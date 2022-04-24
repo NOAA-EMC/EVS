@@ -1,1 +1,78 @@
-sample
+#!/bin/sh
+
+########################################
+# Preliminary data setup step
+########################################
+set -xa
+
+####################################
+# SET SHELL PROCESSING VARIABLES
+####################################
+export PS4='$SECONDS + '
+date
+
+###########################################################
+# obtain unique LSF id (jobid) and make temp directories
+###########################################################
+export pid=$$
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+mkdir -p $DATA
+cd $DATA
+
+####################################
+# Determine Job Output Name on System
+####################################
+export pgmout="OUTPUT.${pid}"
+
+####################################
+# Set EVS directories
+####################################
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXvevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
+
+####################################
+# Run setpdy and initialize PDY variables
+####################################
+export cycle=${cycle:-t${cyc}z}
+setpdy.sh
+. ./PDY
+export VDATE=$PDYm1
+
+####################################
+# Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export RUN=${RUN:-global_det}
+export STEP=${STEP:-prep}
+
+####################################
+# Define COMIN/COMOUT variables
+####################################
+##export COMIN=${COMIN:-$(compath.py evs/${evs_ver})}
+export COMIN=/lfs/h2/emc/stmp/Mallory.Row/evs_output/$envir/com/$NET/$evs_ver/$STEP/$RUN
+#export COMINgfs=${COMN:-$(compath.py gfs/${gfs_ver})}
+##export COMOUT=${COMOUT:-$(compath.py -o evs/${evs_ver})}
+export COMOUT=/lfs/h2/emc/stmp/Mallory.Row/evs_output/$envir/com/$NET/$evs_ver/$STEP/$RUN
+mkdir -p $COMOUT
+
+#######################################################################
+# Execute the script
+#######################################################################
+env
+$HOMEevs/scripts/global_det/prep/exevs_global_det_prep.sh
+export err=$?; err_chk
+
+cat $pgmout
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATAROOT
+  rm -rf $DATA
+fi
+
+date
