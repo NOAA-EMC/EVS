@@ -1,6 +1,6 @@
-      program addpcp
+      program diffpcp
 !
-! BASED ON DIFFPCP FROM VERF_PRECIP AND MODIFIED TO ADD
+! BASED ON DIFFPCP FROM VERF_PRECIP AND MODIFIED
 !
 !$$$  MAIN PROGRAM DOCUMENTATION BLOCK
 !                .      .    .                                       .
@@ -8,8 +8,7 @@
 !  
 !   Programmer: Mallory Row
 !
-! ABSTRACT: program to read in two bucketed precip files, then adds the 
-! togethers to create a continous bucket precipitation
+! ABSTRACT: program to read in two precip files, then subtracts the two
 ! 
 ! nam_2007060712_000_012  ! Input #1
 ! nam_2007060712_012_024  ! Input #2
@@ -23,7 +22,7 @@
       integer kpdso(200),kgdso(200)
       parameter(ji=5000*2000)
       logical*1 bitdiff(ji),bit1(ji),bit2(ji)
-      real add(ji),pcp1(ji), pcp2(ji)
+      real diff(ji),pcp1(ji), pcp2(ji)
       character*200 infile1,infile2,prefx,outfile
       character*18 datstr
       character*3 timeflag
@@ -34,7 +33,7 @@
 ! Read agrument
 nargs = iargc()              !  iargc() - number of arguments
 if (nargs.lt.3) then
-  write(*,*)'usage : addpcp infile1 infile2 outfile'
+  write(*,*)'usage : diffpcp infile1 infile2 outfile'
   stop
 endif
 
@@ -92,10 +91,10 @@ call getarg(3,outfile)
         write(6,*) 'Infile2 Time range 1 : kpds2(14)=', kpds2(14)
         write(6,*) 'Infile2 Time range 2 : kpds2(15)=', kpds2(15)
 
-! Check that infile1 'time range 1' is equal to infile2 'time range 2'
-      if (kpds1(15).ne.kpds2(14)) then
-        write(6,*) 'Infile1 Time range 2 differ: kpds1(15)=', kpds1(15),              &
-          ' Infile2 Time range 1 kpds2(14)=', kpds2(14),'  STOP'
+! Check to see if the two 'time range 1' are identical:
+      if (kpds1(14).ne.kpds2(14)) then
+        write(6,*) 'Time range 1 differ: kpds1(14)=', kpds1(14),              &
+          ' kpds2(14)=', kpds2(14),'  STOP'
         stop
       endif
 
@@ -107,19 +106,19 @@ call getarg(3,outfile)
         stop
       endif
 
-      kpdso=kpds1
+      kpdso=kpds2
       kgdso=kgds
 !
-      kpdso(15) = kpds2(15)
+      kpdso(14) = kpds1(15)
 
       do 40 N=1,kf1
         bitdiff(N)=bit2(N).and.bit1(N)
         if (bitdiff(N)) then
-          add(N)=pcp2(N)+pcp1(N)
-          write(54,54) n, add(n), pcp2(n), pcp1(n)
+          diff(N)=pcp2(N)-pcp1(N)
+          write(54,54) n, diff(n), pcp2(n), pcp1(n)
  54       format(i8,2x,3(3x,f8.3))
         else
-          add(N)=0.
+          diff(N)=0.
         endif
  40   continue
 !
@@ -134,14 +133,14 @@ call getarg(3,outfile)
  50      FORMAT(I4.4,3I2.2,'_',I3.3,'_',I3.3)
       OUTFILE = outfile
       CALL BAOPEN(51,OUTFILE,ierr)
-      call putgb(51,kf1,kpdso,kgdso,bitdiff,add,iret)
+      call putgb(51,kf1,kpdso,kgdso,bitdiff,diff,iret)
       if (iret.eq.0) then
         write(6,*) 'PUTGB successful, iret=', iret, 'for ', outfile
       else
         write(6,*) 'PUTGB failed!  iret=', iret, 'for ', outfile
       endif
       CALL BACLOSE(51,ierr)
-      CALL W3TAGE('ADDPCP ')
+      CALL W3TAGE('DIFFPCP ')
 !
       stop
 

@@ -63,21 +63,6 @@ global_det_model_dict = {
                                                     'gfs.t{init?fmt=%2H}z.'
                                                     +'pgrb2.0p25.'
                                                     +'f{lead?fmt=%3H}'),
-            'arch_fcst_file_format': os.path.join(COMOUT, 'gfs',
-                                                  'gfs.{init?fmt=%Y%m%d}',
-                                                  COMPONENT,
-                                                  'gfs.t{init?fmt=%2H}z.'
-                                                  +'f{lead?fmt=%3H}'),
-            'arch_anl_file_format': os.path.join(COMOUT, 'gfs',
-                                                 'gfs.{init?fmt=%Y%m%d}',
-                                                  COMPONENT,
-                                                 'gfs.t{init?fmt=%2H}z.anl'),
-            'arch_precip_file_format': os.path.join(COMOUT, 'gfs',
-                                                    'gfs.{init?fmt=%Y%m%d}',
-                                                    COMPONENT,
-                                                    'gfs.precip.'
-                                                    +'t{init?fmt=%2H}z.'
-                                                    +'f{lead?fmt=%3H}'),
             'cycles': ['00', '06', '12', '18'],
             'fcst_hrs': range(0, 384+3, 3)},
     'jma': {'prod_fcst_file_format': os.path.join(DCOMROOT,
@@ -95,21 +80,6 @@ global_det_model_dict = {
                                                     'qpf_verif', 'jma_'
                                                     +'{init?fmt=%Y%m%d%H}00'
                                                     +'.grib'),
-            'arch_fcst_file_format': os.path.join(COMOUT, 'jma',
-                                                  'jma.{init?fmt=%Y%m%d}',
-                                                  COMPONENT,
-                                                  'jma.t{init?fmt=%2H}z.'
-                                                  +'f{lead?fmt=%3H}'),
-            'arch_anl_file_format': os.path.join(COMOUT, 'jma',
-                                                 'jma.{init?fmt=%Y%m%d}',
-                                                 COMPONENT,
-                                                 'jma.t{init?fmt=%2H}z.anl'),
-            'arch_precip_file_format': os.path.join(COMOUT, 'jma',
-                                                    'jma.{init?fmt=%Y%m%d}',
-                                                    COMPONENT,
-                                                    'jma.precip.'
-                                                    +'t{init?fmt=%2H}z.'
-                                                    +'f{lead?fmt=%3H}'),
             'cycles': ['00', '12'],
             'fcst_hrs': range(0, 72+12, 12)},
     'ecmwf': {'prod_fcst_file_format': os.path.join(DCOMROOT,
@@ -127,22 +97,6 @@ global_det_model_dict = {
                                                       'qpf_verif',
                                                       'UWD{init?fmt=%Y%m%d%H%M}'
                                                       +'{valid?fmt=%m%d%H%M}1'),
-              'arch_fcst_file_format': os.path.join(COMOUT, 'ecmwf',
-                                                    'ecmwf.{init?fmt=%Y%m%d}',
-                                                    COMPONENT,
-                                                    'ecmwf.t{init?fmt=%2H}z.'
-                                                    +'f{lead?fmt=%3H}'),
-              'arch_anl_file_format': os.path.join(COMOUT, 'ecmwf',
-                                                   'ecmwf.{init?fmt=%Y%m%d}',
-                                                   COMPONENT,
-                                                   'ecmwf.t{init?fmt=%2H}z.'
-                                                   +'anl'),
-              'arch_precip_file_format': os.path.join(COMOUT, 'ecmwf',
-                                                      'ecmwf.{init?fmt=%Y%m%d}',
-                                                      COMPONENT,
-                                                      'ecmwf.precip.'
-                                                      +'t{init?fmt=%2H}z.'
-                                                      +'f{lead?fmt=%3H}'),
               'cycles': ['00', '12'],
               'fcst_hrs': range(0, 240+12, 12)},
     'ukmet': {'prod_fcst_file_format': os.path.join(DCOMROOT,
@@ -158,22 +112,6 @@ global_det_model_dict = {
                                                       '{init?fmt=%Y%m%d}',
                                                       'qpf_verif', 'ukmo.'
                                                       +'{init?fmt=%Y%m%d%H}'),
-              'arch_fcst_file_format': os.path.join(COMOUT, 'ukmet',
-                                                    'ukmet.{init?fmt=%Y%m%d}',
-                                                    COMPONENT,
-                                                    'ukmet.t{init?fmt=%2H}z.'
-                                                    +'f{lead?fmt=%3H}'),
-              'arch_anl_file_format': os.path.join(COMOUT, 'ukmet',
-                                                   'ukmet.{init?fmt=%Y%m%d}',
-                                                   COMPONENT,
-                                                   'ukmet.t{init?fmt=%2H}z.'
-                                                   +'anl'),
-              'arch_precip_file_format': os.path.join(COMOUT, 'ukmet',
-                                                      'ukmet.{init?fmt=%Y%m%d}',
-                                                      COMPONENT,
-                                                      'ukmet.precip.'
-                                                      +'t{init?fmt=%2H}z.'
-                                                      +'f{lead?fmt=%3H}'),
               'cycles': ['00', '12'],
               'fcst_hrs': range(0, 144+12, 12)},
     'imd': {'prod_fcst_file_format': os.path.join(DCOMROOT,
@@ -186,15 +124,6 @@ global_det_model_dict = {
                                                  'wgrbbul', 'ncmrwf_gdas',
                                                  'gdas1.t{init?fmt=%2H}z.'
                                                  +'grbf00'),
-            'arch_fcst_file_format': os.path.join(COMOUT, 'imd',
-                                                  'imd.{init?fmt=%Y%m%d}',
-                                                  COMPONENT,
-                                                  'imd.t{init?fmt=%2H}z.'
-                                                  +'f{lead?fmt=%3H}'),
-            'arch_anl_file_format': os.path.join(COMOUT, 'imd',
-                                                 'imd.{init?fmt=%Y%m%d}',
-                                                 COMPONENT,
-                                                 'imd.t{init?fmt=%2H}z.anl'),
             'cycles': ['00', '12'],
             'fcst_hrs': range(0, 240+12, 12)},
     'cmc': {'prod_fcst_file_format': os.path.join(COMROOT, 'cmc', cmc_ver,
@@ -212,21 +141,6 @@ global_det_model_dict = {
                                                     +'{lead_shift?fmt=%3H?'
                                                     +'shift=-24}_'
                                                     +'{lead?fmt=%3H}.grb2'),
-            'arch_fcst_file_format': os.path.join(COMOUT, 'cmc',
-                                                  'cmc.{init?fmt=%Y%m%d}',
-                                                  COMPONENT,
-                                                  'cmc.t{init?fmt=%2H}z.'
-                                                  +'f{lead?fmt=%3H}'),
-            'arch_anl_file_format': os.path.join(COMOUT, 'cmc',
-                                                 'cmc.{init?fmt=%Y%m%d}',
-                                                 COMPONENT,
-                                                 'cmc.t{init?fmt=%2H}.anl'),
-            'arch_precip_file_format': os.path.join(COMOUT, 'cmc',
-                                                    'cmc.{init?fmt=%Y%m%d}',
-                                                    COMPONENT,
-                                                    'cmc.precip.'
-                                                    +'t{init?fmt=%2H}z.'
-                                                    +'f{lead?fmt=%3H}'),
             'cycles': ['00', '12'],
             'fcst_hrs': range(0, 240+12, 12)},
     'cmc_regional': {'prod_precip_file_format': os.path.join(DCOMROOT,
@@ -236,14 +150,6 @@ global_det_model_dict = {
                                                              +'{lead_shift?fmt=%3H?'
                                                              +'shift=-24}_'
                                                              +'{lead?fmt=%3H}'),
-                     'arch_precip_file_format': os.path.join(COMOUT,
-                                                             'cmc_regional',
-                                                             'cmc_regional.'
-                                                             +'{init?fmt=%Y%m%d}',
-                                                             COMPONENT,
-                                                             'cmc_regional.precip.'
-                                                             +'t{init?fmt=%2H}z.'
-                                                             +'f{lead?fmt=%3H}'),
                      'cycles': ['00', '12'],
                      'fcst_hrs': range(24, 48+12, 12)},
     'fnmoc': {'prod_fcst_file_format': os.path.join(DCOMROOT, 'navgem',
@@ -256,16 +162,6 @@ global_det_model_dict = {
                                                     +'000-'
                                                     +'{init?fmt=%Y%m%d%H}-'
                                                     +'NOAA-halfdeg.gr2'),
-              'arch_fcst_file_format': os.path.join(COMOUT, 'fnmoc',
-                                                    'fnmoc.{init?fmt=%Y%m%d}',
-                                                    COMPONENT,
-                                                    'fnmoc.t{init?fmt=%2H}z.'
-                                                    +'f{lead?fmt=%3H}'),
-              'arch_anl_file_format': os.path.join(COMOUT, 'fnmoc',
-                                                   'fnmoc.{init?fmt=%Y%m%d}',
-                                                   COMPONENT,
-                                                   'fnmoc.t{init?fmt=%2H}z.'
-                                                   +'anl'),
               'cycles': ['00', '12'],
               'fcst_hrs': range(0, 180+12, 12)},
     'cfs': {'prod_fcst_file_format': os.path.join(COMROOT, 'cfs', cfs_ver,
@@ -279,15 +175,6 @@ global_det_model_dict = {
                                                  'cdas.{init?fmt=%Y%m%d}',
                                                  'cdas1.t{init?fmt=%H}z.'
                                                  +'pgrblanl'),
-            'arch_fcst_file_format': os.path.join(COMOUT, 'cfs',
-                                                  'cfs.{init?fmt=%Y%m%d}',
-                                                  COMPONENT,
-                                                  'cfs.t{init?fmt=%2H}z.'
-                                                  +'f{lead?fmt=%3H}'),
-            'arch_anl_file_format': os.path.join(COMOUT, 'cfs',
-                                                 'cfs.{init?fmt=%Y%m%d}',
-                                                 COMPONENT,
-                                                 'cfs.t{init?fmt=%2H}z.anl'),
             'cycles': ['00'],
             'fcst_hrs': range(0, 384+6, 6)},
     'dwd': {'prod_precip_file_format': os.path.join(DCOMROOT,
@@ -297,29 +184,32 @@ global_det_model_dict = {
                                                     +'{lead_shift?fmt=%3H?'
                                                     +'shift=-24}_'
                                                     +'{lead?fmt=%3H}'),
-            'arch_precip_file_format': os.path.join(COMOUT, 'dwd',
-                                                    'dwd.{init?fmt=%Y%m%d}',
-                                                    COMPONENT,
-                                                    'dwd.precip.'
-                                                    +'t{init?fmt=%2H}z.'
-                                                    +'f{lead?fmt=%3H}'),
-            'cycles': ['12'],
+            'cycles': ['00', '12'],
             'fcst_hrs': range(24, 72+12, 12)},
     'metfra': {'prod_precip_file_format': os.path.join(DCOMROOT,
                                                        '{init?fmt=%Y%m%d}',
                                                        'qpf_verif','METFRA_'
                                                        +'{init?fmt=%H}_'
                                                        +'{init?fmt=%Y%m%d}'),
-               'arch_precip_file_format': os.path.join(COMOUT, 'metfra',
-                                                       'metfra.'
-                                                       +'{init?fmt=%Y%m%d}',
-                                                       COMPONENT,
-                                                       'metfra.precip.'
-                                                       +'t{init?fmt=%2H}z.'
-                                                       +'f{lead?fmt=%3H}'),
-               'cycles': ['12'],
+               'cycles': ['00', '12'],
                'fcst_hrs': range(24, 72+12, 12)}
 }
+arch_fcst_file_format = os.path.join(COMOUT, '{model?fmt=%str}',
+                                     '{model?fmt=%str}.{init?fmt=%Y%m%d}',
+                                     COMPONENT,
+                                     '{model?fmt=%str}.t{init?fmt=%2H}z.'
+                                     +'f{lead?fmt=%3H}')
+arch_anl_file_format = os.path.join(COMOUT, '{model?fmt=%str}',
+                                    '{model?fmt=%str}.{init?fmt=%Y%m%d}',
+                                    COMPONENT,
+                                    '{model?fmt=%str}.t{init?fmt=%2H}z.anl')
+arch_precip24hr_file_format = os.path.join(COMOUT, '{model?fmt=%str}',
+                                           '{model?fmt=%str}.'
+                                           +'{init?fmt=%Y%m%d}',
+                                           COMPONENT,
+                                           '{model?fmt=%str}.precip.'
+                                           +'accum24hr.t{init?fmt=%2H}z.'
+                                           +'f{lead?fmt=%3H}')
 
 for model in list(global_det_model_dict.keys()):
     print("---- Prepping data for "+model+" for init "+PDYm1)
@@ -333,11 +223,11 @@ for model in list(global_det_model_dict.keys()):
             if 'prod_fcst_file_format' in list(model_dict.keys()):
                 prod_fcst_file = gda_util.format_filler(
                     model_dict['prod_fcst_file_format'], VDATE_dt, CDATE_dt,
-                    str(fcst_hr)
+                    str(fcst_hr), {}
                 )
                 arch_fcst_file = gda_util.format_filler(
-                    model_dict['arch_fcst_file_format'], VDATE_dt, CDATE_dt,
-                    str(fcst_hr)
+                    arch_fcst_file_format, VDATE_dt, CDATE_dt,
+                    str(fcst_hr), {'model': model}
                 )
                 if not os.path.exists(arch_fcst_file):
                     print("----> Trying to create "+arch_fcst_file)
@@ -362,6 +252,7 @@ for model in list(global_det_model_dict.keys()):
                     elif model == 'ecmwf':
                         gda_util.prep_prod_ecmwf_file(prod_fcst_file,
                                                       arch_fcst_file,
+                                                      str(fcst_hr),
                                                      'full')
                     elif model == 'ukmet':
                         gda_util.prep_prod_ukmet_file(prod_fcst_file,
@@ -378,74 +269,80 @@ for model in list(global_det_model_dict.keys()):
             if 'prod_precip_file_format' in list(model_dict.keys()):
                 prod_precip_file = gda_util.format_filler(
                     model_dict['prod_precip_file_format'], VDATE_dt,
-                    CDATE_dt, str(fcst_hr)
+                    CDATE_dt, str(fcst_hr), {}
                 )
-                arch_precip_file = gda_util.format_filler(
-                    model_dict['arch_precip_file_format'], VDATE_dt,
-                    CDATE_dt, str(fcst_hr)
+                # 24 hour accumulations
+                arch_precip24hr_file = gda_util.format_filler(
+                    arch_precip24hr_file_format, VDATE_dt,
+                    CDATE_dt, str(fcst_hr), {'model': model}
                 )
-                if not os.path.exists(arch_precip_file) and fcst_hr != 0:
-                    print("----> Trying to create "+arch_precip_file)
-                    arch_precip_file_dir = arch_precip_file.rpartition('/')[0]
-                    if not os.path.exists(arch_precip_file_dir):
-                        os.makedirs(arch_precip_file_dir)
-                        print(arch_precip_file_dir)
+                if not os.path.exists(arch_precip24hr_file) and fcst_hr != 0:
+                    print("----> Trying to create "+arch_precip24hr_file)
+                    arch_precip24hr_file_dir = (
+                        arch_precip24hr_file.rpartition('/')[0]
+                    )
+                    if not os.path.exists(arch_precip24hr_file_dir):
+                        os.makedirs(arch_precip24hr_file_dir)
                         if model in ['ecmwf']:
-                             gda_util.run_shell_command(['chmod', '750',
-                                                         arch_precip_file_dir])
-                             gda_util.run_shell_command(['chgrp', 'rstprod',
-                                                         arch_precip_file_dir])
+                             gda_util.run_shell_command(
+                                 ['chmod', '750', arch_precip24hr_file_dir]
+                             )
+                             gda_util.run_shell_command(
+                                 ['chgrp', 'rstprod',
+                                   arch_precip24hr_file_dir]
+                             )
                     if model == 'gfs':
                         gda_util.prep_prod_gfs_file(prod_precip_file,
-                                                    arch_precip_file,
+                                                    arch_precip24hr_file,
                                                     str(fcst_hr),
-                                                    'precip')
+                                                    'precip_24hr')
                     elif model == 'jma':
                         gda_util.prep_prod_jma_file(prod_precip_file,
-                                                    arch_precip_file,
+                                                    arch_precip24hr_file,
                                                     str(fcst_hr),
-                                                    'precip')
+                                                    'precip_24hr')
                     elif model == 'ecmwf':
                         gda_util.prep_prod_ecmwf_file(prod_precip_file,
-                                                      arch_precip_file,
-                                                      'precip')
+                                                      arch_precip24hr_file,
+                                                      str(fcst_hr),
+                                                      'precip_24hr')
                     elif model == 'ukmet':
                         gda_util.prep_prod_ukmet_file(prod_precip_file,
-                                                      arch_precip_file,
+                                                      arch_precip24hr_file,
                                                       str(fcst_hr),
-                                                      'precip')
+                                                      'precip_24hr')
                     elif model in ['cmc', 'cmc_regional']:
                         gda_util.prep_prod_cmc_file(prod_precip_file,
-                                                    arch_precip_file,
+                                                    arch_precip24hr_file,
                                                     str(fcst_hr),
-                                                    'precip')
+                                                    'precip_24hr')
                     elif model == 'dwd':
                         gda_util.prep_prod_dwd_file(prod_precip_file,
-                                                    arch_precip_file,
+                                                    arch_precip24hr_file,
                                                     str(fcst_hr),
-                                                    'precip')
+                                                    'precip_24hr')
                     elif model == 'metfra':
                         gda_util.prep_prod_metfra_file(prod_precip_file,
-                                                       arch_precip_file,
+                                                       arch_precip24hr_file,
                                                        str(fcst_hr),
-                                                       'precip')
+                                                       'precip_24hr')
                     else:
-                        gda_util.copy_file(prod_precip_file, arch_precip_file)
+                        gda_util.copy_file(prod_precip_file,
+                                           arch_precip24hr_file)
         # Analysis file
         if 'prod_anl_file_format' in list(model_dict.keys()):
             prod_anl_file = gda_util.format_filler(
                 model_dict['prod_anl_file_format'], CDATE_dt, CDATE_dt,
-                'anl'
+                'anl', {}
             )
             arch_anl_file = gda_util.format_filler(
-                model_dict['arch_anl_file_format'], CDATE_dt, CDATE_dt,
-                'anl'
+                arch_anl_file_format, CDATE_dt, CDATE_dt,
+                'anl', {'model': model}
             )
             if not os.path.exists(arch_anl_file):
                 arch_anl_file_dir = arch_anl_file.rpartition('/')[0]
                 if not os.path.exists(arch_anl_file_dir):
                     os.makedirs(arch_anl_file_dir)
-                    print(arch_anl_file_dir)
                     if model in ['ecmwf']:
                          gda_util.run_shell_command(['chmod', '750',
                                                      arch_anl_file_dir])
@@ -455,7 +352,7 @@ for model in list(global_det_model_dict.keys()):
                 if model == 'gfs':
                     gda_util.prep_prod_gfs_file(prod_anl_file,
                                                 arch_anl_file,
-                                                str(fcst_hr),
+                                                'anl',
                                                 'full')
                 elif model == 'jma':
                     gda_util.prep_prod_jma_file(prod_anl_file,
@@ -465,6 +362,7 @@ for model in list(global_det_model_dict.keys()):
                 elif model == 'ecmwf':
                     gda_util.prep_prod_ecmwf_file(prod_anl_file,
                                                   arch_anl_file,
+                                                  'anl',
                                                   'full')
                 elif model == 'ukmet':
                     gda_util.prep_prod_ukmet_file(prod_anl_file,
@@ -474,7 +372,7 @@ for model in list(global_det_model_dict.keys()):
                 elif model == 'cmc':
                     gda_util.prep_prod_cmc_file(prod_anl_file,
                                                 arch_anl_file,
-                                                str(fcst_hr),
+                                                'anl',
                                                 'full')
                 else:
                     gda_util.copy_file(prod_anl_file, arch_anl_file)
