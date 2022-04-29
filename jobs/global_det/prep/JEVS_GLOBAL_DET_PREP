@@ -53,17 +53,17 @@ export RUN=${RUN:-atmos}
 # Define COMIN/COMOUT variables
 ####################################
 ##COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDY)}
-export COMIN=/lfs/h2/emc/stmp/Mallory.Row/evs_output/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1
+export COMIN=/lfs/h2/emc/stmp/Mallory.Row/evs_output/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$INITDATE
 #export COMINgfs=${COMN:-$(compath.py gfs/${gfs_ver})}
 ##COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDY)}
-export COMOUT=/lfs/h2/emc/stmp/Mallory.Row/evs_output/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1
+export COMOUT=/lfs/h2/emc/stmp/Mallory.Row/evs_output/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$INITDATE
 mkdir -p $COMOUT
 
 #######################################################################
 # Execute the script
 #######################################################################
 env
-$HOMEevs/scripts/global_det/prep/exevs_global_det_prep.sh
+$HOMEevs/scripts/global_det/prep/exevs_global_det_${RUN}_prep.sh
 export err=$?; err_chk
 
 cat $pgmout
