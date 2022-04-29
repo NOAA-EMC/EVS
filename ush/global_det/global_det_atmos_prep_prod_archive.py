@@ -195,18 +195,11 @@ global_det_model_dict = {
                'fcst_hrs': range(24, 72+12, 12)}
 }
 arch_fcst_file_format = os.path.join(COMOUT, '{model?fmt=%str}',
-                                     '{model?fmt=%str}.{init?fmt=%Y%m%d}',
-                                     COMPONENT,
                                      '{model?fmt=%str}.t{init?fmt=%2H}z.'
                                      +'f{lead?fmt=%3H}')
 arch_anl_file_format = os.path.join(COMOUT, '{model?fmt=%str}',
-                                    '{model?fmt=%str}.{init?fmt=%Y%m%d}',
-                                    COMPONENT,
                                     '{model?fmt=%str}.t{init?fmt=%2H}z.anl')
 arch_precip24hr_file_format = os.path.join(COMOUT, '{model?fmt=%str}',
-                                           '{model?fmt=%str}.'
-                                           +'{init?fmt=%Y%m%d}',
-                                           COMPONENT,
                                            '{model?fmt=%str}.precip.'
                                            +'accum24hr.t{init?fmt=%2H}z.'
                                            +'f{lead?fmt=%3H}')

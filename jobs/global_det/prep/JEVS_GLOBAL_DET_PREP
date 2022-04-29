@@ -45,17 +45,18 @@ export VDATE=$PDYm1
 # Define NET/RUN variables
 ####################################
 export NET=${NET:-evs}
-export RUN=${RUN:-global_det}
 export STEP=${STEP:-prep}
+export COMPONENT=${COMPONENT:-global_det}
+export RUN=${RUN:-atmos}
 
 ####################################
 # Define COMIN/COMOUT variables
 ####################################
-##export COMIN=${COMIN:-$(compath.py evs/${evs_ver})}
-export COMIN=/lfs/h2/emc/stmp/Mallory.Row/evs_output/$envir/com/$NET/$evs_ver/$STEP/$RUN
+##COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDY)}
+export COMIN=/lfs/h2/emc/stmp/Mallory.Row/evs_output/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1
 #export COMINgfs=${COMN:-$(compath.py gfs/${gfs_ver})}
-##export COMOUT=${COMOUT:-$(compath.py -o evs/${evs_ver})}
-export COMOUT=/lfs/h2/emc/stmp/Mallory.Row/evs_output/$envir/com/$NET/$evs_ver/$STEP/$RUN
+##COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDY)}
+export COMOUT=/lfs/h2/emc/stmp/Mallory.Row/evs_output/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1
 mkdir -p $COMOUT
 
 #######################################################################
