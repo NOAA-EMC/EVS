@@ -205,7 +205,7 @@ arch_precip24hr_file_format = os.path.join(COMOUT, '{model?fmt=%str}',
                                            +'f{lead?fmt=%3H}')
 
 for model in list(global_det_model_dict.keys()):
-    print("---- Prepping data for "+model+" for init "+PDYm1)
+    print("---- Prepping data for "+model+" for init "+INITDATE)
     model_dict = global_det_model_dict[model]
     for cycle in model_dict['cycles']:
         CDATE = INITDATE+cycle
