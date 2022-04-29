@@ -20,7 +20,7 @@ DATA = os.environ['DATA']
 COMROOT = os.environ['COMROOT']
 COMOUT = os.environ['COMOUT']
 DCOMROOT = os.environ['DCOMROOT']
-PDYm1 = os.environ['PDYm1']
+INITDATE = os.environ['INITDATE']
 NET = os.environ['NET']
 RUN = os.environ['RUN']
 COMPONENT = os.environ['COMPONENT']
@@ -208,7 +208,7 @@ for model in list(global_det_model_dict.keys()):
     print("---- Prepping data for "+model+" for init "+PDYm1)
     model_dict = global_det_model_dict[model]
     for cycle in model_dict['cycles']:
-        CDATE = PDYm1+cycle
+        CDATE = INITDATE+cycle
         CDATE_dt = datetime.datetime.strptime(CDATE, '%Y%m%d%H')
         # Forecast files
         for fcst_hr in model_dict['fcst_hrs']:
