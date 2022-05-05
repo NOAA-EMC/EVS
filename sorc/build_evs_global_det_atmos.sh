@@ -60,15 +60,4 @@ make
 make install
 #-------------------
 
-#-------------------
-cd $BASE/addpcp.fd
-make
-make install
-#-------------------
-
-#-------------------
-cd $BASE/diffpcp.fd
-make
-make install
-#-------------------
 exit

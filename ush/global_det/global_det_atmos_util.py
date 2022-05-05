@@ -288,12 +288,10 @@ def prep_prod_gfs_file(source_file, dest_file, forecast_hour, prep_method):
     # Environment variables and executables
     WGRIB2 = os.environ['WGRIB2']
     EXECevs = os.environ['EXECevs']
-    DIFFPCP = os.path.join(EXECevs, 'diffpcp')
     # Working file names
     prepped_file = os.path.join(os.getcwd(),
                                 'atmos.'+dest_file.rpartition('/')[2])
     working_file1 = prepped_file+'.tmp1'
-    working_file2 = prepped_file+'.tmp2'
     # Prep file
     if prep_method == 'full': 
         if forecast_hour == 0:
@@ -365,7 +363,6 @@ def prep_prod_gfs_file(source_file, dest_file, forecast_hour, prep_method):
                 run_shell_command(['cat', working_file1, '>>', prepped_file])
                 os.remove(working_file1)
     elif 'precip' in prep_method:
-        accum_length = int(prep_method.split('_')[1].split('hr')[0])
         if int(forecast_hour) % 24 == 0:
             thin_var_level = ('APCP:surface:0-'
                               +str(int(int(forecast_hour)/24)))
@@ -374,23 +371,7 @@ def prep_prod_gfs_file(source_file, dest_file, forecast_hour, prep_method):
         if check_file_exists_size(source_file):
             run_shell_command([WGRIB2, '-match', '"'+thin_var_level+'"',
                                source_file+'|'+WGRIB2, '-i', source_file,
-                               '-grib', working_file1])
-        if check_file_exists_size(working_file1):
-            convert_grib2_grib1(working_file1, working_file2)
-        if int(forecast_hour) >= accum_length:
-            if int(forecast_hour) == accum_length:
-                copy_file(working_file2, prepped_file)
-            else:
-                accum_fhr_end = int(forecast_hour)
-                accum_fhr_start = accum_fhr_end - accum_length
-                accum_fhr_start_file = working_file2.replace(
-                    '.f'+str(accum_fhr_end).zfill(3)+'.',
-                    '.f'+str(accum_fhr_start).zfill(3)+'.',
-                )
-                if check_file_exists_size(working_file2) \
-                        and check_file_exists_size(accum_fhr_start_file):
-                    run_shell_command([DIFFPCP, accum_fhr_start_file,
-                                       working_file2, prepped_file])
+                               '-grib', prepped_file])
     # Copy to destination
     copy_file(prepped_file, dest_file)
 
@@ -411,7 +392,6 @@ def prep_prod_jma_file(source_file_format, dest_file, forecast_hour,
     WGRIB = os.environ['WGRIB']
     EXECevs = os.environ['EXECevs']
     JMAMERGE = os.path.join(EXECevs, 'jma_merge')
-    DIFFPCP = os.path.join(EXECevs, 'diffpcp')
     # Working file names
     prepped_file = os.path.join(os.getcwd(),
                                 'atmos.'+dest_file.rpartition('/')[2])
@@ -443,28 +423,13 @@ def prep_prod_jma_file(source_file_format, dest_file, forecast_hour,
                 [JMAMERGE, working_file1, working_file2, prepped_file]
             )
     elif 'precip' in prep_method:
-        accum_length = int(prep_method.split('_')[1].split('hr')[0])
         source_file = source_file_format
         if check_file_exists_size(source_file):
             run_shell_command(
                 [WGRIB+' '+source_file+' | grep "0-'
                  +forecast_hour+'hr" | '+WGRIB+' '+source_file
-                 +' -i -grib -o '+working_file1]
+                 +' -i -grib -o '+prepped_file]
             )
-        if int(forecast_hour) >= accum_length:
-            if int(forecast_hour) == accum_length:
-                copy_file(working_file1, prepped_file)
-            else:
-                accum_fhr_end = int(forecast_hour)
-                accum_fhr_start = accum_fhr_end - accum_length
-                accum_fhr_start_file = working_file1.replace(
-                    '.f'+str(accum_fhr_end).zfill(3)+'.',
-                    '.f'+str(accum_fhr_start).zfill(3)+'.',
-                )
-                if check_file_exists_size(working_file1) \
-                        and check_file_exists_size(accum_fhr_start_file):
-                    run_shell_command([DIFFPCP, accum_fhr_start_file,
-                                       working_file1, prepped_file])
     copy_file(prepped_file, dest_file)
 
 def prep_prod_ecmwf_file(source_file, dest_file, forecast_hour, prep_method):
@@ -483,11 +448,9 @@ def prep_prod_ecmwf_file(source_file, dest_file, forecast_hour, prep_method):
     EXECevs = os.environ['EXECevs']
     ECMGFSLOOKALIKENEW = os.path.join(EXECevs, 'ecm_gfs_look_alike_new')
     PCPCONFORM = os.path.join(EXECevs, 'pcpconform')
-    DIFFPCP = os.path.join(EXECevs, 'diffpcp')
     # Working file names
     prepped_file = os.path.join(os.getcwd(),
                                 'atmos.'+dest_file.rpartition('/')[2])
-    working_file1 = prepped_file+'.tmp1'
     # Prep file
     if prep_method == 'full':
         if check_file_exists_size(source_file):
@@ -495,25 +458,10 @@ def prep_prod_ecmwf_file(source_file, dest_file, forecast_hour, prep_method):
                 [ECMGFSLOOKALIKENEW, source_file, prepped_file]
             )
     elif 'precip' in prep_method:
-        accum_length = int(prep_method.split('_')[1].split('hr')[0])
         if check_file_exists_size(source_file):
             run_shell_command(
-                [PCPCONFORM, 'ecmwf', source_file, working_file1]
+                [PCPCONFORM, 'ecmwf', source_file, prepped_file]
             )
-        if int(forecast_hour) >= accum_length:
-            if int(forecast_hour) == accum_length:
-                copy_file(working_file1, prepped_file)
-            else:
-                accum_fhr_end = int(forecast_hour)
-                accum_fhr_start = accum_fhr_end - accum_length
-                accum_fhr_start_file = working_file1.replace(
-                    '.f'+str(accum_fhr_end).zfill(3)+'.',
-                    '.f'+str(accum_fhr_start).zfill(3)+'.',
-                )
-                if check_file_exists_size(working_file1) \
-                        and check_file_exists_size(accum_fhr_start_file):
-                    run_shell_command([DIFFPCP, accum_fhr_start_file,
-                                       working_file1, prepped_file])
     if os.path.exists(prepped_file):
         run_shell_command(['chmod', '750', prepped_file])
         run_shell_command(['chgrp', 'rstprod', prepped_file])
@@ -536,7 +484,6 @@ def prep_prod_ukmet_file(source_file_format, dest_file, forecast_hour,
     EXECevs = os.environ['EXECevs']
     WGRIB = os.environ['WGRIB']
     UKMHIRESMERGE = os.path.join(EXECevs, 'ukm_hires_merge')
-    ADDPCP = os.path.join(EXECevs, 'addpcp')
     # Working file names
     prepped_file = os.path.join(os.getcwd(),
                             'atmos.'+dest_file.rpartition('/')[2])
@@ -596,7 +543,6 @@ def prep_prod_ukmet_file(source_file_format, dest_file, forecast_hour,
                 run_shell_command([UKMHIRESMERGE, working_file1,
                                    prepped_file, fhr_str])
     elif 'precip' in prep_method:
-        accum_length = int(prep_method.split('_')[1].split('hr')[0])
         source_file = source_file_format
         source_file_accum = 12
         if check_file_exists_size(source_file):
@@ -609,59 +555,8 @@ def prep_prod_ukmet_file(source_file_format, dest_file, forecast_hour,
                 [WGRIB+' '+working_file1+' | grep "'
                  +str(source_file_accum_fhr_start)+'-'
                  +forecast_hour+'hr" | '+WGRIB+' '+working_file1
-                 +' -i -grib -o '+working_file2]
+                 +' -i -grib -o '+prepped_file]
             )
-        if accum_length == 24:
-            if int(forecast_hour) >= accum_length:
-                if int(forecast_hour) == accum_length:
-                    copy_file(working_file2, prepped_file)
-                else:
-                    accum_fhr_end_file2 = int(forecast_hour)
-                    accum_fhr_start_file1 = accum_fhr_end_file2 - accum_length
-                    accum_fhr_end_file1 = (int(forecast_hour)
-                                           - source_file_accum)
-                    accum_fhr_start_file2 = accum_fhr_end_file1
-                    accum_fhr_file1 = working_file2.replace(
-                        '.f'+str(accum_fhr_end_file2).zfill(3)+'.',
-                        '.f'+str(accum_fhr_end_file1).zfill(3)+'.',
-                    )
-                    if check_file_exists_size(working_file2) \
-                            and check_file_exists_size(accum_fhr_file1):
-                        run_shell_command(
-                            [ADDPCP, accum_fhr_file1,
-                             working_file2, prepped_file]
-                        )
-    copy_file(prepped_file, dest_file)
-
-def prep_prod_cmc_file(source_file, dest_file, forecast_hour, prep_method):
-    """! Do prep work for CMC production files
-
-         Args:
-             source_file_format - source file format (string)
-             dest_file          - destination file (string)
-             forecast_hour      - forecast hour (string)
-             prep_method        - name of prep method to do
-                                  (string)
-
-         Returns:
-    """
-    # Environment variables and executables
-    EXECevs = os.environ['EXECevs']
-    # Working file names
-    prepped_file = os.path.join(os.getcwd(),
-                            'atmos.'+dest_file.rpartition('/')[2])
-    working_file1 = prepped_file+'.tmp1'
-    # Prep file
-    if prep_method == 'full':
-        copy_file(source_file, prepped_file)
-    elif 'precip' in prep_method:
-        accum_length = int(prep_method.split('_')[1].split('hr')[0])
-        file_accum = 24
-        if check_file_exists_size(source_file):
-            convert_grib2_grib1(source_file, working_file1)
-        if accum_length == 24:
-            if check_file_exists_size(working_file1):
-                copy_file(working_file1, prepped_file)
     copy_file(prepped_file, dest_file)
 
 def prep_prod_dwd_file(source_file, dest_file, forecast_hour, prep_method):
@@ -687,21 +582,15 @@ def prep_prod_dwd_file(source_file, dest_file, forecast_hour, prep_method):
     ####    dwd_YYYYMMDDHH_(hhh)_(hhh).tmp
     working_file1 = os.path.join(os.getcwd(),
                                  source_file.rpartition('/')[2]+'.tmp')
-    working_file2 = prepped_file+'.tmp2'
     # Prep file
     if 'precip' in prep_method:
-        accum_length = int(prep_method.split('_')[1].split('hr')[0])
-        file_accum = 24
         if check_file_exists_size(source_file):
             convert_grib2_grib1(source_file, working_file1)
         if check_file_exists_size(working_file1):
             run_shell_command(
                [PCPCONFORM, 'dwd', working_file1,
-                working_file2]
+                prepped_file]
             )
-        if accum_length == 24:
-            if check_file_exists_size(working_file2):
-                copy_file(working_file2, prepped_file)
     copy_file(prepped_file, dest_file)
 
 def prep_prod_metfra_file(source_file, dest_file, forecast_hour, prep_method):
@@ -722,11 +611,8 @@ def prep_prod_metfra_file(source_file, dest_file, forecast_hour, prep_method):
     # Temporary file names
     prepped_file = os.path.join(os.getcwd(),
                             'atmos.'+dest_file.rpartition('/')[2])
-    working_file1 = prepped_file+'.tmp1'
-    working_file2 = prepped_file+'.tmp2'
     # Prep file
     if 'precip' in prep_method:
-        accum_length = int(prep_method.split('_')[1].split('hr')[0])
         file_accum = 24
         fhr_accum_start = int(forecast_hour)-file_accum
         if check_file_exists_size(source_file):
@@ -734,11 +620,8 @@ def prep_prod_metfra_file(source_file, dest_file, forecast_hour, prep_method):
                 [WGRIB+' '+source_file+' | grep "'
                  +str(fhr_accum_start)+'-'
                  +forecast_hour+'hr" | '+WGRIB+' '+source_file
-                 +' -i -grib -o '+working_file1]
+                 +' -i -grib -o '+prepped_file]
             )
-        if accum_length == 24:
-            if check_file_exists_size(working_file1):
-                copy_file(working_file1, prepped_file)
     copy_file(prepped_file, dest_file)
 
 def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
@@ -767,27 +650,21 @@ def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
             prep_prod_ecmwf_file(source_file, dest_file, forecast_hour, 'full')
         elif 'wgrbbul/ukmet_hires' in source_file:
             prep_prod_ukmet_file(source_file, dest_file, forecast_hour, 'full')
-        elif 'cmc/prod' in source_file:
-            prep_prod_cmc_file(source_file, dest_file, forecast_hour, 'full')
-        elif 'qpf_verif' in source_file:
-            if 'jma' in source_file:
-                prep_prod_jma_file(source_file, dest_file, forecast_hour,
-                                   'precip')
-            elif 'UWD' in source_file:
-                prep_prod_ecmwf_file(source_file, dest_file, forecast_hour,
-                                     'precip')
-            elif 'ukmo' in source_file:
-                prep_prod_ukmet_file(source_file, dest_file, forecast_hour,
-                                     'precip')
-            elif 'cmc' in source_file:
-                prep_prod_cmc_file(source_file, dest_file, forecast_hour,
-                                   'precip')
-            elif 'dwd' in source_file:
-                prep_prod_dwd_file(source_file, dest_file, forecast_hour,
-                                   'precip')
-            elif 'METFRA' in source_file:
-                prep_prod_metfra_file(source_file, dest_file, forecast_hour,
-                                      'precip')
+        elif 'qpf_verif/jma' in source_file:
+            prep_prod_jma_file(source_file, dest_file, forecast_hour,
+                               'precip')
+        elif 'qpf_verif/UWD' in source_file:
+            prep_prod_ecmwf_file(source_file, dest_file, forecast_hour,
+                                 'precip')
+        elif 'qpf_verif/ukmo' in source_file:
+            prep_prod_ukmet_file(source_file, dest_file, forecast_hour,
+                                 'precip')
+        elif 'qpf_verif/dwd' in source_file:
+            prep_prod_dwd_file(source_file, dest_file, forecast_hour,
+                               'precip')
+        elif 'qpf_verif/METFRA' in source_file:
+            prep_prod_metfra_file(source_file, dest_file, forecast_hour,
+                                  'precip')
         else:
             if os.path.exists(source_file):
                 print("Linking "+source_file+" to "+dest_file)

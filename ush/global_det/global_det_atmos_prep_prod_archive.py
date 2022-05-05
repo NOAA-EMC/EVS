@@ -199,10 +199,10 @@ arch_fcst_file_format = os.path.join(COMOUT, '{model?fmt=%str}',
                                      +'f{lead?fmt=%3H}')
 arch_anl_file_format = os.path.join(COMOUT, '{model?fmt=%str}',
                                     '{model?fmt=%str}.t{init?fmt=%2H}z.anl')
-arch_precip24hr_file_format = os.path.join(COMOUT, '{model?fmt=%str}',
-                                           '{model?fmt=%str}.precip.'
-                                           +'accum24hr.t{init?fmt=%2H}z.'
-                                           +'f{lead?fmt=%3H}')
+arch_precip_file_format = os.path.join(COMOUT, '{model?fmt=%str}',
+                                       '{model?fmt=%str}.precip.'
+                                       +'t{init?fmt=%2H}z.'
+                                       +'f{lead?fmt=%3H}')
 
 for model in list(global_det_model_dict.keys()):
     print("---- Prepping data for "+model+" for init "+INITDATE)
@@ -252,11 +252,6 @@ for model in list(global_det_model_dict.keys()):
                                                       arch_fcst_file,
                                                       str(fcst_hr),
                                                       'full')
-                    elif model == 'cmc':
-                        gda_util.prep_prod_cmc_file(prod_fcst_file,
-                                                    arch_fcst_file,
-                                                    str(fcst_hr),
-                                                    'full')
                     else:
                         gda_util.copy_file(prod_fcst_file, arch_fcst_file)
             if 'prod_precip_file_format' in list(model_dict.keys()):
@@ -264,64 +259,58 @@ for model in list(global_det_model_dict.keys()):
                     model_dict['prod_precip_file_format'], VDATE_dt,
                     CDATE_dt, str(fcst_hr), {}
                 )
-                # 24 hour accumulations
-                arch_precip24hr_file = gda_util.format_filler(
-                    arch_precip24hr_file_format, VDATE_dt,
+                arch_precip_file = gda_util.format_filler(
+                    arch_precip_file_format, VDATE_dt,
                     CDATE_dt, str(fcst_hr), {'model': model}
                 )
-                if not os.path.exists(arch_precip24hr_file) and fcst_hr != 0:
-                    print("----> Trying to create "+arch_precip24hr_file)
-                    arch_precip24hr_file_dir = (
-                        arch_precip24hr_file.rpartition('/')[0]
+                if not os.path.exists(arch_precip_file) and fcst_hr != 0:
+                    print("----> Trying to create "+arch_precip_file)
+                    arch_precip_file_dir = (
+                        arch_precip_file.rpartition('/')[0]
                     )
-                    if not os.path.exists(arch_precip24hr_file_dir):
-                        os.makedirs(arch_precip24hr_file_dir)
+                    if not os.path.exists(arch_precip_file_dir):
+                        os.makedirs(arch_precip_file_dir)
                         if model in ['ecmwf']:
                              gda_util.run_shell_command(
-                                 ['chmod', '750', arch_precip24hr_file_dir]
+                                 ['chmod', '750', arch_precip_file_dir]
                              )
                              gda_util.run_shell_command(
                                  ['chgrp', 'rstprod',
-                                   arch_precip24hr_file_dir]
+                                   arch_precip_file_dir]
                              )
                     if model == 'gfs':
                         gda_util.prep_prod_gfs_file(prod_precip_file,
-                                                    arch_precip24hr_file,
+                                                    arch_precip_file,
                                                     str(fcst_hr),
-                                                    'precip_24hr')
+                                                    'precip')
                     elif model == 'jma':
                         gda_util.prep_prod_jma_file(prod_precip_file,
-                                                    arch_precip24hr_file,
+                                                    arch_precip_file,
                                                     str(fcst_hr),
-                                                    'precip_24hr')
+                                                    'precip')
                     elif model == 'ecmwf':
                         gda_util.prep_prod_ecmwf_file(prod_precip_file,
-                                                      arch_precip24hr_file,
+                                                      arch_precip_file,
                                                       str(fcst_hr),
-                                                      'precip_24hr')
+                                                      'precip')
                     elif model == 'ukmet':
                         gda_util.prep_prod_ukmet_file(prod_precip_file,
-                                                      arch_precip24hr_file,
+                                                      arch_precip_file,
                                                       str(fcst_hr),
-                                                      'precip_24hr')
-                    elif model in ['cmc', 'cmc_regional']:
-                        gda_util.prep_prod_cmc_file(prod_precip_file,
-                                                    arch_precip24hr_file,
-                                                    str(fcst_hr),
-                                                    'precip_24hr')
+                                                      'precip')
                     elif model == 'dwd':
                         gda_util.prep_prod_dwd_file(prod_precip_file,
-                                                    arch_precip24hr_file,
+                                                    arch_precip_file,
                                                     str(fcst_hr),
-                                                    'precip_24hr')
+                                                    'precip')
                     elif model == 'metfra':
                         gda_util.prep_prod_metfra_file(prod_precip_file,
-                                                       arch_precip24hr_file,
+                                                       arch_precip_file,
                                                        str(fcst_hr),
-                                                       'precip_24hr')
+                                                       'precip')
                     else:
                         gda_util.copy_file(prod_precip_file,
-                                           arch_precip24hr_file)
+                                           arch_precip_file)
         # Analysis file
         if 'prod_anl_file_format' in list(model_dict.keys()):
             prod_anl_file = gda_util.format_filler(
@@ -362,11 +351,6 @@ for model in list(global_det_model_dict.keys()):
                                                   arch_anl_file,
                                                   'anl',
                                                   'full')
-                elif model == 'cmc':
-                    gda_util.prep_prod_cmc_file(prod_anl_file,
-                                                arch_anl_file,
-                                                'anl',
-                                                'full')
                 else:
                     gda_util.copy_file(prod_anl_file, arch_anl_file)
 
