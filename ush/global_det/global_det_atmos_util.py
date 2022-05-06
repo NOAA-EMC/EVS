@@ -372,7 +372,6 @@ def prep_prod_gfs_file(source_file, dest_file, forecast_hour, prep_method):
             run_shell_command([WGRIB2, '-match', '"'+thin_var_level+'"',
                                source_file+'|'+WGRIB2, '-i', source_file,
                                '-grib', prepped_file])
-    # Copy to destination
     copy_file(prepped_file, dest_file)
 
 def prep_prod_jma_file(source_file_format, dest_file, forecast_hour,
@@ -486,7 +485,7 @@ def prep_prod_ukmet_file(source_file_format, dest_file, forecast_hour,
     UKMHIRESMERGE = os.path.join(EXECevs, 'ukm_hires_merge')
     # Working file names
     prepped_file = os.path.join(os.getcwd(),
-                            'atmos.'+dest_file.rpartition('/')[2])
+                                'atmos.'+dest_file.rpartition('/')[2])
     working_file1 = prepped_file+'.tmp1'
     working_file2 = prepped_file+'.tmp2'
     # Prep file
@@ -576,7 +575,7 @@ def prep_prod_dwd_file(source_file, dest_file, forecast_hour, prep_method):
     PCPCONFORM = os.path.join(EXECevs, 'pcpconform')
     # Working file names
     prepped_file = os.path.join(os.getcwd(),
-                            'atmos.'+dest_file.rpartition('/')[2])
+                                'atmos.'+dest_file.rpartition('/')[2])
     #working_file1 = prepped_file+'.tmp1'
     #### For DWD to run through pcpconform, file name must be
     ####    dwd_YYYYMMDDHH_(hhh)_(hhh).tmp
@@ -610,7 +609,7 @@ def prep_prod_metfra_file(source_file, dest_file, forecast_hour, prep_method):
     WGRIB = os.environ['WGRIB']
     # Temporary file names
     prepped_file = os.path.join(os.getcwd(),
-                            'atmos.'+dest_file.rpartition('/')[2])
+                                'atmos.'+dest_file.rpartition('/')[2])
     # Prep file
     if 'precip' in prep_method:
         file_accum = 24

@@ -1,8 +1,8 @@
 #!/bin/sh
 ###############################################################################
-# Name of Script: exevs_global_det_prep.sh  
+# Name of Script: exevs_global_det_atmos_prep.sh
 # Purpose of Script: This script does prep for any global deterministic model
-#                    verification
+#                    atmospheric verification
 # Log history:
 ###############################################################################
 
@@ -14,3 +14,7 @@ echo
 ## Global Deterministic Atmospheric Prep
 ############################################################
 python ${USHevs}/global_det/global_det_atmos_prep_prod_archive.py
+
+if [ $SENDCOM = YES ]; then
+    cp -r $DATA/$RUN.$INITDATE/* $COMOUT/.
+fi

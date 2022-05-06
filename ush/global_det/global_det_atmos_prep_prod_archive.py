@@ -194,12 +194,15 @@ global_det_model_dict = {
                'cycles': ['00', '12'],
                'fcst_hrs': range(24, 72+12, 12)}
 }
-arch_fcst_file_format = os.path.join(COMOUT, '{model?fmt=%str}',
+arch_fcst_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
+                                     '{model?fmt=%str}',
                                      '{model?fmt=%str}.t{init?fmt=%2H}z.'
                                      +'f{lead?fmt=%3H}')
-arch_anl_file_format = os.path.join(COMOUT, '{model?fmt=%str}',
+arch_anl_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
+                                    '{model?fmt=%str}',
                                     '{model?fmt=%str}.t{init?fmt=%2H}z.anl')
-arch_precip_file_format = os.path.join(COMOUT, '{model?fmt=%str}',
+arch_precip_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
+                                       '{model?fmt=%str}',
                                        '{model?fmt=%str}.precip.'
                                        +'t{init?fmt=%2H}z.'
                                        +'f{lead?fmt=%3H}')
