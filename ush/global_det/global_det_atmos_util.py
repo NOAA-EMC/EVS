@@ -719,13 +719,13 @@ def get_off_machine_data(job_file, job_name, job_output, machine, user, queue,
     print("Submitting "+job_file+" to "+queue)
     print("Output sent to "+job_output)
     os.chmod(job_file, 0o755)
-    if machine == 'WCOSS_DELL_P3':
-        os.system('bsub -W '+walltime.strftime('%H:%M')+' -q '+queue+' '
-                  +'-P '+account+' -o '+job_output+' -e '+job_output+' '
-                  +'-J '+job_name+' -M 2048 -R "affinity[core(1)]" '
-                  +job_file)
-        job_check_cmd = ('bjobs -a -u '+user+' -noheader -J '+job_name
-                         +'| grep "RUN\|PEND" | wc -l')
+    if machine == 'WCOSS2':
+        os.system('qsub -V -l walltime='+walltime.strftime('%H:%M:%S')+' '
+                  +'-q '+queue+' -A '+account+' -o '+job_output+' '
+                  +'-e '+job_output+' -N '+job_name+' '
+                  +'-l select=1:ncpus=1 '+job_file)
+        job_check_cmd = ('qselect -s QR -u '+user+' '+'-N '
+                         +job_name+' | wc -l')
     elif machine in ['HERA', 'ORION', 'S4', 'JET']:
         os.system('sbatch --ntasks=1 --time='
                   +walltime.strftime('%H:%M:%S')+' --partition='+queue+' '
@@ -733,13 +733,6 @@ def get_off_machine_data(job_file, job_name, job_output, machine, user, queue,
                   +'--job-name='+job_name+' '+job_file)
         job_check_cmd = ('squeue -u '+user+' -n '+job_name+' '
                          +'-t R,PD -h | wc -l')
-    elif machine == 'WCOSS2':
-        os.system('qsub -V -l walltime='+walltime.strftime('%H:%M:%S')+' '
-                  +'-q '+queue+' -A '+account+' -o '+job_output+' '
-                  +'-e '+job_output+' -N '+job_name+' '
-                  +'-l select=1:ncpus=1 '+job_file)
-        job_check_cmd = ('qselect -s QR -u '+user+' '+'-N '
-                         +job_name+' | wc -l')
     sleep_counter, sleep_checker = 1, 10
     while (sleep_counter*sleep_checker) <= walltime_seconds:
         sleep(sleep_checker)
@@ -751,60 +744,67 @@ def get_off_machine_data(job_file, job_name, job_output, machine, user, queue,
             break
         sleep_counter+=1
 
-def initalize_job_env_dict(use_case, group, use_case_type, use_case_abbrev_type,
-                           job):
+def initalize_job_env_dict(verif_type, group,
+                           verif_case_step_abbrev_type, job):
     """! This initializes a dictionary of environment variables and their
          values to be set for the job pulling from environment variables
          already set previously
          Args:
-             use_case             - string of the use case name
-             group                - string of the group name
-             use_case_type        - string of the type of use case
-             use_case_abbrev_type - string of reference name in config
-             job                  - string of job name
+             verif_type                  - string of the use case name
+             group                       - string of the group name
+             verif_case_step_abbrev_type - string of reference name in config
+                                           and environment variables
+             job                         - string of job name
          Returns:
              job_env_dict - dictionary of job settings
     """
+    os.environ['MET_TMP_DIR'] = os.path.join(
+        os.environ['DATA'], os.environ['VERIF_CASE']+'_'+os.environ['STEP'],
+        'metplus_output', 'tmp'
+    )
+    if not os.path.exists(os.environ['MET_TMP_DIR']):
+        os.makedirs(os.environ['MET_TMP_DIR'])
     job_env_var_list = [
-        'machine', 'HOMEevs', 'FIXevs', 'USHevs', 'HOMEmetplus',
-        'log_met_output_to_metplus', 'metplus_verbosity', 'HOMEmet',
-        'HOMEmet_bin_exec', 'met_verbosity', 'DATA'
+        'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'METPLUS_PATH',
+        'log_met_output_to_metplus', 'metplus_verbosity', 'MET_ROOT',
+        'MET_bin_exec', 'met_verbosity', 'DATA', 'MET_TMP_DIR', 'COMROOT',
+        'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT'
     ]
     job_env_dict = {}
     for env_var in job_env_var_list:
         job_env_dict[env_var] = os.environ[env_var]
-    job_env_dict['MET_TMP_DIR'] = os.path.join(
-        job_env_dict['DATA'], use_case, 'metplus_output', 'tmp'
-    )
-    if not os.path.exists(job_env_dict['MET_TMP_DIR']):
-        os.makedirs(job_env_dict['MET_TMP_DIR'])
-    job_env_dict['USE_CASE'] = use_case
-    job_env_dict['run_job_group_name'] = group
-    if group in ['prep', 'make_met_data']:
-        job_env_dict['USE_CASE_type'] = use_case_type
+    job_env_dict['JOB_GROUP'] = group
+    if group in ['reformat', 'make_met_data']:
+        job_env_dict['VERIF_TYPE'] = verif_type
         job_env_dict['job_name'] = job
-        job_env_dict['fhr_start'] = os.environ[use_case_abbrev_type+'_fhr_min']
-        job_env_dict['fhr_end'] = os.environ[use_case_abbrev_type+'_fhr_max']
-        job_env_dict['fhr_inc'] = os.environ[use_case_abbrev_type+'_fhr_inc']
-        if use_case_type in ['pres_levs', 'means', 'sfc']:
-            use_case_type_valid_hr_list = (
-                os.environ[use_case_abbrev_type+'_valid_hr_list'].split(' ')
-            )
-            job_env_dict['valid_hr_start'] = (
-                use_case_type_valid_hr_list[0].zfill(2)
-            )
-            job_env_dict['valid_hr_end'] = (
-                use_case_type_valid_hr_list[-1].zfill(2)
-            )
-            if len(use_case_type_valid_hr_list) > 1:
-                use_case_type_valid_hr_inc = np.min(
-                    np.diff(np.array(use_case_type_valid_hr_list, dtype=int))
-                )
-            else:
-                use_case_type_valid_hr_inc = 24
-            job_env_dict['valid_hr_inc'] = str(use_case_type_valid_hr_inc)
-        if group == 'make_met_data':
-            job_env_dict['climo_files_dir'] = (
-                os.environ['era_interim_climo_files']
-            )
+    #    job_env_dict['fhr_start'] = os.environ[
+    #        verif_case_step_abbrev_type+'_fhr_min'
+    #    ]
+    #    job_env_dict['fhr_end'] = os.environ[
+    #        verif_case_step_abbrev_type+'_fhr_max'
+    #    ]
+    #    job_env_dict['fhr_inc'] = os.environ[
+    #        verif_case_step_abbrev_type+'_fhr_inc'
+    #    ]
+    #    if use_case_type in ['pres_levs', 'means', 'sfc']:
+    #        use_case_type_valid_hr_list = (
+    #            os.environ[use_case_abbrev_type+'_valid_hr_list'].split(' ')
+    #        )
+    #        job_env_dict['valid_hr_start'] = (
+    #            use_case_type_valid_hr_list[0].zfill(2)
+    #        )
+    #        job_env_dict['valid_hr_end'] = (
+    #            use_case_type_valid_hr_list[-1].zfill(2)
+    #        )
+    #        if len(use_case_type_valid_hr_list) > 1:
+    #            use_case_type_valid_hr_inc = np.min(
+    #                np.diff(np.array(use_case_type_valid_hr_list, dtype=int))
+    #            )
+    #        else:
+    #            use_case_type_valid_hr_inc = 24
+    #        job_env_dict['valid_hr_inc'] = str(use_case_type_valid_hr_inc)
+    #    if group == 'make_met_data':
+    #        job_env_dict['climo_files_dir'] = (
+    #            os.environ['era_interim_climo_files']
+    #        )
     return job_env_dict
