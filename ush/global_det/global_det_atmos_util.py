@@ -760,7 +760,7 @@ def initalize_job_env_dict(verif_type, group,
     """
     os.environ['MET_TMP_DIR'] = os.path.join(
         os.environ['DATA'], os.environ['VERIF_CASE']+'_'+os.environ['STEP'],
-        'metplus_output', 'tmp'
+        'METplus_output', 'tmp'
     )
     if not os.path.exists(os.environ['MET_TMP_DIR']):
         os.makedirs(os.environ['MET_TMP_DIR'])
@@ -777,15 +777,15 @@ def initalize_job_env_dict(verif_type, group,
     if group in ['reformat', 'make_met_data']:
         job_env_dict['VERIF_TYPE'] = verif_type
         job_env_dict['job_name'] = job
-    #    job_env_dict['fhr_start'] = os.environ[
-    #        verif_case_step_abbrev_type+'_fhr_min'
-    #    ]
-    #    job_env_dict['fhr_end'] = os.environ[
-    #        verif_case_step_abbrev_type+'_fhr_max'
-    #    ]
-    #    job_env_dict['fhr_inc'] = os.environ[
-    #        verif_case_step_abbrev_type+'_fhr_inc'
-    #    ]
+        job_env_dict['fhr_start'] = os.environ[
+            verif_case_step_abbrev_type+'_fhr_min'
+        ]
+        job_env_dict['fhr_end'] = os.environ[
+            verif_case_step_abbrev_type+'_fhr_max'
+        ]
+        job_env_dict['fhr_inc'] = os.environ[
+            verif_case_step_abbrev_type+'_fhr_inc'
+        ]
     #    if use_case_type in ['pres_levs', 'means', 'sfc']:
     #        use_case_type_valid_hr_list = (
     #            os.environ[use_case_abbrev_type+'_valid_hr_list'].split(' ')

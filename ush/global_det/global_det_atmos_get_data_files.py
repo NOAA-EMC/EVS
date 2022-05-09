@@ -166,7 +166,9 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                         print("WARNING: the model precip file "
                               "accumulation for "+model+" ("
                               +model_file_format+") is greater than "
-                              +"the verifying accumulation of 24 hours")
+                              +"the verifying accumulation of 24 hours,"
+                              +"please remove")
+                        sys.exit(1)
                     if len(fhrs_24hr_accum_list) == nfiles_24hr_accum:
                         for fhr in fhrs_24hr_accum_list:
                             gda_util.get_model_file(

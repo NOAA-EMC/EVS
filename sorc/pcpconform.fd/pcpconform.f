@@ -104,6 +104,7 @@
         read(file1(len1-10:len1-4),'(i3,x,i3)') kpds(14), kpds(15)
         kpds(5)=61     ! parameter: APCP (was '255')
         kpds(13)=1     ! forecast time unit is 'hour' (was '0')
+        kpds(16)=4     ! forecast time indiciator accumulation
         kpds(19)=2     ! Version number of parameter table (was '255') 
         kpds(22)=3     ! Decimal scale factor (was '0')
         kgds(8)=359750 ! Longitude of the extreme point; was '-2147233)

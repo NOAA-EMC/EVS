@@ -41,6 +41,7 @@ evs_global_det_atmos_settings_dict = {
                             'g2gs_pres_levs_fhr_inc',
                             'g2gs_precip_file_format_list',
                             'g2gs_precip_file_accum_list',
+                            'g2gs_precip_var_list',
                             'g2gs_precip_cycle_list',
                             'g2gs_precip_fhr_min', 'g2gs_precip_fhr_max',
                             'g2gs_precip_fhr_inc',
@@ -151,6 +152,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                     +'_precip_file_format_list')
     check_config_var_len_list.append(VERIF_CASE_STEP_abbrev
                                     +'_precip_file_accum_list')
+    check_config_var_len_list.append(VERIF_CASE_STEP_abbrev
+                                    +'_precip_var_list')
 for config_var in check_config_var_len_list:
     if len(os.environ[config_var].split(' ')) \
             != len(os.environ['model_list'].split(' ')):

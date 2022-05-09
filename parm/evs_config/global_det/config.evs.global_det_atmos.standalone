@@ -66,6 +66,7 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
     #g2gs_pres_levs_truth_format_list: list of truth file format(s)
     #g2gs_precip_file_format_list:     list of precip file format(s)
     #g2gs_precip_file_accum_list:      list of precip accumulations in file: hours (HH) or continuous
+    #g2gs_precip_var_list:             list of the precip variable name to use
     #g2gs_*_cycle_list:        forecst cycles to be included in verification: HH
     #g2gs_*_valid_hr_list:     valid hours to be included in verification: HH
     #g2gs_*_fhr_min:           forecast hour to start verification HH[H]
@@ -81,6 +82,7 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
     export g2gs_pres_levs_fhr_inc=6
     export g2gs_precip_file_format_list="/lfs/h1/ops/prod/com/gfs/v16.2/gfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/atmos/gfs.t{init?fmt=%2H}z.pgrb2.0p25.f{lead?fmt=%3H}"
     export g2gs_precip_file_accum_list="continuous"
+    export g2gs_precip_var_list="APCP"
     export g2gs_precip_cycle_list="00 06 12 18"
     export g2gs_precip_fhr_min=24
     export g2gs_precip_fhr_max=384
