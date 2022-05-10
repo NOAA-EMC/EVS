@@ -216,6 +216,17 @@ PROGRAM ecm_gfs_look_alike
 			case(164)
 				kpds(5)=71; kpds(6)=244 ;kpds(7)=0
 				gfs=100.*ecm
+                !
+                ! SF    0 144,1,0 ** surface Snowfall [m of water equivalent]
+                ! WEASD  0  65,1,0 ** 
+                        case(144)
+                                kpds(5)=65
+                                gfs=1000.*ecm
+                !
+                ! SD    0 141,1,0 ** surface Snow depth [m of water equivalent]
+                ! SNOD  0  66,1,0 ** 
+                        case(141)
+                                kpds(5)=66
 		!
 		! TPsfc    0 228,1,0  ** surface Total precipitation [m]
 		! APCPsfc  0  61,1,0  ** surface Total precipitation [kg/m^2]

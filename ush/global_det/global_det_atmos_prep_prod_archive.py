@@ -85,13 +85,13 @@ global_det_model_dict = {
     'ecmwf': {'prod_fcst_file_format': os.path.join(DCOMROOT,
                                                     '{init?fmt=%Y%m%d}',
                                                     'wgrbbul', 'ecmwf',
-                                                    'DCD{init?fmt=%m%d%H}00'
+                                                    'U1D{init?fmt=%m%d%H}00'
                                                     +'{valid?fmt=%m%d%H}001'),
               'prod_anl_file_format': os.path.join(DCOMROOT,
                                                    '{init?fmt=%Y%m%d}',
                                                    'wgrbbul', 'ecmwf',
-                                                   'DCD{init?fmt=%m%d%H}00'
-                                                   +'{init?fmt=%m%d%H}001'),
+                                                   'U1D{init?fmt=%m%d%H}00'
+                                                   +'{init?fmt=%m%d%H}011'),
               'prod_precip_file_format': os.path.join(DCOMROOT,
                                                       '{init?fmt=%Y%m%d}',
                                                       'qpf_verif',
