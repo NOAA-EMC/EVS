@@ -468,7 +468,7 @@ def prep_prod_ecmwf_file(source_file, dest_file, forecast_hour, prep_method):
             )
         if check_file_exists_size(working_file1):
             run_shell_command(
-                [ECMGFSLOOKALIKENEW, source_file, prepped_file]
+                [ECMGFSLOOKALIKENEW, working_file1, prepped_file]
             )
     elif 'precip' in prep_method:
         if check_file_exists_size(source_file):
