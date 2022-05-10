@@ -447,12 +447,26 @@ def prep_prod_ecmwf_file(source_file, dest_file, forecast_hour, prep_method):
     EXECevs = os.environ['EXECevs']
     ECMGFSLOOKALIKENEW = os.path.join(EXECevs, 'ecm_gfs_look_alike_new')
     PCPCONFORM = os.path.join(EXECevs, 'pcpconform')
+    WGRIB = os.environ['WGRIB']
     # Working file names
     prepped_file = os.path.join(os.getcwd(),
                                 'atmos.'+dest_file.rpartition('/')[2])
+    working_file1 = prepped_file+'.tmp1'
     # Prep file
     if prep_method == 'full':
+        if forecast_hour == 'anl':
+            wgrib_fhr = ':anl'
+        elif int(forecast_hour) == 0:
+            wgrib_fhr = ':anl'
+        else:
+            wgrib_fhr = ':'+forecast_hour+'hr'
         if check_file_exists_size(source_file):
+            run_shell_command(
+                [WGRIB+' '+source_file+' | grep "'+wgrib_fhr+'" | '
+                 +WGRIB+' '+source_file+' -i -grib -o '
+                 +working_file1]
+            )
+        if check_file_exists_size(working_file1):
             run_shell_command(
                 [ECMGFSLOOKALIKENEW, source_file, prepped_file]
             )
