@@ -53,10 +53,10 @@ export RUN=${RUN:-atmos}
 # Define COMIN/COMOUT variables
 ####################################
 ##COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDY)}
-export COMIN=/lfs/h2/emc/stmp/Mallory.Row/evs_output/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE
+export COMIN=/lfs/h2/emc/stmp/$USER/evs_output/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE
 #export COMINgfs=${COMN:-$(compath.py gfs/${gfs_ver})}
 ##COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDY)}
-export COMOUT=/lfs/h2/emc/stmp/Mallory.Row/evs_output/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE
+export COMOUT=/lfs/h2/emc/stmp/$USER/evs_output/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE
 mkdir -p $COMOUT
 
 #######################################################################
