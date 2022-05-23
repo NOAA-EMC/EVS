@@ -14,9 +14,12 @@ echo
 ## Global Deterministic Atmospheric Prep
 ############################################################
 python ${USHevs}/global_det/global_det_atmos_prep_prod_archive.py
+status=$?
+[[ $status -ne 0 ]] && exit $status
+[[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/global_det/global_det_atmos_prep_prod_archive.py"
 
 if [ $SENDCOM = YES ]; then
-    for MODEL in cfs cmc cmc_regional dwd ecmwf fnmoc gfs imd jma metfra ukmet; do
+    for MODEL in $MODEL_LIST; do
         mkdir -p $COMOUT/$MODEL
         for FILE in $DATA/$RUN.$INITDATE/$MODEL/*; do
             cp -v $FILE $COMOUT/$MODEL/.

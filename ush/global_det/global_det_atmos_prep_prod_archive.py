@@ -9,6 +9,7 @@ import datetime
 import glob
 import shutil
 import global_det_atmos_util as gda_util
+import sys
 
 print("BEGIN: "+os.path.basename(__file__))
 
@@ -25,6 +26,7 @@ NET = os.environ['NET']
 RUN = os.environ['RUN']
 COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
+MODEL_list = os.environ['MODEL_list'].split(' ')
 gfs_ver = os.environ['gfs_ver']
 cmc_ver = os.environ['cmc_ver']
 cfs_ver = os.environ['cfs_ver']
@@ -207,9 +209,12 @@ arch_precip_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
                                        +'t{init?fmt=%2H}z.'
                                        +'f{lead?fmt=%3H}')
 
-for model in list(global_det_model_dict.keys()):
-    print("---- Prepping data for "+model+" for init "+INITDATE)
-    model_dict = global_det_model_dict[model]
+for MODEL in MODEL_list:
+    if MODEL not in list(global_det_model_dict.keys()):
+        print("ERROR: "+MODEL+" not recongized")
+        sys.exit(1)
+    print("---- Prepping data for "+MODEL+" for init "+INITDATE)
+    model_dict = global_det_model_dict[MODEL]
     for cycle in model_dict['cycles']:
         CDATE = INITDATE+cycle
         CDATE_dt = datetime.datetime.strptime(CDATE, '%Y%m%d%H')
@@ -223,34 +228,34 @@ for model in list(global_det_model_dict.keys()):
                 )
                 arch_fcst_file = gda_util.format_filler(
                     arch_fcst_file_format, VDATE_dt, CDATE_dt,
-                    str(fcst_hr), {'model': model}
+                    str(fcst_hr), {'model': MODEL}
                 )
                 if not os.path.exists(arch_fcst_file):
                     print("----> Trying to create "+arch_fcst_file)
                     arch_fcst_file_dir = arch_fcst_file.rpartition('/')[0]
                     if not os.path.exists(arch_fcst_file_dir):
                         os.makedirs(arch_fcst_file_dir)
-                        if model in ['ecmwf']:
+                        if MODEL in ['ecmwf']:
                              gda_util.run_shell_command(['chmod', '750',
                                                          arch_fcst_file_dir])
                              gda_util.run_shell_command(['chgrp', 'rstprod',
                                                          arch_fcst_file_dir])
-                    if model == 'gfs':
+                    if MODEL == 'gfs':
                         gda_util.prep_prod_gfs_file(prod_fcst_file,
                                                     arch_fcst_file,
                                                     str(fcst_hr),
                                                     'full')
-                    elif model == 'jma':
+                    elif MODEL == 'jma':
                         gda_util.prep_prod_jma_file(prod_fcst_file,
                                                     arch_fcst_file,
                                                     str(fcst_hr),
                                                     'full')
-                    elif model == 'ecmwf':
+                    elif MODEL == 'ecmwf':
                         gda_util.prep_prod_ecmwf_file(prod_fcst_file,
                                                       arch_fcst_file,
                                                       str(fcst_hr),
                                                      'full')
-                    elif model == 'ukmet':
+                    elif MODEL == 'ukmet':
                         gda_util.prep_prod_ukmet_file(prod_fcst_file,
                                                       arch_fcst_file,
                                                       str(fcst_hr),
@@ -264,7 +269,7 @@ for model in list(global_det_model_dict.keys()):
                 )
                 arch_precip_file = gda_util.format_filler(
                     arch_precip_file_format, VDATE_dt,
-                    CDATE_dt, str(fcst_hr), {'model': model}
+                    CDATE_dt, str(fcst_hr), {'model': MODEL}
                 )
                 if not os.path.exists(arch_precip_file) and fcst_hr != 0:
                     print("----> Trying to create "+arch_precip_file)
@@ -273,7 +278,7 @@ for model in list(global_det_model_dict.keys()):
                     )
                     if not os.path.exists(arch_precip_file_dir):
                         os.makedirs(arch_precip_file_dir)
-                        if model in ['ecmwf']:
+                        if MODEL in ['ecmwf']:
                              gda_util.run_shell_command(
                                  ['chmod', '750', arch_precip_file_dir]
                              )
@@ -281,32 +286,32 @@ for model in list(global_det_model_dict.keys()):
                                  ['chgrp', 'rstprod',
                                    arch_precip_file_dir]
                              )
-                    if model == 'gfs':
+                    if MODEL == 'gfs':
                         gda_util.prep_prod_gfs_file(prod_precip_file,
                                                     arch_precip_file,
                                                     str(fcst_hr),
                                                     'precip')
-                    elif model == 'jma':
+                    elif MODEL == 'jma':
                         gda_util.prep_prod_jma_file(prod_precip_file,
                                                     arch_precip_file,
                                                     str(fcst_hr),
                                                     'precip')
-                    elif model == 'ecmwf':
+                    elif MODEL == 'ecmwf':
                         gda_util.prep_prod_ecmwf_file(prod_precip_file,
                                                       arch_precip_file,
                                                       str(fcst_hr),
                                                       'precip')
-                    elif model == 'ukmet':
+                    elif MODEL == 'ukmet':
                         gda_util.prep_prod_ukmet_file(prod_precip_file,
                                                       arch_precip_file,
                                                       str(fcst_hr),
                                                       'precip')
-                    elif model == 'dwd':
+                    elif MODEL == 'dwd':
                         gda_util.prep_prod_dwd_file(prod_precip_file,
                                                     arch_precip_file,
                                                     str(fcst_hr),
                                                     'precip')
-                    elif model == 'metfra':
+                    elif MODEL == 'metfra':
                         gda_util.prep_prod_metfra_file(prod_precip_file,
                                                        arch_precip_file,
                                                        str(fcst_hr),
@@ -322,34 +327,34 @@ for model in list(global_det_model_dict.keys()):
             )
             arch_anl_file = gda_util.format_filler(
                 arch_anl_file_format, CDATE_dt, CDATE_dt,
-                'anl', {'model': model}
+                'anl', {'model': MODEL}
             )
             if not os.path.exists(arch_anl_file):
                 arch_anl_file_dir = arch_anl_file.rpartition('/')[0]
                 if not os.path.exists(arch_anl_file_dir):
                     os.makedirs(arch_anl_file_dir)
-                    if model in ['ecmwf']:
+                    if MODEL in ['ecmwf']:
                          gda_util.run_shell_command(['chmod', '750',
                                                      arch_anl_file_dir])
                          gda_util.run_shell_command(['chgrp', 'rstprod',
                                                      arch_anl_file_dir])
                 print("----> Trying to create "+arch_anl_file)
-                if model == 'gfs':
+                if MODEL == 'gfs':
                     gda_util.prep_prod_gfs_file(prod_anl_file,
                                                 arch_anl_file,
                                                 'anl',
                                                 'full')
-                elif model == 'jma':
+                elif MODEL == 'jma':
                     gda_util.prep_prod_jma_file(prod_anl_file,
                                                 arch_anl_file,
                                                 'anl',
                                                 'full')
-                elif model == 'ecmwf':
+                elif MODEL == 'ecmwf':
                     gda_util.prep_prod_ecmwf_file(prod_anl_file,
                                                   arch_anl_file,
                                                   'anl',
                                                   'full')
-                elif model == 'ukmet':
+                elif MODEL == 'ukmet':
                     gda_util.prep_prod_ukmet_file(prod_anl_file,
                                                   arch_anl_file,
                                                   'anl',
