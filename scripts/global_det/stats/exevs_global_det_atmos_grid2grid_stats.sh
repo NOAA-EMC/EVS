@@ -82,10 +82,18 @@ done
 
 # Copy files to desired location
 if [ $SENDCOM = YES ]; then
-    cp -r $DATA/${VERIF_CASE}_${STEP}/METplus_output/$RUN.* $COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/.
-    for model in $model_list; do
-        cp -r $DATA/${VERIF_CASE}_${STEP}/METplus_output/$model.* $COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/.
+    DATE=${start_date}
+    while [ $DATE -le ${end_date} ] ; do
+        ls $DATA/${VERIF_CASE}_${STEP}/METplus_output/$RUN.$DATE
+        for MODEL in $model_list; do
+            ls $DATA/${VERIF_CASE}_${STEP}/METplus_output/$MODEL.$DATE
+        done
+        DATE=$(echo $($NDATE +24 ${DATE}00 ) |cut -c 1-8 )
     done
+    #cp -r $DATA/${VERIF_CASE}_${STEP}/METplus_output/$RUN.* $COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/.
+    #for model in $model_list; do
+    #    cp -r $DATA/${VERIF_CASE}_${STEP}/METplus_output/$model.* $COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/.
+    #done
 fi
 
 # Send data to METviewer AWS server

@@ -74,12 +74,24 @@ reformat_model_jobs_dict = {
     'pres_levs': {},
     'means': {},
     'ozone': {},
-    'precip': {'24hrAccum': {'env': {'valid_hr': '12'},
+    'precip': {'24hrAccum': {'env': {'valid_hr': '12',
+                                     'MODEL_template': ('{MODEL}.precip.'
+                                                        +'{init?fmt=%Y%m%d%H}.'
+                                                        +'f{lead?fmt=%HHH}')},
                              'commands': [metplus_cmd_prefix
                                           +'PCPCombine_fcstGLOBAL_DET_'
-                                          +'24hrAccum.conf']}},
+                                          +'24hrAccum_precip.conf']}},
     'sea_ice': {},
-    'snow': {},
+    'snow': {'24hrAccum_WaterEqv': {'env': {'valid_hr': '12',
+                                            'MODEL_var': 'WEASD'},
+                                    'commands': [metplus_cmd_prefix
+                                                 +'PCPCombine_fcstGLOBAL_DET_'
+                                                 +'24hrAccum_snow.conf']},
+             '24hrAccum_Depth': {'env': {'valid_hr': '12',
+                                         'MODEL_var': 'SNOD'},
+                                 'commands': [metplus_cmd_prefix
+                                              +'PCPCombine_fcstGLOBAL_DET_'
+                                              +'24hrAccum_snow.conf']}},
     'sst': {},
 }
 
