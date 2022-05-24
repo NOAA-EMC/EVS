@@ -25,6 +25,27 @@ def run_shell_command(command):
         print("ERROR: "+' '.join(run_command.args)+" gave return code "
               +str(run_command.returncode))
 
+def metplus_command(conf_file_name):
+    """! Write out full call to METplus
+
+         Args:
+             conf_file_name - METplus conf file name (string)
+
+         Returns:
+             metplus_cmd - full call to METplus (string)
+
+    """
+    run_metplus = os.path.join(os.environ['METPLUS_PATH'], 'ush',
+                               'run_metplus.py')
+    machine_conf = os.path.join(os.environ['PARMevs'], 'metplus_config',
+                                'machine.conf')
+    conf_file = os.path.join(os.environ['PARMevs'], 'metplus_config',
+                             os.environ['COMPONENT'],
+                             os.environ['RUN']+'_'+os.environ['VERIF_CASE'],
+                             os.environ['STEP'], conf_file_name)
+    metplus_cmd = run_metplus+' -c '+machine_conf+' -c '+conf_file
+    return metplus_cmd
+
 def check_file_exists_size(file_name):
     """! Checks to see if file exists and has size greater than 0
 

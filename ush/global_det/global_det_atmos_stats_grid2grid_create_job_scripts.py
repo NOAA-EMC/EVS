@@ -44,15 +44,6 @@ precip_var_list = (os.environ \
                    [VERIF_CASE_STEP_abbrev+'_precip_var_list'] \
                     .split(' '))
 
-# Set up METplus job command dictionary
-metplus_cmd_prefix = (
-    os.path.join(METPLUS_PATH, 'ush', 'run_metplus.py')
-    +' -c '+os.path.join(PARMevs, 'metplus_config', 'machine.conf')
-    +' -c '+os.path.join(PARMevs, 'metplus_config', COMPONENT,
-                         RUN+'_'+VERIF_CASE, STEP)
-    +'/'
-)
-
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
 start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
 end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
@@ -64,8 +55,9 @@ reformat_obs_jobs_dict = {
     'means': {},
     'ozone': {},
     'precip': {'24hrCCPA': {'env': {},
-                            'commands': [metplus_cmd_prefix
-                                         +'PCPCombine_obs24hrCCPA.conf']}},
+                            'commands': [gda_util.metplus_command(
+                                             'PCPCombine_obs24hrCCPA.conf'
+                                         )]}},
     'sea_ice': {},
     'snow': {},
     'sst': {},
@@ -77,21 +69,25 @@ reformat_model_jobs_dict = {
     'precip': {'24hrAccum': {'env': {'valid_hr': '12',
                                      'MODEL_template': ('{MODEL}.precip.'
                                                         +'{init?fmt=%Y%m%d%H}.'
-                                                        +'f{lead?fmt=%HHH}')},
-                             'commands': [metplus_cmd_prefix
-                                          +'PCPCombine_fcstGLOBAL_DET_'
-                                          +'24hrAccum_precip.conf']}},
+                                                        +'f{lead?fmt=%HHH}')
+                             },
+                             'commands': [gda_util.metplus_command(
+                                              'PCPCombine_fcstGLOBAL_DET_'
+                                              +'24hrAccum_precip.conf'
+                                          )]}},
     'sea_ice': {},
     'snow': {'24hrAccum_WaterEqv': {'env': {'valid_hr': '12',
                                             'MODEL_var': 'WEASD'},
-                                    'commands': [metplus_cmd_prefix
-                                                 +'PCPCombine_fcstGLOBAL_DET_'
-                                                 +'24hrAccum_snow.conf']},
+                                    'commands': [gda_util.metplus_command(
+                                                     'PCPCombine_fcstGLOBAL_'
+                                                     +'DET_24hrAccum_snow.conf'
+                                                 )]},
              '24hrAccum_Depth': {'env': {'valid_hr': '12',
                                          'MODEL_var': 'SNOD'},
-                                 'commands': [metplus_cmd_prefix
-                                              +'PCPCombine_fcstGLOBAL_DET_'
-                                              +'24hrAccum_snow.conf']}},
+                                 'commands': [gda_util.metplus_command(
+                                                  'PCPCombine_fcstGLOBAL_'
+                                                  +'DET_24hrAccum_snow.conf'
+                                              )]}},
     'sst': {},
 }
 
