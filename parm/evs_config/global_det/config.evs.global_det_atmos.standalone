@@ -29,7 +29,7 @@ export RUN_GRID2OBS_PLOTS="NO"
 #model_file_format_list: file format of model files
 export model_list="GFS"
 export model_stat_dir_list="/lfs/h2/emc/stmp/$USER"
-export model_file_format_list="/lfs/h1/ops/prod/com/gfs/v16.2/gfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/atmos/gfs.t{init?fmt=%2H}z.pgrb2.0p25.f{lead?fmt=%3H}"
+export model_file_format_list="/lfs/h1/ops/prod/com/gfs/v16.2/gfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/atmos/gfs.t{init?fmt=%2H}z.pgrb2.0p50.f{lead?fmt=%3H}"
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory
 export OUTPUTROOT="/lfs/h2/emc/stmp/$USER/evs_global_det_atmos_standalone"
@@ -74,7 +74,7 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
     #g2gs_*_fhr_inc:           frequency to verify forecast hours at HH[H]
     export g2gs_type_list="pres_levs precip snow sst sea_ice ozone means"
     export g2gs_pres_levs_truth_name_list="GFS_ANL"
-    export g2gs_pres_levs_truth_format_list="/lfs/h1/ops/prod/com/gfs/v16.2/gfs.{valid?fmt=%Y%m%d}/{valid?fmt=%2H}/atmos/gfs.t{valid?fmt=%2H}z.pgrb2.0p25.anl"
+    export g2gs_pres_levs_truth_format_list="/lfs/h1/ops/prod/com/gfs/v16.2/gfs.{valid?fmt=%Y%m%d}/{valid?fmt=%2H}/atmos/gfs.t{valid?fmt=%2H}z.pgrb2.0p50.anl"
     export g2gs_pres_levs_cycle_list="00 06 12 18"
     export g2gs_pres_levs_valid_hr_list="00 06 12 18"
     export g2gs_pres_levs_fhr_min=00

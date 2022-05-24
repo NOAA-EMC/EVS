@@ -50,14 +50,14 @@ global_det_model_dict = {
                                                   '{init?fmt=%2H}',
                                                   'atmos',
                                                   'gfs.t{init?fmt=%2H}z.'
-                                                  +'pgrb2.0p25.'
+                                                  +'pgrb2.0p50.'
                                                   +'f{lead?fmt=%3H}'),
             'prod_anl_file_format': os.path.join(COMROOT, 'gfs', gfs_ver,
                                                  'gfs.{init?fmt=%Y%m%d}',
                                                  '{init?fmt=%2H}',
                                                  'atmos',
                                                  'gfs.t{init?fmt=%2H}z.'
-                                                 +'pgrb2.0p25.anl'),
+                                                 +'pgrb2.0p50.anl'),
             'prod_precip_file_format': os.path.join(COMROOT, 'gfs', gfs_ver,
                                                     'gfs.{init?fmt=%Y%m%d}',
                                                     '{init?fmt=%2H}',
