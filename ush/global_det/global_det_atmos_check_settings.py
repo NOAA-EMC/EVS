@@ -16,6 +16,7 @@ print("BEGIN: "+os.path.basename(__file__))
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
+config = os.environ['config']
 
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
 # Set up setting names
@@ -33,47 +34,31 @@ evs_global_det_atmos_settings_dict = {
                'met_verbosity','log_met_output_to_metplus', 'KEEPDATA',
                'SENDCOM'],
     'modules': ['MET_ROOT', 'METPLUS_PATH'],
-    'RUN_GRID2GRID_STATS': ['g2gs_type_list', 'g2gs_pres_levs_truth_name_list',
-                            'g2gs_pres_levs_truth_format_list',
-                            'g2gs_pres_levs_cycle_list',
-                            'g2gs_pres_levs_valid_hr_list',
-                            'g2gs_pres_levs_fhr_min', 'g2gs_pres_levs_fhr_max',
-                            'g2gs_pres_levs_fhr_inc',
-                            'g2gs_precip_file_format_list',
-                            'g2gs_precip_file_accum_list',
-                            'g2gs_precip_var_list',
-                            'g2gs_precip_cycle_list',
-                            'g2gs_precip_fhr_min', 'g2gs_precip_fhr_max',
-                            'g2gs_precip_fhr_inc',
-                            'g2gs_snow_cycle_list',
-                            'g2gs_snow_fhr_min', 'g2gs_snow_fhr_max',
-                            'g2gs_snow_fhr_inc',
-                            'g2gs_sst_cycle_list',
-                            'g2gs_sst_fhr_min', 'g2gs_sst_fhr_max',
-                            'g2gs_sst_fhr_inc',
-                            'g2gs_sea_ice_cycle_list',
-                            'g2gs_sea_ice_fhr_min', 'g2gs_sea_ice_fhr_max',
-                            'g2gs_sea_ice_fhr_inc',
-                            'g2gs_ozone_cycle_list',
-                            'g2gs_ozone_fhr_min', 'g2gs_ozone_fhr_max',
-                            'g2gs_ozone_fhr_inc',
-                            'g2gs_means_cycle_list',
-                            'g2gs_means_valid_hr_list',
-                            'g2gs_means_fhr_min', 'g2gs_means_fhr_max'],
-    'RUN_GRID2OBS_STATS': ['g2os_type_list', 'g2os_pres_levs_cycle_list',
-                           'g2os_pres_levs_valid_hr_list',
-                           'g2os_pres_levs_fhr_min', 'g2os_pres_levs_fhr_max',
-                           'g2os_pres_levs_fhr_inc',
-                           'g2os_sfc_cycle_list',
-                           'g2os_sfc_valid_hr_list',
-                           'g2os_sfc_fhr_min', 'g2os_sfc_fhr_max',
-                           'g2os_sfc_fhr_inc',
-                           'g2os_flux_cycle_list',
-                           'g2os_flux_fhr_min', 'g2os_flux_fhr_max',
-                           'g2os_flux_fhr_inc',
-                           'g2os_sea_ice_cycle_list',
-                           'g2os_sea_ice_fhr_min', 'g2os_sea_ice_fhr_max',
-                           'g2os_sea_ice_fhr_inc',]
+    'RUN_GRID2GRID_STATS': ['g2gs_type_list'],
+    'RUN_GRID2OBS_STATS': ['g2os_type_list']     
+}
+verif_case_step_settings_dict = {
+    'RUN_GRID2GRID_STATS': {
+        'pres_levs': ['truth_name_list', 'truth_format_list',
+                      'cycle_list', 'valid_hr_list',
+                      'fhr_min', 'fhr_max', 'fhr_inc'],
+        'means': ['cycle_list', 'valid_hr_list',
+                  'fhr_min', 'fhr_max', 'fhr_inc'],
+        'ozone': ['cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+        'precip': ['file_format_list', 'file_accum_list', 'var_list',
+                   'cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+        'snow': ['cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+        'sea_ice': ['cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+        'sst': ['cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc']
+    },
+    'RUN_GRID2OBS_STATS': {
+        'pres_levs': ['cycle_list', 'valid_hr_list',
+                      'fhr_min', 'fhr_max', 'fhr_inc'],
+        'sfc': ['cycle_list', 'valid_hr_list',
+                'fhr_min', 'fhr_max', 'fhr_inc'],
+        'flux': ['cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+        'sea_ice': ['cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc']
+    }
 }
 
 # Select dictionary to check
@@ -94,9 +79,22 @@ for env_check_group in env_check_group_list:
                       +"was not set through previous EVS scripts")
             else:
                 print("ERROR: "+env_var_check+" not set in environment, "
-                      +"review modules loaded in "
-                      +"global_det_atmos_load_modules.sh")
+                      +"check configuration file "+config)
             sys.exit(1)
+verif_type_list  = os.environ[VERIF_CASE_STEP_abbrev+'_type_list'].split(' ')
+for verif_type in verif_type_list:
+    verif_type_env_var_list = (
+        verif_case_step_settings_dict[
+            'RUN_'+VERIF_CASE.upper()+'_'+STEP.upper()
+        ][verif_type]
+    )
+    for verif_type_env_var in verif_type_env_var_list:
+         env_var_check = (VERIF_CASE_STEP_abbrev+'_'+verif_type+'_'
+                          +verif_type_env_var)
+         if not env_var_check in os.environ:
+              print("ERROR: "+env_var_check+" not set in environment, "
+                    +"check configuration file "+config)
+              sys.exit(1)
 
 # Do date check
 date_check_name_list = ['start', 'end']
@@ -129,13 +127,15 @@ VERIF_CASE_STEP_type_list = (
     os.environ[VERIF_CASE_STEP_abbrev+'_type_list'].split(' ')
 )
 valid_VERIF_CASE_STEP_type_opts_dict = {
-    'grid2grid_stats': ['pres_levs', 'precip', 'snow', 'sst', 'sea_ice',
-                        'ozone', 'means'],
-    'grid2obs_stats': ['pres_levs', 'sfc', 'flux', 'sea_ice']
+    'RUN_GRID2GRID_STATS': ['pres_levs', 'precip', 'snow', 'sst', 'sea_ice',
+                            'ozone', 'means'],
+    'RUN_GRID2OBS_STATS': ['pres_levs', 'sfc', 'flux', 'sea_ice']
 }
 for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
     if VERIF_CASE_STEP_type \
-            not in valid_VERIF_CASE_STEP_type_opts_dict[VERIF_CASE_STEP]:
+            not in valid_VERIF_CASE_STEP_type_opts_dict[
+            'RUN_'+VERIF_CASE.upper()+'_'+STEP.upper()
+            ]:
         print("ERROR: "+VERIF_CASE_STEP_type+" not a valid option for "
               +VERIF_CASE_STEP_abbrev+"_type_list. Valid options are "
               +','.join(valid_VERIF_CASE_STEP_type_opts_dict[VERIF_CASE_STEP]))
@@ -143,17 +143,30 @@ for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
 
 # Do check for list variables lengths
 check_config_var_len_list = ['model_stat_dir_list', 'model_file_format_list']
-if VERIF_CASE_STEP == 'grid2grid_stats':
-    check_config_var_len_list.append(VERIF_CASE_STEP_abbrev
-                                    +'_pres_levs_truth_name_list')
-    check_config_var_len_list.append(VERIF_CASE_STEP_abbrev
-                                    +'_pres_levs_truth_format_list')
-    check_config_var_len_list.append(VERIF_CASE_STEP_abbrev
-                                    +'_precip_file_format_list')
-    check_config_var_len_list.append(VERIF_CASE_STEP_abbrev
-                                    +'_precip_file_accum_list')
-    check_config_var_len_list.append(VERIF_CASE_STEP_abbrev
-                                    +'_precip_var_list')
+verif_case_step_check_len_dict = {
+    'RUN_GRID2GRID_STATS': {
+        'pres_levs': ['truth_name_list', 'truth_format_list'],
+        'means': [],
+        'ozone': [],
+        'precip': ['file_format_list', 'file_accum_list', 'var_list'],
+        'snow': [],
+        'sea_ice': [],
+        'sst': []
+    },
+    'RUN_GRID2OBS_STATS': {
+        'pres_levs': [],
+        'sfc': [],
+        'flux': [],
+        'sea_ice': []
+    }
+}
+for verif_type in verif_type_list:
+    for check_list in verif_case_step_check_len_dict[
+            'RUN_'+VERIF_CASE.upper()+'_'+STEP.upper()
+             ][verif_type]:
+        check_config_var_len_list.append(
+            VERIF_CASE_STEP_abbrev+'_'+verif_type+'_'+check_list
+        )
 for config_var in check_config_var_len_list:
     if len(os.environ[config_var].split(' ')) \
             != len(os.environ['model_list'].split(' ')):
@@ -161,7 +174,7 @@ for config_var in check_config_var_len_list:
            +str(len(os.environ[config_var].split(' ')))+", values="
            +os.environ[config_var]+") not equal to length of model_list "
            +"(length="+str(len(os.environ['model_list'].split(' ')))+", "
-           +"values="+os.environ['model_list']+")")
+           +"values="+os.environ['model_list']+", check "+config+")")
      sys.exit(1)
 
 # Set valid list of options settings
