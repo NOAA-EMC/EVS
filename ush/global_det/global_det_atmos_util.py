@@ -3,6 +3,7 @@ import datetime
 import numpy as np
 import subprocess
 import shutil
+import sys
 from time import sleep
 
 def run_shell_command(command):
@@ -43,8 +44,32 @@ def metplus_command(conf_file_name):
                              os.environ['COMPONENT'],
                              os.environ['RUN']+'_'+os.environ['VERIF_CASE'],
                              os.environ['STEP'], conf_file_name)
+    if not os.path.exists(conf_file):
+        print("ERROR: "+conf_file+" DOES NOT EXIST")
+        sys.exit(1)
     metplus_cmd = run_metplus+' -c '+machine_conf+' -c '+conf_file
     return metplus_cmd
+
+def python_command(python_script_name, script_arg_list):
+    """! Write out full call to python
+
+         Args:
+             python_script_name - python script name (string)
+             script_arg_list    - list of script agruments (strings)
+
+         Returns:
+             python_cmd - full call to python (string)
+
+    """
+    python_script = os.path.join(os.environ['USHevs'], os.environ['COMPONENT'],
+                                 python_script_name)
+    if not os.path.exists(python_script):
+        print("ERROR: "+python_script+" DOES NOT EXIST")
+        sys.exit(1)
+    python_cmd = 'python '+python_script
+    for script_arg in script_arg_list:
+        python_cmd = python_cmd+' '+script_arg
+    return python_cmd
 
 def check_file_exists_size(file_name):
     """! Checks to see if file exists and has size greater than 0
@@ -809,7 +834,7 @@ def initalize_job_env_dict(verif_type, group,
     for env_var in job_env_var_list:
         job_env_dict[env_var] = os.environ[env_var]
     job_env_dict['JOB_GROUP'] = group
-    if group in ['reformat', 'make_met_data']:
+    if group in ['reformat', 'generate']:
         job_env_dict['VERIF_TYPE'] = verif_type
         job_env_dict['job_name'] = job
         job_env_dict['fhr_start'] = os.environ[
@@ -821,25 +846,26 @@ def initalize_job_env_dict(verif_type, group,
         job_env_dict['fhr_inc'] = os.environ[
             verif_case_step_abbrev_type+'_fhr_inc'
         ]
-    #    if use_case_type in ['pres_levs', 'means', 'sfc']:
-    #        use_case_type_valid_hr_list = (
-    #            os.environ[use_case_abbrev_type+'_valid_hr_list'].split(' ')
-    #        )
-    #        job_env_dict['valid_hr_start'] = (
-    #            use_case_type_valid_hr_list[0].zfill(2)
-    #        )
-    #        job_env_dict['valid_hr_end'] = (
-    #            use_case_type_valid_hr_list[-1].zfill(2)
-    #        )
-    #        if len(use_case_type_valid_hr_list) > 1:
-    #            use_case_type_valid_hr_inc = np.min(
-    #                np.diff(np.array(use_case_type_valid_hr_list, dtype=int))
-    #            )
-    #        else:
-    #            use_case_type_valid_hr_inc = 24
-    #        job_env_dict['valid_hr_inc'] = str(use_case_type_valid_hr_inc)
-    #    if group == 'make_met_data':
-    #        job_env_dict['climo_files_dir'] = (
-    #            os.environ['era_interim_climo_files']
-    #        )
+        if verif_type in ['pres_levs', 'means', 'sfc']:
+            verif_type_valid_hr_list = (
+                os.environ[verif_case_step_abbrev_type+'_valid_hr_list']\
+                .split(' ')
+            )
+            job_env_dict['valid_hr_start'] = (
+                verif_type_valid_hr_list[0].zfill(2)
+            )
+            job_env_dict['valid_hr_end'] = (
+                verif_type_valid_hr_list[-1].zfill(2)
+            )
+            if len(verif_type_valid_hr_list) > 1:
+                verif_type_valid_hr_inc = np.min(
+                    np.diff(np.array(verif_type_valid_hr_list, dtype=int))
+                )
+            else:
+                verif_type_valid_hr_inc = 24
+            job_env_dict['valid_hr_inc'] = str(verif_type_valid_hr_inc)
+        if group == 'generate':
+            job_env_dict['climo_files_dir'] = (
+                os.environ['era_interim_climo_files']
+            )
     return job_env_dict

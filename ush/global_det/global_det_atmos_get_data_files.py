@@ -129,8 +129,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                     # Get previous day for Geopotential
                     # Height Anomaly verification
                     gda_util.get_model_file(
-                        time['valid_time'] - datetime.timedelta(hours=24),
-                        time['init_time'] - datetime.timedelta(hours=24),
+                        time['valid_time'] - datetime.timedelta(days=1),
+                        time['init_time'] - datetime.timedelta(days=1),
                         time['forecast_hour'], model_file_format,
                         model_fcst_dest_file_format
                     )
@@ -213,9 +213,9 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                     # Height Anomaly verification
                     gda_util.get_model_file(
                         (VERIF_CASE_STEP_type_valid_time
-                         - datetime.timedelta(hours=24)),
+                         - datetime.timedelta(days=1)),
                         (VERIF_CASE_STEP_type_valid_time
-                         - datetime.timedelta(hours=24)),
+                         - datetime.timedelta(days=1)),
                         'anl', model_truth_file_format,
                         pres_levs_dest_file_format
                     )
@@ -235,7 +235,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 if not os.path.exists(VERIF_CASE_STEP_ccpa_dir):
                     os.makedirs(VERIF_CASE_STEP_ccpa_dir)
                 accum_valid_start = (VERIF_CASE_STEP_type_valid_time -
-                                     datetime.timedelta(hours=24))
+                                     datetime.timedelta(days=1))
                 accum_valid_end = VERIF_CASE_STEP_type_valid_time
                 accum_valid = accum_valid_end
                 while accum_valid > accum_valid_start:
@@ -391,8 +391,8 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                     # Get previous day for 2 meter
                     # Temperature Anomaly verification
                     gda_util.get_model_file(
-                        time['valid_time'] - datetime.timedelta(hours=24),
-                        time['init_time'] - datetime.timedelta(hours=24),
+                        time['valid_time'] - datetime.timedelta(days=1),
+                        time['init_time'] - datetime.timedelta(days=1),
                         time['forecast_hour'], model_file_format,
                         model_fcst_dest_file_format
                     )
@@ -479,7 +479,7 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                     ) 
                 gda_util.get_truth_file(
                     (VERIF_CASE_STEP_type_valid_time 
-                    - datetime.timedelta(hours=24)),
+                    - datetime.timedelta(days=1)),
                     nam_source_file_format, nam_dest_file_format
                 )
                 # RAP prepbufr
@@ -505,7 +505,7 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                 # Temperature Anomaly verification
                 gda_util.get_truth_file(
                     (VERIF_CASE_STEP_type_valid_time
-                     - datetime.timedelta(hours=24)),
+                     - datetime.timedelta(days=1)),
                     rap_source_file_format, rap_dest_file_format
                 )
             elif VERIF_CASE_STEP_type == 'flux':

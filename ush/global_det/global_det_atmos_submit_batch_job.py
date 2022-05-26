@@ -65,7 +65,8 @@ with open(job_card_filename, 'a') as job_card:
         job_card.write('#PBS -e '+job_output_filename+'\n')
         job_card.write('#PBS -l walltime=6:00:00\n')
         job_card.write('#PBS -l debug=true\n')
-        job_card.write('#PBS -l place=vscatter,select=1'+':ncpus='+nproc+'\n')
+        job_card.write('#PBS -l place=vscatter:exclhost,select=1'
+                       +':ncpus='+nproc+'\n')
         job_card.write('\n')
         job_card.write('cd $PBS_O_WORKDIR\n')
     elif machine == 'HERA':

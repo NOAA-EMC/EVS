@@ -106,11 +106,23 @@ while date_dt <= end_date_dt:
             )
             COMROOT_dir_list.append(
                 os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
+                             RUN+'.'+(date_dt-datetime.timedelta(days=1))\
+                             .strftime('%Y%m%d'), model,
+                             VERIF_CASE)
+            )
+            COMROOT_dir_list.append(
+                os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
                              model+'.'+date_dt.strftime('%Y%m%d'))
             )
             METplus_output_dir_list.append(
                 os.path.join(METplus_output_base_dir,
                              RUN+'.'+date_dt.strftime('%Y%m%d'), model,
+                             VERIF_CASE)
+            )
+            METplus_output_dir_list.append(
+                os.path.join(METplus_output_base_dir,
+                             RUN+'.'+(date_dt-datetime.timedelta(days=1))\
+                             .strftime('%Y%m%d'), model,
                              VERIF_CASE)
             )
             METplus_output_dir_list.append(
