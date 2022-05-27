@@ -54,7 +54,7 @@ export SENDCOM="YES"
 ####################################################
 if [ $RUN_GRID2GRID_STATS = YES ]; then
     #g2gs_type_list: list type of verifications to run for grid-to-grid: pres_levs, precip, snow, sst, sea_ice
-    #                                                                    ozone, means
+    #                                                                    flux, ozone, means
     #    pres_levs:  compare variables on pressure levels to model's own analysis
     #    precip:     compare to CCPA
     #    snow:       compare to NOHRSC
@@ -72,7 +72,7 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
     #g2gs_*_fhr_min:           forecast hour to start verification HH[H]
     #g2gs_*_fhr_max:           forecast hour to end verification HH[H]
     #g2gs_*_fhr_inc:           frequency to verify forecast hours at HH[H]
-    export g2gs_type_list="pres_levs precip snow sst sea_ice ozone means"
+    export g2gs_type_list="pres_levs precip snow sst sea_ice flux ozone means"
     export g2gs_pres_levs_truth_name_list="GFS_ANL"
     export g2gs_pres_levs_truth_format_list="/lfs/h1/ops/prod/com/gfs/v16.2/gfs.{valid?fmt=%Y%m%d}/{valid?fmt=%2H}/atmos/gfs.t{valid?fmt=%2H}z.pgrb2.0p50.anl"
     export g2gs_pres_levs_cycle_list="00 06 12 18"
@@ -99,6 +99,10 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
     export g2gs_sea_ice_fhr_min=00
     export g2gs_sea_ice_fhr_max=384
     export g2gs_sea_ice_fhr_inc=24
+    export g2gs_flux_cycle_list="00 06 12 18"
+    export g2gs_flux_fhr_min=00
+    export g2gs_flux_fhr_max=384
+    export g2gs_flux_fhr_inc=24
     export g2gs_ozone_cycle_list="00 06 12 18"
     export g2gs_ozone_fhr_min=00
     export g2gs_ozone_fhr_max=384
@@ -111,10 +115,9 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
 fi
 
 if [ $RUN_GRID2OBS_STATS = YES ]; then
-    #g2os_type_list: list type of verifications to run for grid-to-obs: pres_levs, sfc, flux, sea_ice
+    #g2os_type_list: list type of verifications to run for grid-to-obs: pres_levs, sfc, sea_ice
     #    pres_levs:  compare variables on pressure levels to GDAS prepbufr obs
     #    sfc:        compare surface variables to GDAS and NAM/RAP prepbufr obs
-    #    flux:       compare variables to Ameriflux, SGP ARM, Global Surface Flux Network, Fluxnet
     #    sea_ice:    compare Internation Arctic Buoy Program
     export g2os_type_list="pres_levs sfc flux sea_ice"
     export g2os_pres_levs_cycle_list="00 06 12 18"
@@ -127,10 +130,6 @@ if [ $RUN_GRID2OBS_STATS = YES ]; then
     export g2os_sfc_fhr_min=00
     export g2os_sfc_fhr_max=384
     export g2os_sfc_fhr_inc=3
-    export g2os_flux_cycle_list="00 06 12 18"
-    export g2os_flux_fhr_min=00
-    export g2os_flux_fhr_max=384
-    export g2os_flux_fhr_inc=6
     export g2os_sea_ice_cycle_list="00 06 12 18"
     export g2os_sea_ice_fhr_min=00
     export g2os_sea_ice_fhr_max=384

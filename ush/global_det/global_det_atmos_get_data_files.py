@@ -328,6 +328,13 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 )
                 if not os.path.exists(VERIF_CASE_STEP_omps_dir):
                     os.makedirs(VERIF_CASE_STEP_omps_dir)
+            elif VERIF_CASE_STEP_type == 'flux':
+                # ALEXI
+                VERIF_CASE_STEP_alexi_dir = os.path.join(
+                    VERIF_CASE_STEP_data_dir, 'alexi'
+                )
+                if not os.path.exists(VERIF_CASE_STEP_alexi_dir):
+                    os.makedirs(VERIF_CASE_STEP_alexi_dir)
 elif VERIF_CASE_STEP == 'grid2obs_stats':
     # Read in VERIF_CASE_STEP related environment variables
     # Get model forecast and truth files for each option in VERIF_CASE_STEP_type_list
@@ -508,35 +515,6 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                      - datetime.timedelta(days=1)),
                     rap_source_file_format, rap_dest_file_format
                 )
-            elif VERIF_CASE_STEP_type == 'flux':
-                # Ameriflux
-                VERIF_CASE_STEP_ameriflux_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'ameriflux'
-                )
-                if not os.path.exists(VERIF_CASE_STEP_ameriflux_dir):
-                    os.makedirs(VERIF_CASE_STEP_ameriflux_dir)
-                # SGP ARM
-                VERIF_CASE_STEP_sgp_arm_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'sgp_arm'
-                )
-                if not os.path.exists(VERIF_CASE_STEP_sgp_arm_dir):
-                    os.makedirs(VERIF_CASE_STEP_sgp_arm_dir)
-                # Fluxnet
-                VERIF_CASE_STEP_fluxnet_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'fluxnet'
-                )
-                if not os.path.exists(VERIF_CASE_STEP_fluxnet_dir):
-                    os.makedirs(VERIF_CASE_STEP_fluxnet_dir)
-                # Global Surface Flux Network
-                VERIF_CASE_STEP_global_surface_flux_network_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'global_surface_flux_network'
-                )
-                if not os.path.exists(
-                        VERIF_CASE_STEP_global_surface_flux_network_dir
-                ):
-                    os.makedirs(
-                        VERIF_CASE_STEP_global_surface_flux_network_dir
-                    )
             elif VERIF_CASE_STEP_type == 'sea_ice':
                 # IABP
                 VERIF_CASE_STEP_iabp_dir = os.path.join(

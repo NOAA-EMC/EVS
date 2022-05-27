@@ -51,6 +51,7 @@ end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
 #### Reformat jobs
 ################################################
 reformat_obs_jobs_dict = {
+    'flux': {},
     'pres_levs': {},
     'means': {},
     'ozone': {},
@@ -63,6 +64,7 @@ reformat_obs_jobs_dict = {
     'sst': {},
 }
 reformat_model_jobs_dict = {
+    'flux': {},
     'pres_levs': {},
     'means': {},
     'ozone': {},
@@ -210,6 +212,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
 ################################################
 # Generate jobs information dictionary
 generate_jobs_dict = {
+    'flux': {},
     'pres_levs': {
         'GeoHeight': {'env': {'var1_name': 'HGT',
                               'var1_levels': "'P1000, P700, P500, P250'",

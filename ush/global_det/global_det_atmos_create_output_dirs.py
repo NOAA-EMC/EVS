@@ -51,6 +51,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
             data_dir_list.append(os.path.join(data_base_dir, 'yopp'))
             data_dir_list.append(os.path.join(data_base_dir, 'ostia'))
             data_dir_list.append(os.path.join(data_base_dir, 'giomas'))
+        elif VERIF_CASE_STEP_type == 'flux':
+            data_dir_list.append(os.path.join(data_base_dir, 'alexi'))
         elif VERIF_CASE_STEP_type == 'ozone':
             data_dir_list.append(os.path.join(data_base_dir, 'omi'))
             data_dir_list.append(os.path.join(data_base_dir, 'tropomi'))
@@ -63,13 +65,6 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
             data_dir_list.append(os.path.join(data_base_dir, 'gdas'))
             data_dir_list.append(os.path.join(data_base_dir, 'nam'))
             data_dir_list.append(os.path.join(data_base_dir, 'rap'))
-        elif VERIF_CASE_STEP_type == 'flux':
-            data_dir_list.append(os.path.join(data_base_dir, 'ameriflux'))
-            data_dir_list.append(os.path.join(data_base_dir, 'sgp_arm'))
-            data_dir_list.append(os.path.join(data_base_dir, 'fluxnet'))
-            data_dir_list.append(
-                os.path.join(data_base_dir, 'global_surface_flux_network')
-            )
         elif VERIF_CASE_STEP_type == 'sea_ice':
             data_dir_list.append(os.path.join(data_base_dir, 'iabp'))
 
