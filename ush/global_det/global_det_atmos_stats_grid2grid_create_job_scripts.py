@@ -435,7 +435,43 @@ for verif_type in VERIF_CASE_STEP_type_list:
 ################################################
 # Gather jobs information dictionary
 gather_jobs_dict = {'env': {},
-                    'commands': []},
+                    'commands': [gda_util.metplus_command(
+                                     'StatAnalysis_fcstGLOBAL_DET.conf'
+                                 )]}
+njobs = 0
+gather_jobs_dir = os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
+                               'gather')
+if not os.path.exists(gather_jobs_dir):
+    os.makedirs(gather_jobs_dir)
+# Initialize job environment dictionary
+job_env_dict = gda_util.initalize_job_env_dict(
+    verif_type, 'gather',
+    VERIF_CASE_STEP_abbrev_type, verif_type_job
+)
+# Loop through and write job script for dates and models
+date_dt = start_date_dt
+while date_dt <= end_date_dt:
+    job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
+    for model_idx in range(len(model_list)):
+        job_env_dict['MODEL'] = model_list[model_idx]
+        njobs+=1
+        # Create job file
+        job_file = os.path.join(gather_jobs_dir, 'job'+str(njobs))
+        print("Creating job script: "+job_file)
+        job = open(job_file, 'w')
+        job.write('#!/bin/sh\n')
+        job.write('set -x\n')
+        job.write('\n')
+        # Set any environment variables for special cases
+        # Write environment variables
+        for name, value in job_env_dict.items():
+            job.write('export '+name+'='+value+'\n')
+        job.write('\n')
+        # Write job commands
+        for cmd in gather_jobs_dict['commands']:
+            job.write(cmd+'\n')
+            job.close()
+    date_dt = date_dt + datetime.timedelta(days=1)
 
 # If running USE_CFP, create POE scripts
 if USE_CFP == 'YES':

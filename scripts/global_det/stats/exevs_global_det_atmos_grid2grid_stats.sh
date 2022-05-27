@@ -50,7 +50,7 @@ status=$?
 [[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_create_stats_job_scripts.py"
 
 # Run job scripts for reformat, generate, and gather
-for group in reformat generate; do
+for group in reformat generate gather; do
     chmod u+x ${VERIF_CASE}_${STEP}/METplus_job_scripts/$group/*
     group_ncount_poe=$(ls -l  ${VERIF_CASE}_${STEP}/METplus_job_scripts/$group/poe* |wc -l)
     group_ncount_job=$(ls -l  ${VERIF_CASE}_${STEP}/METplus_job_scripts/$group/job* |wc -l)
