@@ -81,18 +81,29 @@ done
 
 # Copy files to desired location
 if [ $SENDCOM = YES ]; then
-    DATE=${start_date}
-    while [ $DATE -le ${end_date} ] ; do
-        ls $DATA/${VERIF_CASE}_${STEP}/METplus_output/$RUN.$DATE
-        for MODEL in $model_list; do
-            ls $DATA/${VERIF_CASE}_${STEP}/METplus_output/$MODEL.$DATE
+    # Copy atmos
+    for RUN_DIR_PATH in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$RUN*; do
+        RUN_DIR=$(echo ${RUN_DIR_PATH##*/})
+        mkdir -p $COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN_DIR
+        for RUN_SUBDIR_PATH in $RUN_DIR_PATH/*; do
+            RUN_SUBDIR=$(echo ${RUN_SUBDIR_PATH##*/})
+            mkdir -p $COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN_DIR/$RUN_SUBDIR
+            mkdir -p $COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN_DIR/$RUN_SUBDIR/$VERIF_CASE
+            for FILE in $RUN_SUBDIR_PATH/$VERIF_CASE/*; do
+                cp -v $FILE $COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN_DIR/$RUN_SUBDIR/$VERIF_CASE/.
+            done
         done
-        DATE=$(echo $($NDATE +24 ${DATE}00 ) |cut -c 1-8 )
     done
-    #cp -r $DATA/${VERIF_CASE}_${STEP}/METplus_output/$RUN.* $COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/.
-    #for model in $model_list; do
-    #    cp -r $DATA/${VERIF_CASE}_${STEP}/METplus_output/$model.* $COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/.
-    #done
+    # Copy models
+    for MODEL in $model_list; do
+        for MODEL_DIR_PATH in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$MODEL*; do
+            MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
+            mkdir -p $COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$MODEL_DIR
+            for FILE in $MODEL_DIR_PATH/*; do
+                cp -v $FILE $COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$MODEL_DIR/.
+            done
+        done
+    done
 fi
 
 # Send data to METviewer AWS server
