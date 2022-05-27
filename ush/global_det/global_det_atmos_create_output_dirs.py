@@ -36,12 +36,14 @@ for model in model_list:
     data_dir_list.append(os.path.join(data_base_dir, model))
 if VERIF_CASE_STEP == 'grid2grid_stats':
     for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
-        if VERIF_CASE_STEP_type == 'precip':
+        if VERIF_CASE_STEP_type == 'flux':
+            data_dir_list.append(os.path.join(data_base_dir, 'alexi'))
+        elif VERIF_CASE_STEP_type == 'ozone':
+            data_dir_list.append(os.path.join(data_base_dir, 'omi'))
+            data_dir_list.append(os.path.join(data_base_dir, 'tropomi'))
+            data_dir_list.append(os.path.join(data_base_dir, 'omps'))
+        elif VERIF_CASE_STEP_type == 'precip':
             data_dir_list.append(os.path.join(data_base_dir, 'ccpa'))
-        elif VERIF_CASE_STEP_type == 'snow':
-            data_dir_list.append(os.path.join(data_base_dir, 'nohrsc'))
-        elif VERIF_CASE_STEP_type == 'sst':
-            data_dir_list.append(os.path.join(data_base_dir, 'ghrsst'))
         elif VERIF_CASE_STEP_type == 'sea_ice':
             data_dir_list.append(os.path.join(data_base_dir, 'osi_saf'))
             data_dir_list.append(os.path.join(data_base_dir, 'smos'))
@@ -51,22 +53,20 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
             data_dir_list.append(os.path.join(data_base_dir, 'yopp'))
             data_dir_list.append(os.path.join(data_base_dir, 'ostia'))
             data_dir_list.append(os.path.join(data_base_dir, 'giomas'))
-        elif VERIF_CASE_STEP_type == 'flux':
-            data_dir_list.append(os.path.join(data_base_dir, 'alexi'))
-        elif VERIF_CASE_STEP_type == 'ozone':
-            data_dir_list.append(os.path.join(data_base_dir, 'omi'))
-            data_dir_list.append(os.path.join(data_base_dir, 'tropomi'))
-            data_dir_list.append(os.path.join(data_base_dir, 'omps'))
+        elif VERIF_CASE_STEP_type == 'snow':
+            data_dir_list.append(os.path.join(data_base_dir, 'nohrsc'))
+        elif VERIF_CASE_STEP_type == 'sst':
+            data_dir_list.append(os.path.join(data_base_dir, 'ghrsst'))
 elif VERIF_CASE_STEP == 'grid2obs_stats':
     for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
         if VERIF_CASE_STEP_type == 'pres_levs':
             data_dir_list.append(os.path.join(data_base_dir, 'gdas'))
+        elif VERIF_CASE_STEP_type == 'sea_ice':
+            data_dir_list.append(os.path.join(data_base_dir, 'iabp'))
         elif VERIF_CASE_STEP_type == 'sfc':
             data_dir_list.append(os.path.join(data_base_dir, 'gdas'))
             data_dir_list.append(os.path.join(data_base_dir, 'nam'))
             data_dir_list.append(os.path.join(data_base_dir, 'rap'))
-        elif VERIF_CASE_STEP_type == 'sea_ice':
-            data_dir_list.append(os.path.join(data_base_dir, 'iabp'))
 
 # Create data directories
 for data_dir in data_dir_list:

@@ -40,24 +40,24 @@ evs_global_det_atmos_settings_dict = {
 verif_case_step_settings_dict = {
     'RUN_GRID2GRID_STATS': {
         'flux': ['cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
-        'pres_levs': ['truth_name_list', 'truth_format_list',
-                      'cycle_list', 'valid_hr_list',
-                      'fhr_min', 'fhr_max', 'fhr_inc'],
         'means': ['cycle_list', 'valid_hr_list',
                   'fhr_min', 'fhr_max', 'fhr_inc'],
         'ozone': ['cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
         'precip': ['file_format_list', 'file_accum_list', 'var_list',
                    'cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
-        'snow': ['cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+        'pres_levs': ['truth_name_list', 'truth_format_list',
+                      'cycle_list', 'valid_hr_list',
+                      'fhr_min', 'fhr_max', 'fhr_inc'],
         'sea_ice': ['cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+        'snow': ['cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
         'sst': ['cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc']
     },
     'RUN_GRID2OBS_STATS': {
         'pres_levs': ['cycle_list', 'valid_hr_list',
                       'fhr_min', 'fhr_max', 'fhr_inc'],
+        'sea_ice': ['cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
         'sfc': ['cycle_list', 'valid_hr_list',
-                'fhr_min', 'fhr_max', 'fhr_inc'],
-        'sea_ice': ['cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc']
+                'fhr_min', 'fhr_max', 'fhr_inc']
     }
 }
 
@@ -127,9 +127,9 @@ VERIF_CASE_STEP_type_list = (
     os.environ[VERIF_CASE_STEP_abbrev+'_type_list'].split(' ')
 )
 valid_VERIF_CASE_STEP_type_opts_dict = {
-    'RUN_GRID2GRID_STATS': ['pres_levs', 'precip', 'snow', 'sst', 'sea_ice',
-                            'flux', 'ozone', 'means'],
-    'RUN_GRID2OBS_STATS': ['pres_levs', 'sfc', 'sea_ice']
+    'RUN_GRID2GRID_STATS': ['flux', 'means', 'ozone', 'precip', 'pres_levs',
+                            'sea_ice', 'snow', 'sst'],
+    'RUN_GRID2OBS_STATS': ['pres_levs', 'sea_ice', 'sfc']
 }
 for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
     if VERIF_CASE_STEP_type \
@@ -146,18 +146,18 @@ check_config_var_len_list = ['model_stat_dir_list', 'model_file_format_list']
 verif_case_step_check_len_dict = {
     'RUN_GRID2GRID_STATS': {
         'flux': [],
-        'pres_levs': ['truth_name_list', 'truth_format_list'],
         'means': [],
         'ozone': [],
         'precip': ['file_format_list', 'file_accum_list', 'var_list'],
-        'snow': [],
+        'pres_levs': ['truth_name_list', 'truth_format_list'],
         'sea_ice': [],
+        'snow': [],
         'sst': []
     },
     'RUN_GRID2OBS_STATS': {
         'pres_levs': [],
-        'sfc': [],
-        'sea_ice': []
+        'sea_ice': [],
+        'sfc': []
     }
 }
 for verif_type in verif_type_list:

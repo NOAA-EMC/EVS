@@ -53,33 +53,40 @@ export SENDCOM="YES"
 # SETTINGS FOR SPECIFIC USE CASES
 ####################################################
 if [ $RUN_GRID2GRID_STATS = YES ]; then
-    #g2gs_type_list: list type of verifications to run for grid-to-grid: pres_levs, precip, snow, sst, sea_ice
-    #                                                                    flux, ozone, means
-    #    pres_levs:  compare variables on pressure levels to model's own analysis
+    #g2gs_type_list: list type of verifications to run for grid-to-grid: flux, means, ozone, precip,
+    #                                                                    pres_levs, sea_ice, snow, sst
+    #    flux:       compare to ALEXI
+    #    means:      compute forecast hour means for various variables
+    #    ozone:      compare to OMI, TROPOMI, OMPS
     #    precip:     compare to CCPA
+    #    pres_levs:  compare variables on pressure levels to model's own analysis
+    #    sea_ice:    compare to OSI-SAF, SMOS, NASA Icebridge, YOPP, OSTIA, GIOMA
     #    snow:       compare to NOHRSC
     #    sst:        compare to GHRSST L4
-    #    sea_ice:    compare to OSI-SAF, SMOS, NASA Icebridge, YOPP, OSTIA, GIOMAS
-    #    ozone:      compare to OMI, TROPOMI, OMPS 
-    #    means:      compute forecast hour means for various variables
-    #g2gs_pres_levs_truth_name_list:   list of reference name for truth files
-    #g2gs_pres_levs_truth_format_list: list of truth file format(s)
-    #g2gs_precip_file_format_list:     list of precip file format(s)
-    #g2gs_precip_file_accum_list:      list of precip accumulations in file: hours (HH) or continuous
-    #g2gs_precip_var_list:             list of the precip variable name to use
     #g2gs_*_cycle_list:        forecst cycles to be included in verification: HH
     #g2gs_*_valid_hr_list:     valid hours to be included in verification: HH
     #g2gs_*_fhr_min:           forecast hour to start verification HH[H]
     #g2gs_*_fhr_max:           forecast hour to end verification HH[H]
     #g2gs_*_fhr_inc:           frequency to verify forecast hours at HH[H]
-    export g2gs_type_list="pres_levs precip snow sst sea_ice flux ozone means"
-    export g2gs_pres_levs_truth_name_list="GFS_ANL"
-    export g2gs_pres_levs_truth_format_list="/lfs/h1/ops/prod/com/gfs/v16.2/gfs.{valid?fmt=%Y%m%d}/{valid?fmt=%2H}/atmos/gfs.t{valid?fmt=%2H}z.pgrb2.0p50.anl"
-    export g2gs_pres_levs_cycle_list="00 06 12 18"
-    export g2gs_pres_levs_valid_hr_list="00 06 12 18"
-    export g2gs_pres_levs_fhr_min=00
-    export g2gs_pres_levs_fhr_max=384
-    export g2gs_pres_levs_fhr_inc=6
+    #g2gs_precip_file_format_list:     list of precip file format(s)
+    #g2gs_precip_file_accum_list:      list of precip accumulations in file: hours (HH) or continuous
+    #g2gs_precip_var_list:             list of the precip variable name to use
+    #g2gs_pres_levs_truth_name_list:   list of reference name for truth files
+    #g2gs_pres_levs_truth_format_list: list of truth file format(s)
+    export g2gs_type_list="flux means ozone precip pres_levs sea_ice snow sst"
+    export g2gs_flux_cycle_list="00 06 12 18"
+    export g2gs_flux_fhr_min=00
+    export g2gs_flux_fhr_max=384
+    export g2gs_flux_fhr_inc=24
+    export g2gs_means_cycle_list="00 06 12 18"
+    export g2gs_means_valid_hr_list="00 06 12 18"
+    export g2gs_means_fhr_min=00
+    export g2gs_means_fhr_max=384
+    export g2gs_means_fhr_inc=6
+    export g2gs_ozone_cycle_list="00 06 12 18"
+    export g2gs_ozone_fhr_min=00
+    export g2gs_ozone_fhr_max=384
+    export g2gs_ozone_fhr_inc=12
     export g2gs_precip_file_format_list="/lfs/h1/ops/prod/com/gfs/v16.2/gfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/atmos/gfs.t{init?fmt=%2H}z.pgrb2.0p25.f{lead?fmt=%3H}"
     export g2gs_precip_file_accum_list="continuous"
     export g2gs_precip_var_list="APCP"
@@ -87,6 +94,17 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
     export g2gs_precip_fhr_min=24
     export g2gs_precip_fhr_max=384
     export g2gs_precip_fhr_inc=24
+    export g2gs_pres_levs_truth_name_list="GFS_ANL"
+    export g2gs_pres_levs_truth_format_list="/lfs/h1/ops/prod/com/gfs/v16.2/gfs.{valid?fmt=%Y%m%d}/{valid?fmt=%2H}/atmos/gfs.t{valid?fmt=%2H}z.pgrb2.0p50.anl"
+    export g2gs_pres_levs_cycle_list="00 06 12 18"
+    export g2gs_pres_levs_valid_hr_list="00 06 12 18"
+    export g2gs_pres_levs_fhr_min=00
+    export g2gs_pres_levs_fhr_max=384
+    export g2gs_pres_levs_fhr_inc=6
+    export g2gs_sea_ice_cycle_list="00 06 12 18"
+    export g2gs_sea_ice_fhr_min=00
+    export g2gs_sea_ice_fhr_max=384
+    export g2gs_sea_ice_fhr_inc=24
     export g2gs_snow_cycle_list="00 06 12 18"
     export g2gs_snow_fhr_min=24
     export g2gs_snow_fhr_max=384
@@ -95,44 +113,27 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
     export g2gs_sst_fhr_min=00
     export g2gs_sst_fhr_max=384
     export g2gs_sst_fhr_inc=24
-    export g2gs_sea_ice_cycle_list="00 06 12 18"
-    export g2gs_sea_ice_fhr_min=00
-    export g2gs_sea_ice_fhr_max=384
-    export g2gs_sea_ice_fhr_inc=24
-    export g2gs_flux_cycle_list="00 06 12 18"
-    export g2gs_flux_fhr_min=00
-    export g2gs_flux_fhr_max=384
-    export g2gs_flux_fhr_inc=24
-    export g2gs_ozone_cycle_list="00 06 12 18"
-    export g2gs_ozone_fhr_min=00
-    export g2gs_ozone_fhr_max=384
-    export g2gs_ozone_fhr_inc=12
-    export g2gs_means_cycle_list="00 06 12 18"
-    export g2gs_means_valid_hr_list="00 06 12 18"
-    export g2gs_means_fhr_min=00
-    export g2gs_means_fhr_max=384
-    export g2gs_means_fhr_inc=6
 fi
 
 if [ $RUN_GRID2OBS_STATS = YES ]; then
-    #g2os_type_list: list type of verifications to run for grid-to-obs: pres_levs, sfc, sea_ice
+    #g2os_type_list: list type of verifications to run for grid-to-obs: pres_levs, sea_ice, sfc
     #    pres_levs:  compare variables on pressure levels to GDAS prepbufr obs
-    #    sfc:        compare surface variables to GDAS and NAM/RAP prepbufr obs
     #    sea_ice:    compare Internation Arctic Buoy Program
+    #    sfc:        compare surface variables to GDAS and NAM/RAP prepbufr obs
     export g2os_type_list="pres_levs sfc flux sea_ice"
     export g2os_pres_levs_cycle_list="00 06 12 18"
     export g2os_pres_levs_valid_hr_list="00 06 12 18"
     export g2os_pres_levs_fhr_min=00
     export g2os_pres_levs_fhr_max=384
     export g2os_pres_levs_fhr_inc=6
+    export g2os_sea_ice_cycle_list="00 06 12 18"
+    export g2os_sea_ice_fhr_min=00
+    export g2os_sea_ice_fhr_max=384
+    export g2os_sea_ice_fhr_inc=24
     export g2os_sfc_cycle_list="00 06 12 18"
     export g2os_sfc_valid_hr_list="00 03 06 09 12 15 18 21"
     export g2os_sfc_fhr_min=00
     export g2os_sfc_fhr_max=384
     export g2os_sfc_fhr_inc=3
-    export g2os_sea_ice_cycle_list="00 06 12 18"
-    export g2os_sea_ice_fhr_min=00
-    export g2os_sea_ice_fhr_max=384
-    export g2os_sea_ice_fhr_inc=24
 fi
 echo "END: $(basename ${BASH_SOURCE[0]})"

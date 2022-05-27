@@ -65,6 +65,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
             VERIF_CASE_STEP_type_valid_hr_list = ['12']
         elif VERIF_CASE_STEP_type == 'snow':
             VERIF_CASE_STEP_type_valid_hr_list = ['12']
+        else:
+            VERIF_CASE_STEP_type_valid_hr_list = ['12']
         # Set cycle hours
         VERIF_CASE_STEP_type_cycle_list = os.environ[
             VERIF_CASE_STEP_abbrev_type+'_cycle_list'
@@ -187,7 +189,59 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
         # Get truth files
         for VERIF_CASE_STEP_type_valid_time \
                 in VERIF_CASE_STEP_type_valid_time_list:
-            if VERIF_CASE_STEP_type == 'pres_levs':
+            if VERIF_CASE_STEP_type == 'flux':
+                # ALEXI
+                VERIF_CASE_STEP_alexi_dir = os.path.join(
+                    VERIF_CASE_STEP_data_dir, 'alexi'
+                )
+                if not os.path.exists(VERIF_CASE_STEP_alexi_dir):
+                    os.makedirs(VERIF_CASE_STEP_alexi_dir)
+            elif VERIF_CASE_STEP_type == 'ozone':
+                # OMI
+                VERIF_CASE_STEP_omi_dir = os.path.join(
+                    VERIF_CASE_STEP_data_dir, 'omi'
+                )
+                if not os.path.exists(VERIF_CASE_STEP_omi_dir):
+                    os.makedirs(VERIF_CASE_STEP_omi_dir)
+                # TROPOMI
+                VERIF_CASE_STEP_tropomi_dir = os.path.join(
+                    VERIF_CASE_STEP_data_dir, 'tropomi'
+                )
+                if not os.path.exists(VERIF_CASE_STEP_tropomi_dir):
+                    os.makedirs(VERIF_CASE_STEP_tropomi_dir)
+                # OMPS
+                VERIF_CASE_STEP_omps_dir = os.path.join(
+                    VERIF_CASE_STEP_data_dir, 'omps'
+                )
+                if not os.path.exists(VERIF_CASE_STEP_omps_dir):
+                    os.makedirs(VERIF_CASE_STEP_omps_dir)
+            elif VERIF_CASE_STEP_type == 'precip':
+                # CCPA
+                ccpa_source_file_format = os.path.join(
+                    COMROOT_PROD, 'ccpa', ccpa_ver, 'ccpa.{valid?fmt=%Y%m%d}',
+                    '{valid?fmt=%H}',
+                    'ccpa.t{valid?fmt=%H}z.06h.hrap.conus.gb2'
+                )
+                VERIF_CASE_STEP_ccpa_dir = os.path.join(
+                    VERIF_CASE_STEP_data_dir, 'ccpa'
+                )
+                ccpa_dest_file_format = os.path.join(
+                    VERIF_CASE_STEP_ccpa_dir, 'ccpa.6H.{valid?fmt=%Y%m%d%H}'
+                )
+                if not os.path.exists(VERIF_CASE_STEP_ccpa_dir):
+                    os.makedirs(VERIF_CASE_STEP_ccpa_dir)
+                accum_valid_start = (VERIF_CASE_STEP_type_valid_time -
+                                     datetime.timedelta(days=1))
+                accum_valid_end = VERIF_CASE_STEP_type_valid_time
+                accum_valid = accum_valid_end
+                while accum_valid > accum_valid_start:
+                    gda_util.get_truth_file(
+                        accum_valid, ccpa_source_file_format,
+                        ccpa_dest_file_format
+                    )
+                    accum_valid = (accum_valid -
+                                   datetime.timedelta(hours=6))
+            elif VERIF_CASE_STEP_type == 'pres_levs':
                 # Model Analysis
                 for model_idx in range(len(model_list)):
                     model = model_list[model_idx]
@@ -219,59 +273,6 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                         'anl', model_truth_file_format,
                         pres_levs_dest_file_format
                     )
-            elif VERIF_CASE_STEP_type == 'precip':
-                # CCPA
-                ccpa_source_file_format = os.path.join(
-                    COMROOT_PROD, 'ccpa', ccpa_ver, 'ccpa.{valid?fmt=%Y%m%d}',
-                    '{valid?fmt=%H}',
-                    'ccpa.t{valid?fmt=%H}z.06h.hrap.conus.gb2'
-                )
-                VERIF_CASE_STEP_ccpa_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'ccpa'
-                )
-                ccpa_dest_file_format = os.path.join(
-                    VERIF_CASE_STEP_ccpa_dir, 'ccpa.6H.{valid?fmt=%Y%m%d%H}'
-                )
-                if not os.path.exists(VERIF_CASE_STEP_ccpa_dir):
-                    os.makedirs(VERIF_CASE_STEP_ccpa_dir)
-                accum_valid_start = (VERIF_CASE_STEP_type_valid_time -
-                                     datetime.timedelta(days=1))
-                accum_valid_end = VERIF_CASE_STEP_type_valid_time
-                accum_valid = accum_valid_end
-                while accum_valid > accum_valid_start:
-                    gda_util.get_truth_file(
-                        accum_valid, ccpa_source_file_format,
-                        ccpa_dest_file_format
-                    )
-                    accum_valid = (accum_valid -
-                                   datetime.timedelta(hours=6))
-            elif VERIF_CASE_STEP_type == 'snow':
-                # NOHRSC
-                nohrsc_source_file_format = os.path.join(
-                    DCOMROOT_PROD, '{valid?fmt=%Y%m%d}', 'wgrbbul',
-                    'nohrsc_snowfall',
-                    'sfav2_CONUS_24h_{valid?fmt=%Y%m%d%H}_grid184.grb2'
-                )
-                VERIF_CASE_STEP_nohrsc_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'nohrsc'
-                )
-                nohrsc_dest_file_format = os.path.join(
-                    VERIF_CASE_STEP_nohrsc_dir,
-                    'nohrsc.24H.{valid?fmt=%Y%m%d%H}'
-                )
-                if not os.path.exists(VERIF_CASE_STEP_nohrsc_dir):
-                    os.makedirs(VERIF_CASE_STEP_nohrsc_dir)
-                gda_util.get_truth_file(
-                    VERIF_CASE_STEP_type_valid_time, nohrsc_source_file_format,
-                    nohrsc_dest_file_format
-                )
-            elif VERIF_CASE_STEP_type == 'sst':
-                # GHRSST
-                VERIF_CASE_STEP_ghrsst_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'ghrsst'
-                )
-                if not os.path.exists(VERIF_CASE_STEP_ghrsst_dir):
-                    os.makedirs(VERIF_CASE_STEP_ghrsst_dir)
             elif VERIF_CASE_STEP_type == 'sea_ice':
                 # OSI_SAF
                 VERIF_CASE_STEP_osi_saf_dir = os.path.join(
@@ -309,32 +310,33 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 )
                 if not os.path.exists(VERIF_CASE_STEP_giomas_dir):
                     os.makedirs(VERIF_CASE_STEP_giomas_dir)
-            elif VERIF_CASE_STEP_type == 'ozone':
-                # OMI
-                VERIF_CASE_STEP_omi_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'omi'
+            elif VERIF_CASE_STEP_type == 'snow':
+                # NOHRSC
+                nohrsc_source_file_format = os.path.join(
+                    DCOMROOT_PROD, '{valid?fmt=%Y%m%d}', 'wgrbbul',
+                    'nohrsc_snowfall',
+                    'sfav2_CONUS_24h_{valid?fmt=%Y%m%d%H}_grid184.grb2'
                 )
-                if not os.path.exists(VERIF_CASE_STEP_omi_dir):
-                    os.makedirs(VERIF_CASE_STEP_omi_dir)
-                # TROPOMI
-                VERIF_CASE_STEP_tropomi_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'tropomi'
+                VERIF_CASE_STEP_nohrsc_dir = os.path.join(
+                    VERIF_CASE_STEP_data_dir, 'nohrsc'
                 )
-                if not os.path.exists(VERIF_CASE_STEP_tropomi_dir):
-                    os.makedirs(VERIF_CASE_STEP_tropomi_dir)
-                # OMPS
-                VERIF_CASE_STEP_omps_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'omps'
+                nohrsc_dest_file_format = os.path.join(
+                    VERIF_CASE_STEP_nohrsc_dir,
+                    'nohrsc.24H.{valid?fmt=%Y%m%d%H}'
                 )
-                if not os.path.exists(VERIF_CASE_STEP_omps_dir):
-                    os.makedirs(VERIF_CASE_STEP_omps_dir)
-            elif VERIF_CASE_STEP_type == 'flux':
-                # ALEXI
-                VERIF_CASE_STEP_alexi_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'alexi'
+                if not os.path.exists(VERIF_CASE_STEP_nohrsc_dir):
+                    os.makedirs(VERIF_CASE_STEP_nohrsc_dir)
+                gda_util.get_truth_file(
+                    VERIF_CASE_STEP_type_valid_time, nohrsc_source_file_format,
+                    nohrsc_dest_file_format
                 )
-                if not os.path.exists(VERIF_CASE_STEP_alexi_dir):
-                    os.makedirs(VERIF_CASE_STEP_alexi_dir)
+            elif VERIF_CASE_STEP_type == 'sst':
+                # GHRSST
+                VERIF_CASE_STEP_ghrsst_dir = os.path.join(
+                    VERIF_CASE_STEP_data_dir, 'ghrsst'
+                )
+                if not os.path.exists(VERIF_CASE_STEP_ghrsst_dir):
+                    os.makedirs(VERIF_CASE_STEP_ghrsst_dir)
 elif VERIF_CASE_STEP == 'grid2obs_stats':
     # Read in VERIF_CASE_STEP related environment variables
     # Get model forecast and truth files for each option in VERIF_CASE_STEP_type_list
@@ -429,7 +431,14 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                         gdas_source_file_format,
                         gdas_dest_file_format
                     )
-            if VERIF_CASE_STEP_type == 'sfc':
+            if VERIF_CASE_STEP_type == 'sea_ice':
+                # IABP
+                VERIF_CASE_STEP_iabp_dir = os.path.join(
+                    VERIF_CASE_STEP_data_dir, 'iabp'
+                )
+                if not os.path.exists(VERIF_CASE_STEP_iabp_dir):
+                    os.makedirs(VERIF_CASE_STEP_iabp_dir)
+            elif VERIF_CASE_STEP_type == 'sfc':
                 # NAM prepbufr
                 VERIF_CASE_STEP_nam_dir = os.path.join(
                     VERIF_CASE_STEP_data_dir, 'nam'
@@ -515,12 +524,5 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                      - datetime.timedelta(days=1)),
                     rap_source_file_format, rap_dest_file_format
                 )
-            elif VERIF_CASE_STEP_type == 'sea_ice':
-                # IABP
-                VERIF_CASE_STEP_iabp_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'iabp'
-                )
-                if not os.path.exists(VERIF_CASE_STEP_iabp_dir):
-                    os.makedirs(VERIF_CASE_STEP_iabp_dir)
 
 print("END: "+os.path.basename(__file__))
