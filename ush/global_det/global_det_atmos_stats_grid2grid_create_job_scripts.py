@@ -214,42 +214,138 @@ for verif_type in VERIF_CASE_STEP_type_list:
 generate_jobs_dict = {
     'flux': {},
     'means': {
-        'CAPESfcBased': {'env': {},
-                         'commands': []},
-        'CloudWater': {'env': {},
-                       'commands': []},
-        'GeoHeightTropopause': {'env': {},
-                                'commands': []},
-        'PBLHeight': {'env': {},
-                      'commands': []},
-        'PrecipWater': {'env': {},
-                        'commands': []},
-        'PresSeaLevel': {'env': {},
-                         'commands': []},
-        'PresSfc': {'env': {},
-                    'commands': []},
-        'PresTropopause': {'env': {},
-                           'commands': []},
-        'RelHum2m': {'env': {},
-                     'commands': []},
-        'SnowWaterEqv': {'env': {},
-                         'commands': []},
-        'SpefHum2m': {'env': {},
-                      'commands': []},
-        'Temp2m': {'env': {},
-                   'commands': []},
-        'TempTropopause': {'env': {},
-                           'commands': []},
-        'TempSoilTopLayer': {'env': {},
-                             'commands': []},
-        'TotalOzone': {'env': {}, 
-                      'commands': []},
-        'UWind10m': {'env': {},
-                     'commands': []},
-        'VolSoilMoistTopLayer': {'env': {},
-                                 'commands': []},
-        'VWind10m': {'env': {},
-                     'commands': []},
+        'CAPESfcBased': {'env': {'var1_name': 'CAPE',
+                                 'var1_level': 'Z0',
+                                  'var1_options': ''},
+                         'commands': [gda_util.metplus_command(
+                                          'GridStat_fcstGLOBAL_DET_'
+                                          +'obsGLOBAL_DET.conf'
+                                      )]},
+        'CloudWater': {'env': {'var1_name': 'CWAT',
+                               'var1_level': 'L0',
+                               'var1_options': ''},
+                       'commands': [gda_util.metplus_command(
+                                        'GridStat_fcstGLOBAL_DET_'
+                                        +'obsGLOBAL_DET.conf'
+                                    )]},
+        'GeoHeightTropopause': {'env': {'var1_name': 'HGT',
+                                        'var1_level': 'L0',
+                                        'var1_options': ("'GRIB_lvl_type = 7; "
+                                                         +'set_attr_level = '
+                                                         +'"Tropopause";'+"'")},
+                                'commands': [gda_util.metplus_command(
+                                                 'GridStat_fcstGLOBAL_DET_'
+                                                 +'obsGLOBAL_DET.conf'
+                                             )]},
+        'PBLHeight': {'env': {'var1_name': 'HPBL',
+                              'var1_level': 'L0',
+                              'var1_options': ''},
+                      'commands': [gda_util.metplus_command(
+                                       'GridStat_fcstGLOBAL_DET_'
+                                       +'obsGLOBAL_DET.conf'
+                                   )]},
+        'PrecipWater': {'env': {'var1_name': 'PWAT',
+                                'var1_level': 'L0',
+                                'var1_options': ''},
+                        'commands': [gda_util.metplus_command(
+                                         'GridStat_fcstGLOBAL_DET_'
+                                         +'obsGLOBAL_DET.conf'
+                                     )]},
+        'PresSeaLevel': {'env': {'var1_name': 'PRMSL',
+                                 'var1_level': 'Z0',
+                                 'var1_options': ''},
+                         'commands': [gda_util.metplus_command(
+                                          'GridStat_fcstGLOBAL_DET_'
+                                          +'obsGLOBAL_DET.conf'
+                                      )]},
+        'PresSfc': {'env': {'var1_name': 'PRES',
+                            'var1_level': 'Z0',
+                            'var1_options': ''},
+                    'commands': [gda_util.metplus_command(
+                                     'GridStat_fcstGLOBAL_DET_'
+                                     +'obsGLOBAL_DET.conf'
+                                 )]},
+        'PresTropopause': {'env': {'var1_name': 'PRES',
+                                   'var1_level': 'L0',
+                                   'var1_options': ("'GRIB_lvl_type = 7; "
+                                                    +'set_attr_level = '
+                                                    +'"Tropopause";'+"'")},
+                           'commands': [gda_util.metplus_command(
+                                            'GridStat_fcstGLOBAL_DET_'
+                                            +'obsGLOBAL_DET.conf'
+                                        )]},
+        'RelHum2m': {'env': {'var1_name': 'RH',
+                             'var1_level': 'Z2',
+                             'var1_options': ''},
+                     'commands': [gda_util.metplus_command(
+                                      'GridStat_fcstGLOBAL_DET_'
+                                      +'obsGLOBAL_DET.conf'
+                                  )]},
+        'SnowWaterEqv': {'env': {'var1_name': 'WEASD',
+                                 'var1_level': 'Z0',
+                                 'var1_options': ''},
+                         'commands': [gda_util.metplus_command(
+                                          'GridStat_fcstGLOBAL_DET_'
+                                          +'obsGLOBAL_DET.conf'
+                                      )]},
+        'SpefHum2m': {'env': {'var1_name': 'SPFH',
+                              'var1_level': 'Z2',
+                              'var1_options': ''},
+                      'commands': [gda_util.metplus_command(
+                                       'GridStat_fcstGLOBAL_DET_'
+                                       +'obsGLOBAL_DET.conf'
+                                   )]},
+        'Temp2m': {'env': {'var1_name': 'TMP',
+                           'var1_level': 'Z2',
+                           'var1_options': ''},
+                   'commands': [gda_util.metplus_command(
+                                    'GridStat_fcstGLOBAL_DET_'
+                                    +'obsGLOBAL_DET.conf'
+                                )]},
+        'TempTropopause': {'env': {'var1_name': 'TMP',
+                                   'var1_level': 'L0',
+                                   'var1_options': ("'GRIB_lvl_type = 7; "
+                                                    +'set_attr_level = '
+                                                    +'"Tropopause";'+"'")},
+                           'commands': [gda_util.metplus_command(
+                                            'GridStat_fcstGLOBAL_DET_'
+                                            +'obsGLOBAL_DET.conf'
+                                        )]},
+        'TempSoilTopLayer': {'env': {'var1_name': 'TSOIL',
+                                     'var1_level': 'Z0-0.1',
+                                     'var1_options': ''},
+                             'commands': [gda_util.metplus_command(
+                                              'GridStat_fcstGLOBAL_DET_'
+                                              +'obsGLOBAL_DET.conf'
+                                          )]},
+        'TotalOzone': {'env': {'var1_name': 'TOZNE',
+                               'var1_level': 'L0',
+                               'var1_options': ''}, 
+                      'commands': [gda_util.metplus_command(
+                                       'GridStat_fcstGLOBAL_DET_'
+                                       +'obsGLOBAL_DET.conf'
+                                   )]},
+        'UWind10m': {'env': {'var1_name': 'UGRD',
+                             'var1_level': 'Z10',
+                             'var1_options': ''},
+                     'commands': [gda_util.metplus_command(
+                                      'GridStat_fcstGLOBAL_DET_'
+                                      +'obsGLOBAL_DET.conf'
+                                  )]},
+        'VolSoilMoistTopLayer': {'env': {'var1_name': 'SOILW',
+                                         'var1_level': 'Z0-0.1',
+                                         'var1_options': ''},
+                                 'commands': [gda_util.metplus_command(
+                                                  'GridStat_fcstGLOBAL_DET_'
+                                                  +'obsGLOBAL_DET.conf'
+                                              )]},
+        'VWind10m': {'env': {'var1_name': 'VGRD',
+                             'var1_level': 'Z10',
+                             'var1_options': ''},
+                     'commands': [gda_util.metplus_command(
+                                      'GridStat_fcstGLOBAL_DET_'
+                                      +'obsGLOBAL_DET.conf'
+                                  )]},
     },
     'ozone': {
         'Ozone': {'env': {},
