@@ -352,22 +352,80 @@ generate_jobs_dict = {
                   'commands': []},
     },
     'precip': {
-        '24hrCCPA_G211_mm': {'env': {},
-                             'commands': []},
-        '24hrCCPA_G211_in': {'env': {},
-                             'commands': []},
-        '24hrCCPA_G212_mm': {'env': {},
-                             'commands': []},
-        '24hrCCPA_G212_in': {'env': {},
-                             'commands': []},
-        '24hrCCPA_G218_mm': {'env': {},
-                             'commands': []},
-        '24hrCCPA_G218_in': {'env': {},
-                             'commands': []},
-        '24hrCCPA_Nbrhd_mm': {'env': {},
-                              'commands': []},
-        '24hrCCPA_Nbrhd_in': {'env': {},
-                              'commands': []},
+        '24hrCCPA_G211_mm': {'env': {'grid': 'G211',
+                                     'units': "'"+'"mm"'+"'",
+                                     'thresh_list': ("'>0.1, >0.5, >1, >5, "
+                                                     +">10, >25, >50, >75'"),
+                                     'met_config_overrides': ''},
+                             'commands': [gda_util.metplus_command(
+                                              'GridStat_fcstGLOBAL_DET_'
+                                              +'obs24hrCCPA.conf'
+                                          )]},
+        '24hrCCPA_G211_in': {'env': {'grid': 'G211',
+                                     'units': "'"+'"in"'+"'",
+                                     'thresh_list': ("'>0.01, >0.1, >0.25, "
+                                                     +">0.5, >1, >2, >3'"),
+                                     'met_config_overrides': ("'convert(x) = "
+                                                              +"MM_to_IN(x);'")},
+                             'commands': [gda_util.metplus_command(
+                                              'GridStat_fcstGLOBAL_DET_'
+                                              +'obs24hrCCPA.conf'
+                                          )]},
+        '24hrCCPA_G212_mm': {'env': {'grid': 'G212',
+                                     'units': "'"+'"mm"'+"'",
+                                     'thresh_list': ("'>0.1, >0.5, >1, >5, "
+                                                     +">10, >25, >50, >75'"),
+                                     'met_config_overrides': ''},
+                             'commands': [gda_util.metplus_command(
+                                              'GridStat_fcstGLOBAL_DET_'
+                                              +'obs24hrCCPA.conf'
+                                          )]},
+        '24hrCCPA_G212_in': {'env': {'grid': 'G212',
+                                     'units': "'"+'"in"'+"'",
+                                     'thresh_list': ("'>0.01, >0.1, >0.25, "
+                                                     +">0.5, >1, >2, >3'"),
+                                     'met_config_overrides': ("'convert(x) = "
+                                                              +"MM_to_IN(x);'")},
+                             'commands': [gda_util.metplus_command(
+                                              'GridStat_fcstGLOBAL_DET_'
+                                              +'obs24hrCCPA.conf'
+                                          )]},
+        '24hrCCPA_G218_mm': {'env': {'grid': 'G218',
+                                     'units': "'"+'"mm"'+"'",
+                                     'thresh_list': ("'>0.1, >0.5, >1, >5, "
+                                                     +">10, >25, >50, >75'"),
+                                     'met_config_overrides': ''},
+                             'commands': [gda_util.metplus_command(
+                                              'GridStat_fcstGLOBAL_DET_'
+                                              +'obs24hrCCPA.conf'
+                                          )]},
+        '24hrCCPA_G218_in': {'env': {'grid': 'G218',
+                                     'units': "'"+'"in"'+"'",
+                                     'thresh_list': ("'>0.01, >0.1, >0.25, "
+                                                     +">0.5, >1, >2, >3'"),
+                                     'met_config_overrides': ("'convert(x) = "
+                                                              +"MM_to_IN(x);'")},
+                             'commands': [gda_util.metplus_command(
+                                              'GridStat_fcstGLOBAL_DET_'
+                                              +'obs24hrCCPA.conf'
+                                          )]},
+        '24hrCCPA_Nbrhd_mm': {'env': {'units': "'"+'"mm"'+"'",
+                                      'thresh_list': ("'>0.1, >0.5, >1, >5, "
+                                                      +">10, >25, >50, >75'"),
+                                      'met_config_overrides': ''},
+                              'commands': [gda_util.metplus_command(
+                                               'GridStat_fcstGLOBAL_DET_'
+                                               +'obs24hrCCPA_Nbrhd.conf'
+                                           )]},
+        '24hrCCPA_Nbrhd_in': {'env': {'units': "'"+'"in"'+"'",
+                                      'thresh_list': ("'>0.01, >0.1, >0.25, "
+                                                      +">0.5, >1, >2, >3'"),
+                                      'met_config_overrides': ("'convert(x) = "
+                                                               +"MM_to_IN(x);'")},
+                              'commands': [gda_util.metplus_command(
+                                               'GridStat_fcstGLOBAL_DET_'
+                                               +'obs24hrCCPA_Nbrhd.conf'
+                                           )]},
     },
     'pres_levs': {
         'GeoHeight': {'env': {'var1_name': 'HGT',
@@ -377,8 +435,7 @@ generate_jobs_dict = {
                               'met_config_overrides': "'climo_mean = fcst;'"},
                       'commands': [gda_util.metplus_command(
                                        'GridStat_fcstGLOBAL_DET_'
-                                       +'obsModelAnalysis_climoERAI_'
-                                       +'StatOutput.conf'
+                                       +'obsModelAnalysis_climoERAI.conf'
                                    )]},
         'GeoHeightAnom': {'env': {'var1_name': 'HGT',
                                   'var1_levels': 'P500',
@@ -386,7 +443,7 @@ generate_jobs_dict = {
                           'commands': [gda_util.metplus_command(
                                            'GridStat_fcstGLOBAL_DET_'
                                            +'obsModelAnalysis_climoERAI_'
-                                           +'NetCDFOutput.conf'
+                                           +'NetCDF.conf'
                                        ),
                                        gda_util.python_command(
                                            'global_det_atmos_stats_grid2grid'
@@ -395,8 +452,8 @@ generate_jobs_dict = {
                                        ),
                                        gda_util.metplus_command(
                                            'GridStat_fcstGLOBAL_DET_'
-                                           +'obsModelAnalysis_DailyAvgAnom_'
-                                           +'StatOutput.conf'
+                                           +'obsModelAnalysis_DailyAvgAnom'
+                                           +'.conf'
                                        )]},
         'PresSeaLevel': {'env': {'var1_name': 'PRMSL',
                                  'var1_levels': 'Z0',
@@ -405,8 +462,7 @@ generate_jobs_dict = {
                                  'met_config_overrides': "'climo_mean = fcst;'"},
                          'commands': [gda_util.metplus_command(
                                           'GridStat_fcstGLOBAL_DET_'
-                                          +'obsModelAnalysis_climoERAI_'
-                                          +'StatOutput.conf'
+                                          +'obsModelAnalysis_climoERAI.conf'
                                       )]},
         'Temp': {'env': {'var1_name': 'TMP',
                          'var1_levels': ''"P850, P500, P250"'',
@@ -415,8 +471,7 @@ generate_jobs_dict = {
                          'met_config_overrides': "'climo_mean = fcst;'"},
                  'commands': [gda_util.metplus_command(
                                   'GridStat_fcstGLOBAL_DET_'
-                                  +'obsModelAnalysis_climoERAI_'
-                                  +'StatOutput.conf'
+                                  +'obsModelAnalysis_climoERAI.conf'
                               )]},
         'Winds': {'env': {'var1_name': 'UGRD',
                           'var1_levels': ''"P850, P500, P250"'',
@@ -427,8 +482,7 @@ generate_jobs_dict = {
                           'met_config_overrides': "'climo_mean = fcst;'"},
                   'commands': [gda_util.metplus_command(
                                    'GridStat_fcstGLOBAL_DET_'
-                                   +'obsModelAnalysis_climoERAI_'
-                                   +'WindsStatOutput.conf'
+                                   +'obsModelAnalysis_climoERAI_Winds.conf'
                                )]},
     },
     'sea_ice': {
