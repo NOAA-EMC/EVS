@@ -604,6 +604,7 @@ generate_jobs_dict = {
     },
     'snow': {
         '24hrNOHRSC_WaterEqv_G211': {'env': {'grid': 'G211',
+                                             'file_name_var': 'WaterEqv',
                                              'var1_name': 'WEASD',
                                              'var1_convert': '2.54'},
                                      'commands': [gda_util.metplus_command(
@@ -611,6 +612,7 @@ generate_jobs_dict = {
                                                       +'obs24hrNOHRSC.conf'
                                                   )]},
         '24hrNOHRSC_Depth_G211': {'env': {'grid': 'G211',
+                                          'file_name_var': 'Depth',
                                           'var1_name': 'SNOD',
                                           'var1_convert': '25.4'},
                                   'commands': [gda_util.metplus_command(
@@ -618,6 +620,7 @@ generate_jobs_dict = {
                                                    +'obs24hrNOHRSC.conf'
                                                )]},
         '24hrNOHRSC_WaterEqv_G212': {'env': {'grid': 'G212',
+                                             'file_name_var': 'WaterEqv',
                                              'var1_name': 'WEASD',
                                              'var1_convert': '2.54'},
                                      'commands': [gda_util.metplus_command(
@@ -625,6 +628,7 @@ generate_jobs_dict = {
                                                       +'obs24hrNOHRSC.conf'
                                                   )]},
         '24hrNOHRSC_Depth_G212': {'env': {'grid': 'G212',
+                                          'file_name_var': 'Depth',
                                           'var1_name': 'SNOD',
                                           'var1_convert': '25.4'},
                                   'commands': [gda_util.metplus_command(
@@ -632,6 +636,7 @@ generate_jobs_dict = {
                                                    +'obs24hrNOHRSC.conf'
                                                )]},
         '24hrNOHRSC_WaterEqv_G218': {'env': {'grid': 'G218',
+                                             'file_name_var': 'WaterEqv',
                                              'var1_name': 'WEASD',
                                              'var1_convert': '2.54'},
                                      'commands': [gda_util.metplus_command(
@@ -639,19 +644,22 @@ generate_jobs_dict = {
                                                       +'obs24hrNOHRSC.conf'
                                                   )]},
         '24hrNOHRSC_Depth_G218': {'env': {'grid': 'G218',
+                                          'file_name_var': 'Depth',
                                           'var1_name': 'SNOD',
                                           'var1_convert': '25.4'},
                                   'commands': [gda_util.metplus_command(
                                                    'GridStat_fcstGLOBAL_DET_'
                                                    +'obs24hrNOHRSC.conf'
                                                )]},
-        '24hrNOHRSC_WaterEqv_Nbrhd': {'env': {'var1_name': 'WEASD',
+        '24hrNOHRSC_WaterEqv_Nbrhd': {'env': {'file_name_var': 'WaterEqv',
+                                              'var1_name': 'WEASD',
                                               'var1_convert': '2.54'},
                                       'commands': [gda_util.metplus_command(
                                                       'GridStat_fcstGLOBAL_DET_'
                                                       +'obs24hrNOHRSC_Nbrhd.conf'
                                                   )]},
-        '24hrNOHRSC_Depth_Nbrhd': {'env': {'var1_name': 'SNOD',
+        '24hrNOHRSC_Depth_Nbrhd': {'env': {'file_name_var': 'Depth',
+                                           'var1_name': 'SNOD',
                                            'var1_convert': '25.4'},
                                    'commands': [gda_util.metplus_command(
                                                     'GridStat_fcstGLOBAL_DET_'
