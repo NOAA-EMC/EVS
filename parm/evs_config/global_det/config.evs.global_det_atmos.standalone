@@ -75,7 +75,7 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
     #g2gs_pres_levs_truth_format_list: list of truth file format(s)
     export g2gs_type_list="flux means ozone precip pres_levs sea_ice snow sst"
     export g2gs_flux_cycle_list="00 06 12 18"
-    export g2gs_flux_fhr_min=00
+    export g2gs_flux_fhr_min=24
     export g2gs_flux_fhr_max=384
     export g2gs_flux_fhr_inc=24
     export g2gs_means_cycle_list="00 06 12 18"

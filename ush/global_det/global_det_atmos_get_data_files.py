@@ -33,6 +33,11 @@ ACCOUNT = os.environ['ACCOUNT']
 USER = os.environ['USER']
 ccpa_ver = os.environ['ccpa_ver']
 obsproc_ver = os.environ['obsproc_ver']
+evs_run_mode = os.environ['evs_run_mode']
+
+# Set archive paths
+if evs_run_mode != 'production':
+    archive_obs_data_dir = os.environ['archive_obs_data_dir']
 
 # Make sure in right working directory
 cwd = os.getcwd()
@@ -61,6 +66,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
             VERIF_CASE_STEP_type_valid_hr_list = os.environ[
                 VERIF_CASE_STEP_abbrev_type+'_valid_hr_list'
             ].split(' ')
+        elif VERIF_CASE_STEP_type == 'flux':
+            VERIF_CASE_STEP_type_valid_hr_list = ['00']
         elif VERIF_CASE_STEP_type == 'precip':
             VERIF_CASE_STEP_type_valid_hr_list = ['12']
         elif VERIF_CASE_STEP_type == 'snow':
@@ -127,15 +134,22 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                     time['forecast_hour'], model_file_format,
                     model_fcst_dest_file_format
                 )
-                if VERIF_CASE_STEP_type == 'pres_levs':
-                    # Get previous day for Geopotential
-                    # Height Anomaly verification
-                    gda_util.get_model_file(
-                        time['valid_time'] - datetime.timedelta(days=1),
-                        time['init_time'] - datetime.timedelta(days=1),
-                        time['forecast_hour'], model_file_format,
-                        model_fcst_dest_file_format
-                    )
+                if VERIF_CASE_STEP_type == 'flux':
+                    # Get files for flux daily averages, same init
+                    nf = 1
+                    while nf < 4:
+                        minus_hr = nf * 6
+                        fhr = int(time['forecast_hour'])-minus_hr
+                        if fhr >= 0:
+                            gda_util.get_model_file(
+                                time['valid_time'] \
+                                - datetime.timedelta(hours=minus_hr),
+                                time['init_time'],
+                                str(fhr),
+                                model_file_format,
+                                model_fcst_dest_file_format
+                            )
+                        nf+=1
                 elif VERIF_CASE_STEP_type == 'precip':
                     # Get for 24 hour accumulations
                     fhrs_24hr_accum_list = []
@@ -178,6 +192,15 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                 fhr, model_file_format,
                                 model_fcst_dest_file_format 
                             )
+                elif VERIF_CASE_STEP_type == 'pres_levs':
+                    # Get previous day for Geopotential
+                    # Height Anomaly daily average
+                    gda_util.get_model_file(
+                        time['valid_time'] - datetime.timedelta(days=1),
+                        time['init_time'] - datetime.timedelta(days=1),
+                        time['forecast_hour'], model_file_format,
+                        model_fcst_dest_file_format
+                    )
                 elif VERIF_CASE_STEP_type == 'snow':
                     # Get for 24 hour accumulations
                     if int(time['forecast_hour']) - 24 >= 0:
@@ -190,12 +213,39 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
         for VERIF_CASE_STEP_type_valid_time \
                 in VERIF_CASE_STEP_type_valid_time_list:
             if VERIF_CASE_STEP_type == 'flux':
-                # ALEXI
-                VERIF_CASE_STEP_alexi_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'alexi'
+                # GET-D
+                get_d_source_file_format = os.path.join(
+                    DCOMROOT_PROD, '{valid?fmt=%Y%m%d}', 'wgrbbul',
+                    'get_d', 'GETDL3_DAL_CONUS_{valid?fmt=%Y%j}_1.0.nc'
                 )
-                if not os.path.exists(VERIF_CASE_STEP_alexi_dir):
-                    os.makedirs(VERIF_CASE_STEP_alexi_dir)
+                VERIF_CASE_STEP_get_d_dir = os.path.join(
+                    VERIF_CASE_STEP_data_dir, 'get_d'
+                )
+                get_d_dest_file_format = os.path.join(
+                    VERIF_CASE_STEP_get_d_dir,
+                    'get_d.24H.{valid?fmt=%Y%m%d%H}'
+                )
+                if not os.path.exists(VERIF_CASE_STEP_get_d_dir):
+                    os.makedirs(VERIF_CASE_STEP_get_d_dir)
+                gda_util.get_truth_file(
+                    VERIF_CASE_STEP_type_valid_time, get_d_source_file_format,
+                    get_d_dest_file_format
+                )
+                if not os.path.exists(
+                        gda_util.format_filler(get_d_source_file_format,
+                                               VERIF_CASE_STEP_type_valid_time,
+                                               VERIF_CASE_STEP_type_valid_time,
+                                               ['anl'], {})
+                ) \
+                        and evs_run_mode != 'production':
+                    get_d_arch_file_format = os.path.join(
+                        archive_obs_data_dir, 'get_d',
+                        'GETDL3_DAL_CONUS_{valid?fmt=%Y%j}_1.0.nc'
+                    )
+                    gda_util.get_truth_file(
+                        VERIF_CASE_STEP_type_valid_time,
+                        get_d_arch_file_format, get_d_dest_file_format
+                    )
             elif VERIF_CASE_STEP_type == 'ozone':
                 # OMI
                 VERIF_CASE_STEP_omi_dir = os.path.join(

@@ -32,14 +32,19 @@ export DATAROOT=$OUTPUTROOT/tmp
 export COMROOT=$OUTPUTROOT/$envir/com
 if [ $machine = "WCOSS2" ]; then
     export era_interim_climo_files="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/global/climo/new_climo_files/era_interim"
+    export archive_obs_data_dir="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/global/archive/obs_data"
 elif [ $machine = "HERA" ]; then
     export era_interim_climo_files=""
+    export archive_obs_data_dir=""
 elif [ $machine = "JET" ]; then
     export era_interim_climo_files=""
+    export archive_obs_data_dir=""
 elif [ $machine = "ORION" ]; then
     export era_interim_climo_files=""
+    export archive_obs_data_dir=""
 elif [ $machine = "S4" ]; then
     export era_interim_climo_files=""
+    export archive_obs_data_dir=""
 fi
 
 # Set operational directories
