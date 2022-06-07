@@ -137,7 +137,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 if VERIF_CASE_STEP_type == 'flux':
                     # Get files for flux daily averages, same init
                     nf = 1
-                    while nf < 4:
+                    while nf <= 4:
                         minus_hr = nf * 6
                         fhr = int(time['forecast_hour'])-minus_hr
                         if fhr >= 0:
@@ -193,14 +193,21 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                 model_fcst_dest_file_format 
                             )
                 elif VERIF_CASE_STEP_type == 'pres_levs':
-                    # Get previous day for Geopotential
-                    # Height Anomaly daily average
-                    gda_util.get_model_file(
-                        time['valid_time'] - datetime.timedelta(days=1),
-                        time['init_time'] - datetime.timedelta(days=1),
-                        time['forecast_hour'], model_file_format,
-                        model_fcst_dest_file_format
-                    )
+                    # Get files for anomaly daily averages, same init
+                    nf = 1
+                    while nf <= 4:
+                        minus_hr = nf * 6
+                        fhr = int(time['forecast_hour'])-minus_hr
+                        if fhr >= 0:
+                            gda_util.get_model_file(
+                                time['valid_time'] \
+                                - datetime.timedelta(hours=minus_hr),
+                                time['init_time'],
+                                str(fhr),
+                                model_file_format,
+                                model_fcst_dest_file_format
+                            )
+                        nf+=1
                 elif VERIF_CASE_STEP_type == 'snow':
                     # Get for 24 hour accumulations
                     if int(time['forecast_hour']) - 24 >= 0:

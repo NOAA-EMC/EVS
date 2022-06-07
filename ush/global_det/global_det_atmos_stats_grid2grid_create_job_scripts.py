@@ -130,7 +130,51 @@ reformat_model_jobs_dict = {
                                        +'24hrAccum_precip.conf'
                                    )]}
     },
-    'pres_levs': {},
+    'pres_levs': {
+        'DailyAvg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
+                                           'var1_levels': 'P500',
+                                           'met_config_overrides': (
+                                              "'climo_mean = fcst;'"
+                                           )},
+                                   'commands': [gda_util.metplus_command(
+                                                    'GridStat_fcstGLOBAL_DET_'
+                                                    +'obsModelAnalysis_climoERAI_'
+                                                    +'NetCDF.conf'
+                                                ),
+                                                gda_util.python_command(
+                                                  'global_det_atmos_stats_grid2grid'
+                                                  '_create_anomaly.py',
+                                                   ['HGT_P500',
+                                                    os.path.join(
+                                                        '$DATA',
+                                                        '${VERIF_CASE}_${STEP}',
+                                                        'METplus_output',
+                                                        '${RUN}.{valid?fmt=%Y%m%d}',
+                                                        '$MODEL', '$VERIF_CASE',
+                                                        'grid_stat_${VERIF_TYPE}.'
+                                                        +'${job_name}_'
+                                                        +'{lead?fmt=%2H}0000L_'
+                                                        +'{valid?fmt=%Y%m%d}_'
+                                                        +'{valid?fmt=%H}0000V_pairs.nc'
+                                                    )]
+                                                ),
+                                                gda_util.python_command(
+                                                  'global_det_atmos_stats_grid2grid'
+                                                  '_create_daily_avg.py',
+                                                   ['HGT_ANOM_P500',
+                                                    os.path.join(
+                                                        '$DATA',
+                                                        '${VERIF_CASE}_${STEP}',
+                                                        'METplus_output',
+                                                        '${RUN}.{valid?fmt=%Y%m%d}',
+                                                        '$MODEL', '$VERIF_CASE',
+                                                        'anomaly_${VERIF_TYPE}.'
+                                                        +'${job_name}_init'
+                                                        +'{init?fmt=%Y%m%d%H}_'
+                                                        +'fhr{lead?fmt=%3H}.nc'
+                                                    )]
+                                                )]}
+    },
     'sea_ice': {},
     'snow': {
         '24hrAccum_WaterEqv': {'env': {'valid_hr': '12',
@@ -239,7 +283,11 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job.write('set -x\n')
                 job.write('\n')
                 # Set any environment variables for special cases
-                if verif_type == 'flux':
+                if verif_type == 'pres_levs':
+                    job_env_dict['TRUTH'] = os.environ[
+                        VERIF_CASE_STEP_abbrev_type+'_truth_name_list'
+                    ].split(' ')[model_idx]
+                if verif_type in ['flux', 'pres_levs']:
                     job_env_dict['netCDF_ENDDATE'] = date_dt.strftime('%Y%m%d')
                     job_env_dict['netCDF_STARTDATE'] = (
                         (date_dt - datetime.timedelta(days=1))\
@@ -504,24 +552,16 @@ generate_jobs_dict = {
                                        'GridStat_fcstGLOBAL_DET_'
                                        +'obsModelAnalysis_climoERAI.conf'
                                    )]},
-        'GeoHeightAnom': {'env': {'var1_name': 'HGT',
-                                  'var1_levels': 'P500',
-                                  'met_config_overrides': "'climo_mean = fcst;'"},
-                          'commands': [gda_util.metplus_command(
-                                           'GridStat_fcstGLOBAL_DET_'
-                                           +'obsModelAnalysis_climoERAI_'
-                                           +'NetCDF.conf'
-                                       ),
-                                       gda_util.python_command(
-                                           'global_det_atmos_stats_grid2grid'
-                                           '_create_daily_avg_anomaly.py',
-                                           ['HGT_P500']
-                                       ),
-                                       gda_util.metplus_command(
-                                           'GridStat_fcstGLOBAL_DET_'
-                                           +'obsModelAnalysis_DailyAvgAnom'
-                                           +'.conf'
-                                       )]},
+        'DailyAvg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
+                                           'var1_levels': 'P500',
+                                           'met_config_overrides': (
+                                               "'climo_mean = fcst;'"
+                                           )},
+                                   'commands': [gda_util.metplus_command(
+                                                    'GridStat_fcstGLOBAL_DET_'
+                                                    +'obsModelAnalysis_DailyAvgAnom'
+                                                    +'.conf'
+                                                )]},
         'PresSeaLevel': {'env': {'var1_name': 'PRMSL',
                                  'var1_levels': 'Z0',
                                  'fourier_beg': '',
@@ -671,13 +711,6 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     job_env_dict['TRUTH'] = os.environ[
                         VERIF_CASE_STEP_abbrev_type+'_truth_name_list' 
                     ].split(' ')[model_idx]
-                if verif_type == 'pres_levs' \
-                        and verif_type_job == 'GeoHeightAnom':
-                    job_env_dict['netCDF_ENDDATE'] = date_dt.strftime('%Y%m%d')
-                    job_env_dict['netCDF_STARTDATE'] = (
-                        (date_dt - datetime.timedelta(days=1))\
-                        .strftime('%Y%m%d')
-                    )
                 # Write environment variables
                 for name, value in job_env_dict.items():
                     job.write('export '+name+'='+value+'\n')

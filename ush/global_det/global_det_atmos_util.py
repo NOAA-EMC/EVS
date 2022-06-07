@@ -864,7 +864,6 @@ def initalize_job_env_dict(verif_type, group,
             else:
                 verif_type_valid_hr_inc = 24
             job_env_dict['valid_hr_inc'] = str(verif_type_valid_hr_inc)
-        if group == 'generate':
             job_env_dict['climo_files_dir'] = (
                 os.environ['era_interim_climo_files']
             )
