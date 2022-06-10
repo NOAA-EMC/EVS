@@ -29,7 +29,7 @@ export pgmout="OUTPUT.${pid}"
 ####################################
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
-export FIXvevs=${FIXevs:-$HOMEevs/fix}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
 

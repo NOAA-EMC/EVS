@@ -11,8 +11,8 @@ export libjpeg_ver=9c
 export bufr_dump_ver=1.0.0
 export python_ver=3.8.6
 export netcdf_ver=4.7.4
-export met_ver=10.1.0
-export metplus_ver=4.1.0
+export met_ver=10.1.1
+export metplus_ver=4.1.1
 
 export nam_ver=v4.2
 export sref_ver=v7.1

@@ -17,26 +17,40 @@ VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 config = os.environ['config']
+evs_run_mode = os.environ['evs_run_mode']
 
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
 # Set up setting names
-evs_global_det_atmos_settings_dict = {
-    'evs': ['HOMEevs', 'config', 'NET', 'RUN', 'COMPONENT', 'STEP',
-            'VERIF_CASE', 'envir', 'evs_run_mode', 'job', 'jobid',
-            'pid', 'OUTPUTROOT', 'DATA', 'machine', 'ACCOUNT',
-            'QUEUE', 'QUEUESHARED', 'QUEUESERV', 'PARTITION_BATCH', 'nproc',
-            'USE_CFP', 'MET_bin_exec', 'evs_ver', 'ccpa_ver', 'obsproc_ver',
-            'PARMevs', 'USHevs', 'EXECevs', 'FIXevs', 'DATAROOT', 'COMROOT',
-            'era_interim_climo_files', 'DCOMROOT_PROD', 'COMROOT_PROD',
-            'VERIF_CASE_STEP_abbrev'],
-    'shared': ['model_list', 'model_stat_dir_list', 'model_file_format_list',
-               'OUTPUTROOT', 'start_date', 'end_date', 'metplus_verbosity',
-               'met_verbosity','log_met_output_to_metplus', 'KEEPDATA',
-               'SENDCOM'],
-    'modules': ['MET_ROOT', 'METPLUS_PATH'],
-    'RUN_GRID2GRID_STATS': ['g2gs_type_list'],
-    'RUN_GRID2OBS_STATS': ['g2os_type_list']     
-}
+evs_global_det_atmos_settings_dict = {}
+if evs_run_mode == 'production':
+    evs_global_det_atmos_settings_dict['evs'] = [
+        'HOMEevs', 'config', 'NET', 'RUN', 'COMPONENT', 'STEP',
+        'VERIF_CASE', 'envir', 'evs_run_mode', 'job', 'jobid',
+        'pid', 'OUTPUTROOT', 'DATA', 'nproc', 'USE_CFP', 'MET_bin_exec',
+        'evs_ver', 'ccpa_ver', 'obsproc_ver',
+        'PARMevs', 'USHevs', 'EXECevs', 'FIXevs', 'DATAROOT', 'COMROOT',
+        'DCOMROOT', 'VERIF_CASE_STEP_abbrev'
+    ]
+else:
+    evs_global_det_atmos_settings_dict['evs'] = [
+        'HOMEevs', 'config', 'NET', 'RUN', 'COMPONENT', 'STEP',
+        'VERIF_CASE', 'envir', 'evs_run_mode', 'job', 'jobid',
+        'pid', 'OUTPUTROOT', 'DATA', 'machine', 'ACCOUNT',
+        'QUEUE', 'QUEUESHARED', 'QUEUESERV', 'PARTITION_BATCH', 'nproc',
+        'USE_CFP', 'MET_bin_exec', 'evs_ver', 'ccpa_ver', 'obsproc_ver',
+        'PARMevs', 'USHevs', 'EXECevs', 'FIXevs', 'DATAROOT', 'COMROOT',
+        'DCOMROOT_PROD', 'COMROOT_PROD', 'VERIF_CASE_STEP_abbrev'
+]
+evs_global_det_atmos_settings_dict['shared'] = [
+    'model_list', 'model_stat_dir_list', 'model_file_format_list',
+    'OUTPUTROOT', 'start_date', 'end_date', 'metplus_verbosity',
+    'met_verbosity','log_met_output_to_metplus', 'KEEPDATA',
+    'SENDCOM'
+]
+evs_global_det_atmos_settings_dict['modules'] = ['MET_ROOT', 'METPLUS_PATH']
+evs_global_det_atmos_settings_dict['RUN_GRID2GRID_STATS'] = ['g2gs_type_list']
+evs_global_det_atmos_settings_dict['RUN_GRID2OBS_STATS'] = ['g2os_type_list']
+
 verif_case_step_settings_dict = {
     'RUN_GRID2GRID_STATS': {
         'flux': ['cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc'],

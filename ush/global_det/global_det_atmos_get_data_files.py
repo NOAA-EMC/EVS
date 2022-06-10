@@ -26,14 +26,20 @@ machine = os.environ['machine']
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
-COMROOT_PROD = os.environ['COMROOT_PROD']
-DCOMROOT_PROD = os.environ['DCOMROOT_PROD']
 QUEUESERV = os.environ['QUEUESERV']
 ACCOUNT = os.environ['ACCOUNT']
 USER = os.environ['USER']
 ccpa_ver = os.environ['ccpa_ver']
 obsproc_ver = os.environ['obsproc_ver']
 evs_run_mode = os.environ['evs_run_mode']
+
+# Set production data paths
+if evs_run_mode != 'production':
+    COMROOT_PROD = os.environ['COMROOT_PROD']
+    DCOMROOT_PROD = os.environ['DCOMROOT_PROD']
+else:
+    COMROOT_PROD = os.environ['COMROOT']
+    DCOMROOT_PROD = os.environ['DCOMROOT']
 
 # Set archive paths
 if evs_run_mode != 'production':
