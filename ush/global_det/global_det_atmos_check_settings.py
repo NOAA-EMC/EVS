@@ -26,8 +26,8 @@ if evs_run_mode == 'production':
     evs_global_det_atmos_settings_dict['evs'] = [
         'HOMEevs', 'config', 'NET', 'RUN', 'COMPONENT', 'STEP',
         'VERIF_CASE', 'envir', 'evs_run_mode', 'job', 'jobid',
-        'pid', 'OUTPUTROOT', 'DATA', 'nproc', 'USE_CFP', 'MET_bin_exec',
-        'evs_ver', 'ccpa_ver', 'obsproc_ver',
+        'pid', 'OUTPUTROOT', 'DATA', 'machine', 'nproc', 'USE_CFP',
+        'MET_bin_exec', 'evs_ver', 'ccpa_ver', 'obsproc_ver',
         'PARMevs', 'USHevs', 'EXECevs', 'FIXevs', 'DATAROOT', 'COMROOT',
         'DCOMROOT', 'VERIF_CASE_STEP_abbrev'
     ]

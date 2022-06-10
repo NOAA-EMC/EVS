@@ -52,12 +52,11 @@ status=$?
 # Run job scripts for reformat, generate, and gather
 for group in reformat generate gather; do
     chmod u+x ${VERIF_CASE}_${STEP}/METplus_job_scripts/$group/*
-    group_ncount_poe=$(ls -l  ${VERIF_CASE}_${STEP}/METplus_job_scripts/$group/poe* |wc -l)
     group_ncount_job=$(ls -l  ${VERIF_CASE}_${STEP}/METplus_job_scripts/$group/job* |wc -l)
+    nc=1
     if [ $USE_CFP = YES ]; then
-        nc=0
-        while [ $nc -lt $group_ncount_poe ]; do
-            nc=$((nc+1))
+        group_ncount_poe=$(ls -l  ${VERIF_CASE}_${STEP}/METplus_job_scripts/$group/poe* |wc -l)
+        while [ $nc -le $group_ncount_poe ]; do
             poe_script=$DATA/${VERIF_CASE}_${STEP}/METplus_job_scripts/$group/poe_jobs${nc}
             chmod 775 $poe_script
             export MP_PGMMODEL=mpmd
@@ -69,12 +68,12 @@ for group in reformat generate gather; do
                 launcher="srun --export=ALL --multi-prog"
             fi
             $launcher $MP_CMDFILE
+            nc=$((nc+1))
         done
     else
-        nc=0
-        while [ $nc -lt $group_ncount_job ]; do
-            nc=$((nc+1))
+        while [ $nc -le $group_ncount_job ]; do
             sh +x $DATA/${VERIF_CASE}_${STEP}/METplus_job_scripts/$group/job${nc}
+            nc=$((nc+1))
         done
     fi
 done
