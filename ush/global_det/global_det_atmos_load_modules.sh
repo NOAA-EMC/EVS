@@ -40,5 +40,8 @@ fi
 module use ${HOMEevs}/modulefiles
 module load run.global_det_atmos.${machine}
 module list
-
+if [ $machine = WCOSS2 ]; then
+    export MET_BASE=/apps/ops/para/libs/intel/19.1.3.304/met/10.1.1/share/met
+    export MET_ROOT=/apps/ops/para/libs/intel/19.1.3.304/met/10.1.1
+fi
 echo "END: $(basename ${BASH_SOURCE[0]})"
