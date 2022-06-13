@@ -47,7 +47,7 @@ echo
 python $USHevs/global_det/global_det_atmos_stats_grid2grid_create_job_scripts.py
 status=$?
 [[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_create_stats_job_scripts.py"
+[[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_stats_grid2grid_create_job_scripts.py"
 
 # Run job scripts for reformat, generate, and gather
 for group in reformat generate gather; do
