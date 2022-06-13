@@ -35,12 +35,8 @@ if evs_run_mode != 'production':
     machine = os.environ['machine']
 
 # Set production data paths
-if evs_run_mode != 'production':
-    COMROOT_PROD = os.environ['COMROOT_PROD']
-    DCOMROOT_PROD = os.environ['DCOMROOT_PROD']
-else:
-    COMROOT_PROD = os.environ['COMROOT']
-    DCOMROOT_PROD = os.environ['DCOMROOT']
+DCOMROOT_PROD = '/lfs/h1/ops/prod/dcom'
+COMROOT_PROD = '/lfs/h1/ops/prod/com'
 
 # Set archive paths
 if evs_run_mode != 'production':

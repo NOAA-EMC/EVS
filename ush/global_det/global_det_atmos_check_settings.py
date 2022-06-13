@@ -39,7 +39,7 @@ else:
         'QUEUE', 'QUEUESHARED', 'QUEUESERV', 'PARTITION_BATCH', 'nproc',
         'USE_CFP', 'MET_bin_exec', 'evs_ver', 'ccpa_ver', 'obsproc_ver',
         'PARMevs', 'USHevs', 'EXECevs', 'FIXevs', 'DATAROOT', 'COMROOT',
-        'DCOMROOT_PROD', 'COMROOT_PROD', 'VERIF_CASE_STEP_abbrev'
+        'VERIF_CASE_STEP_abbrev'
 ]
 evs_global_det_atmos_settings_dict['shared'] = [
     'model_list', 'model_stat_dir_list', 'model_file_format_list',

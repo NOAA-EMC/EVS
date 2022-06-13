@@ -46,10 +46,6 @@ elif [ $machine = "S4" ]; then
     export archive_obs_data_dir=""
 fi
 
-# Set operational directories
-export DCOMROOT_PROD=/lfs/h1/ops/prod/dcom
-export COMROOT_PROD=/lfs/h1/ops/prod/com
-
 # Set FTP/HTPP paths [TEMPORARY UNTIL IN DATAFLOW]
 
 echo "END: $(basename ${BASH_SOURCE[0]})"
