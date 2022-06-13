@@ -50,6 +50,7 @@ module load prod_util/2.0.13
 ###### sets: 
 ##### load prod_envir
 ###### sets: OPSROOT, OPSROOTssd, COMROOT, DATAROOT, DCOOMROOT, PACKAGEROOT
+export envir=dev
 export COMROOT=/lfs/h2/emc/stmp/$USER/evs_output/$envir/com
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output/$envir/tmp
 ###### define error handling
@@ -61,7 +62,6 @@ export jobid=$job.${PBS_JOBID:-$$}
 #export SIPHONROOT=
 #export NODBNFCHK=
 #export DBNROOT=
-export envir=dev
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
 ############################################################
