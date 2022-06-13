@@ -26,7 +26,7 @@ NET = os.environ['NET']
 RUN = os.environ['RUN']
 COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
-MODEL_list = os.environ['MODEL_list'].split(' ')
+model_list = os.environ['model_list'].split(' ')
 gfs_ver = os.environ['gfs_ver']
 cmc_ver = os.environ['cmc_ver']
 cfs_ver = os.environ['cfs_ver']
@@ -209,7 +209,7 @@ arch_precip_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
                                        +'t{init?fmt=%2H}z.'
                                        +'f{lead?fmt=%3H}')
 
-for MODEL in MODEL_list:
+for MODEL in model_list:
     if MODEL not in list(global_det_model_dict.keys()):
         print("ERROR: "+MODEL+" not recongized")
         sys.exit(1)
