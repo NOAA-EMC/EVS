@@ -60,13 +60,13 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
 elif VERIF_CASE_STEP == 'grid2obs_stats':
     for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
         if VERIF_CASE_STEP_type == 'pres_levs':
-            data_dir_list.append(os.path.join(data_base_dir, 'gdas'))
+            data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_gdas'))
         elif VERIF_CASE_STEP_type == 'sea_ice':
             data_dir_list.append(os.path.join(data_base_dir, 'iabp'))
         elif VERIF_CASE_STEP_type == 'sfc':
-            data_dir_list.append(os.path.join(data_base_dir, 'gdas'))
-            data_dir_list.append(os.path.join(data_base_dir, 'nam'))
-            data_dir_list.append(os.path.join(data_base_dir, 'rap'))
+            data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_gdas'))
+            data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_nam'))
+            data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_rap_p'))
 
 # Create data directories
 for data_dir in data_dir_list:
@@ -135,6 +135,19 @@ while date_dt <= end_date_dt:
                 METplus_output_dir_list.append(
                     os.path.join(METplus_output_base_dir,
                                  RUN+'.'+date_dt.strftime('%Y%m%d'), 'ccpa',
+                                 VERIF_CASE)
+                )
+    elif VERIF_CASE_STEP == 'grid2obs_stats':
+        for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
+            if VERIF_CASE_STEP_type == 'pres_levs':
+                COMROOT_dir_list.append(
+                    os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
+                                 RUN+'.'+date_dt.strftime('%Y%m%d'), 'prepbufr',
+                                 VERIF_CASE)
+                )
+                METplus_output_dir_list.append(
+                    os.path.join(METplus_output_base_dir,
+                                 RUN+'.'+date_dt.strftime('%Y%m%d'), 'prepbufr',
                                  VERIF_CASE)
                 )
     date_dt = date_dt + datetime.timedelta(days=1)

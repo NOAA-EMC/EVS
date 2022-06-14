@@ -489,14 +489,21 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                     model_fcst_dest_file_format
                 )
                 if VERIF_CASE_STEP_type == 'sfc':
-                    # Get previous day for 2 meter
-                    # Temperature Anomaly verification
-                    gda_util.get_model_file(
-                        time['valid_time'] - datetime.timedelta(days=1),
-                        time['init_time'] - datetime.timedelta(days=1),
-                        time['forecast_hour'], model_file_format,
-                        model_fcst_dest_file_format
-                    )
+                    # Get files for anomaly daily averages, same init
+                    nf = 1
+                    while nf <= 4:
+                        minus_hr = nf * 6
+                        fhr = int(time['forecast_hour'])-minus_hr
+                        if fhr >= 0:
+                            gda_util.get_model_file(
+                                time['valid_time'] \
+                                - datetime.timedelta(hours=minus_hr),
+                                time['init_time'],
+                                str(fhr),
+                                model_file_format,
+                                model_fcst_dest_file_format
+                            )
+                        nf+=1
         # Get truth files
         for VERIF_CASE_STEP_type_valid_time \
                 in VERIF_CASE_STEP_type_valid_time_list:
@@ -504,13 +511,17 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                 # GDAS prepbufr
                 if VERIF_CASE_STEP_type_valid_time.strftime('%H') \
                         in ['00', '06', '12', '18']:
-                    gdas_source_file_format = os.path.join(
+                    gdas_prod_file_format = os.path.join(
                         COMROOT_PROD, 'obsproc', obsproc_ver,
                         'gdas.{valid?fmt=%Y%m%d}', '{valid?fmt=%H}', 'atmos',
                         'gdas.t{valid?fmt=%H}z.prepbufr'
                     )
+                    gdas_prod_file = gda_util.format_filler(
+                        gdas_prod_file_format, VERIF_CASE_STEP_type_valid_time,
+                        VERIF_CASE_STEP_type_valid_time, ['anl'], {}
+                    )
                     VERIF_CASE_STEP_gdas_dir = os.path.join(
-                        VERIF_CASE_STEP_data_dir, 'gdas'
+                        VERIF_CASE_STEP_data_dir, 'prepbufr_gdas'
                     )
                     gdas_dest_file_format = os.path.join(
                         VERIF_CASE_STEP_gdas_dir,
@@ -518,11 +529,23 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                     )
                     if not os.path.exists(VERIF_CASE_STEP_gdas_dir):
                         os.makedirs(VERIF_CASE_STEP_gdas_dir)
-                    gda_util.get_truth_file(
-                        VERIF_CASE_STEP_type_valid_time,
-                        gdas_source_file_format,
-                        gdas_dest_file_format
-                    )
+                    if os.path.exists(gdas_prod_file):
+                        gda_util.get_truth_file(
+                            VERIF_CASE_STEP_type_valid_time,
+                            gdas_prod_file_format,
+                            gdas_dest_file_format
+                        )
+                    else:
+                        if evs_run_mode != 'production':
+                            gdas_arch_file_format = os.path.join(
+                                archive_obs_data_dir, 'prepbufr', 'gdas',
+                                'prepbufr.gdas.{valid?fmt=%Y%m%d%H}'
+                            )
+                            gda_util.get_truth_file(
+                                VERIF_CASE_STEP_type_valid_time,
+                                gdas_arch_file_format,
+                                gdas_dest_file_format
+                            )
             if VERIF_CASE_STEP_type == 'sea_ice':
                 # IABP
                 VERIF_CASE_STEP_iabp_dir = os.path.join(
@@ -532,89 +555,142 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                     os.makedirs(VERIF_CASE_STEP_iabp_dir)
             elif VERIF_CASE_STEP_type == 'sfc':
                 # NAM prepbufr
+                offset_hr = str(
+                    int(VERIF_CASE_STEP_type_valid_time.strftime('%H'))%6
+                ).zfill(2)
+                offset_valid_time_dt = (
+                    VERIF_CASE_STEP_type_valid_time
+                    + datetime.timedelta(hours=int(offset_hr))
+                )
+                nam_prod_file_format = os.path.join(
+                    COMROOT_PROD, 'obsproc', obsproc_ver,
+                    'nam.{valid?fmt=%Y%m%d}',
+                    'nam.t{valid?fmt=%H}z.prepbufr.tm'+offset_hr
+                )
+                nam_prod_file = gda_util.format_filler(
+                    nam_prod_file_format, offset_valid_time_dt,
+                    offset_valid_time_dt, ['anl'], {}
+                )
                 VERIF_CASE_STEP_nam_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'nam'
+                    VERIF_CASE_STEP_data_dir, 'prepbufr_nam'
                 )
                 nam_dest_file_format = os.path.join(
                     VERIF_CASE_STEP_nam_dir,
                     'prepbufr.nam.{valid?fmt=%Y%m%d%H}'
                 )
+                nam_dest_file = gda_util.format_filler(
+                    nam_dest_file_format, VERIF_CASE_STEP_type_valid_time,
+                    VERIF_CASE_STEP_type_valid_time, ['anl'], {}
+                )
                 if not os.path.exists(VERIF_CASE_STEP_nam_dir):
                     os.makedirs(VERIF_CASE_STEP_nam_dir)
-                if VERIF_CASE_STEP_type_valid_time.strftime('%H') \
-                        in ['00', '06', '12', '18']:
-                    nam_source_file_format = os.path.join(
-                        COMROOT_PROD, 'obsproc', obsproc_ver,
-                        'nam.{valid?fmt=%Y%m%d}',
-                        'nam.t{valid?fmt=%H}z.prepbufr.tm00'
+                if os.path.exists(nam_prod_file):
+                    gda_util.get_truth_file(
+                        VERIF_CASE_STEP_type_valid_time,
+                        nam_prod_file, nam_dest_file
                     )
-                elif VERIF_CASE_STEP_type_valid_time.strftime('%H') \
-                        in ['03', '09', '15', '21']:
-                    nam_source_file_format = os.path.join(
-                        COMROOT_PROD, 'obsproc', obsproc_ver,
-                        'nam.'
-                        +(VERIF_CASE_STEP_type_valid_time
-                          +datetime.timedelta(hours=3)).strftime('%Y%m%d'),
-                        'nam.t'
-                        +(VERIF_CASE_STEP_type_valid_time
-                          +datetime.timedelta(hours=3)).strftime('%H')
-                        +'z.prepbufr.tm03'
-                    )
-                gda_util.get_truth_file(
-                    VERIF_CASE_STEP_type_valid_time,
-                    nam_source_file_format, nam_dest_file_format
-                )
+                else:
+                    if evs_run_mode != 'production':
+                        nam_arch_file_format = os.path.join(
+                            archive_obs_data_dir, 'prepbufr',
+                            'nam', 'nam.{valid?fmt=%Y%m%d}',
+                            'nam.t{valid?fmt=%H}z.prepbufr.tm'+offset_hr
+                        )
+                        nam_arch_file = gda_util.format_filler(
+                            nam_arch_file_format, offset_valid_time_dt,
+                            offset_valid_time_dt, ['anl'], {}
+                        )
+                        gda_util.get_truth_file(
+                            VERIF_CASE_STEP_type_valid_time,
+                            nam_arch_file, nam_dest_file
+                        )
                 # Get previous day for 2 meter
                 # Temperature Anomaly verification
-                if VERIF_CASE_STEP_type_valid_time.strftime('%H') \
-                        in ['00', '06', '12', '18']:
-                    nam_source_file_format = os.path.join(
-                        COMROOT_PROD, 'obsproc', obsproc_ver,
-                        'nam.{valid?fmt=%Y%m%d}',
-                        'nam.t{valid?fmt=%H}z.prepbufr.tm00'
-                    )
-                elif VERIF_CASE_STEP_type_valid_time.strftime('%H') \
-                        in ['03', '09', '15', '21']:
-                    nam_source_file_format = os.path.join(
-                        COMROOT_PROD, 'obsproc', obsproc_ver,
-                        'nam.'
-                        +(VERIF_CASE_STEP_type_valid_time
-                          -datetime.timedelta(hours=21)).strftime('%Y%m%d'),
-                        'nam.t'
-                        +(VERIF_CASE_STEP_type_valid_time
-                          -datetime.timedelta(hours=21)).strftime('%H')
-                        +'z.prepbufr.tm03'
-                    ) 
-                gda_util.get_truth_file(
-                    (VERIF_CASE_STEP_type_valid_time 
-                    - datetime.timedelta(days=1)),
-                    nam_source_file_format, nam_dest_file_format
+                offset_valid_time_m1_dt = (
+                    offset_valid_time_dt - datetime.timedelta(days=1)
                 )
-                # RAP prepbufr
-                rap_source_file_format = os.path.join(
+                VERIF_CASE_STEP_type_valid_time_m1 = (
+                    VERIF_CASE_STEP_type_valid_time
+                    - datetime.timedelta(days=1)
+                )
+                nam_prod_file = gda_util.format_filler(
+                    nam_prod_file_format, offset_valid_time_m1_dt,
+                    offset_valid_time_m1_dt, ['anl'], {}
+                )
+                nam_dest_file = gda_util.format_filler(
+                    nam_dest_file_format, VERIF_CASE_STEP_type_valid_time_m1,
+                    VERIF_CASE_STEP_type_valid_time_m1, ['anl'], {}
+                )
+                if os.path.exists(nam_prod_file):
+                    gda_util.get_truth_file(
+                        VERIF_CASE_STEP_type_valid_time,
+                        nam_prod_file, nam_dest_file
+                    )
+                else:
+                    if evs_run_mode != 'production':
+                        nam_arch_file = gda_util.format_filler(
+                            nam_arch_file_format, offset_valid_time_m1_dt,
+                            offset_valid_time_m1_dt, ['anl'], {}
+                        )
+                        gda_util.get_truth_file(
+                            VERIF_CASE_STEP_type_valid_time,
+                            nam_arch_file, nam_dest_file
+                        )
+                # RAP_P prepbufr
+                rap_p_prod_file_format = os.path.join(
                     COMROOT_PROD, 'obsproc', obsproc_ver,
                     'rap_p.{valid?fmt=%Y%m%d}',
                     'rap_p.t{valid?fmt=%H}z.prepbufr.tm00'
                 )
-                VERIF_CASE_STEP_rap_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'rap'
+                rap_p_prod_file = gda_util.format_filler(
+                    rap_p_prod_file_format, VERIF_CASE_STEP_type_valid_time,
+                    VERIF_CASE_STEP_type_valid_time, ['anl'], {}
+                ) 
+                VERIF_CASE_STEP_rap_p_dir = os.path.join(
+                    VERIF_CASE_STEP_data_dir, 'prepbufr_rap_p'
                 )
-                rap_dest_file_format = os.path.join(
-                    VERIF_CASE_STEP_rap_dir,
-                    'prepbufr.rap.{valid?fmt=%Y%m%d%H}'
+                rap_p_dest_file_format = os.path.join(
+                    VERIF_CASE_STEP_rap_p_dir,
+                    'prepbufr.rap_p.{valid?fmt=%Y%m%d%H}'
                 )
-                if not os.path.exists(VERIF_CASE_STEP_rap_dir):
-                    os.makedirs(VERIF_CASE_STEP_rap_dir)
-                gda_util.get_truth_file(
-                    VERIF_CASE_STEP_type_valid_time,
-                    rap_source_file_format, rap_dest_file_format
-                )
+                if not os.path.exists(VERIF_CASE_STEP_rap_p_dir):
+                    os.makedirs(VERIF_CASE_STEP_rap_p_dir)
+                if os.path.exists(rap_p_prod_file):
+                    gda_util.get_truth_file(
+                        VERIF_CASE_STEP_type_valid_time,
+                        rap_p_prod_file_format, rap_p_dest_file_format
+                    )
+                else:
+                    if evs_run_mode != 'production':
+                        rap_p_arch_file_format = os.path.join(
+                            archive_obs_data_dir, 'prepbufr',
+                            'rap_p', 'rap_p.{valid?fmt=%Y%m%d}',
+                            'rap_p.t{valid?fmt=%H}z.prepbufr.tm00'
+                        )
+                        gda_util.get_truth_file(
+                            VERIF_CASE_STEP_type_valid_time,
+                            rap_p_arch_file_format, rap_p_dest_file_format
+                        )
                 # Get previous day for 2 meter
                 # Temperature Anomaly verification
-                gda_util.get_truth_file(
-                    (VERIF_CASE_STEP_type_valid_time
-                     - datetime.timedelta(days=1)),
-                    rap_source_file_format, rap_dest_file_format
+                rap_p_prod_file = gda_util.format_filler(
+                    rap_p_prod_file_format,
+                    VERIF_CASE_STEP_type_valid_time-datetime.timedelta(days=1),
+                    VERIF_CASE_STEP_type_valid_time-datetime.timedelta(days=1),
+                    ['anl'], {}
                 )
+                if os.path.exists(rap_p_prod_file):
+                    gda_util.get_truth_file(
+                        (VERIF_CASE_STEP_type_valid_time
+                         - datetime.timedelta(days=1)),
+                        rap_p_prod_file_format, rap_p_dest_file_format
+                    )
+                else:
+                    if evs_run_mode != 'production':
+                        gda_util.get_truth_file(
+                            (VERIF_CASE_STEP_type_valid_time
+                             - datetime.timedelta(days=1)),
+                            rap_p_arch_file_format, rap_p_dest_file_format
+                        )
 
 print("END: "+os.path.basename(__file__))

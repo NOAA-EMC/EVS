@@ -17,7 +17,7 @@ echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 ## EDIT SECTIONS BELOW FOR VERIFICATION TYPES REQUESTED
 export RUN_GRID2GRID_STATS="YES"
 export RUN_GRID2GRID_PLOTS="NO"
-export RUN_GRID2OBS_STATS="NO"
+export RUN_GRID2OBS_STATS="YES"
 export RUN_GRID2OBS_PLOTS="NO"
 
 ####################################################
@@ -120,7 +120,7 @@ if [ $RUN_GRID2OBS_STATS = YES ]; then
     #    pres_levs:  compare variables on pressure levels to GDAS prepbufr obs
     #    sea_ice:    compare Internation Arctic Buoy Program
     #    sfc:        compare surface variables to GDAS and NAM/RAP prepbufr obs
-    export g2os_type_list="pres_levs sfc flux sea_ice"
+    export g2os_type_list="pres_levs sfc sea_ice"
     export g2os_pres_levs_cycle_list="00 06 12 18"
     export g2os_pres_levs_valid_hr_list="00 06 12 18"
     export g2os_pres_levs_fhr_min=00
