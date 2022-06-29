@@ -682,6 +682,7 @@ if USE_CFP == 'YES':
             print("ERROR: No job files created in "
                   +os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
                                 group))
+            continue
         njob, iproc, node = 1, 0, 1
         while njob <= njob_files:
             job = 'job'+str(njob)
