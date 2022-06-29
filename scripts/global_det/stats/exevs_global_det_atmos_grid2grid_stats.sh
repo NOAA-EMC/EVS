@@ -105,8 +105,28 @@ if [ $SENDCOM = YES ]; then
     done
 fi
 
-# Send data to METviewer AWS server
-
-# Clean up
-#if [ $RUN_ENVIR != nco ]; then
-#fi
+# Non-production jobs
+if [ $evs_run_mode != "production" ]; then
+    # Send data to archive
+    if [ $SENDARCH = YES ]; then
+        python $USHevs/global_det/global_det_atmos_copy_to_archive.py
+        status=$?
+        [[ $status -ne 0 ]] && exit $status
+        [[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_copy_to_archive.py"
+        echo
+    fi
+    # Send data to METviewer AWS server
+    if [ $SENDMETVIEWER = YES ]; then
+        python $USHevs/global_det/global_det_atmos_load_to_METviewer_AWS.py
+        status=$?
+        [[ $status -ne 0 ]] && exit $status
+        [[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_load_to_METviewer_AWS.py"
+        echo
+    else
+        # Clean up
+        if [ $KEEPDATA != "YES" ] ; then
+            cd $DATAROOT
+            rm -rf $DATA
+        fi
+    fi
+fi

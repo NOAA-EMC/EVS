@@ -38,18 +38,25 @@ else:
         'pid', 'OUTPUTROOT', 'DATA', 'machine', 'ACCOUNT',
         'QUEUE', 'QUEUESHARED', 'QUEUESERV', 'PARTITION_BATCH', 'nproc',
         'USE_CFP', 'MET_bin_exec', 'evs_ver', 'ccpa_ver', 'obsproc_ver',
-        'PARMevs', 'USHevs', 'EXECevs', 'FIXevs', 'DATAROOT', 'COMROOT',
+        'PARMevs', 'USHevs', 'EXECevs', 'FIXevs', 'archive_obs_data_dir',
+        'METviewer_AWS_scripts_dir', 'DATAROOT', 'COMROOT',
         'VERIF_CASE_STEP_abbrev'
 ]
 evs_global_det_atmos_settings_dict['shared'] = [
     'model_list', 'model_stat_dir_list', 'model_file_format_list',
     'OUTPUTROOT', 'start_date', 'end_date', 'metplus_verbosity',
     'met_verbosity','log_met_output_to_metplus', 'KEEPDATA',
-    'SENDCOM'
+    'SENDCOM', 'SENDARCH', 'SENDMETVIEWER'
 ]
 evs_global_det_atmos_settings_dict['modules'] = ['MET_ROOT', 'METPLUS_PATH']
-evs_global_det_atmos_settings_dict['RUN_GRID2GRID_STATS'] = ['g2gs_type_list']
-evs_global_det_atmos_settings_dict['RUN_GRID2OBS_STATS'] = ['g2os_type_list']
+evs_global_det_atmos_settings_dict['RUN_GRID2GRID_STATS'] = [
+    'g2gs_type_list', 'g2gs_mv_database_name', 'g2gs_mv_database_group',
+    'g2gs_mv_database_desc'
+]
+evs_global_det_atmos_settings_dict['RUN_GRID2OBS_STATS'] = [
+    'g2os_type_list', 'g2os_mv_database_name', 'g2os_mv_database_group',
+    'g2os_mv_database_desc'
+]
 
 verif_case_step_settings_dict = {
     'RUN_GRID2GRID_STATS': {

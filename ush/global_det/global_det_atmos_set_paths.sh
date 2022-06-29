@@ -32,18 +32,23 @@ export COMROOT=$OUTPUTROOT/$envir/com
 if [ $machine = "WCOSS2" ]; then
     export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
     export archive_obs_data_dir="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/global/archive/obs_data"
+    export METviewer_AWS_scripts_dir="/lfs/h2/emc/vpppg/save/emc.vpppg/verification/metplus/metviewer_aws_scripts"
 elif [ $machine = "HERA" ]; then
     export FIXevs=""
     export archive_obs_data_dir=""
+    export METviewer_AWS_scripts_dir="/scratch1/NCEPDEV/global/Mallory.Row/VRFY/METviewer_AWS"
 elif [ $machine = "JET" ]; then
     export FIXevs=""
     export archive_obs_data_dir=""
+    export METviewer_AWS_scripts_dir="/lfs4/HFIP/hfv3gfs/Mallory.Row/VRFY/METviewer_AWS"
 elif [ $machine = "ORION" ]; then
     export FIXevs=""
     export archive_obs_data_dir=""
+    export METviewer_AWS_scripts_dir="/gpfs/dell2/emc/verification/noscrub/emc.metplus/METviewer_AWS"
 elif [ $machine = "S4" ]; then
     export FIXevs=""
     export archive_obs_data_dir=""
+    export METviewer_AWS_scripts_dir="/data/prod/glopara/MET_data/METviewer_AWS"
 fi
 
 # Set FTP/HTPP paths [TEMPORARY UNTIL IN DATAFLOW]
