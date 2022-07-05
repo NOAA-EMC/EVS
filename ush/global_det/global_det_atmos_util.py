@@ -513,6 +513,8 @@ def prep_prod_ecmwf_file(source_file, dest_file, forecast_hour, prep_method):
                  +working_file1]
             )
         if check_file_exists_size(working_file1):
+            run_shell_command(['chmod', '750', working_file1])
+            run_shell_command(['chgrp', 'rstprod', working_file1])
             run_shell_command(
                 [ECMGFSLOOKALIKENEW, working_file1, prepped_file]
             )
