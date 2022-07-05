@@ -37,12 +37,6 @@ MET_ROOT = os.environ['MET_ROOT']
 MET_bin_exec = os.environ['MET_bin_exec']
 PARMevs = os.environ['PARMevs']
 model_list = os.environ['model_list'].split(' ')
-precip_file_accum_list = (os.environ \
-                          [VERIF_CASE_STEP_abbrev+'_precip_file_accum_list'] \
-                          .split(' '))
-precip_var_list = (os.environ \
-                   [VERIF_CASE_STEP_abbrev+'_precip_var_list'] \
-                    .split(' '))
 
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
 start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
@@ -208,6 +202,14 @@ for verif_type in VERIF_CASE_STEP_type_list:
     verif_type_reformat_model_jobs_dict = (
         reformat_model_jobs_dict[verif_type]
     )
+    # Read in environment variables for verif_type
+    if verif_type == 'precip':
+        precip_file_accum_list = (os.environ \
+            [VERIF_CASE_STEP_abbrev+'_precip_file_accum_list'] \
+        .split(' '))
+        precip_var_list = (os.environ \
+            [VERIF_CASE_STEP_abbrev+'_precip_var_list'] \
+        .split(' '))
     # Reformat obs jobs
     for verif_type_job in list(verif_type_reformat_obs_jobs_dict.keys()):
         # Initialize job environment dictionary

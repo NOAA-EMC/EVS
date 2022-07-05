@@ -49,23 +49,26 @@ if cwd != DATA:
 
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
 if VERIF_CASE_STEP == 'grid2grid_stats':
-    # Read in VERIF_CASE_STEP related environment variables
-    VERIF_CASE_STEP_pres_levs_truth_format_list = os.environ[
-        VERIF_CASE_STEP_abbrev+'_pres_levs_truth_format_list'
-    ].split(' ')
-    VERIF_CASE_STEP_precip_file_format_list = os.environ[
-        VERIF_CASE_STEP_abbrev+'_precip_file_format_list'
-    ].split(' ')
-    VERIF_CASE_STEP_precip_file_accum_list = os.environ[
-        VERIF_CASE_STEP_abbrev+'_precip_file_accum_list'
-    ].split(' ')
     # Get model forecast and truth files for
     # each option in VERIF_CASE_STEP_type_list
+    # Read in VERIF_CASE_STEP related environment variables
     for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
         print("----> Getting files for "+VERIF_CASE_STEP+" "
               +VERIF_CASE_STEP_type)
         VERIF_CASE_STEP_abbrev_type = (VERIF_CASE_STEP_abbrev+'_'
                                        +VERIF_CASE_STEP_type)
+        # Read in VERIF_CASE_STEP_type related environment variables
+        if VERIF_CASE_STEP_type == 'pres_levs':
+            VERIF_CASE_STEP_pres_levs_truth_format_list = os.environ[
+                VERIF_CASE_STEP_abbrev+'_pres_levs_truth_format_list'
+            ].split(' ')
+        elif VERIF_CASE_STEP_type == 'precip':
+            VERIF_CASE_STEP_precip_file_format_list = os.environ[
+                VERIF_CASE_STEP_abbrev+'_precip_file_format_list'
+            ].split(' ')
+            VERIF_CASE_STEP_precip_file_accum_list = os.environ[
+                VERIF_CASE_STEP_abbrev+'_precip_file_accum_list'
+            ].split(' ')
         # Set valid hours
         if VERIF_CASE_STEP_type in ['pres_levs', 'means']: 
             VERIF_CASE_STEP_type_valid_hr_list = os.environ[
@@ -435,6 +438,7 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
     for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
         VERIF_CASE_STEP_abbrev_type = (VERIF_CASE_STEP_abbrev+'_'
                                        +VERIF_CASE_STEP_type)
+        # Read in VERIF_CASE_STEP_type related environment variables
         # Set valid hours
         if VERIF_CASE_STEP_type in ['pres_levs', 'sfc']:
             VERIF_CASE_STEP_type_valid_hr_list = os.environ[
