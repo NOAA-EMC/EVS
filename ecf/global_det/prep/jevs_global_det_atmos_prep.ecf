@@ -86,7 +86,7 @@ export STEP=prep
 export COMPONENT=global_det
 export RUN=atmos
 
-export model_list="cfs cmc cmc_regional dwd ecmwf fnmoc imd jma metfra ukmet"
+export model_list="cmc cmc_regional dwd ecmwf fnmoc imd jma metfra ukmet"
 
 # CALL executable job script here
 $HOMEevs/jobs/global_det/prep/JEVS_GLOBAL_DET_PREP
