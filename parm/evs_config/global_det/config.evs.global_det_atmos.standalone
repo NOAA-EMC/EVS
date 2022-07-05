@@ -50,7 +50,7 @@ export log_met_output_to_metplus="yes"
 export KEEPDATA="YES"
 export SENDCOM="YES"
 export SENDARCH="YES"
-export SENDMETVIEWER="YES"
+export SENDMETVIEWER="NO"
 ####################################################
 # SETTINGS FOR SPECIFIC USE CASES
 ####################################################
