@@ -260,6 +260,11 @@ for MODEL in model_list:
                                                       arch_fcst_file,
                                                       str(fcst_hr),
                                                       'full')
+                    elif MODEL == 'fnmoc':
+                        gda_util.prep_prod_fnmoc_file(prod_fcst_file,
+                                                      arch_fcst_file,
+                                                      str(fcst_hr),
+                                                      'full')
                     else:
                         gda_util.copy_file(prod_fcst_file, arch_fcst_file)
             if 'prod_precip_file_format' in list(model_dict.keys()):
@@ -303,6 +308,11 @@ for MODEL in model_list:
                                                       'precip')
                     elif MODEL == 'ukmet':
                         gda_util.prep_prod_ukmet_file(prod_precip_file,
+                                                      arch_precip_file,
+                                                      str(fcst_hr),
+                                                      'precip')
+                    elif MODEL == 'fnmoc':
+                        gda_util.prep_prod_fnmoc_file(prod_precip_file,
                                                       arch_precip_file,
                                                       str(fcst_hr),
                                                       'precip')
@@ -356,6 +366,11 @@ for MODEL in model_list:
                                                   'full')
                 elif MODEL == 'ukmet':
                     gda_util.prep_prod_ukmet_file(prod_anl_file,
+                                                  arch_anl_file,
+                                                  'anl',
+                                                  'full')
+                elif MODEL == 'fnmoc':
+                    gda_util.prep_prod_fnmoc_file(prod_anl_file,
                                                   arch_anl_file,
                                                   'anl',
                                                   'full')

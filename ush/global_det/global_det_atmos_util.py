@@ -143,6 +143,24 @@ def convert_grib2_grib1(grib2_file, grib1_file):
     os.system(cnvgrib+' -g21 '+grib2_file+' '
               +grib1_file+' > /dev/null 2>&1')
 
+def convert_grib2_grib2(grib2_fileA, grib2_fileB):
+    """! Converts GRIB2 data to GRIB2
+
+         Args:
+             grib2_fileA - string of the path to
+                           the GRIB2 file to
+                           convert
+             grib2_fileB - string of the path to
+                           save the converted GRIB2
+                           file
+         Returns:
+    """
+    print("Converting GRIB2 file "+grib2_fileA+" "
+          +"to GRIB2 file "+grib2_fileB)
+    cnvgrib = os.environ['CNVGRIB']
+    os.system(cnvgrib+' -g22 '+grib2_fileA+' '
+              +grib2_fileB+' > /dev/null 2>&1')
+
 def get_time_info(date_start, date_end, date_type, init_hr_list, valid_hr_list,
                   fhr_list):
     """! Creates a list of dictionaries containing information
@@ -419,6 +437,29 @@ def prep_prod_gfs_file(source_file, dest_file, forecast_hour, prep_method):
                                source_file+'|'+WGRIB2, '-i', source_file,
                                '-grib', prepped_file])
     copy_file(prepped_file, dest_file)
+
+def prep_prod_fnmoc_file(source_file, dest_file, forecast_hour,
+                         prep_method):
+    """! Do prep work for FNMOC production files
+
+         Args:
+             source_file   - source file format (string)
+             dest_file     - destination file (string)
+             forecast_hour - forecast hour (string)
+             prep_method   - name of prep method to do
+                             (string)
+
+         Returns:
+    """
+    # Environment variables and executables
+    # Working file names
+    prepped_file = os.path.join(os.getcwd(),
+                                'atmos.'+dest_file.rpartition('/')[2])
+    # Prep file
+    if check_file_exists_size(source_file):
+        convert_grib2_grib2(source_file, prepped_file)
+    copy_file(prepped_file, dest_file)
+
 
 def prep_prod_jma_file(source_file_format, dest_file, forecast_hour,
                        prep_method):
@@ -705,7 +746,9 @@ def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
     if not os.path.exists(dest_file):
         source_file = format_filler(source_file_format, valid_time_dt,
                                     init_time_dt, forecast_hour, {})
-        if 'wgrbbul/jma_' in source_file:
+        if 'dcom/navgem' in source_file:
+            prep_prod_fnmoc_file(source_file, dest_file, forecast_hour, 'full')
+        elif 'wgrbbul/jma_' in source_file:
             prep_prod_jma_file(source_file, dest_file, forecast_hour, 'full')
         elif 'wgrbbul/ecmwf' in source_file:
             prep_prod_ecmwf_file(source_file, dest_file, forecast_hour, 'full')
