@@ -363,7 +363,7 @@ generate_jobs_dict = {
                                     )]},
         'GeoHeightTropopause': {'env': {'var1_name': 'HGT',
                                         'var1_level': 'L0',
-                                        'var1_options': ("'GRIB_lvl_type = 7; "
+                                        'var1_options': ("'GRIB_lvl_typ = 7; "
                                                          +'set_attr_level = '
                                                          +'"Tropopause";'+"'")},
                                 'commands': [gda_util.metplus_command(
@@ -395,7 +395,7 @@ generate_jobs_dict = {
                                  )]},
         'PresTropopause': {'env': {'var1_name': 'PRES',
                                    'var1_level': 'L0',
-                                   'var1_options': ("'GRIB_lvl_type = 7; "
+                                   'var1_options': ("'GRIB_lvl_typ = 7; "
                                                     +'set_attr_level = '
                                                     +'"Tropopause";'+"'")},
                            'commands': [gda_util.metplus_command(
@@ -427,7 +427,7 @@ generate_jobs_dict = {
                                 )]},
         'TempTropopause': {'env': {'var1_name': 'TMP',
                                    'var1_level': 'L0',
-                                   'var1_options': ("'GRIB_lvl_type = 7; "
+                                   'var1_options': ("'GRIB_lvl_typ = 7; "
                                                     +'set_attr_level = '
                                                     +'"Tropopause";'+"'")},
                            'commands': [gda_util.metplus_command(
