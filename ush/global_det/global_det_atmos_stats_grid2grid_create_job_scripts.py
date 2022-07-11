@@ -587,15 +587,30 @@ generate_jobs_dict = {
                                   'GridStat_fcstGLOBAL_DET_'
                                   +'obsModelAnalysis_climoERAI.conf'
                               )]},
-        'Winds': {'env': {'var1_name': 'UGRD',
+        'UWind': {'env': {'var1_name': 'UGRD',
                           'var1_levels': "'P850, P500, P250'",
-                          'var2_name': 'VGRD',
-                          'var2_levels': "'P850, P500, P250'",
                           'met_config_overrides': "'climo_mean = fcst;'"},
                   'commands': [gda_util.metplus_command(
                                    'GridStat_fcstGLOBAL_DET_'
-                                   +'obsModelAnalysis_climoERAI_Winds.conf'
+                                   +'obsModelAnalysis_climoERAI.conf'
                                )]},
+        'VWind': {'env': {'var1_name': 'VGRD',
+                          'var1_levels': "'P850, P500, P250'",
+                          'met_config_overrides': "'climo_mean = fcst;'"},
+                  'commands': [gda_util.metplus_command(
+                                   'GridStat_fcstGLOBAL_DET_'
+                                   +'obsModelAnalysis_climoERAI.conf'
+                               )]},
+        'VectorWind': {'env': {'var1_name': 'UGRD',
+                               'var1_levels': "'P850, P500, P250'",
+                               'var2_name': 'VGRD',
+                               'var2_levels': "'P850, P500, P250'",
+                               'met_config_overrides': "'climo_mean = fcst;'"},
+                       'commands': [gda_util.metplus_command(
+                                        'GridStat_fcstGLOBAL_DET_'
+                                        +'obsModelAnalysis_climoERAI_'
+                                        +'VectorWind.conf'
+                                    )]},
     },
     'sea_ice': {
         'Concentration': {'env': {},
