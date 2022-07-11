@@ -585,6 +585,7 @@ def prep_prod_ukmet_file(source_file_format, dest_file, forecast_hour,
     # Environment variables and executables
     EXECevs = os.environ['EXECevs']
     WGRIB = os.environ['WGRIB']
+    WGRIB2 = os.environ['WGRIB2']
     UKMHIRESMERGE = os.path.join(EXECevs, 'ukm_hires_merge')
     # Working file names
     prepped_file = os.path.join(os.getcwd(),
@@ -648,15 +649,20 @@ def prep_prod_ukmet_file(source_file_format, dest_file, forecast_hour,
         source_file = source_file_format
         source_file_accum = 12
         if check_file_exists_size(source_file):
-            convert_grib2_grib1(source_file, working_file1)
+            run_shell_command(
+                [WGRIB2+' '+source_file+' -if ":TWATP:" -set_var "APCP" '
+                 +'-fi -grib '+working_file1]
+            )
         if check_file_exists_size(working_file1):
+            convert_grib2_grib1(working_file1, working_file2)
+        if check_file_exists_size(working_file2):
             source_file_accum_fhr_start = (
                 int(forecast_hour) - source_file_accum
             )
             run_shell_command(
-                [WGRIB+' '+working_file1+' | grep "'
+                [WGRIB+' '+working_file2+' | grep "'
                  +str(source_file_accum_fhr_start)+'-'
-                 +forecast_hour+'hr" | '+WGRIB+' '+working_file1
+                 +forecast_hour+'hr" | '+WGRIB+' '+working_file2
                  +' -i -grib -o '+prepped_file]
             )
     copy_file(prepped_file, dest_file)
