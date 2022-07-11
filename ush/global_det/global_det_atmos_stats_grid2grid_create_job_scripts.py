@@ -546,14 +546,23 @@ generate_jobs_dict = {
     },
     'pres_levs': {
         'GeoHeight': {'env': {'var1_name': 'HGT',
-                              'var1_levels': "'P1000, P700, P500, P250'",
-                              'fourier_beg': "'0, 0, 10, 4'",
-                              'fourier_end': "'20, 3, 20, 9'",
+                              'var1_levels': "'P1000, P700, P250'",
                               'met_config_overrides': "'climo_mean = fcst;'"},
                       'commands': [gda_util.metplus_command(
                                        'GridStat_fcstGLOBAL_DET_'
                                        +'obsModelAnalysis_climoERAI.conf'
                                    )]},
+        'GeoHeight_FourierDecomp': {'env': {'var1_name': 'HGT',
+                                            'var1_levels': 'P500',
+                                            'met_config_overrides': ("'climo_"
+                                                                     +"mean = "
+                                                                     +"fcst;'")},
+                                    'commands': [gda_util.metplus_command(
+                                                     'GridStat_fcstGLOBAL_DET_'
+                                                     +'obsModelAnalysis_'
+                                                     +'climoERAI_FourierDecomp'
+                                                     +'.conf'
+                                                 )]},
         'DailyAvg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
                                            'var1_levels': 'P500',
                                            'met_config_overrides': (
@@ -566,28 +575,22 @@ generate_jobs_dict = {
                                                 )]},
         'PresSeaLevel': {'env': {'var1_name': 'PRMSL',
                                  'var1_levels': 'Z0',
-                                 'fourier_beg': '',
-                                 'fourier_end': '',
                                  'met_config_overrides': "'climo_mean = fcst;'"},
                          'commands': [gda_util.metplus_command(
                                           'GridStat_fcstGLOBAL_DET_'
                                           +'obsModelAnalysis_climoERAI.conf'
                                       )]},
         'Temp': {'env': {'var1_name': 'TMP',
-                         'var1_levels': ''"P850, P500, P250"'',
-                         'fourier_beg': '',
-                         'fourier_end': '',
+                         'var1_levels': "'P850, P500, P250'",
                          'met_config_overrides': "'climo_mean = fcst;'"},
                  'commands': [gda_util.metplus_command(
                                   'GridStat_fcstGLOBAL_DET_'
                                   +'obsModelAnalysis_climoERAI.conf'
                               )]},
         'Winds': {'env': {'var1_name': 'UGRD',
-                          'var1_levels': ''"P850, P500, P250"'',
+                          'var1_levels': "'P850, P500, P250'",
                           'var2_name': 'VGRD',
-                          'var2_levels': ''"P850, P500, P250"'',
-                          'fourier_beg': '',
-                          'fourier_end': '',
+                          'var2_levels': "'P850, P500, P250'",
                           'met_config_overrides': "'climo_mean = fcst;'"},
                   'commands': [gda_util.metplus_command(
                                    'GridStat_fcstGLOBAL_DET_'
