@@ -223,6 +223,9 @@ while valid_hr <= int(valid_hr_end):
             else:
                 output_file_data.close()
             input_file_data.close()
+        else:
+            print("ERROR: Cannot create daily average file "+output_file+" "
+                  +"with less than 2 available files")
         daily_avg_day+=1
     valid_hr+=int(valid_hr_inc)
     
