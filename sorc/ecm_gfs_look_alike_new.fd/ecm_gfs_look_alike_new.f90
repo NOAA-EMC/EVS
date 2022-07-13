@@ -227,6 +227,7 @@ PROGRAM ecm_gfs_look_alike
                 ! SNOD  0  66,1,0 ** 
                         case(141)
                                 kpds(5)=66
+                                gfs=10.*ecm
                 !
                 ! TPsfc    0 228,1,0  ** surface Total precipitation [m]
                 ! APCPsfc  0  61,1,0  ** surface Total precipitation [kg/m^2]
