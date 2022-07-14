@@ -195,8 +195,12 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                         sys.exit(1)
                     if len(fhrs_24hr_accum_list) == nfiles_24hr_accum:
                         for fhr in fhrs_24hr_accum_list:
+                            fhr_diff = (int(time['forecast_hour'])
+                                        -int(fhr))
                             gda_util.get_model_file(
-                                time['valid_time'], time['init_time'],
+                                (time['valid_time']
+                                 - datetime.timedelta(hours=fhr_diff)),
+                                time['init_time'],
                                 fhr, model_file_format,
                                 model_fcst_dest_file_format 
                             )
