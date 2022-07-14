@@ -705,11 +705,11 @@ def prep_prod_metfra_file(source_file, dest_file, forecast_hour, prep_method):
     """! Do prep work for METRFRA production files
 
          Args:
-             source_file_format - source file format (string)
-             dest_file          - destination file (string)
-             forecast_hour      - forecast hour (string)
-             prep_method        - name of prep method to do
-                                  (string)
+             source_file   - source file(string)
+             dest_file     - destination file (string)
+             forecast_hour - forecast hour (string)
+             prep_method   - name of prep method to do
+                             (string)
 
          Returns:
     """
@@ -731,6 +731,35 @@ def prep_prod_metfra_file(source_file, dest_file, forecast_hour, prep_method):
                  +' -i -grib -o '+prepped_file]
             )
     copy_file(prepped_file, dest_file)
+
+def prep_prod_osi_saf_file(source_file_format, dest_file_format):
+    """! Do prep work for OSI-SAF production files
+
+         Args:
+             source_file_format - source file format (string)
+             dest_file_format   - destination file format (string)
+
+         Returns:
+    """
+    # Environment variables and executables
+    FIXevs = os.environ['FIXevs']
+    CDO_ROOT = os.environ['CDO_ROOT']
+    # Temporary file names
+    # Prep file
+    for hem in ['nh', 'sh']:
+        hem_source_file = source_file_format.replace('{hem?fmt=str}', hem)
+        hem_dest_file = dest_file_format.replace('{hem?fmt=str}', hem)
+        hem_prepped_file = os.path.join(os.getcwd(),
+                                        'atmos.'
+                                        +hem_dest_file.rpartition('/')[2])
+        if check_file_exists_size(hem_source_file):
+            run_shell_command(
+                [os.path.join(CDO_ROOT, 'bin', 'cdo'),
+                'remapbil,'
+                +os.path.join(FIXevs, 'cdo_grids', 'G004.grid'),
+                hem_source_file, hem_prepped_file]
+            )
+        copy_file(hem_prepped_file, hem_dest_file)
 
 def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
                    source_file_format, dest_file_format):

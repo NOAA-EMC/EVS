@@ -25,6 +25,12 @@ if [ $SENDCOM = YES ]; then
             cp -v $FILE $COMOUT/$MODEL/.
         done
     done
+    for OBS in $obs_list; do
+        mkdir -p $COMOUT/$OBS
+        for FILE in $DATA/$RUN.$INITDATE/$OBS/*; do
+            cp -v $FILE $COMOUT/$OBS/.
+        done
+    done
 fi
 
 if [ ${KEEPDATA} != YES ]; then

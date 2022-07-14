@@ -27,10 +27,12 @@ RUN = os.environ['RUN']
 COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
 model_list = os.environ['model_list'].split(' ')
+obs_list = os.environ['obs_list'].split(' ')
 gfs_ver = os.environ['gfs_ver']
 cmc_ver = os.environ['cmc_ver']
 cfs_ver = os.environ['cfs_ver']
 
+###### MODELS
 # Get operational global deterministic model data
 # Global Forecast System - gfs
 # Japan Meteorological Agency - jma
@@ -196,6 +198,7 @@ global_det_model_dict = {
                'cycles': ['00', '12'],
                'fcst_hrs': range(24, 72+12, 12)}
 }
+
 arch_fcst_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
                                      '{model?fmt=%str}',
                                      '{model?fmt=%str}.t{init?fmt=%2H}z.'
@@ -376,5 +379,47 @@ for MODEL in model_list:
                                                   'full')
                 else:
                     gda_util.copy_file(prod_anl_file, arch_anl_file)
+
+###### OBS
+# Get operational observation data
+# Nortnern & Southern Hemisphere 10 km OSI-SAF multi-sensor analysis - osi_saf
+global_det_obs_dict = {
+    'osi_saf': {'prod_file_format': os.path.join('/lfs/h1/ops/dev/dcom',
+                                                 '{init?fmt=%Y%m%d}',
+                                                 'seaice', 'osisaf',
+                                                 'ice_conc_{hem?fmt=str}_'
+                                                 +'polstere-100_multi_'
+                                                 +'{init?fmt=%Y%m%d%H}00.nc'),
+                'arch_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
+                                                 'osi_saf', 'osi_saf.multi.'
+                                                 +'{hem?fmt=str}.'
+                                                 +'{init?fmt=%Y%m%d%H}_G004.nc'),
+                'cycles': ['12']},
+}
+
+for OBS in obs_list:
+    if OBS not in list(global_det_obs_dict.keys()):
+        print("ERROR: "+OBS+" not recongized")
+        sys.exit(1)
+    print("---- Prepping data for "+OBS+" for init "+INITDATE)
+    obs_dict = global_det_obs_dict[OBS]
+    for cycle in obs_dict['cycles']:
+        CDATE = INITDATE+cycle
+        CDATE_dt = datetime.datetime.strptime(CDATE, '%Y%m%d%H')
+        prod_file = gda_util.format_filler(
+            obs_dict['prod_file_format'], CDATE_dt, CDATE_dt,
+            'anl', {}
+        )
+        arch_file = gda_util.format_filler(
+            obs_dict['arch_file_format'], CDATE_dt, CDATE_dt,
+            'anl', {}
+        )
+        if not os.path.exists(arch_file):
+            arch_file_dir = arch_file.rpartition('/')[0]
+            if not os.path.exists(arch_file_dir):
+                os.makedirs(arch_file_dir)
+            print("----> Trying to create "+arch_file)
+            if OBS == 'osi_saf':
+                gda_util.prep_prod_osi_saf_file(prod_file, arch_file)
 
 print("END: "+os.path.basename(__file__))
