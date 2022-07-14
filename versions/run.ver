@@ -15,6 +15,7 @@ export libpng_ver=1.6.37
 export bufr_dump_ver=1.0.0
 export python_ver=3.8.6
 export netcdf_ver=4.7.4
+export cdo_ver=1.9.8
 export met_ver=10.1.1
 export metplus_ver=4.1.1
 export udunits_ver=2.2.28

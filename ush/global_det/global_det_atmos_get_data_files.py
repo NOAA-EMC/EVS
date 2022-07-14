@@ -36,6 +36,7 @@ if evs_run_mode != 'production':
 
 # Set production data paths
 DCOMROOT_PROD = '/lfs/h1/ops/prod/dcom'
+DCOMROOT_DEV = '/lfs/h1/ops/dev/dcom'
 COMROOT_PROD = '/lfs/h1/ops/prod/com'
 
 # Set archive paths
@@ -77,6 +78,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
         elif VERIF_CASE_STEP_type == 'flux':
             VERIF_CASE_STEP_type_valid_hr_list = ['00']
         elif VERIF_CASE_STEP_type == 'precip':
+            VERIF_CASE_STEP_type_valid_hr_list = ['12']
+        elif VERIF_CASE_STEP_type == 'sea_ice':
             VERIF_CASE_STEP_type_valid_hr_list = ['12']
         elif VERIF_CASE_STEP_type == 'snow':
             VERIF_CASE_STEP_type_valid_hr_list = ['12']
@@ -359,29 +362,45 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                     )
             elif VERIF_CASE_STEP_type == 'sea_ice':
                 # OSI_SAF
+                osi_saf_sh_prod_file_format = os.path.join(
+                    DCOMROOT_DEV, '{valid?fmt=%Y%m%d}',
+                    'seaice', 'osisaf', 'ice_conc_sh_polstere-100_multi_'
+                    +'{valid?fmt=%Y%m%d%H}00.nc'
+                )
+                osi_saf_nh_prod_file_format = os.path.join(
+                    DCOMROOT_DEV, '{valid?fmt=%Y%m%d}',
+                    'seaice', 'osisaf', 'ice_conc_nh_polstere-100_multi_'
+                    +'{valid?fmt=%Y%m%d%H}00.nc'
+                )
                 VERIF_CASE_STEP_osi_saf_dir = os.path.join(
                     VERIF_CASE_STEP_data_dir, 'osi_saf'
                 )
                 if not os.path.exists(VERIF_CASE_STEP_osi_saf_dir):
                     os.makedirs(VERIF_CASE_STEP_osi_saf_dir)
+                osi_saf_sh_dest_file_format = os.path.join(
+                    VERIF_CASE_STEP_osi_saf_dir,
+                    'osi_saf.multi.sh.{valid?fmt=%Y%m%d%H}'
+                )
+                osi_saf_nh_dest_file_format = os.path.join(
+                    VERIF_CASE_STEP_osi_saf_dir,
+                    'osi_saf.multi.nh.{valid?fmt=%Y%m%d%H}'
+                )
+                gda_util.get_truth_file(
+                    VERIF_CASE_STEP_type_valid_time,
+                    osi_saf_sh_prod_file_format,
+                    osi_saf_sh_dest_file_format
+                )
+                gda_util.get_truth_file(
+                    VERIF_CASE_STEP_type_valid_time,
+                    osi_saf_nh_prod_file_format,
+                    osi_saf_nh_dest_file_format
+                )
                 # SMOS
                 VERIF_CASE_STEP_smos_dir = os.path.join(
                     VERIF_CASE_STEP_data_dir, 'smos'
                 )
                 if not os.path.exists(VERIF_CASE_STEP_smos_dir):
                     os.makedirs(VERIF_CASE_STEP_smos_dir)
-                # NASA Icebridge
-                VERIF_CASE_STEP_nasa_icebridge_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'nasa_icebridge'
-                )
-                if not os.path.exists(VERIF_CASE_STEP_nasa_icebridge_dir):
-                    os.makedirs(VERIF_CASE_STEP_nasa_icebridge_dir)
-                # YOPP
-                VERIF_CASE_STEP_yopp_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'yopp'
-                )
-                if not os.path.exists(VERIF_CASE_STEP_yopp_dir):
-                    os.makedirs(VERIF_CASE_STEP_yopp_dir)
                 #OSTIA
                 VERIF_CASE_STEP_ostia_dir = os.path.join(
                     VERIF_CASE_STEP_data_dir, 'ostia'

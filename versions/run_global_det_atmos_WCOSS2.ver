@@ -1,3 +1,4 @@
+export cdo_ver=1.9.8
 export cfp_ver=2.0.4
 export cray_pals_ver=1.0.12
 export craype_ver=2.7.8
