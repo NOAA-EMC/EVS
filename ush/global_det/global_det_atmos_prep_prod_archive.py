@@ -233,7 +233,11 @@ for MODEL in model_list:
                     arch_fcst_file_format, VDATE_dt, CDATE_dt,
                     str(fcst_hr), {'model': MODEL}
                 )
-                if not os.path.exists(arch_fcst_file):
+                COMOUT_fcst_file = os.path.join(
+                    COMOUT, MODEL, arch_fcst_file.rpartition('/')[2]
+                )
+                if not os.path.exists(COMOUT_fcst_file) \
+                        and not os.path.exists(arch_fcst_file):
                     print("----> Trying to create "+arch_fcst_file)
                     arch_fcst_file_dir = arch_fcst_file.rpartition('/')[0]
                     if not os.path.exists(arch_fcst_file_dir):
@@ -279,7 +283,11 @@ for MODEL in model_list:
                     arch_precip_file_format, VDATE_dt,
                     CDATE_dt, str(fcst_hr), {'model': MODEL}
                 )
-                if not os.path.exists(arch_precip_file) and fcst_hr != 0:
+                COMOUT_precip_file = os.path.join(
+                    COMOUT, MODEL, arch_precip_file.rpartition('/')[2]
+                )
+                if not os.path.exists(COMOUT_precip_file) \
+                        and not os.path.exists(arch_precip_file) and fcst_hr != 0:
                     print("----> Trying to create "+arch_precip_file)
                     arch_precip_file_dir = (
                         arch_precip_file.rpartition('/')[0]
@@ -342,7 +350,11 @@ for MODEL in model_list:
                 arch_anl_file_format, CDATE_dt, CDATE_dt,
                 'anl', {'model': MODEL}
             )
-            if not os.path.exists(arch_anl_file):
+            COMOUT_anl_file = os.path.join(
+                COMOUT, MODEL, arch_anl_file.rpartition('/')[2]
+            )
+            if not os.path.exists(COMOUT_anl_file) \
+                    and not os.path.exists(arch_anl_file):
                 arch_anl_file_dir = arch_anl_file.rpartition('/')[0]
                 if not os.path.exists(arch_anl_file_dir):
                     os.makedirs(arch_anl_file_dir)
@@ -413,7 +425,11 @@ for OBS in obs_list:
             obs_dict['arch_file_format'], CDATE_dt, CDATE_dt,
             'anl', {}
         )
-        if not os.path.exists(arch_file):
+        COMOUT_file = os.path.join(
+            COMOUT, OBS, arch_file.rpartition('/')[2]
+        )
+        if not os.path.exists(COMOUT_file) \
+                and not os.path.exists(arch_file):
             arch_file_dir = arch_file.rpartition('/')[0]
             if not os.path.exists(arch_file_dir):
                 os.makedirs(arch_file_dir)
