@@ -392,7 +392,6 @@ global_det_obs_dict = {
                                                  +'{init?fmt=%Y%m%d%H}00.nc'),
                 'arch_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
                                                  'osi_saf', 'osi_saf.multi.'
-                                                 +'{hem?fmt=str}.'
                                                  +'{init?fmt=%Y%m%d%H}_G004.nc'),
                 'cycles': ['12']},
 }
