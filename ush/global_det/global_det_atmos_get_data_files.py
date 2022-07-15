@@ -14,6 +14,8 @@ print("BEGIN: "+os.path.basename(__file__))
 
 # Read in common environment variables
 RUN = os.environ['RUN']
+NET = os.environ['NET']
+COMPONENT = os.environ['COMPONENT']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 DATA = os.environ['DATA']
@@ -26,6 +28,7 @@ VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
 USER = os.environ['USER']
+evs_ver = os.environ['evs_ver']
 ccpa_ver = os.environ['ccpa_ver']
 obsproc_ver = os.environ['obsproc_ver']
 evs_run_mode = os.environ['evs_run_mode']
@@ -362,39 +365,60 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                     )
             elif VERIF_CASE_STEP_type == 'sea_ice':
                 # OSI_SAF
-                osi_saf_sh_prod_file_format = os.path.join(
-                    DCOMROOT_DEV, '{valid?fmt=%Y%m%d}',
-                    'seaice', 'osisaf', 'ice_conc_sh_polstere-100_multi_'
-                    +'{valid?fmt=%Y%m%d%H}00.nc'
+                osi_saf_prod_file_format = os.path.join(
+                    COMROOT_PROD, 'evs',  evs_ver, 'prep',
+                    COMPONENT, RUN+'.{valid?fmt=%Y%m%d}',
+                    'osi_saf', 'osi_saf.multi.{valid?fmt=%Y%m%d%H}_G004.nc'
                 )
-                osi_saf_nh_prod_file_format = os.path.join(
-                    DCOMROOT_DEV, '{valid?fmt=%Y%m%d}',
-                    'seaice', 'osisaf', 'ice_conc_nh_polstere-100_multi_'
-                    +'{valid?fmt=%Y%m%d%H}00.nc'
+                osi_saf_prod_file = gda_util.format_filler(
+                    osi_saf_prod_file_format, VERIF_CASE_STEP_type_valid_time,
+                    VERIF_CASE_STEP_type_valid_time, ['anl'], {}
                 )
                 VERIF_CASE_STEP_osi_saf_dir = os.path.join(
                     VERIF_CASE_STEP_data_dir, 'osi_saf'
                 )
+                osi_saf_dest_file_format = os.path.join(
+                    VERIF_CASE_STEP_osi_saf_dir,
+                    'osi_saf.multi.{valid?fmt=%Y%m%d%H}_G004.nc'
+                )
                 if not os.path.exists(VERIF_CASE_STEP_osi_saf_dir):
                     os.makedirs(VERIF_CASE_STEP_osi_saf_dir)
-                osi_saf_sh_dest_file_format = os.path.join(
-                    VERIF_CASE_STEP_osi_saf_dir,
-                    'osi_saf.multi.sh.{valid?fmt=%Y%m%d%H}'
-                )
-                osi_saf_nh_dest_file_format = os.path.join(
-                    VERIF_CASE_STEP_osi_saf_dir,
-                    'osi_saf.multi.nh.{valid?fmt=%Y%m%d%H}'
-                )
-                gda_util.get_truth_file(
-                    VERIF_CASE_STEP_type_valid_time,
-                    osi_saf_sh_prod_file_format,
-                    osi_saf_sh_dest_file_format
-                )
-                gda_util.get_truth_file(
-                    VERIF_CASE_STEP_type_valid_time,
-                    osi_saf_nh_prod_file_format,
-                    osi_saf_nh_dest_file_format
-                )
+                if os.path.exists(osi_saf_prod_file):
+                    gda_util.get_truth_file(
+                        VERIF_CASE_STEP_type_valid_time,
+                        osi_saf_prod_file_format,
+                        osi_saf_dest_file_format
+                    )
+                else:
+                    osi_saf_hem_prod_file_format = os.path.join(
+                        DCOMROOT_DEV, '{valid?fmt=%Y%m%d}',
+                        'seaice', 'osisaf', 'ice_conc_{hem?fmt=str}'
+                        +'_polstere-100_multi_{valid?fmt=%Y%m%d%H}00.nc'
+                    )
+                    osi_saf_hem_prod_file = gda_util.format_filler(
+                        osi_saf_hem_prod_file_format,
+                        VERIF_CASE_STEP_type_valid_time,
+                        VERIF_CASE_STEP_type_valid_time, ['anl'], {}
+                    )
+                    osi_saf_dest_file = gda_util.format_filler(
+                        osi_saf_dest_file_format,
+                        VERIF_CASE_STEP_type_valid_time,
+                        VERIF_CASE_STEP_type_valid_time, ['anl'], {}
+                    )
+                    gda_util.prep_prod_osi_saf_file(
+                        osi_saf_hem_prod_file,
+                        osi_saf_dest_file
+                    )
+                    if not os.path.exists(osi_saf_dest_file) \
+                            and evs_run_mode != 'production':
+                        osi_saf_arch_file_format = os.path.join(
+                            archive_obs_data_dir, 'osi_saf',
+                            'osi_saf.multi.{valid?fmt=%Y%m%d%H}_G004.nc'
+                        )
+                        gda_util.get_truth_file(
+                            VERIF_CASE_STEP_type_valid_time,
+                            osi_saf_arch_file_format, osi_saf_dest_file_format
+                        )
                 # SMOS
                 VERIF_CASE_STEP_smos_dir = os.path.join(
                     VERIF_CASE_STEP_data_dir, 'smos'

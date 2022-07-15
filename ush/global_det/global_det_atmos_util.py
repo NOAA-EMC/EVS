@@ -762,10 +762,10 @@ def prep_prod_osi_saf_file(source_file_format, dest_file):
                 +os.path.join(FIXevs, 'cdo_grids', 'G004.grid'),
                 hem_source_file, hem_prepped_file]
             )
-            if hem == 'nh':
-                nh_prepped_file = hem_prepped_file
-            elif hem == 'sh':
-                sh_prepped_file = hem_prepped_file
+        if hem == 'nh':
+            nh_prepped_file = hem_prepped_file
+        elif hem == 'sh':
+            sh_prepped_file = hem_prepped_file
     if check_file_exists_size(nh_prepped_file) \
             and check_file_exists_size(sh_prepped_file):
         nh_data = netcdf.Dataset(nh_prepped_file)
