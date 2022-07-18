@@ -212,20 +212,23 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                             )
                 elif VERIF_CASE_STEP_type == 'pres_levs':
                     # Get files for anomaly daily averages, same init
-                    nf = 1
-                    while nf <= 4:
-                        minus_hr = nf * 6
-                        fhr = int(time['forecast_hour'])-minus_hr
-                        if fhr >= 0:
-                            gda_util.get_model_file(
-                                time['valid_time'] \
-                                - datetime.timedelta(hours=minus_hr),
-                                time['init_time'],
-                                str(fhr),
-                                model_file_format,
-                                model_fcst_dest_file_format
-                            )
-                        nf+=1
+                    # get for 00Z and 12Z only
+                    if time['init_time'].strftime('%H') in ['00', '12'] \
+                            and int(time['forecast_hour']) % 24 == 0:
+                        nf = 1
+                        while nf <= 3:
+                            minus_hr = nf * 6
+                            fhr = int(time['forecast_hour'])-minus_hr
+                            if fhr >= 0:
+                                gda_util.get_model_file(
+                                    time['valid_time'] \
+                                    - datetime.timedelta(hours=minus_hr),
+                                    time['init_time'],
+                                    str(fhr),
+                                    model_file_format,
+                                    model_fcst_dest_file_format
+                                )
+                            nf+=1
                 elif VERIF_CASE_STEP_type == 'snow':
                     # Get for 24 hour accumulations
                     if int(time['forecast_hour']) - 24 >= 0:
@@ -542,7 +545,7 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                 if VERIF_CASE_STEP_type == 'sfc':
                     # Get files for anomaly daily averages, same init
                     nf = 1
-                    while nf <= 4:
+                    while nf <= 3:
                         minus_hr = nf * 6
                         fhr = int(time['forecast_hour'])-minus_hr
                         if fhr >= 0:
