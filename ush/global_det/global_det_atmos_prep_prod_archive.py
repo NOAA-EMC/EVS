@@ -85,7 +85,7 @@ global_det_model_dict = {
                                                     +'{init?fmt=%Y%m%d%H}00'
                                                     +'.grib'),
             'cycles': ['00', '12'],
-            'fcst_hrs': range(0, 72+12, 12)},
+            'fcst_hrs': range(0, 192+24, 24)},
     'ecmwf': {'prod_fcst_file_format': os.path.join(DCOMROOT,
                                                     '{init?fmt=%Y%m%d}',
                                                     'wgrbbul', 'ecmwf',
@@ -102,7 +102,7 @@ global_det_model_dict = {
                                                       'UWD{init?fmt=%Y%m%d%H%M}'
                                                       +'{valid?fmt=%m%d%H%M}1'),
               'cycles': ['00', '12'],
-              'fcst_hrs': range(0, 240+12, 12)},
+              'fcst_hrs': range(0, 240+6, 6)},
     'ukmet': {'prod_fcst_file_format': os.path.join(DCOMROOT,
                                                     '{init?fmt=%Y%m%d}',
                                                     'wgrbbul', 'ukmet_hires',
@@ -117,7 +117,7 @@ global_det_model_dict = {
                                                       'qpf_verif', 'ukmo.'
                                                       +'{init?fmt=%Y%m%d%H}'),
               'cycles': ['00', '12'],
-              'fcst_hrs': range(0, 144+12, 12)},
+              'fcst_hrs': range(0, 144+6, 6)},
     'imd': {'prod_fcst_file_format': os.path.join(DCOMROOT,
                                                   '{init?fmt=%Y%m%d}',
                                                   'wgrbbul', 'ncmrwf_gdas',
@@ -129,7 +129,7 @@ global_det_model_dict = {
                                                  'gdas1.t{init?fmt=%2H}z.'
                                                  +'grbf00'),
             'cycles': ['00', '12'],
-            'fcst_hrs': range(0, 240+12, 12)},
+            'fcst_hrs': range(0, 240+6, 6)},
     'cmc': {'prod_fcst_file_format': os.path.join(COMROOT, 'cmc', cmc_ver,
                                                   'cmc.{init?fmt=%Y%m%d}',
                                                   'cmc_{init?fmt=%Y%m%d%H}'
@@ -146,7 +146,7 @@ global_det_model_dict = {
                                                     +'shift=-24}_'
                                                     +'{lead?fmt=%3H}.grb2'),
             'cycles': ['00', '12'],
-            'fcst_hrs': range(0, 240+12, 12)},
+            'fcst_hrs': range(0, 240+6, 6)},
     'cmc_regional': {'prod_precip_file_format': os.path.join(DCOMROOT,
                                                              '{init?fmt=%Y%m%d}',
                                                              'qpf_verif','cmc_'
@@ -167,7 +167,7 @@ global_det_model_dict = {
                                                     +'{init?fmt=%Y%m%d%H}-'
                                                     +'NOAA-halfdeg.gr2'),
               'cycles': ['00', '12'],
-              'fcst_hrs': range(0, 180+12, 12)},
+              'fcst_hrs': range(0, 180+6, 6)},
     'cfs': {'prod_fcst_file_format': os.path.join(COMROOT, 'cfs', cfs_ver,
                                                   'cfs.{init?fmt=%Y%m%d}',
                                                   '{init?fmt=%H}',
