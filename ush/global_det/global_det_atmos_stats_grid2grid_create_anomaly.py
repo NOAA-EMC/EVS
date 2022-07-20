@@ -28,12 +28,16 @@ MODEL = os.environ['MODEL']
 DATE = os.environ['DATE']
 netCDF_STARTDATE = os.environ['netCDF_STARTDATE']
 netCDF_ENDDATE = os.environ['netCDF_ENDDATE']
-valid_hr_start = os.environ['valid_hr_start']
-valid_hr_end = os.environ['valid_hr_end'] 
-valid_hr_inc = os.environ['valid_hr_inc']
+valid_hr_start = '12'
+valid_hr_end = '12'
+valid_hr_inc = '12'
+#valid_hr_start = os.environ['valid_hr_start']
+#valid_hr_end = os.environ['valid_hr_end']
+#valid_hr_inc = os.environ['valid_hr_inc']
 netCDF_fhr_start = os.environ['netCDF_fhr_start']
 fhr_end = os.environ['fhr_end']
-fhr_inc = os.environ['fhr_inc']
+fhr_inc = '12'
+#fhr_inc = os.environ['fhr_inc']
 
 # Process run time agruments
 if len(sys.argv) != 3:
@@ -63,7 +67,7 @@ netCDF_ENDDATE_dt = datetime.datetime.strptime(
 valid_date_dt = netCDF_STARTDATE_dt
 while valid_date_dt <= netCDF_ENDDATE_dt:
     fhr = int(netCDF_fhr_start)
-    while fhr < int(fhr_end):
+    while fhr <= int(fhr_end):
         init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
         input_file = gda_util.format_filler(
             file_format, valid_date_dt, init_date_dt, str(fhr), {}
@@ -148,8 +152,8 @@ while valid_date_dt <= netCDF_ENDDATE_dt:
                 output_file_data.close()
                 input_file_data.close()
         else:
-           print("WARNING: "+input_file+" does not exist")
+           print("\nWARNING: "+input_file+" does not exist")
         fhr+=int(fhr_inc)
-    valid_date_dt = valid_date_dt + datetime.timedelta(hours=6)
+    valid_date_dt = valid_date_dt + datetime.timedelta(hours=int(valid_hr_inc))
     
 print("END: "+os.path.basename(__file__))

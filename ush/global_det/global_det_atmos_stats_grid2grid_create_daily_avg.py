@@ -57,16 +57,21 @@ output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
 print("\nCreating daily average files")
 valid_hr = int(valid_hr_start)
 while valid_hr <= int(valid_hr_end):
+    if int(valid_hr) % 12 != 0 :
+        valid_hr+=int(valid_hr_inc)
+        continue
     daily_avg_valid_end = datetime.datetime.strptime(DATE+str(valid_hr),
                                                      '%Y%m%d%H')
-    daily_avg_valid_start = daily_avg_valid_end - datetime.timedelta(hours=18)
+    daily_avg_valid_start = daily_avg_valid_end - datetime.timedelta(hours=12)
+    #daily_avg_valid_start = daily_avg_valid_end - datetime.timedelta(hours=18)
     daily_avg_day_end = int(fhr_end)/24
     daily_avg_day_start = 1
     daily_avg_day = daily_avg_day_start
     while daily_avg_day <= daily_avg_day_end:
         daily_avg_file_list = []
         daily_avg_day_fhr_end = daily_avg_day * 24
-        daily_avg_day_fhr_start = daily_avg_day_fhr_end - 18
+        daily_avg_day_fhr_start = daily_avg_day_fhr_end - 12
+        #daily_avg_day_fhr_start = daily_avg_day_fhr_end - 18
         daily_avg_day_init = (daily_avg_valid_end
                               - datetime.timedelta(days=daily_avg_day))
         daily_avg_day_fhr = daily_avg_day_fhr_start
@@ -124,8 +129,10 @@ while valid_hr <= int(valid_hr_end):
             else:
                 print("No input file for forecast hour "+str(daily_avg_day_fhr)
                       +', valid '+str(daily_avg_day_fhr_valid)
-                      +', init '+str(daily_avg_day_init))
-            daily_avg_day_fhr+=6
+                      +', init '+str(daily_avg_day_init)+' '
+                      +daily_avg_day_fhr_input_file)
+            daily_avg_day_fhr+=12
+            #daily_avg_day_fhr+=6
         if len(daily_avg_fcst_file_list) != 0:
             daily_avg_fcst = (
                 daily_avg_fcst_sum/len(daily_avg_fcst_file_list)
@@ -134,8 +141,8 @@ while valid_hr <= int(valid_hr_end):
             daily_avg_obs = (
                 daily_avg_obs_sum/len(daily_avg_obs_file_list)
             )
-        if len(daily_avg_fcst_file_list) >= 2 \
-                and len(daily_avg_obs_file_list) >= 2:
+        if len(daily_avg_fcst_file_list) == 2 \
+                and len(daily_avg_obs_file_list) == 2:
             output_file_data = netcdf.Dataset(output_file, 'w',
                                               format='NETCDF3_CLASSIC')
             for attr in input_file_data.ncattrs():
@@ -225,8 +232,9 @@ while valid_hr <= int(valid_hr_end):
             input_file_data.close()
         else:
             print("ERROR: Cannot create daily average file "+output_file+" "
-                  +"with less than 2 available files")
+                  +"; need two input files")
         daily_avg_day+=1
+        print("")
     valid_hr+=int(valid_hr_inc)
     
 print("END: "+os.path.basename(__file__))
