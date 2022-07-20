@@ -514,6 +514,17 @@ generate_jobs_dict = {
                                            'PointStat_fcstGLOBAL_DET_'
                                            +'obsPrepbufr.conf'
                                        )]},
+        'UWind10m': {'env': {'prepbufr': 'nam',
+                             'obs_window': '900',
+                             'msg_type': 'ADPSFC',
+                             'var1_name': 'UGRD',
+                             'var1_levels': 'Z10',
+                             'var1_options': '',
+                             'met_config_overrides': ''},
+                     'commands': [gda_util.metplus_command(
+                                      'PointStat_fcstGLOBAL_DET_'
+                                       +'obsPrepbufr.conf'
+                                  )]},
         'Visibility': {'env': {'prepbufr': 'nam',
                                'obs_window': '900',
                                'msg_type': 'ADPSFC',
@@ -525,6 +536,17 @@ generate_jobs_dict = {
                                         'PointStat_fcstGLOBAL_DET_'
                                         +'obsPrepbufr.conf'
                                     )]},
+        'VWind10m': {'env': {'prepbufr': 'nam',
+                             'obs_window': '900',
+                             'msg_type': 'ADPSFC',
+                             'var1_name': 'VGRD',
+                             'var1_levels': 'Z10',
+                             'var1_options': '',
+                             'met_config_overrides': ''},
+                     'commands': [gda_util.metplus_command(
+                                      'PointStat_fcstGLOBAL_DET_'
+                                       +'obsPrepbufr.conf'
+                                  )]},
         'WindGust': {'env': {'prepbufr': 'nam',
                              'obs_window': '900',
                              'msg_type': 'ADPSFC',
@@ -536,20 +558,20 @@ generate_jobs_dict = {
                                       'PointStat_fcstGLOBAL_DET_'
                                        +'obsPrepbufr.conf'
                                   )]},
-        'Winds10m': {'env': {'prepbufr': 'nam',
-                             'obs_window': '900',
-                             'msg_type': 'ADPSFC',
-                             'var1_name': 'UGRD',
-                             'var1_levels': 'Z10',
-                             'var1_options': '',
-                             'var2_name': 'VGRD',
-                             'var2_levels': 'Z10',
-                             'var2_options': '',
-                             'met_config_overrides': ''},
-                     'commands': [gda_util.metplus_command(
-                                      'PointStat_fcstGLOBAL_DET_'
-                                       +'obsPrepbufr_Winds.conf'
-                                  )]},
+        'VectorWind10m': {'env': {'prepbufr': 'nam',
+                                  'obs_window': '900',
+                                  'msg_type': 'ADPSFC',
+                                  'var1_name': 'UGRD',
+                                  'var1_levels': 'Z10',
+                                  'var1_options': '',
+                                  'var2_name': 'VGRD',
+                                  'var2_levels': 'Z10',
+                                  'var2_options': '',
+                                  'met_config_overrides': ''},
+                          'commands': [gda_util.metplus_command(
+                                          'PointStat_fcstGLOBAL_DET_'
+                                          +'obsPrepbufr_VectorWind.conf'
+                                       )]},
     },
     'sea_ice': {}
 }
