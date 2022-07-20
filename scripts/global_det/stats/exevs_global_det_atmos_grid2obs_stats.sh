@@ -40,7 +40,7 @@ echo
 python $USHevs/global_det/global_det_atmos_get_data_files.py
 status=$?
 [[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Succesfully ran global_det_get_data_files.py"
+[[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_get_data_files.py"
 echo
 
 # Create job scripts data
