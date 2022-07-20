@@ -211,13 +211,20 @@ generate_jobs_dict = {
         'GeoHeight': {'env': {'prepbufr': 'gdas',
                               'obs_window': '1800',
                               'msg_type': "'ADPUPA, AIRCAR, AIRCFT'",
-                              'var1_name': 'HGT',
-                              'var1_levels': ("'P1000, P925, P850, "
-                                              +"P700, P500, P400, "
-                                              +"P300, P250, P200, "
-                                              +"P150, P100, P50, "
-                                              +"P20, P10, P5, P1'"),
-                              'var1_options': '',
+                              'var1_fcst_name': 'HGT',
+                              'var1_fcst_levels': ("'P1000, P925, P850, "
+                                                   +"P700, P500, P400, "
+                                                   +"P300, P250, P200, "
+                                                   +"P150, P100, P50, "
+                                                   +"P20, P10, P5, P1'"),
+                              'var1_fcst_options': '',
+                              'var1_obs_name': 'HGT',
+                              'var1_obs_levels': ("'P1000, P925, P850, "
+                                                  +"P700, P500, P400, "
+                                                  +"P300, P250, P200, "
+                                                  +"P150, P100, P50, "
+                                                  +"P20, P10, P5, P1'"),
+                              'var1_obs_options': '',
                               'met_config_overrides': ''},
                       'commands': [gda_util.metplus_command(
                                        'PointStat_fcstGLOBAL_DET_'
@@ -226,13 +233,20 @@ generate_jobs_dict = {
         'RelHum': {'env': {'prepbufr': 'gdas',
                            'obs_window': '1800',
                            'msg_type': "'ADPUPA, AIRCAR, AIRCFT'",
-                           'var1_name': 'RH',
-                           'var1_levels': ("'P1000, P925, P850, "
-                                           +"P700, P500, P400, "
-                                           +"P300, P250, P200, "
-                                           +"P150, P100, P50, "
-                                           +"P20, P10, P5, P1'"),
-                           'var1_options': '',
+                           'var1_fcst_name': 'RH',
+                           'var1_fcst_levels': ("'P1000, P925, P850, "
+                                                +"P700, P500, P400, "
+                                                +"P300, P250, P200, "
+                                                +"P150, P100, P50, "
+                                                +"P20, P10, P5, P1'"),
+                           'var1_fcst_options': '',
+                           'var1_obs_name': 'RH',
+                           'var1_obs_levels': ("'P1000, P925, P850, "
+                                               +"P700, P500, P400, "
+                                               +"P300, P250, P200, "
+                                               +"P150, P100, P50, "
+                                               +"P20, P10, P5, P1'"),
+                           'var1_obs_options': '',
                            'met_config_overrides': ''},
                    'commands': [gda_util.metplus_command(
                                     'PointStat_fcstGLOBAL_DET_'
@@ -241,13 +255,20 @@ generate_jobs_dict = {
         'SpefHum': {'env': {'prepbufr': 'gdas',
                             'obs_window': '1800',
                             'msg_type': "'ADPUPA, AIRCAR, AIRCFT'",
-                            'var1_name': 'SPFH',
-                            'var1_levels': ("'P1000, P925, P850, "
-                                            +"P700, P500, P400, "
-                                            +"P300, P250, P200, "
-                                            +"P150, P100, P50, "
-                                            +"P20, P10, P5, P1'"),
-                            'var1_options': '',
+                            'var1_fcst_name': 'SPFH',
+                            'var1_fcst_levels': ("'P1000, P925, P850, "
+                                                 +"P700, P500, P400, "
+                                                 +"P300, P250, P200, "
+                                                 +"P150, P100, P50, "
+                                                 +"P20, P10, P5, P1'"),
+                            'var1_fcst_options': '',
+                            'var1_obs_name': 'SPFH',
+                            'var1_obs_levels': ("'P1000, P925, P850, "
+                                                +"P700, P500, P400, "
+                                                +"P300, P250, P200, "
+                                                +"P150, P100, P50, "
+                                                +"P20, P10, P5, P1'"),
+                            'var1_obs_options': '',
                             'met_config_overrides': ''},
                     'commands': [gda_util.metplus_command(
                                      'PointStat_fcstGLOBAL_DET_'
@@ -256,13 +277,20 @@ generate_jobs_dict = {
         'Temp': {'env': {'prepbufr': 'gdas',
                          'obs_window': '1800',
                          'msg_type': "'ADPUPA, AIRCAR, AIRCFT'",
-                         'var1_name': 'TMP',
-                         'var1_levels': ("'P1000, P925, P850, "
-                                         +"P700, P500, P400, "
-                                         +"P300, P250, P200, "
-                                         +"P150, P100, P50, "
-                                         +"P20, P10, P5, P1'"),
-                         'var1_options': '',
+                         'var1_fcst_name': 'TMP',
+                         'var1_fcst_levels': ("'P1000, P925, P850, "
+                                              +"P700, P500, P400, "
+                                              +"P300, P250, P200, "
+                                              +"P150, P100, P50, "
+                                              +"P20, P10, P5, P1'"),
+                         'var1_fcst_options': '',
+                         'var1_obs_name': 'TMP',
+                         'var1_obs_levels': ("'P1000, P925, P850, "
+                                             +"P700, P500, P400, "
+                                             +"P300, P250, P200, "
+                                             +"P150, P100, P50, "
+                                             +"P20, P10, P5, P1'"),
+                         'var1_obs_options': '',
                          'met_config_overrides': ''},
                  'commands': [gda_util.metplus_command(
                                   'PointStat_fcstGLOBAL_DET_'
@@ -271,13 +299,20 @@ generate_jobs_dict = {
         'UWind': {'env': {'prepbufr': 'gdas',
                           'obs_window': '1800',
                           'msg_type': "'ADPUPA, AIRCAR, AIRCFT'",
-                          'var1_name': 'UGRD',
-                          'var1_levels': ("'P1000, P925, P850, "
-                                          +"P700, P500, P400, "
-                                          +"P300, P250, P200, "
-                                          +"P150, P100, P50, "
-                                          +"P20, P10, P5, P1'"),
-                          'var1_options': '',
+                          'var1_fcst_name': 'UGRD',
+                          'var1_fcst_levels': ("'P1000, P925, P850, "
+                                               +"P700, P500, P400, "
+                                               +"P300, P250, P200, "
+                                               +"P150, P100, P50, "
+                                               +"P20, P10, P5, P1'"),
+                          'var1_fcst_options': '',
+                          'var1_obs_name': 'UGRD',
+                          'var1_obs_levels': ("'P1000, P925, P850, "
+                                              +"P700, P500, P400, "
+                                              +"P300, P250, P200, "
+                                              +"P150, P100, P50, "
+                                              +"P20, P10, P5, P1'"),
+                          'var1_obs_options': '',
                           'met_config_overrides': ''},
                   'commands': [gda_util.metplus_command(
                                    'PointStat_fcstGLOBAL_DET_'
@@ -286,13 +321,20 @@ generate_jobs_dict = {
         'VWind': {'env': {'prepbufr': 'gdas',
                           'obs_window': '1800',
                           'msg_type': "'ADPUPA, AIRCAR, AIRCFT'",
-                          'var1_name': 'VGRD',
-                          'var1_levels': ("'P1000, P925, P850, "
-                                          +"P700, P500, P400, "
-                                          +"P300, P250, P200, "
-                                          +"P150, P100, P50, "
-                                          +"P20, P10, P5, P1'"),
-                          'var1_options': '',
+                          'var1_fcst_name': 'VGRD',
+                          'var1_fcst_levels': ("'P1000, P925, P850, "
+                                               +"P700, P500, P400, "
+                                               +"P300, P250, P200, "
+                                               +"P150, P100, P50, "
+                                               +"P20, P10, P5, P1'"),
+                          'var1_fcst_options': '',
+                          'var1_obs_name': 'VGRD',
+                          'var1_obs_levels': ("'P1000, P925, P850, "
+                                              +"P700, P500, P400, "
+                                              +"P300, P250, P200, "
+                                              +"P150, P100, P50, "
+                                              +"P20, P10, P5, P1'"),
+                          'var1_obs_options': '',
                           'met_config_overrides': ''},
                   'commands': [gda_util.metplus_command(
                                    'PointStat_fcstGLOBAL_DET_'
@@ -301,25 +343,39 @@ generate_jobs_dict = {
         'VectorWind': {'env': {'prepbufr': 'gdas',
                                'obs_window': '1800',
                                'msg_type': "'ADPUPA, AIRCAR, AIRCFT'",
-                               'var1_name': 'UGRD',
-                               'var1_levels': ("'P1000, P925, P850, "
-                                               +"P700, P500, P400, "
-                                               +"P300, P250, P200, "
-                                               +"P150, P100, P50, "
-                                               +"P20, P10, P5, P1'"),
-                              'var1_options': '',
-                              'var2_name': 'VGRD',
-                              'var2_levels': ("'P1000, P925, P850, "
-                                              +"P700, P500, P400, "
-                                              +"P300, P250, P200, "
-                                              +"P150, P100, P50, "
-                                              +"P20, P10, P5, P1'"),
-                              'var2_options': '',
-                              'met_config_overrides': ''},
-                      'commands': [gda_util.metplus_command(
-                                       'PointStat_fcstGLOBAL_DET_'
-                                       +'obsPrepbufr_VectorWind.conf'
-                                   )]}
+                               'var1_fcst_name': 'UGRD',
+                               'var1_fcst_levels': ("'P1000, P925, P850, "
+                                                    +"P700, P500, P400, "
+                                                    +"P300, P250, P200, "
+                                                    +"P150, P100, P50, "
+                                                    +"P20, P10, P5, P1'"),
+                               'var1_fcst_options': '',
+                               'var1_obs_name': 'UGRD',
+                               'var1_obs_levels': ("'P1000, P925, P850, "
+                                                   +"P700, P500, P400, "
+                                                   +"P300, P250, P200, "
+                                                   +"P150, P100, P50, "
+                                                   +"P20, P10, P5, P1'"),
+                               'var1_obs_options': '',
+                               'var2_fcst_name': 'VGRD',
+                               'var2_fcst_levels': ("'P1000, P925, P850, "
+                                                    +"P700, P500, P400, "
+                                                    +"P300, P250, P200, "
+                                                    +"P150, P100, P50, "
+                                                    +"P20, P10, P5, P1'"),
+                               'var2_fcst_options': '',
+                               'var2_obs_name': 'VGRD',
+                               'var2_obs_levels': ("'P1000, P925, P850, "
+                                                   +"P700, P500, P400, "
+                                                   +"P300, P250, P200, "
+                                                   +"P150, P100, P50, "
+                                                   +"P20, P10, P5, P1'"),
+                               'var2_obs_options': '',
+                               'met_config_overrides': ''},
+                       'commands': [gda_util.metplus_command(
+                                        'PointStat_fcstGLOBAL_DET_'
+                                        +'obsPrepbufr_VectorWind.conf'
+                                    )]}
     },
     'sfc': {
         'CAPEMixedLayer': {'env': {'prepbufr': 'gdas',
@@ -371,11 +427,14 @@ generate_jobs_dict = {
         'Ceiling': {'env': {'prepbufr': 'nam',
                             'obs_window': '900',
                             'msg_type': 'ADPSFC',
-                            'var1_name': 'HGT',
-                            'var1_levels': 'L0',
-                            'var1_options': ("'GRIB_lvl_typ = 215;"
-                                             +"set_attr_level = "
-                                             +'"Ceiling";'+"'"),
+                            'var1_fcst_name': 'HGT',
+                            'var1_fcst_levels': 'L0',
+                            'var1_fcst_options': ("'GRIB_lvl_typ = 215;"
+                                                  +"set_attr_level = "
+                                                  +'"Ceiling";'+"'"),
+                            'var1_obs_name': 'CEILING',
+                            'var1_obs_levels': 'L0',
+                            'var1_obs_options': '',
                             'met_config_overrides': ''},
                     'commands': [gda_util.metplus_command(
                                      'PointStat_fcstGLOBAL_DET_'
@@ -385,9 +444,12 @@ generate_jobs_dict = {
                                         'obs_window': '900',
                                         'msg_type': 'ADPSFC',
                                         'valid_hr_inc': '6',
-                                        'var1_name': 'TMP',
-                                        'var1_levels': 'Z2',
-                                        'var1_options': '',
+                                        'var1_fcst_name': 'TMP',
+                                        'var1_fcst_levels': 'Z2',
+                                        'var1_fcst_options': '',
+                                        'var1_obs_name': 'TMP',
+                                        'var1_obs_levels': 'Z2',
+                                        'var1_obs_options': '',
                                         'met_config_overrides': ("'climo_mean "
                                                                  +"= fcst;'")},
                                 'commands': [gda_util.metplus_command(
@@ -460,9 +522,12 @@ generate_jobs_dict = {
                               'obs_window': '1800',
                               'msg_type': "'ADPUPA, AIRCAR, AIRCFT'",
                               'valid_hr_inc': '6',
-                              'var1_name': 'HPBL',
-                              'var1_levels': 'L0',
-                              'var1_options': '',
+                              'var1_fcst_name': 'HPBL',
+                              'var1_fcst_levels': 'L0',
+                              'var1_fcst_options': '',
+                              'var1_obs_name': 'HPBL',
+                              'var1_obs_levels': 'L0',
+                              'var1_obs_options': '',
                               'met_config_overrides': ''},
                       'commands': [gda_util.metplus_command(
                                        'PointStat_fcstGLOBAL_DET_'
@@ -471,9 +536,12 @@ generate_jobs_dict = {
         'RelHum2m': {'env': {'prepbufr': 'nam',
                              'obs_window': '900',
                              'msg_type': 'ADPSFC',
-                             'var1_name': 'RH',
-                             'var1_levels': 'Z2',
-                             'var1_options': '',
+                             'var1_fcst_name': 'RH',
+                             'var1_fcst_levels': 'Z2',
+                             'var1_fcst_options': '',
+                             'var1_obs_name': 'RH',
+                             'var1_obs_levels': 'Z2',
+                             'var1_obs_options': '',
                              'met_config_overrides': ''},
                      'commands': [gda_util.metplus_command(
                                       'PointStat_fcstGLOBAL_DET_'
@@ -482,9 +550,12 @@ generate_jobs_dict = {
         'SeaLevelPres': {'env': {'prepbufr': 'nam',
                                  'obs_window': '900',
                                  'msg_type': 'ADPSFC',
-                                 'var1_name': 'PRMSL',
-                                 'var1_levels': 'Z0',
-                                 'var1_options': '',
+                                 'var1_fcst_name': 'PRMSL',
+                                 'var1_fcst_levels': 'Z0',
+                                 'var1_fcst_options': '',
+                                 'var1_obs_name': 'PRMSL',
+                                 'var1_obs_levels': 'Z0',
+                                 'var1_obs_options': '',
                                  'met_config_overrides': ''},
                          'commands': [gda_util.metplus_command(
                                           'PointStat_fcstGLOBAL_DET_'
@@ -493,9 +564,12 @@ generate_jobs_dict = {
         'Temp2m': {'env': {'prepbufr': 'nam',
                            'obs_window': '900',
                            'msg_type': 'ADPSFC',
-                           'var1_name': 'TMP',
-                           'var1_levels': 'Z2',
-                           'var1_options': '',
+                           'var1_fcst_name': 'TMP',
+                           'var1_fcst_levels': 'Z2',
+                           'var1_fcst_options': '',
+                           'var1_obs_name': 'TMP',
+                           'var1_obs_levels': 'Z2',
+                           'var1_obs_options': '',
                            'met_config_overrides': ''},
                    'commands': [gda_util.metplus_command(
                                     'PointStat_fcstGLOBAL_DET_'
@@ -504,11 +578,14 @@ generate_jobs_dict = {
         'TotCloudCover': {'env': {'prepbufr': 'nam',
                                   'obs_window': '900',
                                   'msg_type': 'ADPSFC',
-                                  'var1_name': 'TCDC',
-                                  'var1_levels': 'L0',
-                                  'var1_options': ("'GRIB_lvl_typ = 10;"
-                                                   +"set_attr_level = "
-                                                   +'"Total";'+"'"),
+                                  'var1_fcst_name': 'TCDC',
+                                  'var1_fcst_levels': 'L0',
+                                  'var1_fcst_options': ("'GRIB_lvl_typ = 10;"
+                                                        +"set_attr_level = "
+                                                        +'"Total";'+"'"),
+                                  'var1_obs_name': 'TCDC',
+                                  'var1_obs_levels': 'L0',
+                                  'var1_obs_options': '',
                                   'met_config_overrides': ''},
                           'commands': [gda_util.metplus_command(
                                            'PointStat_fcstGLOBAL_DET_'
@@ -517,9 +594,12 @@ generate_jobs_dict = {
         'UWind10m': {'env': {'prepbufr': 'nam',
                              'obs_window': '900',
                              'msg_type': 'ADPSFC',
-                             'var1_name': 'UGRD',
-                             'var1_levels': 'Z10',
-                             'var1_options': '',
+                             'var1_fcst_name': 'UGRD',
+                             'var1_fcst_levels': 'Z10',
+                             'var1_fcst_options': '',
+                             'var1_obs_name': 'UGRD',
+                             'var1_obs_levels': 'Z10',
+                             'var1_obs_options': '',
                              'met_config_overrides': ''},
                      'commands': [gda_util.metplus_command(
                                       'PointStat_fcstGLOBAL_DET_'
@@ -528,9 +608,12 @@ generate_jobs_dict = {
         'Visibility': {'env': {'prepbufr': 'nam',
                                'obs_window': '900',
                                'msg_type': 'ADPSFC',
-                               'var1_name': 'VIS',
-                               'var1_levels': 'Z0',
-                               'var1_options': '',
+                               'var1_fcst_name': 'VIS',
+                               'var1_fcst_levels': 'Z0',
+                               'var1_fcst_options': '',
+                               'var1_obs_name': 'VIS',
+                               'var1_obs_levels': 'Z0',
+                               'var1_obs_options': '',
                                'met_config_overrides': ''},
                        'commands': [gda_util.metplus_command(
                                         'PointStat_fcstGLOBAL_DET_'
@@ -539,9 +622,12 @@ generate_jobs_dict = {
         'VWind10m': {'env': {'prepbufr': 'nam',
                              'obs_window': '900',
                              'msg_type': 'ADPSFC',
-                             'var1_name': 'VGRD',
-                             'var1_levels': 'Z10',
-                             'var1_options': '',
+                             'var1_fcst_name': 'VGRD',
+                             'var1_fcst_levels': 'Z10',
+                             'var1_fcst_options': '',
+                             'var1_obs_name': 'VGRD',
+                             'var1_obs_levels': 'Z10',
+                             'var1_obs_options': '',
                              'met_config_overrides': ''},
                      'commands': [gda_util.metplus_command(
                                       'PointStat_fcstGLOBAL_DET_'
@@ -550,9 +636,12 @@ generate_jobs_dict = {
         'WindGust': {'env': {'prepbufr': 'nam',
                              'obs_window': '900',
                              'msg_type': 'ADPSFC',
-                             'var1_name': 'GUST',
-                             'var1_levels': 'Z00',
-                             'var1_options': '',
+                             'var1_fcst_name': 'GUST',
+                             'var1_fcst_levels': 'Z0',
+                             'var1_fcst_options': '',
+                             'var1_obs_name': 'GUST',
+                             'var1_obs_levels': 'Z0',
+                             'var1_obs_options': '',
                              'met_config_overrides': ''},
                      'commands': [gda_util.metplus_command(
                                       'PointStat_fcstGLOBAL_DET_'
@@ -561,12 +650,18 @@ generate_jobs_dict = {
         'VectorWind10m': {'env': {'prepbufr': 'nam',
                                   'obs_window': '900',
                                   'msg_type': 'ADPSFC',
-                                  'var1_name': 'UGRD',
-                                  'var1_levels': 'Z10',
-                                  'var1_options': '',
-                                  'var2_name': 'VGRD',
-                                  'var2_levels': 'Z10',
-                                  'var2_options': '',
+                                  'var1_fcst_name': 'UGRD',
+                                  'var1_fcst_levels': 'Z10',
+                                  'var1_fcst_options': '',
+                                  'var2_fcst_name': 'VGRD',
+                                  'var2_fcst_levels': 'Z10',
+                                  'var2_fcst_options': '',
+                                  'var1_obs_name': 'UGRD',
+                                  'var1_obs_levels': 'Z10',
+                                  'var1_obs_options': '',
+                                  'var2_obs_name': 'VGRD',
+                                  'var2_obs_levels': 'Z10',
+                                  'var2_obs_options': '',
                                   'met_config_overrides': ''},
                           'commands': [gda_util.metplus_command(
                                           'PointStat_fcstGLOBAL_DET_'
@@ -633,7 +728,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_NPlains.nc, "
                 +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_NRockies.nc, "
                 +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_PacificNW.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_PacificSW.nc"
+                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_PacificSW.nc, "
                 +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_Prairie.nc, "
                 +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_Southeast.nc, "
                 +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_Southwest.nc, "

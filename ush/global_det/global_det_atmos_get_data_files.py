@@ -484,6 +484,8 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
     # Read in VERIF_CASE_STEP related environment variables
     # Get model forecast and truth files for each option in VERIF_CASE_STEP_type_list
     for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
+        print("----> Getting files for "+VERIF_CASE_STEP+" "
+              +VERIF_CASE_STEP_type)
         VERIF_CASE_STEP_abbrev_type = (VERIF_CASE_STEP_abbrev+'_'
                                        +VERIF_CASE_STEP_type)
         # Read in VERIF_CASE_STEP_type related environment variables
