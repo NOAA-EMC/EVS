@@ -70,6 +70,7 @@ with open(job_card_filename, 'a') as job_card:
         job_card.write('\n')
         job_card.write('cd $PBS_O_WORKDIR\n')
     elif machine == 'HERA':
+        job_card.write('#!/bin/sh\n')
         job_card.write('#SBATCH --qos='+QUEUE+'\n')
         job_card.write('#SBATCH --account='+ACCOUNT+'\n')
         job_card.write('#SBATCH --job-name='+job_name+'\n')
@@ -78,6 +79,7 @@ with open(job_card_filename, 'a') as job_card:
         job_card.write('#SBATCH --ntasks-per-node='+nproc+'\n')
         job_card.write('#SBATCH --time=6:00:00\n')
     elif machine in ['ORION', 'S4', 'JET']:
+        job_card.write('#!/bin/sh\n')
         job_card.write('#SBATCH --partition='+PARTITION_BATCH+'\n')
         job_card.write('#SBATCH --qos='+QUEUE+'\n')
         job_card.write('#SBATCH --account='+ACCOUNT+'\n')

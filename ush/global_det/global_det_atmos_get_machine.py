@@ -15,7 +15,7 @@ import subprocess
 
 print("BEGIN: "+os.path.basename(__file__))
 
-supported_machine_list = ['WCOSS2']
+supported_machine_list = ['WCOSS2', 'HERA']
 
 # Read in environment variables
 if not 'HOSTNAME' in list(os.environ.keys()):
