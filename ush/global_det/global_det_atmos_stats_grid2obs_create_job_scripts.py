@@ -750,9 +750,11 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 if MPR_fhr_start > 0:
                     job_env_dict['MPR_fhr_start'] = str(MPR_fhr_start)
                 else:
-                    job_env_dict['MPR_fhr_start'] = (
-                        job_env_dict['fhr_start']
-                    )
+                    job_env_dict['MPR_fhr_start'] = '6'
+                if job_env_dict['valid_hr_inc'] != '6':
+                    job_env_dict['valid_hr_inc'] = '6'
+                if job_env_dict['fhr_inc'] != '6':
+                    job_env_dict['fhr_inc'] = '6'
             for model_idx in range(len(model_list)):
                 job_env_dict['MODEL'] = model_list[model_idx]
                 njobs+=1

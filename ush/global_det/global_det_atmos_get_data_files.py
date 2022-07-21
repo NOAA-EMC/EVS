@@ -544,20 +544,21 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                 )
                 if VERIF_CASE_STEP_type == 'sfc':
                     # Get files for anomaly daily averages, same init
-                    nf = 1
-                    while nf <= 3:
-                        minus_hr = nf * 6
-                        fhr = int(time['forecast_hour'])-minus_hr
-                        if fhr >= 0:
-                            gda_util.get_model_file(
-                                time['valid_time'] \
-                                - datetime.timedelta(hours=minus_hr),
-                                time['init_time'],
-                                str(fhr),
-                                model_file_format,
-                                model_fcst_dest_file_format
-                            )
-                        nf+=1
+                    if int(time['forecast_hour']) % 24 == 0:
+                        nf = 1
+                        while nf <= 3:
+                            minus_hr = nf * 6
+                            fhr = int(time['forecast_hour'])-minus_hr
+                            if fhr >= 0:
+                                gda_util.get_model_file(
+                                    time['valid_time'] \
+                                    - datetime.timedelta(hours=minus_hr),
+                                    time['init_time'],
+                                    str(fhr),
+                                    model_file_format,
+                                    model_fcst_dest_file_format
+                                )
+                            nf+=1
         # Get truth files
         for VERIF_CASE_STEP_type_valid_time \
                 in VERIF_CASE_STEP_type_valid_time_list:

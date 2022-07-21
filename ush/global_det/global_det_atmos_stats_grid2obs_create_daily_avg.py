@@ -112,7 +112,7 @@ while valid_hr <= int(valid_hr_end):
                       +', init '+str(daily_avg_day_init))
             daily_avg_day_fhr+=6
         daily_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
-        if len(daily_avg_file_list) != 0:
+        if len(daily_avg_file_list) == 4:
             print("Output File: "+output_file)
             all_daily_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
             for daily_avg_file in daily_avg_file_list:
@@ -142,8 +142,8 @@ while valid_hr <= int(valid_hr_end):
                                 == vx_mask
                             ]
                         )
-                        #print(obtype+' '+sid+' '+vx_mask)
-                        #print(all_daily_avg_obtype_sid_vx_mask_df)
+                        if len(all_daily_avg_obtype_sid_vx_mask_df) != 4:
+                            continue
                         all_daily_avg_obtype_sid_vx_mask_fcst_mean = (
                             np.array(
                                 all_daily_avg_obtype_sid_vx_mask_df['FCST']\
@@ -189,6 +189,9 @@ while valid_hr <= int(valid_hr_end):
                 output_file, header=input_file_header,
                 index=None, sep=' ', mode='w'
             )
+        else:
+            print("ERROR: Need 4 files to create daily average")
+        print("")
         daily_avg_day+=1
     valid_hr+=int(valid_hr_inc)
 
