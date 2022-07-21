@@ -1,5 +1,5 @@
 '''
-Name: global_det_atmos_create_anomaly_data.py
+Name: global_det_atmos_stats_grid2grid_create_anomaly
 Contact(s): Mallory Row
 Abstract: This script is used to create anomaly
           data from MET grid_stat netCDF output
@@ -29,15 +29,12 @@ DATE = os.environ['DATE']
 netCDF_STARTDATE = os.environ['netCDF_STARTDATE']
 netCDF_ENDDATE = os.environ['netCDF_ENDDATE']
 valid_hr_start = '12'
-valid_hr_end = '12'
-valid_hr_inc = '12'
 #valid_hr_start = os.environ['valid_hr_start']
-#valid_hr_end = os.environ['valid_hr_end']
-#valid_hr_inc = os.environ['valid_hr_inc']
+valid_hr_end = os.environ['valid_hr_end']
+valid_hr_inc = os.environ['valid_hr_inc']
 netCDF_fhr_start = os.environ['netCDF_fhr_start']
 fhr_end = os.environ['fhr_end']
-fhr_inc = '12'
-#fhr_inc = os.environ['fhr_inc']
+fhr_inc = os.environ['fhr_inc']
 
 # Process run time agruments
 if len(sys.argv) != 3:

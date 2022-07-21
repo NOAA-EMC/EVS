@@ -289,7 +289,21 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     job_env_dict['TRUTH'] = os.environ[
                         VERIF_CASE_STEP_abbrev_type+'_truth_name_list'
                     ].split(' ')[model_idx]
-                if verif_type in ['flux', 'pres_levs']:
+                    job_env_dict['netCDF_ENDDATE'] = date_dt.strftime('%Y%m%d')
+                    job_env_dict['netCDF_STARTDATE'] = (
+                        (date_dt - datetime.timedelta(days=1))\
+                        .strftime('%Y%m%d')
+                    )
+                    netCDF_fhr_start = int(job_env_dict['fhr_start']) - 18
+                    if netCDF_fhr_start > 0:
+                        job_env_dict['netCDF_fhr_start'] = str(netCDF_fhr_start)
+                    else:
+                        job_env_dict['netCDF_fhr_start'] = '12'
+                    if job_env_dict['valid_hr_inc'] != '12':
+                         job_env_dict['valid_hr_inc'] = '12'
+                    if job_env_dict['fhr_inc'] != '12':
+                        job_env_dict['fhr_inc'] = '12'
+                elif verif_type == 'flux':
                     job_env_dict['netCDF_ENDDATE'] = date_dt.strftime('%Y%m%d')
                     job_env_dict['netCDF_STARTDATE'] = (
                         (date_dt - datetime.timedelta(days=1))\
@@ -739,6 +753,13 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     job_env_dict['TRUTH'] = os.environ[
                         VERIF_CASE_STEP_abbrev_type+'_truth_name_list' 
                     ].split(' ')[model_idx]
+                    if verif_type_job == 'DailyAvg_GeoHeightAnom':
+                        if int(job_env_dict['valid_hr_inc']) < 12:
+                            job_env_dict['valid_hr_inc'] = '12'
+                        if int(job_env_dict['fhr_start']) < 24:
+                            job_env_dict['fhr_start'] = '24'
+                        if int(job_env_dict['fhr_inc']) < 24:
+                            job_env_dict['fhr_inc'] = '24'
                 # Write environment variables
                 for name, value in job_env_dict.items():
                     job.write('export '+name+'='+value+'\n')

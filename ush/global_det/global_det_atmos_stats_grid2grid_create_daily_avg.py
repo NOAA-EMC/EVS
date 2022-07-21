@@ -1,5 +1,5 @@
 '''
-Name: global_det_atmos_create_daily_avg.py
+Name: global_det_atmos_stats_grid2grid_create_daily_avg.py
 Contact(s): Mallory Row
 Abstract: This script is used to create daily average
           for variable from netCDF output
@@ -85,7 +85,6 @@ while valid_hr <= int(valid_hr_end):
                                    .strftime('%Y%m%d%H')+'.nc')
         if os.path.exists(output_file):
             os.remove(output_file)
-        print("Output File: "+output_file)
         daily_avg_fcst_sum = 0
         daily_avg_fcst_file_list = []
         daily_avg_obs_sum = 0
@@ -143,6 +142,7 @@ while valid_hr <= int(valid_hr_end):
             )
         if len(daily_avg_fcst_file_list) == 2 \
                 and len(daily_avg_obs_file_list) == 2:
+            print("Output File: "+output_file)
             output_file_data = netcdf.Dataset(output_file, 'w',
                                               format='NETCDF3_CLASSIC')
             for attr in input_file_data.ncattrs():
