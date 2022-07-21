@@ -43,7 +43,7 @@ else:
         'VERIF_CASE_STEP_abbrev'
 ]
 evs_global_det_atmos_settings_dict['shared'] = [
-    'model_list', 'model_stat_dir_list', 'model_file_format_list',
+    'model_list', 'model_evs_data_dir_list', 'model_file_format_list',
     'OUTPUTROOT', 'start_date', 'end_date', 'metplus_verbosity',
     'met_verbosity','log_met_output_to_metplus', 'KEEPDATA',
     'SENDCOM', 'SENDARCH', 'SENDMETVIEWER'
@@ -163,7 +163,8 @@ for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
         sys.exit(1)
 
 # Do check for list variables lengths
-check_config_var_len_list = ['model_stat_dir_list', 'model_file_format_list']
+check_config_var_len_list = ['model_evs_data_dir_list',
+                             'model_file_format_list']
 verif_case_step_check_len_dict = {
     'RUN_GRID2GRID_STATS': {
         'flux': [],

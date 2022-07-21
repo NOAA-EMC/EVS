@@ -24,11 +24,11 @@ export RUN_GRID2OBS_PLOTS="NO"
 # GENERAL SETTINGS APPLIED TO ALL USE CASES
 ####################################################
 ## INPUT DATA SETTINGS
-#model_list:             model names
-#model_stat_dir_list:    directory path to model .stat files
-#model_file_format_list: file format of model files
+#model_list:                 model names
+#model_evs_data_dir_list:    base path to "evs_data" directory
+#model_file_format_list:     file format of model files
 export model_list="GFS"
-export model_stat_dir_list="/lfs/h2/emc/stmp/$USER"
+export model_evs_data_dir_list="/lfs/h2/emc/stmp/$USER"
 export model_file_format_list="/lfs/h1/ops/prod/com/gfs/v16.2/gfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/atmos/gfs.t{init?fmt=%2H}z.pgrb2.0p25.f{lead?fmt=%3H}"
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory

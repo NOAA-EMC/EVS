@@ -18,7 +18,7 @@ VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 COMPONENT = os.environ['COMPONENT']
 model_list = os.environ['model_list'].split(' ')
-model_stat_dir_list = os.environ['model_stat_dir_list'].split(' ')
+model_evs_data_dir_list = os.environ['model_evs_data_dir_list'].split(' ')
 start_date = os.environ['start_date']
 end_date = os.environ['end_date']
 
@@ -29,13 +29,13 @@ end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
 # Copy files to archive dir
 for model_idx in range(len(model_list)):
     model = model_list[model_idx]
-    model_stat_base_dir = model_stat_dir_list[model_idx]
-    model_stat_dir = os.path.join(
-        model_stat_base_dir, 'archive', 'evs_data',
+    model_evs_data_base_dir = model_evs_data_dir_list[model_idx]
+    model_evs_data_dir = os.path.join(
+        model_evs_data_base_dir, 'evs_data',
         COMPONENT, RUN, VERIF_CASE, model
     )
-    if not os.path.exists(model_stat_dir):
-        os.makedirs(model_stat_dir)
+    if not os.path.exists(model_evs_data_dir):
+        os.makedirs(model_evs_data_dir)
     date_dt = start_date_dt
     while date_dt <= end_date_dt:
         tmp_stat_file = os.path.join(
@@ -45,7 +45,7 @@ for model_idx in range(len(model_list)):
             +date_dt.strftime('%Y%m%d')+'.stat'
         )
         arch_stat_file = os.path.join(
-            model_stat_dir, model+'_v'+date_dt.strftime('%Y%m%d')+'.stat'
+            model_evs_data_dir, model+'_v'+date_dt.strftime('%Y%m%d')+'.stat'
         )
         if os.path.exists(tmp_stat_file):
             print("Copying "+tmp_stat_file+" to "+arch_stat_file)
