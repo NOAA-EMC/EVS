@@ -60,24 +60,24 @@ evs_global_det_atmos_settings_dict['RUN_GRID2OBS_STATS'] = [
 
 verif_case_step_settings_dict = {
     'RUN_GRID2GRID_STATS': {
-        'flux': ['cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
-        'means': ['cycle_list', 'valid_hr_list',
+        'flux': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+        'means': ['init_hr_list', 'valid_hr_list',
                   'fhr_min', 'fhr_max', 'fhr_inc'],
-        'ozone': ['cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+        'ozone': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
         'precip': ['file_format_list', 'file_accum_list', 'var_list',
-                   'cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+                   'init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
         'pres_levs': ['truth_name_list', 'truth_format_list',
-                      'cycle_list', 'valid_hr_list',
+                      'init_hr_list', 'valid_hr_list',
                       'fhr_min', 'fhr_max', 'fhr_inc'],
-        'sea_ice': ['cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
-        'snow': ['cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
-        'sst': ['cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc']
+        'sea_ice': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+        'snow': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+        'sst': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc']
     },
     'RUN_GRID2OBS_STATS': {
-        'pres_levs': ['cycle_list', 'valid_hr_list',
+        'pres_levs': ['init_hr_list', 'valid_hr_list',
                       'fhr_min', 'fhr_max', 'fhr_inc'],
-        'sea_ice': ['cycle_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
-        'sfc': ['cycle_list', 'valid_hr_list',
+        'sea_ice': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+        'sfc': ['init_hr_list', 'valid_hr_list',
                 'fhr_min', 'fhr_max', 'fhr_inc']
     }
 }

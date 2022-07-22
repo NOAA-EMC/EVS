@@ -88,9 +88,9 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
             VERIF_CASE_STEP_type_valid_hr_list = ['12']
         else:
             VERIF_CASE_STEP_type_valid_hr_list = ['12']
-        # Set cycle hours
-        VERIF_CASE_STEP_type_cycle_list = os.environ[
-            VERIF_CASE_STEP_abbrev_type+'_cycle_list'
+        # Set initialization hours
+        VERIF_CASE_STEP_type_init_hr_list = os.environ[
+            VERIF_CASE_STEP_abbrev_type+'_init_hr_list'
         ].split(' ')
         # Set forecast hours
         VERIF_CASE_STEP_type_fhr_min = (
@@ -110,7 +110,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
         )
         # Get time information
         VERIF_CASE_STEP_type_time_info_dict = gda_util.get_time_info(
-            start_date, end_date, 'VALID', VERIF_CASE_STEP_type_cycle_list,
+            start_date, end_date, 'VALID', VERIF_CASE_STEP_type_init_hr_list,
             VERIF_CASE_STEP_type_valid_hr_list, VERIF_CASE_STEP_type_fhr_list
         )
         # Get forecast files for each model
@@ -494,9 +494,9 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
             VERIF_CASE_STEP_type_valid_hr_list = os.environ[
                 VERIF_CASE_STEP_abbrev_type+'_valid_hr_list'
             ].split(' ')
-        # Set cycle hours
-        VERIF_CASE_STEP_type_cycle_list = os.environ[
-            VERIF_CASE_STEP_abbrev_type+'_cycle_list'
+        # Set initialization hours
+        VERIF_CASE_STEP_type_init_hr_list = os.environ[
+            VERIF_CASE_STEP_abbrev_type+'_init_hr_list'
         ].split(' ')
         # Set forecast hours
         VERIF_CASE_STEP_type_fhr_min = (
@@ -516,7 +516,7 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
         )
         # Get time information
         VERIF_CASE_STEP_type_time_info_dict = gda_util.get_time_info(
-            start_date, end_date, 'VALID', VERIF_CASE_STEP_type_cycle_list,
+            start_date, end_date, 'VALID', VERIF_CASE_STEP_type_init_hr_list,
             VERIF_CASE_STEP_type_valid_hr_list, VERIF_CASE_STEP_type_fhr_list
         )
         # Get forecast files for each model
