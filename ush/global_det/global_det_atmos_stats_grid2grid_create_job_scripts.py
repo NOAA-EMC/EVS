@@ -835,8 +835,7 @@ if USE_CFP == 'YES':
             poe_filename = os.path.join(DATA, VERIF_CASE_STEP,
                                         'METplus_job_scripts',
                                         group, 'poe_jobs'+str(node))
-            if iproc == 0:
-                poe_file = open(poe_filename, 'w')
+            poe_file = open(poe_filename, 'a')
             iproc+=1
             if machine in ['HERA', 'ORION', 'S4', 'JET']:
                 poe_file.write(
@@ -849,11 +848,14 @@ if USE_CFP == 'YES':
                     os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
                                  group, job)+'\n'
                 )
+            poe_file.close()
             njob+=1
-        poe_file.close()
         # If at final record and have not reached the
         # final processor then write echo's to
         # poe script for remaining processors
+        poe_filename = os.path.join(DATA, VERIF_CASE_STEP,
+                                    'METplus_job_scripts',
+                                    group, 'poe_jobs'+str(node))
         poe_file = open(poe_filename, 'a')
         iproc+=1
         while iproc <= int(nproc):
