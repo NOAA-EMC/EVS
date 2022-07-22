@@ -97,6 +97,8 @@ reformat_jobs_dir = os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
 if not os.path.exists(reformat_jobs_dir):
     os.makedirs(reformat_jobs_dir)
 for verif_type in VERIF_CASE_STEP_type_list:
+    print("----> Making job scripts for "+VERIF_CASE_STEP+" "
+          +verif_type+" for job group reformat")
     VERIF_CASE_STEP_abbrev_type = (VERIF_CASE_STEP_abbrev+'_'
                                    +verif_type)
     verif_type_reformat_obs_jobs_dict = (
@@ -676,6 +678,8 @@ generate_jobs_dir = os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
 if not os.path.exists(generate_jobs_dir):
     os.makedirs(generate_jobs_dir)
 for verif_type in VERIF_CASE_STEP_type_list:
+    print("----> Making job scripts for "+VERIF_CASE_STEP+" "
+          +verif_type+" for job group generate")
     VERIF_CASE_STEP_abbrev_type = (VERIF_CASE_STEP_abbrev+'_'
                                    +verif_type)
     verif_type_generate_jobs_dict = generate_jobs_dict[verif_type]
@@ -794,6 +798,8 @@ job_env_dict = gda_util.initalize_job_env_dict(
     VERIF_CASE_STEP_abbrev_type, verif_type_job
 )
 # Loop through and write job script for dates and models
+print("----> Making job scripts for "+VERIF_CASE_STEP+" "
+      +"for job group gather")
 date_dt = start_date_dt
 while date_dt <= end_date_dt:
     job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
