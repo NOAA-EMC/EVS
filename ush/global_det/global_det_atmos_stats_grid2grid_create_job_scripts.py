@@ -1,10 +1,9 @@
 '''
 Program Name: global_det_atmos_stats_grid2grid_create_job_scripts.py
 Contact(s): Mallory Row
-Abstract: This script is run by all scripts in scripts/.
-          This creates multiple independent job scripts. These
+Abstract: This creates multiple independent job scripts. These
           jobs contain all the necessary environment variables
-          and METplus commands to needed to run the specific
+          and commands to needed to run the specific
           use case.
 '''
 
