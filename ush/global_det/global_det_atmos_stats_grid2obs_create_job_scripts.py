@@ -393,10 +393,10 @@ generate_jobs_dict = {
                                                         +"[ >0 ]; "
                                                         +"cnt_logic = "
                                                         +"UNION;'"),
-                                   'var1_thresh_list': ("'>500, >1000, "
-                                                        +">1500, >2000, "
-                                                        +">3000, >4000, "
-                                                        +">5000'"),
+                                   'var1_thresh_list': ("'>=500, >=1000, "
+                                                        +">=1500, >=2000, "
+                                                        +">=3000, >=4000, "
+                                                        +">=5000'"),
                                    'met_config_overrides': ''},
                            'commands': [gda_util.metplus_command(
                                             'PointStat_fcstGLOBAL_DET_'
@@ -416,10 +416,10 @@ generate_jobs_dict = {
                                                       +"[ >0 ]; "
                                                       +"cnt_logic = "
                                                       +"UNION;'"),
-                                 'var1_thresh_list': ("'>500, >1000, "
-                                                      +">1500, >2000, "
-                                                      +">3000, >4000, "
-                                                      +">5000'"),
+                                 'var1_thresh_list': ("'>=500, >=1000, "
+                                                      +">=1500, >=2000, "
+                                                      +">=3000, >=4000, "
+                                                      +">=5000'"),
                                  'met_config_overrides': ''},
                          'commands': [gda_util.metplus_command(
                                           'PointStat_fcstGLOBAL_DET_'
@@ -436,10 +436,13 @@ generate_jobs_dict = {
                             'var1_obs_name': 'CEILING',
                             'var1_obs_levels': 'L0',
                             'var1_obs_options': '',
+                            'var1_thresh_list': ("'<804.672, <1609.344, '"
+                                                 +"<4828.032, <8046.72, "
+                                                 +">=8046.72, <16093.44'"),
                             'met_config_overrides': ''},
                     'commands': [gda_util.metplus_command(
                                      'PointStat_fcstGLOBAL_DET_'
-                                     +'obsPrepbufr.conf'
+                                     +'obsPrepbufr_Thresh.conf'
                                  )]},
         'DailyAvg_TempAnom2m': {'env': {'prepbufr': 'nam',
                                         'obs_window': '900',
@@ -481,7 +484,7 @@ generate_jobs_dict = {
                                             gda_util.python_command(
                                                 'global_det_atmos_stats_'
                                                 'grid2obs_create_daily_avg.py',
-                                                ['HGT_ANOM_P500',
+                                                ['TMP_ANOM_Z2',
                                                   os.path.join(
                                                       '$DATA',
                                                       '${VERIF_CASE}_${STEP}',
@@ -513,7 +516,8 @@ generate_jobs_dict = {
                                'var1_obs_name': 'DPT',
                                'var1_obs_levels': 'Z2',
                                'var1_obs_options': '',
-                               'var1_thresh_list': "'>50, >60, >70'",
+                               'var1_thresh_list': ("'>=277.594, >=283.15, "
+                                                    +">=288.706, >=294.261'"),
                                'met_config_overrides': ''},
                        'commands': [gda_util.metplus_command(
                                         'PointStat_fcstGLOBAL_DET_'
@@ -615,10 +619,13 @@ generate_jobs_dict = {
                                'var1_obs_name': 'VIS',
                                'var1_obs_levels': 'Z0',
                                'var1_obs_options': '',
+                               'var1_thresh_list': ("'<152.4, <304.8, "
+                                                    +"<914.4, >=914.4, "
+                                                    +"<1524, <3048'"),
                                'met_config_overrides': ''},
                        'commands': [gda_util.metplus_command(
                                         'PointStat_fcstGLOBAL_DET_'
-                                        +'obsPrepbufr.conf'
+                                        +'obsPrepbufr_Thresh.conf'
                                     )]},
         'VWind10m': {'env': {'prepbufr': 'nam',
                              'obs_window': '900',
