@@ -73,15 +73,15 @@ reformat_obs_jobs_dict = {
                         'commands': [gda_util.metplus_command(
                                          'PB2NC_obsPrepbufr.conf'
                                      )]},
-        'PrepbufrRAP_P': {'env': {'prepbufr': 'rap_p',
-                                  'obs_window': '900',
-                                  'msg_type': 'ADPSFC',
-                                  'obs_bufr_var_list': ("'PMO, UOB, VOB, MXGS, "
-                                                        +"TOB, TDO, D_RH, QOB, "
-                                                        +"HOVI, CEILING, TOCC'")},
-                          'commands': [gda_util.metplus_command(
-                                           'PB2NC_obsPrepbufr.conf'
-                                       )]},
+        'PrepbufrRAP': {'env': {'prepbufr': 'rap',
+                                'obs_window': '900',
+                                'msg_type': 'ADPSFC',
+                                'obs_bufr_var_list': ("'PMO, UOB, VOB, MXGS, "
+                                                      +"TOB, TDO, D_RH, QOB, "
+                                                      +"HOVI, CEILING, TOCC'")},
+                        'commands': [gda_util.metplus_command(
+                                         'PB2NC_obsPrepbufr.conf'
+                                     )]},
     },
     'sea_ice': {}
 }
@@ -141,7 +141,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
             # Set any environment variables for special cases
             if verif_type == 'sfc' \
                     and verif_type_job in ['PrepbufrNAM',
-                                           'PrepbufrRAP_P']:
+                                           'PrepbufrRAP']:
                 job_env_dict['PB2NC_ENDDATE'] = date_dt.strftime('%Y%m%d')
                 job_env_dict['PB2NC_STARTDATE'] = (
                     (date_dt - datetime.timedelta(hours=24))\

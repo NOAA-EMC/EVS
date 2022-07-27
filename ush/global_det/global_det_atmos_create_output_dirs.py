@@ -62,7 +62,7 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
         elif VERIF_CASE_STEP_type == 'sfc':
             data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_gdas'))
             data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_nam'))
-            data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_rap_p'))
+            data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_rap'))
 
 # Create data directories
 for data_dir in data_dir_list:
