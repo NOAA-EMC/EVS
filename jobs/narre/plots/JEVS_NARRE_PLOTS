@@ -56,7 +56,8 @@ cd $DATA
 
 
 
-export ush_dir=$USHevs/narre
+#export ush_dir=$USHevs/narre
+export ush_dir=/lfs/h2/emc/vpppg/noscrub/marcel.caron/verif_plotting/ush
 export prune_dir=$DATA/data
 export save_dir=$DATA/out
 export output_base_dir=$DATA/stat_archive
@@ -101,7 +102,7 @@ setpdy.sh
 export vday=${vday:-$PDYm1}
 
 export eval_period='TEST'
-export past_days=12
+#export past_days=0
 
 export init_end=$vday
 export valid_end=$vday
@@ -122,8 +123,8 @@ export valid_beg=$first_day
 # Define COMIN/COMOUT variables
 ##################################
 
-export GATHER_STAT=${COM_OUT}/stats/narre/narre.${vday}
-export SMALL_STAT=${COM_OUT}/stats/narre/grid2obs.${vday}/
+export GATHER_STAT=${COM_OUT}/stats/narre
+export SMALL_STAT=${COM_OUT}/stats/narre
 export PLOTS=${COM_OUT}/plots/narre/narre.${vday}
 
 mkdir -p $GATHER_STAT $SMALL_STAT $PLOTS

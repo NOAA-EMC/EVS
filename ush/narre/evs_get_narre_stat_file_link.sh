@@ -15,7 +15,7 @@ mkdir -p $narre_archive_yyyymm
 
 cd ${narre_archive_yyyymm}
 
-ln -sf $GATHER_STAT/${MODEL}_${verify}_${day}.stat ${MODEL}_${day}.stat
+ln -sf $GATHER_STAT/narre.${day}/${MODEL}_${verify}_${day}.stat ${MODEL}_${day}.stat
 
   
 

@@ -90,10 +90,6 @@ export URL_HEADER=""
 # ${OUTPUT_BASE_DIR}/${VERIF_CASE}/${MODEL_NAME}/${Ym}/${MODEL_NAME}*.stat
 # This format can be changed by editing the output_base_template variable in the Templates class in
 # ${USH_DIR}/settings.py  
-export USH_DIR="/gpfs/dell3/ptmp/${USER}/verif_plotting/ush"
-export PRUNE_DIR="/gpfs/dell3/ptmp/${USER}/data"
-export SAVE_DIR="/gpfs/dell3/ptmp/${USER}/out"
-export OUTPUT_BASE_DIR="/gpfs/dell2/emc/verification/noscrub/emc.verif/regional/stat_archive/"
 export USH_DIR=$ush_dir
 export PRUNE_DIR=$prune_dir
 export SAVE_DIR=$save_dir

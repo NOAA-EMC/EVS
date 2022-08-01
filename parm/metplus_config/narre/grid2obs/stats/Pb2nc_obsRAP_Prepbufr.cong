@@ -7,7 +7,6 @@
 OUTPUT_BASE = {ENV[output_base]}
 LOG_LINE_FORMAT =
 
-
 # List of applications to run - only PB2NC for this case
 PROCESS_LIST = PB2NC
 
