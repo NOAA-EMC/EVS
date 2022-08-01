@@ -5,6 +5,9 @@ import subprocess
 import shutil
 import sys
 import netCDF4 as netcdf
+import numpy as np
+import glob
+import pandas as pd
 from time import sleep
 
 def run_shell_command(command):
@@ -957,23 +960,34 @@ def initalize_job_env_dict(verif_type, group,
          Returns:
              job_env_dict - dictionary of job settings
     """
-    os.environ['MET_TMP_DIR'] = os.path.join(
-        os.environ['DATA'], os.environ['VERIF_CASE']+'_'+os.environ['STEP'],
-        'METplus_output', 'tmp'
-    )
-    if not os.path.exists(os.environ['MET_TMP_DIR']):
-        os.makedirs(os.environ['MET_TMP_DIR'])
     job_env_var_list = [
-        'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'METPLUS_PATH',
-        'log_met_output_to_metplus', 'metplus_verbosity', 'MET_ROOT',
-        'MET_bin_exec', 'met_verbosity', 'DATA', 'MET_TMP_DIR', 'COMROOT',
+        'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA', 'COMROOT',
         'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT'
     ]
+    if group in ['reformat', 'generate', 'gather']:
+        os.environ['MET_TMP_DIR'] = os.path.join(
+            os.environ['DATA'],
+            os.environ['VERIF_CASE']+'_'+os.environ['STEP'],
+            'METplus_output', 'tmp'
+        )
+        if not os.path.exists(os.environ['MET_TMP_DIR']):
+            os.makedirs(os.environ['MET_TMP_DIR'])
+        job_env_var_list.extend(
+            ['METPLUS_PATH','log_met_output_to_metplus', 'metplus_verbosity',
+             'MET_ROOT', 'MET_bin_exec', 'met_verbosity', 'MET_TMP_DIR',
+             'COMROOT']
+        )
+    elif group == 'plot':
+        job_env_var_list.extend(['MET_ROOT', 'met_ver', ])
     job_env_dict = {}
     for env_var in job_env_var_list:
         job_env_dict[env_var] = os.environ[env_var]
+    if group == 'plot':
+        job_env_dict['plot_verbosity'] = (
+            os.environ['metplus_verbosity']
+        )
     job_env_dict['JOB_GROUP'] = group
-    if group in ['reformat', 'generate']:
+    if group in ['reformat', 'generate', 'plot']:
         job_env_dict['VERIF_TYPE'] = verif_type
         job_env_dict['job_name'] = job
         job_env_dict['fhr_start'] = os.environ[
@@ -1003,4 +1017,669 @@ def initalize_job_env_dict(verif_type, group,
             else:
                 verif_type_valid_hr_inc = 24
             job_env_dict['valid_hr_inc'] = str(verif_type_valid_hr_inc)
+    if group == 'plot':
+        verif_type_init_hr_list = (
+            os.environ[verif_case_step_abbrev_type+'_init_hr_list']\
+            .split(' ')
+        )
+        job_env_dict['init_hr_start'] = (
+            verif_type_init_hr_list[0].zfill(2)
+        )
+        job_env_dict['init_hr_end'] = (
+            verif_type_init_hr_list[-1].zfill(2)
+        )
+        if len(verif_type_init_hr_list) > 1:
+            verif_type_init_hr_inc = np.min(
+                np.diff(np.array(verif_type_init_hr_list, dtype=int))
+            )
+        else:
+            verif_type_init_hr_inc = 24
+        job_env_dict['init_hr_inc'] = str(verif_type_init_hr_inc)
+        job_env_dict['event_equalization'] = os.environ[
+            verif_case_step_abbrev_type[0:4]+'_event_equalization'
+        ]
     return job_env_dict
+
+def get_plot_dates(logger, date_type, start_date, end_date,
+                   valid_hr_start, valid_hr_end, valid_hr_inc,
+                   init_hr_start, init_hr_end, init_hr_inc,
+                   forecast_hour):
+    """! This builds the dates to include in plotting based on user
+         configurations
+         Args:
+             logger         - logger object
+             date_type      - type of date to plot (string: VALID or INIT)
+             start_date     - plotting start date (string, format: YYYYmmdd)
+             end_date       - plotting end date (string, format: YYYYmmdd)
+             valid_hr_start - starting valid hour (string)
+             valid_hr_end   - ending valid hour (string)
+             valid_hr_inc   - valid hour increment (string)
+             init_hr_start  - starting initialization hour (string)
+             init_hr_end    - ending initialization hour (string)
+             init_hr_inc    - initialization hour incrrement (string)
+             forecast_hour  - forecast hour (string)
+         Returns:
+             valid_dates - array of valid dates (datetime)
+             init_dates  - array of initalization dates (datetime)
+    """
+    # Build date_type date array
+    if date_type == 'VALID':
+        start_date_dt = datetime.datetime.strptime(start_date+valid_hr_start,
+                                                   '%Y%m%d%H')
+        end_date_dt = datetime.datetime.strptime(end_date+valid_hr_end,
+                                                 '%Y%m%d%H')
+        dt_inc = datetime.timedelta(hours=int(valid_hr_inc))
+    elif date_type == 'INIT':
+        start_date_dt = datetime.datetime.strptime(start_date+init_hr_start,
+                                                   '%Y%m%d%H')
+        end_date_dt = datetime.datetime.strptime(end_date+init_hr_end,
+                                                 '%Y%m%d%H')
+        dt_inc = datetime.timedelta(hours=int(init_hr_inc))
+    date_type_dates = (np.arange(start_date_dt, end_date_dt+dt_inc, dt_inc)\
+                       .astype(datetime.datetime))
+    # Build valid and init date arrays
+    if date_type == 'VALID':
+        valid_dates = date_type_dates
+        init_dates = (valid_dates
+                      - datetime.timedelta(hours=(int(forecast_hour))))
+    elif date_type == 'INIT':
+        init_dates = date_type_dates
+        valid_dates = (init_dates
+                      + datetime.timedelta(hours=(int(forecast_hour))))
+    # Check if unrequested hours exist in arrays, and remove
+    valid_remove_idx_list = []
+    valid_hr_list = [
+        str(hr).zfill(2) for hr in range(int(valid_hr_start),
+                                         int(valid_hr_end)+int(valid_hr_inc),
+                                         int(valid_hr_inc))
+    ]
+    for d in range(len(valid_dates)):
+        if valid_dates[d].strftime('%H') \
+                not in valid_hr_list:
+            valid_remove_idx_list.append(d)
+    valid_dates = np.delete(valid_dates, valid_remove_idx_list)
+    init_dates = np.delete(init_dates, valid_remove_idx_list)
+    init_remove_idx_list = []
+    init_hr_list = [
+        str(hr).zfill(2) for hr in range(int(init_hr_start),
+                                         int(init_hr_end)+int(init_hr_inc),
+                                         int(init_hr_inc))
+    ]
+    for d in range(len(init_dates)):
+        if init_dates[d].strftime('%H') \
+                not in init_hr_list:
+            init_remove_idx_list.append(d)
+    valid_dates = np.delete(valid_dates, init_remove_idx_list)
+    init_dates = np.delete(init_dates, init_remove_idx_list)
+    return valid_dates, init_dates
+
+def get_met_line_type_cols(logger, met_root, met_version, met_line_type):
+    """! Get the MET columns for a specific line type and MET
+         verison
+
+         Args:
+             logger        - logger object
+             met_root      - path to MET (string)
+             met_version   - MET version number (string)
+             met_line_type - MET line type (string)
+         Returns:
+             met_version_line_type_col_list - list of MET versoin
+                                              line type colums (strings)
+    """
+    if met_version.count('.') == 2:
+        met_minor_version = met_version.rpartition('.')[0]
+    elif met_version.count('.') == 1:
+        met_minor_version = met_version
+    met_minor_version_col_file = os.path.join(
+        met_root, 'share', 'met', 'table_files',
+        'met_header_columns_V'+met_minor_version+'.txt'
+    )
+    if os.path.exists(met_minor_version_col_file):
+        with open(met_minor_version_col_file) as f:
+            for line in f:
+                if met_line_type in line:
+                    line_type_cols = line.split(' : ')[-1]
+                    break
+    else:
+        logger.error(f"{met_minor_version_col_file} DOES NOT EXISTS, "
+                     +"cannot determine MET data column structure")
+        sys.exit(1)
+    met_version_line_type_col_list = (
+        line_type_cols.replace('\n', '').split(' ')
+    )
+    return met_version_line_type_col_list
+
+def condense_model_stat_files(logger, input_dir, output_file, model, obs,
+                              vx_mask, fcst_var_name, obs_var_name,
+                              line_type):
+    """! Condense the individual date model stat file and
+         thin out unneeded data
+
+         Args:
+             logger        - logger object
+             input_dir     - path to input directory (string)
+             output_file   - path to output file (string)
+             model         - model name (string)
+             obs           - observation name (string)
+             vx_mask       - verification masking region (string)
+             fcst_var_name - forecast variable name (string)
+             obs_var_name  - observation variable name (string)
+             line_type     - MET line type (string)
+
+         Returns:
+    """
+    model_stat_files_wildcard = os.path.join(input_dir, model, model+'_*.stat')
+    model_stat_files = glob.glob(model_stat_files_wildcard, recursive=True)
+    if len(model_stat_files) == 0:
+        logger.warning(f"NO STAT FILES IN MATCHING "
+                       +f"{model_stat_files_wildcard}")
+    else:
+        if not os.path.exists(output_file):
+            logger.debug(f"Condensing down stat files matching "
+                         +f"{model_stat_files_wildcard}")
+            with open(model_stat_files[0]) as msf:
+                met_header_cols = msf.readline()
+            all_grep_output = ''
+            grep_opts = (
+                ' | grep "'+obs+' "'
+                +' | grep "'+vx_mask+' "'
+                +' | grep "'+fcst_var_name+' "'
+                +' | grep "'+obs_var_name+' "'
+                +' | grep "'+line_type+' "'
+            )
+            for model_stat_file in model_stat_files:
+                logger.debug(f"Getting data from {model_stat_file}")
+                ps = subprocess.Popen(
+                    'grep -R "'+model+' " '+model_stat_file+grep_opts,
+                    shell=True, stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT, encoding='UTF-8'
+                )
+                logger.debug(f"Ran {ps.args}")
+                all_grep_output = all_grep_output+ps.communicate()[0]
+            logger.debug(f"Condensed {model} .stat file at "
+                         +f"{output_file}")
+            with open(output_file, 'w') as f:
+                f.write(met_header_cols+all_grep_output)
+
+def build_df(logger, input_dir, output_dir, model_info_dict,
+             plot_info_dict, date_info_dict, met_info_dict,
+             dates, met_format_valid_dates):
+    """! Build the data frame for all model stats,
+         Read the model parse file, if doesn't exist
+         parse the model file for need information, and write file
+
+         Args:
+             logger                 - logger object
+             input_dir              - path to input directory (string)
+             output_dir             - path to output directory (string)
+             model_info_dict        - model infomation dictionary (strings)
+             plot_info_dict         - plot information dictionary (strings)
+             date_info_dict         - date information dictionary (strings)
+             met_info_dict          - MET information dictionary (strings)
+             dates                  - array of dates (datetime)
+             met_format_valid_dates - list of valid dates formatted
+                                      like they are in MET stat files
+
+         Returns:
+    """
+    met_version_line_type_col_list = get_met_line_type_cols(
+        logger, met_info_dict['root'], met_info_dict['version'],
+        plot_info_dict['line_type']
+    )
+    df_dtype_dict = {}
+    float_idx = met_version_line_type_col_list.index('TOTAL')
+    for col in met_version_line_type_col_list:
+        col_idx = met_version_line_type_col_list.index(col)
+        if col_idx < float_idx:
+            df_dtype_dict[col] = str
+        else:
+            df_dtype_dict[col] = np.float64
+    for model_num in list(model_info_dict.keys()):
+        model_num_name = (
+            model_num+'/'+model_info_dict[model_num]['name']
+            +'/'+model_info_dict[model_num]['plot_name']
+        )
+        model_num_df_index = pd.MultiIndex.from_product(
+            [[model_num_name], met_format_valid_dates],
+            names=['model', 'valid_dates']
+        )
+        model_num_df = pd.DataFrame(np.nan, index=model_num_df_index,
+                                    columns=met_version_line_type_col_list)
+        model_dict = model_info_dict[model_num]
+        parsed_model_stat_file = os.path.join(
+            output_dir,
+            'fcst'+model_dict['name']+'_'
+            +plot_info_dict['fcst_var_name']
+            +plot_info_dict['fcst_var_level']
+            +plot_info_dict['fcst_var_thresh']+'_'
+            +'obs'+model_dict['obs_name']+'_'
+            +plot_info_dict['obs_var_name']
+            +plot_info_dict['obs_var_level']
+            +plot_info_dict['obs_var_thresh']+'_'
+            +'linetype'+plot_info_dict['line_type']+'_'
+            +'vxmask'+plot_info_dict['vx_mask']+'_'
+            +'interp_'+plot_info_dict['interp_method']
+            +plot_info_dict['interp_points']+'_'
+            +date_info_dict['date_type'].lower()
+            +dates[0].strftime('%Y%m%d%H%M%S')+'to'
+            +dates[-1].strftime('%Y%m%d%H%M%S')+'_'
+            +'fhr'+date_info_dict['forecast_hour'].zfill(3)
+            +'.stat'
+        )
+        if not os.path.exists(parsed_model_stat_file):
+            condensed_model_file = os.path.join(
+                input_dir, model_num+'_'+model_dict['name']+'.stat'
+            )
+            if not os.path.exists(condensed_model_file):
+                condense_model_stat_files(
+                    logger, input_dir, condensed_model_file, model_dict['name'],
+                    model_dict['obs_name'], plot_info_dict['vx_mask'],
+                    plot_info_dict['fcst_var_name'],
+                    plot_info_dict['obs_var_name'],
+                    plot_info_dict['line_type']
+                )
+            if os.path.exists(condensed_model_file):
+                logger.debug(f"Parsing file {condensed_model_file}")
+                condensed_model_df = pd.read_csv(
+                    condensed_model_file, sep=" ", skiprows=1,
+                    skipinitialspace=True, names=met_version_line_type_col_list,
+                    keep_default_na=False, dtype='str', header=None
+                )
+                parsed_model_df = condensed_model_df[
+                    (condensed_model_df['MODEL'] == model_dict['name'])
+                     & (condensed_model_df['FCST_LEAD'] \
+                        == date_info_dict['forecast_hour'].zfill(2)+'0000')
+                     & (condensed_model_df['FCST_VAR'] \
+                        == plot_info_dict['fcst_var_name'])
+                     & (condensed_model_df['FCST_LEV'] \
+                        == plot_info_dict['fcst_var_level'])
+                     & (condensed_model_df['OBS_VAR'] \
+                        == plot_info_dict['obs_var_name'])
+                     & (condensed_model_df['OBS_LEV'] \
+                        == plot_info_dict['obs_var_level'])
+                     & (condensed_model_df['OBTYPE'] == model_dict['obs_name'])
+                     & (condensed_model_df['VX_MASK'] \
+                        == plot_info_dict['vx_mask'])
+                     & (condensed_model_df['INTERP_MTHD'] \
+                        == plot_info_dict['interp_method'])
+                     & (condensed_model_df['INTERP_PNTS'] \
+                        == plot_info_dict['interp_points'])
+                     & (condensed_model_df['FCST_THRESH'] \
+                        == plot_info_dict['fcst_var_thresh'])
+                     & (condensed_model_df['OBS_THRESH'] \
+                        == plot_info_dict['obs_var_thresh'])
+                     & (condensed_model_df['LINE_TYPE'] \
+                        == plot_info_dict['line_type'])
+                ]
+                parsed_model_df = parsed_model_df[
+                    parsed_model_df['FCST_VALID_BEG'].isin(met_format_valid_dates)
+                ]
+                parsed_model_df['FCST_VALID_BEG'] = pd.to_datetime(
+                    parsed_model_df['FCST_VALID_BEG'], format='%Y%m%d_%H%M%S'
+                )
+                parsed_model_df = parsed_model_df.sort_values(by='FCST_VALID_BEG')
+                parsed_model_df['FCST_VALID_BEG'] = (
+                    parsed_model_df['FCST_VALID_BEG'].dt.strftime('%Y%m%d_%H%M%S')
+                )
+                parsed_model_df.to_csv(
+                    parsed_model_stat_file, header=met_version_line_type_col_list,
+                    index=None, sep=' ', mode='w'
+                )
+            if os.path.exists(parsed_model_stat_file):
+                logger.debug(f"Parsed {model_dict['name']} file "
+                             +f"at {parsed_model_stat_file}")
+            else:
+                logger.debug(f"Could not create {parsed_model_stat_file}")
+        if os.path.exists(parsed_model_stat_file):
+            logger.debug(f"Reading {parsed_model_stat_file} for "
+                         +f"{model_dict['name']}")
+            model_stat_file_df = pd.read_csv(
+                parsed_model_stat_file, sep=" ", skiprows=1,
+                skipinitialspace=True, names=met_version_line_type_col_list,
+                keep_default_na=False, converters=df_dtype_dict,
+                header=None
+            )
+            for valid_date in met_format_valid_dates:
+                model_stat_file_df_valid_date_idx_list = (
+                    model_stat_file_df.index[
+                        model_stat_file_df['FCST_VALID_BEG'] == valid_date
+                    ]
+                ).tolist()
+                if len(model_stat_file_df_valid_date_idx_list) == 0:
+                    logger.debug(f"No data matching valid date {valid_date} "
+                                 +f"in {parsed_model_stat_file}")
+                    continue
+                elif len(model_stat_file_df_valid_date_idx_list) > 1:
+                    logger.debug(f"Multiple lines matching valid date "
+                                 +f"{valid_date} in {parsed_model_stat_file}"
+                                 +f"using first one")
+                else:
+                    logger.debug(f"One line matching valid date "
+                                 +f"{valid_date} in {parsed_model_stat_file}")
+                model_num_df.loc[(model_num_name, valid_date)] = (
+                    model_stat_file_df.loc\
+                    [model_stat_file_df_valid_date_idx_list[0]]\
+                    [:]
+                )
+        else:
+            logger.warning(f"{parsed_model_stat_file} does not exist")
+        if model_num == 'model1':
+            all_model_df = model_num_df
+        else:
+            all_model_df = pd.concat([all_model_df, model_num_df], sort=True)
+    return all_model_df
+
+def calculate_stat(logger, data_df, line_type, stat):
+   """! Calculate the statistic from the data from the
+        read in MET .stat file(s)
+        Args:
+           data_df        - dataframe containing the model(s)
+                            information from the MET .stat
+                            files
+           line_type      - MET line type (string)
+           stat           - statistic to calculate (string)
+
+        Returns:
+           stat_df       - dataframe of the statistic
+           stat_array    - array of the statistic
+   """
+   if line_type == 'SL1L2':
+       FBAR = data_df.loc[:]['FBAR']
+       OBAR = data_df.loc[:]['OBAR']
+       FOBAR = data_df.loc[:]['FOBAR']
+       FFBAR = data_df.loc[:]['FFBAR']
+       OOBAR = data_df.loc[:]['OOBAR']
+   elif line_type == 'SAL1L2':
+       FABAR = data_df.loc[:]['FABAR']
+       OABAR = data_df.loc[:]['OABAR']
+       FOABAR = data_df.loc[:]['FOABAR']
+       FFABAR = data_df.loc[:]['FFABAR']
+       OOABAR = data_df.loc[:]['OOABAR']
+   elif line_type == 'CNT':
+       FBAR = data_df.loc[:]['FBAR']
+       FBAR_NCL = data_df.loc[:]['FBAR_NCL']
+       FBAR_NCU = data_df.loc[:]['FBAR_NCU']
+       FBAR_BCL = data_df.loc[:]['FBAR_BCL']
+       FBAR_BCU = data_df.loc[:]['FBAR_BCU']
+       FSTDEV = data_df.loc[:]['FSTDEV']
+       FSTDEV_NCL = data_df.loc[:]['FSTDEV_NCL']
+       FSTDEV_NCU = data_df.loc[:]['FSTDEV_NCU']
+       FSTDEV_BCL = data_df.loc[:]['FSTDEV_BCL']
+       FSTDEV_BCU = data_df.loc[:]['FSTDEV_BCU']
+       OBAR = data_df.loc[:]['OBAR']
+       OBAR_NCL = data_df.loc[:]['OBAR_NCL']
+       OBAR_NCU = data_df.loc[:]['OBAR_NCU']
+       OBAR_BCL = data_df.loc[:]['OBAR_BCL']
+       OBAR_BCU = data_df.loc[:]['OBAR_BCU']
+       OSTDEV = data_df.loc[:]['OSTDEV']
+       OSTDEV_NCL = data_df.loc[:]['OSTDEV_NCL']
+       OSTDEV_NCU = data_df.loc[:]['OSTDEV_NCU']
+       OSTDEV_BCL = data_df.loc[:]['OSTDEV_BCL']
+       OSTDEV_BCU = data_df.loc[:]['OSTDEV_BCU']
+       PR_CORR = data_df.loc[:]['PR_CORR']
+       PR_CORR_NCL = data_df.loc[:]['PR_CORR_NCL']
+       PR_CORR_NCU = data_df.loc[:]['PR_CORR_NCU']
+       PR_CORR_BCL = data_df.loc[:]['PR_CORR_BCL']
+       PR_CORR_BCU = data_df.loc[:]['PR_CORR_BCU']
+       SP_CORR = data_df.loc[:]['SP_CORR']
+       KT_CORR = data_df.loc[:]['KT_CORR']
+       RANKS = data_df.loc[:]['RANKS']
+       FRANKS_TIES = data_df.loc[:]['FRANKS_TIES']
+       ORANKS_TIES = data_df.loc[:]['ORANKS_TIES']
+       ME = data_df.loc[:]['ME']
+       ME_NCL = data_df.loc[:]['ME_NCL']
+       ME_NCU = data_df.loc[:]['ME_NCU']
+       ME_BCL = data_df.loc[:]['ME_BCL']
+       ME_BCU = data_df.loc[:]['ME_BCU']
+       ESTDEV = data_df.loc[:]['ESTDEV']
+       ESTDEV_NCL = data_df.loc[:]['ESTDEV_NCL']
+       ESTDEV_NCU = data_df.loc[:]['ESTDEV_NCU']
+       ESTDEV_BCL = data_df.loc[:]['ESTDEV_BCL']
+       ESTDEV_BCU = data_df.loc[:]['ESTDEV_BCU']
+       MBIAS = data_df.loc[:]['MBIAS']
+       MBIAS_BCL = data_df.loc[:]['MBIAS_BCL']
+       MBIAS_BCU = data_df.loc[:]['MBIAS_BCU']
+       MAE = data_df.loc[:]['MAE']
+       MAE_BCL = data_df.loc[:]['MAE_BCL']
+       MAE_BCU = data_df.loc[:]['MAE_BCU']
+       MSE = data_df.loc[:]['MSE']
+       MSE_BCL = data_df.loc[:]['MSE_BCL']
+       MSE_BCU = data_df.loc[:]['MSE_BCU']
+       BCRMSE = data_df.loc[:]['BCRMSE']
+       BCRMSE_BCL = data_df.loc[:]['BCRMSE_BCL']
+       BCRMSE_BCU = data_df.loc[:]['BCRMSE_BCU']
+       RMSE = data_df.loc[:]['RMSE']
+       RMSE_BCL = data_df.loc[:]['RMSE_BCL']
+       RMSE_BCU = data_df.loc[:]['RMSE_BCU']
+       E10 = data_df.loc[:]['E10']
+       E10_BCL = data_df.loc[:]['E10_BCL']
+       E10_BCU = data_df.loc[:]['E10_BCU']
+       E25 = data_df.loc[:]['E25']
+       E25_BCL = data_df.loc[:]['E25_BCL']
+       E25_BCU = data_df.loc[:]['E25_BCU']
+       E50 = data_df.loc[:]['E50']
+       E50_BCL = data_df.loc[:]['E50_BCL']
+       E50_BCU = data_df.loc[:]['E50_BCU']
+       E75 = data_df.loc[:]['E75']
+       E75_BCL = data_df.loc[:]['E75_BCL']
+       E75_BCU = data_df.loc[:]['E75_BCU']
+       E90 = data_df.loc[:]['E90']
+       E90_BCL = data_df.loc[:]['E90_BCL']
+       E90_BCU = data_df.loc[:]['E90_BCU']
+       IQR = data_df.loc[:]['IQR']
+       IQR_BCL = data_df.loc[:]['IQR_BCL']
+       IQR_BCU = data_df.loc[:]['IQR_BCU']
+       MAD = data_df.loc[:]['MAD']
+       MAD_BCL = data_df.loc[:]['MAD_BCL']
+       MAD_BCU = data_df.loc[:]['MAD_BCU']
+       ANOM_CORR_NCL = data_df.loc[:]['ANOM_CORR_NCL']
+       ANOM_CORR_NCU = data_df.loc[:]['ANOM_CORR_NCU']
+       ANOM_CORR_BCL = data_df.loc[:]['ANOM_CORR_BCL']
+       ANOM_CORR_BCU = data_df.loc[:]['ANOM_CORR_BCU']
+       ME2 = data_df.loc[:]['ME2']
+       ME2_BCL = data_df.loc[:]['ME2_BCL']
+       ME2_BCU = data_df.loc[:]['ME2_BCU']
+       MSESS = data_df.loc[:]['MSESS']
+       MSESS_BCL = data_df.loc[:]['MSESS_BCL']
+       MSESS_BCU = data_df.loc[:]['MSESS_BCU']
+       RMSFA = data_df.loc[:]['RMSFA']
+       RMSFA_BCL = data_df.loc[:]['RMSFA_BCL']
+       RMSFA_BCU = data_df.loc[:]['RMSFA_BCU']
+       RMSOA = data_df.loc[:]['RMSOA']
+       RMSOA_BCL = data_df.loc[:]['RMSOA_BCL']
+       RMSOA_BCU = data_df.loc[:]['RMSOA_BCU']
+       ANOM_CORR_UNCNTR = data_df.loc[:]['ANOM_CORR_UNCNTR']
+       ANOM_CORR_UNCNTR_BCL = data_df.loc[:]['ANOM_CORR_UNCNTR_BCL']
+       ANOM_CORR_UNCNTR_BCU = data_df.loc[:]['ANOM_CORR_UNCNTR_BCU']
+       SI = data_df.loc[:]['SI']
+       SI_BCL = data_df.loc[:]['SI_BCL']
+       SI_BCU = data_df.loc[:]['SI_BCU']
+   elif line_type == 'GRAD':
+       FGBAR = data_df.loc[:]['FGBAR']
+       OGBAR = data_df.loc[:]['OGBAR']
+       MGBAR = data_df.loc[:]['MGBAR']
+       EGBAR = data_df.loc[:]['EGBAR']
+       S1 = data_df.loc[:]['S1']
+       S1_OG = data_df.loc[:]['S1_OG']
+       FGOG_RATIO = data_df.loc[:]['FGOG_RATIO']
+       DX = data_df.loc[:]['DX']
+       DY = data_df.loc[:]['DY']
+   elif line_type == 'FHO':
+       F_RATE = data_df.loc[:]['F_RATE']
+       H_RATE = data_df.loc[:]['H_RATE']
+       O_RATE = data_df.loc[:]['O_RATE']
+   elif line_type in ['CTC', 'NBRCTC']:
+       FY_OY = data_df.loc[:]['FY_OY']
+       FY_ON = data_df.loc[:]['FY_ON']
+       FN_OY = data_df.loc[:]['FN_OY']
+       FN_ON = data_df.loc[:]['FN_ON']
+   elif line_type in ['CTS', 'NBRCTS']:
+       BASER = data_df.loc[:]['BASER']
+       BASER_NCL = data_df.loc[:]['BASER_NCL']
+       BASER_NCU = data_df.loc[:]['BASER_NCU']
+       BASER_BCL = data_df.loc[:]['BASER_BCL']
+       BASER_BCU = data_df.loc[:]['BASER_BCU']
+       FMEAN = data_df.loc[:]['FMEAN']
+       FMEAN_NCL = data_df.loc[:]['FMEAN_NCL']
+       FMEAN_NCU = data_df.loc[:]['FMEAN_NCU']
+       FMEAN_BCL = data_df.loc[:]['FMEAN_BCL']
+       FMEAN_BCU = data_df.loc[:]['FMEAN_BCU']
+       ACC = data_df.loc[:]['ACC']
+       ACC_NCL = data_df.loc[:]['ACC_NCL']
+       ACC_NCU = data_df.loc[:]['ACC_NCU']
+       ACC_BCL = data_df.loc[:]['ACC_BCL']
+       ACC_BCU = data_df.loc[:]['ACC_BCU']
+       FBIAS = data_df.loc[:]['FBIAS']
+       FBIAS_BCL = data_df.loc[:]['FBIAS_BCL']
+       FBIAS_BCU = data_df.loc[:]['FBIAS_BCU']
+       PODY = data_df.loc[:]['PODY']
+       PODY_NCL = data_df.loc[:]['PODY_NCL']
+       PODY_NCU = data_df.loc[:]['PODY_NCU']
+       PODY_BCL = data_df.loc[:]['PODY_BCL']
+       PODY_BCU = data_df.loc[:]['PODY_BCU']
+       PODN = data_df.loc[:]['PODN']
+       PODN_NCL = data_df.loc[:]['PODN_NCL']
+       PODN_NCU = data_df.loc[:]['PODN_NCU']
+       PODN_BCL = data_df.loc[:]['PODN_BCL']
+       PODN_BCU = data_df.loc[:]['PODN_BCU']
+       POFD = data_df.loc[:]['POFD']
+       POFD_NCL = data_df.loc[:]['POFD_NCL']
+       POFD_NCU = data_df.loc[:]['POFD_NCU']
+       POFD_BCL = data_df.loc[:]['POFD_BCL']
+       POFD_BCU = data_df.loc[:]['POFD_BCU']
+       FAR = data_df.loc[:]['FAR']
+       FAR_NCL = data_df.loc[:]['FAR_NCL']
+       FAR_NCU = data_df.loc[:]['FAR_NCU']
+       FAR_BCL = data_df.loc[:]['FAR_BCL']
+       FAR_BCU = data_df.loc[:]['FAR_BCU']
+       CSI = data_df.loc[:]['CSI']
+       CSI_NCL = data_df.loc[:]['CSI_NCL']
+       CSI_NCU = data_df.loc[:]['CSI_NCU']
+       CSI_BCL = data_df.loc[:]['CSI_BCL']
+       CSI_BCU = data_df.loc[:]['CSI_BCU']
+       GSS = data_df.loc[:]['GSS']
+       GSS_BCL = data_df.loc[:]['GSS_BCL']
+       GSS_BCU = data_df.loc[:]['GSS_BCU']
+       HK = data_df.loc[:]['HK']
+       HK_NCL = data_df.loc[:]['HK_NCL']
+       HK_NCU = data_df.loc[:]['HK_NCU']
+       HK_BCL = data_df.loc[:]['HK_BCL']
+       HK_BCU = data_df.loc[:]['HK_BCU']
+       HSS = data_df.loc[:]['HSS']
+       HSS_BCL = data_df.loc[:]['HSS_BCL']
+       HSS_BCU = data_df.loc[:]['HSS_BCU']
+       ODDS = data_df.loc[:]['ODDS']
+       ODDS_NCL = data_df.loc[:]['ODDS_NCL']
+       ODDS_NCU = data_df.loc[:]['ODDS_NCU']
+       ODDS_BCL = data_df.loc[:]['ODDS_BCL']
+       ODDS_BCU = data_df.loc[:]['ODDS_BCU']
+       LODDS = data_df.loc[:]['LODDS']
+       LODDS_NCL = data_df.loc[:]['LODDS_NCL']
+       LODDS_NCU = data_df.loc[:]['LODDS_NCU']
+       LODDS_BCL = data_df.loc[:]['LODDS_BCL']
+       LODDS_BCU = data_df.loc[:]['LODDS_BCU']
+       ORSS = data_df.loc[:]['ORSS']
+       ORSS_NCL = data_df.loc[:]['ORSS_NCL']
+       ORSS_NCU = data_df.loc[:]['ORSS_NCU']
+       ORSS_BCL = data_df.loc[:]['ORSS_BCL']
+       ORSS_BCU = data_df.loc[:]['ORSS_BCU']
+       EDS = data_df.loc[:]['EDS']
+       EDS_NCL = data_df.loc[:]['EDS_NCL']
+       EDS_NCU = data_df.loc[:]['EDS_NCU']
+       EDS_BCL = data_df.loc[:]['EDS_BCL']
+       EDS_BCU = data_df.loc[:]['EDS_BCU']
+       SEDS = data_df.loc[:]['SEDS']
+       SEDS_NCL = data_df.loc[:]['SEDS_NCL']
+       SEDS_NCU = data_df.loc[:]['SEDS_NCU']
+       SEDS_BCL = data_df.loc[:]['SEDS_BCL']
+       SEDS_BCU = data_df.loc[:]['SEDS_BCU']
+       EDI = data_df.loc[:]['EDI']
+       EDI_NCL = data_df.loc[:]['EDI_NCL']
+       EDI_NCU = data_df.loc[:]['EDI_NCU']
+       EDI_BCL = data_df.loc[:]['EDI_BCL']
+       EDI_BCU = data_df.loc[:]['EDI_BCU']
+       SEDI = data_df.loc[:]['SEDI']
+       SEDI_NCL = data_df.loc[:]['SEDI_NCL']
+       SEDI_NCU = data_df.loc[:]['SEDI_NCU']
+       SEDI_BCL = data_df.loc[:]['SEDI_BCL']
+       SEDI_BCU = data_df.loc[:]['SEDI_BCU']
+       BAGSS = data_df.loc[:]['BAGSS']
+       BAGSS_BCL = data_df.loc[:]['BAGSS_BCL']
+       BAGSS_BCU = data_df.loc[:]['BAGSS_BCU']
+   elif line_type == 'NBRCNT':
+       FBS = data_df.loc[:]['FBS']
+       FBS_BCL = data_df.loc[:]['FBS_BCL']
+       FBS_BCU = data_df.loc[:]['FBS_BCU']
+       FSS = data_df.loc[:]['FSS']
+       FSS_BCL = data_df.loc[:]['FSS_BCL']
+       FSS_BCU = data_df.loc[:]['FSS_BCU']
+       AFSS = data_df.loc[:]['AFSS']
+       AFSS_BCL = data_df.loc[:]['AFSS_BCL']
+       AFSS_BCU = data_df.loc[:]['AFSS_BCU']
+       UFSS = data_df.loc[:]['UFSS']
+       UFSS_BCL = data_df.loc[:]['UFSS_BCL']
+       UFSS_BCU = data_df.loc[:]['UFSS_BCU']
+       F_RATE = data_df.loc[:]['F_RATE']
+       F_RATE_BCL = data_df.loc[:]['F_RATE_BCL']
+       F_RATE_BCU = data_df.loc[:]['F_RATE_BCU']
+       O_RATE = data_df.loc[:]['O_RATE']
+       O_RATE_BCL = data_df.loc[:]['O_RATE_BCL']
+       O_RATE_BCU = data_df.loc[:]['O_RATE_BCU']
+   elif line_type == 'VL1L2':
+       UFBAR = data_df.loc[:]['UFBAR']
+       VFBAR = data_df.loc[:]['VFBAR']
+       UOBAR = data_df.loc[:]['UOBAR']
+       VOBAR = data_df.loc[:]['VOBAR']
+       UVFOBAR = data_df.loc[:]['UVFOBAR']
+       UVFFBAR = data_df.loc[:]['UVFFBAR']
+       UVOOBAR = data_df.loc[:]['UVOOBAR']
+   elif line_type == 'VAL1L2':
+       UFABAR = data_df.loc[:]['UFABAR']
+       VFABAR = data_df.loc[:]['VFABAR']
+       UOABAR = data_df.loc[:]['UOABAR']
+       VOABAR = data_df.loc[:]['VOABAR']
+       UVFOABAR = data_df.loc[:]['UVFOABAR']
+       UVFFABAR = data_df.loc[:]['UVFFABAR']
+       UVOOABAR = data_df.loc[:]['UVOOABAR']
+   elif line_type == 'VCNT':
+       FBAR = data_df.loc[:]['FBAR']
+       OBAR = data_df.loc[:]['OBAR']
+       FS_RMS = data_df.loc[:]['FS_RMS']
+       OS_RMS = data_df.loc[:]['OS_RMS']
+       MSVE = data_df.loc[:]['MSVE']
+       RMSVE = data_df.loc[:]['RMSVE']
+       FSTDEV = data_df.loc[:]['FSTDEV']
+       OSTDEV = data_df.loc[:]['OSTDEV']
+       FDIR = data_df.loc[:]['FDIR']
+       ORDIR = data_df.loc[:]['ODIR']
+       FBAR_SPEED = data_df.loc[:]['FBAR_SPEED']
+       OBAR_SPEED = data_df.loc[:]['OBAR_SPEED']
+       VDIFF_SPEED = data_df.loc[:]['VDIFF_SPEED']
+       VDIFF_DIR = data_df.loc[:]['VDIFF_DIR']
+       SPEED_ERR = data_df.loc[:]['SPEED_ERR']
+       SPEED_ABSERR = data_df.loc[:]['SPEED_ABSERR']
+       DIR_ERR = data_df.loc[:]['DIR_ERR']
+       DIR_ABSERR = data_df.loc[:]['DIR_ABSERR']
+   if stat == 'ACC': # Anomaly Correlation Coefficient
+       if line_type == 'SAL1L2':
+           var_f = FFABAR - FABAR*FABAR
+           var_o = OOABAR - OABAR*OABAR
+           covar = FOABAR - FABAR*OABAR
+           stat_df = covar/np.sqrt(var_f*var_o)
+       else:
+          stat_df = ANOM_CORR
+   else:
+        logger.error(stat+" IS NOT AN OPTION")
+        sys.exit(1)
+   idx = 0
+   idx_dict = {}
+   while idx < stat_df.index.nlevels:
+       idx_dict['index'+str(idx)] = len(
+           stat_df.index.get_level_values(idx).unique()
+       )
+       idx+=1
+   if stat_df.index.nlevels == 2:
+       stat_array = stat_df.values.reshape(
+           idx_dict['index0'], idx_dict['index1']
+       )
+   return stat_df, stat_array

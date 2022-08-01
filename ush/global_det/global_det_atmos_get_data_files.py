@@ -747,5 +747,36 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                              - datetime.timedelta(days=1)),
                             rap_p_arch_file_format, rap_p_dest_file_format
                         )
+elif STEP == 'plots' :
+    # Read in VERIF_CASE_STEP related environment variables
+    # Get model stat files
+    VERIF_CASE_STEP_data_dir = os.path.join(DATA, VERIF_CASE_STEP, 'data')
+    date_type = 'VALID'
+    for model_idx in range(len(model_list)):
+        model = model_list[model_idx]
+        model_evs_data_dir = model_evs_data_dir_list[model_idx]
+        start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
+        end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
+        date_dt = start_date_dt
+        while date_dt <= end_date_dt:
+            if date_type == 'VALID':
+                source_model_date_stat_file = os.path.join(
+                    model_evs_data_dir, 'evs_data', COMPONENT, RUN, VERIF_CASE,
+                    model, model+'_v'+date_dt.strftime('%Y%m%d')+'.stat'
+                )
+                dest_model_date_stat_file = os.path.join(
+                    VERIF_CASE_STEP_data_dir, model,
+                    model+'_v'+date_dt.strftime('%Y%m%d')+'.stat'
+                )
+            if not os.path.exists(dest_model_date_stat_file):
+                if os.path.exists(source_model_date_stat_file):
+                    print("Linking "+source_model_date_stat_file+" to "
+                          +dest_model_date_stat_file)
+                    os.symlink(source_model_date_stat_file,
+                               dest_model_date_stat_file)
+                else:
+                    print("WARNING: "+source_model_date_stat_file+" "
+                          +"DOES NOT EXIST")
+            date_dt = date_dt + datetime.timedelta(days=1)
 
 print("END: "+os.path.basename(__file__))

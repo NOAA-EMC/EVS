@@ -28,6 +28,8 @@ start_date = os.environ['start_date']
 end_date = os.environ['end_date']
 
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
+start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
+end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
 
 # Build information of data directories
 data_base_dir = os.path.join(DATA, VERIF_CASE_STEP, 'data')
@@ -70,25 +72,29 @@ for data_dir in data_dir_list:
         print("Creating data directory: "+data_dir)
         os.makedirs(data_dir, mode=0o755)
 
-# Create METplus jobs base directory
-METplus_job_scripts_dir = os.path.join(DATA, VERIF_CASE_STEP,
-                                       'METplus_job_scripts')
-if not os.path.exists(METplus_job_scripts_dir):
-    print("Creating METplus job directory: "+METplus_job_scripts_dir)
-    os.makedirs(METplus_job_scripts_dir, mode=0o755)
+# Create job script base directory
+if STEP == 'stats':
+    job_scripts_dir = os.path.join(DATA, VERIF_CASE_STEP,
+                                   'METplus_job_scripts')
+elif STEP == 'plots':
+   job_scripts_dir = os.path.join(DATA, VERIF_CASE_STEP,
+                                   'plot_job_scripts')
+if not os.path.exists(job_scripts_dir):
+    print("Creating job script directory: "+job_scripts_dir)
+    os.makedirs(job_scripts_dir, mode=0o755)
 
-# Build information of METplus and COMROOT output directories
-METplus_output_base_dir = os.path.join(DATA, VERIF_CASE_STEP, 'METplus_output')
-METplus_output_dir_list = [ METplus_output_base_dir ]
-METplus_output_dir_list.append(os.path.join(METplus_output_base_dir, 'confs'))
-METplus_output_dir_list.append(os.path.join(METplus_output_base_dir, 'logs'))
-METplus_output_dir_list.append(os.path.join(METplus_output_base_dir, 'tmp'))
+# Build information of working and COMROOT output directories
+working_dir_list = []
 COMROOT_dir_list = []
-start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
-end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
-date_dt = start_date_dt
-while date_dt <= end_date_dt:
-    if STEP == 'stats':
+if STEP == 'stats':
+    working_output_base_dir = os.path.join(DATA, VERIF_CASE_STEP,
+                                           'METplus_output')
+    working_dir_list.append(working_output_base_dir)
+    working_dir_list.append(os.path.join(working_output_base_dir, 'confs'))
+    working_dir_list.append(os.path.join(working_output_base_dir, 'logs'))
+    working_dir_list.append(os.path.join(working_output_base_dir, 'tmp'))
+    date_dt = start_date_dt
+    while date_dt <= end_date_dt:
         for model in model_list:
             COMROOT_dir_list.append(
                 os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
@@ -105,59 +111,77 @@ while date_dt <= end_date_dt:
                 os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
                              model+'.'+date_dt.strftime('%Y%m%d'))
             )
-            METplus_output_dir_list.append(
-                os.path.join(METplus_output_base_dir,
+            working_dir_list.append(
+                os.path.join(working_output_base_dir,
                              RUN+'.'+date_dt.strftime('%Y%m%d'), model,
                              VERIF_CASE)
             )
-            METplus_output_dir_list.append(
-                os.path.join(METplus_output_base_dir,
+            working_dir_list.append(
+                os.path.join(working_output_base_dir,
                              RUN+'.'+(date_dt-datetime.timedelta(days=1))\
                              .strftime('%Y%m%d'), model,
                              VERIF_CASE)
             )
-            METplus_output_dir_list.append(
-                os.path.join(METplus_output_base_dir,
+            working_dir_list.append(
+                os.path.join(working_output_base_dir,
                              model+'.'+date_dt.strftime('%Y%m%d'))
             )
-    if VERIF_CASE_STEP == 'grid2grid_stats':
-        for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
-            if VERIF_CASE_STEP_type == 'precip':
-                COMROOT_dir_list.append(
-                    os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
-                                 RUN+'.'+date_dt.strftime('%Y%m%d'), 'ccpa',
-                                 VERIF_CASE)
-                )
-                METplus_output_dir_list.append(
-                    os.path.join(METplus_output_base_dir,
-                                 RUN+'.'+date_dt.strftime('%Y%m%d'), 'ccpa',
-                                 VERIF_CASE)
-                )
-    elif VERIF_CASE_STEP == 'grid2obs_stats':
-        for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
-            if VERIF_CASE_STEP_type == 'pres_levs':
-                COMROOT_dir_list.append(
-                    os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
-                                 RUN+'.'+date_dt.strftime('%Y%m%d'), 'prepbufr',
-                                 VERIF_CASE)
-                )
-                METplus_output_dir_list.append(
-                    os.path.join(METplus_output_base_dir,
-                                 RUN+'.'+date_dt.strftime('%Y%m%d'), 'prepbufr',
-                                 VERIF_CASE)
-                )
-    date_dt = date_dt + datetime.timedelta(days=1)
+        if VERIF_CASE_STEP == 'grid2grid_stats':
+            for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
+                if VERIF_CASE_STEP_type == 'precip':
+                    COMROOT_dir_list.append(
+                        os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
+                                     RUN+'.'+date_dt.strftime('%Y%m%d'), 'ccpa',
+                                     VERIF_CASE)
+                    )
+                    working_dir_list.append(
+                        os.path.join(working_output_base_dir,
+                                     RUN+'.'+date_dt.strftime('%Y%m%d'), 'ccpa',
+                                     VERIF_CASE)
+                    )
+        elif VERIF_CASE_STEP == 'grid2obs_stats':
+            for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
+                if VERIF_CASE_STEP_type == 'pres_levs':
+                    COMROOT_dir_list.append(
+                        os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
+                                     RUN+'.'+date_dt.strftime('%Y%m%d'), 'prepbufr',
+                                     VERIF_CASE)
+                    )
+                    working_dir_list.append(
+                        os.path.join(working_output_base_dir,
+                                     RUN+'.'+date_dt.strftime('%Y%m%d'), 'prepbufr',
+                                     VERIF_CASE)
+                    )
+        date_dt = date_dt + datetime.timedelta(days=1)
+elif STEP == 'plots':
+    working_output_base_dir = os.path.join(DATA, VERIF_CASE_STEP,
+                                           'plot_output')
+    working_dir_list.append(working_output_base_dir)
+    working_dir_list.append(
+        os.path.join(working_output_base_dir, 'images')
+    )
+    working_dir_list.append(
+        os.path.join(working_output_base_dir, 'logs')
+    )
+    working_dir_list.append(
+        os.path.join(working_output_base_dir,
+                     COMPONENT+'.'+end_date_dt.strftime('%Y%m%d'))
+    )
+    COMROOT_dir_list.append(
+        os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
+                     COMPONENT+'.'+end_date_dt.strftime('%Y%m%d'))
+    )
+
+# Create working output directories
+for working_output_dir in working_dir_list:
+    if not os.path.exists(working_output_dir):
+        print("Creating workings output directory: "+working_output_dir)
+        os.makedirs(working_output_dir, mode=0o755)
 
 # Create COMROOT output directories
 for COMROOT_dir in COMROOT_dir_list:
     if not os.path.exists(COMROOT_dir):
         print("Creating COMROOT output directory: "+COMROOT_dir)
         os.makedirs(COMROOT_dir, mode=0o755)
-
-# Create METplus output directories
-for METplus_output_dir in METplus_output_dir_list:
-    if not os.path.exists(METplus_output_dir):
-        print("Creating METplus output directory: "+METplus_output_dir)
-        os.makedirs(METplus_output_dir, mode=0o755)
 
 print("END: "+os.path.basename(__file__))

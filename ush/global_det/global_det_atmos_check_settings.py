@@ -53,6 +53,10 @@ evs_global_det_atmos_settings_dict['RUN_GRID2GRID_STATS'] = [
     'g2gs_type_list', 'g2gs_mv_database_name', 'g2gs_mv_database_group',
     'g2gs_mv_database_desc'
 ]
+evs_global_det_atmos_settings_dict['RUN_GRID2GRID_PLOTS'] = [
+    'g2gp_model_plot_name_list', 'g2gp_type_list',
+    'g2gp_event_equalization'
+]
 evs_global_det_atmos_settings_dict['RUN_GRID2OBS_STATS'] = [
     'g2os_type_list', 'g2os_mv_database_name', 'g2os_mv_database_group',
     'g2os_mv_database_desc'
@@ -72,6 +76,17 @@ verif_case_step_settings_dict = {
         'sea_ice': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
         'snow': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
         'sst': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc']
+    },
+    'RUN_GRID2GRID_PLOTS': {
+        'flux': [],
+        'means': [],
+        'ozone': [],
+        'precip': [],
+        'pres_levs': ['truth_name_list', 'init_hr_list', 'valid_hr_list',
+                      'fhr_min', 'fhr_max', 'fhr_inc'],
+        'sea_ice': [],
+        'snow': [],
+        'sst': []
     },
     'RUN_GRID2OBS_STATS': {
         'pres_levs': ['init_hr_list', 'valid_hr_list',
@@ -150,6 +165,8 @@ VERIF_CASE_STEP_type_list = (
 valid_VERIF_CASE_STEP_type_opts_dict = {
     'RUN_GRID2GRID_STATS': ['flux', 'means', 'ozone', 'precip', 'pres_levs',
                             'sea_ice', 'snow', 'sst'],
+    'RUN_GRID2GRID_PLOTS': ['flux', 'means', 'ozone', 'precip', 'pres_levs',
+                            'sea_ice', 'snow', 'sst'],
     'RUN_GRID2OBS_STATS': ['pres_levs', 'sea_ice', 'sfc']
 }
 for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
@@ -165,6 +182,9 @@ for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
 # Do check for list variables lengths
 check_config_var_len_list = ['model_evs_data_dir_list',
                              'model_file_format_list']
+if STEP.upper() == 'PLOTS':
+    check_config_var_len_list.append(VERIF_CASE_STEP_abbrev
+                                     +'_model_plot_name_list')
 verif_case_step_check_len_dict = {
     'RUN_GRID2GRID_STATS': {
         'flux': [],
@@ -172,6 +192,16 @@ verif_case_step_check_len_dict = {
         'ozone': [],
         'precip': ['file_format_list', 'file_accum_list', 'var_list'],
         'pres_levs': ['truth_name_list', 'truth_format_list'],
+        'sea_ice': [],
+        'snow': [],
+        'sst': []
+    },
+    'RUN_GRID2GRID_PLOTS': {
+        'flux': [],
+        'means': [],
+        'ozone': [],
+        'precip': [],
+        'pres_levs': ['truth_name_list'],
         'sea_ice': [],
         'snow': [],
         'sst': []
@@ -207,6 +237,10 @@ valid_config_var_values_dict = {
     'KEEPDATA': ['YES', 'NO'],
     'SENDCOM': ['YES', 'NO'],
 }
+if STEP.upper() == 'PLOTS':
+    valid_config_var_values_dict[
+        VERIF_CASE_STEP_abbrev+'_event_equalization'
+    ] = ['YES', 'NO']
 
 # Run through and check config variables from dictionary
 for config_var in list(valid_config_var_values_dict.keys()):
