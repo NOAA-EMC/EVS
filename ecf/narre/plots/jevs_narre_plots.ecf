@@ -1,1 +1,43 @@
-sample
+#!/bin/bash
+
+#PBS -N jevs_narre_plots_%CYC%
+#PBS -j oe
+#PBS -S /bin/bash
+#PBS -q %QUEUE%
+#PBS -A VERF-DEV
+#PBS -l walltime=00:20:00
+#PBS -l place=vscatter,select=1:ncpus=2:mem=500GB
+#PBS -l debug=true
+
+
+
+%include <head.h>
+%include <envir-p1.h>
+
+export model=evs
+%include <model_ver.h>
+
+set -x
+export cyc=%CYC%
+export cycles="%CYCLES%"
+
+module purge
+source $HOMEevs/modulefiles/${evs_ver}
+
+
+${HOMEevs}/jobs/narre/plots/JEVS_NARRE_PLOTS
+
+%include <tail.h>
+%manual
+#################################################################################
+#TASKSCRIPT DOCUMENTATION BLOCK
+#
+#PURPOSE:  To execute the job that creates the ncepdate on IBMSP
+#######################################################################
+#######################################################################
+## Job specific troubleshooting instructions:
+#  see generic troubleshoot manual page
+#
+######################################################################
+%end
+
