@@ -140,7 +140,6 @@ if [ $RUN_GRID2GRID_PLOTS = YES ]; then
     export g2gp_pres_levs_fhr_min=00
     export g2gp_pres_levs_fhr_max=240
     export g2gp_pres_levs_fhr_inc=24
-
 fi
 
 if [ $RUN_GRID2OBS_STATS = YES ]; then
@@ -167,4 +166,24 @@ if [ $RUN_GRID2OBS_STATS = YES ]; then
     export g2os_mv_database_group="$USER"
     export g2os_mv_database_desc="Grid-to-obs METplus data"
 fi
+
+if [ $RUN_GRID2OBS_PLOTS = YES ]; then
+    #g2op_model_plot_name_list: list of models reference name on plots
+    #g2op_type_list: list type of verifications to run for grid-to-grid: pres_levs, sea_ice, sfc
+    #g2op_*_init_hr_list:      initialization hours to be included in verification: HH
+    #g2op_*_valid_hr_list:     valid hours to be included in verification: HH
+    #g2op_*_fhr_min:           forecast hour to start verification HH[H]
+    #g2op_*_fhr_max:           forecast hour to end verification HH[H]
+    #g2op_*_fhr_inc:           frequency to verify forecast hours at HH[H]
+    #g2op_event_equalization: do event equalization (YES) or not (NO)
+    export g2op_model_plot_name_list="ops_gfs"
+    export g2op_type_list="pres_levs sea_ice sfc"
+    export g2op_event_equalization="YES"
+    export g2op_pres_levs_init_hr_list="00"
+    export g2op_pres_levs_valid_hr_list="00"
+    export g2op_pres_levs_fhr_min=00
+    export g2op_pres_levs_fhr_max=240
+    export g2op_pres_levs_fhr_inc=24
+fi
+
 echo "END: $(basename ${BASH_SOURCE[0]})"

@@ -1366,7 +1366,7 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
         if model_num == 'model1':
             all_model_df = model_num_df
         else:
-            all_model_df = pd.concat([all_model_df, model_num_df], sort=True)
+            all_model_df = pd.concat([all_model_df, model_num_df])
     return all_model_df
 
 def calculate_stat(logger, data_df, line_type, stat):
@@ -1666,8 +1666,13 @@ def calculate_stat(logger, data_df, line_type, stat):
            var_o = OOABAR - OABAR*OABAR
            covar = FOABAR - FABAR*OABAR
            stat_df = covar/np.sqrt(var_f*var_o)
-       else:
+       elif line_type == 'CNT':
           stat_df = ANOM_CORR
+   elif stat == 'BIAS': # Bias
+       if line_type == 'SL1L2':
+           stat_df = FBAR - OBAR
+       elif line_type == 'CNT':
+           stat_df = ME
    else:
         logger.error(stat+" IS NOT AN OPTION")
         sys.exit(1)

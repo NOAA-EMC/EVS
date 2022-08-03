@@ -61,6 +61,10 @@ evs_global_det_atmos_settings_dict['RUN_GRID2OBS_STATS'] = [
     'g2os_type_list', 'g2os_mv_database_name', 'g2os_mv_database_group',
     'g2os_mv_database_desc'
 ]
+evs_global_det_atmos_settings_dict['RUN_GRID2OBS_PLOTS'] = [
+    'g2gp_model_plot_name_list', 'g2gp_type_list',
+    'g2gp_event_equalization'
+]
 
 verif_case_step_settings_dict = {
     'RUN_GRID2GRID_STATS': {
@@ -94,6 +98,12 @@ verif_case_step_settings_dict = {
         'sea_ice': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
         'sfc': ['init_hr_list', 'valid_hr_list',
                 'fhr_min', 'fhr_max', 'fhr_inc']
+    },
+    'RUN_GRID2OBS_PLOTS': {
+        'pres_levs': ['init_hr_list', 'valid_hr_list',
+                      'fhr_min', 'fhr_max', 'fhr_inc'],
+        'sea_ice': [],
+        'sfc': []
     }
 }
 
@@ -167,7 +177,8 @@ valid_VERIF_CASE_STEP_type_opts_dict = {
                             'sea_ice', 'snow', 'sst'],
     'RUN_GRID2GRID_PLOTS': ['flux', 'means', 'ozone', 'precip', 'pres_levs',
                             'sea_ice', 'snow', 'sst'],
-    'RUN_GRID2OBS_STATS': ['pres_levs', 'sea_ice', 'sfc']
+    'RUN_GRID2OBS_STATS': ['pres_levs', 'sea_ice', 'sfc'],
+    'RUN_GRID2OBS_PLOTS': ['pres_levs', 'sea_ice', 'sfc']
 }
 for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
     if VERIF_CASE_STEP_type \
@@ -210,7 +221,12 @@ verif_case_step_check_len_dict = {
         'pres_levs': [],
         'sea_ice': [],
         'sfc': []
-    }
+    },
+    'RUN_GRID2OBS_PLOTS': {
+        'pres_levs': [],
+        'sea_ice': [],
+        'sfc': []
+    },
 }
 for verif_type in verif_type_list:
     for check_list in verif_case_step_check_len_dict[

@@ -104,7 +104,8 @@ class PlotSpecs:
                                   (string)
         """
         stat_plot_name_dict = {
-            'ACC': 'Anomaly Correlation Coefficient'
+            'ACC': 'Anomaly Correlation Coefficient',
+            'BIAS': 'Bias'
         }
         if stat in list(stat_plot_name_dict.keys()):
             stat_plot_name = stat_plot_name_dict[stat]
