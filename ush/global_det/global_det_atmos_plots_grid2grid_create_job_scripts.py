@@ -145,12 +145,17 @@ if USE_CFP == 'YES':
     if njob_files == 0:
         print("ERROR: No job files created in "
               +os.path.join(DATA, VERIF_CASE_STEP, 'plot_job_scripts'))
+    poe_files = glob.glob(os.path.join(DATA, VERIF_CASE_STEP,
+                                       'plot_job_scripts', 'poe*'))
+    npoe_files = len(poe_files)
+    if npoe_files > 0:
+        for poe_file in poe_files:
+            os.remove(poe_file)
     njob, iproc, node = 1, 0, 1
     while njob <= njob_files:
         job = 'job'+str(njob)
         if machine in ['HERA', 'ORION', 'S4', 'JET']:
             if iproc >= int(nproc):
-                poe_file.close()
                 iproc = 0
                 node+=1
         poe_filename = os.path.join(DATA, VERIF_CASE_STEP,

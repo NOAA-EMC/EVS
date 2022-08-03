@@ -779,12 +779,18 @@ if USE_CFP == 'YES':
                   +os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
                                 group))
             continue
+        poe_files = glob.glob(os.path.join(DATA, VERIF_CASE_STEP,
+                                           'METplus_job_scripts', group,
+                                           'poe*'))
+        npoe_files = len(poe_files)
+        if npoe_files > 0:
+            for poe_file in poe_files:
+                os.remove(poe_file)
         njob, iproc, node = 1, 0, 1
         while njob <= njob_files:
             job = 'job'+str(njob)
             if machine in ['HERA', 'ORION', 'S4', 'JET']:
                 if iproc >= int(nproc):
-                    poe_file.close()
                     iproc = 0
                     node+=1
             poe_filename = os.path.join(DATA, VERIF_CASE_STEP,
@@ -823,6 +829,6 @@ if USE_CFP == 'YES':
                     '/bin/echo '+str(iproc)+'\n'
                 )
             iproc+=1
-    poe_file.close()
+        poe_file.close()
 
 print("END: "+os.path.basename(__file__))
