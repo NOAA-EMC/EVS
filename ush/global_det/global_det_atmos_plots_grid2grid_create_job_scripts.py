@@ -42,22 +42,18 @@ plot_jobs_dict = {
     'ozone': {},
     'precip': {},
     'pres_levs': {
-        'SAL1L2/ACC/HGT/GLOBAL': {'fcst_var_dict': {
-                                      'name': 'HGT',
+        'GeoHeight': {'line_type_stat_list': ['SAL1L2/ACC'],
+                      'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
+                                       'TROPICS'],
+                      'fcst_var_dict': {'name': 'HGT',
+                                        'levels': 'P1000, P700, P500, P250',
+                                        'threshs': 'NA'},
+                      'obs_var_dict': {'name': 'HGT',
                                       'levels': 'P1000, P700, P500, P250',
-                                      'threshs': 'NA',
-                                  },
-                                  'obs_var_dict': {
-                                      'name': 'HGT',
-                                      'levels': 'P1000, P700, P500, P250',
-                                      'threshs': 'NA',
-                                  },
-                                  'interp_dict': {
-                                      'method': 'NEAREST',
-                                      'points': '1',
-                                  },
-                                  'plots_list': 'time_series',
-                                 },
+                                      'threshs': 'NA'},
+                      'interp_dict': {'method': 'NEAREST',
+                                      'points': '1'},
+                      'plots_list': 'time_series'},
     },
     'sea_ice': {},
     'snow': {},
@@ -90,10 +86,6 @@ for verif_type in VERIF_CASE_STEP_type_list:
         job_env_dict['start_date'] = start_date
         job_env_dict['end_date'] = end_date
         job_env_dict['date_type'] = 'VALID'
-        job_env_dict['line_type'] = verif_type_job.split('/')[0]
-        job_env_dict['stat'] = verif_type_job.split('/')[1]
-        job_env_dict['job_var'] = verif_type_job.split('/')[2]
-        job_env_dict['vx_mask'] = verif_type_job.split('/')[3]
         job_env_dict['plots_list'] = (
             "'"+verif_type_plot_jobs_dict[verif_type_job]\
             ['plots_list']+"'"
@@ -119,23 +111,36 @@ for verif_type in VERIF_CASE_STEP_type_list:
             verif_type_plot_jobs_dict[verif_type_job]\
             ['interp_dict']['points']
         +"'")
-        # Write job script
-        njobs+=1
-        # Create job file
-        job_file = os.path.join(plot_jobs_dir, 'job'+str(njobs))
-        print("Creating job script: "+job_file)
-        job = open(job_file, 'w')
-        job.write('#!/bin/sh\n')
-        job.write('set -x\n')
-        job.write('\n')
-        # Set any environment variables for special cases
-        # Write environment variables
-        for name, value in job_env_dict.items():
-            job.write('export '+name+'='+value+'\n')
-        job.write('\n')
-        # Write job commands
-        job.write(gda_util.python_command('global_det_atmos_plots.py',[]))
-        job.close()
+        for line_type_stat \
+                in verif_type_plot_jobs_dict[verif_type_job]\
+                ['line_type_stat_list']:
+            job_env_dict['line_type'] = line_type_stat.split('/')[0]
+            job_env_dict['stat'] = line_type_stat.split('/')[1]
+            for vx_mask in verif_type_plot_jobs_dict[verif_type_job]\
+                    ['vx_mask_list']:
+                job_env_dict['vx_mask'] = vx_mask
+                job_env_dict['job_name'] = (line_type_stat+'/'
+                                            +verif_type_job+'/'
+                                            +vx_mask)
+                # Write job script
+                njobs+=1
+                # Create job file
+                job_file = os.path.join(plot_jobs_dir, 'job'+str(njobs))
+                print("Creating job script: "+job_file)
+                job = open(job_file, 'w')
+                job.write('#!/bin/sh\n')
+                job.write('set -x\n')
+                job.write('\n')
+                # Set any environment variables for special cases
+                # Write environment variables
+                for name, value in job_env_dict.items():
+                    job.write('export '+name+'='+value+'\n')
+                job.write('\n')
+                # Write job commands
+                job.write(
+                    gda_util.python_command('global_det_atmos_plots.py',[])
+                )
+                job.close()
 
 # If running USE_CFP, create POE scripts
 if USE_CFP == 'YES':

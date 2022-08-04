@@ -989,7 +989,10 @@ def initalize_job_env_dict(verif_type, group,
     job_env_dict['JOB_GROUP'] = group
     if group in ['reformat', 'generate', 'plot']:
         job_env_dict['VERIF_TYPE'] = verif_type
-        job_env_dict['job_name'] = job
+        if group == 'plot':
+            job_env_dict['job_var'] = job
+        else:
+            job_env_dict['job_name'] = job
         job_env_dict['fhr_start'] = os.environ[
             verif_case_step_abbrev_type+'_fhr_min'
         ]
