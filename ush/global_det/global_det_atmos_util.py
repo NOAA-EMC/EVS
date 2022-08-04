@@ -1662,17 +1662,27 @@ def calculate_stat(logger, data_df, line_type, stat):
        DIR_ABSERR = data_df.loc[:]['DIR_ABSERR']
    if stat == 'ACC': # Anomaly Correlation Coefficient
        if line_type == 'SAL1L2':
-           var_f = FFABAR - FABAR*FABAR
-           var_o = OOABAR - OABAR*OABAR
-           covar = FOABAR - FABAR*OABAR
-           stat_df = covar/np.sqrt(var_f*var_o)
+           stat_df = (FOABAR - FABAR*OABAR) \
+                     /np.sqrt((FFABAR - FABAR*FABAR)*
+                              (OOABAR - OABAR*OABAR))
        elif line_type == 'CNT':
-          stat_df = ANOM_CORR
+           stat_df = ANOM_CORR
+       elif line_type == 'VAL1L2':
+           stat_df = UVFOABAR/np.sqrt(UVFFBAR*UVOOABAR)
    elif stat == 'BIAS': # Bias
        if line_type == 'SL1L2':
            stat_df = FBAR - OBAR
        elif line_type == 'CNT':
            stat_df = ME
+       elif line_type == 'VL1L2':
+           stat_df = np.sqrt(UVFFAR) - np.sqrt(UVOOBAR)
+   elif stat == 'RMSE': # Root Mean Square Error
+       if line_type == 'SL1L2':
+           stat_df = np.sqrt(FFBAR + OOBAR - 2*FOBAR)
+       elif line_type == 'CNT':
+           stat_df = RMSE
+       elif line_type == 'VL1L2':
+           stat_df = np.sqrt(UVFFVAR + UVOOBAR - 2*UVFOBAR)
    else:
         logger.error(stat+" IS NOT AN OPTION")
         sys.exit(1)

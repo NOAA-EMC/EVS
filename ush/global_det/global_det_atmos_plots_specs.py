@@ -105,7 +105,8 @@ class PlotSpecs:
         """
         stat_plot_name_dict = {
             'ACC': 'Anomaly Correlation Coefficient',
-            'BIAS': 'Bias'
+            'BIAS': 'Bias',
+            'RMSE': 'Root Mean Square Error'
         }
         if stat in list(stat_plot_name_dict.keys()):
             stat_plot_name = stat_plot_name_dict[stat]
@@ -163,7 +164,11 @@ class PlotSpecs:
                                      (string)
         """
         vx_mask_plot_name_dict = {
-             'GLOBAL': 'Global'
+             'CONUS': 'CONUS',
+             'GLOBAL': 'Global',
+             'NHEM': 'Northern Hemisphere 20N-80N',
+             'SHEM': 'Southern Hemisphere 20S-80S',
+             'TROPICS': 'Tropics 20S-20N',
         }
         if vx_mask in list(vx_mask_plot_name_dict.keys()):
             vx_mask_plot_name = vx_mask_plot_name_dict[vx_mask]
