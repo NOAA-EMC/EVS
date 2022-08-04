@@ -58,6 +58,126 @@ plot_jobs_dict = {
                                       'points': '4'},
                       'obs_name': 'ADPUPA',
                       'plots_list': 'time_series'},
+        'RelHum': {'line_type_stat_list': ['SL1L2/BIAS',
+                                           'SL1L2/RMSE',],
+                   'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
+                                    'TROPICS', 'CONUS'],
+                   'fcst_var_dict': {'name': 'RH',
+                                     'levels': ('P1000, P925, P850, P700, '
+                                                +'P500, P400, P300, P250, '
+                                                +'P200, P150, P100, P50, '
+                                                +'P20, P10, P5, P1'),
+                                     'threshs': 'NA'},
+                   'obs_var_dict': {'name': 'RH',
+                                    'levels': ('P1000, P925, P850, P700, '
+                                               +'P500, P400, P300, P250, '
+                                               +'P200, P150, P100, P50, '
+                                               +'P20, P10, P5, P1'),
+                                    'threshs': 'NA'},
+                   'interp_dict': {'method': 'BILIN',
+                                   'points': '4'},
+                   'obs_name': 'ADPUPA',
+                   'plots_list': 'time_series'},
+        'SpefHum': {'line_type_stat_list': ['SL1L2/BIAS',
+                                            'SL1L2/RMSE',],
+                    'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
+                                     'TROPICS', 'CONUS'],
+                    'fcst_var_dict': {'name': 'SPFH',
+                                      'levels': ('P1000, P925, P850, P700, '
+                                                 +'P500, P400, P300, P250, '
+                                                 +'P200, P150, P100, P50, '
+                                                 +'P20, P10, P5, P1'),
+                                      'threshs': 'NA'},
+                    'obs_var_dict': {'name': 'SPFH',
+                                     'levels': ('P1000, P925, P850, P700, '
+                                                +'P500, P400, P300, P250, '
+                                                +'P200, P150, P100, P50, '
+                                                +'P20, P10, P5, P1'),
+                                     'threshs': 'NA'},
+                    'interp_dict': {'method': 'BILIN',
+                                    'points': '4'},
+                    'obs_name': 'ADPUPA',
+                    'plots_list': 'time_series'},
+        'Temp': {'line_type_stat_list': ['SL1L2/BIAS',
+                                         'SL1L2/RMSE',],
+                 'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
+                                  'TROPICS', 'CONUS'],
+                 'fcst_var_dict': {'name': 'TMP',
+                                   'levels': ('P1000, P925, P850, P700, '
+                                              +'P500, P400, P300, P250, '
+                                              +'P200, P150, P100, P50, '
+                                              +'P20, P10, P5, P1'),
+                                   'threshs': 'NA'},
+                  'obs_var_dict': {'name': 'TMP',
+                                   'levels': ('P1000, P925, P850, P700, '
+                                              +'P500, P400, P300, P250, '
+                                              +'P200, P150, P100, P50, '
+                                              +'P20, P10, P5, P1'),
+                                   'threshs': 'NA'},
+                  'interp_dict': {'method': 'BILIN',
+                                  'points': '4'},
+                  'obs_name': 'ADPUPA',
+                  'plots_list': 'time_series'},
+        'UWind': {'line_type_stat_list': ['SL1L2/BIAS',
+                                          'SL1L2/RMSE',],
+                  'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
+                                   'TROPICS', 'CONUS'],
+                  'fcst_var_dict': {'name': 'UGRD',
+                                    'levels': ('P1000, P925, P850, P700, '
+                                               +'P500, P400, P300, P250, '
+                                               +'P200, P150, P100, P50, '
+                                               +'P20, P10, P5, P1'),
+                                    'threshs': 'NA'},
+                  'obs_var_dict': {'name': 'UGRD',
+                                   'levels': ('P1000, P925, P850, P700, '
+                                              +'P500, P400, P300, P250, '
+                                              +'P200, P150, P100, P50, '
+                                              +'P20, P10, P5, P1'),
+                                   'threshs': 'NA'},
+                  'interp_dict': {'method': 'BILIN',
+                                  'points': '4'},
+                  'obs_name': 'ADPUPA',
+                  'plots_list': 'time_series'},
+        'VWind': {'line_type_stat_list': ['SL1L2/BIAS',
+                                          'SL1L2/RMSE',],
+                  'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
+                                   'TROPICS', 'CONUS'],
+                  'fcst_var_dict': {'name': 'VGRD',
+                                    'levels': ('P1000, P925, P850, P700, '
+                                               +'P500, P400, P300, P250, '
+                                               +'P200, P150, P100, P50, '
+                                               +'P20, P10, P5, P1'),
+                                    'threshs': 'NA'},
+                  'obs_var_dict': {'name': 'VGRD',
+                                   'levels': ('P1000, P925, P850, P700, '
+                                              +'P500, P400, P300, P250, '
+                                              +'P200, P150, P100, P50, '
+                                              +'P20, P10, P5, P1'),
+                                   'threshs': 'NA'},
+                  'interp_dict': {'method': 'BILIN',
+                                  'points': '4'},
+                  'obs_name': 'ADPUPA',
+                  'plots_list': 'time_series'},
+        'VectorWind': {'line_type_stat_list': ['VL1L2/BIAS',
+                                               'VL1L2/RMSE',],
+                       'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
+                                        'TROPICS', 'CONUS'],
+                       'fcst_var_dict': {'name': 'WIND',
+                                         'levels': ('P1000, P925, P850, P700, '
+                                                    +'P500, P400, P300, P250, '
+                                                    +'P200, P150, P100, P50, '
+                                                    +'P20, P10, P5, P1'),
+                                         'threshs': 'NA'},
+                       'obs_var_dict': {'name': 'WIND',
+                                        'levels': ('P1000, P925, P850, P700, '
+                                                   +'P500, P400, P300, P250, '
+                                                   +'P200, P150, P100, P50, '
+                                                   +'P20, P10, P5, P1'),
+                                        'threshs': 'NA'},
+                       'interp_dict': {'method': 'BILIN',
+                                       'points': '4'},
+                       'obs_name': 'ADPUPA',
+                       'plots_list': 'time_series'}
     },
     'sea_ice': {},
     'sfc': {}
