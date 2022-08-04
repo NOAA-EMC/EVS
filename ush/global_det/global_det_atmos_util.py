@@ -1686,6 +1686,8 @@ def calculate_stat(logger, data_df, line_type, stat):
            stat_df = RMSE
        elif line_type == 'VL1L2':
            stat_df = np.sqrt(UVFFVAR + UVOOBAR - 2*UVFOBAR)
+   elif stat == 'S1': # S1
+       stat_df = S1
    else:
         logger.error(stat+" IS NOT AN OPTION")
         sys.exit(1)
