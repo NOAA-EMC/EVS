@@ -537,6 +537,14 @@ generate_jobs_dict = {
                                                     +'obsModelAnalysis_DailyAvgAnom'
                                                     +'.conf'
                                                 )]},
+        'Ozone': {'env': {'var1_name': 'O3MR',
+                          'var1_levels': ("'P100, P70, P50, P30, P20, "
+                                          +"P10, P5, P1'"),
+                          'met_config_overrides': "'climo_mean = fcst;'"},
+                  'commands': [gda_util.metplus_command(
+                                   'GridStat_fcstGLOBAL_DET_'
+                                   +'obsModelAnalysis_climoERAI.conf'
+                               )]},
         'PresSeaLevel': {'env': {'var1_name': 'PRMSL',
                                  'var1_levels': 'Z0',
                                  'met_config_overrides': "'climo_mean = fcst;'"},
