@@ -262,14 +262,18 @@ generate_jobs_dict = {
                                                  +"P300, P250, P200, "
                                                  +"P150, P100, P50, "
                                                  +"P20, P10, P5, P1'"),
-                            'var1_fcst_options': '',
+                            'var1_fcst_options': ("'set_attr_units = "
+                                                  +'"g/kg"; convert(x)=x*1000'
+                                                  +"'"),
                             'var1_obs_name': 'SPFH',
                             'var1_obs_levels': ("'P1000, P925, P850, "
                                                 +"P700, P500, P400, "
                                                 +"P300, P250, P200, "
                                                 +"P150, P100, P50, "
                                                 +"P20, P10, P5, P1'"),
-                            'var1_obs_options': '',
+                            'var1_obs_options': ("'set_attr_units = "
+                                                 +'"g/kg"; convert(x)=x*1000'
+                                                 +"'"),
                             'met_config_overrides': ''},
                     'commands': [gda_util.metplus_command(
                                      'PointStat_fcstGLOBAL_DET_'
@@ -557,10 +561,16 @@ generate_jobs_dict = {
                                  'msg_type': 'ADPSFC',
                                  'var1_fcst_name': 'PRMSL',
                                  'var1_fcst_levels': 'Z0',
-                                 'var1_fcst_options': '',
+                                 'var1_fcst_options': ("'set_attr_units = "
+                                                       +'"hPa"; convert(p)='
+                                                       +'PA_to_HPA(p)'
+                                                       +"'"),
                                  'var1_obs_name': 'PRMSL',
                                  'var1_obs_levels': 'Z0',
-                                 'var1_obs_options': '',
+                                 'var1_obs_options': ("'set_attr_units = "
+                                                      +'"hPa"; convert(p)='
+                                                      +'PA_to_HPA(p)'
+                                                      +"'"),
                                  'met_config_overrides': ''},
                          'commands': [gda_util.metplus_command(
                                           'PointStat_fcstGLOBAL_DET_'

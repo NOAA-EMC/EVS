@@ -398,13 +398,18 @@ generate_jobs_dict = {
                                      )]},
         'PresSeaLevel': {'env': {'var1_name': 'PRMSL',
                                  'var1_level': 'Z0',
-                                 'var1_options': ''},
+                                 'var1_options': ("'set_attr_units = "
+                                                  +'"hPa"; convert(p)='
+                                                  +'PA_to_HPA(p)'
+                                                  +"'")},
                          'commands': [gda_util.metplus_command(
                                           'GridStat_fcstGLOBAL_DET.conf'
                                       )]},
         'PresSfc': {'env': {'var1_name': 'PRES',
                             'var1_level': 'Z0',
-                            'var1_options': ''},
+                            'var1_options': ("'set_attr_units = "
+                                             +'"hPa"; convert(p)=PA_to_HPA(p)'
+                                             +"'")},
                     'commands': [gda_util.metplus_command(
                                      'GridStat_fcstGLOBAL_DET.conf'
                                  )]},
@@ -412,7 +417,10 @@ generate_jobs_dict = {
                                    'var1_level': 'L0',
                                    'var1_options': ("'GRIB_lvl_typ = 7; "
                                                     +'set_attr_level = '
-                                                    +'"Tropopause";'+"'")},
+                                                    +'"Tropopause";'
+                                                    +'set_attr_units = "hPa"; '
+                                                    +'convert(p)=PA_to_HPA(p)'
+                                                    +"'")},
                            'commands': [gda_util.metplus_command(
                                             'GridStat_fcstGLOBAL_DET.conf'
                                         )]},
@@ -430,7 +438,9 @@ generate_jobs_dict = {
                                       )]},
         'SpefHum2m': {'env': {'var1_name': 'SPFH',
                               'var1_level': 'Z2',
-                              'var1_options': ''},
+                              'var1_options': ("'set_attr_units = "
+                                               +'"g/kg"; convert(x)=x*1000'
+                                               +"'")},
                       'commands': [gda_util.metplus_command(
                                        'GridStat_fcstGLOBAL_DET.conf'
                                    )]},
@@ -510,7 +520,8 @@ generate_jobs_dict = {
     },
     'pres_levs': {
         'GeoHeight': {'env': {'var1_name': 'HGT',
-                              'var1_levels': "'P1000, P700, P250'",
+                              'var1_levels': "'P1000, P700, P500, P250'",
+                              'var1_options': '',
                               'met_config_overrides': "'climo_mean = fcst;'"},
                       'commands': [gda_util.metplus_command(
                                        'GridStat_fcstGLOBAL_DET_'
@@ -540,6 +551,9 @@ generate_jobs_dict = {
         'Ozone': {'env': {'var1_name': 'O3MR',
                           'var1_levels': ("'P100, P70, P50, P30, P20, "
                                           +"P10, P5, P1'"),
+                          'var1_options': ("'set_attr_units = "
+                                           +'"g/kg"; convert(x)=x*1000'
+                                           +"'"),
                           'met_config_overrides': "'climo_mean = fcst;'"},
                   'commands': [gda_util.metplus_command(
                                    'GridStat_fcstGLOBAL_DET_'
@@ -547,6 +561,9 @@ generate_jobs_dict = {
                                )]},
         'PresSeaLevel': {'env': {'var1_name': 'PRMSL',
                                  'var1_levels': 'Z0',
+                                 'var1_options': ("'set_attr_units = "
+                                                  +'"hPa"; convert(p)=PA_to_HPA(p)'
+                                                  +"'"),
                                  'met_config_overrides': "'climo_mean = fcst;'"},
                          'commands': [gda_util.metplus_command(
                                           'GridStat_fcstGLOBAL_DET_'
@@ -554,6 +571,7 @@ generate_jobs_dict = {
                                       )]},
         'Temp': {'env': {'var1_name': 'TMP',
                          'var1_levels': "'P850, P500, P250'",
+                         'var1_options': '',
                          'met_config_overrides': "'climo_mean = fcst;'"},
                  'commands': [gda_util.metplus_command(
                                   'GridStat_fcstGLOBAL_DET_'
@@ -561,6 +579,7 @@ generate_jobs_dict = {
                               )]},
         'UWind': {'env': {'var1_name': 'UGRD',
                           'var1_levels': "'P850, P500, P250'",
+                          'var1_options': '',
                           'met_config_overrides': "'climo_mean = fcst;'"},
                   'commands': [gda_util.metplus_command(
                                    'GridStat_fcstGLOBAL_DET_'
@@ -568,6 +587,7 @@ generate_jobs_dict = {
                                )]},
         'VWind': {'env': {'var1_name': 'VGRD',
                           'var1_levels': "'P850, P500, P250'",
+                          'var1_options': '',
                           'met_config_overrides': "'climo_mean = fcst;'"},
                   'commands': [gda_util.metplus_command(
                                    'GridStat_fcstGLOBAL_DET_'
