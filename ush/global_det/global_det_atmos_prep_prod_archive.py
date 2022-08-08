@@ -26,11 +26,16 @@ NET = os.environ['NET']
 RUN = os.environ['RUN']
 COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
-model_list = os.environ['model_list'].split(' ')
-obs_list = os.environ['obs_list'].split(' ')
+MODELNAME = os.environ['MODELNAME'].split(' ')
+OBSNAME = os.environ['OBSNAME'].split(' ')
 gfs_ver = os.environ['gfs_ver']
 cmc_ver = os.environ['cmc_ver']
 cfs_ver = os.environ['cfs_ver']
+
+# Make COMOUT directory for dates
+COMOUT_INITDATE = COMOUT+'.'+INITDATE
+if not os.path.exists(COMOUT_INITDATE):
+    os.makedirs(COMOUT_INITDATE)
 
 ###### MODELS
 # Get operational global deterministic model data
@@ -212,7 +217,7 @@ arch_precip_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
                                        +'t{init?fmt=%2H}z.'
                                        +'f{lead?fmt=%3H}')
 
-for MODEL in model_list:
+for MODEL in MODELNAME:
     if MODEL not in list(global_det_model_dict.keys()):
         print("ERROR: "+MODEL+" not recongized")
         sys.exit(1)
@@ -234,7 +239,7 @@ for MODEL in model_list:
                     str(fcst_hr), {'model': MODEL}
                 )
                 COMOUT_fcst_file = os.path.join(
-                    COMOUT, MODEL, arch_fcst_file.rpartition('/')[2]
+                    COMOUT_INITDATE, MODEL, arch_fcst_file.rpartition('/')[2]
                 )
                 if not os.path.exists(COMOUT_fcst_file) \
                         and not os.path.exists(arch_fcst_file):
@@ -284,7 +289,7 @@ for MODEL in model_list:
                     CDATE_dt, str(fcst_hr), {'model': MODEL}
                 )
                 COMOUT_precip_file = os.path.join(
-                    COMOUT, MODEL, arch_precip_file.rpartition('/')[2]
+                    COMOUT_INITDATE, MODEL, arch_precip_file.rpartition('/')[2]
                 )
                 if not os.path.exists(COMOUT_precip_file) \
                         and not os.path.exists(arch_precip_file) and fcst_hr != 0:
@@ -351,7 +356,7 @@ for MODEL in model_list:
                 'anl', {'model': MODEL}
             )
             COMOUT_anl_file = os.path.join(
-                COMOUT, MODEL, arch_anl_file.rpartition('/')[2]
+                COMOUT_INITDATE, MODEL, arch_anl_file.rpartition('/')[2]
             )
             if not os.path.exists(COMOUT_anl_file) \
                     and not os.path.exists(arch_anl_file):
@@ -408,7 +413,7 @@ global_det_obs_dict = {
                 'cycles': ['12']},
 }
 
-for OBS in obs_list:
+for OBS in OBSNAME:
     if OBS not in list(global_det_obs_dict.keys()):
         print("ERROR: "+OBS+" not recongized")
         sys.exit(1)
@@ -426,7 +431,7 @@ for OBS in obs_list:
             'anl', {}
         )
         COMOUT_file = os.path.join(
-            COMOUT, OBS, arch_file.rpartition('/')[2]
+            COMOUT_INITDATE, OBS, arch_file.rpartition('/')[2]
         )
         if not os.path.exists(COMOUT_file) \
                 and not os.path.exists(arch_file):

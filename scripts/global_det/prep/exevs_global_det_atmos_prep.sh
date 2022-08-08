@@ -19,16 +19,16 @@ status=$?
 [[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/global_det/global_det_atmos_prep_prod_archive.py"
 
 if [ $SENDCOM = YES ]; then
-    for MODEL in $model_list; do
-        mkdir -p $COMOUT/$MODEL
-        for FILE in $DATA/$RUN.$INITDATE/$MODEL/*; do
-            cp -v $FILE $COMOUT/$MODEL/.
+    for mname in $MODELNAME; do
+        mkdir -p $COMOUT.$INITDATE/$mname
+        for FILE in $DATA/$RUN.$INITDATE/$mname/*; do
+            cp -v $FILE $COMOUT.$INITDATE/$mname/.
         done
     done
-    for OBS in $obs_list; do
-        mkdir -p $COMOUT/$OBS
-        for FILE in $DATA/$RUN.$INITDATE/$OBS/*; do
-            cp -v $FILE $COMOUT/$OBS/.
+    for oname in $OBSNAME; do
+        mkdir -p $COMOUT.$INITDATE/$oname
+        for FILE in $DATA/$RUN.$INITDATE/$oname/*; do
+            cp -v $FILE $COMOUT.$INITDATE/$oname/.
         done
     done
 fi
