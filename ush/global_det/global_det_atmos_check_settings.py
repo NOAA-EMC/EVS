@@ -83,7 +83,8 @@ verif_case_step_settings_dict = {
     },
     'RUN_GRID2GRID_PLOTS': {
         'flux': [],
-        'means': [],
+        'means': ['init_hr_list', 'valid_hr_list',
+                  'fhr_min', 'fhr_max', 'fhr_inc'],
         'ozone': [],
         'precip': [],
         'pres_levs': ['truth_name_list', 'init_hr_list', 'valid_hr_list',

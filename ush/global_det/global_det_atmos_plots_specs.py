@@ -106,6 +106,7 @@ class PlotSpecs:
         stat_plot_name_dict = {
             'ACC': 'Anomaly Correlation Coefficient',
             'BIAS': 'Bias',
+            'FBAR': 'Forecast Mean',
             'RMSE': 'Root Mean Square Error',
             'S1': 'S1'
         }
@@ -130,25 +131,59 @@ class PlotSpecs:
                                  (string)
         """
         var_name_plot_name_dict = {
+            'CAPE': 'CAPE (J 'r'$\mathregular{kg^{-1}}$'')',
+            'CWAT': 'Cloud Water (kg 'r'$\mathregular{m^{-2}}$'')',
             'HGT': 'Geopotential Height (gpm)',
+            'HGT_DECOMP_WV1_0-3': 'Geopotential Height: Waves 0-3 (gpm)',
+            'HGT_DECOMP_WV1_4-9': 'Geopotential Height: Waves 4-9 (gpm)',
+            'HGT_DECOMP_WV1_10-20': 'Geopotential Height: Waves 10-20 (gpm)',
+            'HGT_DECOMP_WV1_0-20': 'Geopotential Height: Waves 0-20 (gpm)',
+            'HPBL': 'Planetary Boundary Layer Height (m)',
+            'O3MR': 'Ozone Mixing Ratio (g 'r'$\mathregular{kg^{-1}}$'')',
+            'PRES': 'Pressure (hPa)',
+            'PRMSL': 'Pressure Reduced to MSL (hPa)',
+            'PWAT': 'Precipitable Water (kg 'r'$\mathregular{m^{-2}}$'')',
+            'RH': 'Relative Humidity (%)',
+            'SOILW': 'Volumetric Soil Moisture Content (fraction)',
+            'SPFH': 'Specific Humidity (g 'r'$\mathregular{kg^{-1}}$'')',
+            'TMP': 'Temperature (K)',
+            'TOZNE': 'Total Ozone (Dobson)',
+            'TSOIL': 'Soil Temperature (K)',
+            'UGRD': 'U-Component of Wind (m 'r'$\mathregular{s^{-1}}$'')',
+            'UGRD_VGRD': 'Vector Wind (m 'r'$\mathregular{s^{-1}}$'')',
+            'VGRD': 'V-Component of Wind (m 'r'$\mathregular{s^{-1}}$'')',
+            'WEASD': ('Water Equivalent of Accumulated Snow Depth '
+                      +'(kg 'r'$\mathregular{m^{-2}}$'')')
         }
         if var_name in list(var_name_plot_name_dict.keys()):
             var_name_plot_name = var_name_plot_name_dict[var_name]
         else:
             self.logger.debug(f"{var_name} not recognized, "
                               +f"using {var_name} on plot")
-            var_name_plot_name = var_name_plot_name
+            var_name_plot_name = var_name
         if 'P' in var_level:
             var_level_plot_name = var_level.replace('P', '')+' hPa'
+        elif 'Z' in var_level:
+            if var_level == 'Z0':
+                if var_name in ['WEASD', 'PRMSL']:
+                    var_level_plot_name = ''
+                elif var_name == 'CAPE':
+                    var_level_plot_name = 'Surface Based'
+                else:
+                    var_level_plot_name = 'Surface'
+            else:
+                var_level_plot_name = var_level.replace('Z', '')+' meter'
+        elif var_level == 'L0':
+            var_level_plot_name = ''
         else:
             self.logger.debug(f"{var_level} not recognized, "
-                              +f"using {var_levl} on plot")
+                              +f"using {var_level} on plot")
             var_level_plot_name = var_level
         if var_thresh != 'NA':
             var_thresh_plot_name = var_thresh
         else:
             var_thresh_plot_name = ''
-        var_plot_name = (var_name_plot_name+' '+var_level_plot_name+' '
+        var_plot_name = (var_level_plot_name+' '+var_name_plot_name
                          +var_thresh_plot_name)
         return var_plot_name
 
@@ -167,7 +202,13 @@ class PlotSpecs:
         vx_mask_plot_name_dict = {
              'CONUS': 'CONUS',
              'GLOBAL': 'Global',
+             'N60N90': '60N-90N',
+             'NAO': 'Northern Atlantic Ocean',
+             'NPO': 'Northern Pacific Ocean',
              'NHEM': 'Northern Hemisphere 20N-80N',
+             'S60S90': '60S-90S',
+             'SAO': 'Southern Atlantic Ocean',
+             'SPO': 'Southern Pacific Ocean',
              'SHEM': 'Southern Hemisphere 20S-80S',
              'TROPICS': 'Tropics 20S-20N',
         }
@@ -260,11 +301,25 @@ class PlotSpecs:
                                 int(date_info_dict['valid_hr_inc']))
             ]
         if self.plot_type == 'time_series':
+            if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
+                plot_title = (
+                    plot_title
+                    +self.get_var_plot_name(plot_info_dict['fcst_var_name']
+                                            +'_'+plot_info_dict['interp_method'],
+                                            plot_info_dict['fcst_var_level'],
+                                            plot_info_dict['fcst_var_thresh'])
+                                            +'\n'
+                )
+            else:
+                plot_title = (
+                    plot_title
+                    +self.get_var_plot_name(plot_info_dict['fcst_var_name'],
+                                            plot_info_dict['fcst_var_level'],
+                                            plot_info_dict['fcst_var_thresh'])
+                                            +'\n'
+                )
             plot_title = (
                 plot_title
-                +self.get_var_plot_name(plot_info_dict['fcst_var_name'],
-                                        plot_info_dict['fcst_var_level'],
-                                        plot_info_dict['fcst_var_thresh'])+'\n'
                 +self.get_dates_plot_name(date_info_dict['date_type'],
                                           start_date_hr, end_date_hr,
                                           other_hr_list,
@@ -292,17 +347,29 @@ class PlotSpecs:
             date_type_start_hr = date_info_dict['init_hr_start']
             date_type_end_hr = date_info_dict['init_hr_end']
         if self.plot_type == 'time_series':
+            savefig_name = plot_info_dict['stat']+'_'
+            if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
+                savefig_name = (
+                    savefig_name
+                    +plot_info_dict['fcst_var_name']+'_'
+                    +plot_info_dict['interp_method']+'_'
+                )
+            else:
+                savefig_name = (
+                    savefig_name
+                    +plot_info_dict['fcst_var_name']+'_'
+                )
             savefig_name = (
-                plot_info_dict['stat']+'_'
+                savefig_name
+                +plot_info_dict['fcst_var_level']+'_'
+                +plot_info_dict['vx_mask']+'_'
                 +date_info_dict['date_type'].lower()
                 +date_info_dict['start_date']
                 +date_type_start_hr+'to'
                 +date_info_dict['end_date']
                 +date_type_end_hr+'_'
-                +'fhr'+date_info_dict['forecast_hour'].zfill(3)+'_'
-                +plot_info_dict['fcst_var_name']+'_'
-                +plot_info_dict['fcst_var_level']+'_'
-                +plot_info_dict['vx_mask']+'.png'
+                +'fhr'+date_info_dict['forecast_hour'].zfill(3)
+                +'.png'
             )
         image_path = os.path.join(image_dir, savefig_name)
         return image_path

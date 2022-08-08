@@ -123,6 +123,10 @@ for model_idx in range(len(model_list)):
          model_info_dict['model'+str(model_num)]['obs_name'] = (
              truth_name_list[model_idx]
          )
+    elif VERIF_CASE == 'grid2grid' and VERIF_TYPE == 'means':
+         model_info_dict['model'+str(model_num)]['obs_name'] = (
+             model_list[model_idx]
+         )
     else:
         model_info_dict['model'+str(model_num)]['obs_name'] = obs_name
 
@@ -205,6 +209,5 @@ for plot in plots_list:
                                          model_info_dict, date_info_dict,
                                          plot_info_dict, met_info_dict, logo_dir)
             plot_ts.make_time_series()
-            exit()
 
 print("END: "+os.path.basename(__file__))

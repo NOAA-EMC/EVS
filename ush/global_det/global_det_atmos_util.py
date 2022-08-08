@@ -1679,6 +1679,9 @@ def calculate_stat(logger, data_df, line_type, stat):
            stat_df = ME
        elif line_type == 'VL1L2':
            stat_df = np.sqrt(UVFFAR) - np.sqrt(UVOOBAR)
+   elif stat == 'FBAR': # Forecast Mean
+       if line_type == 'SL1L2':
+           stat_df = FBAR
    elif stat == 'RMSE': # Root Mean Square Error
        if line_type == 'SL1L2':
            stat_df = np.sqrt(FFBAR + OOBAR - 2*FOBAR)
