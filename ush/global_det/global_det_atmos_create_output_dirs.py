@@ -165,11 +165,11 @@ elif STEP == 'plots':
     )
     working_dir_list.append(
         os.path.join(working_output_base_dir,
-                     COMPONENT+'.'+end_date_dt.strftime('%Y%m%d'))
+                     RUN+'.'+end_date_dt.strftime('%Y%m%d'))
     )
     COMROOT_dir_list.append(
         os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
-                     COMPONENT+'.'+end_date_dt.strftime('%Y%m%d'))
+                     RUN+'.'+end_date_dt.strftime('%Y%m%d'))
     )
 
 # Create working output directories

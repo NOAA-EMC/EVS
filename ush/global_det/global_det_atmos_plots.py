@@ -73,7 +73,7 @@ VERIF_CASE_STEP_dir = os.path.join(DATA, VERIF_CASE_STEP)
 stat_base_dir = os.path.join(VERIF_CASE_STEP_dir, 'data')
 plot_output_dir = os.path.join(VERIF_CASE_STEP_dir, 'plot_output')
 logging_dir = os.path.join(plot_output_dir, 'logs')
-job_output_dir = os.path.join(plot_output_dir, COMPONENT+'.'+end_date,
+job_output_dir = os.path.join(plot_output_dir, RUN+'.'+end_date,
                               VERIF_TYPE,job_name.replace('/','_'))
 if not os.path.exists(job_output_dir):
     os.makedirs(job_output_dir)
