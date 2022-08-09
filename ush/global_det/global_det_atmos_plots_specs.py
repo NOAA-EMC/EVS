@@ -140,7 +140,7 @@ class PlotSpecs:
             'HGT_DECOMP_WV1_10-20': 'Geopotential Height: Waves 10-20 (gpm)',
             'HGT_DECOMP_WV1_0-20': 'Geopotential Height: Waves 0-20 (gpm)',
             'HPBL': 'Planetary Boundary Layer Height (m)',
-            'O3MR': 'Ozone Mixing Ratio (g 'r'$\mathregular{kg^{-1}}$'')',
+            'O3MR': 'Ozone Mixing Ratio (ppm)',
             'PRES': 'Pressure (hPa)',
             'PRMSL': 'Pressure Reduced to MSL (hPa)',
             'PWAT': 'Precipitable Water (kg 'r'$\mathregular{m^{-2}}$'')',

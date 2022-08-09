@@ -571,7 +571,7 @@ generate_jobs_dict = {
                           'var1_levels': ("'P100, P70, P50, P30, P20, "
                                           +"P10, P5, P1'"),
                           'var1_options': ("'set_attr_units = "
-                                           +'"g/kg"; convert(x)=x*1000'
+                                           +'"ppm"; convert(x)=x*1000000'
                                            +"'"),
                           'met_config_overrides': "'climo_mean = fcst;'"},
                   'commands': [gda_util.metplus_command(
