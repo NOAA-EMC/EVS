@@ -134,6 +134,7 @@ class PlotSpecs:
             'CAPE': 'CAPE (J 'r'$\mathregular{kg^{-1}}$'')',
             'CWAT': 'Cloud Water (kg 'r'$\mathregular{m^{-2}}$'')',
             'HGT': 'Geopotential Height (gpm)',
+            'HGT_ANOM': 'Geopotential Height Anomaly (gpm)',
             'HGT_DECOMP_WV1_0-3': 'Geopotential Height: Waves 0-3 (gpm)',
             'HGT_DECOMP_WV1_4-9': 'Geopotential Height: Waves 4-9 (gpm)',
             'HGT_DECOMP_WV1_10-20': 'Geopotential Height: Waves 10-20 (gpm)',
@@ -245,10 +246,10 @@ class PlotSpecs:
                           +end_date_hr_dt.strftime('%d%b%Y %H')+'Z, ')
         if date_type == 'VALID':
             date_plot_name = (date_plot_name
-                              +' init '+', '.join(other_hr_list)+', ')
+                              +'init '+', '.join(other_hr_list)+', ')
         elif date_type == 'INIT':
             date_plot_name = (date_plot_name
-                              +' valif '+', '.join(other_hr_list)+', ')
+                              +'valid '+', '.join(other_hr_list)+', ')
         if forecast_hour != 'NA':
             forecast_day = int(forecast_hour)/24.
             if int(forecast_hour) % 24 == 0:

@@ -1671,7 +1671,7 @@ def calculate_stat(logger, data_df, line_type, stat):
        elif line_type == 'CNT':
            stat_df = ANOM_CORR
        elif line_type == 'VAL1L2':
-           stat_df = UVFOABAR/np.sqrt(UVFFBAR*UVOOABAR)
+           stat_df = UVFOABAR/np.sqrt(UVFFABAR*UVOOABAR)
    elif stat == 'BIAS': # Bias
        if line_type == 'SL1L2':
            stat_df = FBAR - OBAR
