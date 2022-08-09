@@ -45,12 +45,11 @@ class PlotSpecs:
         self.fig_size=(14.,14.)
         if self.plot_type == 'time_series':
             self.fig_size = (14., 7.)
-            self.axis_title_size = 15
-            self.fig_subplot_top = 0.85
-            self.fig_subplot_bottom = 0.15
+            self.axis_title_size = 16
+            self.fig_subplot_top = 0.825
+            self.fig_subplot_bottom = 0.125
             self.fig_subplot_right = 0.95
-            self.fig_subplot_left = 0.1
-            self.fig_subplot_bottom = 0.15
+            self.fig_subplot_left = 0.15
             self.legend_frame_on = False
             self.legend_bbox = (0.5, 0.05)
             self.legend_font_size = 13
@@ -246,10 +245,10 @@ class PlotSpecs:
                           +end_date_hr_dt.strftime('%d%b%Y %H')+'Z, ')
         if date_type == 'VALID':
             date_plot_name = (date_plot_name
-                              +'init '+', '.join(other_hr_list)+', ')
+                              +'cycles: '+', '.join(other_hr_list)+'\n')
         elif date_type == 'INIT':
             date_plot_name = (date_plot_name
-                              +'valid '+', '.join(other_hr_list)+', ')
+                              +'valid: '+', '.join(other_hr_list)+'\n')
         if forecast_hour != 'NA':
             forecast_day = int(forecast_hour)/24.
             if int(forecast_hour) % 24 == 0:
@@ -392,13 +391,11 @@ class PlotSpecs:
         alpha = 0.5
         if x_figsize == 14 and y_figsize == 7:
             if position == 'left':
-                #x_loc = x_figsize * dpi * 0.1
-                x_loc = x_figsize * dpi * 0.05
-                y_loc = y_figsize * dpi * 0.875
+                x_loc = x_figsize * dpi * 0.15
+                y_loc = y_figsize * dpi * 0.86
             elif position == 'right':
-                #x_loc = x_figsize * dpi * 0.9
-                x_loc = x_figsize * dpi * 0.94
-                y_loc = y_figsize * dpi * 0.875
+                x_loc = x_figsize * dpi * 0.9
+                y_loc = y_figsize * dpi * 0.86
         return x_loc, y_loc, alpha
 
     def get_model_plot_settings(self):

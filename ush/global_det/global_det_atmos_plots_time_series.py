@@ -186,7 +186,6 @@ class TimeSeries:
             ax.xaxis.set_major_formatter(md.DateFormatter('%d%b%Y %HZ'))
             if len(plot_dates) < 10:
                 ax.xaxis.set_minor_locator(md.HourLocator())
-                ax.tick_params(axis='both', which='major', labelsize=12)
             else:
                 ax.xaxis.set_minor_locator(md.DayLocator())
         else:
