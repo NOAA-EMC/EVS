@@ -512,11 +512,30 @@ generate_jobs_dict = {
                                            'GridStat_fcstGLOBAL_DET_'
                                            +'obs24hrCCPA.conf'
                                        )]},
-        '24hrCCPA_Nbrhd': {'env': {'met_config_overrides': ''},
+        '24hrCCPA_Nbrhd1': {'env': {'nbhrd_list': "'1,3,5,7,9,11,13,15'",
+                                    'met_config_overrides': ''},
+                            'commands': [gda_util.metplus_command(
+                                             'GridStat_fcstGLOBAL_DET_'
+                                             +'obs24hrCCPA_Nbrhd.conf'
+                                         )]},
+        '24hrCCPA_Nbrhd2': {'env': {'nbhrd_list': "'15,17,19,21,23,25,27,29'",
+                                    'met_config_overrides': ''},
+                            'commands': [gda_util.metplus_command(
+                                             'GridStat_fcstGLOBAL_DET_'
+                                             +'obs24hrCCPA_Nbrhd.conf'
+                                         )]},
+        '24hrCCPA_Nbrhd3': {'env': {'nbhrd_list': "'31,33,35,37,39,41,43,45'",
+                                    'met_config_overrides': ''},
                            'commands': [gda_util.metplus_command(
                                             'GridStat_fcstGLOBAL_DET_'
                                             +'obs24hrCCPA_Nbrhd.conf'
                                         )]},
+        '24hrCCPA_Nbrhd4': {'env': {'nbhrd_list': "'47,49,51,53,55,57,59,61,63'",
+                                    'met_config_overrides': ''},
+                           'commands': [gda_util.metplus_command(
+                                            'GridStat_fcstGLOBAL_DET_'
+                                            +'obs24hrCCPA_Nbrhd.conf'
+                                        )]}
     },
     'pres_levs': {
         'GeoHeight': {'env': {'var1_name': 'HGT',
