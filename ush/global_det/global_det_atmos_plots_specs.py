@@ -130,30 +130,29 @@ class PlotSpecs:
                                  (string)
         """
         var_name_plot_name_dict = {
-            'CAPE': 'CAPE (J 'r'$\mathregular{kg^{-1}}$'')',
-            'CWAT': 'Cloud Water (kg 'r'$\mathregular{m^{-2}}$'')',
-            'HGT': 'Geopotential Height (gpm)',
-            'HGT_ANOM': 'Geopotential Height Anomaly (gpm)',
-            'HGT_DECOMP_WV1_0-3': 'Geopotential Height: Waves 0-3 (gpm)',
-            'HGT_DECOMP_WV1_4-9': 'Geopotential Height: Waves 4-9 (gpm)',
-            'HGT_DECOMP_WV1_10-20': 'Geopotential Height: Waves 10-20 (gpm)',
-            'HGT_DECOMP_WV1_0-20': 'Geopotential Height: Waves 0-20 (gpm)',
-            'HPBL': 'Planetary Boundary Layer Height (m)',
-            'O3MR': 'Ozone Mixing Ratio (ppm)',
-            'PRES': 'Pressure (hPa)',
-            'PRMSL': 'Pressure Reduced to MSL (hPa)',
-            'PWAT': 'Precipitable Water (kg 'r'$\mathregular{m^{-2}}$'')',
-            'RH': 'Relative Humidity (%)',
-            'SOILW': 'Volumetric Soil Moisture Content (fraction)',
-            'SPFH': 'Specific Humidity (g 'r'$\mathregular{kg^{-1}}$'')',
-            'TMP': 'Temperature (K)',
-            'TOZNE': 'Total Ozone (Dobson)',
-            'TSOIL': 'Soil Temperature (K)',
-            'UGRD': 'U-Component of Wind (m 'r'$\mathregular{s^{-1}}$'')',
-            'UGRD_VGRD': 'Vector Wind (m 'r'$\mathregular{s^{-1}}$'')',
-            'VGRD': 'V-Component of Wind (m 'r'$\mathregular{s^{-1}}$'')',
-            'WEASD': ('Water Equivalent of Accumulated Snow Depth '
-                      +'(kg 'r'$\mathregular{m^{-2}}$'')')
+            'CAPE': 'CAPE',
+            'CWAT': 'Cloud Water',
+            'HGT': 'Geopotential Height',
+            'HGT_ANOM': 'Geopotential Height Anomaly',
+            'HGT_DECOMP_WV1_0-3': 'Geopotential Height: Waves 0-3',
+            'HGT_DECOMP_WV1_4-9': 'Geopotential Height: Waves 4-9',
+            'HGT_DECOMP_WV1_10-20': 'Geopotential Height: Waves 10-20',
+            'HGT_DECOMP_WV1_0-20': 'Geopotential Height: Waves 0-20',
+            'HPBL': 'Planetary Boundary Layer Height',
+            'O3MR': 'Ozone Mixing Ratio',
+            'PRES': 'Pressure',
+            'PRMSL': 'Pressure Reduced to MSL',
+            'PWAT': 'Precipitable Water',
+            'RH': 'Relative Humidity',
+            'SOILW': 'Volumetric Soil Moisture Content',
+            'SPFH': 'Specific Humidity',
+            'TMP': 'Temperature',
+            'TOZNE': 'Total Ozone',
+            'TSOIL': 'Soil Temperature',
+            'UGRD': 'U-Component of Wind',
+            'UGRD_VGRD': 'Vector Wind',
+            'VGRD': 'V-Component of Wind',
+            'WEASD': 'Water Equivalent of Accumulated Snow Depth'
         }
         if var_name in list(var_name_plot_name_dict.keys()):
             var_name_plot_name = var_name_plot_name_dict[var_name]
@@ -260,12 +259,13 @@ class PlotSpecs:
                               +'(Forecast Hour '+forecast_hour+')')
         return date_plot_name
 
-    def get_plot_title(self, plot_info_dict, date_info_dict):
+    def get_plot_title(self, plot_info_dict, date_info_dict, units):
         """! Construct the title for the plot
 
              Args:
                  plot_info_dict  - plot information dictionary (strings)
                  date_info_dict  - date information dictionary (strings)
+                 units           - variable units (string)
  
              Returns:
                  plot_title - full plot title that will be 
@@ -308,7 +308,6 @@ class PlotSpecs:
                                             +'_'+plot_info_dict['interp_method'],
                                             plot_info_dict['fcst_var_level'],
                                             plot_info_dict['fcst_var_thresh'])
-                                            +'\n'
                 )
             else:
                 plot_title = (
@@ -316,10 +315,10 @@ class PlotSpecs:
                     +self.get_var_plot_name(plot_info_dict['fcst_var_name'],
                                             plot_info_dict['fcst_var_level'],
                                             plot_info_dict['fcst_var_thresh'])
-                                            +'\n'
                 )
             plot_title = (
-                plot_title
+                plot_title+' '
+                +'('+units+')\n'
                 +self.get_dates_plot_name(date_info_dict['date_type'],
                                           start_date_hr, end_date_hr,
                                           other_hr_list,
