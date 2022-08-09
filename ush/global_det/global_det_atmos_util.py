@@ -1678,7 +1678,7 @@ def calculate_stat(logger, data_df, line_type, stat):
        elif line_type == 'CNT':
            stat_df = ME
        elif line_type == 'VL1L2':
-           stat_df = np.sqrt(UVFFAR) - np.sqrt(UVOOBAR)
+           stat_df = np.sqrt(UVFFBAR) - np.sqrt(UVOOBAR)
    elif stat == 'FBAR': # Forecast Mean
        if line_type == 'SL1L2':
            stat_df = FBAR
@@ -1688,7 +1688,7 @@ def calculate_stat(logger, data_df, line_type, stat):
        elif line_type == 'CNT':
            stat_df = RMSE
        elif line_type == 'VL1L2':
-           stat_df = np.sqrt(UVFFVAR + UVOOBAR - 2*UVFOBAR)
+           stat_df = np.sqrt(UVFFBAR + UVOOBAR - 2*UVFOBAR)
    elif stat == 'S1': # S1
        stat_df = S1
    else:

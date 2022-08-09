@@ -39,7 +39,7 @@ VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
 plot_jobs_dict = {
     'pres_levs': {
         'GeoHeight': {'line_type_stat_list': ['SL1L2/BIAS',
-                                              'SL1L2/RMSE',],
+                                              'SL1L2/RMSE'],
                       'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                        'TROPICS', 'CONUS'],
                       'fcst_var_dict': {'name': 'HGT',
@@ -59,7 +59,7 @@ plot_jobs_dict = {
                       'obs_name': 'ADPUPA',
                       'plots_list': 'time_series'},
         'RelHum': {'line_type_stat_list': ['SL1L2/BIAS',
-                                           'SL1L2/RMSE',],
+                                           'SL1L2/RMSE'],
                    'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                     'TROPICS', 'CONUS'],
                    'fcst_var_dict': {'name': 'RH',
@@ -79,7 +79,7 @@ plot_jobs_dict = {
                    'obs_name': 'ADPUPA',
                    'plots_list': 'time_series'},
         'SpefHum': {'line_type_stat_list': ['SL1L2/BIAS',
-                                            'SL1L2/RMSE',],
+                                            'SL1L2/RMSE'],
                     'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                      'TROPICS', 'CONUS'],
                     'fcst_var_dict': {'name': 'SPFH',
@@ -99,7 +99,7 @@ plot_jobs_dict = {
                     'obs_name': 'ADPUPA',
                     'plots_list': 'time_series'},
         'Temp': {'line_type_stat_list': ['SL1L2/BIAS',
-                                         'SL1L2/RMSE',],
+                                         'SL1L2/RMSE'],
                  'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                   'TROPICS', 'CONUS'],
                  'fcst_var_dict': {'name': 'TMP',
@@ -119,7 +119,7 @@ plot_jobs_dict = {
                   'obs_name': 'ADPUPA',
                   'plots_list': 'time_series'},
         'UWind': {'line_type_stat_list': ['SL1L2/BIAS',
-                                          'SL1L2/RMSE',],
+                                          'SL1L2/RMSE'],
                   'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                    'TROPICS', 'CONUS'],
                   'fcst_var_dict': {'name': 'UGRD',
@@ -139,7 +139,7 @@ plot_jobs_dict = {
                   'obs_name': 'ADPUPA',
                   'plots_list': 'time_series'},
         'VWind': {'line_type_stat_list': ['SL1L2/BIAS',
-                                          'SL1L2/RMSE',],
+                                          'SL1L2/RMSE'],
                   'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                    'TROPICS', 'CONUS'],
                   'fcst_var_dict': {'name': 'VGRD',
@@ -159,16 +159,16 @@ plot_jobs_dict = {
                   'obs_name': 'ADPUPA',
                   'plots_list': 'time_series'},
         'VectorWind': {'line_type_stat_list': ['VL1L2/BIAS',
-                                               'VL1L2/RMSE',],
+                                               'VL1L2/RMSE'],
                        'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                         'TROPICS', 'CONUS'],
-                       'fcst_var_dict': {'name': 'WIND',
+                       'fcst_var_dict': {'name': 'UGRD_VGRD',
                                          'levels': ('P1000, P925, P850, P700, '
                                                     +'P500, P400, P300, P250, '
                                                     +'P200, P150, P100, P50, '
                                                     +'P20, P10, P5, P1'),
                                          'threshs': 'NA'},
-                       'obs_var_dict': {'name': 'WIND',
+                       'obs_var_dict': {'name': 'UGRD_VGRD',
                                         'levels': ('P1000, P925, P850, P700, '
                                                    +'P500, P400, P300, P250, '
                                                    +'P200, P150, P100, P50, '
