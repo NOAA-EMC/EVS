@@ -274,6 +274,7 @@ class PlotSpecs:
         """
         plot_title = (
             self.get_stat_plot_name(plot_info_dict['stat'])+' - '
+            +self.get_vx_mask_plot_name(plot_info_dict['grid']+'/'
             +self.get_vx_mask_plot_name(plot_info_dict['vx_mask'])+'\n'
         )
         if date_info_dict['date_type'] == 'VALID':
@@ -361,6 +362,7 @@ class PlotSpecs:
             savefig_name = (
                 savefig_name
                 +plot_info_dict['fcst_var_level']+'_'
+                +plot_info_dict['grid']
                 +plot_info_dict['vx_mask']+'_'
                 +date_info_dict['date_type'].lower()
                 +date_info_dict['start_date']

@@ -481,6 +481,8 @@ for verif_type in VERIF_CASE_STEP_type_list:
             "'"+verif_type_plot_jobs_dict[verif_type_job]\
             ['plots_list']+"'"
         )
+        if verif_type in ['pres_levs', 'means']:
+            job_env_dict['grid'] = 'G004'
         for data_name in ['fcst', 'obs']:
             job_env_dict[data_name+'_var_name'] =  (
                 verif_type_plot_jobs_dict[verif_type_job]\

@@ -1153,7 +1153,7 @@ def get_met_line_type_cols(logger, met_root, met_version, met_line_type):
     return met_version_line_type_col_list
 
 def condense_model_stat_files(logger, input_dir, output_file, model, obs,
-                              vx_mask, fcst_var_name, obs_var_name,
+                              grid, vx_mask, fcst_var_name, obs_var_name,
                               line_type):
     """! Condense the individual date model stat file and
          thin out unneeded data
@@ -1164,6 +1164,7 @@ def condense_model_stat_files(logger, input_dir, output_file, model, obs,
              output_file   - path to output file (string)
              model         - model name (string)
              obs           - observation name (string)
+             grid          - verification grid (string)
              vx_mask       - verification masking region (string)
              fcst_var_name - forecast variable name (string)
              obs_var_name  - observation variable name (string)
@@ -1185,6 +1186,7 @@ def condense_model_stat_files(logger, input_dir, output_file, model, obs,
             all_grep_output = ''
             grep_opts = (
                 ' | grep "'+obs+' "'
+                +' | grep "'+grid+' "'
                 +' | grep "'+vx_mask+' "'
                 +' | grep "'+fcst_var_name+' "'
                 +' | grep "'+obs_var_name+' "'
@@ -1276,7 +1278,8 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
             if not os.path.exists(condensed_model_file):
                 condense_model_stat_files(
                     logger, input_dir, condensed_model_file, model_dict['name'],
-                    model_dict['obs_name'], plot_info_dict['vx_mask'],
+                    model_dict['obs_name'], plot_info_dict['grid'],
+                    plot_info_dict['vx_mask'],
                     plot_info_dict['fcst_var_name'],
                     plot_info_dict['obs_var_name'],
                     plot_info_dict['line_type']
@@ -1290,6 +1293,7 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                 )
                 parsed_model_df = condensed_model_df[
                     (condensed_model_df['MODEL'] == model_dict['name'])
+                     & (condensed_model_df['DESC'] == plot_info_dict['grid'])
                      & (condensed_model_df['FCST_LEAD'] \
                         == date_info_dict['forecast_hour'].zfill(2)+'0000')
                      & (condensed_model_df['FCST_VAR'] \

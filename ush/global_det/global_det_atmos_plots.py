@@ -32,6 +32,7 @@ event_equalization = os.environ['event_equalization']
 job_name = os.environ['job_name']
 line_type = os.environ['line_type']
 stat = os.environ['stat']
+grid = os.environ['grid']
 job_var = os.environ['job_var']
 vx_mask = os.environ['vx_mask']
 interp_method = os.environ['interp_method']
@@ -108,7 +109,7 @@ for model_idx in range(len(model_list)):
         obs_name = truth_name_list[model_idx]
     gda_util.condense_model_stat_files(logger, stat_base_dir,
                                        condensed_model_stat_file, model,
-                                       obs_name, vx_mask, fcst_var_name,
+                                       obs_name, grid, vx_mask, fcst_var_name,
                                        obs_var_name, line_type)
 
 # Set up model information dictionary
@@ -147,6 +148,7 @@ fhrs = list(range(int(fhr_start), int(fhr_end)+int(fhr_inc), int(fhr_inc)))
 # Set up plot information dictionary
 plot_info_dict = {
     'line_type': line_type,
+    'grid': grid,
     'stat': stat,
     'vx_mask': vx_mask,
     'interp_method': interp_method,

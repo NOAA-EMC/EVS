@@ -358,6 +358,7 @@ def main():
     }
     PLOT_INFO_DICT = {
         'line_type': 'LINE_TYPE',
+        'grid': 'GRID',
         'stat': 'STAT',
         'vx_mask': 'VX_MASK',
         'event_equalization': 'EVENT_EQUALIZATION',
