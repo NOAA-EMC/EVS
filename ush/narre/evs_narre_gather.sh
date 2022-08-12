@@ -14,8 +14,8 @@ export regrid='NONE'
 
 >run_gather_all_poe.sh
 
-modnam=narre
-verifys=grid2obs
+modnam=$MODELNAME
+verifys=$VERIF_CASE
 
 
 for verify in $verifys   ; do 
@@ -37,13 +37,12 @@ for verify in $verifys   ; do
 
     echo  "export model=$modnam" >> run_gather_${verify}.sh
     echo  "export MODEL=${MODEL}_MEAN" >> run_gather_${verify}.sh
-    echo  "export stat_file_dir=${SMALL_STAT}" >> run_gather_${verify}.sh
+    echo  "export stat_file_dir=${COMOUTsmall}" >> run_gather_${verify}.sh
     echo  "export gather_output_dir=${WORK}/gather " >> run_gather_${verify}.sh
 
     echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/StatAnlysis_fcstNARRE_obsPREPBUFR_GatherByDay.conf " >> run_gather_${verify}.sh
 
-     echo "cp ${WORK}/gather/${vday}/${MODEL}_MEAN_grid2obs_${vday}.stat  $GATHER_STAT">>run_gather_${verify}.sh
-     #echo "cp ${WORK}/${verify}/stat/*.stat  $SMALL_STAT">>run_gather_${verify}.sh
+    echo "cp ${WORK}/gather/${vday}/${MODEL}_MEAN_grid2obs_${vday}.stat  $COMOUTfinal">>run_gather_${verify}.sh
 
   chmod +x run_gather_${verify}.sh
 

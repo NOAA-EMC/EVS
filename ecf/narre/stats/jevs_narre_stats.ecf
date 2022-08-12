@@ -20,14 +20,16 @@ export cycles="%CYCLES%"
 module purge
 source $HOMEevs/modulefiles/${evs_ver}
 
-export envir=dev
-export RUN_ENVIR=prod
-export run_mpi='yes'
-export stats='yes'
-export gather='yes'
+export NET=evs
+export STEP=stats
+export COMPONENT=narre
+export RUN=atmos
+export VERIF_CASE=grid2obs
+export MODELNAME=narre
 
+export KEEPDATA=YES
 
-${HOMEevs}/jobs/narre/stats/JEVS_NARRE_STATS
+${HOMEevs}/jobs/${COMPONENT}/${STEP}/JEVS_NARRE_STATS
 
 %include <tail.h>
 %manual

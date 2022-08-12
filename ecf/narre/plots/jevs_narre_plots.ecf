@@ -5,7 +5,7 @@
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A VERF-DEV
-#PBS -l walltime=00:20:00
+#PBS -l walltime=01:00:00
 #PBS -l place=vscatter,select=1:ncpus=2:mem=500GB
 #PBS -l debug=true
 
@@ -24,6 +24,16 @@ export cycles="%CYCLES%"
 module purge
 source $HOMEevs/modulefiles/${evs_ver}
 
+export NET=evs
+export STEP=plots
+export COMPONENT=narre
+export RUN=atmos
+export VERIF_CASE=grid2obs
+export MODELNAME=narre
+
+export KEEPDATA=YES
+
+export past_days=7
 
 ${HOMEevs}/jobs/narre/plots/JEVS_NARRE_PLOTS
 

@@ -14,9 +14,19 @@ export log_met_output_to_metplus=''
 export metplus_verbosity=2
 export met_verbosity=2
 
+export run_mpi=${run_mpi:-'yes'}
+export stats=${stats:-'yes'}
+export gather=${gather:-'yes'}
+
 
 msg="$job HAS BEGUN"
 postmsg "$jlogfile" "$msg"
+
+export COMNARRE=$COMIN/narre/${narre_ver}
+export PREPBUFR=$COMIN/obsproc/${obsproc_ver}
+export GRID2OBS_CONF=$PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}
+export MET_CONFIG=${METPLUS_BASE}/parm/met_config
+export maskpath=$MASKS
 
 
 #############################################################
@@ -27,10 +37,6 @@ if [ $stats = yes ] ; then
  $USHevs/narre/evs_narre_stats.sh  
 fi
 
-
-#if [ $gather = yes ] ; then
-# $USHevs/narre/stats/evs_narre_gather.sh
-#fi
 
 msg="JOB $job HAS COMPLETED NORMALLY"
 postmsg "$jlogfile" "$msg"

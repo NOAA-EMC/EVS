@@ -8,7 +8,7 @@ modnam=$1
 
 if [ $modnam = prepbufr ] ; then
 
- mkdir -p $WORK/prepbufr.$vday
+ mkdir -p $WORK/prepbufr.$VDATE
  export output_base=${WORK}/pb2nc
 
  for grid in G130 G214 ; do
@@ -20,7 +20,7 @@ if [ $modnam = prepbufr ] ; then
      export verif_grid=$grid
 
      ${METPLUS_PATH}/ush/master_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr.cong
-     cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${vday}
+     cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${VDATE}
   
   done
 
@@ -30,7 +30,7 @@ fi
 
 if [ $modnam = prepbufr_new ] ; then
 
-  mkdir -p $WORK/prepbufr.$vday
+  mkdir -p $WORK/prepbufr.$VDATE
   export output_base=${WORK}/pb2nc
 
   for grid in G130 G214 ; do

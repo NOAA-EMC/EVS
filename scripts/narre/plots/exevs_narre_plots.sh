@@ -4,11 +4,37 @@ set -x
 
 cd $DATA
 
+export prune_dir=$DATA/data
+export save_dir=$DATA/out
+export output_base_dir=$DATA/stat_archive
+export log_metplus=$DATA/logs/NARRE_verif_plotting_job.out
+mkdir -p $prune_dir
+mkdir -p $save_dir
+mkdir -p $output_base_dir
+mkdir -p $DATA/logs
+
+
+export eval_period='TEST'
+#export past_days=0
+
+export init_end=$VDATE
+export valid_end=$VDATE
+
+n=0
+while [ $n -le $past_days ] ; do
+    hrs=$((n*24))
+    first_day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
+    n=$((n+1))
+done
+
+export init_beg=$first_day
+export valid_beg=$first_day
+
 n=0
 while [ $n -le $past_days ] ; do
   #hrs=`expr $n \* 24`
   hrs=$((n*24))
-  day=`$NDATE -$hrs ${vday}00|cut -c1-8`
+  day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
   sh $USHevs/narre/evs_get_narre_stat_file_link.sh $day
   n=$((n+1))
@@ -71,13 +97,6 @@ for grid in $VX_MASK_LIST ; do
 export vx_mask_list=$grid
 export verif_case='grid2obs'
 export verif_type='conus_sfc'
-#export ush_dir="/gpfs/dell2/emc/verification/noscrub/Binbin.Zhou/EVS/ploting/verif_plotting.v2/ush"
-#export ush_dir="/gpfs/dell2/emc/verification/noscrub/Marcel.Caron/verif_plotting/ush"
-#export prune_dir="/gpfs/dell2/emc/verification/noscrub/Binbin.Zhou/EVS/ploting/data"
-#export save_dir="/gpfs/dell2/emc/verification/noscrub/Binbin.Zhou/EVS/ploting/out"
-#export output_base_dir="/gpfs/dell2/emc/verification/noscrub/Binbin.Zhou/com/plot_stat/regional/stat_archive/"
-#export log_metplus="${save_dir}/logs/NARRE_verif_plotting_job_`date '+%Y%m%d-%H%M%S'`_$$.out"
-
 
 export log_level="INFO"
 export met_ver="10.0"
@@ -86,12 +105,8 @@ export model="NARRE_MEAN"
 export eval_period="TEST"
 if [ $score_type = valid_hour_average ] ; then
   export date_type="INIT"
-#  export init_beg=20220416
-#  export init_end=20220426
 else
   export date_type="VALID"
-#  export valid_beg=20220416
-#  export valid_end=20220426
 fi
 
 export var_name=$var
@@ -123,9 +138,9 @@ set -x
 plot_dir=$DATA/out/ceil_vis/${valid_beg}-${valid_end}
 cd $plot_dir
   
-tar -cvf plots_narre_grid2obs_v${vday}.tar *.png
+tar -cvf plots_narre_grid2obs_v${VDATE}.tar *.png
 
-cp plots_narre_grid2obs_v${vday}.tar  $PLOTS/.  
+cp plots_narre_grid2obs_v${VDATE}.tar  $COMOUT/.  
 
 cd $DATA
 

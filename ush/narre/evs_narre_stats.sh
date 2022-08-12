@@ -9,6 +9,11 @@ set -x
 export regrid='NONE'
 ############################################################
 
+
+export vday=$VDATE
+
+echo COMOUTsmall=$COMOUTsmall
+
 >run_all_narre_poe.sh
 
 
@@ -92,7 +97,7 @@ for prod in mean  ; do
 
        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstNARRE_obsPREPBUFR_SFC_mean.conf " >> run_narre_${model}.${dom}.${range}.sh
 
-       echo "cp \$output_base/stat/*.stat $SMALL_STAT" >> run_narre_${model}.${dom}.${range}.sh
+       echo "cp \$output_base/stat/*.stat $COMOUTsmall" >> run_narre_${model}.${dom}.${range}.sh
 
        chmod +x run_narre_${model}.${dom}.${range}.sh
        echo "run_narre_${model}.${dom}.${range}.sh" >> run_all_narre_poe.sh
