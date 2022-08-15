@@ -78,14 +78,32 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
             VERIF_CASE_STEP_type_valid_hr_list = os.environ[
                 VERIF_CASE_STEP_abbrev_type+'_valid_hr_list'
             ].split(' ')
-        elif VERIF_CASE_STEP_type == 'flux':
-            VERIF_CASE_STEP_type_valid_hr_list = ['00']
         elif VERIF_CASE_STEP_type == 'precip':
-            VERIF_CASE_STEP_type_valid_hr_list = ['12']
-        elif VERIF_CASE_STEP_type == 'sea_ice':
-            VERIF_CASE_STEP_type_valid_hr_list = ['12']
+            (CCPA24hr_valid_hr_start, CCPA24hr_valid_hr_end,
+             CCPA24hr_valid_hr_inc) = gda_util.get_obs_valid_hrs(
+                 '24hrCCPA'
+            )
+            CCPA24hr_valid_hr_list = [
+                str(x).zfill(2) for x in range(
+                    CCPA24hr_valid_hr_start,
+                    CCPA24hr_valid_hr_end+CCPA24hr_valid_hr_inc,
+                    CCPA24hr_valid_hr_inc
+                )
+            ]
+            VERIF_CASE_STEP_type_valid_hr_list = CCPA24hr_valid_hr_list
         elif VERIF_CASE_STEP_type == 'snow':
-            VERIF_CASE_STEP_type_valid_hr_list = ['12']
+            (NOHRSC24hr_valid_hr_start, NOHRSC24hr_valid_hr_end,
+             NOHRSC24hr_valid_hr_inc) = gda_util.get_obs_valid_hrs(
+                 '24hrNOHRSC'
+            )
+            NOHRSC24hr_valid_hr_list = [
+                str(x).zfill(2) for x in range(
+                    NOHRSC24hr_valid_hr_start,
+                    NOHRSC24hr_valid_hr_end+NOHRSC24hr_valid_hr_inc,
+                    NOHRSC24hr_valid_hr_inc
+                )
+            ]
+            VERIF_CASE_STEP_type_valid_hr_list = NOHRSC24hr_valid_hr_list
         else:
             VERIF_CASE_STEP_type_valid_hr_list = ['12']
         # Set initialization hours

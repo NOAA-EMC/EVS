@@ -896,6 +896,35 @@ def get_truth_file(valid_time_dt, source_file_format, dest_file_format):
         else:
             print("WARNING: "+source_file+" DOES NOT EXIST")
 
+def get_obs_valid_hrs(obs):
+    """! This returns the valid hour start, end, and increment
+         information for a given observation
+
+         Args:
+             obs - observation name (string)
+
+         Returns:
+             valid_hr_start - starting valid hour (string)
+             valid_hr_end   - ending valid hour (string)
+             valid_hr_inc   - valid hour increment (string)
+    """
+    obs_valid_hr_dict = {
+        '24hrCCPA': {'valid_hr_start': 12,
+                     'valid_hr_end': 12,
+                     'valid_hr_inc': 24},
+        '24hrNOHRSC': {'valid_hr_start': 12,
+                       'valid_hr_end': 12,
+                       'valid_hr_inc': 24}
+    }
+    if obs in list(obs_valid_hr_dict.keys()):
+        valid_hr_start = obs_valid_hr_dict[obs]['valid_hr_start']
+        valid_hr_end = obs_valid_hr_dict[obs]['valid_hr_end']
+        valid_hr_inc = obs_valid_hr_dict[obs]['valid_hr_inc']
+    else:
+        print(f"ERROR: Cannot get {obs} valid hour information")
+        sys.exit(1)
+    return valid_hr_start, valid_hr_end, valid_hr_inc
+
 def get_off_machine_data(job_file, job_name, job_output, machine, user, queue,
                          account):
     """! This submits a job to the transfer queue
