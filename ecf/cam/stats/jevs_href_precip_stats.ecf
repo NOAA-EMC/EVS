@@ -1,1 +1,49 @@
-sample
+#PBS -N jevs_href_precip_stats_%CYC%
+#PBS -j oe
+#PBS -S /bin/bash
+#PBS -q %QUEUE%
+#PBS -A %PROJ%-%PROJENVIR%
+#PBS -l walltime=01:00:00
+#PBS -l place=vscatter:exclhost,select=1:ncpus=40:mem=10GB
+#PBS -l debug=true
+
+%include <head.h>
+%include <envir-p1.h>
+%include <model_ver.h>
+
+set -x
+
+export cyc=%CYC%
+export cycles="%CYCLES%"
+
+module purge
+source $HOMEevs/modulefiles/${evs_ver}
+
+
+export NET=evs
+export STEP=stats
+export COMPONENT=cam
+export RUN=atmos
+export VERIF_CASE=precip
+export MODELNAME=href
+export KEEPDATA=YES
+
+export OMP_NUM_THREADS=1
+
+${HOMEevs}/jobs/${COMPONENT}/${STEP}/JEVS_CAM_STATS
+
+%include <tail.h>
+%manual
+#################################################################################
+#TASKSCRIPT DOCUMENTATION BLOCK
+#
+#PURPOSE:  To execute the job that creates the ncepdate on IBMSP
+#######################################################################
+#######################################################################
+## Job specific troubleshooting instructions:
+#  see generic troubleshoot manual page
+#
+######################################################################
+%end
+
+

@@ -1,0 +1,164 @@
+#!/bin/ksh
+set -x 
+
+#Binbin note: If METPLUS_BASE,  PARM_BASE not set, then they will be set to $METPLUS_PATH
+#             by config_launcher.py in METplus-3.0/ush
+#             why config_launcher.py is not in METplus-3.1/ush ??? 
+
+
+#export regrid='NONE'
+############################################################
+
+
+domain=$1
+
+if [ $domain = all ] ; then
+  domains="CONUS Alaska"
+else
+  domains=$domain
+fi
+
+>run_all_href_profile_poe.sh
+
+
+export obsv=prepbufr
+
+#for dom in CONUS Alaska ; do
+for dom in $domains ; do
+
+   if [ $dom = CONUS ] ; then
+
+       export domain=CONUS
+
+     for valid_at in 00 12 ; do
+
+
+      #for fhr in fhr1 ; do
+      for fhr in fhr1 fhr2 ; do
+
+        >run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+       
+       echo "export regrid=NONE" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       echo "export obsv=prepbufr" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       echo "export domain=CONUS" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+       echo  "export output_base=$WORK/grid2obs/run_href_${domain}.${valid_at}.${fhr}_profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh 
+       echo  "export OBTYPE='PREPBUFR'" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       echo  "export obsvhead=$obsv" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       echo  "export obsvgrid=G227" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       echo  "export obsvpath=$WORK" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+       
+       echo  "export vbeg=${valid_at}" >>run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       echo  "export vend=${valid_at}" >>run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       echo  "export valid_increment=10800" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh       
+
+       if [ $valid_at = 00 ] || [ $valid_at = 06 ] || [ $valid_at = 12 ] || [ $valid_at = 18 ] ; then
+
+         if [ $fhr = fhr1 ] ; then
+           echo  "export lead=' 6,12,18,24'" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+         elif [ $fhr = fhr2 ] ; then
+           echo  "export lead='30,36,42,48'" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+         fi 
+       fi
+        
+       echo  "export domain=CONUS" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       echo  "export model=href"  >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       echo  "export MODEL=HREF" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       echo  "export regrid=NONE " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       echo  "export modelhead=href" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       echo  "export modelpath=$COMHREF" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       echo  "export modelgrid=conus.f" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       echo  "export modeltail=''" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       echo  "export extradir='verf_g2g/'" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+ 
+       echo  "export verif_grid=''" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       #echo  "export verif_poly='${maskpath}/grid2obs_CONUS.nc' " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       echo  "export verif_poly='${maskpath}/Bukovsky_G227_CONUS.nc,
+                        ${maskpath}/Bukovsky_G227_CONUS_East.nc,
+		        ${maskpath}/Bukovsky_G227_CONUS_West.nc,
+		        ${maskpath}/Bukovsky_G227_CONUS_South.nc,
+		        ${maskpath}/Bukovsky_G227_CONUS_Central.nc' " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh 
+
+        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh 
+
+	echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF_obsPREPBUFR_PROFILE_prob.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+       chmod +x run_href_${domain}.${valid_at}.${fhr}_profile.sh
+       echo "run_href_${domain}.${valid_at}.${fhr}_profile.sh" >> run_all_href_profile_poe.sh
+
+      done
+
+     done
+
+    elif [ $dom = Alaska ] ; then
+
+       export domain=Alaska
+
+      #for valid_at in 00 03 06 09 12 15 18 21 ; do 
+      for valid_at in 00 12 ; do 
+
+       for fhr in fhr1 ; do 
+
+         >run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+
+        echo "export regrid=NONE" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "export obsv=prepbufr" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "export domain=Alaska" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+
+        echo  "export output_base=$WORK/grid2obs/run_href_${domain}.${valid_at}.${fhr}_profile" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+        echo  "export OBTYPE='PREPBUFR'" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+        echo  "export obsvhead=$obsv " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo  "export obsvgrid=G198" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo  "export obsvpath=$WORK" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo  "export domain=Alaska " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+        echo  "export vbeg=${valid_at}" >>run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo  "export vend=${valid_at}" >>run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo  "export valid_increment=10800" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+
+        if [ $valid_at = 00 ] || [ $valid_at = 12 ] ; then
+          echo  "export lead=' 6,18,30,42'" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        fi
+
+        echo  "export model=href"  >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo  "export MODEL=HREF" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo  "export regrid=NONE " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo  "export modelhead=href" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo  "export modelpath=$COMHREF" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo  "export modelgrid=ak.f" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo  "export modeltail=''" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo  "export extradir='verf_g2g/'" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+        echo  "export verif_grid='G198'" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo  "export verif_poly=''"  >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+	echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF_obsPREPBUFR_PROFILE_prob.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+	echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
+	chmod +x run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo "run_href_${domain}.${valid_at}.${fhr}_profile.sh" >> run_all_href_profile_poe.sh
+
+       done
+      done
+
+    fi 
+
+ done #end of dom
+
+
+chmod 775 run_all_href_profile_poe.sh
+
+exit
+
+
