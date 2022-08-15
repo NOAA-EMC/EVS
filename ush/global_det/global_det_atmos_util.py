@@ -904,9 +904,9 @@ def get_obs_valid_hrs(obs):
              obs - observation name (string)
 
          Returns:
-             valid_hr_start - starting valid hour (string)
-             valid_hr_end   - ending valid hour (string)
-             valid_hr_inc   - valid hour increment (string)
+             valid_hr_start - starting valid hour (integer)
+             valid_hr_end   - ending valid hour (integer)
+             valid_hr_inc   - valid hour increment (integer)
     """
     obs_valid_hr_dict = {
         '24hrCCPA': {'valid_hr_start': 12,
@@ -1049,6 +1049,20 @@ def initalize_job_env_dict(verif_type, group,
             else:
                 verif_type_valid_hr_inc = 24
             job_env_dict['valid_hr_inc'] = str(verif_type_valid_hr_inc)
+        else:
+            if verif_type == 'precip':
+                valid_hr_start, valid_hr_end, valid_hr_inc = (
+                    get_obs_valid_hrs('24hrCCPA')
+                )
+            elif verif_type == 'snow':
+                valid_hr_start, valid_hr_end, valid_hr_inc = (
+                    get_obs_valid_hrs('24hrNOHRSC')
+                )
+            else:
+                 valid_hr_start, valid_hr_end, valid_hr_inc = 12, 12, 23
+            job_env_dict['valid_hr_start'] = str(valid_hr_start)
+            job_env_dict['valid_hr_end'] = str(valid_hr_end)
+            job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
     if group == 'plot':
         verif_type_init_hr_list = (
             os.environ[verif_case_step_abbrev_type+'_init_hr_list']\

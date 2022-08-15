@@ -59,65 +59,11 @@ reformat_obs_jobs_dict = {
     'sst': {},
 }
 reformat_model_jobs_dict = {
-    'flux': {
-        'DailyAvg_LatentHeat': {'env': {'var1_name': 'LHTFL',
-                                        'var1_levels': 'Z0',
-                                        'valid_hr_start': '00',
-                                        'valid_hr_end': '00',
-                                        'valid_hr_inc': '24'},
-                                 'commands': [gda_util.metplus_command(
-                                                  'GridStat_fcstGLOBAL_DET_'
-                                                  +'NetCDF.conf'
-                                              ),
-                                              gda_util.python_command(
-                                                  'global_det_atmos_stats_grid2grid'
-                                                  '_create_daily_avg.py',
-                                                  ['LHTFL_Z0',
-                                                   os.path.join(
-                                                       '$DATA',
-                                                       '${VERIF_CASE}_${STEP}',
-                                                       'METplus_output',
-                                                       '${RUN}.{valid?fmt=%Y%m%d}',
-                                                       '$MODEL', '$VERIF_CASE',
-                                                       'grid_stat_${VERIF_TYPE}.'
-                                                       +'${job_name}_'
-                                                       +'{lead?fmt=%2H}0000L_'
-                                                       +'{valid?fmt=%Y%m%d}_'
-                                                       +'{valid?fmt=%H}0000V_pairs.nc'
-                                                   )]
-                                              )]},
-
-        'DailyAvg_SensibleHeat': {'env': {'var1_name': 'SHTFL',
-                                          'var1_levels': 'Z0',
-                                          'valid_hr_start': '00',
-                                          'valid_hr_end': '00',
-                                          'valid_hr_inc': '24'},
-                                  'commands': [gda_util.metplus_command(
-                                                   'GridStat_fcstGLOBAL_DET_'
-                                                   +'NetCDF.conf'
-                                               ),
-                                               gda_util.python_command(
-                                                  'global_det_atmos_stats_grid2grid'
-                                                  '_create_daily_avg.py',
-                                                  ['SHTFL_Z0',
-                                                   os.path.join(
-                                                       '$DATA',
-                                                       '${VERIF_CASE}_${STEP}',
-                                                       'METplus_output',
-                                                       '${RUN}.{valid?fmt=%Y%m%d}',
-                                                       '$MODEL', '$VERIF_CASE',
-                                                       'grid_stat_${VERIF_TYPE}.'
-                                                       +'${job_name}_'
-                                                       +'{lead?fmt=%2H}0000L_'
-                                                       +'{valid?fmt=%Y%m%d}_'
-                                                       +'{valid?fmt=%H}0000V_pairs.nc'
-                                                   )]
-                                               )]}
-    },
+    'flux': {},
     'means': {},
     'ozone': {},
     'precip': {
-        '24hrAccum': {'env': {'valid_hr': '12'},
+        '24hrAccum': {'env': {},
                       'commands': [gda_util.metplus_command(
                                        'PCPCombine_fcstGLOBAL_DET_'
                                        +'24hrAccum_precip.conf'
@@ -170,14 +116,12 @@ reformat_model_jobs_dict = {
     },
     'sea_ice': {},
     'snow': {
-        '24hrAccum_WaterEqv': {'env': {'valid_hr': '12',
-                                       'MODEL_var': 'WEASD'},
+        '24hrAccum_WaterEqv': {'env': {'MODEL_var': 'WEASD'},
                                'commands': [gda_util.metplus_command(
                                                 'PCPCombine_fcstGLOBAL_'
                                                 +'DET_24hrAccum_snow.conf'
                                             )]},
-        '24hrAccum_Depth': {'env': {'valid_hr': '12',
-                                    'MODEL_var': 'SNOD'},
+        '24hrAccum_Depth': {'env': {'MODEL_var': 'SNOD'},
                             'commands': [gda_util.metplus_command(
                                              'PCPCombine_fcstGLOBAL_'
                                              +'DET_24hrAccum_snow.conf'
@@ -346,23 +290,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
 ################################################
 # Generate jobs information dictionary
 generate_jobs_dict = {
-    'flux': {
-        'DailyAvg_LatentHeat': {'env': {'fcst_var1_name': 'LHTFL',
-                                        'obs_var1_name': 'ET',
-                                        'obs_conversion': ("'2.45 * 1000000 "
-                                                           +"/ 86400'")},
-                                'commands': [gda_util.metplus_command(
-                                                 'GridStat_fcstGLOBAL_DET'
-                                                 +'_obsGET_D.conf'
-                                             )]},
-        'DailyAvg_SensibleHeat': {'env': {'fcst_var1_name': 'SHTFL',
-                                           'obs_var1_name': 'HDAY',
-                                           'obs_conversion': "'1000000 / 86400'"},
-                                  'commands': [gda_util.metplus_command(
-                                                   'GridStat_fcstGLOBAL_DET'
-                                                   +'_obsGET_D.conf'
-                                               )]},
-    },
+    'flux': {},
     'means': {
         'CAPESfcBased': {'env': {'var1_name': 'CAPE',
                                  'var1_level': 'Z0',
