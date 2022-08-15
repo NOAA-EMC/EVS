@@ -440,7 +440,7 @@ generate_jobs_dict = {
                                            'GridStat_fcstGLOBAL_DET_'
                                            +'obs24hrCCPA.conf'
                                        )]},
-        '24hrCCPA_Nbrhd1': {'env': {'nbhrd_list': "'1,3,5,7,9,11,13,15'",
+        '24hrCCPA_Nbrhd1': {'env': {'nbhrd_list': "'1,3,5,7,9,11,13'",
                                     'met_config_overrides': ''},
                             'commands': [gda_util.metplus_command(
                                              'GridStat_fcstGLOBAL_DET_'
@@ -612,7 +612,7 @@ generate_jobs_dict = {
                                                )]},
         '24hrNOHRSC_WaterEqv_Nbrhd1': {'env': {'file_name_var': 'WaterEqv',
                                                'nbhrd_list': ("'1,3,5,7,9,"
-                                                              +"11,13,15'"),
+                                                              +"11,13'"),
                                                'var1_name': 'WEASD',
                                                'var1_convert': '0.001 * 10'},
                                        'commands': [gda_util.metplus_command(
@@ -621,7 +621,7 @@ generate_jobs_dict = {
                                                    )]},
         '24hrNOHRSC_Depth_Nbrhd1': {'env': {'file_name_var': 'Depth',
                                             'nbhrd_list': ("'1,3,5,7,9,"
-                                                           +"11,13,15'"),
+                                                           +"11,13'"),
                                             'var1_name': 'SNOD',
                                             'var1_convert': '1'},
                                     'commands': [gda_util.metplus_command(
