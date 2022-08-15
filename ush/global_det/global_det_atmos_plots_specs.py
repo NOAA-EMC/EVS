@@ -274,7 +274,7 @@ class PlotSpecs:
         """
         plot_title = (
             self.get_stat_plot_name(plot_info_dict['stat'])+' - '
-            +self.get_vx_mask_plot_name(plot_info_dict['grid']+'/'
+            +self.get_vx_mask_plot_name(plot_info_dict['grid'])+'/'
             +self.get_vx_mask_plot_name(plot_info_dict['vx_mask'])+'\n'
         )
         if date_info_dict['date_type'] == 'VALID':
