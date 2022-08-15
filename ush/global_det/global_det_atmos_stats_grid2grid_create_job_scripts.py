@@ -610,26 +610,85 @@ generate_jobs_dict = {
                                                    'GridStat_fcstGLOBAL_DET_'
                                                    +'obs24hrNOHRSC.conf'
                                                )]},
-        '24hrNOHRSC_WaterEqv_Nbrhd': {'env': {'file_name_var': 'WaterEqv',
-                                              'var1_name': 'WEASD',
-                                              'var1_convert': '0.001 * 10'},
-                                      'commands': [gda_util.metplus_command(
-                                                      'GridStat_fcstGLOBAL_DET_'
-                                                      +'obs24hrNOHRSC_Nbrhd.conf'
-                                                  )]},
-        '24hrNOHRSC_Depth_Nbrhd': {'env': {'file_name_var': 'Depth',
-                                           'var1_name': 'SNOD',
-                                           'var1_convert': '1'},
-                                   'commands': [gda_util.metplus_command(
-                                                    'GridStat_fcstGLOBAL_DET_'
-                                                    +'obs24hrNOHRSC_Nbrhd.conf'
-                                                )]},
+        '24hrNOHRSC_WaterEqv_Nbrhd1': {'env': {'file_name_var': 'WaterEqv',
+                                               'nbhrd_list': ("'1,3,5,7,9,"
+                                                              +"11,13,15'"),
+                                               'var1_name': 'WEASD',
+                                               'var1_convert': '0.001 * 10'},
+                                       'commands': [gda_util.metplus_command(
+                                                       'GridStat_fcstGLOBAL_DET_'
+                                                       +'obs24hrNOHRSC_Nbrhd.conf'
+                                                   )]},
+        '24hrNOHRSC_Depth_Nbrhd1': {'env': {'file_name_var': 'Depth',
+                                            'nbhrd_list': ("'1,3,5,7,9,"
+                                                           +"11,13,15'"),
+                                            'var1_name': 'SNOD',
+                                            'var1_convert': '1'},
+                                    'commands': [gda_util.metplus_command(
+                                                     'GridStat_fcstGLOBAL_DET_'
+                                                     +'obs24hrNOHRSC_Nbrhd.conf'
+                                                 )]},
+        '24hrNOHRSC_WaterEqv_Nbrhd2': {'env': {'file_name_var': 'WaterEqv',
+                                               'nbhrd_list': ("'15,17,19,21,"
+                                                              +"23,25,27,29'"),
+                                               'var1_name': 'WEASD',
+                                               'var1_convert': '0.001 * 10'},
+                                       'commands': [gda_util.metplus_command(
+                                                       'GridStat_fcstGLOBAL_DET_'
+                                                       +'obs24hrNOHRSC_Nbrhd.conf'
+                                                   )]},
+        '24hrNOHRSC_Depth_Nbrhd2': {'env': {'file_name_var': 'Depth',
+                                            'nbhrd_list': ("'15,17,19,21,"
+                                                           +"23,25,27,29'"),
+                                            'var1_name': 'SNOD',
+                                            'var1_convert': '1'},
+                                    'commands': [gda_util.metplus_command(
+                                                     'GridStat_fcstGLOBAL_DET_'
+                                                     +'obs24hrNOHRSC_Nbrhd.conf'
+                                                 )]},
+        '24hrNOHRSC_WaterEqv_Nbrhd3': {'env': {'file_name_var': 'WaterEqv',
+                                               'nbhrd_list': ("'31,33,35,37,39"
+                                                              +",41,43,45'"),
+                                               'var1_name': 'WEASD',
+                                               'var1_convert': '0.001 * 10'},
+                                       'commands': [gda_util.metplus_command(
+                                                       'GridStat_fcstGLOBAL_DET_'
+                                                       +'obs24hrNOHRSC_Nbrhd.conf'
+                                                   )]},
+        '24hrNOHRSC_Depth_Nbrhd3': {'env': {'file_name_var': 'Depth',
+                                            'nbhrd_list': ("'31,33,35,37,39"
+                                                           +",41,43,45'"),
+                                            'var1_name': 'SNOD',
+                                            'var1_convert': '1'},
+                                    'commands': [gda_util.metplus_command(
+                                                     'GridStat_fcstGLOBAL_DET_'
+                                                     +'obs24hrNOHRSC_Nbrhd.conf'
+                                                 )]},
+        '24hrNOHRSC_WaterEqv_Nbrhd4': {'env': {'file_name_var': 'WaterEqv',
+                                               'nbhrd_list': ("'47,49,51,53,55"
+                                                              +",57,59,61,63'"),
+                                               'var1_name': 'WEASD',
+                                               'var1_convert': '0.001 * 10'},
+                                       'commands': [gda_util.metplus_command(
+                                                       'GridStat_fcstGLOBAL_DET_'
+                                                       +'obs24hrNOHRSC_Nbrhd.conf'
+                                                   )]},
+        '24hrNOHRSC_Depth_Nbrhd4': {'env': {'file_name_var': 'Depth',
+                                            'nbhrd_list': ("'47,49,51,53,55"
+                                                           +",57,59,61,63'"),
+                                            'var1_name': 'SNOD',
+                                            'var1_convert': '1'},
+                                    'commands': [gda_util.metplus_command(
+                                                     'GridStat_fcstGLOBAL_DET_'
+                                                     +'obs24hrNOHRSC_Nbrhd.conf'
+                                                 )]},
     },
     'sst': {
         'TempSeaSfc': {'env': {},
                        'commands': []},
     },
 }
+
 # Create generate jobs directory
 njobs = 0
 generate_jobs_dir = os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
