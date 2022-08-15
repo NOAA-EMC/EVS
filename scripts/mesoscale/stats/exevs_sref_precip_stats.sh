@@ -18,10 +18,9 @@ export met_verbosity=2
 export run_mpi=${run_mpi:-'yes'}
 export gather=${gather:-'yes'}
 
-
 export COMSREF=$COMIN/sref/${sref_ver}
-export PREPBUFR=$COMIN/obsproc/${obsproc_ver}
-export GRID2OBS_CONF=$PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}
+export COMCCPA=$COMIN/ccpa/${ccpa_ver}
+export PRECIP_CONF=$PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}
 export MET_CONFIG=${METPLUS_BASE}/parm/met_config
 export maskpath=$MASKS
 
@@ -29,8 +28,7 @@ export maskpath=$MASKS
 msg="$job HAS BEGUN"
 postmsg "$jlogfile" "$msg"
 
-$USHevs/mesoscale/evs_sref_grid2obs.sh
-
+$USHevs/mesoscale/evs_sref_precip.sh 
 
 msg="JOB $job HAS COMPLETED NORMALLY"
 postmsg "$jlogfile" "$msg"

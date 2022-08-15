@@ -1,1 +1,73 @@
-sample
+#!/bin/ksh
+
+########################################
+# Preliminary data setup step
+########################################
+set -xa
+
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+
+export cycle=t${cyc}z 
+
+export COMIN=${COMIN:-$COMROOT}
+export COMOUT=${COMOUT:-$COMROOT/${NET}/${evs_ver}/$STEP/$COMPONENT}
+export DATA_IN=${DATA_IN:-$DATAROOT}
+mkdir -p $COMOUT
+
+export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
+export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
+mkdir -p $COMOUTfinal $COMOUTsmall
+
+
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXvevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
+export FIXevs=${FIXevs:-/lfs/h1/ops/prod/packages/evs.${evs_ver}/fix}
+export MASKS=$FIXevs/masks
+
+export pid=$$
+
+jobid=evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$
+export DATA=${DATA:-$DATA_IN/${jobid}}
+mkdir -p $DATA
+cd $DATA
+
+setpdy.sh
+. $DATA/PDY
+
+
+if [ $MODELNAME = sref ] ; then
+  export VDATE=${VDATE:-$PDYm2}
+fi
+
+
+# ###################################
+# SET SHELL PROCESSING VARIABLES
+# ###################################
+export PS4='$SECONDS + '
+date
+
+
+####################################
+# Determine Job Output Name on System
+####################################
+export pgmout="OUTPUT.${pid}"
+
+
+# STEP->prep/stats, MODELNAME->sref, COMPONENT->mesoscale, VERIF_CASE->grid2grid/grid2obs/precip
+$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+
+cat $pgmout
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATAROOT
+  rm -rf $DATA
+fi
+
