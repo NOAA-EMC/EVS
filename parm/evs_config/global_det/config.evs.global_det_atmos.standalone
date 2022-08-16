@@ -139,12 +139,20 @@ if [ $RUN_GRID2GRID_PLOTS = YES ]; then
     export g2gp_means_fhr_min=00
     export g2gp_means_fhr_max=240
     export g2gp_means_fhr_inc=24
+    export g2gp_precip_init_hr_list="12"
+    export g2gp_precip_fhr_min=24
+    export g2gp_precip_fhr_max=72
+    export g2gp_precip_fhr_inc=24
     export g2gp_pres_levs_truth_name_list="GFS_ANL"
     export g2gp_pres_levs_init_hr_list="00"
     export g2gp_pres_levs_valid_hr_list="00"
     export g2gp_pres_levs_fhr_min=00
     export g2gp_pres_levs_fhr_max=240
     export g2gp_pres_levs_fhr_inc=24
+    export g2gp_snow_init_hr_list="12"
+    export g2gp_snow_fhr_min=24
+    export g2gp_snow_fhr_max=72
+    export g2gp_snow_fhr_inc=24
 fi
 
 if [ $RUN_GRID2OBS_STATS = YES ]; then

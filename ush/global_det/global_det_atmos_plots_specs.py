@@ -105,7 +105,12 @@ class PlotSpecs:
         stat_plot_name_dict = {
             'ACC': 'Anomaly Correlation Coefficient',
             'BIAS': 'Bias',
+            'ETS': 'Equitable Threat Score',
             'FBAR': 'Forecast Mean',
+            'FBIAS': 'Frequency Bias',
+            'FSS': 'Fraction Skill Score',
+            'FY_OY': 'Forecast Yes - Obs Yes',
+            'GSS': 'Gilbert Skill Score',
             'RMSE': 'Root Mean Square Error',
             'S1': 'S1'
         }
@@ -116,20 +121,20 @@ class PlotSpecs:
             stat_plot_name = stat
         return stat_plot_name
 
-    def get_var_plot_name(self, var_name, var_level, var_thresh):
+    def get_var_plot_name(self, var_name, var_level):
         """! Get the full variable information that will be displayed
              on the plot
 
              Args:
                  var_name   - abbreviated variable name (string)
                  var_level  - abbreviated variable level (string)
-                 var_thresh - abbreviated variable threshold (string)
              Returns:
                  var_plot_name - full variable information that
                                  will be displayed on the plot
                                  (string)
         """
         var_name_plot_name_dict = {
+            'APCP_A24': '24 hour Accumulated Precipitation',
             'CAPE': 'CAPE',
             'CWAT': 'Cloud Water',
             'HGT': 'Geopotential Height',
@@ -144,6 +149,7 @@ class PlotSpecs:
             'PRMSL': 'Pressure Reduced to MSL',
             'PWAT': 'Precipitable Water',
             'RH': 'Relative Humidity',
+            'SNOD_A24': '24 hour Snow Accumulation (derived from SNOD)'
             'SOILW': 'Volumetric Soil Moisture Content',
             'SPFH': 'Specific Humidity',
             'TMP': 'Temperature',
@@ -153,6 +159,7 @@ class PlotSpecs:
             'UGRD_VGRD': 'Vector Wind',
             'VGRD': 'V-Component of Wind',
             'WEASD': 'Water Equivalent of Accumulated Snow Depth'
+            'WEASD_A24': '24 hour Snow Accumulation (derived from WEASD)'
         }
         if var_name in list(var_name_plot_name_dict.keys()):
             var_name_plot_name = var_name_plot_name_dict[var_name]
@@ -160,7 +167,9 @@ class PlotSpecs:
             self.logger.debug(f"{var_name} not recognized, "
                               +f"using {var_name} on plot")
             var_name_plot_name = var_name
-        if 'P' in var_level:
+        if 'A' in var_level:
+            var_level_plot_name = ''
+        elif 'P' in var_level:
             var_level_plot_name = var_level.replace('P', '')+' hPa'
         elif 'Z' in var_level:
             if var_level == 'Z0':
@@ -178,12 +187,7 @@ class PlotSpecs:
             self.logger.debug(f"{var_level} not recognized, "
                               +f"using {var_level} on plot")
             var_level_plot_name = var_level
-        if var_thresh != 'NA':
-            var_thresh_plot_name = var_thresh
-        else:
-            var_thresh_plot_name = ''
-        var_plot_name = (var_level_plot_name+' '+var_name_plot_name
-                         +var_thresh_plot_name)
+        var_plot_name = var_level_plot_name+' '+var_name_plot_name
         return var_plot_name
 
     def get_vx_mask_plot_name(self, vx_mask):
@@ -200,6 +204,10 @@ class PlotSpecs:
         """
         vx_mask_plot_name_dict = {
              'CONUS': 'CONUS',
+             'CONUS_Central': 'CONUS - Central',
+             'CONUS_East': 'CONUS - East',
+             'CONUS_South': 'CONUS - South',
+             'CONUS_West': 'CONUS - West',
              'GLOBAL': 'Global',
              'N60N90': '60N-90N',
              'NAO': 'Northern Atlantic Ocean',
@@ -307,19 +315,31 @@ class PlotSpecs:
                     plot_title
                     +self.get_var_plot_name(plot_info_dict['fcst_var_name']
                                             +'_'+plot_info_dict['interp_method'],
-                                            plot_info_dict['fcst_var_level'],
-                                            plot_info_dict['fcst_var_thresh'])
+                                            plot_info_dict['fcst_var_level'])
                 )
             else:
                 plot_title = (
                     plot_title
                     +self.get_var_plot_name(plot_info_dict['fcst_var_name'],
-                                            plot_info_dict['fcst_var_level'],
-                                            plot_info_dict['fcst_var_thresh'])
+                                            plot_info_dict['fcst_var_level'])
                 )
             plot_title = (
                 plot_title+' '
-                +'('+units+')\n'
+                +'('+units+')'
+            )
+            if plot_info_dict['fcst_var_thresh'] != 'NA':
+                plot_title = (
+                    plot_title+' '
+                    +plot_info_dict['fcst_var_thresh']
+                )
+            if plot_info_dict['interp_method'] == 'NBRHD_SQUARE':
+                plot_title = (
+                    plot_title+' '
+                    +'Neighborhood Points: '
+                    +plot_info_dict['interp_points']
+                )
+            plot_title = (
+                plot_title+'\n'
                 +self.get_dates_plot_name(date_info_dict['date_type'],
                                           start_date_hr, end_date_hr,
                                           other_hr_list,
@@ -346,8 +366,8 @@ class PlotSpecs:
         elif date_info_dict['date_type'] == 'INIT':
             date_type_start_hr = date_info_dict['init_hr_start']
             date_type_end_hr = date_info_dict['init_hr_end']
+        savefig_name = plot_info_dict['stat']+'_'
         if self.plot_type == 'time_series':
-            savefig_name = plot_info_dict['stat']+'_'
             if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
                 savefig_name = (
                     savefig_name
@@ -364,6 +384,15 @@ class PlotSpecs:
                 +plot_info_dict['fcst_var_level']+'_'
                 +plot_info_dict['grid']
                 +plot_info_dict['vx_mask']+'_'
+            )
+            if plot_info_dict['interp_method'] == 'NBRHD_SQUARE':
+                savefig_name = (
+                    savefig_name
+                    +plot_info_dict['interp_method']
+                    +plot_info_dict['interp_points']+'_'
+                )
+            savefig_name = (
+                savefig_name
                 +date_info_dict['date_type'].lower()
                 +date_info_dict['start_date']
                 +date_type_start_hr+'to'

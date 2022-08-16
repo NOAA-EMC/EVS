@@ -1195,6 +1195,41 @@ def get_met_line_type_cols(logger, met_root, met_version, met_line_type):
     )
     return met_version_line_type_col_list
 
+def format_thresh(thresh):
+   """! Format threshold with letter and symbol options
+
+      Args:
+         thresh         - the threshold (string)
+
+      Return:
+         thresh_symbol  - threshold with symbols (string)
+         thresh_letters - treshold with letters (string)
+   """
+   for opt in ['>=', '>', '==', '!=', '<=', '<',
+               'ge', 'gt', 'eq', 'ne', 'le', 'lt']:
+       if opt in thresh:
+           thresh_opt = opt
+           thresh_value = thresh.replace(opt, '')
+   if thresh_opt in ['>', 'gt']:
+       thresh_symbol = '>'+thresh_value
+       thresh_letter = 'gt'+thresh_value
+   elif thresh_opt in ['>=', 'ge']:
+       thresh_symbol = '>='+thresh_value
+       thresh_letter = 'ge'+thresh_value
+   elif thresh_opt in ['<', 'lt']:
+       thresh_symbol = '<'+thresh_value
+       thresh_letter = 'lt'+thresh_value
+   elif thresh_opt in ['<=', 'le']:
+       thresh_symbol = '<='+thresh_value
+       thresh_letter = 'le'+thresh_value
+   elif thresh_opt in ['==', 'eq']:
+      thresh_symbol = '=='+thresh_value
+      thresh_letter = 'eq'+thresh_value
+   elif thresh_opt in ['!=', 'ne']:
+       thresh_symbol = '!='+thresh_value
+       thresh_letter = 'ne'+thresh_value
+   return thresh_symbol, thresh_letter
+
 def condense_model_stat_files(logger, input_dir, output_file, model, obs,
                               grid, vx_mask, fcst_var_name, obs_var_name,
                               line_type):
@@ -1327,6 +1362,20 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                     plot_info_dict['obs_var_name'],
                     plot_info_dict['line_type']
                 )
+            if plot_info_dict['fcst_var_thresh'] != 'NA':
+                fcst_var_thresh_symbol, fcst_vat_thresh_letter = (
+                    format_thresh(plot_info_dict['fcst_var_thresh'])
+                )
+            else:
+                fcst_var_thresh_symbol = plot_info_dict['fcst_var_thresh']
+                fcst_vat_thresh_letter = plot_info_dict['fcst_var_thresh']
+            if plot_info_dict['obs_var_thresh'] != 'NA':
+                obs_var_thresh_symbol, obs_vat_thresh_letter = (
+                    format_thresh(plot_info_dict['obs_var_thresh'])
+                )
+            else:
+                obs_var_thresh_symbol = plot_info_dict['obs_var_thresh']
+                obs_vat_thresh_letter = plot_info_dict['obs_var_thresh']
             if os.path.exists(condensed_model_file):
                 logger.debug(f"Parsing file {condensed_model_file}")
                 condensed_model_df = pd.read_csv(
@@ -1355,9 +1404,9 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                      & (condensed_model_df['INTERP_PNTS'] \
                         == plot_info_dict['interp_points'])
                      & (condensed_model_df['FCST_THRESH'] \
-                        == plot_info_dict['fcst_var_thresh'])
+                        == fcst_var_thresh_symbol)
                      & (condensed_model_df['OBS_THRESH'] \
-                        == plot_info_dict['obs_var_thresh'])
+                        == obs_var_thresh_symbol)
                      & (condensed_model_df['LINE_TYPE'] \
                         == plot_info_dict['line_type'])
                 ]
@@ -1386,9 +1435,9 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
             model_stat_file_df = pd.read_csv(
                 parsed_model_stat_file, sep=" ", skiprows=1,
                 skipinitialspace=True, names=met_version_line_type_col_list,
-                keep_default_na=False, converters=df_dtype_dict,
-                header=None
+                na_values=['NA'], header=None
             )
+            model_stat_file_df = model_stat_file_df.astype(df_dtype_dict)
             for valid_date in met_format_valid_dates:
                 model_stat_file_df_valid_date_idx_list = (
                     model_stat_file_df.index[
@@ -1726,9 +1775,27 @@ def calculate_stat(logger, data_df, line_type, stat):
            stat_df = ME
        elif line_type == 'VL1L2':
            stat_df = np.sqrt(UVFFBAR) - np.sqrt(UVOOBAR)
+   elif stat in ['ETS', 'GSS']: # Equitable Threat Score/Gilbert Skill Score
+       if line_type == 'CTC':
+           TOTAL = FY_OY + FY_ON + FN_OY + FN_ON
+           C = ((FY_OY + FY_ON)*(FY_OY + FN_OY))/TOTAL
+           stat_df = (FY_OY - C)/(FY_OY + FY_ON + FN_OY - C)
+       elif line_type == 'CTS':
+           stat_df = GSS
    elif stat == 'FBAR': # Forecast Mean
        if line_type == 'SL1L2':
            stat_df = FBAR
+   elif stat == 'FBIAS': # Frequency Bias
+       if line_type == 'CTC':
+           stat_df = (FY_OY + FY_ON)/(FY_OY + FN_OY)
+       elif line_type == 'CTS':
+           stat_df = FBIAS
+   elif stat == 'FSS': # Fraction Skill Score
+       if line_type == 'NBRCNT':
+           stat_df = FSS
+   elif stat == 'FY_OY': # Forecast Yes/Obs Yes
+       if line_type == 'CTC':
+           stat_df = FY_OY
    elif stat == 'RMSE': # Root Mean Square Error
        if line_type == 'SL1L2':
            stat_df = np.sqrt(FFBAR + OOBAR - 2*FOBAR)

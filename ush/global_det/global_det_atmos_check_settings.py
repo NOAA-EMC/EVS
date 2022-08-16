@@ -86,11 +86,11 @@ verif_case_step_settings_dict = {
         'means': ['init_hr_list', 'valid_hr_list',
                   'fhr_min', 'fhr_max', 'fhr_inc'],
         'ozone': [],
-        'precip': [],
+        'precip': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
         'pres_levs': ['truth_name_list', 'init_hr_list', 'valid_hr_list',
                       'fhr_min', 'fhr_max', 'fhr_inc'],
         'sea_ice': [],
-        'snow': [],
+        'snow': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
         'sst': []
     },
     'RUN_GRID2OBS_STATS': {
