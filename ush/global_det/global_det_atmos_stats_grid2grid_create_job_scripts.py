@@ -308,7 +308,7 @@ generate_jobs_dict = {
                                         'var1_level': 'L0',
                                         'var1_options': ("'GRIB_lvl_typ = 7; "
                                                          +'set_attr_level = '
-                                                         +'"Tropopause";'+"'")},
+                                                         +'"TROPOPAUSE";'+"'")},
                                 'commands': [gda_util.metplus_command(
                                                  'GridStat_fcstGLOBAL_DET.conf'
                                              )]},
@@ -345,7 +345,7 @@ generate_jobs_dict = {
                                    'var1_level': 'L0',
                                    'var1_options': ("'GRIB_lvl_typ = 7; "
                                                     +'set_attr_level = '
-                                                    +'"Tropopause";'
+                                                    +'"TROPOPAUSE";'
                                                     +'set_attr_units = "hPa"; '
                                                     +'convert(p)=PA_to_HPA(p)'
                                                     +"'")},
@@ -382,7 +382,7 @@ generate_jobs_dict = {
                                    'var1_level': 'L0',
                                    'var1_options': ("'GRIB_lvl_typ = 7; "
                                                     +'set_attr_level = '
-                                                    +'"Tropopause";'+"'")},
+                                                    +'"TROPOPAUSE";'+"'")},
                            'commands': [gda_util.metplus_command(
                                             'GridStat_fcstGLOBAL_DET.conf'
                                         )]},

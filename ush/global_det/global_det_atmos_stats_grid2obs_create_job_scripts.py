@@ -436,7 +436,7 @@ generate_jobs_dict = {
                             'var1_fcst_levels': 'L0',
                             'var1_fcst_options': ("'GRIB_lvl_typ = 215;"
                                                   +"set_attr_level = "
-                                                  +'"Ceiling";'+"'"),
+                                                  +'"CEILING";'+"'"),
                             'var1_obs_name': 'CEILING',
                             'var1_obs_levels': 'L0',
                             'var1_obs_options': '',
@@ -597,7 +597,7 @@ generate_jobs_dict = {
                                   'var1_fcst_levels': 'L0',
                                   'var1_fcst_options': ("'GRIB_lvl_typ = 10;"
                                                         +"set_attr_level = "
-                                                        +'"Total";'+"'"),
+                                                        +'"TOTAL";'+"'"),
                                   'var1_obs_name': 'TCDC',
                                   'var1_obs_levels': 'L0',
                                   'var1_obs_options': '',
