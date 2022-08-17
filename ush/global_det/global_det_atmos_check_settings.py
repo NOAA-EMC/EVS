@@ -62,8 +62,8 @@ evs_global_det_atmos_settings_dict['RUN_GRID2OBS_STATS'] = [
     'g2os_mv_database_desc'
 ]
 evs_global_det_atmos_settings_dict['RUN_GRID2OBS_PLOTS'] = [
-    'g2gp_model_plot_name_list', 'g2gp_type_list',
-    'g2gp_event_equalization'
+    'g2op_model_plot_name_list', 'g2op_type_list',
+    'g2op_event_equalization'
 ]
 
 verif_case_step_settings_dict = {
