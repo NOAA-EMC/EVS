@@ -195,10 +195,10 @@ plot_jobs_dict = {
                                             'SRockies'],
                            'fcst_var_dict': {'name': 'MLCAPE',
                                              'levels': 'P90-0',
-                                             'thresh': 'NA'},
+                                             'threshs': 'NA'},
                            'obs_var_dict': {'name': 'MLCAPE',
                                             'levels': 'L90000-0',
-                                            'thresh': 'NA'},
+                                            'threshs': 'NA'},
                            'interp_dict': {'method': 'BILIN',
                                            'points': '4'},
                            'obs_name': 'ADPUPA',
@@ -218,13 +218,13 @@ plot_jobs_dict = {
                                                    'SPlains', 'SRockies'],
                                   'fcst_var_dict': {'name': 'MLCAPE',
                                                     'levels': 'P90-0',
-                                                    'thresh': ('ge500, ge1000, '
+                                                    'threshs': ('ge500, ge1000, '
                                                                +'ge1500, ge2000, '
                                                                +'ge3000, ge4000, '
                                                                +'ge5000')},
                                   'obs_var_dict': {'name': 'MLCAPE',
                                                    'levels': 'L90000-0',
-                                                   'thresh': ('ge500, ge1000, '
+                                                   'threshs': ('ge500, ge1000, '
                                                               +'ge1500, ge2000, '
                                                               +'ge3000, ge4000, '
                                                               +'ge5000')},
@@ -246,10 +246,10 @@ plot_jobs_dict = {
                                           'SRockies'],
                          'fcst_var_dict': {'name': 'CAPE',
                                            'levels': 'Z0',
-                                           'thresh': 'NA'},
+                                           'threshs': 'NA'},
                          'obs_var_dict': {'name': 'CAPE',
                                           'levels': 'L100000-0',
-                                          'thresh': 'NA'},
+                                          'threshs': 'NA'},
                          'interp_dict': {'method': 'BILIN',
                                          'points': '4'},
                          'obs_name': 'ADPUPA',
@@ -269,13 +269,13 @@ plot_jobs_dict = {
                                                  'SPlains', 'SRockies'],
                                 'fcst_var_dict': {'name': 'CAPE',
                                                   'levels': 'Z0',
-                                                  'thresh': ('ge500, ge1000, '
+                                                  'threshs': ('ge500, ge1000, '
                                                              +'ge1500, ge2000, '
                                                              +'ge3000, ge4000, '
                                                              +'ge5000')},
                                 'obs_var_dict': {'name': 'CAPE',
                                                  'levels': 'L100000-0',
-                                                 'thresh': ('ge500, ge1000, '
+                                                 'threshs': ('ge500, ge1000, '
                                                             +'ge1500, ge2000, '
                                                             +'ge3000, ge4000, '
                                                             +'ge5000')},
@@ -297,14 +297,14 @@ plot_jobs_dict = {
                                      'SPlains', 'SRockies'],
                     'fcst_var_dict': {'name': 'CEILING',
                                       'levels': 'L0',
-                                      'thresh': ('lt804.672, lt1609.344, '
-                                                 +'lt4828.032, lt8046.72, '
-                                                 +'ge8046.72, lt16093.44')},
+                                      'threshs': ('lt804.672, lt1609.344, '
+                                                  +'lt4828.032, lt8046.72, '
+                                                  +'ge8046.72, lt16093.44')},
                     'obs_var_dict': {'name': 'CEILING',
                                      'levels': 'L0',
-                                     'thresh': ('lt804.672, lt1609.344, '
-                                                +'lt4828.032, lt8046.72, '
-                                                +'ge8046.72, lt16093.44')},
+                                     'threshs': ('lt804.672, lt1609.344, '
+                                                 +'lt4828.032, lt8046.72, '
+                                                 +'ge8046.72, lt16093.44')},
                     'interp_dict': {'method': 'BILIN',
                                     'points': '4'},
                     'obs_name': 'ADPSFC',
@@ -323,10 +323,10 @@ plot_jobs_dict = {
                                                  'SPlains', 'SRockies'],
                                 'fcst_var_dict': {'name': 'TMP_ANOM',
                                                   'levels': 'Z2',
-                                                  'thresh': 'NA'},
+                                                  'threshs': 'NA'},
                                 'obs_var_dict': {'name': 'TMP_ANOM',
                                                  'levels': 'Z2',
-                                                 'thresh': 'NA'},
+                                                 'threshs': 'NA'},
                                 'interp_dict': {'method': 'BILIN',
                                                 'points': '4'},
                                 'obs_name': 'ADPSFC',
@@ -345,10 +345,10 @@ plot_jobs_dict = {
                                         'SPlains', 'SRockies'],
                        'fcst_var_dict': {'name': 'DPT',
                                          'levels': 'Z2',
-                                         'thresh': 'NA'},
+                                         'threshs': 'NA'},
                        'obs_var_dict': {'name': 'DPT',
                                         'levels': 'Z2',
-                                        'thresh': 'NA'},
+                                        'threshs': 'NA'},
                        'interp_dict': {'method': 'BILIN',
                                        'points': '4'},
                        'obs_name': 'ADPSFC',
@@ -367,16 +367,16 @@ plot_jobs_dict = {
                                                'SPlains', 'SRockies'],
                               'fcst_var_dict': {'name': 'DPT',
                                                 'levels': 'Z2',
-                                                'thresh': ('ge277.594, '
+                                                'threshs': ('ge277.594, '
+                                                            +'ge283.15, '
+                                                            +'ge288.706, '
+                                                            +'ge294.261')},
+                              'obs_var_dict': {'name': 'DPT',
+                                               'levels': 'Z2',
+                                               'threshs': ('ge277.594, '
                                                            +'ge283.15, '
                                                            +'ge288.706, '
                                                            +'ge294.261')},
-                              'obs_var_dict': {'name': 'DPT',
-                                               'levels': 'Z2',
-                                               'thresh': ('ge277.594, '
-                                                          +'ge283.15, '
-                                                          +'ge288.706, '
-                                                          +'ge294.261')},
                               'interp_dict': {'method': 'BILIN',
                                               'points': '4'},
                               'obs_name': 'ADPSFC',
@@ -395,10 +395,10 @@ plot_jobs_dict = {
                                        'SPlains', 'SRockies'],
                       'fcst_var_dict': {'name': 'HPBL',
                                         'levels': 'L0',
-                                        'thresh': 'NA'},
+                                        'threshs': 'NA'},
                       'obs_var_dict': {'name': 'HPBL',
                                        'levels': 'L0',
-                                       'thresh': 'NA'},
+                                       'threshs': 'NA'},
                       'interp_dict': {'method': 'BILIN',
                                       'points': '4'},
                       'obs_name': 'ADPUPA',
@@ -417,10 +417,10 @@ plot_jobs_dict = {
                                       'SPlains', 'SRockies'],
                      'fcst_var_dict': {'name': 'PRMSL',
                                        'levels': 'Z0',
-                                       'thresh': 'NA'},
+                                       'threshs': 'NA'},
                      'obs_var_dict': {'name': 'PRMSL',
                                       'levels': 'Z0',
-                                      'thresh': 'NA'},
+                                      'threshs': 'NA'},
                      'interp_dict': {'method': 'BILIN',
                                      'points': '4'},
                      'obs_name': 'ADPSFC',
@@ -439,10 +439,10 @@ plot_jobs_dict = {
                                           'SPlains', 'SRockies'],
                          'fcst_var_dict': {'name': 'PRMSL',
                                            'levels': 'Z0',
-                                           'thresh': 'NA'},
+                                           'threshs': 'NA'},
                          'obs_var_dict': {'name': 'PRMSL',
                                           'levels': 'Z0',
-                                          'thresh': 'NA'},
+                                          'threshs': 'NA'},
                          'interp_dict': {'method': 'BILIN',
                                          'points': '4'},
                          'obs_name': 'ADPSFC',
@@ -461,10 +461,10 @@ plot_jobs_dict = {
                                     'SPlains', 'SRockies'],
                    'fcst_var_dict': {'name': 'TMP',
                                      'levels': 'Z2',
-                                     'thresh': 'NA'},
+                                     'threshs': 'NA'},
                    'obs_var_dict': {'name': 'TMP',
                                     'levels': 'Z2',
-                                    'thresh': 'NA'},
+                                    'threshs': 'NA'},
                    'interp_dict': {'method': 'BILIN',
                                    'points': '4'},
                    'obs_name': 'ADPSFC',
@@ -483,10 +483,10 @@ plot_jobs_dict = {
                                            'SPlains', 'SRockies'],
                           'fcst_var_dict': {'name': 'TCDC',
                                             'levels': 'TOTAL',
-                                            'thresh': 'NA'},
+                                            'threshs': 'NA'},
                           'obs_var_dict': {'name': 'TCDC',
                                            'levels': 'TOTAL',
-                                           'thresh': 'NA'},
+                                           'threshs': 'NA'},
                           'interp_dict': {'method': 'BILIN',
                                           'points': '4'},
                           'obs_name': 'ADPSFC',
@@ -505,10 +505,10 @@ plot_jobs_dict = {
                                       'SPlains', 'SRockies'],
                      'fcst_var_dict': {'name': 'UGRD',
                                        'levels': 'Z10',
-                                       'thresh': 'NA'},
+                                       'threshs': 'NA'},
                      'obs_var_dict': {'name': 'UGRD',
                                       'levels': 'Z10',
-                                      'thresh': 'NA'},
+                                      'threshs': 'NA'},
                      'interp_dict': {'method': 'BILIN',
                                      'points': '4'},
                      'obs_name': 'ADPSFC',
@@ -527,14 +527,14 @@ plot_jobs_dict = {
                                         'SPlains', 'SRockies'],
                        'fcst_var_dict': {'name': 'VIS',
                                          'levels': 'Z0',
-                                         'thresh': ('lt152.4, lt304.8, '
-                                                    +'lt914.4, ge914.4, '
-                                                    +'lt1524, lt3048')},
+                                         'threshs': ('lt152.4, lt304.8, '
+                                                     +'lt914.4, ge914.4, '
+                                                     +'lt1524, lt3048')},
                        'obs_var_dict': {'name': 'VIS',
                                         'levels': 'Z0',
-                                        'thresh': ('lt152.4, lt304.8, '
-                                                   +'lt914.4, ge914.4, '
-                                                   +'lt1524, lt3048')},
+                                        'threshs': ('lt152.4, lt304.8, '
+                                                    +'lt914.4, ge914.4, '
+                                                    +'lt1524, lt3048')},
                        'interp_dict': {'method': 'BILIN',
                                        'points': '4'},
                        'obs_name': 'ADPSFC',
@@ -553,10 +553,10 @@ plot_jobs_dict = {
                                       'SPlains', 'SRockies'],
                      'fcst_var_dict': {'name': 'VGRD',
                                        'levels': 'Z10',
-                                       'thresh': 'NA'},
+                                       'threshs': 'NA'},
                      'obs_var_dict': {'name': 'VGRD',
                                       'levels': 'Z10',
-                                      'thresh': 'NA'},
+                                      'threshs': 'NA'},
                      'interp_dict': {'method': 'BILIN',
                                      'points': '4'},
                      'obs_name': 'ADPSFC',
@@ -575,10 +575,10 @@ plot_jobs_dict = {
                                       'SPlains', 'SRockies'],
                      'fcst_var_dict': {'name': 'GUST',
                                        'levels': 'Z0',
-                                       'thresh': 'NA'},
+                                       'threshs': 'NA'},
                      'obs_var_dict': {'name': 'GUST',
                                       'levels': 'Z0',
-                                      'thresh': 'NA'},
+                                      'threshs': 'NA'},
                      'interp_dict': {'method': 'BILIN',
                                      'points': '4'},
                      'obs_name': 'ADPSFC',
@@ -597,10 +597,10 @@ plot_jobs_dict = {
                                            'SPlains', 'SRockies'],
                           'fcst_var_dict': {'name': 'UGRD_VGRD',
                                             'levels': 'Z10',
-                                             'thresh': 'NA'},
+                                             'threshs': 'NA'},
                           'obs_var_dict': {'name': 'UGRD_VGRD',
                                            'levels': 'Z10',
-                                           'thresh': 'NA'},
+                                           'threshs': 'NA'},
                           'interp_dict': {'method': 'BILIN',
                                           'points': '4'},
                           'obs_name': 'ADPSFC',

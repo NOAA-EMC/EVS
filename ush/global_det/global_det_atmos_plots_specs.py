@@ -149,7 +149,7 @@ class PlotSpecs:
             'PRMSL': 'Pressure Reduced to MSL',
             'PWAT': 'Precipitable Water',
             'RH': 'Relative Humidity',
-            'SNOD_A24': '24 hour Snow Accumulation (derived from SNOD)'
+            'SNOD_A24': '24 hour Snow Accumulation (derived from SNOD)',
             'SOILW': 'Volumetric Soil Moisture Content',
             'SPFH': 'Specific Humidity',
             'TMP': 'Temperature',
@@ -158,7 +158,7 @@ class PlotSpecs:
             'UGRD': 'U-Component of Wind',
             'UGRD_VGRD': 'Vector Wind',
             'VGRD': 'V-Component of Wind',
-            'WEASD': 'Water Equivalent of Accumulated Snow Depth'
+            'WEASD': 'Water Equivalent of Accumulated Snow Depth',
             'WEASD_A24': '24 hour Snow Accumulation (derived from WEASD)'
         }
         if var_name in list(var_name_plot_name_dict.keys()):
