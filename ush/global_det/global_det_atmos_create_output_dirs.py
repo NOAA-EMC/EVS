@@ -176,12 +176,12 @@ elif STEP == 'plots':
 for working_output_dir in working_dir_list:
     if not os.path.exists(working_output_dir):
         print("Creating workings output directory: "+working_output_dir)
-        os.makedirs(working_output_dir, mode=0o755)
+        os.makedirs(working_output_dir, mode=0o755, exist_ok=True)
 
 # Create COMROOT output directories
 for COMROOT_dir in COMROOT_dir_list:
     if not os.path.exists(COMROOT_dir):
         print("Creating COMROOT output directory: "+COMROOT_dir)
-        os.makedirs(COMROOT_dir, mode=0o755)
+        os.makedirs(COMROOT_dir, mode=0o755, exist_ok=True)
 
 print("END: "+os.path.basename(__file__))
