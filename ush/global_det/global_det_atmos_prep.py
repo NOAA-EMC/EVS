@@ -1,5 +1,5 @@
 '''
-Name: global_det_atmos_prep_prod_archive.py
+Name: global_det_atmos_prep.py
 Contact(s): Mallory Row
 Abstract: 
 '''
@@ -18,9 +18,21 @@ print("Working in: "+cwd)
 
 # Read in common environment variables
 DATA = os.environ['DATA']
-COMROOT = os.environ['COMROOT']
+COMINcmc=os.environ['COMINcmc']
+COMINcmc_precip=os.environ['COMINcmc_precip']
+COMINcmc_regional_precip=os.environ['COMINcmc_regional_precip']
+COMINdwd_precip=os.environ['COMINdwd_precip']
+COMINecmwf=os.environ['COMINecmwf']
+COMINecmwf_precip=os.environ['COMINecmwf_precip']
+COMINfnmoc=os.environ['COMINfnmoc']
+COMINimd=os.environ['COMINimd']
+COMINjma=os.environ['COMINjma']
+COMINjma_precip=os.environ['COMINjma_precip']
+COMINmetfra_precip=os.environ['COMINmetfra_precip']
+COMINukmet=os.environ['COMINukmet']
+COMINukmet_precip=os.environ['COMINukmet_precip']
+COMINosi_saf=os.environ['COMINosi_saf']
 COMOUT = os.environ['COMOUT']
-DCOMROOT = os.environ['DCOMROOT']
 INITDATE = os.environ['INITDATE']
 NET = os.environ['NET']
 RUN = os.environ['RUN']
@@ -28,9 +40,6 @@ COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
 MODELNAME = os.environ['MODELNAME'].split(' ')
 OBSNAME = os.environ['OBSNAME'].split(' ')
-gfs_ver = os.environ['gfs_ver']
-cmc_ver = os.environ['cmc_ver']
-cfs_ver = os.environ['cfs_ver']
 
 # Make COMOUT directory for dates
 COMOUT_INITDATE = COMOUT+'.'+INITDATE
@@ -39,7 +48,6 @@ if not os.path.exists(COMOUT_INITDATE):
 
 ###### MODELS
 # Get operational global deterministic model data
-# Global Forecast System - gfs
 # Japan Meteorological Agency - jma
 # European Centre for Medium-Range Weather Forecasts - ecmwf
 # Met Office (UK) - ukmet
@@ -52,156 +60,91 @@ if not os.path.exists(COMOUT_INITDATE):
 # Météo-France - metfra
 
 global_det_model_dict = {
-    'gfs': {'prod_fcst_file_format': os.path.join(COMROOT, 'gfs', gfs_ver,
-                                                  'gfs.{init?fmt=%Y%m%d}',
-                                                  '{init?fmt=%2H}',
-                                                  'atmos',
-                                                  'gfs.t{init?fmt=%2H}z.'
-                                                  +'pgrb2.0p50.'
-                                                  +'f{lead?fmt=%3H}'),
-            'prod_anl_file_format': os.path.join(COMROOT, 'gfs', gfs_ver,
-                                                 'gfs.{init?fmt=%Y%m%d}',
-                                                 '{init?fmt=%2H}',
-                                                 'atmos',
-                                                 'gfs.t{init?fmt=%2H}z.'
-                                                 +'pgrb2.0p50.anl'),
-            'prod_precip_file_format': os.path.join(COMROOT, 'gfs', gfs_ver,
-                                                    'gfs.{init?fmt=%Y%m%d}',
-                                                    '{init?fmt=%2H}',
-                                                    'atmos',
-                                                    'gfs.t{init?fmt=%2H}z.'
-                                                    +'pgrb2.0p25.'
-                                                    +'f{lead?fmt=%3H}'),
-            'cycles': ['00', '06', '12', '18'],
-            'fcst_hrs': range(0, 384+3, 3)},
-    'jma': {'prod_fcst_file_format': os.path.join(DCOMROOT,
-                                                  '{init?fmt=%Y%m%d}',
-                                                  'wgrbbul',
-                                                  'jma_{hem?fmt=str}'
-                                                  +'_{init?fmt=%H}'),
-            'prod_anl_file_format': os.path.join(DCOMROOT,
-                                                 '{init?fmt=%Y%m%d}',
-                                                 'wgrbbul',
-                                                 'jma_{hem?fmt=str}'
-                                                 +'_{init?fmt=%H}'),
-            'prod_precip_file_format': os.path.join(DCOMROOT,
-                                                    '{init?fmt=%Y%m%d}',
-                                                    'qpf_verif', 'jma_'
-                                                    +'{init?fmt=%Y%m%d%H}00'
-                                                    +'.grib'),
-            'cycles': ['00', '12'],
-            'fcst_hrs': range(0, 192+24, 24)},
-    'ecmwf': {'prod_fcst_file_format': os.path.join(DCOMROOT,
-                                                    '{init?fmt=%Y%m%d}',
-                                                    'wgrbbul', 'ecmwf',
-                                                    'U1D{init?fmt=%m%d%H}00'
-                                                    +'{valid?fmt=%m%d%H}001'),
-              'prod_anl_file_format': os.path.join(DCOMROOT,
-                                                   '{init?fmt=%Y%m%d}',
-                                                   'wgrbbul', 'ecmwf',
-                                                   'U1D{init?fmt=%m%d%H}00'
-                                                   +'{init?fmt=%m%d%H}011'),
-              'prod_precip_file_format': os.path.join(DCOMROOT,
-                                                      '{init?fmt=%Y%m%d}',
-                                                      'qpf_verif',
-                                                      'UWD{init?fmt=%Y%m%d%H%M}'
-                                                      +'{valid?fmt=%m%d%H%M}1'),
-              'cycles': ['00', '12'],
-              'fcst_hrs': range(0, 240+6, 6)},
-    'ukmet': {'prod_fcst_file_format': os.path.join(DCOMROOT,
-                                                    '{init?fmt=%Y%m%d}',
-                                                    'wgrbbul', 'ukmet_hires',
-                                                    'GAB{init?fmt=%2H}'
-                                                    +'{letter?fmt=str}.GRB'),
-              'prod_anl_file_format': os.path.join(DCOMROOT,
-                                                   '{init?fmt=%Y%m%d}',
-                                                   'wgrbbul', 'ukmet_hires',
-                                                   'GAB{init?fmt=%2H}AAT.GRB'),
-              'prod_precip_file_format': os.path.join(DCOMROOT,
-                                                      '{init?fmt=%Y%m%d}',
-                                                      'qpf_verif', 'ukmo.'
-                                                      +'{init?fmt=%Y%m%d%H}'),
-              'cycles': ['00', '12'],
-              'fcst_hrs': range(0, 144+6, 6)},
-    'imd': {'prod_fcst_file_format': os.path.join(DCOMROOT,
-                                                  '{init?fmt=%Y%m%d}',
-                                                  'wgrbbul', 'ncmrwf_gdas',
-                                                  'gdas1.t{init?fmt=%2H}z.'
-                                                  +'grbf{lead?fmt=%2H}'),
-            'prod_anl_file_format': os.path.join(DCOMROOT,
-                                                 '{init?fmt=%Y%m%d}',
-                                                 'wgrbbul', 'ncmrwf_gdas',
-                                                 'gdas1.t{init?fmt=%2H}z.'
-                                                 +'grbf00'),
-            'cycles': ['00', '12'],
-            'fcst_hrs': range(0, 240+6, 6)},
-    'cmc': {'prod_fcst_file_format': os.path.join(COMROOT, 'cmc', cmc_ver,
-                                                  'cmc.{init?fmt=%Y%m%d}',
+    'cmc': {'prod_fcst_file_format': os.path.join(COMINcmc,
                                                   'cmc_{init?fmt=%Y%m%d%H}'
                                                   +'f{lead?fmt=%3H}'),
-            'prod_anl_file_format': os.path.join(COMROOT, 'cmc', cmc_ver,
-                                                 'cmc.{init?fmt=%Y%m%d}',
+            'prod_anl_file_format': os.path.join(COMINcmc,
                                                  'cmc_{init?fmt=%Y%m%d%H}'
                                                  +'f000'),
-            'prod_precip_file_format': os.path.join(DCOMROOT,
-                                                    '{init?fmt=%Y%m%d}',
-                                                    'qpf_verif','cmcglb_'
+            'prod_precip_file_format': os.path.join(COMINcmc_precip, 'cmcglb_'
                                                     +'{init?fmt=%Y%m%d%H}_'
                                                     +'{lead_shift?fmt=%3H?'
                                                     +'shift=-24}_'
                                                     +'{lead?fmt=%3H}.grb2'),
             'cycles': ['00', '12'],
             'fcst_hrs': range(0, 240+6, 6)},
-    'cmc_regional': {'prod_precip_file_format': os.path.join(DCOMROOT,
-                                                             '{init?fmt=%Y%m%d}',
-                                                             'qpf_verif','cmc_'
+    'cmc_regional': {'prod_precip_file_format': os.path.join(COMINcmc_regional_precip,
+                                                             'cmc_'
                                                              +'{init?fmt=%Y%m%d%H}_'
                                                              +'{lead_shift?fmt=%3H?'
                                                              +'shift=-24}_'
                                                              +'{lead?fmt=%3H}'),
                      'cycles': ['00', '12'],
                      'fcst_hrs': range(24, 48+12, 12)},
-    'fnmoc': {'prod_fcst_file_format': os.path.join(DCOMROOT, 'navgem',
-                                                    'US058GMET-OPSbd2.NAVGEM'
-                                                    +'{lead?fmt=%3H}-'
-                                                    +'{init?fmt=%Y%m%d%H}-'
-                                                    +'NOAA-halfdeg.gr2'),
-              'prod_anl_file_format': os.path.join(DCOMROOT, 'navgem',
-                                                    'US058GMET-OPSbd2.NAVGEM'
-                                                    +'000-'
-                                                    +'{init?fmt=%Y%m%d%H}-'
-                                                    +'NOAA-halfdeg.gr2'),
-              'cycles': ['00', '12'],
-              'fcst_hrs': range(0, 180+6, 6)},
-    'cfs': {'prod_fcst_file_format': os.path.join(COMROOT, 'cfs', cfs_ver,
-                                                  'cfs.{init?fmt=%Y%m%d}',
-                                                  '{init?fmt=%H}',
-                                                  '6hrly_grib_01',
-                                                  'pgbf{valid?fmt=%Y%m%d%H}.01'
-                                                  +'.{init?fmt=%Y%m%d%H}'
-                                                  +'.grb2'),
-            'prod_anl_file_format': os.path.join(COMROOT, 'cfs', cfs_ver,
-                                                 'cdas.{init?fmt=%Y%m%d}',
-                                                 'cdas1.t{init?fmt=%H}z.'
-                                                 +'pgrblanl'),
-            'cycles': ['00'],
-            'fcst_hrs': range(0, 384+6, 6)},
-    'dwd': {'prod_precip_file_format': os.path.join(DCOMROOT,
-                                                    '{init?fmt=%Y%m%d}',
-                                                    'qpf_verif','dwd_'
+    'dwd': {'prod_precip_file_format': os.path.join(COMINdwd_precip, 'dwd_'
                                                     +'{init?fmt=%Y%m%d%H}_'
                                                     +'{lead_shift?fmt=%3H?'
                                                     +'shift=-24}_'
                                                     +'{lead?fmt=%3H}'),
             'cycles': ['00', '12'],
             'fcst_hrs': range(24, 72+12, 12)},
-    'metfra': {'prod_precip_file_format': os.path.join(DCOMROOT,
-                                                       '{init?fmt=%Y%m%d}',
-                                                       'qpf_verif','METFRA_'
+    'ecmwf': {'prod_fcst_file_format': os.path.join(COMINecmwf,
+                                                    'U1D{init?fmt=%m%d%H}00'
+                                                    +'{valid?fmt=%m%d%H}001'),
+              'prod_anl_file_format': os.path.join(COMINecmwf,
+                                                   'U1D{init?fmt=%m%d%H}00'
+                                                   +'{init?fmt=%m%d%H}011'),
+              'prod_precip_file_format': os.path.join(COMINecmwf_precip,
+                                                      'UWD{init?fmt=%Y%m%d%H%M}'
+                                                      +'{valid?fmt=%m%d%H%M}1'),
+              'cycles': ['00', '12'],
+              'fcst_hrs': range(0, 240+6, 6)},
+    'fnmoc': {'prod_fcst_file_format': os.path.join(COMINfnmoc,
+                                                    'US058GMET-OPSbd2.NAVGEM'
+                                                    +'{lead?fmt=%3H}-'
+                                                    +'{init?fmt=%Y%m%d%H}-'
+                                                    +'NOAA-halfdeg.gr2'),
+              'prod_anl_file_format': os.path.join(COMINfnmoc,
+                                                    'US058GMET-OPSbd2.NAVGEM'
+                                                    +'000-'
+                                                    +'{init?fmt=%Y%m%d%H}-'
+                                                    +'NOAA-halfdeg.gr2'),
+              'cycles': ['00', '12'],
+              'fcst_hrs': range(0, 180+6, 6)},
+    'imd': {'prod_fcst_file_format': os.path.join(COMINimd,
+                                                  'gdas1.t{init?fmt=%2H}z.'
+                                                  +'grbf{lead?fmt=%2H}'),
+            'prod_anl_file_format': os.path.join(COMINimd,
+                                                 'gdas1.t{init?fmt=%2H}z.'
+                                                 +'grbf00'),
+            'cycles': ['00', '12'],
+            'fcst_hrs': range(0, 240+6, 6)},
+    'jma': {'prod_fcst_file_format': os.path.join(COMINjma,
+                                                  'jma_{hem?fmt=str}'
+                                                  +'_{init?fmt=%H}'),
+            'prod_anl_file_format': os.path.join(COMINjma,
+                                                 'jma_{hem?fmt=str}'
+                                                 +'_{init?fmt=%H}'),
+            'prod_precip_file_format': os.path.join(COMINjma_precip, 'jma_'
+                                                    +'{init?fmt=%Y%m%d%H}00'
+                                                    +'.grib'),
+            'cycles': ['00', '12'],
+            'fcst_hrs': range(0, 192+24, 24)},
+    'metfra': {'prod_precip_file_format': os.path.join(COMINmetfra_precip,
+                                                       'METFRA_'
                                                        +'{init?fmt=%H}_'
                                                        +'{init?fmt=%Y%m%d}'),
                'cycles': ['00', '12'],
-               'fcst_hrs': range(24, 72+12, 12)}
+               'fcst_hrs': range(24, 72+12, 12)},
+    'ukmet': {'prod_fcst_file_format': os.path.join(COMINukmet,
+                                                    'GAB{init?fmt=%2H}'
+                                                    +'{letter?fmt=str}.GRB'),
+              'prod_anl_file_format': os.path.join(COMINukmet,
+                                                   'GAB{init?fmt=%2H}AAT.GRB'),
+              'prod_precip_file_format': os.path.join(COMINukmet_precip, 'ukmo.'
+                                                      +'{init?fmt=%Y%m%d%H}'),
+              'cycles': ['00', '12'],
+              'fcst_hrs': range(0, 144+6, 6)}
 }
 
 arch_fcst_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
@@ -252,12 +195,7 @@ for MODEL in MODELNAME:
                                                          arch_fcst_file_dir])
                              gda_util.run_shell_command(['chgrp', 'rstprod',
                                                          arch_fcst_file_dir])
-                    if MODEL == 'gfs':
-                        gda_util.prep_prod_gfs_file(prod_fcst_file,
-                                                    arch_fcst_file,
-                                                    str(fcst_hr),
-                                                    'full')
-                    elif MODEL == 'jma':
+                    if MODEL == 'jma':
                         gda_util.prep_prod_jma_file(prod_fcst_file,
                                                     arch_fcst_file,
                                                     str(fcst_hr),
@@ -307,12 +245,7 @@ for MODEL in MODELNAME:
                                  ['chgrp', 'rstprod',
                                    arch_precip_file_dir]
                              )
-                    if MODEL == 'gfs':
-                        gda_util.prep_prod_gfs_file(prod_precip_file,
-                                                    arch_precip_file,
-                                                    str(fcst_hr),
-                                                    'precip')
-                    elif MODEL == 'jma':
+                    if MODEL == 'jma':
                         gda_util.prep_prod_jma_file(prod_precip_file,
                                                     arch_precip_file,
                                                     str(fcst_hr),
@@ -369,12 +302,7 @@ for MODEL in MODELNAME:
                          gda_util.run_shell_command(['chgrp', 'rstprod',
                                                      arch_anl_file_dir])
                 print("----> Trying to create "+arch_anl_file)
-                if MODEL == 'gfs':
-                    gda_util.prep_prod_gfs_file(prod_anl_file,
-                                                arch_anl_file,
-                                                'anl',
-                                                'full')
-                elif MODEL == 'jma':
+                if MODEL == 'jma':
                     gda_util.prep_prod_jma_file(prod_anl_file,
                                                 arch_anl_file,
                                                 'anl',
@@ -401,9 +329,7 @@ for MODEL in MODELNAME:
 # Get operational observation data
 # Nortnern & Southern Hemisphere 10 km OSI-SAF multi-sensor analysis - osi_saf
 global_det_obs_dict = {
-    'osi_saf': {'prod_file_format': os.path.join('/lfs/h1/ops/dev/dcom',
-                                                 '{init?fmt=%Y%m%d}',
-                                                 'seaice', 'osisaf',
+    'osi_saf': {'prod_file_format': os.path.join(COMINosi_saf,
                                                  'ice_conc_{hem?fmt=str}_'
                                                  +'polstere-100_multi_'
                                                  +'{init?fmt=%Y%m%d%H}00.nc'),

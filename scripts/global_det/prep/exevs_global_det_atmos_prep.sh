@@ -13,10 +13,10 @@ echo
 ############################################################
 ## Global Deterministic Atmospheric Prep
 ############################################################
-python ${USHevs}/global_det/global_det_atmos_prep_prod_archive.py
+python ${USHevs}/global_det/global_det_atmos_prep.py
 status=$?
 [[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/global_det/global_det_atmos_prep_prod_archive.py"
+[[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/global_det/global_det_atmos_prep.py"
 
 if [ $SENDCOM = YES ]; then
     for mname in $MODELNAME; do

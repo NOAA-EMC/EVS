@@ -53,7 +53,21 @@ export RUN=${RUN:-atmos}
 # Define COMIN/COMOUT variables
 ####################################
 export COMIN=$COMROOT
-#export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
+export COMINcmc=${COMINcmc:-$(compath.py -o cmc/$cmc_ver/cmc.$INITDATE)}
+export COMINcmc_precip=${COMINcmc_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
+export COMINcmc_regional_precip=${COMINcmc_regional_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
+export COMINdwd_precip=${COMINdwd_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
+export COMINecmwf=${COMINecmwf:-$DCOMROOT/${INITDATE}/wgrbbul/ecmwf}
+export COMINecmwf_precip=${COMINecmwf_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
+export COMINfnmoc=${COMINfnmoc:-$DCOMROOT/navgem}
+export COMINimd=${COMINimd:-$DCOMROOT/${INITDATE}/wgrbbul/ncmrwf_gdas}
+export COMINjma=${COMINjma:-$DCOMROOT/${INITDATE}/wgrbbul}
+export COMINjma_precip=${COMINjma_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
+export COMINmetfra_precip=${COMINmetfra_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
+export COMINukmet=${COMINukmet:-$DCOMROOT/${INITDATE}/wgrbbul/ukmet_hires}
+export COMINukmet_precip=${COMINukmet_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
+export COMINosi_saf=${COMINosi_saf:-/lfs/h1/ops/dev/dcom/${INITDATE}/seaice/osisaf}
+##export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 export COMOUT=/lfs/h2/emc/vpppg/save/mallory.row/verification/global/evs_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
 mkdir -p $COMOUT.${INITDATE}
 
