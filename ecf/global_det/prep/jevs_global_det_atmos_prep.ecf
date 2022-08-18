@@ -83,6 +83,7 @@ module list
 ##export cyc=%CYC%
 export cyc=00
 
+export NET=evs
 export STEP=prep
 export COMPONENT=global_det
 export RUN=atmos
