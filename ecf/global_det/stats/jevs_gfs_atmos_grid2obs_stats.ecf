@@ -1,4 +1,4 @@
-#PBS -N jevs_global_det_atmos_grid2obs_stats_00
+#PBS -N jevs_gfs_atmos_grid2obs_stats_00
 #PBS -j oe
 #PBS -S /bin/sh
 #PBS -q dev
@@ -51,11 +51,11 @@ module load prod_util/2.0.13
 ##### load prod_envir
 ###### sets: OPSROOT, OPSROOTssd, COMROOT, DATAROOT, DCOOMROOT, PACKAGEROOT
 export envir=dev
-export COMROOT=/lfs/h2/emc/stmp/$USER/evs_output/$envir/com
-export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output/$envir/tmp
+export COMROOT=/lfs/h2/emc/vpppg/save/$USER/verification/global/evs_test/$envir/com
+export DATAROOT=/lfs/h2/emc/vpppg/save/$USER/verification/global/evs_test/$envir/tmp
 ###### define error handling
 # In prod, /apps/ops/prod/nco/core/ecflow.v5.6.0.11/include/envir-p1.h?
-export job=${PBS_JOBNAME:-jevs_global_det_atmos_grid2obs_stats}
+export job=${PBS_JOBNAME:-jevs_gfs_atmos_grid2obs_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 #export SENDCANNEDDBN=
 #export eval=
@@ -107,14 +107,23 @@ export nproc=128
 export cyc=00
 
 # Set verification information
+export NET=evs
 export STEP=stats
 export COMPONENT=global_det
 export RUN=atmos
 export VERIF_CASE=grid2obs
+export MODELNAME=gfs
 
-# Source config
-export config=$HOMEevs/parm/evs_config/global_det/config.evs.global_det_atmos.standalone
-source $config
+# Set MODELNAME COMIN/COMOUT
+export COMIN=${COMIN:-$(compath.py prod/gfs/$gfs_ver)}
+export COMINfcst=${COMINfcst:-$COMIN}
+export COMINobs=${COMINobs:-$COMIN}
+export COMOUT=${COMOUT:-$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT}
+export COMOUTsmall=${COMOUTsmall:-$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE}
+export COMOUTfinal=${COMOUTfinal:-$COMOUT/$MODELNAME.$VDATE}
+
+# Set config file
+export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
 # CALL executable job script here
 $HOMEevs/jobs/global_det/stats/JEVS_GLOBAL_DET_STATS
