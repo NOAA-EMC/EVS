@@ -778,10 +778,19 @@ elif STEP == 'plots' :
         date_dt = start_date_dt
         while date_dt <= end_date_dt:
             if date_type == 'VALID':
-                source_model_date_stat_file = os.path.join(
-                    model_evs_data_dir, 'evs_data', COMPONENT, RUN, VERIF_CASE,
-                    model, model+'_v'+date_dt.strftime('%Y%m%d')+'.stat'
-                )
+                if evs_run_mode == 'production':
+                   source_model_date_stat_file = os.path.join(
+                        model_evs_data_dir,
+                        model+'.'+date_dt.strftime('%Y%m%d'),
+                        model+'_'+RUN+'_'+VERIF_CASE+'_'
+                        'v'+date_dt.strftime('%Y%m%d')+'.stat'
+                    )
+                else:
+                    source_model_date_stat_file = os.path.join(
+                        model_evs_data_dir, 'evs_data',
+                        COMPONENT, RUN, VERIF_CASE, model,
+                        model+'_v'+date_dt.strftime('%Y%m%d')+'.stat'
+                    )
                 dest_model_date_stat_file = os.path.join(
                     VERIF_CASE_STEP_data_dir, model,
                     model+'_v'+date_dt.strftime('%Y%m%d')+'.stat'
