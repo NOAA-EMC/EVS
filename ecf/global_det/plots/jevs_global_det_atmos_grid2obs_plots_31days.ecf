@@ -29,7 +29,7 @@ versionfile=$HOMEevs/versions/run.ver
 . $versionfile
 export evs_ver=$evs_ver
 ##### set more variables
-export envir=dev
+export envir=prod
 #export MACHINE_SITE=
 export RUN_ENVIR=nco
 export SENDECF=
@@ -50,8 +50,7 @@ module load prod_util/2.0.13
 ###### sets: 
 ##### load prod_envir
 ###### sets: OPSROOT, OPSROOTssd, COMROOT, DATAROOT, DCOOMROOT, PACKAGEROOT
-export envir=dev
-export COMROOT=/lfs/h2/emc/vpppg/save/$USER/verification/global/evs_test/$envir/com
+export envir=prod
 export DATAROOT=/lfs/h2/emc/vpppg/save/$USER/verification/global/evs_test/$envir/tmp
 ###### define error handling
 # In prod, /apps/ops/prod/nco/core/ecflow.v5.6.0.11/include/envir-p1.h?

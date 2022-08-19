@@ -29,7 +29,7 @@ export RUN_GRID2OBS_PLOTS="NO"
 #model_file_format_list: file format of model files
 export model_list="$MODELNAME"
 export model_evs_data_dir_list="$COMOUTfinal"
-export model_file_format_list="$COMINfcst/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/atmos/${MODELNAME}.t{init?fmt=%2H}z.pgrb2.0p25.f{lead?fmt=%3H}"
+export model_file_format_list="$COMINgfs/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/atmos/${MODELNAME}.t{init?fmt=%2H}z.pgrb2.0p25.f{lead?fmt=%3H}"
 
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory
@@ -80,7 +80,7 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
     export g2gs_means_fhr_min=00
     export g2gs_means_fhr_max=384
     export g2gs_means_fhr_inc=24
-    export g2gs_precip_file_format_list="$COMINfcst/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/atmos/${MODELNAME}.t{init?fmt=%2H}z.pgrb2.0p25.f{lead?fmt=%3H}"
+    export g2gs_precip_file_format_list="$COMINgfs/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/atmos/${MODELNAME}.t{init?fmt=%2H}z.pgrb2.0p25.f{lead?fmt=%3H}"
     export g2gs_precip_file_accum_list="continuous"
     export g2gs_precip_var_list="APCP"
     export g2gs_precip_init_hr_list="12"
@@ -88,7 +88,7 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
     export g2gs_precip_fhr_max=384
     export g2gs_precip_fhr_inc=24
     export g2gs_pres_levs_truth_name_list="${MODELNAME}_anl"
-    export g2gs_pres_levs_truth_format_list="$COMINfcst/${MODELNAME}.{valid?fmt=%Y%m%d}/{valid?fmt=%2H}/atmos/${MODELNAME}.t{valid?fmt=%2H}z.pgrb2.0p25.anl"
+    export g2gs_pres_levs_truth_format_list="$COMINgfs/${MODELNAME}.{valid?fmt=%Y%m%d}/{valid?fmt=%2H}/atmos/${MODELNAME}.t{valid?fmt=%2H}z.pgrb2.0p25.anl"
     export g2gs_pres_levs_init_hr_list="00 06 12 18"
     export g2gs_pres_levs_valid_hr_list="00 06 12 18"
     export g2gs_pres_levs_fhr_min=00

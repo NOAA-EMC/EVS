@@ -29,7 +29,7 @@ export RUN_GRID2OBS_PLOTS="NO"
 #model_file_format_list: file format of model files
 export model_list="$MODELNAME"
 export model_evs_data_dir_list="$COMOUTfinal"
-export model_file_format_list="$COMINfcst/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/atmos/${MODELNAME}.t{init?fmt=%2H}z.pgrb2.0p25.f{lead?fmt=%3H}"
+export model_file_format_list="$COMINgfs/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/atmos/${MODELNAME}.t{init?fmt=%2H}z.pgrb2.0p25.f{lead?fmt=%3H}"
 
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory

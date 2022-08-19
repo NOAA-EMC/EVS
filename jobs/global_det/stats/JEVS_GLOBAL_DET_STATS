@@ -52,9 +52,15 @@ export RUN=${RUN:-atmos}
 ####################################
 # Define COMIN/COMOUT variables
 ####################################
-export COMIN=${COMIN:-$(compath.py $envir/$NET/$evs_ver)}
-export COMINfcst=${COMINfcst:-$(compath.py $envir/$NET/$evs_ver/prep/$COMPONENT/$RUN)}
-export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
+export COMINccpa=${COMINccpa:-$(compath.py -o ccpa/$ccpa_ver)}
+export COMINcfs=${COMINcfs:-$(compath.py -o cfs/$cfs_ver)}
+export COMINgfs=${COMINgfs:-$(compath.py gfs/$gfs_ver)}
+export COMINnohrsc=${COMINnohrsc:-$DCOMROOT/${VDATE}/wgrbbul/nohrsc_snowfall}
+export COMINobsproc=${COMINobsproc:-$(compath.py obsproc/$obsproc_ver)}
+##export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
+##export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
+export COMIN=/lfs/h2/emc/vpppg/save/mallory.row/verification/global/evs_test/$envir/com/$NET/$evs_ver
+export COMOUT=/lfs/h2/emc/vpppg/save/mallory.row/verification/global/evs_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT
 export COMOUTsmall=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
 export COMOUTfinal=$COMOUT/$MODELNAME.$VDATE
 mkdir -p $COMOUT $COMOUTsmall $COMOUTfinal
