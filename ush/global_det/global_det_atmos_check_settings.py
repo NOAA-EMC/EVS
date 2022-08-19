@@ -31,10 +31,6 @@ if evs_run_mode == 'production':
         'EXECevs', 'FIXevs', 'DATAROOT', 'COMROOT',
         'DCOMROOT', 'VERIF_CASE_STEP_abbrev'
     ]
-    if STEP == 'stats':
-        evs_global_det_atmos_settings_dict['evs'] = (
-            evs_global_det_atmos_settings_dict['evs'].append('MET_bin_exec')
-        )
 else:
     evs_global_det_atmos_settings_dict['evs'] = [
         'HOMEevs', 'config', 'NET', 'RUN', 'COMPONENT', 'STEP',
@@ -52,10 +48,7 @@ evs_global_det_atmos_settings_dict['shared'] = [
     'met_verbosity','log_met_output_to_metplus', 'KEEPDATA',
     'SENDCOM', 'SENDARCH', 'SENDMETVIEWER'
 ]
-if STEP == 'stats':
-    evs_global_det_atmos_settings_dict['modules'] = ['MET_ROOT', 'METPLUS_PATH']
-else:
-    evs_global_det_atmos_settings_dict['modules'] = []
+evs_global_det_atmos_settings_dict['modules'] = ['MET_ROOT', 'METPLUS_PATH']
 evs_global_det_atmos_settings_dict['RUN_GRID2GRID_STATS'] = [
     'g2gs_type_list', 'g2gs_mv_database_name', 'g2gs_mv_database_group',
     'g2gs_mv_database_desc'
@@ -116,12 +109,8 @@ verif_case_step_settings_dict = {
 }
 
 # Select dictionary to check
-if STEP == 'stats':
-    env_check_group_list = ['evs', 'shared', 'modules',
-                            'RUN_'+VERIF_CASE.upper()+'_'+STEP.upper()]
-else:
-     env_check_group_list = ['evs', 'shared',
-                             'RUN_'+VERIF_CASE.upper()+'_'+STEP.upper()]
+env_check_group_list = ['evs', 'shared', 'modules',
+                        'RUN_'+VERIF_CASE.upper()+'_'+STEP.upper()]
 for env_check_group in env_check_group_list:
     env_var_check_list = (
         evs_global_det_atmos_settings_dict[env_check_group]
