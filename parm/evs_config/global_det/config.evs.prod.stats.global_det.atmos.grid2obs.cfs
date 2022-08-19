@@ -29,7 +29,7 @@ export RUN_GRID2OBS_PLOTS="NO"
 #model_file_format_list: file format of model files
 export model_list="$MODELNAME"
 export model_evs_data_dir_list="$COMOUTfinal"
-export model_file_format_list="$COMINfcst/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/atmos/${MODELNAME}.t{init?fmt=%2H}z.pgrb2.0p25.f{lead?fmt=%3H}"
+export model_file_format_list="${COMINfcst}.{init?fmt=%Y%m%d}/{init?fmt=%H}/6hrly_grib_01/pgbf{valid?fmt=%Y%m%d%H}.01.{init?fmt=%Y%m%d%H}.grb2"
 
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory
@@ -60,17 +60,12 @@ if [ $RUN_GRID2OBS_STATS = YES ]; then
     #    pres_levs:  compare variables on pressure levels to GDAS prepbufr obs
     #    sea_ice:    compare Internation Arctic Buoy Program
     #    sfc:        compare surface variables to GDAS and NAM/RAP prepbufr obs
-    export g2os_type_list="pres_levs sfc"
+    export g2os_type_list="pres_levs"
     export g2os_pres_levs_init_hr_list="00 06 12 18"
     export g2os_pres_levs_valid_hr_list="00 06 12 18"
     export g2os_pres_levs_fhr_min=00
     export g2os_pres_levs_fhr_max=384
     export g2os_pres_levs_fhr_inc=6
-    export g2os_sfc_init_hr_list="00 06 12 18"
-    export g2os_sfc_valid_hr_list="00 03 06 09 12 15 18 21"
-    export g2os_sfc_fhr_min=00
-    export g2os_sfc_fhr_max=384
-    export g2os_sfc_fhr_inc=3
     export g2os_mv_database_name="mv_evs_global_det_atmos_grid2obs_stats_$MODELNAME"
     export g2os_mv_database_group="$USER"
     export g2os_mv_database_desc="Grid-to-obs METplus data for $MODELNAME"

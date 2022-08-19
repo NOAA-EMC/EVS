@@ -29,7 +29,7 @@ export RUN_GRID2OBS_PLOTS="NO"
 #model_file_format_list: file format of model files
 export model_list="$MODELNAME"
 export model_evs_data_dir_list="$COMOUTfinal"
-export model_file_format_list="$COMINfcst/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/atmos/${MODELNAME}.t{init?fmt=%2H}z.pgrb2.0p25.f{lead?fmt=%3H}"
+export model_file_format_list="${COMINfcst}.{init?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.t{init?fmt=%H}z.f{lead?fmt=%3H}"
 
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory
@@ -74,30 +74,21 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
     #g2gs_*_fhr_min:           forecast hour to start verification HH[H]
     #g2gs_*_fhr_max:           forecast hour to end verification HH[H]
     #g2gs_*_fhr_inc:           frequency to verify forecast hours at HH[H]
-    export g2gs_type_list="pres_levs precip means snow"
-    export g2gs_means_init_hr_list="00 06 12 18"
-    export g2gs_means_valid_hr_list="00 06 12 18"
-    export g2gs_means_fhr_min=00
-    export g2gs_means_fhr_max=384
-    export g2gs_means_fhr_inc=24
-    export g2gs_precip_file_format_list="$COMINfcst/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/atmos/${MODELNAME}.t{init?fmt=%2H}z.pgrb2.0p25.f{lead?fmt=%3H}"
+    export g2gs_type_list="pres_levs precip"
+    export g2gs_precip_file_format_list="${COMINfcst}.{init?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.precip.t{init?fmt=%H}z.f{lead?fmt=%3H}"
     export g2gs_precip_file_accum_list="continuous"
     export g2gs_precip_var_list="APCP"
     export g2gs_precip_init_hr_list="12"
     export g2gs_precip_fhr_min=24
-    export g2gs_precip_fhr_max=384
+    export g2gs_precip_fhr_max=72
     export g2gs_precip_fhr_inc=24
     export g2gs_pres_levs_truth_name_list="${MODELNAME}_anl"
-    export g2gs_pres_levs_truth_format_list="$COMINfcst/${MODELNAME}.{valid?fmt=%Y%m%d}/{valid?fmt=%2H}/atmos/${MODELNAME}.t{valid?fmt=%2H}z.pgrb2.0p25.anl"
-    export g2gs_pres_levs_init_hr_list="00 06 12 18"
-    export g2gs_pres_levs_valid_hr_list="00 06 12 18"
+    export g2gs_pres_levs_truth_format_list="${COMINfcst}.{valid?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.t{valid?fmt=%H}z.anl"
+    export g2gs_pres_levs_init_hr_list="00 12"
+    export g2gs_pres_levs_valid_hr_list="00 12"
     export g2gs_pres_levs_fhr_min=00
-    export g2gs_pres_levs_fhr_max=384
-    export g2gs_pres_levs_fhr_inc=6
-    export g2gs_snow_init_hr_list="12"
-    export g2gs_snow_fhr_min=24
-    export g2gs_snow_fhr_max=384
-    export g2gs_snow_fhr_inc=24
+    export g2gs_pres_levs_fhr_max=192
+    export g2gs_pres_levs_fhr_inc=12
     export g2gs_mv_database_name="mv_evs_global_det_atmos_grid2grid_stats_$MODELNAME"
     export g2gs_mv_database_group="$USER"
     export g2gs_mv_database_desc="Grid-to-grid METplus data for $MODELNAME"
