@@ -1,1 +1,82 @@
-example
+#!/bin/sh
+
+########################################
+# Preliminary data setup step
+########################################
+set -xa
+
+####################################
+# SET SHELL PROCESSING VARIABLES
+####################################
+export PS4='$SECONDS + '
+date
+
+###########################################################
+# obtain unique LSF id (jobid) and make temp directories
+###########################################################
+export pid=$$
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+mkdir -p $DATA
+cd $DATA
+
+####################################
+# Determine Job Output Name on System
+####################################
+export pgmout="OUTPUT.${pid}"
+
+####################################
+# Set EVS directories
+####################################
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
+
+####################################
+# Run setpdy and initialize PDY variables
+####################################
+export cycle=${cycle:-t${cyc}z}
+setpdy.sh ${NDAYS}
+. ./PDY
+#export plot_start=$PDYm1
+#export plot_end=$(eval echo \$PDYm$NDAYS)
+
+####################################
+# Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-plots}
+export COMPONENT=${COMPONENT:-global_det}
+export RUN=${RUN:-atmos}
+
+####################################
+# Define COMIN/COMOUT variables
+####################################
+export COMIN=$COMROOT/$NET/$evs_ver/stats/$COMPONENT
+export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE
+mkdir -p $COMOUT
+
+#######################################################################
+# Execute the script
+#######################################################################
+env
+
+if [ $RUN = atmos ]; then
+    $HOMEevs/scripts/global_det/plots/exevs_global_det_${RUN}_${VERIF_CASE}_plots.sh
+else
+    $HOMEevs/scripts/global_det/plots/exevs_global_det_${RUN}_plots.sh
+fi
+export err=$?; err_chk
+
+cat $pgmout
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATAROOT
+  rm -rf $DATA
+fi
+
+date

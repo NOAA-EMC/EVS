@@ -14,6 +14,7 @@ export VERIF_CASE_STEP_abbrev="g2op"
 # Set run mode
 if [ $RUN_ENVIR = nco ]; then
     export evs_run_mode="production"
+    source $config
 else
     export evs_run_mode=$evs_run_mode
 fi
