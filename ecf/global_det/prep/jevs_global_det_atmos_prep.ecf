@@ -39,7 +39,7 @@ export SENDCOM=YES
 #export COMPATH=
 #export MAILTO=
 #export DBNLOG=
-export KEEPDATA=YES
+export KEEPDATA=NO
 export SENDDBN=
 export SENDDBN_NTC=
 ##### load prod_util
