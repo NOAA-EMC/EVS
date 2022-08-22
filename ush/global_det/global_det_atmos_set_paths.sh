@@ -51,6 +51,11 @@ elif [ $machine = "S4" ]; then
     export METviewer_AWS_scripts_dir="/data/prod/glopara/MET_data/METviewer_AWS"
 fi
 
+# Set WCOSS2 production paths
+export COMINccpa=/lfs/h1/ops/prod/com/ccpa/$ccpa_ver
+export COMINnohrsc=/lfs/h1/ops/prod/dcom
+export COMINobsproc=/lfs/h1/ops/prod/com/obsproc/$obsproc_ver
+
 # Set FTP/HTPP paths [TEMPORARY UNTIL IN DATAFLOW]
 
 echo "END: $(basename ${BASH_SOURCE[0]})"

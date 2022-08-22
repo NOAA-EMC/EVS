@@ -64,11 +64,16 @@ export COMINimd=${COMINimd:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
 export COMINjma=${COMINjma:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
 export COMINmetfra=${COMINmetfra:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
 export COMINukmet=${COMINukmet:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
+export COMINccpa=${COMINccpa:-$(compath.py prod/ccpa/$ccpa_ver)}
+export COMINnohrsc=${COMINnohrsc:-$DCOMROOT}
+export COMINobsproc=${COMINobsproc:-$(compath.py prod/obsproc/$obsproc_ver)}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
-export COMOUTsmall=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
+export COMOUTsmallVDATE=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
+export COMOUTsmallPDYm2=$COMOUT/$RUN.$PDYm2/$MODELNAME/$VERIF_CASE
+export COMOUTccpaVDATE=$COMOUT/$RUN.$VDATE/ccpa/$VERIF_CASE
 export COMOUTfinal=$COMOUT/$MODELNAME.$VDATE
 if [ $envir = dev ]; then
-    export COMROOT=/lfs/h2/emc/vpppg/save/mallory.row/verification/global/evs_test/$envir
+    export COMROOT=/lfs/h2/emc/vpppg/save/mallory.row/verification/global/evs_test/$envir/com
     export COMIN=/lfs/h2/emc/vpppg/save/mallory.row/verification/global/evs_test/$envir/com/$NET/$evs_ver
     export COMINcmc=$COMIN/prep/$COMPONENT/$RUN
     export COMINcmc_regional=$COMIN/prep/$COMPONENT/$RUN
@@ -80,10 +85,12 @@ if [ $envir = dev ]; then
     export COMINmetfra=$COMIN/prep/$COMPONENT/$RUN
     export COMINukmet=$COMIN/prep/$COMPONENT/$RUN
     export COMOUT=/lfs/h2/emc/vpppg/save/mallory.row/verification/global/evs_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT
-    export COMOUTsmall=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
+    export COMOUTsmallVDATE=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
+    export COMOUTsmallPDYm2=$COMOUT/$RUN.$PDYm2/$MODELNAME/$VERIF_CASE
+    export COMOUTccpaVDATE=$COMOUT/$RUN.$VDATE/ccpa/$VERIF_CASE
     export COMOUTfinal=$COMOUT/$MODELNAME.$VDATE
 fi
-mkdir -p $COMOUT $COMOUTsmall $COMOUTfinal
+mkdir -p $COMOUT $COMOUTsmallVDATE $COMOUTsmallPDYm2 $COMOUTccpaVDATE $COMOUTfinal
 
 #######################################################################
 # Execute the script

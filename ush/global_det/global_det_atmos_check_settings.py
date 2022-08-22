@@ -28,7 +28,8 @@ if evs_run_mode == 'production':
         'VERIF_CASE', 'envir', 'evs_run_mode', 'job', 'jobid',
         'pid', 'OUTPUTROOT', 'DATA', 'machine', 'nproc', 'USE_CFP',
         'evs_ver', 'ccpa_ver', 'obsproc_ver', 'PARMevs', 'USHevs',
-        'EXECevs', 'FIXevs', 'DATAROOT', 'COMROOT',
+        'EXECevs', 'FIXevs', 'DATAROOT', 'COMROOT', 'COMINccpa',
+        'COMINnohrsc', 'COMINobsproc',
         'DCOMROOT', 'VERIF_CASE_STEP_abbrev'
     ]
 else:
@@ -39,7 +40,8 @@ else:
         'QUEUE', 'QUEUESHARED', 'QUEUESERV', 'PARTITION_BATCH', 'nproc',
         'USE_CFP', 'MET_bin_exec', 'evs_ver', 'ccpa_ver', 'obsproc_ver',
         'PARMevs', 'USHevs', 'EXECevs', 'FIXevs', 'archive_obs_data_dir',
-        'METviewer_AWS_scripts_dir', 'DATAROOT', 'COMROOT',
+        'METviewer_AWS_scripts_dir', 'DATAROOT', 'COMROOT', 'COMINccpa',
+        'COMINnohrsc', 'COMINobsproc',
         'VERIF_CASE_STEP_abbrev'
 ]
 evs_global_det_atmos_settings_dict['shared'] = [
