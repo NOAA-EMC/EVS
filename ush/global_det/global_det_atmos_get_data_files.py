@@ -29,9 +29,10 @@ VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
 USER = os.environ['USER']
 evs_run_mode = os.environ['evs_run_mode']
-COMINccpa = os.environ['COMINccpa']
-COMINnohrsc = os.environ['COMINnohrsc']
-COMINobsproc = os.environ['COMINobsproc']
+if STEP == 'stats':
+    COMINccpa = os.environ['COMINccpa']
+    COMINnohrsc = os.environ['COMINnohrsc']
+    COMINobsproc = os.environ['COMINobsproc']
 if evs_run_mode != 'production':
     QUEUESERV = os.environ['QUEUESERV']
     ACCOUNT = os.environ['ACCOUNT']
@@ -765,9 +766,8 @@ elif STEP == 'plots' :
         while date_dt <= end_date_dt:
             if date_type == 'VALID':
                 if evs_run_mode == 'production':
-                   source_model_date_stat_file = os.path.join(
-                        model_evs_data_dir,
-                        model+'.'+date_dt.strftime('%Y%m%d'),
+                    source_model_date_stat_file = os.path.join(
+                        model_evs_data_dir+'.'+date_dt.strftime('%Y%m%d'),
                         model+'_'+RUN+'_'+VERIF_CASE+'_'
                         'v'+date_dt.strftime('%Y%m%d')+'.stat'
                     )
