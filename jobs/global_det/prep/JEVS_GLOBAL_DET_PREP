@@ -52,7 +52,7 @@ export RUN=${RUN:-atmos}
 ####################################
 # Define COMIN/COMOUT variables
 ####################################
-export COMINcmc=${COMINcmc:-$(compath.py -o cmc/$cmc_ver/cmc.$INITDATE)}
+export COMINcmc=${COMINcmc:-$(compath.py -o prod/cmc/$cmc_ver/cmc.$INITDATE)}
 export COMINcmc_precip=${COMINcmc_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
 export COMINcmc_regional_precip=${COMINcmc_regional_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
 export COMINdwd_precip=${COMINdwd_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
