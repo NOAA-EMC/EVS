@@ -52,14 +52,30 @@ export RUN=${RUN:-atmos}
 ####################################
 # Define COMIN/COMOUT variables
 ####################################
-export COMINccpa=${COMINccpa:-$(compath.py -o ccpa/$ccpa_ver)}
-export COMINcfs=${COMINcfs:-$(compath.py -o cfs/$cfs_ver)}
-export COMINgfs=${COMINgfs:-$(compath.py gfs/$gfs_ver)}
-export COMINnohrsc=${COMINnohrsc:-$DCOMROOT/${VDATE}/wgrbbul/nohrsc_snowfall}
-export COMINobsproc=${COMINobsproc:-$(compath.py obsproc/$obsproc_ver)}
 ##export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
-##export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
+export COMINcfs=${COMINcfs:-$(compath.py -o prod/cfs/$cfs_ver)}
+export COMINgfs=${COMINgfs:-$(compath.py prod/gfs/$gfs_ver)}
+##export COMINcmc=${COMINcmc:-$(compath.py $NET/$evs_ver/prep/$COMPONENT/$RUN)}
+##export COMINcmc_regional=${COMINcmc_regional:-$(compath.py $NET/$evs_ver/prep/$COMPONENT/$RUN)}
+##export COMINdwd=${COMINdwd:-$(compath.py $NET/$evs_ver/prep/$COMPONENT/$RUN)}
+##export COMINecmwf=${COMINecmwf:-$(compath.py $NET/$evs_ver/prep/$COMPONENT/$RUN)}
+##export COMINfnmoc=${COMINfnmoc:-$(compath.py $NET/$evs_ver/prep/$COMPONENT/$RUN)}
+##export COMINimd=${COMINimd:-$(compath.py $NET/$evs_ver/prep/$COMPONENT/$RUN)}
+##export COMINjma=${COMINjma:-$(compath.py $NET/$evs_ver/prep/$COMPONENT/$RUN)}
+##export COMINmetfra=${COMINmetfra:-$(compath.py $NET/$evs_ver/prep/$COMPONENT/$RUN)}
+##export COMINukmet=${COMINukmet:-$(compath.py $NET/$evs_ver/prep/$COMPONENT/$RUN)}
+export COMROOT=/lfs/h2/emc/vpppg/save/mallory.row/verification/global/evs_test/prod
 export COMIN=/lfs/h2/emc/vpppg/save/mallory.row/verification/global/evs_test/$envir/com/$NET/$evs_ver
+export COMINcmc=${COMINcmc:-$COMIN/prep/$COMPONENT/$RUN)}
+export COMINcmc_regional=${COMINcmc_regional:-$COMIN/prep/$COMPONENT/$RUN}
+export COMINdwd=${COMINdwd:-$COMIN/prep/$COMPONENT/$RUN}
+export COMINecmwf=${COMINecmwf:-$COMIN/prep/$COMPONENT/$RUN}
+export COMINfnmoc=${COMINfnmoc:-$COMIN/prep/$COMPONENT/$RUN}
+export COMINimd=${COMINimd:-$COMIN/prep/$COMPONENT/$RUN}
+export COMINjma=${COMINjma:-$COMIN/prep/$COMPONENT/$RUN}
+export COMINmetfra=${COMINmetfra:-$COMIN/prep/$COMPONENT/$RUN}
+export COMINukmet=${COMINukmet:-$COMIN/prep/$COMPONENT/$RUN}
+##export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
 export COMOUT=/lfs/h2/emc/vpppg/save/mallory.row/verification/global/evs_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT
 export COMOUTsmall=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
 export COMOUTfinal=$COMOUT/$MODELNAME.$VDATE
