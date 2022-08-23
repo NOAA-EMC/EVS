@@ -1777,7 +1777,7 @@ def calculate_stat(logger, data_df, line_type, stat):
        elif line_type == 'VL1L2':
            stat_df = np.sqrt(UVFFBAR) - np.sqrt(UVOOBAR)
    elif stat == 'CSI': # Critical Success Index'
-       if stat == 'CTC':
+       if line_type == 'CTC':
            stat_df = FY_OY/(FY_OY + FY_ON + FN_OY)
    elif stat in ['ETS', 'GSS']: # Equitable Threat Score/Gilbert Skill Score
        if line_type == 'CTC':
