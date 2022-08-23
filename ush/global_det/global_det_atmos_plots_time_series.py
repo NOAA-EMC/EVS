@@ -146,9 +146,12 @@ class TimeSeries:
         fcst_units = all_model_df['FCST_UNITS'].values.astype('str')
         nan_idxs = np.where(fcst_units == 'nan')
         fcst_units = np.unique(np.delete(fcst_units, nan_idxs))
-        if len(fcst_units) != 1:
-            self.logger.error("Differing units, exiting")
+        if len(fcst_units) > 1:
+            self.logger.error("Differing units ")
             sys.exit(1)
+        elif len(fcst_units) == 0:
+            self.logger.warning("Empty dataframe")
+            fcst_units = ['']
         plot_title = plot_specs_ts.get_plot_title(
             self.plot_info_dict, self.date_info_dict,
             fcst_units[0]
