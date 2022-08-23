@@ -564,7 +564,7 @@ plot_jobs_dict = {
                                 'vx_mask_list': ['CONUS', 'CONUS_East',
                                                  'CONUS_West', 'CONUS_Central',
                                                  'CONUS_South'],
-                                'fcst_var_dict': {'name': 'SNOD_A24',
+                                'fcst_var_dict': {'name': 'WEASD_A24',
                                                   'levels': 'A24',
                                                   'threshs': ('ge0.0254, '
                                                               +'ge0.0508, '
