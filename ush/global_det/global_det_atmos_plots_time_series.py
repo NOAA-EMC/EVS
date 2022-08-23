@@ -309,10 +309,15 @@ class TimeSeries:
                 fontsize = plot_specs_ts.legend_font_size
             )
             plt.draw()
-            legend_box = (legend.get_window_extent() \
-                         .inverse_transformed(ax.transData))
-            if stat_min < legend_box.y1:
-                while stat_min < legend_box.y1:
+            inv = ax.transData.inverted()
+            legend_box = legend.get_window_extent()
+            legend_box_inv = inv.transform(
+                [(legend_box.x0,legend_box.y0),
+                 (legend_box.x1,legend_box.y1)]
+            )
+            legend_box_inv_y1 = legend_box_inv[1][1]
+            if stat_min < legend_box_inv_y1:
+                while stat_min < legend_box_inv_y1:
                     y_axis_min = y_axis_min - y_axis_tick_inc
                     ax.set_yticks(
                         np.arange(y_axis_min,
@@ -328,10 +333,13 @@ class TimeSeries:
                         fontsize = plot_specs_ts.legend_font_size
                     )
                     plt.draw()
-                    legend_box = (
-                        legend.get_window_extent() \
-                        .inverse_transformed(ax.transData)
+                    inv = ax.transData.inverted()
+                    legend_box = legend.get_window_extent()
+                    legend_box_inv = inv.transform(
+                         [(legend_box.x0,legend_box.y0),
+                          (legend_box.x1,legend_box.y1)]
                     )
+                    legend_box_inv_y1 = legend_box_inv[1][1]
         self.logger.info("Saving image as "+image_name)
         plt.savefig(image_name)
         plt.clf()
