@@ -56,6 +56,7 @@ plot_jobs_dict = {
                                        'threshs': 'NA'},
                       'interp_dict': {'method': 'BILIN',
                                       'points': '4'},
+                      'grid': 'G004',
                       'obs_name': 'ADPUPA',
                       'plots_list': 'time_series'},
         'RelHum': {'line_type_stat_list': ['SL1L2/BIAS',
@@ -76,6 +77,7 @@ plot_jobs_dict = {
                                     'threshs': 'NA'},
                    'interp_dict': {'method': 'BILIN',
                                    'points': '4'},
+                   'grid': 'G004',
                    'obs_name': 'ADPUPA',
                    'plots_list': 'time_series'},
         'SpefHum': {'line_type_stat_list': ['SL1L2/BIAS',
@@ -97,6 +99,7 @@ plot_jobs_dict = {
                     'interp_dict': {'method': 'BILIN',
                                     'points': '4'},
                     'obs_name': 'ADPUPA',
+                    'grid': 'G004',
                     'plots_list': 'time_series'},
         'Temp': {'line_type_stat_list': ['SL1L2/BIAS',
                                          'SL1L2/RMSE'],
@@ -116,6 +119,7 @@ plot_jobs_dict = {
                                    'threshs': 'NA'},
                   'interp_dict': {'method': 'BILIN',
                                   'points': '4'},
+                  'grid': 'G004',
                   'obs_name': 'ADPUPA',
                   'plots_list': 'time_series'},
         'UWind': {'line_type_stat_list': ['SL1L2/BIAS',
@@ -136,6 +140,7 @@ plot_jobs_dict = {
                                    'threshs': 'NA'},
                   'interp_dict': {'method': 'BILIN',
                                   'points': '4'},
+                  'grid': 'G004',
                   'obs_name': 'ADPUPA',
                   'plots_list': 'time_series'},
         'VWind': {'line_type_stat_list': ['SL1L2/BIAS',
@@ -156,6 +161,7 @@ plot_jobs_dict = {
                                    'threshs': 'NA'},
                   'interp_dict': {'method': 'BILIN',
                                   'points': '4'},
+                  'grid': 'G004',
                   'obs_name': 'ADPUPA',
                   'plots_list': 'time_series'},
         'VectorWind': {'line_type_stat_list': ['VL1L2/BIAS',
@@ -176,6 +182,7 @@ plot_jobs_dict = {
                                         'threshs': 'NA'},
                        'interp_dict': {'method': 'BILIN',
                                        'points': '4'},
+                       'grid': 'G004',
                        'obs_name': 'ADPUPA',
                        'plots_list': 'time_series'}
     },
@@ -201,6 +208,7 @@ plot_jobs_dict = {
                                             'threshs': 'NA'},
                            'interp_dict': {'method': 'BILIN',
                                            'points': '4'},
+                           'grid': 'G104',
                            'obs_name': 'ADPUPA',
                            'plots_list': 'time_series'},
         'CAPEMixedLayer_Thresh': {'line_type_stat_list': ['CTC/SRATIO',
@@ -230,6 +238,7 @@ plot_jobs_dict = {
                                                               +'ge5000')},
                                   'interp_dict': {'method': 'BILIN',
                                                   'points': '4'},
+                                  'grid': 'G104',
                                   'obs_name': 'ADPUPA',
                                   'plots_list': 'time_series'},
         'CAPESfcBased': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
@@ -252,6 +261,7 @@ plot_jobs_dict = {
                                           'threshs': 'NA'},
                          'interp_dict': {'method': 'BILIN',
                                          'points': '4'},
+                         'grid': 'G104',
                          'obs_name': 'ADPUPA',
                          'plots_list': 'time_series'},
         'CAPESfcBased_Thresh': {'line_type_stat_list': ['CTC/SRATIO',
@@ -281,6 +291,7 @@ plot_jobs_dict = {
                                                             +'ge5000')},
                                 'interp_dict': {'method': 'BILIN',
                                                 'points': '4'},
+                                'grid': 'G104',
                                 'obs_name': 'ADPUPA',
                                 'plots_list': 'time_series'},
         'Ceiling': {'line_type_stat_list': ['CTC/FBIAS', 'CTC/ETS'],
@@ -307,6 +318,7 @@ plot_jobs_dict = {
                                                  +'ge8046.72, lt16093.44')},
                     'interp_dict': {'method': 'BILIN',
                                     'points': '4'},
+                    'grid': 'G104',
                     'obs_name': 'ADPSFC',
                     'plots_list': 'time_series'},
         'DailyAvg_TempAnom2m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
@@ -329,6 +341,7 @@ plot_jobs_dict = {
                                                  'threshs': 'NA'},
                                 'interp_dict': {'method': 'BILIN',
                                                 'points': '4'},
+                                'grid': 'G104',
                                 'obs_name': 'ADPSFC',
                                 'plots_list': 'time_series'},
         'Dewpoint2m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
@@ -351,6 +364,7 @@ plot_jobs_dict = {
                                         'threshs': 'NA'},
                        'interp_dict': {'method': 'BILIN',
                                        'points': '4'},
+                       'grid': 'G104',
                        'obs_name': 'ADPSFC',
                        'plots_list': 'time_series'},
         'Dewpoint2m_Thresh': {'line_type_stat_list': ['CTC/FBIAS'],
@@ -379,6 +393,7 @@ plot_jobs_dict = {
                                                            +'ge294.261')},
                               'interp_dict': {'method': 'BILIN',
                                               'points': '4'},
+                              'grid': 'G104',
                               'obs_name': 'ADPSFC',
                               'plots_list': 'time_series'},
         'PBLHeight': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
@@ -401,6 +416,7 @@ plot_jobs_dict = {
                                        'threshs': 'NA'},
                       'interp_dict': {'method': 'BILIN',
                                       'points': '4'},
+                      'grid': 'G104',
                       'obs_name': 'ADPUPA',
                       'plots_list': 'time_series'},
         'RelHum2m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
@@ -423,6 +439,7 @@ plot_jobs_dict = {
                                       'threshs': 'NA'},
                      'interp_dict': {'method': 'BILIN',
                                      'points': '4'},
+                     'grid': 'G104',
                      'obs_name': 'ADPSFC',
                      'plots_list': 'time_series'},
         'SeaLevelPres': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
@@ -445,6 +462,7 @@ plot_jobs_dict = {
                                           'threshs': 'NA'},
                          'interp_dict': {'method': 'BILIN',
                                          'points': '4'},
+                         'grid': 'G104',
                          'obs_name': 'ADPSFC',
                          'plots_list': 'time_series'},
         'Temp2m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
@@ -467,6 +485,7 @@ plot_jobs_dict = {
                                     'threshs': 'NA'},
                    'interp_dict': {'method': 'BILIN',
                                    'points': '4'},
+                   'grid': 'G104',
                    'obs_name': 'ADPSFC',
                    'plots_list': 'time_series'},
         'TotCloudCover': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
@@ -489,6 +508,7 @@ plot_jobs_dict = {
                                            'threshs': 'NA'},
                           'interp_dict': {'method': 'BILIN',
                                           'points': '4'},
+                          'grid': 'G104',
                           'obs_name': 'ADPSFC',
                           'plots_list': 'time_series'},
         'UWind10m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
@@ -511,6 +531,7 @@ plot_jobs_dict = {
                                       'threshs': 'NA'},
                      'interp_dict': {'method': 'BILIN',
                                      'points': '4'},
+                     'grid': 'G104',
                      'obs_name': 'ADPSFC',
                      'plots_list': 'time_series'},
         'Visibility': {'line_type_stat_list': ['CTC/FBIAS', 'CTC/ETS'],
@@ -537,6 +558,7 @@ plot_jobs_dict = {
                                                     +'lt1524, lt3048')},
                        'interp_dict': {'method': 'BILIN',
                                        'points': '4'},
+                       'grid': 'G104',
                        'obs_name': 'ADPSFC',
                        'plots_list': 'time_series'},
         'VWind10m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
@@ -559,6 +581,7 @@ plot_jobs_dict = {
                                       'threshs': 'NA'},
                      'interp_dict': {'method': 'BILIN',
                                      'points': '4'},
+                     'grid': 'G104',
                      'obs_name': 'ADPSFC',
                      'plots_list': 'time_series'},
         'WindGust': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
@@ -581,6 +604,7 @@ plot_jobs_dict = {
                                       'threshs': 'NA'},
                      'interp_dict': {'method': 'BILIN',
                                      'points': '4'},
+                     'grid': 'G104',
                      'obs_name': 'ADPSFC',
                      'plots_list': 'time_series'},
         'VectorWind10m': {'line_type_stat_list': ['VL1L2/RMSE', 'VL1L2/BIAS'],
@@ -603,6 +627,7 @@ plot_jobs_dict = {
                                            'threshs': 'NA'},
                           'interp_dict': {'method': 'BILIN',
                                           'points': '4'},
+                          'grid': 'G104',
                           'obs_name': 'ADPSFC',
                           'plots_list': 'time_series'}
     }
@@ -637,8 +662,6 @@ for verif_type in VERIF_CASE_STEP_type_list:
             "'"+verif_type_plot_jobs_dict[verif_type_job]\
             ['plots_list']+"'"
         )
-        if verif_type == 'pres_levs':
-            job_env_dict['grid'] = 'G004'
         for data_name in ['fcst', 'obs']:
             job_env_dict[data_name+'_var_name'] =  (
                 verif_type_plot_jobs_dict[verif_type_job]\
@@ -660,6 +683,10 @@ for verif_type in VERIF_CASE_STEP_type_list:
             verif_type_plot_jobs_dict[verif_type_job]\
             ['interp_dict']['points']
         +"'")
+        job_env_dict['grid'] = (
+            verif_type_plot_jobs_dict[verif_type_job]\
+            ['grid']
+        )
         for line_type_stat \
                 in verif_type_plot_jobs_dict[verif_type_job]\
                 ['line_type_stat_list']:
