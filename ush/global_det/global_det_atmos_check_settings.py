@@ -43,10 +43,8 @@ else:
         'VERIF_CASE_STEP_abbrev'
 ]
 if STEP.upper() == 'STATS':
-    evs_global_det_atmos_settings_dict['evs'] = (
-        evs_global_det_atmos_settings_dict['evs'].extend(
+    evs_global_det_atmos_settings_dict['evs'].extend(
             ['COMINccpa', 'COMINnohrsc', 'COMINobsproc']
-        )
     )
 evs_global_det_atmos_settings_dict['shared'] = [
     'model_list', 'model_evs_data_dir_list', 'model_file_format_list',
