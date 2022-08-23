@@ -1805,7 +1805,11 @@ def calculate_stat(logger, data_df, line_type, stat):
        elif line_type == 'VL1L2':
            stat_df = np.sqrt(UVFFBAR + UVOOBAR - 2*UVFOBAR)
    elif stat == 'S1': # S1
-       stat_df = S1
+       if line_type == 'GRAD':
+           stat_df = S1
+   elif stat == 'SRATIO': # Success Ratio
+       if line_type == 'CTC':
+           stat_df = 1 - (FY_ON/(FY_ON + FY_OY))
    else:
         logger.error(stat+" IS NOT AN OPTION")
         sys.exit(1)
