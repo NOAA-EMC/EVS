@@ -1776,6 +1776,9 @@ def calculate_stat(logger, data_df, line_type, stat):
            stat_df = ME
        elif line_type == 'VL1L2':
            stat_df = np.sqrt(UVFFBAR) - np.sqrt(UVOOBAR)
+   elif stat == 'CSI': # Critical Success Index'
+       if stat == 'CTC':
+           stat_df = FY_OY/(FY_OY + FY_ON + FN_OY)
    elif stat in ['ETS', 'GSS']: # Equitable Threat Score/Gilbert Skill Score
        if line_type == 'CTC':
            TOTAL = FY_OY + FY_ON + FN_OY + FN_ON
@@ -1797,6 +1800,9 @@ def calculate_stat(logger, data_df, line_type, stat):
    elif stat == 'FY_OY': # Forecast Yes/Obs Yes
        if line_type == 'CTC':
            stat_df = FY_OY
+   elif stat == 'POD': # Probability of Detection
+       if line_type == 'CTC':
+           stat_df = FY_OY/(FY_OY + FN_OY)
    elif stat == 'RMSE': # Root Mean Square Error
        if line_type == 'SL1L2':
            stat_df = np.sqrt(FFBAR + OOBAR - 2*FOBAR)
