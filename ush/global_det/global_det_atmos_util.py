@@ -1340,8 +1340,9 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
             +plot_info_dict['obs_var_level']
             +plot_info_dict['obs_var_thresh']+'_'
             +'linetype'+plot_info_dict['line_type']+'_'
+            +'grid'+plot_info_dict['grid']+'_'
             +'vxmask'+plot_info_dict['vx_mask']+'_'
-            +'interp_'+plot_info_dict['interp_method']
+            +'interp'+plot_info_dict['interp_method']
             +plot_info_dict['interp_points']+'_'
             +date_info_dict['date_type'].lower()
             +dates[0].strftime('%Y%m%d%H%M%S')+'to'
