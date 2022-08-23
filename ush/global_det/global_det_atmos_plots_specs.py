@@ -167,11 +167,11 @@ class PlotSpecs:
             self.logger.debug(f"{var_name} not recognized, "
                               +f"using {var_name} on plot")
             var_name_plot_name = var_name
-        if 'A' in var_level:
+        if var_level[0] == 'A':
             var_level_plot_name = ''
-        elif 'P' in var_level:
+        elif var_level[0] == 'P':
             var_level_plot_name = var_level.replace('P', '')+' hPa'
-        elif 'Z' in var_level:
+        elif var_level[0] == 'Z':
             if var_level == 'Z0':
                 if var_name in ['WEASD', 'PRMSL']:
                     var_level_plot_name = ''
@@ -185,8 +185,8 @@ class PlotSpecs:
             var_level_plot_name = ''
         else:
             self.logger.debug(f"{var_level} not recognized, "
-                              +f"using {var_level} on plot")
-            var_level_plot_name = var_level
+                              +f"using {var_level.title()} on plot")
+            var_level_plot_name = var_level.title()
         var_plot_name = var_level_plot_name+' '+var_name_plot_name
         return var_plot_name
 
