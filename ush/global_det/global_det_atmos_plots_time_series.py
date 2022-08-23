@@ -145,7 +145,7 @@ class TimeSeries:
         )
         fcst_units = all_model_df['FCST_UNITS'].values.astype('str')
         nan_idxs = np.where(fcst_units == 'nan')
-        fcst_units = np.delete(fcst_units, nan_idxs)
+        fcst_units = np.unique(np.delete(fcst_units, nan_idxs))
         if len(fcst_units) != 1:
             self.logger.error("Differing units, exiting")
             sys.exit(1)
