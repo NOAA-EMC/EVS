@@ -384,40 +384,45 @@ class PlotSpecs:
             date_type_start_hr = date_info_dict['init_hr_start']
             date_type_end_hr = date_info_dict['init_hr_end']
         savefig_name = plot_info_dict['stat']+'_'
-        if self.plot_type == 'time_series':
-            if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
-                savefig_name = (
-                    savefig_name
-                    +plot_info_dict['fcst_var_name']+'_'
-                    +plot_info_dict['interp_method']+'_'
-                )
-            else:
-                savefig_name = (
-                    savefig_name
-                    +plot_info_dict['fcst_var_name']+'_'
-                )
+        if plot_info_dict['interp_method'] == 'NBRHD_SQUARE':
             savefig_name = (
                 savefig_name
+                +plot_info_dict['interp_method']
+                +plot_info_dict['interp_points']+'_'
+            )
+        if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
+            savefig_name = (
+                savefig_name
+                +plot_info_dict['fcst_var_name']+'_'
+                +plot_info_dict['interp_method']+'_'
                 +plot_info_dict['fcst_var_level']+'_'
-                +plot_info_dict['grid']
-                +plot_info_dict['vx_mask']+'_'
             )
-            if plot_info_dict['interp_method'] == 'NBRHD_SQUARE':
-                savefig_name = (
-                    savefig_name
-                    +plot_info_dict['interp_method']
-                    +plot_info_dict['interp_points']+'_'
-                )
+        else:
             savefig_name = (
                 savefig_name
-                +date_info_dict['date_type'].lower()
-                +date_info_dict['start_date']
-                +date_type_start_hr+'to'
-                +date_info_dict['end_date']
-                +date_type_end_hr+'_'
-                +'fhr'+date_info_dict['forecast_hour'].zfill(3)
-                +'.png'
+                +plot_info_dict['fcst_var_name']+'_'
+                +plot_info_dict['fcst_var_level']+'_'
             )
+        if plot_info_dict['fcst_var_thresh'] != 'NA':
+            savefig_name = (
+                savefig_name
+                +plot_info_dict['fcst_var_thresh']+'_'
+            )
+        savefig_name = (
+            savefig_name
+            +plot_info_dict['grid']
+            +plot_info_dict['vx_mask']+'_'
+        )
+        savefig_name = (
+            savefig_name
+            +date_info_dict['date_type'].lower()
+            +date_info_dict['start_date']
+            +date_type_start_hr+'to'
+            +date_info_dict['end_date']
+            +date_type_end_hr+'_'
+            +'fhr'+date_info_dict['forecast_hour'].zfill(3)
+            +'.png'
+        )
         image_path = os.path.join(image_dir, savefig_name)
         return image_path
 
