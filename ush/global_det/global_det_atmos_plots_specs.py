@@ -105,14 +105,17 @@ class PlotSpecs:
         stat_plot_name_dict = {
             'ACC': 'Anomaly Correlation Coefficient',
             'BIAS': 'Bias',
+            'CSI': 'Critical Success Index',
             'ETS': 'Equitable Threat Score',
             'FBAR': 'Forecast Mean',
             'FBIAS': 'Frequency Bias',
             'FSS': 'Fraction Skill Score',
             'FY_OY': 'Forecast Yes - Obs Yes',
             'GSS': 'Gilbert Skill Score',
+            'POD': 'Probability of Detection',
             'RMSE': 'Root Mean Square Error',
-            'S1': 'S1'
+            'S1': 'S1',
+            'SRATIO': 'Success Ratio (1-FAR)'
         }
         if stat in list(stat_plot_name_dict.keys()):
             stat_plot_name = stat_plot_name_dict[stat]
