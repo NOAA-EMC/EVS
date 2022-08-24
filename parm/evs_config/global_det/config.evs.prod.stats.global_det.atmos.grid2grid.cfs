@@ -29,7 +29,7 @@ export RUN_GRID2OBS_PLOTS="NO"
 #model_file_format_list: file format of model files
 export model_list="$MODELNAME"
 export model_evs_data_dir_list="$COMOUTfinal"
-export model_file_format_list="${COMINcfs}.{init?fmt=%Y%m%d}/{init?fmt=%H}/6hrly_grib_01/pgbf{valid?fmt=%Y%m%d%H}.01.{init?fmt=%Y%m%d%H}.grb2"
+export model_file_format_list="${COMINcfs}/${MODELNAME}.{init?fmt=%Y%m%d}/{init?fmt=%H}/6hrly_grib_01/pgbf{valid?fmt=%Y%m%d%H}.01.{init?fmt=%Y%m%d%H}.grb2"
 
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory
@@ -76,7 +76,7 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
     #g2gs_*_fhr_inc:           frequency to verify forecast hours at HH[H]
     export g2gs_type_list="pres_levs"
     export g2gs_pres_levs_truth_name_list="cdas_anl"
-    export g2gs_pres_levs_truth_format_list="${COMINcfs}.{valid?fmt=%Y%m%d}/cdas1.t{valid?fmt=%H}z.pgrblanl"
+    export g2gs_pres_levs_truth_format_list="${COMINcfs}/cdas.{valid?fmt=%Y%m%d}/cdas1.t{valid?fmt=%H}z.pgrblanl"
     export g2gs_pres_levs_init_hr_list="00 06 12 18"
     export g2gs_pres_levs_valid_hr_list="00 06 12 18"
     export g2gs_pres_levs_fhr_min=00
