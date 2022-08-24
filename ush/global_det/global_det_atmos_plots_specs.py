@@ -136,61 +136,172 @@ class PlotSpecs:
                                  will be displayed on the plot
                                  (string)
         """
-        var_name_plot_name_dict = {
-            'APCP_A24': '24 hour Accumulated Precipitation',
-            'CAPE': 'CAPE',
-            'CWAT': 'Cloud Water',
-            'HGT': 'Geopotential Height',
-            'HGT_ANOM': 'Geopotential Height Anomaly',
-            'HGT_DECOMP_WV1_0-3': 'Geopotential Height: Waves 0-3',
-            'HGT_DECOMP_WV1_4-9': 'Geopotential Height: Waves 4-9',
-            'HGT_DECOMP_WV1_10-20': 'Geopotential Height: Waves 10-20',
-            'HGT_DECOMP_WV1_0-20': 'Geopotential Height: Waves 0-20',
-            'HPBL': 'Planetary Boundary Layer Height',
-            'O3MR': 'Ozone Mixing Ratio',
-            'PRES': 'Pressure',
-            'PRMSL': 'Pressure Reduced to MSL',
-            'PWAT': 'Precipitable Water',
-            'RH': 'Relative Humidity',
-            'SNOD_A24': '24 hour Snow Accumulation (derived from SNOD)',
-            'SOILW': 'Volumetric Soil Moisture Content',
-            'SPFH': 'Specific Humidity',
-            'TMP': 'Temperature',
+        var_name_level = var_name+'/'+var_level
+        var_plot_name_dict = {
+            'APCP_A24/A24': '24 hour Accumulated Precipitation',
+            'CAPE/Z0': 'Surface Based CAPE',
+            'CEILING/L0': 'Ceiling',
+            'CWAT/L0': 'Cloud Water',
+            'DPT/Z2': '2 meter Dewpoint',
+            'HGT/P1': '1 hPa Geopotential Height',
+            'HGT/P5': '5 hPa Geopotential Height',
+            'HGT/P10': '10 hPa Geopotential Height',
+            'HGT/P20': '20 hPa Geopotential Height',
+            'HGT/P50': '50 hPa Geopotential Height',
+            'HGT/P100': '100 hPa Geopotential Height',
+            'HGT/P150': '150 hPa Geopotential Height',
+            'HGT/P200': '200 hPa Geopotential Height',
+            'HGT/P250': '250 hPa Geopotential Height',
+            'HGT/P300': '300 hPa Geopotential Height',
+            'HGT/P400': '400 hPa Geopotential Height',
+            'HGT/P500': '500 hPa Geopotential Height',
+            'HGT/P700': '700 hPa Geopotential Height',
+            'HGT/P850': '850 hPa Geopotential Height',
+            'HGT/P925': '925 hPa Geopotential Height',
+            'HGT/P1000': '1000 hPa Geopotential Height',
+            'HGT/TROPOPAUSE': 'Tropopause Geopotential Height',
+            'HGT_ANOM/P500': '500 hPa Geopotential Height Anomaly',
+            'HGT_DECOMP_WV1_0-3/P500': ('500 hPa Geopotential Height: '
+                                        +'Waves 0-3'),
+            'HGT_DECOMP_WV1_0-20/P500': ('500 hPa Geopotential Height: '
+                                         +'Waves 0-20'),
+            'HGT_DECOMP_WV1_4-9/P500': ('500 hPa Geopotential Height: '
+                                        +'Waves 4-9'),
+            'HGT_DECOMP_WV1_10-20/P500': ('500 hPa Geopotential Height: '
+                                          +'Waves 10-20'), 
+            'HPBL/L0': 'Planetary Boundary Layer Height',
+            'MLCAPE/P90-0': 'Mixed-Layer CAPE',
+            'O3MR/P1': '1 hPa Ozone Mixing Ratio',
+            'O3MR/P5': '5 hPa Ozone Mixing Ratio',
+            'O3MR/P10': '10 hPa Ozone Mixing Ratio',
+            'O3MR/P20': '20 hPa Ozone Mixing Ratio',
+            'O3MR/P30': '30 hPa Ozone Mixing Ratio',
+            'O3MR/P50': '50 hPa Ozone Mixing Ratio',
+            'O3MR/P70': '70 hPa Ozone Mixing Ratio',
+            'O3MR/P100': '100 hPa Ozone Mixing Ratio',
+            'PWAT/L0': 'Precipitable Water',
+            'PRES/Z0': 'Surface Pressure',
+            'PRMSL/Z0': 'Pressure Reduced to MSL',
+            'RH/P1': '1 hPa Relative Humidity',
+            'RH/P5': '5 hPa Relative Humidity',
+            'RH/P10': '10 hPa Relative Humidity',
+            'RH/P20': '20 hPa Relative Humidity',
+            'RH/P50': '50 hPa Relative Humidity',
+            'RH/P100': '100 hPa Relative Humidity',
+            'RH/P150': '150 hPa Relative Humidity',
+            'RH/P200': '200 hPa Relative Humidity',
+            'RH/P250': '250 hPa Relative Humidity',
+            'RH/P300': '300 hPa Relative Humidity',
+            'RH/P400': '400 hPa Relative Humidity',
+            'RH/P500': '500 hPa Relative Humidity',
+            'RH/P700': '700 hPa Relative Humidity',
+            'RH/P850': '850 hPa Relative Humidity',
+            'RH/P925': '925 hPa Relative Humidity',
+            'RH/P1000': '1000 hPa Relative Humidity',
+            'RH/Z2': '2 meter Relative Humidity',
+            'SNOD_A24/Z0': '24 hour Snow Accumulation (derived from SNOD)',
+            'SOILW/Z0.1-0': '0.1-0 meter Volumetric Soil Moisture Content',
+            'SPFH/P1': '1 hPa Specific Humidity',
+            'SPFH/P5': '5 hPa Specific Humidity',
+            'SPFH/P10': '10 hPa Specific Humidity',
+            'SPFH/P20': '20 hPa Specific Humidity',
+            'SPFH/P50': '50 hPa Specific Humidity',
+            'SPFH/P100': '100 hPa Specific Humidity',
+            'SPFH/P150': '150 hPa Specific Humidity',
+            'SPFH/P200': '200 hPa Specific Humidity',
+            'SPFH/P250': '250 hPa Specific Humidity',
+            'SPFH/P300': '300 hPa Specific Humidity',
+            'SPFH/P400': '400 hPa Specific Humidity',
+            'SPFH/P500': '500 hPa Specific Humidity',
+            'SPFH/P700': '700 hPa Specific Humidity',
+            'SPFH/P850': '850 hPa Specific Humidity',
+            'SPFH/P925': '925 hPa Specific Humidity',
+            'SPFH/P1000': '1000 hPa Specific Humidity',
+            'SPFH/Z2': '2 meter Specific Humidity',
+            'TCDC/TOTAL': 'Total Cloud Cover',
+            'TMP/P1': '1 hPa Temperature',
+            'TMP/P5': '5 hPa Temperature',
+            'TMP/P10': '10 hPa Temperature',
+            'TMP/P20': '20 hPa Temperature',
+            'TMP/P50': '50 hPa Temperature',
+            'TMP/P100': '100 hPa Temperature',
+            'TMP/P150': '150 hPa Temperature',
+            'TMP/P100': '100 hPa Temperature',
+            'TMP/P200': '200 hPa Temperature',
+            'TMP/P250': '250 hPa Temperature',
+            'TMP/P300': '300 hPa Temperature',
+            'TMP/P400': '400 hPa Temperature',
+            'TMP/P500': '500 hPa Temperature',
+            'TMP/P700': '700 hPa Temperature',
+            'TMP/P850': '850 hPa Temperature',
+            'TMP/P925': '925 hPa Temperature',
+            'TMP/P1000': '1000 hPa Temperature',
+            'TMP/TROPOPAUSE': 'Tropopause Temperature',
+            'TMP/Z2': '2 meter Temperature',
+            'TMP_ANOM/Z2': '2 meter Temperature Anomaly',
             'TOZNE': 'Total Ozone',
-            'TSOIL': 'Soil Temperature',
-            'UGRD': 'U-Component of Wind',
-            'UGRD_VGRD': 'Vector Wind',
-            'VGRD': 'V-Component of Wind',
-            'WEASD': 'Water Equivalent of Accumulated Snow Depth',
-            'WEASD_A24': '24 hour Snow Accumulation (derived from WEASD)'
+            'TSOIL/Z0.1-0': '0.1-0 meter Soil Temperature',
+            'UGRD/P1': '1 hPa U-Component of Wind',
+            'UGRD/P5': '5 hPa U-Component of Wind',
+            'UGRD/P10': '10 hPa U-Component of Wind',
+            'UGRD/P20': '20 hPa U-Component of Wind',
+            'UGRD/P50': '50 hPa U-Component of Wind',
+            'UGRD/P100': '100 hPa U-Component of Wind',
+            'UGRD/P150': '150 hPa U-Component of Wind',
+            'UGRD/P200': '200 hPa U-Component of Wind',
+            'UGRD/P250': '250 hPa U-Component of Wind',
+            'UGRD/P300': '300 hPa U-Component of Wind',
+            'UGRD/P400': '400 hPa U-Component of Wind',
+            'UGRD/P500': '500 hPa U-Component of Wind',
+            'UGRD/P700': '700 hPa U-Component of Wind',
+            'UGRD/P850': '850 hPa U-Component of Wind',
+            'UGRD/P925': '925 hPa U-Component of Wind',
+            'UGRD/P1000': '1000 hPa U-Component of Wind',
+            'UGRD/Z10': '10 meter U-Component of Wind',
+            'UGRD_VGRD/P1': '1 hPa Vector Wind',
+            'UGRD_VGRD/P5': '5 hPa Vector Wind',
+            'UGRD_VGRD/P10': '10 hPa Vector Wind',
+            'UGRD_VGRD/P20': '20 hPa Vector Wind',
+            'UGRD_VGRD/P50': '50 hPa Vector Wind',
+            'UGRD_VGRD/P100': '100 hPa Vector Wind',
+            'UGRD_VGRD/P150': '150 hPa Vector Wind',
+            'UGRD_VGRD/P200': '200 hPa Vector Wind',
+            'UGRD_VGRD/P250': '250 hPa Vector Wind',
+            'UGRD_VGRD/P300': '300 hPa Vector Wind',
+            'UGRD_VGRD/P400': '400 hPa Vector Wind',
+            'UGRD_VGRD/P500': '500 hPa Vector Wind',
+            'UGRD_VGRD/P700': '700 hPa Vector Wind',
+            'UGRD_VGRD/P850': '850 hPa Vector Wind',
+            'UGRD_VGRD/P925': '925 hPa Vector Wind',
+            'UGRD_VGRD/P1000': '1000 hPa Vector Wind',
+            'VIS/Z0': 'Visibility',
+            'VGRD/P1': '1 hPa V-Component of Wind',
+            'VGRD/P5': '5 hPa V-Component of Wind',
+            'VGRD/P10': '10 hPa V-Component of Wind',
+            'VGRD/P20': '20 hPa V-Component of Wind',
+            'VGRD/P50': '50 hPa V-Component of Wind',
+            'VGRD/P100': '100 hPa V-Component of Wind',
+            'VGRD/P150': '150 hPa V-Component of Wind',
+            'VGRD/P200': '200 hPa V-Component of Wind',
+            'VGRD/P250': '250 hPa V-Component of Wind',
+            'VGRD/P300': '300 hPa V-Component of Wind',
+            'VGRD/P400': '400 hPa V-Component of Wind',
+            'VGRD/P500': '500 hPa V-Component of Wind',
+            'VGRD/P700': '700 hPa V-Component of Wind',
+            'VGRD/P850': '850 hPa V-Component of Wind',
+            'VGRD/P925': '925 hPa V-Component of Wind',
+            'VGRD/P1000': '1000 hPa V-Component of Wind',
+            'VGRD/Z10': '10 meter V-Component of Wind',
+            'WEASD/Z0': 'Water Equivalent of Accumulated Snow Depth',
+            'WEASD_A24/Z0': '24 hour Snow Accumulation (derived from WEASD)',
+            'WIND': 'Wind Gust'
         }
-        if var_name in list(var_name_plot_name_dict.keys()):
-            var_name_plot_name = var_name_plot_name_dict[var_name]
+        if var_name_level in list(var_plot_name_dict.keys()):
+            var_plot_name = var_plot_name_dict[var_name_level]
         else:
-            self.logger.debug(f"{var_name} not recognized, "
-                              +f"using {var_name} on plot")
-            var_name_plot_name = var_name
-        if var_level[0] == 'A':
-            var_level_plot_name = ''
-        elif var_level[0] == 'P':
-            var_level_plot_name = var_level.replace('P', '')+' hPa'
-        elif var_level[0] == 'Z':
-            if var_level == 'Z0':
-                if var_name in ['WEASD', 'PRMSL']:
-                    var_level_plot_name = ''
-                elif var_name == 'CAPE':
-                    var_level_plot_name = 'Surface Based'
-                else:
-                    var_level_plot_name = 'Surface'
-            else:
-                var_level_plot_name = var_level.replace('Z', '')+' meter'
-        elif var_level == 'L0':
-            var_level_plot_name = ''
-        else:
-            self.logger.debug(f"{var_level} not recognized, "
-                              +f"using {var_level.title()} on plot")
-            var_level_plot_name = var_level.title()
-        var_plot_name = var_level_plot_name+' '+var_name_plot_name
+            self.logger.debug(f"{var_name_level} not recognized, "
+                              +f"using {var_name_level} on plot")
+            var_plot_name = var_name_level
         return var_plot_name
 
     def get_vx_mask_plot_name(self, vx_mask):
@@ -333,15 +444,19 @@ class PlotSpecs:
             if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
                 plot_title = (
                     plot_title
-                    +self.get_var_plot_name(plot_info_dict['fcst_var_name']
-                                            +'_'+plot_info_dict['interp_method'],
-                                            plot_info_dict['fcst_var_level'])
+                    +self.get_var_plot_name(
+                        plot_info_dict['fcst_var_name']
+                        +'_'+plot_info_dict['interp_method'],
+                        plot_info_dict['fcst_var_level']
+                    )
                 )
             else:
                 plot_title = (
                     plot_title
-                    +self.get_var_plot_name(plot_info_dict['fcst_var_name'],
-                                            plot_info_dict['fcst_var_level'])
+                    +self.get_var_plot_name(
+                        plot_info_dict['fcst_var_name'],
+                        plot_info_dict['fcst_var_level']
+                    )
                 )
             plot_title = (
                 plot_title+' '
