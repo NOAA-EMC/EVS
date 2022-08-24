@@ -541,13 +541,13 @@ plot_jobs_dict = {
                                               'CONUS_West', 'CONUS_Central',
                                               'CONUS_South'],
                              'fcst_var_dict': {'name': 'SNOD_A24',
-                                               'levels': 'A24',
+                                               'levels': 'Z0',
                                                'threshs': ('ge0.0254, '
                                                            +'ge0.0508, '
                                                            +'ge0.1016, '
                                                            +'ge0.2032, '
                                                            +'ge0.3048')},
-                             'obs_var_dict': {'name': 'ASNOW_A24',
+                             'obs_var_dict': {'name': 'ASNOW',
                                               'levels': 'A24',
                                               'threshs': ('ge0.0254, '
                                                           +'ge0.0508, '
@@ -565,13 +565,13 @@ plot_jobs_dict = {
                                                  'CONUS_West', 'CONUS_Central',
                                                  'CONUS_South'],
                                 'fcst_var_dict': {'name': 'WEASD_A24',
-                                                  'levels': 'A24',
+                                                  'levels': 'Z0',
                                                   'threshs': ('ge0.0254, '
                                                               +'ge0.0508, '
                                                               +'ge0.1016, '
                                                               +'ge0.2032, '
                                                               +'ge0.3048')},
-                                'obs_var_dict': {'name': 'ASNOW_A24',
+                                'obs_var_dict': {'name': 'ASNOW',
                                                  'levels': 'A24',
                                                  'threshs': ('ge0.0254, '
                                                              +'ge0.0508, '
@@ -589,13 +589,13 @@ plot_jobs_dict = {
                                                     'CONUS_Central',
                                                     'CONUS_South'],
                                    'fcst_var_dict': {'name': 'SNOD_A24',
-                                                     'levels': 'A24',
+                                                     'levels': 'Z0',
                                                      'threshs': ('ge0.0254, '
                                                                  +'ge0.0508, '
                                                                  +'ge0.1016, '
                                                                  +'ge0.2032, '
                                                                  +'ge0.3048')},
-                                   'obs_var_dict': {'name': 'SNOD_A24',
+                                   'obs_var_dict': {'name': 'ASNOW',
                                                     'levels': 'A24',
                                                     'threshs': ('ge0.0254, '
                                                                 +'ge0.0508, '
@@ -625,13 +625,13 @@ plot_jobs_dict = {
                                                        'CONUS_Central',
                                                        'CONUS_South'],
                                       'fcst_var_dict': {'name': 'WEASD_A24',
-                                                        'levels': 'A24',
+                                                        'levels': 'Z0',
                                                         'threshs': ('ge0.0254, '
                                                                     +'ge0.0508, '
                                                                     +'ge0.1016, '
                                                                     +'ge0.2032, '
                                                                     +'ge0.3048')},
-                                      'obs_var_dict': {'name': 'ASNOW_A24',
+                                      'obs_var_dict': {'name': 'ASNOW',
                                                        'levels': 'A24',
                                                        'threshs': ('ge0.0254, '
                                                                    +'ge0.0508, '
