@@ -51,7 +51,7 @@ module load prod_util/2.0.13
 ##### load prod_envir
 ###### sets: OPSROOT, OPSROOTssd, COMROOT, DATAROOT, DCOOMROOT, PACKAGEROOT
 export envir=dev
-export DATAROOT=/lfs/h2/emc/vpppg/save/$USER/verification/global/evs_test/$envir/tmp
+export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 ###### define error handling
 # In prod, /apps/ops/prod/nco/core/ecflow.v5.6.0.11/include/envir-p1.h?
 export job=${PBS_JOBNAME:-jevs_imd_atmos_grid2grid_stats}
