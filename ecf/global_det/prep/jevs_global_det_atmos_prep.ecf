@@ -88,7 +88,7 @@ export STEP=prep
 export COMPONENT=global_det
 export RUN=atmos
 
-export MODELNAME="cmc cmc_regional dwd ecmwf fnmoc imd jma metfra ukmet"
+export MODELNAME="cfs cmc cmc_regional dwd ecmwf fnmoc imd jma metfra ukmet"
 export OBSNAME="osi_saf"
 
 # CALL executable job script here

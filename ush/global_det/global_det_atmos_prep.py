@@ -18,20 +18,21 @@ print("Working in: "+cwd)
 
 # Read in common environment variables
 DATA = os.environ['DATA']
-COMINcmc=os.environ['COMINcmc']
-COMINcmc_precip=os.environ['COMINcmc_precip']
-COMINcmc_regional_precip=os.environ['COMINcmc_regional_precip']
-COMINdwd_precip=os.environ['COMINdwd_precip']
-COMINecmwf=os.environ['COMINecmwf']
-COMINecmwf_precip=os.environ['COMINecmwf_precip']
-COMINfnmoc=os.environ['COMINfnmoc']
-COMINimd=os.environ['COMINimd']
-COMINjma=os.environ['COMINjma']
-COMINjma_precip=os.environ['COMINjma_precip']
-COMINmetfra_precip=os.environ['COMINmetfra_precip']
-COMINukmet=os.environ['COMINukmet']
-COMINukmet_precip=os.environ['COMINukmet_precip']
-COMINosi_saf=os.environ['COMINosi_saf']
+COMINcfs = os.environ['COMINcfs']
+COMINcmc = os.environ['COMINcmc']
+COMINcmc_precip = os.environ['COMINcmc_precip']
+COMINcmc_regional_precip = os.environ['COMINcmc_regional_precip']
+COMINdwd_precip = os.environ['COMINdwd_precip']
+COMINecmwf = os.environ['COMINecmwf']
+COMINecmwf_precip = os.environ['COMINecmwf_precip']
+COMINfnmoc = os.environ['COMINfnmoc']
+COMINimd = os.environ['COMINimd']
+COMINjma = os.environ['COMINjma']
+COMINjma_precip = os.environ['COMINjma_precip']
+COMINmetfra_precip = os.environ['COMINmetfra_precip']
+COMINukmet = os.environ['COMINukmet']
+COMINukmet_precip = os.environ['COMINukmet_precip']
+COMINosi_saf = os.environ['COMINosi_saf']
 COMOUT = os.environ['COMOUT']
 INITDATE = os.environ['INITDATE']
 NET = os.environ['NET']
@@ -48,6 +49,7 @@ if not os.path.exists(COMOUT_INITDATE):
 
 ###### MODELS
 # Get operational global deterministic model data
+# Climate Forecast System - cfs
 # Japan Meteorological Agency - jma
 # European Centre for Medium-Range Weather Forecasts - ecmwf
 # Met Office (UK) - ukmet
@@ -60,6 +62,14 @@ if not os.path.exists(COMOUT_INITDATE):
 # Météo-France - metfra
 
 global_det_model_dict = {
+    'cfs': {'prod_fcst_file_format': os.path.join(COMINcfs,
+                                                  '{init?fmt=%H}',
+                                                  '6hrly_grib_01',
+                                                  'pgbf{valid?fmt=%Y%m%d%H}.01'
+                                                  +'.{init?fmt=%Y%m%d%H}'
+                                                  +'.grb2'),
+            'cycles': ['00', '06', '12', '18'],
+            'fcst_hrs': range(0, 384+6, 6)},
     'cmc': {'prod_fcst_file_format': os.path.join(COMINcmc,
                                                   'cmc_{init?fmt=%Y%m%d%H}'
                                                   +'f{lead?fmt=%3H}'),
