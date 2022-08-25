@@ -440,7 +440,7 @@ generate_jobs_dict = {
                             'var1_obs_name': 'CEILING',
                             'var1_obs_levels': 'L0',
                             'var1_obs_options': '',
-                            'var1_thresh_list': ("'lt804.672, lt1609.344, '"
+                            'var1_thresh_list': ("'lt804.672, lt1609.344, "
                                                  +"lt4828.032, lt8046.72, "
                                                  +"ge8046.72, lt16093.44'"),
                             'met_config_overrides': ''},
@@ -727,33 +727,33 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 +FIXevs+"/masks/G004_NHEM.nc, "
                 +FIXevs+"/masks/G004_SHEM.nc, "
                 +FIXevs+"/masks/G004_TROPICS.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_CONUS.nc'"
+                +FIXevs+"/masks/Bukovsky_G004_CONUS.nc'"
             )
         elif verif_type == 'sfc':
             job_env_dict['grid'] = 'G104'
             job_env_dict['mask_list'] = (
-                "'/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_CONUS.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_CONUS_East.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_CONUS_West.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_CONUS_South.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_CONUS_Central.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_Appalachia.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_CPlains.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_DeepSouth.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_GreatBasin.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_GreatLakes.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_Mezquital.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_MidAtlantic.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_NorthAtlantic.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_NPlains.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_NRockies.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_PacificNW.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_PacificSW.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_Prairie.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_Southeast.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_Southwest.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_SPlains.nc, "
-                +"/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_SRockies.nc'"
+                "'"+FIXevs+"/masks/Bukovsky_G104_CONUS.nc, "
+                +FIXevs+"/masks/Bukovsky_G104_CONUS_East.nc, "
+                +FIXevs+"/masks/Bukovsky_G104_CONUS_West.nc, "
+                +FIXevs+"/masks/Bukovsky_G104_CONUS_South.nc, "
+                +FIXevs+"/masks/Bukovsky_G104_CONUS_Central.nc, "
+                +FIXevs+"/masks/Bukovsky_G104_Appalachia.nc, "
+                +FIXevs+"/masks/Bukovsky_G104_CPlains.nc, "
+                +FIXevs+"/masks/Bukovsky_G104_DeepSouth.nc, "
+                +FIXevs+"/masks/Bukovsky_G104_GreatBasin.nc, "
+                +FIXevs+"/masks/Bukovsky_G104_GreatLakes.nc, "
+                +FIXevs+"/masks/Bukovsky_G104_Mezquital.nc, "
+                +FIXevs+"/masks/Bukovsky_G104_MidAtlantic.nc, "
+                +FIXevs+"/masks/Bukovsky_G104_NorthAtlantic.nc, "
+                +FIXevs+"/masks/Bukovsky_G104_NPlains.nc, "
+                +FIXevs+"/masks/Bukovsky_G104_NRockies.nc, "
+                +FIXevs+"/masks/Bukovsky_G104_PacificNW.nc, "
+                +FIXevs+"/masks/Bukovsky_G104_PacificSW.nc, "
+                +FIXevs+"/masks/Bukovsky_G104_Prairie.nc, "
+                +FIXevs+"/masks/Bukovsky_G104_Southeast.nc, "
+                +FIXevs+"/masks/Bukovsky_G104_Southwest.nc, "
+                +FIXevs+"/masks/Bukovsky_G104_SPlains.nc, "
+                +FIXevs+"/masks/Bukovsky_G104_SRockies.nc'"
             )
         # Loop through and write job script for dates and models
         date_dt = start_date_dt
