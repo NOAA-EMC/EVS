@@ -688,6 +688,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
             job_env_dict['obs_name'] = (
                 verif_type_plot_jobs_dict[verif_type_job]['obs_name']
             )
+        job_env_dict['event_equalization'] = (
+            os.environ[VERIF_CASE_STEP_abbrev+'_event_equalization']
+        )
         job_env_dict['start_date'] = start_date
         job_env_dict['end_date'] = end_date
         job_env_dict['date_type'] = 'VALID'

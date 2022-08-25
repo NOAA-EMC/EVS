@@ -1007,7 +1007,7 @@ def initalize_job_env_dict(verif_type, group,
              'COMROOT']
         )
     elif group == 'plot':
-        job_env_var_list.extend(['MET_ROOT', 'met_ver', ])
+        job_env_var_list.extend(['MET_ROOT', 'met_ver'])
     job_env_dict = {}
     for env_var in job_env_var_list:
         job_env_dict[env_var] = os.environ[env_var]
@@ -1063,27 +1063,23 @@ def initalize_job_env_dict(verif_type, group,
             job_env_dict['valid_hr_start'] = str(valid_hr_start)
             job_env_dict['valid_hr_end'] = str(valid_hr_end)
             job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
-    if group == 'plot':
-        verif_type_init_hr_list = (
-            os.environ[verif_case_step_abbrev_type+'_init_hr_list']\
-            .split(' ')
+    verif_type_init_hr_list = (
+        os.environ[verif_case_step_abbrev_type+'_init_hr_list']\
+        .split(' ')
+    )
+    job_env_dict['init_hr_start'] = (
+        verif_type_init_hr_list[0].zfill(2)
+    )
+    job_env_dict['init_hr_end'] = (
+        verif_type_init_hr_list[-1].zfill(2)
+    )
+    if len(verif_type_init_hr_list) > 1:
+        verif_type_init_hr_inc = np.min(
+            np.diff(np.array(verif_type_init_hr_list, dtype=int))
         )
-        job_env_dict['init_hr_start'] = (
-            verif_type_init_hr_list[0].zfill(2)
-        )
-        job_env_dict['init_hr_end'] = (
-            verif_type_init_hr_list[-1].zfill(2)
-        )
-        if len(verif_type_init_hr_list) > 1:
-            verif_type_init_hr_inc = np.min(
-                np.diff(np.array(verif_type_init_hr_list, dtype=int))
-            )
-        else:
-            verif_type_init_hr_inc = 24
-        job_env_dict['init_hr_inc'] = str(verif_type_init_hr_inc)
-        job_env_dict['event_equalization'] = os.environ[
-            verif_case_step_abbrev_type[0:4]+'_event_equalization'
-        ]
+    else:
+        verif_type_init_hr_inc = 24
+    job_env_dict['init_hr_inc'] = str(verif_type_init_hr_inc)
     return job_env_dict
 
 def get_plot_dates(logger, date_type, start_date, end_date,
