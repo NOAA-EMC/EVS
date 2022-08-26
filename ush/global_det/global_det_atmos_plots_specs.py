@@ -139,6 +139,7 @@ class PlotSpecs:
         var_name_level = var_name+'/'+var_level
         var_plot_name_dict = {
             'APCP_A24/A24': '24 hour Accumulated Precipitation',
+            'CAPE/P90-0': 'Mixed-Layer CAPE',
             'CAPE/Z0': 'Surface Based CAPE',
             'CEILING/L0': 'Ceiling',
             'CWAT/L0': 'Cloud Water',
@@ -170,7 +171,6 @@ class PlotSpecs:
             'HGT_DECOMP_WV1_10-20/P500': ('500 hPa Geopotential Height: '
                                           +'Waves 10-20'), 
             'HPBL/L0': 'Planetary Boundary Layer Height',
-            'MLCAPE/P90-0': 'Mixed-Layer CAPE',
             'O3MR/P1': '1 hPa Ozone Mixing Ratio',
             'O3MR/P5': '5 hPa Ozone Mixing Ratio',
             'O3MR/P10': '10 hPa Ozone Mixing Ratio',

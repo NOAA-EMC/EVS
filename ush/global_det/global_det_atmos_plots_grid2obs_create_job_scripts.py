@@ -200,7 +200,7 @@ plot_jobs_dict = {
                                             'PacificSW', 'Prairie',
                                             'Southeast', 'Southwest', 'SPlains',
                                             'SRockies'],
-                           'fcst_var_dict': {'name': 'MLCAPE',
+                           'fcst_var_dict': {'name': 'CAPE',
                                              'levels': 'P90-0',
                                              'threshs': 'gt0||'},
                            'obs_var_dict': {'name': 'MLCAPE',
@@ -224,7 +224,7 @@ plot_jobs_dict = {
                                                    'PacificSW', 'Prairie',
                                                    'Southeast', 'Southwest',
                                                    'SPlains', 'SRockies'],
-                                  'fcst_var_dict': {'name': 'MLCAPE',
+                                  'fcst_var_dict': {'name': 'CAPE',
                                                     'levels': 'P90-0',
                                                     'threshs': ('ge500, ge1000, '
                                                                +'ge1500, ge2000, '
