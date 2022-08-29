@@ -78,3 +78,23 @@ else
     done
 fi
 
+# Tar up images
+cd ${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/images
+tar -cvf ${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/plots_${COMPONENT}_${RUN}_grid2obs.tar *
+cd $DATA
+
+# Copy files to desired location
+if [ $SENDCOM = YES ]; then
+    # Copy tar file
+    cp -v ${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/plots_${COMPONENT}_${RUN}_grid2obs.tar $COMOUT/. 
+fi
+
+# Non-production jobs
+if [ $evs_run_mode != "production" ]; then
+    # Clean up
+    if [ $KEEPDATA != "YES" ] ; then
+        cd $DATAROOT
+        rm -rf $DATA
+    fi
+fi
+

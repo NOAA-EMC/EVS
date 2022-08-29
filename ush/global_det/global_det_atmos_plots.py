@@ -11,6 +11,7 @@ import datetime
 import glob
 import subprocess
 import itertools
+import shutil
 import global_det_atmos_util as gda_util
 
 print("BEGIN: "+os.path.basename(__file__))
@@ -73,7 +74,9 @@ logo_dir = os.path.join(FIXevs, 'logos')
 VERIF_CASE_STEP_dir = os.path.join(DATA, VERIF_CASE_STEP)
 stat_base_dir = os.path.join(VERIF_CASE_STEP_dir, 'data')
 plot_output_dir = os.path.join(VERIF_CASE_STEP_dir, 'plot_output')
-logging_dir = os.path.join(plot_output_dir, 'logs')
+logging_dir = os.path.join(plot_output_dir, RUN+'.'+end_date, 'logs')
+VERIF_TYPE_image_dir = os.path.join(plot_output_dir, RUN+'.'+end_date,
+                                    'images', VERIF_TYPE)
 job_output_dir = os.path.join(plot_output_dir, RUN+'.'+end_date,
                               VERIF_TYPE,job_name.replace('/','_'))
 if not os.path.exists(job_output_dir):
@@ -211,5 +214,14 @@ for plot in plots_list:
                                          model_info_dict, date_info_dict,
                                          plot_info_dict, met_info_dict, logo_dir)
             plot_ts.make_time_series()
+
+# Copy images from job directory to main image directory
+job_output_image_dir = os.path.join(job_output_dir, 'images')
+if len(glob.glob(job_output_image_dir+'/*')) != 0:
+    for job_output_image in glob.glob(job_output_image_dir+'/*'):
+        logger.debug(f"Copying {job_output_image} to {VERIF_TYPE_image_dir}")
+        shutil.copy2(job_output_image, VERIF_TYPE_image_dir)            
+else:
+    logger.warning(f"No images generated in {job_output_image_dir}")
 
 print("END: "+os.path.basename(__file__))

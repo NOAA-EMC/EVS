@@ -158,15 +158,30 @@ elif STEP == 'plots':
                                            'plot_output')
     working_dir_list.append(working_output_base_dir)
     working_dir_list.append(
-        os.path.join(working_output_base_dir, 'images')
-    )
-    working_dir_list.append(
-        os.path.join(working_output_base_dir, 'logs')
-    )
-    working_dir_list.append(
         os.path.join(working_output_base_dir,
                      RUN+'.'+end_date_dt.strftime('%Y%m%d'))
     )
+    working_dir_list.append(
+        os.path.join(working_output_base_dir,
+                     RUN+'.'+end_date_dt.strftime('%Y%m%d'),
+                     'images')
+    )
+    working_dir_list.append(
+        os.path.join(working_output_base_dir,
+                     RUN+'.'+end_date_dt.strftime('%Y%m%d'),
+                     'logs')
+    )
+    for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
+        working_dir_list.append(
+            os.path.join(working_output_base_dir,
+                         RUN+'.'+end_date_dt.strftime('%Y%m%d'),
+                         'images', VERIF_CASE_STEP_type)
+        )
+        working_dir_list.append(
+            os.path.join(working_output_base_dir,
+                         RUN+'.'+end_date_dt.strftime('%Y%m%d'),
+                         VERIF_CASE_STEP_type)
+        )
     COMROOT_dir_list.append(
         os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
                      RUN+'.'+end_date_dt.strftime('%Y%m%d'))
