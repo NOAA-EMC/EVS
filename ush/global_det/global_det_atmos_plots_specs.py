@@ -141,9 +141,10 @@ class PlotSpecs:
             'APCP_A24/A24': '24 hour Accumulated Precipitation',
             'CAPE/P90-0': 'Mixed-Layer CAPE',
             'CAPE/Z0': 'Surface Based CAPE',
-            'CEILING/L0': 'Ceiling',
             'CWAT/L0': 'Cloud Water',
             'DPT/Z2': '2 meter Dewpoint',
+            'GUST/Z0': 'Wind Gust',
+            'HGT/CEILING': 'Ceiling',
             'HGT/P1': '1 hPa Geopotential Height',
             'HGT/P5': '5 hPa Geopotential Height',
             'HGT/P10': '10 hPa Geopotential Height',
@@ -274,6 +275,7 @@ class PlotSpecs:
             'UGRD_VGRD/P850': '850 hPa Vector Wind',
             'UGRD_VGRD/P925': '925 hPa Vector Wind',
             'UGRD_VGRD/P1000': '1000 hPa Vector Wind',
+            'UGRD_VGRD/Z10': '10 meter Vector Wind',
             'VIS/Z0': 'Visibility',
             'VGRD/P1': '1 hPa V-Component of Wind',
             'VGRD/P5': '5 hPa V-Component of Wind',
@@ -293,8 +295,7 @@ class PlotSpecs:
             'VGRD/P1000': '1000 hPa V-Component of Wind',
             'VGRD/Z10': '10 meter V-Component of Wind',
             'WEASD/Z0': 'Water Equivalent of Accumulated Snow Depth',
-            'WEASD_A24/Z0': '24 hour Snow Accumulation (derived from WEASD)',
-            'WIND': 'Wind Gust'
+            'WEASD_A24/Z0': '24 hour Snow Accumulation (derived from WEASD)'
         }
         if var_name_level in list(var_plot_name_dict.keys()):
             var_plot_name = var_plot_name_dict[var_name_level]
