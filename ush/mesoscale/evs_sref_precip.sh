@@ -26,6 +26,7 @@ for  obsv in ccpa ; do
     $USHevs/mesoscale/evs_prepare_sref.sh  sref_apcp06
   fi
 
+
   for fhr in fhr1 fhr2 ; do
   
        >run_sref_mpi_${domain}.${obsv}.${fhr}.sh
@@ -34,7 +35,6 @@ for  obsv in ccpa ; do
 
    
        echo  "export obsvhead=$obsv" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-       echo  "export obsvgrid=grid212" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
        echo  "export obsvpath=$WORK" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
        echo  "export vbeg=03" >>run_sref_mpi_${domain}.${obsv}.${fhr}.sh
        echo  "export vend=21" >>run_sref_mpi_${domain}.${obsv}.${fhr}.sh
@@ -59,18 +59,29 @@ for  obsv in ccpa ; do
        echo  "export extradir=''" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
 
     else
-       echo  "export modelpath=$COMSREF" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+       echo  "export modelpath=$COMINsref" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
        echo  "export modelgrid=pgrb212" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
        echo  "export modeltail='.grib2'" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
        echo  "export extradir=''" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
 
     fi
        if [ $obsv = ndas ] ; then 
+
          echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/EnsembleStat_fcstSREF_obsModelAnalysis.conf " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+
        elif [ $obsv = ccpa  ] ; then
-         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/EnsembleStat_fcstSREF_obsCCPA.conf " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstSREF_obsCCPA_mean.conf " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstSREF_obsCCPA_prob.conf " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+
+	 echo  "export grid=G212"  >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh      
+	 echo  "export obsvgrid=grid212" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/EnsembleStat_fcstSREF_obsCCPA_G212.conf " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstSREF_obsCCPA_mean_G212.conf " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstSREF_obsCCPA_prob_G212.conf " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+
+	 echo  "export obsvgrid=grid240" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+	 echo  "export grid=G240"  >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+	 echo  "export regrid=OBS" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+	 echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstSREF_obsCCPA_mean_G240.conf " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+
        else
          exit
        fi

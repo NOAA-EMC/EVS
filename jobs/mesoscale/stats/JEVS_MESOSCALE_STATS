@@ -11,10 +11,15 @@ export SENDECF=${SENDECF:-YES}
 
 export cycle=t${cyc}z 
 
-export COMIN=${COMIN:-$COMROOT}
-export COMOUT=${COMOUT:-$COMROOT/${NET}/${evs_ver}/$STEP/$COMPONENT}
+export COMIN=${COMIN:-$(compath.py  $NET/$evs_ver)}
+export COMINsref=${COMINsref:-$(compath.py  sref/$sref_ver)}
+export COMINprepbufr=${COMINprepbufr:-$(compath.py  obsproc/${obsproc_ver})}
+export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
+
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}/$STEP/$COMPONENT
 export DATA_IN=${DATA_IN:-$DATAROOT}
 mkdir -p $COMOUT
+
 
 export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}

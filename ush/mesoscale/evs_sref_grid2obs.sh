@@ -29,8 +29,7 @@ for  obsv in prepbufr ; do
        echo  "export obsvhead=$obsv" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo  "export obsvgrid=grid212" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo  "export obsvpath=$WORK" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
-       #echo  "export vbeg=0" >>run_sref_g2o_${domain}.${obsv}.${fhr}.sh
-       echo  "export vbeg=18" >>run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo  "export vbeg=0" >>run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo  "export vend=18" >>run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo  "export valid_increment=21600" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        if [ $fhr = fhr1 ] ; then
@@ -45,7 +44,7 @@ for  obsv in prepbufr ; do
        echo  "export regrid=NONE " >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo  "export modelhead=sref" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
     
-       echo  "export modelpath=$COMSREF" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo  "export modelpath=$COMINsref" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo  "export modelgrid=pgrb212" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo  "export modeltail='.grib2'" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo  "export extradir=''" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh

@@ -18,9 +18,6 @@ export met_verbosity=2
 export run_mpi=${run_mpi:-'yes'}
 export gather=${gather:-'yes'}
 
-
-export COMSREF=$COMIN/sref/${sref_ver}
-export PREPBUFR=$COMIN/obsproc/${obsproc_ver}
 export GRID2OBS_CONF=$PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}
 export MET_CONFIG=${METPLUS_BASE}/parm/met_config
 export maskpath=$MASKS
