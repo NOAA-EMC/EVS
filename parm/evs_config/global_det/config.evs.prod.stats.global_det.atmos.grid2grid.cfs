@@ -76,7 +76,7 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
     #g2gs_*_fhr_inc:           frequency to verify forecast hours at HH[H]
     export g2gs_type_list="pres_levs"
     export g2gs_pres_levs_truth_name_list="gfs_anl"
-    export g2gs_pres_levs_truth_format_list="$COMINgfs/gfs.{valid?fmt=%Y%m%d}/{valid?fmt=%2H}/atmos/${MODELNAME}.t{valid?fmt=%2H}z.pgrb2.0p25.anl"
+    export g2gs_pres_levs_truth_format_list="$COMINgfs/gfs.{valid?fmt=%Y%m%d}/{valid?fmt=%2H}/atmos/gfs.t{valid?fmt=%2H}z.pgrb2.0p25.anl"
     export g2gs_pres_levs_init_hr_list="00 06 12 18"
     export g2gs_pres_levs_valid_hr_list="00 06 12 18"
     export g2gs_pres_levs_fhr_min=00
