@@ -10,6 +10,7 @@
 %include <head.h>
 %include <envir-p1.h>
 
+export envir=prod
 export model=evs
 %include <model_ver.h>
 

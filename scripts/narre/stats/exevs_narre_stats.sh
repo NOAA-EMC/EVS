@@ -22,8 +22,6 @@ export gather=${gather:-'yes'}
 msg="$job HAS BEGUN"
 postmsg "$jlogfile" "$msg"
 
-export COMNARRE=$COMIN/narre/${narre_ver}
-export PREPBUFR=$COMIN/obsproc/${obsproc_ver}
 export GRID2OBS_CONF=$PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}
 export MET_CONFIG=${METPLUS_BASE}/parm/met_config
 export maskpath=$MASKS

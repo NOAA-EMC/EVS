@@ -18,8 +18,11 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
-export COMIN=${COMIN:-$COMROOT}
-export COMOUT=${COMOUT:-$COMROOT/$NET/${evs_ver}/$STEP/$COMPONENT}
+
+export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}
+export COMINnarre=${COMIN:-$(compath.py  $envir/com/narre/$narre_ver)}
+export COMINobs=${COMINobs:-$(compath.py  $envir/com/obsproc/$obsproc_ver)}
+export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/${evs_ver})}/${STEP}/${COMPONENT}
 mkdir -p $COMOUT
 
 export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}

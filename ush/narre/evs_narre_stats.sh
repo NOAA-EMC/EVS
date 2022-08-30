@@ -91,7 +91,7 @@ for prod in mean  ; do
        echo  "export MODEL=NARRE_${PROD}" >> run_narre_${model}.${dom}.${range}.sh
        echo  "export regrid=NONE" >> run_narre_${model}.${dom}.${range}.sh
        echo  "export modelhead=$model" >> run_narre_${model}.${dom}.${range}.sh
-       echo  "export modelpath=$COMNARRE" >> run_narre_${model}.${dom}.${range}.sh
+       echo  "export modelpath=$COMINnarre" >> run_narre_${model}.${dom}.${range}.sh
        echo  "export modeltail='.grib2'" >> run_narre_${model}.${dom}.${range}.sh
        echo  "export extradir='ensprod/'" >> run_narre_${model}.${dom}.${range}.sh
 
