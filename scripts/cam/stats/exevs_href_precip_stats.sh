@@ -17,9 +17,11 @@ export gather=${gather:-'yes'}
 export verify='precip'
 #export sys=$verify
 
-export COMHREF=$COMIN/href/${href_ver}
-export COMCCPA=$COMIN/ccpa/${ccpa_ver}
-export COMSNOW=$DCOMROOT
+export COMHREF=$COMINhref
+export COMCCPA=$COMINccpa
+export COMSNOW=$COMINsnow
+export COMMRMS=$COMINmrms
+
 export PRECIP_CONF=$PARMevs/metplus_config/$COMPONENT/precip/$STEP
 export SNOWFALL_CONF=$PARMevs/metplus_config/$COMPONENT/snowfall/$STEP
 export GATHER_CONF_PRECIP=$PRECIP_CONF
@@ -33,7 +35,7 @@ postmsg "$jlogfile" "$msg"
 
 
 if [ $prepare = yes ] ; then
- for precip in ccpa01h03h ccpa24h apcp24h ; do
+ for precip in ccpa01h03h ccpa24h apcp24h_conus mrms03h mrms24h apcp24h_alaska ; do
   $USHevs/cam/evs_href_preppare.sh  $precip
  done
 fi
@@ -55,7 +57,7 @@ if [ -s run_all_precip_poe.sh ]  ; then
 
   if [ $run_mpi = yes ] ; then
     export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-    mpiexec  -n 20 -ppn 20 --cpu-bind core --depth=2 cfp run_all_precip_poe.sh
+    mpiexec  -n 30 -ppn 30 --cpu-bind core --depth=2 cfp run_all_precip_poe.sh
   else
    sh run_all_precip_poe.sh
   fi

@@ -12,8 +12,15 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
-export COMIN=${COMIN:-$COMROOT}
-export COMOUT=${COMOUT:-${COMROOT}/${NET}/${evs_ver}/$STEP/$COMPONENT}
+export COMIN=${COMIN:-$(compath.py  $NET/$evs_ver)}
+export COMINhref=${COMINhref:-$(compath.py  href/$href_ver)}
+export COMINprepbufr=${COMINprepbufr:-$(compath.py  obsproc/${obsproc_ver})}
+export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
+export COMINsnow=$DCOMROOT
+export COMINmrms=$DCOMROOT/ldmdata/obs/upperair/mrms/alaska/MultiSensorQPE
+
+
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}/$STEP/$COMPONENT
 export DATA_IN=${DATA_IN:-$DATAROOT}
 mkdir -p $COMOUT
 
@@ -32,7 +39,8 @@ export MASKS=${MASKS:-$FIXevs/masks}
 
 export pid=$$
 
-jobid=evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$
+#jobid=evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$
+jobid=evs_${MODELNAME}_${VERIF_CASE}_${STEP}.test
 export DATA=${DATA:-$DATA_IN/${jobid}}
 mkdir -p $DATA
 cd $DATA

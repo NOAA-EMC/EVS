@@ -74,7 +74,6 @@ for dom in $domains ; do
        echo  "export extradir='verf_g2g/'" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
  
        echo  "export verif_grid=''" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-       #echo  "export verif_poly='${maskpath}/grid2obs_CONUS.nc' " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
        echo  "export verif_poly='${maskpath}/Bukovsky_G227_CONUS.nc,
                         ${maskpath}/Bukovsky_G227_CONUS_East.nc,
 		        ${maskpath}/Bukovsky_G227_CONUS_West.nc,
@@ -137,8 +136,8 @@ for dom in $domains ; do
         echo  "export modeltail=''" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export extradir='verf_g2g/'" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-        echo  "export verif_grid='G198'" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo  "export verif_poly=''"  >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo  "export verif_grid=''" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+        echo  "export verif_poly='${maskpath}/Alaska_HREF.nc'"  >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh
 

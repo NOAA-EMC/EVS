@@ -32,8 +32,9 @@ export gather=${gather:-'yes'}
 export verify=$VERIF_CASE
 export run_mpi=${run_mpi:-'yes'}
 
-export COMHREF=$COMIN/href/${href_ver}
-export PREPBUFR=$COMIN/obsproc/${obsproc_ver}
+export COMHREF=$COMINhref
+export PREPBUFR=$COMINprepbufr
+
 export GATHER_CONF_PRECIP=$PRECIP_CONF
 export GRID2OBS_CONF=$PARMevs/metplus_config/$COMPONENT/grid2obs/$STEP
 export GATHER_CONF_GRID2OBS=$GRID2OBS_CONF

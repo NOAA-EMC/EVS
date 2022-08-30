@@ -17,13 +17,11 @@ obsv='prepbufr'
 
 #for prod in mean prob sclr ; do
 for prod in mean prob ; do
-#for prod in prob ; do
 
  PROD=`echo $prod | tr '[a-z]' '[A-Z]'`
 
  model=HREF${prod}
 
- #for dom in CONUS ; do
  for dom in CONUS Alaska ; do
 
     export domain=$dom
@@ -87,30 +85,29 @@ for prod in mean prob ; do
        echo  "export modeltail='.grib2'" >> run_href_${model}.${dom}.${valid_run}_product.sh
        echo  "export extradir='ensprod/'" >> run_href_${model}.${dom}.${valid_run}_product.sh
 
-       echo  "export verif_grid='G227'" >> run_href_${model}.${dom}.${valid_run}_product.sh
-       #echo  "export verif_poly='${maskpath}/grid2obs_CONUS.nc, ${maskpath}/grid2obs_EAST.nc, ${maskpath}/grid2obs_WEST.nc'" >> run_href_${model}.${dom}.${valid_run}_product.sh
+       echo  "export verif_grid=''" >> run_href_${model}.${dom}.${valid_run}_product.sh
        echo  "export verif_poly='${maskpath}/Bukovsky_G227_CONUS.nc,
                                  ${maskpath}/Bukovsky_G227_CONUS_East.nc,
                                  ${maskpath}/Bukovsky_G227_CONUS_West.nc,
                                  ${maskpath}/Bukovsky_G227_CONUS_South.nc,
                                  ${maskpath}/Bukovsky_G227_CONUS_Central.nc,
-                                 ${maskpath}/Bukovsky_50m_Appalachia.nc,
-                                 ${maskpath}/Bukovsky_50m_CPlains.nc,
-                                 ${maskpath}/Bukovsky_50m_DeepSouth.nc,
-                                 ${maskpath}/Bukovsky_50m_GreatBasin.nc,
-                                 ${maskpath}/Bukovsky_50m_GreatLakes.nc,
-                                 ${maskpath}/Bukovsky_50m_Mezquital.nc,
-                                 ${maskpath}/Bukovsky_50m_MidAtlantic.nc,
-                                 ${maskpath}/Bukovsky_50m_NorthAtlantic.nc,
-                                 ${maskpath}/Bukovsky_50m_NPlains.nc,
-                                 ${maskpath}/Bukovsky_50m_NRockies.nc,
-                                 ${maskpath}/Bukovsky_50m_PacificNW.nc,
-                                 ${maskpath}/Bukovsky_50m_PacificSW.nc,
-                                 ${maskpath}/Bukovsky_50m_Prairie.nc,
-                                 ${maskpath}/Bukovsky_50m_Southeast.nc,
-                                 ${maskpath}/Bukovsky_50m_Southwest.nc,
-                                 ${maskpath}/Bukovsky_50m_SPlains.nc,
-                                 ${maskpath}/Bukovsky_50m_SRockies.nc'" >> run_href_${model}.${dom}.${valid_run}_product.sh
+                                 ${maskpath}/Bukovsky_G227_Appalachia.nc,
+                                 ${maskpath}/Bukovsky_G227_CPlains.nc,
+                                 ${maskpath}/Bukovsky_G227_DeepSouth.nc,
+                                 ${maskpath}/Bukovsky_G227_GreatBasin.nc,
+                                 ${maskpath}/Bukovsky_G227_GreatLakes.nc,
+                                 ${maskpath}/Bukovsky_G227_Mezquital.nc,
+                                 ${maskpath}/Bukovsky_G227_MidAtlantic.nc,
+                                 ${maskpath}/Bukovsky_G227_NorthAtlantic.nc,
+                                 ${maskpath}/Bukovsky_G227_NPlains.nc,
+                                 ${maskpath}/Bukovsky_G227_NRockies.nc,
+                                 ${maskpath}/Bukovsky_G227_PacificNW.nc,
+                                 ${maskpath}/Bukovsky_G227_PacificSW.nc,
+                                 ${maskpath}/Bukovsky_G227_Prairie.nc,
+                                 ${maskpath}/Bukovsky_G227_Southeast.nc,
+                                 ${maskpath}/Bukovsky_G227_Southwest.nc,
+                                 ${maskpath}/Bukovsky_G227_SPlains.nc,
+                                 ${maskpath}/Bukovsky_G227_SRockies.nc'" >> run_href_${model}.${dom}.${valid_run}_product.sh
 
        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF${prod}_obsPREPBUFR_SFC.conf " >> run_href_${model}.${dom}.${valid_run}_product.sh
 
@@ -141,8 +138,8 @@ for prod in mean prob ; do
        else
          echo  "export modelgrid=ak.${prod}" >> run_href_${model}.${dom}.${valid_run}_product.sh
        fi
-       echo  "export verif_grid='G198'" >> run_href_${model}.${dom}.${valid_run}_product.sh
-       echo  "export verif_poly='' " >> run_href_${model}.${dom}.${valid_run}_product.sh
+       echo  "export verif_grid=''" >> run_href_${model}.${dom}.${valid_run}_product.sh
+       echo  "export verif_poly='${maskpath}/Alaska_HREF.nc' " >> run_href_${model}.${dom}.${valid_run}_product.sh
        echo  "export obsvhead=$obsv" >> run_href_${model}.${dom}.${valid_run}_product.sh
        echo  "export obsvpath=$WORK" >> run_href_${model}.${dom}.${valid_run}_product.sh
 
