@@ -78,15 +78,13 @@ else
     done
 fi
 
-# Tar up images
-cd ${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/images
-tar -cvf ${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/plots_${COMPONENT}_${RUN}_grid2grid.tar *
-cd $DATA
-
 # Copy files to desired location
 if [ $SENDCOM = YES ]; then
-    # Copy tar file
-    cp -v ${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/plots_${COMPONENT}_${RUN}_grid2grid.tar $COMOUT/.
+    # Make and copy tar file
+    cd ${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/images
+    tar -cvf ${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${PDYm1}/plots_${COMPONENT}_${RUN}_grid2grid_${NDAYS}days_v${PDYm1}.tar *
+    cd $DATA
+    cp -v ${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${PDYm1}/plots_${COMPONENT}_${RUN}_grid2grid_${NDAYS}days_v${PDYm1}.tar $COMOUT/.
 fi
 
 # Non-production jobs
