@@ -1,0 +1,49 @@
+#PBS -N $evs_global_ens_prep_%CYC%
+#PBS -j oe
+#PBS -S /bin/bash
+#PBS -q %QUEUE%
+#PBS -A %PROJ%-%PROJENVIR%
+#PBS -l walltime=02:30:00
+#PBS -l select=1:ncpus=14
+#PBS -l debug=true
+
+%include <head.h>
+%include <envir-p1.h>
+
+export model=evs
+%include <model_ver.h>
+
+############################################################
+## Load modules
+#############################################################
+module purge
+source $HOMEevs/modulefiles/${evs_ver}
+
+set -x
+
+export cyc=%CYC%
+export cycles="%CYCLES%"
+
+
+export NET=evs
+export RUN=atmos
+export STEP=prep
+export COMPONENT=global_ens
+export VERIF_CASE=grid2grid
+
+${HOMEevs}/jobs/global_ens/prep/JEVS_GLOBAL_ENS_PREP
+
+%include <tail.h>
+%manual
+################################################################################
+#TASKSCRIPT DOCUMENTATION BLOCK
+#
+#PURPOSE:  To execute the job that creates the ncepdate on IBMSP
+#######################################################################
+#######################################################################
+## Job specific troubleshooting instructions:
+#  see generic troubleshoot manual page
+#
+######################################################################
+%end
+

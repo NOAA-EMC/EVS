@@ -1,0 +1,39 @@
+#PBS -N evs_naefs_g2g_stats_%CYC%
+#PBS -o /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs-naefs-g2g_stats.o
+#PBS -e /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs-naefs-g2g_stats.e
+#PBS -S /bin/bash
+#PBS -q %QUEUE%
+#PBS -A %PROJ%-%PROJENVIR%
+#PBS -l walltime=01:00:00
+#PBS -l place=vscatter:exclhost,select=1:ncpus=6:mem=100GB
+#PBS -l debug=true
+
+%include <head.h>
+%include <envir-p1.h>
+
+export model=evs
+%include <model_ver.h>
+
+############################################################
+## Load modules
+#############################################################
+module purge
+source $HOMEevs/modulefiles/${evs_ver}
+
+set -x
+
+
+export cyc=%CYC%
+export cycles="%CYCLES%"
+
+
+
+export NET=evs
+export RUN=atmos
+export STEP=stats
+export COMPONENT=global_ens
+export VERIF_CASE=grid2grid
+export MODELNAME=naefs
+
+
+${HOMEevs}/jobs/global_ens/stats/JEVS_GLOBAL_ENS_STATS

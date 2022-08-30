@@ -1,0 +1,23 @@
+  for cyc in $gens_cyc ; do
+
+     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ; do
+
+       typeset -Z3 hhh
+       typeset -Z3 hhh_24
+       fhr=24
+       while [ $fhr -le 384 ] ; do
+            hhh=$fhr
+            fhr_24=$((fhr-24))
+            hhh_24=$fhr_24
+            pcp_combine -subtract \
+            $COMOUT_ecme/ecme.ens${mb}.t${cyc}z.grid3.f${hhh}.grib2  \
+                                    'name="WEASD"; level="Z0";' \
+            $COMOUT_ecme/ecme.ens${mb}.t${cyc}z.grid3.f${hhh_24}.grib2 \
+                                    'name="WEASD"; level="Z0";' \
+             ecme.ens${mb}.t${cyc}z.grid3.weasd_24h.f${hhh}.nc
+            cp ecme.ens${mb}.t${cyc}z.grid3.weasd_24h.f${hhh}.nc $COMOUT_ecme
+           fhr=$((fhr+12))
+       done
+     done
+  done
+
