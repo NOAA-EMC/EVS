@@ -66,22 +66,6 @@ export COMINjma=${COMINjma:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/jma)}
 export COMINmetfra=${COMINmetfra:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/metfra)}
 export COMINukmet=${COMINukmet:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/ukmet)}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1)}
-if [ $envir = dev ]; then
-    export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/verification/global/evs_test/$envir/com
-    export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/verification/global/evs_test/$envir/com/$NET/$evs_ver
-    export COMINcfs=$COMIN/stats/$COMPONENT/cfs
-    export COMINgfs=$COMIN/stats/$COMPONENT/gfs
-    export COMINcmc=$COMIN/stats/$COMPONENT/cmc
-    export COMINcmc_regional=$COMIN/stats/$COMPONENT/cmc_regional
-    export COMINdwd=$COMIN/stats/$COMPONENT/dwd
-    export COMINecmwf=$COMIN/stats/$COMPONENT/ecmwf
-    export COMINfnmoc=$COMIN/stats/$COMPONENT/fnmoc
-    export COMINimd=$COMIN/stats/$COMPONENT/imd
-    export COMINjma=$COMIN/stats/$COMPONENT/jma
-    export COMINmetfra=$COMIN/stats/$COMPONENT/metfra
-    export COMINukmet=$COMIN/stats/$COMPONENT/ukmet
-    export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/verification/global/evs_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1
-fi
 mkdir -p $COMOUT
 
 #######################################################################

@@ -69,9 +69,6 @@ export COMINukmet_precip=${COMINukmet_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
 export COMINosi_saf=${COMINosi_saf:-/lfs/h1/ops/dev/dcom/${INITDATE}/seaice/osisaf}
 export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
-if [ $envir = dev ] ; then
-    export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/verification/global/evs_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
-fi
 mkdir -p $COMOUT.${INITDATE}
 
 #######################################################################

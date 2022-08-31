@@ -72,25 +72,6 @@ export COMOUTsmallVDATE=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
 export COMOUTsmallPDYm2=$COMOUT/$RUN.$PDYm2/$MODELNAME/$VERIF_CASE
 export COMOUTccpaVDATE=$COMOUT/$RUN.$VDATE/ccpa/$VERIF_CASE
 export COMOUTfinal=$COMOUT/$MODELNAME.$VDATE
-if [ $envir = dev ]; then
-    export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/verification/global/evs_test/$envir/com
-    export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/verification/global/evs_test/$envir/com/$NET/$evs_ver
-    export COMINcfs=$COMIN/prep/$COMPONENT/$RUN
-    export COMINcmc=$COMIN/prep/$COMPONENT/$RUN
-    export COMINcmc_regional=$COMIN/prep/$COMPONENT/$RUN
-    export COMINdwd=$COMIN/prep/$COMPONENT/$RUN
-    export COMINecmwf=$COMIN/prep/$COMPONENT/$RUN
-    export COMINfnmoc=$COMIN/prep/$COMPONENT/$RUN
-    export COMINimd=$COMIN/prep/$COMPONENT/$RUN
-    export COMINjma=$COMIN/prep/$COMPONENT/$RUN
-    export COMINmetfra=$COMIN/prep/$COMPONENT/$RUN
-    export COMINukmet=$COMIN/prep/$COMPONENT/$RUN
-    export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/verification/global/evs_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT
-    export COMOUTsmallVDATE=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
-    export COMOUTsmallPDYm2=$COMOUT/$RUN.$PDYm2/$MODELNAME/$VERIF_CASE
-    export COMOUTccpaVDATE=$COMOUT/$RUN.$VDATE/ccpa/$VERIF_CASE
-    export COMOUTfinal=$COMOUT/$MODELNAME.$VDATE
-fi
 mkdir -p $COMOUT $COMOUTsmallVDATE $COMOUTsmallPDYm2 $COMOUTccpaVDATE $COMOUTfinal
 
 #######################################################################

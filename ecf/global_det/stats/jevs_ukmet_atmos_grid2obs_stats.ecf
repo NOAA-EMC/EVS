@@ -1,9 +1,9 @@
-#PBS -N jevs_ukmet_atmos_grid2obs_stats_00
+#PBS -N jevs_ukmet_atmos_grid2obs_stats_%CYC%
 #PBS -j oe
 #PBS -S /bin/sh
-#PBS -q dev
-#PBS -A VERF-DEV
-#PBS -l walltime=10:00:00
+#PBS -q %QUEUE%
+#PBS -A %PROJ%-%PROJENVIR%
+#PBS -l walltime=3:00:00
 #PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
 #PBS -l debug=true
 #PBS -V
@@ -12,60 +12,8 @@ set -x
 
 export model=evs
 
-##%include <head.h>
-##%include <envir-p1.h>
-
-############################################################
-############################################################
-############################################################
-# In prod, /apps/ops/prod/nco/core/ecflow.v5.6.0.11/include/head.h?
-###### ECF_ environment variables set
-###### do module reset
-module reset
-###### set HOMEevs
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/verification/global/EVS
-###### read version file and set model_ver
-versionfile=$HOMEevs/versions/run.ver
-. $versionfile
-export evs_ver=$evs_ver
-##### set more variables
-export envir=dev
-#export MACHINE_SITE=
-export RUN_ENVIR=nco
-export SENDECF=
-export SENDCOM=YES
-#export PDY=
-#export PARATEST=
-#export COMPATH=
-#export MAILTO=
-#export DBNLOG=
-export KEEPDATA=YES
-export SENDDBN=
-export SENDDBN_NTC=
-##### load prod_util
-module load prod_envir/2.0.6
-###### sets: UTILROOT, MDATE, NDATE, NHOUR, FSYNC, COMDATEROOT, COMLISTROOT, COMLOGROOT
-###### preprends: PATH, PYTHONPATH
-module load prod_util/2.0.13
-###### sets: 
-##### load prod_envir
-###### sets: OPSROOT, OPSROOTssd, COMROOT, DATAROOT, DCOOMROOT, PACKAGEROOT
-export envir=dev
-export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
-###### define error handling
-# In prod, /apps/ops/prod/nco/core/ecflow.v5.6.0.11/include/envir-p1.h?
-export job=${PBS_JOBNAME:-jevs_ukmet_atmos_grid2obs_stats}
-export jobid=$job.${PBS_JOBID:-$$}
-#export SENDCANNEDDBN=
-#export eval=
-#export SIPHONROOT=
-#export NODBNFCHK=
-#export DBNROOT=
-export TMPDIR=$DATAROOT
-export SITE=$(cat /etc/cluster_name)
-############################################################
-############################################################
-############################################################
+%include <head.h>
+%include <envir-p1.h>
 
 ############################################################
 # Load modules
@@ -102,8 +50,7 @@ export USE_CFP=YES
 export nproc=128
 
 # Set cycle
-##export cyc=%CYC%
-export cyc=00
+export cyc=%CYC%
 
 # Set verification information
 export NET=evs
@@ -119,10 +66,10 @@ export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMP
 # CALL executable job script here
 $HOMEevs/jobs/global_det/stats/JEVS_GLOBAL_DET_STATS
 
-##%include <tail.h>
-##%manual
+%include <tail.h>
+%manual
 ######################################################################
 # Purpose: This does the statistics work for the global deterministic
-#          atmospheric grid-to-grid component
+#          atmospheric grid-to-observations component
 ######################################################################
-#%end
+%end
