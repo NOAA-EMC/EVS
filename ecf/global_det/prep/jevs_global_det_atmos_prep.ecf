@@ -1,8 +1,8 @@
-#PBS -N jevs_global_det_atmos_prep_%CYC%
+#PBS -N jevs_global_det_atmos_prep_00
 #PBS -j oe
 #PBS -S /bin/sh
-#PBS -q %QUEUE%
-#PBS -A %PROJ%-%PROJENVIR%
+#PBS -q dev
+#PBS -A VERF-DEV
 #PBS -l walltime=2:00:00
 #PBS -l select=1:ncpus=1:mem=5GB
 #PBS -l debug=true
@@ -12,8 +12,31 @@ set -x
 
 export model=evs
 
-%include <head.h>
-%include <envir-p1.h>
+############################################################
+# For dev testing
+############################################################
+cd $PBS_O_WORKDIR
+module reset
+export HOMEevs=$(eval "cd ../../../;pwd")
+versionfile=$HOMEevs/versions/run.ver
+. $versionfile
+export evs_ver=$evs_ver
+export envir=dev
+export SENDCOM=YES
+export KEEPDATA=NO
+module load prod_envir/2.0.6
+module load prod_util/2.0.13
+export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_global_det_atmos_test/$envir/tmp
+export job=${PBS_JOBNAME:-jevs_global_det_atmos_prep}
+export jobid=$job.${PBS_JOBID:-$$}
+export TMPDIR=$DATAROOT
+export SITE=$(cat /etc/cluster_name)
+export NET=evs
+export STEP=prep
+export COMPONENT=global_det
+export RUN=atmos
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
+############################################################
 
 ############################################################
 # Load modules
@@ -27,7 +50,7 @@ module load python/${python_ver}
 module load cdo/${cdo_ver}
 module list
 
-export cyc=%CYC%
+export cyc=00
 
 export NET=evs
 export STEP=prep
@@ -40,9 +63,6 @@ export OBSNAME="osi_saf"
 # CALL executable job script here
 $HOMEevs/jobs/global_det/prep/JEVS_GLOBAL_DET_PREP
 
-%include <tail.h>
-%manual
 ######################################################################
 # Purpose: This does the prep work for the global deterministic atmospheric
 ######################################################################
-%end

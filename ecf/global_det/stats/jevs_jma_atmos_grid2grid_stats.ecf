@@ -1,9 +1,9 @@
-#PBS -N jevs_jma_atmos_grid2grid_stats_%CYC%
+#PBS -N jevs_jma_atmos_grid2grid_stats_00
 #PBS -j oe
 #PBS -S /bin/sh
-#PBS -q %QUEUE%
-#PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=3:00:00
+#PBS -q dev
+#PBS -A VERF-DEV
+#PBS -l walltime=4:00:00
 #PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
 #PBS -l debug=true
 #PBS -V
@@ -12,8 +12,44 @@ set -x
 
 export model=evs
 
-%include <head.h>
-%include <envir-p1.h>
+############################################################
+# For dev testing
+############################################################
+cd $PBS_O_WORKDIR
+module reset
+export HOMEevs=$(eval "cd ../../../;pwd")
+versionfile=$HOMEevs/versions/run.ver
+. $versionfile
+export evs_ver=$evs_ver
+export envir=dev
+export RUN_ENVIR=nco
+export SENDCOM=YES
+export KEEPDATA=NO
+module load prod_envir/2.0.6
+module load prod_util/2.0.13
+export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_global_det_atmos_test/$envir/tmp
+export job=${PBS_JOBNAME:-jevs_jma_atmos_grid2grid_stats}
+export jobid=$job.${PBS_JOBID:-$$}
+export TMPDIR=$DATAROOT
+export SITE=$(cat /etc/cluster_name)
+export NET=evs
+export STEP=stats
+export COMPONENT=global_det
+export RUN=atmos
+export VERIF_CASE=grid2grid
+export MODELNAME=jma
+export VDATE=$(date -d "24 hours ago" '+%Y%m%d')
+export PDYm2=$(date -d "48 hours ago" '+%Y%m%d')
+export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com
+export COMIN=$COMROOT/$NET/$evs_ver
+export COMINjma=$COMIN/prep/$COMPONENT/$RUN
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT
+export COMOUTsmallVDATE=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
+export COMOUTsmallPDYm2=$COMOUT/$RUN.$PDYm2/$MODELNAME/$VERIF_CASE
+export COMOUTccpaVDATE=$COMOUT/$RUN.$VDATE/ccpa/$VERIF_CASE
+export COMOUTfinal=$COMOUT/$MODELNAME.$VDATE
+export OUTPUTROOT=/lfs/h2/emc/stmp/$USER/evs_global_det_atmos_test
+############################################################
 
 ############################################################
 # Load modules
@@ -50,7 +86,7 @@ export USE_CFP=YES
 export nproc=128
 
 # Set cycle
-export cyc=%CYC%
+export cyc=00
 
 # Set verification information
 export NET=evs
@@ -66,10 +102,7 @@ export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMP
 # CALL executable job script here
 $HOMEevs/jobs/global_det/stats/JEVS_GLOBAL_DET_STATS
 
-%include <tail.h>
-%manual
 ######################################################################
 # Purpose: This does the statistics work for the global deterministic
-#          atmospheric grid-to-grid component
+#          atmospheric grid-to-grid component for JMA
 ######################################################################
-%end
