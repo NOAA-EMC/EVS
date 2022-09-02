@@ -54,7 +54,7 @@ else:
 output_var_level = (var_level.split('_')[0]+'_ANOM_'
                     +var_level.split('_')[-1])
 
-# Creat fcst and obs anomaly data
+# Create fcst and obs anomaly data
 netCDF_STARTDATE_dt = datetime.datetime.strptime(
     netCDF_STARTDATE+valid_hr_start, '%Y%m%d%H'
 )

@@ -295,7 +295,8 @@ class PlotSpecs:
             'VGRD/P1000': '1000 hPa V-Component of Wind',
             'VGRD/Z10': '10 meter V-Component of Wind',
             'WEASD/Z0': 'Water Equivalent of Accumulated Snow Depth',
-            'WEASD_A24/Z0': '24 hour Snow Accumulation (derived from WEASD)'
+            'WEASD_A24/Z0': '24 hour Snow Accumulation (derived from WEASD)',
+            'WNDSHR/P850-P200': 'Wind Shear (850-200 hPa)'
         }
         if var_name_level in list(var_plot_name_dict.keys()):
             var_plot_name = var_plot_name_dict[var_name_level]
@@ -319,6 +320,7 @@ class PlotSpecs:
         """
         vx_mask_plot_name_dict = {
              'Appalachia': 'Appalachia',
+             'ATL_MDR', 'Atlantic Main Development Region',
              'CONUS': 'CONUS',
              'CONUS_Central': 'CONUS - Central',
              'CONUS_East': 'CONUS - East',
@@ -326,6 +328,7 @@ class PlotSpecs:
              'CONUS_West': 'CONUS - West',
              'CPlains': 'Central Plains',
              'DeepSouth': 'Deep South',
+             'EPAC_MDR': 'East Pacific Main Development Region',
              'GLOBAL': 'Global',
              'GreatBasin': 'Great Basin',
              'Great Lakes': 'Great Lakes',

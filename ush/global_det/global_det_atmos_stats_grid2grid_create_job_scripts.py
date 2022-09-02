@@ -112,7 +112,31 @@ reformat_model_jobs_dict = {
                                                         +'{init?fmt=%Y%m%d%H}_'
                                                         +'fhr{lead?fmt=%3H}.nc'
                                                     )]
-                                                )]}
+                                                )]},
+        'WindShear': {'env': {'var1_name': 'UGRD',
+                              'var1_levels': '"P850, P200"',
+                              'var2_name': 'VGRD',
+                              'var2_levels': '"P850, P200"',
+                              'met_config_overrides': ''},
+                      'commands': [gda_util.metplus_command(
+                                       'GridStat_fcstGLOBAL_DET_'
+                                       +'obsModelAnalysis_WindsNetCDF.conf'
+                                   ),
+                                   gda_util.python_command(
+                                       'global_det_atmos_stats_grid2grid_'
+                                       +'create_wind_shear.py',
+                                       [os.path.join(
+                                            '$DATA', '${VERIF_CASE}_${STEP}',
+                                            'METplus_output',
+                                            '${RUN}.{valid?fmt=%Y%m%d}',
+                                            '$MODEL', '$VERIF_CASE',
+                                            'grid_stat_${VERIF_TYPE}.'
+                                            +'${job_name}_'
+                                            +'{lead?fmt=%2H}0000L_'
+                                            +'{valid?fmt=%Y%m%d}_'
+                                            +'{valid?fmt=%H}0000V_pairs.nc'
+                                        )]
+                                   )]}
     },
     'sea_ice': {},
     'snow': {
@@ -234,20 +258,25 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     job_env_dict['TRUTH'] = os.environ[
                         VERIF_CASE_STEP_abbrev_type+'_truth_name_list'
                     ].split(' ')[model_idx]
-                    job_env_dict['netCDF_ENDDATE'] = date_dt.strftime('%Y%m%d')
-                    job_env_dict['netCDF_STARTDATE'] = (
-                        (date_dt - datetime.timedelta(days=1))\
-                        .strftime('%Y%m%d')
-                    )
-                    netCDF_fhr_start = int(job_env_dict['fhr_start']) - 18
-                    if netCDF_fhr_start > 0:
-                        job_env_dict['netCDF_fhr_start'] = str(netCDF_fhr_start)
-                    else:
-                        job_env_dict['netCDF_fhr_start'] = '12'
-                    if job_env_dict['valid_hr_inc'] != '12':
-                         job_env_dict['valid_hr_inc'] = '12'
-                    if job_env_dict['fhr_inc'] != '12':
-                        job_env_dict['fhr_inc'] = '12'
+                    if verif_type_job == 'DailyAvg_GeoHeightAnom':
+                        job_env_dict['netCDF_ENDDATE'] = (
+                            date_dt.strftime('%Y%m%d')
+                        )
+                        job_env_dict['netCDF_STARTDATE'] = (
+                            (date_dt - datetime.timedelta(days=1))\
+                            .strftime('%Y%m%d')
+                        )
+                        netCDF_fhr_start = int(job_env_dict['fhr_start']) - 18
+                        if netCDF_fhr_start > 0:
+                            job_env_dict['netCDF_fhr_start'] = str(
+                                netCDF_fhr_start
+                            )
+                        else:
+                            job_env_dict['netCDF_fhr_start'] = '12'
+                        if job_env_dict['valid_hr_inc'] != '12':
+                            job_env_dict['valid_hr_inc'] = '12'
+                        if job_env_dict['fhr_inc'] != '12':
+                            job_env_dict['fhr_inc'] = '12'
                 elif verif_type == 'flux':
                     job_env_dict['netCDF_ENDDATE'] = date_dt.strftime('%Y%m%d')
                     job_env_dict['netCDF_STARTDATE'] = (
@@ -550,6 +579,11 @@ generate_jobs_dict = {
                                         +'obsModelAnalysis_climoERAI_'
                                         +'VectorWind.conf'
                                     )]},
+        'WindShear': {'env': {},
+                      'commands': [gda_util.metplus_command(
+                                       'GridStat_fcstGLOBAL_DET_'
+                                       +'obsModelAnalysis_WindShear.conf'
+                                   )]}
     },
     'sea_ice': {
         'Concentration': {'env': {},
