@@ -14,6 +14,7 @@ export libjpeg_ver=9c
 export libpng_ver=1.6.37
 export bufr_dump_ver=1.0.0
 export python_ver=3.8.6
+export nco_ver=4.9.7
 export netcdf_ver=4.7.4
 export cdo_ver=1.9.8
 export met_ver=10.1.1

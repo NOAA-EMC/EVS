@@ -249,7 +249,8 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                                   time information (string)
     """
     filled_file_format = '/'
-    format_opt_list = ['lead', 'lead_shift', 'valid', 'init', 'cycle']
+    format_opt_list = ['lead', 'lead_shift', 'valid', 'valid_shift',
+                       'init', 'init_shift', 'cycle']
     if len(list(str_sub_dict.keys())) != 0:
         format_opt_list = format_opt_list+list(str_sub_dict.keys())
     for filled_file_format_chunk in unfilled_file_format.split('/'):
@@ -260,7 +261,8 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
             if nformat_opt > 0:
                format_opt_count = 1
                while format_opt_count <= nformat_opt:
-                   if format_opt == 'lead_shift':
+                   if format_opt in ['lead_shift', 'valid_shift',
+                                     'init_shift']:
                        shift = (filled_file_format_chunk \
                                 .partition('shift=')[2] \
                                 .partition('}')[0])
@@ -291,6 +293,14 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                            replace_format_opt_count = forecast_hour.zfill(3)
                        else:
                            replace_format_opt_count = forecast_hour
+                   elif format_opt == 'init':
+                       replace_format_opt_count = init_time_dt.strftime(
+                           format_opt_count_fmt
+                       )
+                   elif format_opt == 'cycle':
+                       replace_format_opt_count = init_time_dt.strftime(
+                           format_opt_count_fmt
+                       ) 
                    elif format_opt == 'lead_shift':
                        shift = (filled_file_format_chunk.partition('shift=')[2]\
                                 .partition('}')[0])
@@ -313,13 +323,27 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                            )
                        else:
                            replace_format_opt_count = forecast_hour_shift
-                   elif format_opt in ['init', 'cycle']:
-                       replace_format_opt_count = init_time_dt.strftime(
+                   elif format_opt == 'init_shift':
+                       shift = (filled_file_format_chunk.partition('shift=')[2]\
+                                .partition('}')[0])
+                       init_shift_time_dt = (
+                           init_time_dt + datetime.timedelta(hours=int(shift))
+                       )
+                       replace_format_opt_count = init_shift_time_dt.strftime(
+                           format_opt_count_fmt
+                       )
+                   elif format_opt == 'valid_shift':
+                       shift = (filled_file_format_chunk.partition('shift=')[2]\
+                                .partition('}')[0])
+                       valid_shift_time_dt = (
+                           valid_time_dt + datetime.timedelta(hours=int(shift))
+                       )
+                       replace_format_opt_count = valid_shift_time_dt.strftime(
                            format_opt_count_fmt
                        )
                    else:
                        replace_format_opt_count = str_sub_dict[format_opt]
-                   if format_opt == 'lead_shift':
+                   if format_opt in ['lead_shift', 'valid_shift', 'init_shift']:
                        filled_file_format_chunk = (
                            filled_file_format_chunk.replace(
                                '{'+format_opt+'?fmt='
@@ -736,27 +760,32 @@ def prep_prod_metfra_file(source_file, dest_file, forecast_hour, prep_method):
             )
     copy_file(prepped_file, dest_file)
 
-def prep_prod_osi_saf_file(source_file_format, dest_file):
+def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
+                           weekly_source_file_list, weekly_dest_file):
     """! Do prep work for OSI-SAF production files
 
          Args:
-             source_file_format - source file format (string)
-             dest_file          - destination file (string)
-
+             daily_source_file_format - daily source file format (string)
+             daily_dest_file          - daily destination file (string)
+             weekly_source_file_list  - list of daily files to make up
+                                        weekly average file
+             weekly_dest_file         - weekly destination file (string)
          Returns:
     """
     # Environment variables and executables
     FIXevs = os.environ['FIXevs']
     CDO_ROOT = os.environ['CDO_ROOT']
     # Temporary file names
-    prepped_file = os.path.join(os.getcwd(),
-                                'atmos.'+dest_file.rpartition('/')[2])
-    # Prep file
+    daily_prepped_file = os.path.join(os.getcwd(), 'atmos.'
+                                      +daily_dest_file.rpartition('/')[2])
+    weekly_prepped_file = os.path.join(os.getcwd(), 'atmos.'
+                                       +weekly_dest_file.rpartition('/')[2])
+    # Prep daily file
     for hem in ['nh', 'sh']:
-        hem_source_file = source_file_format.replace('{hem?fmt=str}', hem)
-        hem_dest_file = dest_file.replace('multi.', 'multi.'+hem+'.')
-        hem_prepped_file = os.path.join(os.getcwd(),
-                                        'atmos.'
+        hem_source_file = daily_source_file_format.replace('{hem?fmt=str}',
+                                                           hem)
+        hem_dest_file = daily_dest_file.replace('multi.', 'multi.'+hem+'.')
+        hem_prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                         +hem_dest_file.rpartition('/')[2])
         if check_file_exists_size(hem_source_file):
             run_shell_command(
@@ -773,7 +802,7 @@ def prep_prod_osi_saf_file(source_file_format, dest_file):
             and check_file_exists_size(sh_prepped_file):
         nh_data = netcdf.Dataset(nh_prepped_file)
         sh_data = netcdf.Dataset(sh_prepped_file)
-        merged_data = netcdf.Dataset(prepped_file, 'w',
+        merged_data = netcdf.Dataset(daily_prepped_file, 'w',
                                      format='NETCDF3_CLASSIC')
         for attr in nh_data.ncattrs():
             if attr == 'history':
@@ -821,7 +850,21 @@ def prep_prod_osi_saf_file(source_file_format, dest_file):
                            nh_data.variables[var][0,180:,:]))
                ,nh_data.variables[var]._FillValue)
             merged_var[:] = merged_var_vals
-    copy_file(prepped_file, dest_file)
+    copy_file(daily_prepped_file, daily_dest_file)
+    # Prep weekly file
+    for weekly_source_file in weekly_source_file_list:
+        if not os.path.exists(weekly_source_file):
+            print(f"WARNING: {weekly_source_file} does not exist, "
+                  +"not using in weekly average file")
+            weekly_source_file_list.remove(weekly_source_file)
+    if len(weekly_source_file_list) >= 4:
+        ncea_cmd_list = ['ncea']
+        for weekly_source_file in weekly_source_file_list:
+            ncea_cmd_list.append(weekly_source_file)
+        ncea_cmd_list.append('-o')
+        ncea_cmd_list.append(weekly_prepped_file)
+        run_shell_command(ncea_cmd_list)
+    copy_file(weekly_prepped_file, weekly_dest_file)
 
 def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
                    source_file_format, dest_file_format):
