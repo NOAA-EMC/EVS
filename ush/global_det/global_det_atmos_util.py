@@ -979,7 +979,10 @@ def get_obs_valid_hrs(obs):
                      'valid_hr_inc': 24},
         '24hrNOHRSC': {'valid_hr_start': 12,
                        'valid_hr_end': 12,
-                       'valid_hr_inc': 24}
+                       'valid_hr_inc': 24},
+        'OSI-SAF': {'valid_hr_start': 00,
+                    'valid_hr_end': 00,
+                    'valid_hr_inc': 24},
     }
     if obs in list(obs_valid_hr_dict.keys()):
         valid_hr_start = obs_valid_hr_dict[obs]['valid_hr_start']
@@ -1122,6 +1125,10 @@ def initalize_job_env_dict(verif_type, group,
             elif verif_type == 'snow':
                 valid_hr_start, valid_hr_end, valid_hr_inc = (
                     get_obs_valid_hrs('24hrNOHRSC')
+                )
+            elif verif_type == 'sea_ice':
+                valid_hr_start, valid_hr_end, valid_hr_inc = (
+                    get_obs_valid_hrs('OSI-SAF')
                 )
             else:
                  valid_hr_start, valid_hr_end, valid_hr_inc = 12, 12, 23

@@ -101,6 +101,19 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 )
             ]
             VERIF_CASE_STEP_type_valid_hr_list = NOHRSC24hr_valid_hr_list
+        elif VERIF_CASE_STEP_type == 'sea_ice':
+            (OSI_SAF_valid_hr_start, OSI_SAF_valid_hr_end,
+             OSI_SAF_valid_hr_inc) = gda_util.get_obs_valid_hrs(
+                 'OSI-SAF'
+            )
+            OSI_SAF_valid_hr_list = [
+                str(x).zfill(2) for x in range(
+                    OSI_SAF_valid_hr_start,
+                    OSI_SAF_valid_hr_end+OSI_SAF_valid_hr_inc,
+                    OSI_SAF_valid_hr_inc
+                )
+            ]
+            VERIF_CASE_STEP_type_valid_hr_list = OSI_SAF_valid_hr_list
         else:
             VERIF_CASE_STEP_type_valid_hr_list = ['12']
         # Set initialization hours
@@ -380,43 +393,54 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                         )
             elif VERIF_CASE_STEP_type == 'sea_ice':
                 # OSI_SAF
-                osi_saf_prod_file_format = os.path.join(
-                    COMINosi_saf, 'prep',
-                    COMPONENT, RUN+'.{valid?fmt=%Y%m%d}',
-                    'osi_saf', 'osi_saf.multi.{valid?fmt=%Y%m%d%H}_G004.nc'
-                )
-                osi_saf_prod_file = gda_util.format_filler(
-                    osi_saf_prod_file_format, VERIF_CASE_STEP_type_valid_time,
-                    VERIF_CASE_STEP_type_valid_time, ['anl'], {}
-                )
                 VERIF_CASE_STEP_osi_saf_dir = os.path.join(
                     VERIF_CASE_STEP_data_dir, 'osi_saf'
                 )
-                osi_saf_dest_file_format = os.path.join(
-                    VERIF_CASE_STEP_osi_saf_dir,
-                    'osi_saf.multi.{valid?fmt=%Y%m%d%H}_G004.nc'
-                )
-                osi_saf_dest_file = gda_util.format_filler(
-                    osi_saf_dest_file_format, VERIF_CASE_STEP_type_valid_time,
-                    VERIF_CASE_STEP_type_valid_time, ['anl'], {}
-                )
                 if not os.path.exists(VERIF_CASE_STEP_osi_saf_dir):
                     os.makedirs(VERIF_CASE_STEP_osi_saf_dir)
-                gda_util.get_truth_file(
-                    VERIF_CASE_STEP_type_valid_time,
-                    osi_saf_prod_file_format,
-                    osi_saf_dest_file_format
-                )
-                if not os.path.exists(osi_saf_dest_file) \
-                        and evs_run_mode != 'production':
-                    osi_saf_arch_file_format = os.path.join(
-                        archive_obs_data_dir, 'osi_saf',
-                        'osi_saf.multi.{valid?fmt=%Y%m%d%H}_G004.nc'
+                for time_length in ['daily', 'weekly']:
+                    if time_length == 'daily':
+                        valid_shift_hrs = '-24'
+                    elif time_length == 'weekly':
+                        valid_shift_hrs = '-168'
+                    osi_saf_prod_file_format = os.path.join(
+                        COMINosi_saf, 'prep',
+                        COMPONENT, RUN+'.{valid?fmt=%Y%m%d}',
+                        'osi_saf', 'osi_saf.multi.'
+                        +'{valid_shift?fmt=%Y%m%d%H?shift='
+                        +valid_shift_hrs+'}to'
+                        +'{valid?fmt=%Y%m%d%H}_G004.nc'
+                    )
+                    osi_saf_dest_file_format = os.path.join(
+                        VERIF_CASE_STEP_osi_saf_dir,
+                        'osi_saf.multi.'
+                        +'{valid_shift?fmt=%Y%m%d%H?shift='
+                        +valid_shift_hrs+'}to'
+                        +'{valid?fmt=%Y%m%d%H}_G004.nc'
+                    )
+                    if evs_run_mode != 'production':
+                        osi_saf_arch_file_format = os.path.join(
+                            archive_obs_data_dir, 'osi_saf',
+                            +'{valid_shift?fmt=%Y%m%d%H?shift='
+                            +valid_shift_hrs+'}to'
+                            +'{valid?fmt=%Y%m%d%H}_G004.nc'
+                        )
+                    osi_saf_dest_file = gda_util.format_filler(
+                        osi_saf_dest_file_format,
+                        VERIF_CASE_STEP_type_valid_time,
+                        VERIF_CASE_STEP_type_valid_time, ['anl'], {}
                     )
                     gda_util.get_truth_file(
                         VERIF_CASE_STEP_type_valid_time,
-                        osi_saf_arch_file_format, osi_saf_dest_file_format
+                        osi_saf_prod_file_format,
+                        osi_saf_dest_file_format
                     )
+                    if not os.path.exists(osi_saf_dest_file) \
+                            and evs_run_mode != 'production':
+                        gda_util.get_truth_file(
+                            VERIF_CASE_STEP_type_valid_time,
+                            osi_saf_arch_file_format, osi_saf_dest_file_format
+                        )
                 # SMOS
                 VERIF_CASE_STEP_smos_dir = os.path.join(
                     VERIF_CASE_STEP_data_dir, 'smos'
