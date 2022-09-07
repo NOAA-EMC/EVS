@@ -253,6 +253,19 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                 model_file_format,
                                 model_fcst_dest_file_format
                             )
+                elif VERIF_CASE_STEP_type == 'sea_ice':
+                    # OSI-SAF spans PDYm1 00Z to PDY 00Z
+                    if int(time['forecast_hour']) % 24 == 0:
+                        nf = 0
+                        while nf <= 4:
+                            gda_util.get_model_file(
+                                (time['valid_time']
+                                 -datetime.timedelta(hours=6*nf)),
+                                time['init_time'],
+                                str(int(time['forecast_hour'])-(6*nf)),
+                                model_file_format, model_fcst_dest_file_format
+                            )
+                            nf+=1
                 elif VERIF_CASE_STEP_type == 'snow':
                     # Get for 24 hour accumulations
                     if int(time['forecast_hour']) - 24 >= 0:
