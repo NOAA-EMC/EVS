@@ -340,13 +340,19 @@ for MODEL in MODELNAME:
 # Nortnern & Southern Hemisphere 10 km OSI-SAF multi-sensor analysis - osi_saf
 global_det_obs_dict = {
     'osi_saf': {'daily_prod_file_format': os.path.join(COMINosi_saf,
+                                                       '{init_shift?fmt=%Y%m%d'
+                                                       +'?shift=-12}',
+                                                       'seaice', 'osisaf',
                                                        'ice_conc_{hem?fmt=str}_'
                                                        +'polstere-100_multi_'
-                                                       +'{init?fmt=%Y%m%d%H}'
+                                                       +'{init_shift?fmt=%Y%m%d%H'
+                                                       +'?shift=-12}'
                                                        +'00.nc'),
                 'daily_arch_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
                                                        'osi_saf',
                                                        'osi_saf.multi.'
+                                                       +'{init_shift?fmt=%Y%m%d%H'
+                                                       +'?shift=-24}to'
                                                        +'{init?fmt=%Y%m%d%H}'
                                                        +'_G004.nc'),
                 'weekly_arch_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
@@ -357,7 +363,7 @@ global_det_obs_dict = {
                                                        +'to'
                                                        +'{init?fmt=%Y%m%d%H}'
                                                        +'_G004.nc'),
-                'cycles': ['12']},
+                'cycles': ['00']},
 }
 
 for OBS in OBSNAME:
@@ -369,45 +375,46 @@ for OBS in OBSNAME:
     for cycle in obs_dict['cycles']:
         CDATE = INITDATE+cycle
         CDATE_dt = datetime.datetime.strptime(CDATE, '%Y%m%d%H')
-        CDATEm7_dt = CDATE_dt + datetime.timedelta(hours=-168)
-        daily_prod_file = gda_util.format_filler(
-            obs_dict['daily_prod_file_format'], CDATE_dt, CDATE_dt,
-            'anl', {}
-        )
-        daily_arch_file = gda_util.format_filler(
-            obs_dict['daily_arch_file_format'], CDATE_dt, CDATE_dt,
-            'anl', {}
-        )
-        weekly_arch_file = gda_util.format_filler(
-            obs_dict['weekly_arch_file_format'], CDATE_dt, CDATE_dt,
-            'anl', {}
-        )
-        daily_COMOUT_file = os.path.join(
-            COMOUT_INITDATE, OBS, daily_arch_file.rpartition('/')[2]
-        )
-        daily_COMOUT_file_format = os.path.join(
-            COMOUT+'.{init?fmt=%Y%m%d}', OBS,
-            obs_dict['daily_arch_file_format'].rpartition('/')[2]
-        )
-        if not os.path.exists(daily_COMOUT_file) \
-                and not os.path.exists(daily_arch_file):
-            arch_file_dir = daily_arch_file.rpartition('/')[0]
-            if not os.path.exists(arch_file_dir):
-                os.makedirs(arch_file_dir)
-            print("----> Trying to create "+daily_arch_file+" and "
-                  +weekly_arch_file)
-            weekly_file_list = [daily_arch_file]
-            CDATEm_dt = CDATEm7_dt
-            while CDATEm_dt < CDATE_dt:
-                CDATEm_arch_file = gda_util.format_filler(
-                    daily_COMOUT_file_format, CDATEm_dt, CDATEm_dt,
-                    'anl', {}
+        if OBS == 'osi_saf':
+            CDATEm7_dt = CDATE_dt + datetime.timedelta(hours=-168)
+            daily_prod_file = gda_util.format_filler(
+                obs_dict['daily_prod_file_format'], CDATE_dt, CDATE_dt,
+                'anl', {}
+            )
+            daily_arch_file = gda_util.format_filler(
+                obs_dict['daily_arch_file_format'], CDATE_dt, CDATE_dt,
+                'anl', {}
+            )
+            weekly_arch_file = gda_util.format_filler(
+                obs_dict['weekly_arch_file_format'], CDATE_dt, CDATE_dt,
+                'anl', {}
+            )
+            daily_COMOUT_file = os.path.join(
+                COMOUT_INITDATE, OBS, daily_arch_file.rpartition('/')[2]
+            )
+            daily_COMOUT_file_format = os.path.join(
+                COMOUT+'.{init?fmt=%Y%m%d}', OBS,
+                obs_dict['daily_arch_file_format'].rpartition('/')[2]
+            )
+            if not os.path.exists(daily_COMOUT_file) \
+                    and not os.path.exists(daily_arch_file):
+                arch_file_dir = daily_arch_file.rpartition('/')[0]
+                if not os.path.exists(arch_file_dir):
+                    os.makedirs(arch_file_dir)
+                print("----> Trying to create "+daily_arch_file+" and "
+                      +weekly_arch_file)
+                weekly_file_list = [daily_arch_file]
+                CDATEm_dt = CDATE_dt - datetime.timedelta(hours=24)
+                while CDATEm_dt > CDATEm7_dt:
+                    CDATEm_arch_file = gda_util.format_filler(
+                        daily_COMOUT_file_format, CDATEm_dt, CDATEm_dt,
+                        'anl', {}
+                    )
+                    weekly_file_list.append(CDATEm_arch_file)
+                    CDATEm_dt = CDATEm_dt - datetime.timedelta(hours=24)
+                gda_util.prep_prod_osi_saf_file(
+                    daily_prod_file, daily_arch_file,
+                    weekly_file_list, weekly_arch_file, (CDATEm7_dt,CDATE_dt)
                 )
-                weekly_file_list.append(CDATEm_arch_file)
-                CDATEm_dt = CDATEm_dt + datetime.timedelta(hours=24)
-            if OBS == 'osi_saf':
-                gda_util.prep_prod_osi_saf_file(daily_prod_file, daily_arch_file,
-                                                weekly_file_list,
-                                                weekly_arch_file)
 
 print("END: "+os.path.basename(__file__))

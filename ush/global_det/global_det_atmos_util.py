@@ -761,7 +761,8 @@ def prep_prod_metfra_file(source_file, dest_file, forecast_hour, prep_method):
     copy_file(prepped_file, dest_file)
 
 def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
-                           weekly_source_file_list, weekly_dest_file):
+                           weekly_source_file_list, weekly_dest_file,
+                           weekly_dates):
     """! Do prep work for OSI-SAF production files
 
          Args:
@@ -770,6 +771,8 @@ def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
              weekly_source_file_list  - list of daily files to make up
                                         weekly average file
              weekly_dest_file         - weekly destination file (string)
+             weekly_dates             - date span for weekly dates (tuple
+                                        of datetimes)
          Returns:
     """
     # Environment variables and executables
@@ -827,7 +830,10 @@ def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
                 merged_var.setncatts(
                     {k: nh_data.variables[var].getncattr(k)}
                 )
-            merged_var[:] = nh_data.variables[var][:]
+            if var == 'time':
+                merged_var[:] = nh_data.variables[var][:] + 43200
+            else:
+                merged_var[:] = nh_data.variables[var][:]
         for var in ['ice_conc', 'ice_conc_unfiltered', 'masks',
                     'confidence_level', 'status_flag', 'total_uncertainty',
                     'smearing_uncertainty', 'algorithm_uncertainty']:
@@ -864,6 +870,22 @@ def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
         ncea_cmd_list.append('-o')
         ncea_cmd_list.append(weekly_prepped_file)
         run_shell_command(ncea_cmd_list)
+        if check_file_exists_size(weekly_prepped_file):
+            weekly_data = netcdf.Dataset(weekly_prepped_file, 'a',
+                                         format='NETCDF3_CLASSIC')
+            weekly_data.setncattr(
+                'start_date', weekly_dates[0].strftime('%Y-%m-%d %H:%M:%S')
+            )
+            osi_saf_date_since_dt = datetime.datetime.strptime(
+                '1978-01-01 00:00:00','%Y-%m-%d %H:%M:%S'
+            )
+            weekly_data.variables['time_bnds'][:] = [
+                (weekly_dates[0] - osi_saf_date_since_dt).total_seconds(),
+                weekly_data.variables['time_bnds'][:][0][1]
+            ]
+    else:
+        print("Not enough files to make "+weekly_prepped_file
+              +": "+' '.join(weekly_source_file_list))
     copy_file(weekly_prepped_file, weekly_dest_file)
 
 def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
