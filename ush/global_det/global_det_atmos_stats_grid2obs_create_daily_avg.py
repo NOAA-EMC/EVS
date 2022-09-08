@@ -175,6 +175,14 @@ while valid_hr <= int(valid_hr_end):
                         daily_avg_obtype_sid_vx_mask_df['OBS_VALID_END'] = (
                             daily_avg_valid_end.strftime('%Y%m%d_%H%M%S')
                         )
+                        daily_avg_obtype_sid_vx_mask_df['FCST_VAR'] = (
+                            daily_avg_obtype_sid_vx_mask_df['FCST_VAR']
+                            +'_DAILYAVG'
+                        )
+                        daily_avg_obtype_sid_vx_mask_df['OBS_VAR'] = (
+                            daily_avg_obtype_sid_vx_mask_df['OBS_VAR']
+                            +'_DAILYAVG'
+                        )
                         daily_avg_obtype_sid_vx_mask_df['FCST'] = str(
                             all_daily_avg_obtype_sid_vx_mask_fcst_mean
                         )

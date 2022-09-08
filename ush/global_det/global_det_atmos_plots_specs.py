@@ -162,7 +162,8 @@ class PlotSpecs:
             'HGT/P925': '925 hPa Geopotential Height',
             'HGT/P1000': '1000 hPa Geopotential Height',
             'HGT/TROPOPAUSE': 'Tropopause Geopotential Height',
-            'HGT_ANOM/P500': '500 hPa Geopotential Height Anomaly',
+            'HGT_ANOM_DAILYAVG/P500': ('500 hPa Daily Avg '
+                                       +'Geopotential Height Anomaly'),
             'HGT_DECOMP_WV1_0-3/P500': ('500 hPa Geopotential Height: '
                                         +'Waves 0-3'),
             'HGT_DECOMP_WV1_0-20/P500': ('500 hPa Geopotential Height: '
@@ -239,7 +240,7 @@ class PlotSpecs:
             'TMP/P1000': '1000 hPa Temperature',
             'TMP/TROPOPAUSE': 'Tropopause Temperature',
             'TMP/Z2': '2 meter Temperature',
-            'TMP_ANOM/Z2': '2 meter Temperature Anomaly',
+            'TMP_ANOM_DAILYAVG/Z2': '2 meter Daily Avg Temperature Anomaly',
             'TOZNE': 'Total Ozone',
             'TSOIL/Z0.1-0': '0.1-0 meter Soil Temperature',
             'UGRD/P1': '1 hPa U-Component of Wind',

@@ -504,10 +504,6 @@ generate_jobs_dict = {
                                             ),
                                             gda_util.metplus_command(
                                                 'StatAnalysis_fcstGLOBAL_DET_'
-                                                +'obsPrepbufr_MPRtoCNT.conf'
-                                            ),
-                                            gda_util.metplus_command(
-                                                'StatAnalysis_fcstGLOBAL_DET_'
                                                 +'obsPrepbufr_MPRtoSL1L2.conf'
                                             )
                                         ]},

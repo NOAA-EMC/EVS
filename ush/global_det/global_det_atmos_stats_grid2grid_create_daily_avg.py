@@ -180,7 +180,7 @@ while valid_hr <= int(valid_hr_end):
                     if data_name+'_'+var_level in input_var:
                         input_var_level = input_var
                 write_data_name_var = output_file_data.createVariable(
-                    data_name+'_'+var_level,
+                    data_name+'_'+var_level+'_DAILYAVG',
                     input_file_data.variables[input_var_level]\
                     .datatype,
                     input_file_data.variables[input_var_level]\
