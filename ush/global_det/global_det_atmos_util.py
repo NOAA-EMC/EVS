@@ -1868,6 +1868,13 @@ def calculate_stat(logger, data_df, line_type, stat):
    elif stat == 'FY_OY': # Forecast Yes/Obs Yes
        if line_type == 'CTC':
            stat_df = FY_OY
+   elif stat == 'HSS': # Heidke Skill Score
+       if line_type == 'CTC':
+           TOTAL = FY_OY + FY_ON + FN_OY + FN_ON
+           CA = (FY_OY+FY_ON)*(FY_OY+FN_OY)
+           CB = (FN_OY+FN_ON)*(FY_ON+FN_ON)
+           C = (CA + CB)/TOTAL
+           stat_df = (FY_OY + FN_ON - C)/(TOTAL - C)
    elif stat == 'POD': # Probability of Detection
        if line_type == 'CTC':
            stat_df = FY_OY/(FY_OY + FN_OY)

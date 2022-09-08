@@ -112,6 +112,7 @@ class PlotSpecs:
             'FSS': 'Fraction Skill Score',
             'FY_OY': 'Forecast Yes - Obs Yes',
             'GSS': 'Gilbert Skill Score',
+            'HSS': 'Heidke Skill Score',
             'POD': 'Probability of Detection',
             'RMSE': 'Root Mean Square Error',
             'S1': 'S1',
@@ -173,6 +174,8 @@ class PlotSpecs:
             'HGT_DECOMP_WV1_10-20/P500': ('500 hPa Geopotential Height: '
                                           +'Waves 10-20'), 
             'HPBL/L0': 'Planetary Boundary Layer Height',
+            'ICEC_DAILYAVG/Z0': 'Daily Avg Ice Concentration',
+            'ICEC_WEEKLYAVG/Z0': 'Weekly Avg Ice Concentration',
             'O3MR/P1': '1 hPa Ozone Mixing Ratio',
             'O3MR/P5': '5 hPa Ozone Mixing Ratio',
             'O3MR/P10': '10 hPa Ozone Mixing Ratio',
@@ -320,7 +323,9 @@ class PlotSpecs:
                                      (string)
         """
         vx_mask_plot_name_dict = {
+             'ANTARCTIC': 'Antarctic 50S-90S',
              'Appalachia': 'Appalachia',
+             'ARCTIC': 'Arctic 50N-90N',
              'ATL_MDR', 'Atlantic Main Development Region',
              'CONUS': 'CONUS',
              'CONUS_Central': 'CONUS - Central',
