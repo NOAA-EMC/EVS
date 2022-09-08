@@ -638,8 +638,16 @@ generate_jobs_dict = {
                                    )]}
     },
     'sea_ice': {
-        'Concentration': {'env': {},
-                          'commands': []},
+        'DailyAvg_Concentration': {'env': {},
+                                   'commands': [gda_util.metplus_command(
+                                                   'GridStat_fcstGLOBAL_DET_'
+                                                   +'obsOSI-SAF_DailyAvg.conf'
+                                                )]},
+        'WeeklyAvg_Concentration': {'env': {},
+                                    'commands': [gda_util.metplus_command(
+                                                   'GridStat_fcstGLOBAL_DET_'
+                                                    +'obsOSI-SAF_WeeklyAvg.conf'
+                                                 )]},
     },
     'snow': {
         '24hrNOHRSC_WaterEqv_G211': {'env': {'grid': 'G211',
