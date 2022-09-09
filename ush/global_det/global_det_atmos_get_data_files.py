@@ -34,6 +34,7 @@ if STEP == 'stats':
     COMINnohrsc = os.environ['COMINnohrsc']
     COMINobsproc = os.environ['COMINobsproc']
     COMINosi_saf = os.environ['COMINosi_saf']
+    COMINghrsst_median = os.environ['COMINghrsst_median']
 if evs_run_mode != 'production':
     QUEUESERV = os.environ['QUEUESERV']
     ACCOUNT = os.environ['ACCOUNT']
@@ -114,6 +115,19 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 )
             ]
             VERIF_CASE_STEP_type_valid_hr_list = OSI_SAF_valid_hr_list
+        elif VERIF_CASE_STEP_type == 'sst':
+            (GHRSST_MEDIAN_valid_hr_start, GHRSST_MEDIAN_valid_hr_end,
+             GHRSST_MEDIAN_valid_hr_inc) = gda_util.get_obs_valid_hrs(
+                 'GHRSST-MEDIAN'
+            )
+            GHRSST_MEDIAN_valid_hr_list = [
+                str(x).zfill(2) for x in range(
+                    GHRSST_MEDIAN_valid_hr_start,
+                    GHRSST_MEDIAN_valid_hr_end+GHRSST_MEDIAN_valid_hr_inc,
+                    GHRSST_MEDIAN_valid_hr_inc
+                )
+            ]
+            VERIF_CASE_STEP_type_valid_hr_list = GHRSST_MEDIAN_valid_hr_list
         else:
             VERIF_CASE_STEP_type_valid_hr_list = ['12']
         # Set initialization hours
@@ -274,6 +288,19 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                             str(int(time['forecast_hour']) - 24),
                             model_file_format, model_fcst_dest_file_format
                         )
+                elif VERIF_CASE_STEP_type == 'sst':
+                    # GHRSST Median spans PDYm1 00Z to PDY 00Z
+                    nf = 0
+                    while nf <= 4:
+                        if int(time['forecast_hour'])-(6*nf) >= 0:
+                            gda_util.get_model_file(
+                                (time['valid_time']
+                                 -datetime.timedelta(hours=6*nf)),
+                                time['init_time'],
+                                str(int(time['forecast_hour'])-(6*nf)),
+                                model_file_format, model_fcst_dest_file_format
+                            )
+                        nf+=1
         # Get truth files
         for VERIF_CASE_STEP_type_valid_time \
                 in VERIF_CASE_STEP_type_valid_time_list:
@@ -311,25 +338,6 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 #            VERIF_CASE_STEP_type_valid_time,
                 #            get_d_arch_file_format, get_d_dest_file_format
                 #        )
-            elif VERIF_CASE_STEP_type == 'ozone':
-                # OMI
-                VERIF_CASE_STEP_omi_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'omi'
-                )
-                if not os.path.exists(VERIF_CASE_STEP_omi_dir):
-                    os.makedirs(VERIF_CASE_STEP_omi_dir)
-                # TROPOMI
-                VERIF_CASE_STEP_tropomi_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'tropomi'
-                )
-                if not os.path.exists(VERIF_CASE_STEP_tropomi_dir):
-                    os.makedirs(VERIF_CASE_STEP_tropomi_dir)
-                # OMPS
-                VERIF_CASE_STEP_omps_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'omps'
-                )
-                if not os.path.exists(VERIF_CASE_STEP_omps_dir):
-                    os.makedirs(VERIF_CASE_STEP_omps_dir)
             elif VERIF_CASE_STEP_type == 'precip':
                 # CCPA
                 ccpa_prod_file_format = os.path.join(
@@ -455,24 +463,6 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                             VERIF_CASE_STEP_type_valid_time,
                             osi_saf_arch_file_format, osi_saf_dest_file_format
                         )
-                # SMOS
-                VERIF_CASE_STEP_smos_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'smos'
-                )
-                if not os.path.exists(VERIF_CASE_STEP_smos_dir):
-                    os.makedirs(VERIF_CASE_STEP_smos_dir)
-                #OSTIA
-                VERIF_CASE_STEP_ostia_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'ostia'
-                )
-                if not os.path.exists(VERIF_CASE_STEP_ostia_dir):
-                    os.makedirs(VERIF_CASE_STEP_ostia_dir)
-                # GIOMAS
-                VERIF_CASE_STEP_giomas_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'giomas'
-                )
-                if not os.path.exists(VERIF_CASE_STEP_giomas_dir):
-                    os.makedirs(VERIF_CASE_STEP_giomas_dir)
             elif VERIF_CASE_STEP_type == 'snow':
                 # NOHRSC
                 nohrsc_prod_file_format = os.path.join(
@@ -508,12 +498,46 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                         nohrsc_arch_file_format, nohrsc_dest_file_format
                     )
             elif VERIF_CASE_STEP_type == 'sst':
-                # GHRSST
-                VERIF_CASE_STEP_ghrsst_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'ghrsst'
+                # GHRSST Median
+                ghrsst_median_prod_file_format = os.path.join(
+                    COMINghrsst_median, 'prep',
+                    COMPONENT, RUN+'.{valid?fmt=%Y%m%d}', 'ghrsst_median',
+                    'ghrsst_median.{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
+                    +'{valid?fmt=%Y%m%d%H}.nc'
                 )
-                if not os.path.exists(VERIF_CASE_STEP_ghrsst_dir):
-                    os.makedirs(VERIF_CASE_STEP_ghrsst_dir)
+                VERIF_CASE_STEP_ghrsst_median_dir = os.path.join(
+                    VERIF_CASE_STEP_data_dir, 'ghrsst_median'
+                )
+                if not os.path.exists(VERIF_CASE_STEP_ghrsst_median_dir):
+                    os.makedirs(VERIF_CASE_STEP_ghrsst_median_dir)
+                ghrsst_median_dest_file_format = os.path.join(
+                    VERIF_CASE_STEP_ghrsst_median_dir,
+                    'ghrsst_median.{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
+                     +'{valid?fmt=%Y%m%d%H}.nc'
+                )
+                ghrsst_median_dest_file = gda_util.format_filler(
+                    ghrsst_median_dest_file_format,
+                    VERIF_CASE_STEP_type_valid_time,
+                    VERIF_CASE_STEP_type_valid_time, ['anl'], {}
+                )
+                gda_util.get_truth_file(
+                    VERIF_CASE_STEP_type_valid_time,
+                    ghrsst_median_prod_file_format,
+                    ghrsst_median_dest_file_format
+                )
+                if not os.path.exists(ghrsst_median_dest_file) \
+                        and evs_run_mode != 'production':
+                    ghrsst_median_arch_file_format = os.path.join(
+                        archive_obs_data_dir, 'ghrsst_median',
+                        'UKMO-L4_GHRSST-SSTfnd-GMPE-GLOB_'
+                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
+                        +'{valid?fmt=%Y%m%d%H}.nc'
+                    )
+                    gda_util.get_truth_file(
+                        VERIF_CASE_STEP_type_valid_time,
+                        ghrsst_median_arch_file_format,
+                        ghrsst_median_dest_file_format
+                    )
 elif VERIF_CASE_STEP == 'grid2obs_stats':
     # Read in VERIF_CASE_STEP related environment variables
     # Get model forecast and truth files for each option in VERIF_CASE_STEP_type_list
@@ -634,14 +658,7 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                             gdas_arch_file_format,
                             gdas_dest_file_format
                         )
-            if VERIF_CASE_STEP_type == 'sea_ice':
-                # IABP
-                VERIF_CASE_STEP_iabp_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'iabp'
-                )
-                if not os.path.exists(VERIF_CASE_STEP_iabp_dir):
-                    os.makedirs(VERIF_CASE_STEP_iabp_dir)
-            elif VERIF_CASE_STEP_type == 'sfc':
+            if VERIF_CASE_STEP_type == 'sfc':
                 # NAM prepbufr
                 offset_hr = str(
                     int(VERIF_CASE_STEP_type_valid_time.strftime('%H'))%6

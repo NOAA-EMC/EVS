@@ -190,7 +190,30 @@ reformat_model_jobs_dict = {
                                              +'DET_24hrAccum_snow.conf'
                                          )]}
     },
-    'sst': {},
+    'sst': {
+        'DailyAvg_SST': {'env': {'var1_name': 'TMP',
+                                 'var1_levels': 'Z0'},
+                         'commands': [gda_util.metplus_command(
+                                          'GridStat_fcstGLOBAL_DET_'
+                                          +'NetCDF.conf'
+                                      ),
+                                      gda_util.python_command(
+                                          'global_det_atmos_stats_grid2grid'
+                                          '_create_daily_avg.py',
+                                          ['TMP_Z0',
+                                           os.path.join(
+                                              '$DATA',
+                                              '${VERIF_CASE}_${STEP}',
+                                              'METplus_output',
+                                              '${RUN}.{valid?fmt=%Y%m%d}',
+                                              '$MODEL', '$VERIF_CASE',
+                                              'grid_stat_${VERIF_TYPE}.'
+                                              +'${job_name}_'
+                                              +'{lead?fmt=%2H}0000L_'
+                                              +'{valid?fmt=%Y%m%d}_'
+                                              +'{valid?fmt=%H}0000V_pairs.nc'
+                                          )])]}
+    },
 }
 
 # Create reformat jobs directory
@@ -344,6 +367,19 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             'A'+job_env_dict['MODEL_accum']
                         )
                 elif verif_type == 'sea_ice':
+                    job_env_dict['netCDF_ENDDATE'] = date_dt.strftime('%Y%m%d')
+                    job_env_dict['netCDF_STARTDATE'] = (
+                        (date_dt - datetime.timedelta(days=1))\
+                        .strftime('%Y%m%d')
+                    )
+                    netCDF_fhr_start = int(job_env_dict['fhr_start']) - 24
+                    if netCDF_fhr_start >= 0:
+                        job_env_dict['netCDF_fhr_start'] = str(netCDF_fhr_start)
+                    else:
+                        job_env_dict['netCDF_fhr_start'] = (
+                            job_env_dict['fhr_start']
+                        )
+                elif verif_type == 'sst':
                     job_env_dict['netCDF_ENDDATE'] = date_dt.strftime('%Y%m%d')
                     job_env_dict['netCDF_STARTDATE'] = (
                         (date_dt - datetime.timedelta(days=1))\
@@ -772,8 +808,11 @@ generate_jobs_dict = {
                                                  )]},
     },
     'sst': {
-        'TempSeaSfc': {'env': {},
-                       'commands': []},
+        'DailyAvg_SST': {'env': {},
+                         'commands': [gda_util.metplus_command(
+                                          'GridStat_fcstGLOBAL_DET_'
+                                          +'obsGHRSST_MEDIAN_DailyAvg.conf'
+                                      )]},
     },
 }
 

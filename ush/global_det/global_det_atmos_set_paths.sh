@@ -56,6 +56,7 @@ export COMINccpa=/lfs/h1/ops/prod/com/ccpa/$ccpa_ver
 export COMINnohrsc=/lfs/h1/ops/prod/dcom
 export COMINobsproc=/lfs/h1/ops/prod/com/obsproc/$obsproc_ver
 export COMINosi_saf=/lfs/h1/ops/prod/com/evs/$evs_ver
+export COMINghrsst_median=/lfs/h1/ops/prod/com/evs/$evs_ver
 
 # Set FTP/HTPP paths [TEMPORARY UNTIL IN DATAFLOW]
 
