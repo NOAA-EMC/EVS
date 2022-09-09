@@ -1,7 +1,7 @@
 #PBS -N jevs_global_det_atmos_prep_00
 #PBS -j oe
 #PBS -S /bin/sh
-#PBS -q dev
+#PBS -q dev_transfer
 #PBS -A VERF-DEV
 #PBS -l walltime=2:00:00
 #PBS -l select=1:ncpus=1:mem=5GB
@@ -61,7 +61,7 @@ export COMPONENT=global_det
 export RUN=atmos
 
 export MODELNAME="cfs cmc cmc_regional dwd ecmwf fnmoc imd jma metfra ukmet"
-export OBSNAME="osi_saf"
+export OBSNAME="osi_saf ghrsst_median"
 
 # CALL executable job script here
 $HOMEevs/jobs/global_det/prep/JEVS_GLOBAL_DET_PREP

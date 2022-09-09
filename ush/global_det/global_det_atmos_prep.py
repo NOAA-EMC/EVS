@@ -33,6 +33,7 @@ COMINmetfra_precip = os.environ['COMINmetfra_precip']
 COMINukmet = os.environ['COMINukmet']
 COMINukmet_precip = os.environ['COMINukmet_precip']
 COMINosi_saf = os.environ['COMINosi_saf']
+COMINghrsst_median = os.environ['COMINghrsst_median']
 COMOUT = os.environ['COMOUT']
 INITDATE = os.environ['INITDATE']
 NET = os.environ['NET']
@@ -364,6 +365,20 @@ global_det_obs_dict = {
                                                        +'{init?fmt=%Y%m%d%H}'
                                                        +'_G004.nc'),
                 'cycles': ['00']},
+    'ghrsst_median': {'prod_file_format': os.path.join(COMINghrsst_median,
+                                                       'ghrsst_median',
+                                                       '{init_shift?fmt=%Y%m%d%H'
+                                                       +'?shift=-12}0000-'
+                                                       +'UKMO-L4_GHRSST-'
+                                                       +'SSTfnd-GMPE-GLOB-'
+                                                       +'v03.0-fv03.0.nc'),
+                      'arch_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
+                                                       'ghrsst_median',
+                                                       'ghrsst_median.'
+                                                       +'{init_shift?fmt=%Y%m%d%H'
+                                                       +'?shift=-24}to'
+                                                       +'{init?fmt=%Y%m%d%H}.nc'),
+                      'cycles': ['00']}
 }
 
 for OBS in OBSNAME:
@@ -416,5 +431,27 @@ for OBS in OBSNAME:
                     daily_prod_file, daily_arch_file,
                     weekly_file_list, weekly_arch_file, (CDATEm7_dt,CDATE_dt)
                 )
-
+        else:
+            prod_file = gda_util.format_filler(
+                obs_dict['prod_file_format'], CDATE_dt, CDATE_dt,
+                'anl', {}
+            )
+            arch_file = gda_util.format_filler(
+                obs_dict['arch_file_format'], CDATE_dt, CDATE_dt,
+                'anl', {}
+            )
+            COMOUT_file = os.path.join(
+                COMOUT_INITDATE, OBS, arch_file.rpartition('/')[2]
+            )
+            if not os.path.exists(COMOUT_file) \
+                    and not os.path.exists(arch_file):
+                arch_file_dir = arch_file.rpartition('/')[0]
+                if not os.path.exists(arch_file_dir):
+                    os.makedirs(arch_file_dir)
+                print("----> Trying to create "+arch_file)
+                if OBS == 'ghrsst_median':
+                    gda_util.prep_prod_ghrsst_median_file(
+                        prod_file, arch_file,
+                        datetime.datetime.strptime(CDATE, '%Y%m%d%H')
+                    )
 print("END: "+os.path.basename(__file__))

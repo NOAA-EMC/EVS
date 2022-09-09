@@ -888,6 +888,44 @@ def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
               +": "+' '.join(weekly_source_file_list))
     copy_file(weekly_prepped_file, weekly_dest_file)
 
+def prep_prod_ghrsst_median_file(source_file, dest_file, date_dt):
+    """! Do prep work for GHRSST Median production files
+
+         Args:
+             source_file - source file (string)
+             dest_file   - destination file (string)
+             date_dt     - date (datetime object)
+         Returns:
+    """
+    # Environment variables and executables
+    # Temporary file names
+    prepped_file = os.path.join(os.getcwd(), 'atmos.'
+                                +source_file.rpartition('/')[2])
+    # Prep file
+    #copy_file(prod_file, prepped_file)
+    ##########################################################################
+    # Temporary until NCO brings in data feed
+    date_m1_dt = date_dt - datetime.timedelta(hours=12)
+    ftp_file = ('ftp://nrt.cmems-du.eu/Core/SST_GLO_SST_L4_NRT_OBSERVATIONS_'
+                +'010_005/METOFFICE-GLO-SST-L4-NRT-OBS-GMPE-V3/'
+                +date_m1_dt.strftime('%Y')+'/'+date_m1_dt.strftime('%m')+'/'
+                +date_m1_dt.strftime('%Y%m%d')+'120000-'
+                +'UKMO-L4_GHRSST-SSTfnd-GMPE-GLOB-v03.0-fv03.0.nc')
+    run_shell_command(
+        ['wget', '--ftp-user=mrow', '--ftp-password=EMCvpppg2022',
+         ftp_file]
+    )
+    copy_file(os.path.join(os.getcwd(),ftp_file.rpartition('/')[2]),prepped_file)
+    ##########################################################################
+    if check_file_exists_size(prepped_file):
+        prepped_data = netcdf.Dataset(prepped_file, 'a',
+                                      format='NETCDF3_CLASSIC')
+        ghrsst_median_date_since_dt = datetime.datetime.strptime(
+            '1981-01-01 00:00:00','%Y-%m-%d %H:%M:%S'
+        )
+        prepped_data['time'][:] = prepped_data['time'][:][0] + 43200
+    copy_file(prepped_file, dest_file)
+
 def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
                    source_file_format, dest_file_format):
     """! This get a model file and saves it in the specificed
@@ -983,6 +1021,9 @@ def get_obs_valid_hrs(obs):
         'OSI-SAF': {'valid_hr_start': 00,
                     'valid_hr_end': 00,
                     'valid_hr_inc': 24},
+        'GHRSST-MEDIAN': {'valid_hr_start': 00,
+                          'valid_hr_end': 00,
+                          'valid_hr_inc': 24},
     }
     if obs in list(obs_valid_hr_dict.keys()):
         valid_hr_start = obs_valid_hr_dict[obs]['valid_hr_start']
@@ -1129,6 +1170,10 @@ def initalize_job_env_dict(verif_type, group,
             elif verif_type == 'sea_ice':
                 valid_hr_start, valid_hr_end, valid_hr_inc = (
                     get_obs_valid_hrs('OSI-SAF')
+                )
+            elif verif_type == 'sst':
+                valid_hr_start, valid_hr_end, valid_hr_inc = (
+                    get_obs_valid_hrs('GHRSST-MEDIAN')
                 )
             else:
                  valid_hr_start, valid_hr_end, valid_hr_inc = 12, 12, 23
