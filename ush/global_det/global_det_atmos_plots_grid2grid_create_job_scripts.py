@@ -705,7 +705,21 @@ plot_jobs_dict = {
                                       'obs_name': '24hrNOHRSC',
                                       'plots_list': 'time_series'},
     },
-    'sst': {},
+    'sst': {
+        'DailyAvg_SST': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
+                         'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
+                                          'TROPICS'],
+                         'fcst_var_dict': {'name': 'SST_DAILYAVG',
+                                           'levels': 'Z0',
+                                           'threshs': 'NA'},
+                         'obs_var_dict': {'name': 'analysed_sst',
+                                          'levels': "'0,*,*'",
+                                          'threshs': 'NA'},
+                         'interp_dict': {'method': 'NEAREST',
+                                         'points': '1'},
+                         'grid': 'G004',
+                         'plots_list': 'time_series'},
+    }
 }
 njobs = 0
 plot_jobs_dir = os.path.join(DATA, VERIF_CASE_STEP, 'plot_job_scripts')
