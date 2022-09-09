@@ -32,6 +32,7 @@ valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end'] 
 valid_hr_inc = os.environ['valid_hr_inc']
 fhr_end = os.environ['fhr_end']
+fhr_inc = os.environ['fhr_inc']
 
 # Process run time agruments
 if len(sys.argv) != 3:
@@ -140,7 +141,7 @@ while valid_hr <= int(valid_hr_end):
             if job_name == 'DailyAvg_GeoHeightAnom':
                 daily_avg_day_fhr+=12
             else:
-                daily_avg_day_fhr+=6
+                daily_avg_day_fhr+=int(fhr_inc)
         if len(daily_avg_fcst_file_list) != 0:
             daily_avg_fcst = (
                 daily_avg_fcst_sum/len(daily_avg_fcst_file_list)
@@ -152,7 +153,10 @@ while valid_hr <= int(valid_hr_end):
         if job_name == 'DailyAvg_GeoHeightAnom':
             expected_nfiles = 2
         else:
-            expected_nfiles = 5
+            if fhr_inc == '6':
+                expected_nfiles = 5
+            elif fhr_inc == '12':
+                expected_nfiles = 3
         if len(daily_avg_fcst_file_list) == expected_nfiles \
                 and len(daily_avg_obs_file_list) == expected_nfiles:
             print("Output File: "+output_file)
@@ -249,7 +253,7 @@ while valid_hr <= int(valid_hr_end):
         if job_name == 'DailyAvg_GeoHeightAnom':
             daily_avg_day+=1
         else:
-            daily_avg_day+=0.25
+            daily_avg_day+=int(fhr_inc)/24.
         print("")
     valid_hr+=int(valid_hr_inc)
     
