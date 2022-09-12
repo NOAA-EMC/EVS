@@ -44,6 +44,7 @@ export COMINgfs=$(compath.py prod/gfs/$gfs_ver)
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com
 export COMIN=$COMROOT/$NET/$evs_ver
 export COMINosi_saf=$COMIN
+export COMINghrsst_median=$COMIN
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT
 export COMOUTsmallVDATE=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
 export COMOUTsmallPDYm2=$COMOUT/$RUN.$PDYm2/$MODELNAME/$VERIF_CASE

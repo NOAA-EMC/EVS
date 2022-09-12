@@ -74,7 +74,7 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
     #g2gs_*_fhr_min:           forecast hour to start verification HH[H]
     #g2gs_*_fhr_max:           forecast hour to end verification HH[H]
     #g2gs_*_fhr_inc:           frequency to verify forecast hours at HH[H]
-    export g2gs_type_list="pres_levs snow"
+    export g2gs_type_list="pres_levs snow sst"
     export g2gs_pres_levs_truth_name_list="${MODELNAME}_anl"
     export g2gs_pres_levs_truth_format_list="${COMINimd}.{valid?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.t{valid?fmt=%H}z.anl"
     export g2gs_pres_levs_init_hr_list="00 12"
@@ -86,6 +86,10 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
     export g2gs_snow_fhr_min=24
     export g2gs_snow_fhr_max=240
     export g2gs_snow_fhr_inc=24
+    export g2gs_sst_init_hr_list="00 12"
+    export g2gs_sst_fhr_min=24
+    export g2gs_sst_fhr_max=240
+    export g2gs_sst_fhr_inc=12
     export g2gs_mv_database_name="mv_evs_global_det_atmos_grid2grid_stats_$MODELNAME"
     export g2gs_mv_database_group="$USER"
     export g2gs_mv_database_desc="Grid-to-grid METplus data for $MODELNAME"
