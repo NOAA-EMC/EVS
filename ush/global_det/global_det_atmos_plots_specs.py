@@ -55,6 +55,18 @@ class PlotSpecs:
             self.legend_font_size = 13
             self.legend_loc = 'center'
             self.legend_ncol = 5
+        elif self.plot_type == 'lead_average':
+            self.fig_size = (14., 14.)
+            self.axis_title_size = 16
+            self.fig_subplot_top = 0.9
+            self.fig_subplot_bottom = 0.075
+            self.fig_subplot_right = 0.95
+            self.fig_subplot_left = 0.15
+            self.legend_frame_on = False
+            self.legend_bbox = (0.5, 0.05)
+            self.legend_font_size = 13
+            self.legend_loc = 'center'
+            self.legend_ncol = 5
         else:
             self.logger.warning(f"{self.plot_type} NOT RECOGNIZED")
             sys.exit(1)
@@ -424,7 +436,7 @@ class PlotSpecs:
         """
         plot_title = (
             self.get_stat_plot_name(plot_info_dict['stat'])+' - '
-            +self.get_vx_mask_plot_name(plot_info_dict['grid'])+'/'
+            +plot_info_dict['grid']+'/'
             +self.get_vx_mask_plot_name(plot_info_dict['vx_mask'])+'\n'
         )
         if date_info_dict['date_type'] == 'VALID':
@@ -451,7 +463,7 @@ class PlotSpecs:
                                 +int(date_info_dict['valid_hr_inc']),
                                 int(date_info_dict['valid_hr_inc']))
             ]
-        if self.plot_type == 'time_series':
+        if self.plot_type in ['time_series', 'lead_average']:
             if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
                 plot_title = (
                     plot_title
@@ -484,13 +496,22 @@ class PlotSpecs:
                     +'Neighborhood Points: '
                     +plot_info_dict['interp_points']
                 )
-            plot_title = (
-                plot_title+'\n'
-                +self.get_dates_plot_name(date_info_dict['date_type'],
-                                          start_date_hr, end_date_hr,
-                                          other_hr_list,
-                                          date_info_dict['forecast_hour'])
-            )
+            if self.plot_type == 'time_series':
+                plot_title = (
+                    plot_title+'\n'
+                    +self.get_dates_plot_name(date_info_dict['date_type'],
+                                              start_date_hr, end_date_hr,
+                                              other_hr_list,
+                                              date_info_dict['forecast_hour'])
+                )
+            elif self.plot_type == 'lead_average':
+                plot_title = (
+                    plot_title+'\n'
+                    +self.get_dates_plot_name(date_info_dict['date_type'],
+                                              start_date_hr, end_date_hr,
+                                              other_hr_list,
+                                              'NA')
+                )
         return plot_title
 
     def get_savefig_name(self, image_dir, plot_info_dict, date_info_dict):
@@ -542,16 +563,27 @@ class PlotSpecs:
             +plot_info_dict['grid']
             +plot_info_dict['vx_mask']+'_'
         )
-        savefig_name = (
-            savefig_name
-            +date_info_dict['date_type'].lower()
-            +date_info_dict['start_date']
-            +date_type_start_hr+'to'
-            +date_info_dict['end_date']
-            +date_type_end_hr+'_'
-            +'fhr'+date_info_dict['forecast_hour'].zfill(3)
-            +'.png'
-        )
+        if self.plot_type == 'time_series':
+            savefig_name = (
+                savefig_name
+                +date_info_dict['date_type'].lower()
+                +date_info_dict['start_date']
+                +date_type_start_hr+'to'
+                +date_info_dict['end_date']
+                +date_type_end_hr+'_'
+                +'fhr'+date_info_dict['forecast_hour'].zfill(3)
+                +'.png'
+            )
+        elif self.plot_type == 'lead_average':
+            savefig_name = (
+                savefig_name
+                +date_info_dict['date_type'].lower()
+                +date_info_dict['start_date']
+                +date_type_start_hr+'to'
+                +date_info_dict['end_date']
+                +date_type_end_hr+'_'
+                +'fhrmean.png'
+            )
         image_path = os.path.join(image_dir, savefig_name)
         return image_path
 
@@ -577,6 +609,13 @@ class PlotSpecs:
             elif position == 'right':
                 x_loc = x_figsize * dpi * 0.9
                 y_loc = y_figsize * dpi * 0.86
+        if x_figsize == 14 and y_figsize == 14:
+            if position == 'left':
+                x_loc = x_figsize * dpi * 0.15
+                y_loc = y_figsize * dpi * 0.925
+            elif position == 'right':
+                x_loc = x_figsize * dpi * 0.9
+                y_loc = y_figsize * dpi * 0.925
         return x_loc, y_loc, alpha
 
     def get_model_plot_settings(self):

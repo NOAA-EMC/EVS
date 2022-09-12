@@ -1398,8 +1398,8 @@ def condense_model_stat_files(logger, input_dir, output_file, model, obs,
                 f.write(met_header_cols+all_grep_output)
 
 def build_df(logger, input_dir, output_dir, model_info_dict,
-             plot_info_dict, date_info_dict, met_info_dict,
-             dates, met_format_valid_dates):
+             plot_info_dict, met_info_dict, date_type, dates,
+             met_format_valid_dates, fhr):
     """! Build the data frame for all model stats,
          Read the model parse file, if doesn't exist
          parse the model file for need information, and write file
@@ -1410,11 +1410,12 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
              output_dir             - path to output directory (string)
              model_info_dict        - model infomation dictionary (strings)
              plot_info_dict         - plot information dictionary (strings)
-             date_info_dict         - date information dictionary (strings)
              met_info_dict          - MET information dictionary (strings)
+             date_type              - type of date (string, VALID or INIT)
              dates                  - array of dates (datetime)
              met_format_valid_dates - list of valid dates formatted
                                       like they are in MET stat files
+             fhr                    - forecast hour (string)
 
          Returns:
     """
@@ -1457,10 +1458,10 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
             +'vxmask'+plot_info_dict['vx_mask']+'_'
             +'interp'+plot_info_dict['interp_method']
             +plot_info_dict['interp_points']+'_'
-            +date_info_dict['date_type'].lower()
+            +date_type.lower()
             +dates[0].strftime('%Y%m%d%H%M%S')+'to'
             +dates[-1].strftime('%Y%m%d%H%M%S')+'_'
-            +'fhr'+date_info_dict['forecast_hour'].zfill(3)
+            +'fhr'+fhr.zfill(3)
             +'.stat'
         )
         if not os.path.exists(parsed_model_stat_file):
@@ -1501,7 +1502,7 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                     (condensed_model_df['MODEL'] == model_dict['name'])
                      & (condensed_model_df['DESC'] == plot_info_dict['grid'])
                      & (condensed_model_df['FCST_LEAD'] \
-                        == date_info_dict['forecast_hour'].zfill(2)+'0000')
+                        == fhr.zfill(2)+'0000')
                      & (condensed_model_df['FCST_VAR'] \
                         == plot_info_dict['fcst_var_name'])
                      & (condensed_model_df['FCST_LEV'] \

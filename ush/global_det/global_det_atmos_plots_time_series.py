@@ -113,8 +113,9 @@ class TimeSeries:
         all_model_df = gda_util.build_df(
             self.logger, self.input_dir, self.output_dir,
             self.model_info_dict, self.plot_info_dict,
-            self.date_info_dict, self.met_info_dict,
-            plot_dates, format_valid_dates
+            self.met_info_dict, self.date_info_dict['date_type'],
+            plot_dates, format_valid_dates,
+            str(self.date_info_dict['forecast_hour'])
         )
         # Calculate statistic
         self.logger.info(f"Calculating statstic {self.plot_info_dict['stat']} "
