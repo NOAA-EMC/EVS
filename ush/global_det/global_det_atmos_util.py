@@ -1398,7 +1398,9 @@ def condense_model_stat_files(logger, input_dir, output_file, model, obs,
                 f.write(met_header_cols+all_grep_output)
 
 def build_df(logger, input_dir, output_dir, model_info_dict,
-             plot_info_dict, met_info_dict, date_type, dates,
+             met_info_dict, fcst_var_name, fcst_var_level, fcst_var_thresh,
+             obs_var_name, obs_var_level, obs_var_thresh, line_type,
+             grid, vx_mask, interp_method, interp_points, date_type, dates,
              met_format_valid_dates, fhr):
     """! Build the data frame for all model stats,
          Read the model parse file, if doesn't exist
@@ -1409,8 +1411,18 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
              input_dir              - path to input directory (string)
              output_dir             - path to output directory (string)
              model_info_dict        - model infomation dictionary (strings)
-             plot_info_dict         - plot information dictionary (strings)
              met_info_dict          - MET information dictionary (strings)
+             fcst_var_name          - forecast variable name (string)
+             fcst_var_level         - forecast variable level (string)
+             fcst_var_tresh         - forecast variable treshold (string)
+             obs_var_name           - observation variable name (string)
+             obs_var_level          - observation variable level (string)
+             obs_var_tresh          - observation variable treshold (string)
+             line_type              - MET line type (string)
+             grid                   - verification grid (string)
+             vx_mask                - verification masking region (string)
+             interp_method          - interpolation method (string)
+             interp_points          - interpolation points (string)
              date_type              - type of date (string, VALID or INIT)
              dates                  - array of dates (datetime)
              met_format_valid_dates - list of valid dates formatted
@@ -1420,8 +1432,7 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
          Returns:
     """
     met_version_line_type_col_list = get_met_line_type_cols(
-        logger, met_info_dict['root'], met_info_dict['version'],
-        plot_info_dict['line_type']
+        logger, met_info_dict['root'], met_info_dict['version'], line_type
     )
     df_dtype_dict = {}
     float_idx = met_version_line_type_col_list.index('TOTAL')
@@ -1446,18 +1457,12 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
         parsed_model_stat_file = os.path.join(
             output_dir,
             'fcst'+model_dict['name']+'_'
-            +plot_info_dict['fcst_var_name']
-            +plot_info_dict['fcst_var_level']
-            +plot_info_dict['fcst_var_thresh']+'_'
+            +fcst_var_name+fcst_var_level+fcst_var_thresh+'_'
             +'obs'+model_dict['obs_name']+'_'
-            +plot_info_dict['obs_var_name']
-            +plot_info_dict['obs_var_level']
-            +plot_info_dict['obs_var_thresh']+'_'
-            +'linetype'+plot_info_dict['line_type']+'_'
-            +'grid'+plot_info_dict['grid']+'_'
-            +'vxmask'+plot_info_dict['vx_mask']+'_'
-            +'interp'+plot_info_dict['interp_method']
-            +plot_info_dict['interp_points']+'_'
+            +obs_var_name+obs_var_level+obs_var_thresh+'_'
+            +'linetype'+line_type+'_'
+            +'grid'+grid+'_'+'vxmask'+vx_mask+'_'
+            +'interp'+interp_method+interp_points+'_'
             +date_type.lower()
             +dates[0].strftime('%Y%m%d%H%M%S')+'to'
             +dates[-1].strftime('%Y%m%d%H%M%S')+'_'
@@ -1471,26 +1476,23 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
             if not os.path.exists(condensed_model_file):
                 condense_model_stat_files(
                     logger, input_dir, condensed_model_file, model_dict['name'],
-                    model_dict['obs_name'], plot_info_dict['grid'],
-                    plot_info_dict['vx_mask'],
-                    plot_info_dict['fcst_var_name'],
-                    plot_info_dict['obs_var_name'],
-                    plot_info_dict['line_type']
+                    model_dict['obs_name'], grid, vx_mask,
+                    fcst_var_name, obs_var_name, line_type
                 )
-            if plot_info_dict['fcst_var_thresh'] != 'NA':
+            if fcst_var_thresh != 'NA':
                 fcst_var_thresh_symbol, fcst_vat_thresh_letter = (
-                    format_thresh(plot_info_dict['fcst_var_thresh'])
+                    format_thresh(fcst_var_thresh)
                 )
             else:
-                fcst_var_thresh_symbol = plot_info_dict['fcst_var_thresh']
-                fcst_vat_thresh_letter = plot_info_dict['fcst_var_thresh']
-            if plot_info_dict['obs_var_thresh'] != 'NA':
+                fcst_var_thresh_symbol = fcst_var_thresh
+                fcst_vat_thresh_letter = fcst_var_thresh
+            if obs_var_thresh != 'NA':
                 obs_var_thresh_symbol, obs_vat_thresh_letter = (
-                    format_thresh(plot_info_dict['obs_var_thresh'])
+                    format_thresh(obs_var_thresh)
                 )
             else:
-                obs_var_thresh_symbol = plot_info_dict['obs_var_thresh']
-                obs_vat_thresh_letter = plot_info_dict['obs_var_thresh']
+                obs_var_thresh_symbol = obs_var_thresh
+                obs_vat_thresh_letter = obs_var_thresh
             if os.path.exists(condensed_model_file):
                 logger.debug(f"Parsing file {condensed_model_file}")
                 condensed_model_df = pd.read_csv(
@@ -1500,30 +1502,30 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                 )
                 parsed_model_df = condensed_model_df[
                     (condensed_model_df['MODEL'] == model_dict['name'])
-                     & (condensed_model_df['DESC'] == plot_info_dict['grid'])
+                     & (condensed_model_df['DESC'] == grid)
                      & (condensed_model_df['FCST_LEAD'] \
                         == fhr.zfill(2)+'0000')
                      & (condensed_model_df['FCST_VAR'] \
-                        == plot_info_dict['fcst_var_name'])
+                        == fcst_var_name)
                      & (condensed_model_df['FCST_LEV'] \
-                        == plot_info_dict['fcst_var_level'])
+                        == fcst_var_level)
                      & (condensed_model_df['OBS_VAR'] \
-                        == plot_info_dict['obs_var_name'])
+                        == obs_var_name)
                      & (condensed_model_df['OBS_LEV'] \
-                        == plot_info_dict['obs_var_level'])
+                        == obs_var_level)
                      & (condensed_model_df['OBTYPE'] == model_dict['obs_name'])
                      & (condensed_model_df['VX_MASK'] \
-                        == plot_info_dict['vx_mask'])
+                        == vx_mask)
                      & (condensed_model_df['INTERP_MTHD'] \
-                        == plot_info_dict['interp_method'])
+                        == interp_method)
                      & (condensed_model_df['INTERP_PNTS'] \
-                        == plot_info_dict['interp_points'])
+                        == interp_points)
                      & (condensed_model_df['FCST_THRESH'] \
                         == fcst_var_thresh_symbol)
                      & (condensed_model_df['OBS_THRESH'] \
                         == obs_var_thresh_symbol)
                      & (condensed_model_df['LINE_TYPE'] \
-                        == plot_info_dict['line_type'])
+                        == line_type)
                 ]
                 parsed_model_df = parsed_model_df[
                     parsed_model_df['FCST_VALID_BEG'].isin(met_format_valid_dates)

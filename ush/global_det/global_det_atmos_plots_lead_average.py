@@ -115,8 +115,19 @@ class LeadAverage:
             self.logger.info(f"Reading in model stat files from {self.input_dir}")
             all_model_df = gda_util.build_df(
                 self.logger, self.input_dir, self.output_dir,
-                self.model_info_dict, self.plot_info_dict,
-                self.met_info_dict, self.date_info_dict['date_type'],
+                self.model_info_dict, self.met_info_dict,
+                self.plot_info_dict['fcst_var_name'],
+                self.plot_info_dict['fcst_var_level'],
+                self.plot_info_dict['fcst_var_thresh'],
+                self.plot_info_dict['obs_var_name'],
+                self.plot_info_dict['obs_var_level'],
+                self.plot_info_dict['obs_var_thresh'],
+                self.plot_info_dict['line_type'],
+                self.plot_info_dict['grid'],
+                self.plot_info_dict['vx_mask'],
+                self.plot_info_dict['interp_method'],
+                self.plot_info_dict['interp_points'],
+                self.date_info_dict['date_type'],
                 plot_dates, format_valid_dates,
                 str(forecast_hour)
             )
@@ -208,7 +219,7 @@ class LeadAverage:
         ax2.set_xlabel('Forecast Hour')
         ax2.set_xlim([self.date_info_dict['forecast_hours'][0],
                       self.date_info_dict['forecast_hours'][-1]])
-        ax2.set_xticks(self.date_info_dict['forecast_hours'][::xtick_intvl]))
+        ax2.set_xticks(self.date_info_dict['forecast_hours'][::xtick_intvl])
         ax2.set_ylabel('Difference')
         ax2.set_title('Difference from '
                       +self.model_info_dict['model1']['plot_name'], loc='left')
