@@ -67,6 +67,18 @@ class PlotSpecs:
             self.legend_font_size = 13
             self.legend_loc = 'center'
             self.legend_ncol = 5
+        elif self.plot_type == 'lead_by_date':
+            self.fig_size = (14., 14.)
+            self.axis_title_size = 16
+            self.fig_subplot_top = 0.9
+            self.fig_subplot_bottom = 0.075
+            self.fig_subplot_right = 0.9
+            self.fig_subplot_left = 0.15
+            self.legend_frame_on = False
+            self.legend_bbox = (0.5, 0.05)
+            self.legend_font_size = 13
+            self.legend_loc = 'center'
+            self.legend_ncol = 5
         else:
             self.logger.warning(f"{self.plot_type} NOT RECOGNIZED")
             sys.exit(1)
@@ -94,6 +106,8 @@ class PlotSpecs:
         plt.rcParams['figure.subplot.right'] = self.fig_subplot_right
         plt.rcParams['figure.subplot.top'] = self.fig_subplot_top
         plt.rcParams['figure.subplot.bottom'] = self.fig_subplot_bottom
+        plt.rcParams['figure.titleweight'] = plt.rcParams['axes.titleweight']
+        plt.rcParams['figure.titlesize'] = plt.rcParams['axes.titlesize']
         plt.rcParams['legend.handletextpad'] = self.legend_handle_text_pad
         plt.rcParams['legend.handlelength'] = self.legend_handle_length
         plt.rcParams['legend.borderaxespad'] = self.legend_border_axis_pad
@@ -463,7 +477,7 @@ class PlotSpecs:
                                 +int(date_info_dict['valid_hr_inc']),
                                 int(date_info_dict['valid_hr_inc']))
             ]
-        if self.plot_type in ['time_series', 'lead_average']:
+        if self.plot_type in ['time_series', 'lead_average', 'lead_by_date']:
             if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
                 plot_title = (
                     plot_title
@@ -504,7 +518,7 @@ class PlotSpecs:
                                               other_hr_list,
                                               date_info_dict['forecast_hour'])
                 )
-            elif self.plot_type == 'lead_average':
+            elif self.plot_type in ['lead_average', 'lead_by_date']:
                 plot_title = (
                     plot_title+'\n'
                     +self.get_dates_plot_name(date_info_dict['date_type'],
@@ -583,6 +597,16 @@ class PlotSpecs:
                 +date_info_dict['end_date']
                 +date_type_end_hr+'_'
                 +'fhrmean.png'
+            )
+        elif self.plot_type == 'lead_by_date':
+            savefig_name = (
+                savefig_name
+                +date_info_dict['date_type'].lower()
+                +date_info_dict['start_date']
+                +date_type_start_hr+'to'
+                +date_info_dict['end_date']
+                +date_type_end_hr+'_'
+                +'leaddate.png'
             )
         image_path = os.path.join(image_dir, savefig_name)
         return image_path

@@ -244,6 +244,36 @@ for plot in plots_list:
                                           model_info_dict, date_info_dict,
                                           plot_info_dict, met_info_dict, logo_dir)
             plot_la.make_lead_average()
+    elif plot == 'lead_by_date':
+        import global_det_atmos_plots_lead_by_date as gdap_lbd
+        for var_interppts_info in \
+                list(itertools.product(var_info, interp_points_list)):
+            date_info_dict['forecast_hours'] = fhrs
+            plot_info_dict['fcst_var_name'] = (
+                var_interppts_info[0][0][0]
+            )
+            plot_info_dict['fcst_var_level'] = (
+                var_interppts_info[0][0][1]
+            )
+            plot_info_dict['fcst_var_thresh'] = (
+                var_interppts_info[0][0][2]
+            )
+            plot_info_dict['obs_var_name'] = (
+                var_interppts_info[0][1][0]
+            )
+            plot_info_dict['obs_var_level'] = (
+                var_interppts_info[0][1][1]
+            )
+            plot_info_dict['obs_var_thresh'] = (
+                var_interppts_info[0][1][2]
+            )
+            plot_info_dict['interp_points'] = str(
+                var_interppts_info[1]
+            )
+            plot_lbd = gdap_lbd.LeadByDate(logger, job_output_dir, job_output_dir,
+                                           model_info_dict, date_info_dict,
+                                           plot_info_dict, met_info_dict, logo_dir)
+            plot_lbd.make_lead_by_date()
 
 # Copy images from job directory to main image directory
 job_output_image_dir = os.path.join(job_output_dir, 'images')
