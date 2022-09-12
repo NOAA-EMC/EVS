@@ -327,7 +327,7 @@ class PlotSpecs:
              'ANTARCTIC': 'Antarctic 50S-90S',
              'Appalachia': 'Appalachia',
              'ARCTIC': 'Arctic 50N-90N',
-             'ATL_MDR', 'Atlantic Main Development Region',
+             'ATL_MDR': 'Atlantic Main Development Region',
              'CONUS': 'CONUS',
              'CONUS_Central': 'CONUS - Central',
              'CONUS_East': 'CONUS - East',
