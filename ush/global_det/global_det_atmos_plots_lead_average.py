@@ -52,7 +52,7 @@ class LeadAverage:
         self.logo_dir = logo_dir
 
     def make_lead_average(self):
-        """! Create the time series graphic
+        """! Create the lead average graphic
 
              Args:
 
