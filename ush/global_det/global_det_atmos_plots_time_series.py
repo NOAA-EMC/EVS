@@ -159,7 +159,7 @@ class TimeSeries:
         nan_idxs = np.where(fcst_units == 'nan')
         fcst_units = np.unique(np.delete(fcst_units, nan_idxs))
         if len(fcst_units) > 1:
-            self.logger.error("Differing units ")
+            self.logger.error("DIFFERING UNITS")
             sys.exit(1)
         elif len(fcst_units) == 0:
             self.logger.warning("Empty dataframe")
