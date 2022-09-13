@@ -237,12 +237,15 @@ class TimeSeries:
                 right_logo_ypixel_loc, zorder=1, alpha=right_logo_alpha
             )
         model_plot_settings_dict = plot_specs_ts.get_model_plot_settings()
-        for model_num in list(self.model_info_dict.keys()):
-            model_num_idx = list(self.model_info_dict.keys()).index(model_num)
-            model_num_name = self.model_info_dict[model_num]['name']
-            model_num_plot_name = self.model_info_dict[model_num]['plot_name']
+        model_idx_list = (
+            stat_df.index.get_level_values(0).unique().tolist()
+        )
+        for model_idx in model_idx_list:
+            model_num = model_idx.split('/')[0]
+            model_num_name = model_idx.split('/')[1]
+            model_num_plot_name = model_idx.split('/')[2]
             model_num_obs_name = self.model_info_dict[model_num]['obs_name']
-            model_num_data = stat_array[model_num_idx]
+            model_num_data = stat_df.loc[model_idx]
             if model_num_name in list(model_plot_settings_dict.keys()):
                 model_num_plot_settings_dict = (
                     model_plot_settings_dict[model_num_name]
@@ -281,7 +284,7 @@ class TimeSeries:
                     label = (model_num_plot_name+' '+model_num_mean+' '
                              +str(model_num_npts)),
                     zorder = (len(list(self.model_info_dict.keys()))
-                              - model_num_idx + 4)
+                              - model_idx_list.index(model_idx) + 4)
                 )
                 if masked_model_num_data.min() < stat_min \
                         or np.ma.is_masked(stat_min):
