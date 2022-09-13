@@ -74,9 +74,8 @@ class LeadAverage:
         self.logger.info(f"Plots will be in: {output_image_dir}")
         # Create dataframe for all forecast hours
         self.logger.info("Building dataframe for all forecast hours")
-        forecast_hours_df_dict = {}
         for forecast_hour in self.date_info_dict['forecast_hours']:
-            self.logger.debug(f"Building data for {forecast_hour}")
+            self.logger.debug(f"Building data for forecast hour {forecast_hour}")
             # Get dates to plot
             self.logger.info("Creating valid and init date arrays")
             valid_dates, init_dates = gda_util.get_plot_dates(
@@ -131,20 +130,73 @@ class LeadAverage:
                 plot_dates, format_valid_dates,
                 str(forecast_hour)
             )
-            # Calculate statistic
-            #self.logger.info(f"Calculating statstic {self.plot_info_dict['stat']} "
-            #                 +f"from line type {self.plot_info_dict['line_type']}")
-            #stat_df, stat_array = gda_util.calculate_stat(
-            #    self.logger, all_model_df, self.plot_info_dict['line_type'],
-            #    self.plot_info_dict['stat']
-            #)
-            #if self.plot_info_dict['event_equalization'] == 'YES':
-            #    self.logger.debug("Doing event equalization")
-            #    masked_stat_array = np.ma.masked_invalid(stat_array)
-            #    stat_array = np.ma.mask_cols(masked_stat_array)
-            #    stat_array = stat_array.filled(fill_value=np.nan)
-            forecast_hours_df_dict[forecast_hour] = all_model_df
-        forecast_hours_df = pd.concat(forecast_hours_df_dict)
+            # Calculate statistic mean and 95% confidence intervals
+            self.logger.info(f"Calculating statstic {self.plot_info_dict['stat']} "
+                             +f"from line type {self.plot_info_dict['line_type']} "
+                             +"average and 95% confidence intervals")
+            stat_df, stat_array = gda_util.calculate_stat(
+                self.logger, all_model_df, self.plot_info_dict['line_type'],
+                self.plot_info_dict['stat']
+            )
+            model_idx_list = (
+                stat_df.index.get_level_values(0).unique().tolist()
+            )
+            if self.plot_info_dict['event_equalization'] == 'YES':
+                self.logger.debug("Doing event equalization")
+                masked_stat_array = np.ma.masked_invalid(stat_array)
+                stat_array = np.ma.mask_cols(masked_stat_array)
+                stat_array = stat_array.filled(fill_value=np.nan)
+                for model_idx in model_idx_list:
+                    model_idx_num = model_idx_list.index(model_idx)
+                    stat_df.loc[model_idx] = stat_array[model_idx_num,:]
+            if forecast_hour == self.date_info_dict['forecast_hours'][0]:
+                forecast_hours_avg_df = pd.DataFrame(
+                    np.nan, model_idx_list,
+                    columns=self.date_info_dict['forecast_hours']
+                )
+                forecast_hours_ci_df = pd.DataFrame(
+                    np.nan, model_idx_list,
+                    columns=self.date_info_dict['forecast_hours']
+                )
+            for model_idx in model_idx_list:
+                model_idx_num = model_idx_list.index(model_idx)
+                model_idx_forecast_hour_avg = (
+                    np.ma.masked_invalid(stat_df.loc[model_idx]).mean()
+                )
+                if not np.ma.is_masked(model_idx_forecast_hour_avg):
+                    forecast_hours_avg_df.loc[model_idx, forecast_hour] = (
+                        np.ma.masked_invalid(stat_df.loc[model_idx]).mean()
+                    )
+                if model_idx == model_idx_list[0]:
+                    model1_stat_df = stat_df.loc[model_idx]
+                else:
+                    model_idx_model1_diff = np.ma.masked_invalid(
+                        stat_df.loc[model_idx] - model1_stat_df
+                    )
+                    model_idx_model1_diff_std = np.std(model_idx_model1_diff)
+                    ## VSDB
+                    nsamples = (len(model_idx_model1_diff)
+                                -np.ma.count_masked(model_idx_model1_diff))
+                    if nsamples > 80:
+                        m = 1.960
+                    elif nsamples >=40 and nsamples < 80:
+                        m = 2.000
+                    elif nsamples >= 20 and nsamples < 40:
+                        m = 2.042
+                    elif nsamples > 0 and nsamples < 20:
+                        m = 2.228
+                    print("VSDB: "+str(m*model_idx_model1_diff_std/np.sqrt(nsamples-1)))
+                    if nsamples-1 > 80:
+                        m = 1.960
+                    elif nsamples-1 >=40 and nsamples-1 < 80:
+                        m = 2.000
+                    elif nsamples-1 >= 20 and nsamples-1 < 40:
+                        m = 2.042
+                    elif nsamples-1 > 0 and nsamples-1 < 20:
+                        m = 2.228 
+                    print("NEW: "+str(m*model_idx_model1_diff_std/np.sqrt(nsamples)))
+                    exit()
+                    #forecast_hours_ci_df.loc[model_idx, forecast_hour] = ()
         # Set up plot
         self.logger.info(f"Doing plot set up")
         plot_specs_ts = PlotSpecs(self.logger, 'lead_average')
@@ -245,11 +297,15 @@ class LeadAverage:
                 right_logo_ypixel_loc, zorder=1, alpha=right_logo_alpha
             )
         model_plot_settings_dict = plot_specs_ts.get_model_plot_settings()
-        for model_num in list(self.model_info_dict.keys()):
-            model_num_idx = list(self.model_info_dict.keys()).index(model_num)
-            model_num_name = self.model_info_dict[model_num]['name']
-            model_num_plot_name = self.model_info_dict[model_num]['plot_name']
+        model_idx_list = (
+            forecast_hours_avg_df.index.get_level_values(0).unique().tolist()
+        )
+        for model_idx in model_idx_list:
+            model_num = model_idx.split('/')[0]
+            model_num_name = model_idx.split('/')[1]
+            model_num_plot_name = model_idx.split('/')[2]
             model_num_obs_name = self.model_info_dict[model_num]['obs_name']
+            model_num_data = forecast_hours_avg_df.loc[model_idx]
             if model_num_name in list(model_plot_settings_dict.keys()):
                 model_num_plot_settings_dict = (
                     model_plot_settings_dict[model_num_name]
@@ -260,111 +316,176 @@ class LeadAverage:
                 )
             self.logger.debug(f"Plotting {model_num} - {model_num_name} "
                               +f"- {model_num_plot_name}")
-            #if model_num == 'model1':
-            #    ax2.plot(
-            #        self.date_info_dict['forecast_hours'],
-            #        np.zeros_like(self.date_info_dict['forecast_hours']),
-            #        color = model_num_plot_settings_dict['color'],
-            #        linestyle = model_num_plot_settings_dict['linestyle'],
-            #        linewidth = model_num_plot_settings_dict['linewidth'],
-            #        marker = model_num_plot_settings_dict['marker'],
-            #        markersize = model_num_plot_settings_dict['markersize'],
-            #        zorder = (len(list(self.model_info_dict.keys()))
-            #                  - model_num_idx + 4)
-            #    )
-            ## ax1 - modelN average
-            ## ax2 - modelN average - model1 average
+            masked_model_num_data = np.ma.masked_invalid(model_num_data)
+            model_num_npts = (
+                len(masked_model_num_data)
+                - np.ma.count_masked(masked_model_num_data)
+            )
+            masked_forecast_hours = np.ma.masked_where(
+                np.ma.getmask(masked_model_num_data),
+                forecast_hours_avg_df.columns.values.tolist()
+            )
+            if model_num_npts != 0:
+                self.logger.debug(f"Plotting {model_num} - {model_num_name} "
+                                  +f"- {model_num_plot_name}")
+                ax1.plot(
+                    np.ma.compressed(masked_forecast_hours),
+                    np.ma.compressed(masked_model_num_data),
+                    color = model_num_plot_settings_dict['color'],
+                    linestyle = model_num_plot_settings_dict['linestyle'],
+                    linewidth = model_num_plot_settings_dict['linewidth'],
+                    marker = model_num_plot_settings_dict['marker'],
+                    markersize = model_num_plot_settings_dict['markersize'],
+                    label = model_num_plot_name,
+                    zorder = (len(list(self.model_info_dict.keys()))
+                              - model_idx_list.index(model_idx) + 4)
+                )
+                if masked_model_num_data.min() \
+                        < stat_min_max_dict['ax1_stat_min'] \
+                        or np.ma.is_masked(stat_min_max_dict['ax1_stat_min']):
+                    stat_min_max_dict['ax1_stat_min'] = (
+                        masked_model_num_data.min()
+                    )
+                if masked_model_num_data.max() \
+                        > stat_min_max_dict['ax1_stat_max'] \
+                        or np.ma.is_masked(stat_min_max_dict['ax1_stat_max']):
+                    stat_min_max_dict['ax1_stat_max'] = (
+                        masked_model_num_data.max()
+                    )
+                if model_num == 'model1':
+                    model1_masked_model_num_data = masked_model_num_data
+            masked_model_num_model1_diff_data = np.ma.masked_invalid(
+                model_num_data - model1_masked_model_num_data
+            )
+            model_num_diff_npts = (
+                len(masked_model_num_model1_diff_data)
+                - np.ma.count_masked(masked_model_num_model1_diff_data)
+            )
+            masked_diff_forecast_hours = np.ma.masked_where(
+                np.ma.getmask(masked_model_num_model1_diff_data),
+                forecast_hours_avg_df.columns.values.tolist()
+            )
+            if model_num_diff_npts != 0:
+                self.logger.debug(f"Plotting {model_num} - {model_num_name} "
+                                  +f"- {model_num_plot_name} difference from "
+                                  +self.model_info_dict['model1']['plot_name'])
+                ax2.plot(
+                    np.ma.compressed(masked_diff_forecast_hours),
+                    np.ma.compressed(masked_model_num_model1_diff_data),
+                    color = model_num_plot_settings_dict['color'],
+                    linestyle = model_num_plot_settings_dict['linestyle'],
+                    linewidth = model_num_plot_settings_dict['linewidth'],
+                    marker = model_num_plot_settings_dict['marker'],
+                    markersize = model_num_plot_settings_dict['markersize'],
+                    zorder = (len(list(self.model_info_dict.keys()))
+                              - model_idx_list.index(model_idx) + 4)
+                )
+                if masked_model_num_model1_diff_data.min() \
+                        < stat_min_max_dict['ax2_stat_min'] \
+                        or np.ma.is_masked(stat_min_max_dict['ax2_stat_min']):
+                    stat_min_max_dict['ax2_stat_min'] = (
+                        masked_model_num_model1_diff_data.min()
+                    )
+                if masked_model_num_model1_diff_data.max() \
+                        > stat_min_max_dict['ax2_stat_max'] \
+                        or np.ma.is_masked(stat_min_max_dict['ax2_stat_max']):
+                    stat_min_max_dict['ax2_stat_max'] = (
+                        masked_model_num_model1_diff_data.max()
+                    )
             ## ax2 - modelN average - model1 average CI
-        #subplot_num = 1
-        #for ax in fig.get_axes():
-        #    stat_min = stat_min_max_dict['ax'+str(subplot_num)+'_stat_min']
-        #    stat_max = stat_min_max_dict['ax'+str(subplot_num)+'_stat_max']
-        #    preset_y_axis_tick_min = ax.get_yticks()[0]
-        #    preset_y_axis_tick_max = ax.get_yticks()[-1]
-        #    preset_y_axis_tick_inc = ax.get_yticks()[1] - ax.get_yticks()[0]
-        #    if self.plot_info_dict['stat'] in ['ACC']:
-        #        y_axis_tick_inc = 0.1
-        #    else:
-        #        y_axis_tick_inc = preset_y_axis_tick_inc
-        #    if np.ma.is_masked(stat_min):
-        #        y_axis_min = preset_y_axis_tick_min
-        #    else:
-        #        if self.plot_info_dict['stat'] in ['ACC']:
-        #            y_axis_min = round(stat_min,1) - y_axis_tick_inc
-        #        else:
-        #            y_axis_min = preset_y_axis_tick_min
-        #            while y_axis_min > stat_min:
-        #                y_axis_min = y_axis_min - y_axis_tick_inc
-        #    if np.ma.is_masked(stat_max):
-        #        y_axis_max = preset_y_axis_tick_max
-        #    else:
-        #        if self.plot_info_dict['stat'] in ['ACC']:
-        #            y_axis_max = 1
-        #        else:
-        #            y_axis_max = preset_y_axis_tick_max + y_axis_tick_inc
-        #            while y_axis_max < stat_max:
-        #                y_axis_max = y_axis_max + y_axis_tick_inc
-        #    ax.set_yticks(np.arange(y_axis_min,
-        #                            y_axis_max+y_axis_tick_inc,
-        #                            y_axis_tick_inc))
-        #    ax.set_ylim([y_axis_min, y_axis_max])
-        #    if stat_max >= ax.get_ylim()[1]:
-        #        while stat_max >= ax.get_ylim()[1]:
-        #            y_axis_max = y_axis_max + y_axis_tick_inc
-        #            ax.set_yticks(np.arange(y_axis_min,
-        #                                    y_axis_max +  y_axis_tick_inc,
-        #                                    y_axis_tick_inc))
-        #            ax.set_ylim([y_axis_min, y_axis_max])
-        #    if stat_min <= ax.get_ylim()[0]:
-        #        while stat_min <= ax.get_ylim()[0]:
-        #            y_axis_min = y_axis_min - y_axis_tick_inc
-        #            ax.set_yticks(np.arange(y_axis_min,
-        #                                    y_axis_max +  y_axis_tick_inc,
-        #                                    y_axis_tick_inc))
-        #            ax.set_ylim([y_axis_min, y_axis_max])  
-        #    subplot_num+=1
-        #if len(ax1.lines) != 0:
-        #    legend = ax1.legend(
-        #        bbox_to_anchor=(plot_specs_ts.legend_bbox[0],
-        #                        plot_specs_ts.legend_bbox[1]),
-        #        loc = plot_specs_ts.legend_loc,
-        #        ncol = plot_specs_ts.legend_ncol,
-        #        fontsize = plot_specs_ts.legend_font_size
-        #    )
-        #    plt.draw()
-        #    inv = ax1.transData.inverted()
-        #    legend_box = legend.get_window_extent()
-        #    legend_box_inv = inv.transform(
-        #        [(legend_box.x0,legend_box.y0),
-        #         (legend_box.x1,legend_box.y1)]
-        #    )
-        #    legend_box_inv_y1 = legend_box_inv[1][1]
-        #    stat_min = stat_min_max_dict['ax1_stat_min']
-        #    stat_max = stat_min_max_dict['ax1_stat_max']
-        #    if stat_min < legend_box_inv_y1:
-        #        while stat_min < legend_box_inv_y1:
-        #            y_axis_min = y_axis_min - y_axis_tick_inc
-        #            ax1.set_yticks(
-        #                np.arange(y_axis_min,
-        #                          y_axis_max + y_axis_tick_inc,
-        #                          y_axis_tick_inc)
-        #            )
-        #            ax.set_ylim([y_axis_min, y_axis_max])
-        #            legend = ax1.legend(
-        #                bbox_to_anchor=(plot_specs_ts.legend_bbox[0],
-        #                                plot_specs_ts.legend_bbox[1]),
-        #                loc = plot_specs_ts.legend_loc,
-        #                ncol = plot_specs_ts.legend_ncol,
-        #                fontsize = plot_specs_ts.legend_font_size
-        #            )
-        #            plt.draw()
-        #            inv = ax1.transData.inverted()
-        #            legend_box = legend.get_window_extent()
-        #            legend_box_inv = inv.transform(
-        #                 [(legend_box.x0,legend_box.y0),
-        #                  (legend_box.x1,legend_box.y1)]
-        #            )
-        #            legend_box_inv_y1 = legend_box_inv[1][1]
+        subplot_num = 1
+        for ax in fig.get_axes():
+            stat_min = stat_min_max_dict['ax'+str(subplot_num)+'_stat_min']
+            stat_max = stat_min_max_dict['ax'+str(subplot_num)+'_stat_max']
+            preset_y_axis_tick_min = ax.get_yticks()[0]
+            preset_y_axis_tick_max = ax.get_yticks()[-1]
+            preset_y_axis_tick_inc = ax.get_yticks()[1] - ax.get_yticks()[0]
+            if self.plot_info_dict['stat'] in ['ACC'] and subplot_num == 1:
+                y_axis_tick_inc = 0.1
+            else:
+                y_axis_tick_inc = preset_y_axis_tick_inc
+            if np.ma.is_masked(stat_min):
+                y_axis_min = preset_y_axis_tick_min
+            else:
+                if self.plot_info_dict['stat'] in ['ACC'] and subplot_num == 1:
+                    y_axis_min = round(stat_min,1) - y_axis_tick_inc
+                else:
+                    y_axis_min = preset_y_axis_tick_min
+                    while y_axis_min > stat_min:
+                        y_axis_min = y_axis_min - y_axis_tick_inc
+            if np.ma.is_masked(stat_max):
+                y_axis_max = preset_y_axis_tick_max
+            else:
+                if self.plot_info_dict['stat'] in ['ACC'] and subplot_num == 1:
+                    y_axis_max = 1
+                else:
+                    y_axis_max = preset_y_axis_tick_max + y_axis_tick_inc
+                    while y_axis_max < stat_max:
+                        y_axis_max = y_axis_max + y_axis_tick_inc
+            ax.set_yticks(np.arange(y_axis_min,
+                                    y_axis_max+y_axis_tick_inc,
+                                    y_axis_tick_inc))
+            ax.set_ylim([y_axis_min, y_axis_max])
+            if stat_max >= ax.get_ylim()[1]:
+                while stat_max >= ax.get_ylim()[1]:
+                    y_axis_max = y_axis_max + y_axis_tick_inc
+                    ax.set_yticks(np.arange(y_axis_min,
+                                            y_axis_max +  y_axis_tick_inc,
+                                            y_axis_tick_inc))
+                    ax.set_ylim([y_axis_min, y_axis_max])
+            if stat_min <= ax.get_ylim()[0]:
+                while stat_min <= ax.get_ylim()[0]:
+                    y_axis_min = y_axis_min - y_axis_tick_inc
+                    ax.set_yticks(np.arange(y_axis_min,
+                                            y_axis_max +  y_axis_tick_inc,
+                                            y_axis_tick_inc))
+                    ax.set_ylim([y_axis_min, y_axis_max])  
+            subplot_num+=1
+        if len(ax1.lines) != 0:
+            y_axis_min = ax1.get_yticks()[0]
+            y_axis_max = ax1.get_yticks()[-1]
+            y_axis_tick_inc = ax1.get_yticks()[1] - ax1.get_yticks()[0]
+            stat_min = stat_min_max_dict['ax1_stat_min']
+            stat_max = stat_min_max_dict['ax1_stat_max']
+            legend = ax1.legend(
+                bbox_to_anchor=(plot_specs_ts.legend_bbox[0],
+                                plot_specs_ts.legend_bbox[1]),
+                loc = plot_specs_ts.legend_loc,
+                ncol = plot_specs_ts.legend_ncol,
+                fontsize = plot_specs_ts.legend_font_size
+            )
+            plt.draw()
+            inv = ax1.transData.inverted()
+            legend_box = legend.get_window_extent()
+            legend_box_inv = inv.transform(
+                [(legend_box.x0,legend_box.y0),
+                 (legend_box.x1,legend_box.y1)]
+            )
+            legend_box_inv_y1 = legend_box_inv[1][1]
+            if stat_min < legend_box_inv_y1:
+                while stat_min < legend_box_inv_y1:
+                    y_axis_min = y_axis_min - y_axis_tick_inc
+                    ax1.set_yticks(
+                        np.arange(y_axis_min,
+                                  y_axis_max + y_axis_tick_inc,
+                                  y_axis_tick_inc)
+                    )
+                    ax1.set_ylim([y_axis_min, y_axis_max])
+                    legend = ax1.legend(
+                        bbox_to_anchor=(plot_specs_ts.legend_bbox[0],
+                                        plot_specs_ts.legend_bbox[1]),
+                        loc = plot_specs_ts.legend_loc,
+                        ncol = plot_specs_ts.legend_ncol,
+                        fontsize = plot_specs_ts.legend_font_size
+                    )
+                    plt.draw()
+                    inv = ax1.transData.inverted()
+                    legend_box = legend.get_window_extent()
+                    legend_box_inv = inv.transform(
+                         [(legend_box.x0,legend_box.y0),
+                          (legend_box.x1,legend_box.y1)]
+                    )
+                    legend_box_inv_y1 = legend_box_inv[1][1]
         self.logger.info("Saving image as "+image_name)
         plt.savefig(image_name)
         plt.clf()
