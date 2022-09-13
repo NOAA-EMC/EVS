@@ -140,6 +140,12 @@ class TimeSeries:
             masked_stat_array = np.ma.masked_invalid(stat_array)
             stat_array = np.ma.mask_cols(masked_stat_array)
             stat_array = stat_array.filled(fill_value=np.nan)
+            model_idx_list = (
+                stat_df.index.get_level_values(0).unique().tolist()
+            )
+            for model_idx in model_idx_list:
+                model_idx_num = model_idx_list.index(model_idx)
+                stat_df.loc[model_idx] = stat_array[model_idx_num,:]
         # Set up plot
         self.logger.info(f"Doing plot set up")
         plot_specs_ts = PlotSpecs(self.logger, 'time_series')
