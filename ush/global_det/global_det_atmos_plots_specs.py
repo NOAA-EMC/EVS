@@ -62,8 +62,8 @@ class PlotSpecs:
             self.fig_size = (14., 14.)
             self.fig_subplot_top = 0.9
             self.fig_subplot_bottom = 0.075
-            self.fig_subplot_right = 0.95
-            self.fig_subplot_left = 0.15
+            self.fig_subplot_right = 0.925
+            self.fig_subplot_left = 0.125
             self.legend_frame_on = False
             self.legend_bbox = (0.5, 0.05)
             self.legend_ncol = 5
@@ -632,7 +632,7 @@ class PlotSpecs:
                 y_loc = y_figsize * dpi * 0.875
         if x_figsize == 14 and y_figsize == 14:
             if position == 'left':
-                x_loc = x_figsize * dpi * 0.15
+                x_loc = x_figsize * dpi * 0.045
                 y_loc = y_figsize * dpi * 0.925
             elif position == 'right':
                 x_loc = x_figsize * dpi * 0.9

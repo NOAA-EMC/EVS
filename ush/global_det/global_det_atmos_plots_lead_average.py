@@ -212,9 +212,9 @@ class LeadAverage:
                                        figsize=(plot_specs_ts.fig_size[0],
                                                 plot_specs_ts.fig_size[1]),
                                        sharex=True)
+        fig.suptitle(plot_title)
         ax1.grid(True)
         ax1.set_ylabel(stat_plot_name)
-        ax1.set_title(plot_title)
         ax2.grid(True)
         ax2.set_xlabel('Forecast Hour')
         ax2.set_xlim([self.date_info_dict['forecast_hours'][0],
