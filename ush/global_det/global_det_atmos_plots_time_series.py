@@ -218,7 +218,7 @@ class TimeSeries:
             else:
                 ax.xaxis.set_minor_locator(md.MonthLocator())
         ax.set_ylabel(stat_plot_name)
-        ax.set_title(plot_title)
+        fig.suptitle(plot_title)
         if plot_left_logo:
             left_logo_img = fig.figimage(
                 left_logo_img_array, left_logo_xpixel_loc,

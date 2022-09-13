@@ -41,21 +41,22 @@ class PlotSpecs:
         self.legend_col_space = 1.0
         self.legend_frame_on = True
         self.legend_bbox = (0,1)
-        self.legend_font_size = 17
-        self.legend_loc = 'center right'
+        self.legend_font_size = 13
+        self.legend_loc = 'center'
         self.legend_ncol = 1
         self.title_loc = 'center'
         self.fig_size=(14.,14.)
         if self.plot_type == 'time_series':
             self.fig_size = (14., 7.)
-            self.fig_subplot_top = 0.825
+            self.fig_subplot_top = 0.85
             self.fig_subplot_bottom = 0.125
             self.fig_subplot_right = 0.95
-            self.fig_subplot_left = 0.15
+            self.fig_subplot_left = 0.1
+            self.axis_label_size = 14
+            self.xtick_label_size = 14
+            self.ytick_label_size = 14
             self.legend_frame_on = False
             self.legend_bbox = (0.5, 0.05)
-            self.legend_font_size = 13
-            self.legend_loc = 'center'
             self.legend_ncol = 5
         elif self.plot_type == 'lead_average':
             self.fig_size = (14., 14.)
@@ -65,8 +66,6 @@ class PlotSpecs:
             self.fig_subplot_left = 0.15
             self.legend_frame_on = False
             self.legend_bbox = (0.5, 0.05)
-            self.legend_font_size = 13
-            self.legend_loc = 'center'
             self.legend_ncol = 5
         elif self.plot_type == 'lead_by_date':
             self.fig_size = (14., 14.)
@@ -418,10 +417,10 @@ class PlotSpecs:
                           +end_date_hr_dt.strftime('%d%b%Y %H')+'Z, ')
         if date_type == 'VALID':
             date_plot_name = (date_plot_name
-                              +'cycles: '+', '.join(other_hr_list)+'\n')
+                              +'cycles: '+', '.join(other_hr_list))
         elif date_type == 'INIT':
             date_plot_name = (date_plot_name
-                              +'valid: '+', '.join(other_hr_list)+'\n')
+                              +'valid: '+', '.join(other_hr_list))
         if forecast_hour != 'NA':
             forecast_day = int(forecast_hour)/24.
             if int(forecast_hour) % 24 == 0:
@@ -429,7 +428,7 @@ class PlotSpecs:
             else: 
                 forecast_day_plot = str(forecast_day)
             date_plot_name = (date_plot_name
-                              +'Forecast Day '+forecast_day_plot+' '
+                              +', Forecast Day '+forecast_day_plot+' '
                               +'(Forecast Hour '+forecast_hour+')')
         return date_plot_name
 
@@ -626,11 +625,11 @@ class PlotSpecs:
         alpha = 0.5
         if x_figsize == 14 and y_figsize == 7:
             if position == 'left':
-                x_loc = x_figsize * dpi * 0.15
-                y_loc = y_figsize * dpi * 0.86
+                x_loc = x_figsize * dpi * 0.025
+                y_loc = y_figsize * dpi * 0.875
             elif position == 'right':
-                x_loc = x_figsize * dpi * 0.9
-                y_loc = y_figsize * dpi * 0.86
+                x_loc = x_figsize * dpi * 0.925
+                y_loc = y_figsize * dpi * 0.875
         if x_figsize == 14 and y_figsize == 14:
             if position == 'left':
                 x_loc = x_figsize * dpi * 0.15
