@@ -101,6 +101,11 @@ logger_info = f"Log file: {job_logging_file}"
 print(logger_info)
 logger.info(logger_info)
 
+if len(model_list) > 10:
+    logger.error("T00 MANY MODELS LISTED ("+str(len(model_list))
+                 +", ["+', '.join(model_list)+"]), maximum is 10")
+    sys.exit(1)
+
 # Condense .stat files
 logger.info("Condensing model .stat files for job")
 for model_idx in range(len(model_list)):
