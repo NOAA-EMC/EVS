@@ -18,9 +18,10 @@ class PlotSpecs:
         self.logger = logger
         self.font_weight = 'bold'
         self.axis_title_weight = 'bold'
-        self.axis_title_size = 20
-        self.axis_offset = False
+        self.axis_title_size = 16
         self.axis_title_pad = 15
+        self.axis_title_loc = 'center'
+        self.axis_offset = False
         self.axis_label_weight = 'bold'
         self.axis_label_size = 16
         self.axis_label_pad = 10
@@ -28,6 +29,8 @@ class PlotSpecs:
         self.xtick_major_pad = 10
         self.ytick_label_size = 16
         self.ytick_major_pad = 10
+        self.fig_title_weight = 'bold'
+        self.fig_title_size = 16
         self.fig_subplot_right = 0.95
         self.fig_subplot_left = 0.1
         self.fig_subplot_top = 0.925
@@ -45,7 +48,6 @@ class PlotSpecs:
         self.fig_size=(14.,14.)
         if self.plot_type == 'time_series':
             self.fig_size = (14., 7.)
-            self.axis_title_size = 16
             self.fig_subplot_top = 0.825
             self.fig_subplot_bottom = 0.125
             self.fig_subplot_right = 0.95
@@ -57,7 +59,6 @@ class PlotSpecs:
             self.legend_ncol = 5
         elif self.plot_type == 'lead_average':
             self.fig_size = (14., 14.)
-            self.axis_title_size = 16
             self.fig_subplot_top = 0.9
             self.fig_subplot_bottom = 0.075
             self.fig_subplot_right = 0.95
@@ -69,16 +70,12 @@ class PlotSpecs:
             self.legend_ncol = 5
         elif self.plot_type == 'lead_by_date':
             self.fig_size = (14., 14.)
-            self.axis_title_size = 16
+            self.axis_title_pad = 5
+            self.axis_title_loc = 'left'
             self.fig_subplot_top = 0.9
             self.fig_subplot_bottom = 0.075
             self.fig_subplot_right = 0.9
             self.fig_subplot_left = 0.15
-            self.legend_frame_on = False
-            self.legend_bbox = (0.5, 0.05)
-            self.legend_font_size = 13
-            self.legend_loc = 'center'
-            self.legend_ncol = 5
         else:
             self.logger.warning(f"{self.plot_type} NOT RECOGNIZED")
             sys.exit(1)
@@ -94,6 +91,7 @@ class PlotSpecs:
         plt.rcParams['axes.titleweight'] = self.axis_title_weight
         plt.rcParams['axes.titlesize'] = self.axis_title_size
         plt.rcParams['axes.titlepad'] = self.axis_title_pad
+        plt.rcParams['axes.titlelocation'] = self.axis_title_loc
         plt.rcParams['axes.labelweight'] = self.axis_label_weight
         plt.rcParams['axes.labelsize'] = self.axis_label_size
         plt.rcParams['axes.labelpad'] = self.axis_label_pad
@@ -106,8 +104,8 @@ class PlotSpecs:
         plt.rcParams['figure.subplot.right'] = self.fig_subplot_right
         plt.rcParams['figure.subplot.top'] = self.fig_subplot_top
         plt.rcParams['figure.subplot.bottom'] = self.fig_subplot_bottom
-        plt.rcParams['figure.titleweight'] = plt.rcParams['axes.titleweight']
-        plt.rcParams['figure.titlesize'] = plt.rcParams['axes.titlesize']
+        plt.rcParams['figure.titleweight'] = self.fig_title_weight
+        plt.rcParams['figure.titlesize'] = self.fig_title_size
         plt.rcParams['legend.handletextpad'] = self.legend_handle_text_pad
         plt.rcParams['legend.handlelength'] = self.legend_handle_length
         plt.rcParams['legend.borderaxespad'] = self.legend_border_axis_pad

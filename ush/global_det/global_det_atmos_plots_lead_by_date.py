@@ -176,11 +176,14 @@ class LeadByDate:
             gs_hspace, gs_wspace = 0.225, 0.1
             gs_bottom, gs_top = 0.125, 0.9
         else:
-            self.logger.error("Too many subplots selected, max. is 10")
+            self.logger.error("TOO MANY SUBPLOTS REQUESTED, MAXIMUM IS 10")
             sys.exit(1)
         if nsubplots <= 2:
             plot_specs_ts.fig_size = (14., 7.)
-        n_xticks = 17
+        if nsubplots >= 2:
+            n_xticks = 8
+        else:
+            n_xticks = 17
         if len(self.date_info_dict['forecast_hours']) < n_xticks:
             xtick_intvl = 1
         else:
@@ -199,7 +202,7 @@ class LeadByDate:
         nan_idxs = np.where(fcst_units == 'nan')
         fcst_units = np.unique(np.delete(fcst_units, nan_idxs))
         if len(fcst_units) > 1:
-            self.logger.error("Differing units ")
+            self.logger.error("DIFFERING UNITS")
             sys.exit(1)
         elif len(fcst_units) == 0:
             self.logger.warning("Empty dataframe")
@@ -257,9 +260,9 @@ class LeadByDate:
                 right_logo_img_array, right_logo_xpixel_loc,
                 right_logo_ypixel_loc, zorder=1, alpha=right_logo_alpha
             )
-        subplot_num = 0
-        while subplot_num < nsubplots:
-            ax = plt.subplot(gs[subplot_num])
+        subplot_num = 1
+        while subplot_num <= nsubplots:
+            ax = plt.subplot(gs[subplot_num-1])
             ax.grid(True)
             ax.set_xlim([self.date_info_dict['forecast_hours'][0],
                           self.date_info_dict['forecast_hours'][-1]])
@@ -287,6 +290,15 @@ class LeadByDate:
                 ax.set_ylabel(self.date_info_dict['date_type'].title()+' Date')
             else:
                 plt.setp(ax.get_yticklabels(), visible=False)
+            if subplot_num == 1:
+                ax.set_title(
+                    self.model_info_dict['model'+str(subplot_num)]['plot_name']
+                )
+            else:
+                ax.set_title(
+                    self.model_info_dict['model'+str(subplot_num)]['plot_name']
+                    +'-'+self.model_info_dict['model1']['plot_name']
+                )
             subplot_num+=1
         self.logger.info("Saving image as "+image_name)
         plt.savefig(image_name)
