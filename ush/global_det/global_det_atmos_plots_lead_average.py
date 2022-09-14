@@ -173,30 +173,37 @@ class LeadAverage:
                     model_idx_model1_diff = np.ma.masked_invalid(
                         stat_df.loc[model_idx] - model1_stat_df
                     )
-                    model_idx_model1_diff_std = np.std(model_idx_model1_diff)
-                    ## VSDB
                     nsamples = (len(model_idx_model1_diff)
                                 -np.ma.count_masked(model_idx_model1_diff))
+                    model_idx_model1_diff_mean = np.mean(model_idx_model1_diff)
+                    model_idx_model1_diff_std = np.std(model_idx_model1_diff)
+                    model_idx_model1_diff_mean_std_err = (
+                        model_idx_model1_diff_std/np.sqrt(nsamples-1)
+                    )
+                    ##Null Hypothesis: mean(M1-M2)=0,
+                    ##M1-M2 follows normal distribution.
+                    ##plot the 5% conf interval of difference of means
+                    ##F*SD/sqrt(N-1),
+                    ##F=1.96 for infinite samples, F=2.0 for nsz=60,
+                    ##F=2.042 for nsz=30, F=2.228 for nsz=10
                     if nsamples > 80:
-                        m = 1.960
+                        ci = 1.960 * model_idx_model1_diff_mean_std_err
                     elif nsamples >=40 and nsamples < 80:
-                        m = 2.000
+                        ci = 2.000 * model_idx_model1_diff_mean_std_err
                     elif nsamples >= 20 and nsamples < 40:
-                        m = 2.042
+                        ci = 2.042 * model_idx_model1_diff_mean_std_err
                     elif nsamples > 0 and nsamples < 20:
-                        m = 2.228
-                    print("VSDB: "+str(m*model_idx_model1_diff_std/np.sqrt(nsamples-1)))
-                    if nsamples-1 > 80:
-                        m = 1.960
-                    elif nsamples-1 >=40 and nsamples-1 < 80:
-                        m = 2.000
-                    elif nsamples-1 >= 20 and nsamples-1 < 40:
-                        m = 2.042
-                    elif nsamples-1 > 0 and nsamples-1 < 20:
-                        m = 2.228 
-                    print("NEW: "+str(m*model_idx_model1_diff_std/np.sqrt(nsamples)))
-                    exit()
-                    #forecast_hours_ci_df.loc[model_idx, forecast_hour] = ()
+                        ci = 2.228 * model_idx_model1_diff_mean_std_err
+                    elif nsamples == 0:
+                        ci = np.nan
+                    forecast_hours_ci_df.loc[model_idx, forecast_hour] = ci
+                    from scipy import stats
+                    scipy_ci = stats.t.interval(
+                        alpha=0.95,
+                        df=len(np.ma.compressed(model_idx_model1_diff))-1,
+                        loc=0,
+                        scale=stats.sem(np.ma.compressed(model_idx_model1_diff))
+                    )
         # Set up plot
         self.logger.info(f"Doing plot set up")
         plot_specs_ts = PlotSpecs(self.logger, 'lead_average')
@@ -300,6 +307,20 @@ class LeadAverage:
         model_idx_list = (
             forecast_hours_avg_df.index.get_level_values(0).unique().tolist()
         )
+        ci_bar_max_widths = np.append(
+            np.diff(self.date_info_dict['forecast_hours']),
+            self.date_info_dict['forecast_hours'][-1]
+            -self.date_info_dict['forecast_hours'][-2]
+        )/1.5
+        ci_bar_min_widths = np.append(
+            np.diff(self.date_info_dict['forecast_hours']),
+            self.date_info_dict['forecast_hours'][-1]
+            -self.date_info_dict['forecast_hours'][-2]
+        )/len(list(self.model_info_dict.keys()))
+        ci_bar_intvl_widths = (
+            (ci_bar_max_widths-ci_bar_min_widths)
+            /len(list(self.model_info_dict.keys()))
+        )
         for model_idx in model_idx_list:
             model_num = model_idx.split('/')[0]
             model_num_name = model_idx.split('/')[1]
@@ -392,7 +413,78 @@ class LeadAverage:
                     stat_min_max_dict['ax2_stat_max'] = (
                         masked_model_num_model1_diff_data.max()
                     )
-            ## ax2 - modelN average - model1 average CI
+            if model_num == 'model1':
+                ax2.plot(
+                    forecast_hours_avg_df.columns.values.tolist(),
+                    np.zeros_like(forecast_hours_avg_df.columns.values.tolist()),
+                    color = model_num_plot_settings_dict['color'],
+                    linestyle = model_num_plot_settings_dict['linestyle'],
+                    linewidth = model_num_plot_settings_dict['linewidth'],
+                    marker = model_num_plot_settings_dict['marker'],
+                    markersize = model_num_plot_settings_dict['markersize'],
+                    zorder = (len(list(self.model_info_dict.keys()))
+                              - model_idx_list.index(model_idx) + 4)
+                )
+            if model_num != 'model1':
+                masked_model_num_model1_diff_ci_data = np.ma.masked_invalid(
+                    forecast_hours_ci_df.loc[model_idx]
+                )
+                model_num_ci_npts = (
+                    len(masked_model_num_model1_diff_ci_data)
+                    - np.ma.count_masked(masked_model_num_model1_diff_ci_data)
+                )
+                masked_ci_forecast_hours = np.ma.masked_where(
+                    np.ma.getmask(masked_model_num_model1_diff_ci_data),
+                    forecast_hours_ci_df.columns.values.tolist()
+                )
+                if model_num_ci_npts != 0:
+                    self.logger.debug(f"Plotting {model_num} - "
+                                      +f"{model_num_name}"
+                                      +f"- {model_num_plot_name} "
+                                      +"difference from "
+                                      +self.model_info_dict['model1']['plot_name']
+                                      +" confidence intervals")
+                    ci_min = masked_model_num_model1_diff_ci_data.min()
+                    ci_max = masked_model_num_model1_diff_ci_data.max()
+                    if ci_min < stat_min_max_dict['ax2_stat_min'] \
+                            or np.ma.is_masked(stat_min_max_dict['ax2_stat_min']):
+                        if not np.ma.is_masked(ci_min):
+                            stat_min_max_dict['ax2_stat_min'] = ci_min
+                    if ci_max > stat_min_max_dict['ax2_stat_max'] \
+                            or np.ma.is_masked(stat_min_max_dict['ax2_stat_max']):
+                        if not np.ma.is_masked(ci_max):
+                            stat_min_max_dict['ax2_stat_max'] = ci_max
+                    cmasked_ci_forecast_hours = np.ma.compressed(
+                        masked_ci_forecast_hours
+                    )
+                    cmasked_model_num_model1_diff_ci_data = np.ma.compressed(
+                        masked_model_num_model1_diff_ci_data
+                    )
+                    cmasked_ci_bar_max_widths = np.ma.compressed(
+                        np.ma.masked_where(
+                            np.ma.getmask(masked_model_num_model1_diff_ci_data),
+                            ci_bar_max_widths
+                        )
+                    )
+                    cmasked_ci_bar_intvl_widths = np.ma.compressed(
+                        np.ma.masked_where(
+                            np.ma.getmask(masked_model_num_model1_diff_ci_data),
+                            ci_bar_intvl_widths
+                        )
+                    )
+                    for fhr_idx in range(len(cmasked_ci_forecast_hours)):
+                        fhr = cmasked_ci_forecast_hours[fhr_idx]
+                        fhr_ci = (
+                            cmasked_model_num_model1_diff_ci_data[fhr_idx]
+                        )
+                        ax2.bar(fhr, 2*np.absolute(fhr_ci),
+                                bottom=-1*np.absolute(fhr_ci),
+                                width=(cmasked_ci_bar_max_widths[fhr_idx]
+                                       -(cmasked_ci_bar_intvl_widths[fhr_idx]
+                                       *model_idx_list.index(model_idx))),
+                                color = 'None',
+                                edgecolor=model_num_plot_settings_dict['color'],
+                                linewidth=1)
         subplot_num = 1
         for ax in fig.get_axes():
             stat_min = stat_min_max_dict['ax'+str(subplot_num)+'_stat_min']
