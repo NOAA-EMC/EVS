@@ -57,7 +57,7 @@ class PlotSpecs:
             self.ytick_label_size = 14
             self.legend_frame_on = False
             self.legend_bbox = (0.5, 0.05)
-            self.legend_ncol = 5
+            self.legend_ncol = 4
         elif self.plot_type == 'lead_average':
             self.fig_size = (14., 14.)
             self.fig_subplot_top = 0.9
