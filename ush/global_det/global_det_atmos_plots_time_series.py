@@ -282,7 +282,7 @@ class TimeSeries:
                     marker = model_num_plot_settings_dict['marker'],
                     markersize = model_num_plot_settings_dict['markersize'],
                     label = (model_num_plot_name+' '+model_num_mean+' '
-                             +str(model_num_npts)),
+                             +str(model_num_npts)+' days'),
                     zorder = (len(list(self.model_info_dict.keys()))
                               - model_idx_list.index(model_idx) + 4)
                 )
