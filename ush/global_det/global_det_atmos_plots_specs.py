@@ -73,7 +73,7 @@ class PlotSpecs:
             self.axis_title_loc = 'left'
             self.fig_subplot_top = 0.9
             self.fig_subplot_bottom = 0.075
-            self.fig_subplot_right = 0.9
+            self.fig_subplot_right = 0.95
             self.fig_subplot_left = 0.15
         else:
             self.logger.warning(f"{self.plot_type} NOT RECOGNIZED")
