@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import datetime
 import sys
 import os
+import numpy as np
 
 class PlotSpecs:
     def __init__(self, logger, plot_type):
@@ -638,6 +639,174 @@ class PlotSpecs:
                 x_loc = x_figsize * dpi * 0.9
                 y_loc = y_figsize * dpi * 0.925
         return x_loc, y_loc, alpha
+
+    def get_plot_colormaps(self, stat):
+        """! Get colormaps for contour plots
+
+             Args:
+                 stat    - statistic name (string)
+
+             Returns:
+                 subplot0_cmap  - colormap for subplot 0
+                 subplotsN_cmap - colormap for other subplots
+        """
+        if stat in ['BIAS', 'FBIAS']:
+            cmap_bias_original = plt.cm.PiYG_r
+            colors_bias = cmap_bias_original(
+                np.append(np.linspace(0,0.3,10), np.linspace(0.7,1,10))
+            )
+            subplot0_cmap = matplotlib.colors.LinearSegmentedColormap.from_list(
+                'cmap_bias', colors_bias
+            )
+        else:
+            subplot0_cmap = plt.cm.BuPu_r
+        if stat in ['BIAS', 'FBIAS']:
+            subplotsN_cmap = subplot0_cmap
+        else:
+            if stat == 'RMSE':
+                cmap_diff_original = plt.cm.bwr
+            else:
+                cmap_diff_original = plt.cm.bwr_r
+            colors_diff = cmap_diff_original(
+                np.append(np.linspace(0,0.425,10), np.linspace(0.575,1,10))
+            )
+            subplotsN_cmap = (
+                matplotlib.colors.LinearSegmentedColormap.from_list('cmap_diff',
+                                                                    colors_diff)
+            )
+        return subplot0_cmap, subplotsN_cmap
+
+    def get_centered_contour_levels(self, data, center_value, spacing):
+        """! Get contour levels for plotting levels center on a certain
+             value
+                  Args:
+                      data         - array of data to be contoured
+                      center_value - center value of the levels (integer)
+                      spacing      - float for spacing for power function,
+                                     value of 1.0 gives evenly spaced
+                                     contour intervals
+                  Returns:
+                      center_clevels - array of contour levels
+        """
+        if np.abs(np.nanmin(data)) > np.nanmax(data):
+            cmax = np.abs(np.nanmin(data))
+            cmin = np.nanmin(data)
+        else:
+            cmax = np.nanmax(data)
+            cmin = -1 * np.nanmax(data)
+        if cmax > 100:
+            clevels_cmax = cmax - (cmax * 0.2)
+            clevels_cmin = cmin + (cmin * 0.2)
+        elif cmax > 10:
+            clevels_cmax = cmax - (cmax * 0.1)
+            clevels_cmin = cmin + (cmin * 0.1)
+        else:
+            clevels_cmax = cmax
+            clevels_cmin = cmin
+        if cmax > 1:
+            clevels_round_cmin = round(clevels_cmin-1,0)
+            clevels_round_cmax = round(clevels_cmax+1,0)
+        else:
+            clevels_round_cmin = round(clevels_cmin-0.1,1)
+            clevels_round_cmax = round(clevels_cmax+0.1,1)
+        steps = 6
+        span = cmax
+        dx = 1.0 / (steps-1)
+        pos = np.array([0 + (i*dx)**spacing*span for i in range(steps)],
+                       dtype=float)
+        neg = np.array(pos[1:], dtype=float) * -1
+        centered_clevels = np.append(neg[::-1], pos)
+        center_value = 1
+        if center_value != 0:
+            centered_clevels = centered_clevels + center_value
+        return centered_clevels
+
+    def get_plot_contour_levels(self, stat, subplot0_data, subplotsN_data):
+        """! Get contour levels
+
+             Args:
+                 stat           - statistic name (string)
+                 subplot0_data  - array of data for subplot 0
+                 subplotsN_data - array of data for other subplots
+
+             Returns:
+                 have_subplot0_levs  - boolean if have valid values
+                                       subplot 0
+                 subplot0_levs       - array of contour levels for
+                                       subplot 0
+                 have_subplotsN_levs - boolean if have valid values
+                                       other subplots
+                 subplotsN_levs      - array of contour levels for
+                                       other subplots
+        """
+        have_subplot0_levs = False
+        subplot0_levs = np.array([np.nan])
+        if stat == 'ACC':
+            have_subplot0_levs = True
+            subplot0_levs = np.array([0.0, 0.25, 0.5, 0.6, 0.7, 0.8,
+                                      0.9, 0.95, 0.99, 1])
+        elif not np.ma.masked_invalid(subplot0_data).mask.all():
+            cmax = np.nanmax(subplot0_data)
+            if cmax > 100:
+                spacing = 2.25
+            elif cmax > 10:
+                spacing = 2
+            else:
+                spacing = 1.75
+            if stat == 'RMSE':
+                steps = 12
+                dx = 1.0 / (steps-1)
+                have_subplot0_levs = True
+                subplot0_levs = np.array(
+                    [0+(i*dx)**spacing*cmax for i in range(steps)],
+                    dtype=float
+                )
+            elif stat in ['BIAS', 'FBIAS']:
+                if stat == 'BIAS':
+                    center_value = 0
+                elif stat == 'FBIAS':
+                    center_value = 1
+                have_subplot0_levs = True
+                subplot0_levs = self.get_centered_contour_levels(
+                    subplot0_data, center_value, spacing
+                )
+        have_subplotsN_levs = False
+        subplotsN_levs = np.array([np.nan])
+        if stat == 'ACC':
+            have_subplotsN_levs = True
+            subplotsN_levs = np.array([-0.5, -0.4, -0.3, -0.2, -0.1, -0.05,
+                                       0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5])
+        else:
+            if subplotsN_data != [np.nan]:
+                if stat in ['BIAS', 'FBIAS']:
+                    have_subplotsN_levs = have_subplot0_levs
+                    subplotsN_levs = subplot0_levs
+                    if not have_subplotsN_levs:
+                        for N in range(len(subplotsN_data[:,0,0])):
+                            if stat in ['BIAS', 'FBIAS']:
+                                subplotN_data = subplotsN_data[N,:,:]
+                                if np.nanmax(subplotN_data) > 100:
+                                    spacing = 2.25
+                                elif np.nanmax(subplotN_data) > 100:
+                                    spacing = 2
+                                else:
+                                    spacing = 1.75
+                                if stat == 'BIAS':
+                                    center_value = 0
+                                elif stat == 'FBIAS':
+                                    center_value = 1
+                            else:
+                                subplotN_data = (subplotsN_data[N,:,:]
+                                                 - subplot0_data)
+                                center_value = 0
+                                spacing = 1.25
+                            if not np.ma.masked_invalid(subplotN_data).mask.all():
+                                have_subplotsN_levs = True
+                                subplotsN_levs = self.get_centered_contour_levels(
+                                    subplotN_data[N,:,:], center_value, spacing
+                                )
+                                break
+        return have_subplot0_levs, subplot0_levs, have_subplotsN_levs, subplotsN_levs
 
     def get_model_plot_settings(self):
         """! Get dictionary plot settings for models

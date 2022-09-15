@@ -75,9 +75,9 @@ class LeadByDate:
         self.logger.info(f"Plots will be in: {output_image_dir}")
         # Create dataframe for all forecast hours
         self.logger.info("Building dataframe for all forecast hours")
-        forecast_hours_df_dict = {}
+        forecast_hours_stat_df_dict = {}
         for forecast_hour in self.date_info_dict['forecast_hours']:
-            self.logger.debug(f"Building data for {forecast_hour}")
+            self.logger.debug(f"Building data for forecast hour {forecast_hour}")
             # Get dates to plot
             self.logger.info("Creating valid and init date arrays")
             valid_dates, init_dates = gda_util.get_plot_dates(
@@ -133,53 +133,85 @@ class LeadByDate:
                 str(forecast_hour)
             )
             # Calculate statistic
-            #self.logger.info(f"Calculating statstic {self.plot_info_dict['stat']} "
-            #                 +f"from line type {self.plot_info_dict['line_type']}")
-            #stat_df, stat_array = gda_util.calculate_stat(
-            #    self.logger, all_model_df, self.plot_info_dict['line_type'],
-            #    self.plot_info_dict['stat']
-            #)
-            #if self.plot_info_dict['event_equalization'] == 'YES':
-            #    self.logger.debug("Doing event equalization")
-            #    masked_stat_array = np.ma.masked_invalid(stat_array)
-            #    stat_array = np.ma.mask_cols(masked_stat_array)
-            #    stat_array = stat_array.filled(fill_value=np.nan)
-            forecast_hours_df_dict[forecast_hour] = all_model_df
-        forecast_hours_df = pd.concat(forecast_hours_df_dict)
+            self.logger.info(f"Calculating statstic {self.plot_info_dict['stat']} "
+                             +f"from line type {self.plot_info_dict['line_type']}")
+            stat_df, stat_array = gda_util.calculate_stat(
+                self.logger, all_model_df, self.plot_info_dict['line_type'],
+                self.plot_info_dict['stat']
+            )
+            if self.plot_info_dict['event_equalization'] == 'YES':
+                self.logger.debug("Doing event equalization")
+                masked_stat_array = np.ma.masked_invalid(stat_array)
+                stat_array = np.ma.mask_cols(masked_stat_array)
+                stat_array = stat_array.filled(fill_value=np.nan)
+                model_idx_list = (
+                    stat_df.index.get_level_values(0).unique().tolist()
+                )
+                for model_idx in model_idx_list:
+                    model_idx_num = model_idx_list.index(model_idx)
+                    stat_df.loc[model_idx] = stat_array[model_idx_num,:]
+            forecast_hours_stat_df_dict[forecast_hour] = stat_df
+        forecast_hours_stat_df = pd.concat(forecast_hours_stat_df_dict,
+                                           names=['fhr', 'model', 'valid_dates'])
         # Set up plot
         self.logger.info(f"Doing plot set up")
-        plot_specs_ts = PlotSpecs(self.logger, 'lead_by_date')
-        plot_specs_ts.set_up_plot()
-        nsubplots = len(list(self.model_info_dict.keys()))
+        plot_specs_lbd = PlotSpecs(self.logger, 'lead_by_date')
+        plot_specs_lbd.set_up_plot()
+        fhr_idx_list = (
+            forecast_hours_stat_df.index.get_level_values(0)\
+            .unique().tolist()
+        )
+        model_idx_list = (
+            forecast_hours_stat_df.index.get_level_values(1)\
+            .unique().tolist()
+        )
+        valid_dates_idx_list = (
+            forecast_hours_stat_df.index.get_level_values(2)\
+            .unique().tolist()
+        )
+        ymesh, xmesh = np.meshgrid(plot_dates, fhr_idx_list)
+        nsubplots = len(model_idx_list)
         if nsubplots == 1:
             gs_row, gs_col = 1, 1
             gs_hspace, gs_wspace = 0, 0
-            gs_bottom, gs_top = 0.175, 0.825
+            gs_bottom, gs_top = 0.225, 0.85
+            cbar_bottom = 0.075
+            cbar_height = 0.02
         elif nsubplots == 2:
             gs_row, gs_col = 1, 2
             gs_hspace, gs_wspace = 0, 0.1
-            gs_bottom, gs_top = 0.175, 0.825
+            gs_bottom, gs_top = 0.225, 0.85
+            cbar_bottom = 0.075
+            cbar_height = 0.02
         elif nsubplots > 2 and nsubplots <= 4:
             gs_row, gs_col = 2, 2
             gs_hspace, gs_wspace = 0.15, 0.1
             gs_bottom, gs_top = 0.125, 0.9
+            cbar_bottom = 0.04
+            cbar_height = 0.02
         elif nsubplots > 4 and nsubplots <= 6:
             gs_row, gs_col = 3, 2
             gs_hspace, gs_wspace = 0.15, 0.1
             gs_bottom, gs_top = 0.125, 0.9
+            cbar_bottom = 0.04
+            cbar_height = 0.02
         elif nsubplots > 6 and nsubplots <= 8:
             gs_row, gs_col = 4, 2
             gs_hspace, gs_wspace = 0.175, 0.1
             gs_bottom, gs_top = 0.125, 0.9
+            cbar_bottom = 0.04
+            cbar_height = 0.02
         elif nsubplots > 8 and nsubplots <= 10:
             gs_row, gs_col = 5, 2
             gs_hspace, gs_wspace = 0.225, 0.1
             gs_bottom, gs_top = 0.125, 0.9
+            cbar_bottom = 0.04
+            cbar_height = 0.02
         else:
             self.logger.error("TOO MANY SUBPLOTS REQUESTED, MAXIMUM IS 10")
             sys.exit(1)
         if nsubplots <= 2:
-            plot_specs_ts.fig_size = (14., 7.)
+            plot_specs_lbd.fig_size = (14., 7.)
         if nsubplots >= 2:
             n_xticks = 8
         else:
@@ -195,7 +227,7 @@ class LeadByDate:
         else:
             ytick_intvl = int(len(plot_dates)/n_yticks)
         date_intvl = int((plot_dates[1]-plot_dates[0]).total_seconds())
-        stat_plot_name = plot_specs_ts.get_stat_plot_name(
+        stat_plot_name = plot_specs_lbd.get_stat_plot_name(
              self.plot_info_dict['stat']
         )
         fcst_units = all_model_df['FCST_UNITS'].values.astype('str')
@@ -207,7 +239,7 @@ class LeadByDate:
         elif len(fcst_units) == 0:
             self.logger.warning("Empty dataframe")
             fcst_units = ['']
-        plot_title = plot_specs_ts.get_plot_title(
+        plot_title = plot_specs_lbd.get_plot_title(
             self.plot_info_dict, self.date_info_dict,
             fcst_units[0]
         )
@@ -219,9 +251,9 @@ class LeadByDate:
                 plot_left_logo_path
             )
             left_logo_xpixel_loc, left_logo_ypixel_loc, left_logo_alpha = (
-                plot_specs_ts.get_logo_location(
-                    'left', plot_specs_ts.fig_size[0],
-                    plot_specs_ts.fig_size[1], plt.rcParams['figure.dpi']
+                plot_specs_lbd.get_logo_location(
+                    'left', plot_specs_lbd.fig_size[0],
+                    plot_specs_lbd.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
         plot_right_logo = False
@@ -232,18 +264,42 @@ class LeadByDate:
                 plot_right_logo_path
             )
             right_logo_xpixel_loc, right_logo_ypixel_loc, right_logo_alpha = (
-                plot_specs_ts.get_logo_location(
-                    'right', plot_specs_ts.fig_size[0],
-                    plot_specs_ts.fig_size[1], plt.rcParams['figure.dpi']
+                plot_specs_lbd.get_logo_location(
+                    'right', plot_specs_lbd.fig_size[0],
+                    plot_specs_lbd.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
-        image_name = plot_specs_ts.get_savefig_name(
+        image_name = plot_specs_lbd.get_savefig_name(
             output_image_dir, self.plot_info_dict, self.date_info_dict
         )
+        subplot0_cmap, subplotsN_cmap = plot_specs_lbd.get_plot_colormaps(
+            self.plot_info_dict['stat']
+        )
+        subplot0_data = [
+            i.to_numpy().tolist() for _, i in \
+            forecast_hours_stat_df.loc[:,model_idx_list[0],:].groupby('fhr')
+        ]
+        for model_idx in model_idx_list[1:]:
+            subplotN_data = [
+                i.to_numpy().tolist() for _, i in \
+                forecast_hours_stat_df.loc[:,model_idx,:].groupby('fhr')
+            ]
+            if model_idx == model_idx_list[1]:
+                subplotsN_data = [subplotN_data]
+            else:
+                subplotsN_data = np.concatenate((subplotsN_data, [subplotN_data]))
+        if len(model_idx_list) == 1:
+            subplotsN_data = [np.nan]
+        have_subplot0_levs, subplot0_levs, have_subplotsN_levs, subplotsN_levs = (
+            plot_specs_lbd.get_plot_contour_levels(
+                self.plot_info_dict['stat'], subplot0_data, subplotsN_data
+            )
+        )
+        make_colorbar = False
         # Create plot
         self.logger.info(f"Creating plot for {self.plot_info_dict['stat']} ")
-        fig = plt.figure(figsize=(plot_specs_ts.fig_size[0],
-                                  plot_specs_ts.fig_size[1]))
+        fig = plt.figure(figsize=(plot_specs_lbd.fig_size[0],
+                                  plot_specs_lbd.fig_size[1]))
         gs = gridspec.GridSpec(gs_row, gs_col,
                                bottom=gs_bottom, top=gs_top,
                                hspace=gs_hspace, wspace=gs_wspace)
@@ -260,9 +316,17 @@ class LeadByDate:
                 right_logo_img_array, right_logo_xpixel_loc,
                 right_logo_ypixel_loc, zorder=1, alpha=right_logo_alpha
             )
-        subplot_num = 1
-        while subplot_num <= nsubplots:
-            ax = plt.subplot(gs[subplot_num-1])
+        for model_idx in model_idx_list:
+            model_num = model_idx.split('/')[0]
+            model_num_name = model_idx.split('/')[1]
+            model_num_plot_name = model_idx.split('/')[2]
+            model_num_obs_name = self.model_info_dict[model_num]['obs_name']
+            model_num_data = [
+                i.to_numpy().tolist() for _, i in \
+                forecast_hours_stat_df.loc[:,model_idx,:].groupby('fhr')
+            ]
+            masked_model_num_data = np.ma.masked_invalid(model_num_data)
+            ax = plt.subplot(gs[model_idx_list.index(model_idx)])
             ax.grid(True)
             ax.set_xlim([self.date_info_dict['forecast_hours'][0],
                           self.date_info_dict['forecast_hours'][-1]])
@@ -290,16 +354,126 @@ class LeadByDate:
                 ax.set_ylabel(self.date_info_dict['date_type'].title()+' Date')
             else:
                 plt.setp(ax.get_yticklabels(), visible=False)
-            if subplot_num == 1:
-                ax.set_title(
-                    self.model_info_dict['model'+str(subplot_num)]['plot_name']
-                )
+            if model_idx == model_idx_list[0]:
+                self.logger.debug(f"Plotting {model_num} - {model_num_name} "
+                                  +f"- {model_num_plot_name}")
+                ax.set_title(model_num_plot_name)
+                subplot0_plot_name = model_num_plot_name
+                subplot0_data = masked_model_num_data
+                if not subplot0_data.mask.all():
+                    if have_subplot0_levs:
+                        CF0 = ax.contourf(xmesh, ymesh, subplot0_data,
+                                          levels=subplot0_levs,
+                                          cmap=subplot0_cmap, extend='both')
+                    else:
+                       CF0 = ax.contourf(xmesh, ymesh, subplot0_data,
+                                         cmap=subplot0_cmap, extend='both')
+                    C0 = ax.contour(xmesh, ymesh, subplot0_data,
+                                    levels=CF0.levels, colors='k',
+                                    linewidths=1.0)
+                    C0_labels_list = []
+                    for lev in C0.levels:
+                        if str(lev).split('.')[1] == '0':
+                            C0_labels_list.append(str(int(lev)))
+                        else:
+                            C0_labels_list.append(str(round(lev,3)).rstrip('0'))
+                    C0_fmt = {}
+                    for lev, label in zip(C0.levels, C0_labels_list):
+                        C0_fmt[lev] = label
+                    ax.clabel(C0, C0.levels, fmt=C0_fmt, inline=True,
+                              fontsize=12.5)
+                    if self.plot_info_dict['stat'] in ['BIAS', 'FBIAS']:
+                        if not make_colorbar:
+                            make_colorbar = True
+                            cbar_CF = CF0
+                            cbar_ticks = CF0.levels
+                            cbar_label = plot_specs_lbd.get_stat_plot_name(
+                                self.plot_info_dict['stat']
+                            )
+                else:
+                    self.logger.warning(f"Fully masked array for {model_num}, "
+                                        +"no plotting")
             else:
-                ax.set_title(
-                    self.model_info_dict['model'+str(subplot_num)]['plot_name']
-                    +'-'+self.model_info_dict['model1']['plot_name']
-                )
-            subplot_num+=1
+                ax.set_title(model_num_plot_name+'-'+subplot0_plot_name)
+                if self.plot_info_dict['stat'] in ['BIAS', 'FBIAS']:
+                    self.logger.debug(f"Plotting {model_num} - {model_num_name} "
+                                      +f"- {model_num_plot_name}")
+                    ax.set_title(model_num_plot_name)
+                    subplotN_data = masked_model_num_data
+                else:
+                    self.logger.debug(f"Plotting {model_num} - {model_num_name} "
+                                      +f"- {model_num_plot_name} difference from "
+                                      +f"{subplot0_plot_name}")
+                    ax.set_title(model_num_plot_name+'-'+subplot0_plot_name)
+                    subplotN_data = masked_model_num_data - subplot0_data
+                if not subplotN_data.mask.all():
+                    if have_subplotsN_levs:
+                        CFN = ax.contourf(xmesh, ymesh, subplotN_data,
+                                          levels=subplotsN_levs,
+                                          cmap=subplotsN_cmap, extend='both')
+                        if self.plot_info_dict['stat'] in ['BIAS', 'FBIAS']:
+                            CN = ax.contour(xmesh, ymesh, subplotN_data,
+                                            levels=CFN.levels, colors='k',
+                                            linewidths=1.0)
+                            CN_labels_list = []
+                            for lev in CN.levels:
+                                if str(lev).split('.')[1] == '0':
+                                    CN_labels_list.append(str(int(lev)))
+                                else:
+                                    CN_labels_list.append(
+                                        str(round(lev,3)).rstrip('0')
+                                    )
+                            CN_fmt = {}
+                            for lev, label in zip(CN.levels, CN_labels_list):
+                                CN_fmt[lev] = label
+                            ax.clabel(CN, CN.levels, fmt=CN_fmt, inline=True,
+                                      fontsize=12.5)
+                        if not make_colorbar:
+                            make_colorbar = True
+                            cbar_CF = CFN
+                            cbar_ticks = CFN.levels
+                            if self.plot_info_dict['stat'] in ['BIAS', 'FBIAS']:
+                                cbar_label = plot_specs_lbd.get_stat_plot_name(
+                                    self.plot_info_dict['stat']
+                                )
+                            else:
+                                cbar_label = 'Difference'
+                    else:
+                        self.logger.warning("Do not have contour levels "
+                                            +"to plot, not plotting")
+                else:
+                    self.logger.warning(f"Fully masked array for {model_num}, "
+                                        +"no plotting")
+        if make_colorbar:
+            cbar_left = (
+                left_logo_img.get_extent()[1]
+                /(plt.rcParams['figure.dpi']*plot_specs_lbd.fig_size[0])
+            )
+            cbar_width = (
+                (right_logo_img.get_extent()[1]
+                 /(plt.rcParams['figure.dpi']*plot_specs_lbd.fig_size[0]))
+                - (left_logo_img.get_extent()[1]
+                   /(plt.rcParams['figure.dpi']*plot_specs_lbd.fig_size[0]))
+            )
+            cbar_ax = fig.add_axes(
+                [cbar_left, cbar_bottom, cbar_width, cbar_height]
+            )
+            cbar = fig.colorbar(cbar_CF, cax=cbar_ax,
+                                orientation='horizontal',
+                                ticks=cbar_ticks)
+            cbar.ax.set_xlabel(cbar_label, labelpad = 0)
+            cbar.ax.xaxis.set_tick_params(pad=0)
+            cbar_tick_labels_list = []
+            for tick in cbar.get_ticks():
+                if str(tick).split('.')[1] == '0':
+                    cbar_tick_labels_list.append(
+                        str(int(tick))
+                    )
+                else:
+                    cbar_tick_labels_list.append(
+                        str(round(tick,3)).rstrip('0')
+                    )
+            cbar.ax.set_xticklabels(cbar_tick_labels_list)
         self.logger.info("Saving image as "+image_name)
         plt.savefig(image_name)
         plt.clf()
