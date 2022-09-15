@@ -1949,8 +1949,44 @@ def calculate_stat(logger, data_df, line_type, stat):
            stat_df.index.get_level_values(idx).unique()
        )
        idx+=1
-   if stat_df.index.nlevels == 2:
+   if stat_df.index.nlevels == 1:
+       stat_array = stat_df.values.reshape(
+           idx_dict['index0']
+       )
+   elif stat_df.index.nlevels == 2:
        stat_array = stat_df.values.reshape(
            idx_dict['index0'], idx_dict['index1']
        )
    return stat_df, stat_array
+
+def calculate_average(logger, average_method, line_type, stat, df):
+    """! Calculate average of dataset
+        
+         Args:
+             logger                 - logger object
+             average_method         - method to use to
+                                      calculate the
+                                      average (string:
+                                      mean, aggregation)
+             line_type              - line type to calculate
+                                      stat from
+             stat                   - statistic to calculate
+                                      (string)
+             df                     - dataframe of values
+         Returns:
+    """
+    average_value = np.nan
+    if average_method == 'mean':
+        average_value = np.ma.masked_invalid(df).mean()
+    elif average_method == 'aggregation':
+        if not df.isnull().values.all():
+            x = df.loc[:,'TOTAL':].agg(['sum'])
+            avg_df, avg_array = calculate_stat(
+                logger, df.loc[:,'TOTAL':].agg(['sum']),
+                line_type, stat
+            )
+            average_value = avg_array[0]
+    else:
+        logger.warning(f"{average_method} not recongnized..."
+                       +"use mean, or aggregation...returning NaN")
+    return average_value

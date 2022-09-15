@@ -149,6 +149,10 @@ class LeadAverage:
                 for model_idx in model_idx_list:
                     model_idx_num = model_idx_list.index(model_idx)
                     stat_df.loc[model_idx] = stat_array[model_idx_num,:]
+                    all_model_df.loc[model_idx] = (
+                        all_model_df.loc[model_idx].where(
+                            stat_df.loc[model_idx].notna()
+                    ).values)
             if forecast_hour == self.date_info_dict['forecast_hours'][0]:
                 forecast_hours_avg_df = pd.DataFrame(
                     np.nan, model_idx_list,
@@ -160,12 +164,21 @@ class LeadAverage:
                 )
             for model_idx in model_idx_list:
                 model_idx_num = model_idx_list.index(model_idx)
-                model_idx_forecast_hour_avg = (
-                    np.ma.masked_invalid(stat_df.loc[model_idx]).mean()
+                if self.plot_info_dict['line_type'] in ['CNT', 'GRAD',
+                                                        'CTS', 'NBRCTS',
+                                                        'NBRCNT', 'VCNT']:
+                    avg_method = 'mean'
+                    calc_avg_df = stat_df.loc[model_idx]
+                else:
+                    avg_method = 'aggregation'
+                    calc_avg_df = all_model_df.loc[model_idx]
+                model_idx_forecast_hour_avg = gda_util.calculate_average(
+                    self.logger, avg_method, self.plot_info_dict['line_type'],
+                    self.plot_info_dict['stat'], calc_avg_df
                 )
-                if not np.ma.is_masked(model_idx_forecast_hour_avg):
+                if not np.isnan(model_idx_forecast_hour_avg):
                     forecast_hours_avg_df.loc[model_idx, forecast_hour] = (
-                        np.ma.masked_invalid(stat_df.loc[model_idx]).mean()
+                        model_idx_forecast_hour_avg
                     )
                 if model_idx == model_idx_list[0]:
                     model1_stat_df = stat_df.loc[model_idx]
@@ -177,33 +190,34 @@ class LeadAverage:
                                 -np.ma.count_masked(model_idx_model1_diff))
                     model_idx_model1_diff_mean = np.mean(model_idx_model1_diff)
                     model_idx_model1_diff_std = np.std(model_idx_model1_diff)
-                    model_idx_model1_diff_mean_std_err = (
-                        model_idx_model1_diff_std/np.sqrt(nsamples-1)
-                    )
                     ##Null Hypothesis: mean(M1-M2)=0,
                     ##M1-M2 follows normal distribution.
                     ##plot the 5% conf interval of difference of means
                     ##F*SD/sqrt(N-1),
                     ##F=1.96 for infinite samples, F=2.0 for nsz=60,
                     ##F=2.042 for nsz=30, F=2.228 for nsz=10
-                    if nsamples > 80:
-                        ci = 1.960 * model_idx_model1_diff_mean_std_err
-                    elif nsamples >=40 and nsamples < 80:
-                        ci = 2.000 * model_idx_model1_diff_mean_std_err
-                    elif nsamples >= 20 and nsamples < 40:
-                        ci = 2.042 * model_idx_model1_diff_mean_std_err
-                    elif nsamples > 0 and nsamples < 20:
-                        ci = 2.228 * model_idx_model1_diff_mean_std_err
+                    if nsamples > 0:
+                        model_idx_model1_diff_mean_std_err = (
+                            model_idx_model1_diff_std/np.sqrt(nsamples-1)
+                        )
+                        if nsamples > 80:
+                            ci = 1.960 * model_idx_model1_diff_mean_std_err
+                        elif nsamples >=40 and nsamples < 80:
+                            ci = 2.000 * model_idx_model1_diff_mean_std_err
+                        elif nsamples >= 20 and nsamples < 40:
+                            ci = 2.042 * model_idx_model1_diff_mean_std_err
+                        elif nsamples > 0 and nsamples < 20:
+                            ci = 2.228 * model_idx_model1_diff_mean_std_err
                     elif nsamples == 0:
                         ci = np.nan
                     forecast_hours_ci_df.loc[model_idx, forecast_hour] = ci
-                    from scipy import stats
-                    scipy_ci = stats.t.interval(
-                        alpha=0.95,
-                        df=len(np.ma.compressed(model_idx_model1_diff))-1,
-                        loc=0,
-                        scale=stats.sem(np.ma.compressed(model_idx_model1_diff))
-                    )
+                    #from scipy import stats
+                    #scipy_ci = stats.t.interval(
+                    #    alpha=0.95,
+                    #    df=len(np.ma.compressed(model_idx_model1_diff))-1,
+                    #    loc=0,
+                    #    scale=stats.sem(np.ma.compressed(model_idx_model1_diff))
+                    #)
         # Set up plot
         self.logger.info(f"Doing plot set up")
         plot_specs_la = PlotSpecs(self.logger, 'lead_average')
@@ -338,6 +352,8 @@ class LeadAverage:
             self.logger.debug(f"Plotting {model_num} - {model_num_name} "
                               +f"- {model_num_plot_name}")
             masked_model_num_data = np.ma.masked_invalid(model_num_data)
+            if model_num == 'model1':
+                 model1_masked_model_num_data = masked_model_num_data 
             model_num_npts = (
                 len(masked_model_num_data)
                 - np.ma.count_masked(masked_model_num_data)
@@ -373,8 +389,6 @@ class LeadAverage:
                     stat_min_max_dict['ax1_stat_max'] = (
                         masked_model_num_data.max()
                     )
-                if model_num == 'model1':
-                    model1_masked_model_num_data = masked_model_num_data
             masked_model_num_model1_diff_data = np.ma.masked_invalid(
                 model_num_data - model1_masked_model_num_data
             )

@@ -146,6 +146,10 @@ class TimeSeries:
             for model_idx in model_idx_list:
                 model_idx_num = model_idx_list.index(model_idx)
                 stat_df.loc[model_idx] = stat_array[model_idx_num,:]
+                all_model_df.loc[model_idx] = (
+                    all_model_df.loc[model_idx].where(
+                        stat_df.loc[model_idx].notna()
+                ).values)
         # Set up plot
         self.logger.info(f"Doing plot set up")
         plot_specs_ts = PlotSpecs(self.logger, 'time_series')
@@ -265,14 +269,24 @@ class TimeSeries:
             if model_num_npts != 0:
                 self.logger.debug(f"Plotting {model_num} - {model_num_name} "
                                   +f"- {model_num_plot_name}")
-                if np.abs(masked_model_num_data.mean()) >= 10:
-                    model_num_mean = format(
-                        round(masked_model_num_data.mean(), 2), '.2f'
-                    )
+                if self.plot_info_dict['line_type'] in ['CNT', 'GRAD',
+                                                        'CTS', 'NBRCTS',
+                                                        'NBRCNT', 'VCNT']:
+                    avg_method = 'mean'
+                    calc_avg_df = model_num_data
                 else:
-                    model_num_mean = format(
-                        round(masked_model_num_data.mean(), 3), '.3f'
-                    )
+                    avg_method = 'aggregation'
+                    calc_avg_df = all_model_df.loc[model_idx]
+                model_num_avg = gda_util.calculate_average(
+                    self.logger, avg_method, self.plot_info_dict['line_type'],
+                    self.plot_info_dict['stat'], calc_avg_df
+                )
+                if np.abs(model_num_avg) >= 10:
+                    model_num_avg_label = format(round(model_num_avg, 2),
+                                                 '.2f')
+                else:
+                    model_num_avg_label = format(round(model_num_avg, 3),
+                                                  '.3f')
                 ax.plot_date(
                     np.ma.compressed(masked_plot_dates),
                     np.ma.compressed(masked_model_num_data),
@@ -281,7 +295,7 @@ class TimeSeries:
                     linewidth = model_num_plot_settings_dict['linewidth'],
                     marker = model_num_plot_settings_dict['marker'],
                     markersize = model_num_plot_settings_dict['markersize'],
-                    label = (model_num_plot_name+' '+model_num_mean+' '
+                    label = (model_num_plot_name+' '+model_num_avg_label+' '
                              +str(model_num_npts)+' days'),
                     zorder = (len(list(self.model_info_dict.keys()))
                               - model_idx_list.index(model_idx) + 4)

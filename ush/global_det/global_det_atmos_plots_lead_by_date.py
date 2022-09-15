@@ -150,6 +150,10 @@ class LeadByDate:
                 for model_idx in model_idx_list:
                     model_idx_num = model_idx_list.index(model_idx)
                     stat_df.loc[model_idx] = stat_array[model_idx_num,:]
+                    all_model_df.loc[model_idx] = (
+                        all_model_df.loc[model_idx].where(
+                            stat_df.loc[model_idx].notna()
+                    ).values)
             forecast_hours_stat_df_dict[forecast_hour] = stat_df
         forecast_hours_stat_df = pd.concat(forecast_hours_stat_df_dict,
                                            names=['fhr', 'model', 'valid_dates'])
