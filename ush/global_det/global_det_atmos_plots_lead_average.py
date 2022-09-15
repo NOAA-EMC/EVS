@@ -206,8 +206,8 @@ class LeadAverage:
                     )
         # Set up plot
         self.logger.info(f"Doing plot set up")
-        plot_specs_ts = PlotSpecs(self.logger, 'lead_average')
-        plot_specs_ts.set_up_plot()
+        plot_specs_la = PlotSpecs(self.logger, 'lead_average')
+        plot_specs_la.set_up_plot()
         n_xticks = 17
         if len(self.date_info_dict['forecast_hours']) < n_xticks:
             xtick_intvl = 1
@@ -220,7 +220,7 @@ class LeadAverage:
             'ax2_stat_min': np.ma.masked_invalid(np.nan),
             'ax2_stat_max': np.ma.masked_invalid(np.nan)
         }
-        stat_plot_name = plot_specs_ts.get_stat_plot_name(
+        stat_plot_name = plot_specs_la.get_stat_plot_name(
              self.plot_info_dict['stat']
         )
         fcst_units = all_model_df['FCST_UNITS'].values.astype('str')
@@ -232,7 +232,7 @@ class LeadAverage:
         elif len(fcst_units) == 0:
             self.logger.warning("Empty dataframe")
             fcst_units = ['']
-        plot_title = plot_specs_ts.get_plot_title(
+        plot_title = plot_specs_la.get_plot_title(
             self.plot_info_dict, self.date_info_dict,
             fcst_units[0]
         )
@@ -244,9 +244,9 @@ class LeadAverage:
                 plot_left_logo_path
             )
             left_logo_xpixel_loc, left_logo_ypixel_loc, left_logo_alpha = (
-                plot_specs_ts.get_logo_location(
-                    'left', plot_specs_ts.fig_size[0],
-                    plot_specs_ts.fig_size[1], plt.rcParams['figure.dpi']
+                plot_specs_la.get_logo_location(
+                    'left', plot_specs_la.fig_size[0],
+                    plot_specs_la.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
         plot_right_logo = False
@@ -257,19 +257,19 @@ class LeadAverage:
                 plot_right_logo_path
             )
             right_logo_xpixel_loc, right_logo_ypixel_loc, right_logo_alpha = (
-                plot_specs_ts.get_logo_location(
-                    'right', plot_specs_ts.fig_size[0],
-                    plot_specs_ts.fig_size[1], plt.rcParams['figure.dpi']
+                plot_specs_la.get_logo_location(
+                    'right', plot_specs_la.fig_size[0],
+                    plot_specs_la.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
-        image_name = plot_specs_ts.get_savefig_name(
+        image_name = plot_specs_la.get_savefig_name(
             output_image_dir, self.plot_info_dict, self.date_info_dict
         )
         # Create plot
         self.logger.info(f"Creating plot for {self.plot_info_dict['stat']} ")
         fig, (ax1, ax2) = plt.subplots(2,1,
-                                       figsize=(plot_specs_ts.fig_size[0],
-                                                plot_specs_ts.fig_size[1]),
+                                       figsize=(plot_specs_la.fig_size[0],
+                                                plot_specs_la.fig_size[1]),
                                        sharex=True)
         fig.suptitle(plot_title)
         ax1.grid(True)
@@ -303,7 +303,7 @@ class LeadAverage:
                 right_logo_img_array, right_logo_xpixel_loc,
                 right_logo_ypixel_loc, zorder=1, alpha=right_logo_alpha
             )
-        model_plot_settings_dict = plot_specs_ts.get_model_plot_settings()
+        model_plot_settings_dict = plot_specs_la.get_model_plot_settings()
         model_idx_list = (
             forecast_hours_avg_df.index.get_level_values(0).unique().tolist()
         )
@@ -540,11 +540,11 @@ class LeadAverage:
             stat_min = stat_min_max_dict['ax1_stat_min']
             stat_max = stat_min_max_dict['ax1_stat_max']
             legend = ax1.legend(
-                bbox_to_anchor=(plot_specs_ts.legend_bbox[0],
-                                plot_specs_ts.legend_bbox[1]),
-                loc = plot_specs_ts.legend_loc,
-                ncol = plot_specs_ts.legend_ncol,
-                fontsize = plot_specs_ts.legend_font_size
+                bbox_to_anchor=(plot_specs_la.legend_bbox[0],
+                                plot_specs_la.legend_bbox[1]),
+                loc = plot_specs_la.legend_loc,
+                ncol = plot_specs_la.legend_ncol,
+                fontsize = plot_specs_la.legend_font_size
             )
             plt.draw()
             inv = ax1.transData.inverted()
@@ -564,11 +564,11 @@ class LeadAverage:
                     )
                     ax1.set_ylim([y_axis_min, y_axis_max])
                     legend = ax1.legend(
-                        bbox_to_anchor=(plot_specs_ts.legend_bbox[0],
-                                        plot_specs_ts.legend_bbox[1]),
-                        loc = plot_specs_ts.legend_loc,
-                        ncol = plot_specs_ts.legend_ncol,
-                        fontsize = plot_specs_ts.legend_font_size
+                        bbox_to_anchor=(plot_specs_la.legend_bbox[0],
+                                        plot_specs_la.legend_bbox[1]),
+                        loc = plot_specs_la.legend_loc,
+                        ncol = plot_specs_la.legend_ncol,
+                        fontsize = plot_specs_la.legend_font_size
                     )
                     plt.draw()
                     inv = ax1.transData.inverted()
