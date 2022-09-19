@@ -1980,9 +1980,12 @@ def calculate_average(logger, average_method, line_type, stat, df):
         average_value = np.ma.masked_invalid(df).mean()
     elif average_method == 'aggregation':
         if not df.isnull().values.all():
-            x = df.loc[:,'TOTAL':].agg(['sum'])
+            ndays = (
+                len(df.loc[:,'TOTAL'])
+                -np.ma.count_masked(np.ma.masked_invalid(df.loc[:,'TOTAL']))
+            )
             avg_df, avg_array = calculate_stat(
-                logger, df.loc[:,'TOTAL':].agg(['sum']),
+                logger, df.loc[:,'TOTAL':].agg(['sum'])/ndays,
                 line_type, stat
             )
             average_value = avg_array[0]
