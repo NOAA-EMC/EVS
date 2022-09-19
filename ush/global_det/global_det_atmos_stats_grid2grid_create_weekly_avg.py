@@ -35,9 +35,10 @@ fhr_end = os.environ['fhr_end']
 fhr_inc = os.environ['fhr_inc']
 
 # Process run time agruments
-if len(sys.argv) != 3:
+if len(sys.argv) != 4:
     print("ERROR: Not given correct number of run time agruments..."
-          +os.path.basename(__file__)+" VARNAME_VARLEVEL FILE_FORMAT")
+          +os.path.basename(__file__)+" VARNAME_VARLEVEL DATAROOT_FILE_FORMAT "
+          +"COMIN_FILE_FORMART")
     sys.exit(1)
 else:
     if '_' not in sys.argv[1]:
@@ -48,7 +49,8 @@ else:
     else:
         var_level = sys.argv[1]
         print("Using var_level = "+var_level)
-    file_format = sys.argv[2]
+    DATAROOT_file_format = sys.argv[2]
+    COMIN_file_format = sys.argv[3]
 
 # Set input and output directories
 output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
@@ -102,11 +104,23 @@ while valid_hr <= int(valid_hr_end):
                 weekly_avg_day_init
                 + datetime.timedelta(hours=weekly_avg_day_fhr)
             )
-            weekly_avg_day_fhr_input_file = gda_util.format_filler(
-                    file_format, weekly_avg_day_fhr_valid,
+            weekly_avg_day_fhr_DATAROOT_input_file = gda_util.format_filler(
+                    DATAROOT_file_format, weekly_avg_day_fhr_valid,
                     weekly_avg_day_init, 
                     str(weekly_avg_day_fhr), {}
             )
+            weekly_avg_day_fhr_COMIN_input_file = gda_util.format_filler(
+                    COMIN_file_format, weekly_avg_day_fhr_valid,
+                    weekly_avg_day_init,
+                    str(weekly_avg_day_fhr), {}
+            )
+            if os.path.exists(weekly_avg_day_fhr_COMIN_input_file):
+                weekly_avg_day_fhr_input_file = (
+                    weekly_avg_day_fhr_COMIN_input_file)
+            else:
+                weekly_avg_day_fhr_input_file = (
+                    weekly_avg_day_fhr_DATAROOT_input_file
+                )
             if os.path.exists(weekly_avg_day_fhr_input_file):
                 print("Input file for forecast hour "+str(weekly_avg_day_fhr)
                       +', valid '+str(weekly_avg_day_fhr_valid)

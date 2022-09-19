@@ -29,6 +29,7 @@ export USHevs=$HOMEevs/ush
 export EXECevs=$HOMEevs/exec
 export DATAROOT=$OUTPUTROOT/tmp
 export COMROOT=$OUTPUTROOT/$envir/com
+export COMINevs=$COMROOT/$NET/$evs_ver
 if [ $machine = "WCOSS2" ]; then
     export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
     export archive_obs_data_dir="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/global/archive/obs_data"

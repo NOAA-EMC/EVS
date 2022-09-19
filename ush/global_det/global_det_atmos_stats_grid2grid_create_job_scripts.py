@@ -176,6 +176,17 @@ reformat_model_jobs_dict = {
                                                +'{lead?fmt=%2H}0000L_'
                                                +'{valid?fmt=%Y%m%d}_'
                                                +'{valid?fmt=%H}0000V_pairs.nc'
+                                           ),
+                                           os.path.join(
+                                               '$COMIN', 'stats',
+                                               '$COMPONENT',
+                                               '${RUN}.{valid?fmt=%Y%m%d}',
+                                               '$MODEL', '$VERIF_CASE',
+                                               'grid_stat_${VERIF_TYPE}.'
+                                               +'${job_name}_'
+                                               +'{lead?fmt=%2H}0000L_'
+                                               +'{valid?fmt=%Y%m%d}_'
+                                               +'{valid?fmt=%H}0000V_pairs.nc'
                                            )])]},
     },
     'snow': {
