@@ -83,26 +83,20 @@ done
 # Copy files to desired location
 if [ $SENDCOM = YES ]; then
     # Copy atmos
-    for RUN_DIR_PATH in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$RUN*; do
-        RUN_DIR=$(echo ${RUN_DIR_PATH##*/})
-        mkdir -p $COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN_DIR
-        for RUN_SUBDIR_PATH in $RUN_DIR_PATH/*; do
-            RUN_SUBDIR=$(echo ${RUN_SUBDIR_PATH##*/})
-            mkdir -p $COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN_DIR/$RUN_SUBDIR
-            mkdir -p $COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN_DIR/$RUN_SUBDIR/$VERIF_CASE
-            for FILE in $RUN_SUBDIR_PATH/$VERIF_CASE/*; do
-                cp -v $FILE $COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN_DIR/$RUN_SUBDIR/$VERIF_CASE/.
-            done
+    mkdir -p $COMOUT/$RUN.$VDATE
+    for RUN_SUBDIR_PATH in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$RUN.$VDATE/*; do
+        RUN_SUBDIR=$(echo ${RUN_SUBDIR_PATH##*/})
+        mkdir -p $COMOUT/$RUN.$VDATE/$RUN_SUBDIR
+        mkdir -p $COMOUT/$RUN.$VDATE/$RUN_SUBDIR/$VERIF_CASE
+        for FILE in $RUN_SUBDIR_PATH/$VERIF_CASE/*; do
+            cp -v $FILE $COMOUT/$RUN.$VDATE/$RUN_SUBDIR/$VERIF_CASE/.
         done
     done
     # Copy models
     for MODEL in $model_list; do
-        for MODEL_DIR_PATH in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$MODEL*; do
-            MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
-            mkdir -p $COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$MODEL_DIR
-            for FILE in $MODEL_DIR_PATH/*; do
-                cp -v $FILE $COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$MODEL_DIR/.
-            done
+        mkdir -p $COMOUT/$MODEL.$VDATE
+        for FILE in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$MODEL.$VDATE/*; do
+            cp -v $FILE $COMOUT/$MODEL.$VDATE/.
         done
     done
 fi
