@@ -1,0 +1,37 @@
+#!/bin/sh -e
+
+export metplus_verbosity="DEBUG"
+export met_verbosity="2"
+export log_met_output_to_metplus="yes"
+
+export valid_beg=00
+export valid_end=18
+export valid_inc=6
+
+export FHOURS="06 12 18 24 30 36"
+export FHOURS_EVSlist=${FHOURS// /, }
+
+if [ $OBSERVATION = "GCIP" ] ; then
+    export MET_GRIB_TABLES=$PARMevs/$STEP/grib2_wafs.txt
+    export INPUT_BASE=$DATA/${MODELNAME}_${RESOLUTION}
+    rm -rf $INPUT_BASE
+    mkdir -p $INPUT_BASE
+
+    if [ $RESOLUTION = "1P25" ] ; then
+	export REGRID=G45
+	export VAR1_NAME=ICIP
+	export VAR1_LEVELS_FCST="P800, P700, P600, P500, P400"
+	export VAR1_LEVELS_OBS="$VAR1_LEVELS_FCST"
+    elif [ $RESOLUTION = "0P25" ] ; then
+	export REGRID=G193
+	export VAR1_NAME=ICESEV
+	export VAR1_THRESH_FCST="ge1, ge2, ge3, ge4"
+	export VAR1_THRESH_OBS="ge2, ge2, ge2, ge2"
+	export VAR1_LEVELS_FCST="P812, P696.8, P595.2, P506, P392.7"
+	export VAR1_LEVELS_OBS="P800, P700, P600, P500, P400"
+    fi
+elif [ $OBSERVATION = "GFS" ] ; then
+    export INPUT_BASE=
+    export VAR1=TMP
+    export VAR2=VectorWind
+fi
