@@ -94,23 +94,11 @@ if STEP == 'stats':
             )
             COMROOT_dir_list.append(
                 os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
-                             RUN+'.'+(date_dt-datetime.timedelta(days=1))\
-                             .strftime('%Y%m%d'), model,
-                             VERIF_CASE)
-            )
-            COMROOT_dir_list.append(
-                os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
                              model+'.'+date_dt.strftime('%Y%m%d'))
             )
             working_dir_list.append(
                 os.path.join(working_output_base_dir,
                              RUN+'.'+date_dt.strftime('%Y%m%d'), model,
-                             VERIF_CASE)
-            )
-            working_dir_list.append(
-                os.path.join(working_output_base_dir,
-                             RUN+'.'+(date_dt-datetime.timedelta(days=1))\
-                             .strftime('%Y%m%d'), model,
                              VERIF_CASE)
             )
             working_dir_list.append(

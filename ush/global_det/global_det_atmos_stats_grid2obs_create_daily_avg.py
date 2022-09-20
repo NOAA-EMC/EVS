@@ -25,17 +25,16 @@ VERIF_TYPE = os.environ['VERIF_TYPE']
 job_name = os.environ['job_name']
 MODEL = os.environ['MODEL']
 DATE = os.environ['DATE']
-MPR_STARTDATE = os.environ['MPR_STARTDATE']
-MPR_ENDDATE = os.environ['MPR_ENDDATE']
 valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
 valid_hr_inc = os.environ['valid_hr_inc']
 fhr_end = os.environ['fhr_end']
 
 # Process run time agruments
-if len(sys.argv) != 3:
+if len(sys.argv) != 4:
     print("ERROR: Not given correct number of run time agruments..."
-          +os.path.basename(__file__)+" VARNAME_VARLEVEL FILE_FORMAT")
+          +os.path.basename(__file__)+" VARNAME_VARLEVEL DATAROOT_FILE_FORMAT "
+          +"COMIN_FILE_FORMART")
     sys.exit(1)
 else:
     if '_' not in sys.argv[1]:
@@ -46,7 +45,8 @@ else:
     else:
         var_level = sys.argv[1]
         print("Using var_level = "+var_level)
-    file_format = sys.argv[2]
+    DATAROOT_file_format = sys.argv[2]
+    COMIN_file_format = sys.argv[3]
 
 # Set MET MPR columns
 MET_MPR_column_list = [
@@ -95,11 +95,23 @@ while valid_hr <= int(valid_hr_end):
                 daily_avg_day_init
                 + datetime.timedelta(hours=daily_avg_day_fhr)
             )
-            daily_avg_day_fhr_input_file = gda_util.format_filler(
-                    file_format, daily_avg_day_fhr_valid,
-                    daily_avg_day_init, 
+            daily_avg_day_fhr_DATAROOT_input_file = gda_util.format_filler(
+                    DATAROOT_file_format, daily_avg_day_fhr_valid,
+                    daily_avg_day_init,
                     str(daily_avg_day_fhr), {}
             )
+            daily_avg_day_fhr_COMIN_input_file = gda_util.format_filler(
+                    COMIN_file_format, daily_avg_day_fhr_valid,
+                    daily_avg_day_init,
+                    str(daily_avg_day_fhr), {}
+            )
+            if os.path.exists(daily_avg_day_fhr_COMIN_input_file):
+                daily_avg_day_fhr_input_file = (
+                    daily_avg_day_fhr_COMIN_input_file)
+            else:
+                daily_avg_day_fhr_input_file = (
+                    daily_avg_day_fhr_DATAROOT_input_file
+                )
             if os.path.exists(daily_avg_day_fhr_input_file):
                 print("Input file for forecast hour "+str(daily_avg_day_fhr)
                       +', valid '+str(daily_avg_day_fhr_valid)

@@ -111,6 +111,16 @@ reformat_model_jobs_dict = {
                                                         +'${job_name}_init'
                                                         +'{init?fmt=%Y%m%d%H}_'
                                                         +'fhr{lead?fmt=%3H}.nc'
+                                                    ),
+                                                    os.path.join(
+                                                        '$COMIN', 'stats',
+                                                        '$COMPONENT',
+                                                        '${RUN}.{valid?fmt=%Y%m%d}',
+                                                        '$MODEL', '$VERIF_CASE',
+                                                        'anomaly_${VERIF_TYPE}.'
+                                                        +'${job_name}_init'
+                                                        +'{init?fmt=%Y%m%d%H}_'
+                                                        +'fhr{lead?fmt=%3H}.nc'
                                                     )]
                                                 )]},
         'WindShear': {'env': {'var1_name': 'UGRD',
@@ -153,6 +163,17 @@ reformat_model_jobs_dict = {
                                                '$DATA',
                                                '${VERIF_CASE}_${STEP}',
                                                'METplus_output',
+                                               '${RUN}.{valid?fmt=%Y%m%d}',
+                                               '$MODEL', '$VERIF_CASE',
+                                               'grid_stat_${VERIF_TYPE}.'
+                                               +'${job_name}_'
+                                               +'{lead?fmt=%2H}0000L_'
+                                               +'{valid?fmt=%Y%m%d}_'
+                                               +'{valid?fmt=%H}0000V_pairs.nc'
+                                           ),
+                                           os.path.join(
+                                               '$COMIN', 'stats',
+                                               '$COMPONENT',
                                                '${RUN}.{valid?fmt=%Y%m%d}',
                                                '$MODEL', '$VERIF_CASE',
                                                'grid_stat_${VERIF_TYPE}.'
@@ -223,7 +244,18 @@ reformat_model_jobs_dict = {
                                               +'{lead?fmt=%2H}0000L_'
                                               +'{valid?fmt=%Y%m%d}_'
                                               +'{valid?fmt=%H}0000V_pairs.nc'
-                                          )])]}
+                                          ),
+                                          os.path.join(
+                                               '$COMIN', 'stats',
+                                               '$COMPONENT',
+                                               '${RUN}.{valid?fmt=%Y%m%d}',
+                                               '$MODEL', '$VERIF_CASE',
+                                               'grid_stat_${VERIF_TYPE}.'
+                                               +'${job_name}_'
+                                               +'{lead?fmt=%2H}0000L_'
+                                               +'{valid?fmt=%Y%m%d}_'
+                                               +'{valid?fmt=%H}0000V_pairs.nc'
+                                           )])]}
     },
 }
 
@@ -331,38 +363,6 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     job_env_dict['TRUTH'] = os.environ[
                         VERIF_CASE_STEP_abbrev_type+'_truth_name_list'
                     ].split(' ')[model_idx]
-                    if verif_type_job == 'DailyAvg_GeoHeightAnom':
-                        job_env_dict['netCDF_ENDDATE'] = (
-                            date_dt.strftime('%Y%m%d')
-                        )
-                        job_env_dict['netCDF_STARTDATE'] = (
-                            (date_dt - datetime.timedelta(days=1))\
-                            .strftime('%Y%m%d')
-                        )
-                        netCDF_fhr_start = int(job_env_dict['fhr_start']) - 18
-                        if netCDF_fhr_start > 0:
-                            job_env_dict['netCDF_fhr_start'] = str(
-                                netCDF_fhr_start
-                            )
-                        else:
-                            job_env_dict['netCDF_fhr_start'] = '12'
-                        if job_env_dict['valid_hr_inc'] != '12':
-                            job_env_dict['valid_hr_inc'] = '12'
-                        if job_env_dict['fhr_inc'] != '12':
-                            job_env_dict['fhr_inc'] = '12'
-                elif verif_type == 'flux':
-                    job_env_dict['netCDF_ENDDATE'] = date_dt.strftime('%Y%m%d')
-                    job_env_dict['netCDF_STARTDATE'] = (
-                        (date_dt - datetime.timedelta(days=1))\
-                        .strftime('%Y%m%d')
-                    )
-                    netCDF_fhr_start = int(job_env_dict['fhr_start']) - 18
-                    if netCDF_fhr_start > 0:
-                        job_env_dict['netCDF_fhr_start'] = str(netCDF_fhr_start)
-                    else:
-                        job_env_dict['netCDF_fhr_start'] = (
-                            job_env_dict['fhr_start']
-                        )
                 elif verif_type == 'precip':
                     job_env_dict['MODEL_var'] = precip_var_list[model_idx]
                     if precip_file_accum_list[model_idx] == 'continuous':
@@ -376,32 +376,6 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         )
                         job_env_dict['MODEL_levels'] = (
                             'A'+job_env_dict['MODEL_accum']
-                        )
-                elif verif_type == 'sea_ice':
-                    job_env_dict['netCDF_ENDDATE'] = date_dt.strftime('%Y%m%d')
-                    job_env_dict['netCDF_STARTDATE'] = (
-                        (date_dt - datetime.timedelta(days=1))\
-                        .strftime('%Y%m%d')
-                    )
-                    netCDF_fhr_start = int(job_env_dict['fhr_start']) - 24
-                    if netCDF_fhr_start >= 0:
-                        job_env_dict['netCDF_fhr_start'] = str(netCDF_fhr_start)
-                    else:
-                        job_env_dict['netCDF_fhr_start'] = (
-                            job_env_dict['fhr_start']
-                        )
-                elif verif_type == 'sst':
-                    job_env_dict['netCDF_ENDDATE'] = date_dt.strftime('%Y%m%d')
-                    job_env_dict['netCDF_STARTDATE'] = (
-                        (date_dt - datetime.timedelta(days=1))\
-                        .strftime('%Y%m%d')
-                    )
-                    netCDF_fhr_start = int(job_env_dict['fhr_start']) - 24
-                    if netCDF_fhr_start >= 0:
-                        job_env_dict['netCDF_fhr_start'] = str(netCDF_fhr_start)
-                    else:
-                        job_env_dict['netCDF_fhr_start'] = (
-                            job_env_dict['fhr_start']
                         )
                 # Write environment variables
                 for name, value in job_env_dict.items():

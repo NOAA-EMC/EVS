@@ -26,13 +26,11 @@ VERIF_TYPE = os.environ['VERIF_TYPE']
 job_name = os.environ['job_name']
 MODEL = os.environ['MODEL']
 DATE = os.environ['DATE']
-MPR_STARTDATE = os.environ['MPR_STARTDATE']
-MPR_ENDDATE = os.environ['MPR_ENDDATE']
 valid_hr_start = '06'
-#valid_hr_start = os.environ['valid_hr_start']
+valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
 valid_hr_inc = os.environ['valid_hr_inc']
-MPR_fhr_start = os.environ['MPR_fhr_start']
+fhr_start = os.environ['fhr_start']
 fhr_end = os.environ['fhr_end']
 fhr_inc = os.environ['fhr_inc']
 
@@ -66,15 +64,15 @@ MET_MPR_column_list = [
 ]
 
 # Create fcst and obs anomaly data
-MPR_STARTDATE_dt = datetime.datetime.strptime(
-    MPR_STARTDATE+valid_hr_start, '%Y%m%d%H'
+STARTDATE_dt = datetime.datetime.strptime(
+    DATE+valid_hr_start, '%Y%m%d%H'
 )
-MPR_ENDDATE_dt = datetime.datetime.strptime(
-    MPR_ENDDATE+valid_hr_end, '%Y%m%d%H'
+ENDDATE_dt = datetime.datetime.strptime(
+    DATE+valid_hr_end, '%Y%m%d%H'
 )
-valid_date_dt = MPR_STARTDATE_dt
-while valid_date_dt <= MPR_ENDDATE_dt:
-    fhr = int(MPR_fhr_start)
+valid_date_dt = STARTDATE_dt
+while valid_date_dt <= ENDDATE_dt:
+    fhr = int(fhr_start)
     while fhr <= int(fhr_end):
         init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
         input_file = gda_util.format_filler(

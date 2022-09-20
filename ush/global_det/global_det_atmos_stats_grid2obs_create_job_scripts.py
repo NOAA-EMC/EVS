@@ -139,17 +139,6 @@ for verif_type in VERIF_CASE_STEP_type_list:
             job.write('set -x\n')
             job.write('\n')
             # Set any environment variables for special cases
-            if verif_type == 'sfc' \
-                    and verif_type_job in ['PrepbufrNAM',
-                                           'PrepbufrRAP']:
-                job_env_dict['PB2NC_ENDDATE'] = date_dt.strftime('%Y%m%d')
-                job_env_dict['PB2NC_STARTDATE'] = (
-                    (date_dt - datetime.timedelta(hours=24))\
-                    .strftime('%Y%m%d')
-                )
-            else:
-                job_env_dict['PB2NC_ENDDATE'] = date_dt.strftime('%Y%m%d')
-                job_env_dict['PB2NC_STARTDATE'] = date_dt.strftime('%Y%m%d')
             # Write environment variables
             for name, value in job_env_dict.items():
                 job.write('export '+name+'='+value+'\n')
@@ -500,6 +489,16 @@ generate_jobs_dict = {
                                                       +'${job_name}_init'
                                                       +'{init?fmt=%Y%m%d%H}_'
                                                       +'fhr{lead?fmt=%3H}.stat'
+                                                ),
+                                                os.path.join(
+                                                    '$COMIN', 'stats',
+                                                    '$COMPONENT',
+                                                    '${RUN}.{valid?fmt=%Y%m%d}',
+                                                    '$MODEL', '$VERIF_CASE',
+                                                    'anomaly_${VERIF_TYPE}.'
+                                                    +'${job_name}_init'
+                                                    +'{init?fmt=%Y%m%d%H}_'
+                                                    +'fhr{lead?fmt=%3H}.stat'
                                                 )]
                                             ),
                                             gda_util.metplus_command(

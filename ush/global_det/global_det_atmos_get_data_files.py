@@ -400,18 +400,6 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                         'anl', model_truth_file_format,
                         pres_levs_dest_file_format
                     )
-                    # Get previous day for Geopotential
-                    # Height Anomaly verification
-                    if VERIF_CASE_STEP_type_valid_time.strftime('%H') \
-                            in ['00', '12']:
-                        gda_util.get_model_file(
-                            (VERIF_CASE_STEP_type_valid_time
-                             - datetime.timedelta(days=1)),
-                            (VERIF_CASE_STEP_type_valid_time
-                             - datetime.timedelta(days=1)),
-                            'anl', model_truth_file_format,
-                            pres_levs_dest_file_format
-                        )
             elif VERIF_CASE_STEP_type == 'sea_ice':
                 # OSI_SAF
                 VERIF_CASE_STEP_osi_saf_dir = os.path.join(
@@ -707,37 +695,6 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                         VERIF_CASE_STEP_type_valid_time,
                         nam_arch_file, nam_dest_file
                     )
-                # Get previous day for 2 meter
-                # Temperature Anomaly verification
-                offset_valid_time_m1_dt = (
-                    offset_valid_time_dt - datetime.timedelta(days=1)
-                )
-                VERIF_CASE_STEP_type_valid_time_m1 = (
-                    VERIF_CASE_STEP_type_valid_time
-                    - datetime.timedelta(days=1)
-                )
-                nam_prod_file = gda_util.format_filler(
-                    nam_prod_file_format, offset_valid_time_m1_dt,
-                    offset_valid_time_m1_dt, ['anl'], {}
-                )
-                nam_dest_file = gda_util.format_filler(
-                    nam_dest_file_format, VERIF_CASE_STEP_type_valid_time_m1,
-                    VERIF_CASE_STEP_type_valid_time_m1, ['anl'], {}
-                )
-                gda_util.get_truth_file(
-                    VERIF_CASE_STEP_type_valid_time,
-                    nam_prod_file, nam_dest_file
-                )
-                if not os.path.exists(nam_dest_file) \
-                        and evs_run_mode != 'production':
-                    nam_arch_file = gda_util.format_filler(
-                        nam_arch_file_format, offset_valid_time_m1_dt,
-                        offset_valid_time_m1_dt, ['anl'], {}
-                    )
-                    gda_util.get_truth_file(
-                        VERIF_CASE_STEP_type_valid_time,
-                        nam_arch_file, nam_dest_file
-                    )
                 # RAP prepbufr
                 rap_prod_file_format = os.path.join(
                     COMINobsproc, 'rap.{valid?fmt=%Y%m%d}',
@@ -771,26 +728,6 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                         VERIF_CASE_STEP_type_valid_time,
                         rap_arch_file_format, rap_dest_file_format
                         )
-                # Get previous day for 2 meter
-                # Temperature Anomaly verification
-                rap_dest_file = gda_util.format_filler(
-                    rap_dest_file_format,
-                    VERIF_CASE_STEP_type_valid_time-datetime.timedelta(days=1),
-                    VERIF_CASE_STEP_type_valid_time-datetime.timedelta(days=1),
-                    ['anl'], {}
-                )
-                gda_util.get_truth_file(
-                    (VERIF_CASE_STEP_type_valid_time
-                     - datetime.timedelta(days=1)),
-                    rap_prod_file_format, rap_dest_file_format
-                )
-                if not os.path.exists(rap_dest_file) \
-                        and evs_run_mode != 'production':
-                    gda_util.get_truth_file(
-                        (VERIF_CASE_STEP_type_valid_time
-                         - datetime.timedelta(days=1)),
-                        rap_arch_file_format, rap_dest_file_format
-                    )
 elif STEP == 'plots' :
     # Read in VERIF_CASE_STEP related environment variables
     # Get model stat files

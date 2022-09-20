@@ -26,13 +26,10 @@ VERIF_TYPE = os.environ['VERIF_TYPE']
 job_name = os.environ['job_name']
 MODEL = os.environ['MODEL']
 DATE = os.environ['DATE']
-netCDF_STARTDATE = os.environ['netCDF_STARTDATE']
-netCDF_ENDDATE = os.environ['netCDF_ENDDATE']
-valid_hr_start = '12'
-#valid_hr_start = os.environ['valid_hr_start']
+valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
 valid_hr_inc = os.environ['valid_hr_inc']
-netCDF_fhr_start = os.environ['netCDF_fhr_start']
+fhr_start = os.environ['fhr_start']
 fhr_end = os.environ['fhr_end']
 fhr_inc = os.environ['fhr_inc']
 
@@ -55,15 +52,15 @@ output_var_level = (var_level.split('_')[0]+'_ANOM_'
                     +var_level.split('_')[-1])
 
 # Create fcst and obs anomaly data
-netCDF_STARTDATE_dt = datetime.datetime.strptime(
-    netCDF_STARTDATE+valid_hr_start, '%Y%m%d%H'
+STARTDATE_dt = datetime.datetime.strptime(
+    DATE+valid_hr_start, '%Y%m%d%H'
 )
-netCDF_ENDDATE_dt = datetime.datetime.strptime(
-    netCDF_ENDDATE+valid_hr_end, '%Y%m%d%H'
+ENDDATE_dt = datetime.datetime.strptime(
+    DATE+valid_hr_end, '%Y%m%d%H'
 )
-valid_date_dt = netCDF_STARTDATE_dt
-while valid_date_dt <= netCDF_ENDDATE_dt:
-    fhr = int(netCDF_fhr_start)
+valid_date_dt = STARTDATE_dt
+while valid_date_dt <= ENDDATE_dt:
+    fhr = int(fhr_start)
     while fhr <= int(fhr_end):
         init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
         input_file = gda_util.format_filler(
