@@ -68,6 +68,7 @@ export COMINukmet=${COMINukmet:-$DCOMROOT/${INITDATE}/wgrbbul/ukmet_hires}
 export COMINukmet_precip=${COMINukmet_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
 export COMINosi_saf=${COMINosi_saf:-/lfs/h1/ops/dev/dcom}
 export COMINghrsst_median=${COMINghrsst_median:-$DCOMROOT}
+export COMINget_d=${COMINget_d:-$DCOMROOT}
 export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 mkdir -p $COMOUT.${INITDATE}

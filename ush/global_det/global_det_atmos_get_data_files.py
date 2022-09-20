@@ -35,6 +35,7 @@ if STEP == 'stats':
     COMINobsproc = os.environ['COMINobsproc']
     COMINosi_saf = os.environ['COMINosi_saf']
     COMINghrsst_median = os.environ['COMINghrsst_median']
+    COMINget_d = os.environ['COMINget_d']
 if evs_run_mode != 'production':
     QUEUESERV = os.environ['QUEUESERV']
     ACCOUNT = os.environ['ACCOUNT']
@@ -72,7 +73,20 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 VERIF_CASE_STEP_abbrev+'_precip_file_accum_list'
             ].split(' ')
         # Set valid hours
-        if VERIF_CASE_STEP_type in ['pres_levs', 'means']: 
+        if VERIF_CASE_STEP_type == 'flux':
+            (GET_D_valid_hr_start, GET_D_valid_hr_end,
+             GET_D_valid_hr_inc) = gda_util.get_obs_valid_hrs(
+                 'GET_D'
+            )
+            GET_D_valid_hr_list = [
+                str(x).zfill(2) for x in range(
+                    GET_D_valid_hr_start,
+                    GET_D_valid_hr_end+GET_D_valid_hr_inc,
+                    GET_D_valid_hr_inc
+                )
+            ]
+            VERIF_CASE_STEP_type_valid_hr_list = GET_D_valid_hr_list
+        elif VERIF_CASE_STEP_type in ['pres_levs', 'means']: 
             VERIF_CASE_STEP_type_valid_hr_list = os.environ[
                 VERIF_CASE_STEP_abbrev_type+'_valid_hr_list'
             ].split(' ')
@@ -306,38 +320,42 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 in VERIF_CASE_STEP_type_valid_time_list:
             if VERIF_CASE_STEP_type == 'flux':
                 # GET-D
-                #get_d_prod_file_format = os.path.join(
-                #    DCOMROOT_PROD, '{valid?fmt=%Y%m%d}', 'wgrbbul',
-                #    'get_d', 'GETDL3_DAL_CONUS_{valid?fmt=%Y%j}_1.0.nc'
-                #)
-                #get_d_prod_file = gda_util.format_filler(
-                #    get_d_prod_file_format, VERIF_CASE_STEP_type_valid_time,
-                #    VERIF_CASE_STEP_type_valid_time, ['anl'], {}
-                #)
+                get_d_prod_file_format = os.path.join(
+                    COMINget_d, 'prep',
+                    COMPONENT, RUN+'.{valid?fmt=%Y%m%d}',
+                    'get_d', 'get_d.'
+                    +'{valid_shift?fmt=%Y%m%d%H?shift='
+                    +'-24}to'
+                    +'{valid?fmt=%Y%m%d%H}.nc'
+                )
                 VERIF_CASE_STEP_get_d_dir = os.path.join(
                     VERIF_CASE_STEP_data_dir, 'get_d'
                 )
-                #get_d_dest_file_format = os.path.join(
-                #    VERIF_CASE_STEP_get_d_dir,
-                #    'get_d.24H.{valid?fmt=%Y%m%d%H}'
-                #)
-                #if not os.path.exists(VERIF_CASE_STEP_get_d_dir):
-                #    os.makedirs(VERIF_CASE_STEP_get_d_dir)
-                #if os.path.exists(get_d_prod_file):
-                #    gda_util.get_truth_file(
-                #        VERIF_CASE_STEP_type_valid_time,
-                #        get_d_prod_file_format, get_d_dest_file_format
-                #    )
-                #else:
-                #    if evs_run_mode != 'production':
-                #        get_d_arch_file_format = os.path.join(
-                #            archive_obs_data_dir, 'get_d',
-                #            'GETDL3_DAL_CONUS_{valid?fmt=%Y%j}_1.0.nc'
-                #        )
-                #        gda_util.get_truth_file(
-                #            VERIF_CASE_STEP_type_valid_time,
-                #            get_d_arch_file_format, get_d_dest_file_format
-                #        )
+                get_d_dest_file_format = os.path.join(
+                    VERIF_CASE_STEP_get_d_dir,
+                    'get_d.{valid_shift?fmt=%Y%m%d%H?shift='
+                    +'-24}to'
+                    +'{valid?fmt=%Y%m%d%H}.nc'
+                )
+                get_d_dest_file = gda_util.format_filler(
+                    get_d_dest_file_format,
+                    VERIF_CASE_STEP_type_valid_time,
+                    VERIF_CASE_STEP_type_valid_time, ['anl'], {}
+                )
+                gda_util.get_truth_file(
+                    VERIF_CASE_STEP_type_valid_time,
+                    get_d_prod_file_format, get_d_dest_file_format
+                )
+                if not os.path.exists(get_d_dest_file) \
+                        and evs_run_mode != 'production':
+                        get_d_arch_file_format = os.path.join(
+                            archive_obs_data_dir, 'get_d',
+                            'GETDL3_DAL_CONUS_{valid?fmt=%Y%j}_1.0.nc'
+                        )
+                        gda_util.get_truth_file(
+                            VERIF_CASE_STEP_type_valid_time,
+                            get_d_arch_file_format, get_d_dest_file_format
+                        )
             elif VERIF_CASE_STEP_type == 'precip':
                 # CCPA
                 ccpa_prod_file_format = os.path.join(

@@ -34,6 +34,7 @@ COMINukmet = os.environ['COMINukmet']
 COMINukmet_precip = os.environ['COMINukmet_precip']
 COMINosi_saf = os.environ['COMINosi_saf']
 COMINghrsst_median = os.environ['COMINghrsst_median']
+COMINget_d = os.environ['COMINget_d']
 COMOUT = os.environ['COMOUT']
 INITDATE = os.environ['INITDATE']
 NET = os.environ['NET']
@@ -378,7 +379,17 @@ global_det_obs_dict = {
                                                        +'{init_shift?fmt=%Y%m%d%H'
                                                        +'?shift=-24}to'
                                                        +'{init?fmt=%Y%m%d%H}.nc'),
-                      'cycles': ['00']}
+                      'cycles': ['00']},
+    'get_d': {'prod_file_format': os.path.join(COMINget_d, 'get_d',
+                                               'GETDL3_DAL_CONUS_'
+                                               +'{init?fmt=%Y%j}_1.0.nc'),
+                      'arch_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
+                                                       'get_d',
+                                                       'get_d.'
+                                                       '{init_shift?fmt=%Y%m%d%H'
+                                                       +'?shift=-24}to'
+                                                       '{init?fmt=%Y%m%d%H}.nc'),
+                      'cycles': ['00']},
 }
 
 for OBS in OBSNAME:
@@ -454,4 +465,10 @@ for OBS in OBSNAME:
                         prod_file, arch_file,
                         datetime.datetime.strptime(CDATE, '%Y%m%d%H')
                     )
+                elif OBS == 'get_d':
+                    gda_util.prep_prod_get_d_file(
+                        prod_file, arch_file,
+                        datetime.datetime.strptime(CDATE, '%Y%m%d%H')
+                    )
+
 print("END: "+os.path.basename(__file__))
