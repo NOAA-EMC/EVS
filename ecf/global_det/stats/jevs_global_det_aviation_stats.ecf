@@ -15,7 +15,7 @@
 
 export OMP_NUM_THREADS=1
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/yali.mao/git/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/git/EVS
 source $HOMEevs/versions/run.ver
 
 ############################################################
@@ -76,9 +76,10 @@ export RUN=aviation
 export VERIF_CASE=grid2grid
 export MODELNAME=wafs
 
-export DATA=/lfs/h2/emc/ptmp/yali.mao/evs/working
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/yali.mao/evs.fix
-export COMOUT=/lfs/h2/emc/ptmp/yali.mao/evs/com
+export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
+
+export DATA=/lfs/h2/emc/ptmp/$USER/evs/working
+export COMOUT=/lfs/h2/emc/ptmp/$USER/evs/com
 
 ############################################################
 # CALL executable job script here
