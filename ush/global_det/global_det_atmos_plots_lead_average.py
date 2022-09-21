@@ -58,7 +58,7 @@ class LeadAverage:
 
              Returns:
         """
-        self.logger.info(f"Creating time series...")
+        self.logger.info(f"Creating lead average...")
         self.logger.debug(f"Input directory: {self.input_dir}")
         self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Model information dictionary: "
