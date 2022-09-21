@@ -548,9 +548,9 @@ def main():
     logger_info = f"Log file: {job_logging_file}"
     print(logger_info)
     logger.info(logger_info)
-    p = LeadAverage(logger, INPUT_DIR, OUTPUT_DIR, MODEL_INFO_DICT,
-                    DATE_INFO_DICT, PLOT_INFO_DICT, MET_INFO_DICT, LOGO_DIR)
-    p.make_lead_average()
+    p = LeadByDate(logger, INPUT_DIR, OUTPUT_DIR, MODEL_INFO_DICT,
+                   DATE_INFO_DICT, PLOT_INFO_DICT, MET_INFO_DICT, LOGO_DIR)
+    p.make_lead_by_date()
 
 if __name__ == "__main__":
     main()
