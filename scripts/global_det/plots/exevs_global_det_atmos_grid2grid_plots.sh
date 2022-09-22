@@ -82,9 +82,13 @@ fi
 if [ $SENDCOM = YES ]; then
     # Make and copy tar file
     cd ${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/images
-    tar -cvf ${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${PDYm1}/plots_${COMPONENT}_${RUN}_grid2grid_${NDAYS}days_v${PDYm1}.tar *
+    for VERIF_TYPE_SUBDIR_PATH in $DATA/${VERIF_CASE}_${STEP}/plot_output/$RUN.${end_date}/images/*; do
+        VERIF_TYPE_SUBDIR=$(echo ${VERIF_TYPE_SUBDIR_PATH##*/})
+        cd $VERIF_TYPE_SUBDIR
+        tar -cvf ${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/images/plots_${COMPONENT}_${RUN}_grid2grid_${VERIF_TYPE_SUBDIR}_v${start_date}to${end_date}.tar *
+        cp -v ${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/images/plots_${COMPONENT}_${RUN}_grid2grid_${VERIF_TYPE_SUBDIR}_v${start_date}to${end_date}.tar $COMOUT/.
+    done
     cd $DATA
-    cp -v ${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${PDYm1}/plots_${COMPONENT}_${RUN}_grid2grid_${NDAYS}days_v${PDYm1}.tar $COMOUT/.
 fi
 
 # Non-production jobs

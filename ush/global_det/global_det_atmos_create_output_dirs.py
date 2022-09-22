@@ -143,11 +143,6 @@ elif STEP == 'plots':
     working_dir_list.append(
         os.path.join(working_output_base_dir,
                      RUN+'.'+end_date_dt.strftime('%Y%m%d'),
-                     'images')
-    )
-    working_dir_list.append(
-        os.path.join(working_output_base_dir,
-                     RUN+'.'+end_date_dt.strftime('%Y%m%d'),
                      'logs')
     )
     for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
