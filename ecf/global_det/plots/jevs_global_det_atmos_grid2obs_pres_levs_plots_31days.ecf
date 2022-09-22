@@ -1,4 +1,4 @@
-#PBS -N jevs_global_det_atmos_grid2obs_plots_31days_00
+#PBS -N jevs_global_det_atmos_grid2obs_pres_levs_plots_31days_00
 #PBS -j oe
 #PBS -S /bin/sh
 #PBS -q dev
@@ -24,7 +24,7 @@ export evs_ver=$evs_ver
 export envir=dev
 export RUN_ENVIR=nco
 export SENDCOM=YES
-export KEEPDATA=NO
+export KEEPDATA=YES
 module load prod_envir/2.0.6
 module load prod_util/2.0.13
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_global_det_atmos_test/$envir/tmp
@@ -100,15 +100,16 @@ export STEP=plots
 export COMPONENT=global_det
 export RUN=atmos
 export VERIF_CASE=grid2obs
+export VERIF_TYPE=pres_levs
 export NDAYS=31
 
 # Set config file
-export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${NDAYS}days
+export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${VERIF_TYPE}.${NDAYS}days
 
 # CALL executable job script here
 $HOMEevs/jobs/global_det/plots/JEVS_GLOBAL_DET_PLOTS
 
 ######################################################################
 # Purpose: This does the plotting work for the global deterministic
-#          atmospheric grid-to-observations past 31 days
+#          atmospheric grid-to-observations pres_levs past 31 days
 ######################################################################
