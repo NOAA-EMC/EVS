@@ -165,9 +165,9 @@ class TimeSeries:
         stat_plot_name = plot_specs_ts.get_stat_plot_name(
              self.plot_info_dict['stat']
         )
-        fcst_units = all_model_df['FCST_UNITS'].values.astype('str')
-        nan_idxs = np.where(fcst_units == 'nan')
-        fcst_units = np.unique(np.delete(fcst_units, nan_idxs))
+        fcst_units = all_model_df['FCST_UNITS'].values.astype('str').tolist()
+        fcst_units = np.unique(fcst_units)
+        fcst_units = np.delete(fcst_units, np.where(fcst_units == 'nan'))
         if len(fcst_units) > 1:
             self.logger.error("DIFFERING UNITS")
             sys.exit(1)

@@ -74,6 +74,7 @@ class LeadAverage:
         self.logger.info(f"Plots will be in: {output_image_dir}")
         # Create dataframe for all forecast hours
         self.logger.info("Building dataframe for all forecast hours")
+        fcst_units = []
         for forecast_hour in self.date_info_dict['forecast_hours']:
             self.logger.debug(f"Building data for forecast hour {forecast_hour}")
             # Get dates to plot
@@ -129,6 +130,9 @@ class LeadAverage:
                 self.date_info_dict['date_type'],
                 plot_dates, format_valid_dates,
                 str(forecast_hour)
+            )
+            fcst_units.extend(
+                all_model_df['FCST_UNITS'].values.astype('str').tolist()
             )
             # Calculate statistic mean and 95% confidence intervals
             self.logger.info(f"Calculating statstic {self.plot_info_dict['stat']} "
@@ -237,9 +241,8 @@ class LeadAverage:
         stat_plot_name = plot_specs_la.get_stat_plot_name(
              self.plot_info_dict['stat']
         )
-        fcst_units = all_model_df['FCST_UNITS'].values.astype('str')
-        nan_idxs = np.where(fcst_units == 'nan')
-        fcst_units = np.unique(np.delete(fcst_units, nan_idxs))
+        fcst_units = np.unique(fcst_units)
+        fcst_units = np.delete(fcst_units, np.where(fcst_units == 'nan'))
         if len(fcst_units) > 1:
             self.logger.error("DIFFERING UNITS")
             sys.exit(1)
