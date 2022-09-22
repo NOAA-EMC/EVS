@@ -76,6 +76,15 @@ class PlotSpecs:
             self.fig_subplot_bottom = 0.075
             self.fig_subplot_right = 0.95
             self.fig_subplot_left = 0.15
+        elif self.plot_type == 'stat_by_level':
+            self.fig_size = (14., 14.)
+            self.fig_subplot_top = 0.9
+            self.fig_subplot_bottom = 0.05
+            self.fig_subplot_right = 0.925
+            self.fig_subplot_left = 0.1
+            self.legend_frame_on = False
+            self.legend_bbox = (0.05, 0.9125)
+            self.legend_ncol = 1
         else:
             self.logger.warning(f"{self.plot_type} NOT RECOGNIZED")
             sys.exit(1)
@@ -170,6 +179,7 @@ class PlotSpecs:
             'DPT/Z2': '2 meter Dewpoint',
             'GUST/Z0': 'Wind Gust',
             'HGT/CEILING': 'Ceiling',
+            'HGT/NA': 'Geopotential Height',
             'HGT/P1': '1 hPa Geopotential Height',
             'HGT/P5': '5 hPa Geopotential Height',
             'HGT/P10': '10 hPa Geopotential Height',
@@ -211,6 +221,7 @@ class PlotSpecs:
             'PWAT/L0': 'Precipitable Water',
             'PRES/Z0': 'Surface Pressure',
             'PRMSL/Z0': 'Pressure Reduced to MSL',
+            'RH/NA': 'Relative Humidity',
             'RH/P1': '1 hPa Relative Humidity',
             'RH/P5': '5 hPa Relative Humidity',
             'RH/P10': '10 hPa Relative Humidity',
@@ -230,6 +241,7 @@ class PlotSpecs:
             'RH/Z2': '2 meter Relative Humidity',
             'SNOD_A24/Z0': '24 hour Snow Accumulation (derived from SNOD)',
             'SOILW/Z0.1-0': '0.1-0 meter Volumetric Soil Moisture Content',
+            'SPFH/NA': 'Specific Humidity',
             'SPFH/P1': '1 hPa Specific Humidity',
             'SPFH/P5': '5 hPa Specific Humidity',
             'SPFH/P10': '10 hPa Specific Humidity',
@@ -249,6 +261,7 @@ class PlotSpecs:
             'SPFH/Z2': '2 meter Specific Humidity',
             'SST_DAILYAVG': 'Daily Avg Sea Surface Temperature',
             'TCDC/TOTAL': 'Total Cloud Cover',
+            'TMP/NA': 'Temperature',
             'TMP/P1': '1 hPa Temperature',
             'TMP/P5': '5 hPa Temperature',
             'TMP/P10': '10 hPa Temperature',
@@ -271,6 +284,7 @@ class PlotSpecs:
             'TMP_ANOM_DAILYAVG/Z2': '2 meter Daily Avg Temperature Anomaly',
             'TOZNE': 'Total Ozone',
             'TSOIL/Z0.1-0': '0.1-0 meter Soil Temperature',
+            'UGRD/NA': 'U-Component of Wind',
             'UGRD/P1': '1 hPa U-Component of Wind',
             'UGRD/P5': '5 hPa U-Component of Wind',
             'UGRD/P10': '10 hPa U-Component of Wind',
@@ -288,6 +302,7 @@ class PlotSpecs:
             'UGRD/P925': '925 hPa U-Component of Wind',
             'UGRD/P1000': '1000 hPa U-Component of Wind',
             'UGRD/Z10': '10 meter U-Component of Wind',
+            'UGRD_VGRD/NA': 'Vector Wind',
             'UGRD_VGRD/P1': '1 hPa Vector Wind',
             'UGRD_VGRD/P5': '5 hPa Vector Wind',
             'UGRD_VGRD/P10': '10 hPa Vector Wind',
@@ -306,6 +321,7 @@ class PlotSpecs:
             'UGRD_VGRD/P1000': '1000 hPa Vector Wind',
             'UGRD_VGRD/Z10': '10 meter Vector Wind',
             'VIS/Z0': 'Visibility',
+            'VGRD/NA': 'V-Component of Wind',
             'VGRD/P1': '1 hPa V-Component of Wind',
             'VGRD/P5': '5 hPa V-Component of Wind',
             'VGRD/P10': '10 hPa V-Component of Wind',
@@ -475,55 +491,34 @@ class PlotSpecs:
                                 +int(date_info_dict['valid_hr_inc']),
                                 int(date_info_dict['valid_hr_inc']))
             ]
-        if self.plot_type in ['time_series', 'lead_average', 'lead_by_date']:
-            if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
-                plot_title = (
-                    plot_title
-                    +self.get_var_plot_name(
-                        plot_info_dict['fcst_var_name']
-                        +'_'+plot_info_dict['interp_method'],
-                        plot_info_dict['fcst_var_level']
-                    )
-                )
-            else:
-                plot_title = (
-                    plot_title
-                    +self.get_var_plot_name(
-                        plot_info_dict['fcst_var_name'],
-                        plot_info_dict['fcst_var_level']
-                    )
-                )
-            plot_title = (
-                plot_title+' '
-                +'('+units+')'
-            )
-            if plot_info_dict['fcst_var_thresh'] != 'NA':
-                plot_title = (
-                    plot_title+' '
-                    +plot_info_dict['fcst_var_thresh']
-                )
-            if plot_info_dict['interp_method'] == 'NBRHD_SQUARE':
-                plot_title = (
-                    plot_title+' '
-                    +'Neighborhood Points: '
-                    +plot_info_dict['interp_points']
-                )
-            if self.plot_type == 'time_series':
-                plot_title = (
-                    plot_title+'\n'
-                    +self.get_dates_plot_name(date_info_dict['date_type'],
-                                              start_date_hr, end_date_hr,
-                                              other_hr_list,
-                                              date_info_dict['forecast_hour'])
-                )
-            elif self.plot_type in ['lead_average', 'lead_by_date']:
-                plot_title = (
-                    plot_title+'\n'
-                    +self.get_dates_plot_name(date_info_dict['date_type'],
-                                              start_date_hr, end_date_hr,
-                                              other_hr_list,
-                                              'NA')
-                )
+        if self.plot_type in ['time_series', 'stat_by_level']:
+            fhr_for_title = date_info_dict['forecast_hour']
+        elif self.plot_type in ['lead_average', 'lead_by_date']:
+            fhr_for_title = 'NA'
+        if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
+            var_name_for_title = (plot_info_dict['fcst_var_name']
+                                  +'_'+plot_info_dict['interp_method'])
+        else:
+            var_name_for_title = plot_info_dict['fcst_var_name']
+        if self.plot_type in ['stat_by_level']:
+            var_level_for_title = 'NA'
+        else:
+            var_level_for_title = plot_info_dict['fcst_var_level']
+        plot_title = (plot_title
+                      +self.get_var_plot_name(var_name_for_title,
+                                              var_level_for_title))
+        plot_title = plot_title+' '+'('+units+')'
+        if plot_info_dict['fcst_var_thresh'] != 'NA':
+            plot_title = (plot_title+' '
+                          +plot_info_dict['fcst_var_thresh'])
+        if plot_info_dict['interp_method'] == 'NBRHD_SQUARE':
+            plot_title = (plot_title+' '
+                          +'Neighborhood Points: '
+                          +plot_info_dict['interp_points'])
+        plot_title = (plot_title+'\n'
+                      +self.get_dates_plot_name(date_info_dict['date_type'],
+                                                start_date_hr, end_date_hr,
+                                                other_hr_list, fhr_for_title))
         return plot_title
 
     def get_savefig_name(self, image_dir, plot_info_dict, date_info_dict):
@@ -545,67 +540,38 @@ class PlotSpecs:
         elif date_info_dict['date_type'] == 'INIT':
             date_type_start_hr = date_info_dict['init_hr_start']
             date_type_end_hr = date_info_dict['init_hr_end']
-        savefig_name = plot_info_dict['stat']+'_'
-        if plot_info_dict['interp_method'] == 'NBRHD_SQUARE':
-            savefig_name = (
-                savefig_name
-                +plot_info_dict['interp_method']
-                +plot_info_dict['interp_points']+'_'
-            )
         if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
-            savefig_name = (
-                savefig_name
-                +plot_info_dict['fcst_var_name']+'_'
-                +plot_info_dict['interp_method']+'_'
-                +plot_info_dict['fcst_var_level']+'_'
-            )
+            var_name_for_savefig = (plot_info_dict['fcst_var_name']+'_'
+                                    +plot_info_dict['interp_method'])
         else:
-            savefig_name = (
-                savefig_name
-                +plot_info_dict['fcst_var_name']+'_'
-                +plot_info_dict['fcst_var_level']+'_'
-            )
-        if plot_info_dict['fcst_var_thresh'] != 'NA':
-            savefig_name = (
-                savefig_name
-                +plot_info_dict['fcst_var_thresh']+'_'
-            )
-        savefig_name = (
-            savefig_name
-            +plot_info_dict['grid']
-            +plot_info_dict['vx_mask']+'_'
-        )
-        if self.plot_type == 'time_series':
-            savefig_name = (
-                savefig_name
-                +date_info_dict['date_type'].lower()
-                +date_info_dict['start_date']
-                +date_type_start_hr+'to'
-                +date_info_dict['end_date']
-                +date_type_end_hr+'_'
-                +'fhr'+date_info_dict['forecast_hour'].zfill(3)
-                +'.png'
-            )
+            var_name_for_savefig = plot_info_dict['fcst_var_name']
+        if self.plot_type in ['time_series', 'stat_by_level']:
+            fhr_for_savefig = 'fhr'+date_info_dict['forecast_hour'].zfill(3)
         elif self.plot_type == 'lead_average':
-            savefig_name = (
-                savefig_name
-                +date_info_dict['date_type'].lower()
-                +date_info_dict['start_date']
-                +date_type_start_hr+'to'
-                +date_info_dict['end_date']
-                +date_type_end_hr+'_'
-                +'fhrmean.png'
-            )
+            fhr_for_savefig = 'fhrmean'
         elif self.plot_type == 'lead_by_date':
-            savefig_name = (
-                savefig_name
-                +date_info_dict['date_type'].lower()
-                +date_info_dict['start_date']
-                +date_type_start_hr+'to'
-                +date_info_dict['end_date']
-                +date_type_end_hr+'_'
-                +'leaddate.png'
-            )
+            fhr_for_savefig = 'leaddate'
+        savefig_name = (plot_info_dict['stat']+'_'
+                        +var_name_for_savefig+'_'
+                        +plot_info_dict['fcst_var_level']+'_')
+        if plot_info_dict['fcst_var_thresh'] != 'NA':
+            savefig_name = (savefig_name
+                            +plot_info_dict['fcst_var_thresh']+'_')
+        if plot_info_dict['interp_method'] == 'NBRHD_SQUARE':
+            savefig_name = (savefig_name
+                            +plot_info_dict['interp_method']
+                            +plot_info_dict['interp_points']+'_')
+        savefig_name = (savefig_name
+                        +plot_info_dict['grid']
+                        +plot_info_dict['vx_mask']+'_')
+        savefig_name = (savefig_name
+                        +date_info_dict['date_type'].lower()
+                        +date_info_dict['start_date']
+                        +date_type_start_hr+'to'
+                        +date_info_dict['end_date']
+                        +date_type_end_hr+'_'
+                        +fhr_for_savefig
+                        +'.png')
         image_path = os.path.join(image_dir, savefig_name)
         return image_path
 
