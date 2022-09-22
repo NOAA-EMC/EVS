@@ -24,11 +24,11 @@ export evs_ver=$evs_ver
 export envir=dev
 export RUN_ENVIR=nco
 export SENDCOM=YES
-export KEEPDATA=YES
+export KEEPDATA=NO
 module load prod_envir/2.0.6
 module load prod_util/2.0.13
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_global_det_atmos_test/$envir/tmp
-export job=${PBS_JOBNAME:-jevs_global_det_atmos_grid2obs_plots_31days}
+export job=${PBS_JOBNAME:-jevs_global_det_atmos_grid2obs_pres_levs_plots_31days}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
@@ -37,6 +37,7 @@ export STEP=plots
 export COMPONENT=global_det
 export RUN=atmos
 export VERIF_CASE=grid2obs
+export VERIF_TYPE=pres_levs
 export NDAYS=31
 export PDYm1=$(date -d "24 hours ago" '+%Y%m%d')
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com
