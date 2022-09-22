@@ -451,7 +451,7 @@ generate_jobs_dict = {
                                                                  +"= fcst;'")},
                                 'commands': [gda_util.metplus_command(
                                                 'PointStat_fcstGLOBAL_DET_'
-                                                 +'obsPrepbufr_climoERAI_'
+                                                 +'obsPrepbufr_climoERA5_'
                                                  +'MPR.conf'
                                              ),
                                              gda_util.python_command(

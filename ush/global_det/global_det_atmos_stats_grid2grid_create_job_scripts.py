@@ -77,7 +77,7 @@ reformat_model_jobs_dict = {
                                            )},
                                    'commands': [gda_util.metplus_command(
                                                     'GridStat_fcstGLOBAL_DET_'
-                                                    +'obsModelAnalysis_climoERAI_'
+                                                    +'obsModelAnalysis_climoERA5_'
                                                     +'NetCDF.conf'
                                                 ),
                                                 gda_util.python_command(
@@ -574,7 +574,7 @@ generate_jobs_dict = {
                               'met_config_overrides': "'climo_mean = fcst;'"},
                       'commands': [gda_util.metplus_command(
                                        'GridStat_fcstGLOBAL_DET_'
-                                       +'obsModelAnalysis_climoERAI.conf'
+                                       +'obsModelAnalysis_climoERA5.conf'
                                    )]},
         'GeoHeight_FourierDecomp': {'env': {'var1_name': 'HGT',
                                             'var1_levels': 'P500',
@@ -584,7 +584,7 @@ generate_jobs_dict = {
                                     'commands': [gda_util.metplus_command(
                                                      'GridStat_fcstGLOBAL_DET_'
                                                      +'obsModelAnalysis_'
-                                                     +'climoERAI_FourierDecomp'
+                                                     +'climoERA5_FourierDecomp'
                                                      +'.conf'
                                                  )]},
         'DailyAvg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
@@ -606,7 +606,7 @@ generate_jobs_dict = {
                           'met_config_overrides': "'climo_mean = fcst;'"},
                   'commands': [gda_util.metplus_command(
                                    'GridStat_fcstGLOBAL_DET_'
-                                   +'obsModelAnalysis_climoERAI.conf'
+                                   +'obsModelAnalysis_climoERA5.conf'
                                )]},
         'PresSeaLevel': {'env': {'var1_name': 'PRMSL',
                                  'var1_levels': 'Z0',
@@ -616,7 +616,7 @@ generate_jobs_dict = {
                                  'met_config_overrides': "'climo_mean = fcst;'"},
                          'commands': [gda_util.metplus_command(
                                           'GridStat_fcstGLOBAL_DET_'
-                                          +'obsModelAnalysis_climoERAI.conf'
+                                          +'obsModelAnalysis_climoERA5.conf'
                                       )]},
         'Temp': {'env': {'var1_name': 'TMP',
                          'var1_levels': "'P850, P500, P250'",
@@ -624,7 +624,7 @@ generate_jobs_dict = {
                          'met_config_overrides': "'climo_mean = fcst;'"},
                  'commands': [gda_util.metplus_command(
                                   'GridStat_fcstGLOBAL_DET_'
-                                  +'obsModelAnalysis_climoERAI.conf'
+                                  +'obsModelAnalysis_climoERA5.conf'
                               )]},
         'UWind': {'env': {'var1_name': 'UGRD',
                           'var1_levels': "'P850, P500, P250'",
@@ -632,7 +632,7 @@ generate_jobs_dict = {
                           'met_config_overrides': "'climo_mean = fcst;'"},
                   'commands': [gda_util.metplus_command(
                                    'GridStat_fcstGLOBAL_DET_'
-                                   +'obsModelAnalysis_climoERAI.conf'
+                                   +'obsModelAnalysis_climoERA5.conf'
                                )]},
         'VWind': {'env': {'var1_name': 'VGRD',
                           'var1_levels': "'P850, P500, P250'",
@@ -640,7 +640,7 @@ generate_jobs_dict = {
                           'met_config_overrides': "'climo_mean = fcst;'"},
                   'commands': [gda_util.metplus_command(
                                    'GridStat_fcstGLOBAL_DET_'
-                                   +'obsModelAnalysis_climoERAI.conf'
+                                   +'obsModelAnalysis_climoERA5.conf'
                                )]},
         'VectorWind': {'env': {'var1_name': 'UGRD',
                                'var1_levels': "'P850, P500, P250'",
@@ -649,7 +649,7 @@ generate_jobs_dict = {
                                'met_config_overrides': "'climo_mean = fcst;'"},
                        'commands': [gda_util.metplus_command(
                                         'GridStat_fcstGLOBAL_DET_'
-                                        +'obsModelAnalysis_climoERAI_'
+                                        +'obsModelAnalysis_climoERA5_'
                                         +'VectorWind.conf'
                                     )]},
         'WindShear': {'env': {},
