@@ -1,1 +1,50 @@
-sample
+#!/bin/bash
+#PBS -N jevs_hireswarw_precip_stats
+#PBS -j oe
+#PBS -S /bin/sh
+#PBS -q dev
+#PBS -A VERF-DEV
+#PBS -l walltime=10:00:00
+#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
+#PBS -l debug=true
+#PBS -V
+
+set -x
+export model=evs
+module reset
+export machine=WCOSS2
+
+# ECF Settings
+export envir=prod
+export RUN_ENVIR=nco
+export SENDECF=YES
+export SENDCOM=YES
+export KEEPDATA=YES
+export SENDDBN=YES
+export SENDDBN_NTC=
+# In production the following will be deleted (DATAROOT will be used instead, which already exists in the environment)
+export DATAROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+export job=${PBS_JOBNAME:-jevs_hireswarw_precip_stats}
+export jobid=$job.${PBS_JOBID:-$$}
+export SITE=$(cat /etc/cluster_name)
+export USE_CFP=YES
+export nproc=128
+
+# General Verification Settings
+export NET="evs"
+export STEP="stats"
+export COMPONENT="cam"
+export RUN="atmos"
+export VERIF_CASE="precip"
+export MODELNAME="hireswarw"
+
+# EVS Settings
+export evs_ver="v1.0"
+export EVS_HOME_DIR="/lfs/h2/emc/vpppg/noscrub/$USER/EVS"
+export config=$EVS_HOME_DIR/parm/evs_config/cam/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
+
+# Load Modules
+source ${EVS_HOME_DIR}/ush/cam/evs_setup_$machine.sh
+
+# Job Settings and Run
+. ${EVS_HOME_DIR}/jobs/cam/stats/JEVS_CAM_STATS

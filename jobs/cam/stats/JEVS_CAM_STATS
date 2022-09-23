@@ -1,78 +1,68 @@
-#!/bin/ksh
+#!/bin/bash -e
 
-########################################
-# Preliminary data setup step
-########################################
+# =============================================================================
+#
+# NAME: JEVS_CAM_STATS
+# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# PURPOSE: Use ECF environment variables to define and run an EVS job
+# DEPENDENCIES: $EVS_HOME_DIR/ecf/cam/stats/jevs_namnest_precip_stats.ecf
+#
+# =============================================================================
+
 set -xa
 
-# ###################################
-# SET SHELL PROCESSING VARIABLES
-# ###################################
+echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
+
+# Shell Processing Variables
 export PS4='$SECONDS + '
 date
 
-###########################################################
-# obtain unique LSF id (jobid) and make temp directories
-###########################################################
+# LSF id (jobid) and Temp Directories
 export pid=$$
-export DATA_IN=${DATA_IN:-$DATAROOT}
+# in production, the following will be set to DATAROOT
+#export DATA_IN=${DATA_IN:-$DATAROOT}
+export DATA_IN=${DATA_IN:-$DATAROOTtmp}
 export DATA=$DATA_IN/${jobid}
-
 rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
 
-####################################
-# Determine Job Output Name on System
-####################################
+# General I/O Settings
 export pgmout="OUTPUT.${pid}"
+export VDATE=$(date -d "today -2 day" +"%Y%m%d")
+export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
+# in production the following will be set using compath.py
+#export COMINccpa=${COMINccpa:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
+export COMINccpa=/lfs/h2/emc/ptmp/marcel.caron/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT/$RUN
+# in production the following will be set using compath.py
+#export COMINmrms=${COMINmrms:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
+export COMINmrms=/lfs/h2/emc/ptmp/marcel.caron/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT/$RUN
+export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
+export COMINhiresw=${COMINhiresw:-$(compath.py ${envir}/com/hiresw/${hiresw_ver})}
+export COMINhrrr=${COMINhrrr:-$(compath.py ${envir}/com/hrrr/${hrrr_ver})}
+# in production, the following will be set to the approp. COMOUT dir
+#export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
+export COMOUT=/lfs/h2/emc/ptmp/marcel.caron/EVS_out/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
 
-export cycle=t${cyc}z
+# Subdirectories to EVS Home Directory
+export EVS_PARM_DIR=$EVS_HOME_DIR/parm
+export EVS_USH_DIR=$EVS_HOME_DIR/ush
+export EVS_EXEC_DIR=$EVS_HOME_DIR/exec
+export EVS_FIX_DIR=$EVS_HOME_DIR/fix
+export EVS_SCRIPTS_DIR=$EVS_HOME_DIR/scripts
+export MET_PLUS_CONF="${EVS_PARM_DIR}/metplus_config/cam/precip/stats"
 
-##################################################
-# SAVEGES  - Copy Files From TMPDIR to $GESdir
-# SENDECF  - Flag Events on ecFLOW
-# SENDCOM  - Copy Files From TMPDIR to $COMOUT
-# SENDDBN  - Issue DBNet Client Calls
-##################################################
-export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-YES}
-export SENDECF=${SENDECF:-YES}
+# Execute the Script
+$EVS_SCRIPTS_DIR/$COMPONENT/$STEP/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+export err=$?; err_chk
 
-export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
-export EXECevs=${EXECevs:-$HOMEevs/exec}
-export FIXvevs=${FIXevs:-$HOMEevs/fix}
-export PARMevs=${PARMevs:-$HOMEevs/parm}
-export USHevs=${USHevs:-$HOMEevs/ush}
-
-# Run setpdy and initialize PDY variables
-setpdy.sh
-. ./PDY
-
-export vday=$PDYm1
-
-# Define COMIN/COMOUT variables:
-
-export COMIN=${COMIN:-$(compath.py evs/${evs_ver}/)}
-export COMOUT=${COMOUT:-$(compath.py -o evs/${evs_ver}/${prog}/${net})}
-export COMNAM=${COMN:-$(compath.py nam/${nam_ver})}
-export COMMOD=${COMMOD:-$(compath.py ${mod}/${mod_ver})}
-
-#######################################################################
-# Execute the script.
-#######################################################################
-
-$HOMEevs/scripts/${net}/exevs_${mod}_${sys}_${prog}.sh
-
+# Clean Up
 cat $pgmout
-
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
-
 if [ "$KEEPDATA" != "YES" ] ; then
-  cd $DATAROOT
+  cd $DATA_IN
   rm -rf $DATA
 fi
 
-}
+echo "END: $(basename ${BASH_SOURCE[0]})"
