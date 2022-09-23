@@ -71,10 +71,17 @@ export COMINosi_saf=${COMINosi_saf:-$(compath.py -o $NET/$evs_ver)}
 export COMINghrsst_median=${COMINghrsst_median:-$(compath.py -o $NET/$evs_ver)}
 export COMINget_d=${COMINget_d:-$(compath.py -o $NET/$evs_ver)}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
-export COMOUTsmallVDATE=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
-export COMOUTccpaVDATE=$COMOUT/$RUN.$VDATE/ccpa/$VERIF_CASE
+export COMOUTsmall=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
 export COMOUTfinal=$COMOUT/$MODELNAME.$VDATE
-mkdir -p $COMOUT $COMOUTsmallVDATE $COMOUTccpaVDATE $COMOUTfinal
+mkdir -p $COMOUT $COMOUTsmall $COMOUTfinal
+if [ $VERIF_CASE == grid2grid ]; then
+    export COMOUTccpa=$COMOUT/$RUN.$VDATE/ccpa/$VERIF_CASE
+    mkdir -p $COMOUTccpa
+fi
+if [ $VERIF_CASE == grid2obs ]; then
+    export COMOUTprepbufr=$COMOUT/$RUN.$VDATE/prepbufr/$VERIF_CASE
+    mkdir -p $COMOUTprepbufr
+fi
 
 #######################################################################
 # Execute the script
