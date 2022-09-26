@@ -81,23 +81,16 @@ for group in reformat generate gather; do
 done
 
 # Copy files to desired location
-# Copy files to desired location
 if [ $SENDCOM = YES ]; then
     # Copy atmos
     for RUN_DATE_PATH in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$RUN.*; do
-        RUN_DATE_SUBDIR=$(echo ${RUN_DATE_PATH##*/})
-        # Copy atmos model files
-        for MODEL in $model_list; do
-            for FILE_AVG in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$RUN_DATE_SUBDIR/$MODEL/$VERIF_CASE/*DailyAvg*; do
-                cp -v $FILE_AVG $COMOUT/$RUN_DATE_SUBDIR/$MODEL/$VERIF_CASE/.
+        RUN_DATE_DIR=$(echo ${RUN_DATE_PATH##*/})
+        for RUN_DATE_SUBDIR_PATH in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$RUN_DATE_DIR/*; do
+            RUN_DATE_SUBDIR=$(echo ${RUN_DATE_SUBDIR_PATH##*/})
+            for FILE in $RUN_DATE_SUBDIR_PATH/$VERIF_CASE/*; do
+                cp -v $FILE $COMOUT/$RUN_DATE_DIR/$RUN_DATE_SUBDIR/$VERIF_CASE/.
             done
         done
-        # Copy atmos obs files
-        if [ -d $DATA/${VERIF_CASE}_${STEP}/METplus_output/$RUN_DATE_SUBDIR/prepbufr/$VERIF_CASE ]; then
-            for FILE_NC in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$RUN_DATE_SUBDIR/prepbufr/$VERIF_CASE/*; do
-                cp -v $FILE_NC $COMOUT/$RUN_DATE_SUBDIR/prepbufr/$VERIF_CASE/.
-            done
-        fi
     done
     # Copy model files
     for MODEL in $model_list; do
