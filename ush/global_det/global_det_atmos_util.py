@@ -856,6 +856,7 @@ def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
                            nh_data.variables[var][0,180:,:]))
                ,nh_data.variables[var]._FillValue)
             merged_var[:] = merged_var_vals
+        merged_data.close()
     copy_file(daily_prepped_file, daily_dest_file)
     # Prep weekly file
     for weekly_source_file in weekly_source_file_list:
@@ -863,7 +864,7 @@ def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
             print(f"WARNING: {weekly_source_file} does not exist, "
                   +"not using in weekly average file")
             weekly_source_file_list.remove(weekly_source_file)
-    if len(weekly_source_file_list) >= 4:
+    if len(weekly_source_file_list) == 7:
         ncea_cmd_list = ['ncea']
         for weekly_source_file in weekly_source_file_list:
             ncea_cmd_list.append(weekly_source_file)
@@ -883,6 +884,7 @@ def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
                 (weekly_dates[0] - osi_saf_date_since_dt).total_seconds(),
                 weekly_data.variables['time_bnds'][:][0][1]
             ]
+            weekly_data.close()
     else:
         print("Not enough files to make "+weekly_prepped_file
               +": "+' '.join(weekly_source_file_list))
@@ -924,6 +926,7 @@ def prep_prod_ghrsst_median_file(source_file, dest_file, date_dt):
             '1981-01-01 00:00:00','%Y-%m-%d %H:%M:%S'
         )
         prepped_data['time'][:] = prepped_data['time'][:][0] + 43200
+        prepped_data.close()
     copy_file(prepped_file, dest_file)
 
 def prep_prod_get_d_file(source_file, dest_file, date_dt):
