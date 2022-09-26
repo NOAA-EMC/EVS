@@ -754,22 +754,6 @@ for verif_type in VERIF_CASE_STEP_type_list:
         date_dt = start_date_dt
         while date_dt <= end_date_dt:
             job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
-            if verif_type == 'sfc' \
-                    and verif_type_job == 'DailyAvg_TempAnom2m':
-                job_env_dict['MPR_ENDDATE'] = date_dt.strftime('%Y%m%d')
-                job_env_dict['MPR_STARTDATE'] = (
-                    (date_dt - datetime.timedelta(hours=24))\
-                    .strftime('%Y%m%d')
-                )
-                MPR_fhr_start = int(job_env_dict['fhr_start']) - 18
-                if MPR_fhr_start > 0:
-                    job_env_dict['MPR_fhr_start'] = str(MPR_fhr_start)
-                else:
-                    job_env_dict['MPR_fhr_start'] = '6'
-                if job_env_dict['valid_hr_inc'] != '6':
-                    job_env_dict['valid_hr_inc'] = '6'
-                if job_env_dict['fhr_inc'] != '6':
-                    job_env_dict['fhr_inc'] = '6'
             for model_idx in range(len(model_list)):
                 job_env_dict['MODEL'] = model_list[model_idx]
                 njobs+=1
@@ -781,6 +765,13 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job.write('set -x\n')
                 job.write('\n')
                 # Set any environment variables for special cases
+                if 'DailyAvg' in verif_type_job:
+                    if int(job_env_dict['fhr_start']) - 24 <= 0:
+                        job_env_dict['MPR_fhr_start'] = '0'
+                    else:
+                        job_env_dict['MPR_fhr_start'] = str(
+                            int(job_env_dict['fhr_start']) - 24
+                        )
                 # Write environment variables
                 for name, value in job_env_dict.items():
                     job.write('export '+name+'='+value+'\n')
