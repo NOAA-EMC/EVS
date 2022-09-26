@@ -1208,8 +1208,8 @@ def initalize_job_env_dict(verif_type, group,
                 )
             else:
                  valid_hr_start, valid_hr_end, valid_hr_inc = 12, 12, 23
-            job_env_dict['valid_hr_start'] = str(valid_hr_start)
-            job_env_dict['valid_hr_end'] = str(valid_hr_end)
+            job_env_dict['valid_hr_start'] = str(valid_hr_start).zfill(2)
+            job_env_dict['valid_hr_end'] = str(valid_hr_end).zfill(2)
             job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
     verif_type_init_hr_list = (
         os.environ[verif_case_step_abbrev_type+'_init_hr_list']\
