@@ -282,7 +282,7 @@ class PlotSpecs:
             'TMP/TROPOPAUSE': 'Tropopause Temperature',
             'TMP/Z2': '2 meter Temperature',
             'TMP_ANOM_DAILYAVG/Z2': '2 meter Daily Avg Temperature Anomaly',
-            'TOZNE': 'Total Ozone',
+            'TOZNE/L0': 'Total Ozone',
             'TSOIL/Z0.1-0': '0.1-0 meter Soil Temperature',
             'UGRD/NA': 'U-Component of Wind',
             'UGRD/P1': '1 hPa U-Component of Wind',
