@@ -259,7 +259,7 @@ class PlotSpecs:
             'SPFH/P925': '925 hPa Specific Humidity',
             'SPFH/P1000': '1000 hPa Specific Humidity',
             'SPFH/Z2': '2 meter Specific Humidity',
-            'SST_DAILYAVG': 'Daily Avg Sea Surface Temperature',
+            'SST_DAILYAVG/Z0': 'Daily Avg Sea Surface Temperature',
             'TCDC/TOTAL': 'Total Cloud Cover',
             'TMP/NA': 'Temperature',
             'TMP/P1': '1 hPa Temperature',
