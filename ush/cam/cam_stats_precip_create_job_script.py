@@ -77,6 +77,8 @@ if VERIF_CASE == 'precip':
         ACC = os.environ['ACC']
         COMPONENT = os.environ['COMPONENT']
         OBSNAME = os.environ['OBSNAME']
+        MODEL_PCP_COMBINE_METHOD = os.environ['MODEL_PCP_COMBINE_METHOD']
+        MODEL_PCP_COMBINE_COMMAND = os.environ['MODEL_PCP_COMBINE_COMMAND']
     elif job_type == 'generate':
         MODEL_ACC = os.environ['MODEL_ACC']
         OBS_ACC = os.environ['OBS_ACC']
@@ -88,8 +90,6 @@ if VERIF_CASE == 'precip':
         GRID = os.environ['GRID']
         COMPONENT = os.environ['COMPONENT']
         OBSNAME = os.environ['OBSNAME']
-        MODEL_PCP_COMBINE_METHOD = os.environ['MODEL_PCP_COMBINE_METHOD']
-        MODEL_PCP_COMBINE_COMMAND = os.environ['MODEL_PCP_COMBINE_COMMAND']
     elif job_type == 'gather':
         COMPONENT = os.environ['COMPONENT']
         OBSNAME = os.environ['OBSNAME']
@@ -160,6 +160,8 @@ if VERIF_CASE == 'precip':
         job_env_vars_dict['MODEL_ACC'] = MODEL_ACC
         job_env_vars_dict['OBS_ACC'] = OBS_ACC
         job_env_vars_dict['ACC'] = ACC
+        job_env_vars_dict['MODEL_PCP_COMBINE_METHOD'] = MODEL_PCP_COMBINE_METHOD
+        job_env_vars_dict['MODEL_PCP_COMBINE_COMMAND'] = MODEL_PCP_COMBINE_COMMAND
         job_dependent_vars['FHR_START'] = {
             'exec_value': '',
             'bash_value': (
@@ -202,8 +204,6 @@ if VERIF_CASE == 'precip':
         job_env_vars_dict['OUTPUT_FLAG_CATEG'] = OUTPUT_FLAG_CATEG
         job_env_vars_dict['NBRHD_WIDTHS'] = NBRHD_WIDTHS
         job_env_vars_dict['GRID'] = GRID
-        job_env_vars_dict['MODEL_PCP_COMBINE_METHOD'] = MODEL_PCP_COMBINE_METHOD
-        job_env_vars_dict['MODEL_PCP_COMBINE_COMMAND'] = MODEL_PCP_COMBINE_COMMAND
         job_dependent_vars['FHR_START'] = {
             'exec_value': '',
             'bash_value': (

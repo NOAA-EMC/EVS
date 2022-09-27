@@ -21,7 +21,7 @@ export job_type="reformat"
 export njob=1
 for NEST in $NEST_LIST; do
     export NEST=$NEST
-    for ACC in "01"; do
+    for ACC in "01" "03" "24"; do
         export ACC=$ACC
         if [ "${ACC}" = "01" ]; then
             #VHOUR_LIST="01 04 07 10 13 16 19 22"
@@ -110,7 +110,7 @@ export job_type="generate"
 export njob=1
 for NEST in $NEST_LIST; do
     export NEST=$NEST
-    for ACC in "01"; do
+    for ACC in "01" "03" "24"; do
         export ACC=$ACC
         if [ "${ACC}" = "01" ]; then
             #VHOUR_LIST="01 04 07 10 13 16 19 22"

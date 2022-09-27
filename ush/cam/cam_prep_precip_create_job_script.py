@@ -83,10 +83,19 @@ if STEP == 'prep':
                                 + f" fi"
                             )
                             #os.makedirs(COMOUTobs, exist_ok=True)
-                            infiles=os.path.join(
-                                COMINobs, f'ccpa.{VDATEm}', '*', 
-                                f'ccpa.t{VHOURm}z.{OBS_ACC}h.hrap.{NEST}.gb2'
-                            )
+                            if int(VHOURm) > 18:
+                                VDATEmp1 = (
+                                    VDATEHOURm + td(days=1)
+                                ).strftime('%Y%m%d')
+                                infiles=os.path.join(
+                                    COMINobs, f'ccpa.{VDATEmp1}', '*', 
+                                    f'ccpa.t{VHOURm}z.{OBS_ACC}h.hrap.{NEST}.gb2'
+                                )
+                            else:
+                                infiles=os.path.join(
+                                    COMINobs, f'ccpa.{VDATEm}', '*', 
+                                    f'ccpa.t{VHOURm}z.{OBS_ACC}h.hrap.{NEST}.gb2'
+                                )
                             if not glob.glob(infiles):
                                 print(f"ERROR: Found no matches for {infiles}."
                                       + f" Cannot copy necessary data into the"
