@@ -108,23 +108,14 @@ class StatByLevel:
                               +"with valid dates "
                               +', '.join(format_valid_dates))
             plot_dates = init_dates
-        # Set vertical profile levels
-        vert_profile_levels_dict = {
-            'all': ['P1000', 'P925', 'P850', 'P700', 'P500', 'P400', 'P300',
-                    'P250', 'P200', 'P150', 'P100', 'P50', 'P20', 'P10',
-                    'P5', 'P1'],
-            'lower_trop': ['P1000', 'P925', 'P850', 'P700', 'P500'],
-            'upper_trop': ['P500', 'P400', 'P300', 'P250', 'P200',
-                           'P150', 'P100'],
-            'trop': ['P1000', 'P925', 'P850', 'P700', 'P500', 'P500', 'P400',
-                     'P300', 'P250', 'P200', 'P150', 'P100'],
-            'strat': ['P100', 'P50', 'P20', 'P10', 'P5', 'P1']
-        }
+        plot_specs_sbl = PlotSpecs(self.logger, 'stat_by_level')
         # Loop over various vertical profiles
         for vert_profile in self.plot_info_dict['vert_profiles']:
             self.logger.info(f"Gathering data for {self.plot_info_dict['stat']} "
                              +f"- vertical profile {vert_profile}")
-            vert_profile_levels = vert_profile_levels_dict[vert_profile]
+            vert_profile_levels = plot_specs_sbl.get_vert_profile_levels(
+                vert_profile
+            )
             vert_profile_levels_int = np.empty(len(vert_profile_levels),
                                                dtype=int)
             self.plot_info_dict['fcst_var_level'] = vert_profile
@@ -209,7 +200,6 @@ class StatByLevel:
                         )
             # Set up plot
             self.logger.info(f"Doing plot set up")
-            plot_specs_sbl = PlotSpecs(self.logger, 'stat_by_level')
             plot_specs_sbl.set_up_plot()
             stat_min = np.ma.masked_invalid(np.nan)
             stat_max = np.ma.masked_invalid(np.nan)

@@ -774,6 +774,36 @@ class PlotSpecs:
                                 break
         return have_subplot0_levs, subplot0_levs, have_subplotsN_levs, subplotsN_levs
 
+    def get_vert_profile_levels(self, vert_profile):
+        """! Get list of levels that make up the vertical profile
+
+             Args:
+                vert_profile - name of vertical profile (string)
+
+             Returns:
+                 vert_profile_levs - list of pressure levels that
+                                     make up the vertical profile
+                                     (strings)
+        """
+        vert_profile_levels_dict = {
+            'all': ['P1000', 'P925', 'P850', 'P700', 'P500', 'P400', 'P300',
+                    'P250', 'P200', 'P150', 'P100', 'P50', 'P20', 'P10',
+                    'P5', 'P1'],
+            'lower_trop': ['P1000', 'P925', 'P850', 'P700', 'P500'],
+            'upper_trop': ['P500', 'P400', 'P300', 'P250', 'P200',
+                           'P150', 'P100'],
+            'trop': ['P1000', 'P925', 'P850', 'P700', 'P500', 'P500', 'P400',
+                     'P300', 'P250', 'P200', 'P150', 'P100'],
+            'strat': ['P100', 'P50', 'P20', 'P10', 'P5', 'P1']
+        }
+        if vert_profile in list(vert_profile_levels_dict.keys()):
+            vert_profile_levels = vert_profile_levels_dict[vert_profile]
+        else:
+            self.logger.debug(f"{vert_profile} not recognized, "
+                              +f"using all levels")
+            vert_profile_levels = vert_profile_levels_dict['all']
+        return vert_profile_levels
+
     def get_model_plot_settings(self):
         """! Get dictionary plot settings for models
 
