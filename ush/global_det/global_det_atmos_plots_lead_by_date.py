@@ -401,7 +401,6 @@ class LeadByDate:
                     self.logger.warning(f"Fully masked array for {model_num}, "
                                         +"no plotting")
             else:
-                ax.set_title(model_num_plot_name+'-'+subplot0_plot_name)
                 if self.plot_info_dict['stat'] in ['BIAS', 'FBIAS']:
                     self.logger.debug(f"Plotting {model_num} - {model_num_name} "
                                       +f"- {model_num_plot_name}")
