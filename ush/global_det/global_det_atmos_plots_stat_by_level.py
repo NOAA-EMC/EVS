@@ -122,6 +122,7 @@ class StatByLevel:
             self.plot_info_dict['obs_var_level'] = vert_profile
             fcst_units = []
             for level in vert_profile_levels:
+                self.logger.debug(f"Building data for level {level}")
                 vert_profile_levels_int[vert_profile_levels.index(level)] = (
                     level[1:]
                 )
