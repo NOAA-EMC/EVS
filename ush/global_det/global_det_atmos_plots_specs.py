@@ -85,6 +85,14 @@ class PlotSpecs:
             self.legend_frame_on = False
             self.legend_bbox = (0.05, 0.9125)
             self.legend_ncol = 1
+        elif self.plot_type == 'lead_by_level':
+            self.fig_size = (14., 14.)
+            self.axis_title_pad = 5
+            self.axis_title_loc = 'left'
+            self.fig_subplot_top = 0.9
+            self.fig_subplot_bottom = 0.075
+            self.fig_subplot_right = 0.95
+            self.fig_subplot_left = 0.1
         else:
             self.logger.warning(f"{self.plot_type} NOT RECOGNIZED")
             sys.exit(1)
@@ -493,14 +501,15 @@ class PlotSpecs:
             ]
         if self.plot_type in ['time_series', 'stat_by_level']:
             fhr_for_title = date_info_dict['forecast_hour']
-        elif self.plot_type in ['lead_average', 'lead_by_date']:
+        elif self.plot_type in ['lead_average', 'lead_by_date',
+                                'lead_by_level']:
             fhr_for_title = 'NA'
         if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
             var_name_for_title = (plot_info_dict['fcst_var_name']
                                   +'_'+plot_info_dict['interp_method'])
         else:
             var_name_for_title = plot_info_dict['fcst_var_name']
-        if self.plot_type in ['stat_by_level']:
+        if self.plot_type in ['stat_by_level', 'lead_by_level']:
             var_level_for_title = 'NA'
         else:
             var_level_for_title = plot_info_dict['fcst_var_level']
@@ -547,7 +556,7 @@ class PlotSpecs:
             var_name_for_savefig = plot_info_dict['fcst_var_name']
         if self.plot_type in ['time_series', 'stat_by_level']:
             fhr_for_savefig = 'fhr'+date_info_dict['forecast_hour'].zfill(3)
-        elif self.plot_type == 'lead_average':
+        elif self.plot_type in ['lead_average', 'lead_by_level']:
             fhr_for_savefig = 'fhrmean'
         elif self.plot_type == 'lead_by_date':
             fhr_for_savefig = 'leaddate'
@@ -597,7 +606,7 @@ class PlotSpecs:
             elif position == 'right':
                 x_loc = x_figsize * dpi * 0.925
                 y_loc = y_figsize * dpi * 0.875
-        if x_figsize == 14 and y_figsize == 14:
+        elif x_figsize == 14 and y_figsize == 14:
             if position == 'left':
                 x_loc = x_figsize * dpi * 0.045
                 y_loc = y_figsize * dpi * 0.925
@@ -682,7 +691,6 @@ class PlotSpecs:
                        dtype=float)
         neg = np.array(pos[1:], dtype=float) * -1
         centered_clevels = np.append(neg[::-1], pos)
-        center_value = 1
         if center_value != 0:
             centered_clevels = centered_clevels + center_value
         return centered_clevels
@@ -743,35 +751,35 @@ class PlotSpecs:
             subplotsN_levs = np.array([-0.5, -0.4, -0.3, -0.2, -0.1, -0.05,
                                        0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5])
         else:
-            if subplotsN_data != [np.nan]:
+            if np.shape(subplotsN_data) != np.shape([np.nan]):
                 if stat in ['BIAS', 'FBIAS']:
                     have_subplotsN_levs = have_subplot0_levs
                     subplotsN_levs = subplot0_levs
-                    if not have_subplotsN_levs:
-                        for N in range(len(subplotsN_data[:,0,0])):
-                            if stat in ['BIAS', 'FBIAS']:
-                                subplotN_data = subplotsN_data[N,:,:]
-                                if np.nanmax(subplotN_data) > 100:
-                                    spacing = 2.25
-                                elif np.nanmax(subplotN_data) > 100:
-                                    spacing = 2
-                                else:
-                                    spacing = 1.75
-                                if stat == 'BIAS':
-                                    center_value = 0
-                                elif stat == 'FBIAS':
-                                    center_value = 1
+                if not have_subplotsN_levs:
+                    for N in range(len(subplotsN_data[:,0,0])):
+                        if stat in ['BIAS', 'FBIAS']:
+                            subplotN_data = subplotsN_data[N,:,:]
+                            if np.nanmax(subplotN_data) > 100:
+                                spacing = 2.25
+                            elif np.nanmax(subplotN_data) > 100:
+                                spacing = 2
                             else:
-                                subplotN_data = (subplotsN_data[N,:,:]
-                                                 - subplot0_data)
+                                spacing = 1.75
+                            if stat == 'BIAS':
                                 center_value = 0
-                                spacing = 1.25
-                            if not np.ma.masked_invalid(subplotN_data).mask.all():
-                                have_subplotsN_levs = True
-                                subplotsN_levs = self.get_centered_contour_levels(
-                                    subplotN_data[N,:,:], center_value, spacing
-                                )
-                                break
+                            elif stat == 'FBIAS':
+                                center_value = 1
+                        else:
+                            subplotN_data = (subplotsN_data[N,:,:]
+                                             - subplot0_data)
+                            center_value = 0
+                            spacing = 1.25
+                        if not np.ma.masked_invalid(subplotN_data).mask.all():
+                            have_subplotsN_levs = True
+                            subplotsN_levs = self.get_centered_contour_levels(
+                                subplotN_data, center_value, spacing
+                            )
+                            break
         return have_subplot0_levs, subplot0_levs, have_subplotsN_levs, subplotsN_levs
 
     def get_vert_profile_levels(self, vert_profile):

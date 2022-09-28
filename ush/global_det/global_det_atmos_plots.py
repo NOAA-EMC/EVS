@@ -288,7 +288,8 @@ for plot in plots_list:
             )
             plot_info_dict['fcst_var_name'] = fcst_var_name
             plot_info_dict['obs_var_name'] = obs_var_name
-            plot_info_dict['vert_profiles'] = ['all', 'trop', 'strat']
+            plot_info_dict['vert_profiles'] = ['all', 'trop', 'strat',
+                                               'lower_trop', 'upper_trop']
             plot_info_dict['interp_points'] = str(
                 fhr_interppts_info[1]
             )
@@ -308,6 +309,31 @@ for plot in plots_list:
                                                     met_info_dict,
                                                     logo_dir)
                     plot_sbl.make_stat_by_level()
+    elif plot == 'lead_by_level':
+        import global_det_atmos_plots_lead_by_level as gdap_lbl
+        for interppts in interp_points_list:
+            date_info_dict['forecast_hours'] = fhrs
+            plot_info_dict['fcst_var_name'] = fcst_var_name
+            plot_info_dict['obs_var_name'] = obs_var_name
+            plot_info_dict['vert_profiles'] = ['all', 'trop', 'strat',
+                                               'lower_trop', 'upper_trop']
+            plot_info_dict['interp_points'] = str(interppts)
+            if len(fcst_var_thresh_list) != len(obs_var_thresh_list):
+                logger.error("FORECAST AND OBSERVATION THRESHOLDS NOT THE "
+                             +"SAME LENGTH")
+                sys.exit(1)
+            else:
+                for t in range(len(fcst_var_thresh_list)):
+                    plot_info_dict['fcst_var_thresh'] = fcst_var_thresh_list[t]
+                    plot_info_dict['obs_var_thresh'] = obs_var_thresh_list[t]
+                    plot_lbl = gdap_lbl.LeadByLevel(logger, job_output_dir,
+                                                    job_output_dir,
+                                                    model_info_dict,
+                                                    date_info_dict,
+                                                    plot_info_dict,
+                                                    met_info_dict,
+                                                    logo_dir)
+                    plot_lbl.make_lead_by_level()
 
 # Copy images from job directory to main image directory
 job_output_image_dir = os.path.join(job_output_dir, 'images')
