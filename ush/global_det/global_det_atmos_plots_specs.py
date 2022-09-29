@@ -46,53 +46,59 @@ class PlotSpecs:
         self.legend_loc = 'center'
         self.legend_ncol = 1
         self.title_loc = 'center'
-        self.fig_size=(14.,14.)
+        self.fig_size=(16.,16.)
         if self.plot_type == 'time_series':
-            self.fig_size = (14., 7.)
-            self.fig_subplot_top = 0.85
-            self.fig_subplot_bottom = 0.125
-            self.fig_subplot_right = 0.95
-            self.fig_subplot_left = 0.1
-            self.axis_label_size = 14
-            self.xtick_label_size = 14
-            self.ytick_label_size = 14
+            self.fig_size = (16., 8.)
+            self.fig_subplot_top = 0.87
+            self.fig_subplot_bottom = 0.1
+            self.fig_subplot_right = 0.925
+            self.fig_subplot_left = 0.085
+            self.axis_label_size = 15
+            self.xtick_label_size = 15
+            self.ytick_label_size = 15
             self.legend_frame_on = False
             self.legend_bbox = (0.5, 0.05)
             self.legend_ncol = 4
         elif self.plot_type == 'lead_average':
-            self.fig_size = (14., 14.)
+            self.fig_size = (16., 16.)
             self.fig_subplot_top = 0.9
-            self.fig_subplot_bottom = 0.075
-            self.fig_subplot_right = 0.925
-            self.fig_subplot_left = 0.125
+            self.fig_subplot_bottom = 0.05
+            self.fig_subplot_right = 0.92
+            self.fig_subplot_left = 0.12
             self.legend_frame_on = False
             self.legend_bbox = (0.5, 0.05)
             self.legend_ncol = 5
+            self.fig_title_size = 18
         elif self.plot_type == 'lead_by_date':
-            self.fig_size = (14., 14.)
+            self.fig_size = (16., 16.)
             self.axis_title_pad = 5
             self.axis_title_loc = 'left'
             self.fig_subplot_top = 0.9
             self.fig_subplot_bottom = 0.075
-            self.fig_subplot_right = 0.95
+            self.fig_subplot_right = 0.923
             self.fig_subplot_left = 0.15
+            self.fig_title_size = 18
         elif self.plot_type == 'stat_by_level':
-            self.fig_size = (14., 14.)
-            self.fig_subplot_top = 0.9
+            self.fig_size = (16., 16.)
+            self.fig_subplot_top = 0.925
             self.fig_subplot_bottom = 0.05
             self.fig_subplot_right = 0.925
             self.fig_subplot_left = 0.1
             self.legend_frame_on = False
-            self.legend_bbox = (0.05, 0.9125)
+            self.legend_bbox = (0.01, 0.995)
             self.legend_ncol = 1
+            self.legend_font_size = 15
+            self.legend_loc = 'upper left'
+            self.fig_title_size = 18
         elif self.plot_type == 'lead_by_level':
-            self.fig_size = (14., 14.)
+            self.fig_size = (16., 16.)
             self.axis_title_pad = 5
             self.axis_title_loc = 'left'
-            self.fig_subplot_top = 0.9
-            self.fig_subplot_bottom = 0.075
+            self.fig_subplot_top = 0.95
+            self.fig_subplot_bottom = 0.025
             self.fig_subplot_right = 0.95
             self.fig_subplot_left = 0.1
+            self.fig_title_size = 18
         else:
             self.logger.warning(f"{self.plot_type} NOT RECOGNIZED")
             sys.exit(1)
@@ -454,7 +460,7 @@ class PlotSpecs:
                 forecast_day_plot = str(forecast_day)
             date_plot_name = (date_plot_name
                               +', Forecast Day '+forecast_day_plot+' '
-                              +'(Forecast Hour '+forecast_hour+')')
+                              +'(Hour '+forecast_hour+')')
         return date_plot_name
 
     def get_plot_title(self, plot_info_dict, date_info_dict, units):
@@ -599,20 +605,20 @@ class PlotSpecs:
                  alpha - alpha value (float)
         """
         alpha = 0.5
-        if x_figsize == 14 and y_figsize == 7:
+        if x_figsize == 16 and y_figsize == 8:
             if position == 'left':
-                x_loc = x_figsize * dpi * 0.025
-                y_loc = y_figsize * dpi * 0.875
+                x_loc = x_figsize * dpi * 0.0
+                y_loc = y_figsize * dpi * 0.89
             elif position == 'right':
-                x_loc = x_figsize * dpi * 0.925
-                y_loc = y_figsize * dpi * 0.875
-        elif x_figsize == 14 and y_figsize == 14:
+                x_loc = x_figsize * dpi * 0.948
+                y_loc = y_figsize * dpi * 0.89
+        elif x_figsize == 16 and y_figsize == 16:
             if position == 'left':
-                x_loc = x_figsize * dpi * 0.045
-                y_loc = y_figsize * dpi * 0.925
+                x_loc = x_figsize * dpi * 0
+                y_loc = y_figsize * dpi * 0.945
             elif position == 'right':
-                x_loc = x_figsize * dpi * 0.9
-                y_loc = y_figsize * dpi * 0.925
+                x_loc = x_figsize * dpi * 0.948
+                y_loc = y_figsize * dpi * 0.945
         return x_loc, y_loc, alpha
 
     def get_plot_colormaps(self, stat):

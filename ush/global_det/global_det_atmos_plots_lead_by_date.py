@@ -219,7 +219,9 @@ class LeadByDate:
             self.logger.error("TOO MANY SUBPLOTS REQUESTED, MAXIMUM IS 10")
             sys.exit(1)
         if nsubplots <= 2:
-            plot_specs_lbd.fig_size = (14., 7.)
+            plot_specs_lbd.fig_size = (16., 8.)
+            plot_specs_lbd.fig_title_size = 16
+            plt.rcParams['figure.titlesize'] = plot_specs_lbd.fig_title_size
         if nsubplots >= 2:
             n_xticks = 8
         else:
@@ -339,7 +341,8 @@ class LeadByDate:
                           self.date_info_dict['forecast_hours'][-1]])
             ax.set_xticks(self.date_info_dict['forecast_hours'][::xtick_intvl])
             if ax.is_last_row() \
-                    or (nsubplots % 2 != 0 and subplot_num == nsubplots -1):
+                    or (nsubplots % 2 != 0 and model_idx_list.index(model_idx)\
+                        == nsubplots-1):
                 ax.set_xlabel('Forecast Hour')
             else:
                 plt.setp(ax.get_xticklabels(), visible=False)
@@ -451,16 +454,9 @@ class LeadByDate:
                     self.logger.warning(f"Fully masked array for {model_num}, "
                                         +"no plotting")
         if make_colorbar:
-            cbar_left = (
-                left_logo_img.get_extent()[1]
-                /(plt.rcParams['figure.dpi']*plot_specs_lbd.fig_size[0])
-            )
-            cbar_width = (
-                (right_logo_img.get_extent()[1]
-                 /(plt.rcParams['figure.dpi']*plot_specs_lbd.fig_size[0]))
-                - (left_logo_img.get_extent()[1]
-                   /(plt.rcParams['figure.dpi']*plot_specs_lbd.fig_size[0]))
-            )
+            cbar_left = gs.get_grid_positions(fig)[2][0]
+            cbar_width = (gs.get_grid_positions(fig)[3][-1]
+                          - gs.get_grid_positions(fig)[2][0])
             cbar_ax = fig.add_axes(
                 [cbar_left, cbar_bottom, cbar_width, cbar_height]
             )

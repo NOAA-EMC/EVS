@@ -271,7 +271,9 @@ class LeadByLevel:
                 self.logger.error("TOO MANY SUBPLOTS REQUESTED, MAXIMUM IS 10")
                 sys.exit(1)
             if nsubplots <= 2:
-                plot_specs_lbl.fig_size = (14., 7.)
+                plot_specs_lbl.fig_size = (16., 8.)
+                plot_specs_lbl.fig_title_size = 16
+                plt.rcParams['figure.titlesize'] = plot_specs_lbl.fig_title_size
             if nsubplots >= 2:
                 n_xticks = 8
             else:
@@ -281,11 +283,18 @@ class LeadByLevel:
             else:
                 xtick_intvl = int(len(self.date_info_dict['forecast_hours'])
                                   /n_xticks)
-            n_yticks = 5
-            if len(vert_profile_levels_int) < n_yticks:
-                ytick_intvl = 1
-            else:
-                ytick_intvl = int(len(vert_profile_levels_int)/n_yticks)
+            vert_profile_levels_int_ticks = vert_profile_levels_int
+            if vert_profile == 'all':
+                for del_lev in [925, 700, 400, 250, 150]:
+                    vert_profile_levels_int_ticks = np.delete(
+                        vert_profile_levels_int_ticks,
+                        np.where(vert_profile_levels_int_ticks == del_lev)
+                    )
+            elif vert_profile == 'trop':
+                vert_profile_levels_int_ticks = np.delete(
+                    vert_profile_levels_int_ticks,
+                    np.where(vert_profile_levels_int_ticks == 925)
+                )
             fcst_units = np.unique(fcst_units)
             fcst_units = np.delete(fcst_units, np.where(fcst_units == 'nan'))
             if len(fcst_units) > 1:
@@ -394,21 +403,21 @@ class LeadByLevel:
                               [::xtick_intvl])
                 if ax.is_last_row() \
                         or (nsubplots % 2 != 0 \
-                            and subplot_num == nsubplots -1):
+                            and model_idx_list.index(model_idx) \
+                            == nsubplots-1):
                     ax.set_xlabel('Forecast Hour')
                 else:
                     plt.setp(ax.get_xticklabels(), visible=False)
                 ax.set_yscale('log')
                 ax.minorticks_off()
-                ax.set_yticks(vert_profile_levels_int)
-                ax.set_yticklabels(vert_profile_levels_int)
-                #ax.set_yticks(vert_profile_levels_int[::ytick_intvl])
-                #ax.set_yticklabels(vert_profile_levels_int[::ytick_intvl])
+                ax.set_yticks(vert_profile_levels_int_ticks)
+                ax.set_yticklabels(vert_profile_levels_int_ticks)
                 ax.set_ylim([vert_profile_levels_int[0],
                              vert_profile_levels_int[-1]])
                 if ax.is_first_col() \
                         or (nsubplots % 2 != 0 \
-                            and subplot_num == nsubplots -1):
+                            and model_idx_list.index(model_idx) \
+                            == nsubplots -1):
                     ax.set_ylabel('Pressure Level (hPa)')
                 else:
                     plt.setp(ax.get_yticklabels(), visible=False)
@@ -518,18 +527,9 @@ class LeadByLevel:
                                             +"for {model_num}, "
                                             +"no plotting")
             if make_colorbar:
-                cbar_left = (
-                    left_logo_img.get_extent()[1]
-                    /(plt.rcParams['figure.dpi']*plot_specs_lbl.fig_size[0])
-                )
-                cbar_width = (
-                    (right_logo_img.get_extent()[1]
-                     /(plt.rcParams['figure.dpi']
-                       *plot_specs_lbl.fig_size[0]))
-                    - (left_logo_img.get_extent()[1]
-                       /(plt.rcParams['figure.dpi']
-                         *plot_specs_lbl.fig_size[0]))
-                )
+                cbar_left = gs.get_grid_positions(fig)[2][0]
+                cbar_width = (gs.get_grid_positions(fig)[3][-1]
+                              - gs.get_grid_positions(fig)[2][0])
                 cbar_ax = fig.add_axes(
                     [cbar_left, cbar_bottom, cbar_width, cbar_height]
                 )

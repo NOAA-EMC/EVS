@@ -154,7 +154,7 @@ class TimeSeries:
         self.logger.info(f"Doing plot set up")
         plot_specs_ts = PlotSpecs(self.logger, 'time_series')
         plot_specs_ts.set_up_plot()
-        n_xticks = 4
+        n_xticks = 5
         if len(plot_dates) < n_xticks:
             xtick_intvl = 1
         else:
