@@ -58,7 +58,8 @@ plot_jobs_dict = {
                                       'points': '4'},
                       'grid': 'G004',
                       'obs_name': 'AIRUPA',
-                      'plots_list': 'time_series'},
+                      'plots_list': ('time_series, lead_average, '
+                                     +'stat_by_level, lead_level')},
         'RelHum': {'line_type_stat_list': ['SL1L2/BIAS',
                                            'SL1L2/RMSE'],
                    'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
@@ -79,7 +80,8 @@ plot_jobs_dict = {
                                    'points': '4'},
                    'grid': 'G004',
                    'obs_name': 'AIRUPA',
-                   'plots_list': 'time_series'},
+                   'plots_list': ('time_series, lead_average, '
+                                  +'stat_by_level, lead_level')},
         'SpefHum': {'line_type_stat_list': ['SL1L2/BIAS',
                                             'SL1L2/RMSE'],
                     'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
@@ -100,7 +102,8 @@ plot_jobs_dict = {
                                     'points': '4'},
                     'obs_name': 'AIRUPA',
                     'grid': 'G004',
-                    'plots_list': 'time_series'},
+                    'plots_list': ('time_series, lead_average, '
+                                   +'stat_by_level, lead_level')},
         'Temp': {'line_type_stat_list': ['SL1L2/BIAS',
                                          'SL1L2/RMSE'],
                  'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
@@ -121,7 +124,8 @@ plot_jobs_dict = {
                                   'points': '4'},
                   'grid': 'G004',
                   'obs_name': 'AIRUPA',
-                  'plots_list': 'time_series'},
+                  'plots_list': ('time_series, lead_average, '
+                                 +'stat_by_level, lead_level')},
         'UWind': {'line_type_stat_list': ['SL1L2/BIAS',
                                           'SL1L2/RMSE'],
                   'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
@@ -142,7 +146,8 @@ plot_jobs_dict = {
                                   'points': '4'},
                   'grid': 'G004',
                   'obs_name': 'AIRUPA',
-                  'plots_list': 'time_series'},
+                  'plots_list': ('time_series, lead_average, '
+                                 +'stat_by_level, lead_level')},
         'VWind': {'line_type_stat_list': ['SL1L2/BIAS',
                                           'SL1L2/RMSE'],
                   'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
@@ -163,7 +168,8 @@ plot_jobs_dict = {
                                   'points': '4'},
                   'grid': 'G004',
                   'obs_name': 'AIRUPA',
-                  'plots_list': 'time_series'},
+                  'plots_list': ('time_series, lead_average, '
+                                 +'stat_by_level, lead_level')},
         'VectorWind': {'line_type_stat_list': ['VL1L2/BIAS',
                                                'VL1L2/RMSE'],
                        'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
@@ -184,7 +190,8 @@ plot_jobs_dict = {
                                        'points': '4'},
                        'grid': 'G004',
                        'obs_name': 'AIRUPA',
-                       'plots_list': 'time_series'}
+                       'plots_list': ('time_series, lead_average, '
+                                      +'stat_by_level, lead_level')}
     },
     'sea_ice': {},
     'sfc': {
@@ -210,7 +217,7 @@ plot_jobs_dict = {
                                            'points': '4'},
                            'grid': 'G104',
                            'obs_name': 'AIRUPA',
-                           'plots_list': 'time_series'},
+                           'plots_list': 'time_series, lead_average'},
         'CAPEMixedLayer_Thresh': {'line_type_stat_list': ['CTC/SRATIO',
                                                           'CTC/POD', 'CTC/CSI'],
                                   'vx_mask_list': ['CONUS', 'CONUS_Central',
@@ -240,7 +247,7 @@ plot_jobs_dict = {
                                                   'points': '4'},
                                   'grid': 'G104',
                                   'obs_name': 'AIRUPA',
-                                  'plots_list': 'time_series'},
+                                  'plots_list': 'time_series, lead_average'},
         'CAPESfcBased': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
                          'vx_mask_list': ['CONUS', 'CONUS_Central',
                                           'CONUS_East', 'CONUS_South',
@@ -263,7 +270,7 @@ plot_jobs_dict = {
                                          'points': '4'},
                          'grid': 'G104',
                          'obs_name': 'AIRUPA',
-                         'plots_list': 'time_series'},
+                         'plots_list': 'time_series, lead_average'},
         'CAPESfcBased_Thresh': {'line_type_stat_list': ['CTC/SRATIO',
                                                         'CTC/POD', 'CTC/CSI'],
                                 'vx_mask_list': ['CONUS', 'CONUS_Central',
@@ -293,7 +300,7 @@ plot_jobs_dict = {
                                                 'points': '4'},
                                 'grid': 'G104',
                                 'obs_name': 'AIRUPA',
-                                'plots_list': 'time_series'},
+                                'plots_list': 'time_series, lead_average'},
         'Ceiling': {'line_type_stat_list': ['CTC/FBIAS', 'CTC/ETS'],
                     'vx_mask_list': ['CONUS', 'CONUS_Central',
                                      'CONUS_East', 'CONUS_South',
@@ -308,11 +315,17 @@ plot_jobs_dict = {
                                      'SPlains', 'SRockies'],
                     'fcst_var_dict': {'name': 'HGT',
                                       'levels': 'CEILING',
+                                      #'threshs': ('lt152.4, lt304.8, '
+                                      #            +'lt914.4, ge914.4, '
+                                      #            +'lt1524, lt3048')
                                       'threshs': ('lt804.672, lt1609.344, '
                                                   +'lt4828.032, lt8046.72, '
                                                   +'ge8046.72, lt16093.44')},
                     'obs_var_dict': {'name': 'CEILING',
                                      'levels': 'L0',
+                                     #'threshs': ('lt152.4, lt304.8, '
+                                     #            +'lt914.4, ge914.4, '
+                                     #            +'lt1524, lt3048')
                                      'threshs': ('lt804.672, lt1609.344, '
                                                  +'lt4828.032, lt8046.72, '
                                                  +'ge8046.72, lt16093.44')},
@@ -320,7 +333,7 @@ plot_jobs_dict = {
                                     'points': '4'},
                     'grid': 'G104',
                     'obs_name': 'ADPSFC',
-                    'plots_list': 'time_series'},
+                    'plots_list': 'time_series, lead_average'},
         'DailyAvg_TempAnom2m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
                                 'vx_mask_list': ['CONUS', 'CONUS_Central',
                                                  'CONUS_East', 'CONUS_South',
@@ -343,7 +356,7 @@ plot_jobs_dict = {
                                                 'points': '4'},
                                 'grid': 'G104',
                                 'obs_name': 'ADPSFC',
-                                'plots_list': 'time_series'},
+                                'plots_list': 'time_series, lead_average'},
         'Dewpoint2m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
                        'vx_mask_list': ['CONUS', 'CONUS_Central',
                                         'CONUS_East', 'CONUS_South',
@@ -366,7 +379,7 @@ plot_jobs_dict = {
                                        'points': '4'},
                        'grid': 'G104',
                        'obs_name': 'ADPSFC',
-                       'plots_list': 'time_series'},
+                       'plots_list': 'time_series, lead_average'},
         'Dewpoint2m_Thresh': {'line_type_stat_list': ['CTC/FBIAS'],
                               'vx_mask_list': ['CONUS', 'CONUS_Central',
                                                'CONUS_East', 'CONUS_South',
@@ -395,7 +408,7 @@ plot_jobs_dict = {
                                               'points': '4'},
                               'grid': 'G104',
                               'obs_name': 'ADPSFC',
-                              'plots_list': 'time_series'},
+                              'plots_list': 'time_series, lead_average'},
         'PBLHeight': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
                       'vx_mask_list': ['CONUS', 'CONUS_Central',
                                        'CONUS_East', 'CONUS_South',
@@ -418,7 +431,7 @@ plot_jobs_dict = {
                                       'points': '4'},
                       'grid': 'G104',
                       'obs_name': 'AIRUPA',
-                      'plots_list': 'time_series'},
+                      'plots_list': 'time_series, lead_average'},
         'RelHum2m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
                      'vx_mask_list': ['CONUS', 'CONUS_Central',
                                       'CONUS_East', 'CONUS_South',
@@ -441,7 +454,7 @@ plot_jobs_dict = {
                                      'points': '4'},
                      'grid': 'G104',
                      'obs_name': 'ADPSFC',
-                     'plots_list': 'time_series'},
+                     'plots_list': 'time_series, lead_average'},
         'SeaLevelPres': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
                          'vx_mask_list': ['CONUS', 'CONUS_Central',
                                           'CONUS_East', 'CONUS_South',
@@ -464,7 +477,7 @@ plot_jobs_dict = {
                                          'points': '4'},
                          'grid': 'G104',
                          'obs_name': 'ADPSFC',
-                         'plots_list': 'time_series'},
+                         'plots_list': 'time_series, lead_average'},
         'Temp2m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
                    'vx_mask_list': ['CONUS', 'CONUS_Central',
                                     'CONUS_East', 'CONUS_South',
@@ -487,7 +500,7 @@ plot_jobs_dict = {
                                    'points': '4'},
                    'grid': 'G104',
                    'obs_name': 'ADPSFC',
-                   'plots_list': 'time_series'},
+                   'plots_list': 'time_series, lead_average'},
         'TotCloudCover': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
                           'vx_mask_list': ['CONUS', 'CONUS_Central',
                                            'CONUS_East', 'CONUS_South',
@@ -510,7 +523,7 @@ plot_jobs_dict = {
                                           'points': '4'},
                           'grid': 'G104',
                           'obs_name': 'ADPSFC',
-                          'plots_list': 'time_series'},
+                          'plots_list': 'time_series, lead_average'},
         'UWind10m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
                      'vx_mask_list': ['CONUS', 'CONUS_Central',
                                       'CONUS_East', 'CONUS_South',
@@ -533,7 +546,7 @@ plot_jobs_dict = {
                                      'points': '4'},
                      'grid': 'G104',
                      'obs_name': 'ADPSFC',
-                     'plots_list': 'time_series'},
+                     'plots_list': 'time_series, lead_average'},
         'Visibility': {'line_type_stat_list': ['CTC/FBIAS', 'CTC/ETS'],
                        'vx_mask_list': ['CONUS', 'CONUS_Central',
                                         'CONUS_East', 'CONUS_South',
@@ -548,11 +561,17 @@ plot_jobs_dict = {
                                         'SPlains', 'SRockies'],
                        'fcst_var_dict': {'name': 'VIS',
                                          'levels': 'Z0',
+                                         #'threshs': ('lt804.672, lt1609.344, '
+                                         #            +'lt4828.032, lt8046.72, '
+                                         #            +'ge8046.72, lt16093.44')
                                          'threshs': ('lt152.4, lt304.8, '
                                                      +'lt914.4, ge914.4, '
                                                      +'lt1524, lt3048')},
                        'obs_var_dict': {'name': 'VIS',
                                         'levels': 'Z0',
+                                        #'threshs': ('lt804.672, lt1609.344, '
+                                        #             +'lt4828.032, lt8046.72, '
+                                        #             +'ge8046.72, lt16093.44')
                                         'threshs': ('lt152.4, lt304.8, '
                                                     +'lt914.4, ge914.4, '
                                                     +'lt1524, lt3048')},
@@ -560,7 +579,7 @@ plot_jobs_dict = {
                                        'points': '4'},
                        'grid': 'G104',
                        'obs_name': 'ADPSFC',
-                       'plots_list': 'time_series'},
+                       'plots_list': 'time_series, lead_average'},
         'VWind10m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
                      'vx_mask_list': ['CONUS', 'CONUS_Central',
                                       'CONUS_East', 'CONUS_South',
@@ -583,7 +602,7 @@ plot_jobs_dict = {
                                      'points': '4'},
                      'grid': 'G104',
                      'obs_name': 'ADPSFC',
-                     'plots_list': 'time_series'},
+                     'plots_list': 'time_series, lead_average'},
         'WindGust': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
                      'vx_mask_list': ['CONUS', 'CONUS_Central',
                                       'CONUS_East', 'CONUS_South',
@@ -606,7 +625,7 @@ plot_jobs_dict = {
                                      'points': '4'},
                      'grid': 'G104',
                      'obs_name': 'ADPSFC',
-                     'plots_list': 'time_series'},
+                     'plots_list': 'time_series, lead_average'},
         'VectorWind10m': {'line_type_stat_list': ['VL1L2/RMSE', 'VL1L2/BIAS'],
                           'vx_mask_list': ['CONUS', 'CONUS_Central',
                                            'CONUS_East', 'CONUS_South',
@@ -629,7 +648,7 @@ plot_jobs_dict = {
                                           'points': '4'},
                           'grid': 'G104',
                           'obs_name': 'ADPSFC',
-                          'plots_list': 'time_series'}
+                          'plots_list': 'time_series, lead_average'}
     }
 }
 njobs = 0
