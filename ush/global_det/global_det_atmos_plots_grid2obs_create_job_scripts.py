@@ -315,20 +315,14 @@ plot_jobs_dict = {
                                      'SPlains', 'SRockies'],
                     'fcst_var_dict': {'name': 'HGT',
                                       'levels': 'CEILING',
-                                      #'threshs': ('lt152.4, lt304.8, '
-                                      #            +'lt914.4, ge914.4, '
-                                      #            +'lt1524, lt3048')
-                                      'threshs': ('lt804.672, lt1609.344, '
-                                                  +'lt4828.032, lt8046.72, '
-                                                  +'ge8046.72, lt16093.44')},
+                                      'threshs': ('lt152.4, lt304.8, '
+                                                  +'lt914.4, ge914.4, '
+                                                  +'lt1524, lt3048')},
                     'obs_var_dict': {'name': 'CEILING',
                                      'levels': 'L0',
-                                     #'threshs': ('lt152.4, lt304.8, '
-                                     #            +'lt914.4, ge914.4, '
-                                     #            +'lt1524, lt3048')
-                                     'threshs': ('lt804.672, lt1609.344, '
-                                                 +'lt4828.032, lt8046.72, '
-                                                 +'ge8046.72, lt16093.44')},
+                                     'threshs': ('lt152.4, lt304.8, '
+                                                 +'lt914.4, ge914.4, '
+                                                 +'lt1524, lt3048')},
                     'interp_dict': {'method': 'BILIN',
                                     'points': '4'},
                     'grid': 'G104',
@@ -561,20 +555,14 @@ plot_jobs_dict = {
                                         'SPlains', 'SRockies'],
                        'fcst_var_dict': {'name': 'VIS',
                                          'levels': 'Z0',
-                                         #'threshs': ('lt804.672, lt1609.344, '
-                                         #            +'lt4828.032, lt8046.72, '
-                                         #            +'ge8046.72, lt16093.44')
-                                         'threshs': ('lt152.4, lt304.8, '
-                                                     +'lt914.4, ge914.4, '
-                                                     +'lt1524, lt3048')},
+                                         'threshs': ('lt804.672, lt1609.344, '
+                                                     +'lt4828.032, lt8046.72, '
+                                                     +'ge8046.72, lt16093.44')},
                        'obs_var_dict': {'name': 'VIS',
                                         'levels': 'Z0',
-                                        #'threshs': ('lt804.672, lt1609.344, '
-                                        #             +'lt4828.032, lt8046.72, '
-                                        #             +'ge8046.72, lt16093.44')
-                                        'threshs': ('lt152.4, lt304.8, '
-                                                    +'lt914.4, ge914.4, '
-                                                    +'lt1524, lt3048')},
+                                        'threshs': ('lt804.672, lt1609.344, '
+                                                     +'lt4828.032, lt8046.72, '
+                                                     +'ge8046.72, lt16093.44')},
                        'interp_dict': {'method': 'BILIN',
                                        'points': '4'},
                        'grid': 'G104',

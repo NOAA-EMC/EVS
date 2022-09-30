@@ -429,9 +429,9 @@ generate_jobs_dict = {
                             'var1_obs_name': 'CEILING',
                             'var1_obs_levels': 'L0',
                             'var1_obs_options': '',
-                            'var1_thresh_list': ("'lt804.672, lt1609.344, "
-                                                 +"lt4828.032, lt8046.72, "
-                                                 +"ge8046.72, lt16093.44'"),
+                            'var1_thresh_list': ("'lt152.4, lt304.8, "
+                                                 +"lt914.4, ge914.4, "
+                                                 +"lt1524, lt3048'"),
                             'met_config_overrides': ''},
                     'commands': [gda_util.metplus_command(
                                      'PointStat_fcstGLOBAL_DET_'
@@ -624,9 +624,9 @@ generate_jobs_dict = {
                                'var1_obs_name': 'VIS',
                                'var1_obs_levels': 'Z0',
                                'var1_obs_options': '',
-                               'var1_thresh_list': ("'lt152.4, lt304.8, "
-                                                    +"lt914.4, ge914.4, "
-                                                    +"lt1524, lt3048'"),
+                               'var1_thresh_list': ("'lt804.672, lt1609.344, "
+                                                    +"lt4828.032, lt8046.72, "
+                                                    +"ge8046.72, lt16093.44'"),
                                'met_config_overrides': ''},
                        'commands': [gda_util.metplus_command(
                                         'PointStat_fcstGLOBAL_DET_'
