@@ -620,7 +620,8 @@ generate_jobs_dict = {
                                'msg_type': 'ADPSFC',
                                'var1_fcst_name': 'VIS',
                                'var1_fcst_levels': 'Z0',
-                               'var1_fcst_options': '',
+                               'var1_fcst_options': ("'censor_thresh = gt16090;"
+                                                     +"censor_val = 16090;'"),
                                'var1_obs_name': 'VIS',
                                'var1_obs_levels': 'Z0',
                                'var1_obs_options': '',
