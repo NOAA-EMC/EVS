@@ -7,6 +7,20 @@ set -xa
 #######################################################
 #######################################################
 
+export cycle=t${cyc}z
+
+export pid=$$
+export DATA_IN=${DATA_IN:-$DATAROOT}
+export DATA=$DATA_IN/evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$
+mkdir -p $DATA
+cd $DATA
+
+# Run setpdy and initialize PDY variables
+setpdy.sh
+. $DATA/PDY
+
+export VDATE=${VDATE:-$PDYm1}
+
 
 ##################################################
 # SAVEGES  - Copy Files From TMPDIR to $GESdir
@@ -41,12 +55,7 @@ export MASKS=$FIXevs/masks
 # obtain unique process id (pid) and make temp directories
 ###########################################################
 
-export pid=$$
-export DATA_IN=${DATA_IN:-$DATAROOT}
-export DATA=$DATA_IN/evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$
-mkdir -p $DATA
 
-cd $DATA
 ####################################
 # File To Log Msgs
 ####################################
@@ -59,17 +68,10 @@ export outid="LL$job"
 export jobid="${outid}.o${pid}"
 export pgmout="OUTPUT.${pid}"
 
-export cycle=t${cyc}z
-
 ####################################
 # Specify codes and scripts locaton
 ####################################
 
-# Run setpdy and initialize PDY variables
-setpdy.sh
-. $DATA/PDY
-
-export VDATE=${VDATE:-$PDYm1}
 
 sh $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${STEP}.sh 
 
