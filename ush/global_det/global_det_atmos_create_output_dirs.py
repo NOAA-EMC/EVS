@@ -56,6 +56,10 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
             data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_gdas'))
             data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_nam'))
             data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_rap'))
+elif VERIF_CASE_STEP == 'grid2grid_plots':
+    for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
+        if VERIF_CASE_STEP_type == 'precip':
+            data_dir_list.append(os.path.join(data_base_dir, 'ccpa'))
 
 # Create data directories
 for data_dir in data_dir_list:

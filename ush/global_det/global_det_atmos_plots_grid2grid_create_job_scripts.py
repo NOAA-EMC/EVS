@@ -370,6 +370,19 @@ plot_jobs_dict = {
                           'grid': 'G240',
                           'obs_name': '24hrCCPA',
                           'plots_list': 'time_series, lead_average'},
+        '24hrAccumMaps': {'line_type_stat_list': ['SL1L2/FBAR'],
+                          'vx_mask_list': ['CONUS'],
+                          'fcst_var_dict': {'name': 'APCP_A24',
+                                            'levels': 'A24',
+                                            'threshs': 'NA'},
+                          'obs_var_dict': {'name': 'APCP_A24',
+                                           'levels': 'A24',
+                                           'threshs': 'NA'},
+                          'interp_dict': {'method': 'NEAREST',
+                                          'points': '1'},
+                          'grid': 'G211',
+                          'obs_name': '24hrCCPA',
+                          'plots_list': 'precip_spatial_map'}
     },
     'pres_levs': {
         'GeoHeight': {'line_type_stat_list': ['SAL1L2/ACC', 'GRAD/S1'],
@@ -414,7 +427,7 @@ plot_jobs_dict = {
                                       'grid': 'G004',
                                       'plots_list': ('time_series, '
                                                      +'lead_average, '
-                                                     +'lead_by_date'},
+                                                     +'lead_by_date')},
         'GeoHeight_FourierDecom4-9': {'line_type_stat_list': ['SAL1L2/ACC'],
                                       'vx_mask_list': ['GLOBAL', 'NHEM',
                                                        'SHEM', 'TROPICS'],
@@ -561,7 +574,7 @@ plot_jobs_dict = {
                                                            'CTC/CSI',
                                                            'CTC/HSS'],
                                    'vx_mask_list': ['ARCTIC', 'ANTARCTIC'],
-                                   'fcst_var_dict': {'name': 'ICE_DAILYAVG',
+                                   'fcst_var_dict': {'name': 'ICEC_DAILYAVG',
                                                      'levels': 'Z0',
                                                      'threshs': ('ge15, ge40, '
                                                                  +'ge80')},

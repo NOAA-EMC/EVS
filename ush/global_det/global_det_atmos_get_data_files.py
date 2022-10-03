@@ -19,6 +19,7 @@ COMPONENT = os.environ['COMPONENT']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 DATA = os.environ['DATA']
+COMIN = os.environ['COMIN']
 model_list = os.environ['model_list'].split(' ')
 model_evs_data_dir_list = os.environ['model_evs_data_dir_list'].split(' ')
 model_file_format_list = os.environ['model_file_format_list'].split(' ')
@@ -749,13 +750,13 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
 elif STEP == 'plots' :
     # Read in VERIF_CASE_STEP related environment variables
     # Get model stat files
+    start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
+    end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
     VERIF_CASE_STEP_data_dir = os.path.join(DATA, VERIF_CASE_STEP, 'data')
     date_type = 'VALID'
     for model_idx in range(len(model_list)):
         model = model_list[model_idx]
         model_evs_data_dir = model_evs_data_dir_list[model_idx]
-        start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
-        end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
         date_dt = start_date_dt
         while date_dt <= end_date_dt:
             if date_type == 'VALID':
@@ -785,5 +786,86 @@ elif STEP == 'plots' :
                     print("WARNING: "+source_model_date_stat_file+" "
                           +"DOES NOT EXIST")
             date_dt = date_dt + datetime.timedelta(days=1)
+    # Get model pcp_combine files from COMIN
+    if VERIF_CASE == 'grid2grid' and 'precip' in VERIF_CASE_STEP_type_list:
+        (CCPA24hr_valid_hr_start, CCPA24hr_valid_hr_end,
+         CCPA24hr_valid_hr_inc) = gda_util.get_obs_valid_hrs(
+             '24hrCCPA'
+        )
+        CCPA24hr_valid_hr_list = [
+            str(x).zfill(2) for x in range(
+                CCPA24hr_valid_hr_start,
+                CCPA24hr_valid_hr_end+CCPA24hr_valid_hr_inc,
+                CCPA24hr_valid_hr_inc
+            )
+        ]
+        VERIF_CASE_STEP_precip_fhr_min = (
+            os.environ[VERIF_CASE_STEP_abbrev+'_precip_fhr_min']
+        )
+        VERIF_CASE_STEP_precip_fhr_max = (
+            os.environ[VERIF_CASE_STEP_abbrev+'_precip_fhr_max']
+        )
+        VERIF_CASE_STEP_precip_fhr_inc = (
+            os.environ[VERIF_CASE_STEP_abbrev+'_precip_fhr_inc']
+        )
+        VERIF_CASE_STEP_precip_fhr_list = list(
+            range(int(VERIF_CASE_STEP_precip_fhr_min),
+                  int(VERIF_CASE_STEP_precip_fhr_max)
+                  +int(VERIF_CASE_STEP_precip_fhr_inc),
+                  int(VERIF_CASE_STEP_precip_fhr_inc))
+        )
+        COMINccpa = os.path.join(
+            COMIN, 'stats', COMPONENT,
+            RUN+'.'+end_date_dt.strftime('%Y%m%d'),
+            'ccpa', 'grid2grid'
+        )
+        source_ccpa_pcp_combine_file = os.path.join(
+            COMINccpa, 'pcp_combine_precip.24hrCCPA.valid'
+            +end_date_dt.strftime('%Y%m%d')+CCPA24hr_valid_hr_list[0]+'.nc'
+        )
+        dest_ccpa_pcp_combine_file = os.path.join(
+            VERIF_CASE_STEP_data_dir, 'ccpa',
+            'ccpa_precip.24hrAccum.valid'
+            +end_date_dt.strftime('%Y%m%d')+CCPA24hr_valid_hr_list[0]+'.nc'
+        )
+        if not os.path.exists(dest_ccpa_pcp_combine_file):
+            if os.path.exists(source_ccpa_pcp_combine_file):
+                print("Linking "+source_ccpa_pcp_combine_file+" "
+                      +"to "+dest_ccpa_pcp_combine_file)
+                os.symlink(source_ccpa_pcp_combine_file,
+                           dest_ccpa_pcp_combine_file)
+            else:
+                print("WARNING: "+source_ccpa_pcp_combine_file+" "
+                       +"DOES NOT EXIST")
+        for model_idx in range(len(model_list)):
+            model = model_list[model_idx]
+            COMINmodel = os.path.join(
+                COMIN, 'stats', COMPONENT,
+                RUN+'.'+end_date_dt.strftime('%Y%m%d'),
+                model, 'grid2grid'
+            )
+            for fhr in VERIF_CASE_STEP_precip_fhr_list:
+                init_dt = (
+                    end_date_dt
+                    + datetime.timedelta(hours=int(CCPA24hr_valid_hr_list[0]))
+                )- datetime.timedelta(hours=fhr)
+                source_model_fhr_pcp_combine_file = os.path.join(
+                    COMINmodel, 'pcp_combine_precip.24hrAccum.init'
+                    +init_dt.strftime('%Y%m%d%H')+'.f'+str(fhr).zfill(3)+'.nc'
+                )
+                dest_model_fhr_pcp_combine_file = os.path.join(
+                    VERIF_CASE_STEP_data_dir, model,
+                    model+'_precip.24hrAccum.init'
+                    +init_dt.strftime('%Y%m%d%H')+'.f'+str(fhr).zfill(3)+'.nc'
+                )
+                if not os.path.exists(dest_model_fhr_pcp_combine_file):
+                    if os.path.exists(source_model_fhr_pcp_combine_file):
+                        print("Linking "+source_model_fhr_pcp_combine_file+" "
+                              +"to "+dest_model_fhr_pcp_combine_file)
+                        os.symlink(source_model_fhr_pcp_combine_file,
+                                   dest_model_fhr_pcp_combine_file)
+                    else:
+                        print("WARNING: "+source_model_fhr_pcp_combine_file+" "
+                              +"DOES NOT EXIST")
 
 print("END: "+os.path.basename(__file__))

@@ -334,6 +334,26 @@ for plot in plots_list:
                                                     met_info_dict,
                                                     logo_dir)
                     plot_lbl.make_lead_by_level()
+    elif plot == 'precip_spatial_map':
+        model_info_dict['obs'] = {'name': 'ccpa',
+                                  'plot_name': 'ccpa',
+                                  'obs_name': '24hrCCPA'}
+        pcp_combine_base_dir = os.path.join(VERIF_CASE_STEP_dir, 'data')
+        import global_det_atmos_plots_precip_spatial_map as gdap_psm
+        for fhr in fhrs:
+            date_info_dict['forecast_hour'] = str(fhr)
+            plot_info_dict['fcst_var_name'] = fcst_var_name
+            plot_info_dict['fcst_var_level'] = fcst_var_level_list[0]
+            plot_info_dict['fcst_var_thresh'] = 'NA'
+            plot_info_dict['obs_var_name'] = obs_var_name
+            plot_info_dict['obs_var_level'] = obs_var_level_list[0]
+            plot_info_dict['obs_var_thresh'] = 'NA'
+            plot_info_dict['interp_points'] = 'NA'
+            plot_psm = gdap_psm.PrecipSpatialMap(logger, pcp_combine_base_dir,
+                                                 job_output_dir, model_info_dict,
+                                                 date_info_dict, plot_info_dict,
+                                                 met_info_dict, logo_dir)
+            plot_psm.make_precip_spatial_map()
 
 # Copy images from job directory to main image directory
 job_output_image_dir = os.path.join(job_output_dir, 'images')

@@ -99,8 +99,17 @@ class PlotSpecs:
             self.fig_subplot_right = 0.95
             self.fig_subplot_left = 0.1
             self.fig_title_size = 18
+        elif self.plot_type == 'precip_spatial_map':
+            self.fig_size = (16., 8.)
+            #self.fig_subplot_top = 0.87
+            #self.fig_subplot_bottom = 0.1
+            #self.fig_subplot_right = 0.925
+            #self.fig_subplot_left = 0.085
+            #self.axis_label_size = 15
+            #self.xtick_label_size = 15
+            #self.ytick_label_size = 15
         else:
-            self.logger.warning(f"{self.plot_type} NOT RECOGNIZED")
+            self.logger.error(f"{self.plot_type} NOT RECOGNIZED")
             sys.exit(1)
 
     def set_up_plot(self):
