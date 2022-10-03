@@ -5,7 +5,7 @@
 # PURPOSE: Define working/ output directories and create them if they don't
 #          exist.
 # DEPENDENCIES: os.path.join([
-#                   EVS_SCRIPTS_DIR,COMPONENT,STEP,
+#                   SCRIPTSevs,COMPONENT,STEP,
 #                   "_".join(["exevs",MODELNAME,VERIF_CASE,STEP+".sh"]
 #               )]
 #

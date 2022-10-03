@@ -6,7 +6,7 @@
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Set up configurations to run EVS Hires Window ARW Member 2 
 #          Precipitation - Statistics
-# DEPENDENCIES: $EVS_HOME_DIR/ecf/cam/stats/jevs_hireswarwmem2_precip_stats.ecf
+# DEPENDENCIES: $HOMEevs/ecf/cam/stats/jevs_hireswarwmem2_precip_stats.ecf
 # 
 # =============================================================================
 
@@ -99,7 +99,7 @@ if [ "$BOOL_NBRHD" = True ]; then
         export MASK_POLY_LIST="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS_East.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS_West.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS_Central.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS_South.nc"
     elif [ "$NEST" = "ak" ]; then
         export VERIF_TYPE="mrms"
-        export MET_GRIB_TABLES=$EVS_PARM_DIR/metplus_config/cam/precip/stats/grib2_mrms.txt
+        export MET_GRIB_TABLES=$PARMevs/metplus_config/cam/precip/stats/grib2_mrms.txt
         export COMINobs=${COMINmrms}
         export OBSNAME="mrms"
         export MIN_IHOUR="06"
@@ -124,7 +124,7 @@ else
         export MASK_POLY_LIST="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G212_CONUS.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G212_CONUS_East.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G212_CONUS_West.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G212_CONUS_Central.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G212_CONUS_South.nc"
     elif [ "$NEST" = "ak" ]; then
         export VERIF_TYPE="mrms"
-        export MET_GRIB_TABLES=$EVS_PARM_DIR/metplus_config/cam/precip/stats/grib2_mrms.txt
+        export MET_GRIB_TABLES=$PARMevs/metplus_config/cam/precip/stats/grib2_mrms.txt
         export COMINobs=${COMINmrms}
         export OBSNAME="mrms"
         export MIN_IHOUR="06"

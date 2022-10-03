@@ -4,7 +4,7 @@
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Check User's Settings
 # DEPENDENCIES: os.path.join([
-#                   EVS_SCRIPTS_DIR,COMPONENT,STEP,
+#                   SCRIPTSevs,COMPONENT,STEP,
 #                   "_".join(["exevs",MODELNAME,VERIF_CASE,STEP+".sh"]
 #               )]
 #
@@ -37,18 +37,18 @@ if evs_run_mode == 'production':
     evs_cam_settings_dict['evs'] = [
         'model', 'machine', 'envir', 'SENDCOM', 'KEEPDATA', 'job', 'jobid', 'USE_CFP', 'nproc', 'NET', 
         'STEP', 'COMPONENT', 'RUN', 'VERIF_CASE', 'VERIF_TYPE',
-        'EVS_HOME_DIR', 'config', 'evs_ver', 'ccpa_ver', 'pid', 'DATA', 
-        'VDATE', 'COMIN', 'COMOUT', 'EVS_PARM_DIR', 'EVS_USH_DIR', 'EVS_EXEC_DIR', 
-        'EVS_FIX_DIR', 'EVS_SCRIPTS_DIR', 'evs_run_mode'
+        'HOMEevs', 'config', 'evs_ver', 'ccpa_ver', 'pid', 'DATA', 
+        'VDATE', 'COMIN', 'COMOUT', 'PARMevs', 'USHevs', 'EXECevs', 
+        'FIXevs', 'SCRIPTSevs', 'evs_run_mode'
     ]
 else:
     evs_cam_settings_dict['evs'] = [
         'model', 'machine', 'envir', 'SENDCOM', 'KEEPDATA', 'job', 'jobid', 'USE_CFP', 'ACCOUNT', 'QUEUE', 
         'QUEUESHARED', 'QUEUESERV', 'PARTITION_BATCH', 'nproc', 'NET', 'STEP', 
-        'COMPONENT', 'RUN', 'VERIF_CASE', 'VERIF_TYPE', 'EVS_HOME_DIR', 
+        'COMPONENT', 'RUN', 'VERIF_CASE', 'VERIF_TYPE', 'HOMEevs', 
         'config', 'evs_ver', 'ccpa_ver', 'pid', 'DATA', 'VDATE', 'COMIN', 'COMOUT', 
-        'EVS_PARM_DIR', 'EVS_USH_DIR', 'EVS_EXEC_DIR', 'EVS_FIX_DIR', 
-        'EVS_SCRIPTS_DIR', 'evs_run_mode'
+        'PARMevs', 'USHevs', 'EXECevs', 'FIXevs', 
+        'SCRIPTSevs', 'evs_run_mode'
     ]
 '''
 if STEP.upper() == 'STATS':

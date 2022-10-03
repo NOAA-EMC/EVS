@@ -4,7 +4,7 @@
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: 
 # DEPENDENCIES: os.path.join([
-#                   EVS_SCRIPTS_DIR,COMPONENT,STEP,
+#                   SCRIPTSevs,COMPONENT,STEP,
 #                   "_".join(["exevs",MODELNAME,VERIF_CASE,STEP+".sh"]
 #               )]
 #
