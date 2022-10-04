@@ -12,6 +12,8 @@ export regrid='NONE'
 
 export vday=$VDATE
 
+$USHevs/check_files_existing.sh
+
 echo COMOUTsmall=$COMOUTsmall
 
 >run_all_narre_poe.sh
