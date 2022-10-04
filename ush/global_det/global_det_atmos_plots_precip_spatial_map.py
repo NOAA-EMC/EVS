@@ -139,7 +139,11 @@ class PrecipSpatialMap:
                 var_name = precip_data.variables['APCP_A24'].getncattr('name')
                 var_level = precip_data.variables['APCP_A24'].getncattr('level')
                 var_units = precip_data.variables['APCP_A24'].getncattr('units')
-                x, y = np.meshgrid(precip_lon, precip_lat)
+                if model_num == 'obs':
+                    x = precip_lon
+                    y = precip_lat
+                else:
+                    x, y = np.meshgrid(precip_lon, precip_lat)
                 file_init_time = (precip_data.variables['APCP_A24']\
                                   .getncattr('init_time'))
                 file_valid_time = (precip_data.variables['APCP_A24']\
