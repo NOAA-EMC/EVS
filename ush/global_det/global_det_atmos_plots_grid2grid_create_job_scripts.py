@@ -370,6 +370,27 @@ plot_jobs_dict = {
                           'grid': 'G240',
                           'obs_name': '24hrCCPA',
                           'plots_list': 'time_series, lead_average'},
+        '24hrCCPAPerfDia': {'line_type_stat_list': ['CTC/PERF_DIA'],
+                            'vx_mask_list': ['CONUS', 'CONUS_East',
+                                             'CONUS_West', 'CONUS_Central',
+                                             'CONUS_South'],
+                            'fcst_var_dict': {'name': 'APCP_A24',
+                                              'levels': 'A24',
+                                              'threshs': ('ge0.1, ge0.5, '
+                                                          +'ge1, ge5, '
+                                                          +'ge10, ge25, '
+                                                          +'ge50, ge75')},
+                            'obs_var_dict': {'name': 'APCP_A24',
+                                             'levels': 'A24',
+                                             'threshs': ('ge0.1, ge0.5, '
+                                                         +'ge1, ge5, '
+                                                         +'ge10, ge25, '
+                                                         +'ge50, ge75')},
+                            'interp_dict': {'method': 'NEAREST',
+                                            'points': '1'},
+                            'grid': 'G211',
+                            'obs_name': '24hrCCPA',
+                            'plots_list': 'performance_diagram'},
         '24hrAccumMaps': {'line_type_stat_list': ['SL1L2/FBAR'],
                           'vx_mask_list': ['CONUS'],
                           'fcst_var_dict': {'name': 'APCP_A24',

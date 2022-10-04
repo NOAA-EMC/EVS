@@ -101,13 +101,17 @@ class PlotSpecs:
             self.fig_title_size = 18
         elif self.plot_type == 'precip_spatial_map':
             self.fig_size = (16., 8.)
-            #self.fig_subplot_top = 0.87
-            #self.fig_subplot_bottom = 0.1
-            #self.fig_subplot_right = 0.925
-            #self.fig_subplot_left = 0.085
-            #self.axis_label_size = 15
-            #self.xtick_label_size = 15
-            #self.ytick_label_size = 15
+        elif self.plot_type == 'performance_diagram':
+            self.fig_size = (16., 16.)
+            self.fig_subplot_top = 0.9
+            self.fig_subplot_bottom = 0.175
+            self.fig_subplot_right = 0.85
+            self.fig_subplot_left = 0.075
+            self.legend_frame_on = True
+            self.legend_loc = 'upper center'
+            self.legend_ncol = 5
+            self.legend_font_size = 16
+            self.fig_title_size = 18
         else:
             self.logger.error(f"{self.plot_type} NOT RECOGNIZED")
             sys.exit(1)
@@ -170,6 +174,7 @@ class PlotSpecs:
             'GSS': 'Gilbert Skill Score',
             'HSS': 'Heidke Skill Score',
             'POD': 'Probability of Detection',
+            'PERF_DIA': 'Performance Diagram',
             'RMSE': 'Root Mean Square Error',
             'S1': 'S1',
             'SRATIO': 'Success Ratio (1-FAR)'
@@ -514,7 +519,8 @@ class PlotSpecs:
                                 +int(date_info_dict['valid_hr_inc']),
                                 int(date_info_dict['valid_hr_inc']))
             ]
-        if self.plot_type in ['time_series', 'stat_by_level']:
+        if self.plot_type in ['time_series', 'stat_by_level',
+                              'performance_diagram']:
             fhr_for_title = date_info_dict['forecast_hour']
         elif self.plot_type in ['lead_average', 'lead_by_date',
                                 'lead_by_level']:
@@ -569,7 +575,8 @@ class PlotSpecs:
                                     +plot_info_dict['interp_method'])
         else:
             var_name_for_savefig = plot_info_dict['fcst_var_name']
-        if self.plot_type in ['time_series', 'stat_by_level']:
+        if self.plot_type in ['time_series', 'stat_by_level',
+                              'performance_diagram']:
             fhr_for_savefig = 'fhr'+date_info_dict['forecast_hour'].zfill(3)
         elif self.plot_type in ['lead_average', 'lead_by_level']:
             fhr_for_savefig = 'fhrmean'
@@ -826,6 +833,33 @@ class PlotSpecs:
                               +f"using all levels")
             vert_profile_levels = vert_profile_levels_dict['all']
         return vert_profile_levels
+
+    def get_marker_plot_settings(self):
+        """! Get dictionary plot settings for models
+
+             Args:
+
+             Returns: 
+                 marker_plot_settings_dict - dictionary of
+                                             marker plotting specifications
+                                             (strings)
+        """
+        marker_plot_settings_dict = {
+            'marker1': {'marker': 'o', 'markersize': 12},
+            'marker2': {'marker': 'P', 'markersize': 14},
+            'marker3': {'marker': '^', 'markersize': 14},
+            'marker4': {'marker': 'X', 'markersize': 14},
+            'marker5': {'marker': 's', 'markersize': 12},
+            'marker6': {'marker': 'D', 'markersize': 12},
+            'marker7': {'marker': 'v', 'markersize': 14},
+            'marker8': {'marker': 'p', 'markersize': 14},
+            'marker9': {'marker': '<', 'markersize': 14},
+            'marker10': {'marker': 'd', 'markersize': 14},
+            'marker11': {'marker': r'$\spadesuit$', 'markersize': 14},
+            'marker12': {'marker': '>', 'markersize': 14},
+            'marker13': {'marker': r'$\clubsuit$', 'markersize': 14},
+        }
+        return marker_plot_settings_dict
 
     def get_model_plot_settings(self):
         """! Get dictionary plot settings for models
