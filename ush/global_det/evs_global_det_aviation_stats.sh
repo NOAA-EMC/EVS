@@ -1,6 +1,6 @@
 #!/bin/sh
 ##############################################################################
-# Script Name: evs_global_det_aviation.sh
+# Script Name: evs_global_det_aviation_stats.sh
 # Purpose:  This script prepares unified templates for UK, GFS and blended forecasts
 # History:  Yali Mao Aug 2022
 ###############################################################################

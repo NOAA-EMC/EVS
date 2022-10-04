@@ -26,7 +26,7 @@ for RESOLUTION in $resolutions ; do
     for CENTER in $CENTERS ; do
 	export CENTER
 	# Prepare data
-	sh $USHevs/evs_global_det_aviation.sh
+	sh $USHevs/evs_global_det_aviation_stats.sh
 
 	${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/$STEP/GridStat_fcstWAFS_obs${OBSERVATION}.conf
     done
