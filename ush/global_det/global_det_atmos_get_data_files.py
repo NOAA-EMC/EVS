@@ -426,7 +426,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 )
                 if not os.path.exists(VERIF_CASE_STEP_osi_saf_dir):
                     os.makedirs(VERIF_CASE_STEP_osi_saf_dir)
-                for time_length in ['daily', 'weekly']:
+                #for time_length in ['daily', 'weekly']:
+                for time_length in ['daily']:
                     if time_length == 'daily':
                         valid_shift_hrs = '-24'
                     elif time_length == 'weekly':
