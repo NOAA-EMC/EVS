@@ -1030,15 +1030,22 @@ def get_truth_file(valid_time_dt, source_file_format, dest_file_format):
         else:
             print("WARNING: "+source_file+" DOES NOT EXIST")
 
-def check_truth_files(verif_case_dir, job_function, verif_type,
-                      verif_type_job, valid_date_dt):
+def check_truth_files(job_dict):
     """!
          Args:
 
          Returns:
     """
-    if job_function == 'reformat':
-        if verif_type == 'precip' and verif_type_job == '24hrCCPA':
+    valid_date_dt = datetime.datetime.strptime(
+        job_dict['DATE']+job_dict['valid_hr_start'],
+        '%Y%m%d%H'
+    )
+    verif_case_dir = os.path.join(
+        job_dict['DATE'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
+    )
+    if job_dict['JOB_GROUP'] == 'reformat':
+        if job_dict['VERIF_TYPE'] == 'precip' \
+                and job_dict['job_name'] == '24hrCCPA':
             ccpa_dir = os.path.join(verif_case_dir, 'data', 'ccpa')
             nccpa_files = 4
             n = 1
@@ -1053,8 +1060,10 @@ def check_truth_files(verif_case_dir, job_function, verif_type,
                     all_truth_file_exist = False
                     break
                 n+=1
-        if verif_type in ['pres_levs', 'sfc'] and 'Prepbufr' in verif_type_job:
-            prepbufr_name = verif_type_job.replace('Prepbufr', '').lower()
+        elif job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc'] \
+                and 'Prepbufr' in job_dict['job_name']:
+            prepbufr_name = (job_dict['VERIF_TYPE'].replace('Prepbufr', '')\
+                             .lower())
             prepbufr_file = os.path.join(verif_case_dir, 'data', 'prepbufr',
                                          prepbufr_name, 'prepbufr.'
                                          +prepbufr_name+'.'

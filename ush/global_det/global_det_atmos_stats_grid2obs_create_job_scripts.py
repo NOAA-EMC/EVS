@@ -127,26 +127,15 @@ for verif_type in VERIF_CASE_STEP_type_list:
             [verif_type_job]['commands']
         )
         # Loop through and write job script for dates
-        if verif_type_job in ['PrepbufrGDAS', 'PrepbufrNAM', 'PrepbufrRAP']:
-            verif_type_valid_hr_list = os.environ[
-                VERIF_CASE_STEP_abbrev_type+'_valid_hr_list'
-            ].split(' ')
-            verif_type_job_valid_hr_start = verif_type_valid_hr_list[0]
-            verif_type_job_valid_hr_end = verif_type_valid_hr_list[-1]
-            if len(verif_type_valid_hr_list) > 1:
-                verif_type_job_valid_hr_inc = int(np.min(
-                    np.diff(np.array(verif_type_valid_hr_list, dtype=int))
-                ))
-            else:
-                verif_type_job_valid_hr_inc = 24
         valid_start_date_dt = datetime.datetime.strptime(
-            start_date+str(verif_type_job_valid_hr_start),
+            start_date+job_env_dict['valid_hr_start'],
             '%Y%m%d%H'
         )
         valid_end_date_dt = datetime.datetime.strptime(
-            end_date+str(verif_type_job_valid_hr_end),
+            end_date+job_env_dict['valid_hr_end'],
             '%Y%m%d%H'
         )
+        valid_date_inc = int(job_env_dict['valid_hr_inc'])
         date_dt = valid_start_date_dt
         while date_dt <= valid_end_date_dt:
             job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
@@ -166,18 +155,12 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job.write('export '+name+'='+value+'\n')
             job.write('\n')
             # Write job commands
-            all_truth_file_exist = gda_util.check_truth_files(
-                os.path.join(DATA, VERIF_CASE_STEP),
-                'reformat', verif_type, verif_type_job,
-                date_dt
-            )
+            all_truth_file_exist = gda_util.check_truth_files(job_env_dict)
             if all_truth_file_exist:
                 for cmd in verif_type_job_commands_list:
                     job.write(cmd+'\n')
             job.close()
-            date_dt = (
-                date_dt + datetime.timedelta(hours=verif_type_job_valid_hr_inc)
-            )
+            date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
     # Reformat model jobs
     for verif_type_job in list(verif_type_reformat_model_jobs_dict.keys()):
         # Initialize job environment dictionary
