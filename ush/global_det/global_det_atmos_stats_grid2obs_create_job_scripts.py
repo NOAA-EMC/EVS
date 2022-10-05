@@ -176,14 +176,28 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 verif_type_reformat_model_jobs_dict\
                 [verif_type_job]['env'][verif_type_job_env_var]
             )
+        fhr_start = job_env_dict['fhr_start']
+        fhr_end = job_env_dict['fhr_end']
+        fhr_inc = job_env_dict['fhr_inc']
         verif_type_job_commands_list = (
             verif_type_reformat_model_jobs_dict\
             [verif_type_job]['commands']
         )
         # Loop through and write job script for dates and models
-        date_dt = start_date_dt
-        while date_dt <= end_date_dt:
+        valid_start_date_dt = datetime.datetime.strptime(
+            start_date+job_env_dict['valid_hr_start'],
+            '%Y%m%d%H'
+        )
+        valid_end_date_dt = datetime.datetime.strptime(
+            end_date+job_env_dict['valid_hr_end'],
+            '%Y%m%d%H'
+        )
+        valid_date_inc = int(job_env_dict['valid_hr_inc'])
+        date_dt = valid_start_date_dt
+        while date_dt <= valid_end_date_dt:
             job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
+            job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
+            job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
             for model_idx in range(len(model_list)):
                 job_env_dict['MODEL'] = model_list[model_idx]
                 njobs+=1
@@ -196,13 +210,27 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job.write('\n')
                 # Set any environment variables for special cases
                 # Write environment variables
+                model_files_exist, valid_date_fhr_list = (
+                    gda_util.check_model_files(job_env_dict)
+                )
+                job_env_dict['fhr_list'] = (
+                    '"'+','.join(valid_date_fhr_list)+'"'
+                )
+                job_env_dict.pop('fhr_start')
+                job_env_dict.pop('fhr_end')
+                job_env_dict.pop('fhr_inc')
                 for name, value in job_env_dict.items():
                     job.write('export '+name+'='+value+'\n')
                 job.write('\n')
                 # Write job commands
-                for cmd in verif_type_job_commands_list:
-                    job.write(cmd+'\n')
+                if model_files_exist:
+                    for cmd in verif_type_job_commands_list:
+                        job.write(cmd+'\n')
                 job.close()
+                job_env_dict.pop('fhr_list')
+                job_env_dict['fhr_start'] = fhr_start
+                job_env_dict['fhr_end'] = fhr_end
+                job_env_dict['fhr_inc'] = fhr_inc
             date_dt = date_dt + datetime.timedelta(days=1)
 
 ################################################

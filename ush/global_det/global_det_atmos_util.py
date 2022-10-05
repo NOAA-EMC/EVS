@@ -1030,6 +1030,131 @@ def get_truth_file(valid_time_dt, source_file_format, dest_file_format):
         else:
             print("WARNING: "+source_file+" DOES NOT EXIST")
 
+def check_model_files(job_dict):
+    """!
+         Args:
+
+         Returns:
+    """
+    valid_date_dt = datetime.datetime.strptime(
+        job_dict['DATE']+job_dict['valid_hr_start'],
+        '%Y%m%d%H'
+    )
+    verif_case_dir = os.path.join(
+        job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
+    )
+    model = job_dict['MODEL']
+    fhr_min = int(job_dict['fhr_start'])
+    fhr_max = int(job_dict['fhr_end'])
+    fhr_inc = int(job_dict['fhr_inc'])
+    fhr = fhr_min
+    fhr_list = []
+    fhr_check_dict = {}
+    while fhr <= fhr_max:
+        fhr_check_dict[str(fhr)] = {}
+        init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
+        if job_dict['JOB_GROUP'] == 'reformat':
+            if job_dict['VERIF_TYPE'] == 'precip' \
+                    and job_dict['job_name'] == '24hrAccum':
+               model_file_format = os.path.join(verif_case_dir, 'data', model,
+                                                model+'.precip.{init?fmt=%Y%m%d%H}.'
+                                                +'f{lead?fmt=%3H}')
+            else:
+               model_file_format = os.path.join(verif_case_dir, 'data', model,
+                                                 model+'.{init?fmt=%Y%m%d%H}.'
+                                                 +'f{lead?fmt=%3H}')
+            if job_dict['VERIF_TYPE'] == 'precip' \
+                    and job_dict['job_name'] == '24hrAccum':
+               fhr_in_accum_list = [str(fhr)]
+               if job_dict['MODEL_accum'][0] == '{': #continuous
+                    if fhr-24 > 0:
+                        fhr_in_accum_list.append(str(fhr-24))
+               elif int(job_dict['MODEL_accum']) < 24:
+                    nfiles_in_accum = int(24/int(job_dict['MODEL_accum']))
+                    nf = 1
+                    while nf <= nfiles_in_accum:
+                        fhr_nf = fhr - ((nf-1)*int(job_dict['MODEL_accum']))
+                        if fhr_nf > 0:
+                            fhr_in_accum_list.append(str(fhr_nf))
+               for fhr_in_accum in fhr_in_accum_list:
+                    file_num = fhr_in_accum_list.index(fhr_in_accum)+1
+                    fhr_check_dict[str(fhr)]['file'+str(file_num)] = {
+                        'valid_date': valid_date_dt,
+                        'init_date': init_date_dt,
+                        'forecast_hour': str(fhr_in_accum)
+                    }
+            elif job_dict['VERIF_TYPE'] == 'pres_levs' \
+                    and job_dict['job_name'] == 'DailyAvg_GeoHeightAnom':
+                if init_date_dt.strftime('%H') in ['00', '12'] \
+                        and fhr % 24 == 0:
+                    fhr_check_dict[str(fhr)]['file1'] = {
+                        'valid_date': valid_date_dt,
+                        'init_date': init_date_dt,
+                        'forecast_hour': str(fhr)
+                    }
+                    fhr_check_dict[str(fhr)]['file2'] = {
+                        'valid_date': valid_date_dt,
+                        'init_date': init_date_dt,
+                        'forecast_hour': str(fhr-12)
+                    }
+            elif job_dict['VERIF_TYPE'] == 'sea_ice':
+                nf = 0
+                while nf <= 4:
+                    fhr_check_dict[str(fhr)]['file'+str(nf+1)] = {
+                        'valid_date': valid_date_dt,
+                        'init_date': init_date_dt,
+                        'forecast_hour': str(fhr-(6*nf))
+                    }
+                    nf+=1
+            elif job_dict['VERIF_TYPE'] == 'snow':
+                fhr_check_dict[str(fhr)]['file1'] = {
+                    'valid_date': valid_date_dt,
+                    'init_date': init_date_dt,
+                    'forecast_hour': str(fhr)
+                }
+                fhr_check_dict[str(fhr)]['file2'] = {
+                    'valid_date': valid_date_dt,
+                    'init_date': init_date_dt,
+                    'forecast_hour': str(fhr-24)
+                }
+            elif job_dict['VERIF_TYPE'] == 'sst':
+                nf = 0
+                while nf <= 2:
+                    fhr_check_dict[str(fhr)]['file'+str(nf+1)] = {
+                        'valid_date': valid_date_dt,
+                        'init_date': init_date_dt,
+                        'forecast_hour': str(fhr-(12*nf))
+                    }
+                    nf+=1
+            else:
+                fhr_check_dict[str(fhr)]['file1'] = {
+                    'valid_date': valid_date_dt,
+                    'init_date': init_date_dt,
+                    'forecast_hour': str(fhr)
+                }
+        fhr+=fhr_inc
+    for fhr_key in list(fhr_check_dict.keys()):
+        fhr_key_files_exist_list = []
+        for fhr_fileN_key in list(fhr_check_dict[fhr_key].keys()):
+            fhr_fileN = format_filler(
+                model_file_format,
+                fhr_check_dict[fhr_key][fhr_fileN_key]['valid_date'],
+                fhr_check_dict[fhr_key][fhr_fileN_key]['init_date'],
+                fhr_check_dict[fhr_key][fhr_fileN_key]['forecast_hour'],
+                {}
+            )
+            if os.path.exists(fhr_fileN):
+                fhr_key_files_exist_list.append(True)
+            else:
+                fhr_key_files_exist_list.append(False)
+        if all(x == True for x in fhr_key_files_exist_list):
+            fhr_list.append(fhr_key)
+    if len(fhr_list) != 0:
+        model_files_exist = True
+    else:
+        model_files_exist = False
+    return model_files_exist, fhr_list
+
 def check_truth_files(job_dict):
     """!
          Args:
