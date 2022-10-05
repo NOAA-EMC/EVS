@@ -1030,6 +1030,41 @@ def get_truth_file(valid_time_dt, source_file_format, dest_file_format):
         else:
             print("WARNING: "+source_file+" DOES NOT EXIST")
 
+def check_truth_files(verif_case_dir, job_function, verif_type,
+                      verif_type_job, valid_date_dt):
+    """!
+         Args:
+
+         Returns:
+    """
+    if job_function == 'reformat':
+        if verif_type == 'precip' and verif_type_job == '24hrCCPA':
+            ccpa_dir = os.path.join(verif_case_dir, 'data', 'ccpa')
+            nccpa_files = 4
+            n = 1
+            all_truth_file_exist = True
+            while n <= 4:
+                nccpa_file = os.path.join(
+                    ccpa_dir, 'ccpa.6H.'
+                    +(valid_date_dt-datetime.timedelta(hours=(n-1)*6))\
+                    .strftime('%Y%m%d%H')
+                )
+                if not os.path.exists(nccpa_file):
+                    all_truth_file_exist = False
+                    break
+                n+=1
+        if verif_type in ['pres_levs', 'sfc'] and 'Prepbufr' in verif_type_job:
+            prepbufr_name = verif_type_job.replace('Prepbufr', '').lower()
+            prepbufr_file = os.path.join(verif_case_dir, 'data', 'prepbufr',
+                                         prepbufr_name, 'prepbufr.'
+                                         +prepbufr_name+'.'
+                                         +valid_date_dt.strftime('%Y%m%d%H'))
+            if os.path.exists(prepbufr_file):    
+                all_truth_file_exist = True
+            else:
+                all_truth_file_exist = False
+    return all_truth_file_exist
+
 def get_obs_valid_hrs(obs):
     """! This returns the valid hour start, end, and increment
          information for a given observation
