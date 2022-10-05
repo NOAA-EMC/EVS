@@ -84,6 +84,7 @@ export COMOUT=/lfs/h2/emc/ptmp/$USER/evs/com
 ############################################################
 # CALL executable job script here
 ############################################################
+export KEEPDATA=YES
 
 $HOMEevs/jobs/global_det/stats/JEVS_GLOBAL_DET_AVIATION_STATS
 
