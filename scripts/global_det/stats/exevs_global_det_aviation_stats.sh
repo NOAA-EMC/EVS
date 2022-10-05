@@ -21,7 +21,7 @@ export OBSERVATION=GCIP
 resolutions="0P25"
 for RESOLUTION in $resolutions ; do
     export RESOLUTION
-    source $HOMEevs/parm/evs_config/global_det/config.evs.global_det_${RUN}.standalone
+    source $HOMEevs/parm/evs_config/global_det/config.evs.stats.global_det.${RUN}.standalone
     
     for CENTER in $CENTERS ; do
 	export CENTER
@@ -46,7 +46,7 @@ done
 # Part 2: U/V/T Verification
 ################################################
 export OBSERVATION=GFS
-source $HOMEevs/parm/evs_config/global_det/config.evs.global_det_${RUN}.standalone
+source $HOMEevs/parm/evs_config/global_det/config.evs.stats.global_det.${RUN}.standalone
 
 #####################################################################
 # GOOD RUN
