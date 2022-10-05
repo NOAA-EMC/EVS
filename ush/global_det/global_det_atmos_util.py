@@ -1041,7 +1041,7 @@ def check_truth_files(job_dict):
         '%Y%m%d%H'
     )
     verif_case_dir = os.path.join(
-        job_dict['DATE'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
+        job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
     )
     if job_dict['JOB_GROUP'] == 'reformat':
         if job_dict['VERIF_TYPE'] == 'precip' \
