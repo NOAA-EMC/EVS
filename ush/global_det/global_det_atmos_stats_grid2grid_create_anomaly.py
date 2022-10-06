@@ -29,9 +29,10 @@ DATE = os.environ['DATE']
 valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
 valid_hr_inc = os.environ['valid_hr_inc']
-fhr_start = os.environ['fhr_start']
-fhr_end = os.environ['fhr_end']
-fhr_inc = os.environ['fhr_inc']
+fhr_list = os.environ['fhr_list'].split(',')
+#fhr_start = os.environ['fhr_start']
+#fhr_end = os.environ['fhr_end']
+#fhr_inc = os.environ['fhr_inc']
 
 # Process run time agruments
 if len(sys.argv) != 3:
@@ -60,8 +61,8 @@ ENDDATE_dt = datetime.datetime.strptime(
 )
 valid_date_dt = STARTDATE_dt
 while valid_date_dt <= ENDDATE_dt:
-    fhr = int(fhr_start)
-    while fhr <= int(fhr_end):
+    for fhr_str in fhr_list:
+        fhr = int(fhr_str)
         init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
         input_file = gda_util.format_filler(
             file_format, valid_date_dt, init_date_dt, str(fhr), {}
@@ -147,7 +148,6 @@ while valid_date_dt <= ENDDATE_dt:
                 input_file_data.close()
         else:
            print("\nWARNING: "+input_file+" does not exist")
-        fhr+=int(fhr_inc)
     valid_date_dt = valid_date_dt + datetime.timedelta(hours=int(valid_hr_inc))
     
 print("END: "+os.path.basename(__file__))

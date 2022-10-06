@@ -381,13 +381,6 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         job_env_dict['MODEL_levels'] = (
                             'A'+job_env_dict['MODEL_accum']
                         )
-                if 'Avg_' in verif_type_job:
-                    if int(job_env_dict['fhr_start']) - 24 <= 0:
-                        job_env_dict['netCDF_fhr_start'] = '0'
-                    else:
-                        job_env_dict['netCDF_fhr_start'] = str(
-                           int(job_env_dict['fhr_start']) - 24
-                        )
                 model_files_exist, valid_date_fhr_list = (
                     gda_util.check_model_files(job_env_dict)
                 )
@@ -402,9 +395,19 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     job.write('export '+name+'='+value+'\n')
                 job.write('\n')
                 # Write job commands
-                if model_files_exist:
-                    for cmd in verif_type_job_commands_list:
-                        job.write(cmd+'\n')
+                if verif_type == 'pres_levs' \
+                        and verif_type_job in ['DailyAvg_GeoHeightAnom',
+                                               'WindShear']:
+                    all_truth_file_exist = gda_util.check_truth_files(
+                        job_env_dict
+                    )
+                    if model_files_exist and all_truth_file_exist:
+                        for cmd in verif_type_job_commands_list:
+                            job.write(cmd+'\n')
+                else:
+                    if model_files_exist:
+                        for cmd in verif_type_job_commands_list:
+                            job.write(cmd+'\n')
                 job.close()
                 job_env_dict.pop('fhr_list')
                 job_env_dict['fhr_start'] = fhr_start

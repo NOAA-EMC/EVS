@@ -29,8 +29,10 @@ DATE = os.environ['DATE']
 valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end'] 
 valid_hr_inc = os.environ['valid_hr_inc']
-fhr_end = os.environ['fhr_end']
-fhr_inc = os.environ['fhr_inc']
+fhr_list = os.environ['fhr_list'].split(',')
+fhr_inc = '12'
+#fhr_end = os.environ['fhr_end']
+#fhr_inc = os.environ['fhr_inc']
 
 # Process run time agruments
 if len(sys.argv) != 4:
@@ -70,7 +72,7 @@ while valid_hr <= int(valid_hr_end):
     else:
         daily_avg_valid_start = (daily_avg_valid_end
                                  - datetime.timedelta(hours=24))
-    daily_avg_day_end = int(fhr_end)/24
+    daily_avg_day_end = int(fhr_list[-1])/24
     daily_avg_day_start = 1
     daily_avg_day = daily_avg_day_start
     while daily_avg_day <= daily_avg_day_end:
