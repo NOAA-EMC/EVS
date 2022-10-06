@@ -1076,6 +1076,7 @@ def check_model_files(job_dict):
                         fhr_nf = fhr - ((nf-1)*int(job_dict['MODEL_accum']))
                         if fhr_nf > 0:
                             fhr_in_accum_list.append(str(fhr_nf))
+                        nf+=1
                for fhr_in_accum in fhr_in_accum_list:
                     file_num = fhr_in_accum_list.index(fhr_in_accum)+1
                     fhr_check_dict[str(fhr)]['file'+str(file_num)] = {
