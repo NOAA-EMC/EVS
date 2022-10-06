@@ -44,14 +44,14 @@ status=$?
 [[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_get_data_files.py"
 echo
 
-# Create job scripts data
-python $USHevs/global_det/global_det_atmos_stats_grid2obs_create_job_scripts.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_stats_grid2obs_create_job_scripts.py"
-
-# Run job scripts for reformat, generate, and gather
-for group in reformat generate gather; do
+# Create and run job scripts for reformat, generate, and gather
+for group in reformat; do
+    export JOB_GROUP=$group
+    echo "Creating and running jobs for grid-to-obs stats: ${JOB_GROUP}"
+    python $USHevs/global_det/global_det_atmos_stats_grid2obs_create_job_scripts.py
+    status=$?
+    [[ $status -ne 0 ]] && exit $status
+    [[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_stats_grid2obs_create_job_scripts.py"
     chmod u+x ${VERIF_CASE}_${STEP}/METplus_job_scripts/$group/*
     group_ncount_job=$(ls -l  ${VERIF_CASE}_${STEP}/METplus_job_scripts/$group/job* |wc -l)
     nc=1

@@ -23,6 +23,7 @@ RUN = os.environ['RUN']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 COMPONENT = os.environ['COMPONENT']
+JOB_GROUP = os.environ['JOB_GROUP']
 machine = os.environ['machine']
 USE_CFP = os.environ['USE_CFP']
 nproc = os.environ['nproc']
@@ -40,6 +41,14 @@ model_list = os.environ['model_list'].split(' ')
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
 start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
 end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
+
+# Set up job directory
+njobs = 0
+JOB_GROUP_jobs_dir = os.path.join(DATA, VERIF_CASE_STEP,
+                                  'METplus_job_scripts', JOB_GROUP)
+if not os.path.exists(JOB_GROUP_jobs_dir):
+    os.makedirs(JOB_GROUP_jobs_dir)
+
 ################################################
 #### Reformat jobs
 ################################################
@@ -90,153 +99,10 @@ reformat_model_jobs_dict = {
     'sfc': {},
     'sea_ice': {}
 }
-# Create reformat jobs directory
-njobs = 0
-reformat_jobs_dir = os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
-                                 'reformat')
-if not os.path.exists(reformat_jobs_dir):
-    os.makedirs(reformat_jobs_dir)
-for verif_type in VERIF_CASE_STEP_type_list:
-    print("----> Making job scripts for "+VERIF_CASE_STEP+" "
-          +verif_type+" for job group reformat")
-    VERIF_CASE_STEP_abbrev_type = (VERIF_CASE_STEP_abbrev+'_'
-                                   +verif_type)
-    verif_type_reformat_obs_jobs_dict = (
-        reformat_obs_jobs_dict[verif_type]
-    )
-    verif_type_reformat_model_jobs_dict = (
-        reformat_model_jobs_dict[verif_type]
-    )
-    # Reformat obs jobs
-    for verif_type_job in list(verif_type_reformat_obs_jobs_dict.keys()):
-        # Initialize job environment dictionary
-        job_env_dict = gda_util.initalize_job_env_dict(
-            verif_type, 'reformat',
-            VERIF_CASE_STEP_abbrev_type, verif_type_job
-        )
-        # Add job specific environment variables
-        for verif_type_job_env_var in \
-                list(verif_type_reformat_obs_jobs_dict\
-                     [verif_type_job]['env'].keys()):
-            job_env_dict[verif_type_job_env_var] = (
-                verif_type_reformat_obs_jobs_dict\
-                [verif_type_job]['env'][verif_type_job_env_var]
-            )
-        verif_type_job_commands_list = (
-            verif_type_reformat_obs_jobs_dict\
-            [verif_type_job]['commands']
-        )
-        # Loop through and write job script for dates
-        valid_start_date_dt = datetime.datetime.strptime(
-            start_date+job_env_dict['valid_hr_start'],
-            '%Y%m%d%H'
-        )
-        valid_end_date_dt = datetime.datetime.strptime(
-            end_date+job_env_dict['valid_hr_end'],
-            '%Y%m%d%H'
-        )
-        valid_date_inc = int(job_env_dict['valid_hr_inc'])
-        date_dt = valid_start_date_dt
-        while date_dt <= valid_end_date_dt:
-            job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
-            job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
-            job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
-            njobs+=1
-            # Create job file
-            job_file = os.path.join(reformat_jobs_dir, 'job'+str(njobs))
-            print("Creating job script: "+job_file)
-            job = open(job_file, 'w')
-            job.write('#!/bin/sh\n')
-            job.write('set -x\n')
-            job.write('\n')
-            # Set any environment variables for special cases
-            # Write environment variables
-            for name, value in job_env_dict.items():
-                job.write('export '+name+'='+value+'\n')
-            job.write('\n')
-            # Write job commands
-            all_truth_file_exist = gda_util.check_truth_files(job_env_dict)
-            if all_truth_file_exist:
-                for cmd in verif_type_job_commands_list:
-                    job.write(cmd+'\n')
-            job.close()
-            date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
-    # Reformat model jobs
-    for verif_type_job in list(verif_type_reformat_model_jobs_dict.keys()):
-        # Initialize job environment dictionary
-        job_env_dict = gda_util.initalize_job_env_dict(
-            verif_type, 'reformat',
-            VERIF_CASE_STEP_abbrev_type, verif_type_job
-        )
-        # Add job specific environment variables
-        for verif_type_job_env_var in \
-                list(verif_type_reformat_model_jobs_dict\
-                     [verif_type_job]['env'].keys()):
-            job_env_dict[verif_type_job_env_var] = (
-                verif_type_reformat_model_jobs_dict\
-                [verif_type_job]['env'][verif_type_job_env_var]
-            )
-        fhr_start = job_env_dict['fhr_start']
-        fhr_end = job_env_dict['fhr_end']
-        fhr_inc = job_env_dict['fhr_inc']
-        verif_type_job_commands_list = (
-            verif_type_reformat_model_jobs_dict\
-            [verif_type_job]['commands']
-        )
-        # Loop through and write job script for dates and models
-        valid_start_date_dt = datetime.datetime.strptime(
-            start_date+job_env_dict['valid_hr_start'],
-            '%Y%m%d%H'
-        )
-        valid_end_date_dt = datetime.datetime.strptime(
-            end_date+job_env_dict['valid_hr_end'],
-            '%Y%m%d%H'
-        )
-        valid_date_inc = int(job_env_dict['valid_hr_inc'])
-        date_dt = valid_start_date_dt
-        while date_dt <= valid_end_date_dt:
-            job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
-            job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
-            job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
-            for model_idx in range(len(model_list)):
-                job_env_dict['MODEL'] = model_list[model_idx]
-                njobs+=1
-                # Create job file
-                job_file = os.path.join(reformat_jobs_dir, 'job'+str(njobs))
-                print("Creating job script: "+job_file)
-                job = open(job_file, 'w')
-                job.write('#!/bin/sh\n')
-                job.write('set -x\n')
-                job.write('\n')
-                # Set any environment variables for special cases
-                # Write environment variables
-                model_files_exist, valid_date_fhr_list = (
-                    gda_util.check_model_files(job_env_dict)
-                )
-                job_env_dict['fhr_list'] = (
-                    '"'+','.join(valid_date_fhr_list)+'"'
-                )
-                job_env_dict.pop('fhr_start')
-                job_env_dict.pop('fhr_end')
-                job_env_dict.pop('fhr_inc')
-                for name, value in job_env_dict.items():
-                    job.write('export '+name+'='+value+'\n')
-                job.write('\n')
-                # Write job commands
-                if model_files_exist:
-                    for cmd in verif_type_job_commands_list:
-                        job.write(cmd+'\n')
-                job.close()
-                job_env_dict.pop('fhr_list')
-                job_env_dict['fhr_start'] = fhr_start
-                job_env_dict['fhr_end'] = fhr_end
-                job_env_dict['fhr_inc'] = fhr_inc
-            date_dt = date_dt + datetime.timedelta(days=1)
 
 ################################################
 #### Generate jobs
 ################################################
-# Generate jobs information dictionary
 generate_jobs_dict = {
     'pres_levs': {
         'GeoHeight': {'env': {'prepbufr': 'gdas',
@@ -725,212 +591,313 @@ generate_jobs_dict = {
     },
     'sea_ice': {}
 }
-# Create generate jobs directory
-njobs = 0
-generate_jobs_dir = os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
-                                 'generate')
-if not os.path.exists(generate_jobs_dir):
-    os.makedirs(generate_jobs_dir)
-for verif_type in VERIF_CASE_STEP_type_list:
-    print("----> Making job scripts for "+VERIF_CASE_STEP+" "
-          +verif_type+" for job group generate")
-    VERIF_CASE_STEP_abbrev_type = (VERIF_CASE_STEP_abbrev+'_'
-                                   +verif_type)
-    verif_type_generate_jobs_dict = generate_jobs_dict[verif_type]
-    # Generate model jobs
-    for verif_type_job in list(verif_type_generate_jobs_dict.keys()):
-        # Initialize job environment dictionary
-        job_env_dict = gda_util.initalize_job_env_dict(
-            verif_type, 'generate',
-            VERIF_CASE_STEP_abbrev_type, verif_type_job
-        )
-        # Add job specific environment variables
-        for verif_type_job_env_var in \
-                list(verif_type_generate_jobs_dict\
-                     [verif_type_job]['env'].keys()):
-            job_env_dict[verif_type_job_env_var] = (
-                verif_type_generate_jobs_dict\
-                [verif_type_job]['env'][verif_type_job_env_var]
-            )
-        verif_type_job_commands_list = (
-            verif_type_generate_jobs_dict\
-            [verif_type_job]['commands']
-        )
-        FIXevs = job_env_dict['FIXevs']
-        if verif_type == 'pres_levs':
-            job_env_dict['grid'] = 'G004'
-            job_env_dict['mask_list'] = (
-                "'"+FIXevs+"/masks/G004_GLOBAL.nc, "
-                +FIXevs+"/masks/G004_NHEM.nc, "
-                +FIXevs+"/masks/G004_SHEM.nc, "
-                +FIXevs+"/masks/G004_TROPICS.nc, "
-                +FIXevs+"/masks/Bukovsky_G004_CONUS.nc'"
-            )
-        elif verif_type == 'sfc':
-            job_env_dict['grid'] = 'G104'
-            job_env_dict['mask_list'] = (
-                "'"+FIXevs+"/masks/Bukovsky_G104_CONUS.nc, "
-                +FIXevs+"/masks/Bukovsky_G104_CONUS_East.nc, "
-                +FIXevs+"/masks/Bukovsky_G104_CONUS_West.nc, "
-                +FIXevs+"/masks/Bukovsky_G104_CONUS_South.nc, "
-                +FIXevs+"/masks/Bukovsky_G104_CONUS_Central.nc, "
-                +FIXevs+"/masks/Bukovsky_G104_Appalachia.nc, "
-                +FIXevs+"/masks/Bukovsky_G104_CPlains.nc, "
-                +FIXevs+"/masks/Bukovsky_G104_DeepSouth.nc, "
-                +FIXevs+"/masks/Bukovsky_G104_GreatBasin.nc, "
-                +FIXevs+"/masks/Bukovsky_G104_GreatLakes.nc, "
-                +FIXevs+"/masks/Bukovsky_G104_Mezquital.nc, "
-                +FIXevs+"/masks/Bukovsky_G104_MidAtlantic.nc, "
-                +FIXevs+"/masks/Bukovsky_G104_NorthAtlantic.nc, "
-                +FIXevs+"/masks/Bukovsky_G104_NPlains.nc, "
-                +FIXevs+"/masks/Bukovsky_G104_NRockies.nc, "
-                +FIXevs+"/masks/Bukovsky_G104_PacificNW.nc, "
-                +FIXevs+"/masks/Bukovsky_G104_PacificSW.nc, "
-                +FIXevs+"/masks/Bukovsky_G104_Prairie.nc, "
-                +FIXevs+"/masks/Bukovsky_G104_Southeast.nc, "
-                +FIXevs+"/masks/Bukovsky_G104_Southwest.nc, "
-                +FIXevs+"/masks/Bukovsky_G104_SPlains.nc, "
-                +FIXevs+"/masks/Bukovsky_G104_SRockies.nc'"
-            )
-        # Loop through and write job script for dates and models
-        date_dt = start_date_dt
-        while date_dt <= end_date_dt:
-            job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
-            for model_idx in range(len(model_list)):
-                job_env_dict['MODEL'] = model_list[model_idx]
-                njobs+=1
-                # Create job file
-                job_file = os.path.join(generate_jobs_dir, 'job'+str(njobs))
-                print("Creating job script: "+job_file)
-                job = open(job_file, 'w')
-                job.write('#!/bin/sh\n')
-                job.write('set -x\n')
-                job.write('\n')
-                # Set any environment variables for special cases
-                if 'DailyAvg' in verif_type_job:
-                    if int(job_env_dict['fhr_start']) - 24 <= 0:
-                        job_env_dict['MPR_fhr_start'] = '0'
-                    else:
-                        job_env_dict['MPR_fhr_start'] = str(
-                            int(job_env_dict['fhr_start']) - 24
-                        )
-                # Write environment variables
-                for name, value in job_env_dict.items():
-                    job.write('export '+name+'='+value+'\n')
-                job.write('\n')
-                # Write job commands
-                for cmd in verif_type_job_commands_list:
-                    job.write(cmd+'\n')
-                job.close()
-            date_dt = date_dt + datetime.timedelta(days=1)
 
 ################################################
 #### Gather jobs
 ################################################
-# Gather jobs information dictionary
 gather_jobs_dict = {'env': {},
                     'commands': [gda_util.metplus_command(
                                      'StatAnalysis_fcstGLOBAL_DET.conf'
                                  )]}
-njobs = 0
-gather_jobs_dir = os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
-                               'gather')
-if not os.path.exists(gather_jobs_dir):
-    os.makedirs(gather_jobs_dir)
-# Initialize job environment dictionary
-job_env_dict = gda_util.initalize_job_env_dict(
-    verif_type, 'gather',
-    VERIF_CASE_STEP_abbrev_type, verif_type_job
-)
-# Loop through and write job script for dates and models
-print("----> Making job scripts for "+VERIF_CASE_STEP+" "
-      +"for job group gather")
-date_dt = start_date_dt
-while date_dt <= end_date_dt:
-    job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
-    for model_idx in range(len(model_list)):
-        job_env_dict['MODEL'] = model_list[model_idx]
-        njobs+=1
-        # Create job file
-        job_file = os.path.join(gather_jobs_dir, 'job'+str(njobs))
-        print("Creating job script: "+job_file)
-        job = open(job_file, 'w')
-        job.write('#!/bin/sh\n')
-        job.write('set -x\n')
-        job.write('\n')
-        # Set any environment variables for special cases
-        # Write environment variables
-        for name, value in job_env_dict.items():
-            job.write('export '+name+'='+value+'\n')
-        job.write('\n')
-        # Write job commands
-        for cmd in gather_jobs_dict['commands']:
-            job.write(cmd+'\n')
-            job.close()
-    date_dt = date_dt + datetime.timedelta(days=1)
+
+# Create job scripts
+if JOB_GROUP in ['reformat', 'generate']:
+    if JOB_GROUP == 'reformat':
+        JOB_GROUP_jobs_dict = reformat_model_jobs_dict
+    elif JOB_GROUP == 'generate':
+        JOB_GROUP_jobs_dict = generate_jobs_dict
+    for verif_type in VERIF_CASE_STEP_type_list:
+        print("----> Making job scripts for "+VERIF_CASE_STEP+" "
+              +verif_type+" for job group "+JOB_GROUP)
+        VERIF_CASE_STEP_abbrev_type = (VERIF_CASE_STEP_abbrev+'_'
+                                       +verif_type)
+        # Read in environment variables for verif_type
+        if JOB_GROUP == 'reformat' and verif_type == 'precip':
+            precip_file_accum_list = (os.environ \
+                [VERIF_CASE_STEP_abbrev+'_precip_file_accum_list'] \
+                .split(' '))
+            precip_var_list = (os.environ \
+                [VERIF_CASE_STEP_abbrev+'_precip_var_list'] \
+                .split(' '))
+        for verif_type_job in list(JOB_GROUP_jobs_dict[verif_type].keys()):
+            # Initialize job environment dictionary
+            job_env_dict = gda_util.initalize_job_env_dict(
+                verif_type, JOB_GROUP, VERIF_CASE_STEP_abbrev_type,
+                verif_type_job
+            )
+            # Add job specific environment variables
+            for verif_type_job_env_var in \
+                    list(JOB_GROUP_jobs_dict[verif_type]\
+                         [verif_type_job]['env'].keys()):
+                job_env_dict[verif_type_job_env_var] = (
+                    JOB_GROUP_jobs_dict[verif_type]\
+                    [verif_type_job]['env'][verif_type_job_env_var]
+                )
+            fhr_start = job_env_dict['fhr_start']
+            fhr_end = job_env_dict['fhr_end']
+            fhr_inc = job_env_dict['fhr_inc']
+            verif_type_job_commands_list = (
+                JOB_GROUP_jobs_dict[verif_type]\
+                [verif_type_job]['commands']
+            ) 
+            # Loop through and write job script for dates and models
+            valid_start_date_dt = datetime.datetime.strptime(
+                start_date+job_env_dict['valid_hr_start'],
+                '%Y%m%d%H'
+            )
+            valid_end_date_dt = datetime.datetime.strptime(
+                end_date+job_env_dict['valid_hr_end'],
+                '%Y%m%d%H'
+            )
+            valid_date_inc = int(job_env_dict['valid_hr_inc'])
+            date_dt = valid_start_date_dt
+            while date_dt <= valid_end_date_dt:
+                job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
+                job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
+                job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
+                for model_idx in range(len(model_list)):
+                    job_env_dict['MODEL'] = model_list[model_idx]
+                    njobs+=1
+                    # Create job file
+                    job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
+                    print("Creating job script: "+job_file)
+                    job = open(job_file, 'w')
+                    job.write('#!/bin/sh\n')
+                    job.write('set -x\n')
+                    job.write('\n')
+                    # Set any environment variables for special cases
+                    FIXevs = job_env_dict['FIXevs']
+                    if verif_type == 'pres_levs':
+                        job_env_dict['grid'] = 'G004'
+                        job_env_dict['mask_list'] = (
+                            "'"+FIXevs+"/masks/G004_GLOBAL.nc, "
+                            +FIXevs+"/masks/G004_NHEM.nc, "
+                            +FIXevs+"/masks/G004_SHEM.nc, "
+                            +FIXevs+"/masks/G004_TROPICS.nc, "
+                            +FIXevs+"/masks/Bukovsky_G004_CONUS.nc'"
+                        )
+                    elif verif_type == 'sfc':
+                        job_env_dict['grid'] = 'G104'
+                        job_env_dict['mask_list'] = (
+                            "'"+FIXevs+"/masks/Bukovsky_G104_CONUS.nc, "
+                            +FIXevs+"/masks/Bukovsky_G104_CONUS_East.nc, "
+                            +FIXevs+"/masks/Bukovsky_G104_CONUS_West.nc, "
+                            +FIXevs+"/masks/Bukovsky_G104_CONUS_South.nc, "
+                            +FIXevs+"/masks/Bukovsky_G104_CONUS_Central.nc, "
+                            +FIXevs+"/masks/Bukovsky_G104_Appalachia.nc, "
+                            +FIXevs+"/masks/Bukovsky_G104_CPlains.nc, "
+                            +FIXevs+"/masks/Bukovsky_G104_DeepSouth.nc, "
+                            +FIXevs+"/masks/Bukovsky_G104_GreatBasin.nc, "
+                            +FIXevs+"/masks/Bukovsky_G104_GreatLakes.nc, "
+                            +FIXevs+"/masks/Bukovsky_G104_Mezquital.nc, "
+                            +FIXevs+"/masks/Bukovsky_G104_MidAtlantic.nc, "
+                            +FIXevs+"/masks/Bukovsky_G104_NorthAtlantic.nc, "
+                            +FIXevs+"/masks/Bukovsky_G104_NPlains.nc, "
+                            +FIXevs+"/masks/Bukovsky_G104_NRockies.nc, "
+                            +FIXevs+"/masks/Bukovsky_G104_PacificNW.nc, "
+                            +FIXevs+"/masks/Bukovsky_G104_PacificSW.nc, "
+                            +FIXevs+"/masks/Bukovsky_G104_Prairie.nc, "
+                            +FIXevs+"/masks/Bukovsky_G104_Southeast.nc, "
+                            +FIXevs+"/masks/Bukovsky_G104_Southwest.nc, "
+                            +FIXevs+"/masks/Bukovsky_G104_SPlains.nc, "
+                            +FIXevs+"/masks/Bukovsky_G104_SRockies.nc'"
+                        )
+                    # Do file checks
+                    check_model_files = True
+                    if check_model_files:
+                        model_files_exist, valid_date_fhr_list = (
+                            gda_util.check_model_files(job_env_dict)
+                        )
+                        job_env_dict['fhr_list'] = (
+                            '"'+','.join(valid_date_fhr_list)+'"'
+                        )
+                        job_env_dict.pop('fhr_start')
+                        job_env_dict.pop('fhr_end')
+                        job_env_dict.pop('fhr_inc')
+                    if JOB_GROUP == 'reformat':
+                        check_truth_files = False
+                    elif JOB_GROUP == 'generate':
+                        check_truth_files = True
+                    if check_truth_files:
+                        all_truth_file_exist = gda_util.check_truth_files(
+                            job_env_dict
+                        )
+                        if model_files_exist and all_truth_file_exist:
+                            write_job_cmds = True
+                    else:
+                        if model_files_exist:
+                            write_job_cmds = True
+                    # Write environment variables
+                    for name, value in job_env_dict.items():
+                        job.write('export '+name+'='+value+'\n')
+                    job.write('\n')
+                    # Write job commands
+                    if write_job_cmds:
+                        for cmd in verif_type_job_commands_list:
+                            job.write(cmd+'\n')
+                    job.close()
+                    job_env_dict.pop('fhr_list')
+                    job_env_dict['fhr_start'] = fhr_start
+                    job_env_dict['fhr_end'] = fhr_end
+                    job_env_dict['fhr_inc'] = fhr_inc
+                date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
+        # Do reformat observation jobs
+        if JOB_GROUP == 'reformat':
+            for verif_type_job in list(reformat_obs_jobs_dict[verif_type]\
+                                       .keys()):
+                # Initialize job environment dictionary
+                job_env_dict = gda_util.initalize_job_env_dict(
+                    verif_type, JOB_GROUP, VERIF_CASE_STEP_abbrev_type,
+                    verif_type_job
+                )
+                job_env_dict.pop('fhr_start')
+                job_env_dict.pop('fhr_end')
+                job_env_dict.pop('fhr_inc')
+                # Add job specific environment variables
+                for verif_type_job_env_var in \
+                        list(reformat_obs_jobs_dict[verif_type]\
+                             [verif_type_job]['env'].keys()):
+                    job_env_dict[verif_type_job_env_var] = (
+                        reformat_obs_jobs_dict[verif_type]\
+                        [verif_type_job]['env'][verif_type_job_env_var]
+                    )
+                verif_type_job_commands_list = (
+                    reformat_obs_jobs_dict[verif_type]\
+                    [verif_type_job]['commands']
+                )
+                # Loop through and write job script for dates and models
+                valid_start_date_dt = datetime.datetime.strptime(
+                    start_date+job_env_dict['valid_hr_start'],
+                    '%Y%m%d%H'
+                )
+                valid_end_date_dt = datetime.datetime.strptime(
+                    end_date+job_env_dict['valid_hr_end'],
+                    '%Y%m%d%H'
+                )
+                valid_date_inc = int(job_env_dict['valid_hr_inc'])
+                date_dt = valid_start_date_dt
+                while date_dt <= valid_end_date_dt:
+                    job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
+                    job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
+                    job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
+                    njobs+=1
+                    # Create job file
+                    job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
+                    print("Creating job script: "+job_file)
+                    job = open(job_file, 'w')
+                    job.write('#!/bin/sh\n')
+                    job.write('set -x\n')
+                    job.write('\n')
+                    # Set any environment variables for special cases
+                    # Do file checks
+                    all_truth_file_exist = gda_util.check_truth_files(
+                        job_env_dict
+                    )
+                    if all_truth_file_exist:
+                        write_job_cmds = True
+                    # Write environment variables
+                    for name, value in job_env_dict.items():
+                        job.write('export '+name+'='+value+'\n')
+                    job.write('\n')
+                    # Write job commands
+                    if write_job_cmds:
+                        for cmd in verif_type_job_commands_list:
+                            job.write(cmd+'\n')
+                    job.close()
+                    date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
+elif JOB_GROUP == 'gather':
+    print("----> Making job scripts for "+VERIF_CASE_STEP+" "
+      +"for job group "+JOB_GROUP)
+    # Initialize job environment dictionary
+    job_env_dict = gda_util.initalize_job_env_dict(
+        verif_type, JOB_GROUP,
+        VERIF_CASE_STEP_abbrev_type, verif_type_job
+    )
+    # Loop through and write job script for dates and models
+    date_dt = start_date_dt
+    while date_dt <= end_date_dt:
+        job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
+        for model_idx in range(len(model_list)):
+            job_env_dict['MODEL'] = model_list[model_idx]
+            njobs+=1
+            # Create job file
+            job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
+            print("Creating job script: "+job_file)
+            job = open(job_file, 'w')
+            job.write('#!/bin/sh\n')
+            job.write('set -x\n')
+            job.write('\n')
+            # Set any environment variables for special cases
+            # Write environment variables
+            for name, value in job_env_dict.items():
+                job.write('export '+name+'='+value+'\n')
+            job.write('\n')
+            # Write job commands
+            for cmd in gather_jobs_dict['commands']:
+                job.write(cmd+'\n')
+                job.close()
+        date_dt = date_dt + datetime.timedelta(days=1)
 
 # If running USE_CFP, create POE scripts
 if USE_CFP == 'YES':
-    for group in ['reformat', 'generate', 'gather']:
-        job_files = glob.glob(os.path.join(DATA, VERIF_CASE_STEP,
-                                           'METplus_job_scripts', group,
-                                           'job*'))
-        njob_files = len(job_files)
-        if njob_files == 0:
-            print("ERROR: No job files created in "
-                  +os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
-                                group))
-            continue
-        poe_files = glob.glob(os.path.join(DATA, VERIF_CASE_STEP,
-                                           'METplus_job_scripts', group,
-                                           'poe*'))
-        npoe_files = len(poe_files)
-        if npoe_files > 0:
-            for poe_file in poe_files:
-                os.remove(poe_file)
-        njob, iproc, node = 1, 0, 1
-        while njob <= njob_files:
-            job = 'job'+str(njob)
-            if machine in ['HERA', 'ORION', 'S4', 'JET']:
-                if iproc >= int(nproc):
-                    iproc = 0
-                    node+=1
-            poe_filename = os.path.join(DATA, VERIF_CASE_STEP,
-                                        'METplus_job_scripts',
-                                        group, 'poe_jobs'+str(node))
-            poe_file = open(poe_filename, 'a')
-            iproc+=1
-            if machine in ['HERA', 'ORION', 'S4', 'JET']:
-                poe_file.write(
-                    str(iproc-1)+' '
-                    +os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
-                                  group, job)+'\n'
-                )
-            else:
-                poe_file.write(
-                    os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
-                                 group, job)+'\n'
-                )
-            poe_file.close()
-            njob+=1
-        # If at final record and have not reached the
-        # final processor then write echo's to
-        # poe script for remaining processors
+    job_files = glob.glob(os.path.join(DATA, VERIF_CASE_STEP,
+                                       'METplus_job_scripts', JOB_GROUP,
+                                       'job*'))
+    njob_files = len(job_files)
+    if njob_files == 0:
+        print("ERROR: No job files created in "
+              +os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
+                            JOB_GROUP))
+    poe_files = glob.glob(os.path.join(DATA, VERIF_CASE_STEP,
+                                       'METplus_job_scripts', JOB_GROUP,
+                                       'poe*'))
+    npoe_files = len(poe_files)
+    if npoe_files > 0:
+        for poe_file in poe_files:
+            os.remove(poe_file)
+    njob, iproc, node = 1, 0, 1
+    while njob <= njob_files:
+        job = 'job'+str(njob)
+        if machine in ['HERA', 'ORION', 'S4', 'JET']:
+            if iproc >= int(nproc):
+                iproc = 0
+                node+=1
         poe_filename = os.path.join(DATA, VERIF_CASE_STEP,
                                     'METplus_job_scripts',
-                                    group, 'poe_jobs'+str(node))
+                                    JOB_GROUP, 'poe_jobs'+str(node))
         poe_file = open(poe_filename, 'a')
         iproc+=1
-        while iproc <= int(nproc):
-            if machine in ['HERA', 'ORION', 'S4', 'JET']:
-                poe_file.write(
-                    str(iproc-1)+' /bin/echo '+str(iproc)+'\n'
-                )
-            else:
-                poe_file.write(
-                    '/bin/echo '+str(iproc)+'\n'
-                )
-            iproc+=1
+        if machine in ['HERA', 'ORION', 'S4', 'JET']:
+            poe_file.write(
+               str(iproc-1)+' '
+               +os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
+                             JOB_GROUP, job)+'\n'
+            )
+        else:
+            poe_file.write(
+                os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
+                             JOB_GROUP, job)+'\n'
+            )
         poe_file.close()
+        njob+=1
+    # If at final record and have not reached the
+    # final processor then write echo's to
+    # poe script for remaining processors
+    poe_filename = os.path.join(DATA, VERIF_CASE_STEP,
+                                'METplus_job_scripts',
+                                JOB_GROUP, 'poe_jobs'+str(node))
+    poe_file = open(poe_filename, 'a')
+    iproc+=1
+    while iproc <= int(nproc):
+       if machine in ['HERA', 'ORION', 'S4', 'JET']:
+           poe_file.write(
+               str(iproc-1)+' /bin/echo '+str(iproc)+'\n'
+           )
+       else:
+           poe_file.write(
+               '/bin/echo '+str(iproc)+'\n'
+           )
+       iproc+=1
+    poe_file.close()
 
 print("END: "+os.path.basename(__file__))
