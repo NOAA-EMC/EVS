@@ -1331,8 +1331,8 @@ def check_truth_files(job_dict):
            ccpa_file = os.path.join(
                verif_case_dir, 'METplus_output',
                job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
-               'prepbufr', job_dict['VERIF_CASE'], job_dict['VERIF_TYPE']+'.'
-               +'prepbufr.'+job_dict['prepbufr']+'.'
+               'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
+               +job_dict['VERIF_TYPE']+'.'+'prepbufr.'+job_dict['prepbufr']+'.'
                +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
            )
            truth_file_list.append(ccpa_file)
