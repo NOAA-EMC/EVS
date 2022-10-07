@@ -408,10 +408,22 @@ generate_jobs_dict = {
                                                     +'fhr{lead?fmt=%3H}.stat'
                                                 )]
                                             ),
+                                            'ndaily_avg_stat_files='
+                                            +'$(ls '+os.path.join(
+                                                '$DATA',
+                                                '${VERIF_CASE}_${STEP}',
+                                                'METplus_output',
+                                                '${RUN}.${DATE}',
+                                                '$MODEL', '$VERIF_CASE',
+                                                'daily_avg_*.stat'
+                                            )+'|wc -l)',
+                                            ('if [ $ndaily_avg_stat_files '
+                                            +'-ne 0 ]; then'),
                                             gda_util.metplus_command(
                                                 'StatAnalysis_fcstGLOBAL_DET_'
                                                 +'obsPrepbufr_MPRtoSL1L2.conf'
-                                            )
+                                            ),
+                                            'fi'
                                         ]},
         'Dewpoint2m': {'env': {'prepbufr': 'nam',
                                'obs_window': '900',
