@@ -116,7 +116,7 @@ while valid_date_dt <= ENDDATE_dt:
                                        +valid_date_dt.strftime('%Y%m%d'),
                                        MODEL, VERIF_CASE)
             output_file = os.path.join(output_dir, 'anomaly_'
-                                       +VERIF_TYPE+'.'+job_name+'_init'
+                                       +VERIF_TYPE+'_'+job_name+'_init'
                                        +init_date_dt.strftime('%Y%m%d%H')+'_'
                                        +'fhr'+str(fhr).zfill(3)+'.stat')
             print("Output File: "+output_file)

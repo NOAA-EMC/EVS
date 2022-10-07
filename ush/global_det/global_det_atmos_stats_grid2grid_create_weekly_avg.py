@@ -84,7 +84,7 @@ while valid_hr <= int(valid_hr_end):
                               - datetime.timedelta(days=weekly_avg_day))
         weekly_avg_day_fhr = weekly_avg_day_fhr_start
         output_file = os.path.join(output_dir, 'weekly_avg_'
-                                   +VERIF_TYPE+'.'+job_name+'_init'
+                                   +VERIF_TYPE+'_'+job_name+'_init'
                                    +weekly_avg_day_init.strftime('%Y%m%d%H')
                                    +'_valid'
                                    +weekly_avg_valid_start\

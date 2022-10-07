@@ -373,7 +373,7 @@ generate_jobs_dict = {
                                                       +'{valid?fmt=%Y%m%d}',
                                                       '$MODEL', '$VERIF_CASE',
                                                       'point_stat_'
-                                                      +'${VERIF_TYPE}.'
+                                                      +'${VERIF_TYPE}_'
                                                       +'${job_name}_'
                                                       +'{lead?fmt=%2H}0000L_'
                                                       +'{valid?fmt=%Y%m%d}_'
@@ -392,7 +392,7 @@ generate_jobs_dict = {
                                                       '${RUN}.'
                                                       +'{valid?fmt=%Y%m%d}',
                                                       '$MODEL', '$VERIF_CASE',
-                                                      'anomaly_${VERIF_TYPE}.'
+                                                      'anomaly_${VERIF_TYPE}_'
                                                       +'${job_name}_init'
                                                       +'{init?fmt=%Y%m%d%H}_'
                                                       +'fhr{lead?fmt=%3H}.stat'
@@ -402,7 +402,7 @@ generate_jobs_dict = {
                                                     '$COMPONENT',
                                                     '${RUN}.{valid?fmt=%Y%m%d}',
                                                     '$MODEL', '$VERIF_CASE',
-                                                    'anomaly_${VERIF_TYPE}.'
+                                                    'anomaly_${VERIF_TYPE}_'
                                                     +'${job_name}_init'
                                                     +'{init?fmt=%Y%m%d%H}_'
                                                     +'fhr{lead?fmt=%3H}.stat'

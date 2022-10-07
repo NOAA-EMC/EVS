@@ -1143,7 +1143,7 @@ def check_model_files(job_dict):
                     verif_case_dir, 'METplus_output',
                     job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
                     model, job_dict['VERIF_CASE'], 'daily_avg_'
-                    +job_dict['VERIF_TYPE']+'.'+job_dict['job_name']+'_init'
+                    +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']+'_init'
                     +'{init?fmt=%Y%m%d%H}_valid{valid_shift?fmt=%Y%m%d%H'
                     +'?shift=-12}to{valid?fmt=%Y%m%d%H}.nc'
                 )
@@ -1154,7 +1154,7 @@ def check_model_files(job_dict):
                     verif_case_dir, 'METplus_output',
                     job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
                     model, job_dict['VERIF_CASE'], 'wind_shear_'
-                    +job_dict['VERIF_TYPE']+'.'+job_dict['job_name']+'_init'
+                    +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']+'_init'
                     +'{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
                 )
             elif job_dict['VERIF_CASE'] == 'grid2grid'\
@@ -1163,8 +1163,8 @@ def check_model_files(job_dict):
                     verif_case_dir, 'METplus_output',
                     job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
                     model, job_dict['VERIF_CASE'], 'pcp_combine_'
-                    +job_dict['VERIF_TYPE']+'.24hrAccum.init'
-                    +'{init?fmt=%Y%m%d%H}.f{lead?fmt=%3H}.nc'
+                    +job_dict['VERIF_TYPE']+'_24hrAccum_init'
+                    +'{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
                 )
             elif job_dict['VERIF_CASE'] == 'grid2grid'\
                     and job_dict['VERIF_TYPE'] == 'sea_ice':
@@ -1172,7 +1172,7 @@ def check_model_files(job_dict):
                     verif_case_dir, 'METplus_output',
                     job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
                     model, job_dict['VERIF_CASE'], 'daily_avg_'
-                    +job_dict['VERIF_TYPE']+'.'+job_dict['job_name']+'_init'
+                    +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']+'_init'
                     +'{init?fmt=%Y%m%d%H}_valid{valid_shift?fmt=%Y%m%d%H'
                     +'?shift=-24}to{valid?fmt=%Y%m%d%H}.nc'
                 )
@@ -1182,9 +1182,9 @@ def check_model_files(job_dict):
                     verif_case_dir, 'METplus_output',
                     job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
                     model, job_dict['VERIF_CASE'], 'pcp_combine_'
-                    +job_dict['VERIF_TYPE']+'.24hrAccum_'
-                    +job_dict['file_name_var']+'.init'
-                    +'{init?fmt=%Y%m%d%H}.f{lead?fmt=%3H}.nc'
+                    +job_dict['VERIF_TYPE']+'_24hrAccum_'
+                    +job_dict['file_name_var']+'_init'
+                    +'{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
                 )
             elif job_dict['VERIF_CASE'] == 'grid2grid'\
                     and job_dict['VERIF_TYPE'] == 'sst':
@@ -1192,7 +1192,7 @@ def check_model_files(job_dict):
                     verif_case_dir, 'METplus_output',
                     job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
                     model, job_dict['VERIF_CASE'], 'daily_avg_'
-                    +job_dict['VERIF_TYPE']+'.'+job_dict['job_name']+'_init'
+                    +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']+'_init'
                     +'{init?fmt=%Y%m%d%H}_valid{valid_shift?fmt=%Y%m%d%H'
                     +'?shift=-24}to{valid?fmt=%Y%m%d%H}.nc'
                 )
@@ -1306,7 +1306,7 @@ def check_truth_files(job_dict):
                verif_case_dir, 'METplus_output',
                job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
                'ccpa', job_dict['VERIF_CASE'], 'pcp_combine_'
-               +job_dict['VERIF_TYPE']+'.24hrCCPA.valid'
+               +job_dict['VERIF_TYPE']+'_24hrCCPA_valid'
                +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
            )
            truth_file_list.append(ccpa_file)
@@ -1339,14 +1339,14 @@ def check_truth_files(job_dict):
            truth_file_list.append(ghrsst_median_file)
         elif job_dict['VERIF_CASE'] == 'grid2obs' \
                 and job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc']:
-           ccpa_file = os.path.join(
+           pb2nc_file = os.path.join(
                verif_case_dir, 'METplus_output',
                job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
                'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
-               +job_dict['VERIF_TYPE']+'.'+'prepbufr.'+job_dict['prepbufr']+'.'
+               +job_dict['VERIF_TYPE']+'_'+job_dict['prepbufr']+'_valid'
                +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
            )
-           truth_file_list.append(ccpa_file)
+           truth_file_list.append(pb2nc_file)
     truth_files_exist_list = []
     for truth_file in truth_file_list:
         if os.path.exists(truth_file):
