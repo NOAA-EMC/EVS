@@ -45,7 +45,7 @@ status=$?
 echo
 
 # Create and run job scripts for reformat, generate, and gather
-for group in reformat generate; do
+for group in reformat generate gather; do
     export JOB_GROUP=$group
     echo "Creating and running jobs for grid-to-grid stats: ${JOB_GROUP}"
     python $USHevs/global_det/global_det_atmos_stats_grid2grid_create_job_scripts.py

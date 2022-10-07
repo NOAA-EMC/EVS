@@ -1031,10 +1031,17 @@ def get_truth_file(valid_time_dt, source_file_format, dest_file_format):
             print("WARNING: "+source_file+" DOES NOT EXIST")
 
 def check_model_files(job_dict):
-    """!
+    """! Check what model files or don't exist
+
          Args:
+             job_dict - dictionary containing settings
+                        job is running with (strings)
 
          Returns:
+             model_files_exist - if non-zero number of  model files
+                                 exist or not (boolean)
+             fhr_list          - list of forecast hours that model
+                                 files exist for (string)
     """
     valid_date_dt = datetime.datetime.strptime(
         job_dict['DATE']+job_dict['valid_hr_start'],
@@ -1235,8 +1242,12 @@ def check_model_files(job_dict):
 def check_truth_files(job_dict):
     """!
          Args:
+             job_dict - dictionary containing settings
+                        job is running with (strings)
 
          Returns:
+             all_truth_file_exist - if all needed truth files
+                                    exist or not (boolean)
     """
     valid_date_dt = datetime.datetime.strptime(
         job_dict['DATE']+job_dict['valid_hr_start'],
@@ -1348,6 +1359,29 @@ def check_truth_files(job_dict):
     else:
         all_truth_file_exist = False
     return all_truth_file_exist
+
+def check_stat_files(job_dict):
+    """! Check for MET .stat files
+
+         Args:
+             job_dict - dictionary containing settings
+                        job is running with (strings)
+
+         Returns:
+             stat_files_exist - if .stat files
+                                exist or not (boolean)
+    """
+    model_stat_file_dir = os.path.join(
+        job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP'],
+        'METplus_output', job_dict['RUN']+'.'+job_dict['DATE'],
+        job_dict['MODEL'], job_dict['VERIF_CASE']
+    )
+    stat_file_list = glob.glob(os.path.join(model_stat_file_dir, '*.stat'))
+    if len(stat_file_list) != 0:
+        stat_files_exist = True
+    else:
+        stat_files_exist = False
+    return stat_files_exist
 
 def get_obs_valid_hrs(obs):
     """! This returns the valid hour start, end, and increment
@@ -1533,23 +1567,23 @@ def initalize_job_env_dict(verif_type, group,
             job_env_dict['valid_hr_start'] = str(valid_hr_start).zfill(2)
             job_env_dict['valid_hr_end'] = str(valid_hr_end).zfill(2)
             job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
-    verif_type_init_hr_list = (
-        os.environ[verif_case_step_abbrev_type+'_init_hr_list']\
-        .split(' ')
-    )
-    job_env_dict['init_hr_start'] = (
-        verif_type_init_hr_list[0].zfill(2)
-    )
-    job_env_dict['init_hr_end'] = (
-        verif_type_init_hr_list[-1].zfill(2)
-    )
-    if len(verif_type_init_hr_list) > 1:
-        verif_type_init_hr_inc = np.min(
-            np.diff(np.array(verif_type_init_hr_list, dtype=int))
+        verif_type_init_hr_list = (
+            os.environ[verif_case_step_abbrev_type+'_init_hr_list']\
+            .split(' ')
         )
-    else:
-        verif_type_init_hr_inc = 24
-    job_env_dict['init_hr_inc'] = str(verif_type_init_hr_inc)
+        job_env_dict['init_hr_start'] = (
+            verif_type_init_hr_list[0].zfill(2)
+        )
+        job_env_dict['init_hr_end'] = (
+            verif_type_init_hr_list[-1].zfill(2)
+        )
+        if len(verif_type_init_hr_list) > 1:
+            verif_type_init_hr_inc = np.min(
+                np.diff(np.array(verif_type_init_hr_list, dtype=int))
+            )
+        else:
+            verif_type_init_hr_inc = 24
+        job_env_dict['init_hr_inc'] = str(verif_type_init_hr_inc)
     return job_env_dict
 
 def get_plot_dates(logger, date_type, start_date, end_date,

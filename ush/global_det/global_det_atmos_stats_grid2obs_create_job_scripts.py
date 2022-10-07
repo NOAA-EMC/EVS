@@ -814,8 +814,8 @@ elif JOB_GROUP == 'gather':
       +"for job group "+JOB_GROUP)
     # Initialize job environment dictionary
     job_env_dict = gda_util.initalize_job_env_dict(
-        verif_type, JOB_GROUP,
-        VERIF_CASE_STEP_abbrev_type, verif_type_job
+        JOB_GROUP, JOB_GROUP,
+        VERIF_CASE_STEP_abbrev, JOB_GROUP
     )
     # Loop through and write job script for dates and models
     date_dt = start_date_dt
@@ -836,10 +836,17 @@ elif JOB_GROUP == 'gather':
             for name, value in job_env_dict.items():
                 job.write('export '+name+'='+value+'\n')
             job.write('\n')
+            # Do file checks
+            stat_files_exist = gda_util.check_stat_files(job_env_dict)
+            if stat_files_exist:
+                write_job_cmds = True
+            else:
+                write_job_cmds = False
             # Write job commands
-            for cmd in gather_jobs_dict['commands']:
-                job.write(cmd+'\n')
-                job.close()
+            if write_job_cmds:
+                for cmd in gather_jobs_dict['commands']:
+                    job.write(cmd+'\n')
+            job.close()
         date_dt = date_dt + datetime.timedelta(days=1)
 
 # If running USE_CFP, create POE scripts
