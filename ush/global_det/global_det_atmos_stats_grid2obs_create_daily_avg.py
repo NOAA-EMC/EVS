@@ -28,7 +28,7 @@ DATE = os.environ['DATE']
 valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
 valid_hr_inc = os.environ['valid_hr_inc']
-fhr_end = os.environ['fhr_end']
+fhr_end = os.environ['fhr_list'].split(',')[0]
 
 # Process run time agruments
 if len(sys.argv) != 4:
@@ -76,7 +76,7 @@ while valid_hr <= int(valid_hr_end):
     while daily_avg_day <= daily_avg_day_end:
         daily_avg_file_list = []
         daily_avg_day_fhr_end = daily_avg_day * 24
-        daily_avg_day_fhr_start = daily_avg_day_fhr_end - 18
+        daily_avg_day_fhr_start = daily_avg_day_fhr_end - 12
         daily_avg_day_init = (daily_avg_valid_end
                               - datetime.timedelta(days=daily_avg_day))
         daily_avg_day_fhr = daily_avg_day_fhr_start
@@ -122,9 +122,9 @@ while valid_hr <= int(valid_hr_end):
                 print("No input file for forecast hour "+str(daily_avg_day_fhr)
                       +', valid '+str(daily_avg_day_fhr_valid)
                       +', init '+str(daily_avg_day_init))
-            daily_avg_day_fhr+=6
+            daily_avg_day_fhr+=12
         daily_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
-        if len(daily_avg_file_list) == 4:
+        if len(daily_avg_file_list) == 2:
             print("Output File: "+output_file)
             all_daily_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
             for daily_avg_file in daily_avg_file_list:
@@ -154,7 +154,7 @@ while valid_hr <= int(valid_hr_end):
                                 == vx_mask
                             ]
                         )
-                        if len(all_daily_avg_obtype_sid_vx_mask_df) != 4:
+                        if len(all_daily_avg_obtype_sid_vx_mask_df) != 2:
                             continue
                         all_daily_avg_obtype_sid_vx_mask_fcst_mean = (
                             np.array(
@@ -210,7 +210,7 @@ while valid_hr <= int(valid_hr_end):
                 index=None, sep=' ', mode='w'
             )
         else:
-            print("ERROR: Need 4 files to create daily average")
+            print("ERROR: Need 2 files to create daily average")
         print("")
         daily_avg_day+=1
     valid_hr+=int(valid_hr_inc)

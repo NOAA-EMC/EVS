@@ -1128,6 +1128,77 @@ def check_model_files(job_dict):
                     'init_date': init_date_dt,
                     'forecast_hour': str(fhr)
                 }
+        elif job_dict['JOB_GROUP'] == 'generate':
+            if job_dict['VERIF_CASE'] == 'grid2grid'\
+                    and job_dict['VERIF_TYPE'] == 'pres_levs' \
+                    and job_dict['job_name'] == 'DailyAvg_GeoHeightAnom':
+                model_file_format = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
+                    model, job_dict['VERIF_CASE'], 'daily_avg_'
+                    +job_dict['VERIF_TYPE']+'.'+job_dict['job_name']+'_init'
+                    +'{init?fmt=%Y%m%d%H}_valid{valid_shift?fmt=%Y%m%d%H'
+                    +'?shift=-12}to{valid?fmt=%Y%m%d%H}.nc'
+                )
+            elif job_dict['VERIF_CASE'] == 'grid2grid'\
+                    and job_dict['VERIF_TYPE'] == 'pres_levs' \
+                    and job_dict['job_name'] == 'WindShear':
+                model_file_format = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
+                    model, job_dict['VERIF_CASE'], 'wind_shear_'
+                    +job_dict['VERIF_TYPE']+'.'+job_dict['job_name']+'_init'
+                    +'{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
+                )
+            elif job_dict['VERIF_CASE'] == 'grid2grid'\
+                    and job_dict['VERIF_TYPE'] == 'precip':
+                model_file_format = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
+                    model, job_dict['VERIF_CASE'], 'pcp_combine_'
+                    +job_dict['VERIF_TYPE']+'.24hrAccum.init'
+                    +'{init?fmt=%Y%m%d%H}.f{lead?fmt=%3H}.nc'
+                )
+            elif job_dict['VERIF_CASE'] == 'grid2grid'\
+                    and job_dict['VERIF_TYPE'] == 'sea_ice':
+                model_file_format = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
+                    model, job_dict['VERIF_CASE'], 'daily_avg_'
+                    +job_dict['VERIF_TYPE']+'.'+job_dict['job_name']+'_init'
+                    +'{init?fmt=%Y%m%d%H}_valid{valid_shift?fmt=%Y%m%d%H'
+                    +'?shift=-24}to{valid?fmt=%Y%m%d%H}.nc'
+                )
+            elif job_dict['VERIF_CASE'] == 'grid2grid'\
+                    and job_dict['VERIF_TYPE'] == 'snow':
+                model_file_format = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
+                    model, job_dict['VERIF_CASE'], 'pcp_combine_'
+                    +job_dict['VERIF_TYPE']+'.24hrAccum_'
+                    +job_dict['file_name_var']+'.init'
+                    +'{init?fmt=%Y%m%d%H}.f{lead?fmt=%3H}.nc'
+                )
+            elif job_dict['VERIF_CASE'] == 'grid2grid'\
+                    and job_dict['VERIF_TYPE'] == 'sst':
+                model_file_format = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
+                    model, job_dict['VERIF_CASE'], 'daily_avg_'
+                    +job_dict['VERIF_TYPE']+'.'+job_dict['job_name']+'_init'
+                    +'{init?fmt=%Y%m%d%H}_valid{valid_shift?fmt=%Y%m%d%H'
+                    +'?shift=-24}to{valid?fmt=%Y%m%d%H}.nc'
+                )
+            else:
+                model_file_format = os.path.join(
+                    verif_case_dir, 'data', model,
+                    model+'.{init?fmt=%Y%m%d%H}.f{lead?fmt=%3H}'
+                )
+            fhr_check_dict[str(fhr)]['file1'] = {
+                    'valid_date': valid_date_dt,
+                    'init_date': init_date_dt,
+                    'forecast_hour': str(fhr)
+                }
         fhr+=fhr_inc
     for fhr_key in list(fhr_check_dict.keys()):
         fhr_key_files_exist_list = []
@@ -1141,7 +1212,8 @@ def check_model_files(job_dict):
             )
             if os.path.exists(fhr_fileN):
                 fhr_key_files_exist_list.append(True)
-                if 'DailyAvg' in job_dict['job_name']:
+                if job_dict['JOB_GROUP'] == 'reformat' \
+                        and 'DailyAvg' in job_dict['job_name']:
                     fhr_list.append(
                         fhr_check_dict[fhr_key][fhr_fileN_key]\
                         ['forecast_hour']
@@ -1173,6 +1245,7 @@ def check_truth_files(job_dict):
     verif_case_dir = os.path.join(
         job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
     )
+    truth_file_list = []
     if job_dict['JOB_GROUP'] == 'reformat':
         if job_dict['VERIF_CASE'] == 'grid2grid' \
                 and job_dict['VERIF_TYPE'] == 'precip' \
@@ -1180,16 +1253,13 @@ def check_truth_files(job_dict):
             ccpa_dir = os.path.join(verif_case_dir, 'data', 'ccpa')
             nccpa_files = 4
             n = 1
-            all_truth_file_exist = True
             while n <= 4:
                 nccpa_file = os.path.join(
                     ccpa_dir, 'ccpa.6H.'
                     +(valid_date_dt-datetime.timedelta(hours=(n-1)*6))\
                     .strftime('%Y%m%d%H')
                 )
-                if not os.path.exists(nccpa_file):
-                    all_truth_file_exist = False
-                    break
+                truth_file_list.append(nccpa_file)
                 n+=1
         elif job_dict['VERIF_CASE'] == 'grid2obs' \
                 and job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc'] \
@@ -1201,21 +1271,82 @@ def check_truth_files(job_dict):
                 'prepbufr.'+prepbufr_name+'.'
                 +valid_date_dt.strftime('%Y%m%d%H')
             )
-            if os.path.exists(prepbufr_file):    
-                all_truth_file_exist = True
-            else:
-                all_truth_file_exist = False
+            truth_file_list.append(prepbufr_file)
         elif job_dict['VERIF_CASE'] == 'grid2grid' \
                 and job_dict['VERIF_TYPE'] == 'pres_levs':
-            model_truth_file = format_filler(
-                os.path.join(verif_case_dir, 'data', job_dict['MODEL'],
-                             job_dict['MODEL']+'.{valid?fmt=%Y%m%d%H}.truth'),
-                valid_date_dt, valid_date_dt, ['anl'], {}
+            model_truth_file = os.path.join(
+                verif_case_dir, 'data', job_dict['MODEL'],
+                job_dict['MODEL']+'.'+valid_date_dt.strftime('%Y%m%d%H')
+                +'.truth'
             )
-            if os.path.exists(model_truth_file):
-                all_truth_file_exist = True
-            else:
-                all_truth_file_exist = False
+            truth_file_list.append(model_truth_file)
+    elif job_dict['JOB_GROUP'] == 'generate':
+        if job_dict['VERIF_CASE'] == 'grid2grid' \
+                and job_dict['VERIF_TYPE'] == 'pres_levs':
+            model_truth_file = os.path.join(
+                verif_case_dir, 'data', job_dict['MODEL'],
+                job_dict['MODEL']+'.'+valid_date_dt.strftime('%Y%m%d%H')
+                +'.truth'
+            )
+            truth_file_list.append(model_truth_file)
+        elif job_dict['VERIF_CASE'] == 'grid2grid' \
+                and job_dict['VERIF_TYPE'] == 'precip':
+           ccpa_file = os.path.join(
+               verif_case_dir, 'METplus_output',
+               job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
+               'ccpa', job_dict['VERIF_CASE'], 'pcp_combine_'
+               +job_dict['VERIF_TYPE']+'.24hrCCPA.valid'
+               +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
+           )
+           truth_file_list.append(ccpa_file)
+        elif job_dict['VERIF_CASE'] == 'grid2grid' \
+                and job_dict['VERIF_TYPE'] == 'sea_ice':
+           osi_saf_file = os.path.join(
+               verif_case_dir, 'data', 'osi_saf',
+               'osi_saf.multi.'
+               +(valid_date_dt-datetime.timedelta(hours=24))\
+               .strftime('%Y%m%d%H')
+               +'to'+valid_date_dt.strftime('%Y%m%d%H')+'_G004.nc'
+           )
+           truth_file_list.append(osi_saf_file)
+        elif job_dict['VERIF_CASE'] == 'grid2grid' \
+                and job_dict['VERIF_TYPE'] == 'snow':
+           nohrsc_file = os.path.join(
+               verif_case_dir, 'data', 'nohrsc',
+               'nohrsc.24H.'+valid_date_dt.strftime('%Y%m%d%H')
+           )
+           truth_file_list.append(nohrsc_file)
+        elif job_dict['VERIF_CASE'] == 'grid2grid' \
+                and job_dict['VERIF_TYPE'] == 'sst':
+           ghrsst_median_file = os.path.join(
+               verif_case_dir, 'data', 'ghrsst_median',
+               'ghrsst_median.'
+               +(valid_date_dt-datetime.timedelta(hours=24))\
+               .strftime('%Y%m%d%H')
+               +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
+           )
+           truth_file_list.append(ghrsst_median_file)
+        elif job_dict['VERIF_CASE'] == 'grid2obs' \
+                and job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc']:
+           ccpa_file = os.path.join(
+               verif_case_dir, 'METplus_output',
+               job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
+               'prepbufr', job_dict['VERIF_CASE'], job_dict['VERIF_TYPE']+'.'
+               +'prepbufr.'+job_dict['prepbufr']+'.'
+               +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
+           )
+           truth_file_list.append(ccpa_file)
+    truth_files_exist_list = []
+    for truth_file in truth_file_list:
+        if os.path.exists(truth_file):
+            truth_files_exist_list.append(True)
+        else:
+            truth_files_exist_list.append(False)
+    if all(x == True for x in truth_files_exist_list) \
+            and len(truth_files_exist_list) > 0:
+        all_truth_file_exist = True
+    else:
+        all_truth_file_exist = False
     return all_truth_file_exist
 
 def get_obs_valid_hrs(obs):

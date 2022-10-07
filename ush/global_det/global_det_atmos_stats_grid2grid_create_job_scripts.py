@@ -779,22 +779,28 @@ if JOB_GROUP in ['reformat', 'generate']:
                             check_truth_files = False
                     elif JOB_GROUP == 'generate':
                         if verif_type == 'pres_levs' \
-                                and verif_type_job not in [
+                                and verif_type_job in [
                                     'DailyAvg_GeoHeightAnom',
                                     'WindShear'
                                 ]:
-                            check_truth_files = True
-                        else:
                             check_truth_files = False
+                        elif verif_type == 'means':
+                            check_truth_files = False
+                        else:
+                            check_truth_files = True
                     if check_truth_files:
                         all_truth_file_exist = gda_util.check_truth_files(
                             job_env_dict
                         )
                         if model_files_exist and all_truth_file_exist:
                             write_job_cmds = True
+                        else:
+                            write_job_cmds = False
                     else:
                         if model_files_exist:
                             write_job_cmds = True
+                        else:
+                            write_job_cmds = False
                     # Write environment variables
                     for name, value in job_env_dict.items():
                         job.write('export '+name+'='+value+'\n')
