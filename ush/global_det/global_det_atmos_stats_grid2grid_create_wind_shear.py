@@ -151,7 +151,7 @@ while valid_date_dt <= ENDDATE_dt:
             else:
                 for req_var_level in req_var_level_list:
                     if req_var_level not in input_file_data_var_list:
-                        print("ERROR: "+input_file+" does not contain "
+                        print("WARNING: "+input_file+" does not contain "
                               +"variable "+req_var_level+" cannot make "
                               +"wind shear data")
             input_file_data.close()

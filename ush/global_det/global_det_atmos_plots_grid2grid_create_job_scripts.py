@@ -849,7 +849,7 @@ if USE_CFP == 'YES':
                                        'plot_job_scripts', 'job*'))
     njob_files = len(job_files)
     if njob_files == 0:
-        print("ERROR: No job files created in "
+        print("WARNING: No job files created in "
               +os.path.join(DATA, VERIF_CASE_STEP, 'plot_job_scripts'))
     poe_files = glob.glob(os.path.join(DATA, VERIF_CASE_STEP,
                                        'plot_job_scripts', 'poe*'))

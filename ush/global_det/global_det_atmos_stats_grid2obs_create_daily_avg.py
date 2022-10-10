@@ -210,7 +210,7 @@ while valid_hr <= int(valid_hr_end):
                 index=None, sep=' ', mode='w'
             )
         else:
-            print("ERROR: Need 2 files to create daily average")
+            print("WARNING: Need 2 files to create daily average")
         print("")
         daily_avg_day+=1
     valid_hr+=int(valid_hr_inc)

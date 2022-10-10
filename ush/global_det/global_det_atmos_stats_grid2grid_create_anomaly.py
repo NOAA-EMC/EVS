@@ -76,7 +76,7 @@ while valid_date_dt <= ENDDATE_dt:
                 if 'CLIMO_MEAN_'+var_level in input_var:
                     climo_var_level = input_var
             if not climo_var_level in input_file_data_var_list:
-                print("ERROR: "+input_file+" does not contain any "
+                print("WARNING: "+input_file+" does not contain any "
                       +"climo variable cannot make anomaly data")
             else:
                 output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP,
@@ -142,7 +142,7 @@ while valid_date_dt <= ENDDATE_dt:
                                 input_file_data.variables[climo_var_level][:]
                             )
                     else:
-                        print("ERROR: "+input_file+" does not contain "
+                        print("WARNING: "+input_file+" does not contain "
                               +data_name+" variable, cannot make anomaly data")
                 output_file_data.close()
                 input_file_data.close()

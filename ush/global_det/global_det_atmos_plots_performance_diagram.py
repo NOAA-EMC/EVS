@@ -326,6 +326,7 @@ class PerformanceDiagram:
                             +") EXCEEDS PRESET MARKER SETTING, REDUCE NUMBER "
                             +"OF THRESHOLDS TO <= "
                             +f"{len(list(thresh_marker_plot_settings_dict.keys()))}")
+          sys.exit(1)
         thresh_legend_handles = []
         thresh_mark_dict = {}
         for fcst_var_thresh in self.plot_info_dict['fcst_var_threshs']:

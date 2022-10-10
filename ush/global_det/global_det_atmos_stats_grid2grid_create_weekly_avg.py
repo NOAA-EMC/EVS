@@ -260,7 +260,7 @@ while valid_hr <= int(valid_hr_end):
                 output_file_data.close()
             input_file_data.close()
         else:
-            print("ERROR: Cannot create weekly average file "+output_file+" "
+            print("WARNING: Cannot create weekly average file "+output_file+" "
                   +"; need "+str(expected_nfiles)+" input files")
         if job_name == 'DailyAvg_GeoHeightAnom':
             weekly_avg_day+=1
