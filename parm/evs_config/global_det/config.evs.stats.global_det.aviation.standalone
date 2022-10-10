@@ -25,8 +25,8 @@ if [ $OBSERVATION = "GCIP" ] ; then
     elif [ $RESOLUTION = "0P25" ] ; then
 	export REGRID=G193
 	export VAR1_NAME=ICESEV
-	export VAR1_THRESH_FCST="ge1, ge2, ge3, ge4"
-	export VAR1_THRESH_OBS="ge2, ge2, ge2, ge2"
+	export VAR1_THRESH_FCST=">=1,>=2,>=3,>=4"
+	export VAR1_THRESH_OBS=">=2,>=2,>=2,>=2"
 	export VAR1_LEVELS_FCST="P812, P696.8, P595.2, P506, P392.7"
 	export VAR1_LEVELS_OBS="P800, P700, P600, P500, P400"
     fi
