@@ -1102,7 +1102,7 @@ def check_model_files(job_dict):
                     }
                     fhr_check_dict[str(fhr)]['file2'] = {
                         'valid_date': valid_date_dt,
-                        'init_date': init_date_dt,
+                        'init_date': valid_date_dt-datetime.timedelta(hours=12),
                         'forecast_hour': str(fhr-12)
                     }
             elif job_dict['VERIF_TYPE'] in ['sea_ice', 'sst']:
@@ -1113,7 +1113,9 @@ def check_model_files(job_dict):
                 while fhr_in_avg <= fhr_avg_end:
                     fhr_check_dict[str(fhr)]['file'+str(nf+1)] = {
                         'valid_date': valid_date_dt,
-                        'init_date': init_date_dt,
+                        'init_date': valid_date_dt-datetime.timedelta(
+                                         hours=fhr_in_avg
+                        ),
                         'forecast_hour': str(fhr_in_avg)
                     }
                     nf+=1
@@ -1208,8 +1210,10 @@ def check_model_files(job_dict):
                 }
         fhr+=fhr_inc
     for fhr_key in list(fhr_check_dict.keys()):
+        print("-- "+str(fhr_key))
         fhr_key_files_exist_list = []
         for fhr_fileN_key in list(fhr_check_dict[fhr_key].keys()):
+            print(fhr_fileN_key)
             fhr_fileN = format_filler(
                 model_file_format,
                 fhr_check_dict[fhr_key][fhr_fileN_key]['valid_date'],
@@ -1217,6 +1221,7 @@ def check_model_files(job_dict):
                 fhr_check_dict[fhr_key][fhr_fileN_key]['forecast_hour'],
                 {}
             )
+            print(fhr_fileN)
             if os.path.exists(fhr_fileN):
                 fhr_key_files_exist_list.append(True)
                 if job_dict['JOB_GROUP'] == 'reformat' \
