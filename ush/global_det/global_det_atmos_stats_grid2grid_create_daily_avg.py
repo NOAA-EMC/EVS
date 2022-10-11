@@ -150,8 +150,9 @@ while valid_hr <= int(valid_hr_end):
             else:
                 print("No input file for forecast hour "+str(daily_avg_day_fhr)
                       +', valid '+str(daily_avg_day_fhr_valid)
-                      +', init '+str(daily_avg_day_init)+' '
-                      +daily_avg_day_fhr_input_file)
+                      +', init '+str(daily_avg_day_init)+" "
+                      +daily_avg_day_fhr_DATAROOT_input_file+" or "
+                      +daily_avg_day_fhr_COMIN_input_file)
             if job_name == 'DailyAvg_GeoHeightAnom':
                 daily_avg_day_fhr+=12
             else:

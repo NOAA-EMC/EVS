@@ -282,6 +282,14 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                 model_file_format,
                                 model_fcst_dest_file_format
                             )
+                            gda_util.get_model_file(
+                                time['valid_time'] \
+                                - datetime.timedelta(hours=12),
+                                time['init_time'],
+                                str(fhr),
+                                model_file_format,
+                                model_fcst_dest_file_format
+                            )
                 elif VERIF_CASE_STEP_type == 'sea_ice':
                     # OSI-SAF spans PDYm1 00Z to PDY 00Z
                     nf = 0
