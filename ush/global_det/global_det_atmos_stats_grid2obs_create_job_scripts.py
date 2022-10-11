@@ -743,6 +743,16 @@ if JOB_GROUP in ['reformat', 'generate']:
                             write_job_cmds = True
                         else:
                             write_job_cmds = False
+                     # Check job and model being run
+                    if job_env_dict['MODEL'] \
+                            in ['cmc', 'ecmwf', 'fnmoc',
+                                'imd', 'jma', 'ukmet'] \
+                            and verif_type_job == 'SpefHum':
+                        write_job_cmds = False
+                    elif job_env_dict['MODEL'] \
+                            in ['jma'] \
+                            and verif_type_job == 'RelHum':
+                        write_job_cmds = False
                     # Write environment variables
                     for name, value in job_env_dict.items():
                         job.write('export '+name+'='+value+'\n')
