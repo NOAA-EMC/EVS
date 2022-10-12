@@ -10,6 +10,19 @@ export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
 export cycle=t${cyc}z 
+export DATA_IN=${DATA_IN:-$DATAROOT}
+jobid=evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$
+export DATA=${DATA:-$DATA_IN/${jobid}}
+mkdir -p $DATA
+cd $DATA
+
+setpdy.sh
+. $DATA/PDY
+
+if [ $MODELNAME = sref ] ; then
+  export VDATE=${VDATE:-$PDYm2}
+fi
+
 
 export COMIN=${COMIN:-$(compath.py  $NET/$evs_ver)}
 export COMINsref=${COMINsref:-$(compath.py  sref/$sref_ver)}
@@ -17,7 +30,6 @@ export COMINprepbufr=${COMINprepbufr:-$(compath.py  obsproc/${obsproc_ver})}
 export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
 
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}/$STEP/$COMPONENT
-export DATA_IN=${DATA_IN:-$DATAROOT}
 mkdir -p $COMOUT
 
 
@@ -35,19 +47,6 @@ export FIXevs=${FIXevs:-/lfs/h1/ops/prod/packages/evs.${evs_ver}/fix}
 export MASKS=$FIXevs/masks
 
 export pid=$$
-
-jobid=evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$
-export DATA=${DATA:-$DATA_IN/${jobid}}
-mkdir -p $DATA
-cd $DATA
-
-setpdy.sh
-. $DATA/PDY
-
-
-if [ $MODELNAME = sref ] ; then
-  export VDATE=${VDATE:-$PDYm2}
-fi
 
 
 # ###################################

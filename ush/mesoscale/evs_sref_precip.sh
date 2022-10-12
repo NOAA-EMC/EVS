@@ -10,16 +10,20 @@ export vday=$VDATE
 export regrid='NONE'
 ############################################################
 
+$USHevs/evs_check_sref_files.sh
+
 >run_all_sref_precip_poe
 
 export model=sref
 
 for  obsv in ccpa ; do 
-#for  obsv in ndas ccpa ; do 
+
+#####for  obsv in ndas ccpa ; do 
 
  export domain=CONUS
 
   $USHevs/mesoscale/evs_prepare_sref.sh $obsv 
+
 
 
   if [ $obsv = ccpa ] ; then
@@ -106,6 +110,7 @@ if [ $run_mpi = yes ] ; then
 else
   sh run_all_sref_precip_poe
 fi 
+
 
 if [ $gather = yes ] ; then
   $USHevs/mesoscale/evs_sref_gather.sh $VERIF_CASE

@@ -9,6 +9,7 @@
 
 %include <head.h>
 %include <envir-p1.h>
+export model=evs
 %include <model_ver.h>
 
 set -x
@@ -17,7 +18,27 @@ export cyc=%CYC%
 export cycles="%CYCLES%"
 
 module purge
-source $HOMEevs/modulefiles/${evs_ver}
+module load PrgEnv-intel/$PrgEnv_intel_ver
+module load intel/$intel_ver
+module load cray-pals/$craypals_ver
+module load libjpeg/$libjpeg_ver
+module load grib_util/$grib_util_ver
+module load prod_util/$prod_util_ver
+module load wgrib2/$wgrib2_ver
+module load libpng/$libpng_ver
+module load zlib/$zlib_ver
+module load jasper/$jasper_ver
+module load netcdf/$netcdf_ver
+module load cfp/$cfp_ver
+export HPC_OPT=/apps/ops/para/libs
+module use /apps/ops/para/libs/modulefiles/compiler/intel/$intel_ver
+module load gsl/${gsl_ver}
+module load python/$python_ver
+module load met/$met_ver
+module load metplus/$metplus_ver
+module load udunits/${udunits_ver}
+
+module list
 
 
 export NET=evs
