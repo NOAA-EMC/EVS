@@ -29,14 +29,14 @@ cd $DATA
 
 # General I/O Settings
 export pgmout="OUTPUT.${pid}"
-export VDATE=$(date -d "today -2 day" +"%Y%m%d")
+export VDATE=$(date -d "today -1 day" +"%Y%m%d")
 export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
 # in production the following will be set using compath.py
 #export COMINccpa=${COMINccpa:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
-export COMINccpa=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT/$RUN
+export COMINccpa=/lfs/h2/emc/ptmp/marcel.caron/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT/$RUN
 # in production the following will be set using compath.py
 #export COMINmrms=${COMINmrms:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
-export COMINmrms=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT/$RUN
+export COMINmrms=/lfs/h2/emc/ptmp/marcel.caron/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT/$RUN
 export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
 export COMINhiresw=${COMINhiresw:-$(compath.py ${envir}/com/hiresw/${hiresw_ver})}
 export COMINhrrr=${COMINhrrr:-$(compath.py ${envir}/com/hrrr/${hrrr_ver})}
