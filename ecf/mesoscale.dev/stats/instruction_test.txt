@@ -1,0 +1,78 @@
+
+
+Testing ecf directory:
+  /lfs/h2/emc/vpppg/noscrub/$USER/EVS/evs.v1.0/ecf/mesoscale.dev/stats
+
+  There are 2 ecf files:
+   jevs_sref_grid2obs_stats.ecf
+   jevs_sref_precip_stats.ecf
+ 
+   Tese 2 ecj jobs have no relationship. They can be qsub at same time
+
+
+Submit jobs:
+
+  qsub jevs_sref_grid2obs_stats.ecf
+  qsub jevs_sref_precip_stats.ecf 
+
+  Note: since "#PBS -j oe" is set, the stdout file will be in the submit directory
+   /lfs/h2/emc/vpppg/noscrub/$USER/EVS/evs.v1.0/ecf/mesoscale.dev/stats
+
+The running directory (i.e. $DATA) will be in /lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd:
+  
+  evs_sref_grid2obs_stats.$jobid
+  evs_sref_precip_stats.$jobid
+
+  jobid is automatically created ($$) during the run
+
+The running has 3 stages for each job
+
+ (1) Run METplus to process PB2NC prepbufr files (grid2obs) or PCP_Combine 6hr CCPA  data and sref's 6h APCP data files (precip)
+
+       After finished, 
+     the prepbufr files are in  $DATE/prepbufr.vdate sub-directory  
+     the pcp_combine files are in $DATA/ccpa.vdate, sref.initdate1, sref.initdate2, sref.initdate3, sref.initdate4, and sref.initdate5
+     Since there will be 5 days and 26 sref member's 6hr APCP should be generated, it takes a while to complete this work 
+
+ (2) Run METplus to generate stat files
+ 
+     For grid2obs 
+       All of output stat files will be in the $DATA/grid2obs
+     For precip 
+       All of output stat files will be in  the $DATA/precip
+
+     After the stage (1) is finished, 
+
+        for grid2obe following 2 sub-job scripts are generated for MPI run
+           run_sref_g2o_CONUS.prepbufr.fhr1.sh
+           run_sref_g2o_CONUS.prepbufr.fhr2.sh
+
+        for precip following 2 sub-job scripts are generated for MPI run
+           run_sref_mpi_CONUS.ccpa.fhr1.sh
+           run_sref_mpi_CONUS.ccpa.fhr2.sh
+
+    The METplus output_base for each sub-jobs are in grid2obs or precip
+        
+
+    In each job's output_base directory, there are 3 sub directories
+          logs, stats, and tmp
+       
+    The small stat files are stored in the stats. For grid2obs and precip , the small stat files have 3 types:
+          (1) ensemble_stat*.stat
+          (2) point_stat*MEAN*.stat (grid2obs) or grid_stat*MEAN*.stat (precip)
+          (3) point_stat*PROB*.stat (grid2obs) or grid_stat*PROB*.stat (precip)
+
+ (3) Combine the small stat files to a large stat file
+
+     After the small stat files of all of grid2obs or precip ijobs are created, they will be copied to 
+    the directory 
+       /lfs/h2/emc/vpppg/noscrub/${USER}/com/evs/v1.0/stats/narre/atmos.$VDATE
+
+   Thes small stat files  are then combined (by StatAnalysis tool) into a large stat file
+   called NARRE_MEAN_grid2obs_20221002.stat
+   This large stat file is stored in the directory 
+      /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/narre.$VDATE
+
+  The StatAnalysis METplus output_base directory is $DATA/gather, in which all of running info are stored  
+  
+
