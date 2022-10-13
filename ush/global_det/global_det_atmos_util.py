@@ -1324,6 +1324,14 @@ def check_model_files(job_dict):
     fhr_list = list(
         np.asarray(np.unique(np.asarray(fhr_list, dtype=int)),dtype=str)
     )
+    # UKMET data doesn't have RH for fhr 132 or 144
+    if job_dict['MODEL'] == 'ukmet' \
+            and job_dict['VERIF_CASE'] == 'grid2obs' \
+            and job_dict['VERIF_TYPE'] == 'pres_levs' \
+            and job_dict['job_name'] == 'RelHum':
+        for fhr_rm in ['132', '144']:
+            if fhr_rm in fhr_list:
+                fhr_list.remove(fhr_rm)
     if len(fhr_list) != 0:
         model_files_exist = True
     else:
