@@ -97,10 +97,11 @@ if STEP == 'prep':
                                     f'ccpa.t{VHOURm}z.{OBS_ACC}h.hrap.{NEST}.gb2'
                                 )
                             if not glob.glob(infiles):
-                                print(f"ERROR: Found no matches for {infiles}."
+                                print(f"WARNING: Found no matches for {infiles}."
                                       + f" Cannot copy necessary data into the"
-                                      + f" prep archive.")
-                                sys.exit(1)
+                                      + f" prep archive ... Continuing to the"
+                                      + f" next valid datetime.")
+                                continue
                             for infile in glob.glob(infiles):
                                 job_cmd_list.append(
                                     f"if [ -f \"{infile}\" ]; then cp \"{infile}\""
