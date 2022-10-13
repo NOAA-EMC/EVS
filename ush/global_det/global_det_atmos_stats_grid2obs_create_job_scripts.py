@@ -50,9 +50,9 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
     os.makedirs(JOB_GROUP_jobs_dir)
 
 ################################################
-#### Reformat jobs
+#### reformat_data jobs
 ################################################
-reformat_obs_jobs_dict = {
+reformat_data_obs_jobs_dict = {
     'pres_levs': {
         'PrepbufrGDAS': {'env': {'prepbufr': 'gdas',
                                  'obs_window': '1800',
@@ -94,16 +94,68 @@ reformat_obs_jobs_dict = {
     },
     'sea_ice': {}
 }
-reformat_model_jobs_dict = {
+reformat_data_model_jobs_dict = {
     'pres_levs': {},
     'sfc': {},
     'sea_ice': {}
 }
 
 ################################################
-#### Generate jobs
+#### assemble_data jobs
 ################################################
-generate_jobs_dict = {
+assemble_data_obs_jobs_dict = {
+    'pres_levs': {},
+    'sfc': {},
+    'sea_ice': {}
+}
+assemble_data_model_jobs_dict = {
+    'pres_levs': {},
+    'sfc': {
+        'TempAnom2m': {'env': {'prepbufr': 'nam',
+                               'obs_window': '900',
+                               'msg_type': 'ADPSFC',
+                               'valid_hr_inc': '6',
+                               'var1_fcst_name': 'TMP',
+                               'var1_fcst_levels': 'Z2',
+                               'var1_fcst_options': '',
+                               'var1_obs_name': 'TMP',
+                               'var1_obs_levels': 'Z2',
+                               'var1_obs_options': '',
+                               'met_config_overrides': ("'climo_mean "
+                                                        +"= fcst;'")},
+                       'commands': [gda_util.metplus_command(
+                                        'PointStat_fcstGLOBAL_DET_'
+                                        +'obsPrepbufr_climoERA5_'
+                                        +'MPR.conf'
+                                    ),
+                                    gda_util.python_command(
+                                        'global_det_atmos_stats_'
+                                        'grid2obs_create_anomaly.py',
+                                        ['TMP_Z2',
+                                         os.path.join(
+                                             '$DATA',
+                                             '${VERIF_CASE}_${STEP}',
+                                             'METplus_output',
+                                             '${RUN}.'
+                                             +'{valid?fmt=%Y%m%d}',
+                                             '$MODEL', '$VERIF_CASE',
+                                             'point_stat_'
+                                             +'${VERIF_TYPE}_'
+                                             +'${job_name}_'
+                                             +'{lead?fmt=%2H}0000L_'
+                                             +'{valid?fmt=%Y%m%d}_'
+                                             +'{valid?fmt=%H}0000V'
+                                             +'.stat'
+                                         )]
+                                    )]},
+    },
+    'sea_ice': {}
+}
+
+################################################
+#### generate_stats jobs
+################################################
+generate_stats_jobs_dict = {
     'pres_levs': {
         'GeoHeight': {'env': {'prepbufr': 'gdas',
                               'obs_window': '1800',
@@ -356,32 +408,7 @@ generate_jobs_dict = {
                                         'var1_obs_options': '',
                                         'met_config_overrides': ("'climo_mean "
                                                                  +"= fcst;'")},
-                                'commands': [gda_util.metplus_command(
-                                                'PointStat_fcstGLOBAL_DET_'
-                                                 +'obsPrepbufr_climoERA5_'
-                                                 +'MPR.conf'
-                                             ),
-                                             gda_util.python_command(
-                                                 'global_det_atmos_stats_'
-                                                 'grid2obs_create_anomaly.py',
-                                                 ['TMP_Z2',
-                                                  os.path.join(
-                                                      '$DATA',
-                                                      '${VERIF_CASE}_${STEP}',
-                                                      'METplus_output',
-                                                      '${RUN}.'
-                                                      +'{valid?fmt=%Y%m%d}',
-                                                      '$MODEL', '$VERIF_CASE',
-                                                      'point_stat_'
-                                                      +'${VERIF_TYPE}_'
-                                                      +'${job_name}_'
-                                                      +'{lead?fmt=%2H}0000L_'
-                                                      +'{valid?fmt=%Y%m%d}_'
-                                                      +'{valid?fmt=%H}0000V'
-                                                      +'.stat'
-                                                )]
-                                            ),
-                                            gda_util.python_command(
+                                'commands': [gda_util.python_command(
                                                 'global_det_atmos_stats_'
                                                 'grid2obs_create_daily_avg.py',
                                                 ['TMP_ANOM_Z2',
@@ -393,7 +420,7 @@ generate_jobs_dict = {
                                                       +'{valid?fmt=%Y%m%d}',
                                                       '$MODEL', '$VERIF_CASE',
                                                       'anomaly_${VERIF_TYPE}_'
-                                                      +'${job_name}_init'
+                                                      +'TempAnom2m_init'
                                                       +'{init?fmt=%Y%m%d%H}_'
                                                       +'fhr{lead?fmt=%3H}.stat'
                                                 ),
@@ -403,7 +430,7 @@ generate_jobs_dict = {
                                                     '${RUN}.{valid?fmt=%Y%m%d}',
                                                     '$MODEL', '$VERIF_CASE',
                                                     'anomaly_${VERIF_TYPE}_'
-                                                    +'${job_name}_init'
+                                                    +'TempAnom2m_init'
                                                     +'{init?fmt=%Y%m%d%H}_'
                                                     +'fhr{lead?fmt=%3H}.stat'
                                                 )]
@@ -423,8 +450,7 @@ generate_jobs_dict = {
                                                 'StatAnalysis_fcstGLOBAL_DET_'
                                                 +'obsPrepbufr_MPRtoSL1L2.conf'
                                             ),
-                                            'fi'
-                                        ]},
+                                            'fi']},
         'Dewpoint2m': {'env': {'prepbufr': 'nam',
                                'obs_window': '900',
                                'msg_type': 'ADPSFC',
@@ -605,32 +631,27 @@ generate_jobs_dict = {
 }
 
 ################################################
-#### Gather jobs
+#### gather_stats jobs
 ################################################
-gather_jobs_dict = {'env': {},
-                    'commands': [gda_util.metplus_command(
-                                     'StatAnalysis_fcstGLOBAL_DET.conf'
-                                 )]}
+gather_stats_jobs_dict = {'env': {},
+                          'commands': [gda_util.metplus_command(
+                                           'StatAnalysis_fcstGLOBAL_DET.conf'
+                                       )]}
 
 # Create job scripts
-if JOB_GROUP in ['reformat', 'generate']:
-    if JOB_GROUP == 'reformat':
-        JOB_GROUP_jobs_dict = reformat_model_jobs_dict
-    elif JOB_GROUP == 'generate':
-        JOB_GROUP_jobs_dict = generate_jobs_dict
+if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
+    if JOB_GROUP == 'reformat_data':
+        JOB_GROUP_jobs_dict = reformat_data_model_jobs_dict
+    if JOB_GROUP == 'assemble_data':
+        JOB_GROUP_jobs_dict = assemble_data_model_jobs_dict
+    elif JOB_GROUP == 'generate_stats':
+        JOB_GROUP_jobs_dict = generate_stats_jobs_dict
     for verif_type in VERIF_CASE_STEP_type_list:
         print("----> Making job scripts for "+VERIF_CASE_STEP+" "
               +verif_type+" for job group "+JOB_GROUP)
         VERIF_CASE_STEP_abbrev_type = (VERIF_CASE_STEP_abbrev+'_'
                                        +verif_type)
         # Read in environment variables for verif_type
-        if JOB_GROUP == 'reformat' and verif_type == 'precip':
-            precip_file_accum_list = (os.environ \
-                [VERIF_CASE_STEP_abbrev+'_precip_file_accum_list'] \
-                .split(' '))
-            precip_var_list = (os.environ \
-                [VERIF_CASE_STEP_abbrev+'_precip_var_list'] \
-                .split(' '))
         for verif_type_job in list(JOB_GROUP_jobs_dict[verif_type].keys()):
             # Initialize job environment dictionary
             job_env_dict = gda_util.initalize_job_env_dict(
@@ -653,6 +674,14 @@ if JOB_GROUP in ['reformat', 'generate']:
                 [verif_type_job]['commands']
             ) 
             # Loop through and write job script for dates and models
+            if JOB_GROUP == 'assemble_data':
+                if verif_type == 'sfc' \
+                        and verif_type_job == 'TempAnom2m':
+                    if int(job_env_dict['valid_hr_start']) - 12 > 0:
+                        job_env_dict['valid_hr_start'] = str(
+                            int(job_env_dict['valid_hr_start']) - 12
+                        )
+                        job_env_dict['valid_hr_inc'] = '12'
             valid_start_date_dt = datetime.datetime.strptime(
                 start_date+job_env_dict['valid_hr_start'],
                 '%Y%m%d%H'
@@ -678,42 +707,55 @@ if JOB_GROUP in ['reformat', 'generate']:
                     job.write('set -x\n')
                     job.write('\n')
                     # Set any environment variables for special cases
-                    FIXevs = job_env_dict['FIXevs']
-                    if verif_type == 'pres_levs':
-                        job_env_dict['grid'] = 'G004'
-                        job_env_dict['mask_list'] = (
-                            "'"+FIXevs+"/masks/G004_GLOBAL.nc, "
-                            +FIXevs+"/masks/G004_NHEM.nc, "
-                            +FIXevs+"/masks/G004_SHEM.nc, "
-                            +FIXevs+"/masks/G004_TROPICS.nc, "
-                            +FIXevs+"/masks/Bukovsky_G004_CONUS.nc'"
-                        )
-                    elif verif_type == 'sfc':
-                        job_env_dict['grid'] = 'G104'
-                        job_env_dict['mask_list'] = (
-                            "'"+FIXevs+"/masks/Bukovsky_G104_CONUS.nc, "
-                            +FIXevs+"/masks/Bukovsky_G104_CONUS_East.nc, "
-                            +FIXevs+"/masks/Bukovsky_G104_CONUS_West.nc, "
-                            +FIXevs+"/masks/Bukovsky_G104_CONUS_South.nc, "
-                            +FIXevs+"/masks/Bukovsky_G104_CONUS_Central.nc, "
-                            +FIXevs+"/masks/Bukovsky_G104_Appalachia.nc, "
-                            +FIXevs+"/masks/Bukovsky_G104_CPlains.nc, "
-                            +FIXevs+"/masks/Bukovsky_G104_DeepSouth.nc, "
-                            +FIXevs+"/masks/Bukovsky_G104_GreatBasin.nc, "
-                            +FIXevs+"/masks/Bukovsky_G104_GreatLakes.nc, "
-                            +FIXevs+"/masks/Bukovsky_G104_Mezquital.nc, "
-                            +FIXevs+"/masks/Bukovsky_G104_MidAtlantic.nc, "
-                            +FIXevs+"/masks/Bukovsky_G104_NorthAtlantic.nc, "
-                            +FIXevs+"/masks/Bukovsky_G104_NPlains.nc, "
-                            +FIXevs+"/masks/Bukovsky_G104_NRockies.nc, "
-                            +FIXevs+"/masks/Bukovsky_G104_PacificNW.nc, "
-                            +FIXevs+"/masks/Bukovsky_G104_PacificSW.nc, "
-                            +FIXevs+"/masks/Bukovsky_G104_Prairie.nc, "
-                            +FIXevs+"/masks/Bukovsky_G104_Southeast.nc, "
-                            +FIXevs+"/masks/Bukovsky_G104_Southwest.nc, "
-                            +FIXevs+"/masks/Bukovsky_G104_SPlains.nc, "
-                            +FIXevs+"/masks/Bukovsky_G104_SRockies.nc'"
-                        )
+                    if JOB_GROUP in ['assemble_data', 'generate_stats']:
+                        if verif_type == 'pres_levs':
+                            job_env_dict['grid'] = 'G004'
+                            mask_list = [
+                                'G004_GLOBAL', 'G004_NHEM', 'G004_SHEM',
+                                'G004_TROPICS', 'Bukovsky_G004_CONUS'
+                            ]
+                        elif verif_type == 'sfc':
+                            job_env_dict['grid'] = 'G104'
+                            mask_list = [
+                                'Bukovsky_G104_CONUS', 'Bukovsky_G104_CONUS_East',
+                                'Bukovsky_G104_CONUS_West',
+                                'Bukovsky_G104_CONUS_South',
+                                'Bukovsky_G104_CONUS_Central',
+                                'Bukovsky_G104_Appalachia',
+                                'Bukovsky_G104_CPlains',
+                                'Bukovsky_G104_DeepSouth',
+                                'Bukovsky_G104_GreatBasin',
+                                'Bukovsky_G104_GreatLakes',
+                                'Bukovsky_G104_Mezquital',
+                                'Bukovsky_G104_MidAtlantic',
+                                'Bukovsky_G104_NorthAtlantic',
+                                'Bukovsky_G104_NPlains',
+                                'Bukovsky_G104_NRockies',
+                                'Bukovsky_G104_PacificNW',
+                                'Bukovsky_G104_PacificSW',
+                                'Bukovsky_G104_Prairie',
+                                'Bukovsky_G104_Southeast',
+                                'Bukovsky_G104_Southwest',
+                                'Bukovsky_G104_SPlains',
+                                'Bukovsky_G104_SRockies'
+                            ]
+                        for mask in mask_list:
+                            if mask == mask_list[0]:
+                                env_var_mask_list = ("'"+job_env_dict['FIXevs']
+                                                     +"/masks/"+mask+".nc, ")
+                            elif mask == mask_list[-1]:
+                                env_var_mask_list = (env_var_mask_list
+                                                     +job_env_dict['FIXevs']
+                                                     +"/masks/"+mask+".nc'")
+                            else:
+                                env_var_mask_list = (env_var_mask_list
+                                                     +job_env_dict['FIXevs']
+                                                     +"/masks/"+mask+".nc, ")
+                        job_env_dict['mask_list'] = env_var_mask_list
+                    if JOB_GROUP == 'generate_stats':
+                        if verif_type_job == 'DailyAvg_TempAnom2m':
+                            if int(job_env_dict['fhr_inc']) < 24:
+                                job_env_dict['fhr_inc'] = '24'
                     # Do file checks
                     check_model_files = True
                     if check_model_files:
@@ -726,9 +768,9 @@ if JOB_GROUP in ['reformat', 'generate']:
                         job_env_dict.pop('fhr_start')
                         job_env_dict.pop('fhr_end')
                         job_env_dict.pop('fhr_inc')
-                    if JOB_GROUP == 'reformat':
+                    if JOB_GROUP == 'assemble_data':
                         check_truth_files = False
-                    elif JOB_GROUP == 'generate':
+                    elif JOB_GROUP in ['reformat_data', 'generate_stats']:
                         check_truth_files = True
                     if check_truth_files:
                         all_truth_file_exist = gda_util.check_truth_files(
@@ -767,9 +809,13 @@ if JOB_GROUP in ['reformat', 'generate']:
                     job_env_dict['fhr_end'] = fhr_end
                     job_env_dict['fhr_inc'] = fhr_inc
                 date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
-        # Do reformat observation jobs
-        if JOB_GROUP == 'reformat':
-            for verif_type_job in list(reformat_obs_jobs_dict[verif_type]\
+        # Do reformat_data and assemble_data observation jobs
+        if JOB_GROUP in ['reformat_data', 'assemble_data']:
+            if JOB_GROUP == 'reformat_data':
+                JOB_GROUP_obs_jobs_dict = reformat_data_obs_jobs_dict
+            elif JOB_GROUP == 'assemble_data':
+                JOB_GROUP_obs_jobs_dict = assemble_data_obs_jobs_dict
+            for verif_type_job in list(JOB_GROUP_obs_jobs_dict[verif_type]\
                                        .keys()):
                 # Initialize job environment dictionary
                 job_env_dict = gda_util.initalize_job_env_dict(
@@ -781,14 +827,14 @@ if JOB_GROUP in ['reformat', 'generate']:
                 job_env_dict.pop('fhr_inc')
                 # Add job specific environment variables
                 for verif_type_job_env_var in \
-                        list(reformat_obs_jobs_dict[verif_type]\
+                        list(JOB_GROUP_obs_jobs_dict[verif_type]\
                              [verif_type_job]['env'].keys()):
                     job_env_dict[verif_type_job_env_var] = (
-                        reformat_obs_jobs_dict[verif_type]\
+                        JOB_GROUP_obs_jobs_dict[verif_type]\
                         [verif_type_job]['env'][verif_type_job_env_var]
                     )
                 verif_type_job_commands_list = (
-                    reformat_obs_jobs_dict[verif_type]\
+                    JOB_GROUP_obs_jobs_dict[verif_type]\
                     [verif_type_job]['commands']
                 )
                 # Loop through and write job script for dates and models
@@ -831,7 +877,7 @@ if JOB_GROUP in ['reformat', 'generate']:
                             job.write(cmd+'\n')
                     job.close()
                     date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
-elif JOB_GROUP == 'gather':
+elif JOB_GROUP == 'gather_stats':
     print("----> Making job scripts for "+VERIF_CASE_STEP+" "
       +"for job group "+JOB_GROUP)
     # Initialize job environment dictionary
@@ -866,7 +912,7 @@ elif JOB_GROUP == 'gather':
                 write_job_cmds = False
             # Write job commands
             if write_job_cmds:
-                for cmd in gather_jobs_dict['commands']:
+                for cmd in gather_stats_jobs_dict['commands']:
                     job.write(cmd+'\n')
             job.close()
         date_dt = date_dt + datetime.timedelta(days=1)

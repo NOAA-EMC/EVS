@@ -50,88 +50,51 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
     os.makedirs(JOB_GROUP_jobs_dir)
 
 ################################################
-#### Reformat jobs
+#### reformat_data jobs
 ################################################
-reformat_obs_jobs_dict = {
+reformat_data_obs_jobs_dict = {
     'flux': {},
     'means': {},
     'ozone': {},
-    'precip': {
-        '24hrCCPA': {'env': {},
-                     'commands': [gda_util.metplus_command(
-                                      'PCPCombine_obs24hrCCPA.conf'
-                                  )]}
-    },
+    'precip': {},
     'pres_levs': {},
     'sea_ice': {},
     'snow': {},
     'sst': {},
 }
-reformat_model_jobs_dict = {
+reformat_data_model_jobs_dict = {
     'flux': {},
     'means': {},
     'ozone': {},
-    'precip': {
-        '24hrAccum': {'env': {},
-                      'commands': [gda_util.metplus_command(
-                                       'PCPCombine_fcstGLOBAL_DET_'
-                                       +'24hrAccum_precip.conf'
-                                   )]}
-    },
+    'precip': {},
     'pres_levs': {
-        'DailyAvg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
-                                           'var1_levels': 'P500',
-                                           'met_config_overrides': (
-                                              "'climo_mean = fcst;'"
-                                           )},
-                                   'commands': [gda_util.metplus_command(
-                                                    'GridStat_fcstGLOBAL_DET_'
-                                                    +'obsModelAnalysis_climoERA5_'
-                                                    +'NetCDF.conf'
-                                                ),
-                                                gda_util.python_command(
-                                                  'global_det_atmos_stats_grid2grid'
-                                                  '_create_anomaly.py',
-                                                   ['HGT_P500',
-                                                    os.path.join(
-                                                        '$DATA',
-                                                        '${VERIF_CASE}_${STEP}',
-                                                        'METplus_output',
-                                                        '${RUN}.{valid?fmt=%Y%m%d}',
-                                                        '$MODEL', '$VERIF_CASE',
-                                                        'grid_stat_${VERIF_TYPE}_'
-                                                        +'${job_name}_'
-                                                        +'{lead?fmt=%2H}0000L_'
-                                                        +'{valid?fmt=%Y%m%d}_'
-                                                        +'{valid?fmt=%H}0000V_pairs.nc'
-                                                    )]
-                                                ),
-                                                gda_util.python_command(
-                                                  'global_det_atmos_stats_grid2grid'
-                                                  '_create_daily_avg.py',
-                                                   ['HGT_ANOM_P500',
-                                                    os.path.join(
-                                                        '$DATA',
-                                                        '${VERIF_CASE}_${STEP}',
-                                                        'METplus_output',
-                                                        '${RUN}.{valid?fmt=%Y%m%d}',
-                                                        '$MODEL', '$VERIF_CASE',
-                                                        'anomaly_${VERIF_TYPE}_'
-                                                        +'${job_name}_init'
-                                                        +'{init?fmt=%Y%m%d%H}_'
-                                                        +'fhr{lead?fmt=%3H}.nc'
-                                                    ),
-                                                    os.path.join(
-                                                        '$COMIN', 'stats',
-                                                        '$COMPONENT',
-                                                        '${RUN}.{valid?fmt=%Y%m%d}',
-                                                        '$MODEL', '$VERIF_CASE',
-                                                        'anomaly_${VERIF_TYPE}_'
-                                                        +'${job_name}_init'
-                                                        +'{init?fmt=%Y%m%d%H}_'
-                                                        +'fhr{lead?fmt=%3H}.nc'
-                                                    )]
-                                                )]},
+        'GeoHeightAnom': {'env': {'var1_name': 'HGT',
+                                  'var1_levels': 'P500',
+                                  'met_config_overrides': (
+                                      "'climo_mean = fcst;'"
+                                  )},
+                          'commands': [gda_util.metplus_command(
+                                           'GridStat_fcstGLOBAL_DET_'
+                                            +'obsModelAnalysis_climoERA5_'
+                                            +'NetCDF.conf'
+                                       ),
+                                       gda_util.python_command(
+                                           'global_det_atmos_stats_grid2grid'
+                                           '_create_anomaly.py',
+                                           ['HGT_P500',
+                                            os.path.join(
+                                                '$DATA',
+                                                '${VERIF_CASE}_${STEP}',
+                                                'METplus_output',
+                                                '${RUN}.{valid?fmt=%Y%m%d}',
+                                                '$MODEL', '$VERIF_CASE',
+                                                'grid_stat_${VERIF_TYPE}_'
+                                                +'${job_name}_'
+                                                +'{lead?fmt=%2H}0000L_'
+                                                +'{valid?fmt=%Y%m%d}_'
+                                                +'{valid?fmt=%H}0000V_pairs.nc'
+                                             )]
+                                       )]},
         'WindShear': {'env': {'var1_name': 'UGRD',
                               'var1_levels': '"P850, P200"',
                               'var2_name': 'VGRD',
@@ -158,26 +121,110 @@ reformat_model_jobs_dict = {
                                    )]}
     },
     'sea_ice': {
+        'Concentration': {'env': {'var1_name': 'ICEC',
+                                  'var1_levels': 'Z0',},
+                          'commands': [gda_util.metplus_command(
+                                           'GridStat_fcstGLOBAL_DET_'
+                                            +'NetCDF.conf'
+                                       )]},
+    },
+    'snow': {},
+    'sst': {
+        'SST': {'env': {'var1_name': 'TMP',
+                        'var1_levels': 'Z0'},
+                'commands': [gda_util.metplus_command(
+                                 'GridStat_fcstGLOBAL_DET_'
+                                 +'NetCDF.conf'
+                             )]}
+    },
+}
+################################################
+#### assemble_data jobs
+################################################
+assemble_data_obs_jobs_dict = {
+    'flux': {},
+    'means': {},
+    'ozone': {},
+    'precip': {
+        '24hrCCPA': {'env': {},
+                     'commands': [gda_util.metplus_command(
+                                      'PCPCombine_obs24hrCCPA.conf'
+                                  )]}
+    },
+    'pres_levs': {},
+    'sea_ice': {},
+    'snow': {},
+    'sst': {},
+}
+assemble_data_model_jobs_dict = {
+    'flux': {},
+    'means': {},
+    'ozone': {},
+    'precip': {
+        '24hrAccum': {'env': {},
+                      'commands': [gda_util.metplus_command(
+                                       'PCPCombine_fcstGLOBAL_DET_'
+                                       +'24hrAccum_precip.conf'
+                                   )]}
+    },
+    'pres_levs': {
+        'DailyAvg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
+                                           'var1_levels': 'P500',},
+                                   'commands': [gda_util.python_command(
+                                                    'global_det_atmos_'
+                                                    +'stats_grid2grid'
+                                                    +'_create_daily_avg.py',
+                                                    ['HGT_ANOM_P500',
+                                                     os.path.join(
+                                                         '$DATA',
+                                                         '${VERIF_CASE}_'
+                                                         +'${STEP}',
+                                                         'METplus_output',
+                                                         '${RUN}.'
+                                                         +'{valid?fmt=%Y%m%d}',
+                                                         '$MODEL',
+                                                         '$VERIF_CASE',
+                                                         'anomaly_'
+                                                         +'${VERIF_TYPE}_'
+                                                         +'GeoHeightAnom_init'
+                                                         +'{init?fmt=%Y%m%d%H}_'
+                                                         +'fhr{lead?fmt=%3H}.nc'
+                                                     ),
+                                                     os.path.join(
+                                                         '$COMIN', 'stats',
+                                                         '$COMPONENT',
+                                                         '${RUN}.'
+                                                         +'{valid?fmt=%Y%m%d}',
+                                                         '$MODEL',
+                                                         '$VERIF_CASE',
+                                                         'anomaly_'
+                                                         +'${VERIF_TYPE}_'
+                                                         +'GeoHeightAnom_init'
+                                                         +'{init?fmt=%Y%m%d%H}_'
+                                                         +'fhr{lead?fmt=%3H}.nc'
+                                                     )]
+                                                )]},
+    },
+    'sea_ice': {
         'DailyAvg_Concentration': {'env': {'var1_name': 'ICEC',
                                            'var1_levels': 'Z0',},
-                                   'commands': [gda_util.metplus_command(
-                                                    'GridStat_fcstGLOBAL_DET_'
-                                                    +'NetCDF.conf'
-                                                ),
-                                                gda_util.python_command(
+                                   'commands': [gda_util.python_command(
                                                     'global_det_atmos_stats_'
                                                     +'grid2grid_create_'
                                                     +'daily_avg.py',
                                                     ['ICEC_Z0',
                                                      os.path.join(
                                                          '$DATA',
-                                                         '${VERIF_CASE}_${STEP}',
+                                                         '${VERIF_CASE}_'
+                                                         +'${STEP}',
                                                          'METplus_output',
                                                          '${RUN}.'
                                                          +'{valid?fmt=%Y%m%d}',
-                                                         '$MODEL', '$VERIF_CASE',
-                                                         'grid_stat_${VERIF_TYPE}_'
-                                                         +'${job_name}_'
+                                                         '$MODEL',
+                                                         '$VERIF_CASE',
+                                                         'grid_stat_'
+                                                         +'${VERIF_TYPE}_'
+                                                         +'Concentration_'
                                                          +'{lead?fmt=%2H}0000L_'
                                                          +'{valid?fmt=%Y%m%d}_'
                                                          +'{valid?fmt=%H}0000V_'
@@ -188,9 +235,11 @@ reformat_model_jobs_dict = {
                                                          '$COMPONENT',
                                                          '${RUN}.'
                                                          +'{valid?fmt=%Y%m%d}',
-                                                         '$MODEL', '$VERIF_CASE',
-                                                         'grid_stat_${VERIF_TYPE}_'
-                                                         +'${job_name}_'
+                                                         '$MODEL',
+                                                         '$VERIF_CASE',
+                                                         'grid_stat_'
+                                                         +'${VERIF_TYPE}_'
+                                                         +'Concentration_'
                                                          +'{lead?fmt=%2H}0000L_'
                                                          +'{valid?fmt=%Y%m%d}_'
                                                          +'{valid?fmt=%H}0000V_'
@@ -202,7 +251,7 @@ reformat_model_jobs_dict = {
                                'commands': [gda_util.metplus_command(
                                                 'PCPCombine_fcstGLOBAL_'
                                                 +'DET_24hrAccum_snow.conf'
-                                            )]},
+                                            )]}, 
         '24hrAccum_Depth': {'env': {'MODEL_var': 'SNOD'},
                             'commands': [gda_util.metplus_command(
                                              'PCPCombine_fcstGLOBAL_'
@@ -212,13 +261,10 @@ reformat_model_jobs_dict = {
     'sst': {
         'DailyAvg_SST': {'env': {'var1_name': 'TMP',
                                  'var1_levels': 'Z0'},
-                         'commands': [gda_util.metplus_command(
-                                          'GridStat_fcstGLOBAL_DET_'
-                                          +'NetCDF.conf'
-                                      ),
-                                      gda_util.python_command(
-                                          'global_det_atmos_stats_grid2grid'
-                                          '_create_daily_avg.py',
+                         'commands': [gda_util.python_command(
+                                          'global_det_atmos_'
+                                          +'stats_grid2grid'
+                                          +'_create_daily_avg.py',
                                           ['TMP_Z0',
                                            os.path.join(
                                               '$DATA',
@@ -226,8 +272,7 @@ reformat_model_jobs_dict = {
                                               'METplus_output',
                                               '${RUN}.{valid?fmt=%Y%m%d}',
                                               '$MODEL', '$VERIF_CASE',
-                                              'grid_stat_${VERIF_TYPE}_'
-                                              +'${job_name}_'
+                                              'grid_stat_${VERIF_TYPE}_SST_'
                                               +'{lead?fmt=%2H}0000L_'
                                               +'{valid?fmt=%Y%m%d}_'
                                               +'{valid?fmt=%H}0000V_pairs.nc'
@@ -237,8 +282,7 @@ reformat_model_jobs_dict = {
                                                '$COMPONENT',
                                                '${RUN}.{valid?fmt=%Y%m%d}',
                                                '$MODEL', '$VERIF_CASE',
-                                               'grid_stat_${VERIF_TYPE}.'
-                                               +'${job_name}_'
+                                               'grid_stat_${VERIF_TYPE}_SST_'
                                                +'{lead?fmt=%2H}0000L_'
                                                +'{valid?fmt=%Y%m%d}_'
                                                +'{valid?fmt=%H}0000V_pairs.nc'
@@ -247,9 +291,9 @@ reformat_model_jobs_dict = {
 }
 
 ################################################
-#### Generate jobs
+#### generate_stats jobs
 ################################################
-generate_jobs_dict = {
+generate_stats_jobs_dict = {
     'flux': {},
     'means': {
         'CAPESfcBased': {'env': {'var1_name': 'CAPE',
@@ -735,26 +779,28 @@ generate_jobs_dict = {
 }
 
 ################################################
-#### Gather jobs
+#### gather_stats jobs
 ################################################
-gather_jobs_dict = {'env': {},
+gather_stats_jobs_dict = {'env': {},
                     'commands': [gda_util.metplus_command(
                                      'StatAnalysis_fcstGLOBAL_DET.conf'
                                  )]}
 
 # Create job scripts
-if JOB_GROUP in ['reformat', 'generate']:
-    if JOB_GROUP == 'reformat':
-        JOB_GROUP_jobs_dict = reformat_model_jobs_dict
-    elif JOB_GROUP == 'generate':
-        JOB_GROUP_jobs_dict = generate_jobs_dict
+if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
+    if JOB_GROUP == 'reformat_data':
+        JOB_GROUP_jobs_dict = reformat_data_model_jobs_dict
+    elif JOB_GROUP == 'assemble_data':
+        JOB_GROUP_jobs_dict = assemble_data_model_jobs_dict
+    elif JOB_GROUP == 'generate_stats':
+        JOB_GROUP_jobs_dict = generate_stats_jobs_dict
     for verif_type in VERIF_CASE_STEP_type_list:
         print("----> Making job scripts for "+VERIF_CASE_STEP+" "
               +verif_type+" for job group "+JOB_GROUP)
         VERIF_CASE_STEP_abbrev_type = (VERIF_CASE_STEP_abbrev+'_'
                                        +verif_type)
         # Read in environment variables for verif_type
-        if JOB_GROUP == 'reformat' and verif_type == 'precip':
+        if JOB_GROUP == 'assemble_data' and verif_type == 'precip':
             precip_file_accum_list = (os.environ \
                 [VERIF_CASE_STEP_abbrev+'_precip_file_accum_list'] \
                 .split(' '))
@@ -783,6 +829,18 @@ if JOB_GROUP in ['reformat', 'generate']:
                 [verif_type_job]['commands']
             ) 
             # Loop through and write job script for dates and models
+            if JOB_GROUP == 'reformat_data':
+                if verif_type in ['sst', 'sea_ice']:
+                    job_env_dict['valid_hr_start'] = '00'
+                    job_env_dict['valid_hr_end'] = '12'
+                    job_env_dict['valid_hr_inc'] = '12'
+                if verif_type == 'pres_levs' \
+                        and verif_type_job == 'GeoHeightAnom':
+                    if int(job_env_dict['valid_hr_start']) - 12 > 0:
+                        job_env_dict['valid_hr_start'] = str(
+                            int(job_env_dict['valid_hr_start']) - 12
+                        )
+                        job_env_dict['valid_hr_inc'] = '12'
             valid_start_date_dt = datetime.datetime.strptime(
                 start_date+job_env_dict['valid_hr_start'],
                 '%Y%m%d%H'
@@ -808,12 +866,13 @@ if JOB_GROUP in ['reformat', 'generate']:
                     job.write('set -x\n')
                     job.write('\n')
                     # Set any environment variables for special cases
-                    if JOB_GROUP == 'reformat':
+                    if JOB_GROUP == 'reformat_data':
                         if verif_type == 'pres_levs':
                             job_env_dict['TRUTH'] = os.environ[
                                 VERIF_CASE_STEP_abbrev_type+'_truth_name_list'
                             ].split(' ')[model_idx]
-                        elif verif_type == 'precip':
+                    if JOB_GROUP == 'assemble_data':
+                        if verif_type == 'precip':
                             job_env_dict['MODEL_var'] = (
                                 precip_var_list[model_idx]
                             )
@@ -830,15 +889,18 @@ if JOB_GROUP in ['reformat', 'generate']:
                                 job_env_dict['MODEL_levels'] = (
                                     'A'+job_env_dict['MODEL_accum']
                                 )
-                    elif JOB_GROUP == 'generate':
+                    elif JOB_GROUP == 'generate_stats':
                         if verif_type == 'pres_levs':
                             job_env_dict['TRUTH'] = os.environ[
                                 VERIF_CASE_STEP_abbrev_type+'_truth_name_list'
                             ].split(' ')[model_idx]
-                        if verif_type_job == 'DailyAvg_GeoHeightAnom':
-                            if int(job_env_dict['fhr_inc']) < 24:
-                                job_env_dict['fhr_inc'] = '24'
+                            if verif_type_job == 'DailyAvg_GeoHeightAnom':
+                                if int(job_env_dict['fhr_inc']) < 24:
+                                    job_env_dict['fhr_inc'] = '24'
                     # Do file checks
+                    all_truth_file_exist = False
+                    model_files_exist = False
+                    write_job_cmds = False
                     check_model_files = True
                     if check_model_files:
                         model_files_exist, valid_date_fhr_list = (
@@ -850,14 +912,16 @@ if JOB_GROUP in ['reformat', 'generate']:
                         job_env_dict.pop('fhr_start')
                         job_env_dict.pop('fhr_end')
                         job_env_dict.pop('fhr_inc')
-                    if JOB_GROUP == 'reformat':
+                    if JOB_GROUP == 'reformat_data':
                         if verif_type == 'pres_levs' \
-                                and verif_type_job in ['DailyAvg_GeoHeightAnom',
+                                and verif_type_job in ['GeoHeightAnom',
                                                        'WindShear']:
                             check_truth_files = True
                         else:
                             check_truth_files = False
-                    elif JOB_GROUP == 'generate':
+                    elif JOB_GROUP == 'assemble_data':
+                        check_truth_files = False
+                    elif JOB_GROUP == 'generate_stats':
                         if verif_type == 'pres_levs' \
                                 and verif_type_job in [
                                     'DailyAvg_GeoHeightAnom',
@@ -901,9 +965,13 @@ if JOB_GROUP in ['reformat', 'generate']:
                     job_env_dict['fhr_end'] = fhr_end
                     job_env_dict['fhr_inc'] = fhr_inc
                 date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
-        # Do reformat observation jobs
-        if JOB_GROUP == 'reformat':
-            for verif_type_job in list(reformat_obs_jobs_dict[verif_type]\
+        # Do reformat_data and assemble_data observation jobs
+        if JOB_GROUP in ['reformat_data', 'assemble_data']:
+            if JOB_GROUP == 'reformat_data':
+                JOB_GROUP_obs_jobs_dict = reformat_data_obs_jobs_dict
+            elif JOB_GROUP == 'assemble_data':
+                JOB_GROUP_obs_jobs_dict = assemble_data_obs_jobs_dict
+            for verif_type_job in list(JOB_GROUP_obs_jobs_dict[verif_type]\
                                        .keys()):
                 # Initialize job environment dictionary
                 job_env_dict = gda_util.initalize_job_env_dict(
@@ -915,14 +983,14 @@ if JOB_GROUP in ['reformat', 'generate']:
                 job_env_dict.pop('fhr_inc')
                 # Add job specific environment variables
                 for verif_type_job_env_var in \
-                        list(reformat_obs_jobs_dict[verif_type]\
+                        list(JOB_GROUP_obs_jobs_dict[verif_type]\
                              [verif_type_job]['env'].keys()):
                     job_env_dict[verif_type_job_env_var] = (
-                        reformat_obs_jobs_dict[verif_type]\
+                        JOB_GROUP_obs_jobs_dict[verif_type]\
                         [verif_type_job]['env'][verif_type_job_env_var]
                     )
                 verif_type_job_commands_list = (
-                    reformat_obs_jobs_dict[verif_type]\
+                    JOB_GROUP_obs_jobs_dict[verif_type]\
                     [verif_type_job]['commands']
                 )
                 # Loop through and write job script for dates and models
@@ -965,7 +1033,7 @@ if JOB_GROUP in ['reformat', 'generate']:
                             job.write(cmd+'\n')
                     job.close()
                     date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
-elif JOB_GROUP == 'gather':
+elif JOB_GROUP == 'gather_stats':
     print("----> Making job scripts for "+VERIF_CASE_STEP+" "
       +"for job group "+JOB_GROUP)
     # Initialize job environment dictionary
@@ -1000,7 +1068,7 @@ elif JOB_GROUP == 'gather':
                 write_job_cmds = False
             # Write job commands
             if write_job_cmds:
-                for cmd in gather_jobs_dict['commands']:
+                for cmd in gather_stats_jobs_dict['commands']:
                     job.write(cmd+'\n')
             job.close()
         date_dt = date_dt + datetime.timedelta(days=1)

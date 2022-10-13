@@ -632,6 +632,14 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                                     model_file_format,
                                     model_fcst_dest_file_format
                                 )
+                                gda_util.get_model_file(
+                                    time['valid_time'],
+                                    time['init_time'] \
+                                    - datetime.timedelta(hours=minus_hr),
+                                    str(fhr),
+                                    model_file_format,
+                                    model_fcst_dest_file_format
+                                )
                             nf+=1
         # Get truth files
         for VERIF_CASE_STEP_type_valid_time \
