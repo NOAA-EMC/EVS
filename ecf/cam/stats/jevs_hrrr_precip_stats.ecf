@@ -15,15 +15,12 @@ module reset
 export machine=WCOSS2
 
 # ECF Settings
-export envir=prod
 export RUN_ENVIR=nco
 export SENDECF=YES
 export SENDCOM=YES
 export KEEPDATA=YES
 export SENDDBN=YES
 export SENDDBN_NTC=
-# In production the following will be deleted (DATAROOT will be used instead, which already exists in the environment)
-export DATAROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_hrrr_precip_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
@@ -39,12 +36,14 @@ export VERIF_CASE="precip"
 export MODELNAME="hrrr"
 
 # EVS Settings
-export evs_ver="v1.0"
 export HOMEevs="/lfs/h2/emc/vpppg/noscrub/$USER/EVS"
 export config=$HOMEevs/parm/evs_config/cam/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
 # Load Modules
 source ${HOMEevs}/ush/cam/evs_setup_$machine.sh
+
+# In production the following will be deleted (DATAROOT will be used instead, which already exists in the environment)
+export DATAROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/cam/stats/JEVS_CAM_STATS
