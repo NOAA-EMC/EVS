@@ -1,4 +1,4 @@
-#PBS -N jevs_aqm_stats_00
+#PBS -N jevs_aqm_prep_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -39,11 +39,10 @@ module load prod_envir/${prodenvir_ver}
 
 module list
 
-export cyc
+export cyc=00
 echo $cyc
-export envir=prod
 export NET=evs
-export STEP=stats
+export STEP=prep
 export COMPONENT=aqm
 export RUN=atmos
 export VERIF_CASE=grid2obs
@@ -55,7 +54,7 @@ export config=$HOMEevs/parm/evs_config/aqm/config.evs.aqm.prod
 source $config
 
 # CALL executable job script here
-$HOMEevs/jobs/aqm/stats/JEVS_AQM_STATS
+$HOMEevs/jobs/aqm/prep/JEVS_AQM_PREP
 
 ######################################################################
 ## Purpose: This job will generate the grid2obs statistics for the AQM
