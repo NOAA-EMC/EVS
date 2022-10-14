@@ -26,9 +26,6 @@ export netcdf_ver=4.7.4
 export craypals_ver=1.0.12
 export cfp_ver=2.0.4
 export python_ver=3.8.6
-export hdf5_ver=1.10.6
-export craympich_ver=8.1.12
-export bufr_dump_ver=1.0.0
 
 export nam_ver=v4.2
 export sref_ver=v7.1
