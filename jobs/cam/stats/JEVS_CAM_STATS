@@ -15,8 +15,10 @@ date
 # obtain unique LSF id (jobid) and make temp directories
 ###########################################################
 export pid=$$
-export DATA_IN=${DATA_IN:-$DATAROOT}
-export DATA=$DATA_IN/${jobid}
+#export DATA_IN=${DATA_IN:-$DATAROOT}
+#export DATA=$DATA_IN/${jobid}
+
+export DATA=/lfs/h2/emc/ptmp/perry.shafran/EVS2/${cyc}_${MODELNAME}
 
 rm -rf $DATA
 mkdir -p $DATA
@@ -40,7 +42,6 @@ export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
 export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXvevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
@@ -50,29 +51,34 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 setpdy.sh
 . ./PDY
 
-export vday=$PDYm1
+export VDATE=$PDYm1
 
 # Define COMIN/COMOUT variables:
 
-export COMIN=${COMIN:-$(compath.py evs/${evs_ver}/)}
-export COMOUT=${COMOUT:-$(compath.py -o evs/${evs_ver}/${prog}/${net})}
-export COMNAM=${COMN:-$(compath.py nam/${nam_ver})}
-export COMMOD=${COMMOD:-$(compath.py ${mod}/${mod_ver})}
+echo $COMPATH
+
+#export COMIN=${COMIN:-$(compath.py ${envir}/com/evs/${evs_ver}/)}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/perry.shafran/${NET}/${evs_ver}
+export COMINnam=${COMINnam:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
+export COMINobs=${COMINobs:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/perry.shafran/${NET}/${evs_ver}/${STEP}/${COMPONENT}
+export COMOUTsmall=$COMOUT/${RUN}.${VDATE}/$MODELNAME/$VERIF_CASE
+export COMOUTfinal=$COMOUT/${MODELNAME}.${VDATE}
 
 #######################################################################
 # Execute the script.
 #######################################################################
 
-$HOMEevs/scripts/${net}/exevs_${mod}_${sys}_${prog}.sh
+$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 
 cat $pgmout
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
 
-if [ "$KEEPDATA" != "YES" ] ; then
-  cd $DATAROOT
-  rm -rf $DATA
-fi
+#if [ "$KEEPDATA" != "YES" ] ; then
+#  cd $DATAROOT
+#  rm -rf $DATA
+#fi
 
 }
