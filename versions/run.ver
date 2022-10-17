@@ -32,6 +32,7 @@ export nco_ver=4.9.7
 export proj_ver=7.1.0
 export cdo_ver=1.9.8
 export udunits_ver=2.2.28
+export imagemagick_ver=7.0.8-7
 
 export nam_ver=v4.2
 export sref_ver=v7.1

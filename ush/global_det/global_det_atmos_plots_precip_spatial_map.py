@@ -14,6 +14,7 @@ import matplotlib.gridspec as gridspec
 import os
 import sys
 import datetime
+import subprocess
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from cartopy.util import add_cyclic_point
@@ -324,6 +325,21 @@ class PrecipSpatialMap:
                 plt.savefig(image_name)
                 plt.clf()
                 plt.close('all')
+                # Convert png to gif, if possible
+                check_convert = subprocess.run(
+                    ['which', 'convert'], stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL
+                )
+                if check_convert.returncode == 0:
+                    self.logger.info(f"Converting {image_name} to "
+                                     +f"{image_name.replace('.png', '.gif')}")
+                    run_convert = subprocess.run(
+                        ['convert', image_name,
+                         image_name.replace('.png', '.gif')]
+                    )
+                else:
+                    self.logger.warning("convert executable not in PATH, "
+                                        "not greating gif of image")
 
 def main():
     # Need settings
