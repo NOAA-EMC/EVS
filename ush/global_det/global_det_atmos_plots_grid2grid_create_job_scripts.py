@@ -392,7 +392,7 @@ plot_jobs_dict = {
                             'obs_name': '24hrCCPA',
                             'plots_list': 'performance_diagram'},
         '24hrAccumMaps': {'line_type_stat_list': ['SL1L2/FBAR'],
-                          'vx_mask_list': ['CONUS'],
+                          'vx_mask_list': ['CONUS', 'AK', 'PR', 'HI'],
                           'fcst_var_dict': {'name': 'APCP_A24',
                                             'levels': 'A24',
                                             'threshs': 'NA'},

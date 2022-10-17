@@ -159,11 +159,12 @@ class PrecipSpatialMap:
                                       +"DOES NOT MATCH EXPECTED VALID TIME "
                                       +f"{valid_date_dt}")
                     sys.exit(1)
-                if init_date_dt != file_init_time_dt:
-                    self.logger.error(f"FILE INIT TIME {file_init_time_dt} "
-                                      +"DOES NOT MATCH EXPECTED INIT TIME "
-                                      +f"{init_date_dt}")
-                    sys.exit(1)
+                if model_num != 'obs':
+                    if init_date_dt != file_init_time_dt:
+                        self.logger.error(f"FILE INIT TIME {file_init_time_dt} "
+                                          +"DOES NOT MATCH EXPECTED INIT TIME "
+                                          +f"{init_date_dt}")
+                        sys.exit(1)
                 if var_units in ['mm', 'kg/m^2']:
                     self.logger.info(f"Converting from {var_units} to " 
                                      +"inches")
@@ -235,6 +236,10 @@ class PrecipSpatialMap:
                         +'.v'+valid_date_dt.strftime('%Y%m%d%H')+'.'
                         +self.date_info_dict['forecast_hour'].zfill(3)+'h.png'
                     )
+                if self.plot_info_dict['vx_mask'] != 'CONUS':
+                    image_name = image_name.replace(
+                        'png', self.plot_info_dict['vx_mask']+'.png'
+                    )
                 # Create plot
                 self.logger.info(f"Creating plot for {model_num_file}")
                 fig = plt.figure(figsize=(plot_specs_psm.fig_size[0],
@@ -255,9 +260,24 @@ class PrecipSpatialMap:
                         right_logo_img_array, right_logo_xpixel_loc,
                         right_logo_ypixel_loc, zorder=1, alpha=right_logo_alpha
                     )
-                extent = [-124,-70,18.0,50.0]
-                myproj=ccrs.LambertConformal(central_longitude=-97.6,
-                                             central_latitude=35.4,
+                if self.plot_info_dict['vx_mask'] == 'CONUS':
+                    extent = [-124,-70,18.0,50.0]
+                    central_lon = -97.6
+                    central_lat = 35.4
+                elif self.plot_info_dict['vx_mask'] == 'AK':
+                    extent = [-180,-110,45.0,75.0]
+                    central_lon = -145
+                    central_lat = 60
+                elif self.plot_info_dict['vx_mask'] == 'PR':
+                    extent = [-75,-60,12.0,25.0]
+                    central_lon = -67.5
+                    central_lat = 18.5
+                elif self.plot_info_dict['vx_mask'] == 'HI':
+                    extent = [-165,-150,15.0,25.0]
+                    central_lon = -157.5
+                    central_lat = 20
+                myproj=ccrs.LambertConformal(central_longitude=central_lon,
+                                             central_latitude=central_lat,
                                              false_easting=0.0,
                                              false_northing=0.0,
                                              secant_latitudes=None,
