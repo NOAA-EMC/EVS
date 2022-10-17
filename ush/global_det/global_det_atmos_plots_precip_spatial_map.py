@@ -183,12 +183,12 @@ class PrecipSpatialMap:
                     model_num_plot_name.upper()+' '
                     +plot_specs_psm.get_var_plot_name(var_name, var_level)+' '
                     +f'({var_units})\n'
+                    +'Forecast Day '+forecast_day_plot+' '
+                     +'(Hour '+self.date_info_dict['forecast_hour']+')\n' 
                     +'valid '
                     +(valid_date_dt-datetime.timedelta(hours=24))\
                     .strftime('%d%b%Y %H')+'Z to '
-                    +valid_date_dt.strftime('%d%b%Y %H')+'Z, '
-                    +'Forecast Day '+forecast_day_plot+' '
-                    +'(Hour '+self.date_info_dict['forecast_hour']+')'
+                    +valid_date_dt.strftime('%d%b%Y %H')+'Z'
                 )
                 plot_left_logo = False
                 plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
@@ -246,7 +246,7 @@ class PrecipSpatialMap:
                 fig = plt.figure(figsize=(plot_specs_psm.fig_size[0],
                                           plot_specs_psm.fig_size[1]))
                 gs_hspace, gs_wspace = 0, 0
-                gs_bottom, gs_top = 0.1, 0.925
+                gs_bottom, gs_top = 0.125, 0.85
                 gs = gridspec.GridSpec(1,1, bottom=gs_bottom, top=gs_top,
                                        hspace=gs_hspace, wspace=gs_wspace)
                 fig.suptitle(plot_title)
@@ -300,7 +300,7 @@ class PrecipSpatialMap:
                 cbar_width = (gs.get_grid_positions(fig)[3][-1]
                               - gs.get_grid_positions(fig)[2][0])
                 cbar_bottom = 0.075
-                cbar_height = 0.02
+                cbar_height = 0.03
                 cbar_ax = fig.add_axes(
                     [cbar_left, cbar_bottom, cbar_width, cbar_height]
                 )

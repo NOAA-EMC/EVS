@@ -100,7 +100,13 @@ class PlotSpecs:
             self.fig_subplot_left = 0.1
             self.fig_title_size = 18
         elif self.plot_type == 'precip_spatial_map':
-            self.fig_size = (16., 8.)
+            self.fig_size = (8., 6.)
+            self.fig_title_size = 13
+            self.fig_subplot_right = 0.975
+            self.fig_subplot_left = 0.025
+            self.axis_label_size = 12
+            self.xtick_label_size = 12
+            self.axis_tick_size = 13
         elif self.plot_type == 'performance_diagram':
             self.fig_size = (16., 16.)
             self.fig_subplot_top = 0.9
@@ -621,7 +627,14 @@ class PlotSpecs:
                  alpha - alpha value (float)
         """
         alpha = 0.5
-        if x_figsize == 16 and y_figsize == 8:
+        if x_figsize == 8 and y_figsize == 6:
+            if position == 'left':
+                x_loc = x_figsize * dpi * 0.0
+                y_loc = y_figsize * dpi * 0.858
+            elif position == 'right':
+                x_loc = x_figsize * dpi * 0.9
+                y_loc = y_figsize * dpi * 0.858
+        elif x_figsize == 16 and y_figsize == 8:
             if position == 'left':
                 x_loc = x_figsize * dpi * 0.0
                 y_loc = y_figsize * dpi * 0.89
