@@ -4,7 +4,7 @@
 
 - [ ] Recommend testing for the reviewer(s) to perform, including the location of input datasets, and any additional instructions:</br>
 
-- [ ] Do these updates/additions include sufficient documentation updates, ensuring that no errors or warnings exist in the build of the documentation? **[Yes or No]**
+- [ ] Has the code been checked to ensure that no errors occur during the execution? **[Yes or No]**
 
 - [ ] Do these updates/additions include sufficient testing updates? **[Yes or No]**
 
