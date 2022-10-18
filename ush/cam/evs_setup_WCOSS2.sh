@@ -1,4 +1,4 @@
-source $EVS_HOME_DIR/versions/run.ver
+source $HOMEevs/versions/run.ver
 
 #module purge
 source /usr/share/lmod/lmod/init/sh
@@ -32,4 +32,4 @@ module load metplus/${metplus_ver}
 export MET_PLUS_PATH="/apps/ops/para/libs/intel/19.1.3.304/metplus/${metplus_ver}"
 export MET_PATH="/apps/ops/para/libs/intel/19.1.3.304/met/${met_ver}"
 export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
-export PYTHONPATH=$EVS_HOME_DIR/ush/$COMPONENT:$PYTHONPATH
+export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
