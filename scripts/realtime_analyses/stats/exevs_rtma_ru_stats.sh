@@ -74,7 +74,9 @@ then
 	rtmafound=0
 	export grid=CONUS
 #	export poly=/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_CONUS.nc
-        export poly=$maskdir/Bukovsky_RTMA_CONUS.nc
+#        export poly=$maskdir/Bukovsky_RTMA_CONUS.nc
+        export masks=$maskdir/Bukovsky_RTMA_CONUS.nc,$maskdir/Bukovsky_RTMA_CONUS_East.nc,$maskdir/Bukovsky_RTMA_CONUS_West.nc,$maskdir/Bukovsky_RTMA_CONUS_Central.nc,$maskdir/Bukovsky_RTMA_CONUS_South.nc
+
 fi
 
        if [ -e $COMINfcst/${modnam}.${VDATE}/${modnam}.t${cyc}00z.${outtyp}_ndfd.grb2 ]
