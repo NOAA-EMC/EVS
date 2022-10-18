@@ -1947,22 +1947,32 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
         model_num_df = pd.DataFrame(np.nan, index=model_num_df_index,
                                     columns=met_version_line_type_col_list)
         model_dict = model_info_dict[model_num]
-        parsed_model_stat_file = os.path.join(
-            output_dir,
-            'fcst'+model_dict['name']+'_'
-            +fcst_var_name+fcst_var_level+fcst_var_thresh+'_'
-            +'obs'+model_dict['obs_name']+'_'
-            +obs_var_name+obs_var_level+obs_var_thresh+'_'
-            +'linetype'+line_type+'_'
-            +'grid'+grid+'_'+'vxmask'+vx_mask+'_'
-            +'interp'+interp_method+interp_points+'_'
-            +date_type.lower()
-            +dates[0].strftime('%Y%m%d%H%M%S')+'to'
-            +dates[-1].strftime('%Y%m%d%H%M%S')+'_'
-            +'fhr'+fhr.zfill(3)
-            +'.stat'
-        )
-        if not os.path.exists(parsed_model_stat_file):
+        if len(dates) != 0:
+            parsed_model_stat_file = os.path.join(
+                output_dir,
+                'fcst'+model_dict['name']+'_'
+                +fcst_var_name+fcst_var_level+fcst_var_thresh+'_'
+                +'obs'+model_dict['obs_name']+'_'
+                +obs_var_name+obs_var_level+obs_var_thresh+'_'
+                +'linetype'+line_type+'_'
+                +'grid'+grid+'_'+'vxmask'+vx_mask+'_'
+                +'interp'+interp_method+interp_points+'_'
+                +date_type.lower()
+                +dates[0].strftime('%Y%m%d%H%M%S')+'to'
+                +dates[-1].strftime('%Y%m%d%H%M%S')+'_'
+                +'fhr'+fhr.zfill(3)
+                +'.stat'
+            )
+            if not os.path.exists(parsed_model_stat_file):
+                write_parse_stat_file = True
+                read_parse_stat_file = True
+            else:
+                write_parse_stat_file = False
+                read_parse_stat_file = True
+        else:
+            write_parse_stat_file = False
+            read_parse_stat_file = False
+        if write_parse_stat_file:
             condensed_model_file = os.path.join(
                 input_dir, model_num+'_'+model_dict['name']+'.stat'
             )
@@ -2039,39 +2049,43 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                              +f"at {parsed_model_stat_file}")
             else:
                 logger.debug(f"Could not create {parsed_model_stat_file}")
-        if os.path.exists(parsed_model_stat_file):
-            logger.debug(f"Reading {parsed_model_stat_file} for "
-                         +f"{model_dict['name']}")
-            model_stat_file_df = pd.read_csv(
-                parsed_model_stat_file, sep=" ", skiprows=1,
-                skipinitialspace=True, names=met_version_line_type_col_list,
-                na_values=['NA'], header=None
-            )
-            model_stat_file_df = model_stat_file_df.astype(df_dtype_dict)
-            for valid_date in met_format_valid_dates:
-                model_stat_file_df_valid_date_idx_list = (
-                    model_stat_file_df.index[
-                        model_stat_file_df['FCST_VALID_BEG'] == valid_date
-                    ]
-                ).tolist()
-                if len(model_stat_file_df_valid_date_idx_list) == 0:
-                    logger.debug(f"No data matching valid date {valid_date} "
-                                 +f"in {parsed_model_stat_file}")
-                    continue
-                elif len(model_stat_file_df_valid_date_idx_list) > 1:
-                    logger.debug(f"Multiple lines matching valid date "
-                                 +f"{valid_date} in {parsed_model_stat_file}"
-                                 +f"using first one")
-                else:
-                    logger.debug(f"One line matching valid date "
-                                 +f"{valid_date} in {parsed_model_stat_file}")
-                model_num_df.loc[(model_num_name, valid_date)] = (
-                    model_stat_file_df.loc\
-                    [model_stat_file_df_valid_date_idx_list[0]]\
-                    [:]
+        if read_parse_stat_file:
+            if os.path.exists(parsed_model_stat_file):
+                logger.debug(f"Reading {parsed_model_stat_file} for "
+                             +f"{model_dict['name']}")
+                model_stat_file_df = pd.read_csv(
+                    parsed_model_stat_file, sep=" ", skiprows=1,
+                    skipinitialspace=True, names=met_version_line_type_col_list,
+                    na_values=['NA'], header=None
                 )
-        else:
-            logger.warning(f"{parsed_model_stat_file} does not exist")
+                model_stat_file_df = model_stat_file_df.astype(df_dtype_dict)
+                for valid_date in met_format_valid_dates:
+                    model_stat_file_df_valid_date_idx_list = (
+                        model_stat_file_df.index[
+                            model_stat_file_df['FCST_VALID_BEG'] == valid_date
+                        ]
+                    ).tolist()
+                    if len(model_stat_file_df_valid_date_idx_list) == 0:
+                        logger.debug("No data matching valid date "
+                                     +f"{valid_date} in"
+                                     +f"{parsed_model_stat_file}")
+                        continue
+                    elif len(model_stat_file_df_valid_date_idx_list) > 1:
+                        logger.debug(f"Multiple lines matching valid date "
+                                     +f"{valid_date} in "
+                                     +f"{parsed_model_stat_file} "
+                                     +f"using first one")
+                    else:
+                        logger.debug(f"One line matching valid date "
+                                     +f"{valid_date} in "
+                                     +f"{parsed_model_stat_file}")
+                    model_num_df.loc[(model_num_name, valid_date)] = (
+                        model_stat_file_df.loc\
+                        [model_stat_file_df_valid_date_idx_list[0]]\
+                        [:]
+                    )
+            else:
+                logger.warning(f"{parsed_model_stat_file} does not exist")
         if model_num == 'model1':
             all_model_df = model_num_df
         else:

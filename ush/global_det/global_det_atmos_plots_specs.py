@@ -59,7 +59,7 @@ class PlotSpecs:
             self.legend_frame_on = False
             self.legend_bbox = (0.5, 0.05)
             self.legend_ncol = 4
-        elif self.plot_type == 'lead_average':
+        elif self.plot_type in ['lead_average', 'valid_hour_average']:
             self.fig_size = (16., 16.)
             self.fig_subplot_top = 0.9
             self.fig_subplot_bottom = 0.05
@@ -528,8 +528,8 @@ class PlotSpecs:
         if self.plot_type in ['time_series', 'stat_by_level',
                               'performance_diagram']:
             fhr_for_title = date_info_dict['forecast_hour']
-        elif self.plot_type in ['lead_average', 'lead_by_date',
-                                'lead_by_level']:
+        elif self.plot_type in ['lead_average', 'valid_hour_average',
+                                'lead_by_date', 'lead_by_level']:
             fhr_for_title = 'NA'
         if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
             var_name_for_title = (plot_info_dict['fcst_var_name']
@@ -588,6 +588,11 @@ class PlotSpecs:
             fhr_for_savefig = 'fhrmean'
         elif self.plot_type == 'lead_by_date':
             fhr_for_savefig = 'leaddate'
+        elif self.plot_type == 'valid_hour_average':
+            fhr_for_savefig = (
+                'f'+str(date_info_dict['forecast_hours'][0]).zfill(3)+'to'
+                'f'+str(date_info_dict['forecast_hours'][-1]).zfill(3)
+            )
         savefig_name = (plot_info_dict['stat']+'_'
                         +var_name_for_savefig+'_'
                         +plot_info_dict['fcst_var_level']+'_')

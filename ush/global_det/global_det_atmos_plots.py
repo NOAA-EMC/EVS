@@ -249,6 +249,39 @@ for plot in plots_list:
                                           model_info_dict, date_info_dict,
                                           plot_info_dict, met_info_dict, logo_dir)
             plot_la.make_lead_average()
+    elif plot == 'valid_hour_average':
+        import global_det_atmos_plots_valid_hour_average as gdap_vha
+        for var_interppts_info in \
+                list(itertools.product(var_info, interp_points_list)):
+            date_info_dict['forecast_hours'] = fhrs
+            plot_info_dict['fcst_var_name'] = (
+                var_interppts_info[0][0][0]
+            )
+            plot_info_dict['fcst_var_level'] = (
+                var_interppts_info[0][0][1]
+            )
+            plot_info_dict['fcst_var_thresh'] = (
+                var_interppts_info[0][0][2]
+            )
+            plot_info_dict['obs_var_name'] = (
+                var_interppts_info[0][1][0]
+            )
+            plot_info_dict['obs_var_level'] = (
+                var_interppts_info[0][1][1]
+            )
+            plot_info_dict['obs_var_thresh'] = (
+                var_interppts_info[0][1][2]
+            )
+            plot_info_dict['interp_points'] = str(
+                var_interppts_info[1]
+            )
+            plot_vha = gdap_vha.ValidHourAverage(logger, job_output_dir,
+                                                 job_output_dir,
+                                                 model_info_dict,
+                                                 date_info_dict,
+                                                 plot_info_dict,
+                                                 met_info_dict, logo_dir)
+            plot_vha.make_valid_hour_average()
     elif plot == 'lead_by_date':
         import global_det_atmos_plots_lead_by_date as gdap_lbd
         for var_interppts_info in \
