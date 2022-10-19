@@ -272,7 +272,7 @@ plot_jobs_dict = {
                          'grid': 'G104',
                          'obs_name': 'ADPUPA',
                          'plots_list': ('time_series, lead_average, '
-                                        +'valid_hour_average'},
+                                        +'valid_hour_average')},
         'CAPESfcBased_Thresh': {'line_type_stat_list': ['CTC/SRATIO',
                                                         'CTC/POD', 'CTC/CSI'],
                                 'vx_mask_list': ['CONUS', 'CONUS_Central',
