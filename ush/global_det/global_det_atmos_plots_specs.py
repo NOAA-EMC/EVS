@@ -612,7 +612,8 @@ class PlotSpecs:
                         +date_type_start_hr+'to'
                         +date_info_dict['end_date']
                         +date_type_end_hr+'_'
-                        +fhr_for_savefig
+                        +fhr_for_savefig+'_'
+                        +self.plot_type
                         +'.png')
         image_path = os.path.join(image_dir, savefig_name)
         return image_path
