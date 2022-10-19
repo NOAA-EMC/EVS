@@ -1,5 +1,5 @@
 '''
-Name: global_det_atmos_plots_lead_valid_hour.py
+Name: global_det_atmos_plots_valid_hour_average.py
 Contact(s): Mallory Row
 Abstract: This script generates a valid hour average plot.
 '''
@@ -58,7 +58,7 @@ class ValidHourAverage:
 
              Returns:
         """
-        self.logger.info(f"Creating lead average...")
+        self.logger.info(f"Creating valid hour average...")
         self.logger.debug(f"Input directory: {self.input_dir}")
         self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Model information dictionary: "
