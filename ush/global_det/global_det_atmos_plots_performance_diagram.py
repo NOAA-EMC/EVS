@@ -224,8 +224,6 @@ class PerformanceDiagram:
         elif len(fcst_units) == 0:
             self.logger.warning("Empty dataframe")
             fcst_units = ['']
-        self.plot_info_dict['fcst_var_thresh'] = 'NA'
-        self.plot_info_dict['obs_var_thresh'] = 'NA'
         plot_title = plot_specs_pd.get_plot_title(
             self.plot_info_dict, self.date_info_dict,
             fcst_units[0]
@@ -256,12 +254,6 @@ class PerformanceDiagram:
                     plot_specs_pd.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
-        self.plot_info_dict['fcst_var_thresh'] = ''.join(
-            self.plot_info_dict['fcst_var_threshs']
-        )
-        self.plot_info_dict['obs_var_thresh'] = ''.join(
-            self.plot_info_dict['obs_var_threshs']
-        )
         image_name = plot_specs_pd.get_savefig_name(
             output_image_dir, self.plot_info_dict, self.date_info_dict
         )
