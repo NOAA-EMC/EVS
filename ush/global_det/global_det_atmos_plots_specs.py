@@ -59,7 +59,8 @@ class PlotSpecs:
             self.legend_frame_on = False
             self.legend_bbox = (0.5, 0.05)
             self.legend_ncol = 4
-        elif self.plot_type in ['lead_average', 'valid_hour_average']:
+        elif self.plot_type in ['lead_average', 'valid_hour_average',
+                                'threshold_average']:
             self.fig_size = (16., 16.)
             self.fig_subplot_top = 0.9
             self.fig_subplot_bottom = 0.05
@@ -526,7 +527,7 @@ class PlotSpecs:
                                 int(date_info_dict['valid_hr_inc']))
             ]
         if self.plot_type in ['time_series', 'stat_by_level',
-                              'performance_diagram']:
+                              'performance_diagram', 'threshold_average']:
             fhr_for_title = date_info_dict['forecast_hour']
         elif self.plot_type in ['lead_average', 'valid_hour_average',
                                 'lead_by_date', 'lead_by_level']:
@@ -540,13 +541,16 @@ class PlotSpecs:
             var_level_for_title = 'NA'
         else:
             var_level_for_title = plot_info_dict['fcst_var_level']
+        if self.plot_type in ['performance_diagram', 'threshold_average']:
+            var_thresh_for_title = 'NA'
+        else:
+            var_thresh_for_title = plot_info_dict['fcst_var_thresh']
         plot_title = (plot_title
                       +self.get_var_plot_name(var_name_for_title,
                                               var_level_for_title))
         plot_title = plot_title+' '+'('+units+')'
-        if plot_info_dict['fcst_var_thresh'] != 'NA':
-            plot_title = (plot_title+' '
-                          +plot_info_dict['fcst_var_thresh'])
+        if var_thresh_for_title != 'NA':
+            plot_title = plot_title+' '+var_thresh_for_title
         if plot_info_dict['interp_method'] == 'NBRHD_SQUARE':
             plot_title = (plot_title+' '
                           +'Neighborhood Points: '
@@ -582,7 +586,7 @@ class PlotSpecs:
         else:
             var_name_for_savefig = plot_info_dict['fcst_var_name']
         if self.plot_type in ['time_series', 'stat_by_level',
-                              'performance_diagram']:
+                              'performance_diagram', 'threshold_average']:
             fhr_for_savefig = 'fhr'+date_info_dict['forecast_hour'].zfill(3)
         elif self.plot_type in ['lead_average', 'lead_by_level']:
             fhr_for_savefig = 'fhrmean'
@@ -596,9 +600,16 @@ class PlotSpecs:
         savefig_name = (plot_info_dict['stat']+'_'
                         +var_name_for_savefig+'_'
                         +plot_info_dict['fcst_var_level']+'_')
-        if plot_info_dict['fcst_var_thresh'] != 'NA':
-            savefig_name = (savefig_name
-                            +plot_info_dict['fcst_var_thresh']+'_')
+        if self.plot_type == 'performance_diagram':
+            var_thresh_for_savefig = ''.join(
+                plot_info_dict['fcst_var_threshs']
+            )
+        elif self.plot_type == 'threshold_average':
+            var_thresh_for_savefig = 'threshmean'
+        else:
+            var_thresh_for_savefig = plot_info_dict['fcst_var_thresh']
+        if var_thresh_for_savefig != 'NA':
+            savefig_name = savefig_name+var_thresh_for_savefig+'_'
         if plot_info_dict['interp_method'] == 'NBRHD_SQUARE':
             savefig_name = (savefig_name
                             +plot_info_dict['interp_method']

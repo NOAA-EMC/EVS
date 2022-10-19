@@ -282,6 +282,32 @@ for plot in plots_list:
                                                  plot_info_dict,
                                                  met_info_dict, logo_dir)
             plot_vha.make_valid_hour_average()
+    elif plot == 'threshold_average':
+        import global_det_atmos_plots_threshold_average as gdap_ta
+        for fhr_interppts_info in \
+                list(itertools.product(fhrs, interp_points_list)):
+            date_info_dict['forecast_hour'] = str(
+                fhr_interppts_info[0]
+            )
+            plot_info_dict['fcst_var_name'] = fcst_var_name
+            plot_info_dict['obs_var_name'] = obs_var_name
+            plot_info_dict['fcst_var_threshs'] = fcst_var_thresh_list
+            plot_info_dict['obs_var_name'] = obs_var_name
+            plot_info_dict['obs_var_threshs'] = obs_var_thresh_list
+            plot_info_dict['interp_points'] = str(
+                fhr_interppts_info[1]
+            )
+            for l in range(len(fcst_var_level_list)):
+                plot_info_dict['fcst_var_level'] = fcst_var_level_list[l]
+                plot_info_dict['obs_var_level'] = obs_var_level_list[l]
+                plot_ta = gdap_ta.ThresholdAverage(logger, job_output_dir,
+                                                   job_output_dir,
+                                                   model_info_dict,
+                                                   date_info_dict,
+                                                   plot_info_dict,
+                                                   met_info_dict,
+                                                   logo_dir)
+                plot_ta.make_threshold_average()
     elif plot == 'lead_by_date':
         import global_det_atmos_plots_lead_by_date as gdap_lbd
         for var_interppts_info in \
