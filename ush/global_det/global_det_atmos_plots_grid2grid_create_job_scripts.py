@@ -359,14 +359,8 @@ plot_jobs_dict = {
                                                         +'ge25.4, ge50.8, '
                                                         +'ge76.2, ge101.6')},
                           'interp_dict': {'method': 'NBRHD_SQUARE',
-                                          'points': ('1, 9, 25, 49, 81, 121, '
-                                                     +'169, 225, 289, 361, '
-                                                     +'441, 529, 625, 729, '
-                                                     +'841, 961, 1089, 1225, '
-                                                     +'1369, 1521, 1681, 1849, '
-                                                     +'2025, 2209, 2401, 2601, '
-                                                     +'2809, 3025, 3249, '
-                                                     +'3481, 3721, 3969')},
+                                          'points': ('1, 169, 529, 1089, '
+                                                     +'1849, 2809, 3969')},
                           'grid': 'G240',
                           'obs_name': '24hrCCPA',
                           'plots_list': 'time_series, lead_average'},
@@ -610,8 +604,7 @@ plot_jobs_dict = {
                                    'plots_list': 'time_series'},
     },
     'snow': {
-        '24hrNOHRSC_Depth': {'line_type_stat_list': ['CTC/ETS', 'CTC/FBIAS',
-                                                     'CTC/FY_OY'],
+        '24hrNOHRSC_Depth': {'line_type_stat_list': ['CTC/ETS', 'CTC/FBIAS'],
                              'vx_mask_list': ['CONUS', 'CONUS_East',
                                               'CONUS_West', 'CONUS_Central',
                                               'CONUS_South'],
@@ -634,8 +627,7 @@ plot_jobs_dict = {
                              'grid': 'G211',
                              'obs_name': '24hrNOHRSC',
                              'plots_list': 'time_series, lead_average'},
-        '24hrNOHRSC_WaterEqv': {'line_type_stat_list': ['CTC/ETS', 'CTC/FBIAS',
-                                                        'CTC/FY_OY'],
+        '24hrNOHRSC_WaterEqv': {'line_type_stat_list': ['CTC/ETS', 'CTC/FBIAS'],
                                 'vx_mask_list': ['CONUS', 'CONUS_East',
                                                  'CONUS_West', 'CONUS_Central',
                                                  'CONUS_South'],
@@ -678,19 +670,10 @@ plot_jobs_dict = {
                                                                 +'ge0.2032, '
                                                                 +'ge0.3048')},
                                    'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                   'points': ('1, 9, 25, 49, '
-                                                              +'81, 121, 169, '
-                                                              +'225, 289, 361, '
-                                                              +'441, 529, 625, '
-                                                              +'729, 841, 961, '
-                                                              +'1089, 1225, '
-                                                              +'1369, 1521, '
-                                                              +'1681, 1849, '
-                                                              +'2025, 2209, '
-                                                              +'2401, 2601, '
-                                                              +'2809, 3025, '
-                                                              +'3249, 3481, '
-                                                              +'3721 3969')},
+                                                   'points': ('1, 169, '
+                                                              +'529, 1089, '
+                                                              +'1849, 2809, '
+                                                              +'3969')},
                                    'grid': 'G240',
                                    'obs_name': '24hrNOHRSC',
                                    'plots_list': 'time_series, lead_average'},
@@ -714,19 +697,10 @@ plot_jobs_dict = {
                                                                    +'ge0.2032, '
                                                                    +'ge0.3048')},
                                       'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                      'points': ('1, 9, 25, 49, '
-                                                                 +'81, 121, 169, '
-                                                                 +'225, 289, 361, '
-                                                                 +'441, 529, 625, '
-                                                                 +'729, 841, 961, '
-                                                                 +'1089, 1225, '
-                                                                 +'1369, 1521, '
-                                                                 +'1681, 1849, '
-                                                                 +'2025, 2209, '
-                                                                 +'2401, 2601, '
-                                                                 +'2809, 3025, '
-                                                                 +'3249, 3481, '
-                                                                 +'3721 3969')},
+                                                      'points': ('1, 169, '
+                                                                 +'529, 1089, '
+                                                                 +'1849, 2809, '
+                                                                 +'3969')},
                                       'grid': 'G240',
                                       'obs_name': '24hrNOHRSC',
                                       'plots_list': 'time_series, lead_average'},
