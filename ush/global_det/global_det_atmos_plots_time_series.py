@@ -131,10 +131,20 @@ class TimeSeries:
         # Calculate statistic
         self.logger.info(f"Calculating statstic {self.plot_info_dict['stat']} "
                          +f"from line type {self.plot_info_dict['line_type']}")
-        stat_df, stat_array = gda_util.calculate_stat(
-            self.logger, all_model_df, self.plot_info_dict['line_type'],
-            self.plot_info_dict['stat']
-        )
+        if self.plot_info_dict['stat'] == 'FBAR_OBAR':
+            stat_df, stat_array = gda_util.calculate_stat(
+                self.logger, all_model_df, self.plot_info_dict['line_type'],
+                'FBAR'
+            )
+            obar_stat_df, obar_stat_array = gda_util.calculate_stat(
+                self.logger, all_model_df, self.plot_info_dict['line_type'],
+                'OBAR'
+            )
+        else:
+            stat_df, stat_array = gda_util.calculate_stat(
+                self.logger, all_model_df, self.plot_info_dict['line_type'],
+                self.plot_info_dict['stat']
+            )
         if self.plot_info_dict['event_equalization'] == 'YES':
             self.logger.debug("Doing event equalization")
             masked_stat_array = np.ma.masked_invalid(stat_array)
@@ -150,6 +160,22 @@ class TimeSeries:
                     all_model_df.loc[model_idx].where(
                         stat_df.loc[model_idx].notna()
                 ).values)
+            if self.plot_info_dict['stat'] == 'FBAR_OBAR':
+                masked_obar_stat_array = np.ma.masked_invalid(obar_stat_array)
+                obar_stat_array = np.ma.mask_cols(masked_obar_stat_array)
+                obar_stat_array = obar_stat_array.filled(fill_value=np.nan)
+                model_idx_list = (
+                   obar_stat_df.index.get_level_values(0).unique().tolist()
+                )
+                for model_idx in model_idx_list:
+                    model_idx_num = model_idx_list.index(model_idx)
+                    obar_stat_df.loc[model_idx] = (
+                        obar_stat_array[model_idx_num,:]
+                    )
+                    all_model_df.loc[model_idx] = (
+                        all_model_df.loc[model_idx].where(
+                            obar_stat_df.loc[model_idx].notna()
+                    ).values)
         # Set up plot
         self.logger.info(f"Doing plot set up")
         plot_specs_ts = PlotSpecs(self.logger, 'time_series')
@@ -206,7 +232,7 @@ class TimeSeries:
             )
         image_name = plot_specs_ts.get_savefig_name(
             output_image_dir, self.plot_info_dict, self.date_info_dict
-         )
+        )
         # Create plot
         self.logger.info(f"Creating plot for {self.plot_info_dict['stat']} ")
         fig, ax = plt.subplots(1,1,figsize=(plot_specs_ts.fig_size[0],
@@ -244,6 +270,7 @@ class TimeSeries:
         model_idx_list = (
             stat_df.index.get_level_values(0).unique().tolist()
         )
+        obs_plotted = False
         for model_idx in model_idx_list:
             model_num = model_idx.split('/')[0]
             model_num_name = model_idx.split('/')[1]
@@ -266,6 +293,18 @@ class TimeSeries:
             masked_plot_dates = np.ma.masked_where(
                 np.ma.getmask(masked_model_num_data), plot_dates
             )
+            if self.plot_info_dict['stat'] == 'FBAR_OBAR':
+                obar_model_num_data = obar_stat_df.loc[model_idx]
+                obar_masked_model_num_data = np.ma.masked_invalid(
+                    obar_model_num_data
+                )
+                obar_model_num_npts = (
+                    len(obar_masked_model_num_data)
+                    - np.ma.count_masked(obar_masked_model_num_data)
+                )
+                obar_masked_plot_dates = np.ma.masked_where(
+                    np.ma.getmask(obar_masked_model_num_data), plot_dates
+                )
             if model_num_npts != 0:
                 self.logger.debug(f"Plotting {model_num} - {model_num_name} "
                                   +f"- {model_num_plot_name}")
@@ -274,19 +313,45 @@ class TimeSeries:
                                                         'NBRCNT', 'VCNT']:
                     avg_method = 'mean'
                     calc_avg_df = model_num_data
+                    if self.plot_info_dict['stat'] == 'FBAR_OBAR':
+                        obar_calc_avg_df = obar_model_num_data
                 else:
                     avg_method = 'aggregation'
                     calc_avg_df = all_model_df.loc[model_idx]
-                model_num_avg = gda_util.calculate_average(
-                    self.logger, avg_method, self.plot_info_dict['line_type'],
-                    self.plot_info_dict['stat'], calc_avg_df
-                )
+                    if self.plot_info_dict['stat'] == 'FBAR_OBAR':
+                        obar_calc_avg_df = all_model_df.loc[model_idx]
+                if self.plot_info_dict['stat'] == 'FBAR_OBAR':
+                    model_num_avg = gda_util.calculate_average(
+                        self.logger, avg_method,
+                        self.plot_info_dict['line_type'],
+                        'FBAR', calc_avg_df
+                    )
+                    obar_model_num_avg = gda_util.calculate_average(
+                        self.logger, avg_method,
+                        self.plot_info_dict['line_type'],
+                        'OBAR', obar_calc_avg_df
+                    )
+                else:
+                    model_num_avg = gda_util.calculate_average(
+                        self.logger, avg_method,
+                        self.plot_info_dict['line_type'],
+                        self.plot_info_dict['stat'], calc_avg_df
+                    )
                 if np.abs(model_num_avg) >= 10:
                     model_num_avg_label = format(round(model_num_avg, 2),
                                                  '.2f')
                 else:
                     model_num_avg_label = format(round(model_num_avg, 3),
                                                   '.3f')
+                if self.plot_info_dict['stat'] == 'FBAR_OBAR':
+                    if np.abs(obar_model_num_avg) >= 10:
+                        obar_model_num_avg_label = format(
+                            round(obar_model_num_avg, 2), '.2f'
+                        )
+                    else:
+                        obar_model_num_avg_label = format(
+                            round(obar_model_num_avg, 3), '.3f'
+                        )
                 ax.plot_date(
                     np.ma.compressed(masked_plot_dates),
                     np.ma.compressed(masked_model_num_data),
@@ -306,6 +371,33 @@ class TimeSeries:
                 if masked_model_num_data.max() > stat_max \
                         or np.ma.is_masked(stat_max):
                     stat_max = masked_model_num_data.max()
+                if self.plot_info_dict['stat'] == 'FBAR_OBAR':
+                    if not obs_plotted and obar_model_num_npts != 0:
+                        self.logger.debug("Plotting observation mean from "
+                                          +f"{model_num} - {model_num_name} "
+                                          +f"- {model_num_plot_name}")
+                        obs_plot_settings_dict = (
+                            model_plot_settings_dict['obs']
+                        )
+                        ax.plot_date(
+                            np.ma.compressed(obar_masked_plot_dates),
+                            np.ma.compressed(obar_masked_model_num_data),
+                            color = obs_plot_settings_dict['color'],
+                            linestyle = obs_plot_settings_dict['linestyle'],
+                            linewidth = obs_plot_settings_dict['linewidth'],
+                            marker = obs_plot_settings_dict['marker'],
+                            markersize = obs_plot_settings_dict['markersize'],
+                            label = ('obs '+obar_model_num_avg_label+' '
+                                     +str(obar_model_num_npts)+' days'),
+                            zorder = 4
+                        )
+                        if obar_masked_model_num_data.min() < stat_min \
+                                or np.ma.is_masked(stat_min):
+                            stat_min = obar_masked_model_num_data.min()
+                        if obar_masked_model_num_data.max() > stat_max \
+                                or np.ma.is_masked(stat_max):
+                            stat_max = obar_masked_model_num_data.max()
+                        obs_plotted = True
             else:
                 self.logger.warning(f"{model_num} - {model_num_name} "
                                     +f"- {model_num_plot_name} has no points")

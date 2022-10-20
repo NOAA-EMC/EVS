@@ -175,11 +175,13 @@ class PlotSpecs:
             'CSI': 'Critical Success Index',
             'ETS': 'Equitable Threat Score',
             'FBAR': 'Forecast Mean',
+            'FBAR_OBAR': 'Forecast and Observation Mean',
             'FBIAS': 'Frequency Bias',
             'FSS': 'Fraction Skill Score',
             'FY_OY': 'Forecast Yes - Obs Yes',
             'GSS': 'Gilbert Skill Score',
             'HSS': 'Heidke Skill Score',
+            'OBAR': 'Observation Mean',
             'POD': 'Probability of Detection',
             'PERF_DIA': 'Performance Diagram',
             'RMSE': 'Root Mean Square Error',
@@ -607,7 +609,12 @@ class PlotSpecs:
         elif self.plot_type == 'threshold_average':
             var_thresh_for_savefig = 'threshmean'
         else:
-            var_thresh_for_savefig = plot_info_dict['fcst_var_thresh']
+            if '||':
+                var_thresh_for_savefig = (
+                    plot_info_dict['fcst_var_thresh'].replace('||', '')
+                )
+            else:
+                var_thresh_for_savefig = plot_info_dict['fcst_var_thresh']
         if var_thresh_for_savefig != 'NA':
             savefig_name = savefig_name+var_thresh_for_savefig+'_'
         if plot_info_dict['interp_method'] == 'NBRHD_SQUARE':
@@ -934,7 +941,7 @@ class PlotSpecs:
                         'linestyle': 'solid', 'linewidth': 1.5},
             'obs': {'color': '#aaaaaa',
                     'marker': 'None', 'markersize': 0,
-                    'linestyle': 'solid', 'linewidth': 4},
+                    'linestyle': 'solid', 'linewidth': 2},
             'gfs': {'color': '#000000',
                     'marker': 'o', 'markersize': 6,
                     'linestyle': 'solid', 'linewidth': 3},

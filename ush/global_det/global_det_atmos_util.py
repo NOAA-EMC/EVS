@@ -2430,6 +2430,9 @@ def calculate_stat(logger, data_df, line_type, stat):
            CB = (FN_OY+FN_ON)*(FY_ON+FN_ON)
            C = (CA + CB)/TOTAL
            stat_df = (FY_OY + FN_ON - C)/(TOTAL - C)
+   elif stat == 'OBAR': # Observation Mean
+       if line_type == 'SL1L2':
+           stat_df = OBAR
    elif stat == 'POD': # Probability of Detection
        if line_type == 'CTC':
            stat_df = FY_OY/(FY_OY + FN_OY)

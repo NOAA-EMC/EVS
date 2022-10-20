@@ -67,6 +67,11 @@ class PerformanceDiagram:
                           +f"{self.date_info_dict}")
         self.logger.debug(f"Plot information dictionary: "
                           +f"{self.plot_info_dict}")
+        # Check stat
+        if self.plot_info_dict['stat'] != 'PERF_DIA':
+            self.logger.warning("Cannot make performance diagram for stat "
+                                +f"{self.plot_info_dict['stat']}")
+            sys.exit(0)
         # Make job image directory
         output_image_dir = os.path.join(self.output_dir, 'images')
         if not os.path.exists(output_image_dir):
