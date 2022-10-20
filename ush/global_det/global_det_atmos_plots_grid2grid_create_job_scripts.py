@@ -584,10 +584,7 @@ plot_jobs_dict = {
                       'plots_list': 'time_series, lead_average'},
     },
     'sea_ice': {
-        'DailyAvg_Concentration': {'line_type_stat_list': ['CTC/SRATIO',
-                                                           'CTC/POD',
-                                                           'CTC/CSI',
-                                                           'CTC/HSS'],
+        'DailyAvg_Concentration': {'line_type_stat_list': ['CTC/CSI'],
                                    'vx_mask_list': ['ARCTIC', 'ANTARCTIC'],
                                    'fcst_var_dict': {'name': 'ICEC_DAILYAVG',
                                                      'levels': 'Z0',
@@ -601,7 +598,26 @@ plot_jobs_dict = {
                                                    'points': '1'},
                                    'grid': 'G004',
                                    'obs_name': 'osi_saf',
-                                   'plots_list': 'time_series'},
+                                   'plots_list': 'time_series, lead_average'},
+        'DailyAvg_Concentration_PerfDia': {'line_type_stat_list': \
+                                               ['CTC/PERF_DIA'],
+                                           'vx_mask_list': \
+                                               ['ARCTIC', 'ANTARCTIC'],
+                                           'fcst_var_dict': \
+                                               {'name': 'ICEC_DAILYAVG',
+                                                'levels': 'Z0',
+                                                'threshs': ('ge15, ge40, '
+                                                            +'ge80')},
+                                           'obs_var_dict': \
+                                               {'name': 'ice_conc',
+                                                'levels': "'*,*'",
+                                                'threshs': ('ge15, ge40, '
+                                                            +'ge80')},
+                                           'interp_dict': {'method': 'NEAREST',
+                                                           'points': '1'},
+                                           'grid': 'G004',
+                                           'obs_name': 'osi_saf',
+                                           'plots_list': 'performance_diagram'},
     },
     'snow': {
         '24hrNOHRSC_Depth': {'line_type_stat_list': ['CTC/ETS', 'CTC/FBIAS'],
