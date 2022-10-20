@@ -195,7 +195,8 @@ plot_jobs_dict = {
     },
     'sea_ice': {},
     'sfc': {
-        'CAPEMixedLayer': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
+        'CAPEMixedLayer': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS',
+                                                   'SL1L2/FBAR_OBAR'],
                            'vx_mask_list': ['CONUS', 'CONUS_Central',
                                             'CONUS_East', 'CONUS_South',
                                             'CONUS_West', 'Appalachia',
@@ -219,8 +220,7 @@ plot_jobs_dict = {
                            'obs_name': 'ADPUPA',
                            'plots_list': ('time_series, lead_average, '
                                           +'valid_hour_average')},
-        'CAPEMixedLayer_Thresh': {'line_type_stat_list': ['CTC/SRATIO',
-                                                          'CTC/POD', 'CTC/CSI'],
+        'CAPEMixedLayer_Thresh': {'line_type_stat_list': ['CTC/FBIAS'],
                                   'vx_mask_list': ['CONUS', 'CONUS_Central',
                                                    'CONUS_East', 'CONUS_South',
                                                    'CONUS_West', 'Appalachia',
@@ -248,8 +248,39 @@ plot_jobs_dict = {
                                                   'points': '4'},
                                   'grid': 'G104',
                                   'obs_name': 'ADPUPA',
-                                  'plots_list': 'time_series, lead_average'},
-        'CAPESfcBased': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
+                                  'plots_list': ('time_series, lead_average, '
+                                                 'threshold_average')},
+        'CAPEMixedLayer_PerfDia': {'line_type_stat_list': ['CTC/PERF_DIA'],
+                                   'vx_mask_list': ['CONUS', 'CONUS_Central',
+                                                    'CONUS_East', 'CONUS_South',
+                                                    'CONUS_West', 'Appalachia',
+                                                    'CPlains', 'DeepSouth',
+                                                    'GreatBasin', 'GreatLakes',
+                                                    'Mezqutial', 'MidAtlantic',
+                                                    'NorthAtlantic', 'NPlains',
+                                                    'NRockies', 'PacificNW',
+                                                    'PacificSW', 'Prairie',
+                                                    'Southeast', 'Southwest',
+                                                    'SPlains', 'SRockies'],
+                                   'fcst_var_dict': {'name': 'CAPE',
+                                                     'levels': 'P90-0',
+                                                     'threshs': ('ge500, ge1000, '
+                                                                +'ge1500, ge2000, '
+                                                                +'ge3000, ge4000, '
+                                                                +'ge5000')},
+                                   'obs_var_dict': {'name': 'MLCAPE',
+                                                    'levels': 'L90000-0',
+                                                    'threshs': ('ge500, ge1000, '
+                                                               +'ge1500, ge2000, '
+                                                               +'ge3000, ge4000, '
+                                                               +'ge5000')},
+                                   'interp_dict': {'method': 'BILIN',
+                                                   'points': '4'},
+                                   'grid': 'G104',
+                                   'obs_name': 'ADPUPA',
+                                   'plots_list': 'performance_diagram'},
+        'CAPESfcBased': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS',
+                                                 'SL1L2/FBAR_OBAR'],
                          'vx_mask_list': ['CONUS', 'CONUS_Central',
                                           'CONUS_East', 'CONUS_South',
                                           'CONUS_West', 'Appalachia',
@@ -273,8 +304,7 @@ plot_jobs_dict = {
                          'obs_name': 'ADPUPA',
                          'plots_list': ('time_series, lead_average, '
                                         +'valid_hour_average')},
-        'CAPESfcBased_Thresh': {'line_type_stat_list': ['CTC/SRATIO',
-                                                        'CTC/POD', 'CTC/CSI'],
+        'CAPESfcBased_Thresh': {'line_type_stat_list': ['CTC/FBIAS'],
                                 'vx_mask_list': ['CONUS', 'CONUS_Central',
                                                  'CONUS_East', 'CONUS_South',
                                                  'CONUS_West', 'Appalachia',
@@ -302,7 +332,37 @@ plot_jobs_dict = {
                                                 'points': '4'},
                                 'grid': 'G104',
                                 'obs_name': 'ADPUPA',
-                                'plots_list': 'time_series, lead_average'},
+                                'plots_list': ('time_series, lead_average, '
+                                               'threshold_average')},
+        'CAPESfcBased_PerfDia': {'line_type_stat_list': ['CTC/PERF_DIA'],
+                                 'vx_mask_list': ['CONUS', 'CONUS_Central',
+                                                  'CONUS_East', 'CONUS_South',
+                                                  'CONUS_West', 'Appalachia',
+                                                  'CPlains', 'DeepSouth',
+                                                  'GreatBasin', 'GreatLakes',
+                                                  'Mezqutial', 'MidAtlantic',
+                                                  'NorthAtlantic', 'NPlains',
+                                                  'NRockies', 'PacificNW',
+                                                  'PacificSW', 'Prairie',
+                                                  'Southeast', 'Southwest',
+                                                  'SPlains', 'SRockies'],
+                                 'fcst_var_dict': {'name': 'CAPE',
+                                                   'levels': 'Z0',
+                                                   'threshs': ('ge500, ge1000, '
+                                                              +'ge1500, ge2000, '
+                                                              +'ge3000, ge4000, '
+                                                              +'ge5000')},
+                                 'obs_var_dict': {'name': 'CAPE',
+                                                  'levels': 'L100000-0',
+                                                  'threshs': ('ge500, ge1000, '
+                                                             +'ge1500, ge2000, '
+                                                             +'ge3000, ge4000, '
+                                                             +'ge5000')},
+                                 'interp_dict': {'method': 'BILIN',
+                                                 'points': '4'},
+                                 'grid': 'G104',
+                                 'obs_name': 'ADPUPA',
+                                 'plots_list': 'performance_diagram'},
         'Ceiling': {'line_type_stat_list': ['CTC/FBIAS', 'CTC/ETS'],
                     'vx_mask_list': ['CONUS', 'CONUS_Central',
                                      'CONUS_East', 'CONUS_South',
