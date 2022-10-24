@@ -1,12 +1,12 @@
 #!/bin/bash -l
 
-#PBS -N evs_sref_g2o_stats
+#PBS -N evs_sref_cnv_stats
 #PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A GEFS-DEV
-#PBS -l walltime=02:00:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=4:mem=10GB
+#PBS -l walltime=00:30:00
+#PBS -l place=vscatter:exclhost,select=1:ncpus=30:mem=10GB
 #PBS -l debug=true
 
 #Total 2 parallel processes
@@ -56,6 +56,10 @@ export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
 export DATA_IN=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
 export COMINsrefmean=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
+
+export just_cnv=yes
+export run_mpi=yes
+export gather=no
 
 ${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS
 

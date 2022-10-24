@@ -1,21 +1,24 @@
 #!/bin/bash -l
 
-#PBS -N evs_sref_g2o_stats
-#PBS -j oe 
+#PBS -N jevs_sref_grid2obs_stats_%CYC%
+#PBS -j oe
 #PBS -S /bin/bash
-#PBS -q dev
-#PBS -A GEFS-DEV
-#PBS -l walltime=02:00:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=4:mem=10GB
+#PBS -q %QUEUE%
+#PBS -A %PROJ%-%PROJENVIR%
+#PBS -l walltime=00:30:00
+#PBS -l place=vscatter:exclhost,select=30:ncpus=4:mem=10GB
 #PBS -l debug=true
 
-#Total 2 parallel processes
+%include <head.h>
+%include <envir-p1.h>
+export model=evs
+%include <model_ver.h>
+
+set -x
+export cyc=%CYC%
+export cycles="%CYCLES%"
 
 export OMP_NUM_THREADS=1
-
-export evs_ver=v1.0
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
-source $HOMEevs/versions/run.ver
 
 module purge
 module load envvar/$envvar_ver
@@ -51,11 +54,8 @@ export MODELNAME=sref
 
 export KEEPDATA=YES
 
-export cyc=00
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
-export DATA_IN=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
-export COMINsrefmean=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
+export just_cnv=yes
+export gather=no
 
 ${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS
 
