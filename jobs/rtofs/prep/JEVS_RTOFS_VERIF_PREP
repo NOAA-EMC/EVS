@@ -1,0 +1,40 @@
+#!/bin/bash
+###############################################################################
+# Job Name: JEVS_RTOFS_VERIF_PREP
+# Purpose: To pre-process RTOFS forecast data into the same spatial and
+#          temporal scales as validation data.
+# Author: L. Gwen Chen (lichuan.chen@noaa.gov)
+###############################################################################
+
+set -x
+
+# set up VDATE
+#export VDATE=20221008
+#export VDATE=$(date --date="yesterday" +%Y%m%d)
+export VDATE=$(date --date="2 days ago" +%Y%m%d)
+
+# set up paths
+#export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
+#export COMINobs=$DCOMROOT
+export COMINobs=/lfs/h2/emc/vpppg/noscrub/Lichuan.Chen
+#export COMINrtofs=${COMINrtofs:-$(compath.py $envir/com/$COMPONENT/${rtofs_ver})}
+export COMINrtofs=/lfs/h1/ops/$envir/com/$COMPONENT/${rtofs_ver}
+#export COMOUT=$COMIN/$STEP/$COMPONENT
+export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver}/$STEP/$COMPONENT
+export FIXevs=$EVS/fix/cdo_grids
+
+# run scripts
+#  get RTOFS production data from /com
+$EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_prep.sh
+
+#  convert RTOFS forecast data into lat-lon grids for each RUN;
+#  RUN is the validation source: ghrsst, smos, smap etc.
+for rcase in ghrsst gmpe smos smap aviso osisaf; do
+  export RUN=$rcase
+  $EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_verif_prep.sh
+done
+
+#  process sea ice forecasts and data
+$EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_seaice_prep.sh
+
+################################# END OF JOB ##################################
