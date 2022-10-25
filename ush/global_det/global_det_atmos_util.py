@@ -904,21 +904,7 @@ def prep_prod_ghrsst_median_file(source_file, dest_file, date_dt):
     prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                 +source_file.rpartition('/')[2])
     # Prep file
-    #copy_file(prod_file, prepped_file)
-    ##########################################################################
-    # Temporary until NCO brings in data feed
-    date_m1_dt = date_dt - datetime.timedelta(hours=12)
-    ftp_file = ('ftp://nrt.cmems-du.eu/Core/SST_GLO_SST_L4_NRT_OBSERVATIONS_'
-                +'010_005/METOFFICE-GLO-SST-L4-NRT-OBS-GMPE-V3/'
-                +date_m1_dt.strftime('%Y')+'/'+date_m1_dt.strftime('%m')+'/'
-                +date_m1_dt.strftime('%Y%m%d')+'120000-'
-                +'UKMO-L4_GHRSST-SSTfnd-GMPE-GLOB-v03.0-fv03.0.nc')
-    run_shell_command(
-        ['wget', '--ftp-user=mrow', '--ftp-password=EMCvpppg2022',
-         ftp_file]
-    )
-    copy_file(os.path.join(os.getcwd(),ftp_file.rpartition('/')[2]),prepped_file)
-    ##########################################################################
+    copy_file(source_file, prepped_file)
     if check_file_exists_size(prepped_file):
         prepped_data = netcdf.Dataset(prepped_file, 'a',
                                       format='NETCDF3_CLASSIC')

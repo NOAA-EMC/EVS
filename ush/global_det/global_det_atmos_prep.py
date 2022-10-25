@@ -367,7 +367,10 @@ global_det_obs_dict = {
                                                        +'_G004.nc'),
                 'cycles': ['00']},
     'ghrsst_median': {'prod_file_format': os.path.join(COMINghrsst_median,
-                                                       'ghrsst_median',
+                                                       '{init_shift?fmt=%Y%m%d'
+                                                       +'?shift=-12}',
+                                                       'validation_data', 'marine', 
+                                                       'ghrsst',
                                                        '{init_shift?fmt=%Y%m%d%H'
                                                        +'?shift=-12}0000-'
                                                        +'UKMO-L4_GHRSST-'
