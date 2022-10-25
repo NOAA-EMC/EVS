@@ -564,7 +564,7 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                                        +VERIF_CASE_STEP_type)
         # Read in VERIF_CASE_STEP_type related environment variables
         # Set valid hours
-        if VERIF_CASE_STEP_type in ['pres_levs', 'sfc']:
+        if VERIF_CASE_STEP_type in ['pres_levs', 'sfc', 'ptype']:
             VERIF_CASE_STEP_type_valid_hr_list = os.environ[
                 VERIF_CASE_STEP_abbrev_type+'_valid_hr_list'
             ].split(' ')
@@ -682,7 +682,7 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                             gdas_arch_file_format,
                             gdas_dest_file_format
                         )
-            if VERIF_CASE_STEP_type == 'sfc':
+            if VERIF_CASE_STEP_type in ['sfc', 'ptype']:
                 # NAM prepbufr
                 offset_hr = str(
                     int(VERIF_CASE_STEP_type_valid_time.strftime('%H'))%6

@@ -56,7 +56,7 @@ export SENDMETVIEWER="NO"
 
 if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     #g2op_model_plot_name_list: list of models reference name on plots
-    #g2op_type_list: list type of verifications to run for grid-to-grid: pres_levs, sea_ice, sfc
+    #g2op_type_list: list type of verifications to run for grid-to-grid: pres_levs, ptype, sfc
     #g2op_*_init_hr_list:      initialization hours to be included in verification: HH
     #g2op_*_valid_hr_list:     valid hours to be included in verification: HH
     #g2op_*_fhr_min:           forecast hour to start verification HH[H]

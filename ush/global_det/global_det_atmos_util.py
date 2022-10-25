@@ -1087,6 +1087,13 @@ def check_model_files(job_dict):
                         'init_date': init_date_dt,
                         'forecast_hour': str(fhr)
                     }
+            if job_dict['VERIF_CASE'] == 'grid2obs':
+                if job_dict['VERIF_TYPE'] == 'ptype':
+                    fhr_check_dict[str(fhr)]['file1'] = {
+                        'valid_date': valid_date_dt,
+                        'init_date': init_date_dt,
+                        'forecast_hour': str(fhr)
+                    }
         elif job_dict['JOB_GROUP'] == 'assemble_data':
             if job_dict['VERIF_CASE'] == 'grid2grid':
                 if job_dict['VERIF_TYPE'] == 'precip':
@@ -1352,7 +1359,7 @@ def check_truth_files(job_dict):
                 )
                 truth_file_list.append(model_truth_file)
         elif job_dict['VERIF_CASE'] == 'grid2obs':
-            if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc'] \
+            if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc', 'ptype'] \
                     and 'Prepbufr' in job_dict['job_name']:
                 prepbufr_name = (job_dict['job_name'].replace('Prepbufr', '')\
                                  .lower())
@@ -1378,7 +1385,7 @@ def check_truth_files(job_dict):
                     truth_file_list.append(nccpa_file)
                     n+=1
         elif job_dict['VERIF_CASE'] == 'grid2obs':
-            if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc']:
+            if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc', 'ptype']:
                 pb2nc_file = os.path.join(
                     verif_case_dir, 'METplus_output',
                     job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
@@ -1430,7 +1437,7 @@ def check_truth_files(job_dict):
                )
                truth_file_list.append(ghrsst_median_file)
         elif job_dict['VERIF_CASE'] == 'grid2obs':
-            if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc']:
+            if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc', 'ptype']:
                 pb2nc_file = os.path.join(
                     verif_case_dir, 'METplus_output',
                     job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
@@ -1619,7 +1626,7 @@ def initalize_job_env_dict(verif_type, group,
         job_env_dict['fhr_inc'] = os.environ[
             verif_case_step_abbrev_type+'_fhr_inc'
         ]
-        if verif_type in ['pres_levs', 'means', 'sfc']:
+        if verif_type in ['pres_levs', 'means', 'sfc', 'ptype']:
             verif_type_valid_hr_list = (
                 os.environ[verif_case_step_abbrev_type+'_valid_hr_list']\
                 .split(' ')
