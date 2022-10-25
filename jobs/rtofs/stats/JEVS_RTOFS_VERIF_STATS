@@ -19,11 +19,13 @@ export VDATE=$(date --date="2 days ago" +%Y%m%d)
 export COMINobs=/lfs/h2/emc/vpppg/noscrub/Lichuan.Chen
 #export COMINfcst=$COMIN/prep/$COMPONENT
 export COMINfcst=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver}/prep/$COMPONENT
-export COMINclimo=$EVS/fix/climos/$COMPONENT
+#export COMINclimo=$EVS/fix/climos/$COMPONENT
+export COMINclimo=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/climos/$COMPONENT
 #export COMOUT=$COMIN
 export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver}
 export COMOUTfinal=$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE
-export FIXevs=$EVS/fix
+#export FIXevs=$EVS/fix
+export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export CONFIGevs=$EVS/parm/metplus_config/$COMPONENT
 export ARCHevs=/lfs/h2/emc/vpppg/noscrub/$USER/stat_archive/RTOFS
 

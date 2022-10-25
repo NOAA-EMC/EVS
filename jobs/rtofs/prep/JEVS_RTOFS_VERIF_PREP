@@ -21,7 +21,8 @@ export COMINobs=/lfs/h2/emc/vpppg/noscrub/Lichuan.Chen
 export COMINrtofs=/lfs/h1/ops/$envir/com/$COMPONENT/${rtofs_ver}
 #export COMOUT=$COMIN/$STEP/$COMPONENT
 export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver}/$STEP/$COMPONENT
-export FIXevs=$EVS/fix/cdo_grids
+#export FIXevs=$EVS/fix/cdo_grids
+export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/cdo_grids
 
 # run scripts
 #  get RTOFS production data from /com
