@@ -228,18 +228,16 @@ class PrecipSpatialMap:
                 if model_num == 'obs':
                     image_name = os.path.join(
                         output_image_dir,
-                        'qpe.v'+valid_date_dt.strftime('%Y%m%d%H')+'.024h.png'
+                        'qpe.v'+valid_date_dt.strftime('%Y%m%d%H')+'.024h.'
+                        +self.plot_info_dict['vx_mask'].lower()+'.png'
                     )
                 else:
                     image_name = os.path.join(
                         output_image_dir,
                         model_num_name
                         +'.v'+valid_date_dt.strftime('%Y%m%d%H')+'.'
-                        +self.date_info_dict['forecast_hour'].zfill(3)+'h.png'
-                    )
-                if self.plot_info_dict['vx_mask'] != 'CONUS':
-                    image_name = image_name.replace(
-                        'png', self.plot_info_dict['vx_mask']+'.png'
+                        +self.date_info_dict['forecast_hour'].zfill(3)+'h.'
+                        +self.plot_info_dict['vx_mask'].lower()+'.png'
                     )
                 # Create plot
                 self.logger.info(f"Creating plot for {model_num_file}")
