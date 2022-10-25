@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N /lfs/h2/emc/stmp/perry.shafran/jevs_hrrr_precip_stats
+#PBS -N jevs_hrrr_precip_stats
 #PBS -j oe
 #PBS -S /bin/sh
 #PBS -q dev

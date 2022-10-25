@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N /lfs/h2/emc/stmp/perry.shafran/jevs_namnest_precip_prep
+#PBS -N jevs_namnest_precip_prep
 #PBS -j oe
 #PBS -S /bin/sh
 #PBS -q dev
