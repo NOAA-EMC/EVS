@@ -473,7 +473,7 @@ plot_jobs_dict = {
                                         'plots_list': ('time_series, '
                                                        +'lead_average, '
                                                        +'lead_by_date')},
-        'DailyAvg_GeoHeightAnom': {'line_type_stat_list': ['SL1L2/BIAS',
+        'DailyAvg_GeoHeightAnom': {'line_type_stat_list': ['SL1L2/ME',
                                                            'SL1L2/RMSE'],
                                    'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                                     'TROPICS'],
@@ -487,7 +487,7 @@ plot_jobs_dict = {
                                                    'points': '1'},
                                    'grid': 'G004',
                                    'plots_list': 'time_series, lead_average'},
-        'Ozone': {'line_type_stat_list': ['SL1L2/BIAS', 'SL1L2/RMSE'],
+        'Ozone': {'line_type_stat_list': ['SL1L2/ME', 'SL1L2/RMSE'],
                   'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                    'TROPICS'],
                   'fcst_var_dict': {'name': 'O3MR',
@@ -503,7 +503,7 @@ plot_jobs_dict = {
                   'grid': 'G004',
                   'plots_list': ('time_series, lead_average, '
                                  +'stat_by_level, lead_by_level')},
-        'PresSeaLevel': {'line_type_stat_list': ['SAL1L2/ACC', 'SL1L2/BIAS',
+        'PresSeaLevel': {'line_type_stat_list': ['SAL1L2/ACC', 'SL1L2/ME',
                                                  'SL1L2/RMSE', 'GRAD/S1'],
                          'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                           'TROPICS'],
@@ -570,7 +570,7 @@ plot_jobs_dict = {
                                        'points': '1'},
                        'grid': 'G004',
                        'plots_list': 'time_series, lead_average, lead_by_date'},
-        'WindShear': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
+        'WindShear': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/ME'],
                       'vx_mask_list': ['ATL_MDR', 'EPAC_MDR'],
                       'fcst_var_dict': {'name': 'WNDSHR',
                                         'levels': 'P850-P200',
@@ -585,7 +585,7 @@ plot_jobs_dict = {
     },
     'sea_ice': {
         'DailyAvg_Concentration': {'line_type_stat_list': ['SL1L2/RMSE',
-                                                           'SL1L2/BIAS'],
+                                                           'SL1L2/ME'],
                                    'vx_mask_list': ['ARCTIC', 'ANTARCTIC'],
                                    'fcst_var_dict': {'name': 'ICEC_DAILYAVG',
                                                      'levels': 'Z0',
@@ -742,7 +742,7 @@ plot_jobs_dict = {
                                       'plots_list': 'time_series, lead_average'},
     },
     'sst': {
-        'DailyAvg_SST': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
+        'DailyAvg_SST': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/ME'],
                          'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                           'TROPICS'],
                          'fcst_var_dict': {'name': 'SST_DAILYAVG',
