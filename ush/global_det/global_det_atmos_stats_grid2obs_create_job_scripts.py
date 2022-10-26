@@ -423,7 +423,7 @@ generate_stats_jobs_dict = {
                          'met_config_overrides': ''},
                  'commands': [gda_util.metplus_command(
                                   'PointStat_fcstGLOBAL_DET_'
-                                  +'obsPrepbufr_Thresh.conf'
+                                  +'obsPrepbufr_Thresh_Ptype.conf'
                               )]},
         'Snow': {'env': {'prepbufr': 'nam',
                          'obs_window': '900',
@@ -439,7 +439,7 @@ generate_stats_jobs_dict = {
                          'met_config_overrides': ''},
                  'commands': [gda_util.metplus_command(
                                   'PointStat_fcstGLOBAL_DET_'
-                                  +'obsPrepbufr_Thresh.conf'
+                                  +'obsPrepbufr_Thresh_Ptype.conf'
                               )]},
         'FrzRain': {'env': {'prepbufr': 'nam',
                             'obs_window': '900',
@@ -455,7 +455,7 @@ generate_stats_jobs_dict = {
                             'met_config_overrides': ''},
                     'commands': [gda_util.metplus_command(
                                      'PointStat_fcstGLOBAL_DET_'
-                                     +'obsPrepbufr_Thresh.conf'
+                                     +'obsPrepbufr_Thresh_Ptype.conf'
                                  )]},
         'IcePel': {'env': {'prepbufr': 'nam',
                            'obs_window': '900',
@@ -471,7 +471,7 @@ generate_stats_jobs_dict = {
                            'met_config_overrides': ''},
                    'commands': [gda_util.metplus_command(
                                     'PointStat_fcstGLOBAL_DET_'
-                                    +'obsPrepbufr_Thresh.conf'
+                                    +'obsPrepbufr_Thresh_Ptype.conf'
                                 )]},
         'Ptype': {'env': {'prepbufr': 'nam',
                           'obs_window': '900',
