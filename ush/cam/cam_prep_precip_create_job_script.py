@@ -101,6 +101,7 @@ if STEP == 'prep':
                                       + f" Cannot copy necessary data into the"
                                       + f" prep archive ... Continuing to the"
                                       + f" next valid datetime.")
+                                subtract_hours+=subtract_hours_inc
                                 continue
                             for infile in glob.glob(infiles):
                                 job_cmd_list.append(
