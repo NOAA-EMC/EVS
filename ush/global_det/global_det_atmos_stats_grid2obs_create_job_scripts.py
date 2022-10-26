@@ -110,7 +110,32 @@ reformat_data_obs_jobs_dict = {
 }
 reformat_data_model_jobs_dict = {
     'pres_levs': {},
-    'ptype': {},
+    'ptype': {
+        'Rain': {'env': {'var1_name': 'CRAIN',
+                         'var1_level': 'L0',
+                         'grid': 'G104'},
+                 'commands': [gda_util.metplus_command(
+                                  'RegridDataPlane_fcstGLOBAL_DET.conf'
+                              )]},
+        'Snow': {'env': {'var1_name': 'CSNOW',
+                         'var1_level': 'L0',
+                         'grid': 'G104'},
+                 'commands': [gda_util.metplus_command(
+                                  'RegridDataPlane_fcstGLOBAL_DET.conf'
+                              )]},
+        'FrzRain': {'env': {'var1_name': 'CFRZR',
+                            'var1_level': 'L0',
+                            'grid': 'G104'},
+                    'commands': [gda_util.metplus_command(
+                                     'RegridDataPlane_fcstGLOBAL_DET.conf'
+                                 )]},
+        'IcePel': {'env': {'var1_name': 'CICEP',
+                           'var1_level': 'L0',
+                           'grid': 'G104'},
+                   'commands': [gda_util.metplus_command(
+                                    'RegridDataPlane_fcstGLOBAL_DET.conf'
+                                )]},
+    },
     'sfc': {}
 }
 
@@ -124,7 +149,47 @@ assemble_data_obs_jobs_dict = {
 }
 assemble_data_model_jobs_dict = {
     'pres_levs': {},
-    'ptype': {},
+    'ptype': {
+        'Ptype': {'env': {},
+                  'commands': [
+                      gda_util.python_command(
+                          'global_det_atmos_stats_grid2obs_'
+                          'create_merged_ptype.py',
+                          [os.path.join(
+                               '$DATA', '${VERIF_CASE}_${STEP}',
+                               'METplus_output',
+                               '${RUN}.{valid?fmt=%Y%m%d}',
+                               '$MODEL', '$VERIF_CASE',
+                               'regrid_data_plane_${VERIF_TYPE}_Rain_'
+                               +'init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
+                           ),
+                           os.path.join(
+                               '$DATA', '${VERIF_CASE}_${STEP}',
+                               'METplus_output',
+                               '${RUN}.{valid?fmt=%Y%m%d}',
+                               '$MODEL', '$VERIF_CASE',
+                               'regrid_data_plane_${VERIF_TYPE}_Snow_'
+                               +'init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
+                           ),
+                           os.path.join(
+                               '$DATA', '${VERIF_CASE}_${STEP}',
+                               'METplus_output',
+                               '${RUN}.{valid?fmt=%Y%m%d}',
+                               '$MODEL', '$VERIF_CASE',
+                               'regrid_data_plane_${VERIF_TYPE}_FrzRain_'
+                               +'init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
+                           ),
+                           os.path.join(
+                               '$DATA', '${VERIF_CASE}_${STEP}',
+                               'METplus_output',
+                               '${RUN}.{valid?fmt=%Y%m%d}',
+                               '$MODEL', '$VERIF_CASE',
+                               'regrid_data_plane_${VERIF_TYPE}_IcePel_'
+                               +'init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
+                           )]
+                      )
+                  ]}
+    },
     'sfc': {
         'TempAnom2m': {'env': {'prepbufr': 'nam',
                                'obs_window': '900',
@@ -408,6 +473,14 @@ generate_stats_jobs_dict = {
                                     'PointStat_fcstGLOBAL_DET_'
                                     +'obsPrepbufr_Thresh.conf'
                                 )]},
+        'Ptype': {'env': {'prepbufr': 'nam',
+                          'obs_window': '900',
+                          'msg_type': "'ADPSFC'",
+                          'met_config_overrides': ''},
+                  'commands': [gda_util.metplus_command(
+                                   'PointStat_fcstGLOBAL_DET_'
+                                   +'obsPrepbufr_Ptype_MCTC.conf'
+                               )]},
     },
     'sfc': {
         'CAPEMixedLayer': {'env': {'prepbufr': 'gdas',
@@ -829,7 +902,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                 'Bukovsky_G104_Southeast',
                                 'Bukovsky_G104_Southwest',
                                 'Bukovsky_G104_SPlains',
-                                'Bukovsky_G104_SRockies'
+                                'Bukovsky_G104_SRockies',
+                                'Alaska_G104'
                             ]
                         for mask in mask_list:
                             if mask == mask_list[0]:
@@ -863,7 +937,11 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     if JOB_GROUP == 'assemble_data':
                         check_truth_files = False
                     elif JOB_GROUP in ['reformat_data', 'generate_stats']:
-                        check_truth_files = True
+                        if verif_type == 'ptype' \
+                                and JOB_GROUP == 'reformat_data':
+                            check_truth_files = False
+                        else: 
+                            check_truth_files = True
                     if check_truth_files:
                         all_truth_file_exist = gda_util.check_truth_files(
                             job_env_dict

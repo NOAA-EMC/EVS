@@ -1192,6 +1192,12 @@ def check_model_files(job_dict):
                                       -datetime.timedelta(hours=fhr-12)),
                         'forecast_hour': str(fhr-12)
                     }
+                elif job_dict['VERIF_TYPE'] == 'ptype':
+                    fhr_check_dict[str(fhr)]['file1'] = {
+                        'valid_date': valid_date_dt,
+                        'init_date': init_date_dt,
+                        'forecast_hour': str(fhr)
+                    }
         elif job_dict['JOB_GROUP'] == 'generate_stats':
             if job_dict['VERIF_CASE'] == 'grid2grid':
                 if job_dict['VERIF_TYPE'] == 'pres_levs' \
@@ -1257,7 +1263,20 @@ def check_model_files(job_dict):
                         model+'.{init?fmt=%Y%m%d%H}.f{lead?fmt=%3H}'
                     )
             elif job_dict['VERIF_CASE'] == 'grid2obs':
-                if job_dict['VERIF_TYPE'] == 'sfc' \
+                if job_dict['VERIF_TYPE'] == 'ptype' \
+                        and job_dict['job_name'] == 'Ptype':
+                    model_file_format = os.path.join(verif_case_dir,
+                                                     'METplus_output',
+                                                     job_dict['RUN']+'.'
+                                                     +'{valid?fmt=%Y%m%d}',
+                                                     job_dict['MODEL'],
+                                                     job_dict['VERIF_CASE'],
+                                                     'merged_ptype_'
+                                                     +job_dict['VERIF_TYPE']+'_'
+                                                     +job_dict['job_name']+'_'
+                                                     +'init{init?fmt=%Y%m%d%H}_'
+                                                     +'fhr{lead?fmt=%3H}.nc')
+                elif job_dict['VERIF_TYPE'] == 'sfc' \
                         and job_dict['job_name'] == 'DailyAvg_TempAnom2m':
                     model_file_format = os.path.join(verif_case_dir,
                                                      'METplus_output',
