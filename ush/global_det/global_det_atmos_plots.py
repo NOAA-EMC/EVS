@@ -348,7 +348,7 @@ for plot in plots_list:
             plot_info_dict['fcst_var_name'] = fcst_var_name
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['vert_profiles'] = ['all', 'trop', 'strat',
-                                               'lower_trop', 'upper_trop']
+                                               'ltrop', 'utrop']
             plot_info_dict['interp_points'] = str(
                 fhr_interppts_info[1]
             )
@@ -370,7 +370,7 @@ for plot in plots_list:
             plot_info_dict['fcst_var_name'] = fcst_var_name
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['vert_profiles'] = ['all', 'trop', 'strat',
-                                               'lower_trop', 'upper_trop']
+                                               'ltrop', 'utrop']
             plot_info_dict['interp_points'] = str(interppts)
             for t in range(len(fcst_var_thresh_list)):
                 plot_info_dict['fcst_var_thresh'] = fcst_var_thresh_list[t]

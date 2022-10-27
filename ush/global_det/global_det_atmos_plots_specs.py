@@ -585,7 +585,7 @@ class PlotSpecs:
         parameter_savefig_name = plot_info_dict['fcst_var_name']
         # Level
         level_savefig_name = plot_info_dict['fcst_var_level']
-        # Daya
+        # Days
         start_date_dt = datetime.datetime.strptime(
             date_info_dict['start_date'], '%Y%m%d'
         )
@@ -597,9 +597,16 @@ class PlotSpecs:
         # Plot type
         if self.plot_type == 'time_series':
             plot_type_savefig_name = 'timeseries'
+        elif self.plot_type == 'lead_average':
+            plot_type_savefig_name = 'fhrmean'
+        elif self.plot_type == 'stat_by_level':
+            plot_type_savefig_name = 'vertprof'
+        elif self.plot_type == 'lead_by_level':
+            plot_type_savefig_name = 'vertprof_fhrmean'
         else:
             plot_type_savefig_name = self.plot_type.replace('_', '')
-        if self.plot_type in ['time_series']:
+        if self.plot_type in ['time_series', 'lead_average',
+                              'stat_by_level', 'lead_by_level']:
             plot_type_savefig_name = plot_type_savefig_name+'_valid'
             valid_hr = int(date_info_dict['valid_hr_start'])
             while valid_hr <= int(date_info_dict['valid_hr_end']):
@@ -607,7 +614,7 @@ class PlotSpecs:
                                           +str(valid_hr).zfill(2))
                 valid_hr+=int(date_info_dict['valid_hr_inc'])
             plot_type_savefig_name = plot_type_savefig_name+'Z'
-        if self.plot_type in ['time_series']:
+        if self.plot_type in ['time_series', 'stat_by_level']:
             plot_type_savefig_name = (
                  plot_type_savefig_name+'_'
                  +'f'+date_info_dict['forecast_hour'].zfill(3)
@@ -620,7 +627,7 @@ class PlotSpecs:
             'GLOBAL': 'glb',
             'NHEM': 'nhem',
             'SHEM': 'shem',
-            'TROPICS': 'trop'
+            'TROPICS': 'tropics'
         }
         if plot_info_dict['vx_mask'] in list(region_savefig_dict.keys()):
             region_savefig_name = (
@@ -862,9 +869,8 @@ class PlotSpecs:
             'all': ['P1000', 'P925', 'P850', 'P700', 'P500', 'P400', 'P300',
                     'P250', 'P200', 'P150', 'P100', 'P50', 'P20', 'P10',
                     'P5', 'P1'],
-            'lower_trop': ['P1000', 'P925', 'P850', 'P700', 'P500'],
-            'upper_trop': ['P500', 'P400', 'P300', 'P250', 'P200',
-                           'P150', 'P100'],
+            'ltrop': ['P1000', 'P925', 'P850', 'P700', 'P500'],
+            'utrop': ['P500', 'P400', 'P300', 'P250', 'P200', 'P150', 'P100'],
             'trop': ['P1000', 'P925', 'P850', 'P700', 'P500', 'P500', 'P400',
                      'P300', 'P250', 'P200', 'P150', 'P100'],
             'strat': ['P100', 'P50', 'P20', 'P10', 'P5', 'P1']
