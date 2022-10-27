@@ -66,10 +66,10 @@ if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     export g2op_model_plot_name_list="gfs ecmwf cmc ukmet jma imd fnmoc cfs"
     export g2op_type_list="pres_levs"
     export g2op_event_equalization="NO"
-    export g2op_pres_levs_init_hr_list="00"
+    export g2op_pres_levs_init_hr_list="00 06 12 18"
     export g2op_pres_levs_valid_hr_list="00"
     export g2op_pres_levs_fhr_min=00
     export g2op_pres_levs_fhr_max=384
-    export g2op_pres_levs_fhr_inc=24
+    export g2op_pres_levs_fhr_inc=6
 fi
 echo "END: $(basename ${BASH_SOURCE[0]})"
