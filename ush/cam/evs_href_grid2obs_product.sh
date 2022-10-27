@@ -109,9 +109,9 @@ for prod in mean prob ; do
                                  ${maskpath}/Bukovsky_G227_SPlains.nc,
                                  ${maskpath}/Bukovsky_G227_SRockies.nc'" >> run_href_${model}.${dom}.${valid_run}_product.sh
 
-       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF${prod}_obsPREPBUFR_SFC.conf " >> run_href_${model}.${dom}.${valid_run}_product.sh
+         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF${prod}_obsPREPBUFR_SFC.conf " >> run_href_${model}.${dom}.${valid_run}_product.sh
 
-       echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${model}.${dom}.${valid_run}_product.sh
+  	 echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${model}.${dom}.${valid_run}_product.sh
 
        chmod +x run_href_${model}.${dom}.${valid_run}_product.sh
        echo "run_href_${model}.${dom}.${valid_run}_product.sh" >> run_all_href_product_poe.sh
@@ -177,8 +177,8 @@ for prod in mean prob ; do
        echo  "export modeltail='.grib2'" >> run_href_${model}.${dom}.${valid_run}_product.sh
        echo  "export extradir='ensprod/'" >> run_href_${model}.${dom}.${valid_run}_product.sh
 
+ 
        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF${prod}_obsPREPBUFR_SFC.conf " >> run_href_${model}.${dom}.${valid_run}_product.sh
-
        echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${model}.${dom}.${valid_run}_product.sh
        chmod +x run_href_${model}.${dom}.${valid_run}_product.sh
        echo "run_href_${model}.${dom}.${valid_run}_product.sh" >> run_all_href_product_poe.sh

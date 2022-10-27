@@ -16,6 +16,8 @@ export log_met_output_to_metplus=''
 export metplus_verbosity=2
 export met_verbosity=2
 
+#check input data are available:
+$USHevs/evs_check_href_files.sh 
 
 #lvl = profile or sfc or both
 export lvl='both'

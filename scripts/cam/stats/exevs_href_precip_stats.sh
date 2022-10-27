@@ -1,6 +1,9 @@
 #!/bin/ksh
 set -x
 
+#check input data are available:
+$USHevs/cam/evs_check_href_files.sh
+
 export WORK=$DATA
 cd $WORK
 
@@ -10,12 +13,11 @@ export metplus_verbosity=2
 export met_verbosity=2
 
 export run_mpi=${run_mpi:-'yes'}
-export prepare='yes'
-export verif_precip='yes'
-export verif_snowfall='yes'
+export prepare=${prepare:-'yes'}
+export verif_precip=${verif_precip:-'yes'}
+export verif_snowfall=${verif_snowfall:-'yes'}
 export gather=${gather:-'yes'}
 export verify='precip'
-#export sys=$verify
 
 export COMHREF=$COMINhref
 export COMCCPA=$COMINccpa
@@ -35,7 +37,7 @@ postmsg "$jlogfile" "$msg"
 
 
 if [ $prepare = yes ] ; then
- for precip in ccpa01h03h ccpa24h apcp24h_conus mrms03h mrms24h apcp24h_alaska ; do
+ for precip in ccpa01h03h ccpa24h apcp24h_conus  apcp24h_alaska mrms ; do
   $USHevs/cam/evs_href_preppare.sh  $precip
  done
 fi
@@ -57,7 +59,7 @@ if [ -s run_all_precip_poe.sh ]  ; then
 
   if [ $run_mpi = yes ] ; then
     export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-    mpiexec  -n 30 -ppn 30 --cpu-bind core --depth=2 cfp run_all_precip_poe.sh
+    mpiexec  -n 44 -ppn 44 --cpu-bind core --depth=2 cfp run_all_precip_poe.sh
   else
    sh run_all_precip_poe.sh
   fi

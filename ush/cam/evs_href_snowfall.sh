@@ -11,6 +11,9 @@ set -x
 
 >run_all_href_snowfall_poe.sh
 
+mkdir -p $COMOUTsmall/HREF_SNOW
+
+
 for obsv in 6h 24h  ; do
 
      >run_href_snow${obsv}.sh
@@ -29,14 +32,14 @@ for obsv in 6h 24h  ; do
 
       if [ $obsv = 6h ] ; then
         echo  "export level=A06" >> run_href_snow${obsv}.sh
-        echo  "export thresh='ge1, ge2, ge4, ge8'" >> run_href_snow${obsv}.sh
+        echo  "export thresh='ge0.0254, ge0.0508, ge0.1016, ge0.2032'" >> run_href_snow${obsv}.sh
         echo  "export vbeg=0" >>run_href_snow${obsv}.sh
         echo  "export vend=18" >>run_href_snow${obsv}.sh
         echo  "export valid_increment=21600" >> run_href_snow${obsv}.sh
         echo  "export lead='6,12,18,24,30,36,42,48'" >> run_href_snow${obsv}.sh
       elif [ $obsv = 24h ] ; then
         echo  "export level=A24" >> run_href_snow${obsv}.sh
-        echo  "export thresh='ge1, ge4, ge8, ge12'" >> run_href_snow${obsv}.sh
+        echo  "export thresh='ge0.0254, ge0.1016, ge0.2032, ge0.3048'" >> run_href_snow${obsv}.sh
         echo  "export vbeg=0" >>run_href_snow${obsv}.sh
         echo  "export vend=12" >>run_href_snow${obsv}.sh
         echo  "export valid_increment=43200" >> run_href_snow${obsv}.sh
@@ -44,7 +47,7 @@ for obsv in 6h 24h  ; do
 
       fi
 
-       echo  "export MODEL=HREF" >> run_href_snow${obsv}.sh
+       echo  "export MODEL=HREF_SNOW" >> run_href_snow${obsv}.sh
        echo  "export regrid=FCST" >> run_href_snow${obsv}.sh
        echo  "export modelpath=$COMHREF" >> run_href_snow${obsv}.sh
        echo  "export modelgrid=conus" >> run_href_snow${obsv}.sh
@@ -63,7 +66,7 @@ for obsv in 6h 24h  ; do
 
       echo  "${METPLUS_PATH}/ush/run_metplus.py -c  ${PARMevs}/metplus_config/machine.conf -c ${SNOWFALL_CONF}/GridStat_fcstHREFmean_obsNOHRSC_NOHRSCgrid.conf " >> run_href_snow${obsv}.sh
 
-        echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_snow${obsv}.sh
+        echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall/HREF_SNOW" >> run_href_snow${obsv}.sh
        chmod +x run_href_snow${obsv}.sh
        echo "run_href_snow${obsv}.sh" >> run_all_href_snowfall_poe.sh
 

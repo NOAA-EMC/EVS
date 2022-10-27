@@ -18,34 +18,37 @@ modnam=href
 verify=$1
 
 if [ $verify = precip ] ; then
- MODELS='HREF HREF_MEAN HREF_PMMN HREF_LPMM HREF_AVRG  HREF_PROB'
+ MODELS='HREF HREF_MEAN HREF_PMMN HREF_LPMM HREF_AVRG  HREF_PROB HREF_EAS HREF_SNOW'
 elif [ $verify = grid2obs ] ; then
  MODELS='HREF HREF_MEAN HREF_PROB'
 fi 
 
 for MODL in $MODELS ; do
 
+    modl=`echo $MODL | tr '[A-Z]' '[a-z]'`
+
 >run_gather_${verify}_${MODL}.sh
 
     echo  "export output_base=${WORK}/gather" >> run_gather_${verify}_${MODL}.sh 
     echo  "export verify=$verify" >> run_gather_${verify}_${MODL}.sh 
 
+
     echo  "export vbeg=00" >> run_gather_${verify}_${MODL}.sh
     echo  "export vend=23" >> run_gather_${verify}_${MODL}.sh
     echo  "export valid_increment=3600" >>  run_gather_${verify}_${MODL}.sh
     echo  "export model=$modnam" >> run_gather_${verify}_${MODL}.sh
-#    echo  "export stat_file_dir=${WORK}/${verify}/stat" >> run_gather_${verify}_${MODL}.sh
     echo  "export stat_file_dir=${COMOUTsmall}" >> run_gather_${verify}_${MODL}.sh
     echo  "export gather_output_dir=${WORK}/gather " >> run_gather_${verify}_${MODL}.sh
     echo  "export MODEL=${MODL}" >> run_gather_${verify}_${MODL}.sh
+    echo  "export modl=$modl" >> run_gather_${verify}_${MODL}.sh
 
     if [ $verify = grid2obs ] ; then 
       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/StatAnlysis_fcstHREF_obsPREPBUFR_GatherByDay.conf " >> run_gather_${verify}_${MODL}.sh
     elif [ $verify = precip ] ; then
       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/StatAnlysis_fcstHREF_obsAnalysis_GatherByDay.conf " >> run_gather_${verify}_${MODL}.sh
-    fi
+   fi
 
-    echo "cp ${WORK}/gather/${vday}/${MODL}_${verify}_${vday}.stat  $COMOUTfinal" >> run_gather_${verify}_${MODL}.sh
+    echo "cp ${WORK}/gather/${vday}/${MODL}_${verify}_${vday}.stat  $COMOUTfinal/${modl}_${verify}_v${vday}.stat" >> run_gather_${verify}_${MODL}.sh
 
     chmod +x run_gather_${verify}_${MODL}.sh
  

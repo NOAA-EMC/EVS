@@ -44,6 +44,10 @@ for dom in CONUS Alaska ; do
            echo  "export lead='3,6,9,12,15,18,21,24'" >> run_href_${domain}.${valid_at}_system.sh
          elif [ $valid_at = 2fhr ] ; then
            echo  "export lead='27,30,33,36,39,42,45,48'" >> run_href_${domain}.${valid_at}_system.sh
+         elif [ $valid_at = test ] ; then
+           echo  "export vbeg=18" >>run_href_${domain}.${valid_at}_system.sh
+           echo  "export vend=18" >>run_href_${domain}.${valid_at}_system.sh
+           echo  "export lead='12'" >> run_href_${domain}.${valid_at}_system.sh
          fi
 
          echo  "export domain=CONUS" >> run_href_${domain}.${valid_at}_system.sh
@@ -84,6 +88,7 @@ for dom in CONUS Alaska ; do
          echo  "export valid_at=$valid_at" >> run_href_${domain}.${valid_at}_system.sh
 
          echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstHREF_obsPREPBUFR_SFC.conf " >> run_href_${domain}.${valid_at}_system.sh
+         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF_obsPREPBUFR_SFC_prob.conf " >> run_href_${domain}.${valid_at}_system.sh
 
          echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${domain}.${valid_at}_system.sh
 
@@ -138,6 +143,8 @@ for dom in CONUS Alaska ; do
          echo  "export valid_at=$valid_at" >> run_href_${domain}.${valid_at}_system.sh
 
          echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstHREF_obsPREPBUFR_SFC.conf " >> run_href_${domain}.${valid_at}_system.sh
+
+	 echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF_obsPREPBUFR_SFC_prob.conf " >> run_href_${domain}.${valid_at}_system.sh
 
 	 echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${domain}.${valid_at}_system.sh
          chmod +x run_href_${domain}.${valid_at}_system.sh

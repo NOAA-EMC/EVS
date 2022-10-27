@@ -74,11 +74,29 @@ for dom in $domains ; do
        echo  "export extradir='verf_g2g/'" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
  
        echo  "export verif_grid=''" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+
        echo  "export verif_poly='${maskpath}/Bukovsky_G227_CONUS.nc,
-                        ${maskpath}/Bukovsky_G227_CONUS_East.nc,
-		        ${maskpath}/Bukovsky_G227_CONUS_West.nc,
-		        ${maskpath}/Bukovsky_G227_CONUS_South.nc,
-		        ${maskpath}/Bukovsky_G227_CONUS_Central.nc' " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh 
+                                   ${maskpath}/Bukovsky_G227_CONUS_East.nc,
+                                   ${maskpath}/Bukovsky_G227_CONUS_West.nc,
+                                   ${maskpath}/Bukovsky_G227_CONUS_South.nc,
+                                   ${maskpath}/Bukovsky_G227_CONUS_Central.nc,
+                                   ${maskpath}/Bukovsky_G227_Appalachia.nc,
+                                   ${maskpath}/Bukovsky_G227_CPlains.nc,
+                                   ${maskpath}/Bukovsky_G227_DeepSouth.nc,
+                                   ${maskpath}/Bukovsky_G227_GreatBasin.nc,
+                                   ${maskpath}/Bukovsky_G227_GreatLakes.nc,
+                                   ${maskpath}/Bukovsky_G227_Mezquital.nc,
+                                   ${maskpath}/Bukovsky_G227_MidAtlantic.nc,
+                                   ${maskpath}/Bukovsky_G227_NorthAtlantic.nc,
+                                   ${maskpath}/Bukovsky_G227_NPlains.nc,
+                                   ${maskpath}/Bukovsky_G227_NRockies.nc,
+                                   ${maskpath}/Bukovsky_G227_PacificNW.nc,
+                                   ${maskpath}/Bukovsky_G227_PacificSW.nc,
+                                   ${maskpath}/Bukovsky_G227_Prairie.nc,
+                                   ${maskpath}/Bukovsky_G227_Southeast.nc,
+                                   ${maskpath}/Bukovsky_G227_Southwest.nc,
+                                   ${maskpath}/Bukovsky_G227_SPlains.nc,
+                                   ${maskpath}/Bukovsky_G227_SRockies.nc'" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstHREF_obsPREPBUFR_PROFILE.conf " >>  run_href_${domain}.${valid_at}.${fhr}_profile.sh 
 

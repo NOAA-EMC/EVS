@@ -33,7 +33,7 @@ export rap_ver=v5.1
 export aqm_ver=v6.1
 export hrrr_ver=v4.1
 export gfs_ver=v16.2
-export gefs_ver=v12.2
+export gefs_ver=v12.3
 export hiresw_ver=v8.1
 export narre_ver=v1.2
 export rtma_ver=v2.9
@@ -48,6 +48,11 @@ export naefs_ver=v6.1
 export hysplit_ver=v7.9
 export obsproc_ver=v1.0
 export st4_ver=v4.1
+
+export cdo_ver=1.9.8
+export gsl_ver=2.7
+export udunits_ver=2.2.28
+export nco_ver=4.7.9
 
 #export COMPATH=/lfs/h1/ops/prod/com/gfs:/lfs/h1/ops/prod/com/hrrr:/lfs/h1/ops/prod/com/rtma:/lfs/h1/ops/prod/com/aqm:/lfs/h1/ops/prod/com/gefs:/lfs/h1/ops/prod/com/naefs:/lfs/h1/ops/prod/com/urma:/lfs/h1/ops/prod/com/narre:/lfs/h1/ops/prod/com/hiresw:/lfs/h1/ops/prod/com/rap:/lfs/h1/ops/prod/com/sref:/lfs/h1/ops/prod/com/hourly:/lfs/h1/ops/prod/com/href:/lfs/h1/ops/prod/com/obsproc:/lfs/h1/ops/prod/com/ccpa
 

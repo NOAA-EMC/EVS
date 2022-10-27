@@ -21,103 +21,67 @@ prevday=`$NDATE -24 ${vday}09 |cut -c1-8`
  
 if [ $data = ccpa01h03h ] ; then
 
-ccpadir=$WORK/ccpa.$vday
+export  ccpadir=${WORK}/ccpa.${vday}
 
 mkdir -p $ccpadir
-
+cd $ccpadir
+ 
      for cyc in 00 ; do
-
-       ccpa01h=$COMCCPA/ccpa.${vday}/00/ccpa.t${cyc}z.01h.hrap.conus.gb2
-       $COPYGB2 -g"30 6 0 0 0 0 0 0 185 129 12190000 226541000 8 25000000 265000000 40635000 40635000 0 64 25000000 25000000 0 0" -i3,1 -x $ccpa01h  $ccpadir/ccpa01h.t${cyc}z.G212.grib2
-       cp $ccpa01h  $ccpadir/ccpa01h.t${cyc}z.G240.grib2
-
-       ccpa03h=$COMCCPA/ccpa.${vday}/00/ccpa.t${cyc}z.03h.hrap.conus.gb2
-       $COPYGB2 -g"30 6 0 0 0 0 0 0 185 129 12190000 226541000 8 25000000 265000000 40635000 40635000 0 64 25000000 25000000 0 0" -i3,1 -x $ccpa03h  $ccpadir/ccpa03h.t${cyc}z.G212.grib2
-       cp $ccpa03h  $ccpadir/ccpa03h.t${cyc}z.G240.grib2
-
+       cp $COMCCPA/ccpa.${vday}/00/ccpa.t${cyc}z.01h.hrap.conus.gb2  $ccpadir/ccpa01h.t${cyc}z.G240.grib2
+       cp $COMCCPA/ccpa.${vday}/00/ccpa.t${cyc}z.03h.hrap.conus.gb2  $ccpadir/ccpa03h.t${cyc}z.G240.grib2
      done
 
      for cyc in 01 02 03 04 05 06  ; do
-
-       ccpa01h=$COMCCPA/ccpa.${vday}/06/ccpa.t${cyc}z.01h.hrap.conus.gb2
-       $COPYGB2 -g"30 6 0 0 0 0 0 0 185 129 12190000 226541000 8 25000000 265000000 40635000 40635000 0 64 25000000 25000000 0 0" -i3,1 -x $ccpa01h  $ccpadir/ccpa01h.t${cyc}z.G212.grib2
-       cp $ccpa01h  $ccpadir/ccpa01h.t${cyc}z.G240.grib2
-
+       cp $COMCCPA/ccpa.${vday}/06/ccpa.t${cyc}z.01h.hrap.conus.gb2  $ccpadir/ccpa01h.t${cyc}z.G240.grib2
      done
 
      for cyc in 07 08 09 10 11 12  ; do
-
-       ccpa01h=$COMCCPA/ccpa.${vday}/12/ccpa.t${cyc}z.01h.hrap.conus.gb2
-       $COPYGB2 -g"30 6 0 0 0 0 0 0 185 129 12190000 226541000 8 25000000 265000000 40635000 40635000 0 64 25000000 25000000 0 0" -i3,1 -x $ccpa01h  $ccpadir/ccpa01h.t${cyc}z.G212.grib2
-       cp $ccpa01h  $ccpadir/ccpa01h.t${cyc}z.G240.grib2
-
+       cp $COMCCPA/ccpa.${vday}/12/ccpa.t${cyc}z.01h.hrap.conus.gb2  $ccpadir/ccpa01h.t${cyc}z.G240.grib2
      done
 
      for cyc in 13 14 15 16 17 18  ; do
-
-       ccpa01h=$COMCCPA/ccpa.${vday}/18/ccpa.t${cyc}z.01h.hrap.conus.gb2
-       $COPYGB2 -g"30 6 0 0 0 0 0 0 185 129 12190000 226541000 8 25000000 265000000 40635000 40635000 0 64 25000000 25000000 0 0" -i3,1 -x $ccpa01h  $ccpadir/ccpa01h.t${cyc}z.G212.grib2
-       cp $ccpa01h  $ccpadir/ccpa01h.t${cyc}z.G240.grib2
-
+       cp $COMCCPA/ccpa.${vday}/18/ccpa.t${cyc}z.01h.hrap.conus.gb2 $ccpadir/ccpa01h.t${cyc}z.G240.grib2
      done
 
      for cyc in 19 20 21 22 23  ; do
-       ccpa01h=$COMCCPA/ccpa.${nextday}/00/ccpa.t${cyc}z.01h.hrap.conus.gb2
-       $COPYGB2 -g"30 6 0 0 0 0 0 0 185 129 12190000 226541000 8 25000000 265000000 40635000 40635000 0 64 25000000 25000000 0 0" -i3,1 -x $ccpa01h  $ccpadir/ccpa01h.t${cyc}z.G212.grib2
-       cp $ccpa01h  $ccpadir/ccpa01h.t${cyc}z.G240.grib2
+       cp $COMCCPA/ccpa.${nextday}/00/ccpa.t${cyc}z.01h.hrap.conus.gb2 $ccpadir/ccpa01h.t${cyc}z.G240.grib2
      done
 
  
      for cyc in  03 06 ; do 
-       ccpa03h=$COMCCPA/ccpa.${vday}/06/ccpa.t${cyc}z.03h.hrap.conus.gb2
-       $COPYGB2 -g"30 6 0 0 0 0 0 0 185 129 12190000 226541000 8 25000000 265000000 40635000 40635000 0 64 25000000 25000000 0 0" -i3,1 -x $ccpa03h  $ccpadir/ccpa03h.t${cyc}z.G212.grib2
-       cp $ccpa03h $ccpadir/ccpa03h.t${cyc}z.G240.grib2
+       cp $COMCCPA/ccpa.${vday}/06/ccpa.t${cyc}z.03h.hrap.conus.gb2  $ccpadir/ccpa03h.t${cyc}z.G240.grib2
      done
  
-     for cyc in 09 12 ; do
-       ccpa03h=$COMCCPA/ccpa.${vday}/12/ccpa.t${cyc}z.03h.hrap.conus.gb2
-       $COPYGB2 -g"30 6 0 0 0 0 0 0 185 129 12190000 226541000 8 25000000 265000000 40635000 40635000 0 64 25000000 25000000 0 0" -i3,1 -x $ccpa03h  $ccpadir/ccpa03h.t${cyc}z.G212.grib2
-       cp $ccpa03h $ccpadir/ccpa03h.t${cyc}z.G240.grib2
+     for cyc in 09 12 ; do 
+       cp $COMCCPA/ccpa.${vday}/12/ccpa.t${cyc}z.03h.hrap.conus.gb2 $ccpadir/ccpa03h.t${cyc}z.G240.grib2
      done 
 
      for cyc in 15 18 ; do
-       ccpa03h=$COMCCPA/ccpa.${vday}/18/ccpa.t${cyc}z.03h.hrap.conus.gb2
-       $COPYGB2 -g"30 6 0 0 0 0 0 0 185 129 12190000 226541000 8 25000000 265000000 40635000 40635000 0 64 25000000 25000000 0 0" -i3,1 -x $ccpa03h  $ccpadir/ccpa03h.t${cyc}z.G212.grib2
-       cp $ccpa03h $ccpadir/ccpa03h.t${cyc}z.G240.grib2
+       cp $COMCCPA/ccpa.${vday}/18/ccpa.t${cyc}z.03h.hrap.conus.gb2 $ccpadir/ccpa03h.t${cyc}z.G240.grib2
      done
 
      for cyc in 21 ; do
-       ccpa03h=$COMCCPA/ccpa.${nextday}/00/ccpa.t${cyc}z.03h.hrap.conus.gb2
-       $COPYGB2 -g"30 6 0 0 0 0 0 0 185 129 12190000 226541000 8 25000000 265000000 40635000 40635000 0 64 25000000 25000000 0 0" -i3,1 -x $ccpa03h  $ccpadir/ccpa03h.t${cyc}z.G212.grib2
-       cp $ccpa03h $ccpadir/ccpa03h.t${cyc}z.G240.grib2
+       cp $COMCCPA/ccpa.${nextday}/00/ccpa.t${cyc}z.03h.hrap.conus.gb2 $ccpadir/ccpa03h.t${cyc}z.G240.grib2
      done
 
 fi
 
 if [ $data = ccpa24h ] ; then
 
-ccpadir=$WORK/ccpa.$vday
-mkdir -p $ccpadir
+export output_base=${WORK}/ccpa.${vday}
+export ccpadir=${WORK}/ccpa.${vday}
+export ccpa24=$ccpadir/ccpa24
+mkdir -p $ccpa24
+
 
  cycles="12"
  for cyc in $cycles ; do
-  ccpa1=${COMCCPA}/ccpa.${vday}/12/ccpa.t12z.06h.hrap.conus.gb2
-  ccpa2=${COMCCPA}/ccpa.${vday}/06/ccpa.t06z.06h.hrap.conus.gb2
-  ccpa3=${COMCCPA}/ccpa.${vday}/00/ccpa.t00z.06h.hrap.conus.gb2
-  ccpa4=${COMCCPA}/ccpa.${prevday}/18/ccpa.t18z.06h.hrap.conus.gb2
+  cp ${COMCCPA}/ccpa.${vday}/12/ccpa.t12z.06h.hrap.conus.gb2 $ccpa24/ccpa1
+  cp ${COMCCPA}/ccpa.${vday}/06/ccpa.t06z.06h.hrap.conus.gb2 $ccpa24/ccpa2
+  cp ${COMCCPA}/ccpa.${vday}/00/ccpa.t00z.06h.hrap.conus.gb2 $ccpa24/ccpa3
+  cp ${COMCCPA}/ccpa.${prevday}/18/ccpa.t18z.06h.hrap.conus.gb2 $ccpa24/ccpa4
 
-  mkdir -p $ccpadir/ccpa24
-  cp $ccpa1 $ccpadir/ccpa24/.
-  cp $ccpa2 $ccpadir/ccpa24/.
-  cp $ccpa3 $ccpadir/ccpa24/.
-  cp $ccpa4 $ccpadir/ccpa24/.
-
-  pcp_combine ${prevday}_120000 06 ${vday}_120000 24  ccpa24h.t12z.G240.nc -pcpdir $ccpadir/ccpa24
-
-  regrid_data_plane ccpa24h.t12z.G240.nc G212 ccpa24h.t12z.G212.nc -field 'name="APCP_24"; level="(*,*)";' -method BUDGET
-
-  mv ccpa24h.t12z.G212.nc  $ccpadir/. 
-  mv ccpa24h.t12z.G240.nc  $ccpadir/. 
+  ${METPLUS_PATH}/ush/master_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA24h.conf
 
  done
 
@@ -131,71 +95,31 @@ fi
 
 if [ $data = apcp24h_conus ] ; then
 
-typeset -Z2 fcyc
-cyc=12
-obsv_cyc=${vday}${cyc}
+export domain=conus
+export grid=G227
+export output_base=$WORK/apcp24h_conus
+export fcyc	
+export vcyc=12
+obsv_vcyc=${vday}${vcyc}
 
+export fhr
 for fhr in 24 30 36 42 48 ; do
- fcst_time=`$NDATE -$fhr $obsv_cyc`
+ fcst_time=`$NDATE -$fhr $obsv_vcyc`
  fyyyymmdd=${fcst_time:0:8}
  fcyc=${fcst_time:8:2}
- if [ $fhr = 24 ] ; then
-  hhs=" 03 06 09 12 15 18 21 24"
-  init="12"
- elif [ $fhr = 30 ] ; then
-  hhs=" 09 12 15 18 21 24 27 30"
-  init="06"
- elif [ $fhr = 36 ] ; then
-  hhs=" 15 18 21 24 27 30 33 36"
-  init="00"
- elif [ $fhr = 42 ] ; then
-  hhs=" 21 24 27 30 33 36 39 42"
-  init="18"
- elif [ $fhr = 48 ] ; then
-  hhs=" 27 30 33 36 39 42 45 48"
-  init="12"
- else
-  exit
- fi
 
-  href=$WORK/href.${fyyyymmdd}/apcp24_mean
-  mkdir -p $href
-  for hh in $hhs ; do
-    hrefmean=${COMHREF}/href.${fyyyymmdd}/ensprod/href.t${fcyc}z.conus.mean.f${hh}.grib2
-    cp $hrefmean $href
+
+  mkdir -p $WORK/href.${fyyyymmdd}
+
+  export modelpath=${COMHREF}/href.${fyyyymmdd}/ensprod
+
+  export prod 
+  for prod in mean avrg pmmn lpmm ; do
+ 
+     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstHREF_APCP24h.conf
+     mv $output_base/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}/.
+
   done
-  pcp_combine ${fyyyymmdd}_${init}0000 03 ${vday}_12 24 href.t${init}z.G227.mean24.f${fhr}.nc -pcpdir $href
-  mv href.t${init}z.G227.mean24.f${fhr}.nc $WORK/href.${fyyyymmdd}/hrefmean.t${init}z.G227.24h.f${fhr}.nc
-
-  href=$WORK/href.${fyyyymmdd}/apcp24_avrg
-  mkdir -p $href
-  for hh in $hhs ; do
-    hrefavrg=${COMHREF}/href.${fyyyymmdd}/ensprod/href.t${fcyc}z.conus.avrg.f${hh}.grib2
-    cp $hrefavrg $href
-  done
-  pcp_combine ${fyyyymmdd}_${init}0000 03 ${vday}_12 24 href.t${init}z.conus.avrg24.f${fhr}.nc -pcpdir $href
-  mv href.t${init}z.conus.avrg24.f${fhr}.nc $WORK/href.${fyyyymmdd}/hrefavrg.t${init}z.G227.24h.f${fhr}.nc
-
-
-  href=$WORK/href.${fyyyymmdd}/apcp24_pmmn
-  mkdir -p $href
-  for hh in $hhs ; do
-    hrefpmmn=${COMHREF}/href.${fyyyymmdd}/ensprod/href.t${fcyc}z.conus.pmmn.f${hh}.grib2
-    cp $hrefpmmn $href
-  done
-  pcp_combine ${fyyyymmdd}_${init}0000 03 ${vday}_12 24 href.t${init}z.conus.pmmn24.f${fhr}.nc -pcpdir $href
-  mv href.t${init}z.conus.pmmn24.f${fhr}.nc $WORK/href.${fyyyymmdd}/hrefpmmn.t${init}z.G227.24h.f${fhr}.nc
-
-
-  href_lpmm=$WORK/href.${fyyyymmdd}/apcp24_lpmm
-  mkdir -p $href_lpmm
-
-  for hh in $hhs ; do
-    hreflpmm=${COMHREF}/href.${fyyyymmdd}/ensprod/href.t${fcyc}z.conus.lpmm.f${hh}.grib2
-    cp $hreflpmm $href_lpmm
-  done
-  pcp_combine ${fyyyymmdd}_${init}0000 03 ${vday}_12 24 href.t${init}z.conus.lpmm24.f${fhr}.nc -pcpdir $href_lpmm
-  mv href.t${init}z.conus.lpmm24.f${fhr}.nc $WORK/href.${fyyyymmdd}/hreflpmm.t${init}z.G227.24h.f${fhr}.nc
 
 done
 
@@ -212,80 +136,34 @@ fi
 
 if [ $data = apcp24h_alaska ] ; then
 
-typeset -Z2 fcyc
-obsv_cyc=${vday}${cyc}
+ export domain=ak
+ export grid=G255
+ export output_base=$WORK/apcp24h_ak
+ export fcyc
+ export vcyc=12
+ obsv_vcyc=${vday}${vcyc}
 
-#Alaska only has 06 cycle run
-init="06"
+ export fhr
 
- for fhr in 24 30 36 42 48 ; do
-  
+ #for fhr in 24 30 36 42 48 ; do
+ for fhr in 30 ; do  #since Alaska run only at 06Z, only 30fhr fcst can be validated at 12Z 
 
-   if [ $fhr = 24 ] ; then
-       cyc=06
-       hhs=" 03 06 09 12 15 18 21 24"
-   elif [ $fhr = 30 ] ; then
-       cyc=12
-       hhs=" 09 12 15 18 21 24 27 30"
-   elif [ $fhr = 36 ] ; then
-       cyc=18
-       hhs=" 15 18 21 24 27 30 33 36"
-   elif [ $fhr = 42 ] ; then
-       cyc=00
-       hhs=" 21 24 27 30 33 36 39 42"
-   elif [ $fhr = 48 ] ; then
-       cyc=06
-       hhs=" 27 30 33 36 39 42 45 48"
-   fi
-
-   obsv_cyc=${vday}${cyc}
-   fcst_time=`$NDATE -$fhr $obsv_cyc`
+   fcst_time=`$NDATE -$fhr $obsv_vcyc`
    fyyyymmdd=${fcst_time:0:8}
-   fcyc=${fcst_time:8:2}
+   export fcyc=${fcst_time:8:2} #Alaska only has 06 cycle run 
+   #export fcyc=06  #Alaska only has 06 cycle run
 
+   mkdir -p href.${fyyyymmdd}
 
-  href=$WORK/href.${fyyyymmdd}/apcp24_mean
-  mkdir -p $href
-  rm -f $href/*.grib2
-  for hh in $hhs ; do
-    hrefmean=${COMHREF}/href.${fyyyymmdd}/ensprod/href.t${fcyc}z.ak.mean.f${hh}.grib2
-    cp $hrefmean $href
-  done
-  pcp_combine -sum  ${fyyyymmdd}_${fcyc}0000 3 ${vday}_${cyc}0000 24 href.t${init}z.G255.mean24.f${fhr}.nc -pcpdir $href
-  mv href.t${init}z.G255.mean24.f${fhr}.nc $WORK/href.${fyyyymmdd}/hrefmean.t${init}z.G255.24h.f${fhr}.nc
-
-  href=$WORK/href.${fyyyymmdd}/apcp24_avrg
-  mkdir -p $href
-  rm -f $href/*.grib2
-  for hh in $hhs ; do
-    hrefavrg=${COMHREF}/href.${fyyyymmdd}/ensprod/href.t${fcyc}z.ak.avrg.f${hh}.grib2
-    cp $hrefavrg $href
-  done
-  pcp_combine ${fyyyymmdd}_${fcyc}0000 03 ${vday}_${cyc} 24 href.t${init}z.ak.avrg24.f${fhr}.nc -pcpdir $href
-  mv href.t${init}z.ak.avrg24.f${fhr}.nc $WORK/href.${fyyyymmdd}/hrefavrg.t${init}z.G255.24h.f${fhr}.nc
-
-
-  href=$WORK/href.${fyyyymmdd}/apcp24_pmmn
-  mkdir -p $href
-  rm -f $href/*.grib2
-  for hh in $hhs ; do
-    hrefpmmn=${COMHREF}/href.${fyyyymmdd}/ensprod/href.t${fcyc}z.ak.pmmn.f${hh}.grib2
-    cp $hrefpmmn $href
-  done
-  pcp_combine ${fyyyymmdd}_${fcyc}0000 03 ${vday}_${cyc} 24 href.t${init}z.ak.pmmn24.f${fhr}.nc -pcpdir $href
-  mv href.t${init}z.ak.pmmn24.f${fhr}.nc $WORK/href.${fyyyymmdd}/hrefpmmn.t${init}z.G255.24h.f${fhr}.nc
-
-
-  href=$WORK/href.${fyyyymmdd}/apcp24_lpmm
-  mkdir -p $href
-  rm -f $href/*.grib2
-  for hh in $hhs ; do
-    hreflpmm=${COMHREF}/href.${fyyyymmdd}/ensprod/href.t${fcyc}z.ak.lpmm.f${hh}.grib2
-    cp $hreflpmm $href
-  done
-  pcp_combine ${fyyyymmdd}_${fcyc}0000 03 ${vday}_${cyc} 24 href.t${init}z.ak.lpmm24.f${fhr}.nc -pcpdir $href
-  mv href.t${init}z.ak.lpmm24.f${fhr}.nc $WORK/href.${fyyyymmdd}/hreflpmm.t${init}z.G255.24h.f${fhr}.nc
-
+   export modelpath=${COMHREF}/href.${fyyyymmdd}/ensprod
+   export prod
+   for prod in mean avrg pmmn lpmm ; do
+	  
+     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstHREF_APCP24h.conf
+     mv $output_base/href${prod}.t${fcyc}z.G255.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}/.
+	    
+   done
+	      
  done
 
 fi
@@ -296,7 +174,6 @@ fi
 if [ $data = prepbufr ] ; then
 
  mkdir -p $WORK/prepbufr.$vday
- #export PREPBUFR=$WORK/prepbufr.$vday
  export output_base=${WORK}/pb2nc
 
  if [ $domain = CONUS ] ; then
@@ -339,42 +216,56 @@ if [ $data = prepbufr ] ; then
 fi
 
 
-if [ $data = mrms03h ] ; then
+if [ $data = mrms ] ; then
 
- mrmsdir=$WORK/mrms.$vday
+export accum
+
+for accum in 01 03 24 ; do 	
+
+ if [ $accum = 03 ] ; then
+   cycs="00 03 06 09 12 15 18 21"
+ elif [ $accum = 24 ] ; then
+   cycs="00 06 12  18"
+ elif [ $accum = 01 ] ; then
+   cycs="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
+ fi
+
+ export cyc
+ export output_base=$WORK/mrms${accum}h
+ export mrmsdir=$WORK/mrms.$vday
  mkdir -p $mrmsdir
  cd $mrmsdir
 
-  for cyc in 00 03 06 09 12 15 18 21 23 ; do
-    mrms03=$COMINmrms/MultiSensor_QPE_03H_Pass2_00.00_${VDATE}-${cyc}0000.grib2.gz
+  #for cyc in 00 03 06 09 12 15 18 21 ; do
+  for cyc in $cycs ; do
+
+    export vbeg=$vday$cyc
+    export vend=$vday$cyc
+   
+
+    mrms03=$COMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${cyc}0000.grib2.gz
     cp $mrms03 $mrmsdir/.
-    gunzip MultiSensor_QPE_03H_Pass2_00.00_${VDATE}-${cyc}0000.grib2.gz
-    export MET_GRIB_TABLES=$PARMevs/metplus_config/cam/precip/prep/grib2_mrms_qpf03h.txt
-    regrid_data_plane  MultiSensor_QPE_03H_Pass2_00.00_${VDATE}-${cyc}0000.grib2 G216 mrms03h.t${cyc}z.G216.nc -field 'name="APCP_03"; level="Z0";' -method BUDGET
-    regrid_data_plane  MultiSensor_QPE_03H_Pass2_00.00_${VDATE}-${cyc}0000.grib2 G091 mrms03h.t${cyc}z.G91.nc  -field 'name="APCP_03"; level="Z0";' -method BUDGET
-    regrid_data_plane  MultiSensor_QPE_03H_Pass2_00.00_${VDATE}-${cyc}0000.grib2  MultiSensor_QPE_03H_Pass2_00.00_${VDATE}-${cyc}0000.grib2  mrms03h.t${cyc}z.G255.nc  -field 'name="APCP_03"; level="Z0";' -method BUDGET
-    #mv MultiSensor_QPE_03H_Pass2_00.00_${VDATE}-${cyc}0000.grib2 mrms03h.t${cyc}z.G255.grib2
+    gunzip MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${cyc}0000.grib2.gz
+    export MET_GRIB_TABLES=$PARMevs/metplus_config/cam/precip/prep/grib2_mrms_qpf.txt
+
+    export togrid=G216
+    export grid=G216
+    ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsMRMSqpf.conf
+
+    export togrid=G091
+    export grid=G91
+    ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsMRMSqpf.conf
+
+    export togrid=
+    export grid=G255
+    ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsMRMSqpf_toMRMSnc.conf
+
   done 
+
+    cp ${output_base}/*.nc $mrmsdir
+
+done
 
 fi 
 
-
-if [ $data = mrms24h ] ; then
-
- mrmsdir=$WORK/mrms.$vday
- mkdir -p $mrmsdir
- cd $mrmsdir
-
-  for cyc in 00 06 12  18 ; do
-    mrms24=$COMINmrms/MultiSensor_QPE_24H_Pass2_00.00_${VDATE}-${cyc}0000.grib2.gz
-    cp $mrms24 $mrmsdir/.
-    gunzip MultiSensor_QPE_24H_Pass2_00.00_${VDATE}-${cyc}0000.grib2.gz
-    export MET_GRIB_TABLES=$PARMevs/metplus_config/cam/precip/prep/grib2_mrms_qpf24h.txt
-    regrid_data_plane  MultiSensor_QPE_24H_Pass2_00.00_${VDATE}-${cyc}0000.grib2 G216 mrms24h.t${cyc}z.G216.nc -field 'name="APCP_24"; level="Z0";' -method BUDGET
-    regrid_data_plane  MultiSensor_QPE_24H_Pass2_00.00_${VDATE}-${cyc}0000.grib2 G091 mrms24h.t${cyc}z.G91.nc  -field 'name="APCP_24"; level="Z0";' -method BUDGET
-    regrid_data_plane  MultiSensor_QPE_24H_Pass2_00.00_${VDATE}-${cyc}0000.grib2 MultiSensor_QPE_24H_Pass2_00.00_${VDATE}-${cyc}0000.grib2  mrms24h.t${cyc}z.G255.nc  -field 'name="APCP_24"; level="Z0";' -method BUDGET
-    #mv MultiSensor_QPE_24H_Pass2_00.00_${VDATE}-${cyc}0000.grib2 mrms24h.t${cyc}z.G255.grib2 
-  done
-
-fi
 
