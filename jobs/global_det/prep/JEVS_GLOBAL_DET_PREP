@@ -1,1 +1,93 @@
-sample
+#!/bin/sh
+
+########################################
+# Preliminary data setup step
+########################################
+set -xa
+
+####################################
+# SET SHELL PROCESSING VARIABLES
+####################################
+export PS4='$SECONDS + '
+date
+
+###########################################################
+# obtain unique LSF id (jobid) and make temp directories
+###########################################################
+export pid=$$
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+mkdir -p $DATA
+cd $DATA
+
+####################################
+# Determine Job Output Name on System
+####################################
+export pgmout="OUTPUT.${pid}"
+
+####################################
+# Set EVS directories
+####################################
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
+
+####################################
+# Run setpdy and initialize PDY variables
+####################################
+export cycle=${cycle:-t${cyc}z}
+setpdy.sh
+. ./PDY
+export INITDATE=$PDYm1
+
+####################################
+# Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-prep}
+export COMPONENT=${COMPONENT:-global_det}
+export RUN=${RUN:-atmos}
+
+####################################
+# Define COMIN/COMOUT variables
+####################################
+export COMINcfs=${COMINcfs:-$(compath.py prod/cfs/$cfs_ver/cfs.$INITDATE)}
+export COMINcmc=${COMINcmc:-$(compath.py prod/cmc/$cmc_ver/cmc.$INITDATE)}
+export COMINcmc_precip=${COMINcmc_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
+export COMINcmc_regional_precip=${COMINcmc_regional_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
+export COMINdwd_precip=${COMINdwd_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
+export COMINecmwf=${COMINecmwf:-$DCOMROOT/${INITDATE}/wgrbbul/ecmwf}
+export COMINecmwf_precip=${COMINecmwf_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
+export COMINfnmoc=${COMINfnmoc:-$DCOMROOT/navgem}
+export COMINimd=${COMINimd:-$DCOMROOT/${INITDATE}/wgrbbul/ncmrwf_gdas}
+export COMINjma=${COMINjma:-$DCOMROOT/${INITDATE}/wgrbbul}
+export COMINjma_precip=${COMINjma_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
+export COMINmetfra_precip=${COMINmetfra_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
+export COMINukmet=${COMINukmet:-$DCOMROOT/${INITDATE}/wgrbbul/ukmet_hires}
+export COMINukmet_precip=${COMINukmet_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
+export COMINosi_saf=${COMINosi_saf:-/lfs/h1/ops/dev/dcom}
+export COMINghrsst_median=${COMINghrsst_median:-/lfs/h1/ops/dev/dcom}
+export COMINget_d=${COMINget_d:-$DCOMROOT}
+export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
+mkdir -p $COMOUT.${INITDATE}
+
+#######################################################################
+# Execute the script
+#######################################################################
+env
+$HOMEevs/scripts/global_det/prep/exevs_global_det_${RUN}_prep.sh
+export err=$?; err_chk
+
+cat $pgmout
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATAROOT
+  rm -rf $DATA
+fi
+
+date
