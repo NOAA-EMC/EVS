@@ -1,0 +1,90 @@
+#!/bin/sh -e
+##---------------------------------------------------------------------------
+##---------------------------------------------------------------------------
+## NCEP EMC Verification System (EVS) - GFS Atmospheric
+##
+## CONTRIBUTORS: Mallory Row, mallory.row@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+## PURPOSE: Set up configurations to run EVS GFS Atmospheric standalone
+##---------------------------------------------------------------------------
+##--------------------------------------------------------------------------
+
+echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
+
+####################################################
+# WHAT METPLUS USE CASES TO RUN FOR GFS ATMOSPHERIC
+####################################################
+## SET TO "YES" or "NO"
+## EDIT SECTIONS BELOW FOR VERIFICATION TYPES REQUESTED
+export RUN_GRID2GRID_STATS="YES"
+export RUN_GRID2GRID_PLOTS="NO"
+export RUN_GRID2OBS_STATS="NO"
+export RUN_GRID2OBS_PLOTS="NO"
+
+####################################################
+# GENERAL SETTINGS APPLIED TO ALL USE CASES
+####################################################
+## INPUT DATA SETTINGS
+#model_list:             model names
+#model_evs_data_dir_list:    directory path to model .stat files
+#model_file_format_list: file format of model files
+export model_list="$MODELNAME"
+export model_evs_data_dir_list="$COMOUTfinal"
+export model_file_format_list="${COMINcfs}.{init?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.t{init?fmt=%H}z.f{lead?fmt=%3H}"
+
+## OUTPUT DATA SETTINGS
+#OUTPUTROOT: base output directory
+export OUTPUTROOT="$DATAROOT"
+## DATE SETTINGS
+#start_date:       verification start date, format YYYYMMDD
+#end_date:         verification end date, format YYYYMMDD
+export start_date=$VDATE
+export end_date=$VDATE
+## METPLUS SETTINGS
+#metplus_verbosity:         DEBUG, INFO, WARN, ERROR (most verbose is DEBUG)
+#met_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
+#log_met_output_to_metplus: log MET output to METplus log, yes or no
+export metplus_verbosity="DEBUG"
+export met_verbosity="2"
+export log_met_output_to_metplus="yes"
+## DATA DIRECTIVE SETTINGS
+export KEEPDATA=${KEEPDATA:-"NO"}
+export SENDCOM="YES"
+export SENDARCH="NO"
+export SENDMETVIEWER="NO"
+####################################################
+# SETTINGS FOR SPECIFIC USE CASES
+####################################################
+if [ $RUN_GRID2GRID_STATS = YES ]; then
+    #g2gs_type_list: list type of verifications to run for grid-to-grid: pres_levs, precip, snow, sst, sea_ice
+    #                                                                    ozone, means
+    #    pres_levs:  compare variables on pressure levels to model's own analysis
+    #    precip:     compare to CCPA
+    #    snow:       compare to NOHRSC
+    #    sst:        compare to GHRSST L4
+    #    sea_ice:    compare to OSI-SAF, SMOS, NASA Icebridge, YOPP, OSTIA, GIOMAS
+    #    ozone:      compare to OMI, TROPOMI, OMPS 
+    #    means:      compute forecast hour means for various variables
+    #g2gs_pres_levs_truth_name_list:   list of reference name for truth files
+    #g2gs_pres_levs_truth_format_list: list of truth file format(s)
+    #g2gs_precip_file_format_list:     list of precip file format(s)
+    #g2gs_precip_file_accum_list:      list of precip accumulations in file: hours (HH) or continuous
+    #g2gs_precip_var_list:             list of the precip variable name to use
+    #g2gs_*_init_hr_list:        forecst init_hrs to be included in verification: HH
+    #g2gs_*_valid_hr_list:     valid hours to be included in verification: HH
+    #g2gs_*_fhr_min:           forecast hour to start verification HH[H]
+    #g2gs_*_fhr_max:           forecast hour to end verification HH[H]
+    #g2gs_*_fhr_inc:           frequency to verify forecast hours at HH[H]
+    export g2gs_type_list="pres_levs"
+    export g2gs_pres_levs_truth_name_list="gfs_anl"
+    export g2gs_pres_levs_truth_format_list="$COMINgfs/gfs.{valid?fmt=%Y%m%d}/{valid?fmt=%2H}/atmos/gfs.t{valid?fmt=%2H}z.pgrb2.0p25.anl"
+    export g2gs_pres_levs_init_hr_list="00 06 12 18"
+    export g2gs_pres_levs_valid_hr_list="00 06 12 18"
+    export g2gs_pres_levs_fhr_min=00
+    export g2gs_pres_levs_fhr_max=384
+    export g2gs_pres_levs_fhr_inc=6
+    export g2gs_mv_database_name="mv_evs_global_det_atmos_grid2grid_stats_$MODELNAME"
+    export g2gs_mv_database_group="$USER"
+    export g2gs_mv_database_desc="Grid-to-grid METplus data for $MODELNAME"
+fi
+
+echo "END: $(basename ${BASH_SOURCE[0]})"
