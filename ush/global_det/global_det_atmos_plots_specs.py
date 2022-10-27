@@ -577,64 +577,69 @@ class PlotSpecs:
                  image_path - full path of the name the plot will
                               be saved as (string)
         """
-        if date_info_dict['date_type'] == 'VALID':
-            date_type_start_hr = date_info_dict['valid_hr_start']
-            date_type_end_hr = date_info_dict['valid_hr_end']
-        elif date_info_dict['date_type'] == 'INIT':
-            date_type_start_hr = date_info_dict['init_hr_start']
-            date_type_end_hr = date_info_dict['init_hr_end']
-        if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
-            var_name_for_savefig = (plot_info_dict['fcst_var_name']+'_'
-                                    +plot_info_dict['interp_method'])
+        # Component
+        component_savefig_name = 'globat_det'
+        # Metric
+        metric_savefig_name = plot_info_dict['stat']
+        # Parameter
+        parameter_savefig_name = plot_info_dict['fcst_var_name']
+        # Level
+        level_savefig_name = plot_info_dict['fcst_var_level']
+        # Daya
+        start_date_dt = datetime.datetime.strptime(
+            date_info_dict['start_date'], '%Y%m%d'
+        )
+        end_date_dt = datetime.datetime.strptime(
+            date_info_dict['end_date'], '%Y%m%d'
+        )
+        ndays = int((end_date_dt - start_date_dt).total_seconds()/86400)
+        ndays_savefig_name = 'last'+str(ndays)+'days'
+        # Plot type
+        if self.plot_type == 'time_series':
+            plot_type_savefig_name = 'timeseries'
         else:
-            var_name_for_savefig = plot_info_dict['fcst_var_name']
-        if self.plot_type in ['time_series', 'stat_by_level',
-                              'performance_diagram', 'threshold_average']:
-            fhr_for_savefig = 'fhr'+date_info_dict['forecast_hour'].zfill(3)
-        elif self.plot_type in ['lead_average', 'lead_by_level']:
-            fhr_for_savefig = 'fhrmean'
-        elif self.plot_type == 'lead_by_date':
-            fhr_for_savefig = 'leaddate'
-        elif self.plot_type == 'valid_hour_average':
-            fhr_for_savefig = (
-                'f'+str(date_info_dict['forecast_hours'][0]).zfill(3)+'to'
-                'f'+str(date_info_dict['forecast_hours'][-1]).zfill(3)
+            plot_type_savefig_name = self.plot_type.replace('_', '')
+        if self.plot_type in ['time_series']:
+            plot_type_savefig_name = plot_type_savefig_name+'_valid'
+            valid_hr = int(date_info_dict['valid_hr_start'])
+            while valid_hr <= int(date_info_dict['valid_hr_end']):
+                plot_type_savefig_name = (plot_type_savefig_name
+                                          +str(valid_hr).zfill(2))
+                valid_hr+=int(date_info_dict['valid_hr_inc'])
+            plot_type_savefig_name = plot_type_savefig_name+'Z'
+        if self.plot_type in ['time_series']:
+            plot_type_savefig_name = (
+                 plot_type_savefig_name+'_'
+                 +'f'+date_info_dict['forecast_hour'].zfill(3)
             )
-        savefig_name = (plot_info_dict['stat']+'_'
-                        +var_name_for_savefig+'_'
-                        +plot_info_dict['fcst_var_level']+'_')
-        if self.plot_type == 'performance_diagram':
-            var_thresh_for_savefig = ''.join(
-                plot_info_dict['fcst_var_threshs']
+        # Grid and region
+        grid_savefig_name = plot_info_dict['grid']
+        # Region
+        region_savefig_dict = {
+            'CONUS': 'buk_conus',
+            'GLOBAL': 'glb',
+            'NHEM': 'nhem',
+            'SHEM': 'shem',
+            'TROPICS': 'trop'
+        }
+        if plot_info_dict['vx_mask'] in list(region_savefig_dict.keys()):
+            region_savefig_name = (
+                region_savefig_dict[plot_info_dict['vx_mask']]
             )
-        elif self.plot_type == 'threshold_average':
-            var_thresh_for_savefig = 'threshmean'
-        else:
-            if '||':
-                var_thresh_for_savefig = (
-                    plot_info_dict['fcst_var_thresh'].replace('||', '')
-                )
-            else:
-                var_thresh_for_savefig = plot_info_dict['fcst_var_thresh']
-        if var_thresh_for_savefig != 'NA':
-            savefig_name = savefig_name+var_thresh_for_savefig+'_'
-        if plot_info_dict['interp_method'] == 'NBRHD_SQUARE':
-            savefig_name = (savefig_name
-                            +plot_info_dict['interp_method']
-                            +plot_info_dict['interp_points']+'_')
-        savefig_name = (savefig_name
-                        +plot_info_dict['grid']
-                        +plot_info_dict['vx_mask']+'_')
-        savefig_name = (savefig_name
-                        +date_info_dict['date_type'].lower()
-                        +date_info_dict['start_date']
-                        +date_type_start_hr+'to'
-                        +date_info_dict['end_date']
-                        +date_type_end_hr+'_'
-                        +fhr_for_savefig+'_'
-                        +self.plot_type
-                        +'.png')
-        image_path = os.path.join(image_dir, savefig_name)
+        else:    
+            region_savefig_name = plot_info_dict['vx_mask']
+        # Put together
+        savefig_name = (
+            'evs.'
+            +component_savefig_name+'.'
+            +metric_savefig_name+'.'
+            +parameter_savefig_name+'_'+level_savefig_name+'.'
+            +ndays_savefig_name+'.'
+            +plot_type_savefig_name+'.'
+            +grid_savefig_name+'_'+region_savefig_name
+            +'.png'
+        )
+        image_path = os.path.join(image_dir, savefig_name.lower())
         return image_path
 
     def get_logo_location(self, position, x_figsize, y_figsize, dpi):
