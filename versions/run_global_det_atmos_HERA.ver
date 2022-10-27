@@ -1,0 +1,14 @@
+export anaconda_ver=latest
+export cdo_ver=1.9.8
+export grib_util_ver=1.2.4
+export hdf5_ver=1.10.6
+export hpc_ver=1.1.0
+export hpc_impi_ver=2018.0.4
+export hpc_intel_ver=18.0.5.274
+export hpss_ver=hpss
+export met_ver=10.1.1
+export metplus_ver=4.1.1
+export nco_ver=4.9.1
+export netcdf_ver=4.7.4
+export prod_util_ver=1.2.2
+export wgrib2_ver=2.0.8
