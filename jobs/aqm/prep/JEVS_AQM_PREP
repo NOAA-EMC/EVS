@@ -18,7 +18,7 @@ export pid=$$
 #export DATA_IN=${DATA_IN:-$DATAROOT}
 #export DATA=$DATA_IN/${jobid}
 
-export DATA=/lfs/h2/emc/ptmp/perry.shafran/EVS/${cyc}_${MODELNAME}
+export DATA=/lfs/h2/emc/ptmp/$USER/EVS/${cyc}_${MODELNAME}
 
 rm -rf $DATA
 mkdir -p $DATA
@@ -57,7 +57,7 @@ export VDATE=$PDYm3
 echo $COMPATH
 
 #export COMIN=${COMIN:-$(compath.py evs/${evs_ver}/)}
-export COMIN=/lfs/h2/emc/vpppg/noscrub/perry.shafran/${NET}/${evs_ver}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMINobs=${COMINobs:-$(compath.py obsproc/${obsproc_ver})}
 export COMINaqm=${COMINaqm:-$(compath.py ${modsys}/${mod_ver})}
 #export COMOUT=${COMOUT:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
