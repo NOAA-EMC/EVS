@@ -23,6 +23,13 @@ echo "RUN MODE:$evs_run_mode"
 # Make directory
 mkdir -p ${VERIF_CASE}_${STEP}
 
+# Set number of days being plotted
+start_date_seconds=$(date +%s -d ${start_date})
+end_date_seconds=$(date +%s -d ${end_date})
+diff_seconds=$(expr $end_date_seconds - $start_date_seconds)
+diff_days=$(expr $diff_seconds \/ 86400)
+NDAYS=${NDAYS:-$(expr $diff_days + 1)}
+
 # Check user's config settings
 python $USHevs/global_det/global_det_atmos_check_settings.py
 status=$?
@@ -85,8 +92,8 @@ if [ $SENDCOM = YES ]; then
     for VERIF_TYPE_SUBDIR_PATH in $DATA/${VERIF_CASE}_${STEP}/plot_output/$RUN.${end_date}/images/*; do
         VERIF_TYPE_SUBDIR=$(echo ${VERIF_TYPE_SUBDIR_PATH##*/})
         cd $VERIF_TYPE_SUBDIR
-        tar -cvf ${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/plots_${COMPONENT}_${RUN}_grid2obs_${VERIF_TYPE_SUBDIR}_v${start_date}to${end_date}.tar *
-        cp -v ${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/plots_${COMPONENT}_${RUN}_grid2obs_${VERIF_TYPE_SUBDIR}_v${start_date}to${end_date}.tar $COMOUT/.
+        tar -cvf ${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/plots_${COMPONENT}_${RUN}_grid2obs_${VERIF_TYPE_SUBDIR}_last${NDAYS}days_v${PDYm1}.tar *
+        cp -v ${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/plots_${COMPONENT}_${RUN}_grid2obs_${VERIF_TYPE_SUBDIR}_last${NDAYS}days_v${PDYm1}.tar $COMOUT/.
     done
     cd $DATA
 fi
