@@ -1027,6 +1027,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     )
                     if all_truth_file_exist:
                         write_job_cmds = True
+                    else:
+                        write_job_cmds = False
                     # Write environment variables
                     for name, value in job_env_dict.items():
                         job.write('export '+name+'='+value+'\n')
