@@ -39,6 +39,11 @@ export STEP=${STEP:-stats} # prep stats plot
 export COMPONENT=${COMPONENT:-global_det}
 export RUN=${RUN:-aviation}
 export VERIF_CASE=${VERIF_CASE:-grid2grid}
+
+# WAFS is the general MODELNAME for data structure
+# while the center (us/uk/blend or gfs) will be the actual MODEL
+# parm/metplus_config/global_det/aviation/stats/GridStat_fcstWAFS_obsGCIP.conf
+# parm/metplus_config/global_det/aviation/stats/StatAnalysis_fcstWAFS_obsGCIP_GatherbyDay.conf
 export MODELNAME=${MODELNAME:-wafs}
 
 ############################################
@@ -80,7 +85,6 @@ export MASKS=${MASKS:-$FIXevs/masks}
 # Execute the script.
 ############################################
 
-export CENTERS="us uk blend"
 $SCRIPTSevs/stats/exevs_global_det_aviation_stats.sh
 
 export err=$?; err_chk
@@ -93,3 +97,4 @@ if [ "$KEEPDATA" != "YES" ] ; then
 fi
 
 date
+exit

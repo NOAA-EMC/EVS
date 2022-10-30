@@ -12,17 +12,22 @@ cd $DATA
 msg="WAFS g2g verification job HAS BEGUN"
 echo $msg
 
-export MODEL=$MODELNAME
-
 ################################################
 # Part 1: Icing Verification
 ################################################
 export OBSERVATION=GCIP
 resolutions="0P25"
+export CENTERS="blend us uk"
+
 for RESOLUTION in $resolutions ; do
     export RESOLUTION
-    source $HOMEevs/parm/evs_config/global_det/config.evs.stats.global_det.${RUN}.standalone
+
+    export INPUT_BASE=$DATA/${MODELNAME}_${RESOLUTION}
+    rm -rf $INPUT_BASE
+    mkdir -p $INPUT_BASE
     
+    source $HOMEevs/parm/evs_config/global_det/config.evs.stats.global_det.aviation.standalone
+
     for CENTER in $CENTERS ; do
 	export CENTER
 	# Prepare data
@@ -46,6 +51,8 @@ done
 # Part 2: U/V/T Verification
 ################################################
 export OBSERVATION=GFS
+export CENTERS="gfs"
+
 source $HOMEevs/parm/evs_config/global_det/config.evs.stats.global_det.${RUN}.standalone
 
 #####################################################################
