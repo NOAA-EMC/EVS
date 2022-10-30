@@ -6,7 +6,7 @@
 #PBS -q debug
 #PBS -A VERF-DEV
 #PBS -l walltime=00:30:00
-#PBS -l select=1:ncpus=1:mem=200GB
+#PBS -l select=1:ncpus=1:mem=2GB
 ##PBS -V
 
 ##PBS -q debug
