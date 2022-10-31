@@ -1,0 +1,659 @@
+Running prologue on parent mom node: nid003150...
+Job 16476967.cbqs01 nodelist: nid003150
+Job 16476967.cbqs01 - Prologue complete. Execution time: 3 seconds
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=00 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16476973.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=01 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16477013.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=02 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16477041.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=03 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16477231.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=04 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16477290.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=05 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16477324.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=06 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16477357.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=07 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16477400.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=08 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16477483.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=09 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16477575.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=10 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16477652.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=11 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16477715.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=12 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16477762.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=13 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16477905.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=14 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16477935.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=15 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16477976.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=16 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16478030.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=17 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16478062.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=18 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16478128.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=19 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16478237.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=20 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16478275.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=21 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16478312.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=22 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16478374.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=23 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+16478516.cbqs01
+++ sleep 60
+++ exit
+Job 16476967.cbqs01 - Epilogue complete. Execution time: 2 seconds
+==================================================================
+BEGIN - DEBUG INFO
+==================================================================
+Job 16476967.cbqs01 - Post Job Mem Usage:
+nid003150: 2022-10-20.00 1 ===========================================
+nid003150: 2022-10-20.00 2 #### Node Memory Usage for nid003150 ####
+nid003150: 2022-10-20.00 3 ------------------
+nid003150: 2022-10-20.00 4 Mem: total:527077116 used:10128784 free:513160172 shared:2065256 cache:3788160 avail:512639528
+nid003150: 2022-10-20.00 5 4.0K	/dev/shm
+nid003150: 2022-10-20.00 6 7.8M	/tmp
+nid003150: 2022-10-20.00 7 ===========================================
+nid003150: 2022-10-20.45 1 ===========================================
+nid003150: 2022-10-20.45 2 #### Node Memory Usage for nid003150 ####
+nid003150: 2022-10-20.45 3 ------------------
+nid003150: 2022-10-20.45 4 Mem: total:527077116 used:10199988 free:513179028 shared:2058024 cache:3698100 avail:512615828
+nid003150: 2022-10-20.45 5 4.0K	/dev/shm
+nid003150: 2022-10-20.45 6 7.7M	/tmp
+nid003150: 2022-10-20.45 7 ===========================================
+
+------------------------------------------------------------------
+Job 16476967.cbqs01 - /var/log/messages for job duration:
+nid003150: 2022-10-20A--:--:--.------+--:-- nid003150 #### nid003150 - Job 16476967.cbqs01 Runtime Data from /var/log/messages
+nid003150: 2022-10-20T14:27:44.391736+00:00 nid003150 prologue: MARK: Job 16476967.cbqs01 Start
+nid003150: 2022-10-20T14:27:44.402055+00:00 nid003150 prologue: Job 16476967.cbqs01 nodelist: nid003150
+nid003150: 2022-10-20T14:27:44.403070+00:00 nid003150 prologue: Job 16476967.cbqs01 - Checking existing ASLR settings...
+nid003150: 2022-10-20T14:27:44.443065+00:00 nid003150 prologue: Job 16476967.cbqs01 - Checking palsd open file count...
+nid003150: 2022-10-20T14:27:44.591885+00:00 nid003150 PBS_CMD: root : /opt/pbs/bin/qstat -Bf
+nid003150: 2022-10-20T14:27:45.612418+00:00 nid003150 prologue: Job 16476967.cbqs01 - Checking one-shot control: False
+nid003150: 2022-10-20T14:27:45.614471+00:00 nid003150 prologue: Job 16476967.cbqs01 - Recording pre-job HSN counters...
+nid003150: 2022-10-20T14:27:45.722254+00:00 nid003150 prologue: Job 16476967.cbqs01 - Recording pre-job memory usage...
+nid003150: 2022-10-20T14:27:45.797084+00:00 nid003150 prologue: Job 16476967.cbqs01 - Killing any stray user processes...
+nid003150: 2022-10-20T14:27:45.870845+00:00 nid003150 prologue: Job 16476967.cbqs01 - Enabling turboboost...
+nid003150: 2022-10-20T14:27:45.873246+00:00 nid003150 prologue: Job 16476967.cbqs01 - Verifying post-boot workarounds...
+nid003150: 2022-10-20T14:27:46.177936+00:00 nid003150 prologue: Job 16476967.cbqs01 - Warchk Complete
+nid003150: 2022-10-20T14:27:46.179448+00:00 nid003150 prologue: Job 16476967.cbqs01 - Recording initial NFS client statistics...
+nid003150: 2022-10-20T14:27:46.186167+00:00 nid003150 prologue: Job 16476967.cbqs01 - Prologue complete. Execution time: 3 seconds
+nid003150: 2022-10-20T14:27:56.884601+00:00 nid003150 systemd[1]: session-116692.scope: Succeeded.
+nid003150: 2022-10-20T14:28:37.874807+00:00 nid003150 systemd[1]: session-116693.scope: Succeeded.
+nid003150: 2022-10-20T14:29:12.834091+00:00 nid003150 systemd[1]: session-116694.scope: Succeeded.
+nid003150: 2022-10-20T14:29:46.451025+00:00 nid003150 systemd[1]: session-116695.scope: Succeeded.
+nid003150: 2022-10-20T14:29:54.839383+00:00 nid003150 systemd[1]: session-116696.scope: Succeeded.
+nid003150: 2022-10-20T14:30:45.432675+00:00 nid003150 systemd[1]: session-116697.scope: Succeeded.
+nid003150: 2022-10-20T14:31:16.746134+00:00 nid003150 systemd[1]: session-116698.scope: Succeeded.
+nid003150: 2022-10-20T14:31:57.996353+00:00 nid003150 systemd[1]: session-116699.scope: Succeeded.
+nid003150: 2022-10-20T14:32:33.184047+00:00 nid003150 systemd[1]: session-116700.scope: Succeeded.
+nid003150: 2022-10-20T14:32:42.361839+00:00 nid003150 systemd[1]: session-116701.scope: Succeeded.
+nid003150: 2022-10-20T14:32:54.779183+00:00 nid003150 systemd[1]: etc_update.service: Succeeded.
+nid003150: 2022-10-20T14:33:09.056941+00:00 nid003150 systemd[1]: session-116702.scope: Succeeded.
+nid003150: 2022-10-20T14:33:17.565355+00:00 nid003150 systemd[1]: session-116703.scope: Succeeded.
+nid003150: 2022-10-20T14:33:43.101523+00:00 nid003150 systemd[1]: session-116704.scope: Succeeded.
+nid003150: 2022-10-20T14:33:52.327751+00:00 nid003150 systemd[1]: session-116705.scope: Succeeded.
+nid003150: 2022-10-20T14:34:18.109755+00:00 nid003150 systemd[1]: session-116706.scope: Succeeded.
+nid003150: 2022-10-20T14:34:27.220809+00:00 nid003150 systemd[1]: session-116707.scope: Succeeded.
+nid003150: 2022-10-20T14:34:51.722488+00:00 nid003150 systemd[1]: session-116708.scope: Succeeded.
+nid003150: 2022-10-20T14:35:00.332648+00:00 nid003150 systemd[1]: session-116709.scope: Succeeded.
+nid003150: 2022-10-20T14:35:31.766388+00:00 nid003150 systemd[1]: session-116710.scope: Succeeded.
+nid003150: 2022-10-20T14:36:11.732932+00:00 nid003150 systemd[1]: session-116711.scope: Succeeded.
+nid003150: 2022-10-20T14:36:51.776404+00:00 nid003150 systemd[1]: session-116712.scope: Succeeded.
+nid003150: 2022-10-20T14:37:00.430277+00:00 nid003150 systemd[1]: session-116713.scope: Succeeded.
+nid003150: 2022-10-20T14:37:33.079424+00:00 nid003150 systemd[1]: session-116714.scope: Succeeded.
+nid003150: 2022-10-20T14:37:42.057386+00:00 nid003150 systemd[1]: session-116715.scope: Succeeded.
+nid003150: 2022-10-20T14:38:06.410164+00:00 nid003150 systemd[1]: session-116716.scope: Succeeded.
+nid003150: 2022-10-20T14:38:46.728371+00:00 nid003150 systemd[1]: session-116717.scope: Succeeded.
+nid003150: 2022-10-20T14:39:21.891544+00:00 nid003150 systemd[1]: session-116718.scope: Succeeded.
+nid003150: 2022-10-20T14:39:56.603930+00:00 nid003150 systemd[1]: session-116719.scope: Succeeded.
+nid003150: 2022-10-20T14:40:56.593809+00:00 nid003150 systemd[1]: session-116720.scope: Succeeded.
+nid003150: 2022-10-20T14:41:36.604092+00:00 nid003150 systemd[1]: session-116721.scope: Succeeded.
+nid003150: 2022-10-20T14:42:16.393357+00:00 nid003150 systemd[1]: session-116722.scope: Succeeded.
+nid003150: 2022-10-20T14:42:56.521599+00:00 nid003150 systemd[1]: session-116723.scope: Succeeded.
+nid003150: 2022-10-20T14:43:05.772919+00:00 nid003150 systemd[1]: etc_update.service: Succeeded.
+nid003150: 2022-10-20T14:43:36.473174+00:00 nid003150 systemd[1]: session-116724.scope: Succeeded.
+nid003150: 2022-10-20T14:44:17.531340+00:00 nid003150 systemd[1]: session-116725.scope: Succeeded.
+nid003150: 2022-10-20T14:44:51.504457+00:00 nid003150 systemd[1]: session-116726.scope: Succeeded.
+nid003150: 2022-10-20T14:45:31.438136+00:00 nid003150 systemd[1]: session-116727.scope: Succeeded.
+nid003150: 2022-10-20T14:46:11.943636+00:00 nid003150 systemd[1]: session-116728.scope: Succeeded.
+nid003150: 2022-10-20T14:46:46.502836+00:00 nid003150 systemd[1]: session-116729.scope: Succeeded.
+nid003150: 2022-10-20T14:47:27.612205+00:00 nid003150 systemd[1]: session-116730.scope: Succeeded.
+nid003150: 2022-10-20T14:48:01.493164+00:00 nid003150 systemd[1]: session-116731.scope: Succeeded.
+nid003150: 2022-10-20T14:48:41.432572+00:00 nid003150 systemd[1]: session-116732.scope: Succeeded.
+nid003150: 2022-10-20T14:49:21.796791+00:00 nid003150 systemd[1]: session-116733.scope: Succeeded.
+nid003150: 2022-10-20T14:49:56.483799+00:00 nid003150 systemd[1]: session-116734.scope: Succeeded.
+nid003150: 2022-10-20T14:50:51.430778+00:00 nid003150 systemd[1]: session-116735.scope: Succeeded.
+nid003150: 2022-10-20T14:51:32.058924+00:00 nid003150 systemd[1]: session-116736.scope: Succeeded.
+nid003150: 2022-10-20T14:52:00.852563+00:00 nid003150 epilogue: Job 16476967.cbqs01 complete, running post-job actions.
+nid003150: 2022-10-20T14:52:00.868896+00:00 nid003150 epilogue: Job 16476967.cbqs01 - Recording post-job HSN counters...
+nid003150: 2022-10-20T14:52:00.971083+00:00 nid003150 epilogue: Job 16476967.cbqs01 - Recording post-job memory usage...
+nid003150: 2022-10-20T14:52:00.989889+00:00 nid003150 epilogue: Job 16476967.cbqs01 - Recording job NFS statistics to /tmp/nfsstats.16476967.cbqs01
+nid003150: 2022-10-20T14:52:01.481184+00:00 nid003150 epilogue: Job 16476967.cbqs01 - Clearing /tmp...
+nid003150: 2022-10-20T14:52:01.497484+00:00 nid003150 epilogue: Job 16476967.cbqs01 - Clearing shared memory...
+nid003150: 2022-10-20T14:52:01.509716+00:00 nid003150 epilogue: Job 16476967.cbqs01 - Clearing memory cache...
+nid003150: 2022-10-20T14:52:01.847455+00:00 nid003150 kernel: [6657140.274525] drop_caches (145565): drop_caches: 3
+nid003150: 2022-10-20T14:52:01.977841+00:00 nid003150 epilogue: Job 16476967.cbqs01 - Releasing Lustre Locks...
+nid003150: 2022-10-20T14:52:02.019507+00:00 nid003150 epilogue: MARK: Job 16476967.cbqs01 Complete.
+
+------------------------------------------------------------------
+Job 16476967.cbqs01 - dmesg output for job duration:
+nid003150: 2022-10-20A--:--:--.------+--:-- nid003150 #### nid003150 - Job 16476967.cbqs01 Runtime Data from dmesg
+nid003150: [Thu Oct 20 14:25:49 2022] MARK: Job 16476967.cbqs01 Start
+nid003150: [Thu Oct 20 14:50:07 2022] MARK: Job 16476967.cbqs01 Complete.
+nid003150: [Thu Oct 20 14:50:07 2022] drop_caches (145565): drop_caches: 3
+
+------------------------------------------------------------------
+Job 16476967.cbqs01 - Pre/Post job diff on HSN (MLX) Counters:
+nid003150: 2022-10-20A--:--:--.------+--:-- nid003150 #### nid003150 - Job 16476967.cbqs01 HSN0 MLX Counter Post-Job Difference
+nid003150: multicast: 299088966					      |	multicast: 299089686
+nid003150: port_rcv_data: 172326627575189				      |	port_rcv_data: 172326627891794
+nid003150: port_rcv_packets: 247533181576				      |	port_rcv_packets: 247533187931
+nid003150: port_xmit_data: 168073442434021				      |	port_xmit_data: 168073442767878
+nid003150: port_xmit_packets: 243516385829				      |	port_xmit_packets: 243516392192
+nid003150: rx_bytes: 185188097051					      |	rx_bytes: 185198867623
+nid003150: rx_packets: 383229869					      |	rx_packets: 383244121
+nid003150: tx_bytes: 82849923788					      |	tx_bytes: 82851923991
+nid003150: tx_packets: 59519647					      |	tx_packets: 59532473
+nid003150: unicast_rcv_packets: 247533181576			      |	unicast_rcv_packets: 247533187931
+nid003150: unicast_xmit_packets: 243516385829			      |	unicast_xmit_packets: 243516392192
+
+------------------------------------------------------------------
+### Job 16476967.cbqs01 - NFS Statistics for job duration:
+nid003150: #### 2022-10-20.00 #### nid003150 - Job 16476967.cbqs01 NFS Statistics for job duration (nfsstat)
+nid003150: ## /usr/sbin/nfsstat -v -S /tmp/nfsstats.begin.16476967.cbqs01 :
+nid003150: Client packet stats:
+nid003150: packets    udp        tcp        tcpconn
+nid003150: 0          0          0          0       
+nid003150: 
+nid003150: Client rpc stats:
+nid003150: calls      retrans    authrefrsh
+nid003150: 7804       0          7804    
+nid003150: 
+nid003150: Client nfs v3:
+nid003150: null             getattr          setattr          lookup           access           
+nid003150: 0         0%     6488     83%     2         0%     349       4%     377       4%     
+nid003150: readlink         read             write            create           mkdir            
+nid003150: 48        0%     298       3%     47        0%     0         0%     0         0%     
+nid003150: symlink          mknod            remove           rmdir            rename           
+nid003150: 0         0%     0         0%     0         0%     0         0%     0         0%     
+nid003150: link             readdir          readdirplus      fsstat           fsinfo           
+nid003150: 0         0%     0         0%     195       2%     0         0%     0         0%     
+nid003150: pathconf         commit           
+nid003150: 0         0%     0         0%     
+nid003150: 
+nid003150: 
+nid003150: -----------------------------------------------------------------------------------
+nid003150: 
+nid003150: #### 2022-10-20.00 #### nid003150 - Job 16476967.cbqs01 NFS Mount Statistics for job duration (mountstats)
+nid003150: ## /usr/sbin/mountstats iostat -S /tmp/mntstats.begin.16476967.cbqs01 /apps :
+nid003150: 
+nid003150: 
+nid003150: 172.20.250.16:/AZ-HFS-Cactus-apps mounted on /apps:
+nid003150: 
+nid003150:            ops/s       rpc bklog
+nid003150:            4.447           0.000
+nid003150: 
+nid003150: read:              ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid003150:                    0.054           0.115           2.138        0 (0.0%)           0.346           0.397
+nid003150: write:             ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid003150:                    0.000           0.000           0.000        0 (0.0%)           0.000           0.000
+nid003150: ## /usr/sbin/mountstats iostat -S /tmp/mntstats.begin.16476967.cbqs01 /sfs :
+nid003150: 
+nid003150: 
+nid003150: 172.20.250.16:/AZ-HFS-Cactus-sfs mounted on /sfs:
+nid003150: 
+nid003150:            ops/s       rpc bklog
+nid003150:            4.447           0.000
+nid003150: 
+nid003150: read:              ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid003150:                    0.001           0.000           0.391        0 (0.0%)           0.000           1.000
+nid003150: write:             ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid003150:                    0.032           0.082           2.544        0 (0.0%)           1.723           1.809
+nid003150: ## /usr/sbin/mountstats iostat -S /tmp/mntstats.begin.16476967.cbqs01 /u :
+nid003150: 
+nid003150: 
+nid003150: 172.20.250.17:/AZ-HFS-Cactus-u mounted on /u:
+nid003150: 
+nid003150:            ops/s       rpc bklog
+nid003150:            0.060           0.000
+nid003150: 
+nid003150: read:              ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid003150:                    0.001           0.001           0.969        0 (0.0%)           0.000           1.000
+nid003150: write:             ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid003150:                    0.000           0.000           0.000        0 (0.0%)           0.000           0.000
+nid003150: ## /usr/sbin/mountstats iostat -S /tmp/mntstats.begin.16476967.cbqs01 /pe :
+nid003150: 
+nid003150: 
+nid003150: 10.31.62.242:/cm_shared/image/images_rw_nfs/pe mounted on /pe:
+nid003150: 
+nid003150:            ops/s       rpc bklog
+nid003150:            0.937           0.000
+nid003150: 
+nid003150: read:              ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid003150:                    0.029           4.242         146.942        0 (0.0%)           2.667           2.714
+nid003150: write:             ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid003150:                    0.000           0.000           0.000        0 (0.0%)           0.000           0.000
+nid003150: ----------------
+nid003150: ## /usr/sbin/mountstats mountstats -S /tmp/mntstats.begin.16476967.cbqs01 /apps :
+nid003150: Stats for 172.20.250.16:/AZ-HFS-Cactus-apps mounted on /apps:
+nid003150:   NFS mount options: ro,vers=3,rsize=65536,wsize=65536,namlen=255,acregmin=3,acregmax=60,acdirmin=30,acdirmax=60,hard,proto=tcp,timeo=600,retrans=2,sec=sys,mountaddr=172.20.250.16,mountvers=3,mountport=4048,mountproto=udp,local_lock=none
+nid003150:   NFS server capabilities: caps=0x3fc7,wtmult=4096,dtsize=8192,bsize=0,namlen=255
+nid003150:   NFS security flavor: 1  pseudoflavor: 0
+nid003150: 
+nid003150: NFS byte counts:
+nid003150:   applications read 4058652 bytes via read(2)
+nid003150:   applications wrote 0 bytes via write(2)
+nid003150:   applications read 0 bytes via O_DIRECT read(2)
+nid003150:   applications wrote 0 bytes via O_DIRECT write(2)
+nid003150:   client read 148160 bytes via NFS READ
+nid003150:   client wrote 0 bytes via NFS WRITE
+nid003150: 
+nid003150: RPC statistics:
+nid003150:   6471 RPC requests sent, 6471 RPC replies received (0 XIDs not found)
+nid003150:   average backlog queue length: 0
+nid003150: 
+nid003150: GETATTR:
+nid003150: 	5527 ops (85%) 
+nid003150: 	avg bytes sent per op: avg bytes received per op: 112
+nid003150: 	backlog wait: 0.001990 	RTT: 0.299439 	total execute time: 0.310476 (milliseconds)
+nid003150: ACCESS:
+nid003150: 	311 ops (4%) 
+nid003150: 	avg bytes sent per op: avg bytes received per op: 120
+nid003150: 	backlog wait: 0.003215 	RTT: 0.376206 	total execute time: 0.385852 (milliseconds)
+nid003150: READDIRPLUS:
+nid003150: 	195 ops (3%) 
+nid003150: 	avg bytes sent per op: avg bytes received per op: 936
+nid003150: 	backlog wait: 0.000000 	RTT: 0.133333 	total execute time: 0.143590 (milliseconds)
+nid003150: LOOKUP:
+nid003150: 	173 ops (2%) 
+nid003150: 	avg bytes sent per op: avg bytes received per op: 164
+nid003150: 	backlog wait: 0.000000 	RTT: 0.115607 	total execute time: 0.127168 (milliseconds)
+nid003150: READ:
+nid003150: 	78 ops (1%) 
+nid003150: 	avg bytes sent per op: avg bytes received per op: 2028
+nid003150: 	backlog wait: 0.025641 	RTT: 0.346154 	total execute time: 0.397436 (milliseconds)
+nid003150: READLINK:
+nid003150: 	46 ops (0%) 
+nid003150: 	avg bytes sent per op: avg bytes received per op: 135
+nid003150: 	backlog wait: 0.000000 	RTT: 0.086957 	total execute time: 0.108696 (milliseconds)
+nid003150: 
+nid003150: ## /usr/sbin/mountstats mountstats -S /tmp/mntstats.begin.16476967.cbqs01 /sfs :
+nid003150: 
+nid003150: Stats for 172.20.250.16:/AZ-HFS-Cactus-sfs mounted on /sfs:
+nid003150:   NFS mount options: rw,vers=3,rsize=65536,wsize=65536,namlen=255,acregmin=3,acregmax=60,acdirmin=30,acdirmax=60,hard,proto=tcp,timeo=600,retrans=2,sec=sys,mountaddr=172.20.250.16,mountvers=3,mountport=4048,mountproto=udp,local_lock=none
+nid003150:   NFS server capabilities: caps=0x3fc7,wtmult=4096,dtsize=8192,bsize=0,namlen=255
+nid003150:   NFS security flavor: 1  pseudoflavor: 0
+nid003150: 
+nid003150: NFS byte counts:
+nid003150:   applications read 13847 bytes via read(2)
+nid003150:   applications wrote 14582 bytes via write(2)
+nid003150:   applications read 0 bytes via O_DIRECT read(2)
+nid003150:   applications wrote 0 bytes via O_DIRECT write(2)
+nid003150:   client read 146 bytes via NFS READ
+nid003150:   client wrote 108464 bytes via NFS WRITE
+nid003150: 
+nid003150: RPC statistics:
+nid003150:   6471 RPC requests sent, 6471 RPC replies received (0 XIDs not found)
+nid003150:   average backlog queue length: 0
+nid003150: 
+nid003150: GETATTR:
+nid003150: 	80 ops (1%) 
+nid003150: 	avg bytes sent per op: avg bytes received per op: 112
+nid003150: 	backlog wait: 0.012500 	RTT: 0.812500 	total execute time: 0.837500 (milliseconds)
+nid003150: WRITE:
+nid003150: 	47 ops (0%) 
+nid003150: 	avg bytes sent per op: avg bytes received per op: 160
+nid003150: 	backlog wait: 0.042553 	RTT: 1.723404 	total execute time: 1.808511 (milliseconds)
+nid003150: ACCESS:
+nid003150: 	6 ops (0%) 
+nid003150: 	avg bytes sent per op: avg bytes received per op: 120
+nid003150: 	backlog wait: 0.000000 	RTT: 0.166667 	total execute time: 0.333333 (milliseconds)
+nid003150: LOOKUP:
+nid003150: 	5 ops (0%) 
+nid003150: 	avg bytes sent per op: avg bytes received per op: 240
+nid003150: 	backlog wait: 0.000000 	RTT: 0.200000 	total execute time: 0.200000 (milliseconds)
+nid003150: SETATTR:
+nid003150: 	2 ops (0%) 
+nid003150: 	avg bytes sent per op: avg bytes received per op: 144
+nid003150: 	backlog wait: 0.000000 	RTT: 1.000000 	total execute time: 1.000000 (milliseconds)
+nid003150: READ:
+nid003150: 	1 ops (0%) 
+nid003150: 	avg bytes sent per op: avg bytes received per op: 276
+nid003150: 	backlog wait: 0.000000 	RTT: 0.000000 	total execute time: 1.000000 (milliseconds)
+nid003150: 
+nid003150: ## /usr/sbin/mountstats mountstats -S /tmp/mntstats.begin.16476967.cbqs01 /u :
+nid003150: 
+nid003150: Stats for 172.20.250.17:/AZ-HFS-Cactus-u mounted on /u:
+nid003150:   NFS mount options: rw,vers=3,rsize=65536,wsize=65536,namlen=255,acregmin=3,acregmax=60,acdirmin=30,acdirmax=60,hard,proto=tcp,timeo=600,retrans=2,sec=sys,mountaddr=172.20.250.17,mountvers=3,mountport=4048,mountproto=udp,local_lock=none
+nid003150:   NFS server capabilities: caps=0x3fc7,wtmult=4096,dtsize=8192,bsize=0,namlen=255
+nid003150:   NFS security flavor: 1  pseudoflavor: 0
+nid003150: 
+nid003150: NFS byte counts:
+nid003150:   applications read 701 bytes via read(2)
+nid003150:   applications wrote 0 bytes via write(2)
+nid003150:   applications read 0 bytes via O_DIRECT read(2)
+nid003150:   applications wrote 0 bytes via O_DIRECT write(2)
+nid003150:   client read 701 bytes via NFS READ
+nid003150:   client wrote 0 bytes via NFS WRITE
+nid003150: 
+nid003150: RPC statistics:
+nid003150:   87 RPC requests sent, 87 RPC replies received (0 XIDs not found)
+nid003150:   average backlog queue length: 0
+nid003150: 
+nid003150: GETATTR:
+nid003150: 	48 ops (55%) 
+nid003150: 	avg bytes sent per op: avg bytes received per op: 112
+nid003150: 	backlog wait: 0.000000 	RTT: 0.208333 	total execute time: 0.208333 (milliseconds)
+nid003150: ACCESS:
+nid003150: 	26 ops (29%) 
+nid003150: 	avg bytes sent per op: avg bytes received per op: 120
+nid003150: 	backlog wait: 0.000000 	RTT: 0.115385 	total execute time: 0.153846 (milliseconds)
+nid003150: LOOKUP:
+nid003150: 	12 ops (13%) 
+nid003150: 	avg bytes sent per op: avg bytes received per op: 136
+nid003150: 	backlog wait: 0.000000 	RTT: 0.083333 	total execute time: 0.083333 (milliseconds)
+nid003150: READ:
+nid003150: 	1 ops (1%) 
+nid003150: 	avg bytes sent per op: avg bytes received per op: 832
+nid003150: 	backlog wait: 0.000000 	RTT: 0.000000 	total execute time: 1.000000 (milliseconds)
+nid003150: 
+nid003150: ## /usr/sbin/mountstats mountstats -S /tmp/mntstats.begin.16476967.cbqs01 /pe :
+nid003150: 
+nid003150: Stats for 10.31.62.242:/cm_shared/image/images_rw_nfs/pe mounted on /pe:
+nid003150:   NFS mount options: ro,vers=3,rsize=1048576,wsize=1048576,namlen=255,acregmin=3,acregmax=60,acdirmin=30,acdirmax=60,hard,nolock,proto=tcp,timeo=600,retrans=2,sec=sys,mountaddr=10.31.62.242,mountvers=3,mountport=38465,mountproto=tcp,local_lock=all
+nid003150:   NFS server capabilities: caps=0x3fcf,wtmult=4096,dtsize=32768,bsize=0,namlen=255
+nid003150:   NFS security flavor: 1  pseudoflavor: 0
+nid003150: 
+nid003150: NFS byte counts:
+nid003150:   applications read 1308672 bytes via read(2)
+nid003150:   applications wrote 0 bytes via write(2)
+nid003150:   applications read 0 bytes via O_DIRECT read(2)
+nid003150:   applications wrote 0 bytes via O_DIRECT write(2)
+nid003150:   client read 6311936 bytes via NFS READ
+nid003150:   client wrote 0 bytes via NFS WRITE
+nid003150: 
+nid003150: RPC statistics:
+nid003150:   1363 RPC requests sent, 1363 RPC replies received (0 XIDs not found)
+nid003150:   average backlog queue length: 0
+nid003150: 
+nid003150: GETATTR:
+nid003150: 	833 ops (61%) 
+nid003150: 	avg bytes sent per op: avg bytes received per op: 112
+nid003150: 	backlog wait: 0.001200 	RTT: 0.398559 	total execute time: 0.409364 (milliseconds)
+nid003150: LOOKUP:
+nid003150: 	159 ops (11%) 
+nid003150: 	avg bytes sent per op: avg bytes received per op: 82
+nid003150: 	backlog wait: 0.006289 	RTT: 0.559748 	total execute time: 0.559748 (milliseconds)
+nid003150: READ:
+nid003150: 	42 ops (3%) 
+nid003150: 	avg bytes sent per op: avg bytes received per op: 150328
+nid003150: 	backlog wait: 0.023810 	RTT: 2.666667 	total execute time: 2.714286 (milliseconds)
+nid003150: ACCESS:
+nid003150: 	34 ops (2%) 
+nid003150: 	avg bytes sent per op: avg bytes received per op: 36
+nid003150: 	backlog wait: 0.000000 	RTT: 0.294118 	total execute time: 0.323529 (milliseconds)
+nid003150: READLINK:
+nid003150: 	2 ops (0%) 
+nid003150: 	avg bytes sent per op: avg bytes received per op: 136
+nid003150: 	backlog wait: 0.000000 	RTT: 0.500000 	total execute time: 0.000000 (milliseconds)
+nid003150: 
+nid003150: 
+
+------------------------------------------------------------------
+### Job 16476967.cbqs01 - Exit status is 0
+
+------------------------------------------------------------------
+Job 16476967.cbqs01 - Job summary:
+Job Id: 16476967.cbqs01
+    Job_Name = run_rtma_ru_stats
+    Job_Owner = perry.shafran@clogin04.cactus.wcoss2.ncep.noaa.gov
+    resources_used.cpupercent = 1
+    resources_used.cput = 00:00:02
+    resources_used.mem = 24412kb
+    resources_used.ncpus = 1
+    resources_used.vmem = 45872kb
+    resources_used.walltime = 00:24:10
+    job_state = R
+    queue = dev
+    server = cbqs01
+    Account_Name = VERF-DEV
+    Checkpoint = u
+    ctime = Thu Oct 20 14:27:37 2022
+    Error_Path = clogin04.cactus.wcoss2.ncep.noaa.gov:/lfs/h2/emc/vpppg/save/pe
+	rry.shafran/EVS/ecf/realtime_analyses/stats/run_rtma_ru_stats.e16476967
+	
+    exec_host = nid003150/0
+    exec_vnode = (nid003150:ncpus=1:mem=2097152kb)
+    Hold_Types = n
+    Join_Path = oe
+    Keep_Files = oed
+    Mail_Points = a
+    mtime = Thu Oct 20 14:51:56 2022
+    Output_Path = clogin04.cactus.wcoss2.ncep.noaa.gov:/lfs/h2/emc/vpppg/save/p
+	erry.shafran/EVS/ecf/realtime_analyses/stats/run_rtma_ru_stats.o1647696
+	7
+    Priority = 0
+    qtime = Thu Oct 20 14:27:37 2022
+    Rerunable = False
+    Resource_List.alvl = 2
+    Resource_List.aslr = True
+    Resource_List.debug = True
+    Resource_List.dfs = False
+    Resource_List.hyper = False
+    Resource_List.mem = 2gb
+    Resource_List.ncpus = 1
+    Resource_List.nodect = 1
+    Resource_List.one-shot = False
+    Resource_List.place = shared
+    Resource_List.select = 1:ncpus=1:mem=2GB
+    Resource_List.thp = True
+    Resource_List.turbo = True
+    Resource_List.walltime = 02:00:00
+    schedselect = 1:ncpus=1:mem=2GB:prepost=False
+    stime = Thu Oct 20 14:27:43 2022
+    session_id = 141489
+    Shell_Path_List = /bin/bash
+    jobdir = /u/perry.shafran
+    substate = 42
+    Variable_List = PBS_O_HOME=/u/perry.shafran,PBS_O_LANG=en_US.UTF-8,
+	PBS_O_LOGNAME=perry.shafran,
+	PBS_O_PATH=/apps/ops/prod/nco/core/prod_util.v2.0.14/ush:/apps/prod/hp
+	c-stack/intel-19.1.3.304/netcdf/4.7.4/bin:/apps/prod/hpc-stack/intel-19
+	.1.3.304/hdf5/1.10.6/bin:/apps/spack/python/3.8.6/intel/19.1.3.304/pjn2
+	nzkjvqgmjw4hmyz43v5x4jbxjzpk/bin:/apps/ops/para/libs/intel/19.1.3.304/m
+	etplus/4.1.1/ush:/apps/ops/para/libs/intel/19.1.3.304/met/10.1.1/bin:/a
+	pps/ops/para/libs/intel/19.1.3.304/gsl/2.6/bin:/pe/intel/compilers_and_
+	libraries_2020.4.304/linux/bin/intel64:/pe/intel/compilers_and_librarie
+	s_2020.4.304/linux/bin:/pe/intel/compilers_and_libraries_2020.4.304/lin
+	ux/mpi/intel64/bin:/pe/intel/debugger_2020/gdb/intel64/bin:/opt/cray/li
+	bfabric/1.11.0.0./bin:/opt/clmgr/sbin:/opt/clmgr/bin:/opt/sgi/sbin:/opt
+	/sgi/bin:/usr/local/bin:/usr/bin:/bin:/usr/lib/mit/bin:/usr/lib/mit/sbi
+	n:/opt/pbs/bin:/sbin:.:/u/perry.shafran/bin:/usr/sbin:/apps/prod/python
+	-modules/3.8.6/intel/19.1.3.304/bin:/apps/prod/python-modules/3.8.6/int
+	el/19.1.3.304/lib/python3.8/site-packages/bin,
+	PBS_O_MAIL=/var/spool/mail/perry.shafran,PBS_O_SHELL=/bin/bash,
+	PBS_O_WORKDIR=/lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_an
+	alyses/stats,PBS_O_SYSTEM=Linux,PBS_O_QUEUE=dev,
+	PBS_O_HOST=clogin04.cactus.wcoss2.ncep.noaa.gov
+    euser = perry.shafran
+    egroup = emc
+    hashname = 16476967.cbqs01
+    queue_rank = 1666276057555
+    queue_type = E
+    comment = Job run at Thu Oct 20 at 14:27 on (nid003150:ncpus=1:mem=2097152k
+	b)
+    etime = Thu Oct 20 14:27:37 2022
+    umask = 22
+    run_count = 6
+    eligible_time = 00:00:08
+    accrue_type = 3
+    Submit_arguments = run_rtma_ru_stats.sh
+    project = VERF-DEV
+    run_version = 1
+    Submit_Host = clogin04.cactus.wcoss2.ncep.noaa.gov
+
+
+------------------------------------------------------------------
+Job 16476967.cbqs01 - PBS tracejob output (for parent mom node only):
+
+Job: 16476967.cbqs01
+
+10/20/2022 14:27:43  M    update_job_usage: CPU usage: 0.000 secs
+10/20/2022 14:27:43  M    update_job_usage: cpupercent initialized to zero
+10/20/2022 14:27:43  M    update_job_usage: Memory usage: mem=0b
+10/20/2022 14:27:43  M    no active tasks
+10/20/2022 14:27:46  M    Started, pid = 141489
+10/20/2022 14:29:11  M    update_job_usage: CPU usage: 1.691 secs
+10/20/2022 14:29:11  M    update_job_usage: 16476967.cbqs01 measured interval cpupercent 1 increased job cpupercent to 1
+10/20/2022 14:29:11  M    update_job_usage: Memory usage: mem=24412kb
+10/20/2022 14:31:12  M    update_job_usage: CPU usage: 1.714 secs
+10/20/2022 14:31:12  M    update_job_usage: Memory usage: mem=24412kb
+10/20/2022 14:33:13  M    update_job_usage: CPU usage: 1.738 secs
+10/20/2022 14:33:13  M    update_job_usage: Memory usage: mem=24412kb
+10/20/2022 14:35:14  M    update_job_usage: CPU usage: 1.762 secs
+10/20/2022 14:35:14  M    update_job_usage: Memory usage: mem=24412kb
+10/20/2022 14:37:16  M    update_job_usage: CPU usage: 1.787 secs
+10/20/2022 14:37:16  M    update_job_usage: Memory usage: mem=24412kb
+10/20/2022 14:39:17  M    update_job_usage: CPU usage: 1.811 secs
+10/20/2022 14:39:17  M    update_job_usage: Memory usage: mem=24412kb
+10/20/2022 14:41:18  M    update_job_usage: CPU usage: 1.835 secs
+10/20/2022 14:41:18  M    update_job_usage: Memory usage: mem=24412kb
+10/20/2022 14:43:19  M    update_job_usage: CPU usage: 1.858 secs
+10/20/2022 14:43:19  M    update_job_usage: Memory usage: mem=24412kb
+10/20/2022 14:45:20  M    update_job_usage: CPU usage: 1.882 secs
+10/20/2022 14:45:20  M    update_job_usage: Memory usage: mem=24412kb
+10/20/2022 14:47:22  M    update_job_usage: CPU usage: 1.906 secs
+10/20/2022 14:47:22  M    update_job_usage: Memory usage: mem=24412kb
+10/20/2022 14:49:23  M    update_job_usage: CPU usage: 1.930 secs
+10/20/2022 14:49:23  M    update_job_usage: Memory usage: mem=24412kb
+10/20/2022 14:51:24  M    update_job_usage: CPU usage: 1.955 secs
+10/20/2022 14:51:24  M    update_job_usage: Memory usage: mem=24412kb
+10/20/2022 14:52:00  M    task 00000001 terminated
+10/20/2022 14:52:00  M    Terminated
+10/20/2022 14:52:00  M    task 00000001 cput=00:00:03
+10/20/2022 14:52:00  M    kill_job
+10/20/2022 14:52:00  M    nid003150 cput=00:00:02 mem=24412kb
+10/20/2022 14:52:00  M    update_job_usage: CPU usage: 1.956 secs
+10/20/2022 14:52:00  M    update_job_usage: Memory usage: mem=24412kb
+
+------------------------------------------------------------------
+To see full PBS log data, run: /sfs/admin/scripts/tracejob.sh 16476967.cbqs01
+
+==================================================================
+END - DEBUG INFO
+==================================================================
+
+##### Job 16476967.cbqs01 - PBS Job Script:
+
+#PBS -N run_rtma_ru_stats
+#PBS -N run_rtma_ru_stats
+#PBS -j oe
+#PBS -j oe
+#PBS -S /bin/bash
+#PBS -S /bin/bash
+#PBS -q "dev"
+#PBS -q "dev"
+#PBS -A VERF-DEV
+#PBS -A VERF-DEV
+#PBS -l walltime=02:00:00
+#PBS -l walltime=02:00:00
+#PBS -l select=1:ncpus=1:mem=2GB
+#PBS -l select=1:ncpus=1:mem=2GB
+#PBS -l debug=true
+#PBS -l debug=true
+
+set -x
+
+for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+do
+   export fhr
+   qsub -v cyc=$fhr /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+   sleep 60
+done
+
+exit
+
+##### End of job script
+------------------------------------------------------------------
