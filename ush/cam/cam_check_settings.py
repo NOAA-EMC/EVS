@@ -4,7 +4,7 @@
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Check User's Settings
 # DEPENDENCIES: os.path.join([
-#                   EVS_SCRIPTS_DIR,COMPONENT,STEP,
+#                   SCRIPTSevs,COMPONENT,STEP,
 #                   "_".join(["exevs",MODELNAME,VERIF_CASE,STEP+".sh"]
 #               )]
 #
@@ -36,19 +36,19 @@ evs_cam_settings_dict = {}
 if evs_run_mode == 'production':
     evs_cam_settings_dict['evs'] = [
         'model', 'machine', 'envir', 'SENDCOM', 'KEEPDATA', 'job', 'jobid', 'USE_CFP', 'nproc', 'NET', 
-        'STEP', 'COMPONENT', 'RUN', 'VERIF_CASE', 'VERIF_TYPE',
-        'EVS_HOME_DIR', 'config', 'evs_ver', 'ccpa_ver', 'pid', 'DATA', 
-        'VDATE', 'COMIN', 'COMOUT', 'EVS_PARM_DIR', 'EVS_USH_DIR', 'EVS_EXEC_DIR', 
-        'EVS_FIX_DIR', 'EVS_SCRIPTS_DIR', 'evs_run_mode'
+        'STEP', 'COMPONENT', 'RUN', 'VERIF_CASE',
+        'HOMEevs', 'config', 'evs_ver', 'ccpa_ver', 'obsproc_ver', 'pid', 'DATA', 
+        'VDATE', 'COMIN', 'COMOUT', 'PARMevs', 'USHevs', 'EXECevs', 
+        'FIXevs', 'SCRIPTSevs', 'evs_run_mode'
     ]
 else:
     evs_cam_settings_dict['evs'] = [
         'model', 'machine', 'envir', 'SENDCOM', 'KEEPDATA', 'job', 'jobid', 'USE_CFP', 'ACCOUNT', 'QUEUE', 
         'QUEUESHARED', 'QUEUESERV', 'PARTITION_BATCH', 'nproc', 'NET', 'STEP', 
-        'COMPONENT', 'RUN', 'VERIF_CASE', 'VERIF_TYPE', 'EVS_HOME_DIR', 
-        'config', 'evs_ver', 'ccpa_ver', 'pid', 'DATA', 'VDATE', 'COMIN', 'COMOUT', 
-        'EVS_PARM_DIR', 'EVS_USH_DIR', 'EVS_EXEC_DIR', 'EVS_FIX_DIR', 
-        'EVS_SCRIPTS_DIR', 'evs_run_mode'
+        'COMPONENT', 'RUN', 'VERIF_CASE', 'HOMEevs', 
+        'config', 'evs_ver', 'ccpa_ver', 'obsproc_ver', 'pid', 'DATA', 'VDATE', 'COMIN', 'COMOUT', 
+        'PARMevs', 'USHevs', 'EXECevs', 'FIXevs', 
+        'SCRIPTSevs', 'evs_run_mode'
     ]
 '''
 if STEP.upper() == 'STATS':
@@ -62,12 +62,12 @@ evs_cam_settings_dict['RUN_GRID2OBS_PREP'] = []
 evs_cam_settings_dict['RUN_GRID2OBS_STATS'] = []
 evs_cam_settings_dict['RUN_GRID2OBS_PLOTS'] = []
 evs_cam_settings_dict['RUN_PRECIP_PREP'] = [
-        'VHOUR_LIST', 'COMINobs', 'OBSNAME', 'OBS_ACC', 'ACC'
+        'VERIF_TYPE', 'VHOUR_LIST', 'COMINobs', 'OBSNAME', 'OBS_ACC', 'ACC'
         ]
 evs_cam_settings_dict['RUN_PRECIP_STATS'] = [
         'MET_PLUS_CONF','MET_PLUS_OUT','MET_CONFIG_OVERRIDES', 
         'METPLUS_VERBOSITY','MET_VERBOSITY','LOG_MET_OUTPUT_TO_METPLUS',
-        'VHOUR','FHR_END_SHORT','FHR_INCR_SHORT','FHR_END_FULL',
+        'VERIF_TYPE','VHOUR','FHR_END_SHORT','FHR_INCR_SHORT','FHR_END_FULL',
         'FHR_INCR_FULL','COMINfcst','COMINobs','NEST',
         'OBSNAME','MIN_IHOUR','MODEL_ACC','OBS_ACC','ACC','BOOL_NBRHD','FCST_LEV',
         'FCST_THRESH','OBS_LEV','OBS_THRESH','OUTPUT_FLAG_NBRHD',
@@ -182,21 +182,30 @@ if STEP == 'stats':
     COMINfcst = os.environ['COMINfcst']
     COMINobs = os.environ['COMINobs']
     VHOUR = os.environ['VHOUR']
-    FHR_END_SHORT = os.environ['FHR_END_SHORT']
-    FHR_INCR_SHORT = os.environ['FHR_INCR_SHORT']
-    FHR_END_FULL = os.environ['FHR_END_FULL']
-    FHR_INCR_FULL = os.environ['FHR_INCR_FULL']
-    MIN_IHOUR = os.environ['MIN_IHOUR']
     MASK_POLY_LIST=os.environ['MASK_POLY_LIST']
 if VERIF_CASE == 'precip':
     if STEP == 'prep':
+        FHR_END_SHORT = os.environ['FHR_END_SHORT']
+        FHR_INCR_SHORT = os.environ['FHR_INCR_SHORT']
+        FHR_END_FULL = os.environ['FHR_END_FULL']
+        FHR_INCR_FULL = os.environ['FHR_INCR_FULL']
+        MIN_IHOUR = os.environ['MIN_IHOUR']
         ACC = os.environ['ACC']
         OBS_ACC = os.environ['OBS_ACC']
     if STEP == 'stats':
+        FHR_END_SHORT = os.environ['FHR_END_SHORT']
+        FHR_INCR_SHORT = os.environ['FHR_INCR_SHORT']
+        FHR_END_FULL = os.environ['FHR_END_FULL']
+        FHR_INCR_FULL = os.environ['FHR_INCR_FULL']
+        MIN_IHOUR = os.environ['MIN_IHOUR']
         ACC = os.environ['ACC']
         MODEL_ACC = os.environ['MODEL_ACC']
         OBS_ACC = os.environ['OBS_ACC']
         NBRHD_WIDTHS=os.environ['NBRHD_WIDTHS']
+elif VERIF_CASE == 'grid2obs':
+    FHR_START = os.environ['FHR_START']
+    FHR_END = os.environ['FHR_END']
+    FHR_INCR = os.environ['FHR_INCR']
     
 # Check current working directory
 cwd = os.getcwd()
@@ -291,33 +300,33 @@ if STEP == 'stats':
                   + f" of day. Please set VHOUR to a two-digit integer between"
                   + f"00 and 23 in {config}.")
             sys.exit(1)
-    if int(MIN_IHOUR) < 0 or int(MIN_IHOUR) > 23:
-        if int(MIN_IHOUR) == 24:
-            print(f"ERROR: MIN_IHOUR is set to {MIN_IHOUR}, which is equivalent to 00."
-                  + f" Please change the MIN_IHOUR to 00 instead in {config}.")
-            sys.exit(1)
-        else:
-            print(f"ERROR: MIN_IHOUR is set to {MIN_IHOUR}, which is not a valid time"
-                  + f" of day. Please set MIN_IHOUR to a two-digit integer between"
-                  + f"00 and 23 in {config}.")
-            sys.exit(1)
-    if int(FHR_END_SHORT) < 0:
-        print(f"ERROR: FHR_END_SHORT is set to {FHR_END_SHORT}, which is invalid."
-              + f" Please set FHR_END_SHORT to a positive integer in {config}.")
-        sys.exit(1)
-    if int(FHR_INCR_SHORT) < 0:
-        print(f"ERROR: FHR_INCR_SHORT is set to {FHR_INCR_SHORT}, which is invalid."
-              + f" Please set FHR_INCR_SHORT to a positive integer in {config}.")
-        sys.exit(1)
-    if int(FHR_END_FULL) < 0:
-        print(f"ERROR: FHR_END_FULL is set to {FHR_END_FULL}, which is invalid."
-              + f" Please set FHR_END_FULL to a positive integer in {config}.")
-        sys.exit(1)
-    if int(FHR_INCR_FULL) < 0:
-        print(f"ERROR: FHR_INCR_FULL is set to {FHR_INCR_FULL}, which is invalid."
-              + f" Please set FHR_INCR_FULL to a positive integer in {config}.")
-        sys.exit(1)
     if VERIF_CASE == 'precip':
+        if int(MIN_IHOUR) < 0 or int(MIN_IHOUR) > 23:
+            if int(MIN_IHOUR) == 24:
+                print(f"ERROR: MIN_IHOUR is set to {MIN_IHOUR}, which is equivalent to 00."
+                      + f" Please change the MIN_IHOUR to 00 instead in {config}.")
+                sys.exit(1)
+            else:
+                print(f"ERROR: MIN_IHOUR is set to {MIN_IHOUR}, which is not a valid time"
+                      + f" of day. Please set MIN_IHOUR to a two-digit integer between"
+                      + f"00 and 23 in {config}.")
+                sys.exit(1)
+        if int(FHR_END_SHORT) < 0:
+            print(f"ERROR: FHR_END_SHORT is set to {FHR_END_SHORT}, which is invalid."
+                  + f" Please set FHR_END_SHORT to a positive integer in {config}.")
+            sys.exit(1)
+        if int(FHR_INCR_SHORT) < 0:
+            print(f"ERROR: FHR_INCR_SHORT is set to {FHR_INCR_SHORT}, which is invalid."
+                  + f" Please set FHR_INCR_SHORT to a positive integer in {config}.")
+            sys.exit(1)
+        if int(FHR_END_FULL) < 0:
+            print(f"ERROR: FHR_END_FULL is set to {FHR_END_FULL}, which is invalid."
+                  + f" Please set FHR_END_FULL to a positive integer in {config}.")
+            sys.exit(1)
+        if int(FHR_INCR_FULL) < 0:
+            print(f"ERROR: FHR_INCR_FULL is set to {FHR_INCR_FULL}, which is invalid."
+                  + f" Please set FHR_INCR_FULL to a positive integer in {config}.")
+            sys.exit(1)
         for MODEL_ACC_i in re.split(r'[,\s]+', MODEL_ACC):
             for OBS_ACC_i in re.split(r'[,\s]+', OBS_ACC):
                 for ACC_i in re.split(r'[,\s]+', ACC):
@@ -361,5 +370,18 @@ if STEP == 'stats':
                               + f" OBS_ACC ({OBS_ACC_i}), which will cause an error"
                               + f" if no other options are listed. Please check the"
                               + f" configuration file: {config}")
+    elif VERIF_CASE == 'grid2obs':
+        if int(FHR_START) < 0:
+            print(f"ERROR: FHR_START is set to {FHR_START}, which is invalid."
+                  + f" Please set FHR_START to a positive integer in {config}.")
+            sys.exit(1)
+        if int(FHR_END) < 0:
+            print(f"ERROR: FHR_END is set to {FHR_END}, which is invalid."
+                  + f" Please set FHR_END to a positive integer in {config}.")
+            sys.exit(1)
+        if int(FHR_INCR) < 0:
+            print(f"ERROR: FHR_INCR is set to {FHR_INCR}, which is invalid."
+                  + f" Please set FHR_INCR to a positive integer in {config}.")
+            sys.exit(1)
 
 print(f"END: {os.path.basename(__file__)}")

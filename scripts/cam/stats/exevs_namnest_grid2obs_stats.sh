@@ -13,68 +13,53 @@
 set -x
 
 # Set Basic Environment Variables
-NEST_LIST="conus ak"
-export BOOL_NBRHD=False
+NEST_LIST="conus ak firewx hi pr"
 
 # Reformat MET Data
 export job_type="reformat"
 export njob=1
 for NEST in $NEST_LIST; do
     export NEST=$NEST
-    for ACC in "01" "03" "24"; do
-        export ACC=$ACC
-        if [ "${ACC}" = "01" ]; then
-            #VHOUR_LIST="01 04 07 10 13 16 19 22"
-            VHOUR_LIST="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
-        elif [ "${ACC}" = "03" ]; then
-            VHOUR_LIST="00 03 06 09 12 15 18 21"
-        elif [ "${ACC}" = "24" ]; then
-            VHOUR_LIST="00 03 06 09 12 15 18 21"
-        else
-            echo "${ACC} is not supported"
-            exit 1
-        fi
-        for VHOUR in $VHOUR_LIST; do
-            export VHOUR=$VHOUR
-            if [ $RUN_ENVIR = nco ]; then
-                export evs_run_mode="production"
-                source $config
-            else
-                export evs_run_mode=$evs_run_mode
-            fi
-            echo "RUN MODE: $evs_run_mode"
-            # Check User's Configuration Settings
-            python $USHevs/cam/cam_check_settings.py
-            status=$?
-            [[ $status -ne 0 ]] && exit $status
-            [[ $status -eq 0 ]] && echo "Successfully ran cam_check_settings.py ($job_type)"
-            echo
+    if [ $RUN_ENVIR = nco ]; then
+        export evs_run_mode="production"
+        source $config
+    else
+        export evs_run_mode=$evs_run_mode
+    fi
+    echo "RUN MODE: $evs_run_mode"
+    for VHOUR in $VHOUR_LIST; do
+        export VHOUR=$VHOUR
+        # Check User's Configuration Settings
+        python $USHevs/cam/cam_check_settings.py
+        status=$?
+        [[ $status -ne 0 ]] && exit $status
+        [[ $status -eq 0 ]] && echo "Successfully ran cam_check_settings.py ($job_type)"
+        echo
  
-            # Create Output Directories
-            python $USHevs/cam/cam_create_output_dirs.py
-            status=$?
-            [[ $status -ne 0 ]] && exit $status
-            [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
+        # Create Output Directories
+        python $USHevs/cam/cam_create_output_dirs.py
+        status=$?
+        [[ $status -ne 0 ]] && exit $status
+        [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
  
-            # Create Reformat Job Script 
-            python $USHevs/cam/cam_stats_precip_create_job_script.py
-            status=$?
-            [[ $status -ne 0 ]] && exit $status
-            [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_precip_create_job_script.py ($job_type)"
-            export njob=$((njob+1))
-        done
+        # Create Reformat Job Script 
+        python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
+        status=$?
+        [[ $status -ne 0 ]] && exit $status
+        [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_grid2obs_create_job_script.py ($job_type)"
+        export njob=$((njob+1))
     done
 done
 
 # Create Reformat POE Job Scripts
 if [ $USE_CFP = YES ]; then
-    python $USHevs/cam/cam_stats_precip_create_poe_job_scripts.py
+    python $USHevs/cam/cam_stats_grid2obs_create_poe_job_scripts.py
     status=$?
     [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_precip_create_poe_job_scripts.py ($job_type)"
+    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
 fi
 
-# Run All NAM Nest precip/stats Reformat Jobs
+# Run All NAM Nest grid2obs/stats Reformat Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
 nc=1
@@ -110,63 +95,47 @@ export job_type="generate"
 export njob=1
 for NEST in $NEST_LIST; do
     export NEST=$NEST
-    for ACC in "01" "03" "24"; do
-        export ACC=$ACC
-        if [ "${ACC}" = "01" ]; then
-            #VHOUR_LIST="01 04 07 10 13 16 19 22"
-            VHOUR_LIST="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
-        elif [ "${ACC}" = "03" ]; then
-            VHOUR_LIST="00 03 06 09 12 15 18 21"
-        elif [ "${ACC}" = "24" ]; then
-            VHOUR_LIST="00 03 06 09 12 15 18 21"
-        else
-            echo "${ACC} is not supported"
-            exit 1
-        fi
-        for VHOUR in $VHOUR_LIST; do
-            export VHOUR=$VHOUR
-            for BOOL_NBRHD in True False; do
-                export BOOL_NBRHD=$BOOL_NBRHD
-                if [ $RUN_ENVIR = nco ]; then
-                    export evs_run_mode="production"
-                    source $config
-                else
-                    export evs_run_mode=$evs_run_mode
-                fi
+    if [ $RUN_ENVIR = nco ]; then
+        export evs_run_mode="production"
+        source $config
+    else
+        export evs_run_mode=$evs_run_mode
+    fi
+    for VHOUR in $VHOUR_LIST; do
+        export VHOUR=$VHOUR
+        # Check User's Configuration Settings
+        python $USHevs/cam/cam_check_settings.py
+        status=$?
+        [[ $status -ne 0 ]] && exit $status
+        [[ $status -eq 0 ]] && echo "Successfully ran cam_check_settings.py ($job_type)"
+        echo
  
-                # Check User's Configuration Settings
-                python $USHevs/cam/cam_check_settings.py
-                status=$?
-                [[ $status -ne 0 ]] && exit $status
-                [[ $status -eq 0 ]] && echo "Successfully ran cam_check_settings.py ($job_type)"
-                echo
+        # Create Output Directories
+        python $USHevs/cam/cam_create_output_dirs.py
+        status=$?
+        [[ $status -ne 0 ]] && exit $status
+        [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
  
-                # Create Output Directories
-                python $USHevs/cam/cam_create_output_dirs.py
-                status=$?
-                [[ $status -ne 0 ]] && exit $status
-                [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
- 
-                # Create Generate Job Script 
-                python $USHevs/cam/cam_stats_precip_create_job_script.py
-                status=$?
-                [[ $status -ne 0 ]] && exit $status
-                [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_precip_create_job_script.py ($job_type)"
-                export njob=$((njob+1))
-            done
-        done
+        # Create Generate Job Script 
+        python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
+        status=$?
+        [[ $status -ne 0 ]] && exit $status
+        [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_grid2obs_create_job_script.py ($job_type)"
+        export njob=$((njob+1))
+        
     done
+    
 done
 
 # Create Generate POE Job Scripts
 if [ $USE_CFP = YES ]; then
-    python $USHevs/cam/cam_stats_precip_create_poe_job_scripts.py
+    python $USHevs/cam/cam_stats_grid2obs_create_poe_job_scripts.py
     status=$?
     [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_precip_create_poe_job_scripts.py ($job_type)"
+    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
 fi
 
-# Run All NAM Nest precip/stats Generate Jobs
+# Run All NAM Nest grid2obs/stats Generate Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
 nc=1
@@ -214,22 +183,22 @@ for NEST in $NEST_LIST; do
     [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
     
     # Create Gather Job Script
-    python $USHevs/cam/cam_stats_precip_create_job_script.py
+    python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
     status=$?
     [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_precip_create_job_script.py ($job_type)"
+    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_grid2obs_create_job_script.py ($job_type)"
     export njob=$((njob+1))
 done
 
 # Create Gather POE Job Scripts
 if [ $USE_CFP = YES ]; then
-    python $USHevs/cam/cam_stats_precip_create_poe_job_scripts.py
+    python $USHevs/cam/cam_stats_grid2obs_create_poe_job_scripts.py
     status=$?
     [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_precip_create_poe_job_scripts.py ($job_type)"
+    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
 fi
 
-# Run All NAM Nest precip/stats Gather Jobs
+# Run All NAM Nest grid2obs/stats Gather Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
 nc=1
