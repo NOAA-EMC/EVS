@@ -1,0 +1,140 @@
+#!/bin/sh -e
+
+# =============================================================================
+# 
+# NAME: config.evs.prod.stats.cam.atmos.precip.hireswarwmem2 
+# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# PURPOSE: Set up configurations to run EVS Hires Window ARW Member 2 
+#          Precipitation - Statistics
+# DEPENDENCIES: $HOMEevs/ecf/cam/stats/jevs_hireswarwmem2_precip_stats.ecf
+# 
+# =============================================================================
+
+echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
+
+# METplus Settings
+export MET_PLUS_OUT=${DATA}/${VERIF_CASE}/METplus_output
+export MET_CONFIG_OVERRIDES=""
+
+# Logging
+export METPLUS_VERBOSITY="DEBUG"
+export MET_VERBOSITY="5"
+export LOG_MET_OUTPUT_TO_METPLUS="yes"
+
+# Time Settings
+export FHR_GROUP_LIST="FULL"
+export FHR_END_FULL="48"
+export FHR_INCR_FULL="12"
+export FHR_END_SHORT="48"
+export FHR_INCR_SHORT="12"
+
+# Model/Obs Settings
+export COMINfcst=${COMINhiresw}
+export OBS_ACC="01"
+
+# Additional Verification Settings
+if [ "$ACC" = "01" ]; then
+    export MODEL_ACC="01"
+    export BUCKET_INTERVAL=$MODEL_ACC
+    export FCST_LEV="A1"
+    export FCST_THRESH="ge0.254,ge1.27,ge2.54,ge6.35,ge12.7,ge19.05,ge25.4"
+    if [ "$NEST" = "conus" ]; then
+        export OBS_LEV="A1"
+    elif [ "$NEST" = "ak" ]; then
+        export OBS_LEV="Z0"
+    else
+        echo "The provided NEST, $NEST, is not supported for $MODELNAME"
+        exit 1
+    fi
+    export OBS_THRESH="ge0.254,ge1.27,ge2.54,ge6.35,ge12.7,ge19.05,ge25.4"
+    export MODEL_PCP_COMBINE_METHOD="ADD"
+    export MODEL_PCP_COMBINE_COMMAND=""
+elif [ "$ACC" = "03" ]; then
+    export MODEL_ACC="01"
+    export BUCKET_INTERVAL=$MODEL_ACC
+    export FCST_LEV="A3"
+    export FCST_THRESH="ge0.254,ge1.27,ge2.54,ge6.35,ge12.7,ge19.05,ge25.4,ge50.8"
+    if [ "$NEST" = "conus" ]; then
+        export OBS_LEV="A3"
+    elif [ "$NEST" = "ak" ]; then
+        export OBS_LEV="Z0"
+    else
+        echo "The provided NEST, $NEST, is not supported for $MODELNAME"
+        exit 1
+    fi
+    export OBS_THRESH="ge0.254,ge1.27,ge2.54,ge6.35,ge12.7,ge19.05,ge25.4,ge50.8"
+    export MODEL_PCP_COMBINE_METHOD="ADD"
+    export MODEL_PCP_COMBINE_COMMAND=""
+elif [ "$ACC" = "24" ]; then
+    export MODEL_ACC="01"
+    export BUCKET_INTERVAL=$MODEL_ACC
+    export FCST_LEV="A24"
+    export FCST_THRESH="ge0.254,ge2.54,ge6.35,ge12.7,ge25.4,ge38.1,ge50.8,ge76.2,ge101.6,ge152.4"
+    if [ "$NEST" = "conus" ]; then
+        export OBS_LEV="A24"
+    elif [ "$NEST" = "ak" ]; then
+        export OBS_LEV="Z0"
+    else
+        echo "The provided NEST, $NEST, is not supported for $MODELNAME"
+        exit 1
+    fi
+    export OBS_THRESH="ge0.254,ge2.54,ge6.35,ge12.7,ge25.4,ge38.1,ge50.8,ge76.2,ge101.6,ge152.4"
+    export MODEL_PCP_COMBINE_METHOD="ADD"
+    export MODEL_PCP_COMBINE_COMMAND=""
+else
+    echo "The provided ACC, $ACC, is not supported for $MODELNAME"
+    exit 1
+fi
+if [ "$BOOL_NBRHD" = True ]; then
+    export OUTPUT_FLAG_NBRHD="STAT"
+    export OUTPUT_FLAG_CATEG="NONE"
+    export NBRHD_WIDTHS="1,3,5,7,9,11,13,17,21,25,31,35,39,43,47,53,57,63"
+    if [ "$NEST" = "conus" ]; then
+        export VERIF_TYPE="ccpa"
+        export COMINobs=${COMINccpa}
+        export OBSNAME="ccpa"
+        export MIN_IHOUR="00"
+        export GRID="G240"
+        export MODEL_INPUT_TEMPLATE="hiresw.{init?fmt=%Y%m%d}/hiresw.t{init?fmt=%2H}z.arw_5km.f{lead?fmt=%2H}.conusmem2.grib2"
+        export MASK_POLY_LIST="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS_East.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS_West.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS_Central.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS_South.nc"
+    elif [ "$NEST" = "ak" ]; then
+        export VERIF_TYPE="mrms"
+        export MET_GRIB_TABLES=$PARMevs/metplus_config/cam/precip/stats/grib2_mrms.txt
+        export COMINobs=${COMINmrms}
+        export OBSNAME="mrms"
+        export MIN_IHOUR="06"
+        export GRID="G091"
+        export MODEL_INPUT_TEMPLATE="hiresw.{init?fmt=%Y%m%d}/hiresw.t{init?fmt=%2H}z.arw_5km.f{lead?fmt=%2H}.akmem2.grib2"
+        export MASK_POLY_LIST="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Alaska_G091.nc"
+    else
+        echo "The provided NEST, $NEST, is not supported for $MODELNAME"
+        exit 1
+    fi
+else
+    export OUTPUT_FLAG_NBRHD="NONE"
+    export OUTPUT_FLAG_CATEG="STAT"
+    export NBRHD_WIDTHS="1"
+    if [ "$NEST" = "conus" ]; then
+        export VERIF_TYPE="ccpa"
+        export COMINobs=${COMINccpa}
+        export OBSNAME="ccpa"
+        export MIN_IHOUR="00"
+        export GRID="G212"
+        export MODEL_INPUT_TEMPLATE="hiresw.{init?fmt=%Y%m%d}/hiresw.t{init?fmt=%2H}z.arw_5km.f{lead?fmt=%2H}.conusmem2.grib2"
+        export MASK_POLY_LIST="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G212_CONUS.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G212_CONUS_East.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G212_CONUS_West.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G212_CONUS_Central.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G212_CONUS_South.nc"
+    elif [ "$NEST" = "ak" ]; then
+        export VERIF_TYPE="mrms"
+        export MET_GRIB_TABLES=$PARMevs/metplus_config/cam/precip/stats/grib2_mrms.txt
+        export COMINobs=${COMINmrms}
+        export OBSNAME="mrms"
+        export MIN_IHOUR="06"
+        export GRID="G216"
+        export MODEL_INPUT_TEMPLATE="hiresw.{init?fmt=%Y%m%d}/hiresw.t{init?fmt=%2H}z.arw_5km.f{lead?fmt=%2H}.akmem2.grib2"
+        export MASK_POLY_LIST="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Alaska_G216.nc"
+    else
+        echo "The provided NEST, $NEST, is not supported for $MODELNAME"
+        exit 1
+    fi
+fi
+
+echo "END: $(basename ${BASH_SOURCE[0]})"
