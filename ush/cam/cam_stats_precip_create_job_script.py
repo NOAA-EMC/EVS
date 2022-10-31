@@ -5,7 +5,7 @@
 # NAME: cam_stats_precip_create_job_script.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Create EVS CAM Precipitation - Statistics job scripts
-# DEPENDENCIES: $EVS_SCRIPTS_DIR/cam/stats/exevs_$MODELNAME_precip_stats.sh
+# DEPENDENCIES: $SCRIPTSevs/cam/stats/exevs_$MODELNAME_precip_stats.sh
 #
 # =============================================================================
 

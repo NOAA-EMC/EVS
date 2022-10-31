@@ -23,6 +23,7 @@ module load python/${python_ver}
 module load netcdf/${netcdf_ver}
 module load nco/${nco_ver}
 module load prod_util/${prod_util_ver}
+module load prod_envir/${prod_envir_ver}
 module load cdo/${cdo_ver}
 module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
 module load grib_util/${grib_util_ver}

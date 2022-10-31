@@ -6,7 +6,7 @@
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Handle all components of an EVS HiRes Window FV3 Member 
 #          Precipitation - Statistics job
-# DEPENDENCIES: $EVS_HOME_DIR/jobs/cam/stats/JEVS_CAM_STATS 
+# DEPENDENCIES: $HOMEevs/jobs/cam/stats/JEVS_CAM_STATS 
 #
 # =============================================================================
 
@@ -44,20 +44,20 @@ for NEST in $NEST_LIST; do
             echo "RUN MODE: $evs_run_mode"
 
             # Check User's Configuration Settings
-            python $EVS_USH_DIR/cam/cam_check_settings.py
+            python $USHevs/cam/cam_check_settings.py
             status=$?
             [[ $status -ne 0 ]] && exit $status
             [[ $status -eq 0 ]] && echo "Successfully ran cam_check_settings.py ($job_type)"
             echo
 
             # Create Output Directories
-            python $EVS_USH_DIR/cam/cam_create_output_dirs.py
+            python $USHevs/cam/cam_create_output_dirs.py
             status=$?
             [[ $status -ne 0 ]] && exit $status
             [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
 
             # Create Reformat Job Script 
-            python $EVS_USH_DIR/cam/cam_stats_precip_create_job_script.py
+            python $USHevs/cam/cam_stats_precip_create_job_script.py
             status=$?
             [[ $status -ne 0 ]] && exit $status
             [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_precip_create_job_script.py ($job_type)"
@@ -68,7 +68,7 @@ done
 
 # Create Reformat POE Job Scripts
 if [ $USE_CFP = YES ]; then
-    python $EVS_USH_DIR/cam/cam_stats_precip_create_poe_job_scripts.py
+    python $USHevs/cam/cam_stats_precip_create_poe_job_scripts.py
     status=$?
     [[ $status -ne 0 ]] && exit $status
     [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_precip_create_poe_job_scripts.py ($job_type)"
@@ -134,20 +134,20 @@ for NEST in $NEST_LIST; do
                 fi
 
                 # Check User's Configuration Settings
-                python $EVS_USH_DIR/cam/cam_check_settings.py
+                python $USHevs/cam/cam_check_settings.py
                 status=$?
                 [[ $status -ne 0 ]] && exit $status
                 [[ $status -eq 0 ]] && echo "Successfully ran cam_check_settings.py ($job_type)"
                 echo
 
                 # Create Output Directories
-                python $EVS_USH_DIR/cam/cam_create_output_dirs.py
+                python $USHevs/cam/cam_create_output_dirs.py
                 status=$?
                 [[ $status -ne 0 ]] && exit $status
                 [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
 
                 # Create Generate Job Script
-                python $EVS_USH_DIR/cam/cam_stats_precip_create_job_script.py
+                python $USHevs/cam/cam_stats_precip_create_job_script.py
                 status=$?
                 [[ $status -ne 0 ]] && exit $status
                 [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_precip_create_job_script.py ($job_type)"
@@ -159,7 +159,7 @@ done
 
 # Create Generate POE Job Scripts
 if [ $USE_CFP = YES ]; then
-    python $EVS_USH_DIR/cam/cam_stats_precip_create_poe_job_scripts.py
+    python $USHevs/cam/cam_stats_precip_create_poe_job_scripts.py
     status=$?
     [[ $status -ne 0 ]] && exit $status
     [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_precip_create_poe_job_scripts.py ($job_type)"
@@ -207,13 +207,13 @@ for NEST in $NEST_LIST; do
         export evs_run_mode=$evs_run_mode
     fi
     # Create Output Directories
-    python $EVS_USH_DIR/cam/cam_create_output_dirs.py
+    python $USHevs/cam/cam_create_output_dirs.py
     status=$?
     [[ $status -ne 0 ]] && exit $status
     [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
     
     # Create Gather Job Script
-    python $EVS_USH_DIR/cam/cam_stats_precip_create_job_script.py
+    python $USHevs/cam/cam_stats_precip_create_job_script.py
     status=$?
     [[ $status -ne 0 ]] && exit $status
     [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_precip_create_job_script.py ($job_type)"
@@ -222,7 +222,7 @@ done
 
 # Create Gather POE Job Scripts
 if [ $USE_CFP = YES ]; then
-    python $EVS_USH_DIR/cam/cam_stats_precip_create_poe_job_scripts.py
+    python $USHevs/cam/cam_stats_precip_create_poe_job_scripts.py
     status=$?
     [[ $status -ne 0 ]] && exit $status
     [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_precip_create_poe_job_scripts.py ($job_type)"

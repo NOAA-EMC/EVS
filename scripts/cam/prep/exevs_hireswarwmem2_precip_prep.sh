@@ -6,7 +6,7 @@
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Handle all components of an EVS HiRes Window ARW Member 2 
 #          Precipitation - Prep job
-# DEPENDENCIES: $EVS_HOME_DIR/jobs/cam/prep/JEVS_CAM_PREP
+# DEPENDENCIES: $HOMEevs/jobs/cam/prep/JEVS_CAM_PREP
 #
 # =============================================================================
 
@@ -27,20 +27,20 @@ for NEST in "conus" "ak"; do
         echo "RUN MODE: $evs_run_mode"
  
         # Check User's Configuration Settings
-        python $EVS_USH_DIR/cam/cam_check_settings.py
+        python $USHevs/cam/cam_check_settings.py
         status=$?
         [[ $status -ne 0 ]] && exit $status
         [[ $status -eq 0 ]] && echo "Successfully ran cam_check_settings.py"
         echo
  
         # Create Output Directories
-        python $EVS_USH_DIR/cam/cam_create_output_dirs.py
+        python $USHevs/cam/cam_create_output_dirs.py
         status=$?
         [[ $status -ne 0 ]] && exit $status
         [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py" 
  
         # Create Job Script 
-        python $EVS_USH_DIR/cam/cam_prep_precip_create_job_script.py
+        python $USHevs/cam/cam_prep_precip_create_job_script.py
         status=$?
         [[ $status -ne 0 ]] && exit $status
         [[ $status -eq 0 ]] && echo "Successfully ran cam_prep_precip_create_job_script.py"
@@ -50,7 +50,7 @@ done
 
 # Create POE Job Scripts
 if [ $USE_CFP = YES ]; then
-    python $EVS_USH_DIR/cam/cam_prep_precip_create_poe_job_scripts.py
+    python $USHevs/cam/cam_prep_precip_create_poe_job_scripts.py
     status=$?
     [[ $status -ne 0 ]] && exit $status
     [[ $status -eq 0 ]] && echo "Successfully ran cam_prep_precip_create_poe_job_scripts.py"

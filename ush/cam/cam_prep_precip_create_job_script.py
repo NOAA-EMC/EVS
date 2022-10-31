@@ -5,7 +5,7 @@
 # NAME: cam_prep_precip_create_job_script.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Create EVS CAM Precipitation - Prepare job scripts
-# DEPENDENCIES: $EVS_SCRIPTS_DIR/cam/stats/exevs_$MODELNAME_precip_prep.sh
+# DEPENDENCIES: $SCRIPTSevs/cam/stats/exevs_$MODELNAME_precip_prep.sh
 #
 # =============================================================================
 
@@ -97,10 +97,12 @@ if STEP == 'prep':
                                     f'ccpa.t{VHOURm}z.{OBS_ACC}h.hrap.{NEST}.gb2'
                                 )
                             if not glob.glob(infiles):
-                                print(f"ERROR: Found no matches for {infiles}."
+                                print(f"WARNING: Found no matches for {infiles}."
                                       + f" Cannot copy necessary data into the"
-                                      + f" prep archive.")
-                                sys.exit(1)
+                                      + f" prep archive ... Continuing to the"
+                                      + f" next valid datetime.")
+                                subtract_hours+=subtract_hours_inc
+                                continue
                             for infile in glob.glob(infiles):
                                 job_cmd_list.append(
                                     f"if [ -f \"{infile}\" ]; then cp \"{infile}\""
