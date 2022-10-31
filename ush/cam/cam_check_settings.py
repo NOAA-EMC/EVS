@@ -37,8 +37,8 @@ if evs_run_mode == 'production':
     evs_cam_settings_dict['evs'] = [
         'model', 'machine', 'envir', 'SENDCOM', 'KEEPDATA', 'job', 'jobid', 'USE_CFP', 'nproc', 'NET', 
         'HOMEevs', 'config', 'evs_ver', 'ccpa_ver', 'obsproc_ver', 'pid', 'DATA', 
-        'STEP', 'COMPONENT', 'RUN', 'VERIF_CASE', 'VERIF_TYPE',
-        'HOMEevs', 'config', 'evs_ver', 'ccpa_ver', 'pid', 'DATA', 
+        'STEP', 'COMPONENT', 'RUN', 'VERIF_CASE',
+        'HOMEevs', 'config', 'evs_ver', 'ccpa_ver', 'obsproc_ver', 'pid', 'DATA', 
         'VDATE', 'COMIN', 'COMOUT', 'PARMevs', 'USHevs', 'EXECevs', 
         'FIXevs', 'SCRIPTSevs', 'evs_run_mode'
     ]
@@ -46,8 +46,8 @@ else:
     evs_cam_settings_dict['evs'] = [
         'model', 'machine', 'envir', 'SENDCOM', 'KEEPDATA', 'job', 'jobid', 'USE_CFP', 'ACCOUNT', 'QUEUE', 
         'QUEUESHARED', 'QUEUESERV', 'PARTITION_BATCH', 'nproc', 'NET', 'STEP', 
-        'COMPONENT', 'RUN', 'VERIF_CASE', 'VERIF_TYPE', 'HOMEevs', 
-        'config', 'evs_ver', 'ccpa_ver', 'pid', 'DATA', 'VDATE', 'COMIN', 'COMOUT', 
+        'COMPONENT', 'RUN', 'VERIF_CASE', 'HOMEevs', 
+        'config', 'evs_ver', 'ccpa_ver', 'obsproc_ver', 'pid', 'DATA', 'VDATE', 'COMIN', 'COMOUT', 
         'PARMevs', 'USHevs', 'EXECevs', 'FIXevs', 
         'SCRIPTSevs', 'evs_run_mode'
     ]
