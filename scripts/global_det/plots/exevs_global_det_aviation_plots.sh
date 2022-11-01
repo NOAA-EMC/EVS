@@ -21,7 +21,7 @@ export OBSERVATION=GCIP
 export LINE_TYPE="ctc"
 export CENTERS="blend us uk"
 
-PLOT_TYPES="roc_curve"
+PLOT_TYPES=" fbias"
 
 resolutions="0P25"
 for RESOLUTION in $resolutions ; do
@@ -52,6 +52,8 @@ for RESOLUTION in $resolutions ; do
 	export PLOT_TYPE
 	if [[ $PLOT_TYPE = "roc_curve" ]] ; then
 	    export STATS="farate,pod"
+	elif [[ $PLOT_TYPE = "fbias" ]] ; then
+	    export STATS="fbias"
 	fi
 	# Set the config and run python scripts to generate plots
 	sh $HOMEevs/parm/evs_config/global_det/config.evs.plots.global_det.aviation

@@ -19,6 +19,8 @@ if [ $OBSERVATION = "GCIP" ] ; then
     if [ $RESOLUTION = "1P25" ] ; then
 	export REGRID=G45
 	export VAR1_NAME=ICIP
+	export VAR1_THRESH_FCST=">=0.1,>=0.2,>=0.3,>=0.4,>=0.5,>=0.6,>=0.7,>=0.8,>=0.9"
+	export VAR1_THRESH_OBS=">=0.3,>=0.3,>=0.3,>=0.3,>=0.3,>=0.3,>=0.3,>=0.3,>=0.3"
 	export VAR1_LEVELS_FCST="P800, P700, P600, P500, P400"
 	export VAR1_LEVELS_OBS="$VAR1_LEVELS_FCST"
     elif [ $RESOLUTION = "0P25" ] ; then
