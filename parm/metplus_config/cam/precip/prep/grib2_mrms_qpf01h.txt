@@ -1,0 +1,2 @@
+GRIB2
+209 0 0 0 161 1 6 37 "APCP_01" "1hr Accumulated precip" "mm"
