@@ -423,7 +423,7 @@ class PlotSpecs:
              'NAO': 'Northern Atlantic Ocean',
              'NPO': 'Northern Pacific Ocean',
              'NHEM': 'Northern Hemisphere 20N-80N',
-             'North Atlantic': 'North Atlantic',
+             'North Atlantic': 'Northeast (North Atlantic)',
              'NPlains': 'Northern Plains',
              'NRockies': 'Northern Rockies',
              'PacificNW': 'Pacific NW',
@@ -623,10 +623,31 @@ class PlotSpecs:
         grid_savefig_name = plot_info_dict['grid']
         # Region
         region_savefig_dict = {
+            'Appalachia', 'buk_apl'
             'CONUS': 'buk_conus',
+            'CONUS_East': 'buk_conus_e',
+            'CONUS_Central': 'buk_conus_c',
+            'CONUS_South': 'buk_conus_s',
+            'CONUS_West': 'buk_conus_w',
+            'CPlains', 'buk_cpl',
+            'DeepSouth', 'buk_ds',
             'GLOBAL': 'glb',
+            'GreatBasin': 'buk_grb',
+            'GreatLakes': 'buk_grlk',
+            'Mezquital': 'buk_mez',
+            'MidAtlantic': 'buk_matl',
             'NHEM': 'nhem',
+            'NorthAtlantic': 'buk_ne',
+            'NPlains': 'buk_npl',
+            'NRockies': 'buk_nrk',
+            'PacificNW': 'buk_npw',
+            'PacificSW': 'buk_nsw',
+            'Prairie': 'buk_pra',
             'SHEM': 'shem',
+            'Southeast': 'buk_se',
+            'Southwest': 'buk_sw',
+            'SPlains': 'buk_spl',
+            'SRockies': 'buk_srk',
             'TROPICS': 'tropics'
         }
         if plot_info_dict['vx_mask'] in list(region_savefig_dict.keys()):
