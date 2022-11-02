@@ -14,6 +14,8 @@ echo $msg
 export VALID_END=$VDATE
 export VALID_BEG=`date -d "$VDATE - $NDAYS days" +%Y%m%d`
 
+export DATAplot=$DATA/plot
+
 ################################################
 # Part 1: Icing Verification
 ################################################
@@ -28,7 +30,6 @@ for RESOLUTION in $resolutions ; do
     export RESOLUTION
     source $HOMEevs/parm/evs_config/global_det/config.evs.stats.global_det.aviation.standalone
 
-    export DATAplot=$DATA/plot/${OBSERVATION}_${RESOLUTION}
     export OUTPUT_BASE_DIR=$DATA/datainput/${OBSERVATION}_${RESOLUTION}
     mkdir -p $DATAplot $OUTPUT_BASE_DIR
     rm $OUTPUT_BASE_DIR/*
@@ -61,7 +62,7 @@ for RESOLUTION in $resolutions ; do
 done
 
 cd $DATAplot
-tar -cvfr $COMOUT/plots_${COMPONENT}_${RUN}_${VERIF_CASE}_v${VDATE}.tar *png
+tar -cvf $COMOUT/plots_${COMPONENT}_${RUN}_${VERIF_CASE}_v${VDATE}.tar *png
 
 ################################################
 # Part 2: U/V/T Verification

@@ -254,7 +254,6 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
 
     # Calculate desired metric
     metric_long_names = []
-    print("metric2_name=",metric2_name)
     for metric_name in [metric1_name]:
         stat_output = plot_util.calculate_stat(
             logger, df_aggregated, str(metric_name).lower()
@@ -537,10 +536,17 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
             )
         else:
             model_plot_name = model_list[m]
-        y_vals = [
-            pivot_metric1[str(model_list[m])].values[i] 
-            for i in thresh_argsort
-        ]
+        try:
+            y_vals = [
+                pivot_metric1[str(model_list[m])].values[i] 
+                for i in thresh_argsort
+            ]
+        except:
+            print("Exception when obtainting y_vals for model=",model_plot_name)
+            logger.info("Exception when obtainting y_vals")
+            plt.close(num)
+            logger.info("========================================")
+            return None
         y_max = max([y_max] + y_vals)
         y_min = min([y_min] + y_vals)
         print(y_vals)
