@@ -1,4 +1,3 @@
-#!/bin/bash
 export evs_ver=v1.0
 
 export envvar_ver=1.0

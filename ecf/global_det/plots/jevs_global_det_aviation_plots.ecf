@@ -3,9 +3,9 @@
 #PBS -N evs_aviation_plots
 #PBS -j oe
 #PBS -o /lfs/h2/emc/ptmp/yali.mao/evs_aviation_plots.log
-#PBS -q debug
+#PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:30:00
+#PBS -l walltime=02:00:00
 #PBS -l select=1:ncpus=1:mem=2GB
 ##PBS -V
 
@@ -63,7 +63,7 @@ export COMPONENT=global_det
 export RUN=aviation
 export VERIF_CASE=grid2grid
 
-export COMIN=/lfs/h2/emc/ptmp/$USER/evs/com
+export COMIN=/lfs/h2/emc/ptmp/$USER/com/evs/$evs_ver
 
 export USH_DIR=$HOMEevs/ush/$COMPONENT
 export NDAYS=90

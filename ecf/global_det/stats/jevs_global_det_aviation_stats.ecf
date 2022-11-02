@@ -75,7 +75,7 @@ export VERIF_CASE=grid2grid
 
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
-export COMOUT=/lfs/h2/emc/ptmp/$USER/evs/com
+export COMOUT=/lfs/h2/emc/ptmp/$USER/com/evs/$evs_ver
 
 ############################################################
 # CALL executable job script here

@@ -21,7 +21,7 @@ export OBSERVATION=GCIP
 export LINE_TYPE="ctc"
 export CENTERS="blend us uk"
 
-PLOT_TYPES=" fbias"
+PLOT_TYPES="roc_curve fbias"
 
 resolutions="0P25"
 for RESOLUTION in $resolutions ; do
@@ -61,7 +61,7 @@ for RESOLUTION in $resolutions ; do
 done
 
 cd $DATAplot
-tar -cvf $COMOUT/plots_${COMPONENT}_${RUN}_${VERIF_CASE}_v${VDATE}.tar *png
+tar -cvfr $COMOUT/plots_${COMPONENT}_${RUN}_${VERIF_CASE}_v${VDATE}.tar *png
 
 ################################################
 # Part 2: U/V/T Verification
