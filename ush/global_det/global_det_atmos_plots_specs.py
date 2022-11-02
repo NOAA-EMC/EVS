@@ -623,14 +623,14 @@ class PlotSpecs:
         grid_savefig_name = plot_info_dict['grid']
         # Region
         region_savefig_dict = {
-            'Appalachia', 'buk_apl'
+            'Appalachia': 'buk_apl',
             'CONUS': 'buk_conus',
             'CONUS_East': 'buk_conus_e',
             'CONUS_Central': 'buk_conus_c',
             'CONUS_South': 'buk_conus_s',
             'CONUS_West': 'buk_conus_w',
-            'CPlains', 'buk_cpl',
-            'DeepSouth', 'buk_ds',
+            'CPlains': 'buk_cpl',
+            'DeepSouth': 'buk_ds',
             'GLOBAL': 'glb',
             'GreatBasin': 'buk_grb',
             'GreatLakes': 'buk_grlk',
