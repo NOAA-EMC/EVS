@@ -427,10 +427,10 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
     ]
 
     cmap = colors.ListedColormap(gray_colors)
-    '''
+
     grid_ticks = np.arange(0.001, 1.001, 0.001)
     fr_g, pod_g = np.meshgrid(grid_ticks, grid_ticks)
-    '''
+
     bias = pod_g / sr_g
     csi = 1.0 / (1.0 / sr_g + 1.0 / pod_g - 1.0)
     bias_contour_vals = [
@@ -451,12 +451,20 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
         ]
     )
     '''
+    '''
     random_contour = plt.contour(
         fr_g, pod_g, pod_g / fr_g, [1.],
         colors='gray', linestyles='dashed'
     )
-    y_min = 0.
-    y_max = 1.
+    '''
+    
+    # draw the perfect score line
+    x_vals = pivot_metric1.index.tolist()
+    print(x_vals)
+    print("type of x_vals=", type(x_vals))
+    y_vals = [1.0 for i in range(len(x_vals))]
+    plt.plot(x_vals, y_vals, linewidth=0.8,  color='gray',linestyle="dashed")
+
     thresh_labels = pivot_metric1.index
     thresh_argsort = np.argsort(thresh_labels.astype(float))
     requested_thresh_argsort = np.argsort([
@@ -521,6 +529,8 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
         f'{opt}{thresh_label} {units}'
         for thresh_label in thresh_labels
     ]
+    y_min = 99999.
+    y_max = -99999.
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -528,14 +538,14 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
             )
         else:
             model_plot_name = model_list[m]
-        x_vals = pivot_metric1.index.tolist()
-        print(x_vals)
-        print("type of x_vals=", type(x_vals))
         y_vals = [
             pivot_metric1[str(model_list[m])].values[i] 
             for i in thresh_argsort
         ]
+        y_max = max([y_max] + y_vals)
+        y_min = min([y_min] + y_vals)
         print(y_vals)
+        print("ymin=",y_min," ymax=",y_max)
         print("type of y_vals=", type(y_vals))
         #mosaic_vals = pivot_metric3[str(model_list[m])].values
         y_mean = np.nanmean(y_vals)
@@ -584,27 +594,35 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
         labels+=[f'{metric_mean_fmt_string}']
 
     # Configure axis ticks
-    xticks_min = 0.
-    xticks_max = 1.
-    incr = .1
+    xticks_min = 1
+    xticks_max = 4
+    incr = 1
+    '''
     xticks = [
         x_val for x_val in np.arange(xticks_min, xticks_max+incr, incr)
     ] 
-    xtick_labels = [f'{xtick:.1f}' for xtick in xticks]
-    x_buffer_size = .015
+    xtick_labels = [f'{xtick:1d}' for xtick in xticks]
+    '''
+    x_buffer_size = 0.
     ax.set_xlim(
         xticks_min-incr*x_buffer_size, xticks_max+incr*x_buffer_size
     )
-    yticks_min = 0.
-    yticks_max = 1.
+
+    '''
+    yticks_min = y_min
+    yticks_max = y_max
+
+    incr = (yticks_max - yticks_min) / 6.
     yticks = [
         y_val for y_val in np.arange(yticks_min, yticks_max+incr, incr)
     ] 
     ytick_labels = [f'{ytick:.1f}' for ytick in yticks]
-    y_buffer_size = .015
+
+    y_buffer_size = 0.
     ax.set_ylim(
         yticks_min-incr*y_buffer_size, yticks_max+incr*y_buffer_size
     )
+    '''
     var_long_name_key = df['FCST_VAR'].tolist()[0]
     if str(var_long_name_key).upper() == 'HGT':
         if str(df['OBS_VAR'].tolist()[0]).upper() == 'CEILING':
@@ -617,10 +635,10 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
     ]
     ax.set_ylabel(f'{metric_long_names[0]}')
     ax.set_xlabel(xlabel)
-    ax.set_xticklabels(xtick_labels)
-    ax.set_yticklabels(ytick_labels)
-    ax.set_yticks(yticks)
-    ax.set_xticks(xticks)
+    #ax.set_xticklabels(xtick_labels)
+    #    ax.set_yticklabels(ytick_labels)
+    #    ax.set_yticks(yticks)
+    #ax.set_xticks(xticks)
     ax.tick_params(
         labelleft=True, labelright=False, labelbottom=True, labeltop=False
     )
@@ -633,12 +651,13 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
         handles, labels, loc='upper center', fontsize=15, framealpha=1, 
         bbox_to_anchor=(0.5, -0.08), ncol=4, frameon=True, numpoints=1, 
         borderpad=.8, labelspacing=2., columnspacing=3., handlelength=3., 
-        handletextpad=.4, borderaxespad=.5) 
+        handletextpad=.4, borderaxespad=.5)
+    '''
     ax.grid(
         b=True, which='major', axis='both', alpha=.35, linestyle='--', 
         linewidth=.5, c='black', zorder=0
     )
-    
+    '''
     fig.subplots_adjust(bottom=.2, right=.77, left=.23, wspace=0, hspace=0)
     '''
     cax = fig.add_axes([.775, .2, .01, .725])
@@ -721,7 +740,7 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
         for thresh_label in requested_thresh_labels
     ])
     thresholds_string = f'Forecast Thresholds {thresholds_phrase}'
-    title1 = f'ROC Curve'
+    title1 = f'Frequency Bias'
     if not units:
         title2 = (f'{level_string}{var_long_name} (-), {domain_string}')
     else:
@@ -753,7 +772,7 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
                  + f'{str(var_savename).lower()}_'
                  + f'{str(level_savename).lower()}.'
                  + f'{time_period_savename}.'
-                 + f'roc_{str(frange_save_string).lower()}.')
+                 + f'fbias_{str(frange_save_string).lower()}.')
     if str(domain).lower() == str(regrid).lower():
         save_name = save_name + f'{str(regrid)}'
     else:
@@ -862,9 +881,9 @@ def main():
     logger.debug(f"Y_MIN_LIMIT: {Y_MIN_LIMIT}")
     logger.debug(f"Y_MAX_LIMIT: {Y_MAX_LIMIT}")
     logger.debug(f"Y_LIM_LOCK: {Y_LIM_LOCK}")
-    logger.debug(f"X_MIN_LIMIT: Ignored for ROC curves")
-    logger.debug(f"X_MAX_LIMIT: Ignored for ROC curves")
-    logger.debug(f"X_LIM_LOCK: Ignored for ROC curves")
+    logger.debug(f"X_MIN_LIMIT: Ignored for Frequency Bias")
+    logger.debug(f"X_MAX_LIMIT: Ignored for Frequency Bias")
+    logger.debug(f"X_LIM_LOCK: Ignored for Frequency Bias")
     logger.debug(f"Display averages? {'yes' if display_averages else 'no'}")
     logger.debug(
         f"Clear prune directories? {'yes' if clear_prune_dir else 'no'}"
