@@ -460,8 +460,7 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
     
     # draw the perfect score line
     x_vals = pivot_metric1.index.tolist()
-    print(x_vals)
-    print("type of x_vals=", type(x_vals))
+    x_vals = [ int(x) for x in x_vals ]
     y_vals = [1.0 for i in range(len(x_vals))]
     plt.plot(x_vals, y_vals, linewidth=0.8,  color='gray',linestyle="dashed")
 
@@ -597,18 +596,13 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
     xticks_min = 1
     xticks_max = 4
     incr = 1
-    '''
     xticks = [
         x_val for x_val in np.arange(xticks_min, xticks_max+incr, incr)
     ] 
     xtick_labels = [f'{xtick:1d}' for xtick in xticks]
-    '''
     x_buffer_size = 0.
-    ax.set_xlim(
-        xticks_min-incr*x_buffer_size, xticks_max+incr*x_buffer_size
-    )
+    ax.set_xlim(xticks_min, xticks_max)
 
-    '''
     yticks_min = y_min
     yticks_max = y_max
 
@@ -622,7 +616,7 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
     ax.set_ylim(
         yticks_min-incr*y_buffer_size, yticks_max+incr*y_buffer_size
     )
-    '''
+
     var_long_name_key = df['FCST_VAR'].tolist()[0]
     if str(var_long_name_key).upper() == 'HGT':
         if str(df['OBS_VAR'].tolist()[0]).upper() == 'CEILING':
@@ -635,10 +629,10 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
     ]
     ax.set_ylabel(f'{metric_long_names[0]}')
     ax.set_xlabel(xlabel)
-    #ax.set_xticklabels(xtick_labels)
-    #    ax.set_yticklabels(ytick_labels)
-    #    ax.set_yticks(yticks)
-    #ax.set_xticks(xticks)
+    ax.set_xticklabels(xtick_labels)
+    ax.set_yticklabels(ytick_labels)
+    ax.set_yticks(yticks)
+    ax.set_xticks(xticks)
     ax.tick_params(
         labelleft=True, labelright=False, labelbottom=True, labeltop=False
     )
