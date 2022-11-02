@@ -61,8 +61,6 @@ export KEEPDATA=${KEEPDATA:-YES}
 export SENDMETVIEWER=${SENDMETVIEWER:-NO}
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output
 
-##export cyc=%CYC%
-#export cyc=00
 export MODELNAME=gefs
 export NET=evs
 export COMPONENT=global_ens

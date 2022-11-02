@@ -68,16 +68,11 @@ export COMINgefs=${COMINgefs:-$(compath.py ${MODELNAME}/${model_ver})}
 ## Could not find obsproc/v1.0
 export COMINobs=/lfs/h1/ops/prod/com/obsproc/v1.0
 export COMINgdas=${COMINobs}/gdas
-#export COMINobs=/lfs/h2/emc/vpppg/noscrub/deanna.spindler/GEFS_grib/archive
-## archived files are ${COMINobs}/${INITDATE}/gdas.t*z.prepbufr
-
 
 ##COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$INITDATE)}
 export OUTPUTROOT="/lfs/h2/emc/stmp/$USER"
-#export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
-# /lfs/h2/emc/stmp/$USER/evs/v1.0/prep/global_ens/wave.${INITDATE}/gefs/grid2obs
 export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}
-# /lfs/h2/emc/stmp/$USER/evs/v1.0/prep/global_ens/wave
+
 mkdir -p ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
 
 export jlogfile=${DATA}/${MODELNAME}_${RUN}_PB2NC.log

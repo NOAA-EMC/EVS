@@ -85,7 +85,6 @@ done
 run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}/PB2NC_wave.conf
 export err=$?; err_chk
 
-
 cat $pgmout
 
 ##############################################
