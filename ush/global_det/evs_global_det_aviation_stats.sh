@@ -17,21 +17,33 @@ for past_day in 0 1 2 ; do
        for ff in $FHOURS ; do
 	   if [ $CENTER = "uk" ] ; then
 	       if [ $RESOLUTION = "0P25" ] ; then
-		   ln -sf $COMINuk/$day/wgrbbul/ukmet_wafs/EGRR_WAFS_0p25_icing_unblended_${day}_${cc}z_t${ff}.grib2 $INPUT_BASE/$CENTER.${day}${cc}.f${ff}.grib2
+		   if [[ -f $COMINuk/$day/wgrbbul/ukmet_wafs/EGRR_WAFS_0p25_icing_unblended_${day}_${cc}z_t${ff}.grib2 ]] ; then
+		       ln -sf $COMINuk/$day/wgrbbul/ukmet_wafs/EGRR_WAFS_0p25_icing_unblended_${day}_${cc}z_t${ff}.grib2 $INPUT_BASE/$CENTER.${day}${cc}.f${ff}.grib2
+		   fi
 	       elif [ $RESOLUTION = "1P25" ] ; then
-                   ln -sf $COMINuk/$day/wgrbbul/ukmet_wafs/EGRR_WAFS_unblended_${day}_${cc}z_t${ff}.grib2 $INPUT_BASE/$CENTER.${day}${cc}.f${ff}.grib2
+		   if [[ -f $COMINuk/$day/wgrbbul/ukmet_wafs/EGRR_WAFS_unblended_${day}_${cc}z_t${ff}.grib2 ]] ; then
+                       ln -sf $COMINuk/$day/wgrbbul/ukmet_wafs/EGRR_WAFS_unblended_${day}_${cc}z_t${ff}.grib2 $INPUT_BASE/$CENTER.${day}${cc}.f${ff}.grib2
+		   fi
 	       fi
 	   elif [ $CENTER = "us" ] ; then
 	       if [ $RESOLUTION = "0P25" ] ; then
-		   ln -sf $COMINgfs/gfs.$day/$cc/atmos/gfs.t${cc}z.wafs_0p25_unblended.f${ff}.grib2 $INPUT_BASE/$CENTER.${day}${cc}.f${ff}.grib2
+		   if [[ -f $COMINgfs/gfs.$day/$cc/atmos/gfs.t${cc}z.wafs_0p25_unblended.f${ff}.grib2 ]] ; then
+		       ln -sf $COMINgfs/gfs.$day/$cc/atmos/gfs.t${cc}z.wafs_0p25_unblended.f${ff}.grib2 $INPUT_BASE/$CENTER.${day}${cc}.f${ff}.grib2
+		   fi
 	       elif [ $RESOLUTION = "1P25" ] ; then
-		   ln -sf $COMINgfs/gfs.$day/$cc/atmos/gfs.t${cc}z.wafs_grb45f${ff}.grib2 $INPUT_BASE/$CENTER.${day}${cc}.f${ff}.grib2
+		   if [[ -f $COMINgfs/gfs.$day/$cc/atmos/gfs.t${cc}z.wafs_grb45f${ff}.grib2 ]] ; then
+		       ln -sf $COMINgfs/gfs.$day/$cc/atmos/gfs.t${cc}z.wafs_grb45f${ff}.grib2 $INPUT_BASE/$CENTER.${day}${cc}.f${ff}.grib2
+		   fi
 	       fi
 	   elif [ $CENTER = "blend" ] ; then
                if [ $RESOLUTION = "0P25" ] ; then
-                   ln -sf $COMINgfs/gfs.$day/$cc/atmos/WAFS_0p25_blended_${day}${cc}f${ff}.grib2 $INPUT_BASE/$CENTER.${day}${cc}.f${ff}.grib2
-               elif [ $RESOLUTION = "1P25" ] ; then
-                   ln -sf $COMINgfs/gfs.$day/$cc/atmos/WAFS_blended_${day}${cc}f${ff}.grib2 $INPUT_BASE/$CENTER.${day}${cc}.f${ff}.grib2
+		   if [[ -f $COMINgfs/gfs.$day/$cc/atmos/WAFS_0p25_blended_${day}${cc}f${ff}.grib2 ]] ; then
+                       ln -sf $COMINgfs/gfs.$day/$cc/atmos/WAFS_0p25_blended_${day}${cc}f${ff}.grib2 $INPUT_BASE/$CENTER.${day}${cc}.f${ff}.grib2
+		   fi
+	       elif [ $RESOLUTION = "1P25" ] ; then
+		   if [[ -f $COMINgfs/gfs.$day/$cc/atmos/WAFS_blended_${day}${cc}f${ff}.grib2 ]] ; then
+		       ln -sf $COMINgfs/gfs.$day/$cc/atmos/WAFS_blended_${day}${cc}f${ff}.grib2 $INPUT_BASE/$CENTER.${day}${cc}.f${ff}.grib2
+		   fi
 	       fi
 	   fi
        done
