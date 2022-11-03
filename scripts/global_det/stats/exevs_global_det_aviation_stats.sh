@@ -46,6 +46,8 @@ for RESOLUTION in $resolutions ; do
     done
 done
 
+cat $DATA/${MODELNAME}_stat/* > ${MODELNAME}.stat
+awk '!seen[$0]++' ${MODELNAME}.stat > $COMOUTfinal/$NET.$STEP.$MODELNAME.$RUN.$VERIF_CASE.v$VDATE.stat
 
 ################################################
 # Part 2: U/V/T Verification

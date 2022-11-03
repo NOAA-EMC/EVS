@@ -117,7 +117,7 @@ export DATE_TYPE="VALID"
 # Will choose a valid or init range based on a preset EVAL_PERIOD.  Use "TEST" if you want to use 
 # the custom-defined range below. Presets are defined in ${USH_DIR}/settings.py in the Presets() 
 # class. 
-export EVAL_PERIOD="LAST90DAYS"
+export EVAL_PERIOD=$EVAL_PERIOD
 
 # If EVAL_PERIOD="TEST", will use statistics from the valid or init range below. If not, ignores 
 # these settings. DATE_TYPE decides whether valid or init is used.

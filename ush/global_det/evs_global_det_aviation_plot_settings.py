@@ -57,8 +57,7 @@ class Templates():
         Example: 
         "{RUN_CASE_LOWER}/{MODEL}/{valid?fmt=%Y%m}/{MODEL}_{valid?fmt=%Y%m%d}*"
         '''
-        self.output_base_template = "{MODEL}_{RUN_CASE}_*_v{valid?fmt=%Y%m%d}*"
-
+        self.output_base_template = "*.{RUN_CASE}.*.v{valid?fmt=%Y%m%d}*"
 class Presets():
     def __init__(self):
         
@@ -87,19 +86,19 @@ class Presets():
                 'init_beg': (datetime.now()-td(days=90)).strftime('%Y%m%d'),
                 'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
             },
-            'PAST30DAYS': {
+            'LAST30DAYS': {
                 'valid_beg': (datetime.now()-td(days=30)).strftime('%Y%m%d'),
                 'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
                 'init_beg': (datetime.now()-td(days=30)).strftime('%Y%m%d'),
                 'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
             },
-            'PAST7DAYS': {
+            'LAST7DAYS': {
                 'valid_beg': (datetime.now()-td(days=7)).strftime('%Y%m%d'),
                 'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
                 'init_beg': (datetime.now()-td(days=7)).strftime('%Y%m%d'),
                 'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
             },
-            'PAST3DAYS': {
+            'LAST3DAYS': {
                 'valid_beg': (datetime.now()-td(days=3)).strftime('%Y%m%d'),
                 'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
                 'init_beg': (datetime.now()-td(days=3)).strftime('%Y%m%d'),
