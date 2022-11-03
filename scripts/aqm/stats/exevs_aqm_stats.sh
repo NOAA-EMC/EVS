@@ -73,7 +73,7 @@ do
       export fhr
 
       export datehr=${VDATE}${cyc}
-      adate=`/apps/ops/prod/nco/core/prod_util.v2.0.7/exec/ndate -$fhr $datehr`
+      adate=`$NDATE -$fhr $datehr`
       aday=`echo $adate |cut -c1-8`
       acyc=`echo $adate |cut -c9-10`
       if [ $acyc = 06 -o $acyc = 12 ]

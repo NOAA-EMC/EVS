@@ -53,6 +53,21 @@ export mod_ver=${aqm_ver}
 export config=$HOMEevs/parm/evs_config/aqm/config.evs.aqm.prod
 source $config
 
+export DATA=/lfs/h2/emc/ptmp/$USER/EVS/${cyc}_${MODELNAME}
+
+rm -rf $DATA
+mkdir -p $DATA
+cd $DATA
+
+export cycle=t${cyc}z
+setpdy.sh
+. ./PDY
+
+export VDATE=$PDYm3
+
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
+export COMOUT=$COMIN/${STEP}/${COMPONENT}
+
 # CALL executable job script here
 $HOMEevs/jobs/aqm/prep/JEVS_AQM_PREP
 
