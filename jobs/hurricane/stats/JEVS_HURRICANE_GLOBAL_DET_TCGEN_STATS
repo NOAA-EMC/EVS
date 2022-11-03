@@ -1,0 +1,101 @@
+#!/bin/bash 
+date
+export PS4=' $SECONDS + '
+set -x
+
+####################################
+# obtain unique process id (pid) and make temp directory
+####################################
+export jobid=${jobid:-$job.o$$}
+export DATA=${DATA:-${DATAROOT:?}/${jobid}}
+mkdir -p $DATA
+cd $DATA
+export cycle=t${cyc}z
+
+####################################
+# File To Log Msgs
+####################################
+export jlogfile=${jlogfile:-${DATA}/jlogfile.${jobid}}
+
+####################################
+# Specify NET and RUN Name and model
+####################################
+export NET=${NET:-evs}
+export COMPONENT=${COMPONENT:-hurricane_global_det}
+export RUN=${RUN:-tcgen}
+export STEP=${STEP:-stats}
+
+####################################
+# Determine Job Output Name on System
+####################################
+export pgmout="OUTPUT.$$"
+export pgmerr=errfile
+
+####################################
+# SENDECF  - Flag Events on ecFLOW
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+####################################
+export SENDECF=${SENDECF:-NO}
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-NO}
+
+####################################
+# Specify Execution Areas
+####################################
+export HOMEevs=${HOMEevs:-${PACKAGEHOME}}
+export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts/hurricane/stats}
+export USHevs=${USHevs:-$HOMEevs/ush/hurricane/stats}
+export PARMevs=${PARMevs:-$HOMEevs/parm/metplus_config/hurricane/stats}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+
+# Run setpdy and initialize PDY variables
+##############################
+#setpdy.sh
+#. ./PDY
+export PDY=20211005
+
+##############################################
+# Define COM directories
+##############################################
+export YYYY=`echo ${PDY} | cut -c1-4`
+#export YY22=`echo ${PDY} | cut -c3-4`
+
+export COMINgenesis=${COMINgenesis:-/lfs/h2/emc/vpppg/save/jiayi.peng/TCgen/genesisDATA}
+export COMINadeckNHC=${COMINadeckNHC:-/lfs/h2/emc/vpppg/save/jiayi.peng/TCgen/ABdeck}
+export COMINbdeckNHC=${COMINbdeckNHC:-/lfs/h2/emc/vpppg/save/jiayi.peng/TCgen/ABdeck}
+export COMINadeckJTWC=${COMINadeckJTWC:-/lfs/h2/emc/vpppg/save/jiayi.peng/TCgen/ABdeck}
+export COMINbdeckJTWC=${COMINbdeckJTWC:-/lfs/h2/emc/vpppg/save/jiayi.peng/TCgen/ABdeck}
+
+#export COMINbdeckNHC=${COMINbdeckNHC:-/lfs/h1/ops/prod/dcom/nhc/atcf-noaa/btk}
+#export COMINbdeckJTWC=${COMINbdeckJTWC:-/lfs/h1/ops/prod/dcom/nhc/atcf-navy/btk}
+#export COMINadeckNHC=${COMINadeckNHC:-/lfs/h1/ops/prod/dcom/nhc/atcf-noaa/aid_nws}
+#export COMINadeckJTWC=${COMINadeckJTWC:-/lfs/h1/ops/prod/dcom/nhc/atcf-navy/aid}
+
+#export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})/${COMPONENT}/${RUN}/${STEP}}
+export COMOUT=${COMOUT:-${COMROOT}/${NET}/${evs_ver}/${COMPONENT}/${RUN}/${STEP}}
+mkdir -m 775 -p $COMOUT 
+
+msg="HAS BEGUN on `hostname`"
+postmsg "$jlogfile" "$msg"
+
+#env
+
+#############################################################
+# Execute the script
+${SCRIPTSevs}/exevs_hurricane_global_det_tcgen_stats.sh
+export err=$?; err_chk
+
+#############################################################
+
+msg="JOB COMPLETED NORMALLY"
+postmsg "$jlogfile" "$msg"
+
+##############################
+# Remove the Temporary working directory
+##############################
+if [[ $KEEPDATA != "YES" ]]; then
+  rm -rf $DATA
+fi
+
+date
