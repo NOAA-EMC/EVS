@@ -59,7 +59,7 @@ plot_jobs_dict = {
                       'grid': 'G004',
                       'obs_name': 'ADPUPA',
                       'plots_list': ('time_series, lead_average, '
-                                     +'stat_by_level, lead_level')},
+                                     +'stat_by_level, lead_by_level')},
         'RelHum': {'line_type_stat_list': ['SL1L2/ME',
                                            'SL1L2/RMSE'],
                    'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
@@ -81,7 +81,7 @@ plot_jobs_dict = {
                    'grid': 'G004',
                    'obs_name': 'ADPUPA',
                    'plots_list': ('time_series, lead_average, '
-                                  +'stat_by_level, lead_level')},
+                                  +'stat_by_level, lead_by_level')},
         'SpefHum': {'line_type_stat_list': ['SL1L2/ME',
                                             'SL1L2/RMSE'],
                     'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
@@ -103,7 +103,7 @@ plot_jobs_dict = {
                     'obs_name': 'ADPUPA',
                     'grid': 'G004',
                     'plots_list': ('time_series, lead_average, '
-                                   +'stat_by_level, lead_level')},
+                                   +'stat_by_level, lead_by_level')},
         'Temp': {'line_type_stat_list': ['SL1L2/ME',
                                          'SL1L2/RMSE'],
                  'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
@@ -125,7 +125,7 @@ plot_jobs_dict = {
                   'grid': 'G004',
                   'obs_name': 'ADPUPA',
                   'plots_list': ('time_series, lead_average, '
-                                 +'stat_by_level, lead_level')},
+                                 +'stat_by_level, lead_by_level')},
         'UWind': {'line_type_stat_list': ['SL1L2/ME',
                                           'SL1L2/RMSE'],
                   'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
@@ -147,7 +147,7 @@ plot_jobs_dict = {
                   'grid': 'G004',
                   'obs_name': 'ADPUPA',
                   'plots_list': ('time_series, lead_average, '
-                                 +'stat_by_level, lead_level')},
+                                 +'stat_by_level, lead_by_level')},
         'VWind': {'line_type_stat_list': ['SL1L2/ME',
                                           'SL1L2/RMSE'],
                   'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
@@ -169,7 +169,7 @@ plot_jobs_dict = {
                   'grid': 'G004',
                   'obs_name': 'ADPUPA',
                   'plots_list': ('time_series, lead_average, '
-                                 +'stat_by_level, lead_level')},
+                                 +'stat_by_level, lead_by_level')},
         'VectorWind': {'line_type_stat_list': ['VL1L2/BIAS',
                                                'VL1L2/RMSE'],
                        'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
@@ -191,7 +191,7 @@ plot_jobs_dict = {
                        'grid': 'G004',
                        'obs_name': 'ADPUPA',
                        'plots_list': ('time_series, lead_average, '
-                                      +'stat_by_level, lead_level')}
+                                      +'stat_by_level, lead_by_level')}
     },
     'sea_ice': {},
     'sfc': {

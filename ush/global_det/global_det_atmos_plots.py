@@ -429,6 +429,8 @@ for plot in plots_list:
                                                      met_info_dict,
                                                      logo_dir)
                 plot_pd.make_performance_diagram()
+    else:
+        logger.warnig(plot+" not recongized")
 
 # Copy images from job directory to main image directory
 job_output_image_dir = os.path.join(job_output_dir, 'images')
