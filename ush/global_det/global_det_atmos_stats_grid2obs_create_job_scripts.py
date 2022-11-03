@@ -415,11 +415,11 @@ generate_stats_jobs_dict = {
                          'var1_fcst_name': 'CRAIN',
                          'var1_fcst_levels': 'L0',
                          'var1_fcst_options': '',
-                         'var1_fcst_threshs': "'>=1.0'",
+                         'var1_fcst_threshs': "'ge1.0'",
                          'var1_obs_name': 'PRWE',
                          'var1_obs_levels': 'Z0',
                          'var1_obs_options': '',
-                         'var1_obs_threshs': "'>=161&&<=163'",
+                         'var1_obs_threshs': "'ge161&&le163'",
                          'met_config_overrides': ''},
                  'commands': [gda_util.metplus_command(
                                   'PointStat_fcstGLOBAL_DET_'
@@ -431,11 +431,11 @@ generate_stats_jobs_dict = {
                          'var1_fcst_name': 'CSNOW',
                          'var1_fcst_levels': 'L0',
                          'var1_fcst_options': '',
-                         'var1_fcst_threshs': "'>=1.0'",
+                         'var1_fcst_threshs': "'ge1.0'",
                          'var1_obs_name': 'PRWE',
                          'var1_obs_levels': 'Z0',
                          'var1_obs_options': '',
-                         'var1_obs_threshs': "'>=171&&<=173'",
+                         'var1_obs_threshs': "'ge171&&le173'",
                          'met_config_overrides': ''},
                  'commands': [gda_util.metplus_command(
                                   'PointStat_fcstGLOBAL_DET_'
@@ -447,11 +447,11 @@ generate_stats_jobs_dict = {
                             'var1_fcst_name': 'CFRZR',
                             'var1_fcst_levels': 'L0',
                             'var1_fcst_options': '',
-                            'var1_fcst_threshs': "'>=1.0'",
+                            'var1_fcst_threshs': "'ge1.0'",
                             'var1_obs_name': 'PRWE',
                             'var1_obs_levels': 'Z0',
                             'var1_obs_options': '',
-                            'var1_obs_threshs': "'>=164&&<=166'",
+                            'var1_obs_threshs': "'ge164&&le166'",
                             'met_config_overrides': ''},
                     'commands': [gda_util.metplus_command(
                                      'PointStat_fcstGLOBAL_DET_'
@@ -463,11 +463,11 @@ generate_stats_jobs_dict = {
                            'var1_fcst_name': 'CICEP',
                            'var1_fcst_levels': 'L0',
                            'var1_fcst_options': '',
-                           'var1_fcst_threshs': "'>=1.0'",
+                           'var1_fcst_threshs': "'ge1.0'",
                            'var1_obs_name': 'PRWE',
                            'var1_obs_levels': 'Z0',
                            'var1_obs_options': '',
-                           'var1_obs_threshs': "'>=174&&<=176'",
+                           'var1_obs_threshs': "'ge174&&le176'",
                            'met_config_overrides': ''},
                    'commands': [gda_util.metplus_command(
                                     'PointStat_fcstGLOBAL_DET_'
