@@ -24,7 +24,7 @@ export evs_ver=$evs_ver
 export envir=dev
 export RUN_ENVIR=nco
 export SENDCOM=YES
-export KEEPDATA=YES
+export KEEPDATA=NO
 module load prod_envir/2.0.6
 module load prod_util/2.0.13
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_global_det_atmos_test/$envir/tmp
