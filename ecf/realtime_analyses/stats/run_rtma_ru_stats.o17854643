@@ -1,0 +1,23 @@
+Running prologue on parent mom node: nid001212...
+Job 17854643.cbqs01 nodelist: nid001212
+Job 17854643.cbqs01 - Prologue complete. Execution time: 3 seconds
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=00 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+17854645.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=01 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+17854780.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=02 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+17854870.cbqs01
+++ sleep 60
+++ for fhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+++ export fhr
+++ qsub -v cyc=03 /lfs/h2/emc/vpppg/save/perry.shafran/EVS/ecf/realtime_analyses/stats/jevs_rtma_ru_stats.ecf
+17854894.cbqs01
+++ sleep 60

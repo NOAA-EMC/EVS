@@ -67,7 +67,20 @@ do
 	elif [ $region = CONUS ]
 	then
 	 smregion=conus
+	elif [ $region = Alaska ]
+	then
+         smregion=alaska
+	elif [ $region = Hawaii ]
+	then
+	 smregion=hawaii
+	elif [ $region = PuertoRico ]
+	then
+	 smregion=prico
+        elif [ $region = Guam ]
+	then
+	 smregion=guam	
 	fi
+
 for var in TMP2m DPT2m
 do
 	export var
@@ -80,8 +93,8 @@ do
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
 #        mv ${DATA}/valid_hour* ${PLOTDIR}/BCRMSE_${region}_${var}_${lev}_G221_VALID${PDYm31}to${VDATE}_VALHR.png
-        mv ${DATA}/valid_hour* ${PLOTDIR}/${COMPONENT}.bcrmse_me.${smvar}_${smlev}.buk_${smregion}.last31days.vhrmean_f000.png
-done
+#        mv ${DATA}/valid_hour* ${PLOTDIR}/${COMPONENT}.bcrmse_me.${smvar}_${smlev}.buk_${smregion}.last31days.vhrmean_f000.png
+         mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${COMPONENT}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean_f000.buk_${smregion}.png
 done
 
 for var in WIND10m
@@ -90,9 +103,12 @@ do
 	export lev=Z10
 	export lev_obs=Z10
         export linetype=SL1L2
+	smlev=`echo $lev | tr A-Z a-z`
+        smvar=`echo $var | tr A-Z a-z`
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
-        mv ${DATA}/valid_hour* ${PLOTDIR}/BCRMSE_${region}_${var}_${lev}_G221_VALID${PDYm31}to${VDATE}_VALHR.png
+#        mv ${DATA}/valid_hour* ${PLOTDIR}/BCRMSE_${region}_${var}_${lev}_G221_VALID${PDYm31}to${VDATE}_VALHR.png
+        mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${COMPONENT}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean_f000.buk_${smregion}.png
 done
 
 for var in GUSTsfc
@@ -100,9 +116,12 @@ do
 	export var
 	export lev=Z10
 	export lev_obs=Z0
+	smlev=`echo $lev | tr A-Z a-z`
+        smvar=`echo $var | tr A-Z a-z`
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
-        mv ${DATA}/valid_hour* ${PLOTDIR}/BCRMSE_${region}_${var}_${lev}_G221_VALID${PDYm31}to${VDATE}_VALHR.png
+#        mv ${DATA}/valid_hour* ${PLOTDIR}/BCRMSE_${region}_${var}_${lev}_G221_VALID${PDYm31}to${VDATE}_VALHR.png
+        mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${COMPONENT}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean_f000.buk_${smregion}.png
 done
 done
 
