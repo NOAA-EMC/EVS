@@ -87,21 +87,13 @@ while valid_date_dt <= ENDDATE_dt:
             print("Input CFRZR File: "+input_cfrzr_file)
             print("Input CICEP File: "+input_cicep_file)
             input_crain_data = netcdf.Dataset(input_crain_file)
-            input_crain = np.ma.masked_less(
-                input_crain_data.variables['CRAIN'][:],1
-            )
             input_csnow_data = netcdf.Dataset(input_csnow_file)
-            input_csnow = np.ma.masked_less(
-                input_csnow_data.variables['CSNOW'][:],1
-            )
             input_cfrzr_data = netcdf.Dataset(input_cfrzr_file)
-            input_cfrzr = np.ma.masked_less(
-                input_cfrzr_data.variables['CFRZR'][:],1
-            )
             input_cicep_data = netcdf.Dataset(input_cicep_file)
-            input_cicep = np.ma.masked_less(
-                input_cicep_data.variables['CICEP'][:],1
-            )
+            input_crain = input_crain_data.variables['CRAIN'][:]
+            input_csnow = input_csnow_data.variables['CSNOW'][:]
+            input_cfrzr = input_cfrzr_data.variables['CFRZR'][:]
+            input_cicep = input_cicep_data.variables['CICEP'][:]
             print("Output Merged Ptype File: "+output_merged_ptype_file)
             if os.path.exists(output_merged_ptype_file):
                 os.remove(output_merged_ptype_file)
@@ -113,7 +105,7 @@ while valid_date_dt <= ENDDATE_dt:
                     cfrzr_xy = input_cfrzr[x,y]
                     cicep_xy = input_cicep[x,y]
                     ptype_xy_list = [crain_xy, csnow_xy, cfrzr_xy, cicep_xy]
-                    if ptype_xy_list.count('1.0') == 1: # one ptype
+                    if ptype_xy_list.count(1.0) == 1: # one ptype
                         if crain_xy == 1.0:
                             merged_ptype[x,y] = 1
                         elif csnow_xy == 1.0:
@@ -122,7 +114,8 @@ while valid_date_dt <= ENDDATE_dt:
                             merged_ptype[x,y] = 3
                         elif cicep_xy == 1.0:
                             merged_ptype[x,y] = 4
-                    #elif ptype_list.count('1.0') > 1: # more than ptype
+                    elif ptype_xy_list.count('1.0') > 1: # more than ptype
+                        print("more than 1 ptype")
             output_merged_ptype_data = netcdf.Dataset(
                 output_merged_ptype_file, 'w', format='NETCDF3_CLASSIC'
             )
@@ -157,6 +150,7 @@ while valid_date_dt <= ENDDATE_dt:
                     output_merged_var.setncatts(
                         {k: input_crain_data.variables[var].getncattr(k)}
                     )
+            output_merged_var[:] = merged_ptype[:]
             output_merged_ptype_data.close()
             input_crain_data.close()
             input_csnow_data.close()
