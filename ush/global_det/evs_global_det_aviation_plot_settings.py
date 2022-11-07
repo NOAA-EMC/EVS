@@ -57,7 +57,7 @@ class Templates():
         Example: 
         "{RUN_CASE_LOWER}/{MODEL}/{valid?fmt=%Y%m}/{MODEL}_{valid?fmt=%Y%m%d}*"
         '''
-        self.output_base_template = "*.{RUN_CASE}.*.v{valid?fmt=%Y%m%d}*"
+        self.output_base_template = "*.{RUN_CASE}*.v{valid?fmt=%Y%m%d}*"
 class Presets():
     def __init__(self):
         
@@ -484,15 +484,15 @@ class ModelSpecs():
                 'plot_name':'RRFS-A'
             },
             'us': {
-                'settings_key':'WAFS_US', 
+                'settings_key':'US', 
                 'plot_name':'US'
             },
             'uk': {
-                'settings_key':'WAFS_UK', 
+                'settings_key':'UK', 
                 'plot_name':'UK'
             },
             'blend': {
-                'settings_key':'WAFS_BLEND', 
+                'settings_key':'BLEND', 
                 'plot_name':'BLEND'
             }
         }
@@ -619,6 +619,15 @@ class ModelSpecs():
                      'linestyle': 'solid', 'linewidth': 3.},
             'OFCL': {'color': '#696969',
                      'marker': 'o', 'markersize': 12,
+                     'linestyle': 'solid', 'linewidth': 3.},
+            'BLEND': {'color': '#fb2020',
+                     'marker': 'o', 'markersize': 12,
+                     'linestyle': 'solid', 'linewidth': 3.},
+            'US': {'color': '#1e3cff',
+                     'marker': 'o', 'markersize': 12,
+                     'linestyle': 'solid', 'linewidth': 3.},
+            'UK': {'color': '#000000',
+                     'marker': 'o', 'markersize': 12,
                      'linestyle': 'solid', 'linewidth': 3.}
         }    
       
@@ -702,6 +711,7 @@ class Reference():
                                     'VIS': 'Visibility',
                                     'ICEC_Z0_mean': 'Sea Ice Concentration',
                                     'ICESEV': 'Icing Severity',
+                                    'ICIP': 'Icing Potential',
                                     'REFC': 'Composite Reflectivity',
                                     'REFD': 'Above Ground Level Reflectivity',
                                     'RETOP': 'Echo Top Height'}
@@ -2086,7 +2096,7 @@ class Reference():
                                   'obs_var_thresholds': '>=1, >=2, >=3, >=4',
                                   'obs_var_options': '',
                                   'plot_group':'aviation'},
-                        'ICIP': {'fcst_var_names': ['ICIP'],
+                        'ICIP': {'fcst_var_names': ['ICIPmean', 'ICIPmax'],
                                   'fcst_var_levels': ['P800','P700','P600','P500','P400'],
                                   'fcst_var_thresholds': '>=0.1, >=0.2, >=0.3, >=0.4, >=0.5, >=0.6, >=0.7, >=0.8, >=0.9',
                                   'fcst_var_options': '',

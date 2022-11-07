@@ -18,7 +18,7 @@ export DATAplot=$DATA/plot
 mkdir -p $DATAplot
 
 export EVAL_PERIOD="LAST${NDAYS}DAYS"
-eval_period=`echo $EVAL_PERIOD | tr [:upper:] [:lower:]`
+eval_period=`echo $EVAL_PERIOD | tr '[:upper:]' '[:lower:]'`
 
 ################################################
 # Part 1: Icing Verification
@@ -29,7 +29,7 @@ export CENTERS="blend us uk"
 
 PLOT_TYPES="roc_curve fbias"
 
-resolutions="0P25"
+resolutions="0P25 1P25"
 for RESOLUTION in $resolutions ; do
     export RESOLUTION
     source $HOMEevs/parm/evs_config/global_det/config.evs.stats.global_det.aviation.standalone
@@ -38,12 +38,13 @@ for RESOLUTION in $resolutions ; do
     mkdir -p $OUTPUT_BASE_DIR
     rm $OUTPUT_BASE_DIR/*
 
+    stat_file_suffix=`echo $VAR1_NAME | sed -e "s|mean||" -e "s|max||" | tr '[:upper:]' '[:lower:]'`
     for CENTER in $CENTERS ; do
 #	# Re-organize data for plotting
 	n=0
 	while [[ $n -le $NDAYS ]] ; do
 	    day=`date -d "$VDATE - $n days" +%Y%m%d`
-	    sourefile=$COMINstat/${MODELNAME}.$day/$NET.stats.$MODELNAME.$RUN.$VERIF_CASE.v$day.stat
+	    sourefile=$COMINstat/${MODELNAME}.$day/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
 	    if [[ -f "$sourefile" ]] ; then
 		ln -s $sourefile $OUTPUT_BASE_DIR/.
 	    fi

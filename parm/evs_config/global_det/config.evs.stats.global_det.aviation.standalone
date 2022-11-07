@@ -17,14 +17,24 @@ if [ $OBSERVATION = "GCIP" ] ; then
     export MET_GRIB_TABLES=$PARMevs/$STEP/grib2_wafs.txt
 
     if [ $RESOLUTION = "1P25" ] ; then
-	export REGRID=G45
-	export VAR1_NAME=ICIP
+	export REGRID=G045
+	export VAR_NAME_OBS=ICIP
+
+	export VAR1_NAME=ICIPmean
 	export VAR1_THRESH_FCST=">=0.1,>=0.2,>=0.3,>=0.4,>=0.5,>=0.6,>=0.7,>=0.8,>=0.9"
 	export VAR1_THRESH_OBS=">=0.3,>=0.3,>=0.3,>=0.3,>=0.3,>=0.3,>=0.3,>=0.3,>=0.3"
 	export VAR1_LEVELS_FCST="P800, P700, P600, P500, P400"
 	export VAR1_LEVELS_OBS="$VAR1_LEVELS_FCST"
+	#The renamed ICIPmax uses the same observation data as ICIPmean
+	export VAR2_NAME=ICIPmax
+	export VAR2_THRESH_FCST="$VAR1_THRESH_FCST"
+	export VAR2_THRESH_OBS="$VAR1_THRESH_OBS"
+	export VAR2_LEVELS_FCST="$VAR1_LEVELS_FCST"
+	export VAR2_LEVELS_OBS="$VAR2_LEVELS_FCST"
     elif [ $RESOLUTION = "0P25" ] ; then
 	export REGRID=G193
+	export VAR_NAME_OBS=ICESEV
+
 	export VAR1_NAME=ICESEV
 	export VAR1_THRESH_FCST=">=1,>=2,>=3,>=4"
 	export VAR1_THRESH_OBS=">=2,>=2,>=2,>=2"
@@ -34,4 +44,8 @@ if [ $OBSERVATION = "GCIP" ] ; then
 elif [ $OBSERVATION = "GFS" ] ; then
     export VAR1=TMP
     export VAR2=VectorWind
+    if [ $RESOLUTION = "1P25" ] ; then
+        export REGRID=G045
+	
+    fi
 fi
