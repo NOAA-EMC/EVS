@@ -178,7 +178,7 @@ class PlotSpecs:
             'FBAR_OBAR': 'Forecast and Observation Mean',
             'FBIAS': 'Frequency Bias',
             'FSS': 'Fraction Skill Score',
-            'FY_OY': 'Forecast Yes - Obs Yes',
+            'FY_OY': 'Forecast:Yes,Obs:Yes',
             'GSS': 'Gilbert Skill Score',
             'HSS': 'Heidke Skill Score',
             'ME': 'Mean Error (Bias)',
