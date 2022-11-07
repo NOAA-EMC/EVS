@@ -414,7 +414,8 @@ generate_stats_jobs_dict = {
                          'msg_type': "'ADPSFC'",
                          'var1_fcst_name': 'CRAIN',
                          'var1_fcst_levels': 'L0',
-                         'var1_fcst_options': '',
+                         'var1_fcst_options': ("'set_attr_units = "
+                                               +'"unitless";'+"'"),
                          'var1_fcst_threshs': "'ge1.0'",
                          'var1_obs_name': 'PRWE',
                          'var1_obs_levels': 'Z0',
@@ -430,7 +431,8 @@ generate_stats_jobs_dict = {
                          'msg_type': "'ADPSFC'",
                          'var1_fcst_name': 'CSNOW',
                          'var1_fcst_levels': 'L0',
-                         'var1_fcst_options': '',
+                         'var1_fcst_options': ("'set_attr_units = "
+                                               +'"unitless";'+"'"),
                          'var1_fcst_threshs': "'ge1.0'",
                          'var1_obs_name': 'PRWE',
                          'var1_obs_levels': 'Z0',
@@ -446,7 +448,8 @@ generate_stats_jobs_dict = {
                             'msg_type': "'ADPSFC'",
                             'var1_fcst_name': 'CFRZR',
                             'var1_fcst_levels': 'L0',
-                            'var1_fcst_options': '',
+                            'var1_fcst_options': ("'set_attr_units = "
+                                                  +'"unitless";'+"'"),
                             'var1_fcst_threshs': "'ge1.0'",
                             'var1_obs_name': 'PRWE',
                             'var1_obs_levels': 'Z0',
@@ -462,7 +465,8 @@ generate_stats_jobs_dict = {
                            'msg_type': "'ADPSFC'",
                            'var1_fcst_name': 'CICEP',
                            'var1_fcst_levels': 'L0',
-                           'var1_fcst_options': '',
+                           'var1_fcst_options': ("'set_attr_units = "
+                                                 +'"unitless";'+"'"),
                            'var1_fcst_threshs': "'ge1.0'",
                            'var1_obs_name': 'PRWE',
                            'var1_obs_levels': 'Z0',
