@@ -783,12 +783,6 @@ elif STEP == 'plots' :
                         model+'_'+RUN+'_'+VERIF_CASE+'_'
                         +'v'+date_dt.strftime('%Y%m%d')+'.stat'
                     )
-                    if not os.path.exists(source_model_date_stat_file):
-                        source_model_date_stat_file = os.path.join(
-                            model_evs_data_dir+'.'+date_dt.strftime('%Y%m%d'),
-                            'evs.stats.'+model+'.'+RUN+'.'+VERIF_CASE+'.'
-                            +'v'+date_dt.strftime('%Y%m%d')+'.stat'
-                        )
                 else:
                     source_model_date_stat_file = os.path.join(
                         model_evs_data_dir, 'evs_data',
