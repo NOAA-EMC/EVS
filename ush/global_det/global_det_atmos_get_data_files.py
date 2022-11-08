@@ -780,14 +780,8 @@ elif STEP == 'plots' :
                 if evs_run_mode == 'production':
                     source_model_date_stat_file = os.path.join(
                         model_evs_data_dir+'.'+date_dt.strftime('%Y%m%d'),
-                        model+'_'+RUN+'_'+VERIF_CASE+'_'
+                        'evs.stats.'+model+'.'+RUN+'.'+VERIF_CASE+'.'
                         +'v'+date_dt.strftime('%Y%m%d')+'.stat'
-                    )
-                else:
-                    source_model_date_stat_file = os.path.join(
-                        model_evs_data_dir, 'evs_data',
-                        COMPONENT, RUN, VERIF_CASE, model,
-                        model+'.v'+date_dt.strftime('%Y%m%d')+'.stat'
                     )
                 dest_model_date_stat_file = os.path.join(
                     VERIF_CASE_STEP_data_dir, model,
