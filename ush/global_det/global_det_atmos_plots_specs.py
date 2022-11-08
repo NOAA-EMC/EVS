@@ -578,11 +578,17 @@ class PlotSpecs:
                               be saved as (string)
         """
         # Component
-        component_savefig_name = 'globat_det'
+        component_savefig_name = 'global_det'
         # Metric
         metric_savefig_name = plot_info_dict['stat']
         # Parameter
         parameter_savefig_name = plot_info_dict['fcst_var_name']
+        if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
+            parameter_savefig_name = (
+                parameter_savefig_name+'_'
+                +plot_info_dict['interp_method'].replace('WV1_', '')\
+                .replace('-', '_')
+            )
         # Level
         level_savefig_name = plot_info_dict['fcst_var_level']
         # Days
@@ -599,14 +605,17 @@ class PlotSpecs:
             plot_type_savefig_name = 'timeseries'
         elif self.plot_type == 'lead_average':
             plot_type_savefig_name = 'fhrmean'
-        elif self.plot_type == 'stat_by_level':
-            plot_type_savefig_name = 'vertprof'
+        elif self.plot_type == 'lead_by_date':
+            plot_type_savefig_name = 'leaddate'
         elif self.plot_type == 'lead_by_level':
             plot_type_savefig_name = 'vertprof_fhrmean'
+        elif self.plot_type == 'stat_by_level':
+            plot_type_savefig_name = 'vertprof'
         else:
             plot_type_savefig_name = self.plot_type.replace('_', '')
         if self.plot_type in ['time_series', 'lead_average',
-                              'stat_by_level', 'lead_by_level']:
+                              'stat_by_level', 'lead_by_level',
+                              'lead_by_date']:
             plot_type_savefig_name = plot_type_savefig_name+'_valid'
             valid_hr = int(date_info_dict['valid_hr_start'])
             while valid_hr <= int(date_info_dict['valid_hr_end']):
