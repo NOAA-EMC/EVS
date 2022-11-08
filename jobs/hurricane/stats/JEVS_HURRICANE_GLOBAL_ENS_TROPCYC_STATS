@@ -60,12 +60,10 @@ setpdy.sh
 export YYYY=`echo ${PDY} | cut -c1-4`
 export YY22=`echo ${PDY} | cut -c3-4`
 
-export COMINvit=${COMINvit:-/lfs/h1/ops/prod/com/gfs/v16.2/syndat/syndat_tcvitals.${YYYY}}
-export COMINtrack=${COMINtrack:-/lfs/h1/ops/prod/com/ens_tracker/v1.3/global/tracks.atcfunix.${YY22}}
-export COMINbdeckNHC=${COMINbdeckNHC:-/lfs/h1/ops/prod/dcom/nhc/atcf-noaa/btk}
-export COMINbdeckJTWC=${COMINbdeckJTWC:-/lfs/h1/ops/prod/dcom/nhc/atcf-navy/btk}
-#export COMINadeckNHC=${COMINadeckNHC:-/lfs/h1/ops/prod/dcom/nhc/atcf-noaa/aid_nws}
-#export COMINadeckJTWC=${COMINadeckJTWC:-/lfs/h1/ops/prod/dcom/nhc/atcf-navy/aid}
+export COMINvit=${COMINvit:-/your/TC/vitals/file}
+export COMINtrack=${COMINtrack:-your/TC/track/file}
+export COMINbdeckNHC=${COMINbdeckNHC:-/your/NHC/bdeck/data/dir}
+export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
 
 #export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})/${COMPONENT}/${RUN}/${STEP}}
 export COMOUT=${COMOUT:-${COMROOT}/${NET}/${evs_ver}/${COMPONENT}/${RUN}/${STEP}}

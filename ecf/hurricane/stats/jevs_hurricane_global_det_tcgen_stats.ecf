@@ -50,6 +50,13 @@ export cyc=00
 export job=jevs_hurricane_global_det_tcgen_stats_${cyc}
 
 #export HOMEevs=/lfs/h2/emc/vpppg/save/$USER/EVS
+#Define the directories of your TC genesis data and A/Bdeck files
+export COMINgenesis=/lfs/h2/emc/vpppg/save/jiayi.peng/TCgen/genesisDATA
+export COMINadeckNHC=/lfs/h2/emc/vpppg/save/jiayi.peng/TCgen/ABdeck
+export COMINbdeckNHC=/lfs/h2/emc/vpppg/save/jiayi.peng/TCgen/ABdeck
+export COMINadeckJTWC=/lfs/h2/emc/vpppg/save/jiayi.peng/TCgen/ABdeck
+export COMINbdeckJTWC=/lfs/h2/emc/vpppg/save/jiayi.peng/TCgen/ABdeck
+
 export DATAROOT=/lfs/h2/emc/ptmp/$USER
 export COMROOT=${DATAROOT}/com
 export KEEPDATA=YES
