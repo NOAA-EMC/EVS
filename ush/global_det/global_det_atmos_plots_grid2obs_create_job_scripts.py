@@ -170,7 +170,7 @@ plot_jobs_dict = {
                   'obs_name': 'ADPUPA',
                   'plots_list': ('time_series, lead_average, '
                                  +'stat_by_level, lead_by_level')},
-        'VectorWind': {'line_type_stat_list': ['VL1L2/BIAS',
+        'VectorWind': {'line_type_stat_list': ['VL1L2/ME',
                                                'VL1L2/RMSE'],
                        'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                         'TROPICS', 'CONUS'],
@@ -681,7 +681,7 @@ plot_jobs_dict = {
                      'grid': 'G104',
                      'obs_name': 'ADPSFC',
                      'plots_list': 'time_series, lead_average'},
-        'VectorWind10m': {'line_type_stat_list': ['VL1L2/RMSE', 'VL1L2/BIAS'],
+        'VectorWind10m': {'line_type_stat_list': ['VL1L2/RMSE', 'VL1L2/ME'],
                           'vx_mask_list': ['CONUS', 'CONUS_Central',
                                            'CONUS_East', 'CONUS_South',
                                            'CONUS_West', 'Appalachia',
