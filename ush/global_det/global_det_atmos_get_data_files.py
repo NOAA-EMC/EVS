@@ -837,12 +837,12 @@ elif STEP == 'plots' :
             'ccpa', 'grid2grid'
         )
         source_ccpa_pcp_combine_file = os.path.join(
-            COMINccpa, 'pcp_combine_precip.24hrCCPA.valid'
+            COMINccpa, 'pcp_combine_precip_24hrCCPA_valid'
             +end_date_dt.strftime('%Y%m%d')+CCPA24hr_valid_hr_list[0]+'.nc'
         )
         dest_ccpa_pcp_combine_file = os.path.join(
             VERIF_CASE_STEP_data_dir, 'ccpa',
-            'ccpa_precip.24hrAccum.valid'
+            'ccpa_precip_24hrAccum_valid'
             +end_date_dt.strftime('%Y%m%d')+CCPA24hr_valid_hr_list[0]+'.nc'
         )
         if not os.path.exists(dest_ccpa_pcp_combine_file):
@@ -867,13 +867,13 @@ elif STEP == 'plots' :
                     + datetime.timedelta(hours=int(CCPA24hr_valid_hr_list[0]))
                 )- datetime.timedelta(hours=fhr)
                 source_model_fhr_pcp_combine_file = os.path.join(
-                    COMINmodel, 'pcp_combine_precip.24hrAccum.init'
-                    +init_dt.strftime('%Y%m%d%H')+'.f'+str(fhr).zfill(3)+'.nc'
+                    COMINmodel, 'pcp_combine_precip_24hrAccum_init'
+                    +init_dt.strftime('%Y%m%d%H')+'_fhr'+str(fhr).zfill(3)+'.nc'
                 )
                 dest_model_fhr_pcp_combine_file = os.path.join(
                     VERIF_CASE_STEP_data_dir, model,
-                    model+'_precip.24hrAccum.init'
-                    +init_dt.strftime('%Y%m%d%H')+'.f'+str(fhr).zfill(3)+'.nc'
+                    model+'_precip_24hrAccum_init'
+                    +init_dt.strftime('%Y%m%d%H')+'_fhr'+str(fhr).zfill(3)+'.nc'
                 )
                 if not os.path.exists(dest_model_fhr_pcp_combine_file):
                     if os.path.exists(source_model_fhr_pcp_combine_file):
