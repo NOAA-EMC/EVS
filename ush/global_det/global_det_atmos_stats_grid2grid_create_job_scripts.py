@@ -866,7 +866,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
                     print("Creating job script: "+job_file)
                     job = open(job_file, 'w')
-                    job.write('#!/bin/sh\n')
+                    job.write('#!/bin/bash\n')
                     job.write('set -x\n')
                     job.write('\n')
                     # Set any environment variables for special cases
@@ -1017,7 +1017,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
                     print("Creating job script: "+job_file)
                     job = open(job_file, 'w')
-                    job.write('#!/bin/sh\n')
+                    job.write('#!/bin/bash\n')
                     job.write('set -x\n')
                     job.write('\n')
                     # Set any environment variables for special cases
@@ -1058,7 +1058,7 @@ elif JOB_GROUP == 'gather_stats':
             job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
             print("Creating job script: "+job_file)
             job = open(job_file, 'w')
-            job.write('#!/bin/sh\n')
+            job.write('#!/bin/bash\n')
             job.write('set -x\n')
             job.write('\n')
             # Set any environment variables for special cases
