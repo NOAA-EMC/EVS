@@ -4,6 +4,7 @@ import datetime
 import sys
 import os
 import numpy as np
+import global_det_atmos_util as gda_util
 
 class PlotSpecs:
     def __init__(self, logger, plot_type):
@@ -186,7 +187,7 @@ class PlotSpecs:
             'POD': 'Probability of Detection',
             'PERF_DIA': 'Performance Diagram',
             'RMSE': 'Root Mean Square Error',
-            'S1': 'S1',
+            'S1': 'S1 Score',
             'SRATIO': 'Success Ratio (1-FAR)'
         }
         if stat in list(stat_plot_name_dict.keys()):
@@ -580,7 +581,25 @@ class PlotSpecs:
         # Component
         component_savefig_name = 'global_det'
         # Metric
-        metric_savefig_name = plot_info_dict['stat']
+        if plot_info_dict['stat'] == 'PERF_DIA':
+            metric_savefig_name = 'ctc'
+        else:
+            metric_savefig_name = plot_info_dict['stat']
+        if plot_info_dict['interp_method'] == 'NBRHD_SQUARE':
+            nwidth = int(np.sqrt(float(plot_info_dict['interp_points'])))
+            metric_savefig_name = (
+                metric_savefig_name+'_'
+                +'width'+str(nwidth)
+            )
+        if 'fcst_var_thresh' in list(plot_info_dict.keys()):
+            if plot_info_dict['fcst_var_thresh'] != 'NA':
+                thresh_symbol, thresh_letter = gda_util.format_thresh(
+                    plot_info_dict['fcst_var_thresh']
+                )
+                metric_savefig_name = (
+                    metric_savefig_name+'_'
+                    +thresh_letter.replace('.','p')
+                )
         # Parameter
         parameter_savefig_name = plot_info_dict['fcst_var_name']
         if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
@@ -590,7 +609,7 @@ class PlotSpecs:
                 .replace('-', '_')
             )
         # Level
-        level_savefig_name = plot_info_dict['fcst_var_level']
+        level_savefig_name = plot_info_dict['fcst_var_level'].replace('-', '_')
         # Days
         start_date_dt = datetime.datetime.strptime(
             date_info_dict['start_date'], '%Y%m%d'
@@ -609,6 +628,8 @@ class PlotSpecs:
             plot_type_savefig_name = 'leaddate'
         elif self.plot_type == 'lead_by_level':
             plot_type_savefig_name = 'vertprof_fhrmean'
+        elif self.plot_type == 'performance_diagram':
+            plot_type_savefig_name = 'perfdia'
         elif self.plot_type == 'stat_by_level':
             plot_type_savefig_name = 'vertprof'
         else:
@@ -623,7 +644,8 @@ class PlotSpecs:
                                           +str(valid_hr).zfill(2))
                 valid_hr+=int(date_info_dict['valid_hr_inc'])
             plot_type_savefig_name = plot_type_savefig_name+'Z'
-        if self.plot_type in ['time_series', 'stat_by_level']:
+        if self.plot_type in ['time_series', 'stat_by_level',
+                              'performance_diagram']:
             plot_type_savefig_name = (
                  plot_type_savefig_name+'_'
                  +'f'+date_info_dict['forecast_hour'].zfill(3)
