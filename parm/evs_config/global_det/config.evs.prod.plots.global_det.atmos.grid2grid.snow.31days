@@ -69,7 +69,7 @@ if [ $RUN_GRID2GRID_PLOTS = YES ]; then
     export g2gp_event_equalization="NO"
     export g2gp_snow_init_hr_list="12"
     export g2gp_snow_fhr_min=24
-    export g2gp_snow_fhr_max=384
+    export g2gp_snow_fhr_max=240
     export g2gp_snow_fhr_inc=24
 fi
 
