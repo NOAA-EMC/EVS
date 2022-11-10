@@ -1,6 +1,6 @@
 #PBS -N jevs_gfs_atmos_grid2obs_stats_00
 #PBS -j oe
-#PBS -S /bin/sh
+#PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=1:15:00

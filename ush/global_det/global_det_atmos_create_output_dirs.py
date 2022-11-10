@@ -56,6 +56,9 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
             data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_gdas'))
             data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_nam'))
             data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_rap'))
+        elif VERIF_CASE_STEP_type == 'ptype':
+            data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_nam'))
+            data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_rap'))
 elif VERIF_CASE_STEP == 'grid2grid_plots':
     for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
         if VERIF_CASE_STEP_type == 'precip':
@@ -124,7 +127,7 @@ if STEP == 'stats':
                     )
         elif VERIF_CASE_STEP == 'grid2obs_stats':
             for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
-                if VERIF_CASE_STEP_type == 'pres_levs':
+                if VERIF_CASE_STEP_type in ['pres_levs', 'sfc', 'ptype']:
                     COMROOT_dir_list.append(
                         os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
                                      RUN+'.'+date_dt.strftime('%Y%m%d'), 'prepbufr',
