@@ -1087,6 +1087,13 @@ def check_model_files(job_dict):
                         'init_date': init_date_dt,
                         'forecast_hour': str(fhr)
                     }
+            if job_dict['VERIF_CASE'] == 'grid2obs':
+                if job_dict['VERIF_TYPE'] == 'ptype':
+                    fhr_check_dict[str(fhr)]['file1'] = {
+                        'valid_date': valid_date_dt,
+                        'init_date': init_date_dt,
+                        'forecast_hour': str(fhr)
+                    }
         elif job_dict['JOB_GROUP'] == 'assemble_data':
             if job_dict['VERIF_CASE'] == 'grid2grid':
                 if job_dict['VERIF_TYPE'] == 'precip':
@@ -1185,6 +1192,12 @@ def check_model_files(job_dict):
                                       -datetime.timedelta(hours=fhr-12)),
                         'forecast_hour': str(fhr-12)
                     }
+                elif job_dict['VERIF_TYPE'] == 'ptype':
+                    fhr_check_dict[str(fhr)]['file1'] = {
+                        'valid_date': valid_date_dt,
+                        'init_date': init_date_dt,
+                        'forecast_hour': str(fhr)
+                    }
         elif job_dict['JOB_GROUP'] == 'generate_stats':
             if job_dict['VERIF_CASE'] == 'grid2grid':
                 if job_dict['VERIF_TYPE'] == 'pres_levs' \
@@ -1250,7 +1263,20 @@ def check_model_files(job_dict):
                         model+'.{init?fmt=%Y%m%d%H}.f{lead?fmt=%3H}'
                     )
             elif job_dict['VERIF_CASE'] == 'grid2obs':
-                if job_dict['VERIF_TYPE'] == 'sfc' \
+                if job_dict['VERIF_TYPE'] == 'ptype' \
+                        and job_dict['job_name'] == 'Ptype':
+                    model_file_format = os.path.join(verif_case_dir,
+                                                     'METplus_output',
+                                                     job_dict['RUN']+'.'
+                                                     +'{valid?fmt=%Y%m%d}',
+                                                     job_dict['MODEL'],
+                                                     job_dict['VERIF_CASE'],
+                                                     'merged_ptype_'
+                                                     +job_dict['VERIF_TYPE']+'_'
+                                                     +job_dict['job_name']+'_'
+                                                     +'init{init?fmt=%Y%m%d%H}_'
+                                                     +'fhr{lead?fmt=%3H}.nc')
+                elif job_dict['VERIF_TYPE'] == 'sfc' \
                         and job_dict['job_name'] == 'DailyAvg_TempAnom2m':
                     model_file_format = os.path.join(verif_case_dir,
                                                      'METplus_output',
@@ -1352,7 +1378,7 @@ def check_truth_files(job_dict):
                 )
                 truth_file_list.append(model_truth_file)
         elif job_dict['VERIF_CASE'] == 'grid2obs':
-            if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc'] \
+            if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc', 'ptype'] \
                     and 'Prepbufr' in job_dict['job_name']:
                 prepbufr_name = (job_dict['job_name'].replace('Prepbufr', '')\
                                  .lower())
@@ -1378,7 +1404,7 @@ def check_truth_files(job_dict):
                     truth_file_list.append(nccpa_file)
                     n+=1
         elif job_dict['VERIF_CASE'] == 'grid2obs':
-            if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc']:
+            if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc', 'ptype']:
                 pb2nc_file = os.path.join(
                     verif_case_dir, 'METplus_output',
                     job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
@@ -1430,7 +1456,7 @@ def check_truth_files(job_dict):
                )
                truth_file_list.append(ghrsst_median_file)
         elif job_dict['VERIF_CASE'] == 'grid2obs':
-            if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc']:
+            if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc', 'ptype']:
                 pb2nc_file = os.path.join(
                     verif_case_dir, 'METplus_output',
                     job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
@@ -1619,7 +1645,7 @@ def initalize_job_env_dict(verif_type, group,
         job_env_dict['fhr_inc'] = os.environ[
             verif_case_step_abbrev_type+'_fhr_inc'
         ]
-        if verif_type in ['pres_levs', 'means', 'sfc']:
+        if verif_type in ['pres_levs', 'means', 'sfc', 'ptype']:
             verif_type_valid_hr_list = (
                 os.environ[verif_case_step_abbrev_type+'_valid_hr_list']\
                 .split(' ')
@@ -1797,29 +1823,16 @@ def format_thresh(thresh):
          thresh_symbol  - threshold with symbols (string)
          thresh_letters - treshold with letters (string)
    """
-   for opt in ['>=', '>', '==', '!=', '<=', '<',
-               'ge', 'gt', 'eq', 'ne', 'le', 'lt']:
-       if opt in thresh:
-           thresh_opt = opt
-           thresh_value = thresh.replace(opt, '')
-   if thresh_opt in ['>', 'gt']:
-       thresh_symbol = '>'+thresh_value
-       thresh_letter = 'gt'+thresh_value
-   elif thresh_opt in ['>=', 'ge']:
-       thresh_symbol = '>='+thresh_value
-       thresh_letter = 'ge'+thresh_value
-   elif thresh_opt in ['<', 'lt']:
-       thresh_symbol = '<'+thresh_value
-       thresh_letter = 'lt'+thresh_value
-   elif thresh_opt in ['<=', 'le']:
-       thresh_symbol = '<='+thresh_value
-       thresh_letter = 'le'+thresh_value
-   elif thresh_opt in ['==', 'eq']:
-      thresh_symbol = '=='+thresh_value
-      thresh_letter = 'eq'+thresh_value
-   elif thresh_opt in ['!=', 'ne']:
-       thresh_symbol = '!='+thresh_value
-       thresh_letter = 'ne'+thresh_value
+   thresh_symbol = (
+       thresh.replace('ge', '>=').replace('gt', '>')\
+       .replace('eq', '==').replace('ne', '!=')\
+       .replace('le', '<=').replace('lt', '<')
+   )
+   thresh_letter = (
+       thresh.replace('>=', 'ge').replace('>', 'gt')\
+       .replace('==', 'eq').replace('!=', 'ne')\
+       .replace('<=', 'le').replace('<', 'lt')
+   )
    return thresh_symbol, thresh_letter
 
 def condense_model_stat_files(logger, input_dir, output_file, model, obs,
@@ -1913,14 +1926,6 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
     met_version_line_type_col_list = get_met_line_type_cols(
         logger, met_info_dict['root'], met_info_dict['version'], line_type
     )
-    df_dtype_dict = {}
-    float_idx = met_version_line_type_col_list.index('TOTAL')
-    for col in met_version_line_type_col_list:
-        col_idx = met_version_line_type_col_list.index(col)
-        if col_idx < float_idx:
-            df_dtype_dict[col] = str
-        else:
-            df_dtype_dict[col] = np.float64
     for model_num in list(model_info_dict.keys()):
         model_num_name = (
             model_num+'/'+model_info_dict[model_num]['name']
@@ -1930,10 +1935,21 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
             [[model_num_name], met_format_valid_dates],
             names=['model', 'valid_dates']
         )
-        model_num_df = pd.DataFrame(np.nan, index=model_num_df_index,
-                                    columns=met_version_line_type_col_list)
         model_dict = model_info_dict[model_num]
+        condensed_model_file = os.path.join(
+            input_dir, model_num+'_'+model_dict['name']+'.stat'
+        )
         if len(dates) != 0:
+            if not os.path.exists(condensed_model_file):
+                write_condensed_stat_file = True
+            else:
+                write_condensed_stat_file = False
+            if write_condensed_stat_file:
+                condense_model_stat_files(
+                    logger, input_dir, condensed_model_file, model_dict['name'],
+                    model_dict['obs_name'], grid, vx_mask,
+                    fcst_var_name, obs_var_name, line_type
+                )
             parsed_model_stat_file = os.path.join(
                 output_dir,
                 'fcst'+model_dict['name']+'_'
@@ -1958,16 +1974,38 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
         else:
             write_parse_stat_file = False
             read_parse_stat_file = False
-        if write_parse_stat_file:
-            condensed_model_file = os.path.join(
-                input_dir, model_num+'_'+model_dict['name']+'.stat'
+        if os.path.exists(condensed_model_file) and line_type == 'MCTC':
+            tmp_df = pd.read_csv(
+                condensed_model_file, sep=" ", skiprows=1,
+                skipinitialspace=True,
+                keep_default_na=False, dtype='str', header=None
             )
-            if not os.path.exists(condensed_model_file):
-                condense_model_stat_files(
-                    logger, input_dir, condensed_model_file, model_dict['name'],
-                    model_dict['obs_name'], grid, vx_mask,
-                    fcst_var_name, obs_var_name, line_type
+            if len(tmp_df) > 0:
+                ncat = int(tmp_df[25][0])
+                new_met_version_line_type_col_list = []
+                for col in met_version_line_type_col_list:
+                    if col == '(N_CAT)':
+                        new_met_version_line_type_col_list.append('N_CAT')
+                    elif col == 'F[0-9]*_O[0-9]*':
+                        fcount = 1
+                        ocount = 1
+                        totcount = 1
+                        while totcount <= ncat*ncat:
+                            new_met_version_line_type_col_list.append(
+                                'F'+str(fcount)+'_'+'O'+str(ocount)
+                            )
+                            if ocount < ncat:
+                                ocount+=1
+                            elif ocount == ncat:
+                                ocount = 1
+                                fcount+=1
+                            totcount+=1
+                    else:
+                        new_met_version_line_type_col_list.append(col)
+                met_version_line_type_col_list = (
+                    new_met_version_line_type_col_list
                 )
+        if write_parse_stat_file:
             if fcst_var_thresh != 'NA':
                 fcst_var_thresh_symbol, fcst_vat_thresh_letter = (
                     format_thresh(fcst_var_thresh)
@@ -2035,6 +2073,8 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                              +f"at {parsed_model_stat_file}")
             else:
                 logger.debug(f"Could not create {parsed_model_stat_file}")
+        model_num_df = pd.DataFrame(np.nan, index=model_num_df_index,
+                                    columns=met_version_line_type_col_list)
         if read_parse_stat_file:
             if os.path.exists(parsed_model_stat_file):
                 logger.debug(f"Reading {parsed_model_stat_file} for "
@@ -2044,6 +2084,14 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                     skipinitialspace=True, names=met_version_line_type_col_list,
                     na_values=['NA'], header=None
                 )
+                df_dtype_dict = {}
+                float_idx = met_version_line_type_col_list.index('TOTAL')
+                for col in met_version_line_type_col_list:
+                    col_idx = met_version_line_type_col_list.index(col)
+                    if col_idx < float_idx:
+                        df_dtype_dict[col] = str
+                    else:
+                        df_dtype_dict[col] = np.float64
                 model_stat_file_df = model_stat_file_df.astype(df_dtype_dict)
                 for valid_date in met_format_valid_dates:
                     model_stat_file_df_valid_date_idx_list = (
@@ -2315,6 +2363,8 @@ def calculate_stat(logger, data_df, line_type, stat):
        BAGSS = data_df.loc[:]['BAGSS']
        BAGSS_BCL = data_df.loc[:]['BAGSS_BCL']
        BAGSS_BCU = data_df.loc[:]['BAGSS_BCU']
+   elif line_type == 'MCTC':
+       F1_O1 = data_df.loc[:]['F1_O1']
    elif line_type == 'NBRCNT':
        FBS = data_df.loc[:]['FBS']
        FBS_BCL = data_df.loc[:]['FBS_BCL']
@@ -2388,6 +2438,9 @@ def calculate_stat(logger, data_df, line_type, stat):
    elif stat == 'CSI': # Critical Success Index'
        if line_type == 'CTC':
            stat_df = FY_OY/(FY_OY + FY_ON + FN_OY)
+   elif stat == 'F1_O1': # Count of forecast category 1 and observation category 1
+       if line_type == 'MCTC':
+           stat_df = F1_O1
    elif stat in ['ETS', 'GSS']: # Equitable Threat Score/Gilbert Skill Score
        if line_type == 'CTC':
            TOTAL = FY_OY + FY_ON + FN_OY + FN_ON

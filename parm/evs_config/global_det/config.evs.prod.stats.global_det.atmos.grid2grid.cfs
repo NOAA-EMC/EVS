@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 ##---------------------------------------------------------------------------
 ##---------------------------------------------------------------------------
 ## NCEP EMC Verification System (EVS) - GFS Atmospheric
@@ -56,13 +56,12 @@ export SENDMETVIEWER="NO"
 ####################################################
 if [ $RUN_GRID2GRID_STATS = YES ]; then
     #g2gs_type_list: list type of verifications to run for grid-to-grid: pres_levs, precip, snow, sst, sea_ice
-    #                                                                    ozone, means
+    #                                                                    means
     #    pres_levs:  compare variables on pressure levels to model's own analysis
     #    precip:     compare to CCPA
     #    snow:       compare to NOHRSC
-    #    sst:        compare to GHRSST L4
-    #    sea_ice:    compare to OSI-SAF, SMOS, NASA Icebridge, YOPP, OSTIA, GIOMAS
-    #    ozone:      compare to OMI, TROPOMI, OMPS 
+    #    sst:        compare to GHRSST Median
+    #    sea_ice:    compare to OSI-SAF 
     #    means:      compute forecast hour means for various variables
     #g2gs_pres_levs_truth_name_list:   list of reference name for truth files
     #g2gs_pres_levs_truth_format_list: list of truth file format(s)

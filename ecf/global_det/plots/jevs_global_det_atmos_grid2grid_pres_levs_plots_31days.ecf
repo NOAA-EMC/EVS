@@ -1,6 +1,6 @@
 #PBS -N jevs_global_det_atmos_grid2grid_pres_levs_plots_31days_00
 #PBS -j oe
-#PBS -S /bin/sh
+#PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=0:30:00
