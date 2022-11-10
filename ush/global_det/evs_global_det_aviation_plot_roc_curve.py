@@ -131,7 +131,7 @@ def plot_roc_curve(df: pd.DataFrame, logger: logging.Logger,
         ]
     elif isinstance(flead, np.int):
         frange_string = f'Forecast Hour {flead:02d}'
-        frange_save_string = f'F{flead:02d}'
+        frange_save_string = f'F{flead:03d}'
         df = df[df['LEAD_HOURS'] == flead]
     else:
         e1 = f"Invalid forecast lead: \'{flead}\'"
@@ -767,7 +767,7 @@ def plot_roc_curve(df: pd.DataFrame, logger: logging.Logger,
     date_start_string = date_range[0].strftime('%d %b %Y')
     date_end_string = date_range[1].strftime('%d %b %Y')
     if str(verif_type).lower() in ['pres', 'upper_air'] or 'P' in str(level):
-        level_num = level.replace('P', '')
+        level_num = int(float(level.replace('P', '')))
         level_string = f'{level_num} hPa '
         level_savename = f'p{level_num}'
     elif (str(verif_type).lower() 

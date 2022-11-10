@@ -724,14 +724,15 @@ class Reference():
                                   'SAO': 'Southern Atlantic Ocean',
                                   'NH': 'Northern Hemisphere 20N-90N',
                                   'SH': 'Southern Hemisphere 20S-90S',
-                                  'AR2': 'Area 2',
                                   'ASIA': 'Asia',
                                   'AUNZ': 'Australia and New Zealand',
-                                  'NAMR': 'North America',
-                                  'NHM': 'Northern Hemisphere',
-                                  'NPCF': 'North Pacific',
-                                  'SHM': 'Southern Hemisphere',
-                                  'TRP': 'Tropics',
+                                  'EAST': 'Middle East',
+                                  'NAMER': 'North America',
+                                  'NATL_AR2': 'North Atlantic - Area 2',
+                                  'NHEM': 'Northern Hemisphere',
+                                  'NPO': 'North Pacific',
+                                  'SHEM': 'Southern Hemisphere',
+                                  'TROPICS': 'Tropics',
                                   'G193': 'Global',
                                   'G45': 'Global',
                                   'G002': 'Global',
@@ -743,7 +744,6 @@ class Reference():
                                   'CONUS': 'CONUS',
                                   'POLAR': 'Polar 60-90 N/S',
                                   'ARCTIC': 'Arctic',
-                                  'EAST': 'Middle East',
                                   'CONUS_East': 'Eastern US',
                                   'WEST': 'Western US',
                                   'CONUS_West': 'Western US',
@@ -2074,7 +2074,7 @@ class Reference():
                                         + ' obar, pod, farate, faratio, sratio'),
                     'interp': 'NEAREST',
                     'vx_mask_list' : [
-                        'G45','G193','AR2','ASIA','AUNZ','EAST','NAMR','NHM','NPCF','SHM','TRP'
+		         'G45','G193','ASIA','AUNZ','EAST','NAMER','NATL_AR2','NHEM','NPO','SHEM','TROPICS'
                     ],
                     'var_dict': {
                         'ICESEV': {'fcst_var_names': ['ICESEV'],
