@@ -27,7 +27,7 @@ do
      export fhr
 
      export datehr=${VDATE}${cyc}
-     adate=`/apps/ops/prod/nco/core/prod_util.v2.0.7/exec/ndate -$fhr $datehr`
+     adate=`$NDATE -$fhr $datehr`
      aday=`echo $adate |cut -c1-8`
      acyc=`echo $adate |cut -c9-10`
      if [ -e $COMINnam/nam.${aday}/nam.t${acyc}z.${regionnest}.${outtyp}${fhr}.tm00.grib2 ]
@@ -62,7 +62,7 @@ then
  tmnum=01
 fi
 
-obdate=`/apps/ops/prod/nco/core/prod_util.v2.0.7/exec/ndate +6 $datehr`
+obdate=`$NDATE +6 $datehr`
 obday=`echo $obdate |cut -c1-8`
 obhr=`echo $obdate |cut -c9-10`
 
@@ -84,8 +84,7 @@ if [ -e $COMINobs/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum} ]
 then
  obfound=1
  mkdir -p $DATA/$OBSDIR/nam.${obday}
- cat $COMINobs/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum}  $COMINobs/nam.${obday}/nam.t${obcyc}z.prepbufr.acft_profiles_sfc.tm${tmnum} > $DATA/$OBSDIR/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum}
-# cp $COMINobs/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum} $DATA/$OBSDIR/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum}
+  cp $COMINobs/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum} $DATA/$OBSDIR/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum}
 fi
 
 echo $obfound
