@@ -9,7 +9,7 @@
 
 export model=evs
 
-export HOMEevs=/lfs/h2/emc/vpppg/save/perry.shafran/EVS2
+export HOMEevs=/lfs/h2/emc/vpppg/save/$USER/EVS2
 
 source $HOMEevs/versions/run.ver
 
