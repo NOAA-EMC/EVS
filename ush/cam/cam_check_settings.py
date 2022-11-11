@@ -59,8 +59,8 @@ if STEP.upper() == 'STATS':
 '''
 evs_cam_settings_dict['shared'] = []
 evs_cam_settings_dict['modules'] = ['MET_PLUS_PATH', 'MET_PATH', 'MET_CONFIG']
-evs_cam_settings_dict['RUN_GRID2OBS_PREP'] = []
-evs_cam_settings_dict['RUN_GRID2OBS_STATS'] = []
+evs_cam_settings_dict['RUN_GRID2OBS_PREP'] = ['VERIF_TYPE']
+evs_cam_settings_dict['RUN_GRID2OBS_STATS'] = ['VERIF_TYPE']
 evs_cam_settings_dict['RUN_GRID2OBS_PLOTS'] = []
 evs_cam_settings_dict['RUN_PRECIP_PREP'] = [
         'VERIF_TYPE', 'VHOUR_LIST', 'COMINobs', 'OBSNAME', 'OBS_ACC', 'ACC'

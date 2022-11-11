@@ -14,40 +14,44 @@ set -x
 
 # Set Basic Environment Variables
 NEST_LIST="conus ak firewx hi pr"
+VERIF_TYPES="raob metar"
 
 # Reformat MET Data
 export job_type="reformat"
 export njob=1
 for NEST in $NEST_LIST; do
     export NEST=$NEST
-    if [ $RUN_ENVIR = nco ]; then
-        export evs_run_mode="production"
-        source $config
-    else
-        export evs_run_mode=$evs_run_mode
-    fi
-    echo "RUN MODE: $evs_run_mode"
-    for VHOUR in $VHOUR_LIST; do
-        export VHOUR=$VHOUR
-        # Check User's Configuration Settings
-        python $USHevs/cam/cam_check_settings.py
-        status=$?
-        [[ $status -ne 0 ]] && exit $status
-        [[ $status -eq 0 ]] && echo "Successfully ran cam_check_settings.py ($job_type)"
-        echo
- 
-        # Create Output Directories
-        python $USHevs/cam/cam_create_output_dirs.py
-        status=$?
-        [[ $status -ne 0 ]] && exit $status
-        [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
- 
-        # Create Reformat Job Script 
-        python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
-        status=$?
-        [[ $status -ne 0 ]] && exit $status
-        [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_grid2obs_create_job_script.py ($job_type)"
-        export njob=$((njob+1))
+    for VERIF_TYPE in $VERIF_TYPES; do
+        export VERIF_TYPE=$VERIF_TYPE
+        if [ $RUN_ENVIR = nco ]; then
+            export evs_run_mode="production"
+            source $config
+        else
+            export evs_run_mode=$evs_run_mode
+        fi
+        echo "RUN MODE: $evs_run_mode"
+        for VHOUR in $VHOUR_LIST; do
+            export VHOUR=$VHOUR
+            # Check User's Configuration Settings
+            python $USHevs/cam/cam_check_settings.py
+            status=$?
+            [[ $status -ne 0 ]] && exit $status
+            [[ $status -eq 0 ]] && echo "Successfully ran cam_check_settings.py ($job_type)"
+            echo
+     
+            # Create Output Directories
+            python $USHevs/cam/cam_create_output_dirs.py
+            status=$?
+            [[ $status -ne 0 ]] && exit $status
+            [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
+     
+            # Create Reformat Job Script 
+            python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
+            status=$?
+            [[ $status -ne 0 ]] && exit $status
+            [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_grid2obs_create_job_script.py ($job_type)"
+            export njob=$((njob+1))
+        done
     done
 done
 
@@ -95,36 +99,40 @@ export job_type="generate"
 export njob=1
 for NEST in $NEST_LIST; do
     export NEST=$NEST
-    if [ $RUN_ENVIR = nco ]; then
-        export evs_run_mode="production"
-        source $config
-    else
-        export evs_run_mode=$evs_run_mode
-    fi
-    for VHOUR in $VHOUR_LIST; do
-        export VHOUR=$VHOUR
-        # Check User's Configuration Settings
-        python $USHevs/cam/cam_check_settings.py
-        status=$?
-        [[ $status -ne 0 ]] && exit $status
-        [[ $status -eq 0 ]] && echo "Successfully ran cam_check_settings.py ($job_type)"
-        echo
- 
-        # Create Output Directories
-        python $USHevs/cam/cam_create_output_dirs.py
-        status=$?
-        [[ $status -ne 0 ]] && exit $status
-        [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
- 
-        # Create Generate Job Script 
-        python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
-        status=$?
-        [[ $status -ne 0 ]] && exit $status
-        [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_grid2obs_create_job_script.py ($job_type)"
-        export njob=$((njob+1))
-        
-    done
-    
+    for VERIF_TYPE in $VERIF_TYPES; do
+        export VERIF_TYPE=$VERIF_TYPE
+        if [ $RUN_ENVIR = nco ]; then
+            export evs_run_mode="production"
+            source $config
+        else
+            export evs_run_mode=$evs_run_mode
+        fi
+        for VAR_NAME in $VAR_NAME_LIST; do
+            export VAR_NAME=$VAR_NAME
+            for VHOUR in $VHOUR_LIST; do
+                export VHOUR=$VHOUR
+                # Check User's Configuration Settings
+                python $USHevs/cam/cam_check_settings.py
+                status=$?
+                [[ $status -ne 0 ]] && exit $status
+                [[ $status -eq 0 ]] && echo "Successfully ran cam_check_settings.py ($job_type)"
+                echo
+         
+                # Create Output Directories
+                python $USHevs/cam/cam_create_output_dirs.py
+                status=$?
+                [[ $status -ne 0 ]] && exit $status
+                [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
+         
+                # Create Generate Job Script 
+                python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
+                status=$?
+                [[ $status -ne 0 ]] && exit $status
+                [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_grid2obs_create_job_script.py ($job_type)"
+                export njob=$((njob+1))
+            done
+        done
+    done 
 done
 
 # Create Generate POE Job Scripts
@@ -170,24 +178,27 @@ export job_type="gather"
 export njob=1
 for NEST in $NEST_LIST; do
     export NEST=$NEST
-    if [ $RUN_ENVIR = nco ]; then
-        export evs_run_mode="production"
-        source $config
-    else
-        export evs_run_mode=$evs_run_mode
-    fi
-    # Create Output Directories
-    python $USHevs/cam/cam_create_output_dirs.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
-    
-    # Create Gather Job Script
-    python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_grid2obs_create_job_script.py ($job_type)"
-    export njob=$((njob+1))
+    for VERIF_TYPE in $VERIF_TYPES; do
+        export VERIF_TYPE=$VERIF_TYPE
+        if [ $RUN_ENVIR = nco ]; then
+            export evs_run_mode="production"
+            source $config
+        else
+            export evs_run_mode=$evs_run_mode
+        fi
+        # Create Output Directories
+        python $USHevs/cam/cam_create_output_dirs.py
+        status=$?
+        [[ $status -ne 0 ]] && exit $status
+        [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
+        
+        # Create Gather Job Script
+        python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
+        status=$?
+        [[ $status -ne 0 ]] && exit $status
+        [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_grid2obs_create_job_script.py ($job_type)"
+        export njob=$((njob+1))
+    done
 done
 
 # Create Gather POE Job Scripts

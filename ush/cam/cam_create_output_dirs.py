@@ -12,6 +12,7 @@
 # =============================================================================
 
 import os
+import re
 from datetime import datetime, timedelta as td
 
 print(f"BEGIN: {os.path.basename(__file__)}")
@@ -25,16 +26,19 @@ NET = os.environ['NET']
 RUN = os.environ['RUN']
 COMPONENT = os.environ['COMPONENT']
 VERIF_CASE = os.environ['VERIF_CASE']
-VERIF_TYPE = os.environ['VERIF_TYPE']
 OBSNAME = os.environ['OBSNAME']
 STEP = os.environ['STEP']
 MODELNAME = os.environ['MODELNAME']
 VDATE = os.environ['VDATE']
-FHR_END_FULL = os.environ['FHR_END_FULL']
-FHR_END_SHORT = os.environ['FHR_END_SHORT']
 fhr_end_max = max(int(FHR_END_FULL), int(FHR_END_SHORT))
 vdate_dt = datetime.strptime(VDATE, '%Y%m%d')
 start_date_dt = vdate_dt - td(hours=fhr_end_max)
+if VERIF_CASE == "precip":
+    FHR_END_FULL = os.environ['FHR_END_FULL']
+    FHR_END_SHORT = os.environ['FHR_END_SHORT']
+    VERIF_TYPE = os.environ['VERIF_TYPE']
+elif VERIF_CASE == "grid2obs":
+    VERIF_TYPE = os.environ['VERIF_TYPE']
 if STEP == 'stats':
     job_type = os.environ['job_type']
 
@@ -74,20 +78,20 @@ for job_scripts_dir in job_scripts_dirs:
 working_dir_list = []
 COMOUT_dir_list = []
 if STEP == 'stats':
-    if job_type == 'reformat':
-        working_output_base_dir = os.path.join(
-            DATA, VERIF_CASE, 'METplus_output', VERIF_TYPE
-        )
-    if job_type == 'generate':
-        working_output_base_dir = os.path.join(
-            DATA, VERIF_CASE, 'METplus_output', VERIF_TYPE
-        )
-    if job_type == 'gather':
-        working_output_base_dir = os.path.join(
-            DATA, VERIF_CASE, 'METplus_output'
-        )
-    working_dir_list.append(working_output_base_dir)
-    if VERIF_CASE == 'precip':
+    if VERIF_CASE == "precip"
+        if job_type == 'reformat':
+            working_output_base_dir = os.path.join(
+                DATA, VERIF_CASE, 'METplus_output', VERIF_TYPE
+            )
+        if job_type == 'generate':
+            working_output_base_dir = os.path.join(
+                DATA, VERIF_CASE, 'METplus_output', VERIF_TYPE
+            )
+        if job_type == 'gather':
+            working_output_base_dir = os.path.join(
+                DATA, VERIF_CASE, 'METplus_output'
+            )
+        working_dir_list.append(working_output_base_dir)
         if job_type == 'reformat':
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'pcp_combine', 'confs'
@@ -126,45 +130,12 @@ if STEP == 'stats':
                 working_output_base_dir, 'stat_analysis', 
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
-    date_dt = start_date_dt
-    while date_dt <= vdate_dt+td(days=1):
-        '''
-        COMOUT_dir_list.append(os.path.join(
-            COMOUT, 
-            RUN+'.'+date_dt.strftime('%Y%m%d'), MODELNAME, VERIF_CASE
-        ))
-        COMOUT_dir_list.append(os.path.join(
-            COMOUT, 
-            RUN+'.'+(date_dt-td(days=1)).strftime('%Y%m%d'), MODELNAME, VERIF_CASE
-        ))
-        working_dir_list.append(os.path.join(
-            working_output_base_dir, 
-            RUN+'.'+(date_dt-td(days=1)).strftime('%Y%m%d'), MODELNAME, VERIF_CASE
-        ))
-        working_dir_list.append(os.path.join(
-            working_output_base_dir, 
-            RUN+'.'+date_dt.strftime('%Y%m%d'), MODELNAME, VERIF_CASE
-        ))
-        working_dir_list.append(os.path.join(
-            working_output_base_dir, 
-            MODELNAME+'.'+date_dt.strftime('%Y%m%d')
-        ))
-        '''
-        COMOUT_dir_list.append(os.path.join(
-            COMOUT, 
-            MODELNAME+'.'+date_dt.strftime('%Y%m%d')
-        ))
-        if VERIF_CASE == 'precip':
-            '''
-            working_dir_list.append(os.path.join(
-                working_output_base_dir,
-                RUN+'.'+date_dt.strftime('%Y%m%d'), OBSNAME, VERIF_CASE
-            ))
+        date_dt = start_date_dt
+        while date_dt <= vdate_dt+td(days=1):
             COMOUT_dir_list.append(os.path.join(
-                COMOUT,
-                RUN+'.'+date_dt.strftime('%Y%m%d'), OBSNAME, VERIF_CASE
+                COMOUT, 
+                MODELNAME+'.'+date_dt.strftime('%Y%m%d')
             ))
-            '''
             if job_type == 'reformat':
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'pcp_combine', 
@@ -174,7 +145,75 @@ if STEP == 'stats':
                     working_output_base_dir, 'pcp_combine', 
                     MODELNAME+'.'+date_dt.strftime('init%Y%m%d')
                 ))
-        date_dt+=td(days=1)
+            date_dt+=td(days=1)
+    elif VERIF_CASE == "grid2obs"
+        if job_type == 'reformat':
+            working_output_base_dir = os.path.join(
+                DATA, VERIF_CASE, 'METplus_output', VERIF_TYPE
+            )
+        if job_type == 'generate':
+            working_output_base_dir = os.path.join(
+                DATA, VERIF_CASE, 'METplus_output', VERIF_TYPE
+            )
+        if job_type == 'gather':
+            working_output_base_dir = os.path.join(
+                DATA, VERIF_CASE, 'METplus_output'
+            )
+        working_dir_list.append(working_output_base_dir)
+        if job_type == 'reformat':
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'pb2nc', 'confs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'pb2nc', 'logs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'pb2nc', 'tmp'
+            ))
+        if job_type == 'generate':
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'point_stat', 'confs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'point_stat', 'logs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'point_stat', 'tmp'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'point_stat', 
+                MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
+            ))
+        if job_type == 'gather':
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'stat_analysis', 'confs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'stat_analysis', 'logs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'stat_analysis', 'tmp'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'stat_analysis', 
+                MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
+            ))
+        date_dt = start_date_dt
+        while date_dt <= vdate_dt+td(days=1):
+            COMOUT_dir_list.append(os.path.join(
+                COMOUT, 
+                MODELNAME+'.'+date_dt.strftime('%Y%m%d')
+            ))
+            if job_type == 'reformat':
+                working_dir_list.append(os.path.join(
+                    working_output_base_dir, 'pb2nc', 
+                    OBSNAME+'.'+date_dt.strftime('%Y%m%d')
+                ))
+                working_dir_list.append(os.path.join(
+                    working_output_base_dir, 'pb2nc', 
+                    MODELNAME+'.'+date_dt.strftime('init%Y%m%d')
+                ))
+            date_dt+=td(days=1)
 # Create working output and COMOUT directories
 for working_dir in working_dir_list:
     if not os.path.exists(working_dir):

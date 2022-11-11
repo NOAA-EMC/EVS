@@ -28,6 +28,7 @@ export FHR_END="60"
 # Model/Obs Settings
 export COMINfcst=${COMINnam}
 export COMINobs=${COMINobsproc}
+export OBSNAME=${VERIF_TYPE}
 
 # Additional Verification Settings
 export GRID="FCST"
