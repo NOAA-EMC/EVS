@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/bin/bash
 
 ########################################
 # Preliminary data setup step

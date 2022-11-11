@@ -1,3 +1,5 @@
+#!/bin/bash
+
 set -x
 
 mkdir -p $DATA/logs
@@ -16,13 +18,15 @@ export grid=G221
 export fcstmax=$g2os_sfc_fhr_max
 
 fhr=0
+shr=0
 fcstnum=0
 obfound=0
-while [ $fhr -le $fcstmax ]
+while [ $shr -le $fcstmax ]
 do
-     if [ $fhr -lt 10 ]
+     fhr=$shr
+     if [ $shr -lt 10 ]
      then
-       fhr=0$fhr
+       fhr=0$shr
      fi
      export fhr
 
@@ -35,7 +39,7 @@ do
        echo $fhr >> $DATA/fcstlist
        let "fcstnum=fcstnum+1"
      fi
-     let "fhr=fhr+1"
+     let "shr=shr+1"
 done
 export fcsthours=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcstlist`
 echo $fcsthours, $fcstnum
