@@ -36,6 +36,7 @@ module load met/${met_ver}
 module load metplus/${metplus_ver}
 module load prod_util/${produtil_ver}
 module load prod_envir/${prodenvir_ver}
+module load imagemagick/7.0.8-7
 
 module list
 

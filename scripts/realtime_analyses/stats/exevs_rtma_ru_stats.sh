@@ -17,7 +17,7 @@ datehr=${VDATE}${cyc}
 obday=`echo $datehr |cut -c1-8`
 obhr=`echo $datehr |cut -c9-10`
 
-if [ -e $COMINobs/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00 ]
+if [ -e $COMINobs/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}00z.prepbufr.tm00 ]
 then
  obfound=1
 fi

@@ -15,7 +15,7 @@ datehr=${VDATE}${cyc}
 obday=`echo $datehr |cut -c1-8`
 obhr=`echo $datehr |cut -c9-10`
 
-if [ -e $COMINobs/${MODELNAME}.${obday}/nam.t${obhr}z.prepbufr.tm00 ]
+if [ -e $COMINobs/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00 ]
 then
  obfound=1
 fi
@@ -23,7 +23,6 @@ fi
 echo $obfound
 
 for type in 2dvaranl 2dvarges
-do
 do
 if [ $type = "2dvaranl" ]
 then
@@ -48,11 +47,9 @@ then
 # check for CONUS rtma2p5 file
 
 	rtmafound=0
-#	export grid=
-#        export grid="$maskdir/Bukovsky_RTMA_CONUS.nc","$maskdir/Bukovsky_RTMA_CONUS_East.nc","$maskdir/Bukovsky_RTMA_CONUS_West.nc","$maskdir/Bukovsky_RTMA_CONUS_Central.nc","$maskdir/Bukovsky_RTMA_CONUS_Central.nc"
-#        export poly=$maskdir/Bukovsky_RTMA_CONUS.nc
        export masks=$maskdir/Bukovsky_RTMA_CONUS.nc,$maskdir/Bukovsky_RTMA_CONUS_East.nc,$maskdir/Bukovsky_RTMA_CONUS_West.nc,$maskdir/Bukovsky_RTMA_CONUS_Central.nc,$maskdir/Bukovsky_RTMA_CONUS_South.nc
        export wexptag="_wexp"
+       export restag=""
 
        if [ -e $COMINfcst/${modnam}.${VDATE}/${modnam}.t${cyc}z.${outtyp}_ndfd.grb2_wexp ]
        then
@@ -65,6 +62,7 @@ then
 	export grid=
         export masks=$maskdir/Alaska_RTMA.nc
 	export wexptag=""
+	export restag="_3p0"
 
 # check for CONUS rtma2p5 file
 
@@ -81,6 +79,7 @@ then
         export grid=
         export masks=$maskdir/Hawaii_RTMA.nc
 	export wexptag=""
+	export restag=""
 
 	rtmafound=0
 	if [ -e $COMINfcst/${modnam}.${VDATE}/${modnam}.t${cyc}z.${outtyp}_ndfd.grb2 ]
@@ -93,6 +92,7 @@ then
         export grid=
         export masks=$maskdir/Puerto_Rico_RTMA.nc
 	export wexptag=""
+	export restag=""
 
 	rtmafound=0
 	if [ -e $COMINfcst/${modnam}.${VDATE}/${modnam}.t${cyc}z.${outtyp}_ndfd.grb2 ]
@@ -105,6 +105,7 @@ then
         export grid=
         export masks=$maskdir/Guam_RTMA.nc
 	export wexptag=""
+	export restag=""
 	rtmafound=0
 
 	if [ -e $COMINobs/urma.${obday}/urma.t${obcyc}z.prepbufr.tm00 ]

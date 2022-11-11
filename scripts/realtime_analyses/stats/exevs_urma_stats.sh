@@ -46,10 +46,9 @@ if [ $modnam = "urma2p5" ]
 then
 	urmafound=0
 	export grid=
-#	export poly=/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_CONUS.nc
-#        export poly=$maskdir/Bukovsky_RTMA_CONUS.nc
         export masks=$maskdir/Bukovsky_RTMA_CONUS.nc,$maskdir/Bukovsky_RTMA_CONUS_East.nc,$maskdir/Bukovsky_RTMA_CONUS_West.nc,$maskdir/Bukovsky_RTMA_CONUS_Central.nc,$maskdir/Bukovsky_RTMA_CONUS_South.nc
 	export wexptag="_wexp"
+	export restag=""
 
 	if [ -e $COMINfcst/${modnam}.${VDATE}/${modnam}.t${cyc}z.${outtyp}_ndfd.grb2_wexp ]
         then
@@ -62,6 +61,7 @@ then
 	export grid=
         export masks=$maskdir/Alaska_RTMA.nc
 	export wexptag=""
+	export restag="_3p0"
 
 # check for CONUS rtma2p5 file
 
@@ -78,6 +78,7 @@ then
         export grid=
         export masks=$maskdir/Hawaii_RTMA.nc
 	export wexptag=""
+	export restag=""
 
 	# check for CONUS rtma2p5 file
 
@@ -94,6 +95,7 @@ then
         export grid=
         export masks=$maskdir/Puerto_Rico_RTMA.nc
         export wexptag=""
+	export restag=""
 
 	urmafound=0
 

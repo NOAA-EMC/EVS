@@ -96,55 +96,53 @@ do
 
 for anl in rtma urma rtma_ru
 do
-for varb in TMP DPT
+for var in TMP2m DPT2m
 do
-	export var=${varb}2m
+	export var
 	export region
 	export lev=Z2
 	export lev_obs=Z2
 	export linetype=SL1L2
 	smlev=`echo $lev | tr A-Z a-z`
-	smvar=`echo $varb | tr A-Z a-z`
+	smvar=`echo $var | tr A-Z a-z`
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
-        mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png
+#        mv ${DATA}/valid_hour* ${PLOTDIR}/BCRMSE_${region}_${var}_${lev}_G221_VALID${PDYm31}to${VDATE}_VALHR.png
+#        mv ${DATA}/valid_hour* ${PLOTDIR}/${COMPONENT}.bcrmse_me.${smvar}_${smlev}.buk_${smregion}.last31days.vhrmean_f000.png
+         mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${COMPONENT}_${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean_f000.buk_${smregion}.png
 done
 
-for varb in WIND
+for var in WIND10m
 do
-	export var=${varb}10m
+	export var
 	export lev=Z10
 	export lev_obs=Z10
         export linetype=SL1L2
 	smlev=`echo $lev | tr A-Z a-z`
-        smvar=`echo $varb | tr A-Z a-z`
+        smvar=`echo $var | tr A-Z a-z`
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
-        mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png
+#        mv ${DATA}/valid_hour* ${PLOTDIR}/BCRMSE_${region}_${var}_${lev}_G221_VALID${PDYm31}to${VDATE}_VALHR.png
+        mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${COMPONENT}_${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean_f000.buk_${smregion}.png
 done
 
-for varb in GUST
+for var in GUSTsfc
 do
-	export var=${varb}sfc
+	export var
 	export lev=Z10
 	export lev_obs=Z0
 	export linetype=SL1L2
 	smlev=`echo $lev | tr A-Z a-z`
-        smvar=`echo $varb | tr A-Z a-z`
+        smvar=`echo $var | tr A-Z a-z`
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
-        mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png
+#        mv ${DATA}/valid_hour* ${PLOTDIR}/BCRMSE_${region}_${var}_${lev}_G221_VALID${PDYm31}to${VDATE}_VALHR.png
+        mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${COMPONENT}_${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean_f000.buk_${smregion}.png
 done
 
-for varb in VIS CEILING
+for var in VISsfc HGTcldceil
 do
-	if [ $varb = "VIS" ]
-	then
-	 export var=${varb}sfc
-        elif [ $varb = "CEILING" ]
-	then
-	 export var=HGTcldceil
-        fi	 
+	export var
 	export lev=L0
 	export lev_obs=L0
 	export linetype=CTC
@@ -156,10 +154,10 @@ do
           export thresh="<152.4, <304.8, <914.4, <1524, <3048"
 	fi
 	smlev=`echo $lev | tr A-Z a-z`
-	smvar=`echo $varb | tr A-Z a-z`
+	smvar=`echo $var | tr A-Z a-z`
 	sh $USHevs/${COMPONENT}/py_plotting.config_perf
 
-	mv ${DATA}/perf* ${PLOTDIR}/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png
+	mv ${DATA}/perf* ${PLOTDIR}/evs.${COMPONENT}_${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag_f000.buk_${smregion}.png
 
 	for stat in csi fbias
 	do
@@ -167,10 +165,9 @@ do
 	export stat
 
 	sh $USHevs/${COMPONENT}/py_plotting.config_thresh
-	mv ${DATA}/thresh* ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png
+	mv ${DATA}/thresh* ${PLOTDIR}/evs.${COMPONENT}_${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean_f000.buk_${smregion}.png
         
         done
-done
 
 	export var=TCDC
 	export lev=L0
@@ -185,10 +182,11 @@ done
 	export stat
 
 	sh $USHevs/${COMPONENT}/py_plotting.config_thresh
-	mv ${DATA}/thresh* ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png
+	mv ${DATA}/thresh* ${PLOTDIR}/evs.${COMPONENT}_${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean_f000.buk_${smregion}.png
         done
 
 	
+done
 done
 done
 
