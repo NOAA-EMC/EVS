@@ -632,11 +632,16 @@ class PlotSpecs:
             plot_type_savefig_name = 'perfdia'
         elif self.plot_type == 'stat_by_level':
             plot_type_savefig_name = 'vertprof'
+        elif self.plot_type == 'threshold_average':
+            plot_type_savefig_name = 'threshmean'
+        elif self.plot_type == 'valid_hour_average':
+            plot_type_savefig_name = 'vhrmean'
         else:
             plot_type_savefig_name = self.plot_type.replace('_', '')
         if self.plot_type in ['time_series', 'lead_average',
                               'stat_by_level', 'lead_by_level',
-                              'lead_by_date']:
+                              'lead_by_date', 'performance_diagram',
+                              'threshold_average']:
             plot_type_savefig_name = plot_type_savefig_name+'_valid'
             valid_hr = int(date_info_dict['valid_hr_start'])
             while valid_hr <= int(date_info_dict['valid_hr_end']):
@@ -645,7 +650,8 @@ class PlotSpecs:
                 valid_hr+=int(date_info_dict['valid_hr_inc'])
             plot_type_savefig_name = plot_type_savefig_name+'Z'
         if self.plot_type in ['time_series', 'stat_by_level',
-                              'performance_diagram']:
+                              'performance_diagram',
+                              'threshold_average']:
             plot_type_savefig_name = (
                  plot_type_savefig_name+'_'
                  +'f'+date_info_dict['forecast_hour'].zfill(3)
@@ -654,7 +660,11 @@ class PlotSpecs:
         grid_savefig_name = plot_info_dict['grid']
         # Region
         region_savefig_dict = {
+            'Alaska': 'alaska',
             'Appalachia': 'buk_apl',
+            'ANTARCTIC': 'antarctic',
+            'ARCTIC': 'arctic',
+            'ATL_MDR': 'al_mdr',
             'CONUS': 'buk_conus',
             'CONUS_East': 'buk_conus_e',
             'CONUS_Central': 'buk_conus_c',
@@ -662,6 +672,7 @@ class PlotSpecs:
             'CONUS_West': 'buk_conus_w',
             'CPlains': 'buk_cpl',
             'DeepSouth': 'buk_ds',
+            'EPAC_MDR': 'ep_mdr',
             'GLOBAL': 'glb',
             'GreatBasin': 'buk_grb',
             'GreatLakes': 'buk_grlk',
