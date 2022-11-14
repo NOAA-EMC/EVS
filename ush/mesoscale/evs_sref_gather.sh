@@ -43,7 +43,7 @@ MODEL=`echo $modnam | tr '[a-z]' '[A-Z]'`
       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/StatAnlysis_fcstSREF_obsCCPA_GatherByDay.conf " >> run_gather_${verify}.sh
     fi
 
-   echo "cp ${WORK}/gather/${vday}/${modnam}_${verify}_${vday}.stat  $COMOUTfinal/${model}_${verify}_v${vday}.stat">>run_gather_${verify}.sh
+   echo "cp ${WORK}/gather/${vday}/${modnam}_${verify}_${vday}.stat  $COMOUTfinal/evs.stats.${model}_${verify}_v${vday}.stat">>run_gather_${verify}.sh
 
   chmod +x run_gather_${verify}.sh
 
