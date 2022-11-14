@@ -30,13 +30,15 @@ export gather=${gather:-'yes'}
 
 export vday=$1
 export ens=$2 
+export verif_case=$3
 
 #############################################################
 # Step 0: Run copygb to convert URMA data to 4km WRF grid
 #############################################################
 
-if [ $ens = all ] || [ $ens = gefs ] || [ $ens = cmce ] || [ $ens = naefs ] || [ $ens = ecme ] ; then 
- $USHevs/global_ens/evs_global_ens_atmos_grid2obs.sh $ens  
+
+if [ $ens = all ] || [ $ens = gefs ] || [ $ens = cmce ] || [ $ens = naefs ] || [ $ens = ecme ] ; then 	
+ $USHevs/global_ens/evs_global_ens_atmos_${verif_case}.sh $ens  
 fi
 
 msg="JOB $job HAS COMPLETED NORMALLY"

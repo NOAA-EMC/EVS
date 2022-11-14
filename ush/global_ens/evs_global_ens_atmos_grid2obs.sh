@@ -17,6 +17,15 @@ model_list=$1
 
 models=$model_list
 
+if [ $model_list = naefs ] ; then
+  $USHevs/global_ens/evs_gens_atmos_check_input_files.sh gefs
+  $USHevs/global_ens/evs_gens_atmos_check_input_files.sh cmce
+else
+  $USHevs/global_ens/evs_gens_atmos_check_input_files.sh model_list
+fi
+
+$USHevs/global_ens/evs_gens_atmos_check_input_files.sh prepbufr
+$USHevs/global_ens/evs_gens_atmos_check_input_files.sh prepbufr_profile
 
 
 >run_all_gens_g2o_poe.sh
@@ -61,7 +70,11 @@ for modnam in $models ; do
   if [ $field = profile ] ; then
      fhrs='fhr1 fhr2 fhr3 fhr4'
   elif [ $field = cloud ] ; then
-    fhrs='fhr30 fhr31'
+    if [  $modnam = gefs ] ; then	  
+      fhrs='fhr30 fhr31 fhr32'
+    else
+      fhrs='fhr30 fhr31'
+    fi
   elif [ $field = sfc ] ; then
     if [ $modnam = gefs ] ; then
       fhrs='fhr21 fhr22 fhr23 fhr24'
@@ -107,10 +120,11 @@ for modnam in $models ; do
 
        #For Cloud 
        elif [ $fhr = fhr30 ] ; then
-           echo  "export lead='6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66, 72,78, 84,90, 96,102, 108,114, 120,126, 132,138, 144,150, 156,162, 168,174, 180,186, 192'  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+           echo  "export lead='  6,  12,  18,  24,  30,  36,  42,  48,  54,  60,  66,  72,  78,  84,  90,  96, 102, 108, 114, 120, 126 '  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
        elif [ $fhr = fhr31 ] ; then
-           echo  "export lead='198,204,210, 216,222, 228,234, 240,246, 252,258, 264,270, 276,282, 288,294, 300,306, 312,318, 324,330, 336,342, 348,354, 360,366, 372,378, 384'  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
-
+           echo  "export lead='132, 138, 144, 150, 156, 162, 168, 174, 180, 186, 192, 198, 204, 210, 216, 222, 228, 234, 240, 246, 252'  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+       elif [ $fhr = fhr32 ] ; then
+	   echo  "export lead='258, 264, 270, 276, 282, 288, 294, 300, 306, 312, 318, 324, 330, 336, 342, 348, 354, 360, 366, 372, 378, 384' " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
        #For sfc
        elif [ $fhr = fhr21 ] ; then
            echo  "export lead='6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66, 72,78, 84,90, 96'  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
@@ -131,6 +145,8 @@ for modnam in $models ; do
             echo  "export lead='12, 24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180' "  >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
        elif [ $fhr = fhr31 ] ; then
             echo  "export lead='192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360' "  >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+        
+
 
        #For profile
        elif [ $fhr = fhr1 ] ; then
@@ -167,23 +183,26 @@ for modnam in $models ; do
 
 
     echo  "export modelhead=$modnam" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
-    echo  "export modelgrid=grid3.f" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
 
     if [ $modnam = ecme ] ; then
      echo  "export modeltail='.grib1'" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+     echo  "export modelgrid=grid4.f" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
     else
      echo  "export modeltail='.grib2'" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+     echo  "export modelgrid=grid3.f" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
     fi 
 
     echo  "export extradir='atmos/'" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
 
-    echo  "export climpath=$CLIMO/era_interim" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
-    #echo  "export climpath=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS/evs.v1.0/fix/climo" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+    echo  "export climpath=$CLIMO/era5" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
     echo  "export climgrid=grid3" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
     echo  "export climtail='.grib1'" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
     echo  "export members=$mbrs" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
 
     if [ $field = cloud ] ; then 
+
+
+      echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcst${MODNAM}_obsPREPBUFR_CLOUD.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
 
       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcst${MODNAM}_obsPREPBUFR_CLOUD.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcst${MODNAM}_obsPREPBUFR_CLOUD_mean.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
@@ -191,8 +210,10 @@ for modnam in $models ; do
 
     elif [ $field = sfc ] ; then
 
-      echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcst${MODNAM}_obsPREPBUFR_SFC_climoERAI.conf  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
-      echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcst${MODNAM}_obsPREPBUFR_SFC_mean_climoERAI.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+      echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcst${MODNAM}_obsPREPBUFR_SFC_climoERA5.conf  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+
+      echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcst${MODNAM}_obsPREPBUFR_SFC_climoERA5.conf  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+      echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcst${MODNAM}_obsPREPBUFR_SFC_mean_climoERA5.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
 
     elif [ $field = profile ] ; then
 
@@ -221,7 +242,7 @@ if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
 
    if [ ${models} = gefs ] ; then
-    mpiexec -n 40 -ppn 40 --cpu-bind verbose,depth cfp run_all_gens_g2o_poe.sh
+    mpiexec -n 44 -ppn 44 --cpu-bind verbose,depth cfp run_all_gens_g2o_poe.sh
    else
     mpiexec -n 20 -ppn 20 --cpu-bind verbose,depth cfp run_all_gens_g2o_poe.sh
    fi

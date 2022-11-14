@@ -4,6 +4,8 @@ set -x
 >run_get_all_gens_atmos_poe.sh
 >run_get_all_gens_apcp24h_poe.sh
 >run_get_all_gens_snow24h_poe.sh
+>run_get_all_gens_icec_poe.sh
+>run_get_all_gens_sst24h_poe.sh
 
 for model in gefs cmce ecme ; do 
 
@@ -125,6 +127,20 @@ for model in gefs cmce ecme ; do
      fi
 
 
+     if [ $get_gefs_icec24h = yes ] ; then
+           >get_data_${model}_icec.sh
+           echo "$USHevs/global_ens/evs_get_gens_atmos_data.sh  gefs_icec24h" >> get_data_${model}_icec.sh
+           #echo "$USHevs/global_ens/evs_get_gens_atmos_data.sh  gefs_icec7day" >> get_data_${model}_icec.sh
+           chmod +x get_data_${model}_icec.sh
+           echo "get_data_${model}_icec.sh" >> run_get_all_gens_icec_poe.sh
+     fi
+
+     if [ $get_gefs_sst24h = yes ] ; then
+	   >get_data_${model}_sst24h.sh
+           echo "$USHevs/global_ens/evs_get_gens_atmos_data.sh  gefs_sst24h" >> get_data_${model}_sst24h.sh
+           chmod +x get_data_${model}_sst24h.sh
+	   echo "get_data_${model}_sst24h.sh" >> run_get_all_gens_sst24h_poe.sh
+     fi 
 
    elif [ $model = cmce ] ; then  
 
@@ -259,6 +275,8 @@ if [ $run_mpi = yes ] ; then
    mpiexec  -n 174 -ppn 174 --cpu-bind core --depth=2 cfp  run_get_all_gens_atmos_poe.sh
  fi
 
+ #Only after the above jobs are finished, following jobs can be run!
+
  if [ -s run_get_all_gens_apcp24h_poe.sh ] ; then
    chmod +x run_get_all_gens_apcp24h_poe.sh
    run_get_all_gens_apcp24h_poe.sh
@@ -269,6 +287,16 @@ if [ $run_mpi = yes ] ; then
     run_get_all_gens_snow24h_poe.sh
   fi
 
+  if [ -s run_get_all_gens_icec_poe.sh ] ; then
+     chmod +x run_get_all_gens_icec_poe.sh
+     run_get_all_gens_icec_poe.sh
+  fi     
+
+
+    if [ -s run_get_all_gens_sst24h_poe.sh ] ; then
+      chmod +x run_get_all_gens_sst24h_poe.sh
+      run_get_all_gens_sst24h_poe.sh
+    fi
 
 else
 
@@ -284,6 +312,16 @@ else
  if [ -s run_get_all_gens_snow24h_poe.sh ] ; then
     chmod +x run_get_all_gens_snow24h_poe.sh
     run_get_all_gens_snow24h_poe.sh
+ fi
+
+ if [ -s run_get_all_gens_icec_poe.sh ] ; then
+    chmod +x run_get_all_gens_icec_poe.sh
+    run_get_all_gens_icec_poe.sh
+ fi
+
+ if [ -s run_get_all_gens_sst24h_poe.sh ] ; then
+    chmod +x run_get_all_gens_sst24h_poe.sh
+    run_get_all_gens_sst24h_poe.sh
  fi
 
 fi 

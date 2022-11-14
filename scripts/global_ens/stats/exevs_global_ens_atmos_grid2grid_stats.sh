@@ -30,16 +30,24 @@ export gather=${gather:-'yes'}
 
 export vday=$1
 ens=$2 
-verify_type=$3
+verif_case=$3
 
 #############################################################
 # Step 0: Run copygb to convert URMA data to 4km WRF grid
 #############################################################
 
 if [ $ens = all ] || [ $ens = gefs ] || [ $ens = cmce ] || [ $ens = naefs ] || [ $ens = ecme ] ; then
- if [ $verify_type = all ] || [ $verify_type = upper ] || [ $verify_type = precip ] ; then 
-   $USHevs/global_ens/evs_global_ens_atmos_grid2grid.sh $ens $verify_type 
+ if [ $verif_case = all ] || [ $verif_case = upper ] || [ $verif_case = precip ] ; then 
+   $USHevs/global_ens/evs_global_ens_atmos_grid2grid.sh $ens $verif_case 
  fi
+fi
+
+if [ $verif_case = snowfall ] || [ $verif_case = sea_ice ] ; then
+  $USHevs/global_ens/evs_global_ens_atmos_${verif_case}.sh $ens ${verif_case}
+fi
+
+if [ $verif_case = sst ] ; then
+  $USHevs/global_ens/evs_global_ens_atmos_${verif_case}.sh $ens sst24h
 fi
 
 

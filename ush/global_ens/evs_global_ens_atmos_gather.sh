@@ -41,16 +41,28 @@ for modnam in $models ; do
 
     echo  "export model=$modnam" >> run_gather_${modnam}_${verify}.sh
     echo  "export MODEL=${MODEL}" >> run_gather_${modnam}_${verify}.sh
+
     echo  "export stat_file_dir=${COMOUTsmall}" >> run_gather_${modnam}_${verify}.sh
+
     echo  "export gather_output_dir=${WORK}/gather " >> run_gather_${modnam}_${verify}.sh
 
     if [ $verify = grid2obs ] ; then   
       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/StatAnlysis_fcstGENS_obsPREPBUFR_GatherByDay.conf " >> run_gather_${modnam}_${verify}.sh
     elif [ $verify = grid2grid ] ; then
       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/StatAnlysis_fcstGENS_obsAnalysis_GatherByDay.conf " >> run_gather_${modnam}_${verify}.sh
+    elif [ $verify = precip ] ; then
+     echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/StatAnlysis_fcstGENS_obsCCPA_GatherByDay.conf " >> run_gather_${modnam}_${verify}.sh
+    elif [ $verify = snowfall ] ; then
+      echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/StatAnlysis_fcstGENS_obsNOHRSC_GatherByDay.conf " >> run_gather_${modnam}_${verify}.sh
+    elif [ $verify = sea_ice ] ; then
+      echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/StatAnlysis_fcstGENS_obsOSI_SAF_GatherByDay.conf " >> run_gather_${modnam}_${verify}.sh
+    elif [ $verify = sst24h ] ; then
+      echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/StatAnlysis_fcstGENS_obsGHRSST_GatherByDay.conf " >> run_gather_${modnam}_${verify}.sh
+    elif [ $verify = cnv ] ; then
+      echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/StatAnlysis_fcstGENS_obsPREPBUFR_CNV_GatherByDay.conf " >> run_gather_${modnam}_${verify}.sh
     fi
 
-    echo "cp $output_base/${vday}/${modnam}_${verify}_${vday}.stat $COMOUTfinal/${modnam}_atmos_${verify}_v${vday}.stat" >> run_gather_${modnam}_${verify}.sh
+    echo "cp $output_base/${vday}/${modnam}_${verify}_${vday}.stat $COMOUTfinal/evs.stats.${modnam}_${RUN}_${verify}_v${vday}.stat" >> run_gather_${modnam}_${verify}.sh
 
   chmod +x run_gather_${modnam}_${verify}.sh
 

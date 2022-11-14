@@ -1,5 +1,4 @@
 #!/bin/ksh
-
 set -x
 
 modnam=$1
@@ -7,10 +6,10 @@ gens_cyc=$2
 fhr_beg=$3
 fhr_end=$4
 
-export vday=${vday:-$PDYm2}    #for ensemble, use past-2 day as validation day
+
+export vday=${INITDATE:-$PDYm2}    #for ensemble, use past-2 day as validation day
 export vdate=${vdate:-$vday$cyc}
 
-export copygb2=$COPYGB2
 export cnvgrib=$CNVGRIB
 export wgrib2=$WGRIB2
 export ndate=$NDATE
@@ -24,10 +23,11 @@ if [ $modnam = gfsanl ]; then
   echo $modnam is print here ...............
 
   for cyc in 00 06 12 18 ; do
-
     cp $COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.f000 $COMOUT_gefs/gfsanl.t${cyc}z.grid3.f000.grib2
-
   done
+
+    #For WMO 1.5 deg verification 
+    $wgrib2 $COMOUT_gefs/gfsanl.t00z.grid3.f000.grib2 -set_grib_type same -new_grid_winds earth -new_grid latlon 0:240:1.5 -90:121:1.5 $COMOUT_gefs/gfsanl.t00z.deg1.5.f000.grib2 
 fi
 
 
@@ -51,7 +51,13 @@ if [ $modnam = cmcanl ] ; then
         cmcanl=$origin/cmc_gec00.t${cyc}z.pgrb2a.0p50.anl
       fi
 
+     for level in 10 50 100 200 250 300 400 500 700 850 925 1000 ; do
+      $WGRIB2  $cmcanl|grep "UGRD:$level mb"|grep "anl:ENS=low-res"|$WGRIB2 -i $cmcanl -grib $WORK/output.${cyc}
+      cat $WORK/output.${cyc} >> $WORK/cmce.upper.${cyc}.${mb}.${h3}
 
+      $WGRIB2  $cmcanl|grep "VGRD:$level mb"|grep "anl:ENS=low-res"|$WGRIB2 -i $cmcanl -grib $WORK/output.${cyc}
+      cat $WORK/output.${cyc} >> $WORK/cmce.upper.${cyc}.${mb}.${h3}
+     done	     
 
       $WGRIB2  $cmcanl|grep "HGT:"|grep "anl:ENS=low-res"|$WGRIB2 -i $cmcanl -grib $WORK/output.${cyc}
       cat $WORK/output.${cyc} >> $WORK/cmce.upper.${cyc}.${mb}.${h3}
@@ -60,10 +66,10 @@ if [ $modnam = cmcanl ] ; then
       $WGRIB2  $cmcanl|grep "TMP:"|grep "anl:ENS=low-res"|$WGRIB2 -i $cmcanl -grib $WORK/output.${cyc}
       cat $WORK/output.${cyc} >> $WORK/cmce.upper.${cyc}.${mb}.${h3}
 
-      $WGRIB2  $cmcanl|grep "UGRD:"|grep "anl:ENS=low-res"|$WGRIB2 -i $cmcanl -grib $WORK/output.${cyc}
+      $WGRIB2  $cmcanl|grep "UGRD:10 m "|grep "anl:ENS=low-res"|$WGRIB2 -i $cmcanl -grib $WORK/output.${cyc}
       cat $WORK/output.${cyc} >> $WORK/cmce.upper.${cyc}.${mb}.${h3}
 
-      $WGRIB2  $cmcanl|grep "VGRD:"|grep "anl:ENS=low-res"|$WGRIB2 -i $cmcanl -grib $WORK/output.${cyc}
+      $WGRIB2  $cmcanl|grep "VGRD:10 m "|grep "anl:ENS=low-res"|$WGRIB2 -i $cmcanl -grib $WORK/output.${cyc}
       cat $WORK/output.${cyc} >> $WORK/cmce.upper.${cyc}.${mb}.${h3}
 
       $WGRIB2 $cmcanl|grep "PRMSL:"|grep "anl:ENS=low-res"|$WGRIB2 -i $cmcanl -grib $WORK/output.${cyc}
@@ -74,14 +80,16 @@ if [ $modnam = cmcanl ] ; then
 
  
       #cat $WORK/cmce.sfc >> $WORK/cmce.upper.adjusted
-      #use copygb2 to reverse north-south direction, and convert ftom 0.5x0.5 degree to 1x1 degree
-      #$COPYGB2 -g"0 6 0 0 0 0 0 0 360 181 0 -1 90000000 0 48 -90000000 359000000 1000000 1000000 0" -x $WORK/cmce.upper.adjusted  $outdata/cmcanl.t${cyc}z.grid3.f00.grib2
+      #use wgrib2 to reverse north-south direction, and convert ftom 0.5x0.5 degree to 1x1 degree
       cat $WORK/cmce.sfc.${cyc}.${mb}.${h3} >> $WORK/cmce.upper.${cyc}.${mb}.${h3}
-      $COPYGB2 -g"0 6 0 0 0 0 0 0 360 181 0 -1 90000000 0 48 -90000000 359000000 1000000 1000000 0" -x $WORK/cmce.upper.${cyc}.${mb}.${h3} $outdata/cmcanl.t${cyc}z.grid3.f000.grib2
+
+       $wgrib2 $WORK/cmce.upper.${cyc}.${mb}.${h3} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $outdata/cmcanl.t${cyc}z.grid3.f000.grib2
 
       rm   $WORK/cmce.upper.${cyc}.${mb}.${h3} $WORK/cmce.sfc.${cyc}.${mb}.${h3}  $WORK/output.${cyc}
    done
- 
+
+    $wgrib2 $COMOUT_cmce/cmcanl.t00z.grid3.f000.grib2 -set_grib_type same -new_grid_winds earth -new_grid latlon 0:240:1.5 -90:121:1.5 $COMOUT_cmce/cmcanl.t00z.deg1.5.f000.grib2
+
 fi 
 
 
@@ -122,16 +130,25 @@ if [ $modnam = gefs ] ; then
 
              >$WORK/gefs.upper.${cyc}.${mb}.${hhh}
              >$WORK/gefs.sfc.${cyc}.${mb}.${hhh}
+
+	     for level in 10 50 100 200 250 300 400 500 700 850 925 1000 ; do
+                  $WGRIB2  $gefs|grep "UGRD:$level mb"|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${cyc}.${mb}.${hhh}
+	          cat $WORK/grabgefs.${cyc}.${mb}.${hhh} >> $WORK/gefs.upper.${cyc}.${mb}.${hhh}
+
+	          $WGRIB2  $gefs|grep "VGRD:$level mb"|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${cyc}.${mb}.${hhh}
+	          cat $WORK/grabgefs.${cyc}.${mb}.${hhh} >> $WORK/gefs.upper.${cyc}.${mb}.${hhh}
+             done	
+
              $WGRIB2  $gefs|grep "HGT:"|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${cyc}.${mb}.${hhh}
              cat $WORK/grabgefs.${cyc}.${mb}.${hhh} >> $WORK/gefs.upper.${cyc}.${mb}.${hhh}
 
              $WGRIB2  $gefs|grep "TMP:"|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${cyc}.${mb}.${hhh}
              cat $WORK/grabgefs.${cyc}.${mb}.${hhh} >> $WORK/gefs.upper.${cyc}.${mb}.${hhh}
 
-             $WGRIB2  $gefs|grep "UGRD:"|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${cyc}.${mb}.${hhh}
+             $WGRIB2  $gefs|grep "UGRD:10 m "|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${cyc}.${mb}.${hhh}
              cat $WORK/grabgefs.${cyc}.${mb}.${hhh} >> $WORK/gefs.upper.${cyc}.${mb}.${hhh}
 
-             $WGRIB2  $gefs|grep "VGRD:"|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${cyc}.${mb}.${hhh}
+             $WGRIB2  $gefs|grep "VGRD:10 m "|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${cyc}.${mb}.${hhh}
              cat $WORK/grabgefs.${cyc}.${mb}.${hhh} >> $WORK/gefs.upper.${cyc}.${mb}.${hhh}
 
              $WGRIB2  $gefs|grep "RH:"|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${cyc}.${mb}.${hhh}
@@ -144,6 +161,9 @@ if [ $modnam = gefs ] ; then
              cat $WORK/grabgefs.${cyc}.${mb}.${hhh} >> $WORK/gefs.sfc.${cyc}.${mb}.${hhh}
 
 	     $WGRIB2 $gefs|grep "WEASD:"|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${cyc}.${mb}.${hhh}
+	     cat $WORK/grabgefs.${cyc}.${mb}.${hhh} >> $WORK/gefs.sfc.${cyc}.${mb}.${hhh}
+
+	     $WGRIB2 $gefs|grep "SNOD:"|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${cyc}.${mb}.${hhh}
 	     cat $WORK/grabgefs.${cyc}.${mb}.${hhh} >> $WORK/gefs.sfc.${cyc}.${mb}.${hhh}
 
              $WGRIB2 $gefs|grep "PRMSL:"|$WGRIB2 -i $gefs -grib $WORK/grabgefs.${cyc}.${mb}.${hhh}
@@ -164,11 +184,16 @@ if [ $modnam = gefs ] ; then
              $WGRIB2 $gefs_cvc|grep "HGT:cloud ceiling"|$WGRIB2 -i $gefs_cvc -grib $WORK/grabgefs.${cyc}.${mb}.${hhh}
              cat $WORK/grabgefs.${cyc}.${mb}.${hhh} >> $WORK/gefs.upper.${cyc}.${mb}.${hhh}
 
+	     $WGRIB2 $gefs_cvc|grep "ICEC:surface"|$WGRIB2 -i $gefs_cvc -grib $WORK/grabgefs.${cyc}.${mb}.${hhh}
+	     cat $WORK/grabgefs.${cyc}.${mb}.${hhh} >> $WORK/gefs.upper.${cyc}.${mb}.${hhh}
+
+	     $WGRIB2 $gefs_cvc|grep "TMP:surface"|$WGRIB2 -i $gefs_cvc -grib $WORK/grabgefs.${cyc}.${mb}.${hhh}
+	     cat $WORK/grabgefs.${cyc}.${mb}.${hhh} >> $WORK/gefs.upper.${cyc}.${mb}.${hhh}
+
              #$WGRIB2 $gefs_cvc|grep "SPFH:"|$WGRIB2 -i $gefs_cvc -grib $WORK/grabgefs.${cyc}.${mb}.${hhh}
              #cat $WORK/grabgefs.${cyc}.${mb}.${hhh} >> $WORK/gefs.upper.${cyc}.${mb}.${hhh} 
 
-            $COPYGB2 -g"0 6 0 0 0 0 0 0 360 181 0 -1 90000000 0 48 -90000000 359000000 1000000 1000000 0" -x $WORK/gefs.upper.${cyc}.${mb}.${hhh} $outdata/gefs.ens${mb}.t${cyc}z.grid3.f${hhh}.grib2
-            #mv $WORK/gefs.upper.${cyc}.${mb}.${hhh} $outdata/gefs.ens${mb}.t${cyc}z.grid4.f${hhh}.grib2
+            $wgrib2 $WORK/gefs.upper.${cyc}.${mb}.${hhh} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $outdata/gefs.ens${mb}.t${cyc}z.grid3.f${hhh}.grib2
 
             rm -f  $WORK/gefs.upper.${cyc}.${mb}.${hhh} $WORK/gefs.sfc.${cyc}.${mb}.${hhh}         
 
@@ -222,16 +247,24 @@ if [ $modnam = cmce ] ; then
              >$WORK/cmce.upper.${cyc}.${mb}.${h3}
              >$WORK/cmce.sfc.${cyc}.${mb}.${h3}
              
+	     for level in 10 50 100 200 250 300 400 500 700 850 925 1000 ; do
+		$WGRIB2  $cmce|grep "UGRD:$level mb"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${cyc}.${mb}.${h3}
+		cat $WORK/grabcmce.${cyc}.${mb}.${h3} >> $WORK/cmce.upper.${cyc}.${mb}.${h3}
+
+                $WGRIB2  $cmce|grep "VGRD:$level mb"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${cyc}.${mb}.${h3}
+              cat $WORK/grabcmce.${cyc}.${mb}.${h3} >> $WORK/cmce.upper.${cyc}.${mb}.${h3}
+	     done
+
              $WGRIB2  $cmce|grep "HGT:"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${cyc}.${mb}.${h3}
              cat $WORK/grabcmce.${cyc}.${mb}.${h3} >> $WORK/cmce.upper.${cyc}.${mb}.${h3}
 
              $WGRIB2  $cmce|grep "TMP:"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${cyc}.${mb}.${h3}
              cat $WORK/grabcmce.${cyc}.${mb}.${h3} >> $WORK/cmce.upper.${cyc}.${mb}.${h3}
 
-             $WGRIB2  $cmce|grep "UGRD:"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${cyc}.${mb}.${h3}
+             $WGRIB2  $cmce|grep "UGRD:10 m "|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${cyc}.${mb}.${h3}
              cat $WORK/grabcmce.${cyc}.${mb}.${h3} >> $WORK/cmce.upper.${cyc}.${mb}.${h3}
 
-             $WGRIB2  $cmce|grep "VGRD:"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${cyc}.${mb}.${h3}
+             $WGRIB2  $cmce|grep "VGRD:10 m "|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${cyc}.${mb}.${h3}
              cat $WORK/grabcmce.${cyc}.${mb}.${h3} >> $WORK/cmce.upper.${cyc}.${mb}.${h3}
 
              $WGRIB2  $cmce|grep "RH:"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${cyc}.${mb}.${h3}
@@ -244,6 +277,9 @@ if [ $modnam = cmce ] ; then
              cat $WORK/grabcmce.${cyc}.${mb}.${h3} >> $WORK/cmce.sfc.${cyc}.${mb}.${h3}
 
 	     $WGRIB2 $cmce|grep "WEASD:"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${cyc}.${mb}.${h3}
+	     cat $WORK/grabcmce.${cyc}.${mb}.${h3} >> $WORK/cmce.sfc.${cyc}.${mb}.${h3}
+
+	     $WGRIB2 $cmce|grep "SNOD:"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${cyc}.${mb}.${h3}
 	     cat $WORK/grabcmce.${cyc}.${mb}.${h3} >> $WORK/cmce.sfc.${cyc}.${mb}.${h3}
 
              $WGRIB2 $cmce|grep "PRMSL:"|$WGRIB2 -i $cmce -grib $WORK/grabcmce.${cyc}.${mb}.${h3}
@@ -260,12 +296,12 @@ if [ $modnam = cmce ] ; then
              #In MET, not necessary to adjust upper level fields for CMCE members since
              #MET  uses string of field name to read data
 
-             #use copygb2 to reverse N-S grid direction and convert 0.5x0.5 deg to 1x1 deg
-             #$COPYGB2 -g"0 6 0 0 0 0 0 0 360 181 0 -1 90000000 0 48 -90000000 359000000 1000000 1000000 0" -x $WORK/cmce.upper.adjusted $outdata/cmce.ens${mb}.t${cyc}z.grid3.f${hh}
+             #use wgrib2 to reverse N-S grid direction and convert 0.5x0.5 deg to 1x1 deg
            
              cat $WORK/cmce.sfc.${cyc}.${mb}.${h3} >> $WORK/cmce.upper.${cyc}.${mb}.${h3} 
 
-             $COPYGB2 -g"0 6 0 0 0 0 0 0 360 181 0 -1 90000000 0 48 -90000000 359000000 1000000 1000000 0" -x $WORK/cmce.upper.${cyc}.${mb}.${h3} $outdata/cmce.ens${mb}.t${cyc}z.grid3.f${h3}.grib2
+
+	     $wgrib2 $WORK/cmce.upper.${cyc}.${mb}.${h3} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $outdata/cmce.ens${mb}.t${cyc}z.grid3.f${h3}.grib2
 
              rm -f  $WORK/cmce.upper.${cyc}.${mb}.${h3} $WORK/cmce.sfc.${cyc}.${mb}.${h3} 
 
@@ -310,10 +346,10 @@ if [ $modnam = prepbufr ] ; then
       echo  "export vbeg=${cyc}" >> run_pb2nc.${cyc}.sh
       echo  "export vend=${cyc}" >> run_pb2nc.${cyc}.sh
 
-      echo  "${METPLUS_PATH}/ush/master_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr.cong" >> run_pb2nc.${cyc}.sh
-
-      echo  "${METPLUS_PATH}/ush/master_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr_Profile.cong" >> run_pb2nc.${cyc}.sh
-
+      if [ -s $COMINprepbufr/gfs.${vday}/${cyc}/atmos/gfs.t${cyc}z.prepbufr ] ; then
+        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr.cong" >> run_pb2nc.${cyc}.sh
+        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr_Profile.cong" >> run_pb2nc.${cyc}.sh
+      fi 
 
       chmod +x run_pb2nc.${cyc}.sh
       echo "run_pb2nc.${cyc}.sh" >> run_pb2nc.sh
@@ -332,16 +368,18 @@ fi
 if [ $modnam = ccpa ] ; then
 
   day1=`$ndate -24 ${vday}12`
-  vday_1=${day1:0:8}
+  export vday_1=${day1:0:8}
 
   for cyc in 00 06 12 18 ; do
-    $COPYGB2 -g"0 6 0 0 0 0 0 0 360 181 0 -1 90000000 0 48 -90000000 359000000 1000000 1000000 0" -x  $COMINccpa/ccpa.${vday}/$cyc/ccpa.t${cyc}z.06h.1p0.conus.gb2 ${COMOUT_gefs}/ccpa.t${cyc}z.grid3.06h.f00.grib2 
-
+      $wgrib2 $COMINccpa/ccpa.${vday}/$cyc/ccpa.t${cyc}z.06h.1p0.conus.gb2 -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  ${COMOUT_gefs}/ccpa.t${cyc}z.grid3.06h.f00.grib2
   done
 
-  ccpa24=${WORK}/ccpa24
+  export output_base=${WORK}/precip
+
+  export ccpa24=${WORK}/ccpa24
   mkdir $ccpa24
   rm -f ${WORK}/ccpa24/*.grib2
+
 
   for cyc in 12 ; do
     cp ${COMOUT_gefs}/ccpa.t12z.grid3.06h.f00.grib2 ${WORK}/ccpa24/ccpa1
@@ -349,8 +387,13 @@ if [ $modnam = ccpa ] ; then
     cp ${COMOUT_gefs}/ccpa.t00z.grid3.06h.f00.grib2 ${WORK}/ccpa24/ccpa3
     cp ${COMOUT}.${vday_1}/gefs/ccpa.t18z.grid3.06h.f00.grib2 ${WORK}/ccpa24/ccpa4
 
-    pcp_combine ${vday_1}_120000 06 ${vday}_120000 24 ccpa.t12z.grid3.24h.f00.nc -pcpdir ${WORK}/ccpa24
-    cp ccpa.t12z.grid3.24h.f00.nc $COMOUT_gefs/.
+    if [ -s ${WORK}/ccpa24/ccpa1 ] && [ -s ${WORK}/ccpa24/ccpa2 ] && [ -s ${WORK}/ccpa24/ccpa3 ] && [ -s ${WORK}/ccpa24/ccpa4 ] ; then
+       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_obsCCPA24h.conf
+       cp $output_base/ccpa.t12z.grid3.24h.f00.nc $COMOUT_gefs/.
+    else
+       echo "At least one of ccpa06h files is missing!"
+       exit 
+    fi  
   done
 fi
 
@@ -371,7 +414,7 @@ if [ $modnam = gefs_apcp06h ] ; then
 
          gefs=$COMINgefs/gefs.$vday/$cyc/atmos/pgrb2ap5/gep${mb}.t${cyc}z.pgrb2a.0p50.f${hhh}
          $wgrib2 -match "APCP" $gefs|$wgrib2 -i $gefs -grib gefs.ens${mb}.t${cyc}z.grid4.06h.f${hhh}.grib2
-         $copygb2  -g"0 6 0 0 0 0 0 0 360 181 0 -1 90000000 0 48 -90000000 359000000 1000000 1000000 0" -i3 -x gefs.ens${mb}.t${cyc}z.grid4.06h.f${hhh}.grib2 $COMOUT_gefs/gefs.ens${mb}.t${cyc}z.grid3.06h.f${hhh}.grib2
+         $wgrib2 gefs.ens${mb}.t${cyc}z.grid4.06h.f${hhh}.grib2 -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $COMOUT_gefs/gefs.ens${mb}.t${cyc}z.grid3.06h.f${hhh}.grib2
 
         else
          
@@ -390,53 +433,25 @@ if [ $modnam = gefs_apcp06h ] ; then
 fi 
 
 if [ $modnam = gefs_apcp24h ] ; then
- 
+
+    export output_base=${WORK}/precip/gefs_apcp24h
+    export model=gefs
+    export modelpath=$COMOUT_gefs
+    
+    export cyc
+    export mb
+
     for cyc in $gens_cyc ; do
 
-     apcp24=$WORK/apcp24.gefs.$cyc
-     mkdir -p $apcp24
-     rm -f $apcp24/*.grib2
-
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
-
-       typeset -Z3 hhh
-       typeset -Z3 hhh_6
-       typeset -Z3 hhh_12
-       typeset -Z3 hhh_18
-       fhr=24
-       while [ $fhr -le 384 ] ; do
-         hhh=$fhr 
-         apcp1=$COMOUT_gefs/gefs.ens${mb}.t${cyc}z.grid3.06h.f${hhh}.grib2
-         cp $apcp1 $apcp24/.
-
-         fhr_6=$((fhr-6))
-         hhh_6=$fhr_6
-         apcp2=$COMOUT_gefs/gefs.ens${mb}.t${cyc}z.grid3.06h.f${hhh_6}.grib2
-         cp $apcp2 $apcp24/.
-
-         fhr_12=$((fhr-12))
-         hhh_12=$fhr_12
-         apcp3=$COMOUT_gefs/gefs.ens${mb}.t${cyc}z.grid3.06h.f${hhh_12}.grib2
-         cp $apcp3 $apcp24/.
-
-         fhr_18=$((fhr-18))
-         hhh_18=$fhr_18
-         apcp4=$COMOUT_gefs/gefs.ens${mb}.t${cyc}z.grid3.06h.f${hhh_18}.grib2
-         cp $apcp4 $apcp24/.
-
-         fcst_cyc=${vday}${cyc}
-	 #Note fcst_time is future, not backward. This is just reversed to the pcp_combine -sum in HREF 
-         fcst_time=`$ndate +$fhr $fcst_cyc`  
-         fvday=${fcst_time:0:8} #forecast hours --> day+hour format
-         hour=${fcst_time:8:2}
-         pcp_combine -sum ${vday}_${cyc}0000 06 ${fvday}_${hour} 24 gefs.ens${mb}.t${cyc}z.grid3.24h.f${hhh}.nc -pcpdir $apcp24 -field 'name="APCP"; level="A06";'
-         cp gefs.ens${mb}.t${cyc}z.grid3.24h.f${hhh}.nc $COMOUT_gefs
-         fhr=$((fhr+12))
-         rm -f $apcp24/*.grib2
-       done
+         if [ -s $COMOUT_gefs/gefs.ens${mb}.t${cyc}z.grid3.f024.grib2 ] ; then 	
+            export lead='24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384'
+            ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_APCP24h.conf
+	 fi
       done
     done
 
+    cp ${output_base}/*.nc $COMOUT_gefs/.
 fi
 
 
@@ -451,7 +466,7 @@ if [ $modnam = cmce_apcp06h ] ; then
          hhh=$fhr
          cmce=$COMINcmce/cmce.$vday/$cyc/pgrb2ap5/cmc_gep${mb}.t${cyc}z.pgrb2a.0p50.f${hhh}
          $wgrib2 -match "APCP" $cmce|$wgrib2 -i $cmce -grib cmce.ens${mb}.t${cyc}z.grid4.06h.f${hhh}.grib2
-         $copygb2  -g"0 6 0 0 0 0 0 0 360 181 0 -1 90000000 0 48 -90000000 359000000 1000000 1000000 0" -i3 -x cmce.ens${mb}.t${cyc}z.grid4.06h.f${hhh}.grib2 $COMOUT_cmce/cmce.ens${mb}.t${cyc}z.grid3.06h.f${hhh}.grib2
+	 $wgrib2 cmce.ens${mb}.t${cyc}z.grid4.06h.f${hhh}.grib2 -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $COMOUT_cmce/cmce.ens${mb}.t${cyc}z.grid3.06h.f${hhh}.grib2
          fhr=$((fhr+6))
        done
 
@@ -459,89 +474,48 @@ if [ $modnam = cmce_apcp06h ] ; then
    done
 fi
 
+
+
 if [ $modnam = cmce_apcp24h ] ; then
 
-   for cyc in $gens_cyc ; do
+    export output_base=${WORK}/precip/cmce_apcp24h
+    export model=cmce
+    export modelpath=$COMOUT_cmce
+    
+    export cyc
+    export mb
 
-     apcp24=$WORK/apcp24.cmce.$cyc
-     mkdir -p $apcp24
-     rm -f $apcp24/*.grib2
-
-
+    for cyc in $gens_cyc ; do
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ; do
+	 if [ -s $COMOUT_cmce/cmce.ens${mb}.t${cyc}z.grid3.06h.f024.grib2 ] ; then
+	  export lead='24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384'
+          ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstCMCE_APCP24h.conf
+	 fi 
+      done
+    done
 
-       typeset -Z3 hhh
-       typeset -Z3 hhh_6
-       typeset -Z3 hhh_12
-       typeset -Z3 hhh_18
-       fhr=24
-       while [ $fhr -le 384 ] ; do
-         hhh=$fhr
-         cmce1=$COMOUT_cmce/cmce.ens${mb}.t${cyc}z.grid3.06h.f${hhh}.grib2
-         cp $cmce1 $apcp24/.
-
-         fhr_6=$((fhr-6))
-         hhh_6=$fhr_6
-         cmce2=$COMOUT_cmce/cmce.ens${mb}.t${cyc}z.grid3.06h.f${hhh_6}.grib2
-         cp $cmce2 $apcp24/.
-
-         fhr_12=$((fhr-12))
-         hhh_12=$fhr_12
-         cmce3=$COMOUT_cmce/cmce.ens${mb}.t${cyc}z.grid3.06h.f${hhh_12}.grib2
-         cp $cmce3 $apcp24/.
-
-         fhr_18=$((fhr-18))
-         hhh_18=$fhr_18
-         cmce4=$COMOUT_cmce/cmce.ens${mb}.t${cyc}z.grid3.06h.f${hhh_18}.grib2
-         cp $cmce4 $apcp24/.
-        fcst_cyc=${vday}${cyc}
-         fcst_time=`$ndate +$fhr $fcst_cyc`
-         fvday=${fcst_time:0:8} #forecast hours --> day+hour format
-         hour=${fcst_time:8:2}
-         pcp_combine -sum ${vday}_${cyc}0000 06 ${fvday}_${hour} 24 cmce.ens${mb}.t${cyc}z.grid3.24h.f${hhh}.nc -pcpdir $apcp24 -field 'name="APCP"; level="A06";'
-         cp cmce.ens${mb}.t${cyc}z.grid3.24h.f${hhh}.nc $COMOUT_cmce
-         fhr=$((fhr+12))
-         rm -f $apcp24/*.grib2
-       done
-     done
-   done
+    cp ${output_base}/*.nc $COMOUT_cmce/.
 fi
+
+
 
 if [ $modnam = ecme_apcp24h ] ; then
 
+  export cyc
+  export mb
+  export modelpath=$COMOUT_ecme
+
   for cyc in 00 12 ; do
+     export output_base=${WORK}/precip/ecme_apcp24h.${cyc}
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40  41 42 43 44 45 46 47 48 49 50  ; do
-
-
-       pcp_combine -subtract \
-        $COMOUT_ecme/ecme.ens${mb}.t${cyc}z.grid3_apcp.f024.grib1 'name="TP"; level="L0";' \
-        $COMOUT_ecme/ecme.ens${mb}.t${cyc}z.grid3_apcp.f000.grib1 'name="TP"; level="L0";' \
-        ecme.ens${mb}.t${cyc}z.grid3.24h.f024.nc
-        cp ecme.ens${mb}.t${cyc}z.grid3.24h.f024.nc $COMOUT_ecme 
-
-
-       typeset -Z3 hhh
-       typeset -Z3 hhh_24
-       fhr=36
-       while [ $fhr -le 360 ] ; do
-         hhh=$fhr
-
-         fhr_24=$((fhr-24))
-         hhh_24=$fhr_24
-
-         pcp_combine -subtract \
-           $COMOUT_ecme/ecme.ens${mb}.t${cyc}z.grid3_apcp.f${hhh}.grib1  \
-           'name="TP"; level="L0";' \
-           $COMOUT_ecme/ecme.ens${mb}.t${cyc}z.grid3_apcp.f${hhh_24}.grib1 \
-           'name="TP"; level="L0";' \
-           ecme.ens${mb}.t${cyc}z.grid3.24h.f${hhh}.nc
-           cp ecme.ens${mb}.t${cyc}z.grid3.24h.f${hhh}.nc $COMOUT_ecme 
-         fhr=$((fhr+12))
-       done
-
+       if [ -s $COMOUT_ecme/ecme.ens${mb}.t${cyc}z.grid4_apcp.f024.grib1 ] ; then  
+         export lead='24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360'
+	 ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstECME_APCP24h.conf
+       fi
      done
   done
 
+     cp ${output_base}/*.nc $COMOUT_ecme/.
 fi
 
 
@@ -556,85 +530,183 @@ fi
 
 if [ $modnam = gefs_snow24h ] ; then
 
-  #for cyc in 00 12 ; do
+  export output_base=${WORK}/snow/gefs_snow24h.${gens_cyc}
+
+   export cyc
+   export mb
+   export model=gefs
+   export modelpath=$COMOUT_gefs
+   export snow
+
   for cyc in $gens_cyc ; do
 
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
-
-       typeset -Z3 hhh
-       typeset -Z3 hhh_24
-       fhr=24
-       while [ $fhr -le 384 ] ; do
-            hhh=$fhr
-            fhr_24=$((fhr-24))
-            hhh_24=$fhr_24
-            pcp_combine -subtract \
-            $COMOUT_gefs/gefs.ens${mb}.t${cyc}z.grid3.f${hhh}.grib2  \
-         	                    'name="WEASD"; level="Z0";' \
-            $COMOUT_gefs/gefs.ens${mb}.t${cyc}z.grid3.f${hhh_24}.grib2 \
-      	        	            'name="WEASD"; level="Z0";' \
-             gefs.ens${mb}.t${cyc}z.grid3.weasd_24h.f${hhh}.nc
-            cp gefs.ens${mb}.t${cyc}z.grid3.weasd_24h.f${hhh}.nc $COMOUT_gefs
-           fhr=$((fhr+12))
+       for snow in WEASD SNOD ; do 
+	 if [  -s $COMOUT_gefs/gefs.ens${mb}.t${cyc}z.grid3.f024.grib2 ] ; then
+	   export lead='24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384'
+	   ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SNOW24h.conf
+	 fi 
        done
-     done
+    done  
+    
   done
 
+  cp $output_base/*.nc $COMOUT_gefs/.
 fi
+
+
 
 if [ $modnam = cmce_snow24h ] ; then
 
-  for cyc in 00 12 ; do
-  #for cyc in $gens_cyc ; do
-
+  export output_base=${WORK}/snow/cmce_snow24h.${gens_cyc}
+  export cyc
+  export mb
+  export model=cmce
+  export modelpath=$COMOUT_cmce
+  export snow 
+  for cyc in $gens_cyc ; do
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ; do
 
-       typeset -Z3 hhh
-       typeset -Z3 hhh_24
-       fhr=24
-       while [ $fhr -le 384 ] ; do
-            hhh=$fhr
-            fhr_24=$((fhr-24))
-            hhh_24=$fhr_24
-            pcp_combine -subtract \
-            $COMOUT_cmce/cmce.ens${mb}.t${cyc}z.grid3.f${hhh}.grib2  \
-                                    'name="WEASD"; level="Z0";' \
-            $COMOUT_cmce/cmce.ens${mb}.t${cyc}z.grid3.f${hhh_24}.grib2 \
-                                    'name="WEASD"; level="Z0";' \
-             cmce.ens${mb}.t${cyc}z.grid3.weasd_24h.f${hhh}.nc
-            cp cmce.ens${mb}.t${cyc}z.grid3.weasd_24h.f${hhh}.nc $COMOUT_cmce
-           fhr=$((fhr+12))
+       for snow in WEASD SNOD ; do
+        if [  -s $COMOUT_cmce/cmce.ens${mb}.t${cyc}z.grid3.f024.grib2 ] ; then  
+         export lead='24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384'
+         ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SNOW24h.conf
+        fi
        done
+       
      done
   done
 
+  cp $output_base/*.nc $COMOUT_cmce/.
 fi
 
 if [ $modnam = ecme_snow24h ] ; then
 
+    export cyc
+    export mb
+    export model=ecme
+    export modelpath=$COMOUT_ecme
+
   for cyc in 00 12 ; do
-  #for cyc in $gens_cyc ; do
 
-     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30; do
+     export output_base=${WORK}/snow/ecme_snow24h.${cyc}
 
-       typeset -Z3 hhh
-       typeset -Z3 hhh_24
-       fhr=24
-       while [ $fhr -le 360 ] ; do
-            hhh=$fhr
-            fhr_24=$((fhr-24))
-            hhh_24=$fhr_24
-            pcp_combine -subtract \
-            $COMOUT_ecme/ecme.ens${mb}.t${cyc}z.grid3_apcp.f${hhh}.grib1  \
-                                    'name="SF"; level="L0";' \
-            $COMOUT_ecme/ecme.ens${mb}.t${cyc}z.grid3_apcp.f${hhh_24}.grib1 \
-                                    'name="SF"; level="L0";' \
-             ecme.ens${mb}.t${cyc}z.grid3.weasd_24h.f${hhh}.nc
-            cp ecme.ens${mb}.t${cyc}z.grid3.weasd_24h.f${hhh}.nc $COMOUT_ecme
-           fhr=$((fhr+12))
-       done
+     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do
+       if [  -s $COMOUT_ecme/ecme.ens${mb}.t${cyc}z.grid4_apcp.f024.grib1 ] ; then
+    	  export lead='24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360 '
+          ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstECME_SNOW24h.conf
+       fi
      done
   done
+
+  #cp $output_base/ecme*.nc $COMOUT_ecme
+fi
+
+
+if [ $modnam = gfs ] ; then
+
+  for cyc in 00  ; do
+
+    for  hhh in 024 048 072 096  120 144 168 192 216 240 264 288 312 336 360 384 ; do     
+     gfs=$COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.f${hhh}
+     $WGRIB2  $gfs|grep "HGT:500 mb"|$WGRIB2 -i $gfs -grib $COMOUT_gefs/gfs.t${cyc}z.grid3.f${hhh}.grib2     
+    done
+
+  done
+
+fi
+
+
+if [ $modnam = osi_saf ] ; then
+   
+   python ${USHevs}/global_ens/global_det_sea_ice_prep.py
+   cp $WORK/atmos.${INITDATE}/osi_saf/*.nc $COMOUT_osi_saf/.
+fi
+
+# Ice concentration starts from f000. There is amount of ice at beginning.
+# So, for f024 ice concentation, it shoule be  averaged of f000, f006, f012
+# f018 and f024 
+if [ $modnam = gefs_icec24h ] ; then
+
+    export output_base=${WORK}/gefs_icec24h
+    export model=gefs
+    export modelpath=$COMOUT_gefs
+
+    export cyc
+    export mb
+    export accum=24
+
+    for cyc in 00 12  ; do
+
+     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
+         if [ $cyc = 00 ] ; then
+    	     export lead='24, 48, 72, 96, 120, 144, 168, 192, 216,  240,  264,  288,  312,  336,  360,  384' 
+	 elif [ $cyc = 12 ] ; then
+    	     export lead='36, 60, 84, 108, 132, 156, 180, 204, 228, 252, 276, 300, 324, 348, 372 ' 
+         fi
+
+	 if [  -s $COMOUT_gefs/gefs.ens${mb}.t${cyc}z.grid3.f024.grib2 ] ; then
+    	     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_ICEC.conf
+	 fi 
+
+      done
+    done
+
+    cp $output_base/gefs*icec*.nc $COMOUT_gefs
+fi
+
+if [ $modnam = gefs_icec7day ] ; then
+
+    export output_base=${WORK}/gefs_icec7day
+    export model=gefs
+    export modelpath=$COMOUT_gefs 
+		              
+    export cyc
+    export mb
+    export accum=168	
+
+    #for cyc in 00  12  ; do
+    for cyc in 00  ; do
+
+     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
+        if [ $cyc = 00 ] ; then
+            export lead='168, 192, 216,  240,  264,  288,  312,  336,  360,  384'
+        elif [ $cyc = 12 ] ; then 
+            export lead='180, 204, 228, 252, 276, 300, 324, 348, 372 '
+        fi
+        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_ICEC.conf
+     done
+   done
+							     
+   cp $output_base/gefs*icec*.nc $COMOUT_gefs
+fi
+
+if [ $modnam = gefs_sst24h ] ; then
+
+    export output_base=${WORK}/gefs_sst24h
+    export model=gefs
+    export modelpath=$COMOUT_gefs
+
+    export cyc
+    export mb
+    export accum=24
+
+    for cyc in 00  12  ; do
+
+       for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
+         if [ $cyc = 00 ] ; then
+           export lead='24, 48, 72, 96, 120, 144, 168, 192, 216,  240,  264,  288,  312,  336,  360,  384'
+         elif [ $cyc = 12 ] ; then
+           export lead='36, 60, 84, 108, 132, 156, 180, 204, 228, 252, 276, 300, 324, 348, 372 '
+         fi
+	 if [  -s $COMOUT_gefs/gefs.ens${mb}.t${cyc}z.grid3.f024.grib2 ] ; then
+           ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SST24h.conf
+	 fi 
+       done
+
+   done
+
+     cp $output_base/gefs*sst*.nc $COMOUT_gefs
 
 fi
 

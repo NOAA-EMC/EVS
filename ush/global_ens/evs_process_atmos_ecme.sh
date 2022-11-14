@@ -98,12 +98,12 @@ while [ ${hourix} -lt 31 ]; do
     done
   fi 
 
-  DCE=${dcom}/$yyyymmdd/wgrbbul/ecmwf/DCE${imdh}00${vmdh}001
+  E1E=${dcom}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}001
 
-  >DCE.${hourinc} 
+  >E1E.${hourinc} 
   for n in 1 2 12 13 14 15 ; do
-     $WGRIB $DCE|grep "${VAR[$n]}"|$WGRIB -i -grib $DCE -o x 
-     cat x >> DCE.${hourinc}
+     $WGRIB $E1E|grep "${VAR[$n]}"|$WGRIB -i -grib $E1E -o x 
+     cat x >> E1E.${hourinc}
   done
  
   h3=${hourinc}
@@ -113,11 +113,11 @@ while [ ${hourix} -lt 31 ]; do
     m2=$mbr
     typeset -Z2 m2
      
-    $WGRIB DCE.${hourinc}|grep "forecast $mbr:"|$WGRIB -i -grib DCE.${hourinc} -o $outdata/ecme.ens${m2}.t${cyc}z.grid3.f${h3}.grib1
+    $WGRIB E1E.${hourinc}|grep "forecast $mbr:"|$WGRIB -i -grib E1E.${hourinc} -o $outdata/ecme.ens${m2}.t${cyc}z.grid4.f${h3}.grib1
     mbr=$((mbr+1))
    
    done
-   rm DCE.${hourinc}
+   rm E1E.${hourinc}
    
 
   let hourix=hourix+1
@@ -133,12 +133,12 @@ while [ ${hourix} -lt 31 ]; do
   vmdh=`  echo ${vymdh} | cut -c5-10`
   vhour=` ${getvhour} ${vymdh} ${ymdh}`
 
-  DCE=${dcom}/$yyyymmdd/wgrbbul/ecmwf/DCE${imdh}00${vmdh}001
+  E1E=${dcom}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}001
 
-  >DCE_apcp.${hourinc}
+  >E1E_apcp.${hourinc}
   for n in 20 21 ; do
-     $WGRIB $DCE|grep "${VAR[$n]}"|$WGRIB -i -grib $DCE -o x
-     cat x >> DCE_apcp.${hourinc}
+     $WGRIB $E1E|grep "${VAR[$n]}"|$WGRIB -i -grib $E1E -o x
+     cat x >> E1E_apcp.${hourinc}
   done
 
   h3=${hourinc}
@@ -148,11 +148,11 @@ while [ ${hourix} -lt 31 ]; do
     m2=$mbr
     typeset -Z2 m2
 
-    $WGRIB DCE_apcp.${hourinc}|grep "forecast $mbr:"|$WGRIB -i -grib DCE_apcp.${hourinc} -o $outdata/ecme.ens${m2}.t${cyc}z.grid3_apcp.f${h3}.grib1
+    $WGRIB E1E_apcp.${hourinc}|grep "forecast $mbr:"|$WGRIB -i -grib E1E_apcp.${hourinc} -o $outdata/ecme.ens${m2}.t${cyc}z.grid4_apcp.f${h3}.grib1
     mbr=$((mbr+1))
 
    done
-   rm DCE_apcp.${hourinc}
+   rm E1E_apcp.${hourinc}
 
   let hourix=hourix+1
 
@@ -167,7 +167,6 @@ VAR[4]=':T:kpds5=130:kpds6=100'
 VAR[5]=':R:kpds5=157:kpds6=100'
 
 hourix=0
-#while [ ${hourix} -lt 61 ]; do
 while [ ${hourix} -lt 31 ]; do
 
   let hourinc=hourix*12
@@ -176,23 +175,16 @@ while [ ${hourix} -lt 31 ]; do
   vmdh=`  echo ${vymdh} | cut -c5-10`
   vhour=` ${getvhour} ${vymdh} ${ymdh}`
 
-  DCE=${dcom}/$yyyymmdd/wgrbbul/ecmwf/DCE${imdh}00${vmdh}001
   E1E=${dcom}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}001
   
- >DCE_vertical.${hourinc}
  >E1E_vertical.${hourinc}
 
   for n in 1 2 3 4 5  ; do
  
-   for level in 200 250 500 700 850 925 1000 ; do 
-     $WGRIB $DCE|grep "${VAR[$n]}:kpds7=${level}:"|$WGRIB -i -grib $DCE -o x
-     cat x >> DCE_vertical.${hourinc}
-    done
-  
-    for level in 50 100 300 400 ; do
-     $WGRIB $E1E|grep "${VAR[$n]}:kpds7=${level}:"|$WGRIB -i -grib $E1E -o y
-     cat y >> E1E_vertical.${hourinc}
-    done
+   for level in 50 100 200 300 400 500 700 850 925 1000 ; do 
+     $WGRIB $E1E|grep "${VAR[$n]}:kpds7=${level}:"|$WGRIB -i -grib $E1E -o x
+     cat x >> E1E_vertical.${hourinc}
+   done
  
   done
 
@@ -203,17 +195,13 @@ while [ ${hourix} -lt 31 ]; do
     m2=$mbr
     typeset -Z2 m2
 
-    $WGRIB DCE_vertical.${hourinc}|grep "forecast $mbr:"|$WGRIB -i -grib DCE_vertical.${hourinc} -o DCE_vertical.${hourinc}.mbr${mbr}
-    cat DCE_vertical.${hourinc}.mbr${mbr} >> $outdata/ecme.ens${m2}.t${cyc}z.grid3.f${h3}.grib1
-
     $WGRIB E1E_vertical.${hourinc}|grep "forecast $mbr:"|$WGRIB -i -grib E1E_vertical.${hourinc} -o E1E_vertical.${hourinc}.mbr${mbr}
-    $COPYGB -g3 -x E1E_vertical.${hourinc}.mbr${mbr} E1E_vertical.${hourinc}.mbr${mbr}.g3
-    cat E1E_vertical.${hourinc}.mbr${mbr}.g3 >> $outdata/ecme.ens${m2}.t${cyc}z.grid3.f${h3}.grib1
+    cat E1E_vertical.${hourinc}.mbr${mbr} >> $outdata/ecme.ens${m2}.t${cyc}z.grid4.f${h3}.grib1
 
     mbr=$((mbr+1))
 
    done
-   rm DCE_vertical.${hourinc}*
+   rm E1E_vertical.${hourinc}*
    rm E1E_vertical.${hourinc}*
 
 
