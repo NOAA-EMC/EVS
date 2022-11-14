@@ -57,7 +57,7 @@ class Templates():
         Example: 
         "{RUN_CASE_LOWER}/{MODEL}/{valid?fmt=%Y%m}/{MODEL}_{valid?fmt=%Y%m%d}*"
         '''
-        self.output_base_template = "{MODEL}_atmos_grid2obs_v{valid?fmt=%Y%m%d}.stat"
+        self.output_base_template = "evs.stats.{MODEL}.atmos.grid2obs.v{valid?fmt=%Y%m%d}.stat"
 
 class Presets():
     def __init__(self):
@@ -671,6 +671,7 @@ class Reference():
                                     'OZMAX8': 'Max 8-hr ozone',
                                     'PMTF': '2.5 micron particulate matter',
                                     'HPBL': 'Planetary Boundary Layer Height',
+                                    'PBL': 'Planetary Boundary Layer Height',
                                     'TSOIL': 'Soil Temperature',
                                     'SOILW': ('Volumetric Soil Moisture'
                                               + ' Content'),
@@ -1579,7 +1580,7 @@ class Reference():
                     'vx_mask_list' : [
                         'CONUS', 'G130', 'G214', 'G221', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GMC', 'APL', 'NAK', 'SAK'
+                        'LMV', 'GMC', 'APL', 'NAK', 'SAK', 'FULL'
                     ],
                     'var_dict': {
                         'TMP2m': {'fcst_var_names': ['TMP'],
@@ -1664,11 +1665,11 @@ class Reference():
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'sfc_upper'},
-                        'HPBL': {'fcst_var_names': ['HPBL'],
+                        'PBL': {'fcst_var_names': ['HGT'],
                                  'fcst_var_levels': ['L0'],
                                  'fcst_var_thresholds': '',
                                  'fcst_var_options': '',
-                                 'obs_var_names': ['HPBL'],
+                                 'obs_var_names': ['PBL'],
                                  'obs_var_levels': ['L0'],
                                  'obs_var_thresholds': '',
                                  'obs_var_options': '',
@@ -1709,7 +1710,7 @@ class Reference():
                     'vx_mask_list' : [
                         'CONUS', 'G130', 'G214', 'G221', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GMC', 'APL', 'NAK', 'SAK'
+                        'LMV', 'GMC', 'APL', 'NAK', 'SAK', 'FULL'
                     ],
                     'var_dict': {
                         'UGRD_VGRD10m': {'fcst_var_names': ['UGRD_VGRD'],

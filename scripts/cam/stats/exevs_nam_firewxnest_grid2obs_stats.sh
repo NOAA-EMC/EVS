@@ -4,6 +4,7 @@ set -x
 
 mkdir -p $DATA/logs
 mkdir -p $DATA/stat
+mkdir -p $DATA/statanalysis
 
 export OBSDIR=OBS
 mkdir -p $DATA/$OBSDIR
@@ -105,8 +106,15 @@ then
   if [ $cyc = 23 ]
   then
        mkdir -p $COMOUTfinal
-       run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstCAM_obsNDAS_GatherByDay.conf $PARMevs/metplus_config/machine.conf
+       cd $DATA/statanalysis
+       run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstCAM_obsONLYSF_GatherByDay.conf $PARMevs/metplus_config/machine.conf
        export err=$?; err_chk
+
+       run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstCAM_obsADPUPA_GatherByDay.conf $PARMevs/metplus_config/machine.conf
+       export err=$?; err_chk
+
+       cat *ADPUPA >> *stat
+       cp *stat $COMOUTfinal
   fi
 
 else

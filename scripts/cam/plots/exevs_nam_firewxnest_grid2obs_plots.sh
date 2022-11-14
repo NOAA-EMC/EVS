@@ -27,52 +27,126 @@ while [ $DATE -ge $ENDDATE ]; do
 	MONTH=`cut -c 1-6 curdate`
 	HOUR=`cut -c 9-10 curdate`
 
-	if [ -e ${COMINnam}.$DAY/${MODELNAME}_${RUN}_${VERIF_CASE}_v${DAY}.stat ]
+	if [ -e ${COMINnam}.$DAY/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat ]
 	then
-	cp ${COMINnam}.$DAY/${MODELNAME}_${RUN}_${VERIF_CASE}_v${DAY}.stat $STATDIR
-        else
-        cp ${COMINnam}.$DAY/*stat $STATDIR/${MODELNAME}_${RUN}_${VERIF_CASE}_v${DAY}.stat 
+	cp ${COMINnam}.$DAY/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
         fi
 
-	sed "s/$model1/$MODELNAME/g" $STATDIR/${MODELNAME}_${RUN}_${VERIF_CASE}_v${DAY}.stat > $STATDIR/temp.stat
-	mv $STATDIR/temp.stat $STATDIR/${MODELNAME}_${RUN}_${VERIF_CASE}_v${DAY}.stat
+	sed "s/$model1/$MODELNAME/g" $STATDIR/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat > $STATDIR/temp.stat
+	mv $STATDIR/temp.stat $STATDIR/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat
 
-	DATE=`/apps/ops/prod/nco/core/prod_util.v2.0.7/exec/ndate -24 $DATE`
+	DATE=`$NDATE -24 $DATE`
 
 done
 
-for var in TMP2m DPT2m RH2m
+for varb in TMP DPT RH
 do
-	export var
+	export var=${varb}2m
 	export lev=Z2
+	export lev_obs=Z2
 	export linetype=SL1L2
+	smlev=`echo $lev | tr A-Z a-z`
+	smvar=`echo $varb | tr A-Z a-z`
+	export plottyp=lead
+	export datetyp=VALID
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
-        mv ${DATA}/lead_average* ${PLOTDIR}/BCRMSE_${var}_${lev}_G221_VALID${PDYm31}to${VDATE}_DIEOFF.png
+        mv ${DATA}/lead_average* ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
+
+	export plottyp=valid_hour
+	export datetyp=INIT
+	sh $USHevs/${COMPONENT}/py_plotting.config
+
+        mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
+
+	if [ $varb = DPT ]
+	then 
+		export plottyp=threshold_average
+		export datetyp=INIT
+                export thresh=">=277.59, >=283.15, >=288.7, >=294.26"
+		sh $USHevs/${COMPONENT}/py_plotting.config_thresh
+
+		mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.threshmean.firewx.png
+	elif [ $varb = RH ]
+	then
+		export plottyp=threshold_average
+		export datetyp=INIT
+		export thresh="<=15, <=20, <=25, <=30"
+		sh $USHevs/${COMPONENT}/py_plotting.config_thresh
+
+		mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.threshmean.firewx.png
+	fi
 done
 
-for var in UGRD10m VGRD10m UGRD_VGRD10m WIND10m
+
+for varb in UGRD VGRD UGRD_VGRD WIND
 do
-	export var
+	export var=${varb}10m
 	export lev=Z10
+	export lev_obs=Z10
 	if [ $var = UGRD_VGRD10m ]
         then
          export linetype=VL1L2
 	else
          export linetype=SL1L2
 	fi
+	smlev=`echo $lev | tr A-Z a-z`
+	smvar=`echo $varb | tr A-Z a-z`
+	export plottyp=lead
+	export datetyp=VALID
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
-        mv ${DATA}/lead_average* ${PLOTDIR}/BCRMSE_${var}_${lev}_G221_VALID${PDYm31}to${VDATE}_DIEOFF.png
+        mv ${DATA}/lead_average* ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
+
+	export plottyp=valid_hour
+	export datetyp=INIT
+	sh $USHevs/${COMPONENT}/py_plotting.config
+
+	mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
+
 done
 
-for var in GUSTsfc
+for varb in GUST
 do
-	export var
+	export var=${varb}sfc
 	export lev=Z0
+	export lev_obs=Z0
+	export linetype=SL1L2
+	smlev=`echo $lev | tr A-Z a-z`
+	smvar=`echo $varb | tr A-Z a-z`
+	export plottyp=lead
+	export datetyp=VALID
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
-        mv ${DATA}/lead_average* ${PLOTDIR}/BCRMSE_${var}_${lev}_G221_VALID${PDYm31}to${VDATE}_DIEOFF.png
+        mv ${DATA}/lead_average* ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
+
+	export plottyp=valid_hour
+	export datetyp=INIT
+	sh $USHevs/${COMPONENT}/py_plotting.config
+
+	mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
+done
+
+for varb in PBL
+do
+	export var=${varb}
+	export lev=L0
+	export lev_obs=L0
+	export linetype=SL1L2
+	smlev=`echo $lev | tr A-Z a-z`
+	smvar=`echo $varb | tr A-Z a-z`
+	export plottyp=lead
+	export datetyp=VALID
+	sh $USHevs/${COMPONENT}/py_plotting.config
+
+	mv ${DATA}/lead_average* ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
+
+	export plottyp=valid_hour
+	export datetyp=INIT
+	sh $USHevs/${COMPONENT}/py_plotting.config
+
+	mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
+
 done
 
 
