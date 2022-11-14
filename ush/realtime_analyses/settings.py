@@ -57,7 +57,7 @@ class Templates():
         Example: 
         "{RUN_CASE_LOWER}/{MODEL}/{valid?fmt=%Y%m}/{MODEL}_{valid?fmt=%Y%m%d}*"
         '''
-        self.output_base_template = "{MODEL}_atmos_grid2obs_v{valid?fmt=%Y%m%d}.stat"
+        self.output_base_template = "evs.stats.{MODEL}.atmos.grid2obs.v{valid?fmt=%Y%m%d}.stat"
 
 class Presets():
     def __init__(self):
@@ -689,6 +689,7 @@ class Reference():
                                     'CWAT': 'Cloud Water',
                                     'TCDC': 'Cloud Area Fraction',
                                     'HGTCLDCEIL': 'Cloud Ceiling Height',
+                                    'CEIL': 'Obs Ceiling',
                                     'VIS': 'Visibility',
                                     'ICEC_Z0_mean': 'Sea Ice Concentration',
                                     'ICESEV': 'Icing Severity',
@@ -1610,7 +1611,7 @@ class Reference():
                                   'fcst_var_levels': ['Z2'],
                                   'fcst_var_thresholds': '',
                                   'fcst_var_options': '',
-                                  'obs_var_names': ['TDO'],
+                                  'obs_var_names': ['DPT'],
                                   'obs_var_levels': ['Z2'],
                                   'obs_var_thresholds': '',
                                   'obs_var_options': '',
@@ -1642,7 +1643,7 @@ class Reference():
                                    'obs_var_thresholds': '',
                                    'obs_var_options': '',
                                    'plot_group':'ceil_vis'},
-                        'HGTcldceil': {'fcst_var_names': ['HGT'],
+                        'HGTcldceil': {'fcst_var_names': ['CEIL'],
                                        'fcst_var_levels': ['L0'],
                                        'fcst_var_thresholds': '',
                                        'fcst_var_options': ('GRIB_lvl_typ ='
@@ -1715,7 +1716,9 @@ class Reference():
                     'vx_mask_list' : [
                         'CONUS', 'G130', 'G214', 'G221', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GMC', 'APL', 'NAK', 'SAK'
+                        'LMV', 'GMC', 'APL', 'NAK', 'SAK',
+                        'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South', 'Alaska', 
+                        'Hawaii', 'PuertoRico', 'Guam'
                     ],
                     'var_dict': {
                         'UGRD_VGRD10m': {'fcst_var_names': ['UGRD_VGRD'],
@@ -1730,48 +1733,59 @@ class Reference():
                     }
                 },
                 'CTC': {
-                    'plot_stats_list': ('csi, fbias, fss, pod,'
+                    'plot_stats_list': ('csi, ets, fbias, fss, pod,'
                                         + ' faratio, sratio'),
                     'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
                         'CONUS', 'G130', 'G214', 'G221', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GMC', 'APL', 'NAK', 'SAK'
+                        'LMV', 'GMC', 'APL', 'NAK', 'SAK',
+                        'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South', 'Alaska',
+                        'Hawaii', 'PuertoRico', 'Guam'
                     ],
                     'var_dict': {
                         'VISsfc': {'fcst_var_names': ['VIS'],
                                    'fcst_var_levels': ['L0'],
-                                   'fcst_var_thresholds': ('<=800, <805, <=1600, <1609,'
-                                                           + ' <=4800, <4828, <=8000, <8045,'
-                                                           + ' >=8045,'
-                                                           + ' <=16000, <16090'),
+                                   'fcst_var_thresholds': ('<804.672, <1609.344,'
+                                                           + ' <4828.032, <8046.72,'
+                                                           + ' >=8046.72,'
+                                                           + ' <16093.44'),
                                    'fcst_var_options': '',
                                    'obs_var_names': ['VIS'],
                                    'obs_var_levels': ['L0'],
-                                   'obs_var_thresholds': ('<=800, <805, <=1600, <1609,'
-                                                          + ' <=4800, <4828, <=8000, <8045,'
-                                                          + ' >=8045,'
-                                                          + ' <=16000, <16090'),
+                                   'obs_var_thresholds': ('<804.672, <1609.344,'
+                                                          + ' <4828.032, <8046.72,'
+                                                          + ' >=8046.72,'
+                                                          + ' <16093.44'),
                                    'obs_var_options': '',
                                    'plot_group':'ceil_vis'},
-                        'HGTcldceil': {'fcst_var_names': ['HGT'],
+                        'HGTcldceil': {'fcst_var_names': ['CEIL'],
                                        'fcst_var_levels': ['L0'],
-                                       'fcst_var_thresholds': ('<152, <=152, <305,'
-                                                               + ' <=305, <914,'
-                                                               + ' >=914, <=916,'
-                                                               + ' <1520, <=1524, '
-                                                               + ' <3040, <=3048'),
+                                       'fcst_var_thresholds': ('<152.4, <304.8,'
+                                                               + ' <914.4,'
+                                                               + ' >=914.4,'
+                                                               + ' <1524,'
+                                                               + ' <3048'),
                                        'fcst_var_options': ('GRIB_lvl_typ ='
                                                             + ' 215;'),
                                        'obs_var_names': ['CEILING','HGT'],
                                        'obs_var_levels': ['L0'],
-                                       'obs_var_thresholds': ('<152, <=152, <305,'
-                                                              + ' <=305, <914, '
-                                                              + '>=914, <=916, '
-                                                              + '<1520, <=1524, '
-                                                              + '<3040, <=3048'),
+                                       'obs_var_thresholds': ('<152.4, <304.8,'
+                                                              + ' <914.4,'
+                                                              + ' >=914.4,'
+                                                              + ' <1524,'
+                                                              + ' <3048'),
                                        'obs_var_options': '',
                                        'plot_group':'ceil_vis'},
+                          'TCDC': {'fcst_var_names': ['TCDC'],
+                                   'fcst_var_levels': ['L0'],
+                                   'fcst_var_thresholds': ('>10, >50, >90'),
+                                   'fcst_var_options': 'GRIB_lvl_typ = 200;',
+                                   'obs_var_names': ['TCDC'],
+                                   'obs_var_levels': ['L0'],
+                                   'obs_var_thresholds': ('>10, >50, >90'),
+                                   'obs_var_options': '',
+                                   'plot_group':'sfc_upper'},
                         'CAPEsfc': {'fcst_var_names': ['CAPE'],
                                     'fcst_var_levels': ['L0'],
                                     'fcst_var_thresholds': ('>500, >1000,'
@@ -1803,7 +1817,7 @@ class Reference():
                                   'fcst_var_thresholds': (' >=4.4, >=10,'
                                                           + ' >=15.55, >=21.11'),
                                   'fcst_var_options': '',
-                                  'obs_var_names': ['TDO'],
+                                  'obs_var_names': ['DPT'],
                                   'obs_var_levels': ['Z2'],
                                   'obs_var_thresholds': (' >=4.4, >=10,'
                                                          + ' >=15.55, >=21.11'),

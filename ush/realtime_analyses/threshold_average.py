@@ -682,7 +682,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     )
     if not os.path.isdir(save_subdir):
         os.makedirs(save_subdir)
-    save_path = os.path.join(save_subdir, save_name+'.png')
+    save_path = os.path.join(save_name+'.png')
     fig.savefig(save_path, dpi=dpi)
     logger.info(u"\u2713"+f" plot saved successfully as {save_path}")
     plt.close(num)

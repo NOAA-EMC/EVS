@@ -140,12 +140,12 @@ export INTERP="BILIN"
 
 # Will use statistics for all comma-separated thresholds. Use symbols (e.g., >=) to define 
 # thresholds. **
-export FCST_THRESH=""
-export OBS_THRESH=""
+export FCST_THRESH="$thresh"
+export OBS_THRESH="$thresh"
 
 # Will plot all comma-separated metrics.  For performance diagram, metrics must be "sratio,pod,csi". 
 # Depending on the VERIF_CASE, VERIF_TYPE, and LINE_TYPE, only some settings are allowed. **
-export STATS="bcrmse,bias"
+export STATS="$stat"
 
 # String of True or False. If "True", will plot bootstrap confidence intervals. Other confidence 
 # interval settings can be configured in ${USH_DIR}/settings.py
@@ -154,6 +154,6 @@ export CONFIDENCE_INTERVALS="False"
 # Executes the desired python script.  Scripts in $USH_DIR currently include {lead_average.py, 
 # performance_diagram.py, stat_by_level.py, threshold_average.py, time_series.py, 
 # valid_hour_average.py}
-python $USH_DIR/valid_hour_average.py
+python $USH_DIR/threshold_average.py
 
 exit 0
