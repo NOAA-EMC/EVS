@@ -275,13 +275,19 @@ for plot in plots_list:
             plot_info_dict['interp_points'] = str(
                 var_interppts_info[1]
             )
-            plot_vha = gdap_vha.ValidHourAverage(logger, job_output_dir,
-                                                 job_output_dir,
-                                                 model_info_dict,
-                                                 date_info_dict,
-                                                 plot_info_dict,
-                                                 met_info_dict, logo_dir)
-            plot_vha.make_valid_hour_average()
+            if date_info_dict['valid_hr_start'] \
+                    != date_info_dict['valid_hr_end']:
+                plot_vha = gdap_vha.ValidHourAverage(logger, job_output_dir,
+                                                     job_output_dir,
+                                                     model_info_dict,
+                                                     date_info_dict,
+                                                     plot_info_dict,
+                                                     met_info_dict, logo_dir)
+                plot_vha.make_valid_hour_average()
+            else:
+                logger.warning("No span of valid hours to plot, "
+                               +"valid start hour is the same as "
+                               +"valid end hour")
     elif plot == 'threshold_average':
         import global_det_atmos_plots_threshold_average as gdap_ta
         for fhr_interppts_info in \
@@ -430,7 +436,7 @@ for plot in plots_list:
                                                      logo_dir)
                 plot_pd.make_performance_diagram()
     else:
-        logger.warnig(plot+" not recongized")
+        logger.warning(plot+" not recongized")
 
 # Copy images from job directory to main image directory
 job_output_image_dir = os.path.join(job_output_dir, 'images')
