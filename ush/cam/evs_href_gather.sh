@@ -48,7 +48,7 @@ for MODL in $MODELS ; do
       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/StatAnlysis_fcstHREF_obsAnalysis_GatherByDay.conf " >> run_gather_${verify}_${MODL}.sh
    fi
 
-    echo "cp ${WORK}/gather/${vday}/${MODL}_${verify}_${vday}.stat  $COMOUTfinal/${modl}_${verify}_v${vday}.stat" >> run_gather_${verify}_${MODL}.sh
+    echo "cp ${WORK}/gather/${vday}/${MODL}_${verify}_${vday}.stat  $COMOUTfinal/evs.stats.${modl}_${verify}_v${vday}.stat" >> run_gather_${verify}_${MODL}.sh
 
     chmod +x run_gather_${verify}_${MODL}.sh
  
