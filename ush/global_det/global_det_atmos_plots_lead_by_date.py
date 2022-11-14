@@ -272,12 +272,14 @@ class LeadByDate:
         else:
             n_xticks = 17
         if len(self.date_info_dict['forecast_hours']) < n_xticks:
-            xtick_intvl = 1
+            xticks = self.date_info_dict['forecast_hours']
         else:
-            xtick_intvl = int(len(self.date_info_dict['forecast_hours'])
-                              /n_xticks)
+            xticks = []
+            for fhr in self.date_info_dict['forecast_hours']:
+                if int(fhr) % 24 == 0:
+                    xticks.append(fhr)
         n_yticks = 5
-        if len(plot_dates) < n_xticks:
+        if len(plot_dates) < n_yticks:
             ytick_intvl = 1
         else:
             ytick_intvl = int(len(plot_dates)/n_yticks)
@@ -384,7 +386,7 @@ class LeadByDate:
             ax.grid(True)
             ax.set_xlim([self.date_info_dict['forecast_hours'][0],
                           self.date_info_dict['forecast_hours'][-1]])
-            ax.set_xticks(self.date_info_dict['forecast_hours'][::xtick_intvl])
+            ax.set_xticks(xticks)
             if ax.is_last_row() \
                     or (nsubplots % 2 != 0 and model_idx_list.index(model_idx)\
                         == nsubplots-1):

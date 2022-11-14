@@ -233,10 +233,12 @@ class LeadAverage:
         plot_specs_la.set_up_plot()
         n_xticks = 17
         if len(self.date_info_dict['forecast_hours']) < n_xticks:
-            xtick_intvl = 1
+            xticks = self.date_info_dict['forecast_hours']
         else:
-            xtick_intvl = int(len(self.date_info_dict['forecast_hours'])
-                              /n_xticks)
+            xticks = []
+            for fhr in self.date_info_dict['forecast_hours']:
+                if int(fhr) % 24 == 0:
+                    xticks.append(fhr)
         stat_min_max_dict = {
             'ax1_stat_min': np.ma.masked_invalid(np.nan),
             'ax1_stat_max': np.ma.masked_invalid(np.nan),
@@ -300,7 +302,7 @@ class LeadAverage:
         ax2.set_xlabel('Forecast Hour')
         ax2.set_xlim([self.date_info_dict['forecast_hours'][0],
                       self.date_info_dict['forecast_hours'][-1]])
-        ax2.set_xticks(self.date_info_dict['forecast_hours'][::xtick_intvl])
+        ax2.set_xticks(xticks)
         ax2.set_ylabel('Difference')
         ax2.set_title('Difference from '
                       +self.model_info_dict['model1']['plot_name'], loc='left')
