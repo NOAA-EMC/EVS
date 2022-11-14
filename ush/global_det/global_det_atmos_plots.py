@@ -144,13 +144,13 @@ date_info_dict = {
     'date_type': date_type,
     'start_date': start_date,
     'end_date': end_date,
-    'valid_hr_start': valid_hr_start,
-    'valid_hr_end': valid_hr_end,
-    'valid_hr_inc': valid_hr_inc,
     'init_hr_start': init_hr_start,
     'init_hr_end': init_hr_end,
     'init_hr_inc': init_hr_inc,
 }
+valid_hrs = list(range(int(valid_hr_start),
+                       int(valid_hr_end)+int(valid_hr_inc),
+                       int(valid_hr_inc)))
 fhrs = list(range(int(fhr_start), int(fhr_end)+int(fhr_inc), int(fhr_inc)))
 
 # Set up plot information dictionary
@@ -189,92 +189,65 @@ met_info_dict = {
 for plot in plots_list:
     if plot == 'time_series':
         import global_det_atmos_plots_time_series as gdap_ts
-        for fhr_var_interppts_info in \
-                list(itertools.product(fhrs, var_info, interp_points_list)):
-            date_info_dict['forecast_hour'] = str(
-                fhr_var_interppts_info[0]
-            )
-            plot_info_dict['fcst_var_name'] = (
-                fhr_var_interppts_info[1][0][0]
-            )
-            plot_info_dict['fcst_var_level'] = (
-                fhr_var_interppts_info[1][0][1]
-            )
-            plot_info_dict['fcst_var_thresh'] = (
-                fhr_var_interppts_info[1][0][2]
-            )
-            plot_info_dict['obs_var_name'] = (
-                fhr_var_interppts_info[1][1][0]
-            )
-            plot_info_dict['obs_var_level'] = (
-                fhr_var_interppts_info[1][1][1]
-            )
-            plot_info_dict['obs_var_thresh'] = (
-                fhr_var_interppts_info[1][1][2]
-            )
-            plot_info_dict['interp_points'] = str(
-                fhr_var_interppts_info[2]
-            )
+        for ts_info in \
+                list(itertools.product(valid_hrs, fhrs, var_info,
+                                       interp_points_list)):
+            date_info_dict['valid_hr_start'] = str(ts_info[0])
+            date_info_dict['valid_hr_end'] = str(ts_info[0])
+            date_info_dict['valid_hr_inc'] = '24'
+            date_info_dict['forecast_hour'] = str(ts_info[1])
+            plot_info_dict['fcst_var_name'] = ts_info[2][0][0]
+            plot_info_dict['fcst_var_level'] = ts_info[2][0][1]
+            plot_info_dict['fcst_var_thresh'] = ts_info[2][0][2]
+            plot_info_dict['obs_var_name'] = ts_info[2][1][0]
+            plot_info_dict['obs_var_level'] = ts_info[2][1][1]
+            plot_info_dict['obs_var_thresh'] = ts_info[2][1][2]
+            plot_info_dict['interp_points'] = str(ts_info[3])
             plot_ts = gdap_ts.TimeSeries(logger, job_output_dir, job_output_dir,
                                          model_info_dict, date_info_dict,
                                          plot_info_dict, met_info_dict, logo_dir)
             plot_ts.make_time_series()
     elif plot == 'lead_average':
         import global_det_atmos_plots_lead_average as gdap_la
-        for var_interppts_info in \
-                list(itertools.product(var_info, interp_points_list)):
+        for la_info in \
+                list(itertools.product(valid_hrs, var_info,
+                                       interp_points_list)):
+            date_info_dict['valid_hr_start'] = str(la_info[0])
+            date_info_dict['valid_hr_end'] = str(la_info[0])
+            date_info_dict['valid_hr_inc'] = '24'
             date_info_dict['forecast_hours'] = fhrs
-            plot_info_dict['fcst_var_name'] = (
-                var_interppts_info[0][0][0]
-            )
-            plot_info_dict['fcst_var_level'] = (
-                var_interppts_info[0][0][1]
-            )
-            plot_info_dict['fcst_var_thresh'] = (
-                var_interppts_info[0][0][2]
-            )
-            plot_info_dict['obs_var_name'] = (
-                var_interppts_info[0][1][0]
-            )
-            plot_info_dict['obs_var_level'] = (
-                var_interppts_info[0][1][1]
-            )
-            plot_info_dict['obs_var_thresh'] = (
-                var_interppts_info[0][1][2]
-            )
-            plot_info_dict['interp_points'] = str(
-                var_interppts_info[1]
-            )
-            plot_la = gdap_la.LeadAverage(logger, job_output_dir, job_output_dir,
-                                          model_info_dict, date_info_dict,
-                                          plot_info_dict, met_info_dict, logo_dir)
-            plot_la.make_lead_average()
+            plot_info_dict['fcst_var_name'] = la_info[1][0][0]
+            plot_info_dict['fcst_var_level'] = la_info[1][0][1]
+            plot_info_dict['fcst_var_thresh'] = la_info[1][0][2]
+            plot_info_dict['obs_var_name'] = la_info[1][1][0]
+            plot_info_dict['obs_var_level'] = la_info[1][1][1]
+            plot_info_dict['obs_var_thresh'] = la_info[1][1][2]
+            plot_info_dict['interp_points'] = str(la_info[2])
+            if len(date_info_dict['forecast_hours']) > 1:
+                plot_la = gdap_la.LeadAverage(logger, job_output_dir,
+                                              job_output_dir, model_info_dict,
+                                              date_info_dict, plot_info_dict,
+                                              met_info_dict, logo_dir)
+                plot_la.make_lead_average()
+            else:
+                logger.warning("No span of forecast hours to plot, "
+                              +"given 1 forecast hour, skipping "
+                              +"lead_average plots")
     elif plot == 'valid_hour_average':
         import global_det_atmos_plots_valid_hour_average as gdap_vha
-        for var_interppts_info in \
+        for vha_info in \
                 list(itertools.product(var_info, interp_points_list)):
+            date_info_dict['valid_hr_start'] = valid_hr_start
+            date_info_dict['valid_hr_end'] = valid_hr_end
+            date_info_dict['valid_hr_inc'] = valid_hr_inc
             date_info_dict['forecast_hours'] = fhrs
-            plot_info_dict['fcst_var_name'] = (
-                var_interppts_info[0][0][0]
-            )
-            plot_info_dict['fcst_var_level'] = (
-                var_interppts_info[0][0][1]
-            )
-            plot_info_dict['fcst_var_thresh'] = (
-                var_interppts_info[0][0][2]
-            )
-            plot_info_dict['obs_var_name'] = (
-                var_interppts_info[0][1][0]
-            )
-            plot_info_dict['obs_var_level'] = (
-                var_interppts_info[0][1][1]
-            )
-            plot_info_dict['obs_var_thresh'] = (
-                var_interppts_info[0][1][2]
-            )
-            plot_info_dict['interp_points'] = str(
-                var_interppts_info[1]
-            )
+            plot_info_dict['fcst_var_name'] = vha_info[0][0][0]
+            plot_info_dict['fcst_var_level'] = vha_info[0][0][1]
+            plot_info_dict['fcst_var_thresh'] = vha_info[0][0][2]
+            plot_info_dict['obs_var_name'] = vha_info[0][1][0]
+            plot_info_dict['obs_var_level'] = vha_info[0][1][1]
+            plot_info_dict['obs_var_thresh'] = vha_info[0][1][2]
+            plot_info_dict['interp_points'] = str(vha_info[1])
             if date_info_dict['valid_hr_start'] \
                     != date_info_dict['valid_hr_end']:
                 plot_vha = gdap_vha.ValidHourAverage(logger, job_output_dir,
@@ -287,77 +260,77 @@ for plot in plots_list:
             else:
                 logger.warning("No span of valid hours to plot, "
                                +"valid start hour is the same as "
-                               +"valid end hour")
+                               +"valid end hour, skipping "
+                               +"valid_hour_average plots") 
     elif plot == 'threshold_average':
         import global_det_atmos_plots_threshold_average as gdap_ta
-        for fhr_interppts_info in \
-                list(itertools.product(fhrs, interp_points_list)):
-            date_info_dict['forecast_hour'] = str(
-                fhr_interppts_info[0]
-            )
+        for ta_info in \
+                list(itertools.product(valid_hrs, fhrs, interp_points_list)):
+            date_info_dict['valid_hr_start'] = str(ta_info[0])
+            date_info_dict['valid_hr_end'] = str(ta_info[0])
+            date_info_dict['valid_hr_inc'] = '24'
+            date_info_dict['forecast_hour'] = str(ta_info[1])
             plot_info_dict['fcst_var_name'] = fcst_var_name
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['fcst_var_threshs'] = fcst_var_thresh_list
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['obs_var_threshs'] = obs_var_thresh_list
-            plot_info_dict['interp_points'] = str(
-                fhr_interppts_info[1]
-            )
+            plot_info_dict['interp_points'] = str(ta_info[2])
             for l in range(len(fcst_var_level_list)):
                 plot_info_dict['fcst_var_level'] = fcst_var_level_list[l]
                 plot_info_dict['obs_var_level'] = obs_var_level_list[l]
-                plot_ta = gdap_ta.ThresholdAverage(logger, job_output_dir,
-                                                   job_output_dir,
-                                                   model_info_dict,
-                                                   date_info_dict,
-                                                   plot_info_dict,
-                                                   met_info_dict,
-                                                   logo_dir)
-                plot_ta.make_threshold_average()
+                if len(plot_info_dict['fcst_var_threshs']) > 1:
+                    plot_ta = gdap_ta.ThresholdAverage(logger, job_output_dir,
+                                                       job_output_dir,
+                                                       model_info_dict,
+                                                       date_info_dict,
+                                                       plot_info_dict,
+                                                       met_info_dict,
+                                                       logo_dir)
+                    plot_ta.make_threshold_average()
+                else:
+                    logger.warning("No span of thresholds to plot, "
+                                   +"given 1 threshold, skipping "
+                                   +"threshold_average plots")
     elif plot == 'lead_by_date':
         import global_det_atmos_plots_lead_by_date as gdap_lbd
-        for var_interppts_info in \
-                list(itertools.product(var_info, interp_points_list)):
+        for lbd_info in \
+                list(itertools.product(valid_hrs, var_info,
+                                       interp_points_list)):
+            date_info_dict['valid_hr_start'] = str(lbd_info[0])
+            date_info_dict['valid_hr_end'] = str(lbd_info[0])
+            date_info_dict['valid_hr_inc'] = '24'
             date_info_dict['forecast_hours'] = fhrs
-            plot_info_dict['fcst_var_name'] = (
-                var_interppts_info[0][0][0]
-            )
-            plot_info_dict['fcst_var_level'] = (
-                var_interppts_info[0][0][1]
-            )
-            plot_info_dict['fcst_var_thresh'] = (
-                var_interppts_info[0][0][2]
-            )
-            plot_info_dict['obs_var_name'] = (
-                var_interppts_info[0][1][0]
-            )
-            plot_info_dict['obs_var_level'] = (
-                var_interppts_info[0][1][1]
-            )
-            plot_info_dict['obs_var_thresh'] = (
-                var_interppts_info[0][1][2]
-            )
-            plot_info_dict['interp_points'] = str(
-                var_interppts_info[1]
-            )
-            plot_lbd = gdap_lbd.LeadByDate(logger, job_output_dir, job_output_dir,
-                                           model_info_dict, date_info_dict,
-                                           plot_info_dict, met_info_dict, logo_dir)
-            plot_lbd.make_lead_by_date()
+            plot_info_dict['fcst_var_name'] = lbd_info[1][0][0]
+            plot_info_dict['fcst_var_level'] = lbd_info[1][0][1]
+            plot_info_dict['fcst_var_thresh'] = lbd_info[1][0][2]
+            plot_info_dict['obs_var_name'] = lbd_info[1][1][0]
+            plot_info_dict['obs_var_level'] = lbd_info[1][1][1]
+            plot_info_dict['obs_var_thresh'] = lbd_info[1][1][2]
+            plot_info_dict['interp_points'] = str(lbd_info[2])
+            if len(date_info_dict['forecast_hours']) > 1:
+                plot_lbd = gdap_lbd.LeadByDate(logger, job_output_dir,
+                                               job_output_dir, model_info_dict,
+                                               date_info_dict, plot_info_dict,
+                                               met_info_dict, logo_dir)
+                plot_lbd.make_lead_by_date()
+            else:
+                logger.warning("No span of forecast hours to plot, "
+                              +"given 1 forecast hour, skipping "
+                              +"lead_by_date plots")
     elif plot == 'stat_by_level':
         import global_det_atmos_plots_stat_by_level as gdap_sbl
-        for fhr_interppts_info in \
-                list(itertools.product(fhrs, interp_points_list)):
-            date_info_dict['forecast_hour'] = str(
-                fhr_interppts_info[0]
-            )
+        for sbl_info in \
+                list(itertools.product(valid_hrs, fhrs, interp_points_list)):
+            date_info_dict['valid_hr_start'] = str(sbl_info[0])
+            date_info_dict['valid_hr_end'] = str(sbl_info[0])
+            date_info_dict['valid_hr_inc'] = '24'
+            date_info_dict['forecast_hour'] = str(sbl_info[1])
             plot_info_dict['fcst_var_name'] = fcst_var_name
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['vert_profiles'] = ['all', 'trop', 'strat',
                                                'ltrop', 'utrop']
-            plot_info_dict['interp_points'] = str(
-                fhr_interppts_info[1]
-            )
+            plot_info_dict['interp_points'] = str(sbl_info[2])
             for t in range(len(fcst_var_thresh_list)):
                 plot_info_dict['fcst_var_thresh'] = fcst_var_thresh_list[t]
                 plot_info_dict['obs_var_thresh'] = obs_var_thresh_list[t]
@@ -371,32 +344,44 @@ for plot in plots_list:
                 plot_sbl.make_stat_by_level()
     elif plot == 'lead_by_level':
         import global_det_atmos_plots_lead_by_level as gdap_lbl
-        for interppts in interp_points_list:
+        for lbl_info in \
+                list(itertools.product(valid_hrs, interp_points_list)):
+            date_info_dict['valid_hr_start'] = str(lbl_info[0])
+            date_info_dict['valid_hr_end'] = str(lbl_info[0])
+            date_info_dict['valid_hr_inc'] = '24'
             date_info_dict['forecast_hours'] = fhrs
             plot_info_dict['fcst_var_name'] = fcst_var_name
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['vert_profiles'] = ['all', 'trop', 'strat',
                                                'ltrop', 'utrop']
-            plot_info_dict['interp_points'] = str(interppts)
+            plot_info_dict['interp_points'] = str(lbl_info[1])
             for t in range(len(fcst_var_thresh_list)):
-                plot_info_dict['fcst_var_thresh'] = fcst_var_thresh_list[t]
-                plot_info_dict['obs_var_thresh'] = obs_var_thresh_list[t]
-                plot_lbl = gdap_lbl.LeadByLevel(logger, job_output_dir,
-                                                job_output_dir,
-                                                model_info_dict,
-                                                date_info_dict,
-                                                plot_info_dict,
-                                                met_info_dict,
-                                                logo_dir)
-                plot_lbl.make_lead_by_level()
+                if len(date_info_dict['forecast_hours']) > 1:
+                    plot_info_dict['fcst_var_thresh'] = fcst_var_thresh_list[t]
+                    plot_info_dict['obs_var_thresh'] = obs_var_thresh_list[t]
+                    plot_lbl = gdap_lbl.LeadByLevel(logger, job_output_dir,
+                                                    job_output_dir,
+                                                    model_info_dict,
+                                                    date_info_dict,
+                                                    plot_info_dict,
+                                                    met_info_dict, logo_dir)
+                    plot_lbl.make_lead_by_level()
+                else:
+                    logger.warning("No span of forecast hours to plot, "
+                                   +"given 1 forecast hour, skipping "
+                                   +"lead_by_level plots")
     elif plot == 'precip_spatial_map':
         model_info_dict['obs'] = {'name': 'ccpa',
                                   'plot_name': 'ccpa',
                                   'obs_name': '24hrCCPA'}
         pcp_combine_base_dir = os.path.join(VERIF_CASE_STEP_dir, 'data')
         import global_det_atmos_plots_precip_spatial_map as gdap_psm
-        for fhr in fhrs:
-            date_info_dict['forecast_hour'] = str(fhr)
+        for psm_info in \
+                list(itertools.product(valid_hrs, fhrs)):
+            date_info_dict['valid_hr_start'] = str(psm_info[0])
+            date_info_dict['valid_hr_end'] = str(psm_info[0])
+            date_info_dict['valid_hr_inc'] = '24'
+            date_info_dict['forecast_hour'] = str(psm_info[1])
             plot_info_dict['fcst_var_name'] = fcst_var_name
             plot_info_dict['fcst_var_level'] = fcst_var_level_list[0]
             plot_info_dict['fcst_var_thresh'] = 'NA'
@@ -405,25 +390,26 @@ for plot in plots_list:
             plot_info_dict['obs_var_thresh'] = 'NA'
             plot_info_dict['interp_points'] = 'NA'
             plot_psm = gdap_psm.PrecipSpatialMap(logger, pcp_combine_base_dir,
-                                                 job_output_dir, model_info_dict,
-                                                 date_info_dict, plot_info_dict,
+                                                 job_output_dir,
+                                                 model_info_dict,
+                                                 date_info_dict,
+                                                 plot_info_dict,
                                                  met_info_dict, logo_dir)
             plot_psm.make_precip_spatial_map()
     elif plot == 'performance_diagram':
         import global_det_atmos_plots_performance_diagram as gdap_pd
-        for fhr_interppts_info in \
-                list(itertools.product(fhrs, interp_points_list)):
-            date_info_dict['forecast_hour'] = str(
-                fhr_interppts_info[0]
-            )
+        for pd_info in \
+                list(itertools.product(valid_hrs, fhrs, interp_points_list)):
+            date_info_dict['valid_hr_start'] = str(pd_info[0])
+            date_info_dict['valid_hr_end'] = str(pd_info[0])
+            date_info_dict['valid_hr_inc'] = '24'
+            date_info_dict['forecast_hour'] = str(pd_info[1])
             plot_info_dict['fcst_var_name'] = fcst_var_name
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['fcst_var_threshs'] = fcst_var_thresh_list
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['obs_var_threshs'] = obs_var_thresh_list
-            plot_info_dict['interp_points'] = str(
-                fhr_interppts_info[1]
-            )
+            plot_info_dict['interp_points'] = str(pd_info[2])
             for l in range(len(fcst_var_level_list)):
                 plot_info_dict['fcst_var_level'] = fcst_var_level_list[l]
                 plot_info_dict['obs_var_level'] = obs_var_level_list[l]
