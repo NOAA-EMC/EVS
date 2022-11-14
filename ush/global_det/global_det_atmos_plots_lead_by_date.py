@@ -423,8 +423,8 @@ class LeadByDate:
                                           levels=subplot0_levs,
                                           cmap=subplot0_cmap, extend='both')
                     else:
-                       CF0 = ax.contourf(xmesh, ymesh, subplot0_data,
-                                         cmap=subplot0_cmap, extend='both')
+                        CF0 = ax.contourf(xmesh, ymesh, subplot0_data,
+                                          cmap=subplot0_cmap, extend='both')
                     C0 = ax.contour(xmesh, ymesh, subplot0_data,
                                     levels=CF0.levels, colors='k',
                                     linewidths=1.0)
