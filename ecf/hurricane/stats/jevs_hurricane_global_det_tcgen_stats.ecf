@@ -43,13 +43,11 @@ export NET=evs
 export COMPONENT=hurricane_global_det
 export RUN=tcgen
 export STEP=stats
-#export VERIF_CASE=grid2obs
 
 export envir=dev
 export cyc=00
 export job=jevs_hurricane_global_det_tcgen_stats_${cyc}
 
-#export HOMEevs=/lfs/h2/emc/vpppg/save/$USER/EVS
 #Define the directories of your TC genesis data and A/Bdeck files
 export COMINgenesis=/lfs/h2/emc/vpppg/save/jiayi.peng/TCgen/genesisDATA
 export COMINadeckNHC=/lfs/h2/emc/vpppg/save/jiayi.peng/TCgen/ABdeck
@@ -63,7 +61,7 @@ export KEEPDATA=YES
 
 
 # CALL executable job script here
-$HOMEevs/jobs/hurricane/stats/JEVS_HURRICANE_GLOBAL_DET_TCGEN_STATS
+$HOMEevs/jobs/hurricane/stats/JEVS_HURRICANE_STATS
 
 %include <tail.h>
 %manual

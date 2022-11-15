@@ -39,13 +39,11 @@ export NET=evs
 export COMPONENT=hurricane_global_ens
 export RUN=tropcyc
 export STEP=stats
-#export VERIF_CASE=grid2obs
 
 export envir=dev
 export cyc=00
 export job=jevs_hurricane_global_ens_tropcyc_stats_${cyc}
 
-#export HOMEevs=/lfs/h2/emc/vpppg/save/$USER/EVS
 #Define TC-vital file, TC track file and the directory for Bdeck files
 export COMINvit=/lfs/h1/ops/prod/com/gfs/v16.2/syndat/syndat_tcvitals.2022
 export COMINtrack=/lfs/h1/ops/prod/com/ens_tracker/v1.3/global/tracks.atcfunix.22
@@ -58,7 +56,7 @@ export KEEPDATA=YES
 
 
 # CALL executable job script here
-$HOMEevs/jobs/hurricane/stats/JEVS_HURRICANE_GLOBAL_ENS_TROPCYC_STATS
+$HOMEevs/jobs/hurricane/stats/JEVS_HURRICANE_STATS
 
 %include <tail.h>
 %manual
