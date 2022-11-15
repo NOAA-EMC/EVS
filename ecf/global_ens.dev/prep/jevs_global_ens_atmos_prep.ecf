@@ -1,7 +1,7 @@
 #!/bin/bash 
 #
 #PBS -N evs_gens_prep
-#PBS -oe 
+#PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A GEFS-DEV

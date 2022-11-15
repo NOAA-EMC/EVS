@@ -1,5 +1,5 @@
 #PBS -N evs_naefs_g2o_stats_%CYC%
-#PBS -oe
+#PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%

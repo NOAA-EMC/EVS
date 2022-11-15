@@ -1,23 +1,59 @@
 Instruction for tesing EVS global_ens package:
 
+ General information
+
+  The EVS global_ens verifies 4 global ensembles (models) over 1x1 global grid (G003) 
+     (1) NCEP's Global Ensemble Forecast System (GEFS)
+     (2) Canadian Meteorologic Center's Ensemble (CMCE)
+     (3) Europe Center's Medium-range Ensemble (ECME) 
+     (4) NCEP's North American Ensemble Forecast System (NAEFS) 
+
+   According to EVS, 3 "RUN"s assigned for the verification of these models:
+     (1) Atmos ( for GEFS, CMCE, ECME, NAEFS)
+     (2) WMO ( for GEFS, CMCE)
+     (3) Headline (for GEFS, NAEFS)
+          As comparison, GFS is also inluded for reference
+
+   Each RUN has different verification types:
+      Atmos:     grid2grid, grid2obs, precipitation, snowfall, sea-ice, SST, cnv (ceiling and visibility)
+      WMO:       grid2grid 
+      Headline:  grid2grid
+     
+   
  
-0. Before testing, please compile the Fortran source codes that are required to process
-    NAEFS data:
-    (1) go to /sorc sub-directory
+0. Before testing, please compile the Fortran source codes that are required to process NAEFS member data:
+    
+    (1) go to /sorc sub-directory under EVS
     (2) run script compile_evs_global_ens_sorc.sh that compiles the Fortran codes in the directory evs_global_ens_adjust_CMCE_NAEFS.fd
-        If the complation is successful, the execution file evs_g2g_adjustCMC.x will stored in the sub-directory /exec under EVS
-    The compilation is just one. If the compilation is successful, then can test the prep and stats ecf as shown below.
+        If the complation is successful, the execution file evs_g2g_adjustCMC.x will be stored in the sub-directory /exec under EVS
+    The compilation is just once. If the compilation is successful, then can test the prep and stats ecf as shown below.
  
 
 1. Testing ecf directory:
-  (1)  prep ecf testing directory
  
-  /lfs/h2/emc/vpppg/noscrub/$USER/EVS/ecf/global_gens.dev/prep
+  
+  (1)  prep ecf testing directory
+
+    Since the global_ens verifies 16 days of the ensemble forecast while the operational data are retained only for few days,
+    it is necessary to retain them for at least 16 days. But the global ensemble member files are very large and will occupy
+    huge storage space. To reduce the storage space, they are thinned by retireving only required fields. The second reason
+    is raw ensemble files are not G003. One of prep task to converting them to G003 grid. This also save large storage space.
+    The prep jobs also process required observation data, such as prepbufr, ccap, osi_saf, ghrsst, nohrsc data, etc. 
+   
+  The testing prep ecf files are in the directory:
+     /lfs/h2/emc/vpppg/noscrub/$USER/EVS/ecf/global_gens.dev/prep
+
     There are 2 ecf files:
 
-    jevs_global_ens_atmos_prep.ecf  
-    jevs_global_ens_headline_prep.ecf
+       jevs_global_ens_atmos_prep.ecf  
+       jevs_global_ens_headline_prep.ecf
 
+  After jevs_global_ens_atmos_prep.ecf is successfully finished, the prepared data are stored in directory
+ 
+     /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/prep/global_ens
+
+     Under which the daily data are in directory atmos.$INITDATE and headline.$INIDATE, respectovely 
+ 
   (2) stats ecf testing directory 
 
   /lfs/h2/emc/vpppg/noscrub/$USER/EVS/ecf/global_gens.dev/stats
@@ -164,8 +200,12 @@ Instruction for tesing EVS global_ens package:
       evs.stats.gfs_headline_grid2grid_v20221109.stat
 
 If all of above big files are generated, the stats execution is completeted.
-The standard output of all of ecf jobs are stored in the ecf directory 
+The standard output of all of ecf jobs are stored in the ecf directory:
 /lfs/h2/emc/vpppg/noscrub/$USER/EVS/ecf/global_ens.dev/stats
+Under which, the small stat files are saved in atmos.$VDATE, wmo.$VDATE and headline.$VDATE
+The large stat files are saved in gefs.$VDATE, cmce.$VDATE, ecme.$VDATE, and naefs.$VDATE 
+ (atmos, wmo, and headline stat files are save in the same model's directory)  
+
 
 Please Note: Only ater the retained prepared forecat files are accumulated for 16 days,
 (after running the prep ecf for 16 days), the verification of all forecast 384 hours

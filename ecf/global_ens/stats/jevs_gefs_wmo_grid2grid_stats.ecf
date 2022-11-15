@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #PBS -N evs_gefs_wmo_%CYC%
-#PBS -oe
+#PBS -j oe
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
 #PBS -A VERF-DEV
