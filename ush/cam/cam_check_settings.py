@@ -51,15 +51,13 @@ else:
         'PARMevs', 'USHevs', 'EXECevs', 'FIXevs', 
         'SCRIPTSevs', 'evs_run_mode'
     ]
-'''
-if STEP.upper() == 'STATS':
-    evs_cam_settings_dict['evs'].extend(
-        ['COMINfcst', 'COMINobs']
-    )
-'''
 evs_cam_settings_dict['shared'] = []
 evs_cam_settings_dict['modules'] = ['MET_PLUS_PATH', 'MET_PATH', 'MET_CONFIG']
-evs_cam_settings_dict['RUN_GRID2OBS_PREP'] = ['VERIF_TYPE']
+evs_cam_settings_dict['RUN_GRID2OBS_PREP'] = [
+        'MET_PLUS_CONF','MET_PLUS_OUT','METPLUS_VERBOSITY','MET_VERBOSITY',
+        'LOG_MET_OUTPUT_TO_METPLUS','NEST','TEMP_DIR','GRID_DIR','URL_HEAD',
+        'MASK_POLY_LIST'
+        ]
 evs_cam_settings_dict['RUN_GRID2OBS_STATS'] = ['VERIF_TYPE']
 evs_cam_settings_dict['RUN_GRID2OBS_PLOTS'] = []
 evs_cam_settings_dict['RUN_PRECIP_PREP'] = [
@@ -127,15 +125,25 @@ valid_config_var_values_dict = {
     'KEEPDATA': ['YES', 'NO'],
     'SENDCOM': ['YES', 'NO'],
 }
+if STEP.upper() == 'PREP':
+    if VERIF_CASE.upper() == 'GRID2OBS':
+        valid_config_var_values_dict['METPLUS_VERBOSITY'] = [
+            'DEBUG', 'INFO', 'WARN', 'ERROR'
+        ]
+        valid_config_var_values_dict['MET_VERBOSITY'] = [
+            '0', '1', '2', '3', '4', '5'
+        ]
+        valid_config_var_values_dict['LOG_MET_OUTPUT_TO_METPLUS'] = ['yes', 'no']
+        valid_config_var_values_dict['NEST'] = ['ak', 'conus', 'spc_otlk', 'firewxnest']
 if STEP.upper() == 'STATS':
     valid_config_var_values_dict['METPLUS_VERBOSITY'] = [
         'DEBUG', 'INFO', 'WARN', 'ERROR'
-    ],
+    ]
     valid_config_var_values_dict['MET_VERBOSITY'] = [
         '0', '1', '2', '3', '4', '5'
-    ],
-    valid_config_var_values_dict['LOG_MET_OUTPUT_TO_METPLUS'] = ['yes', 'no'],
-    valid_config_var_values_dict['NEST'] = ['ak', 'conus']
+    ]
+    valid_config_var_values_dict['LOG_MET_OUTPUT_TO_METPLUS'] = ['yes', 'no']
+    valid_config_var_values_dict['NEST'] = ['ak', 'conus', 'spc_otlk', 'firewxnest']
     valid_config_var_values_dict['BOOL_NBRHD'] = ['True', 'False']
     valid_config_var_values_dict['OUTPUT_FLAG_NBRHD'] = ['NONE', 'STAT', 'BOTH']
     valid_config_var_values_dict['OUTPUT_FLAG_CATEG'] = ['NONE', 'STAT', 'BOTH']
@@ -147,20 +155,18 @@ for env_var in list(valid_config_var_values_dict.keys()):
             if list_item not in valid_config_var_values_dict[env_var]:
                 env_var_pass = False
                 failed_config_value = list_item
-                break
             else:
                 env_var_pass = True
     else:
         if os.environ[env_var] not in valid_config_var_values_dict[env_var]:
             env_var_pass = False
             failed_config_value = os.environ[env_var]
-            break
         else: 
             env_var_pass = True
     if not env_var_pass:
         print(f"ERROR: The {env_var} value of {failed_config_value} is not a"
               + f" valid option. Valid options are"
-              + f" {', '.join(valid_config_var_values_dict[config_var])}")
+              + f" {', '.join(valid_config_var_values_dict[env_var])}")
         sys.exit(1)
 
 print(f"END: {os.path.basename(__file__)}")
@@ -175,9 +181,6 @@ USER = os.environ['USER']
 if evs_run_mode != 'production':
     QUEUESERV = os.environ['QUEUESERV']
     ACCOUNT = os.environ['ACCOUNT']
-if STEP == 'prep':
-    COMINobs = os.environ['COMINobs']
-    VHOUR_LIST = os.environ['VHOUR_LIST']
 if STEP == 'stats':
     MODEL_INPUT_TEMPLATE = os.environ['MODEL_INPUT_TEMPLATE']
     COMINfcst = os.environ['COMINfcst']
@@ -186,6 +189,8 @@ if STEP == 'stats':
     MASK_POLY_LIST=os.environ['MASK_POLY_LIST']
 if VERIF_CASE == 'precip':
     if STEP == 'prep':
+        COMINobs = os.environ['COMINobs']
+        VHOUR_LIST = os.environ['VHOUR_LIST']
         FHR_END_SHORT = os.environ['FHR_END_SHORT']
         FHR_INCR_SHORT = os.environ['FHR_INCR_SHORT']
         FHR_END_FULL = os.environ['FHR_END_FULL']
@@ -204,9 +209,10 @@ if VERIF_CASE == 'precip':
         OBS_ACC = os.environ['OBS_ACC']
         NBRHD_WIDTHS=os.environ['NBRHD_WIDTHS']
 elif VERIF_CASE == 'grid2obs':
-    FHR_START = os.environ['FHR_START']
-    FHR_END = os.environ['FHR_END']
-    FHR_INCR = os.environ['FHR_INCR']
+    if STEP == 'stats':
+        FHR_START = os.environ['FHR_START']
+        FHR_END = os.environ['FHR_END']
+        FHR_INCR = os.environ['FHR_INCR']
     
 # Check current working directory
 cwd = os.getcwd()
@@ -221,7 +227,13 @@ if STEP == 'prep':
     env_dir_list.append('MET_PLUS_PATH')
     env_dir_list.append('MET_PATH')
     env_dir_list.append('MET_CONFIG')
-    env_dir_list.append('COMINobs')
+    if VERIF_CASE == 'precip':
+        env_dir_list.append('COMINobs')
+    if VERIF_CASE == 'grid2obs':
+        env_dir_list.append('MET_PLUS_PATH')
+        env_dir_list.append('MET_PATH')
+        env_dir_list.append('MET_CONFIG')
+        env_file_list.append('MASK_POLY_LIST')
 if STEP == 'stats':
     env_dir_list.append('MET_PLUS_PATH')
     env_dir_list.append('MET_PATH')
@@ -253,18 +265,18 @@ for env_file in env_file_list:
 
 # Check whether or not other variables are invalid
 if STEP == 'prep':
-    for VHOUR in re.split(r'[\s,]+', VHOUR_LIST):
-        if int(VHOUR) < 0 or int(VHOUR) > 23:
-            if int(VHOUR) == 24:
-                print(f"ERROR: VHOUR is set to {VHOUR}, which is equivalent to 00."
-                      + f" Please change the VHOUR to 00 instead in {config}.")
-                sys.exit(1)
-            else:
-                print(f"ERROR: VHOUR is set to {VHOUR}, which is not a valid time"
-                      + f" of day. Please set VHOUR to a two-digit integer between"
-                      + f"00 and 23 in {config}.")
-                sys.exit(1)
     if VERIF_CASE == 'precip':
+        for VHOUR in re.split(r'[\s,]+', VHOUR_LIST):
+            if int(VHOUR) < 0 or int(VHOUR) > 23:
+                if int(VHOUR) == 24:
+                    print(f"ERROR: VHOUR is set to {VHOUR}, which is equivalent to 00."
+                          + f" Please change the VHOUR to 00 instead in {config}.")
+                    sys.exit(1)
+                else:
+                    print(f"ERROR: VHOUR is set to {VHOUR}, which is not a valid time"
+                          + f" of day. Please set VHOUR to a two-digit integer between"
+                          + f"00 and 23 in {config}.")
+                    sys.exit(1)
         if len(OBS_ACC) != 2:
             print(f"ERROR: OBS_ACC is set to {OBS_ACC}, which has"
                   + f" {len(OBS_ACC)} digits, but two digits are required."

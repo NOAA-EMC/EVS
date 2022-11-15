@@ -26,19 +26,24 @@ NET = os.environ['NET']
 RUN = os.environ['RUN']
 COMPONENT = os.environ['COMPONENT']
 VERIF_CASE = os.environ['VERIF_CASE']
-OBSNAME = os.environ['OBSNAME']
 STEP = os.environ['STEP']
 MODELNAME = os.environ['MODELNAME']
 VDATE = os.environ['VDATE']
-fhr_end_max = max(int(FHR_END_FULL), int(FHR_END_SHORT))
 vdate_dt = datetime.strptime(VDATE, '%Y%m%d')
-start_date_dt = vdate_dt - td(hours=fhr_end_max)
 if VERIF_CASE == "precip":
+    fhr_end_max = max(int(FHR_END_FULL), int(FHR_END_SHORT))
+    start_date_dt = vdate_dt - td(hours=fhr_end_max)
     FHR_END_FULL = os.environ['FHR_END_FULL']
     FHR_END_SHORT = os.environ['FHR_END_SHORT']
     VERIF_TYPE = os.environ['VERIF_TYPE']
+    OBSNAME = os.environ['OBSNAME']
 elif VERIF_CASE == "grid2obs":
-    VERIF_TYPE = os.environ['VERIF_TYPE']
+    if STEP == 'stats':
+        VERIF_TYPE = os.environ['VERIF_TYPE']
+        OBSNAME = os.environ['OBSNAME']
+if STEP == 'prep':
+    if VERIF_CASE == 'grid2obs':
+        NEST = os.environ['NEST']
 if STEP == 'stats':
     job_type = os.environ['job_type']
 
@@ -46,12 +51,16 @@ if STEP == 'stats':
 # Define data base directorie
 data_base_dir = os.path.join(DATA, VERIF_CASE, 'data')
 data_dir_list = [data_base_dir]
-data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
 if VERIF_CASE == 'precip':
     if STEP == 'prep':
+        data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
         data_dir_list.append(os.path.join(data_base_dir, OBSNAME))
     if STEP == 'stats':
+        data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
         data_dir_list.append(os.path.join(data_base_dir, OBSNAME))
+elif VERIF_CASE == 'grid2obs':
+    if STEP == 'stats':
+        data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
 
 # Create data directories and subdirectories
 for data_dir in data_dir_list:
@@ -62,7 +71,7 @@ for data_dir in data_dir_list:
 # Create job script base directory
 job_scripts_dirs = []
 if STEP == 'prep':
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'prep_job_scripts'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'prep_job_scripts'))
 if STEP == 'stats':
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'reformat'))
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'generate'))
@@ -77,8 +86,22 @@ for job_scripts_dir in job_scripts_dirs:
 # Define working and COMOUT directories
 working_dir_list = []
 COMOUT_dir_list = []
-if STEP == 'stats':
-    if VERIF_CASE == "precip"
+if STEP == 'prep':
+    if VERIF_CASE == 'grid2obs':
+        working_output_base_dir = os.path.join(
+            DATA, VERIF_CASE
+        )
+        working_dir_list.append(working_output_base_dir)
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'data', 
+            NEST+'.'+vdate_dt.strftime('%Y%m%d')
+        ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUT, 
+            NEST+'.'+vdate_dt.strftime('%Y%m%d')
+        ))
+elif STEP == 'stats':
+    if VERIF_CASE == 'precip':
         if job_type == 'reformat':
             working_output_base_dir = os.path.join(
                 DATA, VERIF_CASE, 'METplus_output', VERIF_TYPE
@@ -146,7 +169,7 @@ if STEP == 'stats':
                     MODELNAME+'.'+date_dt.strftime('init%Y%m%d')
                 ))
             date_dt+=td(days=1)
-    elif VERIF_CASE == "grid2obs"
+    elif VERIF_CASE == "grid2obs":
         if job_type == 'reformat':
             working_output_base_dir = os.path.join(
                 DATA, VERIF_CASE, 'METplus_output', VERIF_TYPE

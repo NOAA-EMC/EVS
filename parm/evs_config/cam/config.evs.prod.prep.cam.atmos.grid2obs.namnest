@@ -25,15 +25,15 @@ export DAYS="1 2 3"
 export VHOUR_GROUPS="LT1200 GE1200"
 
 # Model/Obs Settings
-export OBS_ACC="01"
 
 # Additional Verification Settings
 if [ "$NEST" = "spc_otlk" ]; then
-    export TEMP_DIR="${DATA}/${VERIF_CASE}/data/genvxmask/${NEST}"
+    export TEMP_DIR="${DATA}/${VERIF_CASE}/data/${NEST}.${VDATE}"
     export GRID_DIR="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks"
-    export URL_HEAD="https://www.spc.noaa.gov/product/outlook/archive"
+    export URL_HEAD="https://www.spc.noaa.gov/products/outlook/archive"
     export MASK_POLY_LIST="${GRID_DIR}/Bukovsky_G104_CONUS"
 elif [ "$NEST" = "firewx" ]; then
+    export TEMP_DIR="${DATA}/${VERIF_CASE}/data/${NEST}.${VDATE}"
 else
     echo "The provided NEST, $NEST, is not supported for $MODELNAME"
     exit 1

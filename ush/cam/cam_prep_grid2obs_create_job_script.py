@@ -33,38 +33,23 @@ COMPONENT = os.environ['COMPONENT']
 NEST = os.environ['NEST']
 USHevs = os.environ['USHevs']
 if NEST == 'spc_otlk':
-    MASK_POLY_LIST = os.environ['MASK_POLY_LIST']
-    MET_PLUS_OUT = os.environ['MET_PLUS_OUT']
-    MET_PLUS_CONF = os.environ['MET_PLUS_CONF']
-    METPLUS_VERBOSITY = os.environ['METPLUS_VERBOSITY']
-    MET_VERBOSITY = os.environ['MET_VERBOSITY']
-    LOG_MET_OUTPUT_TO_METPLUS = os.environ['LOG_MET_OUTPUT_TO_METPLUS']
-    TEMP_DIR = os.environ['TEMP_DIR']
-    DAY = os.environ['DAY']
-    VHOUR_GROUP = os.environ['VHOUR_GROUP']
-    URL_HEAD = os.environ['URL_HEAD']
-    metplus_launcher = os.environ['metplus_launcher']
+    if STEP == 'prep':
+        TEMP_DIR = os.environ['TEMP_DIR']
+        DAY = os.environ['DAY']
+        VHOUR_GROUP = os.environ['VHOUR_GROUP']
+        URL_HEAD = os.environ['URL_HEAD']
+        metplus_launcher = os.environ['metplus_launcher']
 
 # Make a dictionary of environment variables needed to run this particular job
 job_env_vars_dict = {}
 if NEST == 'spc_otlk':
-    job_env_vars_dict['MASK_POLY_LIST'] = MASK_POLY_LIST
-    job_env_vars_dict['MET_PLUS_OUT'] = MET_PLUS_OUT
-    job_env_vars_dict['MET_PLUS_PATH'] = MET_PLUS_PATH
-    job_env_vars_dict['MET_PATH'] = MET_PATH
-    job_env_vars_dict['MET_PLUS_CONF'] = MET_PLUS_CONF
-    job_env_vars_dict['NEST'] = NEST
-    job_env_vars_dict['METPLUS_VERBOSITY'] = METPLUS_VERBOSITY
-    job_env_vars_dict['MET_VERBOSITY'] = MET_VERBOSITY
-    job_env_vars_dict['LOG_MET_OUTPUT_TO_METPLUS'] = LOG_MET_OUTPUT_TO_METPLUS
-    job_env_vars_dict['VERIF_CASE'] = VERIF_CASE
-    job_env_vars_dict['job_name'] = job_name
-    job_env_vars_dict['VDATE'] = VDATE
-    job_env_vars_dict['DAY'] = DAY
-    job_env_vars_dict['VHOUR_GROUP'] = VHOUR_GROUP
-    job_env_vars_dict['URL_HEAD'] = URL_HEAD
-    job_env_vars_dict['TEMP_DIR'] = TEMP_DIR
-    job_env_vars_dict['metplus_launcher'] = metplus_launcher
+    if STEP == 'prep':
+        job_env_vars_dict['NEST'] = NEST
+        job_env_vars_dict['VDATE'] = VDATE
+        job_env_vars_dict['DAY'] = DAY
+        job_env_vars_dict['VHOUR_GROUP'] = VHOUR_GROUP
+        job_env_vars_dict['URL_HEAD'] = URL_HEAD
+        job_env_vars_dict['TEMP_DIR'] = TEMP_DIR
 
 
 # Make a list of commands needed to run this particular job
@@ -73,8 +58,8 @@ if STEP == 'prep':
     if COMPONENT == 'cam':
         if NEST == 'spc_otlk':
             job_cmd_list.append(
-                f"/bin/bash {USHevs}/{COMPONENT}/"
-                + f"{COMPONENT}_{STEP}_{VERIF_CASE}_gen_{NEST}_mask.sh"
+                f"python {USHevs}/{COMPONENT}/"
+                + f"{COMPONENT}_{STEP}_{VERIF_CASE}_gen_{NEST}_mask.py"
             )
         else:
             print(f"ERROR: {NEST} is not a valid NEST for"

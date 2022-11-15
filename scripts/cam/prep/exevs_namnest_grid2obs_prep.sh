@@ -12,7 +12,7 @@
 set -x
 
 # Set Basic Environment Variables
-NEST_LIST="firewx spc_outlook"
+NEST_LIST="spc_otlk"
 
 # Loop through NAM Nest Grid2Obs configs
 export njob=1
@@ -49,7 +49,8 @@ for NEST in $NEST_LIST; do
             [[ $status -ne 0 ]] && exit $status
             [[ $status -eq 0 ]] && echo "Successfully ran cam_prep_grid2obs_create_job_script.py"
             export njob=$((njob+1))
-    
+        done
+    done
 done
 
 # Create POE Job Scripts
@@ -102,7 +103,7 @@ for NEST in $NEST_LIST; do
     # Copy files to desired location
     #all commands to copy output files into the correct EVS COMOUT directory
     if [ $SENDCOM = YES ]; then
-        for OBS_DIR_PATH in $DATA/$VERIF_CASE/data/$VERIF_TYPE/*; do
+        for OBS_DIR_PATH in $DATA/$VERIF_CASE/data/*; do
             OBS_DIR=$(echo ${OBS_DIR_PATH##*/})
             mkdir -p $COMOUT/$OBS_DIR
             for FILE in $OBS_DIR_PATH/*; do
