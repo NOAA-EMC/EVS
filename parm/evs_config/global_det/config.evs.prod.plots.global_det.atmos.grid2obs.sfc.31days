@@ -66,10 +66,10 @@ if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     export g2op_model_plot_name_list="gfs"
     export g2op_type_list="sfc"
     export g2op_event_equalization="NO"
-    export g2op_sfc_init_hr_list="00"
-    export g2op_sfc_valid_hr_list="00"
+    export g2op_sfc_init_hr_list="00 06 12 18"
+    export g2op_sfc_valid_hr_list="00 03 06 09 12 15 18 21"
     export g2op_sfc_fhr_min=00
     export g2op_sfc_fhr_max=384
-    export g2op_sfc_fhr_inc=24
+    export g2op_sfc_fhr_inc=3
 fi
 echo "END: $(basename ${BASH_SOURCE[0]})"
