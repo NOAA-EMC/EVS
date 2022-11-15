@@ -102,7 +102,7 @@ for  verify in $verifys ; do
         echo  "export vend=$cyc" >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
         echo  "export valid_increment=21600" >>  run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
 
-        echo  "export lead='24, 48, 72, 96, 12 144, 168, 192, 216, 240, 264, 288, 312, 336, 360, 384' "  >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
+        echo  "export lead='24, 48, 72, 96, 120, 144, 168, 192, 216, 240, 264, 288, 312, 336, 360, 384' "  >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
  
 
         echo  "export modeltail='.grib2'" >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
