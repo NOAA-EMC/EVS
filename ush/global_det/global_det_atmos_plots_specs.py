@@ -549,6 +549,9 @@ class PlotSpecs:
             var_thresh_for_title = 'NA'
         else:
             var_thresh_for_title = plot_info_dict['fcst_var_thresh']
+        if plot_info_dict['fcst_var_name'] == 'CAPE' \
+                and plot_info_dict['stat'] in ['RMSE', 'BIAS']:
+            var_thresh_for_title = 'NA'
         plot_title = (plot_title
                       +self.get_var_plot_name(var_name_for_title,
                                               var_level_for_title))
@@ -578,9 +581,7 @@ class PlotSpecs:
                  image_path - full path of the name the plot will
                               be saved as (string)
         """
-        # Component
         component_savefig_name = 'global_det'
-        # Metric
         if plot_info_dict['stat'] == 'PERF_DIA':
             metric_savefig_name = 'ctc'
         else:
@@ -600,7 +601,6 @@ class PlotSpecs:
                     metric_savefig_name+'_'
                     +thresh_letter.replace('.','p')
                 )
-        # Parameter
         parameter_savefig_name = plot_info_dict['fcst_var_name']
         if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
             parameter_savefig_name = (
@@ -608,9 +608,7 @@ class PlotSpecs:
                 +plot_info_dict['interp_method'].replace('WV1_', '')\
                 .replace('-', '_')
             )
-        # Level
         level_savefig_name = plot_info_dict['fcst_var_level'].replace('-', '_')
-        # Days
         start_date_dt = datetime.datetime.strptime(
             date_info_dict['start_date'], '%Y%m%d'
         )
@@ -619,7 +617,6 @@ class PlotSpecs:
         )
         ndays = int((end_date_dt - start_date_dt).total_seconds()/86400)
         ndays_savefig_name = 'last'+str(ndays)+'days'
-        # Plot type
         if self.plot_type == 'time_series':
             plot_type_savefig_name = 'timeseries'
         elif self.plot_type == 'lead_average':
@@ -656,9 +653,7 @@ class PlotSpecs:
                  plot_type_savefig_name+'_'
                  +'f'+date_info_dict['forecast_hour'].zfill(3)
             )
-        # Grid and region
         grid_savefig_name = plot_info_dict['grid']
-        # Region
         region_savefig_dict = {
             'Alaska': 'alaska',
             'Appalachia': 'buk_apl',
@@ -698,7 +693,6 @@ class PlotSpecs:
             )
         else:    
             region_savefig_name = plot_info_dict['vx_mask']
-        # Put together
         savefig_name = (
             'evs.'
             +component_savefig_name+'.'
@@ -710,6 +704,9 @@ class PlotSpecs:
             +'.png'
         )
         image_path = os.path.join(image_dir, savefig_name.lower())
+        if plot_info_dict['fcst_var_name'] == 'CAPE' \
+                and plot_info_dict['stat'] in ['RMSE', 'BIAS']:
+            image_path = image_path.replace('_gt0||', '')
         return image_path
 
     def get_logo_location(self, position, x_figsize, y_figsize, dpi):
