@@ -286,10 +286,12 @@ class LeadByLevel:
             if len(self.date_info_dict['forecast_hours']) < n_xticks:
                 xticks = self.date_info_dict['forecast_hours']
             else:
+                xtick_intvl = int(len(self.date_info_dict['forecast_hours'])
+                                  /n_xticks)
                 xticks = []
-                for fhr in self.date_info_dict['forecast_hours']:
+                for fhr in self.date_info_dict['forecast_hours'][::xtick_intvl]:
                     if int(fhr) % 24 == 0:
-                       xticks.append(fhr) 
+                        xticks.append(fhr)
             vert_profile_levels_int_ticks = vert_profile_levels_int
             if vert_profile == 'all':
                 for del_lev in [925, 700, 400, 250, 150]:

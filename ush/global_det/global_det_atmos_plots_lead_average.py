@@ -235,8 +235,10 @@ class LeadAverage:
         if len(self.date_info_dict['forecast_hours']) < n_xticks:
             xticks = self.date_info_dict['forecast_hours']
         else:
+            xtick_intvl = int(len(self.date_info_dict['forecast_hours'])
+                              /n_xticks)
             xticks = []
-            for fhr in self.date_info_dict['forecast_hours']:
+            for fhr in self.date_info_dict['forecast_hours'][::xtick_intvl]:
                 if int(fhr) % 24 == 0:
                     xticks.append(fhr)
         stat_min_max_dict = {
