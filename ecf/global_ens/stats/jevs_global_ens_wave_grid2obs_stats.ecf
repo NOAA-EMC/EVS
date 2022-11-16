@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=02:00:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
+#PBS -l walltime=01:30:00
+#PBS -l place=vscatter,select=1:ncpus=128:mem=500G
 #PBS -l debug=true
 #PBS -V
 
@@ -30,8 +30,10 @@ export obsproc_ver=$obsproc_ver
 module reset
 ##export HPC_OPT=/apps/ops/para/libs
 module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
+module load cray-pals/${craypals_ver}
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module --ignore-cache load intel/${intel_ver}
+module load cfp/${cfp_ver}
 module load libjpeg/${libjpeg_ver}
 module load grib_util/${grib_util_ver}
 module load wgrib2/${wgrib2_ver}
@@ -58,15 +60,25 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export KEEPDATA=${KEEPDATA:-YES}
-export SENDMETVIEWER=${SENDMETVIEWER:-NO}
-export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output
 
 export MODELNAME=gefs
+export OBTYPE=GDAS
 export NET=evs
 export COMPONENT=global_ens
 export STEP=stats
 export RUN=wave
 export VERIF_CASE=grid2obs
+
+## developers directories
+export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output
+export FIXvevs='/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix'
+export COMINobs=/lfs/h1/ops/prod/com/obsproc/v1.0
+export OUTPUTROOT="/lfs/h2/emc/vpppg/noscrub/$USER/EVS_stats"
+export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}
+export ARCgefs=${COMIN}/prep/${COMPONENT}
+
+export run_mpi='yes'
+export gather='yes'
 
 export job=${PBS_JOBNAME:-jevs_global_ens_wave_g2o_stats}
 export jobid=$job.${PBS_JOBID:-$$}
