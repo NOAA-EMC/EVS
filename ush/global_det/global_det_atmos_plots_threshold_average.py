@@ -653,10 +653,10 @@ def main():
         'interp_points': 'INTERP_POINTS',
         'fcst_var_name': 'FCST_VAR_NAME',
         'fcst_var_level': 'FCST_VAR_LEVEL',
-        'fcst_var_thresh': ['FCST_VAR_THRESHS'],
+        'fcst_var_threshs': ['FCST_VAR_THRESHS'],
         'obs_var_name': 'OBS_VAR_NAME',
         'obs_var_level': 'OBS_VAR_LEVEL',
-        'obs_var_thresh': ['OBS_VAR_THRESHS'],
+        'obs_var_threshs': ['OBS_VAR_THRESHS'],
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',
