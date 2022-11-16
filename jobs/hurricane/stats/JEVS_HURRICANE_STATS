@@ -103,6 +103,10 @@ export COMINtrack=${COMINtrack:-your/TC/track/file}
 export COMINbdeckNHC=${COMINbdeckNHC:-/your/NHC/bdeck/data/dir}
 export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
 
+else
+echo "Job failed: unknown ${COMPONENT} and ${RUN}"
+err_exit "FAILED ${jobid} - ERROR IN unknown ${COMPONENT} and ${RUN} - ABNORMAL EXIT"
+
 fi
 
 #export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})/${COMPONENT}/${RUN}/${STEP}}
