@@ -257,9 +257,10 @@ class PlotSpecs:
             'O3MR/P50': '50 hPa Ozone Mixing Ratio',
             'O3MR/P70': '70 hPa Ozone Mixing Ratio',
             'O3MR/P100': '100 hPa Ozone Mixing Ratio',
-            'PWAT/L0': 'Precipitable Water',
+            'PRES/TROPOPAUSE': 'Tropopause Pressure',
             'PRES/Z0': 'Surface Pressure',
             'PRMSL/Z0': 'Pressure Reduced to MSL',
+            'PWAT/L0': 'Precipitable Water',
             'RH/NA': 'Relative Humidity',
             'RH/P1': '1 hPa Relative Humidity',
             'RH/P5': '5 hPa Relative Humidity',
@@ -550,7 +551,7 @@ class PlotSpecs:
         else:
             var_thresh_for_title = plot_info_dict['fcst_var_thresh']
         if plot_info_dict['fcst_var_name'] == 'CAPE' \
-                and plot_info_dict['stat'] in ['RMSE', 'BIAS']:
+                and plot_info_dict['stat'] in ['RMSE', 'BIAS', 'ME']:
             var_thresh_for_title = 'NA'
         plot_title = (plot_title
                       +self.get_var_plot_name(var_name_for_title,
@@ -608,7 +609,10 @@ class PlotSpecs:
                 +plot_info_dict['interp_method'].replace('WV1_', '')\
                 .replace('-', '_')
             )
-        level_savefig_name = plot_info_dict['fcst_var_level'].replace('-', '_')
+        level_savefig_name = (
+            plot_info_dict['fcst_var_level'].replace('-', '_')\
+            .replace('.', 'p')
+        )
         start_date_dt = datetime.datetime.strptime(
             date_info_dict['start_date'], '%Y%m%d'
         )
@@ -673,17 +677,23 @@ class PlotSpecs:
             'GreatLakes': 'buk_grlk',
             'Mezquital': 'buk_mez',
             'MidAtlantic': 'buk_matl',
+            'N60N90': 'n60',
+            'NAO': 'nao',
             'NHEM': 'nhem',
             'NorthAtlantic': 'buk_ne',
             'NPlains': 'buk_npl',
+            'NPO': 'npo',
             'NRockies': 'buk_nrk',
             'PacificNW': 'buk_npw',
             'PacificSW': 'buk_nsw',
             'Prairie': 'buk_pra',
+            'S60S90': 's60',
+            'SAO': 'sao',
             'SHEM': 'shem',
             'Southeast': 'buk_se',
             'Southwest': 'buk_sw',
             'SPlains': 'buk_spl',
+            'SPO': 'spo',
             'SRockies': 'buk_srk',
             'TROPICS': 'tropics'
         }
@@ -704,9 +714,10 @@ class PlotSpecs:
             +'.png'
         )
         image_path = os.path.join(image_dir, savefig_name.lower())
-        if plot_info_dict['fcst_var_name'] == 'CAPE' \
-                and plot_info_dict['stat'] in ['RMSE', 'BIAS']:
-            image_path = image_path.replace('_gt0||', '')
+        if plot_info_dict['fcst_var_name'] == 'CAPE':
+            image_path = image_path.replace('_z0', '_l0').replace('_p90_0', '_l90')
+            if plot_info_dict['stat'] in ['RMSE', 'BIAS', 'ME']:
+                image_path = image_path.replace('_gt0||', '')
         return image_path
 
     def get_logo_location(self, position, x_figsize, y_figsize, dpi):
@@ -757,7 +768,7 @@ class PlotSpecs:
                  subplot0_cmap  - colormap for subplot 0
                  subplotsN_cmap - colormap for other subplots
         """
-        if stat in ['BIAS', 'FBIAS']:
+        if stat in ['BIAS', 'ME', 'FBIAS']:
             cmap_bias_original = plt.cm.PiYG_r
             colors_bias = cmap_bias_original(
                 np.append(np.linspace(0,0.3,10), np.linspace(0.7,1,10))
@@ -767,7 +778,7 @@ class PlotSpecs:
             )
         else:
             subplot0_cmap = plt.cm.BuPu_r
-        if stat in ['BIAS', 'FBIAS']:
+        if stat in ['BIAS', 'ME', 'FBIAS']:
             subplotsN_cmap = subplot0_cmap
         else:
             if stat == 'RMSE':
@@ -867,8 +878,8 @@ class PlotSpecs:
                     [0+(i*dx)**spacing*cmax for i in range(steps)],
                     dtype=float
                 )
-            elif stat in ['BIAS', 'FBIAS']:
-                if stat == 'BIAS':
+            elif stat in ['BIAS', 'ME', 'FBIAS']:
+                if stat in ['BIAS', 'ME']:
                     center_value = 0
                 elif stat == 'FBIAS':
                     center_value = 1
@@ -884,12 +895,12 @@ class PlotSpecs:
                                        0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5])
         else:
             if np.shape(subplotsN_data) != np.shape([np.nan]):
-                if stat in ['BIAS', 'FBIAS']:
+                if stat in ['BIAS', 'ME', 'FBIAS']:
                     have_subplotsN_levs = have_subplot0_levs
                     subplotsN_levs = subplot0_levs
                 if not have_subplotsN_levs:
                     for N in range(len(subplotsN_data[:,0,0])):
-                        if stat in ['BIAS', 'FBIAS']:
+                        if stat in ['BIAS', 'ME', 'FBIAS']:
                             subplotN_data = subplotsN_data[N,:,:]
                             if np.nanmax(subplotN_data) > 100:
                                 spacing = 2.25
@@ -897,7 +908,7 @@ class PlotSpecs:
                                 spacing = 2
                             else:
                                 spacing = 1.75
-                            if stat == 'BIAS':
+                            if stat in ['BIAS', 'ME']:
                                 center_value = 0
                             elif stat == 'FBIAS':
                                 center_value = 1
