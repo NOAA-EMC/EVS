@@ -547,6 +547,14 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
             plt.close(num)
             logger.info("========================================")
             return None
+        for yy in y_vals:
+            if yy == np.inf or yy == -np.inf:
+                print("Incorrect value when obtainting y_vals for model=",model_plot_name)
+                logger.info("Incorrect value when obtainting y_vals")
+                plt.close(num)
+                logger.info("========================================")
+                return None
+
         y_max = max([y_max] + y_vals)
         y_min = min([y_min] + y_vals)
         print(y_vals)
