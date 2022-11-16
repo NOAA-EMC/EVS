@@ -544,12 +544,22 @@ for plot in plots_list:
     else:
         logger.warning(plot+" not recongized")
 
-# Copy images from job directory to main image directory
+# Create tar file of jobs plots and copy to main image directory
 job_output_image_dir = os.path.join(job_output_dir, 'images')
+cwd = os.getcwd()
 if len(glob.glob(job_output_image_dir+'/*')) != 0:
-    for job_output_image in glob.glob(job_output_image_dir+'/*'):
-        logger.debug(f"Copying {job_output_image} to {VERIF_TYPE_image_dir}")
-        shutil.copy2(job_output_image, VERIF_TYPE_image_dir)            
+    os.chdir(job_output_image_dir)
+    tar_file = os.path.join(job_output_image_dir,
+                            job_name.replace('/','_')+'.tar')
+    if os.path.exists(tar_file):
+        os.remove(tar_file)
+    logger.debug("Make tar file "+tar_file+" from "+job_output_image_dir)
+    gda_util.run_shell_command(
+        ['tar', '-cvf', tar_file, '*']
+    )
+    logger.debug(f"Copying {tar_file} to {VERIF_TYPE_image_dir}")
+    shutil.copy2(tar_file, VERIF_TYPE_image_dir)
+    os.chdir(cwd)
 else:
     logger.warning(f"No images generated in {job_output_image_dir}")
 
