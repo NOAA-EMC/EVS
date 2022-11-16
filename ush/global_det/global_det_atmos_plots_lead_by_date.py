@@ -441,7 +441,7 @@ class LeadByDate:
                         C0_fmt[lev] = label
                     ax.clabel(C0, C0.levels, fmt=C0_fmt, inline=True,
                               fontsize=12.5)
-                    if self.plot_info_dict['stat'] in ['BIAS', 'FBIAS']:
+                    if self.plot_info_dict['stat'] in ['BIAS', 'ME', 'FBIAS']:
                         if not make_colorbar:
                             make_colorbar = True
                             cbar_CF = CF0
@@ -453,7 +453,7 @@ class LeadByDate:
                     self.logger.warning(f"Fully masked array for {model_num}, "
                                         +"no plotting")
             else:
-                if self.plot_info_dict['stat'] in ['BIAS', 'FBIAS']:
+                if self.plot_info_dict['stat'] in ['BIAS', 'ME',' FBIAS']:
                     self.logger.debug(f"Plotting {model_num} - {model_num_name} "
                                       +f"- {model_num_plot_name}")
                     ax.set_title(model_num_plot_name)
@@ -469,7 +469,8 @@ class LeadByDate:
                         CFN = ax.contourf(xmesh, ymesh, subplotN_data,
                                           levels=subplotsN_levs,
                                           cmap=subplotsN_cmap, extend='both')
-                        if self.plot_info_dict['stat'] in ['BIAS', 'FBIAS']:
+                        if self.plot_info_dict['stat'] in ['BIAS', 'ME',
+                                                           'FBIAS']:
                             CN = ax.contour(xmesh, ymesh, subplotN_data,
                                             levels=CFN.levels, colors='k',
                                             linewidths=1.0)
@@ -490,7 +491,8 @@ class LeadByDate:
                             make_colorbar = True
                             cbar_CF = CFN
                             cbar_ticks = CFN.levels
-                            if self.plot_info_dict['stat'] in ['BIAS', 'FBIAS']:
+                            if self.plot_info_dict['stat'] in ['BIAS', 'ME',
+                                                               'FBIAS']:
                                 cbar_label = plot_specs_lbd.get_stat_plot_name(
                                     self.plot_info_dict['stat']
                                 )

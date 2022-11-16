@@ -114,290 +114,294 @@ class StatByLevel:
                               +', '.join(format_valid_dates))
             plot_dates = init_dates
         plot_specs_sbl = PlotSpecs(self.logger, 'stat_by_level')
-        # Loop over various vertical profiles
-        for vert_profile in self.plot_info_dict['vert_profiles']:
-            self.logger.info(f"Gathering data for {self.plot_info_dict['stat']} "
-                             +f"- vertical profile {vert_profile}")
-            vert_profile_levels = plot_specs_sbl.get_vert_profile_levels(
-                vert_profile
+        self.logger.info(f"Gathering data for {self.plot_info_dict['stat']} "
+                         +"- vertical profile "
+                         +f"{self.plot_info_dict['vert_profile']}")
+        vert_profile_levels = plot_specs_sbl.get_vert_profile_levels(
+            self.plot_info_dict['vert_profile']
+        )
+        vert_profile_levels_int = np.empty(len(vert_profile_levels),
+                                           dtype=int)
+        self.plot_info_dict['fcst_var_level'] = (
+            self.plot_info_dict['vert_profile']
+        )
+        self.plot_info_dict['obs_var_level'] = (
+            self.plot_info_dict['vert_profile']
+        )
+        fcst_units = []
+        for level in vert_profile_levels:
+            self.logger.debug(f"Building data for level {level}")
+            vert_profile_levels_int[vert_profile_levels.index(level)] = (
+                level[1:]
             )
-            vert_profile_levels_int = np.empty(len(vert_profile_levels),
-                                               dtype=int)
-            self.plot_info_dict['fcst_var_level'] = vert_profile
-            self.plot_info_dict['obs_var_level'] = vert_profile
-            fcst_units = []
-            for level in vert_profile_levels:
-                self.logger.debug(f"Building data for level {level}")
-                vert_profile_levels_int[vert_profile_levels.index(level)] = (
-                    level[1:]
-                )
-                # Read in data
-                self.logger.info("Reading in model stat files "
-                                 +f"from {self.input_dir}")
-                all_model_df = gda_util.build_df(
-                    self.logger, self.input_dir, self.output_dir,
-                    self.model_info_dict, self.met_info_dict,
-                    self.plot_info_dict['fcst_var_name'],
-                    level,
-                    self.plot_info_dict['fcst_var_thresh'],
-                    self.plot_info_dict['obs_var_name'],
-                    level,
-                    self.plot_info_dict['obs_var_thresh'],
-                    self.plot_info_dict['line_type'],
-                    self.plot_info_dict['grid'],
-                    self.plot_info_dict['vx_mask'],
-                    self.plot_info_dict['interp_method'],
-                    self.plot_info_dict['interp_points'],
-                    self.date_info_dict['date_type'],
-                    plot_dates, format_valid_dates,
-                    str(self.date_info_dict['forecast_hour'])
-                )
-                fcst_units.extend(
-                    all_model_df['FCST_UNITS'].values.astype('str').tolist()
-                )
-                # Calculate statistic
-                self.logger.info("Calculating statstic "
-                                 +f"{self.plot_info_dict['stat']} "
-                                 +"from line type "
-                                 +f"{self.plot_info_dict['line_type']}")
-                stat_df, stat_array = gda_util.calculate_stat(
-                    self.logger, all_model_df,
-                    self.plot_info_dict['line_type'],
-                    self.plot_info_dict['stat']
-                )
-                model_idx_list = (
-                    stat_df.index.get_level_values(0).unique().tolist()
-                )
-                if self.plot_info_dict['event_equalization'] == 'YES':
-                    self.logger.debug("Doing event equalization")
-                    masked_stat_array = np.ma.masked_invalid(stat_array)
-                    stat_array = np.ma.mask_cols(masked_stat_array)
-                    stat_array = stat_array.filled(fill_value=np.nan)
-                    for model_idx in model_idx_list:
-                        model_idx_num = model_idx_list.index(model_idx)
-                        stat_df.loc[model_idx] = stat_array[model_idx_num,:]
-                        all_model_df.loc[model_idx] = (
-                            all_model_df.loc[model_idx].where(
-                                stat_df.loc[model_idx].notna()
-                        ).values)
-                if level == vert_profile_levels[0]:
-                    stat_vert_profile_df = pd.DataFrame(
-                        np.nan, model_idx_list,
-                        columns=vert_profile_levels
-                    )
-                for model_idx in model_idx_list:
-                    model_idx_num = model_idx_list.index(model_idx)
-                    if self.plot_info_dict['line_type'] in ['CNT', 'GRAD',
-                                                            'CTS', 'NBRCTS',
-                                                            'NBRCNT', 'VCNT']:
-                        avg_method = 'mean'
-                        calc_avg_df = stat_df.loc[model_idx]
-                    else:
-                        avg_method = 'aggregation'
-                        calc_avg_df = all_model_df.loc[model_idx]
-                    model_idx_forecast_hour_avg = gda_util.calculate_average(
-                        self.logger, avg_method,
-                        self.plot_info_dict['line_type'],
-                        self.plot_info_dict['stat'], calc_avg_df
-                    )
-                    if not np.isnan(model_idx_forecast_hour_avg):
-                        stat_vert_profile_df.loc[model_idx, level] = (
-                            model_idx_forecast_hour_avg
-                        )
-            # Set up plot
-            self.logger.info(f"Doing plot set up")
-            plot_specs_sbl.set_up_plot()
-            stat_min = np.ma.masked_invalid(np.nan)
-            stat_max = np.ma.masked_invalid(np.nan)
-            stat_plot_name = plot_specs_sbl.get_stat_plot_name(
+            # Read in data
+            self.logger.info("Reading in model stat files "
+                             +f"from {self.input_dir}")
+            all_model_df = gda_util.build_df(
+                self.logger, self.input_dir, self.output_dir,
+                self.model_info_dict, self.met_info_dict,
+                self.plot_info_dict['fcst_var_name'],
+                level,
+                self.plot_info_dict['fcst_var_thresh'],
+                self.plot_info_dict['obs_var_name'],
+                level,
+                self.plot_info_dict['obs_var_thresh'],
+                self.plot_info_dict['line_type'],
+                self.plot_info_dict['grid'],
+                self.plot_info_dict['vx_mask'],
+                self.plot_info_dict['interp_method'],
+                self.plot_info_dict['interp_points'],
+                self.date_info_dict['date_type'],
+                plot_dates, format_valid_dates,
+                str(self.date_info_dict['forecast_hour'])
+            )
+            fcst_units.extend(
+                all_model_df['FCST_UNITS'].values.astype('str').tolist()
+            )
+            # Calculate statistic
+            self.logger.info("Calculating statstic "
+                             +f"{self.plot_info_dict['stat']} "
+                             +"from line type "
+                             +f"{self.plot_info_dict['line_type']}")
+            stat_df, stat_array = gda_util.calculate_stat(
+                self.logger, all_model_df,
+                self.plot_info_dict['line_type'],
                 self.plot_info_dict['stat']
             )
-            fcst_units = np.unique(fcst_units)
-            fcst_units = np.delete(fcst_units, np.where(fcst_units == 'nan'))
-            if len(fcst_units) > 1:
-                self.logger.error("DIFFERING UNITS")
-                sys.exit(1)
-            elif len(fcst_units) == 0:
-                self.logger.warning("Empty dataframe")
-                fcst_units = ['']
-            plot_title = plot_specs_sbl.get_plot_title(
-                self.plot_info_dict, self.date_info_dict,
-                fcst_units[0]
+            model_idx_list = (
+                stat_df.index.get_level_values(0).unique().tolist()
             )
-            plot_left_logo = False
-            plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
-            if os.path.exists(plot_left_logo_path):
-                plot_left_logo = True
-                left_logo_img_array = matplotlib.image.imread(
-                    plot_left_logo_path
+            if self.plot_info_dict['event_equalization'] == 'YES':
+                self.logger.debug("Doing event equalization")
+                masked_stat_array = np.ma.masked_invalid(stat_array)
+                stat_array = np.ma.mask_cols(masked_stat_array)
+                stat_array = stat_array.filled(fill_value=np.nan)
+                for model_idx in model_idx_list:
+                    model_idx_num = model_idx_list.index(model_idx)
+                    stat_df.loc[model_idx] = stat_array[model_idx_num,:]
+                    all_model_df.loc[model_idx] = (
+                        all_model_df.loc[model_idx].where(
+                            stat_df.loc[model_idx].notna()
+                    ).values)
+            if level == vert_profile_levels[0]:
+                stat_vert_profile_df = pd.DataFrame(
+                    np.nan, model_idx_list,
+                    columns=vert_profile_levels
                 )
-                left_logo_xpixel_loc, left_logo_ypixel_loc, left_logo_alpha = (
-                    plot_specs_sbl.get_logo_location(
-                        'left', plot_specs_sbl.fig_size[0],
-                        plot_specs_sbl.fig_size[1], plt.rcParams['figure.dpi']
-                    )
-                )
-            plot_right_logo = False
-            plot_right_logo_path = os.path.join(self.logo_dir, 'nws.png')
-            if os.path.exists(plot_right_logo_path):
-                plot_right_logo = True
-                right_logo_img_array = matplotlib.image.imread(
-                    plot_right_logo_path
-                )
-                right_logo_xpixel_loc, right_logo_ypixel_loc, right_logo_alpha = (
-                    plot_specs_sbl.get_logo_location(
-                        'right', plot_specs_sbl.fig_size[0],
-                        plot_specs_sbl.fig_size[1], plt.rcParams['figure.dpi']
-                    )
-                )
-            image_name = plot_specs_sbl.get_savefig_name(
-                output_image_dir, self.plot_info_dict, self.date_info_dict
-            )
-            # Create plot
-            self.logger.info(f"Creating plot for {self.plot_info_dict['stat']} "
-                             +f"- vertical profile {vert_profile}")
-            fig, ax = plt.subplots(1,1,figsize=(plot_specs_sbl.fig_size[0],
-                                                plot_specs_sbl.fig_size[1]))
-            ax.grid(True)
-            ax.set_xlabel(stat_plot_name)
-            ax.set_ylabel('Pressure Level (hPa)')
-            ax.set_yscale('log')
-            ax.minorticks_off()
-            ax.set_yticks(vert_profile_levels_int)
-            ax.set_yticklabels(vert_profile_levels_int)
-            ax.set_ylim([vert_profile_levels_int[0],
-                         vert_profile_levels_int[-1]])
-            fig.suptitle(plot_title)
-            if plot_left_logo:
-                left_logo_img = fig.figimage(
-                    left_logo_img_array, left_logo_xpixel_loc,
-                    left_logo_ypixel_loc, zorder=1, alpha=right_logo_alpha
-                )
-                left_logo_img.set_visible(True)
-            if plot_right_logo:
-                right_logo_img = fig.figimage(
-                    right_logo_img_array, right_logo_xpixel_loc,
-                    right_logo_ypixel_loc, zorder=1, alpha=right_logo_alpha
-                )
-            model_plot_settings_dict = plot_specs_sbl.get_model_plot_settings()
             for model_idx in model_idx_list:
-                model_num = model_idx.split('/')[0]
-                model_num_name = model_idx.split('/')[1]
-                model_num_plot_name = model_idx.split('/')[2]
-                model_num_obs_name = self.model_info_dict[model_num]['obs_name']
-                model_num_data = stat_vert_profile_df.loc[model_idx]
-                if model_num_name in list(model_plot_settings_dict.keys()):
-                    model_num_plot_settings_dict = (
-                        model_plot_settings_dict[model_num_name]
-                    )
+                model_idx_num = model_idx_list.index(model_idx)
+                if self.plot_info_dict['line_type'] in ['CNT', 'GRAD',
+                                                        'CTS', 'NBRCTS',
+                                                        'NBRCNT', 'VCNT']:
+                    avg_method = 'mean'
+                    calc_avg_df = stat_df.loc[model_idx]
                 else:
-                    model_num_plot_settings_dict = (
-                       model_plot_settings_dict[model_num]
-                    )
-                masked_model_num_data = np.ma.masked_invalid(model_num_data)
-                model_num_npts = (
-                    len(masked_model_num_data)
-                    - np.ma.count_masked(masked_model_num_data)
+                    avg_method = 'aggregation'
+                    calc_avg_df = all_model_df.loc[model_idx]
+                model_idx_forecast_hour_avg = gda_util.calculate_average(
+                    self.logger, avg_method,
+                    self.plot_info_dict['line_type'],
+                    self.plot_info_dict['stat'], calc_avg_df
                 )
-                masked_vert_profile_levels_int = np.ma.masked_where(
-                    np.ma.getmask(masked_model_num_data),
-                    vert_profile_levels_int
-                )
-                if model_num_npts != 0:
-                    self.logger.debug(f"Plotting {model_num} - {model_num_name} "
-                                      +f"- {model_num_plot_name}")
-                    ax.plot(
-                        np.ma.compressed(masked_model_num_data),
-                        np.ma.compressed(masked_vert_profile_levels_int),
-                        color = model_num_plot_settings_dict['color'],
-                        linestyle = model_num_plot_settings_dict['linestyle'],
-                        linewidth = model_num_plot_settings_dict['linewidth'],
-                        marker = model_num_plot_settings_dict['marker'],
-                        markersize = model_num_plot_settings_dict['markersize'],
-                        label = model_num_plot_name,
-                        zorder = (len(list(self.model_info_dict.keys()))
-                                  - model_idx_list.index(model_idx) + 4)
+                if not np.isnan(model_idx_forecast_hour_avg):
+                    stat_vert_profile_df.loc[model_idx, level] = (
+                        model_idx_forecast_hour_avg
                     )
-                    if masked_model_num_data.min() < stat_min \
-                            or np.ma.is_masked(stat_min):
-                        stat_min = masked_model_num_data.min()
-                    if masked_model_num_data.max() > stat_max \
-                            or np.ma.is_masked(stat_max):
-                        stat_max = masked_model_num_data.max()
-                else:
-                    self.logger.warning(f"{model_num} - {model_num_name} "
-                                        +f"- {model_num_plot_name} has no points")
-            preset_x_axis_tick_min = ax.get_xticks()[0]
-            preset_x_axis_tick_max = ax.get_xticks()[-1]
-            preset_x_axis_tick_inc = ax.get_xticks()[1] - ax.get_xticks()[0]
-            if self.plot_info_dict['stat'] in ['ACC']:
-                x_axis_tick_inc = 0.1
-            else:
-                x_axis_tick_inc = preset_x_axis_tick_inc
-            if np.ma.is_masked(stat_min):
-                x_axis_min = preset_x_axis_tick_min
-            else:
-                if self.plot_info_dict['stat'] in ['ACC']:
-                    x_axis_min = round(stat_min,1) - x_axis_tick_inc
-                else:
-                    x_axis_min = preset_x_axis_tick_min
-                    while x_axis_min > stat_min:
-                        x_axis_min = x_axis_min - x_axis_tick_inc
-            if np.ma.is_masked(stat_max):
-                x_axis_max = preset_x_axis_tick_max
-            else:
-                if self.plot_info_dict['stat'] in ['ACC']:
-                    x_axis_max = 1
-                else:
-                    x_axis_max = preset_x_axis_tick_max + x_axis_tick_inc
-                    while x_axis_max < stat_max:
-                        x_axis_max = x_axis_max + x_axis_tick_inc
-            ax.set_xticks(
-                np.arange(x_axis_min, x_axis_max+x_axis_tick_inc,
-                          x_axis_tick_inc)
+        # Set up plot
+        self.logger.info(f"Doing plot set up")
+        plot_specs_sbl.set_up_plot()
+        stat_min = np.ma.masked_invalid(np.nan)
+        stat_max = np.ma.masked_invalid(np.nan)
+        stat_plot_name = plot_specs_sbl.get_stat_plot_name(
+            self.plot_info_dict['stat']
+        )
+        fcst_units = np.unique(fcst_units)
+        fcst_units = np.delete(fcst_units, np.where(fcst_units == 'nan'))
+        if len(fcst_units) > 1:
+            self.logger.error("DIFFERING UNITS")
+            sys.exit(1)
+        elif len(fcst_units) == 0:
+            self.logger.warning("Empty dataframe")
+            fcst_units = ['']
+        plot_title = plot_specs_sbl.get_plot_title(
+            self.plot_info_dict, self.date_info_dict,
+            fcst_units[0]
+        )
+        plot_left_logo = False
+        plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
+        if os.path.exists(plot_left_logo_path):
+            plot_left_logo = True
+            left_logo_img_array = matplotlib.image.imread(
+                plot_left_logo_path
             )
-            ax.set_xlim([x_axis_min, x_axis_max])
-            if len(ax.lines) != 0:
-                legend = ax.legend(
-                    bbox_to_anchor=(plot_specs_sbl.legend_bbox[0],
-                                    plot_specs_sbl.legend_bbox[1]),
-                    loc = plot_specs_sbl.legend_loc,
-                    ncol = plot_specs_sbl.legend_ncol,
-                    fontsize = plot_specs_sbl.legend_font_size
+            left_logo_xpixel_loc, left_logo_ypixel_loc, left_logo_alpha = (
+                plot_specs_sbl.get_logo_location(
+                    'left', plot_specs_sbl.fig_size[0],
+                    plot_specs_sbl.fig_size[1], plt.rcParams['figure.dpi']
                 )
-                plt.draw()
-                inv = ax.transData.inverted()
-                legend_box = legend.get_window_extent()
-                legend_box_inv = inv.transform(
-                    [(legend_box.x0,legend_box.y0),
-                     (legend_box.x1,legend_box.y1)]
+            )
+        plot_right_logo = False
+        plot_right_logo_path = os.path.join(self.logo_dir, 'nws.png')
+        if os.path.exists(plot_right_logo_path):
+            plot_right_logo = True
+            right_logo_img_array = matplotlib.image.imread(
+                plot_right_logo_path
+            )
+            right_logo_xpixel_loc, right_logo_ypixel_loc, right_logo_alpha = (
+                plot_specs_sbl.get_logo_location(
+                    'right', plot_specs_sbl.fig_size[0],
+                    plot_specs_sbl.fig_size[1], plt.rcParams['figure.dpi']
                 )
-                legend_box_inv_x1 = legend_box_inv[1][0]
-                if stat_min < legend_box_inv_x1:
-                    while stat_min < legend_box_inv_x1:
-                        x_axis_min = x_axis_min - x_axis_tick_inc
-                        ax.set_xticks(
-                            np.arange(x_axis_min,
-                                      x_axis_max + x_axis_tick_inc,
-                                      x_axis_tick_inc)
-                        )
-                        ax.set_xlim([x_axis_min, x_axis_max])
-                        legend = ax.legend(
-                            bbox_to_anchor=(plot_specs_sbl.legend_bbox[0],
-                                            plot_specs_sbl.legend_bbox[1]),
-                            loc = plot_specs_sbl.legend_loc,
-                            ncol = plot_specs_sbl.legend_ncol,
-                            fontsize = plot_specs_sbl.legend_font_size
-                        )
-                        plt.draw()
-                        inv = ax.transData.inverted()
-                        legend_box = legend.get_window_extent()
-                        legend_box_inv = inv.transform(
-                             [(legend_box.x0,legend_box.y0),
-                              (legend_box.x1,legend_box.y1)]
-                        )
-                        legend_box_inv_x1 = legend_box_inv[1][0]
-            self.logger.info("Saving image as "+image_name)
+            )
+        image_name = plot_specs_sbl.get_savefig_name(
+            output_image_dir, self.plot_info_dict, self.date_info_dict
+        )
+        # Create plot
+        self.logger.info(f"Creating plot for {self.plot_info_dict['stat']} "
+                         +"- vertical profile "
+                         +f"self.plot_info_dict['vert_profile']")
+        fig, ax = plt.subplots(1,1,figsize=(plot_specs_sbl.fig_size[0],
+                                            plot_specs_sbl.fig_size[1]))
+        ax.grid(True)
+        ax.set_xlabel(stat_plot_name)
+        ax.set_ylabel('Pressure Level (hPa)')
+        ax.set_yscale('log')
+        ax.minorticks_off()
+        ax.set_yticks(vert_profile_levels_int)
+        ax.set_yticklabels(vert_profile_levels_int)
+        ax.set_ylim([vert_profile_levels_int[0],
+                     vert_profile_levels_int[-1]])
+        fig.suptitle(plot_title)
+        if plot_left_logo:
+            left_logo_img = fig.figimage(
+                left_logo_img_array, left_logo_xpixel_loc,
+                left_logo_ypixel_loc, zorder=1, alpha=right_logo_alpha
+            )
+            left_logo_img.set_visible(True)
+        if plot_right_logo:
+            right_logo_img = fig.figimage(
+                right_logo_img_array, right_logo_xpixel_loc,
+                right_logo_ypixel_loc, zorder=1, alpha=right_logo_alpha
+            )
+        model_plot_settings_dict = plot_specs_sbl.get_model_plot_settings()
+        for model_idx in model_idx_list:
+            model_num = model_idx.split('/')[0]
+            model_num_name = model_idx.split('/')[1]
+            model_num_plot_name = model_idx.split('/')[2]
+            model_num_obs_name = self.model_info_dict[model_num]['obs_name']
+            model_num_data = stat_vert_profile_df.loc[model_idx]
+            if model_num_name in list(model_plot_settings_dict.keys()):
+                model_num_plot_settings_dict = (
+                    model_plot_settings_dict[model_num_name]
+                )
+            else:
+                model_num_plot_settings_dict = (
+                    model_plot_settings_dict[model_num]
+                )
+            masked_model_num_data = np.ma.masked_invalid(model_num_data)
+            model_num_npts = (
+                len(masked_model_num_data)
+                - np.ma.count_masked(masked_model_num_data)
+            )
+            masked_vert_profile_levels_int = np.ma.masked_where(
+                np.ma.getmask(masked_model_num_data),
+                vert_profile_levels_int
+            )
+            if model_num_npts != 0:
+                self.logger.debug(f"Plotting {model_num} - {model_num_name} "
+                                  +f"- {model_num_plot_name}")
+                ax.plot(
+                    np.ma.compressed(masked_model_num_data),
+                    np.ma.compressed(masked_vert_profile_levels_int),
+                    color = model_num_plot_settings_dict['color'],
+                    linestyle = model_num_plot_settings_dict['linestyle'],
+                    linewidth = model_num_plot_settings_dict['linewidth'],
+                    marker = model_num_plot_settings_dict['marker'],
+                    markersize = model_num_plot_settings_dict['markersize'],
+                    label = model_num_plot_name,
+                    zorder = (len(list(self.model_info_dict.keys()))
+                              - model_idx_list.index(model_idx) + 4)
+                )
+                if masked_model_num_data.min() < stat_min \
+                        or np.ma.is_masked(stat_min):
+                    stat_min = masked_model_num_data.min()
+                if masked_model_num_data.max() > stat_max \
+                        or np.ma.is_masked(stat_max):
+                    stat_max = masked_model_num_data.max()
+            else:
+                self.logger.warning(f"{model_num} - {model_num_name} "
+                                    +f"- {model_num_plot_name} has no points")
+        preset_x_axis_tick_min = ax.get_xticks()[0]
+        preset_x_axis_tick_max = ax.get_xticks()[-1]
+        preset_x_axis_tick_inc = ax.get_xticks()[1] - ax.get_xticks()[0]
+        if self.plot_info_dict['stat'] in ['ACC']:
+            x_axis_tick_inc = 0.1
+        else:
+            x_axis_tick_inc = preset_x_axis_tick_inc
+        if np.ma.is_masked(stat_min):
+            x_axis_min = preset_x_axis_tick_min
+        else:
+            if self.plot_info_dict['stat'] in ['ACC']:
+                x_axis_min = round(stat_min,1) - x_axis_tick_inc
+            else:
+                x_axis_min = preset_x_axis_tick_min
+                while x_axis_min > stat_min:
+                    x_axis_min = x_axis_min - x_axis_tick_inc
+        if np.ma.is_masked(stat_max):
+            x_axis_max = preset_x_axis_tick_max
+        else:
+            if self.plot_info_dict['stat'] in ['ACC']:
+                x_axis_max = 1
+            else:
+                x_axis_max = preset_x_axis_tick_max + x_axis_tick_inc
+                while x_axis_max < stat_max:
+                    x_axis_max = x_axis_max + x_axis_tick_inc
+        ax.set_xticks(
+            np.arange(x_axis_min, x_axis_max+x_axis_tick_inc,
+                      x_axis_tick_inc)
+        )
+        ax.set_xlim([x_axis_min, x_axis_max])
+        if len(ax.lines) != 0:
+            legend = ax.legend(
+                bbox_to_anchor=(plot_specs_sbl.legend_bbox[0],
+                                plot_specs_sbl.legend_bbox[1]),
+                loc = plot_specs_sbl.legend_loc,
+                ncol = plot_specs_sbl.legend_ncol,
+                fontsize = plot_specs_sbl.legend_font_size
+            )
+            plt.draw()
+            inv = ax.transData.inverted()
+            legend_box = legend.get_window_extent()
+            legend_box_inv = inv.transform(
+                [(legend_box.x0,legend_box.y0),
+                 (legend_box.x1,legend_box.y1)]
+            )
+            legend_box_inv_x1 = legend_box_inv[1][0]
+            if stat_min < legend_box_inv_x1:
+                while stat_min < legend_box_inv_x1:
+                    x_axis_min = x_axis_min - x_axis_tick_inc
+                    ax.set_xticks(
+                        np.arange(x_axis_min,
+                                  x_axis_max + x_axis_tick_inc,
+                                  x_axis_tick_inc)
+                    )
+                    ax.set_xlim([x_axis_min, x_axis_max])
+                    legend = ax.legend(
+                        bbox_to_anchor=(plot_specs_sbl.legend_bbox[0],
+                                        plot_specs_sbl.legend_bbox[1]),
+                        loc = plot_specs_sbl.legend_loc,
+                        ncol = plot_specs_sbl.legend_ncol,
+                        fontsize = plot_specs_sbl.legend_font_size
+                    )
+                    plt.draw()
+                    inv = ax.transData.inverted()
+                    legend_box = legend.get_window_extent()
+                    legend_box_inv = inv.transform(
+                         [(legend_box.x0,legend_box.y0),
+                          (legend_box.x1,legend_box.y1)]
+                    )
+                    legend_box_inv_x1 = legend_box_inv[1][0]
+        self.logger.info("Saving image as "+image_name)
             plt.savefig(image_name)
             plt.clf()
             plt.close('all')
@@ -436,7 +440,7 @@ def main():
         'fcst_var_thresh': 'FCST_VAR_THRESH',
         'obs_var_name': 'OBS_VAR_NAME',
         'obs_var_thresh': 'OBS_VAR_THRESH',
-        'vert_profiles': ['all', 'trop', 'strat']
+        'vert_profile': 'all'
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',
