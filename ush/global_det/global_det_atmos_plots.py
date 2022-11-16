@@ -11,7 +11,6 @@ import datetime
 import glob
 import subprocess
 import itertools
-import shutil
 import global_det_atmos_util as gda_util
 from global_det_atmos_plots_specs import PlotSpecs
 
@@ -548,7 +547,7 @@ for plot in plots_list:
     else:
         logger.warning(plot+" not recongized")
 
-# Create tar file of jobs plots and copy to main image directory
+# Create tar file of jobs plots and move to main image directory
 job_output_image_dir = os.path.join(job_output_dir, 'images')
 cwd = os.getcwd()
 if len(glob.glob(job_output_image_dir+'/*')) != 0:
@@ -561,8 +560,10 @@ if len(glob.glob(job_output_image_dir+'/*')) != 0:
     gda_util.run_shell_command(
         ['tar', '-cvf', tar_file, '*']
     )
-    logger.debug(f"Copying {tar_file} to {VERIF_TYPE_image_dir}")
-    shutil.copy2(tar_file, VERIF_TYPE_image_dir)
+    logger.debug(f"Moving {tar_file} to {VERIF_TYPE_image_dir}")
+    gda_util.run_shell_command(
+        ['mv', tar_file, VERIF_TYPE_image_dir+'/.']
+    )
     os.chdir(cwd)
 else:
     logger.warning(f"No images generated in {job_output_image_dir}")
