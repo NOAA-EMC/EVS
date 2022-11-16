@@ -122,26 +122,26 @@ for model_idx in range(len(model_list)):
                                        obs_var_name, line_type)
 
 # Set up model information dictionary
-model_info_dict = {}
+original_model_info_dict = {}
 for model_idx in range(len(model_list)):
     model_num = model_idx + 1
-    model_info_dict['model'+str(model_num)] = {
+    original_model_info_dict['model'+str(model_num)] = {
         'name': model_list[model_idx],
         'plot_name': model_plot_name_list[model_idx],
     }
     if VERIF_CASE == 'grid2grid' and VERIF_TYPE == 'pres_levs':
-         model_info_dict['model'+str(model_num)]['obs_name'] = (
+         original_model_info_dict['model'+str(model_num)]['obs_name'] = (
              truth_name_list[model_idx]
          )
     elif VERIF_CASE == 'grid2grid' and VERIF_TYPE == 'means':
-         model_info_dict['model'+str(model_num)]['obs_name'] = (
+         original_model_info_dict['model'+str(model_num)]['obs_name'] = (
              model_list[model_idx]
          )
     else:
-        model_info_dict['model'+str(model_num)]['obs_name'] = obs_name
+        original_model_info_dict['model'+str(model_num)]['obs_name'] = obs_name
 
 # Set up date information dictionary
-date_info_dict = {
+original_date_info_dict = {
     'date_type': date_type,
     'start_date': start_date,
     'end_date': end_date,
@@ -158,7 +158,7 @@ init_hrs = list(range(int(init_hr_start),
 fhrs = list(range(int(fhr_start), int(fhr_end)+int(fhr_inc), int(fhr_inc)))
 
 # Set up plot information dictionary
-plot_info_dict = {
+original_plot_info_dict = {
     'line_type': line_type,
     'grid': grid,
     'stat': stat,
@@ -184,7 +184,7 @@ else:
     sys.exit(1)
 
 # Set up MET information dictionary
-met_info_dict = {
+original_met_info_dict = {
     'root': MET_ROOT,
     'version': met_ver
 }
@@ -192,6 +192,10 @@ met_info_dict = {
 # Make the plots
 for plot in plots_list:
     plot_specs = PlotSpecs(logger, plot)
+    model_info_dict = original_model_info_dict.copy()
+    date_info_dict = original_date_info_dict.copy()
+    plot_info_dict = original_plot_info_dict.copy()
+    met_info_dict = original_met_info_dict.copy()
     if plot == 'time_series':
         import global_det_atmos_plots_time_series as gdap_ts
         for ts_info in \
