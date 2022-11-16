@@ -69,7 +69,7 @@ class LeadAverage:
                           +f"{self.plot_info_dict}")
         # Check stat
         if self.plot_info_dict['stat'] == 'FBAR_OBAR':
-            self.logger.warning("Cannot make lead_by_date for stat "
+            self.logger.warning("Cannot make lead_average for stat "
                                 +f"{self.plot_info_dict['stat']}")
             sys.exit(0)
         # Make job image directory
