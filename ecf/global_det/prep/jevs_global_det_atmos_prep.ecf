@@ -1,0 +1,71 @@
+#PBS -N jevs_global_det_atmos_prep_00
+#PBS -j oe
+#PBS -S /bin/sh
+#PBS -q dev_transfer
+#PBS -A VERF-DEV
+#PBS -l walltime=1:00:00
+#PBS -l select=1:ncpus=1:mem=5GB
+#PBS -l debug=true
+#PBS -V
+
+set -x 
+
+export model=evs
+
+############################################################
+# For dev testing
+############################################################
+cd $PBS_O_WORKDIR
+module reset
+export HOMEevs=$(eval "cd ../../../;pwd")
+versionfile=$HOMEevs/versions/run.ver
+. $versionfile
+export evs_ver=$evs_ver
+export envir=dev
+export SENDCOM=YES
+export KEEPDATA=NO
+module load prod_envir/2.0.6
+module load prod_util/2.0.13
+export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_global_det_atmos_test/$envir/tmp
+export job=${PBS_JOBNAME:-jevs_global_det_atmos_prep}
+export jobid=$job.${PBS_JOBID:-$$}
+export TMPDIR=$DATAROOT
+export SITE=$(cat /etc/cluster_name)
+export NET=evs
+export STEP=prep
+export COMPONENT=global_det
+export RUN=atmos
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
+############################################################
+
+############################################################
+# Load modules
+############################################################
+module load PrgEnv-intel/${PrgEnvintel_ver}
+module load intel/${intel_ver}
+module load libjpeg/${libjpeg_ver}
+module load grib_util/${grib_util_ver}
+module load wgrib2/${wgrib2_ver}
+module load python/${python_ver}
+module load cdo/${cdo_ver}
+module load gsl/${gsl_ver}
+module load udunits/${udunits_ver}
+module load nco/${nco_ver}
+module list
+
+export cyc=00
+
+export NET=evs
+export STEP=prep
+export COMPONENT=global_det
+export RUN=atmos
+
+export MODELNAME="cfs cmc cmc_regional dwd ecmwf fnmoc imd jma metfra ukmet"
+export OBSNAME="osi_saf ghrsst_median"
+
+# CALL executable job script here
+$HOMEevs/jobs/global_det/prep/JEVS_GLOBAL_DET_PREP
+
+######################################################################
+# Purpose: This does the prep work for the global deterministic atmospheric
+######################################################################

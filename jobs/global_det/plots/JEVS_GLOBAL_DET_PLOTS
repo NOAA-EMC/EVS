@@ -1,1 +1,93 @@
-example
+#!/bin/sh
+
+########################################
+# Preliminary data setup step
+########################################
+set -xa
+
+####################################
+# SET SHELL PROCESSING VARIABLES
+####################################
+export PS4='$SECONDS + '
+date
+
+###########################################################
+# obtain unique LSF id (jobid) and make temp directories
+###########################################################
+export pid=$$
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+mkdir -p $DATA
+cd $DATA
+
+####################################
+# Determine Job Output Name on System
+####################################
+export pgmout="OUTPUT.${pid}"
+
+####################################
+# Set EVS directories
+####################################
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
+
+####################################
+# Run setpdy and initialize PDY variables
+####################################
+export cycle=${cycle:-t${cyc}z}
+setpdy.sh ${NDAYS}
+. ./PDY
+#export plot_start=$PDYm1
+#export plot_end=$(eval echo \$PDYm$NDAYS)
+
+####################################
+# Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-plots}
+export COMPONENT=${COMPONENT:-global_det}
+export RUN=${RUN:-atmos}
+
+####################################
+# Define COMIN/COMOUT variables
+####################################
+export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
+export COMINcfs=${COMINcfs:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/cfs)}
+export COMINgfs=${COMINgfs:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/gfs)}
+export COMINcmc=${COMINcmc:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/cmc)}
+export COMINcmc_regional=${COMINcmc_regional:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/cmc_regional)}
+export COMINdwd=${COMINdwd:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/dwd)}
+export COMINecmwf=${COMINecmwf:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/ecmwf)}
+export COMINfnmoc=${COMINfnmoc:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/fnmoc)}
+export COMINimd=${COMINimd:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/imd)}
+export COMINjma=${COMINjma:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/jma)}
+export COMINmetfra=${COMINmetfra:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/metfra)}
+export COMINukmet=${COMINukmet:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/ukmet)}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1)}
+mkdir -p $COMOUT
+
+#######################################################################
+# Execute the script
+#######################################################################
+env
+
+if [ $RUN = atmos ]; then
+    $HOMEevs/scripts/global_det/plots/exevs_global_det_${RUN}_${VERIF_CASE}_plots.sh
+else
+    $HOMEevs/scripts/global_det/plots/exevs_global_det_${RUN}_plots.sh
+fi
+export err=$?; err_chk
+
+cat $pgmout
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATAROOT
+  rm -rf $DATA
+fi
+
+date
