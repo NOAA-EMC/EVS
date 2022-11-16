@@ -66,4 +66,4 @@ The running has 3 stages
    This large stat file is stored in the directory 
       /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/narre.$VDATE
 
-
+   The StatAnalysis METplus output_base directory is $DATA/gather, in which all of running info are stored
