@@ -23,7 +23,7 @@ gen_vx_mask \
 $COMINfcst/rtofs.$VDATE/$RUN/ice_mask.nc \
 $COMINfcst/rtofs.$VDATE/$RUN/ice_mask.nc \
 $COMINfcst/rtofs.$VDATE/$RUN/mask.global.nc \
--type lat -thresh 'ge-80 && le90' -intersection -name Global
+-type lat -thresh 'ge-80 && le90' -intersection -name GLB
 
 #   North Atlantic Ocean
 gen_vx_mask \
@@ -36,7 +36,7 @@ gen_vx_mask \
 $COMINfcst/rtofs.$VDATE/$RUN/north_atlantic.lat.nc \
 $COMINfcst/rtofs.$VDATE/$RUN/north_atlantic.lat.nc \
 $COMINfcst/rtofs.$VDATE/$RUN/mask.north_atlantic.nc \
--type lon -thresh 'ge-98 && le10' -intersection -name North_Atlantic
+-type lon -thresh 'ge-98 && le10' -intersection -name NATL
 
 #   South Atlantic Ocean
 gen_vx_mask \
@@ -49,7 +49,7 @@ gen_vx_mask \
 $COMINfcst/rtofs.$VDATE/$RUN/south_atlantic.lat.nc \
 $COMINfcst/rtofs.$VDATE/$RUN/south_atlantic.lat.nc \
 $COMINfcst/rtofs.$VDATE/$RUN/mask.south_atlantic.nc \
--type lon -thresh 'ge-70 && le20' -intersection -name South_Atlantic
+-type lon -thresh 'ge-70 && le20' -intersection -name SATL
 
 #   Equatorial Atlantic Ocean
 gen_vx_mask \
@@ -62,7 +62,7 @@ gen_vx_mask \
 $COMINfcst/rtofs.$VDATE/$RUN/equatorial_atlantic.lat.nc \
 $COMINfcst/rtofs.$VDATE/$RUN/equatorial_atlantic.lat.nc \
 $COMINfcst/rtofs.$VDATE/$RUN/mask.equatorial_atlantic.nc \
--type lon -thresh 'ge-80 && le30' -intersection -name Equatorial_Atlantic
+-type lon -thresh 'ge-80 && le30' -intersection -name EQATL
 
 #   North Pacific Ocean
 gen_vx_mask \
@@ -87,7 +87,7 @@ gen_vx_mask \
 $COMINfcst/rtofs.$VDATE/$RUN/northeast_pacific.nc \
 $COMINfcst/rtofs.$VDATE/$RUN/northwest_pacific.nc \
 $COMINfcst/rtofs.$VDATE/$RUN/mask.north_pacific.nc \
--type data -mask_field 'name="NWPAC"; level="(*,*)";' -thresh eq1 -union -name North_Pacific
+-type data -mask_field 'name="NWPAC"; level="(*,*)";' -thresh eq1 -union -name NPAC
 
 #   South Pacific Ocean
 gen_vx_mask \
@@ -112,7 +112,7 @@ gen_vx_mask \
 $COMINfcst/rtofs.$VDATE/$RUN/southeast_pacific.nc \
 $COMINfcst/rtofs.$VDATE/$RUN/southwest_pacific.nc \
 $COMINfcst/rtofs.$VDATE/$RUN/mask.south_pacific.nc \
--type data -mask_field 'name="SWPAC"; level="(*,*)";' -thresh eq1 -union -name South_Pacific
+-type data -mask_field 'name="SWPAC"; level="(*,*)";' -thresh eq1 -union -name SPAC
 
 #   Equatorial Pacific Ocean
 gen_vx_mask \
@@ -137,7 +137,7 @@ gen_vx_mask \
 $COMINfcst/rtofs.$VDATE/$RUN/centraleast_pacific.nc \
 $COMINfcst/rtofs.$VDATE/$RUN/centralwest_pacific.nc \
 $COMINfcst/rtofs.$VDATE/$RUN/mask.equatorial_pacific.nc \
--type data -mask_field 'name="CWPAC"; level="(*,*)";' -thresh eq1 -union -name Equatorial_Pacific
+-type data -mask_field 'name="CWPAC"; level="(*,*)";' -thresh eq1 -union -name EQPAC
 
 #   Indian Ocean
 gen_vx_mask \
@@ -150,14 +150,14 @@ gen_vx_mask \
 $COMINfcst/rtofs.$VDATE/$RUN/indian.lat.nc \
 $COMINfcst/rtofs.$VDATE/$RUN/indian.lat.nc \
 $COMINfcst/rtofs.$VDATE/$RUN/mask.indian.nc \
--type lon -thresh 'ge20 && le115' -intersection -name Indian
+-type lon -thresh 'ge20 && le115' -intersection -name IND
 
 #   Southern Ocean
 gen_vx_mask \
 $COMINfcst/rtofs.$VDATE/$RUN/ice_mask.nc \
 $COMINfcst/rtofs.$VDATE/$RUN/ice_mask.nc \
 $COMINfcst/rtofs.$VDATE/$RUN/mask.southern.nc \
--type lat -thresh 'ge-80 && le-30' -intersection -name Southern
+-type lat -thresh 'ge-80 && le-30' -intersection -name SOC
 
 #   Arctic Ocean
 gen_vx_mask \
@@ -177,7 +177,7 @@ gen_vx_mask \
 $COMINfcst/rtofs.$VDATE/$RUN/mediterranean.lat.nc \
 $COMINfcst/rtofs.$VDATE/$RUN/mediterranean.lat.nc \
 $COMINfcst/rtofs.$VDATE/$RUN/mask.mediterranean.nc \
--type lon -thresh 'ge-2 && le45' -intersection -name Mediterranean
+-type lon -thresh 'ge-2 && le45' -intersection -name MEDIT
 
 exit
 

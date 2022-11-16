@@ -1,1 +1,57 @@
-example
+#!/bin/bash
+###############################################################################
+# Job Name: JEVS_RTOFS_PLOTS
+# Purpose: To create plots for RTOFS forecast verification using MET/METplus.
+# Author: L. Gwen Chen (lichuan.chen@noaa.gov)
+###############################################################################
+
+set -x
+
+# set up paths
+export FIXevs=${FIXevs:-$EVS/fix/logos}
+export USHevs=${USHevs:-$EVS/ush/$COMPONENT}
+export CONFIGevs=${CONFIGevs:-$EVS/parm/metplus_config/$COMPONENT}
+
+# define COMIN/COMOUT variables
+export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
+export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
+export COMOUTfinal=${COMOUTfinal:-$COMOUT/stats/$COMPONENT/$COMPONENT.$VDATE}
+export COMOUTplots=${COMOUTplots:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
+
+# make plots; run scripts for each RUN;
+# RUN is the validation source: gmpe, smos, smap etc.
+for rcase in gmpe smos smap aviso; do
+  export RUN=$rcase
+
+  if [ $RUN = 'gmpe' ] ; then
+    export OBTYPE=GMPE
+    export VAR=SST
+  fi
+
+  if [ $RUN = 'smos' ] ; then
+    export OBTYPE=SMOS
+    export VAR=SSS
+  fi
+
+  if [ $RUN = 'smap' ] ; then
+    export OBTYPE=SMAP
+    export VAR=SSS
+  fi
+
+  if [ $RUN = 'aviso' ] ; then
+    export OBTYPE=AVISO
+    export VAR=SSH
+  fi
+
+  $EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${STEP}_timeseries.sh
+done
+
+for rcase in osisaf; do
+  export RUN=$rcase
+  export OBTYPE=OSISAF
+  export VAR=SIC
+
+  $EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${STEP}_seaice.sh
+done
+
+################################# END OF JOB ##################################

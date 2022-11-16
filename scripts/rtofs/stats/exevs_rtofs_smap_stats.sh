@@ -9,7 +9,9 @@
 set -x
 
 # check if obs file exists; exit if not
-if [ ! -s $COMINobs/SMAP/SMAP-L3-GLOB_$VDATE.nc ] ; then
+export JDATE=$(date --date="$VDATE" +%Y%j)
+
+if [ ! -s $COMINobs/$VDATE/validation_data/marine/smap/SP_D${JDATE}_Map_SATSSS_data_1day.nc ] ; then
    echo "Missing validation SMAP data file for $VDATE" 
    exit
 fi
@@ -104,7 +106,7 @@ fi
 
 # run Grid_Stat
 run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
--c $CONFIGevs/grid2grid/$STEP/GridStat_fcstRTOFS_obsSMAP_climoWOA18.conf
+-c $CONFIGevs/${VERIF_CASE}/$STEP/GridStat_fcstRTOFS_obsSMAP_climoWOA18.conf
 
 # check if stat files exist; exit if not
 if [ ! -s $COMOUTsmall/grid_stat_RTOFS_SMAP_SSS_1920000L_${VDATE}_000000V.stat ] ; then
@@ -116,7 +118,7 @@ fi
 mkdir -p $COMOUTfinal
 
 run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
--c $CONFIGevs/grid2grid/$STEP/StatAnalysis_fcstRTOFS.conf
+-c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstRTOFS.conf
 
 # archive final stat file
 rsync -av $COMOUTfinal $ARCHevs

@@ -2,14 +2,14 @@
 ###############################################################################
 # Name of Script: exevs_rtofs_gmpe_stats.sh
 # Purpose of Script: To create stat files for RTOFS SST forecasts verified
-#    with GMPE data using MET/METplus.
+#    with GMPE/GHRSST median data using MET/METplus.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
 ###############################################################################
 
 set -x
 
 # check if obs file exists; exit if not
-if [ ! -s $COMINobs/GMPE/UKMO-L4_GHRSST-SSTfnd-GMPE-GLOB_valid${VDATE}*.nc ] ; then
+if [ ! -s $COMINobs/$VDATE/validation_data/marine/ghrsst/${VDATE}120000-UKMO-L4_GHRSST-SSTfnd-GMPE-GLOB-v03.0-fv03.0.nc ] ; then
    echo "Missing validation GMPE data file for $VDATE" 
    exit
 fi
@@ -104,7 +104,7 @@ fi
 
 # run Grid_Stat
 run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
--c $CONFIGevs/grid2grid/$STEP/GridStat_fcstRTOFS_obsGMPE_climoWOA18.conf
+-c $CONFIGevs/${VERIF_CASE}/$STEP/GridStat_fcstRTOFS_obsGMPE_climoWOA18.conf
 
 # check if stat files exist; exit if not
 if [ ! -s $COMOUTsmall/grid_stat_RTOFS_GMPE_SST_1920000L_${VDATE}_000000V.stat ] ; then
@@ -116,7 +116,7 @@ fi
 mkdir -p $COMOUTfinal
 
 run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
--c $CONFIGevs/grid2grid/$STEP/StatAnalysis_fcstRTOFS.conf
+-c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstRTOFS.conf
 
 # archive final stat file
 rsync -av $COMOUTfinal $ARCHevs

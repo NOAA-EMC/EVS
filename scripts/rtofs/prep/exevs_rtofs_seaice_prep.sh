@@ -12,7 +12,7 @@ mkdir -p $COMOUT/rtofs.$VDATE/osisaf
 
 for ftype in nh sh; do
 cdo remapbil,$FIXevs/rtofs_osisaf.grid \
-$COMINobs/OSISAF/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc \
+$COMINobs/$VDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc \
 $COMOUT/rtofs.$VDATE/osisaf/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc
 done
 

@@ -97,10 +97,10 @@ fi
 
 # run Grid_Stat
 run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
--c $CONFIGevs/grid2grid/$STEP/GridStat_fcstRTOFS_obsOSISAF_nh.conf
+-c $CONFIGevs/${VERIF_CASE}/$STEP/GridStat_fcstRTOFS_obsOSISAF_nh.conf
 
 run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
--c $CONFIGevs/grid2grid/$STEP/GridStat_fcstRTOFS_obsOSISAF_sh.conf
+-c $CONFIGevs/${VERIF_CASE}/$STEP/GridStat_fcstRTOFS_obsOSISAF_sh.conf
 
 # check if stat files exist; exit if not
 if [ ! -s $COMOUTsmall/grid_stat_RTOFS_OSISAF_SIC_sh_1920000L_${VDATE}_000000V.stat ] ; then
@@ -112,7 +112,7 @@ fi
 mkdir -p $COMOUTfinal
 
 run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
--c $CONFIGevs/grid2grid/$STEP/StatAnalysis_fcstRTOFS.conf
+-c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstRTOFS.conf
 
 # archive final stat file
 rsync -av $COMOUTfinal $ARCHevs
