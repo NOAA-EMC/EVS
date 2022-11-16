@@ -71,7 +71,7 @@ if [ $USE_CFP = YES ]; then
         if [ $machine = WCOSS2 ]; then
             export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
             if [[ $g2op_type_list == *sfc* ]]; then
-                nnp=$(expr $nproc + $nproc + $nproc)
+                nnp=$(expr $nproc + $nproc + $nproc + $nproc + $nproc + $nproc)
             else
                 nnp=$nproc
             fi
