@@ -551,7 +551,8 @@ class PlotSpecs:
         else:
             var_thresh_for_title = plot_info_dict['fcst_var_thresh']
         if plot_info_dict['fcst_var_name'] == 'CAPE' \
-                and plot_info_dict['stat'] in ['RMSE', 'BIAS', 'ME']:
+                and plot_info_dict['stat'] in ['RMSE', 'BIAS', 'ME',
+                                               'FBAR_OBAR']:
             var_thresh_for_title = 'NA'
         plot_title = (plot_title
                       +self.get_var_plot_name(var_name_for_title,
@@ -716,7 +717,7 @@ class PlotSpecs:
         image_path = os.path.join(image_dir, savefig_name.lower())
         if plot_info_dict['fcst_var_name'] == 'CAPE':
             image_path = image_path.replace('_z0', '_l0').replace('_p90_0', '_l90')
-            if plot_info_dict['stat'] in ['RMSE', 'BIAS', 'ME']:
+            if plot_info_dict['stat'] in ['RMSE', 'BIAS', 'ME', 'FBAR_OBAR']:
                 image_path = image_path.replace('_gt0||', '')
         return image_path
 
