@@ -402,9 +402,9 @@ class StatByLevel:
                     )
                     legend_box_inv_x1 = legend_box_inv[1][0]
         self.logger.info("Saving image as "+image_name)
-            plt.savefig(image_name)
-            plt.clf()
-            plt.close('all')
+        plt.savefig(image_name)
+        plt.clf()
+        plt.close('all')
 
 def main():
     # Need settings

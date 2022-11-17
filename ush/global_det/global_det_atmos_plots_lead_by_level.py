@@ -297,13 +297,13 @@ class LeadByLevel:
                 if int(fhr) % 24 == 0:
                     xticks.append(fhr)
         vert_profile_levels_int_ticks = vert_profile_levels_int
-        if vert_profile == 'all':
+        if self.plot_info_dict['vert_profile'] == 'all':
             for del_lev in [925, 700, 400, 250, 150]:
                 vert_profile_levels_int_ticks = np.delete(
                     vert_profile_levels_int_ticks,
                     np.where(vert_profile_levels_int_ticks == del_lev)
                 )
-        elif vert_profile == 'trop':
+        elif self.plot_info_dict['vert_profile'] == 'trop':
             vert_profile_levels_int_ticks = np.delete(
                 vert_profile_levels_int_ticks,
                 np.where(vert_profile_levels_int_ticks == 925)
