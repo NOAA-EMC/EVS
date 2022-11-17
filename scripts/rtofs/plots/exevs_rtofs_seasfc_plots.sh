@@ -1,8 +1,8 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_rtofs_plots_seaice_timeseries.sh
-# Purpose of Script: To create time series plots for RTOFS sea ice forecast
-#    verification using MET/METplus.
+# Name of Script: exevs_rtofs_seasfc_plots.sh
+# Purpose of Script: To create forecast verification plots for RTOFS sea
+#    surface variables using MET/METplus.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
 ###############################################################################
 
@@ -10,52 +10,54 @@ set -x
 
 # set up plot variables
 export PERIOD=last60days
-export MASKS="Arctic, Antarctic"
+export MASKS="GLB, NATL, SATL, EQATL, NPAC, SPAC, EQPAC, IND, SOC, Arctic, MEDIT"
+export THRESH=""
 
 # plot time series
 export PTYPE=time_series
+
 for lead in 000 024 048 072 096 120 144 168 192; do
   export FLEAD=$lead
 
-  for stats in me rmse; do
+  for stats in me rmse acc; do
+    export METRIC=$stats
+
     if [ $stats = 'me' ] ; then 
-      export METRIC=$stats
       export LTYPE=SL1L2
-      export THRESH=""
     fi
 
     if [ $stats = 'rmse' ] ; then  
-      export METRIC=$stats
       export LTYPE=SL1L2
-      export THRESH=""
+    fi
+
+    if [ $stats = 'acc' ] ; then  
+      export LTYPE=SAL1L2
     fi
 
 # make plots
     $CONFIGevs/${VERIF_CASE}/$STEP/verif_plotting.rtofs.conf
+
   done
-
-  for stats in csi; do
-    export METRIC=$stats
-    export LTYPE=CTC
-
-    for thre in ">=15" ">=40" ">=80"; do
-      export THRESH=$thre
-
-# make plots
-      $CONFIGevs/${VERIF_CASE}/$STEP/verif_plotting.rtofs.conf
-    done
-  done
-
 done
 
-# plot performance diagram
-export PTYPE=performance_diagram
-export METRIC="sratio,pod,csi"
-export LTYPE=CTC
-export THRESH=">=15,>=40,>=80"
+# plot mean vs. lead time
+export PTYPE=lead_average
+export FLEAD="000,024,048,072,096,120,144,168,192"
 
-for lead in 000 024 048 072 096 120 144 168 192; do
-  export FLEAD=$lead
+for stats in me rmse acc; do
+  export METRIC=$stats
+
+  if [ $stats = 'me' ] ; then
+    export LTYPE=SL1L2
+  fi
+
+  if [ $stats = 'rmse' ] ; then
+    export LTYPE=SL1L2
+  fi
+
+  if [ $stats = 'acc' ] ; then
+    export LTYPE=SAL1L2
+  fi
 
 # make plots
   $CONFIGevs/${VERIF_CASE}/$STEP/verif_plotting.rtofs.conf
