@@ -491,11 +491,11 @@ plot_jobs_dict = {
                   'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                    'TROPICS'],
                   'fcst_var_dict': {'name': 'O3MR',
-                                    'levels': ('P100, P70, P50, P30, '
+                                    'levels': ('P925, P100, P70, P50, P30, '
                                                +'P20, P10, P5, P1'),
                                     'threshs': 'NA'},
                   'obs_var_dict': {'name': 'O3MR',
-                                   'levels': ('P100, P70, P50, P30, '
+                                   'levels': ('P925, P100, P70, P50, P30, '
                                               +'P20, P10, P5, P1'),
                                    'threshs': 'NA'},
                   'interp_dict': {'method': 'NEAREST',
