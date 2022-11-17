@@ -61,4 +61,5 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATA_IN=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
 
+
 ${HOMEevs}/jobs/global_ens/stats/JEVS_GLOBAL_ENS_STATS

@@ -16,7 +16,7 @@ fi
 for vcyc in 00 06 12 18 ; do 
 #for vcyc in 00  ; do 
 
-  for n in 2 3 4 5 6 7 8 9 10 11 ; do
+  for n in 2 3 4 5 6 7 8 9 10 11 12 13 ; do
     ctc25[$n]=0
     ctc26[$n]=0
     ctc27[$n]=0
@@ -34,7 +34,7 @@ for vcyc in 00 06 12 18 ; do
 	  header=$LINE 
         fi   
 
-	if [ $line -ge 2 ] && [ $line -le 11 ] ; then 
+	if [ $line -ge 2 ] && [ $line -le 13 ] ; then 
           ctc25[$line]=$(( ctc25[$line] + data[25] ))
           ctc26[$line]=$(( ctc26[$line] + data[26] ))
           ctc27[$line]=$(( ctc27[$line] + data[27] ))
