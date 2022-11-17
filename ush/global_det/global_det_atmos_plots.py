@@ -259,7 +259,10 @@ for plot in plots_list:
                                    +"lead_average plots")
                     make_la = False
                 else:
-                    make_la = True
+                    if plot_info_dict['stat'] == 'FBAR_OBAR':
+                        make_la = False
+                    else:
+                        make_la = True
             else:
                 make_la = False
             if make_la:
@@ -296,7 +299,10 @@ for plot in plots_list:
                                    +"valid_hour_average plots")
                     make_vha = False
                 else:
-                    make_vha = True
+                    if plot_info_dict['stat'] == 'FBAR_OBAR':
+                        make_vha = False
+                    else:
+                        make_vha = True
             else:
                 make_vha = False
             if make_vha:
@@ -340,7 +346,10 @@ for plot in plots_list:
                                            +"threshold_average plots")
                             make_ta = False
                         else:
-                            make_ta = True
+                            if plot_info_dict['stat'] == 'FBAR_OBAR':
+                                make_ta = False
+                            else:
+                                make_ta = True
                     else:
                         make_ta = False
                 else:
@@ -381,7 +390,10 @@ for plot in plots_list:
                                    +"lead_by_date plots")
                     make_lbd = False
                 else:
-                    make_lbd = True
+                    if plot_info_dict['stat'] == 'FBAR_OBAR':
+                        make_lbd = False
+                    else:
+                        make_lbd = True
             else:
                 make_lbd = False
             if make_lbd:
@@ -421,7 +433,10 @@ for plot in plots_list:
                     if not os.path.exists(image_name):
                         make_sbl = True
                     else:
-                        make_sbl = False
+                        if plot_info_dict['stat'] == 'FBAR_OBAR':
+                            make_sbl = False
+                        else:
+                            make_sbl = True
                 else:
                     make_sbl = False
                 del plot_info_dict['fcst_var_level']
@@ -464,7 +479,10 @@ for plot in plots_list:
                                        +"given 1 forecast hour, skipping "
                                        +"lead_by_level plots")
                     else:
-                        make_lbl = True
+                        if plot_info_dict['stat'] == 'FBAR_OBAR':
+                            make_lbl = False
+                        else:
+                            make_lbl = True
                 else:
                     make_lbl = False
                 del plot_info_dict['fcst_var_level']
