@@ -214,6 +214,10 @@ class PlotSpecs:
             'APCP_A24/A24': '24 hour Accumulated Precipitation',
             'CAPE/P90-0': 'Mixed-Layer CAPE',
             'CAPE/Z0': 'Surface Based CAPE',
+            'CFRZR/L0': 'Precipitation Type - Freezing Rain',
+            'CICEP/L0': 'Precipitation Type - Ice Pellets',
+            'CRAIN/L0': 'Precipitation Type - Rain',
+            'CSNOW/L0': 'Precipitation Type - Snow',
             'CWAT/L0': 'Cloud Water',
             'DPT/Z2': '2 meter Dewpoint',
             'GUST/Z0': 'Wind Gust',
@@ -404,6 +408,7 @@ class PlotSpecs:
                                      (string)
         """
         vx_mask_plot_name_dict = {
+             'Alaska': 'Alaska',
              'ANTARCTIC': 'Antarctic 50S-90S',
              'Appalachia': 'Appalachia',
              'ARCTIC': 'Arctic 50N-90N',
