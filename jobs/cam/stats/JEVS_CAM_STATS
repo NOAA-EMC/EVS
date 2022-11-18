@@ -52,6 +52,7 @@ export COMINobs=${COMINobs:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
 export COMOUT=${COMOUT:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
 export COMOUTsmall=${COMOUTsmall:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE})}
 export COMOUTfinal=${COMOUTfinal:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${MODELNAME}.${VDATE})}
+mkdir -p $COMOUTfinal
 
 #######################################################################
 # Execute the script.
