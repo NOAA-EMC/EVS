@@ -312,8 +312,7 @@ plot_jobs_dict = {
     },
     'ozone': {},
     'precip': {
-        '24hrCCPA': {'line_type_stat_list': ['CTC/ETS', 'CTC/FBIAS',
-                                             'CTC/FY_OY'],
+        '24hrCCPA': {'line_type_stat_list': ['CTC/ETS', 'CTC/FBIAS'],
                      'vx_mask_list': ['CONUS', 'CONUS_East',
                                       'CONUS_West', 'CONUS_Central',
                                       'CONUS_South'],
