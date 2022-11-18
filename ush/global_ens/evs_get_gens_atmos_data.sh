@@ -636,14 +636,14 @@ if [ $modnam = gefs_icec24h ] ; then
     export mb
     export accum=24
 
-    for cyc in 00 12  ; do
+    for cyc in 00 ; do
 
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
-         if [ $cyc = 00 ] ; then
+         #if [ $cyc = 00 ] ; then
     	     export lead='24, 48, 72, 96, 120, 144, 168, 192, 216,  240,  264,  288,  312,  336,  360,  384' 
-	 elif [ $cyc = 12 ] ; then
-    	     export lead='36, 60, 84, 108, 132, 156, 180, 204, 228, 252, 276, 300, 324, 348, 372 ' 
-         fi
+	 #elif [ $cyc = 12 ] ; then
+    	 #    export lead='36, 60, 84, 108, 132, 156, 180, 204, 228, 252, 276, 300, 324, 348, 372 ' 
+         #fi
 
 	 if [  -s $COMOUT_gefs/gefs.ens${mb}.t${cyc}z.grid3.f024.grib2 ] ; then
     	     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_ICEC.conf

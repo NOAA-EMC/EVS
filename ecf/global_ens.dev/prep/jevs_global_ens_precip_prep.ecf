@@ -74,9 +74,9 @@ export get_cmce_apcp24h=es
 export get_ecme_apcp24h=es
 export get_gefs_snow24h=es
 export get_cmce_snow24h=es
-export get_ecme_snow24h=yes
+export get_ecme_snow24h=es
 export get_nohrsc24h=es
-export get_gefs_icec24h=es
+export get_gefs_icec24h=yes
 export get_gefs_sst24h=es
 export get_gfs=no
 export get_forecst=yes
@@ -84,6 +84,7 @@ export run_mpi=no
 
 export get_osi_saf=es
 
+export run_mpi=no
 
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
 export DATA_IN=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd

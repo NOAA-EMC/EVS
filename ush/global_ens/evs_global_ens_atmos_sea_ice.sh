@@ -99,7 +99,8 @@ if [ $verify = sea_ice ] ; then
 
 
          if [ $average = 24 ] ; then
-	  echo  "export lead='24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384' "  >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
+	  echo  "export lead='24, 48, 72, 96, 120, 144, 168, 192, 216,  240,  264,  288,  312,  336,  360,  384' "  >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
+	  #echo  "export lead='24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384' "  >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
          elif  [ $average = 168 ] ; then
            echo  "export lead='168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384' "  >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
          fi
