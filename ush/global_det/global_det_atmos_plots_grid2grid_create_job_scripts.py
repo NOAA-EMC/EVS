@@ -317,14 +317,14 @@ plot_jobs_dict = {
                      'vx_mask_list': ['CONUS', 'CONUS_East',
                                       'CONUS_West', 'CONUS_Central',
                                       'CONUS_South'],
-                     'fcst_var_dict': {'name': 'APCP_A24',
+                     'fcst_var_dict': {'name': 'APCP',
                                        'levels': 'A24',
                                        'threshs': ('ge0.1, ge0.5, ge1, ge5, '
                                                    +'ge10, ge25, ge50, ge75, '
                                                    +'ge0.254, ge2.54, ge6.35, '
                                                    +'ge12.7, ge25.4, ge50.8, '
                                                    +'ge76.2, ge101.6')},
-                     'obs_var_dict': {'name': 'APCP_A24',
+                     'obs_var_dict': {'name': 'APCP',
                                      'levels': 'A24',
                                      'threshs': ('ge0.1, ge0.5, ge1, ge5, '
                                                  +'ge10, ge25, ge50, ge75, '
@@ -340,7 +340,7 @@ plot_jobs_dict = {
                             'vx_mask_list': ['CONUS', 'CONUS_East',
                                              'CONUS_West', 'CONUS_Central',
                                              'CONUS_South'],
-                            'fcst_var_dict': {'name': 'APCP_A24',
+                            'fcst_var_dict': {'name': 'APCP',
                                               'levels': 'A24',
                                               'threshs': ('ge0.1, ge0.5, ge1, '
                                                           +'ge5, ge10, ge25, '
@@ -349,7 +349,7 @@ plot_jobs_dict = {
                                                           +'ge6.35, ge12.7, '
                                                           +'ge25.4, ge50.8, '
                                                           +'ge76.2, ge101.6')},
-                            'obs_var_dict': {'name': 'APCP_A24',
+                            'obs_var_dict': {'name': 'APCP',
                                              'levels': 'A24',
                                              'threshs': ('ge0.1, ge0.5, ge1, '
                                                          +'ge5, ge10, ge25, '
@@ -367,7 +367,7 @@ plot_jobs_dict = {
                               'vx_mask_list': ['CONUS', 'CONUS_East',
                                                'CONUS_West', 'CONUS_Central',
                                                'CONUS_South'],
-                              'fcst_var_dict': {'name': 'APCP_A24',
+                              'fcst_var_dict': {'name': 'APCP',
                                                 'levels': 'A24',
                                                 'threshs': ('ge0.1, ge0.5, ge1, '
                                                             +'ge5, ge10, ge25, '
@@ -376,7 +376,7 @@ plot_jobs_dict = {
                                                             +'ge6.35, ge12.7, '
                                                             +'ge25.4, ge50.8, '
                                                             +'ge76.2, ge101.6')},
-                              'obs_var_dict': {'name': 'APCP_A24',
+                              'obs_var_dict': {'name': 'APCP',
                                                'levels': 'A24',
                                                'threshs': ('ge0.1, ge0.5, ge1, '
                                                            +'ge5, ge10, ge25, '
@@ -394,7 +394,7 @@ plot_jobs_dict = {
                               'vx_mask_list': ['CONUS', 'CONUS_East',
                                                'CONUS_West', 'CONUS_Central',
                                                'CONUS_South'],
-                              'fcst_var_dict': {'name': 'APCP_A24',
+                              'fcst_var_dict': {'name': 'APCP',
                                                 'levels': 'A24',
                                                 'threshs': ('ge0.1, ge0.5, ge1, '
                                                             +'ge5, ge10, ge25, '
@@ -403,7 +403,7 @@ plot_jobs_dict = {
                                                             +'ge6.35, ge12.7, '
                                                             +'ge25.4, ge50.8, '
                                                             +'ge76.2, ge101.6')},
-                              'obs_var_dict': {'name': 'APCP_A24',
+                              'obs_var_dict': {'name': 'APCP',
                                                'levels': 'A24',
                                                'threshs': ('ge0.1, ge0.5, ge1, '
                                                            +'ge5, ge10, ge25, '
@@ -421,7 +421,7 @@ plot_jobs_dict = {
                                'vx_mask_list': ['CONUS', 'CONUS_East',
                                                 'CONUS_West', 'CONUS_Central',
                                                 'CONUS_South'],
-                               'fcst_var_dict': {'name': 'APCP_A24',
+                               'fcst_var_dict': {'name': 'APCP',
                                                  'levels': 'A24',
                                                  'threshs': ('ge0.1, ge0.5, ge1, '
                                                              +'ge5, ge10, ge25, '
@@ -430,7 +430,7 @@ plot_jobs_dict = {
                                                              +'ge6.35, ge12.7, '
                                                              +'ge25.4, ge50.8, '
                                                              +'ge76.2, ge101.6')},
-                               'obs_var_dict': {'name': 'APCP_A24',
+                               'obs_var_dict': {'name': 'APCP',
                                                 'levels': 'A24',
                                                 'threshs': ('ge0.1, ge0.5, ge1, '
                                                             +'ge5, ge10, ge25, '
@@ -448,7 +448,7 @@ plot_jobs_dict = {
                                'vx_mask_list': ['CONUS', 'CONUS_East',
                                                 'CONUS_West', 'CONUS_Central',
                                                 'CONUS_South'],
-                               'fcst_var_dict': {'name': 'APCP_A24',
+                               'fcst_var_dict': {'name': 'APCP',
                                                  'levels': 'A24',
                                                  'threshs': ('ge0.1, ge0.5, ge1, '
                                                              +'ge5, ge10, ge25, '
@@ -457,7 +457,7 @@ plot_jobs_dict = {
                                                              +'ge6.35, ge12.7, '
                                                              +'ge25.4, ge50.8, '
                                                              +'ge76.2, ge101.6')},
-                               'obs_var_dict': {'name': 'APCP_A24',
+                               'obs_var_dict': {'name': 'APCP',
                                                 'levels': 'A24',
                                                 'threshs': ('ge0.1, ge0.5, ge1, '
                                                             +'ge5, ge10, ge25, '
@@ -475,7 +475,7 @@ plot_jobs_dict = {
                                'vx_mask_list': ['CONUS', 'CONUS_East',
                                                 'CONUS_West', 'CONUS_Central',
                                                 'CONUS_South'],
-                               'fcst_var_dict': {'name': 'APCP_A24',
+                               'fcst_var_dict': {'name': 'APCP',
                                                  'levels': 'A24',
                                                  'threshs': ('ge0.1, ge0.5, ge1, '
                                                              +'ge5, ge10, ge25, '
@@ -484,7 +484,7 @@ plot_jobs_dict = {
                                                              +'ge6.35, ge12.7, '
                                                              +'ge25.4, ge50.8, '
                                                              +'ge76.2, ge101.6')},
-                               'obs_var_dict': {'name': 'APCP_A24',
+                               'obs_var_dict': {'name': 'APCP',
                                                 'levels': 'A24',
                                                 'threshs': ('ge0.1, ge0.5, ge1, '
                                                             +'ge5, ge10, ge25, '
@@ -502,7 +502,7 @@ plot_jobs_dict = {
                                'vx_mask_list': ['CONUS', 'CONUS_East',
                                                 'CONUS_West', 'CONUS_Central',
                                                 'CONUS_South'],
-                               'fcst_var_dict': {'name': 'APCP_A24',
+                               'fcst_var_dict': {'name': 'APCP',
                                                  'levels': 'A24',
                                                  'threshs': ('ge0.1, ge0.5, ge1, '
                                                              +'ge5, ge10, ge25, '
@@ -511,7 +511,7 @@ plot_jobs_dict = {
                                                              +'ge6.35, ge12.7, '
                                                              +'ge25.4, ge50.8, '
                                                              +'ge76.2, ge101.6')},
-                               'obs_var_dict': {'name': 'APCP_A24',
+                               'obs_var_dict': {'name': 'APCP',
                                                 'levels': 'A24',
                                                 'threshs': ('ge0.1, ge0.5, ge1, '
                                                             +'ge5, ge10, ge25, '
@@ -529,13 +529,13 @@ plot_jobs_dict = {
                             'vx_mask_list': ['CONUS', 'CONUS_East',
                                              'CONUS_West', 'CONUS_Central',
                                              'CONUS_South'],
-                            'fcst_var_dict': {'name': 'APCP_A24',
+                            'fcst_var_dict': {'name': 'APCP',
                                               'levels': 'A24',
                                               'threshs': ('ge0.1, ge0.5, '
                                                           +'ge1, ge5, '
                                                           +'ge10, ge25, '
                                                           +'ge50, ge75')},
-                            'obs_var_dict': {'name': 'APCP_A24',
+                            'obs_var_dict': {'name': 'APCP',
                                              'levels': 'A24',
                                              'threshs': ('ge0.1, ge0.5, '
                                                          +'ge1, ge5, '
@@ -548,10 +548,10 @@ plot_jobs_dict = {
                             'plots_list': 'performance_diagram'},
         '24hrAccumMaps': {'line_type_stat_list': ['SL1L2/FBAR'],
                           'vx_mask_list': ['CONUS', 'AK', 'PR', 'HI'],
-                          'fcst_var_dict': {'name': 'APCP_A24',
+                          'fcst_var_dict': {'name': 'APCP',
                                             'levels': 'A24',
                                             'threshs': 'NA'},
-                          'obs_var_dict': {'name': 'APCP_A24',
+                          'obs_var_dict': {'name': 'APCP',
                                            'levels': 'A24',
                                            'threshs': 'NA'},
                           'interp_dict': {'method': 'NEAREST',
