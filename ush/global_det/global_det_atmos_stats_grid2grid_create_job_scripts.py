@@ -364,7 +364,8 @@ generate_stats_jobs_dict = {
                                   )]},
         'SnowWaterEqv': {'env': {'var1_name': 'WEASD',
                                  'var1_level': 'Z0',
-                                 'var1_options': ''},
+                                 'var1_options': ("'set_attr_units = "
+                                                  +'"mm";'+"'")},
                          'commands': [gda_util.metplus_command(
                                           'GridStat_fcstGLOBAL_DET.conf'
                                       )]},
