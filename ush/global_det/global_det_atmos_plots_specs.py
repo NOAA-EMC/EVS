@@ -211,7 +211,7 @@ class PlotSpecs:
         """
         var_name_level = var_name+'/'+var_level
         var_plot_name_dict = {
-            'APCP_A24/A24': '24 hour Accumulated Precipitation',
+            'APCP/A24': '24 hour Accumulated Precipitation',
             'CAPE/P90-0': 'Mixed-Layer CAPE',
             'CAPE/Z0': 'Surface Based CAPE',
             'CFRZR/L0': 'Precipitation Type - Freezing Rain',
@@ -564,7 +564,17 @@ class PlotSpecs:
                                               var_level_for_title))
         plot_title = plot_title+' '+'('+units+')'
         if var_thresh_for_title != 'NA':
-            plot_title = plot_title+' '+var_thresh_for_title
+            plot_title = plot_title+', '+var_thresh_for_title+' '+units
+            if plot_info_dict['fcst_var_name'] == 'APCP':
+                thresh_in = round(
+                    float(plot_info_dict['fcst_var_thresh'][2:])*0.0393701,3
+                )
+                plot_title = plot_title+' ('+str(thresh_in)+' in)'
+            elif plot_info_dict['fcst_var_name'] in ['SNOD_A24', 'WEASD_A24']:
+                thresh_in = round(
+                    float(plot_info_dict['fcst_var_thresh'][2:])*39.3701,3
+                )
+                plot_title = plot_title+' ('+str(thresh_in)+' in)'
         if plot_info_dict['interp_method'] == 'NBRHD_SQUARE':
             plot_title = (plot_title+' '
                           +'Neighborhood Points: '
