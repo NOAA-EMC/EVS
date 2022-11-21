@@ -77,7 +77,7 @@ if [ $verif_product = yes ] ; then
 fi
 
 
-#totall: 26 jobs for all (both conus and alaska, profile, system and product)
+#totall: 28 jobs for all (both conus and alaska, profile, system and product)
 chmod 775 run_href_all_grid2obs_poe
 
 if [ $run_mpi = yes ] ; then
