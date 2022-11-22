@@ -11,6 +11,7 @@ import datetime
 import glob
 import subprocess
 import itertools
+import shutil
 import global_det_atmos_util as gda_util
 from global_det_atmos_plots_specs import PlotSpecs
 
@@ -26,6 +27,7 @@ COMPONENT = os.environ['COMPONENT']
 FIXevs = os.environ['FIXevs']
 MET_ROOT = os.environ['MET_ROOT']
 met_ver = os.environ['met_ver']
+evs_run_mode = os.environ['evs_run_mode']
 start_date = os.environ['start_date']
 end_date = os.environ['end_date']
 plot_verbosity = os.environ['plot_verbosity']
@@ -585,5 +587,10 @@ if len(glob.glob(job_output_image_dir+'/*')) != 0:
     os.chdir(cwd)
 else:
     logger.warning(f"No images generated in {job_output_image_dir}")
+
+# Clean up
+if evs_run_mode == 'production':
+    logger.info(f"Removing {job_output_dir}")
+    shutil.rmtree(job_output_dir)
 
 print("END: "+os.path.basename(__file__))
