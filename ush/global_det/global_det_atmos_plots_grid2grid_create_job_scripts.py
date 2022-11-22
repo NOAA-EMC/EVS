@@ -1179,7 +1179,7 @@ plot_jobs_dict = {
                                                                        +'ge0.2032, '
                                                                        +'ge0.3048')},
                                           'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                          'points': '39699'},
+                                                          'points': '3969'},
                                           'grid': 'G240',
                                           'obs_name': '24hrNOHRSC',
                                           'plots_list': 'time_series, lead_average'},
