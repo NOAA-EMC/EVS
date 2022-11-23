@@ -4,16 +4,14 @@
 # Deanna Spindler / Deanna.Spindler@noaa.gov                                   
 # Purpose of Script: Run the grid2obs data prep for any global wave model      
 #                    (deterministic and ensemble: GEFS-Wave, GFS-Wave, NWPS)   
-# Log history: August 2022                                                     
+#                                                                              
 # Usage:                                                                       
 #  Parameters: None                                                            
 #  Input files:                                                                
 #     gdas.${cycle}.prepbufr                                                   
 #  Output files:                                                               
 #     gdas.${validdate}.nc                                                     
-#  Condition codes:                                                            
-#     99  - Missing input file                                                 
-#  User controllable options: None                                             
+#     global.0p25.grib2 files for archive                                      
 ###############################################################################
 
 set -x 
@@ -57,13 +55,6 @@ for cyc in ${cycles} ; do
     cp ${COMINmodel}/${MODELNAME}.${INITDATE}/${cyc}/wave/gridded/${filename} ${ARCgefs}/${newname}
   done
 done
-
-########################################################
-# Clean up anything more than 20 days old on the archive
-########################################################
-oldestarc=${PDYm20}
-
-
 
 ############################################
 # get the GDAS prepbufr files for yesterday 
@@ -109,7 +100,6 @@ done
 /usr/bin/env
 run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}/PB2NC_wave.conf
 export err=$?; err_chk
-
 
 cat $pgmout
 
