@@ -11,7 +11,7 @@
 #     gdas.${cycle}.prepbufr                                                   
 #  Output files:                                                               
 #     gdas.${validdate}.nc                                                     
-#                                                                              
+#     global.0p25.grib2 files for archive                                      
 ###############################################################################
 
 set -x 
@@ -55,13 +55,6 @@ for cyc in ${cycles} ; do
     cp ${COMINmodel}/${MODELNAME}.${INITDATE}/${cyc}/wave/gridded/${filename} ${ARCgfs}/${newname}
   done
 done
-
-########################################################
-# Clean up anything more than 20 days old on the archive
-########################################################
-oldestarc=${PDYm20}
-
-
 
 ############################################
 # get the GDAS prepbufr files for yesterday 
