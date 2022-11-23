@@ -232,15 +232,16 @@ class LeadAverage:
         plot_specs_la = PlotSpecs(self.logger, 'lead_average')
         plot_specs_la.set_up_plot()
         n_xticks = 17
-        if len(self.date_info_dict['forecast_hours']) < n_xticks:
+        if len(self.date_info_dict['forecast_hours']) <= n_xticks:
             xticks = self.date_info_dict['forecast_hours']
         else:
-            xtick_intvl = int(len(self.date_info_dict['forecast_hours'])
-                              /n_xticks)
             xticks = []
-            for fhr in self.date_info_dict['forecast_hours'][::xtick_intvl]:
+            for fhr in self.date_info_dict['forecast_hours']:
                 if int(fhr) % 24 == 0:
                     xticks.append(fhr)
+            if len(xticks) > n_xticks:
+                xtick_intvl = int(len(xticks)/n_xticks)
+                xticks = xticks[xtick_intvl]
         stat_min_max_dict = {
             'ax1_stat_min': np.ma.masked_invalid(np.nan),
             'ax1_stat_max': np.ma.masked_invalid(np.nan),

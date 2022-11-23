@@ -271,15 +271,16 @@ class LeadByDate:
             n_xticks = 8
         else:
             n_xticks = 17
-        if len(self.date_info_dict['forecast_hours']) < n_xticks:
+        if len(self.date_info_dict['forecast_hours']) <= n_xticks:
             xticks = self.date_info_dict['forecast_hours']
         else:
-            xtick_intvl = int(len(self.date_info_dict['forecast_hours'])
-                              /n_xticks)
             xticks = []
-            for fhr in self.date_info_dict['forecast_hours'][::xtick_intvl]:
+            for fhr in self.date_info_dict['forecast_hours']:
                 if int(fhr) % 24 == 0:
                     xticks.append(fhr)
+            if len(xticks) > n_xticks:
+                xtick_intvl = int(len(xticks)/n_xticks)
+                xticks = xticks[xtick_intvl]
         n_yticks = 5
         if len(plot_dates) < n_yticks:
             ytick_intvl = 1
