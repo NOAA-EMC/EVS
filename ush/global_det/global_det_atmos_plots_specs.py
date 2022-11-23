@@ -212,6 +212,7 @@ class PlotSpecs:
         var_name_level = var_name+'/'+var_level
         var_plot_name_dict = {
             'APCP/A24': '24 hour Accumulated Precipitation',
+            'APCP_A24/A24': '24 hour Accumulated Precipitation',
             'CAPE/P90-0': 'Mixed-Layer CAPE',
             'CAPE/Z0': 'Surface Based CAPE',
             'CFRZR/L0': 'Precipitation Type - Freezing Rain',
@@ -457,19 +458,19 @@ class PlotSpecs:
              'EPAC_MDR': 'East Pacific Main Development Region',
              'GLOBAL': 'Global',
              'GreatBasin': 'Great Basin',
-             'Great Lakes': 'Great Lakes',
+             'GreatLakes': 'Great Lakes',
              'Mezquital': 'Mezquital',
              'MidAtlantic': 'Mid-Atlantic',
              'N60N90': '60N-90N',
              'NAO': 'Northern Atlantic Ocean',
              'NPO': 'Northern Pacific Ocean',
              'NHEM': 'Northern Hemisphere 20N-80N',
-             'North Atlantic': 'Northeast (North Atlantic)',
+             'NorthAtlantic': 'Northeast (North Atlantic)',
              'NPlains': 'Northern Plains',
              'NRockies': 'Northern Rockies',
              'PacificNW': 'Pacific NW',
              'PacificSW': 'Pacific SW',
-             'Prairie': 'Prairies',
+             'Prairie': 'Prairie',
              'S60S90': '60S-90S',
              'SAO': 'Southern Atlantic Ocean',
              'SPO': 'Southern Pacific Ocean',
@@ -725,7 +726,7 @@ class PlotSpecs:
             'GLOBAL': 'glb',
             'GreatBasin': 'buk_grb',
             'GreatLakes': 'buk_grlk',
-            'Mezquital': 'buk_mez',
+            'Mezqutial': 'buk_mez',
             'MidAtlantic': 'buk_matl',
             'N60N90': 'n60',
             'NAO': 'nao',
@@ -735,7 +736,7 @@ class PlotSpecs:
             'NPO': 'npo',
             'NRockies': 'buk_nrk',
             'PacificNW': 'buk_npw',
-            'PacificSW': 'buk_nsw',
+            'PacificSW': 'buk_psw',
             'Prairie': 'buk_pra',
             'S60S90': 's60',
             'SAO': 'sao',
@@ -989,12 +990,12 @@ class PlotSpecs:
         vert_profile_levels_dict = {
             'all': ['P1000', 'P925', 'P850', 'P700', 'P500', 'P400', 'P300',
                     'P250', 'P200', 'P150', 'P100', 'P50', 'P20', 'P10',
-                    'P5', 'P1'],
+                    'P5'],
             'ltrop': ['P1000', 'P925', 'P850', 'P700', 'P500'],
             'utrop': ['P500', 'P400', 'P300', 'P250', 'P200', 'P150', 'P100'],
             'trop': ['P1000', 'P925', 'P850', 'P700', 'P500', 'P400',
                      'P300', 'P250', 'P200', 'P150', 'P100'],
-            'strat': ['P100', 'P50', 'P20', 'P10', 'P5', 'P1']
+            'strat': ['P100', 'P50', 'P20', 'P10', 'P5']
         }
         if vert_profile in list(vert_profile_levels_dict.keys()):
             vert_profile_levels = vert_profile_levels_dict[vert_profile]
