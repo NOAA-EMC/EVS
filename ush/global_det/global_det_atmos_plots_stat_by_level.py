@@ -120,6 +120,9 @@ class StatByLevel:
         vert_profile_levels = plot_specs_sbl.get_vert_profile_levels(
             self.plot_info_dict['vert_profile']
         )
+        if plot_info_dict['fcst_var_name'] == '03MR' and \
+                self.plot_info_dict['vert_profile'] in ['all', 'strat']:
+            vert_profile_levels.append('P1')
         vert_profile_levels_int = np.empty(len(vert_profile_levels),
                                            dtype=int)
         self.plot_info_dict['fcst_var_level'] = (
