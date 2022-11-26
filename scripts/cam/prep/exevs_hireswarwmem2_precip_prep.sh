@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 
 # =============================================================================
 #
@@ -23,6 +23,7 @@ for NEST in "conus" "ak"; do
             source $config
         else
             export evs_run_mode=$evs_run_mode
+            source $config
         fi
         echo "RUN MODE: $evs_run_mode"
  
@@ -94,6 +95,7 @@ for NEST in "conus" "ak"; do
         source $config
     else
         export evs_run_mode=$evs_run_mode
+        source $config
     fi
     # Copy files to desired location
     #all commands to copy output files into the correct EVS COMOUT directory

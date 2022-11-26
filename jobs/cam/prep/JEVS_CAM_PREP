@@ -19,9 +19,7 @@ date
 
 # LSF id (jobid) and Temp Directories
 export pid=$$
-# in production, the following will be set to DATAROOT
-#export DATA_IN=${DATA_IN:-$DATAROOT}
-export DATA_IN=${DATA_IN:-$DATAROOTtmp}
+export DATA_IN=${DATA_IN:-$DATAROOT}
 export DATA=$DATA_IN/${jobid}
 rm -rf $DATA
 mkdir -p $DATA
@@ -33,20 +31,19 @@ export VDATE=$(date -d "today -1 day" +"%Y%m%d")
 export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
 export COMINccpa=${COMINccpa:-$(compath.py prod/ccpa/$ccpa_ver)}
 export COMINmrms=$DCOMROOT/ldmdata/obs/upperair/mrms/alaska/MultiSensorQPE
+export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
 export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
 export COMINhiresw=${COMINhiresw:-$(compath.py ${envir}/com/hiresw/${hiresw_ver})}
 export COMINhrrr=${COMINhrrr:-$(compath.py ${envir}/com/hrrr/${hrrr_ver})}
-# in production, the following will be set to the approp. COMOUT dir
-#export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
-export COMOUT=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
+export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 
 # Subdirectories to EVS Home Directory
-export PARMevs=$HOMEevs/parm
-export USHevs=$HOMEevs/ush
-export EXECevs=$HOMEevs/exec
-export FIXevs=$HOMEevs/fix
-export SCRIPTSevs=$HOMEevs/scripts
-export MET_PLUS_CONF="${PARMevs}/metplus_config/cam/precip/stats"
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
+export MET_PLUS_CONF="${PARMevs}/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}"
 
 # Execute the Script
 $SCRIPTSevs/$COMPONENT/$STEP/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh

@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
  
 # =============================================================================
 #
@@ -24,7 +24,6 @@ job_type = os.environ['job_type']
 PYTHONPATH = os.environ['PYTHONPATH']
 STEP = os.environ['STEP']
 VERIF_CASE = os.environ['VERIF_CASE']
-VERIF_TYPE = os.environ['VERIF_TYPE']
 MODELNAME = os.environ['MODELNAME']
 MET_PLUS_PATH = os.environ['MET_PLUS_PATH']
 MET_PATH = os.environ['MET_PATH']
@@ -37,8 +36,9 @@ MET_CONFIG_OVERRIDES = os.environ['MET_CONFIG_OVERRIDES']
 METPLUS_VERBOSITY = os.environ['METPLUS_VERBOSITY']
 MET_VERBOSITY = os.environ['MET_VERBOSITY']
 LOG_MET_OUTPUT_TO_METPLUS = os.environ['LOG_MET_OUTPUT_TO_METPLUS']
-NEST = os.environ['NEST']
 if job_type == 'reformat':
+    VERIF_TYPE = os.environ['VERIF_TYPE']
+    NEST = os.environ['NEST']
     VHOUR = os.environ['VHOUR']
     FHR_GROUP_LIST = os.environ['FHR_GROUP_LIST']
     FHR_END_SHORT = os.environ['FHR_END_SHORT']
@@ -52,6 +52,8 @@ if job_type == 'reformat':
     njob = os.environ['njob']
     BUCKET_INTERVAL = os.environ['BUCKET_INTERVAL']
 elif job_type == 'generate':
+    VERIF_TYPE = os.environ['VERIF_TYPE']
+    NEST = os.environ['NEST']
     #VHOUR_LIST = os.environ['VHOUR_LIST']
     VHOUR = os.environ['VHOUR']
     FHR_GROUP_LIST = os.environ['FHR_GROUP_LIST']
@@ -69,6 +71,10 @@ elif job_type == 'generate':
     MASK_POLY_LIST = os.environ['MASK_POLY_LIST']
     njob = os.environ['njob']
 elif job_type == 'gather':
+    VERIF_TYPE = os.environ['VERIF_TYPE']
+    NEST = os.environ['NEST']
+    njob = os.environ['njob']
+elif job_type == 'gather2':
     njob = os.environ['njob']
 if VERIF_CASE == 'precip':
     if job_type == 'reformat':
@@ -93,12 +99,13 @@ if VERIF_CASE == 'precip':
     elif job_type == 'gather':
         COMPONENT = os.environ['COMPONENT']
         OBSNAME = os.environ['OBSNAME']
+    elif job_type == 'gather2':
+        COMPONENT = os.environ['COMPONENT']
 
 # Make a dictionary of environment variables needed to run this particular job
 job_env_vars_dict = {
     'PYTHONPATH': PYTHONPATH,
     'VERIF_CASE': VERIF_CASE,
-    'VERIF_TYPE': VERIF_TYPE,
     'MODELNAME': MODELNAME,
     'MET_PLUS_PATH': MET_PLUS_PATH,
     'MET_PATH': MET_PATH,
@@ -111,11 +118,12 @@ job_env_vars_dict = {
     'METPLUS_VERBOSITY': METPLUS_VERBOSITY,
     'MET_VERBOSITY': MET_VERBOSITY,
     'LOG_MET_OUTPUT_TO_METPLUS': LOG_MET_OUTPUT_TO_METPLUS,
-    'NEST': NEST
 }
 job_iterate_over_env_lists_dict = {}
 job_dependent_vars = {}
 if job_type == 'reformat':
+    job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE
+    job_env_vars_dict['NEST'] = NEST
     job_env_vars_dict['VHOUR'] = VHOUR
     job_env_vars_dict['FHR_GROUP_LIST'] = FHR_GROUP_LIST
     job_env_vars_dict['FHR_END_SHORT'] = FHR_END_SHORT
@@ -132,6 +140,8 @@ if job_type == 'reformat':
         'exports': ['FHR_END','FHR_INCR']
     }
 elif job_type == 'generate':
+    job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE
+    job_env_vars_dict['NEST'] = NEST
     #job_env_vars_dict['VHOUR_LIST'] = VHOUR_LIST
     job_env_vars_dict['VHOUR'] = VHOUR
     job_env_vars_dict['FHR_GROUP_LIST'] = FHR_GROUP_LIST
@@ -155,6 +165,9 @@ elif job_type == 'generate':
         'list_items': re.split(r'[\s,]+', FHR_GROUP_LIST),
         'exports': ['FHR_END','FHR_INCR']
     }
+elif job_type == 'gather':
+    job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE
+    job_env_vars_dict['NEST'] = NEST
 if VERIF_CASE == 'precip': 
     if job_type == 'reformat':
         job_env_vars_dict['MODEL_ACC'] = MODEL_ACC
@@ -240,6 +253,13 @@ if VERIF_CASE == 'precip':
                 + f'StatAnalysis_fcst{COMPONENT.upper()}_obs{OBSNAME.upper()}'
                 + f'_GatherByDay.conf'
             )
+        elif job_type == 'gather2':
+            job_cmd_list.append(
+                f'{metplus_launcher} -c '
+                + f'{MET_PLUS_CONF}/'
+                + f'StatAnalysis_fcst{COMPONENT.upper()}'
+                + f'_GatherByDay.conf'
+            )
     elif STEP == 'plots':
         pass
 
@@ -253,7 +273,7 @@ if not os.path.exists(job_dir):
 job_file = os.path.join(job_dir, f'job{njob}')
 print(f"Creating job script: {job_file}")
 job = open(job_file, 'w')
-job.write('#!/bin/sh\n')
+job.write('#!/bin/bash\n')
 job.write('set -x \n')
 job.write('\n')
 job.write(f'export job_name=\"job{njob}\"\n')

@@ -56,9 +56,8 @@ evs_cam_settings_dict['modules'] = ['MET_PLUS_PATH', 'MET_PATH', 'MET_CONFIG']
 evs_cam_settings_dict['RUN_GRID2OBS_PREP'] = [
         'MET_PLUS_CONF','MET_PLUS_OUT','METPLUS_VERBOSITY','MET_VERBOSITY',
         'LOG_MET_OUTPUT_TO_METPLUS','NEST','TEMP_DIR','GRID_DIR','URL_HEAD',
-        'MASK_POLY_LIST'
         ]
-evs_cam_settings_dict['RUN_GRID2OBS_STATS'] = ['VERIF_TYPE']
+evs_cam_settings_dict['RUN_GRID2OBS_STATS'] = []
 evs_cam_settings_dict['RUN_GRID2OBS_PLOTS'] = []
 evs_cam_settings_dict['RUN_PRECIP_PREP'] = [
         'VERIF_TYPE', 'VHOUR_LIST', 'COMINobs', 'OBSNAME', 'OBS_ACC', 'ACC'
@@ -66,7 +65,7 @@ evs_cam_settings_dict['RUN_PRECIP_PREP'] = [
 evs_cam_settings_dict['RUN_PRECIP_STATS'] = [
         'MET_PLUS_CONF','MET_PLUS_OUT','MET_CONFIG_OVERRIDES', 
         'METPLUS_VERBOSITY','MET_VERBOSITY','LOG_MET_OUTPUT_TO_METPLUS',
-        'VERIF_TYPE','VHOUR','FHR_END_SHORT','FHR_INCR_SHORT','FHR_END_FULL',
+        'VHOUR','FHR_END_SHORT','FHR_INCR_SHORT','FHR_END_FULL',
         'FHR_INCR_FULL','COMINfcst','COMINobs','NEST',
         'OBSNAME','MIN_IHOUR','MODEL_ACC','OBS_ACC','ACC','BOOL_NBRHD','FCST_LEV',
         'FCST_THRESH','OBS_LEV','OBS_THRESH','OUTPUT_FLAG_NBRHD',
@@ -134,7 +133,7 @@ if STEP.upper() == 'PREP':
             '0', '1', '2', '3', '4', '5'
         ]
         valid_config_var_values_dict['LOG_MET_OUTPUT_TO_METPLUS'] = ['yes', 'no']
-        valid_config_var_values_dict['NEST'] = ['ak', 'conus', 'spc_otlk', 'firewxnest']
+        valid_config_var_values_dict['NEST'] = ['spc_otlk']
 if STEP.upper() == 'STATS':
     valid_config_var_values_dict['METPLUS_VERBOSITY'] = [
         'DEBUG', 'INFO', 'WARN', 'ERROR'
@@ -143,31 +142,34 @@ if STEP.upper() == 'STATS':
         '0', '1', '2', '3', '4', '5'
     ]
     valid_config_var_values_dict['LOG_MET_OUTPUT_TO_METPLUS'] = ['yes', 'no']
-    valid_config_var_values_dict['NEST'] = ['ak', 'conus', 'spc_otlk', 'firewxnest']
+    valid_config_var_values_dict['NEST'] = ['ak', 'conus', 'subreg', 'spc_otlk', 'firewx', 'hi', 'pr', 'gu']
     valid_config_var_values_dict['BOOL_NBRHD'] = ['True', 'False']
     valid_config_var_values_dict['OUTPUT_FLAG_NBRHD'] = ['NONE', 'STAT', 'BOTH']
     valid_config_var_values_dict['OUTPUT_FLAG_CATEG'] = ['NONE', 'STAT', 'BOTH']
 if STEP.upper() == 'PLOTS':
     valid_config_var_values_dict['event_equalization'] = ['YES', 'NO']
 for env_var in list(valid_config_var_values_dict.keys()):
-    if 'LIST' in env_var.upper():
-        for list_item in re.split(r'[,\s]+', os.environ[env_dir]):
-            if list_item not in valid_config_var_values_dict[env_var]:
+    if env_var in os.environ:
+        if 'LIST' in env_var.upper():
+                for list_item in re.split(r'[,\s]+', os.environ[env_var]):
+                    if list_item not in valid_config_var_values_dict[env_var]:
+                        env_var_pass = False
+                        failed_config_value = list_item
+                    else:
+                        env_var_pass = True
+        else:
+            if os.environ[env_var] not in valid_config_var_values_dict[env_var]:
                 env_var_pass = False
-                failed_config_value = list_item
-            else:
+                failed_config_value = os.environ[env_var]
+            else: 
                 env_var_pass = True
+        if not env_var_pass:
+            print(f"ERROR: The {env_var} value of {failed_config_value} is not a"
+                  + f" valid option. Valid options are"
+                  + f" {', '.join(valid_config_var_values_dict[env_var])}")
+            sys.exit(1)
     else:
-        if os.environ[env_var] not in valid_config_var_values_dict[env_var]:
-            env_var_pass = False
-            failed_config_value = os.environ[env_var]
-        else: 
-            env_var_pass = True
-    if not env_var_pass:
-        print(f"ERROR: The {env_var} value of {failed_config_value} is not a"
-              + f" valid option. Valid options are"
-              + f" {', '.join(valid_config_var_values_dict[env_var])}")
-        sys.exit(1)
+            continue
 
 print(f"END: {os.path.basename(__file__)}")
 
@@ -186,7 +188,6 @@ if STEP == 'stats':
     COMINfcst = os.environ['COMINfcst']
     COMINobs = os.environ['COMINobs']
     VHOUR = os.environ['VHOUR']
-    MASK_POLY_LIST=os.environ['MASK_POLY_LIST']
 if VERIF_CASE == 'precip':
     if STEP == 'prep':
         COMINobs = os.environ['COMINobs']
@@ -199,6 +200,7 @@ if VERIF_CASE == 'precip':
         ACC = os.environ['ACC']
         OBS_ACC = os.environ['OBS_ACC']
     if STEP == 'stats':
+        MASK_POLY_LIST=os.environ['MASK_POLY_LIST']
         FHR_END_SHORT = os.environ['FHR_END_SHORT']
         FHR_INCR_SHORT = os.environ['FHR_INCR_SHORT']
         FHR_END_FULL = os.environ['FHR_END_FULL']
@@ -210,9 +212,11 @@ if VERIF_CASE == 'precip':
         NBRHD_WIDTHS=os.environ['NBRHD_WIDTHS']
 elif VERIF_CASE == 'grid2obs':
     if STEP == 'stats':
-        FHR_START = os.environ['FHR_START']
-        FHR_END = os.environ['FHR_END']
-        FHR_INCR = os.environ['FHR_INCR']
+        FHR_END_SHORT = os.environ['FHR_END_SHORT']
+        FHR_INCR_SHORT = os.environ['FHR_INCR_SHORT']
+        FHR_END_FULL = os.environ['FHR_END_FULL']
+        FHR_INCR_FULL = os.environ['FHR_INCR_FULL']
+        MIN_IHOUR = os.environ['MIN_IHOUR']
     
 # Check current working directory
 cwd = os.getcwd()
@@ -233,14 +237,14 @@ if STEP == 'prep':
         env_dir_list.append('MET_PLUS_PATH')
         env_dir_list.append('MET_PATH')
         env_dir_list.append('MET_CONFIG')
-        env_file_list.append('MASK_POLY_LIST')
 if STEP == 'stats':
     env_dir_list.append('MET_PLUS_PATH')
     env_dir_list.append('MET_PATH')
     env_dir_list.append('MET_CONFIG')
     env_dir_list.append('COMINobs')
     env_dir_list.append('COMINfcst')
-    env_file_list.append('MASK_POLY_LIST')
+    if VERIF_CASE == 'precip':
+        env_file_list.append('MASK_POLY_LIST')
 for env_dir in env_dir_list:
     if 'LIST' in env_dir.upper():
         for list_item in re.split(r'[,\s]+', os.environ[env_dir]):
@@ -384,17 +388,31 @@ if STEP == 'stats':
                               + f" if no other options are listed. Please check the"
                               + f" configuration file: {config}")
     elif VERIF_CASE == 'grid2obs':
-        if int(FHR_START) < 0:
-            print(f"ERROR: FHR_START is set to {FHR_START}, which is invalid."
-                  + f" Please set FHR_START to a positive integer in {config}.")
+        if int(MIN_IHOUR) < 0 or int(MIN_IHOUR) > 23:
+            if int(MIN_IHOUR) == 24:
+                print(f"ERROR: MIN_IHOUR is set to {MIN_IHOUR}, which is equivalent to 00."
+                      + f" Please change the MIN_IHOUR to 00 instead in {config}.")
+                sys.exit(1)
+            else:
+                print(f"ERROR: MIN_IHOUR is set to {MIN_IHOUR}, which is not a valid time"
+                      + f" of day. Please set MIN_IHOUR to a two-digit integer between"
+                      + f"00 and 23 in {config}.")
+                sys.exit(1)
+        if int(FHR_END_SHORT) < 0:
+            print(f"ERROR: FHR_END_SHORT is set to {FHR_END_SHORT}, which is invalid."
+                  + f" Please set FHR_END_SHORT to a positive integer in {config}.")
             sys.exit(1)
-        if int(FHR_END) < 0:
-            print(f"ERROR: FHR_END is set to {FHR_END}, which is invalid."
-                  + f" Please set FHR_END to a positive integer in {config}.")
+        if int(FHR_INCR_SHORT) < 0:
+            print(f"ERROR: FHR_INCR_SHORT is set to {FHR_INCR_SHORT}, which is invalid."
+                  + f" Please set FHR_INCR_SHORT to a positive integer in {config}.")
             sys.exit(1)
-        if int(FHR_INCR) < 0:
-            print(f"ERROR: FHR_INCR is set to {FHR_INCR}, which is invalid."
-                  + f" Please set FHR_INCR to a positive integer in {config}.")
+        if int(FHR_END_FULL) < 0:
+            print(f"ERROR: FHR_END_FULL is set to {FHR_END_FULL}, which is invalid."
+                  + f" Please set FHR_END_FULL to a positive integer in {config}.")
+            sys.exit(1)
+        if int(FHR_INCR_FULL) < 0:
+            print(f"ERROR: FHR_INCR_FULL is set to {FHR_INCR_FULL}, which is invalid."
+                  + f" Please set FHR_INCR_FULL to a positive integer in {config}.")
             sys.exit(1)
 
 print(f"END: {os.path.basename(__file__)}")

@@ -38,12 +38,14 @@ if VERIF_CASE == "precip":
     VERIF_TYPE = os.environ['VERIF_TYPE']
     OBSNAME = os.environ['OBSNAME']
 elif VERIF_CASE == "grid2obs":
+    NEST = os.environ['NEST']
     if STEP == 'stats':
+        FHR_END_FULL = os.environ['FHR_END_FULL']
+        FHR_END_SHORT = os.environ['FHR_END_SHORT']
+        fhr_end_max = max(int(FHR_END_FULL), int(FHR_END_SHORT))
+        start_date_dt = vdate_dt - td(hours=fhr_end_max)
         VERIF_TYPE = os.environ['VERIF_TYPE']
         OBSNAME = os.environ['OBSNAME']
-if STEP == 'prep':
-    if VERIF_CASE == 'grid2obs':
-        NEST = os.environ['NEST']
 if STEP == 'stats':
     job_type = os.environ['job_type']
 
@@ -76,6 +78,7 @@ if STEP == 'stats':
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'reformat'))
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'generate'))
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather2'))
 if STEP == 'plots':
     pass
 for job_scripts_dir in job_scripts_dirs:
@@ -112,6 +115,10 @@ elif STEP == 'stats':
             )
         if job_type == 'gather':
             working_output_base_dir = os.path.join(
+                DATA, VERIF_CASE, 'METplus_output', 'gather_small'
+            )
+        if job_type == 'gather2':
+            working_output_base_dir = os.path.join(
                 DATA, VERIF_CASE, 'METplus_output'
             )
         working_dir_list.append(working_output_base_dir)
@@ -139,7 +146,7 @@ elif STEP == 'stats':
                 working_output_base_dir, 'grid_stat', 
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
-        if job_type == 'gather':
+        if job_type in ['gather', 'gather2']:
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'stat_analysis', 'confs'
             ))
@@ -180,19 +187,37 @@ elif STEP == 'stats':
             )
         if job_type == 'gather':
             working_output_base_dir = os.path.join(
+                DATA, VERIF_CASE, 'METplus_output', 'gather_small'
+            )
+        if job_type == 'gather2':
+            working_output_base_dir = os.path.join(
                 DATA, VERIF_CASE, 'METplus_output'
             )
         working_dir_list.append(working_output_base_dir)
         if job_type == 'reformat':
             working_dir_list.append(os.path.join(
-                working_output_base_dir, 'pb2nc', 'confs'
+                working_output_base_dir, NEST, 'pb2nc', 'confs'
             ))
             working_dir_list.append(os.path.join(
-                working_output_base_dir, 'pb2nc', 'logs'
+                working_output_base_dir, NEST, 'pb2nc', 'logs'
             ))
             working_dir_list.append(os.path.join(
-                working_output_base_dir, 'pb2nc', 'tmp'
+                working_output_base_dir, NEST, 'pb2nc', 'tmp'
             ))
+            if NEST in ['spc_otlk', 'firewx']:
+                working_dir_list.append(os.path.join(
+                    working_output_base_dir, 'genvxmask', 'confs'
+                ))
+                working_dir_list.append(os.path.join(
+                    working_output_base_dir, 'genvxmask', 'logs'
+                ))
+                working_dir_list.append(os.path.join(
+                    working_output_base_dir, 'genvxmask', 'tmp'
+                ))
+                working_dir_list.append(os.path.join(
+                    working_output_base_dir, 'genvxmask',
+                    NEST+'.'+vdate_dt.strftime('%Y%m%d')
+                ))
         if job_type == 'generate':
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'point_stat', 'confs'
@@ -207,7 +232,7 @@ elif STEP == 'stats':
                 working_output_base_dir, 'point_stat', 
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
-        if job_type == 'gather':
+        if job_type in ['gather', 'gather2']:
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'stat_analysis', 'confs'
             ))
@@ -229,11 +254,11 @@ elif STEP == 'stats':
             ))
             if job_type == 'reformat':
                 working_dir_list.append(os.path.join(
-                    working_output_base_dir, 'pb2nc', 
+                    working_output_base_dir, NEST, 'pb2nc', 
                     OBSNAME+'.'+date_dt.strftime('%Y%m%d')
                 ))
                 working_dir_list.append(os.path.join(
-                    working_output_base_dir, 'pb2nc', 
+                    working_output_base_dir, NEST, 'pb2nc', 
                     MODELNAME+'.'+date_dt.strftime('init%Y%m%d')
                 ))
             date_dt+=td(days=1)
