@@ -84,7 +84,7 @@ class LeadByLevel:
         vert_profile_levels = plot_specs_lbl.get_vert_profile_levels(
             self.plot_info_dict['vert_profile']
         )
-        if plot_info_dict['fcst_var_name'] == '03MR' and \
+        if self.plot_info_dict['fcst_var_name'] == 'O3MR' and \
                 self.plot_info_dict['vert_profile'] in ['all', 'strat']:
             vert_profile_levels.append('P1')
         vert_profile_levels_int = np.empty(len(vert_profile_levels),
@@ -299,7 +299,7 @@ class LeadByLevel:
                     xticks.append(fhr)
             if len(xticks) > n_xticks:
                 xtick_intvl = int(len(xticks)/n_xticks)
-                xticks = xticks[xtick_intvl]
+                xticks = xticks[::xtick_intvl]
         vert_profile_levels_int_ticks = vert_profile_levels_int
         if self.plot_info_dict['vert_profile'] == 'all':
             for del_lev in [925, 700, 400, 250, 150]:

@@ -280,7 +280,7 @@ class LeadByDate:
                     xticks.append(fhr)
             if len(xticks) > n_xticks:
                 xtick_intvl = int(len(xticks)/n_xticks)
-                xticks = xticks[xtick_intvl]
+                xticks = xticks[::xtick_intvl]
         n_yticks = 5
         if len(plot_dates) < n_yticks:
             ytick_intvl = 1

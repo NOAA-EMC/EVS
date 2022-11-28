@@ -241,7 +241,7 @@ class LeadAverage:
                     xticks.append(fhr)
             if len(xticks) > n_xticks:
                 xtick_intvl = int(len(xticks)/n_xticks)
-                xticks = xticks[xtick_intvl]
+                xticks = xticks[::xtick_intvl]
         stat_min_max_dict = {
             'ax1_stat_min': np.ma.masked_invalid(np.nan),
             'ax1_stat_max': np.ma.masked_invalid(np.nan),
