@@ -147,7 +147,7 @@ fi
 
 cycles='00 12'
 fhrs='fhr1 fhr2 fhr3 fhr4 fhr5'
-#fhrs='fhr1 fhr2 fhr3 fhr4 fhr5 fhr6 fhr7 fhr8'
+#fhrs='fhr1 fhr2 fhr3 fhr4 fhr5 fhr6 fhr7 fhr8 fhr9'
 
 export GRID2OBS_CONF="${PARMevs}/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}"
 
@@ -162,28 +162,36 @@ for cyc in ${cycles}  ; do
     echo "export fhr=${fhr}" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
     case ${fhr} in
     'fhr1')
+      #echo "export lead_hrs=0,6,12,18,24,30,36"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
       echo "export lead_hrs=0,12,24,36"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
       ;;
     'fhr2')
+      #echo "export lead_hrs=42,48,54,60,66,72,78"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
       echo "export lead_hrs=48,60,72,84"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
       ;;
     'fhr3')
+      #echo "export lead_hrs=84,90,96,102,108,114,120"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
       echo "export lead_hrs=96,108,120,132"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
       ;;
     'fhr4')
+      #echo "export lead_hrs=126,132,138,144,150,156,162"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
       echo "export lead_hrs=144,156,168,180"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
       ;;
     'fhr5')
+      #echo "export lead_hrs=168,174,180,186,192,198,204"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
       echo "export lead_hrs=192,204,216,228,240"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
       ;;
 #    'fhr6')
-#      echo "export lead_hrs=252,264,276,288"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+#      echo "export lead_hrs=210,216,222,228,234,240"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
 #      ;;
 #    'fhr7')
-#      echo "export lead_hrs=300,312,324,336"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+#      echo "export lead_hrs=246,252,258,264,270,276,282,288"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
 #      ;;
 #    'fhr8')
-#      echo "export lead_hrs=348,360,372,384"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+#      echo "export lead_hrs=294,300,306,312,318,324,330,336"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+#      ;;
+#    'fhr9')
+#      echo "export lead_hrs=342,348,354,360,366,372,378,384"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
 #      ;;
     esac
     echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf \
