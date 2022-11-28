@@ -1,0 +1,74 @@
+#!/bin/sh -e
+##---------------------------------------------------------------------------
+##---------------------------------------------------------------------------
+## NCEP EMC Verification System (EVS) - GFS Atmospheric
+##
+## CONTRIBUTORS: Mallory Row, mallory.row@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+## PURPOSE: Set up configurations to run EVS GFS Atmospheric standalone
+##---------------------------------------------------------------------------
+##--------------------------------------------------------------------------
+
+echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
+
+####################################################
+# WHAT METPLUS USE CASES TO RUN FOR GFS ATMOSPHERIC
+####################################################
+## SET TO "YES" or "NO"
+## EDIT SECTIONS BELOW FOR VERIFICATION TYPES REQUESTED
+export RUN_GRID2GRID_STATS="NO"
+export RUN_GRID2GRID_PLOTS="NO"
+export RUN_GRID2OBS_STATS="YES"
+export RUN_GRID2OBS_PLOTS="NO"
+
+####################################################
+# GENERAL SETTINGS APPLIED TO ALL USE CASES
+####################################################
+## INPUT DATA SETTINGS
+#model_list:             model names
+#model_evs_data_dir_list:    directory path to model .stat files
+#model_file_format_list: file format of model files
+export model_list="$MODELNAME"
+export model_evs_data_dir_list="$COMOUTfinal"
+export model_file_format_list="${COMINukmet}.{init?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.t{init?fmt=%H}z.f{lead?fmt=%3H}"
+
+## OUTPUT DATA SETTINGS
+#OUTPUTROOT: base output directory
+export OUTPUTROOT="$DATAROOT"
+## DATE SETTINGS
+#start_date:       verification start date, format YYYYMMDD
+#end_date:         verification end date, format YYYYMMDD
+export start_date=$VDATE
+export end_date=$VDATE
+## METPLUS SETTINGS
+#metplus_verbosity:         DEBUG, INFO, WARN, ERROR (most verbose is DEBUG)
+#met_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
+#log_met_output_to_metplus: log MET output to METplus log, yes or no
+export metplus_verbosity="DEBUG"
+export met_verbosity="2"
+export log_met_output_to_metplus="yes"
+## DATA DIRECTIVE SETTINGS
+export KEEPDATA=${KEEPDATA:-"NO"}
+export SENDCOM="YES"
+export SENDARCH="NO"
+export SENDMETVIEWER="NO"
+####################################################
+# SETTINGS FOR SPECIFIC USE CASES
+####################################################
+
+if [ $RUN_GRID2OBS_STATS = YES ]; then
+    #g2os_type_list: list type of verifications to run for grid-to-obs: pres_levs, sea_ice, sfc
+    #    pres_levs:  compare variables on pressure levels to GDAS prepbufr obs
+    #    sea_ice:    compare Internation Arctic Buoy Program
+    #    sfc:        compare surface variables to GDAS and NAM/RAP prepbufr obs
+    export g2os_type_list="pres_levs"
+    export g2os_pres_levs_init_hr_list="00 12"
+    export g2os_pres_levs_valid_hr_list="00 12"
+    export g2os_pres_levs_fhr_min=00
+    export g2os_pres_levs_fhr_max=144
+    export g2os_pres_levs_fhr_inc=12
+    export g2os_mv_database_name="mv_evs_global_det_atmos_grid2obs_stats_$MODELNAME"
+    export g2os_mv_database_group="$USER"
+    export g2os_mv_database_desc="Grid-to-obs METplus data for $MODELNAME"
+fi
+
+echo "END: $(basename ${BASH_SOURCE[0]})"

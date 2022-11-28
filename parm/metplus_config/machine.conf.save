@@ -1,0 +1,26 @@
+# Machine Conf file for MET and METplus
+[config]
+
+MET_INSTALL_DIR = {ENV[MET_ROOT]}
+<<<<<<< HEAD
+MET_BIN_DIR = {MET_INSTALL_DIR}/{ENV[MET_bin_exec]}
+=======
+MET_BIN_DIR = {MET_INSTALL_DIR}/bin
+>>>>>>> upstream/develop
+METPLUS_BASE = {ENV[METPLUS_PATH]}
+PARM_BASE = {METPLUS_BASE}/parm
+TMP_DIR = {OUTPUT_BASE}/tmp
+STAGING_DIR = {OUTPUT_BASE}/stage
+CONVERT = convert
+GEMPPAKTOCF_JAR = GempakToCF.jar
+LOG_TIMESTAMP_TEMPLATE = %Y%m%d%H%M%S
+LOG_TIMESTAMP_USE_DATATIME = no
+LOG_MET_OUTPUT_TO_METPLUS = {ENV[log_met_output_to_metplus]}
+LOG_LEVEL = {ENV[metplus_verbosity]}
+LOG_MET_VERBOSITY = {ENV[met_verbosity]}
+LOG_LINE_FORMAT = %(asctime)s.%(msecs)03d %(name)s (%(filename)s:%(lineno)d) %(levelname)s: %(message)s
+LOG_ERR_LINE_FORMAT = {LOG_LINE_FORMAT}
+LOG_DEBUG_LINE_FORMAT = {LOG_LINE_FORMAT}
+LOG_INFO_LINE_FORMAT = %(asctime)s.%(msecs)03d %(name)s %(levelname)s: %(message)s
+LOG_LINE_DATE_FORMAT = %m/%d %H:%M:%S
+

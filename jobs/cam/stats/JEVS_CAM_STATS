@@ -1,9 +1,10 @@
-#!/bin/ksh
+#!/bin/bash
 
 ########################################
 # Preliminary data setup step
 ########################################
 set -xa
+
 
 # ###################################
 # SET SHELL PROCESSING VARIABLES
@@ -14,21 +15,18 @@ date
 ###########################################################
 # obtain unique LSF id (jobid) and make temp directories
 ###########################################################
-export pid=$$
-export DATA_IN=${DATA_IN:-$DATAROOT}
-export DATA=$DATA_IN/${jobid}
 
-rm -rf $DATA
+export pid=$$
+
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
-
 ####################################
 # Determine Job Output Name on System
 ####################################
 export pgmout="OUTPUT.${pid}"
 
 export cycle=t${cyc}z
-
 ##################################################
 # SAVEGES  - Copy Files From TMPDIR to $GESdir
 # SENDECF  - Flag Events on ecFLOW
@@ -46,24 +44,21 @@ export FIXvevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
 
-# Run setpdy and initialize PDY variables
-setpdy.sh
-. ./PDY
-
-export vday=$PDYm1
-
 # Define COMIN/COMOUT variables:
 
-export COMIN=${COMIN:-$(compath.py evs/${evs_ver}/)}
-export COMOUT=${COMOUT:-$(compath.py -o evs/${evs_ver}/${prog}/${net})}
-export COMNAM=${COMN:-$(compath.py nam/${nam_ver})}
-export COMMOD=${COMMOD:-$(compath.py ${mod}/${mod_ver})}
+export COMIN=${COMIN:-$(compath.py ${envir}/com/evs/${evs_ver}/)}
+export COMINnam=${COMINnam:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
+export COMINobs=${COMINobs:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
+export COMOUT=${COMOUT:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
+export COMOUTsmall=${COMOUTsmall:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE})}
+export COMOUTfinal=${COMOUTfinal:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${MODELNAME}.${VDATE})}
+mkdir -m 775 -p  $COMOUT
 
 #######################################################################
 # Execute the script.
 #######################################################################
 
-$HOMEevs/scripts/${net}/exevs_${mod}_${sys}_${prog}.sh
+$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 
 cat $pgmout
 
@@ -72,7 +67,9 @@ postmsg "$jlogfile" "$msg"
 
 if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT
-  rm -rf $DATA
-fi
-
-}
+ rm -rf $DATA
+ fi
+    #if [ "$KEEPDATA" != "YES" ] ; then
+    #  cd $DATAROOT
+    #  rm -rf $DATA
+    #fi
