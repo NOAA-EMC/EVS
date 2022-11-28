@@ -42,7 +42,7 @@ export end_date=$PDYm1
 #metplus_verbosity:         DEBUG, INFO, WARN, ERROR (most verbose is DEBUG)
 #met_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
 #log_met_output_to_metplus: log MET output to METplus log, yes or no
-export metplus_verbosity="DEBUG"
+export metplus_verbosity="INFO"
 export met_verbosity="2"
 export log_met_output_to_metplus="yes"
 ## DATA DIRECTIVE SETTINGS
@@ -67,7 +67,7 @@ if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     export g2op_type_list="pres_levs"
     export g2op_event_equalization="NO"
     export g2op_pres_levs_init_hr_list="00 06 12 18"
-    export g2op_pres_levs_valid_hr_list="00"
+    export g2op_pres_levs_valid_hr_list="00 12"
     export g2op_pres_levs_fhr_min=00
     export g2op_pres_levs_fhr_max=384
     export g2op_pres_levs_fhr_inc=6

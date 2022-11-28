@@ -42,7 +42,7 @@ export end_date=$PDYm1
 #metplus_verbosity:         DEBUG, INFO, WARN, ERROR (most verbose is DEBUG)
 #met_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
 #log_met_output_to_metplus: log MET output to METplus log, yes or no
-export metplus_verbosity="DEBUG"
+export metplus_verbosity="INFO"
 export met_verbosity="2"
 export log_met_output_to_metplus="yes"
 ## DATA DIRECTIVE SETTINGS
@@ -67,8 +67,8 @@ if [ $RUN_GRID2GRID_PLOTS = YES ]; then
     export g2gp_model_plot_name_list="gfs"
     export g2gp_type_list="means"
     export g2gp_event_equalization="NO"
-    export g2gp_means_init_hr_list="00"
-    export g2gp_means_valid_hr_list="00"
+    export g2gp_means_init_hr_list="00 06 12 18"
+    export g2gp_means_valid_hr_list="00 06 12 18"
     export g2gp_means_fhr_min=00
     export g2gp_means_fhr_max=384
     export g2gp_means_fhr_inc=24
