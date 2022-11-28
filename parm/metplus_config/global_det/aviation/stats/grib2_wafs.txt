@@ -1,0 +1,3 @@
+GRIB2
+0 1 0 255 0 0 19 20  "ICIP"  "Icing"  "%"
+0 1 0 255 0 0 19 37  "ICESEV"  "Icing Severity"  "-"
