@@ -1,7 +1,7 @@
 #!/bin/bash
 export evs_ver=v1.0
-export met_ver=10.1.1
-export metplus_ver=4.1.1
+export met_ver=10.1.2
+export metplus_ver=4.1.4
 
 export envvar_ver=1.0
 export PrgEnv_intel_ver=8.1.0
