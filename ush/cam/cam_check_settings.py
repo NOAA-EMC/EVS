@@ -192,11 +192,6 @@ if VERIF_CASE == 'precip':
     if STEP == 'prep':
         COMINobs = os.environ['COMINobs']
         VHOUR_LIST = os.environ['VHOUR_LIST']
-        FHR_END_SHORT = os.environ['FHR_END_SHORT']
-        FHR_INCR_SHORT = os.environ['FHR_INCR_SHORT']
-        FHR_END_FULL = os.environ['FHR_END_FULL']
-        FHR_INCR_FULL = os.environ['FHR_INCR_FULL']
-        MIN_IHOUR = os.environ['MIN_IHOUR']
         ACC = os.environ['ACC']
         OBS_ACC = os.environ['OBS_ACC']
     if STEP == 'stats':

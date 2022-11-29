@@ -31,10 +31,10 @@ MODELNAME = os.environ['MODELNAME']
 VDATE = os.environ['VDATE']
 vdate_dt = datetime.strptime(VDATE, '%Y%m%d')
 if VERIF_CASE == "precip":
-    fhr_end_max = max(int(FHR_END_FULL), int(FHR_END_SHORT))
-    start_date_dt = vdate_dt - td(hours=fhr_end_max)
     FHR_END_FULL = os.environ['FHR_END_FULL']
     FHR_END_SHORT = os.environ['FHR_END_SHORT']
+    fhr_end_max = max(int(FHR_END_FULL), int(FHR_END_SHORT))
+    start_date_dt = vdate_dt - td(hours=fhr_end_max)
     VERIF_TYPE = os.environ['VERIF_TYPE']
     OBSNAME = os.environ['OBSNAME']
 elif VERIF_CASE == "grid2obs":
