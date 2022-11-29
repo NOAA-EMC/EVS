@@ -547,14 +547,14 @@ generate_stats_jobs_dict = {
                             'var1_fcst_options': ("'GRIB_lvl_typ = 215;"
                                                   +"set_attr_level = "
                                                   +'"CEILING";'+"'"),
-                            'var1_fcst_threshs': ("'lt152.4, lt304.8, "
-                                                  +"lt914.4, ge914.4, "
+                            'var1_fcst_threshs': ("'lt152, lt305, "
+                                                  +"lt914, ge914, "
                                                   +"lt1524, lt3048'"),
                             'var1_obs_name': 'CEILING',
                             'var1_obs_levels': 'L0',
                             'var1_obs_options': '',
-                            'var1_obs_threshs': ("'lt152.4, lt304.8, "
-                                                 +"lt914.4, ge914.4, "
+                            'var1_obs_threshs': ("'lt152, lt305, "
+                                                 +"lt914, ge914, "
                                                  +"lt1524, lt3048'"),
                             'met_config_overrides': ''},
                     'commands': [gda_util.metplus_command(
@@ -732,17 +732,17 @@ generate_stats_jobs_dict = {
                                'var1_fcst_levels': 'Z0',
                                'var1_fcst_options': ("'censor_thresh = gt16090;"
                                                      +"censor_val = 16090;'"),
-                               'var1_fcst_threshs': ("'lt804.672, lt1609.344, "
-                                                     +"lt4828.032, lt8046.72, "
-                                                     +"ge8046.72, "
-                                                     +"lt16093.44'"),
+                               'var1_fcst_threshs': ("'lt805, lt1609, "
+                                                     +"lt4828, lt8045, "
+                                                     +"ge8045, "
+                                                     +"lt16090'"),
                                'var1_obs_name': 'VIS',
                                'var1_obs_levels': 'Z0',
                                'var1_obs_options': '',
-                               'var1_obs_threshs': ("'lt804.672, lt1609.344, "
-                                                    +"lt4828.032, lt8046.72, "
-                                                    +"ge8046.72, "
-                                                    +"lt16093.44'"),
+                               'var1_obs_threshs': ("'lt805, lt1609, "
+                                                    +"lt4828, lt8045, "
+                                                    +"ge8045, "
+                                                    +"lt16090'"),
                                'met_config_overrides': ''},
                        'commands': [gda_util.metplus_command(
                                         'PointStat_fcstGLOBAL_DET_'

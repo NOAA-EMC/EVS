@@ -364,7 +364,8 @@ generate_stats_jobs_dict = {
                                   )]},
         'SnowWaterEqv': {'env': {'var1_name': 'WEASD',
                                  'var1_level': 'Z0',
-                                 'var1_options': ''},
+                                 'var1_options': ("'set_attr_units = "
+                                                  +'"mm";'+"'")},
                          'commands': [gda_util.metplus_command(
                                           'GridStat_fcstGLOBAL_DET.conf'
                                       )]},
@@ -525,7 +526,7 @@ generate_stats_jobs_dict = {
                                                     +'.conf'
                                                 )]},
         'Ozone': {'env': {'var1_name': 'O3MR',
-                          'var1_levels': ("'P100, P70, P50, P30, P20, "
+                          'var1_levels': ("'P925, P100, P70, P50, P30, P20, "
                                           +"P10, P5, P1'"),
                           'var1_options': ("'set_attr_units = "
                                            +'"ppm"; convert(x)=x*1000000'
