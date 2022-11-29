@@ -19,8 +19,7 @@ date
 
 # LSF id (jobid) and Temp Directories
 export pid=$$
-export DATA_IN=${DATA_IN:-$DATAROOT}
-export DATA=$DATA_IN/${jobid}
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
