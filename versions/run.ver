@@ -10,8 +10,8 @@ export grib_util_ver=1.2.2
 export bufr_dump_ver=1.0.0
 export python_ver=3.8.6
 export netcdf_ver=4.7.4
-export met_ver=10.1.1
-export metplus_ver=4.1.1
+export met_ver=10.1.2
+export metplus_ver=4.1.4
 
 export envvar_ver=1.0
 export grib_util_ver=1.2.2
