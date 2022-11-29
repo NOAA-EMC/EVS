@@ -2023,14 +2023,14 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                 )
         if write_parse_stat_file:
             if fcst_var_thresh != 'NA':
-                fcst_var_thresh_symbol, fcst_vat_thresh_letter = (
+                fcst_var_thresh_symbol, fcst_var_thresh_letter = (
                     format_thresh(fcst_var_thresh)
                 )
             else:
                 fcst_var_thresh_symbol = fcst_var_thresh
                 fcst_vat_thresh_letter = fcst_var_thresh
             if obs_var_thresh != 'NA':
-                obs_var_thresh_symbol, obs_vat_thresh_letter = (
+                obs_var_thresh_symbol, obs_var_thresh_letter = (
                     format_thresh(obs_var_thresh)
                 )
             else:
