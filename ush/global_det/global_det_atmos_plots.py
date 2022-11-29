@@ -454,6 +454,13 @@ for plot in plots_list:
                     plot_sbl.make_stat_by_level()
     elif plot == 'lead_by_level':
         import global_det_atmos_plots_lead_by_level as gdap_lbl
+        if evs_run_mode == 'production' and int(fhr_start) == 0 \
+                and int(fhr_end) == 384 and int(fhr_inc) == 6:
+            fhrs_lbl = list(
+                range(int(fhr_start), int(fhr_end)+int(fhr_inc), 12)
+            )
+        else:
+            fhrs_lbl = fhrs
         vert_profiles = ['all', 'trop', 'strat', 'ltrop', 'utrop']
         for lbl_info in \
                 list(itertools.product(valid_hrs, interp_points_list,
@@ -461,7 +468,7 @@ for plot in plots_list:
             date_info_dict['valid_hr_start'] = str(lbl_info[0])
             date_info_dict['valid_hr_end'] = str(lbl_info[0])
             date_info_dict['valid_hr_inc'] = '24'
-            date_info_dict['forecast_hours'] = fhrs
+            date_info_dict['forecast_hours'] = fhrs_lbl
             plot_info_dict['fcst_var_name'] = fcst_var_name
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['interp_points'] = str(lbl_info[1])
