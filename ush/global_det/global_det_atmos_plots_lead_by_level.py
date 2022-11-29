@@ -542,6 +542,13 @@ class LeadByLevel:
                     self.logger.warning("Fully masked array "
                                         +"for {model_num}, "
                                         +"no plotting")
+                    if os.environ['evs_run_mode'] == 'production' \
+                            and model_num_plot_name == 'jma' \
+                            and (int(self.date_info_dict['forecast_hours'][1])\
+                            - int(self.date_info_dict['forecast_hours'][0])) \
+                            == 12:
+                        ax.set_title('Forecasts not available at 12-h intervals',
+                                     loc='right')
         if make_colorbar:
             cbar_left = gs.get_grid_positions(fig)[2][0]
             cbar_width = (gs.get_grid_positions(fig)[3][-1]
