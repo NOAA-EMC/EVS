@@ -704,9 +704,9 @@ plot_jobs_dict = {
                                                      +'ge8045, lt16090')},
                        'obs_var_dict': {'name': 'VIS',
                                         'levels': 'Z0',
-                                        'threshs': ('lt805, lt16094, '
-                                                     +'lt4828, lt8045, '
-                                                     +'ge8045, lt16090')},
+                                        'threshs': ('lt805, lt1609, '
+                                                    +'lt4828, lt8045, '
+                                                    +'ge8045, lt16090')},
                        'interp_dict': {'method': 'BILIN',
                                        'points': '4'},
                        'grid': 'G104',
