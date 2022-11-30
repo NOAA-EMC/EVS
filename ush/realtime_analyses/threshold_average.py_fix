@@ -16,7 +16,6 @@
 import os
 import sys
 import numpy as np
-import math
 import pandas as pd
 import logging
 from functools import reduce
@@ -24,14 +23,12 @@ import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
-import matplotlib.image as mpimg
-from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from datetime import datetime, timedelta as td
 from decimal import Decimal
 
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
-from settings import Toggle, Templates, Paths, Presets, ModelSpecs, Reference
+from settings import Toggle, Templates, Presets, ModelSpecs, Reference
 from plotter import Plotter
 from prune_stat_files import prune_data
 import plot_util
@@ -44,7 +41,6 @@ plotter = Plotter(fig_size=(28.,14.))
 plotter.set_up_plots()
 toggle = Toggle()
 templates = Templates()
-paths = Paths()
 presets = Presets()
 model_colors = ModelSpecs()
 reference = Reference()
@@ -68,11 +64,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
                       eval_period: str = 'TEST', save_header: str = '', 
                       display_averages: bool = True, 
                       plot_group: str = 'sfc_upper',
-                      sample_equalization: bool = True,
-                      plot_logo_left: bool = False,
-                      plot_logo_right: bool = False, path_logo_left: str = '.',
-                      path_logo_right: str = '.', zoom_logo_left: float = 1.,
-                      zoom_logo_right: float = 1.):
+                      sample_equalization: bool = True):
 
     logger.info("========================================")
     logger.info(f"Creating Plot {num} ...")
@@ -100,6 +92,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
                        + f" plot...")
         logger.info("========================================")
         return None
+
     # filter by forecast lead times
     if isinstance(flead, list):
         if len(flead) <= 8:
@@ -131,19 +124,13 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         logger.error(e1)
         logger.error(e2)
         raise ValueError(e1+"\n"+e2)
-    if df.empty:
-        logger.warning(f"Empty Dataframe. Continuing onto next plot...")
-        plt.close(num)
-        logger.info("========================================")
-        return None
-    
+
     # Remove from date_hours the valid/init hours that don't exist in the 
     # dataframe
     date_hours = np.array(date_hours)[[
         str(x) in df[str(date_type).upper()].dt.hour.astype(str).tolist() 
         for x in date_hours
     ]]
-
     requested_thresh_symbol, requested_thresh_letter = list(
         zip(*[plot_util.format_thresh(t) for t in thresh])
     )
@@ -164,7 +151,10 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         logger.error(e)
         logger.error("Quitting ...")
         raise ValueError(e+"\nQuitting ...")
-    
+
+    print(df['FCST_THRESH'])
+    print([t for t in df['FCST_THRESH']])
+    print([type(t) for t in df['FCST_THRESH']])
     df_thresh_symbol, df_thresh_letter = list(
         zip(*[plot_util.format_thresh(t) for t in df['FCST_THRESH']])
     )
@@ -217,7 +207,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         plt.close(num)
         logger.info("========================================")
         return None
-    
     group_by = ['MODEL','FCST_THRESH_VALUE']
     if sample_equalization:
         df, bool_success = plot_util.equalize_samples(logger, df, group_by)
@@ -229,8 +218,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         df_aggregated = df_groups.sum()
     else:
         df_aggregated = df_groups.mean()
-    if sample_equalization:
-        df_aggregated['COUNTS']=df_groups.size()
+
     # Remove data if they exist for some but not all models at some value of 
     # the indep. variable. Otherwise plot_util.calculate_stat will throw an 
     # error
@@ -300,11 +288,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         df_aggregated, values=str(metric_name).upper(), columns='MODEL', 
         index='FCST_THRESH_VALUE'
     )
-    if sample_equalization:
-        pivot_counts = pd.pivot_table(
-            df_aggregated, values='COUNTS', columns='MODEL',
-            index='FCST_THRESH_VALUE'
-        )
     pivot_metric = pivot_metric.dropna()
     if confidence_intervals:
         pivot_ci_lower = pd.pivot_table(
@@ -393,8 +376,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         pivot_metric = pivot_metric[pivot_metric.index.isin(indices_in_common)]
         pivot_ci_lower = pivot_ci_lower[pivot_ci_lower.index.isin(indices_in_common)]
         pivot_ci_upper = pivot_ci_upper[pivot_ci_upper.index.isin(indices_in_common)]
-        if sample_equalization:
-            pivot_counts = pivot_counts[pivot_counts.index.isin(indices_in_common)]
     units = df['FCST_UNITS'].tolist()[0]
     #pivot_metric = 
     x_vals = pivot_metric.index.astype(float).tolist()
@@ -432,24 +413,14 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
                 str(model_list[m])
             ].values
         if not y_lim_lock:
-            if np.any(y_vals_metric != np.inf):
-                y_vals_metric_min = np.nanmin(y_vals_metric[y_vals_metric != np.inf])
-                y_vals_metric_max = np.nanmax(y_vals_metric[y_vals_metric != np.inf])
-            else:
-                y_vals_metric_min = np.nanmin(y_vals_metric)
-                y_vals_metric_max = np.nanmax(y_vals_metric)
+            y_vals_metric_min = np.nanmin(y_vals_metric)
+            y_vals_metric_max = np.nanmax(y_vals_metric)
             if m == 0:
                 y_mod_min = y_vals_metric_min
                 y_mod_max = y_vals_metric_max
             else:
-                if math.isinf(y_mod_min):
-                    y_mod_min = y_vals_metric_min
-                else:
-                    y_mod_min = np.nanmin([y_mod_min, y_vals_metric_min])
-                if math.isinf(y_mod_max):
-                    y_mod_max = y_vals_metric_max
-                else:
-                    y_mod_max = np.nanmax([y_mod_max, y_vals_metric_max])
+                y_mod_min = np.nanmin([y_mod_min, y_vals_metric_min])
+                y_mod_max = np.nanmax([y_mod_max, y_vals_metric_max])
             if (y_vals_metric_min > y_min_limit 
                     and y_vals_metric_min <= y_mod_min):
                 y_min = y_vals_metric_min
@@ -516,8 +487,8 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         np.digitize(len(xtick_labels), number_of_ticks_dig) + 2
     )/2.)*2
     xtick_labels_with_blanks = ['' for item in xtick_labels]
-    #for i, item in enumerate(xtick_labels[::int(show_xtick_every)]):
-    #     xtick_labels_with_blanks[int(show_xtick_every)*i] = item
+    for i, item in enumerate(xtick_labels[::int(show_xtick_every)]):
+         xtick_labels_with_blanks[int(show_xtick_every)*i] = item
      
     replace_xticks = [
         xtick for xtick in xticks 
@@ -541,9 +512,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     xtick_labels_with_blanks = np.concatenate((
         res_xlabels, add_labels
     ))[xticks_argsort]
-    #xticks_argsort = np.argsort(x_vals.tolist())
-    #xticks = np.array(x_vals.tolist())[xticks_argsort]
-    #xtick_labels_with_blanks = np.array(add_labels)[xticks_argsort]
     res_diff = np.diff(
         [xtick for x, xtick in enumerate(xticks) if xtick_labels_with_blanks[x]]
     )
@@ -621,24 +589,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         linewidth=.5, zorder=0
     )
 
-    if sample_equalization:
-        counts = pivot_counts.mean(axis=1, skipna=True).fillna('')
-        for count, xval in zip(counts, x_vals.tolist()):
-            if not isinstance(count, str):
-                count = str(int(count))
-            ax.annotate(
-                f'{count}', xy=(xval,1.),
-                xycoords=('data','axes fraction'), xytext=(0,18),
-                textcoords='offset points', va='top', fontsize=16,
-                color='dimgrey', ha='center'
-            )
-        ax.annotate(
-            '#SAMPLES', xy=(0.,1.), xycoords='axes fraction',
-            xytext=(-50, 21), textcoords='offset points', va='top',
-            fontsize=11, color='dimgrey', ha='center'
-        )
-        fig.subplots_adjust(top=.9)
-
     # Title
     domain = df['VX_MASK'].tolist()[0]
     var_savename = df['FCST_VAR'].tolist()[0]
@@ -700,44 +650,8 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
               + f'{date_start_string} to {date_end_string}, {frange_string}')
     title_center = '\n'.join([title1, title2, title3])
-    if sample_equalization:
-        title_pad=40
-    else:
-        title_pad=None
-    ax.set_title(title_center, loc=plotter.title_loc, pad=title_pad) 
+    ax.set_title(title_center, loc=plotter.title_loc) 
     logger.info("... Plotting complete.")
-
-    # Logos
-    if plot_logo_left:
-        if os.path.exists(path_logo_left):
-            left_logo_arr = mpimg.imread(path_logo_left)
-            left_image_box = OffsetImage(left_logo_arr, zoom=zoom_logo_left)
-            ab_left = AnnotationBbox(
-                left_image_box, xy=(0.,1.), xycoords='axes fraction',
-                xybox=(0, 20), boxcoords='offset points', frameon = False,
-                box_alignment=(0,0)
-            )
-            ax.add_artist(ab_left)
-        else:
-            logger.warning(
-                f"Left logo path ({path_logo_left}) doesn't exist. "
-                + f"Left logo will not be plotted."
-            )
-    if plot_logo_right:
-        if os.path.exists(path_logo_right):
-            right_logo_arr = mpimg.imread(path_logo_right)
-            right_image_box = OffsetImage(right_logo_arr, zoom=zoom_logo_right)
-            ab_right = AnnotationBbox(
-                right_image_box, xy=(1.,1.), xycoords='axes fraction',
-                xybox=(0, 20), boxcoords='offset points', frameon = False,
-                box_alignment=(1,0)
-            )
-            ax.add_artist(ab_right)
-        else:
-            logger.warning(
-                f"Right logo path ({path_logo_right}) doesn't exist. "
-                + f"Right logo will not be plotted."
-            )
 
     # Saving
     models_savename = '_'.join([str(model) for model in model_list])
@@ -875,18 +789,6 @@ def main():
     logger.debug(f"Display averages? {'yes' if display_averages else 'no'}")
     logger.debug(
         f"Clear prune directories? {'yes' if clear_prune_dir else 'no'}"
-    )
-    logger.debug(f"Plot upper-left logo? {'yes' if plot_logo_left else 'no'}")
-    logger.debug(
-        f"Plot upper-right logo? {'yes' if plot_logo_right else 'no'}"
-    )
-    logger.debug(f"Upper-left logo path: {path_logo_left}")
-    logger.debug(f"Upper-right logo path: {path_logo_right}")
-    logger.debug(
-        f"Upper-left logo fraction of original size: {zoom_logo_left}"
-    )
-    logger.debug(
-        f"Upper-right logo fraction of original size: {zoom_logo_right}"
     )
     if CONFIDENCE_INTERVALS:
         logger.debug(f"Confidence Level: {int(ci_lev*100)}%")
@@ -1040,13 +942,7 @@ def main():
                         confidence_intervals=CONFIDENCE_INTERVALS, 
                         bs_nrep=bs_nrep, bs_method=bs_method, ci_lev=ci_lev,
                         bs_min_samp=bs_min_samp,
-                        sample_equalization=sample_equalization,
-                        plot_logo_left=plot_logo_left,
-                        plot_logo_right=plot_logo_right,
-                        path_logo_left=path_logo_left,
-                        path_logo_right=path_logo_right,
-                        zoom_logo_left=zoom_logo_left,
-                        zoom_logo_right=zoom_logo_right
+                        sample_equalization=sample_equalization
                     )
                     num+=1
 
@@ -1093,8 +989,8 @@ if __name__ == "__main__":
     FLEADS = check_FCST_LEAD(os.environ['FCST_LEAD']).replace(' ','').split(',')
 
     # list of levels
-    FCST_LEVELS = re.split(r',(?![0*])', check_FCST_LEVEL(os.environ['FCST_LEVEL']).replace(' ',''))
-    OBS_LEVELS = re.split(r',(?![0*])', check_OBS_LEVEL(os.environ['OBS_LEVEL']).replace(' ',''))
+    FCST_LEVELS = check_FCST_LEVEL(os.environ['FCST_LEVEL']).replace(' ','').split(',')
+    OBS_LEVELS = check_OBS_LEVEL(os.environ['OBS_LEVEL']).replace(' ','').split(',')
 
     FCST_THRESH = check_FCST_THRESH(os.environ['FCST_THRESH'], LINE_TYPE)
     OBS_THRESH = check_OBS_THRESH(os.environ['OBS_THRESH'], FCST_THRESH, LINE_TYPE).replace(' ','').split(',')
@@ -1130,14 +1026,6 @@ if __name__ == "__main__":
 
     # Whether or not to clear the intermediate directory that stores pruned data
     clear_prune_dir = toggle.plot_settings['clear_prune_directory']
-
-    # Information about logos
-    plot_logo_left = toggle.plot_settings['plot_logo_left']
-    plot_logo_right = toggle.plot_settings['plot_logo_right']
-    zoom_logo_left = toggle.plot_settings['zoom_logo_left']
-    zoom_logo_right = toggle.plot_settings['zoom_logo_right']
-    path_logo_left = paths.logo_left_path
-    path_logo_right = paths.logo_right_path
 
     OUTPUT_BASE_TEMPLATE = templates.output_base_template
 

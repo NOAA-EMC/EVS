@@ -4,7 +4,7 @@
 #PBS -q "dev"
 #PBS -A VERF-DEV
 #PBS -l walltime=02:00:00
-#PBS -l select=1:ncpus=1:mem=2GB
+#PBS -l select=1:ncpus=1:mem=500MB
 #PBS -l debug=true
 
 export model=evs
@@ -54,6 +54,22 @@ export mod_ver=${rtma_ver}
 
 export config=$HOMEevs/parm/evs_config/realtime_analyses/config.evs.rtma.prod
 source $config
+
+export DATA=/lfs/h2/emc/ptmp/$USER/EVS/${cyc}_${MODELNAME}
+
+rm -rf $DATA
+mkdir -p $DATA
+cd $DATA
+
+export cycle=t${cyc}z
+setpdy.sh 31
+. ./PDY 
+
+export VDATE=$PDYm1
+
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
+export COMINanl=${COMIN}/stats/${COMPONENT}
+export COMOUTplots=${COMIN}/plots/${COMPONENT}/${RUN}.${VDATE}
 
 # CALL executable job script here
 $HOMEevs/jobs/realtime_analyses/plots/JEVS_REALTIME_ANALYSES_PLOTS

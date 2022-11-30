@@ -23,6 +23,10 @@ class Toggle():
             'sample_equalization': True, # equalize samples along each value of the independent variable where data exist
             'keep_shared_events_only': False, # functional for time_series only.
             'clear_prune_directory': True, # remove the intermediate directory created to store pruned data files temporarily
+            'plot_logo_left': True,
+            'plot_logo_right': True,
+            'zoom_logo_left': 1.0,
+            'zoom_logo_right': 1.0,
         }
 
 class Templates():
@@ -58,6 +62,17 @@ class Templates():
         "{RUN_CASE_LOWER}/{MODEL}/{valid?fmt=%Y%m}/{MODEL}_{valid?fmt=%Y%m%d}*"
         '''
         self.output_base_template = "evs.stats.{MODEL}.atmos.grid2obs.v{valid?fmt=%Y%m%d}.stat"
+
+class Paths():
+    def __init__(self):
+        '''
+        Custom paths to left and right logos.
+
+        Referenced if plot_logo_left and plot_logo_right, in the Toggle class,
+        are set to True
+        '''
+        self.logo_left_path = "/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/logos/noaa.png"
+        self.logo_right_path = "/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/logos/nws.png"
 
 class Presets():
     def __init__(self):
@@ -1746,33 +1761,33 @@ class Reference():
                     'var_dict': {
                         'VISsfc': {'fcst_var_names': ['VIS'],
                                    'fcst_var_levels': ['L0'],
-                                   'fcst_var_thresholds': ('<804.672, <1609.344,'
-                                                           + ' <4828.032, <8046.72,'
-                                                           + ' >=8046.72,'
-                                                           + ' <16093.44'),
+                                   'fcst_var_thresholds': ('<805, <1609,'
+                                                           + ' <4828, <8045,'
+                                                           + ' >=8045,'
+                                                           + ' <16090'),
                                    'fcst_var_options': '',
                                    'obs_var_names': ['VIS'],
                                    'obs_var_levels': ['L0'],
-                                   'obs_var_thresholds': ('<804.672, <1609.344,'
-                                                          + ' <4828.032, <8046.72,'
-                                                          + ' >=8046.72,'
-                                                          + ' <16093.44'),
+                                   'obs_var_thresholds': ('<805, <1609,'
+                                                          + ' <4828, <8045'
+                                                          + ' >=8045,'
+                                                          + ' <16090'),
                                    'obs_var_options': '',
                                    'plot_group':'ceil_vis'},
                         'HGTcldceil': {'fcst_var_names': ['CEIL'],
                                        'fcst_var_levels': ['L0'],
-                                       'fcst_var_thresholds': ('<152.4, <304.8,'
-                                                               + ' <914.4,'
-                                                               + ' >=914.4,'
+                                       'fcst_var_thresholds': ('<152, <305,'
+                                                               + ' <914,'
+                                                               + ' >=914,'
                                                                + ' <1524,'
                                                                + ' <3048'),
                                        'fcst_var_options': ('GRIB_lvl_typ ='
                                                             + ' 215;'),
                                        'obs_var_names': ['CEILING','HGT'],
                                        'obs_var_levels': ['L0'],
-                                       'obs_var_thresholds': ('<152.4, <304.8,'
-                                                              + ' <914.4,'
-                                                              + ' >=914.4,'
+                                       'obs_var_thresholds': ('<152, <305,'
+                                                              + ' <914,'
+                                                              + ' >=914,'
                                                               + ' <1524,'
                                                               + ' <3048'),
                                        'obs_var_options': '',

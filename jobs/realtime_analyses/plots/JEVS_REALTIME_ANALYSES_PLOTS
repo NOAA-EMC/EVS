@@ -15,12 +15,8 @@ date
 # obtain unique LSF id (jobid) and make temp directories
 ###########################################################
 export pid=$$
-#export DATA_IN=${DATA_IN:-$DATAROOT}
-#export DATA=$DATA_IN/${jobid}
 
-export DATA=/lfs/h2/emc/ptmp/perry.shafran/EVS2/${cyc}_${MODELNAME}
-
-rm -rf $DATA
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
 
@@ -47,21 +43,15 @@ export FIXvevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
 
-# Run setpdy and initialize PDY variables
-setpdy.sh 31
-. ./PDY 
-
-export VDATE=$PDYm1
-
 # Define COMIN/COMOUT variables:
 
 echo $COMPATH
 
-#export COMIN=${COMIN:-$(compath.py ${envir}/com/evs/${evs_ver}/)}
-export COMIN=/lfs/h2/emc/vpppg/noscrub/perry.shafran/${NET}/${evs_ver}
-#export COMINnam=${COMINnam:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
-export COMINanl=$COMIN/stats/${COMPONENT}
-export COMOUT=${COMIN}/${STEP}/${COMPONENT}
+export COMIN=${COMIN:-$(compath.py ${envir}/com/evs/${evs_ver}/)}
+export COMINanl=${COMINanl:-$(compath.py ${envir}/com/evs/${evs_ver}/stats/${COMPONENT})}
+export COMOUT=${COMOUT:-${COMIN}/${STEP}/${COMPONENT}}
+export COMOUTplots=${COMOUTplots:-${COMOUT}/${RUN}.${VDATE}}
+mkdir -m 775 -p $COMOUTplots
 
 #######################################################################
 # Execute the script.

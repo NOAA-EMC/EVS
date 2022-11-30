@@ -107,7 +107,12 @@ do
 	smvar=`echo $varb | tr A-Z a-z`
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
+	if [ -e valid_hour* ]
+	then
         mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png
+        else
+	echo "NO PLOT FOR",$varb,$region,$anl
+        fi
 done
 
 for varb in WIND
@@ -120,7 +125,12 @@ do
         smvar=`echo $varb | tr A-Z a-z`
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
+	if [ -e valid_hour* ]
+	then
         mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png
+        else
+	echo "NO PLOT FOR",$varb,$region,$anl
+        fi
 done
 
 for varb in GUST
@@ -133,7 +143,12 @@ do
         smvar=`echo $varb | tr A-Z a-z`
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
+	if [ -e valid_hour* ]
+	then
         mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png
+        else
+	echo "NO PLOT FOR",$varb,$region,$anl
+        fi
 done
 
 for varb in VIS CEILING
@@ -150,16 +165,21 @@ do
 	export linetype=CTC
         if [ $var = VISsfc ]
 	then
-          export thresh="<804.672, <1609.344, <4828.032, <8046.72,  <16093.44"
+          export thresh="<805, <1609, <4828, <8045,  <16090"
 	elif [ $var = HGTcldceil ]
 	then
-          export thresh="<152.4, <304.8, <914.4, <1524, <3048"
+          export thresh="<152, <305, <914, <1524, <3048"
 	fi
 	smlev=`echo $lev | tr A-Z a-z`
 	smvar=`echo $varb | tr A-Z a-z`
 	sh $USHevs/${COMPONENT}/py_plotting.config_perf
 
+	if [ -e perf* ]
+	then
 	mv ${DATA}/perf* ${PLOTDIR}/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png
+        else
+	echo "NO PLOT FOR",$varb,$region,$anl
+        fi
 
 	for stat in csi fbias
 	do
@@ -167,12 +187,20 @@ do
 	export stat
 
 	sh $USHevs/${COMPONENT}/py_plotting.config_thresh
+	if [ -e thresh* ]
+	then
 	mv ${DATA}/thresh* ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png
+        else
+	echo "NO PLOT FOR",$varb,$region,$anl
+        fi
+
         
         done
 done
 
-	export var=TCDC
+        if [ $anl = rtma -o $anl = urma ]
+	then
+        export var=TCDC
 	export lev=L0
 	export lev_obs=L0
 	export linetype=CTC
@@ -185,13 +213,23 @@ done
 	export stat
 
 	sh $USHevs/${COMPONENT}/py_plotting.config_thresh
+	if [ -e thresh* ]
+	then
 	mv ${DATA}/thresh* ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png
+        else
+	echo "NO PLOT FOR",$var,$region,$anl
+        fi
         done
+        fi
 
 	
 done
 done
 
+cd ${PLOTDIR}
+tar -cvf evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar *png
+
+cp evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
 
 exit
 

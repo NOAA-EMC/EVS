@@ -54,6 +54,25 @@ export mod_ver=${rtma_ver}
 export config=$HOMEevs/parm/evs_config/realtime_analyses/config.evs.rtma.prod
 source $config
 
+source $config
+
+export DATA=/lfs/h2/emc/ptmp/$USER/EVS/${cyc}_${MODELNAME}
+
+rm -rf $DATA
+mkdir -p $DATA
+cd $DATA
+
+export cycle=t${cyc}z
+setpdy.sh
+. ./PDY
+
+export VDATE=$PDYm1
+
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
+export COMOUT=$COMIN/${STEP}/${COMPONENT}
+export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
+export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
+
 # CALL executable job script here
 $HOMEevs/jobs/realtime_analyses/stats/JEVS_REALTIME_ANALYSES_STATS
 
