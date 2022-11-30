@@ -13,7 +13,7 @@ set -x
 ##%include <head.h>
 ##%include <envir-p1.h>
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS_save
 
 ############################################################
 # read version file and set model_ver
@@ -88,7 +88,7 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 ############################################################
-$HOMEevs/jobs/global_ens/stats/JEVS_GLOBAL_ENS_WAVE_GRID2OBS_STATS
+${HOMEevs}/jobs/global_ens/stats/JEVS_GLOBAL_ENS_WAVE_GRID2OBS_STATS
 
 ##%include <tail.h>
 ##%manual

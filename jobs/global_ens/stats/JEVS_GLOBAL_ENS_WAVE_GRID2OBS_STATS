@@ -41,6 +41,7 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 ######################################
 # Correct MET/METplus roots (Aug 2022)
 ######################################
+# for use with MET/10.1.1 and METplus/4.1.1
 export MET_ROOT="/apps/ops/para/libs/intel/${intel_ver}/met/${met_ver}"
 export MET_BASE="${MET_ROOT}/share/met"
 export METPLUS_PATH="/apps/ops/para/libs/intel/${intel_ver}/metplus/${metplus_ver}"
@@ -54,7 +55,7 @@ export MODEL=${MODEL:-evs}
 export STEP=${STEP:-stats}
 export COMPONENT=${COMPONENT:-global_ens}
 export MODELNAME=${MODELNAME:-gefs}
-export MODNAM=`echo $MODELNAME | tr '[a-z]' '[A-Z]'`
+export MODNAM=$(echo $MODELNAME | tr '[a-z]' '[A-Z]')
 export OBTYPE=${OBTYPE:-GDAS}
 export RUN=${RUN:-wave}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
