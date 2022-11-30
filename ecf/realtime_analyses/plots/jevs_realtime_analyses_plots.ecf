@@ -9,7 +9,7 @@
 
 export model=evs
 
-export HOMEevs=/lfs/h2/emc/vpppg/save/perry.shafran/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/save/$USER/EVS
 
 source $HOMEevs/versions/run.ver
 
@@ -68,8 +68,9 @@ setpdy.sh 31
 export VDATE=$PDYm1
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMINanl=${COMIN}/stats/${COMPONENT}
-export COMOUTplots=${COMIN}/plots/${COMPONENT}/${RUN}.${VDATE}
+export COMOUTplots=${COMOUT}/plots/${COMPONENT}/${RUN}.${VDATE}
 
 # CALL executable job script here
 $HOMEevs/jobs/realtime_analyses/plots/JEVS_REALTIME_ANALYSES_PLOTS
