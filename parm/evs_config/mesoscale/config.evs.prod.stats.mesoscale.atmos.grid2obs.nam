@@ -1,0 +1,105 @@
+#!/bin/sh -e
+
+# =============================================================================
+# 
+# NAME: config.evs.prod.stats.mesoscale.atmos.grid2obs.nam
+# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# CONTRIBUTOR(S): roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# PURPOSE: Set up configurations to run EVS NAM Nest Grid2Obs - Statistics
+# DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_nam_grid2obs_stats.ecf
+# 
+# =============================================================================
+
+echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
+
+# METplus Settings
+export MET_PLUS_OUT=${DATA}/${VERIF_CASE}/METplus_output
+#export MET_PLUS_OUT=${DATAROOTtmp}/${VERIF_CASE}/METplus_output
+export MET_CONFIG_OVERRIDES=""
+
+# Logging
+export METPLUS_VERBOSITY="DEBUG"
+export MET_VERBOSITY="5"
+export LOG_MET_OUTPUT_TO_METPLUS="yes"
+
+# Time Settings
+export FHR_START=0
+export FHR_INCR=6
+export FHR_END="60"
+
+# Model/Obs Settings
+export COMINfcst=${COMINnam}
+export COMINobs=${COMINobsproc}
+export OBSNAME=${VERIF_TYPE}
+
+## OUTPUT DATA SETTINGS
+# OUTPUTROOT: base output directory
+# export OUTPUTROOT="/lfs/h2/emc/ptmp/$USER/evs_mesoscale"
+# echo "Output will be in: $OUTPUTROOT"
+# export DATAROOT="$OUTPUTROOT/tmp"
+# export COMROOT="$OUTPUTROOT/$envir/com"
+
+export job=${NET}_${COMPONENT}_${RUN}
+export job_name=${NET}'_'${COMPONENT}'_'${RUN}'_'${VERIF_CASE}'_'${STEP}
+# export pid=${pid:-$$}
+# export jobid=$job.$pid
+# export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+# mkdir -p $DATAROOT $DATA $COMROOT
+# cd $DATA
+echo
+
+
+# Additional Verification Settings
+export VERIF_TYPE="raob"
+export GRID="FCST"
+export VHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
+
+# if [ "$NEST" = "conus" ]; then
+#    export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.conusnest.hiresf{lead?fmt=%2H}.tm00.grib2"
+#    export VAR_NAME_LIST="HGT, TMP, UGRD, VGRD, UGRD_VGRD, SPFH, TMP2m, DPT2m, RH2m, MSLP, UGRD10m, VGRD10m, UGRD_VGRD10m, WIND10m, GUSTsfc, SBCAPE, MLCAPE, VIS, CEILING, HPBL"
+#    export MASK_POLY_LIST="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS_East.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS_West.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS_Central.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS_South.nc"
+# elif [ "$NEST" = "ak" ]; then
+#    export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.alaskanest.hiresf{lead?fmt=%2H}.tm00.grib2"
+#    export VAR_NAME_LIST="HGT, TMP, UGRD, VGRD, UGRD_VGRD, SPFH, TMP2m, DPT2m, RH2m, MSLP, UGRD10m, VGRD10m, UGRD_VGRD10m, WIND10m, GUSTsfc, SBCAPE, MLCAPE, VIS, CEILING, HPBL"
+#    export MASK_POLY_LIST="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Alaska_G091.nc"
+# elif [ "$NEST" = "hi" ]; then
+#    export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.alaskanest.hiresf{lead?fmt=%2H}.tm00.grib2"
+#    export VAR_NAME_LIST="HGT, TMP, UGRD, VGRD, UGRD_VGRD, SPFH"
+#    export MASK_POLY_LIST="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Hawaii_G196.nc"
+#elif [ "$NEST" = "pr" ]; then
+#    export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.alaskanest.hiresf{lead?fmt=%2H}.tm00.grib2"
+#    export VAR_NAME_LIST="HGT, TMP, UGRD, VGRD, UGRD_VGRD, SPFH"
+#    export MASK_POLY_LIST="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Puerto_Rico_G194.nc"
+#elif [ "$NEST" = "firewx" ]; then
+#    export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.alaskanest.hiresf{lead?fmt=%2H}.tm00.grib2"
+#    export VAR_NAME_LIST="TMP2m, DPT2m, RH2m, UGRD10m, VGRD10m, UGRD_VGRD10m, WIND10m, GUSTsfc, HPBL"
+#    export MASK_POLY_LIST=""
+#else
+#    echo "The provided NEST, $NEST, is not supported for $MODELNAME"
+#    exit 1
+# fi
+
+# export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.conusnest.hiresf{lead?fmt=%2H}.tm00.grib2"
+  export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.awip32{lead?fmt=%2H}.tm00.grib2"
+
+  export VAR_NAME_LIST="HGT, TMP, UGRD, VGRD, UGRD_VGRD, SPFH"
+#    TMP2m, DPT2m, RH2m, MSLP, UGRD10m, VGRD10m, UGRD_VGRD10m, WIND10m, GUSTsfc, SBCAPE, MLCAPE, VIS, CEILING, HPBL"
+
+
+
+export MASK_POLY_LIST="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/G221_NAMER.nc"
+
+    #/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS_East.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS_West.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS_Central.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS_South.nc"
+
+    export MASK_CUSTOM_LIST=""
+    export FHR_GROUP_LIST="FULL"
+    export FHR_END_FULL="48"
+    export FHR_INCR_FULL="06"
+    export FHR_END_SHORT="48"
+    export FHR_INCR_SHORT="01"
+    export MIN_IHOUR="00"
+
+
+
+    
+    echo "END: $(basename ${BASH_SOURCE[0]})"
