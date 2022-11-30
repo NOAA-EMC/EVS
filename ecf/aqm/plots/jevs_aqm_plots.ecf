@@ -66,7 +66,7 @@ setpdy.sh 32
 export VDATE=$PDYm3
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/perry.shafran/${NET}/${evs_ver}
-export COMOUT=/lfs/h2/emc/vppg/noscrub/$USER/${NET}/${evs_ver}
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMINaqm=${COMIN}/stats/${COMPONENT}/${MODELNAME}
 export COMOUTplots=${COMOUT}/plots/${COMPONENT}/${RUN}.${VDATE}
 
