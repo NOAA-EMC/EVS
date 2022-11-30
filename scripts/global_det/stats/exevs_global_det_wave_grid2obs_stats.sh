@@ -154,8 +154,28 @@ mkdir ${DATA}/all_stats
 touch run_all_${MODELNAME}_${RUN}_g2o_poe.sh
 
 for cyc in ${cycles}  ; do
+  if [ ${cyc} = '00' ] ; then
+    wind_level_str="'{ name=\"WIND\"; level=\"(0,*,*)\"; }'"
+    htsgw_level_str="'{ name=\"HTSGW\"; level=\"(0,*,*)\"; }'"
+    perpw_level_str="'{ name=\"PERPW\"; level=\"(0,*,*)\"; }'"
+  elif [ ${cyc} = '06' ] ; then
+    wind_level_str="'{ name=\"WIND\"; level=\"(2,*,*)\"; }'"
+    htsgw_level_str="'{ name=\"HTSGW\"; level=\"(2,*,*)\"; }'"
+    perpw_level_str="'{ name=\"PERPW\"; level=\"(2,*,*)\"; }'"
+  elif [ ${cyc} = '12' ] ; then
+    wind_level_str="'{ name=\"WIND\"; level=\"(4,*,*)\"; }'"
+    htsgw_level_str="'{ name=\"HTSGW\"; level=\"(4,*,*)\"; }'"
+    perpw_level_str="'{ name=\"PERPW\"; level=\"(4,*,*)\"; }'"
+  elif [ ${cyc} = '18' ] ; then
+    wind_level_str="'{ name=\"WIND\"; level=\"(6,*,*)\"; }'"
+    htsgw_level_str="'{ name=\"HTSGW\"; level=\"(6,*,*)\"; }'"
+    perpw_level_str="'{ name=\"PERPW\"; level=\"(6,*,*)\"; }'"
+  fi
   for fhr in ${fhrs} ; do
   # write the commands
+    echo "export wind_level_str=${wind_level_str}" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+    echo "export htsgw_level_str=${htsgw_level_str}" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+    echo "export perpw_level_str=${perpw_level_str}" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
     echo "export CYC=${cyc}" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
     echo "export fhr=${fhr}" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
     case ${fhr} in

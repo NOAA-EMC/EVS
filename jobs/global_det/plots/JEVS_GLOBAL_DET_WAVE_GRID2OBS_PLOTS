@@ -11,7 +11,8 @@ date
 # obtain unique LSF id (jobid) and make temp directories 
 #########################################################
 export pid=$$
-export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+export DATA_IN=${DATA_IN:-${DATAROOT}}
+export DATA=${DATA_IN}/${jobid:?}
 mkdir -p $DATA
 cd $DATA
 
@@ -19,10 +20,10 @@ cd $DATA
 # Run setpdy and initialize PDY variables 
 ##########################################
 export cycle=${cycle:-t00z}
-setpdy.sh 20
+setpdy.sh 90
 . ./PDY
+export PDYm90=${PDYm90}
 export VDATE=${PDYm1}
-export NEXTDATE=${PDY}
 
 ######################################
 # Determine Job Output Name on System 
@@ -34,7 +35,7 @@ export pgmout="OUTPUT.${pid}"
 ####################################
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
-export FIXevs=${FIXvevs:-$HOMEevs/fix}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
 
@@ -42,20 +43,20 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 # Correct MET/METplus roots (Aug 2022)
 ######################################
 # for use with MET/10.1.1 and METplus/4.1.1
-export MET_ROOT="/apps/ops/para/libs/intel/${intel_ver}/met/${met_ver}"
-export MET_BASE="${MET_ROOT}/share/met"
-export METPLUS_PATH="/apps/ops/para/libs/intel/${intel_ver}/metplus/${metplus_ver}"
-export PATH="${METPLUS_PATH}/ush:${MET_ROOT}/bin:${PATH}"
+export MET_ROOT=/apps/ops/para/libs/intel/${intel_ver}/met/${met_ver}
+export MET_BASE=${MET_ROOT}/share/met
+export METPLUS_PATH=/apps/ops/para/libs/intel/${intel_ver}/metplus/${metplus_ver}
+export PATH=${METPLUS_PATH}/ush:${MET_ROOT}/bin:${PATH}
 
 ####################################
 # Define NET/RUN variables          
 ####################################
 export NET=${NET:-evs}
 export MODEL=${MODEL:-evs}
-export STEP=${STEP:-stats}
+export STEP=${STEP:-plots}
 export COMPONENT=${COMPONENT:-global_det}
 export MODELNAME=${MODELNAME:-gfs}
-export MODNAM=`echo $MODELNAME | tr '[a-z]' '[A-Z]'`
+export MODNAM=$(echo $MODELNAME | tr '[a-z]' '[A-Z]')
 export OBTYPE=${OBTYPE:-GDAS}
 export RUN=${RUN:-wave}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
@@ -64,25 +65,20 @@ export VERIF_CASE=${VERIF_CASE:-grid2obs}
 # Define COMIN/COMOUT variables     
 ####################################
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export COMINmodel=${COMINmodel:-$(compath.py ${MODELNAME}/${model_ver})}
-export COMINobs=${COMINobs:-$(compath.py obsproc/${obsproc_ver})}
-export COMINgdasnc=${COMIN}/prep/${COMPONENT}
+export COMOUT=${COMOUT:-$(compath.py ${NET}/${evs_ver})}
+export COMOUTstats=${COMOUT}/stats/${COMPONENT}/${MODELNAME}.${VDATE}
+export COMOUTplots=${COMOUT}/${STEP}/${COMPONENT}/${MODELNAME}.${VDATE}
 
-export COMOUT=${COMIN}/${STEP}/${COMPONENT}
-export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
-export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
+# make the directory where the plots will be kept
+mkdir -p ${COMOUTplots}
 
-mkdir -p ${COMOUT} ${COMOUTsmall} ${COMOUTfinal} 
-
-export jlogfile=${DATA}/${MODELNAME}_${RUN}_PointStat.log
+export jlogfile=${DATA}/${MODELNAME}_${RUN}_plots.log
 
 ####################################
 # Execute the script                
 ####################################
 env
-
-$HOMEevs/scripts/global_det/stats/exevs_global_det_wave_grid2obs_stats.sh 1>>$pgmout 2>errfile.${pid}
-
+$HOMEevs/scripts/global_det/plots/exevs_global_det_wave_grid2obs_plots.sh 1>>$pgmout 2>errfile.${pid}
 export err=$?; err_chk
 
 cat $pgmout
