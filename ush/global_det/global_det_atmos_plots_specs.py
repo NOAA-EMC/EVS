@@ -221,7 +221,7 @@ class PlotSpecs:
             'CSNOW/L0': 'Precipitation Type - Snow',
             'CWAT/L0': 'Cloud Water',
             'DPT/Z2': '2 meter Dewpoint',
-            'GUST/Z0': 'Wind Gust',
+            'GUST/Z0': 'Surface Wind Gust',
             'HGT/CEILING': 'Ceiling',
             'HGT/all': 'Geopotential Height - All Levels',
             'HGT/trop': 'Geopotential Height - Troposphere',
@@ -600,16 +600,27 @@ class PlotSpecs:
         plot_title = plot_title+' '+'('+units+')'
         if var_thresh_for_title != 'NA':
             plot_title = plot_title+', '+var_thresh_for_title+' '+units
+            thresh_value = float(plot_info_dict['fcst_var_thresh'][2:])
             if plot_info_dict['fcst_var_name'] == 'APCP':
-                thresh_in = round(
-                    float(plot_info_dict['fcst_var_thresh'][2:])*0.0393701,3
-                )
+                thresh_in = round(thresh_value*0.0393701, 3)
                 plot_title = plot_title+' ('+str(thresh_in)+' in)'
             elif plot_info_dict['fcst_var_name'] in ['SNOD_A24', 'WEASD_A24']:
-                thresh_in = round(
-                    float(plot_info_dict['fcst_var_thresh'][2:])*39.3701,3
-                )
+                thresh_in = round(thresh_value*39.3701,3)
                 plot_title = plot_title+' ('+str(thresh_in)+' in)'
+            elif plot_info_dict['fcst_var_name'] == 'DPT':
+                thresh_F = round((((thresh_value-273.15)*9)/5)+32)
+                plot_title = plot_title+' ('+str(thresh_F)+' F)'
+            elif plot_info_dict['fcst_var_name'] == 'HGT' \
+                    and plot_info_dict['fcst_var_level'] == 'CEILING':
+                thresh_kft = round(thresh_value/304.8,1)
+                if int(thresh_kft) == thresh_kft:
+                    thresh_kft = int(thresh_kft)
+                plot_title = plot_title+' ('+str(thresh_kft)+' kft)'
+            elif plot_info_dict['fcst_var_name'] == 'VIS':
+                thresh_mile = round(thresh_value * 0.000621371,1)
+                if int(thresh_mile) == thresh_mile:
+                    thresh_mile = int(thresh_mile)
+                plot_title = plot_title+' ('+str(thresh_mile)+' mile)'
         if plot_info_dict['interp_method'] == 'NBRHD_SQUARE':
             plot_title = (plot_title+' '
                           +'Neighborhood Points: '
