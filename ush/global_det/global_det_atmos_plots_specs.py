@@ -708,6 +708,11 @@ class PlotSpecs:
                  plot_type_savefig_name+'_'
                  +'f'+date_info_dict['forecast_hour'].zfill(3)
             )
+        else:
+            plot_type_savefig_name = (
+                 plot_type_savefig_name+'_'
+                 +'f'+str(date_info_dict['forecast_hours'][-1]).zfill(3)
+            )
         grid_savefig_name = plot_info_dict['grid']
         region_savefig_dict = {
             'Alaska': 'alaska',

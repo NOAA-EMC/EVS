@@ -24,6 +24,7 @@ RUN = os.environ['RUN']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 COMPONENT = os.environ['COMPONENT']
+evs_run_mode = os.environ['evs_run_mode']
 machine = os.environ['machine']
 USE_CFP = os.environ['USE_CFP']
 nproc = os.environ['nproc']
@@ -259,7 +260,7 @@ plot_jobs_dict = {
         #          'vx_mask_list': ['CONUS', 'CONUS_Central',
         #                           'CONUS_East', 'CONUS_South',
         #                           'CONUS_West', 'Alaska'],
-        #          'fcst_var_dict': {'name': 'PTYPE_L0',
+        #          'fcst_var_dict': {'name': 'PTYPE',
         #                            'levels': 'L0',
         #                            'threshs': '>=1.0,>=2.0,>=3.0,>=4.0'},
         #          'obs_var_dict': {'name': 'PRWE',
@@ -870,6 +871,14 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         job.write('export '+name+'='+value+'\n')
                     job.write('\n')
                     # Write job commands
+                    if evs_run_mode == 'production' and \
+                            verif_type in ['pres_levs', 'sfc']:
+                        job.write(
+                            gda_util.python_command(
+                                'global_det_atmos_plots_production_tof240.py',
+                                 []
+                            )+'\n'
+                        )
                     job.write(
                         gda_util.python_command('global_det_atmos_plots.py',[])
                     )
