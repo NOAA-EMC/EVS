@@ -39,8 +39,8 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 export cycle=${cycle:-t${cyc}z}
 setpdy.sh $(($NDAYS + 1))
 . ./PDY
-#export plot_start=$PDYm1
-#export plot_end=$(eval echo \$PDYm$NDAYS)
+export VDATE_START=$(eval echo \$PDYm$NDAYS)
+export VDATE_END=$PDYm1
 
 ####################################
 # Define NET/RUN variables

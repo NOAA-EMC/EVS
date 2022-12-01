@@ -36,8 +36,8 @@ export OUTPUTROOT="$DATAROOT"
 ## DATE SETTINGS
 #start_date:       verification start date, format YYYYMMDD
 #end_date:         verification end date, format YYYYMMDD
-export start_date=$PDYm91
-export end_date=$PDYm1
+export start_date=$VDATE_START
+export end_date=$VDATE_END
 ## METPLUS SETTINGS
 #metplus_verbosity:         DEBUG, INFO, WARN, ERROR (most verbose is DEBUG)
 #met_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
