@@ -435,12 +435,12 @@ for plot in plots_list:
                 )
                 if init_hr in init_hrs:
                     if not os.path.exists(image_name):
-                        make_sbl = True
-                    else:
                         if plot_info_dict['stat'] == 'FBAR_OBAR':
                             make_sbl = False
                         else:
                             make_sbl = True
+                    else:
+                        make_sbl = False
                 else:
                     make_sbl = False
                 del plot_info_dict['fcst_var_level']
