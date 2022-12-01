@@ -79,10 +79,21 @@ export USH_DIR=${USH_DIR:-$HOMEevs/ush/$COMPONENT}
 ############################################
 # Execute the script.
 ############################################
-
 export NDAYS=${NDAYS:-90}
 
-$SCRIPTSevs/plots/exevs_global_det_aviation_plots.sh
+export MPIRUN=${MPIRUN:-"mpiexec -np 2 -cpu-bind verbose,core cfp"}
+
+rm wafs_plots.cmdfile
+if [ `echo $MPIRUN | cut -d " " -f1` = 'srun' ] ; then
+    echo 0 $SCRIPTSevs/plots/exevs_global_det_aviation_plots.sh GCIP  >> wafs_plots.cmdfile
+    echo 1 $SCRIPTSevs/plots/exevs_global_det_aviation_plots.sh GFS >> wafs_plots.cmdfile
+else
+    echo $SCRIPTSevs/plots/exevs_global_det_aviation_plots.sh GCIP  >> wafs_plots.cmdfile
+    echo $SCRIPTSevs/plots/exevs_global_det_aviation_plots.sh GFS >> wafs_plots.cmdfile
+    export MP_PGMMODEL=mpmd
+fi
+
+$MPIRUN wafs_plots.cmdfile
 
 export err=$?; err_chk
 

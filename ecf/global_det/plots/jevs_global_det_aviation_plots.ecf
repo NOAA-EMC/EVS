@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #PBS -N evs_aviation_plots
 #PBS -j oe
@@ -6,7 +6,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=02:00:00
-#PBS -l select=1:ncpus=1:mem=2GB
+#PBS -l select=1:ncpus=2:mem=200GB
 ##PBS -V
 
 export OMP_NUM_THREADS=1

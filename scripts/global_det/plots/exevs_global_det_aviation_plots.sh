@@ -5,11 +5,20 @@
 # Arguments: exevs_global_det_aviation_plots.sh
 #   
 ########################################################################################
+# OBSERVATION  CENTERS        RESOLUTION  PLOT_TYPE    ||  LINE_TYPE  STAT
+# GCIP         "blend us uk"  1.25        roc_curve    ||  ctc        "farate,pod"
+#                                         fbias        ||  ctc        "fbias"
+#                             0.25        roc_curve    ||  ctc        "farate,pod"
+#                                         fbias        ||  ctc        "fbias"
+# GFS          "gfs"          1.25        time_series  ||  SL1L2      "rmse"
+#                                         time_series  ||  VL1L2      "rmse"
 
 set -x 
 
 msg="WAFS g2g verification job HAS BEGUN"
 echo $msg
+
+export OBSERVATION=$1
 
 export VALID_END=$VDATE
 export VALID_BEG=`date -d "$VDATE - $NDAYS days" +%Y%m%d`
@@ -23,24 +32,52 @@ eval_period=`echo $EVAL_PERIOD | tr '[:upper:]' '[:lower:]'`
 ################################################
 # Part 1: Icing Verification
 ################################################
-export OBSERVATION=GCIP
-export LINE_TYPE="ctc"
-export CENTERS="blend us uk"
+if [ $OBSERVATION = "GCIP" ] ; then
+    export CENTERS="blend us uk"
+    resolutions="0P25 1P25"
+    plot_types="roc_curve fbias"
+################################################
+# Part 2: U/V/T Verification
+################################################
+else
+    export CENTERS="gfs"
+    resolutions="1P25"
+    plot_types="time_series"
+fi
 
-PLOT_TYPES="roc_curve fbias"
-
-resolutions="0P25 1P25"
 for RESOLUTION in $resolutions ; do
     export RESOLUTION
-    source $HOMEevs/parm/evs_config/global_det/config.evs.stats.global_det.aviation.standalone
-
+    resolution=`echo $RESOLUTION | tr '[:upper:]' '[:lower:]'`
+    
     export OUTPUT_BASE_DIR=$DATA/datainput/${OBSERVATION}_${RESOLUTION}
     mkdir -p $OUTPUT_BASE_DIR
     rm $OUTPUT_BASE_DIR/*
 
-    stat_file_suffix=`echo $VAR1_NAME | sed -e "s|mean||" -e "s|max||" | tr '[:upper:]' '[:lower:]'`
-    for CENTER in $CENTERS ; do
-#	# Re-organize data for plotting
+    source $HOMEevs/parm/evs_config/global_det/config.evs.stats.global_det.aviation.standalone
+
+    if [ $OBSERVATION = "GCIP" ] ; then
+        stat_file_suffix=`echo $VAR1_NAME | sed -e "s|mean||" -e "s|max||" | tr '[:upper:]' '[:lower:]'`
+    elif [ $OBSERVATION = "GFS" ] ; then
+	stat_file_suffix="uvt$resolution"
+	#===================================================================================================#
+	#========== Turn off Wind Direction verification until its RMSE gets supported by METplus ==========#
+	# stat_file_suffix="'uvt'$resolution 'wdir'$resolution"
+	#===================================================================================================#
+    fi
+
+    cd $DATA    
+
+    for suffix in $stat_file_suffix ; do
+	if [[ $suffix =~ 'uvt' ]] ; then
+	    export LINE_TYPE="SL1L2"
+	elif [[ $suffix =~ 'wdir' ]] ; then
+	    export LINE_TYPE="VL1L2"
+	else
+	    export LINE_TYPE="ctc"
+	fi
+
+	# Re-organize data for plotting
+	rm $OUTPUT_BASE_DIR/*
 	n=0
 	while [[ $n -le $NDAYS ]] ; do
 	    day=`date -d "$VDATE - $n days" +%Y%m%d`
@@ -50,27 +87,30 @@ for RESOLUTION in $resolutions ; do
 	    fi
 	    n=$((n+1))
 	done
+
+	for PLOT_TYPE in $plot_types ; do
+	    export PLOT_TYPE
+	    if [[ $PLOT_TYPE = "roc_curve" ]] ; then
+		export STATS="farate,pod"
+	    elif [[ $PLOT_TYPE = "fbias" ]] ; then
+		export STATS="fbias"
+	    elif [[ $PLOT_TYPE = "time_series" ]] ; then
+		export STATS="rmse"
+	    fi
+	    # Set the config and run python scripts to generate plots
+	    sh $HOMEevs/parm/evs_config/global_det/config.evs.plots.global_det.aviation
+	done
     done
 
-    cd $DATA    
-
-    for PLOT_TYPE in $PLOT_TYPES ; do
-	export PLOT_TYPE
-	if [[ $PLOT_TYPE = "roc_curve" ]] ; then
-	    export STATS="farate,pod"
-	elif [[ $PLOT_TYPE = "fbias" ]] ; then
-	    export STATS="fbias"
-	fi
-	# Set the config and run python scripts to generate plots
-	sh $HOMEevs/parm/evs_config/global_det/config.evs.plots.global_det.aviation
-    done
 done
 
 cd $DATAplot
 tar -cvf $COMOUT/$NET.$STEP.${COMPONENT}.${RUN}.${VERIF_CASE}.$eval_period.v${VDATE}.tar *png
 
-################################################
-# Part 2: U/V/T Verification
-################################################
-export OBSERVATION=GFS
-export CENTERS="gfs"
+#####################################################################
+# GOOD RUN
+echo "********SCRIPT exevs_global_det_aviation_stats.sh COMPLETED NORMALLY on `date`"
+exit 0
+#####################################################################
+
+############## END OF SCRIPT #######################

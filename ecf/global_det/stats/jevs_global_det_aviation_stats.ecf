@@ -1,12 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
 #PBS -N evs_aviation_stats
 #PBS -j oe
 #PBS -o /lfs/h2/emc/ptmp/yali.mao/evs_aviation_stats.log
 #PBS -q debug
 #PBS -A VERF-DEV
-#PBS -l walltime=00:30:00
-#PBS -l select=1:ncpus=1:mem=2GB
+#PBS -l walltime=00:45:00
+#PBS -l select=1:ncpus=2:mem=4GB
 ##PBS -V
 
 ##PBS -q debug

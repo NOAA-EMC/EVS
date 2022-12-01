@@ -33,20 +33,30 @@ for past_day in 0 1 2 ; do
 	       elif [ $RESOLUTION = "1P25" ] ; then
 		   sourcefile=$COMINgfs/gfs.$day/$cc/atmos/WAFS_blended_${day}${cc}f${ff}.grib2
 	       fi
+	   elif [ $CENTER = "gfs" ] ; then
+	       if [ $RESOLUTION = "1P25" ] ; then
+		   sourcefile=$COMINgfs/gfs.$day/$cc/atmos/gfs.t${cc}z.wafs_grb45f${ff}.grib2
+	       fi
 	   fi
 
-	   if [ $RESOLUTION = "0P25" ] ; then
+	   if [[ $RESOLUTION = "1P25" ]] && [[ $OBSERVATION = "GCIP" ]] ; then
 	       if [[ -f $sourcefile ]] ; then
-		   ln -sf $sourcefile $INPUT_BASE/$CENTER.${day}${cc}.f${ff}.grib2
-	       fi
-	   elif [ $RESOLUTION = "1P25" ] ; then
-	       if [[ -f $sourcefile ]] ; then
+		   # 1. Seperate ICIP ave and max 2. Convert tempalte 4.15 to 4.0
 		   $WGRIB2 $sourcefile | grep ICIP | grep ave | $WGRIB2 -i $sourcefile -grib ave.$CENTER.${day}${cc}.f${ff}.grib2
 		   $WGRIB2 $sourcefile | grep ICIP | grep max | $WGRIB2 -i $sourcefile -grib max.$CENTER.${day}${cc}.f${ff}.grib2.tmp
 		   $WGRIB2 max.$CENTER.${day}${cc}.f${ff}.grib2.tmp -if "var0_[0-9]+_[0-9]+_[0-9]+_19_20" -set_var ALBDO -grib max.$CENTER.${day}${cc}.f${ff}.grib2
 		   cat ave.$CENTER.${day}${cc}.f${ff}.grib2 max.$CENTER.${day}${cc}.f${ff}.grib2 > combo.$CENTER.${day}${cc}.f${ff}.grib2
-		   $WGRIB2 combo.$CENTER.${day}${cc}.f${ff}.grib2 -set_pdt +0 -grib $INPUT_BASE/$CENTER.${day}${cc}.f${ff}.grib2
-		   rm *.$CENTER.${day}${cc}.f${ff}.grib2* combo.$CENTER.${day}${cc}.f${ff}.grib2
+		   $WGRIB2 combo.$CENTER.${day}${cc}.f${ff}.grib2 -set_pdt +0 -grib $GRID_STAT_INPUT_BASE/$CENTER.${day}${cc}.f${ff}.grib2
+		   rm *.$CENTER.${day}${cc}.f${ff}.grib2*
+	       fi
+	   elif [[ $RESOLUTION = "1P25" ]] && [[ $OBSERVATION = "GFS" ]] ; then
+	       if [[ -f $sourcefile ]] ; then
+		   # Convert tempalte 4.15 to 4.0
+                   $WGRIB2 $sourcefile -set_pdt +0 -grib $GRID_STAT_INPUT_BASE/$CENTER.${day}${cc}.f${ff}.grib2
+               fi
+	   else
+	       if [[ -f $sourcefile ]] ; then
+		   ln -sf $sourcefile $GRID_STAT_INPUT_BASE/$CENTER.${day}${cc}.f${ff}.grib2
 	       fi
 	   fi
        done

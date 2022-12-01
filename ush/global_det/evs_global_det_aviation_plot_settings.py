@@ -59,7 +59,7 @@ class Templates():
         '''
         self.output_base_template = "*.{RUN_CASE}*.v{valid?fmt=%Y%m%d}*"
 class Presets():
-    def __init__(self):
+    def __init__(self,EVAL_PERIOD=''):
         
         '''
         Evaluation periods that are requested regularly can be defined here 
@@ -80,30 +80,6 @@ class Presets():
         the online documentation to learn how to use these libraries.
         '''
         self.date_presets = {
-            'LAST90DAYS': {
-                'valid_beg': (datetime.now()-td(days=90)).strftime('%Y%m%d'),
-                'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
-                'init_beg': (datetime.now()-td(days=90)).strftime('%Y%m%d'),
-                'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
-            },
-            'LAST30DAYS': {
-                'valid_beg': (datetime.now()-td(days=30)).strftime('%Y%m%d'),
-                'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
-                'init_beg': (datetime.now()-td(days=30)).strftime('%Y%m%d'),
-                'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
-            },
-            'LAST7DAYS': {
-                'valid_beg': (datetime.now()-td(days=7)).strftime('%Y%m%d'),
-                'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
-                'init_beg': (datetime.now()-td(days=7)).strftime('%Y%m%d'),
-                'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
-            },
-            'LAST3DAYS': {
-                'valid_beg': (datetime.now()-td(days=3)).strftime('%Y%m%d'),
-                'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
-                'init_beg': (datetime.now()-td(days=3)).strftime('%Y%m%d'),
-                'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
-            },
             '2020': {
                 'valid_beg': '20200101',
                 'valid_end': '20201231',
@@ -141,6 +117,16 @@ class Presets():
                 'init_end': datetime.now().strftime('%Y1130')
             }
         }
+        if EVAL_PERIOD:
+            if EVAL_PERIOD.startswith("LAST") and EVAL_PERIOD.endswith("DAYS"):
+                lastNdays = int(EVAL_PERIOD.split("LAST")[1].split("DAYS")[0])
+                value={
+                    'valid_beg': (datetime.now()-td(days=lastNdays)).strftime('%Y%m%d'),
+                    'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
+                    'init_beg': (datetime.now()-td(days=lastNdays)).strftime('%Y%m%d'),
+                    'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
+                }
+                self.date_presets[EVAL_PERIOD]=value
             
 class ModelSpecs():
     def __init__(self):
@@ -620,10 +606,10 @@ class ModelSpecs():
             'OFCL': {'color': '#696969',
                      'marker': 'o', 'markersize': 12,
                      'linestyle': 'solid', 'linewidth': 3.},
-            'BLEND': {'color': '#fb2020',
+            'BLEND': {'color': '#1e3cff',
                      'marker': 'o', 'markersize': 12,
                      'linestyle': 'solid', 'linewidth': 3.},
-            'US': {'color': '#1e3cff',
+            'US': {'color': '#fb2020',
                      'marker': 'o', 'markersize': 12,
                      'linestyle': 'solid', 'linewidth': 3.},
             'UK': {'color': '#000000',
@@ -712,6 +698,8 @@ class Reference():
                                     'ICEC_Z0_mean': 'Sea Ice Concentration',
                                     'ICESEV': 'Icing Severity',
                                     'ICIP': 'Icing Potential',
+                                    'WIND': 'Wind Speed',
+                                    'WIND80': 'Wind Speed >= 80knots',
                                     'REFC': 'Composite Reflectivity',
                                     'REFD': 'Above Ground Level Reflectivity',
                                     'RETOP': 'Echo Top Height'}
@@ -734,14 +722,15 @@ class Reference():
                                   'SAO': 'Southern Atlantic Ocean',
                                   'NH': 'Northern Hemisphere 20N-90N',
                                   'SH': 'Southern Hemisphere 20S-90S',
-                                  'AR2': 'Area 2',
                                   'ASIA': 'Asia',
                                   'AUNZ': 'Australia and New Zealand',
-                                  'NAMR': 'North America',
-                                  'NHM': 'Northern Hemisphere',
-                                  'NPCF': 'North Pacific',
-                                  'SHM': 'Southern Hemisphere',
-                                  'TRP': 'Tropics',
+                                  'EAST': 'Middle East',
+                                  'NAMER': 'North America',
+                                  'NATL_AR2': 'North Atlantic - Area 2',
+                                  'NHEM': 'Northern Hemisphere',
+                                  'NPO': 'North Pacific',
+                                  'SHEM': 'Southern Hemisphere',
+                                  'TROPICS': 'Tropics',
                                   'G193': 'Global',
                                   'G45': 'Global',
                                   'G002': 'Global',
@@ -753,7 +742,6 @@ class Reference():
                                   'CONUS': 'CONUS',
                                   'POLAR': 'Polar 60-90 N/S',
                                   'ARCTIC': 'Arctic',
-                                  'EAST': 'Middle East',
                                   'CONUS_East': 'Eastern US',
                                   'WEST': 'Western US',
                                   'CONUS_West': 'Western US',
@@ -2084,7 +2072,7 @@ class Reference():
                                         + ' obar, pod, farate, faratio, sratio'),
                     'interp': 'NEAREST',
                     'vx_mask_list' : [
-                        'G45','G193','AR2','ASIA','AUNZ','EAST','NAMR','NHM','NPCF','SHM','TRP'
+                        'G45','G193','ASIA','AUNZ','EAST','NAMER','NATL_AR2','NHEM','NPO','SHEM','TROPICS'
                     ],
                     'var_dict': {
                         'ICESEV': {'fcst_var_names': ['ICESEV'],
@@ -2105,6 +2093,42 @@ class Reference():
                                   'obs_var_thresholds': '>=0.1, >=0.2, >=0.3, >=0.4, >=0.5, >=0.6, >=0.7, >=0.8, >=0.9',
                                   'obs_var_options': '',
                                   'plot_group':'aviation'}
+                    }
+                },
+                'SL1L2': {
+                    'plot_stats_list': 'bias, rmse, fbar_obar',
+                    'interp': 'NEAREST',
+                    'vx_mask_list' : [
+                        'G45','G193','ASIA','AUNZ','EAST','NAMER','NATL_AR2','NHEM','NPO','SHEM','TROPICS'
+                    ],
+                    'var_dict': {
+                        'TMP': {'fcst_var_names': ['TMP'],
+                                  'fcst_var_levels': ['P850', 'P700', 'P600', 'P500', 'P400', 'P300', 'P250', 'P200', 'P150', 'P100'],
+                                  'fcst_var_thresholds': '',
+                                  'fcst_var_options': '',
+                                  'obs_var_names': ['TMP'],
+                                  'obs_var_levels': ['P850', 'P700', 'P600', 'P500', 'P400', 'P300', 'P250', 'P200', 'P150', 'P100'],
+                                  'obs_var_thresholds': '',
+                                  'obs_var_options': '',
+                                  'plot_group':'aviation'},
+                        'WIND': {'fcst_var_names': ['WIND'],
+                                   'fcst_var_levels': ['P850', 'P700', 'P600', 'P500', 'P400', 'P300', 'P250', 'P200', 'P150', 'P100'],
+                                   'fcst_var_thresholds': '',
+                                   'fcst_var_options': '',
+                                   'obs_var_names': ['WIND'],
+                                   'obs_var_levels': ['P850', 'P700', 'P600', 'P500', 'P400', 'P300', 'P250', 'P200', 'P150', 'P100'],
+                                   'obs_var_thresholds': '',
+                                   'obs_var_options': '',
+                                   'plot_group':'aviation'},
+                        'WIND80': {'fcst_var_names': ['WIND80'],
+                                    'fcst_var_levels': ['P850', 'P700', 'P600', 'P500', 'P400', 'P300', 'P250', 'P200', 'P150', 'P100'],
+                                    'fcst_var_thresholds': '',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['WIND80'],
+                                    'obs_var_levels': ['P850', 'P700', 'P600', 'P500', 'P400', 'P300', 'P250', 'P200', 'P150', 'P100'],
+                                    'obs_var_thresholds': '',
+                                    'obs_var_options': '',
+                                    'plot_group':'aviation'}
                     }
                 }
             },

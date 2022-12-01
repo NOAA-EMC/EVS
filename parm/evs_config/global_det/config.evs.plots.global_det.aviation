@@ -134,8 +134,8 @@ export FCST_VALID_HOUR="00,06,12,18"
 # Settings below are used to select desired variable and domain. **
 export FCST_LEVEL="$VAR1_LEVELS_FCST"
 export OBS_LEVEL="$VAR1_LEVELS_OBS"
-export var_name="$VAR_NAME_OBS"
-export VX_MASK_LIST="AR2, ASIA, AUNZ, EAST, NAMR, NHM, NPCF, SHM, TRP"
+export var_name="$VAR_NAME"
+export VX_MASK_LIST="ASIA, AUNZ, EAST, NAMER, NATL_AR2, NHEM, NPO, SHEM, TROPICS"
 
 # Will use statistics for all comma-separated lead times 
 export FCST_LEAD="$FHOURS_EVSlist"

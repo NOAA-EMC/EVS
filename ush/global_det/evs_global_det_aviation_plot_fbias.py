@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Name:          fbi.py
+# Name:          fbias.py
 # Contact(s):    Marcel Caron
 # Developed:     Sep. 26, 2022 by Marcel Caron 
 # Last Modified: Oct. 31, 2022 by Yali Mao
@@ -132,7 +132,7 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
         ]
     elif isinstance(flead, np.int):
         frange_string = f'Forecast Hour {flead:02d}'
-        frange_save_string = f'F{flead:02d}'
+        frange_save_string = f'F{flead:03d}'
         df = df[df['LEAD_HOURS'] == flead]
     else:
         e1 = f"Invalid forecast lead: \'{flead}\'"
@@ -203,7 +203,7 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
 
     y_min = 99999.
     y_max = -99999.
-    # In case ICIPmean, ICIPmax
+    # If ICIPmean and ICIPmax, will plot them together
     df0 = df.copy()
     model_list0 = model_list.copy()
     for fcst_var_name in fcst_var_names:
@@ -714,7 +714,7 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
     date_start_string = date_range[0].strftime('%d %b %Y')
     date_end_string = date_range[1].strftime('%d %b %Y')
     if str(verif_type).lower() in ['pres', 'upper_air'] or 'P' in str(level):
-        level_num = level.replace('P', '')
+        level_num = int(float(level.replace('P', '')))
         level_string = f'{level_num} hPa '
         level_savename = f'p{level_num}'
     elif (str(verif_type).lower() 
@@ -783,7 +783,7 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
         time_period_savename = f'{date_start_savename}-{date_end_savename}'
     else:
         time_period_savename = f'{str(eval_period).lower()}'
-    save_name = (f'evs.{str(component)}.pstd.'
+    save_name = (f'evs.{str(component)}.ctc.'
                  + f'{str(var_savename).lower()}_'
                  + f'{str(level_savename).lower()}.'
                  + f'{time_period_savename}.'
@@ -1174,4 +1174,6 @@ if __name__ == "__main__":
     CONFIDENCE_INTERVALS = str(CONFIDENCE_INTERVALS).lower() in [
         'true', '1', 't', 'y', 'yes'
     ]
+    # Modify the global variable presets, add "LAST[XX]DAYS" to the dictionary.
+    presets = Presets(EVAL_PERIOD)
     main()
