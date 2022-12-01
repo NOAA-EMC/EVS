@@ -18,6 +18,7 @@ for lead in ${leads}; do
 done
 wait
 rm -f *hvr*.nc  # don't need these
+rm -f *3dz*.nc  # don't need the 3dz files for EVSv1
 
 # touch RTOFS data in previous 12 days to keep them in scrub space
 TDATE=$(date --date="$VDATE -1 day" +%Y%m%d)

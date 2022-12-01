@@ -75,7 +75,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                      display_averages: bool = True, 
                      keep_shared_events_only: bool = False,
                      plot_group: str = 'sfc_upper', obtype: str = '',
-                     sample_equalization: bool = True,
+                     sample_equalization: bool = True, run: str = '',
                      plot_logo_left: bool = False,
                      plot_logo_right: bool = False, path_logo_left: str = '.',
                      path_logo_right: str = '.', zoom_logo_left: float = 1.,
@@ -1021,7 +1021,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     if save_header:
         save_name = f'{save_header}_'+save_name
     save_subdir = os.path.join(
-        save_dir, f'{str(obtype).lower()}'
+        save_dir, f'{str(run).lower()}'
     )
     if not os.path.isdir(save_subdir):
         os.makedirs(save_subdir)
@@ -1289,7 +1289,7 @@ def main():
                     xlabel=f'{str(date_type_string).capitalize()} Date', 
                     verif_type=VERIF_TYPE, date_hours=date_hours, 
                     line_type=LINE_TYPE, save_dir=SAVE_DIR, fix_dir=FIX_DIR, 
-                    eval_period=EVAL_PERIOD, obtype=OBTYPE, 
+                    eval_period=EVAL_PERIOD, obtype=OBTYPE, run=RUN, 
                     display_averages=display_averages, 
                     keep_shared_events_only=keep_shared_events_only,
                     save_header=URL_HEADER, plot_group=plot_group,
@@ -1325,6 +1325,7 @@ if __name__ == "__main__":
     DATE_TYPE = check_DATE_TYPE(os.environ['DATE_TYPE'])
     LINE_TYPE = check_LINE_TYPE(os.environ['LINE_TYPE'])
     INTERP = check_INTERP(os.environ['INTERP'])
+    RUN = check_RUN(os.environ['RUN'])
     OBTYPE = check_OBTYPE(os.environ['OBTYPE'])
     MODELS = check_MODEL(os.environ['MODEL']).replace(' ','').split(',')
     DOMAINS = check_VX_MASK_LIST(os.environ['VX_MASK_LIST']).replace(' ','').split(',')

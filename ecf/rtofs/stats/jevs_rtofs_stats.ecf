@@ -27,6 +27,8 @@ module load python/${python_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
 module load envvar/${envvar_ver}
+module load prod_envir/${prodenvir_ver}
+module load prod_util/${produtil_ver}
 module load rsync/${rsync_ver}
 module list
 
@@ -34,12 +36,12 @@ module list
 export NET=evs
 export STEP=stats
 export COMPONENT=rtofs
-export VERIF_CASE=grid2grid
 
 # set up VDATE and COMIN and COMOUT
 export VDATE=$(date --date="2 days ago" +%Y%m%d)
 
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
+export COMINgdas=/lfs/h1/ops/prod/com/obsproc/v1.0/gdas
 export COMINobs=/lfs/h1/ops/dev/dcom
 export COMINfcst=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver}/prep/$COMPONENT
 export COMINclimo=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/climos/$COMPONENT

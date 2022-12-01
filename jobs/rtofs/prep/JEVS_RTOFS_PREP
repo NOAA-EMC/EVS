@@ -23,7 +23,7 @@ $EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${STEP}.sh
 
 #  convert RTOFS forecast data into lat-lon grids for each RUN;
 #  RUN is the validation source: gmpe, smos, smap etc.
-for rcase in gmpe smos smap aviso osisaf; do
+for rcase in gmpe smos smap aviso osisaf buoys; do
   export RUN=$rcase
   $EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_verif_${STEP}.sh
 done
