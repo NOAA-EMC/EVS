@@ -94,17 +94,10 @@ if [ $SENDCOM = YES ]; then
     for VERIF_TYPE_SUBDIR_PATH in $DATA/${VERIF_CASE}_${STEP}/plot_output/$RUN.${end_date}/images/*; do
         VERIF_TYPE_SUBDIR=$(echo ${VERIF_TYPE_SUBDIR_PATH##*/})
         cd $VERIF_TYPE_SUBDIR
-        tar -cvf ${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/images/evs.plots.${COMPONENT}.${RUN}.grid2obs_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${PDYm1}.tar *.tar
-        #nTAR_FILE=1
-        #for TAR_FILE in *.tar; do
-        #    if [ $nTAR_FILE = 1 ]; then
-        #        cp $TAR_FILE ${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/images/evs.plots.${COMPONENT}.${RUN}.grid2obs_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${PDYm1}.tar
-        #    else
-        #        tar -n -Avf ${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/images/evs.plots.${COMPONENT}.${RUN}.grid2obs_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${PDYm1}.tar $TAR_FILE
-        #    fi
-        #    nTAR_FILE=$(expr $nTAR_FILE + 1)
-        #done
-        cp -v ${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/images/evs.plots.${COMPONENT}.${RUN}.grid2obs_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${PDYm1}.tar $COMOUT/.
+        VERIF_TYPE_fhr_max=$(eval echo \$g2gp_${VERIF_TYPE_SUBDIR}_fhr_max)
+        large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/images/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${PDYm1}.tar
+        tar -cvf $large_tar_file *.tar
+        cp -v $large_tar_file $COMOUT/.
     done
     cd $DATA
 fi
