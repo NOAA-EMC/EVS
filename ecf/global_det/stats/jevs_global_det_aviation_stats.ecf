@@ -3,7 +3,7 @@
 #PBS -N evs_aviation_stats
 #PBS -j oe
 #PBS -o /lfs/h2/emc/ptmp/yali.mao/evs_aviation_stats.log
-#PBS -q debug
+#PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:45:00
 #PBS -l select=1:ncpus=2:mem=4GB
