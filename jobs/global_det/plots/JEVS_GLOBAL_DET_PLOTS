@@ -37,10 +37,9 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 # Run setpdy and initialize PDY variables
 ####################################
 export cycle=${cycle:-t${cyc}z}
-export NDAYSp1=$(($NDAYS + 1))
-setpdy.sh $NDAYSp1
+setpdy.sh $NDAYS
 . ./PDY
-export VDATE_START=$(eval echo \$PDYm$NDAYSp1)
+export VDATE_START=$(eval echo \$PDYm$NDAYS)
 export VDATE_END=$PDYm1
 
 ####################################

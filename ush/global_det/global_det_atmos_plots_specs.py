@@ -681,7 +681,7 @@ class PlotSpecs:
         end_date_dt = datetime.datetime.strptime(
             date_info_dict['end_date'], '%Y%m%d'
         )
-        ndays = int((end_date_dt - start_date_dt).total_seconds()/86400)
+        ndays = int((end_date_dt - start_date_dt).total_seconds()/86400) + 1
         ndays_savefig_name = 'last'+str(ndays)+'days'
         if self.plot_type == 'time_series':
             plot_type_savefig_name = 'timeseries'

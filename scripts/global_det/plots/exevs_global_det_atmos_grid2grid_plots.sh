@@ -28,7 +28,8 @@ start_date_seconds=$(date +%s -d ${start_date})
 end_date_seconds=$(date +%s -d ${end_date})
 diff_seconds=$(expr $end_date_seconds - $start_date_seconds)
 diff_days=$(expr $diff_seconds \/ 86400)
-NDAYS=${NDAYS:-$(expr $diff_days + 1)}
+total_days=$(expr $diff_days + 1)
+NDAYS=${NDAYS:-total_days}
 
 # Check user's config settings
 python $USHevs/global_det/global_det_atmos_check_settings.py
