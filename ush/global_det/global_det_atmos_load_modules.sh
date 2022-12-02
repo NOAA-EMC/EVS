@@ -1,4 +1,4 @@
-#!/bin/sh -xe
+#!/bin/bash -xe
 ##---------------------------------------------------------------------------
 ##---------------------------------------------------------------------------
 ## NCEP EMC Verification System (EVS) - Global Deterministic Atmospheric
@@ -20,24 +20,24 @@ else
 fi
 
 if [ $machine = WCOSS2 ]; then
-    source /usr/share/lmod/lmod/init/sh
+    source /usr/share/lmod/lmod/init/bash
     module reset
     export HPC_OPT=/apps/ops/para/libs
     export MET_bin_exec="bin"
 elif [ $machine = HERA ]; then
-    source /apps/lmod/lmod/init/sh
+    source /apps/lmod/lmod/init/bash
     module purge
     export MET_bin_exec="bin"
 elif [ $machine = JET ]; then
-    source /apps/lmod/lmod/init/sh
+    source /apps/lmod/lmod/init/bash
     module purge
     export MET_bin_exec="bin"
 elif [ $machine = ORION ]; then
-    source /apps/lmod/lmod/init/sh
+    source /apps/lmod/lmod/init/bash
     module purge
     export MET_bin_exec="bin"
 elif [ $machine = S4 ]; then
-    source /usr/share/lmod/lmod/init/sh
+    source /usr/share/lmod/lmod/init/bash
     module purge
     export MET_bin_exec="bin"
 else
