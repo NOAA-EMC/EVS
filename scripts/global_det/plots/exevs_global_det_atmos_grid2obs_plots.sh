@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ###############################################################################
 # Name of Script: exevs_global_det_atmos_grid2obs_plots.sh
 # Purpose of Script: This script generates grid-to-observations

@@ -23,12 +23,14 @@ import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
+import matplotlib.image as mpimg
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from datetime import datetime, timedelta as td
 
 
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
-from settings import Toggle, Templates, Presets, ModelSpecs, Reference
+from settings import Toggle, Templates, Paths, Presets, ModelSpecs, Reference
 from plotter import Plotter
 from prune_stat_files import prune_data
 import plot_util
@@ -41,6 +43,7 @@ plotter = Plotter(fig_size=(20., 14.))
 plotter.set_up_plots()
 toggle = Toggle()
 templates = Templates()
+paths = Paths()
 presets = Presets()
 model_colors = ModelSpecs()
 reference = Reference()
@@ -66,7 +69,11 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                       bs_min_samp: int = 30, eval_period: str = 'TEST', 
                       display_averages: bool = True, save_header: str = '', 
                       plot_group: str = 'sfc_upper',
-                      sample_equalization: bool = True):
+                      sample_equalization: bool = True,
+                      plot_logo_left: bool = False,
+                      plot_logo_right: bool = False, path_logo_left: str = '.',
+                      path_logo_right: str = '.', zoom_logo_left: float = 1.,
+                      zoom_logo_right: float = 1.):
 
     logger.info("========================================")
     logger.info(f"Creating Plot {num} ...")
@@ -232,6 +239,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     df_groups = df.groupby(group_by)
     # Aggregate unit statistics before calculating metrics
     df_aggregated = df_groups.sum()
+    if sample_equalization:
+        df_aggregated['COUNTS']=df_groups.size()
     # Remove data if they exist for some but not all models at some value of 
     # the indep. variable. Otherwise plot_util.calculate_stat will throw an 
     # error
@@ -314,6 +323,11 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         df_aggregated, values=str(metric3_name).upper(), columns='MODEL', 
         index='FCST_THRESH_VALUE'
     )
+    if sample_equalization:
+        pivot_counts = pd.pivot_table(
+            df_aggregated, values='COUNTS', columns='MODEL',
+            index='FCST_THRESH_VALUE'
+        )
     pivot_metric1 = pivot_metric1.dropna() 
     pivot_metric2 = pivot_metric2.dropna() 
     pivot_metric3 = pivot_metric3.dropna() 
@@ -370,6 +384,10 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             pivot_metric3.drop(
                 labels=thresh_idx, inplace=True, errors='ignore'
             )
+            if sample_equalization:
+                pivot_counts.drop(
+                    labels=thresh_idx, inplace=True, errors='ignore'
+                )
     if confidence_intervals:
         for ci_thresh_idx in all_ci_thresh_idx:
             if np.any([
@@ -401,6 +419,10 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             pivot_metric3.drop(
                 columns=model_col, inplace=True, errors='ignore'
             )
+            if sample_equalization:
+                pivot_counts.drop(
+                    columns=model_col, inplace=True, errors='ignore'
+                )
             if confidence_intervals:
                 pivot_ci_lower1.drop(
                     columns=model_col, inplace=True, errors='ignore'
@@ -610,6 +632,18 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         f'{opt}{thresh_label} {units}'
         for thresh_label in thresh_labels
     ]
+    
+    if sample_equalization:
+        counts = pivot_counts.mean(axis=1, skipna=True).fillna('')
+        counts = [
+            str(int(count)) if not isinstance(count,str) else count 
+            for count in counts
+        ]
+        labels = [
+            label+f' ({counts[l]})' 
+            for l, label in enumerate(labels)
+        ]
+    
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -725,7 +759,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
 
     ax.legend(
         handles, labels, loc='upper center', fontsize=15, framealpha=1, 
-        bbox_to_anchor=(0.5, -0.08), ncol=4, frameon=True, numpoints=1, 
+        bbox_to_anchor=(0.5, -0.08), ncol=5, frameon=True, numpoints=1, 
         borderpad=.8, labelspacing=2., columnspacing=3., handlelength=3., 
         handletextpad=.4, borderaxespad=.5) 
     ax.grid(
@@ -823,6 +857,38 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     title_center = '\n'.join([title1, title2, title3])
     ax.set_title(title_center, loc=plotter.title_loc) 
     logger.info("... Plotting complete.")
+
+    # Logos
+    if plot_logo_left:
+        if os.path.exists(path_logo_left):
+            left_logo_arr = mpimg.imread(path_logo_left)
+            left_image_box = OffsetImage(left_logo_arr, zoom=zoom_logo_left*.8)
+            ab_left = AnnotationBbox(
+                left_image_box, xy=(0.,1.), xycoords='axes fraction',
+                xybox=(0, 3), boxcoords='offset points', frameon = False,
+                box_alignment=(0,0)
+            )
+            ax.add_artist(ab_left)
+        else:
+            logger.warning(
+                f"Left logo path ({path_logo_left}) doesn't exist. "
+                + f"Left logo will not be plotted."
+            )
+    if plot_logo_right:
+        if os.path.exists(path_logo_right):
+            right_logo_arr = mpimg.imread(path_logo_right)
+            right_image_box = OffsetImage(right_logo_arr, zoom=zoom_logo_right*.8)
+            ab_right = AnnotationBbox(
+                right_image_box, xy=(1.,1.), xycoords='axes fraction',
+                xybox=(0, 3), boxcoords='offset points', frameon = False,
+                box_alignment=(1,0)
+            )
+            ax.add_artist(ab_right)
+        else:
+            logger.warning(
+                f"Right logo path ({path_logo_right}) doesn't exist. "
+                + f"Right logo will not be plotted."
+            )
 
     # Saving
     models_savename = '_'.join([str(model) for model in model_list])
@@ -961,6 +1027,18 @@ def main():
     logger.debug(f"Display averages? {'yes' if display_averages else 'no'}")
     logger.debug(
         f"Clear prune directories? {'yes' if clear_prune_dir else 'no'}"
+    )
+    logger.debug(f"Plot upper-left logo? {'yes' if plot_logo_left else 'no'}")
+    logger.debug(
+        f"Plot upper-right logo? {'yes' if plot_logo_right else 'no'}"
+    )
+    logger.debug(f"Upper-left logo path: {path_logo_left}")
+    logger.debug(f"Upper-right logo path: {path_logo_right}")
+    logger.debug(
+        f"Upper-left logo fraction of original size: {zoom_logo_left}"
+    )
+    logger.debug(
+        f"Upper-right logo fraction of original size: {zoom_logo_right}"
     )
     if CONFIDENCE_INTERVALS:
         logger.debug(f"Confidence Level: {int(ci_lev*100)}%")
@@ -1114,7 +1192,13 @@ def main():
                     confidence_intervals=CONFIDENCE_INTERVALS, 
                     bs_nrep=bs_nrep, bs_method=bs_method, ci_lev=ci_lev, 
                     bs_min_samp=bs_min_samp,
-                    sample_equalization=sample_equalization
+                    sample_equalization=sample_equalization,
+                    plot_logo_left=plot_logo_left,
+                    plot_logo_right=plot_logo_right,
+                    path_logo_left=path_logo_left,
+                    path_logo_right=path_logo_right,
+                    zoom_logo_left=zoom_logo_left,
+                    zoom_logo_right=zoom_logo_right
                 )
                 num+=1
 
@@ -1161,8 +1245,8 @@ if __name__ == "__main__":
     FLEADS = check_FCST_LEAD(os.environ['FCST_LEAD']).replace(' ','').split(',')
 
     # list of levels
-    FCST_LEVELS = check_FCST_LEVEL(os.environ['FCST_LEVEL']).replace(' ','').split(',')
-    OBS_LEVELS = check_OBS_LEVEL(os.environ['OBS_LEVEL']).replace(' ','').split(',')
+    FCST_LEVELS = re.split(r',(?![0*])', check_FCST_LEVEL(os.environ['FCST_LEVEL']).replace(' ',''))
+    OBS_LEVELS = re.split(r',(?![0*])', check_OBS_LEVEL(os.environ['OBS_LEVEL']).replace(' ',''))
 
     FCST_THRESH = check_FCST_THRESH(os.environ['FCST_THRESH'], LINE_TYPE)
     OBS_THRESH = check_OBS_THRESH(os.environ['OBS_THRESH'], FCST_THRESH, LINE_TYPE).replace(' ','').split(',')
@@ -1198,6 +1282,14 @@ if __name__ == "__main__":
 
     # Whether or not to clear the intermediate directory that stores pruned data
     clear_prune_dir = toggle.plot_settings['clear_prune_directory']
+
+    # Information about logos
+    plot_logo_left = toggle.plot_settings['plot_logo_left']
+    plot_logo_right = toggle.plot_settings['plot_logo_right']
+    zoom_logo_left = toggle.plot_settings['zoom_logo_left']
+    zoom_logo_right = toggle.plot_settings['zoom_logo_right']
+    path_logo_left = paths.logo_left_path
+    path_logo_right = paths.logo_right_path
 
     OUTPUT_BASE_TEMPLATE = templates.output_base_template
 
