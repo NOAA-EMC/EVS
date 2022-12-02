@@ -31,15 +31,25 @@ MODELNAME = os.environ['MODELNAME']
 VDATE = os.environ['VDATE']
 vdate_dt = datetime.strptime(VDATE, '%Y%m%d')
 if VERIF_CASE == "precip":
-    FHR_END_FULL = os.environ['FHR_END_FULL']
-    FHR_END_SHORT = os.environ['FHR_END_SHORT']
-    fhr_end_max = max(int(FHR_END_FULL), int(FHR_END_SHORT))
-    start_date_dt = vdate_dt - td(hours=fhr_end_max)
-    VERIF_TYPE = os.environ['VERIF_TYPE']
-    OBSNAME = os.environ['OBSNAME']
+    if STEP == 'prep':
+        FHR_END_FULL = os.environ['FHR_END_FULL']
+        FHR_END_SHORT = os.environ['FHR_END_SHORT']
+        fhr_end_max = max(int(FHR_END_FULL), int(FHR_END_SHORT))
+        start_date_dt = vdate_dt - td(hours=fhr_end_max)
+        VERIF_TYPE = os.environ['VERIF_TYPE']
+        OBSNAME = os.environ['OBSNAME']
+    elif STEP == 'stats':
+        FHR_END_FULL = os.environ['FHR_END_FULL']
+        FHR_END_SHORT = os.environ['FHR_END_SHORT']
+        fhr_end_max = max(int(FHR_END_FULL), int(FHR_END_SHORT))
+        start_date_dt = vdate_dt - td(hours=fhr_end_max)
+        VERIF_TYPE = os.environ['VERIF_TYPE']
+        OBSNAME = os.environ['OBSNAME']
 elif VERIF_CASE == "grid2obs":
-    NEST = os.environ['NEST']
+    if STEP == 'prep':
+        NEST = os.environ['NEST']
     if STEP == 'stats':
+        NEST = os.environ['NEST']
         FHR_END_FULL = os.environ['FHR_END_FULL']
         FHR_END_SHORT = os.environ['FHR_END_SHORT']
         fhr_end_max = max(int(FHR_END_FULL), int(FHR_END_SHORT))
@@ -80,7 +90,7 @@ if STEP == 'stats':
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather'))
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather2'))
 if STEP == 'plots':
-    pass
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'plotting_job_scripts'))
 for job_scripts_dir in job_scripts_dirs:
     if not os.path.exists(job_scripts_dir):
         print(f"Creating job script directory: {job_scripts_dir}")
@@ -262,6 +272,35 @@ elif STEP == 'stats':
                     MODELNAME+'.'+date_dt.strftime('init%Y%m%d')
                 ))
             date_dt+=td(days=1)
+elif STEP == 'plots':
+    if VERIF_CASE == 'grid2obs':
+        working_output_base_dir = os.path.join(
+            DATA, VERIF_CASE
+        )
+        working_dir_list.append(working_output_base_dir)
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'data'
+        )
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'logs'
+        )
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'out'
+        )
+    if VERIF_CASE == 'precip':
+        working_output_base_dir = os.path.join(
+            DATA, VERIF_CASE
+        )
+        working_dir_list.append(working_output_base_dir)
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'data'
+        )
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'logs'
+        )
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'out'
+        )
 # Create working output and COMOUT directories
 for working_dir in working_dir_list:
     if not os.path.exists(working_dir):

@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/bin/bash
 
 ########################################
 # Preliminary data setup step
@@ -15,11 +15,8 @@ date
 # obtain unique LSF id (jobid) and make temp directories
 ###########################################################
 export pid=$$
-#export DATA_IN=${DATA_IN:-$DATAROOT}
-#export DATA=$DATA_IN/${jobid}
 
-export DATA=/lfs/h2/emc/ptmp/perry.shafran/EVS2/${cyc}_${MODELNAME}
-
+export DATA=${DATA:-${DATAROOT:?}}/${jobid:?}
 rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
@@ -42,6 +39,7 @@ export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
 export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXvevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
@@ -54,14 +52,10 @@ setpdy.sh 31
 export VDATE=$PDYm1
 
 # Define COMIN/COMOUT variables:
+export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 
 echo $COMPATH
-
-#export COMIN=${COMIN:-$(compath.py ${envir}/com/evs/${evs_ver}/)}
-export COMIN=/lfs/h2/emc/vpppg/noscrub/perry.shafran/${NET}/${evs_ver}
-#export COMINnam=${COMINnam:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
-export COMINnam=$COMIN/stats/${COMPONENT}/${MODELNAME}
-export COMOUT=$COMIN}/${STEP}/${COMPONENT}
 
 #######################################################################
 # Execute the script.
