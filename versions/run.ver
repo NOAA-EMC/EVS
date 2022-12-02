@@ -14,7 +14,6 @@ export met_ver=10.1.2
 export metplus_ver=4.1.4
 
 export envvar_ver=1.0
-export grib_util_ver=1.2.2
 export prod_util_ver=2.0.5
 export prod_envir_ver=2.0.4
 export libjpeg_ver=9c
@@ -28,7 +27,6 @@ export jasper_ver=2.0.25
 export sigio_ver=2.3.2
 export sp_ver=2.3.3
 export ip_ver=3.3.3
-export craypals_ver=1.0.12
 export cfp_ver=2.0.4
 export gsl_ver=2.7
 export geos_ver=3.8.1
