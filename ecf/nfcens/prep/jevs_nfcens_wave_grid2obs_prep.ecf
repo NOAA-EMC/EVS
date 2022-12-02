@@ -53,7 +53,7 @@ module list
 ############################################################
 # set some variables
 ############################################################
-export envir=dev
+export envir=prod
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
@@ -70,8 +70,6 @@ export cycle=t00z
 ## developers directories
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
-export COMINmodel=/lfs/h1/ops/prod/com/wave_nfcens/v1.3
-export COMINobs=/lfs/h1/ops/prod/com/obsproc/v1.0
 export OUTPUTROOT=/lfs/h2/emc/vpppg/noscrub/$USER/EVS_stats
 export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}
 

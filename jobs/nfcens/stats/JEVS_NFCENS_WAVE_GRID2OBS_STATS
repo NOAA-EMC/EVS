@@ -34,7 +34,7 @@ export pgmout="OUTPUT.${pid}"
 ####################################
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
-export FIXevs=${FIXvevs:-$HOMEevs/fix}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
 
@@ -64,9 +64,9 @@ export VERIF_CASE=${VERIF_CASE:-grid2obs}
 # Define COMIN/COMOUT variables     
 ####################################
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export COMINmodel=${COMINmodel:-$(compath.py ${MODELNAME}/${model_ver})}
-export COMINobs=${COMINobs:-$(compath.py obsproc/${obsproc_ver})}
+export COMINmodel=${COMINmodel:-$(compath.py ${envir}/com/${RUN}_${MODELNAME}/${model_ver})}
 export COMINgdasnc=${COMIN}/prep/${COMPONENT}
+export ARCmodel=${COMIN}/prep/${COMPONENT}
 
 export COMOUT=${COMIN}/${STEP}/${COMPONENT}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}

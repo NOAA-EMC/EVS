@@ -55,7 +55,7 @@ module list
 ############################################################
 # set some variables
 ############################################################
-export envir=dev
+export envir=prod
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
@@ -71,11 +71,9 @@ export VERIF_CASE=grid2obs
 
 ## developers directories
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output
-export FIXvevs='/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix'
-export COMINobs=/lfs/h1/ops/prod/com/obsproc/v1.0
+export FIXevs='/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix'
 export OUTPUTROOT="/lfs/h2/emc/vpppg/noscrub/$USER/EVS_stats"
 export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}
-export ARCmodel=${COMIN}/prep/${COMPONENT}
 
 export run_mpi='yes'
 export gather='yes'
