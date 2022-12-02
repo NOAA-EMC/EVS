@@ -91,6 +91,9 @@ if STEP == 'stats':
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather2'))
 if STEP == 'plots':
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'plotting_job_scripts'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'data'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'out'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'out', 'logs'))
 for job_scripts_dir in job_scripts_dirs:
     if not os.path.exists(job_scripts_dir):
         print(f"Creating job script directory: {job_scripts_dir}")
@@ -280,13 +283,13 @@ elif STEP == 'plots':
         working_dir_list.append(working_output_base_dir)
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'data'
-        )
+        ))
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'logs'
-        )
+        ))
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'out'
-        )
+        ))
     if VERIF_CASE == 'precip':
         working_output_base_dir = os.path.join(
             DATA, VERIF_CASE
@@ -294,13 +297,13 @@ elif STEP == 'plots':
         working_dir_list.append(working_output_base_dir)
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'data'
-        )
+        ))
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'logs'
-        )
+        ))
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'out'
-        )
+        ))
 # Create working output and COMOUT directories
 for working_dir in working_dir_list:
     if not os.path.exists(working_dir):

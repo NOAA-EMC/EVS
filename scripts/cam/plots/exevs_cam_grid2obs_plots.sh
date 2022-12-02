@@ -36,10 +36,10 @@ status=$?
 [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py"
 
 # Create Job Script 
-python $USHevs/cam/cam_plots_grid2obs_create_job_script.py
+python $USHevs/cam/cam_plots_grid2obs_create_job_scripts.py
 status=$?
 [[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran cam_plots_grid2obs_create_job_script.py"
+[[ $status -eq 0 ]] && echo "Successfully ran cam_plots_grid2obs_create_job_scripts.py"
 export njob=$((njob+1))
 
 # Create POE Job Scripts
@@ -84,7 +84,7 @@ fi
 # Copy files to desired location
 #all commands to copy output files into the correct EVS COMOUT directory
 if [ $SENDCOM = YES ]; then
-    find ${DATA}/${VERIF_CASE}/${STEP}/out/*/*.png -type f -print | tar -cvf ${COMOUT}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar -T -
+    find ${DATA}/${VERIF_CASE}/out/*/*.png -type f -print | tar -cvf ${COMOUT}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar -T -
 fi
 
 # Non-production jobs

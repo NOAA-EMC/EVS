@@ -13,7 +13,7 @@ graphics = {
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS',
                         'INTERP':'BILIN',
-                        'EVAL_PERIODS':['PAST31DAYS','PAST90DAYS'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
                         'FCST_VALID_HOURS':[''],
                         'FCST_INIT_HOURS':['0','12'],
                         'VARIABLES':{
@@ -29,6 +29,7 @@ graphics = {
                                 },
                                 'MLCAPE':{
                                     'STATSs':['fbar,obar'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60'],
                                     'FCST_LEVEL':'P90-0',
                                     'OBS_LEVEL':'L90000-0',
                                     'FCST_THRESHs':[''],
@@ -46,7 +47,7 @@ graphics = {
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS, Alaska, Hawaii, PuertoRico',
                         'INTERP':'BILIN',
-                        'EVAL_PERIODS':['PAST31DAYS','PAST90DAYS'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
                         'FCST_VALID_HOURS':[''],
                         'FCST_INIT_HOURS':['0','12'],
                         'VARIABLES':{
@@ -109,7 +110,7 @@ graphics = {
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South,Alaska,Appalachia,CPlains,DeepSouth,GreatLakes,Mezquital,MidAtlantic,NorthAtlantic,NPlains,NRockies,PacificNW,PacificSW,Prairie,Southeast,SPlains,SRockies',
                         'INTERP':'BILIN',
-                        'EVAL_PERIODS':['PAST31DAYS','PAST90DAYS'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
                         'FCST_VALID_HOURS':[''],
                         'FCST_INIT_HOURS':['0','12'],
                         'VARIABLES':{
@@ -145,7 +146,7 @@ graphics = {
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South,Alaska,Appalachia,CPlains,DeepSouth,GreatLakes,Mezquital,MidAtlantic,NorthAtlantic,NPlains,NRockies,PacificNW,PacificSW,Prairie,Southeast,SPlains,SRockies',
                         'INTERP':'BILIN',
-                        'EVAL_PERIODS':['PAST31DAYS','PAST90DAYS'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
                         'FCST_VALID_HOURS':['0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23'],
                         'FCST_INIT_HOURS':['0','12'],
                         'VARIABLES':{
@@ -181,7 +182,7 @@ graphics = {
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South,Alaska,Appalachia,CPlains,DeepSouth,GreatLakes,Mezquital,MidAtlantic,NorthAtlantic,NPlains,NRockies,PacificNW,PacificSW,Prairie,Southeast,SPlains,SRockies',
                         'INTERP':'BILIN',
-                        'EVAL_PERIODS':['PAST31DAYS','PAST90DAYS'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
                         'FCST_VALID_HOURS':[''],
                         'FCST_INIT_HOURS':['0','12'],
                         'VARIABLES':{
@@ -215,7 +216,7 @@ graphics = {
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South,Alaska,Appalachia,CPlains,DeepSouth,GreatLakes,Mezquital,MidAtlantic,NorthAtlantic,NPlains,NRockies,PacificNW,PacificSW,Prairie,Southeast,SPlains,SRockies',
                         'INTERP':'BILIN',
-                        'EVAL_PERIODS':['PAST31DAYS','PAST90DAYS'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
                         'FCST_VALID_HOURS':[''],
                         'FCST_INIT_HOURS':['0','12'],
                         'VARIABLES':{
@@ -251,7 +252,7 @@ graphics = {
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS, Alaska, Hawaii, PuertoRico',
                         'INTERP':'BILIN',
-                        'EVAL_PERIODS':['PAST31DAYS','PAST90DAYS'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
                         'FCST_VALID_HOURS':[''],
                         'FCST_INIT_HOURS':['0','12'],
                         'VARIABLES':{
@@ -280,7 +281,7 @@ graphics = {
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South,Alaska,Appalachia,CPlains,DeepSouth,GreatLakes,Mezquital,MidAtlantic,NorthAtlantic,NPlains,NRockies,PacificNW,PacificSW,Prairie,Southeast,SPlains,SRockies',
                         'INTERP':'BILIN',
-                        'EVAL_PERIODS':['PAST31DAYS','PAST90DAYS'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
                         'FCST_VALID_HOURS':[''],
                         'FCST_INIT_HOURS':['0','12'],
                         'VARIABLES':{
@@ -379,7 +380,7 @@ graphics = {
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South,Alaska,Appalachia,CPlains,DeepSouth,GreatLakes,Mezquital,MidAtlantic,NorthAtlantic,NPlains,NRockies,PacificNW,PacificSW,Prairie,Southeast,SPlains,SRockies',
                         'INTERP':'BILIN',
-                        'EVAL_PERIODS':['PAST31DAYS','PAST90DAYS'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
                         'FCST_VALID_HOURS':['0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23'],
                         'FCST_INIT_HOURS':['0','12'],
                         'VARIABLES':{
@@ -478,7 +479,7 @@ graphics = {
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South,Alaska,Appalachia,CPlains,DeepSouth,GreatLakes,Mezquital,MidAtlantic,NorthAtlantic,NPlains,NRockies,PacificNW,PacificSW,Prairie,Southeast,SPlains,SRockies',
                         'INTERP':'BILIN',
-                        'EVAL_PERIODS':['PAST31DAYS','PAST90DAYS'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
                         'FCST_VALID_HOURS':[''],
                         'FCST_INIT_HOURS':['0','12'],
                         'VARIABLES':{
@@ -539,7 +540,7 @@ graphics = {
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South,Alaska,Appalachia,CPlains,DeepSouth,GreatLakes,Mezquital,MidAtlantic,NorthAtlantic,NPlains,NRockies,PacificNW,PacificSW,Prairie,Southeast,SPlains,SRockies',
                         'INTERP':'BILIN',
-                        'EVAL_PERIODS':['PAST31DAYS','PAST90DAYS'],
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
                         'FCST_VALID_HOURS':[''],
                         'FCST_INIT_HOURS':['0','12'],
                         'VARIABLES':{

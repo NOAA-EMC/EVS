@@ -23,12 +23,14 @@ import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
+import matplotlib.image as mpimg
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from datetime import datetime, timedelta as td
 
 
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
-from settings import Toggle, Templates, Presets, ModelSpecs, Reference
+from settings import Toggle, Templates, Paths, Presets, ModelSpecs, Reference
 from plotter import Plotter
 from prune_stat_files import prune_data
 import plot_util
@@ -41,6 +43,7 @@ plotter = Plotter(fig_size=(20., 14.))
 plotter.set_up_plots()
 toggle = Toggle()
 templates = Templates()
+paths = Paths()
 presets = Presets()
 model_colors = ModelSpecs()
 reference = Reference()
@@ -66,7 +69,11 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                       bs_min_samp: int = 30, eval_period: str = 'TEST', 
                       display_averages: bool = True, save_header: str = '', 
                       plot_group: str = 'sfc_upper',
-                      sample_equalization: bool = True):
+                      sample_equalization: bool = True,
+                      plot_logo_left: bool = False,
+                      plot_logo_right: bool = False, path_logo_left: str = '.',
+                      path_logo_right: str = '.', zoom_logo_left: float = 1.,
+                      zoom_logo_right: float = 1.):
 
     logger.info("========================================")
     logger.info(f"Creating Plot {num} ...")
@@ -232,6 +239,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     df_groups = df.groupby(group_by)
     # Aggregate unit statistics before calculating metrics
     df_aggregated = df_groups.sum()
+    if sample_equalization:
+        df_aggregated['COUNTS']=df_groups.size()
     # Remove data if they exist for some but not all models at some value of 
     # the indep. variable. Otherwise plot_util.calculate_stat will throw an 
     # error
@@ -314,6 +323,11 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         df_aggregated, values=str(metric3_name).upper(), columns='MODEL', 
         index='FCST_THRESH_VALUE'
     )
+    if sample_equalization:
+        pivot_counts = pd.pivot_table(
+            df_aggregated, values='COUNTS', columns='MODEL',
+            index='FCST_THRESH_VALUE'
+        )
     pivot_metric1 = pivot_metric1.dropna() 
     pivot_metric2 = pivot_metric2.dropna() 
     pivot_metric3 = pivot_metric3.dropna() 
@@ -370,6 +384,10 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             pivot_metric3.drop(
                 labels=thresh_idx, inplace=True, errors='ignore'
             )
+            if sample_equalization:
+                pivot_counts.drop(
+                    labels=thresh_idx, inplace=True, errors='ignore'
+                )
     if confidence_intervals:
         for ci_thresh_idx in all_ci_thresh_idx:
             if np.any([
@@ -401,6 +419,10 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             pivot_metric3.drop(
                 columns=model_col, inplace=True, errors='ignore'
             )
+            if sample_equalization:
+                pivot_counts.drop(
+                    columns=model_col, inplace=True, errors='ignore'
+                )
             if confidence_intervals:
                 pivot_ci_lower1.drop(
                     columns=model_col, inplace=True, errors='ignore'
@@ -610,6 +632,18 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         f'{opt}{thresh_label} {units}'
         for thresh_label in thresh_labels
     ]
+    
+    if sample_equalization:
+        counts = pivot_counts.mean(axis=1, skipna=True).fillna('')
+        counts = [
+            str(int(count)) if not isinstance(count,str) else count 
+            for count in counts
+        ]
+        labels = [
+            label+f' ({counts[l]})' 
+            for l, label in enumerate(labels)
+        ]
+    
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -701,8 +735,10 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     )
     var_long_name_key = df['FCST_VAR'].tolist()[0]
     if str(var_long_name_key).upper() == 'HGT':
-        if str(df['OBS_VAR'].tolist()[0]).upper() == 'CEILING':
+        if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
             var_long_name_key = 'HGTCLDCEIL'
+        elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+            var_long_name_key = 'HPBL'
     var_long_name = variable_translator[var_long_name_key]
     metrics_using_var_units = [
         'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
@@ -725,7 +761,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
 
     ax.legend(
         handles, labels, loc='upper center', fontsize=15, framealpha=1, 
-        bbox_to_anchor=(0.5, -0.08), ncol=4, frameon=True, numpoints=1, 
+        bbox_to_anchor=(0.5, -0.08), ncol=5, frameon=True, numpoints=1, 
         borderpad=.8, labelspacing=2., columnspacing=3., handlelength=3., 
         handletextpad=.4, borderaxespad=.5) 
     ax.grid(
@@ -770,16 +806,41 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     '''
     date_start_string = date_range[0].strftime('%d %b %Y')
     date_end_string = date_range[1].strftime('%d %b %Y')
-    if str(verif_type).lower() in ['pres', 'upper_air'] or 'P' in str(level):
-        level_num = level.replace('P', '')
-        level_string = f'{level_num} hPa '
-        level_savename = f'{level_num}MB_'
+    if str(level).upper() in ['CEILING', 'TOTAL', 'PBL']:
+        if str(level).upper() == 'CEILING':
+            level_string = ''
+            level_savename = ''
+        elif str(level).upper() == 'TOTAL':
+            level_string = 'Total '
+            level_savename = ''
+        elif str(level).upper() == 'PBL':
+            level_string = ''
+            level_savename = ''
+    elif str(verif_type).lower() in ['pres', 'upper_air', 'raob'] or 'P' in str(level):
+        if 'P' in str(level):
+            if str(level).upper() == 'P90-0':
+                level_string = f'Mixed-Layer '
+                level_savename = f'ML'
+            else:
+                level_num = level.replace('P', '')
+                level_string = f'{level_num} hPa '
+                level_savename = f'{level_num}MB_'
+        elif str(level).upper() == 'L0':
+            level_string = f'Surface-Based '
+            level_savename = f'SB'
+        else:
+            level_string = ''
+            level_savename = ''
     elif (str(verif_type).lower() 
-            in ['sfc', 'conus_sfc', 'polar_sfc', 'mrms']):
+            in ['sfc', 'conus_sfc', 'polar_sfc', 'mrms', 'metar']):
         if 'Z' in str(level):
             if str(level).upper() == 'Z0':
-                level_string = 'Surface '
-                level_savename = 'SFC_'
+                if str(var_long_name_key).upper() in ['MLSP', 'MSLET', 'MSLMA', 'PRMSL']:
+                    level_string = ''
+                    level_savename = ''
+                else:
+                    level_string = 'Surface '
+                    level_savename = 'SFC_'
             else:
                 level_num = level.replace('Z', '')
                 if var_savename in ['TSOIL', 'SOILW']:
@@ -824,6 +885,38 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     ax.set_title(title_center, loc=plotter.title_loc) 
     logger.info("... Plotting complete.")
 
+    # Logos
+    if plot_logo_left:
+        if os.path.exists(path_logo_left):
+            left_logo_arr = mpimg.imread(path_logo_left)
+            left_image_box = OffsetImage(left_logo_arr, zoom=zoom_logo_left*.8)
+            ab_left = AnnotationBbox(
+                left_image_box, xy=(0.,1.), xycoords='axes fraction',
+                xybox=(0, 3), boxcoords='offset points', frameon = False,
+                box_alignment=(0,0)
+            )
+            ax.add_artist(ab_left)
+        else:
+            logger.warning(
+                f"Left logo path ({path_logo_left}) doesn't exist. "
+                + f"Left logo will not be plotted."
+            )
+    if plot_logo_right:
+        if os.path.exists(path_logo_right):
+            right_logo_arr = mpimg.imread(path_logo_right)
+            right_image_box = OffsetImage(right_logo_arr, zoom=zoom_logo_right*.8)
+            ab_right = AnnotationBbox(
+                right_image_box, xy=(1.,1.), xycoords='axes fraction',
+                xybox=(0, 3), boxcoords='offset points', frameon = False,
+                box_alignment=(1,0)
+            )
+            ax.add_artist(ab_right)
+        else:
+            logger.warning(
+                f"Right logo path ({path_logo_right}) doesn't exist. "
+                + f"Right logo will not be plotted."
+            )
+
     # Saving
     models_savename = '_'.join([str(model) for model in model_list])
     if len(date_hours) <= 8: 
@@ -841,15 +934,22 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         time_period_savename = f'{date_start_savename}-{date_end_savename}'
     else:
         time_period_savename = f'{eval_period}'
-    save_name = (f'performance_diagram_regional_'
-                 + f'{str(domain).lower()}_{str(date_type).lower()}_'
-                 + f'{str(date_hours_savename).lower()}_'
-                 + f'{str(level_savename).lower()}'
-                 + f'{str(var_savename).lower()}_'
-                 + f'{str(frange_save_string).lower()}_'
-                 + f'{str(thresholds_save_phrase).lower()}')
+
+    plot_info = (
+        f'perfdiag_{str(date_type).lower()}{str(date_hours_savename).lower()}'
+        + f'_{str(frange_save_string).lower()}'
+    )
+    save_name = (
+        f'ctc'
+    )
+    save_name+=f'.{str(var_savename).lower()}'
+    save_name+=f'_{str(level_savename).lower()}'
+    save_name+=f'.{time_period_savename}'
+    save_name+=f'.{plot_info}'
+    save_name+=f'.{str(domain).lower()}'
+
     if save_header:
-        save_name = f'{save_header}_'+save_name
+        save_name = f'{save_header}.'+save_name
     save_subdir = os.path.join(
         save_dir, f'{str(plot_group).lower()}', 
         f'{str(time_period_savename).lower()}'
@@ -867,21 +967,21 @@ def main():
 
     # Logging
     log_metplus_dir = '/'
-    for subdir in LOG_METPLUS.split('/')[:-1]:
+    for subdir in LOG_TEMPLATE.split('/')[:-1]:
         log_metplus_dir = os.path.join(log_metplus_dir, subdir)
     if not os.path.isdir(log_metplus_dir):
         os.makedirs(log_metplus_dir)
-    logger = logging.getLogger(LOG_METPLUS)
+    logger = logging.getLogger(LOG_TEMPLATE)
     logger.setLevel(LOG_LEVEL)
     formatter = logging.Formatter(
         '%(asctime)s.%(msecs)03d (%(filename)s:%(lineno)d) %(levelname)s: '
         + '%(message)s',
         '%m/%d %H:%M:%S'
     )
-    file_handler = logging.FileHandler(LOG_METPLUS, mode='a')
+    file_handler = logging.FileHandler(LOG_TEMPLATE, mode='a')
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
-    logger_info = f"Log file: {LOG_METPLUS}"
+    logger_info = f"Log file: {LOG_TEMPLATE}"
     print(logger_info)
     logger.info(logger_info)
 
@@ -915,8 +1015,8 @@ def main():
     logger.debug("Config file settings")
     logger.debug(f"LOG_LEVEL: {LOG_LEVEL}")
     logger.debug(f"MET_VERSION: {MET_VERSION}")
-    logger.debug(f"URL_HEADER: {URL_HEADER if URL_HEADER else 'No header'}")
-    logger.debug(f"OUTPUT_BASE_DIR: {OUTPUT_BASE_DIR}")
+    logger.debug(f"IMG_HEADER: {IMG_HEADER if IMG_HEADER else 'No header'}")
+    logger.debug(f"STAT_OUTPUT_BASE_DIR: {STAT_OUTPUT_BASE_DIR}")
     logger.debug(f"STATS_DIR: {STATS_DIR}")
     logger.debug(f"PRUNE_DIR: {PRUNE_DIR}")
     logger.debug(f"SAVE_DIR: {SAVE_DIR}")
@@ -961,6 +1061,18 @@ def main():
     logger.debug(f"Display averages? {'yes' if display_averages else 'no'}")
     logger.debug(
         f"Clear prune directories? {'yes' if clear_prune_dir else 'no'}"
+    )
+    logger.debug(f"Plot upper-left logo? {'yes' if plot_logo_left else 'no'}")
+    logger.debug(
+        f"Plot upper-right logo? {'yes' if plot_logo_right else 'no'}"
+    )
+    logger.debug(f"Upper-left logo path: {path_logo_left}")
+    logger.debug(f"Upper-right logo path: {path_logo_right}")
+    logger.debug(
+        f"Upper-left logo fraction of original size: {zoom_logo_left}"
+    )
+    logger.debug(
+        f"Upper-right logo fraction of original size: {zoom_logo_right}"
     )
     if CONFIDENCE_INTERVALS:
         logger.debug(f"Confidence Level: {int(ci_lev*100)}%")
@@ -1069,7 +1181,7 @@ def main():
             if (FCST_LEVELS[l] not in var_specs['fcst_var_levels'] 
                     or OBS_LEVELS[l] not in var_specs['obs_var_levels']):
                 e = (f"The requested variable/level combination is not valid:"
-                     + f" {requested_var}/{level}")
+                     + f" {requested_var}/{fcst_level}")
                 logger.warning(e)
                 logger.warning("Continuing ...")
                 continue
@@ -1109,12 +1221,18 @@ def main():
                     verif_type=VERIF_TYPE, line_type=LINE_TYPE, 
                     date_hours=date_hours, save_dir=SAVE_DIR, 
                     eval_period=EVAL_PERIOD, 
-                    display_averages=display_averages, save_header=URL_HEADER,
+                    display_averages=display_averages, save_header=IMG_HEADER,
                     plot_group=plot_group, 
                     confidence_intervals=CONFIDENCE_INTERVALS, 
                     bs_nrep=bs_nrep, bs_method=bs_method, ci_lev=ci_lev, 
                     bs_min_samp=bs_min_samp,
-                    sample_equalization=sample_equalization
+                    sample_equalization=sample_equalization,
+                    plot_logo_left=plot_logo_left,
+                    plot_logo_right=plot_logo_right,
+                    path_logo_left=path_logo_left,
+                    path_logo_right=path_logo_right,
+                    zoom_logo_left=zoom_logo_left,
+                    zoom_logo_right=zoom_logo_right
                 )
                 num+=1
 
@@ -1123,20 +1241,20 @@ def main():
 
 if __name__ == "__main__":
     print("\n=================== CHECKING CONFIG VARIABLES =====================\n")
-    LOG_METPLUS = check_LOG_METPLUS(os.environ['LOG_METPLUS'])
+    LOG_TEMPLATE = check_LOG_TEMPLATE(os.environ['LOG_TEMPLATE'])
     LOG_LEVEL = check_LOG_LEVEL(os.environ['LOG_LEVEL'])
     MET_VERSION = check_MET_VERSION(os.environ['MET_VERSION'])
-    URL_HEADER = check_URL_HEADER(os.environ['URL_HEADER'])
+    IMG_HEADER = check_IMG_HEADER(os.environ['IMG_HEADER'])
     VERIF_CASE = check_VERIF_CASE(os.environ['VERIF_CASE'])
     VERIF_TYPE = check_VERIF_TYPE(os.environ['VERIF_TYPE'])
-    OUTPUT_BASE_DIR = check_OUTPUT_BASE_DIR(os.environ['OUTPUT_BASE_DIR'])
-    STATS_DIR = OUTPUT_BASE_DIR
+    STAT_OUTPUT_BASE_DIR = check_STAT_OUTPUT_BASE_DIR(os.environ['STAT_OUTPUT_BASE_DIR'])
+    STATS_DIR = STAT_OUTPUT_BASE_DIR
     PRUNE_DIR = check_PRUNE_DIR(os.environ['PRUNE_DIR'])
     SAVE_DIR = check_SAVE_DIR(os.environ['SAVE_DIR'])
     DATE_TYPE = check_DATE_TYPE(os.environ['DATE_TYPE'])
     LINE_TYPE = check_LINE_TYPE(os.environ['LINE_TYPE'])
     INTERP = check_INTERP(os.environ['INTERP'])
-    MODELS = check_MODEL(os.environ['MODEL']).replace(' ','').split(',')
+    MODELS = check_MODELS(os.environ['MODELS']).replace(' ','').split(',')
     DOMAINS = check_VX_MASK_LIST(os.environ['VX_MASK_LIST']).replace(' ','').split(',')
 
     # valid hour (each plot will use all available valid_hours listed below)
@@ -1161,8 +1279,8 @@ if __name__ == "__main__":
     FLEADS = check_FCST_LEAD(os.environ['FCST_LEAD']).replace(' ','').split(',')
 
     # list of levels
-    FCST_LEVELS = check_FCST_LEVEL(os.environ['FCST_LEVEL']).replace(' ','').split(',')
-    OBS_LEVELS = check_OBS_LEVEL(os.environ['OBS_LEVEL']).replace(' ','').split(',')
+    FCST_LEVELS = re.split(r',(?![0*])', check_FCST_LEVEL(os.environ['FCST_LEVEL']).replace(' ',''))
+    OBS_LEVELS = re.split(r',(?![0*])', check_OBS_LEVEL(os.environ['OBS_LEVEL']).replace(' ',''))
 
     FCST_THRESH = check_FCST_THRESH(os.environ['FCST_THRESH'], LINE_TYPE)
     OBS_THRESH = check_OBS_THRESH(os.environ['OBS_THRESH'], FCST_THRESH, LINE_TYPE).replace(' ','').split(',')
@@ -1199,12 +1317,20 @@ if __name__ == "__main__":
     # Whether or not to clear the intermediate directory that stores pruned data
     clear_prune_dir = toggle.plot_settings['clear_prune_directory']
 
-    OUTPUT_BASE_TEMPLATE = templates.output_base_template
+    # Information about logos
+    plot_logo_left = toggle.plot_settings['plot_logo_left']
+    plot_logo_right = toggle.plot_settings['plot_logo_right']
+    zoom_logo_left = toggle.plot_settings['zoom_logo_left']
+    zoom_logo_right = toggle.plot_settings['zoom_logo_right']
+    path_logo_left = paths.logo_left_path
+    path_logo_right = paths.logo_right_path
+
+    OUTPUT_BASE_TEMPLATE = os.environ['STAT_OUTPUT_BASE_TEMPLATE']
 
     print("\n===================================================================\n")
     # ============= END USER CONFIGURATIONS =================
 
-    LOG_METPLUS = str(LOG_METPLUS)
+    LOG_TEMPLATE = str(LOG_TEMPLATE)
     LOG_LEVEL = str(LOG_LEVEL)
     MET_VERSION = float(MET_VERSION)
     VALID_HOURS = [

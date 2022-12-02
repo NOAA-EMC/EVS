@@ -4,7 +4,7 @@ from pathlib import Path
 
 USH_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(USH_DIR))
-from cam_plots_grid2obs_graphx_defs import graphics
+from cam_plots_precip_graphx_defs import graphics
 import cam_util as cutil
 
 USHevs = os.environ['USHevs']

@@ -1022,12 +1022,12 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
    elif stat == 'pcor':
       if str(bs_method).upper() in ['MATCHED_PAIRS','FORECASTS']:
          if line_type == 'SL1L2':
-            var_f_mean = ffbar_est_mean - fbar_est_mean*obar_est_mean
+            var_f_mean = ffbar_est_mean - fbar_est_mean*fbar_est_mean
             var_o_mean = oobar_est_mean - obar_est_mean*obar_est_mean
             covar_mean = fobar_est_mean - fbar_est_mean*obar_est_mean
             stat_values_pre_mean = covar_mean/np.sqrt(var_f_mean*var_o_mean)
             stat_values_mean = np.mean(stat_values_pre_mean)
-            var_f = ffbar_est_samp - fbar_est_samp*obar_est_samp
+            var_f = ffbar_est_samp - fbar_est_samp*fbar_est_samp
             var_o = oobar_est_samp - obar_est_samp*obar_est_samp
             covar = fobar_est_samp - fbar_est_samp*obar_est_samp
             stat_values = covar/np.sqrt(var_f*var_o)
@@ -1362,7 +1362,7 @@ def calculate_stat(logger, model_data, stat):
          stat_values = np.sqrt(var_f + var_o - 2*np.sqrt(var_f*var_o)*R)
    elif stat == 'pcor':
       if line_type == 'SL1L2':
-         var_f = ffbar - fbar*obar
+         var_f = ffbar - fbar*fbar
          var_o = oobar - obar*obar
          covar = fobar - fbar*obar
          stat_values = covar/np.sqrt(var_f*var_o)
@@ -1624,8 +1624,6 @@ def get_ci_file(stat, input_filename, fcst_lead, output_base_dir, ci_method):
    return CI_file          
 
 def equalize_samples(logger, df, group_by):
-    with open('/u/perry.shafran/test.pkl','wb') as f:
-        pickle.dump(df, f)
     # columns that will be used to drop duplicate rows across model groups
     cols_to_check = [
         key for key in [

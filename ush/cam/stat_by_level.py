@@ -3,7 +3,7 @@
 # Name:          stat_by_level.py
 # Contact(s):    Marcel Caron
 # Developed:     Oct. 14, 2021 by Marcel Caron 
-# Last Modified: Apr. 06, 2022 by Marcel Caron             
+# Last Modified: Nov. 02, 2022 by Marcel Caron             
 # Title:         Line plot of pressure level as a function of 
 #                verification metric
 # Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
@@ -23,11 +23,13 @@ import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
+import matplotlib.image as mpimg
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from datetime import datetime, timedelta as td
 
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
-from settings import Toggle, Templates, Presets, ModelSpecs, Reference
+from settings import Toggle, Templates, Paths, Presets, ModelSpecs, Reference
 from plotter import Plotter
 from prune_stat_files import prune_data
 import plot_util
@@ -40,6 +42,7 @@ plotter = Plotter(fig_size=(18., 14.))
 plotter.set_up_plots()
 toggle = Toggle()
 templates = Templates()
+paths = Paths()
 presets = Presets()
 model_colors = ModelSpecs()
 reference = Reference()
@@ -64,7 +67,11 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
                        eval_period: str = 'TEST', save_header: str = '', 
                        display_averages: bool = True, 
                        plot_group: str = 'sfc_upper',
-                       sample_equalization: bool = True):
+                       sample_equalization: bool = True,
+                       plot_logo_left: bool = False,
+                       plot_logo_right: bool = False, path_logo_left: str = '.',
+                       path_logo_right: str = '.', zoom_logo_left: float = 1.,
+                       zoom_logo_right: float = 1.):
 
     logger.info("========================================")
     logger.info(f"Creating Plot {num} ...")
@@ -161,7 +168,8 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         df_aggregated = df_groups.sum()
     else:
         df_aggregated = df_groups.mean()
-
+    if sample_equalization:
+        df_aggregated['COUNTS']=df_groups.size()
     # Remove data if they exist for some but not all models at some value of 
     # the indep. variable. Otherwise plot_util.calculate_stat will throw an 
     # error
@@ -237,6 +245,11 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         df_aggregated, values=str(metric1_name).upper(), columns='MODEL', 
         index='PLEV'
     )
+    if sample_equalization:
+        pivot_counts = pd.pivot_table(
+            df_aggregated, values='COUNTS', columns='MODEL', 
+            index='PLEV'
+        )
     if metric2_name:
         pivot_metric2 = pd.pivot_table(
             df_aggregated, values=str(metric2_name).upper(), columns='MODEL', 
@@ -337,21 +350,6 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
 
     # Plot data
     logger.info("Begin plotting ...")
-    f = lambda m,c,ls,lw,ms,mec: plt.plot(
-        [], [], marker=m, mec=mec, mew=2., c=c, ls=ls, lw=lw, ms=ms
-    )[0]
-    if metric2_name is not None:
-        handles = [
-            f('', 'black', line_setting, 5., 0, 'white') 
-            for line_setting in ['solid','dashed']
-        ]
-        labels = [
-            str(metric_name).upper() 
-            for metric_name in [metric1_name, metric2_name]
-        ]
-    else:
-        handles = []
-        labels = []
     if confidence_intervals:
         indices_in_common1 = list(set.intersection(*map(
             set, 
@@ -364,6 +362,8 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         pivot_metric1 = pivot_metric1[pivot_metric1.index.isin(indices_in_common1)]
         pivot_ci_lower1 = pivot_ci_lower1[pivot_ci_lower1.index.isin(indices_in_common1)]
         pivot_ci_upper1 = pivot_ci_upper1[pivot_ci_upper1.index.isin(indices_in_common1)]
+        if sample_equalization:
+            pivot_counts = pivot_counts[pivot_counts.index.isin(indices_in_common1)]
         if metric2_name is not None:
             indices_in_common2 = list(set.intersection(*map(
                 set, 
@@ -383,6 +383,82 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     min_incr = np.min(plev_incr) 
     x_min = x_min_limit
     x_max = x_max_limit
+    plot_reference = [False, False]
+    ref_metrics = ['OBAR']
+    if str(metric1_name).upper() in ref_metrics:
+        plot_reference[0] = True
+        pivot_reference1 = pivot_metric1
+        reference1 = pivot_reference1.mean(axis=1)
+        if confidence_intervals:
+            reference_ci_lower1 = pivot_ci_lower1.mean(axis=1)
+            reference_ci_upper1 = pivot_ci_upper1.mean(axis=1)
+        if not np.any((pivot_reference1.T/reference1).T == 1.):
+            logger.warning(
+                f"{str(metric1_name).upper()} is requested, but the value "
+                + f"varies from model to model. "
+                + f"Will plot an individual line for each model. If a "
+                + f"single reference line is preferred, set the "
+                + f"sample_equalization toggle in ush/settings.py to 'True', "
+                + f"and check in the log file if sample equalization "
+                + f"completed successfully."
+            )
+            plot_reference[0] = False
+    if metric2_name is not None and str(metric2_name).upper() in ref_metrics:
+        plot_reference[1] = True
+        pivot_reference2 = pivot_metric2
+        reference2 = pivot_reference2.mean(axis=1)
+        if confidence_intervals:
+            reference_ci_lower2 = pivot_ci_lower2.mean(axis=1)
+            reference_ci_upper2 = pivot_ci_upper2.mean(axis=1)
+        if not np.any((pivot_reference2.T/reference2).T == 1.):
+            logger.warning(
+                f"{str(metric2_name).upper()} is requested, but the value "
+                + f"varies from model to model. "
+                + f"Will plot an individual line for each model. If a "
+                + f"single reference line is preferred, set the "
+                + f"sample_equalization toggle in ush/settings.py to 'True', "
+                + f"and check in the log file if sample equalization "
+                + f"completed successfully."
+            )
+            plot_reference[1] = False
+    if np.any(plot_reference):
+        plotted_reference = [False, False]
+        if confidence_intervals:
+            plotted_reference_CIs = [False, False]
+    f = lambda m,c,ls,lw,ms,mec: plt.plot(
+        [], [], marker=m, mec=mec, mew=2., c=c, ls=ls, lw=lw, ms=ms
+    )[0]
+    if metric2_name is not None:
+        if np.any(plot_reference):
+            ref_color_dict = model_colors.get_color_dict('obs')
+            handles = []
+            labels = []
+            line_settings = ['solid','dashed']
+            metric_names = [metric1_name, metric2_name]
+            for p, rbool in enumerate(plot_reference):
+                if rbool:
+                    handles += [
+                        f('', ref_color_dict['color'], line_settings[p], 5., 0, 'white')
+                    ]
+                else:
+                    handles += [
+                        f('', 'black', line_settings[p], 5., 0, 'white')
+                    ]
+                labels += [
+                    str(metric_names[p]).upper()
+                ]
+        else:
+            handles = [
+                f('', 'black', line_setting, 5., 0, 'white') 
+                for line_setting in ['solid','dashed']
+            ]
+            labels = [
+                str(metric_name).upper() 
+                for metric_name in [metric1_name, metric2_name]
+            ]
+    else:
+        handles = []
+        labels = []
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -436,43 +512,93 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
             metric1_mean_fmt_string = f'{x_vals_metric1_mean:.2f}'
         else:
             metric1_mean_fmt_string = f'{x_vals_metric1_mean:.2E}'
-        plt.plot(
-            x_vals_metric1, y_vals1.tolist(), 
-            marker=mod_setting_dicts[m]['marker'], 
-            c=mod_setting_dicts[m]['color'], mew=2., mec='white', 
-            figure=fig, ms=mod_setting_dicts[m]['markersize'], ls='solid', 
-            lw=mod_setting_dicts[m]['linewidth']
-        )
+        if plot_reference[0]:
+            if not plotted_reference[0]:
+                ref_color_dict = model_colors.get_color_dict('obs')
+                plt.plot(
+                    reference1, y_vals1.tolist(),
+                    marker=ref_color_dict['marker'],
+                    c=ref_color_dict['color'], mew=2., mec='white',
+                    figure=fig, ms=ref_color_dict['markersize'], ls='solid',
+                    lw=ref_color_dict['linewidth']
+                )
+                plotted_reference[0] = True
+        else:
+            plt.plot(
+                x_vals_metric1, y_vals1.tolist(), 
+                marker=mod_setting_dicts[m]['marker'], 
+                c=mod_setting_dicts[m]['color'], mew=2., mec='white', 
+                figure=fig, ms=mod_setting_dicts[m]['markersize'], ls='solid', 
+                lw=mod_setting_dicts[m]['linewidth']
+            )
         if metric2_name is not None:
             if np.abs(x_vals_metric2_mean) < 1E4:
                 metric2_mean_fmt_string = f'{x_vals_metric2_mean:.2f}'
             else:
                 metric2_mean_fmt_string = f'{x_vals_metric2_mean:.2E}'
-            plt.plot(
-                x_vals_metric2, y_vals2.tolist(), 
-                marker=mod_setting_dicts[m]['marker'], 
-                c=mod_setting_dicts[m]['color'], mew=2., mec='white', 
-                figure=fig, ms=mod_setting_dicts[m]['markersize'], ls='dashed', 
-                lw=mod_setting_dicts[m]['linewidth']
-            )
+            if plot_reference[1]:
+                if not plotted_reference[0]:
+                    ref_color_dict = model_colors.get_color_dict('obs')
+                    plt.plot(
+                        reference2, y_vals2.tolist(),
+                        marker=ref_color_dict['marker'],
+                        c=ref_color_dict['color'], mew=2., mec='white',
+                        figure=fig, ms=ref_color_dict['markersize'], ls='dashed',
+                        lw=ref_color_dict['linewidth']
+                    )
+                    plotted_reference[1] = True
+            else:
+                plt.plot(
+                    x_vals_metric2, y_vals2.tolist(), 
+                    marker=mod_setting_dicts[m]['marker'], 
+                    c=mod_setting_dicts[m]['color'], mew=2., mec='white', 
+                    figure=fig, ms=mod_setting_dicts[m]['markersize'], ls='dashed', 
+                    lw=mod_setting_dicts[m]['linewidth']
+                )
         if confidence_intervals:
-            plt.errorbar(
-                x_vals_metric1, y_vals1.tolist(),
-                xerr=[np.abs(x_vals_ci_lower1), x_vals_ci_upper1],
-                fmt='none', ecolor=mod_setting_dicts[m]['color'],
-                elinewidth=mod_setting_dicts[m]['linewidth']/1.5,
-                capsize=9., capthick=mod_setting_dicts[m]['linewidth']/1.5,
-                alpha=.70, zorder=0
-            )
-            if metric2_name is not None:
+            if plot_reference[0]:
+                if not plotted_reference_CIs[0]:
+                    ref_color_dict = model_colors.get_color_dict('obs')
+                    plt.errorbar(
+                        reference1, y_vals1.tolist(),
+                        xerr=[np.abs(reference_ci_lower1), reference_ci_upper1],
+                        fmt='none', ecolor=ref_color_dict['color'],
+                        elinewidth=ref_color_dict['linewidth']/1.5,
+                        capsize=9., capthick=ref_color_dict['linewidth']/1.5,
+                        alpha=.70, zorder=0
+                    )
+                    plotted_reference_CIs[0] = True
+            else:
                 plt.errorbar(
-                    x_vals_metric2, y_vals2.tolist(),
-                    xerr=[np.abs(x_vals_ci_lower2), x_vals_ci_upper2],
+                    x_vals_metric1, y_vals1.tolist(),
+                    xerr=[np.abs(x_vals_ci_lower1), x_vals_ci_upper1],
                     fmt='none', ecolor=mod_setting_dicts[m]['color'],
                     elinewidth=mod_setting_dicts[m]['linewidth']/1.5,
                     capsize=9., capthick=mod_setting_dicts[m]['linewidth']/1.5,
                     alpha=.70, zorder=0
                 )
+            if metric2_name is not None:
+                if plot_reference[1]:
+                    if not plotted_reference_CIs[1]:
+                        ref_color_dict = model_colors.get_color_dict('obs')
+                        plt.errorbar(
+                            reference2, y_vals2.tolist(),
+                            xerr=[np.abs(reference_ci_lower2), reference_ci_upper2],
+                            fmt='none', ecolor=ref_color_dict['color'],
+                            elinewidth=ref_color_dict['linewidth']/1.5,
+                            capsize=9., capthick=ref_color_dict['linewidth']/1.5,
+                            alpha=.70, zorder=0
+                        )
+                        plotted_reference_CIs[1] = True
+                else:
+                    plt.errorbar(
+                        x_vals_metric2, y_vals2.tolist(),
+                        xerr=[np.abs(x_vals_ci_lower2), x_vals_ci_upper2],
+                        fmt='none', ecolor=mod_setting_dicts[m]['color'],
+                        elinewidth=mod_setting_dicts[m]['linewidth']/1.5,
+                        capsize=9., capthick=mod_setting_dicts[m]['linewidth']/1.5,
+                        alpha=.70, zorder=0
+                    )
         handles+=[
             f(
                 mod_setting_dicts[m]['marker'], mod_setting_dicts[m]['color'], 
@@ -554,8 +680,10 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         xtick_labels_with_blanks[int(show_xtick_every)*i] = item
     var_long_name_key = df['FCST_VAR'].tolist()[0]
     if str(var_long_name_key).upper() == 'HGT':
-        if str(df['OBS_VAR'].tolist()[0]).upper() == 'CEILING':
+        if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
             var_long_name_key = 'HGTCLDCEIL'
+        elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+            var_long_name_key = 'HPBL'
     var_long_name = variable_translator[var_long_name_key]
     units = df['FCST_UNITS'].tolist()[0]
     if units in reference.unit_conversions:
@@ -638,6 +766,24 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         linewidth=.5, zorder=0
     )
 
+    if sample_equalization:
+        counts = pivot_counts.mean(axis=1, skipna=True).fillna('')
+        for count, yval in zip(counts, y_vals1.tolist()):
+            if not isinstance(count, str):
+                count = str(int(count))
+            ax.annotate(
+                f'{count}', xy=(1.,yval),
+                xycoords=('axes fraction','data'), xytext=(9,0),
+                textcoords='offset points', va='center', fontsize=16,
+                color='dimgrey', ha='left'
+            )
+        ax.annotate(
+            '#SAMPLES', xy=(1.,1.), xycoords='axes fraction',
+            xytext=(9,5), textcoords='offset points', va='bottom',
+            fontsize=11, color='dimgrey', ha='right'
+        )
+        fig.subplots_adjust(right=.95)
+
     # Title
     domain = df['VX_MASK'].tolist()[0]
     var_savename = df['FCST_VAR'].tolist()[0]
@@ -670,6 +816,46 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     ax.set_title(title_center, loc=plotter.title_loc) 
     logger.info("... Plotting complete.")
 
+    # Logos
+    if plot_logo_left:
+        if os.path.exists(path_logo_left):
+            left_logo_arr = mpimg.imread(path_logo_left)
+            left_image_box = OffsetImage(left_logo_arr, zoom=zoom_logo_left*0.9)
+            ab_left = AnnotationBbox(
+                left_image_box, xy=(0.,1.), xycoords='axes fraction',
+                xybox=(0, 3), boxcoords='offset points', frameon = False,
+                box_alignment=(0,0)
+            )
+            ax.add_artist(ab_left)
+        else:
+            logger.warning(
+                f"Left logo path ({path_logo_left}) doesn't exist. "
+                + f"Left logo will not be plotted."
+            )
+    if plot_logo_right:
+        if os.path.exists(path_logo_right):
+            right_logo_arr = mpimg.imread(path_logo_right)
+            if sample_equalization:
+                right_image_box = OffsetImage(right_logo_arr, zoom=zoom_logo_right*0.65)
+                ab_right = AnnotationBbox(
+                    right_image_box, xy=(1.,1.), xycoords='axes fraction',
+                    xybox=(0, 20), boxcoords='offset points', frameon = False,
+                    box_alignment=(1,0)
+                )
+            else:
+                right_image_box = OffsetImage(right_logo_arr, zoom=zoom_logo_right*0.9)
+                ab_right = AnnotationBbox(
+                    right_image_box, xy=(1.,1.), xycoords='axes fraction',
+                    xybox=(0, 3), boxcoords='offset points', frameon = False,
+                    box_alignment=(1,0)
+                )
+            ax.add_artist(ab_right)
+        else:
+            logger.warning(
+                f"Right logo path ({path_logo_right}) doesn't exist. "
+                + f"Right logo will not be plotted."
+            )
+
     # Saving 
     models_savename = '_'.join([str(model) for model in model_list])
     if len(date_hours) <= 8: 
@@ -687,16 +873,21 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         time_period_savename = f'{date_start_savename}-{date_end_savename}'
     else:
         time_period_savename = f'{eval_period}'
-    save_name = (f'stat_by_level_regional_'
-                 + f'{str(domain).lower()}_{str(date_type).lower()}_'
-                 + f'{str(date_hours_savename).lower()}_'
-                 + f'{str(var_savename).lower()}_'
-                 + f'{str(metric1_name).lower()}')
+
+    plot_info = (
+        f'vertprof_{str(date_type).lower()}{str(date_hours_savename).lower()}'
+        + f'_{str(frange_save_string).lower()}'
+    )
+    save_name = (f'{str(metric1_name).lower()}')
     if metric2_name is not None:
         save_name+=f'_{str(metric2_name).lower()}'
-    save_name+=f'_{str(frange_save_string).lower()}'
+    save_name+=f'.{str(var_savename).lower()}'
+    save_name+=f'.{time_period_savename}'
+    save_name+=f'.{plot_info}'
+    save_name+=f'.{str(domain).lower()}'
+
     if save_header:
-        save_name = f'{save_header}_'+save_name
+        save_name = f'{save_header}.'+save_name
     save_subdir = os.path.join(
         save_dir, f'{str(plot_group).lower()}', 
         f'{str(time_period_savename).lower()}'
@@ -714,21 +905,21 @@ def main():
 
     # Logging
     log_metplus_dir = '/'
-    for subdir in LOG_METPLUS.split('/')[:-1]:
+    for subdir in LOG_TEMPLATE.split('/')[:-1]:
         log_metplus_dir = os.path.join(log_metplus_dir, subdir)
     if not os.path.isdir(log_metplus_dir):
         os.makedirs(log_metplus_dir)
-    logger = logging.getLogger(LOG_METPLUS)
+    logger = logging.getLogger(LOG_TEMPLATE)
     logger.setLevel(LOG_LEVEL)
     formatter = logging.Formatter(
         '%(asctime)s.%(msecs)03d (%(filename)s:%(lineno)d) %(levelname)s: '
         + '%(message)s',
         '%m/%d %H:%M:%S'
     )
-    file_handler = logging.FileHandler(LOG_METPLUS, mode='a')
+    file_handler = logging.FileHandler(LOG_TEMPLATE, mode='a')
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
-    logger_info = f"Log file: {LOG_METPLUS}"
+    logger_info = f"Log file: {LOG_TEMPLATE}"
     print(logger_info)
     logger.info(logger_info)
 
@@ -764,8 +955,8 @@ def main():
     logger.debug("Config file settings")
     logger.debug(f"LOG_LEVEL: {LOG_LEVEL}")
     logger.debug(f"MET_VERSION: {MET_VERSION}")
-    logger.debug(f"URL_HEADER: {URL_HEADER if URL_HEADER else 'No header'}")
-    logger.debug(f"OUTPUT_BASE_DIR: {OUTPUT_BASE_DIR}")
+    logger.debug(f"IMG_HEADER: {IMG_HEADER if IMG_HEADER else 'No header'}")
+    logger.debug(f"STAT_OUTPUT_BASE_DIR: {STAT_OUTPUT_BASE_DIR}")
     logger.debug(f"STATS_DIR: {STATS_DIR}")
     logger.debug(f"PRUNE_DIR: {PRUNE_DIR}")
     logger.debug(f"SAVE_DIR: {SAVE_DIR}")
@@ -810,6 +1001,18 @@ def main():
     logger.debug(f"Display averages? {'yes' if display_averages else 'no'}")
     logger.debug(
         f"Clear prune directories? {'yes' if clear_prune_dir else 'no'}"
+    )
+    logger.debug(f"Plot upper-left logo? {'yes' if plot_logo_left else 'no'}")
+    logger.debug(
+        f"Plot upper-right logo? {'yes' if plot_logo_right else 'no'}"
+    )
+    logger.debug(f"Upper-left logo path: {path_logo_left}")
+    logger.debug(f"Upper-right logo path: {path_logo_right}")
+    logger.debug(
+        f"Upper-left logo fraction of original size: {zoom_logo_left}"
+    )
+    logger.debug(
+        f"Upper-right logo fraction of original size: {zoom_logo_right}"
     )
     if CONFIDENCE_INTERVALS:
         logger.debug(f"Confidence Level: {int(ci_lev*100)}%")
@@ -943,11 +1146,14 @@ def main():
                 y_lim_lock=Y_LIM_LOCK, ylabel='Pressure Level (hPa)', 
                 line_type=LINE_TYPE, date_hours=date_hours, 
                 save_dir=SAVE_DIR, eval_period=EVAL_PERIOD,
-                display_averages=display_averages, save_header=URL_HEADER,
+                display_averages=display_averages, save_header=IMG_HEADER,
                 plot_group=plot_group, 
                 confidence_intervals=CONFIDENCE_INTERVALS, bs_nrep=bs_nrep, 
                 bs_method=bs_method, ci_lev=ci_lev, bs_min_samp=bs_min_samp,
-                sample_equalization=sample_equalization
+                sample_equalization=sample_equalization,
+                plot_logo_left=plot_logo_left, plot_logo_right=plot_logo_right,
+                path_logo_left=path_logo_left, path_logo_right=path_logo_right,
+                zoom_logo_left=zoom_logo_left, zoom_logo_right=zoom_logo_right
             )
             num+=1
 
@@ -956,20 +1162,20 @@ def main():
 
 if __name__ == "__main__":
     print("\n=================== CHECKING CONFIG VARIABLES =====================\n")
-    LOG_METPLUS = check_LOG_METPLUS(os.environ['LOG_METPLUS'])
+    LOG_TEMPLATE = check_LOG_TEMPLATE(os.environ['LOG_TEMPLATE'])
     LOG_LEVEL = check_LOG_LEVEL(os.environ['LOG_LEVEL'])
     MET_VERSION = check_MET_VERSION(os.environ['MET_VERSION'])
-    URL_HEADER = check_URL_HEADER(os.environ['URL_HEADER'])
+    IMG_HEADER = check_IMG_HEADER(os.environ['IMG_HEADER'])
     VERIF_CASE = check_VERIF_CASE(os.environ['VERIF_CASE'])
     VERIF_TYPE = check_VERIF_TYPE(os.environ['VERIF_TYPE'])
-    OUTPUT_BASE_DIR = check_OUTPUT_BASE_DIR(os.environ['OUTPUT_BASE_DIR'])
-    STATS_DIR = OUTPUT_BASE_DIR
+    STAT_OUTPUT_BASE_DIR = check_STAT_OUTPUT_BASE_DIR(os.environ['STAT_OUTPUT_BASE_DIR'])
+    STATS_DIR = STAT_OUTPUT_BASE_DIR
     PRUNE_DIR = check_PRUNE_DIR(os.environ['PRUNE_DIR'])
     SAVE_DIR = check_SAVE_DIR(os.environ['SAVE_DIR'])
     DATE_TYPE = check_DATE_TYPE(os.environ['DATE_TYPE'])
     LINE_TYPE = check_LINE_TYPE(os.environ['LINE_TYPE'])
     INTERP = check_INTERP(os.environ['INTERP'])
-    MODELS = check_MODEL(os.environ['MODEL']).replace(' ','').split(',')
+    MODELS = check_MODELS(os.environ['MODELS']).replace(' ','').split(',')
     DOMAINS = check_VX_MASK_LIST(os.environ['VX_MASK_LIST']).replace(' ','').split(',')
 
     # valid hour (each plot will use all available valid_hours listed below)
@@ -994,8 +1200,8 @@ if __name__ == "__main__":
     FLEADS = check_FCST_LEAD(os.environ['FCST_LEAD']).replace(' ','').split(',')
 
     # list of levels
-    FCST_LEVELS = check_FCST_LEVEL(os.environ['FCST_LEVEL']).replace(' ','').split(',')
-    OBS_LEVELS = check_OBS_LEVEL(os.environ['OBS_LEVEL']).replace(' ','').split(',')
+    FCST_LEVELS = re.split(r',(?![0*])', check_FCST_LEVEL(os.environ['FCST_LEVEL']).replace(' ',''))
+    OBS_LEVELS = re.split(r',(?![0*])', check_OBS_LEVEL(os.environ['OBS_LEVEL']).replace(' ',''))
 
     FCST_THRESH = check_FCST_THRESH(os.environ['FCST_THRESH'], LINE_TYPE)
     OBS_THRESH = check_OBS_THRESH(os.environ['OBS_THRESH'], FCST_THRESH, LINE_TYPE).replace(' ','').split(',')
@@ -1034,12 +1240,20 @@ if __name__ == "__main__":
     # Whether or not to clear the intermediate directory that stores pruned data
     clear_prune_dir = toggle.plot_settings['clear_prune_directory']
 
-    OUTPUT_BASE_TEMPLATE = templates.output_base_template
+    # Information about logos
+    plot_logo_left = toggle.plot_settings['plot_logo_left']
+    plot_logo_right = toggle.plot_settings['plot_logo_right']
+    zoom_logo_left = toggle.plot_settings['zoom_logo_left']
+    zoom_logo_right = toggle.plot_settings['zoom_logo_right']
+    path_logo_left = paths.logo_left_path
+    path_logo_right = paths.logo_right_path
+
+    OUTPUT_BASE_TEMPLATE = os.environ['STAT_OUTPUT_BASE_TEMPLATE']
 
     print("\n===================================================================\n")
     # ============= END USER CONFIGURATIONS =================
 
-    LOG_METPLUS = str(LOG_METPLUS)
+    LOG_TEMPLATE = str(LOG_TEMPLATE)
     LOG_LEVEL = str(LOG_LEVEL)
     MET_VERSION = float(MET_VERSION)
     VALID_HOURS = [

@@ -2,10 +2,10 @@
  
 # =============================================================================
 #
-# NAME: cam_plots_grid2obs_create_job_script.sh
+# NAME: cam_plots_precip_create_job_script.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Create EVS CAM Grid2Obs - Plots job scripts
-# DEPENDENCIES: $SCRIPTSevs/cam/stats/exevs_$MODELNAME_grid2obs_plots.sh
+# PURPOSE: Create EVS CAM Precipitation - Plots job scripts
+# DEPENDENCIES: $SCRIPTSevs/cam/stats/exevs_$MODELNAME_precip_plots.sh
 #
 # =============================================================================
 
@@ -38,7 +38,6 @@ IMG_HEADER = os.environ['IMG_HEADER']
 PRUNE_DIR = os.environ['PRUNE_DIR']
 SAVE_DIR = os.environ['SAVE_DIR']
 LOG_TEMPLATE = os.environ['LOG_TEMPLATE']
-LOG_LEVEL = os.environ['LOG_LEVEL']
 STAT_OUTPUT_BASE_DIR = os.environ['STAT_OUTPUT_BASE_DIR']
 STAT_OUTPUT_BASE_TEMPLATE = os.environ['STAT_OUTPUT_BASE_TEMPLATE']
 MODELS = os.environ['MODELS']

@@ -2,10 +2,10 @@
 
 # =============================================================================
 # 
-# NAME: config.evs.prod.plots.cam.atmos.grid2obs
+# NAME: config.evs.prod.plots.cam.atmos.precip
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Set up configurations to run EVS CAM Grid2Obs - Plots
-# DEPENDENCIES: $HOMEevs/ecf/cam/plots/jevs_cam_grid2obs_plots.ecf
+# PURPOSE: Set up configurations to run EVS CAM Precipitation - Plots
+# DEPENDENCIES: $HOMEevs/ecf/cam/plots/jevs_cam_precip_plots.ecf
 # 
 # =============================================================================
 
