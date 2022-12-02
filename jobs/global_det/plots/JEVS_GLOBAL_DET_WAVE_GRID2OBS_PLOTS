@@ -65,7 +65,7 @@ export VERIF_CASE=${VERIF_CASE:-grid2obs}
 # Define COMIN/COMOUT variables     
 ####################################
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export COMOUT=${COMOUT:-$(compath.py ${NET}/${evs_ver})}
+export COMOUT=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 export COMOUTstats=${COMOUT}/stats/${COMPONENT}/${MODELNAME}.${VDATE}
 export COMOUTplots=${COMOUT}/${STEP}/${COMPONENT}/${MODELNAME}.${VDATE}
 
