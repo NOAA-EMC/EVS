@@ -290,6 +290,9 @@ elif STEP == 'plots':
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'out'
         ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUT, 
+        ))
     if VERIF_CASE == 'precip':
         working_output_base_dir = os.path.join(
             DATA, VERIF_CASE
@@ -303,6 +306,9 @@ elif STEP == 'plots':
         ))
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'out'
+        ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUT, 
         ))
 # Create working output and COMOUT directories
 for working_dir in working_dir_list:

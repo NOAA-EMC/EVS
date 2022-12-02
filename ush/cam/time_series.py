@@ -3,7 +3,7 @@
 # Name:          time_series.py
 # Contact(s):    Marcel Caron
 # Developed:     Oct. 14, 2021 by Marcel Caron 
-# Last Modified: Nov. 28, 2022 by Marcel Caron             
+# Last Modified: Dec. 01, 2022 by Marcel Caron             
 # Title:         Line plot of verification metric as a function of 
 #                valid or init time
 # Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
@@ -1030,7 +1030,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     save_name = (f'{str(metric1_name).lower()}')
     if metric2_name is not None:
         save_name+=f'_{str(metric2_name).lower()}'
-    if thresh and '' not in thresh::
+    if thresh and '' not in thresh:
         save_name+=f'_{str(thresholds_save_phrase).lower()}'
     save_name+=f'.{str(var_savename).lower()}'
     save_name+=f'_{str(level_savename).lower()}'
