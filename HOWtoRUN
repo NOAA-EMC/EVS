@@ -3,5 +3,6 @@ cd ./ecf/hurricane/stats
 (2) qsub jevs_hurricane_global_det_tcgen_stats.ecf
     qsub jevs_hurricane_global_det_tropcyc_stats.ecf
     qsub jevs_hurricane_global_ens_tropcyc_stats.ecf
+    qsub jevs_hurricane_regional_tropcyc_stats.ecf
 (3) See the stats file and plots under:
     /lfs/h2/emc/ptmp/$USER/com/evs 
