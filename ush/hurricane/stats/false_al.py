@@ -17,11 +17,14 @@ import datetime
 import matplotlib.path as mpath
 import matplotlib.ticker as mticker
 
-
+import cartopy
 import cartopy.crs as ccrs
 from cartopy.feature import GSHHSFeature
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 import cartopy.feature as cfeature
+
+cartopyDataDir = os.environ['cartopyDataDir']
+cartopy.config['data_dir'] = cartopyDataDir
 
 # RE -------------------
 #Initialize the empty Plot (only need to call the figure to write the map.)

@@ -1,5 +1,5 @@
 #PBS -S /bin/bash
-#PBS -N jevs_hurricane_global_ens_tropcyc_stats
+#PBS -N jevs_hurricane_regional_tropcyc_stats
 #PBS -j oe
 #PBS -A ENSTRACK-DEV
 #PBS -q dev
@@ -36,19 +36,23 @@ module load imagemagick/${imagemagick_ver}
 module list
 
 export NET=evs
-export COMPONENT=hurricane_global_ens
+export COMPONENT=hurricane_regional
 export RUN=tropcyc
 export STEP=stats
 
 export envir=dev
 export cyc=00
-export job=jevs_hurricane_global_ens_tropcyc_stats_${cyc}
+export job=jevs_hurricane_regional_tropcyc_stats_${cyc}
 
 #Define TC-vital file, TC track file and the directory for Bdeck files
-export COMINvit=/lfs/h1/ops/prod/com/gfs/v16.3/syndat/syndat_tcvitals.2022
-export COMINtrack=/lfs/h1/ops/prod/com/ens_tracker/v1.3/global/tracks.atcfunix.22
-export COMINbdeckNHC=/lfs/h1/ops/prod/dcom/nhc/atcf-noaa/btk
-export COMINbdeckJTWC=/lfs/h1/ops/prod/dcom/nhc/atcf-navy/btk
+#export COMINvit=/lfs/h1/ops/prod/com/gfs/v16.3/syndat/syndat_tcvitals.2022
+#export COMINbdeckNHC=/lfs/h1/ops/prod/dcom/nhc/atcf-noaa/btk
+#export COMINbdeckJTWC=/lfs/h1/ops/prod/dcom/nhc/atcf-navy/btk
+
+export COMINvit=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/TCvital/syndat_tcvitals.2022
+export COMINtrack=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/regionalTrack/tracks.atcfunix.22
+export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/bdeck
+export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/bdeck
 
 export DATAROOT=/lfs/h2/emc/ptmp/$USER
 export COMROOT=${DATAROOT}/com
