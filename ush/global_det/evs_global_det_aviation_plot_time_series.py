@@ -24,6 +24,8 @@ matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.colors as colors
+import matplotlib.image as mpimg
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from datetime import datetime, timedelta as td
 
 SETTINGS_DIR=os.environ['USHevs']
@@ -503,7 +505,9 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             )
         else:
             model_plot_name = model_list[m]
-        y_vals_metric1 = pivot_metric1[str(model_list[m])].values
+        pivot_metric1 = pivot_metric1[str(model_list[m])].dropna()
+        x_vals1_new = pivot_metric1.index
+        y_vals_metric1 = pivot_metric1.values
         y_vals_metric1_mean = np.nanmean(y_vals_metric1)
         if metric2_name is not None:
             y_vals_metric2 = pivot_metric2[str(model_list[m])].values
@@ -550,7 +554,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         else:
             metric1_mean_fmt_string = f'{y_vals_metric1_mean:.2E}'
         plt.plot(
-            x_vals1.tolist(), y_vals_metric1, 
+            x_vals1_new.tolist(), y_vals_metric1, 
             marker=mod_setting_dicts[m]['marker'], 
             c=mod_setting_dicts[m]['color'], mew=2., mec='white', 
             figure=fig, ms=mod_setting_dicts[m]['markersize'], ls='solid', 
@@ -809,6 +813,26 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     ax.set_title(title_center, loc=plotter.title_loc) 
     logger.info("... Plotting complete.")
 
+    # Adding logo
+    if logo_dir:
+        left_logo_arr = mpimg.imread(os.path.join(logo_dir, 'noaa.png'))
+        left_image_box = OffsetImage(left_logo_arr, zoom=zoom_logo_left, alpha=logo_alpha)
+        ab_left = AnnotationBbox(
+            left_image_box, xy=(-0.06,0.975), xycoords='axes fraction',
+            xybox=(0, 20), boxcoords='offset points', frameon = False,
+            box_alignment=(0,0)
+        )
+        ax.add_artist(ab_left)
+
+        right_logo_arr = mpimg.imread(os.path.join(logo_dir, 'nws.png'))
+        right_image_box = OffsetImage(right_logo_arr, zoom=zoom_logo_right, alpha=logo_alpha)
+        ab_right = AnnotationBbox(
+            right_image_box, xy=(1.04,0.975), xycoords='axes fraction',
+            xybox=(0, 20), boxcoords='offset points', frameon = False,
+            box_alignment=(1,0)
+        )
+        ax.add_artist(ab_right)
+
     # Saving
     models_savename = '_'.join([str(model) for model in model_list])
     if len(date_hours) <= 8: 
@@ -841,7 +865,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         save_name = f'{save_header}_'+save_name
     save_subdir = save_dir
     if not os.path.isdir(save_subdir):
-        os.makedirs(save_subdir)
+        os.makedirs(save_subdir, exist_ok=True)
     save_path = os.path.join(save_subdir, save_name+'.png')
     fig.savefig(save_path, dpi=dpi)
     logger.info(u"\u2713"+f" plot saved successfully as {save_path}")
@@ -856,7 +880,7 @@ def main():
     for subdir in LOG_METPLUS.split('/')[:-1]:
         log_metplus_dir = os.path.join(log_metplus_dir, subdir)
     if not os.path.isdir(log_metplus_dir):
-        os.makedirs(log_metplus_dir)
+        os.makedirs(log_metplus_dir, exist_ok=True)
     logger = logging.getLogger(LOG_METPLUS)
     logger.setLevel(LOG_LEVEL)
     formatter = logging.Formatter(
@@ -1215,6 +1239,12 @@ if __name__ == "__main__":
     # Whether or not to clear the intermediate directory that stores pruned data
     clear_prune_dir = toggle.plot_settings['clear_prune_directory']
 
+    # Information about logos
+    logo_dir = check_LOGO_DIR(os.environ['LOGO_DIR'])
+    zoom_logo_left = toggle.plot_settings['zoom_logo_left']
+    zoom_logo_right = toggle.plot_settings['zoom_logo_right']
+    logo_alpha = toggle.plot_settings['logo_alpha']
+    
     OUTPUT_BASE_TEMPLATE = templates.output_base_template
 
     print("\n===================================================================\n")

@@ -91,6 +91,7 @@ export URL_HEADER=""
 # ${USH_DIR}/settings.py
 
 export USH_DIR=$USH_DIR
+export LOGO_DIR=$FIXevs/logos
 # Temporary data storage
 export PRUNE_DIR=$DATA/data/${OBSERVATION}_${RESOLUTION}
 mkdir -p $PRUNE_DIR

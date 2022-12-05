@@ -33,7 +33,8 @@ eval_period=`echo $EVAL_PERIOD | tr '[:upper:]' '[:lower:]'`
 # Part 1: Icing Verification
 ################################################
 if [ $OBSERVATION = "GCIP" ] ; then
-    export CENTERS="blend us uk"
+    # export CENTERS="blend us uk"
+    export CENTERS="blend"
     resolutions="0P25 1P25"
     plot_types="roc_curve fbias"
 ################################################

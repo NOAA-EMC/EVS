@@ -23,6 +23,9 @@ class Toggle():
             'sample_equalization': True, # equalize samples along each value of the independent variable where data exist
             'keep_shared_events_only': False, # functional for time_series only.
             'clear_prune_directory': True, # remove the intermediate directory created to store pruned data files temporarily
+            'zoom_logo_left': 0.85,
+            'zoom_logo_right': 0.85,
+            'logo_alpha': 0.5
         }
 
 class Templates():
