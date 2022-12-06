@@ -1,5 +1,5 @@
-import pickle
 import os
+import sys
 import datetime as datetime
 import time
 import numpy as np
@@ -1670,18 +1670,21 @@ def equalize_samples(logger, df, group_by):
     df_equalized = df_equalized.loc[
         df_equalized[cols_to_check+['MODEL']].drop_duplicates().index
     ]
-    # Regroup the data and move forward with this groups!
+    # Regroup the data and move forward with these groups!
     df_equalized_groups = df_equalized.groupby(group_by)
     # Check that groups are indeed equally sized for each independent variable
     df_groups_sizes = df_equalized_groups.size()
-    df_groups_sizes.index = df_groups_sizes.index.set_levels(
-        df_groups_sizes.index.levels[-1].astype(str), level=-1
-    )
-    data_are_equalized = np.all([
-        np.unique(df_groups_sizes.xs(str(unique_indep_var), level=1)).size == 1
-        for unique_indep_var 
-        in np.unique(np.array(list(df_groups_sizes.keys())).T[1])
-    ])
+    if df_groups_sizes:
+        df_groups_sizes.index = df_groups_sizes.index.set_levels(
+            df_groups_sizes.index.levels[-1].astype(str), level=-1
+        )
+        data_are_equalized = np.all([
+            np.unique(df_groups_sizes.xs(str(unique_indep_var), level=1)).size == 1
+            for unique_indep_var 
+            in np.unique(np.array(list(df_groups_sizes.keys())).T[1])
+        ])
+    else:
+        data_are_equalized = False
     if data_are_equalized:
         logger.info(
             "Data were successfully equalized along the independent"

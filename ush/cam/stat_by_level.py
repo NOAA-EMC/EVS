@@ -3,7 +3,7 @@
 # Name:          stat_by_level.py
 # Contact(s):    Marcel Caron
 # Developed:     Oct. 14, 2021 by Marcel Caron 
-# Last Modified: Nov. 02, 2022 by Marcel Caron             
+# Last Modified: Dec. 02, 2022 by Marcel Caron             
 # Title:         Line plot of pressure level as a function of 
 #                verification metric
 # Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
@@ -16,6 +16,7 @@
 import os
 import sys
 import numpy as np
+import math
 import pandas as pd
 import logging
 from functools import reduce
@@ -53,7 +54,7 @@ reference = Reference()
 
 def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger, 
                        date_range: tuple, model_list: list, num: int = 0, 
-                       flead='all', metric1_name: str = 'BCRMSE', 
+                       levels: list = ['P500'], flead='all', metric1_name: str = 'BCRMSE', 
                        metric2_name: str = 'ME', x_min_limit: float = -10., 
                        x_max_limit: float = 10., x_lim_lock: bool = False, 
                        y_min_limit: float = 50., y_max_limit: float = 1000., 
@@ -86,6 +87,9 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     domain_translator = reference.domain_translator
     model_settings = model_colors.model_settings
 
+    # filter by levels
+    df = df[df['FCST_LEV'].astype(str).isin(levels)]
+
     # filter by forecast lead times
     if str(flead).upper() == 'ALL':
         frange_string = 'All Available Forecasts'
@@ -100,7 +104,7 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
             frange_save_phrase = '-'.join([str(f) for f in flead])
         else:
             frange_phrase = f's {flead[0]}'+u'\u2013'+f'{flead[-1]}'
-            frange_save_phrase = f'{flead[0]}-TO-F{flead[-1]}'
+            frange_save_phrase = f'{flead[0]:02d}-TO-F{flead[-1]:02d}'
         frange_string = f'Forecast Hour{frange_phrase}'
         frange_save_string = f'F{frange_save_phrase}'
         df = df[df['LEAD_HOURS'].isin(flead)]
@@ -380,7 +384,10 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     if metric2_name is not None:
         y_vals2 = pivot_metric2.index
     plev_incr = np.abs(np.diff(y_vals1))
-    min_incr = np.min(plev_incr) 
+    if plev_incr.size == 0:
+        min_incr = 100
+    else:
+        min_incr = np.min(plev_incr) 
     x_min = x_min_limit
     x_max = x_max_limit
     plot_reference = [False, False]
@@ -459,6 +466,7 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     else:
         handles = []
         labels = []
+    n_mods = 0
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -466,6 +474,8 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
             )
         else:
             model_plot_name = model_list[m]
+        if str(model_list[m]) not in pivot_metric1:
+            continue
         x_vals_metric1 = pivot_metric1[str(model_list[m])].values
         x_vals_metric1_mean = np.nanmean(x_vals_metric1)
         if metric2_name is not None:
@@ -487,21 +497,45 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
                 ].values
         if not x_lim_lock:
             if metric2_name is not None:
-                x_vals_metric_min = np.nanmin([
-                    x_vals_metric1, x_vals_metric2
-                ])
-                x_vals_metric_max = np.nanmax([
-                    x_vals_metric1, x_vals_metric2
-                ])
+                x_vals_both_metrics = np.concatenate((x_vals_metric1, x_vals_metric2))
+                if np.any(x_vals_both_metrics != np.inf):
+                    x_vals_metric_min = np.nanmin(
+                        x_vals_both_metrics[x_vals_both_metrics != np.inf]
+                    )
+                    x_vals_metric_max = np.nanmax(
+                        x_vals_both_metrics[x_vals_both_metrics != np.inf]
+                    )
+                else:
+                    x_vals_metric_min = np.nanmin([
+                        x_vals_both_metrics
+                    ])
+                    x_vals_metric_max = np.nanmax([
+                        x_vals_both_metrics
+                    ])
             else:
-                x_vals_metric_min = np.nanmin(x_vals_metric1)
-                x_vals_metric_max = np.nanmax(x_vals_metric1)
-            if m == 0:
+                if np.any(x_vals_metric1 != np.inf):
+                    x_vals_metric_min = np.nanmin(
+                        x_vals_metric1[x_vals_metric1 != np.inf]
+                    )
+                    x_vals_metric_max = np.nanmax(
+                        x_vals_metric1[x_vals_metric1 != np.inf]
+                    )
+                else:
+                    x_vals_metric_min = np.nanmin(x_vals_metric1)
+                    x_vals_metric_max = np.nanmax(x_vals_metric1)
+            if n_mods == 0:
                 x_mod_min = x_vals_metric_min
                 x_mod_max = x_vals_metric_max
+                n_mods+=1
             else:
-                x_mod_min = np.nanmin([x_mod_min, x_vals_metric_min])
-                x_mod_max = np.nanmax([x_mod_max, x_vals_metric_max])
+                if math.isinf(x_mod_min):
+                    x_mod_min = x_vals_metric_min
+                else:
+                    x_mod_min = np.nanmin([x_mod_min, x_vals_metric_min])
+                if math.isinf(x_mod_max):
+                    x_mod_max = x_vals_metric_max
+                else:
+                    x_mod_max = np.nanmax([x_mod_max, x_vals_metric_max])
             if (x_vals_metric_min > x_min_limit 
                     and x_vals_metric_min <= x_mod_min):
                 x_min = x_vals_metric_min
@@ -649,6 +683,10 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         for x in [-5,-4,-3,-2,-1,0,1,2,3,4,5]
     ]).flatten()
     round_to_nearest_categories = x_range_categories/20.
+    if math.isinf(x_max):
+        x_max = x_max_limit
+    if math.isinf(x_min):
+        x_min = x_min_limit
     x_range = x_max-x_min
     round_to_nearest =  round_to_nearest_categories[
         np.digitize(x_range, x_range_categories[:-1])
@@ -788,9 +826,11 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     domain = df['VX_MASK'].tolist()[0]
     var_savename = df['FCST_VAR'].tolist()[0]
     if domain in list(domain_translator.keys()):
-        domain_string = domain_translator[domain]
+        domain_string = domain_translator[domain]['long_name']
+        domain_save_string = domain_translator[domain]['save_name']
     else:
         domain_string = domain
+        domain_save_string = domain
     date_hours_string = plot_util.get_name_for_listed_items(
         [f'{date_hour:02d}' for date_hour in date_hours],
         ', ', '', 'Z', 'and ', ''
@@ -874,17 +914,20 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     else:
         time_period_savename = f'{eval_period}'
 
-    plot_info = (
-        f'vertprof_{str(date_type).lower()}{str(date_hours_savename).lower()}'
-        + f'_{str(frange_save_string).lower()}'
+    plot_info = '_'.join(
+        [item for item in [
+            f'vertprof',
+            f'{str(date_type).lower()}{str(date_hours_savename).lower()}',
+            f'{str(frange_save_string).lower()}',
+        ] if item]
     )
     save_name = (f'{str(metric1_name).lower()}')
     if metric2_name is not None:
         save_name+=f'_{str(metric2_name).lower()}'
     save_name+=f'.{str(var_savename).lower()}'
-    save_name+=f'.{time_period_savename}'
+    save_name+=f'.{str(time_period_savename).lower()}'
     save_name+=f'.{plot_info}'
-    save_name+=f'.{str(domain).lower()}'
+    save_name+=f'.{str(domain_save_string).lower()}'
 
     if save_header:
         save_name = f'{save_header}.'+save_name
@@ -1121,6 +1164,29 @@ def main():
             logger.warning(e)
             logger.warning("Continuing ...")
         plot_group = var_specs['plot_group']
+        if len(FCST_LEVELS) != len(OBS_LEVELS):
+            e = ("FCST_LEVELS and OBS_LEVELS must be lists of the same"
+                 + f" size")
+            logger.error(e)
+            logger.error("Quitting ...")
+            raise ValueError(e+"\nQuitting ...")
+        keep = []
+        for l, fcst_level in enumerate(FCST_LEVELS):
+            if (FCST_LEVELS[l] not in var_specs['fcst_var_levels']
+                    or OBS_LEVELS[l] not in var_specs['obs_var_levels']):
+                keep.append(False)
+            else:
+                keep.append(True)
+        keep = np.array(keep)
+        dropped_items = np.array(FCST_LEVELS)[~keep].tolist()
+        fcst_levels = np.array(FCST_LEVELS)[keep].tolist()
+        if dropped_items:
+            dropped_items_string = ', '.join(dropped_items)
+            e = (f"The requested levels are not valid for the requested"
+                 + f" case type ({VERIF_CASETYPE}) and line_type"
+                 + f" ({LINE_TYPE}): {dropped_items_string}")
+            logger.warning(e)
+            logger.warning("Continuing ...")
         for domain in DOMAINS:
             if str(domain) not in case_specs['vx_mask_list']:
                 e = (f"The requested domain is not valid for the requested"
@@ -1138,7 +1204,8 @@ def main():
             if df is None:
                 continue
             plot_stat_by_level(
-                df, logger, date_range, MODELS, num=num, flead=FLEADS, 
+                df, logger, date_range, MODELS, num=num, 
+                flead=FLEADS, levels=fcst_levels, 
                 metric1_name=metrics[0], metric2_name=metrics[1], 
                 date_type=DATE_TYPE, x_min_limit=X_MIN_LIMIT, 
                 x_max_limit=X_MAX_LIMIT, x_lim_lock=X_LIM_LOCK, 

@@ -75,4 +75,4 @@ postmsg "$jlogfile" "$msg"
 #  rm -rf $DATA
 #fi
 
-}
+

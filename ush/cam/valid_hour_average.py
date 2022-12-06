@@ -83,7 +83,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         logger.warning(f"Empty Dataframe. Continuing onto next plot...")
         logger.info("========================================")
         return None
-    if str(line_type).upper() == 'CTC' and np.array(thresh).size == 0:
+    if str(line_type).upper() == 'CTC' and np.array(fcst_thresh).size == 0:
         logger.warning(f"Empty list of thresholds. Continuing onto next"
                        + f" plot...")
         logger.info("========================================")
@@ -110,10 +110,10 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                 frange_phrase = 's '+', '.join([str(f) for f in flead])
             else:
                 frange_phrase = ' '+', '.join([str(f) for f in flead])
-            frange_save_phrase = '-'.join([str(f) for f in flead])
+            frange_save_phrase = '-'.join([str(f).zfill(2) for f in flead])
         else:
             frange_phrase = f's {flead[0]}'+u'\u2013'+f'{flead[-1]}'
-            frange_save_phrase = f'{flead[0]}_TO_F{flead[-1]}'
+            frange_save_phrase = f'{flead[0]:02d}_TO_F{flead[-1]:02d}'
         frange_string = f'Forecast Hour{frange_phrase}'
         frange_save_string = f'F{frange_save_phrase}'
         df = df[df['LEAD_HOURS'].isin(flead)]
@@ -609,6 +609,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
     else:
         handles = []
         labels = []
+    n_mods = 0
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -616,6 +617,8 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
             )
         else:
             model_plot_name = model_list[m]
+        if str(model_list[m]) not in pivot_metric1:
+            continue
         y_vals_metric1 = pivot_metric1[str(model_list[m])].values
         y_vals_metric1_mean = np.nanmean(y_vals_metric1)
         if metric2_name is not None:
@@ -651,9 +654,10 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                 else:
                     y_vals_metric_min = np.nanmin(y_vals_metric1)
                     y_vals_metric_max = np.nanmax(y_vals_metric1)
-            if m == 0:
+            if n_mods == 0:
                 y_mod_min = y_vals_metric_min
                 y_mod_max = y_vals_metric_max
+                n_mods+=1
             else:
                 if math.isinf(y_mod_min):
                     y_mod_min = y_vals_metric_min
@@ -812,6 +816,10 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         for y in [-5,-4,-3,-2,-1,0,1,2,3,4,5]
     ]).flatten()
     round_to_nearest_categories = y_range_categories/20.
+    if math.isinf(y_min):
+        y_min = y_min_limit
+    if math.isinf(y_max):
+        y_max = y_max_limit
     y_range = y_max-y_min
     round_to_nearest =  round_to_nearest_categories[
         np.digitize(y_range, y_range_categories[:-1])
@@ -918,9 +926,11 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
     domain = df['VX_MASK'].tolist()[0]
     var_savename = df['FCST_VAR'].tolist()[0]
     if domain in list(domain_translator.keys()):
-        domain_string = domain_translator[domain]
+        domain_string = domain_translator[domain]['long_name']
+        domain_save_string = domain_translator[domain]['save_name']
     else:
         domain_string = domain
+        domain_save_string = domain
     date_hours_string = plot_util.get_name_for_listed_items(
         [f'{date_hour:02d}' for date_hour in date_hours],
         ', ', '', 'Z', 'and ', ''
@@ -950,47 +960,47 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
             else:
                 level_num = level.replace('P', '')
                 level_string = f'{level_num} hPa '
-                level_savename = f'{level_num}MB_'
+                level_savename = f'{level_num}MB'
         elif str(level).upper() == 'L0':
             level_string = f'Surface-Based '
             level_savename = f'SB'
         else:
             level_string = ''
-            level_savename = ''
+            level_savename = '{level}'
     elif str(verif_type).lower() in ['sfc', 'conus_sfc', 'polar_sfc', 'mrms', 'metar']:
         if 'Z' in str(level):
             if str(level).upper() == 'Z0':
                 if str(var_long_name_key).upper() in ['MLSP', 'MSLET', 'MSLMA', 'PRMSL']:
                     level_string = ''
-                    level_savename = ''
+                    level_savename = '{level}'
                 else:
                     level_string = 'Surface '
-                    level_savename = 'SFC_'
+                    level_savename = 'SFC'
             else:
                 level_num = level.replace('Z', '')
                 if var_savename in ['TSOIL', 'SOILW']:
                     level_string = f'{level_num}-cm '
-                    level_savename = f'{level_num}CM_'
+                    level_savename = f'{level_num}CM'
                 else:
                     level_string = f'{level_num}-m '
-                    level_savename = f'{level_num}M_'
+                    level_savename = f'{level_num}M'
         elif 'L' in str(level) or 'A' in str(level):
             level_string = ''
-            level_savename = ''
+            level_savename = '{level}'
         else:
             level_string = f'{level} '
-            level_savename = f'{level}_'
-    elif str(verif_type).lower() in ['ccpa']:
+            level_savename = f'{level}'
+    elif str(verif_type).lower() in ['ccpa', 'mrms']:
         if 'A' in str(level):
             level_num = level.replace('A', '')
             level_string = f'{level_num}-hour '
-            level_savename = f'{level_num}H_'
+            level_savename = f'{level_num}H'
         else:
             level_string = f''
-            level_savename = f''
+            level_savename = f'{level}'
     else:
         level_string = f'{level}'
-        level_savename = f'{level}_'
+        level_savename = f'{level}'
     if metric2_name is not None:
         title1 = f'{metric1_string} and {metric2_string}'
     else:
@@ -1005,7 +1015,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         fcst_thresholds_save_phrase = ''.join([
             f'{opt_letter}{fcst_thresh_label}' 
             for fcst_thresh_label in requested_fcst_thresh_labels
-        ])
+        ]).replace('.','p')
     if obs_thresh_on:
         obs_thresholds_phrase = ', '.join([
             f'obs{opt}{obs_thresh_label}' 
@@ -1014,7 +1024,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         obs_thresholds_save_phrase = ''.join([
             f'obs{opt_letter}{obs_thresh_label}' 
             for obs_thresh_label in requested_obs_thresh_labels
-        ])
+        ]).replace('.','p')
     if fcst_thresh_on:
         if units:
             title2 = (f'{level_string}{var_long_name} ({fcst_thresholds_phrase}'
@@ -1103,10 +1113,11 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
     elif obs_thresh_on:
         save_name+=f'_{str(obs_thresholds_save_phrase).lower()}'
     save_name+=f'.{str(var_savename).lower()}'
-    save_name+=f'_{str(level_savename).lower()}'
-    save_name+=f'.{time_period_savename}'
+    if level_savename:
+        save_name+=f'_{str(level_savename).lower()}'
+    save_name+=f'.{str(time_period_savename).lower()}'
     save_name+=f'.{plot_info}'
-    save_name+=f'.{str(domain).lower()}'
+    save_name+=f'.{str(domain_save_string).lower()}'
     
     if save_header:
         save_name = f'{save_header}.'+save_name
@@ -1357,7 +1368,7 @@ def main():
             if (FCST_LEVELS[l] not in var_specs['fcst_var_levels'] 
                     or OBS_LEVELS[l] not in var_specs['obs_var_levels']):
                 e = (f"The requested variable/level combination is not valid: "
-                     + f"{requested_var}/{level}")
+                     + f"{requested_var}/{fcst_level}")
                 logger.warning(e)
                 continue
             for domain in DOMAINS:

@@ -92,7 +92,7 @@ graphics = {
                         }
                     },
                 }
-            }
+            },
             'mrms':{
                 'namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr':{
                     'threshold_average':{

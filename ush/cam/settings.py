@@ -23,9 +23,9 @@ class Toggle():
             'display_averages': False, # display mean statistic for each model, averaged across the dimension of the independent variable
             'sample_equalization': True, # equalize samples along each value of the independent variable where data exist
             'keep_shared_events_only': False, # functional for time_series only.
-            'clear_prune_directory': False, # remove the intermediate directory created to store pruned data files temporarily
-            'plot_logo_left': False,
-            'plot_logo_right': False,
+            'clear_prune_directory': True, # remove the intermediate directory created to store pruned data files temporarily
+            'plot_logo_left': True,
+            'plot_logo_right': True,
             'zoom_logo_left': 1.0, 
             'zoom_logo_right': 1.0,
         }
@@ -805,97 +805,367 @@ class Reference():
         to this dictionary.  Add keys and values, not forgetting to include
         a comma at the end of any new lines.
         '''
-        self.domain_translator = {'NHX': 'Northern Hemisphere 20N-80N',
-                                  'SHX': 'Southern Hemisphere 20S-80S',
-                                  'TRO': 'Tropics 20S-20N',
-                                  'PNA': 'Pacific North America',
-                                  'N60': '60N-90N',
-                                  'S60': '60S-90S',
-                                  'North_Pacific': 'Northern Pacific Ocean',
-                                  'NPO': 'Northern Pacific Ocean',
-                                  'South_Pacific': 'Southern Pacific Ocean',
-                                  'SPO': 'Southern Pacific Ocean',
-                                  'Equatorial_Pacific': 'Equatorial Pacific Ocean',
-                                  'North_Atlantic': 'Northern Atlantic Ocean',
-                                  'NAO': 'Northern Atlantic Ocean',
-                                  'South_Atlantic': 'Southern Atlantic Ocean',
-                                  'SAO': 'Southern Atlantic Ocean',
-                                  'Equatorial_Atlantic': 'Equatorial Atlantic Ocean',
-                                  'Indian': 'Indian Ocean',
-                                  'Southern': 'Southern Ocean',
-                                  'Mediterranean': 'Mediterranean Sea',
-                                  'NH': 'Northern Hemisphere 20N-90N',
-                                  'SH': 'Southern Hemisphere 20S-90S',
-                                  'AR2': 'AR2',
-                                  'ASIA': 'Asia',
-                                  'AUNZ': 'Australia and New Zealand',
-                                  'NAMR': 'North America',
-                                  'NHM': 'Northern Hemisphere',
-                                  'NPCF': 'North Pacific Ocean',
-                                  'SHM': 'Southern Hemisphere',
-                                  'TRP': 'TRP',
-                                  'G002': 'Global',
-                                  'G003': 'Global',
-                                  'Global': 'Global',
-                                  'G130': 'CONUS - NCEP Grid 130',
-                                  'G211': 'CONUS - NCEP Grid 211',
-                                  'G221': 'CONUS - NCEP Grid 221',
-                                  'G236': 'CONUS - NCEP Grid 236',
-                                  'G223': 'CONUS - NCEP Grid 223',
-                                  'CONUS': 'CONUS',
-                                  'POLAR': 'Polar 60-90 N/S',
-                                  'ARCTIC': 'Arctic',
-                                  'Arctic': 'Arctic Ocean',
-                                  'Antarctic': 'Antarctic Ocean',
-                                  'EAST': 'Eastern US',
-                                  'CONUS_East': 'Eastern US',
-                                  'WEST': 'Western US',
-                                  'CONUS_West': 'Western US',
-                                  'CONUS_Central': 'Central US',
-                                  'CONUS_South': 'Southern US',
-                                  'NWC': 'Northwest Coast',
-                                  'PacificNW': 'Pacific Northwest',
-                                  'SWC': 'Southwest Coast',
-                                  'PacificSW': 'Pacific Southwest',
-                                  'NMT': 'Northern Mountain Region',
-                                  'NRockies': 'Northern Rocky Mountains', 
-                                  'GRB': 'Great Basin',
-                                  'GreatBasin': 'Great Basin',
-                                  'SMT': 'Southern Mountain Region',
-                                  'SRockies': 'Southern Rocky Mountains',
-                                  'SWD': 'Southwest Desert',
-                                  'Mezquital': 'Mezquital',
-                                  'NPL': 'Northern Plains',
-                                  'NPlains': 'Northern Plains',
-                                  'CPlains': 'Central Plains',
-                                  'SPL': 'Southern Plains',
-                                  'SPlains': 'Southern Plains',
-                                  'Prairie': 'Prairie',
-                                  'GreatLakes': 'Great Lakes',
-                                  'MDW': 'Midwest',
-                                  'LMV': 'Lower Mississippi Valley',
-                                  'APL': 'Appalachians',
-                                  'Appalachia': 'Appalachia',
-                                  'NorthAtlantic': 'Northeast',
-                                  'MidAtlantic': 'Mid-Atlantic',
-                                  'NEC': 'Northeast Coast',
-                                  'SEC': 'Southeast Coast',
-                                  'Southeast': 'Southeast',
-                                  'Southwest': 'Southwest',
-                                  'GMC': 'Gulf of Mexico Coast',
-                                  'DeepSouth': 'Deep South',
-                                  'Alaska': 'Alaska',
-                                  'NAK': 'Northern Alaska',
-                                  'SAK': 'Southern Alaska',
-                                  'Hawaii': 'Hawaii',
-                                  'PuertoRico': 'Puerto Rico',
-                                  'Guam': 'Guam',
-                                  'FireWx': 'Fire Weather Nest',
-                                  'SEA_ICE': 'Global - Sea Ice',
-                                  'SEA_ICE_FREE': 'Global - Sea Ice Free',
-                                  'SEA_ICE_POLAR': 'Polar - Sea Ice',
-                                  'SEA_ICE_FREE_POLAR': ('Polar - Sea Ice'
-                                                         + ' Free')}
+        self.domain_translator = {'NHX': {
+                                      'long_name': 'Northern Hemisphere 20N-80N',
+                                      'save_name': 'NHX',
+                                  },
+                                  'SHX': {
+                                      'long_name': 'Southern Hemisphere 20S-80S',
+                                      'save_name': 'SHX',
+                                  },
+                                  'TRO': {
+                                      'long_name': 'Tropics 20S-20N',
+                                      'save_name': 'TRO',
+                                  },
+                                  'PNA': {
+                                      'long_name': 'Pacific North America',
+                                      'save_name': 'PNA',
+                                  },
+                                  'N60': {
+                                      'long_name': '60N-90N',
+                                      'save_name': 'N60',
+                                  },
+                                  'S60': {
+                                      'long_name': '60S-90S',
+                                      'save_name': 'S60',
+                                  },
+                                  'North_Pacific': {
+                                      'long_name': 'Northern Pacific Ocean',
+                                      'save_name': 'North_Pacific',
+                                  },
+                                  'NPO': {
+                                      'long_name': 'Northern Pacific Ocean',
+                                      'save_name': 'NPO',
+                                  },
+                                  'South_Pacific': {
+                                      'long_name': 'Southern Pacific Ocean',
+                                      'save_name': 'South_Pacific',
+                                  },
+                                  'SPO': {
+                                      'long_name': 'Southern Pacific Ocean',
+                                      'save_name': 'SPO',
+                                  },
+                                  'Equatorial_Pacific': {
+                                      'long_name': 'Equatorial Pacific Ocean',
+                                      'save_name': 'Equatorial_Pacific',
+                                  },
+                                  'North_Atlantic': {
+                                      'long_name': 'Northern Atlantic Ocean',
+                                      'save_name': 'North_Atlantic',
+                                  },
+                                  'NAO': {
+                                      'long_name': 'Northern Atlantic Ocean',
+                                      'save_name': 'NAO',
+                                  },
+                                  'South_Atlantic': {
+                                      'long_name': 'Southern Atlantic Ocean',
+                                      'save_name': 'South_Atlantic',
+                                  },
+                                  'SAO': {
+                                      'long_name': 'Southern Atlantic Ocean',
+                                      'save_name': 'SAO',
+                                  },
+                                  'Equatorial_Atlantic': {
+                                      'long_name': 'Equatorial Atlantic Ocean',
+                                      'save_name': 'Equatorial_Atlantic',
+                                  },
+                                  'Indian': {
+                                      'long_name': 'Indian Ocean',
+                                      'save_name': 'Indian',
+                                  },
+                                  'Southern': {
+                                      'long_name': 'Southern Ocean',
+                                      'save_name': 'Southern',
+                                  },
+                                  'Mediterranean': {
+                                      'long_name': 'Mediterranean Sea',
+                                      'save_name': 'Mediterranean',
+                                  },
+                                  'NH': {
+                                      'long_name': 'Northern Hemisphere 20N-90N',
+                                      'save_name': 'NH',
+                                  },
+                                  'SH': {
+                                      'long_name': 'Southern Hemisphere 20S-90S',
+                                      'save_name': 'SH',
+                                  },
+                                  'AR2': {
+                                      'long_name': 'AR2',
+                                      'save_name': 'AR2',
+                                  },
+                                  'ASIA': {
+                                      'long_name': 'Asia',
+                                      'save_name': 'ASIA',
+                                  },
+                                  'AUNZ': {
+                                      'long_name': 'Australia and New Zealand',
+                                      'save_name': 'AUNZ',
+                                  },
+                                  'NAMR': {
+                                      'long_name': 'North America',
+                                      'save_name': 'NAMR',
+                                  },
+                                  'NHM': {
+                                      'long_name': 'Northern Hemisphere',
+                                      'save_name': 'NHM',
+                                  },
+                                  'NPCF': {
+                                      'long_name': 'North Pacific Ocean',
+                                      'save_name': 'NPCF',
+                                  },
+                                  'SHM': {
+                                      'long_name': 'Southern Hemisphere',
+                                      'save_name': 'SHM',
+                                  },
+                                  'TRP': {
+                                      'long_name': 'TRP',
+                                      'save_name': 'TRP',
+                                  },
+                                  'G002': {
+                                      'long_name': 'Global',
+                                      'save_name': 'G002',
+                                  },
+                                  'G003': {
+                                      'long_name': 'Global',
+                                      'save_name': 'G003',
+                                  },
+                                  'Global': {
+                                      'long_name': 'Global',
+                                      'save_name': 'Global',
+                                  },
+                                  'G130': {
+                                      'long_name': 'CONUS - NCEP Grid 130',
+                                      'save_name': 'G130',
+                                  },
+                                  'G211': {
+                                      'long_name': 'CONUS - NCEP Grid 211',
+                                      'save_name': 'G211',
+                                  },
+                                  'G221': {
+                                      'long_name': 'CONUS - NCEP Grid 221',
+                                      'save_name': 'G221',
+                                  },
+                                  'G236': {
+                                      'long_name': 'CONUS - NCEP Grid 236',
+                                      'save_name': 'G236',
+                                  },
+                                  'G223': {
+                                      'long_name': 'CONUS - NCEP Grid 223',
+                                      'save_name': 'G223',
+                                  },
+                                  'CONUS': {
+                                      'long_name': 'CONUS',
+                                      'save_name': 'buk_conus',
+                                  },
+                                  'POLAR': {
+                                      'long_name': 'Polar 60-90 N/S',
+                                      'save_name': 'POLAR',
+                                  },
+                                  'ARCTIC': {
+                                      'long_name': 'Arctic',
+                                      'save_name': 'ARCTIC',
+                                  },
+                                  'Arctic': {
+                                      'long_name': 'Arctic Ocean',
+                                      'save_name': 'Arctic',
+                                  },
+                                  'Antarctic': {
+                                      'long_name': 'Antarctic Ocean',
+                                      'save_name': 'Antarctic',
+                                  },
+                                  'EAST': {
+                                      'long_name': 'Eastern US',
+                                      'save_name': 'EAST',
+                                  },
+                                  'CONUS_East': {
+                                      'long_name': 'Eastern US',
+                                      'save_name': 'buk_conus_e',
+                                  },
+                                  'WEST': {
+                                      'long_name': 'Western US',
+                                      'save_name': 'WEST',
+                                  },
+                                  'CONUS_West': {
+                                      'long_name': 'Western US',
+                                      'save_name': 'buk_conus_w',
+                                  },
+                                  'CONUS_Central': {
+                                      'long_name': 'Central US',
+                                      'save_name': 'buk_conus_c',
+                                  },
+                                  'CONUS_South': {
+                                      'long_name': 'Southern US',
+                                      'save_name': 'buk_conus_s',
+                                  },
+                                  'NWC': {
+                                      'long_name': 'Northwest Coast',
+                                      'save_name': 'NWC',
+                                  },
+                                  'PacificNW': {
+                                      'long_name': 'Pacific Northwest',
+                                      'save_name': 'buk_pnw',
+                                  },
+                                  'SWC': {
+                                      'long_name': 'Southwest Coast',
+                                      'save_name': 'SWC',
+                                  },
+                                  'PacificSW': {
+                                      'long_name': 'Pacific Southwest',
+                                      'save_name': 'buk_psw',
+                                  },
+                                  'NMT': {
+                                      'long_name': 'Northern Mountain Region',
+                                      'save_name': 'NMT',
+                                  },
+                                  'NRockies': {
+                                      'long_name': 'Northern Rocky Mountains', 
+                                      'save_name': 'buk_nrk',
+                                  },
+                                  'GRB': {
+                                      'long_name': 'Great Basin',
+                                      'save_name': 'GRB',
+                                  },
+                                  'GreatBasin': {
+                                      'long_name': 'Great Basin',
+                                      'save_name': 'buk_grb',
+                                  },
+                                  'SMT': {
+                                      'long_name': 'Southern Mountain Region',
+                                      'save_name': 'SMT',
+                                  },
+                                  'SRockies': {
+                                      'long_name': 'Southern Rocky Mountains',
+                                      'save_name': 'buk_srk',
+                                  },
+                                  'SWD': {
+                                      'long_name': 'Southwest Desert',
+                                      'save_name': 'SWD',
+                                  },
+                                  'Mezquital': {
+                                      'long_name': 'Mezquital',
+                                      'save_name': 'buk_mez',
+                                  },
+                                  'NPL': {
+                                      'long_name': 'Northern Plains',
+                                      'save_name': 'NPL',
+                                  },
+                                  'NPlains': {
+                                      'long_name': 'Northern Plains',
+                                      'save_name': 'buk_npl',
+                                  },
+                                  'CPlains': {
+                                      'long_name': 'Central Plains',
+                                      'save_name': 'buk_cpl',
+                                  },
+                                  'SPL': {
+                                      'long_name': 'Southern Plains',
+                                      'save_name': 'SPL',
+                                  },
+                                  'SPlains': {
+                                      'long_name': 'Southern Plains',
+                                      'save_name': 'buk_spl',
+                                  },
+                                  'Prairie': {
+                                      'long_name': 'Prairie',
+                                      'save_name': 'buk_pra',
+                                  },
+                                  'GreatLakes': {
+                                      'long_name': 'Great Lakes',
+                                      'save_name': 'buk_grlk',
+                                  },
+                                  'MDW': {
+                                      'long_name': 'Midwest',
+                                      'save_name': 'MDW',
+                                  },
+                                  'LMV': {
+                                      'long_name': 'Lower Mississippi Valley',
+                                      'save_name': 'LMV',
+                                  },
+                                  'APL': {
+                                      'long_name': 'Appalachians',
+                                      'save_name': 'APL',
+                                  },
+                                  'Appalachia': {
+                                      'long_name': 'Appalachia',
+                                      'save_name': 'buk_apl',
+                                  },
+                                  'NorthAtlantic': {
+                                      'long_name': 'Northeast',
+                                      'save_name': 'buk_ne',
+                                  },
+                                  'MidAtlantic': {
+                                      'long_name': 'Mid-Atlantic',
+                                      'save_name': 'buk_matl',
+                                  },
+                                  'NEC': {
+                                      'long_name': 'Northeast Coast',
+                                      'save_name': 'NEC',
+                                  },
+                                  'SEC': {
+                                      'long_name': 'Southeast Coast',
+                                      'save_name': 'SEC',
+                                  },
+                                  'Southeast': {
+                                      'long_name': 'Southeast',
+                                      'save_name': 'buk_se',
+                                  },
+                                  'Southwest': {
+                                      'long_name': 'Southwest',
+                                      'save_name': 'buk_sw',
+                                  },
+                                  'GMC': {
+                                      'long_name': 'Gulf of Mexico Coast',
+                                      'save_name': 'GMC',
+                                  },
+                                  'DeepSouth': {
+                                      'long_name': 'Deep South',
+                                      'save_name': 'buk_ds',
+                                  },
+                                  'Alaska': {
+                                      'long_name': 'Alaska',
+                                      'save_name': 'alaska',
+                                  },
+                                  'NAK': {
+                                      'long_name': 'Northern Alaska',
+                                      'save_name': 'NAK',
+                                  },
+                                  'SAK': {
+                                      'long_name': 'Southern Alaska',
+                                      'save_name': 'NAK',
+                                  },
+                                  'Hawaii': {
+                                      'long_name': 'Hawaii',
+                                      'save_name': 'hawaii',
+                                  },
+                                  'PuertoRico': {
+                                      'long_name': 'Puerto Rico',
+                                      'save_name': 'prico',
+                                  },
+                                  'Guam': {
+                                      'long_name': 'Guam',
+                                      'save_name': 'guam',
+                                  },
+                                  'FireWx': {
+                                      'long_name': 'Fire Weather Nest',
+                                      'save_name': 'firewx',
+                                  },
+                                  'SEA_ICE': {
+                                      'long_name': 'Global - Sea Ice',
+                                      'save_name': 'SEA_ICE',
+                                  },
+                                  'SEA_ICE_FREE': {
+                                      'long_name': 'Global - Sea Ice Free',
+                                      'save_name': 'SEA_ICE_FREE',
+                                  },
+                                  'SEA_ICE_POLAR': {
+                                      'long_name': 'Polar - Sea Ice',
+                                      'save_name': 'SEA_ICE_POLAR',
+                                  },
+                                  'SEA_ICE_FREE_POLAR': {
+                                      'long_name': 'Polar - Sea Ice Free',
+                                      'save_name': 'SEA_ICE_FREE_POLAR',
+                                  },
+        }
         self.linetype_cols = {'FHO':['TOTAL','F_RATE','H_RATE','O_RATE'],
                               'CTC':['TOTAL','FY_OY','FY_ON','FN_OY','FN_ON'],
                               'CTS':['TOTAL','BASER','BASER_NCL','BASER_NCU',
@@ -1877,7 +2147,7 @@ class Reference():
                                     'obs_var_options': '',
                                     'plot_group':'cape'},
                         'HPBL': {'fcst_var_names': ['HGT','HPBL'],
-                                 'fcst_var_levels': ['L0'],
+                                 'fcst_var_levels': ['L0','PBL'],
                                  'fcst_var_thresholds': '',
                                  'fcst_var_options': '',
                                  'obs_var_names': ['HPBL'],
@@ -1979,7 +2249,7 @@ class Reference():
                                     'obs_var_options': '',
                                     'plot_group':'cape'},
                         'HPBL': {'fcst_var_names': ['HGT','HPBL'],
-                                 'fcst_var_levels': ['L0'],
+                                 'fcst_var_levels': ['L0','PBL'],
                                  'fcst_var_thresholds': '<=500, >=2000',
                                  'fcst_var_options': '',
                                  'obs_var_names': ['HPBL'],
@@ -2192,7 +2462,7 @@ class Reference():
                     ],
                     'var_dict': {
                         'TCDC': {'fcst_var_names': ['TCDC'],
-                                 'fcst_var_levels': ['L0'],
+                                 'fcst_var_levels': ['L0','TOTAL'],
                                  'fcst_var_thresholds': '',
                                  'fcst_var_options': '',
                                  'obs_var_names': ['TCDC'],
@@ -3027,8 +3297,8 @@ class Reference():
             kt_vals = np.array(mps_vals)*1.94384449412
             return kt_vals
         def gpm_to_kft(gpm_vals):
-            kft_vals = (np.array(gpm_vals)/304.8).round()
+            kft_vals = (np.array(gpm_vals)/304.8).round(decimals=2)
             return kft_vals
         def m_to_mi(m_vals):
-            mi_vals = (np.array(m_vals)/1609.34).round()
+            mi_vals = (np.array(m_vals)/1609.34).round(decimals=2)
             return mi_vals

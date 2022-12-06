@@ -14,6 +14,9 @@
 import os
 import re
 from datetime import datetime, timedelta as td
+from cam_plots_grid2obs_graphx_defs import graphics as graphics_g2o
+from cam_plots_precip_graphx_defs import graphics as graphics_pcp
+import cam_util as cutil
 
 print(f"BEGIN: {os.path.basename(__file__)}")
 
@@ -45,6 +48,8 @@ if VERIF_CASE == "precip":
         start_date_dt = vdate_dt - td(hours=fhr_end_max)
         VERIF_TYPE = os.environ['VERIF_TYPE']
         OBSNAME = os.environ['OBSNAME']
+    elif STEP == 'plots':
+        all_eval_periods = cutil.get_all_eval_periods(graphics_pcp)
 elif VERIF_CASE == "grid2obs":
     if STEP == 'prep':
         NEST = os.environ['NEST']
@@ -56,6 +61,8 @@ elif VERIF_CASE == "grid2obs":
         start_date_dt = vdate_dt - td(hours=fhr_end_max)
         VERIF_TYPE = os.environ['VERIF_TYPE']
         OBSNAME = os.environ['OBSNAME']
+    elif STEP == 'plots':
+        all_eval_periods = cutil.get_all_eval_periods(graphics_g2o)
 if STEP == 'stats':
     job_type = os.environ['job_type']
 
@@ -91,9 +98,6 @@ if STEP == 'stats':
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather2'))
 if STEP == 'plots':
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'plotting_job_scripts'))
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'data'))
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'out'))
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'out', 'logs'))
 for job_scripts_dir in job_scripts_dirs:
     if not os.path.exists(job_scripts_dir):
         print(f"Creating job script directory: {job_scripts_dir}")
@@ -277,6 +281,7 @@ elif STEP == 'stats':
             date_dt+=td(days=1)
 elif STEP == 'plots':
     if VERIF_CASE == 'grid2obs':
+
         working_output_base_dir = os.path.join(
             DATA, VERIF_CASE
         )
@@ -285,14 +290,23 @@ elif STEP == 'plots':
             working_output_base_dir, 'data'
         ))
         working_dir_list.append(os.path.join(
-            working_output_base_dir, 'logs'
+            working_output_base_dir, 'out'
         ))
         working_dir_list.append(os.path.join(
-            working_output_base_dir, 'out'
+            working_output_base_dir, 'out', 'logs'
         ))
         COMOUT_dir_list.append(os.path.join(
             COMOUT, 
         ))
+        for plot_group in [
+                'aq', 'aviation', 'cape', 'ceil_vis', 'precip', 
+                'radar', 'rtofs_sfc', 'sfc_upper'
+            ]:
+            for eval_period in all_eval_periods:
+                working_dir_list.append(os.path.join(
+                    working_output_base_dir, 'out', str(plot_group).lower(), 
+                    str(eval_period).lower()
+                ))
     if VERIF_CASE == 'precip':
         working_output_base_dir = os.path.join(
             DATA, VERIF_CASE
@@ -302,14 +316,20 @@ elif STEP == 'plots':
             working_output_base_dir, 'data'
         ))
         working_dir_list.append(os.path.join(
-            working_output_base_dir, 'logs'
+            working_output_base_dir, 'out'
         ))
         working_dir_list.append(os.path.join(
-            working_output_base_dir, 'out'
+            working_output_base_dir, 'out', 'logs'
         ))
         COMOUT_dir_list.append(os.path.join(
             COMOUT, 
         ))
+        for plot_group in ['precip', 'radar', 'rtofs_sfc', 'sfc_upper']:
+            for eval_period in all_eval_periods:
+                working_dir_list.append(os.path.join(
+                    working_output_base_dir, 'out', str(plot_group).lower(), 
+                    str(eval_period).lower()
+                ))
 # Create working output and COMOUT directories
 for working_dir in working_dir_list:
     if not os.path.exists(working_dir):

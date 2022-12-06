@@ -9,6 +9,19 @@
 import numpy as np
 import subprocess
 
+def get_all_eval_periods(graphics):
+    all_eval_periods = []
+    for component in graphics:                                                               
+        for verif_case in graphics[component]:                                                 
+            for verif_type in graphics[component][verif_case]:                                     
+                verif_type_dict = graphics[component][verif_case][verif_type]
+                for models in verif_type_dict:
+                    for plot_type in verif_type_dict[models]:           
+                        all_eval_periods.append(
+                            verif_type_dict[models][plot_type]['EVAL_PERIODS']
+                        )
+    return np.unique(np.array(all_eval_periods))
+
 def get_fhr_start(vhour, acc, fhr_incr, min_ihour):
     fhr_start = (
         float(vhour) + float(min_ihour)

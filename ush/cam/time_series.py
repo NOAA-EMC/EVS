@@ -572,6 +572,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     else:
         handles = []
         labels = []
+    n_mods = 0
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -579,6 +580,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             )
         else:
             model_plot_name = model_list[m]
+        if str(model_list[m]) not in pivot_metric1:
+            continue
         y_vals_metric1 = pivot_metric1[str(model_list[m])].values
         y_vals_metric1_mean = np.nanmean(y_vals_metric1)
         if metric2_name is not None:
@@ -614,10 +617,11 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 else:
                     y_vals_metric_min = np.nanmin(y_vals_metric1)
                     y_vals_metric_max = np.nanmax(y_vals_metric1)
-            if m == 0:
+            if n_mods == 0:
                 y_mod_min = y_vals_metric_min
                 y_mod_max = y_vals_metric_max
                 counts = pivot_counts[str(model_list[m])].values
+                n_mods+=1
             else:
                 if math.isinf(y_mod_min):
                     y_mod_min = y_vals_metric_min
@@ -764,6 +768,10 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         for y in [-5,-4,-3,-2,-1,0,1,2,3,4,5]
     ]).flatten()
     round_to_nearest_categories = y_range_categories/20.
+    if math.isinf(y_min):
+        y_min = y_min_limit
+    if math.isinf(y_max):
+        y_max = y_max_limit
     y_range = y_max-y_min
     round_to_nearest =  round_to_nearest_categories[
         np.digitize(y_range, y_range_categories[:-1])
@@ -866,9 +874,11 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     domain = df['VX_MASK'].tolist()[0]
     var_savename = df['FCST_VAR'].tolist()[0]
     if domain in list(domain_translator.keys()):
-        domain_string = domain_translator[domain]
+        domain_string = domain_translator[domain]['long_name']
+        domain_save_string = domain_translator[domain]['save_name']
     else:
         domain_string = domain
+        domain_save_string = domain
     '''
     date_hours_string = ' '.join([
         f'{date_hour:02d}Z,' for date_hour in date_hours
@@ -898,47 +908,47 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             else:
                 level_num = level.replace('P', '')
                 level_string = f'{level_num} hPa '
-                level_savename = f'{level_num}MB_'
+                level_savename = f'{level_num}MB'
         elif str(level).upper() == 'L0':
             level_string = f'Surface-Based '
             level_savename = f'SB'
         else:
             level_string = ''
-            level_savename = ''
+            level_savename = '{level}'
     elif str(verif_type).lower() in ['sfc', 'conus_sfc', 'polar_sfc', 'metar']:
         if 'Z' in str(level):
             if str(level).upper() == 'Z0':
                 if str(var_long_name_key).upper() in ['MLSP', 'MSLET', 'MSLMA', 'PRMSL']:
                     level_string = ''
-                    level_savename = ''
+                    level_savename = '{level}'
                 else:
                     level_string = 'Surface '
-                    level_savename = 'SFC_'
+                    level_savename = 'SFC'
             else:
                 level_num = level.replace('Z', '')
                 if var_savename in ['TSOIL', 'SOILW']:
                     level_string = f'{level_num}-cm '
-                    level_savename = f'{level_num}CM_'
+                    level_savename = f'{level_num}CM'
                 else:
                     level_string = f'{level_num}-m '
-                    level_savename = f'{level_num}M_'
+                    level_savename = f'{level_num}M'
         elif 'L' in str(level) or 'A' in str(level):
             level_string = ''
-            level_savename = ''
+            level_savename = '{level}'
         else:
             level_string = f'{level} '
-            level_savename = f'{level}_'
-    elif str(verif_type).lower() in ['ccpa']:
+            level_savename = f'{level}'
+    elif str(verif_type).lower() in ['ccpa', 'mrms']:
         if 'A' in str(level):
             level_num = level.replace('A', '')
             level_string = f'{level_num}-hour '
-            level_savename = f'{level_num}H_'
+            level_savename = f'{level_num}H'
         else:
             level_string = f''
             level_savename = f''
     else:
         level_string = f'{level}'
-        level_savename = f'{level}_'
+        level_savename = f'{level}'
     if metric2_name is not None:
         title1 = f'{metric1_string} and {metric2_string}'
     else:
@@ -950,7 +960,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         thresholds_save_phrase = ''.join([
             f'{opt_letter}{thresh_label}' 
             for thresh_label in requested_thresh_labels
-        ])
+        ]).replace('.','p')
         if units:
             title2 = (f'{level_string}{var_long_name} ({thresholds_phrase}'
                       + f' {units}), {domain_string}')
@@ -1022,10 +1032,12 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     else:
         time_period_savename = f'{eval_period}'
 
-    plot_info = (
-        f'timeseries'
-        + f'_{str(date_type).lower()}{str(date_hours_savename).lower()}'
-        + f'_{str(frange_save_string).lower()}'
+    plot_info = '_'.join(
+        [item for item in [
+            f'timeseries',
+            f'{str(date_type).lower()}{str(date_hours_savename).lower()}',
+            f'{str(frange_save_string).lower()}',
+        ] if item]
     )
     save_name = (f'{str(metric1_name).lower()}')
     if metric2_name is not None:
@@ -1033,10 +1045,11 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     if thresh and '' not in thresh:
         save_name+=f'_{str(thresholds_save_phrase).lower()}'
     save_name+=f'.{str(var_savename).lower()}'
-    save_name+=f'_{str(level_savename).lower()}'
-    save_name+=f'.{time_period_savename}'
+    if level_savename:
+        save_name+=f'_{str(level_savename).lower()}'
+    save_name+=f'.{str(time_period_savename).lower()}'
     save_name+=f'.{plot_info}'
-    save_name+=f'.{str(domain).lower()}'
+    save_name+=f'.{str(domain_save_string).lower()}'
 
     if save_header:
         save_name = f'{save_header}.'+save_name

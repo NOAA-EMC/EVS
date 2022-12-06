@@ -122,10 +122,10 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                 frange_phrase = 's '+', '.join([str(f) for f in flead])
             else:
                 frange_phrase = ' '+', '.join([str(f) for f in flead])
-            frange_save_phrase = '-'.join([str(f) for f in flead])
+            frange_save_phrase = '-'.join([str(f).zfill(2) for f in flead])
         else:
             frange_phrase = f's {flead[0]}'+u'\u2013'+f'{flead[-1]}'
-            frange_save_phrase = f'{flead[0]}_TO_F{flead[-1]}'
+            frange_save_phrase = f'{flead[0]:02d}_TO_F{flead[-1]:02d}'
         frange_string = f'Forecast Hour{frange_phrase}'
         frange_save_string = f'F{frange_save_phrase}'
         df = df[df['LEAD_HOURS'].isin(flead)]
@@ -175,10 +175,20 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         logger.error(e)
         logger.error("Quitting ...")
         raise ValueError(e+"\nQuitting ...")
-
-    df_thresh_symbol, df_thresh_letter = list(
-        zip(*[plot_util.format_thresh(t) for t in df['FCST_THRESH']])
-    )
+    if df.empty:
+        logger.warning(f"Empty Dataframe. Continuing onto next plot...")
+        plt.close(num)
+        logger.info("========================================")
+        return None
+    try:
+        df_thresh_symbol, df_thresh_letter = list(
+            zip(*[plot_util.format_thresh(t) for t in df['FCST_THRESH']])
+        )
+    except ValueError as e:
+        print(f"ERROR: {e}")
+        print(f"df['FCST_THRESH']:{df['FCST_THRESH']}")
+        print(f"In list form: {[t for t in df['FCST_THRESH']]}")
+        sys.exit(1)
     df['FCST_THRESH_SYMBOL'] = df_thresh_symbol
     df['FCST_THRESH_VALUE'] = [str(item)[2:] for item in df_thresh_letter]
     requested_thresh_value = [
@@ -644,6 +654,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             for l, label in enumerate(labels)
         ]
     
+    n_mods = 0
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -651,6 +662,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             )
         else:
             model_plot_name = model_list[m]
+        if str(model_list[m]) not in pivot_metric1:
+            continue
         x_vals = [
             pivot_metric1[str(model_list[m])].values[i] 
             for i in thresh_argsort
@@ -792,9 +805,11 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     domain = df['VX_MASK'].tolist()[0]
     var_savename = df['FCST_VAR'].tolist()[0]
     if domain in list(domain_translator.keys()):
-        domain_string = domain_translator[domain]
+        domain_string = domain_translator[domain]['long_name']
+        domain_save_string = domain_translator[domain]['save_name']
     else:
         domain_string = domain
+        domain_save_string = domain
     date_hours_string = plot_util.get_name_for_listed_items(
         [f'{date_hour:02d}' for date_hour in date_hours],
         ', ', '', 'Z', 'and ', ''
@@ -830,49 +845,49 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             level_savename = f'SB'
         else:
             level_string = ''
-            level_savename = ''
+            level_savename = '{level}'
     elif (str(verif_type).lower() 
             in ['sfc', 'conus_sfc', 'polar_sfc', 'mrms', 'metar']):
         if 'Z' in str(level):
             if str(level).upper() == 'Z0':
                 if str(var_long_name_key).upper() in ['MLSP', 'MSLET', 'MSLMA', 'PRMSL']:
                     level_string = ''
-                    level_savename = ''
+                    level_savename = '{level}'
                 else:
                     level_string = 'Surface '
-                    level_savename = 'SFC_'
+                    level_savename = 'SFC'
             else:
                 level_num = level.replace('Z', '')
                 if var_savename in ['TSOIL', 'SOILW']:
                     level_string = f'{level_num}-cm '
-                    level_savename = f'{level_num}CM_'
+                    level_savename = f'{level_num}CM'
                 else:
                     level_string = f'{level_num}-m '
-                    level_savename = f'{level_num}M_'
+                    level_savename = f'{level_num}M'
         elif 'L' in str(level) or 'A' in str(level):
             level_string = ''
-            level_savename = ''
+            level_savename = '{level}'
         else:
             level_string = f'{level} '
-            level_savename = f'{level}_'
-    elif str(verif_type).lower() in ['ccpa']:
+            level_savename = f'{level}'
+    elif str(verif_type).lower() in ['ccpa','mrms']:
         if 'A' in str(level):
             level_num = level.replace('A', '')
             level_string = f'{level_num}-hour '
-            level_savename = f'{level_num}H_'
+            level_savename = f'{level_num}H'
         else:
             level_string = f''
-            level_savename = f''
+            level_savename = f'{level}'
     else:
         level_string = f'{level} '
-        level_savename = f'{level}_'
+        level_savename = f'{level}'
     thresholds_phrase = ', '.join([
         f'{opt}{thresh_label}' for thresh_label in thresh_labels
     ])
     thresholds_save_phrase = ''.join([
         f'{opt_letter}{thresh_label}' 
         for thresh_label in requested_thresh_labels
-    ])
+    ]).replace('.','p')
     thresholds_string = f'Forecast Thresholds {thresholds_phrase}'
     title1 = f'Performance Diagram'
     if not units:
@@ -935,18 +950,22 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     else:
         time_period_savename = f'{eval_period}'
 
-    plot_info = (
-        f'perfdiag_{str(date_type).lower()}{str(date_hours_savename).lower()}'
-        + f'_{str(frange_save_string).lower()}'
+    plot_info = '_'.join(
+        [item for item in [
+            f'perfdiag',
+            f'{str(date_type).lower()}{str(date_hours_savename).lower()}',
+            f'{str(frange_save_string).lower()}',
+        ] if item]
     )
     save_name = (
         f'ctc'
     )
     save_name+=f'.{str(var_savename).lower()}'
-    save_name+=f'_{str(level_savename).lower()}'
-    save_name+=f'.{time_period_savename}'
+    if level_savename:
+        save_name+=f'_{str(level_savename).lower()}'
+    save_name+=f'.{str(time_period_savename).lower()}'
     save_name+=f'.{plot_info}'
-    save_name+=f'.{str(domain).lower()}'
+    save_name+=f'.{str(domain_save_string).lower()}'
 
     if save_header:
         save_name = f'{save_header}.'+save_name

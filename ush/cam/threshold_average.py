@@ -107,10 +107,10 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
                 frange_phrase = 's '+', '.join([str(f) for f in flead])
             else:
                 frange_phrase = ' '+', '.join([str(f) for f in flead])
-            frange_save_phrase = '-'.join([str(f) for f in flead])
+            frange_save_phrase = '-'.join([str(f).zfill(2) for f in flead])
         else:
             frange_phrase = f's {flead[0]}'+u'\u2013'+f'{flead[-1]}'
-            frange_save_phrase = f'{flead[0]}_TO_F{flead[-1]}'
+            frange_save_phrase = f'{flead[0]:02d}_TO_F{flead[-1]:02d}'
         frange_string = f'Forecast Hour{frange_phrase}'
         frange_save_string = f'F{frange_save_phrase}'
         df = df[df['LEAD_HOURS'].isin(flead)]
@@ -417,6 +417,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     incr = incrs[incr_idx-1]
     y_min = y_min_limit
     y_max = y_max_limit
+    n_mods = 0
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -424,6 +425,8 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
             )
         else:
             model_plot_name = model_list[m]
+        if str(model_list[m]) not in pivot_metric:
+            continue
         y_vals_metric = pivot_metric[str(model_list[m])].values
         y_vals_metric = np.array([y_vals_metric[i] for i in x_vals_argsort])
         y_vals_metric_mean = np.nanmean(y_vals_metric)
@@ -441,9 +444,10 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
             else:
                 y_vals_metric_min = np.nanmin(y_vals_metric)
                 y_vals_metric_max = np.nanmax(y_vals_metric)
-            if m == 0:
+            if n_mods == 0:
                 y_mod_min = y_vals_metric_min
                 y_mod_max = y_vals_metric_max
+                n_mods+=1
             else:
                 if math.isinf(y_mod_min):
                     y_mod_min = y_vals_metric_min
@@ -566,6 +570,10 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         for y in [-5,-4,-3,-2,-1,0,1,2,3,4,5]
     ]).flatten()
     round_to_nearest_categories = y_range_categories/20.
+    if math.isinf(y_min):
+        y_min = y_min_limit
+    if math.isinf(y_max):
+        y_max = y_max_limit
     y_range = y_max-y_min
     round_to_nearest =  round_to_nearest_categories[
         np.digitize(y_range, y_range_categories[:-1])
@@ -648,9 +656,11 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     domain = df['VX_MASK'].tolist()[0]
     var_savename = df['FCST_VAR'].tolist()[0]
     if domain in list(domain_translator.keys()):
-        domain_string = domain_translator[domain]
+        domain_string = domain_translator[domain]['long_name']
+        domain_save_string = domain_translator[domain]['save_name']
     else:
         domain_string = domain
+        domain_save_string = domain
     date_hours_string = plot_util.get_name_for_listed_items(
         [f'{date_hour:02d}' for date_hour in date_hours],
         ', ', '', 'Z', 'and ', ''
@@ -681,7 +691,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
             else:
                 level_num = level.replace('P', '')
                 level_string = f'{level_num} hPa '
-                level_savename = f'{level_num}MB_'
+                level_savename = f'{level_num}MB'
         elif str(level).upper() == 'L0':
             level_string = f'Surface-Based '
             level_savename = f'SB'
@@ -696,33 +706,33 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
                     level_savename = ''
                 else:
                     level_string = 'Surface '
-                    level_savename = 'SFC_'
+                    level_savename = 'SFC'
             else:
                 level_num = level.replace('Z', '')
                 if var_savename in ['TSOIL', 'SOILW']:
                     level_string = f'{level_num}-cm '
-                    level_savename = f'{level_num}CM_'
+                    level_savename = f'{level_num}CM'
                 else:
                     level_string = f'{level_num}-m '
-                    level_savename = f'{level_num}M_'
+                    level_savename = f'{level_num}M'
         elif 'L' in str(level) or 'A' in str(level):
             level_string = ''
             level_savename = ''
 
         else:
             level_string = f'{level} '
-            level_savename = f'{level}_'
-    elif str(verif_type).lower() in ['ccpa']:
+            level_savename = f'{level}'
+    elif str(verif_type).lower() in ['ccpa', 'mrms']:
         if 'A' in str(level):
             level_num = level.replace('A', '')
             level_string = f'{level_num}-hour '
-            level_savename = f'{level_num}H_'
+            level_savename = f'{level_num}H'
         else:
             level_string = f''
             level_savename = f''
     else:
         level_string = f'{level} '
-        level_savename = f'{level}_'
+        level_savename = f'{level}'
     title1 = f'{metric_string}'
     if units:
         title2 = f'{level_string}{var_long_name} ({units}), {domain_string}'
@@ -788,19 +798,20 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     else:
         time_period_savename = f'{eval_period}'
 
-    plot_info = (
-        f'threshmean'
-        + f'_{str(date_type).lower()}{str(date_hours_savename).lower()}'
-        + f'_{str(frange_save_string).lower()}'
+    plot_info = '_'.join(
+        [item for item in [
+            f'threshmean',
+            f'{str(date_type).lower()}{str(date_hours_savename).lower()}',
+            f'{str(frange_save_string).lower()}',
+        ] if item]
     )
-    save_name = (f'{str(metric1_name).lower()}')
-    if metric2_name is not None:
-        save_name+=f'_{str(metric2_name).lower()}'
+    save_name = (f'{str(metric_name).lower()}')
     save_name+=f'.{str(var_savename).lower()}'
-    save_name+=f'_{str(level_savename).lower()}'
-    save_name+=f'.{time_period_savename}'
+    if level_savename:
+        save_name+=f'_{str(level_savename).lower()}'
+    save_name+=f'.{str(time_period_savename).lower()}'
     save_name+=f'.{plot_info}'
-    save_name+=f'.{str(domain).lower()}'
+    save_name+=f'.{str(domain_save_string).lower()}'
 
     if save_header:
         save_name = f'{save_header}.'+save_name
