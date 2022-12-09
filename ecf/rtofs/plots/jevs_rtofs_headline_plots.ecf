@@ -1,4 +1,4 @@
-#PBS -N jevs_rtofs_plots
+#PBS -N jevs_rtofs_headline_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -33,6 +33,7 @@ module list
 export NET=evs
 export STEP=plots
 export COMPONENT=rtofs
+export RUN=headline
 
 # set up VDATE and COMIN and COMOUT
 export VDATE=$(date --date="2 days ago" +%Y%m%d)
@@ -46,13 +47,13 @@ export USHevs=$EVS/ush/$COMPONENT
 export CONFIGevs=$EVS/parm/metplus_config/$COMPONENT
 
 # call j-job
-$EVS/jobs/$COMPONENT/$STEP/JEVS_RTOFS_PLOTS
+$EVS/jobs/$COMPONENT/$STEP/JEVS_RTOFS_HEADLINE_PLOTS
 
 #%include <tail.h>
 #%manual
 ######################################################################
-# Purpose: The job and task scripts work together to create plots
-#          for RTOFS forecast verification using MET/METplus.
+# Purpose: The job and task scripts work together to create headline
+#    score plots for RTOFS forecast verifications using MET/METplus.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
 ######################################################################
 #%end
