@@ -839,7 +839,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job_file = os.path.join(plot_jobs_dir, 'job'+str(njobs))
                 print("Creating job script: "+job_file)
                 job = open(job_file, 'w')
-                job.write('#!/bin/sh\n')
+                job.write('#!/bin/bash\n')
                 job.write('set -x\n')
                 job.write('\n')
                 # Set any environment variables for special cases

@@ -324,6 +324,12 @@ for MODEL in MODELNAME:
                                                   arch_anl_file,
                                                   'anl',
                                                   'full')
+                    if os.path.exists(arch_anl_file):
+                        ecmwf_f000_file = gda_util.format_filler(
+                            arch_fcst_file_format, CDATE_dt, CDATE_dt,
+                            '00', {'model': MODEL}
+                        )
+                        shutil.copy2(arch_anl_file, ecmwf_f000_file)
                 elif MODEL == 'ukmet':
                     gda_util.prep_prod_ukmet_file(prod_anl_file,
                                                   arch_anl_file,

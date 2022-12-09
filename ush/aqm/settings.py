@@ -23,6 +23,10 @@ class Toggle():
             'sample_equalization': True, # equalize samples along each value of the independent variable where data exist
             'keep_shared_events_only': False, # functional for time_series only.
             'clear_prune_directory': True, # remove the intermediate directory created to store pruned data files temporarily
+            'plot_logo_left': True,
+            'plot_logo_right': True,
+            'zoom_logo_left': 1.0,
+            'zoom_logo_right': 1.0,
         }
 
 class Templates():
@@ -57,7 +61,18 @@ class Templates():
         Example: 
         "{RUN_CASE_LOWER}/{MODEL}/{valid?fmt=%Y%m}/{MODEL}_{valid?fmt=%Y%m%d}*"
         '''
-        self.output_base_template = "{MODEL}_atmos_grid2obs_v{valid?fmt=%Y%m%d}.stat"
+        self.output_base_template = "evs.stats.{MODEL}.atmos.grid2obs.v{valid?fmt=%Y%m%d}.stat"
+
+class Paths():
+    def __init__(self):
+       '''
+       Custom paths to left and right logos.
+
+       Referenced if plot_logo_left and plot_logo_right, in the Toggle class,
+       are set to True
+       '''
+       self.logo_left_path = "/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/logos/noaa.png"
+       self.logo_right_path = "/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/logos/nws.png"
 
 class Presets():
     def __init__(self):
@@ -1814,7 +1829,11 @@ class Reference():
                     'vx_mask_list' : [
                         'CONUS', 'G130', 'G214', 'G221', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC',
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB',
-                        'LMV', 'GMC', 'APL', 'NAK', 'SAK'
+                        'LMV', 'GMC', 'APL', 'NAK', 'SAK',
+                        'CONUS_East', 'CONUS_West', 'CONUS_South', 'CONUS_Central', 'Appalachia',
+                        'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 'Mezquital', 'MidAtlantic',
+                        'NorthAtlantic', 'NPlains', 'NRockies', 'PacificNW', 'PacificSW',
+                        'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies'
                     ],
                     'var_dict': {
                         'OZCON1': {'fcst_var_names': ['OZCON1'],
@@ -1844,7 +1863,11 @@ class Reference():
                     'vx_mask_list' : [
                         'CONUS', 'G130', 'G214', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GMC', 'APL', 'NAK', 'SAK'
+                        'LMV', 'GMC', 'APL', 'NAK', 'SAK',
+                        'CONUS_East', 'CONUS_West', 'CONUS_South', 'CONUS_Central', 'Appalachia',
+                        'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 'Mezquital', 'MidAtlantic',
+                        'NorthAtlantic', 'NPlains', 'NRockies', 'PacificNW', 'PacificSW',
+                        'Prairie', 'Southeast', 'Southwest', 'SPlains', 'SRockies'
                     ],
                     'var_dict': {
                         'OZCON1': {'fcst_var_names': ['OZCON1'],

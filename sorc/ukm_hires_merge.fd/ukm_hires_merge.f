@@ -132,7 +132,19 @@ nrec=-1
 do n=1,np
      jgds(2)=nx; jgds(3)=ny; jgds(9)=resx; jgds(10)=resy 
      jgds(4)=ys(n); jgds(5)=xs(n); jgds(7)=ye(n); jgds(8)=xe(n)
+     !if(nrec.ge.-560 .and. nrec.le.-537) then
+     !    nrec=nrec-1
+     !    goto 10
+     !endif
      call getgb(10,0,mmax,nrec,jpds,jgds,kf,k,kpds,kgds,lb,varp(1,n),iret)
+     !print *, nrec
+     !print *, n
+     !print *, (jpds(k),k=5,7)
+     !print *, (kpds(k),k=5,7)
+     if(kpds(6).eq.7) then
+         nrec=nrec-1
+         goto 10
+     endif
      if(iret.ne.0) goto 100   !reached end of record or incorrect file 
 
 !     write(1,*)
