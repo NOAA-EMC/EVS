@@ -93,7 +93,7 @@ export URL_HEADER=""
 export USH_DIR=$USH_DIR
 export LOGO_DIR=$FIXevs/logos
 # Temporary data storage
-export PRUNE_DIR=$DATA/data/${OBSERVATION}_${RESOLUTION}
+export PRUNE_DIR=$DATA/data/${OBSERVATION}_${NDAYS}_${RESOLUTION}
 mkdir -p $PRUNE_DIR
 # Where plottings are saved for the final tarball
 export SAVE_DIR=$DATAplot
@@ -101,7 +101,7 @@ export SAVE_DIR=$DATAplot
 export OUTPUT_BASE_DIR=$OUTPUT_BASE_DIR
 
 # Logfile settings. Log level options are "DEBUG", "INFO", "WARNING", "ERROR", and "CRITICAL"
-export LOG_METPLUS="${DATA}/logs/${OBSERVATION}_${RESOLUTION}_${PLOT_TYPE}_plotting_${VDATE}.out"
+export LOG_METPLUS="${DATA}/logs/${OBSERVATION}_${NDAYS}_${RESOLUTION}_${PLOT_TYPE}_plotting_${VDATE}.out"
 export LOG_LEVEL="DEBUG"
 # Version of MET listed in the metplus .stat files used to create graphics
 export MET_VERSION="10.1"

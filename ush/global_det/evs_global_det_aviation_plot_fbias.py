@@ -555,8 +555,6 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
 
             y_max = max([y_max] + y_vals)
             y_min = min([y_min] + y_vals)
-            print(y_vals)
-            print("ymin=",y_min," ymax=",y_max)
 
             #mosaic_vals = pivot_metric3[str(model_list[m])].values
             y_mean = np.nanmean(y_vals)

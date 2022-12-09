@@ -46,8 +46,8 @@ module load ip/$ip_ver
 module load netcdf/$netcdf_ver
 module load cfp/$cfp_ver
 
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/$intel_ver
+export HPC_OPT=/apps/ops/prod/libs
+module use /apps/ops/prod/libs/modulefiles/compiler/intel/$intel_ver
 module load intel
 module load gsl
 module load python/$python_ver

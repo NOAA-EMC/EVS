@@ -19,15 +19,12 @@ msg="WAFS g2g verification job HAS BEGUN"
 echo $msg
 
 export OBSERVATION=$1
+export NDAYS=$2
 
 export VALID_END=$VDATE
 export VALID_BEG=`date -d "$VDATE - $NDAYS days" +%Y%m%d`
 
-export DATAplot=$DATA/plot
-mkdir -p $DATAplot
-
 export EVAL_PERIOD="LAST${NDAYS}DAYS"
-eval_period=`echo $EVAL_PERIOD | tr '[:upper:]' '[:lower:]'`
 
 ################################################
 # Part 1: Icing Verification
@@ -105,12 +102,9 @@ for RESOLUTION in $resolutions ; do
 
 done
 
-cd $DATAplot
-tar -cvf $COMOUT/$NET.$STEP.${COMPONENT}.${RUN}.${VERIF_CASE}.$eval_period.v${VDATE}.tar *png
-
 #####################################################################
 # GOOD RUN
-echo "********SCRIPT exevs_global_det_aviation_stats.sh COMPLETED NORMALLY on `date`"
+echo "********SCRIPT exevs_global_det_aviation_plots.sh $1 $2 COMPLETED NORMALLY on `date`"
 exit 0
 #####################################################################
 

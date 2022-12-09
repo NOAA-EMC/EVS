@@ -79,21 +79,34 @@ export USH_DIR=${USH_DIR:-$HOMEevs/ush/$COMPONENT}
 ############################################
 # Execute the script.
 ############################################
-export NDAYS=${NDAYS:-90}
+export DAYS_LIST=${DAYS_LIST:-"90 31"}
 
-export MPIRUN=${MPIRUN:-"mpiexec -np 2 -cpu-bind verbose,core cfp"}
+export DATAplot=$DATA/plot
+mkdir -p $DATAplot
 
+export MPIRUN=${MPIRUN:-"mpiexec -np 4 -cpu-bind verbose,core cfp"}
+
+OBSERVATIONS="GCIP GFS"
 rm wafs_plots.cmdfile
-if [ `echo $MPIRUN | cut -d " " -f1` = 'srun' ] ; then
-    echo 0 $SCRIPTSevs/plots/exevs_global_det_aviation_plots.sh GCIP  >> wafs_plots.cmdfile
-    echo 1 $SCRIPTSevs/plots/exevs_global_det_aviation_plots.sh GFS >> wafs_plots.cmdfile
-else
-    echo $SCRIPTSevs/plots/exevs_global_det_aviation_plots.sh GCIP  >> wafs_plots.cmdfile
-    echo $SCRIPTSevs/plots/exevs_global_det_aviation_plots.sh GFS >> wafs_plots.cmdfile
-    export MP_PGMMODEL=mpmd
-fi
-
+n=0
+for observation in $OBSERVATIONS ; do
+    for ndays in $DAYS_LIST ; do
+	if [ `echo $MPIRUN | cut -d " " -f1` = 'srun' ] ; then
+	    echo $n $SCRIPTSevs/plots/exevs_global_det_aviation_plots.sh $observation $ndays  >> wafs_plots.cmdfile
+	else
+	    echo $SCRIPTSevs/plots/exevs_global_det_aviation_plots.sh $observation $ndays  >> wafs_plots.cmdfile
+	    export MP_PGMMODEL=mpmd
+	fi
+	n=$(( n + 1 ))
+    done
+done
 $MPIRUN wafs_plots.cmdfile
+
+cd $DATAplot
+for ndays in $DAYS_LIST ; do
+    eval_period="last${ndays}days"
+    tar -cvf $COMOUT/$NET.$STEP.${COMPONENT}.${RUN}.${VERIF_CASE}.$eval_period.v${VDATE}.tar *${eval_period}*png
+done
 
 export err=$?; err_chk
 

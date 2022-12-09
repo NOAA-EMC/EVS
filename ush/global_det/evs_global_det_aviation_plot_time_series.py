@@ -700,10 +700,15 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         majorlocator =  mdates.MonthLocator()
         minorLocator = mdates.MonthLocator(bymonthday=[1,15])
         majorFormatter = mdates.ConciseDateFormatter(ax.xaxis.get_major_locator())
-    else:
+    elif ndays >=60:
         majorlocator =  mdates.MonthLocator(bymonthday=[1,15])
         minorLocator = mdates.DayLocator()
         majorFormatter = mdates.DateFormatter('%Y-%m-%d')
+    else:
+        majorlocator =  mdates.DayLocator(bymonthday=range(1,32,3))
+        minorLocator = mdates.DayLocator()
+        majorFormatter = mdates.DateFormatter('%Y-%m-%d')
+
     ax.xaxis.set_major_locator(majorlocator)
     ax.xaxis.set_major_formatter(majorFormatter)
     ax.xaxis.set_minor_locator(minorLocator)
@@ -743,11 +748,12 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     date_hours_string = ' '.join([
         f'{date_hour:02d}Z,' for date_hour in date_hours
     ])
-    '''
     date_hours_string = plot_util.get_name_for_listed_items(
         [f'{date_hour:02d}' for date_hour in date_hours],
         ', ', '', 'Z', 'and ', ''
     )
+    '''
+    date_hours_string = ""
     date_start_string = date_range[0].strftime('%d %b %Y')
     date_end_string = date_range[1].strftime('%d %b %Y')
     if str(verif_type).lower() in ['pres', 'upper_air'] or 'P' in str(level):
@@ -807,7 +813,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             title2 = f'{level_string}{var_long_name} ({units}), {domain_string}'
         else:
             title2 = f'{level_string}{var_long_name} (unitless), {domain_string}'
-    title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
+    title3 = (f'{str(date_type).capitalize()} {date_hours_string}'
               + f'{date_start_string} to {date_end_string}, {frange_string}')
     title_center = '\n'.join([title1, title2, title3])
     ax.set_title(title_center, loc=plotter.title_loc) 
