@@ -246,6 +246,11 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         df, bool_success = plot_util.equalize_samples(logger, df, group_by)
         if not bool_success:
             sample_equalization = False
+        if df.empty:
+            logger.warning(f"Empty Dataframe. Continuing onto next plot...")
+            plt.close(num)
+            logger.info("========================================")
+            return None
     df_groups = df.groupby(group_by)
     # Aggregate unit statistics before calculating metrics
     df_aggregated = df_groups.sum()
@@ -275,7 +280,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     metric_long_names = []
     for metric_name in [metric1_name, metric2_name, metric3_name]:
         stat_output = plot_util.calculate_stat(
-            logger, df_aggregated, str(metric_name).lower()
+            logger, df_aggregated, str(metric_name).lower(), [None, None]
         )
         df_aggregated[str(metric_name).upper()] = stat_output[0]
         metric_long_names.append(stat_output[2])
@@ -283,7 +288,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             ci_output = df_groups.apply(
                 lambda x: plot_util.calculate_bootstrap_ci(
                     logger, bs_method, x, str(metric_name).lower(), bs_nrep,
-                    ci_lev, bs_min_samp
+                    ci_lev, bs_min_samp, [None, None]
                 )
             )
             if any(ci_output['STATUS'] == 1):
@@ -607,7 +612,10 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     units = df['FCST_UNITS'].tolist()[0]
     if units in reference.unit_conversions:
         thresh_labels = [float(tlab) for tlab in thresh_labels]
-        thresh_labels = reference.unit_conversions[units]['formula'](thresh_labels)
+        thresh_labels = reference.unit_conversions[units]['formula'](
+            thresh_labels,
+            rounding=True
+        )
         thresh_diff_categories = np.array([
             [np.power(10., y)]
             for y in [-5,-4,-3,-2,-1,0,1,2,3,4,5]
@@ -845,14 +853,14 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             level_savename = f'SB'
         else:
             level_string = ''
-            level_savename = '{level}'
+            level_savename = f'{level}'
     elif (str(verif_type).lower() 
             in ['sfc', 'conus_sfc', 'polar_sfc', 'mrms', 'metar']):
         if 'Z' in str(level):
             if str(level).upper() == 'Z0':
                 if str(var_long_name_key).upper() in ['MLSP', 'MSLET', 'MSLMA', 'PRMSL']:
                     level_string = ''
-                    level_savename = '{level}'
+                    level_savename = f'{level}'
                 else:
                     level_string = 'Surface '
                     level_savename = 'SFC'
@@ -866,7 +874,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                     level_savename = f'{level_num}M'
         elif 'L' in str(level) or 'A' in str(level):
             level_string = ''
-            level_savename = '{level}'
+            level_savename = f'{level}'
         else:
             level_string = f'{level} '
             level_savename = f'{level}'

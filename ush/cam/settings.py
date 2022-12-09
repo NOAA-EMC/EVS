@@ -3283,22 +3283,76 @@ class Reference():
             },
         }
 
+    '''
+    Each formula in the formulas class needs to have the capability of providing three things.
+    1) Simply, the complete conversion of the input quantity into the output units
+    2) The rounded conversion of the input to the output (e.g., for displaying some thresholds)
+    3) The coefficient and the constant that composes the formula (for converting base stats)
+    '''
     class formulas():
-        def mm_to_in(mm_vals):
-            inch_vals = np.divide(mm_vals, 25.4)
-            return inch_vals
-        def K_to_F(K_vals):
-            F_vals = (((np.array(K_vals)-273.15)*9./5.)+32.).round()
-            return F_vals
-        def C_to_F(C_vals):
-            F_vals = (np.array(C_vals)*9./5.)+32.
-            return F_vals
-        def mps_to_kt(mps_vals):
-            kt_vals = np.array(mps_vals)*1.94384449412
-            return kt_vals
-        def gpm_to_kft(gpm_vals):
-            kft_vals = (np.array(gpm_vals)/304.8).round(decimals=2)
-            return kft_vals
-        def m_to_mi(m_vals):
-            mi_vals = (np.array(m_vals)/1609.34).round(decimals=2)
-            return mi_vals
+        def mm_to_in(mm_vals, rounding=False, return_terms=False):
+            if return_terms:
+                M = np.divide(1., 25.4)
+                C = 0.
+                return M, C
+            else:
+                if rounding:
+                    inch_vals = np.divide(mm_vals, 25.4).round(decimals=2)
+                else:
+                    inch_vals = np.divide(mm_vals, 25.4)
+                return inch_vals
+        def K_to_F(K_vals, rounding=False, return_terms=False):
+            if return_terms:
+                M = np.divide(9., 5.)
+                C = ((-273.15)*9./5.)+32.
+                return M, C
+            else:
+                if rounding:
+                    F_vals = (((np.array(K_vals)-273.15)*9./5.)+32.).round()
+                else:
+                    F_vals = ((np.array(K_vals)-273.15)*9./5)+32.
+                return F_vals
+        def C_to_F(C_vals, rounding=False, return_terms=False):
+            if return_terms:
+                M = np.divide(9., 5.)
+                C = 32.
+                return M, C
+            else:
+                if rounding:
+                    F_vals = ((np.array(C_vals)*9./5.)+32.).round()
+                else:
+                    F_vals = (np.array(C_vals)*9./5.)+32.
+                return F_vals
+        def mps_to_kt(mps_vals, rounding=False, return_terms=False):
+            if return_terms:
+                M = 1.94384449412
+                C = 0.
+                return M, C
+            else:
+                if rounding:
+                    kt_vals = (np.multiply(mps_vals, 1.94384449412)).round()
+                else:
+                    kt_vals = np.multiply(mps_vals, 1.94384449412)
+                return kt_vals
+        def gpm_to_kft(gpm_vals, rounding=False, return_terms=False):
+            if return_terms:
+                M = np.divide(1., 304.8)
+                C = 0.
+                return M, C
+            else:
+                if rounding:
+                    kft_vals = (np.divide(gpm_vals, 304.8)).round(decimals=2)
+                else:
+                    kft_vals = np.divide(gpm_vals, 304.8)
+                return kft_vals
+        def m_to_mi(m_vals, rounding=False, return_terms=False):
+            if return_terms:
+                M = np.divide(1., 1609.34)
+                C = 0.
+                return M, C
+            else:
+                if rounding:
+                    mi_vals = (np.divide(m_vals, 1609.34)).round(decimals=2)
+                else:
+                    mi_vals = np.divide(m_vals, 1609.34)
+                return mi_vals

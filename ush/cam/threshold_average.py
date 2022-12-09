@@ -223,6 +223,11 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         df, bool_success = plot_util.equalize_samples(logger, df, group_by)
         if not bool_success:
             sample_equalization = False
+        if df.empty:
+            logger.warning(f"Empty Dataframe. Continuing onto next plot...")
+            plt.close(num)
+            logger.info("========================================")
+            return None
     df_groups = df.groupby(group_by)
     # Aggregate unit statistics before calculating metrics
     if str(line_type).upper() == 'CTC':
@@ -252,9 +257,24 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         logger.info("========================================")
         return None
 
+    units = df['FCST_UNITS'].tolist()[0]
+    metrics_using_var_units = [
+        'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
+        'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR',
+        'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
+    ]
+    coef, const = (None, None)
+    if units in reference.unit_conversions:
+        if str(metric_name).upper() in metrics_using_var_units:
+            coef, const = (
+                reference.unit_conversions[units]['formula'](
+                    None,
+                    return_terms=True
+                )
+            )
     # Calculate desired metric
     stat_output = plot_util.calculate_stat(
-        logger, df_aggregated, str(metric_name).lower()
+        logger, df_aggregated, str(metric_name).lower(), [coef, const]
     )
     df_aggregated[str(metric_name).upper()] = stat_output[0]
     metric_long_name = stat_output[2]
@@ -262,7 +282,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         ci_output = df_groups.apply(
             lambda x: plot_util.calculate_bootstrap_ci(
                 logger, bs_method, x, str(metric_name).lower(), bs_nrep,
-                ci_lev, bs_min_samp
+                ci_lev, bs_min_samp, [coef, const]
             )
         )
         if any(ci_output['STATUS'] == 1):
@@ -395,11 +415,12 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         pivot_ci_upper = pivot_ci_upper[pivot_ci_upper.index.isin(indices_in_common)]
         if sample_equalization:
             pivot_counts = pivot_counts[pivot_counts.index.isin(indices_in_common)]
-    units = df['FCST_UNITS'].tolist()[0]
-    #pivot_metric = 
     x_vals = pivot_metric.index.astype(float).tolist()
     if units in reference.unit_conversions:
-        x_vals = reference.unit_conversions[units]['formula'](x_vals)
+        x_vals = reference.unit_conversions[units]['formula'](
+            x_vals,
+            rounding=True
+        )
         units = reference.unit_conversions[units]['convert_to']
     if units == '-':
         units = ''
@@ -592,11 +613,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
             var_long_name_key = 'HPBL'
     var_long_name = variable_translator[var_long_name_key]
-    metrics_using_var_units = [
-        'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
-        'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR',
-        'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
-    ]
     if str(metric_name).upper() in metrics_using_var_units:
         if units:
             ylabel = f'{var_long_name} ({units})'
@@ -697,13 +713,13 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
             level_savename = f'SB'
         else:
             level_string = ''
-            level_savename = ''
+            level_savename = f'{level}'
     elif str(verif_type).lower() in ['sfc', 'conus_sfc', 'polar_sfc', 'mrms','metar']:
         if 'Z' in str(level):
             if str(level).upper() == 'Z0':
                 if str(var_long_name_key).upper() in ['MLSP', 'MSLET', 'MSLMA', 'PRMSL']:
                     level_string = ''
-                    level_savename = ''
+                    level_savename = f'{level}'
                 else:
                     level_string = 'Surface '
                     level_savename = 'SFC'
@@ -717,7 +733,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
                     level_savename = f'{level_num}M'
         elif 'L' in str(level) or 'A' in str(level):
             level_string = ''
-            level_savename = ''
+            level_savename = f'{level}'
 
         else:
             level_string = f'{level} '
@@ -729,7 +745,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
             level_savename = f'{level_num}H'
         else:
             level_string = f''
-            level_savename = f''
+            level_savename = f'{level}'
     else:
         level_string = f'{level} '
         level_savename = f'{level}'

@@ -166,6 +166,11 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         df, bool_success = plot_util.equalize_samples(logger, df, group_by)
         if not bool_success:
             sample_equalization = False
+        if df.empty:
+            logger.warning(f"Empty Dataframe. Continuing onto next plot...")
+            plt.close(num)
+            logger.info("========================================")
+            return None
     df_groups = df.groupby(group_by)
     # Aggregate unit statistics before calculating metrics
     if str(line_type).upper() == 'CTC':
@@ -194,12 +199,36 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         logger.info("========================================")
         return None
 
+    coef, const = (None, None)
+    units = df['FCST_UNITS'].tolist()[0]
+    metrics_using_var_units = [
+        'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
+        'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR',
+        'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
+    ]
+    if units in reference.unit_conversions:
+        if metric2_name is not None:
+            if (str(metric1_name).upper() in metrics_using_var_units
+                    and str(metric2_name).upper() in metrics_using_var_units):
+                coef, const = (
+                    reference.unit_conversions[units]['formula'](
+                        None,
+                        return_terms=True
+                    )
+                )
+        elif str(metric1_name).upper() in metrics_using_var_units:
+            coef, const = (
+                reference.unit_conversions[units]['formula'](
+                    None,
+                    return_terms=True
+                )
+            )
     # Calculate desired metrics
     metric_long_names = []
     for stat in [metric1_name, metric2_name]:
         if stat:
             stat_output = plot_util.calculate_stat(
-                logger, df_aggregated, str(stat).lower()
+                logger, df_aggregated, str(stat).lower(), [coef, const]
             )
             df_aggregated[str(stat).upper()] = stat_output[0]
             metric_long_names.append(stat_output[2])
@@ -207,7 +236,7 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
                 ci_output = df_groups.apply(
                     lambda x: plot_util.calculate_bootstrap_ci(
                         logger, bs_method, x, str(stat).lower(), bs_nrep,
-                        ci_lev, bs_min_samp
+                        ci_lev, bs_min_samp, [coef, const]
                     )
                 )
                 if any(ci_output['STATUS'] == 1):
@@ -723,16 +752,10 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
             var_long_name_key = 'HPBL'
     var_long_name = variable_translator[var_long_name_key]
-    units = df['FCST_UNITS'].tolist()[0]
     if units in reference.unit_conversions:
         units = reference.unit_conversions[units]['convert_to']
     if units == '-':
         units = ''
-    metrics_using_var_units = [
-        'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
-        'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR',
-        'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
-    ]
     if metric2_name is not None:
         metric1_string, metric2_string = metric_long_names
         if (str(metric1_name).upper() in metrics_using_var_units 
