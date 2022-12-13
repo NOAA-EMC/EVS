@@ -1,0 +1,75 @@
+
+
+Testing ecf directory:
+  /lfs/h2/emc/vpppg/noscrub/$USER/EVS/ecf/cam.dev/stats
+
+  There are 2 ecf files:
+   jevs_href_grid2obs_stats.ecf
+   jevs_href_precip_stats.ecf
+ 
+   These 2 ecf jobs have no relationship, so they can be run at same time
+
+
+Submit jobs:
+  qsub jevs_href_grid2obs_stats.ecf
+  qsub jevs_href_precip_stats.ecf 
+
+  Note: since "#PBS -j oe" is set, the stdout file will be in the submit directory
+   /lfs/h2/emc/vpppg/noscrub/$USER/EVS/ecf/cam.dev/stats
+
+The running directory (i.e. $DATA) will be in /lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd:
+  
+  evs_href_grid2obs_stats.$jobid for both jevs_href_cnv_stats.ecf and jevs_href_grid2obs_stats.ecf
+  evs_href_precip_stats.$jobid
+
+  jobid is automatically created ($$) during the run
+
+
+The running has 4 stages for each job
+
+ (0) Check validation data, including observation data and HREF ensemble member files and ensemble product files
+      If observation data is missing, the run will stop 
+      If any href member(s) is(are) missing, the run will stop
+      If href member files are missing for all forecast hours, the run will stop
+
+    IF none of above happen, go following stages
+
+ (1) Run METplus to process PB2NC prepbufr files (grid2obs) or PCP_Combine 3hr, 24hr  CCPA/MRMS  data and href's 3hr and 24hr APCP data files (precip)
+
+     After finished, 
+     the prepbufr files are in  $DATE/prepbufr.vdate sub-directory  
+     the pcp_combine files are in $DATA/ccpa.vdate, href.initdate1, href.initdate2, href.initdate3, href.initdate4, and href.initdate5
+     Since there will be 5 days and 26 href member's 6hr APCP need to be generated, it will take a while to complete this procedure 
+
+ (2) Run METplus to generate stat files
+ 
+     For grid2obs 
+       All of output stat files will be in the $DATA/grid2obs
+     For precip 
+       All of output stat files will be in  the $DATA/precip
+       in which there are several sub-directories. Each sub-directory is corresponding to one parallel job
+ 
+    In each job's directory, there are 3 sub directories
+          logs, stats, and tmp
+       
+    The small stat files are stored in the stats sub-directory.  For grid2obs and precip , the small stat files have 3 types:
+          (1) ensemble_stat*.stat
+          (2) point_stat*CNV*.stat 
+          (3) point_stat*MEAN*.stat (grid2obs) or grid_stat*MEAN*.stat (precip)
+          (4) point_stat*PROB*.stat (grid2obs) or grid_stat*PROB*.stat (precip)
+
+    The small stat files are stored in directory /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/cam/atmos.$VDATE/href
+       grid2obs and precip, respectively 
+       
+
+ (3) Combine the small stat files to a large stat file
+
+   The small stat files  are then combined (by StatAnalysis tool) into a large stat file
+   called href_grid2obs_v$DATE.stat, and href_precip_v$VDATE.stat
+
+   This large stat file is stored in the directory 
+      /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/cam/href.$VDATE
+
+  The StatAnalysis METplus output_base directory is $DATA/gather, in which all of running info are stored  
+  
+
