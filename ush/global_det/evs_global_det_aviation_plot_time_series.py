@@ -68,7 +68,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                      xlabel: str = 'Valid Date', date_type: str = 'VALID', 
                      date_hours: list = [0,6,12,18], verif_type: str = 'pres', 
                      save_dir: str = '.', requested_var: str = 'HGT', 
-                     line_type: str = 'SL1L2', dpi: int = 300, 
+                     line_type: str = 'SL1L2', dpi: int = 100, 
                      confidence_intervals: bool = False,
                      bs_nrep: int = 5000, bs_method: str = 'MATCHED_PAIRS',
                      ci_lev: float = .95, bs_min_samp: int = 30,
@@ -816,7 +816,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     title3 = (f'{str(date_type).capitalize()} {date_hours_string}'
               + f'{date_start_string} to {date_end_string}, {frange_string}')
     title_center = '\n'.join([title1, title2, title3])
-    ax.set_title(title_center, loc=plotter.title_loc) 
+    title_pad = 13
+    ax.set_title(title_center, loc=plotter.title_loc, pad=title_pad)
     logger.info("... Plotting complete.")
 
     # Adding logo
