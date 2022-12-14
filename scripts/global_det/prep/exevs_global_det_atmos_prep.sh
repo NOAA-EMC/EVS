@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ###############################################################################
 # Name of Script: exevs_global_det_atmos_prep.sh
 # Purpose of Script: This script does prep for any global deterministic model
