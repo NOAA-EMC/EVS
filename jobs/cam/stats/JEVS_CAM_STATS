@@ -5,74 +5,72 @@
 ########################################
 set -xa
 
-# ###################################
-# SET SHELL PROCESSING VARIABLES
-# ###################################
-export PS4='$SECONDS + '
-date
 
-###########################################################
-# obtain unique LSF id (jobid) and make temp directories
-###########################################################
-export pid=$$
-export DATA_IN=${DATA_IN:-$DATAROOT}
-export DATA=$DATA_IN/${jobid}
+export cycle=t${cyc}z 
 
-rm -rf $DATA
-mkdir -p $DATA
-cd $DATA
-
-####################################
-# Determine Job Output Name on System
-####################################
-export pgmout="OUTPUT.${pid}"
-
-export cycle=t${cyc}z
-
-##################################################
-# SAVEGES  - Copy Files From TMPDIR to $GESdir
-# SENDECF  - Flag Events on ecFLOW
-# SENDCOM  - Copy Files From TMPDIR to $COMOUT
-# SENDDBN  - Issue DBNet Client Calls
-##################################################
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
-export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
+export DATA_IN=${DATA_IN:-$DATAROOT}
+export pid=$$
+jobid=evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$
+export DATA=${DATA:-$DATA_IN/${jobid}}
+mkdir -p $DATA
+cd $DATA
+
+setpdy.sh
+. $DATA/PDY
+
+if [ $MODELNAME = href ] ; then
+ if [ $VERIF_CASE = grid2obs ] ; then
+   export VDATE=${VDATE:-$PDYm1}
+ elif [ $VERIF_CASE = precip ] ; then
+   export VDATE=${VDATE:-$PDYm2}
+ fi
+fi
+
+
+export COMIN=${COMIN:-$(compath.py  $NET/$evs_ver)}
+export COMINhref=${COMINhref:-$(compath.py  href/$href_ver)}
+export COMINprepbufr=${COMINprepbufr:-$(compath.py  obsproc/${obsproc_ver})}
+export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
+export COMINsnow=$DCOMROOT
+export COMINmrms=$DCOMROOT/ldmdata/obs/upperair/mrms/alaska/MultiSensorQPE
+
+
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}/$STEP/$COMPONENT
+mkdir -p $COMOUT
+
+export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
+export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
+mkdir -p $COMOUTfinal $COMOUTsmall
+
+
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXvevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
+export FIXevs=${FIXevs:-/lfs/h1/ops/prod/packages/evs.${evs_ver}/fix}
+export MASKS=${MASKS:-$FIXevs/masks} 
 
-# Run setpdy and initialize PDY variables
-setpdy.sh
-. ./PDY
+export pid=$$
+jobid=evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$
+export DATA=${DATA:-$DATA_IN/${jobid}}
+mkdir -p $DATA
+cd $DATA
 
-export vday=$PDYm1
 
-# Define COMIN/COMOUT variables:
+export pgmout="OUTPUT.${pid}"
 
-export COMIN=${COMIN:-$(compath.py evs/${evs_ver}/)}
-export COMOUT=${COMOUT:-$(compath.py -o evs/${evs_ver}/${prog}/${net})}
-export COMNAM=${COMN:-$(compath.py nam/${nam_ver})}
-export COMMOD=${COMMOD:-$(compath.py ${mod}/${mod_ver})}
-
-#######################################################################
-# Execute the script.
-#######################################################################
-
-$HOMEevs/scripts/${net}/exevs_${mod}_${sys}_${prog}.sh
-
-cat $pgmout
+$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 
 msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
+postmsg "$msg"
 
 if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT
   rm -rf $DATA
 fi
 
-}
