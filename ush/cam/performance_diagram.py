@@ -122,23 +122,23 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                 frange_phrase = 's '+', '.join([str(f) for f in flead])
             else:
                 frange_phrase = ' '+', '.join([str(f) for f in flead])
-            frange_save_phrase = '-'.join([str(f).zfill(2) for f in flead])
+            frange_save_phrase = '-'.join([str(f).zfill(3) for f in flead])
         else:
             frange_phrase = f's {flead[0]}'+u'\u2013'+f'{flead[-1]}'
-            frange_save_phrase = f'{flead[0]:02d}_TO_F{flead[-1]:02d}'
+            frange_save_phrase = f'{flead[0]:03d}-F{flead[-1]:03d}'
         frange_string = f'Forecast Hour{frange_phrase}'
         frange_save_string = f'F{frange_save_phrase}'
         df = df[df['LEAD_HOURS'].isin(flead)]
     elif isinstance(flead, tuple):
         frange_string = (f'Forecast Hours {flead[0]:02d}'+u'\u2013'
                          + f'{flead[1]:02d}')
-        frange_save_string = f'F{flead[0]:02d}-F{flead[1]:02d}'
+        frange_save_string = f'F{flead[0]:03d}-F{flead[1]:03d}'
         df = df[
             (df['LEAD_HOURS'] >= flead[0]) & (df['LEAD_HOURS'] <= flead[1])
         ]
     elif isinstance(flead, np.int):
         frange_string = f'Forecast Hour {flead:02d}'
-        frange_save_string = f'F{flead:02d}'
+        frange_save_string = f'F{flead:03d}'
         df = df[df['LEAD_HOURS'] == flead]
     else:
         e1 = f"Invalid forecast lead: \'{flead}\'"
@@ -611,31 +611,42 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         return None
     units = df['FCST_UNITS'].tolist()[0]
     if units in reference.unit_conversions:
-        thresh_labels = [float(tlab) for tlab in thresh_labels]
-        thresh_labels = reference.unit_conversions[units]['formula'](
-            thresh_labels,
-            rounding=True
-        )
-        thresh_diff_categories = np.array([
-            [np.power(10., y)]
-            for y in [-5,-4,-3,-2,-1,0,1,2,3,4,5]
-        ]).flatten()
-        precision_scale_indiv_mult = [
-            thresh_diff_categories[item] 
-            for item in np.digitize(thresh_labels, thresh_diff_categories)
-        ]
-        precision_scale_collective_mult = 100/min(precision_scale_indiv_mult)
-        precision_scale = np.multiply(
-            precision_scale_indiv_mult, precision_scale_collective_mult
-        )
-        thresh_labels = [
-            f'{np.round(tlab)/precision_scale[t]}' 
-            for t, tlab in enumerate(
-                np.multiply(thresh_labels, precision_scale)
+        unit_convert = True
+        var_long_name_key = df['FCST_VAR'].tolist()[0]
+        if str(var_long_name_key).upper() == 'HGT':
+            if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
+                if units in ['m', 'gpm']:
+                    units = 'gpm'
+            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+                unit_convert = False
+            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
+                unit_convert = False
+        if unit_convert:
+            thresh_labels = [float(tlab) for tlab in thresh_labels]
+            thresh_labels = reference.unit_conversions[units]['formula'](
+                thresh_labels,
+                rounding=True
             )
-        ]
-        #thresh_labels = [f'{tlab}' for tlab in thresh_labels]
-        units = reference.unit_conversions[units]['convert_to']
+            thresh_diff_categories = np.array([
+                [np.power(10., y)]
+                for y in [-5,-4,-3,-2,-1,0,1,2,3,4,5]
+            ]).flatten()
+            precision_scale_indiv_mult = [
+                thresh_diff_categories[item] 
+                for item in np.digitize(thresh_labels, thresh_diff_categories)
+            ]
+            precision_scale_collective_mult = 100/min(precision_scale_indiv_mult)
+            precision_scale = np.multiply(
+                precision_scale_indiv_mult, precision_scale_collective_mult
+            )
+            thresh_labels = [
+                f'{np.round(tlab)/precision_scale[t]}' 
+                for t, tlab in enumerate(
+                    np.multiply(thresh_labels, precision_scale)
+                )
+            ]
+            #thresh_labels = [f'{tlab}' for tlab in thresh_labels]
+            units = reference.unit_conversions[units]['convert_to']
     if units == '-':
         units = ''
     f = lambda m,c,ls,lw,ms,mec: plt.plot(
@@ -812,6 +823,10 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     # Title
     domain = df['VX_MASK'].tolist()[0]
     var_savename = df['FCST_VAR'].tolist()[0]
+    if str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+        var_savename = 'HPBL'
+    elif str(df['OBS_VAR'].tolist()[0]).upper() in ['MSLET','MSLMA','PRMSL']:
+        var_savename = 'MSLET'
     if domain in list(domain_translator.keys()):
         domain_string = domain_translator[domain]['long_name']
         domain_save_string = domain_translator[domain]['save_name']
@@ -832,25 +847,25 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     if str(level).upper() in ['CEILING', 'TOTAL', 'PBL']:
         if str(level).upper() == 'CEILING':
             level_string = ''
-            level_savename = ''
+            level_savename = 'L0'
         elif str(level).upper() == 'TOTAL':
             level_string = 'Total '
-            level_savename = ''
+            level_savename = 'L0'
         elif str(level).upper() == 'PBL':
             level_string = ''
-            level_savename = ''
+            level_savename = 'L0'
     elif str(verif_type).lower() in ['pres', 'upper_air', 'raob'] or 'P' in str(level):
         if 'P' in str(level):
             if str(level).upper() == 'P90-0':
                 level_string = f'Mixed-Layer '
-                level_savename = f'ML'
+                level_savename = f'L90'
             else:
                 level_num = level.replace('P', '')
                 level_string = f'{level_num} hPa '
-                level_savename = f'{level_num}MB_'
+                level_savename = f'{level}'
         elif str(level).upper() == 'L0':
             level_string = f'Surface-Based '
-            level_savename = f'SB'
+            level_savename = f'{level}'
         else:
             level_string = ''
             level_savename = f'{level}'
@@ -863,7 +878,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                     level_savename = f'{level}'
                 else:
                     level_string = 'Surface '
-                    level_savename = 'SFC'
+                    level_savename = '{level}'
             else:
                 level_num = level.replace('Z', '')
                 if var_savename in ['TSOIL', 'SOILW']:
@@ -871,7 +886,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                     level_savename = f'{level_num}CM'
                 else:
                     level_string = f'{level_num}-m '
-                    level_savename = f'{level_num}M'
+                    level_savename = f'{level}'
         elif 'L' in str(level) or 'A' in str(level):
             level_string = ''
             level_savename = f'{level}'
@@ -882,7 +897,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         if 'A' in str(level):
             level_num = level.replace('A', '')
             level_string = f'{level_num}-hour '
-            level_savename = f'{level_num}H'
+            level_savename = f'A{level_num.zfill(2)}'
         else:
             level_string = f''
             level_savename = f'{level}'

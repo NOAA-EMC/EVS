@@ -107,23 +107,23 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
                 frange_phrase = 's '+', '.join([str(f) for f in flead])
             else:
                 frange_phrase = ' '+', '.join([str(f) for f in flead])
-            frange_save_phrase = '-'.join([str(f).zfill(2) for f in flead])
+            frange_save_phrase = '-'.join([str(f).zfill(3) for f in flead])
         else:
             frange_phrase = f's {flead[0]}'+u'\u2013'+f'{flead[-1]}'
-            frange_save_phrase = f'{flead[0]:02d}_TO_F{flead[-1]:02d}'
+            frange_save_phrase = f'{flead[0]:03d}-F{flead[-1]:03d}'
         frange_string = f'Forecast Hour{frange_phrase}'
         frange_save_string = f'F{frange_save_phrase}'
         df = df[df['LEAD_HOURS'].isin(flead)]
     elif isinstance(flead, tuple):
         frange_string = (f'Forecast Hours {flead[0]:02d}'
                          + u'\u2013' + f'{flead[1]:02d}')
-        frange_save_string = f'F{flead[0]:02d}-F{flead[1]:02d}'
+        frange_save_string = f'F{flead[0]:03d}-F{flead[1]:03d}'
         df = df[
             (df['LEAD_HOURS'] >= flead[0]) & (df['LEAD_HOURS'] <= flead[1])
         ]
     elif isinstance(flead, np.int):
         frange_string = f'Forecast Hour {flead:02d}'
-        frange_save_string = f'F{flead:02d}'
+        frange_save_string = f'F{flead:03d}'
         df = df[df['LEAD_HOURS'] == flead]
     else:
         e1 = f"Invalid forecast lead: \'{flead}\'"
@@ -265,13 +265,24 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     ]
     coef, const = (None, None)
     if units in reference.unit_conversions:
-        if str(metric_name).upper() in metrics_using_var_units:
-            coef, const = (
-                reference.unit_conversions[units]['formula'](
-                    None,
-                    return_terms=True
+        unit_convert = True
+        var_long_name_key = df['FCST_VAR'].tolist()[0]
+        if str(var_long_name_key).upper() == 'HGT':
+            if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
+                if units in ['m', 'gpm']:
+                    units = 'gpm'
+            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+                unit_convert = False
+            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
+                unit_convert = False
+        if unit_convert:
+            if str(metric_name).upper() in metrics_using_var_units:
+                coef, const = (
+                    reference.unit_conversions[units]['formula'](
+                        None,
+                        return_terms=True
+                    )
                 )
-            )
     # Calculate desired metric
     stat_output = plot_util.calculate_stat(
         logger, df_aggregated, str(metric_name).lower(), [coef, const]
@@ -416,7 +427,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         if sample_equalization:
             pivot_counts = pivot_counts[pivot_counts.index.isin(indices_in_common)]
     x_vals = pivot_metric.index.astype(float).tolist()
-    if units in reference.unit_conversions:
+    if unit_convert:
         x_vals = reference.unit_conversions[units]['formula'](
             x_vals,
             rounding=True
@@ -518,7 +529,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         plt.axhline(y=1, color='black', linestyle='--', linewidth=1, zorder=0)
 
     # Configure axis ticks
-    if units in reference.unit_conversions:
+    if unit_convert:
         x_vals_incr = reference.unit_conversions[units]['formulas'](x_vals)
 
     xticks_min = np.min(x_vals)
@@ -671,6 +682,10 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     # Title
     domain = df['VX_MASK'].tolist()[0]
     var_savename = df['FCST_VAR'].tolist()[0]
+    if str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+        var_savename = 'HPBL'
+    elif str(df['OBS_VAR'].tolist()[0]).upper() in ['MSLET','MSLMA','PRMSL']:
+        var_savename = 'MSLET'
     if domain in list(domain_translator.keys()):
         domain_string = domain_translator[domain]['long_name']
         domain_save_string = domain_translator[domain]['save_name']
@@ -692,25 +707,25 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     if str(level).upper() in ['CEILING', 'TOTAL', 'PBL']:
         if str(level).upper() == 'CEILING':
             level_string = ''
-            level_savename = ''
+            level_savename = 'L0'
         elif str(level).upper() == 'TOTAL':
             level_string = 'Total '
-            level_savename = ''
+            level_savename = 'L0'
         elif str(level).upper() == 'PBL':
             level_string = ''
-            level_savename = ''
+            level_savename = 'L0'
     elif str(verif_type).lower() in ['pres', 'upper_air', 'raob'] or 'P' in str(level):
         if 'P' in str(level):
             if str(level).upper() == 'P90-0':
                 level_string = f'Mixed-Layer '
-                level_savename = f'ML'
+                level_savename = f'L90'
             else:
                 level_num = level.replace('P', '')
                 level_string = f'{level_num} hPa '
-                level_savename = f'{level_num}MB'
+                level_savename = f'{level}'
         elif str(level).upper() == 'L0':
             level_string = f'Surface-Based '
-            level_savename = f'SB'
+            level_savename = f'{level}'
         else:
             level_string = ''
             level_savename = f'{level}'
@@ -722,7 +737,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
                     level_savename = f'{level}'
                 else:
                     level_string = 'Surface '
-                    level_savename = 'SFC'
+                    level_savename = '{level}'
             else:
                 level_num = level.replace('Z', '')
                 if var_savename in ['TSOIL', 'SOILW']:
@@ -730,7 +745,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
                     level_savename = f'{level_num}CM'
                 else:
                     level_string = f'{level_num}-m '
-                    level_savename = f'{level_num}M'
+                    level_savename = f'{level}'
         elif 'L' in str(level) or 'A' in str(level):
             level_string = ''
             level_savename = f'{level}'
@@ -742,7 +757,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         if 'A' in str(level):
             level_num = level.replace('A', '')
             level_string = f'{level_num}-hour '
-            level_savename = f'{level_num}H'
+            level_savename = f'A{level_num.zfill(2)}'
         else:
             level_string = f''
             level_savename = f'{level}'

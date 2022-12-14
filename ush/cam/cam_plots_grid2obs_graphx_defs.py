@@ -53,7 +53,7 @@ graphics = {
                         'VARIABLES':{
                             'sl1l2':{
                                 'HGT':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
                                     'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
                                     'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
@@ -62,7 +62,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'True',
                                 },
                                 'TMP':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
                                     'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
                                     'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
@@ -71,7 +71,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'True',
                                 },
                                 'UGRD':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
                                     'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
                                     'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
@@ -80,7 +80,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'True',
                                 },
                                 'VGRD':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
                                     'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
                                     'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
@@ -91,7 +91,7 @@ graphics = {
                             },
                             'vl1l2':{
                                 'UGRD_VGRD':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
                                     'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
                                     'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
@@ -116,43 +116,7 @@ graphics = {
                         'VARIABLES':{
                             'sl1l2':{
                                 'HPBL':{
-                                    'STATSs':['bcrmse,bias'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
-                                    'FCST_LEVEL':'PBL',
-                                    'OBS_LEVEL':'L0',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'True',
-                                },
-                            },
-                            'ctc':{
-                                'HPBL':{
-                                    'STATSs':['csi','fbias'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
-                                    'FCST_LEVEL':'PBL',
-                                    'OBS_LEVEL':'L0',
-                                    'FCST_THRESHs':['<=500','>=2000'],
-                                    'OBS_THRESHs':['<=500','>=2000'],
-                                    'CONFIDENCE_INTERVALS':'True',
-                                },
-                            }
-                        }
-                    },
-                    'valid_hour_average':{
-                        'DATE_TYPE':'INIT',
-                        'VALID_BEG':'',
-                        'VALID_END':'',
-                        'INIT_BEG':'',
-                        'INIT_END':'',
-                        'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South,Alaska,Appalachia,CPlains,DeepSouth,GreatLakes,Mezquital,MidAtlantic,NorthAtlantic,NPlains,NRockies,PacificNW,PacificSW,Prairie,Southeast,SPlains,SRockies',
-                        'INTERP':'BILIN',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
-                        'FCST_VALID_HOURS':['0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23'],
-                        'FCST_INIT_HOURS':['0','12'],
-                        'VARIABLES':{
-                            'sl1l2':{
-                                'HPBL':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'PBL',
                                     'OBS_LEVEL':'L0',
@@ -258,7 +222,7 @@ graphics = {
                         'VARIABLES':{
                             'sl1l2':{
                                 'SPFH':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
                                     'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300',
                                     'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300',
@@ -287,7 +251,7 @@ graphics = {
                         'VARIABLES':{
                             'sl1l2':{
                                 'TMP2m':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'Z2',
                                     'OBS_LEVEL':'Z2',
@@ -296,7 +260,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'True',
                                 },
                                 'DPT2m':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'Z2',
                                     'OBS_LEVEL':'Z2',
@@ -305,7 +269,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'True',
                                 },
                                 'RH2m':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'Z2',
                                     'OBS_LEVEL':'Z2',
@@ -314,7 +278,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'True',
                                 },
                                 'MSLP':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'Z0',
                                     'OBS_LEVEL':'Z0',
@@ -323,7 +287,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'True',
                                 },
                                 'UGRD10m':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'Z10',
                                     'OBS_LEVEL':'Z10',
@@ -332,7 +296,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'True',
                                 },
                                 'VGRD10m':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'Z10',
                                     'OBS_LEVEL':'Z10',
@@ -341,7 +305,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'True',
                                 },
                                 'WIND10m':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'Z10',
                                     'OBS_LEVEL':'Z10',
@@ -350,7 +314,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'True',
                                 },
                                 'GUSTsfc':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'Z0',
                                     'OBS_LEVEL':'Z0',
@@ -361,7 +325,7 @@ graphics = {
                             },
                             'vl1l2':{
                                 'UGRD_VGRD10m':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'Z10',
                                     'OBS_LEVEL':'Z10',
@@ -386,7 +350,7 @@ graphics = {
                         'VARIABLES':{
                             'sl1l2':{
                                 'TMP2m':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'Z2',
                                     'OBS_LEVEL':'Z2',
@@ -395,7 +359,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'True',
                                 },
                                 'DPT2m':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'Z2',
                                     'OBS_LEVEL':'Z2',
@@ -404,7 +368,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'True',
                                 },
                                 'RH2m':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'Z2',
                                     'OBS_LEVEL':'Z2',
@@ -413,7 +377,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'True',
                                 },
                                 'MSLP':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'Z0',
                                     'OBS_LEVEL':'Z0',
@@ -422,7 +386,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'True',
                                 },
                                 'UGRD10m':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'Z10',
                                     'OBS_LEVEL':'Z10',
@@ -431,7 +395,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'True',
                                 },
                                 'VGRD10m':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'Z10',
                                     'OBS_LEVEL':'Z10',
@@ -440,7 +404,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'True',
                                 },
                                 'WIND10m':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'Z10',
                                     'OBS_LEVEL':'Z10',
@@ -449,7 +413,7 @@ graphics = {
                                     'CONFIDENCE_INTERVALS':'True',
                                 },
                                 'GUSTsfc':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'Z0',
                                     'OBS_LEVEL':'Z0',
@@ -460,7 +424,7 @@ graphics = {
                             },
                             'vl1l2':{
                                 'UGRD_VGRD10m':{
-                                    'STATSs':['bcrmse,bias'],
+                                    'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
                                     'FCST_LEVEL':'Z10',
                                     'OBS_LEVEL':'Z10',

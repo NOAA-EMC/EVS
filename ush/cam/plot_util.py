@@ -531,8 +531,8 @@ def get_stat_plot_name(logger, stat):
          stat_plot_name - string of the formal statistic
                           name being plotted
    """
-   if stat == 'bias':
-      stat_plot_name = 'Bias'
+   if stat == 'me':
+      stat_plot_name = 'Mean Error (i.e., Bias)'
    elif stat == 'rmse':
       stat_plot_name = 'Root Mean Square Error'
    elif stat == 'bcrmse':
@@ -550,11 +550,11 @@ def get_stat_plot_name(logger, stat):
    elif stat == 'acc':
       stat_plot_name = 'Anomaly Correlation Coefficient'
    elif stat == 'fbar':
-      stat_plot_name = 'Forecast Averages'
+      stat_plot_name = 'Forecast Mean'
    elif stat == 'obar':
-      stat_plot_name = 'Observation Averages'
+      stat_plot_name = 'Observation Mean'
    elif stat == 'fbar_obar':
-      stat_plot_name = 'Forecast and Observation Averages'
+      stat_plot_name = 'Forecast and Observation Mean'
    elif stat == 'speed_err':
       stat_plot_name = (
          'Difference in Average FCST and OBS Wind Vector Speeds'
@@ -1016,7 +1016,7 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
    else:
       logger.error(bs_method+" is not a valid option")
       exit(1)
-   if stat == 'bias':
+   if stat == 'me':
       if str(bs_method).upper() in ['MATCHED_PAIRS','FORECASTS']:
          if line_type == 'SL1L2':
             stat_values_mean = np.mean(fbar_est_mean) - np.mean(obar_est_mean)
@@ -1453,7 +1453,7 @@ def calculate_stat(logger, model_data, stat, conversion):
          logger.error("Could not recognize line type from columns")
          exit(1)
    stat_plot_name = get_stat_plot_name(logger, stat)
-   if stat == 'bias':
+   if stat == 'me':
       if line_type == 'SL1L2':
          stat_values = fbar - obar
       elif line_type == 'VL1L2':

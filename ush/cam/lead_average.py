@@ -322,22 +322,33 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     ]
     coef, const = (None, None)
     if units in reference.unit_conversions:
-        if metric2_name is not None:
-            if (str(metric1_name).upper() in metrics_using_var_units
-                    and str(metric2_name).upper() in metrics_using_var_units):
+        unit_convert = True
+        var_long_name_key = df['FCST_VAR'].tolist()[0]
+        if str(var_long_name_key).upper() == 'HGT':
+            if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
+                if units in ['m', 'gpm']:
+                    units = 'gpm'
+            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+                unit_convert = False
+            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
+                unit_convert = False
+        if unit_convert:
+            if metric2_name is not None:
+                if (str(metric1_name).upper() in metrics_using_var_units
+                        and str(metric2_name).upper() in metrics_using_var_units):
+                    coef, const = (
+                        reference.unit_conversions[units]['formula'](
+                            None, 
+                            return_terms=True
+                        ) 
+                    )
+            elif str(metric1_name).upper() in metrics_using_var_units:
                 coef, const = (
                     reference.unit_conversions[units]['formula'](
                         None, 
                         return_terms=True
                     ) 
                 )
-        elif str(metric1_name).upper() in metrics_using_var_units:
-            coef, const = (
-                reference.unit_conversions[units]['formula'](
-                    None, 
-                    return_terms=True
-                ) 
-            )
     # Calculate desired metric
     metric_long_names = []
     for stat in [metric1_name, metric2_name]:
@@ -872,7 +883,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
             var_long_name_key = 'HPBL'
     var_long_name = variable_translator[var_long_name_key]
-    if units in reference.unit_conversions:
+    if unit_convert:
         if fcst_thresh and '' not in fcst_thresh:
             fcst_thresh_labels = [float(tlab) for tlab in fcst_thresh_labels]
             fcst_thresh_labels = (
@@ -962,6 +973,10 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     # Title
     domain = df['VX_MASK'].tolist()[0]
     var_savename = df['FCST_VAR'].tolist()[0]
+    if str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+        var_savename = 'HPBL'
+    elif str(df['OBS_VAR'].tolist()[0]).upper() in ['MSLET','MSLMA','PRMSL']:
+        var_savename = 'MSLET'
     if domain in list(domain_translator.keys()):
         domain_string = domain_translator[domain]['long_name']
         domain_save_string = domain_translator[domain]['save_name']
@@ -982,25 +997,25 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     if str(level).upper() in ['CEILING', 'TOTAL', 'PBL']:
         if str(level).upper() == 'CEILING':
             level_string = ''
-            level_savename = ''
+            level_savename = 'L0'
         elif str(level).upper() == 'TOTAL':
             level_string = 'Total '
-            level_savename = ''
+            level_savename = 'L0'
         elif str(level).upper() == 'PBL':
             level_string = ''
-            level_savename = ''
+            level_savename = 'L0'
     elif str(verif_type).lower() in ['pres', 'upper_air', 'raob'] or 'P' in str(level):
         if 'P' in str(level):
             if str(level).upper() == 'P90-0':
                 level_string = f'Mixed-Layer '
-                level_savename = f'ML'
+                level_savename = f'L90'
             else:
                 level_num = level.replace('P', '')
                 level_string = f'{level_num} hPa '
-                level_savename = f'{level_num}MB'
+                level_savename = f'{level}'
         elif str(level).upper() == 'L0':
             level_string = f'Surface-Based '
-            level_savename = f'SB'
+            level_savename = f'{level}'
         else:
             level_string = ''
             level_savename = f'{level}'
@@ -1012,7 +1027,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                     level_savename = f'{level}'
                 else:
                     level_string = 'Surface '
-                    level_savename = 'SFC'
+                    level_savename = '{level}'
             else:
                 level_num = level.replace('Z', '')
                 if var_savename in ['TSOIL', 'SOILW']:
@@ -1020,7 +1035,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                     level_savename = f'{level_num}CM'
                 else:
                     level_string = f'{level_num}-m '
-                    level_savename = f'{level_num}M'
+                    level_savename = f'{level}'
         elif 'L' in str(level) or 'A' in str(level):
             level_string = ''
             level_savename = f'{level}'
@@ -1031,7 +1046,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         if 'A' in str(level):
             level_num = level.replace('A', '')
             level_string = f'{level_num}-hour '
-            level_savename = f'{level_num}H'
+            level_savename = f'A{level_num.zfill(2)}'
         else:
             level_string = f''
             level_savename = f'{level}'
