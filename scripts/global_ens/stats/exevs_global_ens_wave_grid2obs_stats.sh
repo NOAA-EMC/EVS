@@ -38,185 +38,221 @@ echo '-------------'
 echo ' '
 [[ "$LOUD" = YES ]] && set -x
 
-##########################
-# get the model fcst files
-##########################
-set +x
-echo ' '
-echo 'Copying fcst files :'
-echo '-----------------------------'
-[[ "$LOUD" = YES ]] && set -x
-
 mkdir -p ${DATA}/gribs
-
-date_list="${PDYm1} ${PDYm2} ${PDYm3} ${PDYm4} ${PDYm5} ${PDYm6} ${PDYm7}
-           ${PDYm8} ${PDYm9} ${PDYm10} ${PDYm11} ${PDYm12} ${PDYm13} ${PDYm14}
-           ${PDYm15} ${PDYm16} ${PDYm17}"
-
-for theDate in ${date_list}; do
-  cp ${ARCgefs}/${RUN}.${theDate}/${MODELNAME}/${VERIF_CASE}/*global.0p25*grib2 ${DATA}/gribs/.
-done
-
-####################
-# quick error check 
-####################
-nc=`ls ${DATA}/gribs/${MODELNAME}*grib2 | wc -l | awk '{print $1}'`
-echo " Found ${nc} ${DATA}/gribs/${MODELNAME}*grib2 files for ${VDATE} "
-if [ "${nc}" != '0' ]
-then
-  set +x
-  echo "Successfully copied the GEFS-Wave grib2 files for ${VDATE}"
-  [[ "$LOUD" = YES ]] && set -x
-else
-  set +x
-  echo ' '
-  echo '**************************************** '
-  echo '*** ERROR : NO GEFS-Wave grib2 FILES *** '
-  echo "      for ${VDATE} "
-  echo '**************************************** '
-  echo ' '
-  echo "${MODELNAME}_${RUN} $VDATE $cycle : GEFS-Wave grib2 files missing."
-  [[ "$LOUD" = YES ]] && set -x
-  ./postmsg "$jlogfile" "FATAL ERROR : NO GEFS-Wave GRIB2 FILES for ${VDATE}"
-  err_exit "FATAL ERROR: Did not copy the GEFS-Wave grib2 files for ${VDATE}"
-fi
-
-##############################################################
-# check to see if the nc files have been made by the prep step
-##############################################################
-set +x
-nc=`ls ${COMINgdasnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gdas.*.nc | wc -l | awk '{print $1}'`
-echo " Found ${nc} ${COMINgdasnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gdas.*.nc files for ${VDATE} "
-[[ "$LOUD" = YES ]] && set -x
-
-if [ "${nc}" = '0' ]
-then
-  set +x
-  echo ' '
-  echo '**************************************** '
-  echo '*** FATAL ERROR : NO GDAS.*.nc FILES *** '
-  echo " in ${COMINgdasnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}"
-  echo '**************************************** '
-  echo ' '
-  echo "${MODELNAME}_${RUN} PointStat $VDATE : gdas.*.nc missing."
-  [[ "$LOUD" = YES ]] && set -x
-  ./postmsg "$jlogfile" "FATAL ERROR : NO gdas.*.nc OUTPUT FILES"
-  err_exit "FATAL ERROR: PB2NC did not make the gdas.${VDATE}.nc files"  
-fi
-
-#########################
-# copy the gdas nc files 
-#########################
-set +x
-echo ' '
-echo 'Copying GDAS netcdf files :'
-echo '-----------------------------'
-[[ "$LOUD" = YES ]] && set -x
-
 mkdir -p ${DATA}/ncfiles
-cp ${COMINgdasnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gdas.*.nc ${DATA}/ncfiles/.
+mkdir ${DATA}/all_stats
 
-####################
-# quick error check 
-####################
-nc=`ls ${DATA}/ncfiles/*nc | wc -l | awk '{print $1}'`
-echo " Found ${nc} ${DATA}/ncfiles/*nc files for ${VDATE} "
-if [ "${nc}" != '0' ]
-then
-  set +x
-  echo "Successfully copied the GDAS netcdf files for ${VDATE}"
-  [[ "$LOUD" = YES ]] && set -x
-else
-  set +x
-  echo ' '
-  echo '**************************************** '
-  echo '*** ERROR : NO GDAS netcdf FILES *** '
-  echo "      for ${VDATE} "
-  echo '**************************************** '
-  echo ' '
-  echo "${MODELNAME}_${RUN} $VDATE $cycle : GDAS netcdf files missing."
-  [[ "$LOUD" = YES ]] && set -x
-  ./postmsg "$jlogfile" "FATAL ERROR : NO GDAS NETCDF FILES for ${VDATE}"
-  err_exit "FATAL ERROR: Did not copy the GDAS netcdf files for ${VDATE}"
-fi
+cycles='0 6 12 18'
 
-#################################
-# Make the command files for cfp 
-#################################
+lead_hours='0 6 12 18 24 30 36 42 48 54 60 66 72 78
+            84 90 96 102 108 114 120 126 132 138 144 150 156 162
+            168 174 180 186 192 198 204 210 216 222 228 234 240 246
+            252 258 264 270 276 282 288 294 300 306 312 318 324 330 
+            336 342 348 354 360 366 372 378 384'
 
-cycles='00 06 12 18'
 fhrs='fhr1 fhr2 fhr3 fhr4 fhr5 fhr6 fhr7 fhr8 fhr9'
 
 export GRID2OBS_CONF="${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}"
 
 cd ${DATA}
-mkdir ${DATA}/all_stats
 touch run_all_${MODELNAME}_${RUN}_g2o_poe.sh
 
-for cyc in ${cycles}  ; do
-  if [ ${cyc} = '00' ] ; then
-    wind_level_str="'{ name=\"WIND\"; level=\"(0,*,*)\"; }'"
-    htsgw_level_str="'{ name=\"HTSGW\"; level=\"(0,*,*)\"; }'"
-    perpw_level_str="'{ name=\"PERPW\"; level=\"(0,*,*)\"; }'"
-  elif [ ${cyc} = '06' ] ; then
-    wind_level_str="'{ name=\"WIND\"; level=\"(2,*,*)\"; }'"
-    htsgw_level_str="'{ name=\"HTSGW\"; level=\"(2,*,*)\"; }'"
-    perpw_level_str="'{ name=\"PERPW\"; level=\"(2,*,*)\"; }'"
-  elif [ ${cyc} = '12' ] ; then
-    wind_level_str="'{ name=\"WIND\"; level=\"(4,*,*)\"; }'"
-    htsgw_level_str="'{ name=\"HTSGW\"; level=\"(4,*,*)\"; }'"
-    perpw_level_str="'{ name=\"PERPW\"; level=\"(4,*,*)\"; }'"
-  elif [ ${cyc} = '18' ] ; then
-    wind_level_str="'{ name=\"WIND\"; level=\"(6,*,*)\"; }'"
-    htsgw_level_str="'{ name=\"HTSGW\"; level=\"(6,*,*)\"; }'"
-    perpw_level_str="'{ name=\"PERPW\"; level=\"(6,*,*)\"; }'"
+for cyc in ${cycles} ; do
+
+  ##########################
+  # get the model fcst files
+  ##########################
+  set +x
+  echo ' '
+  echo 'Copying model fcst files :'
+  echo '-----------------------------'
+  [[ "$LOUD" = YES ]] && set -x
+
+  # clear lead_hrs# from previous cycle
+  lead_hrs1=''
+  lead_hrs2=''
+  lead_hrs3=''
+  lead_hrs4=''
+  lead_hrs5=''
+  lead_hrs6=''
+  lead_hrs7=''
+  lead_hrs8=''
+  lead_hrs9=''
+  for fhr in ${lead_hours} ; do
+    matchtime=$(date --date="${VDATE} ${cyc} ${fhr} hours ago" +"%Y%m%d %H")
+    match_date=$(echo ${matchtime} | awk '{print $1}')
+    match_hr=$(echo ${matchtime} | awk '{print $2}')
+    match_fhr=$(printf "%02d" "${match_hr}")
+    flead=$(printf "%03d" "${fhr}")
+    filename=${MODELNAME}.${RUN}.${match_date}.t${match_fhr}z.mean.global.0p25.f${flead}.grib2
+    # check to see if the file is in the archive
+    if [[ -s ${ARCgefs}/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${filename} ]]; then
+      cp ${ARCgefs}/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${filename} ${DATA}/gribs/.
+    fi
+    # check to see if the file was copied successfully
+    if [[ -s ${DATA}/gribs/${filename} ]] ; then
+      if (( ${fhr} <= 36 )) ; then
+        lead_hrs1="${lead_hrs1}${lead_hrs1:+,}${fhr}"
+      elif (( ${fhr} > 36 & ${fhr} <= 78 )) ; then
+        lead_hrs2="${lead_hrs2}${lead_hrs2:+,}${fhr}"
+      elif (( ${fhr} > 78 & ${fhr} <= 120 )) ; then
+        lead_hrs3="${lead_hrs3}${lead_hrs3:+,}${fhr}"
+      elif (( ${fhr} > 120 & ${fhr} <= 162 )) ; then
+        lead_hrs4="${lead_hrs4}${lead_hrs4:+,}${fhr}"
+      elif (( ${fhr} > 162 & ${fhr} <= 204 )) ; then
+        lead_hrs5="${lead_hrs5}${lead_hrs5:+,}${fhr}"
+      elif (( ${fhr} > 204 & ${fhr} <= 246 )) ; then
+        lead_hrs6="${lead_hrs6}${lead_hrs6:+,}${fhr}"
+      elif (( ${fhr} > 246 & ${fhr} <= 288 )) ; then
+        lead_hrs7="${lead_hrs7}${lead_hrs7:+,}${fhr}"
+      elif (( ${fhr} > 288 & ${fhr} <= 336 )) ; then
+        lead_hrs8="${lead_hrs8}${lead_hrs8:+,}${fhr}"
+      elif (( ${fhr} > 336 & ${fhr} <= 384 )) ; then
+        lead_hrs9="${lead_hrs9}${lead_hrs9:+,}${fhr}"
+      fi
+    fi
+  done
+
+  ####################
+  # quick error check 
+  ####################
+  nc=$(ls ${DATA}/gribs/${MODELNAME}*${cyc}*.grib2 | wc -l | awk '{print $1}')
+  if [ "${nc}" != '0' ]
+  then
+    set +x
+    echo "Successfully copied ${nc} GEFS-Wave grib2 files for ${VDATE} ${cyc}"
+    [[ "$LOUD" = YES ]] && set -x
+  else
+    set +x
+    echo ' '
+    echo '**************************************** '
+    echo '*** ERROR : NO GEFS-Wave grib2 FILES *** '
+    echo "      for ${VDATE} ${cyc}"
+    echo '**************************************** '
+    echo ' '
+    echo "${MODELNAME}_${RUN} $VDATE $cyc : GEFS-Wave grib2 files missing."
+    [[ "$LOUD" = YES ]] && set -x
+    ./postmsg "$jlogfile" "FATAL ERROR : NO GEFS-Wave GRIB2 FILES for ${VDATE} ${cyc}"
+    err_exit "FATAL ERROR: Did not copy the GEFS-Wave grib2 files for ${VDATE} ${cyc}"
+  fi 
+  
+  #########################
+  # copy the gdas nc files 
+  #########################
+  set +x
+  echo ' '
+  echo 'Copying GDAS netcdf files :'
+  echo '-----------------------------'
+  [[ "$LOUD" = YES ]] && set -x
+  
+  # check to see if the file is in the archive
+  cyc=$(printf "%02d" "${cyc}")
+  if [[ -s ${COMINgdasnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${VDATE}${cyc}.nc ]] ; then
+    cp ${COMINgdasnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${VDATE}${cyc}.nc ${DATA}/ncfiles/.
+    # check to see if the file was copied successfully
+    if [[ -s ${DATA}/ncfiles/gdas.${VDATE}${cyc}.nc ]] ; then
+      found_cycles="${found_cycles}${found_cycles:+ }${cyc}"
+    fi
   fi
-  for fhr in ${fhrs} ; do
-  # write the commands
-    echo "export wind_level_str=${wind_level_str}" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-    echo "export htsgw_level_str=${htsgw_level_str}" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-    echo "export perpw_level_str=${perpw_level_str}" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-    echo "export CYC=${cyc}" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-    echo "export fhr=${fhr}" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-    case ${fhr} in
-    'fhr1')
-      echo "export lead_hrs=0,6,12,18,24,30,36"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-      ;;
-    'fhr2')
-      echo "export lead_hrs=42,48,54,60,66,72,78"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-      ;;
-    'fhr3')
-      echo "export lead_hrs=84,90,96,102,108,114,120"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-      ;;
-    'fhr4')
-      echo "export lead_hrs=126,132,138,144,150,156,162"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-      ;;
-    'fhr5')
-      echo "export lead_hrs=168,174,180,186,192,198,204"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-      ;;
-    'fhr6')
-      echo "export lead_hrs=210,216,222,228,234,240,246"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-      ;;
-    'fhr7')
-      echo "export lead_hrs=252,258,264,270,276,282,288"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-      ;;
-    'fhr8')
-      echo "export lead_hrs=294,300,306,312,318,324,330,336"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-      ;;
-    'fhr9')
-      echo "export lead_hrs=342,348,354,360,366,372,378,384"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-      ;;
-    esac
-    echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstGEFS_obsGDAS_climoERA5_Wave_Multifield.conf"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-    echo "export err=$?; err_chk" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-    echo "cpreq ${DATA}/stats_${cyc}_${fhr}/*.stat ${COMOUTsmall}/." >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-    echo "mv ${DATA}/stats_${cyc}_${fhr}/*.stat ${DATA}/all_stats/." >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+
+  ####################
+  # quick error check 
+  ####################
+  nc=`ls ${DATA}/ncfiles/gdas.${VDATE}${cyc}.nc | wc -l | awk '{print $1}'`
+  echo " Found ${DATA}/ncfiles/gdas.${VDATE}${cyc}.nc for ${VDATE} "
+  if [ "${nc}" != '0' ]
+  then
+    found_cycle='yes'
+    set +x
+    echo "Successfully copied ${nc} GDAS netcdf files for ${VDATE}"
+    [[ "$LOUD" = YES ]] && set -x
+  else
+    found_cycle='no'
+    set +x
+    echo ' '
+    echo '**************************************** '
+    echo '*** ERROR : NO GDAS netcdf FILES *** '
+    echo "      for ${VDATE} ${cyc} "
+    echo '**************************************** '
+    echo ' '
+    echo "${MODELNAME}_${RUN} $VDATE $cyc : GDAS netcdf files missing."
+    [[ "$LOUD" = YES ]] && set -x
+    ./postmsg "$jlogfile" "FATAL ERROR : NO GDAS NETCDF FILES for ${VDATE} ${cyc}"
+    err_exit "FATAL ERROR: Did not copy the GDAS netcdf files for ${VDATE} ${cyc}"
+  fi
+
+  #################################
+  # Make the command files for cfp 
+  #################################
+  
+  # only run for those cycles with GDAS data
+  if [ ${found_cycle} = 'yes' ] ; then
+  
+    if [ ${cyc} = '00' ] ; then
+      wind_level_str="'{ name=\"WIND\"; level=\"(0,*,*)\"; }'"
+      htsgw_level_str="'{ name=\"HTSGW\"; level=\"(0,*,*)\"; }'"
+      perpw_level_str="'{ name=\"PERPW\"; level=\"(0,*,*)\"; }'"
+    elif [ ${cyc} = '06' ] ; then
+      wind_level_str="'{ name=\"WIND\"; level=\"(2,*,*)\"; }'"
+      htsgw_level_str="'{ name=\"HTSGW\"; level=\"(2,*,*)\"; }'"
+      perpw_level_str="'{ name=\"PERPW\"; level=\"(2,*,*)\"; }'"
+    elif [ ${cyc} = '12' ] ; then
+      wind_level_str="'{ name=\"WIND\"; level=\"(4,*,*)\"; }'"
+      htsgw_level_str="'{ name=\"HTSGW\"; level=\"(4,*,*)\"; }'"
+      perpw_level_str="'{ name=\"PERPW\"; level=\"(4,*,*)\"; }'"
+    elif [ ${cyc} = '18' ] ; then
+      wind_level_str="'{ name=\"WIND\"; level=\"(6,*,*)\"; }'"
+      htsgw_level_str="'{ name=\"HTSGW\"; level=\"(6,*,*)\"; }'"
+      perpw_level_str="'{ name=\"PERPW\"; level=\"(6,*,*)\"; }'"
+    fi
     
-    chmod +x run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-    
-    echo "run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh" >> run_all_${MODELNAME}_${RUN}_g2o_poe.sh
-  done  # end of fhr
-done  # end of cycles
+    for fhr in ${fhrs} ; do
+    # write the commands
+      echo "export wind_level_str=${wind_level_str}" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+      echo "export htsgw_level_str=${htsgw_level_str}" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+      echo "export perpw_level_str=${perpw_level_str}" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+      echo "export CYC=${cyc}" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+      echo "export fhr=${fhr}" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+      case ${fhr} in
+        'fhr1')
+          echo "export lead_hrs=${lead_hrs1}"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+          ;;
+        'fhr2')
+          echo "export lead_hrs=${lead_hrs2}"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+          ;;
+        'fhr3')
+          echo "export lead_hrs=${lead_hrs3}"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+          ;;
+        'fhr4')
+          echo "export lead_hrs=${lead_hrs4}"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+          ;;
+        'fhr5')
+          echo "export lead_hrs=${lead_hrs5}"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+          ;;
+        'fhr6')
+          echo "export lead_hrs=${lead_hrs6}"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+          ;;
+        'fhr7')
+          echo "export lead_hrs=${lead_hrs7}"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+          ;;
+        'fhr8')
+          echo "export lead_hrs=${lead_hrs8}"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+          ;;
+        'fhr9')
+          echo "export lead_hrs=${lead_hrs9}"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+          ;;
+      esac
+      echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstGEFS_obsGDAS_climoERA5_Wave_Multifield.conf"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+      echo "export err=$?; err_chk" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+      echo "cpreq ${DATA}/stats_${cyc}_${fhr}/*.stat ${COMOUTsmall}/." >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+      echo "mv ${DATA}/stats_${cyc}_${fhr}/*.stat ${DATA}/all_stats/." >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+      
+      chmod +x run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
+      
+      echo "run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh" >> run_all_${MODELNAME}_${RUN}_g2o_poe.sh
+    done  # end of fhr
+  fi # found cycle    
+done  # end of cycles 
 
 chmod 775 run_all_${MODELNAME}_${RUN}_g2o_poe.sh
 
