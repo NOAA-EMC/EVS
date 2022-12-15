@@ -264,6 +264,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
     ]
     coef, const = (None, None)
+    unit_convert = False
     if units in reference.unit_conversions:
         unit_convert = True
         var_long_name_key = df['FCST_VAR'].tolist()[0]
@@ -432,7 +433,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
             x_vals,
             rounding=True
         )
-        units = reference.unit_conversions[units]['convert_to']
     if units == '-':
         units = ''
     x_vals_argsort = np.argsort(x_vals)
@@ -530,7 +530,8 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
 
     # Configure axis ticks
     if unit_convert:
-        x_vals_incr = reference.unit_conversions[units]['formulas'](x_vals)
+        x_vals_incr = reference.unit_conversions[units]['formula'](x_vals)
+        units = reference.unit_conversions[units]['convert_to']
 
     xticks_min = np.min(x_vals)
     xticks_max = np.max(x_vals)

@@ -610,6 +610,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         logger.info("========================================")
         return None
     units = df['FCST_UNITS'].tolist()[0]
+    unit_convert = False
     if units in reference.unit_conversions:
         unit_convert = True
         var_long_name_key = df['FCST_VAR'].tolist()[0]

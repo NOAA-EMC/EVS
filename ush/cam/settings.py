@@ -1469,7 +1469,7 @@ class Reference():
             },
             'grid2grid_pres': {
                 'SL1L2': {
-                    'plot_stats_list': ('bias, rmse, msess, rsd, rmse_md,'
+                    'plot_stats_list': ('me, rmse, msess, rsd, rmse_md,'
                                         + ' rmse_pv'),
                     'interp': 'NEAREST',
                     'vx_mask_list' : ['NHX', 'SHX', 'PNA', 'TRO'],
@@ -1552,7 +1552,7 @@ class Reference():
                     }
                 },
                 'VL1L2': {
-                    'plot_stats_list': ('bias, rmse, msess, rsd, rmse_md,'
+                    'plot_stats_list': ('me, rmse, msess, rsd, rmse_md,'
                                         + ' rmse_pv'),
                     'interp': 'NEAREST',
                     'vx_mask_list' : ['NHX', 'SHX', 'PNA', 'TRO'],
@@ -1860,7 +1860,7 @@ class Reference():
             },
             'grid2obs_upper_air': {
                 'SL1L2': {
-                    'plot_stats_list': ('bias, rmse, bcrmse, fbar_obar, fbar,'
+                    'plot_stats_list': ('me, rmse, bcrmse, fbar_obar, fbar,'
                                         + ' obar'),
                     'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
@@ -1939,7 +1939,7 @@ class Reference():
                     }
                 },
                 'VL1L2': {
-                    'plot_stats_list': ('bias, rmse, bcrmse, fbar_obar, fbar,'
+                    'plot_stats_list': ('me, rmse, bcrmse, fbar_obar, fbar,'
                                         + ' obar'),
                     'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
@@ -1971,7 +1971,7 @@ class Reference():
             },
             'grid2obs_raob': {
                 'SL1L2': {
-                    'plot_stats_list': ('bcrmse, bias, fbar_obar, fbar,'
+                    'plot_stats_list': ('bcrmse, me, fbar_obar, fbar,'
                                         + ' obar'),
                     'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
@@ -2158,7 +2158,7 @@ class Reference():
                     }
                 },
                 'VL1L2': {
-                    'plot_stats_list': ('bias, rmse, bcrmse, fbar_obar, fbar,'
+                    'plot_stats_list': ('me, rmse, bcrmse, fbar_obar, fbar,'
                                         + ' obar'),
                     'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
@@ -2262,7 +2262,7 @@ class Reference():
             },
             'grid2obs_metar': {
                 'SL1L2': {
-                    'plot_stats_list': ('bcrmse, bias'),
+                    'plot_stats_list': ('bcrmse, me'),
                     'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
                         'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
@@ -2348,7 +2348,7 @@ class Reference():
                     }
                 },
                 'VL1L2': {
-                    'plot_stats_list': ('bcrmse, bias'),
+                    'plot_stats_list': ('bcrmse, me'),
                     'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
                         'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
@@ -2475,7 +2475,7 @@ class Reference():
             },
             'grid2obs_conus_sfc': {
                 'SL1L2': {
-                    'plot_stats_list': ('bias, rmse, bcrmse, fbar_obar, fbar,'
+                    'plot_stats_list': ('me, rmse, bcrmse, fbar_obar, fbar,'
                                         + ' obar'),
                     'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
@@ -2596,7 +2596,7 @@ class Reference():
                     }
                 },
                 'VL1L2': {
-                    'plot_stats_list': ('bias, rmse, bcrmse, fbar_obar, fbar,'
+                    'plot_stats_list': ('me, rmse, bcrmse, fbar_obar, fbar,'
                                         + ' obar'),
                     'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
@@ -2741,7 +2741,7 @@ class Reference():
             },
             'grid2obs_polar_sfc': {
                 'SL1L2': {
-                    'plot_stats_list': 'bias, rmse, fbar_obar',
+                    'plot_stats_list': 'me, rmse, fbar_obar',
                     'interp': 'NEAREST',
                     'vx_mask_list' : ['ARCTIC'],
                     'var_dict': {
@@ -2777,7 +2777,7 @@ class Reference():
             },
             'grid2grid_rtofs_sfc': {
                 'SL1L2': {
-                    'plot_stats_list': 'bias, rmse, fbar_obar, estdev',
+                    'plot_stats_list': 'me, rmse, fbar_obar, estdev',
                     'interp': 'NEAREST',
                     'vx_mask_list' : [
                         'Global','North_Atlantic','South_Atlantic','Equatorial_Atlantic',
@@ -2902,7 +2902,7 @@ class Reference():
             },
             'precip_ccpa': {
                 'SL1L2': {
-                    'plot_stats_list': ('bias, rmse, bcrmse, fbar_obar, fbar,'
+                    'plot_stats_list': ('me, rmse, bcrmse, fbar_obar, fbar,'
                                         + ' obar'),
                     'interp': 'NEAREST',
                     'vx_mask_list' : [
@@ -2949,7 +2949,7 @@ class Reference():
                     }
                 },
                 'CTC': {
-                    'plot_stats_list': ('bias, ets, fss, csi, fbias, fbar,'
+                    'plot_stats_list': ('me, ets, fss, csi, fbias, fbar,'
                                         + ' obar, pod, faratio, farate, sratio'),
                     'interp': 'NEAREST',
                     'vx_mask_list' : [
@@ -3054,7 +3054,7 @@ class Reference():
             },
             'precip_mrms': {
                 'SL1L2': {
-                    'plot_stats_list': ('bias, rmse, bcrmse, fbar_obar, fbar,'
+                    'plot_stats_list': ('me, rmse, bcrmse, fbar_obar, fbar,'
                                         + ' obar'),
                     'interp': 'NEAREST',
                     'vx_mask_list' : [
@@ -3100,7 +3100,7 @@ class Reference():
                     }
                 },
                 'CTC': {
-                    'plot_stats_list': ('bias, ets, fss, csi, fbias, fbar,'
+                    'plot_stats_list': ('me, ets, fss, csi, fbias, fbar,'
                                         + ' obar, pod, faratio, farate, sratio'),
                     'interp': 'NEAREST',
                     'vx_mask_list' : [
@@ -3202,7 +3202,7 @@ class Reference():
             },
             'satellite_ghrsst_ncei_avhrr_anl': {
                 'SL1L2': {
-                    'plot_stats_list': 'bias, rmse',
+                    'plot_stats_list': 'me, rmse',
                     'interp': 'NEAREST',
                     'vx_mask_list' : [
                         'NH', 'SH', 'POLAR', 'ARCTIC', 'SEA_ICE', 
@@ -3232,7 +3232,7 @@ class Reference():
             },
             'satellite_ghrsst_ospo_geopolar_anl': {
                 'SL1L2': {
-                    'plot_stats_list': 'bias, rmse',
+                    'plot_stats_list': 'me, rmse',
                     'interp': 'NEAREST',
                     'vx_mask_list' : [
                         'NH', 'SH', 'POLAR', 'ARCTIC', 'SEA_ICE', 
@@ -3262,7 +3262,7 @@ class Reference():
             },
             'aviation_analysis': {
                 'CTC': {
-                    'plot_stats_list': ('bias, ets, fss, csi, fbias, fbar,'
+                    'plot_stats_list': ('me, ets, fss, csi, fbias, fbar,'
                                         + ' obar, pod, farate, faratio, sratio'),
                     'interp': 'NEAREST',
                     'vx_mask_list' : [

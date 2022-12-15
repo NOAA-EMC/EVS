@@ -206,6 +206,7 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR',
         'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
     ]
+    unit_convert = False
     if units in reference.unit_conversions:
         unit_convert = True
         var_long_name_key = df['FCST_VAR'].tolist()[0]

@@ -270,6 +270,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
     ]
     coef, const = (None, None)
+    unit_convert = False
     if units in reference.unit_conversions:
         unit_convert = True
         var_long_name_key = df['FCST_VAR'].tolist()[0]
