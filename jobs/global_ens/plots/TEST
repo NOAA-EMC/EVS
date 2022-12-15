@@ -45,11 +45,7 @@ if [ $RUN = atmos ] ; then
   export INITDATE=${INITDATE:-$PDYm2}
 fi
 
-if [ $valid_time = separate ] ; then
-  sh $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_separate_${STEP}.sh
-else
-  sh $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
-fi
+sh $HOMEevs/scripts/${COMPONENT}/${STEP}/test.sh
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$msg"
