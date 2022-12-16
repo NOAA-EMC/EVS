@@ -966,7 +966,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                     level_savename = f'{level}'
                 else:
                     level_string = 'Surface '
-                    level_savename = '{level}'
+                    level_savename = f'{level}'
             else:
                 level_num = level.replace('Z', '')
                 if var_savename in ['TSOIL', 'SOILW']:
@@ -990,7 +990,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             level_string = f''
             level_savename = f'{level}'
     else:
-        level_string = f'{level}'
+        level_string = f'{level} '
         level_savename = f'{level}'
     if metric2_name is not None:
         title1 = f'{metric1_string} and {metric2_string}'

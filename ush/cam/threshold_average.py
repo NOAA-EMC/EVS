@@ -738,7 +738,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
                     level_savename = f'{level}'
                 else:
                     level_string = 'Surface '
-                    level_savename = '{level}'
+                    level_savename = f'{level}'
             else:
                 level_num = level.replace('Z', '')
                 if var_savename in ['TSOIL', 'SOILW']:
