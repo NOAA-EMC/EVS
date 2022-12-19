@@ -1,10 +1,10 @@
-#PBS -N jevs_global_det_atmos_grid2obs_ptype_plots_31days_00
+#PBS -N jevs_global_det_atmos_grid2grid_pres_levs_plots_90days_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=0:05:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
+#PBS -l walltime=2:30:00
+#PBS -l place=vscatter:exclhost,select=2:ncpus=128:ompthreads=1
 #PBS -l debug=true
 #PBS -V
 
@@ -28,7 +28,7 @@ export KEEPDATA=NO
 module load prod_envir/2.0.6
 module load prod_util/2.0.13
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_global_det_atmos_test/$envir/tmp
-export job=${PBS_JOBNAME:-jevs_global_det_atmos_grid2obs_ptype_plots_31days}
+export job=${PBS_JOBNAME:-jevs_global_det_atmos_grid2grid_pres_levs_plots_90days}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
@@ -36,13 +36,20 @@ export NET=evs
 export STEP=plots
 export COMPONENT=global_det
 export RUN=atmos
-export VERIF_CASE=grid2obs
-export VERIF_TYPE=ptype
-export NDAYS=31
+export VERIF_CASE=grid2grid
+export VERIF_TYPE=pres_levs
+export NDAYS=90
 export PDYm1=$(date -d "24 hours ago" '+%Y%m%d')
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com
 export COMIN=$COMROOT/$NET/$evs_ver
+export COMINcfs=$COMIN/stats/$COMPONENT/cfs
 export COMINgfs=$COMIN/stats/$COMPONENT/gfs
+export COMINcmc=$COMIN/stats/$COMPONENT/cmc
+export COMINecmwf=$COMIN/stats/$COMPONENT/ecmwf
+export COMINfnmoc=$COMIN/stats/$COMPONENT/fnmoc
+export COMINimd=$COMIN/stats/$COMPONENT/imd
+export COMINjma=$COMIN/stats/$COMPONENT/jma
+export COMINukmet=$COMIN/stats/$COMPONENT/ukmet
 export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1
 export OUTPUTROOT=/lfs/h2/emc/stmp/$USER/evs_global_det_atmos_test
 ############################################################
@@ -90,17 +97,18 @@ export NET=evs
 export STEP=plots
 export COMPONENT=global_det
 export RUN=atmos
-export VERIF_CASE=grid2obs
-export VERIF_TYPE=ptype
-export NDAYS=31
+export VERIF_CASE=grid2grid
+export VERIF_TYPE=pres_levs
+export NDAYS=90
 
 # Set config file
 export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${VERIF_TYPE}
+echo $config
 
 # CALL executable job script here
 $HOMEevs/jobs/global_det/plots/JEVS_GLOBAL_DET_PLOTS
 
 ######################################################################
 # Purpose: This does the plotting work for the global deterministic
-#          atmospheric grid-to-observations ptype past 31 days
+#          atmospheric grid-to-grid pres_levs for past 90 days
 ######################################################################

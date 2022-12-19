@@ -36,13 +36,13 @@ export OUTPUTROOT="$DATAROOT"
 ## DATE SETTINGS
 #start_date:       verification start date, format YYYYMMDD
 #end_date:         verification end date, format YYYYMMDD
-export start_date=$PDYm31
-export end_date=$PDYm1
+export start_date=$VDATE_START
+export end_date=$VDATE_END
 ## METPLUS SETTINGS
 #metplus_verbosity:         DEBUG, INFO, WARN, ERROR (most verbose is DEBUG)
 #met_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
 #log_met_output_to_metplus: log MET output to METplus log, yes or no
-export metplus_verbosity="DEBUG"
+export metplus_verbosity="INFO"
 export met_verbosity="2"
 export log_met_output_to_metplus="yes"
 ## DATA DIRECTIVE SETTINGS
@@ -64,12 +64,12 @@ if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     #g2op_*_fhr_inc:           frequency to verify forecast hours at HH[H]
     #g2op_event_equalization: do event equalization (YES) or not (NO)
     export g2op_model_plot_name_list="gfs"
-    export g2op_type_list="sfc"
+    export g2op_type_list="ptype"
     export g2op_event_equalization="NO"
-    export g2op_sfc_init_hr_list="00"
-    export g2op_sfc_valid_hr_list="00"
-    export g2op_sfc_fhr_min=00
-    export g2op_sfc_fhr_max=384
-    export g2op_sfc_fhr_inc=24
+    export g2op_ptype_init_hr_list="00 06 12 18"
+    export g2op_ptype_valid_hr_list="00 03 06 09 12 15 18 21"
+    export g2op_ptype_fhr_min=00
+    export g2op_ptype_fhr_max=60
+    export g2op_ptype_fhr_inc=3
 fi
 echo "END: $(basename ${BASH_SOURCE[0]})"

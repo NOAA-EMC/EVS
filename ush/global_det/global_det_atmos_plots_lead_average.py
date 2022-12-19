@@ -69,7 +69,7 @@ class LeadAverage:
                           +f"{self.plot_info_dict}")
         # Check stat
         if self.plot_info_dict['stat'] == 'FBAR_OBAR':
-            self.logger.warning("Cannot make lead_by_date for stat "
+            self.logger.warning("Cannot make lead_average for stat "
                                 +f"{self.plot_info_dict['stat']}")
             sys.exit(0)
         # Make job image directory
@@ -232,11 +232,16 @@ class LeadAverage:
         plot_specs_la = PlotSpecs(self.logger, 'lead_average')
         plot_specs_la.set_up_plot()
         n_xticks = 17
-        if len(self.date_info_dict['forecast_hours']) < n_xticks:
-            xtick_intvl = 1
+        if len(self.date_info_dict['forecast_hours']) <= n_xticks:
+            xticks = self.date_info_dict['forecast_hours']
         else:
-            xtick_intvl = int(len(self.date_info_dict['forecast_hours'])
-                              /n_xticks)
+            xticks = []
+            for fhr in self.date_info_dict['forecast_hours']:
+                if int(fhr) % 24 == 0:
+                    xticks.append(fhr)
+            if len(xticks) > n_xticks:
+                xtick_intvl = int(len(xticks)/n_xticks)
+                xticks = xticks[::xtick_intvl]
         stat_min_max_dict = {
             'ax1_stat_min': np.ma.masked_invalid(np.nan),
             'ax1_stat_max': np.ma.masked_invalid(np.nan),
@@ -300,7 +305,7 @@ class LeadAverage:
         ax2.set_xlabel('Forecast Hour')
         ax2.set_xlim([self.date_info_dict['forecast_hours'][0],
                       self.date_info_dict['forecast_hours'][-1]])
-        ax2.set_xticks(self.date_info_dict['forecast_hours'][::xtick_intvl])
+        ax2.set_xticks(xticks)
         ax2.set_ylabel('Difference')
         ax2.set_title('Difference from '
                       +self.model_info_dict['model1']['plot_name'], loc='left')

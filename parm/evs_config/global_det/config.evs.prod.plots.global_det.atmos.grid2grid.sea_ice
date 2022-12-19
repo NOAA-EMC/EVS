@@ -16,9 +16,9 @@ echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 ## SET TO "YES" or "NO"
 ## EDIT SECTIONS BELOW FOR VERIFICATION TYPES REQUESTED
 export RUN_GRID2GRID_STATS="NO"
-export RUN_GRID2GRID_PLOTS="NO"
+export RUN_GRID2GRID_PLOTS="YES"
 export RUN_GRID2OBS_STATS="NO"
-export RUN_GRID2OBS_PLOTS="YES"
+export RUN_GRID2OBS_PLOTS="NO"
 
 ####################################################
 # GENERAL SETTINGS APPLIED TO ALL USE CASES
@@ -36,13 +36,13 @@ export OUTPUTROOT="$DATAROOT"
 ## DATE SETTINGS
 #start_date:       verification start date, format YYYYMMDD
 #end_date:         verification end date, format YYYYMMDD
-export start_date=$PDYm31
-export end_date=$PDYm1
+export start_date=$VDATE_START
+export end_date=$VDATE_END
 ## METPLUS SETTINGS
 #metplus_verbosity:         DEBUG, INFO, WARN, ERROR (most verbose is DEBUG)
 #met_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
 #log_met_output_to_metplus: log MET output to METplus log, yes or no
-export metplus_verbosity="DEBUG"
+export metplus_verbosity="INFO"
 export met_verbosity="2"
 export log_met_output_to_metplus="yes"
 ## DATA DIRECTIVE SETTINGS
@@ -54,22 +54,23 @@ export SENDMETVIEWER="NO"
 # SETTINGS FOR SPECIFIC USE CASES
 ####################################################
 
-if [ $RUN_GRID2OBS_PLOTS = YES ]; then
-    #g2op_model_plot_name_list: list of models reference name on plots
-    #g2op_type_list: list type of verifications to run for grid-to-grid: pres_levs, ptype, sfc
-    #g2op_*_init_hr_list:      initialization hours to be included in verification: HH
-    #g2op_*_valid_hr_list:     valid hours to be included in verification: HH
-    #g2op_*_fhr_min:           forecast hour to start verification HH[H]
-    #g2op_*_fhr_max:           forecast hour to end verification HH[H]
-    #g2op_*_fhr_inc:           frequency to verify forecast hours at HH[H]
-    #g2op_event_equalization: do event equalization (YES) or not (NO)
-    export g2op_model_plot_name_list="gfs"
-    export g2op_type_list="ptype"
-    export g2op_event_equalization="NO"
-    export g2op_ptype_init_hr_list="00"
-    export g2op_ptype_valid_hr_list="00"
-    export g2op_ptype_fhr_min=00
-    export g2op_ptype_fhr_max=72
-    export g2op_ptype_fhr_inc=24
+if [ $RUN_GRID2GRID_PLOTS = YES ]; then
+    #g2gp_model_plot_name_list: list of models reference name on plots
+    #g2gp_type_list: list type of verifications to run for grid-to-grid: flux, means, precip,
+    #                                                                    pres_levs, sea_ice, snow, sst
+    #g2gp_*_init_hr_list:      initialization hours to be included in verification: HH
+    #g2gp_*_valid_hr_list:     valid hours to be included in verification: HH
+    #g2gp_*_fhr_min:           forecast hour to start verification HH[H]
+    #g2gp_*_fhr_max:           forecast hour to end verification HH[H]
+    #g2gp_*_fhr_inc:           frequency to verify forecast hours at HH[H]
+    #g2gp_event_equalization: do event equalization (YES) or not (NO)
+    export g2gp_model_plot_name_list="gfs"
+    export g2gp_type_list="sea_ice"
+    export g2gp_event_equalization="NO"
+    export g2gp_sea_ice_init_hr_list="00"
+    export g2gp_sea_ice_fhr_min=24
+    export g2gp_sea_ice_fhr_max=384
+    export g2gp_sea_ice_fhr_inc=24
 fi
+
 echo "END: $(basename ${BASH_SOURCE[0]})"
