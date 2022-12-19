@@ -23,6 +23,14 @@ echo "RUN MODE:$evs_run_mode"
 # Make directory
 mkdir -p ${VERIF_CASE}_${STEP}
 
+# Set number of days being plotted
+start_date_seconds=$(date +%s -d ${start_date})
+end_date_seconds=$(date +%s -d ${end_date})
+diff_seconds=$(expr $end_date_seconds - $start_date_seconds)
+diff_days=$(expr $diff_seconds \/ 86400)
+total_days=$(expr $diff_days + 1)
+NDAYS=${NDAYS:-total_days}
+
 # Check user's config settings
 python $USHevs/global_det/global_det_atmos_check_settings.py
 status=$?
@@ -63,7 +71,9 @@ if [ $USE_CFP = YES ]; then
         export MP_CMDFILE=${poe_script}
         if [ $machine = WCOSS2 ]; then
             export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-            launcher="mpiexec -np ${nproc} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+            nselect=$(cat $PBS_NODEFILE | wc -l)
+            nnp=$(($nselect * $nproc))
+            launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
         elif [ $machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
             export SLURM_KILL_BAD_EXIT=0
             launcher="srun --export=ALL --multi-prog"
@@ -85,8 +95,10 @@ if [ $SENDCOM = YES ]; then
     for VERIF_TYPE_SUBDIR_PATH in $DATA/${VERIF_CASE}_${STEP}/plot_output/$RUN.${end_date}/images/*; do
         VERIF_TYPE_SUBDIR=$(echo ${VERIF_TYPE_SUBDIR_PATH##*/})
         cd $VERIF_TYPE_SUBDIR
-        tar -cvf ${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/images/plots_${COMPONENT}_${RUN}_grid2grid_${VERIF_TYPE_SUBDIR}_v${start_date}to${end_date}.tar *
-        cp -v ${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/images/plots_${COMPONENT}_${RUN}_grid2grid_${VERIF_TYPE_SUBDIR}_v${start_date}to${end_date}.tar $COMOUT/.
+        VERIF_TYPE_fhr_max=$(eval echo \$g2gp_${VERIF_TYPE_SUBDIR}_fhr_max)
+        large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/images/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${PDYm1}.tar
+        tar -cvf $large_tar_file *.tar
+        cp -v $large_tar_file $COMOUT/.
     done
     cd $DATA
 fi
