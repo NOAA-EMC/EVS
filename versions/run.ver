@@ -53,7 +53,6 @@ export cfs_ver=v2.3
 export obsproc_ver=v1.1
 export hourly_ver=v0.0
 export ccpa_ver=v4.2
-export obsproc_ver=v1.1
 export href_ver=v3.1
 export naefs_ver=v6.1
 export hysplit_ver=v7.9
