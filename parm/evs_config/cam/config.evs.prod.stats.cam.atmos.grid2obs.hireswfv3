@@ -38,7 +38,7 @@ if [ "$NEST" = "conus" ]; then
         export VHOUR_LIST="00 06 12 18"
     elif [ "$OBSNAME" = "metar" ]; then
         export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING"
-        export VHOUR_LIST="00 06 12 18"
+        export VHOUR_LIST="00 03 06 09 12 15 18 21"
     else
         echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
         exit 1
@@ -57,7 +57,7 @@ elif [ "$NEST" = "subreg" ]; then
         export VHOUR_LIST="00 06 12 18"
     elif [ "$OBSNAME" = "metar" ]; then
         export VAR_NAME_LIST="TMP2m DPT2m RH2m UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc VIS CEILING"
-        export VHOUR_LIST="00 06 12 18"
+        export VHOUR_LIST="00 03 06 09 12 15 18 21"
     else
         echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
         exit 1
@@ -76,7 +76,7 @@ elif [ "$NEST" = "ak" ]; then
         export VHOUR_LIST="00 06 12 18"
     elif [ "$OBSNAME" = "metar" ]; then
         export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING"
-        export VHOUR_LIST="00 06 12 18"
+        export VHOUR_LIST="00 03 06 09 12 15 18 21"
     else
         echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
         exit 1
@@ -95,7 +95,7 @@ elif [ "$NEST" = "hi" ]; then
         export VHOUR_LIST="00 06 12 18"
     elif [ "$OBSNAME" = "metar" ]; then
         export VAR_NAME_LIST=""
-        export VHOUR_LIST="00 06 12 18"
+        export VHOUR_LIST="00 03 06 09 12 15 18 21"
     else
         echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
         exit 1
@@ -114,7 +114,7 @@ elif [ "$NEST" = "pr" ]; then
         export VHOUR_LIST="00 06 12 18"
     elif [ "$OBSNAME" = "metar" ]; then
         export VAR_NAME_LIST=""
-        export VHOUR_LIST="00 06 12 18"
+        export VHOUR_LIST="00 03 06 09 12 15 18 21"
     else
         echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
         exit 1
@@ -133,7 +133,7 @@ elif [ "$NEST" = "gu" ]; then
         export VHOUR_LIST="00 06 12 18"
     elif [ "$OBSNAME" = "metar" ]; then
         export VAR_NAME_LIST=""
-        export VHOUR_LIST="00 06 12 18"
+        export VHOUR_LIST="00 03 06 09 12 15 18 21"
     else
         echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
         exit 1
@@ -152,7 +152,7 @@ elif [ "$NEST" = "spc_otlk" ]; then
         export VHOUR_LIST="00 06 12 18"
     elif [ "$OBSNAME" = "metar" ]; then
         export VAR_NAME_LIST=""
-        export VHOUR_LIST="00 06 12 18"
+        export VHOUR_LIST="00 03 06 09 12 15 18 21"
     else
         echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
         exit 1
