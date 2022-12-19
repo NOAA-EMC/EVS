@@ -234,6 +234,22 @@ def get_time_info(date_start, date_end, date_type, init_hr_list, valid_hr_list,
         date_dt = date_dt + datetime.timedelta(hours=int(date_type_hr_inc))
     return time_info
 
+def get_init_hour(valid_hour, forecast_hour):
+    """! Get a initialization hour/cycle
+
+         Args:
+             valid_hour    - valid hour (integer)
+             forecast_hour - forecast hour (integer)
+    """
+    init_hour = 24 + (valid_hour - (forecast_hour%24))
+    if forecast_hour % 24 == 0:
+        init_hour = valid_hour
+    else:
+        init_hour = 24 + (valid_hour - (forecast_hour%24))
+    if init_hour >= 24:
+        init_hour = init_hour - 24
+    return init_hour
+
 def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                   forecast_hour, str_sub_dict):
     """! Creates a filled file path from a format
@@ -1605,7 +1621,7 @@ def initalize_job_env_dict(verif_type, group,
     """
     job_env_var_list = [
         'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA', 'COMROOT',
-        'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'COMIN'
+        'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'COMIN', 'evs_run_mode'
     ]
     if group in ['reformat_data', 'assemble_data', 'generate_stats', 'gather_stats']:
         os.environ['MET_TMP_DIR'] = os.path.join(
@@ -2007,14 +2023,14 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                 )
         if write_parse_stat_file:
             if fcst_var_thresh != 'NA':
-                fcst_var_thresh_symbol, fcst_vat_thresh_letter = (
+                fcst_var_thresh_symbol, fcst_var_thresh_letter = (
                     format_thresh(fcst_var_thresh)
                 )
             else:
                 fcst_var_thresh_symbol = fcst_var_thresh
                 fcst_vat_thresh_letter = fcst_var_thresh
             if obs_var_thresh != 'NA':
-                obs_var_thresh_symbol, obs_vat_thresh_letter = (
+                obs_var_thresh_symbol, obs_var_thresh_letter = (
                     format_thresh(obs_var_thresh)
                 )
             else:
@@ -2428,7 +2444,7 @@ def calculate_stat(logger, data_df, line_type, stat):
            stat_df = ANOM_CORR
        elif line_type == 'VAL1L2':
            stat_df = UVFOABAR/np.sqrt(UVFFABAR*UVOOABAR)
-   elif stat == 'BIAS': # Bias
+   elif stat in ['BIAS', 'ME']: # Bias/Mean Error
        if line_type == 'SL1L2':
            stat_df = FBAR - OBAR
        elif line_type == 'CNT':
