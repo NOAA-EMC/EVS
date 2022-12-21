@@ -1100,6 +1100,7 @@ def main():
                             df_metrics = [ df_all ]
                         else:
                             df_all=pd.concat([df_all,df], ignore_index=True)
+                            df_all['VX_MASK'] = REGRID.upper()
                             df_metrics = [ df, df_all ]
                     else:
                         if df is None:
@@ -1109,9 +1110,9 @@ def main():
                                 df_all = df.copy()
                                 # Only change one subdomain to global for plotting and avoid duplicate records
                                 #df_all=df_all.assign(VX_MASK=REGRID.upper())
-                                df_all['VX_MASK'] = REGRID.upper()
                             else:
                                 df_all=pd.concat([df_all,df], ignore_index=True)
+                            df_all['VX_MASK'] = REGRID.upper()
                             df_metrics = [ df ]
                     for df_metric in df_metrics:
                         plot_roc_curve(

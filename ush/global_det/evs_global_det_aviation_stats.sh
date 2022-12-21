@@ -6,14 +6,15 @@
 ###############################################################################
 set -x
 
+cycles="00 06 12 18"
+
 # Since WAFS verification is up to 36/48 hours, link only 2 days in the past
 for past_day in 0 1 2 ; do
    hour=$((past_day*24))
    past=`$NDATE -$hour ${VDATE}00`
    day=${past:0:8}
    # cc=${past:8:2}
-   cc=$valid_beg
-   while [ $cc -le $valid_end ] ; do
+   for cc in $cycles ; do
        for ff in $FHOURS ; do
 	   if [ $CENTER = "uk" ] ; then
 	       if [ $RESOLUTION = "0P25" ] ; then
@@ -60,10 +61,25 @@ for past_day in 0 1 2 ; do
 	       fi
 	   fi
        done
-       cc=$(( cc + $valid_inc ))
-       cc="$(printf "%02d" $(( 10#$cc )) )"
    done
 done
+
+# GCIP data
+if [[ $OBSERVATION = "GCIP" ]] ; then
+    for cc in $cycles ; do
+	sourcedir=$COMINgfs/gfs.$VDATE/$cc/atmos
+	
+	targetdir=$GRID_STAT_INPUT_BASE/gfs.$VDATE/$cc/atmos
+	mkdir -p $targetdir
+	ln -sf $sourcedir/gfs.t${cc}z.gcip.f00.grib2 $targetdir/.
+	
+	cc2=$(( 10#$cc + 3 ))
+	cc2="$(printf "%02d" $(( 10#$cc2 )) )"
+	targetdir=$GRID_STAT_INPUT_BASE/gfs.$VDATE/$cc2/atmos
+	mkdir -p $targetdir
+	ln -sf $sourcedir/gfs.t${cc2}z.gcip.f00.grib2 $targetdir/.
+    done
+fi
 
 exit
 

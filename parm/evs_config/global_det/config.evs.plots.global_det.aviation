@@ -130,7 +130,7 @@ export INIT_END=""
 # Will use statistics for all comma-separated valid or init hours. DATE_TYPE decides whether valid 
 # or init is used.
 export FCST_INIT_HOUR="0"
-export FCST_VALID_HOUR="00,06,12,18"
+export FCST_VALID_HOUR=$FCST_VALID_HOUR
 
 # Settings below are used to select desired variable and domain. **
 export FCST_LEVEL="$VAR1_LEVELS_FCST"
