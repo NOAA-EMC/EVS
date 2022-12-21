@@ -15,7 +15,6 @@
 ############################################################
 set -x
 
-export USER=Lichuan.Chen
 export EVS=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 source $EVS/versions/run.rtofs.ver
 
@@ -38,7 +37,6 @@ export COMPONENT=rtofs
 
 # set up VDATE and COMIN and COMOUT
 export VDATE=$(date --date="2 days ago" +%Y%m%d)
-#export VDATE=20221210
 
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
 export COMINobs=/lfs/h1/ops/dev/dcom
