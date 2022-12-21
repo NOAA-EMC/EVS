@@ -23,17 +23,17 @@ fi
 mkdir -p $DATA
 cd $DATA
 
-setpdy.sh
-. $DATA/PDY
 
 if [ $MODELNAME = href ] ; then
+    setpdy.sh
+    . $DATA/PDY
     if [ $VERIF_CASE = grid2obs ] ; then
         export VDATE=${VDATE:-$PDYm1}
     elif [ $VERIF_CASE = precip ] ; then
         export VDATE=${VDATE:-$PDYm2}
     fi
 else
-    export VDATE=${VDATE:-$PDYm1}
+    export VDATE=$(date -d "today -1 day" +"%Y%m%d")
 fi
 
 export COMIN=${COMIN:-$(compath.py  $NET/$evs_ver)}
