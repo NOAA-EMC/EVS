@@ -28,7 +28,7 @@ export obsproc_ver=$obsproc_ver
 # Load modules
 ############################################################
 module reset
-##export HPC_OPT=/apps/ops/para/libs
+export HPC_OPT=/apps/ops/prod/libs
 module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module --ignore-cache load intel/${intel_ver}
