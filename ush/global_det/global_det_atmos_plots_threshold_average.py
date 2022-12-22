@@ -240,16 +240,17 @@ class ThresholdAverage:
         plot_specs_ta = PlotSpecs(self.logger, 'threshold_average')
         plot_specs_ta.set_up_plot()
         n_xticks = 7
-        fcst_var_thresh_values = np.asarray(
-            [re.sub("[^0-9]", "", x) \
-            for x in self.plot_info_dict['fcst_var_threshs']],
-            dtype=float
-        )
-        if len(self.plot_info_dict['fcst_var_threshs']) < n_xticks:
+        #xticks = np.asarray(
+        #    [re.sub("[^0-9]", "", x) \
+        #    for x in self.plot_info_dict['fcst_var_threshs']],
+        #    dtype=float
+        #)
+        xticks = np.arange(0, len(self.plot_info_dict['fcst_var_threshs']),
+                           1)
+        if len(xticks) < n_xticks:
             xtick_intvl = 1
         else:
-            xtick_intvl = int(len(self.plot_info_dict['fcst_var_threshs'])
-                              /n_xticks)
+            xtick_intvl = int(len(xticks)/n_xticks)
         stat_min_max_dict = {
             'ax1_stat_min': np.ma.masked_invalid(np.nan),
             'ax1_stat_max': np.ma.masked_invalid(np.nan),
@@ -311,8 +312,8 @@ class ThresholdAverage:
         ax1.set_ylabel(stat_plot_name)
         ax2.grid(True)
         ax2.set_xlabel('Threshold')
-        ax2.set_xlim([fcst_var_thresh_values[0], fcst_var_thresh_values[-1]])
-        ax2.set_xticks(fcst_var_thresh_values[::xtick_intvl])
+        ax2.set_xlim([xticks[0], xticks[-1]])
+        ax2.set_xticks(xticks[::xtick_intvl])
         ax2.set_xticklabels(self.plot_info_dict['fcst_var_threshs'][::xtick_intvl])
         ax2.set_ylabel('Difference')
         ax2.set_title('Difference from '
@@ -343,12 +344,12 @@ class ThresholdAverage:
             threshs_avg_df.index.get_level_values(0).unique().tolist()
         )
         ci_bar_max_widths = np.append(
-            np.diff(fcst_var_thresh_values),
-            fcst_var_thresh_values[-1]-fcst_var_thresh_values[-2]
+            np.diff(xticks),
+            xticks[-1]-xticks[-2]
         )/1.5
         ci_bar_min_widths = np.append(
-            np.diff(fcst_var_thresh_values),
-            fcst_var_thresh_values[-1]-fcst_var_thresh_values[-2]
+            np.diff(xticks),
+            xticks[-1]-xticks[-2]
         )/len(list(self.model_info_dict.keys()))
         ci_bar_intvl_widths = (
             (ci_bar_max_widths-ci_bar_min_widths)
@@ -378,10 +379,15 @@ class ThresholdAverage:
                 - np.ma.count_masked(masked_model_num_data)
             )
             thresh_values = np.asarray(
-                [re.sub("[^0-9]", "", x) \
-                for x in threshs_avg_df.columns.values.tolist()],
+                [x for x in \
+                         range(0,len(threshs_avg_df.columns.values.tolist()))],
                 dtype=float
             )
+            #thresh_values = np.asarray(
+            #    [re.sub("[^0-9]", "", x) \
+            #    for x in threshs_avg_df.columns.values.tolist()],
+            #    dtype=float
+            #)
             masked_thresh_values = np.ma.masked_where(
                 np.ma.getmask(masked_model_num_data),
                 thresh_values
@@ -653,10 +659,10 @@ def main():
         'interp_points': 'INTERP_POINTS',
         'fcst_var_name': 'FCST_VAR_NAME',
         'fcst_var_level': 'FCST_VAR_LEVEL',
-        'fcst_var_thresh': ['FCST_VAR_THRESHS'],
+        'fcst_var_threshs': ['FCST_VAR_THRESHS'],
         'obs_var_name': 'OBS_VAR_NAME',
         'obs_var_level': 'OBS_VAR_LEVEL',
-        'obs_var_thresh': ['OBS_VAR_THRESHS'],
+        'obs_var_threshs': ['OBS_VAR_THRESHS'],
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',

@@ -97,6 +97,8 @@ class PrecipSpatialMap:
                         'mediumorchid', 'darkmagenta', 'darkred',
                         'crimson', 'orangered', 'darkorange',
                         'goldenrod', 'yellow']
+        # Set Cartopy shapefile location
+        config['data_dir'] = '/apps/ops/para/data/cartopy'
         # Read in data
         self.logger.info(f"Reading in model files from {self.input_dir}")
         for model_num in self.model_info_dict:
@@ -107,30 +109,51 @@ class PrecipSpatialMap:
             model_num_data_dir = os.path.join(self.input_dir, model_num_name)
             make_plot = False
             if model_num == 'obs':
+                image_data_source = 'qpe'
+                image_forecast_hour = '024'
+            else:
+                image_data_source = model_num_name
+                image_forecast_hour = (
+                    self.date_info_dict['forecast_hour'].zfill(3)
+                )
+            image_region_dict = {
+                'CONUS': 'conus',
+                'AK': 'alaska',
+                'HI': 'hawaii',
+                'PR': 'prico'
+            }
+            image_name = os.path.join(
+                output_image_dir,
+                image_data_source
+                +'.v'+valid_date_dt.strftime('%Y%m%d%H')+'.'
+                +image_forecast_hour+'h.'
+                +image_region_dict[self.plot_info_dict['vx_mask']]+'.png'
+            )
+            if model_num == 'obs':
                 model_num_file = os.path.join(
                     model_num_data_dir,
-                    'ccpa_precip.24hrAccum.valid'
+                    'ccpa_precip_24hrAccum_valid'
                     +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
                 )
-                obs_image_name = os.path.join(
-                    output_image_dir,
-                    'qpe.v'+valid_date_dt.strftime('%Y%m%d%H')+'.024h.gif'
-                )
-                if not os.path.exists(obs_image_name):
+                if not os.path.exists(image_name):
                     make_plot = True
             else:
                 model_num_file = os.path.join(
                     model_num_data_dir,
-                    model_num_name+'_precip.24hrAccum.init'
-                    +init_date_dt.strftime('%Y%m%d%H')+'.'
-                    +'f'+self.date_info_dict['forecast_hour'].zfill(3)
+                    model_num_name+'_precip_24hrAccum_init'
+                    +init_date_dt.strftime('%Y%m%d%H')+'_'
+                    +'fhr'+self.date_info_dict['forecast_hour'].zfill(3)
                     +'.nc'
                 )
+            if not os.path.exists(image_name):
                 if os.path.exists(model_num_file):
                     make_plot = True
                 else:
+                    make_plot = False
                     self.logger.warning(f"{model_num_file} does not exist, "
                                         +"not making plot")
+            else:
+                make_plot = False
             if make_plot:
                 self.logger.debug("Plotting data from "+model_num_file)
                 precip_data = netcdf.Dataset(model_num_file)
@@ -140,11 +163,11 @@ class PrecipSpatialMap:
                 var_name = precip_data.variables['APCP_A24'].getncattr('name')
                 var_level = precip_data.variables['APCP_A24'].getncattr('level')
                 var_units = precip_data.variables['APCP_A24'].getncattr('units')
-                if model_num == 'obs':
+                if precip_lat.ndim == 1 and precip_lon.ndim == 1:
+                    x, y = np.meshgrid(precip_lon, precip_lat)
+                elif precip_lat.ndim == 2 and precip_lon.ndim == 2:
                     x = precip_lon
                     y = precip_lat
-                else:
-                    x, y = np.meshgrid(precip_lon, precip_lat)
                 file_init_time = (precip_data.variables['APCP_A24']\
                                   .getncattr('init_time'))
                 file_valid_time = (precip_data.variables['APCP_A24']\
@@ -225,20 +248,6 @@ class PrecipSpatialMap:
                     clevs = clevs_mm
                     cmap = matplotlib.colors.ListedColormap(colorlist_mm)
                 norm = matplotlib.colors.BoundaryNorm(clevs, cmap.N)
-                if model_num == 'obs':
-                    image_name = os.path.join(
-                        output_image_dir,
-                        'qpe.v'+valid_date_dt.strftime('%Y%m%d%H')+'.024h.'
-                        +self.plot_info_dict['vx_mask'].lower()+'.png'
-                    )
-                else:
-                    image_name = os.path.join(
-                        output_image_dir,
-                        model_num_name
-                        +'.v'+valid_date_dt.strftime('%Y%m%d%H')+'.'
-                        +self.date_info_dict['forecast_hour'].zfill(3)+'h.'
-                        +self.plot_info_dict['vx_mask'].lower()+'.png'
-                    )
                 # Create plot
                 self.logger.info(f"Creating plot for {model_num_file}")
                 fig = plt.figure(figsize=(plot_specs_psm.fig_size[0],

@@ -22,7 +22,7 @@ fi
 if [ $machine = WCOSS2 ]; then
     source /usr/share/lmod/lmod/init/bash
     module reset
-    export HPC_OPT=/apps/ops/para/libs
+    export HPC_OPT=/apps/ops/prod/libs
     export MET_bin_exec="bin"
 elif [ $machine = HERA ]; then
     source /apps/lmod/lmod/init/bash

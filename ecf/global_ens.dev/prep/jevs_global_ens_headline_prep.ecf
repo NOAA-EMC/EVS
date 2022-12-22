@@ -1,0 +1,60 @@
+#!/bin/bash 
+#
+#PBS -N evs_headline_prep
+#PBS -j oe 
+#PBS -S /bin/bash
+#PBS -q dev
+#PBS -A GEFS-DEV
+#PBS -l walltime=02:50:00
+#PBS -l place=vscatter,select=1:ncpus=2:mem=10GB
+#PBS -l debug=true
+
+
+#Total 87 processes: 64(gefs_atmos) + 4(gefs_precip) + 16(cmce_atmos) + 2(cmce_precip) + 1 (ecme_atmos, ecme_precip)
+#Total 2x87=174 cpu cores,  cpu cores are assigned to 3 node
+#Completed in about 1hr 40min
+
+set -x
+export OMP_NUM_THREADS=1
+export evs_ver=v1.0
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+
+source $HOMEevs/versions/run.ver
+
+module purge
+source $HOMEevs/modulefiles/${evs_ver}
+
+export NET=evs
+export RUN=headline
+export STEP=prep
+export COMPONENT=global_ens
+export VERIF_CASE=grid2grid
+export MODELNAME=gefs
+
+export KEEPDATA=YES
+
+#This var is only for testing, if not set, then run operational 
+
+#export INITDATE=$1
+TODAY=`date +%Y%m%d`
+yyyymmdd=${TODAY:0:8}
+PAST=`$NDATE -48 ${yyyymmdd}01`
+export INITDATE=${INITDATE:-${PAST:0:8}}
+
+echo $INITDATE
+export cyc=00
+export run_mpi=no
+
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
+export DATA_IN=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
+export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
+
+#yyyy=2022
+#mm=08
+#for dd in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
+  export INITDATE=20221205
+  ${HOMEevs}/jobs/global_ens/prep/JEVS_GLOBAL_ENS_PREP
+#done
+
+

@@ -109,7 +109,27 @@ class LeadByDate:
                                   +"for forecast hour "
                                   +f"{forecast_hour} with initialization dates "
                                   +', '.join(format_init_dates))
-                plot_dates = valid_dates
+                if len(valid_dates) == 0:
+                    plot_dates = np.arange(
+                        datetime.datetime.strptime(
+                            self.date_info_dict['start_date']
+                            +self.date_info_dict['valid_hr_start'],
+                            '%Y%m%d%H'
+                        ),
+                        datetime.datetime.strptime(
+                            self.date_info_dict['end_date']
+                            +self.date_info_dict['valid_hr_end'],
+                            '%Y%m%d%H'
+                        )
+                        +datetime.timedelta(
+                            hours=int(self.date_info_dict['valid_hr_inc'])
+                        ),
+                        datetime.timedelta(
+                            hours=int(self.date_info_dict['valid_hr_inc'])
+                        )
+                    ).astype(datetime.datetime)
+                else:
+                    plot_dates = valid_dates
             elif self.date_info_dict['date_type'] == 'INIT':
                 self.logger.debug("Based on date information, plot will display "
                                   +"initialization dates "
@@ -117,7 +137,27 @@ class LeadByDate:
                                   +"for forecast hour "
                                   +f"{forecast_hour} with valid dates "
                                   +', '.join(format_valid_dates))
-                plot_dates = init_dates
+                if len(init_dates) == 0:
+                    plot_dates = np.arange(
+                        datetime.datetime.strptime(
+                            self.date_info_dict['start_date']
+                            +self.date_info_dict['init_hr_start'],
+                            '%Y%m%d%H'
+                        ),
+                        datetime.datetime.strptime(
+                            self.date_info_dict['end_date']
+                            +self.date_info_dict['init_hr_end'],
+                            '%Y%m%d%H'
+                        )
+                        +datetime.timedelta(
+                            hours=int(self.date_info_dict['init_hr_inc'])
+                        ),
+                        datetime.timedelta(
+                            hours=int(self.date_info_dict['init_hr_inc'])
+                        )
+                    ).astype(datetime.datetime)
+                else:
+                    plot_dates = init_dates
             # Read in data
             self.logger.info(f"Reading in model stat files from {self.input_dir}")
             all_model_df = gda_util.build_df(
@@ -231,13 +271,18 @@ class LeadByDate:
             n_xticks = 8
         else:
             n_xticks = 17
-        if len(self.date_info_dict['forecast_hours']) < n_xticks:
-            xtick_intvl = 1
+        if len(self.date_info_dict['forecast_hours']) <= n_xticks:
+            xticks = self.date_info_dict['forecast_hours']
         else:
-            xtick_intvl = int(len(self.date_info_dict['forecast_hours'])
-                              /n_xticks)
+            xticks = []
+            for fhr in self.date_info_dict['forecast_hours']:
+                if int(fhr) % 24 == 0:
+                    xticks.append(fhr)
+            if len(xticks) > n_xticks:
+                xtick_intvl = int(len(xticks)/n_xticks)
+                xticks = xticks[::xtick_intvl]
         n_yticks = 5
-        if len(plot_dates) < n_xticks:
+        if len(plot_dates) < n_yticks:
             ytick_intvl = 1
         else:
             ytick_intvl = int(len(plot_dates)/n_yticks)
@@ -344,7 +389,7 @@ class LeadByDate:
             ax.grid(True)
             ax.set_xlim([self.date_info_dict['forecast_hours'][0],
                           self.date_info_dict['forecast_hours'][-1]])
-            ax.set_xticks(self.date_info_dict['forecast_hours'][::xtick_intvl])
+            ax.set_xticks(xticks)
             if ax.is_last_row() \
                     or (nsubplots % 2 != 0 and model_idx_list.index(model_idx)\
                         == nsubplots-1):
@@ -381,8 +426,8 @@ class LeadByDate:
                                           levels=subplot0_levs,
                                           cmap=subplot0_cmap, extend='both')
                     else:
-                       CF0 = ax.contourf(xmesh, ymesh, subplot0_data,
-                                         cmap=subplot0_cmap, extend='both')
+                        CF0 = ax.contourf(xmesh, ymesh, subplot0_data,
+                                          cmap=subplot0_cmap, extend='both')
                     C0 = ax.contour(xmesh, ymesh, subplot0_data,
                                     levels=CF0.levels, colors='k',
                                     linewidths=1.0)
@@ -397,7 +442,7 @@ class LeadByDate:
                         C0_fmt[lev] = label
                     ax.clabel(C0, C0.levels, fmt=C0_fmt, inline=True,
                               fontsize=12.5)
-                    if self.plot_info_dict['stat'] in ['BIAS', 'FBIAS']:
+                    if self.plot_info_dict['stat'] in ['BIAS', 'ME', 'FBIAS']:
                         if not make_colorbar:
                             make_colorbar = True
                             cbar_CF = CF0
@@ -409,7 +454,7 @@ class LeadByDate:
                     self.logger.warning(f"Fully masked array for {model_num}, "
                                         +"no plotting")
             else:
-                if self.plot_info_dict['stat'] in ['BIAS', 'FBIAS']:
+                if self.plot_info_dict['stat'] in ['BIAS', 'ME',' FBIAS']:
                     self.logger.debug(f"Plotting {model_num} - {model_num_name} "
                                       +f"- {model_num_plot_name}")
                     ax.set_title(model_num_plot_name)
@@ -425,7 +470,8 @@ class LeadByDate:
                         CFN = ax.contourf(xmesh, ymesh, subplotN_data,
                                           levels=subplotsN_levs,
                                           cmap=subplotsN_cmap, extend='both')
-                        if self.plot_info_dict['stat'] in ['BIAS', 'FBIAS']:
+                        if self.plot_info_dict['stat'] in ['BIAS', 'ME',
+                                                           'FBIAS']:
                             CN = ax.contour(xmesh, ymesh, subplotN_data,
                                             levels=CFN.levels, colors='k',
                                             linewidths=1.0)
@@ -446,7 +492,8 @@ class LeadByDate:
                             make_colorbar = True
                             cbar_CF = CFN
                             cbar_ticks = CFN.levels
-                            if self.plot_info_dict['stat'] in ['BIAS', 'FBIAS']:
+                            if self.plot_info_dict['stat'] in ['BIAS', 'ME',
+                                                               'FBIAS']:
                                 cbar_label = plot_specs_lbd.get_stat_plot_name(
                                     self.plot_info_dict['stat']
                                 )
