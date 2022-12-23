@@ -114,7 +114,6 @@ else
 fi
 
 export COMOUTmrms=${COMOUT}/${OBSNAME}.${VDATE}
-mkdir -m 755 -p $COMOUTmrms
 
 
 ####################################
