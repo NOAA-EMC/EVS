@@ -279,7 +279,7 @@ elif job_type == 'generate':
         job_dependent_vars['MASK_POLY_LIST'] = {
             'exec_value': '',
             'bash_value': '',
-            'bash_conditional': '[[ ${VHOUR} -lt 1200 ]]',
+            'bash_conditional': '[[ ${VHOUR} -lt 12 ]]',
             'bash_conditional_value': '"' + ', '.join(
                 glob.glob(os.path.join(
                     MET_PLUS_OUT,VERIF_TYPE,'genvxmask',f'spc_otlk.{VDATE}',
