@@ -34,6 +34,7 @@ export obsproc_ver=v1.1
 export nwps_ver=v1.4
 export glwu_ver=v1.1
 export nfcens_ver=v1.3
+export ccpa_ver=v4.2
 
 export COMPATH=/lfs/h1/ops/prod/com/gfs/:/lfs/h1/ops/prod/com/hrrr/:/lfs/h1/ops/prod/com/rtma/:/lfs/h1/ops/prod/com/aqm/:/lfs/h1/ops/prod/com/gefs/:/lfs/h1/ops/prod/com/nam/:/lfs/h1/ops/prod/com/urma/:/lfs/h1/ops/prod/com/narre/:/lfs/h1/ops/prod/com/hiresw/:/lfs/h1/ops/prod/com/rap/:/lfs/h1/ops/prod/com/sref/:/lfs/h1/ops/prod/com/hourly/
 export DATAFS=h1
