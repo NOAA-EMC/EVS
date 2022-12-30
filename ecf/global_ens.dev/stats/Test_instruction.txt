@@ -1,0 +1,215 @@
+Instruction for tesing EVS global_ens package:
+
+ General information
+
+  The EVS global_ens verifies 4 global ensembles (models) over 1x1 global grid (G003) 
+     (1) NCEP's Global Ensemble Forecast System (GEFS)
+     (2) Canadian Meteorologic Center's Ensemble (CMCE)
+     (3) Europe Center's Medium-range Ensemble (ECME) 
+     (4) NCEP's North American Ensemble Forecast System (NAEFS) 
+
+   According to EVS, 3 "RUN"s assigned for the verification of these models:
+     (1) Atmos ( for GEFS, CMCE, ECME, NAEFS)
+     (2) WMO ( for GEFS, CMCE)
+     (3) Headline (for GEFS, NAEFS)
+          As comparison, GFS is also inluded for reference
+
+   Each RUN has different verification types:
+      Atmos:     grid2grid, grid2obs, precipitation, snowfall, sea-ice, SST, cnv (ceiling and visibility)
+      WMO:       grid2grid 
+      Headline:  grid2grid
+     
+   
+ 
+0. Before testing, please compile the Fortran source codes that are required to process NAEFS member data:
+    
+    (1) go to /sorc sub-directory under EVS
+    (2) run script compile_evs_global_ens_sorc.sh that compiles the Fortran codes in the directory evs_global_ens_adjust_CMCE_NAEFS.fd
+        If the complation is successful, the execution file evs_g2g_adjustCMC.x will be stored in the sub-directory /exec under EVS
+    The compilation is just once. If the compilation is successful, then can test the prep and stats ecf as shown below.
+ 
+
+1. Testing ecf directory:
+ 
+  
+  (1)  prep ecf testing directory
+
+    Since the global_ens verifies 16 days of the ensemble forecast while the operational data are retained only for few days,
+    it is necessary to retain them for at least 16 days. But the global ensemble member files are very large and will occupy
+    huge storage space. To reduce the storage space, they are thinned by retireving only required fields. The second reason
+    is raw ensemble files are not G003. One of prep task to converting them to G003 grid. This also save large storage space.
+    The prep jobs also process required observation data, such as prepbufr, ccap, osi_saf, ghrsst, nohrsc data, etc. 
+   
+  The testing prep ecf files are in the directory:
+     /lfs/h2/emc/vpppg/noscrub/$USER/EVS/ecf/global_gens.dev/prep
+
+    There are 2 ecf files:
+
+       jevs_global_ens_atmos_prep.ecf  
+       jevs_global_ens_headline_prep.ecf
+
+  After jevs_global_ens_atmos_prep.ecf is successfully finished, the prepared data are stored in directory
+ 
+     /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/prep/global_ens
+
+     Under which the daily data are in directory atmos.$INITDATE and headline.$INIDATE, respectovely 
+ 
+  (2) stats ecf testing directory 
+
+  /lfs/h2/emc/vpppg/noscrub/$USER/EVS/ecf/global_gens.dev/stats
+    There are 23  ecf files, 10 for gefs, 5 for cmce, 4 for ecme and 4 for naefs
+
+  gefs:
+    jevs_gefs_atmos_grid2grid_stats.ecf
+    jevs_gefs_atmos_grid2obs_stats.ecf
+    jevs_gefs_atmos_precip_stats.ecf
+    jevs_gefs_atmos_snowfall_stats.ecf
+    jevs_gefs_atmos_sea_ice_stats.ecf
+    jevs_gefs_atmos_sst_stats.ecf
+    jevs_gefs_atmos_cnv_stats.ecf
+    jevs_gefs_wmo_grid2grid_stats.ecf
+    jevs_gefs_headline_grid2grid_stats.ecf
+    jevs_gfs_headline_grid2grid_stats.ecf
+
+  cmce:
+    jevs_cmce_atmos_grid2grid_stats.ecf
+    jevs_cmce_atmos_grid2obs_stats.ecf
+    jevs_cmce_atmos_precip_stats.ecf
+    jevs_cmce_atmos_snowfall_stats.ecf
+    jevs_cmce_wmo_grid2grid_stats.ecf
+
+  ecme:
+    jevs_ecme_atmos_grid2grid_stats.ecf
+    jevs_ecme_atmos_grid2obs_stats.ecf
+    jevs_ecme_atmos_precip_stats.ecf
+    jevs_ecme_atmos_snowfall_stats.ecf
+  
+  naefs:
+    jevs_naefs_atmos_grid2grid_stats.ecf
+    jevs_naefs_atmos_grid2obs_stats.ecf
+    jevs_naefs_atmos_precip_stats.ecf
+    jevs_naefs_headline_grid2grid_stats.ecf
+
+2. Submit jobs:
+
+  Note (1):
+   The ecf files in the prep directories must be submitted at first. After they are finished
+     the ecf files in the stats directory can be submitted.
+
+  Note (2): in the prep directory, jevs_global_ens_atmos_prep.ecf must be submitted first.
+    Waiting for at lease 3 hr and 45 min (after the first job is finished), submit jevs_global_ens_headline_prep.ecf
+    The second job will be finsihed within 10min
+
+  Note (3): After 2 jobs in the prep directory are finished, can submit all 23 ecf files.
+    Since these 23 ecf files are not associated, they can be submitted  at same time   
+
+  Note (4): since "#PBS -j oe" is set, the stdout file will be in the submit directory
+   /lfs/h2/emc/vpppg/noscrub/$USER/EVS/ecf/global_gens.dev/prep or 
+   /lfs/h2/emc/vpppg/noscrub/$USER/EVS/ecf/global_gens.dev/stats 
+
+  I run the test by running following 2 scripts 
+   /lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS/ecf/global_ens.dev/prep/submit_prep.sh
+   which qsub qsub jevs_global_ens_atmos_prep.ecf,
+   then sleep 4h, then qsub jevs_global_ens_headline_prep.ecf
+  and
+   /lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS/ecf/global_ens.dev/stats/submit_gens_for_day_all.sh 
+   which qsub all 23  stats ecf at same time
+
+3. Prepared output data structure:
+
+  The ecf job will rettrieve the observation data files and global ensemble member files
+   then thin them by grabbing required fields and save the thinned files in 
+
+      /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/prep/global_ens directory.
+
+        in which  there are /atmos.$ININDATE (103G each) and /headline.$INITDATE (44M each) sub-directories
+
+      In the /atmos.$ININDATE subdirectory, there are 4 sub-directories
+              /cmce  /ecme  /gefs  /osi_saf
+      The /cmce, /ecme and /gefs  store cmce, ecme and gefs  member files and their analysis files, respectively
+      The /osi_saf stores 24h osi_saf files
+
+      The /gefs also store prebufr, ccpa, hgrsst, nohrsc data files
+ 
+      In headline.$INITDATE, there are /cmce and /gefs sub-directories, storing the cmce and gefs headline member files.
+
+   Note: in operarion, atmos.$INITDATA will be retained for 20 days, and headline.$INITDATE will be retained for 13 months
+
+4. Running the stats ecf
+ 
+  The running directory (i.e. $DATA) will be in /lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd:
+ 
+  The running has 4 stages for each ecf file
+
+ (0) Check validation data, including observation data and ensemble member files and ensemble product files
+      If observation data is missing, the run will stop 
+      If any  member(s) is(are) missing, the run will stop
+      If member files are missing for all forecast hours, the run will stop
+
+    IF none of above happen, go following stages
+
+ (1) Run METplus to generate stat files
+ 
+       All of output stat files will be in the $DATA/$VARIF_CASE
+ 
+    In each job's directory, there are 3 sub directories
+          /logs, /stats, and /tmp
+ 
+    The /stats sub-directory is where the stat files (small stat files) generated by METplus
+
+    After all of the small stat files are generated, the gather process combines them into a big stat files         
+
+    The small stat files are stored in directory 
+        /lfs/h2/emc/vpppg/noscrub/$USeR/com/evs/v1.0/stats/global_gens/atmos.$VDATE/${model}
+    The big stat files are stored in directory
+        /lfs/h2/emc/vpppg/noscrub/$USeR/com/evs/v1.0/stats/global_gens/atmos.$VDATE/${model}
+
+   Speficically: 
+
+    for /gefs (9 stat files), 20221109 as example:
+      evs.stats.gefs_atmos_cnv_v20221109.stat        
+      evs.stats.gefs_atmos_snowfall_v20221109.stat
+      evs.stats.gefs_atmos_grid2grid_v20221109.stat  
+      evs.stats.gefs_atmos_sst24h_v20221109.stat
+      evs.stats.gefs_atmos_grid2obs_v20221109.stat   
+      evs.stats.gefs_headline_grid2grid_v20221109.stat
+      evs.stats.gefs_atmos_precip_v20221109.stat     
+      evs.stats.gefs_wmo_grid2grid_v20221109.stat
+      evs.stats.gefs_atmos_sea_ice_v20221109.stat
+
+    for cmce (5 stat files)
+      evs.stats.cmce_atmos_grid2grid_v20221109.stat
+      evs.stats.cmce_atmos_snowfall_v20221109.stat
+      evs.stats.cmce_atmos_grid2obs_v20221109.stat
+      evs.stats.cmce_wmo_grid2grid_v20221109.stat
+      evs.stats.cmce_atmos_precip_v20221109.stat
+
+    for ecme (4 stat files)
+      evs.stats.ecme_atmos_grid2grid_v20221109.stat
+      evs.stats.ecme_atmos_precip_v20221109.stat
+      evs.stats.ecme_atmos_grid2obs_v20221109.stat
+      evs.stats.ecme_atmos_snowfall_v20221109.stat
+   
+    for naefs (4 stat files)
+      evs.stats.naefs_atmos_grid2grid_v20221109.stat
+      evs.stats.naefs_atmos_precip_v20221109.stat
+      evs.stats.naefs_atmos_grid2obs_v20221109.stat
+      evs.stats.naefs_headline_grid2grid_v20221109.stat
+   
+    for gfs (1 stat file)
+      evs.stats.gfs_headline_grid2grid_v20221109.stat
+
+If all of above big files are generated, the stats execution is completeted.
+The standard output of all of ecf jobs are stored in the ecf directory:
+/lfs/h2/emc/vpppg/noscrub/$USER/EVS/ecf/global_ens.dev/stats
+Under which, the small stat files are saved in atmos.$VDATE, wmo.$VDATE and headline.$VDATE
+The large stat files are saved in gefs.$VDATE, cmce.$VDATE, ecme.$VDATE, and naefs.$VDATE 
+ (atmos, wmo, and headline stat files are save in the same model's directory)  
+
+
+Please Note: Only ater the retained prepared forecat files are accumulated for 16 days,
+(after running the prep ecf for 16 days), the verification of all forecast 384 hours
+can be done. If less than 16 days of days are retained, the verification of longer forecast
+hours will be missing.
+
+  
