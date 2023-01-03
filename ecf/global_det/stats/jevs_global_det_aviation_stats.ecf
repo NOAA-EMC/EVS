@@ -1,12 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
 #PBS -N evs_aviation_stats
 #PBS -j oe
 #PBS -o /lfs/h2/emc/ptmp/yali.mao/evs_aviation_stats.log
-#PBS -q debug
+#PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:30:00
-#PBS -l select=1:ncpus=1:mem=2GB
+#PBS -l walltime=01:30:00
+#PBS -l select=1:ncpus=2:mem=4GB
 ##PBS -V
 
 ##PBS -q debug
@@ -46,8 +46,8 @@ module load ip/$ip_ver
 module load netcdf/$netcdf_ver
 module load cfp/$cfp_ver
 
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/$intel_ver
+export HPC_OPT=/apps/ops/prod/libs
+module use /apps/ops/prod/libs/modulefiles/compiler/intel/$intel_ver
 module load intel
 module load gsl
 module load python/$python_ver
