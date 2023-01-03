@@ -1,9 +1,9 @@
 ###############################################################################
 #
 # Name:          df_preprocessing.py
-# Contact(s):    Marcel Caron
 # Developed:     Dec. 2, 2021 by Marcel Caron
-# Last Modified: Apr. 22, 2022 by Marcel Caron
+# Modified:      Apr. 22, 2022 by Marcel Caron
+#                Nov. 10, 2022 by L. Gwen Chen (lichuan.chen@noaa.gov)
 # Abstract:      Collection of functions that initialize and filter dataframes
 #
 ###############################################################################
@@ -18,8 +18,8 @@ from datetime import timedelta as td
 
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
-from evs_global_det_aviation_plot_prune_stat_files import prune_data
-import evs_global_det_aviation_plot_util as plot_util
+from prune_stat_files import prune_data
+import plot_util
 
 
 # =================== FUNCTIONS =========================
@@ -52,7 +52,7 @@ def get_valid_range(logger, date_type, date_range, date_hours, fleads):
 
 def run_prune_data(logger, stats_dir, prune_dir, output_base_template, verif_case, 
                    verif_type, line_type, valid_range, eval_period, var_name, 
-                   fcst_var_names, model_list, domain):
+                   fcst_var_names, model_list, obtype, domain):
     model_list = [str(model) for model in model_list]
     tmp_dir = 'tmp'+str(uuid.uuid4().hex)
     pruned_data_dir = os.path.join(
@@ -73,8 +73,8 @@ def run_prune_data(logger, stats_dir, prune_dir, output_base_template, verif_cas
                 str(eval_period).upper(), str(verif_case).lower(), 
                 str(verif_type).lower(), str(line_type).upper(), 
                 str(domain), 
-                [str(fcst_var_name) for fcst_var_name in fcst_var_names], 
-                str(var_name).upper(), model_list
+                [str(fcst_var_name) for fcst_var_name in fcst_var_names],
+                str(var_name).upper(), model_list, obtype
             )
         else:
             e1 = f"{stats_dir} exists but is empty."
@@ -214,6 +214,15 @@ def filter_by_interp(df, logger, interp):
     else:
         return df
 
+def filter_by_obtype(df, logger, obtype):
+    if df is None:
+        return None
+    df = df[df['OBTYPE'].eq(str(obtype))]
+    if check_empty(df, logger, 'filter_by_obtype'):
+        return None
+    else:
+        return df
+
 def filter_by_domain(df, logger, domain):
     if df is None:
         return None
@@ -279,14 +288,14 @@ def get_preprocessed_data(logger, stats_dir, prune_dir, output_base_template,
                           verif_case, verif_type, line_type, date_type, 
                           date_range, eval_period, date_hours, fleads, 
                           var_name, fcst_var_names, obs_var_names, model_list, 
-                          domain, interp, met_version, clear_prune_dir):
+                          obtype, domain, interp, met_version, clear_prune_dir):
     valid_range = get_valid_range(
         logger, date_type, date_range, date_hours, fleads
     )
     pruned_data_dir = run_prune_data(
         logger, stats_dir, prune_dir, output_base_template, verif_case, verif_type, 
         line_type, valid_range, eval_period, var_name, fcst_var_names, model_list, 
-        domain
+        obtype, domain
     )
     df = create_df(
         logger, stats_dir, pruned_data_dir, line_type, date_range, model_list,
@@ -295,6 +304,7 @@ def get_preprocessed_data(logger, stats_dir, prune_dir, output_base_template,
     df = filter_by_level_type(df, logger, verif_type)
     df = filter_by_var_name(df, logger, fcst_var_names, obs_var_names)
     df = filter_by_interp(df, logger, interp)
+    df = filter_by_obtype(df, logger, obtype)
     df = filter_by_domain(df, logger, domain)
     df = create_lead_hours(df, logger)
     df = create_valid_datetime(df, logger)

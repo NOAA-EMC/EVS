@@ -79,10 +79,34 @@ export USH_DIR=${USH_DIR:-$HOMEevs/ush/$COMPONENT}
 ############################################
 # Execute the script.
 ############################################
+export DAYS_LIST=${DAYS_LIST:-"90 31"}
 
-export NDAYS=${NDAYS:-90}
+export DATAplot=$DATA/plot
+mkdir -p $DATAplot
 
-$SCRIPTSevs/plots/exevs_global_det_aviation_plots.sh
+export MPIRUN=${MPIRUN:-"mpiexec -np 4 -cpu-bind verbose,core cfp"}
+
+OBSERVATIONS="GCIP GFS"
+rm wafs_plots.cmdfile
+n=0
+for observation in $OBSERVATIONS ; do
+    for ndays in $DAYS_LIST ; do
+	if [ `echo $MPIRUN | cut -d " " -f1` = 'srun' ] ; then
+	    echo $n $SCRIPTSevs/plots/exevs_global_det_aviation_plots.sh $observation $ndays  >> wafs_plots.cmdfile
+	else
+	    echo $SCRIPTSevs/plots/exevs_global_det_aviation_plots.sh $observation $ndays  >> wafs_plots.cmdfile
+	    export MP_PGMMODEL=mpmd
+	fi
+	n=$(( n + 1 ))
+    done
+done
+$MPIRUN wafs_plots.cmdfile
+
+cd $DATAplot
+for ndays in $DAYS_LIST ; do
+    eval_period="last${ndays}days"
+    tar -cvf $COMOUT/$NET.$STEP.${COMPONENT}.${RUN}.${VERIF_CASE}.$eval_period.v${VDATE}.tar *${eval_period}*png
+done
 
 export err=$?; err_chk
 

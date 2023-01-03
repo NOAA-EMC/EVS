@@ -98,7 +98,7 @@ def check_PRUNE_DIR(PRUNE_DIR):
     return PRUNE_DIR
 
 # SAVE_DIR
-# info case:whether or not an empty string is provided
+# info case: whether or not an empty string is provided
 # warning case:
 # error case: should be a string, should follow proper directory structure
 def check_SAVE_DIR(SAVE_DIR):
@@ -116,6 +116,24 @@ def check_SAVE_DIR(SAVE_DIR):
         print(f"The provided SAVE_DIR is empty. Will store plots"
                      + f" in the current working directory.")
     return SAVE_DIR
+
+# FIX_DIR
+# info case: whether or not an empty string is provided
+# warning case:
+# error case: should be a string, should follow proper directory structure
+def check_FIX_DIR(FIX_DIR):
+    if not isinstance(FIX_DIR, str):
+        sys.exit(f"The provided FIX_DIR ('{FIX_DIR}') is not a string."
+                     + f"  FIX_DIR must be a string. Check the plotting"
+                     + f" configuration file.")
+    if not Path(FIX_DIR).exists():
+        print(f"WARNING: The provided FIX_DIR ('{FIX_DIR}') does not exist on the"
+                     + f" current system.")
+    if not Path(FIX_DIR).is_dir():
+        print(f"WARNING: The provided FIX_DIR ('{FIX_DIR}') is not a directory.")
+    if not FIX_DIR:
+        print(f"The provided FIX_DIR is empty.")
+    return FIX_DIR
 
 # OUTPUT_BASE_DIR
 # info case: whether or not an empty string is provided
@@ -211,6 +229,24 @@ def check_MODEL(MODEL):
                      + f" configuration file.")
         #sys.exit(1)
     return MODEL
+
+# OBTYPE
+# info case:
+# warning case:
+# error case: should be a string, should be comma-separated or contain no other symbols than letters, numbers, dashes, and underlines
+def check_OBTYPE(OBTYPE):
+    if not isinstance(OBTYPE, str):
+        sys.exit(f"The provided OBTYPE ('{OBTYPE}') is not a string."
+                     + f" OBTYPE must be a string. Check the plotting"
+                     + f" configuration file.")
+        #sys.exit(1)
+    if not re.search(r'(^[ A-Za-z0-9,\-_]+)$', OBTYPE):
+        sys.exit(f"The provided OBTYPE ('{OBTYPE}') is not valid. OBTYPE may"
+                     + f" contain letters, numbers, hyphens, underscores,"
+                     + f" commas, and spaces only. Check the plotting"
+                     + f" configuration file.")
+        #sys.exit(1)
+    return OBTYPE
 
 # DATE_TYPE
 # info case:
@@ -718,25 +754,3 @@ def check_CONFIDENCE_INTERVALS(CONFIDENCE_INTERVALS):
     return CONFIDENCE_INTERVALS
 
 
-# LOGO_DIR
-# info case:whether or not an empty string is provided
-# warning case:
-# error case: should be a string, should follow proper directory structure
-def check_LOGO_DIR(LOGO_DIR):
-    if not LOGO_DIR:
-        print(f"The provided LOGO_DIR is empty.")
-        return False
-    if not isinstance(LOGO_DIR, str):
-        print(f"The provided LOGO_DIR ('{LOGO_DIR}') is not a string."
-                     + f"  LOGO_DIR must be a string. Check the plotting"
-                     + f" configuration file.")
-        #sys.exit(1)
-        return False
-    if not Path(LOGO_DIR).exists():
-        print(f"WARNING: The provided LOGO_DIR ('{LOGO_DIR}') does not exist on the"
-                       + f" current system.")
-        return False
-    if not Path(LOGO_DIR).is_dir():
-        print(f"WARNING: The provided LOGO_DIR ('{LOGO_DIR}') is not a directory.")
-        return False
-    return LOGO_DIR

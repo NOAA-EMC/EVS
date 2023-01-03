@@ -22,10 +22,11 @@ class Toggle():
             'display_averages': False, # display mean statistic for each model, averaged across the dimension of the independent variable
             'sample_equalization': True, # equalize samples along each value of the independent variable where data exist
             'keep_shared_events_only': False, # functional for time_series only.
-            'clear_prune_directory': True, # remove the intermediate directory created to store pruned data files temporarily
-            'zoom_logo_left': 0.85,
-            'zoom_logo_right': 0.85,
-            'logo_alpha': 0.5
+            'clear_prune_directory': False, # remove the intermediate directory created to store pruned data files temporarily
+            'plot_logo_left': True,
+            'plot_logo_right': True,
+            'zoom_logo_left': 1.0, 
+            'zoom_logo_right': 1.0,
         }
 
 class Templates():
@@ -60,9 +61,21 @@ class Templates():
         Example: 
         "{RUN_CASE_LOWER}/{MODEL}/{valid?fmt=%Y%m}/{MODEL}_{valid?fmt=%Y%m%d}*"
         '''
-        self.output_base_template = "*.{RUN_CASE}*.v{valid?fmt=%Y%m%d}*"
+        self.output_base_template = "evs.stats.*.v{valid?fmt=%Y%m%d}.stat"
+
+class Paths():
+    def __init__(self):
+        '''
+        Custom paths to left and right logos. 
+        
+        Referenced if plot_logo_left and plot_logo_right, in the Toggle class,
+        are set to True
+        '''
+        self.logo_left_path = "/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/logos/noaa.png"
+        self.logo_right_path = "/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/logos/nws.png"
+
 class Presets():
-    def __init__(self,EVAL_PERIOD=''):
+    def __init__(self):
         
         '''
         Evaluation periods that are requested regularly can be defined here 
@@ -83,6 +96,30 @@ class Presets():
         the online documentation to learn how to use these libraries.
         '''
         self.date_presets = {
+            'PAST90DAYS': {
+                'valid_beg': (datetime.now()-td(days=90)).strftime('%Y%m%d'),
+                'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
+                'init_beg': (datetime.now()-td(days=90)).strftime('%Y%m%d'),
+                'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
+            },
+            'PAST31DAYS': {
+                'valid_beg': (datetime.now()-td(days=31)).strftime('%Y%m%d'),
+                'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
+                'init_beg': (datetime.now()-td(days=31)).strftime('%Y%m%d'),
+                'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
+            },
+            'PAST7DAYS': {
+                'valid_beg': (datetime.now()-td(days=7)).strftime('%Y%m%d'),
+                'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
+                'init_beg': (datetime.now()-td(days=7)).strftime('%Y%m%d'),
+                'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
+            },
+            'PAST3DAYS': {
+                'valid_beg': (datetime.now()-td(days=3)).strftime('%Y%m%d'),
+                'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
+                'init_beg': (datetime.now()-td(days=3)).strftime('%Y%m%d'),
+                'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
+            },
             '2020': {
                 'valid_beg': '20200101',
                 'valid_end': '20201231',
@@ -120,16 +157,6 @@ class Presets():
                 'init_end': datetime.now().strftime('%Y1130')
             }
         }
-        if EVAL_PERIOD:
-            if EVAL_PERIOD.startswith("LAST") and EVAL_PERIOD.endswith("DAYS"):
-                lastNdays = int(EVAL_PERIOD.split("LAST")[1].split("DAYS")[0])
-                value={
-                    'valid_beg': (datetime.now()-td(days=lastNdays)).strftime('%Y%m%d'),
-                    'valid_end': (datetime.now()-td(days=1)).strftime('%Y%m%d'),
-                    'init_beg': (datetime.now()-td(days=lastNdays)).strftime('%Y%m%d'),
-                    'init_end': (datetime.now()-td(days=1)).strftime('%Y%m%d')
-                }
-                self.date_presets[EVAL_PERIOD]=value
             
 class ModelSpecs():
     def __init__(self):
@@ -444,6 +471,10 @@ class ModelSpecs():
                 'settings_key':'NAM_NEST', 
                 'plot_name':'NAM Nest'
             },
+            'NAM_FIREWXNEST': {
+                'settings_key':'NAM_NEST', 
+                'plot_name':'NAM Fire Wx Nest'
+            },
             'namnest': {
                 'settings_key':'NAM_NEST', 
                 'plot_name':'NAM Nest'
@@ -472,17 +503,29 @@ class ModelSpecs():
                 'settings_key':'RRFS_A', 
                 'plot_name':'RRFS-A'
             },
-            'us': {
-                'settings_key':'US', 
-                'plot_name':'US'
+            'RRFS_A_AK': {
+                'settings_key':'RRFS_A', 
+                'plot_name':'RRFS-A Alaska'
             },
-            'uk': {
-                'settings_key':'UK', 
-                'plot_name':'UK'
+            'RRFS_A_PR': {
+                'settings_key':'RRFS_A', 
+                'plot_name':'RRFS-A Puerto Rico'
             },
-            'blend': {
-                'settings_key':'BLEND', 
-                'plot_name':'BLEND'
+            'RRFS_A_HI': {
+                'settings_key':'RRFS_A', 
+                'plot_name':'RRFS-A Hawaii'
+            },
+            'RRFS_A_CONUS': {
+                'settings_key':'RRFS_A', 
+                'plot_name':'RRFS-A CONUS'
+            },
+            'RRFS_A_NACONUS': {
+                'settings_key':'RRFS_A_NA', 
+                'plot_name':'RRFS-A N. America'
+            },
+            'wafs': {
+                'settings_key':'WAFS', 
+                'plot_name':'WAFS'
             }
         }
 
@@ -585,6 +628,9 @@ class ModelSpecs():
             'RRFS_A': {'color': '#00dc00',
                       'marker': 'o', 'markersize': 12,
                       'linestyle': 'solid', 'linewidth': 3.},
+            'RRFS_A_NA': {'color': '#00dc00',
+                      'marker': 'P', 'markersize': 14,
+                      'linestyle': 'dashed', 'linewidth': 3.},
             'GFS': {'color': '#000000',
                     'marker': 'o', 'markersize': 12,
                     'linestyle': 'solid', 'linewidth': 5.},
@@ -607,15 +653,6 @@ class ModelSpecs():
                      'marker': 'o', 'markersize': 12,
                      'linestyle': 'solid', 'linewidth': 3.},
             'OFCL': {'color': '#696969',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
-            'BLEND': {'color': '#1e3cff',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
-            'US': {'color': '#fb2020',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
-            'UK': {'color': '#000000',
                      'marker': 'o', 'markersize': 12,
                      'linestyle': 'solid', 'linewidth': 3.}
         }    
@@ -643,6 +680,10 @@ class Reference():
             'K': {
                 'convert_to': 'F',
                 'formula': self.formulas.K_to_F
+            },
+            'C': {
+                'convert_to': 'F',
+                'formula': self.formulas.C_to_F
             }
         }
 
@@ -698,11 +739,19 @@ class Reference():
                                     'TCDC': 'Cloud Area Fraction',
                                     'HGTCLDCEIL': 'Cloud Ceiling Height',
                                     'VIS': 'Visibility',
+                                    'sst': 'Sea Surface Temperature',
+                                    'ssh': 'Sea Surface Height',
+                                    'ice_coverage': 'Sea Ice Concentration',
+                                    'sss': 'Sea Surface Salinity',
                                     'ICEC_Z0_mean': 'Sea Ice Concentration',
                                     'ICESEV': 'Icing Severity',
-                                    'ICIP': 'Icing Potential',
-                                    'WIND': 'Wind Speed',
-                                    'WIND80': 'Wind Speed >= 80knots',
+                                    'WIND': '10m Wind Speed',
+                                    'HTSGW': 'Significant Height of Combined Wind Waves and Swell',
+                                    'PERPW': 'Primary Wave Mean Period',
+                                    'WVHGT': 'Significant Height of Wind Waves',
+                                    'WVPER': 'Mean Period of Wind Waves',
+                                    'SWELL': 'Significant Height of Swell Waves',
+                                    'SWPER': 'Mean Period of Swell Waves',
                                     'REFC': 'Composite Reflectivity',
                                     'REFD': 'Above Ground Level Reflectivity',
                                     'RETOP': 'Echo Top Height'}
@@ -719,32 +768,44 @@ class Reference():
                                   'PNA': 'Pacific North America',
                                   'N60': '60N-90N',
                                   'S60': '60S-90S',
+                                  'North_Pacific': 'Northern Pacific Ocean',
                                   'NPO': 'Northern Pacific Ocean',
+                                  'South_Pacific': 'Southern Pacific Ocean',
                                   'SPO': 'Southern Pacific Ocean',
+                                  'Equatorial_Pacific': 'Equatorial Pacific Ocean',
+                                  'North_Atlantic': 'Northern Atlantic Ocean',
                                   'NAO': 'Northern Atlantic Ocean',
+                                  'South_Atlantic': 'Southern Atlantic Ocean',
                                   'SAO': 'Southern Atlantic Ocean',
+                                  'Equatorial_Atlantic': 'Equatorial Atlantic Ocean',
+                                  'Indian': 'Indian Ocean',
+                                  'Southern': 'Southern Ocean',
+                                  'Mediterranean': 'Mediterranean Sea',
                                   'NH': 'Northern Hemisphere 20N-90N',
                                   'SH': 'Southern Hemisphere 20S-90S',
+                                  'AR2': 'AR2',
                                   'ASIA': 'Asia',
                                   'AUNZ': 'Australia and New Zealand',
-                                  'EAST': 'Middle East',
-                                  'NAMER': 'North America',
-                                  'NATL_AR2': 'North Atlantic - Area 2',
-                                  'NHEM': 'Northern Hemisphere',
-                                  'NPO': 'North Pacific',
-                                  'SHEM': 'Southern Hemisphere',
-                                  'TROPICS': 'Tropics',
-                                  'G193': 'Global',
-                                  'G45': 'Global',
+                                  'NAMR': 'North America',
+                                  'NHM': 'Northern Hemisphere',
+                                  'NPCF': 'North Pacific Ocean',
+                                  'SHM': 'Southern Hemisphere',
+                                  'TRP': 'TRP',
                                   'G002': 'Global',
                                   'G003': 'Global',
+                                  'Global': 'Global',
+                                  'FULL': 'Global, 0p25',
                                   'G130': 'CONUS - NCEP Grid 130',
                                   'G211': 'CONUS - NCEP Grid 211',
+                                  'G221': 'CONUS - NCEP Grid 221',
                                   'G236': 'CONUS - NCEP Grid 236',
                                   'G223': 'CONUS - NCEP Grid 223',
                                   'CONUS': 'CONUS',
                                   'POLAR': 'Polar 60-90 N/S',
                                   'ARCTIC': 'Arctic',
+                                  'Arctic': 'Arctic Ocean',
+                                  'Antarctic': 'Antarctic Ocean',
+                                  'EAST': 'Eastern US',
                                   'CONUS_East': 'Eastern US',
                                   'WEST': 'Western US',
                                   'CONUS_West': 'Western US',
@@ -1533,7 +1594,7 @@ class Reference():
                                                     'P10', 'P5', 'P1'],
                                 'fcst_var_thresholds': '',
                                 'fcst_var_options': '',
-                                'obs_var_names': ['HGT'],
+                                'obs_var_names': ['HGT','ZOB'],
                                 'obs_var_levels': ['P1000', 'P925', 'P850',
                                                    'P700', 'P500', 'P400',
                                                    'P300', 'P250', 'P200',
@@ -1723,11 +1784,33 @@ class Reference():
                                         + ' faratio, sratio'),
                     'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
-                        'CONUS', 'G130', 'G214', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
+                        'CONUS', 'G130', 'G214', 'G221', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
                         'LMV', 'GMC', 'APL', 'NAK', 'SAK'
                     ],
                     'var_dict': {
+                         'RH2m': {'fcst_var_names': ['RH'],
+                                  'fcst_var_levels': ['Z2'],
+                                  'fcst_var_thresholds': (' <=15, <=20,'
+                                                          + ' <=25, <=30'),
+                                  'fcst_var_options': '',
+                                  'obs_var_names': ['RH'],
+                                  'obs_var_levels': ['Z2'],
+                                  'obs_var_thresholds': (' <=15, <=20,'
+                                                         + ' <=25, <=30'),
+                                  'obs_var_options': '',
+                                  'plot_group':'sfc_upper'},
+                         'DPT2m': {'fcst_var_names': ['DPT'],
+                                  'fcst_var_levels': ['Z2'],
+                                  'fcst_var_thresholds': (' >=4.4, >=10,'
+                                                          + ' >=15.55, >=21.11'),
+                                  'fcst_var_options': '',
+                                  'obs_var_names': ['TDO'],
+                                  'obs_var_levels': ['Z2'],
+                                  'obs_var_thresholds': (' >=4.4, >=10,'
+                                                         + ' >=15.55, >=21.11'),
+                                  'obs_var_options': '',
+                                  'plot_group':'sfc_upper'},
                         'VISsfc': {'fcst_var_names': ['VIS'],
                                    'fcst_var_levels': ['L0'],
                                    'fcst_var_thresholds': ('<=800, <805, <=1600, <1609,'
@@ -1855,6 +1938,131 @@ class Reference():
                     }
                 }
             },
+            'grid2grid_rtofs_sfc': {
+                'SL1L2': {
+                    'plot_stats_list': 'bias, rmse, fbar_obar, estdev',
+                    'interp': 'NEAREST',
+                    'vx_mask_list' : [
+                        'Global','North_Atlantic','South_Atlantic','Equatorial_Atlantic',
+                        'North_Pacific','South_Pacific','Equatorial_Pacific','Indian',
+                        'Southern','Arctic','Mediterranean','Antarctic'
+                    ],
+                    'var_dict': {
+                        'SST': {'fcst_var_names': ['sst'],
+                                  'fcst_var_levels': ['0,*,*'],
+                                  'fcst_var_thresholds': '',
+                                  'fcst_var_options': '',
+                                  'obs_var_names': ['analysed_sst'],
+                                  'obs_var_levels': ['0,*,*'],
+                                  'obs_var_thresholds': '',
+                                  'obs_var_options': '',
+                                  'plot_group':'rtofs_sfc'},
+                        'SSS': {'fcst_var_names': ['sss'],
+                                  'fcst_var_levels': ['0,*,*'],
+                                  'fcst_var_thresholds':'',
+                                  'fcst_var_options': '',
+                                  'obs_var_names': ['sss'],
+                                  'obs_var_levels': ['0,0,*,*'],
+                                  'obs_var_thresholds': '',
+                                  'obs_var_options': '',
+                                  'plot_group': 'rtofs_sfc'},
+                        'SSH': {'fcst_var_names': ['ssh'],
+                                   'fcst_var_levels': ['0,*,*'],
+                                   'fcst_var_thresholds': '',
+                                   'fcst_var_options': '',
+                                   'obs_var_names': ['adt'],
+                                   'obs_var_levels': ['0,*,*'],
+                                   'obs_var_thresholds': '',
+                                   'obs_var_options': '',
+                                   'plot_group':'rtofs_sfc'},
+                        'SIC': {'fcst_var_names': ['ice_coverage'],
+                                    'fcst_var_levels': ['0,*,*'],
+                                    'fcst_var_thresholds': '',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['ice_conc'],
+                                    'obs_var_levels': ['0,*,*'],
+                                    'obs_var_thresholds': '',
+                                    'obs_var_options': '',
+                                    'plot_group':'rtofs_sfc'}
+                    }
+                },
+                'SAL1L2': {
+                    'plot_stats_list': 'acc',
+                    'interp': 'NEAREST',
+                    'vx_mask_list' : [
+                        'Global','North_Atlantic','South_Atlantic','Equatorial_Atlantic',
+                        'North_Pacific','South_Pacific','Equatorial_Pacific','Indian',
+                        'Southern','Arctic','Mediterranean'
+                    ],
+                    'var_dict': {
+                        'SST': {'fcst_var_names': ['sst'],
+                                  'fcst_var_levels': ['0,*,*'],
+                                  'fcst_var_thresholds': '',
+                                  'fcst_var_options': '',
+                                  'obs_var_names': ['analysed_sst'],
+                                  'obs_var_levels': ['0,*,*'],
+                                  'obs_var_thresholds': '',
+                                  'obs_var_options': '',
+                                  'plot_group':'rtofs_sfc'},
+                        'SSS': {'fcst_var_names': ['sss'],
+                                  'fcst_var_levels': ['0,*,*'],
+                                  'fcst_var_thresholds':'',
+                                  'fcst_var_options': '',
+                                  'obs_var_names': ['sss'],
+                                  'obs_var_levels': ['0,0,*,*'],
+                                  'obs_var_thresholds': '',
+                                  'obs_var_options': '',
+                                  'plot_group': 'rtofs_sfc'},
+                        'SSH': {'fcst_var_names': ['ssh'],
+                                   'fcst_var_levels': ['0,*,*'],
+                                   'fcst_var_thresholds': '',
+                                   'fcst_var_options': '',
+                                   'obs_var_names': ['adt'],
+                                   'obs_var_levels': ['0,*,*'],
+                                   'obs_var_thresholds': '',
+                                   'obs_var_options': '',
+                                   'plot_group':'rtofs_sfc'},
+                        'SIC': {'fcst_var_names': ['ice_coverage'],
+                                    'fcst_var_levels': ['0,*,*'],
+                                    'fcst_var_thresholds': '',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['ice_conc'],
+                                    'obs_var_levels': ['0,*,*'],
+                                    'obs_var_thresholds': '',
+                                    'obs_var_options': '',
+                                    'plot_group':'rtofs_sfc'}
+                    }
+                },
+                'CTC': {
+                    'plot_stats_list': 'sratio, pod, csi, hss',
+                    'interp': 'NEAREST',
+                    'vx_mask_list' : [
+                        'Global','North_Atlantic','South_Atlantic','Equatorial_Atlantic',
+                        'North_Pacific','South_Pacific','Equatorial_Pacific','Indian',
+                        'Southern','Arctic','Mediterranean','Antarctic'
+                    ],
+                    'var_dict': {
+                        'SST': {'fcst_var_names': ['sst'],
+                                  'fcst_var_levels': ['0,*,*'],
+                                  'fcst_var_thresholds': '>=0, >=26.5',
+                                  'fcst_var_options': '',
+                                  'obs_var_names': ['analysed_sst'],
+                                  'obs_var_levels': ['0,*,*'],
+                                  'obs_var_thresholds': '>=0, >=26.5',
+                                  'obs_var_options': '',
+                                  'plot_group':'rtofs_sfc'},
+                        'SIC': {'fcst_var_names': ['ice_coverage'],
+                                    'fcst_var_levels': ['0,*,*'],
+                                    'fcst_var_thresholds': '>=15, >=40, >=80',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['ice_conc'],
+                                    'obs_var_levels': ['0,*,*'],
+                                    'obs_var_thresholds': '>=15, >=40, >=80',
+                                    'obs_var_options': '',
+                                    'plot_group':'rtofs_sfc'}
+                    }
+                }
+            },
             'precip_ccpa': {
                 'SL1L2': {
                     'plot_stats_list': ('bias, rmse, bcrmse, fbar_obar, fbar,'
@@ -1907,7 +2115,7 @@ class Reference():
                 },
                 'CTC': {
                     'plot_stats_list': ('bias, ets, fss, csi, fbias, fbar,'
-                                        + ' obar, pod, faratio, sratio'),
+                                        + ' obar, pod, faratio, farate, sratio'),
                     'interp': 'NEAREST',
                     'vx_mask_list' : [
                         'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 
@@ -2075,7 +2283,7 @@ class Reference():
                                         + ' obar, pod, farate, faratio, sratio'),
                     'interp': 'NEAREST',
                     'vx_mask_list' : [
-                        'G45','G193','ASIA','AUNZ','EAST','NAMER','NATL_AR2','NHEM','NPO','SHEM','TROPICS'
+                        'AR2','ASIA','AUNZ','EAST','NAMR','NHM','NPCF','SHM','TRP'
                     ],
                     'var_dict': {
                         'ICESEV': {'fcst_var_names': ['ICESEV'],
@@ -2087,55 +2295,277 @@ class Reference():
                                   'obs_var_thresholds': '>=1, >=2, >=3, >=4',
                                   'obs_var_options': '',
                                   'plot_group':'aviation'},
-                        'ICIP': {'fcst_var_names': ['ICIPmean', 'ICIPmax'],
-                                  'fcst_var_levels': ['P800','P700','P600','P500','P400'],
-                                  'fcst_var_thresholds': '>=0.1, >=0.2, >=0.3, >=0.4, >=0.5, >=0.6, >=0.7, >=0.8, >=0.9',
-                                  'fcst_var_options': '',
-                                  'obs_var_names': ['ICIP'],
-                                  'obs_var_levels': ['P800','P700','P600','P500','P400'],
-                                  'obs_var_thresholds': '>=0.1, >=0.2, >=0.3, >=0.4, >=0.5, >=0.6, >=0.7, >=0.8, >=0.9',
-                                  'obs_var_options': '',
-                                  'plot_group':'aviation'}
-                    }
-                },
-                'SL1L2': {
-                    'plot_stats_list': 'bias, rmse, fbar_obar',
-                    'interp': 'NEAREST',
-                    'vx_mask_list' : [
-                        'G45','G193','ASIA','AUNZ','EAST','NAMER','NATL_AR2','NHEM','NPO','SHEM','TROPICS'
-                    ],
-                    'var_dict': {
-                        'TMP': {'fcst_var_names': ['TMP'],
-                                  'fcst_var_levels': ['P850', 'P700', 'P600', 'P500', 'P400', 'P300', 'P250', 'P200', 'P150', 'P100'],
-                                  'fcst_var_thresholds': '',
-                                  'fcst_var_options': '',
-                                  'obs_var_names': ['TMP'],
-                                  'obs_var_levels': ['P850', 'P700', 'P600', 'P500', 'P400', 'P300', 'P250', 'P200', 'P150', 'P100'],
-                                  'obs_var_thresholds': '',
-                                  'obs_var_options': '',
-                                  'plot_group':'aviation'},
-                        'WIND': {'fcst_var_names': ['WIND'],
-                                   'fcst_var_levels': ['P850', 'P700', 'P600', 'P500', 'P400', 'P300', 'P250', 'P200', 'P150', 'P100'],
-                                   'fcst_var_thresholds': '',
-                                   'fcst_var_options': '',
-                                   'obs_var_names': ['WIND'],
-                                   'obs_var_levels': ['P850', 'P700', 'P600', 'P500', 'P400', 'P300', 'P250', 'P200', 'P150', 'P100'],
-                                   'obs_var_thresholds': '',
-                                   'obs_var_options': '',
-                                   'plot_group':'aviation'},
-                        'WIND80': {'fcst_var_names': ['WIND80'],
-                                    'fcst_var_levels': ['P850', 'P700', 'P600', 'P500', 'P400', 'P300', 'P250', 'P200', 'P150', 'P100'],
-                                    'fcst_var_thresholds': '',
-                                    'fcst_var_options': '',
-                                    'obs_var_names': ['WIND80'],
-                                    'obs_var_levels': ['P850', 'P700', 'P600', 'P500', 'P400', 'P300', 'P250', 'P200', 'P150', 'P100'],
-                                    'obs_var_thresholds': '',
-                                    'obs_var_options': '',
-                                    'plot_group':'aviation'}
                     }
                 }
             },
-        }
+            'grid2obs_wave': {
+                'SL1L2': {
+                    'plot_stats_list': ('me, esd, rmse, bcrmse, pcor, si, fbar, obar'),
+                    'interp': 'NEAREST',
+                    'vx_mask_list' : ['FULL'],
+                    'var_dict': {
+                        'HTSGW': {'fcst_var_names': ['HTSGW'],
+                                     'fcst_var_levels': ['L0'],
+                                     'fcst_var_thresholds': '',
+                                     'fcst_var_options': '',
+                                     'obs_var_names': ['HTSGW'],
+                                     'obs_var_levels': ['L0'],
+                                     'obs_var_thresholds': '',
+                                     'obs_var_options': '',
+                                     'plot_group':'sfc_wave'},
+                        'PERPW': {'fcst_var_names': ['PERPW'],
+                                    'fcst_var_levels': ['L0'],
+                                    'fcst_var_thresholds': '',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['PERPW'],
+                                    'obs_var_levels': ['L0'],
+                                    'obs_var_thresholds': '',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_wave'},
+                        'WVHGT': {'fcst_var_names': ['WVHGT'],
+                                     'fcst_var_levels': ['L0'],
+                                     'fcst_var_thresholds': '',
+                                     'fcst_var_options': '',
+                                     'obs_var_names': ['WVHGT'],
+                                     'obs_var_levels': ['L0'],
+                                     'obs_var_thresholds': '',
+                                     'obs_var_options': '',
+                                     'plot_group':'sfc_wave'},
+                        'WVPER': {'fcst_var_names': ['WVPER'],
+                                    'fcst_var_levels': ['L0'],
+                                    'fcst_var_thresholds': '',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['WVPER'],
+                                    'obs_var_levels': ['L0'],
+                                    'obs_var_thresholds': '',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_wave'},
+                        'SWELL': {'fcst_var_names': ['SWELL'],
+                                    'fcst_var_levels': ['L0'],
+                                    'fcst_var_thresholds': '',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['SWELL'],
+                                    'obs_var_levels': ['L0'],
+                                    'obs_var_thresholds': '',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_wave'},
+                        'SWPER': {'fcst_var_names': ['SWPER'],
+                                    'fcst_var_levels': ['L0'],
+                                    'fcst_var_thresholds': '',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['SWPER'],
+                                    'obs_var_levels': ['L0'],
+                                    'obs_var_thresholds': '',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_wave'},
+                        'WIND': {'fcst_var_names': ['WIND'],
+                                    'fcst_var_levels': ['L0'],
+                                    'fcst_var_thresholds': '',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['WIND'],
+                                    'obs_var_levels': ['Z10'],
+                                    'obs_var_thresholds': '',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_wave'},
+                             }
+                         },
+                'CTC': {
+                    'plot_stats_list': ('me, ets, fss, csi, fbias, fbar,'
+                                        + ' obar, pod, farate, faratio, sratio'),
+                    'interp': 'NEAREST',
+                    'vx_mask_list' : ['FULL'],
+                    'var_dict': {
+                        'HTSGW_lo': {'fcst_var_names': ['HTSGW'],
+                                     'fcst_var_levels': ['L0'],
+                                     'fcst_var_thresholds': '<=3.0',
+                                     'fcst_var_options': '',
+                                     'obs_var_names': ['HTSGW'],
+                                     'obs_var_levels': ['L0'],
+                                     'obs_var_thresholds': '<=3.0',
+                                     'obs_var_options': '',
+                                     'plot_group':'sfc_wave'},
+                        'HTSGW_hi': {'fcst_var_names': ['HTSGW'],
+                                    'fcst_var_levels': ['L0'],
+                                    'fcst_var_thresholds': '>=8.0',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['HTSGW'],
+                                    'obs_var_levels': ['L0'],
+                                    'obs_var_thresholds': '>=8.0',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_wave'},
+                        'PERPW_lo': {'fcst_var_names': ['PERPW'],
+                                    'fcst_var_levels': ['L0'],
+                                    'fcst_var_thresholds': '<=8.0',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['PERPW'],
+                                    'obs_var_levels': ['L0'],
+                                    'obs_var_thresholds': '<=8.0',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_wave'},
+                        'PERPW_hi': {'fcst_var_names': ['PERPW'],
+                                    'fcst_var_levels': ['L0'],
+                                    'fcst_var_thresholds': '>12.0',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['PERPW'],
+                                    'obs_var_levels': ['L0'],
+                                    'obs_var_thresholds': '>12.0',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_wave'},                        
+                        'WVHGT_lo': {'fcst_var_names': ['WVHGT'],
+                                     'fcst_var_levels': ['L0'],
+                                     'fcst_var_thresholds': '<=3.0',
+                                     'fcst_var_options': '',
+                                     'obs_var_names': ['WVHGT'],
+                                     'obs_var_levels': ['L0'],
+                                     'obs_var_thresholds': '<=3.0',
+                                     'obs_var_options': '',
+                                     'plot_group':'sfc_wave'},
+                        'WVHGT_hi': {'fcst_var_names': ['WVHGT'],
+                                    'fcst_var_levels': ['L0'],
+                                    'fcst_var_thresholds': '>=8.0',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['WVHGT'],
+                                    'obs_var_levels': ['L0'],
+                                    'obs_var_thresholds': '>=8.0',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_wave'},
+                        'WVPER_lo': {'fcst_var_names': ['WVPER'],
+                                    'fcst_var_levels': ['L0'],
+                                    'fcst_var_thresholds': '<=8.0',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['WVPER'],
+                                    'obs_var_levels': ['L0'],
+                                    'obs_var_thresholds': '<=8.0',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_wave'},
+                        'WVPER_hi': {'fcst_var_names': ['WVPER'],
+                                    'fcst_var_levels': ['L0'],
+                                    'fcst_var_thresholds': '>12.0',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['WVPER'],
+                                    'obs_var_levels': ['L0'],
+                                    'obs_var_thresholds': '>12.0',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_wave'},
+                        'WIND_lo': {'fcst_var_names': ['WIND'],
+                                    'fcst_var_levels': ['L0'],
+                                    'fcst_var_thresholds': '<10.0, <20.0',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['WIND'],
+                                    'obs_var_levels': ['Z10'],
+                                    'obs_var_thresholds': '<10.0, <20.0',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_wave'},
+                        'WIND_hi': {'fcst_var_names': ['WIND'],
+                                    'fcst_var_levels': ['L0'],
+                                    'fcst_var_thresholds': '>33.0, >49.4',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['WIND'],
+                                    'obs_var_levels': ['Z10'],
+                                    'obs_var_thresholds': '>33.0, >49.4',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_wave'},
+                            }
+                        },
+                'SAL1L2': {
+                    'plot_stats_list': 'acc',
+                    'interp': 'NEAREST',
+                    'vx_mask_list' : ['FULL'],
+                    'var_dict': {
+                        'HTSGW_lo': {'fcst_var_names': ['HTSGW'],
+                                     'fcst_var_levels': ['L0'],
+                                     'fcst_var_thresholds': '<=3.0',
+                                     'fcst_var_options': '',
+                                     'obs_var_names': ['HTSGW'],
+                                     'obs_var_levels': ['L0'],
+                                     'obs_var_thresholds': '<=3.0',
+                                     'obs_var_options': '',
+                                     'plot_group':'sfc_wave'},
+                        'HTSGW_hi': {'fcst_var_names': ['HTSGW'],
+                                    'fcst_var_levels': ['L0'],
+                                    'fcst_var_thresholds': '>=8.0',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['HTSGW'],
+                                    'obs_var_levels': ['L0'],
+                                    'obs_var_thresholds': '>=8.0',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_wave'},
+                        'PERPW_lo': {'fcst_var_names': ['PERPW'],
+                                    'fcst_var_levels': ['L0'],
+                                    'fcst_var_thresholds': '<=8.0',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['PERPW'],
+                                    'obs_var_levels': ['L0'],
+                                    'obs_var_thresholds': '<=8.0',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_wave'},
+                        'PERPW_hi': {'fcst_var_names': ['PERPW'],
+                                    'fcst_var_levels': ['L0'],
+                                    'fcst_var_thresholds': '>12.0',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['PERPW'],
+                                    'obs_var_levels': ['L0'],
+                                    'obs_var_thresholds': '>12.0',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_wave'},                        
+                        'WVHGT_lo': {'fcst_var_names': ['WVHGT'],
+                                     'fcst_var_levels': ['L0'],
+                                     'fcst_var_thresholds': '<=3.0',
+                                     'fcst_var_options': '',
+                                     'obs_var_names': ['WVHGT'],
+                                     'obs_var_levels': ['L0'],
+                                     'obs_var_thresholds': '<=3.0',
+                                     'obs_var_options': '',
+                                     'plot_group':'sfc_wave'},
+                        'WVHGT_hi': {'fcst_var_names': ['WVHGT'],
+                                    'fcst_var_levels': ['L0'],
+                                    'fcst_var_thresholds': '>=8.0',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['WVHGT'],
+                                    'obs_var_levels': ['L0'],
+                                    'obs_var_thresholds': '>=8.0',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_wave'},
+                        'WVPER_lo': {'fcst_var_names': ['WVPER'],
+                                    'fcst_var_levels': ['L0'],
+                                    'fcst_var_thresholds': '<=8.0',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['WVPER'],
+                                    'obs_var_levels': ['L0'],
+                                    'obs_var_thresholds': '<=8.0',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_wave'},
+                        'WVPER_hi': {'fcst_var_names': ['WVPER'],
+                                    'fcst_var_levels': ['L0'],
+                                    'fcst_var_thresholds': '>12.0',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['WVPER'],
+                                    'obs_var_levels': ['L0'],
+                                    'obs_var_thresholds': '>12.0',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_wave'},
+                        'WIND_lo': {'fcst_var_names': ['WIND'],
+                                    'fcst_var_levels': ['L0'],
+                                    'fcst_var_thresholds': '<10.0, <20.0',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['WIND'],
+                                    'obs_var_levels': ['Z10'],
+                                    'obs_var_thresholds': '<10.0, <20.0',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_wave'},
+                        'WIND_hi': {'fcst_var_names': ['WIND'],
+                                    'fcst_var_levels': ['L0'],
+                                    'fcst_var_thresholds': '>33.0, >49.4',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['WIND'],
+                                    'obs_var_levels': ['Z10'],
+                                    'obs_var_thresholds': '>33.0, >49.4',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_wave'},
+                            }
+                       }
+                  },
+            }
 
     class formulas():
         def mm_to_in(mm_vals):
@@ -2143,4 +2573,7 @@ class Reference():
             return inch_vals
         def K_to_F(K_vals):
             F_vals = ((np.array(K_vals)-273.15)*9./5.)+32.
+            return F_vals
+        def C_to_F(C_vals):
+            F_vals = (np.array(C_vals)*9./5.)+32.
             return F_vals
