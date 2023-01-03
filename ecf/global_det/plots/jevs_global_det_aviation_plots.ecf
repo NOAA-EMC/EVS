@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #PBS -N evs_aviation_plots
 #PBS -j oe
@@ -6,7 +6,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=02:00:00
-#PBS -l select=1:ncpus=1:mem=2GB
+#PBS -l select=1:ncpus=4:mem=200GB
 ##PBS -V
 
 export OMP_NUM_THREADS=1
@@ -41,8 +41,8 @@ module load ip/$ip_ver
 module load netcdf/$netcdf_ver
 module load cfp/$cfp_ver
 
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/$intel_ver
+export HPC_OPT=/apps/ops/prod/libs
+module use /apps/ops/prod/libs/modulefiles/compiler/intel/$intel_ver
 module load intel
 module load gsl
 module load python/$python_ver
@@ -65,8 +65,10 @@ export VERIF_CASE=grid2grid
 
 export COMIN=/lfs/h2/emc/ptmp/$USER/com/evs/$evs_ver
 
+export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
+
 export USH_DIR=$HOMEevs/ush/$COMPONENT
-export NDAYS=90
+export DAYS_LIST="90 31"
 
 ############################################################
 # CALL executable job script here
