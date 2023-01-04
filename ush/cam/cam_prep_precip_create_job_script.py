@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
  
 # =============================================================================
 #
@@ -177,7 +177,7 @@ if not os.path.exists(job_dir):
 job_file = os.path.join(job_dir, f'job{njob}')
 print(f"Creating job script: {job_file}")
 job = open(job_file, 'w')
-job.write('#!/bin/sh\n')
+job.write('#!/bin/bash\n')
 job.write('set -x \n')
 job.write('\n')
 for name, value in job_env_vars_dict.items():
