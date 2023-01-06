@@ -35,7 +35,7 @@ if STEP == 'stats':
     COMINnohrsc = os.environ['COMINnohrsc']
     COMINobsproc = os.environ['COMINobsproc']
     COMINosi_saf = os.environ['COMINosi_saf']
-    COMINghrsst_median = os.environ['COMINghrsst_median']
+    COMINghrsst_ospo = os.environ['COMINghrsst_ospo']
     COMINget_d = os.environ['COMINget_d']
 if evs_run_mode != 'production':
     QUEUESERV = os.environ['QUEUESERV']
@@ -514,45 +514,44 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                         nohrsc_arch_file_format, nohrsc_dest_file_format
                     )
             elif VERIF_CASE_STEP_type == 'sst':
-                # GHRSST Median
-                ghrsst_median_prod_file_format = os.path.join(
-                    COMINghrsst_median, 'prep',
-                    COMPONENT, RUN+'.{valid?fmt=%Y%m%d}', 'ghrsst_median',
-                    'ghrsst_median.{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
+                # GHRSST OSPO
+                ghrsst_ospo_prod_file_format = os.path.join(
+                    COMINghrsst_ospo, 'prep',
+                    COMPONENT, RUN+'.{valid?fmt=%Y%m%d}', 'ghrsst_ospo',
+                    'ghrsst_ospo.{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
                     +'{valid?fmt=%Y%m%d%H}.nc'
                 )
-                VERIF_CASE_STEP_ghrsst_median_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, 'ghrsst_median'
+                VERIF_CASE_STEP_ghrsst_ospo_dir = os.path.join(
+                    VERIF_CASE_STEP_data_dir, 'ghrsst_ospo'
                 )
-                if not os.path.exists(VERIF_CASE_STEP_ghrsst_median_dir):
-                    os.makedirs(VERIF_CASE_STEP_ghrsst_median_dir)
-                ghrsst_median_dest_file_format = os.path.join(
-                    VERIF_CASE_STEP_ghrsst_median_dir,
-                    'ghrsst_median.{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
+                if not os.path.exists(VERIF_CASE_STEP_ghrsst_ospo_dir):
+                    os.makedirs(VERIF_CASE_STEP_ghrsst_ospo_dir)
+                ghrsst_ospo_dest_file_format = os.path.join(
+                    VERIF_CASE_STEP_ghrsst_ospo_dir,
+                    'ghrsst_ospo.{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
                      +'{valid?fmt=%Y%m%d%H}.nc'
                 )
-                ghrsst_median_dest_file = gda_util.format_filler(
-                    ghrsst_median_dest_file_format,
+                ghrsst_ospo_dest_file = gda_util.format_filler(
+                    ghrsst_ospo_dest_file_format,
                     VERIF_CASE_STEP_type_valid_time,
                     VERIF_CASE_STEP_type_valid_time, ['anl'], {}
                 )
                 gda_util.get_truth_file(
                     VERIF_CASE_STEP_type_valid_time,
-                    ghrsst_median_prod_file_format,
-                    ghrsst_median_dest_file_format
+                    ghrsst_ospo_prod_file_format,
+                    ghrsst_ospo_dest_file_format
                 )
-                if not os.path.exists(ghrsst_median_dest_file) \
+                if not os.path.exists(ghrsst_ospo_dest_file) \
                         and evs_run_mode != 'production':
-                    ghrsst_median_arch_file_format = os.path.join(
-                        archive_obs_data_dir, 'ghrsst_median',
-                        'UKMO-L4_GHRSST-SSTfnd-GMPE-GLOB_'
-                        +'valid{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
-                        +'{valid?fmt=%Y%m%d%H}.nc'
+                    ghrsst_ospo_arch_file_format = os.path.join(
+                        archive_obs_data_dir, 'ghrsst_ospo',
+                        'ghrsst_ospo.{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
+                         +'{valid?fmt=%Y%m%d%H}.nc'
                     )
                     gda_util.get_truth_file(
                         VERIF_CASE_STEP_type_valid_time,
-                        ghrsst_median_arch_file_format,
-                        ghrsst_median_dest_file_format
+                        ghrsst_ospo_arch_file_format,
+                        ghrsst_ospo_dest_file_format
                     )
 elif VERIF_CASE_STEP == 'grid2obs_stats':
     # Read in VERIF_CASE_STEP related environment variables
