@@ -503,6 +503,18 @@ for plot in plots_list:
                                                     plot_info_dict,
                                                     met_info_dict, logo_dir)
                     plot_lbl.make_lead_by_level()
+    elif plot == 'nohrsc_spatial_map':
+        import global_det_atmos_plots_nohrsc_spatial_map as gdap_nsm
+        nohrsc_data_dir = os.path.join(VERIF_CASE_STEP_dir, 'data', 'nohrsc')
+        date_info_dict['valid_hr_start'] = str(valid_hrs[0])
+        date_info_dict['valid_hr_end'] = str(valid_hrs[0])
+        date_info_dict['valid_hr_inc'] = '24'
+        plot_info_dict['obs_var_name'] = obs_var_name
+        plot_info_dict['obs_var_level'] = obs_var_level_list[0]
+        plot_nsm = gdap_nsm.NOHRSCSpatialMap(logger, nohrsc_data_dir,
+                                             job_output_dir, date_info_dict,
+                                             plot_info_dict, logo_dir)
+        plot_nsm.make_nohrsc_spatial_map()
     elif plot == 'precip_spatial_map':
         model_info_dict['obs'] = {'name': 'ccpa',
                                   'plot_name': 'ccpa',
