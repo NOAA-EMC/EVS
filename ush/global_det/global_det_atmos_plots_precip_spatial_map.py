@@ -12,6 +12,7 @@ matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import os
+import logging
 import sys
 import datetime
 import subprocess
@@ -89,7 +90,8 @@ class PrecipSpatialMap:
                         '#1e90ff', '#00b2ee', '#00eeee', '#8968cd',
                         '#912cee', '#8b008b', '#8b0000', '#cd0000',
                         '#ee4000', '#ff7f00', '#cd8500', '#ffd700',
-                        '#ffff00', '#ffaeb9']
+                        '#ffff00', '#ffff02']
+        cmap_over_color_in = '#ffaeb9'
         clevs_mm = [0.1, 2, 5, 10, 15, 20, 25, 35, 50, 75, 100, 125,
                     150, 175, 200]
         colorlist_mm = ['chartreuse', 'green', 'blue', 'dodgerblue',
@@ -97,6 +99,7 @@ class PrecipSpatialMap:
                         'mediumorchid', 'darkmagenta', 'darkred',
                         'crimson', 'orangered', 'darkorange',
                         'goldenrod', 'yellow']
+        cmap_over_color_mm = '#ffaeb9'
         # Set Cartopy shapefile location
         config['data_dir'] = '/apps/ops/para/data/cartopy'
         # Read in data
@@ -202,17 +205,28 @@ class PrecipSpatialMap:
                     forecast_day_plot = str(int(forecast_day))
                 else:
                     forecast_day_plot = str(forecast_day)
-                plot_title = (
-                    model_num_plot_name.upper()+' '
-                    +plot_specs_psm.get_var_plot_name(var_name, var_level)+' '
-                    +f'({var_units})\n'
-                    +'Forecast Day '+forecast_day_plot+' '
-                     +'(Hour '+self.date_info_dict['forecast_hour']+')\n' 
-                    +'valid '
-                    +(valid_date_dt-datetime.timedelta(hours=24))\
-                    .strftime('%d%b%Y %H')+'Z to '
-                    +valid_date_dt.strftime('%d%b%Y %H')+'Z'
-                )
+                if model_num == 'obs':
+                    plot_title = (
+                        model_num_plot_name.upper()+' '
+                        +plot_specs_psm.get_var_plot_name(var_name, var_level)+' '
+                        +f'({var_units})\n'
+                        +'valid '
+                        +(valid_date_dt-datetime.timedelta(hours=24))\
+                        .strftime('%d%b%Y %H')+'Z to '
+                        +valid_date_dt.strftime('%d%b%Y %H')+'Z'
+                    )
+                else:
+                    plot_title = (
+                        model_num_plot_name.upper()+' '
+                        +plot_specs_psm.get_var_plot_name(var_name, var_level)+' '
+                        +f'({var_units})\n'
+                        +'Forecast Day '+forecast_day_plot+' '
+                        +'(Hour '+self.date_info_dict['forecast_hour']+')\n'
+                        +'valid '
+                        +(valid_date_dt-datetime.timedelta(hours=24))\
+                        .strftime('%d%b%Y %H')+'Z to '
+                        +valid_date_dt.strftime('%d%b%Y %H')+'Z'
+                    )
                 plot_left_logo = False
                 plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
                 if os.path.exists(plot_left_logo_path):
@@ -244,9 +258,11 @@ class PrecipSpatialMap:
                 if var_units == 'inches':
                     clevs = clevs_in
                     cmap = matplotlib.colors.ListedColormap(colorlist_in)
+                    cmap_over_color = cmap_over_color_in
                 elif var_units in ['mm', 'kg/m^2']:
                     clevs = clevs_mm
                     cmap = matplotlib.colors.ListedColormap(colorlist_mm)
+                    cmap_over_color = cmap_over_color_mm
                 norm = matplotlib.colors.BoundaryNorm(clevs, cmap.N)
                 # Create plot
                 self.logger.info(f"Creating plot for {model_num_file}")
@@ -303,6 +319,7 @@ class PrecipSpatialMap:
                                    transform=ccrs.PlateCarree(),
                                    levels=clevs, norm=norm,
                                    cmap=cmap, extend='max')
+                CF1.cmap.set_over(cmap_over_color)
                 cbar_left = gs.get_grid_positions(fig)[2][0]
                 cbar_width = (gs.get_grid_positions(fig)[3][-1]
                               - gs.get_grid_positions(fig)[2][0])
@@ -346,7 +363,7 @@ class PrecipSpatialMap:
                     )
                 else:
                     self.logger.warning("convert executable not in PATH, "
-                                        "not greating gif of image")
+                                        "not creating gif of image")
 
 def main():
     # Need settings

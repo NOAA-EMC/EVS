@@ -101,7 +101,7 @@ class PlotSpecs:
             self.fig_subplot_right = 0.95
             self.fig_subplot_left = 0.1
             self.fig_title_size = 18
-        elif self.plot_type == 'precip_spatial_map':
+        elif self.plot_type in ['precip_spatial_map', 'nohrsc_spatial_map']:
             self.fig_size = (8., 6.)
             self.fig_title_size = 13
             self.fig_subplot_right = 0.975
