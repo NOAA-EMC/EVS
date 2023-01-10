@@ -12,6 +12,7 @@ import os
 import glob
 import datetime
 import numpy as np
+import subprocess
 import global_det_atmos_util as gda_util
 
 print("BEGIN: "+os.path.basename(__file__))
@@ -23,6 +24,7 @@ RUN = os.environ['RUN']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 COMPONENT = os.environ['COMPONENT']
+evs_run_mode = os.environ['evs_run_mode']
 machine = os.environ['machine']
 USE_CFP = os.environ['USE_CFP']
 nproc = os.environ['nproc']
@@ -31,14 +33,14 @@ end_date = os.environ['end_date']
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
-
+PBS_NODEFILE = os.environ['PBS_NODEFILE']
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
 ################################################
 #### Plotting jobs
 ################################################
 plot_jobs_dict = {
     'pres_levs': {
-        'GeoHeight': {'line_type_stat_list': ['SL1L2/BIAS',
+        'GeoHeight': {'line_type_stat_list': ['SL1L2/ME',
                                               'SL1L2/RMSE'],
                       'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                        'TROPICS', 'CONUS'],
@@ -46,21 +48,21 @@ plot_jobs_dict = {
                                         'levels': ('P1000, P925, P850, P700, '
                                                    +'P500, P400, P300, P250, '
                                                    +'P200, P150, P100, P50, '
-                                                   +'P20, P10, P5, P1'),
+                                                   +'P20, P10, P5'),
                                         'threshs': 'NA'},
                       'obs_var_dict': {'name': 'HGT',
                                        'levels': ('P1000, P925, P850, P700, '
                                                   +'P500, P400, P300, P250, '
                                                   +'P200, P150, P100, P50, '
-                                                  +'P20, P10, P5, P1'),
+                                                  +'P20, P10, P5'),
                                        'threshs': 'NA'},
                       'interp_dict': {'method': 'BILIN',
                                       'points': '4'},
                       'grid': 'G004',
                       'obs_name': 'ADPUPA',
                       'plots_list': ('time_series, lead_average, '
-                                     +'stat_by_level, lead_level')},
-        'RelHum': {'line_type_stat_list': ['SL1L2/BIAS',
+                                     +'stat_by_level, lead_by_level')},
+        'RelHum': {'line_type_stat_list': ['SL1L2/ME',
                                            'SL1L2/RMSE'],
                    'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                     'TROPICS', 'CONUS'],
@@ -68,21 +70,21 @@ plot_jobs_dict = {
                                      'levels': ('P1000, P925, P850, P700, '
                                                 +'P500, P400, P300, P250, '
                                                 +'P200, P150, P100, P50, '
-                                                +'P20, P10, P5, P1'),
+                                                +'P20, P10, P5'),
                                      'threshs': 'NA'},
                    'obs_var_dict': {'name': 'RH',
                                     'levels': ('P1000, P925, P850, P700, '
                                                +'P500, P400, P300, P250, '
                                                +'P200, P150, P100, P50, '
-                                               +'P20, P10, P5, P1'),
+                                               +'P20, P10, P5'),
                                     'threshs': 'NA'},
                    'interp_dict': {'method': 'BILIN',
                                    'points': '4'},
                    'grid': 'G004',
                    'obs_name': 'ADPUPA',
                    'plots_list': ('time_series, lead_average, '
-                                  +'stat_by_level, lead_level')},
-        'SpefHum': {'line_type_stat_list': ['SL1L2/BIAS',
+                                  +'stat_by_level, lead_by_level')},
+        'SpefHum': {'line_type_stat_list': ['SL1L2/ME',
                                             'SL1L2/RMSE'],
                     'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                      'TROPICS', 'CONUS'],
@@ -90,21 +92,21 @@ plot_jobs_dict = {
                                       'levels': ('P1000, P925, P850, P700, '
                                                  +'P500, P400, P300, P250, '
                                                  +'P200, P150, P100, P50, '
-                                                 +'P20, P10, P5, P1'),
+                                                 +'P20, P10, P5'),
                                       'threshs': 'NA'},
                     'obs_var_dict': {'name': 'SPFH',
                                      'levels': ('P1000, P925, P850, P700, '
                                                 +'P500, P400, P300, P250, '
                                                 +'P200, P150, P100, P50, '
-                                                +'P20, P10, P5, P1'),
+                                                +'P20, P10, P5'),
                                      'threshs': 'NA'},
                     'interp_dict': {'method': 'BILIN',
                                     'points': '4'},
                     'obs_name': 'ADPUPA',
                     'grid': 'G004',
                     'plots_list': ('time_series, lead_average, '
-                                   +'stat_by_level, lead_level')},
-        'Temp': {'line_type_stat_list': ['SL1L2/BIAS',
+                                   +'stat_by_level, lead_by_level')},
+        'Temp': {'line_type_stat_list': ['SL1L2/ME',
                                          'SL1L2/RMSE'],
                  'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                   'TROPICS', 'CONUS'],
@@ -112,21 +114,21 @@ plot_jobs_dict = {
                                    'levels': ('P1000, P925, P850, P700, '
                                               +'P500, P400, P300, P250, '
                                               +'P200, P150, P100, P50, '
-                                              +'P20, P10, P5, P1'),
+                                              +'P20, P10, P5'),
                                    'threshs': 'NA'},
                   'obs_var_dict': {'name': 'TMP',
                                    'levels': ('P1000, P925, P850, P700, '
                                               +'P500, P400, P300, P250, '
                                               +'P200, P150, P100, P50, '
-                                              +'P20, P10, P5, P1'),
+                                              +'P20, P10, P5'),
                                    'threshs': 'NA'},
                   'interp_dict': {'method': 'BILIN',
                                   'points': '4'},
                   'grid': 'G004',
                   'obs_name': 'ADPUPA',
                   'plots_list': ('time_series, lead_average, '
-                                 +'stat_by_level, lead_level')},
-        'UWind': {'line_type_stat_list': ['SL1L2/BIAS',
+                                 +'stat_by_level, lead_by_level')},
+        'UWind': {'line_type_stat_list': ['SL1L2/ME',
                                           'SL1L2/RMSE'],
                   'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                    'TROPICS', 'CONUS'],
@@ -134,21 +136,21 @@ plot_jobs_dict = {
                                     'levels': ('P1000, P925, P850, P700, '
                                                +'P500, P400, P300, P250, '
                                                +'P200, P150, P100, P50, '
-                                               +'P20, P10, P5, P1'),
+                                               +'P20, P10, P5'),
                                     'threshs': 'NA'},
                   'obs_var_dict': {'name': 'UGRD',
                                    'levels': ('P1000, P925, P850, P700, '
                                               +'P500, P400, P300, P250, '
                                               +'P200, P150, P100, P50, '
-                                              +'P20, P10, P5, P1'),
+                                              +'P20, P10, P5'),
                                    'threshs': 'NA'},
                   'interp_dict': {'method': 'BILIN',
                                   'points': '4'},
                   'grid': 'G004',
                   'obs_name': 'ADPUPA',
                   'plots_list': ('time_series, lead_average, '
-                                 +'stat_by_level, lead_level')},
-        'VWind': {'line_type_stat_list': ['SL1L2/BIAS',
+                                 +'stat_by_level, lead_by_level')},
+        'VWind': {'line_type_stat_list': ['SL1L2/ME',
                                           'SL1L2/RMSE'],
                   'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                    'TROPICS', 'CONUS'],
@@ -156,21 +158,21 @@ plot_jobs_dict = {
                                     'levels': ('P1000, P925, P850, P700, '
                                                +'P500, P400, P300, P250, '
                                                +'P200, P150, P100, P50, '
-                                               +'P20, P10, P5, P1'),
+                                               +'P20, P10, P5'),
                                     'threshs': 'NA'},
                   'obs_var_dict': {'name': 'VGRD',
                                    'levels': ('P1000, P925, P850, P700, '
                                               +'P500, P400, P300, P250, '
                                               +'P200, P150, P100, P50, '
-                                              +'P20, P10, P5, P1'),
+                                              +'P20, P10, P5'),
                                    'threshs': 'NA'},
                   'interp_dict': {'method': 'BILIN',
                                   'points': '4'},
                   'grid': 'G004',
                   'obs_name': 'ADPUPA',
                   'plots_list': ('time_series, lead_average, '
-                                 +'stat_by_level, lead_level')},
-        'VectorWind': {'line_type_stat_list': ['VL1L2/BIAS',
+                                 +'stat_by_level, lead_by_level')},
+        'VectorWind': {'line_type_stat_list': ['VL1L2/ME',
                                                'VL1L2/RMSE'],
                        'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                         'TROPICS', 'CONUS'],
@@ -178,23 +180,23 @@ plot_jobs_dict = {
                                          'levels': ('P1000, P925, P850, P700, '
                                                     +'P500, P400, P300, P250, '
                                                     +'P200, P150, P100, P50, '
-                                                    +'P20, P10, P5, P1'),
+                                                    +'P20, P10, P5'),
                                          'threshs': 'NA'},
                        'obs_var_dict': {'name': 'UGRD_VGRD',
                                         'levels': ('P1000, P925, P850, P700, '
                                                    +'P500, P400, P300, P250, '
                                                    +'P200, P150, P100, P50, '
-                                                   +'P20, P10, P5, P1'),
+                                                   +'P20, P10, P5'),
                                         'threshs': 'NA'},
                        'interp_dict': {'method': 'BILIN',
                                        'points': '4'},
                        'grid': 'G004',
                        'obs_name': 'ADPUPA',
                        'plots_list': ('time_series, lead_average, '
-                                      +'stat_by_level, lead_level')}
+                                      +'stat_by_level, lead_by_level')}
     },
     'ptype': {
-        'Rain': {'line_type_stat_list': ['CTC/FBIAS', 'CTC/FY_OY'],
+        'Rain': {'line_type_stat_list': ['CTC/FBIAS'],
                  'vx_mask_list': ['CONUS', 'CONUS_Central',
                                   'CONUS_East', 'CONUS_South',
                                   'CONUS_West', 'Alaska'],
@@ -208,8 +210,8 @@ plot_jobs_dict = {
                                  'points': '1'},
                  'grid': 'G104',
                  'obs_name': 'ADPSFC',
-                 'plots_list': 'time_series'},
-        'Snow': {'line_type_stat_list': ['CTC/FBIAS', 'CTC/FY_OY'],
+                 'plots_list': 'time_series, lead_average'},
+        'Snow': {'line_type_stat_list': ['CTC/FBIAS'],
                  'vx_mask_list': ['CONUS', 'CONUS_Central',
                                   'CONUS_East', 'CONUS_South',
                                   'CONUS_West', 'Alaska'],
@@ -223,8 +225,8 @@ plot_jobs_dict = {
                                  'points': '1'},
                  'grid': 'G104',
                  'obs_name': 'ADPSFC',
-                 'plots_list': 'time_series'},
-        'FrzRain': {'line_type_stat_list': ['CTC/FBIAS', 'CTC/FY_OY'],
+                 'plots_list': 'time_series, lead_average'},
+        'FrzRain': {'line_type_stat_list': ['CTC/FBIAS'],
                     'vx_mask_list': ['CONUS', 'CONUS_Central',
                                      'CONUS_East', 'CONUS_South',
                                      'CONUS_West', 'Alaska'],
@@ -238,8 +240,8 @@ plot_jobs_dict = {
                                     'points': '1'},
                     'grid': 'G104',
                     'obs_name': 'ADPSFC',
-                    'plots_list': 'time_series'},
-        'IcePel': {'line_type_stat_list': ['CTC/FBIAS', 'CTC/FY_OY'],
+                    'plots_list': 'time_series, lead_average'},
+        'IcePel': {'line_type_stat_list': ['CTC/FBIAS'],
                    'vx_mask_list': ['CONUS', 'CONUS_Central',
                                     'CONUS_East', 'CONUS_South',
                                     'CONUS_West', 'Alaska'],
@@ -253,25 +255,25 @@ plot_jobs_dict = {
                                    'points': '1'},
                    'grid': 'G104',
                    'obs_name': 'ADPSFC',
-                   'plots_list': 'time_series'},
-        'Ptype': {'line_type_stat_list': ['MCTC/F1_O1'],
-                  'vx_mask_list': ['CONUS', 'CONUS_Central',
-                                   'CONUS_East', 'CONUS_South',
-                                   'CONUS_West', 'Alaska'],
-                  'fcst_var_dict': {'name': 'PTYPE_L0',
-                                    'levels': 'L0',
-                                    'threshs': '>=1.0,>=2.0,>=3.0,>=4.0'},
-                  'obs_var_dict': {'name': 'PRWE',
-                                   'levels': 'Z0',
-                                   'threshs': '>=1.0,>=2.0,>=3.0,>=4.0'},
-                  'interp_dict': {'method': 'NEAREST',
-                                  'points': '1'},
-                  'grid': 'G104',
-                  'obs_name': 'ADPSFC',
-                  'plots_list': 'time_series'},
+                   'plots_list': 'time_series, lead_average'},
+        #'Ptype': {'line_type_stat_list': ['MCTC/F1_O1'],
+        #          'vx_mask_list': ['CONUS', 'CONUS_Central',
+        #                           'CONUS_East', 'CONUS_South',
+        #                           'CONUS_West', 'Alaska'],
+        #          'fcst_var_dict': {'name': 'PTYPE',
+        #                            'levels': 'L0',
+        #                            'threshs': '>=1.0,>=2.0,>=3.0,>=4.0'},
+        #          'obs_var_dict': {'name': 'PRWE',
+        #                           'levels': 'Z0',
+        #                           'threshs': '>=1.0,>=2.0,>=3.0,>=4.0'},
+        #          'interp_dict': {'method': 'NEAREST',
+        #                          'points': '1'},
+        #          'grid': 'G104',
+        #          'obs_name': 'ADPSFC',
+        #          'plots_list': 'time_series'},
     },
     'sfc': {
-        'CAPEMixedLayer': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS',
+        'CAPEMixedLayer': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/ME',
                                                    'SL1L2/FBAR_OBAR'],
                            'vx_mask_list': ['CONUS', 'CONUS_Central',
                                             'CONUS_East', 'CONUS_South',
@@ -355,7 +357,7 @@ plot_jobs_dict = {
                                    'grid': 'G104',
                                    'obs_name': 'ADPUPA',
                                    'plots_list': 'performance_diagram'},
-        'CAPESfcBased': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS',
+        'CAPESfcBased': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/ME',
                                                  'SL1L2/FBAR_OBAR'],
                          'vx_mask_list': ['CONUS', 'CONUS_Central',
                                           'CONUS_East', 'CONUS_South',
@@ -453,20 +455,20 @@ plot_jobs_dict = {
                                      'SPlains', 'SRockies'],
                     'fcst_var_dict': {'name': 'HGT',
                                       'levels': 'CEILING',
-                                      'threshs': ('lt152.4, lt304.8, '
-                                                  +'lt914.4, ge914.4, '
+                                      'threshs': ('lt152, lt305, '
+                                                  +'lt914, ge914, '
                                                   +'lt1524, lt3048')},
                     'obs_var_dict': {'name': 'CEILING',
                                      'levels': 'L0',
-                                     'threshs': ('lt152.4, lt304.8, '
-                                                 +'lt914.4, ge914.4, '
+                                     'threshs': ('lt152, lt305, '
+                                                 +'lt914, ge914, '
                                                  +'lt1524, lt3048')},
                     'interp_dict': {'method': 'BILIN',
                                     'points': '4'},
                     'grid': 'G104',
                     'obs_name': 'ADPSFC',
                     'plots_list': 'time_series, lead_average'},
-        'DailyAvg_TempAnom2m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
+        'DailyAvg_TempAnom2m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/ME'],
                                 'vx_mask_list': ['CONUS', 'CONUS_Central',
                                                  'CONUS_East', 'CONUS_South',
                                                  'CONUS_West', 'Appalachia',
@@ -489,7 +491,7 @@ plot_jobs_dict = {
                                 'grid': 'G104',
                                 'obs_name': 'ADPSFC',
                                 'plots_list': 'time_series, lead_average'},
-        'Dewpoint2m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
+        'Dewpoint2m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/ME'],
                        'vx_mask_list': ['CONUS', 'CONUS_Central',
                                         'CONUS_East', 'CONUS_South',
                                         'CONUS_West', 'Appalachia',
@@ -543,7 +545,7 @@ plot_jobs_dict = {
                               'obs_name': 'ADPSFC',
                               'plots_list': ('time_series, lead_average, '
                                              +'threshold_average')},
-        'PBLHeight': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS',
+        'PBLHeight': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/ME',
                                               'SL1L2/FBAR_OBAR'],
                       'vx_mask_list': ['CONUS', 'CONUS_Central',
                                        'CONUS_East', 'CONUS_South',
@@ -567,7 +569,7 @@ plot_jobs_dict = {
                       'grid': 'G104',
                       'obs_name': 'ADPUPA',
                       'plots_list': 'time_series, lead_average'},
-        'RelHum2m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
+        'RelHum2m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/ME'],
                      'vx_mask_list': ['CONUS', 'CONUS_Central',
                                       'CONUS_East', 'CONUS_South',
                                       'CONUS_West', 'Appalachia',
@@ -590,7 +592,7 @@ plot_jobs_dict = {
                      'grid': 'G104',
                      'obs_name': 'ADPSFC',
                      'plots_list': 'time_series, lead_average'},
-        'SeaLevelPres': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
+        'SeaLevelPres': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/ME'],
                          'vx_mask_list': ['CONUS', 'CONUS_Central',
                                           'CONUS_East', 'CONUS_South',
                                           'CONUS_West', 'Appalachia',
@@ -613,7 +615,7 @@ plot_jobs_dict = {
                          'grid': 'G104',
                          'obs_name': 'ADPSFC',
                          'plots_list': ('time_series, lead_average')},
-        'Temp2m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
+        'Temp2m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/ME'],
                    'vx_mask_list': ['CONUS', 'CONUS_Central',
                                     'CONUS_East', 'CONUS_South',
                                     'CONUS_West', 'Appalachia',
@@ -637,7 +639,7 @@ plot_jobs_dict = {
                    'obs_name': 'ADPSFC',
                    'plots_list': ('time_series, lead_average, '
                                   'valid_hour_average')},
-        'TotCloudCover': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS',
+        'TotCloudCover': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/ME',
                                                   'SL1L2/FBAR_OBAR'],
                           'vx_mask_list': ['CONUS', 'CONUS_Central',
                                            'CONUS_East', 'CONUS_South',
@@ -661,7 +663,7 @@ plot_jobs_dict = {
                           'grid': 'G104',
                           'obs_name': 'ADPSFC',
                           'plots_list': 'time_series, lead_average'},
-        'UWind10m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
+        'UWind10m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/ME'],
                      'vx_mask_list': ['CONUS', 'CONUS_Central',
                                       'CONUS_East', 'CONUS_South',
                                       'CONUS_West', 'Appalachia',
@@ -698,20 +700,20 @@ plot_jobs_dict = {
                                         'SPlains', 'SRockies'],
                        'fcst_var_dict': {'name': 'VIS',
                                          'levels': 'Z0',
-                                         'threshs': ('lt804.672, lt1609.344, '
-                                                     +'lt4828.032, lt8046.72, '
-                                                     +'ge8046.72, lt16093.44')},
+                                         'threshs': ('lt805, lt1609, '
+                                                     +'lt4828, lt8045, '
+                                                     +'ge8045, lt16090')},
                        'obs_var_dict': {'name': 'VIS',
                                         'levels': 'Z0',
-                                        'threshs': ('lt804.672, lt1609.344, '
-                                                     +'lt4828.032, lt8046.72, '
-                                                     +'ge8046.72, lt16093.44')},
+                                        'threshs': ('lt805, lt1609, '
+                                                    +'lt4828, lt8045, '
+                                                    +'ge8045, lt16090')},
                        'interp_dict': {'method': 'BILIN',
                                        'points': '4'},
                        'grid': 'G104',
                        'obs_name': 'ADPSFC',
                        'plots_list': 'time_series, lead_average'},
-        'VWind10m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
+        'VWind10m': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/ME'],
                      'vx_mask_list': ['CONUS', 'CONUS_Central',
                                       'CONUS_East', 'CONUS_South',
                                       'CONUS_West', 'Appalachia',
@@ -734,7 +736,7 @@ plot_jobs_dict = {
                      'grid': 'G104',
                      'obs_name': 'ADPSFC',
                      'plots_list': 'time_series, lead_average'},
-        'WindGust': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
+        'WindGust': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/ME'],
                      'vx_mask_list': ['CONUS', 'CONUS_Central',
                                       'CONUS_East', 'CONUS_South',
                                       'CONUS_West', 'Appalachia',
@@ -757,7 +759,7 @@ plot_jobs_dict = {
                      'grid': 'G104',
                      'obs_name': 'ADPSFC',
                      'plots_list': 'time_series, lead_average'},
-        'VectorWind10m': {'line_type_stat_list': ['VL1L2/RMSE', 'VL1L2/BIAS'],
+        'VectorWind10m': {'line_type_stat_list': ['VL1L2/RMSE', 'VL1L2/ME'],
                           'vx_mask_list': ['CONUS', 'CONUS_Central',
                                            'CONUS_East', 'CONUS_South',
                                            'CONUS_West', 'Appalachia',
@@ -811,10 +813,10 @@ for verif_type in VERIF_CASE_STEP_type_list:
         job_env_dict['start_date'] = start_date
         job_env_dict['end_date'] = end_date
         job_env_dict['date_type'] = 'VALID'
-        job_env_dict['plots_list'] = (
-            "'"+verif_type_plot_jobs_dict[verif_type_job]\
-            ['plots_list']+"'"
-        )
+        #job_env_dict['plots_list'] = (
+        #    "'"+verif_type_plot_jobs_dict[verif_type_job]\
+        #    ['plots_list']+"'"
+        #)
         for data_name in ['fcst', 'obs']:
             job_env_dict[data_name+'_var_name'] =  (
                 verif_type_plot_jobs_dict[verif_type_job]\
@@ -848,28 +850,39 @@ for verif_type in VERIF_CASE_STEP_type_list:
             for vx_mask in verif_type_plot_jobs_dict[verif_type_job]\
                     ['vx_mask_list']:
                 job_env_dict['vx_mask'] = vx_mask
-                job_env_dict['job_name'] = (line_type_stat+'/'
-                                            +verif_type_job+'/'
-                                            +vx_mask)
-                # Write job script
-                njobs+=1
-                # Create job file
-                job_file = os.path.join(plot_jobs_dir, 'job'+str(njobs))
-                print("Creating job script: "+job_file)
-                job = open(job_file, 'w')
-                job.write('#!/bin/bash\n')
-                job.write('set -x\n')
-                job.write('\n')
-                # Set any environment variables for special cases
-                # Write environment variables
-                for name, value in job_env_dict.items():
-                    job.write('export '+name+'='+value+'\n')
-                job.write('\n')
-                # Write job commands
-                job.write(
-                    gda_util.python_command('global_det_atmos_plots.py',[])
-                )
-                job.close()
+                for plot in verif_type_plot_jobs_dict[verif_type_job]['plots_list'].split(', '):
+                    job_env_dict['plots_list'] = plot
+                    job_env_dict['job_name'] = (line_type_stat+'/'
+                                                +verif_type_job+'/'
+                                                +vx_mask+'/'
+                                                +plot)
+                    # Write job script
+                    njobs+=1
+                    # Create job file
+                    job_file = os.path.join(plot_jobs_dir, 'job'+str(njobs))
+                    print("Creating job script: "+job_file)
+                    job = open(job_file, 'w')
+                    job.write('#!/bin/bash\n')
+                    job.write('set -x\n')
+                    job.write('\n')
+                    # Set any environment variables for special cases
+                    # Write environment variables
+                    for name, value in job_env_dict.items():
+                        job.write('export '+name+'='+value+'\n')
+                    job.write('\n')
+                    # Write job commands
+                    if evs_run_mode == 'production' and \
+                            verif_type in ['pres_levs', 'sfc']:
+                        job.write(
+                            gda_util.python_command(
+                                'global_det_atmos_plots_production_tof240.py',
+                                 []
+                            )+'\n'
+                        )
+                    job.write(
+                        gda_util.python_command('global_det_atmos_plots.py',[])
+                    )
+                    job.close()
 
 # If running USE_CFP, create POE scripts
 if USE_CFP == 'YES':
@@ -918,8 +931,15 @@ if USE_CFP == 'YES':
                                 'plot_job_scripts',
                                 'poe_jobs'+str(node))
     poe_file = open(poe_filename, 'a')
+    if machine == 'WCOSS2':
+        nselect = subprocess.check_output(
+            'cat '+PBS_NODEFILE+'| wc -l', shell=True, encoding='UTF-8'
+        ).replace('\n', '')
+        nnp = int(nselect) * int(nproc)
+    else:
+        nnp = nproc
     iproc+=1
-    while iproc <= int(nproc):
+    while iproc <= int(nnp):
         if machine in ['HERA', 'ORION', 'S4', 'JET']:
             poe_file.write(
                 str(iproc-1)+' /bin/echo '+str(iproc)+'\n'

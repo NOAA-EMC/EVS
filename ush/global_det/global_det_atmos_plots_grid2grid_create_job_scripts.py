@@ -12,6 +12,7 @@ import os
 import glob
 import datetime
 import numpy as np
+import subprocess
 import global_det_atmos_util as gda_util
 
 print("BEGIN: "+os.path.basename(__file__))
@@ -23,6 +24,7 @@ RUN = os.environ['RUN']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 COMPONENT = os.environ['COMPONENT']
+evs_run_mode = os.environ['evs_run_mode']
 machine = os.environ['machine']
 USE_CFP = os.environ['USE_CFP']
 nproc = os.environ['nproc']
@@ -31,7 +33,7 @@ end_date = os.environ['end_date']
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
-
+PBS_NODEFILE = os.environ['PBS_NODEFILE']
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
 ################################################
 #### Plotting jobs
@@ -312,19 +314,18 @@ plot_jobs_dict = {
     },
     'ozone': {},
     'precip': {
-        '24hrCCPA': {'line_type_stat_list': ['CTC/ETS', 'CTC/FBIAS',
-                                             'CTC/FY_OY'],
+        '24hrCCPA': {'line_type_stat_list': ['CTC/ETS', 'CTC/FBIAS'],
                      'vx_mask_list': ['CONUS', 'CONUS_East',
                                       'CONUS_West', 'CONUS_Central',
                                       'CONUS_South'],
-                     'fcst_var_dict': {'name': 'APCP_A24',
+                     'fcst_var_dict': {'name': 'APCP',
                                        'levels': 'A24',
                                        'threshs': ('ge0.1, ge0.5, ge1, ge5, '
                                                    +'ge10, ge25, ge50, ge75, '
                                                    +'ge0.254, ge2.54, ge6.35, '
                                                    +'ge12.7, ge25.4, ge50.8, '
                                                    +'ge76.2, ge101.6')},
-                     'obs_var_dict': {'name': 'APCP_A24',
+                     'obs_var_dict': {'name': 'APCP',
                                      'levels': 'A24',
                                      'threshs': ('ge0.1, ge0.5, ge1, ge5, '
                                                  +'ge10, ge25, ge50, ge75, '
@@ -336,11 +337,20 @@ plot_jobs_dict = {
                      'grid': 'G211',
                      'obs_name': '24hrCCPA',
                      'plots_list': 'time_series, lead_average'},
-        '24hrCCPA_Nbrhd': {'line_type_stat_list': ['NBRCNT/FSS'],
-                           'vx_mask_list': ['CONUS', 'CONUS_East',
-                                            'CONUS_West', 'CONUS_Central',
-                                            'CONUS_South'],
-                           'fcst_var_dict': {'name': 'APCP_A24',
+        '24hrCCPA_Nbrhd1': {'line_type_stat_list': ['NBRCNT/FSS'],
+                            'vx_mask_list': ['CONUS', 'CONUS_East',
+                                             'CONUS_West', 'CONUS_Central',
+                                             'CONUS_South'],
+                            'fcst_var_dict': {'name': 'APCP',
+                                              'levels': 'A24',
+                                              'threshs': ('ge0.1, ge0.5, ge1, '
+                                                          +'ge5, ge10, ge25, '
+                                                          +'ge50, ge75, '
+                                                          +'ge0.254, ge2.54, '
+                                                          +'ge6.35, ge12.7, '
+                                                          +'ge25.4, ge50.8, '
+                                                          +'ge76.2, ge101.6')},
+                            'obs_var_dict': {'name': 'APCP',
                                              'levels': 'A24',
                                              'threshs': ('ge0.1, ge0.5, ge1, '
                                                          +'ge5, ge10, ge25, '
@@ -349,32 +359,184 @@ plot_jobs_dict = {
                                                          +'ge6.35, ge12.7, '
                                                          +'ge25.4, ge50.8, '
                                                          +'ge76.2, ge101.6')},
-                           'obs_var_dict': {'name': 'APCP_A24',
-                                            'levels': 'A24',
-                                            'threshs': ('ge0.1, ge0.5, ge1, '
-                                                        +'ge5, ge10, ge25, '
-                                                        +'ge50, ge75, '
-                                                        +'ge0.254, ge2.54, '
-                                                        +'ge6.35, ge12.7, '
-                                                        +'ge25.4, ge50.8, '
-                                                        +'ge76.2, ge101.6')},
-                          'interp_dict': {'method': 'NBRHD_SQUARE',
-                                          'points': ('1, 169, 529, 1089, '
-                                                     +'1849, 2809, 3969')},
-                          'grid': 'G240',
-                          'obs_name': '24hrCCPA',
-                          'plots_list': 'time_series, lead_average'},
+                           'interp_dict': {'method': 'NBRHD_SQUARE',
+                                           'points': '1'},
+                           'grid': 'G240',
+                           'obs_name': '24hrCCPA',
+                           'plots_list': 'time_series, lead_average'},
+        '24hrCCPA_Nbrhd169': {'line_type_stat_list': ['NBRCNT/FSS'],
+                              'vx_mask_list': ['CONUS', 'CONUS_East',
+                                               'CONUS_West', 'CONUS_Central',
+                                               'CONUS_South'],
+                              'fcst_var_dict': {'name': 'APCP',
+                                                'levels': 'A24',
+                                                'threshs': ('ge0.1, ge0.5, ge1, '
+                                                            +'ge5, ge10, ge25, '
+                                                            +'ge50, ge75, '
+                                                            +'ge0.254, ge2.54, '
+                                                            +'ge6.35, ge12.7, '
+                                                            +'ge25.4, ge50.8, '
+                                                            +'ge76.2, ge101.6')},
+                              'obs_var_dict': {'name': 'APCP',
+                                               'levels': 'A24',
+                                               'threshs': ('ge0.1, ge0.5, ge1, '
+                                                           +'ge5, ge10, ge25, '
+                                                           +'ge50, ge75, '
+                                                           +'ge0.254, ge2.54, '
+                                                           +'ge6.35, ge12.7, '
+                                                           +'ge25.4, ge50.8, '
+                                                           +'ge76.2, ge101.6')},
+                             'interp_dict': {'method': 'NBRHD_SQUARE',
+                                             'points': '169'},
+                             'grid': 'G240',
+                             'obs_name': '24hrCCPA',
+                             'plots_list': 'time_series, lead_average'},
+        '24hrCCPA_Nbrhd529': {'line_type_stat_list': ['NBRCNT/FSS'],
+                              'vx_mask_list': ['CONUS', 'CONUS_East',
+                                               'CONUS_West', 'CONUS_Central',
+                                               'CONUS_South'],
+                              'fcst_var_dict': {'name': 'APCP',
+                                                'levels': 'A24',
+                                                'threshs': ('ge0.1, ge0.5, ge1, '
+                                                            +'ge5, ge10, ge25, '
+                                                            +'ge50, ge75, '
+                                                            +'ge0.254, ge2.54, '
+                                                            +'ge6.35, ge12.7, '
+                                                            +'ge25.4, ge50.8, '
+                                                            +'ge76.2, ge101.6')},
+                              'obs_var_dict': {'name': 'APCP',
+                                               'levels': 'A24',
+                                               'threshs': ('ge0.1, ge0.5, ge1, '
+                                                           +'ge5, ge10, ge25, '
+                                                           +'ge50, ge75, '
+                                                           +'ge0.254, ge2.54, '
+                                                           +'ge6.35, ge12.7, '
+                                                           +'ge25.4, ge50.8, '
+                                                           +'ge76.2, ge101.6')},
+                             'interp_dict': {'method': 'NBRHD_SQUARE',
+                                             'points': '529'},
+                             'grid': 'G240',
+                             'obs_name': '24hrCCPA',
+                             'plots_list': 'time_series, lead_average'},
+        '24hrCCPA_Nbrhd1089': {'line_type_stat_list': ['NBRCNT/FSS'],
+                               'vx_mask_list': ['CONUS', 'CONUS_East',
+                                                'CONUS_West', 'CONUS_Central',
+                                                'CONUS_South'],
+                               'fcst_var_dict': {'name': 'APCP',
+                                                 'levels': 'A24',
+                                                 'threshs': ('ge0.1, ge0.5, ge1, '
+                                                             +'ge5, ge10, ge25, '
+                                                             +'ge50, ge75, '
+                                                             +'ge0.254, ge2.54, '
+                                                             +'ge6.35, ge12.7, '
+                                                             +'ge25.4, ge50.8, '
+                                                             +'ge76.2, ge101.6')},
+                               'obs_var_dict': {'name': 'APCP',
+                                                'levels': 'A24',
+                                                'threshs': ('ge0.1, ge0.5, ge1, '
+                                                            +'ge5, ge10, ge25, '
+                                                            +'ge50, ge75, '
+                                                            +'ge0.254, ge2.54, '
+                                                            +'ge6.35, ge12.7, '
+                                                            +'ge25.4, ge50.8, '
+                                                            +'ge76.2, ge101.6')},
+                              'interp_dict': {'method': 'NBRHD_SQUARE',
+                                              'points': '1089'},
+                              'grid': 'G240',
+                              'obs_name': '24hrCCPA',
+                              'plots_list': 'time_series, lead_average'},
+        '24hrCCPA_Nbrhd1849': {'line_type_stat_list': ['NBRCNT/FSS'],
+                               'vx_mask_list': ['CONUS', 'CONUS_East',
+                                                'CONUS_West', 'CONUS_Central',
+                                                'CONUS_South'],
+                               'fcst_var_dict': {'name': 'APCP',
+                                                 'levels': 'A24',
+                                                 'threshs': ('ge0.1, ge0.5, ge1, '
+                                                             +'ge5, ge10, ge25, '
+                                                             +'ge50, ge75, '
+                                                             +'ge0.254, ge2.54, '
+                                                             +'ge6.35, ge12.7, '
+                                                             +'ge25.4, ge50.8, '
+                                                             +'ge76.2, ge101.6')},
+                               'obs_var_dict': {'name': 'APCP',
+                                                'levels': 'A24',
+                                                'threshs': ('ge0.1, ge0.5, ge1, '
+                                                            +'ge5, ge10, ge25, '
+                                                            +'ge50, ge75, '
+                                                            +'ge0.254, ge2.54, '
+                                                            +'ge6.35, ge12.7, '
+                                                            +'ge25.4, ge50.8, '
+                                                            +'ge76.2, ge101.6')},
+                              'interp_dict': {'method': 'NBRHD_SQUARE',
+                                              'points': '1849'},
+                              'grid': 'G240',
+                              'obs_name': '24hrCCPA',
+                              'plots_list': 'time_series, lead_average'},
+        '24hrCCPA_Nbrhd2809': {'line_type_stat_list': ['NBRCNT/FSS'],
+                               'vx_mask_list': ['CONUS', 'CONUS_East',
+                                                'CONUS_West', 'CONUS_Central',
+                                                'CONUS_South'],
+                               'fcst_var_dict': {'name': 'APCP',
+                                                 'levels': 'A24',
+                                                 'threshs': ('ge0.1, ge0.5, ge1, '
+                                                             +'ge5, ge10, ge25, '
+                                                             +'ge50, ge75, '
+                                                             +'ge0.254, ge2.54, '
+                                                             +'ge6.35, ge12.7, '
+                                                             +'ge25.4, ge50.8, '
+                                                             +'ge76.2, ge101.6')},
+                               'obs_var_dict': {'name': 'APCP',
+                                                'levels': 'A24',
+                                                'threshs': ('ge0.1, ge0.5, ge1, '
+                                                            +'ge5, ge10, ge25, '
+                                                            +'ge50, ge75, '
+                                                            +'ge0.254, ge2.54, '
+                                                            +'ge6.35, ge12.7, '
+                                                            +'ge25.4, ge50.8, '
+                                                            +'ge76.2, ge101.6')},
+                              'interp_dict': {'method': 'NBRHD_SQUARE',
+                                              'points': '2809'},
+                              'grid': 'G240',
+                              'obs_name': '24hrCCPA',
+                              'plots_list': 'time_series, lead_average'},
+        '24hrCCPA_Nbrhd3969': {'line_type_stat_list': ['NBRCNT/FSS'],
+                               'vx_mask_list': ['CONUS', 'CONUS_East',
+                                                'CONUS_West', 'CONUS_Central',
+                                                'CONUS_South'],
+                               'fcst_var_dict': {'name': 'APCP',
+                                                 'levels': 'A24',
+                                                 'threshs': ('ge0.1, ge0.5, ge1, '
+                                                             +'ge5, ge10, ge25, '
+                                                             +'ge50, ge75, '
+                                                             +'ge0.254, ge2.54, '
+                                                             +'ge6.35, ge12.7, '
+                                                             +'ge25.4, ge50.8, '
+                                                             +'ge76.2, ge101.6')},
+                               'obs_var_dict': {'name': 'APCP',
+                                                'levels': 'A24',
+                                                'threshs': ('ge0.1, ge0.5, ge1, '
+                                                            +'ge5, ge10, ge25, '
+                                                            +'ge50, ge75, '
+                                                            +'ge0.254, ge2.54, '
+                                                            +'ge6.35, ge12.7, '
+                                                            +'ge25.4, ge50.8, '
+                                                            +'ge76.2, ge101.6')},
+                              'interp_dict': {'method': 'NBRHD_SQUARE',
+                                              'points': '3969'},
+                              'grid': 'G240',
+                              'obs_name': '24hrCCPA',
+                              'plots_list': 'time_series, lead_average'},
         '24hrCCPAPerfDia': {'line_type_stat_list': ['CTC/PERF_DIA'],
                             'vx_mask_list': ['CONUS', 'CONUS_East',
                                              'CONUS_West', 'CONUS_Central',
                                              'CONUS_South'],
-                            'fcst_var_dict': {'name': 'APCP_A24',
+                            'fcst_var_dict': {'name': 'APCP',
                                               'levels': 'A24',
                                               'threshs': ('ge0.1, ge0.5, '
                                                           +'ge1, ge5, '
                                                           +'ge10, ge25, '
                                                           +'ge50, ge75')},
-                            'obs_var_dict': {'name': 'APCP_A24',
+                            'obs_var_dict': {'name': 'APCP',
                                              'levels': 'A24',
                                              'threshs': ('ge0.1, ge0.5, '
                                                          +'ge1, ge5, '
@@ -387,10 +549,10 @@ plot_jobs_dict = {
                             'plots_list': 'performance_diagram'},
         '24hrAccumMaps': {'line_type_stat_list': ['SL1L2/FBAR'],
                           'vx_mask_list': ['CONUS', 'AK', 'PR', 'HI'],
-                          'fcst_var_dict': {'name': 'APCP_A24',
+                          'fcst_var_dict': {'name': 'APCP',
                                             'levels': 'A24',
                                             'threshs': 'NA'},
-                          'obs_var_dict': {'name': 'APCP_A24',
+                          'obs_var_dict': {'name': 'APCP',
                                            'levels': 'A24',
                                            'threshs': 'NA'},
                           'interp_dict': {'method': 'NEAREST',
@@ -473,7 +635,7 @@ plot_jobs_dict = {
                                         'plots_list': ('time_series, '
                                                        +'lead_average, '
                                                        +'lead_by_date')},
-        'DailyAvg_GeoHeightAnom': {'line_type_stat_list': ['SL1L2/BIAS',
+        'DailyAvg_GeoHeightAnom': {'line_type_stat_list': ['SL1L2/ME',
                                                            'SL1L2/RMSE'],
                                    'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                                     'TROPICS'],
@@ -487,15 +649,15 @@ plot_jobs_dict = {
                                                    'points': '1'},
                                    'grid': 'G004',
                                    'plots_list': 'time_series, lead_average'},
-        'Ozone': {'line_type_stat_list': ['SL1L2/BIAS', 'SL1L2/RMSE'],
+        'Ozone': {'line_type_stat_list': ['SL1L2/ME', 'SL1L2/RMSE'],
                   'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                    'TROPICS'],
                   'fcst_var_dict': {'name': 'O3MR',
-                                    'levels': ('P100, P70, P50, P30, '
+                                    'levels': ('P925, P100, P70, P50, P30, '
                                                +'P20, P10, P5, P1'),
                                     'threshs': 'NA'},
                   'obs_var_dict': {'name': 'O3MR',
-                                   'levels': ('P100, P70, P50, P30, '
+                                   'levels': ('P925, P100, P70, P50, P30, '
                                               +'P20, P10, P5, P1'),
                                    'threshs': 'NA'},
                   'interp_dict': {'method': 'NEAREST',
@@ -503,7 +665,7 @@ plot_jobs_dict = {
                   'grid': 'G004',
                   'plots_list': ('time_series, lead_average, '
                                  +'stat_by_level, lead_by_level')},
-        'PresSeaLevel': {'line_type_stat_list': ['SAL1L2/ACC', 'SL1L2/BIAS',
+        'PresSeaLevel': {'line_type_stat_list': ['SAL1L2/ACC', 'SL1L2/ME',
                                                  'SL1L2/RMSE', 'GRAD/S1'],
                          'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                           'TROPICS'],
@@ -570,7 +732,7 @@ plot_jobs_dict = {
                                        'points': '1'},
                        'grid': 'G004',
                        'plots_list': 'time_series, lead_average, lead_by_date'},
-        'WindShear': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
+        'WindShear': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/ME'],
                       'vx_mask_list': ['ATL_MDR', 'EPAC_MDR'],
                       'fcst_var_dict': {'name': 'WNDSHR',
                                         'levels': 'P850-P200',
@@ -585,14 +747,14 @@ plot_jobs_dict = {
     },
     'sea_ice': {
         'DailyAvg_Concentration': {'line_type_stat_list': ['SL1L2/RMSE',
-                                                           'SL1L2/BIAS'],
+                                                           'SL1L2/ME'],
                                    'vx_mask_list': ['ARCTIC', 'ANTARCTIC'],
                                    'fcst_var_dict': {'name': 'ICEC_DAILYAVG',
                                                      'levels': 'Z0',
-                                                     'threshs': ''},
+                                                     'threshs': 'NA'},
                                    'obs_var_dict': {'name': 'ice_conc',
                                                     'levels': "'*,*'",
-                                                    'threshs': ''},
+                                                    'threshs': 'NA'},
                                    'interp_dict': {'method': 'NEAREST',
                                                    'points': '1'},
                                    'grid': 'G004',
@@ -686,39 +848,36 @@ plot_jobs_dict = {
                                 'grid': 'G211',
                                 'obs_name': '24hrNOHRSC',
                                 'plots_list': 'time_series, lead_average'},
-        '24hrNOHRSC_Depth_Nbrhd': {'line_type_stat_list': ['NBRCNT/FSS'],
-                                   'vx_mask_list': ['CONUS', 'CONUS_East',
-                                                    'CONUS_West',
-                                                    'CONUS_Central',
-                                                    'CONUS_South'],
-                                   'fcst_var_dict': {'name': 'SNOD_A24',
-                                                     'levels': 'Z0',
+        '24hrNOHRSC_Depth_Nbrhd1': {'line_type_stat_list': ['NBRCNT/FSS'],
+                                    'vx_mask_list': ['CONUS', 'CONUS_East',
+                                                     'CONUS_West',
+                                                     'CONUS_Central',
+                                                     'CONUS_South'],
+                                    'fcst_var_dict': {'name': 'SNOD_A24',
+                                                      'levels': 'Z0',
+                                                      'threshs': ('ge0.0254, '
+                                                                  +'ge0.0508, '
+                                                                  +'ge0.1016, '
+                                                                  +'ge0.2032, '
+                                                                  +'ge0.3048')},
+                                    'obs_var_dict': {'name': 'ASNOW',
+                                                     'levels': 'A24',
                                                      'threshs': ('ge0.0254, '
                                                                  +'ge0.0508, '
                                                                  +'ge0.1016, '
                                                                  +'ge0.2032, '
                                                                  +'ge0.3048')},
-                                   'obs_var_dict': {'name': 'ASNOW',
-                                                    'levels': 'A24',
-                                                    'threshs': ('ge0.0254, '
-                                                                +'ge0.0508, '
-                                                                +'ge0.1016, '
-                                                                +'ge0.2032, '
-                                                                +'ge0.3048')},
-                                   'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                   'points': ('1, 169, '
-                                                              +'529, 1089, '
-                                                              +'1849, 2809, '
-                                                              +'3969')},
-                                   'grid': 'G240',
-                                   'obs_name': '24hrNOHRSC',
-                                   'plots_list': 'time_series, lead_average'},
-        '24hrNOHRSC_WaterEqv_Nbrhd': {'line_type_stat_list': ['NBRCNT/FSS'],
+                                    'interp_dict': {'method': 'NBRHD_SQUARE',
+                                                    'points': '1'},
+                                    'grid': 'G240',
+                                    'obs_name': '24hrNOHRSC',
+                                    'plots_list': 'time_series, lead_average'},
+        '24hrNOHRSC_Depth_Nbrhd169': {'line_type_stat_list': ['NBRCNT/FSS'],
                                       'vx_mask_list': ['CONUS', 'CONUS_East',
                                                        'CONUS_West',
                                                        'CONUS_Central',
                                                        'CONUS_South'],
-                                      'fcst_var_dict': {'name': 'WEASD_A24',
+                                      'fcst_var_dict': {'name': 'SNOD_A24',
                                                         'levels': 'Z0',
                                                         'threshs': ('ge0.0254, '
                                                                     +'ge0.0508, '
@@ -733,16 +892,314 @@ plot_jobs_dict = {
                                                                    +'ge0.2032, '
                                                                    +'ge0.3048')},
                                       'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                      'points': ('1, 169, '
-                                                                 +'529, 1089, '
-                                                                 +'1849, 2809, '
-                                                                 +'3969')},
+                                                      'points': '169'},
                                       'grid': 'G240',
                                       'obs_name': '24hrNOHRSC',
                                       'plots_list': 'time_series, lead_average'},
+        '24hrNOHRSC_Depth_Nbrhd529': {'line_type_stat_list': ['NBRCNT/FSS'],
+                                      'vx_mask_list': ['CONUS', 'CONUS_East',
+                                                       'CONUS_West',
+                                                       'CONUS_Central',
+                                                       'CONUS_South'],
+                                      'fcst_var_dict': {'name': 'SNOD_A24',
+                                                        'levels': 'Z0',
+                                                        'threshs': ('ge0.0254, '
+                                                                    +'ge0.0508, '
+                                                                    +'ge0.1016, '
+                                                                    +'ge0.2032, '
+                                                                    +'ge0.3048')},
+                                      'obs_var_dict': {'name': 'ASNOW',
+                                                       'levels': 'A24',
+                                                       'threshs': ('ge0.0254, '
+                                                                   +'ge0.0508, '
+                                                                   +'ge0.1016, '
+                                                                   +'ge0.2032, '
+                                                                   +'ge0.3048')},
+                                      'interp_dict': {'method': 'NBRHD_SQUARE',
+                                                      'points': '529'},
+                                      'grid': 'G240',
+                                      'obs_name': '24hrNOHRSC',
+                                      'plots_list': 'time_series, lead_average'},
+        '24hrNOHRSC_Depth_Nbrhd1089': {'line_type_stat_list': ['NBRCNT/FSS'],
+                                       'vx_mask_list': ['CONUS', 'CONUS_East',
+                                                        'CONUS_West',
+                                                        'CONUS_Central',
+                                                        'CONUS_South'],
+                                       'fcst_var_dict': {'name': 'SNOD_A24',
+                                                         'levels': 'Z0',
+                                                         'threshs': ('ge0.0254, '
+                                                                     +'ge0.0508, '
+                                                                     +'ge0.1016, '
+                                                                     +'ge0.2032, '
+                                                                     +'ge0.3048')},
+                                       'obs_var_dict': {'name': 'ASNOW',
+                                                        'levels': 'A24',
+                                                        'threshs': ('ge0.0254, '
+                                                                    +'ge0.0508, '
+                                                                    +'ge0.1016, '
+                                                                    +'ge0.2032, '
+                                                                    +'ge0.3048')},
+                                       'interp_dict': {'method': 'NBRHD_SQUARE',
+                                                       'points': '1089'},
+                                       'grid': 'G240',
+                                       'obs_name': '24hrNOHRSC',
+                                       'plots_list': 'time_series, lead_average'},
+        '24hrNOHRSC_Depth_Nbrhd1849': {'line_type_stat_list': ['NBRCNT/FSS'],
+                                       'vx_mask_list': ['CONUS', 'CONUS_East',
+                                                        'CONUS_West',
+                                                        'CONUS_Central',
+                                                        'CONUS_South'],
+                                       'fcst_var_dict': {'name': 'SNOD_A24',
+                                                         'levels': 'Z0',
+                                                         'threshs': ('ge0.0254, '
+                                                                     +'ge0.0508, '
+                                                                     +'ge0.1016, '
+                                                                     +'ge0.2032, '
+                                                                     +'ge0.3048')},
+                                       'obs_var_dict': {'name': 'ASNOW',
+                                                        'levels': 'A24',
+                                                        'threshs': ('ge0.0254, '
+                                                                    +'ge0.0508, '
+                                                                    +'ge0.1016, '
+                                                                    +'ge0.2032, '
+                                                                    +'ge0.3048')},
+                                       'interp_dict': {'method': 'NBRHD_SQUARE',
+                                                       'points': '1849'},
+                                       'grid': 'G240',
+                                       'obs_name': '24hrNOHRSC',
+                                       'plots_list': 'time_series, lead_average'},
+        '24hrNOHRSC_Depth_Nbrhd2809': {'line_type_stat_list': ['NBRCNT/FSS'],
+                                       'vx_mask_list': ['CONUS', 'CONUS_East',
+                                                        'CONUS_West',
+                                                        'CONUS_Central',
+                                                        'CONUS_South'],
+                                       'fcst_var_dict': {'name': 'SNOD_A24',
+                                                         'levels': 'Z0',
+                                                         'threshs': ('ge0.0254, '
+                                                                     +'ge0.0508, '
+                                                                     +'ge0.1016, '
+                                                                     +'ge0.2032, '
+                                                                     +'ge0.3048')},
+                                       'obs_var_dict': {'name': 'ASNOW',
+                                                        'levels': 'A24',
+                                                        'threshs': ('ge0.0254, '
+                                                                    +'ge0.0508, '
+                                                                    +'ge0.1016, '
+                                                                    +'ge0.2032, '
+                                                                    +'ge0.3048')},
+                                       'interp_dict': {'method': 'NBRHD_SQUARE',
+                                                       'points': '2809'},
+                                       'grid': 'G240',
+                                       'obs_name': '24hrNOHRSC',
+                                       'plots_list': 'time_series, lead_average'},
+        '24hrNOHRSC_Depth_Nbrhd3969': {'line_type_stat_list': ['NBRCNT/FSS'],
+                                       'vx_mask_list': ['CONUS', 'CONUS_East',
+                                                        'CONUS_West',
+                                                        'CONUS_Central',
+                                                        'CONUS_South'],
+                                       'fcst_var_dict': {'name': 'SNOD_A24',
+                                                         'levels': 'Z0',
+                                                         'threshs': ('ge0.0254, '
+                                                                     +'ge0.0508, '
+                                                                     +'ge0.1016, '
+                                                                     +'ge0.2032, '
+                                                                     +'ge0.3048')},
+                                       'obs_var_dict': {'name': 'ASNOW',
+                                                        'levels': 'A24',
+                                                        'threshs': ('ge0.0254, '
+                                                                    +'ge0.0508, '
+                                                                    +'ge0.1016, '
+                                                                    +'ge0.2032, '
+                                                                    +'ge0.3048')},
+                                       'interp_dict': {'method': 'NBRHD_SQUARE',
+                                                       'points': '3969'},
+                                       'grid': 'G240',
+                                       'obs_name': '24hrNOHRSC',
+                                       'plots_list': 'time_series, lead_average'},
+        '24hrNOHRSC_WaterEqv_Nbrhd1': {'line_type_stat_list': ['NBRCNT/FSS'],
+                                       'vx_mask_list': ['CONUS', 'CONUS_East',
+                                                        'CONUS_West',
+                                                        'CONUS_Central',
+                                                        'CONUS_South'],
+                                       'fcst_var_dict': {'name': 'WEASD_A24',
+                                                         'levels': 'Z0',
+                                                         'threshs': ('ge0.0254, '
+                                                                     +'ge0.0508, '
+                                                                     +'ge0.1016, '
+                                                                     +'ge0.2032, '
+                                                                     +'ge0.3048')},
+                                       'obs_var_dict': {'name': 'ASNOW',
+                                                        'levels': 'A24',
+                                                        'threshs': ('ge0.0254, '
+                                                                    +'ge0.0508, '
+                                                                    +'ge0.1016, '
+                                                                    +'ge0.2032, '
+                                                                    +'ge0.3048')},
+                                       'interp_dict': {'method': 'NBRHD_SQUARE',
+                                                       'points': '1'},
+                                       'grid': 'G240',
+                                       'obs_name': '24hrNOHRSC',
+                                       'plots_list': 'time_series, lead_average'},
+        '24hrNOHRSC_WaterEqv_Nbrhd169': {'line_type_stat_list': ['NBRCNT/FSS'],
+                                         'vx_mask_list': ['CONUS', 'CONUS_East',
+                                                          'CONUS_West',
+                                                          'CONUS_Central',
+                                                          'CONUS_South'],
+                                         'fcst_var_dict': {'name': 'WEASD_A24',
+                                                           'levels': 'Z0',
+                                                           'threshs': ('ge0.0254, '
+                                                                       +'ge0.0508, '
+                                                                       +'ge0.1016, '
+                                                                       +'ge0.2032, '
+                                                                       +'ge0.3048')},
+                                         'obs_var_dict': {'name': 'ASNOW',
+                                                          'levels': 'A24',
+                                                          'threshs': ('ge0.0254, '
+                                                                      +'ge0.0508, '
+                                                                      +'ge0.1016, '
+                                                                      +'ge0.2032, '
+                                                                      +'ge0.3048')},
+                                         'interp_dict': {'method': 'NBRHD_SQUARE',
+                                                         'points': '169'},
+                                         'grid': 'G240',
+                                         'obs_name': '24hrNOHRSC',
+                                         'plots_list': 'time_series, lead_average'},
+        '24hrNOHRSC_WaterEqv_Nbrhd529': {'line_type_stat_list': ['NBRCNT/FSS'],
+                                         'vx_mask_list': ['CONUS', 'CONUS_East',
+                                                          'CONUS_West',
+                                                          'CONUS_Central',
+                                                          'CONUS_South'],
+                                         'fcst_var_dict': {'name': 'WEASD_A24',
+                                                           'levels': 'Z0',
+                                                           'threshs': ('ge0.0254, '
+                                                                       +'ge0.0508, '
+                                                                       +'ge0.1016, '
+                                                                       +'ge0.2032, '
+                                                                       +'ge0.3048')},
+                                         'obs_var_dict': {'name': 'ASNOW',
+                                                          'levels': 'A24',
+                                                          'threshs': ('ge0.0254, '
+                                                                      +'ge0.0508, '
+                                                                      +'ge0.1016, '
+                                                                      +'ge0.2032, '
+                                                                      +'ge0.3048')},
+                                         'interp_dict': {'method': 'NBRHD_SQUARE',
+                                                         'points': '529'},
+                                         'grid': 'G240',
+                                         'obs_name': '24hrNOHRSC',
+                                         'plots_list': 'time_series, lead_average'},
+        '24hrNOHRSC_WaterEqv_Nbrhd1089': {'line_type_stat_list': ['NBRCNT/FSS'],
+                                          'vx_mask_list': ['CONUS', 'CONUS_East',
+                                                           'CONUS_West',
+                                                           'CONUS_Central',
+                                                           'CONUS_South'],
+                                          'fcst_var_dict': {'name': 'WEASD_A24',
+                                                            'levels': 'Z0',
+                                                            'threshs': ('ge0.0254, '
+                                                                        +'ge0.0508, '
+                                                                        +'ge0.1016, '
+                                                                        +'ge0.2032, '
+                                                                        +'ge0.3048')},
+                                          'obs_var_dict': {'name': 'ASNOW',
+                                                           'levels': 'A24',
+                                                           'threshs': ('ge0.0254, '
+                                                                       +'ge0.0508, '
+                                                                       +'ge0.1016, '
+                                                                       +'ge0.2032, '
+                                                                       +'ge0.3048')},
+                                          'interp_dict': {'method': 'NBRHD_SQUARE',
+                                                          'points': '1089'},
+                                          'grid': 'G240',
+                                          'obs_name': '24hrNOHRSC',
+                                          'plots_list': 'time_series, lead_average'},
+        '24hrNOHRSC_WaterEqv_Nbrhd1849': {'line_type_stat_list': ['NBRCNT/FSS'],
+                                          'vx_mask_list': ['CONUS', 'CONUS_East',
+                                                           'CONUS_West',
+                                                           'CONUS_Central',
+                                                           'CONUS_South'],
+                                          'fcst_var_dict': {'name': 'WEASD_A24',
+                                                            'levels': 'Z0',
+                                                            'threshs': ('ge0.0254, '
+                                                                        +'ge0.0508, '
+                                                                        +'ge0.1016, '
+                                                                        +'ge0.2032, '
+                                                                        +'ge0.3048')},
+                                          'obs_var_dict': {'name': 'ASNOW',
+                                                           'levels': 'A24',
+                                                           'threshs': ('ge0.0254, '
+                                                                       +'ge0.0508, '
+                                                                       +'ge0.1016, '
+                                                                       +'ge0.2032, '
+                                                                       +'ge0.3048')},
+                                          'interp_dict': {'method': 'NBRHD_SQUARE',
+                                                          'points': '1849'},
+                                          'grid': 'G240',
+                                          'obs_name': '24hrNOHRSC',
+                                          'plots_list': 'time_series, lead_average'},
+        '24hrNOHRSC_WaterEqv_Nbrhd2809': {'line_type_stat_list': ['NBRCNT/FSS'],
+                                          'vx_mask_list': ['CONUS', 'CONUS_East',
+                                                           'CONUS_West',
+                                                           'CONUS_Central',
+                                                           'CONUS_South'],
+                                          'fcst_var_dict': {'name': 'WEASD_A24',
+                                                            'levels': 'Z0',
+                                                            'threshs': ('ge0.0254, '
+                                                                        +'ge0.0508, '
+                                                                        +'ge0.1016, '
+                                                                        +'ge0.2032, '
+                                                                        +'ge0.3048')},
+                                          'obs_var_dict': {'name': 'ASNOW',
+                                                           'levels': 'A24',
+                                                           'threshs': ('ge0.0254, '
+                                                                       +'ge0.0508, '
+                                                                       +'ge0.1016, '
+                                                                       +'ge0.2032, '
+                                                                       +'ge0.3048')},
+                                          'interp_dict': {'method': 'NBRHD_SQUARE',
+                                                          'points': '2809'},
+                                          'grid': 'G240',
+                                          'obs_name': '24hrNOHRSC',
+                                          'plots_list': 'time_series, lead_average'},
+        '24hrNOHRSC_WaterEqv_Nbrhd3969': {'line_type_stat_list': ['NBRCNT/FSS'],
+                                          'vx_mask_list': ['CONUS', 'CONUS_East',
+                                                           'CONUS_West',
+                                                           'CONUS_Central',
+                                                           'CONUS_South'],
+                                          'fcst_var_dict': {'name': 'WEASD_A24',
+                                                            'levels': 'Z0',
+                                                            'threshs': ('ge0.0254, '
+                                                                        +'ge0.0508, '
+                                                                        +'ge0.1016, '
+                                                                        +'ge0.2032, '
+                                                                        +'ge0.3048')},
+                                          'obs_var_dict': {'name': 'ASNOW',
+                                                           'levels': 'A24',
+                                                           'threshs': ('ge0.0254, '
+                                                                       +'ge0.0508, '
+                                                                       +'ge0.1016, '
+                                                                       +'ge0.2032, '
+                                                                       +'ge0.3048')},
+                                          'interp_dict': {'method': 'NBRHD_SQUARE',
+                                                          'points': '3969'},
+                                          'grid': 'G240',
+                                          'obs_name': '24hrNOHRSC',
+                                          'plots_list': 'time_series, lead_average'},
+        '24hrNOHRSC_24hrAccumMaps': {'line_type_stat_list': ['SL1L2/FBAR'],
+                                     'vx_mask_list': ['CONUS'],
+                                     'fcst_var_dict': {'name': 'ASNOW',
+                                                       'levels': 'Z0',
+                                                       'threshs': 'NA'},
+                                     'obs_var_dict': {'name': 'ASNOW',
+                                                      'levels': 'Z0',
+                                                      'threshs': 'NA'},
+                                     'interp_dict': {'method': 'NEAREST',
+                                                     'points': '1'},
+                                     'grid': 'G211',
+                                     'obs_name': '24hrNOHRSC',
+                                     'plots_list': 'nohrsc_spatial_map'}
     },
     'sst': {
-        'DailyAvg_SST': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/BIAS'],
+        'DailyAvg_SST': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/ME'],
                          'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
                                           'TROPICS'],
                          'fcst_var_dict': {'name': 'SST_DAILYAVG',
@@ -794,10 +1251,10 @@ for verif_type in VERIF_CASE_STEP_type_list:
         job_env_dict['start_date'] = start_date
         job_env_dict['end_date'] = end_date
         job_env_dict['date_type'] = 'VALID'
-        job_env_dict['plots_list'] = (
-            "'"+verif_type_plot_jobs_dict[verif_type_job]\
-            ['plots_list']+"'"
-        )
+        #job_env_dict['plots_list'] = (
+        #    "'"+verif_type_plot_jobs_dict[verif_type_job]\
+        #    ['plots_list']+"'"
+        #)
         job_env_dict['grid'] = (
             verif_type_plot_jobs_dict[verif_type_job]['grid']
         )
@@ -830,28 +1287,39 @@ for verif_type in VERIF_CASE_STEP_type_list:
             for vx_mask in verif_type_plot_jobs_dict[verif_type_job]\
                     ['vx_mask_list']:
                 job_env_dict['vx_mask'] = vx_mask
-                job_env_dict['job_name'] = (line_type_stat+'/'
-                                            +verif_type_job+'/'
-                                            +vx_mask)
-                # Write job script
-                njobs+=1
-                # Create job file
-                job_file = os.path.join(plot_jobs_dir, 'job'+str(njobs))
-                print("Creating job script: "+job_file)
-                job = open(job_file, 'w')
-                job.write('#!/bin/bash\n')
-                job.write('set -x\n')
-                job.write('\n')
-                # Set any environment variables for special cases
-                # Write environment variables
-                for name, value in job_env_dict.items():
-                    job.write('export '+name+'='+value+'\n')
-                job.write('\n')
-                # Write job commands
-                job.write(
-                    gda_util.python_command('global_det_atmos_plots.py',[])
-                )
-                job.close()
+                for plot in verif_type_plot_jobs_dict[verif_type_job]['plots_list'].split(', '):
+                    job_env_dict['plots_list'] = plot
+                    job_env_dict['job_name'] = (line_type_stat+'/'
+                                                +verif_type_job+'/'
+                                                +vx_mask+'/'
+                                                +plot)
+                    # Write job script
+                    njobs+=1
+                    # Create job file
+                    job_file = os.path.join(plot_jobs_dir, 'job'+str(njobs))
+                    print("Creating job script: "+job_file)
+                    job = open(job_file, 'w')
+                    job.write('#!/bin/bash\n')
+                    job.write('set -x\n')
+                    job.write('\n')
+                    # Set any environment variables for special cases
+                    # Write environment variables
+                    for name, value in job_env_dict.items():
+                        job.write('export '+name+'='+value+'\n')
+                    job.write('\n')
+                    # Write job commands
+                    if evs_run_mode == 'production' and \
+                            verif_type in ['pres_levs']:
+                        job.write(
+                            gda_util.python_command(
+                                'global_det_atmos_plots_production_tof240.py',
+                                 []
+                            )+'\n'
+                        )
+                    job.write(
+                        gda_util.python_command('global_det_atmos_plots.py',[])
+                    )
+                    job.close()
 
 # If running USE_CFP, create POE scripts
 if USE_CFP == 'YES':
@@ -899,8 +1367,15 @@ if USE_CFP == 'YES':
                                 'plot_job_scripts',
                                 'poe_jobs'+str(node))
     poe_file = open(poe_filename, 'a')
+    if machine == 'WCOSS2':
+        nselect = subprocess.check_output(
+            'cat '+PBS_NODEFILE+'| wc -l', shell=True, encoding='UTF-8'
+        ).replace('\n', '')
+        nnp = int(nselect) * int(nproc)
+    else:
+        nnp = nproc
     iproc+=1
-    while iproc <= int(nproc):
+    while iproc <= int(nnp):
         if machine in ['HERA', 'ORION', 'S4', 'JET']:
             poe_file.write(
                 str(iproc-1)+' /bin/echo '+str(iproc)+'\n'

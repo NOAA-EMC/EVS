@@ -718,3 +718,25 @@ def check_CONFIDENCE_INTERVALS(CONFIDENCE_INTERVALS):
     return CONFIDENCE_INTERVALS
 
 
+# LOGO_DIR
+# info case:whether or not an empty string is provided
+# warning case:
+# error case: should be a string, should follow proper directory structure
+def check_LOGO_DIR(LOGO_DIR):
+    if not LOGO_DIR:
+        print(f"The provided LOGO_DIR is empty.")
+        return False
+    if not isinstance(LOGO_DIR, str):
+        print(f"The provided LOGO_DIR ('{LOGO_DIR}') is not a string."
+                     + f"  LOGO_DIR must be a string. Check the plotting"
+                     + f" configuration file.")
+        #sys.exit(1)
+        return False
+    if not Path(LOGO_DIR).exists():
+        print(f"WARNING: The provided LOGO_DIR ('{LOGO_DIR}') does not exist on the"
+                       + f" current system.")
+        return False
+    if not Path(LOGO_DIR).is_dir():
+        print(f"WARNING: The provided LOGO_DIR ('{LOGO_DIR}') is not a directory.")
+        return False
+    return LOGO_DIR

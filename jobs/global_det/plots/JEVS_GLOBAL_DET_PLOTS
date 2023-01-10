@@ -37,10 +37,10 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 # Run setpdy and initialize PDY variables
 ####################################
 export cycle=${cycle:-t${cyc}z}
-setpdy.sh ${NDAYS}
+setpdy.sh $NDAYS
 . ./PDY
-#export plot_start=$PDYm1
-#export plot_end=$(eval echo \$PDYm$NDAYS)
+export VDATE_START=$(eval echo \$PDYm$NDAYS)
+export VDATE_END=$PDYm1
 
 ####################################
 # Define NET/RUN variables
@@ -54,6 +54,7 @@ export RUN=${RUN:-atmos}
 # Define COMIN/COMOUT variables
 ####################################
 export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
+export COMINnohrsc=${COMINnohrsc:-$DCOMROOT}
 export COMINcfs=${COMINcfs:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/cfs)}
 export COMINgfs=${COMINgfs:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/gfs)}
 export COMINcmc=${COMINcmc:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/cmc)}

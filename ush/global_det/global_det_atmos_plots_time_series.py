@@ -98,7 +98,27 @@ class TimeSeries:
                               +f"{self.date_info_dict['forecast_hour']} "
                               +"with initialization dates "
                               +', '.join(format_init_dates))
-            plot_dates = valid_dates
+            if len(valid_dates) == 0:
+                plot_dates = np.arange(
+                    datetime.datetime.strptime(
+                        self.date_info_dict['start_date']
+                        +self.date_info_dict['valid_hr_start'],
+                        '%Y%m%d%H'
+                    ),
+                    datetime.datetime.strptime(
+                        self.date_info_dict['end_date']
+                        +self.date_info_dict['valid_hr_end'],
+                        '%Y%m%d%H'
+                    )
+                    +datetime.timedelta(
+                        hours=int(self.date_info_dict['valid_hr_inc'])
+                    ),
+                    datetime.timedelta(
+                        hours=int(self.date_info_dict['valid_hr_inc'])
+                    )
+                ).astype(datetime.datetime)
+            else:
+                plot_dates = valid_dates
         elif self.date_info_dict['date_type'] == 'INIT':
             self.logger.debug("Based on date information, plot will display "
                               +"initialization dates "
@@ -107,7 +127,27 @@ class TimeSeries:
                               +f"{self.date_info_dict['forecast_hour']} "
                               +"with valid dates "
                               +', '.join(format_valid_dates))
-            plot_dates = init_dates
+            if len(init_dates) == 0:
+                plot_dates = np.arange(
+                    datetime.datetime.strptime(
+                        self.date_info_dict['start_date']
+                        +self.date_info_dict['init_hr_start'],
+                        '%Y%m%d%H'
+                    ),
+                    datetime.datetime.strptime(
+                        self.date_info_dict['end_date']
+                        +self.date_info_dict['init_hr_end'],
+                        '%Y%m%d%H'
+                    )
+                    +datetime.timedelta(
+                        hours=int(self.date_info_dict['init_hr_inc'])
+                    ),
+                    datetime.timedelta(
+                        hours=int(self.date_info_dict['init_hr_inc'])
+                    )
+                ).astype(datetime.datetime)
+            else:
+                plot_dates = init_dates
         # Read in data
         self.logger.info(f"Reading in model stat files from {self.input_dir}")
         all_model_df = gda_util.build_df(

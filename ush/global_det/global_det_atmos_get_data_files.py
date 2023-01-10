@@ -30,9 +30,9 @@ VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
 USER = os.environ['USER']
 evs_run_mode = os.environ['evs_run_mode']
+COMINnohrsc = os.environ['COMINnohrsc']
 if STEP == 'stats':
     COMINccpa = os.environ['COMINccpa']
-    COMINnohrsc = os.environ['COMINnohrsc']
     COMINobsproc = os.environ['COMINobsproc']
     COMINosi_saf = os.environ['COMINosi_saf']
     COMINghrsst_median = os.environ['COMINghrsst_median']
@@ -783,6 +783,12 @@ elif STEP == 'plots' :
                         'evs.stats.'+model+'.'+RUN+'.'+VERIF_CASE+'.'
                         +'v'+date_dt.strftime('%Y%m%d')+'.stat'
                     )
+                else:
+                    source_model_date_stat_file = os.path.join(
+                        model_evs_data_dir, 'evs_data',
+                        COMPONENT, RUN, VERIF_CASE, model,
+                        model+'_v'+date_dt.strftime('%Y%m%d')+'.stat'
+                    )
                 dest_model_date_stat_file = os.path.join(
                     VERIF_CASE_STEP_data_dir, model,
                     model+'_v'+date_dt.strftime('%Y%m%d')+'.stat'
@@ -831,12 +837,12 @@ elif STEP == 'plots' :
             'ccpa', 'grid2grid'
         )
         source_ccpa_pcp_combine_file = os.path.join(
-            COMINccpa, 'pcp_combine_precip.24hrCCPA.valid'
+            COMINccpa, 'pcp_combine_precip_24hrCCPA_valid'
             +end_date_dt.strftime('%Y%m%d')+CCPA24hr_valid_hr_list[0]+'.nc'
         )
         dest_ccpa_pcp_combine_file = os.path.join(
             VERIF_CASE_STEP_data_dir, 'ccpa',
-            'ccpa_precip.24hrAccum.valid'
+            'ccpa_precip_24hrAccum_valid'
             +end_date_dt.strftime('%Y%m%d')+CCPA24hr_valid_hr_list[0]+'.nc'
         )
         if not os.path.exists(dest_ccpa_pcp_combine_file):
@@ -861,13 +867,13 @@ elif STEP == 'plots' :
                     + datetime.timedelta(hours=int(CCPA24hr_valid_hr_list[0]))
                 )- datetime.timedelta(hours=fhr)
                 source_model_fhr_pcp_combine_file = os.path.join(
-                    COMINmodel, 'pcp_combine_precip.24hrAccum.init'
-                    +init_dt.strftime('%Y%m%d%H')+'.f'+str(fhr).zfill(3)+'.nc'
+                    COMINmodel, 'pcp_combine_precip_24hrAccum_init'
+                    +init_dt.strftime('%Y%m%d%H')+'_fhr'+str(fhr).zfill(3)+'.nc'
                 )
                 dest_model_fhr_pcp_combine_file = os.path.join(
                     VERIF_CASE_STEP_data_dir, model,
-                    model+'_precip.24hrAccum.init'
-                    +init_dt.strftime('%Y%m%d%H')+'.f'+str(fhr).zfill(3)+'.nc'
+                    model+'_precip_24hrAccum_init'
+                    +init_dt.strftime('%Y%m%d%H')+'_fhr'+str(fhr).zfill(3)+'.nc'
                 )
                 if not os.path.exists(dest_model_fhr_pcp_combine_file):
                     if os.path.exists(source_model_fhr_pcp_combine_file):
@@ -878,5 +884,39 @@ elif STEP == 'plots' :
                     else:
                         print("WARNING: "+source_model_fhr_pcp_combine_file+" "
                               +"DOES NOT EXIST")
+    # Get NOHRSC files from COMINnohrsc
+    if VERIF_CASE == 'grid2grid' and 'snow' in VERIF_CASE_STEP_type_list:
+        (NOHRSC24hr_valid_hr_start, NOHRSC24hr_valid_hr_end,
+         NOHRSC24hr_valid_hr_inc) = gda_util.get_obs_valid_hrs(
+            '24hrNOHRSC'
+        )
+        NOHRSC24hr_valid_hr_list = [
+            str(x).zfill(2) for x in range(
+                NOHRSC24hr_valid_hr_start,
+                NOHRSC24hr_valid_hr_end+NOHRSC24hr_valid_hr_inc,
+                NOHRSC24hr_valid_hr_inc
+            )
+        ]
+        source_nohrsc_file = os.path.join(
+            COMINnohrsc, end_date_dt.strftime('%Y%m%d'),
+            'wgrbbul', 'nohrsc_snowfall',
+            'sfav2_CONUS_24h_'+end_date_dt.strftime('%Y%m%d')
+            +NOHRSC24hr_valid_hr_list[0]+'_grid184.grb2'
+        )
+        dest_nohrsc_file = os.path.join(
+            VERIF_CASE_STEP_data_dir, 'nohrsc',
+            'nohrsc_snow_24hrAccum_valid'
+            +end_date_dt.strftime('%Y%m%d')
+            +NOHRSC24hr_valid_hr_list[0]+'.grb2'
+        )
+        if not os.path.exists(dest_nohrsc_file):
+            if os.path.exists(source_nohrsc_file):
+                print("Linking "+source_nohrsc_file+" "
+                      +"to "+dest_nohrsc_file)
+                os.symlink(source_nohrsc_file,
+                           dest_nohrsc_file)
+            else:
+                print("WARNING: "+source_nohrsc_file+" "
+                       +"DOES NOT EXIST")
 
 print("END: "+os.path.basename(__file__))

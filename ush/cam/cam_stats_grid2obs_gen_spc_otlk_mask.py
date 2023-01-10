@@ -103,8 +103,9 @@ for OTLK in OTLKs:
                         '|', 'egrep', '-A', '5', f'"^Record {REC}"', '|', 'tail',
                         '-1', '|', 'cut', '-d\'"\'', '-f2'
                     ], capture_output=True)
+                    NAME = NAME.replace('\n','')
                     print(f"Processing Record #{REC}: {NAME}")
-                    MASK_FNAME = f"spc_otlk_d{DAY}_{OTLK}_v{V1DATE}{V1HOUR}-{V2DATE}{V2HOUR}"
+                    MASK_FNAME = f"spc_otlk_d{DAY}_{OTLK}_{NAME}_v{V1DATE}{V1HOUR}-{V2DATE}{V2HOUR}_for{VHOUR}Z"
                     if int(DAY) == 3:
                         MASK_NAME = f"DAY{DAY}_{NAME}"
                     else:
