@@ -198,7 +198,7 @@ headline1_image_name = plot_specs.get_savefig_name(
 )
 headline1_copy_image_name = os.path.join(
     images_dir,
-    headline1_image_name.rpartition('/')[2].replace('evs.','evs.headline.')
+    headline1_image_name.rpartition('/')[2]
 )
 print("Copying "+headline1_image_name+" to "+headline1_copy_image_name)
 shutil.copy2(headline1_image_name, headline1_copy_image_name)
