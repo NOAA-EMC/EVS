@@ -778,7 +778,7 @@ generate_stats_jobs_dict = {
         'DailyAvg_SST': {'env': {},
                          'commands': [gda_util.metplus_command(
                                           'GridStat_fcstGLOBAL_DET_'
-                                          +'obsGHRSST_MEDIAN_DailyAvg.conf'
+                                          +'obsGHRSST_OSPO_DailyAvg.conf'
                                       )]},
     },
 }

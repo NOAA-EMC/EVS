@@ -1211,7 +1211,7 @@ plot_jobs_dict = {
                          'interp_dict': {'method': 'NEAREST',
                                          'points': '1'},
                          'grid': 'G004',
-                         'obs_name': 'ghrsst_median',
+                         'obs_name': 'ghrsst_ospo',
                          'plots_list': 'time_series, lead_average'},
     }
 }
