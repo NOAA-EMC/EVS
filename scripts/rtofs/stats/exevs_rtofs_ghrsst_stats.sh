@@ -1,16 +1,16 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_rtofs_gmpe_stats.sh
+# Name of Script: exevs_rtofs_ghrsst_stats.sh
 # Purpose of Script: To create stat files for RTOFS SST forecasts verified
-#    with GMPE/GHRSST median data using MET/METplus.
+#    with GHRSST OSPO data using MET/METplus.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
 ###############################################################################
 
 set -x
 
 # check if obs file exists; exit if not
-if [ ! -s $COMINobs/$VDATE/validation_data/marine/ghrsst/${VDATE}120000-UKMO-L4_GHRSST-SSTfnd-GMPE-GLOB-v03.0-fv03.0.nc ] ; then
-   echo "Missing validation GMPE data file for $VDATE" 
+if [ ! -s $COMINobs/$VDATE/validation_data/marine/ghrsst/${VDATE}_OSPO_L4_GHRSST.nc ] ; then
+   echo "Missing validation GHRSST OSPO data file for $VDATE" 
    exit
 fi
 
@@ -92,11 +92,17 @@ MM=$(date --date=$VDATE +%m)
 DD=$(date --date=$VDATE +%d)
 if [ $DD -lt 15 ] ; then
    NM=`expr $MM - 1`
+   if [ $NM -eq 0 ] ; then
+      NM=12
+   fi
    NM=$(printf "%02d" $NM)
    export SM=$NM
    export EM=$MM
 else
    NM=`expr $MM + 1`
+   if [ $NM -eq 13 ] ; then
+      NM=01
+   fi
    NM=$(printf "%02d" $NM)
    export SM=$MM
    export EM=$NM
@@ -104,11 +110,11 @@ fi
 
 # run Grid_Stat
 run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
--c $CONFIGevs/${VERIF_CASE}/$STEP/GridStat_fcstRTOFS_obsGMPE_climoWOA18.conf
+-c $CONFIGevs/${VERIF_CASE}/$STEP/GridStat_fcstRTOFS_obsGHRSST_climoWOA18.conf
 
 # check if stat files exist; exit if not
-if [ ! -s $COMOUTsmall/grid_stat_RTOFS_GMPE_SST_1920000L_${VDATE}_000000V.stat ] ; then
-   echo "Missing RTOFS_GMPE_SST stat files for $VDATE" 
+if [ ! -s $COMOUTsmall/grid_stat_RTOFS_GHRSST_SST_1920000L_${VDATE}_000000V.stat ] ; then
+   echo "Missing RTOFS_GHRSST_SST stat files for $VDATE" 
    exit
 fi
 
