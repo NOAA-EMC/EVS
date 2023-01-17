@@ -8,15 +8,15 @@ class Plotter():
     def __init__(self, font_weight='bold',   axis_title_weight='bold',  
                 axis_title_size=20,         axis_offset=False,
                 axis_title_pad=15,          axis_label_weight='bold',  
-                axis_label_size=16,         axis_label_pad=10,
+                axis_label_size=18,         axis_label_pad=10,
                 xtick_label_size=16,        xtick_major_pad=10,        
                 ytick_label_size=16,        ytick_major_pad=10, 
                 fig_subplot_right=.95,      fig_subplot_left=.1,      
                 fig_subplot_top=.925,       fig_subplot_bottom=.075,
                 legend_handle_text_pad=.25, legend_handle_length=1.25, 
                 legend_border_axis_pad=0,   legend_col_space=1.,
-                legend_frame_on=True,       fig_size=(14.,14.),        
-                legend_bbox=(0,1),          legend_font_size=17, 
+                legend_frame_on=True,       fig_size=(10.,10.),        
+                legend_bbox=(0,1),          legend_font_size=18, 
                 legend_loc='center right',  legend_ncol=1,             
                 title_loc='center'):
         self.font_weight = font_weight

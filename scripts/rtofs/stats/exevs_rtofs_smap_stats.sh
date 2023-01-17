@@ -94,11 +94,17 @@ MM=$(date --date=$VDATE +%m)
 DD=$(date --date=$VDATE +%d)
 if [ $DD -lt 15 ] ; then
    NM=`expr $MM - 1`
+   if [ $NM -eq 0 ] ; then
+      NM=12
+   fi
    NM=$(printf "%02d" $NM)
    export SM=$NM
    export EM=$MM
 else
    NM=`expr $MM + 1`
+   if [ $NM -eq 13 ] ; then
+      NM=01
+   fi
    NM=$(printf "%02d" $NM)
    export SM=$MM
    export EM=$NM

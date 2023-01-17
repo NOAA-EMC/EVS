@@ -63,7 +63,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                       metric3_name: str = 'CSI', date_type: str = 'VALID', 
                       date_hours: list = [0,6,12,18], verif_type: str = 'pres', 
                       line_type: str = 'CTC', save_dir: str = '.', 
-                      fix_dir: str = '.', dpi: int = 300, 
+                      fix_dir: str = '.', dpi: int = 200, 
                       confidence_intervals: bool = False, bs_nrep: int = 5000, 
                       bs_method: str = 'MATCHED_PAIRS', ci_lev: float = .95, 
                       bs_min_samp: int = 30, eval_period: str = 'TEST', 
@@ -767,7 +767,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         linewidth=.5, c='black', zorder=0
     )
 
-    fig.subplots_adjust(bottom=.2, right=.77, left=.23, wspace=0, hspace=0)
+    fig.subplots_adjust(bottom=.15, right=.77, left=.23, wspace=0, hspace=0)
     cax = fig.add_axes([.775, .2, .01, .725])
     cbar_ticks = [0.,.1,.2,.3,.4,.5,.6,.7,.8,.9,1.]
     cb = plt.colorbar(
@@ -864,7 +864,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
               + f'{date_start_string} to {date_end_string}, {frange_string}')
     title_center = '\n'.join([title1, title2, title3])
-    ax.set_title(title_center, loc=plotter.title_loc) 
+    ax.set_title(title_center, loc=plotter.title_loc, pad=None) 
     logger.info("... Plotting complete.")
 
     # Logos
