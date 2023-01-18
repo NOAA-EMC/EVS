@@ -15,7 +15,7 @@ export model=evs
 ############################################################
 # For dev testing
 ############################################################
-#cd $PBS_O_WORKDIR
+cd $PBS_O_WORKDIR
 module reset
 export HOMEevs=$(eval "cd ../../../;pwd")
 versionfile=$HOMEevs/versions/run.ver
