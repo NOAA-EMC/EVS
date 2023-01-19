@@ -2948,6 +2948,92 @@ class Reference():
                                     'plot_group':'precip'}
                     }
                 },
+                'NBRCNT': {
+                    'plot_stats_list': ('fss, afss, ufss, frate, orate'),
+                    'interp': 'NBRHD_SQUARE, NBRHD_CIRCLE',
+                    'vx_mask_list' : [
+                        'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 
+                        'CONUS_South, Alaska', 
+                    ],
+                    'var_dict': {
+                        'APCP_01': {'fcst_var_names': ['APCP', 'APCP_01'],
+                                    'fcst_var_levels': ['A01','A1'],
+                                    'fcst_var_thresholds': ('>=0.254, >=1.27,'
+                                                            + ' >=2.54,'
+                                                            + ' >=6.35,'
+                                                            + ' >=12.7,'
+                                                            + ' >=19.05,'
+                                                            + ' >=25.4,'),
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['APCP', 'APCP_01', 'APCP_01_Z0'],
+                                    'obs_var_levels': ['A01','A1'],
+                                    'obs_var_thresholds': ('>=0.254, >=1.27,'
+                                                           + ' >=2.54,'
+                                                           + ' >=6.35,'
+                                                           + ' >=12.7,'
+                                                           + ' >=19.05,'
+                                                           + ' >=25.4,'),
+                                    'obs_var_options': '',
+                                    'plot_group':'precip'},
+                        'APCP_03': {'fcst_var_names': ['APCP', 'APCP_03'],
+                                    'fcst_var_levels': ['A03','A3'],
+                                    'fcst_var_thresholds': ('>=0.254, >=1.27,'
+                                                            + ' >=2.54,'
+                                                            + ' >=6.35,'
+                                                            + ' >=12.7,'
+                                                            + ' >=19.05,'
+                                                            + ' >=25.4,'),
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['APCP', 'APCP_03', 'APCP_01_Z0'],
+                                    'obs_var_levels': ['A03','A3'],
+                                    'obs_var_thresholds': ('>=0.254, >=1.27,'
+                                                           + ' >=2.54,'
+                                                           + ' >=6.35,'
+                                                           + ' >=12.7,'
+                                                           + ' >=19.05,'
+                                                           + ' >=25.4,'),
+                                    'obs_var_options': '',
+                                    'plot_group':'precip'},
+                        'APCP_06': {'fcst_var_names': ['APCP', 'APCP_06'],
+                                    'fcst_var_levels': ['A06','A6'],
+                                    'fcst_var_thresholds': ('>=0.254, >=1.27,'
+                                                            + ' >=2.54,'
+                                                            + ' >=6.35,'
+                                                            + ' >=12.7,'
+                                                            + ' >=19.05,'
+                                                            + ' >=25.4,'),
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['APCP', 'APCP_06', 'APCP_01_Z0'],
+                                    'obs_var_levels': ['A06','A6'],
+                                    'obs_var_thresholds': ('>=0.254, >=1.27,'
+                                                           + ' >=2.54,'
+                                                           + ' >=6.35,'
+                                                           + ' >=12.7,'
+                                                           + ' >=19.05,'
+                                                           + ' >=25.4,'),
+                                    'obs_var_options': '',
+                                    'plot_group':'precip'},
+                        'APCP_24': {'fcst_var_names': ['APCP', 'APCP_24'],
+                                    'fcst_var_levels': ['A24'],
+                                    'fcst_var_thresholds': ('>=0.254, >=1.27,'
+                                                            + ' >=2.54,'
+                                                            + ' >=6.35,'
+                                                            + ' >=12.7,'
+                                                            + ' >=19.05,'
+                                                            + ' >=25.4,'),
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['APCP', 'APCP_24', 'APCP_01_Z0'],
+                                    'obs_var_levels': ['A24'],
+                                    'obs_var_thresholds': ('>=0.254, >=1.27,'
+                                                           + ' >=2.54,'
+                                                           + ' >=6.35,'
+                                                           + ' >=12.7,'
+                                                           + ' >=19.05,'
+                                                           + ' >=25.4,'),
+                                    'obs_var_options': '',
+                                    'plot_group':'precip'}
+                    }
+                },
                 'CTC': {
                     'plot_stats_list': ('me, ets, fss, csi, fbias, fbar,'
                                         + ' obar, pod, faratio, farate, sratio'),

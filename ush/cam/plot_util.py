@@ -334,6 +334,14 @@ def get_stat_file_line_type_columns(logger, met_version, line_type):
          stat_file_line_type_columns = [
             'TOTAL', 'FY_OY', 'FY_ON', 'FN_OY', 'FN_ON'
          ]
+   elif line_type == 'NBRCNT':
+      if met_version >= 6.0:
+         stat_file_line_type_columns = [
+            'TOTAL', 'FBS', 'FBS_BCL', 'FBS_BCU', 'FSS', 'FSS_BCL', 'FSS_BCU',
+            'AFSS', 'AFSS_BCL', 'AFSS_BCU', 'UFSS', 'UFSS_BCL', 'UFSS_BCU',
+            'F_RATE', 'F_RATE_BCL', 'F_RATE_BCU',
+            'O_RATE', 'O_RATE_BCL', 'O_RATE_BCU'
+         ]
    return stat_file_line_type_columns
 
 def get_clevels(data, spacing):
@@ -555,6 +563,12 @@ def get_stat_plot_name(logger, stat):
       stat_plot_name = 'Observation Mean'
    elif stat == 'fbar_obar':
       stat_plot_name = 'Forecast and Observation Mean'
+   elif stat == 'fss':
+      stat_plot_name = 'Fractions Skill Score'
+   elif stat == 'afss':
+      stat_plot_name = 'Asymptotic Fractions Skill Score'
+   elif stat == 'ufss':
+      stat_plot_name = 'Uniform Fractions Skill Score'
    elif stat == 'speed_err':
       stat_plot_name = (
          'Difference in Average FCST and OBS Wind Vector Speeds'
@@ -813,6 +827,16 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          fy_on = model_data.loc[:]['FY_ON']
          fn_oy = model_data.loc[:]['FN_OY']
          fn_on = model_data.loc[:]['FN_ON']
+      elif all(elem in model_data_columns for elem in
+            ['FBS','FSS','AFSS','UFSS','F_RATE','O_RATE']):
+         line_type = 'NBRCNT'
+         total = model_data.loc[:]['TOTAL']
+         fbs = model_data.loc[:]['FBS']
+         fss = model_data.loc[:]['FSS']
+         afss = model_data.loc[:]['AFSS']
+         ufss = model_data.loc[:]['UFSS']
+         frate = model_data.loc[:]['F_RATE']
+         orate = model_data.loc[:]['O_RATE']
       else:
          logger.error("Could not recognize line type from columns")
          exit(1)
@@ -913,7 +937,10 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
             ffbar_est_samp = np.concatenate((ffbar_est_samples))
             oobar_est_samp = np.concatenate((oobar_est_samples))
       else:
-         logger.error(line_type+" is not currently a valid option")
+         logger.error(
+            line_type
+            + f" is not currently a valid option for bootstrapping {bs_method}"
+         )
          exit(1)
    elif str(bs_method).upper() == 'FORECASTS':
       if total.size < bs_min_samp:
@@ -1010,6 +1037,75 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
             fobar_est_samp = np.concatenate((fobar_samples))
             ffbar_est_samp = np.concatenate((ffbar_samples))
             oobar_est_samp = np.concatenate((oobar_samples))
+      elif line_type == 'NBRCNT':
+         fbs_est_mean = fbs.mean()
+         fss_est_mean = fss.mean()
+         afss_est_mean = afss.mean()
+         ufss_est_mean = ufss.mean()
+         frate_est_mean = frate.mean()
+         orate_est_mean = orate.mean()
+         max_mem_per_array = 32 # MB
+         max_array_size = max_mem_per_array*1E6/8
+         batch_size = int(max_array_size/len(fbs))
+         fbs_samples = []
+         fss_samples = []
+         afss_samples = []
+         ufss_samples = []
+         frate_samples = []
+         orate_samples = []
+         # attempt to bootstrap in batches to save time
+         # if sampling array is too large for batches, traditional bootstrap
+         if batch_size <= 1:
+            for _ in range(nrepl):
+               idx = np.random.choice(
+                  len(fbs),
+                  size=fbs.size,
+                  replace=True
+               )
+               fbs_bs, fss_bs, afss_bs, ufss_bs, frate_bs, orate_bs = [
+                  summary_stat[idx].T
+                  for summary_stat in [fbs, fss, afss, ufss, frate, orate]
+               ]
+               fbs_samples.append(fbs_bs.mean())
+               fss_samples.append(fss_bs.mean())
+               afss_samples.append(afss_bs.mean())
+               ufss_samples.append(ufss_bs.mean())
+               frate_samples.append(frate_bs.mean())
+               orate_samples.append(orate_bs.mean())
+            fbs_est_samp = np.array(fbs_samples)
+            fss_est_samp = np.array(fss_samples)
+            afss_est_samp = np.array(afss_samples)
+            ufss_est_samp = np.array(ufss_samples)
+            frate_est_samp = np.array(frate_samples)
+            orate_est_samp = np.array(orate_samples)
+         else:
+            rep_arr = np.arange(0,nrepl)
+            for b in range(0, nrepl, batch_size):
+               curr_batch_size = len(rep_arr[b:b+batch_size])
+               idxs = [
+                  np.random.choice(
+                     len(fbs),
+                     size=fbs.size,
+                     replace=True
+                  )
+                  for _ in range(curr_batch_size)
+               ]
+               fbs_bs, fss_bs, afss_bs, ufss_bs, frate_bs, orate_bs = [
+                  np.take(np.array(summary_stat), idxs)
+                  for s, summary_stat in enumerate([fbs, fss, afss, ufss, frate, orate])
+               ]
+               fbs_samples.append(fbs_bs.mean(axis=1))
+               fss_samples.append(fss_bs.mean(axis=1))
+               afss_samples.append(afss_bs.mean(axis=1))
+               ufss_samples.append(ufss_bs.mean(axis=1))
+               frate_samples.append(frate_bs.mean(axis=1))
+               orate_samples.append(orate_bs.mean(axis=1))
+            fbs_est_samp = np.concatenate((fbs_samples))
+            fss_est_samp = np.concatenate((fss_samples))
+            afss_est_samp = np.concatenate((afss_samples))
+            ufss_est_samp = np.concatenate((ufss_samples))
+            frate_est_samp = np.concatenate((frate_samples))
+            orate_est_samp = np.concatenate((orate_samples))
       else:
          logger.error(line_type+" is not currently a valid option")
          exit(1)
@@ -1133,6 +1229,21 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
             stat_values_pre_mean = obar_est_mean
             stat_values_mean = np.mean(stat_values_pre_mean)
             stat_values = obar_est_samp
+   elif stat == 'fss':
+      if str(bs_method).upper() in ['MATCHED_PAIRS','FORECASTS']:
+          if line_type == 'NBRCNT':
+             stat_values_mean = np.mean(fss_est_mean)
+             stat_values = fss_est_samp
+   elif stat == 'afss':
+      if str(bs_method).upper() in ['MATCHED_PAIRS','FORECASTS']:
+          if line_type == 'NBRCNT':
+             stat_values_mean = np.mean(afss_est_mean)
+             stat_values = afss_est_samp
+   elif stat == 'ufss':
+      if str(bs_method).upper() in ['MATCHED_PAIRS','FORECASTS']:
+          if line_type == 'NBRCNT':
+             stat_values_mean = np.mean(ufss_est_mean)
+             stat_values = ufss_est_samp
    elif stat == 'orate' or stat == 'baser':
       if line_type == 'CTC':
          total_mean = (
@@ -1141,6 +1252,9 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          stat_values_mean = (np.sum(fy_oy)+np.sum(fn_oy))/total_mean
          total = (fy_oy_samp + fy_on_samp + fn_oy_samp + fn_on_samp)
          stat_values = (fy_oy_samp + fn_oy_samp)/total
+      elif line_type == 'NBRCNT':
+         stat_values_mean = np.mean(orate)
+         stat_values = orate_est_samp
    elif stat == 'frate':
       if line_type == 'CTC':
          total_mean = (
@@ -1149,6 +1263,9 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          stat_values_mean = (np.sum(fy_oy)+np.sum(fy_on))/total_mean
          total = (fy_oy_samp + fy_on_samp + fn_oy_samp + fn_on_samp)
          stat_values = (fy_oy_samp + fy_on_samp)/total
+      elif line_type == 'NBRCNT':
+         stat_values_mean = np.mean(frate)
+         stat_values = frate_est_samp
    elif stat == 'orate_frate' or stat == 'baser_frate':
       if line_type == 'CTC':
          total_mean = (
@@ -1449,6 +1566,16 @@ def calculate_stat(logger, model_data, stat, conversion):
          fy_on = model_data.loc[:]['FY_ON']
          fn_oy = model_data.loc[:]['FN_OY']
          fn_on = model_data.loc[:]['FN_ON']
+      elif all(elem in model_data_columns for elem in 
+            ['FBS','FSS','AFSS','UFSS','F_RATE','O_RATE']):
+          line_type = 'NBRCNT'
+          total = model_data.loc[:]['TOTAL']
+          fbs = model_data.loc[:]['FBS']
+          fss = model_data.loc[:]['FSS']
+          afss = model_data.loc[:]['AFSS']
+          ufss = model_data.loc[:]['UFSS']
+          frate = model_data.loc[:]['F_RATE']
+          orate = model_data.loc[:]['O_RATE']
       else:
          logger.error("Could not recognize line type from columns")
          exit(1)
@@ -1592,9 +1719,22 @@ def calculate_stat(logger, model_data, stat, conversion):
    elif stat == 'orate' or stat == 'baser':
       if line_type == 'CTC':
          stat_values = (fy_oy + fn_oy)/total
+      elif line_type == 'NBRCNT':
+         stat_values = orate
    elif stat == 'frate':
       if line_type == 'CTC':
          stat_values = (fy_oy + fy_on)/total
+      elif line_type == 'NBRCNT':
+         stat_values = frate
+   elif stat == 'fss':
+      if line_type == 'NBRCNT':
+         stat_values = fss
+   elif stat == 'afss':
+      if line_type == 'NBRCNT':
+         stat_values = afss
+   elif stat == 'ufss':
+      if line_type == 'NBRCNT':
+         stat_values = ufss
    elif stat == 'orate_frate' or stat == 'baser_frate':
       if line_type == 'CTC':
          stat_values_fbar = (fy_oy + fy_on)/total

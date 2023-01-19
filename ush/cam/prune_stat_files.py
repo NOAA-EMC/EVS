@@ -106,6 +106,11 @@ def prune_data(data_dir, prune_dir, tmp_dir, output_base_template, valid_range,
          all_grep_output = all_grep_output+grep_output
       pruned_met_stat_file = os.path.join(pruned_data_dir,
                                           model+'.stat')
-      with open(pruned_met_stat_file, 'w') as pmsf:
-         pmsf.write(met_header_cols+all_grep_output)
+      try:
+         with open(pruned_met_stat_file, 'w') as pmsf:
+            pmsf.write(met_header_cols+all_grep_output)
+      except OSError:
+         print(met_header_cols)
+         print(all_grep_output)
+         raise
    print("END: "+os.path.basename(__file__))

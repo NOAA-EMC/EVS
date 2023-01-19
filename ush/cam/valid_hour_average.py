@@ -65,6 +65,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                       verif_type: str = 'pres', save_dir: str = '.',
                       requested_var: str = 'HGT', line_type: str = 'SL1L2',
                       dpi: int = 300, confidence_intervals: bool = False,
+                      interp_pts: list = [],
                       bs_nrep: int = 5000, bs_method: str = 'MATCHED_PAIRS', 
                       ci_lev: float = .95, bs_min_samp: int = 30,
                       eval_period: str = 'TEST', save_header: str = '', 
@@ -152,6 +153,48 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
     anti_date_hours = np.array(anti_date_hours)[[
         int(x) in df['ANTI_DATE_HOURS'].tolist() for x in anti_date_hours
     ]]
+
+    if interp_pts and '' not in interp_pts:
+        interp_shape = list(df['INTERP_MTHD'])[0]
+        if 'SQUARE' in interp_shape:
+            widths = [int(np.sqrt(float(p))) for p in interp_pts]
+        elif 'CIRCLE' in interp_shape:
+            widths = [int(np.sqrt(float(p)+4)) for p in interp_pts]
+        elif np.all([int(p) == 1 for p in interp_pts]):
+            widths = [1 for p in interp_pts]
+        else:
+            error_string = (
+                f"Unknown INTERP_MTHD used to compute INTERP_PNTS: {interp_shape}."
+                + f" Check the INTERP_MTHD column in your METplus stats files."
+                + f" INTERP_MTHD must have either \"SQUARE\" or \"CIRCLE\""
+                + f" in the name."
+            )
+            logger.error(error_string)
+            raise ValueError(error_string)
+        if isinstance(interp_pts, list):
+            if len(interp_pts) <= 8:
+                if len(interp_pts) > 1:
+                    interp_pts_phrase = 's '+', '.join([str(p) for p in widths])
+                else:
+                    interp_pts_phrase = ' '+', '.join([str(p) for p in widths])
+                interp_pts_save_phrase = '-'.join([str(p) for p in widths])
+            else:
+                interp_pts_phrase = f's {widths[0]}'+u'\u2013'+f'{widths[-1]}'
+                interp_pts_save_phrase = f'{widths[0]}-{widths[-1]}'
+            interp_pts_string = f'(Width{interp_pts_phrase})'
+            interp_pts_save_string = f'width{interp_pts_save_phrase}'
+            df = df[df['INTERP_PNTS'].isin(interp_pts)]
+        elif isinstance(interp_pts, np.int):
+            interp_pts_string = f'(Width {widths:d})'
+            interp_pts_save_string = f'width{widths:d}'
+            df = df[df['INTERP_PNTS'] == widths]
+        else:
+            error_string = (
+                f"Invalid interpolation points entry: \'{interp_pts}\'\n"
+                + f"Please check settings for interpolation points."
+            )
+            logger.error(error_string)
+            raise ValueError(error_string)
 
     if obs_thresh and '' not in obs_thresh:
         requested_obs_thresh_symbol, requested_obs_thresh_letter = list(
@@ -1050,6 +1093,8 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         title1 = f'{metric1_string} and {metric2_string}'
     else:
         title1 = f'{metric1_string}'
+    if interp_pts and '' not in interp_pts:
+        title1+=f' {interp_pts_string}'
     fcst_thresh_on = (fcst_thresh and '' not in fcst_thresh)
     obs_thresh_on = (obs_thresh and '' not in obs_thresh)
     if fcst_thresh_on:
@@ -1157,6 +1202,8 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         save_name+=f'_{str(fcst_thresholds_save_phrase).lower()}'
     elif obs_thresh_on:
         save_name+=f'_{str(obs_thresholds_save_phrase).lower()}'
+    if interp_pts and '' not in interp_pts:
+        save_name+=f'_{str(interp_pts_save_string).lower()}'
     save_name+=f'.{str(var_savename).lower()}'
     if level_savename:
         save_name+=f'_{str(level_savename).lower()}'
@@ -1271,6 +1318,7 @@ def main():
     logger.debug(f"LINE_TYPE: {LINE_TYPE}")
     logger.debug(f"METRICS: {METRICS}")
     logger.debug(f"CONFIDENCE_INTERVALS: {CONFIDENCE_INTERVALS}")
+    logger.debug(f"INTERP_PNTS: {INTERP_PNTS if INTERP_PNTS else 'No interpolation points'}")
 
     logger.debug('----------------------------------------')
     logger.debug(f"Advanced settings (configurable in {SETTINGS_DIR}/settings.py)")
@@ -1446,7 +1494,7 @@ def main():
                     display_averages=display_averages, save_header=IMG_HEADER, 
                     plot_group=plot_group, 
                     confidence_intervals=CONFIDENCE_INTERVALS, bs_nrep=bs_nrep, 
-                    bs_method=bs_method, ci_lev=ci_lev, 
+                    interp_pts=INTERP_PNTS, bs_method=bs_method, ci_lev=ci_lev, 
                     bs_min_samp=bs_min_samp,
                     sample_equalization=sample_equalization,
                     plot_logo_left=plot_logo_left,
@@ -1527,6 +1575,9 @@ if __name__ == "__main__":
     ci_lev = toggle.plot_settings['ci_lev']
     bs_min_samp = toggle.plot_settings['bs_min_samp']
 
+    # list of points used in interpolation method
+    INTERP_PNTS = check_INTERP_PTS(os.environ['INTERP_PNTS']).replace(' ','').split(',')
+
     # At each value of the independent variable, whether or not to remove
     # samples used to aggregate each statistic if the samples are not shared
     # by all models.  Required to display sample sizes
@@ -1561,6 +1612,7 @@ if __name__ == "__main__":
         int(init_hour) if init_hour else None for init_hour in INIT_HOURS
     ]
     FLEADS = [int(flead) for flead in FLEADS]
+    INTERP_PNTS = [str(pts) for pts in INTERP_PNTS]
     VERIF_CASETYPE = str(VERIF_CASE).lower() + '_' + str(VERIF_TYPE).lower()
     FCST_LEVELS = [str(level) for level in FCST_LEVELS]
     OBS_LEVELS = [str(level) for level in OBS_LEVELS]

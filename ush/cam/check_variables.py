@@ -717,4 +717,18 @@ def check_CONFIDENCE_INTERVALS(CONFIDENCE_INTERVALS):
                        + f" 'True' if confidence intervals should be plotted.")
     return CONFIDENCE_INTERVALS
 
-
+# INTERP_PTS
+# info case:
+# warning case:
+# error case: should be a string, should be a comma-separated list of positive numbers
+def check_INTERP_PTS(INTERP_PTS):
+    if not isinstance(INTERP_PTS, str):
+        sys.exit(f"The provided INTERP_PTS ('{INTERP_PTS}') is not a string."
+                 + f" INTERP_PTS must be a string. Check the plotting"
+                 + f" configuration file.")
+    if re.search(r'[^ 0-9,]', INTERP_PTS):
+        sys.exit(f"The provided INTERP_PTS string ('{INTERP_PTS}') contains"
+                 + f" invalid characters. INTERP_PTS must be made of"
+                 + f" numerics, commas and/or spaces only. Check the"
+                 + f" plotting configuration file.")
+    return INTERP_PTS
