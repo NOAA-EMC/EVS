@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_global_det_atmos_grid2grid_stats.sh 
+# Name of Script: exevs_global_det_atmos_long_term_stats.sh
 # Purpose of Script: This script generates long term
 #                    verification statistics for the atmospheric component
 #                    of global deterministic models
@@ -17,7 +17,7 @@ else
 fi
 echo "RUN MODE:$evs_run_mode"
 if [ $evs_run_mode = production ] && [ $envir = prod ]; then
-    echo "exevs_global_det_atmos_grid2grid_stats.sh does run in production; exit"
+    echo "exevs_global_det_atmos_long_term_stats.sh does run in production; exit"
     exit 0
 fi
 
