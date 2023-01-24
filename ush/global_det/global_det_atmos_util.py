@@ -1112,7 +1112,8 @@ def check_model_files(job_dict):
                     }
         elif job_dict['JOB_GROUP'] == 'assemble_data':
             if job_dict['VERIF_CASE'] == 'grid2grid':
-                if job_dict['VERIF_TYPE'] == 'precip':
+                if job_dict['VERIF_TYPE'] in ['precip_accum24hr',
+                                              'precip_accum3hr']:
                     model_file_format = os.path.join(verif_case_dir, 'data',
                                                      model, model+'.precip.'
                                                      +'{init?fmt=%Y%m%d%H}.'
@@ -1152,14 +1153,20 @@ def check_model_files(job_dict):
                                                      model, model
                                                      +'.{init?fmt=%Y%m%d%H}.'
                                                      +'f{lead?fmt=%3H}')
-                if job_dict['VERIF_TYPE'] == 'precip' \
-                        and job_dict['job_name'] == '24hrAccum':
+                if job_dict['VERIF_TYPE'] in ['precip_accum24hr',
+                                              'precip_accum3hr']:
+                    precip_accum = int(
+                        job_dict['VERIF_TYPE'].replace('precip_accum','')\
+                        .replace('hr','')
+                    )
                     fhr_in_accum_list = [str(fhr)]
                     if job_dict['MODEL_accum'][0] == '{': #continuous
-                        if fhr-24 > 0:
-                            fhr_in_accum_list.append(str(fhr-24))
-                    elif int(job_dict['MODEL_accum']) < 24:
-                        nfiles_in_accum = int(24/int(job_dict['MODEL_accum']))
+                        if fhr-precip_accum > 0:
+                            fhr_in_accum_list.append(str(fhr-precip_accum))
+                    elif int(job_dict['MODEL_accum']) < precip_accum:
+                        nfiles_in_accum = int(
+                            precip_accum/int(job_dict['MODEL_accum'])
+                        )
                         nf = 1
                         while nf <= nfiles_in_accum:
                             fhr_nf = fhr - ((nf-1)*int(job_dict['MODEL_accum']))
@@ -1236,12 +1243,15 @@ def check_model_files(job_dict):
                         +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
                         +'_init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
                     )
-                elif job_dict['VERIF_TYPE'] == 'precip':
+                elif job_dict['VERIF_TYPE'] in ['precip_accum24hr',
+                                                'precip_accum3hr']:
+                    precip_accum = (job_dict['VERIF_TYPE']\
+                                    .replace('precip_accum',''))
                     model_file_format = os.path.join(
                         verif_case_dir, 'METplus_output',
                         job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
                         model, job_dict['VERIF_CASE'], 'pcp_combine_'
-                        +job_dict['VERIF_TYPE']+'_24hrAccum_init'
+                        +job_dict['VERIF_TYPE']+'_'+precip_accum+'Accum_init'
                         +'{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
                     )
                 elif job_dict['VERIF_TYPE'] == 'sea_ice':
@@ -1406,14 +1416,13 @@ def check_truth_files(job_dict):
                 truth_file_list.append(prepbufr_file)
     elif job_dict['JOB_GROUP'] == 'assemble_data':
         if job_dict['VERIF_CASE'] == 'grid2grid':
-            if job_dict['VERIF_TYPE'] == 'precip' \
+            if job_dict['VERIF_TYPE'] == 'precip_accum24hr' \
                     and job_dict['job_name'] == '24hrCCPA':
-                ccpa_dir = os.path.join(verif_case_dir, 'data', 'ccpa')
                 nccpa_files = 4
                 n = 1
                 while n <= 4:
                     nccpa_file = os.path.join(
-                        ccpa_dir, 'ccpa.6H.'
+                        verif_case_dir, 'data', 'ccpa', 'ccpa.6H.'
                         +(valid_date_dt-datetime.timedelta(hours=(n-1)*6))\
                         .strftime('%Y%m%d%H')
                     )
@@ -1438,15 +1447,21 @@ def check_truth_files(job_dict):
                     +'.truth'
                 )
                 truth_file_list.append(model_truth_file)
-            elif job_dict['VERIF_TYPE'] == 'precip':
-               ccpa_file = os.path.join(
-                   verif_case_dir, 'METplus_output',
-                   job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
-                   'ccpa', job_dict['VERIF_CASE'], 'pcp_combine_'
-                   +job_dict['VERIF_TYPE']+'_24hrCCPA_valid'
-                   +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
-               )
-               truth_file_list.append(ccpa_file)
+            elif job_dict['VERIF_TYPE'] == 'precip_accum24hr':
+                ccpa_file = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
+                    'ccpa', job_dict['VERIF_CASE'], 'pcp_combine_'
+                    +job_dict['VERIF_TYPE']+'_24hrCCPA_valid'
+                    +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
+                )
+                truth_file_list.append(ccpa_file)
+            elif job_dict['VERIF_TYPE'] == 'precip_accum3hr':
+                ccpa_file = os.path.join(
+                    verif_case_dir, 'data', 'ccpa', 'ccpa.3H.'
+                    +valid_date_dt.strftime('%Y%m%d%H')
+                )
+                truth_file_list.append(ccpa_file)
             elif job_dict['VERIF_TYPE'] == 'sea_ice':
                 osi_saf_file = os.path.join(
                     verif_case_dir, 'data', 'osi_saf',
@@ -1457,20 +1472,20 @@ def check_truth_files(job_dict):
                 )
                 truth_file_list.append(osi_saf_file)
             elif job_dict['VERIF_TYPE'] == 'snow':
-               nohrsc_file = os.path.join(
-                   verif_case_dir, 'data', 'nohrsc',
-                   'nohrsc.24H.'+valid_date_dt.strftime('%Y%m%d%H')
-               )
-               truth_file_list.append(nohrsc_file)
+                nohrsc_file = os.path.join(
+                    verif_case_dir, 'data', 'nohrsc',
+                    'nohrsc.24H.'+valid_date_dt.strftime('%Y%m%d%H')
+                )
+                truth_file_list.append(nohrsc_file)
             elif job_dict['VERIF_TYPE'] == 'sst':
-               ghrsst_ospo_file = os.path.join(
-                   verif_case_dir, 'data', 'ghrsst_ospo',
-                   'ghrsst_ospo.'
-                   +(valid_date_dt-datetime.timedelta(hours=24))\
-                   .strftime('%Y%m%d%H')
-                   +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
-               )
-               truth_file_list.append(ghrsst_ospo_file)
+                ghrsst_ospo_file = os.path.join(
+                    verif_case_dir, 'data', 'ghrsst_ospo',
+                    'ghrsst_ospo.'
+                    +(valid_date_dt-datetime.timedelta(hours=24))\
+                    .strftime('%Y%m%d%H')
+                    +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
+                )
+                truth_file_list.append(ghrsst_ospo_file)
         elif job_dict['VERIF_CASE'] == 'grid2obs':
             if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc', 'ptype']:
                 pb2nc_file = os.path.join(
@@ -1533,6 +1548,9 @@ def get_obs_valid_hrs(obs):
         '24hrCCPA': {'valid_hr_start': 12,
                      'valid_hr_end': 12,
                      'valid_hr_inc': 24},
+        '3hrCCPA': {'valid_hr_start': 0,
+                     'valid_hr_end': 21,
+                     'valid_hr_inc': 3},
         '24hrNOHRSC': {'valid_hr_start': 12,
                        'valid_hr_end': 12,
                        'valid_hr_inc': 24},
@@ -1680,9 +1698,13 @@ def initalize_job_env_dict(verif_type, group,
                 verif_type_valid_hr_inc = 24
             job_env_dict['valid_hr_inc'] = str(verif_type_valid_hr_inc)
         else:
-            if verif_type == 'precip':
+            if verif_type == 'precip_accum24hr':
                 valid_hr_start, valid_hr_end, valid_hr_inc = (
                     get_obs_valid_hrs('24hrCCPA')
+                )
+            elif verif_type == 'precip_accum3hr':
+                valid_hr_start, valid_hr_end, valid_hr_inc = (
+                    get_obs_valid_hrs('3hrCCPA')
                 )
             elif verif_type == 'snow':
                 valid_hr_start, valid_hr_end, valid_hr_inc = (
