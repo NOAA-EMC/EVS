@@ -111,7 +111,7 @@ def create_avg_time_range_stat_df(logger, time_range, model_info_dict,
                                   met_info_dict, file_header_list,
                                   input_dir, output_dir,
                                   var_name, var_level, var_thresh,
-                                  line_type, grid, vx_mask,
+                                  line_type, stat, grid, vx_mask,
                                   interp_method, interp_points,
                                   start_date_dt, end_date_dt,
                                   vhr):
@@ -139,6 +139,7 @@ def create_avg_time_range_stat_df(logger, time_range, model_info_dict,
                                    (string)
              line_type           - value in MET column LINE_TYPE
                                    (string)
+             stat                - statistic name (string)
              grid                - value in MET column DESC
                                    (string)
              vx_mask             - value in MET column VX_MASK
@@ -456,7 +457,7 @@ for avg_time_range in avg_time_range_list:
                 avg_time_range_stat_df = create_avg_time_range_stat_df(
                     logger, avg_time_range, g2g_model_info_dict,
                     met_info_dict, g2g_file_header_list, stat_var_dir,
-                    stat_var_dir, var_name, var_level, 'NA', line_type,
+                    stat_var_dir, var_name, var_level, 'NA', line_type, stat,
                     g2g_grid, vx_mask, 'NEAREST', '1',
                     avg_time_range_start_date_dt,
                     avg_time_range_end_date_dt, valid_hour
@@ -606,7 +607,7 @@ for avg_time_range in avg_time_range_list:
                     logger, avg_time_range, precip_model_info_dict,
                     met_info_dict, precip_file_header_list,
                     stat_var_dir, stat_var_dir, var_name, accum,
-                    'ge'+var_thresh_mm.replace('mm', ''), line_type,
+                    'ge'+var_thresh_mm.replace('mm', ''), line_type, stat,
                     grid, vx_mask, interp_method, nbhrd,
                     avg_time_range_start_date_dt, avg_time_range_end_date_dt,
                     valid_hour
