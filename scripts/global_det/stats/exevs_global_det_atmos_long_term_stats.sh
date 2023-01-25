@@ -27,7 +27,7 @@ status=$?
 [[ $status -ne 0 ]] && exit $status
 [[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_stats_long_term.py"
 echo
-exit
+
 # Copy files to desired location
 if [ $SENDCOM = YES ]; then
     for MODEL_PATH in $DATA/monthly/grid2grid/monthly_means/*; do
