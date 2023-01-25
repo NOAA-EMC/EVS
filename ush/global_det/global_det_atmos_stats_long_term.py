@@ -235,10 +235,11 @@ def create_avg_time_range_stat_df(logger, time_range, model_info_dict,
             )    
     return time_range_stat_df
 
-def make_model_time_range_file(model_COMIN_file, model_time_range_stat_df,
-                               model_DATA_file, time_range):
+def make_model_time_range_file(time_range, model_COMIN_file,
+                               model_time_range_stat_df, model_DATA_file):
     """! Write model's time range average file
          Args:
+             time_range                 - either monthly or yearly (string)
              model_COMIN_file           - full path to the model's
                                           time range average file in COMIN
                                           (string)
@@ -248,7 +249,6 @@ def make_model_time_range_file(model_COMIN_file, model_time_range_stat_df,
              model_DATA_file            - full path to write the
                                           model's time range average file to
                                           (string)
-             time_range                 - either monthly or yearly (string)
          Returns:
     """
     if os.path.exists(model_COMIN_file):
@@ -453,35 +453,36 @@ for avg_time_range in avg_time_range_list:
                 var_level = loop2_info[1]
                 logger.info(f"Working on valid hour {valid_hour} "
                             +f"level {var_level}")
-                #avg_time_range_stat_df = create_avg_time_range_stat_df(
-                #    logger, avg_time_range, g2g_model_info_dict,
-                #    met_info_dict, g2g_file_header_list, stat_var_dir,
-                #    stat_var_dir, var_name, var_level, 'NA', line_type,
-                #    g2g_grid, vx_mask, 'NEAREST', '1',
-                #    avg_time_range_start_date_dt,
-                #    avg_time_range_end_date_dt, valid_hour
-                #)
-                #for model_num in list(g2g_model_info_dict.keys()):
-                #    model = g2g_model_info_dict[model_num]['name']
-                #    plot_name = g2g_model_info_dict[model_num]['plot_name']
-                #    model_file_name = (
-                #        'evs_'+stat+'_'+var_name+'_'+var_level+'_'+vx_mask
-                #        +'_valid'+valid_hour+'Z.txt'
-                #    )
-                #    COMINtime_range_stats_file = os.path.join(
-                #        COMINtime_range_stats, model, model_file_name
-                #    )
-                #    DATA_file = os.path.join(
-                #        avg_time_range_g2g_dir, avg_time_range+'_means',
-                #        model, model_file_name
-                #    )
-                #    make_model_time_range_file(
-                #        COMINtime_range_stats_file,
-                #        avg_time_range_stat_df.loc[
-                #            model_num+'/'+model+'/'+plot_name
-                #        ],
-                #        DATA_file
-                #    )
+                avg_time_range_stat_df = create_avg_time_range_stat_df(
+                    logger, avg_time_range, g2g_model_info_dict,
+                    met_info_dict, g2g_file_header_list, stat_var_dir,
+                    stat_var_dir, var_name, var_level, 'NA', line_type,
+                    g2g_grid, vx_mask, 'NEAREST', '1',
+                    avg_time_range_start_date_dt,
+                    avg_time_range_end_date_dt, valid_hour
+                )
+                for model_num in list(g2g_model_info_dict.keys()):
+                    model = g2g_model_info_dict[model_num]['name']
+                    plot_name = g2g_model_info_dict[model_num]['plot_name']
+                    model_file_name = (
+                        'evs_'+stat+'_'+var_name+'_'+var_level+'_'+vx_mask
+                        +'_valid'+valid_hour+'Z.txt'
+                    )
+                    COMINtime_range_stats_file = os.path.join(
+                        COMINtime_range_stats, model, model_file_name
+                    )
+                    DATA_file = os.path.join(
+                        avg_time_range_g2g_dir, avg_time_range+'_means',
+                        model, model_file_name
+                    )
+                    make_model_time_range_file(
+                        avg_time_range,
+                        COMINtime_range_stats_file,
+                        avg_time_range_stat_df.loc[[
+                            model_num+'/'+model+'/'+plot_name
+                        ]],
+                        DATA_file
+                    )
                 # Calculate yearly GFS NHEM useful forecast day
     ### Do precip stats
     print(f"Doing {avg_time_range} GFS precip stats for "
@@ -597,38 +598,40 @@ for avg_time_range in avg_time_range_list:
                     var_thresh_mm = var_thresh
                 logger.info(f"Working on valid hour {valid_hour} "
                             +f"threshold {var_thresh}")
-                #if stat == 'FSS':
-                #    interp_method = 'NBRHD_SQUARE'
-                #else:
-                #    interp_method = 'NEAREST'
-                #avg_time_range_stat_df = create_avg_time_range_stat_df(
-                #    logger, avg_time_range, precip_model_info_dict,
-                #    met_info_dict, precip_file_header_list,
-                #    stat_var_dir, stat_var_dir, var_name, accum,
-                #    'ge'+var_thresh_mm.replace('mm', ''), line_type,
-                #    grid, vx_mask, interp_method, nbhrd,
-                #    avg_time_range_start_date_dt, avg_time_range_end_date_dt,
-                #    valid_hour
-                #)
-                #for model_num in list(precip_model_info_dict.keys()):
-                #    model = precip_model_info_dict[model_num]['name']
-                #    plot_name = precip_model_info_dict[model_num]['plot_name']
-                #    model_file_name = (
-                #        'evs_'+stat+'_'+var_name+'_'+accum+'_'+vx_mask+'_valid'
-                #        +valid_hour+'Z.txt'
-                #    )
-                #    COMINtime_range_stats_file = os.path.join(
-                #        COMINtime_range_stats, model, model_file_name
-                #    )
-                #    DATA_file = os.path.join(
-                #        avg_time_range_g2g_dir, avg_time_range+'_means',
-                #        model, model_file_name
-                #    )
-                #    make_model_time_range_file(
-                #        COMINtime_range_stats_file,
-                #        avg_time_range_stat_df.loc[
-                #            model_num+'/'+model+'/'+plot_name
-                #        ],
-                #        DATA_file
-                #    )
+                if stat == 'FSS':
+                    interp_method = 'NBRHD_SQUARE'
+                else:
+                    interp_method = 'NEAREST'
+                avg_time_range_stat_df = create_avg_time_range_stat_df(
+                    logger, avg_time_range, precip_model_info_dict,
+                    met_info_dict, precip_file_header_list,
+                    stat_var_dir, stat_var_dir, var_name, accum,
+                    'ge'+var_thresh_mm.replace('mm', ''), line_type,
+                    grid, vx_mask, interp_method, nbhrd,
+                    avg_time_range_start_date_dt, avg_time_range_end_date_dt,
+                    valid_hour
+                )
+                for model_num in list(precip_model_info_dict.keys()):
+                    model = precip_model_info_dict[model_num]['name']
+                    plot_name = precip_model_info_dict[model_num]['plot_name']
+                    model_file_name = (
+                        'evs_'+stat+'_'+var_name+'_'+accum+'_'+vx_mask+'_valid'
+                        +valid_hour+'Z.txt'
+                    )
+                    COMINtime_range_stats_file = os.path.join(
+                        COMINtime_range_stats, model, model_file_name
+                    )
+                    DATA_file = os.path.join(
+                        avg_time_range_precip_dir, avg_time_range+'_means',
+                        model, model_file_name
+                    )
+                    make_model_time_range_file(
+                        avg_time_range,
+                        COMINtime_range_stats_file,
+                        avg_time_range_stat_df.loc[[
+                            model_num+'/'+model+'/'+plot_name
+                        ]],
+                        DATA_file
+                    )
+
 print("END: "+os.path.basename(__file__))
