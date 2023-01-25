@@ -2308,6 +2308,8 @@ def calculate_stat(logger, data_df, line_type, stat):
        FY_ON = data_df.loc[:]['FY_ON']
        FN_OY = data_df.loc[:]['FN_OY']
        FN_ON = data_df.loc[:]['FN_ON']
+       if line_type == 'CTC':
+           EC_VALUE = data_df.loc[:]['EC_VALUE']
    elif line_type in ['CTS', 'NBRCTS']:
        BASER = data_df.loc[:]['BASER']
        BASER_NCL = data_df.loc[:]['BASER_NCL']
@@ -2401,6 +2403,8 @@ def calculate_stat(logger, data_df, line_type, stat):
        BAGSS = data_df.loc[:]['BAGSS']
        BAGSS_BCL = data_df.loc[:]['BAGSS_BCL']
        BAGSS_BCU = data_df.loc[:]['BAGSS_BCU']
+       if line_type == 'CTS':
+           EC_VALUE = data_df.loc[:]['EC_VALUE']
    elif line_type == 'MCTC':
        F1_O1 = data_df.loc[:]['F1_O1']
    elif line_type == 'NBRCNT':
@@ -2438,6 +2442,8 @@ def calculate_stat(logger, data_df, line_type, stat):
        UVFOABAR = data_df.loc[:]['UVFOABAR']
        UVFFABAR = data_df.loc[:]['UVFFABAR']
        UVOOABAR = data_df.loc[:]['UVOOABAR']
+       FA_SPEED_BAR = data_df.loc[:]['FA_SPEED_BAR']
+       OA_SPEED_BAR = data_df.loc[:]['OA_SPEED_BAR']
    elif line_type == 'VCNT':
        FBAR = data_df.loc[:]['FBAR']
        OBAR = data_df.loc[:]['OBAR']
@@ -2457,12 +2463,20 @@ def calculate_stat(logger, data_df, line_type, stat):
        SPEED_ABSERR = data_df.loc[:]['SPEED_ABSERR']
        DIR_ERR = data_df.loc[:]['DIR_ERR']
        DIR_ABSERR = data_df.loc[:]['DIR_ABSERR']
+       ANOM_CORR = data_df.loc[:]['ANOM_CORR']
+       ANOM_CORR_NCL = data_df.loc[:]['ANOM_CORR_NCL']
+       ANOM_CORR_NCU = data_df.loc[:]['ANOM_CORR_NCU']
+       ANOM_CORR_BCL = data_df.loc[:]['ANOM_CORR_BCL']
+       ANOM_CORR_BCU = data_df.loc[:]['ANOM_CORR_BCU']
+       ANOM_CORR_UNCNTR = data_df.loc[:]['ANOM_CORR_UNCNTR']
+       ANOM_CORR_UNCNTR_BCL = data_df.loc[:]['ANOM_CORR_UNCNTR_BCL']
+       ANOM_CORR_UNCNTR_BCU = data_df.loc[:]['ANOM_CORR_UNCNTR_BCU']
    if stat == 'ACC': # Anomaly Correlation Coefficient
        if line_type == 'SAL1L2':
            stat_df = (FOABAR - FABAR*OABAR) \
                      /np.sqrt((FFABAR - FABAR*FABAR)*
                               (OOABAR - OABAR*OABAR))
-       elif line_type == 'CNT':
+       elif line_type in ['CNT', 'VCNT']:
            stat_df = ANOM_CORR
        elif line_type == 'VAL1L2':
            stat_df = UVFOABAR/np.sqrt(UVFFABAR*UVOOABAR)
