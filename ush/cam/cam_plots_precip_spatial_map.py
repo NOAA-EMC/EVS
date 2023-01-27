@@ -121,7 +121,7 @@ class PrecipSpatialMap:
                 )
             image_region_dict = {
                 'CONUS': 'conus',
-                'AK': 'alaska',
+                'AK': 'ak',
                 'HI': 'hawaii',
                 'PR': 'prico'
             }
@@ -170,18 +170,23 @@ class PrecipSpatialMap:
                 precip_data = netcdf.Dataset(model_num_file)
                 precip_lat = precip_data.variables['lat'][:]
                 precip_lon = precip_data.variables['lon'][:]
-                precip_APCP_A24 = precip_data.variables['APCP_24'][:]
-                var_name = precip_data.variables['APCP_24'].getncattr('name')
-                var_level = precip_data.variables['APCP_24'].getncattr('level')
-                var_units = precip_data.variables['APCP_24'].getncattr('units')
+                if model_num_name == 'mrms':
+                    precip_var_key = 'APCP_01_Z0'
+                else:
+                    precip_var_key = 'APCP_24'
+                precip_APCP_A24 = precip_data.variables[precip_var_key][:]
+                var_name = precip_data.variables[precip_var_key].getncattr('name')
+                var_level = precip_data.variables[precip_var_key].getncattr('level')
+                var_units = precip_data.variables[precip_var_key].getncattr('units')
                 if precip_lat.ndim == 1 and precip_lon.ndim == 1:
                     x, y = np.meshgrid(precip_lon, precip_lat)
                 elif precip_lat.ndim == 2 and precip_lon.ndim == 2:
                     x = precip_lon
                     y = precip_lat
-                file_init_time = (precip_data.variables['APCP_24']\
+
+                file_init_time = (precip_data.variables[precip_var_key]\
                                   .getncattr('init_time'))
-                file_valid_time = (precip_data.variables['APCP_24']\
+                file_valid_time = (precip_data.variables[precip_var_key]\
                                    .getncattr('valid_time'))
                 file_init_time_dt = datetime.datetime.strptime(
                     file_init_time, '%Y%m%d_%H%M%S'
@@ -215,7 +220,7 @@ class PrecipSpatialMap:
                     forecast_day_plot = str(forecast_day)
                 if model_num == 'obs':
                     plot_title = (
-                        model_num_plot_name.upper()+' '
+                        model_num_plot_name+' '
                         +plot_specs_psm.get_var_plot_name(var_name, var_level)+' '
                         +f'({var_units})\n'
                         +'valid '
@@ -225,7 +230,7 @@ class PrecipSpatialMap:
                     )
                 else:
                     plot_title = (
-                        model_num_plot_name.upper()+' '
+                        model_num_plot_name+' '
                         +plot_specs_psm.get_var_plot_name(var_name, var_level)+' '
                         +f'({var_units})\n'
                         +'Forecast Day '+forecast_day_plot+' '
@@ -323,6 +328,19 @@ class PrecipSpatialMap:
                                 zorder=2, linewidth=1)
                 ax1.add_feature(cfeature.STATES.with_scale('50m'),
                                 zorder=2, linewidth=1)
+                
+                # Sanitize lons if plot crosses the dateline
+                ax_ul = (0.,1.)
+                ax_ur = (1.,1.)
+                ax_ul_display = ax1.transAxes.transform(ax_ul)
+                ax_ur_display = ax1.transAxes.transform(ax_ur)
+                ax_ul_data = ax1.transData.inverted().transform(ax_ul_display)
+                ax_ur_data = ax1.transData.inverted().transform(ax_ur_display)
+                ax_ul_cartesian = ccrs.PlateCarree().transform_point(*ax_ul_data, src_crs=myproj)
+                ax_ur_cartesian = ccrs.PlateCarree().transform_point(*ax_ur_data, src_crs=myproj)
+                if ax_ul_cartesian[0] > ax_ur_cartesian[0]:
+                    x = np.mod(x, 360.)         
+
                 CF1 = ax1.contourf(x, y, precip_APCP_A24,
                                    transform=ccrs.PlateCarree(),
                                    levels=clevs, norm=norm,
@@ -353,7 +371,6 @@ class PrecipSpatialMap:
                             str(round(tick,3)).rstrip('0')
                         )
                 cbar.ax.set_xticklabels(cbar_tick_labels_list)
-                plt.show()
                 self.logger.info("Saving image as "+image_name)
                 plt.savefig(image_name)
                 plt.clf()
