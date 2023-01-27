@@ -13,7 +13,7 @@
 set -x
 
 # Set Basic Environment Variables
-NEST_LIST="conus ak"
+NEST_LIST="conus ak pr hi" # this is reset after reformat 
 export BOOL_NBRHD=False
 
 # Reformat MET Data
@@ -106,6 +106,7 @@ else
     done
 fi
 
+NEST_LIST="conus ak" # this is reset after reformat 
 # Generate MET Data
 export job_type="generate"
 export njob=1
