@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 ##---------------------------------------------------------------------------
 ##---------------------------------------------------------------------------
 ## NCEP EMC Verification System (EVS) - GFS Atmospheric
@@ -43,7 +43,7 @@ export end_date=$VDATE
 #metplus_verbosity:         DEBUG, INFO, WARN, ERROR (most verbose is DEBUG)
 #met_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
 #log_met_output_to_metplus: log MET output to METplus log, yes or no
-export metplus_verbosity="DEBUG"
+export metplus_verbosity="INFO"
 export met_verbosity="2"
 export log_met_output_to_metplus="yes"
 ## DATA DIRECTIVE SETTINGS
@@ -56,10 +56,15 @@ export SENDMETVIEWER="NO"
 ####################################################
 
 if [ $RUN_GRID2OBS_STATS = YES ]; then
-    #g2os_type_list: list type of verifications to run for grid-to-obs: pres_levs, sea_ice, sfc
+    #g2os_type_list: list type of verifications to run for grid-to-obs: pres_levs, pytype, sfc
     #    pres_levs:  compare variables on pressure levels to GDAS prepbufr obs
-    #    sea_ice:    compare Internation Arctic Buoy Program
+    #    ptype:      compare precip-type variables to NAM/RAP prepbufr obs
     #    sfc:        compare surface variables to GDAS and NAM/RAP prepbufr obs
+    #g2os_*_init_hr_list:      initialization hours to be included in verification: HH
+    #g2os_*_valid_hr_list:     valid hours to be included in verification: HH
+    #g2os_*_fhr_min:           forecast hour to start verification HH[H]
+    #g2os_*_fhr_max:           forecast hour to end verification HH[H]
+    #g2os_*_fhr_inc:           frequency to verify forecast hours at HH[H]
     export g2os_type_list="pres_levs"
     export g2os_pres_levs_init_hr_list="00 06 12 18"
     export g2os_pres_levs_valid_hr_list="00 06 12 18"

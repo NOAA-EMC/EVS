@@ -20,6 +20,57 @@ config = os.environ['config']
 evs_run_mode = os.environ['evs_run_mode']
 
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
+
+# Do date check
+date_check_name_list = ['start', 'end']
+for date_check_name in date_check_name_list:
+    date_check = os.environ[date_check_name+'_date']
+    date_check_year = int(date_check[0:4])
+    date_check_month = int(date_check[4:6])
+    date_check_day = int(date_check[6:])
+    if len(date_check) != 8:
+        print("ERROR: "+date_check_name+"_date not in YYYYMMDD format")
+        sys.exit(1)
+    if date_check_month > 12 or int(date_check_month) == 0:
+        print("ERROR: month "+str(date_check_month)+" in value "
+              +date_check+" for "+date_check_name+"_date is not a valid month")
+        sys.exit(1)
+    if date_check_day \
+            > calendar.monthrange(date_check_year, date_check_month)[1]:
+        print("ERROR: day "+str(date_check_day)+" in value "
+              +date_check+" for "+date_check_name+"_date is not a valid day "
+              +"for month")
+        sys.exit(1)
+if datetime.datetime.strptime(os.environ['end_date'], '%Y%m%d') \
+        < datetime.datetime.strptime(os.environ['start_date'], '%Y%m%d'):
+    print("ERROR: end_date ("+os.environ['end_date']+") cannot be less than "
+          +"start_date ("+os.environ['start_date']+")")
+    sys.exit(1)
+
+# Do check for valid config options
+VERIF_CASE_STEP_type_list = (
+    os.environ[VERIF_CASE_STEP_abbrev+'_type_list'].split(' ')
+)
+valid_VERIF_CASE_STEP_type_opts_dict = {
+    'RUN_GRID2GRID_STATS': ['flux', 'means', 'ozone', 'precip', 'pres_levs',
+                            'sea_ice', 'snow', 'sst'],
+    'RUN_GRID2GRID_PLOTS': ['flux', 'means', 'ozone', 'precip', 'pres_levs',
+                            'sea_ice', 'snow', 'sst'],
+    'RUN_GRID2OBS_STATS': ['pres_levs', 'ptype', 'sfc'],
+    'RUN_GRID2OBS_PLOTS': ['pres_levs', 'ptype', 'sfc']
+}
+for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
+    if VERIF_CASE_STEP_type \
+            not in valid_VERIF_CASE_STEP_type_opts_dict[
+            'RUN_'+VERIF_CASE.upper()+'_'+STEP.upper()
+            ]:
+        print("ERROR: "+VERIF_CASE_STEP_type+" not a valid option for "
+              +VERIF_CASE_STEP_abbrev+"_type_list. Valid options are "
+              +','.join(valid_VERIF_CASE_STEP_type_opts_dict[
+                  'RUN_'+VERIF_CASE.upper()+'_'+STEP.upper()
+              ]))
+        sys.exit(1)
+
 # Set up setting names
 evs_global_det_atmos_settings_dict = {}
 if evs_run_mode == 'production':
@@ -45,7 +96,7 @@ else:
 if STEP.upper() == 'STATS':
     evs_global_det_atmos_settings_dict['evs'].extend(
             ['COMINccpa', 'COMINnohrsc', 'COMINobsproc',
-             'COMINosi_saf', 'COMINghrsst_median', 'COMINget_d']
+             'COMINosi_saf', 'COMINghrsst_ospo', 'COMINget_d']
     )
 evs_global_det_atmos_settings_dict['shared'] = [
     'model_list', 'model_evs_data_dir_list', 'model_file_format_list',
@@ -101,15 +152,18 @@ verif_case_step_settings_dict = {
     'RUN_GRID2OBS_STATS': {
         'pres_levs': ['init_hr_list', 'valid_hr_list',
                       'fhr_min', 'fhr_max', 'fhr_inc'],
-        'sea_ice': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+        'ptype': ['init_hr_list', 'valid_hr_list',
+                  'fhr_min', 'fhr_max', 'fhr_inc'],
         'sfc': ['init_hr_list', 'valid_hr_list',
                 'fhr_min', 'fhr_max', 'fhr_inc']
     },
     'RUN_GRID2OBS_PLOTS': {
         'pres_levs': ['init_hr_list', 'valid_hr_list',
                       'fhr_min', 'fhr_max', 'fhr_inc'],
-        'sea_ice': [],
-        'sfc': []
+        'ptype': ['init_hr_list', 'valid_hr_list',
+                  'fhr_min', 'fhr_max', 'fhr_inc'],
+        'sfc': ['init_hr_list', 'valid_hr_list',
+                'fhr_min', 'fhr_max', 'fhr_inc']
     }
 }
 
@@ -148,54 +202,6 @@ for verif_type in verif_type_list:
                     +"check configuration file "+config)
               sys.exit(1)
 
-# Do date check
-date_check_name_list = ['start', 'end']
-for date_check_name in date_check_name_list:
-    date_check = os.environ[date_check_name+'_date']
-    date_check_year = int(date_check[0:4])
-    date_check_month = int(date_check[4:6])
-    date_check_day = int(date_check[6:])
-    if len(date_check) != 8:
-        print("ERROR: "+date_check_name+"_date not in YYYYMMDD format")
-        sys.exit(1)
-    if date_check_month > 12 or int(date_check_month) == 0:
-        print("ERROR: month "+str(date_check_month)+" in value "
-              +date_check+" for "+date_check_name+"_date is not a valid month")
-        sys.exit(1)
-    if date_check_day \
-            > calendar.monthrange(date_check_year, date_check_month)[1]:
-        print("ERROR: day "+str(date_check_day)+" in value "
-              +date_check+" for "+date_check_name+"_date is not a valid day "
-              +"for month")
-        sys.exit(1)
-if datetime.datetime.strptime(os.environ['end_date'], '%Y%m%d') \
-        < datetime.datetime.strptime(os.environ['start_date'], '%Y%m%d'):
-    print("ERROR: end_date ("+os.environ['end_date']+") cannot be less than "
-          +"start_date ("+os.environ['start_date']+")")
-    sys.exit(1)
-
-# Do check for valid config options
-VERIF_CASE_STEP_type_list = (
-    os.environ[VERIF_CASE_STEP_abbrev+'_type_list'].split(' ')
-)
-valid_VERIF_CASE_STEP_type_opts_dict = {
-    'RUN_GRID2GRID_STATS': ['flux', 'means', 'ozone', 'precip', 'pres_levs',
-                            'sea_ice', 'snow', 'sst'],
-    'RUN_GRID2GRID_PLOTS': ['flux', 'means', 'ozone', 'precip', 'pres_levs',
-                            'sea_ice', 'snow', 'sst'],
-    'RUN_GRID2OBS_STATS': ['pres_levs', 'sea_ice', 'sfc'],
-    'RUN_GRID2OBS_PLOTS': ['pres_levs', 'sea_ice', 'sfc']
-}
-for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
-    if VERIF_CASE_STEP_type \
-            not in valid_VERIF_CASE_STEP_type_opts_dict[
-            'RUN_'+VERIF_CASE.upper()+'_'+STEP.upper()
-            ]:
-        print("ERROR: "+VERIF_CASE_STEP_type+" not a valid option for "
-              +VERIF_CASE_STEP_abbrev+"_type_list. Valid options are "
-              +','.join(valid_VERIF_CASE_STEP_type_opts_dict[VERIF_CASE_STEP]))
-        sys.exit(1)
-
 # Do check for list variables lengths
 check_config_var_len_list = ['model_evs_data_dir_list',
                              'model_file_format_list']
@@ -225,12 +231,12 @@ verif_case_step_check_len_dict = {
     },
     'RUN_GRID2OBS_STATS': {
         'pres_levs': [],
-        'sea_ice': [],
+        'ptype': [],
         'sfc': []
     },
     'RUN_GRID2OBS_PLOTS': {
         'pres_levs': [],
-        'sea_ice': [],
+        'ptype': [],
         'sfc': []
     },
 }
