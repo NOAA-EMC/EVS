@@ -87,7 +87,7 @@ class NOHRSCSpatialMap:
         cmap_under_color_m = '#ffffff'
         cmap_over_color_m = '#5d2c2e'
         # Set Cartopy shapefile location
-        config['data_dir'] = '/apps/ops/para/data/cartopy'
+        config['data_dir'] = '/apps/ops/prod/data/cartopy'
         # Convert NOHRSC grib2 to netCDF and read in data
         self.logger.info(f"Reading in NOHRSC file from {self.input_dir}")
         nohrsc_grib2_file = os.path.join(
