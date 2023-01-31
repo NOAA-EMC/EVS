@@ -3,10 +3,10 @@
 # =============================================================================
 #
 # NAME: JEVS_MESOSCALE_STATS
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # CONTRIBUTOR(S): RS, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Use ECF environment variables to define and run an EVS job
 # DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_nam_grid2obs_stats.ecf
+# DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_grid2obs_stats.ecf
 #
 # =============================================================================
 
@@ -20,8 +20,6 @@ date
 
 # LSF id (jobid) and Temp Directories
 export pid=$$
-#v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v- 
-#^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-
 
 # General I/O Settings
 export pgmout="OUTPUT.${pid}"
@@ -36,7 +34,7 @@ cd $DATA
   source $config
 
 # in production the following will be set to yesterday's date
-export VDATE=$(date -d "today -1 day" +"%Y%m%d")
+# export VDATE=$(date -d "today -1 day" +"%Y%m%d")
 
 #v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v- 
 # export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}

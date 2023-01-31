@@ -1,1 +1,82 @@
-sample
+#!/bin/bash
+#PBS -N jevs_rap_grid2obs_stats_00
+#PBS -j oe
+#PBS -S /bin/bash
+#PBS -q "dev"
+#PBS -A VERF-DEV
+#PBS -l walltime=05:30:00
+#PBS -l select=1:ncpus=1:mem=12GB
+#PBS -l debug=true
+
+set -x
+export model=evs
+export machine=WCOSS2
+
+# ECF Settings
+#export RUN_ENVIR=nco
+export RUN_ENVIR=emc
+export SENDECF=YES
+export SENDCOM=YES
+export KEEPDATA=YES
+export SENDDBN=YES
+export SENDDBN_NTC=
+export job=${PBS_JOBNAME:-jevs_mesoscale_grid2obs_stats}
+export jobid=$job.${PBS_JOBID:-$$}
+export SITE=$(cat /etc/cluster_name)
+export USE_CFP=YES
+export nproc=128
+
+# General Verification Settings
+export NET="evs"
+export STEP="stats"
+export COMPONENT="mesoscale"
+export RUN="atmos"
+export VERIF_CASE="grid2obs"
+export MODELNAME="rap" 
+
+#export envir="dev"
+export envir="prod"
+export evs_run_mode="standalone"
+
+# EVS Settings
+  export HOMEevs="/lfs/h2/emc/vpppg/noscrub/${USER}/verification/EVS"
+# export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+# Subdirectories to EVS Home Directory
+     export PARMevs=$HOMEevs/parm
+     export USHevs=$HOMEevs/ush
+     export EXECevs=$HOMEevs/exec
+     export FIXevs=$HOMEevs/fix
+     export SCRIPTSevs=$HOMEevs/scripts
+     export MET_PLUS_CONF="${PARMevs}/metplus_config/mesoscale/grid2obs/stats"
+
+  export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
+
+# Load Modules
+  source ${HOMEevs}/ush/mesoscale/evs_setup_$machine.sh
+
+# In production the following will be deleted (DATAROOT will be used instead, which already exists in the environment)
+  export DATAROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+
+# in production the following will be set to yesterday's date
+  export VDATE=$(date -d "today -1 day" +"%Y%m%d")
+  export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
+
+# in production the following will be set using compath.py
+  export COMINrap=${COMINrap:-$(compath.py ${envir}/com/rap/${rap_ver})}
+
+# in production, the following will be set to the approp. COMOUT dir
+# export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
+  export COMOUT=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
+
+# move comin and comout to ecf section
+# export COMINobs=$DCOMROOT
+  export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
+  export COMINobs=$COMINobsproc
+  export COMOUTfinal=$COMOUT/${MODELNAME}.${VDATE}
+
+# VAR list to run
+  export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH"
+
+# Job Settings and Run
+. ${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS
+
