@@ -485,6 +485,64 @@ for avg_time_range in avg_time_range_list:
                         DATA_file
                     )
                 # Calculate yearly GFS NHEM useful forecast day
+                if avg_time_range == 'yearly' \
+                        and var_name == 'HGT' \
+                        and var_level == 'P500' \
+                        and stat == 'ACC' \
+                        and vx_mask == 'NHEM' \
+                        and valid_hour == '00':
+                    for model_num in list(g2g_model_info_dict.keys()):
+                        model = g2g_model_info_dict[model_num]['name']
+                        plot_name = g2g_model_info_dict[model_num]['plot_name']
+                        if model == 'gfs':
+                            gfs_avg_time_range_stat_df = (
+                                avg_time_range_stat_df.loc[[
+                                    model_num+'/'+model+'/'+plot_name
+                                ]]
+                            ).drop(columns=['SYS', 'YEAR'])
+                            break
+                    gfs_avg_time_range_stat_values = np.ma.masked_equal(
+                         gfs_avg_time_range_stat_df.to_numpy()[0], 'NA'
+                    )
+                    gfs_avg_time_range_stat_values.set_fill_value(np.nan)
+                    gfs_avg_time_range_stat_values = np.ma.masked_invalid(
+                        gfs_avg_time_range_stat_values.filled().astype('float')
+                    )
+                    forecast_days = np.ma.array(
+                        [float(day.replace('DAY', '')) for day in \
+                         gfs_avg_time_range_stat_df.columns.tolist()],
+                         mask=np.ma.getmaskarray(gfs_avg_time_range_stat_values)
+                    )
+                    if len(gfs_avg_time_range_stat_values.compressed()) != 0:
+                        acc06_day = np.interp(
+                            0.6,
+                            gfs_avg_time_range_stat_values.compressed()[::-1],
+                            forecast_days.compressed()[::-1],
+                            left=np.nan, right=np.nan
+                        )
+                        acc06_day_str = str(round(acc06_day,2))
+                    else:
+                        acc06_day_str = 'NA'
+                    acc06_day_df = pd.DataFrame(
+                        {'YEAR': [VDATEYYYY], 'DAY': [acc06_day_str]}
+                    )
+                    model_file_name = (
+                        'usefulfcstdays_'+stat+'06_'+var_name+'_'+var_level
+                        +'_'+vx_mask+'_valid'+valid_hour+'Z.txt'
+                    )
+                    COMINtime_range_stats_file = os.path.join(
+                        COMINtime_range_stats, model, model_file_name
+                    )
+                    DATA_file = os.path.join(
+                        avg_time_range_g2g_dir, avg_time_range+'_means',
+                        model, model_file_name
+                    )
+                    make_model_time_range_file(
+                        avg_time_range,
+                        COMINtime_range_stats_file,
+                        acc06_day_df,
+                        DATA_file
+                    )
     ### Do precip stats
     print(f"Doing {avg_time_range} GFS precip stats for "
           +f"{avg_time_range_info}")
