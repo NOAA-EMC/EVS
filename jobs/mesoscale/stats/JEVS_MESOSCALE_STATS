@@ -42,6 +42,7 @@ echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 
 # in production, the following will be set to the approp. COMOUT dir
   export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
+  export COMOUTfinal=$COMOUT/${MODELNAME}.${VDATE}
 
   source $config
 

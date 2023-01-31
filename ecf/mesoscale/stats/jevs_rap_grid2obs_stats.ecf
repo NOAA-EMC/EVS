@@ -63,7 +63,6 @@ set -x
 
 # Developer Settings
   export COMOUT=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
-  export COMOUTfinal=$COMOUT/${MODELNAME}.${VDATE}
 
 # VAR list to run
   export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH"
