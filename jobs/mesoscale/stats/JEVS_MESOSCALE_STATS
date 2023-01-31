@@ -15,23 +15,23 @@ set -xa
 echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 
 # Shell Processing Variables
-export PS4='$SECONDS + '
-date
+  export PS4='$SECONDS + '
+  date
 
 # LSF id (jobid) and Temp Directories
-export pid=$$
+  export pid=$$
 
-export SENDCOM=${SENDCOM:-YES}
+  export SENDCOM=${SENDCOM:-YES}
 
 # General I/O Settings
-export pgmout="OUTPUT.${pid}"
+  export pgmout="OUTPUT.${pid}"
 # in production, the following will be set to DATAROOT
-#export DATA_IN=${DATA_IN:-$DATAROOT}
-export DATA_IN=${DATA_IN:-$DATAROOTtmp}
-export DATA=$DATA_IN/${jobid}
-rm -rf $DATA
-mkdir -p $DATA
-cd $DATA
+# export DATA_IN=${DATA_IN:-$DATAROOT}
+  export DATA_IN=${DATA_IN:-$DATAROOTtmp}
+  export DATA=$DATA_IN/${jobid}
+  rm -rf $DATA
+  mkdir -p $DATA
+  cd $DATA
 
 # in production the following will be set using compath.py
   export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
@@ -43,15 +43,15 @@ cd $DATA
 # in production, the following will be set to the approp. COMOUT dir
   export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 
-source $config
+  source $config
 
 # Execute the Script
-$SCRIPTSevs/$COMPONENT/$STEP/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
-export err=$?; err_chk
+  $SCRIPTSevs/$COMPONENT/$STEP/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+  export err=$?; err_chk
 
 # Copy files to desired location
-#all commands to copy output files into the correct EVS COMOUT directory
-if [ $SENDCOM = YES ]; then
+# all commands to copy output files into the correct EVS COMOUT directory
+  if [ $SENDCOM = YES ]; then
     for MODEL_DIR_PATH in $MET_PLUS_OUT/stat_analysis/$MODELNAME*; do
         MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
         mkdir -p $COMOUT/$MODEL_DIR
@@ -59,18 +59,15 @@ if [ $SENDCOM = YES ]; then
             cp -v $FILE $COMOUT/$MODEL_DIR/.
         done
     done
-fi
-
-
-
+  fi
 
 # Clean Up
-cat $pgmout
-msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
-if [ "$KEEPDATA" != "YES" ] ; then
-  cd $DATA_IN
-  rm -rf $DATA
-fi
+  cat $pgmout
+  msg="JOB $job HAS COMPLETED NORMALLY."
+  postmsg "$jlogfile" "$msg"
+  if [ "$KEEPDATA" != "YES" ] ; then
+    cd $DATA_IN
+    rm -rf $DATA
+  fi
 
-echo "END: $(basename ${BASH_SOURCE[0]})"
+  echo "END: $(basename ${BASH_SOURCE[0]})"

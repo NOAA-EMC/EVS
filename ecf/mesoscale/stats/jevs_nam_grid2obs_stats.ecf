@@ -61,14 +61,6 @@ set -x
 # in production the following will be set to yesterday's date
   export VDATE=$(date -d "today -1 day" +"%Y%m%d")
 
-# comin and comout
-#  export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
-#  export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
-#  export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
-#  export COMINobs=$DCOMROOT
-#  export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
-#  export COMINobs=$COMINobsproc
-
 # Developer Settings
   export COMOUT=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
   export COMOUTfinal=$COMOUT/${MODELNAME}.${VDATE}
