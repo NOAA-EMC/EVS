@@ -106,7 +106,7 @@ else
     done
 fi
 
-NEST_LIST="conus ak" # this is reset after reformat 
+NEST_LIST="conus ak" 
 # Generate MET Data
 export job_type="generate"
 export njob=1
@@ -333,6 +333,14 @@ if [ $SENDCOM = YES ]; then
         mkdir -p $COMOUT/$MODEL_DIR
         for FILE in $MODEL_DIR_PATH/*; do
             cp -v $FILE $COMOUT/$MODEL_DIR/.
+        done
+    done
+    # copy intermediate 24-h pcp_combine files to COMOUT
+    for DIR_PATH in $MET_PLUS_OUT/*/pcp_combine/!(confs|logs|tmp); do
+        DIR=$(echo ${DIR_PATH##*/})
+        mkdir -p $COMOUT/atmos.${VDATE}/$MODELNAME/${VERIF_CASE}/$DIR
+        for FILEn in $DIR_PATH/*a24h*; do
+            cp -vr $FILEn $COMOUT/atmos.${VDATE}/$MODELNAME/${VERIF_CASE}/${DIR}/.
         done
     done
 fi
