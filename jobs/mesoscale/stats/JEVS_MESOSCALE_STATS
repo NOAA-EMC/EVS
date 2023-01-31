@@ -21,6 +21,8 @@ date
 # LSF id (jobid) and Temp Directories
 export pid=$$
 
+export SENDCOM=${SENDCOM:-YES}
+
 # General I/O Settings
 export pgmout="OUTPUT.${pid}"
 # in production, the following will be set to DATAROOT
@@ -31,50 +33,36 @@ rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
 
-  source $config
+# in production the following will be set using compath.py
+  export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
+  export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
+  export COMINrap=${COMINrap:-$(compath.py ${envir}/com/rap/${rap_ver})}
+  export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
+  export COMINobs=$COMINobsproc
 
-# in production the following will be set to yesterday's date
-# export VDATE=$(date -d "today -1 day" +"%Y%m%d")
+# in production, the following will be set to the approp. COMOUT dir
+  export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 
-#v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v-v- 
-# export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
-# # in production the following will be set using compath.py
-# #export COMINccpa=${COMINccpa:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
-# # export COMINccpa=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT/$RUN
-# # in production the following will be set using compath.py
-# #export COMINmrms=${COMINmrms:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
-# # export COMINmrms=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT/$RUN
-# 
-#  export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
-# # export COMINnam=${COMINnam:-$(compath.py /com/nam/${nam_ver})}
-# 
-# # export COMINhiresw=${COMINhiresw:-$(compath.py ${envir}/com/hiresw/${hiresw_ver})}
-# # export COMINhrrr=${COMINhrrr:-$(compath.py ${envir}/com/hrrr/${hrrr_ver})}
-# # in production, the following will be set to the approp. COMOUT dir
-# #export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
-# 
-# export COMOUT=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
-#  # move comin and comout to ecf section
-#  # export COMINobs=$DCOMROOT
-# export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
-# # export COMINobsproc=${COMINobsproc:-$(compath.py com/obsproc/${obsproc_ver})}
-#   export COMINobs=$COMINobsproc
-# 
-# # export COMOUTsmall=$COMOUT/${RUN}.${VDATE}/$MODELNAME/$VERIF_CASE
-# # export COMOUTfinal=$COMOUT/${MODELNAME}.${VDATE}
-# 
-# # Subdirectories to EVS Home Directory
-# export PARMevs=$HOMEevs/parm
-# export USHevs=$HOMEevs/ush
-# export EXECevs=$HOMEevs/exec
-# export FIXevs=$HOMEevs/fix
-# export SCRIPTSevs=$HOMEevs/scripts
-# export MET_PLUS_CONF="${PARMevs}/metplus_config/mesoscale/grid2obs/stats"
-#^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-
+source $config
 
 # Execute the Script
 $SCRIPTSevs/$COMPONENT/$STEP/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
+
+# Copy files to desired location
+#all commands to copy output files into the correct EVS COMOUT directory
+if [ $SENDCOM = YES ]; then
+    for MODEL_DIR_PATH in $MET_PLUS_OUT/stat_analysis/$MODELNAME*; do
+        MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
+        mkdir -p $COMOUT/$MODEL_DIR
+        for FILE in $MODEL_DIR_PATH/*; do
+            cp -v $FILE $COMOUT/$MODEL_DIR/.
+        done
+    done
+fi
+
+
+
 
 # Clean Up
 cat $pgmout
