@@ -41,11 +41,11 @@ for model_idx in range(len(model_list)):
         tmp_stat_file = os.path.join(
             DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
             model+'.'+date_dt.strftime('%Y%m%d'),
-            model+'_'+RUN+'_'+VERIF_CASE+'_v'
+            'evs.stats.'+model+'.'+RUN+'.'+VERIF_CASE+'.v'
             +date_dt.strftime('%Y%m%d')+'.stat'
         )
         arch_stat_file = os.path.join(
-            model_evs_data_dir, model+'_v'+date_dt.strftime('%Y%m%d')+'.stat'
+            model_evs_data_dir, model+'.v'+date_dt.strftime('%Y%m%d')+'.stat'
         )
         if os.path.exists(tmp_stat_file):
             print("Copying "+tmp_stat_file+" to "+arch_stat_file)

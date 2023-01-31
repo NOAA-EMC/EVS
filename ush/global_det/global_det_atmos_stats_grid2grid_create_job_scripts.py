@@ -364,7 +364,8 @@ generate_stats_jobs_dict = {
                                   )]},
         'SnowWaterEqv': {'env': {'var1_name': 'WEASD',
                                  'var1_level': 'Z0',
-                                 'var1_options': ''},
+                                 'var1_options': ("'set_attr_units = "
+                                                  +'"mm";'+"'")},
                          'commands': [gda_util.metplus_command(
                                           'GridStat_fcstGLOBAL_DET.conf'
                                       )]},
@@ -525,7 +526,7 @@ generate_stats_jobs_dict = {
                                                     +'.conf'
                                                 )]},
         'Ozone': {'env': {'var1_name': 'O3MR',
-                          'var1_levels': ("'P100, P70, P50, P30, P20, "
+                          'var1_levels': ("'P925, P100, P70, P50, P30, P20, "
                                           +"P10, P5, P1'"),
                           'var1_options': ("'set_attr_units = "
                                            +'"ppm"; convert(x)=x*1000000'
@@ -777,7 +778,7 @@ generate_stats_jobs_dict = {
         'DailyAvg_SST': {'env': {},
                          'commands': [gda_util.metplus_command(
                                           'GridStat_fcstGLOBAL_DET_'
-                                          +'obsGHRSST_MEDIAN_DailyAvg.conf'
+                                          +'obsGHRSST_OSPO_DailyAvg.conf'
                                       )]},
     },
 }
@@ -866,7 +867,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
                     print("Creating job script: "+job_file)
                     job = open(job_file, 'w')
-                    job.write('#!/bin/sh\n')
+                    job.write('#!/bin/bash\n')
                     job.write('set -x\n')
                     job.write('\n')
                     # Set any environment variables for special cases
@@ -1017,7 +1018,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
                     print("Creating job script: "+job_file)
                     job = open(job_file, 'w')
-                    job.write('#!/bin/sh\n')
+                    job.write('#!/bin/bash\n')
                     job.write('set -x\n')
                     job.write('\n')
                     # Set any environment variables for special cases
@@ -1027,6 +1028,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     )
                     if all_truth_file_exist:
                         write_job_cmds = True
+                    else:
+                        write_job_cmds = False
                     # Write environment variables
                     for name, value in job_env_dict.items():
                         job.write('export '+name+'='+value+'\n')
@@ -1056,7 +1059,7 @@ elif JOB_GROUP == 'gather_stats':
             job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
             print("Creating job script: "+job_file)
             job = open(job_file, 'w')
-            job.write('#!/bin/sh\n')
+            job.write('#!/bin/bash\n')
             job.write('set -x\n')
             job.write('\n')
             # Set any environment variables for special cases

@@ -12,6 +12,7 @@ matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import os
+import logging
 import sys
 import datetime
 import subprocess
@@ -89,7 +90,8 @@ class PrecipSpatialMap:
                         '#1e90ff', '#00b2ee', '#00eeee', '#8968cd',
                         '#912cee', '#8b008b', '#8b0000', '#cd0000',
                         '#ee4000', '#ff7f00', '#cd8500', '#ffd700',
-                        '#ffff00', '#ffaeb9']
+                        '#ffff00', '#ffff02']
+        cmap_over_color_in = '#ffaeb9'
         clevs_mm = [0.1, 2, 5, 10, 15, 20, 25, 35, 50, 75, 100, 125,
                     150, 175, 200]
         colorlist_mm = ['chartreuse', 'green', 'blue', 'dodgerblue',
@@ -97,6 +99,9 @@ class PrecipSpatialMap:
                         'mediumorchid', 'darkmagenta', 'darkred',
                         'crimson', 'orangered', 'darkorange',
                         'goldenrod', 'yellow']
+        cmap_over_color_mm = '#ffaeb9'
+        # Set Cartopy shapefile location
+        config['data_dir'] = '/apps/ops/para/data/cartopy'
         # Read in data
         self.logger.info(f"Reading in model files from {self.input_dir}")
         for model_num in self.model_info_dict:
@@ -107,30 +112,51 @@ class PrecipSpatialMap:
             model_num_data_dir = os.path.join(self.input_dir, model_num_name)
             make_plot = False
             if model_num == 'obs':
+                image_data_source = 'qpe'
+                image_forecast_hour = '024'
+            else:
+                image_data_source = model_num_name
+                image_forecast_hour = (
+                    self.date_info_dict['forecast_hour'].zfill(3)
+                )
+            image_region_dict = {
+                'CONUS': 'conus',
+                'AK': 'alaska',
+                'HI': 'hawaii',
+                'PR': 'prico'
+            }
+            image_name = os.path.join(
+                output_image_dir,
+                image_data_source
+                +'.v'+valid_date_dt.strftime('%Y%m%d%H')+'.'
+                +image_forecast_hour+'h.'
+                +image_region_dict[self.plot_info_dict['vx_mask']]+'.png'
+            )
+            if model_num == 'obs':
                 model_num_file = os.path.join(
                     model_num_data_dir,
-                    'ccpa_precip.24hrAccum.valid'
+                    'ccpa_precip_24hrAccum_valid'
                     +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
                 )
-                obs_image_name = os.path.join(
-                    output_image_dir,
-                    'qpe.v'+valid_date_dt.strftime('%Y%m%d%H')+'.024h.gif'
-                )
-                if not os.path.exists(obs_image_name):
+                if not os.path.exists(image_name):
                     make_plot = True
             else:
                 model_num_file = os.path.join(
                     model_num_data_dir,
-                    model_num_name+'_precip.24hrAccum.init'
-                    +init_date_dt.strftime('%Y%m%d%H')+'.'
-                    +'f'+self.date_info_dict['forecast_hour'].zfill(3)
+                    model_num_name+'_precip_24hrAccum_init'
+                    +init_date_dt.strftime('%Y%m%d%H')+'_'
+                    +'fhr'+self.date_info_dict['forecast_hour'].zfill(3)
                     +'.nc'
                 )
+            if not os.path.exists(image_name):
                 if os.path.exists(model_num_file):
                     make_plot = True
                 else:
+                    make_plot = False
                     self.logger.warning(f"{model_num_file} does not exist, "
                                         +"not making plot")
+            else:
+                make_plot = False
             if make_plot:
                 self.logger.debug("Plotting data from "+model_num_file)
                 precip_data = netcdf.Dataset(model_num_file)
@@ -140,11 +166,11 @@ class PrecipSpatialMap:
                 var_name = precip_data.variables['APCP_A24'].getncattr('name')
                 var_level = precip_data.variables['APCP_A24'].getncattr('level')
                 var_units = precip_data.variables['APCP_A24'].getncattr('units')
-                if model_num == 'obs':
+                if precip_lat.ndim == 1 and precip_lon.ndim == 1:
+                    x, y = np.meshgrid(precip_lon, precip_lat)
+                elif precip_lat.ndim == 2 and precip_lon.ndim == 2:
                     x = precip_lon
                     y = precip_lat
-                else:
-                    x, y = np.meshgrid(precip_lon, precip_lat)
                 file_init_time = (precip_data.variables['APCP_A24']\
                                   .getncattr('init_time'))
                 file_valid_time = (precip_data.variables['APCP_A24']\
@@ -179,17 +205,28 @@ class PrecipSpatialMap:
                     forecast_day_plot = str(int(forecast_day))
                 else:
                     forecast_day_plot = str(forecast_day)
-                plot_title = (
-                    model_num_plot_name.upper()+' '
-                    +plot_specs_psm.get_var_plot_name(var_name, var_level)+' '
-                    +f'({var_units})\n'
-                    +'Forecast Day '+forecast_day_plot+' '
-                     +'(Hour '+self.date_info_dict['forecast_hour']+')\n' 
-                    +'valid '
-                    +(valid_date_dt-datetime.timedelta(hours=24))\
-                    .strftime('%d%b%Y %H')+'Z to '
-                    +valid_date_dt.strftime('%d%b%Y %H')+'Z'
-                )
+                if model_num == 'obs':
+                    plot_title = (
+                        model_num_plot_name.upper()+' '
+                        +plot_specs_psm.get_var_plot_name(var_name, var_level)+' '
+                        +f'({var_units})\n'
+                        +'valid '
+                        +(valid_date_dt-datetime.timedelta(hours=24))\
+                        .strftime('%d%b%Y %H')+'Z to '
+                        +valid_date_dt.strftime('%d%b%Y %H')+'Z'
+                    )
+                else:
+                    plot_title = (
+                        model_num_plot_name.upper()+' '
+                        +plot_specs_psm.get_var_plot_name(var_name, var_level)+' '
+                        +f'({var_units})\n'
+                        +'Forecast Day '+forecast_day_plot+' '
+                        +'(Hour '+self.date_info_dict['forecast_hour']+')\n'
+                        +'valid '
+                        +(valid_date_dt-datetime.timedelta(hours=24))\
+                        .strftime('%d%b%Y %H')+'Z to '
+                        +valid_date_dt.strftime('%d%b%Y %H')+'Z'
+                    )
                 plot_left_logo = False
                 plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
                 if os.path.exists(plot_left_logo_path):
@@ -221,24 +258,12 @@ class PrecipSpatialMap:
                 if var_units == 'inches':
                     clevs = clevs_in
                     cmap = matplotlib.colors.ListedColormap(colorlist_in)
+                    cmap_over_color = cmap_over_color_in
                 elif var_units in ['mm', 'kg/m^2']:
                     clevs = clevs_mm
                     cmap = matplotlib.colors.ListedColormap(colorlist_mm)
+                    cmap_over_color = cmap_over_color_mm
                 norm = matplotlib.colors.BoundaryNorm(clevs, cmap.N)
-                if model_num == 'obs':
-                    image_name = os.path.join(
-                        output_image_dir,
-                        'qpe.v'+valid_date_dt.strftime('%Y%m%d%H')+'.024h.'
-                        +self.plot_info_dict['vx_mask'].lower()+'.png'
-                    )
-                else:
-                    image_name = os.path.join(
-                        output_image_dir,
-                        model_num_name
-                        +'.v'+valid_date_dt.strftime('%Y%m%d%H')+'.'
-                        +self.date_info_dict['forecast_hour'].zfill(3)+'h.'
-                        +self.plot_info_dict['vx_mask'].lower()+'.png'
-                    )
                 # Create plot
                 self.logger.info(f"Creating plot for {model_num_file}")
                 fig = plt.figure(figsize=(plot_specs_psm.fig_size[0],
@@ -294,6 +319,7 @@ class PrecipSpatialMap:
                                    transform=ccrs.PlateCarree(),
                                    levels=clevs, norm=norm,
                                    cmap=cmap, extend='max')
+                CF1.cmap.set_over(cmap_over_color)
                 cbar_left = gs.get_grid_positions(fig)[2][0]
                 cbar_width = (gs.get_grid_positions(fig)[3][-1]
                               - gs.get_grid_positions(fig)[2][0])
@@ -337,7 +363,7 @@ class PrecipSpatialMap:
                     )
                 else:
                     self.logger.warning("convert executable not in PATH, "
-                                        "not greating gif of image")
+                                        "not creating gif of image")
 
 def main():
     # Need settings

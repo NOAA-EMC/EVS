@@ -84,8 +84,19 @@ export MASKS=${MASKS:-$FIXevs/masks}
 ############################################
 # Execute the script.
 ############################################
+export MPIRUN=${MPIRUN:-"mpiexec -np 2 -cpu-bind verbose,core cfp"}
 
-$SCRIPTSevs/stats/exevs_global_det_aviation_stats.sh
+rm wafs_stat.cmdfile
+if [ `echo $MPIRUN | cut -d " " -f1` = 'srun' ] ; then
+    echo 0 $SCRIPTSevs/stats/exevs_global_det_aviation_stats.sh GCIP  >> wafs_stat.cmdfile
+    echo 1 $SCRIPTSevs/stats/exevs_global_det_aviation_stats.sh GFS >> wafs_stat.cmdfile
+else
+    echo $SCRIPTSevs/stats/exevs_global_det_aviation_stats.sh GCIP  >> wafs_stat.cmdfile
+    echo $SCRIPTSevs/stats/exevs_global_det_aviation_stats.sh GFS >> wafs_stat.cmdfile
+    export MP_PGMMODEL=mpmd
+fi
+
+$MPIRUN wafs_stat.cmdfile
 
 export err=$?; err_chk
 

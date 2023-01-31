@@ -33,7 +33,7 @@ COMINmetfra_precip = os.environ['COMINmetfra_precip']
 COMINukmet = os.environ['COMINukmet']
 COMINukmet_precip = os.environ['COMINukmet_precip']
 COMINosi_saf = os.environ['COMINosi_saf']
-COMINghrsst_median = os.environ['COMINghrsst_median']
+COMINghrsst_ospo = os.environ['COMINghrsst_ospo']
 COMINget_d = os.environ['COMINget_d']
 COMOUT = os.environ['COMOUT']
 INITDATE = os.environ['INITDATE']
@@ -324,6 +324,12 @@ for MODEL in MODELNAME:
                                                   arch_anl_file,
                                                   'anl',
                                                   'full')
+                    if os.path.exists(arch_anl_file):
+                        ecmwf_f000_file = gda_util.format_filler(
+                            arch_fcst_file_format, CDATE_dt, CDATE_dt,
+                            '00', {'model': MODEL}
+                        )
+                        shutil.copy2(arch_anl_file, ecmwf_f000_file)
                 elif MODEL == 'ukmet':
                     gda_util.prep_prod_ukmet_file(prod_anl_file,
                                                   arch_anl_file,
@@ -366,23 +372,21 @@ global_det_obs_dict = {
                                                        +'{init?fmt=%Y%m%d%H}'
                                                        +'_G004.nc'),
                 'cycles': ['00']},
-    'ghrsst_median': {'prod_file_format': os.path.join(COMINghrsst_median,
-                                                       '{init_shift?fmt=%Y%m%d'
-                                                       +'?shift=-12}',
-                                                       'validation_data', 'marine', 
-                                                       'ghrsst',
-                                                       '{init_shift?fmt=%Y%m%d%H'
-                                                       +'?shift=-12}0000-'
-                                                       +'UKMO-L4_GHRSST-'
-                                                       +'SSTfnd-GMPE-GLOB-'
-                                                       +'v03.0-fv03.0.nc'),
-                      'arch_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
-                                                       'ghrsst_median',
-                                                       'ghrsst_median.'
-                                                       +'{init_shift?fmt=%Y%m%d%H'
-                                                       +'?shift=-24}to'
-                                                       +'{init?fmt=%Y%m%d%H}.nc'),
-                      'cycles': ['00']},
+    'ghrsst_ospo': {'prod_file_format': os.path.join(COMINghrsst_ospo,
+                                                     '{init_shift?fmt=%Y%m%d'
+                                                     +'?shift=-24}',
+                                                     'validation_data', 'marine',
+                                                     'ghrsst',
+                                                     '{init_shift?fmt=%Y%m%d'
+                                                     +'?shift=-24}_OSPO_L4_'
+                                                     +'GHRSST.nc'),
+                    'arch_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
+                                                     'ghrsst_ospo',
+                                                     'ghrsst_ospo.'
+                                                     +'{init_shift?fmt=%Y%m%d%H'
+                                                     +'?shift=-24}to'
+                                                     +'{init?fmt=%Y%m%d%H}.nc'),
+                    'cycles': ['00']},
     'get_d': {'prod_file_format': os.path.join(COMINget_d, 'get_d',
                                                'GETDL3_DAL_CONUS_'
                                                +'{init?fmt=%Y%j}_1.0.nc'),
@@ -463,8 +467,8 @@ for OBS in OBSNAME:
                 if not os.path.exists(arch_file_dir):
                     os.makedirs(arch_file_dir)
                 print("----> Trying to create "+arch_file)
-                if OBS == 'ghrsst_median':
-                    gda_util.prep_prod_ghrsst_median_file(
+                if OBS == 'ghrsst_ospo':
+                    gda_util.prep_prod_ghrsst_ospo_file(
                         prod_file, arch_file,
                         datetime.datetime.strptime(CDATE, '%Y%m%d%H')
                     )
