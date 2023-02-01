@@ -1,4 +1,8 @@
 export evs_ver=v1.0
+# export met_ver=10.1.2
+# export metplus_ver=4.1.4
+export met_ver=11.0.0
+export metplus_ver=5.0.0
 
 export PrgEnvintel_ver=8.1.0
 export craype_ver=2.7.8
@@ -11,13 +15,11 @@ export gsl_ver=2.7
 export hdf5_ver=1.10.6
 export grib_util_ver=1.2.3
 export prod_util_ver=2.0.13
-export prod_envir=2.0.6
+# export prod_envir=2.0.6
 export prod_envir_ver=2.0.6
 export bufr_dump_ver=1.0.0
 export python_ver=3.8.6
 export netcdf_ver=4.7.4
-export met_ver=10.1.2
-export metplus_ver=4.1.4
 export cfp_ver=2.0.4
 export rsync_ver=3.2.2
 export libpng_ver=1.6.37
