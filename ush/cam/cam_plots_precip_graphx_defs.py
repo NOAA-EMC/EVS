@@ -136,6 +136,32 @@ graphics = {
                             }
                         }
                     },
+                    'spatial_map':{
+                        'DATE_TYPE':'VALID',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'CONUS',
+                        'EVAL_PERIODS':['NA'],
+                        'FCST_VALID_HOURS':['12'],
+                        'FCST_INIT_HOURS':[''],
+                        'VARIABLES':{
+                            'NA':{
+                                'APCP_24':{
+                                    'STATSs':[''],
+                                    'FCST_LEADS':['24','30','36','42','48','54','60'],
+                                    'FCST_LEVEL':'A24',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'None',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
                 }
             },
             'mrms':{
@@ -266,6 +292,32 @@ graphics = {
                                     'OBS_THRESHs':['>=0.254,>=2.54,>=6.35,>=12.7,>=25.4,>=38.1,>=50.8,>=76.2,>=101.6,>=152.4'],
                                     'CONFIDENCE_INTERVALS':'True',
                                     'INTERP':'NEAREST',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
+                    'spatial_map':{
+                        'DATE_TYPE':'VALID',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'Alaska, PuertoRico, Hawaii',
+                        'EVAL_PERIODS':['NA'],
+                        'FCST_VALID_HOURS':['12'],
+                        'FCST_INIT_HOURS':[''],
+                        'VARIABLES':{
+                            'NA':{
+                                'APCP_24':{
+                                    'STATSs':[''],
+                                    'FCST_LEADS':['24','30','36','42','48','54','60'],
+                                    'FCST_LEVEL':'A24',
+                                    'OBS_LEVEL':'A24',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'None',
                                     'INTERP_PNTSs':[''],
                                 },
                             }

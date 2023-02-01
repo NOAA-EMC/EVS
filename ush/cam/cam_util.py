@@ -20,7 +20,7 @@ def get_all_eval_periods(graphics):
                         all_eval_periods.append(
                             verif_type_dict[models][plot_type]['EVAL_PERIODS']
                         )
-    return np.unique(np.array(all_eval_periods))
+    return np.unique(np.hstack(all_eval_periods))
 
 def get_fhr_start(vhour, acc, fhr_incr, min_ihour):
     fhr_start = (

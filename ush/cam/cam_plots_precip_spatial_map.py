@@ -12,6 +12,7 @@ matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import os
+import glob
 import logging
 import sys
 import datetime
@@ -109,7 +110,10 @@ class PrecipSpatialMap:
             model_num_name = model_num_dict['name']
             model_num_plot_name = model_num_dict['plot_name']
             model_num_obs_name = model_num_dict['obs_name']
-            model_num_data_dir = os.path.join(self.input_dir)
+            model_num_data_dir = os.path.join(
+                self.input_dir,
+                valid_date_dt.strftime('atmos.%Y%m%d'),
+            )
             make_plot = False
             if model_num == 'obs':
                 image_data_source = 'qpe'
@@ -121,9 +125,9 @@ class PrecipSpatialMap:
                 )
             image_region_dict = {
                 'CONUS': 'conus',
-                'AK': 'ak',
-                'HI': 'hawaii',
-                'PR': 'prico'
+                'Alaska': 'ak',
+                'Hawaii': 'hawaii',
+                'PuertoRico': 'prico'
             }
             image_name = os.path.join(
                 output_image_dir,
@@ -133,20 +137,24 @@ class PrecipSpatialMap:
                 +image_region_dict[self.plot_info_dict['vx_mask']]+'.png'
             )
             if model_num == 'obs':
-                model_num_file = os.path.join(
-                    model_num_data_dir, 
+                model_num_file = glob.glob(os.path.join(
+                    model_num_data_dir,
+                    '*',
+                    'precip',
                     valid_date_dt.strftime(f'{model_num_name}.%Y%m%d'),
                     valid_date_dt.strftime(
                        f'{model_num_name}.t%Hz.a24h.'
                        + f'{image_region_dict[self.plot_info_dict["vx_mask"]]}'
                        + f'.nc'
                     ),
-                )
+                ))[0]
                 if not os.path.exists(image_name):
                     make_plot = True
             else:
                 model_num_file = os.path.join(
                     model_num_data_dir,
+                    model_num,
+                    'precip',
                     init_date_dt.strftime(f'{model_num_name}.init%Y%m%d'),
                     init_date_dt.strftime(
                        f'{model_num_name}.t%Hz.'

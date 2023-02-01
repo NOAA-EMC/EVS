@@ -172,7 +172,7 @@ def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range,
             "Nonexistent dataframe. Check the logfile for more details."
         )
         logger.error("Quitting ...")
-        sys.exit(1)
+        sys.exit(0)
 
 def filter_by_level_type(df, logger, verif_type):
     if df is None:

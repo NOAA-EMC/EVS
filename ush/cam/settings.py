@@ -552,6 +552,14 @@ class ModelSpecs():
                 'settings_key':'RRFS_A_NA', 
                 'plot_name':'RRFS-A N. America'
             },
+            'mrms': {
+                'settings_key':'MRMS', 
+                'plot_name':'MRMS'
+            },
+            'ccpa': {
+                'settings_key':'CCPA', 
+                'plot_name':'CCPA'
+            },
             'wafs': {
                 'settings_key':'WAFS', 
                 'plot_name':'WAFS'

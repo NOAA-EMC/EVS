@@ -252,7 +252,8 @@ def check_EVAL_PERIOD(EVAL_PERIOD):
     else:
         print(f"Since the EVAL_PERIOD is not set to 'TEST', will use a"
                     + f" preset INIT/VALID period (check ush/settings.py for"
-                    + f" possible presets).")
+                    + f" possible presets). EVAL_PERIOD may be dealt with"
+                    + f" differently for spatial_map plots.")
     return EVAL_PERIOD
 
 

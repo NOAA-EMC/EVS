@@ -123,7 +123,7 @@ if [ "$BOOL_NBRHD" = True ]; then
         export MET_GRIB_TABLES=$PARMevs/metplus_config/cam/precip/stats/grib2_mrms.txt
         export COMINobs=${COMINmrms}
         export OBSNAME="mrms"
-        export MIN_IHOUR="06"
+        export MIN_IHOUR="00"
         export GRID="G196"
         export MODEL_INPUT_TEMPLATE="hiresw.{init?fmt=%Y%m%d}/hiresw.t{init?fmt=%2H}z.fv3_5km.f{lead?fmt=%2H}.hi.grib2"
         export MASK_POLY_LIST="${FIXevs}/masks/Hawaii_G196.nc"
@@ -166,7 +166,7 @@ else
         export MET_GRIB_TABLES=$PARMevs/metplus_config/cam/precip/stats/grib2_mrms.txt
         export COMINobs=${COMINmrms}
         export OBSNAME="mrms"
-        export MIN_IHOUR="06"
+        export MIN_IHOUR="00"
         export GRID="G196"
         export MODEL_INPUT_TEMPLATE="hiresw.{init?fmt=%Y%m%d}/hiresw.t{init?fmt=%2H}z.fv3_5km.f{lead?fmt=%2H}.hi.grib2"
         export MASK_POLY_LIST="${FIXevs}/masks/Hawaii_G196.nc"

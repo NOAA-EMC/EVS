@@ -334,7 +334,6 @@ if [ $SENDCOM = YES ]; then
             cp -v $FILE $COMOUT/$MODEL_DIR/.
         done
     done
-    # copy intermediate 24-h pcp_combine files to COMOUT
     for DIR_PATH in $MET_PLUS_OUT/*/pcp_combine/!(confs|logs|tmp); do
         DIR=$(echo ${DIR_PATH##*/})
         mkdir -p $COMOUT/atmos.${VDATE}/$MODELNAME/${VERIF_CASE}/$DIR

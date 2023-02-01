@@ -46,7 +46,8 @@ export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
 
 if [[ ${COMPONENT} == "cam" ]]; then
-    export VDATE=$(date -d "today -1 day" +"%Y%m%d")
+    #export VDATE=$(date -d "today -1 day" +"%Y%m%d")
+    export VDATE=20230129
 else
     setpdy.sh 31
     . ./PDY
