@@ -308,15 +308,15 @@ class PrecipSpatialMap:
                     extent = [-124,-70,18.0,50.0]
                     central_lon = -97.6
                     central_lat = 35.4
-                elif self.plot_info_dict['vx_mask'] == 'AK':
+                elif self.plot_info_dict['vx_mask'] == 'Alaska':
                     extent = [-180,-110,45.0,75.0]
                     central_lon = -145
                     central_lat = 60
-                elif self.plot_info_dict['vx_mask'] == 'PR':
+                elif self.plot_info_dict['vx_mask'] == 'PuertoRico':
                     extent = [-75,-60,12.0,25.0]
                     central_lon = -67.5
                     central_lat = 18.5
-                elif self.plot_info_dict['vx_mask'] == 'HI':
+                elif self.plot_info_dict['vx_mask'] == 'Hawaii':
                     extent = [-165,-150,15.0,25.0]
                     central_lon = -157.5
                     central_lat = 20
