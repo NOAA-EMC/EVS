@@ -1184,6 +1184,19 @@ plot_jobs_dict = {
                                           'grid': 'G240',
                                           'obs_name': '24hrNOHRSC',
                                           'plots_list': 'time_series, lead_average'},
+        '24hrNOHRSC_24hrAccumMaps': {'line_type_stat_list': ['SL1L2/FBAR'],
+                                     'vx_mask_list': ['CONUS'],
+                                     'fcst_var_dict': {'name': 'ASNOW',
+                                                       'levels': 'Z0',
+                                                       'threshs': 'NA'},
+                                     'obs_var_dict': {'name': 'ASNOW',
+                                                      'levels': 'Z0',
+                                                      'threshs': 'NA'},
+                                     'interp_dict': {'method': 'NEAREST',
+                                                     'points': '1'},
+                                     'grid': 'G211',
+                                     'obs_name': '24hrNOHRSC',
+                                     'plots_list': 'nohrsc_spatial_map'}
     },
     'sst': {
         'DailyAvg_SST': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/ME'],
@@ -1198,7 +1211,7 @@ plot_jobs_dict = {
                          'interp_dict': {'method': 'NEAREST',
                                          'points': '1'},
                          'grid': 'G004',
-                         'obs_name': 'ghrsst_median',
+                         'obs_name': 'ghrsst_ospo',
                          'plots_list': 'time_series, lead_average'},
     }
 }

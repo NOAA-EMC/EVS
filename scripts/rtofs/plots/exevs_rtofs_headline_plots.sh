@@ -27,7 +27,7 @@ for lead in 000 024 048 072 096 120 144 168 192; do
     export THRESH=""
 
     if [ $vcase = 'grid2grid' ] ; then
-      export OBTYPE=GMPE
+      export OBTYPE=GHRSST
     fi
 
     if [ $vcase = 'grid2obs' ] ; then
@@ -73,7 +73,7 @@ for vcase in grid2grid grid2obs; do
   export THRESH=""
 
   if [ $vcase = 'grid2grid' ] ; then
-    export OBTYPE=GMPE
+    export OBTYPE=GHRSST
   fi
 
   if [ $vcase = 'grid2obs' ] ; then

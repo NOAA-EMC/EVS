@@ -1,6 +1,5 @@
 source $HOMEevs/versions/run.ver
 
-#module purge
 source /usr/share/lmod/lmod/init/sh
 module reset
 export HPC_OPT=/apps/ops/para/libs

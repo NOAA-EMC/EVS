@@ -19,12 +19,12 @@ export COMOUTfinal=${COMOUTfinal:-$COMOUT/stats/$COMPONENT/$COMPONENT.$VDATE}
 export COMOUTplots=${COMOUTplots:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
 
 # make plots; run scripts for each RUN;
-# RUN is the validation source: gmpe, smos, smap etc.
-for rcase in gmpe smos smap aviso buoys; do
+# RUN is the validation source: ghrsst, smos, smap etc.
+for rcase in ghrsst smos smap aviso buoys; do
   export RUN=$rcase
 
-  if [ $RUN = 'gmpe' ] ; then
-    export OBTYPE=GMPE
+  if [ $RUN = 'ghrsst' ] ; then
+    export OBTYPE=GHRSST
     export VAR=SST
     export VERIF_CASE=grid2grid
   fi

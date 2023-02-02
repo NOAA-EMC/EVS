@@ -47,7 +47,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
         elif VERIF_CASE_STEP_type == 'snow':
             data_dir_list.append(os.path.join(data_base_dir, 'nohrsc'))
         elif VERIF_CASE_STEP_type == 'sst':
-            data_dir_list.append(os.path.join(data_base_dir, 'ghrsst_median'))
+            data_dir_list.append(os.path.join(data_base_dir, 'ghrsst_ospo'))
 elif VERIF_CASE_STEP == 'grid2obs_stats':
     for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
         if VERIF_CASE_STEP_type == 'pres_levs':
@@ -63,6 +63,8 @@ elif VERIF_CASE_STEP == 'grid2grid_plots':
     for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
         if VERIF_CASE_STEP_type == 'precip':
             data_dir_list.append(os.path.join(data_base_dir, 'ccpa'))
+        elif VERIF_CASE_STEP_type == 'snow':
+            data_dir_list.append(os.path.join(data_base_dir, 'nohrsc'))
 
 # Create data directories
 for data_dir in data_dir_list:

@@ -61,7 +61,7 @@ export COMPONENT=global_det
 export RUN=atmos
 
 export MODELNAME="cfs cmc cmc_regional dwd ecmwf fnmoc imd jma metfra ukmet"
-export OBSNAME="osi_saf ghrsst_median"
+export OBSNAME="osi_saf ghrsst_ospo"
 
 # CALL executable job script here
 $HOMEevs/jobs/global_det/prep/JEVS_GLOBAL_DET_PREP

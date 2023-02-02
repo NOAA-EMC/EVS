@@ -22,14 +22,14 @@ export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
 export COMOUTfinal=${COMOUTfinal:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
 
 # run scripts for each RUN;
-# RUN is the validation source: gmpe, smos, smap etc.
-for rcase in gmpe smos smap aviso osisaf; do
+# RUN is the validation source: ghrsst, smos, smap etc.
+for rcase in ghrsst smos smap aviso osisaf; do
   export RUN=$rcase
   export VERIF_CASE=grid2grid
   export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE
 
-  if [ $rcase = 'gmpe' ] ; then
-     export RUNupper=GMPE
+  if [ $rcase = 'ghrsst' ] ; then
+     export RUNupper=GHRSST
      export VAR=sst
   fi
 
