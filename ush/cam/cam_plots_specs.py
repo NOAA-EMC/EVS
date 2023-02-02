@@ -4,7 +4,7 @@ import datetime
 import sys
 import os
 import numpy as np
-import global_det_atmos_util as gda_util
+import cam_util as cutil
 
 class PlotSpecs:
     def __init__(self, logger, plot_type):
@@ -646,7 +646,7 @@ class PlotSpecs:
                  image_path - full path of the name the plot will
                               be saved as (string)
         """
-        component_savefig_name = 'global_det'
+        component_savefig_name = 'cam'
         if plot_info_dict['stat'] == 'PERF_DIA':
             metric_savefig_name = 'ctc'
         else:
@@ -659,7 +659,7 @@ class PlotSpecs:
             )
         if 'fcst_var_thresh' in list(plot_info_dict.keys()):
             if plot_info_dict['fcst_var_thresh'] != 'NA':
-                thresh_symbol, thresh_letter = gda_util.format_thresh(
+                thresh_symbol, thresh_letter = cutil.format_thresh(
                     plot_info_dict['fcst_var_thresh']
                 )
                 metric_savefig_name = (

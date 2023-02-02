@@ -50,7 +50,7 @@ OUTPUT_DIR = SAVE_DIR
 LOGO_DIR = FIXevs
 MODEL_INFO_DICT = {
     'obs': {'name': VERIF_TYPE,
-            'plot_name': model_info.model_alias[VERIF_TYPE],
+            'plot_name': model_info.model_alias[VERIF_TYPE]['plot_name'],
             'obs_name': 'OBS'}
 }
 for MODEL in MODELS:

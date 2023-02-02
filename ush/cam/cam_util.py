@@ -57,3 +57,25 @@ def run_shell_command(command, capture_output=False):
     else:
         if capture_output:
             return run_command.stdout.decode('utf-8')
+
+def format_thresh(thresh):
+   """! Format threshold with letter and symbol options
+
+      Args:
+         thresh         - the threshold (string)
+
+      Return:
+         thresh_symbol  - threshold with symbols (string)
+         thresh_letters - treshold with letters (string)
+   """
+   thresh_symbol = (
+       thresh.replace('ge', '>=').replace('gt', '>')\
+       .replace('eq', '==').replace('ne', '!=')\
+       .replace('le', '<=').replace('lt', '<')
+   )
+   thresh_letter = (
+       thresh.replace('>=', 'ge').replace('>', 'gt')\
+       .replace('==', 'eq').replace('!=', 'ne')\
+       .replace('<=', 'le').replace('<', 'lt')
+   )
+   return thresh_symbol, thresh_letter

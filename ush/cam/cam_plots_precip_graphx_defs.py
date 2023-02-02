@@ -139,7 +139,7 @@ graphics = {
                     'spatial_map':{
                         'DATE_TYPE':'VALID',
                         'VALID_BEG':'',
-                        'VALID_END':'',
+                        'VALID_END':os.environ['VDATE'],
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS',
@@ -300,7 +300,7 @@ graphics = {
                     'spatial_map':{
                         'DATE_TYPE':'VALID',
                         'VALID_BEG':'',
-                        'VALID_END':'',
+                        'VALID_END':os.environ['VDATE'],
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'Alaska, PuertoRico, Hawaii',
