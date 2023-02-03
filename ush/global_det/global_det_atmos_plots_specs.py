@@ -61,7 +61,8 @@ class PlotSpecs:
             self.legend_bbox = (0.5, 0.05)
             self.legend_ncol = 4
         elif self.plot_type in ['lead_average', 'valid_hour_average',
-                                'threshold_average']:
+                                'threshold_average',
+                                'long_term_time_series_diff']:
             self.fig_size = (16., 16.)
             self.fig_subplot_top = 0.9
             self.fig_subplot_bottom = 0.05
@@ -1095,6 +1096,18 @@ class PlotSpecs:
             'gfs': {'color': '#000000',
                     'marker': 'o', 'markersize': 6,
                     'linestyle': 'solid', 'linewidth': 3},
+            'gfs00Z': {'color': '#000000',
+                       'marker': 'o', 'markersize': 6,
+                       'linestyle': 'solid', 'linewidth': 3},
+            'gfs06Z': {'color': '#fb2020',
+                       'marker': '^', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'gfs12Z': {'color': '#1e3cff',
+                       'marker': 'X', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'gfs18Z': {'color': '#e69f00',
+                       'marker': 'o', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
             'cfs': {'color': '#56b4e9',
                     'marker': 'o', 'markersize': 6,
                     'linestyle': 'solid', 'linewidth': 1.5},

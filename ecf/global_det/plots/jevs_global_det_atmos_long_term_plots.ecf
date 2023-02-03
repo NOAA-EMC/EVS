@@ -81,8 +81,8 @@ export COMPONENT=global_det
 export RUN=long_term
 
 # Set archive
-export COMINmonthlystats=$COMIN/$STEP/$COMPONENT/$RUN/monthly_means
-export COMINyearlystats=$COMIN/$STEP/$COMPONENT/$RUN/annual_means
+export COMINmonthlystats=$COMIN/stats/$COMPONENT/$RUN/monthly_means
+export COMINyearlystats=$COMIN/stats/$COMPONENT/$RUN/annual_means
 
 # Set year and month
 export VDATEYYYY=$(date -d "1 month ago" '+%Y')
