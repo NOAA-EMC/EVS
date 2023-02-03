@@ -906,8 +906,8 @@ def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
     #          +": "+' '.join(weekly_source_file_list))
     #copy_file(weekly_prepped_file, weekly_dest_file)
 
-def prep_prod_ghrsst_median_file(source_file, dest_file, date_dt):
-    """! Do prep work for GHRSST Median production files
+def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt):
+    """! Do prep work for GHRSST OSPO production files
 
          Args:
              source_file - source file (string)
@@ -924,7 +924,7 @@ def prep_prod_ghrsst_median_file(source_file, dest_file, date_dt):
     if check_file_exists_size(prepped_file):
         prepped_data = netcdf.Dataset(prepped_file, 'a',
                                       format='NETCDF3_CLASSIC')
-        ghrsst_median_date_since_dt = datetime.datetime.strptime(
+        ghrsst_ospo_date_since_dt = datetime.datetime.strptime(
             '1981-01-01 00:00:00','%Y-%m-%d %H:%M:%S'
         )
         prepped_data['time'][:] = prepped_data['time'][:][0] + 43200
@@ -1463,14 +1463,14 @@ def check_truth_files(job_dict):
                )
                truth_file_list.append(nohrsc_file)
             elif job_dict['VERIF_TYPE'] == 'sst':
-               ghrsst_median_file = os.path.join(
-                   verif_case_dir, 'data', 'ghrsst_median',
-                   'ghrsst_median.'
+               ghrsst_ospo_file = os.path.join(
+                   verif_case_dir, 'data', 'ghrsst_ospo',
+                   'ghrsst_ospo.'
                    +(valid_date_dt-datetime.timedelta(hours=24))\
                    .strftime('%Y%m%d%H')
                    +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
                )
-               truth_file_list.append(ghrsst_median_file)
+               truth_file_list.append(ghrsst_ospo_file)
         elif job_dict['VERIF_CASE'] == 'grid2obs':
             if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc', 'ptype']:
                 pb2nc_file = os.path.join(
