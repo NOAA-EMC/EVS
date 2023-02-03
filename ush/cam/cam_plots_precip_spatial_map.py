@@ -136,7 +136,7 @@ class PrecipSpatialMap:
                 +image_region_dict[self.plot_info_dict['vx_mask']]+'.png'
             )
             if model_num == 'obs':
-                model_num_file = glob.glob(os.path.join(
+                model_num_files = glob.glob(os.path.join(
                     model_num_data_dir,
                     '*',
                     'precip',
@@ -146,9 +146,17 @@ class PrecipSpatialMap:
                        + f'{image_region_dict[self.plot_info_dict["vx_mask"]]}'
                        + f'.nc'
                     ),
-                ))[0]
-                if not os.path.exists(image_name):
-                    make_plot = True
+                ))
+                if model_num_files:
+                    model_num_file = model_num_files[0]
+                    if not os.path.exists(image_name):
+                        make_plot = True
+                    else: 
+                        make_plot = False
+                else:
+                    make_plot = False
+                    self.logger.warning(f"No input files exist, "
+                                        +"not making plot")
             else:
                 model_num_file = os.path.join(
                     model_num_data_dir,
@@ -163,15 +171,15 @@ class PrecipSpatialMap:
                        + f'.nc'
                     ),
                 )
-            if not os.path.exists(image_name):
-                if os.path.exists(model_num_file):
-                    make_plot = True
+                if not os.path.exists(image_name):
+                    if os.path.exists(model_num_file):
+                        make_plot = True
+                    else:
+                        make_plot = False
+                        self.logger.warning(f"{model_num_file} does not exist, "
+                                        +"not making plot")
                 else:
                     make_plot = False
-                    self.logger.warning(f"{model_num_file} does not exist, "
-                                        +"not making plot")
-            else:
-                make_plot = False
             if make_plot:
                 self.logger.debug("Plotting data from "+model_num_file)
                 precip_data = netcdf.Dataset(model_num_file)
