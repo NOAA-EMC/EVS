@@ -60,6 +60,14 @@ echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
             cp -v $FILE $COMOUT/$MODEL_DIR/.
         done
     done
+    for MODEL_DIR_PATH in $MET_PLUS_OUT/raob/point_stat/$MODELNAME*; do
+        MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
+        mkdir -p $COMOUTsmall/$MODEL_DIR
+        for FILE in $MODEL_DIR_PATH/*; do
+            cp -v $FILE $COMOUTsmall/$MODEL_DIR/.
+        done
+    done
+
   fi
 
 # Clean Up
