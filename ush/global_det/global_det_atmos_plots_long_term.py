@@ -440,6 +440,10 @@ def create_plots(logger, model_group, model_group_merged_df, plot_var,
         )
         for model in model_list:
             model_plot_settings_dict = all_model_plot_settings_dict[model]
+            model_forecast_day = np.ma.masked_invalid(
+                model_group_merged_df.loc[(model)]\
+                ['DAY'+str(plot_forecast_day)].to_numpy(dtype=float)
+            )
             model_forecast_day_running_mean = np.ma.masked_invalid(
                 model_group_running_mean_df.loc[(model)]\
                 ['DAY'+str(plot_forecast_day)].to_numpy(dtype=float)
@@ -452,28 +456,157 @@ def create_plots(logger, model_group, model_group_merged_df, plot_var,
                 model_forecast_day_running_mean
                 - model0_forecast_day_running_mean
             )
-            ax1.plot_date(
-                plot_run_length_YYYYmm_dt_list,
-                model_forecast_day_running_mean,
-                color=model_plot_settings_dict['color'],
-                linestyle='solid', linewidth=2,
-                marker=None, markersize=0,
-                zorder=((len(model_list)-model_list.index(model))+4),
-                label=model
+            if len(model_forecast_day_running_mean) != \
+                    np.ma.count_masked(model_forecast_day_running_mean):
+                if np.ma.count_masked(model_forecast_day[-1]) == 1:
+                    model_label = f"{model} --"
+                else:
+                    model_label = f"{model} {model_forecast_day[-1]:.3f}"
+                ax1.plot_date(
+                    plot_run_length_YYYYmm_dt_list,
+                    model_forecast_day_running_mean,
+                    color=model_plot_settings_dict['color'],
+                    linestyle='solid', linewidth=2,
+                    marker=None, markersize=0,
+                    zorder=((len(model_list)-model_list.index(model))+4),
+                    label=model_label
+                )
+                if model_forecast_day_running_mean.min() \
+                        < stat_min_max_dict['ax1_stat_min'] \
+                        or np.ma.is_masked(stat_min_max_dict['ax1_stat_min']):
+                    stat_min_max_dict['ax1_stat_min'] = (
+                        model_forecast_day_running_mean.min()
+                    )
+                if model_forecast_day_running_mean.max() > \
+                        stat_min_max_dict['ax1_stat_max'] \
+                        or np.ma.is_masked(stat_min_max_dict['ax1_stat_max']):
+                    stat_min_max_dict['ax1_stat_max'] = (
+                        model_forecast_day_running_mean.max()
+                    )
+            if len(model_model0_forecast_day_running_mean_diff) != \
+                    np.ma.count_masked(model_model0_forecast_day_running_mean_diff):
+                ax2.plot_date(
+                    plot_run_length_YYYYmm_dt_list,
+                    model_model0_forecast_day_running_mean_diff,
+                    color=model_plot_settings_dict['color'],
+                    linestyle='solid', linewidth=2,
+                    marker=None, markersize=0,
+                    zorder=((len(model_list)-model_list.index(model))+4)
+                )
+                if model_model0_forecast_day_running_mean_diff.min() \
+                        < stat_min_max_dict['ax2_stat_min'] \
+                        or np.ma.is_masked(stat_min_max_dict['ax2_stat_min']):
+                    stat_min_max_dict['ax2_stat_min'] = (
+                        model_model0_forecast_day_running_mean_diff.min()
+                    )
+                if model_model0_forecast_day_running_mean_diff.max() > \
+                        stat_min_max_dict['ax2_stat_max'] \
+                        or np.ma.is_masked(stat_min_max_dict['ax2_stat_max']):
+                    stat_min_max_dict['ax2_stat_max'] = (
+                        model_model0_forecast_day_running_mean_diff.max()
+                    )
+        subplot_num = 1
+        for ax in fig.get_axes():
+            stat_min = stat_min_max_dict['ax'+str(subplot_num)+'_stat_min']
+            stat_max = stat_min_max_dict['ax'+str(subplot_num)+'_stat_max']
+            preset_y_axis_tick_min = ax.get_yticks()[0]
+            preset_y_axis_tick_max = ax.get_yticks()[-1]
+            preset_y_axis_tick_inc = ax.get_yticks()[1]-ax.get_yticks()[0]
+            if plot_stat in ['ACC'] and subplot_num == 1:
+                y_axis_tick_inc = 0.1
+            else:
+                y_axis_tick_inc = preset_y_axis_tick_inc
+            if np.ma.is_masked(stat_min):
+                y_axis_min = preset_y_axis_tick_min
+            else:
+                if plot_stat in ['ACC'] and subplot_num == 1:
+                    y_axis_min = round(stat_min,1) - y_axis_tick_inc
+                else:
+                    y_axis_min = preset_y_axis_tick_min
+                    while y_axis_min > stat_min:
+                        y_axis_min = y_axis_min - y_axis_tick_inc
+            if np.ma.is_masked(stat_max):
+                y_axis_max = preset_y_axis_tick_max
+            else:
+                if plot_stat in ['ACC'] and subplot_num == 1:
+                    y_axis_max = 1
+                else:
+                    y_axis_max = preset_y_axis_tick_max + y_axis_tick_inc
+                    while y_axis_max < stat_max:
+                        y_axis_max = y_axis_max + y_axis_tick_inc
+            ax.set_yticks(np.arange(y_axis_min,
+                                    y_axis_max+y_axis_tick_inc,
+                                    y_axis_tick_inc))
+            ax.set_ylim([y_axis_min, y_axis_max])
+            if stat_max >= ax.get_ylim()[1]:
+                while stat_max >= ax.get_ylim()[1]:
+                    y_axis_max = y_axis_max + y_axis_tick_inc
+                    ax.set_yticks(np.arange(y_axis_min,
+                                            y_axis_max +  y_axis_tick_inc,
+                                            y_axis_tick_inc))
+                    ax.set_ylim([y_axis_min, y_axis_max])
+            if stat_min <= ax.get_ylim()[0]:
+                while stat_min <= ax.get_ylim()[0]:
+                    y_axis_min = y_axis_min - y_axis_tick_inc
+                    ax.set_yticks(np.arange(y_axis_min,
+                                            y_axis_max +  y_axis_tick_inc,
+                                            y_axis_tick_inc))
+                    ax.set_ylim([y_axis_min, y_axis_max])
+            subplot_num+=1
+        ax.text(
+            0.5, 0.09,
+            plot_run_length_YYYYmm_dt_list[-1].strftime('%b %Y')+' Mean',
+            fontsize=16, ha='center', va='center', transform=ax1.transAxes
+        )
+        if len(ax1.lines) != 0:
+            y_axis_min = ax1.get_yticks()[0]
+            y_axis_max = ax1.get_yticks()[-1]
+            y_axis_tick_inc = ax1.get_yticks()[1] - ax1.get_yticks()[0]
+            stat_min = stat_min_max_dict['ax1_stat_min']
+            stat_max = stat_min_max_dict['ax1_stat_max']
+            legend = ax1.legend(
+                bbox_to_anchor=(plot_specs_lttsd.legend_bbox[0],
+                                plot_specs_lttsd.legend_bbox[1]),
+                loc=plot_specs_lttsd.legend_loc,
+                ncol=plot_specs_lttsd.legend_ncol,
+                fontsize=plot_specs_lttsd.legend_font_size
             )
-            ax2.plot_date(
-                plot_run_length_YYYYmm_dt_list,
-                model_model0_forecast_day_running_mean_diff,
-                color=model_plot_settings_dict['color'],
-                linestyle='solid', linewidth=2,
-                marker=None, markersize=0,
-                zorder=((len(model_list)-model_list.index(model))+4)
+            plt.draw()
+            inv = ax1.transData.inverted()
+            legend_box = legend.get_window_extent()
+            legend_box_inv = inv.transform(
+                [(legend_box.x0,legend_box.y0),
+                 (legend_box.x1,legend_box.y1)]
             )
+            legend_box_inv_y1 = legend_box_inv[1][1]
+            if stat_min < legend_box_inv_y1:
+                while stat_min < legend_box_inv_y1:
+                    y_axis_min = y_axis_min - y_axis_tick_inc
+                    ax1.set_yticks(
+                        np.arange(y_axis_min,
+                                  y_axis_max + y_axis_tick_inc,
+                                  y_axis_tick_inc)
+                    )
+                    ax1.set_ylim([y_axis_min, y_axis_max])
+                    legend = ax1.legend(
+                        bbox_to_anchor=(plot_specs_la.legend_bbox[0],
+                                        plot_specs_la.legend_bbox[1]),
+                        loc = plot_specs_la.legend_loc,
+                        ncol = plot_specs_la.legend_ncol,
+                        fontsize = plot_specs_la.legend_font_size
+                    )
+                    plt.draw()
+                    inv = ax1.transData.inverted()
+                    legend_box = legend.get_window_extent()
+                    legend_box_inv = inv.transform(
+                         [(legend_box.x0,legend_box.y0),
+                          (legend_box.x1,legend_box.y1)]
+                    )
+                    legend_box_inv_y1 = legend_box_inv[1][1]
         logger.info("Saving image as "+image_name)
         plt.savefig(image_name)
         plt.clf()
         plt.close('all')
-        exit()
     # Make lead-year plots
     # Make annual mean plots 
 

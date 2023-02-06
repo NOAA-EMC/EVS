@@ -72,6 +72,8 @@ class PlotSpecs:
             self.legend_bbox = (0.5, 0.05)
             self.legend_ncol = 5
             self.fig_title_size = 18
+            if self.plot_type == 'long_term_time_series_diff':
+                self.legend_font_size = 15
         elif self.plot_type == 'lead_by_date':
             self.fig_size = (16., 16.)
             self.axis_title_pad = 5
