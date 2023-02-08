@@ -41,8 +41,9 @@ echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
   export COMINobs=$COMINobsproc
 
 # in production, the following will be set to the approp. COMOUT dir
-  export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
+  export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
   export COMOUTfinal=$COMOUT/${MODELNAME}.${VDATE}
+  export COMOUTsmall=${COMOUTsmall:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE})}
 
   source $config
 

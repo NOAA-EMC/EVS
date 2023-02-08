@@ -44,15 +44,18 @@ for WVAR in $VAR_NAME_LIST; do
     cyc=$VHOUR
     
     if [ $cyc = 00 ] || [ $cyc = 06 ] || [ $cyc = 12 ] || [ $cyc = 18 ];  then
-      # echo "";    echo ${FCST_VAR1_NAME};    echo "check check 1"
       run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PB2NC_obsRAOB.conf 
-      # echo "";    echo ${FCST_VAR1_NAME};    echo "check check 2"
+      # export err=$?; err_chk
+
       run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstMESOSCALE_obsRAOB.conf
+      # export err=$?; err_chk
+
     fi
     
     if [ $cyc = 23 ];   then
       mkdir -p $COMOUTfinal
       run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstMESOSCALE_obsRAOB_GatherByDay.conf 
+
     fi
   done
 done
