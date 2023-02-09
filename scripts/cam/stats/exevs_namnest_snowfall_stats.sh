@@ -2,10 +2,10 @@
 
 # =============================================================================
 #
-# NAME: exevs_hireswarwmem2_precip_stats.sh
+# NAME: exevs_namnest_snowfall_stats.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Handle all components of an EVS HiRes Window ARW Member 2 
-#          Precipitation - Statistics job
+# PURPOSE: Handle all components of an EVS NAM Nest Snowfall - Statistics 
+#          job
 # DEPENDENCIES: $HOMEevs/jobs/cam/stats/JEVS_CAM_STATS 
 #
 # =============================================================================
@@ -13,7 +13,7 @@
 set -x
 
 # Set Basic Environment Variables
-NEST_LIST="conus ak pr hi" # this is reset after reformat
+NEST_LIST="conus" 
 export BOOL_NBRHD=False
 
 # Reformat MET Data
@@ -21,14 +21,12 @@ export job_type="reformat"
 export njob=1
 for NEST in $NEST_LIST; do
     export NEST=$NEST
-    for ACC in "01" "03" "24"; do
+    for ACC in "06" "24"; do
         export ACC=$ACC
-        if [ "${ACC}" = "01" ]; then
-            VHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
-        elif [ "${ACC}" = "03" ]; then
-            VHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
+        if [ "${ACC}" = "06" ]; then
+            VHOUR_LIST="00 06 12 18"
         elif [ "${ACC}" = "24" ]; then
-            VHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
+            VHOUR_LIST="00 12"
         else
             echo "${ACC} is not supported"
             exit 1
@@ -43,25 +41,24 @@ for NEST in $NEST_LIST; do
                 source $config
             fi
             echo "RUN MODE: $evs_run_mode"
-
             # Check User's Configuration Settings
             python $USHevs/cam/cam_check_settings.py
             status=$?
             [[ $status -ne 0 ]] && exit $status
             [[ $status -eq 0 ]] && echo "Successfully ran cam_check_settings.py ($job_type)"
             echo
-
+ 
             # Create Output Directories
             python $USHevs/cam/cam_create_output_dirs.py
             status=$?
             [[ $status -ne 0 ]] && exit $status
             [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
-
+ 
             # Create Reformat Job Script 
-            python $USHevs/cam/cam_stats_precip_create_job_script.py
+            python $USHevs/cam/cam_stats_snowfall_create_job_script.py
             status=$?
             [[ $status -ne 0 ]] && exit $status
-            [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_precip_create_job_script.py ($job_type)"
+            [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_job_script.py ($job_type)"
             export njob=$((njob+1))
         done
     done
@@ -69,13 +66,13 @@ done
 
 # Create Reformat POE Job Scripts
 if [ $USE_CFP = YES ]; then
-    python $USHevs/cam/cam_stats_precip_create_poe_job_scripts.py
+    python $USHevs/cam/cam_stats_snowfall_create_poe_job_scripts.py
     status=$?
     [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_precip_create_poe_job_scripts.py ($job_type)"
+    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_poe_job_scripts.py ($job_type)"
 fi
 
-# Run all HiRes Window ARW Member 2 precip/stats Reformat jobs
+# Run All NAM Nest snowfall/stats Reformat Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
 nc=1
@@ -106,20 +103,17 @@ else
     done
 fi
 
-NEST_LIST="conus ak"
 # Generate MET Data
 export job_type="generate"
 export njob=1
 for NEST in $NEST_LIST; do
     export NEST=$NEST
-    for ACC in "01" "03" "24"; do
+    for ACC in "06" "24"; do
         export ACC=$ACC
-        if [ "${ACC}" = "01" ]; then
-            VHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
-        elif [ "${ACC}" = "03" ]; then
-            VHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
+        if [ "${ACC}" = "06" ]; then
+            VHOUR_LIST="00 06 12 18"
         elif [ "${ACC}" = "24" ]; then
-            VHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
+            VHOUR_LIST="00 12"
         else
             echo "${ACC} is not supported"
             exit 1
@@ -135,25 +129,25 @@ for NEST in $NEST_LIST; do
                     export evs_run_mode=$evs_run_mode
                     source $config
                 fi
-
+ 
                 # Check User's Configuration Settings
                 python $USHevs/cam/cam_check_settings.py
                 status=$?
                 [[ $status -ne 0 ]] && exit $status
                 [[ $status -eq 0 ]] && echo "Successfully ran cam_check_settings.py ($job_type)"
                 echo
-
+ 
                 # Create Output Directories
                 python $USHevs/cam/cam_create_output_dirs.py
                 status=$?
                 [[ $status -ne 0 ]] && exit $status
                 [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
-
-                # Create Generate Job Script
-                python $USHevs/cam/cam_stats_precip_create_job_script.py
+ 
+                # Create Generate Job Script 
+                python $USHevs/cam/cam_stats_snowfall_create_job_script.py
                 status=$?
                 [[ $status -ne 0 ]] && exit $status
-                [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_precip_create_job_script.py ($job_type)"
+                [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_job_script.py ($job_type)"
                 export njob=$((njob+1))
             done
         done
@@ -162,13 +156,13 @@ done
 
 # Create Generate POE Job Scripts
 if [ $USE_CFP = YES ]; then
-    python $USHevs/cam/cam_stats_precip_create_poe_job_scripts.py
+    python $USHevs/cam/cam_stats_snowfall_create_poe_job_scripts.py
     status=$?
     [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_precip_create_poe_job_scripts.py ($job_type)"
+    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_poe_job_scripts.py ($job_type)"
 fi
 
-# Run All HiRes Window ARW Member 2 precip/stats Generate Jobs
+# Run All NAM Nest snowfall/stats Generate Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
 nc=1
@@ -187,7 +181,7 @@ if [ $USE_CFP = YES ]; then
             launcher="srun --export=ALL --multi-prog"
         else
             echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-            exit 1
+            exit 1    
         fi
         $launcher $MP_CMDFILE
         nc=$((nc+1))
@@ -217,22 +211,22 @@ for NEST in $NEST_LIST; do
     [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
     
     # Create Gather Job Script
-    python $USHevs/cam/cam_stats_precip_create_job_script.py
+    python $USHevs/cam/cam_stats_snowfall_create_job_script.py
     status=$?
     [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_precip_create_job_script.py ($job_type)"
+    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_job_script.py ($job_type)"
     export njob=$((njob+1))
 done
 
 # Create Gather POE Job Scripts
 if [ $USE_CFP = YES ]; then
-    python $USHevs/cam/cam_stats_precip_create_poe_job_scripts.py
+    python $USHevs/cam/cam_stats_snowfall_create_poe_job_scripts.py
     status=$?
     [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_precip_create_poe_job_scripts.py ($job_type)"
+    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_poe_job_scripts.py ($job_type)"
 fi
 
-# Run All HiRes Window ARW Member 2 precip/stats Gather Jobs
+# Run All NAM Nest snowfall/stats Gather Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
 nc=1
@@ -251,7 +245,7 @@ if [ $USE_CFP = YES ]; then
             launcher="srun --export=ALL --multi-prog"
         else
             echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-            exit 1
+            exit 1    
         fi
         $launcher $MP_CMDFILE
         nc=$((nc+1))
@@ -279,21 +273,21 @@ status=$?
 [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
 
 # Create Gather 2 Job Script
-python $USHevs/cam/cam_stats_precip_create_job_script.py
+python $USHevs/cam/cam_stats_snowfall_create_job_script.py
 status=$?
 [[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran cam_stats_precip_create_job_script.py ($job_type)"
+[[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_job_script.py ($job_type)"
 export njob=$((njob+1))
 
 # Create Gather 2 POE Job Scripts
 if [ $USE_CFP = YES ]; then
-    python $USHevs/cam/cam_stats_precip_create_poe_job_scripts.py
+    python $USHevs/cam/cam_stats_snowfall_create_poe_job_scripts.py
     status=$?
     [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_precip_create_poe_job_scripts.py ($job_type)"
+    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_poe_job_scripts.py ($job_type)"
 fi
 
-# Run All HiRes Window ARW Member 2 precip/stats Gather 2 Jobs
+# Run All NAM Nest snowfall/stats Gather 2 Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
 nc=1
@@ -312,7 +306,7 @@ if [ $USE_CFP = YES ]; then
             launcher="srun --export=ALL --multi-prog"
         else
             echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-            exit 1
+            exit 1    
         fi
         $launcher $MP_CMDFILE
         nc=$((nc+1))
@@ -332,18 +326,6 @@ if [ $SENDCOM = YES ]; then
         mkdir -p $COMOUT/$MODEL_DIR
         for FILE in $MODEL_DIR_PATH/*; do
             cp -v $FILE $COMOUT/$MODEL_DIR/.
-        done
-    done
-    for DIR_PATH in $MET_PLUS_OUT/*/pcp_combine/*; do
-        DIR=$(echo ${DIR_PATH##*/})
-        if [ "$DIR" == "confs" ] || [ "$DIR" == "logs" ] || [ "$DIR" == "tmp" ]; then
-            continue
-        fi
-        mkdir -p $COMOUT/atmos.${VDATE}/$MODELNAME/${VERIF_CASE}/$DIR
-        for FILEn in $DIR_PATH/*a24h*; do
-            if [ -f "$FILEn" ]; then
-                cp -vr $FILEn $COMOUT/atmos.${VDATE}/$MODELNAME/${VERIF_CASE}/${DIR}/.
-            fi
         done
     done
 fi

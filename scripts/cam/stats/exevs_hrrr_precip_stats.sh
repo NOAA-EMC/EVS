@@ -342,7 +342,9 @@ if [ $SENDCOM = YES ]; then
         fi
         mkdir -p $COMOUT/atmos.${VDATE}/$MODELNAME/${VERIF_CASE}/$DIR
         for FILEn in $DIR_PATH/*a24h*; do
-            cp -vr $FILEn $COMOUT/atmos.${VDATE}/$MODELNAME/${VERIF_CASE}/${DIR}/.
+            if [ -f "$FILEn" ]; then
+                cp -vr $FILEn $COMOUT/atmos.${VDATE}/$MODELNAME/${VERIF_CASE}/${DIR}/.
+            fi
         done
     done
 fi
