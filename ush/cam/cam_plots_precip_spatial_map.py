@@ -125,8 +125,8 @@ class PrecipSpatialMap:
             image_region_dict = {
                 'CONUS': 'conus',
                 'Alaska': 'ak',
-                'Hawaii': 'hawaii',
-                'PuertoRico': 'prico'
+                'Hawaii': 'hi',
+                'PuertoRico': 'pr'
             }
             image_name = os.path.join(
                 output_image_dir,

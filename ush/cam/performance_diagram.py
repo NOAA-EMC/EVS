@@ -229,8 +229,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         )
     except ValueError as e:
         print(f"ERROR: {e}")
-        print(f"df['FCST_THRESH']:{df['FCST_THRESH']}")
-        print(f"In list form: {[t for t in df['FCST_THRESH']]}")
+        #print(f"df['FCST_THRESH']:{df['FCST_THRESH']}")
+        #print(f"In list form: {[t for t in df['FCST_THRESH']]}")
         sys.exit(1)
     df['FCST_THRESH_SYMBOL'] = df_thresh_symbol
     df['FCST_THRESH_VALUE'] = [str(item)[2:] for item in df_thresh_letter]
