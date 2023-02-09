@@ -365,24 +365,27 @@ for avg_time_range in avg_time_range_list:
         }
     elif avg_time_range == 'yearly':
         g2g_stats_var_dict = {
-            'SAL1L2/ACC': {'HGT': ['P500']}
+            'SAL1L2/ACC': {'HGT': ['P1000', 'P500']},
+            'SL1L2/ME': {'HGT': ['P1000', 'P500']},
+            'SL1L2/RMSE': {'HGT': ['P1000','P500']},
+            'VL1L2/ME': {'UGRD_VGRD': ['P850', 'P200']},
+            'VL1L2/RMSE': {'UGRD_VGRD': ['P850', 'P200']}
         }
     # Other information
     g2g_grid = 'G004'
     if avg_time_range == 'monthly':
         g2g_valid_hour_list = ['00', '06', '12', '18']
-        g2g_vx_mask_list = ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS']
         g2g_file_header_list = ['SYS', 'YEAR', 'MONTH', 'DAY0', 'DAY1',
                                 'DAY2', 'DAY3', 'DAY4', 'DAY5', 'DAY6',
                                 'DAY7', 'DAY8', 'DAY9', 'DAY10', 'DAY11',
                                 'DAY12', 'DAY13', 'DAY14', 'DAY15', 'DAY16']
     elif avg_time_range == 'yearly':
         g2g_valid_hour_list = ['00']
-        g2g_vx_mask_list = ['NHEM', 'SHEM']
         g2g_file_header_list = ['SYS', 'YEAR', 'DAY0', 'DAY1', 'DAY2',
                                 'DAY3', 'DAY4', 'DAY5', 'DAY6', 'DAY7',
                                 'DAY8', 'DAY9', 'DAY10', 'DAY11', 'DAY12',
                                 'DAY13', 'DAY14', 'DAY15', 'DAY16']
+    g2g_vx_mask_list = ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS']
     # Get daily stat files
     print(f"Getting model daily stat files for {avg_time_range_info}")
     avg_time_range_daily_g2g_stats_dir = os.path.join(
