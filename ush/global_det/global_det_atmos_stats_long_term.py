@@ -333,6 +333,9 @@ for avg_time_range in avg_time_range_list:
         'model5': {'name': 'fnmoc',
                    'plot_name': 'fnmoc',
                    'obs_name': 'fnmoc_anl'},
+        'model6': {'name': 'cfs',
+                   'plot_name': 'cfs',
+                   'obs_name': 'gfs_anl'},
     }
     # Set statistics information
     if avg_time_range == 'monthly':
