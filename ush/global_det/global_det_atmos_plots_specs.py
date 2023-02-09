@@ -74,7 +74,8 @@ class PlotSpecs:
             self.fig_title_size = 18
             if self.plot_type == 'long_term_time_series_diff':
                 self.legend_font_size = 15
-        elif self.plot_type == 'lead_by_date':
+        elif self.plot_type in ['lead_by_date',
+                                'long_term_annual_mean']:
             self.fig_size = (16., 16.)
             self.axis_title_pad = 5
             self.axis_title_loc = 'left'
