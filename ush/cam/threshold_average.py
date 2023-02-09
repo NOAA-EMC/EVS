@@ -748,6 +748,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     date_start_string = date_range[0].strftime('%d %b %Y')
     date_end_string = date_range[1].strftime('%d %b %Y')
     metric_string = metric_long_name
+    print(level)
     if str(level).upper() in ['CEILING', 'TOTAL', 'PBL']:
         if str(level).upper() == 'CEILING':
             level_string = ''
@@ -773,7 +774,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         else:
             level_string = ''
             level_savename = f'{level}'
-    elif str(verif_type).lower() in ['sfc', 'conus_sfc', 'polar_sfc', 'mrms','metar']:
+    elif str(verif_type).lower() in ['sfc', 'conus_sfc', 'polar_sfc', 'mrms', 'metar']:
         if 'Z' in str(level):
             if str(level).upper() == 'Z0':
                 if str(var_long_name_key).upper() in ['MLSP', 'MSLET', 'MSLMA', 'PRMSL']:
@@ -790,10 +791,13 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
                 else:
                     level_string = f'{level_num}-m '
                     level_savename = f'{level}'
-        elif 'L' in str(level) or 'A' in str(level):
+        elif 'L' in str(level): 
             level_string = ''
             level_savename = f'{level}'
-
+        elif 'A' in str(level): 
+            level_num = level.replace('A', '')
+            level_string = f'{level_num}-hour '
+            level_savename = f'A{level_num.zfill(2)}'
         else:
             level_string = f'{level} '
             level_savename = f'{level}'

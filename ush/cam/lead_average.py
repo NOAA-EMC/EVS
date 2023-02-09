@@ -1081,9 +1081,13 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                 else:
                     level_string = f'{level_num}-m '
                     level_savename = f'{level}'
-        elif 'L' in str(level) or 'A' in str(level):
+        elif 'L' in str(level):
             level_string = ''
             level_savename = f'{level}'
+        elif 'A' in str(level):
+            level_num = level.replace('A', '')
+            level_string = f'{level_num}-hour '
+            level_savename = f'A{level_num.zfill(2)}'
         else:
             level_string = f'{level} '
             level_savename = f'{level}'
