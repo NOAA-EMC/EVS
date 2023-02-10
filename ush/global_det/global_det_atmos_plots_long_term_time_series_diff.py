@@ -77,10 +77,14 @@ class LongTermTimeSeriesDiff:
         self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Logo directory: {self.logo_dir}")
         self.logger.debug(f"Time Range: {self.time_range}")
+        if self.time_range not in ['monthly', 'yearly']:
+            self.logger.error("Can only run time series differnce for "
+                              "time range values of monthly or yearly")
+            sys.exit(1)
         if self.time_range == 'monthly':
             self.logger.debug(f"Dates: {self.date_dt_list[0]:%Y%m}"
                               +f"-{self.date_dt_list[-1]:%Y%m}")
-        if self.time_range == 'yearly':
+        elif self.time_range == 'yearly':
             self.logger.debug(f"Dates: {self.date_dt_list[0]:%Y}"
                               +f"-{self.date_dt_list[-1]:%Y}")
         self.logger.debug(f"Model Group: {self.model_group}")
@@ -511,5 +515,7 @@ def main():
                                TIME_RANGE, DATE_DT_LIST, MODEL_GROUP,
                                MODEL_LIST, VAR_NAME, VAR_LEVEL, VX_MASK,
                                STAT, FORECAST_DAY_LIST, RUN_LENGTH_LIST)
+    p.make_long_term_time_series_diff()
+
 if __name__ == "__main__":
     main()
