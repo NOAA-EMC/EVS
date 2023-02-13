@@ -165,6 +165,19 @@ for avg_time_range in avg_time_range_list:
                         run_length_list
                     )
                     plot_ltlbd.make_long_term_lead_by_date()
+                    if stat == 'ACC' and var_name == 'HGT' \
+                            and model_group == 'all_models':
+                        import global_det_atmos_plots_long_term_useful_forecast_days \
+                            as gdap_ltufd
+                        plot_ltufd = gdap_ltufd.LongTermUsefulForecastDays(
+                            logger, COMINtime_range_stats,
+                            avg_time_range_g2g_dir,
+                            os.path.join(FIXevs, 'logos'), avg_time_range,
+                            all_dt_list, model_group, model_list, var_name,
+                            var_level, vx_mask, stat, forecast_day_list,
+                            ['allyears']
+                        )
+                        plot_ltufd.make_long_term_useful_forecast_days()
                 elif avg_time_range == 'yearly':
                     import global_det_atmos_plots_long_term_annual_mean \
                         as gdap_ltam
