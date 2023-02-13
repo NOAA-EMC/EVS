@@ -84,6 +84,9 @@ class PlotSpecs:
             self.fig_subplot_right = 0.923
             self.fig_subplot_left = 0.15
             self.fig_title_size = 18
+            if self.plot_type == 'long_term_annual_mean':
+                self.fig_subplot_left = 0.1
+                self.fig_subplot_right = 0.9
         elif self.plot_type == 'stat_by_level':
             self.fig_size = (16., 16.)
             self.fig_subplot_top = 0.925
