@@ -71,7 +71,7 @@ plot_info_dict = {'HGT': {'level_list': ['P1000', 'P500'],
                                 'stat_list': ['ME', 'RMSE']}}
 for avg_time_range in avg_time_range_list:
     # Set forecast days to plot
-    forecast_day_list = [str(x) for x in np.arange(1,11,1)]
+    forecast_day_list = [str(x) for x in np.arange(0,11,1)]
     # Set run lengths to plot
     run_length_list = ['allyears', 'past10years']
     # Set COMIN directory
@@ -155,6 +155,16 @@ for avg_time_range in avg_time_range_list:
                         run_length_list
                     )
                     plot_lttsd.make_long_term_time_series_diff()
+                    import global_det_atmos_plots_long_term_lead_by_date \
+                        as gdap_ltlbd
+                    plot_ltlbd = gdap_ltlbd.LongTermLeadByDate(
+                        logger, COMINtime_range_stats, avg_time_range_g2g_dir,
+                        os.path.join(FIXevs, 'logos'), avg_time_range,
+                        all_dt_list, model_group, model_list, var_name,
+                        var_level, vx_mask, stat, forecast_day_list,
+                        run_length_list
+                    )
+                    plot_ltlbd.make_long_term_lead_by_date()
                 elif avg_time_range == 'yearly':
                     import global_det_atmos_plots_long_term_annual_mean \
                         as gdap_ltam
