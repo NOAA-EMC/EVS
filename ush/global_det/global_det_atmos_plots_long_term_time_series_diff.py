@@ -78,8 +78,8 @@ class LongTermTimeSeriesDiff:
         self.logger.debug(f"Logo directory: {self.logo_dir}")
         self.logger.debug(f"Time Range: {self.time_range}")
         if self.time_range not in ['monthly', 'yearly']:
-            self.logger.error("Can only run time series differnce for "
-                              "time range values of monthly or yearly")
+            self.logger.error("CAN ONLY RUN TIME SERIES DIFFERENCE FOR "
+                              +"TIME RANGE VALUES OF monthly OR yearly")
             sys.exit(1)
         if self.time_range == 'monthly':
             self.logger.debug(f"Dates: {self.date_dt_list[0]:%Y%m}"
