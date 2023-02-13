@@ -268,7 +268,8 @@ class LongTermTimeSeriesDiff:
                     +f"({var_units})\n"
                     +f"valid {dates_for_title} {model_hour}, "
                     +f"Forecast Day {forecast_day} (Hour {forecast_hour})\n"
-                    +f"{run_length_running_mean} Month Running Mean"
+                    +f"{run_length_running_mean} "
+                    +f"{self.time_range.replace('ly','').title()} Running Mean"
                 )
                 ax1.grid(True)
                 ax1.set_xlim([run_length_date_dt_list[0],
