@@ -17,27 +17,27 @@ for VERIF_TYPE in graphics[COMPONENT][VERIF_CASE]:
         for PLOT_TYPE in graphics[COMPONENT][VERIF_CASE][VERIF_TYPE][MODELS]:
             plot_type_settings = graphics[COMPONENT][VERIF_CASE][VERIF_TYPE][MODELS][PLOT_TYPE]
             for EVAL_PERIOD in plot_type_settings['EVAL_PERIODS']:
-                if plot_type_settings['DATE_TYPE'] == 'VALID':
-                    ANTI_DATE_TYPE = 'INIT'
-                    FCST_HOURS = plot_type_settings['FCST_VALID_HOURS']
-                    if plot_type_settings['FCST_INIT_HOURS']:
-                        ANTI_FCST_HOURS = plot_type_settings['FCST_INIT_HOURS']
-                    else:
-                        ANTI_FCST_HOURS = plot_type_settings['FCST_VALID_HOURS']
-                elif plot_type_settings['DATE_TYPE'] == 'INIT':
-                    ANTI_DATE_TYPE = 'VALID'
-                    FCST_HOURS = plot_type_settings['FCST_INIT_HOURS']
-                    if plot_type_settings['FCST_VALID_HOURS']:
-                        ANTI_FCST_HOURS = plot_type_settings['FCST_VALID_HOURS']
-                    else:
-                        ANTI_FCST_HOURS = plot_type_settings['FCST_INIT_HOURS']
-                else:
-                    raise ValueError(f"Invalid DATE_TYPE: {plot_type_settings['DATE_TYPE']}")
-                    sys.exit(1)
-                for FCST_HOUR in FCST_HOURS:
-                    for ANTI_FCST_HOUR in ANTI_FCST_HOURS:
-                        for LINE_TYPE in plot_type_settings['VARIABLES']:
-                            for VARIABLE in plot_type_settings['VARIABLES'][LINE_TYPE]:
+                for LINE_TYPE in plot_type_settings['VARIABLES']:
+                    for VARIABLE in plot_type_settings['VARIABLES'][LINE_TYPE]:
+                        if plot_type_settings['DATE_TYPE'] == 'VALID':
+                            ANTI_DATE_TYPE = 'INIT'
+                            FCST_HOURS = plot_type_settings['FCST_VALID_HOURS']
+                            if plot_type_settings['FCST_INIT_HOURS']:
+                                ANTI_FCST_HOURS = plot_type_settings['FCST_INIT_HOURS']
+                            else:
+                                ANTI_FCST_HOURS = plot_type_settings['FCST_VALID_HOURS']
+                        elif plot_type_settings['DATE_TYPE'] == 'INIT':
+                            ANTI_DATE_TYPE = 'VALID'
+                            FCST_HOURS = plot_type_settings['FCST_INIT_HOURS']
+                            if plot_type_settings['FCST_VALID_HOURS']:
+                                ANTI_FCST_HOURS = plot_type_settings['FCST_VALID_HOURS']
+                            else:
+                                ANTI_FCST_HOURS = plot_type_settings['FCST_INIT_HOURS']
+                        else:
+                            raise ValueError(f"Invalid DATE_TYPE: {plot_type_settings['DATE_TYPE']}")
+                            sys.exit(1)
+                        for FCST_HOUR in FCST_HOURS:
+                            for ANTI_FCST_HOUR in ANTI_FCST_HOURS:
                                 for FCST_LEAD in plot_type_settings['VARIABLES'][LINE_TYPE][VARIABLE]['FCST_LEADS']:
                                     for STATS in plot_type_settings['VARIABLES'][LINE_TYPE][VARIABLE]['STATSs']: 
                                         for thresh_idx, FCST_THRESH in enumerate(plot_type_settings['VARIABLES'][LINE_TYPE][VARIABLE]['FCST_THRESHs']):

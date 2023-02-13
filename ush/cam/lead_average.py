@@ -1018,7 +1018,9 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     # Title
     domain = df['VX_MASK'].tolist()[0]
     var_savename = df['FCST_VAR'].tolist()[0]
-    if str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+    if 'APCP' in var_savename.upper():
+        var_savename = 'APCP'
+    elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
         var_savename = 'HPBL'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['MSLET','MSLMA','PRMSL']:
         var_savename = 'MSLET'
