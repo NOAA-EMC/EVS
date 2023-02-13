@@ -164,7 +164,7 @@ class LongTermAnnualMean:
                              +f"{run_length_date_list[0]}-"
                              +f"{run_length_date_list[-1]}")
             self.logger.debug("Creating annual mean plot")
-            # Make time series plots for each forecast day with differences
+            # Make annual mean
             plot_specs_ltam = PlotSpecs(self.logger,
                                          'long_term_annual_mean')
             plot_specs_ltam.set_up_plot()
