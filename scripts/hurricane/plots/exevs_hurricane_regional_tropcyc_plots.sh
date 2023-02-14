@@ -73,7 +73,7 @@ export PLOTDATA=${STORMroot}
 #export RUN="tropcyc"
 export img_quality="low"
 
-export fhr_list="0,12,24,36,48,60,72,84,96,108,120"
+export fhr_list="0,6,12,18,24,30,36,42,48,54,60,66,72,78,84,90,96,102,108,114,120,126"
 export model_tmp_atcf_name_list="MD01,MD02,MD03,MD04"
 export model_plot_name_list="GFS,HWRF,HMON,CTCX"
 export plot_CI_bars="NO"
@@ -141,7 +141,7 @@ export PLOTDATA=${metTCcomout}
 #export RUN="tropcyc"
 export img_quality="low"
 
-export fhr_list="0,12,24,36,48,60,72,84,96,108,120"
+export fhr_list="0,6,12,18,24,30,36,42,48,54,60,66,72,78,84,90,96,102,108,114,120,126"
 export model_tmp_atcf_name_list="MD01,MD02,MD03,MD04"
 export model_plot_name_list="GFS,HWRF,HMON,CTCX"
 export plot_CI_bars="NO"
