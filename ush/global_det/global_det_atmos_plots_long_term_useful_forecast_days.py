@@ -67,12 +67,12 @@ class LongTermUsefulForecastDays:
         self.forecast_day_list = forecast_day_list
         self.run_length_list = run_length_list
 
-    def make_long_term_useful_forecast_days(self):
+    def make_long_term_useful_forecast_days_time_series(self):
         """! Create the long term useful forecast days graphics
              Args:
              Returns:
         """
-        self.logger.info(f"Creating long term time series difference...")
+        self.logger.info(f"Creating long term useful forecast day time series...")
         self.logger.debug(f"Input directory: {self.input_dir}")
         self.logger.debug(f"Output directory: {self.output_dir}")
         self.logger.debug(f"Logo directory: {self.logo_dir}")
@@ -221,18 +221,23 @@ class LongTermUsefulForecastDays:
             for model in self.model_list:
                 for ufd_thresh \
                         in run_length_model_group_useful_fday_df.columns:
-                    model_ufd_thresh = (run_length_model_group_useful_fday_df\
-                                        .loc[(model)][ufd_thresh]\
-                                        .to_numpy(dtype=float))
+                    model_ufd_thresh = np.ma.masked_invalid(
+                        run_length_model_group_useful_fday_df\
+                        .loc[(model)][ufd_thresh].to_numpy(dtype=float)
+                    )
                     for m in range(len(model_ufd_thresh)):
                         start = m-int(run_length_running_mean/2)
                         end = m+int(run_length_running_mean/2)
                         if start >= 0 and end < len(model_ufd_thresh):
-                            run_length_model_group_useful_fday_running_mean_df\
-                            .loc[(model,run_length_date_list[m])]\
-                            [ufd_thresh] = (
-                                model_ufd_thresh[start:end+1].mean()
-                            )
+                            if len(model_ufd_thresh[start:end+1].compressed()) \
+                                    >= round(0.75
+                                             *len(model_ufd_thresh\
+                                                  [start:end+1])):
+                                run_length_model_group_useful_fday_running_mean_df\
+                                .loc[(model,run_length_date_list[m])]\
+                                [ufd_thresh] = (
+                                    model_ufd_thresh[start:end+1].mean()
+                                )
             # Make time series for each model
             plot_specs_ts = PlotSpecs(self.logger, 'time_series')
             plot_specs_ts.set_up_plot()
@@ -287,6 +292,7 @@ class LongTermUsefulForecastDays:
                     +f"{self.time_range.replace('ly','').title()} Running Mean"
                 )
                 ax.grid(True)
+                ax.set_xlabel('Year')
                 ax.set_xlim([run_length_date_dt_list[0],
                              run_length_date_dt_list[-1]])
                 if self.time_range == 'monthly':
@@ -345,6 +351,123 @@ class LongTermUsefulForecastDays:
                 plt.savefig(image_name)
                 plt.clf()
                 plt.close('all')
+            # Make time series for models for two thresholds
+            all_model_plot_settings_dict = (
+                plot_specs_ts.get_model_plot_settings()
+            )
+            if self.stat == 'ACC':
+                ufd_two_thresh = ['0.6', '0.8']
+            self.logger.debug("Creating time series plot for "
+                              +f"{self.model_group} useful forecast days, where "
+                              +f"{self.stat} is "
+                              +f"{ufd_two_thresh[0]} and {ufd_two_thresh[1]}")
+            image_name = os.path.join(
+                output_image_dir,
+                f"evs.global_det.{self.model_group}.{self.stat}".lower()
+                +f"_eq{ufd_two_thresh[0].replace('.','p')}_".lower()
+                +f"eq{ufd_two_thresh[1].replace('.','p')}.".lower()
+                +f"{self.var_name}_{self.var_level}.{run_length}.".lower()
+                +f"useful_fcst_days_timeseries_{self.time_range}_"
+                +f"{model_hour.replace(' ', '').replace(',','')}.".lower()
+                +f"g004_{self.vx_mask}.png".lower()
+            )
+            fig, ax = plt.subplots(1,1,figsize=(plot_specs_ts.fig_size[0],
+                                                plot_specs_ts.fig_size[1]))
+            if self.time_range == 'monthly':
+                dates_for_title = (
+                    f"{run_length_date_dt_list[0]:%b%Y}"
+                    +f"-{run_length_date_dt_list[-1]:%b%Y}"
+                )
+            elif self.time_range == 'yearly':
+                dates_for_title = (
+                    f"{run_length_date_dt_list[0]:%Y}"
+                    +f"-{run_length_date_dt_list[-1]:%Y}"
+                )
+            fig.suptitle(
+                    f"Forecast Days Where "
+                    +plot_specs_ts.get_stat_plot_name(self.stat)+' Equals '
+                    +f"{ufd_two_thresh[0]} and {ufd_two_thresh[1]}\n"
+                    +plot_specs_ts.get_var_plot_name(self.var_name,
+                                                     self.var_level)+" "
+                    +f"({var_units}), G004/"
+                    +plot_specs_ts.get_vx_mask_plot_name(self.vx_mask)+'\n'
+                    +f"valid {dates_for_title} {model_hour}\n"
+                    +f"Dotted Line: {self.time_range.title()} Mean, "
+                    +f"Solid Line: {run_length_running_mean} "
+                    +f"{self.time_range.replace('ly','').title()} Running Mean"
+                )
+            ax.grid(True)
+            ax.set_xlabel('Year')
+            ax.set_xlim([run_length_date_dt_list[0],
+                         run_length_date_dt_list[-1]])
+            if self.time_range == 'monthly':
+                ax.set_xticks(run_length_date_dt_list[::24])
+                ax.xaxis.set_minor_locator(md.MonthLocator())
+            elif self.time_range == 'yearly':
+                ax.set_xticks(run_length_date_dt_list[:2])
+            ax.xaxis.set_major_formatter(md.DateFormatter('%Y'))
+            ax.set_ylabel('Forecast Day')
+            ax.set_yticks(range(0,11,1))
+            ax.set_ylim([0, 10])
+            if plot_left_logo:
+                left_logo_img = fig.figimage(
+                    left_logo_img_array, left_logo_xpixel_loc,
+                    left_logo_ypixel_loc, zorder=1,
+                    alpha=right_logo_alpha
+                )
+                left_logo_img.set_visible(True)
+            if plot_right_logo:
+                right_logo_img = fig.figimage(
+                    right_logo_img_array, right_logo_xpixel_loc,
+                    right_logo_ypixel_loc, zorder=1,
+                    alpha=right_logo_alpha
+                )
+            for model in self.model_list:
+                model_plot_settings_dict = (
+                    all_model_plot_settings_dict[model]
+                )
+                for ufd_thresh in ufd_two_thresh:
+                    ax.plot_date(
+                        run_length_date_dt_list,
+                        np.ma.masked_invalid(
+                            run_length_model_group_useful_fday_df\
+                            .loc[(model)][[ufd_thresh]].to_numpy(dtype=float)
+                        ),
+                        color=model_plot_settings_dict['color'],
+                        linestyle='dotted', linewidth=1,
+                        marker=None, markersize=0
+                    )
+                    if ufd_thresh == ufd_two_thresh[0]:
+                        model_label = model
+                    else:
+                        model_label = '_nolegend_'
+                    ax.plot_date(
+                        run_length_date_dt_list,
+                        np.ma.masked_invalid(
+                            run_length_model_group_useful_fday_running_mean_df\
+                            .loc[(model)][[ufd_thresh]].to_numpy(dtype=float)
+                        ),
+                        color=model_plot_settings_dict['color'],
+                        linestyle='solid', linewidth=2,
+                        marker=None, markersize=0, label=model_label
+                    )
+            if self.stat == 'ACC':
+                ax.text(1.01, 0.83, f"{self.stat}={ufd_two_thresh[0]}",
+                        fontsize=11, transform=ax.transAxes)
+                ax.text(1.01, 0.63, f"{self.stat}={ufd_two_thresh[1]}",
+                        fontsize=11, transform=ax.transAxes)
+            if len(ax.lines) != 0:
+                legend = ax.legend(
+                    bbox_to_anchor=(plot_specs_ts.legend_bbox[0],
+                                    plot_specs_ts.legend_bbox[1]),
+                    loc = plot_specs_ts.legend_loc,
+                    ncol = len(self.model_list),
+                    fontsize = plot_specs_ts.legend_font_size
+                )
+            self.logger.info("Saving image as "+image_name)
+            plt.savefig(image_name)
+            plt.clf()
+            plt.close('all')
 
 def main():
     # Need settings
@@ -389,7 +512,7 @@ def main():
                                    TIME_RANGE, DATE_DT_LIST, MODEL_GROUP,
                                    MODEL_LIST, VAR_NAME, VAR_LEVEL, VX_MASK,
                                    STAT, FORECAST_DAY_LIST, RUN_LENGTH_LIST)
-    p.make_long_term_useful_forecast_days()
+    p.make_long_term_useful_forecast_days_time_series()
 
 if __name__ == "__main__":
     main()

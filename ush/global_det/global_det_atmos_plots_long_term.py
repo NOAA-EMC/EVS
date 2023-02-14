@@ -177,7 +177,7 @@ for avg_time_range in avg_time_range_list:
                             var_level, vx_mask, stat, forecast_day_list,
                             ['allyears']
                         )
-                        plot_ltufd.make_long_term_useful_forecast_days()
+                        plot_ltufd.make_long_term_useful_forecast_days_time_series()
                 elif avg_time_range == 'yearly':
                     import global_det_atmos_plots_long_term_annual_mean \
                         as gdap_ltam
