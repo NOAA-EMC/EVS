@@ -1,0 +1,8 @@
+SHELL=/bin/bash -l
+
+NEWHOME='/path/to/croncodes'
+
+# Run the global_ens wave EVS prep, stats, plots, and copy the plots to emcrzdm
+0 09 * * * ${NEWHOME}/scripts/gefs_wave_evs.sh 1>${NEWHOME}/logs/gefs_wave_EVS.log 2>&1
+
+# end of mycrontab
