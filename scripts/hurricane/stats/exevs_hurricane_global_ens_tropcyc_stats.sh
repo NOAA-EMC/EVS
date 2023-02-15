@@ -1,7 +1,7 @@
 #!/bin/bash
 export PS4=' + exevs_hurricane_global_ens_tropcyc_stats.sh line $LINENO: '
 
-export MetOnMachine=/apps/ops/prod/libs/intel/19.1.3.304/met/11.0.0
+export MetOnMachine=$MET_ROOT
 export LEAD_List="-lead 000000 -lead 120000 -lead 240000 -lead 360000 -lead 480000 -lead 600000 -lead 720000 -lead 840000 -lead 960000 -lead 1080000 -lead 1200000 -lead 1320000 -lead 1440000 -lead 1560000 -lead 1680000"
 
 export stormYear=${YYYY}
