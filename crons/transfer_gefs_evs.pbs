@@ -4,7 +4,7 @@
 #PBS -q dev_transfer 
 #PBS -A VERF-DEV
 #PBS -l walltime=01:00:00
-#PBS -o /lfs/h2/emc/vpppg/noscrub/deanna.spindler/CronLogs/transfer_gefs_EVS.log
+#PBS -o /path/to/cron/logs/transfer_gefs_EVS.log
 #PBS -j oe
 
-/lfs/h2/emc/vpppg/noscrub/deanna.spindler/VPPPG/EMC_waves-prod-gen/dataproc/scripts/transfer_evs.sh 'global_ens' 'gefs'
+/path/to/cron/scripts/transfer_evs.sh 'global_ens' 'gefs'
