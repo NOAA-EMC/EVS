@@ -215,7 +215,7 @@ class LongTermLeadByDate:
                 output_image_dir,
                 f"evs.global_det.{self.model_group}.{self.stat}.".lower()
                 +f"{self.var_name}_{self.var_level}.".lower()
-                +f"{run_length}.leaddate_{self.time_range}_".lower()
+                +f"{run_length}_{self.time_range}.leaddate_".lower()
                 +f"{model_hour.replace(' ', '').replace(',','')}".lower()
                 +f".g004_{self.vx_mask}.png".lower()
             )
@@ -223,13 +223,13 @@ class LongTermLeadByDate:
             if nsubplots == 1:
                 gs_row, gs_col = 1, 1
                 gs_hspace, gs_wspace = 0, 0
-                gs_bottom, gs_top = 0.225, 0.85
+                gs_bottom, gs_top = 0.225, 0.82
                 cbar_bottom = 0.075
                 cbar_height = 0.02
             elif nsubplots == 2:
                 gs_row, gs_col = 1, 2
                 gs_hspace, gs_wspace = 0, 0.1
-                gs_bottom, gs_top = 0.225, 0.85
+                gs_bottom, gs_top = 0.225, 0.82
                 cbar_bottom = 0.075
                 cbar_height = 0.02
             elif nsubplots > 2 and nsubplots <= 4:
@@ -302,10 +302,14 @@ class LongTermLeadByDate:
                     right_logo_ypixel_loc, zorder=1, alpha=right_logo_alpha
                 )
                 right_logo_img.set_visible(True)
+            shape = [len(self.model_list),
+                     len(run_length_date_list),
+                     len(self.forecast_day_list)]
             model_group_running_mean = np.ma.masked_invalid(
-                run_length_model_group_running_mean_df[
-                    ['DAY'+str(x) for x in self.forecast_day_list]
-                ].to_numpy(dtype=float)
+                run_length_model_group_running_mean_df\
+                    .loc[[m for m in self.model_list]]
+                    [['DAY'+str(x) for x in self.forecast_day_list]]\
+                    .to_numpy(dtype=float).reshape(shape)
             )
             model0_running_mean = np.ma.masked_invalid(
                 run_length_model_group_running_mean_df\
@@ -317,9 +321,33 @@ class LongTermLeadByDate:
              have_subplotsN_levs, subplotsN_levs) = (
                 plot_specs_ltlbd.get_plot_contour_levels(
                     self.stat, model0_running_mean,
-                    model_group_running_mean[1:,:]
+                    model_group_running_mean[1:,:,:]
                 )
             )
+            # Get difference levels for bias
+            if self.stat in ['BIAS', 'ME', 'FBIAS']:
+                cmap_diff_original = plt.cm.bwr_r
+                colors_diff = cmap_diff_original(
+                    np.append(np.linspace(0,0.425,10), np.linspace(0.575,1,10))
+                )
+                subplotsN_cmap = (
+                    matplotlib.colors.LinearSegmentedColormap.from_list(
+                        'cmap_diff', colors_diff
+                    )
+                )
+                subplotsN_data = model_group_running_mean[1:,:,:]
+                subplot0_data = model0_running_mean
+                center_value = 0
+                spacing = 1.25
+                for N in range(len(subplotsN_data[:,0,0])):
+                    subplotN_data = (subplotsN_data[N,:,:] - subplot0_data)
+                    if not np.ma.masked_invalid(subplotN_data).mask.all():
+                        subplotsN_levs = (
+                            plot_specs_ltlbd.get_centered_contour_levels(
+                                subplotN_data, center_value, spacing
+                            )
+                        )
+                        break
             make_colorbar = False
             for model in self.model_list:
                 ax = plt.subplot(gs[self.model_list.index(model)])
@@ -359,56 +387,20 @@ class LongTermLeadByDate:
                             C0_fmt[lev] = label
                         ax.clabel(C0, C0.levels, fmt=C0_fmt, inline=True,
                                   fontsize=12.5)
-                        if self.stat in ['BIAS', 'ME', 'FBIAS'] \
-                                and not make_colorbar:
-                            make_colorbar = True
-                            cbar_CF = CF0
-                            cbar_ticks = CF0.levels
-                            cbar_label = plot_specs_ltlbd.get_stat_plot_name(
-                                self.stat
-                            )        
                 else:
-                    if self.stat in ['BIAS', 'ME',' FBIAS']:
-                        ax.set_title(model)
-                        subplotN_data = model_running_mean
-                    else:
-                        ax.set_title(model+'-'+self.model_list[0])
-                        subplotN_data = model_running_mean-model0_running_mean
+                    ax.set_title(model+'-'+self.model_list[0])
+                    subplotN_data = model_running_mean-model0_running_mean
                     if not subplotN_data.mask.all():
                         if have_subplotsN_levs:
                             CFN = ax.contourf(xmesh, ymesh, subplotN_data.T,
                                               levels=subplotsN_levs,
                                               cmap=subplotsN_cmap,
                                               extend='both')
-                        if self.stat in ['BIAS', 'ME', 'FBIAS']:
-                            CN = ax.contour(xmesh, ymesh, subplotN_data.T,
-                                            levels=CFN.levels, colors='k',
-                                            linewidths=1.0)
-                            CN_labels_list = []
-                            for lev in CN.levels:
-                                if str(lev).split('.')[1] == '0':
-                                    CN_labels_list.append(str(int(lev)))
-                                else:
-                                    CN_labels_list.append(
-                                        str(round(lev,3)).rstrip('0')
-                                    )
-                            CN_fmt = {}
-                            for lev, label in zip(CN.levels, CN_labels_list):
-                                CN_fmt[lev] = label
-                            ax.clabel(CN, CN.levels, fmt=CN_fmt, inline=True,
-                                      fontsize=12.5)
                         if not make_colorbar:
                             make_colorbar = True
                             cbar_CF = CFN
                             cbar_ticks = CFN.levels
-                            if self.stat in ['BIAS', 'ME', 'FBIAS']:
-                                cbar_label = (
-                                    plot_specs_ltlbd.get_stat_plot_name(
-                                        self.stat
-                                    )
-                                )
-                            else:
-                                cbar_label = 'Difference'
+                            cbar_label = 'Difference'
                 ax.set_xticks(forecast_day_float_list)
                 ax.set_xticklabels(self.forecast_day_list)
                 ax.set_xlim([forecast_day_float_list[0],

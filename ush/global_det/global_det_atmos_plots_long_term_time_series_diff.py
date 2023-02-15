@@ -213,8 +213,8 @@ class LongTermTimeSeriesDiff:
                 image_name = os.path.join(
                     output_image_dir,
                     f"evs.global_det.{self.model_group}.{self.stat}.".lower()
-                    +f"{self.var_name}_{self.var_level}.{run_length}.".lower()
-                    +f"timeseriesdiff_{self.time_range}_"
+                    +f"{self.var_name}_{self.var_level}.{run_length}_".lower()
+                    +f"{self.time_range}.timeseriesdiff_".lower()
                     +f"{model_hour.replace(' ', '').replace(',','')}_".lower()
                     +f"f{forecast_hour.zfill(3)}.g004_{self.vx_mask}.png".lower()
                 )
@@ -454,11 +454,11 @@ class LongTermTimeSeriesDiff:
                             )
                             ax1.set_ylim([y_axis_min, y_axis_max])
                             legend = ax1.legend(
-                                bbox_to_anchor=(plot_specs_la.legend_bbox[0],
-                                                plot_specs_la.legend_bbox[1]),
-                                loc = plot_specs_la.legend_loc,
-                                ncol = plot_specs_la.legend_ncol,
-                                fontsize = plot_specs_la.legend_font_size
+                                bbox_to_anchor=(plot_specs_lttsd.legend_bbox[0],
+                                                plot_specs_lttsd.legend_bbox[1]),
+                                loc = plot_specs_lttsd.legend_loc,
+                                ncol = plot_specs_lttsd.legend_ncol,
+                                fontsize = plot_specs_lttsd.legend_font_size
                             )
                             plt.draw()
                             inv = ax1.transData.inverted()

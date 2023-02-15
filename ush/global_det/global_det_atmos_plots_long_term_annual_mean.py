@@ -184,7 +184,7 @@ class LongTermAnnualMean:
                 output_image_dir,
                 f"evs.global_det.{self.model_group}.{self.stat}.".lower()
                 +f"{self.var_name}_{self.var_level}.".lower()
-                +f"{run_length}.annualmean_".lower()
+                +f"{run_length}_{self.time_range}.annualmean_".lower()
                 +f"{model_hour.replace(' ', '').replace(',','')}".lower()
                 +f".g004_{self.vx_mask}.png".lower()
             )

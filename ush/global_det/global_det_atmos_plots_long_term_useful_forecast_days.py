@@ -262,8 +262,9 @@ class LongTermUsefulForecastDays:
                 image_name = os.path.join(
                     output_image_dir,
                     f"evs.global_det.{model}.{self.stat}.".lower()
-                    +f"{self.var_name}_{self.var_level}.{run_length}.".lower()
-                    +f"useful_fcst_days_timeseries_{self.time_range}_"
+                    +f"{self.var_name}_{self.var_level}.".lower()
+                    +f"{run_length}_{self.time_range}.".lower()
+                    +f"useful_fcst_days_timeseries_".lower()
                     +f"{model_hour.replace(' ', '').replace(',','')}.".lower()
                     +f"g004_{self.vx_mask}.png".lower()
                 )
@@ -363,11 +364,10 @@ class LongTermUsefulForecastDays:
                               +f"{ufd_two_thresh[0]} and {ufd_two_thresh[1]}")
             image_name = os.path.join(
                 output_image_dir,
-                f"evs.global_det.{self.model_group}.{self.stat}".lower()
-                +f"_eq{ufd_two_thresh[0].replace('.','p')}_".lower()
-                +f"eq{ufd_two_thresh[1].replace('.','p')}.".lower()
-                +f"{self.var_name}_{self.var_level}.{run_length}.".lower()
-                +f"useful_fcst_days_timeseries_{self.time_range}_"
+                f"evs.global_det.{self.model_group}.{self.stat}.".lower()
+                +f"{self.var_name}_{self.var_level}.".lower()
+                +f"{run_length}_{self.time_range}.".lower()
+                +f"useful_fcst_days_timeseries_".lower()
                 +f"{model_hour.replace(' ', '').replace(',','')}.".lower()
                 +f"g004_{self.vx_mask}.png".lower()
             )
