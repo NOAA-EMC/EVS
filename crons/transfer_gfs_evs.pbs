@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#PBS -N xfer_gfs_evs
+#PBS -q dev_transfer 
+#PBS -A VERF-DEV
+#PBS -l walltime=01:00:00
+#PBS -o /path/to/cron/logs/transfer_gfs_EVS.log
+#PBS -j oe
+
+/path/to/cron/scripts/transfer_evs.sh 'global_det' 'gfs'
