@@ -81,6 +81,7 @@ export COMPONENT=global_det
 export RUN=long_term
 
 # Set archive
+export COMINdailystats=$COMIN/stats/$COMPONENT
 export COMINmonthlystats=$COMIN/stats/$COMPONENT/$RUN/monthly_means
 export COMINyearlystats=$COMIN/stats/$COMPONENT/$RUN/annual_means
 
