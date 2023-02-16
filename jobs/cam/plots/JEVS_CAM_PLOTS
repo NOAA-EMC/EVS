@@ -54,6 +54,7 @@ else
 fi
 
 # Define COMIN/COMOUT variables:
+export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
 export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 
