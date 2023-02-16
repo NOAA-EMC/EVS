@@ -36,9 +36,10 @@ export NET=evs
 export STEP=plots
 export COMPONENT=global_det
 export RUN=long_term
+export PDY=$(date '+%Y%m%d')
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com
 export COMIN=$COMROOT/$NET/$evs_ver
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDY
 export OUTPUTROOT=/lfs/h2/emc/stmp/$USER/evs_global_det_atmos_test
 
 ############################################################

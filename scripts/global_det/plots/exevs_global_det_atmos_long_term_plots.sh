@@ -17,7 +17,7 @@ else
 fi
 echo "RUN MODE:$evs_run_mode"
 if [ $evs_run_mode = production ] && [ $envir = prod ]; then
-    echo "exevs_global_det_atmos_long_term_plotss.sh does run in production; exit"
+    echo "exevs_global_det_atmos_long_term_plots.sh does run in production; exit"
     exit 0
 fi
 
@@ -29,6 +29,13 @@ status=$?
 echo
 
 # Copy files to desired location
-#if [ $SENDCOM = YES ]; then
-#    # Make and copy tar file
-#fi
+if [ $SENDCOM = YES ]; then
+    # Make and copy tar file
+    large_tar_file=${DATA}/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATEYYYY}${VDATEmm}.tar
+    if [ $VDATEmm = 12 ]; then
+        tar -cvf ${large_tar_file} -C ${DATA}/${VDATEYYYY}_${VDATEmm}_ACC/images . -C ${DATA}/monthly/grid2grid/images . -C ${DATA}/yearly/grid2grid/images .
+    else
+        tar -cvf ${large_tar_file} -C ${DATA}/${VDATEYYYY}_${VDATEmm}_ACC/images . -C ${DATA}/monthly/grid2grid/images .
+    fi
+    cp -v $large_tar_file $COMOUT/.
+fi
