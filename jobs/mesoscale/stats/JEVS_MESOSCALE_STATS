@@ -4,9 +4,11 @@
 #
 # NAME: JEVS_MESOSCALE_STATS
 # CONTRIBUTOR(S): RS, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# CONTRIBUTOR(S): BZ, binbin.zhou@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Use ECF environment variables to define and run an EVS job
 # DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_nam_grid2obs_stats.ecf
 # DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_grid2obs_stats.ecf
+# DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_sref_grid2obs_stats.ecf
 #
 # =============================================================================
 
@@ -19,120 +21,106 @@ set -xa
 echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 
 # Shell Processing Variables
-  export PS4='$SECONDS + '
-  date
+export PS4='$SECONDS + '
+date
 
 # LSF id (jobid) and Temp Directories
-  export pid=$$
-
-  export SENDCOM=${SENDCOM:-YES}
-  export SENDDBN=${SENDDBN:-YES}
-  export SENDECF=${SENDECF:-YES}
-
-  if [ $MODELNAME = sref ]; then
-    export cycle=t${cyc}z
-    export DATA_IN=${DATA_IN:-$DATAROOT}
-    jobid=evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$ 
-  fi
-
-  if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
+export pid=$$
+jobid=evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$ 
 # Determine Job Output Name on System
-    export pgmout="OUTPUT.${pid}"
+export pgmout="OUTPUT.${pid}"
+
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+
+
 # General I/O Settings
 # in production, the following will be set to DATAROOT
-#   export DATA_IN=${DATA_IN:-$DATAROOT}
-    export DATA_IN=${DATA_IN:-$DATAROOTtmp}
-    export DATA=$DATA_IN/${jobid}
-  fi
+#export DATA_IN=${DATA_IN:-$DATAROOT} #sref
+export DATA_IN=${DATA_IN:-$DATAROOTtmp} #nam/rap
+export DATA=$DATA_IN/${jobid}
+rm -rf $DATA
+mkdir -p $DATA
+cd $DATA
 
-  rm -rf $DATA
-  mkdir -p $DATA
-  cd $DATA
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
+export FIXevs=${FIXevs:-/lfs/h1/ops/prod/packages/evs.${evs_ver}/fix}
+export MASKS=$FIXevs/masks
 
-  if [ $MODELNAME = sref ]; then
-    setpdy.sh 
-    . $DATA/PDY
-    export VDATE=${VDATE:-$PDYm2}
-  fi
-
-
- if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
+if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
 # in production the following will be set using compath.py
   export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
   export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
   export COMINrap=${COMINrap:-$(compath.py ${envir}/com/rap/${rap_ver})}
   export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
   export COMINobs=$COMINobsproc
- fi
 
-
- if [ $MODELNAME = sref ]; then
-  export COMIN=${COMIN:-$(compath.py  $NET/$evs_ver)}/prep/$COMPONENT/$RUN
-  export COMINsref=${COMINsref:-$(compath.py  sref/$sref_ver)}
-  export COMINprepbufr=${COMINprepbufr:-$(compath.py  obsproc/${obsproc_ver})}
-  export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
-  export COMINsrefmean=${COMINsrefmean:-$(compath.py  $NET/$evs_ver)}/prep/$COMPONENT
- fi
-
-
- if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
 # in production, the following will be set to the approp. COMOUT dir
   export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
   export COMOUTfinal=$COMOUT/${MODELNAME}.${VDATE}
   export COMOUTsmall=${COMOUTsmall:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE})}
 
   source $config
- fi
+elif [ $MODELNAME = sref ]; then
+  export cycle=t${cyc}z
 
+  setpdy.sh 
+  . $DATA/PDY
+  export VDATE=${VDATE:-$PDYm2}
 
- if [ $MODELNAME = sref ]; then
+  export COMIN=${COMIN:-$(compath.py  $NET/$evs_ver)}/prep/$COMPONENT/$RUN
+  export COMINsref=${COMINsref:-$(compath.py  sref/$sref_ver)}
+  export COMINprepbufr=${COMINprepbufr:-$(compath.py  obsproc/${obsproc_ver})}
+  export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
+  export COMINsrefmean=${COMINsrefmean:-$(compath.py  $NET/$evs_ver)}/prep/$COMPONENT
+
   export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
   export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
   mkdir -p $COMOUTfinal $COMOUTsmall
-
-  export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
-  export EXECevs=${EXECevs:-$HOMEevs/exec}
-  export PARMevs=${PARMevs:-$HOMEevs/parm}
-  export USHevs=${USHevs:-$HOMEevs/ush}
-  export FIXevs=${FIXevs:-/lfs/h1/ops/prod/packages/evs.${evs_ver}/fix}
-  export MASKS=$FIXevs/masks
- fi
+else
+  echo "Improper MODELNAME: $MODELNAME"
+  exit
+fi
 
 
 # Execute the Script
-  $SCRIPTSevs/$COMPONENT/$STEP/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
-  export err=$?; err_chk
+$SCRIPTSevs/$COMPONENT/$STEP/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+export err=$?; err_chk
 
 
 
- if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
-# Copy files to desired location
-# all commands to copy output files into the correct EVS COMOUT directory
-  if [ $SENDCOM = YES ]; then
-    for MODEL_DIR_PATH in $MET_PLUS_OUT/gather_small/stat_analysis/$MODELNAME*; do
-        MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
-        mkdir -p $COMOUT/$MODEL_DIR
-        for FILE in $MODEL_DIR_PATH/*; do
-            cp -v $FILE $COMOUT/$MODEL_DIR/.
-        done
-    done
-    for MODEL_DIR_PATH in $MET_PLUS_OUT/raob/point_stat/$MODELNAME*; do
-        MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
-        mkdir -p $COMOUTsmall/$MODEL_DIR
-        for FILE in $MODEL_DIR_PATH/*; do
-            cp -v $FILE $COMOUTsmall/$MODEL_DIR/.
-        done
-    done
-  fi
- fi
+#  if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
+# # Copy files to desired location
+# # all commands to copy output files into the correct EVS COMOUT directory
+#   if [ $SENDCOM = YES ]; then
+#     for MODEL_DIR_PATH in $MET_PLUS_OUT/gather_small/stat_analysis/$MODELNAME*; do
+#         MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
+#         mkdir -p $COMOUT/$MODEL_DIR
+#         for FILE in $MODEL_DIR_PATH/*; do
+#             cp -v $FILE $COMOUT/$MODEL_DIR/.
+#         done
+#     done
+#     for MODEL_DIR_PATH in $MET_PLUS_OUT/raob/point_stat/$MODELNAME*; do
+#         MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
+#         mkdir -p $COMOUTsmall/$MODEL_DIR
+#         for FILE in $MODEL_DIR_PATH/*; do
+#             cp -v $FILE $COMOUTsmall/$MODEL_DIR/.
+#         done
+#     done
+#   fi
+#  fi
 
 # Clean Up
-  cat $pgmout
-  msg="JOB $job HAS COMPLETED NORMALLY."
-  postmsg "$jlogfile" "$msg"
-  if [ "$KEEPDATA" != "YES" ] ; then
-    cd $DATA_IN
-    rm -rf $DATA
-  fi
+cat $pgmout
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATA_IN
+  rm -rf $DATA
+fi
 
-  echo "END: $(basename ${BASH_SOURCE[0]})"
+echo "END: $(basename ${BASH_SOURCE[0]})"

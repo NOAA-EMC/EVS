@@ -46,28 +46,37 @@ for WVAR in $VAR_NAME_LIST; do
     cyc=$VHOUR
     
     if [ $cyc = 00 ] || [ $cyc = 06 ] || [ $cyc = 12 ] || [ $cyc = 18 ];  then
-      # echo "";    echo ${FCST_VAR1_NAME};    echo "check check 1"
       run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PB2NC_obsRAOB.conf 
       # export err=$?; err_chk
 
-      # echo "";    echo ${FCST_VAR1_NAME};    echo "check check 2"
       run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstMESOSCALE_obsRAOB.conf
       # export err=$?; err_chk
-
-      # mkdir -p $COMOUTsmall
-      # cp $DATA/point_stat/${modnam}${typtag}/* $COMOUTsmall
-      # cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
     fi
     
     if [ $cyc = 23 ];  then
       mkdir -p $COMOUTfinal
       run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstMESOSCALE_obsRAOB_GatherByDay.conf 
-
       # export err=$?; err_chk
-      # cat *ADPUPA >> *stat
-      # cp *stat $COMOUTfinal
     fi
   done
 done
+
+# Copy output files into the correct EVS COMOUT directory
+  if [ $SENDCOM = YES ]; then
+    for MODEL_DIR_PATH in $MET_PLUS_OUT/gather_small/stat_analysis/$MODELNAME*; do
+        MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
+        mkdir -p $COMOUT/$MODEL_DIR
+        for FILE in $MODEL_DIR_PATH/*; do
+            cp -v $FILE $COMOUT/$MODEL_DIR/.
+        done
+    done
+    for MODEL_DIR_PATH in $MET_PLUS_OUT/raob/point_stat/$MODELNAME*; do
+        MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
+        mkdir -p $COMOUTsmall/$MODEL_DIR
+        for FILE in $MODEL_DIR_PATH/*; do
+            cp -v $FILE $COMOUTsmall/$MODEL_DIR/.
+        done
+    done
+  fi
 
 exit
