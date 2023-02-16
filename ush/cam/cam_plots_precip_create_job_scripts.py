@@ -21,18 +21,18 @@ for VERIF_TYPE in graphics[COMPONENT][VERIF_CASE]:
                     for VARIABLE in plot_type_settings['VARIABLES'][LINE_TYPE]:
                         if plot_type_settings['DATE_TYPE'] == 'VALID':
                             ANTI_DATE_TYPE = 'INIT'
-                            FCST_HOURS = plot_type_settings['FCST_VALID_HOURS']
-                            if plot_type_settings['FCST_INIT_HOURS']:
-                                ANTI_FCST_HOURS = plot_type_settings['FCST_INIT_HOURS']
+                            FCST_HOURS = plot_type_settings['VARIABLES'][LINE_TYPE][VARIABLE]['FCST_VALID_HOURS']
+                            if plot_type_settings['VARIABLES'][LINE_TYPE][VARIABLE]['FCST_INIT_HOURS']:
+                                ANTI_FCST_HOURS = plot_type_settings['VARIABLES'][LINE_TYPE][VARIABLE]['FCST_INIT_HOURS']
                             else:
-                                ANTI_FCST_HOURS = plot_type_settings['FCST_VALID_HOURS']
+                                ANTI_FCST_HOURS = plot_type_settings['VARIABLES'][LINE_TYPE][VARIABLE]['FCST_VALID_HOURS']
                         elif plot_type_settings['DATE_TYPE'] == 'INIT':
                             ANTI_DATE_TYPE = 'VALID'
-                            FCST_HOURS = plot_type_settings['FCST_INIT_HOURS']
-                            if plot_type_settings['FCST_VALID_HOURS']:
-                                ANTI_FCST_HOURS = plot_type_settings['FCST_VALID_HOURS']
+                            FCST_HOURS = plot_type_settings['VARIABLES'][LINE_TYPE][VARIABLE]['FCST_INIT_HOURS']
+                            if plot_type_settings['VARIABLES'][LINE_TYPE][VARIABLE]['FCST_VALID_HOURS']:
+                                ANTI_FCST_HOURS = plot_type_settings['VARIABLES'][LINE_TYPE][VARIABLE]['FCST_VALID_HOURS']
                             else:
-                                ANTI_FCST_HOURS = plot_type_settings['FCST_INIT_HOURS']
+                                ANTI_FCST_HOURS = plot_type_settings['VARIABLES'][LINE_TYPE][VARIABLE]['FCST_INIT_HOURS']
                         else:
                             raise ValueError(f"Invalid DATE_TYPE: {plot_type_settings['DATE_TYPE']}")
                             sys.exit(1)

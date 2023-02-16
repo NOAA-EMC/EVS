@@ -401,7 +401,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         logger.info("========================================")
         print("Quitting due to missing data.  Check the log file for details.")
         return None
-
     models_renamed = []
     count_renamed = 1
     for requested_model in model_list:
@@ -465,11 +464,17 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
                 pivot_ci_upper.index
             ]
         )))
-        pivot_metric = pivot_metric[pivot_metric.index.isin(indices_in_common)]
-        pivot_ci_lower = pivot_ci_lower[pivot_ci_lower.index.isin(indices_in_common)]
-        pivot_ci_upper = pivot_ci_upper[pivot_ci_upper.index.isin(indices_in_common)]
-        if sample_equalization:
-            pivot_counts = pivot_counts[pivot_counts.index.isin(indices_in_common)]
+        if pivot_metric[pivot_metric.index.isin(indices_in_common)].empty:
+            e = ("Some confidence intervals are missing. Turning "
+                 + f"confidence intervals off to avoid empty pivot tables.")
+            logger.warning(e)
+            confidence_intervals = False
+        else:
+            pivot_metric = pivot_metric[pivot_metric.index.isin(indices_in_common)]
+            pivot_ci_lower = pivot_ci_lower[pivot_ci_lower.index.isin(indices_in_common)]
+            pivot_ci_upper = pivot_ci_upper[pivot_ci_upper.index.isin(indices_in_common)]
+            if sample_equalization:
+                pivot_counts = pivot_counts[pivot_counts.index.isin(indices_in_common)]
     x_vals = pivot_metric.index.astype(float).tolist()
     if unit_convert:
         x_vals = reference.unit_conversions[units]['formula'](
@@ -506,12 +511,19 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         y_vals_metric = np.array([y_vals_metric[i] for i in x_vals_argsort])
         y_vals_metric_mean = np.nanmean(y_vals_metric)
         if confidence_intervals:
-            y_vals_ci_lower = pivot_ci_lower[
-                str(model_list[m])
-            ].values
-            y_vals_ci_upper = pivot_ci_upper[
-                str(model_list[m])
-            ].values
+            if (str(model_list[m]) not in pivot_ci_lower 
+                    or str(model_list[m]) not in pivot_ci_upper):
+                e = ("Some confidence intervals are missing. Turning "
+                     + f"confidence intervals off to avoid indexing errors.")
+                logger.warning(e)
+                confidence_intervals = False
+            else:
+                y_vals_ci_lower = pivot_ci_lower[
+                    str(model_list[m])
+                ].values
+                y_vals_ci_upper = pivot_ci_upper[
+                    str(model_list[m])
+                ].values
         if not y_lim_lock:
             if np.any(y_vals_metric != np.inf):
                 y_vals_metric_min = np.nanmin(y_vals_metric[y_vals_metric != np.inf])
@@ -750,7 +762,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     date_start_string = date_range[0].strftime('%d %b %Y')
     date_end_string = date_range[1].strftime('%d %b %Y')
     metric_string = metric_long_name
-    print(level)
     if str(level).upper() in ['CEILING', 'TOTAL', 'PBL']:
         if str(level).upper() == 'CEILING':
             level_string = ''
