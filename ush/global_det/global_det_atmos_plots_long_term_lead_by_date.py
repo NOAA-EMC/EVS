@@ -326,7 +326,7 @@ class LongTermLeadByDate:
             )
             # Get difference levels for bias
             if self.stat in ['BIAS', 'ME', 'FBIAS']:
-                cmap_diff_original = plt.cm.bwr_r
+                cmap_diff_original = plt.cm.bwr
                 colors_diff = cmap_diff_original(
                     np.append(np.linspace(0,0.425,10), np.linspace(0.575,1,10))
                 )
