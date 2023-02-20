@@ -527,7 +527,7 @@ generate_stats_jobs_dict = {
                                    'met_config_overrides': ''},
                            'commands': [gda_util.metplus_command(
                                             'GridStat_fcstGLOBAL_DET_'
-                                            +'obs24hrCCPA_Nbrhd.conf'
+                                            +'obs3hrCCPA_Nbrhd.conf'
                                         )]},
         '3hrCCPA_Nbrhd4': {'env': {'nbhrd_list': "'39,41,43'",
                                    'met_config_overrides': ''},
