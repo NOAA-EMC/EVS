@@ -270,8 +270,8 @@ class TimeSeriesMultiFhr:
         else:
             xtick_intvl = int(len(plot_dates)/n_xticks)
         date_intvl = int((plot_dates[1]-plot_dates[0]).total_seconds())
-        stat_min = all_forecast_hour_stat_array.min()
-        stat_max = all_forecast_hour_stat_array.max()
+        stat_min = np.ma.masked_invalid(all_forecast_hour_stat_array).min()
+        stat_max = np.ma.masked_invalid(all_forecast_hour_stat_array).max()
         stat_plot_name = plot_specs_tsmf.get_stat_plot_name(
              self.plot_info_dict['stat']
         )
