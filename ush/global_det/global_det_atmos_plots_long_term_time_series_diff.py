@@ -218,10 +218,12 @@ class LongTermTimeSeriesDiff:
                     +f"{model_hour.replace(' ', '').replace(',','')}_".lower()
                     +f"f{forecast_hour.zfill(3)}.g004_{self.vx_mask}.png".lower()
                 )
+                shape = [len(self.model_list),
+                         len(run_length_date_list)]
                 model_group_forecast_day_running_mean = np.ma.masked_invalid(
                     run_length_model_group_running_mean_df[
                         ['DAY'+str(forecast_day)]
-                    ].to_numpy(dtype=float)
+                    ].to_numpy(dtype=float).reshape(shape)
                 )
                 model0_forecast_day_running_mean = np.ma.masked_invalid(
                     run_length_model_group_running_mean_df\

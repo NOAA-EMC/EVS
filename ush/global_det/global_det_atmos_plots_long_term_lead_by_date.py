@@ -199,18 +199,6 @@ class LongTermLeadByDate:
             subplot0_cmap, subplotsN_cmap = (
                 plot_specs_ltlbd.get_plot_colormaps(self.stat)
             )
-            left_logo_xpixel_loc, left_logo_ypixel_loc, left_logo_alpha = (
-                plot_specs_ltlbd.get_logo_location(
-                    'left', plot_specs_ltlbd.fig_size[0],
-                    plot_specs_ltlbd.fig_size[1], plt.rcParams['figure.dpi']
-                )
-            )
-            right_logo_xpixel_loc, right_logo_ypixel_loc, right_logo_alpha = (
-                plot_specs_ltlbd.get_logo_location(
-                    'right', plot_specs_ltlbd.fig_size[0],
-                     plot_specs_ltlbd.fig_size[1], plt.rcParams['figure.dpi']
-                )
-            )
             image_name = os.path.join(
                 output_image_dir,
                 f"evs.global_det.{self.model_group}.{self.stat}.".lower()
@@ -289,6 +277,18 @@ class LongTermLeadByDate:
                 +f"valid {dates_for_title}, {model_hour}\n"
                 +f"{run_length_running_mean} "
                 +f"{self.time_range.replace('ly','').title()} Running Mean"
+            )
+            left_logo_xpixel_loc, left_logo_ypixel_loc, left_logo_alpha = (
+                plot_specs_ltlbd.get_logo_location(
+                    'left', plot_specs_ltlbd.fig_size[0],
+                    plot_specs_ltlbd.fig_size[1], plt.rcParams['figure.dpi']
+                )
+            )
+            right_logo_xpixel_loc, right_logo_ypixel_loc, right_logo_alpha = (
+                plot_specs_ltlbd.get_logo_location(
+                    'right', plot_specs_ltlbd.fig_size[0],
+                     plot_specs_ltlbd.fig_size[1], plt.rcParams['figure.dpi']
+                )
             )
             if plot_left_logo:
                 left_logo_img = fig.figimage(

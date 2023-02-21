@@ -168,18 +168,6 @@ class LongTermAnnualMean:
             plot_specs_ltam = PlotSpecs(self.logger,
                                          'long_term_annual_mean')
             plot_specs_ltam.set_up_plot()
-            left_logo_xpixel_loc, left_logo_ypixel_loc, left_logo_alpha = (
-                plot_specs_ltam.get_logo_location(
-                    'left', plot_specs_ltam.fig_size[0],
-                    plot_specs_ltam.fig_size[1], plt.rcParams['figure.dpi']
-                )
-            )
-            right_logo_xpixel_loc, right_logo_ypixel_loc, right_logo_alpha = (
-                plot_specs_ltam.get_logo_location(
-                    'right', plot_specs_ltam.fig_size[0],
-                     plot_specs_ltam.fig_size[1], plt.rcParams['figure.dpi']
-                )
-            )
             image_name = os.path.join(
                 output_image_dir,
                 f"evs.global_det.{self.model_group}.{self.stat}.".lower()
@@ -248,6 +236,18 @@ class LongTermAnnualMean:
                 +f"({var_units})\n"
                 +f"valid {run_length_date_dt_list[0]:%Y}-"
                 +f"{run_length_date_dt_list[-1]:%Y}, {model_hour}"
+            )
+            left_logo_xpixel_loc, left_logo_ypixel_loc, left_logo_alpha = (
+                plot_specs_ltam.get_logo_location(
+                    'left', plot_specs_ltam.fig_size[0],
+                    plot_specs_ltam.fig_size[1], plt.rcParams['figure.dpi']
+                )
+            )
+            right_logo_xpixel_loc, right_logo_ypixel_loc, right_logo_alpha = (
+                plot_specs_ltam.get_logo_location(
+                    'right', plot_specs_ltam.fig_size[0],
+                     plot_specs_ltam.fig_size[1], plt.rcParams['figure.dpi']
+                )
             )
             if plot_left_logo:
                 left_logo_img = fig.figimage(
