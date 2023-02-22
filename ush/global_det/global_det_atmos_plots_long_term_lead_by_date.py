@@ -416,7 +416,7 @@ class LongTermLeadByDate:
                     ax.set_yticks(run_length_date_dt_list[::24])
                     ax.yaxis.set_minor_locator(md.MonthLocator())
                 elif self.time_range == 'yearly':
-                    ax.set_yticks(run_length_date_dt_list[:2])
+                    ax.set_yticks(run_length_date_dt_list[::4])
                     ax.yaxis.set_major_formatter(md.DateFormatter('%Y'))
                 ax.yaxis.set_major_formatter(md.DateFormatter('%Y'))
                 if ax.is_first_col():

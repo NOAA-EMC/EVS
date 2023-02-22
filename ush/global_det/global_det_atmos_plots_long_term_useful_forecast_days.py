@@ -300,7 +300,7 @@ class LongTermUsefulForecastDays:
                     ax.set_xticks(run_length_date_dt_list[::24])
                     ax.xaxis.set_minor_locator(md.MonthLocator())
                 elif self.time_range == 'yearly':
-                    ax.set_xticks(run_length_date_dt_list[:2])
+                    ax.set_xticks(run_length_date_dt_list[::4])
                 ax.xaxis.set_major_formatter(md.DateFormatter('%Y'))
                 ax.set_ylabel('Forecast Day')
                 ax.set_yticks(range(0,11,1))
@@ -404,7 +404,7 @@ class LongTermUsefulForecastDays:
                 ax.set_xticks(run_length_date_dt_list[::24])
                 ax.xaxis.set_minor_locator(md.MonthLocator())
             elif self.time_range == 'yearly':
-                ax.set_xticks(run_length_date_dt_list[:2])
+                ax.set_xticks(run_length_date_dt_list[::4])
             ax.xaxis.set_major_formatter(md.DateFormatter('%Y'))
             ax.set_ylabel('Forecast Day')
             ax.set_yticks(range(0,11,1))

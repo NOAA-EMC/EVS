@@ -281,7 +281,7 @@ class LongTermTimeSeriesDiff:
                     ax1.xaxis.set_minor_locator(md.MonthLocator())
                     ax2.xaxis.set_minor_locator(md.MonthLocator())
                 elif self.time_range == 'yearly':
-                    ax1.set_xticks(run_length_date_dt_list[:2])
+                    ax1.set_xticks(run_length_date_dt_list[::4])
                 ax1.xaxis.set_major_formatter(md.DateFormatter('%Y'))
                 ax1.set_ylabel(
                     str(run_length_running_mean)
