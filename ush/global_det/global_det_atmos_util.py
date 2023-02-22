@@ -8,6 +8,7 @@ import netCDF4 as netcdf
 import numpy as np
 import glob
 import pandas as pd
+import logging
 from time import sleep
 
 def run_shell_command(command):
@@ -1720,6 +1721,28 @@ def initalize_job_env_dict(verif_type, group,
         job_env_dict['init_hr_inc'] = str(verif_type_init_hr_inc)
     return job_env_dict
 
+def get_logger(log_file):
+    """! Get logger
+         Args:
+             log_file - full path to log file (string)
+         Returns:
+             logger - logger object
+    """
+    log_formatter = logging.Formatter(
+        '%(asctime)s.%(msecs)03d (%(filename)s:%(lineno)d) %(levelname)s: '
+        + '%(message)s',
+        '%m/%d %H:%M:%S'
+    )
+    logger = logging.getLogger(log_file)
+    logger.setLevel('DEBUG')
+    file_handler = logging.FileHandler(log_file, mode='a')
+    file_handler.setFormatter(log_formatter)
+    logger.addHandler(file_handler)
+    logger_info = f"Log file: {log_file}"
+    print(logger_info)
+    logger.info(logger_info)
+    return logger
+
 def get_plot_dates(logger, date_type, start_date, end_date,
                    valid_hr_start, valid_hr_end, valid_hr_inc,
                    init_hr_start, init_hr_end, init_hr_inc,
@@ -1850,6 +1873,44 @@ def format_thresh(thresh):
        .replace('<=', 'le').replace('<', 'lt')
    )
    return thresh_symbol, thresh_letter
+
+def get_daily_stat_file(model_name, source_stats_base_dir,
+                        dest_model_name_stats_dir, 
+                        verif_case, start_date_dt, end_date_dt):
+    """! Link model daily stat files
+         Args:
+             model_name                - name of model (string)
+             source_stats_base_dir     - full path to stats/global_det
+                                         source directory (string)
+             dest_model_name_stats_dir - full path to model
+                                         destintion directory (string)
+             verif_case                - grid2grid or grid2obs (string)
+             start_date_dt             - month start date (datetime obj)
+             end_date_dt               - month end date (datetime obj)
+         Returns:
+    """
+    date_dt = start_date_dt
+    while date_dt <= end_date_dt:
+        source_model_date_stat_file = os.path.join(
+            source_stats_base_dir,
+            model_name+'.'+date_dt.strftime('%Y%m%d'),
+            'evs.stats.'+model_name+'.atmos.'+verif_case+'.'
+            +'v'+date_dt.strftime('%Y%m%d')+'.stat'
+        )
+        dest_model_date_stat_file = os.path.join(
+            dest_model_name_stats_dir,
+            model_name+'_atmos_'+verif_case+'_v'
+            +date_dt.strftime('%Y%m%d')+'.stat'
+        )
+        if not os.path.exists(dest_model_date_stat_file):
+            if os.path.exists(source_model_date_stat_file):
+                print(f"Linking {source_model_date_stat_file} to "
+                      +f"{dest_model_date_stat_file}")
+                os.symlink(source_model_date_stat_file,
+                           dest_model_date_stat_file)
+            else:
+                print(f"WARNING: {source_model_date_stat_file} DOES NOT EXIST")
+        date_dt = date_dt + datetime.timedelta(days=1)
 
 def condense_model_stat_files(logger, input_dir, output_file, model, obs,
                               grid, vx_mask, fcst_var_name, obs_var_name,

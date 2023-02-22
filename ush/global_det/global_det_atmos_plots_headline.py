@@ -45,67 +45,6 @@ met_info_dict = {
     'version': met_ver
 }
 
-# Definitions
-def get_logger(log_file):
-    """! Get logger
-         Args:
-             log_file - full path to log file (string)
-         Returns:
-             logger - logger object
-    """
-    log_formatter = logging.Formatter(
-        '%(asctime)s.%(msecs)03d (%(filename)s:%(lineno)d) %(levelname)s: '
-        + '%(message)s',
-        '%m/%d %H:%M:%S'
-    )
-    logger = logging.getLogger(log_file)
-    logger.setLevel('DEBUG')
-    file_handler = logging.FileHandler(log_file, mode='a')
-    file_handler.setFormatter(log_formatter)
-    logger.addHandler(file_handler)
-    logger_info = f"Log file: {log_file}"
-    print(logger_info)
-    logger.info(logger_info)
-    return logger
-
-def get_daily_stat_file(model_name, source_stats_base_dir,
-                        dest_model_name_stats_dir,
-                        verif_case, start_date_dt, end_date_dt):
-    """! Link model daily stat files
-         Args:
-             model_name                - name of model (string)
-             source_stats_base_dir     - full path to stats/global_det
-                                         source directory (string)
-             dest_model_name_stats_dir - full path to model
-                                         destintion directory (string)
-             verif_case                - grid2grid or grid2obs (string)
-             start_date_dt             - month start date (datetime obj)
-             end_date_dt               - month end date (datetime obj)
-         Returns:
-    """
-    date_dt = start_date_dt
-    while date_dt <= end_date_dt:
-        source_model_date_stat_file = os.path.join(
-            source_stats_base_dir,
-            model_name+'.'+date_dt.strftime('%Y%m%d'),
-            'evs.stats.'+model_name+'.atmos.'+verif_case+'.'
-            +'v'+date_dt.strftime('%Y%m%d')+'.stat'
-        )
-        dest_model_date_stat_file = os.path.join(
-            dest_model_name_stats_dir,
-            model_name+'_v'+date_dt.strftime('%Y%m%d')
-            +'.stat'
-        )
-        if not os.path.exists(dest_model_date_stat_file):
-            if os.path.exists(source_model_date_stat_file):
-                print(f"Linking {source_model_date_stat_file} to "
-                      +f"{dest_model_date_stat_file}")
-                os.symlink(source_model_date_stat_file,
-                           dest_model_date_stat_file)
-            else:
-                print(f"WARNING: {source_model_date_stat_file} DOES NOT EXIST")
-        date_dt = date_dt + datetime.timedelta(days=1)
-
 ### Headline Score Plot 1: Grid-to-Grid - Geopotential Height 500-hPa ACC Day 5 NH Last 31 days 00Z
 print("\nHeadline Score Plot 1: Grid-to-Grid - Geopotential Height 500-hPa "
       +"ACC Day 5 NH Last 31 days 00Z")
@@ -181,7 +120,7 @@ headline1_logging_file = os.path.join(logging_dir, 'evs_'+COMPONENT+'_atmos_'
                                       +RUN+'_'+STEP+'_'+headline1_job_name
                                       +'_runon'
                                       +now.strftime('%Y%m%d%H%M%S')+'.log')
-logger1 = get_logger(headline1_logging_file)
+logger1 = gda_util.get_logger(headline1_logging_file)
 # Get model daily stat files and condense
 headline1_start_date_dt = datetime.datetime.strptime(
     headline1_date_info_dict['start_date'], '%Y%m%d'
@@ -192,25 +131,24 @@ headline1_end_date_dt = datetime.datetime.strptime(
 for model_num in list(headline1_model_info_dict.keys()):
     model = headline1_model_info_dict[model_num]['name']
     obs_name = headline1_model_info_dict[model_num]['obs_name']
-    stat_model_dir = os.path.join(stat_base_dir, 'grid2grid', model)
+    stat_model_dir = os.path.join(stat_base_dir, model)
     if not os.path.exists(stat_model_dir):
         os.makedirs(stat_model_dir)
-    get_daily_stat_file(model, COMINdailystats, stat_model_dir,
-                        'grid2grid', headline1_start_date_dt,
-                        headline1_end_date_dt)
+    gda_util.get_daily_stat_file(model, COMINdailystats, stat_model_dir,
+                                 'grid2grid', headline1_start_date_dt,
+                                 headline1_end_date_dt)
     logger1.info("Condensing model .stat files for job")
     condensed_model_stat_file = os.path.join(headline1_output_dir,
                                              model_num+'_'+model
                                              +'.stat')
-    gda_util.condense_model_stat_files(logger1,
-                                       os.path.join(stat_base_dir, 'grid2grid'),
-                                       condensed_model_stat_file, model,
-                                       obs_name,
-                                       headline1_plot_info_dict['grid'],
-                                       headline1_plot_info_dict['vx_mask'],
-                                       headline1_plot_info_dict['fcst_var_name'],
-                                       headline1_plot_info_dict['obs_var_name'],
-                                       headline1_plot_info_dict['line_type'])
+    gda_util.condense_model_stat_files(
+        logger1, stat_base_dir, condensed_model_stat_file, model,
+        obs_name, headline1_plot_info_dict['grid'],
+        headline1_plot_info_dict['vx_mask'],
+        headline1_plot_info_dict['fcst_var_name'],
+        headline1_plot_info_dict['obs_var_name'],
+        headline1_plot_info_dict['line_type']
+    )
 # Make plot
 plot_specs = PlotSpecs(logger1, headline1_plot)
 import global_det_atmos_plots_time_series as gdap_ts
@@ -280,12 +218,12 @@ headline2_end_date_dt = datetime.datetime.strptime(
 )
 for model_num in list(headline2_model_info_dict.keys()):
     model = headline2_model_info_dict[model_num]['name']
-    stat_model_dir = os.path.join(stat_base_dir, 'grid2obs', model)
+    stat_model_dir = os.path.join(stat_base_dir, model)
     if not os.path.exists(stat_model_dir):
         os.makedirs(stat_model_dir)
-    get_daily_stat_file(model, COMINdailystats, stat_model_dir,
-                        'grid2obs', headline2_start_date_dt,
-                        headline2_end_date_dt)
+    gda_util.get_daily_stat_file(model, COMINdailystats, stat_model_dir,
+                                 'grid2obs', headline2_start_date_dt,
+                                 headline2_end_date_dt)
 # Make plot
 for stat in ['ME', 'RMSE']:
     headline2_plot_info_dict['stat'] = stat
@@ -309,7 +247,7 @@ for stat in ['ME', 'RMSE']:
                                           +RUN+'_'+STEP+'_'+headline2_job_name
                                           +'_runon'
                                           +now.strftime('%Y%m%d%H%M%S')+'.log')
-    logger2 = get_logger(headline2_logging_file)
+    logger2 = gda_util.get_logger(headline2_logging_file)
     # Condense model daily stat files
     for model_num in list(headline2_model_info_dict.keys()):
         model = headline2_model_info_dict[model_num]['name']
@@ -320,7 +258,7 @@ for stat in ['ME', 'RMSE']:
                                                  model_num+'_'+model
                                                  +'.stat')
         gda_util.condense_model_stat_files(
-            logger2, os.path.join(stat_base_dir, 'grid2obs'),
+            logger2, stat_base_dir,
             condensed_model_stat_file, model,
             obs_name, headline2_plot_info_dict['grid'],
             headline2_plot_info_dict['vx_mask'],
@@ -350,4 +288,16 @@ for stat in ['ME', 'RMSE']:
     print("Copying "+headline2_image_name+" to "+headline2_copy_image_name)
     shutil.copy2(headline2_image_name, headline2_copy_image_name)
 
+### Headline Score Plot 3: Grid-to-Grid - Geopotential Height 500-hPa ACC Day 5 NH 00Z Annual Means
+print("\nHeadline Score Plot 3: Grid-to-Grid - Geopotential Height 500-hPa "
+      +"ACC Day 5 NH 00Z Annual Means")
+
+### Headline Score Plot 4: Grid-to-Grid - GFS Useful Forecast Days NH Annual Means
+print("\nHeadline Score Plot 4: Grid-to-Grid - GFS Useful Forecast Days NH Annual Means")
+
+### Headline Score Plot 5: Grid-to-Grid - 24 hour Precip CONUS FSS 62km Neighborhood
+print("\nHeadline Score Plot 4: Grid-to-Grid - 24 hour Precip CONUS FSS 62km Neighborhood")
+
+### Headline Score Plot 6: Grid-to-Grid - 24 hour Precip CONUS ETS
+print("\nHeadline Score Plot 4: Grid-to-Grid - 24 hour Precip ETS")
 print("END: "+os.path.basename(__file__))
