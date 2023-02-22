@@ -594,6 +594,8 @@ for avg_time_range in avg_time_range_list:
         os.makedirs(avg_time_range_daily_precip_stats_dir)
     for model_num in list(precip_model_info_dict.keys()):
         model = precip_model_info_dict[model_num]['name']
+        obs_name = precip_model_info_dict[model_num]['obs_name']
+        plot_name = precip_model_info_dict[model_num]['plot_name']
         stat_model_dir = os.path.join(
             avg_time_range_daily_precip_stats_dir, model
         )
@@ -626,7 +628,7 @@ for avg_time_range in avg_time_range_list:
             logging_file = os.path.join(
                 avg_time_range_logs_precip_dir,
                 'evs_'+COMPONENT+'_atmos_'+RUN+'_'+STEP+'_'+line_type+'_'+stat
-                +'_'+var_name+'_'+accum+'_'+vx_mask+'_runon'
+                +'_'+var_name+'_'+accum+'_'+grid+'_'+vx_mask+'_runon'
                 +now.strftime('%Y%m%d%H%M%S')+'.log'
             )
             logger = get_logger(logging_file)
@@ -679,10 +681,18 @@ for avg_time_range in avg_time_range_list:
                 for model_num in list(precip_model_info_dict.keys()):
                     model = precip_model_info_dict[model_num]['name']
                     plot_name = precip_model_info_dict[model_num]['plot_name']
-                    model_file_name = (
-                        'evs_'+stat+'_'+var_name+'_'+accum+'_'+vx_mask+'_valid'
-                        +valid_hour+'Z.txt'
-                    )
+                    if stat == 'FSS':
+                        model_file_name = (
+                            'evs_'+stat+'_'+var_thresh.replace('.','p')+'_'
+                            +interp_method+nbhrd+'_'+var_name+'_'+accum+'_'
+                            +grid+'_'+vx_mask+'_valid'+valid_hour+'Z.txt'
+                        )
+                    else:
+                        model_file_name = (
+                            'evs_'+stat+'_'+var_thresh.replace('.','p')+'_'
+                            +var_name+'_'+accum+'_'+grid+'_'+vx_mask+'_valid'
+                            +valid_hour+'Z.txt'
+                        )
                     COMINtime_range_stats_file = os.path.join(
                         COMINtime_range_stats, model, model_file_name
                     )
