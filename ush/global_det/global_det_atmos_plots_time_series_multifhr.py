@@ -92,21 +92,6 @@ class TimeSeriesMultiFhr:
             self.date_info_dict['forecast_hours'] = (
                 self.date_info_dict['forecast_hours'][:4]
             )
-        # Set plot settings
-        forecast_hours_plot_settings_dict = {
-            'fhr1': {'color': '#000000',
-                     'marker': 'o', 'markersize': 6,
-                     'linestyle': 'solid', 'linewidth': 3},
-            'fhr2': {'color': '#fb2020',
-                     'marker': '^', 'markersize': 7,
-                     'linestyle': 'solid', 'linewidth': 1.5},
-            'fhr3': {'color': '#1e3cff',
-                     'marker': 'X', 'markersize': 7,
-                     'linestyle': 'solid', 'linewidth': 1.5},
-            'fhr4': {'color': '#e69f00',
-                     'marker': 'o', 'markersize': 7,
-                     'linestyle': 'solid', 'linewidth': 1.5},
-        }
         # Make job image directory
         output_image_dir = os.path.join(self.output_dir, 'images')
         if not os.path.exists(output_image_dir):
@@ -313,6 +298,9 @@ class TimeSeriesMultiFhr:
                     plot_specs_tsmf.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
+        forecast_hours_plot_settings_dict = (
+            plot_specs_tsmf.get_forecast_hour_plot_settings()
+        )
         image_name = plot_specs_tsmf.get_savefig_name(
             output_image_dir, self.plot_info_dict, self.date_info_dict
         )
@@ -357,11 +345,19 @@ class TimeSeriesMultiFhr:
                                   .to_numpy())[:,0]
             forecast_hour_avg = (all_forecast_hour_stat_avg_df[forecast_hour]\
                                  .to_numpy())[0,0]
-            forecast_hour_plot_settings_dict = (
-                forecast_hours_plot_settings_dict[
-                    f"fhr{str(forecast_hour_idx+1)}"
-                ]
-            )
+            if f"fhr{forecast_hour.zfill(3)}" \
+                    in list(forecast_hours_plot_settings_dict.keys()):
+                forecast_hour_plot_settings_dict = (
+                    forecast_hours_plot_settings_dict[
+                        f"fhr{forecast_hour.zfill(3)}"
+                    ]
+                )
+            else:
+                forecast_hour_plot_settings_dict = (
+                    forecast_hours_plot_settings_dict[
+                        f"fhr_n{str(forecast_hour_idx+1)}"
+                    ]
+                )
             masked_forecast_hour_data = np.ma.masked_invalid(
                 forecast_hour_data
             )

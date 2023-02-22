@@ -1154,3 +1154,42 @@ class PlotSpecs:
                       'linestyle': 'solid', 'linewidth': 1.5},
         }
         return model_plot_settings_dict
+
+    def get_forecast_hour_plot_settings(self):
+        """! Get dictionary plot settings for forecast hours
+
+             Args:
+
+             Returns:
+                 forecast_hour_plot_settings_dict - dictionary of
+                                                    forecast hours
+                                                    plotting specifications
+                                                    (strings)
+        """
+        forecast_hour_plot_settings_dict = {
+            'fhr_n1': {'color': '#fb2020',
+                       'marker': 'o', 'markersize': 6,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'fhr_n2': {'color': '#00dc00',
+                       'marker': '^', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'fhr_n3': {'color': '#1e3cff',
+                       'marker': 'X', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'fhr_n4': {'color': '#e69f00',
+                       'marker': 'o', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'fhr024': {'color': '#fb2020',
+                       'marker': 'o', 'markersize': 6,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'fhr072': {'color': '#00dc00',
+                       'marker': '^', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'fhr120': {'color': '#1e3cff',
+                       'marker': 'X', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'fhr240': {'color': '#e69f00',
+                       'marker': 'o', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+        }
+        return forecast_hour_plot_settings_dict
