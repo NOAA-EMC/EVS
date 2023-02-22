@@ -12,6 +12,7 @@ import glob
 import subprocess
 import itertools
 import shutil
+import dateutil
 import global_det_atmos_util as gda_util
 from global_det_atmos_plots_specs import PlotSpecs
 
@@ -28,7 +29,9 @@ FIXevs = os.environ['FIXevs']
 MET_ROOT = os.environ['MET_ROOT']
 met_ver = os.environ['met_ver']
 evs_run_mode = os.environ['evs_run_mode']
+envir = os.environ['envir']
 COMINdailystats = os.environ['COMINdailystats']
+COMINyearlystats = os.environ['COMINyearlystats']
 
 # Set up directory paths
 logo_dir = os.path.join(FIXevs, 'logos')
@@ -288,16 +291,86 @@ for stat in ['ME', 'RMSE']:
     print("Copying "+headline2_image_name+" to "+headline2_copy_image_name)
     shutil.copy2(headline2_image_name, headline2_copy_image_name)
 
-### Headline Score Plot 3: Grid-to-Grid - Geopotential Height 500-hPa ACC Day 5 NH 00Z Annual Means
-print("\nHeadline Score Plot 3: Grid-to-Grid - Geopotential Height 500-hPa "
-      +"ACC Day 5 NH 00Z Annual Means")
+if evs_run_mode != 'production' and envir != 'prod':
+    print("\nAll production global_det atmos headline plots produced")
+else:
+    print("\nMaking development global_det atmos headline plots")
+    ### Headline Score Plot 3: Grid-to-Grid -
+    ### Geopotential Height 500-hPa ACC Day 5 NH 00Z Annual Means
+    print("\nHeadline Score Plot 3: Grid-to-Grid - Geopotential Height 500-hPa"
+          +" ACC Day 5 NH 00Z Annual Means")
+    headline3_stat = 'ACC'
+    headline3_vx_mask = 'NHEM'
+    headline3_var_name = 'HGT'
+    headline3_var_level = 'P500'
+    headline3_forecast_day_list = ['5']
+    headline3_avg_time_range = 'yearly'
+    headline3_valid_hr = '00'
+    headline3_model_group_dict = {'all_models': ['gfs', 'ecmwf', 'cmc',
+                                                 'fnmoc', 'ukmet', 'cfs'],
+                                  'gfs_ecmwf': ['ecmwf', 'gfs']}
+    headline3_start_YYYY = '1984'
+    headline3_end_YYYY = str(int(datetime.datetime.now().strftime('%Y'))-1)
+    headline3_all_dt_list = list(
+        dateutil.rrule.rrule(
+            dateutil.rrule.YEARLY,
+            dtstart=dateutil.parser.parse(headline3_start_YYYY+'0101T000000'),
+            until=dateutil.parser.parse(headline3_end_YYYY+'0101T000000')
+        )
+    )
+    import global_det_atmos_plots_long_term_time_series as gdap_ltts
+    for headline3_model_group in list(headline3_model_group_dict.keys()):
+        headline3_model_list = headline3_model_group_dict[headline3_model_group]
+        print(f"Working on model group {headline3_model_group}: "
+              +f"{' '.join(headline3_model_list)}")
+        headline3_job_name = (
+            'grid2grid_'+headline3_avg_time_range+'_'+headline3_model_group+'_'
+            +headline3_stat+'_'+headline3_vx_mask+'_'+headline3_var_name+'_'
+            +headline3_var_level+'_'
+            +''.join(['day'+d for d in headline3_forecast_day_list])+'_'
+            +headline3_valid_hr+'Z'
+        )
+        # Set output
+        headline3_output_dir = os.path.join(DATA, headline3_job_name)
+        if not os.path.exists(headline3_output_dir):
+            os.makedirs(headline3_output_dir)
+        # Set up logging
+        now = datetime.datetime.now()
+        headline3_logging_file = os.path.join(
+            logging_dir, 'evs_'+COMPONENT+'_atmos_'
+            +RUN+'_'+STEP+'_'+headline3_job_name
+            +'_runon'+now.strftime('%Y%m%d%H%M%S')+'.log'
+        )
+        logger3 = gda_util.get_logger(headline3_logging_file)
+        plot_ltts = gdap_ltts.LongTermTimeSeries(
+            logger3, COMINyearlystats, headline3_output_dir,
+            os.path.join(FIXevs, 'logos'), headline3_avg_time_range,
+            headline3_all_dt_list, headline3_model_group, headline3_model_list,
+            headline3_var_name, headline3_var_level, headline3_vx_mask,
+            headline3_stat, headline3_forecast_day_list, ['allyears']
+        )
+        plot_ltts.make_long_term_time_series()
+        # Rename and copy to main image directory
+        for headline3_image_name in glob.glob(
+            os.path.join(headline3_output_dir, 'images', '*')
+        ):
+            headline3_copy_image_name = os.path.join(
+                images_dir,
+                headline3_image_name.rpartition('/')[2]
+            )
+            print("Copying "+headline3_image_name+" to "
+                  +headline3_copy_image_name)
+            shutil.copy2(headline3_image_name, headline3_copy_image_name)
+    ### Headline Score Plot 4: Grid-to-Grid
+    ### - GFS Useful Forecast Days NH Annual Means
+    print("\nHeadline Score Plot 4: Grid-to-Grid - "
+          +"GFS Useful Forecast Days NH Annual Means")
+    ### Headline Score Plot 5: Grid-to-Grid
+    ### - 24 hour Precip CONUS FSS 62km Neighborhood
+    print("\nHeadline Score Plot 4: Grid-to-Grid - "
+          +"24 hour Precip CONUS FSS 62km Neighborhood")
+    ### Headline Score Plot 6: Grid-to-Grid - 24 hour Precip CONUS ETS
+    print("\nHeadline Score Plot 4: Grid-to-Grid "
+          +"- 24 hour Precip ETS")
 
-### Headline Score Plot 4: Grid-to-Grid - GFS Useful Forecast Days NH Annual Means
-print("\nHeadline Score Plot 4: Grid-to-Grid - GFS Useful Forecast Days NH Annual Means")
-
-### Headline Score Plot 5: Grid-to-Grid - 24 hour Precip CONUS FSS 62km Neighborhood
-print("\nHeadline Score Plot 4: Grid-to-Grid - 24 hour Precip CONUS FSS 62km Neighborhood")
-
-### Headline Score Plot 6: Grid-to-Grid - 24 hour Precip CONUS ETS
-print("\nHeadline Score Plot 4: Grid-to-Grid - 24 hour Precip ETS")
 print("END: "+os.path.basename(__file__))

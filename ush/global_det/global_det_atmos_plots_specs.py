@@ -49,7 +49,8 @@ class PlotSpecs:
         self.title_loc = 'center'
         self.fig_size=(16.,16.)
         if self.plot_type in ['time_series',
-                              'time_series_multifhr']:
+                              'time_series_multifhr',
+                              'long_term_time_series']:
             self.fig_size = (16., 8.)
             self.fig_subplot_top = 0.87
             self.fig_subplot_bottom = 0.1
@@ -61,7 +62,8 @@ class PlotSpecs:
             self.legend_frame_on = False
             self.legend_bbox = (0.5, 0.05)
             self.legend_ncol = 4
-            if self.plot_type == 'time_series_multifhr':
+            if self.plot_type in ['time_series_multifhr',
+                                  'long_term_time_series']:
                 self.fig_subplot_top = 0.85
         elif self.plot_type in ['lead_average', 'valid_hour_average',
                                 'threshold_average']:
