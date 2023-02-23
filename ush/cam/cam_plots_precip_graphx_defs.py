@@ -157,7 +157,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'CONUS',
-                        'EVAL_PERIODS':['PDYM1'],
+                        'EVAL_PERIODS':['NA'],
                         'VARIABLES':{
                             'NA':{
                                 'APCP_24':{
@@ -332,7 +332,7 @@ graphics = {
                         'INIT_BEG':'',
                         'INIT_END':'',
                         'VX_MASK_LIST':'Alaska, PuertoRico, Hawaii',
-                        'EVAL_PERIODS':['PDYM1'],
+                        'EVAL_PERIODS':['NA'],
                         'VARIABLES':{
                             'NA':{
                                 'APCP_24':{
