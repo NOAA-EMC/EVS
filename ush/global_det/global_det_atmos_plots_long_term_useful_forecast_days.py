@@ -21,6 +21,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as md
 import global_det_atmos_util as gda_util
 import matplotlib.gridspec as gridspec
+import itertools
 from global_det_atmos_plots_specs import PlotSpecs
 
 class LongTermUsefulForecastDays:
@@ -65,7 +66,9 @@ class LongTermUsefulForecastDays:
         self.run_length_list = run_length_list
 
     def make_long_term_useful_forecast_days_time_series(self):
-        """! Create the long term useful forecast days graphics
+        """! Create the long term useful forecast days
+             time series graphics
+             
              Args:
              Returns:
         """
@@ -464,6 +467,257 @@ class LongTermUsefulForecastDays:
             plt.clf()
             plt.close('all')
 
+    def make_long_term_useful_forecast_days_histogram(self):
+        """! Create the long term useful forecast days histogram
+             graphics
+             
+             Args:
+             Returns:
+        """
+        self.logger.info(f"Creating long term useful forecast day time series...")
+        self.logger.debug(f"Input directory: {self.input_dir}")
+        self.logger.debug(f"Output directory: {self.output_dir}")
+        self.logger.debug(f"Logo directory: {self.logo_dir}")
+        self.logger.debug(f"Time Range: {self.time_range}")
+        if self.time_range not in ['monthly', 'yearly']:
+            self.logger.error("CAN ONLY RUN USEFUL FORECAST DAYS FOR "
+                              +"TIME RANGE VALUES OF monthly OR yearly")
+            sys.exit(1)
+        if self.time_range == 'monthly':
+            self.logger.debug(f"Dates: {self.date_dt_list[0]:%Y%m}"
+                              +f"-{self.date_dt_list[-1]:%Y%m}")
+        elif self.time_range == 'yearly':
+            self.logger.debug(f"Dates: {self.date_dt_list[0]:%Y}"
+                              +f"-{self.date_dt_list[-1]:%Y}")
+        self.logger.debug(f"Model Group: {self.model_group}")
+        self.logger.debug(f"Models: {', '.join(self.model_list)}")
+        self.logger.debug(f"Variable Name: {self.var_name}")
+        self.logger.debug(f"Variable Level: {self.var_level}")
+        self.logger.debug(f"Verification Mask: {self.vx_mask}")
+        self.logger.debug(f"Statistic: {self.stat}")
+        self.logger.debug(f"Run Lengths: {', '.join(self.run_length_list)}")
+        # Make job image directory
+        output_image_dir = os.path.join(self.output_dir, 'images')
+        if not os.path.exists(output_image_dir):
+            os.makedirs(output_image_dir)
+        self.logger.info(f"Plots will be in: {output_image_dir}")
+        # Create merged dataset of verification systems
+        model_group_merged_df = gda_util.merge_long_term_stats_datasets(
+            self.logger, self.input_dir, self.time_range, self.date_dt_list,
+            self.model_group, self.model_list, self.var_name,
+            self.var_level, self.vx_mask, self.stat
+        )
+        model_group_merged_df_fcst_day_list = []
+        for col in model_group_merged_df.columns:
+            if 'DAY' in col:
+                model_group_merged_df_fcst_day_list.append(
+                    col.replace('DAY', '')
+                )
+        # Create plots
+        date_list = (model_group_merged_df.index.get_level_values(1)\
+                     .unique().tolist())
+        if self.var_name == 'HGT':
+            var_units = 'gpm'
+        elif self.var_name == 'UGRD_VGRD':
+            var_units = 'm/s'
+        if self.model_group == 'gfs_4cycles':
+            model_hour = 'init 00Z, 06Z, 12Z, 18Z'
+        else:
+            model_hour = 'valid 00Z'
+        plot_left_logo = False
+        plot_left_logo_path = os.path.join(self.logo_dir, 'noaa.png')
+        if os.path.exists(plot_left_logo_path):
+            plot_left_logo = True
+            left_logo_img_array = matplotlib.image.imread(plot_left_logo_path)
+        plot_right_logo = False
+        plot_right_logo_path = os.path.join(self.logo_dir, 'nws.png')
+        if os.path.exists(plot_right_logo_path):
+            plot_right_logo = True
+            right_logo_img_array = matplotlib.image.imread(plot_right_logo_path)
+        if self.stat == 'ACC':
+             ufd_stat_threshold_list = ['0.6']
+        else:
+            self.logger.error(f"THRESHOLDS TO USE FOR {self.stat} NOT KNOWN")
+            sys.exit(1)
+        model_group_useful_fday_df = pd.DataFrame(
+            index=model_group_merged_df.index,
+            columns=[f"{str(x)}" for x in ufd_stat_threshold_list]
+        )
+        for model in self.model_list:
+            for date in date_list:
+                model_date = np.ma.masked_invalid(
+                    model_group_merged_df.loc[(model, date)]\
+                    [[f"DAY{x}" for x in model_group_merged_df_fcst_day_list]]
+                    .to_numpy(dtype=float)
+                )
+                if not model_date.mask.all():
+                    for ufd_thresh in ufd_stat_threshold_list:
+                        model_ufd_thresh_date_value = np.interp(
+                            float(ufd_thresh),
+                            model_date.compressed()[::-1],
+                            np.ma.masked_where(
+                                np.ma.getmask(model_date),
+                                np.array(model_group_merged_df_fcst_day_list,
+                                         dtype=float)
+                            ).compressed()[::-1],
+                            left=np.nan, right=np.nan
+                        )
+                        model_group_useful_fday_df.loc[(model, date)]\
+                            [ufd_thresh] = model_ufd_thresh_date_value
+                        if np.isnan(model_ufd_thresh_date_value) \
+                                and model == 'gfs' and self.var_name == 'HGT' \
+                                and self.var_level == 'P500' \
+                                and self.vx_mask == 'NHEM' \
+                                and model_hour == 'valid 00Z' \
+                                and self.stat == 'ACC' \
+                                and ufd_thresh == '0.6' \
+                                and self.time_range == 'yearly':
+                            excel_file_name = os.path.join(
+                                self.input_dir, model,
+                                'usefulfcstdays_ACC06_HGT_P500_NHEM_'
+                                +'valid00Z.txt'
+                            )
+                            excel_df = pd.read_table(
+                                excel_file_name, delimiter=' ',
+                                skipinitialspace=True,
+                                index_col=0
+                            )
+                            model_group_useful_fday_df.loc[(model, date)]\
+                                [ufd_thresh] = (
+                                excel_df.loc[int(date)].values[0]
+                            )
+        for run_length in self.run_length_list:
+            if run_length == 'allyears':
+                run_length_running_mean = 13
+                run_length_date_list = date_list
+                run_length_date_dt_list = self.date_dt_list
+                run_length_model_group_useful_fday_df = (
+                    model_group_useful_fday_df
+                )
+            elif run_length == 'past10years':
+                run_length_running_mean = 6
+                if self.time_range == 'monthly':
+                    tenyearsago_dt = (
+                        datetime.datetime.strptime(date_list[-1], '%Y%m')
+                        - relativedelta(years=10)
+                    )
+                    run_length_date_list = date_list[
+                        date_list.index(f"{tenyearsago_dt:%Y%m}"):
+                    ]
+                elif self.time_range == 'yearly':
+                    tenyearsago_dt = (
+                        datetime.datetime.strptime(date_list[-1], '%Y')
+                        - relativedelta(years=10)
+                    )
+                    run_length_date_list = date_list[
+                        date_list.index(f"{tenyearsago_dt:%Y}"):
+                    ]
+                run_length_date_dt_list = self.date_dt_list[
+                    self.date_dt_list.index(tenyearsago_dt):
+                ]
+                run_length_model_group_useful_fday_df = (
+                    model_group_useful_fday_df.loc[
+                        (self.model_list, run_length_date_list),:
+                    ]
+                )
+            else:
+                self.logger.warning(f"{run_length} not recongized, skipping,"
+                                    +"use allyears or past10year")
+                continue
+            self.logger.info(f"Working on plots for {run_length}: "
+                             +f"{run_length_date_list[0]}-"
+                             +f"{run_length_date_list[-1]}")
+            # Make histogram for each model and threshold
+            plot_specs_h = PlotSpecs(self.logger, 'histogram')
+            plot_specs_h.set_up_plot()
+            left_logo_xpixel_loc, left_logo_ypixel_loc, left_logo_alpha = (
+                plot_specs_h.get_logo_location(
+                    'left', plot_specs_h.fig_size[0],
+                    plot_specs_h.fig_size[1], plt.rcParams['figure.dpi']
+                )
+            )
+            right_logo_xpixel_loc, right_logo_ypixel_loc, right_logo_alpha = (
+                plot_specs_h.get_logo_location(
+                    'right', plot_specs_h.fig_size[0],
+                     plot_specs_h.fig_size[1], plt.rcParams['figure.dpi']
+                )
+            )
+            for model_thresh in list(
+                itertools.product(self.model_list,
+                                  ufd_stat_threshold_list)
+            ):
+                model = model_thresh[0]
+                thresh = model_thresh[1]
+                self.logger.debug("Creating histogram plot for "
+                                  +f"{model} useful forecast days, where "
+                                  +f"{self.stat} is {thresh}")
+                image_name = os.path.join(
+                    output_image_dir,
+                    f"evs.global_det.{model}.{self.stat}_".lower()
+                    +f"{thresh.replace('.', 'p')}.".lower()
+                    +f"{self.var_name}_{self.var_level}.".lower()
+                    +f"{run_length}_{self.time_range}.".lower()
+                    +f"useful_fcst_days_hist_".lower()
+                    +f"{model_hour.replace(' ', '').replace(',','')}.".lower()
+                    +f"g004_{self.vx_mask}.png".lower()
+                )
+                fig, ax = plt.subplots(1,1,figsize=(plot_specs_h.fig_size[0],
+                                                    plot_specs_h.fig_size[1]))
+                if self.time_range == 'monthly':
+                    dates_for_title = (
+                        f"{run_length_date_dt_list[0]:%b%Y}"
+                        +f"-{run_length_date_dt_list[-1]:%b%Y}"
+                    )
+                elif self.time_range == 'yearly':
+                    dates_for_title = (
+                        f"{run_length_date_dt_list[0]:%Y}"
+                        +f"-{run_length_date_dt_list[-1]:%Y}"
+                    )
+                fig.suptitle(
+                    f"Day At Which {model.upper()} Forecast Loses Useful Skill ("
+                    +plot_specs_h.get_stat_plot_name(self.stat)+f"={thresh})\n"
+                    +plot_specs_h.get_var_plot_name(self.var_name,
+                                                    self.var_level)+" "
+                    +f"({var_units}), G004/"
+                    +plot_specs_h.get_vx_mask_plot_name(self.vx_mask)+'\n'
+                    +f"{self.time_range.title()} Mean"
+                )
+                run_length_dates = np.asarray(run_length_date_list,
+                                              dtype=float)
+                ax.grid(True)
+                ax.set_xlabel('Year')
+                ax.set_xlim([run_length_dates[0],
+                             run_length_dates[-1]])
+                if self.time_range == 'monthly':
+                    ax.set_xticks(run_length_dates[::24])
+                elif self.time_range == 'yearly':
+                    ax.set_xticks(run_length_dates[::2])
+                ax.set_ylabel('Forecast Day')
+                ax.set_yticks(range(0,11,1))
+                ax.set_ylim([0, 10])
+                if plot_left_logo:
+                    left_logo_img = fig.figimage(
+                        left_logo_img_array, left_logo_xpixel_loc,
+                        left_logo_ypixel_loc, zorder=1,
+                        alpha=right_logo_alpha
+                    )
+                    left_logo_img.set_visible(True)
+                if plot_right_logo:
+                    right_logo_img = fig.figimage(
+                        right_logo_img_array, right_logo_xpixel_loc,
+                        right_logo_ypixel_loc, zorder=1,
+                        alpha=right_logo_alpha
+                    )
+                ax.bar(run_length_dates,
+                       np.ma.masked_invalid(
+                            run_length_model_group_useful_fday_df\
+                            .loc[(model)][thresh].to_numpy(dtype=float)
+                        ))
+                self.logger.info("Saving image as "+image_name)
+                plt.savefig(image_name)
+                plt.clf()
+                plt.close('all')
+                
 def main():
     # Need settings
     INPUT_DIR = os.environ['HOME']

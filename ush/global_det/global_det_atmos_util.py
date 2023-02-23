@@ -8,6 +8,7 @@ import netCDF4 as netcdf
 import numpy as np
 import glob
 import pandas as pd
+import logging
 from time import sleep
 
 def run_shell_command(command):
@@ -1720,6 +1721,28 @@ def initalize_job_env_dict(verif_type, group,
         job_env_dict['init_hr_inc'] = str(verif_type_init_hr_inc)
     return job_env_dict
 
+def get_logger(log_file):
+    """! Get logger
+         Args:
+             log_file - full path to log file (string)
+         Returns:
+             logger - logger object
+    """
+    log_formatter = logging.Formatter(
+        '%(asctime)s.%(msecs)03d (%(filename)s:%(lineno)d) %(levelname)s: '
+        + '%(message)s',
+        '%m/%d %H:%M:%S'
+    )
+    logger = logging.getLogger(log_file)
+    logger.setLevel('DEBUG')
+    file_handler = logging.FileHandler(log_file, mode='a')
+    file_handler.setFormatter(log_formatter)
+    logger.addHandler(file_handler)
+    logger_info = f"Log file: {log_file}"
+    print(logger_info)
+    logger.info(logger_info)
+    return logger
+
 def get_plot_dates(logger, date_type, start_date, end_date,
                    valid_hr_start, valid_hr_end, valid_hr_inc,
                    init_hr_start, init_hr_end, init_hr_inc,
@@ -1850,6 +1873,44 @@ def format_thresh(thresh):
        .replace('<=', 'le').replace('<', 'lt')
    )
    return thresh_symbol, thresh_letter
+
+def get_daily_stat_file(model_name, source_stats_base_dir,
+                        dest_model_name_stats_dir, 
+                        verif_case, start_date_dt, end_date_dt):
+    """! Link model daily stat files
+         Args:
+             model_name                - name of model (string)
+             source_stats_base_dir     - full path to stats/global_det
+                                         source directory (string)
+             dest_model_name_stats_dir - full path to model
+                                         destintion directory (string)
+             verif_case                - grid2grid or grid2obs (string)
+             start_date_dt             - month start date (datetime obj)
+             end_date_dt               - month end date (datetime obj)
+         Returns:
+    """
+    date_dt = start_date_dt
+    while date_dt <= end_date_dt:
+        source_model_date_stat_file = os.path.join(
+            source_stats_base_dir,
+            model_name+'.'+date_dt.strftime('%Y%m%d'),
+            'evs.stats.'+model_name+'.atmos.'+verif_case+'.'
+            +'v'+date_dt.strftime('%Y%m%d')+'.stat'
+        )
+        dest_model_date_stat_file = os.path.join(
+            dest_model_name_stats_dir,
+            model_name+'_atmos_'+verif_case+'_v'
+            +date_dt.strftime('%Y%m%d')+'.stat'
+        )
+        if not os.path.exists(dest_model_date_stat_file):
+            if os.path.exists(source_model_date_stat_file):
+                print(f"Linking {source_model_date_stat_file} to "
+                      +f"{dest_model_date_stat_file}")
+                os.symlink(source_model_date_stat_file,
+                           dest_model_date_stat_file)
+            else:
+                print(f"WARNING: {source_model_date_stat_file} DOES NOT EXIST")
+        date_dt = date_dt + datetime.timedelta(days=1)
 
 def condense_model_stat_files(logger, input_dir, output_file, model, obs,
                               grid, vx_mask, fcst_var_name, obs_var_name,
@@ -2261,20 +2322,42 @@ def merge_long_term_stats_datasets(logger, stat_base_dir, time_range,
         logger.debug(f"{model} EMC_verif-global File: "
                      +f"{model_emc_verif_global_file_name}")
         logger.debug(f"{model} EVS File: {model_evs_file_name}")
-        for model_verif_sys_file_name in [model_caplan_zhu_file_name,
+        model_verif_sys_file_name_list = [model_caplan_zhu_file_name,
                                           model_vsdb_file_name,
                                           model_emc_verif_global_file_name,
-                                          model_evs_file_name]:
+                                          model_evs_file_name]
+        if evs_stat == 'ACC' and evs_var_name == 'HGT' \
+                and evs_var_level == 'P500' and valid_hour == '00Z' \
+                and evs_vx_mask in ['NHEM', 'SHEM'] \
+                and time_range == 'yearly':
+            model_excel_file_name = os.path.join(
+                stat_base_dir, model.replace(valid_hour, ''),
+                'excel_'+evs_stat+'_'+evs_var_name+'_'+evs_var_level+'_'
+                +emc_verif_global_vx_mask+'_valid'+valid_hour+'.txt'
+            )
+            logger.debug(f"{model} Excel File: {model_excel_file_name}")
+            if date_dt_list[0] < datetime.datetime.strptime('199601', '%Y%m'):
+                verif_sys_start_date_dict['caplan_zhu'] = '199601'
+            if model == 'ukmet':
+                verif_sys_start_date_dict['caplan_zhu'] = '199701'
+            elif model == 'fnmoc':
+                verif_sys_start_date_dict['caplan_zhu'] = '199801'
+            elif model == 'cfs':
+                verif_sys_start_date_dict['caplan_zhu'] = '999901'
+            model_verif_sys_file_name_list.append(model_excel_file_name)
+        set_new_df = True
+        for model_verif_sys_file_name in model_verif_sys_file_name_list:
             if os.path.exists(model_verif_sys_file_name):
                 model_verif_sys_df = pd.read_table(model_verif_sys_file_name,
                                                    delimiter=' ', dtype='str',
                                                    skipinitialspace=True)
-                if 'caplan_zhu' not in model_verif_sys_file_name:
+                if set_new_df:
+                    model_all_verif_sys_df = model_verif_sys_df.copy()
+                    set_new_df = False
+                else:
                     model_all_verif_sys_df = model_all_verif_sys_df.append(
                         model_verif_sys_df, ignore_index=True
                     )
-                else:
-                    model_all_verif_sys_df = model_verif_sys_df.copy()
             else:
                 logger.warning(f"{model_verif_sys_file_name} does not exist")
         if time_range == 'monthly':
@@ -2318,8 +2401,13 @@ def merge_long_term_stats_datasets(logger, stat_base_dir, time_range,
                         verif_sys_start_date_dict['evs'], '%Y%m'
                     ):
                 date_dt_verif_sys = 'EVG'
-            else:
+            elif date_dt \
+                    >= datetime.datetime.strptime(
+                        verif_sys_start_date_dict['evs'], '%Y%m'
+                    ):
                 date_dt_verif_sys = 'EVS'
+            else:
+                date_dt_verif_sys = 'EXCEL'
             if time_range == 'monthly':
                 model_verif_sys_date_dt_df = model_all_verif_sys_df.loc[
                     (model_all_verif_sys_df['SYS'] == date_dt_verif_sys)
