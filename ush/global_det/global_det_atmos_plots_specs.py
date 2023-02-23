@@ -61,7 +61,8 @@ class PlotSpecs:
             self.legend_bbox = (0.5, 0.05)
             self.legend_ncol = 4
         elif self.plot_type in ['lead_average', 'valid_hour_average',
-                                'threshold_average']:
+                                'threshold_average',
+                                'long_term_time_series_diff']:
             self.fig_size = (16., 16.)
             self.fig_subplot_top = 0.9
             self.fig_subplot_bottom = 0.05
@@ -71,7 +72,11 @@ class PlotSpecs:
             self.legend_bbox = (0.5, 0.05)
             self.legend_ncol = 5
             self.fig_title_size = 18
-        elif self.plot_type == 'lead_by_date':
+            if self.plot_type == 'long_term_time_series_diff':
+                self.legend_font_size = 15
+        elif self.plot_type in ['lead_by_date',
+                                'long_term_annual_mean',
+                                'long_term_lead_by_date']:
             self.fig_size = (16., 16.)
             self.axis_title_pad = 5
             self.axis_title_loc = 'left'
@@ -80,6 +85,11 @@ class PlotSpecs:
             self.fig_subplot_right = 0.923
             self.fig_subplot_left = 0.15
             self.fig_title_size = 18
+            if self.plot_type == 'long_term_annual_mean':
+                self.fig_subplot_left = 0.1
+                self.fig_subplot_right = 0.9
+            if self.plot_type == 'long_term_lead_by_date':
+                self.fig_subplot_left = 0.1
         elif self.plot_type == 'stat_by_level':
             self.fig_size = (16., 16.)
             self.fig_subplot_top = 0.925
@@ -1095,6 +1105,18 @@ class PlotSpecs:
             'gfs': {'color': '#000000',
                     'marker': 'o', 'markersize': 6,
                     'linestyle': 'solid', 'linewidth': 3},
+            'gfs00Z': {'color': '#000000',
+                       'marker': 'o', 'markersize': 6,
+                       'linestyle': 'solid', 'linewidth': 3},
+            'gfs06Z': {'color': '#fb2020',
+                       'marker': '^', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'gfs12Z': {'color': '#1e3cff',
+                       'marker': 'X', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'gfs18Z': {'color': '#e69f00',
+                       'marker': 'o', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
             'cfs': {'color': '#56b4e9',
                     'marker': 'o', 'markersize': 6,
                     'linestyle': 'solid', 'linewidth': 1.5},
