@@ -30,8 +30,7 @@ class LongTermUsefulForecastDays:
 
     def __init__(self, logger, input_dir, output_dir, logo_dir,
                  time_range, date_dt_list, model_group, model_list,
-                 var_name, var_level, vx_mask, stat, forecast_day_list,
-                 run_length_list):
+                 var_name, var_level, vx_mask, stat, run_length_list):
         """! Initalize LongTermUsefulForecastDays class
              Args:
                  logger             - logger object
@@ -47,7 +46,6 @@ class LongTermUsefulForecastDays:
                  var_level          - variable level (string)
                  vx_mask            - verification mask name (string)
                  stat               - statistic name (string)
-                 forecast_days_list - list of forecast days (strings)
                  run_length_list    - list of length of times to plot
                                       (string)
              Returns:
@@ -64,7 +62,6 @@ class LongTermUsefulForecastDays:
         self.var_level = var_level
         self.vx_mask = vx_mask
         self.stat = stat
-        self.forecast_day_list = forecast_day_list
         self.run_length_list = run_length_list
 
     def make_long_term_useful_forecast_days_time_series(self):
@@ -93,8 +90,6 @@ class LongTermUsefulForecastDays:
         self.logger.debug(f"Variable Level: {self.var_level}")
         self.logger.debug(f"Verification Mask: {self.vx_mask}")
         self.logger.debug(f"Statistic: {self.stat}")
-        self.logger.debug("Forecast Days: "
-                          +f"{', '.join(self.forecast_day_list)}")
         self.logger.debug(f"Run Lengths: {', '.join(self.run_length_list)}")
         # Make job image directory
         output_image_dir = os.path.join(self.output_dir, 'images')

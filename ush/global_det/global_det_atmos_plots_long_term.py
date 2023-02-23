@@ -179,8 +179,7 @@ for avg_time_range in avg_time_range_list:
                             avg_time_range_g2g_dir,
                             os.path.join(FIXevs, 'logos'), avg_time_range,
                             all_dt_list, model_group, model_list, var_name,
-                            var_level, vx_mask, stat, forecast_day_list,
-                            run_length_list
+                            var_level, vx_mask, stat, run_length_list
                         )
                         plot_ltufd.make_long_term_useful_forecast_days_time_series()
                 elif avg_time_range == 'yearly':
