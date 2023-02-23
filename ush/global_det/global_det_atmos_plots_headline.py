@@ -365,6 +365,61 @@ else:
     ### - GFS Useful Forecast Days NH Annual Means
     print("\nHeadline Score Plot 4: Grid-to-Grid - "
           +"GFS Useful Forecast Days NH Annual Means")
+    headline4_stat = 'ACC'
+    headline4_vx_mask = 'NHEM'
+    headline4_var_name = 'HGT'
+    headline4_var_level = 'P500'
+    headline4_avg_time_range = 'yearly'
+    headline4_valid_hr = '00'
+    headline4_avg_time_range = 'yearly'
+    headline4_valid_hr = '00'
+    headline4_start_YYYY = '1989'
+    headline4_end_YYYY = str(int(datetime.datetime.now().strftime('%Y'))-1)
+    headline4_all_dt_list = list(
+        dateutil.rrule.rrule(
+            dateutil.rrule.YEARLY,
+            dtstart=dateutil.parser.parse(headline4_start_YYYY+'0101T000000'),
+            until=dateutil.parser.parse(headline4_end_YYYY+'0101T000000')
+        )
+    )
+    headline4_job_name = (
+        'grid2grid_'+headline4_avg_time_range+'_gfs_'
+        +headline4_stat+'_'+headline4_vx_mask+'_'+headline4_var_name+'_'
+        +headline4_var_level+'_useful_forecast_days_'
+        +headline4_valid_hr+'Z'
+    )
+    # Set output
+    headline4_output_dir = os.path.join(DATA, headline4_job_name)
+    if not os.path.exists(headline4_output_dir):
+        os.makedirs(headline4_output_dir)
+    # Set up logging
+    now = datetime.datetime.now()
+    headline4_logging_file = os.path.join(
+        logging_dir, 'evs_'+COMPONENT+'_atmos_'
+        +RUN+'_'+STEP+'_'+headline4_job_name
+        +'_runon'+now.strftime('%Y%m%d%H%M%S')+'.log'
+    )
+    logger4 = gda_util.get_logger(headline4_logging_file)
+    import global_det_atmos_plots_long_term_useful_forecast_days as gdap_ltufd
+    plot_ltufd = gdap_ltufd.LongTermUsefulForecastDays(
+        logger4, COMINyearlystats, headline4_output_dir,
+        os.path.join(FIXevs, 'logos'), headline4_avg_time_range,
+        headline4_all_dt_list, 'gfs', ['gfs'], headline4_var_name,
+        headline4_var_level, headline4_vx_mask, headline4_stat,
+        ['allyears']
+    )
+    plot_ltufd.make_long_term_useful_forecast_days_histogram()
+    # Rename and copy to main image directory
+    for headline4_image_name in glob.glob(
+        os.path.join(headline4_output_dir, 'images', '*')
+    ):
+        headline4_copy_image_name = os.path.join(
+            images_dir,
+            headline4_image_name.rpartition('/')[2]
+        )
+        print("Copying "+headline4_image_name+" to "
+              +headline4_copy_image_name)
+        shutil.copy2(headline4_image_name, headline4_copy_image_name)
     ### Headline Score Plot 5: Grid-to-Grid
     ### - 24 hour Precip CONUS FSS 62km Neighborhood
     print("\nHeadline Score Plot 4: Grid-to-Grid - "

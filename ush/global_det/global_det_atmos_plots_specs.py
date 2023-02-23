@@ -65,6 +65,15 @@ class PlotSpecs:
             if self.plot_type in ['time_series_multifhr',
                                   'long_term_time_series']:
                 self.fig_subplot_top = 0.85
+        elif self.plot_type == 'histogram':
+            self.fig_size = (16., 8.)
+            self.fig_subplot_top = 0.87
+            self.fig_subplot_bottom = 0.1
+            self.fig_subplot_right = 0.925
+            self.fig_subplot_left = 0.085
+            self.axis_label_size = 15
+            self.xtick_label_size = 15
+            self.ytick_label_size = 15
         elif self.plot_type in ['lead_average', 'valid_hour_average',
                                 'threshold_average']:
             self.fig_size = (16., 16.)
