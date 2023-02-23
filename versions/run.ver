@@ -1,6 +1,4 @@
 export evs_ver=v1.0
-# export met_ver=10.1.2
-# export metplus_ver=4.1.4
 export met_ver=11.0.0
 export metplus_ver=5.0.0
 
@@ -15,7 +13,6 @@ export gsl_ver=2.7
 export hdf5_ver=1.10.6
 export grib_util_ver=1.2.3
 export prod_util_ver=2.0.13
-# export prod_envir=2.0.6
 export prod_envir_ver=2.0.6
 export bufr_dump_ver=1.0.0
 export python_ver=3.8.6
