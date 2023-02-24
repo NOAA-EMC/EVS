@@ -56,7 +56,8 @@ reformat_data_obs_jobs_dict = {
     'flux': {},
     'means': {},
     'ozone': {},
-    'precip': {},
+    'precip_accum24hr': {},
+    'precip_accum3hr': {},
     'pres_levs': {},
     'sea_ice': {},
     'snow': {},
@@ -66,7 +67,8 @@ reformat_data_model_jobs_dict = {
     'flux': {},
     'means': {},
     'ozone': {},
-    'precip': {},
+    'precip_accum24hr': {},
+    'precip_accum3hr': {},
     'pres_levs': {
         'GeoHeightAnom': {'env': {'var1_name': 'HGT',
                                   'var1_levels': 'P500',
@@ -145,12 +147,13 @@ assemble_data_obs_jobs_dict = {
     'flux': {},
     'means': {},
     'ozone': {},
-    'precip': {
+    'precip_accum24hr': {
         '24hrCCPA': {'env': {},
                      'commands': [gda_util.metplus_command(
                                       'PCPCombine_obs24hrCCPA.conf'
                                   )]}
     },
+    'precip_accum3hr': {},
     'pres_levs': {},
     'sea_ice': {},
     'snow': {},
@@ -160,11 +163,16 @@ assemble_data_model_jobs_dict = {
     'flux': {},
     'means': {},
     'ozone': {},
-    'precip': {
-        '24hrAccum': {'env': {},
+    'precip_accum24hr': {
+        '24hrAccum': {'env': {'accum': '24'},
                       'commands': [gda_util.metplus_command(
-                                       'PCPCombine_fcstGLOBAL_DET_'
-                                       +'24hrAccum_precip.conf'
+                                       'PCPCombine_fcstGLOBAL_DET_precip.conf'
+                                   )]}
+    },
+    'precip_accum3hr': {
+        '3hrAccum': {'env': {'accum': '3'},
+                      'commands': [gda_util.metplus_command(
+                                       'PCPCombine_fcstGLOBAL_DET_precip.conf'
                                    )]}
     },
     'pres_levs': {
@@ -426,7 +434,7 @@ generate_stats_jobs_dict = {
         'Ozone': {'env': {},
                   'commands': []},
     },
-    'precip': {
+    'precip_accum24hr': {
         '24hrCCPA_G211': {'env': {'grid': 'G211',
                                   'met_config_overrides': ''},
                           'commands': [gda_util.metplus_command(
@@ -472,27 +480,84 @@ generate_stats_jobs_dict = {
                                          )]},
         '24hrCCPA_Nbrhd5': {'env': {'nbhrd_list': "'45,47,49'",
                                     'met_config_overrides': ''},
-                           'commands': [gda_util.metplus_command(
-                                            'GridStat_fcstGLOBAL_DET_'
-                                            +'obs24hrCCPA_Nbrhd.conf'
-                                        )]},
+                            'commands': [gda_util.metplus_command(
+                                             'GridStat_fcstGLOBAL_DET_'
+                                             +'obs24hrCCPA_Nbrhd.conf'
+                                         )]},
         '24hrCCPA_Nbrhd6': {'env': {'nbhrd_list': "'51,53,55'",
                                     'met_config_overrides': ''},
-                           'commands': [gda_util.metplus_command(
-                                            'GridStat_fcstGLOBAL_DET_'
-                                            +'obs24hrCCPA_Nbrhd.conf'
-                                        )]},
+                            'commands': [gda_util.metplus_command(
+                                             'GridStat_fcstGLOBAL_DET_'
+                                             +'obs24hrCCPA_Nbrhd.conf'
+                                         )]},
         '24hrCCPA_Nbrhd7': {'env': {'nbhrd_list': "'57,59'",
                                     'met_config_overrides': ''},
-                           'commands': [gda_util.metplus_command(
-                                            'GridStat_fcstGLOBAL_DET_'
-                                            +'obs24hrCCPA_Nbrhd.conf'
-                                        )]},
+                            'commands': [gda_util.metplus_command(
+                                             'GridStat_fcstGLOBAL_DET_'
+                                             +'obs24hrCCPA_Nbrhd.conf'
+                                         )]},
         '24hrCCPA_Nbrhd8': {'env': {'nbhrd_list': "'61,63'",
                                     'met_config_overrides': ''},
+                            'commands': [gda_util.metplus_command(
+                                             'GridStat_fcstGLOBAL_DET_'
+                                             +'obs24hrCCPA_Nbrhd.conf'
+                                         )]}
+    },
+    'precip_accum3hr': {
+        '3hrCCPA_G212': {'env': {'grid': 'G212',
+                                 'met_config_overrides': ''},
+                         'commands': [gda_util.metplus_command(
+                                          'GridStat_fcstGLOBAL_DET_'
+                                          +'obs3hrCCPA.conf'
+                                      )]},
+        '3hrCCPA_Nbrhd1': {'env': {'nbhrd_list': ("'1,3,5,7,9,11,13,"
+                                                  +"15,17,19'"),
+                                   'met_config_overrides': ''},
                            'commands': [gda_util.metplus_command(
                                             'GridStat_fcstGLOBAL_DET_'
-                                            +'obs24hrCCPA_Nbrhd.conf'
+                                            +'obs3hrCCPA_Nbrhd.conf'
+                                        )]},
+        '3hrCCPA_Nbrhd2': {'env': {'nbhrd_list': "'21,23,25,27,29'",
+                                   'met_config_overrides': ''},
+                           'commands': [gda_util.metplus_command(
+                                            'GridStat_fcstGLOBAL_DET_'
+                                            +'obs3hrCCPA_Nbrhd.conf'
+                                        )]},
+        '3hrCCPA_Nbrhd3': {'env': {'nbhrd_list': "'31,33,35,37'",
+                                   'met_config_overrides': ''},
+                           'commands': [gda_util.metplus_command(
+                                            'GridStat_fcstGLOBAL_DET_'
+                                            +'obs3hrCCPA_Nbrhd.conf'
+                                        )]},
+        '3hrCCPA_Nbrhd4': {'env': {'nbhrd_list': "'39,41,43'",
+                                   'met_config_overrides': ''},
+                           'commands': [gda_util.metplus_command(
+                                            'GridStat_fcstGLOBAL_DET_'
+                                            +'obs3hrCCPA_Nbrhd.conf'
+                                        )]},
+        '3hrCCPA_Nbrhd5': {'env': {'nbhrd_list': "'45,47,49'",
+                                   'met_config_overrides': ''},
+                           'commands': [gda_util.metplus_command(
+                                            'GridStat_fcstGLOBAL_DET_'
+                                            +'obs3hrCCPA_Nbrhd.conf'
+                                        )]},
+        '3hrCCPA_Nbrhd6': {'env': {'nbhrd_list': "'51,53,55'",
+                                   'met_config_overrides': ''},
+                           'commands': [gda_util.metplus_command(
+                                            'GridStat_fcstGLOBAL_DET_'
+                                            +'obs3hrCCPA_Nbrhd.conf'
+                                        )]},
+        '3hrCCPA_Nbrhd7': {'env': {'nbhrd_list': "'57,59'",
+                                   'met_config_overrides': ''},
+                           'commands': [gda_util.metplus_command(
+                                            'GridStat_fcstGLOBAL_DET_'
+                                            +'obs3hrCCPA_Nbrhd.conf'
+                                        )]},
+        '3hrCCPA_Nbrhd8': {'env': {'nbhrd_list': "'61,63'",
+                                   'met_config_overrides': ''},
+                           'commands': [gda_util.metplus_command(
+                                            'GridStat_fcstGLOBAL_DET_'
+                                            +'obs3hrCCPA_Nbrhd.conf'
                                         )]}
     },
     'pres_levs': {
@@ -805,12 +870,13 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
         VERIF_CASE_STEP_abbrev_type = (VERIF_CASE_STEP_abbrev+'_'
                                        +verif_type)
         # Read in environment variables for verif_type
-        if JOB_GROUP == 'assemble_data' and verif_type == 'precip':
+        if JOB_GROUP == 'assemble_data' and verif_type in ['precip_accum24hr',
+                                                           'precip_accum3hr']:
             precip_file_accum_list = (os.environ \
-                [VERIF_CASE_STEP_abbrev+'_precip_file_accum_list'] \
+                [VERIF_CASE_STEP_abbrev+'_'+verif_type+'_file_accum_list'] \
                 .split(' '))
             precip_var_list = (os.environ \
-                [VERIF_CASE_STEP_abbrev+'_precip_var_list'] \
+                [VERIF_CASE_STEP_abbrev+'_'+verif_type+'_var_list'] \
                 .split(' '))
         for verif_type_job in list(JOB_GROUP_jobs_dict[verif_type].keys()):
             # Initialize job environment dictionary
@@ -877,7 +943,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                 VERIF_CASE_STEP_abbrev_type+'_truth_name_list'
                             ].split(' ')[model_idx]
                     if JOB_GROUP == 'assemble_data':
-                        if verif_type == 'precip':
+                        if verif_type in ['precip_accum24hr',
+                                          'precip_accum3hr']:
                             job_env_dict['MODEL_var'] = (
                                 precip_var_list[model_idx]
                             )
