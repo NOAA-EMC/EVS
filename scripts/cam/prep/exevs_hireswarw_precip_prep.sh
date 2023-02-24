@@ -14,7 +14,7 @@ set -x
 
 # Loop through HiRes Window ARW Precipitation configs
 export njob=1
-for NEST in "conus" "ak"; do
+for NEST in "conus" "ak" "pr" "hi"; do
     export NEST=$NEST
     for ACC in "24"; do
         export ACC=$ACC
@@ -88,7 +88,7 @@ else
     done
 fi
 
-for NEST in "conus" "ak"; do
+for NEST in "conus" "ak" "pr" "hi"; do
     export NEST=$NEST
     if [ $RUN_ENVIR = nco ]; then
         export evs_run_mode="production"

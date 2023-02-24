@@ -2,10 +2,10 @@
  
 # =============================================================================
 #
-# NAME: cam_stats_grid2obs_create_poe_job_scripts.sh
+# NAME: cam_plots_precip_create_poe_job_scripts.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Create EVS CAM Grid2Obs - Statistics POE job scripts
-# DEPENDENCIES: $SCRIPTSevs/cam/stats/exevs_$MODELNAME_grid2obs_stats.sh
+# PURPOSE: Create EVS CAM Precipitation - Plots POE job scripts
+# DEPENDENCIES: $SCRIPTSevs/cam/plots/exevs_$MODELNAME_precip_plots.sh
 #
 # =============================================================================
 
@@ -18,7 +18,6 @@ import numpy as np
 print(f"BEGIN: {os.path.basename(__file__)}")
 
 # Read in environment variables
-job_type = os.environ['job_type']
 machine = os.environ['machine']
 USE_CFP = os.environ['USE_CFP']
 nproc = os.environ['nproc']
@@ -28,7 +27,7 @@ DATA = os.environ['DATA']
 
 # If Using CFP, create POE scripts
 if USE_CFP == 'YES':
-    job_dir = os.path.join(DATA, VERIF_CASE, STEP, 'METplus_job_scripts', job_type)
+    job_dir = os.path.join(DATA, VERIF_CASE, STEP, 'plotting_job_scripts')
     job_files = glob.glob(os.path.join(job_dir, 'job*'))
     njob_files = len(job_files)
     if njob_files == 0:
