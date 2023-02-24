@@ -30,23 +30,10 @@ export job=${PBS_JOBNAME:-jevs_dwd_atmos_grid2grid_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
-export NET=evs
-export STEP=stats
-export COMPONENT=global_det
-export RUN=atmos
-export VERIF_CASE=grid2grid
-export MODELNAME=dwd
-export VDATE=$(date -d "24 hours ago" '+%Y%m%d')
-export PDYm2=$(date -d "48 hours ago" '+%Y%m%d')
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com
 export COMIN=$COMROOT/$NET/$evs_ver
 export COMINdwd=$COMIN/prep/$COMPONENT/$RUN
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT
-export COMOUTsmallVDATE=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
-export COMOUTsmallPDYm2=$COMOUT/$RUN.$PDYm2/$MODELNAME/$VERIF_CASE
-export COMOUTccpaVDATE=$COMOUT/$RUN.$VDATE/ccpa/$VERIF_CASE
-export COMOUTfinal=$COMOUT/$MODELNAME.$VDATE
-export OUTPUTROOT=/lfs/h2/emc/stmp/$USER/evs_global_det_atmos_test
 ############################################################
 
 ############################################################
