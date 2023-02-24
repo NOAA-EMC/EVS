@@ -33,6 +33,7 @@ VDATE = os.environ['VDATE']
 VERIF_TYPE = os.environ['VERIF_TYPE']
 USH_DIR = os.environ['USH_DIR']
 FIXevs = os.environ['FIXevs']
+cartopyDataDir = os.environ['cartopyDataDir']
 MET_VERSION = os.environ['MET_VERSION']
 IMG_HEADER = os.environ['IMG_HEADER']
 PRUNE_DIR = os.environ['PRUNE_DIR']
@@ -74,6 +75,7 @@ job_env_vars_dict = {
     'IMG_HEADER': IMG_HEADER,
     'USH_DIR': USH_DIR,
     'FIXevs': FIXevs,
+    'cartopyDataDir': cartopyDataDir,
     'PRUNE_DIR': PRUNE_DIR,
     'SAVE_DIR': SAVE_DIR,
     'STAT_OUTPUT_BASE_DIR': STAT_OUTPUT_BASE_DIR,
