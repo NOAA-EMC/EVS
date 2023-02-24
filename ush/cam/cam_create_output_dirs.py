@@ -16,6 +16,7 @@ import re
 from datetime import datetime, timedelta as td
 from cam_plots_grid2obs_graphx_defs import graphics as graphics_g2o
 from cam_plots_precip_graphx_defs import graphics as graphics_pcp
+from cam_plots_snowfall_graphx_defs import graphics as graphics_sno
 import cam_util as cutil
 
 print(f"BEGIN: {os.path.basename(__file__)}")
@@ -63,6 +64,19 @@ elif VERIF_CASE == "grid2obs":
         OBSNAME = os.environ['OBSNAME']
     elif STEP == 'plots':
         all_eval_periods = cutil.get_all_eval_periods(graphics_g2o)
+elif VERIF_CASE == "snowfall":
+    if STEP == 'prep':
+        pass
+    elif STEP == 'stats':
+        NEST = os.environ['NEST']
+        FHR_END_FULL = os.environ['FHR_END_FULL']
+        FHR_END_SHORT = os.environ['FHR_END_SHORT']
+        fhr_end_max = max(int(FHR_END_FULL), int(FHR_END_SHORT))
+        start_date_dt = vdate_dt - td(hours=fhr_end_max)
+        VERIF_TYPE = os.environ['VERIF_TYPE']
+        OBSNAME = os.environ['OBSNAME']
+    elif STEP == 'plots':
+        all_eval_periods = cutil.get_all_eval_periods(graphics_sno)
 if STEP == 'stats':
     job_type = os.environ['job_type']
 
@@ -80,6 +94,10 @@ if VERIF_CASE == 'precip':
 elif VERIF_CASE == 'grid2obs':
     if STEP == 'stats':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
+elif VERIF_CASE == 'snowfall':
+    if STEP == 'stats':
+        data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
+        data_dir_list.append(os.path.join(data_base_dir, OBSNAME))
 
 # Create data directories and subdirectories
 for data_dir in data_dir_list:
@@ -279,6 +297,78 @@ elif STEP == 'stats':
                     MODELNAME+'.'+date_dt.strftime('init%Y%m%d')
                 ))
             date_dt+=td(days=1)
+    elif VERIF_CASE == 'snowfall':
+        if job_type == 'reformat':
+            working_output_base_dir = os.path.join(
+                DATA, VERIF_CASE, 'METplus_output', VERIF_TYPE
+            )
+        if job_type == 'generate':
+            working_output_base_dir = os.path.join(
+                DATA, VERIF_CASE, 'METplus_output', VERIF_TYPE
+            )
+        if job_type == 'gather':
+            working_output_base_dir = os.path.join(
+                DATA, VERIF_CASE, 'METplus_output', 'gather_small'
+            )
+        if job_type == 'gather2':
+            working_output_base_dir = os.path.join(
+                DATA, VERIF_CASE, 'METplus_output'
+            )
+        working_dir_list.append(working_output_base_dir)
+        if job_type == 'reformat':
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'pcp_combine', 'confs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'pcp_combine', 'logs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'pcp_combine', 'tmp'
+            ))
+        if job_type == 'generate':
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'grid_stat', 'confs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'grid_stat', 'logs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'grid_stat', 'tmp'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'grid_stat', 
+                MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
+            ))
+        if job_type in ['gather', 'gather2']:
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'stat_analysis', 'confs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'stat_analysis', 'logs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'stat_analysis', 'tmp'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'stat_analysis', 
+                MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
+            ))
+        date_dt = start_date_dt
+        while date_dt <= vdate_dt+td(days=1):
+            COMOUT_dir_list.append(os.path.join(
+                COMOUT, 
+                MODELNAME+'.'+date_dt.strftime('%Y%m%d')
+            ))
+            if job_type == 'reformat':
+                working_dir_list.append(os.path.join(
+                    working_output_base_dir, 'pcp_combine', 
+                    OBSNAME+'.'+date_dt.strftime('%Y%m%d')
+                ))
+                working_dir_list.append(os.path.join(
+                    working_output_base_dir, 'pcp_combine', 
+                    MODELNAME+'.'+date_dt.strftime('init%Y%m%d')
+                ))
+            date_dt+=td(days=1)
 elif STEP == 'plots':
     if VERIF_CASE == 'grid2obs':
 
@@ -307,7 +397,7 @@ elif STEP == 'plots':
                     working_output_base_dir, 'out', str(plot_group).lower(), 
                     str(eval_period).lower()
                 ))
-    if VERIF_CASE == 'precip':
+    elif VERIF_CASE == 'precip':
         working_output_base_dir = os.path.join(
             DATA, VERIF_CASE
         )
@@ -325,6 +415,29 @@ elif STEP == 'plots':
             COMOUT, 
         ))
         for plot_group in ['precip', 'radar', 'rtofs_sfc', 'sfc_upper']:
+            for eval_period in all_eval_periods:
+                working_dir_list.append(os.path.join(
+                    working_output_base_dir, 'out', str(plot_group).lower(), 
+                    str(eval_period).lower()
+                ))
+    elif VERIF_CASE == 'snowfall':
+        working_output_base_dir = os.path.join(
+            DATA, VERIF_CASE
+        )
+        working_dir_list.append(working_output_base_dir)
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'data'
+        ))
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'out'
+        ))
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'out', 'logs'
+        ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUT, 
+        ))
+        for plot_group in ['precip']:
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'out', str(plot_group).lower(), 
