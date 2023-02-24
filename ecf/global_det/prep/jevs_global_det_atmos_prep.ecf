@@ -24,8 +24,6 @@ export evs_ver=$evs_ver
 export envir=dev
 export SENDCOM=YES
 export KEEPDATA=NO
-module load prod_envir/2.0.6
-module load prod_util/2.0.13
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_global_det_atmos_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_global_det_atmos_prep}
 export jobid=$job.${PBS_JOBID:-$$}
@@ -43,6 +41,8 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/c
 ############################################################
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
+module load prod_envir/${prodenvir_ver}
+module load prod_util/${produtil_ver}
 module load libjpeg/${libjpeg_ver}
 module load grib_util/${grib_util_ver}
 module load wgrib2/${wgrib2_ver}
