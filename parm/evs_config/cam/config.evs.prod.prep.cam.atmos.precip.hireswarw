@@ -42,6 +42,14 @@ elif [ "$NEST" = "ak" ]; then
     export VERIF_TYPE="mrms"
     export COMINobs=${COMINmrms}
     export OBSNAME="mrms"
+elif [ "$NEST" = "pr" ]; then
+    export VERIF_TYPE="mrms"
+    export COMINobs=${COMINmrms}
+    export OBSNAME="mrms"
+elif [ "$NEST" = "hi" ]; then
+    export VERIF_TYPE="mrms"
+    export COMINobs=${COMINmrms}
+    export OBSNAME="mrms"
 else
     echo "The provided NEST, $NEST, is not supported for $MODELNAME"
     exit 1
