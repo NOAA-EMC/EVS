@@ -29,7 +29,6 @@ export job=${PBS_JOBNAME:-jevs_global_det_atmos_prep}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
 ############################################################
 
 ############################################################
@@ -55,6 +54,8 @@ export NET=evs
 export STEP=prep
 export COMPONENT=global_det
 export RUN=atmos
+
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
 
 export MODELNAME="cfs cmc cmc_regional dwd ecmwf fnmoc imd jma metfra ukmet"
 export OBSNAME="osi_saf ghrsst_ospo"

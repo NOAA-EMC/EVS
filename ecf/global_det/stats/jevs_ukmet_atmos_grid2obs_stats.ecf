@@ -30,10 +30,6 @@ export job=${PBS_JOBNAME:-jevs_ukmet_atmos_grid2obs_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
-export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com
-export COMIN=$COMROOT/$NET/$evs_ver
-export COMINukmet=$COMIN/prep/$COMPONENT/$RUN
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT
 ############################################################
 
 ############################################################
@@ -79,6 +75,12 @@ export COMPONENT=global_det
 export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=ukmet
+
+# Set COM paths
+export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com
+export COMIN=$COMROOT/$NET/$evs_ver
+export COMINukmet=$COMIN/prep/$COMPONENT/$RUN
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT
 
 # Set config file
 export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
