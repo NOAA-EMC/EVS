@@ -105,6 +105,7 @@ generate_stats_jobs_dict = {
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
             }
         },
     },
@@ -214,6 +215,7 @@ generate_stats_jobs_dict = {
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
             }
         },
     },
@@ -411,6 +413,7 @@ generate_stats_jobs_dict = {
                 'VL1L2': 'STAT',
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
             }
         },
     },
@@ -520,6 +523,7 @@ generate_stats_jobs_dict = {
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
             }
         },
     },
@@ -629,6 +633,7 @@ generate_stats_jobs_dict = {
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
             }
         },
     },
@@ -684,6 +689,7 @@ generate_stats_jobs_dict = {
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
             }
         },
     },
@@ -745,6 +751,7 @@ generate_stats_jobs_dict = {
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
             }
         },
     },
@@ -806,6 +813,7 @@ generate_stats_jobs_dict = {
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
             }
         },
     },
@@ -867,6 +875,7 @@ generate_stats_jobs_dict = {
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
             }
         },
     },
@@ -928,6 +937,7 @@ generate_stats_jobs_dict = {
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
             }
         },
     },
@@ -989,6 +999,7 @@ generate_stats_jobs_dict = {
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
             }
         },
     },
@@ -1050,6 +1061,7 @@ generate_stats_jobs_dict = {
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
             }
         },
     },
@@ -1151,6 +1163,7 @@ generate_stats_jobs_dict = {
                 'VL1L2': 'STAT',
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
             }
         },
     },
@@ -1212,6 +1225,7 @@ generate_stats_jobs_dict = {
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
             }
         },
     },
@@ -1273,6 +1287,7 @@ generate_stats_jobs_dict = {
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
             }
         },
     },
@@ -1334,6 +1349,7 @@ generate_stats_jobs_dict = {
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
             }
         },
     },
@@ -1395,6 +1411,7 @@ generate_stats_jobs_dict = {
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
             }
         },
     },
@@ -1456,6 +1473,7 @@ generate_stats_jobs_dict = {
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
             }
         },
     },
@@ -1517,6 +1535,7 @@ generate_stats_jobs_dict = {
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
             }
         },
     },
@@ -1578,6 +1597,7 @@ generate_stats_jobs_dict = {
                 'VL1L2': 'NONE',
                 'CNT': 'STAT',
                 'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
             }
         },
     },
@@ -1639,6 +1659,7 @@ generate_stats_jobs_dict = {
                 'VL1L2': 'NONE',
                 'CNT': 'STAT',
                 'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
             }
         },
     },

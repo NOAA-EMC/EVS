@@ -41,6 +41,10 @@ if [ "$ACC" = "01" ]; then
         export OBS_LEV="A1"
     elif [ "$NEST" = "ak" ]; then
         export OBS_LEV="Z0"
+    elif [ "$NEST" = "hi" ]; then
+        export OBS_LEV="Z0"
+    elif [ "$NEST" = "pr" ]; then
+        export OBS_LEV="Z0"
     else
         echo "The provided NEST, $NEST, is not supported for $MODELNAME"
         exit 1
@@ -56,6 +60,10 @@ if [ "$ACC" = "01" ]; then
                 export MODEL_PCP_COMBINE_COMMAND="-subtract ${COMINfcst}/nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%H}z.conusnest.hiresf{lead?fmt=%2H}.tm00.grib2 'name=\\\"APCP\\\"; level=\\\"A02\\\";' ${COMINfcst}/nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%H}z.conusnest.hiresf{lead?fmt=%2H?shift=-1H}.tm00.grib2 'name=\\\"APCP\\\"; level=\\\"A01\\\";'"
             elif [ "$NEST" = "ak" ]; then
                 export MODEL_PCP_COMBINE_COMMAND="-subtract ${COMINfcst}/nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%H}z.alaskanest.hiresf{lead?fmt=%2H}.tm00.grib2 'name=\\\"APCP\\\"; level=\\\"A02\\\";' ${COMINfcst}/nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%H}z.alaskanest.hiresf{lead?fmt=%2H?shift=-1H}.tm00.grib2 'name=\\\"APCP\\\"; level=\\\"A01\\\";'"
+            elif [ "$NEST" = "hi" ]; then
+                export MODEL_PCP_COMBINE_COMMAND="-subtract ${COMINfcst}/nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%H}z.hawaiinest.hiresf{lead?fmt=%2H}.tm00.grib2 'name=\\\"APCP\\\"; level=\\\"A02\\\";' ${COMINfcst}/nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%H}z.hawaiinest.hiresf{lead?fmt=%2H?shift=-1H}.tm00.grib2 'name=\\\"APCP\\\"; level=\\\"A01\\\";'"
+            elif [ "$NEST" = "pr" ]; then
+                export MODEL_PCP_COMBINE_COMMAND="-subtract ${COMINfcst}/nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%H}z.priconest.hiresf{lead?fmt=%2H}.tm00.grib2 'name=\\\"APCP\\\"; level=\\\"A02\\\";' ${COMINfcst}/nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%H}z.priconest.hiresf{lead?fmt=%2H?shift=-1H}.tm00.grib2 'name=\\\"APCP\\\"; level=\\\"A01\\\";'"
             else
                 echo "The provided NEST, $NEST, is not supported for $MODELNAME"
                 exit 1
@@ -65,6 +73,10 @@ if [ "$ACC" = "01" ]; then
                 export MODEL_PCP_COMBINE_COMMAND="-subtract ${COMINfcst}/nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%H}z.conusnest.hiresf{lead?fmt=%2H}.tm00.grib2 'name=\\\"APCP\\\"; level=\\\"A03\\\";' ${COMINfcst}/nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%H}z.conusnest.hiresf{lead?fmt=%2H?shift=-1H}.tm00.grib2 'name=\\\"APCP\\\"; level=\\\"A02\\\";'"
             elif [ "$NEST" = "ak" ]; then
                 export MODEL_PCP_COMBINE_COMMAND="-subtract ${COMINfcst}/nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%H}z.alaskanest.hiresf{lead?fmt=%2H}.tm00.grib2 'name=\\\"APCP\\\"; level=\\\"A03\\\";' ${COMINfcst}/nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%H}z.alaskanest.hiresf{lead?fmt=%2H?shift=-1H}.tm00.grib2 'name=\\\"APCP\\\"; level=\\\"A02\\\";'"
+            elif [ "$NEST" = "hi" ]; then
+                export MODEL_PCP_COMBINE_COMMAND="-subtract ${COMINfcst}/nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%H}z.hawaiinest.hiresf{lead?fmt=%2H}.tm00.grib2 'name=\\\"APCP\\\"; level=\\\"A03\\\";' ${COMINfcst}/nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%H}z.hawaiinest.hiresf{lead?fmt=%2H?shift=-1H}.tm00.grib2 'name=\\\"APCP\\\"; level=\\\"A02\\\";'"
+            elif [ "$NEST" = "pr" ]; then
+                export MODEL_PCP_COMBINE_COMMAND="-subtract ${COMINfcst}/nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%H}z.priconest.hiresf{lead?fmt=%2H}.tm00.grib2 'name=\\\"APCP\\\"; level=\\\"A03\\\";' ${COMINfcst}/nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%H}z.priconest.hiresf{lead?fmt=%2H?shift=-1H}.tm00.grib2 'name=\\\"APCP\\\"; level=\\\"A02\\\";'"
             else
                 echo "The provided NEST, $NEST, is not supported for $MODELNAME"
                 exit 1
@@ -83,6 +95,10 @@ elif [ "$ACC" = "03" ]; then
         export OBS_LEV="A3"
     elif [ "$NEST" = "ak" ]; then
         export OBS_LEV="Z0"
+    elif [ "$NEST" = "hi" ]; then
+        export OBS_LEV="Z0"
+    elif [ "$NEST" = "pr" ]; then
+        export OBS_LEV="Z0"
     else
         echo "The provided NEST, $NEST, is not supported for $MODELNAME"
         exit 1
@@ -98,6 +114,10 @@ elif [ "$ACC" = "24" ]; then
     if [ "$NEST" = "conus" ]; then
         export OBS_LEV="A24"
     elif [ "$NEST" = "ak" ]; then
+        export OBS_LEV="Z0"
+    elif [ "$NEST" = "hi" ]; then
+        export OBS_LEV="Z0"
+    elif [ "$NEST" = "pr" ]; then
         export OBS_LEV="Z0"
     else
         echo "The provided NEST, $NEST, is not supported for $MODELNAME"
@@ -131,6 +151,24 @@ if [ "$BOOL_NBRHD" = True ]; then
         export GRID="G091"
         export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.alaskanest.hiresf{lead?fmt=%2H}.tm00.grib2"
         export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc"
+    elif [ "$NEST" = "hi" ]; then
+        export VERIF_TYPE="mrms"
+        export MET_GRIB_TABLES=$PARMevs/metplus_config/cam/precip/stats/grib2_mrms.txt
+        export COMINobs=${COMINmrms}
+        export OBSNAME="mrms"
+        export MIN_IHOUR="00"
+        export GRID="G196"
+        export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.hawaiinest.hiresf{lead?fmt=%2H}.tm00.grib2"
+        export MASK_POLY_LIST="${FIXevs}/masks/Hawaii_G196.nc"
+    elif [ "$NEST" = "pr" ]; then
+        export VERIF_TYPE="mrms"
+        export MET_GRIB_TABLES=$PARMevs/metplus_config/cam/precip/stats/grib2_mrms.txt
+        export COMINobs=${COMINmrms}
+        export OBSNAME="mrms"
+        export MIN_IHOUR="00"
+        export GRID="G194"
+        export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.priconest.hiresf{lead?fmt=%2H}.tm00.grib2"
+        export MASK_POLY_LIST="${FIXevs}/masks/Puerto_Rico_G194.nc"
     else
         echo "The provided NEST, $NEST, is not supported for $MODELNAME"
         exit 1
@@ -156,6 +194,24 @@ else
         export GRID="G216"
         export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.alaskanest.hiresf{lead?fmt=%2H}.tm00.grib2"
         export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G216.nc"
+    elif [ "$NEST" = "hi" ]; then
+        export VERIF_TYPE="mrms"
+        export MET_GRIB_TABLES=$PARMevs/metplus_config/cam/precip/stats/grib2_mrms.txt
+        export COMINobs=${COMINmrms}
+        export OBSNAME="mrms"
+        export MIN_IHOUR="00"
+        export GRID="G196"
+        export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.hawaiinest.hiresf{lead?fmt=%2H}.tm00.grib2"
+        export MASK_POLY_LIST="${FIXevs}/masks/Hawaii_G196.nc"
+    elif [ "$NEST" = "pr" ]; then
+        export VERIF_TYPE="mrms"
+        export MET_GRIB_TABLES=$PARMevs/metplus_config/cam/precip/stats/grib2_mrms.txt
+        export COMINobs=${COMINmrms}
+        export OBSNAME="mrms"
+        export MIN_IHOUR="00"
+        export GRID="G194"
+        export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.priconest.hiresf{lead?fmt=%2H}.tm00.grib2"
+        export MASK_POLY_LIST="${FIXevs}/masks/Puerto_Rico_G194.nc"
     else
         echo "The provided NEST, $NEST, is not supported for $MODELNAME"
         exit 1

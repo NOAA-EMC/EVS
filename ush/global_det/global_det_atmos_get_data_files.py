@@ -66,12 +66,15 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
             VERIF_CASE_STEP_pres_levs_truth_format_list = os.environ[
                 VERIF_CASE_STEP_abbrev+'_pres_levs_truth_format_list'
             ].split(' ')
-        elif VERIF_CASE_STEP_type == 'precip':
-            VERIF_CASE_STEP_precip_file_format_list = os.environ[
-                VERIF_CASE_STEP_abbrev+'_precip_file_format_list'
+        elif VERIF_CASE_STEP_type in ['precip_accum24hr',
+                                      'precip_accum3hr']:
+            VERIF_CASE_STEP_precip_accum_file_format_list = os.environ[
+                VERIF_CASE_STEP_abbrev+'_'+VERIF_CASE_STEP_type
+                +'_file_format_list'
             ].split(' ')
-            VERIF_CASE_STEP_precip_file_accum_list = os.environ[
-                VERIF_CASE_STEP_abbrev+'_precip_file_accum_list'
+            VERIF_CASE_STEP_precip_accum_file_accum_list = os.environ[
+                VERIF_CASE_STEP_abbrev+'_'+VERIF_CASE_STEP_type
+                +'_file_accum_list'
             ].split(' ')
         # Set valid hours
         if VERIF_CASE_STEP_type == 'flux':
@@ -91,7 +94,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
             VERIF_CASE_STEP_type_valid_hr_list = os.environ[
                 VERIF_CASE_STEP_abbrev_type+'_valid_hr_list'
             ].split(' ')
-        elif VERIF_CASE_STEP_type == 'precip':
+        elif VERIF_CASE_STEP_type == 'precip_accum24hr':
             (CCPA24hr_valid_hr_start, CCPA24hr_valid_hr_end,
              CCPA24hr_valid_hr_inc) = gda_util.get_obs_valid_hrs(
                  '24hrCCPA'
@@ -104,6 +107,19 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 )
             ]
             VERIF_CASE_STEP_type_valid_hr_list = CCPA24hr_valid_hr_list
+        elif VERIF_CASE_STEP_type == 'precip_accum3hr':
+            (CCPA3hr_valid_hr_start, CCPA3hr_valid_hr_end,
+             CCPA3hr_valid_hr_inc) = gda_util.get_obs_valid_hrs(
+                 '3hrCCPA'
+            )
+            CCPA3hr_valid_hr_list = [
+                str(x).zfill(2) for x in range(
+                    CCPA3hr_valid_hr_start,
+                    CCPA3hr_valid_hr_end+CCPA3hr_valid_hr_inc,
+                    CCPA3hr_valid_hr_inc
+                )
+            ]
+            VERIF_CASE_STEP_type_valid_hr_list = CCPA3hr_valid_hr_list
         elif VERIF_CASE_STEP_type == 'snow':
             (NOHRSC24hr_valid_hr_start, NOHRSC24hr_valid_hr_end,
              NOHRSC24hr_valid_hr_inc) = gda_util.get_obs_valid_hrs(
@@ -183,12 +199,15 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 )
                 if not os.path.exists(VERIF_CASE_STEP_model_dir):
                     os.makedirs(VERIF_CASE_STEP_model_dir)
-                if VERIF_CASE_STEP_type == 'precip':
+                if VERIF_CASE_STEP_type in ['precip_accum24hr',
+                                            'precip_accum3hr']:
                     model_file_format = (
-                        VERIF_CASE_STEP_precip_file_format_list[model_idx]
+                        VERIF_CASE_STEP_precip_accum_file_format_list\
+                        [model_idx]
                     )
                     model_accum = (
-                        VERIF_CASE_STEP_precip_file_accum_list[model_idx]
+                        VERIF_CASE_STEP_precip_accum_file_accum_list\
+                        [model_idx]
                     )
                     model_fcst_dest_file_format = os.path.join(
                         VERIF_CASE_STEP_model_dir,
@@ -221,43 +240,48 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                 model_fcst_dest_file_format
                             )
                         nf+=1
-                elif VERIF_CASE_STEP_type == 'precip':
-                    # Get for 24 hour accumulations
-                    fhrs_24hr_accum_list = []
+                elif VERIF_CASE_STEP_type in ['precip_accum24hr',
+                                              'precip_accum3hr']:
+                    if VERIF_CASE_STEP_type == 'precip_accum24hr':
+                        accum = 24
+                    elif VERIF_CASE_STEP_type == 'precip_accum3hr':
+                        accum = 3
+                    # Get for accumulations
+                    fhrs_accum_list = []
                     if model_accum == 'continuous':
-                        nfiles_24hr_accum = 2
-                        fhrs_24hr_accum_list.append(
+                        nfiles_accum = 2
+                        fhrs_accum_list.append(
                             time['forecast_hour']
                         )
-                        if int(time['forecast_hour']) - 24 > 0:
-                            fhrs_24hr_accum_list.append(
-                                str(int(time['forecast_hour']) - 24)
+                        if int(time['forecast_hour']) - accum > 0:
+                            fhrs_accum_list.append(
+                                str(int(time['forecast_hour']) - accum)
                             )
-                    elif int(model_accum) == 24:
-                        nfiles_24hr_accum = 1
-                        fhrs_24hr_accum_list.append(
+                    elif int(model_accum) == accum:
+                        nfiles_accum = 1
+                        fhrs_accum_list.append(
                             time['forecast_hour']
                         )
-                    elif int(model_accum) < 24:
-                        nfiles_24hr_accum = int(24/int(model_accum))
+                    elif int(model_accum) < accum:
+                        nfiles_accum = int(accum/int(model_accum))
                         nf = 1
-                        while nf <= nfiles_24hr_accum:
+                        while nf <= nfiles_accum:
                             fhr_nf = (int(time['forecast_hour'])
                                       -(nf-1)*int(model_accum))
                             if fhr_nf > 0:
-                                fhrs_24hr_accum_list.append(
+                                fhrs_accum_list.append(
                                     str(fhr_nf)
                                 )
                             nf+=1
-                    elif int(model_accum) > 24:
+                    elif int(model_accum) > accum:
                         print("WARNING: the model precip file "
                               "accumulation for "+model+" ("
                               +model_file_format+") is greater than "
-                              +"the verifying accumulation of 24 hours,"
-                              +"please remove")
+                              +"the verifying accumulation of "+str(accum)
+                              +" hours, please remove")
                         sys.exit(1)
-                    if len(fhrs_24hr_accum_list) == nfiles_24hr_accum:
-                        for fhr in fhrs_24hr_accum_list:
+                    if len(fhrs_accum_list) == nfiles_accum:
+                        for fhr in fhrs_accum_list:
                             fhr_diff = (int(time['forecast_hour'])
                                         -int(fhr))
                             gda_util.get_model_file(
@@ -365,26 +389,43 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                             VERIF_CASE_STEP_type_valid_time,
                             get_d_arch_file_format, get_d_dest_file_format
                         )
-            elif VERIF_CASE_STEP_type == 'precip':
+            elif VERIF_CASE_STEP_type in ['precip_accum24hr',
+                                          'precip_accum3hr']:
                 # CCPA
-                ccpa_prod_file_format = os.path.join(
-                    COMINccpa, 'ccpa.{valid?fmt=%Y%m%d}',
-                    '{valid?fmt=%H}',
-                    'ccpa.t{valid?fmt=%H}z.06h.hrap.conus.gb2'
-                )
+                if VERIF_CASE_STEP_type == 'precip_accum24hr':
+                    ccpa_accum_intvl = 6
+                    accum = 24
+                elif VERIF_CASE_STEP_type == 'precip_accum3hr':
+                    ccpa_accum_intvl = 3
+                    accum = 3
                 VERIF_CASE_STEP_ccpa_dir = os.path.join(
                     VERIF_CASE_STEP_data_dir, 'ccpa'
                 )
                 ccpa_dest_file_format = os.path.join(
-                    VERIF_CASE_STEP_ccpa_dir, 'ccpa.6H.{valid?fmt=%Y%m%d%H}'
+                    VERIF_CASE_STEP_ccpa_dir, 'ccpa.'+str(ccpa_accum_intvl)
+                    +'H.{valid?fmt=%Y%m%d%H}'
                 )
                 if not os.path.exists(VERIF_CASE_STEP_ccpa_dir):
                     os.makedirs(VERIF_CASE_STEP_ccpa_dir)
                 accum_valid_start = (VERIF_CASE_STEP_type_valid_time -
-                                     datetime.timedelta(days=1))
+                                     datetime.timedelta(hours=accum))
                 accum_valid_end = VERIF_CASE_STEP_type_valid_time
                 accum_valid = accum_valid_end
                 while accum_valid > accum_valid_start:
+                    if VERIF_CASE_STEP_type == 'precip_accum3hr' \
+                            and int(accum_valid.strftime('%H'))%6 != 0:
+                        ccpa_prod_file_format = os.path.join(
+                            COMINccpa, 'ccpa.{valid_shift?fmt=%Y%m%d?shift=3}',
+                           '{valid_shift?fmt=%H?shift=3}',
+                           'ccpa.t{valid?fmt=%H}z.'
+                           +str(ccpa_accum_intvl).zfill(2)+'h.hrap.conus.gb2'
+                        )
+                    else:
+                        ccpa_prod_file_format = os.path.join(
+                            COMINccpa, 'ccpa.{valid?fmt=%Y%m%d}',
+                           '{valid?fmt=%H}', 'ccpa.t{valid?fmt=%H}z.'
+                           +str(ccpa_accum_intvl).zfill(2)+'h.hrap.conus.gb2'
+                        )
                     ccpa_dest_file = gda_util.format_filler(
                         ccpa_dest_file_format, accum_valid, accum_valid,
                         ['anl'], {}
@@ -394,17 +435,20 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                         ccpa_dest_file_format
                     )
                     if not os.path.exists(ccpa_dest_file) \
-                            and evs_run_mode != 'production':
+                            and evs_run_mode != 'production' \
+                            and VERIF_CASE_STEP_type == 'precip_accum24hr':
                         ccpa_arch_file_format = os.path.join(
-                            archive_obs_data_dir, 'ccpa_accum6hr',
-                            'ccpa.hrap.{valid?fmt=%Y%m%d%H}.6h'
+                            archive_obs_data_dir, 'ccpa_accum'
+                            +str(ccpa_accum_intvl)+'hr',
+                            'ccpa.hrap.{valid?fmt=%Y%m%d%H}.'
+                            +str(ccpa_accum_intvl)+'h'
                         )
                         gda_util.get_truth_file(
                             accum_valid, ccpa_arch_file_format,
                             ccpa_dest_file_format
                         )
                     accum_valid = (accum_valid -
-                                   datetime.timedelta(hours=6))
+                                   datetime.timedelta(hours=ccpa_accum_intvl))
             elif VERIF_CASE_STEP_type == 'pres_levs':
                 # Model Analysis
                 for model_idx in range(len(model_list)):
