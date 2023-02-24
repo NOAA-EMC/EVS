@@ -49,7 +49,7 @@ export cyc=00
 export job=jevs_hurricane_global_det_tcgen_plots_${cyc}
 
 #Define the directories of your TC genesis stats files
-export COMINstats=/lfs/h2/emc/ptmp/$USER/com/evs/v1.0/hurricane_global_det/tcgen/stats
+export COMINstats=/lfs/h2/emc/ptmp/$USER/com/evs/${evs_ver}/hurricane_global_det/tcgen/stats
 
 export DATAROOT=/lfs/h2/emc/ptmp/$USER
 export COMROOT=${DATAROOT}/com

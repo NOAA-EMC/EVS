@@ -46,7 +46,7 @@ export cyc=00
 export job=jevs_hurricane_global_ens_tropcyc_plots_${cyc}
 
 #Define the directory for TC-stats file 
-export COMINstats=/lfs/h2/emc/ptmp/$USER/com/evs/v1.0/hurricane_global_ens/tropcyc/stats
+export COMINstats=/lfs/h2/emc/ptmp/$USER/com/evs/${evs_ver}/hurricane_global_ens/tropcyc/stats
 
 #Define TC-vital file, and the directory for Bdeck files
 export COMINvit=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/TCvital/syndat_tcvitals.2022
