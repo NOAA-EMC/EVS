@@ -298,7 +298,7 @@ class TimeSeriesMultiFhr:
                     plot_specs_tsmf.fig_size[1], plt.rcParams['figure.dpi']
                 )
             )
-        forecast_hours_plot_settings_dict = (
+        all_forecast_hour_plot_settings_dict = (
             plot_specs_tsmf.get_forecast_hour_plot_settings()
         )
         image_name = plot_specs_tsmf.get_savefig_name(
@@ -346,15 +346,15 @@ class TimeSeriesMultiFhr:
             forecast_hour_avg = (all_forecast_hour_stat_avg_df[forecast_hour]\
                                  .to_numpy())[0,0]
             if f"fhr{forecast_hour.zfill(3)}" \
-                    in list(forecast_hours_plot_settings_dict.keys()):
+                    in list(all_forecast_hour_plot_settings_dict.keys()):
                 forecast_hour_plot_settings_dict = (
-                    forecast_hours_plot_settings_dict[
+                    all_forecast_hour_plot_settings_dict[
                         f"fhr{forecast_hour.zfill(3)}"
                     ]
                 )
             else:
                 forecast_hour_plot_settings_dict = (
-                    forecast_hours_plot_settings_dict[
+                    all_forecast_hour_plot_settings_dict[
                         f"fhr_n{str(forecast_hour_idx+1)}"
                     ]
                 )

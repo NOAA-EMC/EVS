@@ -303,6 +303,7 @@ else:
     headline3_vx_mask = 'NHEM'
     headline3_var_name = 'HGT'
     headline3_var_level = 'P500'
+    headline3_var_thresh = 'NA'
     headline3_forecast_day_list = ['5']
     headline3_avg_time_range = 'yearly'
     headline3_valid_hr = '00'
@@ -346,8 +347,9 @@ else:
             logger3, COMINyearlystats, headline3_output_dir,
             os.path.join(FIXevs, 'logos'), headline3_avg_time_range,
             headline3_all_dt_list, headline3_model_group, headline3_model_list,
-            headline3_var_name, headline3_var_level, headline3_vx_mask,
-            headline3_stat, headline3_forecast_day_list, ['allyears']
+            headline3_var_name, headline3_var_level, headline3_var_thresh,
+            headline3_vx_mask, headline3_stat, headline3_forecast_day_list,
+            ['allyears']
         )
         plot_ltts.make_long_term_time_series()
         # Rename and copy to main image directory
@@ -369,6 +371,7 @@ else:
     headline4_vx_mask = 'NHEM'
     headline4_var_name = 'HGT'
     headline4_var_level = 'P500'
+    headline4_var_thresh = 'NA'
     headline4_avg_time_range = 'yearly'
     headline4_valid_hr = '00'
     headline4_avg_time_range = 'yearly'
@@ -405,8 +408,8 @@ else:
         logger4, COMINyearlystats, headline4_output_dir,
         os.path.join(FIXevs, 'logos'), headline4_avg_time_range,
         headline4_all_dt_list, 'gfs', ['gfs'], headline4_var_name,
-        headline4_var_level, headline4_vx_mask, headline4_stat,
-        ['allyears']
+        headline4_var_level, headline4_var_thresh, headline4_vx_mask,
+        headline4_stat, ['allyears']
     )
     plot_ltufd.make_long_term_useful_forecast_days_histogram()
     # Rename and copy to main image directory
@@ -421,11 +424,60 @@ else:
               +headline4_copy_image_name)
         shutil.copy2(headline4_image_name, headline4_copy_image_name)
     ### Headline Score Plot 5: Grid-to-Grid
-    ### - 24 hour Precip CONUS FSS 62km Neighborhood
-    print("\nHeadline Score Plot 4: Grid-to-Grid - "
-          +"24 hour Precip CONUS FSS 62km Neighborhood")
-    ### Headline Score Plot 6: Grid-to-Grid - 24 hour Precip CONUS ETS
-    print("\nHeadline Score Plot 4: Grid-to-Grid "
-          +"- 24 hour Precip ETS")
+    ### - 24 hour Precip CONUS Days 1,2,3 FSS 62km Neighborhood
+    ### & ETS
+    print("\nHeadline Score Plot 5: Grid-to-Grid - "
+          +"GFS 24 hour Precip CONUS FSS 62km Neighborhood and ETS")
+    headline5_vx_mask = 'CONUS' 
+    headline5_var_name = 'APCP'
+    headline5_var_level = 'A24'
+    headline5_forecast_day_list = ['1', '2', '3']
+    headline5_avg_time_range = 'yearly'
+    headline5_valid_hr = '12'
+    headline5_avg_time_range = 'yearly'
+    headline5_valid_hr = '12'
+    headline5_stat_thresh_dict = {'FSS/NBRHD_SQUARE169': ['10mm', '25mm'],
+                                  'ETS': ['1in', '2in', '3in']}
+    headline5_start_YYYY = '2002'
+    headline5_end_YYYY = str(int(datetime.datetime.now().strftime('%Y'))-1)
+    headline5_all_dt_list = list(
+        dateutil.rrule.rrule(
+            dateutil.rrule.YEARLY,
+            dtstart=dateutil.parser.parse(headline5_start_YYYY+'0101T000000'),
+            until=dateutil.parser.parse(headline5_end_YYYY+'0101T000000')
+        )
+    )
+    import global_det_atmos_plots_long_term_time_series_multifhr \
+        as gdap_lttsmf 
+    for stat in list(headline5_stat_thresh_dict.keys()):
+        headline5_job_name = (
+            'grid2grid_'+headline5_avg_time_range+'_gfs_'
+            +stat.replace('/', '_')+'_'+headline5_vx_mask+'_'
+            +headline5_var_name+'_'+headline5_var_level+'_'
+            +''.join(['day'+d for d in headline5_forecast_day_list])+'_'
+            +headline5_valid_hr+'Z'
+        )
+        # Set output
+        headline5_output_dir = os.path.join(DATA, headline5_job_name)
+        if not os.path.exists(headline5_output_dir):
+            os.makedirs(headline5_output_dir)
+        # Set up logging 
+        now = datetime.datetime.now()
+        headline5_logging_file = os.path.join(
+            logging_dir, 'evs_'+COMPONENT+'_atmos_'
+            +RUN+'_'+STEP+'_'+headline5_job_name
+            +'_runon'+now.strftime('%Y%m%d%H%M%S')+'.log'
+        )
+        logger5 = gda_util.get_logger(headline5_logging_file)
+        for thresh in headline5_stat_thresh_dict[stat]:
+            plot_lttsmf = gdap_lttsmf.LongTermTimeSeriesMultiFhr(
+                logger5, COMINyearlystats, headline5_output_dir,
+                os.path.join(FIXevs, 'logos'), headline5_avg_time_range,
+                headline5_all_dt_list, 'gfs', ['gfs'], headline5_var_name,
+                headline5_var_level, thresh, headline5_vx_mask, stat,
+                headline5_forecast_day_list, ['allyears']
+            )
+            plot_lttsmf.make_long_term_time_series_multifhr()
+
 
 print("END: "+os.path.basename(__file__))

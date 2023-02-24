@@ -30,8 +30,8 @@ class LongTermTimeSeriesDiff:
 
     def __init__(self, logger, input_dir, output_dir, logo_dir,
                  time_range, date_dt_list, model_group, model_list,
-                 var_name, var_level, vx_mask, stat, forecast_day_list,
-                 run_length_list):
+                 var_name, var_level, var_thresh, vx_mask, stat,
+                 forecast_day_list, run_length_list):
         """! Initalize LongTermTimeSeriesDiff class
              Args:
                  logger             - logger object
@@ -45,6 +45,7 @@ class LongTermTimeSeriesDiff:
                  model_list         - list of models in group (string)
                  var_name           - variable name (string)
                  var_level          - variable level (string)
+                 var_thresh         - variable threshold (string)
                  vx_mask            - verification mask name (string)
                  stat               - statistic name (string)
                  forecast_days_list - list of forecast days (strings)
@@ -62,6 +63,7 @@ class LongTermTimeSeriesDiff:
         self.model_list = model_list
         self.var_name = var_name
         self.var_level = var_level
+        self.var_thresh = var_thresh
         self.vx_mask = vx_mask
         self.stat = stat
         self.forecast_day_list = forecast_day_list
@@ -91,6 +93,7 @@ class LongTermTimeSeriesDiff:
         self.logger.debug(f"Models: {', '.join(self.model_list)}")
         self.logger.debug(f"Variable Name: {self.var_name}")
         self.logger.debug(f"Variable Level: {self.var_level}")
+        self.logger.debug(f"Variable Threshold: {self.var_thresh}")
         self.logger.debug(f"Verification Mask: {self.vx_mask}")
         self.logger.debug(f"Statistic: {self.stat}")
         self.logger.debug("Forecast Days: "
@@ -102,11 +105,24 @@ class LongTermTimeSeriesDiff:
             os.makedirs(output_image_dir)
         self.logger.info(f"Plots will be in: {output_image_dir}")
         # Create merged dataset of verification systems
-        model_group_merged_df = gda_util.merge_long_term_stats_datasets(
-            self.logger, self.input_dir, self.time_range, self.date_dt_list,
-            self.model_group, self.model_list, self.var_name,
-            self.var_level, self.vx_mask, self.stat
-        )
+        if self.var_name == 'APCP':
+            model_group_merged_df = (
+                gda_util.merge_precip_long_term_stats_datasets(
+                    self.logger, self.input_dir, self.time_range,
+                    self.date_dt_list, self.model_group, self.model_list,
+                    self.var_name, self.var_level, self.var_thresh,
+                    self.vx_mask, self.stat
+                )
+            )
+        else:
+            model_group_merged_df = (
+                gda_util.merge_grid2grid_long_term_stats_datasets(
+                    self.logger, self.input_dir, self.time_range,
+                    self.date_dt_list, self.model_group, self.model_list,
+                    self.var_name, self.var_level, self.var_thresh,
+                    self.vx_mask, self.stat 
+                )
+            )
         # Create plots
         date_list = (model_group_merged_df.index.get_level_values(1)\
                      .unique().tolist())
@@ -114,8 +130,12 @@ class LongTermTimeSeriesDiff:
             var_units = 'gpm'
         elif self.var_name == 'UGRD_VGRD':
             var_units = 'm/s'
+        elif self.var_name == 'APCP':
+            var_units = self.var_thresh[-2:]
         if self.model_group == 'gfs_4cycles':
             model_hour = 'init 00Z, 06Z, 12Z, 18Z'
+        elif self.var_name == 'APCP':
+            model_hour = 'valid 12Z'
         else:
             model_hour = 'valid 00Z'
         plot_left_logo = False
@@ -486,6 +506,7 @@ def main():
     MODEL_LIST = ['MODELA', 'MODELB']
     VAR_NAME = 'VAR_NAME'
     VAR_LEVEL = 'VAR_LEVEL'
+    VAR_THRESH = 'VAR_THRESH'
     VX_MASK = 'VX_MASK'
     STAT = 'STAT'
     FORECAST_DAY_LIST = ['1', '2']
@@ -516,8 +537,9 @@ def main():
     logger.info(logger_info)
     p = LongTermTimeSeriesDiff(logger, INPUT_DIR, OUTPUT_DIR, LOGO_DIR,
                                TIME_RANGE, DATE_DT_LIST, MODEL_GROUP,
-                               MODEL_LIST, VAR_NAME, VAR_LEVEL, VX_MASK,
-                               STAT, FORECAST_DAY_LIST, RUN_LENGTH_LIST)
+                               MODEL_LIST, VAR_NAME, VAR_LEVEL, VAR_THRESH,
+                               VX_MASK, STAT, FORECAST_DAY_LIST,
+                               RUN_LENGTH_LIST)
     p.make_long_term_time_series_diff()
 
 if __name__ == "__main__":

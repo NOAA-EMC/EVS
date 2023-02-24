@@ -31,7 +31,8 @@ class LongTermUsefulForecastDays:
 
     def __init__(self, logger, input_dir, output_dir, logo_dir,
                  time_range, date_dt_list, model_group, model_list,
-                 var_name, var_level, vx_mask, stat, run_length_list):
+                 var_name, var_level, var_thresh, vx_mask, stat,
+                 run_length_list):
         """! Initalize LongTermUsefulForecastDays class
              Args:
                  logger             - logger object
@@ -45,6 +46,7 @@ class LongTermUsefulForecastDays:
                  model_list         - list of models in group (string)
                  var_name           - variable name (string)
                  var_level          - variable level (string)
+                 var_thresh         - variable threshold (string)
                  vx_mask            - verification mask name (string)
                  stat               - statistic name (string)
                  run_length_list    - list of length of times to plot
@@ -61,6 +63,7 @@ class LongTermUsefulForecastDays:
         self.model_list = model_list
         self.var_name = var_name
         self.var_level = var_level
+        self.var_thresh = var_thresh
         self.vx_mask = vx_mask
         self.stat = stat
         self.run_length_list = run_length_list
@@ -91,6 +94,7 @@ class LongTermUsefulForecastDays:
         self.logger.debug(f"Models: {', '.join(self.model_list)}")
         self.logger.debug(f"Variable Name: {self.var_name}")
         self.logger.debug(f"Variable Level: {self.var_level}")
+        self.logger.debug(f"Variable Threshold: {self.var_thresh}")
         self.logger.debug(f"Verification Mask: {self.vx_mask}")
         self.logger.debug(f"Statistic: {self.stat}")
         self.logger.debug(f"Run Lengths: {', '.join(self.run_length_list)}")
@@ -100,11 +104,24 @@ class LongTermUsefulForecastDays:
             os.makedirs(output_image_dir)
         self.logger.info(f"Plots will be in: {output_image_dir}")
         # Create merged dataset of verification systems
-        model_group_merged_df = gda_util.merge_long_term_stats_datasets(
-            self.logger, self.input_dir, self.time_range, self.date_dt_list,
-            self.model_group, self.model_list, self.var_name,
-            self.var_level, self.vx_mask, self.stat
-        )
+        if self.var_name == 'APCP':
+            model_group_merged_df = (
+                gda_util.merge_precip_long_term_stats_datasets(
+                    self.logger, self.input_dir, self.time_range,
+                    self.date_dt_list, self.model_group, self.model_list,
+                    self.var_name, self.var_level, self.var_thresh,
+                    self.vx_mask, self.stat
+                )
+            )
+        else:
+            model_group_merged_df = (
+                gda_util.merge_grid2grid_long_term_stats_datasets(
+                    self.logger, self.input_dir, self.time_range,
+                    self.date_dt_list, self.model_group, self.model_list,
+                    self.var_name, self.var_level, self.var_thresh,
+                    self.vx_mask, self.stat
+                )
+            )
         model_group_merged_df_fcst_day_list = []
         for col in model_group_merged_df.columns:
             if 'DAY' in col:
@@ -118,6 +135,8 @@ class LongTermUsefulForecastDays:
             var_units = 'gpm'
         elif self.var_name == 'UGRD_VGRD':
             var_units = 'm/s'
+        elif self.var_name == 'APCP':
+            var_units = self.var_thresh[-2:]
         if self.model_group == 'gfs_4cycles':
             model_hour = 'init 00Z, 06Z, 12Z, 18Z'
         else:
@@ -493,6 +512,7 @@ class LongTermUsefulForecastDays:
         self.logger.debug(f"Models: {', '.join(self.model_list)}")
         self.logger.debug(f"Variable Name: {self.var_name}")
         self.logger.debug(f"Variable Level: {self.var_level}")
+        self.logger.debug(f"Variable Threshold: {self.var_thresh}")
         self.logger.debug(f"Verification Mask: {self.vx_mask}")
         self.logger.debug(f"Statistic: {self.stat}")
         self.logger.debug(f"Run Lengths: {', '.join(self.run_length_list)}")
@@ -502,11 +522,24 @@ class LongTermUsefulForecastDays:
             os.makedirs(output_image_dir)
         self.logger.info(f"Plots will be in: {output_image_dir}")
         # Create merged dataset of verification systems
-        model_group_merged_df = gda_util.merge_long_term_stats_datasets(
-            self.logger, self.input_dir, self.time_range, self.date_dt_list,
-            self.model_group, self.model_list, self.var_name,
-            self.var_level, self.vx_mask, self.stat
-        )
+        if self.var_name == 'APCP':
+            model_group_merged_df = (
+                gda_util.merge_precip_long_term_stats_datasets(
+                    self.logger, self.input_dir, self.time_range,
+                    self.date_dt_list, self.model_group, self.model_list,
+                    self.var_name, self.var_level, self.var_thresh,
+                    self.vx_mask, self.stat
+                )
+            )
+        else:
+            model_group_merged_df = (
+                gda_util.merge_grid2grid_long_term_stats_datasets(
+                    self.logger, self.input_dir, self.time_range,
+                    self.date_dt_list, self.model_group, self.model_list,
+                    self.var_name, self.var_level, self.var_thresh,
+                    self.vx_mask, self.stat
+                )
+            )
         model_group_merged_df_fcst_day_list = []
         for col in model_group_merged_df.columns:
             if 'DAY' in col:
@@ -520,8 +553,12 @@ class LongTermUsefulForecastDays:
             var_units = 'gpm'
         elif self.var_name == 'UGRD_VGRD':
             var_units = 'm/s'
+        elif self.var_name == 'APCP':
+            var_units = self.var_thresh[-2:]
         if self.model_group == 'gfs_4cycles':
             model_hour = 'init 00Z, 06Z, 12Z, 18Z'
+        elif self.var_name == 'APCP':
+            model_hour = 'valid 12Z'
         else:
             model_hour = 'valid 00Z'
         plot_left_logo = False
@@ -729,9 +766,9 @@ def main():
     MODEL_LIST = ['MODELA', 'MODELB']
     VAR_NAME = 'VAR_NAME'
     VAR_LEVEL = 'VAR_LEVEL'
+    VAR_THRESH = 'VAR_THRESH'
     VX_MASK = 'VX_MASK'
     STAT = 'STAT'
-    FORECAST_DAY_LIST = ['1', '2']
     RUN_LENGTH_LIST = ['allyears'] 
     # Create OUTPUT_DIR
     if not os.path.exists(OUTPUT_DIR):
@@ -759,8 +796,8 @@ def main():
     logger.info(logger_info)
     p = LongTermUsefulForecastDays(logger, INPUT_DIR, OUTPUT_DIR, LOGO_DIR,
                                    TIME_RANGE, DATE_DT_LIST, MODEL_GROUP,
-                                   MODEL_LIST, VAR_NAME, VAR_LEVEL, VX_MASK,
-                                   STAT, FORECAST_DAY_LIST, RUN_LENGTH_LIST)
+                                   MODEL_LIST, VAR_NAME, VAR_LEVEL, VAR_THRESH,
+                                   VX_MASK, STAT, RUN_LENGTH_LIST)
     p.make_long_term_useful_forecast_days_time_series()
 
 if __name__ == "__main__":

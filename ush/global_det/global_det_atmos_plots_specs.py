@@ -50,7 +50,8 @@ class PlotSpecs:
         self.fig_size=(16.,16.)
         if self.plot_type in ['time_series',
                               'time_series_multifhr',
-                              'long_term_time_series']:
+                              'long_term_time_series',
+                              'long_term_time_series_multifhr']:
             self.fig_size = (16., 8.)
             self.fig_subplot_top = 0.87
             self.fig_subplot_bottom = 0.1
@@ -63,7 +64,8 @@ class PlotSpecs:
             self.legend_bbox = (0.5, 0.05)
             self.legend_ncol = 4
             if self.plot_type in ['time_series_multifhr',
-                                  'long_term_time_series']:
+                                  'long_term_time_series',
+                                  'long_term_time_series_multifhr']:
                 self.fig_subplot_top = 0.85
         elif self.plot_type == 'histogram':
             self.fig_size = (16., 8.)
@@ -1215,11 +1217,14 @@ class PlotSpecs:
             'fhr024': {'color': '#fb2020',
                        'marker': 'o', 'markersize': 6,
                        'linestyle': 'solid', 'linewidth': 1.5},
-            'fhr072': {'color': '#00dc00',
+            'fhr048': {'color': '#00dc00',
                        'marker': '^', 'markersize': 7,
                        'linestyle': 'solid', 'linewidth': 1.5},
-            'fhr120': {'color': '#1e3cff',
+            'fhr072': {'color': '#1e3cff',
                        'marker': 'X', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'fhr120': {'color': '#d269c1',
+                       'marker': 's', 'markersize': 6,
                        'linestyle': 'solid', 'linewidth': 1.5},
             'fhr240': {'color': '#e69f00',
                        'marker': 'o', 'markersize': 7,

@@ -41,29 +41,6 @@ avg_time_range_list = ['monthly']
 if VDATEmm == '12':
     avg_time_range_list.append('yearly')
 
-# Definitions
-def get_logger(log_file):
-    """! Get logger
-         Args:
-             log_file - full path to log file (string)
-         Returns:
-             logger - logger object
-    """
-    log_formatter = logging.Formatter(
-        '%(asctime)s.%(msecs)03d (%(filename)s:%(lineno)d) %(levelname)s: '
-        + '%(message)s',
-        '%m/%d %H:%M:%S'
-    )
-    logger = logging.getLogger(log_file)
-    logger.setLevel('DEBUG')
-    file_handler = logging.FileHandler(log_file, mode='a')
-    file_handler.setFormatter(log_formatter)
-    logger.addHandler(file_handler)
-    logger_info = f"Log file: {log_file}"
-    print(logger_info)
-    logger.info(logger_info)
-    return logger
-
 # Set up plotting information
 model_group_dict = {'all_models': ['gfs', 'ecmwf', 'cmc', 'fnmoc', 'ukmet'],
                     'gfs_ecmwf': ['ecmwf', 'gfs'],
@@ -111,7 +88,7 @@ for avg_time_range in avg_time_range_list:
             'evs_'+COMPONENT+'_atmos_'+RUN+'_'+STEP+'_'+model_group
             +'_runon'+now.strftime('%Y%m%d%H%M%S')+'.log'
         )
-        logger = get_logger(logging_file)
+        logger = gda_util.get_logger(logging_file)
         for var_name in list(plot_info_dict.keys()):
             if model_group == 'gfs_4cycles':
                 start_YYYYmm = '200301'
@@ -156,7 +133,7 @@ for avg_time_range in avg_time_range_list:
                         logger, COMINtime_range_stats, avg_time_range_g2g_dir,
                         os.path.join(FIXevs, 'logos'), avg_time_range,
                         all_dt_list, model_group, model_list, var_name,
-                        var_level, vx_mask, stat, forecast_day_list,
+                        var_level, 'NA', vx_mask, stat, forecast_day_list,
                         run_length_list
                     )
                     plot_lttsd.make_long_term_time_series_diff()
@@ -166,7 +143,7 @@ for avg_time_range in avg_time_range_list:
                         logger, COMINtime_range_stats, avg_time_range_g2g_dir,
                         os.path.join(FIXevs, 'logos'), avg_time_range,
                         all_dt_list, model_group, model_list, var_name,
-                        var_level, vx_mask, stat, forecast_day_list,
+                        var_level, 'NA', vx_mask, stat, forecast_day_list,
                         run_length_list
                     )
                     plot_ltlbd.make_long_term_lead_by_date()
@@ -179,7 +156,7 @@ for avg_time_range in avg_time_range_list:
                             avg_time_range_g2g_dir,
                             os.path.join(FIXevs, 'logos'), avg_time_range,
                             all_dt_list, model_group, model_list, var_name,
-                            var_level, vx_mask, stat, run_length_list
+                            var_level, 'NA', vx_mask, stat, run_length_list
                         )
                         plot_ltufd.make_long_term_useful_forecast_days_time_series()
                 elif avg_time_range == 'yearly':
@@ -189,7 +166,7 @@ for avg_time_range in avg_time_range_list:
                         logger, COMINtime_range_stats, avg_time_range_g2g_dir,
                         os.path.join(FIXevs, 'logos'), avg_time_range,
                         all_dt_list, model_group, model_list, var_name,
-                        var_level, vx_mask, stat, forecast_day_list,
+                        var_level, 'NA', vx_mask, stat, forecast_day_list,
                         run_length_list
                     )
                     plot_ltam.make_long_term_annual_mean()
@@ -277,7 +254,7 @@ acc_logging_file = os.path.join(
     +acc_job_name.replace('/','_')+'_runon'
     +now.strftime('%Y%m%d%H%M%S')+'.log'
 )
-acc_logger = get_logger(acc_logging_file)
+acc_logger = gda_util.get_logger(acc_logging_file)
 # Get model daily stat files and condense
 for model_num in list(yyyymm_acc_model_info_dict.keys()):
     model = yyyymm_acc_model_info_dict[model_num]['name']

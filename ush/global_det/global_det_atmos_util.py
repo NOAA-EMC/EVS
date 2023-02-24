@@ -2203,25 +2203,28 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
             all_model_df = pd.concat([all_model_df, model_num_df])
     return all_model_df
 
-def merge_long_term_stats_datasets(logger, stat_base_dir, time_range,
-                                   date_dt_list, model_group, model_list,
-                                   evs_var_name, evs_var_level, evs_vx_mask,
-                                   evs_stat):
+def merge_grid2grid_long_term_stats_datasets(logger, stat_base_dir,
+                                             time_range, date_dt_list,
+                                             model_group, model_list,
+                                             evs_var_name, evs_var_level,
+                                             evs_var_thresh, evs_vx_mask,
+                                             evs_stat):
     """! Build the data frame for all model stats,
          Read the model parse file, if doesn't exist
          parse the model file for need information, and write file
 
          Args:
-             logger        - logger object
-             stat_base_dir - full path to stats base directory (string)
-             time_range    - time range: monthly or yearly (string)
-             date_dt_list  - list datetime objects
-             model_group   - model group name (string)
-             model_list    - list of models (strings)
-             evs_var_name  - variable name in EVS (string)
-             evs_var_level - variable level in EVS (string)
-             evs_vx_mask   - verification region in EVS (string)
-             evs_stat      - statistic in EVS (string)
+             logger         - logger object
+             stat_base_dir  - full path to stats base directory (string)
+             time_range     - time range: monthly or yearly (string)
+             date_dt_list   - list datetime objects
+             model_group    - model group name (string)
+             model_list     - list of models (strings)
+             evs_var_name   - variable name in EVS (string)
+             evs_var_level  - variable level in EVS (string)
+             evs_var_thresh - variable threshold in EVS (string)
+             evs_vx_mask    - verification region in EVS (string)
+             evs_stat       - statistic in EVS (string)
 
          Returns:
              merged_df - dataframe of stats from all
@@ -2454,6 +2457,173 @@ def merge_long_term_stats_datasets(logger, stat_base_dir, time_range,
             merged_df = pd.concat([merged_df, model_merged_df])
     return merged_df
 
+def merge_precip_long_term_stats_datasets(logger, stat_base_dir,
+                                          time_range, date_dt_list,
+                                          model_group, model_list,
+                                          evs_var_name, evs_var_level,
+                                          evs_var_thresh, evs_vx_mask,
+                                          evs_stat):
+    """! Build the data frame for all model stats,
+         Read the model parse file, if doesn't exist
+         parse the model file for need information, and write file
+
+         Args:
+             logger         - logger object
+             stat_base_dir  - full path to stats base directory (string)
+             time_range     - time range: monthly or yearly (string)
+             date_dt_list   - list datetime objects
+             model_group    - model group name (string)
+             model_list     - list of models (strings)
+             evs_var_name   - variable name in EVS (string)
+             evs_var_level  - variable level in EVS (string)
+             evs_var_thresh - variable threshold in EVS (string)
+             evs_vx_mask    - verification region in EVS (string)
+             evs_stat       - statistic in EVS (string)
+
+         Returns:
+             merged_df - dataframe of stats from all
+                         verification systems
+    """
+    logger.info("Reading data and creating merged dataset")
+    expected_file_columns = [
+        'SYS', 'YEAR', 'MONTH', 'DAY1', 'DAY2', 'DAY3', 'DAY4',
+        'DAY5', 'DAY6', 'DAY7', 'DAY8', 'DAY9', 'DAY10'
+    ]
+    if time_range == 'yearly':
+        expected_file_columns.remove('MONTH')
+    verif_sys_start_date_dict = {
+        'verf_precip': date_dt_list[0].strftime('%Y%m'),
+        'evs': '202401'
+    }
+    if 'FSS' in evs_stat:
+        nbhrd_pts = evs_stat.split('/')[1].replace('NBRHD_SQUARE', '')
+        nbhrd_width_pts = np.sqrt(int(nbhrd_pts))
+        nbhrd_width_km = round(nbhrd_width_pts * 4.7625)
+    for model in model_list:
+        if 'FSS' in evs_stat:
+            model_verf_precip_file_name = os.path.join(
+                stat_base_dir, model,
+                'verf_precip_'+evs_stat.split('/')[0]+'_'
+                +evs_var_thresh.replace('.','p')+'_'
+                +'NBRHD'+str(nbhrd_width_km)+'km_'
+                +evs_var_name+'_'+evs_var_level+'_G240_'
+                +'valid12Z.txt'
+            )
+            model_evs_file_name = os.path.join(
+                stat_base_dir, model,
+                'evs_'+evs_stat.split('/')[0]+'_'
+                +evs_var_thresh.replace('.','p')+'_'
+                +evs_stat.split('/')[1]+'_'
+                +evs_var_name+'_'+evs_var_level+'_G240_'
+                +evs_vx_mask+'_valid12Z.txt'
+            )
+        else:
+            model_verf_precip_file_name = os.path.join(
+                stat_base_dir, model,
+                'verf_precip_'+evs_stat+'_'
+                +evs_var_thresh.replace('.','p')+'_'
+                +evs_var_name+'_'+evs_var_level+'_G212_'
+                +'valid12Z.txt'
+            )
+            model_evs_file_name = os.path.join(
+                stat_base_dir, model,
+                'evs_'+evs_stat+'_'
+                +evs_var_thresh.replace('.','p')+'_'
+                +evs_var_name+'_'+evs_var_level+'_G212_'
+                +evs_vx_mask+'_valid12Z.txt'
+            )
+        logger.debug(f"{model} Verf-precip File: "
+                     +f"{model_verf_precip_file_name}")
+        logger.debug(f"{model} EVS File: {model_evs_file_name}")
+        model_verif_sys_file_name_list = [model_verf_precip_file_name,
+                                          model_evs_file_name]
+        set_new_df = True
+        for model_verif_sys_file_name in model_verif_sys_file_name_list:
+            if os.path.exists(model_verif_sys_file_name):
+                model_verif_sys_df = pd.read_table(model_verif_sys_file_name,
+                                                   delimiter=' ', dtype='str',
+                                                   skipinitialspace=True)
+                if set_new_df:
+                    model_all_verif_sys_df = model_verif_sys_df.copy()
+                    set_new_df = False
+                else:
+                    model_all_verif_sys_df = model_all_verif_sys_df.append(
+                        model_verif_sys_df, ignore_index=True
+                    )
+            else:
+                logger.warning(f"{model_verif_sys_file_name} does not exist")
+        if time_range == 'monthly':
+            model_merged_df = pd.DataFrame(
+                index=pd.MultiIndex.from_product(
+                    [[model], [f"{dt:%Y%m}" for dt in date_dt_list]],
+                    names=['model', 'YYYYmm']
+                ),
+                columns=expected_file_columns
+            )
+        elif time_range == 'yearly':
+            model_merged_df = pd.DataFrame(
+                index=pd.MultiIndex.from_product(
+                    [[model], [f"{dt:%Y}" for dt in date_dt_list]],
+                    names=['model', 'YYYY']
+                ),
+                columns=expected_file_columns
+            )
+        for date_dt in date_dt_list:
+            if date_dt \
+                    >= datetime.datetime.strptime(
+                        verif_sys_start_date_dict['verf_precip'], '%Y%m'
+                    ) \
+                    and date_dt < datetime.datetime.strptime(
+                        verif_sys_start_date_dict['evs'], '%Y%m'
+                    ):
+                date_dt_verif_sys = 'VP'
+            else:
+                date_dt_verif_sys = 'EVS'
+            if time_range == 'monthly':
+                model_verif_sys_date_dt_df = model_all_verif_sys_df.loc[
+                    (model_all_verif_sys_df['SYS'] == date_dt_verif_sys)
+                    & (model_all_verif_sys_df['YEAR'] == f"{date_dt:%Y}")
+                    & (model_all_verif_sys_df['MONTH'] == f"{date_dt:%m}")
+                ]
+            elif time_range == 'yearly':
+                model_verif_sys_date_dt_df = model_all_verif_sys_df.loc[
+                    (model_all_verif_sys_df['SYS'] == date_dt_verif_sys)
+                    & (model_all_verif_sys_df['YEAR'] == f"{date_dt:%Y}")
+                ]
+            if len(model_verif_sys_date_dt_df) == 0:
+                model_merged_verif_sys_date_dt_values = []
+                for col in expected_file_columns:
+                    if col == 'SYS':
+                        model_merged_verif_sys_date_dt_values.append(
+                            date_dt_verif_sys
+                        )
+                    elif col == 'YEAR':
+                        model_merged_verif_sys_date_dt_values.append(
+                            f"{date_dt:%Y}"
+                        )
+                    elif col == 'MONTH':
+                        model_merged_verif_sys_date_dt_values.append(
+                            f"{date_dt:%m}"
+                        )
+                    else:
+                         model_merged_verif_sys_date_dt_values.append(np.nan)
+            else:
+                model_merged_verif_sys_date_dt_values = (
+                    model_verif_sys_date_dt_df.values[0]
+                )
+            if time_range == 'monthly':
+                model_merged_df.loc[(model,f"{date_dt:%Y%m}")] = (
+                    model_merged_verif_sys_date_dt_values
+                )
+            elif time_range == 'yearly':
+                model_merged_df.loc[(model,f"{date_dt:%Y}")] = (
+                     model_merged_verif_sys_date_dt_values
+                )
+        if model_list.index(model) == 0:
+            merged_df = model_merged_df
+        else:
+            merged_df = pd.concat([merged_df, model_merged_df])
+    return merged_df
 def calculate_stat(logger, data_df, line_type, stat):
    """! Calculate the statistic from the data from the
         read in MET .stat file(s)
