@@ -571,7 +571,7 @@ for avg_time_range in avg_time_range_list:
     # Set statistics information
     precip_stats_var_dict = {
         'CTC/ETS/G212/1':  {'APCP/A24': ['0.25in', '1in', '2in', '3in']},
-        'NBRCNT/FSS/G240/13':  {'APCP/A24': ['10mm', '25mm']},
+        'NBRCNT/FSS/G240/169':  {'APCP/A24': ['10mm', '25mm']},
     }
     # Other information
     precip_valid_hour_list = ['12']
