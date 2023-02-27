@@ -304,6 +304,11 @@ class TimeSeriesMultiFhr:
         image_name = plot_specs_tsmf.get_savefig_name(
             output_image_dir, self.plot_info_dict, self.date_info_dict
         )
+        image_name = image_name.replace(
+            'evs.global_det.',
+            'evs.global_det.'+self.model_info_dict['model1']['name'].lower()
+            +'.'
+        )
         # Create plot
         self.logger.info(f"Creating plot for {self.plot_info_dict['stat']} ")
         fig, ax = plt.subplots(1,1,figsize=(plot_specs_tsmf.fig_size[0],
@@ -325,7 +330,8 @@ class TimeSeriesMultiFhr:
             else:
                 ax.xaxis.set_minor_locator(md.MonthLocator())
         ax.set_ylabel(stat_plot_name)
-        fig.suptitle(plot_title)
+        fig.suptitle(f"{self.model_info_dict['model1']['name'].upper()} "
+                     +f"{plot_title}")
         if plot_left_logo:
             left_logo_img = fig.figimage(
                 left_logo_img_array, left_logo_xpixel_loc,

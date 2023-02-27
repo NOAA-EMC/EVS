@@ -2229,8 +2229,8 @@ def merge_grid2grid_long_term_stats_datasets(logger, stat_base_dir,
                                              time_range, date_dt_list,
                                              model_group, model_list,
                                              evs_var_name, evs_var_level,
-                                             evs_var_thresh, evs_vx_mask,
-                                             evs_stat):
+                                             evs_var_thresh, evs_vx_grid,
+                                             evs_vx_mask, evs_stat, evs_nbrhd):
     """! Build the data frame for all model stats,
          Read the model parse file, if doesn't exist
          parse the model file for need information, and write file
@@ -2245,8 +2245,10 @@ def merge_grid2grid_long_term_stats_datasets(logger, stat_base_dir,
              evs_var_name   - variable name in EVS (string)
              evs_var_level  - variable level in EVS (string)
              evs_var_thresh - variable threshold in EVS (string)
+             evs_vx_grid    - verification grid in EVS (string)
              evs_vx_mask    - verification region in EVS (string)
              evs_stat       - statistic in EVS (string)
+             evs_nbrhd      - neighborhood information in EVS
 
          Returns:
              merged_df - dataframe of stats from all
@@ -2483,8 +2485,9 @@ def merge_precip_long_term_stats_datasets(logger, stat_base_dir,
                                           time_range, date_dt_list,
                                           model_group, model_list,
                                           evs_var_name, evs_var_level,
-                                          evs_var_thresh, evs_vx_mask,
-                                          evs_stat):
+                                          evs_var_thresh, evs_vx_grid,
+                                          evs_vx_mask, evs_stat,
+                                          evs_nbrhd):
     """! Build the data frame for all model stats,
          Read the model parse file, if doesn't exist
          parse the model file for need information, and write file
@@ -2499,8 +2502,10 @@ def merge_precip_long_term_stats_datasets(logger, stat_base_dir,
              evs_var_name   - variable name in EVS (string)
              evs_var_level  - variable level in EVS (string)
              evs_var_thresh - variable threshold in EVS (string)
+             evs_vx_grid    - verification grid in EVS (string)
              evs_vx_mask    - verification region in EVS (string)
              evs_stat       - statistic in EVS (string)
+             evs_nbrhd      - neighborhood information in EVS
 
          Returns:
              merged_df - dataframe of stats from all
@@ -2517,42 +2522,42 @@ def merge_precip_long_term_stats_datasets(logger, stat_base_dir,
         'verf_precip': date_dt_list[0].strftime('%Y%m'),
         'evs': '202401'
     }
-    if 'FSS' in evs_stat:
-        nbhrd_pts = evs_stat.split('/')[1].replace('NBRHD_SQUARE', '')
-        nbhrd_width_pts = np.sqrt(int(nbhrd_pts))
-        nbhrd_width_km = round(nbhrd_width_pts * 4.7625)
     for model in model_list:
-        if 'FSS' in evs_stat:
+        if evs_stat == 'FSS':
+            nbrhd_width_pts = np.sqrt(int(evs_nbrhd.split('/')[1]))
+            if evs_vx_grid == 'G240':
+                dx = 4.7625
+            nbrhd_width_km = round(nbrhd_width_pts * dx)
             model_verf_precip_file_name = os.path.join(
                 stat_base_dir, model,
-                'verf_precip_'+evs_stat.split('/')[0]+'_'
-                +evs_var_thresh.replace('.','p')+'_'
-                +'NBRHD'+str(nbhrd_width_km)+'km_'
-                +evs_var_name+'_'+evs_var_level+'_G240_'
-                +'valid12Z.txt'
+                'verf_precip_'+evs_stat+'_'
+                +evs_var_thresh[2:].replace('.','p')+'_'
+                +'NBRHD'+str(nbrhd_width_km)+'km_'
+                +evs_var_name+'_'+evs_var_level+'_'
+                +evs_vx_grid+'_'+'valid12Z.txt'
             )
             model_evs_file_name = os.path.join(
                 stat_base_dir, model,
-                'evs_'+evs_stat.split('/')[0]+'_'
-                +evs_var_thresh.replace('.','p')+'_'
-                +evs_stat.split('/')[1]+'_'
-                +evs_var_name+'_'+evs_var_level+'_G240_'
-                +evs_vx_mask+'_valid12Z.txt'
+                'evs_'+evs_stat+'_'
+                +evs_var_thresh[2:].replace('.','p')+'_'
+                +evs_nbrhd.replace('/', '')+'_'
+                +evs_var_name+'_'+evs_var_level+'_'
+                +evs_vx_grid+'_'+evs_vx_mask+'_valid12Z.txt'
             )
         else:
             model_verf_precip_file_name = os.path.join(
                 stat_base_dir, model,
                 'verf_precip_'+evs_stat+'_'
-                +evs_var_thresh.replace('.','p')+'_'
-                +evs_var_name+'_'+evs_var_level+'_G212_'
-                +'valid12Z.txt'
+                +evs_var_thresh[2:].replace('.','p')+'_'
+                +evs_var_name+'_'+evs_var_level+'_'
+                +evs_vx_grid+'_'+'valid12Z.txt'
             )
             model_evs_file_name = os.path.join(
                 stat_base_dir, model,
                 'evs_'+evs_stat+'_'
-                +evs_var_thresh.replace('.','p')+'_'
-                +evs_var_name+'_'+evs_var_level+'_G212_'
-                +evs_vx_mask+'_valid12Z.txt'
+                +evs_var_thresh[2:].replace('.','p')+'_'
+                +evs_var_name+'_'+evs_var_level+'_'
+                +evs_vx_grid+'_'+evs_vx_mask+'_valid12Z.txt'
             )
         logger.debug(f"{model} Verf-precip File: "
                      +f"{model_verf_precip_file_name}")
@@ -2646,6 +2651,7 @@ def merge_precip_long_term_stats_datasets(logger, stat_base_dir,
         else:
             merged_df = pd.concat([merged_df, model_merged_df])
     return merged_df
+
 def calculate_stat(logger, data_df, line_type, stat):
    """! Calculate the statistic from the data from the
         read in MET .stat file(s)

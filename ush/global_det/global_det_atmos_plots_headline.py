@@ -22,7 +22,6 @@ print("BEGIN: "+os.path.basename(__file__))
 DATA = os.environ['DATA']
 NET = os.environ['NET']
 RUN = os.environ['RUN']
-VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 COMPONENT = os.environ['COMPONENT']
 FIXevs = os.environ['FIXevs']
@@ -163,16 +162,16 @@ plot_ts = gdap_ts.TimeSeries(logger1, headline1_output_dir,
                              met_info_dict, logo_dir)
 plot_ts.make_time_series()
 # Rename and copy to main image directory
-headline1_image_name = plot_specs.get_savefig_name(
-    os.path.join(headline1_output_dir, 'images'),
-    headline1_plot_info_dict, headline1_date_info_dict
-)
-headline1_copy_image_name = os.path.join(
-    images_dir,
-    headline1_image_name.rpartition('/')[2]
-)
-print("Copying "+headline1_image_name+" to "+headline1_copy_image_name)
-shutil.copy2(headline1_image_name, headline1_copy_image_name)
+for headline1_image_name in glob.glob(
+    os.path.join(headline1_output_dir, 'images', '*')
+):
+    headline1_copy_image_name = os.path.join(
+        images_dir,
+        headline1_image_name.rpartition('/')[2]
+    )
+    print("Copying "+headline1_image_name+" to "
+          +headline1_copy_image_name)
+    shutil.copy2(headline1_image_name, headline1_copy_image_name)
 
 ### Headline Score Plot 2: Grid-to-Obs - 2 meter Temperature ME and RMSE Days 1,3,5,10 CONUS Last 90 days 00Z
 print("\nHeadline Score Plot 2: Grid-to-Obs - 2 meter Temperature  "
@@ -280,16 +279,16 @@ for stat in ['ME', 'RMSE']:
                                              met_info_dict, logo_dir)
     plot_tsmf.make_time_series_multifhr()
     # Rename and copy to main image directory
-    headline2_image_name = plot_specs.get_savefig_name(
-        os.path.join(headline2_output_dir, 'images'),
-        headline2_plot_info_dict, headline2_date_info_dict
-    )
-    headline2_copy_image_name = os.path.join(
-        images_dir,
-        headline2_image_name.rpartition('/')[2]
-    )
-    print("Copying "+headline2_image_name+" to "+headline2_copy_image_name)
-    shutil.copy2(headline2_image_name, headline2_copy_image_name)
+    for headline2_image_name in glob.glob(
+        os.path.join(headline2_output_dir, 'images', '*')
+    ):
+        headline2_copy_image_name = os.path.join(
+            images_dir,
+            headline2_image_name.rpartition('/')[2]
+        )
+        print("Copying "+headline2_image_name+" to "
+              +headline2_copy_image_name)
+        shutil.copy2(headline2_image_name, headline2_copy_image_name)
 
 if evs_run_mode != 'production' and envir != 'prod':
     print("\nAll production global_det atmos headline plots produced")
@@ -300,10 +299,12 @@ else:
     print("\nHeadline Score Plot 3: Grid-to-Grid - Geopotential Height 500-hPa"
           +" ACC Day 5 NH 00Z Annual Means")
     headline3_stat = 'ACC'
+    headline3_vx_grid = 'G004'
     headline3_vx_mask = 'NHEM'
     headline3_var_name = 'HGT'
     headline3_var_level = 'P500'
     headline3_var_thresh = 'NA'
+    headline3_nbrhd = 'NA'
     headline3_forecast_day_list = ['5']
     headline3_avg_time_range = 'yearly'
     headline3_valid_hr = '00'
@@ -348,8 +349,8 @@ else:
             os.path.join(FIXevs, 'logos'), headline3_avg_time_range,
             headline3_all_dt_list, headline3_model_group, headline3_model_list,
             headline3_var_name, headline3_var_level, headline3_var_thresh,
-            headline3_vx_mask, headline3_stat, headline3_forecast_day_list,
-            ['allyears']
+            headline3_vx_grid, headline3_vx_mask, headline3_stat, headline3_nbrhd,
+            headline3_forecast_day_list, ['allyears']
         )
         plot_ltts.make_long_term_time_series()
         # Rename and copy to main image directory
@@ -368,10 +369,12 @@ else:
     print("\nHeadline Score Plot 4: Grid-to-Grid - "
           +"GFS Useful Forecast Days NH Annual Means")
     headline4_stat = 'ACC'
+    headline4_vx_grid = 'G004'
     headline4_vx_mask = 'NHEM'
     headline4_var_name = 'HGT'
     headline4_var_level = 'P500'
     headline4_var_thresh = 'NA'
+    headline4_nbrhd = 'NA'
     headline4_avg_time_range = 'yearly'
     headline4_valid_hr = '00'
     headline4_avg_time_range = 'yearly'
@@ -408,8 +411,8 @@ else:
         logger4, COMINyearlystats, headline4_output_dir,
         os.path.join(FIXevs, 'logos'), headline4_avg_time_range,
         headline4_all_dt_list, 'gfs', ['gfs'], headline4_var_name,
-        headline4_var_level, headline4_var_thresh, headline4_vx_mask,
-        headline4_stat, ['allyears']
+        headline4_var_level, headline4_var_thresh, headline4_vx_grid,
+        headline4_vx_mask, headline4_stat, headline4_nbrhd, ['allyears']
     )
     plot_ltufd.make_long_term_useful_forecast_days_histogram()
     # Rename and copy to main image directory
@@ -436,8 +439,8 @@ else:
     headline5_valid_hr = '12'
     headline5_avg_time_range = 'yearly'
     headline5_valid_hr = '12'
-    headline5_stat_thresh_dict = {'FSS/NBRHD_SQUARE169': ['10mm', '25mm'],
-                                  'ETS': ['1in', '2in', '3in']}
+    headline5_stat_thresh_dict = {'FSS': ['ge10mm', 'ge25mm'],
+                                  'ETS': ['ge1in', 'ge2in', 'ge3in']}
     headline5_start_YYYY = '2002'
     headline5_end_YYYY = str(int(datetime.datetime.now().strftime('%Y'))-1)
     headline5_all_dt_list = list(
@@ -469,15 +472,32 @@ else:
             +'_runon'+now.strftime('%Y%m%d%H%M%S')+'.log'
         )
         logger5 = gda_util.get_logger(headline5_logging_file)
+        if stat == 'FSS':
+            vx_grid = 'G240'
+            nbrhd = 'NBRHD_SQUARE/169'
+        else:
+            vx_grid = 'G212'
+            nbrhd = 'NA'
         for thresh in headline5_stat_thresh_dict[stat]:
             plot_lttsmf = gdap_lttsmf.LongTermTimeSeriesMultiFhr(
                 logger5, COMINyearlystats, headline5_output_dir,
                 os.path.join(FIXevs, 'logos'), headline5_avg_time_range,
                 headline5_all_dt_list, 'gfs', ['gfs'], headline5_var_name,
-                headline5_var_level, thresh, headline5_vx_mask, stat,
-                headline5_forecast_day_list, ['allyears']
+                headline5_var_level, thresh, vx_grid, headline5_vx_mask, 
+                stat, nbrhd, headline5_forecast_day_list, ['allyears']
             )
             plot_lttsmf.make_long_term_time_series_multifhr()
+        # Rename and copy to main image directory
+        for headline5_image_name in glob.glob(
+            os.path.join(headline5_output_dir, 'images', '*')
+        ):
+            headline5_copy_image_name = os.path.join(
+                images_dir,
+                headline5_image_name.rpartition('/')[2]
+            )
+            print("Copying "+headline5_image_name+" to "
+                  +headline5_copy_image_name)
+            shutil.copy2(headline5_image_name, headline5_copy_image_name)
 
 
 print("END: "+os.path.basename(__file__))

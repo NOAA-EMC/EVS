@@ -133,8 +133,8 @@ for avg_time_range in avg_time_range_list:
                         logger, COMINtime_range_stats, avg_time_range_g2g_dir,
                         os.path.join(FIXevs, 'logos'), avg_time_range,
                         all_dt_list, model_group, model_list, var_name,
-                        var_level, 'NA', vx_mask, stat, forecast_day_list,
-                        run_length_list
+                        var_level, 'NA', 'G004', vx_mask, stat, 'NA',
+                        forecast_day_list, run_length_list
                     )
                     plot_lttsd.make_long_term_time_series_diff()
                     import global_det_atmos_plots_long_term_lead_by_date \
@@ -143,8 +143,8 @@ for avg_time_range in avg_time_range_list:
                         logger, COMINtime_range_stats, avg_time_range_g2g_dir,
                         os.path.join(FIXevs, 'logos'), avg_time_range,
                         all_dt_list, model_group, model_list, var_name,
-                        var_level, 'NA', vx_mask, stat, forecast_day_list,
-                        run_length_list
+                        var_level, 'NA', 'G004', vx_mask, stat, 'NA',
+                        forecast_day_list, run_length_list
                     )
                     plot_ltlbd.make_long_term_lead_by_date()
                     if stat == 'ACC' and var_name == 'HGT' \
@@ -156,7 +156,8 @@ for avg_time_range in avg_time_range_list:
                             avg_time_range_g2g_dir,
                             os.path.join(FIXevs, 'logos'), avg_time_range,
                             all_dt_list, model_group, model_list, var_name,
-                            var_level, 'NA', vx_mask, stat, run_length_list
+                            var_level, 'NA', 'G004', vx_mask, stat, 'NA',
+                            run_length_list
                         )
                         plot_ltufd.make_long_term_useful_forecast_days_time_series()
                 elif avg_time_range == 'yearly':
@@ -166,8 +167,8 @@ for avg_time_range in avg_time_range_list:
                         logger, COMINtime_range_stats, avg_time_range_g2g_dir,
                         os.path.join(FIXevs, 'logos'), avg_time_range,
                         all_dt_list, model_group, model_list, var_name,
-                        var_level, 'NA', vx_mask, stat, forecast_day_list,
-                        run_length_list
+                        var_level, 'NA', 'G004', vx_mask, stat, 'NA',
+                        forecast_day_list, run_length_list
                     )
                     plot_ltam.make_long_term_annual_mean()
 

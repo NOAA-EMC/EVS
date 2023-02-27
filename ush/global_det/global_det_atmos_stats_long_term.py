@@ -614,7 +614,7 @@ for avg_time_range in avg_time_range_list:
         line_type = line_type_stat_grid_nbrhd.split('/')[0]
         stat = line_type_stat_grid_nbrhd.split('/')[1]
         grid = line_type_stat_grid_nbrhd.split('/')[2]
-        nbhrd = line_type_stat_grid_nbrhd.split('/')[3]
+        nbrhd = line_type_stat_grid_nbrhd.split('/')[3]
         for loop1_info in list(
             itertools.product(
                 list(precip_stats_var_dict[line_type_stat_grid_nbrhd].keys()),
@@ -674,7 +674,7 @@ for avg_time_range in avg_time_range_list:
                     met_info_dict, precip_file_header_list,
                     stat_var_dir, stat_var_dir, var_name, accum,
                     'ge'+var_thresh_mm.replace('mm', ''), line_type, stat,
-                    grid, vx_mask, interp_method, nbhrd,
+                    grid, vx_mask, interp_method, nbrhd,
                     avg_time_range_start_date_dt, avg_time_range_end_date_dt,
                     valid_hour
                 )
@@ -684,7 +684,7 @@ for avg_time_range in avg_time_range_list:
                     if stat == 'FSS':
                         model_file_name = (
                             'evs_'+stat+'_'+var_thresh.replace('.','p')+'_'
-                            +interp_method+nbhrd+'_'+var_name+'_'+accum+'_'
+                            +interp_method+nbrhd+'_'+var_name+'_'+accum+'_'
                             +grid+'_'+vx_mask+'_valid'+valid_hour+'Z.txt'
                         )
                     else:

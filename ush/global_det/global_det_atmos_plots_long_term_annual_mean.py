@@ -30,8 +30,8 @@ class LongTermAnnualMean:
 
     def __init__(self, logger, input_dir, output_dir, logo_dir,
                  time_range, date_dt_list, model_group, model_list,
-                 var_name, var_level, var_thresh, vx_mask, stat,
-                 forecast_day_list, run_length_list):
+                 var_name, var_level, var_thresh, vx_grid, vx_mask, stat,
+                 nbrhd, forecast_day_list, run_length_list):
         """! Initalize LongTermAnnualMean class
              Args:
                  logger             - logger object
@@ -46,8 +46,10 @@ class LongTermAnnualMean:
                  var_name           - variable name (string)
                  var_level          - variable level (string)
                  var_thresh         - variable threshold (string)
+                 vx_grid            - verification grid (string)
                  vx_mask            - verification mask name (string)
                  stat               - statistic name (string)
+                 nbrhd              - neighborhood information (string)
                  forecast_days_list - list of forecast days (strings)
                  run_length_list    - list of length of times to plot
                                       (string)
@@ -64,8 +66,10 @@ class LongTermAnnualMean:
         self.var_name = var_name
         self.var_level = var_level
         self.var_thresh = var_thresh
+        self.vx_grid = vx_grid
         self.vx_mask = vx_mask
         self.stat = stat
+        self.nbrhd = nbrhd
         self.forecast_day_list = forecast_day_list
         self.run_length_list = run_length_list
 
@@ -90,8 +94,10 @@ class LongTermAnnualMean:
         self.logger.debug(f"Variable Name: {self.var_name}")
         self.logger.debug(f"Variable Level: {self.var_level}")
         self.logger.debug(f"Variable Threshold: {self.var_thresh}")
+        self.logger.debug(f"Verification Grid: {self.vx_grid}")
         self.logger.debug(f"Verification Mask: {self.vx_mask}")
         self.logger.debug(f"Statistic: {self.stat}")
+        self.logger.debug(f"Neighborhood: {self.nbrhd}")
         self.logger.debug("Forecast Days: "
                           +f"{', '.join(self.forecast_day_list)}")
         self.logger.debug(f"Run Lengths: {', '.join(self.run_length_list)}")
@@ -107,7 +113,7 @@ class LongTermAnnualMean:
                     self.logger, self.input_dir, self.time_range,
                     self.date_dt_list, self.model_group, self.model_list,
                     self.var_name, self.var_level, self.var_thresh,
-                    self.vx_mask, self.stat
+                    self.vx_grid, self.vx_mask, self.stat, self.nbrhd
                 )
             )
         else:
@@ -116,7 +122,7 @@ class LongTermAnnualMean:
                     self.logger, self.input_dir, self.time_range,
                     self.date_dt_list, self.model_group, self.model_list,
                     self.var_name, self.var_level, self.var_thresh,
-                    self.vx_mask, self.stat 
+                    self.vx_grid, self.vx_mask, self.stat, self.nbrhd
                 )
             )
         # Create plots
@@ -188,13 +194,24 @@ class LongTermAnnualMean:
             plot_specs_ltam = PlotSpecs(self.logger,
                                          'long_term_annual_mean')
             plot_specs_ltam.set_up_plot()
+            if self.stat == 'FSS':
+                nbrhd_width_pts = int(np.sqrt(int(self.nbrhd.split('/')[1])))
+                image_name_stat_thresh = 'fss_width'+str(nbrhd_width_pts)
+            else:
+                image_name_stat_thresh = self.stat
+            if self.var_thresh != 'NA':
+                image_name_stat_thresh = (
+                    image_name_stat_thresh
+                    +f"_{self.var_thresh.replace('.','p')}"
+                )
             image_name = os.path.join(
                 output_image_dir,
-                f"evs.global_det.{self.model_group}.{self.stat}.".lower()
+                f"evs.global_det.{self.model_group}.".lower()
+                +f"{image_name_stat_thresh}.".lower()
                 +f"{self.var_name}_{self.var_level}.".lower()
                 +f"{run_length}_{self.time_range}.annualmean_".lower()
                 +f"{model_hour.replace(' ', '').replace(',','')}".lower()
-                +f".g004_{self.vx_mask}.png".lower()
+                +f".{self.vx_grid}_{self.vx_mask}.png".lower()
             )
             nsubplots = len(self.model_list)
             if nsubplots == 1:
@@ -248,12 +265,27 @@ class LongTermAnnualMean:
             gs = gridspec.GridSpec(gs_row, gs_col,
                                    bottom=gs_bottom, top=gs_top,
                                    hspace=gs_hspace, wspace=gs_wspace)
+            if self.var_thresh == 'NA':
+                var_thresh_for_title = ''
+            else:
+                var_thresh_for_title = ', '+self.var_thresh
+            if self.nbrhd == 'NA':
+                nbrhd_for_title = ''
+            else:
+                nbrhd_pts = self.nbrhd.split('/')[1]
+                if self.vx_grid == 'G240':
+                    dx = 4.7625
+                nbrhd_width_km = round(np.sqrt(int(nbrhd_pts)) * dx)
+                nbrhd_for_title = (', Neighborhood: '
+                                   +nbrhd_pts+' Points, '
+                                   +str(nbrhd_width_km)+' km')
             fig.suptitle(
-                plot_specs_ltam.get_stat_plot_name(self.stat)+' - G004/'
+                plot_specs_ltam.get_stat_plot_name(self.stat)+' - '
+                +f"{self.vx_grid}/"
                 +plot_specs_ltam.get_vx_mask_plot_name(self.vx_mask)+'\n'
                 +plot_specs_ltam.get_var_plot_name(self.var_name,
                                                    self.var_level)+" "
-                +f"({var_units})\n"
+                +f"({var_units}){var_thresh_for_title}{nbrhd_for_title}\n"
                 +f"valid {run_length_date_dt_list[0]:%Y}-"
                 +f"{run_length_date_dt_list[-1]:%Y}, {model_hour}"
             )
@@ -392,8 +424,10 @@ def main():
     VAR_NAME = 'VAR_NAME'
     VAR_LEVEL = 'VAR_LEVEL'
     VAR_THRESH = 'VAR_THRESH'
+    VX_GRID = 'VX_GRID'
     VX_MASK = 'VX_MASK'
     STAT = 'STAT'
+    NBRHD = 'NBHRD'
     FORECAST_DAY_LIST = ['1', '2']
     RUN_LENGTH_LIST = ['allyears', 'past10years'] 
     # Create OUTPUT_DIR
@@ -423,7 +457,8 @@ def main():
     p = LongTermAnnualMean(logger, INPUT_DIR, OUTPUT_DIR, LOGO_DIR,
                            TIME_RANGE, DATE_DT_LIST, MODEL_GROUP,
                            MODEL_LIST, VAR_NAME, VAR_LEVEL, VAR_THRESH,
-                           VX_MASK, STAT, FORECAST_DAY_LIST, RUN_LENGTH_LIST)
+                           VX_GRID, VX_MASK, STAT, FORECAST_DAY_LIST,
+                           RUN_LENGTH_LIST)
     p.make_long_term_annual_mean()
 
 if __name__ == "__main__":
