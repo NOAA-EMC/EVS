@@ -21,7 +21,6 @@ print("BEGIN: "+os.path.basename(__file__))
 DATA = os.environ['DATA']
 NET = os.environ['NET']
 RUN = os.environ['RUN']
-VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 COMPONENT = os.environ['COMPONENT']
 FIXevs = os.environ['FIXevs']
