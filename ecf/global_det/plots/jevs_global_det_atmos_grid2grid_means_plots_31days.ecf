@@ -30,19 +30,6 @@ export job=${PBS_JOBNAME:-jevs_global_det_atmos_grid2grid_means_plots_31days}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
-export NET=evs
-export STEP=plots
-export COMPONENT=global_det
-export RUN=atmos
-export VERIF_CASE=grid2grid
-export VERIF_TYPE=means
-export NDAYS=31
-export PDYm1=$(date -d "24 hours ago" '+%Y%m%d')
-export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com
-export COMIN=$COMROOT/$NET/$evs_ver
-export COMINgfs=$COMIN/stats/$COMPONENT/gfs
-export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1
-export OUTPUTROOT=/lfs/h2/emc/stmp/$USER/evs_global_det_atmos_test
 ############################################################
 
 
@@ -90,6 +77,13 @@ export RUN=atmos
 export VERIF_CASE=grid2grid
 export VERIF_TYPE=means
 export NDAYS=31
+
+# Set COM paths
+export PDYm1=$(date -d "24 hours ago" '+%Y%m%d')
+export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com
+export COMIN=$COMROOT/$NET/$evs_ver
+export COMINgfs=$COMIN/stats/$COMPONENT/gfs
+export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1
 
 # Set config file
 export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${VERIF_TYPE}
