@@ -80,6 +80,10 @@ if VERIF_CASE == 'precip':
 elif VERIF_CASE == 'grid2obs':
     if STEP == 'stats':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
+        data_dir_list.append(os.path.join(
+            data_base_dir, MODELNAME, 'merged_ptype'
+        ))
+        data_dir_list.append(os.path.join(data_base_dir, MODELNAME, 'tmp'))
 
 # Create data directories and subdirectories
 for data_dir in data_dir_list:
