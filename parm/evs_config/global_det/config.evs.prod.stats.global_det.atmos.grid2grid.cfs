@@ -55,20 +55,22 @@ export SENDMETVIEWER="NO"
 # SETTINGS FOR SPECIFIC USE CASES
 ####################################################
 if [ $RUN_GRID2GRID_STATS = YES ]; then
-    #g2gs_type_list: list type of verifications to run for grid-to-grid: pres_levs, precip, snow, sst, sea_ice
+    #g2gs_type_list: list type of verifications to run for grid-to-grid: pres_levs, precip_accum24hr,
+    #                                                                    precip_accum3hr, snow, sst, sea_ice
     #                                                                    means
-    #    pres_levs:  compare variables on pressure levels to model's own analysis
-    #    precip:     compare to CCPA
-    #    snow:       compare to NOHRSC
-    #    sst:        compare to GHRSST Median
-    #    sea_ice:    compare to OSI-SAF 
-    #    means:      compute forecast hour means for various variables
+    #    pres_levs:        compare variables on pressure levels to model's own analysis
+    #    precip_accum24hr: compare to CCPA 24 hour accumulation
+    #    precip_accum3hr:  compare to CCPA 3 hour accumulation
+    #    snow:             compare to NOHRSC
+    #    sst:              compare to GHRSST Median
+    #    sea_ice:          compare to OSI-SAF
+    #    means:            compute forecast hour means for various variables
     #g2gs_pres_levs_truth_name_list:   list of reference name for truth files
     #g2gs_pres_levs_truth_format_list: list of truth file format(s)
-    #g2gs_precip_file_format_list:     list of precip file format(s)
-    #g2gs_precip_file_accum_list:      list of precip accumulations in file: hours (HH) or continuous
-    #g2gs_precip_var_list:             list of the precip variable name to use
-    #g2gs_*_init_hr_list:        forecst init_hrs to be included in verification: HH
+    #g2gs_precip_accum*_file_format_list: list of precip file format(s)
+    #g2gs_precip_accum*_file_accum_list:  list of precip accumulations in file: hours (HH) or continuous
+    #g2gs_precip_accum*_var_list:         list of the precip variable name to use
+    #g2gs_*_init_hr_list:      forecst init_hrs to be included in verification: HH
     #g2gs_*_valid_hr_list:     valid hours to be included in verification: HH
     #g2gs_*_fhr_min:           forecast hour to start verification HH[H]
     #g2gs_*_fhr_max:           forecast hour to end verification HH[H]
