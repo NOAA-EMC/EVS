@@ -69,7 +69,7 @@ setpdy.sh
 
 #export VDATE=$PDYm6
 
-export VDATE=$(date -d "today -12 day" +"%Y%m%d")
+export VDATE=$(date -d "today -22 day" +"%Y%m%d")
 
 #################################################
 # Set up the INPUT and OUTPUT directories
