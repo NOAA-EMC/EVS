@@ -1223,7 +1223,7 @@ class PlotSpecs:
             'fhr072': {'color': '#1e3cff',
                        'marker': 'X', 'markersize': 7,
                        'linestyle': 'solid', 'linewidth': 1.5},
-            'fhr120': {'color': '#d269c1',
+            'fhr120': {'color': '#000000',
                        'marker': 's', 'markersize': 6,
                        'linestyle': 'solid', 'linewidth': 1.5},
             'fhr240': {'color': '#e69f00',

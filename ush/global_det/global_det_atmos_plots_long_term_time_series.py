@@ -314,6 +314,10 @@ class LongTermTimeSeries:
                     model_plot_settings_dict = (
                         all_model_plot_settings_dict[model]
                     )
+                    if model_plot_settings_dict['color'] == '#000000':
+                        model_plot_settings_dict['linewidth'] = 3
+                    else:
+                        model_plot_settings_dict['linewidth'] = 2
                     model_forecast_day = np.ma.masked_invalid(
                         run_length_model_group_merged_df.loc[(model)]\
                         ['DAY'+str(forecast_day)].to_numpy(dtype=float)
