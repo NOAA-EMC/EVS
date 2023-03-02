@@ -335,6 +335,18 @@ if [ $SENDCOM = YES ]; then
             cp -v $FILE $COMOUT/$MODEL_DIR/.
         done
     done
+    for DIR_PATH in $MET_PLUS_OUT/*/pcp_combine/*; do
+        DIR=$(echo ${DIR_PATH##*/})
+        if [ "$DIR" == "confs" ] || [ "$DIR" == "logs" ] || [ "$DIR" == "tmp" ]; then
+            continue
+        fi
+        mkdir -p $COMOUT/atmos.${VDATE}/$MODELNAME/${VERIF_CASE}/$DIR
+        for FILEn in $DIR_PATH/*a24h*; do
+            if [ -f "$FILEn" ]; then
+                cp -vr $FILEn $COMOUT/atmos.${VDATE}/$MODELNAME/${VERIF_CASE}/${DIR}/.
+            fi
+        done
+    done
 fi
 
 # Non-production jobs
