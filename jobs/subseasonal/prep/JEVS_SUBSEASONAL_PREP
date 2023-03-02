@@ -83,7 +83,6 @@ export COMINumd=${COMINumd:-/lfs/h1/ops/dev/dcom}
 export COMINnam=${COMINnam:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$INITDATE)}
 
-mkdir -p $COMOUT
 
 echo Actual output starts here
 
