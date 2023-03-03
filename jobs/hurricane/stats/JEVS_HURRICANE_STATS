@@ -50,12 +50,13 @@ export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 
 
+
 # Run setpdy and initialize PDY variables
 # if not set in upstream ecf script
 #########################################
 echo "PDY=$PDY"
 if [ -z $PDY ]; then
-  setpdy.sh
+   setpdy.sh
    . ./PDY
 fi
 

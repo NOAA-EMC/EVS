@@ -40,7 +40,7 @@ if evs_run_mode == 'production':
         'STEP', 'COMPONENT', 'RUN', 'VERIF_CASE',
         'HOMEevs', 'config', 'evs_ver', 'ccpa_ver', 'obsproc_ver', 'pid', 'DATA', 
         'VDATE', 'COMIN', 'COMOUT', 'PARMevs', 'USHevs', 'EXECevs', 
-        'FIXevs', 'SCRIPTSevs', 'evs_run_mode'
+        'FIXevs', 'evs_run_mode'
     ]
 else:
     evs_cam_settings_dict['evs'] = [
@@ -48,8 +48,7 @@ else:
         'QUEUESHARED', 'QUEUESERV', 'PARTITION_BATCH', 'nproc', 'NET', 'STEP', 
         'COMPONENT', 'RUN', 'VERIF_CASE', 'HOMEevs', 
         'config', 'evs_ver', 'ccpa_ver', 'obsproc_ver', 'pid', 'DATA', 'VDATE', 'COMIN', 'COMOUT', 
-        'PARMevs', 'USHevs', 'EXECevs', 'FIXevs', 
-        'SCRIPTSevs', 'evs_run_mode'
+        'PARMevs', 'USHevs', 'EXECevs', 'FIXevs',  'evs_run_mode'
     ]
 evs_cam_settings_dict['shared'] = []
 evs_cam_settings_dict['modules'] = ['MET_PLUS_PATH', 'MET_PATH', 'MET_CONFIG']
@@ -58,7 +57,10 @@ evs_cam_settings_dict['RUN_GRID2OBS_PREP'] = [
         'LOG_MET_OUTPUT_TO_METPLUS','NEST','TEMP_DIR','GRID_DIR','URL_HEAD',
         ]
 evs_cam_settings_dict['RUN_GRID2OBS_STATS'] = []
-evs_cam_settings_dict['RUN_GRID2OBS_PLOTS'] = []
+evs_cam_settings_dict['RUN_GRID2OBS_PLOTS'] = [
+        'MET_VERSION','IMG_HEADER','PRUNE_DIR','SAVE_DIR','LOG_TEMPLATE',
+        'LOG_LEVEL','STAT_OUTPUT_BASE_DIR','STAT_OUTPUT_BASE_TEMPLATE'
+        ]
 evs_cam_settings_dict['RUN_PRECIP_PREP'] = [
         'VERIF_TYPE', 'VHOUR_LIST', 'COMINobs', 'OBSNAME', 'OBS_ACC', 'ACC'
         ]
@@ -146,8 +148,6 @@ if STEP.upper() == 'STATS':
     valid_config_var_values_dict['BOOL_NBRHD'] = ['True', 'False']
     valid_config_var_values_dict['OUTPUT_FLAG_NBRHD'] = ['NONE', 'STAT', 'BOTH']
     valid_config_var_values_dict['OUTPUT_FLAG_CATEG'] = ['NONE', 'STAT', 'BOTH']
-if STEP.upper() == 'PLOTS':
-    valid_config_var_values_dict['event_equalization'] = ['YES', 'NO']
 for env_var in list(valid_config_var_values_dict.keys()):
     if env_var in os.environ:
         if 'LIST' in env_var.upper():
@@ -240,6 +240,8 @@ if STEP == 'stats':
     env_dir_list.append('COMINfcst')
     if VERIF_CASE == 'precip':
         env_file_list.append('MASK_POLY_LIST')
+if STEP == 'plots':
+    env_dir_list.append('STAT_OUTPUT_BASE_DIR')
 for env_dir in env_dir_list:
     if 'LIST' in env_dir.upper():
         for list_item in re.split(r'[,\s]+', os.environ[env_dir]):

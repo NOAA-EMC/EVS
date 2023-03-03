@@ -83,7 +83,6 @@ export COMINbdeckNHC=${COMINbdeckNHC:-/your/NHC/bdeck/data/dir}
 export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
 
 elif [ ${COMPONENT} = "hurricane_global_det" -a ${RUN} = "tcgen" ]; then
-export PDY=20221231
 export YYYY=`echo ${PDY} | cut -c1-4`
 export YY22=`echo ${PDY} | cut -c3-4`
 export COMINstats=${COMINstats:-/your/TCgen/stats/dir}
