@@ -1,0 +1,1623 @@
+Running prologue on parent mom node: nid001061...
+Job 34642341.cbqs01 nodelist: nid001061
+Job 34642341.cbqs01 - Prologue complete. Execution time: 3 seconds
+
+The following have been reloaded with a version change:
+  1) craype/2.7.10 => craype/2.7.17
+
+
+The following have been reloaded with a version change:
+  1) craype/2.7.17 => craype/2.7.10
+
+
+Currently Loaded Modules:
+  1) intel/19.1.3.304   5) netcdf/4.7.4    9) grib_util/1.2.3
+  2) gsl/2.7            6) met/10.1.2     10) prod_util/2.0.14
+  3) python/3.8.6       7) metplus/4.1.4  11) prod_envir/2.0.6
+  4) hdf5/1.10.6        8) libjpeg/9c     12) imagemagick/7.0.8-7
+
+ 
+
+Thu Feb  2 20:46:58 UTC 2023
+ 0 + export jobid=jevs_hurricane_regional_tropcyc_stats_00.o118420
+ 0 + jobid=jevs_hurricane_regional_tropcyc_stats_00.o118420
+ 0 + export DATA=/lfs/h2/emc/ptmp/olivia.ostwald/jevs_hurricane_regional_tropcyc_stats_00.o118420
+ 0 + DATA=/lfs/h2/emc/ptmp/olivia.ostwald/jevs_hurricane_regional_tropcyc_stats_00.o118420
+ 0 + mkdir -p /lfs/h2/emc/ptmp/olivia.ostwald/jevs_hurricane_regional_tropcyc_stats_00.o118420
+ 0 + cd /lfs/h2/emc/ptmp/olivia.ostwald/jevs_hurricane_regional_tropcyc_stats_00.o118420
+ 0 + export cycle=t00z
+ 0 + cycle=t00z
+ 0 + export jlogfile=/lfs/h2/emc/ptmp/olivia.ostwald/jevs_hurricane_regional_tropcyc_stats_00.o118420/jlogfile.jevs_hurricane_regional_tropcyc_stats_00.o118420
+ 0 + jlogfile=/lfs/h2/emc/ptmp/olivia.ostwald/jevs_hurricane_regional_tropcyc_stats_00.o118420/jlogfile.jevs_hurricane_regional_tropcyc_stats_00.o118420
+ 0 + export NET=evs
+ 0 + NET=evs
+ 0 + export COMPONENT=hurricane_regional
+ 0 + COMPONENT=hurricane_regional
+ 0 + export RUN=tropcyc
+ 0 + RUN=tropcyc
+ 0 + export STEP=stats
+ 0 + STEP=stats
+ 0 + export pgmout=OUTPUT.118420
+ 0 + pgmout=OUTPUT.118420
+ 0 + export pgmerr=errfile
+ 0 + pgmerr=errfile
+ 0 + export SENDECF=NO
+ 0 + SENDECF=NO
+ 0 + export SENDCOM=YES
+ 0 + SENDCOM=YES
+ 0 + export SENDDBN=NO
+ 0 + SENDDBN=NO
+ 0 + export HOMEevs=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Fork/EVS
+ 0 + HOMEevs=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Fork/EVS
+ 0 + export SCRIPTSevs=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Fork/EVS/scripts/hurricane/stats
+ 0 + SCRIPTSevs=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Fork/EVS/scripts/hurricane/stats
+ 0 + export PARMevs=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Fork/EVS/parm/metplus_config/hurricane/stats
+ 0 + PARMevs=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Fork/EVS/parm/metplus_config/hurricane/stats
+ 0 + export PDY=20221231
+ 0 + PDY=20221231
+ 0 + '[' hurricane_regional = hurricane_global_det -a tropcyc = tropcyc ']'
+ 0 + '[' hurricane_regional = hurricane_global_ens -a tropcyc = tropcyc ']'
+ 0 + '[' hurricane_regional = hurricane_global_det -a tropcyc = tcgen ']'
+ 0 + '[' hurricane_regional = hurricane_regional -a tropcyc = tropcyc ']'
+ 0 + setpdy.sh
+ completed cleanly
+ completed cleanly
+Source PDY script to export PDYm7, ..., PDY, ..., PDYp7 variables.
+ 0 + . ./PDY
+  0 + export PDYm7=20221224
+  0 + PDYm7=20221224
+  0 + export PDYm6=20221225
+  0 + PDYm6=20221225
+  0 + export PDYm5=20221226
+  0 + PDYm5=20221226
+  0 + export PDYm4=20221227
+  0 + PDYm4=20221227
+  0 + export PDYm3=20221228
+  0 + PDYm3=20221228
+  0 + export PDYm2=20221229
+  0 + PDYm2=20221229
+  0 + export PDYm1=20221230
+  0 + PDYm1=20221230
+  0 + export PDY=20221231
+  0 + PDY=20221231
+  0 + export PDYp1=20230101
+  0 + PDYp1=20230101
+  0 + export PDYp2=20230102
+  0 + PDYp2=20230102
+  0 + export PDYp3=20230103
+  0 + PDYp3=20230103
+  0 + export PDYp4=20230104
+  0 + PDYp4=20230104
+  0 + export PDYp5=20230105
+  0 + PDYp5=20230105
+  0 + export PDYp6=20230106
+  0 + PDYp6=20230106
+  0 + export PDYp7=20230107
+  0 + PDYp7=20230107
+  0 + echo 20221231
+  0 + cut -c1-4
+ 0 + export YYYY=2022
+ 0 + YYYY=2022
+  0 + echo 20221231
+  0 + cut -c3-4
+ 0 + export YY22=22
+ 0 + YY22=22
+ 0 + export COMINvit=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/TCvital/syndat_tcvitals.2022
+ 0 + COMINvit=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/TCvital/syndat_tcvitals.2022
+ 0 + export COMINtrack=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/regionalTrack/tracks.atcfunix.22
+ 0 + COMINtrack=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/regionalTrack/tracks.atcfunix.22
+ 0 + export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/bdeck
+ 0 + COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/bdeck
+ 0 + export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/bdeck
+ 0 + COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/bdeck
+ 0 + export COMOUT=/lfs/h2/emc/ptmp/olivia.ostwald/com/evs/v1.0/hurricane_regional/tropcyc/stats
+ 0 + COMOUT=/lfs/h2/emc/ptmp/olivia.ostwald/com/evs/v1.0/hurricane_regional/tropcyc/stats
+ 0 + mkdir -m 775 -p /lfs/h2/emc/ptmp/olivia.ostwald/com/evs/v1.0/hurricane_regional/tropcyc/stats
+  0 + hostname
+ 0 + msg='HAS BEGUN on nid001061'
+ 0 + postmsg /lfs/h2/emc/ptmp/olivia.ostwald/jevs_hurricane_regional_tropcyc_stats_00.o118420/jlogfile.jevs_hurricane_regional_tropcyc_stats_00.o118420 'HAS BEGUN on nid001061'
+ 0 + /lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Fork/EVS/scripts/hurricane/stats/exevs_hurricane_regional_tropcyc_stats.sh
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+AL upper case: AL/EP/WP
+ls: cannot access '/lfs/h2/emc/ptmp/olivia.ostwald/com/evs/v1.0/hurricane_regional/tropcyc/stats/Atlantic/*.tcst': No such file or directory
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+EP upper case: AL/EP/WP
+ls: cannot access '/lfs/h2/emc/ptmp/olivia.ostwald/com/evs/v1.0/hurricane_regional/tropcyc/stats/EastPacific/*.tcst': No such file or directory
+ 0 + export err=0
+ 0 + err=0
+ 0 + err_chk
+ completed cleanly
+ 0 + msg='JOB COMPLETED NORMALLY'
+ 0 + postmsg /lfs/h2/emc/ptmp/olivia.ostwald/jevs_hurricane_regional_tropcyc_stats_00.o118420/jlogfile.jevs_hurricane_regional_tropcyc_stats_00.o118420 'JOB COMPLETED NORMALLY'
+ 0 + [[ YES != \Y\E\S ]]
+ 0 + date
+Thu Feb  2 20:46:58 UTC 2023
+/var/spool/pbs/mom_priv/jobs/34642341.cbqs01.SC: line 62: syntax error near unexpected token `newline'
+/var/spool/pbs/mom_priv/jobs/34642341.cbqs01.SC: line 62: `%include <tail.h>'
+Job 34642341.cbqs01 - Epilogue complete. Execution time: 1 seconds
+==================================================================
+BEGIN - DEBUG INFO
+==================================================================
+Job 34642341.cbqs01 - Post Job Mem Usage:
+nid001061: 2023-02-02.46 1 ===========================================
+nid001061: 2023-02-02.46 2 #### Node Memory Usage for nid001061 ####
+nid001061: 2023-02-02.46 3 ------------------
+nid001061: 2023-02-02.46 4 Mem: total:527073400 used:14159876 free:513155192 shared:1991072 cache:3811160 avail:512913524
+nid001061: 2023-02-02.46 5 4.0K	/dev/shm
+nid001061: 2023-02-02.46 6 38M	/tmp
+nid001061: 2023-02-02.46 7 ===========================================
+nid001061: 2023-02-02.59 1 ===========================================
+nid001061: 2023-02-02.59 2 #### Node Memory Usage for nid001061 ####
+nid001061: 2023-02-02.59 3 ------------------
+nid001061: 2023-02-02.59 4 Mem: total:527073400 used:14181316 free:513107092 shared:1991444 cache:3847176 avail:512892084
+nid001061: 2023-02-02.59 5 4.0K	/dev/shm
+nid001061: 2023-02-02.59 6 38M	/tmp
+nid001061: 2023-02-02.59 7 ===========================================
+
+------------------------------------------------------------------
+Job 34642341.cbqs01 - /var/log/messages for job duration:
+nid001061: 2023-02-02A--:--:--.------+--:-- nid001061 #### nid001061 - Job 34642341.cbqs01 Runtime Data from /var/log/messages
+nid001061: 2023-02-02T20:46:44.397435+00:00 nid001061 prologue: MARK: Job 34642341.cbqs01 Start
+nid001061: 2023-02-02T20:46:44.402214+00:00 nid001061 prologue: Job 34642341.cbqs01 nodelist: nid001061
+nid001061: 2023-02-02T20:46:44.403224+00:00 nid001061 prologue: Job 34642341.cbqs01 - Checking existing ASLR settings...
+nid001061: 2023-02-02T20:46:44.493464+00:00 nid001061 prologue: Job 34642341.cbqs01 - Checking palsd open file count...
+nid001061: 2023-02-02T20:46:44.679426+00:00 nid001061 PBS_CMD: root : /opt/pbs/bin/qstat -Bf
+nid001061: 2023-02-02T20:46:45.848569+00:00 nid001061 prologue: Job 34642341.cbqs01 - Checking one-shot control: False
+nid001061: 2023-02-02T20:46:45.850449+00:00 nid001061 prologue: Job 34642341.cbqs01 - Recording pre-job HSN counters...
+nid001061: 2023-02-02T20:46:46.024124+00:00 nid001061 prologue: Job 34642341.cbqs01 - Recording pre-job memory usage...
+nid001061: 2023-02-02T20:46:46.104954+00:00 nid001061 prologue: Job 34642341.cbqs01 - Killing any stray user processes...
+nid001061: 2023-02-02T20:46:46.214020+00:00 nid001061 prologue: Job 34642341.cbqs01 - Enabling turboboost...
+nid001061: 2023-02-02T20:46:46.237433+00:00 nid001061 prologue: Job 34642341.cbqs01 - Verifying post-boot workarounds...
+nid001061: 2023-02-02T20:46:46.587186+00:00 nid001061 prologue: Job 34642341.cbqs01 - Warchk Complete
+nid001061: 2023-02-02T20:46:46.588385+00:00 nid001061 prologue: Job 34642341.cbqs01 - Recording initial NFS client statistics...
+nid001061: 2023-02-02T20:46:46.595434+00:00 nid001061 prologue: Job 34642341.cbqs01 - Prologue complete. Execution time: 3 seconds
+nid001061: 2023-02-02T20:46:59.149303+00:00 nid001061 epilogue: Job 34642341.cbqs01 complete, running post-job actions.
+nid001061: 2023-02-02T20:46:59.166419+00:00 nid001061 epilogue: Job 34642341.cbqs01 - Recording post-job HSN counters...
+nid001061: 2023-02-02T20:46:59.271355+00:00 nid001061 epilogue: Job 34642341.cbqs01 - Recording post-job memory usage...
+nid001061: 2023-02-02T20:46:59.293898+00:00 nid001061 epilogue: Job 34642341.cbqs01 - Recording job NFS statistics to /tmp/nfsstats.34642341.cbqs01
+nid001061: 2023-02-02T20:46:59.761814+00:00 nid001061 epilogue: Job 34642341.cbqs01 - Clearing /tmp...
+nid001061: 2023-02-02T20:46:59.798325+00:00 nid001061 epilogue: Job 34642341.cbqs01 - Clearing shared memory...
+nid001061: 2023-02-02T20:46:59.810491+00:00 nid001061 epilogue: Job 34642341.cbqs01 - Clearing memory cache...
+nid001061: 2023-02-02T20:47:00.023612+00:00 nid001061 kernel: [2747361.227985] drop_caches (118930): drop_caches: 3
+nid001061: 2023-02-02T20:47:00.137086+00:00 nid001061 epilogue: Job 34642341.cbqs01 - Releasing Lustre Locks...
+nid001061: 2023-02-02T20:47:00.155572+00:00 nid001061 epilogue: MARK: Job 34642341.cbqs01 Complete.
+
+------------------------------------------------------------------
+Job 34642341.cbqs01 - dmesg output for job duration:
+nid001061: 2023-02-02A--:--:--.------+--:-- nid001061 #### nid001061 - Job 34642341.cbqs01 Runtime Data from dmesg
+nid001061: [Thu Feb  2 20:43:51 2023] MARK: Job 34642341.cbqs01 Start
+nid001061: [Thu Feb  2 20:44:07 2023] MARK: Job 34642341.cbqs01 Complete.
+nid001061: [Thu Feb  2 20:44:07 2023] drop_caches (118930): drop_caches: 3
+
+------------------------------------------------------------------
+Job 34642341.cbqs01 - Pre/Post job diff on HSN (MLX) Counters:
+nid001061: 2023-02-02A--:--:--.------+--:-- nid001061 #### nid001061 - Job 34642341.cbqs01 HSN0 MLX Counter Post-Job Difference
+nid001061: multicast: 8415455					      |	multicast: 8415456
+nid001061: port_rcv_data: 135265887585937				      |	port_rcv_data: 135265887898449
+nid001061: port_rcv_packets: 220820909218				      |	port_rcv_packets: 220820912068
+nid001061: port_xmit_data: 146457945693550				      |	port_xmit_data: 146457946069009
+nid001061: port_xmit_packets: 234659119465				      |	port_xmit_packets: 234659122263
+nid001061: rx_bytes: 311004076746					      |	rx_bytes: 311006477920
+nid001061: rx_packets: 319159523					      |	rx_packets: 319170633
+nid001061: rx_write_requests: 1900088064				      |	rx_write_requests: 1900088123
+nid001061: tx_bytes: 491740574479					      |	tx_bytes: 491743359626
+nid001061: tx_packets: 293771678					      |	tx_packets: 293792030
+nid001061: unicast_rcv_packets: 220820909218			      |	unicast_rcv_packets: 220820912068
+nid001061: unicast_xmit_packets: 234659119465			      |	unicast_xmit_packets: 234659122263
+
+------------------------------------------------------------------
+### Job 34642341.cbqs01 - NFS Statistics for job duration:
+nid001061: #### 2023-02-02.00 #### nid001061 - Job 34642341.cbqs01 NFS Statistics for job duration (nfsstat)
+nid001061: ## /usr/sbin/nfsstat -v -S /tmp/nfsstats.begin.34642341.cbqs01 :
+nid001061: Client packet stats:
+nid001061: packets    udp        tcp        tcpconn
+nid001061: 0          0          0          0       
+nid001061: 
+nid001061: Client rpc stats:
+nid001061: calls      retrans    authrefrsh
+nid001061: 11427      0          11427   
+nid001061: 
+nid001061: Client nfs v3:
+nid001061: null             getattr          setattr          lookup           access           
+nid001061: 0         0%     9284     81%     0         0%     1096      9%     682       5%     
+nid001061: readlink         read             write            create           mkdir            
+nid001061: 33        0%     160       1%     9         0%     0         0%     0         0%     
+nid001061: symlink          mknod            remove           rmdir            rename           
+nid001061: 0         0%     0         0%     0         0%     0         0%     0         0%     
+nid001061: link             readdir          readdirplus      fsstat           fsinfo           
+nid001061: 0         0%     0         0%     163       1%     0         0%     0         0%     
+nid001061: pathconf         commit           
+nid001061: 0         0%     0         0%     
+nid001061: 
+nid001061: 
+nid001061: -----------------------------------------------------------------------------------
+nid001061: 
+nid001061: #### 2023-02-02.00 #### nid001061 - Job 34642341.cbqs01 NFS Mount Statistics for job duration (mountstats)
+nid001061: ## /usr/sbin/mountstats iostat -S /tmp/mntstats.begin.34642341.cbqs01 /apps :
+nid001061: 
+nid001061: 
+nid001061: 172.20.250.16:/AZ-HFS-Cactus-apps mounted on /apps:
+nid001061: 
+nid001061:            ops/s       rpc bklog
+nid001061:          279.154           0.000
+nid001061: 
+nid001061: read:              ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid001061:                    5.154          10.180           1.975        0 (0.0%)           0.388           0.448
+nid001061: write:             ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid001061:                    0.000           0.000           0.000        0 (0.0%)           0.000           0.000
+nid001061: ## /usr/sbin/mountstats iostat -S /tmp/mntstats.begin.34642341.cbqs01 /sfs :
+nid001061: 
+nid001061: 
+nid001061: 172.20.250.16:/AZ-HFS-Cactus-sfs mounted on /sfs:
+nid001061: 
+nid001061:            ops/s       rpc bklog
+nid001061:          279.154           0.000
+nid001061: 
+nid001061: read:              ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid001061:                    0.077           0.312           4.055        0 (0.0%)           0.000           1.000
+nid001061: write:             ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid001061:                    0.692           1.857           2.682        0 (0.0%)           0.333           0.444
+nid001061: ## /usr/sbin/mountstats iostat -S /tmp/mntstats.begin.34642341.cbqs01 /u :
+nid001061: 
+nid001061: 
+nid001061: 172.20.250.17:/AZ-HFS-Cactus-u mounted on /u:
+nid001061: 
+nid001061:            ops/s       rpc bklog
+nid001061:            0.615           0.000
+nid001061: 
+nid001061: read:              ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid001061:                    0.077           0.152           1.973        0 (0.0%)           0.000           0.000
+nid001061: write:             ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid001061:                    0.000           0.000           0.000        0 (0.0%)           0.000           0.000
+nid001061: ## /usr/sbin/mountstats iostat -S /tmp/mntstats.begin.34642341.cbqs01 /pe :
+nid001061: 
+nid001061: 
+nid001061: 10.31.62.244:/cm_shared/image/images_rw_nfs/pe mounted on /pe:
+nid001061: 
+nid001061:            ops/s       rpc bklog
+nid001061:           48.077           0.000
+nid001061: 
+nid001061: read:              ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid001061:                    5.154         489.562          94.990        0 (0.0%)           1.418           1.463
+nid001061: write:             ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid001061:                    0.000           0.000           0.000        0 (0.0%)           0.000           0.000
+nid001061: ----------------
+nid001061: ## /usr/sbin/mountstats mountstats -S /tmp/mntstats.begin.34642341.cbqs01 /apps :
+nid001061: Stats for 172.20.250.16:/AZ-HFS-Cactus-apps mounted on /apps:
+nid001061:   NFS mount options: ro,vers=3,rsize=65536,wsize=65536,namlen=255,acregmin=3,acregmax=60,acdirmin=30,acdirmax=60,hard,proto=tcp,nconnect=3,timeo=600,retrans=2,sec=sys,mountaddr=172.20.250.16,mountvers=3,mountport=4048,mountproto=udp,local_lock=none
+nid001061:   NFS server capabilities: caps=0x3fc7,wtmult=4096,dtsize=8192,bsize=0,namlen=255
+nid001061:   NFS security flavor: 1  pseudoflavor: 0
+nid001061: 
+nid001061: NFS byte counts:
+nid001061:   applications read 7938036 bytes via read(2)
+nid001061:   applications wrote 0 bytes via write(2)
+nid001061:   applications read 0 bytes via O_DIRECT read(2)
+nid001061:   applications wrote 0 bytes via O_DIRECT write(2)
+nid001061:   client read 117445 bytes via NFS READ
+nid001061:   client wrote 0 bytes via NFS WRITE
+nid001061: 
+nid001061: RPC statistics:
+nid001061:   3629 RPC requests sent, 3629 RPC replies received (0 XIDs not found)
+nid001061:   average backlog queue length: 0
+nid001061: 
+nid001061: GETATTR:
+nid001061: 	9267 ops (255%) 
+nid001061: 	avg bytes sent per op: avg bytes received per op: 112
+nid001061: 	backlog wait: 0.001942 	RTT: 0.083306 	total execute time: 0.093989 (milliseconds)
+nid001061: LOOKUP:
+nid001061: 	695 ops (19%) 
+nid001061: 	avg bytes sent per op: avg bytes received per op: 146
+nid001061: 	backlog wait: 0.001439 	RTT: 0.107914 	total execute time: 0.120863 (milliseconds)
+nid001061: ACCESS:
+nid001061: 	641 ops (17%) 
+nid001061: 	avg bytes sent per op: avg bytes received per op: 120
+nid001061: 	backlog wait: 0.001560 	RTT: 0.453978 	total execute time: 0.464899 (milliseconds)
+nid001061: READDIRPLUS:
+nid001061: 	163 ops (4%) 
+nid001061: 	avg bytes sent per op: avg bytes received per op: 857
+nid001061: 	backlog wait: 0.000000 	RTT: 0.104294 	total execute time: 0.116564 (milliseconds)
+nid001061: READ:
+nid001061: 	67 ops (1%) 
+nid001061: 	avg bytes sent per op: avg bytes received per op: 1882
+nid001061: 	backlog wait: 0.029851 	RTT: 0.388060 	total execute time: 0.447761 (milliseconds)
+nid001061: READLINK:
+nid001061: 	31 ops (0%) 
+nid001061: 	avg bytes sent per op: avg bytes received per op: 132
+nid001061: 	backlog wait: 0.000000 	RTT: 0.129032 	total execute time: 0.129032 (milliseconds)
+nid001061: 
+nid001061: ## /usr/sbin/mountstats mountstats -S /tmp/mntstats.begin.34642341.cbqs01 /sfs :
+nid001061: 
+nid001061: Stats for 172.20.250.16:/AZ-HFS-Cactus-sfs mounted on /sfs:
+nid001061:   NFS mount options: rw,vers=3,rsize=65536,wsize=65536,namlen=255,acregmin=3,acregmax=60,acdirmin=30,acdirmax=60,hard,proto=tcp,nconnect=3,timeo=600,retrans=2,sec=sys,mountaddr=172.20.250.16,mountvers=3,mountport=4048,mountproto=udp,local_lock=none
+nid001061:   NFS server capabilities: caps=0x3fc7,wtmult=4096,dtsize=8192,bsize=0,namlen=255
+nid001061:   NFS security flavor: 1  pseudoflavor: 0
+nid001061: 
+nid001061: NFS byte counts:
+nid001061:   applications read 13555 bytes via read(2)
+nid001061:   applications wrote 5162 bytes via write(2)
+nid001061:   applications read 0 bytes via O_DIRECT read(2)
+nid001061:   applications wrote 0 bytes via O_DIRECT write(2)
+nid001061:   client read 3894 bytes via NFS READ
+nid001061:   client wrote 22038 bytes via NFS WRITE
+nid001061: 
+nid001061: RPC statistics:
+nid001061:   3629 RPC requests sent, 3629 RPC replies received (0 XIDs not found)
+nid001061:   average backlog queue length: 0
+nid001061: 
+nid001061: GETATTR:
+nid001061: 	11 ops (0%) 
+nid001061: 	avg bytes sent per op: avg bytes received per op: 112
+nid001061: 	backlog wait: 0.000000 	RTT: 0.181818 	total execute time: 0.272727 (milliseconds)
+nid001061: WRITE:
+nid001061: 	9 ops (0%) 
+nid001061: 	avg bytes sent per op: avg bytes received per op: 160
+nid001061: 	backlog wait: 0.000000 	RTT: 0.333333 	total execute time: 0.444444 (milliseconds)
+nid001061: ACCESS:
+nid001061: 	3 ops (0%) 
+nid001061: 	avg bytes sent per op: avg bytes received per op: 120
+nid001061: 	backlog wait: 0.000000 	RTT: 0.333333 	total execute time: 0.666667 (milliseconds)
+nid001061: LOOKUP:
+nid001061: 	1 ops (0%) 
+nid001061: 	avg bytes sent per op: avg bytes received per op: 240
+nid001061: 	backlog wait: 0.000000 	RTT: 0.000000 	total execute time: 0.000000 (milliseconds)
+nid001061: READ:
+nid001061: 	1 ops (0%) 
+nid001061: 	avg bytes sent per op: avg bytes received per op: 4024
+nid001061: 	backlog wait: 0.000000 	RTT: 0.000000 	total execute time: 1.000000 (milliseconds)
+nid001061: 
+nid001061: ## /usr/sbin/mountstats mountstats -S /tmp/mntstats.begin.34642341.cbqs01 /u :
+nid001061: 
+nid001061: Stats for 172.20.250.17:/AZ-HFS-Cactus-u mounted on /u:
+nid001061:   NFS mount options: rw,vers=3,rsize=65536,wsize=65536,namlen=255,acregmin=3,acregmax=60,acdirmin=30,acdirmax=60,hard,proto=tcp,nconnect=3,timeo=600,retrans=2,sec=sys,mountaddr=172.20.250.17,mountvers=3,mountport=4048,mountproto=udp,local_lock=none
+nid001061:   NFS server capabilities: caps=0x3fc7,wtmult=4096,dtsize=8192,bsize=0,namlen=255
+nid001061:   NFS security flavor: 1  pseudoflavor: 0
+nid001061: 
+nid001061: NFS byte counts:
+nid001061:   applications read 1752 bytes via read(2)
+nid001061:   applications wrote 0 bytes via write(2)
+nid001061:   applications read 0 bytes via O_DIRECT read(2)
+nid001061:   applications wrote 0 bytes via O_DIRECT write(2)
+nid001061:   client read 1752 bytes via NFS READ
+nid001061:   client wrote 0 bytes via NFS WRITE
+nid001061: 
+nid001061: RPC statistics:
+nid001061:   8 RPC requests sent, 8 RPC replies received (0 XIDs not found)
+nid001061:   average backlog queue length: 0
+nid001061: 
+nid001061: LOOKUP:
+nid001061: 	17 ops (212%) 
+nid001061: 	avg bytes sent per op: avg bytes received per op: 123
+nid001061: 	backlog wait: 0.000000 	RTT: 0.117647 	total execute time: 0.117647 (milliseconds)
+nid001061: ACCESS:
+nid001061: 	4 ops (50%) 
+nid001061: 	avg bytes sent per op: avg bytes received per op: 120
+nid001061: 	backlog wait: 0.000000 	RTT: 0.500000 	total execute time: 0.250000 (milliseconds)
+nid001061: GETATTR:
+nid001061: 	1 ops (12%) 
+nid001061: 	avg bytes sent per op: avg bytes received per op: 112
+nid001061: 	backlog wait: 0.000000 	RTT: 0.000000 	total execute time: 0.000000 (milliseconds)
+nid001061: READ:
+nid001061: 	1 ops (12%) 
+nid001061: 	avg bytes sent per op: avg bytes received per op: 1880
+nid001061: 	backlog wait: 0.000000 	RTT: 0.000000 	total execute time: 0.000000 (milliseconds)
+nid001061: 
+nid001061: ## /usr/sbin/mountstats mountstats -S /tmp/mntstats.begin.34642341.cbqs01 /pe :
+nid001061: 
+nid001061: Stats for 10.31.62.244:/cm_shared/image/images_rw_nfs/pe mounted on /pe:
+nid001061:   NFS mount options: ro,vers=3,rsize=1048576,wsize=1048576,namlen=255,acregmin=3,acregmax=60,acdirmin=30,acdirmax=60,hard,nolock,proto=tcp,timeo=600,retrans=2,sec=sys,mountaddr=10.31.62.244,mountvers=3,mountport=38465,mountproto=tcp,local_lock=all
+nid001061:   NFS server capabilities: caps=0x3fcf,wtmult=4096,dtsize=32768,bsize=0,namlen=255
+nid001061:   NFS security flavor: 1  pseudoflavor: 0
+nid001061: 
+nid001061: NFS byte counts:
+nid001061:   applications read 1186816 bytes via read(2)
+nid001061:   applications wrote 0 bytes via write(2)
+nid001061:   applications read 0 bytes via O_DIRECT read(2)
+nid001061:   applications wrote 0 bytes via O_DIRECT write(2)
+nid001061:   client read 6504448 bytes via NFS READ
+nid001061:   client wrote 0 bytes via NFS WRITE
+nid001061: 
+nid001061: RPC statistics:
+nid001061:   625 RPC requests sent, 625 RPC replies received (0 XIDs not found)
+nid001061:   average backlog queue length: 0
+nid001061: 
+nid001061: LOOKUP:
+nid001061: 	383 ops (61%) 
+nid001061: 	avg bytes sent per op: avg bytes received per op: 52
+nid001061: 	backlog wait: 0.000000 	RTT: 0.553525 	total execute time: 0.563969 (milliseconds)
+nid001061: READ:
+nid001061: 	67 ops (10%) 
+nid001061: 	avg bytes sent per op: avg bytes received per op: 97125
+nid001061: 	backlog wait: 0.029851 	RTT: 1.417910 	total execute time: 1.462687 (milliseconds)
+nid001061: ACCESS:
+nid001061: 	34 ops (5%) 
+nid001061: 	avg bytes sent per op: avg bytes received per op: 36
+nid001061: 	backlog wait: 0.000000 	RTT: 0.323529 	total execute time: 0.352941 (milliseconds)
+nid001061: GETATTR:
+nid001061: 	5 ops (0%) 
+nid001061: 	avg bytes sent per op: avg bytes received per op: 112
+nid001061: 	backlog wait: 0.000000 	RTT: 1.800000 	total execute time: 1.800000 (milliseconds)
+nid001061: READLINK:
+nid001061: 	2 ops (0%) 
+nid001061: 	avg bytes sent per op: avg bytes received per op: 136
+nid001061: 	backlog wait: 0.000000 	RTT: 0.500000 	total execute time: 0.500000 (milliseconds)
+nid001061: 
+nid001061: 
+
+------------------------------------------------------------------
+### Job 34642341.cbqs01 - Exit status is 2
+
+------------------------------------------------------------------
+Job 34642341.cbqs01 - Job summary:
+Job Id: 34642341.cbqs01
+    Job_Name = jevs_hurricane_regional_tropcyc_stats
+    Job_Owner = olivia.ostwald@clogin05.cactus.wcoss2.ncep.noaa.gov
+    resources_used.cpupercent = 0
+    resources_used.cput = 00:00:00
+    resources_used.mem = 0b
+    resources_used.ncpus = 2
+    resources_used.vmem = 0kb
+    resources_used.walltime = 00:00:00
+    job_state = R
+    queue = dev
+    server = cbqs01
+    Account_Name = ENSTRACK-DEV
+    Checkpoint = u
+    ctime = Thu Feb  2 20:46:41 2023
+    Error_Path = clogin05.cactus.wcoss2.ncep.noaa.gov:/lfs/h2/emc/vpppg/noscrub
+	/olivia.ostwald/Fork/EVS/ecf/hurricane/stats/jevs_hurricane_regional_tr
+	opcyc_stats.e34642341
+    exec_host = nid001061/0*2
+    exec_vnode = (nid001061:ncpus=2:mem=4194304kb)
+    Hold_Types = n
+    Join_Path = oe
+    Keep_Files = oed
+    Mail_Points = a
+    mtime = Thu Feb  2 20:46:48 2023
+    Output_Path = clogin05.cactus.wcoss2.ncep.noaa.gov:/lfs/h2/emc/vpppg/noscru
+	b/olivia.ostwald/Fork/EVS/ecf/hurricane/stats/jevs_hurricane_regional_t
+	ropcyc_stats.o34642341
+    Priority = 0
+    qtime = Thu Feb  2 20:46:41 2023
+    Rerunable = False
+    Resource_List.alvl = 2
+    Resource_List.aslr = True
+    Resource_List.debug = True
+    Resource_List.dfs = False
+    Resource_List.hyper = True
+    Resource_List.mem = 4gb
+    Resource_List.ncpus = 2
+    Resource_List.nodect = 1
+    Resource_List.one-shot = False
+    Resource_List.place = shared
+    Resource_List.select = 1:ncpus=2:mem=4GB
+    Resource_List.thp = True
+    Resource_List.turbo = True
+    Resource_List.walltime = 00:30:00
+    schedselect = 1:ncpus=2:mem=4GB:prepost=False
+    stime = Thu Feb  2 20:46:43 2023
+    session_id = 117718
+    Shell_Path_List = /bin/bash
+    jobdir = /u/olivia.ostwald
+    substate = 42
+    Variable_List = PBS_O_HOME=/u/olivia.ostwald,PBS_O_LANG=en_US.UTF-8,
+	PBS_O_LOGNAME=olivia.ostwald,
+	PBS_O_PATH=/apps/ops/para/libs/intel/19.1.3.304/metplus/4.1.4/ush:/app
+	s/ops/para/libs/intel/19.1.3.304/met/10.1.2/bin:/apps/prod/hpc-stack/in
+	tel-19.1.3.304/cray-mpich-8.1.4/netcdf/4.7.4/bin:/apps/prod/hpc-stack/i
+	ntel-19.1.3.304/cray-mpich-8.1.4/hdf5/1.10.6/bin:/apps/spack/python/3.8
+	.6/intel/19.1.3.304/pjn2nzkjvqgmjw4hmyz43v5x4jbxjzpk/bin:/apps/spack/gs
+	l/2.7/intel/19.1.3.304/xks7dxbowrdxhjck5zxc4rompopocevb/bin:/apps/spack
+	/geos/3.8.1/intel/19.1.3.304/5recktk5lndzgkkqq36y4a2h4yx3ahdy/bin:/apps
+	/spack/proj/7.1.0/intel/19.1.3.304/cjbmc7tacv5qcfatslqmcrzo5kb4raaq/bin
+	:/apps/spack/libjpeg/9c/intel/19.1.3.304/jkr3isi257ktoouprwaxcn4twtye74
+	7z/bin:/apps/ops/para/libs/intel/19.1.3.304/cray-mpich/8.1.4/nemsio/2.5
+	.2/bin:/apps/ops/prod/nco/intel/19.1.3.304/util_shared.v1.4.0/ush:/pe/i
+	ntel/compilers_and_libraries_2020.4.304/linux/bin/intel64:/pe/intel/com
+	pilers_and_libraries_2020.4.304/linux/bin:/pe/intel/compilers_and_libra
+	ries_2020.4.304/linux/mpi/intel64/bin:/pe/intel/debugger_2020/gdb/intel
+	64/bin:/apps/ops/prod/libs/intel/19.1.3.304/grib_util/1.2.4/bin:/apps/o
+	ps/prod/libs/intel/19.1.3.304/wgrib2/2.0.8_wmo/bin:/apps/spack/imagemag
+	ick/7.0.8-7/cce/11.0.1/fyjvsbwngyzlsiluc4udbnxkhlbwkzc3/bin:/apps/ops/p
+	rod/libs/intel/19.1.3.304/cray-mpich/8.1.4/nemsio/2.5.2/bin:/apps/prod/
+	cfp/2.0.4/intel/19.1.3.304/bin:/apps/spack/git/2.29.0/gcc/10.2.0/rkn6xa
+	qbrdlim3u4it2l6ljqszg62s25/bin:/apps/ops/prod/nco/core/prod_util.v2.0.8
+	/ush:/opt/cray/libfabric/1.11.0.0./bin:/opt/cray/pe/craype/2.7.10/bin:.
+	:/opt/clmgr/sbin:/opt/clmgr/bin:/opt/sgi/sbin:/opt/sgi/bin:/usr/local/b
+	in:/usr/bin:/bin:/usr/lib/mit/bin:/usr/lib/mit/sbin:/opt/pbs/bin:/sbin:
+	/usr/sbin:/etc:/u/olivia.ostwald/bin:/opt/cray/pe/bin:/apps/prod/python
+	-modules/3.8.6/intel/19.1.3.304/bin:/apps/prod/python-modules/3.8.6/int
+	el/19.1.3.304/lib/python3.8/site-packages/bin,
+	PBS_O_MAIL=/var/spool/mail/olivia.ostwald,PBS_O_SHELL=/bin/bash,
+	PBS_O_WORKDIR=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Fork/EVS/ecf/hu
+	rricane/stats,PBS_O_SYSTEM=Linux,CRAY_LMOD_MPI=cray-mpich/8.0,
+	LMOD_FAMILY_CRAYPE_NETWORK_VERSION=false,
+	LD_LIBRARY_PATH=/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4
+	/netcdf/4.7.4/lib:/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.
+	4/hdf5/1.10.6/lib:/apps/spack/python/3.8.6/intel/19.1.3.304/pjn2nzkjvqg
+	mjw4hmyz43v5x4jbxjzpk/lib:/apps/spack/gsl/2.7/intel/19.1.3.304/xks7dxbo
+	wrdxhjck5zxc4rompopocevb/lib64:/apps/spack/geos/3.8.1/intel/19.1.3.304/
+	5recktk5lndzgkkqq36y4a2h4yx3ahdy/lib:/apps/spack/proj/7.1.0/intel/19.1.
+	3.304/cjbmc7tacv5qcfatslqmcrzo5kb4raaq/lib:/apps/spack/libjpeg/9c/intel
+	/19.1.3.304/jkr3isi257ktoouprwaxcn4twtye747z/lib:/pe/intel/compilers_an
+	d_libraries_2020.4.304/linux/compiler/lib/intel64_lin:/pe/intel/compile
+	rs_and_libraries_2020.4.304/linux/mpi/intel64/lib/release:/pe/intel/com
+	pilers_and_libraries_2020.4.304/linux/mpi/intel64/lib:/pe/intel/compile
+	rs_and_libraries_2020.4.304/linux/ipp/lib/intel64:/pe/intel/compilers_a
+	nd_libraries_2020.4.304/linux/mkl/lib/intel64_lin:/pe/intel/compilers_a
+	nd_libraries_2020.4.304/linux/tbb/lib/intel64/gcc4.8:/pe/intel/debugger
+	_2020/python/intel64/lib:/pe/intel/debugger_2020/libipt/intel64/lib:/op
+	t/cray/libfabric/1.11.0.0./lib64,
+	LS_COLORS=no=00:fi=00:di=01;34:ln=00;36:pi=40;33:so=01;35:do=01;35:bd=
+	40;33;01:cd=40;33;01:or=41;33;01:ex=00;32:*.cmd=00;32:*.exe=01;32:*.com
+	=01;32:*.bat=01;32:*.btm=01;32:*.dll=01;32:*.tar=00;31:*.tbz=00;31:*.tg
+	z=00;31:*.rpm=00;31:*.deb=00;31:*.arj=00;31:*.taz=00;31:*.lzh=00;31:*.l
+	zma=00;31:*.zip=00;31:*.zoo=00;31:*.z=00;31:*.Z=00;31:*.gz=00;31:*.bz2=
+	00;31:*.tb2=00;31:*.tz2=00;31:*.tbz2=00;31:*.xz=00;31:*.avi=01;35:*.bmp
+	=01;35:*.dl=01;35:*.fli=01;35:*.gif=01;35:*.gl=01;35:*.jpg=01;35:*.jpeg
+	=01;35:*.mkv=01;35:*.mng=01;35:*.mov=01;35:*.mp4=01;35:*.mpg=01;35:*.pc
+	x=01;35:*.pbm=01;35:*.pgm=01;35:*.png=01;35:*.ppm=01;35:*.svg=01;35:*.t
+	ga=01;35:*.tif=01;35:*.webm=01;35:*.webp=01;35:*.wmv=01;35:*.xbm=01;35:
+	*.xcf=01;35:*.xpm=01;35:*.aiff=00;32:*.ape=00;32:*.au=00;32:*.flac=00;3
+	2:*.m4a=00;32:*.mid=00;32:*.mp3=00;32:*.mpc=00;32:*.ogg=00;32:*.voc=00;
+	32:*.wav=00;32:*.wma=00;32:*.wv=00;32:,HOSTTYPE=x86_64,
+	LMOD_CUSTOM_PATHS=CNCM/apps/ops/prod/libs/modulefiles/mpi/intel/19.1.3
+	.304/cray-mpich/8.1.4:CNCM/apps/prod/lmodules/INTEL_cray_mpich/19.1.3.3
+	04/cray-mpich/8.1.4:COMPILER/apps/ops/prod/nco/modulefiles/compiler/int
+	el/19.1.3.304:COMPILER/apps/ops/prod/libs/modulefiles/compiler/intel/19
+	.1.3.304:COMPILER/apps/prod/lmodules/intel/19.1.3.304,
+	_ModuleTable017_=L2ludGVsLzE5LjEuMy4zMDQvdzNuY28vMi40LjEubHVhIixbImZ1b
+	GxOYW1lIl09InczbmNvLzIuNC4xIixbImxvYWRPcmRlciJdPTIwLHByb3BUPXt9LFsic3Rh
+	Y2tEZXB0aCJdPTIsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09InczbmNvIix
+	9LHdncmliMj17WyJmbiJdPSIvYXBwcy9vcHMvcHJvZC9saWJzL21vZHVsZWZpbGVzL2NvbX
+	BpbGVyL2ludGVsLzE5LjEuMy4zMDQvd2dyaWIyLzIuMC44X3dtby5sdWEiLFsiZnVsbE5hb
+	WUiXT0id2dyaWIyLzIuMC44X3dtbyIsWyJsb2FkT3JkZXIiXT0xMixwcm9wVD17fSxbInN0
+	YWNrRGVwdGgiXT0wLFsic3RhdHVzIl09ImFjdGl2ZSIsWyJ1c2VyTmFtZSJdPSJ3Z3JpYjI
+	vMi4wLjhfd21vIix9LH0sbXBhdGhBPXsi,JPEG_VER=9c,
+	__LMOD_REF_COUNT_PATH=/apps/ops/para/libs/intel/19.1.3.304/metplus/4.1
+	.4/ush:1;/apps/ops/para/libs/intel/19.1.3.304/met/10.1.2/bin:1;/apps/pr
+	od/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4/netcdf/4.7.4/bin:1;/apps
+	/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4/hdf5/1.10.6/bin:1;/ap
+	ps/spack/python/3.8.6/intel/19.1.3.304/pjn2nzkjvqgmjw4hmyz43v5x4jbxjzpk
+	/bin:1;/apps/spack/gsl/2.7/intel/19.1.3.304/xks7dxbowrdxhjck5zxc4rompop
+	ocevb/bin:1;/apps/spack/geos/3.8.1/intel/19.1.3.304/5recktk5lndzgkkqq36
+	y4a2h4yx3ahdy/bin:1;/apps/spack/proj/7.1.0/intel/19.1.3.304/cjbmc7tacv5
+	qcfatslqmcrzo5kb4raaq/bin:1;/apps/spack/libjpeg/9c/intel/19.1.3.304/jkr
+	3isi257ktoouprwaxcn4twtye747z/bin:1;/apps/ops/para/libs/intel/19.1.3.30
+	4/cray-mpich/8.1.4/nemsio/2.5.2/bin:1;/apps/ops/prod/nco/intel/19.1.3.3
+	04/util_shared.v1.4.0/ush:1;/pe/intel/compilers_and_libraries_2020.4.30
+	4/linux/bin/intel64:1;/pe/intel/compilers_and_libraries_2020.4.304/linu
+	x/bin:1;/pe/intel/compilers_and_libraries_2020.4.304/linux/mpi/intel64/
+	bin:1;/pe/intel/debugger_2020/gdb/intel64/bin:1;/apps/ops/prod/libs/int
+	el/19.1.3.304/grib_util/1.2.4/bin:1;/apps/ops/prod/libs/intel/19.1.3.30
+	4/wgrib2/2.0.8_wmo/bin:1;/apps/spack/imagemagick/7.0.8-7/cce/11.0.1/fyj
+	vsbwngyzlsiluc4udbnxkhlbwkzc3/bin:1;/apps/ops/prod/libs/intel/19.1.3.30
+	4/cray-mpich/8.1.4/nemsio/2.5.2/bin:4;/apps/prod/cfp/2.0.4/intel/19.1.3
+	.304/bin:1;/apps/spack/git/2.29.0/gcc/10.2.0/rkn6xaqbrdlim3u4it2l6ljqsz
+	g62s25/bin:1;/apps/ops/prod/nco/core/prod_util.v2.0.8/ush:1;/opt/cray/l
+	ibfabric/1.11.0.0./bin:1;/opt/cray/pe/craype/2.7.10/bin:1;.:4;/opt/clmg
+	r/sbin:1;/opt/clmgr/bin:1;/opt/sgi/sbin:1;/opt/sgi/bin:1;/usr/local/bin
+	:1;/usr/bin:5;/bin:2;/usr/lib/mit/bin:1;/usr/lib/mit/sbin:1;/opt/pbs/bi
+	n:1;/sbin:1;/usr/sbin:4;/etc:4;/u/olivia.ostwald/bin:4;/opt/cray/pe/bin
+	:1;/apps/prod/python-modules/3.8.6/intel/19.1.3.304/bin:1;/apps/prod/py
+	thon-modules/3.8.6/intel/19.1.3.304/lib/python3.8/site-packages/bin:1,
+	_ModuleTable002_=b2FkT3JkZXIiXT0xLHByb3BUPXt9LFsic3RhY2tEZXB0aCJdPTAsW
+	yJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09IlByZ0Vudi1pbnRlbC84LjEuMCIs
+	fSxiYWNpbz17WyJmbiJdPSIvYXBwcy9vcHMvcHJvZC9saWJzL21vZHVsZWZpbGVzL2NvbXB
+	pbGVyL2ludGVsLzE5LjEuMy4zMDQvYmFjaW8vMi40LjEubHVhIixbImZ1bGxOYW1lIl09Im
+	JhY2lvLzIuNC4xIixbImxvYWRPcmRlciJdPTE5LHByb3BUPXt9LFsic3RhY2tEZXB0aCJdP
+	TIsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09ImJhY2lvIix9LGNmcD17WyJm
+	biJdPSIvYXBwcy9wcm9kL2xtb2R1bGVzL2NvcmUvY2ZwLzIuMC40IixbImZ1bGxOYW1lIl0
+	9ImNmcC8yLjAuNCIsWyJsb2FkT3JkZXIi,
+	SSH_CONNECTION=192.58.154.6 60318 192.58.154.15 22,
+	BULL2SEQ=/apps/ops/prod/nco/intel/19.1.3.304/util_shared.v1.4.0/bin/bu
+	ll2seq,
+	INCLUDE=/apps/spack/python/3.8.6/intel/19.1.3.304/pjn2nzkjvqgmjw4hmyz4
+	3v5x4jbxjzpk/include:/apps/spack/gsl/2.7/intel/19.1.3.304/xks7dxbowrdxh
+	jck5zxc4rompopocevb/include:/apps/spack/geos/3.8.1/intel/19.1.3.304/5re
+	cktk5lndzgkkqq36y4a2h4yx3ahdy/include:/apps/spack/proj/7.1.0/intel/19.1
+	.3.304/cjbmc7tacv5qcfatslqmcrzo5kb4raaq/include:/apps/spack/libjpeg/9c/
+	intel/19.1.3.304/jkr3isi257ktoouprwaxcn4twtye747z/include:/apps/spack/i
+	magemagick/7.0.8-7/cce/11.0.1/fyjvsbwngyzlsiluc4udbnxkhlbwkzc3/include,
+	XAUTHLOCALHOSTNAME=clogin05,LESSCLOSE=lessclose.sh %s %s,
+	CRAY_LD_LIBRARY_PATH=/opt/cray/pe/mpich/8.1.9/ofi/intel/19.0/lib,
+	__LMOD_REF_COUNT_DYLD_LIBRARY_PATH=/apps/prod/hpc-stack/intel-19.1.3.3
+	04/cray-mpich-8.1.4/netcdf/4.7.4/lib:1;/apps/prod/hpc-stack/intel-19.1.
+	3.304/cray-mpich-8.1.4/hdf5/1.10.6/lib:1,
+	XKEYSYMDB=/usr/X11R6/lib/X11/XKeysymDB,PE_ENV=INTEL,
+	CWORDSH=/apps/ops/prod/nco/intel/19.1.3.304/util_shared.v1.4.0/bin/cwo
+	rdsh,
+	__LMOD_REF_COUNT_C_INCLUDE_PATH=/apps/spack/python/3.8.6/intel/19.1.3.
+	304/pjn2nzkjvqgmjw4hmyz43v5x4jbxjzpk/include:1;/apps/spack/gsl/2.7/inte
+	l/19.1.3.304/xks7dxbowrdxhjck5zxc4rompopocevb/include:1;/apps/spack/geo
+	s/3.8.1/intel/19.1.3.304/5recktk5lndzgkkqq36y4a2h4yx3ahdy/include:1;/ap
+	ps/spack/proj/7.1.0/intel/19.1.3.304/cjbmc7tacv5qcfatslqmcrzo5kb4raaq/i
+	nclude:1;/apps/spack/libjpeg/9c/intel/19.1.3.304/jkr3isi257ktoouprwaxcn
+	4twtye747z/include:1;/apps/spack/imagemagick/7.0.8-7/cce/11.0.1/fyjvsbw
+	ngyzlsiluc4udbnxkhlbwkzc3/include:1,
+	__LMOD_REF_COUNT_PE_FORTRAN_PKGCONFIG_LIBS=mpichf90:1,
+	LMOD_FAMILY_CRAYPE_CPU=craype-x86-rome,CRAY_LMOD_COMPILER=intel/19.0,
+	LMOD_MODULERCFILE=/apps/prod/lmodules/.modulerc.lua,
+	PACKAGEROOT=/lfs/h1/ops/prod/packages,
+	PE_PRODUCT_LIST=CRAYPE_X86_ROME:CRAYPE,
+	NDATE=/apps/ops/prod/nco/core/prod_util.v2.0.8/exec/ndate,
+	LMOD_IGNORE_CACHE=yes,LMOD_FAMILY_MPI_VERSION=8.1.9,
+	PE_PERFTOOLS_MPICH_LIBDIR=/opt/cray/pe/mpich/8.1.9/ofi/intel/19.0/lib,
+	PE_MPICH_GTL_DIR_amd_gfx906=-L/opt/cray/pe/mpich/8.1.9/gtl/lib,
+	LANG=en_US.UTF-8,NetCDF_VERSION=4.7.4,
+	_ModuleTable019_=L21vZHVsZWZpbGVzL2NvbW5ldC9pbnRlbC8xOS4wL29maS8xLjAiL
+	CIvYXBwcy9wcm9kL2xtb2R1bGVzL2NvbXBpbGVyL2ludGVsLzE5LjAiLCIvbGZzL2gxL21k
+	bC9uYm0vc2F2ZS9hcHBzL21vZHVsZWZpbGVzIiwiL29wdC9jcmF5L3BlL2xtb2QvbW9kdWx
+	lZmlsZXMvbmV0L29maS8xLjAiLCIvb3B0L2NyYXkvcGUvbG1vZC9tb2R1bGVmaWxlcy9jcH
+	UveDg2LXJvbWUvMS4wIiwiL3Vzci9zaGFyZS9tb2R1bGVzIiwiL3Vzci9zaGFyZS9Nb2R1b
+	GVzLyRNT0RVTEVfVkVSU0lPTi9tb2R1bGVmaWxlcyIsIi91c3Ivc2hhcmUvbW9kdWxlcy9t
+	b2R1bGVmaWxlcyIsIi91c3Ivc2hhcmUvbW9kdWxlZmlsZXMvTGludXgiLCIvdXNyL3NoYXJ
+	lL21vZHVsZWZpbGVzL0NvcmUiLCIvdXNy,
+	PE_MPICH_GTL_DIR_amd_gfx908=-L/opt/cray/pe/mpich/8.1.9/gtl/lib,
+	COMLOGSROOT=/lfs/h1/ops/prod/com,
+	METPLUS_ROOT=/apps/ops/para/libs/intel/19.1.3.304/metplus/4.1.4,
+	WINDOWMANAGER=xterm,
+	_ModuleTable008_=biJdPSIvYXBwcy9wcm9kL2xtb2R1bGVzL2ludGVsLzE5LjEuMy4zM
+	DQvZ3NsLzIuNyIsWyJmdWxsTmFtZSJdPSJnc2wvMi43IixbImxvYWRPcmRlciJdPTI2LHBy
+	b3BUPXt9LFsic3RhY2tEZXB0aCJdPTAsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1
+	lIl09ImdzbCIsfSxoZGY1PXtbImZuIl09Ii9hcHBzL3Byb2QvbG1vZHVsZXMvSU5URUxfY3
+	JheV9tcGljaC8xOS4xLjMuMzA0L2NyYXktbXBpY2gvOC4xLjQvaGRmNS8xLjEwLjYubHVhI
+	ixbImZ1bGxOYW1lIl09ImhkZjUvMS4xMC42IixbImxvYWRPcmRlciJdPTI4LHByb3BUPXt9
+	LFsic3RhY2tEZXB0aCJdPTEsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09Imh
+	kZjUiLH0saW1hZ2VtYWdpY2s9e1siZm4i,LESS=-M -I -R,
+	PE_MPICH_GTL_LIBS_nvidia70=-lmpi_gtl_cuda,
+	__LMOD_REF_COUNT_INTEL_LICENSE_FILE=/pe/intel/compilers_and_libraries_
+	2020.4.304/linux/licenses:1;/opt/intel/licenses:1;/intel/licenses:1,
+	DISPLAY=localhost:25.0,nemsio_VERSION=2.5.2,
+	LMOD_FAMILY_COMPILER_VERSION=19.1.3.304,
+	MET_BASE=/apps/ops/para/libs/intel/19.1.3.304/met/10.1.2/share/met,
+	HOSTNAME=clogin05,
+	IPPROOT=/pe/intel/compilers_and_libraries_2020.4.304/linux/ipp,
+	W3EMC_INCd=/apps/ops/para/libs/intel/19.1.3.304/cray-mpich/8.1.4/w3emc
+	/2.7.3/include_d,LMOD_SYSTEM_DEFAULT_MODULES=envvar/1.0,
+	OLDPWD=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Fork/EVS,
+	__LMOD_REF_COUNT__LMFILES_=/opt/cray/pe/lmod/modulefiles/core/PrgEnv-i
+	ntel/8.1.0.lua:1;/opt/cray/pe/lmod/modulefiles/core/craype/2.7.10.lua:1
+	;/opt/cray/pe/lmod/modulefiles/craype-targets/default/craype-x86-rome.l
+	ua:1;/opt/cray/modulefiles/libfabric/1.11.0.0.:1;/opt/cray/pe/lmod/modu
+	lefiles/craype-targets/default/craype-network-ofi.lua:1;/apps/prod/lmod
+	ules/sys_core/envvar/1.0:1;/apps/ops/prod/nco/modulefiles/core/prod_env
+	ir/2.0.5.lua:1;/apps/ops/prod/nco/modulefiles/core/prod_util/2.0.8:1;/a
+	pps/prod/lmodules/core/git/2.29.0:1;/apps/prod/lmodules/core/cfp/2.0.4:
+	1;/apps/prod/lmodules/core/imagemagick/7.0.8-7:1;/apps/ops/prod/libs/mo
+	dulefiles/compiler/intel/19.1.3.304/wgrib2/2.0.8_wmo.lua:1;/apps/ops/pr
+	od/libs/modulefiles/compiler/intel/19.1.3.304/grib_util/1.2.4.lua:1;/lf
+	s/h1/mdl/nbm/save/apps/modulefiles/grib2io/1.0.2.lua:1;/apps/prod/lmodu
+	les/core/intel/19.1.3.304.lua:1;/opt/cray/pe/lmod/modulefiles/comnet/in
+	tel/19.0/ofi/1.0/cray-mpich/8.1.9.lua:1;/apps/ops/prod/nco/modulefiles/
+	compiler/intel/19.1.3.304/util_shared/1.4.0:1;/apps/ops/prod/libs/modul
+	efiles/compiler/intel/19.1.3.304/sigio/2.3.2.lua:1;/apps/ops/prod/libs/
+	modulefiles/compiler/intel/19.1.3.304/bacio/2.4.1.lua:1;/apps/ops/prod/
+	libs/modulefiles/compiler/intel/19.1.3.304/w3nco/2.4.1.lua:1;/apps/ops/
+	prod/libs/modulefiles/mpi/intel/19.1.3.304/cray-mpich/8.1.4/nemsio/2.5.
+	2.lua:1;/apps/ops/prod/libs/modulefiles/mpi/intel/19.1.3.304/cray-mpich
+	/8.1.4/w3emc/2.7.3.lua:1;/apps/prod/lmodules/intel/19.1.3.304/libjpeg/9
+	c:1;/apps/prod/lmodules/intel/19.1.3.304/proj/7.1.0:1;/apps/prod/lmodul
+	es/intel/19.1.3.304/geos/3.8.1:1;/apps/prod/lmodules/intel/19.1.3.304/g
+	sl/2.7:1;/apps/prod/lmodules/intel/19.1.3.304/python/3.8.6:1;/apps/prod
+	/lmodules/INTEL_cray_mpich/19.1.3.304/cray-mpich/8.1.4/hdf5/1.10.6.lua:
+	1;/apps/prod/lmodules/INTEL_cray_mpich/19.1.3.304/cray-mpich/8.1.4/netc
+	df/4.7.4.lua:1;/apps/ops/prod/libs/modulefiles/compiler/intel/19.1.3.30
+	4/met/10.1.2.lua:1;/apps/ops/prod/libs/modulefiles/compiler/intel/19.1.
+	3.304/metplus/4.1.4.lua:1,
+	CONFIG_SITE=/usr/share/site/x86_64-unknown-linux-gnu,CSHEDIT=emacs,
+	NETCDF_ROOT=/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4/net
+	cdf/4.7.4,
+	C_INCLUDE_PATH=/apps/spack/python/3.8.6/intel/19.1.3.304/pjn2nzkjvqgmj
+	w4hmyz43v5x4jbxjzpk/include:/apps/spack/gsl/2.7/intel/19.1.3.304/xks7dx
+	bowrdxhjck5zxc4rompopocevb/include:/apps/spack/geos/3.8.1/intel/19.1.3.
+	304/5recktk5lndzgkkqq36y4a2h4yx3ahdy/include:/apps/spack/proj/7.1.0/int
+	el/19.1.3.304/cjbmc7tacv5qcfatslqmcrzo5kb4raaq/include:/apps/spack/libj
+	peg/9c/intel/19.1.3.304/jkr3isi257ktoouprwaxcn4twtye747z/include:/apps/
+	spack/imagemagick/7.0.8-7/cce/11.0.1/fyjvsbwngyzlsiluc4udbnxkhlbwkzc3/i
+	nclude,
+	HDF5_ROOT=/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4/hdf5/
+	1.10.6,
+	LMOD_CUSTOM_CNCM_INTEL_19_0_UCX_1_0_X86_ROME_1_0_CRAY_MPICH_8_0_PREFIX
+	=/apps/prod/lmodules/INTEL_cray_mpich/19.1.3.304/cray-mpich/8.1.4:/apps
+	/ops/prod/libs/modulefiles/mpi/intel/19.1.3.304/cray-mpich/8.1.4,
+	NETCDF_VERSION=4.7.4,
+	LMOD_CUSTOM_COMPILER_GNU_8_0_PREFIX=/apps/prod/lmodules/gcc/11.2.0:/ap
+	ps/prod/lmodules/gcc/10.2.0,GPG_TTY=/dev/pts/28,
+	LESS_ADVANCED_PREPROCESSOR=no,
+	W3NCO_INC8=/apps/ops/para/libs/intel/19.1.3.304/w3nco/2.4.1/include_8,
+	HDF5_LIBRARIES=/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4/
+	hdf5/1.10.6/lib,DCOMROOT=/lfs/h1/ops/prod/dcom,
+	W3NCO_INC4=/apps/ops/para/libs/intel/19.1.3.304/w3nco/2.4.1/include_4,
+	COLORTERM=1,
+	__LMOD_REF_COUNT_XDG_DATA_DIRS=/apps/spack/gtkplus/3.20.10/cce/11.0.1/
+	e73twegnu56s2wtekpzwvttejwpps6b3/share:1;/apps/spack/shared-mime-info/1
+	.9/cce/11.0.1/kc4blx55eopohmncyugahi5phm33eg7e/share:1;/apps/spack/pang
+	o/1.41.0/cce/11.0.1/q46kf6zdzfmfqc3meeonatppyoi54x6z/share:1;/apps/spac
+	k/gdk-pixbuf/2.40.0/cce/11.0.1/dvexg53dlrlpojgpqcwf5qlddymn6agh/share:1
+	;/apps/spack/atk/2.36.0/cce/11.0.1/nmgp43img2yofr53p46kpuqpsgscoxx7/sha
+	re:1;/apps/spack/gobject-introspection/1.56.1/cce/11.0.1/uhnxy7tehrvwww
+	p5xfiobys4fbyh3db7/share:1;/usr/share:1,
+	LIBJPEG_ROOT=/apps/spack/libjpeg/9c/intel/19.1.3.304/jkr3isi257ktooupr
+	waxcn4twtye747z,
+	NEMSIO_GET=/apps/ops/para/libs/intel/19.1.3.304/cray-mpich/8.1.4/nemsi
+	o/2.5.2/bin/nemsio_get,
+	sigio_ROOT=/apps/ops/para/libs/intel/19.1.3.304/sigio/2.3.2,
+	_ModuleTable007_=dWxlZmlsZXMvZ3JpYjJpby8xLjAuMi5sdWEiLFsiZnVsbE5hbWUiX
+	T0iZ3JpYjJpby8xLjAuMiIsWyJsb2FkT3JkZXIiXT0xNCxwcm9wVD17fSxbInN0YWNrRGVw
+	dGgiXT0wLFsic3RhdHVzIl09ImFjdGl2ZSIsWyJ1c2VyTmFtZSJdPSJncmliMmlvLzEuMC4
+	yIix9LGdyaWJfdXRpbD17WyJmbiJdPSIvYXBwcy9vcHMvcHJvZC9saWJzL21vZHVsZWZpbG
+	VzL2NvbXBpbGVyL2ludGVsLzE5LjEuMy4zMDQvZ3JpYl91dGlsLzEuMi40Lmx1YSIsWyJmd
+	WxsTmFtZSJdPSJncmliX3V0aWwvMS4yLjQiLFsibG9hZE9yZGVyIl09MTMscHJvcFQ9e30s
+	WyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0iZ3J
+	pYl91dGlsLzEuMi40Iix9LGdzbD17WyJm,
+	SUPVIT=/apps/ops/prod/nco/intel/19.1.3.304/util_shared.v1.4.0/bin/supv
+	it,
+	W3EMC_INC4=/apps/ops/para/libs/intel/19.1.3.304/cray-mpich/8.1.4/w3emc
+	/2.7.3/include_4,
+	W3EMC_INC8=/apps/ops/para/libs/intel/19.1.3.304/cray-mpich/8.1.4/w3emc
+	/2.7.3/include_8,
+	__LMOD_REF_COUNT_NLSPATH=/pe/intel/compilers_and_libraries_2020.4.304/
+	linux/compiler/lib/intel64/locale/%l_%t/%N:1;/pe/intel/compilers_and_li
+	braries_2020.4.304/linux/mkl/lib/intel64_lin/locale/%l_%t/%N:1;/pe/inte
+	l/debugger_2020/gdb/intel64/share/locale/%l_%t/%N:1,
+	__LMOD_REF_COUNT_CPLUS_INCLUDE_PATH=/apps/spack/python/3.8.6/intel/19.
+	1.3.304/pjn2nzkjvqgmjw4hmyz43v5x4jbxjzpk/include:1;/apps/spack/gsl/2.7/
+	intel/19.1.3.304/xks7dxbowrdxhjck5zxc4rompopocevb/include:1;/apps/spack
+	/geos/3.8.1/intel/19.1.3.304/5recktk5lndzgkkqq36y4a2h4yx3ahdy/include:1
+	;/apps/spack/proj/7.1.0/intel/19.1.3.304/cjbmc7tacv5qcfatslqmcrzo5kb4ra
+	aq/include:1;/apps/spack/libjpeg/9c/intel/19.1.3.304/jkr3isi257ktoouprw
+	axcn4twtye747z/include:1;/apps/spack/imagemagick/7.0.8-7/cce/11.0.1/fyj
+	vsbwngyzlsiluc4udbnxkhlbwkzc3/include:1,
+	LMOD_FAMILY_CRAYPE_NETWORK=craype-network-ofi,
+	TOCGRIB=/apps/ops/prod/libs/intel/19.1.3.304/grib_util/1.2.4/bin/tocgr
+	ib,LMOD_FAMILY_CRAYPE_VERSION=2.7.10,
+	NHOUR=/apps/ops/prod/nco/core/prod_util.v2.0.8/exec/nhour,
+	NetCDF_INCLUDES=/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4
+	/netcdf/4.7.4/include,
+	W3NCO_INCd=/apps/ops/para/libs/intel/19.1.3.304/w3nco/2.4.1/include_d,
+	DYLD_LIBRARY_PATH=/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1
+	.4/netcdf/4.7.4/lib:/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.
+	1.4/hdf5/1.10.6/lib,
+	__LMOD_REF_COUNT_INCLUDE=/apps/spack/python/3.8.6/intel/19.1.3.304/pjn
+	2nzkjvqgmjw4hmyz43v5x4jbxjzpk/include:1;/apps/spack/gsl/2.7/intel/19.1.
+	3.304/xks7dxbowrdxhjck5zxc4rompopocevb/include:1;/apps/spack/geos/3.8.1
+	/intel/19.1.3.304/5recktk5lndzgkkqq36y4a2h4yx3ahdy/include:1;/apps/spac
+	k/proj/7.1.0/intel/19.1.3.304/cjbmc7tacv5qcfatslqmcrzo5kb4raaq/include:
+	1;/apps/spack/libjpeg/9c/intel/19.1.3.304/jkr3isi257ktoouprwaxcn4twtye7
+	47z/include:1;/apps/spack/imagemagick/7.0.8-7/cce/11.0.1/fyjvsbwngyzlsi
+	luc4udbnxkhlbwkzc3/include:1,MACHTYPE=x86_64-suse-linux,
+	__LMOD_REF_COUNT_LD_LIBRARY_PATH=/apps/prod/hpc-stack/intel-19.1.3.304
+	/cray-mpich-8.1.4/netcdf/4.7.4/lib:1;/apps/prod/hpc-stack/intel-19.1.3.
+	304/cray-mpich-8.1.4/hdf5/1.10.6/lib:1;/apps/spack/python/3.8.6/intel/1
+	9.1.3.304/pjn2nzkjvqgmjw4hmyz43v5x4jbxjzpk/lib:1;/apps/spack/gsl/2.7/in
+	tel/19.1.3.304/xks7dxbowrdxhjck5zxc4rompopocevb/lib64:1;/apps/spack/geo
+	s/3.8.1/intel/19.1.3.304/5recktk5lndzgkkqq36y4a2h4yx3ahdy/lib:1;/apps/s
+	pack/proj/7.1.0/intel/19.1.3.304/cjbmc7tacv5qcfatslqmcrzo5kb4raaq/lib:1
+	;/apps/spack/libjpeg/9c/intel/19.1.3.304/jkr3isi257ktoouprwaxcn4twtye74
+	7z/lib:1;/pe/intel/compilers_and_libraries_2020.4.304/linux/compiler/li
+	b/intel64_lin:1;/pe/intel/compilers_and_libraries_2020.4.304/linux/mpi/
+	intel64/lib/release:1;/pe/intel/compilers_and_libraries_2020.4.304/linu
+	x/mpi/intel64/lib:1;/pe/intel/compilers_and_libraries_2020.4.304/linux/
+	ipp/lib/intel64:1;/pe/intel/compilers_and_libraries_2020.4.304/linux/mk
+	l/lib/intel64_lin:1;/pe/intel/compilers_and_libraries_2020.4.304/linux/
+	tbb/lib/intel64/gcc4.8:1;/pe/intel/debugger_2020/python/intel64/lib:1;/
+	pe/intel/debugger_2020/libipt/intel64/lib:1;/opt/cray/libfabric/1.11.0.
+	0./lib64:1,
+	__LMOD_REF_COUNT_PKG_CONFIG_PATH=/apps/spack/python/3.8.6/intel/19.1.3
+	.304/pjn2nzkjvqgmjw4hmyz43v5x4jbxjzpk/lib/pkgconfig:1;/apps/spack/gsl/2
+	.7/intel/19.1.3.304/xks7dxbowrdxhjck5zxc4rompopocevb/lib64/pkgconfig:1;
+	/apps/spack/proj/7.1.0/intel/19.1.3.304/cjbmc7tacv5qcfatslqmcrzo5kb4raa
+	q/lib/pkgconfig:1;/apps/spack/libjpeg/9c/intel/19.1.3.304/jkr3isi257kto
+	ouprwaxcn4twtye747z/lib/pkgconfig:1;/pe/intel/compilers_and_libraries_2
+	020.4.304/linux/mkl/bin/pkgconfig:1;/apps/spack/imagemagick/7.0.8-7/cce
+	/11.0.1/fyjvsbwngyzlsiluc4udbnxkhlbwkzc3/lib/pkgconfig:1;/opt/cray/libf
+	abric/1.11.0.0./lib64/pkgconfig:1;/opt/cray/pe/craype/2.7.10/pkg-config
+	:1,
+	LMOD_CUSTOM_CNCM_CRAYCLANG_10_0_UCX_1_0_PREFIX=/apps/prod/lmodules/cce
+	/13.0.0:/apps/prod/lmodules/cce/12.0.3:/apps/prod/lmodules/cce/11.0.4,
+	WEBTITLE=/apps/ops/prod/nco/intel/19.1.3.304/util_shared.v1.4.0/bin/we
+	btitle,UTILROOT=/apps/ops/prod/nco/core/prod_util.v2.0.8,
+	PE_PKGCONFIG_PRODUCTS=PE_MPICH,
+	_ModuleTable015_=a0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hb
+	WUiXT0icHl0aG9uLzMuOC42Iix9LHNpZ2lvPXtbImZuIl09Ii9hcHBzL29wcy9wcm9kL2xp
+	YnMvbW9kdWxlZmlsZXMvY29tcGlsZXIvaW50ZWwvMTkuMS4zLjMwNC9zaWdpby8yLjMuMi5
+	sdWEiLFsiZnVsbE5hbWUiXT0ic2lnaW8vMi4zLjIiLFsibG9hZE9yZGVyIl09MTgscHJvcF
+	Q9e30sWyJzdGFja0RlcHRoIl09MSxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiX
+	T0ic2lnaW8iLH0sdXRpbF9zaGFyZWQ9e1siZm4iXT0iL2FwcHMvb3BzL3Byb2QvbmNvL21v
+	ZHVsZWZpbGVzL2NvbXBpbGVyL2ludGVsLzE5LjEuMy4zMDQvdXRpbF9zaGFyZWQvMS40LjA
+	iLFsiZnVsbE5hbWUiXT0idXRpbF9zaGFy,
+	ASCII2SHP=/apps/ops/prod/nco/intel/19.1.3.304/util_shared.v1.4.0/bin/a
+	scii2shp,CRAY_MPICH_BASEDIR=/opt/cray/pe/mpich/8.1.9/ofi,
+	TOCGRIB2SUPER=/apps/ops/prod/libs/intel/19.1.3.304/grib_util/1.2.4/bin
+	/tocgrib2super,
+	PE_MPICH_GTL_DIR_nvidia80=-L/opt/cray/pe/mpich/8.1.9/gtl/lib,
+	SIGIO_INC4=/apps/ops/para/libs/intel/19.1.3.304/sigio/2.3.2/include,
+	_ModuleTable004_=bE5hbWUiXT0iY3JheXBlLzIuNy4xMCIsWyJsb2FkT3JkZXIiXT0yL
+	HByb3BUPXt9LFsic3RhY2tEZXB0aCJdPTAsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJO
+	YW1lIl09ImNyYXlwZS8yLjcuMTAiLH0sWyJjcmF5cGUtbmV0d29yay1vZmkiXT17WyJmbiJ
+	dPSIvb3B0L2NyYXkvcGUvbG1vZC9tb2R1bGVmaWxlcy9jcmF5cGUtdGFyZ2V0cy9kZWZhdW
+	x0L2NyYXlwZS1uZXR3b3JrLW9maS5sdWEiLFsiZnVsbE5hbWUiXT0iY3JheXBlLW5ldHdvc
+	mstb2ZpIixbImxvYWRPcmRlciJdPTUscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MSxbInN0
+	YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0iY3JheXBlLW5ldHdvcmstb2ZpIix9LFs
+	iY3JheXBlLXg4Ni1yb21lIl09e1siZm4i,MINICOM=-c on,
+	HDF5_INCLUDES=/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4/h
+	df5/1.10.6/include,
+	bacio_ROOT=/apps/ops/para/libs/intel/19.1.3.304/bacio/2.4.1,
+	__LMOD_REF_COUNT_PYTHONPATH=/apps/prod/python-modules/3.8.6/intel/19.1
+	.3.304/lib/python3.8/site-packages:1;/lfs/h1/mdl/nbm/save/apps/grib2io/
+	1.0.2/apps/spack/python/3.8.6/intel/19.1.3.304/pjn2nzkjvqgmjw4hmyz43v5x
+	4jbxjzpk/lib/python3.8/site-packages:1;/apps/ops/prod/nco/core/prod_uti
+	l.v2.0.8/ush:1,
+	PARMshared=/apps/ops/prod/nco/intel/19.1.3.304/util_shared.v1.4.0/parm
+	,C3_RSH=ssh -oConnectTimeout=10 -oForwardX11=no,
+	PE_MPICH_PKGCONFIG_VARIABLES=PE_MPICH_GTL_DIR_@accelerator@:PE_MPICH_G
+	TL_LIBS_@accelerator@,PE_MPICH_PKGCONFIG_LIBS=mpich,
+	INTEL_PYTHONHOME=/pe/intel/debugger_2020/python/intel64/,
+	QT_SYSTEM_DIR=/usr/share/desktop-data,OSTYPE=linux,
+	NETCDF=/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4/netcdf/4
+	.7.4,
+	CLASSPATH=/pe/intel/compilers_and_libraries_2020.4.304/linux/mpi/intel
+	64/lib/mpi.jar,
+	PROJ_LIB=/apps/spack/proj/7.1.0/intel/19.1.3.304/cjbmc7tacv5qcfatslqmc
+	rzo5kb4raaq/share/proj/,
+	GRIB2GRIB=/apps/ops/prod/libs/intel/19.1.3.304/grib_util/1.2.4/bin/gri
+	b2grib,
+	NEMSIO_LIB=/apps/ops/para/libs/intel/19.1.3.304/cray-mpich/8.1.4/nemsi
+	o/2.5.2/lib/libnemsio.a,USER=olivia.ostwald,MODULES_SET_SHELL_STARTUP=0,
+	PAGER=less,METPLUS_VERSION=4.1.4,
+	NetCDF_ROOT=/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4/net
+	cdf/4.7.4,PE_MPICH_GENCOMPILERS_INTEL=19.0,MODULE_VERSION=3.2.10,
+	LMOD_CUSTOM_CNCM_GNU_8_0_OFI_1_0_X86_ROME_1_0_CRAY_MPICH_8_0_PREFIX=/a
+	pps/prod/lmodules/GCC_cray_mpich/10.2.0/cray-mpich/8.1.4,
+	BACIO_INC4=/apps/ops/para/libs/intel/19.1.3.304/bacio/2.4.1/include_4,
+	LMOD_FAMILY_PRGENV_VERSION=8.1.0,
+	BACIO_INC8=/apps/ops/para/libs/intel/19.1.3.304/bacio/2.4.1/include_8,
+	_ModuleTable012_=fSxuZW1zaW89e1siZm4iXT0iL2FwcHMvb3BzL3Byb2QvbGlicy9tb
+	2R1bGVmaWxlcy9tcGkvaW50ZWwvMTkuMS4zLjMwNC9jcmF5LW1waWNoLzguMS40L25lbXNp
+	by8yLjUuMi5sdWEiLFsiZnVsbE5hbWUiXT0ibmVtc2lvLzIuNS4yIixbImxvYWRPcmRlciJ
+	dPTIxLHByb3BUPXt9LFsic3RhY2tEZXB0aCJdPTEsWyJzdGF0dXMiXT0iYWN0aXZlIixbIn
+	VzZXJOYW1lIl09Im5lbXNpbyIsfSxuZXRjZGY9e1siZm4iXT0iL2FwcHMvcHJvZC9sbW9kd
+	Wxlcy9JTlRFTF9jcmF5X21waWNoLzE5LjEuMy4zMDQvY3JheS1tcGljaC84LjEuNC9uZXRj
+	ZGYvNC43LjQubHVhIixbImZ1bGxOYW1lIl09Im5ldGNkZi80LjcuNCIsWyJsb2FkT3JkZXI
+	iXT0yOSxwcm9wVD17fSxbInN0YWNrRGVw,
+	LMOD_CUSTOM_CNCM_GNU_8_0_UCX_1_0_X86_ROME_1_0_CRAY_MPICH_8_0_PREFIX=/a
+	pps/prod/lmodules/GCC_cray_mpich/10.2.0/cray-mpich/8.1.4,
+	CRAY_CPU_TARGET=x86-rome,
+	DEGRIB2=/apps/ops/prod/libs/intel/19.1.3.304/grib_util/1.2.4/bin/degri
+	b2,
+	WGRIB=/apps/ops/prod/libs/intel/19.1.3.304/grib_util/1.2.4/bin/wgrib,
+	DBNETROOT=/lfs/h1/ops/prod/dbnet,
+	LMOD_CUSTOM_CNCM_CRAYCLANG_10_0_UCX_1_0_X86_ROME_1_0_CRAY_MPICH_8_0_PR
+	EFIX=/apps/prod/lmodules/CCE_cray_mpich/11.0.4/cray-mpich/8.1.4,
+	PKGCONFIG_ENABLED=1,
+	__LMOD_REF_COUNT_MODULEPATH=/apps/ops/prod/libs/modulefiles/mpi/intel/
+	19.1.3.304/cray-mpich/8.1.4:1;/apps/prod/lmodules/INTEL_cray_mpich/19.1
+	.3.304/cray-mpich/8.1.4:1;/opt/cray/pe/lmod/modulefiles/mpi/intel/19.0/
+	ofi/1.0/cray-mpich/8.0:4;/apps/ops/prod/nco/modulefiles/compiler/intel/
+	19.1.3.304:1;/apps/ops/prod/libs/modulefiles/compiler/intel/19.1.3.304:
+	5;/apps/prod/lmodules/intel/19.1.3.304:1;/opt/cray/pe/lmod/modulefiles/
+	comnet/intel/19.0/ofi/1.0:1;/apps/prod/lmodules/compiler/intel/19.0:1;/
+	lfs/h1/mdl/nbm/save/apps/modulefiles:4;/opt/cray/pe/lmod/modulefiles/ne
+	t/ofi/1.0:1;/opt/cray/pe/lmod/modulefiles/cpu/x86-rome/1.0:1;/usr/share
+	/modules:1;/usr/share/Modules/$MODULE_VERSION/modulefiles:1;/usr/share/
+	modules/modulefiles:1;/usr/share/modulefiles/Linux:1;/usr/share/modulef
+	iles/Core:1;/usr/share/lmod/lmod/modulefiles/Core:1;/opt/cray/pe/lmod/m
+	odulefiles/core:1;/opt/cray/pe/lmod/modulefiles/craype-targets/default:
+	1;/apps/prod/lmodules/sys_core:1;/apps/ops/prod/nco/modulefiles/core:1;
+	/apps/prod/lmodules/core:1;/opt/cray/modulefiles:1,
+	GRB2INDEX=/apps/ops/prod/libs/intel/19.1.3.304/grib_util/1.2.4/bin/grb
+	2index,MORE=-sl,PE_FORTRAN_PKGCONFIG_LIBS=mpichf90,
+	__LMOD_REF_COUNT_LOADEDMODULES=PrgEnv-intel/8.1.0:1;craype/2.7.10:1;cr
+	aype-x86-rome:1;libfabric/1.11.0.0.:1;craype-network-ofi:1;envvar/1.0:1
+	;prod_envir/2.0.5:1;prod_util/2.0.8:1;git/2.29.0:1;cfp/2.0.4:1;imagemag
+	ick/7.0.8-7:1;wgrib2/2.0.8_wmo:1;grib_util/1.2.4:1;grib2io/1.0.2:1;inte
+	l/19.1.3.304:1;cray-mpich/8.1.9:1;util_shared/1.4.0:1;sigio/2.3.2:1;bac
+	io/2.4.1:1;w3nco/2.4.1:1;nemsio/2.5.2:1;w3emc/2.7.3:1;libjpeg/9c:1;proj
+	/7.1.0:1;geos/3.8.1:1;gsl/2.7:1;python/3.8.6:1;hdf5/1.10.6:1;netcdf/4.7
+	.4:1;met/10.1.2:1;metplus/4.1.4:1,
+	__LMOD_REF_COUNT_CRAY_LD_LIBRARY_PATH=/opt/cray/pe/mpich/8.1.9/ofi/int
+	el/19.0/lib:1,
+	NEMSIO_INC=/apps/ops/para/libs/intel/19.1.3.304/cray-mpich/8.1.4/nemsi
+	o/2.5.2/include,INTEL_MAJOR_VERSION=19.1,
+	MDATE=/apps/ops/prod/nco/core/prod_util.v2.0.8/exec/mdate,
+	PWD=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Fork/EVS/ecf/hurricane/st
+	ats,
+	WGRIB2_LIB=/apps/ops/prod/libs/intel/19.1.3.304/wgrib2/2.0.8_wmo/lib/l
+	ibwgrib2.a,
+	PE_MPICH_GTL_DIR_nvidia70=-L/opt/cray/pe/mpich/8.1.9/gtl/lib,
+	COPYGB=/apps/ops/prod/libs/intel/19.1.3.304/grib_util/1.2.4/bin/copygb
+	,HOME=/u/olivia.ostwald,
+	MK125FLW=/apps/ops/prod/nco/intel/19.1.3.304/util_shared.v1.4.0/bin/mk
+	125flw,
+	MK125FLS=/apps/ops/prod/nco/intel/19.1.3.304/util_shared.v1.4.0/bin/mk
+	125fls,PELOCAL_PRGENV=true,
+	CMAKE_PREFIX_PATH=/apps/spack/python/3.8.6/intel/19.1.3.304/pjn2nzkjvq
+	gmjw4hmyz43v5x4jbxjzpk:/apps/spack/gsl/2.7/intel/19.1.3.304/xks7dxbowrd
+	xhjck5zxc4rompopocevb:/apps/spack/geos/3.8.1/intel/19.1.3.304/5recktk5l
+	ndzgkkqq36y4a2h4yx3ahdy:/apps/spack/proj/7.1.0/intel/19.1.3.304/cjbmc7t
+	acv5qcfatslqmcrzo5kb4raaq:/apps/spack/libjpeg/9c/intel/19.1.3.304/jkr3i
+	si257ktoouprwaxcn4twtye747z:/apps/spack/imagemagick/7.0.8-7/cce/11.0.1/
+	fyjvsbwngyzlsiluc4udbnxkhlbwkzc3:/apps/spack/git/2.29.0/gcc/10.2.0/rkn6
+	xaqbrdlim3u4it2l6ljqszg62s25,
+	UNPMGRB1=/apps/ops/prod/nco/intel/19.1.3.304/util_shared.v1.4.0/bin/un
+	pmgrb1,HOST=clogin05,SSH_CLIENT=192.58.154.6 60318 22,
+	grib_util_ROOT=/apps/ops/prod/libs/intel/19.1.3.304/grib_util/1.2.4,
+	WGRIB2_INC=/apps/ops/prod/libs/intel/19.1.3.304/wgrib2/2.0.8_wmo/inclu
+	de,LMOD_VERSION=8.3.1,w3emc_VERSION=2.7.3,XNLSPATH=/usr/share/X11/nls,
+	PE_MPICH_FORTRAN_PKGCONFIG_LIBS=mpichf90,
+	CPATH=/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4/netcdf/4.
+	7.4/include:/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4/hdf5
+	/1.10.6/include:/apps/spack/python/3.8.6/intel/19.1.3.304/pjn2nzkjvqgmj
+	w4hmyz43v5x4jbxjzpk/include/python3.8:/pe/intel/compilers_and_libraries
+	_2020.4.304/linux/ipp/include:/pe/intel/compilers_and_libraries_2020.4.
+	304/linux/mkl/include:/pe/intel/compilers_and_libraries_2020.4.304/linu
+	x/pstl/include:/pe/intel/compilers_and_libraries_2020.4.304/linux/pstl/
+	stdlib:/pe/intel/compilers_and_libraries_2020.4.304/linux/tbb/include,
+	__LMOD_REF_COUNT_INFOPATH=/pe/intel/documentation_2020/en/debugger/gdb
+	-ia/info:1;/apps/docs/info:1,CRAY_LMOD_CPU=x86-rome/1.0,
+	PE_MPICH_GTL_LIBS_nvidia80=-lmpi_gtl_cuda,
+	UKAUXFLD=/apps/ops/prod/nco/intel/19.1.3.304/util_shared.v1.4.0/bin/uk
+	auxfld,LMOD_FAMILY_CRAYPE_CPU_VERSION=false,
+	BASH_ENV=/usr/share/lmod/lmod/init/bash,
+	XDG_DATA_DIRS=/apps/spack/gtkplus/3.20.10/cce/11.0.1/e73twegnu56s2wtek
+	pzwvttejwpps6b3/share:/apps/spack/shared-mime-info/1.9/cce/11.0.1/kc4bl
+	x55eopohmncyugahi5phm33eg7e/share:/apps/spack/pango/1.41.0/cce/11.0.1/q
+	46kf6zdzfmfqc3meeonatppyoi54x6z/share:/apps/spack/gdk-pixbuf/2.40.0/cce
+	/11.0.1/dvexg53dlrlpojgpqcwf5qlddymn6agh/share:/apps/spack/atk/2.36.0/c
+	ce/11.0.1/nmgp43img2yofr53p46kpuqpsgscoxx7/share:/apps/spack/gobject-in
+	trospection/1.56.1/cce/11.0.1/uhnxy7tehrvwwwp5xfiobys4fbyh3db7/share:/u
+	sr/share,
+	COPYGB2=/apps/ops/prod/libs/intel/19.1.3.304/grib_util/1.2.4/bin/copyg
+	b2,
+	LIBJPEG_LIB=/apps/spack/libjpeg/9c/intel/19.1.3.304/jkr3isi257ktoouprw
+	axcn4twtye747z/lib/libjpeg.a,
+	GI_TYPELIB_PATH=/apps/spack/gtkplus/3.20.10/cce/11.0.1/e73twegnu56s2wt
+	ekpzwvttejwpps6b3/lib/girepository-1.0:/apps/spack/pango/1.41.0/cce/11.
+	0.1/q46kf6zdzfmfqc3meeonatppyoi54x6z/lib/girepository-1.0:/apps/spack/g
+	dk-pixbuf/2.40.0/cce/11.0.1/dvexg53dlrlpojgpqcwf5qlddymn6agh/lib/girepo
+	sitory-1.0:/apps/spack/atk/2.36.0/cce/11.0.1/nmgp43img2yofr53p46kpuqpsg
+	scoxx7/lib/girepository-1.0:/apps/spack/at-spi2-core/2.38.0/cce/11.0.1/
+	hf2hr4cpagq4h22vduewmcnffyrocomv/lib/girepository-1.0:/apps/spack/gobje
+	ct-introspection/1.56.1/cce/11.0.1/uhnxy7tehrvwwwp5xfiobys4fbyh3db7/lib
+	/girepository-1.0,
+	ANOMGB=/apps/ops/prod/nco/intel/19.1.3.304/util_shared.v1.4.0/bin/anom
+	gb,__LMOD_REF_COUNT_PE_MPICH_FORTRAN_PKGCONFIG_LIBS=mpichf90:1,
+	w3nco_ROOT=/apps/ops/para/libs/intel/19.1.3.304/w3nco/2.4.1,
+	OVERGRIDID=/apps/ops/prod/nco/intel/19.1.3.304/util_shared.v1.4.0/bin/
+	overgridid,
+	BULLPROI=/apps/ops/prod/nco/intel/19.1.3.304/util_shared.v1.4.0/bin/bu
+	llproi,INTEL_MINOR_VERSION=3.304,
+	LMOD_CUSTOM_CNCM_INTEL_19_0_OFI_1_0_X86_ROME_1_0_CRAY_MPICH_8_0_PREFIX
+	=/apps/prod/lmodules/INTEL_cray_mpich/19.1.3.304/cray-mpich/8.1.4:/apps
+	/ops/prod/libs/modulefiles/mpi/intel/19.1.3.304/cray-mpich/8.1.4,
+	CRAY_LMOD_NET=ofi/1.0,
+	__LMOD_REF_COUNT_PE_PKGCONFIG_PRODUCTS=PE_MPICH:1,
+	PE_MPICH_MODULE_NAME=cray-mpich,
+	NLSPATH=/pe/intel/compilers_and_libraries_2020.4.304/linux/compiler/li
+	b/intel64/locale/%l_%t/%N:/pe/intel/compilers_and_libraries_2020.4.304/
+	linux/mkl/lib/intel64_lin/locale/%l_%t/%N:/pe/intel/debugger_2020/gdb/i
+	ntel64/share/locale/%l_%t/%N,LIBGL_DEBUG=quiet,
+	LMOD_CUSTOM_COMPILER_INTEL_19_0_PREFIX=/apps/prod/lmodules/intel/19.1.
+	3.304:/apps/ops/prod/libs/modulefiles/compiler/intel/19.1.3.304:/apps/o
+	ps/prod/nco/modulefiles/compiler/intel/19.1.3.304,
+	__LMOD_REF_COUNT_PE_MPICH_FIXED_PRGENV=INTEL:1,
+	__LMOD_REF_COUNT_LIBRARY_PATH=/apps/spack/python/3.8.6/intel/19.1.3.30
+	4/pjn2nzkjvqgmjw4hmyz43v5x4jbxjzpk/lib:1;/apps/spack/gsl/2.7/intel/19.1
+	.3.304/xks7dxbowrdxhjck5zxc4rompopocevb/lib64:1;/apps/spack/geos/3.8.1/
+	intel/19.1.3.304/5recktk5lndzgkkqq36y4a2h4yx3ahdy/lib:1;/apps/spack/pro
+	j/7.1.0/intel/19.1.3.304/cjbmc7tacv5qcfatslqmcrzo5kb4raaq/lib:1;/apps/s
+	pack/libjpeg/9c/intel/19.1.3.304/jkr3isi257ktoouprwaxcn4twtye747z/lib:1
+	;/pe/intel/compilers_and_libraries_2020.4.304/linux/ipp/lib/intel64:1;/
+	pe/intel/compilers_and_libraries_2020.4.304/linux/compiler/lib/intel64_
+	lin:1;/pe/intel/compilers_and_libraries_2020.4.304/linux/mkl/lib/intel6
+	4_lin:1;/pe/intel/compilers_and_libraries_2020.4.304/linux/tbb/lib/inte
+	l64/gcc4.8:2;/apps/spack/imagemagick/7.0.8-7/cce/11.0.1/fyjvsbwngyzlsil
+	uc4udbnxkhlbwkzc3/lib:1,PROFILEREAD=true,
+	LIBRARY_PATH=/apps/spack/python/3.8.6/intel/19.1.3.304/pjn2nzkjvqgmjw4
+	hmyz43v5x4jbxjzpk/lib:/apps/spack/gsl/2.7/intel/19.1.3.304/xks7dxbowrdx
+	hjck5zxc4rompopocevb/lib64:/apps/spack/geos/3.8.1/intel/19.1.3.304/5rec
+	ktk5lndzgkkqq36y4a2h4yx3ahdy/lib:/apps/spack/proj/7.1.0/intel/19.1.3.30
+	4/cjbmc7tacv5qcfatslqmcrzo5kb4raaq/lib:/apps/spack/libjpeg/9c/intel/19.
+	1.3.304/jkr3isi257ktoouprwaxcn4twtye747z/lib:/pe/intel/compilers_and_li
+	braries_2020.4.304/linux/ipp/lib/intel64:/pe/intel/compilers_and_librar
+	ies_2020.4.304/linux/compiler/lib/intel64_lin:/pe/intel/compilers_and_l
+	ibraries_2020.4.304/linux/mkl/lib/intel64_lin:/pe/intel/compilers_and_l
+	ibraries_2020.4.304/linux/tbb/lib/intel64/gcc4.8:/apps/spack/imagemagic
+	k/7.0.8-7/cce/11.0.1/fyjvsbwngyzlsiluc4udbnxkhlbwkzc3/lib,
+	_ModuleTable021_=ZmlsZXMvTGludXg6L3Vzci9zaGFyZS9tb2R1bGVmaWxlcy9Db3JlO
+	i91c3Ivc2hhcmUvbG1vZC9sbW9kL21vZHVsZWZpbGVzL0NvcmU6L29wdC9jcmF5L3BlL2xt
+	b2QvbW9kdWxlZmlsZXMvY29yZTovb3B0L2NyYXkvcGUvbG1vZC9tb2R1bGVmaWxlcy9jcmF
+	5cGUtdGFyZ2V0cy9kZWZhdWx0Oi9hcHBzL3Byb2QvbG1vZHVsZXMvc3lzX2NvcmU6L2FwcH
+	Mvb3BzL3Byb2QvbmNvL21vZHVsZWZpbGVzL2NvcmU6L2FwcHMvcHJvZC9sbW9kdWxlcy9jb
+	3JlOi9vcHQvY3JheS9tb2R1bGVmaWxlcyIsfQ==,
+	__LMOD_REF_COUNT_GI_TYPELIB_PATH=/apps/spack/gtkplus/3.20.10/cce/11.0.
+	1/e73twegnu56s2wtekpzwvttejwpps6b3/lib/girepository-1.0:1;/apps/spack/p
+	ango/1.41.0/cce/11.0.1/q46kf6zdzfmfqc3meeonatppyoi54x6z/lib/girepositor
+	y-1.0:1;/apps/spack/gdk-pixbuf/2.40.0/cce/11.0.1/dvexg53dlrlpojgpqcwf5q
+	lddymn6agh/lib/girepository-1.0:1;/apps/spack/atk/2.36.0/cce/11.0.1/nmg
+	p43img2yofr53p46kpuqpsgscoxx7/lib/girepository-1.0:1;/apps/spack/at-spi
+	2-core/2.38.0/cce/11.0.1/hf2hr4cpagq4h22vduewmcnffyrocomv/lib/gireposit
+	ory-1.0:1;/apps/spack/gobject-introspection/1.56.1/cce/11.0.1/uhnxy7teh
+	rvwwwp5xfiobys4fbyh3db7/lib/girepository-1.0:1,w3nco_VERSION=2.4.1,
+	__LMOD_REF_COUNT_CMAKE_PREFIX_PATH=/apps/spack/python/3.8.6/intel/19.1
+	.3.304/pjn2nzkjvqgmjw4hmyz43v5x4jbxjzpk:1;/apps/spack/gsl/2.7/intel/19.
+	1.3.304/xks7dxbowrdxhjck5zxc4rompopocevb:1;/apps/spack/geos/3.8.1/intel
+	/19.1.3.304/5recktk5lndzgkkqq36y4a2h4yx3ahdy:1;/apps/spack/proj/7.1.0/i
+	ntel/19.1.3.304/cjbmc7tacv5qcfatslqmcrzo5kb4raaq:1;/apps/spack/libjpeg/
+	9c/intel/19.1.3.304/jkr3isi257ktoouprwaxcn4twtye747z:1;/apps/spack/imag
+	emagick/7.0.8-7/cce/11.0.1/fyjvsbwngyzlsiluc4udbnxkhlbwkzc3:1;/apps/spa
+	ck/git/2.29.0/gcc/10.2.0/rkn6xaqbrdlim3u4it2l6ljqszg62s25:1,
+	LMOD_sys=Linux,
+	_ModuleTable010_=b3B0L2NyYXkvbW9kdWxlZmlsZXMvbGliZmFicmljLzEuMTEuMC4wL
+	iIsWyJmdWxsTmFtZSJdPSJsaWJmYWJyaWMvMS4xMS4wLjAuIixbImxvYWRPcmRlciJdPTQs
+	cHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MixbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5
+	hbWUiXT0ibGliZmFicmljIix9LGxpYmpwZWc9e1siZm4iXT0iL2FwcHMvcHJvZC9sbW9kdW
+	xlcy9pbnRlbC8xOS4xLjMuMzA0L2xpYmpwZWcvOWMiLFsiZnVsbE5hbWUiXT0ibGlianBlZ
+	y85YyIsWyJsb2FkT3JkZXIiXT0yMyxwcm9wVD17fSxbInN0YWNrRGVwdGgiXT0wLFsic3Rh
+	dHVzIl09ImFjdGl2ZSIsWyJ1c2VyTmFtZSJdPSJsaWJqcGVnLzljIix9LG1ldD17WyJmbiJ
+	dPSIvYXBwcy9vcHMvcHJvZC9saWJzL21v,PE_PKGCONFIG_LIBS=mpich,
+	GRBINDEX=/apps/ops/prod/libs/intel/19.1.3.304/grib_util/1.2.4/bin/grbi
+	ndex,COMLISTROOT=/lfs/h1/ops/prod/config,
+	_ModuleTable001_=X01vZHVsZVRhYmxlXz17WyJNVHZlcnNpb24iXT0zLFsiY19yZWJ1a
+	WxkVGltZSJdPWZhbHNlLFsiY19zaG9ydFRpbWUiXT1mYWxzZSxkZXB0aFQ9e30sZmFtaWx5
+	PXtbIlByZ0VudiJdPSJQcmdFbnYtaW50ZWwiLFsiY29tcGlsZXIiXT0iaW50ZWwiLFsiY3J
+	heXBlIl09ImNyYXlwZSIsWyJjcmF5cGVfY3B1Il09ImNyYXlwZS14ODYtcm9tZSIsWyJjcm
+	F5cGVfbmV0d29yayJdPSJjcmF5cGUtbmV0d29yay1vZmkiLFsibXBpIl09ImNyYXktbXBpY
+	2giLH0sbVQ9e1siUHJnRW52LWludGVsIl09e1siZm4iXT0iL29wdC9jcmF5L3BlL2xtb2Qv
+	bW9kdWxlZmlsZXMvY29yZS9QcmdFbnYtaW50ZWwvOC4xLjAubHVhIixbImZ1bGxOYW1lIl0
+	9IlByZ0Vudi1pbnRlbC84LjEuMCIsWyJs,
+	LOADEDMODULES=PrgEnv-intel/8.1.0:craype/2.7.10:craype-x86-rome:libfabr
+	ic/1.11.0.0.:craype-network-ofi:envvar/1.0:prod_envir/2.0.5:prod_util/2
+	.0.8:git/2.29.0:cfp/2.0.4:imagemagick/7.0.8-7:wgrib2/2.0.8_wmo:grib_uti
+	l/1.2.4:grib2io/1.0.2:intel/19.1.3.304:cray-mpich/8.1.9:util_shared/1.4
+	.0:sigio/2.3.2:bacio/2.4.1:w3nco/2.4.1:nemsio/2.5.2:w3emc/2.7.3:libjpeg
+	/9c:proj/7.1.0:geos/3.8.1:gsl/2.7:python/3.8.6:hdf5/1.10.6:netcdf/4.7.4
+	:met/10.1.2:metplus/4.1.4,LMOD_AVAIL_STYLE=en_grouped:system,
+	CRAYPE_NETWORK_TARGET=ofi,
+	__LMOD_REF_COUNT_ACLOCAL_PATH=/apps/spack/gsl/2.7/intel/19.1.3.304/xks
+	7dxbowrdxhjck5zxc4rompopocevb/share/aclocal:1,
+	FIXshared=/apps/ops/prod/nco/intel/19.1.3.304/util_shared.v1.4.0/fix,
+	NEMSIO_READ=/apps/ops/para/libs/intel/19.1.3.304/cray-mpich/8.1.4/nems
+	io/2.5.2/bin/nemsio_read,
+	_ModuleTable006_=Zm4iXT0iL2FwcHMvcHJvZC9sbW9kdWxlcy9pbnRlbC8xOS4xLjMuM
+	zA0L2dlb3MvMy44LjEiLFsiZnVsbE5hbWUiXT0iZ2Vvcy8zLjguMSIsWyJsb2FkT3JkZXIi
+	XT0yNSxwcm9wVD17fSxbInN0YWNrRGVwdGgiXT0wLFsic3RhdHVzIl09ImFjdGl2ZSIsWyJ
+	1c2VyTmFtZSJdPSJnZW9zLzMuOC4xIix9LGdpdD17WyJmbiJdPSIvYXBwcy9wcm9kL2xtb2
+	R1bGVzL2NvcmUvZ2l0LzIuMjkuMCIsWyJmdWxsTmFtZSJdPSJnaXQvMi4yOS4wIixbImxvY
+	WRPcmRlciJdPTkscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3Rp
+	dmUiLFsidXNlck5hbWUiXT0iZ2l0LzIuMjkuMCIsfSxncmliMmlvPXtbImZuIl09Ii9sZnM
+	vaDEvbWRsL25ibS9zYXZlL2FwcHMvbW9k,
+	__LMOD_REF_COUNT_MANPATH=/apps/ops/para/libs/intel/19.1.3.304/met/10.1
+	.2/share/man:1;/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4/n
+	etcdf/4.7.4/share/man:1;/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpic
+	h-8.1.4/hdf5/1.10.6/share/man:1;/apps/spack/python/3.8.6/intel/19.1.3.3
+	04/pjn2nzkjvqgmjw4hmyz43v5x4jbxjzpk/share/man:1;/apps/spack/gsl/2.7/int
+	el/19.1.3.304/xks7dxbowrdxhjck5zxc4rompopocevb/share/man:1;/apps/spack/
+	proj/7.1.0/intel/19.1.3.304/cjbmc7tacv5qcfatslqmcrzo5kb4raaq/share/man:
+	1;/apps/spack/libjpeg/9c/intel/19.1.3.304/jkr3isi257ktoouprwaxcn4twtye7
+	47z/share/man:1;/opt/cray/pe/mpich/8.1.9/ofi/man:1;/opt/cray/pe/mpich/8
+	.1.9/man/mpich:1;/pe/intel/man/common:1;/pe/intel/compilers_and_librari
+	es_2020.4.304/linux/mpi/man:1;/pe/intel/documentation_2020/en/debugger/
+	gdb-ia/man:1;/apps/spack/imagemagick/7.0.8-7/cce/11.0.1/fyjvsbwngyzlsil
+	uc4udbnxkhlbwkzc3/share/man:1;/apps/prod/cfp/2.0.4/intel/19.1.3.304/man
+	:1;/apps/spack/git/2.29.0/gcc/10.2.0/rkn6xaqbrdlim3u4it2l6ljqszg62s25/s
+	hare/man:1;/opt/cray/libfabric/1.11.0.0./share/man:1;/opt/cray/pe/crayp
+	e/2.7.10/man:1;/usr/share/lmod/lmod/share/man:1;/usr/share/man:1;/opt/p
+	bs/share/man:1;/opt/clmgr/man:1;/opt/sgi/share/man:1;/opt/clmgr/share/m
+	an:1;/opt/clmgr/lib/cm-cli/man:1,
+	_ModuleTable003_=XT0xMCxwcm9wVD17fSxbInN0YWNrRGVwdGgiXT0wLFsic3RhdHVzI
+	l09ImFjdGl2ZSIsWyJ1c2VyTmFtZSJdPSJjZnAvMi4wLjQiLH0sWyJjcmF5LW1waWNoIl09
+	e1siZm4iXT0iL29wdC9jcmF5L3BlL2xtb2QvbW9kdWxlZmlsZXMvY29tbmV0L2ludGVsLzE
+	5LjAvb2ZpLzEuMC9jcmF5LW1waWNoLzguMS45Lmx1YSIsWyJmdWxsTmFtZSJdPSJjcmF5LW
+	1waWNoLzguMS45IixbImxvYWRPcmRlciJdPTE2LHByb3BUPXt9LFsic3RhY2tEZXB0aCJdP
+	TAsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09ImNyYXktbXBpY2gvOC4xLjki
+	LH0sY3JheXBlPXtbImZuIl09Ii9vcHQvY3JheS9wZS9sbW9kL21vZHVsZWZpbGVzL2NvcmU
+	vY3JheXBlLzIuNy4xMC5sdWEiLFsiZnVs,
+	LIBJPEG_SRC=/apps/spack/libjpeg/9c/intel/19.1.3.304/jkr3isi257ktoouprw
+	axcn4twtye747z/src,
+	INTEL_LICENSE_FILE=/pe/intel/compilers_and_libraries_2020.4.304/linux/
+	licenses:/opt/intel/licenses:/intel/licenses,LMOD_ROOT=/usr/share/lmod,
+	SSH_TTY=/dev/pts/28,MET_VERSION=10.1.2,FROM_HEADER=,
+	CRAY_MPICH_ROOTDIR=/opt/cray/pe/mpich/8.1.9,
+	_ModuleTable013_=dGgiXT0wLFsic3RhdHVzIl09ImFjdGl2ZSIsWyJ1c2VyTmFtZSJdP
+	SJuZXRjZGYvNC43LjQiLH0scHJvZF9lbnZpcj17WyJmbiJdPSIvYXBwcy9vcHMvcHJvZC9u
+	Y28vbW9kdWxlZmlsZXMvY29yZS9wcm9kX2VudmlyLzIuMC41Lmx1YSIsWyJmdWxsTmFtZSJ
+	dPSJwcm9kX2VudmlyLzIuMC41IixbImxvYWRPcmRlciJdPTcscHJvcFQ9e30sWyJzdGFja0
+	RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0icHJvZF9lbnZpc
+	i8yLjAuNSIsfSxwcm9kX3V0aWw9e1siZm4iXT0iL2FwcHMvb3BzL3Byb2QvbmNvL21vZHVs
+	ZWZpbGVzL2NvcmUvcHJvZF91dGlsLzIuMC44IixbImZ1bGxOYW1lIl09InByb2RfdXRpbC8
+	yLjAuOCIsWyJsb2FkT3JkZXIiXT04LHBy,MAIL=/var/spool/mail/olivia.ostwald,
+	SIGIO_LIB=/apps/ops/para/libs/intel/19.1.3.304/sigio/2.3.2/lib/libsigi
+	o.a,
+	PE_INTEL_FIXED_PKGCONFIG_PATH=/opt/cray/pe/mpich/8.1.9/ofi/intel/19.0/
+	lib/pkgconfig,
+	SIGIO_LIB4=/apps/ops/para/libs/intel/19.1.3.304/sigio/2.3.2/lib/libsig
+	io.a,sigio_VERSION=2.3.2,
+	_ModuleTable016_=ZWQvMS40LjAiLFsibG9hZE9yZGVyIl09MTcscHJvcFQ9e30sWyJzd
+	GFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0idXRpbF9z
+	aGFyZWQvMS40LjAiLH0sdzNlbWM9e1siZm4iXT0iL2FwcHMvb3BzL3Byb2QvbGlicy9tb2R
+	1bGVmaWxlcy9tcGkvaW50ZWwvMTkuMS4zLjMwNC9jcmF5LW1waWNoLzguMS40L3czZW1jLz
+	IuNy4zLmx1YSIsWyJmdWxsTmFtZSJdPSJ3M2VtYy8yLjcuMyIsWyJsb2FkT3JkZXIiXT0yM
+	ixwcm9wVD17fSxbInN0YWNrRGVwdGgiXT0wLFsic3RhdHVzIl09ImFjdGl2ZSIsWyJ1c2Vy
+	TmFtZSJdPSJ3M2VtYy8yLjcuMyIsfSx3M25jbz17WyJmbiJdPSIvYXBwcy9vcHMvcHJvZC9
+	saWJzL21vZHVsZWZpbGVzL2NvbXBpbGVy,
+	__LMOD_REF_COUNT_PE_MPICH_GENCOMPILERS_INTEL=19.0:1,
+	LESSKEY=/etc/lesskey.bin,
+	_ModuleTable009_=XT0iL2FwcHMvcHJvZC9sbW9kdWxlcy9jb3JlL2ltYWdlbWFnaWNrL
+	zcuMC44LTciLFsiZnVsbE5hbWUiXT0iaW1hZ2VtYWdpY2svNy4wLjgtNyIsWyJsb2FkT3Jk
+	ZXIiXT0xMSxwcm9wVD17fSxbInN0YWNrRGVwdGgiXT0wLFsic3RhdHVzIl09ImFjdGl2ZSI
+	sWyJ1c2VyTmFtZSJdPSJpbWFnZW1hZ2ljay83LjAuOC03Iix9LGludGVsPXtbImZuIl09Ii
+	9hcHBzL3Byb2QvbG1vZHVsZXMvY29yZS9pbnRlbC8xOS4xLjMuMzA0Lmx1YSIsWyJmdWxsT
+	mFtZSJdPSJpbnRlbC8xOS4xLjMuMzA0IixbImxvYWRPcmRlciJdPTE1LHByb3BUPXt9LFsi
+	c3RhY2tEZXB0aCJdPTAsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09ImludGV
+	sIix9LGxpYmZhYnJpYz17WyJmbiJdPSIv,TERM=xterm,SHELL=/bin/bash,
+	LIBJPEG_INC=/apps/spack/libjpeg/9c/intel/19.1.3.304/jkr3isi257ktoouprw
+	axcn4twtye747z/include,bacio_VERSION=2.4.1,CRAY_MPICH_VER=8.1.9,
+	LMOD_ADMIN_FILE=/apps/prod/lmodules/admin.list,
+	COMROOT=/lfs/h1/ops/prod/com,
+	LMOD_CUSTOM_COMPILER_GNU_8_0_UCX_1_0_PREFIX=/apps/prod/lmodules/gcc/11
+	.2.0:/apps/prod/lmodules/gcc/10.2.0,PE_MPICH_FIXED_PRGENV=INTEL,
+	LMOD_CUSTOM_COMPILER_CRAYCLANG_10_0_PREFIX=/apps/prod/lmodules/cce/13.
+	0.0:/apps/prod/lmodules/cce/12.0.3:/apps/prod/lmodules/cce/11.0.4,
+	TOCGRIB2=/apps/ops/prod/libs/intel/19.1.3.304/grib_util/1.2.4/bin/tocg
+	rib2,LMOD_FAMILY_PRGENV=PrgEnv-intel,
+	MKGRB25=/apps/ops/prod/nco/intel/19.1.3.304/util_shared.v1.4.0/bin/mkg
+	rb25,_ModuleTable_Sz_=21,
+	LIBJPEG_LIBDIR=/apps/spack/libjpeg/9c/intel/19.1.3.304/jkr3isi257ktoou
+	prwaxcn4twtye747z/lib,
+	__LMOD_REF_COUNT_CPATH=/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpic
+	h-8.1.4/netcdf/4.7.4/include:1;/apps/prod/hpc-stack/intel-19.1.3.304/cr
+	ay-mpich-8.1.4/hdf5/1.10.6/include:1;/apps/spack/python/3.8.6/intel/19.
+	1.3.304/pjn2nzkjvqgmjw4hmyz43v5x4jbxjzpk/include/python3.8:1;/pe/intel/
+	compilers_and_libraries_2020.4.304/linux/ipp/include:1;/pe/intel/compil
+	ers_and_libraries_2020.4.304/linux/mkl/include:1;/pe/intel/compilers_an
+	d_libraries_2020.4.304/linux/pstl/include:1;/pe/intel/compilers_and_lib
+	raries_2020.4.304/linux/pstl/stdlib:1;/pe/intel/compilers_and_libraries
+	_2020.4.304/linux/tbb/include:2,LS_OPTIONS=-N --color=tty -T 0,
+	NetCDF=/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4/netcdf/4
+	.7.4,
+	OVERDATEGRIB=/apps/ops/prod/nco/intel/19.1.3.304/util_shared.v1.4.0/bi
+	n/overdate.grib,
+	wgrib2_ROOT=/apps/ops/prod/libs/intel/19.1.3.304/wgrib2/2.0.8_wmo,
+	LMOD_FAMILY_COMPILER=intel,USE_PCM_DB=2,
+	_ModuleTable018_=L2FwcHMvb3BzL3Byb2QvbGlicy9tb2R1bGVmaWxlcy9tcGkvaW50Z
+	WwvMTkuMS4zLjMwNC9jcmF5LW1waWNoLzguMS40IiwiL2FwcHMvcHJvZC9sbW9kdWxlcy9J
+	TlRFTF9jcmF5X21waWNoLzE5LjEuMy4zMDQvY3JheS1tcGljaC84LjEuNCIsIi9vcHQvY3J
+	heS9wZS9sbW9kL21vZHVsZWZpbGVzL21waS9pbnRlbC8xOS4wL29maS8xLjAvY3JheS1tcG
+	ljaC84LjAiLCIvYXBwcy9vcHMvcHJvZC9uY28vbW9kdWxlZmlsZXMvY29tcGlsZXIvaW50Z
+	WwvMTkuMS4zLjMwNCIsIi9hcHBzL29wcy9wcm9kL2xpYnMvbW9kdWxlZmlsZXMvY29tcGls
+	ZXIvaW50ZWwvMTkuMS4zLjMwNCIsIi9hcHBzL3Byb2QvbG1vZHVsZXMvaW50ZWwvMTkuMS4
+	zLjMwNCIsIi9vcHQvY3JheS9wZS9sbW9k,
+	XLOCALEDIR=/apps/spack/libx11/1.6.7/cce/11.0.1/3vsksmjl5klj633thg6m6ge
+	u6vme6u2q/share/X11/locale,
+	MET_ROOT=/apps/ops/para/libs/intel/19.1.3.304/met/10.1.2,
+	LMOD_CUSTOM_CNCM_CRAYCLANG_10_0_OFI_1_0_X86_ROME_1_0_CRAY_MPICH_8_0_PR
+	EFIX=/apps/prod/lmodules/CCE_cray_mpich/11.0.4/cray-mpich/8.1.4,
+	OPSROOT=/lfs/h1/ops/prod,TMOUT=1800,DATAROOT=/lfs/f1/ops/prod/tmp,
+	PYTHONSTARTUP=/etc/pythonstart,
+	NETCDF_INCLUDES=/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4
+	/netcdf/4.7.4/include,SHLVL=1,LANGUAGE=en_US.UTF-8,
+	PYTHONPATH=/apps/prod/python-modules/3.8.6/intel/19.1.3.304/lib/python
+	3.8/site-packages:/lfs/h1/mdl/nbm/save/apps/grib2io/1.0.2/apps/spack/py
+	thon/3.8.6/intel/19.1.3.304/pjn2nzkjvqgmjw4hmyz43v5x4jbxjzpk/lib/python
+	3.8/site-packages:/apps/ops/prod/nco/core/prod_util.v2.0.8/ush,
+	G_FILENAME_ENCODING=@locale\,UTF-8\,ISO-8859-15\,CP1252,
+	LMOD_CUSTOM_COMPILER_INTEL_19_0_UCX_1_0_PREFIX=/apps/prod/lmodules/int
+	el/19.1.3.304:/apps/ops/prod/libs/modulefiles/compiler/intel/19.1.3.304
+	:/apps/ops/prod/nco/modulefiles/compiler/intel/19.1.3.304,
+	ACLOCAL_PATH=/apps/spack/gsl/2.7/intel/19.1.3.304/xks7dxbowrdxhjck5zxc
+	4rompopocevb/share/aclocal,HPC_OPT=/apps/ops/para/libs,
+	W3EMC_LIBd=/apps/ops/para/libs/intel/19.1.3.304/cray-mpich/8.1.4/w3emc
+	/2.7.3/lib/libw3emc_d.a,
+	MANPATH=/apps/ops/para/libs/intel/19.1.3.304/met/10.1.2/share/man:/app
+	s/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4/netcdf/4.7.4/share/m
+	an:/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4/hdf5/1.10.6/s
+	hare/man:/apps/spack/python/3.8.6/intel/19.1.3.304/pjn2nzkjvqgmjw4hmyz4
+	3v5x4jbxjzpk/share/man:/apps/spack/gsl/2.7/intel/19.1.3.304/xks7dxbowrd
+	xhjck5zxc4rompopocevb/share/man:/apps/spack/proj/7.1.0/intel/19.1.3.304
+	/cjbmc7tacv5qcfatslqmcrzo5kb4raaq/share/man:/apps/spack/libjpeg/9c/inte
+	l/19.1.3.304/jkr3isi257ktoouprwaxcn4twtye747z/share/man:/opt/cray/pe/mp
+	ich/8.1.9/ofi/man:/opt/cray/pe/mpich/8.1.9/man/mpich:/pe/intel/man/comm
+	on:/pe/intel/compilers_and_libraries_2020.4.304/linux/mpi/man:/pe/intel
+	/documentation_2020/en/debugger/gdb-ia/man:/apps/spack/imagemagick/7.0.
+	8-7/cce/11.0.1/fyjvsbwngyzlsiluc4udbnxkhlbwkzc3/share/man:/apps/prod/cf
+	p/2.0.4/intel/19.1.3.304/man:/apps/spack/git/2.29.0/gcc/10.2.0/rkn6xaqb
+	rdlim3u4it2l6ljqszg62s25/share/man:/opt/cray/libfabric/1.11.0.0./share/
+	man:/opt/cray/pe/craype/2.7.10/man:/usr/share/lmod/lmod/share/man:/usr/
+	share/man:/opt/pbs/share/man:/opt/clmgr/man:/opt/sgi/share/man:/opt/clm
+	gr/share/man:/opt/clmgr/lib/cm-cli/man,
+	__LMOD_REF_COUNT_CLASSPATH=/pe/intel/compilers_and_libraries_2020.4.30
+	4/linux/mpi/intel64/lib/mpi.jar:1,
+	METPLUS_PATH=/apps/ops/para/libs/intel/19.1.3.304/metplus/4.1.4,
+	INTEL_PATH=/pe/intel/compilers_and_libraries_2020.4.304,
+	MPICH_DIR=/opt/cray/pe/mpich/8.1.9/ofi/intel/19.0,
+	INTEL_VERSION=19.1.3.304,OSCAR_HOME=/opt/oscar,LIBJPEG_VER=9c,
+	W3EMC_LIB8=/apps/ops/para/libs/intel/19.1.3.304/cray-mpich/8.1.4/w3emc
+	/2.7.3/lib/libw3emc_8.a,
+	MODULEPATH=/apps/ops/prod/libs/modulefiles/mpi/intel/19.1.3.304/cray-m
+	pich/8.1.4:/apps/prod/lmodules/INTEL_cray_mpich/19.1.3.304/cray-mpich/8
+	.1.4:/opt/cray/pe/lmod/modulefiles/mpi/intel/19.0/ofi/1.0/cray-mpich/8.
+	0:/apps/ops/prod/nco/modulefiles/compiler/intel/19.1.3.304:/apps/ops/pr
+	od/libs/modulefiles/compiler/intel/19.1.3.304:/apps/prod/lmodules/intel
+	/19.1.3.304:/opt/cray/pe/lmod/modulefiles/comnet/intel/19.0/ofi/1.0:/ap
+	ps/prod/lmodules/compiler/intel/19.0:/lfs/h1/mdl/nbm/save/apps/modulefi
+	les:/opt/cray/pe/lmod/modulefiles/net/ofi/1.0:/opt/cray/pe/lmod/modulef
+	iles/cpu/x86-rome/1.0:/usr/share/modules:/usr/share/Modules/$MODULE_VER
+	SION/modulefiles:/usr/share/modules/modulefiles:/usr/share/modulefiles/
+	Linux:/usr/share/modulefiles/Core:/usr/share/lmod/lmod/modulefiles/Core
+	:/opt/cray/pe/lmod/modulefiles/core:/opt/cray/pe/lmod/modulefiles/crayp
+	e-targets/default:/apps/prod/lmodules/sys_core:/apps/ops/prod/nco/modul
+	efiles/core:/apps/prod/lmodules/core:/opt/cray/modulefiles,
+	NEMSIO_CHGDATE=/apps/ops/para/libs/intel/19.1.3.304/cray-mpich/8.1.4/n
+	emsio/2.5.2/bin/nemsio_chgdate,
+	CRAY_MPICH_DIR=/opt/cray/pe/mpich/8.1.9/ofi/intel/19.0,
+	USHshared=/apps/ops/prod/nco/intel/19.1.3.304/util_shared.v1.4.0/ush,
+	W3EMC_LIB4=/apps/ops/para/libs/intel/19.1.3.304/cray-mpich/8.1.4/w3emc
+	/2.7.3/lib/libw3emc_4.a,LMOD_FAMILY_CRAYPE=craype,
+	FSYNC=/apps/ops/prod/nco/core/prod_util.v2.0.8/exec/fsync_file,
+	LOGNAME=olivia.ostwald,wgrib2_VERSION=2.0.8_wmo,
+	__LMOD_REF_COUNT_XLOCALEDIR=/apps/spack/libx11/1.6.7/cce/11.0.1/3vsksm
+	jl5klj633thg6m6geu6vme6u2q/share/X11/locale:1,
+	__LMOD_REF_COUNT_LMOD_CUSTOM_PATHS=CNCM/apps/ops/prod/libs/modulefiles
+	/mpi/intel/19.1.3.304/cray-mpich/8.1.4:1;CNCM/apps/prod/lmodules/INTEL_
+	cray_mpich/19.1.3.304/cray-mpich/8.1.4:1;COMPILER/apps/ops/prod/nco/mod
+	ulefiles/compiler/intel/19.1.3.304:1;COMPILER/apps/ops/prod/libs/module
+	files/compiler/intel/19.1.3.304:1;COMPILER/apps/prod/lmodules/intel/19.
+	1.3.304:1,CRAY_MPICH_VERSION=8.1.9,
+	CPLUS_INCLUDE_PATH=/apps/spack/python/3.8.6/intel/19.1.3.304/pjn2nzkjv
+	qgmjw4hmyz43v5x4jbxjzpk/include:/apps/spack/gsl/2.7/intel/19.1.3.304/xk
+	s7dxbowrdxhjck5zxc4rompopocevb/include:/apps/spack/geos/3.8.1/intel/19.
+	1.3.304/5recktk5lndzgkkqq36y4a2h4yx3ahdy/include:/apps/spack/proj/7.1.0
+	/intel/19.1.3.304/cjbmc7tacv5qcfatslqmcrzo5kb4raaq/include:/apps/spack/
+	libjpeg/9c/intel/19.1.3.304/jkr3isi257ktoouprwaxcn4twtye747z/include:/a
+	pps/spack/imagemagick/7.0.8-7/cce/11.0.1/fyjvsbwngyzlsiluc4udbnxkhlbwkz
+	c3/include,
+	MKGFSNEMSIOCTL=/apps/ops/para/libs/intel/19.1.3.304/cray-mpich/8.1.4/n
+	emsio/2.5.2/bin/mkgfsnemsioctl,
+	MKLROOT=/pe/intel/compilers_and_libraries_2020.4.304/linux/mkl,
+	MODULE_VERSION_STACK=3.2.10,
+	CNVGRIB=/apps/ops/prod/libs/intel/19.1.3.304/grib_util/1.2.4/bin/cnvgr
+	ib,MODULEPATH_ROOT=/usr/share/modulefiles,
+	LMOD_PACKAGE_PATH=/apps/prod/lmodules,
+	__LMOD_REF_COUNT_PE_INTEL_FIXED_PKGCONFIG_PATH=/opt/cray/pe/mpich/8.1.
+	9/ofi/intel/19.0/lib/pkgconfig:1,
+	PE_MPICH_GTL_LIBS_amd_gfx906=-lmpi_gtl_hsa,
+	JPEG_INC=/apps/spack/libjpeg/9c/intel/19.1.3.304/jkr3isi257ktoouprwaxc
+	n4twtye747z/include,
+	PSTLROOT=/pe/intel/compilers_and_libraries_2020.4.304/linux/pstl,
+	SIGIO_INC=/apps/ops/para/libs/intel/19.1.3.304/sigio/2.3.2/include,
+	XDG_CONFIG_DIRS=/etc/xdg,
+	PATH=/apps/ops/para/libs/intel/19.1.3.304/metplus/4.1.4/ush:/apps/ops/
+	para/libs/intel/19.1.3.304/met/10.1.2/bin:/apps/prod/hpc-stack/intel-19
+	.1.3.304/cray-mpich-8.1.4/netcdf/4.7.4/bin:/apps/prod/hpc-stack/intel-1
+	9.1.3.304/cray-mpich-8.1.4/hdf5/1.10.6/bin:/apps/spack/python/3.8.6/int
+	el/19.1.3.304/pjn2nzkjvqgmjw4hmyz43v5x4jbxjzpk/bin:/apps/spack/gsl/2.7/
+	intel/19.1.3.304/xks7dxbowrdxhjck5zxc4rompopocevb/bin:/apps/spack/geos/
+	3.8.1/intel/19.1.3.304/5recktk5lndzgkkqq36y4a2h4yx3ahdy/bin:/apps/spack
+	/proj/7.1.0/intel/19.1.3.304/cjbmc7tacv5qcfatslqmcrzo5kb4raaq/bin:/apps
+	/spack/libjpeg/9c/intel/19.1.3.304/jkr3isi257ktoouprwaxcn4twtye747z/bin
+	:/apps/ops/para/libs/intel/19.1.3.304/cray-mpich/8.1.4/nemsio/2.5.2/bin
+	:/apps/ops/prod/nco/intel/19.1.3.304/util_shared.v1.4.0/ush:/pe/intel/c
+	ompilers_and_libraries_2020.4.304/linux/bin/intel64:/pe/intel/compilers
+	_and_libraries_2020.4.304/linux/bin:/pe/intel/compilers_and_libraries_2
+	020.4.304/linux/mpi/intel64/bin:/pe/intel/debugger_2020/gdb/intel64/bin
+	:/apps/ops/prod/libs/intel/19.1.3.304/grib_util/1.2.4/bin:/apps/ops/pro
+	d/libs/intel/19.1.3.304/wgrib2/2.0.8_wmo/bin:/apps/spack/imagemagick/7.
+	0.8-7/cce/11.0.1/fyjvsbwngyzlsiluc4udbnxkhlbwkzc3/bin:/apps/ops/prod/li
+	bs/intel/19.1.3.304/cray-mpich/8.1.4/nemsio/2.5.2/bin:/apps/prod/cfp/2.
+	0.4/intel/19.1.3.304/bin:/apps/spack/git/2.29.0/gcc/10.2.0/rkn6xaqbrdli
+	m3u4it2l6ljqszg62s25/bin:/apps/ops/prod/nco/core/prod_util.v2.0.8/ush:/
+	opt/cray/libfabric/1.11.0.0./bin:/opt/cray/pe/craype/2.7.10/bin:.:/opt/
+	clmgr/sbin:/opt/clmgr/bin:/opt/sgi/sbin:/opt/sgi/bin:/usr/local/bin:/us
+	r/bin:/bin:/usr/lib/mit/bin:/usr/lib/mit/sbin:/opt/pbs/bin:/sbin:/usr/s
+	bin:/etc:/u/olivia.ostwald/bin:/opt/cray/pe/bin:/apps/prod/python-modul
+	es/3.8.6/intel/19.1.3.304/bin:/apps/prod/python-modules/3.8.6/intel/19.
+	1.3.304/lib/python3.8/site-packages/bin,
+	W3NCO_LIBd=/apps/ops/para/libs/intel/19.1.3.304/w3nco/2.4.1/lib/libw3n
+	co_d.a,PE_MPICH_GTL_LIBS_amd_gfx908=-lmpi_gtl_hsa,
+	_ModuleTable014_=b3BUPXt9LFsic3RhY2tEZXB0aCJdPTAsWyJzdGF0dXMiXT0iYWN0a
+	XZlIixbInVzZXJOYW1lIl09InByb2RfdXRpbC8yLjAuOCIsfSxwcm9qPXtbImZuIl09Ii9h
+	cHBzL3Byb2QvbG1vZHVsZXMvaW50ZWwvMTkuMS4zLjMwNC9wcm9qLzcuMS4wIixbImZ1bGx
+	OYW1lIl09InByb2ovNy4xLjAiLFsibG9hZE9yZGVyIl09MjQscHJvcFQ9e30sWyJzdGFja0
+	RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0icHJvai83LjEuM
+	CIsfSxweXRob249e1siZm4iXT0iL2FwcHMvcHJvZC9sbW9kdWxlcy9pbnRlbC8xOS4xLjMu
+	MzA0L3B5dGhvbi8zLjguNiIsWyJmdWxsTmFtZSJdPSJweXRob24vMy44LjYiLFsibG9hZE9
+	yZGVyIl09MjcscHJvcFQ9e30sWyJzdGFj,
+	TBBROOT=/pe/intel/compilers_and_libraries_2020.4.304/linux/tbb,
+	__LMOD_REF_COUNT_PE_PRODUCT_LIST=CRAYPE_X86_ROME:1;CRAYPE:1,
+	NetCDF_LIBRARIES=/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.
+	4/netcdf/4.7.4/lib,
+	BACIO_LIB4=/apps/ops/para/libs/intel/19.1.3.304/bacio/2.4.1/lib/libbac
+	io_4.a,
+	_LMFILES_=/opt/cray/pe/lmod/modulefiles/core/PrgEnv-intel/8.1.0.lua:/o
+	pt/cray/pe/lmod/modulefiles/core/craype/2.7.10.lua:/opt/cray/pe/lmod/mo
+	dulefiles/craype-targets/default/craype-x86-rome.lua:/opt/cray/modulefi
+	les/libfabric/1.11.0.0.:/opt/cray/pe/lmod/modulefiles/craype-targets/de
+	fault/craype-network-ofi.lua:/apps/prod/lmodules/sys_core/envvar/1.0:/a
+	pps/ops/prod/nco/modulefiles/core/prod_envir/2.0.5.lua:/apps/ops/prod/n
+	co/modulefiles/core/prod_util/2.0.8:/apps/prod/lmodules/core/git/2.29.0
+	:/apps/prod/lmodules/core/cfp/2.0.4:/apps/prod/lmodules/core/imagemagic
+	k/7.0.8-7:/apps/ops/prod/libs/modulefiles/compiler/intel/19.1.3.304/wgr
+	ib2/2.0.8_wmo.lua:/apps/ops/prod/libs/modulefiles/compiler/intel/19.1.3
+	.304/grib_util/1.2.4.lua:/lfs/h1/mdl/nbm/save/apps/modulefiles/grib2io/
+	1.0.2.lua:/apps/prod/lmodules/core/intel/19.1.3.304.lua:/opt/cray/pe/lm
+	od/modulefiles/comnet/intel/19.0/ofi/1.0/cray-mpich/8.1.9.lua:/apps/ops
+	/prod/nco/modulefiles/compiler/intel/19.1.3.304/util_shared/1.4.0:/apps
+	/ops/prod/libs/modulefiles/compiler/intel/19.1.3.304/sigio/2.3.2.lua:/a
+	pps/ops/prod/libs/modulefiles/compiler/intel/19.1.3.304/bacio/2.4.1.lua
+	:/apps/ops/prod/libs/modulefiles/compiler/intel/19.1.3.304/w3nco/2.4.1.
+	lua:/apps/ops/prod/libs/modulefiles/mpi/intel/19.1.3.304/cray-mpich/8.1
+	.4/nemsio/2.5.2.lua:/apps/ops/prod/libs/modulefiles/mpi/intel/19.1.3.30
+	4/cray-mpich/8.1.4/w3emc/2.7.3.lua:/apps/prod/lmodules/intel/19.1.3.304
+	/libjpeg/9c:/apps/prod/lmodules/intel/19.1.3.304/proj/7.1.0:/apps/prod/
+	lmodules/intel/19.1.3.304/geos/3.8.1:/apps/prod/lmodules/intel/19.1.3.3
+	04/gsl/2.7:/apps/prod/lmodules/intel/19.1.3.304/python/3.8.6:/apps/prod
+	/lmodules/INTEL_cray_mpich/19.1.3.304/cray-mpich/8.1.4/hdf5/1.10.6.lua:
+	/apps/prod/lmodules/INTEL_cray_mpich/19.1.3.304/cray-mpich/8.1.4/netcdf
+	/4.7.4.lua:/apps/ops/prod/libs/modulefiles/compiler/intel/19.1.3.304/me
+	t/10.1.2.lua:/apps/ops/prod/libs/modulefiles/compiler/intel/19.1.3.304/
+	metplus/4.1.4.lua,COMDATEROOT=/lfs/h1/ops/prod/com,
+	DEBUFR=/apps/ops/prod/nco/intel/19.1.3.304/util_shared.v1.4.0/bin/debu
+	fr,HDF5_VERSION=1.10.6,
+	w3emc_ROOT=/apps/ops/para/libs/intel/19.1.3.304/cray-mpich/8.1.4/w3emc
+	/2.7.3,
+	UTILSHAREDROOT=/apps/ops/prod/nco/intel/19.1.3.304/util_shared.v1.4.0,
+	BACIO_LIB8=/apps/ops/para/libs/intel/19.1.3.304/bacio/2.4.1/lib/libbac
+	io_8.a,
+	nemsio_ROOT=/apps/ops/para/libs/intel/19.1.3.304/cray-mpich/8.1.4/nems
+	io/2.5.2,MODULESHOME=/usr/share/lmod/lmod,
+	PKG_CONFIG_PATH=/apps/spack/python/3.8.6/intel/19.1.3.304/pjn2nzkjvqgm
+	jw4hmyz43v5x4jbxjzpk/lib/pkgconfig:/apps/spack/gsl/2.7/intel/19.1.3.304
+	/xks7dxbowrdxhjck5zxc4rompopocevb/lib64/pkgconfig:/apps/spack/proj/7.1.
+	0/intel/19.1.3.304/cjbmc7tacv5qcfatslqmcrzo5kb4raaq/lib/pkgconfig:/apps
+	/spack/libjpeg/9c/intel/19.1.3.304/jkr3isi257ktoouprwaxcn4twtye747z/lib
+	/pkgconfig:/pe/intel/compilers_and_libraries_2020.4.304/linux/mkl/bin/p
+	kgconfig:/apps/spack/imagemagick/7.0.8-7/cce/11.0.1/fyjvsbwngyzlsiluc4u
+	dbnxkhlbwkzc3/lib/pkgconfig:/opt/cray/libfabric/1.11.0.0./lib64/pkgconf
+	ig:/opt/cray/pe/craype/2.7.10/pkg-config,LMOD_SETTARG_FULL_SUPPORT=no,
+	INFOPATH=/pe/intel/documentation_2020/en/debugger/gdb-ia/info::/apps/d
+	ocs/info,G_BROKEN_FILENAMES=1,
+	I_MPI_ROOT=/pe/intel/compilers_and_libraries_2020.4.304/linux/mpi,
+	_ModuleTable011_=ZHVsZWZpbGVzL2NvbXBpbGVyL2ludGVsLzE5LjEuMy4zMDQvbWV0L
+	zEwLjEuMi5sdWEiLFsiZnVsbE5hbWUiXT0ibWV0LzEwLjEuMiIsWyJsb2FkT3JkZXIiXT0z
+	MCxwcm9wVD17fSxbInN0YWNrRGVwdGgiXT0wLFsic3RhdHVzIl09ImFjdGl2ZSIsWyJ1c2V
+	yTmFtZSJdPSJtZXQvMTAuMS4yIix9LG1ldHBsdXM9e1siZm4iXT0iL2FwcHMvb3BzL3Byb2
+	QvbGlicy9tb2R1bGVmaWxlcy9jb21waWxlci9pbnRlbC8xOS4xLjMuMzA0L21ldHBsdXMvN
+	C4xLjQubHVhIixbImZ1bGxOYW1lIl09Im1ldHBsdXMvNC4xLjQiLFsibG9hZE9yZGVyIl09
+	MzEscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXN
+	lck5hbWUiXT0ibWV0cGx1cy80LjEuNCIs,
+	W3NCO_LIB8=/apps/ops/para/libs/intel/19.1.3.304/w3nco/2.4.1/lib/libw3n
+	co_8.a,HISTSIZE=1000,CRAYPE_DIR=/opt/cray/pe/craype/2.7.10,
+	LMOD_PKG=/usr/share/lmod/lmod,
+	W3NCO_LIB4=/apps/ops/para/libs/intel/19.1.3.304/w3nco/2.4.1/lib/libw3n
+	co_4.a,OPSROOTssd=/lfs/f1/ops/prod,
+	__LMOD_REF_COUNT_PE_MPICH_PKGCONFIG_LIBS=mpich:1,
+	__LMOD_REF_COUNT_PE_PKGCONFIG_LIBS=mpich:1,CPU=x86_64,
+	CRAYPE_VERSION=2.7.10,
+	NETCDF_LIBRARIES=/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.
+	4/netcdf/4.7.4/lib,
+	_ModuleTable005_=XT0iL29wdC9jcmF5L3BlL2xtb2QvbW9kdWxlZmlsZXMvY3JheXBlL
+	XRhcmdldHMvZGVmYXVsdC9jcmF5cGUteDg2LXJvbWUubHVhIixbImZ1bGxOYW1lIl09ImNy
+	YXlwZS14ODYtcm9tZSIsWyJsb2FkT3JkZXIiXT0zLHByb3BUPXt9LFsic3RhY2tEZXB0aCJ
+	dPTEsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09ImNyYXlwZS14ODYtcm9tZS
+	IsfSxlbnZ2YXI9e1siZm4iXT0iL2FwcHMvcHJvZC9sbW9kdWxlcy9zeXNfY29yZS9lbnZ2Y
+	XIvMS4wIixbImZ1bGxOYW1lIl09ImVudnZhci8xLjAiLFsibG9hZE9yZGVyIl09Nixwcm9w
+	VD17fSxbInN0YWNrRGVwdGgiXT0wLFsic3RhdHVzIl09ImFjdGl2ZSIsWyJ1c2VyTmFtZSJ
+	dPSJlbnZ2YXIvMS4wIix9LGdlb3M9e1si,
+	LMOD_CMD=/usr/share/lmod/lmod/libexec/lmod,
+	CRAY_MPICH_PREFIX=/opt/cray/pe/mpich/8.1.9/ofi/intel/19.0,CVS_RSH=ssh,
+	WGRIB2=/apps/ops/prod/libs/intel/19.1.3.304/wgrib2/2.0.8_wmo/bin/wgrib
+	2,LESSOPEN=lessopen.sh %s,
+	_ModuleTable020_=L3NoYXJlL2xtb2QvbG1vZC9tb2R1bGVmaWxlcy9Db3JlIiwiL29wd
+	C9jcmF5L3BlL2xtb2QvbW9kdWxlZmlsZXMvY29yZSIsIi9vcHQvY3JheS9wZS9sbW9kL21v
+	ZHVsZWZpbGVzL2NyYXlwZS10YXJnZXRzL2RlZmF1bHQiLCIvYXBwcy9wcm9kL2xtb2R1bGV
+	zL3N5c19jb3JlIiwiL2FwcHMvb3BzL3Byb2QvbmNvL21vZHVsZWZpbGVzL2NvcmUiLCIvYX
+	Bwcy9wcm9kL2xtb2R1bGVzL2NvcmUiLCIvb3B0L2NyYXkvbW9kdWxlZmlsZXMiLH0sWyJze
+	XN0ZW1CYXNlTVBBVEgiXT0iL3Vzci9zaGFyZS9tb2R1bGVzOi91c3Ivc2hhcmUvTW9kdWxl
+	cy8kTU9EVUxFX1ZFUlNJT04vbW9kdWxlZmlsZXM6L3Vzci9zaGFyZS9tb2R1bGVzL21vZHV
+	sZWZpbGVzOi91c3Ivc2hhcmUvbW9kdWxl,
+	LMOD_DIR=/usr/share/lmod/lmod/libexec,LC_TIME=C.UTF-8,
+	JPEG_LIB=/apps/spack/libjpeg/9c/intel/19.1.3.304/jkr3isi257ktoouprwaxc
+	n4twtye747z/lib/libjpeg.a,LMOD_FAMILY_MPI=cray-mpich,
+	BASH_FUNC_module%%=() {  eval $($LMOD_CMD bash \"$@\") && eval $(${LMO
+	D_SETTARG_CMD:-:} -s sh)
+},
+	BASH_FUNC_ml%%=() {  eval $($LMOD_DIR/ml_cmd \"$@\")
+},
+	_=/opt/pbs/bin/qsub,PBS_O_QUEUE=dev,
+	PBS_O_HOST=clogin05.cactus.wcoss2.ncep.noaa.gov
+    euser = olivia.ostwald
+    egroup = emc
+    hashname = 34642341.cbqs01
+    queue_rank = 1675370801376461
+    queue_type = E
+    comment = Job run at Thu Feb 02 at 20:46 on (nid001061:ncpus=2:mem=4194304k
+	b)
+    etime = Thu Feb  2 20:46:41 2023
+    umask = 22
+    run_count = 6
+    eligible_time = 00:00:07
+    accrue_type = 3
+    Submit_arguments = /lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Fork/EVS/ecf/hu
+	rricane/stats/jevs_hurricane_regional_tropcyc_stats.ecf
+    project = ENSTRACK-DEV
+    run_version = 1
+    Submit_Host = clogin05.cactus.wcoss2.ncep.noaa.gov
+    server_instance_id = cbqs01.cactus.wcoss2.ncep.noaa.gov:15001
+
+
+------------------------------------------------------------------
+Job 34642341.cbqs01 - PBS tracejob output (for parent mom node only):
+
+Job: 34642341.cbqs01
+
+02/02/2023 20:46:42  M    update_job_usage: CPU usage: 0.000 secs
+02/02/2023 20:46:42  M    update_job_usage: cpupercent initialized to zero
+02/02/2023 20:46:42  M    update_job_usage: Memory usage: mem=0b
+02/02/2023 20:46:46  M    Started, pid = 117718
+02/02/2023 20:46:58  M    task 00000001 terminated
+02/02/2023 20:46:58  M    Terminated
+02/02/2023 20:46:58  M    task 00000001 cput=00:00:11
+02/02/2023 20:46:58  M    kill_job
+02/02/2023 20:46:58  M    nid001061 cput=00:00:00 mem=0kb
+02/02/2023 20:46:58  M    update_job_usage: CPU usage: 10.043 secs
+02/02/2023 20:46:58  M    update_job_usage: 34642341.cbqs01 measured interval cpupercent 63 increased job cpupercent to 63
+02/02/2023 20:46:58  M    update_job_usage: Memory usage: mem=23580kb
+
+------------------------------------------------------------------
+To see full PBS log data, run: /sfs/admin/scripts/tracejob.sh 34642341.cbqs01
+
+==================================================================
+END - DEBUG INFO
+==================================================================
+
+##### Job 34642341.cbqs01 - PBS Job Script:
+
+#PBS -S /bin/bash
+#PBS -N jevs_hurricane_regional_tropcyc_stats
+#PBS -j oe
+#PBS -A ENSTRACK-DEV
+#PBS -q dev
+#PBS -l select=1:ncpus=2:mem=4GB
+##PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
+#PBS -l walltime=00:30:00
+#PBS -l debug=true
+#PBS -V
+
+#%include <head.h>
+#%include <envir-p1.h>
+
+############################################################
+# Load modules
+############################################################
+module purge
+export HPC_OPT=/apps/ops/prod/libs
+module use /apps/ops/prod/libs/modulefiles/compiler/intel/19.1.3.304/
+#export HOMEevs=/lfs/h2/emc/vpppg/save/$USER/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/Fork/EVS
+source ${HOMEevs}/versions/run.ver
+module load intel/${intel_ver}
+module load gsl/${gsl_ver}
+module load python/${python_ver}
+module load netcdf/${netcdf_ver}
+module load met/${met_ver}
+module load metplus/${metplus_ver}
+
+module load libjpeg/$libjpeg_ver
+module load grib_util/$grib_util_ver
+module load prod_util/${produtil_ver}
+module load prod_envir/${prodenvir_ver}
+module load imagemagick/${imagemagick_ver}
+
+module list
+
+export NET=evs
+export COMPONENT=hurricane_regional
+export RUN=tropcyc
+export STEP=stats
+
+export envir=dev
+export cyc=00
+export job=jevs_hurricane_regional_tropcyc_stats_${cyc}
+
+#Define TC-vital file, TC track file and the directory for Bdeck files
+export COMINvit=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/TCvital/syndat_tcvitals.2022
+export COMINtrack=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/regionalTrack/tracks.atcfunix.22
+export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/bdeck
+export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/bdeck
+
+export DATAROOT=/lfs/h2/emc/ptmp/$USER
+export COMROOT=${DATAROOT}/com
+export KEEPDATA=YES
+
+
+# CALL executable job script here
+$HOMEevs/jobs/hurricane/stats/JEVS_HURRICANE_STATS
+
+%include <tail.h>
+%manual
+######################################################################
+# Purpose: This job will generate the grid2obs statistics for the HRRR
+#          model and generate stat files.
+######################################################################
+%end
+
+
+##### End of job script
+------------------------------------------------------------------
