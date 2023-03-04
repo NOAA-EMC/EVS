@@ -1,6 +1,6 @@
-#PBS -N jevs_cfs_subseasonal_grid2grid_stats_00
+#PBS -N jevs_subseasonal_grid2grid_sea_ice_plots_31days_00
 #PBS -j oe
-#PBS -o /lfs/h2/emc/vpppg/noscrub/shannon.shields/EVS/ecf/subseasonal/stats/evs_cfs_subseasonal_grid2grid_stats_out.txt
+#PBS -o /lfs/h2/emc/vpppg/noscrub/shannon.shields/EVS/ecf/subseasonal/plots/evs_subseasonal_grid2grid_sea_ice_plots_31days_out.txt
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
@@ -38,8 +38,8 @@ export HPC_OPT=/apps/ops/prod/libs
 module use /apps/ops/prod/libs/modulefiles/compiler/intel/${intel_ver}/
 module load intel/${intel_ver}
 module load gsl/${gsl_ver}
-module load libjpeg/${libjpeg_ver}
 module load libpng/${libpng_ver}
+module load libjpeg/${libjpeg_ver}
 module load netcdf/${netcdf_ver}
 module load udunits/${udunits_ver}
 module load nco/${nco_ver}
@@ -50,20 +50,9 @@ module load met/${met_ver}
 module load metplus/${metplus_ver}
 module load cdo/${cdo_ver}
 
-module list
-
-export MET_ROOT=/apps/ops/prod/libs/intel/${intel_ver}/met/${met_ver}
-export MET_BASE=${MET_ROOT}/share/met
-export PATH=${MET_ROOT}/bin:${PATH}
 export MET_bin_exec=bin
-export METviewer_AWS_scripts_dir=/lfs/h2/emc/vpppg/save/emc.vpppg/verification/metplus/metviewer_aws_scripts
 
-export RM=`which rm`
-export CUT=`which cut`
-export TR=`which tr`
-export NCAP2=`which ncap2`
-export CONVERT=`which convert`
-export NCDUMP=`which ncdump`
+module list
 
 export USER=$USER
 export DATAROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
@@ -76,40 +65,35 @@ export nproc=128
 export USE_CFP=YES
 export met_ver=${met_ver}
 export metplus_ver=${metplus_ver}
-#export cyc=%CYC%
 export cyc=00
 export NET=evs
 export evs_ver=${evs_ver}
-export STEP=stats
+export STEP=plots
 export COMPONENT=subseasonal
 export RUN=atmos
-export MODELNAME=cfs
-export cfs_ver=${cfs_ver}
-#export OBSNAME=gfs
-#export gfs_ver=${gfs_ver}
-#export ccpa_ver=${ccpa_ver}
-#export obsproc_ver=${obsproc_ver}
+export MODELNAME=gefs cfs
+#export model_ver=${gefs_ver} ${cfs_ver}
 export VERIF_CASE=grid2grid
+export VERIF_TYPE=sea_ice
+export NDAYS=31
 
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_subseasonal_test/dev/com
-#export COMIN=$COMROOT/$NET/$evs_ver
-export COMIN=/lfs/h2/emc/vpppg/noscrub/shannon.shields/EVS_Data/$NET/$evs_ver/prep/$COMPONENT/$RUN
-export COMINobs=/lfs/h2/emc/vpppg/noscrub/shannon.shields/EVS_Data/$NET/$evs_ver/prep/$COMPONENT/$RUN
+export COMIN=$COMROOT/$NET/$evs_ver
+export COMINcfs=$COMIN/stats/$COMPONENT/cfs
+export COMINgefs=$COMIN/stats/$COMPONENT/gefs
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
-export COMINclimo=$FIXevs/climos/atmos
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_subseasonal_test/dev/com/$NET/$evs_ver/$STEP/$COMPONENT
+export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT
 
-
-export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.subseasonal.cfs.grid2grid.stats
+export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.${COMPONENT}.${VERIF_CASE}.${STEP}.${VERIF_TYPE}
 
 # Call executable job script
-$HOMEevs/jobs/subseasonal/stats/JEVS_SUBSEASONAL_STATS
+$HOMEevs/jobs/subseasonal/plots/JEVS_SUBSEASONAL_PLOTS
 
 #%include <tail.h>
 #%manual
 ######################################################################
 # Purpose: The job and task scripts work together to generate the
-#          subseasonal verification grid-to-grid statistics for the CFS model 
-#          and create the stat files in the databases.
+#          subseasonal grid-to-grid sea ice statistical plots
+#          for the GEFS and CFS models for past 31 days.
 ######################################################################
 #%end

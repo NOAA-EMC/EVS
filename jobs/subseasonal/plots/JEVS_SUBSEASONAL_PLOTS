@@ -19,7 +19,7 @@ export DATA_IN=${DATA_IN:-$DATAROOTtmp}
 export DATA=$DATA_IN/${pid}
 
 
-rm -rf $DATA
+#rm -rf $DATA_IN
 mkdir -p $DATA
 cd $DATA 
 
@@ -27,8 +27,7 @@ cd $DATA
 # Determine Job Output Name on System
 ###############################
 export pgmout="OUTPUT.${pid}"
-
-#export cycle=t${cyc}z 
+ 
 
 ################################################################
 # SENDCOM=YES--Copy files from TMPDIR to $COMOUT
@@ -43,17 +42,11 @@ export SENDDBN_NTC=${SENDDBN_NTC:-NO}
 # Specify Execution Areas
 ################################################################
 export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
-#export FIXevs=${FIXevs:-$HOMEevs/fix}
-export FIXevs=${FIXevs:-/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix}
-#export HOMEMET=${HOMEMET}
-#export HOMEMETplus=${HOMEMETplus}
-#export PARMMETplus=${PARMMETplus:-$HOMEMETplus/parm}
-#export USHMETplus=${USHMETplus:-$HOMEMETplus/ush}
-#export PATH="${USHMETplus}:${PATH}"
-#export PYTHONPATH="${USHMETplus}:${PYTHONPATH}"
+export FIXevs=${FIXevs:-$HOMEevs/fix}
 
 ###################################
 # Set up the UTILITIES
@@ -63,22 +56,21 @@ export FIXevs=${FIXevs:-/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
 
 # Run setpdy and initialize PDY variables
-#setpdy.sh
-#. ./PDY
+export cycle=${cycle:-t${cyc}z}
+setpdy.sh
+. ./PDY
 
-#export vday=$PDYm1
+#export VDATE=$PDYm1
 export VDATE=$(date -d "today -1 day" +"%Y%m%d")
 
 #################################################
 # Set up the INPUT and OUTPUT directories
 #################################################
-#export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-#export COMINgefs=$COMIN/stats/$COMPONENT/$MODELNAME
-export COMINgefs=/lfs/h2/emc/ptmp/$USER/stats/$COMPONENT/$MODELNAME
-#export COMINcfs=$COMIN/stats/$COMPONENT/$MODELNAME
-export COMINcfs=/lfs/h2/emc/ptmp/$USER/stats/$COMPONENT/$MODELNAME
-#export COMOUT=$COMIN/$STEP/$COMPONENT/$RUN.$VDATE
-export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE
+export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
+export COMINgefs=${COMINgefs:-$COMIN/stats/$COMPONENT/gefs}
+export COMINcfs=${COMINcfs:-$COMIN/stats/$COMPONENT/cfs}
+export COMOUT=${COMOUT:-$COMIN/$STEP/$COMPONENT}
+export COMOUT=$COMOUT/$RUN.$VDATE
 
 
 echo Actual output starts here
@@ -86,12 +78,13 @@ echo Actual output starts here
 ################################################
 # Run the config file to set up model variables
 ################################################
-. $PARMevs/evs_config/$COMPONENT/config.evs.$STEP
+. $PARMevs/evs_config/$COMPONENT/config.evs.${COMPONENT}.${VERIF_CASE}.${STEP}.${VERIF_TYPE}
 
 #######################################################################
 # Execute the script.
 #######################################################################
-$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${STEP}.sh
+$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${VERIF_CASE}_${STEP}.sh
+
 export err=$?; err_chk
 
 cat $pgmout
@@ -99,10 +92,10 @@ cat $pgmout
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
 
-#if [ "$KEEPDATA" != "YES" ] ; then
-  #cd $DATAROOT
-  #rm -rf $DATA
-#fi
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATAROOTtmp
+  rm -rf $DATA
+fi
 
-#date
+date
 

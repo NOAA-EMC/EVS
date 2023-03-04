@@ -44,7 +44,7 @@ export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
-export FIXevs=${FIXevs:-/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
 
 export gefs_members="30"
 

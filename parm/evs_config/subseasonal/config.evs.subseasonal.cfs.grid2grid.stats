@@ -78,7 +78,7 @@ if [ $VERIF_CASE_STEP = grid2grid_stats ]; then
     #g2gstats_precip_file_format_list:     list of precip files
     #g2gstats_precip_file_accum_list:      list of precip accumulations in file: hours (HH) or continuous
     #g2gstats_precip_var_list:             list of the precip variable name to use    
-    #g2gstats_*_fyc_list:                all forecst cycles to be included in verification: HH
+    #g2gstats_*_fcyc_list:                all forecast cycles to be included in verification: HH
     #g2gstats_*_vhr_list:               all valid hours to be included in verification: HH
     #g2gstats_*_fhr_min:                forecast hour to start verification HH[H]
     #g2gstats_*_fhr_max:                forecast hour to end verification HH[H]
