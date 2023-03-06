@@ -1654,19 +1654,24 @@ def initalize_job_env_dict(verif_type, group,
              'MET_ROOT', 'MET_bin_exec', 'met_verbosity', 'MET_TMP_DIR',
              'COMROOT']
         )
-    elif group == 'plot':
+    elif group in ['condense_stats', 'filter_stats', 'make_plots',
+                   'tar_images']:
         job_env_var_list.extend(['MET_ROOT', 'met_ver'])
     job_env_dict = {}
     for env_var in job_env_var_list:
         job_env_dict[env_var] = os.environ[env_var]
-    if group == 'plot':
+    if group in ['condense_stats', 'filter_stats', 'make_plots',
+                 'tar_images']:
         job_env_dict['plot_verbosity'] = (
             os.environ['metplus_verbosity']
         )
     job_env_dict['JOB_GROUP'] = group
-    if group in ['reformat_data', 'assemble_data', 'generate_stats', 'plot']:
+    if group in ['reformat_data', 'assemble_data', 'generate_stats',
+                 'condense_stats', 'filter_stats', 'make_plots',
+                 'tar_images']:
         job_env_dict['VERIF_TYPE'] = verif_type
-        if group == 'plot':
+        if group in ['condense_stats', 'filter_stats', 'make_plots',
+                     'tar_images']:
             job_env_dict['job_var'] = job
         else:
             job_env_dict['job_name'] = job
@@ -1988,8 +1993,8 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                     model_dict['obs_name'], grid, vx_mask,
                     fcst_var_name, obs_var_name, line_type
                 )
-            parsed_model_stat_file = os.path.join(
-                output_dir,
+            input_parsed_model_stat_file = os.path.join(
+                input_dir,
                 'fcst'+model_dict['name']+'_'
                 +fcst_var_name+fcst_var_level+fcst_var_thresh+'_'
                 +'obs'+model_dict['obs_name']+'_'
@@ -2003,6 +2008,14 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                 +'fhr'+fhr.zfill(3)
                 +'.stat'
             )
+            output_parsed_model_stat_file = os.path.join(
+                output_dir,
+                input_parsed_model_stat_file.rpartition('/')[2]
+            )
+            if os.path.exists(input_parsed_model_stat_file):
+                parsed_model_stat_file = input_parsed_model_stat_file
+            else:
+                parsed_model_stat_file = output_parsed_model_stat_file
             if not os.path.exists(parsed_model_stat_file):
                 write_parse_stat_file = True
                 read_parse_stat_file = True
