@@ -6,6 +6,7 @@
 # 
 # =============================================================================
 
+import os
 import numpy as np
 import subprocess
 
@@ -130,3 +131,93 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                    elif format_opt == 'lead':
                        if format_opt_count_fmt == '%1H':
                            if int(forecast_hour) < 10:
+                               replace_format_opt_count = forecast_hour[1]
+                           else:
+                               replace_format_opt_count = forecast_hour
+                       elif format_opt_count_fmt == '%2H':
+                           replace_format_opt_count = forecast_hour.zfill(2)
+                       elif format_opt_count_fmt == '%3H':
+                           replace_format_opt_count = forecast_hour.zfill(3)
+                       else:
+                           replace_format_opt_count = forecast_hour
+                   elif format_opt == 'init':
+                       replace_format_opt_count = init_time_dt.strftime(
+                           format_opt_count_fmt
+                       )
+                   elif format_opt == 'cycle':
+                       replace_format_opt_count = init_time_dt.strftime(
+                           format_opt_count_fmt
+                       ) 
+                   elif format_opt == 'lead_shift':
+                       shift = (filled_file_format_chunk.partition('shift=')[2]\
+                                .partition('}')[0])
+                       forecast_hour_shift = str(int(forecast_hour)
+                                                 + int(shift))
+                       if format_opt_count_fmt == '%1H':
+                           if int(forecast_hour_shift) < 10:
+                               replace_format_opt_count = (
+                                   forecast_hour_shift[1]
+                               )
+                           else:
+                               replace_format_opt_count = forecast_hour_shift
+                       elif format_opt_count_fmt == '%2H':
+                           replace_format_opt_count = (
+                               forecast_hour_shift.zfill(2)
+                           )
+                       elif format_opt_count_fmt == '%3H':
+                           replace_format_opt_count = (
+                               forecast_hour_shift.zfill(3)
+                           )
+                       else:
+                           replace_format_opt_count = forecast_hour_shift
+                   elif format_opt == 'init_shift':
+                       shift = (filled_file_format_chunk.partition('shift=')[2]\
+                                .partition('}')[0])
+                       init_shift_time_dt = (
+                           init_time_dt + datetime.timedelta(hours=int(shift))
+                       )
+                       replace_format_opt_count = init_shift_time_dt.strftime(
+                           format_opt_count_fmt
+                       )
+                   elif format_opt == 'valid_shift':
+                       shift = (filled_file_format_chunk.partition('shift=')[2]\
+                                .partition('}')[0])
+                       init_shift_time_dt = (
+                           init_time_dt + datetime.timedelta(hours=int(shift))
+                       )
+                       replace_format_opt_count = init_shift_time_dt.strftime(
+                           format_opt_count_fmt
+                       )
+                   elif format_opt == 'valid_shift':
+                       shift = (filled_file_format_chunk.partition('shift=')[2]\
+                                .partition('}')[0])
+                       valid_shift_time_dt = (
+                           valid_time_dt + datetime.timedelta(hours=int(shift))
+                       )
+                       replace_format_opt_count = valid_shift_time_dt.strftime(
+                           format_opt_count_fmt
+                       )
+                   else:
+                       replace_format_opt_count = str_sub_dict[format_opt]
+                   if format_opt in ['lead_shift', 'valid_shift', 'init_shift']:
+                       filled_file_format_chunk = (
+                           filled_file_format_chunk.replace(
+                               '{'+format_opt+'?fmt='
+                               +format_opt_count_fmt
+                               +'?shift='+shift+'}',
+                               replace_format_opt_count
+                           )
+                       )
+                   else:
+                       filled_file_format_chunk = (
+                           filled_file_format_chunk.replace(
+                               '{'+format_opt+'?fmt='
+                               +format_opt_count_fmt+'}',
+                               replace_format_opt_count
+                           )
+                       )
+                   format_opt_count+=1
+        filled_file_format = os.path.join(filled_file_format,
+                                          filled_file_format_chunk)
+    return filled_file_format
+

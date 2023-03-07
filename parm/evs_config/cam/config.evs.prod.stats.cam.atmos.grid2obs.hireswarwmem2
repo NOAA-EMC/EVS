@@ -37,7 +37,7 @@ if [ "$NEST" = "conus" ]; then
         export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SBCAPE MLCAPE HPBL"
         export VHOUR_LIST="00 06 12 18"
     elif [ "$OBSNAME" = "metar" ]; then
-        export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING"
+        export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING PTYPE"
         export VHOUR_LIST="00 03 06 09 12 15 18 21"
     else
         echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
@@ -75,7 +75,7 @@ elif [ "$NEST" = "ak" ]; then
         export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SBCAPE MLCAPE HPBL"
         export VHOUR_LIST="00 06 12 18"
     elif [ "$OBSNAME" = "metar" ]; then
-        export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING"
+        export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING PTYPE"
         export VHOUR_LIST="00 03 06 09 12 15 18 21"
     else
         echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
