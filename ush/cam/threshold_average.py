@@ -401,7 +401,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         logger.info("========================================")
         print("Quitting due to missing data.  Check the log file for details.")
         return None
-
     models_renamed = []
     count_renamed = 1
     for requested_model in model_list:
@@ -465,11 +464,17 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
                 pivot_ci_upper.index
             ]
         )))
-        pivot_metric = pivot_metric[pivot_metric.index.isin(indices_in_common)]
-        pivot_ci_lower = pivot_ci_lower[pivot_ci_lower.index.isin(indices_in_common)]
-        pivot_ci_upper = pivot_ci_upper[pivot_ci_upper.index.isin(indices_in_common)]
-        if sample_equalization:
-            pivot_counts = pivot_counts[pivot_counts.index.isin(indices_in_common)]
+        if pivot_metric[pivot_metric.index.isin(indices_in_common)].empty:
+            e = ("Some confidence intervals are missing. Turning "
+                 + f"confidence intervals off to avoid empty pivot tables.")
+            logger.warning(e)
+            confidence_intervals = False
+        else:
+            pivot_metric = pivot_metric[pivot_metric.index.isin(indices_in_common)]
+            pivot_ci_lower = pivot_ci_lower[pivot_ci_lower.index.isin(indices_in_common)]
+            pivot_ci_upper = pivot_ci_upper[pivot_ci_upper.index.isin(indices_in_common)]
+            if sample_equalization:
+                pivot_counts = pivot_counts[pivot_counts.index.isin(indices_in_common)]
     x_vals = pivot_metric.index.astype(float).tolist()
     if unit_convert:
         x_vals = reference.unit_conversions[units]['formula'](
@@ -506,12 +511,19 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         y_vals_metric = np.array([y_vals_metric[i] for i in x_vals_argsort])
         y_vals_metric_mean = np.nanmean(y_vals_metric)
         if confidence_intervals:
-            y_vals_ci_lower = pivot_ci_lower[
-                str(model_list[m])
-            ].values
-            y_vals_ci_upper = pivot_ci_upper[
-                str(model_list[m])
-            ].values
+            if (str(model_list[m]) not in pivot_ci_lower 
+                    or str(model_list[m]) not in pivot_ci_upper):
+                e = ("Some confidence intervals are missing. Turning "
+                     + f"confidence intervals off to avoid indexing errors.")
+                logger.warning(e)
+                confidence_intervals = False
+            else:
+                y_vals_ci_lower = pivot_ci_lower[
+                    str(model_list[m])
+                ].values
+                y_vals_ci_upper = pivot_ci_upper[
+                    str(model_list[m])
+                ].values
         if not y_lim_lock:
             if np.any(y_vals_metric != np.inf):
                 y_vals_metric_min = np.nanmin(y_vals_metric[y_vals_metric != np.inf])
@@ -726,7 +738,9 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     # Title
     domain = df['VX_MASK'].tolist()[0]
     var_savename = df['FCST_VAR'].tolist()[0]
-    if str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+    if 'APCP' in var_savename.upper():
+        var_savename = 'APCP'
+    elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
         var_savename = 'HPBL'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['MSLET','MSLMA','PRMSL']:
         var_savename = 'MSLET'
@@ -773,7 +787,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         else:
             level_string = ''
             level_savename = f'{level}'
-    elif str(verif_type).lower() in ['sfc', 'conus_sfc', 'polar_sfc', 'mrms','metar']:
+    elif str(verif_type).lower() in ['sfc', 'conus_sfc', 'polar_sfc', 'mrms', 'metar']:
         if 'Z' in str(level):
             if str(level).upper() == 'Z0':
                 if str(var_long_name_key).upper() in ['MLSP', 'MSLET', 'MSLMA', 'PRMSL']:
@@ -790,10 +804,13 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
                 else:
                     level_string = f'{level_num}-m '
                     level_savename = f'{level}'
-        elif 'L' in str(level) or 'A' in str(level):
+        elif 'L' in str(level): 
             level_string = ''
             level_savename = f'{level}'
-
+        elif 'A' in str(level): 
+            level_num = level.replace('A', '')
+            level_string = f'{level_num}-hour '
+            level_savename = f'A{level_num.zfill(2)}'
         else:
             level_string = f'{level} '
             level_savename = f'{level}'

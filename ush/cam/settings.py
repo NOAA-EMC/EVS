@@ -167,6 +167,16 @@ class Presets():
                     datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
                 ).strftime('%Y%m%d')
             },
+            'PDYM1': {
+                'valid_beg': '',
+                'valid_end': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
+                    ).strftime('%Y%m%d'),
+                'init_beg': '',
+                'init_end': (
+                    datetime.strptime(os.environ['VDATE'], '%Y%m%d')-td(days=1)
+                    ).strftime('%Y%m%d'),
+            },
             '2020': {
                 'valid_beg': '20200101',
                 'valid_end': '20201231',
