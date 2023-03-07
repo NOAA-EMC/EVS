@@ -653,13 +653,15 @@ generate_stats_jobs_dict = {
                              'var1_fcst_name': 'RH',
                              'var1_fcst_levels': 'Z2',
                              'var1_fcst_options': '',
+                             'var1_fcst_threshs': "'le15, le20, le25, le30'",
                              'var1_obs_name': 'RH',
                              'var1_obs_levels': 'Z2',
                              'var1_obs_options': '',
+                             'var1_obs_threshs': "'le15, le20, le25, le30'",
                              'met_config_overrides': ''},
                      'commands': [gda_util.metplus_command(
                                       'PointStat_fcstGLOBAL_DET_'
-                                      +'obsPrepbufr.conf'
+                                      +'obsPrepbufr_Thresh.conf'
                                   )]},
         'SeaLevelPres': {'env': {'prepbufr': 'nam',
                                  'obs_window': '900',
@@ -703,13 +705,15 @@ generate_stats_jobs_dict = {
                                   'var1_fcst_options': ("'GRIB_lvl_typ = 10;"
                                                         +"set_attr_level = "
                                                         +'"TOTAL";'+"'"),
+                                  'var1_fcst_threshs': "'lt10, gt10, gt50, gt90'",
                                   'var1_obs_name': 'TCDC',
                                   'var1_obs_levels': 'L0',
                                   'var1_obs_options': '',
+                                  'var1_obs_threshs': "'lt10, gt10, gt50, gt90'",
                                   'met_config_overrides': ''},
                           'commands': [gda_util.metplus_command(
                                            'PointStat_fcstGLOBAL_DET_'
-                                           +'obsPrepbufr.conf'
+                                           +'obsPrepbufr_Thresh.conf'
                                        )]},
         'UWind10m': {'env': {'prepbufr': 'nam',
                              'obs_window': '900',
@@ -881,7 +885,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             job_env_dict['grid'] = 'G004'
                             mask_list = [
                                 'G004_GLOBAL', 'G004_NHEM', 'G004_SHEM',
-                                'G004_TROPICS', 'Bukovsky_G004_CONUS'
+                                'G004_TROPICS', 'Bukovsky_G004_CONUS',
+                                'Alaska_G004'
                             ]
                         elif verif_type in ['sfc', 'ptype']:
                             job_env_dict['grid'] = 'G104'
