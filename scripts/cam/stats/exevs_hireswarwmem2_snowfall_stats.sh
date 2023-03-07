@@ -2,10 +2,10 @@
 
 # =============================================================================
 #
-# NAME: exevs_namnest_snowfall_stats.sh
+# NAME: exevs_hireswarwmem2_snowfall_stats.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Handle all components of an EVS NAM Nest Snowfall - Statistics 
-#          job
+# PURPOSE: Handle all components of an EVS HiRes Window ARW 2 Snowfall -  
+#          Statistics job
 # DEPENDENCIES: $HOMEevs/jobs/cam/stats/JEVS_CAM_STATS 
 #
 # =============================================================================
@@ -75,7 +75,7 @@ if [ $USE_CFP = YES ]; then
     [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_poe_job_scripts.py ($job_type)"
 fi
 
-# Run All NAM Nest snowfall/stats Reformat Jobs
+# Run All HiRes Window ARW2 snowfall/stats Reformat Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
 nc=1
@@ -167,7 +167,7 @@ if [ $USE_CFP = YES ]; then
     [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_poe_job_scripts.py ($job_type)"
 fi
 
-# Run All NAM Nest snowfall/stats Generate Jobs
+# Run All HiRes Window ARW 2 snowfall/stats Generate Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
 nc=1
@@ -231,7 +231,7 @@ if [ $USE_CFP = YES ]; then
     [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_poe_job_scripts.py ($job_type)"
 fi
 
-# Run All NAM Nest snowfall/stats Gather Jobs
+# Run All HiRes Window ARW 2 snowfall/stats Gather Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
 nc=1
