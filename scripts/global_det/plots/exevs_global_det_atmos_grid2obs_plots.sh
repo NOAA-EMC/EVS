@@ -97,7 +97,6 @@ if [ $SENDCOM = YES ]; then
     for VERIF_TYPE_SUBDIR_PATH in $DATA/${VERIF_CASE}_${STEP}/plot_output/$RUN.${end_date}/images/*; do
         VERIF_TYPE_SUBDIR=$(echo ${VERIF_TYPE_SUBDIR_PATH##*/})
         cd $VERIF_TYPE_SUBDIR
-        VERIF_TYPE_fhr_max=$(eval echo \$g2gp_${VERIF_TYPE_SUBDIR}_fhr_max)
         large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/images/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${PDYm1}.tar
         tar -cvf $large_tar_file *.tar
         cp -v $large_tar_file $COMOUT/.
