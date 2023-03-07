@@ -52,41 +52,43 @@ status=$?
 [[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_get_data_files.py"
 echo
 
-# Create job scripts data
-python $USHevs/global_det/global_det_atmos_plots_grid2grid_create_job_scripts.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_plots_grid2grid_create_job_scripts.py"
-
-# Run job scripts
-chmod u+x ${VERIF_CASE}_${STEP}/plot_job_scripts/*
-ncount_job=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/job* |wc -l)
-nc=1
-if [ $USE_CFP = YES ]; then
-    ncount_poe=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/poe* |wc -l)
-    while [ $nc -le $ncount_poe ]; do
-        poe_script=$DATA/${VERIF_CASE}_${STEP}/plot_job_scripts/poe_jobs${nc}
-        chmod 775 $poe_script
-        export MP_PGMMODEL=mpmd
-        export MP_CMDFILE=${poe_script}
-        if [ $machine = WCOSS2 ]; then
-            export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-            nselect=$(cat $PBS_NODEFILE | wc -l)
-            nnp=$(($nselect * $nproc))
-            launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
-        elif [ $machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
-            export SLURM_KILL_BAD_EXIT=0
-            launcher="srun --export=ALL --multi-prog"
-        fi
-        $launcher $MP_CMDFILE
-        nc=$((nc+1))
-    done
-else
-    while [ $nc -le $ncount_job ]; do
-        sh +x $DATA/${VERIF_CASE}_${STEP}/plot_job_scripts/job${nc}
-        nc=$((nc+1))
-    done
-fi
+# Create and run job scripts for condense_stats, filter_stats, make_plots, and tar_images
+for group in condense_stats filter_stats make_plots tar_images; do
+    export JOB_GROUP=$group
+    echo "Creating and running jobs for grid-to-grid plots: ${JOB_GROUP}"
+    python $USHevs/global_det/global_det_atmos_plots_grid2grid_create_job_scripts.py
+    status=$?
+    [[ $status -ne 0 ]] && exit $status
+    [[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_plots_grid2grid_create_job_scripts.py"
+    chmod u+x ${VERIF_CASE}_${STEP}/plot_job_scripts/$group/*
+    group_ncount_job=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/$group/job* |wc -l)
+    nc=1 
+    if [ $USE_CFP = YES ]; then
+        group_ncount_poe=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/$group/poe* |wc -l)
+        while [ $nc -le $group_ncount_poe ]; do
+            poe_script=$DATA/${VERIF_CASE}_${STEP}/plot_job_scripts/$group/poe_jobs${nc}
+            chmod 775 $poe_script
+            export MP_PGMMODEL=mpmd
+            export MP_CMDFILE=${poe_script}
+            if [ $machine = WCOSS2 ]; then
+                export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
+                nselect=$(cat $PBS_NODEFILE | wc -l)
+                nnp=$(($nselect * $nproc))
+                launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+            elif [ $machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
+                export SLURM_KILL_BAD_EXIT=0
+                launcher="srun --export=ALL --multi-prog"
+            fi
+            $launcher $MP_CMDFILE
+            nc=$((nc+1))
+        done
+    else
+        while [ $nc -le $group_ncount_job ]; do
+            sh +x $DATA/${VERIF_CASE}_${STEP}/plot_job_scripts/$group/job${nc}
+            nc=$((nc+1))
+        done
+    fi
+done
 
 # Copy files to desired location
 if [ $SENDCOM = YES ]; then
