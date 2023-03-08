@@ -91,7 +91,8 @@ if JOB_GROUP == 'make_plots':
     job_logging_file = os.path.join(logging_dir, 'evs_'+COMPONENT+'_'+RUN+'_'
                                     +VERIF_CASE+'_'+STEP+'_'+VERIF_TYPE+'_'
                                     +JOB_GROUP+'_'+job_name.replace('/','_')
-                                    +'_'+stat+'_'+plot+'_runon'
+                                    +'_'+stat+'_'+plot+'_valid'+valid_hr_start
+                                    +'Z_runon'
                                     +now.strftime('%Y%m%d%H%M%S')+'.log')
 elif JOB_GROUP == 'filter_stats':
     job_logging_file = os.path.join(logging_dir, 'evs_'+COMPONENT+'_'+RUN+'_'

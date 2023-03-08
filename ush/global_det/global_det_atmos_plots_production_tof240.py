@@ -96,7 +96,8 @@ if not os.path.exists(job_output_dir):
 job_logging_file = os.path.join(logging_dir, 'evs_'+COMPONENT+'_'+RUN+'_'
                                 +VERIF_CASE+'_'+STEP+'_'+VERIF_TYPE+'_'
                                 +JOB_GROUP+'_'+job_name.replace('/','_')
-                                +'_'+stat+'_'+plot+'_runon'
+                                +'_'+stat+'_'+plot+'_valid'+valid_hr_start
+                                +'Z_runon'
                                 +now.strftime('%Y%m%d%H%M%S')+'.log')
 logger = logging.getLogger(job_logging_file)
 logger.setLevel(plot_verbosity)
