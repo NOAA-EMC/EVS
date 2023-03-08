@@ -166,21 +166,21 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
             for model_idx in range(len(model_list)):
                 model = model_list[model_idx]
                 model_file_form = model_file_format_list[model_idx]
-                VERIF_CASE_STEP_model_daily_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, model, 'daily'
+                VERIF_CASE_STEP_model_dir = os.path.join(
+                    VERIF_CASE_STEP_data_dir, model
                 )
-                if not os.path.exists(VERIF_CASE_STEP_model_daily_dir):
-                    os.makedirs(VERIF_CASE_STEP_model_daily_dir)
-                VERIF_CASE_STEP_model_weekly_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, model, 'weekly'
-                )
-                if not os.path.exists(VERIF_CASE_STEP_model_weekly_dir):
-                    os.makedirs(VERIF_CASE_STEP_model_weekly_dir)
-                VERIF_CASE_STEP_model_monthly_dir = os.path.join(
-                    VERIF_CASE_STEP_data_dir, model, 'monthly'
-                )
-                if not os.path.exists(VERIF_CASE_STEP_model_monthly_dir):
-                    os.makedirs(VERIF_CASE_STEP_model_monthly_dir)
+                if not os.path.exists(VERIF_CASE_STEP_model_dir):
+                    os.makedirs(VERIF_CASE_STEP_model_dir)
+                #VERIF_CASE_STEP_model_weekly_dir = os.path.join(
+                    #VERIF_CASE_STEP_data_dir, model, 'weekly'
+                #)
+                #if not os.path.exists(VERIF_CASE_STEP_model_weekly_dir):
+                    #os.makedirs(VERIF_CASE_STEP_model_weekly_dir)
+                #VERIF_CASE_STEP_model_monthly_dir = os.path.join(
+                    #VERIF_CASE_STEP_data_dir, model, 'monthly'
+                #)
+                #if not os.path.exists(VERIF_CASE_STEP_model_monthly_dir):
+                    #os.makedirs(VERIF_CASE_STEP_model_monthly_dir)
                 #if VERIF_CASE_STEP_type == 'precip':
                     #model_file_format = (
                         #VERIF_CASE_STEP_precip_file_format_list[model_idx]
@@ -375,7 +375,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                         for time_length in ['daily', 'weekly', 'monthly']:
                             if time_length == 'daily':
                                 model_fcst_dest_file_format = os.path.join(
-                                    VERIF_CASE_STEP_model_daily_dir,
+                                    VERIF_CASE_STEP_model_dir,
                                     model+'.ens'+mb+'.{init?fmt=%Y%m%d%H}.'
                                     +'f{lead?fmt=%3H}'
                                 )
@@ -393,7 +393,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                     nf+=1
                             if time_length == 'weekly':
                                 model_fcst_dest_file_format = os.path.join(
-                                    VERIF_CASE_STEP_model_weekly_dir,
+                                    VERIF_CASE_STEP_model_dir,
                                     model+'.ens'+mb+'.{init?fmt=%Y%m%d%H}.'
                                     +'f{lead?fmt=%3H}'
                                 )
@@ -415,7 +415,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                         nf+=1
                             if time_length == 'monthly':
                                 model_fcst_dest_file_format = os.path.join(
-                                    VERIF_CASE_STEP_model_monthly_dir,
+                                    VERIF_CASE_STEP_model_dir,
                                     model+'.ens'+mb+'.{init?fmt=%Y%m%d%H}.'
                                     +'f{lead?fmt=%3H}'
                                 )

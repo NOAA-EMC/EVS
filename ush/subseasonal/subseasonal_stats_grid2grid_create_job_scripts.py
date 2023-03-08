@@ -97,38 +97,46 @@ reformat_data_model_jobs_dict = {
                                        #)]},
     },
     'seaice': {
-        'Weekly_Concentration': {'env': {'var1_name': 'ICEC',
-                                         'var1_levels': 'Z0',},
-                                 'commands': [sub_util.metplus_command(
-                                                  'GridStat_fcstSUBSEASONAL_'
-                                                  +'WeeklyNetCDF.conf'
-                                              )]},
-        'Monthly_Concentration': {'env': {'var1_name': 'ICEC',
-                                          'var1_levels': 'Z0',},
-                                  'commands': [sub_util.metplus_command(
-                                                   'GridStat_fcstSUBSEASONAL_'
-                                                   +'MonthlyNetCDF.conf'
-                                               )]},
+        'Concentration': {'env': {'var1_name': 'ICEC',
+                                  'var1_levels': 'Z0',},
+                          'commands': [sub_util.metplus_command(
+                                           'GenEnsProd_fcstSUBSEASONAL_'
+                                           +'NetCDF.conf'
+                                       ),
+                                       sub_util.metplus_command(
+                                           'GridStat_fcstSUBSEASONAL_'
+                                           +'NetCDF.conf'
+                                       )]},
+        #'Monthly_Concentration': {'env': {'var1_name': 'ICEC',
+                                          #'var1_levels': 'Z0',},
+                                  #'commands': [sub_util.metplus_command(
+                                                   #'GridStat_fcstSUBSEASONAL_#'
+                                                   #+'MonthlyNetCDF.conf'
+                                               #)]},
     },
     'sst': {
-        'Daily_SST': {'env': {'var1_name': 'TMP',
-                              'var1_levels': 'Z0'},
-                      'commands': [sub_util.metplus_command(
-                                       'GridStat_fcstSUBSEASONAL_'
-                                       +'DailyNetCDF.conf'
-                                   )]},
-        'Weekly_SST': {'env': {'var1_name': 'TMP',
-                               'var1_levels': 'Z0'},
-                       'commands': [sub_util.metplus_command(
-                                        'GridStat_fcstSUBSEASONAL_'
-                                        +'WeeklyNetCDF.conf'
-                                    )]},
-        'Monthly_SST': {'env': {'var1_name': 'TMP',
-                                'var1_levels': 'Z0'},
-                        'commands': [sub_util.metplus_command(
-                                         'GridStat_fcstSUBSEASONAL_'
-                                         +'MonthlyNetCDF.conf'
-                                     )]}
+        'SST': {'env': {'var1_name': 'TMP',
+                        'var1_levels': 'Z0'},
+                'commands': [sub_util.metplus_command(
+                                 'GenEnsProd_fcstSUBSEASONAL_'
+                                 +'NetCDF.conf'
+                             ),
+                             sub_util.metplus_command(
+                                 'GridStat_fcstSUBSEASONAL_'
+                                 +'NetCDF.conf'
+                             )]},
+        #'Weekly_SST': {'env': {'var1_name': 'TMP',
+                               #'var1_levels': 'Z0'},
+                       #'commands': [sub_util.metplus_command(
+                                        #'GridStat_fcstSUBSEASONAL_'
+                                        #+'WeeklyNetCDF.conf'
+                                    #)]},
+        #'Monthly_SST': {'env': {'var1_name': 'TMP',
+                                #'var1_levels': 'Z0'},
+                        #'commands': [sub_util.metplus_command(
+                                         #'GridStat_fcstSUBSEASONAL_'
+                                         #+'MonthlyNetCDF.conf'
+                                     #)]}
     },
 }
 ################################################
@@ -215,7 +223,6 @@ assemble_data_model_jobs_dict = {
                                                           '$VERIF_CASE',
                                                           'grid_stat_'
                                                           +'${VERIF_TYPE}_'
-                                                          +'Weekly_'
                                                           +'Concentration_'
                                                           +'{lead?fmt=%2H}0000L_'
                                                           +'{valid?fmt=%Y%m%d}_'
@@ -230,7 +237,6 @@ assemble_data_model_jobs_dict = {
                                                           '$VERIF_CASE',
                                                           'grid_stat_'
                                                           +'${VERIF_TYPE}_'
-                                                          +'Weekly_'
                                                           +'Concentration_'
                                                           +'{lead?fmt=%2H}0000L_'
                                                           +'{valid?fmt=%H}0000V_'
@@ -254,7 +260,6 @@ assemble_data_model_jobs_dict = {
                                                            '$VERIF_CASE',
                                                            'grid_stat_'
                                                            +'${VERIF_TYPE}_'
-                                                           +'Monthly_'
                                                            +'Concentration_'
                                                            +'{lead?fmt=%2H}0000L_'
                                                            +'{valid?fmt=%Y%m%d}_'
@@ -269,7 +274,6 @@ assemble_data_model_jobs_dict = {
                                                            '$VERIF_CASE',
                                                            'grid_stat_'
                                                            +'${VERIF_TYPE}_'
-                                                           +'Monthly_'
                                                            +'Concentration_'
                                                            +'{lead?fmt=%2H}0000L_'
                                                            +'{valid?fmt=%H}0000V_'
@@ -291,7 +295,7 @@ assemble_data_model_jobs_dict = {
                                               '${RUN}.$DATE',
                                               '$MODEL', '$VERIF_CASE',
                                               'grid_stat_${VERIF_TYPE}_'
-                                              +'Daily_SST_'
+                                              +'SST_'
                                               +'{lead?fmt=%2H}0000L_'
                                               +'{valid?fmt=%Y%m%d}_'
                                               +'{valid?fmt=%H}0000V_pairs.nc'
@@ -301,7 +305,7 @@ assemble_data_model_jobs_dict = {
                                                '${RUN}.$DATE',
                                                '$MODEL', '$VERIF_CASE',
                                                'grid_stat_${VERIF_TYPE}_'
-                                               +'Daily_SST_'
+                                               +'SST_'
                                                +'{lead?fmt=%2H}0000L_'
                                                +'{valid?fmt=%Y%m%d}_'
                                                +'{valid?fmt=%H}0000V_pairs.nc'
@@ -324,7 +328,7 @@ assemble_data_model_jobs_dict = {
                                                 '$VERIF_CASE',
                                                 'grid_stat_'
                                                 +'${VERIF_TYPE}_'
-                                                +'Weekly_SST_'
+                                                +'SST_'
                                                 +'{lead?fmt=%2H}0000L_'
                                                 +'{valid?fmt=%Y%m%d}_'
                                                 +'{valid?fmt=%H}0000V_'
@@ -338,7 +342,7 @@ assemble_data_model_jobs_dict = {
                                                 '$VERIF_CASE',
                                                 'grid_stat_'
                                                 +'${VERIF_TYPE}_'
-                                                +'Weekly_SST_'
+                                                +'SST_'
                                                 +'{lead?fmt=%2H}0000L_'
                                                 +'{valid?fmt=%H}0000V_'
                                                 +'pairs.nc'
@@ -357,7 +361,7 @@ assemble_data_model_jobs_dict = {
                                                  '${RUN}.$DATE',
                                                  '$MODEL', '$VERIF_CASE',
                                                  'grid_stat_${VERIF_TYPE}_'
-                                                 +'Monthly_SST_'
+                                                 +'SST_'
                                                  +'{lead?fmt=%2H}0000L_'
                                                  +'{valid?fmt=%Y%m%d}_'
                                                  +'{valid?fmt=%H}0000V_pairs.nc'
@@ -367,7 +371,7 @@ assemble_data_model_jobs_dict = {
                                                  '${RUN}.$DATE',
                                                  '$MODEL', '$VERIF_CASE',
                                                  'grid_stat_${VERIF_TYPE}_'
-                                                 +'Monthly_SST_'
+                                                 +'SST_'
                                                  +'{lead?fmt=%2H}0000L_'
                                                  +'{valid?fmt=%Y%m%d}_'
                                                  +'{valid?fmt=%H}0000V_pairs.nc'

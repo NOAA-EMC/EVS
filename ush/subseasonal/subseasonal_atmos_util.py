@@ -974,11 +974,12 @@ def check_model_files(job_dict):
                                           #-datetime.timedelta(hours=fhr-12)),
                             #'forecast_hour': str(fhr-12)
                         #}
-                if job_dict['VERIF_TYPE'] == 'sst' \
-                      and job_dict['job_name'] == 'Daily_SST':
+                if job_dict['VERIF_TYPE'] in ['seaice', 'sst'] \
+                      and job_dict['job_name'] in ['Concentration',
+                                                   'SST']:
                     mb = str(members).zfill(2)
                     model_file_format = os.path.join(verif_case_dir, 'data',
-                                                     model, 'daily',
+                                                     model,
                                                      model+'.ens'+mb
                                                      +'.{init?fmt=%Y%m%d%H}.'
                                                      +'f{lead?fmt=%3H}')
@@ -992,44 +993,44 @@ def check_model_files(job_dict):
                                 'forecast_hour': str(fhr-(12*nf))
                             }
                             nf+=1
-                elif job_dict['VERIF_TYPE'] in ['seaice', 'sst'] \
-                        and job_dict['job_name'] in ['Weekly_Concentration',
-                                                     'Weekly_SST']:
-                    mb = str(members).zfill(2)
-                    model_file_format = os.path.join(verif_case_dir, 'data',
-                                                     model, 'weekly',
-                                                     model+'.ens'+mb
-                                                     +'.{init?fmt=%Y%m%d%H}.'
-                                                     +'f{lead?fmt=%3H}')
-                    if str(fhr) in ['168', '336', '504', '672', '840']:
-                        nf = 0
-                        while nf <= 14:
-                            fhr_check_dict[str(fhr)]['file'+str(nf+1)] = {
-                                'valid_date': (valid_date_dt
-                                               -datetime.timedelta(hours=12*nf)),
-                                'init_date': init_date_dt,
-                                'forecast_hour': str(fhr-(12*nf))
-                            }
-                            nf+=1
-                elif job_dict['VERIF_TYPE'] in ['seaice', 'sst'] \
-                        and job_dict['job_name'] in ['Monthly_Concentration',
-                                                     'Monthly_SST']:
-                    mb = str(members).zfill(2)
-                    model_file_format = os.path.join(verif_case_dir, 'data',
-                                                     model, 'monthly',
-                                                     model+'.ens'+mb
-                                                     +'.{init?fmt=%Y%m%d%H}.'
-                                                     +'f{lead?fmt=%3H}')
-                    if fhr == 720:
-                        nf = 0
-                        while nf <= 60:
-                            fhr_check_dict[str(fhr)]['file'+str(nf+1)] = {
-                                'valid_date': (valid_date_dt
-                                               -datetime.timedelta(hours=12*nf)),
-                                'init_date': init_date_dt,
-                                'forecast_hour': str(fhr-(12*nf))
-                            }
-                            nf+=1
+                #elif job_dict['VERIF_TYPE'] in ['seaice', 'sst'] \
+                        #and job_dict['job_name'] in ['Weekly_Concentration',
+                                                     #'Weekly_SST']:
+                    #mb = str(members).zfill(2)
+                    #model_file_format = os.path.join(verif_case_dir, 'data',
+                                                     #model, 'weekly',
+                                                     #model+'.ens'+mb
+                                                     #+'.{init?fmt=%Y%m%d%H}.'
+                                                     #+'f{lead?fmt=%3H}')
+                    #if str(fhr) in ['168', '336', '504', '672', '840']:
+                        #nf = 0
+                        #while nf <= 14:
+                            #fhr_check_dict[str(fhr)]['file'+str(nf+1)] = {
+                                #'valid_date': (valid_date_dt
+                                               #-datetime.timedelta(hours=12*nf)),
+                                #'init_date': init_date_dt,
+                                #'forecast_hour': str(fhr-(12*nf))
+                            #}
+                            #nf+=1
+                #elif job_dict['VERIF_TYPE'] in ['seaice', 'sst'] \
+                        #and job_dict['job_name'] in ['Monthly_Concentration',
+                                                     #'Monthly_SST']:
+                    #mb = str(members).zfill(2)
+                    #model_file_format = os.path.join(verif_case_dir, 'data',
+                                                     #model, 'monthly',
+                                                     #model+'.ens'+mb
+                                                     #+'.{init?fmt=%Y%m%d%H}.'
+                                                     #+'f{lead?fmt=%3H}')
+                    #if fhr == 720:
+                        #nf = 0
+                        #while nf <= 60:
+                            #fhr_check_dict[str(fhr)]['file'+str(nf+1)] = {
+                                #'valid_date': (valid_date_dt
+                                               #-datetime.timedelta(hours=12*nf)),
+                                #'init_date': init_date_dt,
+                                #'forecast_hour': str(fhr-(12*nf))
+                            #}
+                            #nf+=1
                 else:
                     fhr_check_dict[str(fhr)]['file1'] = {
                         'valid_date': valid_date_dt,
@@ -1070,7 +1071,7 @@ def check_model_files(job_dict):
                                                      +job_dict['VERIF_TYPE']+'_'
                                                      +job_dict['job_name']\
                                                      .replace('DailyAvg_', 
-                                                              'Daily_')
+                                                              '')
                                                      +'_{lead?fmt=%2H}0000L_'
                                                      +'{valid?fmt=%Y%m%d}_'
                                                      +'{valid?fmt=%H}0000V_'
@@ -1088,7 +1089,7 @@ def check_model_files(job_dict):
                                                      +job_dict['VERIF_TYPE']+'_'
                                                      +job_dict['job_name']\
                                                      .replace('WeeklyAvg_', 
-                                                              'Weekly_')
+                                                              '')
                                                      +'_{lead?fmt=%2H}0000L_'
                                                      +'{valid?fmt=%Y%m%d}_'
                                                      +'{valid?fmt=%H}0000V_'
@@ -1106,7 +1107,7 @@ def check_model_files(job_dict):
                                                      +job_dict['VERIF_TYPE']+'_'
                                                      +job_dict['job_name']\
                                                      .replace('MonthlyAvg_', 
-                                                              'Monthly_')
+                                                              '')
                                                      +'_{lead?fmt=%2H}0000L_'
                                                      +'{valid?fmt=%Y%m%d}_'
                                                      +'{valid?fmt=%H}0000V_'
@@ -1374,11 +1375,8 @@ def check_model_files(job_dict):
                 fhr_key_files_exist_list.append(True)
                 if job_dict['JOB_GROUP'] == 'reformat_data' \
                         and job_dict['job_name'] in ['GeoHeightAnom',
-                                                     'Weekly_Concentration',
-                                                     'Monthly_Concentration',
-                                                     'Daily_SST',
-                                                     'Weekly_SST',
-                                                     'Monthly_SST']:
+                                                     'Concentration',
+                                                     'SST']:
                     fhr_list.append(
                         fhr_check_dict[fhr_key][fhr_fileN_key]\
                         ['forecast_hour']
