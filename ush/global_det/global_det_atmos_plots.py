@@ -685,17 +685,13 @@ elif JOB_GROUP == 'tar_images':
     cwd = os.getcwd()
     if len(glob.glob(job_output_image_dir+'/*')) != 0:
         os.chdir(job_output_image_dir)
-        tar_file = os.path.join(job_output_image_dir,
+        tar_file = os.path.join(VERIF_TYPE_image_dir,
                                 job_name.replace('/','_')+'.tar')
         if os.path.exists(tar_file):
             os.remove(tar_file)
-        logger.debug("Make tar file "+tar_file+" from "+job_output_image_dir)
+        logger.debug(f"Making tar file {tar_file} from {job_output_image_dir}")
         gda_util.run_shell_command(
             ['tar', '-cvf', tar_file, '*']
-        )
-        logger.debug(f"Moving {tar_file} to {VERIF_TYPE_image_dir}")
-        gda_util.run_shell_command(
-            ['mv', tar_file, VERIF_TYPE_image_dir+'/.']
         )
         os.chdir(cwd)
     else:
