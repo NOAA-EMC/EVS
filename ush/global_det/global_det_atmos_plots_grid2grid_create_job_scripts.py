@@ -1367,34 +1367,45 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 for plot in verif_type_plot_jobs_dict\
                         [verif_type_job]['plots_list'].split(', '):
                     job_env_dict['plot'] = plot
-                    # Create job file
-                    njobs+=1 
-                    job_file = os.path.join(JOB_GROUP_jobs_dir,
-                                            'job'+str(njobs))
-                    print("Creating job script: "+job_file)
-                    job = open(job_file, 'w')
-                    job.write('#!/bin/bash\n')
-                    job.write('set -x\n')
-                    job.write('\n')
-                    # Set any environment variables for special cases
-                    # Write environment variables
-                    for name, value in job_env_dict.items():
-                        job.write('export '+name+'='+value+'\n')
-                    job.write('\n')
-                    job.write(
-                        gda_util.python_command('global_det_atmos_plots.py',[])
-                    )
-                    if evs_run_mode == 'production' and \
-                            verif_type == 'pres_levs' and \
-                            plot in ['lead_average', 'lead_by_level',
-                                     'lead_by_date']:
-                        job.write('\n'
-                            +gda_util.python_command(
-                                'global_det_atmos_plots_production_tof240.py',
-                                 []
-                            )+'\n'
+                    if plot == 'valid_hour_average':
+                        mp_valid_hr_inc = 24
+                    else:
+                        mp_valid_hr_inc = valid_hr_inc
+                    valid_hr = valid_hr_start
+                    while valid_hr <= valid_hr_end:
+                        if plot != 'valid_hour_average':
+                            job_env_dict['valid_hr_start'] = str(valid_hr).zfill(2)
+                            job_env_dict['valid_hr_end'] = str(valid_hr).zfill(2)
+                            job_env_dict['valid_hr_inc'] = '24'
+                        # Create job file
+                        njobs+=1 
+                        job_file = os.path.join(JOB_GROUP_jobs_dir,
+                                                'job'+str(njobs))
+                        print("Creating job script: "+job_file)
+                        job = open(job_file, 'w')
+                        job.write('#!/bin/bash\n')
+                        job.write('set -x\n')
+                        job.write('\n')
+                        # Set any environment variables for special cases
+                        # Write environment variables
+                        for name, value in job_env_dict.items():
+                            job.write('export '+name+'='+value+'\n')
+                        job.write('\n')
+                        job.write(
+                            gda_util.python_command('global_det_atmos_plots.py',[])
                         )
-                    job.close()
+                        if evs_run_mode == 'production' and \
+                                verif_type == 'pres_levs' and \
+                                plot in ['lead_average', 'lead_by_level',
+                                         'lead_by_date']:
+                            job.write('\n'
+                                +gda_util.python_command(
+                                    'global_det_atmos_plots_production_tof240.py',
+                                     []
+                                )+'\n'
+                            )
+                        job.close()
+                        valid_hr = valid_hr + mp_valid_hr_inc
 
 # If running USE_CFP, create POE scripts
 if USE_CFP == 'YES':
