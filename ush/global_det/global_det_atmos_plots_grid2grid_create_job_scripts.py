@@ -1287,7 +1287,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
         for line_type_stat \
                 in verif_type_plot_jobs_dict[verif_type_job]\
                 ['line_type_stat_list']:
-            if JOB_GROUP in ['condense_stats', 'filter_stats']:
+            if JOB_GROUP in ['condense_stats', 'filter_stats', 'tar_images']:
                 if line_type_stat.split('/')[0] not in verif_type_job_loop_list:
                     verif_type_job_loop_list.append(line_type_stat.split('/')[0])
             else:
