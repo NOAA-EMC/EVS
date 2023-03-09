@@ -54,7 +54,7 @@ evs_cam_settings_dict['shared'] = []
 evs_cam_settings_dict['modules'] = ['MET_PLUS_PATH', 'MET_PATH', 'MET_CONFIG']
 evs_cam_settings_dict['RUN_GRID2OBS_PREP'] = [
         'MET_PLUS_CONF','MET_PLUS_OUT','METPLUS_VERBOSITY','MET_VERBOSITY',
-        'LOG_MET_OUTPUT_TO_METPLUS','NEST','TEMP_DIR','GRID_DIR','URL_HEAD',
+        'LOG_MET_OUTPUT_TO_METPLUS','NEST','URL_HEAD',
         ]
 evs_cam_settings_dict['RUN_GRID2OBS_STATS'] = []
 evs_cam_settings_dict['RUN_GRID2OBS_PLOTS'] = [
@@ -135,7 +135,7 @@ if STEP.upper() == 'PREP':
             '0', '1', '2', '3', '4', '5'
         ]
         valid_config_var_values_dict['LOG_MET_OUTPUT_TO_METPLUS'] = ['yes', 'no']
-        valid_config_var_values_dict['NEST'] = ['spc_otlk']
+        valid_config_var_values_dict['NEST'] = ['spc_otlk', 'conus']
 if STEP.upper() == 'STATS':
     valid_config_var_values_dict['METPLUS_VERBOSITY'] = [
         'DEBUG', 'INFO', 'WARN', 'ERROR'

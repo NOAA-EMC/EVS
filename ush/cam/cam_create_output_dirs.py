@@ -53,6 +53,7 @@ if VERIF_CASE == "precip":
 elif VERIF_CASE == "grid2obs":
     if STEP == 'prep':
         NEST = os.environ['NEST']
+        OBSNAME = os.environ['OBSNAME']
     if STEP == 'stats':
         NEST = os.environ['NEST']
         FHR_END_FULL = os.environ['FHR_END_FULL']
@@ -78,6 +79,9 @@ if VERIF_CASE == 'precip':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
         data_dir_list.append(os.path.join(data_base_dir, OBSNAME))
 elif VERIF_CASE == 'grid2obs':
+    if STEP == 'prep':
+        if OBSNAME:
+            data_dir_list.append(os.path.join(data_base_dir, OBSNAME))
     if STEP == 'stats':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
         data_dir_list.append(os.path.join(

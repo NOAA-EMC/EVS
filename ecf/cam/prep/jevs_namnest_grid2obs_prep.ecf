@@ -81,6 +81,7 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 export DATA=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
 export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
+export mPINGToken="9dd1b109ab13bc9454d14d5bf631398d88fec93d"
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/cam/prep/JEVS_CAM_PREP

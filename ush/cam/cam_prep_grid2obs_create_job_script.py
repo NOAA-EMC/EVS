@@ -39,6 +39,13 @@ if NEST == 'spc_otlk':
         VHOUR_GROUP = os.environ['VHOUR_GROUP']
         URL_HEAD = os.environ['URL_HEAD']
         metplus_launcher = os.environ['metplus_launcher']
+elif NEST == 'conus':
+    if STEP == 'prep':
+        DAY = os.environ['DAY']
+        VHOUR_GROUP = os.environ['VHOUR_GROUP']
+        URL_HEAD = os.environ['URL_HEAD']
+        mPINGToken = os.environ['mPINGToken']
+        OBSNAME = os.environ['OBSNAME']
 
 # Make a dictionary of environment variables needed to run this particular job
 job_env_vars_dict = {}
@@ -50,7 +57,15 @@ if NEST == 'spc_otlk':
         job_env_vars_dict['VHOUR_GROUP'] = VHOUR_GROUP
         job_env_vars_dict['URL_HEAD'] = URL_HEAD
         job_env_vars_dict['TEMP_DIR'] = TEMP_DIR
-
+elif NEST == 'conus':
+    if STEP == 'prep':
+        job_env_vars_dict['NEST'] = NEST
+        job_env_vars_dict['VDATE'] = VDATE
+        job_env_vars_dict['DAY'] = DAY
+        job_env_vars_dict['VHOUR_GROUP'] = VHOUR_GROUP
+        job_env_vars_dict['URL_HEAD'] = URL_HEAD
+        job_env_vars_dict['mPINGToken'] = mPINGToken
+        job_env_vars_dict['OBSNAME'] = OBSNAME
 
 # Make a list of commands needed to run this particular job
 job_cmd_list = []
@@ -60,6 +75,11 @@ if STEP == 'prep':
             job_cmd_list.append(
                 f"python {USHevs}/{COMPONENT}/"
                 + f"{COMPONENT}_{STEP}_{VERIF_CASE}_gen_{NEST}_mask.py"
+            )
+        elif NEST == 'conus':
+            job_cmd_list.append(
+                f"python {USHevs}/{COMPONENT}/"
+                + f"{COMPONENT}_{STEP}_{VERIF_CASE}_get_mPING.py"
             )
         else:
             print(f"ERROR: {NEST} is not a valid NEST for"

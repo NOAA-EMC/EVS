@@ -35,6 +35,7 @@ export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
 export COMINhiresw=${COMINhiresw:-$(compath.py ${envir}/com/hiresw/${hiresw_ver})}
 export COMINhrrr=${COMINhrrr:-$(compath.py ${envir}/com/hrrr/${hrrr_ver})}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
+export mPINGToken=${mPINGToken:-9999}
 
 # Subdirectories to EVS Home Directory
 export PARMevs=${PARMevs:-$HOMEevs/parm}
