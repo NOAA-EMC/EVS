@@ -79,9 +79,6 @@ if VERIF_CASE == 'precip':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
         data_dir_list.append(os.path.join(data_base_dir, OBSNAME))
 elif VERIF_CASE == 'grid2obs':
-    if STEP == 'prep':
-        if OBSNAME:
-            data_dir_list.append(os.path.join(data_base_dir, OBSNAME))
     if STEP == 'stats':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
         data_dir_list.append(os.path.join(
@@ -123,6 +120,14 @@ if STEP == 'prep':
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'data', 
             NEST+'.'+vdate_dt.strftime('%Y%m%d')
+        ))
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'data', 
+            OBSNAME+'.'+vdate_dt.strftime('%Y%m%d')
+        ))
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'data', 
+            OBSNAME+'.'+(vdate_dt-td(hours=1)).strftime('%Y%m%d')
         ))
         COMOUT_dir_list.append(os.path.join(
             COMOUT, 
@@ -228,6 +233,15 @@ elif STEP == 'stats':
             ))
             working_dir_list.append(os.path.join(
                 working_output_base_dir, NEST, 'pb2nc', 'tmp'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, NEST, 'ascii2nc', 'confs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, NEST, 'ascii2nc', 'logs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, NEST, 'ascii2nc', 'tmp'
             ))
             if NEST in ['spc_otlk', 'firewx']:
                 working_dir_list.append(os.path.join(

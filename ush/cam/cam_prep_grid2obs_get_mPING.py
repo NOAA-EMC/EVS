@@ -25,7 +25,8 @@ for VHOUR in VHOURS:
     vdate_dt_shift1H = vdate_dt - td(hours=1)
 
     DATA = os.environ['DATA']
-    outdir = os.path.join(DATA,VERIF_CASE,'data',OBSNAME)
+    outdir1 = os.path.join(DATA,VERIF_CASE,'data',vdate_dt.strftime(f'{OBSNAME}.%Y%m%d'))
+    outdir2 = os.path.join(DATA,VERIF_CASE,'data',vdate_dt_shift1H.strftime(f'{OBSNAME}.%Y%m%d'))
     outfile1 = vdate_dt.strftime("mPING_%Y%m%d%H.csv")
     outfile2 = vdate_dt_shift1H.strftime("mPING_%Y%m%d%H.csv")
 
@@ -36,8 +37,8 @@ for VHOUR in VHOURS:
         "Authorization": f"Token {mPING_token}"
     }
 
-    get_file1 = not os.path.exists(os.path.join(outdir, outfile1))
-    get_file2 = not os.path.exists(os.path.join(outdir, outfile2))
+    get_file1 = not os.path.exists(os.path.join(outdir1, outfile1))
+    get_file2 = not os.path.exists(os.path.join(outdir2, outfile2))
 
     if get_file1:
         download_link1 = (
@@ -55,9 +56,9 @@ for VHOUR in VHOURS:
         if r1.raise_for_status():
             print("Bad response.  Quitting")
         else:
-            with open(os.path.join(outdir, outfile1), 'w') as f:
+            with open(os.path.join(outdir1, outfile1), 'w') as f:
                 f.write(r1.text)
-            print(f"Wrote data to {os.path.join(outdir, outfile1)}")
+            print(f"Wrote data to {os.path.join(outdir1, outfile1)}")
     if get_file2:
         download_link2 = (
             mPING_url_head
@@ -74,6 +75,6 @@ for VHOUR in VHOURS:
         if r2.raise_for_status():
             print("Bad response.  Quitting")
         else:
-            with open(os.path.join(outdir, outfile2), 'w') as f:
+            with open(os.path.join(outdir2, outfile2), 'w') as f:
                 f.write(r2.text)
-            print(f"Wrote data to {os.path.join(outdir, outfile2)}")
+            print(f"Wrote data to {os.path.join(outdir2, outfile2)}")

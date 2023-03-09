@@ -14,7 +14,7 @@ set -x
 
 # Set Basic Environment Variables
 NEST_LIST="conus ak spc_otlk firewx subreg"
-VERIF_TYPES="raob metar"
+VERIF_TYPES="raob metar mping"
 
 # Reformat MET Data
 export job_type="reformat"
