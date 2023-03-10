@@ -67,9 +67,8 @@ export cycle=${cycle:-t${cyc}z}
 setpdy.sh
 . ./PDY
 
-#export VDATE=$PDYm6
+export VDATE=${VDATE:-$PDYm2}
 
-export VDATE=$(date -d "today -22 day" +"%Y%m%d")
 
 #################################################
 # Set up the INPUT and OUTPUT directories

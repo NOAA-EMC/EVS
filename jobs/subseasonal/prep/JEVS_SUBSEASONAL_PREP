@@ -63,7 +63,6 @@ setpdy.sh
 . ./PDY
 
 export INITDATE=$PDYm2
-#export INITDATE=$(date -d "today -8 day" +"%Y%m%d")
 
 #################################################
 # Set up the INPUT and OUTPUT directories

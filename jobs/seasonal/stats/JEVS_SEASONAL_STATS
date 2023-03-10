@@ -27,8 +27,7 @@ cd $DATA
 # Determine Job Output Name on System
 ###############################
 export pgmout="OUTPUT.${pid}"
-
-#export cycle=t${cyc}z 
+ 
 
 
 ################################################################
@@ -66,11 +65,11 @@ export members="4"
 
 
 # Run setpdy and initialize PDY variables
-#setpdy.sh
-#$. ./PDY
+export cycle=${cycle:-t${cyc}z}
+setpdy.sh
+. ./PDY
 
-#$export vday=$PDYm1
-export VDATE=$(date -d "today -1 day" +"%Y%m%d")
+export VDATE=${VDATE:-$PDYm2}
 
 #################################################
 # Set up the INPUT and OUTPUT directories
