@@ -1,5 +1,5 @@
 '''
-Name: global_det_atmos_restart.py
+Name: global_det_atmos_production_restart.py
 Contact(s): Mallory Row
 Abstract: 
 '''
