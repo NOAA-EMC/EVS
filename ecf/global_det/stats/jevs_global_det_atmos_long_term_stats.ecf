@@ -1,9 +1,9 @@
-#PBS -N jevs_global_det_atmos_headline_plots
+#PBS -N jevs_global_det_atmos_long_term_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=01:00:00
+#PBS -l walltime=05:00:00
 #PBS -l select=1:ncpus=1
 #PBS -l debug=true
 #PBS -V
@@ -26,12 +26,10 @@ export RUN_ENVIR=nco
 export SENDCOM=YES
 export KEEPDATA=NO
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_global_det_atmos_test/$envir/tmp
-export job=${PBS_JOBNAME:-jevs_global_det_atmos_headline_plots}
+export job=${PBS_JOBNAME:-jevs_global_det_atmos_long_term_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
-############################################################
-
 
 ############################################################
 # Load modules
@@ -41,14 +39,18 @@ module use /apps/ops/prod/libs/modulefiles/compiler/intel/19.1.3.304
 module load cray-pals/${craypals_ver}
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
+module load prod_envir/${prodenvir_ver}
+module load prod_util/${produtil_ver}
 module load cfp/${cfp_ver}
-module load prod_envir/${prod_envir_ver}
-module load prod_util/${prod_util_ver}
 module load libjpeg/${libjpeg_ver}
 module load libpng/${libpng_ver}
 module load zlib/${zlib_ver}
 module load jasper/${jasper_ver}
+module load udunits/${udunits_ver}
 module load gsl/${gsl_ver}
+module load netcdf/${netcdf_ver}
+module load grib_util/${grib_util_ver}
+module load wgrib2/${wgrib2_ver}
 module load python/${python_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
@@ -63,22 +65,28 @@ export cyc=00
 
 # Set verification information
 export NET=evs
-export STEP=plots
+export STEP=stats
 export COMPONENT=global_det
-export RUN=headline
+export RUN=long_term
 
-# Set COM paths
-export PDYm1=$(date -d "24 hours ago" '+%Y%m%d')
+# Set archive
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com
 export COMIN=$COMROOT/$NET/$evs_ver
-export COMINdailystats=$COMIN/stats/$COMPONENT
-export COMINyearlystats=$COMIN/stats/$COMPONENT/long_term/annual_means
-export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT
+export COMINdailystats=$COMIN/$STEP/$COMPONENT
+export COMINmonthlystats=$COMIN/$STEP/$COMPONENT/$RUN/monthly_means
+export COMINyearlystats=$COMIN/$STEP/$COMPONENT/$RUN/annual_means
+export COMOUTmonthlystats=$COMOUT/$RUN/monthly_means
+export COMOUTyearlystats=$COMOUT/$RUN/annual_means
+
+# Set year and month
+export VDATEYYYY=$(date -d "1 month ago" '+%Y')
+export VDATEmm=$(date -d "1 month ago" '+%m')
 
 # CALL executable job script here
-$HOMEevs/jobs/global_det/plots/JEVS_GLOBAL_DET_ATMOS_HEADLINE_PLOTS
+$HOMEevs/jobs/global_det/stats/JEVS_GLOBAL_DET_ATMOS_LONG_TERM_STATS
 
 ######################################################################
-# Purpose: This does the plotting work for the global deterministic
-#          atmospheric grid-to-grid headline scores
+# Purpose: This does the statistics work for the global deterministic
+#          atmospheric long term stats
 ######################################################################

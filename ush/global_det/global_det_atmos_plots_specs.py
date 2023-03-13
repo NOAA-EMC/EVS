@@ -48,7 +48,10 @@ class PlotSpecs:
         self.legend_ncol = 1
         self.title_loc = 'center'
         self.fig_size=(16.,16.)
-        if self.plot_type == 'time_series':
+        if self.plot_type in ['time_series',
+                              'time_series_multifhr',
+                              'long_term_time_series',
+                              'long_term_time_series_multifhr']:
             self.fig_size = (16., 8.)
             self.fig_subplot_top = 0.87
             self.fig_subplot_bottom = 0.1
@@ -60,8 +63,22 @@ class PlotSpecs:
             self.legend_frame_on = False
             self.legend_bbox = (0.5, 0.05)
             self.legend_ncol = 4
+            if self.plot_type in ['time_series_multifhr',
+                                  'long_term_time_series',
+                                  'long_term_time_series_multifhr']:
+                self.fig_subplot_top = 0.85
+        elif self.plot_type == 'histogram':
+            self.fig_size = (16., 8.)
+            self.fig_subplot_top = 0.87
+            self.fig_subplot_bottom = 0.1
+            self.fig_subplot_right = 0.925
+            self.fig_subplot_left = 0.085
+            self.axis_label_size = 15
+            self.xtick_label_size = 15
+            self.ytick_label_size = 15
         elif self.plot_type in ['lead_average', 'valid_hour_average',
-                                'threshold_average']:
+                                'threshold_average',
+                                'long_term_time_series_diff']:
             self.fig_size = (16., 16.)
             self.fig_subplot_top = 0.9
             self.fig_subplot_bottom = 0.05
@@ -71,7 +88,11 @@ class PlotSpecs:
             self.legend_bbox = (0.5, 0.05)
             self.legend_ncol = 5
             self.fig_title_size = 18
-        elif self.plot_type == 'lead_by_date':
+            if self.plot_type == 'long_term_time_series_diff':
+                self.legend_font_size = 15
+        elif self.plot_type in ['lead_by_date',
+                                'long_term_annual_mean',
+                                'long_term_lead_by_date']:
             self.fig_size = (16., 16.)
             self.axis_title_pad = 5
             self.axis_title_loc = 'left'
@@ -80,6 +101,11 @@ class PlotSpecs:
             self.fig_subplot_right = 0.923
             self.fig_subplot_left = 0.15
             self.fig_title_size = 18
+            if self.plot_type == 'long_term_annual_mean':
+                self.fig_subplot_left = 0.1
+                self.fig_subplot_right = 0.9
+            if self.plot_type == 'long_term_lead_by_date':
+                self.fig_subplot_left = 0.1
         elif self.plot_type == 'stat_by_level':
             self.fig_size = (16., 16.)
             self.fig_subplot_top = 0.925
@@ -490,16 +516,21 @@ class PlotSpecs:
         return vx_mask_plot_name
 
     def get_dates_plot_name(self, date_type, start_date_hr, end_date_hr,
-                            other_hr_list, forecast_hour):
+                            other_hr_list, forecast_hour_list):
         """! Get the full date information that will be displayed on the plot
 
              Args:
-                 date_type     - type of dates (string, VALID or INIT)
-                 start_date_hr - starting date and hour (string, YYYYmmddHH)
-                 end_date_hr   - ending date and hour (string, YYYYmmddHH)
-                 other_hr_list - list of hours for opposite of date_type
-                                 (strings)
-                 forecast_hour - forecast hour, if not applicable is NA
+                 date_type          - type of dates
+                                      (string, VALID or INIT)
+                 start_date_hr      - starting date and hour
+                                      (string, YYYYmmddHH)
+                 end_date_hr        - ending date and hour
+                                      (string, YYYYmmddHH)
+                 other_hr_list      - list of hours for
+                                      opposite of date_type
+                                      (strings)
+                 forecast_hour_list - list of forecast hour(s),
+                                      if not applicable is NA
  
              Returns:
                  date_plot_name - full date information that
@@ -518,15 +549,23 @@ class PlotSpecs:
         elif date_type == 'INIT':
             date_plot_name = (date_plot_name
                               +'valid: '+', '.join(other_hr_list))
-        if forecast_hour != 'NA':
-            forecast_day = int(forecast_hour)/24.
-            if int(forecast_hour) % 24 == 0:
-                forecast_day_plot = str(int(forecast_day))
-            else: 
-                forecast_day_plot = str(forecast_day)
-            date_plot_name = (date_plot_name
-                              +', Forecast Day '+forecast_day_plot+' '
-                              +'(Hour '+forecast_hour+')')
+        forecast_day_list = []
+        if forecast_hour_list != 'NA':
+            for forecast_hour in forecast_hour_list:
+                forecast_day = int(forecast_hour)/24.
+                if int(forecast_hour) % 24 == 0:
+                    forecast_day_list.append(str(int(forecast_day)))
+                else:
+                    forecast_day_list.append(str(forecast_day))
+            if len(forecast_hour_list) == 1:
+                date_plot_name = (date_plot_name
+                                  +', Forecast Day '+forecast_day_list[0]+' '
+                                  +'(Hour '+forecast_hour_list[0]+')')
+            else:
+                date_plot_name = (date_plot_name
+                                  +'\nForecast Days '
+                                  +','.join(forecast_day_list)+' '
+                                  +'(Hours '+','.join(forecast_hour_list)+')')
         return date_plot_name
 
     def get_plot_title(self, plot_info_dict, date_info_dict, units):
@@ -573,9 +612,12 @@ class PlotSpecs:
             ]
         if self.plot_type in ['time_series', 'stat_by_level',
                               'performance_diagram', 'threshold_average']:
-            fhr_for_title = date_info_dict['forecast_hour']
+            fhr_for_title = [date_info_dict['forecast_hour']]
+        elif self.plot_type == 'time_series_multifhr':
+            fhr_for_title = date_info_dict['forecast_hours']
         elif self.plot_type in ['lead_average', 'valid_hour_average',
-                                'lead_by_date', 'lead_by_level']:
+                                'lead_by_date', 'lead_by_level',
+                                'time_series_multifhr']:
             fhr_for_title = 'NA'
         if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
             var_name_for_title = (plot_info_dict['fcst_var_name']
@@ -685,6 +727,8 @@ class PlotSpecs:
         ndays_savefig_name = 'last'+str(ndays)+'days'
         if self.plot_type == 'time_series':
             plot_type_savefig_name = 'timeseries'
+        elif self.plot_type == 'time_series_multifhr':
+            plot_type_savefig_name = 'timeseries'
         elif self.plot_type == 'lead_average':
             plot_type_savefig_name = 'fhrmean'
         elif self.plot_type == 'lead_by_date':
@@ -701,8 +745,8 @@ class PlotSpecs:
             plot_type_savefig_name = 'vhrmean'
         else:
             plot_type_savefig_name = self.plot_type.replace('_', '')
-        if self.plot_type in ['time_series', 'lead_average',
-                              'stat_by_level', 'lead_by_level',
+        if self.plot_type in ['time_series', 'time_series_multifhr',
+                              'lead_average', 'stat_by_level', 'lead_by_level',
                               'lead_by_date', 'performance_diagram',
                               'threshold_average']:
             plot_type_savefig_name = plot_type_savefig_name+'_valid'
@@ -712,12 +756,18 @@ class PlotSpecs:
                                           +str(valid_hr).zfill(2))
                 valid_hr+=int(date_info_dict['valid_hr_inc'])
             plot_type_savefig_name = plot_type_savefig_name+'Z'
-        if self.plot_type in ['time_series', 'stat_by_level',
-                              'performance_diagram',
+        if self.plot_type in ['time_series',
+                              'stat_by_level', 'performance_diagram',
                               'threshold_average']:
             plot_type_savefig_name = (
                  plot_type_savefig_name+'_'
                  +'f'+date_info_dict['forecast_hour'].zfill(3)
+            )
+        elif self.plot_type == 'time_series_multifhr':
+            plot_type_savefig_name = (
+                 plot_type_savefig_name+'_'
+                 +''.join(['f'+f.zfill(3) for \
+                            f in date_info_dict['forecast_hours']])
             )
         else:
             plot_type_savefig_name = (
@@ -1095,6 +1145,18 @@ class PlotSpecs:
             'gfs': {'color': '#000000',
                     'marker': 'o', 'markersize': 6,
                     'linestyle': 'solid', 'linewidth': 3},
+            'gfs00Z': {'color': '#000000',
+                       'marker': 'o', 'markersize': 6,
+                       'linestyle': 'solid', 'linewidth': 3},
+            'gfs06Z': {'color': '#fb2020',
+                       'marker': '^', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'gfs12Z': {'color': '#1e3cff',
+                       'marker': 'X', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'gfs18Z': {'color': '#e69f00',
+                       'marker': 'o', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
             'cfs': {'color': '#56b4e9',
                     'marker': 'o', 'markersize': 6,
                     'linestyle': 'solid', 'linewidth': 1.5},
@@ -1127,3 +1189,45 @@ class PlotSpecs:
                       'linestyle': 'solid', 'linewidth': 1.5},
         }
         return model_plot_settings_dict
+
+    def get_forecast_hour_plot_settings(self):
+        """! Get dictionary plot settings for forecast hours
+
+             Args:
+
+             Returns:
+                 forecast_hour_plot_settings_dict - dictionary of
+                                                    forecast hours
+                                                    plotting specifications
+                                                    (strings)
+        """
+        forecast_hour_plot_settings_dict = {
+            'fhr_n1': {'color': '#fb2020',
+                       'marker': 'o', 'markersize': 6,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'fhr_n2': {'color': '#00dc00',
+                       'marker': '^', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'fhr_n3': {'color': '#1e3cff',
+                       'marker': 'X', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'fhr_n4': {'color': '#e69f00',
+                       'marker': 'o', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'fhr024': {'color': '#fb2020',
+                       'marker': 'o', 'markersize': 6,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'fhr048': {'color': '#00dc00',
+                       'marker': '^', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'fhr072': {'color': '#1e3cff',
+                       'marker': 'X', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'fhr120': {'color': '#000000',
+                       'marker': 's', 'markersize': 6,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+            'fhr240': {'color': '#e69f00',
+                       'marker': 'o', 'markersize': 7,
+                       'linestyle': 'solid', 'linewidth': 1.5},
+        }
+        return forecast_hour_plot_settings_dict
