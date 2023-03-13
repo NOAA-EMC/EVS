@@ -1,0 +1,11 @@
+#
+
+ls -1 *jevs*> list
+set files = ( `cat list` )
+foreach file ($files)
+sed 's/purge/reset/g' $file > $file.new
+mv $file.new $file
+end
+
+exit
+

@@ -56,7 +56,9 @@ fi
 # Define COMIN/COMOUT variables:
 export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
 export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
+export COMINcam=${COMINcam:-$(compath.py ${envir}/com/evs/${evs_ver}/stats/${COMPONENT})}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
+export COMOUTplots=${COMOUTplots:-${COMOUT}/${RUN}.${VDATE}}
 
 echo $COMPATH
 

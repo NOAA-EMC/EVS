@@ -23,7 +23,6 @@ fi
 mkdir -p $DATA
 cd $DATA
 
-
 if [ $MODELNAME = href ] ; then
     setpdy.sh
     . $DATA/PDY
@@ -54,6 +53,20 @@ else
     export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 fi
 export COMINsnow=$DCOMROOT
+
+if [ $MODELNAME = nam_firewxnest ] ; then
+   export COMIN=${COMIN:-$(compath.py ${envir}/com/evs/${evs_ver}/)}
+   export COMINnam=${COMINnam:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
+   export COMINobs=${COMINobs:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
+   export COMOUT=${COMOUT:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
+   export COMOUTsmall=${COMOUTsmall:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE})}
+   export COMOUTfinal=${COMOUTfinal:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${MODELNAME}.${VDATE})}
+   mkdir -m 775 -p  $COMOUT
+   setpdy.sh
+    . $DATA/PDY
+   export VDATE=${VDATE:-$PDYm1}
+fi
+
 
 mkdir -p $COMOUT
 

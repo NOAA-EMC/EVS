@@ -97,7 +97,7 @@ echo $obfound
 if [ $obfound = 1 -a $fcstnum -gt 0 ]
 then
 
-  run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstCAM_obsNDAS_PrepBufr.conf $PARMevs/metplus_config/machine.conf
+  run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstNAM_FIREWXNEST_obsPREPBUFR.conf $PARMevs/metplus_config/machine.conf
   export err=$?; err_chk
 
   mkdir -p $COMOUTsmall
@@ -107,14 +107,14 @@ then
   then
        mkdir -p $COMOUTfinal
        cd $DATA/statanalysis
-       run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstCAM_obsONLYSF_GatherByDay.conf $PARMevs/metplus_config/machine.conf
+       run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstNAM_FIREWXNEST_obsONLYSF_GatherByDay.conf $PARMevs/metplus_config/machine.conf
        export err=$?; err_chk
 
-       run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstCAM_obsADPUPA_GatherByDay.conf $PARMevs/metplus_config/machine.conf
+       run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstNAM_FIREWXNEST_obsADPUPA_GatherByDay.conf $PARMevs/metplus_config/machine.conf
        export err=$?; err_chk
 
-       cat *ADPUPA >> *stat
-       cp *stat $COMOUTfinal
+       cat *ADPUPA >> evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat
+       cp evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat  $COMOUTfinal
   fi
 
 else

@@ -2,7 +2,7 @@
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
-#PBS -A VERF-DEV
+#PBS -A EVS-DEV
 #PBS -l walltime=06:00:00
 #PBS -l select=1:ncpus=1:mem=500GB
 #PBS -l debug=true
@@ -18,12 +18,13 @@ set -x
 export EVS=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 source $EVS/versions/run.rtofs.ver
 
-module purge
+module reset
 export HPC_OPT=${opt_path}
 module use ${module_path}
 module load intel
 module load netcdf/${netcdf_ver}
 module load python/${python_ver}
+module load gsl/${gsl_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
 module load envvar/${envvar_ver}
@@ -41,7 +42,7 @@ export VDATE=$(date --date="2 days ago" +%Y%m%d)
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
 export COMINobs=/lfs/h1/ops/dev/dcom
 export COMINrtofs=/lfs/h1/ops/$envir/com/$COMPONENT/${rtofs_ver}
-export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver}/$STEP/$COMPONENT
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}/$STEP/$COMPONENT
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/cdo_grids
 
 # call j-job

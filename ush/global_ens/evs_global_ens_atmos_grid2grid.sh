@@ -194,7 +194,7 @@ for  verify in $verifys ; do
 
         chmod +x run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
 
-        echo "run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh" >> run_all_gens_g2g_poe.sh
+        echo "${DATA}/run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh" >> run_all_gens_g2g_poe.sh
 
 
       done #end of fhr 
@@ -321,7 +321,7 @@ for  verify in $verifys ; do
 
        chmod +x run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
 
-       echo "run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh" >> run_all_gens_g2g_poe.sh
+       echo "${DATA}/run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh" >> run_all_gens_g2g_poe.sh
 
       done #end of cyc
 
@@ -362,7 +362,7 @@ if [ -s run_all_gens_g2g_poe.sh ] ; then
     fi
 
  else
-   run_all_gens_g2g_poe.sh	 
+   ${DATA}/run_all_gens_g2g_poe.sh	 
  fi
 
 fi

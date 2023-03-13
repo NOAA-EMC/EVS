@@ -149,7 +149,7 @@ if [ $verify = upper ] ; then
 
         chmod +x run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
 
-        echo "run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh" >> run_all_gens_g2g_poe.sh
+        echo "$DATA/run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh" >> run_all_gens_g2g_poe.sh
 
 
       done #end of fhr 
@@ -165,7 +165,7 @@ fi #end of if verify=upper
 
 
 if [ -s run_all_gens_g2g_poe.sh ] ; then
-  run_all_gens_g2g_poe.sh	 
+  $DATA/run_all_gens_g2g_poe.sh	 
 fi
 
 

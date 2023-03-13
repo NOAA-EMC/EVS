@@ -5,6 +5,7 @@ export envvar_ver=1.0
 export intel_ver=""
 export netcdf_ver=4.7.4
 export python_ver=3.8.6
+esport gsl_ver=2.7
 export met_ver=10.1.2
 export metplus_ver=4.1.4
 export cdo_ver=1.9.8
