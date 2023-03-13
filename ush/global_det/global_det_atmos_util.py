@@ -778,18 +778,13 @@ def prep_prod_metfra_file(source_file, dest_file, forecast_hour, prep_method):
     copy_file(prepped_file, dest_file)
 
 def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
-                           weekly_source_file_list, weekly_dest_file,
-                           weekly_dates):
+                           date_dt):
     """! Do prep work for OSI-SAF production files
 
          Args:
              daily_source_file_format - daily source file format (string)
              daily_dest_file          - daily destination file (string)
-             weekly_source_file_list  - list of daily files to make up
-                                        weekly average file
-             weekly_dest_file         - weekly destination file (string)
-             weekly_dates             - date span for weekly dates (tuple
-                                        of datetimes)
+             date_dt                  - date (datetime object)
          Returns:
     """
     # Environment variables and executables
@@ -798,8 +793,6 @@ def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
     # Temporary file names
     daily_prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                       +daily_dest_file.rpartition('/')[2])
-    weekly_prepped_file = os.path.join(os.getcwd(), 'atmos.'
-                                       +weekly_dest_file.rpartition('/')[2])
     # Prep daily file
     for hem in ['nh', 'sh']:
         hem_source_file = daily_source_file_format.replace('{hem?fmt=str}',
@@ -875,37 +868,6 @@ def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
             merged_var[:] = merged_var_vals
         merged_data.close()
     copy_file(daily_prepped_file, daily_dest_file)
-    # Prep weekly file
-    #for weekly_source_file in weekly_source_file_list:
-    #    if not os.path.exists(weekly_source_file):
-    #        print(f"WARNING: {weekly_source_file} does not exist, "
-    #              +"not using in weekly average file")
-    #        weekly_source_file_list.remove(weekly_source_file)
-    #if len(weekly_source_file_list) == 7:
-    #    ncea_cmd_list = ['ncea']
-    #    for weekly_source_file in weekly_source_file_list:
-    #        ncea_cmd_list.append(weekly_source_file)
-    #    ncea_cmd_list.append('-o')
-    #    ncea_cmd_list.append(weekly_prepped_file)
-    #    run_shell_command(ncea_cmd_list)
-    #    if check_file_exists_size(weekly_prepped_file):
-    #        weekly_data = netcdf.Dataset(weekly_prepped_file, 'a',
-    #                                     format='NETCDF3_CLASSIC')
-    #        weekly_data.setncattr(
-    #            'start_date', weekly_dates[0].strftime('%Y-%m-%d %H:%M:%S')
-    #        )
-    #        osi_saf_date_since_dt = datetime.datetime.strptime(
-    #            '1978-01-01 00:00:00','%Y-%m-%d %H:%M:%S'
-    #        )
-    #        weekly_data.variables['time_bnds'][:] = [
-    #            (weekly_dates[0] - osi_saf_date_since_dt).total_seconds(),
-    #            weekly_data.variables['time_bnds'][:][0][1]
-    #        ]
-    #        weekly_data.close()
-    #else:
-    #    print("Not enough files to make "+weekly_prepped_file
-    #          +": "+' '.join(weekly_source_file_list))
-    #copy_file(weekly_prepped_file, weekly_dest_file)
 
 def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt):
     """! Do prep work for GHRSST OSPO production files

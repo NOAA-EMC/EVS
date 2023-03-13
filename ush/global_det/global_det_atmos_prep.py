@@ -35,6 +35,7 @@ COMINukmet_precip = os.environ['COMINukmet_precip']
 COMINosi_saf = os.environ['COMINosi_saf']
 COMINghrsst_ospo = os.environ['COMINghrsst_ospo']
 COMINget_d = os.environ['COMINget_d']
+SENDCOM = os.environ['SENDCOM']
 COMOUT = os.environ['COMOUT']
 INITDATE = os.environ['INITDATE']
 NET = os.environ['NET']
@@ -196,8 +197,7 @@ for MODEL in MODELNAME:
                 COMOUT_fcst_file = os.path.join(
                     COMOUT_INITDATE, MODEL, arch_fcst_file.rpartition('/')[2]
                 )
-                if not os.path.exists(COMOUT_fcst_file) \
-                        and not os.path.exists(arch_fcst_file):
+                if not os.path.exists(arch_fcst_file):
                     print("----> Trying to create "+arch_fcst_file)
                     arch_fcst_file_dir = arch_fcst_file.rpartition('/')[0]
                     if not os.path.exists(arch_fcst_file_dir):
@@ -229,6 +229,8 @@ for MODEL in MODELNAME:
                                                       'full')
                     else:
                         gda_util.copy_file(prod_fcst_file, arch_fcst_file)
+                    if SENDCOM == 'YES':
+                        gda_util.copy_file(arch_fcst_file, COMOUT_fcst_file)
             if 'prod_precip_file_format' in list(model_dict.keys()):
                 prod_precip_file = gda_util.format_filler(
                     model_dict['prod_precip_file_format'], VDATE_dt,
@@ -241,8 +243,7 @@ for MODEL in MODELNAME:
                 COMOUT_precip_file = os.path.join(
                     COMOUT_INITDATE, MODEL, arch_precip_file.rpartition('/')[2]
                 )
-                if not os.path.exists(COMOUT_precip_file) \
-                        and not os.path.exists(arch_precip_file) and fcst_hr != 0:
+                if not os.path.exists(arch_precip_file) and fcst_hr != 0:
                     print("----> Trying to create "+arch_precip_file)
                     arch_precip_file_dir = (
                         arch_precip_file.rpartition('/')[0]
@@ -290,6 +291,9 @@ for MODEL in MODELNAME:
                     else:
                         gda_util.copy_file(prod_precip_file,
                                            arch_precip_file)
+                    if SENDCOM == 'YES':
+                        gda_util.copy_file(arch_precip_file,
+                                           COMOUT_precip_file)
         # Analysis file
         if 'prod_anl_file_format' in list(model_dict.keys()):
             prod_anl_file = gda_util.format_filler(
@@ -303,8 +307,8 @@ for MODEL in MODELNAME:
             COMOUT_anl_file = os.path.join(
                 COMOUT_INITDATE, MODEL, arch_anl_file.rpartition('/')[2]
             )
-            if not os.path.exists(COMOUT_anl_file) \
-                    and not os.path.exists(arch_anl_file):
+            if not os.path.exists(arch_anl_file):
+                print("----> Trying to create "+arch_anl_file)
                 arch_anl_file_dir = arch_anl_file.rpartition('/')[0]
                 if not os.path.exists(arch_anl_file_dir):
                     os.makedirs(arch_anl_file_dir)
@@ -313,7 +317,6 @@ for MODEL in MODELNAME:
                                                      arch_anl_file_dir])
                          gda_util.run_shell_command(['chgrp', 'rstprod',
                                                      arch_anl_file_dir])
-                print("----> Trying to create "+arch_anl_file)
                 if MODEL == 'jma':
                     gda_util.prep_prod_jma_file(prod_anl_file,
                                                 arch_anl_file,
@@ -342,35 +345,28 @@ for MODEL in MODELNAME:
                                                   'full')
                 else:
                     gda_util.copy_file(prod_anl_file, arch_anl_file)
+                if SENDCOM == 'YES':
+                    gda_util.copy_file(arch_anl_file, COMOUT_anl_file)
 
 ###### OBS
 # Get operational observation data
 # Nortnern & Southern Hemisphere 10 km OSI-SAF multi-sensor analysis - osi_saf
 global_det_obs_dict = {
-    'osi_saf': {'daily_prod_file_format': os.path.join(COMINosi_saf,
-                                                       '{init_shift?fmt=%Y%m%d'
-                                                       +'?shift=-12}',
-                                                       'seaice', 'osisaf',
-                                                       'ice_conc_{hem?fmt=str}_'
-                                                       +'polstere-100_multi_'
-                                                       +'{init_shift?fmt=%Y%m%d%H'
-                                                       +'?shift=-12}'
-                                                       +'00.nc'),
-                'daily_arch_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
-                                                       'osi_saf',
-                                                       'osi_saf.multi.'
-                                                       +'{init_shift?fmt=%Y%m%d%H'
-                                                       +'?shift=-24}to'
-                                                       +'{init?fmt=%Y%m%d%H}'
-                                                       +'_G004.nc'),
-                'weekly_arch_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
-                                                       'osi_saf',
-                                                       'osi_saf.multi.'
-                                                       +'{init_shift?fmt=%Y%m%d%H?'
-                                                       +'shift=-168}'
-                                                       +'to'
-                                                       +'{init?fmt=%Y%m%d%H}'
-                                                       +'_G004.nc'),
+    'osi_saf': {'prod_file_format': os.path.join(COMINosi_saf,
+                                                 '{init_shift?fmt=%Y%m%d'
+                                                 +'?shift=-12}',
+                                                 'seaice', 'osisaf',
+                                                 'ice_conc_{hem?fmt=str}_'
+                                                 +'polstere-100_multi_'
+                                                 +'{init_shift?fmt=%Y%m%d%H'
+                                                 +'?shift=-12}'
+                                                 +'00.nc'),
+                'arch_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
+                                                 'osi_saf', 'osi_saf.multi.'
+                                                 +'{init_shift?fmt=%Y%m%d%H'
+                                                 +'?shift=-24}to'
+                                                 +'{init?fmt=%Y%m%d%H}'
+                                                 +'_G004.nc'),
                 'cycles': ['00']},
     'ghrsst_ospo': {'prod_file_format': os.path.join(COMINghrsst_ospo,
                                                      '{init_shift?fmt=%Y%m%d'
@@ -408,74 +404,35 @@ for OBS in OBSNAME:
     for cycle in obs_dict['cycles']:
         CDATE = INITDATE+cycle
         CDATE_dt = datetime.datetime.strptime(CDATE, '%Y%m%d%H')
-        if OBS == 'osi_saf':
-            CDATEm7_dt = CDATE_dt + datetime.timedelta(hours=-168)
-            daily_prod_file = gda_util.format_filler(
-                obs_dict['daily_prod_file_format'], CDATE_dt, CDATE_dt,
-                'anl', {}
-            )
-            daily_arch_file = gda_util.format_filler(
-                obs_dict['daily_arch_file_format'], CDATE_dt, CDATE_dt,
-                'anl', {}
-            )
-            weekly_arch_file = gda_util.format_filler(
-                obs_dict['weekly_arch_file_format'], CDATE_dt, CDATE_dt,
-                'anl', {}
-            )
-            daily_COMOUT_file = os.path.join(
-                COMOUT_INITDATE, OBS, daily_arch_file.rpartition('/')[2]
-            )
-            daily_COMOUT_file_format = os.path.join(
-                COMOUT+'.{init?fmt=%Y%m%d}', OBS,
-                obs_dict['daily_arch_file_format'].rpartition('/')[2]
-            )
-            if not os.path.exists(daily_COMOUT_file) \
-                    and not os.path.exists(daily_arch_file):
-                arch_file_dir = daily_arch_file.rpartition('/')[0]
-                if not os.path.exists(arch_file_dir):
-                    os.makedirs(arch_file_dir)
-                print("----> Trying to create "+daily_arch_file+" and "
-                      +weekly_arch_file)
-                weekly_file_list = [daily_arch_file]
-                CDATEm_dt = CDATE_dt - datetime.timedelta(hours=24)
-                while CDATEm_dt > CDATEm7_dt:
-                    CDATEm_arch_file = gda_util.format_filler(
-                        daily_COMOUT_file_format, CDATEm_dt, CDATEm_dt,
-                        'anl', {}
-                    )
-                    weekly_file_list.append(CDATEm_arch_file)
-                    CDATEm_dt = CDATEm_dt - datetime.timedelta(hours=24)
+        prod_file = gda_util.format_filler(
+            obs_dict['prod_file_format'], CDATE_dt, CDATE_dt,
+            'anl', {}
+        )
+        arch_file = gda_util.format_filler(
+           obs_dict['arch_file_format'], CDATE_dt, CDATE_dt,
+           'anl', {}
+        )
+        COMOUT_file = os.path.join(
+            COMOUT_INITDATE, OBS, arch_file.rpartition('/')[2]
+        )
+        if not os.path.exists(arch_file):
+            print("----> Trying to create "+arch_file)
+            arch_file_dir = arch_file.rpartition('/')[0]
+            if not os.path.exists(arch_file_dir):
+                os.makedirs(arch_file_dir)
+            if OBS == 'osi_saf':
                 gda_util.prep_prod_osi_saf_file(
-                    daily_prod_file, daily_arch_file,
-                    weekly_file_list, weekly_arch_file, (CDATEm7_dt,CDATE_dt)
+                    prod_file, arch_file, CDATE_dt
                 )
-        else:
-            prod_file = gda_util.format_filler(
-                obs_dict['prod_file_format'], CDATE_dt, CDATE_dt,
-                'anl', {}
-            )
-            arch_file = gda_util.format_filler(
-                obs_dict['arch_file_format'], CDATE_dt, CDATE_dt,
-                'anl', {}
-            )
-            COMOUT_file = os.path.join(
-                COMOUT_INITDATE, OBS, arch_file.rpartition('/')[2]
-            )
-            if not os.path.exists(COMOUT_file) \
-                    and not os.path.exists(arch_file):
-                arch_file_dir = arch_file.rpartition('/')[0]
-                if not os.path.exists(arch_file_dir):
-                    os.makedirs(arch_file_dir)
-                print("----> Trying to create "+arch_file)
-                if OBS == 'ghrsst_ospo':
-                    gda_util.prep_prod_ghrsst_ospo_file(
-                        prod_file, arch_file,
-                        datetime.datetime.strptime(CDATE, '%Y%m%d%H')
-                    )
-                elif OBS == 'get_d':
-                    gda_util.prep_prod_get_d_file(
-                        prod_file, arch_file,
-                        datetime.datetime.strptime(CDATE, '%Y%m%d%H')
-                    )
+            elif OBS == 'ghrsst_ospo':
+                gda_util.prep_prod_ghrsst_ospo_file(
+                    prod_file, arch_file, CDATE_dt
+                )
+            elif OBS == 'get_d':
+                gda_util.prep_prod_get_d_file(
+                    prod_file, arch_file, CDATE_dt
+                )
+            if SENDCOM == 'YES':
+                gda_util.copy_file(arch_file, COMOUT_file)
 
 print("END: "+os.path.basename(__file__))
