@@ -40,7 +40,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
     for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
         if VERIF_CASE_STEP_type == 'flux':
             data_dir_list.append(os.path.join(data_base_dir, 'get_d'))
-        elif VERIF_CASE_STEP_type == 'precip':
+        elif VERIF_CASE_STEP_type in ['precip_accum24hr', 'precip_accum3hr']:
             data_dir_list.append(os.path.join(data_base_dir, 'ccpa'))
         elif VERIF_CASE_STEP_type == 'sea_ice':
             data_dir_list.append(os.path.join(data_base_dir, 'osi_saf'))
@@ -116,7 +116,7 @@ if STEP == 'stats':
             )
         if VERIF_CASE_STEP == 'grid2grid_stats':
             for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
-                if VERIF_CASE_STEP_type == 'precip':
+                if VERIF_CASE_STEP_type in ['precip_accum24hr', 'precip_accum3hr']:
                     COMROOT_dir_list.append(
                         os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
                                      RUN+'.'+date_dt.strftime('%Y%m%d'), 'ccpa',

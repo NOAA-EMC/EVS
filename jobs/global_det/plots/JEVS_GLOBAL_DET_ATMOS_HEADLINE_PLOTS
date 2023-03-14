@@ -53,6 +53,7 @@ export RUN=${RUN:-headline}
 ####################################
 export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
 export COMINdailystats=${COMINdailystats:-$COMIN/stats/$COMPONENT}
+export COMINyearlystats=${COMINyearlystats:-$COMIN/stats/$COMPONENT/long_term/yearly_means}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1)}
 mkdir -p $COMOUT
 
