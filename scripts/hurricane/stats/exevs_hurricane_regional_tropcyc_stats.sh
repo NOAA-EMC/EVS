@@ -1,7 +1,7 @@
 #!/bin/bash
 export PS4=' + exevs_hurricane_regional_tropcyc_stats.sh line $LINENO: '
 
-export MetOnMachine=$MET_ROOT
+export MetOnMachine=/apps/ops/prod/libs/intel/19.1.3.304/met/10.1.2
 export LEAD_List="-lead 000000 -lead 060000 -lead 120000 -lead 180000 -lead 240000 -lead 300000 -lead 360000 -lead 420000 -lead 480000 -lead 540000 -lead 600000 -lead 660000 -lead 720000 -lead 780000 -lead 840000 -lead 900000 -lead 960000 -lead 1020000 -lead 1080000 -lead 1140000 -lead 1200000 -lead 1260000"
 
 export stormYear=${YYYY}
@@ -109,7 +109,7 @@ export enddate="$YY02$MM02$DD02$HH02"
 echo "$startdate, $enddate"
 
 #--- run for TC_pairs
-cp ${PARMevs}/metplus_config/hurricane/stats/TCPairs_template.conf .
+cp ${PARMevs}/TCPairs_template.conf .
 export SEARCH0="METBASE_template"
 export SEARCH1="INPUT_BASE_template"
 export SEARCH2="OUTPUT_BASE_template"
@@ -130,9 +130,30 @@ sed -i "s|$SEARCHx|$Model_List|g" TCPairs_template.conf
 
 run_metplus.py -c $STORMdata/TCPairs_template.conf
 
+#---run for TC_RMW      
+cp ${PARMevs}/TCRMW_template.conf .
+export SEARCH0="METBASE_template"
+export SEARCH1="INPUT_BASE_template"
+export SEARCH2="OUTPUT_BASE_template"
+export SEARCH3="INIT_BEG_template"
+export SEARCH4="INIT_END_template"
+export SEARCH5="TC_RMW_CYCLONE_template"
+export SEARCH6="TC_PAIRS_BASIN_template"
+export SEARCHx="MODELLIST_template"
+sed -i "s|$SEARCH0|$MetOnMachine|g" TCRMW_template.conf
+sed -i "s|$SEARCH1|$STORMdata|g" TCRMW_template.conf
+sed -i "s|$SEARCH2|$STORMroot|g" TCRMW_template.conf
+sed -i "s|$SEARCH3|$startdate|g" TCRMW_template.conf
+sed -i "s|$SEARCH4|$enddate|g" TCRMW_template.conf
+sed -i "s|$SEARCH5|$stormNumber|g" TCRMW_template.conf
+sed -i "s|$SEARCH6|$stbasin|g" TCRMW_template.conf
+sed -i "s|$SEARCHx|$Model_List|g" TCRMW_template.conf
+
+run_metplus.py -c $STORMdata/TCRMW_template.conf
+
 #--- run for TC_stat 
 cd $STORMdata
-cp ${PARMevs}/metplus_config/hurricane/stats/TCStat_template.conf .
+cp ${PARMevs}/TCStat_template.conf .
 
 export SEARCHy="LEAD_template"
 sed -i "s|$SEARCH0|$MetOnMachine|g" TCStat_template.conf
@@ -157,8 +178,10 @@ run_metplus.py -c $STORMdata/TCStat_template.conf
 
 if [ "$SENDCOM" = 'YES' ]; then
   if [ ! -d ${COMOUTroot}/tc_pairs ]; then mkdir -p ${COMOUTroot}/tc_pairs; fi
+  if [ ! -d ${COMOUTroot}/tc_rmw ]; then mkdir -p ${COMOUTroot}/tc_rmw; fi
   if [ ! -d ${COMOUTroot}/tc_stat ]; then mkdir -p ${COMOUTroot}/tc_stat; fi
   cp -r ${STORMroot}/tc_pairs/* ${COMOUTroot}/tc_pairs/.
+  cp -r ${STORMroot}/tc_rmw/* ${COMOUTroot}/tc_rmw/.
   cp -r ${STORMroot}/tc_stat/* ${COMOUTroot}/tc_stat/.
   if [ ${stormBasin} = "al" ]; then
     cp ${COMOUTroot}/tc_stat/tc_stat_summary.tcst ${COMOUTatl}/${stormBasin}${stormNumber}${stormYear}_stat_summary.tcst 
@@ -208,7 +231,7 @@ cd $metTCcomout
 #export SEARCH3=INIT_BEG_template
 #export SEARCH4=INIT_END_template
 
-cp ${PARMevs}/metplus_config/hurricane/stats/TCStat_template_basin.conf .
+cp ${PARMevs}/TCStat_template_basin.conf .
 
 #export SEARCHy="LEAD_template"
 sed -i "s|$SEARCH0|$MetOnMachine|g" TCStat_template_basin.conf
