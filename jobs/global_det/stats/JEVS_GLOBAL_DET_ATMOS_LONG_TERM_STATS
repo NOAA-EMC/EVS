@@ -37,32 +37,37 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 # Run setpdy and initialize PDY variables
 ####################################
 export cycle=${cycle:-t${cyc}z}
-setpdy.sh $NDAYS
+setpdy.sh
 . ./PDY
+export VDATEYYYY=${VDATEYYYY:-$(date -d "1 month ago" '+%Y')}
+export VDATEmm=${VDATEmm:-$(date -d "1 month ago" '+%m')}
 
 ####################################
 # Define NET/RUN variables
 ####################################
 export NET=${NET:-evs}
-export STEP=${STEP:-plots}
+export STEP=${STEP:-stats}
 export COMPONENT=${COMPONENT:-global_det}
-export RUN=${RUN:-headline}
+export RUN=${RUN:-long_term}
 
 ####################################
 # Define COMIN/COMOUT variables
 ####################################
 export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
 export COMINdailystats=${COMINdailystats:-$COMIN/stats/$COMPONENT}
-export COMINyearlystats=${COMINyearlystats:-$COMIN/stats/$COMPONENT/long_term/yearly_means}
-export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1)}
-mkdir -p $COMOUT
+export COMINmonthlystats=${COMINmonthlystats:-$COMIN/$STEP/$COMPONENT/$RUN/monthly_means}
+export COMINyearlystats=${COMINyearlystats:-$COMIN/$STEP/$COMPONENT/$RUN/yearly_means}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
+export COMOUTmonthlystats=${COMOUTmonthlystats:-$COMOUT/$RUN/monthly_means}
+export COMOUTyearlystats=${COMOUTyearlystats:-$COMOUT/$RUN/yearly_means}
+mkdir -p $COMOUT $COMOUTmonthlystats $COMOUTyearlystats
 
 #######################################################################
 # Execute the script
 #######################################################################
 env
 
-$HOMEevs/scripts/global_det/plots/exevs_global_det_atmos_${RUN}_plots.sh
+$HOMEevs/scripts/global_det/stats/exevs_global_det_atmos_${RUN}_stats.sh
 export err=$?; err_chk
 
 cat $pgmout
