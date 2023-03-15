@@ -76,6 +76,7 @@ export gather='yes'
 export metplus_verbosity="INFO"
 export met_verbosity="2"
 export log_met_output_to_metplus="yes"
+export MET_bin_exec=bin
 
 export job=${PBS_JOBNAME:-jevs_global_det_wave_g2o_prep}
 export jobid=$job.${PBS_JOBID:-$$}
