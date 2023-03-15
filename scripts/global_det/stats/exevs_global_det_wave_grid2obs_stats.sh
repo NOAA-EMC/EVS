@@ -249,7 +249,7 @@ for cyc in ${cycles} ; do
       
       chmod +x run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
       
-      echo "run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh" >> run_all_${MODELNAME}_${RUN}_g2o_poe.sh
+      echo "${DATA}/run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh" >> run_all_${MODELNAME}_${RUN}_g2o_poe.sh
     done  # end of fhr
   fi # found cycle    
 done  # end of cycles 
