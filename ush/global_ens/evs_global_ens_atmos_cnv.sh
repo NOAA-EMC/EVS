@@ -108,7 +108,7 @@ for fhr in $fhrs ; do
 
     chmod +x run_${modnam}_${fhr}_cnv.sh
 
-    echo "run_${modnam}_${fhr}_cnv.sh" >> run_all_gens_cnv_poe.sh 
+    echo "${DATA}/run_${modnam}_${fhr}_cnv.sh" >> run_all_gens_cnv_poe.sh 
 
   done # end of fhr 
 done #end of model

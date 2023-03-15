@@ -1,24 +1,27 @@
-#!/bin/bash
-
-#PBS -N $evs_global_ens_prep_%CYC%
-#PBS -j oe
+#!/bin/bash 
+#
+#PBS -N jevs_gens_prep
+#PBS -j oe 
 #PBS -S /bin/bash
-#PBS -q %QUEUE%
-#PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=3:30:00
-#PBS -l select=1:ncpus=14
+#PBS -q dev
+#PBS -A VERF-DEV
+#PBS -l walltime=03:45:00
+#PBS -l place=vscatter,select=3:ncpus=58:mem=500GB
 #PBS -l debug=true
 
-%include <head.h>
-%include <envir-p1.h>
 
-export model=evs
-%include <model_ver.h>
+#Total 98 processes: 68(gefs_atmos) + 2(gefs_precip) + 18(cmce_atmos) + 2(cmce_precip) + 1 (ecme_atmos) + 1 (ecme_precip) + 2 (gefs_snow) + 2 (cmce_snow) + 1 (ecme_snow) + 1 (gefs_icec) 
+# In which 87 (68 gefs_atmos, + 18 cmce_atmos, + 1 ecme_atmos) are run in parrell, all prepcip, snow and icec are not 
+#Total 2x87=174 cpu cores,  cpu cores are assigned to 3 node
+#Completed in about 1hr 40min
 
-############################################################
-## Load modules
-#############################################################
-module purge
+set -x
+export OMP_NUM_THREADS=1
+export evs_ver=v1.0
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+source $HOMEevs/versions/run.ver
+
+module reset
 module load envvar/$envvar_ver
 module load PrgEnv-intel/$PrgEnv_intel_ver
 module load intel/$intel_ver
@@ -33,8 +36,8 @@ module load zlib/$zlib_ver
 module load jasper/$jasper_ver
 module load netcdf/$netcdf_ver
 module load cfp/$cfp_ver
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/$intel_ver
+export HPC_OPT=/apps/ops/prod/libs
+module use /apps/ops/prod/libs/modulefiles/compiler/intel/$intel_ver
 module load gsl/${gsl_ver}
 module load python/$python_ver
 module load met/$met_ver
@@ -43,36 +46,25 @@ module load udunits/${udunits_ver}
 module load cdo/${cdo_ver}
 module load nco/${nco_ver}
 
+
 module list
-
-
-set -x
-
-export cyc=%CYC%
-export cycles="%CYCLES%"
-
-
-export OMP_NUM_THREADS=1
 
 export NET=evs
 export RUN=atmos
 export STEP=prep
 export COMPONENT=global_ens
 export VERIF_CASE=grid2grid
+export MODELNAME=gefs
+
+export KEEPDATA=YES
+
+#This var is only for testing, if not set, then run operational 
+
+export cyc=00
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
+export DATA_IN=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
+export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
 ${HOMEevs}/jobs/global_ens/prep/JEVS_GLOBAL_ENS_PREP
 
-%include <tail.h>
-%manual
-################################################################################
-#TASKSCRIPT DOCUMENTATION BLOCK
-#
-#PURPOSE:  To execute the job that creates the ncepdate on IBMSP
-#######################################################################
-#######################################################################
-## Job specific troubleshooting instructions:
-#  see generic troubleshoot manual page
-#
-######################################################################
-%end
 

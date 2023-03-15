@@ -1,10 +1,10 @@
 #!/bin/bash 
 #
-#PBS -N evs_gens_prep_precip
+#PBS -N jevs_gens_prep_precip
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
-#PBS -A GEFS-DEV
+#PBS -A VERF-DEV
 #PBS -l walltime=02:00:00
 #PBS -l place=vscatter,select=1:ncpus=2:mem=100GB
 #PBS -l debug=true
@@ -21,7 +21,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
 source $HOMEevs/versions/run.ver
 
-module purge
+module reset
 module load envvar/$envvar_ver
 module load PrgEnv-intel/$PrgEnv_intel_ver
 module load intel/$intel_ver
@@ -86,7 +86,7 @@ export get_osi_saf=es
 
 export run_mpi=no
 
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export DATA_IN=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 

@@ -1,10 +1,10 @@
 #!/bin/bash 
 #
-#PBS -N evs_headline_prep
+#PBS -N jevs_headline_prep
 #PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q dev
-#PBS -A GEFS-DEV
+#PBS -A VERF-DEV
 #PBS -l walltime=02:50:00
 #PBS -l place=vscatter,select=1:ncpus=2:mem=10GB
 #PBS -l debug=true
@@ -21,7 +21,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
 source $HOMEevs/versions/run.ver
 
-module purge
+module reset
 source $HOMEevs/modulefiles/${evs_ver}
 
 export NET=evs
@@ -45,8 +45,8 @@ echo $INITDATE
 export cyc=00
 export run_mpi=no
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export DATA_IN=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 

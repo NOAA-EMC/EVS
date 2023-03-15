@@ -226,7 +226,7 @@ for modnam in $models ; do
 
    chmod +x run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
 
-   echo "run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh" >> run_all_gens_g2o_poe.sh 
+   echo "${DATA}/run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh" >> run_all_gens_g2o_poe.sh 
 
   done # end of fhr 
 
