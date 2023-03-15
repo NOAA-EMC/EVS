@@ -1,8 +1,8 @@
-#PBS -N jevs_global_ens_wave_g2o_plots
+#PBS -N jevs_nfcens_g2o_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
-#PBS -A VERF-DEV
+#PBS -A EVS-DEV
 #PBS -l walltime=00:15:00
 #PBS -l place=vscatter,select=1:ncpus=128:mem=500G
 #PBS -l debug=true
@@ -21,14 +21,14 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 versionfile=$HOMEevs/versions/run.ver
 . $versionfile
 export evs_ver=$evs_ver
-export model_ver=$gefs_ver
+export model_ver=$nfcens_ver
 export obsproc_ver=$obsproc_ver
 
 ############################################################
 # Load modules
 ############################################################
 module reset
-#export HPC_OPT=/apps/ops/prod/libs
+export HPC_OPT=/apps/ops/prod/libs
 module use /apps/ops/prod/libs/modulefiles/compiler/intel/${intel_ver}
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module --ignore-cache load intel/${intel_ver}
@@ -50,16 +50,16 @@ module list
 ############################################################
 # set some variables
 ############################################################
-export envir=dev
+export envir=prod
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export KEEPDATA=${KEEPDATA:-YES}
 
-export MODELNAME=gefs
+export MODELNAME=nfcens
 export OBTYPE=GDAS
 export NET=evs
-export COMPONENT=global_ens
+export COMPONENT=nfcens
 export STEP=plots
 export RUN=wave
 export VERIF_CASE=grid2obs
@@ -73,7 +73,7 @@ export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}
 export run_mpi='yes'
 export gather='yes'
 
-export job=${PBS_JOBNAME:-jevs_global_ens_wave_g2o_prep}
+export job=${PBS_JOBNAME:-jevs_nfcens_g2o_prep}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
@@ -81,16 +81,16 @@ export SITE=$(cat /etc/cluster_name)
 export metplus_verbosity="INFO"
 export met_verbosity="2"
 export log_met_output_to_metplus="yes"
-export MET_bin_exec=bin
+
 
 ############################################################
 # CALL executable job script here
 ############################################################
-${HOMEevs}/jobs/global_ens/plots/JEVS_GLOBAL_ENS_WAVE_GRID2OBS_PLOTS
+${HOMEevs}/jobs/nfcens/plots/JEVS_NFCENS_WAVE_GRID2OBS_PLOTS
 
 #%include <tail.h>
 #%manual
 #########################################################################
-# Purpose: This job creates the plots for the global_ens GEFS-Wave model
+# Purpose: This job creates the plots for the NFCENS wave model
 #########################################################################
 #%end
