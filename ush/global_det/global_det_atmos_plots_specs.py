@@ -769,7 +769,8 @@ class PlotSpecs:
                  +''.join(['f'+f.zfill(3) for \
                             f in date_info_dict['forecast_hours']])
             )
-        else:
+        elif self.plot_type in ['lead_average', 'lead_by_level',
+                                'lead_by_date']:
             plot_type_savefig_name = (
                  plot_type_savefig_name+'_'
                  +'f'+str(date_info_dict['forecast_hours'][-1]).zfill(3)

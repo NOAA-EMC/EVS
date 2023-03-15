@@ -936,7 +936,11 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         mp_valid_hr_inc = valid_hr_inc
                     valid_hr = valid_hr_start
                     while valid_hr <= valid_hr_end:
-                        if plot != 'valid_hour_average':
+                        if plot == 'valid_hour_average':
+                            job_env_dict['valid_hr_start'] = str(valid_hr_start)
+                            job_env_dict['valid_hr_end'] = str(valid_hr_end)
+                            job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
+                        else:
                             job_env_dict['valid_hr_start'] = str(valid_hr).zfill(2)
                             job_env_dict['valid_hr_end'] = str(valid_hr).zfill(2)
                             job_env_dict['valid_hr_inc'] = '24'
