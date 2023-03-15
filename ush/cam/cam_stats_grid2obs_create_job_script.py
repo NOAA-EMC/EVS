@@ -336,11 +336,18 @@ elif STEP == 'stats':
                 + f'{MET_PLUS_CONF}/'
                 + f'GenVxMask_{str(NEST).upper()}.conf'
             )
-        job_cmd_list_iterative.append(
-            f'{metplus_launcher} -c '
-            + f'{MET_PLUS_CONF}/'
-            + f'PB2NC_obs{VERIF_TYPE.upper()}.conf'
-        )
+        if VERIF_TYPE == 'mping':
+            job_cmd_list_iterative.append(
+                f'{metplus_launcher} -c '
+                + f'{MET_PLUS_CONF}/'
+                + f'ASCII2NC_obs{VERIF_TYPE.upper()}.conf'
+            )
+        else:
+            job_cmd_list_iterative.append(
+                f'{metplus_launcher} -c '
+                + f'{MET_PLUS_CONF}/'
+                + f'PB2NC_obs{VERIF_TYPE.upper()}.conf'
+            )
     if job_type == 'generate':
         if FCST_VAR2_NAME:
             if NEST == 'firewx':
