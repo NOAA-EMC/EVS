@@ -52,7 +52,7 @@ for MODL in $MODELS ; do
 
     chmod +x run_gather_${verify}_${MODL}.sh
  
-    echo "run_gather_${verify}_${MODL}.sh" >> run_gather_all_poe.sh    
+    echo "${DATA}/run_gather_${verify}_${MODL}.sh" >> run_gather_all_poe.sh    
    
 done
 

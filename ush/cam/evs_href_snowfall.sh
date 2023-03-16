@@ -68,7 +68,7 @@ for obsv in 6h 24h  ; do
 
         echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall/HREF_SNOW" >> run_href_snow${obsv}.sh
        chmod +x run_href_snow${obsv}.sh
-       echo "run_href_snow${obsv}.sh" >> run_all_href_snowfall_poe.sh
+       echo "${DATA}/run_href_snow${obsv}.sh" >> run_all_href_snowfall_poe.sh
 
 
 done  #end of obsv

@@ -17,7 +17,7 @@ export metplus_verbosity=2
 export met_verbosity=2
 
 #check input data are available:
-$USHevs/evs_check_href_files.sh 
+$USHevs/cam/evs_check_href_files.sh 
 
 #lvl = profile or sfc or both
 export lvl='both'
@@ -61,19 +61,19 @@ fi
 #system: 4 jobs
 if [ $verif_system = yes ] ; then 
   $USHevs/cam/evs_href_grid2obs_system.sh 
-  cat run_all_href_system_poe.sh >> run_href_all_grid2obs_poe
+  cat ${DATA}/run_all_href_system_poe.sh >> run_href_all_grid2obs_poe
 fi
 
 #profile: total 6 jobs (4 for conus and 2 for alaska)
 if [ $verif_profile = yes ] ; then 
   $USHevs/cam/evs_href_grid2obs_profile.sh $domain
-  cat run_all_href_profile_poe.sh >> run_href_all_grid2obs_poe 
+  cat ${DATA}/run_all_href_profile_poe.sh >> run_href_all_grid2obs_poe 
 fi 
 
 #Product: 16 jobs
 if [ $verif_product = yes ] ; then
   $USHevs/cam/evs_href_grid2obs_product.sh
-  cat run_all_href_product_poe.sh >> run_href_all_grid2obs_poe
+  cat ${DATA}/run_all_href_product_poe.sh >> run_href_all_grid2obs_poe
 fi
 
 

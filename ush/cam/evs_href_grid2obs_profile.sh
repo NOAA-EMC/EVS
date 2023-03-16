@@ -106,7 +106,7 @@ for dom in $domains ; do
 	echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
        chmod +x run_href_${domain}.${valid_at}.${fhr}_profile.sh
-       echo "run_href_${domain}.${valid_at}.${fhr}_profile.sh" >> run_all_href_profile_poe.sh
+       echo "${DATA}/run_href_${domain}.${valid_at}.${fhr}_profile.sh" >> run_all_href_profile_poe.sh
 
       done
 
@@ -168,7 +168,7 @@ for dom in $domains ; do
 	echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
 	chmod +x run_href_${domain}.${valid_at}.${fhr}_profile.sh
-        echo "run_href_${domain}.${valid_at}.${fhr}_profile.sh" >> run_all_href_profile_poe.sh
+        echo "${DATA}/run_href_${domain}.${valid_at}.${fhr}_profile.sh" >> run_all_href_profile_poe.sh
 
        done
       done
