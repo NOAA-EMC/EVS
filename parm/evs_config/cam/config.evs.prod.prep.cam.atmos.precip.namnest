@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 
 # =============================================================================
 # 
@@ -38,6 +38,14 @@ if [ "$NEST" = "conus" ]; then
     export COMINobs=${COMINccpa}
     export OBSNAME="ccpa"
 elif [ "$NEST" = "ak" ]; then
+    export VERIF_TYPE="mrms"
+    export COMINobs=${COMINmrms}
+    export OBSNAME="mrms"
+elif [ "$NEST" = "pr" ]; then
+    export VERIF_TYPE="mrms"
+    export COMINobs=${COMINmrms}
+    export OBSNAME="mrms"
+elif [ "$NEST" = "hi" ]; then
     export VERIF_TYPE="mrms"
     export COMINobs=${COMINmrms}
     export OBSNAME="mrms"

@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
  
 # =============================================================================
 #
@@ -135,10 +135,56 @@ if STEP == 'prep':
                                 f"if [ ! -d \"{COMOUTobs}\" ]; then mkdir \"{COMOUTobs}\";"
                                 + f" fi"
                             )
-                            infilename=(
-                                f'MultiSensor_QPE_{OBS_ACC}H_Pass2_00.00_'
-                                + f'{VDATEm}-{VHOURm}{VMINm}{VSECm}.grib2.gz'
-                            )
+                            if NEST == 'ak':
+                                infilename=os.path.join(
+                                    'alaska', 
+                                    'MultiSensorQPE', 
+                                    (
+                                        f'MultiSensor_QPE_{OBS_ACC}H_Pass2_00.00_'
+                                        + f'{VDATEm}-{VHOURm}{VMINm}{VSECm}.grib2.gz'
+                                    )
+                                )
+                            elif NEST == 'pr':
+                                infilename=os.path.join(
+                                    'carib', 
+                                    'MultiSensorQPE', 
+                                    (
+                                        f'MRMS_MultiSensor_QPE_{OBS_ACC}H_Pass2_00.00_'
+                                        + f'{VDATEm}-{VHOURm}{VMINm}{VSECm}.grib2.gz'
+                                    )
+                                )
+                            elif NEST == 'hi':
+                                infilename=os.path.join(
+                                    'hawaii', 
+                                    'MultiSensorQPE', 
+                                    (
+                                        f'MRMS_MultiSensor_QPE_{OBS_ACC}H_Pass2_00.00_'
+                                        + f'{VDATEm}-{VHOURm}{VMINm}{VSECm}.grib2.gz'
+                                    )
+                                )
+                            elif NEST == 'gu':
+                                infilename=os.path.join(
+                                    'guam', 
+                                    'MultiSensorQPE', 
+                                    (
+                                        f'MRMS_MultiSensor_QPE_{OBS_ACC}H_Pass2_00.00_'
+                                        + f'{VDATEm}-{VHOURm}{VMINm}{VSECm}.grib2.gz'
+                                    )
+                                )
+                            else:
+                                print(f"WARNING: {NEST} is not either "
+                                      + f"ak, pr, hi, gu; using conus "
+                                      + f"MRMS data (MRMS filename templates "
+                                      + f"are set in ush/cam/"
+                                      + f"cam_prep_precip_create_job_scripts.py).")
+                                infilename=os.path.join(
+                                    'conus', 
+                                    'MultiSensorQPE', 
+                                    (
+                                        f'MRMS_MultiSensor_QPE_{OBS_ACC}H_Pass2_00.00_'
+                                        + f'{VDATEm}-{VHOURm}{VMINm}{VSECm}.grib2.gz'
+                                    )
+                                )
                             infilepath=os.path.join(COMINobs, infilename)
                             job_cmd_list.append(
                                 f"if [ -f \"{infilepath}\" ]; then"
@@ -177,7 +223,7 @@ if not os.path.exists(job_dir):
 job_file = os.path.join(job_dir, f'job{njob}')
 print(f"Creating job script: {job_file}")
 job = open(job_file, 'w')
-job.write('#!/bin/sh\n')
+job.write('#!/bin/bash\n')
 job.write('set -x \n')
 job.write('\n')
 for name, value in job_env_vars_dict.items():

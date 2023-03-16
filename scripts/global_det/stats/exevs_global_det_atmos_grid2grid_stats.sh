@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ###############################################################################
 # Name of Script: exevs_global_det_atmos_grid2grid_stats.sh 
 # Purpose of Script: This script generates grid-to-grid
@@ -64,7 +64,9 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
             export MP_CMDFILE=${poe_script}
             if [ $machine = WCOSS2 ]; then
                 export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-                launcher="mpiexec -np ${nproc} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+                nselect=$(cat $PBS_NODEFILE | wc -l)
+                nnp=$(($nselect * $nproc))
+                launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
             elif [ $machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
                 export SLURM_KILL_BAD_EXIT=0
                 launcher="srun --export=ALL --multi-prog"

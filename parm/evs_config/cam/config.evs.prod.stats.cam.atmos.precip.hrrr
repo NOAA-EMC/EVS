@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 
 # =============================================================================
 # 
@@ -97,7 +97,7 @@ if [ "$BOOL_NBRHD" = True ]; then
         export MIN_IHOUR="00"
         export GRID="G240"
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.grib2"
-        export MASK_POLY_LIST="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS_East.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS_West.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS_Central.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G240_CONUS_South.nc"
+        export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G240_CONUS.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_South.nc"
     elif [ "$NEST" = "ak" ]; then
         export VERIF_TYPE="mrms"
         export MET_GRIB_TABLES=$PARMevs/metplus_config/cam/precip/stats/grib2_mrms.txt
@@ -107,7 +107,7 @@ if [ "$BOOL_NBRHD" = True ]; then
         export MIN_IHOUR="00"
         export GRID="G091"
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/alaska/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.ak.grib2"
-        export MASK_POLY_LIST="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Alaska_G091.nc"
+        export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc"
     else
         echo "The provided NEST, $NEST, is not supported for $MODELNAME"
         exit 1
@@ -124,7 +124,7 @@ else
         export MIN_IHOUR="00"
         export GRID="G212"
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.grib2"
-        export MASK_POLY_LIST="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G212_CONUS.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G212_CONUS_East.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G212_CONUS_West.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G212_CONUS_Central.nc, /lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Bukovsky_G212_CONUS_South.nc"
+        export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G212_CONUS.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_South.nc"
     elif [ "$NEST" = "ak" ]; then
         export VERIF_TYPE="mrms"
         export MET_GRIB_TABLES=$PARMevs/metplus_config/cam/precip/stats/grib2_mrms.txt
@@ -134,7 +134,7 @@ else
         export MIN_IHOUR="00"
         export GRID="G216"
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/alaska/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.ak.grib2"
-        export MASK_POLY_LIST="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/Alaska_G216.nc"
+        export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G216.nc"
     else
         echo "The provided NEST, $NEST, is not supported for $MODELNAME"
         exit 1

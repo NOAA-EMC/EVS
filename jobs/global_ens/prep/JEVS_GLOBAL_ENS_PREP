@@ -1,1 +1,74 @@
-sample
+#!/bin/ksh
+#  JOB card cerated for running METPlus-based Global enesmble verifications
+#   By Binbin Zhou, IMSG@EMC/NCEP
+#   Feb 2, 2022
+#
+set -xa
+#######################################################
+#######################################################
+
+export cycle=t${cyc}z
+
+export DATA_IN=${DATA_IN:-$DATAROOT}
+export pid=$$
+jobid=evs_${RUN}_${COMPONENT}_${STEP}.$$
+export DATA=$DATA_IN/$jobid
+mkdir -p $DATA
+cd $DATA
+
+# Run setpdy and initialize PDY variables
+setpdy.sh
+. $DATA/PDY
+
+if [ $RUN = atmos ] ; then
+  export INITDATE=${INITDATE:-$PDYm2}
+fi
+
+
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+
+export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
+export COMINgfsanl=${COMINgfs:-$(compath.py $envir/com/gfs/${gfs_ver})}
+export COMINgefs=${COMINgefs:-$(compath.py $envir/com/gefs/${gefs_ver})}
+export COMINnaefs=${COMINnaefs:-$(compath.py $envir/com/naefs/${naefs_ver})}
+export DCOMIN=${DCOMIN:-${DCOMROOT}}
+export COMINccpa=${COMINccpa:-$(compath.py $envir/com/ccpa/${ccpa_ver})}
+export COMINcmce=$COMINnaefs
+export COMINprepbufr=${COMINprepbufe:-$(compath.py $envir/com/obsproc/${obsproc_ver})}
+export COMINsnow=${DCOMIN}
+export COMINosi_saf=${COMINosi_saf:-/lfs/h1/ops/dev/dcom}
+export COMINsst=${COMINsst:-/lfs/h1/ops/dev/dcom} 
+
+export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/${evs_ver})}/$STEP/$COMPONENT/$RUN
+mkdir $COMOUT
+
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs_gens.${evs_ver}}
+export EXECevs=$HOMEevs/exec
+export PARMevs=$HOMEevs/parm
+export USHevs=$HOMEevs/ush
+export SCRIPTerf=$HOMEevs/scripts
+export FIXevs=${FIXevs:-/lfs/h1/ops/prod/packages/evs.${evs_ver}/fix}
+
+
+####################################
+# Determine Job Output Name on System
+####################################
+export outid="LL$job"
+export jobid="${outid}.o${pid}"
+export pgmout="OUTPUT.${pid}"
+
+
+sh $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${STEP}.sh
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$msg"
+
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATAROOT
+  rm -rf $DATA
+fi
+
+date
+

@@ -8,6 +8,7 @@ import netCDF4 as netcdf
 import numpy as np
 import glob
 import pandas as pd
+import logging
 from time import sleep
 
 def run_shell_command(command):
@@ -233,6 +234,22 @@ def get_time_info(date_start, date_end, date_type, init_hr_list, valid_hr_list,
                 time_info.append(t)
         date_dt = date_dt + datetime.timedelta(hours=int(date_type_hr_inc))
     return time_info
+
+def get_init_hour(valid_hour, forecast_hour):
+    """! Get a initialization hour/cycle
+
+         Args:
+             valid_hour    - valid hour (integer)
+             forecast_hour - forecast hour (integer)
+    """
+    init_hour = 24 + (valid_hour - (forecast_hour%24))
+    if forecast_hour % 24 == 0:
+        init_hour = valid_hour
+    else:
+        init_hour = 24 + (valid_hour - (forecast_hour%24))
+    if init_hour >= 24:
+        init_hour = init_hour - 24
+    return init_hour
 
 def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                   forecast_hour, str_sub_dict):
@@ -890,8 +907,8 @@ def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
     #          +": "+' '.join(weekly_source_file_list))
     #copy_file(weekly_prepped_file, weekly_dest_file)
 
-def prep_prod_ghrsst_median_file(source_file, dest_file, date_dt):
-    """! Do prep work for GHRSST Median production files
+def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt):
+    """! Do prep work for GHRSST OSPO production files
 
          Args:
              source_file - source file (string)
@@ -908,7 +925,7 @@ def prep_prod_ghrsst_median_file(source_file, dest_file, date_dt):
     if check_file_exists_size(prepped_file):
         prepped_data = netcdf.Dataset(prepped_file, 'a',
                                       format='NETCDF3_CLASSIC')
-        ghrsst_median_date_since_dt = datetime.datetime.strptime(
+        ghrsst_ospo_date_since_dt = datetime.datetime.strptime(
             '1981-01-01 00:00:00','%Y-%m-%d %H:%M:%S'
         )
         prepped_data['time'][:] = prepped_data['time'][:][0] + 43200
@@ -1087,9 +1104,17 @@ def check_model_files(job_dict):
                         'init_date': init_date_dt,
                         'forecast_hour': str(fhr)
                     }
+            if job_dict['VERIF_CASE'] == 'grid2obs':
+                if job_dict['VERIF_TYPE'] == 'ptype':
+                    fhr_check_dict[str(fhr)]['file1'] = {
+                        'valid_date': valid_date_dt,
+                        'init_date': init_date_dt,
+                        'forecast_hour': str(fhr)
+                    }
         elif job_dict['JOB_GROUP'] == 'assemble_data':
             if job_dict['VERIF_CASE'] == 'grid2grid':
-                if job_dict['VERIF_TYPE'] == 'precip':
+                if job_dict['VERIF_TYPE'] in ['precip_accum24hr',
+                                              'precip_accum3hr']:
                     model_file_format = os.path.join(verif_case_dir, 'data',
                                                      model, model+'.precip.'
                                                      +'{init?fmt=%Y%m%d%H}.'
@@ -1129,14 +1154,20 @@ def check_model_files(job_dict):
                                                      model, model
                                                      +'.{init?fmt=%Y%m%d%H}.'
                                                      +'f{lead?fmt=%3H}')
-                if job_dict['VERIF_TYPE'] == 'precip' \
-                        and job_dict['job_name'] == '24hrAccum':
+                if job_dict['VERIF_TYPE'] in ['precip_accum24hr',
+                                              'precip_accum3hr']:
+                    precip_accum = int(
+                        job_dict['VERIF_TYPE'].replace('precip_accum','')\
+                        .replace('hr','')
+                    )
                     fhr_in_accum_list = [str(fhr)]
                     if job_dict['MODEL_accum'][0] == '{': #continuous
-                        if fhr-24 > 0:
-                            fhr_in_accum_list.append(str(fhr-24))
-                    elif int(job_dict['MODEL_accum']) < 24:
-                        nfiles_in_accum = int(24/int(job_dict['MODEL_accum']))
+                        if fhr-precip_accum > 0:
+                            fhr_in_accum_list.append(str(fhr-precip_accum))
+                    elif int(job_dict['MODEL_accum']) < precip_accum:
+                        nfiles_in_accum = int(
+                            precip_accum/int(job_dict['MODEL_accum'])
+                        )
                         nf = 1
                         while nf <= nfiles_in_accum:
                             fhr_nf = fhr - ((nf-1)*int(job_dict['MODEL_accum']))
@@ -1185,6 +1216,12 @@ def check_model_files(job_dict):
                                       -datetime.timedelta(hours=fhr-12)),
                         'forecast_hour': str(fhr-12)
                     }
+                elif job_dict['VERIF_TYPE'] == 'ptype':
+                    fhr_check_dict[str(fhr)]['file1'] = {
+                        'valid_date': valid_date_dt,
+                        'init_date': init_date_dt,
+                        'forecast_hour': str(fhr)
+                    }
         elif job_dict['JOB_GROUP'] == 'generate_stats':
             if job_dict['VERIF_CASE'] == 'grid2grid':
                 if job_dict['VERIF_TYPE'] == 'pres_levs' \
@@ -1207,12 +1244,15 @@ def check_model_files(job_dict):
                         +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
                         +'_init{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
                     )
-                elif job_dict['VERIF_TYPE'] == 'precip':
+                elif job_dict['VERIF_TYPE'] in ['precip_accum24hr',
+                                                'precip_accum3hr']:
+                    precip_accum = (job_dict['VERIF_TYPE']\
+                                    .replace('precip_accum',''))
                     model_file_format = os.path.join(
                         verif_case_dir, 'METplus_output',
                         job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
                         model, job_dict['VERIF_CASE'], 'pcp_combine_'
-                        +job_dict['VERIF_TYPE']+'_24hrAccum_init'
+                        +job_dict['VERIF_TYPE']+'_'+precip_accum+'Accum_init'
                         +'{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
                     )
                 elif job_dict['VERIF_TYPE'] == 'sea_ice':
@@ -1250,7 +1290,20 @@ def check_model_files(job_dict):
                         model+'.{init?fmt=%Y%m%d%H}.f{lead?fmt=%3H}'
                     )
             elif job_dict['VERIF_CASE'] == 'grid2obs':
-                if job_dict['VERIF_TYPE'] == 'sfc' \
+                if job_dict['VERIF_TYPE'] == 'ptype' \
+                        and job_dict['job_name'] == 'Ptype':
+                    model_file_format = os.path.join(verif_case_dir,
+                                                     'METplus_output',
+                                                     job_dict['RUN']+'.'
+                                                     +'{valid?fmt=%Y%m%d}',
+                                                     job_dict['MODEL'],
+                                                     job_dict['VERIF_CASE'],
+                                                     'merged_ptype_'
+                                                     +job_dict['VERIF_TYPE']+'_'
+                                                     +job_dict['job_name']+'_'
+                                                     +'init{init?fmt=%Y%m%d%H}_'
+                                                     +'fhr{lead?fmt=%3H}.nc')
+                elif job_dict['VERIF_TYPE'] == 'sfc' \
                         and job_dict['job_name'] == 'DailyAvg_TempAnom2m':
                     model_file_format = os.path.join(verif_case_dir,
                                                      'METplus_output',
@@ -1352,7 +1405,7 @@ def check_truth_files(job_dict):
                 )
                 truth_file_list.append(model_truth_file)
         elif job_dict['VERIF_CASE'] == 'grid2obs':
-            if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc'] \
+            if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc', 'ptype'] \
                     and 'Prepbufr' in job_dict['job_name']:
                 prepbufr_name = (job_dict['job_name'].replace('Prepbufr', '')\
                                  .lower())
@@ -1364,21 +1417,20 @@ def check_truth_files(job_dict):
                 truth_file_list.append(prepbufr_file)
     elif job_dict['JOB_GROUP'] == 'assemble_data':
         if job_dict['VERIF_CASE'] == 'grid2grid':
-            if job_dict['VERIF_TYPE'] == 'precip' \
+            if job_dict['VERIF_TYPE'] == 'precip_accum24hr' \
                     and job_dict['job_name'] == '24hrCCPA':
-                ccpa_dir = os.path.join(verif_case_dir, 'data', 'ccpa')
                 nccpa_files = 4
                 n = 1
                 while n <= 4:
                     nccpa_file = os.path.join(
-                        ccpa_dir, 'ccpa.6H.'
+                        verif_case_dir, 'data', 'ccpa', 'ccpa.6H.'
                         +(valid_date_dt-datetime.timedelta(hours=(n-1)*6))\
                         .strftime('%Y%m%d%H')
                     )
                     truth_file_list.append(nccpa_file)
                     n+=1
         elif job_dict['VERIF_CASE'] == 'grid2obs':
-            if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc']:
+            if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc', 'ptype']:
                 pb2nc_file = os.path.join(
                     verif_case_dir, 'METplus_output',
                     job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
@@ -1396,15 +1448,21 @@ def check_truth_files(job_dict):
                     +'.truth'
                 )
                 truth_file_list.append(model_truth_file)
-            elif job_dict['VERIF_TYPE'] == 'precip':
-               ccpa_file = os.path.join(
-                   verif_case_dir, 'METplus_output',
-                   job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
-                   'ccpa', job_dict['VERIF_CASE'], 'pcp_combine_'
-                   +job_dict['VERIF_TYPE']+'_24hrCCPA_valid'
-                   +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
-               )
-               truth_file_list.append(ccpa_file)
+            elif job_dict['VERIF_TYPE'] == 'precip_accum24hr':
+                ccpa_file = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
+                    'ccpa', job_dict['VERIF_CASE'], 'pcp_combine_'
+                    +job_dict['VERIF_TYPE']+'_24hrCCPA_valid'
+                    +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
+                )
+                truth_file_list.append(ccpa_file)
+            elif job_dict['VERIF_TYPE'] == 'precip_accum3hr':
+                ccpa_file = os.path.join(
+                    verif_case_dir, 'data', 'ccpa', 'ccpa.3H.'
+                    +valid_date_dt.strftime('%Y%m%d%H')
+                )
+                truth_file_list.append(ccpa_file)
             elif job_dict['VERIF_TYPE'] == 'sea_ice':
                 osi_saf_file = os.path.join(
                     verif_case_dir, 'data', 'osi_saf',
@@ -1415,22 +1473,22 @@ def check_truth_files(job_dict):
                 )
                 truth_file_list.append(osi_saf_file)
             elif job_dict['VERIF_TYPE'] == 'snow':
-               nohrsc_file = os.path.join(
-                   verif_case_dir, 'data', 'nohrsc',
-                   'nohrsc.24H.'+valid_date_dt.strftime('%Y%m%d%H')
-               )
-               truth_file_list.append(nohrsc_file)
+                nohrsc_file = os.path.join(
+                    verif_case_dir, 'data', 'nohrsc',
+                    'nohrsc.24H.'+valid_date_dt.strftime('%Y%m%d%H')
+                )
+                truth_file_list.append(nohrsc_file)
             elif job_dict['VERIF_TYPE'] == 'sst':
-               ghrsst_median_file = os.path.join(
-                   verif_case_dir, 'data', 'ghrsst_median',
-                   'ghrsst_median.'
-                   +(valid_date_dt-datetime.timedelta(hours=24))\
-                   .strftime('%Y%m%d%H')
-                   +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
-               )
-               truth_file_list.append(ghrsst_median_file)
+                ghrsst_ospo_file = os.path.join(
+                    verif_case_dir, 'data', 'ghrsst_ospo',
+                    'ghrsst_ospo.'
+                    +(valid_date_dt-datetime.timedelta(hours=24))\
+                    .strftime('%Y%m%d%H')
+                    +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
+                )
+                truth_file_list.append(ghrsst_ospo_file)
         elif job_dict['VERIF_CASE'] == 'grid2obs':
-            if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc']:
+            if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc', 'ptype']:
                 pb2nc_file = os.path.join(
                     verif_case_dir, 'METplus_output',
                     job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
@@ -1491,6 +1549,9 @@ def get_obs_valid_hrs(obs):
         '24hrCCPA': {'valid_hr_start': 12,
                      'valid_hr_end': 12,
                      'valid_hr_inc': 24},
+        '3hrCCPA': {'valid_hr_start': 0,
+                     'valid_hr_end': 21,
+                     'valid_hr_inc': 3},
         '24hrNOHRSC': {'valid_hr_start': 12,
                        'valid_hr_end': 12,
                        'valid_hr_inc': 24},
@@ -1579,7 +1640,7 @@ def initalize_job_env_dict(verif_type, group,
     """
     job_env_var_list = [
         'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA', 'COMROOT',
-        'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'COMIN'
+        'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'COMIN', 'evs_run_mode'
     ]
     if group in ['reformat_data', 'assemble_data', 'generate_stats', 'gather_stats']:
         os.environ['MET_TMP_DIR'] = os.path.join(
@@ -1619,7 +1680,7 @@ def initalize_job_env_dict(verif_type, group,
         job_env_dict['fhr_inc'] = os.environ[
             verif_case_step_abbrev_type+'_fhr_inc'
         ]
-        if verif_type in ['pres_levs', 'means', 'sfc']:
+        if verif_type in ['pres_levs', 'means', 'sfc', 'ptype']:
             verif_type_valid_hr_list = (
                 os.environ[verif_case_step_abbrev_type+'_valid_hr_list']\
                 .split(' ')
@@ -1638,9 +1699,13 @@ def initalize_job_env_dict(verif_type, group,
                 verif_type_valid_hr_inc = 24
             job_env_dict['valid_hr_inc'] = str(verif_type_valid_hr_inc)
         else:
-            if verif_type == 'precip':
+            if verif_type == 'precip_accum24hr':
                 valid_hr_start, valid_hr_end, valid_hr_inc = (
                     get_obs_valid_hrs('24hrCCPA')
+                )
+            elif verif_type == 'precip_accum3hr':
+                valid_hr_start, valid_hr_end, valid_hr_inc = (
+                    get_obs_valid_hrs('3hrCCPA')
                 )
             elif verif_type == 'snow':
                 valid_hr_start, valid_hr_end, valid_hr_inc = (
@@ -1677,6 +1742,28 @@ def initalize_job_env_dict(verif_type, group,
             verif_type_init_hr_inc = 24
         job_env_dict['init_hr_inc'] = str(verif_type_init_hr_inc)
     return job_env_dict
+
+def get_logger(log_file):
+    """! Get logger
+         Args:
+             log_file - full path to log file (string)
+         Returns:
+             logger - logger object
+    """
+    log_formatter = logging.Formatter(
+        '%(asctime)s.%(msecs)03d (%(filename)s:%(lineno)d) %(levelname)s: '
+        + '%(message)s',
+        '%m/%d %H:%M:%S'
+    )
+    logger = logging.getLogger(log_file)
+    logger.setLevel('DEBUG')
+    file_handler = logging.FileHandler(log_file, mode='a')
+    file_handler.setFormatter(log_formatter)
+    logger.addHandler(file_handler)
+    logger_info = f"Log file: {log_file}"
+    print(logger_info)
+    logger.info(logger_info)
+    return logger
 
 def get_plot_dates(logger, date_type, start_date, end_date,
                    valid_hr_start, valid_hr_end, valid_hr_inc,
@@ -1797,30 +1884,55 @@ def format_thresh(thresh):
          thresh_symbol  - threshold with symbols (string)
          thresh_letters - treshold with letters (string)
    """
-   for opt in ['>=', '>', '==', '!=', '<=', '<',
-               'ge', 'gt', 'eq', 'ne', 'le', 'lt']:
-       if opt in thresh:
-           thresh_opt = opt
-           thresh_value = thresh.replace(opt, '')
-   if thresh_opt in ['>', 'gt']:
-       thresh_symbol = '>'+thresh_value
-       thresh_letter = 'gt'+thresh_value
-   elif thresh_opt in ['>=', 'ge']:
-       thresh_symbol = '>='+thresh_value
-       thresh_letter = 'ge'+thresh_value
-   elif thresh_opt in ['<', 'lt']:
-       thresh_symbol = '<'+thresh_value
-       thresh_letter = 'lt'+thresh_value
-   elif thresh_opt in ['<=', 'le']:
-       thresh_symbol = '<='+thresh_value
-       thresh_letter = 'le'+thresh_value
-   elif thresh_opt in ['==', 'eq']:
-      thresh_symbol = '=='+thresh_value
-      thresh_letter = 'eq'+thresh_value
-   elif thresh_opt in ['!=', 'ne']:
-       thresh_symbol = '!='+thresh_value
-       thresh_letter = 'ne'+thresh_value
+   thresh_symbol = (
+       thresh.replace('ge', '>=').replace('gt', '>')\
+       .replace('eq', '==').replace('ne', '!=')\
+       .replace('le', '<=').replace('lt', '<')
+   )
+   thresh_letter = (
+       thresh.replace('>=', 'ge').replace('>', 'gt')\
+       .replace('==', 'eq').replace('!=', 'ne')\
+       .replace('<=', 'le').replace('<', 'lt')
+   )
    return thresh_symbol, thresh_letter
+
+def get_daily_stat_file(model_name, source_stats_base_dir,
+                        dest_model_name_stats_dir, 
+                        verif_case, start_date_dt, end_date_dt):
+    """! Link model daily stat files
+         Args:
+             model_name                - name of model (string)
+             source_stats_base_dir     - full path to stats/global_det
+                                         source directory (string)
+             dest_model_name_stats_dir - full path to model
+                                         destintion directory (string)
+             verif_case                - grid2grid or grid2obs (string)
+             start_date_dt             - month start date (datetime obj)
+             end_date_dt               - month end date (datetime obj)
+         Returns:
+    """
+    date_dt = start_date_dt
+    while date_dt <= end_date_dt:
+        source_model_date_stat_file = os.path.join(
+            source_stats_base_dir,
+            model_name+'.'+date_dt.strftime('%Y%m%d'),
+            'evs.stats.'+model_name+'.atmos.'+verif_case+'.'
+            +'v'+date_dt.strftime('%Y%m%d')+'.stat'
+        )
+        dest_model_date_stat_file = os.path.join(
+            dest_model_name_stats_dir,
+            model_name+'_atmos_'+verif_case+'_v'
+            +date_dt.strftime('%Y%m%d')+'.stat'
+        )
+        if not os.path.exists(dest_model_date_stat_file):
+            if os.path.exists(source_model_date_stat_file):
+                print(f"Linking {source_model_date_stat_file} to "
+                      +f"{dest_model_date_stat_file}")
+                os.symlink(source_model_date_stat_file,
+                           dest_model_date_stat_file)
+            else:
+                print(f"WARNING: {source_model_date_stat_file} DOES NOT EXIST")
+        date_dt = date_dt + datetime.timedelta(days=1)
 
 def condense_model_stat_files(logger, input_dir, output_file, model, obs,
                               grid, vx_mask, fcst_var_name, obs_var_name,
@@ -1913,14 +2025,6 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
     met_version_line_type_col_list = get_met_line_type_cols(
         logger, met_info_dict['root'], met_info_dict['version'], line_type
     )
-    df_dtype_dict = {}
-    float_idx = met_version_line_type_col_list.index('TOTAL')
-    for col in met_version_line_type_col_list:
-        col_idx = met_version_line_type_col_list.index(col)
-        if col_idx < float_idx:
-            df_dtype_dict[col] = str
-        else:
-            df_dtype_dict[col] = np.float64
     for model_num in list(model_info_dict.keys()):
         model_num_name = (
             model_num+'/'+model_info_dict[model_num]['name']
@@ -1930,10 +2034,21 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
             [[model_num_name], met_format_valid_dates],
             names=['model', 'valid_dates']
         )
-        model_num_df = pd.DataFrame(np.nan, index=model_num_df_index,
-                                    columns=met_version_line_type_col_list)
         model_dict = model_info_dict[model_num]
+        condensed_model_file = os.path.join(
+            input_dir, model_num+'_'+model_dict['name']+'.stat'
+        )
         if len(dates) != 0:
+            if not os.path.exists(condensed_model_file):
+                write_condensed_stat_file = True
+            else:
+                write_condensed_stat_file = False
+            if write_condensed_stat_file:
+                condense_model_stat_files(
+                    logger, input_dir, condensed_model_file, model_dict['name'],
+                    model_dict['obs_name'], grid, vx_mask,
+                    fcst_var_name, obs_var_name, line_type
+                )
             parsed_model_stat_file = os.path.join(
                 output_dir,
                 'fcst'+model_dict['name']+'_'
@@ -1958,25 +2073,47 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
         else:
             write_parse_stat_file = False
             read_parse_stat_file = False
-        if write_parse_stat_file:
-            condensed_model_file = os.path.join(
-                input_dir, model_num+'_'+model_dict['name']+'.stat'
+        if os.path.exists(condensed_model_file) and line_type == 'MCTC':
+            tmp_df = pd.read_csv(
+                condensed_model_file, sep=" ", skiprows=1,
+                skipinitialspace=True,
+                keep_default_na=False, dtype='str', header=None
             )
-            if not os.path.exists(condensed_model_file):
-                condense_model_stat_files(
-                    logger, input_dir, condensed_model_file, model_dict['name'],
-                    model_dict['obs_name'], grid, vx_mask,
-                    fcst_var_name, obs_var_name, line_type
+            if len(tmp_df) > 0:
+                ncat = int(tmp_df[25][0])
+                new_met_version_line_type_col_list = []
+                for col in met_version_line_type_col_list:
+                    if col == '(N_CAT)':
+                        new_met_version_line_type_col_list.append('N_CAT')
+                    elif col == 'F[0-9]*_O[0-9]*':
+                        fcount = 1
+                        ocount = 1
+                        totcount = 1
+                        while totcount <= ncat*ncat:
+                            new_met_version_line_type_col_list.append(
+                                'F'+str(fcount)+'_'+'O'+str(ocount)
+                            )
+                            if ocount < ncat:
+                                ocount+=1
+                            elif ocount == ncat:
+                                ocount = 1
+                                fcount+=1
+                            totcount+=1
+                    else:
+                        new_met_version_line_type_col_list.append(col)
+                met_version_line_type_col_list = (
+                    new_met_version_line_type_col_list
                 )
+        if write_parse_stat_file:
             if fcst_var_thresh != 'NA':
-                fcst_var_thresh_symbol, fcst_vat_thresh_letter = (
+                fcst_var_thresh_symbol, fcst_var_thresh_letter = (
                     format_thresh(fcst_var_thresh)
                 )
             else:
                 fcst_var_thresh_symbol = fcst_var_thresh
                 fcst_vat_thresh_letter = fcst_var_thresh
             if obs_var_thresh != 'NA':
-                obs_var_thresh_symbol, obs_vat_thresh_letter = (
+                obs_var_thresh_symbol, obs_var_thresh_letter = (
                     format_thresh(obs_var_thresh)
                 )
             else:
@@ -2035,6 +2172,8 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                              +f"at {parsed_model_stat_file}")
             else:
                 logger.debug(f"Could not create {parsed_model_stat_file}")
+        model_num_df = pd.DataFrame(np.nan, index=model_num_df_index,
+                                    columns=met_version_line_type_col_list)
         if read_parse_stat_file:
             if os.path.exists(parsed_model_stat_file):
                 logger.debug(f"Reading {parsed_model_stat_file} for "
@@ -2044,6 +2183,14 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                     skipinitialspace=True, names=met_version_line_type_col_list,
                     na_values=['NA'], header=None
                 )
+                df_dtype_dict = {}
+                float_idx = met_version_line_type_col_list.index('TOTAL')
+                for col in met_version_line_type_col_list:
+                    col_idx = met_version_line_type_col_list.index(col)
+                    if col_idx < float_idx:
+                        df_dtype_dict[col] = str
+                    else:
+                        df_dtype_dict[col] = np.float64
                 model_stat_file_df = model_stat_file_df.astype(df_dtype_dict)
                 for valid_date in met_format_valid_dates:
                     model_stat_file_df_valid_date_idx_list = (
@@ -2077,6 +2224,433 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
         else:
             all_model_df = pd.concat([all_model_df, model_num_df])
     return all_model_df
+
+def merge_grid2grid_long_term_stats_datasets(logger, stat_base_dir,
+                                             time_range, date_dt_list,
+                                             model_group, model_list,
+                                             evs_var_name, evs_var_level,
+                                             evs_var_thresh, evs_vx_grid,
+                                             evs_vx_mask, evs_stat, evs_nbrhd):
+    """! Build the data frame for all model stats,
+         Read the model parse file, if doesn't exist
+         parse the model file for need information, and write file
+
+         Args:
+             logger         - logger object
+             stat_base_dir  - full path to stats base directory (string)
+             time_range     - time range: monthly or yearly (string)
+             date_dt_list   - list datetime objects
+             model_group    - model group name (string)
+             model_list     - list of models (strings)
+             evs_var_name   - variable name in EVS (string)
+             evs_var_level  - variable level in EVS (string)
+             evs_var_thresh - variable threshold in EVS (string)
+             evs_vx_grid    - verification grid in EVS (string)
+             evs_vx_mask    - verification region in EVS (string)
+             evs_stat       - statistic in EVS (string)
+             evs_nbrhd      - neighborhood information in EVS
+
+         Returns:
+             merged_df - dataframe of stats from all
+                         verification systems
+    """
+    logger.info("Reading data and creating merged dataset")
+    expected_file_columns = [
+        'SYS', 'YEAR', 'MONTH', 'DAY0', 'DAY1', 'DAY2', 'DAY3', 'DAY4',
+        'DAY5', 'DAY6', 'DAY7', 'DAY8', 'DAY9', 'DAY10', 'DAY11', 'DAY12',
+        'DAY13', 'DAY14', 'DAY15', 'DAY16'
+    ]
+    if time_range == 'yearly':
+        expected_file_columns.remove('MONTH')
+    verif_sys_start_date_dict = {
+        'caplan_zhu': date_dt_list[0].strftime('%Y%m'),
+        'vsdb': '200801',
+        'emc_verif_global': '202101',
+        'evs': '202401'
+    }
+    if evs_var_name == 'UGRD_VGRD':
+        if evs_stat == 'ME':
+            caplan_zhu_var = 'SPD'
+        else:
+            caplan_zhu_var = 'UV'
+        vsdb_var = 'WIND'
+        emc_verif_global_var = evs_var_name
+    else:
+        caplan_zhu_var = evs_var_name
+        vsdb_var = evs_var_name
+        emc_verif_global_var = evs_var_name
+    if evs_var_name == 'HGT':
+        caplan_zhu_level = evs_var_level.replace('P', '')+'hpa'
+    else:
+        caplan_zhu_level = evs_var_level.replace('P', '')+'hPa'
+    vsdb_level = evs_var_level
+    emc_verif_global_level = evs_var_level
+    if evs_vx_mask in ['NHEM', 'SHEM']:
+        caplan_zhu_vx_mask = evs_vx_mask[0:2]
+        vsdb_vx_mask = 'G2'+evs_vx_mask[0:2]+'X'
+        emc_verif_global_vx_mask = evs_vx_mask[0:2]+'X'
+    elif evs_vx_mask == 'TROPICS':
+        caplan_zhu_vx_mask = evs_vx_mask.title()
+        vsdb_vx_mask = 'G2'+evs_vx_mask[0:3]
+        emc_verif_global_vx_mask = evs_vx_mask[0:3]
+    elif evs_vx_mask == 'GLOBAL':
+        caplan_zhu_vx_mask = evs_vx_mask.title()
+        vsdb_vx_mask = 'G2'
+        emc_verif_global_vx_mask = 'G002'
+    else:
+        caplan_zhu_vx_mask = evs_vx_mask
+        vsdb_vx_mask = evs_vx_mask
+        emc_verif_global_vx_mask = evs_vx_mask
+    if evs_stat == 'ACC':
+        caplan_zhu_stat = evs_stat.upper()[0:2]+'Wave1-20'
+        vsdb_stat = evs_stat.upper()[0:2]
+        emc_verif_global_stat = evs_stat.upper()
+    elif evs_stat == 'ME':
+        caplan_zhu_stat = 'Error'
+        vsdb_stat = 'BIAS'
+        emc_verif_global_stat = 'BIAS'
+    elif evs_stat == 'RMSE':
+        caplan_zhu_stat = evs_stat
+        vsdb_stat = evs_stat
+        emc_verif_global_stat = evs_stat
+    else:
+        caplan_zhu_stat = evs_stat
+        vsdb_stat = evs_stat
+        emc_verif_global_stat = evs_stat
+    for model in model_list:
+        if model_group == 'gfs_4cycles':
+            valid_hour = model.replace('gfs', '')
+        else:
+            valid_hour = '00Z'
+        model_caplan_zhu_file_name = os.path.join(
+             stat_base_dir, model.replace(valid_hour, ''),
+            'caplan_zhu_'+caplan_zhu_var+caplan_zhu_stat
+            +'_'+caplan_zhu_level+'_'+caplan_zhu_vx_mask+'_valid'
+            +valid_hour+'.txt'
+        )
+        model_vsdb_file_name = os.path.join(
+             stat_base_dir, model.replace(valid_hour, ''),
+            'vsdb_'+vsdb_stat+'_'+vsdb_var+'_'+vsdb_level+'_'
+            +vsdb_vx_mask+'_valid'+valid_hour+'.txt'
+        )
+        model_emc_verif_global_file_name = os.path.join(
+             stat_base_dir, model.replace(valid_hour, ''),
+            'emc_verif_global_'+emc_verif_global_stat+'_'
+            +emc_verif_global_var+'_'+emc_verif_global_level
+            +'_'+emc_verif_global_vx_mask+'_valid'+valid_hour+'.txt'
+        )
+        model_evs_file_name = os.path.join(
+             stat_base_dir, model.replace(valid_hour, ''),
+            'evs_'+evs_stat+'_'+evs_var_name+'_'+evs_var_level+'_'
+            +evs_vx_mask+'_valid'+valid_hour+'.txt'
+        )
+        logger.debug(f"{model} Caplan-Zhu File: {model_caplan_zhu_file_name}")
+        logger.debug(f"{model} VSDB File: {model_vsdb_file_name}")
+        logger.debug(f"{model} EMC_verif-global File: "
+                     +f"{model_emc_verif_global_file_name}")
+        logger.debug(f"{model} EVS File: {model_evs_file_name}")
+        model_verif_sys_file_name_list = [model_caplan_zhu_file_name,
+                                          model_vsdb_file_name,
+                                          model_emc_verif_global_file_name,
+                                          model_evs_file_name]
+        if evs_stat == 'ACC' and evs_var_name == 'HGT' \
+                and evs_var_level == 'P500' and valid_hour == '00Z' \
+                and evs_vx_mask in ['NHEM', 'SHEM'] \
+                and time_range == 'yearly':
+            model_excel_file_name = os.path.join(
+                stat_base_dir, model.replace(valid_hour, ''),
+                'excel_'+evs_stat+'_'+evs_var_name+'_'+evs_var_level+'_'
+                +emc_verif_global_vx_mask+'_valid'+valid_hour+'.txt'
+            )
+            logger.debug(f"{model} Excel File: {model_excel_file_name}")
+            if date_dt_list[0] < datetime.datetime.strptime('199601', '%Y%m'):
+                verif_sys_start_date_dict['caplan_zhu'] = '199601'
+            if model == 'ukmet':
+                verif_sys_start_date_dict['caplan_zhu'] = '199701'
+            elif model == 'fnmoc':
+                verif_sys_start_date_dict['caplan_zhu'] = '199801'
+            elif model == 'cfs':
+                verif_sys_start_date_dict['caplan_zhu'] = '999901'
+            model_verif_sys_file_name_list.append(model_excel_file_name)
+        set_new_df = True
+        for model_verif_sys_file_name in model_verif_sys_file_name_list:
+            if os.path.exists(model_verif_sys_file_name):
+                model_verif_sys_df = pd.read_table(model_verif_sys_file_name,
+                                                   delimiter=' ', dtype='str',
+                                                   skipinitialspace=True)
+                if set_new_df:
+                    model_all_verif_sys_df = model_verif_sys_df.copy()
+                    set_new_df = False
+                else:
+                    model_all_verif_sys_df = model_all_verif_sys_df.append(
+                        model_verif_sys_df, ignore_index=True
+                    )
+            else:
+                logger.warning(f"{model_verif_sys_file_name} does not exist")
+        if time_range == 'monthly':
+            model_merged_df = pd.DataFrame(
+                index=pd.MultiIndex.from_product(
+                    [[model], [f"{dt:%Y%m}" for dt in date_dt_list]],
+                    names=['model', 'YYYYmm']
+                ),
+                columns=expected_file_columns
+            )
+        elif time_range == 'yearly':
+            model_merged_df = pd.DataFrame(
+                index=pd.MultiIndex.from_product(
+                    [[model], [f"{dt:%Y}" for dt in date_dt_list]],
+                    names=['model', 'YYYY']
+                ),
+                columns=expected_file_columns
+            )
+        for date_dt in date_dt_list:
+            if date_dt \
+                    >= datetime.datetime.strptime(
+                        verif_sys_start_date_dict['caplan_zhu'], '%Y%m'
+                    ) \
+                    and date_dt < datetime.datetime.strptime(
+                        verif_sys_start_date_dict['vsdb'], '%Y%m'
+                    ):
+                date_dt_verif_sys = 'CZ'
+            elif date_dt \
+                    >= datetime.datetime.strptime(
+                        verif_sys_start_date_dict['vsdb'], '%Y%m'
+                    ) \
+                    and date_dt < datetime.datetime.strptime(
+                        verif_sys_start_date_dict['emc_verif_global'], '%Y%m'
+                    ):
+                date_dt_verif_sys = 'VSDB'
+            elif date_dt \
+                    >= datetime.datetime.strptime(
+                        verif_sys_start_date_dict['emc_verif_global'], '%Y%m'
+                    ) \
+                    and date_dt < datetime.datetime.strptime(
+                        verif_sys_start_date_dict['evs'], '%Y%m'
+                    ):
+                date_dt_verif_sys = 'EVG'
+            elif date_dt \
+                    >= datetime.datetime.strptime(
+                        verif_sys_start_date_dict['evs'], '%Y%m'
+                    ):
+                date_dt_verif_sys = 'EVS'
+            else:
+                date_dt_verif_sys = 'EXCEL'
+            if time_range == 'monthly':
+                model_verif_sys_date_dt_df = model_all_verif_sys_df.loc[
+                    (model_all_verif_sys_df['SYS'] == date_dt_verif_sys)
+                    & (model_all_verif_sys_df['YEAR'] == f"{date_dt:%Y}")
+                    & (model_all_verif_sys_df['MONTH'] == f"{date_dt:%m}")
+                ]
+            elif time_range == 'yearly':
+                model_verif_sys_date_dt_df = model_all_verif_sys_df.loc[
+                    (model_all_verif_sys_df['SYS'] == date_dt_verif_sys)
+                    & (model_all_verif_sys_df['YEAR'] == f"{date_dt:%Y}")
+                ]
+            if len(model_verif_sys_date_dt_df) == 0:
+                model_merged_verif_sys_date_dt_values = []
+                for col in expected_file_columns:
+                    if col == 'SYS':
+                        model_merged_verif_sys_date_dt_values.append(
+                            date_dt_verif_sys
+                        )
+                    elif col == 'YEAR':
+                        model_merged_verif_sys_date_dt_values.append(
+                            f"{date_dt:%Y}"
+                        )
+                    elif col == 'MONTH':
+                        model_merged_verif_sys_date_dt_values.append(
+                            f"{date_dt:%m}"
+                        )
+                    else:
+                         model_merged_verif_sys_date_dt_values.append(np.nan)
+            else:
+                model_merged_verif_sys_date_dt_values = (
+                    model_verif_sys_date_dt_df.values[0]
+                )
+            if time_range == 'monthly':
+                model_merged_df.loc[(model,f"{date_dt:%Y%m}")] = (
+                    model_merged_verif_sys_date_dt_values
+                )
+            elif time_range == 'yearly':
+                model_merged_df.loc[(model,f"{date_dt:%Y}")] = (
+                     model_merged_verif_sys_date_dt_values
+                )
+        if model_list.index(model) == 0:
+            merged_df = model_merged_df
+        else:
+            merged_df = pd.concat([merged_df, model_merged_df])
+    return merged_df
+
+def merge_precip_long_term_stats_datasets(logger, stat_base_dir,
+                                          time_range, date_dt_list,
+                                          model_group, model_list,
+                                          evs_var_name, evs_var_level,
+                                          evs_var_thresh, evs_vx_grid,
+                                          evs_vx_mask, evs_stat,
+                                          evs_nbrhd):
+    """! Build the data frame for all model stats,
+         Read the model parse file, if doesn't exist
+         parse the model file for need information, and write file
+
+         Args:
+             logger         - logger object
+             stat_base_dir  - full path to stats base directory (string)
+             time_range     - time range: monthly or yearly (string)
+             date_dt_list   - list datetime objects
+             model_group    - model group name (string)
+             model_list     - list of models (strings)
+             evs_var_name   - variable name in EVS (string)
+             evs_var_level  - variable level in EVS (string)
+             evs_var_thresh - variable threshold in EVS (string)
+             evs_vx_grid    - verification grid in EVS (string)
+             evs_vx_mask    - verification region in EVS (string)
+             evs_stat       - statistic in EVS (string)
+             evs_nbrhd      - neighborhood information in EVS
+
+         Returns:
+             merged_df - dataframe of stats from all
+                         verification systems
+    """
+    logger.info("Reading data and creating merged dataset")
+    expected_file_columns = [
+        'SYS', 'YEAR', 'MONTH', 'DAY1', 'DAY2', 'DAY3', 'DAY4',
+        'DAY5', 'DAY6', 'DAY7', 'DAY8', 'DAY9', 'DAY10'
+    ]
+    if time_range == 'yearly':
+        expected_file_columns.remove('MONTH')
+    verif_sys_start_date_dict = {
+        'verf_precip': date_dt_list[0].strftime('%Y%m'),
+        'evs': '202401'
+    }
+    for model in model_list:
+        if evs_stat == 'FSS':
+            nbrhd_width_pts = np.sqrt(int(evs_nbrhd.split('/')[1]))
+            if evs_vx_grid == 'G240':
+                dx = 4.7625
+            nbrhd_width_km = round(nbrhd_width_pts * dx)
+            model_verf_precip_file_name = os.path.join(
+                stat_base_dir, model,
+                'verf_precip_'+evs_stat+'_'
+                +evs_var_thresh[2:].replace('.','p')+'_'
+                +'NBRHD'+str(nbrhd_width_km)+'km_'
+                +evs_var_name+'_'+evs_var_level+'_'
+                +evs_vx_grid+'_'+'valid12Z.txt'
+            )
+            model_evs_file_name = os.path.join(
+                stat_base_dir, model,
+                'evs_'+evs_stat+'_'
+                +evs_var_thresh[2:].replace('.','p')+'_'
+                +evs_nbrhd.replace('/', '')+'_'
+                +evs_var_name+'_'+evs_var_level+'_'
+                +evs_vx_grid+'_'+evs_vx_mask+'_valid12Z.txt'
+            )
+        else:
+            model_verf_precip_file_name = os.path.join(
+                stat_base_dir, model,
+                'verf_precip_'+evs_stat+'_'
+                +evs_var_thresh[2:].replace('.','p')+'_'
+                +evs_var_name+'_'+evs_var_level+'_'
+                +evs_vx_grid+'_'+'valid12Z.txt'
+            )
+            model_evs_file_name = os.path.join(
+                stat_base_dir, model,
+                'evs_'+evs_stat+'_'
+                +evs_var_thresh[2:].replace('.','p')+'_'
+                +evs_var_name+'_'+evs_var_level+'_'
+                +evs_vx_grid+'_'+evs_vx_mask+'_valid12Z.txt'
+            )
+        logger.debug(f"{model} Verf-precip File: "
+                     +f"{model_verf_precip_file_name}")
+        logger.debug(f"{model} EVS File: {model_evs_file_name}")
+        model_verif_sys_file_name_list = [model_verf_precip_file_name,
+                                          model_evs_file_name]
+        set_new_df = True
+        for model_verif_sys_file_name in model_verif_sys_file_name_list:
+            if os.path.exists(model_verif_sys_file_name):
+                model_verif_sys_df = pd.read_table(model_verif_sys_file_name,
+                                                   delimiter=' ', dtype='str',
+                                                   skipinitialspace=True)
+                if set_new_df:
+                    model_all_verif_sys_df = model_verif_sys_df.copy()
+                    set_new_df = False
+                else:
+                    model_all_verif_sys_df = model_all_verif_sys_df.append(
+                        model_verif_sys_df, ignore_index=True
+                    )
+            else:
+                logger.warning(f"{model_verif_sys_file_name} does not exist")
+        if time_range == 'monthly':
+            model_merged_df = pd.DataFrame(
+                index=pd.MultiIndex.from_product(
+                    [[model], [f"{dt:%Y%m}" for dt in date_dt_list]],
+                    names=['model', 'YYYYmm']
+                ),
+                columns=expected_file_columns
+            )
+        elif time_range == 'yearly':
+            model_merged_df = pd.DataFrame(
+                index=pd.MultiIndex.from_product(
+                    [[model], [f"{dt:%Y}" for dt in date_dt_list]],
+                    names=['model', 'YYYY']
+                ),
+                columns=expected_file_columns
+            )
+        for date_dt in date_dt_list:
+            if date_dt \
+                    >= datetime.datetime.strptime(
+                        verif_sys_start_date_dict['verf_precip'], '%Y%m'
+                    ) \
+                    and date_dt < datetime.datetime.strptime(
+                        verif_sys_start_date_dict['evs'], '%Y%m'
+                    ):
+                date_dt_verif_sys = 'VP'
+            else:
+                date_dt_verif_sys = 'EVS'
+            if time_range == 'monthly':
+                model_verif_sys_date_dt_df = model_all_verif_sys_df.loc[
+                    (model_all_verif_sys_df['SYS'] == date_dt_verif_sys)
+                    & (model_all_verif_sys_df['YEAR'] == f"{date_dt:%Y}")
+                    & (model_all_verif_sys_df['MONTH'] == f"{date_dt:%m}")
+                ]
+            elif time_range == 'yearly':
+                model_verif_sys_date_dt_df = model_all_verif_sys_df.loc[
+                    (model_all_verif_sys_df['SYS'] == date_dt_verif_sys)
+                    & (model_all_verif_sys_df['YEAR'] == f"{date_dt:%Y}")
+                ]
+            if len(model_verif_sys_date_dt_df) == 0:
+                model_merged_verif_sys_date_dt_values = []
+                for col in expected_file_columns:
+                    if col == 'SYS':
+                        model_merged_verif_sys_date_dt_values.append(
+                            date_dt_verif_sys
+                        )
+                    elif col == 'YEAR':
+                        model_merged_verif_sys_date_dt_values.append(
+                            f"{date_dt:%Y}"
+                        )
+                    elif col == 'MONTH':
+                        model_merged_verif_sys_date_dt_values.append(
+                            f"{date_dt:%m}"
+                        )
+                    else:
+                         model_merged_verif_sys_date_dt_values.append(np.nan)
+            else:
+                model_merged_verif_sys_date_dt_values = (
+                    model_verif_sys_date_dt_df.values[0]
+                )
+            if time_range == 'monthly':
+                model_merged_df.loc[(model,f"{date_dt:%Y%m}")] = (
+                    model_merged_verif_sys_date_dt_values
+                )
+            elif time_range == 'yearly':
+                model_merged_df.loc[(model,f"{date_dt:%Y}")] = (
+                     model_merged_verif_sys_date_dt_values
+                )
+        if model_list.index(model) == 0:
+            merged_df = model_merged_df
+        else:
+            merged_df = pd.concat([merged_df, model_merged_df])
+    return merged_df
 
 def calculate_stat(logger, data_df, line_type, stat):
    """! Calculate the statistic from the data from the
@@ -2222,6 +2796,8 @@ def calculate_stat(logger, data_df, line_type, stat):
        FY_ON = data_df.loc[:]['FY_ON']
        FN_OY = data_df.loc[:]['FN_OY']
        FN_ON = data_df.loc[:]['FN_ON']
+       if line_type == 'CTC':
+           EC_VALUE = data_df.loc[:]['EC_VALUE']
    elif line_type in ['CTS', 'NBRCTS']:
        BASER = data_df.loc[:]['BASER']
        BASER_NCL = data_df.loc[:]['BASER_NCL']
@@ -2315,6 +2891,10 @@ def calculate_stat(logger, data_df, line_type, stat):
        BAGSS = data_df.loc[:]['BAGSS']
        BAGSS_BCL = data_df.loc[:]['BAGSS_BCL']
        BAGSS_BCU = data_df.loc[:]['BAGSS_BCU']
+       if line_type == 'CTS':
+           EC_VALUE = data_df.loc[:]['EC_VALUE']
+   elif line_type == 'MCTC':
+       F1_O1 = data_df.loc[:]['F1_O1']
    elif line_type == 'NBRCNT':
        FBS = data_df.loc[:]['FBS']
        FBS_BCL = data_df.loc[:]['FBS_BCL']
@@ -2350,6 +2930,8 @@ def calculate_stat(logger, data_df, line_type, stat):
        UVFOABAR = data_df.loc[:]['UVFOABAR']
        UVFFABAR = data_df.loc[:]['UVFFABAR']
        UVOOABAR = data_df.loc[:]['UVOOABAR']
+       FA_SPEED_BAR = data_df.loc[:]['FA_SPEED_BAR']
+       OA_SPEED_BAR = data_df.loc[:]['OA_SPEED_BAR']
    elif line_type == 'VCNT':
        FBAR = data_df.loc[:]['FBAR']
        OBAR = data_df.loc[:]['OBAR']
@@ -2369,16 +2951,24 @@ def calculate_stat(logger, data_df, line_type, stat):
        SPEED_ABSERR = data_df.loc[:]['SPEED_ABSERR']
        DIR_ERR = data_df.loc[:]['DIR_ERR']
        DIR_ABSERR = data_df.loc[:]['DIR_ABSERR']
+       ANOM_CORR = data_df.loc[:]['ANOM_CORR']
+       ANOM_CORR_NCL = data_df.loc[:]['ANOM_CORR_NCL']
+       ANOM_CORR_NCU = data_df.loc[:]['ANOM_CORR_NCU']
+       ANOM_CORR_BCL = data_df.loc[:]['ANOM_CORR_BCL']
+       ANOM_CORR_BCU = data_df.loc[:]['ANOM_CORR_BCU']
+       ANOM_CORR_UNCNTR = data_df.loc[:]['ANOM_CORR_UNCNTR']
+       ANOM_CORR_UNCNTR_BCL = data_df.loc[:]['ANOM_CORR_UNCNTR_BCL']
+       ANOM_CORR_UNCNTR_BCU = data_df.loc[:]['ANOM_CORR_UNCNTR_BCU']
    if stat == 'ACC': # Anomaly Correlation Coefficient
        if line_type == 'SAL1L2':
            stat_df = (FOABAR - FABAR*OABAR) \
                      /np.sqrt((FFABAR - FABAR*FABAR)*
                               (OOABAR - OABAR*OABAR))
-       elif line_type == 'CNT':
+       elif line_type in ['CNT', 'VCNT']:
            stat_df = ANOM_CORR
        elif line_type == 'VAL1L2':
            stat_df = UVFOABAR/np.sqrt(UVFFABAR*UVOOABAR)
-   elif stat == 'BIAS': # Bias
+   elif stat in ['BIAS', 'ME']: # Bias/Mean Error
        if line_type == 'SL1L2':
            stat_df = FBAR - OBAR
        elif line_type == 'CNT':
@@ -2388,6 +2978,9 @@ def calculate_stat(logger, data_df, line_type, stat):
    elif stat == 'CSI': # Critical Success Index'
        if line_type == 'CTC':
            stat_df = FY_OY/(FY_OY + FY_ON + FN_OY)
+   elif stat == 'F1_O1': # Count of forecast category 1 and observation category 1
+       if line_type == 'MCTC':
+           stat_df = F1_O1
    elif stat in ['ETS', 'GSS']: # Equitable Threat Score/Gilbert Skill Score
        if line_type == 'CTC':
            TOTAL = FY_OY + FY_ON + FN_OY + FN_ON

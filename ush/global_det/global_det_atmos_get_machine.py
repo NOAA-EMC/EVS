@@ -75,7 +75,7 @@ if machine not in supported_machine_list:
 # Write to machine config file
 if not os.path.exists('config.machine'):
     with open('config.machine', 'a') as file:
-        file.write('#!/bin/sh\n')
+        file.write('#!/bin/bash\n')
         file.write('echo "BEGIN: config.machine"\n')
         file.write('echo "Setting machine='+'"'+machine+'""\n')
         file.write('export machine='+'"'+machine+'"\n')
