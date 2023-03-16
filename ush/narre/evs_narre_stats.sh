@@ -102,7 +102,7 @@ for prod in mean  ; do
        echo "cp \$output_base/stat/*.stat $COMOUTsmall" >> run_narre_${model}.${dom}.${range}.sh
 
        chmod +x run_narre_${model}.${dom}.${range}.sh
-       echo "run_narre_${model}.${dom}.${range}.sh" >> run_all_narre_poe.sh
+       echo "${DATA}/run_narre_${model}.${dom}.${range}.sh" >> run_all_narre_poe.sh
 
    done #end of range loop
 
