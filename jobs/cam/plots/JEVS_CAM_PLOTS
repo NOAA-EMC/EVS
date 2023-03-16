@@ -1,32 +1,8 @@
-#!/bin/bash
+#!/bin/ksh
 
 set -xa
-<<<<<<< HEAD
 #######################################################
 #######################################################
-=======
-
-# ###################################
-# SET SHELL PROCESSING VARIABLES
-# ###################################
-export PS4='$SECONDS + '
-date
-
-###########################################################
-# obtain unique LSF id (jobid) and make temp directories
-###########################################################
-export pid=$$
-
-export DATA=${DATA:-${DATAROOT:?}}/${jobid:?}
-rm -rf $DATA
-mkdir -p $DATA
-cd $DATA
-
-####################################
-# Determine Job Output Name on System
-####################################
-export pgmout="OUTPUT.${pid}"
->>>>>>> upstream/develop
 
 export cycle=t${cyc}z
 
@@ -34,7 +10,6 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
-<<<<<<< HEAD
 export pid=$$
 jobid=evs_${RUN}_${COMPONENT}_${VERIF_CASE}_${STEP}.$$
 export DATA=$DATA_IN/$jobid
@@ -53,27 +28,6 @@ export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/${evs_ver})}/$STEP/$COMP
 export COMINapcp24mean=${COMINspatial:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT
 export DATA_IN=${DATA_IN:-$DATAROOT}
 mkdir -p $COMOUT
-=======
-export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
-export EXECevs=${EXECevs:-$HOMEevs/exec}
-export FIXevs=${FIXevs:-$HOMEevs/fix}
-export PARMevs=${PARMevs:-$HOMEevs/parm}
-export USHevs=${USHevs:-$HOMEevs/ush}
-
-if [[ ${COMPONENT} == "cam" ]]; then
-    export VDATE=$(date -d "today -1 day" +"%Y%m%d")
-else
-    setpdy.sh 31
-    . ./PDY
-    export VDATE=$PDYm1
-fi
-
-# Define COMIN/COMOUT variables:
-export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
-export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
-export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
->>>>>>> upstream/develop
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs_gens.${evs_ver}}
 export EXECevs=$HOMEevs/exec
@@ -82,15 +36,9 @@ export USHevs=$HOMEevs/ush
 export SCRIPTevs=$HOMEevs/scripts
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 
-<<<<<<< HEAD
 #export ush_dir=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS_plots/verif_plotting/ush
 export ush_dir=$USHevs/cam/ush_href_plot_py
 
-=======
-#######################################################################
-# Execute the script.
-#######################################################################
->>>>>>> upstream/develop
 
 ####################################
 # Determine Job Output Name on System
@@ -119,7 +67,3 @@ fi
 
 date
 
-<<<<<<< HEAD
-=======
-
->>>>>>> upstream/develop

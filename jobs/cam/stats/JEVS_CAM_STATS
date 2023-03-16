@@ -5,6 +5,7 @@
 ########################################
 set -xa
 
+
 export cycle=t${cyc}z 
 
 export SENDCOM=${SENDCOM:-YES}
@@ -13,88 +14,49 @@ export SENDECF=${SENDECF:-YES}
 
 export DATA_IN=${DATA_IN:-$DATAROOT}
 export pid=$$
-<<<<<<< HEAD
 jobid=evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$
 export DATA=${DATA:-$DATA_IN/${jobid}}
 #export DATA=${DATA:-$DATA_IN/evs_href_spcoutlook_stats}
-=======
-jobid=${jobid:-evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$}
-if [ $MODELNAME = href ] ; then
-    export DATA=${DATA:-$DATA_IN/${jobid}}
-else
-    export DATA=${DATA:-${DATAROOT:?}}/${jobid:?}
-    rm -rf $DATA
-fi
->>>>>>> upstream/develop
 mkdir -p $DATA
 cd $DATA
 
+setpdy.sh
+. $DATA/PDY
 
 if [ $MODELNAME = href ] ; then
-<<<<<<< HEAD
   export VDATE=${VDATE:-$PDYm2}
-=======
-    setpdy.sh
-    . $DATA/PDY
-    if [ $VERIF_CASE = grid2obs ] ; then
-        export VDATE=${VDATE:-$PDYm1}
-    elif [ $VERIF_CASE = precip ] ; then
-        export VDATE=${VDATE:-$PDYm2}
-    fi
-else
-    export VDATE=$(date -d "today -1 day" +"%Y%m%d")
->>>>>>> upstream/develop
 fi
+
 
 export COMIN=${COMIN:-$(compath.py  $NET/$evs_ver)}
 export COMINhref=${COMINhref:-$(compath.py  href/$href_ver)}
 export COMINprepbufr=${COMINprepbufr:-$(compath.py  obsproc/${obsproc_ver})}
-export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
-if [ $MODELNAME = href ] ; then
-    export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
-    export COMINmrms=$DCOMROOT/ldmdata/obs/upperair/mrms/alaska/MultiSensorQPE
-    export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}/$STEP/$COMPONENT
-else
-    export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
-    export COMINhiresw=${COMINhiresw:-$(compath.py ${envir}/com/hiresw/${hiresw_ver})}
-    export COMINhrrr=${COMINhrrr:-$(compath.py ${envir}/com/hrrr/${hrrr_ver})}
-    export COMINspcotlk=${COMINspcotlk:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
-    export COMINccpa=${COMINccpa:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
-    export COMINmrms=${COMINmrms:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
-    export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
-fi
+export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
 export COMINsnow=$DCOMROOT
-<<<<<<< HEAD
 export COMINmrms=$DCOMROOT/ldmdata/obs/upperair/mrms/alaska/MultiSensorQPE
 
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}/$STEP/$COMPONENT
-=======
-
->>>>>>> upstream/develop
 mkdir -p $COMOUT
 
 export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 mkdir -p $COMOUTfinal $COMOUTsmall
 
+
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
-export FIXevs=${FIXevs:-$HOMEevs/fix}
+export FIXvevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
-<<<<<<< HEAD
 export FIXevs=${FIXevs:-$HOMEevs/fix}
-=======
-export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
->>>>>>> upstream/develop
 export MASKS=${MASKS:-$FIXevs/masks} 
-export MET_PLUS_CONF="${PARMevs}/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}"
 
 export pid=$$
 jobid=evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$
 export DATA=${DATA:-$DATA_IN/${jobid}}
 mkdir -p $DATA
 cd $DATA
+
 
 export pgmout="OUTPUT.${pid}"
 
