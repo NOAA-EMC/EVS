@@ -18,7 +18,39 @@ nextday=`$NDATE +24 ${vday}09 |cut -c1-8`
 prevday=`$NDATE -24 ${vday}09 |cut -c1-8`
 
 #NOTE: COPYGB2 is using option -i3 (budget)   
- 
+
+if [ $data = spcoutlook ] ; then
+ day=$INITDATE
+ spc=$COMOUT/spc.${day}
+ mkdir -p $spc
+ cp $COMINspcoutlook/jevs_namnest_grid2obs_stats.*.cbqs01/grid2obs/METplus_output/metar/genvxmask/spc_otlk.${day}/spc_otlk_*for00Z.nc $spc 
+ cp $COMINspcoutlook/jevs_namnest_grid2obs_stats.*.cbqs01/grid2obs/METplus_output/metar/genvxmask/spc_otlk.${day}/spc_otlk_*for12Z.nc $spc 
+
+ cd $spc
+
+ files=`ls spc*for00Z.nc`
+ set -A file $files
+ len=${#file[@]}
+
+ for (( i=0; i<$len; i++ )); do
+   nc="${file[$i]}"
+   region=${nc:0:21}
+   ln -sf  $nc ${region}_00Z.nc
+ done
+
+ files=`ls spc*for12Z.nc`
+ set -A file $files
+ len=${#file[@]}
+
+ for (( i=0; i<$len; i++ )); do
+   nc="${file[$i]}"
+   region=${nc:0:21}
+   ln -sf  $nc ${region}_12Z.nc
+ done
+
+fi
+
+
 if [ $data = ccpa01h03h ] ; then
 
 export  ccpadir=${WORK}/ccpa.${vday}
@@ -83,6 +115,11 @@ mkdir -p $ccpa24
 
   ${METPLUS_PATH}/ush/master_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA24h.conf
 
+  #mkdir -p ${COMOUT}/${RUN}.${VDATE}/href/precip_mean24
+  #cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUT}/${RUN}.${VDATE}/href/precip_mean24
+  mkdir -p ${COMOUTfinal}/precip_mean24
+  cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUTfinal}/precip_mean24
+
  done
 
 fi
@@ -118,6 +155,10 @@ for fhr in 24 30 36 42 48 ; do
  
      ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstHREF_APCP24h.conf
      mv $output_base/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}/.
+     #mkdir -p ${COMOUT}/${RUN}.${fyyyymmdd}/href/precip_mean24
+     #cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ${COMOUT}/${RUN}.${fyyyymmdd}/href/precip_mean24 
+     mkdir -p ${COMOUT}/href.${fyyyymmdd}/precip_mean24
+     cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ${COMOUT}/href.${fyyyymmdd}/precip_mean24
 
   done
 
@@ -184,6 +225,7 @@ if [ $data = prepbufr ] ; then
    grids="G227 G198"
  fi
 
+ #lvl is set in /scripts/exevs_href_grid2obs_stats.sh (lvl=both)
  if [ $lvl = profile ] ; then
     cycs="00 12"
  else
@@ -212,6 +254,34 @@ if [ $data = prepbufr ] ; then
  done
 
   cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${vday}
+
+fi
+
+
+if [ $data = gfs_prepbufr ] ; then
+
+    mkdir -p $WORK/prepbufr.$vday
+    export output_base=${WORK}/pb2nc
+
+ for domain in Hawaii PRico ; do
+
+   if [ $domain = Hawaii ] ; then
+     grid=G139
+   elif [ $domain = PRico ] ; then
+     grid=G200
+   fi
+
+   export verif_grid=$grid
+
+   for cyc in 00 12 ; do
+      export vbeg=${cyc}
+      export vend=${cyc}
+
+      ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr_Profile.cong
+   done
+   cp ${WORK}/pb2nc/prepbufr_nc/*${grid}.nc $WORK/prepbufr.$vday 
+
+ done
 
 fi
 

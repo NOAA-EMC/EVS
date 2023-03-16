@@ -16,6 +16,7 @@ export DATA_IN=${DATA_IN:-$DATAROOT}
 export pid=$$
 jobid=evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$
 export DATA=${DATA:-$DATA_IN/${jobid}}
+#export DATA=${DATA:-$DATA_IN/evs_href_spcoutlook_stats}
 mkdir -p $DATA
 cd $DATA
 
@@ -23,11 +24,7 @@ setpdy.sh
 . $DATA/PDY
 
 if [ $MODELNAME = href ] ; then
- if [ $VERIF_CASE = grid2obs ] ; then
-   export VDATE=${VDATE:-$PDYm1}
- elif [ $VERIF_CASE = precip ] ; then
-   export VDATE=${VDATE:-$PDYm2}
- fi
+  export VDATE=${VDATE:-$PDYm2}
 fi
 
 
@@ -37,7 +34,6 @@ export COMINprepbufr=${COMINprepbufr:-$(compath.py  obsproc/${obsproc_ver})}
 export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
 export COMINsnow=$DCOMROOT
 export COMINmrms=$DCOMROOT/ldmdata/obs/upperair/mrms/alaska/MultiSensorQPE
-
 
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}/$STEP/$COMPONENT
 mkdir -p $COMOUT
@@ -52,7 +48,7 @@ export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXvevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
-export FIXevs=${FIXevs:-/lfs/h1/ops/prod/packages/evs.${evs_ver}/fix}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
 export MASKS=${MASKS:-$FIXevs/masks} 
 
 export pid=$$

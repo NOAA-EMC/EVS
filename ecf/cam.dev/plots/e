@@ -1,0 +1,1533 @@
+Running prologue on parent mom node: nid001011...
+Job 49539551.cbqs01 nodelist: nid001011
+Job 49539551.cbqs01 - Prologue complete. Execution time: 1 seconds
+ completed cleanly
+ completed cleanly
+Source PDY script to export PDYm7, ..., PDY, ..., PDYp7 variables.
+ completed cleanly
+ completed cleanly
+Source PDY script to export PDYm7, ..., PDY, ..., PDYp7 variables.
+20230313
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230312
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230311
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230310
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230309
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230308
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230307
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230306
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230305
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230304
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230303
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230302
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230301
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230228
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230227
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230226
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230225
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230224
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230223
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230222
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230221
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230220
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230219
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230218
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230217
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230216
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230215
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230214
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230213
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230212
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230211
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+20230210
+57
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/
+
+=================== CHECKING CONFIG VARIABLES =====================
+
+The provided URL_HEADER is empty. Plot file names will not include a header.
+Since the EVAL_PERIOD is set to 'TEST', will use a custom INIT/VALID period.
+
+===================================================================
+
+Log file: /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/logs/GENS_verif_plotting_job.out
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_East, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_West, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_South, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_Central, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Appalachia, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask DeepSouth, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask GreatBasin, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+Quitting due to missing data.  Check the log file for details.
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Mezquital, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask MidAtlantic, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask PacificNW, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Southeast, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask SPlains, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+
+=================== CHECKING CONFIG VARIABLES =====================
+
+The provided URL_HEADER is empty. Plot file names will not include a header.
+Since the EVAL_PERIOD is set to 'TEST', will use a custom INIT/VALID period.
+
+===================================================================
+
+Log file: /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/logs/GENS_verif_plotting_job.out
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_East, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_West, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_South, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_Central, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Appalachia, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask DeepSouth, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask GreatBasin, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Mezquital, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask MidAtlantic, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask PacificNW, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Southeast, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask SPlains, variable CAPE, line_type CTC
+END: prune_stat_files.py
+
+=================== CHECKING CONFIG VARIABLES =====================
+
+The provided URL_HEADER is empty. Plot file names will not include a header.
+Since the EVAL_PERIOD is set to 'TEST', will use a custom INIT/VALID period.
+
+===================================================================
+
+Log file: /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/logs/GENS_verif_plotting_job.out
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_East, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_West, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+Continuing due to missing data.  Check the log file for details.
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_South, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_Central, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Appalachia, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+Continuing due to missing data.  Check the log file for details.
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask DeepSouth, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask GreatBasin, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+Continuing due to missing data.  Check the log file for details.
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Mezquital, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask MidAtlantic, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask PacificNW, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+Continuing due to missing data.  Check the log file for details.
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Southeast, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask SPlains, variable CAPE/MLCAPE, line_type CTC
+END: prune_stat_files.py
+
+=================== CHECKING CONFIG VARIABLES =====================
+
+The provided URL_HEADER is empty. Plot file names will not include a header.
+Since the EVAL_PERIOD is set to 'TEST', will use a custom INIT/VALID period.
+
+===================================================================
+
+Log file: /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/logs/GENS_verif_plotting_job.out
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_East, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_West, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_South, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_Central, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Appalachia, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask DeepSouth, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask GreatBasin, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Mezquital, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask MidAtlantic, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask PacificNW, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Southeast, variable CAPE, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask SPlains, variable CAPE, line_type CTC
+END: prune_stat_files.py
+
+=================== CHECKING CONFIG VARIABLES =====================
+
+The provided URL_HEADER is empty. Plot file names will not include a header.
+Since the EVAL_PERIOD is set to 'TEST', will use a custom INIT/VALID period.
+
+===================================================================
+
+Log file: /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/logs/GENS_verif_plotting_job.out
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_East, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_West, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_South, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_Central, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Alaska, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Appalachia, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CPlains, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask DeepSouth, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask GreatBasin, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask GreatLakes, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Mezquital, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask MidAtlantic, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask NorthAtlantic, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask NPlains, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask NRockies, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask PacificNW, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask PacificSW, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Prairie, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Southeast, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Southwest, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask SPlains, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask SRockies, variable TCDC, line_type CTC
+END: prune_stat_files.py
+
+=================== CHECKING CONFIG VARIABLES =====================
+
+The provided URL_HEADER is empty. Plot file names will not include a header.
+Since the EVAL_PERIOD is set to 'TEST', will use a custom INIT/VALID period.
+
+===================================================================
+
+Log file: /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/logs/GENS_verif_plotting_job.out
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_East, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_West, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_South, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_Central, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Alaska, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Appalachia, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CPlains, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask DeepSouth, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask GreatBasin, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask GreatLakes, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Mezquital, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask MidAtlantic, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask NorthAtlantic, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask NPlains, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask NRockies, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask PacificNW, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask PacificSW, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Prairie, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Southeast, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Southwest, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask SPlains, variable TCDC, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask SRockies, variable TCDC, line_type CTC
+END: prune_stat_files.py
+
+=================== CHECKING CONFIG VARIABLES =====================
+
+The provided URL_HEADER is empty. Plot file names will not include a header.
+Since the EVAL_PERIOD is set to 'TEST', will use a custom INIT/VALID period.
+
+===================================================================
+
+Log file: /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/logs/GENS_verif_plotting_job.out
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_East, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_West, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_South, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_Central, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Alaska, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Appalachia, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CPlains, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask DeepSouth, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask GreatBasin, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask GreatLakes, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Mezquital, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask MidAtlantic, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask NorthAtlantic, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask NPlains, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask NRockies, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask PacificNW, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask PacificSW, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Prairie, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Southeast, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Southwest, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask SPlains, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask SRockies, variable VIS, line_type CTC
+END: prune_stat_files.py
+
+=================== CHECKING CONFIG VARIABLES =====================
+
+The provided URL_HEADER is empty. Plot file names will not include a header.
+Since the EVAL_PERIOD is set to 'TEST', will use a custom INIT/VALID period.
+
+===================================================================
+
+Log file: /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/logs/GENS_verif_plotting_job.out
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_East, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_West, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_South, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_Central, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Alaska, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Appalachia, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CPlains, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask DeepSouth, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask GreatBasin, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask GreatLakes, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Mezquital, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask MidAtlantic, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask NorthAtlantic, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask NPlains, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask NRockies, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask PacificNW, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask PacificSW, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Prairie, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Southeast, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Southwest, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask SPlains, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask SRockies, variable HGT, line_type CTC
+END: prune_stat_files.py
+
+=================== CHECKING CONFIG VARIABLES =====================
+
+The provided URL_HEADER is empty. Plot file names will not include a header.
+Since the EVAL_PERIOD is set to 'TEST', will use a custom INIT/VALID period.
+
+===================================================================
+
+Log file: /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/logs/GENS_verif_plotting_job.out
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_East, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_West, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_South, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_Central, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Alaska, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Appalachia, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CPlains, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask DeepSouth, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask GreatBasin, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask GreatLakes, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Mezquital, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask MidAtlantic, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask NorthAtlantic, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask NPlains, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask NRockies, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask PacificNW, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask PacificSW, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Prairie, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Southeast, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Southwest, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask SPlains, variable VIS, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask SRockies, variable VIS, line_type CTC
+END: prune_stat_files.py
+
+=================== CHECKING CONFIG VARIABLES =====================
+
+The provided URL_HEADER is empty. Plot file names will not include a header.
+Since the EVAL_PERIOD is set to 'TEST', will use a custom INIT/VALID period.
+
+===================================================================
+
+Log file: /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/logs/GENS_verif_plotting_job.out
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_East, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_West, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_South, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CONUS_Central, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Alaska, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Appalachia, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask CPlains, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask DeepSouth, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask GreatBasin, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask GreatLakes, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Mezquital, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask MidAtlantic, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask NorthAtlantic, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask NPlains, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask NRockies, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask PacificNW, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask PacificSW, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Prairie, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Southeast, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask Southwest, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask SPlains, variable HGT, line_type CTC
+END: prune_stat_files.py
+BEGIN: prune_stat_files.py
+Pruning /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_cam_grid2obs_ctc_plots.42032/stat_archive files for model HREF_MEAN, vx_mask SRockies, variable HGT, line_type CTC
+END: prune_stat_files.py
+CFP RANK   0    TOTAL RANK RUN TIME: 567.4 sec    Return status: 00000000 hex
+CFP RANK   1    TOTAL RANK RUN TIME: 771.1 sec    Return status: 00000000 hex
+CFP RANK   2    TOTAL RANK RUN TIME:  55.6 sec    Return status: 00000000 hex
+CFP RANK   3    TOTAL RANK RUN TIME:  53.9 sec    Return status: 00000000 hex
+CFP RANK   4    TOTAL RANK RUN TIME: 152.0 sec    Return status: 00000000 hex
+CFP RANK   5    TOTAL RANK RUN TIME:1592.5 sec    Return status: 00000000 hex
+CFP RANK   6    TOTAL RANK RUN TIME:1982.6 sec    Return status: 00000000 hex
+CFP RANK   7    TOTAL RANK RUN TIME:  96.1 sec    Return status: 00000000 hex
+CFP RANK   8    TOTAL RANK RUN TIME: 441.1 sec    Return status: 00000000 hex
+CFP RANK   9    TOTAL RANK RUN TIME:  92.5 sec    Return status: 00000000 hex
+evs.href.csi_fbias.cape_l0.last31days.fhrmean.valid_00z_12z.buk_appalachia.png
+evs.href.csi_fbias.cape_l0.last31days.fhrmean.valid_00z_12z.buk_conus_central.png
+evs.href.csi_fbias.cape_l0.last31days.fhrmean.valid_00z_12z.buk_conus_east.png
+evs.href.csi_fbias.cape_l0.last31days.fhrmean.valid_00z_12z.buk_conus.png
+evs.href.csi_fbias.cape_l0.last31days.fhrmean.valid_00z_12z.buk_conus_south.png
+evs.href.csi_fbias.cape_l0.last31days.fhrmean.valid_00z_12z.buk_conus_west.png
+evs.href.csi_fbias.cape_l0.last31days.fhrmean.valid_00z_12z.buk_mezquital.png
+evs.href.csi_fbias.cape_l0.last31days.fhrmean.valid_00z_12z.buk_midatlantic.png
+evs.href.csi_fbias.cape_l0.last31days.fhrmean.valid_00z_12z.buk_pacificnw.png
+evs.href.csi_fbias.cape_l0.last31days.fhrmean.valid_00z_12z.buk_southeast.png
+evs.href.csi_fbias.cape_l0.last31days.fhrmean.valid_00z_12z.buk_splains.png
+evs.href.csi_fbias.ceiling_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_alaska.png
+evs.href.csi_fbias.ceiling_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_appalachia.png
+evs.href.csi_fbias.ceiling_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_central.png
+evs.href.csi_fbias.ceiling_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_east.png
+evs.href.csi_fbias.ceiling_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus.png
+evs.href.csi_fbias.ceiling_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_south.png
+evs.href.csi_fbias.ceiling_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_west.png
+evs.href.csi_fbias.ceiling_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_mezquital.png
+evs.href.csi_fbias.ceiling_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_midatlantic.png
+evs.href.csi_fbias.ceiling_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_northatlantic.png
+evs.href.csi_fbias.ceiling_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_nrockies.png
+evs.href.csi_fbias.ceiling_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_pacificnw.png
+evs.href.csi_fbias.ceiling_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_pacificsw.png
+evs.href.csi_fbias.ceiling_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_prairie.png
+evs.href.csi_fbias.ceiling_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_southeast.png
+evs.href.csi_fbias.ceiling_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_southwest.png
+evs.href.csi_fbias.ceiling_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_splains.png
+evs.href.csi_fbias.ceiling_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_srockies.png
+evs.href.csi_fbias.mlcape_ml.last31days.fhrmean.valid_00z_12z.buk_appalachia.png
+evs.href.csi_fbias.mlcape_ml.last31days.fhrmean.valid_00z_12z.buk_conus_central.png
+evs.href.csi_fbias.mlcape_ml.last31days.fhrmean.valid_00z_12z.buk_conus_east.png
+evs.href.csi_fbias.mlcape_ml.last31days.fhrmean.valid_00z_12z.buk_conus.png
+evs.href.csi_fbias.mlcape_ml.last31days.fhrmean.valid_00z_12z.buk_conus_south.png
+evs.href.csi_fbias.mlcape_ml.last31days.fhrmean.valid_00z_12z.buk_conus_west.png
+evs.href.csi_fbias.mlcape_ml.last31days.fhrmean.valid_00z_12z.buk_mezquital.png
+evs.href.csi_fbias.mlcape_ml.last31days.fhrmean.valid_00z_12z.buk_midatlantic.png
+evs.href.csi_fbias.mlcape_ml.last31days.fhrmean.valid_00z_12z.buk_pacificnw.png
+evs.href.csi_fbias.mlcape_ml.last31days.fhrmean.valid_00z_12z.buk_southeast.png
+evs.href.csi_fbias.mlcape_ml.last31days.fhrmean.valid_00z_12z.buk_splains.png
+evs.href.csi_fbias.vis_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_alaska.png
+evs.href.csi_fbias.vis_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_appalachia.png
+evs.href.csi_fbias.vis_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_central.png
+evs.href.csi_fbias.vis_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_east.png
+evs.href.csi_fbias.vis_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus.png
+evs.href.csi_fbias.vis_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_south.png
+evs.href.csi_fbias.vis_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_west.png
+evs.href.csi_fbias.vis_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_mezquital.png
+evs.href.csi_fbias.vis_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_midatlantic.png
+evs.href.csi_fbias.vis_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_northatlantic.png
+evs.href.csi_fbias.vis_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_nrockies.png
+evs.href.csi_fbias.vis_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_pacificnw.png
+evs.href.csi_fbias.vis_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_pacificsw.png
+evs.href.csi_fbias.vis_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_prairie.png
+evs.href.csi_fbias.vis_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_southeast.png
+evs.href.csi_fbias.vis_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_southwest.png
+evs.href.csi_fbias.vis_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_splains.png
+evs.href.csi_fbias.vis_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_srockies.png
+evs.href.ctc.cape_l0.last31days.perfdiag.valid_00z_12z.buk_appalachia.png
+evs.href.ctc.cape_l0.last31days.perfdiag.valid_00z_12z.buk_conus_central.png
+evs.href.ctc.cape_l0.last31days.perfdiag.valid_00z_12z.buk_conus_east.png
+evs.href.ctc.cape_l0.last31days.perfdiag.valid_00z_12z.buk_conus.png
+evs.href.ctc.cape_l0.last31days.perfdiag.valid_00z_12z.buk_conus_south.png
+evs.href.ctc.cape_l0.last31days.perfdiag.valid_00z_12z.buk_conus_west.png
+evs.href.ctc.cape_l0.last31days.perfdiag.valid_00z_12z.buk_mezquital.png
+evs.href.ctc.cape_l0.last31days.perfdiag.valid_00z_12z.buk_midatlantic.png
+evs.href.ctc.cape_l0.last31days.perfdiag.valid_00z_12z.buk_pacificnw.png
+evs.href.ctc.cape_l0.last31days.perfdiag.valid_00z_12z.buk_southeast.png
+evs.href.ctc.cape_l0.last31days.perfdiag.valid_00z_12z.buk_splains.png
+evs.href.ctc.ceiling_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_alaska.png
+evs.href.ctc.ceiling_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_appalachia.png
+evs.href.ctc.ceiling_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_central.png
+evs.href.ctc.ceiling_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_east.png
+evs.href.ctc.ceiling_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus.png
+evs.href.ctc.ceiling_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_south.png
+evs.href.ctc.ceiling_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_west.png
+evs.href.ctc.ceiling_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_mezquital.png
+evs.href.ctc.ceiling_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_midatlantic.png
+evs.href.ctc.ceiling_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_northatlantic.png
+evs.href.ctc.ceiling_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_nrockies.png
+evs.href.ctc.ceiling_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_pacificnw.png
+evs.href.ctc.ceiling_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_pacificsw.png
+evs.href.ctc.ceiling_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_prairie.png
+evs.href.ctc.ceiling_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_southeast.png
+evs.href.ctc.ceiling_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_southwest.png
+evs.href.ctc.ceiling_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_splains.png
+evs.href.ctc.ceiling_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_srockies.png
+evs.href.ctc.mlcape_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_alaska.png
+evs.href.ctc.mlcape_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_appalachia.png
+evs.href.ctc.mlcape_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_central.png
+evs.href.ctc.mlcape_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_east.png
+evs.href.ctc.mlcape_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus.png
+evs.href.ctc.mlcape_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_south.png
+evs.href.ctc.mlcape_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_west.png
+evs.href.ctc.mlcape_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_mezquital.png
+evs.href.ctc.mlcape_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_midatlantic.png
+evs.href.ctc.mlcape_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_northatlantic.png
+evs.href.ctc.mlcape_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_nrockies.png
+evs.href.ctc.mlcape_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_pacificnw.png
+evs.href.ctc.mlcape_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_pacificsw.png
+evs.href.ctc.mlcape_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_prairie.png
+evs.href.ctc.mlcape_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_southeast.png
+evs.href.ctc.mlcape_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_southwest.png
+evs.href.ctc.mlcape_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_splains.png
+evs.href.ctc.mlcape_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_srockies.png
+evs.href.ctc.mlcape_ml.last31days.perfdiag.valid_00z_12z.buk_conus_central.png
+evs.href.ctc.mlcape_ml.last31days.perfdiag.valid_00z_12z.buk_conus_east.png
+evs.href.ctc.mlcape_ml.last31days.perfdiag.valid_00z_12z.buk_conus.png
+evs.href.ctc.mlcape_ml.last31days.perfdiag.valid_00z_12z.buk_conus_south.png
+evs.href.ctc.mlcape_ml.last31days.perfdiag.valid_00z_12z.buk_mezquital.png
+evs.href.ctc.mlcape_ml.last31days.perfdiag.valid_00z_12z.buk_midatlantic.png
+evs.href.ctc.mlcape_ml.last31days.perfdiag.valid_00z_12z.buk_southeast.png
+evs.href.ctc.mlcape_ml.last31days.perfdiag.valid_00z_12z.buk_splains.png
+evs.href.ctc.vis_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_alaska.png
+evs.href.ctc.vis_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_appalachia.png
+evs.href.ctc.vis_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_central.png
+evs.href.ctc.vis_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_east.png
+evs.href.ctc.vis_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus.png
+evs.href.ctc.vis_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_south.png
+evs.href.ctc.vis_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_west.png
+evs.href.ctc.vis_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_mezquital.png
+evs.href.ctc.vis_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_midatlantic.png
+evs.href.ctc.vis_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_northatlantic.png
+evs.href.ctc.vis_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_nrockies.png
+evs.href.ctc.vis_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_pacificnw.png
+evs.href.ctc.vis_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_pacificsw.png
+evs.href.ctc.vis_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_prairie.png
+evs.href.ctc.vis_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_southeast.png
+evs.href.ctc.vis_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_southwest.png
+evs.href.ctc.vis_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_splains.png
+evs.href.ctc.vis_l0.last31days.perfdiag.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_srockies.png
+evs.href.ets_fbias.cape_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_alaska.png
+evs.href.ets_fbias.cape_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_appalachia.png
+evs.href.ets_fbias.cape_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_central.png
+evs.href.ets_fbias.cape_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_east.png
+evs.href.ets_fbias.cape_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus.png
+evs.href.ets_fbias.cape_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_south.png
+evs.href.ets_fbias.cape_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_conus_west.png
+evs.href.ets_fbias.cape_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_mezquital.png
+evs.href.ets_fbias.cape_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_midatlantic.png
+evs.href.ets_fbias.cape_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_northatlantic.png
+evs.href.ets_fbias.cape_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_nrockies.png
+evs.href.ets_fbias.cape_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_pacificnw.png
+evs.href.ets_fbias.cape_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_pacificsw.png
+evs.href.ets_fbias.cape_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_prairie.png
+evs.href.ets_fbias.cape_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_southeast.png
+evs.href.ets_fbias.cape_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_southwest.png
+evs.href.ets_fbias.cape_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_splains.png
+evs.href.ets_fbias.cape_l0.last31days.fhrmean.valid_00z_03z_06z_09z_12z_15z_18z_21z.buk_srockies.png
+lead_average_regional_cplains_valid_00z_03z_06z_09z_12z_15z_18z_21z_hgt_csi_fbias_lt152lt305lt914lt1524lt3048.png
+lead_average_regional_cplains_valid_00z_03z_06z_09z_12z_15z_18z_21z_vis_csi_fbias_lt805lt1609lt4828lt8045lt16090.png
+lead_average_regional_cplains_valid_00z_06z_12z_18z_tcdc_ets_fbias_ge10ge50ge90.png
+lead_average_regional_deepsouth_valid_00z_03z_06z_09z_12z_15z_18z_21z_hgt_csi_fbias_lt152lt305lt914lt1524lt3048.png
+lead_average_regional_deepsouth_valid_00z_03z_06z_09z_12z_15z_18z_21z_vis_csi_fbias_lt805lt1609lt4828lt8045lt16090.png
+lead_average_regional_deepsouth_valid_00z_06z_12z_18z_cape_csi_fbias_ge250ge500ge1000ge2000.png
+lead_average_regional_deepsouth_valid_00z_06z_12z_18z_mlcape_csi_fbias_ge250ge500ge1000ge2000.png
+lead_average_regional_deepsouth_valid_00z_06z_12z_18z_tcdc_ets_fbias_ge10ge50ge90.png
+lead_average_regional_greatbasin_valid_00z_03z_06z_09z_12z_15z_18z_21z_hgt_csi_fbias_lt152lt305lt914lt1524lt3048.png
+lead_average_regional_greatbasin_valid_00z_03z_06z_09z_12z_15z_18z_21z_vis_csi_fbias_lt805lt1609lt4828lt8045lt16090.png
+lead_average_regional_greatbasin_valid_00z_06z_12z_18z_tcdc_ets_fbias_ge10ge50ge90.png
+lead_average_regional_greatbasin_valid_00z_12z_15z_cape_csi_fbias_ge250ge500ge1000ge2000.png
+lead_average_regional_greatlakes_valid_00z_03z_06z_09z_12z_15z_18z_21z_hgt_csi_fbias_lt152lt305lt914lt1524lt3048.png
+lead_average_regional_greatlakes_valid_00z_03z_06z_09z_12z_15z_18z_21z_vis_csi_fbias_lt805lt1609lt4828lt8045lt16090.png
+lead_average_regional_greatlakes_valid_00z_06z_12z_18z_tcdc_ets_fbias_ge10ge50ge90.png
+lead_average_regional_nplains_valid_00z_03z_06z_09z_12z_15z_18z_21z_hgt_csi_fbias_lt152lt305lt914lt1524lt3048.png
+lead_average_regional_nplains_valid_00z_03z_06z_09z_12z_15z_18z_21z_vis_csi_fbias_lt805lt1609lt4828lt8045lt16090.png
+lead_average_regional_nplains_valid_00z_06z_12z_18z_tcdc_ets_fbias_ge10ge50ge90.png
+performance_diagram_regional_cplains_valid_00z_03z_06z_09z_12z_15z_18z_21z_hgt_f6_to_f48__lt152lt305lt914lt1524lt3048.png
+performance_diagram_regional_cplains_valid_00z_03z_06z_09z_12z_15z_18z_21z_vis_f6_to_f48__lt805lt1609lt4828lt8045lt16090.png
+performance_diagram_regional_cplains_valid_00z_06z_12z_18z_tcdc_f6_to_f48__ge10ge50ge90.png
+performance_diagram_regional_deepsouth_valid_00z_03z_06z_09z_12z_15z_18z_21z_hgt_f6_to_f48__lt152lt305lt914lt1524lt3048.png
+performance_diagram_regional_deepsouth_valid_00z_03z_06z_09z_12z_15z_18z_21z_vis_f6_to_f48__lt805lt1609lt4828lt8045lt16090.png
+performance_diagram_regional_deepsouth_valid_00z_06z_12z_18z_cape_f6_to_f48__ge250ge500ge1000ge2000.png
+performance_diagram_regional_deepsouth_valid_00z_06z_12z_18z_mlcape_f6_to_f48__ge250ge500ge1000ge2000.png
+performance_diagram_regional_deepsouth_valid_00z_06z_12z_18z_tcdc_f6_to_f48__ge10ge50ge90.png
+performance_diagram_regional_greatbasin_valid_00z_03z_06z_09z_12z_15z_18z_21z_hgt_f6_to_f48__lt152lt305lt914lt1524lt3048.png
+performance_diagram_regional_greatbasin_valid_00z_03z_06z_09z_12z_15z_18z_21z_vis_f6_to_f48__lt805lt1609lt4828lt8045lt16090.png
+performance_diagram_regional_greatbasin_valid_00z_06z_12z_18z_tcdc_f6_to_f48__ge10ge50ge90.png
+performance_diagram_regional_greatbasin_valid_00z_12z_15z_cape_f6_to_f48__ge250ge500ge1000ge2000.png
+performance_diagram_regional_greatlakes_valid_00z_03z_06z_09z_12z_15z_18z_21z_hgt_f6_to_f48__lt152lt305lt914lt1524lt3048.png
+performance_diagram_regional_greatlakes_valid_00z_03z_06z_09z_12z_15z_18z_21z_vis_f6_to_f48__lt805lt1609lt4828lt8045lt16090.png
+performance_diagram_regional_greatlakes_valid_00z_06z_12z_18z_tcdc_f6_to_f48__ge10ge50ge90.png
+performance_diagram_regional_nplains_valid_00z_03z_06z_09z_12z_15z_18z_21z_hgt_f6_to_f48__lt152lt305lt914lt1524lt3048.png
+performance_diagram_regional_nplains_valid_00z_03z_06z_09z_12z_15z_18z_21z_vis_f6_to_f48__lt805lt1609lt4828lt8045lt16090.png
+performance_diagram_regional_nplains_valid_00z_06z_12z_18z_tcdc_f6_to_f48__ge10ge50ge90.png
+Wed Mar 15 21:21:49 UTC 2023
+Job 49539551.cbqs01 - Epilogue complete. Execution time: 1 seconds
+==================================================================
+BEGIN - DEBUG INFO
+==================================================================
+Job 49539551.cbqs01 - Post Job Mem Usage:
+nid001011: 2023-03-15.00 1 ===========================================
+nid001011: 2023-03-15.00 2 #### Node Memory Usage for nid001011 ####
+nid001011: 2023-03-15.00 3 ------------------
+nid001011: 2023-03-15.00 4 Mem: total:527073140 used:11772496 free:515738212 shared:397284 cache:2032684 avail:515300644
+nid001011: 2023-03-15.00 5 4.0K	/dev/shm
+nid001011: 2023-03-15.00 6 35M	/tmp
+nid001011: 2023-03-15.00 7 ===========================================
+nid001011: 2023-03-15.50 1 ===========================================
+nid001011: 2023-03-15.50 2 #### Node Memory Usage for nid001011 ####
+nid001011: 2023-03-15.50 3 ------------------
+nid001011: 2023-03-15.50 4 Mem: total:527073140 used:12328776 free:513050044 shared:396636 cache:4634032 avail:514744364
+nid001011: 2023-03-15.50 5 4.0K	/dev/shm
+nid001011: 2023-03-15.50 6 35M	/tmp
+nid001011: 2023-03-15.50 7 ===========================================
+
+------------------------------------------------------------------
+Job 49539551.cbqs01 - /var/log/messages for job duration:
+nid001011: 2023-03-15A--:--:--.------+--:-- nid001011 #### nid001011 - Job 49539551.cbqs01 Runtime Data from /var/log/messages
+nid001011: 2023-03-15T20:47:59.894322+00:00 nid001011 prologue: MARK: Job 49539551.cbqs01 Start
+nid001011: 2023-03-15T20:47:59.900119+00:00 nid001011 prologue: Job 49539551.cbqs01 nodelist: nid001011
+nid001011: 2023-03-15T20:47:59.902006+00:00 nid001011 prologue: Job 49539551.cbqs01 - Checking existing ASLR settings...
+nid001011: 2023-03-15T20:47:59.906671+00:00 nid001011 prologue: Job 49539551.cbqs01 - Checking palsd open file count...
+nid001011: 2023-03-15T20:48:00.197493+00:00 nid001011 prologue: Job 49539551.cbqs01 - Checking one-shot control: False
+nid001011: 2023-03-15T20:48:00.198619+00:00 nid001011 prologue: Job 49539551.cbqs01 - Recording pre-job HSN counters...
+nid001011: 2023-03-15T20:48:00.307478+00:00 nid001011 prologue: Job 49539551.cbqs01 - Recording pre-job memory usage...
+nid001011: 2023-03-15T20:48:00.335049+00:00 nid001011 prologue: Job 49539551.cbqs01 - Killing any stray user processes...
+nid001011: 2023-03-15T20:48:00.412632+00:00 nid001011 prologue: Job 49539551.cbqs01 - Enabling turboboost...
+nid001011: 2023-03-15T20:48:00.415736+00:00 nid001011 prologue: Job 49539551.cbqs01 - Verifying post-boot workarounds...
+nid001011: 2023-03-15T20:48:00.697780+00:00 nid001011 prologue: Job 49539551.cbqs01 - Warchk Complete
+nid001011: 2023-03-15T20:48:00.699700+00:00 nid001011 prologue: Job 49539551.cbqs01 - Recording initial NFS client statistics...
+nid001011: 2023-03-15T20:48:00.705699+00:00 nid001011 prologue: Job 49539551.cbqs01 - Prologue complete. Execution time: 1 seconds
+nid001011: 2023-03-15T20:48:44.927679+00:00 nid001011 palsd: Executing cfp apid fd41798e-ae06-4fcf-8e16-6e972717c141 jobid 49539551.cbqs01 uid 32119 gid 20011
+nid001011: 2023-03-15T20:48:44.929045+00:00 nid001011 palsd: Forked shepherd 42717 for apid fd41798e-ae06-4fcf-8e16-6e972717c141, jobid 49539551.cbqs01
+nid001011: 2023-03-15T20:48:44.932580+00:00 nid001011 palsd: ATOM_SOCKET not set, disabling ATOM support
+nid001011: 2023-03-15T20:48:44.982188+00:00 nid001011 palsd: Creating file /var/run/palsd/fd41798e-ae06-4fcf-8e16-6e972717c141/files/cfp mode 0700
+nid001011: 2023-03-15T20:51:52.623797+00:00 nid001011 systemd[1]: etc_update.service: Succeeded.
+nid001011: 2023-03-15T21:00:07.600670+00:00 nid001011 systemd[1]: Started Timeline of Snapper Snapshots.
+nid001011: 2023-03-15T21:00:07.638929+00:00 nid001011 dbus-daemon[5558]: [system] Activating via systemd: service name='org.opensuse.Snapper' unit='snapperd.service' requested by ':1.22460' (uid=0 pid=58074 comm="/usr/lib/snapper/systemd-helper --timeline ")
+nid001011: 2023-03-15T21:00:07.642313+00:00 nid001011 systemd[1]: Starting DBus interface for snapper...
+nid001011: 2023-03-15T21:00:07.653542+00:00 nid001011 dbus-daemon[5558]: [system] Successfully activated service 'org.opensuse.Snapper'
+nid001011: 2023-03-15T21:00:07.653718+00:00 nid001011 systemd[1]: Started DBus interface for snapper.
+nid001011: 2023-03-15T21:00:07.657198+00:00 nid001011 systemd[1]: snapper-timeline.service: Succeeded.
+nid001011: 2023-03-15T21:01:07.718865+00:00 nid001011 systemd[1]: snapperd.service: Succeeded.
+nid001011: 2023-03-15T21:03:30.274100+00:00 nid001011 systemd[1]: etc_update.service: Succeeded.
+nid001011: 2023-03-15T21:11:53.634428+00:00 nid001011 nscd: 5765 monitored file `/etc/passwd` was written to
+nid001011: 2023-03-15T21:11:53.650019+00:00 nid001011 check_and_pull_files.sh[60344]: 04bde777c4b622f254ebf6d979068f4a8bb8f2a9  passwd
+nid001011: 2023-03-15T21:11:53.650095+00:00 nid001011 check_and_pull_files.sh[60344]: 961c1c1a4a02ad60c19c986953ef2056c99318a7  group
+nid001011: 2023-03-15T21:11:53.650147+00:00 nid001011 check_and_pull_files.sh[60344]: dd1ec1f03e369ce9efb173ba2718f362db21093d  hosts
+nid001011: 2023-03-15T21:11:53.651810+00:00 nid001011 check_and_pull_files.sh[60344]: a8e39aa10b0e67065dfda6ae250ba10221aecc42  shadow
+nid001011: 2023-03-15T21:11:53.653638+00:00 nid001011 systemd[1]: etc_update.service: Succeeded.
+nid001011: 2023-03-15T21:21:48.691835+00:00 nid001011 palsd: apid fd41798e-ae06-4fcf-8e16-6e972717c141 shepherd 42717 exited with status 0
+nid001011: 2023-03-15T21:21:50.365899+00:00 nid001011 epilogue: Job 49539551.cbqs01 complete, running post-job actions.
+nid001011: 2023-03-15T21:21:50.381822+00:00 nid001011 epilogue: Job 49539551.cbqs01 - Recording post-job HSN counters...
+nid001011: 2023-03-15T21:21:50.487831+00:00 nid001011 epilogue: Job 49539551.cbqs01 - Recording post-job memory usage...
+nid001011: 2023-03-15T21:21:50.508659+00:00 nid001011 epilogue: Job 49539551.cbqs01 - Recording job NFS statistics to /tmp/nfsstats.49539551.cbqs01
+nid001011: 2023-03-15T21:21:51.000661+00:00 nid001011 epilogue: Job 49539551.cbqs01 - Clearing /tmp...
+nid001011: 2023-03-15T21:21:51.030583+00:00 nid001011 epilogue: Job 49539551.cbqs01 - Clearing shared memory...
+nid001011: 2023-03-15T21:21:51.043165+00:00 nid001011 epilogue: Job 49539551.cbqs01 - Clearing memory cache...
+nid001011: 2023-03-15T21:21:51.741489+00:00 nid001011 kernel: [1027920.878288] drop_caches (61741): drop_caches: 3
+nid001011: 2023-03-15T21:21:51.895932+00:00 nid001011 epilogue: Job 49539551.cbqs01 - Releasing Lustre Locks...
+nid001011: 2023-03-15T21:21:51.913493+00:00 nid001011 epilogue: MARK: Job 49539551.cbqs01 Complete.
+
+------------------------------------------------------------------
+Job 49539551.cbqs01 - dmesg output for job duration:
+nid001011: 2023-03-15A--:--:--.------+--:-- nid001011 #### nid001011 - Job 49539551.cbqs01 Runtime Data from dmesg
+nid001011: [Wed Mar 15 20:47:31 2023] MARK: Job 49539551.cbqs01 Start
+nid001011: [Wed Mar 15 21:21:22 2023] drop_caches (61741): drop_caches: 3
+nid001011: [Wed Mar 15 21:21:23 2023] MARK: Job 49539551.cbqs01 Complete.
+
+------------------------------------------------------------------
+Job 49539551.cbqs01 - Pre/Post job diff on HSN (MLX) Counters:
+nid001011: 2023-03-15A--:--:--.------+--:-- nid001011 #### nid001011 - Job 49539551.cbqs01 HSN0 MLX Counter Post-Job Difference
+nid001011: multicast: 258072388					      |	multicast: 258075330
+nid001011: port_rcv_data: 38836877688237				      |	port_rcv_data: 38837336761703
+nid001011: port_rcv_packets: 57145691235				      |	port_rcv_packets: 57146272452
+nid001011: port_xmit_data: 41839547152260				      |	port_xmit_data: 41840109719788
+nid001011: port_xmit_packets: 60057953265				      |	port_xmit_packets: 60058593702
+nid001011: rx_bytes: 112667502009					      |	rx_bytes: 112766505256
+nid001011: rx_packets: 393309008					      |	rx_packets: 393419743
+nid001011: rx_write_requests: 34386657				      |	rx_write_requests: 34388563
+nid001011: tx_bytes: 427478360264					      |	tx_bytes: 427490406645
+nid001011: tx_packets: 158686984					      |	tx_packets: 158761629
+nid001011: unicast_rcv_packets: 57145691235			      |	unicast_rcv_packets: 57146272452
+nid001011: unicast_xmit_packets: 60057953265			      |	unicast_xmit_packets: 60058593702
+
+------------------------------------------------------------------
+### Job 49539551.cbqs01 - NFS Statistics for job duration:
+nid001011: #### 2023-03-15.00 #### nid001011 - Job 49539551.cbqs01 NFS Statistics for job duration (nfsstat)
+nid001011: ## /usr/sbin/nfsstat -v -S /tmp/nfsstats.begin.49539551.cbqs01 :
+nid001011: Client packet stats:
+nid001011: packets    udp        tcp        tcpconn
+nid001011: 0          0          0          0       
+nid001011: 
+nid001011: Client rpc stats:
+nid001011: calls      retrans    authrefrsh
+nid001011: 50031      0          50064   
+nid001011: 
+nid001011: Client nfs v3:
+nid001011: null             getattr          setattr          lookup           access           
+nid001011: 0         0%     31151    62%     4         0%     3229      6%     8259     16%     
+nid001011: readlink         read             write            create           mkdir            
+nid001011: 105       0%     6856     13%     51        0%     0         0%     20        0%     
+nid001011: symlink          mknod            remove           rmdir            rename           
+nid001011: 0         0%     0         0%     0         0%     0         0%     0         0%     
+nid001011: link             readdir          readdirplus      fsstat           fsinfo           
+nid001011: 0         0%     0         0%     451       0%     0         0%     0         0%     
+nid001011: pathconf         commit           
+nid001011: 0         0%     0         0%     
+nid001011: 
+nid001011: 
+nid001011: -----------------------------------------------------------------------------------
+nid001011: 
+nid001011: #### 2023-03-15.00 #### nid001011 - Job 49539551.cbqs01 NFS Mount Statistics for job duration (mountstats)
+nid001011: ## /usr/sbin/mountstats iostat -S /tmp/mntstats.begin.49539551.cbqs01 /apps :
+nid001011: 
+nid001011: 
+nid001011: 172.20.250.16:/AZ-HFS-Cactus-apps mounted on /apps:
+nid001011: 
+nid001011:            ops/s       rpc bklog
+nid001011:            7.688           0.000
+nid001011: 
+nid001011: read:              ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid001011:                    2.831          41.708          14.732        0 (0.0%)           1.438           1.497
+nid001011: write:             ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid001011:                    0.000           0.000           0.000        0 (0.0%)           0.000           0.000
+nid001011: ## /usr/sbin/mountstats iostat -S /tmp/mntstats.begin.49539551.cbqs01 /sfs :
+nid001011: 
+nid001011: 
+nid001011: 172.20.250.17:/AZ-HFS-Cactus-sfs mounted on /sfs:
+nid001011: 
+nid001011:            ops/s       rpc bklog
+nid001011:            0.053           0.000
+nid001011: 
+nid001011: read:              ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid001011:                    0.002           0.073          29.479        0 (0.0%)           0.600           0.600
+nid001011: write:             ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid001011:                    0.025           0.060           2.396        0 (0.0%)           0.333           0.392
+nid001011: ## /usr/sbin/mountstats iostat -S /tmp/mntstats.begin.49539551.cbqs01 /u :
+nid001011: 
+nid001011: 
+nid001011: 172.20.250.17:/AZ-HFS-Cactus-u mounted on /u:
+nid001011: 
+nid001011:            ops/s       rpc bklog
+nid001011:            0.053           0.000
+nid001011: 
+nid001011: read:              ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid001011:                    0.001           0.045          30.349        0 (0.0%)           1.000           0.667
+nid001011: write:             ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid001011:                    0.000           0.000           0.000        0 (0.0%)           0.000           0.000
+nid001011: ## /usr/sbin/mountstats iostat -S /tmp/mntstats.begin.49539551.cbqs01 /pe :
+nid001011: 
+nid001011: 
+nid001011: 10.31.62.243:/cm_shared/image/images_rw_nfs/pe mounted on /pe:
+nid001011: 
+nid001011:            ops/s       rpc bklog
+nid001011:            1.761           0.000
+nid001011: 
+nid001011: read:              ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid001011:                    0.410          80.231         195.522        0 (0.0%)           5.742           5.791
+nid001011: write:             ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid001011:                    0.000           0.000           0.000        0 (0.0%)           0.000           0.000
+nid001011: ----------------
+nid001011: ## /usr/sbin/mountstats mountstats -S /tmp/mntstats.begin.49539551.cbqs01 /apps :
+nid001011: Stats for 172.20.250.16:/AZ-HFS-Cactus-apps mounted on /apps:
+nid001011:   NFS mount options: ro,vers=3,rsize=65536,wsize=65536,namlen=255,acregmin=3,acregmax=60,acdirmin=30,acdirmax=60,hard,proto=tcp,nconnect=3,timeo=600,retrans=2,sec=sys,mountaddr=172.20.250.16,mountvers=3,mountport=4048,mountproto=udp,local_lock=none
+nid001011:   NFS server capabilities: caps=0x3fc7,wtmult=4096,dtsize=8192,bsize=0,namlen=255
+nid001011:   NFS security flavor: 1  pseudoflavor: 0
+nid001011: 
+nid001011: NFS byte counts:
+nid001011:   applications read 23777421986 bytes via read(2)
+nid001011:   applications wrote 0 bytes via write(2)
+nid001011:   applications read 0 bytes via O_DIRECT read(2)
+nid001011:   applications wrote 0 bytes via O_DIRECT write(2)
+nid001011:   client read 85066419 bytes via NFS READ
+nid001011:   client wrote 0 bytes via NFS WRITE
+nid001011: 
+nid001011: RPC statistics:
+nid001011:   15606 RPC requests sent, 15606 RPC replies received (0 XIDs not found)
+nid001011:   average backlog queue length: 0
+nid001011: 
+nid001011: GETATTR:
+nid001011: 	29228 ops (187%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 112
+nid001011: 	backlog wait: 0.003011 	RTT: 0.097680 	total execute time: 0.130047 (milliseconds)
+nid001011: ACCESS:
+nid001011: 	8085 ops (51%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 120
+nid001011: 	backlog wait: 0.002597 	RTT: 0.615832 	total execute time: 0.624366 (milliseconds)
+nid001011: READ:
+nid001011: 	5747 ops (36%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 14930
+nid001011: 	backlog wait: 0.046285 	RTT: 1.438316 	total execute time: 1.496781 (milliseconds)
+nid001011: LOOKUP:
+nid001011: 	2727 ops (17%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 164
+nid001011: 	backlog wait: 0.002200 	RTT: 0.102310 	total execute time: 0.116978 (milliseconds)
+nid001011: READDIRPLUS:
+nid001011: 	451 ops (2%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 1331
+nid001011: 	backlog wait: 0.002217 	RTT: 0.106430 	total execute time: 0.115299 (milliseconds)
+nid001011: READLINK:
+nid001011: 	102 ops (0%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 143
+nid001011: 	backlog wait: 0.000000 	RTT: 0.088235 	total execute time: 0.098039 (milliseconds)
+nid001011: 
+nid001011: ## /usr/sbin/mountstats mountstats -S /tmp/mntstats.begin.49539551.cbqs01 /sfs :
+nid001011: 
+nid001011: Stats for 172.20.250.17:/AZ-HFS-Cactus-sfs mounted on /sfs:
+nid001011:   NFS mount options: rw,vers=3,rsize=65536,wsize=65536,namlen=255,acregmin=3,acregmax=60,acdirmin=30,acdirmax=60,hard,proto=tcp,nconnect=3,timeo=600,retrans=2,sec=sys,mountaddr=172.20.250.17,mountvers=3,mountport=4048,mountproto=udp,local_lock=none
+nid001011:   NFS server capabilities: caps=0x3fc7,wtmult=4096,dtsize=8192,bsize=0,namlen=255
+nid001011:   NFS security flavor: 1  pseudoflavor: 0
+nid001011: 
+nid001011: NFS byte counts:
+nid001011:   applications read 163365 bytes via read(2)
+nid001011:   applications wrote 12238 bytes via write(2)
+nid001011:   applications read 0 bytes via O_DIRECT read(2)
+nid001011:   applications wrote 0 bytes via O_DIRECT write(2)
+nid001011:   client read 149664 bytes via NFS READ
+nid001011:   client wrote 109973 bytes via NFS WRITE
+nid001011: 
+nid001011: RPC statistics:
+nid001011:   108 RPC requests sent, 108 RPC replies received (0 XIDs not found)
+nid001011:   average backlog queue length: 0
+nid001011: 
+nid001011: GETATTR:
+nid001011: 	119 ops (110%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 112
+nid001011: 	backlog wait: 0.008403 	RTT: 0.126050 	total execute time: 0.159664 (milliseconds)
+nid001011: WRITE:
+nid001011: 	51 ops (47%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 160
+nid001011: 	backlog wait: 0.039216 	RTT: 0.333333 	total execute time: 0.392157 (milliseconds)
+nid001011: ACCESS:
+nid001011: 	32 ops (29%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 120
+nid001011: 	backlog wait: 0.000000 	RTT: 0.281250 	total execute time: 0.281250 (milliseconds)
+nid001011: LOOKUP:
+nid001011: 	9 ops (8%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 240
+nid001011: 	backlog wait: 0.000000 	RTT: 0.111111 	total execute time: 0.222222 (milliseconds)
+nid001011: READ:
+nid001011: 	5 ops (4%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 30062
+nid001011: 	backlog wait: 0.000000 	RTT: 0.600000 	total execute time: 0.600000 (milliseconds)
+nid001011: SETATTR:
+nid001011: 	4 ops (3%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 144
+nid001011: 	backlog wait: 0.000000 	RTT: 0.250000 	total execute time: 0.250000 (milliseconds)
+nid001011: 
+nid001011: ## /usr/sbin/mountstats mountstats -S /tmp/mntstats.begin.49539551.cbqs01 /u :
+nid001011: 
+nid001011: Stats for 172.20.250.17:/AZ-HFS-Cactus-u mounted on /u:
+nid001011:   NFS mount options: rw,vers=3,rsize=65536,wsize=65536,namlen=255,acregmin=3,acregmax=60,acdirmin=30,acdirmax=60,hard,proto=tcp,nconnect=3,timeo=600,retrans=2,sec=sys,mountaddr=172.20.250.17,mountvers=3,mountport=4048,mountproto=udp,local_lock=none
+nid001011:   NFS server capabilities: caps=0x3fc7,wtmult=4096,dtsize=8192,bsize=0,namlen=255
+nid001011:   NFS security flavor: 1  pseudoflavor: 0
+nid001011: 
+nid001011: NFS byte counts:
+nid001011:   applications read 859327 bytes via read(2)
+nid001011:   applications wrote 0 bytes via write(2)
+nid001011:   applications read 0 bytes via O_DIRECT read(2)
+nid001011:   applications wrote 0 bytes via O_DIRECT write(2)
+nid001011:   client read 92374 bytes via NFS READ
+nid001011:   client wrote 0 bytes via NFS WRITE
+nid001011: 
+nid001011: RPC statistics:
+nid001011:   108 RPC requests sent, 108 RPC replies received (0 XIDs not found)
+nid001011:   average backlog queue length: 0
+nid001011: 
+nid001011: ACCESS:
+nid001011: 	55 ops (50%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 120
+nid001011: 	backlog wait: 0.018182 	RTT: 0.218182 	total execute time: 0.236364 (milliseconds)
+nid001011: LOOKUP:
+nid001011: 	21 ops (19%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 151
+nid001011: 	backlog wait: 0.047619 	RTT: 0.142857 	total execute time: 0.190476 (milliseconds)
+nid001011: MKDIR:
+nid001011: 	20 ops (18%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 144
+nid001011: 	backlog wait: 0.000000 	RTT: 0.550000 	total execute time: 0.550000 (milliseconds)
+nid001011: GETATTR:
+nid001011: 	12 ops (11%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 112
+nid001011: 	backlog wait: 0.000000 	RTT: 0.166667 	total execute time: 0.166667 (milliseconds)
+nid001011: READ:
+nid001011: 	3 ops (2%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 30921
+nid001011: 	backlog wait: 0.000000 	RTT: 1.000000 	total execute time: 0.666667 (milliseconds)
+nid001011: 
+nid001011: ## /usr/sbin/mountstats mountstats -S /tmp/mntstats.begin.49539551.cbqs01 /pe :
+nid001011: 
+nid001011: Stats for 10.31.62.243:/cm_shared/image/images_rw_nfs/pe mounted on /pe:
+nid001011:   NFS mount options: ro,vers=3,rsize=1048576,wsize=1048576,namlen=255,acregmin=3,acregmax=60,acdirmin=30,acdirmax=60,hard,nolock,proto=tcp,timeo=600,retrans=2,sec=sys,mountaddr=10.31.62.243,mountvers=3,mountport=38465,mountproto=tcp,local_lock=all
+nid001011:   NFS server capabilities: caps=0x3fcf,wtmult=4096,dtsize=32768,bsize=0,namlen=255
+nid001011:   NFS security flavor: 1  pseudoflavor: 0
+nid001011: 
+nid001011: NFS byte counts:
+nid001011:   applications read 59937248 bytes via read(2)
+nid001011:   applications wrote 0 bytes via write(2)
+nid001011:   applications read 0 bytes via O_DIRECT read(2)
+nid001011:   applications wrote 0 bytes via O_DIRECT write(2)
+nid001011:   client read 166618741 bytes via NFS READ
+nid001011:   client wrote 0 bytes via NFS WRITE
+nid001011: 
+nid001011: RPC statistics:
+nid001011:   3574 RPC requests sent, 3574 RPC replies received (0 XIDs not found)
+nid001011:   average backlog queue length: 0
+nid001011: 
+nid001011: GETATTR:
+nid001011: 	1802 ops (50%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 112
+nid001011: 	backlog wait: 0.003330 	RTT: 0.445616 	total execute time: 0.585461 (milliseconds)
+nid001011: READ:
+nid001011: 	833 ops (23%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 200066
+nid001011: 	backlog wait: 0.028812 	RTT: 5.741897 	total execute time: 5.791116 (milliseconds)
+nid001011: LOOKUP:
+nid001011: 	472 ops (13%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 53
+nid001011: 	backlog wait: 0.002119 	RTT: 0.898305 	total execute time: 0.908898 (milliseconds)
+nid001011: ACCESS:
+nid001011: 	88 ops (2%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 36
+nid001011: 	backlog wait: 0.011364 	RTT: 0.409091 	total execute time: 0.431818 (milliseconds)
+nid001011: READLINK:
+nid001011: 	3 ops (0%) 
+nid001011: 	avg bytes sent per op: avg bytes received per op: 134
+nid001011: 	backlog wait: 0.000000 	RTT: 1.000000 	total execute time: 1.000000 (milliseconds)
+nid001011: 
+nid001011: 
+
+------------------------------------------------------------------
+### Job 49539551.cbqs01 - Exit status is 0
+
+------------------------------------------------------------------
+Job 49539551.cbqs01 - Job summary:
+Job Id: 49539551.cbqs01
+    Job_Name = evs_href_grid2obs_ctc_plot
+    Job_Owner = binbin.zhou@clogin06.cactus.wcoss2.ncep.noaa.gov
+    resources_used.cpupercent = 999
+    resources_used.cput = 05:16:18
+    resources_used.mem = 2793492kb
+    resources_used.ncpus = 20
+    resources_used.vmem = 7814284kb
+    resources_used.walltime = 00:33:11
+    job_state = R
+    queue = dev
+    server = cbqs01
+    Account_Name = VERF-DEV
+    Checkpoint = u
+    ctime = Wed Mar 15 20:47:58 2023
+    Error_Path = clogin06.cactus.wcoss2.ncep.noaa.gov:/lfs/h2/emc/vpppg/noscrub
+	/binbin.zhou/EVS/ecf/cam.dev/plots/evs_href_grid2obs_ctc_plot.e49539551
+	
+    exec_host = nid001011/0*20
+    exec_vnode = (nid001011:ncpus=20:mem=104857600kb)
+    Hold_Types = n
+    Join_Path = n
+    Keep_Files = oed
+    Mail_Points = a
+    mtime = Wed Mar 15 21:21:13 2023
+    Output_Path = clogin06.cactus.wcoss2.ncep.noaa.gov:/lfs/h2/emc/vpppg/noscru
+	b/binbin.zhou/EVS/ecf/cam.dev/plots/e
+    Priority = 0
+    qtime = Wed Mar 15 20:47:58 2023
+    Rerunable = False
+    Resource_List.alvl = 2
+    Resource_List.aslr = True
+    Resource_List.debug = True
+    Resource_List.dfs = False
+    Resource_List.hyper = True
+    Resource_List.mem = 100gb
+    Resource_List.ncpus = 20
+    Resource_List.nodect = 1
+    Resource_List.one-shot = False
+    Resource_List.place = vscatter:exclhost
+    Resource_List.select = 1:ncpus=20:mem=100GB
+    Resource_List.thp = True
+    Resource_List.turbo = True
+    Resource_List.walltime = 01:00:00
+    schedselect = 1:ncpus=20:mem=100GB:prepost=False
+    stime = Wed Mar 15 20:47:59 2023
+    session_id = 40829
+    Shell_Path_List = /bin/bash
+    jobdir = /u/binbin.zhou
+    substate = 42
+    Variable_List = PBS_O_HOME=/u/binbin.zhou,PBS_O_LANG=en_US.UTF-8,
+	PBS_O_LOGNAME=binbin.zhou,
+	PBS_O_PATH=/apps/ops/prod/libs/intel/19.1.3.304/metplus/5.0.0/ush:/app
+	s/ops/prod/libs/intel/19.1.3.304/met/11.0.0/bin:/apps/spack/gsl/2.7/int
+	el/19.1.3.304/xks7dxbowrdxhjck5zxc4rompopocevb/bin:/apps/spack/geos/3.8
+	.1/intel/19.1.3.304/5recktk5lndzgkkqq36y4a2h4yx3ahdy/bin:/apps/spack/pr
+	oj/7.1.0/intel/19.1.3.304/cjbmc7tacv5qcfatslqmcrzo5kb4raaq/bin:/apps/sp
+	ack/python/3.8.6/intel/19.1.3.304/pjn2nzkjvqgmjw4hmyz43v5x4jbxjzpk/bin:
+	/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4/cdo/1.9.8/bin:/a
+	pps/spack/libjpeg/9c/intel/19.1.3.304/jkr3isi257ktoouprwaxcn4twtye747z/
+	bin:/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4/netcdf/4.7.4
+	/bin:/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4/hdf5/1.10.6
+	/bin:/apps/spack/libpng/1.6.37/intel/19.1.3.304/4ohkronuhlyherusoszzrmu
+	r5ewvlwzh/bin:/apps/spack/jasper/2.0.25/intel/19.1.3.304/sjib74krrorkyc
+	zqpqah4tvewmlnqdx4/bin:/pe/intel/compilers_and_libraries_2020.4.304/lin
+	ux/bin/intel64:/pe/intel/compilers_and_libraries_2020.4.304/linux/bin:/
+	pe/intel/compilers_and_libraries_2020.4.304/linux/mpi/intel64/bin:/pe/i
+	ntel/debugger_2020/gdb/intel64/bin:/apps/spack/grads/2.2.1/cce/11.0.4/6
+	nvi5fhtdfnb6v6qngbvdplxta4jofvt/bin:/opt/cray/pe/pals/1.0.12/bin:/apps/
+	spack/git/2.29.0/gcc/10.2.0/rkn6xaqbrdlim3u4it2l6ljqszg62s25/bin:/opt/c
+	ray/pe/python/3.9.13.1/bin:/apps/ops/prod/libs/intel/19.1.3.304/wgrib2/
+	2.0.8_wmo/bin:/apps/ops/prod/nco/core/prod_util.v2.0.5/ush:/apps/ops/pr
+	od/libs/intel/19.1.3.304/grib_util/1.2.4/bin:/apps/ops/prod/libs/intel/
+	19.1.3.304/bufr/11.4.0/bin:/opt/cray/pe/craype/2.7.10/bin:/opt/cray/lib
+	fabric/1.11.0.0./bin:/opt/clmgr/sbin:/opt/clmgr/bin:/opt/sgi/sbin:/opt/
+	sgi/bin:/usr/local/bin:/usr/bin:/bin:/usr/lib/mit/bin:/usr/lib/mit/sbin
+	:/opt/pbs/bin:/sbin:.:/u/binbin.zhou/bin:/usr/sbin:/opt/cray/pe/bin:/ap
+	ps/prod/python-modules/3.8.6/intel/19.1.3.304/bin:/apps/prod/python-mod
+	ules/3.8.6/intel/19.1.3.304/lib/python3.8/site-packages/bin,
+	PBS_O_MAIL=/var/spool/mail/binbin.zhou,PBS_O_SHELL=/bin/bash,
+	PBS_O_WORKDIR=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS/ecf/cam.dev/pl
+	ots,PBS_O_SYSTEM=Linux,PBS_O_QUEUE=dev,
+	PBS_O_HOST=clogin06.cactus.wcoss2.ncep.noaa.gov
+    euser = binbin.zhou
+    egroup = emc
+    hashname = 49539551.cbqs01
+    queue_rank = 1678913278906454
+    queue_type = E
+    comment = Job run at Wed Mar 15 at 20:47 on (nid001011:ncpus=20:mem=1048576
+	00kb)
+    etime = Wed Mar 15 20:47:58 2023
+    umask = 22
+    run_count = 6
+    eligible_time = 00:00:04
+    accrue_type = 3
+    Submit_arguments = jevs_href_grid2obs_ctc_past31days_plots.ecf
+    project = VERF-DEV
+    run_version = 1
+    Submit_Host = clogin06.cactus.wcoss2.ncep.noaa.gov
+    server_instance_id = cbqs01.cactus.wcoss2.ncep.noaa.gov:15001
+
+
+------------------------------------------------------------------
+Job 49539551.cbqs01 - PBS tracejob output (for parent mom node only):
+
+Job: 49539551.cbqs01
+
+03/15/2023 20:47:59  M    update_job_usage: CPU usage: 0.000 secs
+03/15/2023 20:47:59  M    update_job_usage: cpupercent initialized to zero
+03/15/2023 20:47:59  M    update_job_usage: Memory usage: mem=0b
+03/15/2023 20:48:00  M    Started, pid = 40829
+03/15/2023 20:48:05  M    update_job_usage: CPU usage: 3.252 secs
+03/15/2023 20:48:05  M    update_job_usage: Memory usage: mem=63160kb
+03/15/2023 20:48:45  M    _execjob_attach_handler: Attaching PID 42717
+03/15/2023 20:48:45  M    update_job_usage: CPU usage: 33.350 secs
+03/15/2023 20:48:45  M    pid 42717 sid 42717 cmd palsd attached as task 00000002
+03/15/2023 20:50:06  M    update_job_usage: CPU usage: 808.880 secs
+03/15/2023 20:50:06  M    update_job_usage: 49539551.cbqs01 measured interval cpupercent 952 increased job cpupercent to 952
+03/15/2023 20:52:07  M    update_job_usage: CPU usage: 2014.108 secs
+03/15/2023 20:52:07  M    update_job_usage: 49539551.cbqs01 measured interval cpupercent 999 increased job cpupercent to 999
+03/15/2023 20:54:08  M    update_job_usage: CPU usage: 3229.277 secs
+03/15/2023 20:56:09  M    update_job_usage: CPU usage: 4434.500 secs
+03/15/2023 20:58:10  M    update_job_usage: CPU usage: 5649.629 secs
+03/15/2023 21:00:11  M    update_job_usage: CPU usage: 6854.948 secs
+03/15/2023 21:02:13  M    update_job_usage: CPU usage: 8070.347 secs
+03/15/2023 21:04:14  M    update_job_usage: CPU usage: 9285.732 secs
+03/15/2023 21:06:16  M    update_job_usage: CPU usage: 10501.145 secs
+03/15/2023 21:08:17  M    update_job_usage: CPU usage: 11716.458 secs
+03/15/2023 21:10:18  M    update_job_usage: CPU usage: 12921.782 secs
+03/15/2023 21:12:19  M    update_job_usage: CPU usage: 14137.110 secs
+03/15/2023 21:14:20  M    update_job_usage: CPU usage: 15342.174 secs
+03/15/2023 21:16:21  M    update_job_usage: CPU usage: 16557.536 secs
+03/15/2023 21:18:22  M    update_job_usage: CPU usage: 17762.846 secs
+03/15/2023 21:20:23  M    update_job_usage: CPU usage: 18978.294 secs
+03/15/2023 21:21:49  M    no active process for task 00000002
+03/15/2023 21:21:49  M    task 00000001 terminated
+03/15/2023 21:21:49  M    Terminated
+03/15/2023 21:21:49  M    task 00000001 cput=00:00:35
+03/15/2023 21:21:49  M    task 00000002 cput=05:23:36
+03/15/2023 21:21:49  M    kill_job
+03/15/2023 21:21:49  M    nid001011 cput=05:16:18 mem=2793492kb
+03/15/2023 21:21:49  M    update_job_usage: CPU usage: 19826.294 secs
+03/15/2023 21:21:49  M    update_job_usage: Memory usage: mem=2793492kb
+
+------------------------------------------------------------------
+To see full PBS log data, run: /sfs/admin/scripts/tracejob.sh 49539551.cbqs01
+
+==================================================================
+END - DEBUG INFO
+==================================================================
+
+##### Job 49539551.cbqs01 - PBS Job Script:
+
+#!/bin/bash
+
+#PBS -N evs_href_grid2obs_ctc_plot
+#PBS -oe
+#PBS -S /bin/bash
+#PBS -q dev
+#PBS -A VERF-DEV
+#PBS -l walltime=01:00:00
+#PBS -l place=vscatter:exclhost,select=1:ncpus=20:mem=100GB
+#PBS -l debug=true
+
+
+export OMP_NUM_THREADS=1
+
+export evs_ver=v1.0
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+
+source $HOMEevs/versions/run.ver
+
+module purge
+module load envvar/$envvar_ver
+module load PrgEnv-intel/$PrgEnv_intel_ver
+module load intel/$intel_ver
+module load cray-pals/$craypals_ver
+module load libjpeg/$libjpeg_ver
+module load grib_util/$grib_util_ver
+module load prod_util/$prod_util_ver
+module load prod_envir/$prod_envir_ver
+module load wgrib2/$wgrib2_ver
+module load libpng/$libpng_ver
+module load zlib/$zlib_ver
+module load jasper/$jasper_ver
+module load netcdf/$netcdf_ver
+module load cfp/$cfp_ver
+export HPC_OPT=/apps/ops/para/libs
+module use /apps/ops/para/libs/modulefiles/compiler/intel/$intel_ver
+module load gsl/${gsl_ver}
+module load python/$python_ver
+module load met/$met_ver
+module load metplus/$metplus_ver
+module load udunits/${udunits_ver}
+
+module list
+
+export met_v=${met_ver:0:4}
+
+export envir=prod
+
+export NET=evs
+export STEP=plots
+export COMPONENT=cam
+export RUN=atmos
+export VERIF_CASE=grid2obs_ctc
+export MODELNAME=href
+
+export KEEPDATA=YES
+
+export cyc=00
+#export VDATE=20221231
+export past_days=31
+
+export run_mpi=yes
+export valid_time=both
+
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
+export DATA_IN=${DATA_IN:-/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd}
+export ush_dir=/lfs/h2/emc/vpppg/noscrub/marcel.caron/verif_plotting/ush
+
+${HOMEevs}/jobs/cam/plots/JEVS_CAM_PLOTS
+
+##### End of job script
+------------------------------------------------------------------

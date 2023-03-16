@@ -109,6 +109,8 @@ for prod in mean prob ; do
                                  ${maskpath}/Bukovsky_G227_SPlains.nc,
                                  ${maskpath}/Bukovsky_G227_SRockies.nc'" >> run_href_${model}.${dom}.${valid_run}_product.sh
 
+         #echo 'export verif_poly="$verif_poly, $SPCoutlookMask/TSTM_01Z.nc" ' >> run_href_${model}.${dom}.${valid_run}_product.sh
+
          echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF${prod}_obsPREPBUFR_SFC.conf " >> run_href_${model}.${dom}.${valid_run}_product.sh
 
   	 echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${model}.${dom}.${valid_run}_product.sh
@@ -196,5 +198,8 @@ for prod in mean prob ; do
 done #end of prod loop
 
 chmod 775 run_all_href_product_poe.sh
+
+sh run_all_href_product_poe.sh
+
 exit
 

@@ -42,6 +42,7 @@ if [ $prepare = yes ] ; then
  done
 fi
 
+
 > run_all_precip_poe.sh
 if [ $verif_precip = yes ] ; then
  $USHevs/cam/evs_href_precip.sh

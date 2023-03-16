@@ -5,7 +5,7 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=01:30:00
+#PBS -l walltime=02:00:00
 #PBS -l place=vscatter:exclhost,select=1:ncpus=88:mem=10GB
 #PBS -l debug=true
 
@@ -34,8 +34,8 @@ module load jasper/$jasper_ver
 module load netcdf/$netcdf_ver
 module load cfp/$cfp_ver
 
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/$intel_ver
+export HPC_OPT=/apps/ops/prod/libs
+module use /apps/ops/prod/libs/modulefiles/compiler/intel/$intel_ver
 module load gsl/${gsl_ver}
 module load python/$python_ver
 module load met/$met_ver
@@ -44,6 +44,8 @@ module load udunits/${udunits_ver}
 
 module list
 
+set -x 
+
 export NET=evs
 export STEP=stats
 export COMPONENT=cam
@@ -51,9 +53,6 @@ export RUN=atmos
 export VERIF_CASE=precip
 export MODELNAME=href
 export KEEPDATA=YES
-
-
-#export VDATE=20221015
 
 export cyc=00
 
@@ -70,5 +69,7 @@ export verif_snowfall=yes
 
 export gather=yes
 
+
 ${HOMEevs}/jobs/cam/stats/JEVS_CAM_STATS
+
 

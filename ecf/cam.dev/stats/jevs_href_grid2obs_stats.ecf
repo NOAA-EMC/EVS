@@ -34,8 +34,8 @@ module load jasper/$jasper_ver
 module load netcdf/$netcdf_ver
 module load cfp/$cfp_ver
 
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/$intel_ver
+export HPC_OPT=/apps/ops/prod/libs
+module use /apps/ops/prod/libs/modulefiles/compiler/intel/$intel_ver
 module load gsl/${gsl_ver}
 module load python/$python_ver
 module load met/$met_ver
@@ -56,9 +56,6 @@ export KEEPDATA=YES
 
 export run_envir=dev
 
-
-#export VDATE=20221015
-
 export cyc=00
 
 export run_mpi=yes
@@ -68,6 +65,7 @@ export FIXevs=/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CO
 export MASKS=/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
 export DATA_IN=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
+
 
 ${HOMEevs}/jobs/cam/stats/JEVS_CAM_STATS
 
