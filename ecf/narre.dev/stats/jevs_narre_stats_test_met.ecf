@@ -20,6 +20,8 @@ export evs_ver=v1.0
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
 source $HOMEevs/versions/run.ver
+export met_ver=11.0.0
+export metplus=5.0.0
 
 module purge
 echo Loading modules........
@@ -62,7 +64,7 @@ export KEEPDATA=YES
 
 export cyc=00
 
-export rum_mpi=yes
+export run_mpi=no
 
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver

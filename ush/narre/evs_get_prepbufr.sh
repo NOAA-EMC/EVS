@@ -19,7 +19,7 @@ if [ $modnam = prepbufr ] ; then
      export vend=${cyc}
      export verif_grid=$grid
 
-     ${METPLUS_PATH}/ush/master_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr.cong
+     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr.cong
      cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${VDATE}
   
   done

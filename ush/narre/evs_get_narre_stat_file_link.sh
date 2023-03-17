@@ -25,8 +25,8 @@ mkdir -p $narre_archive_yyyymmdd
 
 cd ${narre_archive_yyyymmdd}
 
-if [ -s ${narre_stat}/evs.stats.narremean_mean_${VERIF_CASE}_v${day}.stat ] ; then
-  ln -sf ${narre_stat}/evs.stats.narremean_mean_${VERIF_CASE}_v${day}.stat ${MODEL}_${day}.stat
+if [ -s ${narre_stat}/evs.stats.narremean.mean.${VERIF_CASE}.v${day}.stat ] ; then
+  ln -sf ${narre_stat}/evs.stats.narremean.mean.${VERIF_CASE}.v${day}.stat ${MODEL}_${day}.stat
 fi
 
   

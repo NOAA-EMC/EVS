@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/ksh
 
 set -x 
 
@@ -47,7 +47,7 @@ VX_MASK_LIST="G130 G214"
 export fcst_valid_hour="0,3,6,9,12,15,18,21"
 export fcst_lead="1,2,3,4,5,6,7,8,9,10,11,12"
 
-export plot_dir=$DATA/out/ceil_vis/${valid_beg}-${valid_end}
+export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
 
 
 > run_all_poe.sh 
@@ -66,10 +66,10 @@ for grid in $VX_MASK_LIST ; do
      
     if [ $grid = G130 ] ; then
       echo "export mask=buk_conus" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-      echo "export grd=g130"
+      echo "export grd=g130"  >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
     elif [ $grid = G214 ] ; then
       echo "export mask=alaska" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-      echo "export grd=g214"
+      echo "export grd=g214"  >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
     fi
 
       echo "export PLOT_TYPE=$score_type" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
@@ -121,7 +121,7 @@ for grid in $VX_MASK_LIST ; do
      echo "export verif_type=conus_sfc" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
 
      echo "export log_level=INFO" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-     echo "export met_ver=10.0" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+     echo "export met_ver=$met_v" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
      echo "export model=NARRE_MEAN" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
 
      echo "export eval_period=TEST" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
@@ -152,7 +152,7 @@ for grid in $VX_MASK_LIST ; do
      #evs.global_det.acc.hgt_p500.last90days.timeseries_valid00z_f120.g004_glb.png
      #evs.cam_ens.ctc.vis_l0.last31days.perfdiag_f048.buk_conus.png
      if [ $score_type = performance_diagram ] ; then
-        echo "mv ${plot_dir}/${score_type}_regional_*${grd}*_*${vname}*.png ${plot_dir}/evs.narre.ctc.${field}.last${past_days}days.perfdiag_f012.${mask}.png" >>  run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+        echo "mv ${plot_dir}/${score_type}_regional_*\${grd}*_*\${vname}*.png ${plot_dir}/evs.narre.ctc.\${field}.last${past_days}days.perfdiag.f012.\${mask}.png" >>  run_narre_${grid}.${score_type}.${var}.${line_type}.sh
      fi 
      
      chmod +x  run_narre_${grid}.${score_type}.${var}.${line_type}.sh
@@ -177,9 +177,9 @@ fi
 
 cd $plot_dir
   
-tar -cvf plots_narre_grid2obs_v${VDATE}.tar *.png
+tar -cvf plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar *.png
 
-cp plots_narre_grid2obs_v${VDATE}.tar  $COMOUT/.  
+cp plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar  $COMOUT/.  
 
 
 
