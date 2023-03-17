@@ -846,6 +846,21 @@ for verif_type in VERIF_CASE_STEP_type_list:
         valid_hr_start = int(job_env_dict['valid_hr_start'])
         valid_hr_end = int(job_env_dict['valid_hr_end'])
         valid_hr_inc = int(job_env_dict['valid_hr_inc'])
+        if 'Daily' in verif_type_job:
+            if job_env_dict['fhr_inc'] != '24':
+                job_env_dict['fhr_inc'] = '24'
+            if int(job_env_dict['fhr_end'])%24 != 0:
+                job_env_dict['fhr_end'] = str(
+                    int(job_env_dict['fhr_end'])
+                     -(int(job_env_dict['fhr_end'])%24)
+                )
+            if int(job_env_dict['fhr_start'])%24 != 0:
+                job_env_dict['fhr_start'] = str(
+                    int(job_env_dict['fhr_start'])
+                    -(int(job_env_dict['fhr_start'])%24)
+                )
+            if int(job_env_dict['fhr_start']) < 24:
+                job_env_dict['fhr_start'] = '24'
         verif_type_job_loop_list = []
         for line_type_stat \
                 in verif_type_plot_jobs_dict[verif_type_job]\

@@ -251,6 +251,23 @@ def get_init_hour(valid_hour, forecast_hour):
         init_hour = init_hour - 24
     return init_hour
 
+def get_valid_hour(init_hour, forecast_hour):
+    """! Get a valid hour
+
+         Args:
+             init_hour    - intit hour/cycle (integer)
+             forecast_hour - forecast hour (integer)
+    """ 
+    valid_hour = (init_hour + (forecast_hour%24))
+    if forecast_hour % 24 == 0:
+        valid_hour = init_hour
+    else:
+        valid_hour = (init_hour + (forecast_hour%24))
+    if valid_hour >= 24:
+        valid_hour = valid_hour - 24
+    return valid_hour
+
+
 def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                   forecast_hour, str_sub_dict):
     """! Creates a filled file path from a format
@@ -1690,6 +1707,13 @@ def initalize_job_env_dict(verif_type, group,
                 os.environ[verif_case_step_abbrev_type+'_valid_hr_list']\
                 .split(' ')
             )
+            if os.environ['VERIF_CASE'] == 'grid2obs' \
+                    and verif_type == 'sfc':
+                if 'CAPE' in job or job in ['PBLHeight',
+                                            'DailyAvg_TempAnom2m']:
+                    for vh in verif_type_valid_hr_list:
+                        if int(vh) % 6 != 0:
+                            verif_type_valid_hr_list.remove(vh)
             job_env_dict['valid_hr_start'] = (
                 verif_type_valid_hr_list[0].zfill(2)
             )
