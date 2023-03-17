@@ -804,12 +804,13 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                                       + f' {y_mean:.2f}, {mosaic_mean:.2f})')
         else:
             metric_mean_fmt_string = f'{model_plot_name}'
-        plt.plot(
-            x_vals, y_vals, marker='None', c=mod_setting_dicts[m]['color'], 
-            mew=2., mec='white', figure=fig, ms=0, 
-            ls=mod_setting_dicts[m]['linestyle'], 
-            lw=mod_setting_dicts[m]['linewidth']
-        )
+        if not thresh_categ:
+            plt.plot(
+                x_vals, y_vals, marker='None', c=mod_setting_dicts[m]['color'], 
+                mew=2., mec='white', figure=fig, ms=0, 
+                ls=mod_setting_dicts[m]['linestyle'], 
+                lw=mod_setting_dicts[m]['linewidth']
+            )
         for i, item in enumerate(x_vals):
             plt.scatter(
                 x_vals[i], y_vals[i], marker=thresh_markers[i][0], 
@@ -990,7 +991,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         else:
             level_string = f'{level} '
             level_savename = f'{level}'
-    elif str(verif_type).lower() in ['ccpa','mrms']:
+    elif str(verif_type).lower() in ['ccpa','mrms','ptype']:
         if 'A' in str(level):
             level_num = level.replace('A', '')
             level_string = f'{level_num}-hour '
