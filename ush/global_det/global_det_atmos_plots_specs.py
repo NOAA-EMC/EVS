@@ -556,6 +556,7 @@ class PlotSpecs:
                     )
                     if str(other_hr).zfill(2)+'Z' not in title_other_hr_list:
                         title_other_hr_list.append(str(other_hr).zfill(2)+'Z')
+            title_other_hr_list.sort()
             date_plot_name = (date_plot_name+', '.join(date_type_hr_list)
                               +', cycles: '+', '.join(title_other_hr_list))
         elif date_type == 'INIT':
@@ -568,8 +569,9 @@ class PlotSpecs:
                     if str(other_hr).zfill(2)+'Z' not in title_other_hr_list:
                         title_other_hr_list.append(str(other_hr).zfill(2)+'Z')
                     title_other_hr_list.append(str(init_hr).zfill(2)+'Z')
+            title_other_hr_list.sort()
             date_plot_name = (date_plot_name+', '.join(date_type_hr_list)
-                              +', valid: '+', '.join(other_hr_list))
+                              +', valid: '+', '.join(title_other_hr_list))
         if plot_type not in ['lead_average', 'valid_hour_average',
                              'lead_by_date', 'lead_by_level']:
             forecast_day_list = []
