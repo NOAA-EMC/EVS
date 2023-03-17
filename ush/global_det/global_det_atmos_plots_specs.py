@@ -554,7 +554,8 @@ class PlotSpecs:
                         int(date_type_hr.replace('Z', '')),
                         int(forecast_hour)
                     )
-                    if str(other_hr).zfill(2)+'Z' not in title_other_hr_list:
+                    if str(other_hr).zfill(2)+'Z' not in title_other_hr_list \
+                            and str(other_hr).zfill(2)+'Z' in other_hr_list:
                         title_other_hr_list.append(str(other_hr).zfill(2)+'Z')
             title_other_hr_list.sort()
             date_plot_name = (date_plot_name+', '.join(date_type_hr_list)
@@ -566,7 +567,8 @@ class PlotSpecs:
                         int(date_type_hr.replace('Z', '')),
                         int(forecast_hour)
                     )
-                    if str(other_hr).zfill(2)+'Z' not in title_other_hr_list:
+                    if str(other_hr).zfill(2)+'Z' not in title_other_hr_list \
+                            and str(other_hr).zfill(2)+'Z' in other_hr_list:
                         title_other_hr_list.append(str(other_hr).zfill(2)+'Z')
                     title_other_hr_list.append(str(init_hr).zfill(2)+'Z')
             title_other_hr_list.sort()
