@@ -23,6 +23,7 @@ if [ $data = spcoutlook ] ; then
  day=$INITDATE
  spc=$COMOUT/spc.${day}
  mkdir -p $spc
+ #Note: on cactus use cbqs01, on doogwood, use dbqs01
  cp $COMINspcoutlook/jevs_namnest_grid2obs_stats.*.cbqs01/grid2obs/METplus_output/metar/genvxmask/spc_otlk.${day}/spc_otlk_*for00Z.nc $spc 
  cp $COMINspcoutlook/jevs_namnest_grid2obs_stats.*.cbqs01/grid2obs/METplus_output/metar/genvxmask/spc_otlk.${day}/spc_otlk_*for12Z.nc $spc 
 

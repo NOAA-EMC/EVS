@@ -58,6 +58,7 @@ verif_case=grid2obs
 
 #Total SPC outlook area masks = 6 x 3 = 18
 #VX_MASK_LIST="DAY1_0100_MRGL, DAY1_1200_MRGL, DAY1_1300_MRGL, DAY1_1630_MRGL, DAY1_2000_MRGL, DAY2_0700_MRGL, DAY2_1730_MRGL, DAY3_MRGL, DAY1_0100_TSTM, DAY1_1200_TSTM, DAY1_1300_TSTM, DAY1_1630_TSTM, DAY1_2000_TSTM, DAY2_0700_TSTM, DAY2_1730_TSTM, DAY3_TSTM, DAY1_0100_SLGT, DAY1_1200_SLGT, DAY1_1300_SLGT, DAY1_1630_SLGT, DAY1_2000_SLGT, DAY2_0700_SLGT, DAY2_1730_SLGT, DAY3_SLGT, DAY1_0100_ENH, DAY1_1200_ENH, DAY1_1300_ENH, DAY1_1630_ENH, DAY1_2000_ENH, DAY2_0700_ENH, DAY2_1730_ENH, DAY3_ENH, DAY1_0100_MDT, DAY1_1200_MDT, DAY1_1300_MDT, DAY1_1630_MDT, DAY1_2000_MDT, DAY2_0700_MDT, DAY2_1730_MDT, DAY3_MDT, DAY1_0100_HIGH, DAY1_1200_HIGH, DAY1_1300_HIGH, DAY1_1630_HIGH, DAY1_2000_HIGH, DAY2_0700_HIGH, DAY2_1730_HIGH, DAY3_HIGH" 
+
 VX_MASK_LIST="DAY1_MRGL,  DAY2_MRGL, DAY3_MRGL, DAY1_TSTM,  DAY2_TSTM, DAY3_TSTM,  DAY1_SLGT,  DAY2_SLGT, DAY3_SLGT, DAY1_ENH,  DAY2_ENH, DAY3_ENH, DAY1_MDT,  DAY2_MDT, DAY3_MDT, DAY1_HIGH,  DAY2_HIGH, DAY3_HIGH"
 
 > run_all_poe.sh
@@ -159,7 +160,7 @@ chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 8 -ppn 8 --cpu-bind verbose,depth cfp run_all_poe.sh
+   mpiexec -np 6 -ppn 6 --cpu-bind verbose,depth cfp run_all_poe.sh
 else
  sh run_all_poe.sh
 fi
@@ -179,6 +180,8 @@ for domain in day1_mrgl day1_slgt day1_tstm day1_enh day1_mdt day1_high day2_mrg
     valid=valid_00z_12z
   fi
   mv lead_average_regional_${domain}_${valid}_${var}*.png  evs.href.csi_fbias.${var_new}_${level}.last${past_days}days.fhrmean.${valid}.buk_${domain}.png
+  mv threshold_average_regional_${domain}_${valid}_${var}_csi*.png  evs.href.csi.${var_new}_${level}.last${past_days}days.thresholdmean.${valid}.buk_${domain}.png
+  mv threshold_average_regional_${domain}_${valid}_${var}_fbias*.png  evs.href.fbias.${var_new}_${level}.last${past_days}days.thresholdmean.${valid}.buk_${domain}.png
   mv performance_diagram_regional_${domain}_${valid}_${var}*.png evs.href.ctc.${var_new}_${level}.last${past_days}days.perfdiag.${valid}.buk_${domain}.png
 
  done

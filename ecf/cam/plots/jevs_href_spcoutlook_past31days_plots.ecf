@@ -1,21 +1,19 @@
 #!/bin/bash
 
-#PBS -N evs_href_profile_plot
+#PBS -N evs_href_spcoutlook_plot
 #PBS -j oe
 #PBS -S /bin/bash
-#PBS -q dev
-#PBS -A VERF-DEV
+#PBS -A %PROJ%-%PROJENVIR%
 #PBS -l walltime=00:30:00
-#PBS -l place=vscatter:exclhost,select=10:ncpus=64:mem=100GB
+#PBS -l walltime=01:00:00
+#PBS -l place=vscatter:exclhost,select=1:ncpus=12:mem=100GB
 #PBS -l debug=true
 
+%include <head.h>
+%include <envir-p1.h>
 
-export OMP_NUM_THREADS=1
-
-export evs_ver=v1.0
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
-
-source $HOMEevs/versions/run.ver
+export model=evs
+%include <model_ver.h>
 
 module purge
 module load envvar/$envvar_ver
@@ -44,27 +42,40 @@ module list
 
 export met_v=${met_ver:0:4}
 
-export envir=prod
+export OMP_NUM_THREADS=1
+
+set -x
+
+export cyc=%CYC%
+export cycles="%CYCLES%"
 
 export NET=evs
 export STEP=plots
 export COMPONENT=cam
 export RUN=atmos
-export VERIF_CASE=profile
+export VERIF_CASE=spcoutlook
 export MODELNAME=href
 
 export KEEPDATA=YES
 
-export cyc=00
-#export VDATE=20230117
-export past_days=90
+export past_days=31
 
-export run_mpi=yes
+export run_mpi=no
 export valid_time=both
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
-export DATA_IN=${DATA_IN:-/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd}
-export ush_dir=/lfs/h2/emc/vpppg/noscrub/marcel.caron/verif_plotting/ush
 
 ${HOMEevs}/jobs/cam/plots/JEVS_CAM_PLOTS
+
+%include <tail.h>
+%manual
+################################################################################
+###TASKSCRIPT DOCUMENTATION BLOCK
+###
+###PURPOSE:  To execute the job that creates the ncepdate on IBMSP
+#########################################################################
+#########################################################################
+#### Job specific troubleshooting instructions:
+###  see generic troubleshoot manual page
+###
+########################################################################
+%end

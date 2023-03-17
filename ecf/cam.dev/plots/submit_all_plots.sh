@@ -16,3 +16,5 @@ qsub jevs_href_precip_past90days_plots.ecf
 qsub jevs_href_snowfall_past90days_plots.ecf
 
 qsub jevs_href_precip_spatial_plots.ecf
+qsub jevs_href_spcoutlook_past31days_plots.ecf
+qsub jevs_href_spcoutlook_past90days_plots.ecf

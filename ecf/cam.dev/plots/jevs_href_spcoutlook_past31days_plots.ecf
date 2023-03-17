@@ -1,12 +1,12 @@
 #!/bin/bash
 
 #PBS -N evs_href_spcoutlook_plot
-#PBS -oe
+#PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=01:00:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=16:mem=100GB
+#PBS -l place=vscatter:exclhost,select=1:ncpus=12:mem=100GB
 #PBS -l debug=true
 
 
@@ -56,8 +56,7 @@ export MODELNAME=href
 export KEEPDATA=YES
 
 export cyc=00
-#export VDATE=20230313
-export past_days=3
+export past_days=31
 
 export run_mpi=no
 export valid_time=both

@@ -226,27 +226,27 @@ for score_type in lead_average threshold_average; do
    if [ $var = vis ] ; then
        var_new=$var
        level=l0
-       stats=csi_fbias
+       stats="csi_fbias csi fbias"
        valid=valid_00z_03z_06z_09z_12z_15z_18z_21z
    elif [ $var = hgt ] ; then
        var_new=ceiling
        level=l0
-       stats=csi_fbias
+       stats="csi_fbias csi fbias"
        valid=valid_00z_03z_06z_09z_12z_15z_18z_21z
    elif [ $var = cape ] ; then
        var_new=cape
        level=l0
-       stats=csi_fbias
+       stats="csi_fbias  csi fbias"
        valid=valid_00z_12z
    elif [ $var = mlcape ] ; then
        var_new=mlcape
        level=ml
-       stats=csi_fbias
+       stats="csi_fbias csi fbias"
        valid=valid_00z_12z
    elif [ $var = tcdc ] ; then
        var_new=tatal_cloud
        level=l0
-       stats=ets_fbias
+       stats="ets_fbias ets fbias" 
        valid=valid_00z_03z_06z_09z_12z_15z_18z_21z
    fi
 
@@ -260,7 +260,7 @@ for score_type in lead_average threshold_average; do
 
     for domain in conus conus_east conus_west conus_south conus_central alaska appalachia cplains deepsouth greatbasin greatlakes mezquital midatlantic northatlantic nolains nrockies pacificnw pacificsw prairie southeast southwest splains nplains srockies ; do
 
-     mv ${score_type}_regional_${domain}_valid*_${var}_*.png evs.href.${stats}.${var_new}_${level}.last${past_days}days.${scoretype}.${valid}.buk_${domain}.png
+     mv ${score_type}_regional_${domain}_valid*_${var}_${stats}*.png evs.href.${stats}.${var_new}_${level}.last${past_days}days.${scoretype}.${valid}.buk_${domain}.png
 
        done #domain
     done #stat

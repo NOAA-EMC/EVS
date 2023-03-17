@@ -234,7 +234,7 @@ for stats in rmse_spread bss_smpl ; do
       fi	
 
       
-       mv ${score_type}_regional_${domain}_valid_00z_12z_${var}_${stats}${lead}  href.${stats}.${var_new}.last${past_days}days.${scoretype}_${valid_time}.${init_time}.buk_${domain}.png
+       mv ${score_type}_regional_${domain}_valid_00z_12z_${var}_${stats}${lead}  href.${stats}.${var_new}.last${past_days}days.${scoretype}.${valid_time}.${init_time}.buk_${domain}.png
 
     done #var
    done  #domain
