@@ -2,7 +2,7 @@
 
 # =============================================================================
 #
-# NAME: exevs_cam_grid2obs_plots.sh
+# NAME: exevs_mesoscale_grid2obs_plots.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # CONTRIBUTOR(S): Roshan Shrestha, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Handle all components of an EVS CAM Grid2Obs - Plots job
