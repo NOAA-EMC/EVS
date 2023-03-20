@@ -26,7 +26,7 @@ if STEP == 'prep':
     COMOUT_INITDATE = COMOUT+'.'+INITDATE
     if os.path.exists(COMOUT_INITDATE):
         print(f"Copying COMOUT {COMOUT_INITDATE} directory "
-              +"into working directory {cwd}")
+              +f"into working directory {cwd}")
         gda_util.run_shell_command(
             ['cp', '-r', COMOUT_INITDATE, os.path.join(cwd, '.')]
         )
