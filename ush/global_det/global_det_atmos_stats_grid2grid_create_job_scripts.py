@@ -662,7 +662,7 @@ generate_stats_jobs_dict = {
         '24hrNOHRSC_WaterEqv_G211': {'env': {'grid': 'G211',
                                              'file_name_var': 'WaterEqv',
                                              'var1_name': 'WEASD',
-                                             'var1_convert': '0.001 * 10'},
+                                             'var1_convert': '0.01'},
                                      'commands': [gda_util.metplus_command(
                                                       'GridStat_fcstGLOBAL_DET_'
                                                       +'obs24hrNOHRSC.conf'
@@ -678,7 +678,7 @@ generate_stats_jobs_dict = {
         '24hrNOHRSC_WaterEqv_G212': {'env': {'grid': 'G212',
                                              'file_name_var': 'WaterEqv',
                                              'var1_name': 'WEASD',
-                                             'var1_convert': '0.001 * 10'},
+                                             'var1_convert': '0.01'},
                                      'commands': [gda_util.metplus_command(
                                                       'GridStat_fcstGLOBAL_DET_'
                                                       +'obs24hrNOHRSC.conf'
@@ -694,7 +694,7 @@ generate_stats_jobs_dict = {
         '24hrNOHRSC_WaterEqv_G218': {'env': {'grid': 'G218',
                                              'file_name_var': 'WaterEqv',
                                              'var1_name': 'WEASD',
-                                             'var1_convert': '0.001 * 10'},
+                                             'var1_convert': '0.01'},
                                      'commands': [gda_util.metplus_command(
                                                       'GridStat_fcstGLOBAL_DET_'
                                                       +'obs24hrNOHRSC.conf'
@@ -711,7 +711,7 @@ generate_stats_jobs_dict = {
                                                'nbhrd_list': ("'1,3,5,7,9,11,"
                                                               +"13,15,17,19'"),
                                                'var1_name': 'WEASD',
-                                               'var1_convert': '0.001 * 10'},
+                                               'var1_convert': '0.01'},
                                        'commands': [gda_util.metplus_command(
                                                        'GridStat_fcstGLOBAL_DET_'
                                                        +'obs24hrNOHRSC_Nbrhd.conf'
@@ -720,7 +720,7 @@ generate_stats_jobs_dict = {
                                                'nbhrd_list': ("'21,23,25,27,"
                                                               +"29'"),
                                                'var1_name': 'WEASD',
-                                               'var1_convert': '0.001 * 10'},
+                                               'var1_convert': '0.01'},
                                        'commands': [gda_util.metplus_command(
                                                        'GridStat_fcstGLOBAL_DET_'
                                                        +'obs24hrNOHRSC_Nbrhd.conf'
@@ -728,7 +728,7 @@ generate_stats_jobs_dict = {
         '24hrNOHRSC_WaterEqv_Nbrhd3': {'env': {'file_name_var': 'WaterEqv',
                                                'nbhrd_list': "'31,33,35,37'",
                                                'var1_name': 'WEASD',
-                                               'var1_convert': '0.001 * 10'},
+                                               'var1_convert': '0.01'},
                                        'commands': [gda_util.metplus_command(
                                                        'GridStat_fcstGLOBAL_DET_'
                                                        +'obs24hrNOHRSC_Nbrhd.conf'
@@ -736,7 +736,7 @@ generate_stats_jobs_dict = {
         '24hrNOHRSC_WaterEqv_Nbrhd4': {'env': {'file_name_var': 'WaterEqv',
                                                'nbhrd_list': "'39,41,43'",
                                                'var1_name': 'WEASD',
-                                               'var1_convert': '0.001 * 10'},
+                                               'var1_convert': '0.01'},
                                        'commands': [gda_util.metplus_command(
                                                        'GridStat_fcstGLOBAL_DET_'
                                                        +'obs24hrNOHRSC_Nbrhd.conf'
@@ -744,7 +744,7 @@ generate_stats_jobs_dict = {
         '24hrNOHRSC_WaterEqv_Nbrhd5': {'env': {'file_name_var': 'WaterEqv',
                                                'nbhrd_list': "'45,47,49'",
                                                'var1_name': 'WEASD',
-                                               'var1_convert': '0.001 * 10'},
+                                               'var1_convert': '0.01'},
                                        'commands': [gda_util.metplus_command(
                                                        'GridStat_fcstGLOBAL_DET_'
                                                        +'obs24hrNOHRSC_Nbrhd.conf'
@@ -752,7 +752,7 @@ generate_stats_jobs_dict = {
         '24hrNOHRSC_WaterEqv_Nbrhd6': {'env': {'file_name_var': 'WaterEqv',
                                                'nbhrd_list': "'51,53,55'",
                                                'var1_name': 'WEASD',
-                                               'var1_convert': '0.001 * 10'},
+                                               'var1_convert': '0.01'},
                                        'commands': [gda_util.metplus_command(
                                                        'GridStat_fcstGLOBAL_DET_'
                                                        +'obs24hrNOHRSC_Nbrhd.conf'
@@ -760,7 +760,7 @@ generate_stats_jobs_dict = {
         '24hrNOHRSC_WaterEqv_Nbrhd7': {'env': {'file_name_var': 'WaterEqv',
                                                'nbhrd_list': "'57,59'",
                                                'var1_name': 'WEASD',
-                                               'var1_convert': '0.001 * 10'},
+                                               'var1_convert': '0.01'},
                                        'commands': [gda_util.metplus_command(
                                                        'GridStat_fcstGLOBAL_DET_'
                                                        +'obs24hrNOHRSC_Nbrhd.conf'
@@ -768,7 +768,7 @@ generate_stats_jobs_dict = {
         '24hrNOHRSC_WaterEqv_Nbrhd8': {'env': {'file_name_var': 'WaterEqv',
                                                'nbhrd_list': "'61,63'",
                                                'var1_name': 'WEASD',
-                                               'var1_convert': '0.001 * 10'},
+                                               'var1_convert': '0.01'},
                                        'commands': [gda_util.metplus_command(
                                                        'GridStat_fcstGLOBAL_DET_'
                                                        +'obs24hrNOHRSC_Nbrhd.conf'
@@ -929,6 +929,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                 for model_idx in range(len(model_list)):
                     job_env_dict['MODEL'] = model_list[model_idx]
                     njobs+=1
+                    job_env_dict['job_num'] = str(njobs)
                     # Create job file
                     job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
                     print("Creating job script: "+job_file)
@@ -961,6 +962,14 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                 job_env_dict['MODEL_levels'] = (
                                     'A'+job_env_dict['MODEL_accum']
                                 )
+                        if verif_type == 'pres_levs' \
+                                and verif_type_job == 'DailyAvg_GeoHeightAnom':
+                            if int(job_env_dict['fhr_inc']) < 24:
+                                job_env_dict['fhr_inc'] = '24'
+                            if int(job_env_dict['fhr_start']) < 24:
+                                job_env_dict['fhr_start'] = str(
+                                    int(job_env_dict['fhr_start']) + 24
+                                )
                     elif JOB_GROUP == 'generate_stats':
                         if verif_type == 'pres_levs':
                             job_env_dict['TRUTH'] = os.environ[
@@ -969,6 +978,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             if verif_type_job == 'DailyAvg_GeoHeightAnom':
                                 if int(job_env_dict['fhr_inc']) < 24:
                                     job_env_dict['fhr_inc'] = '24'
+                                if int(job_env_dict['fhr_start']) < 24:
+                                    job_env_dict['fhr_start'] = str(
+                                        int(job_env_dict['fhr_start']) + 24
+                                    )
                     # Do file checks
                     all_truth_file_exist = False
                     model_files_exist = False
