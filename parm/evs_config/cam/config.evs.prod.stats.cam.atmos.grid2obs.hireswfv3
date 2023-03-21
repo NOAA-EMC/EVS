@@ -31,6 +31,7 @@ export OBSNAME=${VERIF_TYPE}
 # Additional Verification Settings
 export GRID="FCST"
 if [ "$NEST" = "conus" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="yes"
     export MODEL_INPUT_TEMPLATE="hiresw.{init?fmt=%Y%m%d}/hiresw.t{init?fmt=%2H}z.fv3_5km.f{lead?fmt=%2H}.conus.grib2"
     if [ "$OBSNAME" = "raob" ]; then
         export COMINobs=${COMINobsproc}
@@ -56,6 +57,7 @@ if [ "$NEST" = "conus" ]; then
     export FHR_END_SHORT="60"
     export FHR_INCR_SHORT="12"
 elif [ "$NEST" = "subreg" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="yes"
     export MODEL_INPUT_TEMPLATE="hiresw.{init?fmt=%Y%m%d}/hiresw.t{init?fmt=%2H}z.fv3_5km.f{lead?fmt=%2H}.conus.grib2"
     if [ "$OBSNAME" = "raob" ]; then
         export COMINobs=${COMINobsproc}
@@ -81,6 +83,7 @@ elif [ "$NEST" = "subreg" ]; then
     export FHR_END_SHORT="60"
     export FHR_INCR_SHORT="12"
 elif [ "$NEST" = "ak" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="yes"
     export MODEL_INPUT_TEMPLATE="hiresw.{init?fmt=%Y%m%d}/hiresw.t{init?fmt=%2H}z.fv3_5km.f{lead?fmt=%2H}.ak.grib2"
     if [ "$OBSNAME" = "raob" ]; then
         export COMINobs=${COMINobsproc}
@@ -106,6 +109,7 @@ elif [ "$NEST" = "ak" ]; then
     export FHR_END_SHORT="60"
     export FHR_INCR_SHORT="12"
 elif [ "$NEST" = "hi" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="yes"
     export MODEL_INPUT_TEMPLATE="hiresw.{init?fmt=%Y%m%d}/hiresw.t{init?fmt=%2H}z.fv3_5km.f{lead?fmt=%2H}.hi.grib2"
     if [ "$OBSNAME" = "raob" ]; then
         export COMINobs=${COMINobsproc}
@@ -131,6 +135,7 @@ elif [ "$NEST" = "hi" ]; then
     export FHR_END_SHORT="60"
     export FHR_INCR_SHORT="12"
 elif [ "$NEST" = "pr" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="yes"
     export MODEL_INPUT_TEMPLATE="hiresw.{init?fmt=%Y%m%d}/hiresw.t{init?fmt=%2H}z.fv3_5km.f{lead?fmt=%2H}.pr.grib2"
     if [ "$OBSNAME" = "raob" ]; then
         export COMINobs=${COMINobsproc}
@@ -156,6 +161,7 @@ elif [ "$NEST" = "pr" ]; then
     export FHR_END_SHORT="60"
     export FHR_INCR_SHORT="12"
 elif [ "$NEST" = "gu" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="yes"
     export MODEL_INPUT_TEMPLATE="hiresw.{init?fmt=%Y%m%d}/hiresw.t{init?fmt=%2H}z.fv3_5km.f{lead?fmt=%2H}.guam.grib2"
     if [ "$OBSNAME" = "raob" ]; then
         export COMINobs=${COMINobsproc}
@@ -181,6 +187,7 @@ elif [ "$NEST" = "gu" ]; then
     export FHR_END_SHORT="60"
     export FHR_INCR_SHORT="12"
 elif [ "$NEST" = "spc_otlk" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="no"
     export MODEL_INPUT_TEMPLATE="hiresw.{init?fmt=%Y%m%d}/hiresw.t{init?fmt=%2H}z.fv3_5km.f{lead?fmt=%2H}.conus.grib2"
     if [ "$OBSNAME" = "raob" ]; then
         export COMINobs=${COMINobsproc}
