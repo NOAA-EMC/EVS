@@ -95,7 +95,7 @@ for  obsv in ccpa ; do
        echo "cp \$output_base/stat/*.stat $COMOUTsmall" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
 
        chmod +x run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-       echo "run_sref_mpi_${domain}.${obsv}.${fhr}.sh" >> run_all_sref_precip_poe
+       echo "${DATA}/run_sref_mpi_${domain}.${obsv}.${fhr}.sh" >> run_all_sref_precip_poe
 
   done
 
