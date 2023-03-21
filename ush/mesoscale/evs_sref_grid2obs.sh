@@ -60,7 +60,7 @@ for  obsv in prepbufr ; do
        echo "cp \$output_base/stat/*.stat $COMOUTsmall" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
 
        chmod +x run_sref_g2o_${domain}.${obsv}.${fhr}.sh
-       echo "run_sref_g2o_${domain}.${obsv}.${fhr}.sh" >> run_all_sref_g2o_poe.sh
+       echo "${DATA}/run_sref_g2o_${domain}.${obsv}.${fhr}.sh" >> run_all_sref_g2o_poe.sh
 
   done
 
