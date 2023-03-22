@@ -1,0 +1,84 @@
+#!/bin/bash -e
+##---------------------------------------------------------------------------
+##---------------------------------------------------------------------------
+## NCEP EMC VERIFICATION SYSTEM (SUBSEASONAL)
+##
+## CONTRIBUTORS: Shannon Shields, Shannon.Shields@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+## PURPOSE: Set up configurations to run user requested subseasonal verification plots
+##---------------------------------------------------------------------------
+##--------------------------------------------------------------------------
+
+echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
+
+####################################################
+# WHAT METPLUS USE CASES TO RUN
+####################################################
+## PLOTS STEP PRODUCES PLOTS FOR STATISTICS FROM .STAT FILES
+export VERIF_CASE_STEP=${VERIF_CASE}_${STEP}
+####################################################
+# GENERAL SETTINGS APPLIED TO ALL USE CASES
+####################################################
+## FORECAST MODEL SETTINGS
+#model_list:             model names
+#model_dir_list:         directory path to model stat files
+#model_plots_dir_list:    directory path to model plots
+#model_file_format_list: file format of model files
+export model_list="$MODELNAME"
+export model_dir_list="$COMINgefs $COMINcfs"
+export model_plots_dir_list="$COMOUT $COMOUT"
+#export model_file_format_list="gefs.{init?fmt=%Y%m%d}/{init?fmt=%2H} cfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}"
+## OUTPUT DATA SETTINGS
+#OUTPUTROOT: base output directory
+export OUTPUTROOT="$DATAROOTtmp/$STEP"
+#export OUTPUTROOT="/lfs/h1/ops/prod/com/$NET/$evs_ver/$STEP"
+## DATE SETTINGS
+#start_date:       verification start date, format YYYYMMDD
+#end_date:         verification end date, format YYYYMMDD
+#plot_by:          how to plot data, "VALID" or "INIT"
+export start_date="$VDATE_START"
+export end_date="$VDATE_END"
+export plot_by="VALID"
+## WEB SETTINGS
+#SEND2WEB:  whether or not to send maps to webhost
+#webhost:   webhost(rzdm) computer
+#webhostid: webhost(rzdm) user name
+#webdir:    directory where to send maps on webhost
+export SEND2WEB="NO"
+export webhost="emcrzdm.ncep.noaa.gov"
+export webhostid="$USER"
+export webdir="/home/people/emc/www/htdocs/users/${webhostid}/METplus/TEST"
+## METPLUS SETTINGS
+#MET_version:               MET version to use
+#METplus_version:           METplus version to use
+#MET_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
+#METplus_verbosity:         DEBUG, INFO, WARN, ERROR (most verbose is DEBUG)
+#log_MET_output_to_METplus: log MET output to METplus log, yes or no
+export MET_version="$met_ver"
+export METplus_version="$metplus_ver"
+export METplus_verbosity="INFO"
+export MET_verbosity="2"
+export log_MET_output_to_METplus="yes"
+## DATA DIRECTIVE SETTINGS
+export SENDARCH="YES"
+export KEEPDATA="YES"
+####################################################
+# SETTINGS FOR SPECIFIC USE CASES
+####################################################
+if [ $VERIF_CASE_STEP = grid2grid_plots ]; then
+    #g2gplots_model_plot_name_list: list of models reference name on plots
+    #g2gplots_type_list: list type of verifications to run for grid-to-grid:  sst
+    #####    g2gplots_*_fcyc_list:        all forecast cycles to be included in verification: HH
+    #####    g2gplots_*_fhr_min:         forecast hour to start verification HH[H]
+    #####    g2gplots_*_fhr_max:         forecast hour to end verification HH[H]
+    #####    g2gplots_*_fhr_inc:         frequency to verify forecast hours at HH[H]
+    #####    g2gplots_*_event_eq:        do event equalization (YES) or not (NO)
+    export g2gplots_model_plot_name_list="gefs_mean cfs_mean"
+    export g2gplots_type_list="sst"
+    export g2gplots_sst_fcyc_list="00"
+    export g2gplots_sst_fhr_min=24
+    export g2gplots_sst_fhr_max=840
+    export g2gplots_sst_fhr_inc=24
+    export g2gplots_event_eq="NO"
+fi
+
+echo "END: $(basename ${BASH_SOURCE[0]})"
