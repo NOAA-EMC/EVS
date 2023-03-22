@@ -39,8 +39,8 @@ set -x
   export evs_run_mode="standalone"
 
 # EVS Settings
-  export HOMEevs="/lfs/h2/emc/vpppg/noscrub/${USER}/verification/EVS"
-# export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+#  export HOMEevs="/lfs/h2/emc/vpppg/noscrub/${USER}/verification/EVS"
+ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 # Subdirectories to EVS Home Directory
   export PARMevs=$HOMEevs/parm
   export USHevs=$HOMEevs/ush
@@ -58,7 +58,7 @@ source $HOMEevs/versions/run.ver
 
 source /usr/share/lmod/lmod/init/sh
 module reset
-export HPC_OPT=/apps/ops/para/libs
+export HPC_OPT=/apps/ops/prod/libs
 export MET_bin_exec="bin"
 
 module load cray-pals/${craypals_ver}
@@ -99,7 +99,7 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
   export VDATE=$(date -d "today -1 day" +"%Y%m%d")
 
 # Developer Settings
-  export COMOUT=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
+  export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
   export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 
 # VAR list to run

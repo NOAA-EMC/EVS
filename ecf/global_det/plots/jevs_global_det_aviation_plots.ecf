@@ -1,23 +1,22 @@
 #!/bin/bash
 
-#PBS -N evs_aviation_plots
+#PBS -N jevs_aviation_plots
 #PBS -j oe
-#PBS -o /lfs/h2/emc/ptmp/yali.mao/evs_aviation_plots.log
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=02:00:00
+#PBS -l walltime=06:00:00
 #PBS -l select=1:ncpus=4:mem=200GB
 ##PBS -V
 
 export OMP_NUM_THREADS=1
 
-export HOMEevs=${HOMEevs:-/lfs/h2/emc/vpppg/noscrub/$USER/git/EVS}
+export HOMEevs=${HOMEevs:-/lfs/h2/emc/vpppg/noscrub/$USER/EVS}
 source $HOMEevs/versions/run.ver
 
 ############################################################
 # Load modules
 ############################################################
-module purge
+module reset
 module load envvar/$envvar_ver
 module load PrgEnv-intel/$PrgEnv_intel_ver
 module load intel/$intel_ver
@@ -44,7 +43,7 @@ module load cfp/$cfp_ver
 export HPC_OPT=/apps/ops/prod/libs
 module use /apps/ops/prod/libs/modulefiles/compiler/intel/$intel_ver
 module load intel
-module load gsl
+module load gsl/$gsl_ver
 module load python/$python_ver
 module load met/$met_ver
 module load metplus/$metplus_ver
@@ -63,7 +62,7 @@ export COMPONENT=global_det
 export RUN=aviation
 export VERIF_CASE=grid2grid
 
-export COMIN=/lfs/h2/emc/ptmp/$USER/com/evs/$evs_ver
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/evs/$evs_ver
 
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
