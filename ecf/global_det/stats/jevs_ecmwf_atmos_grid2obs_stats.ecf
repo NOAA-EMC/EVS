@@ -2,7 +2,7 @@
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
-#PBS -A VERF-DEV
+#PBS -A EVS-DEV
 #PBS -l walltime=0:30:00
 #PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
 #PBS -l debug=true
@@ -17,7 +17,8 @@ export model=evs
 ############################################################
 cd $PBS_O_WORKDIR
 module reset
-export HOMEevs=$(eval "cd ../../../;pwd")
+#export HOMEevs=$(eval "cd ../../../;pwd")
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 versionfile=$HOMEevs/versions/run.ver
 . $versionfile
 export evs_ver=$evs_ver
@@ -77,10 +78,12 @@ export VERIF_CASE=grid2obs
 export MODELNAME=ecmwf
 
 # Set COM paths
-export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com
+export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
+#export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com
 export COMIN=$COMROOT/$NET/$evs_ver
 export COMINecmwf=$COMIN/prep/$COMPONENT/$RUN
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT
+#export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT
 
 # Set config file
 export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}

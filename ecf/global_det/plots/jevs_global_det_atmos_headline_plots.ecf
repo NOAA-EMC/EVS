@@ -17,7 +17,8 @@ export model=evs
 ############################################################
 cd $PBS_O_WORKDIR
 module reset
-export HOMEevs=$(eval "cd ../../../;pwd")
+#export HOMEevs=$(eval "cd ../../../;pwd")
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 versionfile=$HOMEevs/versions/run.ver
 . $versionfile
 export evs_ver=$evs_ver
@@ -71,7 +72,7 @@ export RUN=headline
 
 # Set COM paths
 export PDYm1=$(date -d "24 hours ago" '+%Y%m%d')
-export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com
+export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=$COMROOT/$NET/$evs_ver
 export COMINdailystats=$COMIN/stats/$COMPONENT
 export COMINyearlystats=$COMIN/stats/$COMPONENT/long_term/annual_means

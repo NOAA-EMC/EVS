@@ -2,7 +2,7 @@
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev_transfer
-#PBS -A VERF-DEV
+#PBS -A EVS-DEV
 #PBS -l walltime=1:00:00
 #PBS -l select=1:ncpus=1:mem=5GB
 #PBS -l debug=true
@@ -16,8 +16,10 @@ export model=evs
 # For dev testing
 ############################################################
 cd $PBS_O_WORKDIR
+echo $PBS_O_WORKDIR
 module reset
-export HOMEevs=$(eval "cd ../../../;pwd")
+#export HOMEevs=$(eval "cd ../../../;pwd")
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 versionfile=$HOMEevs/versions/run.ver
 . $versionfile
 export evs_ver=$evs_ver
@@ -55,7 +57,8 @@ export STEP=prep
 export COMPONENT=global_det
 export RUN=atmos
 
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
+#export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
 
 export MODELNAME="cfs cmc cmc_regional dwd ecmwf fnmoc imd jma metfra ukmet"
 export OBSNAME="osi_saf ghrsst_ospo"
