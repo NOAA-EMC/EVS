@@ -1,26 +1,23 @@
-#PBS -N jevs_sref_grid2obs_stats_%CYC%
-#PBS -j oe
+#!/bin/bash
+
+#PBS -N jevs_sref_g2o_stats
+#PBS -j oe 
 #PBS -S /bin/bash
-#PBS -q %QUEUE%
-#PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=01:00:00
+#PBS -q dev
+#PBS -A VERF-DEV
+#PBS -l walltime=02:00:00
 #PBS -l place=vscatter:exclhost,select=1:ncpus=4:mem=10GB
 #PBS -l debug=true
 
-
-%include <head.h>
-%include <envir-p1.h>
-export model=evs
-%include <model_ver.h>
-
-set -x
-export cyc=%CYC%
-export cycles="%CYCLES%"
+#Total 2 prodllel processes
 
 export OMP_NUM_THREADS=1
 
+export evs_ver=v1.0
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 source $HOMEevs/versions/run.ver
-module purge
+
+module reset
 module load envvar/$envvar_ver
 module load PrgEnv-intel/$PrgEnv_intel_ver
 module load intel/$intel_ver
@@ -35,8 +32,8 @@ module load zlib/$zlib_ver
 module load jasper/$jasper_ver
 module load netcdf/$netcdf_ver
 module load cfp/$cfp_ver
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/$intel_ver
+export HPC_OPT=/apps/ops/prod/libs
+module use /apps/ops/prod/libs/modulefiles/compiler/intel/$intel_ver
 module load gsl/${gsl_ver}
 module load python/$python_ver
 module load met/$met_ver
@@ -50,24 +47,16 @@ export STEP=stats
 export COMPONENT=mesoscale
 export RUN=atmos
 export VERIF_CASE=grid2obs
-export MODEL=sref
+export MODELNAME=sref
 
 export KEEPDATA=YES
 
+export cyc=00
+export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
+export DATA_IN=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
+export COMINsrefmean=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
 
-${HOMEevs}/jobs/${COMPONENT}/${STEP}/JEVS_MESOSCALE_STATS
+${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS
 
-%include <tail.h>
-%manual
-#################################################################################
-##TASKSCRIPT DOCUMENTATION BLOCK
-##
-##PURPOSE:  To execute the job that creates the ncepdate on IBMSP
-########################################################################
-########################################################################
-### Job specific troubleshooting instructions:
-##  see generic troubleshoot manual page
-##
-#######################################################################
-%end
 
