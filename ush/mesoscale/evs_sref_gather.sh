@@ -47,7 +47,7 @@ MODEL=`echo $modnam | tr '[a-z]' '[A-Z]'`
 
   chmod +x run_gather_${verify}.sh
 
-  echo "run_gather_${verify}.sh" >> run_gather_all_poe.sh 
+  echo "${DATA}/run_gather_${verify}.sh" >> run_gather_all_poe.sh 
 
 
 
