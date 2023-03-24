@@ -35,16 +35,15 @@ for NEST in $NEST_LIST; do
             echo "${ACC} is not supported"
             exit 1
         fi
+        source $USHevs/cam/cam_stats_precip_filter_valid_hours_list.sh
         for VHOUR in $VHOUR_LIST; do
             export VHOUR=$VHOUR
             if [ $RUN_ENVIR = nco ]; then
                 export evs_run_mode="production"
                 source $config
-                source $USHevs/cam/cam_stats_precip_filter_valid_hours_list.sh
             else
                 export evs_run_mode=$evs_run_mode
                 source $config
-                source $USHevs/cam/cam_stats_precip_filter_valid_hours_list.sh
             fi
             echo "RUN MODE: $evs_run_mode"
             # Check User's Configuration Settings
@@ -128,6 +127,7 @@ for NEST in $NEST_LIST; do
             echo "${ACC} is not supported"
             exit 1
         fi
+        source $USHevs/cam/cam_stats_precip_filter_valid_hours_list.sh
         for VHOUR in $VHOUR_LIST; do
             export VHOUR=$VHOUR
             for BOOL_NBRHD in True False; do
@@ -135,11 +135,9 @@ for NEST in $NEST_LIST; do
                 if [ $RUN_ENVIR = nco ]; then
                     export evs_run_mode="production"
                     source $config
-                    source $USHevs/cam/cam_stats_precip_filter_valid_hours_list.sh
                 else
                     export evs_run_mode=$evs_run_mode
                     source $config
-                    source $USHevs/cam/cam_stats_precip_filter_valid_hours_list.sh
                 fi
  
                 # Check User's Configuration Settings
@@ -212,11 +210,9 @@ for NEST in $NEST_LIST; do
     if [ $RUN_ENVIR = nco ]; then
         export evs_run_mode="production"
         source $config
-        source $USHevs/cam/cam_stats_precip_filter_valid_hours_list.sh
     else
         export evs_run_mode=$evs_run_mode
         source $config
-        source $USHevs/cam/cam_stats_precip_filter_valid_hours_list.sh
     fi
     # Create Output Directories
     python $USHevs/cam/cam_create_output_dirs.py
@@ -276,11 +272,9 @@ export njob=1
 if [ $RUN_ENVIR = nco ]; then
     export evs_run_mode="production"
     source $config
-    source $USHevs/cam/cam_stats_precip_filter_valid_hours_list.sh
 else
     export evs_run_mode=$evs_run_mode
     source $config
-    source $USHevs/cam/cam_stats_precip_filter_valid_hours_list.sh
 fi
 # Create Output Directories
 python $USHevs/cam/cam_create_output_dirs.py
@@ -365,11 +359,9 @@ if [ "$cyc" -ge "$last_cyc" ]; then
     if [ $RUN_ENVIR = nco ]; then
         export evs_run_mode="production"
         source $config
-        source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
     else
         export evs_run_mode=$evs_run_mode
         source $config
-        source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
     fi
     # Create Output Directories
     python $USHevs/cam/cam_create_output_dirs.py

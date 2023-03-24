@@ -21,25 +21,25 @@ fi
 
 echo "REQUESTED LIST OF VALID HOURS: $VHOUR_LIST"
 NEW_VHOUR_LIST=""
-if [ $cyc -ge 18 ] && [ $cyc -lt 19 ]; then
+if [ $cyc -ge 19 ] && [ $cyc -lt 20 ]; then
     for VHOUR in $VHOUR_LIST; do
         if [ $VHOUR -ge 0 ] && [ $VHOUR -le 5 ]; then
             NEW_VHOUR_LIST+="$VHOUR "
         fi
     done
-elif [ $cyc -ge 19 ] && [ $cyc -lt 20 ]; then
+elif [ $cyc -ge 20 ] && [ $cyc -lt 21 ]; then
     for VHOUR in $VHOUR_LIST; do
         if [ $VHOUR -ge 6 ] && [ $VHOUR -le 11 ]; then
             NEW_VHOUR_LIST+="$VHOUR "
         fi
     done
-elif [ $cyc -ge 20 ] && [ $cyc -lt 21 ]; then
+elif [ $cyc -ge 21 ] && [ $cyc -lt 22 ]; then
     for VHOUR in $VHOUR_LIST; do
         if [ $VHOUR -ge 12 ] && [ $VHOUR -le 17 ]; then
             NEW_VHOUR_LIST+="$VHOUR "
         fi
     done
-elif [ $cyc -ge 21 ] && [ $cyc -le 23 ]; then
+elif [ $cyc -ge 22 ] && [ $cyc -le 23 ]; then
     for VHOUR in $VHOUR_LIST; do
         if [ $VHOUR -ge 18 ] && [ $VHOUR -le 23 ]; then
             NEW_VHOUR_LIST+="$VHOUR "
