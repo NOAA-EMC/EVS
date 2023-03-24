@@ -386,7 +386,7 @@ if [ "$cyc" -ge "$last_cyc" ]; then
 
     # Run All NAM Nest precip/stats Gather 3 Jobs
     chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
-    ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc - 1)
+    ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
     nc=1
     if [ $USE_CFP = YES ]; then
         ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe* |wc -l)

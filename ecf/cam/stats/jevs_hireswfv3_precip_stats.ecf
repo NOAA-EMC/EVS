@@ -36,7 +36,7 @@ export VERIF_CASE="precip"
 export MODELNAME="hireswfv3"
 
 # EVS Settings
-export HOMEevs="/lfs/h2/emc/vpppg/noscrub/$USER/EVS"
+export HOMEevs="/lfs/h2/emc/vpppg/save/$USER/EVS"
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export config=$HOMEevs/parm/evs_config/cam/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
@@ -84,6 +84,7 @@ export COMINmrms=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
 export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
+export cyc=$(date -d "today" +"%H")
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/cam/stats/JEVS_CAM_STATS

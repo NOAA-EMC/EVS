@@ -359,7 +359,7 @@ if [ "$cyc" -ge "$last_cyc" ]; then
 
     # Run All NAM Nest grid2obs/stats Gather 3 Jobs
     chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
-    ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc - 1)
+    ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
     nc=1
     if [ $USE_CFP = YES ]; then
         ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe* |wc -l)
@@ -375,7 +375,7 @@ if [ "$cyc" -ge "$last_cyc" ]; then
                 export SLURM_KILL_BAD_EXIT=0
                 launcher="srun --export=ALL --multi-prog"
             else
-                echo "Cannot submit jobs to scheduler on this machine. Set USE_CFP=NO and retry."
+                echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
                 exit 1
             fi
             $launcher $MP_CMDFILE
