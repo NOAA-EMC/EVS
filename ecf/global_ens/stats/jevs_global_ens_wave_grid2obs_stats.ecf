@@ -13,7 +13,7 @@ set -x
 ##%include <head.h>
 ##%include <envir-p1.h>
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS_save
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 ############################################################
 # read version file and set model_ver
@@ -28,8 +28,8 @@ export obsproc_ver=$obsproc_ver
 # Load modules
 ############################################################
 module reset
-##export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
+##export HPC_OPT=/apps/ops/prod/libs
+module use /apps/ops/prod/libs/modulefiles/compiler/intel/${intel_ver}
 module load cray-pals/${craypals_ver}
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module --ignore-cache load intel/${intel_ver}
@@ -72,7 +72,7 @@ export VERIF_CASE=grid2obs
 ## developers directories
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output
 export FIXevs='/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix'
-export OUTPUTROOT="/lfs/h2/emc/vpppg/noscrub/$USER/EVS_stats"
+export OUTPUTROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}
 
 export run_mpi='yes'
@@ -82,6 +82,11 @@ export job=${PBS_JOBNAME:-jevs_global_ens_wave_g2o_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
+
+export metplus_verbosity="INFO"
+export met_verbosity="2"
+export log_met_output_to_metplus="yes"
+export MET_bin_exec=bin
 
 ############################################################
 # CALL executable job script here
