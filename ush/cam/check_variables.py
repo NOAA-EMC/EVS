@@ -36,26 +36,26 @@ def check_VERIF_TYPE(VERIF_TYPE):
         ##sys.exit(1)
     return VERIF_TYPE
 
-# IMG_HEADER
+# URL_HEADER
 # info case: whether or not an empty string is provided
 # warning case:
 # error case:should be a string (in quotes), should be alphanumeric, should follow file naming conventions
-def check_IMG_HEADER(IMG_HEADER):
-    if not isinstance(IMG_HEADER, str):
-        sys.exit(f"The provided IMG_HEADER ('{IMG_HEADER}') is not a string."
-                     + f"  IMG_HEADER must be a string. Check the plotting"
+def check_URL_HEADER(URL_HEADER):
+    if not isinstance(URL_HEADER, str):
+        sys.exit(f"The provided URL_HEADER ('{URL_HEADER}') is not a string."
+                     + f"  URL_HEADER must be a string. Check the plotting"
                      + f" configuration file.")
         #sys.exit(1)
-    if re.search(r'[^A-Za-z0-9_\-\\.]', IMG_HEADER):
-        sys.exit(f"The provided IMG_HEADER string ('{IMG_HEADER}') contains"
-                     + f" invalid characters. IMG_HEADER must be made of"
+    if re.search(r'[^A-Za-z0-9_\-\\]', URL_HEADER):
+        sys.exit(f"The provided URL_HEADER string ('{URL_HEADER}') contains"
+                     + f" invalid characters. URL_HEADER must be made of"
                      + f" alphanumeric characters, hyphen, and/or underscore."
                      + f" Check the plotting configuration file.")
         #sys.exit(1)
-    if not IMG_HEADER:
-        print(f"The provided IMG_HEADER is empty. Plot file names will"
+    if not URL_HEADER:
+        print(f"The provided URL_HEADER is empty. Plot file names will"
                      + f" not include a header.")
-    return IMG_HEADER
+    return URL_HEADER
 
 # USH_DIR
 # info case:whether or not an empty string is provided
@@ -117,40 +117,40 @@ def check_SAVE_DIR(SAVE_DIR):
                      + f" in the current working directory.")
     return SAVE_DIR
 
-# STAT_OUTPUT_BASE_DIR
+# OUTPUT_BASE_DIR
 # info case: whether or not an empty string is provided
 # warning case:
 # error case:should be a string, should follow proper directory structure
-def check_STAT_OUTPUT_BASE_DIR(STAT_OUTPUT_BASE_DIR):
-    if not isinstance(STAT_OUTPUT_BASE_DIR, str):
-        sys.exit(f"The provided STAT_OUTPUT_BASE_DIR ('{STAT_OUTPUT_BASE_DIR}') is not a string."
-                     + f"  STAT_OUTPUT_BASE_DIR must be a string. Check the plotting"
+def check_OUTPUT_BASE_DIR(OUTPUT_BASE_DIR):
+    if not isinstance(OUTPUT_BASE_DIR, str):
+        sys.exit(f"The provided OUTPUT_BASE_DIR ('{OUTPUT_BASE_DIR}') is not a string."
+                     + f"  OUTPUT_BASE_DIR must be a string. Check the plotting"
                      + f" configuration file.")
         #sys.exit(1)
-    if not Path(STAT_OUTPUT_BASE_DIR).exists():
-        print(f"WARNING: The provided STAT_OUTPUT_BASE_DIR ('{STAT_OUTPUT_BASE_DIR}') does not exist on the"
+    if not Path(OUTPUT_BASE_DIR).exists():
+        print(f"WARNING: The provided OUTPUT_BASE_DIR ('{OUTPUT_BASE_DIR}') does not exist on the"
                        + f" current system.")
-    if not Path(STAT_OUTPUT_BASE_DIR).is_dir():
-        print(f"WARNING: The provided STAT_OUTPUT_BASE_DIR ('{STAT_OUTPUT_BASE_DIR}') is not a directory.")
-    if not STAT_OUTPUT_BASE_DIR:
-        print(f"The provided STAT_OUTPUT_BASE_DIR is empty. Will look for stat files"
+    if not Path(OUTPUT_BASE_DIR).is_dir():
+        print(f"WARNING: The provided OUTPUT_BASE_DIR ('{OUTPUT_BASE_DIR}') is not a directory.")
+    if not OUTPUT_BASE_DIR:
+        print(f"The provided OUTPUT_BASE_DIR is empty. Will look for stat files"
                      + f" in the current working directory.")
-    return STAT_OUTPUT_BASE_DIR
+    return OUTPUT_BASE_DIR
 
-# LOG_TEMPLATE
+# LOG_METPLUS
 # info case:
 # warning case:
 # error case: should be a string, should follow proper directory structure, should not be empty
-def check_LOG_TEMPLATE(LOG_TEMPLATE):
-    if not isinstance(LOG_TEMPLATE, str):
-        sys.exit(f"The provided LOG_TEMPLATE ('{LOG_TEMPLATE}') is not a string."
-                     + f"  LOG_TEMPLATE must be a string. Check the plotting"
+def check_LOG_METPLUS(LOG_METPLUS):
+    if not isinstance(LOG_METPLUS, str):
+        sys.exit(f"The provided LOG_METPLUS ('{LOG_METPLUS}') is not a string."
+                     + f"  LOG_METPLUS must be a string. Check the plotting"
                      + f" configuration file.")
         #sys.exit(1)
-    if not LOG_TEMPLATE:
-        print(f"WARNING: The provided LOG_TEMPLATE is empty. The logger will be"
+    if not LOG_METPLUS:
+        print(f"WARNING: The provided LOG_METPLUS is empty. The logger will be"
                        + f" the root logger of the hierarchy.")
-    return LOG_TEMPLATE
+    return LOG_METPLUS
 
 # LOG_LEVEL
 # info case: 
@@ -194,23 +194,23 @@ def check_MET_VERSION(MET_VERSION):
         #sys.exit(1)
     return MET_VERSION
 
-# MODELS
+# MODEL
 # info case:
 # warning case:
 # error case: should be a string, should be comma-separated or contain no other symbols than letters, numbers, dashes, and underlines
-def check_MODELS(MODELS):
-    if not isinstance(MODELS, str):
-        sys.exit(f"The provided MODELS ('{MODELS}') is not a string."
-                     + f" MODELS must be a string. Check the plotting"
+def check_MODEL(MODEL):
+    if not isinstance(MODEL, str):
+        sys.exit(f"The provided MODEL ('{MODEL}') is not a string."
+                     + f" MODEL must be a string. Check the plotting"
                      + f" configuration file.")
         #sys.exit(1)
-    if not re.search(r'(^[ A-Za-z0-9,\-_]+)$', MODELS):
-        sys.exit(f"The provided MODELS ('{MODELS}') is not valid. MODELS may"
+    if not re.search(r'(^[ A-Za-z0-9,\-_]+)$', MODEL):
+        sys.exit(f"The provided MODEL ('{MODEL}') is not valid. MODEL may"
                      + f" contain letters, numbers, hyphens, underscores,"
                      + f" commas, and spaces only. Check the plotting"
                      + f" configuration file.")
         #sys.exit(1)
-    return MODELS
+    return MODEL
 
 # DATE_TYPE
 # info case:
@@ -252,8 +252,7 @@ def check_EVAL_PERIOD(EVAL_PERIOD):
     else:
         print(f"Since the EVAL_PERIOD is not set to 'TEST', will use a"
                     + f" preset INIT/VALID period (check ush/settings.py for"
-                    + f" possible presets). EVAL_PERIOD may be dealt with"
-                    + f" differently for spatial_map plots.")
+                    + f" possible presets).")
     return EVAL_PERIOD
 
 
@@ -718,18 +717,4 @@ def check_CONFIDENCE_INTERVALS(CONFIDENCE_INTERVALS):
                        + f" 'True' if confidence intervals should be plotted.")
     return CONFIDENCE_INTERVALS
 
-# INTERP_PTS
-# info case:
-# warning case:
-# error case: should be a string, should be a comma-separated list of positive numbers
-def check_INTERP_PTS(INTERP_PTS):
-    if not isinstance(INTERP_PTS, str):
-        sys.exit(f"The provided INTERP_PTS ('{INTERP_PTS}') is not a string."
-                 + f" INTERP_PTS must be a string. Check the plotting"
-                 + f" configuration file.")
-    if re.search(r'[^ 0-9,]', INTERP_PTS):
-        sys.exit(f"The provided INTERP_PTS string ('{INTERP_PTS}') contains"
-                 + f" invalid characters. INTERP_PTS must be made of"
-                 + f" numerics, commas and/or spaces only. Check the"
-                 + f" plotting configuration file.")
-    return INTERP_PTS
+
