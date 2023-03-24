@@ -1,1 +1,83 @@
-sample
+#!/bin/ksh
+#  JOB card cerated for running METPlus-based Global enesmble verifications
+#   By Binbin Zhou, IMSG@EMC/NCEP
+#   Feb 2, 2022
+#
+set -xa
+#######################################################
+#######################################################
+
+export cycle=t${cyc}z
+
+export DATA_IN=${DATA_IN:-$DATAROOT}
+export pid=$$
+jobid=evs_${RUN}_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}.$$
+export DATA=$DATA_IN/$jobid
+mkdir -p $DATA
+cd $DATA
+
+# Run setpdy and initialize PDY variables
+setpdy.sh
+. $DATA/PDY
+
+if [ $RUN = atmos ] || [ $RUN = wmo ] || [ $RUN = headline ] ; then
+  export VDATE=${VDATE:-$PDYm2}
+fi
+
+
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+
+export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/prep/$COMPONENT/$RUN
+export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/$evs_ver)}/$STEP/$COMPONENT
+mkdir $COMOUT
+
+export COMOUTsmall=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
+export COMOUTfinal=$COMOUT/$MODELNAME.$VDATE
+
+mkdir -p $COMOUTsmall $COMOUTfinal
+
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs_gens.${evs_ver}}
+export EXECevs=$HOMEevs/exec
+export PARMevs=$HOMEevs/parm
+export USHevs=$HOMEevs/ush
+export SCRIPTerf=$HOMEevs/scripts
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+
+
+####################################
+# Determine Job Output Name on System
+####################################
+export outid="LL$job"
+export jobid="${outid}.o${pid}"
+export pgmout="OUTPUT.${pid}"
+
+
+if [ $RUN = headline ] ; then
+       sh $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh $VDATE $MODELNAME upper
+elif [ $RUN = wmo ] ; then
+       sh $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh $VDATE $MODELNAME upper
+elif [ $RUN = atmos ] ; then
+   if [ $VERIF_CASE = grid2grid ] ; then
+       sh $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh $VDATE $MODELNAME upper
+   elif [ $VERIF_CASE = grid2obs ] || [ $VERIF_CASE = cnv ] ; then
+       sh $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_grid2obs_${STEP}.sh $VDATE $MODELNAME $VERIF_CASE
+   else
+       sh $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_grid2grid_${STEP}.sh $VDATE $MODELNAME $VERIF_CASE
+   fi 
+else
+      echo "Wrong RUN: $RUN"
+      exit
+fi
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$msg"
+
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATAROOT
+  rm -rf $DATA
+fi
+
+date
+
