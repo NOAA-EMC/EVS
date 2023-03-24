@@ -13,8 +13,6 @@ mkdir -p $PRUNEDIR
 model1=`echo $MODELNAME | tr a-z A-Z`
 export model1
 
-module load imagemagick/7.0.8-7
-
 STARTDATE=${VDATE}00
 ENDDATE=${PDYm31}00
 DATE=$STARTDATE
