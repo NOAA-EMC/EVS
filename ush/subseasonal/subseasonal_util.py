@@ -924,6 +924,277 @@ def get_truth_file(valid_time_dt, source_file_format, dest_file_format):
             print("WARNING: "+source_file+" DOES NOT EXIST")
 
 
+def check_daily_model_files(job_dict):
+    """! Check if model files exist for daily reformat step
+
+         Args:
+             job_dict - dictionary containing settings
+                        job is running with (strings)
+
+         Returns:
+             model_files_exist - if non-zero number of  model files
+                                 exist or not (boolean)
+    """
+    valid_date_dt = datetime.datetime.strptime(
+        job_dict['DATE']+job_dict['valid_hr_start'],
+        '%Y%m%d%H'
+    )
+    verif_case_dir = os.path.join(
+        job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
+    )
+    model = job_dict['MODEL']
+    members = job_dict['members']
+    fhr_min = int(job_dict['fhr_start'])
+    fhr_max = int(job_dict['fhr_end'])
+    fhr_inc = 24
+    fhr = fhr_min
+    fhr_list = []
+    fhr_check_dict = {}
+    while fhr <= fhr_max:
+        fhr_check_dict[str(fhr)] = {}
+        init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
+        if job_dict['JOB_GROUP'] == 'reformat_data':
+            if job_dict['VERIF_CASE'] == 'grid2grid':
+                if job_dict['VERIF_TYPE'] == 'sst' \
+                      and job_dict['job_name'] == 'SST':
+                    mb = str(members).zfill(2)
+                    model_file_format = os.path.join(verif_case_dir, 'data',
+                                                     model,
+                                                     model+'.ens'+mb
+                                                     +'.{init?fmt=%Y%m%d%H}.'
+                                                     +'f{lead?fmt=%3H}')
+                    nf = 0
+                    while nf <= 2:
+                        if fhr-(12*nf) >= 0:
+                            fhr_check_dict[str(fhr)]['file'+str(nf+1)] = {
+                                'valid_date': (valid_date_dt
+                                               -datetime.timedelta(hours=12*nf)),
+                                'init_date': init_date_dt,
+                                'forecast_hour': str(fhr-(12*nf))
+                            }
+                            nf+=1
+                else:
+                    fhr_check_dict[str(fhr)]['file1'] = {
+                        'valid_date': valid_date_dt,
+                        'init_date': init_date_dt,
+                        'forecast_hour': str(fhr)
+                    }
+        fhr+=fhr_inc
+    for fhr_key in list(fhr_check_dict.keys()):
+        fhr_key_files_exist_list = []
+        for fhr_fileN_key in list(fhr_check_dict[fhr_key].keys()):
+            fhr_fileN = format_filler(
+                model_file_format,
+                fhr_check_dict[fhr_key][fhr_fileN_key]['valid_date'],
+                fhr_check_dict[fhr_key][fhr_fileN_key]['init_date'],
+                fhr_check_dict[fhr_key][fhr_fileN_key]['forecast_hour'],
+                {}
+            )
+            if os.path.exists(fhr_fileN):
+                fhr_key_files_exist_list.append(True)
+                if job_dict['JOB_GROUP'] == 'reformat_data' \
+                        and job_dict['job_name'] == 'SST':
+                    fhr_list.append(
+                        fhr_check_dict[fhr_key][fhr_fileN_key]\
+                        ['forecast_hour']
+                    )
+            else:
+                fhr_key_files_exist_list.append(False)
+        if all(x == True for x in fhr_key_files_exist_list) \
+                and len(fhr_key_files_exist_list) > 0:
+            fhr_list.append(fhr_key)
+    fhr_list = list(
+        np.asarray(np.unique(np.asarray(fhr_list, dtype=int)),dtype=str)
+    )
+    if len(fhr_list) != 0:
+        model_files_exist = True
+    else:
+        model_files_exist = False
+    return model_files_exist
+
+
+def check_weekly_model_files(job_dict):
+    """! Check if model files exist for weekly reformat step
+
+         Args:
+             job_dict - dictionary containing settings
+                        job is running with (strings)
+
+         Returns:
+             model_files_exist - if non-zero number of  model files
+                                 exist or not (boolean)
+    """
+    valid_date_dt = datetime.datetime.strptime(
+        job_dict['DATE']+job_dict['valid_hr_start'],
+        '%Y%m%d%H'
+    )
+    verif_case_dir = os.path.join(
+        job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
+    )
+    model = job_dict['MODEL']
+    members = job_dict['members']
+    fhr_min = int(job_dict['fhr_start'])
+    fhr_max = int(job_dict['fhr_end'])
+    fhr_inc = 24
+    fhr = fhr_min
+    fhr_list = []
+    fhr_check_dict = {}
+    while fhr <= fhr_max:
+        fhr_check_dict[str(fhr)] = {}
+        init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
+        if job_dict['JOB_GROUP'] == 'reformat_data':
+            if job_dict['VERIF_CASE'] == 'grid2grid':
+                if job_dict['VERIF_TYPE'] in ['seaice', 'sst'] \
+                      and job_dict['job_name'] in ['Concentration',
+                                                   'SST']:
+                    mb = str(members).zfill(2)
+                    model_file_format = os.path.join(verif_case_dir, 'data',
+                                                     model,
+                                                     model+'.ens'+mb
+                                                     +'.{init?fmt=%Y%m%d%H}.'
+                                                     +'f{lead?fmt=%3H}')
+                    if str(fhr) in ['168', '336', '504', '672', '840']:
+                        nf = 0
+                        while nf <= 14:
+                            fhr_check_dict[str(fhr)]['file'+str(nf+1)] = {
+                                'valid_date': (valid_date_dt
+                                               -datetime.timedelta(hours=12*nf)),
+                                'init_date': init_date_dt,
+                                'forecast_hour': str(fhr-(12*nf))
+                            }
+                            nf+=1
+                else:
+                    fhr_check_dict[str(fhr)]['file1'] = {
+                        'valid_date': valid_date_dt,
+                        'init_date': init_date_dt,
+                        'forecast_hour': str(fhr)
+                    }
+        fhr+=fhr_inc
+    for fhr_key in list(fhr_check_dict.keys()):
+        fhr_key_files_exist_list = []
+        for fhr_fileN_key in list(fhr_check_dict[fhr_key].keys()):
+            fhr_fileN = format_filler(
+                model_file_format,
+                fhr_check_dict[fhr_key][fhr_fileN_key]['valid_date'],
+                fhr_check_dict[fhr_key][fhr_fileN_key]['init_date'],
+                fhr_check_dict[fhr_key][fhr_fileN_key]['forecast_hour'],
+                {}
+            )
+            if os.path.exists(fhr_fileN):
+                fhr_key_files_exist_list.append(True)
+                if job_dict['JOB_GROUP'] == 'reformat_data' \
+                        and job_dict['job_name'] in ['Concentration',
+                                                     'SST']:
+                    fhr_list.append(
+                        fhr_check_dict[fhr_key][fhr_fileN_key]\
+                        ['forecast_hour']
+                    )
+            else:
+                fhr_key_files_exist_list.append(False)
+        if all(x == True for x in fhr_key_files_exist_list) \
+                and len(fhr_key_files_exist_list) > 0:
+            fhr_list.append(fhr_key)
+    fhr_list = list(
+        np.asarray(np.unique(np.asarray(fhr_list, dtype=int)),dtype=str)
+    )
+    if len(fhr_list) != 0:
+        model_files_exist = True
+    else:
+        model_files_exist = False
+    return model_files_exist
+
+
+def check_monthly_model_files(job_dict):
+    """! Check if model files exist for monthly reformat step
+
+         Args:
+             job_dict - dictionary containing settings
+                        job is running with (strings)
+
+         Returns:
+             model_files_exist - if non-zero number of  model files
+                                 exist or not (boolean)
+    """
+    valid_date_dt = datetime.datetime.strptime(
+        job_dict['DATE']+job_dict['valid_hr_start'],
+        '%Y%m%d%H'
+    )
+    verif_case_dir = os.path.join(
+        job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
+    )
+    model = job_dict['MODEL']
+    members = job_dict['members']
+    fhr_min = int(job_dict['fhr_start'])
+    fhr_max = int(job_dict['fhr_end'])
+    fhr_inc = 24
+    fhr = fhr_min
+    fhr_list = []
+    fhr_check_dict = {}
+    while fhr <= fhr_max:
+        fhr_check_dict[str(fhr)] = {}
+        init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
+        if job_dict['JOB_GROUP'] == 'reformat_data':
+            if job_dict['VERIF_CASE'] == 'grid2grid':
+                if job_dict['VERIF_TYPE'] in ['seaice', 'sst'] \
+                      and job_dict['job_name'] in ['Concentration',
+                                                   'SST']:
+                    mb = str(members).zfill(2)
+                    model_file_format = os.path.join(verif_case_dir, 'data',
+                                                     model,
+                                                     model+'.ens'+mb
+                                                     +'.{init?fmt=%Y%m%d%H}.'
+                                                     +'f{lead?fmt=%3H}')
+                    if fhr == 720:
+                        nf = 0
+                        while nf <= 60:
+                            fhr_check_dict[str(fhr)]['file'+str(nf+1)] = {
+                                'valid_date': (valid_date_dt
+                                               -datetime.timedelta(hours=12*nf)),
+                                'init_date': init_date_dt,
+                                'forecast_hour': str(fhr-(12*nf))
+                            }
+                            nf+=1
+                else:
+                    fhr_check_dict[str(fhr)]['file1'] = {
+                        'valid_date': valid_date_dt,
+                        'init_date': init_date_dt,
+                        'forecast_hour': str(fhr)
+                    }
+        fhr+=fhr_inc
+    for fhr_key in list(fhr_check_dict.keys()):
+        fhr_key_files_exist_list = []
+        for fhr_fileN_key in list(fhr_check_dict[fhr_key].keys()):
+            fhr_fileN = format_filler(
+                model_file_format,
+                fhr_check_dict[fhr_key][fhr_fileN_key]['valid_date'],
+                fhr_check_dict[fhr_key][fhr_fileN_key]['init_date'],
+                fhr_check_dict[fhr_key][fhr_fileN_key]['forecast_hour'],
+                {}
+            )
+            if os.path.exists(fhr_fileN):
+                fhr_key_files_exist_list.append(True)
+                if job_dict['JOB_GROUP'] == 'reformat_data' \
+                        and job_dict['job_name'] in ['Concentration',
+                                                     'SST']:
+                    fhr_list.append(
+                        fhr_check_dict[fhr_key][fhr_fileN_key]\
+                        ['forecast_hour']
+                    )
+            else:
+                fhr_key_files_exist_list.append(False)
+        if all(x == True for x in fhr_key_files_exist_list) \
+                and len(fhr_key_files_exist_list) > 0:
+            fhr_list.append(fhr_key)
+    fhr_list = list(
+        np.asarray(np.unique(np.asarray(fhr_list, dtype=int)),dtype=str)
+    )
+    if len(fhr_list) != 0:
+        model_files_exist = True
+    else:
+        model_files_exist = False
+    return model_files_exist
+
+
 def check_model_files(job_dict):
     """! Check if model files exist
 
@@ -1729,8 +2000,8 @@ def initalize_job_env_dict(verif_type, group,
         if not os.path.exists(os.environ['MET_TMP_DIR']):
             os.makedirs(os.environ['MET_TMP_DIR'])
         job_env_var_list.extend(
-            ['METPLUS_PATH','log_MET_output_to_METplus', 'METplus_verbosity',
-             'MET_ROOT', 'MET_bin_exec', 'MET_verbosity', 'MET_TMP_DIR',
+            ['METPLUS_PATH','log_met_output_to_metplus', 'metplus_verbosity',
+             'MET_ROOT', 'MET_bin_exec', 'met_verbosity', 'MET_TMP_DIR',
              'COMROOT']
         )
     elif group == 'plot':
