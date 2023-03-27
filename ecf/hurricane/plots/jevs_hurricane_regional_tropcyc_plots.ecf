@@ -38,10 +38,10 @@ module load imagemagick/${imagemagick_ver}
 module list
 
 export NET=evs
-export COMPONENT=hurricane_regional
-export RUN=tropcyc
+export COMPONENT=hurricane
+export RUN=regional
 export STEP=plots
-
+export VERIF_CASE=tropcyc
 export envir=dev
 export cyc=00
 export job=jevs_hurricane_regional_tropcyc_plots_${cyc}
@@ -51,17 +51,16 @@ export PDY=20221231
 
 export PDY=20221231
 #Define the directory for TC-stats file 
-export COMINstats=/lfs/h2/emc/ptmp/$USER/com/evs/${evs_ver}/hurricane_regional/tropcyc/stats
+export COMINstats=/lfs/h2/emc/ptmp/$USER/com/evs/${evs_ver}/${COMPONENT}/${RUN}/${VERIF_CASE}/stats
 
 #Define TC-vital file, and the directory for Bdeck files
 export COMINvit=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/TCvital/syndat_tcvitals.2022
 export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/bdeck/Year2022
 export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/bdeck/Year2022
-
 export DATAROOT=/lfs/h2/emc/ptmp/$USER
 export COMROOT=${DATAROOT}/com
 export KEEPDATA=YES
-
+export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
 # CALL executable job script here
 $HOMEevs/jobs/hurricane/plots/JEVS_HURRICANE_PLOTS

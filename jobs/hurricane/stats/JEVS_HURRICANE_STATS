@@ -21,10 +21,10 @@ export jlogfile=${jlogfile:-${DATA}/jlogfile.${jobid}}
 # Specify NET and RUN Name and model
 ####################################
 export NET=${NET:-evs}
-export COMPONENT=${COMPONENT:-define_in_ecf}
-export RUN=${RUN:-define_in_ecf}
-export STEP=${STEP:-stats}
-
+export COMPONENT=${COMPONENT:-hurricane}
+export RUN=${RUN:-define_in_ecf}  # global_det global_ens regional
+export STEP=${STEP:-define_in_ecf}   # stats plots
+export VERIF_CASE=${VERIF_CASE:-define_in_ecf}   # tropcyc tcgen
 ####################################
 # Determine Job Output Name on System
 ####################################
@@ -63,8 +63,7 @@ fi
 ##############################################
 # Define COM directories
 ##############################################
-if [ ${COMPONENT} = "hurricane_global_det" -a ${RUN} = "tropcyc" ]; then
-
+if [ ${RUN} = "global_det" -a ${VERIF_CASE} = "tropcyc" ]; then
 export YYYY=`echo ${PDY} | cut -c1-4`
 export YY22=`echo ${PDY} | cut -c3-4`
 
@@ -73,8 +72,7 @@ export COMINtrack=${COMINtrack:-your/TC/track/file}
 export COMINbdeckNHC=${COMINbdeckNHC:-/your/NHC/bdeck/data/dir}
 export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
 
-elif [ ${COMPONENT} = "hurricane_global_ens" -a ${RUN} = "tropcyc" ]; then
-
+elif [ ${RUN} = "global_ens" -a ${VERIF_CASE} = "tropcyc" ]; then
 export YYYY=`echo ${PDY} | cut -c1-4`
 export YY22=`echo ${PDY} | cut -c3-4`
 
@@ -83,8 +81,7 @@ export COMINtrack=${COMINtrack:-your/TC/track/file}
 export COMINbdeckNHC=${COMINbdeckNHC:-/your/NHC/bdeck/data/dir}
 export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
 
-elif [ ${COMPONENT} = "hurricane_global_det" -a ${RUN} = "tcgen" ]; then
-
+elif [ ${RUN} = "global_det" -a ${VERIF_CASE} = "tropcyc" ]; then
 export YYYY=`echo ${PDY} | cut -c1-4`
 export YY22=`echo ${PDY} | cut -c3-4`
 
@@ -94,8 +91,7 @@ export COMINbdeckNHC=${COMINbdeckNHC:-/your/NHC/bdeck/data/dir}
 export COMINadeckJTWC=${COMINadeckJTWC:-/your/JTWC/adeck/data/dir}
 export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
 
-elif [ ${COMPONENT} = "hurricane_regional" -a ${RUN} = "tropcyc" ]; then
-
+elif [ ${RUN} = "regional" -a ${VERIF_CASE} = "tropcyc" ]; then
 export YYYY=`echo ${PDY} | cut -c1-4`
 export YY22=`echo ${PDY} | cut -c3-4`
 
@@ -105,13 +101,12 @@ export COMINbdeckNHC=${COMINbdeckNHC:-/your/NHC/bdeck/data/dir}
 export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
 
 else
-echo "Job failed: unknown ${COMPONENT} and ${RUN}"
-err_exit "FAILED ${jobid} - ERROR IN unknown ${COMPONENT} and ${RUN} - ABNORMAL EXIT"
-
+echo "Job failed: unknown ${RUN} and ${VERIF_CASE}"
+err_exit "FAILED ${jobid} - ERROR IN unknown ${RUN} and ${VERIF_CASE} - ABNORMAL EXIT"
 fi
 
-#export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})/${COMPONENT}/${RUN}/${STEP}}
-export COMOUT=${COMOUT:-${COMROOT}/${NET}/${evs_ver}/${COMPONENT}/${RUN}/${STEP}}
+#export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})/${COMPONENT}/${RUN}/${VERIF_CASE}/${STEP}}
+export COMOUT=${COMOUT:-${COMROOT}/${NET}/${evs_ver}/${COMPONENT}/${RUN}/${VERIF_CASE}/${STEP}}
 mkdir -m 775 -p $COMOUT 
 
 msg="HAS BEGUN on `hostname`"
@@ -121,7 +116,7 @@ postmsg "$jlogfile" "$msg"
 
 #############################################################
 # Execute the script
-${SCRIPTSevs}/hurricane/stats/exevs_${COMPONENT}_${RUN}_stats.sh
+${SCRIPTSevs}/hurricane/stats/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
 
 #############################################################
