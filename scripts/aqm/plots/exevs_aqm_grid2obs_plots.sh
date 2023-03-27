@@ -13,8 +13,6 @@ mkdir -p $OUTDIR
 model1=`echo $MODELNAME | tr a-z A-Z`
 export model1
 
-module load imagemagick/7.0.8-7
-
 for aqmtyp in ozone pm25 ozmax8 pmave
 do
 for biasc in raw bc
