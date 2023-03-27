@@ -57,11 +57,10 @@ export FIXevs=${FIXevs:-$HOMEevs/fix}
 
 # Run setpdy and initialize PDY variables
 export cycle=${cycle:-t${cyc}z}
-setpdy.sh
+setpdy.sh 90
 . ./PDY
 
-#export VDATE=$PDYm1
-export VDATE=$(date -d "today -1 day" +"%Y%m%d")
+export VDATE=${VDATE:-$PDYm2}
 
 #################################################
 # Set up the INPUT and OUTPUT directories
