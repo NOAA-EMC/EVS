@@ -99,6 +99,16 @@ def check_file_exists_size(file_name):
         file_good = False
     return file_good
 
+def log_missing_file(log_missing_files, missing_file):
+    """! This write a missing file to a log
+
+         Args:
+             log_missing_file - log of missing files (string)
+             missing_file     - missingfile path (string)
+    """
+    with open(log_missing_files, "a") as lmf:
+        lmf.write(f"Warning: {missing_file} is missing\n")
+
 def copy_file(source_file, dest_file):
     """! This copies a file from one location to another
 
@@ -382,117 +392,18 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                                           filled_file_format_chunk)
     return filled_file_format
 
-def prep_prod_gfs_file(source_file, dest_file, forecast_hour, prep_method):
-    """! Do prep work for GFS production files
-
-         Args:
-             source_file_format - source file format (string)
-             dest_file          - destination file (string)
-             forecast_hour      - forecast hour (string)
-             prep_method        - name of prep method to do
-                                  (string)
-
-         Returns:
-    """
-    # Environment variables and executables
-    WGRIB2 = os.environ['WGRIB2']
-    EXECevs = os.environ['EXECevs']
-    # Working file names
-    prepped_file = os.path.join(os.getcwd(),
-                                'atmos.'+dest_file.rpartition('/')[2])
-    working_file1 = prepped_file+'.tmp1'
-    # Prep file
-    if prep_method == 'full': 
-        if forecast_hour == 0:
-            wgrib_fhr = 'anl'
-        else:
-            wgrib_fhr = forecast_hour
-        thin_var_level_list = [
-            'CAPE:surface',
-            'CAPE:90-0 mb above ground',
-            'CWAT:entire atmosphere (considered as a single layer)',
-            'DPT:2 m above ground',
-            'GUST:surface',
-            'HGT:1000 mb', 'HGT:925 mb', 'HGT:850 mb', 'HGT:700 mb',
-            'HGT:500 mb', 'HGT:400 mb', 'HGT:300 mb', 'HGT:250 mb',
-            'HGT:200 mb', 'HGT:150 mb', 'HGT:100 mb', 'HGT:50 mb','HGT:20 mb',
-            'HGT:10 mb', 'HGT:5 mb', 'HGT:1 mb', 'HGT:cloud ceiling',
-            'HGT:tropopause',
-            'HPBL:surface',
-            'ICEC:surface',
-            'ICETK:surface',
-            'LHTFL:surface',
-            'O3MR:925 mb', 'O3MR:100 mb', 'O3MR:70 mb', 'O3MR:50 mb',
-            'O3MR:30 mb', 'O3MR:20 mb', 'O3MR:10 mb', 'O3MR:5 mb', 'O3MR:1 mb',
-            'PRES:surface', 'PRES:tropopause',
-            'PRMSL:mean sea level',
-            'PWAT:entire atmosphere (considered as a single layer)',
-            'RH:1000 mb', 'RH:925 mb', 'RH:850 mb', 'RH:700 mb', 'RH:500 mb',
-            'RH:400 mb', 'RH:300 mb', 'RH:250 mb', 'RH:200 mb', 'RH:150 mb',
-            'RH:100 mb', 'RH:50 mb','RH:20 mb', 'RH:10 mb', 'RH:5 mb',
-            'RH:1 mb', 'RH:2 m above ground',
-            'SHTFL:surface',
-            'SNOD:surface',
-            'SPFH:1000 mb', 'SPFH:925 mb', 'SPFH:850 mb', 'SPFH:700 mb',
-            'SPFH:500 mb', 'SPFH:400 mb', 'SPFH:300 mb', 'SPFH:250 mb',
-            'SPFH:200 mb', 'SPFH:150 mb', 'SPFH:100 mb', 'SPFH:50 mb',
-            'SPFH:20 mb', 'SPFH:10 mb', 'SPFH:5 mb', 'SPFH:1 mb',
-            'SPFH:2 m above ground',
-            'SOILW:0-0.1 m below ground',
-            'TCDC:entire atmosphere:'+wgrib_fhr,
-            'TMP:1000 mb', 'TMP:925 mb', 'TMP:850 mb', 'TMP:700 mb',
-            'TMP:500 mb', 'TMP:400 mb', 'TMP:300 mb', 'TMP:250 mb',
-            'TMP:200 mb', 'TMP:150 mb', 'TMP:100 mb', 'TMP:50 mb',
-            'TMP:20 mb', 'TMP:10 mb', 'TMP:5 mb', 'TMP:1 mb',
-            'TMP:2 m above ground', 'TMP:surface', 'TMP:tropopause',
-            'TOZNE:entire atmosphere (considered as a single layer)',
-            'TSOIL:0-0.1 m below ground',
-            'UGRD:1000 mb', 'UGRD:925 mb', 'UGRD:850 mb', 'UGRD:700 mb',
-            'UGRD:500 mb', 'UGRD:400 mb', 'UGRD:300 mb', 'UGRD:250 mb',
-            'UGRD:200 mb', 'UGRD:150 mb', 'UGRD:100 mb', 'UGRD:50 mb',
-            'UGRD:20 mb', 'UGRD:10 mb', 'UGRD:5 mb', 'UGRD:1 mb',
-            'UGRD:10 m above ground',
-            'VGRD:1000 mb', 'VGRD:925 mb', 'VGRD:850 mb', 'VGRD:700 mb',
-            'VGRD:500 mb', 'VGRD:400 mb', 'VGRD:300 mb', 'VGRD:250 mb',
-            'VGRD:200 mb', 'VGRD:150 mb', 'VGRD:100 mb', 'VGRD:50 mb',
-            'VGRD:20 mb', 'VGRD:10 mb', 'VGRD:5 mb', 'VGRD:1 mb',
-            'VGRD:10 m above ground',
-            'VIS:surface',
-            'WEASD:surface'
-        ]
-        # Missing in GFS files: Sea Ice Drift (Velocity) - SICED??
-        #                       Sea Ice Extent - Derived from ICEC?
-        #                       Sea Ice Volume
-        if check_file_exists_size(source_file):
-            run_shell_command(['>', prepped_file])
-            for thin_var_level in thin_var_level_list:
-                run_shell_command([WGRIB2, '-match', '"'+thin_var_level+'"',
-                                   source_file+'|'+WGRIB2, '-i', source_file,
-                                   '-grib', working_file1])
-                run_shell_command(['cat', working_file1, '>>', prepped_file])
-                os.remove(working_file1)
-    elif 'precip' in prep_method:
-        if int(forecast_hour) % 24 == 0:
-            thin_var_level = ('APCP:surface:0-'
-                              +str(int(int(forecast_hour)/24)))
-        else:
-            thin_var_level = ('APCP:surface:0-'+forecast_hour)
-        if check_file_exists_size(source_file):
-            run_shell_command([WGRIB2, '-match', '"'+thin_var_level+'"',
-                               source_file+'|'+WGRIB2, '-i', source_file,
-                               '-grib', prepped_file])
-    copy_file(prepped_file, dest_file)
-
 def prep_prod_fnmoc_file(source_file, dest_file, forecast_hour,
-                         prep_method):
+                         prep_method, log_missing_files):
     """! Do prep work for FNMOC production files
 
          Args:
-             source_file   - source file format (string)
-             dest_file     - destination file (string)
-             forecast_hour - forecast hour (string)
-             prep_method   - name of prep method to do
-                             (string)
+             source_file       - source file format (string)
+             dest_file         - destination file (string)
+             forecast_hour     - forecast hour (string)
+             prep_method       - name of prep method to do
+                                 (string)
+             log_missing_files - text file path to write that
+                                 production file is missing (string)
 
          Returns:
     """
@@ -503,11 +414,13 @@ def prep_prod_fnmoc_file(source_file, dest_file, forecast_hour,
     # Prep file
     if check_file_exists_size(source_file):
         convert_grib2_grib2(source_file, prepped_file)
+    #else:
+    #    log_missing_file(log_missing_files, source_file)
     copy_file(prepped_file, dest_file)
 
 
 def prep_prod_jma_file(source_file_format, dest_file, forecast_hour,
-                       prep_method):
+                       prep_method, log_missing_files):
     """! Do prep work for JMA production files
          
          Args:
@@ -516,6 +429,8 @@ def prep_prod_jma_file(source_file_format, dest_file, forecast_hour,
              forecast_hour      - forecast hour (string)
              prep_method        - name of prep method to do
                                   (string)
+             log_missing_files  - text file path to write that
+                                  production file is missing (string)
 
          Returns:
     """
@@ -548,6 +463,8 @@ def prep_prod_jma_file(source_file_format, dest_file, forecast_hour,
                      +WGRIB+' '+hem_source_file+' -i -grib -o '
                      +working_file]
                 )
+            #else:
+            #    log_missing_file(log_missing_files, hem_source_file)
         if check_file_exists_size(working_file1) \
                 and check_file_exists_size(working_file2):
             run_shell_command(
@@ -561,17 +478,22 @@ def prep_prod_jma_file(source_file_format, dest_file, forecast_hour,
                  +forecast_hour+'hr" | '+WGRIB+' '+source_file
                  +' -i -grib -o '+prepped_file]
             )
+        #else:
+        #    log_missing_file(log_missing_files, source_file)
     copy_file(prepped_file, dest_file)
 
-def prep_prod_ecmwf_file(source_file, dest_file, forecast_hour, prep_method):
+def prep_prod_ecmwf_file(source_file, dest_file, forecast_hour, prep_method,
+                         log_missing_files):
     """! Do prep work for ECMWF production files
 
          Args:
-             source_file   - source file format (string)
-             dest_file     - destination file (string)
-             forecast_hour - forecast hour (string)
-             prep_method   - name of prep method to do
-                             (string)
+             source_file       - source file format (string)
+             dest_file         - destination file (string)
+             forecast_hour     - forecast hour (string)
+             prep_method       - name of prep method to do
+                                 (string)
+             log_missing_files - text file path to write that
+                                 production file is missing (string)
 
          Returns:
     """
@@ -598,6 +520,8 @@ def prep_prod_ecmwf_file(source_file, dest_file, forecast_hour, prep_method):
                  +WGRIB+' '+source_file+' -i -grib -o '
                  +working_file1]
             )
+        #else:
+        #    log_missing_file(log_missing_files, source_file)
         if check_file_exists_size(working_file1):
             run_shell_command(['chmod', '750', working_file1])
             run_shell_command(['chgrp', 'rstprod', working_file1])
@@ -609,13 +533,15 @@ def prep_prod_ecmwf_file(source_file, dest_file, forecast_hour, prep_method):
             run_shell_command(
                 [PCPCONFORM, 'ecmwf', source_file, prepped_file]
             )
+        #else:
+        #    log_missing_file(log_missing_files, source_file)
     if os.path.exists(prepped_file):
         run_shell_command(['chmod', '750', prepped_file])
         run_shell_command(['chgrp', 'rstprod', prepped_file])
     copy_file(prepped_file, dest_file)
 
 def prep_prod_ukmet_file(source_file_format, dest_file, forecast_hour,
-                         prep_method):
+                         prep_method, log_missing_files):
     """! Do prep work for UKMET production files
 
          Args:
@@ -624,6 +550,8 @@ def prep_prod_ukmet_file(source_file_format, dest_file, forecast_hour,
              forecast_hour      - forecast hour (string)
              prep_method        - name of prep method to do
                                   (string)
+             log_missing_files  - text file path to write that
+                                  production file is missing (string)
 
          Returns:
     """
@@ -687,6 +615,8 @@ def prep_prod_ukmet_file(source_file_format, dest_file, forecast_hour,
                      +'" | '+WGRIB+' '+source_file+' -i -grib -o '
                      +working_file1]
                 )
+            #else:
+            #    log_missing_file(log_missing_files, source_file)
             if check_file_exists_size(working_file1):
                 run_shell_command([UKMHIRESMERGE, working_file1,
                                    prepped_file, fhr_str])
@@ -698,6 +628,8 @@ def prep_prod_ukmet_file(source_file_format, dest_file, forecast_hour,
                 [WGRIB2+' '+source_file+' -if ":TWATP:" -set_var "APCP" '
                  +'-fi -grib '+working_file1]
             )
+        #else:
+        #    log_missing_file(log_missing_files, source_file)
         if check_file_exists_size(working_file1):
             convert_grib2_grib1(working_file1, working_file2)
         if check_file_exists_size(working_file2):
@@ -712,7 +644,8 @@ def prep_prod_ukmet_file(source_file_format, dest_file, forecast_hour,
             )
     copy_file(prepped_file, dest_file)
 
-def prep_prod_dwd_file(source_file, dest_file, forecast_hour, prep_method):
+def prep_prod_dwd_file(source_file, dest_file, forecast_hour, prep_method,
+                       log_missing_files):
     """! Do prep work for DWD production files
 
          Args:
@@ -721,6 +654,8 @@ def prep_prod_dwd_file(source_file, dest_file, forecast_hour, prep_method):
              forecast_hour      - forecast hour (string)
              prep_method        - name of prep method to do
                                   (string)
+             log_missing_files  - text file path to write that
+                                  production file is missing (string)
 
          Returns:
     """
@@ -739,6 +674,8 @@ def prep_prod_dwd_file(source_file, dest_file, forecast_hour, prep_method):
     if 'precip' in prep_method:
         if check_file_exists_size(source_file):
             convert_grib2_grib1(source_file, working_file1)
+        #else:
+        #    log_missing_file(log_missing_files, source_file)
         if check_file_exists_size(working_file1):
             run_shell_command(
                [PCPCONFORM, 'dwd', working_file1,
@@ -746,15 +683,18 @@ def prep_prod_dwd_file(source_file, dest_file, forecast_hour, prep_method):
             )
     copy_file(prepped_file, dest_file)
 
-def prep_prod_metfra_file(source_file, dest_file, forecast_hour, prep_method):
+def prep_prod_metfra_file(source_file, dest_file, forecast_hour, prep_method,
+                          log_missing_files):
     """! Do prep work for METRFRA production files
 
          Args:
-             source_file   - source file(string)
-             dest_file     - destination file (string)
-             forecast_hour - forecast hour (string)
-             prep_method   - name of prep method to do
-                             (string)
+             source_file       - source file(string)
+             dest_file         - destination file (string)
+             forecast_hour     - forecast hour (string)
+             prep_method       - name of prep method to do
+                                 (string)
+             log_missing_files - text file path to write that
+                                 production file is missing (string)
 
          Returns:
     """
@@ -775,16 +715,20 @@ def prep_prod_metfra_file(source_file, dest_file, forecast_hour, prep_method):
                  +forecast_hour+'hr" | '+WGRIB+' '+source_file
                  +' -i -grib -o '+prepped_file]
             )
+        #else:
+        #    log_missing_file(log_missing_files, source_file)
     copy_file(prepped_file, dest_file)
 
 def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
-                           date_dt):
+                           date_dt, log_missing_files):
     """! Do prep work for OSI-SAF production files
 
          Args:
              daily_source_file_format - daily source file format (string)
              daily_dest_file          - daily destination file (string)
              date_dt                  - date (datetime object)
+             log_missing_files        - text file path to write that
+                                        production file is missing (string)
          Returns:
     """
     # Environment variables and executables
@@ -807,6 +751,8 @@ def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
                 +os.path.join(FIXevs, 'cdo_grids', 'G004.grid'),
                 hem_source_file, hem_prepped_file]
             )
+        else:
+           log_missing_file(log_missing_files, hem_source_file)
         if hem == 'nh':
             nh_prepped_file = hem_prepped_file
         elif hem == 'sh':
@@ -869,13 +815,16 @@ def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
         merged_data.close()
     copy_file(daily_prepped_file, daily_dest_file)
 
-def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt):
+def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt,
+                               log_missing_files):
     """! Do prep work for GHRSST OSPO production files
 
          Args:
-             source_file - source file (string)
-             dest_file   - destination file (string)
-             date_dt     - date (datetime object)
+             source_file       - source file (string)
+             dest_file         - destination file (string)
+             date_dt           - date (datetime object)
+             log_missing_files - text file path to write that
+                                 production file is missing (string)
          Returns:
     """
     # Environment variables and executables
@@ -883,6 +832,8 @@ def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt):
     prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                 +source_file.rpartition('/')[2])
     # Prep file
+    if not os.path.exists(source_file):
+        log_missing_file(log_missing_files, hem_source_file)
     copy_file(source_file, prepped_file)
     if check_file_exists_size(prepped_file):
         prepped_data = netcdf.Dataset(prepped_file, 'a',
@@ -894,13 +845,16 @@ def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt):
         prepped_data.close()
     copy_file(prepped_file, dest_file)
 
-def prep_prod_get_d_file(source_file, dest_file, date_dt):
+def prep_prod_get_d_file(source_file, dest_file, date_dt,
+                         log_missing_files):
     """! Do prep work for ALEXI GET-D production files
 
          Args:
-             source_file - source file (string)
-             dest_file   - destination file (string)
-             date_dt     - date (datetime object)
+             source_file       - source file (string)
+             dest_file         - destination file (string)
+             date_dt           - date (datetime object)
+             log_missing_files - text file path to write that
+                                 production file is missing (string)
          Returns:
     """
     # Environment variables and executables
@@ -908,6 +862,8 @@ def prep_prod_get_d_file(source_file, dest_file, date_dt):
     prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                 +source_file.rpartition('/')[2])
     # Prep file
+    if not os.path.exists(source_file):
+        log_missing_file(log_missing_files, hem_source_file)
     #copy_file(prod_file, prepped_file)
     ##########################################################################
     # Temporary until NCO brings in data feed
@@ -923,7 +879,8 @@ def prep_prod_get_d_file(source_file, dest_file, date_dt):
     copy_file(prepped_file, dest_file)
 
 def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
-                   source_file_format, dest_file_format):
+                   source_file_format, dest_file_format,
+                   log_missing_files):
     """! This get a model file and saves it in the specificed
          destination
          
@@ -933,7 +890,8 @@ def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
              forecast_hour      - forecast hour (string)
              source_file_format - source file format (string)
              dest_file_format   - destination file format (string)
-         
+             log_missing_files  - text file path to write that
+                                  production file is missing (string) 
 
          Returns:
     """
@@ -943,28 +901,32 @@ def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
         source_file = format_filler(source_file_format, valid_time_dt,
                                     init_time_dt, forecast_hour, {})
         if 'dcom/navgem' in source_file:
-            prep_prod_fnmoc_file(source_file, dest_file, forecast_hour, 'full')
+            prep_prod_fnmoc_file(source_file, dest_file, forecast_hour, 'full',
+                                 log_missing_files)
         elif 'wgrbbul/jma_' in source_file:
-            prep_prod_jma_file(source_file, dest_file, forecast_hour, 'full')
+            prep_prod_jma_file(source_file, dest_file, forecast_hour, 'full',
+                               log_missing_files)
         elif 'wgrbbul/ecmwf' in source_file:
-            prep_prod_ecmwf_file(source_file, dest_file, forecast_hour, 'full')
+            prep_prod_ecmwf_file(source_file, dest_file, forecast_hour, 'full',
+                                 log_missing_files)
         elif 'wgrbbul/ukmet_hires' in source_file:
-            prep_prod_ukmet_file(source_file, dest_file, forecast_hour, 'full')
+            prep_prod_ukmet_file(source_file, dest_file, forecast_hour, 'full',
+                                 log_missing_files)
         elif 'qpf_verif/jma' in source_file:
             prep_prod_jma_file(source_file, dest_file, forecast_hour,
-                               'precip')
+                               'precip', log_missing_files)
         elif 'qpf_verif/UWD' in source_file:
             prep_prod_ecmwf_file(source_file, dest_file, forecast_hour,
-                                 'precip')
+                                 'precip', log_missing_files)
         elif 'qpf_verif/ukmo' in source_file:
             prep_prod_ukmet_file(source_file, dest_file, forecast_hour,
-                                 'precip')
+                                 'precip', log_missing_files)
         elif 'qpf_verif/dwd' in source_file:
             prep_prod_dwd_file(source_file, dest_file, forecast_hour,
-                               'precip')
+                               'precip', log_missing_files)
         elif 'qpf_verif/METFRA' in source_file:
             prep_prod_metfra_file(source_file, dest_file, forecast_hour,
-                                  'precip')
+                                  'precip', log_missing_files)
         else:
             if os.path.exists(source_file):
                 print("Linking "+source_file+" to "+dest_file)
@@ -972,7 +934,8 @@ def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
             else:
                 print("WARNING: "+source_file+" DOES NOT EXIST")
 
-def get_truth_file(valid_time_dt, source_file_format, dest_file_format):
+def get_truth_file(valid_time_dt, source_file_format, dest_file_format,
+                   log_missing_files):
     """! This get a model file and saves it in the specificed
          destination
          
@@ -980,8 +943,8 @@ def get_truth_file(valid_time_dt, source_file_format, dest_file_format):
              valid_time_dt      - valid time (datetime)
              source_file_format - source file format (string)
              dest_file_format   - destination file format (string)
-         
-
+             log_missing_files  - text file path to write that
+                                  production file is missing (string)
          Returns:
     """
     dest_file = format_filler(dest_file_format, valid_time_dt,
@@ -994,6 +957,7 @@ def get_truth_file(valid_time_dt, source_file_format, dest_file_format):
             os.symlink(source_file, dest_file)
         else:
             print("WARNING: "+source_file+" DOES NOT EXIST")
+            #log_missing_file(log_missing_files, source_file)
 
 def check_model_files(job_dict):
     """! Check what model files or don't exist

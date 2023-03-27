@@ -51,7 +51,12 @@ cwd = os.getcwd()
 if cwd != DATA:
     os.chdir(DATA)
 
+# Set up text file for missing production files
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
+log_missing_files = os.path.join(DATA, VERIF_CASE_STEP, 'data',
+                                 COMPONENT+'_'+RUN+'_'+VERIF_CASE_STEP+'_'
+                                 +'missing_files.txt')
+
 if VERIF_CASE_STEP == 'grid2grid_stats':
     # Get model forecast and truth files for
     # each option in VERIF_CASE_STEP_type_list
@@ -222,7 +227,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 gda_util.get_model_file(
                     time['valid_time'], time['init_time'],
                     time['forecast_hour'], model_file_format,
-                    model_fcst_dest_file_format
+                    model_fcst_dest_file_format,
+                    log_missing_files
                 )
                 if VERIF_CASE_STEP_type == 'flux':
                     # Get files for flux daily averages, same init
@@ -237,7 +243,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                 time['init_time'],
                                 str(fhr),
                                 model_file_format,
-                                model_fcst_dest_file_format
+                                model_fcst_dest_file_format,
+                                log_missing_files
                             )
                         nf+=1
                 elif VERIF_CASE_STEP_type in ['precip_accum24hr',
@@ -289,7 +296,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                  - datetime.timedelta(hours=fhr_diff)),
                                 time['init_time'],
                                 fhr, model_file_format,
-                                model_fcst_dest_file_format 
+                                model_fcst_dest_file_format,
+                                log_missing_files 
                             )
                 elif VERIF_CASE_STEP_type == 'pres_levs':
                     # Get files for anomaly daily averages, same init
@@ -304,7 +312,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                 time['init_time'],
                                 str(fhr),
                                 model_file_format,
-                                model_fcst_dest_file_format
+                                model_fcst_dest_file_format,
+                                log_missing_files
                             )
                             gda_util.get_model_file(
                                 time['valid_time'] \
@@ -312,7 +321,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                 time['init_time'],
                                 str(fhr),
                                 model_file_format,
-                                model_fcst_dest_file_format
+                                model_fcst_dest_file_format,
+                                log_missing_files
                             )
                 elif VERIF_CASE_STEP_type == 'sea_ice':
                     # OSI-SAF spans PDYm1 00Z to PDY 00Z
@@ -324,7 +334,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                  -datetime.timedelta(hours=6*nf)),
                                 time['init_time'],
                                 str(int(time['forecast_hour'])-(6*nf)),
-                                model_file_format, model_fcst_dest_file_format
+                                model_file_format, model_fcst_dest_file_format,
+                                log_missing_files
                             )
                         nf+=1
                 elif VERIF_CASE_STEP_type == 'snow':
@@ -333,7 +344,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                         gda_util.get_model_file(
                             time['valid_time'], time['init_time'],
                             str(int(time['forecast_hour']) - 24),
-                            model_file_format, model_fcst_dest_file_format
+                            model_file_format, model_fcst_dest_file_format,
+                            log_missing_files
                         )
                 elif VERIF_CASE_STEP_type == 'sst':
                     # GHRSST Median spans PDYm1 00Z to PDY 00Z
@@ -345,7 +357,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                  -datetime.timedelta(hours=6*nf)),
                                 time['init_time'],
                                 str(int(time['forecast_hour'])-(6*nf)),
-                                model_file_format, model_fcst_dest_file_format
+                                model_file_format, model_fcst_dest_file_format,
+                                log_missing_files
                             )
                         nf+=1
         # Get truth files
@@ -377,7 +390,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 )
                 gda_util.get_truth_file(
                     VERIF_CASE_STEP_type_valid_time,
-                    get_d_prod_file_format, get_d_dest_file_format
+                    get_d_prod_file_format, get_d_dest_file_format,
+                    log_missing_files
                 )
                 if not os.path.exists(get_d_dest_file) \
                         and evs_run_mode != 'production':
@@ -387,7 +401,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                         )
                         gda_util.get_truth_file(
                             VERIF_CASE_STEP_type_valid_time,
-                            get_d_arch_file_format, get_d_dest_file_format
+                            get_d_arch_file_format, get_d_dest_file_format,
+                            log_missing_files
                         )
             elif VERIF_CASE_STEP_type in ['precip_accum24hr',
                                           'precip_accum3hr']:
@@ -432,7 +447,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                     )
                     gda_util.get_truth_file(
                         accum_valid, ccpa_prod_file_format,
-                        ccpa_dest_file_format
+                        ccpa_dest_file_format,
+                        log_missing_files
                     )
                     if not os.path.exists(ccpa_dest_file) \
                             and evs_run_mode != 'production' \
@@ -445,7 +461,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                         )
                         gda_util.get_truth_file(
                             accum_valid, ccpa_arch_file_format,
-                            ccpa_dest_file_format
+                            ccpa_dest_file_format,
+                            log_missing_files
                         )
                     accum_valid = (accum_valid -
                                    datetime.timedelta(hours=ccpa_accum_intvl))
@@ -469,7 +486,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                         VERIF_CASE_STEP_type_valid_time,
                         VERIF_CASE_STEP_type_valid_time,
                         'anl', model_truth_file_format,
-                        pres_levs_dest_file_format
+                        pres_levs_dest_file_format,
+                        log_missing_files
                     )
             elif VERIF_CASE_STEP_type == 'sea_ice':
                 # OSI_SAF
@@ -515,13 +533,15 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                     gda_util.get_truth_file(
                         VERIF_CASE_STEP_type_valid_time,
                         osi_saf_prod_file_format,
-                        osi_saf_dest_file_format
+                        osi_saf_dest_file_format,
+                        log_missing_files
                     )
                     if not os.path.exists(osi_saf_dest_file) \
                             and evs_run_mode != 'production':
                         gda_util.get_truth_file(
                             VERIF_CASE_STEP_type_valid_time,
-                            osi_saf_arch_file_format, osi_saf_dest_file_format
+                            osi_saf_arch_file_format, osi_saf_dest_file_format,
+                            log_missing_files
                         )
             elif VERIF_CASE_STEP_type == 'snow':
                 # NOHRSC
@@ -545,7 +565,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                     os.makedirs(VERIF_CASE_STEP_nohrsc_dir)
                 gda_util.get_truth_file(
                     VERIF_CASE_STEP_type_valid_time,
-                    nohrsc_prod_file_format, nohrsc_dest_file_format
+                    nohrsc_prod_file_format, nohrsc_dest_file_format,
+                    log_missing_files
                 )
                 if not os.path.exists(nohrsc_dest_file) \
                         and evs_run_mode != 'production':
@@ -555,7 +576,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                     )
                     gda_util.get_truth_file(
                         VERIF_CASE_STEP_type_valid_time,
-                        nohrsc_arch_file_format, nohrsc_dest_file_format
+                        nohrsc_arch_file_format, nohrsc_dest_file_format,
+                        log_missing_files
                     )
             elif VERIF_CASE_STEP_type == 'sst':
                 # GHRSST OSPO
@@ -583,7 +605,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 gda_util.get_truth_file(
                     VERIF_CASE_STEP_type_valid_time,
                     ghrsst_ospo_prod_file_format,
-                    ghrsst_ospo_dest_file_format
+                    ghrsst_ospo_dest_file_format,
+                    log_missing_files
                 )
                 if not os.path.exists(ghrsst_ospo_dest_file) \
                         and evs_run_mode != 'production':
@@ -595,7 +618,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                     gda_util.get_truth_file(
                         VERIF_CASE_STEP_type_valid_time,
                         ghrsst_ospo_arch_file_format,
-                        ghrsst_ospo_dest_file_format
+                        ghrsst_ospo_dest_file_format,
+                        log_missing_files
                     )
 elif VERIF_CASE_STEP == 'grid2obs_stats':
     # Read in VERIF_CASE_STEP related environment variables
@@ -657,7 +681,8 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                 gda_util.get_model_file(
                     time['valid_time'], time['init_time'],
                     time['forecast_hour'], model_file_format,
-                    model_fcst_dest_file_format
+                    model_fcst_dest_file_format,
+                    log_missing_files
                 )
                 if VERIF_CASE_STEP_type == 'sfc':
                     # Get files for anomaly daily averages, same init
@@ -673,7 +698,8 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                                     time['init_time'],
                                     str(fhr),
                                     model_file_format,
-                                    model_fcst_dest_file_format
+                                    model_fcst_dest_file_format,
+                                    log_missing_files
                                 )
                                 gda_util.get_model_file(
                                     time['valid_time'],
@@ -681,7 +707,8 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                                     - datetime.timedelta(hours=minus_hr),
                                     str(fhr),
                                     model_file_format,
-                                    model_fcst_dest_file_format
+                                    model_fcst_dest_file_format,
+                                    log_missing_files
                                 )
                             nf+=1
         # Get truth files
@@ -712,7 +739,8 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                     gda_util.get_truth_file(
                         VERIF_CASE_STEP_type_valid_time,
                         gdas_prod_file_format,
-                        gdas_dest_file_format
+                        gdas_dest_file_format,
+                        log_missing_files
                     )
                     if not os.path.exists(gdas_dest_file) \
                             and evs_run_mode != 'production':
@@ -723,7 +751,8 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                         gda_util.get_truth_file(
                             VERIF_CASE_STEP_type_valid_time,
                             gdas_arch_file_format,
-                            gdas_dest_file_format
+                            gdas_dest_file_format,
+                            log_missing_files
                         )
             if VERIF_CASE_STEP_type in ['sfc', 'ptype']:
                 # NAM prepbufr
@@ -757,7 +786,8 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                     os.makedirs(VERIF_CASE_STEP_nam_dir)
                 gda_util.get_truth_file(
                     VERIF_CASE_STEP_type_valid_time,
-                    nam_prod_file, nam_dest_file
+                    nam_prod_file, nam_dest_file,
+                    log_missing_files
                 )
                 if not os.path.exists(nam_dest_file) \
                         and evs_run_mode != 'production':
@@ -772,7 +802,8 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                     )
                     gda_util.get_truth_file(
                         VERIF_CASE_STEP_type_valid_time,
-                        nam_arch_file, nam_dest_file
+                        nam_arch_file, nam_dest_file,
+                        log_missing_files
                     )
                 # RAP prepbufr
                 rap_prod_file_format = os.path.join(
@@ -794,7 +825,8 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                     os.makedirs(VERIF_CASE_STEP_rap_dir)
                 gda_util.get_truth_file(
                     VERIF_CASE_STEP_type_valid_time,
-                    rap_prod_file_format, rap_dest_file_format
+                    rap_prod_file_format, rap_dest_file_format,
+                    log_missing_files
                 )
                 if not os.path.exists(rap_dest_file) \
                         and evs_run_mode != 'production':
@@ -805,8 +837,9 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                     )
                     gda_util.get_truth_file(
                         VERIF_CASE_STEP_type_valid_time,
-                        rap_arch_file_format, rap_dest_file_format
-                        )
+                        rap_arch_file_format, rap_dest_file_format,
+                        log_missing_files
+                    )
 elif STEP == 'plots' :
     # Read in VERIF_CASE_STEP related environment variables
     # Get model stat files
