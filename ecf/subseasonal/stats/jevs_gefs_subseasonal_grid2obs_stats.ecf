@@ -55,12 +55,6 @@ export MET_BASE=${MET_ROOT}/share/met
 export PATH=${MET_ROOT}/bin:${PATH}
 export MET_bin_exec=bin
 
-export RM=`which rm`
-export CUT=`which cut`
-export TR=`which tr`    
-export NCAP2=`which ncap2`
-export CONVERT=`which convert`    
-export NCDUMP=`which ncdump`
 
 export USER=$USER
 export DATAROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp

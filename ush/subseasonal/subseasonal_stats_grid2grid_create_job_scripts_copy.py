@@ -12,7 +12,7 @@ import os
 import glob
 import datetime
 import numpy as np
-import subseasonal_atmos_util as sub_util
+import subseasonal_util as sub_util
 
 print("BEGIN: "+os.path.basename(__file__))
 

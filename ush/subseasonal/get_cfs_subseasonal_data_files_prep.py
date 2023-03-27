@@ -1,9 +1,9 @@
 '''
-Program Name: get_cfs_subseasonal_data_files.py
+Program Name: get_cfs_subseasonal_data_files_prep.py
 Contact(s): Shannon Shields
 Abstract: This script is run by all scripts in scripts/.
-          This gets the necessary data files to run
-          the METplus use case.
+          This gets the necessary CFS model files for the
+          prep step.
 '''
 
 import os
@@ -13,7 +13,7 @@ from time import sleep
 import pandas as pd
 import glob
 import numpy as np
-import subseasonal_atmos_util as sub_util
+import subseasonal_util as sub_util
 
 print("BEGIN: "+os.path.basename(__file__))
 

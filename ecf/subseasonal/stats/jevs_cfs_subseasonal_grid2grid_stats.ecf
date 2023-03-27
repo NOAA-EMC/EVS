@@ -58,12 +58,6 @@ export PATH=${MET_ROOT}/bin:${PATH}
 export MET_bin_exec=bin
 export METviewer_AWS_scripts_dir=/lfs/h2/emc/vpppg/save/emc.vpppg/verification/metplus/metviewer_aws_scripts
 
-export RM=`which rm`
-export CUT=`which cut`
-export TR=`which tr`
-export NCAP2=`which ncap2`
-export CONVERT=`which convert`
-export NCDUMP=`which ncdump`
 
 export USER=$USER
 export DATAROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
@@ -98,7 +92,7 @@ export COMINobs=/lfs/h2/emc/vpppg/noscrub/shannon.shields/EVS_Data/$NET/$evs_ver
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export COMINclimo=$FIXevs/climos/atmos
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_subseasonal_test/dev/com/$NET/$evs_ver/$STEP/$COMPONENT
-export VDATE=$(date -d "today -22 day" +"%Y%m%d")
+#export VDATE=$(date -d "today -26 day" +"%Y%m%d")
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.subseasonal.cfs.grid2grid.stats
 
