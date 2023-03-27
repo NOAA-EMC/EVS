@@ -11,7 +11,7 @@ import numpy as np
 import glob
 import netCDF4 as netcdf
 import datetime
-import subseasonal_atmos_util as sub_util
+import subseasonal_util as sub_util
 
 print("BEGIN: "+os.path.basename(__file__))
 
