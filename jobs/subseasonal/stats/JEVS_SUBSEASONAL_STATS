@@ -1,1 +1,110 @@
-sample
+#!/bin/bash
+
+set -xa
+
+# ###################################
+# SET SHELL PROCESSING VARIABLES
+# ###################################
+export PS4='$SECONDS + ' 
+date
+
+export machine="WCOSS2"
+
+###########################################################
+# obtain unique process id (pid) and make temp directories
+###########################################################
+export pid=$$
+#export DATA_IN=${DATA_IN:-$DATAROOT}
+export DATA_IN=${DATA_IN:-$DATAROOTtmp}
+export DATA=$DATA_IN/${pid}
+
+
+#rm -rf $DATA_IN
+mkdir -p $DATA
+cd $DATA 
+
+###############################
+# Determine Job Output Name on System
+###############################
+export pgmout="OUTPUT.${pid}"
+
+
+
+################################################################
+# SENDCOM=YES--Copy files from TMPDIR to $COMOUT
+# SENDECF=YES--Flag events on ecflow
+# SENDDBN=YES--Issue DBNet Client Calls
+################################################################
+export SENDCOM=${SENDCOM:-NO}
+export SENDDBN=${SENDDBN:-NO}       # need to set to NO for testing
+export SENDECF=${SENDECF:-NO}
+export SENDDBN_NTC=${SENDDBN_NTC:-NO}
+################################################################
+# Specify Execution Areas
+################################################################
+export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+
+if [ $MODELNAME = gefs ] ; then
+    export members="30"
+fi
+if [ $MODELNAME = cfs ] ; then
+    export members="4"
+fi
+
+###################################
+# Set up the UTILITIES
+###################################
+# for wwgrib: find the path of wgrib2: 
+#export WGRIBpath=`echo $WGRIB | sed 's/\/wgrib//'`
+
+# Run setpdy and initialize PDY variables
+export cycle=${cycle:-t${cyc}z}
+setpdy.sh 40
+. ./PDY
+
+export VDATE=${VDATE:-$PDYm2}
+
+
+#################################################
+# Set up the INPUT and OUTPUT directories
+#################################################
+export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
+export COMINobs=${COMINobs:-$COMIN/prep/$COMPONENT/$RUN}
+export COMINclimo=${COMINclimo:-$FIXevs/climos/atmos}
+export COMOUT=${COMOUT:-$COMIN/$STEP/$COMPONENT}
+export COMOUTsmall=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
+export COMOUTfinal=$COMOUT/$MODELNAME.$VDATE
+
+mkdir -p $COMOUT $COMOUTfinal
+
+echo Actual output starts here
+
+################################################
+# Run the config file to set up model variables
+################################################
+. $PARMevs/evs_config/$COMPONENT/config.evs.$COMPONENT.$MODELNAME.$VERIF_CASE.$STEP
+
+#######################################################################
+# Execute the script.
+#######################################################################
+$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${VERIF_CASE}_${STEP}.sh
+
+export err=$?; err_chk
+
+cat $pgmout
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATAROOTtmp
+  rm -rf $DATA
+fi
+
+date
+
