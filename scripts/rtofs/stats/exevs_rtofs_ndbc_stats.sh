@@ -1,31 +1,16 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_rtofs_buoys_stats.sh
+# Name of Script: exevs_rtofs_ndbc_stats.sh
 # Purpose of Script: To create stat files for RTOFS ocean temperature
-#    forecasts verified with Buoys data obtained from GDAS prepbufr files
-#    using MET/METplus.
+#    forecasts verified with NDBC buoy data using MET/METplus.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
 ###############################################################################
 
 set -x
 
-# check if gdas prepbufr files exist; exit if not
-for cyc in 00 06 12 18; do
-  export cycle=t${cyc}z
-
-  if [ ! -s $COMINgdas.$VDATE/$cyc/atmos/gdas.$cycle.prepbufr ] ; then
-    echo "Missing GDAS prepbufr file of ${cyc}Z for $VDATE" 
-    exit
-  fi
-done
-
-# run PB2NC
-run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
--c $CONFIGevs/${VERIF_CASE}/$STEP/PB2NC_obsBUOYS.conf
-
-# check if buoys nc files exist; exit if not
-if [ ! -s $COMINfcst/rtofs.$VDATE/$RUN/gdas.${VDATE}00.nc ] ; then
-  echo "Missing buoys nc file of 00Z for $VDATE" 
+# check if ndbc nc file exists; exit if not
+if [ ! -s $COMINfcst/rtofs.$VDATE/$RUN/ndbc.${VDATE}.nc ] ; then
+  echo "Missing ndbc nc file for $VDATE" 
   exit
 fi
 
@@ -125,11 +110,11 @@ fi
 
 # run Point_Stat
 run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
--c $CONFIGevs/${VERIF_CASE}/$STEP/PointStat_fcstRTOFS_obsBUOYS_climoWOA18.conf
+-c $CONFIGevs/${VERIF_CASE}/$STEP/PointStat_fcstRTOFS_obsNDBC_climoWOA23.conf
 
 # check if stat files exist; exit if not
-if [ ! -s $COMOUTsmall/point_stat_RTOFS_BUOYS_SST_1920000L_${VDATE}_000000V.stat ] ; then
-   echo "Missing RTOFS_BUOYS_SST stat files for $VDATE" 
+if [ ! -s $COMOUTsmall/point_stat_RTOFS_NDBC_SST_1920000L_${VDATE}_000000V.stat ] ; then
+   echo "Missing RTOFS_NDBC_SST stat files for $VDATE" 
    exit
 fi
 
@@ -137,7 +122,7 @@ fi
 mkdir -p $COMOUTfinal
 
 run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
--c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstRTOFS.conf
+-c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstRTOFS_obsNDBC.conf
 
 # archive final stat file
 rsync -av $COMOUTfinal $ARCHevs

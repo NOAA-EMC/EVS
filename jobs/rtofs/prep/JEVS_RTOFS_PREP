@@ -10,12 +10,16 @@ set -x
 
 # set up paths
 export FIXevs=${FIXevs:-$EVS/fix/cdo_grids}
+export USHevs=${USHevs:-$EVS/ush/$COMPONENT}
+export CONFIGevs=${CONFIGevs:-$EVS/parm/metplus_config/$COMPONENT}
 
 # define COMIN/COMOUT variables
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
 export COMINobs=${COMINobs:-$(compath.py $envir/dcom)}
 export COMINrtofs=${COMINrtofs:-$(compath.py $envir/com/$COMPONENT/${rtofs_ver})}
-export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver}/$STEP/$COMPONENT)}
+export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
+export COMOUTprep=${COMOUTprep:-$COMOUT/$STEP/$COMPONENT}
+export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
 
 # run scripts
 #  get RTOFS production data from /com
@@ -23,12 +27,12 @@ $EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${STEP}.sh
 
 #  convert RTOFS forecast data into lat-lon grids for each RUN;
 #  RUN is the validation source: ghrsst, smos, smap etc.
-for rcase in ghrsst smos smap aviso osisaf argo buoys; do
+for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
   export RUN=$rcase
-  $EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_verif_${STEP}.sh
+  $EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_fcst_${STEP}.sh
 done
 
-#  process sea ice forecasts and data
-$EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_seaice_${STEP}.sh
+#  process obs data
+$EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_obs_${STEP}.sh
 
 ################################# END OF JOB ##################################
