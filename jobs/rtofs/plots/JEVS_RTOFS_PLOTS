@@ -17,10 +17,11 @@ export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
 export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
 export COMOUTfinal=${COMOUTfinal:-$COMOUT/stats/$COMPONENT/$COMPONENT.$VDATE}
 export COMOUTplots=${COMOUTplots:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
+export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
 
 # make plots; run scripts for each RUN;
 # RUN is the validation source: ghrsst, smos, smap etc.
-for rcase in ghrsst smos smap aviso buoys; do
+for rcase in ghrsst smos smap aviso ndbc; do
   export RUN=$rcase
 
   if [ $RUN = 'ghrsst' ] ; then
@@ -47,10 +48,12 @@ for rcase in ghrsst smos smap aviso buoys; do
     export VERIF_CASE=grid2grid
   fi
 
-  if [ $RUN = 'buoys' ] ; then
-    export OBTYPE=SFCSHP
+  if [ $RUN = 'ndbc' ] ; then
+    export OBTYPE=NDBC_STANDARD
     export VAR=SST
     export VERIF_CASE=grid2obs
+    export FLVL=Z0
+    export OLVL=Z0
   fi
 
   $EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_seasfc_${STEP}.sh
@@ -63,6 +66,15 @@ for rcase in osisaf; do
   export VERIF_CASE=grid2grid
 
   $EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_seaice_${STEP}.sh
+done
+
+export RUN=argo
+export OBTYPE=ARGO
+export VERIF_CASE=grid2obs
+
+for vari in TEMP PSAL; do
+  export VAR=$vari
+  $EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_profile_${STEP}.sh
 done
 
 ################################# END OF JOB ##################################
