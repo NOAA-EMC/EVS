@@ -1,4 +1,4 @@
-#PBS -N jevs_rtofs_prep
+#PBS -N jevs_rtofs_ndbc_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -27,12 +27,12 @@ module load netcdf/${netcdf_ver}
 module load python/${python_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
-module load cdo/${cdo_ver}
+module load rsync/${rsync_ver}
 module list
 
 # specify environment variables
 export NET=evs
-export STEP=prep
+export STEP=stats
 export COMPONENT=rtofs
 
 # set up VDATE and COMIN and COMOUT
@@ -40,23 +40,24 @@ export VDATE=$(date --date="2 days ago" +%Y%m%d)
 
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
 export COMINobs=/lfs/h1/ops/dev/dcom
-export COMINrtofs=/lfs/h1/ops/$envir/com/$COMPONENT/${rtofs_ver}
+export COMINfcst=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver}/prep/$COMPONENT
+export COMINclimo=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/climos/$COMPONENT
 export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver}
-export COMOUTprep=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver}/$STEP/$COMPONENT
+export COMOUTfinal=$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE
 export DATA=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver}
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/cdo_grids
-export USHevs=$EVS/ush/$COMPONENT
+export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export CONFIGevs=$EVS/parm/metplus_config/$COMPONENT
+export ARCHevs=/lfs/h2/emc/vpppg/noscrub/$USER/stat_archive/RTOFS
 
 # call j-job
-$EVS/jobs/$COMPONENT/$STEP/JEVS_RTOFS_PREP
+$EVS/jobs/$COMPONENT/$STEP/JEVS_RTOFS_NDBC_STATS
 
 #%include <tail.h>
 #%manual
 ######################################################################
-# Purpose: The job and task scripts work together to pre-process RTOFS
-#          forecast data into the same spatial and temporal scales
-#          as validation data.
+# Purpose: The job and task scripts work together to create stat
+#          files for RTOFS forecasts verified with NDBC data using
+#          MET/METplus.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
 ######################################################################
 #%end
