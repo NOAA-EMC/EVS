@@ -130,7 +130,6 @@ sed -i "s|$SEARCHx|$Model_List|g" TCPairs_template.conf
 
 run_metplus.py -c $STORMdata/TCPairs_template.conf
 
-<<<<<<< HEAD
 #---run for TC_RMW      
 #cp ${PARMevs}/metplus_config/hurricane/stats/TCRMW_template.conf .
 #export SEARCH0="METBASE_template"
@@ -154,8 +153,7 @@ run_metplus.py -c $STORMdata/TCPairs_template.conf
 
 #--- run for TC_stat 
 cd $STORMdata
-=======
->>>>>>> f0c4e78adf28464c0ecf2814c27375060ca2847b
+
 cp ${PARMevs}/metplus_config/hurricane/stats/TCStat_template.conf .
 
 export SEARCHy="LEAD_template"
@@ -195,25 +193,25 @@ if [ "$SENDCOM" = 'YES' ]; then
   fi
 fi
 #---run for TC_RMW      
-cp ${PARMevs}/metplus_config/hurricane/stats/TCRMW_template.conf .
-export SEARCH0="METBASE_template"
-export SEARCH1="INPUT_BASE_template"
-export SEARCH2="OUTPUT_BASE_template"
-export SEARCH3="INIT_BEG_template"
-export SEARCH4="INIT_END_template"
-export SEARCH5="TC_RMW_CYCLONE_template"
-export SEARCH6="TC_PAIRS_BASIN_template"
-export SEARCHx="MODELLIST_template"
-sed -i "s|$SEARCH0|$MetOnMachine|g" TCRMW_template.conf
-sed -i "s|$SEARCH1|$STORMdata|g" TCRMW_template.conf
-sed -i "s|$SEARCH2|$STORMroot|g" TCRMW_template.conf
-sed -i "s|$SEARCH3|$startdate|g" TCRMW_template.conf
-sed -i "s|$SEARCH4|$enddate|g" TCRMW_template.conf
-sed -i "s|$SEARCH5|$stormNumber|g" TCRMW_template.conf
-sed -i "s|$SEARCH6|$stbasin|g" TCRMW_template.conf
-sed -i "s|$SEARCHx|$Model_List|g" TCRMW_template.conf
+#cp ${PARMevs}/metplus_config/hurricane/stats/TCRMW_template.conf .
+#export SEARCH0="METBASE_template"
+#export SEARCH1="INPUT_BASE_template"
+#export SEARCH2="OUTPUT_BASE_template"
+#export SEARCH3="INIT_BEG_template"
+#export SEARCH4="INIT_END_template"
+#export SEARCH5="TC_RMW_CYCLONE_template"
+#export SEARCH6="TC_PAIRS_BASIN_template"
+#export SEARCHx="MODELLIST_template"
+#sed -i "s|$SEARCH0|$MetOnMachine|g" TCRMW_template.conf
+#sed -i "s|$SEARCH1|$STORMdata|g" TCRMW_template.conf
+#sed -i "s|$SEARCH2|$STORMroot|g" TCRMW_template.conf
+#sed -i "s|$SEARCH3|$startdate|g" TCRMW_template.conf
+#sed -i "s|$SEARCH4|$enddate|g" TCRMW_template.conf
+#sed -i "s|$SEARCH5|$stormNumber|g" TCRMW_template.conf
+#sed -i "s|$SEARCH6|$stbasin|g" TCRMW_template.conf
+#sed -i "s|$SEARCHx|$Model_List|g" TCRMW_template.conf
 
-run_metplus.py -c $STORMdata/TCRMW_template.conf
+#run_metplus.py -c $STORMdata/TCRMW_template.conf
 
 ## two ifs end
 fi
