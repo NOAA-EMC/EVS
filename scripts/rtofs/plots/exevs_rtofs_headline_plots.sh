@@ -18,20 +18,30 @@ for lead in 000 024 048 072 096 120 144 168 192; do
   export FLEAD=$lead
 
 # make plots for SST
-  export VAR=SST
   export MASKS="GLB"
 
-  for vcase in grid2grid grid2obs; do
-    export VERIF_CASE=$vcase
+  for obs in GHRSST NDBC_STANDARD ARGO; do
+    export OBTYPE=$obs
     export LTYPE=SL1L2
     export THRESH=""
 
-    if [ $vcase = 'grid2grid' ] ; then
-      export OBTYPE=GHRSST
+    if [ $obs = 'GHRSST' ] ; then
+      export VERIF_CASE=grid2grid
+      export VAR=SST
     fi
 
-    if [ $vcase = 'grid2obs' ] ; then
-      export OBTYPE=SFCSHP
+    if [ $obs = 'NDBC_STANDARD' ] ; then
+      export VERIF_CASE=grid2obs
+      export VAR=SST
+      export FLVL=Z0
+      export OLVL=Z0
+    fi
+
+    if [ $obs = 'ARGO' ] ; then
+      export VERIF_CASE=grid2obs
+      export VAR=TEMP
+      export FLVL=Z0
+      export OLVL=Z4-0
     fi
 
     for stats in me rmse; do
@@ -64,20 +74,30 @@ export PTYPE=lead_average
 export FLEAD="000,024,048,072,096,120,144,168,192"
 
 # make plots for SST
-export VAR=SST
 export MASKS="GLB"
 
-for vcase in grid2grid grid2obs; do
-  export VERIF_CASE=$vcase
+for obs in GHRSST NDBC_STANDARD ARGO; do
+  export OBTYPE=$obs
   export LTYPE=SL1L2
   export THRESH=""
 
-  if [ $vcase = 'grid2grid' ] ; then
-    export OBTYPE=GHRSST
+  if [ $obs = 'GHRSST' ] ; then
+    export VERIF_CASE=grid2grid
+    export VAR=SST
   fi
 
-  if [ $vcase = 'grid2obs' ] ; then
-    export OBTYPE=SFCSHP
+  if [ $obs = 'NDBC_STANDARD' ] ; then
+    export VERIF_CASE=grid2obs
+    export VAR=SST
+    export FLVL=Z0
+    export OLVL=Z0
+  fi
+
+  if [ $obs = 'ARGO' ] ; then
+    export VERIF_CASE=grid2obs
+    export VAR=TEMP
+    export FLVL=Z0
+    export OLVL=Z4-0
   fi
 
   for stats in me rmse; do
