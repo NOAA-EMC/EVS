@@ -55,14 +55,14 @@ plot_jobs_dict = {
                                        'TROPICS', 'CONUS'],
                       'fcst_var_dict': {'name': 'HGT',
                                         'levels': ('P1000, P925, P850, P700, '
-                                                   +'P500, P400, P300, P250, '
-                                                   +'P200, P150, P100, P50, '
+                                                   +'P500, P300, P250, '
+                                                   +'P200, P100, P50, '
                                                    +'P20, P10, P5'),
                                         'threshs': 'NA'},
                       'obs_var_dict': {'name': 'HGT',
                                        'levels': ('P1000, P925, P850, P700, '
-                                                  +'P500, P400, P300, P250, '
-                                                  +'P200, P150, P100, P50, '
+                                                  +'P500, P300, P250, '
+                                                  +'P200, P100, P50, '
                                                   +'P20, P10, P5'),
                                        'threshs': 'NA'},
                       'interp_dict': {'method': 'BILIN',
@@ -77,14 +77,14 @@ plot_jobs_dict = {
                                     'TROPICS', 'CONUS'],
                    'fcst_var_dict': {'name': 'RH',
                                      'levels': ('P1000, P925, P850, P700, '
-                                                +'P500, P400, P300, P250, '
-                                                +'P200, P150, P100, P50, '
+                                                +'P500, P300, P250, '
+                                                +'P200, P100, P50, '
                                                 +'P20, P10, P5'),
                                      'threshs': 'NA'},
                    'obs_var_dict': {'name': 'RH',
                                     'levels': ('P1000, P925, P850, P700, '
-                                               +'P500, P400, P300, P250, '
-                                               +'P200, P150, P100, P50, '
+                                               +'P500, P300, P250, '
+                                               +'P200, P100, P50, '
                                                +'P20, P10, P5'),
                                     'threshs': 'NA'},
                    'interp_dict': {'method': 'BILIN',
@@ -99,14 +99,14 @@ plot_jobs_dict = {
                                      'TROPICS', 'CONUS'],
                     'fcst_var_dict': {'name': 'SPFH',
                                       'levels': ('P1000, P925, P850, P700, '
-                                                 +'P500, P400, P300, P250, '
-                                                 +'P200, P150, P100, P50, '
+                                                 +'P500, P300, P250, '
+                                                 +'P200, P100, P50, '
                                                  +'P20, P10, P5'),
                                       'threshs': 'NA'},
                     'obs_var_dict': {'name': 'SPFH',
                                      'levels': ('P1000, P925, P850, P700, '
-                                                +'P500, P400, P300, P250, '
-                                                +'P200, P150, P100, P50, '
+                                                +'P500, P300, P250, '
+                                                +'P200, P100, P50, '
                                                 +'P20, P10, P5'),
                                      'threshs': 'NA'},
                     'interp_dict': {'method': 'BILIN',
@@ -121,14 +121,14 @@ plot_jobs_dict = {
                                   'TROPICS', 'CONUS'],
                  'fcst_var_dict': {'name': 'TMP',
                                    'levels': ('P1000, P925, P850, P700, '
-                                              +'P500, P400, P300, P250, '
-                                              +'P200, P150, P100, P50, '
+                                              +'P500, P300, P250, '
+                                              +'P200, P100, P50, '
                                               +'P20, P10, P5'),
                                    'threshs': 'NA'},
                   'obs_var_dict': {'name': 'TMP',
                                    'levels': ('P1000, P925, P850, P700, '
-                                              +'P500, P400, P300, P250, '
-                                              +'P200, P150, P100, P50, '
+                                              +'P500, P300, P250, '
+                                              +'P200, P100, P50, '
                                               +'P20, P10, P5'),
                                    'threshs': 'NA'},
                   'interp_dict': {'method': 'BILIN',
@@ -143,14 +143,14 @@ plot_jobs_dict = {
                                    'TROPICS', 'CONUS'],
                   'fcst_var_dict': {'name': 'UGRD',
                                     'levels': ('P1000, P925, P850, P700, '
-                                               +'P500, P400, P300, P250, '
-                                               +'P200, P150, P100, P50, '
+                                               +'P500, P300, P250, '
+                                               +'P200, P100, P50, '
                                                +'P20, P10, P5'),
                                     'threshs': 'NA'},
                   'obs_var_dict': {'name': 'UGRD',
                                    'levels': ('P1000, P925, P850, P700, '
-                                              +'P500, P400, P300, P250, '
-                                              +'P200, P150, P100, P50, '
+                                              +'P500, P300, P250, '
+                                              +'P200, P100, P50, '
                                               +'P20, P10, P5'),
                                    'threshs': 'NA'},
                   'interp_dict': {'method': 'BILIN',
@@ -165,14 +165,14 @@ plot_jobs_dict = {
                                    'TROPICS', 'CONUS'],
                   'fcst_var_dict': {'name': 'VGRD',
                                     'levels': ('P1000, P925, P850, P700, '
-                                               +'P500, P400, P300, P250, '
-                                               +'P200, P150, P100, P50, '
+                                               +'P500, P300, P250, '
+                                               +'P200, P100, P50, '
                                                +'P20, P10, P5'),
                                     'threshs': 'NA'},
                   'obs_var_dict': {'name': 'VGRD',
                                    'levels': ('P1000, P925, P850, P700, '
-                                              +'P500, P400, P300, P250, '
-                                              +'P200, P150, P100, P50, '
+                                              +'P500, P300, P250, '
+                                              +'P200, P100, P50, '
                                               +'P20, P10, P5'),
                                    'threshs': 'NA'},
                   'interp_dict': {'method': 'BILIN',
@@ -187,14 +187,14 @@ plot_jobs_dict = {
                                         'TROPICS', 'CONUS'],
                        'fcst_var_dict': {'name': 'UGRD_VGRD',
                                          'levels': ('P1000, P925, P850, P700, '
-                                                    +'P500, P400, P300, P250, '
-                                                    +'P200, P150, P100, P50, '
+                                                    +'P500, P300, P250, '
+                                                    +'P200, P100, P50, '
                                                     +'P20, P10, P5'),
                                          'threshs': 'NA'},
                        'obs_var_dict': {'name': 'UGRD_VGRD',
                                         'levels': ('P1000, P925, P850, P700, '
-                                                   +'P500, P400, P300, P250, '
-                                                   +'P200, P150, P100, P50, '
+                                                   +'P500, P300, P250, '
+                                                   +'P200, P100, P50, '
                                                    +'P20, P10, P5'),
                                         'threshs': 'NA'},
                        'interp_dict': {'method': 'BILIN',
