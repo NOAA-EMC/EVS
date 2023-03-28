@@ -148,6 +148,8 @@ init_hrs = list(range(int(init_hr_start),
                       int(init_hr_end)+int(init_hr_inc),
                       int(init_hr_inc)))
 fhrs = list(range(int(fhr_start), int(fhr_end)+int(fhr_inc), int(fhr_inc)))
+if fhrs == list(range(0, 240+6, 6)):
+    fhrs = list(range(0,72,6)) + list(range(72,240,24))
 
 # Set up plot information dictionary
 original_plot_info_dict = {
@@ -451,7 +453,7 @@ if JOB_GROUP == 'make_plots':
         import global_det_atmos_plots_lead_by_level as gdap_lbl
         if evs_run_mode == 'production' and int(fhr_inc) == 6:
             fhrs_lbl = list(
-                range(int(fhr_start), int(fhr_end)+int(fhr_inc), 12)
+                range(int(fhr_start), int(fhr_end)+int(fhr_inc), 24)
             )
         else:
             fhrs_lbl = fhrs
