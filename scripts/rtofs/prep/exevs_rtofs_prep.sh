@@ -9,8 +9,8 @@
 set -x
 
 # get latest RTOFS data
-mkdir -p $COMOUT/rtofs.$VDATE
-cd $COMOUT/rtofs.$VDATE
+mkdir -p $COMOUTprep/rtofs.$VDATE
+cd $COMOUTprep/rtofs.$VDATE
 leads='n024 f024 f048 f072 f096 f120 f144 f168 f192'
 for lead in ${leads}; do
   pattern="rtofs_glo_*_${lead}_*.nc"
@@ -18,13 +18,12 @@ for lead in ${leads}; do
 done
 wait
 rm -f *hvr*.nc  # don't need these
-rm -f *3dz*.nc  # don't need the 3dz files for EVSv1
 
 # touch RTOFS data in previous 12 days to keep them in scrub space
 TDATE=$(date --date="$VDATE -1 day" +%Y%m%d)
 EDATE=$(date --date="$VDATE -12 days" +%Y%m%d)
 while [ $TDATE -ge $EDATE ] ; do 
-  cd $COMOUT/rtofs.$TDATE
+  cd $COMOUTprep/rtofs.$TDATE
   touch *.nc
   for dir in $(ls -d */); do
     touch $dir/*.nc

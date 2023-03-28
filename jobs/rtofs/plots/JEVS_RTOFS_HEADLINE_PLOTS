@@ -18,6 +18,7 @@ export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
 export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
 export COMOUTfinal=${COMOUTfinal:-$COMOUT/stats/$COMPONENT/$COMPONENT.$VDATE}
 export COMOUTplots=${COMOUTplots:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
+export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
 
 # make headline score plots
 $EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_headline_${STEP}.sh
