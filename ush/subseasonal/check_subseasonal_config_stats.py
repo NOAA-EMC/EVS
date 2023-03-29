@@ -170,7 +170,7 @@ for config_var in check_config_var_len_list:
 valid_config_var_values_dict = {
     'make_met_data_by': ['VALID', 'INIT'],
     'SEND2WEB': ['YES', 'NO'],
-    'metplus_verbosity': ['DEBUG', 'INFO', 'WARN', 'ERORR'],
+    'metplus_verbosity': ['DEBUG', 'INFO', 'WARN', 'ERROR'],
     'met_verbosity': ['0', '1', '2', '3', '4', '5'],
     'log_met_output_to_metplus': ['yes', 'no'],
     'SENDARCH': ['YES', 'NO'],
