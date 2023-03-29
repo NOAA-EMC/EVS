@@ -149,7 +149,7 @@ init_hrs = list(range(int(init_hr_start),
                       int(init_hr_inc)))
 fhrs = list(range(int(fhr_start), int(fhr_end)+int(fhr_inc), int(fhr_inc)))
 if fhrs == list(range(0, 240+6, 6)):
-    fhrs = list(range(0,72,6)) + list(range(72,240,24))
+    fhrs = list(range(0,72,6)) + list(range(72,240+24,24))
 
 # Set up plot information dictionary
 original_plot_info_dict = {
