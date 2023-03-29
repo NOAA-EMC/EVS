@@ -158,7 +158,7 @@ for period in ${periods} ; do
           
           chmod +x plot_${wvar}_${cyc}_${fhr}_${stats}_${period}.sh
           
-          echo "plot_${wvar}_${cyc}_${fhr}_${stats}_${period}.sh" >> plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
+          echo "${DATA}/plot_${wvar}_${cyc}_${fhr}_${stats}_${period}.sh" >> plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
           
         done  # end of stats
       done  # end of wave vars
