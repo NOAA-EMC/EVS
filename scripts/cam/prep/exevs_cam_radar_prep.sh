@@ -1,10 +1,11 @@
 #!/bin/bash
 ###############################################################################
 # Name of Script: exevs_cam_radar_prep.sh
+# Contact(s):     Logan Dawson
 # Purpose of Script: This script preprocesses MRMS radar observations for 
 #                    CAM verification.
-# History:
-# 01/01/2023: Initial script assembled by Logan Dawson 
+# History Log:
+# 12/22/2022: Initial script assembled by Logan Dawson 
 ###############################################################################
 
 
@@ -17,9 +18,13 @@ echo
 set -x
 
 
+
+
 ############################################################
 # Copy and unzip MRMS product files
 ############################################################
+mkdir -p $COMOUTmrms
+
 python $USHevs/${COMPONENT}/prep_mrms_radar_files.py
 export err=$?; err_chk
 
@@ -34,7 +39,7 @@ export MAX_REGRID_WIDTH=17
 
 
 
-############################################################
+############################################################
 # Check for MRMS files to process or exit gracefully
 ############################################################
 
@@ -56,12 +61,15 @@ for RADAR_FIELD in ${RADAR_FIELDS}; do
 
    if [ -e $DATA/MRMS_${DOMAIN}_tmp/${MRMS_PRODUCT}_${VDATE}-${cyc}0000.grib2 ]; then
 
-      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/RegridDataPlane_obsMRMS_${RADAR_FIELD}.conf
+      ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/RegridDataPlane_obsMRMS_${RADAR_FIELD}.conf
       export err=$?; err_chk
 
    else
 
-      echo "No $RADAR_FIELD observation file for ${VDATE}${cyc}. METplus will not run."
+      export subject="${MRMS_PRODUCT} missing for ${VDATE}${cyc}"
+      export maillist=${maillist:-'logan.dawson@noaa.gov'}
+      echo "Warning: The ${MRMS_PRODUCT} observation file for ${VDATE}${cyc} is missing. METplus will not run.">>mailmsg
+      cat mailmsg | mail -s "$subject" $maillist
 
    fi	
 
@@ -73,6 +81,18 @@ if [ $SENDCOM = YES ]; then
    for FILE in $DATA/MRMS_${DOMAIN}/*; do
       cp -v $FILE $COMOUTmrms/${DOMAIN}
    done
+fi
+
+
+
+############################################################
+# Extra step used in dev testing 
+############################################################
+
+if [ $DOGRAPHX = YES ]; then
+   export CARTOPY_PROD=/apps/ops/prod/data/cartopy
+   python ${USHevs}/cam/mrms_plot.py ${VDATE}${cyc}
+   export err=$?; err_chk
 fi
 
 

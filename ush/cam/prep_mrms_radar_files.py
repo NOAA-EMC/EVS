@@ -1,7 +1,7 @@
 ###############################################################################
-# Name:          prep_mrms_radar_files.py
-# Contact(s):    Logan Dawson
-# Abstract:      Copy and unzip MRMS radar files that are closest to top of hour
+# Name of Script: prep_mrms_radar_files.py
+# Contact(s):     Logan Dawson
+# Purpose of Script: Copy and unzip MRMS radar files that are closest to top of hour
 #
 # History Log:
 #   2020:       Initial script assembled and run in dev

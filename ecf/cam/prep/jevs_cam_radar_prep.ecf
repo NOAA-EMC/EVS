@@ -16,7 +16,7 @@ cd $PBS_O_WORKDIR
 
 export model=evs
 
-export HOMEevs=/lfs/h2/emc/vpppg/save/logan.dawson/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/save/${USER}/EVS
 source $HOMEevs/versions/run.ver
 
 ############################################################
@@ -24,20 +24,23 @@ source $HOMEevs/versions/run.ver
 ############################################################
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export job=${PBS_JOBNAME:-jevs_cam_radar_prep}
-export jobid=$job.${PBS_JOBID:-$$}
 export KEEPDATA=YES
 export NET=evs
 export STEP=prep
 export COMPONENT=cam
 export RUN=atmos
 export VERIF_CASE=radar
-export COMOUT=/lfs/h2/emc/ptmp/${USER}/com/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
+export job=${PBS_JOBNAME:-jevs_cam_${VERIF_CASE}_${STEP}}
+export jobid=$job.${PBS_JOBID:-$$}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}
 
 export MET_bin_exec=bin
 export metplus_verbosity=DEBUG
-export met_verbosity=2
+export met_verbosity=5
 export log_met_output_to_metplus=yes
+
+export DOGRAPHX=YES
 ############################################################
 
 
@@ -46,9 +49,11 @@ export log_met_output_to_metplus=yes
 ############################################################
 module reset
 
-export HPC_OPT=/apps/ops/prod/libs
-module use /apps/ops/prod/libs/modulefiles/compiler/intel/19.1.3.304
-module load PrgEnv-intel/${PrgEnvintel_ver}
+#export HPC_OPT=/apps/ops/prod/libs
+#module use /apps/ops/prod/libs/modulefiles/compiler/intel/${intel_ver}
+#module use /apps/dev/modulefiles/
+#module load ve/evs/${ve_evs_ver}
+#module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
 module load craype/${craype_ver}
 module load cray-mpich/${craympich_ver}
@@ -60,6 +65,8 @@ module load jasper/${jasper_ver}
 module load cfp/${cfp_ver}
 module load gsl/${gsl_ver}
 module load python/${python_ver}
+module load proj/${proj_ver}
+module load geos/${geos_ver}
 module load netcdf/${netcdf_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
@@ -76,6 +83,13 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-NO}
+export DOGRAPHX=${DOGRAPHX:-NO}
+
+
+#which python
+#which python3
+#which pip
+#pip list
 
 
 # CALL executable job script here
