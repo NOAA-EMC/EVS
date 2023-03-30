@@ -1224,51 +1224,49 @@ plot_jobs_dict = {
                          'plots_list': 'time_series, lead_average'},
     }
 }
+
+model_list = os.environ['model_list'].split(' ')
 for verif_type in VERIF_CASE_STEP_type_list:
     print("----> Making job scripts for "+VERIF_CASE_STEP+" "
           +verif_type+" for job group "+JOB_GROUP)
     VERIF_CASE_STEP_abbrev_type = (VERIF_CASE_STEP_abbrev+'_'
                                    +verif_type)
+    model_plot_name_list = (
+        os.environ[VERIF_CASE_STEP_abbrev+'_model_plot_name_list'].split(' ')
+    )
     verif_type_plot_jobs_dict = plot_jobs_dict[verif_type]
     for verif_type_job in list(verif_type_plot_jobs_dict.keys()):
+        if verif_type == 'pres_levs':
+            obs_list = (
+                os.environ[VERIF_CASE_STEP_abbrev_type+'_truth_name_list']\
+                .split(' ')
+            )
+        elif verif_type == 'means':
+            obs_list = model_list
+        else:   
+            obs_list = [
+                verif_type_plot_jobs_dict[verif_type_job]['obs_name']
+                for m in model_list
+            ]
+        fcst_var_levels = (verif_type_plot_jobs_dict[verif_type_job]\
+                           ['fcst_var_dict']['levels'].split(', '))
+        fcst_var_threshs = (verif_type_plot_jobs_dict[verif_type_job]\
+                            ['fcst_var_dict']['threshs'].split(', '))
+        obs_var_levels = (verif_type_plot_jobs_dict[verif_type_job]\
+                          ['obs_var_dict']['levels'].split(', '))
+        obs_var_threshs = (verif_type_plot_jobs_dict[verif_type_job]\
+                           ['obs_var_dict']['threshs'].split(', '))
         # Initialize job environment dictionary
         job_env_dict = gda_util.initalize_job_env_dict(
             verif_type, JOB_GROUP,
             VERIF_CASE_STEP_abbrev_type, verif_type_job
         )
-        job_env_dict['model_list'] = "'"+os.environ['model_list']+"'"
-        job_env_dict['model_plot_name_list'] = (
-            "'"+os.environ[VERIF_CASE_STEP_abbrev+'_model_plot_name_list']+"'" 
-        )
-        if verif_type == 'pres_levs':
-            job_env_dict['truth_name_list'] =  "'"+os.environ[
-                VERIF_CASE_STEP_abbrev_type+'_truth_name_list'
-            ]+"'"
-        elif verif_type == 'means':
-            job_env_dict['obs_name'] = "'"+os.environ['model_list']+"'"
-        else:
-            job_env_dict['obs_name'] = (
-                verif_type_plot_jobs_dict[verif_type_job]['obs_name']
-            )
-        job_env_dict['event_equalization'] = (
-            os.environ[VERIF_CASE_STEP_abbrev+'_event_equalization']
-        )
         job_env_dict['start_date'] = start_date
         job_env_dict['end_date'] = end_date
         job_env_dict['date_type'] = 'VALID'
-        for data_name in ['fcst', 'obs']:
-            job_env_dict[data_name+'_var_name'] =  (
-                verif_type_plot_jobs_dict[verif_type_job]\
-                [data_name+'_var_dict']['name']
-            )
-            job_env_dict[data_name+'_var_level_list'] =  ("'"+
-                verif_type_plot_jobs_dict[verif_type_job]\
-                [data_name+'_var_dict']['levels']
-            +"'")
-            job_env_dict[data_name+'_var_thresh_list'] =  ("'"+
-                verif_type_plot_jobs_dict[verif_type_job]\
-                [data_name+'_var_dict']['threshs']
-            +"'")
+        job_env_dict['event_equalization'] = (
+            os.environ[VERIF_CASE_STEP_abbrev+'_event_equalization']
+        )
         job_env_dict['interp_method'] = (
             verif_type_plot_jobs_dict[verif_type_job]\
             ['interp_dict']['method']
@@ -1283,6 +1281,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
         valid_hr_start = int(job_env_dict['valid_hr_start'])
         valid_hr_end = int(job_env_dict['valid_hr_end'])
         valid_hr_inc = int(job_env_dict['valid_hr_inc'])
+        valid_hrs = list(range(valid_hr_start,
+                               valid_hr_end+valid_hr_inc,
+                               valid_hr_inc))
         if 'Daily' in verif_type_job:
             if job_env_dict['fhr_inc'] != '24':
                 job_env_dict['fhr_inc'] = '24'
@@ -1298,6 +1299,11 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 )
             if int(job_env_dict['fhr_start']) < 24:
                 job_env_dict['fhr_start'] = '24'
+        for data_name in ['fcst', 'obs']:
+            job_env_dict[data_name+'_var_name'] =  (
+                verif_type_plot_jobs_dict[verif_type_job]\
+                [data_name+'_var_dict']['name']
+            )
         verif_type_job_loop_list = []
         for line_type_stat \
                 in verif_type_plot_jobs_dict[verif_type_job]\
@@ -1327,30 +1333,86 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 +verif_type_job+'/'
                 +job_env_dict['vx_mask']
             )
-            if JOB_GROUP in ['condense_stats', 'tar_images']:
-                # Create job file
-                njobs+=1
-                job_file = os.path.join(JOB_GROUP_jobs_dir,
-                                        'job'+str(njobs))
-                print("Creating job script: "+job_file)
-                job = open(job_file, 'w')
-                job.write('#!/bin/bash\n')
-                job.write('set -x\n')
-                job.write('\n')
-                # Set any environment variables for special cases
-                # Write environment variables
-                for name, value in job_env_dict.items():
-                    job.write('export '+name+'='+value+'\n')
-                job.write('\n')
-                job.write(
-                    gda_util.python_command('global_det_atmos_plots.py',[])
-                )
-                job.close()
+            job_output_dir = os.path.join(
+                DATA, VERIF_CASE+'_'+STEP, 'plot_output',
+                RUN+'.'+end_date, verif_type,
+                job_env_dict['job_name'].replace('/','_')
+            )
+            if not os.path.exists(job_output_dir):
+                os.makedirs(job_output_dir)
+            if JOB_GROUP == 'condense_stats':
+                for JOB_GROUP_loop in list(
+                    itertools.product(model_list, [fcst_var_levels],
+                                      [fcst_var_threshs])
+                ):
+                    job_env_dict['model_list'] = "'"+f"{JOB_GROUP_loop[0]}"+"'"
+                    job_env_dict['model_plot_name_list'] = (
+                        "'"+f"{model_plot_name_list[model_list.index(JOB_GROUP_loop[0])]}"+"'"
+                    )
+                    job_env_dict['obs_list'] = (
+                        "'"+f"{obs_list[model_list.index(JOB_GROUP_loop[0])]}"+"'"
+                    )
+                    job_env_dict['fcst_var_level_list'] = (
+                        "'"+f"{', '.join(JOB_GROUP_loop[1])}"+"'"
+                    )
+                    job_env_dict['fcst_var_thresh_list'] = (
+                        "'"+f"{', '.join(JOB_GROUP_loop[2])}"+"'"
+                    )
+                    job_env_dict['obs_var_level_list'] = (
+                        "'"+f"{', '.join(obs_var_levels)}"+"'"
+                    )
+                    job_env_dict['obs_var_thresh_list'] = (
+                        "'"+f"{', '.join(obs_var_threshs)}"+"'"
+                    )
+                    # Create job file
+                    njobs+=1
+                    job_file = os.path.join(JOB_GROUP_jobs_dir,
+                                            'job'+str(njobs))
+                    print("Creating job script: "+job_file)
+                    job = open(job_file, 'w')
+                    job.write('#!/bin/bash\n')
+                    job.write('set -x\n')
+                    job.write('\n')
+                    # Set any environment variables for special cases
+                    # Write environment variables
+                    job_env_dict['job_id'] = 'job'+str(njobs)
+                    for name, value in job_env_dict.items():
+                        job.write('export '+name+'='+value+'\n')
+                    job.write('\n')
+                    job.write(
+                        gda_util.python_command('global_det_atmos_plots.py',[])
+                    )
+                    job.close()
             elif JOB_GROUP == 'filter_stats':
-                valid_hr = valid_hr_start
-                while valid_hr <= valid_hr_end:
-                    job_env_dict['valid_hr_start'] = str(valid_hr).zfill(2)
-                    job_env_dict['valid_hr_end'] = str(valid_hr).zfill(2)
+                for JOB_GROUP_loop in list(
+                    itertools.product(model_list, fcst_var_levels,
+                                      fcst_var_threshs, valid_hrs)
+                ):
+                    job_env_dict['model_list'] = "'"+f"{JOB_GROUP_loop[0]}"+"'"
+                    job_env_dict['model_plot_name_list'] = (
+                        "'"+f"{model_plot_name_list[model_list.index(JOB_GROUP_loop[0])]}"+"'"
+                    )
+                    job_env_dict['obs_list'] = (
+                        "'"+f"{obs_list[model_list.index(JOB_GROUP_loop[0])]}"+"'"
+                    )
+                    job_env_dict['fcst_var_level_list'] = (
+                        "'"+f"{JOB_GROUP_loop[1]}"+"'"
+                    )
+                    job_env_dict['fcst_var_thresh_list'] = (
+                        "'"+f"{JOB_GROUP_loop[2]}"+"'"
+                    )
+                    job_env_dict['obs_var_level_list'] = (
+                        "'"+f"{obs_var_levels[fcst_var_levels.index(JOB_GROUP_loop[1])]}"+"'"
+                    )
+                    job_env_dict['obs_var_thresh_list'] = (
+                        "'"+f"{obs_var_threshs[fcst_var_threshs.index(JOB_GROUP_loop[2])]}"+"'"
+                    )
+                    job_env_dict['valid_hr_start'] = (
+                        str(JOB_GROUP_loop[3]).zfill(2)
+                    )
+                    job_env_dict['valid_hr_end'] = (
+                        job_env_dict['valid_hr_start']
+                    )
                     job_env_dict['valid_hr_inc'] = '24'
                     # Create job file
                     njobs+=1
@@ -1363,6 +1425,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     job.write('\n')
                     # Set any environment variables for special cases
                     # Write environment variables
+                    job_env_dict['job_id'] = 'job'+str(njobs)
                     for name, value in job_env_dict.items():
                         job.write('export '+name+'='+value+'\n')
                     job.write('\n')
@@ -1370,7 +1433,6 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         gda_util.python_command('global_det_atmos_plots.py',[])
                     )
                     job.close()
-                    valid_hr = valid_hr + valid_hr_inc
             elif JOB_GROUP == 'make_plots':
                 job_output_images_dir = os.path.join(
                     DATA, VERIF_CASE+'_'+STEP, 'plot_output',
@@ -1379,48 +1441,150 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 )
                 if not os.path.exists(job_output_images_dir):
                     os.makedirs(job_output_images_dir)
+                job_env_dict['model_list'] = "'"+f"{', '.join(model_list)}"+"'"
+                job_env_dict['model_plot_name_list'] = (
+                    "'"+f"{', '.join(model_plot_name_list)}"+"'"
+                )
+                job_env_dict['obs_list'] = (
+                    "'"+f"{', '.join(obs_list)}"+"'"
+                )
                 for plot in verif_type_plot_jobs_dict\
                         [verif_type_job]['plots_list'].split(', '):
                     job_env_dict['plot'] = plot
                     if plot == 'valid_hour_average':
-                        mp_valid_hr_inc = 24
+                        plot_valid_hrs_loop = [valid_hrs]
                     else:
-                        mp_valid_hr_inc = valid_hr_inc
-                    valid_hr = valid_hr_start
-                    while valid_hr <= valid_hr_end:
-                        if plot != 'valid_hour_average':
-                            job_env_dict['valid_hr_start'] = str(valid_hr).zfill(2)
-                            job_env_dict['valid_hr_end'] = str(valid_hr).zfill(2)
+                        plot_valid_hrs_loop = valid_hrs
+                    if plot in ['threshold_average', 'performance_diagram']:
+                        plot_fcst_threshs_loop = [fcst_var_threshs]
+                    else:
+                        plot_fcst_threshs_loop = fcst_var_threshs
+                    if plot in ['stat_by_level', 'lead_by_level']:
+                        plot_fcst_levels_loop = ['all', 'trop', 'strat',
+                                                 'ltrop', 'utrop']
+                    else:
+                        plot_fcst_levels_loop = fcst_var_levels
+                    for JOB_GROUP_loop in list(
+                        itertools.product(plot_valid_hrs_loop,
+                                          plot_fcst_threshs_loop,
+                                          plot_fcst_levels_loop)
+                    ):
+                        if plot == 'valid_hour_average':
+                            job_env_dict['valid_hr_start'] = str(
+                                JOB_GROUP_loop[0][0]
+                            ).zfill(2)
+                            job_env_dict['valid_hr_end'] = str(
+                                JOB_GROUP_loop[0][-1]
+                            ).zfill(2)
+                            job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
+                        else:
+                            job_env_dict['valid_hr_start'] = str(
+                                JOB_GROUP_loop[0]
+                            ).zfill(2)
+                            job_env_dict['valid_hr_end'] = str(
+                                JOB_GROUP_loop[0]
+                            ).zfill(2)
                             job_env_dict['valid_hr_inc'] = '24'
-                        # Create job file
-                        njobs+=1 
-                        job_file = os.path.join(JOB_GROUP_jobs_dir,
-                                                'job'+str(njobs))
-                        print("Creating job script: "+job_file)
-                        job = open(job_file, 'w')
-                        job.write('#!/bin/bash\n')
-                        job.write('set -x\n')
-                        job.write('\n')
-                        # Set any environment variables for special cases
-                        # Write environment variables
-                        for name, value in job_env_dict.items():
-                            job.write('export '+name+'='+value+'\n')
-                        job.write('\n')
-                        job.write(
-                            gda_util.python_command('global_det_atmos_plots.py',[])
-                        )
+                        if plot in ['threshold_average',
+                                    'performance_diagram']:
+                            job_env_dict['fcst_var_thresh_list'] = (
+                                "'"+f"{', '.join(JOB_GROUP_loop[1])}"+"'"
+                            )
+                            job_env_dict['obs_var_thresh_list'] = (
+                                "'"+f"{', '.join(obs_var_threshs)}"+"'"
+                            )
+                        else:
+                            job_env_dict['fcst_var_thresh_list'] = (
+                                "'"+f"{JOB_GROUP_loop[1]}"+"'"
+                            )
+                            job_env_dict['obs_var_thresh_list'] = (
+                                "'"+f"{obs_var_threshs[fcst_var_threshs.index(JOB_GROUP_loop[1])]}"+"'"
+                            )
+                        if plot in ['stat_by_level', 'lead_by_level']:
+                            job_env_dict['vert_profile'] = (
+                                "'"+f"{JOB_GROUP_loop[2]}"+"'"
+                            )
+                            job_env_dict['fcst_var_level_list'] = (
+                                "'"+f"{', '.join(fcst_var_levels)}"+"'"
+                            )
+                            job_env_dict['obs_var_level_list'] = (
+                                "'"+f"{', '.join(obs_var_levels)}"+"'"
+                            )
+                        else:
+                            job_env_dict['fcst_var_level_list'] = (
+                                "'"+f"{JOB_GROUP_loop[2]}"+"'"
+                            )
+                            job_env_dict['obs_var_level_list'] = (
+                                "'"+f"{obs_var_levels[fcst_var_levels.index(JOB_GROUP_loop[2])]}"+"'"
+                            )
+                        run_global_det_atmos_plots = ['global_det_atmos_plots.py']
                         if evs_run_mode == 'production' and \
-                                verif_type == 'pres_levs' and \
+                                verif_type in ['pres_levs', 'sfc'] and \
                                 plot in ['lead_average', 'lead_by_level',
                                          'lead_by_date']:
-                            job.write('\n'
-                                +gda_util.python_command(
-                                    'global_det_atmos_plots_production_tof240.py',
-                                     []
-                                )+'\n'
+                            run_global_det_atmos_plots.append(
+                                'global_det_atmos_plots_production_tof240.py'
+                            )
+                        for run_global_det_atmos_plot in run_global_det_atmos_plots:
+                            # Create job file
+                            njobs+=1
+                            job_file = os.path.join(JOB_GROUP_jobs_dir,
+                                                    'job'+str(njobs))
+                            print("Creating job script: "+job_file)
+                            job = open(job_file, 'w')
+                            job.write('#!/bin/bash\n')
+                            job.write('set -x\n')
+                            job.write('\n')
+                            # Set any environment variables for special cases
+                            # Write environment variables
+                            job_env_dict['job_id'] = 'job'+str(njobs)
+                            for name, value in job_env_dict.items():
+                                job.write('export '+name+'='+value+'\n')
+                            job.write('\n')
+                            job.write(
+                                gda_util.python_command(run_global_det_atmos_plot,
+                                                        [])
                             )
                         job.close()
-                        valid_hr = valid_hr + mp_valid_hr_inc
+            elif JOB_GROUP == 'tar_images':
+                job_env_dict['model_list'] = "'"+f"{', '.join(model_list)}"+"'"
+                job_env_dict['model_plot_name_list'] = (
+                    "'"+f"{', '.join(model_plot_name_list)}"+"'"
+                )
+                job_env_dict['obs_list'] = (
+                    "'"+f"{', '.join(obs_list)}"+"'"
+                )
+                job_env_dict['fcst_var_level_list'] = (
+                    "'"+f"{', '.join(fcst_var_levels)}"+"'"
+                )
+                job_env_dict['fcst_var_thresh_list'] = (
+                    "'"+f"{', '.join(fcst_var_threshs)}"+"'"
+                )
+                job_env_dict['obs_var_level_list'] = (
+                    "'"+f"{', '.join(obs_var_levels)}"+"'"
+                )
+                job_env_dict['obs_var_thresh_list'] = (
+                    "'"+f"{', '.join(obs_var_threshs)}"+"'"
+                )
+                # Create job file       
+                njobs+=1
+                job_file = os.path.join(JOB_GROUP_jobs_dir,
+                                        'job'+str(njobs))
+                print("Creating job script: "+job_file)
+                job = open(job_file, 'w')
+                job.write('#!/bin/bash\n')
+                job.write('set -x\n')
+                job.write('\n') 
+                # Set any environment variables for special cases
+                # Write environment variables
+                job_env_dict['job_id'] = 'job'+str(njobs)
+                for name, value in job_env_dict.items():
+                    job.write('export '+name+'='+value+'\n')
+                job.write('\n')
+                job.write(
+                    gda_util.python_command('global_det_atmos_plots.py',[])
+                )
+                job.close()
 
 # If running USE_CFP, create POE scripts
 if USE_CFP == 'YES':

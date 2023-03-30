@@ -157,6 +157,9 @@ class PrecipSpatialMap:
                                         +"not making plot")
             else:
                 make_plot = False
+            if model_num_name != 'gfs' \
+                    and self.plot_info_dict['vx_mask'] != 'CONUS':
+                make_plot = False
             if make_plot:
                 self.logger.debug("Plotting data from "+model_num_file)
                 precip_data = netcdf.Dataset(model_num_file)

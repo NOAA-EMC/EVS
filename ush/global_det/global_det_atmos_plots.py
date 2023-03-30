@@ -46,8 +46,9 @@ fcst_var_thresh_list = os.environ['fcst_var_thresh_list'].split(', ')
 obs_var_name = os.environ['obs_var_name']
 obs_var_level_list = os.environ['obs_var_level_list'].split(', ')
 obs_var_thresh_list = os.environ['obs_var_thresh_list'].split(', ')
-model_list = os.environ['model_list'].split(' ')
-model_plot_name_list = os.environ['model_plot_name_list'].split(' ')
+model_list = os.environ['model_list'].split(', ')
+model_plot_name_list = os.environ['model_plot_name_list'].split(', ')
+obs_list = os.environ['obs_list'].split(', ')
 VERIF_TYPE = os.environ['VERIF_TYPE']
 date_type = os.environ['date_type']
 valid_hr_start = os.environ['valid_hr_start']
@@ -59,13 +60,10 @@ init_hr_inc = os.environ['init_hr_inc']
 fhr_start = os.environ['fhr_start']
 fhr_end = os.environ['fhr_end']
 fhr_inc = os.environ['fhr_inc']
+job_id = os.environ['job_id']
 if JOB_GROUP == 'make_plots':
     stat = os.environ['stat']
     plot = os.environ['plot']
-if VERIF_CASE == 'grid2grid' and VERIF_TYPE == 'pres_levs':
-    truth_name_list = os.environ['truth_name_list'].split(' ') 
-else:
-    obs_name = os.environ['obs_name']
 
 # Set variables
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
@@ -87,25 +85,10 @@ if not os.path.exists(job_output_dir):
     os.makedirs(job_output_dir)
 
 # Set up logging
-if JOB_GROUP == 'make_plots':
-    job_logging_file = os.path.join(logging_dir, 'evs_'+COMPONENT+'_'+RUN+'_'
-                                    +VERIF_CASE+'_'+STEP+'_'+VERIF_TYPE+'_'
-                                    +JOB_GROUP+'_'+job_name.replace('/','_')
-                                    +'_'+stat+'_'+plot+'_valid'+valid_hr_start
-                                    +'Z_runon'
-                                    +now.strftime('%Y%m%d%H%M%S')+'.log')
-elif JOB_GROUP == 'filter_stats':
-    job_logging_file = os.path.join(logging_dir, 'evs_'+COMPONENT+'_'+RUN+'_'
-                                    +VERIF_CASE+'_'+STEP+'_'+VERIF_TYPE+'_'
-                                    +JOB_GROUP+'_'+job_name.replace('/','_')
-                                    +'_valid'+valid_hr_start+'Z_runon'
-                                    +now.strftime('%Y%m%d%H%M%S')+'.log')
-else:
-    job_logging_file = os.path.join(logging_dir, 'evs_'+COMPONENT+'_'+RUN+'_'
-                                    +VERIF_CASE+'_'+STEP+'_'+VERIF_TYPE+'_'
-                                    +JOB_GROUP+'_'+job_name.replace('/','_')
-                                    +'_runon'
-                                    +now.strftime('%Y%m%d%H%M%S')+'.log')
+job_logging_file = os.path.join(logging_dir, 'evs_'+COMPONENT+'_'+RUN+'_'
+                                +VERIF_CASE+'_'+STEP+'_'+VERIF_TYPE+'_'
+                                +JOB_GROUP+'_'+job_id+'_runon'
+                                +now.strftime('%Y%m%d%H%M%S')+'.log')
 logger = logging.getLogger(job_logging_file)
 logger.setLevel(plot_verbosity)
 formatter = logging.Formatter(
@@ -127,17 +110,8 @@ for model_idx in range(len(model_list)):
     original_model_info_dict['model'+str(model_num)] = {
         'name': model_list[model_idx],
         'plot_name': model_plot_name_list[model_idx],
+        'obs_name': obs_list[model_idx]
     }
-    if VERIF_CASE == 'grid2grid' and VERIF_TYPE == 'pres_levs':
-         original_model_info_dict['model'+str(model_num)]['obs_name'] = (
-             truth_name_list[model_idx]
-         )
-    elif VERIF_CASE == 'grid2grid' and VERIF_TYPE == 'means':
-         original_model_info_dict['model'+str(model_num)]['obs_name'] = (
-             model_list[model_idx]
-         )
-    else:
-        original_model_info_dict['model'+str(model_num)]['obs_name'] = obs_name
 
 # Set up date information dictionary
 original_date_info_dict = {
@@ -196,11 +170,10 @@ if JOB_GROUP == 'condense_stats':
     logger.info("Condensing model .stat files")
     for model_idx in range(len(model_list)):
         model = model_list[model_idx]
+        obs_name = obs_list[model_idx]
         condensed_model_stat_file = os.path.join(job_output_dir, 'model'
                                                  +str(model_idx+1)+'_'+model
                                                  +'.stat')
-        if VERIF_CASE == 'grid2grid' and VERIF_TYPE == 'pres_levs':
-            obs_name = truth_name_list[model_idx]
         gda_util.condense_model_stat_files(logger, stat_base_dir,
                                            condensed_model_stat_file, model,
                                            obs_name, grid, vx_mask,
@@ -504,7 +477,7 @@ elif JOB_GROUP == 'make_plots':
                 plot_lbd.make_lead_by_date()
     elif plot == 'stat_by_level':
         import global_det_atmos_plots_stat_by_level as gdap_sbl
-        vert_profiles = ['all', 'trop', 'strat', 'ltrop', 'utrop']
+        vert_profiles = [os.environ['vert_profile']]
         for sbl_info in \
                 list(itertools.product(valid_hrs, fhrs, interp_points_list,
                                        vert_profiles)):
@@ -558,7 +531,7 @@ elif JOB_GROUP == 'make_plots':
             )
         else:
             fhrs_lbl = fhrs
-        vert_profiles = ['all', 'trop', 'strat', 'ltrop', 'utrop']
+        vert_profiles = [os.environ['vert_profile']]
         for lbl_info in \
                 list(itertools.product(valid_hrs, interp_points_list,
                                        vert_profiles)):

@@ -2068,16 +2068,16 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
             input_dir, model_num+'_'+model_dict['name']+'.stat'
         )
         if len(dates) != 0:
-            if not os.path.exists(condensed_model_file):
-                write_condensed_stat_file = True
-            else:
-                write_condensed_stat_file = False
-            if write_condensed_stat_file:
-                condense_model_stat_files(
-                    logger, input_dir, condensed_model_file, model_dict['name'],
-                    model_dict['obs_name'], grid, vx_mask,
-                    fcst_var_name, obs_var_name, line_type
-                )
+            #if not os.path.exists(condensed_model_file):
+            #    write_condensed_stat_file = True
+            #else:
+            #    write_condensed_stat_file = False
+            #if write_condensed_stat_file:
+            #    condense_model_stat_files(
+            #        logger, input_dir, condensed_model_file, model_dict['name'],
+            #        model_dict['obs_name'], grid, vx_mask,
+            #        fcst_var_name, obs_var_name, line_type
+            #    )
             input_parsed_model_stat_file = os.path.join(
                 input_dir,
                 'fcst'+model_dict['name']+'_'
