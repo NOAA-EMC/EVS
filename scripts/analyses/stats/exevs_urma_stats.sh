@@ -109,7 +109,7 @@ fi
 if [ $urmafound -eq 1 -a $obfound -eq 1 ]
 then
 
-run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstREALTIME_ANALYSES_obsNDAS_PrepBufr.conf $PARMevs/metplus_config/machine.conf
+run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstANALYSES_obsNDAS_PrepBufr.conf $PARMevs/metplus_config/machine.conf
 export err=$?; err_chk
 
 mkdir -p $COMOUTsmall
@@ -125,7 +125,7 @@ done
 if [ $cyc = 23 -a $urmafound -eq 1 -a $obfound -eq 1 ]
 then
        mkdir -p $COMOUTfinal
-       run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstREALTIME_ANALYSES_obsNDAS_GatherByDay.conf $PARMevs/metplus_config/machine.conf
+       run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstANALYSES_obsNDAS_GatherByDay.conf $PARMevs/metplus_config/machine.conf
        export err=$?; err_chk
 fi
 
