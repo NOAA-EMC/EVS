@@ -83,6 +83,7 @@ export COMINcfs=$COMIN/stats/$COMPONENT/cfs
 export COMINgefs=$COMIN/stats/$COMPONENT/gefs
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT
+export VDATE=$(date -d "today -22 day" +"%Y%m%d")
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.${COMPONENT}.${VERIF_CASE}.${STEP}.${VERIF_TYPE}
 
