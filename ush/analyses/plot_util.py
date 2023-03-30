@@ -1624,7 +1624,7 @@ def get_ci_file(stat, input_filename, fcst_lead, output_base_dir, ci_method):
    return CI_file          
 
 def equalize_samples(logger, df, group_by):
-    with open('/u/perry.shafran/test.pkl','wb') as f:
+    with open('/u/emc.vpppg/test.pkl','wb') as f:
         pickle.dump(df, f)
     # columns that will be used to drop duplicate rows across model groups
     cols_to_check = [
