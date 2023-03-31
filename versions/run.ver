@@ -59,11 +59,11 @@ export nfcens_ver=v1.3
 export nwps_ver=v1.4
 export obsproc_ver=v1.1
 export rap_ver=v5.1
-export rtma_ver=v2.9
+export rtma_ver=v2.10
 export rtofs_ver=v2.3
 export sref_ver=v7.1
 export st4_ver=v4.1
-export urma_ver=v2.9
+export urma_ver=v2.10
 
 export COMPATH=/lfs/h1/ops/prod/com/gfs/:/lfs/h1/ops/prod/com/hrrr/:/lfs/h1/ops/prod/com/rtma/:/lfs/h1/ops/prod/com/aqm/:/lfs/h1/ops/prod/com/gefs/:/lfs/h1/ops/prod/com/nam/:/lfs/h1/ops/prod/com/urma/:/lfs/h1/ops/prod/com/narre/:/lfs/h1/ops/prod/com/hiresw/:/lfs/h1/ops/prod/com/rap/:/lfs/h1/ops/prod/com/sref/:/lfs/h1/ops/prod/com/hourly/
 export DATAFS=h1
