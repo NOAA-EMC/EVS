@@ -67,7 +67,8 @@ for RADAR_FIELD in ${RADAR_FIELDS}; do
    else
 
       export subject="${MRMS_PRODUCT} missing for ${VDATE}${cyc}"
-      export maillist=${maillist:-'logan.dawson@noaa.gov'}
+      export maillist=${maillist:-'logan.dawson@noaa.gov,geoffrey.manikin@noaa.gov'}
+      rm -rf mailmsg
       echo "Warning: The ${MRMS_PRODUCT} observation file for ${VDATE}${cyc} is missing. METplus will not run.">>mailmsg
       cat mailmsg | mail -s "$subject" $maillist
 
@@ -81,18 +82,6 @@ if [ $SENDCOM = YES ]; then
    for FILE in $DATA/MRMS_${DOMAIN}/*; do
       cp -v $FILE $COMOUTmrms/${DOMAIN}
    done
-fi
-
-
-
-############################################################
-# Extra step used in dev testing 
-############################################################
-
-if [ $DOGRAPHX = YES ]; then
-   export CARTOPY_PROD=/apps/ops/prod/data/cartopy
-   python ${USHevs}/cam/mrms_plot.py ${VDATE}${cyc}
-   export err=$?; err_chk
 fi
 
 

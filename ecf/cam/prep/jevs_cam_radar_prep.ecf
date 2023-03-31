@@ -30,6 +30,7 @@ export STEP=prep
 export COMPONENT=cam
 export RUN=atmos
 export VERIF_CASE=radar
+export MODELNAME=cam
 export job=${PBS_JOBNAME:-jevs_cam_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}
@@ -39,8 +40,6 @@ export MET_bin_exec=bin
 export metplus_verbosity=DEBUG
 export met_verbosity=5
 export log_met_output_to_metplus=yes
-
-export DOGRAPHX=YES
 ############################################################
 
 
@@ -83,7 +82,6 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-NO}
-export DOGRAPHX=${DOGRAPHX:-NO}
 
 
 #which python
