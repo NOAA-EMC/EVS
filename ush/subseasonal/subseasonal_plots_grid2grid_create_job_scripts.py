@@ -54,6 +54,9 @@ plot_jobs_dict = {
                                                      'threshs': 'NA'},
                                     'interp_dict': {'method': 'NEAREST',
                                                     'points': '1'},
+                                    'fhr_start': '168',
+                                    'fhr_end': '840',
+                                    'fhr_inc': '168',
                                     'grid': 'G003',
                                     'obs_name': 'osi_saf',
                                     'plots_list': 'time_series, lead_average'},
@@ -74,6 +77,9 @@ plot_jobs_dict = {
                                                                         +'ge80')},
                                            'interp_dict': {'method': 'NEAREST',
                                                            'points': '1'},
+                                           'fhr_start': '168',
+                                           'fhr_end': '840',
+                                           'fhr_inc': '168',
                                            'grid': 'G003',
                                            'obs_name': 'osi_saf',
                                            'plots_list': ('time_series, '
@@ -94,6 +100,9 @@ plot_jobs_dict = {
                                                              +'ge80')},
                                             'interp_dict': {'method': 'NEAREST'
                                                             'points': '1'},
+                                            'fhr_start': '168',
+                                            'fhr_end': '840',
+                                            'fhr_inc': '168',
                                             'grid': 'G003',
                                             'obs_name': 'osi_saf',
                                             'plots_list': 'performance_diagram'},
@@ -108,6 +117,9 @@ plot_jobs_dict = {
                                                       'threshs': 'NA'},
                                      'interp_dict': {'method': 'NEAREST',
                                                      'points': '1'},
+                                     'fhr_start': '720',
+                                     'fhr_end': '720',
+                                     'fhr_inc': '0',
                                      'grid': 'G003',
                                      'obs_name': 'osi_saf',
                                      'plots_list': 'time_series'},
@@ -128,6 +140,9 @@ plot_jobs_dict = {
                                                                          +'ge80')},
                                             'interp_dict': {'method': 'NEAREST',
                                                             'points': '1'},
+                                            'fhr_start': '720',
+                                            'fhr_end': '720',
+                                            'fhr_inc': '0',
                                             'grid': 'G003',
                                             'obs_name': 'osi_saf',
                                             'plots_list': 'time_series'},
@@ -147,6 +162,9 @@ plot_jobs_dict = {
                                                               +'ge80')},
                                              'interp_dict': {'method': 'NEAREST',
                                                              'points': '1'},
+                                             'fhr_start': '720',
+                                             'fhr_end': '720',
+                                             'fhr_inc': '0',
                                              'grid': 'G003',
                                              'obs_name': 'osi_saf',
                                              'plots_list': 'performance_diagram'},
@@ -162,6 +180,9 @@ plot_jobs_dict = {
                                           'threshs': 'NA'},
                          'interp_dict': {'method': 'NEAREST',
                                          'points': '1'},
+                         'fhr_start': '24',
+                         'fhr_end': '840',
+                         'fhr_inc': '24',
                          'grid': 'G003',
                          'obs_name': 'ghrsst_ospo',
                          'plots_list': 'time_series, lead_average'},
@@ -175,6 +196,9 @@ plot_jobs_dict = {
                                            'threshs': 'NA'},
                           'interp_dict': {'method': 'NEAREST',
                                           'points': '1'},
+                          'fhr_start': '168',
+                          'fhr_end': '840',
+                          'fhr_inc': '168',
                           'grid': 'G003',
                           'obs_name': 'ghrsst_ospo',
                           'plots_list': 'time_series, lead_average'},
@@ -188,6 +212,9 @@ plot_jobs_dict = {
                                             'threshs': 'NA'},
                            'interp_dict': {'method': 'NEAREST',
                                            'points': '1'},
+                           'fhr_start': '720',
+                           'fhr_end': '720',
+                           'fhr_inc': '0',
                            'grid': 'G003',
                            'obs_name': 'ghrsst_ospo',
                            'plots_list': 'time_series'},
@@ -223,6 +250,15 @@ for verif_type in VERIF_CASE_STEP_type_list:
             )
         job_env_dict['event_equalization'] = (
             os.environ[VERIF_CASE_STEP_abbrev+'_event_eq']
+        )
+        job_env_dict['fhr_start'] = (
+            verif_type_plot_jobs_dict[verif_type_job]['fhr_start']
+        )
+        job_env_dict['fhr_end'] = (
+            verif_type_plot_jobs_dict[verif_type_job]['fhr_end']
+        )
+        job_env_dict['fhr_inc'] = (
+            verif_type_plot_jobs_dict[verif_type_job]['fhr_inc']
         )
         job_env_dict['start_date'] = start_date
         job_env_dict['end_date'] = end_date

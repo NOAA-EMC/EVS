@@ -2056,7 +2056,7 @@ def initalize_job_env_dict(verif_type, group,
                 valid_hr_start, valid_hr_end, valid_hr_inc = (
                     get_obs_valid_hrs('24hrNOHRSC')
                 )
-            elif verif_type == 'seaice':
+            elif verif_type in ['seaice', 'sea_ice']:
                 valid_hr_start, valid_hr_end, valid_hr_inc = (
                     get_obs_valid_hrs('OSI-SAF')
                 )
@@ -2163,7 +2163,7 @@ def get_plot_dates(logger, date_type, start_date, end_date,
 
 def get_met_line_type_cols(logger, met_root, met_version, met_line_type):
     """! Get the MET columns for a specific line type and MET
-         verison
+         version
 
          Args:
              logger        - logger object
@@ -2171,7 +2171,7 @@ def get_met_line_type_cols(logger, met_root, met_version, met_line_type):
              met_version   - MET version number (string)
              met_line_type - MET line type (string)
          Returns:
-             met_version_line_type_col_list - list of MET versoin
+             met_version_line_type_col_list - list of MET version
                                               line type colums (strings)
     """
     if met_version.count('.') == 2:
@@ -2896,6 +2896,6 @@ def calculate_average(logger, average_method, line_type, stat, df):
             )
             average_value = avg_array[0]
     else:
-        logger.warning(f"{average_method} not recongnized..."
+        logger.warning(f"{average_method} not recognized..."
                        +"use mean, or aggregation...returning NaN")
     return average_value
