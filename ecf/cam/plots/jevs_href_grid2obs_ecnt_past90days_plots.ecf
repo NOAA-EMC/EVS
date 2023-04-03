@@ -3,21 +3,21 @@
 #PBS -N evs_href_grid2obs_ecnt_plot
 #PBS -j oe
 #PBS -S /bin/bash
-#PBS -q %QUEUE%
-#PBS -A %PROJ%-%PROJENVIR%
+#PBS -q dev
+#PBS -A EVS-DEV
 #PBS -l walltime=00:30:00
 #PBS -l place=vscatter:exclhost,select=1:ncpus=48:mem=100GB
 #PBS -l debug=true
 
 
-%include <head.h>
-%include <envir-p1.h>
+export OMP_NUM_THREADS=1
 
-export model=evs
-%include <model_ver.h>
+export evs_ver=v1.0
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
+source $HOMEevs/versions/run.ver
 
-module purge
+module reset
 module load envvar/$envvar_ver
 module load PrgEnv-intel/$PrgEnv_intel_ver
 module load intel/$intel_ver
@@ -39,16 +39,12 @@ module load python/$python_ver
 module load met/$met_ver
 module load metplus/$metplus_ver
 module load udunits/${udunits_ver}
+
 module list
 
 export met_v=${met_ver:0:4}
 
-export OMP_NUM_THREADS=1
-
-set -x
-
-export cyc=%CYC%
-export cycles="%CYCLES%"
+export envir=prod
 
 export NET=evs
 export STEP=plots
@@ -59,24 +55,16 @@ export MODELNAME=href
 
 export KEEPDATA=YES
 
+export cyc=00
+#export VDATE=20221231
 export past_days=90
 
 export run_mpi=yes
 export valid_time=both
 
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
+export DATA_IN=${DATA_IN:-/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd}
+export ush_dir=/lfs/h2/emc/vpppg/noscrub/marcel.caron/verif_plotting/ush
+
 ${HOMEevs}/jobs/cam/plots/JEVS_CAM_PLOTS
-
-%include <tail.h>
-%manual
-################################################################################
-###TASKSCRIPT DOCUMENTATION BLOCK
-###
-###PURPOSE:  To execute the job that creates the ncepdate on IBMSP
-#########################################################################
-#########################################################################
-#### Job specific troubleshooting instructions:
-###  see generic troubleshoot manual page
-###
-########################################################################
-%end
-

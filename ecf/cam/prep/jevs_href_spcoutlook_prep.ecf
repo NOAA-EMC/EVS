@@ -1,25 +1,23 @@
 #!/bin/bash
 
-#PBS -N evs_href_spc_prep_%CYC%
+#PBS -N evs_href_spc_prep
 #PBS -j oe
 #PBS -S /bin/bash
-#PBS -q %QUEUE%
-#PBS -A %PROJ%-%PROJENVIR%
+#PBS -q dev
+#PBS -A EVS-DEV
 #PBS -l walltime=00:05:00
 #PBS -l place=vscatter:exclhost,select=1:ncpus=128:mem=500GB
 #PBS -l debug=true
 
-%include <head.h>
-%include <envir-p1.h>
 
-export model=evs
-%include <model_ver.h>
+export evs_ver=v1.0
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+source $HOMEevs/versions/run.ver
 
+module reset
 
-############################################################
-### Load modules
-##############################################################
-module purge
+echo Loading modules........
+
 module load envvar/$envvar_ver
 module load PrgEnv-intel/$PrgEnv_intel_ver
 module load intel/$intel_ver
@@ -51,19 +49,12 @@ export cyc=00
 export run_mpi=no
 export gather=no
 
-${HOMEevs}/jobs/cam/prep/JEVS_CAM_PREP
+export DATA_IN=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
 
-%include <tail.h>
-%manual
-################################################################################
-##TASKSCRIPT DOCUMENTATION BLOCK
-##
-##PURPOSE:  To execute the job that creates the ncepdate on IBMSP
-########################################################################
-########################################################################
-### Job specific troubleshooting instructions:
-##  see generic troubleshoot manual page
-##
-#######################################################################
-%end
+#export INITDATE=20230313 
+
+export COMINspcoutlook=/lfs/h2/emc/stmp/marcel.caron/evs_test/prod/tmp
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/com/evs/v1.0/prep/cam/href
+
+${HOMEevs}/jobs/cam/prep/JEVS_CAM_PREP
 
