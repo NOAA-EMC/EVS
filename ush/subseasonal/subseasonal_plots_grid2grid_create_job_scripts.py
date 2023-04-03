@@ -30,7 +30,8 @@ nproc = os.environ['nproc']
 start_date = os.environ['start_date']
 end_date = os.environ['end_date']
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
-VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \                             .split(' '))
+VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
+                             .split(' '))
 PBS_NODEFILE = os.environ['PBS_NODEFILE']
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
 ################################################
@@ -98,7 +99,7 @@ plot_jobs_dict = {
                                                  'levels': "'*,*'",
                                                  'threshs': ('ge15, ge40, '
                                                              +'ge80')},
-                                            'interp_dict': {'method': 'NEAREST'
+                                            'interp_dict': {'method': 'NEAREST',
                                                             'points': '1'},
                                             'fhr_start': '168',
                                             'fhr_end': '840',

@@ -71,7 +71,7 @@ export evs_ver=${evs_ver}
 export STEP=plots
 export COMPONENT=subseasonal
 export RUN=atmos
-export MODELNAME=gefs cfs
+export MODELNAME="gefs cfs"
 #export model_ver=${gefs_ver} ${cfs_ver}
 export VERIF_CASE=grid2grid
 export VERIF_TYPE=sst
@@ -82,7 +82,7 @@ export COMIN=$COMROOT/$NET/$evs_ver
 export COMINcfs=$COMIN/stats/$COMPONENT/cfs
 export COMINgefs=$COMIN/stats/$COMPONENT/gefs
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
-export VDATE_START=$(date -d "today -31 day" +"%Y%m%d")
+export VDATE_START=$(date -d "today -32 day" +"%Y%m%d")
 export VDATE_END=$(date -d "today -2 day" +"%Y%m%d")
 export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE_END
 
