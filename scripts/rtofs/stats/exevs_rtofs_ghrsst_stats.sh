@@ -110,7 +110,7 @@ fi
 
 # run Grid_Stat
 run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
--c $CONFIGevs/${VERIF_CASE}/$STEP/GridStat_fcstRTOFS_obsGHRSST_climoWOA18.conf
+-c $CONFIGevs/${VERIF_CASE}/$STEP/GridStat_fcstRTOFS_obsGHRSST_climoWOA23.conf
 
 # check if stat files exist; exit if not
 if [ ! -s $COMOUTsmall/grid_stat_RTOFS_GHRSST_SST_1920000L_${VDATE}_000000V.stat ] ; then
