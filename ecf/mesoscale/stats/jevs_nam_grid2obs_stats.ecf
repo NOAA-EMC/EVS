@@ -39,8 +39,9 @@ set -x
   export evs_run_mode="standalone"
 
 # EVS Settings
-#  export HOMEevs="/lfs/h2/emc/vpppg/noscrub/${USER}/verification/EVS"
- export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+  export HOMEevs="/lfs/h2/emc/vpppg/noscrub/${USER}/verification/EVS"
+# export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+
 # Subdirectories to EVS Home Directory
   export PARMevs=$HOMEevs/parm
   export USHevs=$HOMEevs/ush
