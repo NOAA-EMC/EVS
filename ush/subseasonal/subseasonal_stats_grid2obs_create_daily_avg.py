@@ -1,6 +1,6 @@
 '''
-Name: global_det_atmos_stats_grid2obs_create_daily_average.py
-Contact(s): Mallory Row
+Name: subseasonal_stats_grid2obs_create_daily_average.py
+Contact(s): Shannon Shields
 Abstract: This script is used to create daily average
           data from MET point_stat MPR output
 '''
@@ -11,7 +11,7 @@ import numpy as np
 import glob
 import pandas as pd
 import datetime
-import global_det_atmos_util as gda_util
+import subseasonal_util as sub_util
 
 print("BEGIN: "+os.path.basename(__file__))
 # Read in environment variables
