@@ -64,7 +64,7 @@ fi
 
 # Run setpdy and initialize PDY variables
 export cycle=${cycle:-t${cyc}z}
-setpdy.sh
+setpdy.sh 40
 . ./PDY
 
 export VDATE=${VDATE:-$PDYm2}
