@@ -48,6 +48,8 @@ export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 
+export members="NA"
+
 ###################################
 # Set up the UTILITIES
 ###################################

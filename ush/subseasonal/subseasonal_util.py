@@ -2011,7 +2011,7 @@ def initalize_job_env_dict(verif_type, group,
         job_env_dict[env_var] = os.environ[env_var]
     if group == 'plot':
         job_env_dict['plot_verbosity'] = (
-            os.environ['METplus_verbosity']
+            os.environ['metplus_verbosity']
         )
     job_env_dict['JOB_GROUP'] = group
     if group in ['reformat_data', 'assemble_data', 'generate_stats', 'plot']:
