@@ -74,7 +74,7 @@ fi
 ###################################################################
 k=0
 fhr=$fhr_beg
-
+min_file_req=24
 
 while [ $k -lt $nloop ]; do
 
@@ -92,7 +92,7 @@ i=1
    export fhr_end
 
 
-   while [ $i -le 24 ]; do
+   while [ $i -le $min_file_req ]; do
 
       export fcst_file=$COMINfcst/${modsys}.${IDATE}/conus/${modsys}.t${cyc}z.wrfprsf$(printf "%02d" $fhr).grib2
 
@@ -113,19 +113,21 @@ i=1
    # Run METplus if all forecast files exist or exit gracefully
    ###################################################################
 
-   if [ $nfiles -eq 24 ]; then
+   if [ $nfiles -eq $min_file_req ]; then
 
-      echo "Found all files. Generating ${MODELNAME} SSPF for ${cyc}Z ${IDATE} cycle at F${fhr_end}"
+      echo "Found all $nfiles forecast files. Generating ${MODELNAME} SSPF for ${cyc}Z ${IDATE} cycle at F${fhr_end}"
+
       ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/GenEnsProd_fcstCAM_MXUPHL_SurrogateSevere.conf
       export err=$?; err_chk
 
    else
 
-      export subject="${MODELNAME} data missing for ${cyc}Z ${IDATE} cycle"
+      export subject="${MODELNAME} Forecast Data Missing for EVS ${COMPONENT}"
       export maillist=${maillist:-'logan.dawson@noaa.gov'}
-      echo "Warning: Some ${MODELNAME} files are missing from ${cyc}Z ${IDATE} cycle. Only ${nfiles} files found. METplus will not run.">>mailmsg
-      echo "Job ID: $jobid">>mailmsg
+      echo "Warning: Only $nfiles ${MODELNAME} forecast files found for ${cyc}Z ${IDATE} cycle. At least $min_file_req files are required. METplus will not run." > mailmsg
+      echo "Job Name & ID: $job $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $maillist
+      exit 0
 
    fi
 

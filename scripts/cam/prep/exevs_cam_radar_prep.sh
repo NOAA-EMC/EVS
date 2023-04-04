@@ -66,11 +66,12 @@ for RADAR_FIELD in ${RADAR_FIELDS}; do
 
    else
 
-      export subject="${MRMS_PRODUCT} missing for ${VDATE}${cyc}"
+      export subject="MRMS ${MRMS_PRODUCT} Data Missing for EVS ${COMPONENT}"
       export maillist=${maillist:-'logan.dawson@noaa.gov,geoffrey.manikin@noaa.gov'}
-      rm -rf mailmsg
-      echo "Warning: The ${MRMS_PRODUCT} observation file for ${VDATE}${cyc} is missing. METplus will not run.">>mailmsg
+      echo "Warning: The ${MRMS_PRODUCT} file is missing for ${VDATE}${cyc}. METplus will not run." > mailmsg
+      echo "Job Name & ID: $job $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $maillist
+      exit 0
 
    fi	
 

@@ -29,11 +29,6 @@ export ACCUM_END=${ACCUM_END:-$PDY}12
 export COMINfcst=${DATA}/mem_files
 mkdir -p ${COMINfcst}
 
-export COMINmem1=${COMOUT}/hiresw.${PDYm1}
-export COMINmem2=${COMOUT}/hiresw.${PDYm1}
-export COMINmem3=${COMOUT}/hiresw.${PDYm1}
-export COMINmem4=${COMOUT}/hrrr.${PDYm1}
-export COMINmem5=${COMOUT}/nam.${PDYm1}
 
 
 # Define settings for 00Z HREF time-lagged members
@@ -41,6 +36,11 @@ if [ $cyc -eq 00 ];then
 
    nloop=1
 
+   export COMINmem1=${COMOUT}/hiresw.${PDYm1}
+   export COMINmem2=${COMOUT}/hiresw.${PDYm1}
+   export COMINmem3=${COMOUT}/hiresw.${PDYm1}
+   export COMINmem4=${COMOUT}/hrrr.${PDYm1}
+   export COMINmem5=${COMOUT}/nam.${PDYm1}
    export COMINmem6=${COMOUT}/hiresw.${PDYm2}
    export COMINmem7=${COMOUT}/hiresw.${PDYm2}
    export COMINmem8=${COMOUT}/hiresw.${PDYm2}
@@ -50,7 +50,7 @@ if [ $cyc -eq 00 ];then
    export cyc_lag6=18
    export cyc_lag12=12
 
-   fhr_end=36
+   fhr_end1=36
    fhr_end1_lag6=42
    fhr_end1_lag12=48
 
@@ -59,6 +59,11 @@ elif [ $cyc -eq 12 ]; then
 
    nloop=2
 
+   export COMINmem1=${COMOUT}/hiresw.${PDYm1}
+   export COMINmem2=${COMOUT}/hiresw.${PDYm1}
+   export COMINmem3=${COMOUT}/hiresw.${PDYm1}
+   export COMINmem4=${COMOUT}/hrrr.${PDYm1}
+   export COMINmem5=${COMOUT}/nam.${PDYm1}
    export COMINmem6=${COMOUT}/hiresw.${PDYm1}
    export COMINmem7=${COMOUT}/hiresw.${PDYm1}
    export COMINmem8=${COMOUT}/hiresw.${PDYm1}
@@ -89,6 +94,7 @@ fi
 ###################################################################
 k=0
 
+min_file_req=7
 
 while [ $k -lt $nloop ]; do
 
@@ -102,6 +108,18 @@ i=1
       export fhr_end_lag6=$fhr_end1_lag6
       export fhr_end_lag12=$fhr_end1_lag12
    elif [ $k -eq 1 ]; then
+      
+      export COMINmem1=${COMOUT}/hiresw.${PDYm2}
+      export COMINmem2=${COMOUT}/hiresw.${PDYm2}
+      export COMINmem3=${COMOUT}/hiresw.${PDYm2}
+      export COMINmem4=${COMOUT}/hrrr.${PDYm2}
+      export COMINmem5=${COMOUT}/nam.${PDYm2}
+      export COMINmem6=${COMOUT}/hiresw.${PDYm2}
+      export COMINmem7=${COMOUT}/hiresw.${PDYm2}
+      export COMINmem8=${COMOUT}/hiresw.${PDYm2}
+      export COMINmem9=${COMOUT}/hrrr.${PDYm2}
+      export COMINmem10=${COMOUT}/nam.${PDYm2}
+
       export fhr_end=$fhr_end2
       export fhr_end_lag6=$fhr_end2_lag6
       export fhr_end_lag12=$fhr_end2_lag12
@@ -113,25 +131,45 @@ i=1
 
       # Define path to forecast file for each member
       if [ $i -eq 1 ]; then
-         export fcst_file=${COMINmem1}/hireswarw.t${cyc}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
+	 export mem1=hireswarw.t${cyc}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
+         export fcst_file=${COMINmem1}/${mem1}
+
       elif [ $i -eq 2 ]; then
-         export fcst_file=${COMINmem2}/hireswarwmem2.t${cyc}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
+	 export mem2=hireswarwmem2.t${cyc}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
+         export fcst_file=${COMINmem2}/${mem2}
+
       elif [ $i -eq 3 ]; then
-         export fcst_file=${COMINmem3}/hireswfv3.t${cyc}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
+	 export mem3=hireswfv3.t${cyc}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
+         export fcst_file=${COMINmem3}/${mem3}
+
       elif [ $i -eq 4 ]; then
-         export fcst_file=${COMINmem4}/hrrr.t${cyc}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
+	 export mem4=hrrr.t${cyc}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
+         export fcst_file=${COMINmem4}/${mem4}
+
       elif [ $i -eq 5 ]; then
-         export fcst_file=${COMINmem5}/namnest.t${cyc}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
+	 export mem5=namnest.t${cyc}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
+         export fcst_file=${COMINmem5}/${mem5}
+
       elif [ $i -eq 6 ]; then
-         export fcst_file=${COMINmem6}/hireswarw.t${cyc_lag12}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag12}.nc
+	 export mem6=hireswarw.t${cyc_lag12}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag12}.nc
+         export fcst_file=${COMINmem6}/${mem6}
+
       elif [ $i -eq 7 ]; then
-         export fcst_file=${COMINmem7}/hireswarwmem2.t${cyc_lag12}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag12}.nc
+	 export mem7=hireswarwmem2.t${cyc_lag12}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag12}.nc
+         export fcst_file=${COMINmem7}/${mem7}
+
       elif [ $i -eq 8 ]; then
-         export fcst_file=${COMINmem8}/hireswfv3.t${cyc_lag12}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag12}.nc
+	 export mem8=hireswfv3.t${cyc_lag12}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag12}.nc
+         export fcst_file=${COMINmem8}/${mem8}
+
       elif [ $i -eq 9 ]; then
-         export fcst_file=${COMINmem9}/hrrr.t${cyc_lag6}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag6}.nc
+	 export mem9=hrrr.t${cyc_lag6}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag6}.nc
+         export fcst_file=${COMINmem9}/${mem9}
+
       elif [ $i -eq 10 ]; then
-         export fcst_file=${COMINmem10}/namnest.t${cyc_lag6}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag6}.nc
+	 export mem10=namnest.t${cyc_lag6}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag6}.nc
+         export fcst_file=${COMINmem10}/${mem10}
+
       fi
 
       # Copy the member files to working directory if they exist
@@ -140,7 +178,7 @@ i=1
          cp -v $fcst_file $COMINfcst
          nfiles=$((nfiles+1))
       else
-         echo "File not found for member $i. METplus will not run without X members available."
+         echo "Forecast file not found for member $i. METplus will not run without $min_file_req members available."
       fi
    
       fhr=$((fhr+1))
@@ -153,19 +191,20 @@ i=1
    # Run METplus if all forecast files exist or exit gracefully
    ###################################################################
 
-   if [ $nfiles -gt 7 ]; then
+   if [ $nfiles -ge $min_file_req ]; then
 
-      echo "Found enough files to run. Generating ${MODELNAME} SSPF for ${cyc}Z ${IDATE} cycle at F${fhr_end}"
+      echo "Found $nfiles forecast files. Generating ${MODELNAME} SSPF for ${cyc}Z ${IDATE} cycle at F${fhr_end}"
       ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/GenEnsProd_fcstHREF_MXUPHL_SurrogateSevere.conf
       export err=$?; err_chk
 
    else
 
-      export subject="${MODELNAME} data missing for ${cyc}Z ${IDATE} cycle"
+      export subject="${MODELNAME} Forecast Data Missing for EVS ${COMPONENT}"
       export maillist=${maillist:-'logan.dawson@noaa.gov'}
-      echo "Warning: More than 3 ${MODELNAME} member files are missing from ${cyc}Z ${IDATE} cycle. Only ${nfiles} member files found. METplus will not run.">>mailmsg
-      echo "Job ID: $jobid">>mailmsg
+      echo "Warning: Only $nfiles ${MODELNAME} forecast files found for ${cyc}Z ${IDATE} cycle. At least $min_file_req files are required. METplus will not run." > mailmsg
+      echo "Job Name & ID: $job $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $maillist
+      exit 0
 
    fi
 

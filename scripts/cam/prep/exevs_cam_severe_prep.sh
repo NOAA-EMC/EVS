@@ -45,13 +45,12 @@ if [ -e $COMINspc/${REP_DATE}/validation_data/weather/spc/spc_reports_${REP_DATE
 
 else
 
-   echo "No SPC storm report for ${VDATE}. METplus will not run."
-
-   export subject="SPC report data missing for ${VDATE}"
+   export subject="SPC LSR Data Missing for EVS ${COMPONENT}"
    export maillist=${maillist:-'logan.dawson@noaa.gov,geoffrey.manikin@noaa.gov'}
-   echo "Warning: The SPC report file for ${VDATE} is missing. METplus will not run.">>mailmsg
+   echo "Warning: The SPC report file is missing for ${VDATE}. METplus will not run." > mailmsg
+   echo "Job Name & ID: $job $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $maillist
-
+   exit 0
 
 fi
 
