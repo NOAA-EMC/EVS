@@ -828,15 +828,15 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         else:
             level_string = f'{level} '
             level_savename = f'{level}'
-    elif str(verif_type).lower() in ['rtofs_sfc']:
-        if 'Z' in str(level):
+    elif str(verif_type).lower() in ['rtofs']:
+        if 'Z0' in str(level):
             if str(level).upper() == 'Z0':
                 level_string = ''
                 level_savename = 'Z0'
         else:
             level_num = level.replace('Z', '')
             level_string = f'{level_num}-m '
-            level_savename = f'{level_num}M'
+            level_savename = f'{level}'
     elif str(verif_type).lower() in ['ccpa']:
         if 'A' in str(level):
             level_num = level.replace('A', '')
