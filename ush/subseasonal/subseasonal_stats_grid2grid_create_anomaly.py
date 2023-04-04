@@ -1,6 +1,6 @@
 '''
-Name: global_det_atmos_stats_grid2grid_create_anomaly
-Contact(s): Mallory Row
+Name: subseasonal_stats_grid2grid_create_anomaly
+Contact(s): Shannon Shields
 Abstract: This script is used to create anomaly
           data from MET grid_stat netCDF output
 '''
@@ -11,7 +11,7 @@ import numpy as np
 import glob
 import netCDF4 as netcdf
 import datetime
-import global_det_atmos_util as gda_util
+import subseasonal_util as sub_util
 
 print("BEGIN: "+os.path.basename(__file__))
 
