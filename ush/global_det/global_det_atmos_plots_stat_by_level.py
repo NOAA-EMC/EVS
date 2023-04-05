@@ -262,7 +262,7 @@ class StatByLevel:
         # Create plot
         self.logger.info(f"Creating plot for {self.plot_info_dict['stat']} "
                          +"- vertical profile "
-                         +f"self.plot_info_dict['vert_profile']")
+                         +f"{self.plot_info_dict['vert_profile']}")
         fig, ax = plt.subplots(1,1,figsize=(plot_specs_sbl.fig_size[0],
                                             plot_specs_sbl.fig_size[1]))
         ax.grid(True)
