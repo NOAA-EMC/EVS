@@ -1,0 +1,99 @@
+#!/bin/bash -e
+##---------------------------------------------------------------------------
+##---------------------------------------------------------------------------
+## NCEP EMC VERIFICATION SYSTEM (CFS SUBSEASONAL)
+##
+## CONTRIBUTORS: Shannon Shields, Shannon.Shields@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+## PURPOSE: Set up configurations to run user requested subseasonal verification
+##---------------------------------------------------------------------------
+##--------------------------------------------------------------------------
+
+echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
+
+####################################################
+# WHAT METPLUS USE CASES TO RUN
+####################################################
+## STATS STEP PRODUCES .STAT FILES FOR PARTIAL SUMS OR CONTINGENCY TABLE COUNTS
+## EDIT SECTIONS BELOW FOR VERIFICATION TYPES REQUESTED
+#RUN_GRID2OBS_STATS:  runs METplus pb2nc, point_stat, stat_analysis
+export VERIF_CASE_STEP=${VERIF_CASE}_${STEP}
+####################################################
+# GENERAL SETTINGS APPLIED TO ALL USE CASES
+####################################################
+## FORECAST MODEL SETTINGS
+#model_list:             model names
+#model_stats_dir_list:    directory path to model .stat files
+#model_file_format_list: file format of model files
+export model_list="$MODELNAME"
+export model_stats_dir_list="$COMOUTfinal"
+export model_file_format_list="$COMIN.{init?fmt=%Y%m%d}/cfs/cfs"
+## OUTPUT DATA SETTINGS
+#OUTPUTROOT: base output directory
+export OUTPUTROOT="$DATAROOTtmp/$STEP"
+#export OUTPUTROOT="/lfs/h1/ops/prod/com/$NET/$evs_ver/$STEP"
+## DATE SETTINGS
+#start_date:       verification start date, format YYYYMMDD
+#end_date:         verification end date, format YYYYMMDD
+#make_met_data_by: how to treat dates, "VALID" or "INIT"
+export start_date="$VDATE"
+export end_date="$VDATE"
+export make_met_data_by="VALID"
+## WEB SETTINGS
+#SEND2WEB:  whether or not to send maps to webhost
+#webhost:   webhost(rzdm) computer
+#webhostid: webhost(rzdm) user name
+#webdir:    directory where to send maps on webhost
+export SEND2WEB="NO"
+export webhost="emcrzdm.ncep.noaa.gov"
+export webhostid="$USER"
+export webdir="/home/people/emc/www/htdocs/users/${webhostid}/METplus/TEST"
+## METPLUS SETTINGS
+#met_version:               MET version to use: 10.1.1
+#metplus_version:           METplus version to use: 4.1.1
+#met_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
+#metplus_verbosity:         DEBUG, INFO, WARN, ERROR (most verbose is DEBUG)
+#log_met_output_to_metplus: log MET output to METplus log, yes or no
+export met_version="$met_ver" #10.1.1
+export metplus_version="$metplus_ver" #4.1.1
+export metplus_verbosity="DEBUG"
+export met_verbosity="5"
+export log_met_output_to_metplus="yes"
+## DATA DIRECTIVE SETTINGS
+export SENDARCH="YES"
+export SENDMETVIEWER="NO"
+export KEEPDATA="YES"
+####################################################
+# SETTINGS FOR SPECIFIC USE CASES
+####################################################
+if [ $VERIF_CASE_STEP = grid2obs_stats ]; then
+    #g2ostats_type_list: list type of verifications to run for grid-to-obs: PrepBufr
+    #### PrepBufr:  compare 2m temp to NAM prepbufr obs
+    #####    g2ostats_[type]_msg_type_list: observation message type(s) to be used
+    #####    g2ostats_[type]_fyc_list:      all forecast cycles to be included in verification: HH
+    #####    g2ostats_[type]_vhr_list:      all valid hours to be included in verification: HH
+    #####    g2ostats_[type]_fhr_min:       forecast hour to start verification HH[H]
+    #####    g2ostats_[type]_fhr_max:       forecast hour to end verification HH[H]
+    #####    g2ostats_[type]_grid:          NCEP grid to do verification on
+    #####    g2ostats_[type]_gather_by:     how to group the verification data, VSDB, VALID, INIT
+    #g2ostats_mv_database_name: name of the METviewer database to send data to, MUST START WITH "mv"
+    #g2ostats_mv_database_group: name of the group the METviewer database belongs to
+    #g2ostats_mv_database_desc: description of database, can be blank
+    export g2ostats_type_list="PrepBufr" 
+    export g2ostats_PrepBufr_msg_type_list="ONLYSF"
+    export g2ostats_PrepBufr_truth_name_list="nam_anl"
+    export g2ostats_PrepBufr_truth_file_format_list="$COMINobs.{valid?fmt=%Y%m%d}/prepbufr_nam/prepbufr.nam.{valid?fmt=%Y%m%d%H}"
+    export g2ostats_PrepBufr_fcyc_list="00"
+    export g2ostats_PrepBufr_vhr_list="00 12"
+    export g2ostats_PrepBufr_fhr_min="24"
+    export g2ostats_PrepBufr_fhr_max="840"
+    export g2ostats_PrepBufr_daily_fhr_inc=24
+    export g2ostats_PrepBufr_weekly_fhr_inc=168
+    export g2ostats_PrepBufr_grid="G003"
+    export g2ostats_PrepBufr_gather_by="VALID"
+    export g2ostats_mv_database_name="mv_evs_subseasonal_grid2obs_stats_$MODELNAME"
+    export g2ostats_mv_database_group="$USER"
+    export g2ostats_mv_database_desc="Grid-to-obs subseasonal METplus data for $MODELNAME"
+fi
+
+
+echo "END: $(basename ${BASH_SOURCE[0]})"

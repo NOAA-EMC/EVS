@@ -1,0 +1,8 @@
+GridStat_fcstHREFmean_obsNOHRSC.conf
+  The mean of snow is from EnsembleStat
+GridStat_fcstHREFmean_obsCCPA.conf
+  The mean, pmmn, plmm, avrg of APCP, all are from HREF mean/pmmn/plmm/avrg  files
+GridStat_fcstHREFmean_obsCCPA.conf
+  The prob of APCP are from HREF prob files 
+
+

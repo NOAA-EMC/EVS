@@ -1,0 +1,72 @@
+#!/bin/ksh
+
+########################################
+# Preliminary data setup step
+########################################
+set -xa
+
+# ###################################
+# SET SHELL PROCESSING VARIABLES
+# ###################################
+export PS4='$SECONDS + '
+date
+
+###########################################################
+# obtain unique LSF id (jobid) and make temp directories
+###########################################################
+export pid=$$
+
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+mkdir -p $DATA
+cd $DATA
+
+####################################
+# Determine Job Output Name on System
+####################################
+export pgmout="OUTPUT.${pid}"
+
+export cycle=t${cyc}z
+
+##################################################
+# SAVEGES  - Copy Files From TMPDIR to $GESdir
+# SENDECF  - Flag Events on ecFLOW
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+##################################################
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+
+export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXvevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
+
+# Define COMIN/COMOUT variables:
+
+echo $COMPATH
+
+export COMIN=${COMIN:-$(compath.py ${envir}/com/evs/${evs_ver}/)}
+export COMINaqm=${COMINaqm:-$(compath.py ${envir}/com/evs/${evs_ver}/stats/${COMPONENT})}
+export COMOUT=${COMOUT:-${COMIN}/${STEP}/${COMPONENT}}
+export COMOUTplots=${COMOUTplots:-${COMOUT}/${RUN}.${VDATE}}
+mkdir -m 775 -p $COMOUT
+
+#######################################################################
+# Execute the script.
+#######################################################################
+
+$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+
+cat $pgmout
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+
+#if [ "$KEEPDATA" != "YES" ] ; then
+#  cd $DATAROOT
+#  rm -rf $DATA
+#fi
+
+}

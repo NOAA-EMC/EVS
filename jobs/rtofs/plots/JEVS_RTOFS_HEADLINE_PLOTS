@@ -1,0 +1,26 @@
+#!/bin/bash
+###############################################################################
+# Job Name: JEVS_RTOFS_HEADLINE_PLOTS
+# Purpose: To create headline score plots for RTOFS forecast verifications
+#    using MET/METplus.
+# Author: L. Gwen Chen (lichuan.chen@noaa.gov)
+###############################################################################
+
+set -x
+
+# set up paths
+export FIXevs=${FIXevs:-$EVS/fix/logos}
+export USHevs=${USHevs:-$EVS/ush/$COMPONENT}
+export CONFIGevs=${CONFIGevs:-$EVS/parm/metplus_config/$COMPONENT}
+
+# define COMIN/COMOUT variables
+export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
+export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
+export COMOUTfinal=${COMOUTfinal:-$COMOUT/stats/$COMPONENT/$COMPONENT.$VDATE}
+export COMOUTplots=${COMOUTplots:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
+export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
+
+# make headline score plots
+$EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_headline_${STEP}.sh
+
+################################# END OF JOB ##################################
