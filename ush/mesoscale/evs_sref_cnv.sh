@@ -67,7 +67,7 @@ for  obsv in prepbufr ; do
        echo "cp \$output_base/stat/*CNV*.stat $COMOUTsmall" >> run_sref_cnv_${fhr}.sh
 
        chmod +x run_sref_cnv_${fhr}.sh
-       echo "${DATA}/run_sref_cnv_${fhr}.sh" >> run_all_sref_cnv_poe.sh
+       echo "run_sref_cnv_${fhr}.sh" >> run_all_sref_cnv_poe.sh
 
   done
 

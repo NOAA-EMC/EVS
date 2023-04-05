@@ -37,6 +37,40 @@ if [ $modnam = sref_apcp06 ] ; then
 fi
 
 
+if [ $modnam = sref_apcp24_mean ] ; then
+  export output_base=${WORK}/sref.${vday}
+  mkdir -p $output_base
+  cd $output_base
+
+  for cyc in 09 15 ; do
+    large=$COMINsref/sref.${vday}/${cyc}/ensprod/sref.t${cyc}z.pgrb212.mean_3hrly.grib2
+    fhr=3
+    while [ $fhr -le 87 ] ; do
+     fhr_3=$((fhr-3))
+     string="APCP:surface:${fhr_3}-${fhr} hour"
+     hh=$fhr
+     typeset -Z2 hh
+     $WGRIB2 $large|grep "$string"|$WGRIB2 -i $large -grib $output_base/sref.t${cyc}z.pgrb212.mean.fhr${hh}.grib2
+     fhr=$((fhr+3))
+    done
+  done
+  for nfhr in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 ; do
+   echo $nfhr |$HOMEevs/exec/sref_precip.x
+  done
+
+  export lead='24, 48, 72'
+  export cyc='12'
+  export modelpath=$output_base
+
+  ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstSREF_APCP24h.conf
+  #mkdir -p $COMOUT/${RUN}.${VDATE}/${MODELNAME}/apcp24mean
+  #cp $output_base/*24mean*.nc $COMOUT/${RUN}.${VDATE}/${MODELNAME}/apcp24mean
+  mkdir -p ${COMOUTfinal}/apcp24mean
+  cp $output_base/*24mean*.nc ${COMOUTfinal}/apcp24mean
+
+fi  
+
+
 if [ $modnam = ccpa ] ; then
 
   export output_base=${WORK}/ccpa.${vday}

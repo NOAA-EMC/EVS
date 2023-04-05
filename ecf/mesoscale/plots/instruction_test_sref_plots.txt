@@ -1,0 +1,44 @@
+
+Testing ecf directory:
+  /lfs/h2/emc/vpppg/noscrub/$USER/EVS/ecf/mesoscale.dev/plots
+
+  There are 4 ecf files:
+   jevs_sref_grid2obs_past90days_plots.ecf  
+   jevs_sref_precip_spatial_plots.ecf
+   jevs_sref_cnv_past90days_plots.ecf  
+   jevs_sref_precip_past90days_plots.ecf  
+ 
+   These 4 ecf jobs are independent and can be submit at same time
+ 
+
+Submit jobs
+   qsub jevs_sref_grid2obs_past90days_plots.ecf  
+   qsub jevs_sref_precip_spatial_plots.ecf
+   qsub jevs_sref_cnv_past90days_plots.ecf  
+   qsub jevs_sref_precip_past90days_plots.ecf
+
+  Note: since "#PBS -j oe" is set, the stdout file will be in the submit directory
+   /lfs/h2/emc/vpppg/noscrub/$USER/EVS/ecf/mesoscale.dev/plots
+
+The running directory (i.e. $DATA) will be in /lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
+
+There is a script called submit_all_plots.sh. By running this script, all 4 jobs
+can be submitted. 
+  
+The flowchart for each job is similar:
+
+ecf scripts in /lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS/ecf/mesoscale.dev 
+-> JEVS_MESOSCALE_PLOTS  in /lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS/jobs/mesoscale/plots 
+-> scripts in /lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS/scripts/mesoscale/plots
+-> python plotting scripts in  
+       /lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS/ush/mesoscale/ush_sref_plot_cnv_py 
+   or  /lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS/ush/mesoscale/ush_sref_plot_precip_py 
+   or  /lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS/ush/mesoscale/ush_sref_plot_py 
+
+The generated plots are tarred in one tar files for each job and is sent to the COMOUT directory
+/lfs/h2/emc/vpppg/noscrub/${USER}/com/evs/v1.0/plots/mesoscale/atmos.$VDATE:
+  plots.sref.cnv.v20230226.90.tar  
+  plots.sref.grid2obs.v20230226.90.tar  
+  plots.sref.precip.v20230226.90.both.valid.times.tar   
+  plots.href.precip.spatial.map.v20230227.tar 
+

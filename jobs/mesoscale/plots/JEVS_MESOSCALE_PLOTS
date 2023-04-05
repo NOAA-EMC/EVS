@@ -1,0 +1,62 @@
+#!/bin/ksh
+
+set -xa
+#######################################################
+#######################################################
+
+export cycle=t${cyc}z
+
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+
+export pid=$$
+jobid=evs_${RUN}_${COMPONENT}_${VERIF_CASE}_${STEP}.$$
+export DATA=$DATA_IN/$jobid
+mkdir -p $DATA
+cd $DATA
+
+setpdy.sh
+. $DATA/PDY
+
+if [ $MODELNAME = sref ] ; then
+  export VDATE=${VDATE:-$PDYm2}
+fi
+
+export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$MODELNAME.$VDATE
+export COMINapcp24mean=${COMINspatial:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT
+export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/${evs_ver})}/$STEP/$COMPONENT/$RUN.$VDATE
+export DATA_IN=${DATA_IN:-$DATAROOT}
+mkdir -p $COMOUT
+
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs_gens.${evs_ver}}
+export EXECevs=$HOMEevs/exec
+export PARMevs=$HOMEevs/parm
+export USHevs=$HOMEevs/ush
+export SCRIPTevs=$HOMEevs/scripts
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+
+if [ $VERIF_CASE = precip ] ; then
+  export ush_dir=$USHevs/mesoscale/ush_sref_plot_precip_py
+elif [ $VERIF_CASE = cnv ] ; then
+  export ush_dir=$USHevs/mesoscale/ush_sref_plot_cnv_py
+else  
+  export ush_dir=$USHevs/mesoscale/ush_sref_plot_py
+fi
+
+if [ $RUN = atmos ] ; then
+  export INITDATE=${INITDATE:-$PDYm2}
+fi
+
+sh $SCRIPTevs/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$msg"
+
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATAROOT
+  rm -rf $DATA
+fi
+
+date
+
