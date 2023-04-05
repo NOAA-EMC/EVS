@@ -104,7 +104,8 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
   export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 
 # VAR list to run
-  export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH"
+#  export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH"
+  export VAR_NAME_LIST="SBCAPE MLCAPE"
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS

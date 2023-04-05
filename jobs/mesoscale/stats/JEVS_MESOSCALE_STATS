@@ -91,16 +91,14 @@ fi
 # Execute the Script
   $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
   export err=$?; err_chk
-$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
-export err=$?; err_chk
 
 # Clean Up
-cat $pgmout
-msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
-if [ "$KEEPDATA" != "YES" ] ; then
-  cd $DATA_IN
-  rm -rf $DATA
-fi
+  cat $pgmout
+  msg="JOB $job HAS COMPLETED NORMALLY."
+  postmsg "$jlogfile" "$msg"
+  if [ "$KEEPDATA" != "YES" ] ; then
+    cd $DATA_IN
+    rm -rf $DATA
+  fi
 
-echo "END: $(basename ${BASH_SOURCE[0]})"
+  echo "END: $(basename ${BASH_SOURCE[0]})"
