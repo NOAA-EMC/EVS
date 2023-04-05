@@ -1,0 +1,33 @@
+#!/bin/bash
+###############################################################################
+# Job Name: JEVS_RTOFS_NDBC_STATS
+# Purpose: To create stat files for RTOFS forecasts verified with NDBC data
+#          using MET/METplus.
+# Author: L. Gwen Chen (lichuan.chen@noaa.gov)
+###############################################################################
+
+set -x
+
+# set up paths
+export FIXevs=${FIXevs:-$EVS/fix}
+export CONFIGevs=${CONFIGevs:-$EVS/parm/metplus_config/$COMPONENT}
+
+# define COMIN/COMOUT variables
+export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
+export COMINobs=${COMINobs:-$(compath.py $envir/dcom)}
+export COMINfcst=${COMINfcst:-$(compath.py $NET/${evs_ver}/prep/$COMPONENT)}
+export COMINclimo=${COMINclimo:-$EVS/fix/climos/$COMPONENT}
+export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
+export COMOUTfinal=${COMOUTfinal:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
+export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
+
+# run grid2obs verifications with NDBC data
+export VERIF_CASE=grid2obs
+export RUN=ndbc
+export RUNupper=NDBC_STANDARD
+export VAR=sst
+export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE
+
+$EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${STEP}.sh
+
+################################# END OF JOB ##################################
