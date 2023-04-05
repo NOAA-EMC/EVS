@@ -3,12 +3,12 @@ Name: subseasonal_get_data_files.py
 Contact(s): Shannon Shields
 Abstract: This script is run by all scripts in scripts/.
           This gets the necessary data files to run
-          the  use case.
+          the use case.
 '''
 
 import os
 import datetime
-import subseasonal_atmos_util as sub_util
+import subseasonal_util as sub_util
 
 print("BEGIN: "+os.path.basename(__file__))
 
