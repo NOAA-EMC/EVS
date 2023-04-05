@@ -234,6 +234,38 @@ def get_time_info(date_start, date_end, date_type, init_hr_list, valid_hr_list,
         date_dt = date_dt + datetime.timedelta(hours=int(date_type_hr_inc))
     return time_info
 
+def get_init_hour(valid_hour, forecast_hour):
+    """! Get a initialization hour/cycle
+
+         Args:
+             valid_hour    - valid hour (integer)
+             forecast_hour - forecast hour (integer)
+    """
+    init_hour = 24 + (valid_hour - (forecast_hour%24))
+    if forecast_hour % 24 == 0:
+        init_hour = valid_hour
+    else:
+        init_hour = 24 + (valid_hour - (forecast_hour%24))
+    if init_hour >= 24:
+        init_hour = init_hour - 24
+    return init_hour
+
+def get_valid_hour(init_hour, forecast_hour):
+    """! Get a valid hour
+
+         Args:
+             init_hour    - intit hour/cycle (integer)
+             forecast_hour - forecast hour (integer)
+    """
+    valid_hour = (init_hour + (forecast_hour%24))
+    if forecast_hour % 24 == 0:
+        valid_hour = init_hour
+    else:
+        valid_hour = (init_hour + (forecast_hour%24))
+    if valid_hour >= 24:
+        valid_hour = valid_hour - 24
+    return valid_hour
+
 def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                   forecast_hour, str_sub_dict):
     """! Creates a filled file path from a format
