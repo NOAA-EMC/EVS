@@ -2,10 +2,10 @@
 
 # =============================================================================
 #
-# NAME: exevs_mesoscale_grid2obs_plots.sh
+# NAME: exevs_nam_grid2obs_plots.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # CONTRIBUTOR(S): Roshan Shrestha, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Handle all components of an EVS MESOSCALE Grid2Obs - Plots job
+# PURPOSE: Handle all components of an EVS NAM Grid2Obs - Plots job
 # DEPENDENCIES: $HOMEevs/jobs/mesoscale/plots/JEVS_MESOSCALE_PLOTS 
 #
 # =============================================================================
