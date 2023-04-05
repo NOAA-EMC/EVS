@@ -7,9 +7,26 @@ set -xa
 #######################################################
 #######################################################
 
+
+export cycle=t${cyc}z
+
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
+
+export pid=$$
+export DATA_IN=${DATA_IN:-$DATAROOT}
+export DATA=$DATA_IN/evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$
+
+mkdir -p $DATA
+cd $DATA
+
+setpdy.sh
+. $DATA/PDY
+
+mkdir -p $DATA/logs
+
+export VDATE=${VDATE:-$PDYm1}
 
 export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$MODELNAME.$VDATE
 export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/$evs_ver)}/$STEP/$COMPONENT/$RUN.$VDATE
@@ -22,18 +39,10 @@ export USHevs=$HOMEevs/ush
 export FIXevs=${FIXevs:-/lfs/h1/ops/prod/packages/evs.${evs_ver}/fix}
 export MASKS=$FIXevs/masks
 
-export ush_dir=/lfs/h2/emc/vpppg/noscrub/marcel.caron/verif_plotting/ush
+#export ush_dir=/lfs/h2/emc/vpppg/noscrub/marcel.caron/verif_plotting/ush
+#export ush_dir=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS_plots/verif_plotting/ush
+export ush_dir=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS/ush/narre/ush_narre_plot_py
 
-###########################################################
-# obtain unique process id (pid) and make temp directories
-###########################################################
-export pid=$$
-export DATA_IN=${DATA_IN:-$DATAROOT}
-export DATA=$DATA_IN/evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$
-
-mkdir -p $DATA
-cd $DATA
-mkdir -p $DATA/logs
 
 ####################################
 # File To Log Msgs

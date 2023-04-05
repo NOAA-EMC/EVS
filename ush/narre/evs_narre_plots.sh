@@ -179,6 +179,10 @@ export STATS="stat_list"
 # interval settings can be configured in ${USH_DIR}/settings.py
 export CONFIDENCE_INTERVALS="False"
 
+# Will use statistics for all comma-separated interpolation points
+#export INTERP_PNTS="3969"
+export INTERP_PNTS=''
+
 
 # String defining the type of plot to make. Options are "lead_average", "performance_diagram", 
 # "stat_by_level", "threshold_average", "time_series", and "valid_hour_average".
