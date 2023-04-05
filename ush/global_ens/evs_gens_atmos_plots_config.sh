@@ -166,8 +166,8 @@ export INTERP=$interp
 # thresholds. **
 #export FCST_THRESH="<805,<1609,<4828,<8045,<16090"
 #export OBS_THRESH="<805,<1609,<4828,<8045,<16090"
-export FCST_THRESH="thresh_list"
-export OBS_THRESH="thresh_list"
+export FCST_THRESH="thresh_fcst"
+export OBS_THRESH="thresh_obs"
 
 
 # Will plot all comma-separated metrics.  For performance diagram, metrics must be "sratio,pod,csi". 
@@ -178,6 +178,10 @@ export STATS="stat_list"
 # String of True or False. If "True", will plot bootstrap confidence intervals. Other confidence 
 # interval settings can be configured in ${USH_DIR}/settings.py
 export CONFIDENCE_INTERVALS="False"
+
+# Will use statistics for all comma-separated interpolation points
+#export INTERP_PNTS="3969"
+export INTERP_PNTS=interp_pnts
 
 
 # String defining the type of plot to make. Options are "lead_average", "performance_diagram", 

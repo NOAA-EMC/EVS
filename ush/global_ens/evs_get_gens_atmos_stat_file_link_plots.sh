@@ -4,13 +4,21 @@ set -x
 
 day=$1
 MODEL_LIST=$2
+if [ ${VERIF_CASE} = sst ] ; then
+  VRF_CASE=${VERIF_CASE}24h
+elif [ ${VERIF_CASE} = profile1 ] || [ ${VERIF_CASE} = profile2 ] || [ ${VERIF_CASE} = profile3 ] || [ ${VERIF_CASE} = profile4 ]; then
+  VRF_CASE=grid2obs
+else
+  VRF_CASE=${VERIF_CASE}
+fi
 
 for MODEL in $MODEL_LIST ; do
  
   model=`echo $MODEL | tr '[A-Z]' '[a-z]'`
 
+
   archive=$output_base_dir
-  prefix=${COMIN%%gefs*}
+  prefix=${COMIN%%${MODELNAME}*}
   index=${#prefix}
   echo $index
   COM_IN=${COMIN:0:$index}
@@ -23,8 +31,8 @@ for MODEL in $MODEL_LIST ; do
 
   cd ${gens_archive_yyyymmdd}
 
-  if [ -s ${model_stat_dir}/evs.stats.${model}_atmos_${VERIF_CASE}_v${day}.stat ] ; then
-    ln -sf ${model_stat_dir}/evs.stats.${model}_atmos_${VERIF_CASE}_v${day}.stat ${MODEL}_${day}.stat
+  if [ -s ${model_stat_dir}/evs.stats.${model}.atmos.${VRF_CASE}.v${day}.stat ] ; then
+    ln -sf ${model_stat_dir}/evs.stats.${model}.atmos.${VRF_CASE}.v${day}.stat ${MODEL}_${day}.stat
   fi
 
   if [ $MODEL = ECME ] ; then

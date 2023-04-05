@@ -41,16 +41,20 @@ export COMINsnow=${DCOMIN}
 export COMINosi_saf=${COMINosi_saf:-/lfs/h1/ops/dev/dcom}
 export COMINsst=${COMINsst:-/lfs/h1/ops/dev/dcom} 
 
-export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/${evs_ver})}/$STEP/$COMPONENT/$RUN
-mkdir $COMOUT
+export COMINgefs_bc=${COMINgefs_bc:-$COMINnaefs}
+export COMINcmce_bc=${DCOMIN}
+
+
+
+export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/${evs_ver})}/$STEP/global_ens/$RUN
+mkdir -p $COMOUT
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs_gens.${evs_ver}}
 export EXECevs=$HOMEevs/exec
 export PARMevs=$HOMEevs/parm
 export USHevs=$HOMEevs/ush
 export SCRIPTerf=$HOMEevs/scripts
-export FIXevs=${FIXevs:-/lfs/h1/ops/prod/packages/evs.${evs_ver}/fix}
-
+export FIXevs=${FIXevs:-$HOMEevs/fix}
 
 ####################################
 # Determine Job Output Name on System
@@ -60,7 +64,7 @@ export jobid="${outid}.o${pid}"
 export pgmout="OUTPUT.${pid}"
 
 
-sh $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${STEP}.sh
+sh $HOMEevs/scripts/global_ens/${STEP}/exevs_${COMPONENT}_${RUN}_${STEP}.sh
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$msg"

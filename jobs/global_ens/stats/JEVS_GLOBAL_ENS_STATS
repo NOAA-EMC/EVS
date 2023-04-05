@@ -43,7 +43,7 @@ export EXECevs=$HOMEevs/exec
 export PARMevs=$HOMEevs/parm
 export USHevs=$HOMEevs/ush
 export SCRIPTerf=$HOMEevs/scripts
-export FIXevs=${FIXevs:-/lfs/h1/ops/prod/packages/evs.${evs_ver}/fix}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
 
 
 ####################################

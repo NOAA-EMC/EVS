@@ -23,8 +23,15 @@ if [ $modnam = gfsanl ]; then
   echo $modnam is print here ...............
 
   for cyc in 00 06 12 18 ; do
-    cp $COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.f000 $COMOUT_gefs/gfsanl.t${cyc}z.grid3.f000.grib2
-  done
+    ###cp $COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.f000 $COMOUT_gefs/gfsanl.t${cyc}z.grid3.f000.grib2
+    cp $COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.anl $COMOUT_gefs/gfsanl.t${cyc}z.grid3.f000.grib2
+    #There are no U10, V10 in GFS analysis, so use GFS*f000 as alternative
+    GFSf000=$COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.f000 
+    $WGRIB2  $GFSf000|grep "UGRD:10 m above ground"|$WGRIB2 -i $GFSf000 -grib $WORK/U10_f000.${cyc}
+    cat $WORK/U10_f000.${cyc} >> $COMOUT_gefs/gfsanl.t${cyc}z.grid3.f000.grib2
+    $WGRIB2  $GFSf000|grep "VGRD:10 m above ground"|$WGRIB2 -i $GFSf000 -grib $WORK/V10_f000.${cyc}
+    cat $WORK/V10_f000.${cyc} >> $COMOUT_gefs/gfsanl.t${cyc}z.grid3.f000.grib2
+ done
 
     #For WMO 1.5 deg verification 
     $wgrib2 $COMOUT_gefs/gfsanl.t00z.grid3.f000.grib2 -set_grib_type same -new_grid_winds earth -new_grid latlon 0:240:1.5 -90:121:1.5 $COMOUT_gefs/gfsanl.t00z.deg1.5.f000.grib2 

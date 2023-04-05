@@ -1,0 +1,1265 @@
+Running prologue on parent mom node: nid002681...
+Job 52404433.cbqs01 nodelist: nid002681
+Job 52404433.cbqs01 - Prologue complete. Execution time: 3 seconds
+Lmod has detected the following error: The following module(s) are unknown:
+"netcdf4"
+
+Please check the spelling or version number. Also try "module spider ..."
+It is also possible your cache file is out-of-date; it may help to try:
+  $ module --ignore-cache load "netcdf4"
+
+Also make sure that all modulefiles written in TCL start with the string
+#%Module
+
+
+
+Lmod has detected the following error: The following module(s) are unknown:
+"python-modules/3.8.6"
+
+Please check the spelling or version number. Also try "module spider ..."
+It is also possible your cache file is out-of-date; it may help to try:
+  $ module --ignore-cache load "python-modules/3.8.6"
+
+Also make sure that all modulefiles written in TCL start with the string
+#%Module
+
+
+
+
+Currently Loaded Modules:
+  1) craype-x86-rome     (H)  19) netcdf/4.7.4
+  2) libfabric/1.11.0.0. (H)  20) sigio/2.3.2
+  3) craype-network-ofi  (H)  21) gfsio/1.4.1
+  4) envvar/1.0               22) crtm/2.3.0
+  5) PrgEnv-intel/8.1.0       23) libxmlparse/2.0.0
+  6) intel/19.1.3.304         24) libjpeg/9c
+  7) craype/2.7.10            25) grib_util/1.2.4
+  8) cray-mpich/8.1.12        26) prod_util/2.0.5
+  9) ip/3.3.3                 27) prod_envir/2.0.4
+ 10) bacio/2.4.1              28) wgrib2/2.0.8_wmo
+ 11) w3nco/2.4.1              29) cray-python/3.9.13.1
+ 12) jasper/2.0.25            30) git/2.29.0
+ 13) libpng/1.6.37            31) cray-pals/1.0.12
+ 14) zlib/1.2.11              32) cdo/1.9.8
+ 15) bufr/11.4.0              33) python/3.8.6
+ 16) sfcio/1.4.1              34) proj/7.1.0
+ 17) sp/2.3.3                 35) geos/3.8.1
+ 18) hdf5/1.10.6              36) GrADS/2.2.1-cce-11.0.4
+
+  Where:
+   H:  Hidden Module
+
+ 
+
+Resetting modules to system default. Reseting $MODULEPATH back to system default. All extra directories will be removed from $MODULEPATH.
++ cycle=t00z
++ export cycle
++ DATA_IN=/lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd
++ export DATA_IN
++ pid=98937
++ export pid
++ jobid=evs_atmos_global_ens_gefs_precip_spatial_plots.98937
++ DATA=/lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937
++ export DATA
++ mkdir -p /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937
++ cd /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937
++ setpdy.sh
+ completed cleanly
+ completed cleanly
+Source PDY script to export PDYm7, ..., PDY, ..., PDYp7 variables.
++ . /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/PDY
++ PDYm7=20230329
++ export PDYm7
++ PDYm6=20230330
++ export PDYm6
++ PDYm5=20230331
++ export PDYm5
++ PDYm4=20230401
++ export PDYm4
++ PDYm3=20230402
++ export PDYm3
++ PDYm2=20230403
++ export PDYm2
++ PDYm1=20230404
++ export PDYm1
++ PDY=20230405
++ export PDY
++ PDYp1=20230406
++ export PDYp1
++ PDYp2=20230407
++ export PDYp2
++ PDYp3=20230408
++ export PDYp3
++ PDYp4=20230409
++ export PDYp4
++ PDYp5=20230410
++ export PDYp5
++ PDYp6=20230411
++ export PDYp6
++ PDYp7=20230412
++ export PDYp7
++ [ atmos '=' atmos ]
++ VDATE=20230403
++ export VDATE
++ SENDCOM=YES
++ export SENDCOM
++ SENDDBN=YES
++ export SENDDBN
++ SENDECF=YES
++ export SENDECF
++ COMIN=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/gefs.20230403
++ export COMIN
++ COMINapcp24mean=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean
++ export COMINapcp24mean
++ COMINccpa24=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/prep/global_ens/atmos.20230403
++ export COMINccpa24
++ COMOUT=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/plots/global_ens/atmos.20230403
++ export COMOUT
++ DATA_IN=/lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd
++ export DATA_IN
++ mkdir -p /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/plots/global_ens/atmos.20230403
++ HOMEevs=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS
++ export HOMEevs
++ EXECevs=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS/exec
++ export EXECevs
++ PARMevs=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS/parm
++ export PARMevs
++ USHevs=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS/ush
++ export USHevs
++ SCRIPTevs=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS/scripts
++ export SCRIPTevs
++ FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
++ export FIXevs
++ run_mpi=yes
++ export run_mpi
++ ush_dir=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS/ush/global_ens/ush_gens_plot_py
++ export ush_dir
++ [ '=' separate ]
+/lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS/jobs/global_ens/plots/JEVS_GLOBAL_ENS_PLOTS[49]: [: argument expected
++ sh /lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS/scripts/global_ens/plots/exevs_global_ens_atmos_gefs_precip_spatial_plots.sh
++ cd /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937
++ export machine=WCOSS2
++ machine=WCOSS2
++ export COMROOT=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com
++ COMROOT=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com
++ export VERIF_CASE=grid2grid
++ VERIF_CASE=grid2grid
++ export evs_run_mode=production
++ evs_run_mode=production
++ export plot_verbosity=INFO
++ plot_verbosity=INFO
++ export JOB_GROUP=plot
++ JOB_GROUP=plot
++ export VERIF_TYPE=precip
++ VERIF_TYPE=precip
++ export job_var=24hrAccumMaps
++ job_var=24hrAccumMaps
++ export fhr_start=24
++ fhr_start=24
++ export fhr_end=240
++ fhr_end=240
++ export fhr_inc=24
++ fhr_inc=24
++ export valid_hr_start=12
++ valid_hr_start=12
++ export valid_hr_end=12
++ valid_hr_end=12
++ export valid_hr_inc=24
++ valid_hr_inc=24
++ export init_hr_start=12
++ init_hr_start=12
++ export init_hr_end=12
++ init_hr_end=12
++ export init_hr_inc=24
++ init_hr_inc=24
++ export 'model_list=gefs cmce ecme naefs'
++ model_list='gefs cmce ecme naefs'
++ export 'model_plot_name_list=gefs cmce ecme naefs'
++ model_plot_name_list='gefs cmce ecme naefs'
++ export obs_name=24hrCCPA
++ obs_name=24hrCCPA
++ export event_equalization=NO
++ event_equalization=NO
++ export start_date=20230403
++ start_date=20230403
++ export end_date=20230403
++ end_date=20230403
++ export date_type=VALID
++ date_type=VALID
++ export grid=G211
++ grid=G211
++ export fcst_var_name=APCP
++ fcst_var_name=APCP
++ export fcst_var_level_list=A24
++ fcst_var_level_list=A24
++ export fcst_var_thresh_list=NA
++ fcst_var_thresh_list=NA
++ export obs_var_name=APCP
++ obs_var_name=APCP
++ export obs_var_level_list=A24
++ obs_var_level_list=A24
++ export obs_var_thresh_list=NA
++ obs_var_thresh_list=NA
++ export interp_method=NEAREST
++ interp_method=NEAREST
++ export interp_points_list=1
++ interp_points_list=1
++ export line_type=SL1L2
++ line_type=SL1L2
++ export stat=FBAR
++ stat=FBAR
++ export vx_mask=CONUS
++ vx_mask=CONUS
++ export plots_list=precip_spatial_map
++ plots_list=precip_spatial_map
++ export job_name=SL1L2/FBAR/24hrAccumMaps/CONUS/precip_spatial_map
++ job_name=SL1L2/FBAR/24hrAccumMaps/CONUS/precip_spatial_map
++ mkdir -p /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/plot_output/atmos.20230403/logs
++ for model in $model_list
+++ echo gefs
+++ tr '[a-z]' '[A-Z]'
++ MODEL=GEFS
++ source=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/gefs
++ target=/lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/gefs
++ mkdir -p /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/gefs
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -024 2023040312
++ past=2023040212
++ INITDATE=20230402
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/gefs/GenEnsProd_GEFS_APCP24_FHR024_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/gefs/gefs_precip_24hrAccum_init2023040212_fhr024.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -048 2023040312
++ past=2023040112
++ INITDATE=20230401
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/gefs/GenEnsProd_GEFS_APCP24_FHR048_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/gefs/gefs_precip_24hrAccum_init2023040112_fhr048.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -072 2023040312
++ past=2023033112
++ INITDATE=20230331
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/gefs/GenEnsProd_GEFS_APCP24_FHR072_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/gefs/gefs_precip_24hrAccum_init2023033112_fhr072.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -096 2023040312
++ past=2023033012
++ INITDATE=20230330
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/gefs/GenEnsProd_GEFS_APCP24_FHR096_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/gefs/gefs_precip_24hrAccum_init2023033012_fhr096.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -120 2023040312
++ past=2023032912
++ INITDATE=20230329
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/gefs/GenEnsProd_GEFS_APCP24_FHR120_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/gefs/gefs_precip_24hrAccum_init2023032912_fhr120.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -144 2023040312
++ past=2023032812
++ INITDATE=20230328
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/gefs/GenEnsProd_GEFS_APCP24_FHR144_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/gefs/gefs_precip_24hrAccum_init2023032812_fhr144.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -168 2023040312
++ past=2023032712
++ INITDATE=20230327
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/gefs/GenEnsProd_GEFS_APCP24_FHR168_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/gefs/gefs_precip_24hrAccum_init2023032712_fhr168.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -192 2023040312
++ past=2023032612
++ INITDATE=20230326
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/gefs/GenEnsProd_GEFS_APCP24_FHR192_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/gefs/gefs_precip_24hrAccum_init2023032612_fhr192.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -216 2023040312
++ past=2023032512
++ INITDATE=20230325
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/gefs/GenEnsProd_GEFS_APCP24_FHR216_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/gefs/gefs_precip_24hrAccum_init2023032512_fhr216.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -240 2023040312
++ past=2023032412
++ INITDATE=20230324
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/gefs/GenEnsProd_GEFS_APCP24_FHR240_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/gefs/gefs_precip_24hrAccum_init2023032412_fhr240.nc
++ for model in $model_list
+++ echo cmce
+++ tr '[a-z]' '[A-Z]'
++ MODEL=CMCE
++ source=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/cmce
++ target=/lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/cmce
++ mkdir -p /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/cmce
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -024 2023040312
++ past=2023040212
++ INITDATE=20230402
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/cmce/GenEnsProd_CMCE_APCP24_FHR024_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/cmce/cmce_precip_24hrAccum_init2023040212_fhr024.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -048 2023040312
++ past=2023040112
++ INITDATE=20230401
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/cmce/GenEnsProd_CMCE_APCP24_FHR048_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/cmce/cmce_precip_24hrAccum_init2023040112_fhr048.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -072 2023040312
++ past=2023033112
++ INITDATE=20230331
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/cmce/GenEnsProd_CMCE_APCP24_FHR072_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/cmce/cmce_precip_24hrAccum_init2023033112_fhr072.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -096 2023040312
++ past=2023033012
++ INITDATE=20230330
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/cmce/GenEnsProd_CMCE_APCP24_FHR096_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/cmce/cmce_precip_24hrAccum_init2023033012_fhr096.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -120 2023040312
++ past=2023032912
++ INITDATE=20230329
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/cmce/GenEnsProd_CMCE_APCP24_FHR120_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/cmce/cmce_precip_24hrAccum_init2023032912_fhr120.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -144 2023040312
++ past=2023032812
++ INITDATE=20230328
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/cmce/GenEnsProd_CMCE_APCP24_FHR144_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/cmce/cmce_precip_24hrAccum_init2023032812_fhr144.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -168 2023040312
++ past=2023032712
++ INITDATE=20230327
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/cmce/GenEnsProd_CMCE_APCP24_FHR168_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/cmce/cmce_precip_24hrAccum_init2023032712_fhr168.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -192 2023040312
++ past=2023032612
++ INITDATE=20230326
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/cmce/GenEnsProd_CMCE_APCP24_FHR192_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/cmce/cmce_precip_24hrAccum_init2023032612_fhr192.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -216 2023040312
++ past=2023032512
++ INITDATE=20230325
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/cmce/GenEnsProd_CMCE_APCP24_FHR216_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/cmce/cmce_precip_24hrAccum_init2023032512_fhr216.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -240 2023040312
++ past=2023032412
++ INITDATE=20230324
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/cmce/GenEnsProd_CMCE_APCP24_FHR240_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/cmce/cmce_precip_24hrAccum_init2023032412_fhr240.nc
++ for model in $model_list
+++ echo ecme
+++ tr '[a-z]' '[A-Z]'
++ MODEL=ECME
++ source=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/ecme
++ target=/lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/ecme
++ mkdir -p /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/ecme
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -024 2023040312
++ past=2023040212
++ INITDATE=20230402
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/ecme/GenEnsProd_ECME_APCP24_FHR024_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/ecme/ecme_precip_24hrAccum_init2023040212_fhr024.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -048 2023040312
++ past=2023040112
++ INITDATE=20230401
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/ecme/GenEnsProd_ECME_APCP24_FHR048_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/ecme/ecme_precip_24hrAccum_init2023040112_fhr048.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -072 2023040312
++ past=2023033112
++ INITDATE=20230331
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/ecme/GenEnsProd_ECME_APCP24_FHR072_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/ecme/ecme_precip_24hrAccum_init2023033112_fhr072.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -096 2023040312
++ past=2023033012
++ INITDATE=20230330
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/ecme/GenEnsProd_ECME_APCP24_FHR096_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/ecme/ecme_precip_24hrAccum_init2023033012_fhr096.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -120 2023040312
++ past=2023032912
++ INITDATE=20230329
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/ecme/GenEnsProd_ECME_APCP24_FHR120_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/ecme/ecme_precip_24hrAccum_init2023032912_fhr120.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -144 2023040312
++ past=2023032812
++ INITDATE=20230328
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/ecme/GenEnsProd_ECME_APCP24_FHR144_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/ecme/ecme_precip_24hrAccum_init2023032812_fhr144.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -168 2023040312
++ past=2023032712
++ INITDATE=20230327
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/ecme/GenEnsProd_ECME_APCP24_FHR168_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/ecme/ecme_precip_24hrAccum_init2023032712_fhr168.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -192 2023040312
++ past=2023032612
++ INITDATE=20230326
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/ecme/GenEnsProd_ECME_APCP24_FHR192_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/ecme/ecme_precip_24hrAccum_init2023032612_fhr192.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -216 2023040312
++ past=2023032512
++ INITDATE=20230325
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/ecme/GenEnsProd_ECME_APCP24_FHR216_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/ecme/ecme_precip_24hrAccum_init2023032512_fhr216.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -240 2023040312
++ past=2023032412
++ INITDATE=20230324
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/ecme/GenEnsProd_ECME_APCP24_FHR240_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/ecme/ecme_precip_24hrAccum_init2023032412_fhr240.nc
++ for model in $model_list
+++ echo naefs
+++ tr '[a-z]' '[A-Z]'
++ MODEL=NAEFS
++ source=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/naefs
++ target=/lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/naefs
++ mkdir -p /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/naefs
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -024 2023040312
++ past=2023040212
++ INITDATE=20230402
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/naefs/GenEnsProd_NAEFS_APCP24_FHR024_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/naefs/naefs_precip_24hrAccum_init2023040212_fhr024.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -048 2023040312
++ past=2023040112
++ INITDATE=20230401
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/naefs/GenEnsProd_NAEFS_APCP24_FHR048_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/naefs/naefs_precip_24hrAccum_init2023040112_fhr048.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -072 2023040312
++ past=2023033112
++ INITDATE=20230331
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/naefs/GenEnsProd_NAEFS_APCP24_FHR072_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/naefs/naefs_precip_24hrAccum_init2023033112_fhr072.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -096 2023040312
++ past=2023033012
++ INITDATE=20230330
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/naefs/GenEnsProd_NAEFS_APCP24_FHR096_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/naefs/naefs_precip_24hrAccum_init2023033012_fhr096.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -120 2023040312
++ past=2023032912
++ INITDATE=20230329
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/naefs/GenEnsProd_NAEFS_APCP24_FHR120_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/naefs/naefs_precip_24hrAccum_init2023032912_fhr120.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -144 2023040312
++ past=2023032812
++ INITDATE=20230328
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/naefs/GenEnsProd_NAEFS_APCP24_FHR144_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/naefs/naefs_precip_24hrAccum_init2023032812_fhr144.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -168 2023040312
++ past=2023032712
++ INITDATE=20230327
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/naefs/GenEnsProd_NAEFS_APCP24_FHR168_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/naefs/naefs_precip_24hrAccum_init2023032712_fhr168.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -192 2023040312
++ past=2023032612
++ INITDATE=20230326
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/naefs/GenEnsProd_NAEFS_APCP24_FHR192_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/naefs/naefs_precip_24hrAccum_init2023032612_fhr192.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -216 2023040312
++ past=2023032512
++ INITDATE=20230325
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/naefs/GenEnsProd_NAEFS_APCP24_FHR216_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/naefs/naefs_precip_24hrAccum_init2023032512_fhr216.nc
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -240 2023040312
++ past=2023032412
++ INITDATE=20230324
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/atmos.20230403/apcp24_mean/naefs/GenEnsProd_NAEFS_APCP24_FHR240_20230403_120000V_ens.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/naefs/naefs_precip_24hrAccum_init2023032412_fhr240.nc
++ source=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/prep/global_ens/atmos.20230403/gefs
++ target=/lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/ccpa
++ mkdir -p /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/ccpa
++ ln -sf /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/prep/global_ens/atmos.20230403/gefs/ccpa.t12z.grid3.24h.f00.nc /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/data/ccpa/ccpa_precip_24hrAccum_valid2023040312.nc
++ python /lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS/ush/global_ens/ush_gens_plot_py/global_det_atmos_plots.py
+BEGIN: global_det_atmos_plots.py
+Log file: /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/plot_output/atmos.20230403/logs/evs_global_ens_atmos_grid2grid_plots_precip_SL1L2_FBAR_24hrAccumMaps_CONUS_precip_spatial_map_runon20230405133604.log
+END: global_det_atmos_plots.py
++ cd /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_atmos_global_ens_gefs_precip_spatial_plots.98937/grid2grid_plots/plot_output/atmos.20230403/precip/SL1L2_FBAR_24hrAccumMaps_CONUS_precip_spatial_map/images
+++ echo CONUS
+++ tr '[A-Z]' '[a-z]'
++ mask=conus
++ for model in $model_list
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -024 2023040312
++ past=2023040212
++ INITDATE=20230402
++ mv gefs.v2023040312.024h.conus.png evs.gefs.spatial_map.apcp_a24.init20230402.vlid2023040312.f024.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -048 2023040312
++ past=2023040112
++ INITDATE=20230401
++ mv gefs.v2023040312.048h.conus.png evs.gefs.spatial_map.apcp_a24.init20230401.vlid2023040312.f048.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -072 2023040312
++ past=2023033112
++ INITDATE=20230331
++ mv gefs.v2023040312.072h.conus.png evs.gefs.spatial_map.apcp_a24.init20230331.vlid2023040312.f072.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -096 2023040312
++ past=2023033012
++ INITDATE=20230330
++ mv gefs.v2023040312.096h.conus.png evs.gefs.spatial_map.apcp_a24.init20230330.vlid2023040312.f096.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -120 2023040312
++ past=2023032912
++ INITDATE=20230329
++ mv gefs.v2023040312.120h.conus.png evs.gefs.spatial_map.apcp_a24.init20230329.vlid2023040312.f120.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -144 2023040312
++ past=2023032812
++ INITDATE=20230328
++ mv gefs.v2023040312.144h.conus.png evs.gefs.spatial_map.apcp_a24.init20230328.vlid2023040312.f144.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -168 2023040312
++ past=2023032712
++ INITDATE=20230327
++ mv gefs.v2023040312.168h.conus.png evs.gefs.spatial_map.apcp_a24.init20230327.vlid2023040312.f168.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -192 2023040312
++ past=2023032612
++ INITDATE=20230326
++ mv gefs.v2023040312.192h.conus.png evs.gefs.spatial_map.apcp_a24.init20230326.vlid2023040312.f192.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -216 2023040312
++ past=2023032512
++ INITDATE=20230325
++ mv gefs.v2023040312.216h.conus.png evs.gefs.spatial_map.apcp_a24.init20230325.vlid2023040312.f216.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -240 2023040312
++ past=2023032412
++ INITDATE=20230324
++ mv gefs.v2023040312.240h.conus.png evs.gefs.spatial_map.apcp_a24.init20230324.vlid2023040312.f240.buk_conus.png
++ for model in $model_list
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -024 2023040312
++ past=2023040212
++ INITDATE=20230402
++ mv cmce.v2023040312.024h.conus.png evs.cmce.spatial_map.apcp_a24.init20230402.vlid2023040312.f024.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -048 2023040312
++ past=2023040112
++ INITDATE=20230401
++ mv cmce.v2023040312.048h.conus.png evs.cmce.spatial_map.apcp_a24.init20230401.vlid2023040312.f048.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -072 2023040312
++ past=2023033112
++ INITDATE=20230331
++ mv cmce.v2023040312.072h.conus.png evs.cmce.spatial_map.apcp_a24.init20230331.vlid2023040312.f072.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -096 2023040312
++ past=2023033012
++ INITDATE=20230330
++ mv cmce.v2023040312.096h.conus.png evs.cmce.spatial_map.apcp_a24.init20230330.vlid2023040312.f096.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -120 2023040312
++ past=2023032912
++ INITDATE=20230329
++ mv cmce.v2023040312.120h.conus.png evs.cmce.spatial_map.apcp_a24.init20230329.vlid2023040312.f120.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -144 2023040312
++ past=2023032812
++ INITDATE=20230328
++ mv cmce.v2023040312.144h.conus.png evs.cmce.spatial_map.apcp_a24.init20230328.vlid2023040312.f144.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -168 2023040312
++ past=2023032712
++ INITDATE=20230327
++ mv cmce.v2023040312.168h.conus.png evs.cmce.spatial_map.apcp_a24.init20230327.vlid2023040312.f168.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -192 2023040312
++ past=2023032612
++ INITDATE=20230326
++ mv cmce.v2023040312.192h.conus.png evs.cmce.spatial_map.apcp_a24.init20230326.vlid2023040312.f192.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -216 2023040312
++ past=2023032512
++ INITDATE=20230325
++ mv cmce.v2023040312.216h.conus.png evs.cmce.spatial_map.apcp_a24.init20230325.vlid2023040312.f216.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -240 2023040312
++ past=2023032412
++ INITDATE=20230324
++ mv cmce.v2023040312.240h.conus.png evs.cmce.spatial_map.apcp_a24.init20230324.vlid2023040312.f240.buk_conus.png
++ for model in $model_list
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -024 2023040312
++ past=2023040212
++ INITDATE=20230402
++ mv ecme.v2023040312.024h.conus.png evs.ecme.spatial_map.apcp_a24.init20230402.vlid2023040312.f024.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -048 2023040312
++ past=2023040112
++ INITDATE=20230401
++ mv ecme.v2023040312.048h.conus.png evs.ecme.spatial_map.apcp_a24.init20230401.vlid2023040312.f048.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -072 2023040312
++ past=2023033112
++ INITDATE=20230331
++ mv ecme.v2023040312.072h.conus.png evs.ecme.spatial_map.apcp_a24.init20230331.vlid2023040312.f072.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -096 2023040312
++ past=2023033012
++ INITDATE=20230330
++ mv ecme.v2023040312.096h.conus.png evs.ecme.spatial_map.apcp_a24.init20230330.vlid2023040312.f096.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -120 2023040312
++ past=2023032912
++ INITDATE=20230329
++ mv ecme.v2023040312.120h.conus.png evs.ecme.spatial_map.apcp_a24.init20230329.vlid2023040312.f120.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -144 2023040312
++ past=2023032812
++ INITDATE=20230328
++ mv ecme.v2023040312.144h.conus.png evs.ecme.spatial_map.apcp_a24.init20230328.vlid2023040312.f144.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -168 2023040312
++ past=2023032712
++ INITDATE=20230327
++ mv ecme.v2023040312.168h.conus.png evs.ecme.spatial_map.apcp_a24.init20230327.vlid2023040312.f168.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -192 2023040312
++ past=2023032612
++ INITDATE=20230326
++ mv ecme.v2023040312.192h.conus.png evs.ecme.spatial_map.apcp_a24.init20230326.vlid2023040312.f192.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -216 2023040312
++ past=2023032512
++ INITDATE=20230325
++ mv ecme.v2023040312.216h.conus.png evs.ecme.spatial_map.apcp_a24.init20230325.vlid2023040312.f216.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -240 2023040312
++ past=2023032412
++ INITDATE=20230324
++ mv ecme.v2023040312.240h.conus.png evs.ecme.spatial_map.apcp_a24.init20230324.vlid2023040312.f240.buk_conus.png
++ for model in $model_list
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -024 2023040312
++ past=2023040212
++ INITDATE=20230402
++ mv naefs.v2023040312.024h.conus.png evs.naefs.spatial_map.apcp_a24.init20230402.vlid2023040312.f024.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -048 2023040312
++ past=2023040112
++ INITDATE=20230401
++ mv naefs.v2023040312.048h.conus.png evs.naefs.spatial_map.apcp_a24.init20230401.vlid2023040312.f048.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -072 2023040312
++ past=2023033112
++ INITDATE=20230331
++ mv naefs.v2023040312.072h.conus.png evs.naefs.spatial_map.apcp_a24.init20230331.vlid2023040312.f072.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -096 2023040312
++ past=2023033012
++ INITDATE=20230330
++ mv naefs.v2023040312.096h.conus.png evs.naefs.spatial_map.apcp_a24.init20230330.vlid2023040312.f096.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -120 2023040312
++ past=2023032912
++ INITDATE=20230329
++ mv naefs.v2023040312.120h.conus.png evs.naefs.spatial_map.apcp_a24.init20230329.vlid2023040312.f120.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -144 2023040312
++ past=2023032812
++ INITDATE=20230328
++ mv naefs.v2023040312.144h.conus.png evs.naefs.spatial_map.apcp_a24.init20230328.vlid2023040312.f144.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -168 2023040312
++ past=2023032712
++ INITDATE=20230327
++ mv naefs.v2023040312.168h.conus.png evs.naefs.spatial_map.apcp_a24.init20230327.vlid2023040312.f168.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -192 2023040312
++ past=2023032612
++ INITDATE=20230326
++ mv naefs.v2023040312.192h.conus.png evs.naefs.spatial_map.apcp_a24.init20230326.vlid2023040312.f192.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -216 2023040312
++ past=2023032512
++ INITDATE=20230325
++ mv naefs.v2023040312.216h.conus.png evs.naefs.spatial_map.apcp_a24.init20230325.vlid2023040312.f216.buk_conus.png
++ for fhr in 024 048 072 096 120 144 168 192 216 240
+++ /apps/ops/prod/nco/core/prod_util.v2.0.5/exec/ndate -240 2023040312
++ past=2023032412
++ INITDATE=20230324
++ mv naefs.v2023040312.240h.conus.png evs.naefs.spatial_map.apcp_a24.init20230324.vlid2023040312.f240.buk_conus.png
++ tar -cvf plots.global_ens.precip.spatial.map.v20230403.tar evs.cmce.spatial_map.apcp_a24.init20230324.vlid2023040312.f240.buk_conus.png evs.cmce.spatial_map.apcp_a24.init20230325.vlid2023040312.f216.buk_conus.png evs.cmce.spatial_map.apcp_a24.init20230326.vlid2023040312.f192.buk_conus.png evs.cmce.spatial_map.apcp_a24.init20230327.vlid2023040312.f168.buk_conus.png evs.cmce.spatial_map.apcp_a24.init20230328.vlid2023040312.f144.buk_conus.png evs.cmce.spatial_map.apcp_a24.init20230329.vlid2023040312.f120.buk_conus.png evs.cmce.spatial_map.apcp_a24.init20230330.vlid2023040312.f096.buk_conus.png evs.cmce.spatial_map.apcp_a24.init20230331.vlid2023040312.f072.buk_conus.png evs.cmce.spatial_map.apcp_a24.init20230401.vlid2023040312.f048.buk_conus.png evs.cmce.spatial_map.apcp_a24.init20230402.vlid2023040312.f024.buk_conus.png evs.ecme.spatial_map.apcp_a24.init20230324.vlid2023040312.f240.buk_conus.png evs.ecme.spatial_map.apcp_a24.init20230325.vlid2023040312.f216.buk_conus.png evs.ecme.spatial_map.apcp_a24.init20230326.vlid2023040312.f192.buk_conus.png evs.ecme.spatial_map.apcp_a24.init20230327.vlid2023040312.f168.buk_conus.png evs.ecme.spatial_map.apcp_a24.init20230328.vlid2023040312.f144.buk_conus.png evs.ecme.spatial_map.apcp_a24.init20230329.vlid2023040312.f120.buk_conus.png evs.ecme.spatial_map.apcp_a24.init20230330.vlid2023040312.f096.buk_conus.png evs.ecme.spatial_map.apcp_a24.init20230331.vlid2023040312.f072.buk_conus.png evs.ecme.spatial_map.apcp_a24.init20230401.vlid2023040312.f048.buk_conus.png evs.ecme.spatial_map.apcp_a24.init20230402.vlid2023040312.f024.buk_conus.png evs.gefs.spatial_map.apcp_a24.init20230324.vlid2023040312.f240.buk_conus.png evs.gefs.spatial_map.apcp_a24.init20230325.vlid2023040312.f216.buk_conus.png evs.gefs.spatial_map.apcp_a24.init20230326.vlid2023040312.f192.buk_conus.png evs.gefs.spatial_map.apcp_a24.init20230327.vlid2023040312.f168.buk_conus.png evs.gefs.spatial_map.apcp_a24.init20230328.vlid2023040312.f144.buk_conus.png evs.gefs.spatial_map.apcp_a24.init20230329.vlid2023040312.f120.buk_conus.png evs.gefs.spatial_map.apcp_a24.init20230330.vlid2023040312.f096.buk_conus.png evs.gefs.spatial_map.apcp_a24.init20230331.vlid2023040312.f072.buk_conus.png evs.gefs.spatial_map.apcp_a24.init20230401.vlid2023040312.f048.buk_conus.png evs.gefs.spatial_map.apcp_a24.init20230402.vlid2023040312.f024.buk_conus.png evs.naefs.spatial_map.apcp_a24.init20230324.vlid2023040312.f240.buk_conus.png evs.naefs.spatial_map.apcp_a24.init20230325.vlid2023040312.f216.buk_conus.png evs.naefs.spatial_map.apcp_a24.init20230326.vlid2023040312.f192.buk_conus.png evs.naefs.spatial_map.apcp_a24.init20230327.vlid2023040312.f168.buk_conus.png evs.naefs.spatial_map.apcp_a24.init20230328.vlid2023040312.f144.buk_conus.png evs.naefs.spatial_map.apcp_a24.init20230329.vlid2023040312.f120.buk_conus.png evs.naefs.spatial_map.apcp_a24.init20230330.vlid2023040312.f096.buk_conus.png evs.naefs.spatial_map.apcp_a24.init20230331.vlid2023040312.f072.buk_conus.png evs.naefs.spatial_map.apcp_a24.init20230401.vlid2023040312.f048.buk_conus.png evs.naefs.spatial_map.apcp_a24.init20230402.vlid2023040312.f024.buk_conus.png qpe.v2023040312.024h.conus.png
+evs.cmce.spatial_map.apcp_a24.init20230324.vlid2023040312.f240.buk_conus.png
+evs.cmce.spatial_map.apcp_a24.init20230325.vlid2023040312.f216.buk_conus.png
+evs.cmce.spatial_map.apcp_a24.init20230326.vlid2023040312.f192.buk_conus.png
+evs.cmce.spatial_map.apcp_a24.init20230327.vlid2023040312.f168.buk_conus.png
+evs.cmce.spatial_map.apcp_a24.init20230328.vlid2023040312.f144.buk_conus.png
+evs.cmce.spatial_map.apcp_a24.init20230329.vlid2023040312.f120.buk_conus.png
+evs.cmce.spatial_map.apcp_a24.init20230330.vlid2023040312.f096.buk_conus.png
+evs.cmce.spatial_map.apcp_a24.init20230331.vlid2023040312.f072.buk_conus.png
+evs.cmce.spatial_map.apcp_a24.init20230401.vlid2023040312.f048.buk_conus.png
+evs.cmce.spatial_map.apcp_a24.init20230402.vlid2023040312.f024.buk_conus.png
+evs.ecme.spatial_map.apcp_a24.init20230324.vlid2023040312.f240.buk_conus.png
+evs.ecme.spatial_map.apcp_a24.init20230325.vlid2023040312.f216.buk_conus.png
+evs.ecme.spatial_map.apcp_a24.init20230326.vlid2023040312.f192.buk_conus.png
+evs.ecme.spatial_map.apcp_a24.init20230327.vlid2023040312.f168.buk_conus.png
+evs.ecme.spatial_map.apcp_a24.init20230328.vlid2023040312.f144.buk_conus.png
+evs.ecme.spatial_map.apcp_a24.init20230329.vlid2023040312.f120.buk_conus.png
+evs.ecme.spatial_map.apcp_a24.init20230330.vlid2023040312.f096.buk_conus.png
+evs.ecme.spatial_map.apcp_a24.init20230331.vlid2023040312.f072.buk_conus.png
+evs.ecme.spatial_map.apcp_a24.init20230401.vlid2023040312.f048.buk_conus.png
+evs.ecme.spatial_map.apcp_a24.init20230402.vlid2023040312.f024.buk_conus.png
+evs.gefs.spatial_map.apcp_a24.init20230324.vlid2023040312.f240.buk_conus.png
+evs.gefs.spatial_map.apcp_a24.init20230325.vlid2023040312.f216.buk_conus.png
+evs.gefs.spatial_map.apcp_a24.init20230326.vlid2023040312.f192.buk_conus.png
+evs.gefs.spatial_map.apcp_a24.init20230327.vlid2023040312.f168.buk_conus.png
+evs.gefs.spatial_map.apcp_a24.init20230328.vlid2023040312.f144.buk_conus.png
+evs.gefs.spatial_map.apcp_a24.init20230329.vlid2023040312.f120.buk_conus.png
+evs.gefs.spatial_map.apcp_a24.init20230330.vlid2023040312.f096.buk_conus.png
+evs.gefs.spatial_map.apcp_a24.init20230331.vlid2023040312.f072.buk_conus.png
+evs.gefs.spatial_map.apcp_a24.init20230401.vlid2023040312.f048.buk_conus.png
+evs.gefs.spatial_map.apcp_a24.init20230402.vlid2023040312.f024.buk_conus.png
+evs.naefs.spatial_map.apcp_a24.init20230324.vlid2023040312.f240.buk_conus.png
+evs.naefs.spatial_map.apcp_a24.init20230325.vlid2023040312.f216.buk_conus.png
+evs.naefs.spatial_map.apcp_a24.init20230326.vlid2023040312.f192.buk_conus.png
+evs.naefs.spatial_map.apcp_a24.init20230327.vlid2023040312.f168.buk_conus.png
+evs.naefs.spatial_map.apcp_a24.init20230328.vlid2023040312.f144.buk_conus.png
+evs.naefs.spatial_map.apcp_a24.init20230329.vlid2023040312.f120.buk_conus.png
+evs.naefs.spatial_map.apcp_a24.init20230330.vlid2023040312.f096.buk_conus.png
+evs.naefs.spatial_map.apcp_a24.init20230331.vlid2023040312.f072.buk_conus.png
+evs.naefs.spatial_map.apcp_a24.init20230401.vlid2023040312.f048.buk_conus.png
+evs.naefs.spatial_map.apcp_a24.init20230402.vlid2023040312.f024.buk_conus.png
+qpe.v2023040312.024h.conus.png
++ cp plots.global_ens.precip.spatial.map.v20230403.tar /lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/plots/global_ens/atmos.20230403/.
++ msg='JOB  HAS COMPLETED NORMALLY.'
++ postmsg 'JOB  HAS COMPLETED NORMALLY.'
+
+  04/05 13:41:48Z evs_atmos_global_ens_gefs_precip_spatial_plots.98937-JOB  HAS COMPLETED NORMALLY.
+
++ [ YES '!=' YES ]
++ date
+Wed Apr  5 13:41:48 UTC 2023
+Job 52404433.cbqs01 - Epilogue complete. Execution time: 1 seconds
+==================================================================
+BEGIN - DEBUG INFO
+==================================================================
+Job 52404433.cbqs01 - Post Job Mem Usage:
+nid002681: Warning: Permanently added the ECDSA host key for IP address '10.253.134.153' to the list of known hosts.
+nid002681: 2023-04-05.26 1 ===========================================
+nid002681: 2023-04-05.26 2 #### Node Memory Usage for nid002681 ####
+nid002681: 2023-04-05.26 3 ------------------
+nid002681: 2023-04-05.26 4 Mem: total:527073400 used:8537524 free:519553208 shared:112964 cache:842980 avail:518535876
+nid002681: 2023-04-05.26 5 4.0K	/dev/shm
+nid002681: 2023-04-05.26 6 372K	/tmp
+nid002681: 2023-04-05.26 7 ===========================================
+nid002681: 2023-04-05.49 1 ===========================================
+nid002681: 2023-04-05.49 2 #### Node Memory Usage for nid002681 ####
+nid002681: 2023-04-05.49 3 ------------------
+nid002681: 2023-04-05.49 4 Mem: total:527073400 used:8911516 free:518867696 shared:113244 cache:1466240 avail:518161884
+nid002681: 2023-04-05.49 5 4.0K	/dev/shm
+nid002681: 2023-04-05.49 6 396K	/tmp
+nid002681: 2023-04-05.49 7 ===========================================
+
+------------------------------------------------------------------
+Job 52404433.cbqs01 - /var/log/messages for job duration:
+nid002681: 2023-04-05A--:--:--.------+--:-- nid002681 #### nid002681 - Job 52404433.cbqs01 Runtime Data from /var/log/messages
+nid002681: 2023-04-05T13:13:25.175421+00:00 nid002681 prologue: MARK: Job 52404433.cbqs01 Start
+nid002681: 2023-04-05T13:13:25.180319+00:00 nid002681 prologue: Job 52404433.cbqs01 nodelist: nid002681
+nid002681: 2023-04-05T13:13:25.181380+00:00 nid002681 prologue: Job 52404433.cbqs01 - Checking existing ASLR settings...
+nid002681: 2023-04-05T13:13:25.187647+00:00 nid002681 prologue: Job 52404433.cbqs01 - Checking palsd open file count...
+nid002681: 2023-04-05T13:13:25.267610+00:00 nid002681 PBS_CMD: root : /opt/pbs/bin/qstat -Bf
+nid002681: 2023-04-05T13:13:26.285007+00:00 nid002681 prologue: Job 52404433.cbqs01 - Checking one-shot control: False
+nid002681: 2023-04-05T13:13:26.286062+00:00 nid002681 prologue: Job 52404433.cbqs01 - Recording pre-job HSN counters...
+nid002681: 2023-04-05T13:13:26.389042+00:00 nid002681 prologue: Job 52404433.cbqs01 - Recording pre-job memory usage...
+nid002681: 2023-04-05T13:13:26.414211+00:00 nid002681 prologue: Job 52404433.cbqs01 - Killing any stray user processes...
+nid002681: 2023-04-05T13:13:26.484683+00:00 nid002681 prologue: Job 52404433.cbqs01 - Enabling turboboost...
+nid002681: 2023-04-05T13:13:26.487391+00:00 nid002681 prologue: Job 52404433.cbqs01 - Verifying post-boot workarounds...
+nid002681: 2023-04-05T13:13:26.792147+00:00 nid002681 prologue: Job 52404433.cbqs01 - Warchk Complete
+nid002681: 2023-04-05T13:13:26.793281+00:00 nid002681 prologue: Job 52404433.cbqs01 - Recording initial NFS client statistics...
+nid002681: 2023-04-05T13:13:26.800545+00:00 nid002681 prologue: Job 52404433.cbqs01 - Prologue complete. Execution time: 3 seconds
+nid002681: 2023-04-05T13:15:56.255507+00:00 nid002681 systemd[1]: session-607.scope: Succeeded.
+nid002681: 2023-04-05T13:21:17.891543+00:00 nid002681 systemd[1]: session-608.scope: Succeeded.
+nid002681: 2023-04-05T13:23:06.291183+00:00 nid002681 systemd[1]: etc_update.service: Succeeded.
+nid002681: 2023-04-05T13:26:37.047776+00:00 nid002681 systemd[1]: session-609.scope: Succeeded.
+nid002681: 2023-04-05T13:31:55.853974+00:00 nid002681 systemd[1]: session-610.scope: Succeeded.
+nid002681: 2023-04-05T13:32:39.289996+00:00 nid002681 systemd[1]: etc_update.service: Succeeded.
+nid002681: 2023-04-05T13:37:16.731559+00:00 nid002681 systemd[1]: session-611.scope: Succeeded.
+nid002681: 2023-04-05T13:40:27.289515+00:00 nid002681 systemd[1]: etc_update.service: Succeeded.
+nid002681: 2023-04-05T13:41:49.283331+00:00 nid002681 epilogue: Job 52404433.cbqs01 complete, running post-job actions.
+nid002681: 2023-04-05T13:41:49.300235+00:00 nid002681 epilogue: Job 52404433.cbqs01 - Recording post-job HSN counters...
+nid002681: 2023-04-05T13:41:49.405705+00:00 nid002681 epilogue: Job 52404433.cbqs01 - Recording post-job memory usage...
+nid002681: 2023-04-05T13:41:49.420202+00:00 nid002681 epilogue: Job 52404433.cbqs01 - Recording job NFS statistics to /tmp/nfsstats.52404433.cbqs01
+nid002681: 2023-04-05T13:41:49.913695+00:00 nid002681 epilogue: Job 52404433.cbqs01 - Clearing /tmp...
+nid002681: 2023-04-05T13:41:49.925961+00:00 nid002681 epilogue: Job 52404433.cbqs01 - Clearing shared memory...
+nid002681: 2023-04-05T13:41:49.938925+00:00 nid002681 epilogue: Job 52404433.cbqs01 - Clearing memory cache...
+nid002681: 2023-04-05T13:41:50.210555+00:00 nid002681 kernel: [124727.777855] drop_caches (99616): drop_caches: 3
+nid002681: 2023-04-05T13:41:50.340947+00:00 nid002681 epilogue: Job 52404433.cbqs01 - Releasing Lustre Locks...
+nid002681: 2023-04-05T13:41:50.356138+00:00 nid002681 epilogue: MARK: Job 52404433.cbqs01 Complete.
+
+------------------------------------------------------------------
+Job 52404433.cbqs01 - dmesg output for job duration:
+nid002681: 2023-04-05A--:--:--.------+--:-- nid002681 #### nid002681 - Job 52404433.cbqs01 Runtime Data from dmesg
+nid002681: [Wed Apr  5 13:13:28 2023] MARK: Job 52404433.cbqs01 Start
+nid002681: [Wed Apr  5 13:41:53 2023] MARK: Job 52404433.cbqs01 Complete.
+nid002681: [Wed Apr  5 13:41:53 2023] drop_caches (99616): drop_caches: 3
+
+------------------------------------------------------------------
+Job 52404433.cbqs01 - Pre/Post job diff on HSN (MLX) Counters:
+nid002681: 2023-04-05A--:--:--.------+--:-- nid002681 #### nid002681 - Job 52404433.cbqs01 HSN0 MLX Counter Post-Job Difference
+nid002681: multicast: 16391454					      |	multicast: 16396101
+nid002681: port_rcv_data: 1922534506350				      |	port_rcv_data: 1922573768461
+nid002681: port_rcv_packets: 2192082152				      |	port_rcv_packets: 2192141885
+nid002681: port_xmit_data: 1916169845082				      |	port_xmit_data: 1916174373859
+nid002681: port_xmit_packets: 2183457278				      |	port_xmit_packets: 2183483599
+nid002681: rx_bytes: 2634468511					      |	rx_bytes: 2812981622
+nid002681: rx_packets: 16857043					      |	rx_packets: 17013142
+nid002681: rx_write_requests: 90194				      |	rx_write_requests: 90519
+nid002681: tx_bytes: 50493203					      |	tx_bytes: 61895580
+nid002681: tx_packets: 370794					      |	tx_packets: 453769
+nid002681: unicast_rcv_packets: 2192082152				      |	unicast_rcv_packets: 2192141885
+nid002681: unicast_xmit_packets: 2183457278			      |	unicast_xmit_packets: 2183483599
+
+------------------------------------------------------------------
+### Job 52404433.cbqs01 - NFS Statistics for job duration:
+nid002681: #### 2023-04-05.00 #### nid002681 - Job 52404433.cbqs01 NFS Statistics for job duration (nfsstat)
+nid002681: ## /usr/sbin/nfsstat -v -S /tmp/nfsstats.begin.52404433.cbqs01 :
+nid002681: Client packet stats:
+nid002681: packets    udp        tcp        tcpconn
+nid002681: 0          0          0          0       
+nid002681: 
+nid002681: Client rpc stats:
+nid002681: calls      retrans    authrefrsh
+nid002681: 40996      0          40996   
+nid002681: 
+nid002681: Client nfs v3:
+nid002681: null             getattr          setattr          lookup           access           
+nid002681: 0         0%     20455    49%     3         0%     3601      8%     11383    27%     
+nid002681: readlink         read             write            create           mkdir            
+nid002681: 93        0%     4347     10%     40        0%     0         0%     2         0%     
+nid002681: symlink          mknod            remove           rmdir            rename           
+nid002681: 0         0%     0         0%     0         0%     0         0%     0         0%     
+nid002681: link             readdir          readdirplus      fsstat           fsinfo           
+nid002681: 0         0%     0         0%     1071      2%     0         0%     0         0%     
+nid002681: pathconf         commit           
+nid002681: 0         0%     0         0%     
+nid002681: 
+nid002681: 
+nid002681: -----------------------------------------------------------------------------------
+nid002681: 
+nid002681: #### 2023-04-05.00 #### nid002681 - Job 52404433.cbqs01 NFS Mount Statistics for job duration (mountstats)
+nid002681: ## /usr/sbin/mountstats iostat -S /tmp/mntstats.begin.52404433.cbqs01 /apps :
+nid002681: 
+nid002681: 
+nid002681: 172.20.250.16:/AZ-HFS-Cactus-apps mounted on /apps:
+nid002681: 
+nid002681:            ops/s       rpc bklog
+nid002681:            7.554           0.000
+nid002681: 
+nid002681: read:              ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid002681:                    2.122          93.557          44.099        0 (0.0%)         137.427         137.492
+nid002681: write:             ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid002681:                    0.000           0.000           0.000        0 (0.0%)           0.000           0.000
+nid002681: ## /usr/sbin/mountstats iostat -S /tmp/mntstats.begin.52404433.cbqs01 /sfs :
+nid002681: 
+nid002681: 
+nid002681: 172.20.250.17:/AZ-HFS-Cactus-sfs mounted on /sfs:
+nid002681: 
+nid002681:            ops/s       rpc bklog
+nid002681:            0.055           0.000
+nid002681: 
+nid002681: read:              ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid002681:                    0.001           0.002           4.055        0 (0.0%)           0.000           0.000
+nid002681: write:             ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid002681:                    0.023           0.060           2.548        0 (0.0%)           0.325           0.375
+nid002681: ## /usr/sbin/mountstats iostat -S /tmp/mntstats.begin.52404433.cbqs01 /u :
+nid002681: 
+nid002681: 
+nid002681: 172.20.250.17:/AZ-HFS-Cactus-u mounted on /u:
+nid002681: 
+nid002681:            ops/s       rpc bklog
+nid002681:            0.055           0.000
+nid002681: 
+nid002681: read:              ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid002681:                    0.002           0.053          30.349        0 (0.0%)           0.667           0.667
+nid002681: write:             ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid002681:                    0.000           0.000           0.000        0 (0.0%)           0.000           0.000
+nid002681: ## /usr/sbin/mountstats iostat -S /tmp/mntstats.begin.52404433.cbqs01 /pe :
+nid002681: 
+nid002681: 
+nid002681: 10.31.62.241:/cm_shared/image/images_rw_nfs/pe mounted on /pe:
+nid002681: 
+nid002681:            ops/s       rpc bklog
+nid002681:            1.406           0.000
+nid002681: 
+nid002681: read:              ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid002681:                    0.372          90.958         244.710        0 (0.0%)          14.803          14.864
+nid002681: write:             ops/s            kB/s           kB/op         retrans    avg RTT (ms)    avg exe (ms)
+nid002681:                    0.000           0.000           0.000        0 (0.0%)           0.000           0.000
+nid002681: ----------------
+nid002681: ## /usr/sbin/mountstats mountstats -S /tmp/mntstats.begin.52404433.cbqs01 /apps :
+nid002681: Stats for 172.20.250.16:/AZ-HFS-Cactus-apps mounted on /apps:
+nid002681:   NFS mount options: ro,vers=3,rsize=65536,wsize=65536,namlen=255,acregmin=3,acregmax=60,acdirmin=30,acdirmax=60,hard,proto=tcp,nconnect=3,timeo=600,retrans=2,sec=sys,mountaddr=172.20.250.16,mountvers=3,mountport=4048,mountproto=udp,local_lock=none
+nid002681:   NFS server capabilities: caps=0x3fc7,wtmult=4096,dtsize=8192,bsize=0,namlen=255
+nid002681:   NFS security flavor: 1  pseudoflavor: 0
+nid002681: 
+nid002681: NFS byte counts:
+nid002681:   applications read 2926507995 bytes via read(2)
+nid002681:   applications wrote 0 bytes via write(2)
+nid002681:   applications read 0 bytes via O_DIRECT read(2)
+nid002681:   applications wrote 0 bytes via O_DIRECT write(2)
+nid002681:   client read 162124658 bytes via NFS READ
+nid002681:   client wrote 0 bytes via NFS WRITE
+nid002681: 
+nid002681: RPC statistics:
+nid002681:   12864 RPC requests sent, 12864 RPC replies received (0 XIDs not found)
+nid002681:   average backlog queue length: 0
+nid002681: 
+nid002681: GETATTR:
+nid002681: 	19414 ops (150%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 112
+nid002681: 	backlog wait: 0.003348 	RTT: 0.145617 	total execute time: 0.173689 (milliseconds)
+nid002681: ACCESS:
+nid002681: 	11186 ops (86%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 120
+nid002681: 	backlog wait: 0.003308 	RTT: 116.168782 	total execute time: 116.211336 (milliseconds)
+nid002681: READ:
+nid002681: 	3613 ops (28%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 45000
+nid002681: 	backlog wait: 0.029338 	RTT: 137.427346 	total execute time: 137.491558 (milliseconds)
+nid002681: LOOKUP:
+nid002681: 	3080 ops (23%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 170
+nid002681: 	backlog wait: 0.002922 	RTT: 0.141234 	total execute time: 0.164286 (milliseconds)
+nid002681: READDIRPLUS:
+nid002681: 	1071 ops (8%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 1104
+nid002681: 	backlog wait: 0.003735 	RTT: 0.193277 	total execute time: 0.220355 (milliseconds)
+nid002681: READLINK:
+nid002681: 	90 ops (0%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 145
+nid002681: 	backlog wait: 0.000000 	RTT: 0.211111 	total execute time: 0.233333 (milliseconds)
+nid002681: 
+nid002681: ## /usr/sbin/mountstats mountstats -S /tmp/mntstats.begin.52404433.cbqs01 /sfs :
+nid002681: 
+nid002681: Stats for 172.20.250.17:/AZ-HFS-Cactus-sfs mounted on /sfs:
+nid002681:   NFS mount options: rw,vers=3,rsize=65536,wsize=65536,namlen=255,acregmin=3,acregmax=60,acdirmin=30,acdirmax=60,hard,proto=tcp,nconnect=3,timeo=600,retrans=2,sec=sys,mountaddr=172.20.250.17,mountvers=3,mountport=4048,mountproto=udp,local_lock=none
+nid002681:   NFS server capabilities: caps=0x3fc7,wtmult=4096,dtsize=8192,bsize=0,namlen=255
+nid002681:   NFS security flavor: 1  pseudoflavor: 0
+nid002681: 
+nid002681: NFS byte counts:
+nid002681:   applications read 16133 bytes via read(2)
+nid002681:   applications wrote 10552 bytes via write(2)
+nid002681:   applications read 0 bytes via O_DIRECT read(2)
+nid002681:   applications wrote 0 bytes via O_DIRECT write(2)
+nid002681:   client read 3894 bytes via NFS READ
+nid002681:   client wrote 92458 bytes via NFS WRITE
+nid002681: 
+nid002681: RPC statistics:
+nid002681:   93 RPC requests sent, 93 RPC replies received (0 XIDs not found)
+nid002681:   average backlog queue length: 0
+nid002681: 
+nid002681: GETATTR:
+nid002681: 	126 ops (135%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 112
+nid002681: 	backlog wait: 0.007937 	RTT: 0.134921 	total execute time: 0.174603 (milliseconds)
+nid002681: WRITE:
+nid002681: 	40 ops (43%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 160
+nid002681: 	backlog wait: 0.050000 	RTT: 0.325000 	total execute time: 0.375000 (milliseconds)
+nid002681: ACCESS:
+nid002681: 	20 ops (21%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 120
+nid002681: 	backlog wait: 0.000000 	RTT: 0.300000 	total execute time: 0.300000 (milliseconds)
+nid002681: SETATTR:
+nid002681: 	3 ops (3%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 144
+nid002681: 	backlog wait: 0.000000 	RTT: 0.333333 	total execute time: 0.333333 (milliseconds)
+nid002681: LOOKUP:
+nid002681: 	1 ops (1%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 240
+nid002681: 	backlog wait: 0.000000 	RTT: 0.000000 	total execute time: 0.000000 (milliseconds)
+nid002681: READ:
+nid002681: 	1 ops (1%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 4024
+nid002681: 	backlog wait: 0.000000 	RTT: 0.000000 	total execute time: 0.000000 (milliseconds)
+nid002681: 
+nid002681: ## /usr/sbin/mountstats mountstats -S /tmp/mntstats.begin.52404433.cbqs01 /u :
+nid002681: 
+nid002681: Stats for 172.20.250.17:/AZ-HFS-Cactus-u mounted on /u:
+nid002681:   NFS mount options: rw,vers=3,rsize=65536,wsize=65536,namlen=255,acregmin=3,acregmax=60,acdirmin=30,acdirmax=60,hard,proto=tcp,nconnect=3,timeo=600,retrans=2,sec=sys,mountaddr=172.20.250.17,mountvers=3,mountport=4048,mountproto=udp,local_lock=none
+nid002681:   NFS server capabilities: caps=0x3fc7,wtmult=4096,dtsize=8192,bsize=0,namlen=255
+nid002681:   NFS security flavor: 1  pseudoflavor: 0
+nid002681: 
+nid002681: NFS byte counts:
+nid002681:   applications read 92374 bytes via read(2)
+nid002681:   applications wrote 0 bytes via write(2)
+nid002681:   applications read 0 bytes via O_DIRECT read(2)
+nid002681:   applications wrote 0 bytes via O_DIRECT write(2)
+nid002681:   client read 92374 bytes via NFS READ
+nid002681:   client wrote 0 bytes via NFS WRITE
+nid002681: 
+nid002681: RPC statistics:
+nid002681:   93 RPC requests sent, 93 RPC replies received (0 XIDs not found)
+nid002681:   average backlog queue length: 0
+nid002681: 
+nid002681: GETATTR:
+nid002681: 	45 ops (48%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 112
+nid002681: 	backlog wait: 0.000000 	RTT: 0.222222 	total execute time: 0.244444 (milliseconds)
+nid002681: LOOKUP:
+nid002681: 	25 ops (26%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 145
+nid002681: 	backlog wait: 0.000000 	RTT: 0.120000 	total execute time: 0.160000 (milliseconds)
+nid002681: ACCESS:
+nid002681: 	12 ops (12%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 120
+nid002681: 	backlog wait: 0.000000 	RTT: 0.166667 	total execute time: 0.166667 (milliseconds)
+nid002681: READ:
+nid002681: 	3 ops (3%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 30921
+nid002681: 	backlog wait: 0.000000 	RTT: 0.666667 	total execute time: 0.666667 (milliseconds)
+nid002681: MKDIR:
+nid002681: 	2 ops (2%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 144
+nid002681: 	backlog wait: 0.000000 	RTT: 0.500000 	total execute time: 0.500000 (milliseconds)
+nid002681: 
+nid002681: ## /usr/sbin/mountstats mountstats -S /tmp/mntstats.begin.52404433.cbqs01 /pe :
+nid002681: 
+nid002681: Stats for 10.31.62.241:/cm_shared/image/images_rw_nfs/pe mounted on /pe:
+nid002681:   NFS mount options: ro,vers=3,rsize=1048576,wsize=1048576,namlen=255,acregmin=3,acregmax=60,acdirmin=30,acdirmax=60,hard,nolock,proto=tcp,timeo=600,retrans=2,sec=sys,mountaddr=10.31.62.241,mountvers=3,mountport=38465,mountproto=tcp,local_lock=all
+nid002681:   NFS server capabilities: caps=0x3fcf,wtmult=4096,dtsize=32768,bsize=0,namlen=255
+nid002681:   NFS security flavor: 1  pseudoflavor: 0
+nid002681: 
+nid002681: NFS byte counts:
+nid002681:   applications read 41124544 bytes via read(2)
+nid002681:   applications wrote 0 bytes via write(2)
+nid002681:   applications read 0 bytes via O_DIRECT read(2)
+nid002681:   applications wrote 0 bytes via O_DIRECT write(2)
+nid002681:   client read 158500796 bytes via NFS READ
+nid002681:   client wrote 0 bytes via NFS WRITE
+nid002681: 
+nid002681: RPC statistics:
+nid002681:   2395 RPC requests sent, 2396 RPC replies received (0 XIDs not found)
+nid002681:   average backlog queue length: 0
+nid002681: 
+nid002681: GETATTR:
+nid002681: 	870 ops (36%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 112
+nid002681: 	backlog wait: 0.002299 	RTT: 0.424138 	total execute time: 0.436782 (milliseconds)
+nid002681: READ:
+nid002681: 	633 ops (26%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 250440
+nid002681: 	backlog wait: 0.033175 	RTT: 14.802528 	total execute time: 14.864139 (milliseconds)
+nid002681: LOOKUP:
+nid002681: 	495 ops (20%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 51
+nid002681: 	backlog wait: 0.000000 	RTT: 1.484848 	total execute time: 1.492929 (milliseconds)
+nid002681: ACCESS:
+nid002681: 	165 ops (6%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 36
+nid002681: 	backlog wait: 0.006061 	RTT: 0.357576 	total execute time: 0.369697 (milliseconds)
+nid002681: READLINK:
+nid002681: 	3 ops (0%) 
+nid002681: 	avg bytes sent per op: avg bytes received per op: 134
+nid002681: 	backlog wait: 0.000000 	RTT: 0.333333 	total execute time: 0.333333 (milliseconds)
+nid002681: 
+nid002681: 
+
+------------------------------------------------------------------
+### Job 52404433.cbqs01 - Exit status is 0
+
+------------------------------------------------------------------
+Job 52404433.cbqs01 - Job summary:
+Job Id: 52404433.cbqs01
+    Job_Name = evs_global_ens_spatial_plot
+    Job_Owner = binbin.zhou@clogin04.cactus.wcoss2.ncep.noaa.gov
+    resources_used.cpupercent = 49
+    resources_used.cput = 00:01:22
+    resources_used.mem = 477784kb
+    resources_used.ncpus = 2
+    resources_used.vmem = 1012152kb
+    resources_used.walltime = 00:28:11
+    job_state = R
+    queue = dev
+    server = cbqs01
+    Account_Name = EVS-DEV
+    Checkpoint = u
+    ctime = Wed Apr  5 13:13:22 2023
+    Error_Path = clogin04.cactus.wcoss2.ncep.noaa.gov:/lfs/h2/emc/vpppg/noscrub
+	/binbin.zhou/EVS/ecf/global_ens/plots/evs_global_ens_spatial_plot.e5240
+	4433
+    exec_host = nid002681/0*2
+    exec_vnode = (nid002681:ncpus=2:mem=209715200kb)
+    Hold_Types = n
+    Join_Path = oe
+    Keep_Files = oed
+    Mail_Points = a
+    mtime = Wed Apr  5 13:41:39 2023
+    Output_Path = clogin04.cactus.wcoss2.ncep.noaa.gov:/lfs/h2/emc/vpppg/noscru
+	b/binbin.zhou/EVS/ecf/global_ens/plots/evs_global_ens_spatial_plot.o524
+	04433
+    Priority = 0
+    qtime = Wed Apr  5 13:13:22 2023
+    Rerunable = False
+    Resource_List.alvl = 2
+    Resource_List.aslr = True
+    Resource_List.debug = True
+    Resource_List.dfs = False
+    Resource_List.hyper = True
+    Resource_List.mem = 200gb
+    Resource_List.ncpus = 2
+    Resource_List.nodect = 1
+    Resource_List.one-shot = False
+    Resource_List.place = vscatter:exclhost
+    Resource_List.select = 1:ncpus=2:mem=200GB
+    Resource_List.thp = True
+    Resource_List.turbo = True
+    Resource_List.walltime = 00:30:00
+    schedselect = 1:ncpus=2:mem=200GB:prepost=False
+    stime = Wed Apr  5 13:13:23 2023
+    session_id = 97287
+    Shell_Path_List = /bin/bash
+    jobdir = /u/binbin.zhou
+    substate = 42
+    Variable_List = PBS_O_HOME=/u/binbin.zhou,PBS_O_LANG=en_US.UTF-8,
+	PBS_O_LOGNAME=binbin.zhou,
+	PBS_O_PATH=/apps/ops/prod/libs/intel/19.1.3.304/metplus/5.0.0/ush:/app
+	s/ops/prod/libs/intel/19.1.3.304/met/11.0.0/bin:/apps/spack/gsl/2.7/int
+	el/19.1.3.304/xks7dxbowrdxhjck5zxc4rompopocevb/bin:/apps/spack/geos/3.8
+	.1/intel/19.1.3.304/5recktk5lndzgkkqq36y4a2h4yx3ahdy/bin:/apps/spack/pr
+	oj/7.1.0/intel/19.1.3.304/cjbmc7tacv5qcfatslqmcrzo5kb4raaq/bin:/apps/sp
+	ack/python/3.8.6/intel/19.1.3.304/pjn2nzkjvqgmjw4hmyz43v5x4jbxjzpk/bin:
+	/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4/cdo/1.9.8/bin:/a
+	pps/spack/libjpeg/9c/intel/19.1.3.304/jkr3isi257ktoouprwaxcn4twtye747z/
+	bin:/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4/netcdf/4.7.4
+	/bin:/apps/prod/hpc-stack/intel-19.1.3.304/cray-mpich-8.1.4/hdf5/1.10.6
+	/bin:/apps/spack/libpng/1.6.37/intel/19.1.3.304/4ohkronuhlyherusoszzrmu
+	r5ewvlwzh/bin:/apps/spack/jasper/2.0.25/intel/19.1.3.304/sjib74krrorkyc
+	zqpqah4tvewmlnqdx4/bin:/pe/intel/compilers_and_libraries_2020.4.304/lin
+	ux/bin/intel64:/pe/intel/compilers_and_libraries_2020.4.304/linux/bin:/
+	pe/intel/compilers_and_libraries_2020.4.304/linux/mpi/intel64/bin:/pe/i
+	ntel/debugger_2020/gdb/intel64/bin:/apps/spack/grads/2.2.1/cce/11.0.4/6
+	nvi5fhtdfnb6v6qngbvdplxta4jofvt/bin:/opt/cray/pe/pals/1.0.12/bin:/apps/
+	spack/git/2.29.0/gcc/10.2.0/rkn6xaqbrdlim3u4it2l6ljqszg62s25/bin:/opt/c
+	ray/pe/python/3.9.13.1/bin:/apps/ops/prod/libs/intel/19.1.3.304/wgrib2/
+	2.0.8_wmo/bin:/apps/ops/prod/nco/core/prod_util.v2.0.5/ush:/apps/ops/pr
+	od/libs/intel/19.1.3.304/grib_util/1.2.4/bin:/apps/ops/prod/libs/intel/
+	19.1.3.304/bufr/11.4.0/bin:/opt/cray/pe/craype/2.7.10/bin:/opt/cray/lib
+	fabric/1.11.0.0./bin:/opt/clmgr/sbin:/opt/clmgr/bin:/opt/sgi/sbin:/opt/
+	sgi/bin:/usr/local/bin:/usr/bin:/bin:/usr/lib/mit/bin:/usr/lib/mit/sbin
+	:/opt/pbs/bin:/sbin:.:/u/binbin.zhou/bin:/usr/sbin:/opt/cray/pe/bin:/ap
+	ps/prod/python-modules/3.8.6/intel/19.1.3.304/bin:/apps/prod/python-mod
+	ules/3.8.6/intel/19.1.3.304/lib/python3.8/site-packages/bin,
+	PBS_O_MAIL=/var/spool/mail/binbin.zhou,PBS_O_SHELL=/bin/bash -l,
+	PBS_O_WORKDIR=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS/ecf/global_ens
+	/plots,PBS_O_SYSTEM=Linux,PBS_O_QUEUE=dev,
+	PBS_O_HOST=clogin04.cactus.wcoss2.ncep.noaa.gov
+    euser = binbin.zhou
+    egroup = emc
+    hashname = 52404433.cbqs01
+    queue_rank = 1680700402773217
+    queue_type = E
+    comment = Job run at Wed Apr 05 at 13:13 on (nid002681:ncpus=2:mem=20971520
+	0kb)
+    etime = Wed Apr  5 13:13:22 2023
+    umask = 22
+    run_count = 6
+    eligible_time = 00:00:07
+    accrue_type = 3
+    Submit_arguments = jevs_gefs_precip_spatial_plots.ecf
+    project = EVS-DEV
+    run_version = 1
+    Submit_Host = clogin04.cactus.wcoss2.ncep.noaa.gov
+    server_instance_id = cbqs01.cactus.wcoss2.ncep.noaa.gov:15001
+
+
+------------------------------------------------------------------
+Job 52404433.cbqs01 - PBS tracejob output (for parent mom node only):
+
+Job: 52404433.cbqs01
+
+04/05/2023 13:13:23  M    update_job_usage: CPU usage: 0.000 secs
+04/05/2023 13:13:23  M    update_job_usage: cpupercent initialized to zero
+04/05/2023 13:13:23  M    update_job_usage: Memory usage: mem=0b
+04/05/2023 13:13:27  M    Started, pid = 97287
+04/05/2023 13:13:36  M    update_job_usage: CPU usage: 0.193 secs
+04/05/2023 13:13:36  M    update_job_usage: 52404433.cbqs01 measured interval cpupercent 1 increased job cpupercent to 1
+04/05/2023 13:13:36  M    update_job_usage: Memory usage: mem=8548kb
+04/05/2023 13:15:37  M    update_job_usage: CPU usage: 1.063 secs
+04/05/2023 13:15:37  M    update_job_usage: Memory usage: mem=14408kb
+04/05/2023 13:17:38  M    update_job_usage: CPU usage: 1.825 secs
+04/05/2023 13:17:38  M    update_job_usage: Memory usage: mem=16252kb
+04/05/2023 13:19:39  M    update_job_usage: CPU usage: 2.758 secs
+04/05/2023 13:19:39  M    update_job_usage: Memory usage: mem=49904kb
+04/05/2023 13:21:40  M    update_job_usage: CPU usage: 4.175 secs
+04/05/2023 13:21:40  M    update_job_usage: Memory usage: mem=51952kb
+04/05/2023 13:23:41  M    update_job_usage: CPU usage: 5.844 secs
+04/05/2023 13:23:41  M    update_job_usage: Memory usage: mem=52156kb
+04/05/2023 13:25:42  M    update_job_usage: CPU usage: 7.960 secs
+04/05/2023 13:25:42  M    update_job_usage: Memory usage: mem=69016kb
+04/05/2023 13:27:43  M    update_job_usage: CPU usage: 12.782 secs
+04/05/2023 13:27:43  M    update_job_usage: 52404433.cbqs01 measured interval cpupercent 3 increased job cpupercent to 3
+04/05/2023 13:27:43  M    update_job_usage: Memory usage: mem=89156kb
+04/05/2023 13:29:45  M    update_job_usage: CPU usage: 15.249 secs
+04/05/2023 13:29:45  M    update_job_usage: Memory usage: mem=89156kb
+04/05/2023 13:31:47  M    update_job_usage: CPU usage: 17.748 secs
+04/05/2023 13:31:47  M    update_job_usage: Memory usage: mem=89156kb
+04/05/2023 13:33:48  M    update_job_usage: CPU usage: 20.109 secs
+04/05/2023 13:33:48  M    update_job_usage: Memory usage: mem=116976kb
+04/05/2023 13:35:50  M    update_job_usage: CPU usage: 20.735 secs
+04/05/2023 13:35:50  M    update_job_usage: Memory usage: mem=213316kb
+04/05/2023 13:37:51  M    update_job_usage: CPU usage: 21.499 secs
+04/05/2023 13:37:51  M    update_job_usage: Memory usage: mem=304944kb
+04/05/2023 13:39:52  M    update_job_usage: CPU usage: 81.584 secs
+04/05/2023 13:39:52  M    update_job_usage: 52404433.cbqs01 measured interval cpupercent 49 increased job cpupercent to 49
+04/05/2023 13:39:52  M    update_job_usage: Memory usage: mem=477784kb
+04/05/2023 13:41:48  M    task 00000001 terminated
+04/05/2023 13:41:48  M    Terminated
+04/05/2023 13:41:48  M    task 00000001 cput=00:03:20
+04/05/2023 13:41:48  M    kill_job
+04/05/2023 13:41:48  M    nid002681 cput=00:01:22 mem=477784kb
+04/05/2023 13:41:48  M    update_job_usage: CPU usage: 198.978 secs
+04/05/2023 13:41:48  M    update_job_usage: 52404433.cbqs01 measured interval cpupercent 100 increased job cpupercent to 100
+04/05/2023 13:41:48  M    update_job_usage: Memory usage: mem=571776kb
+04/05/2023 13:41:54  M    update_job_usage: No CPU usage data
+04/05/2023 13:41:54  M    no active tasks
+
+------------------------------------------------------------------
+To see full PBS log data, run: /sfs/admin/scripts/tracejob.sh 52404433.cbqs01
+
+==================================================================
+END - DEBUG INFO
+==================================================================
+
+##### Job 52404433.cbqs01 - PBS Job Script:
+
+#!/bin/bash
+
+#PBS -N evs_global_ens_spatial_plot
+#PBS -j oe 
+#PBS -S /bin/bash
+#PBS -q dev
+#PBS -A EVS-DEV
+#PBS -l walltime=00:30:00
+#PBS -l place=vscatter:exclhost,select=1:ncpus=2:mem=200GB
+#PBS -l debug=true
+
+export evs_ver=v1.0
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+source $HOMEevs/versions/run.ver
+
+export envir=prod
+
+module reset
+module load envvar/$envvar_ver
+module load PrgEnv-intel/$PrgEnv_intel_ver
+module load intel/$intel_ver
+module load cray-pals/$craypals_ver
+module load prod_util/$prod_util_ver
+module load prod_envir/$prod_envir_ver
+module load netcdf/$netcdf_ver
+module load proj/$proj_ver
+module load geos/$geos_ver
+module load cfp/$cfp_ver
+export HPC_OPT=/apps/ops/prod/libs
+module use /apps/ops/prod/libs/modulefiles/compiler/intel/$intel_ver
+module load gsl/${gsl_ver}
+module load python/$python_ver
+module load met/$met_ver
+module load metplus/$metplus_ver
+
+export NET=evs
+export STEP=plots
+export COMPONENT=global_ens
+export RUN=atmos
+export VERIF_CASE=precip_spatial
+export MODELNAME=gefs
+
+export KEEPDATA=YES
+
+export cyc=00
+
+export met_v=${met_ver:0:4}
+
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
+export COMINspatial=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
+export DATA_IN=${DATA_IN:-/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd}
+export COMROOT=/lfs/h2/emc/vpppg/noscrub/${USER}/com
+export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
+
+$HOMEevs/jobs/global_ens/plots/JEVS_GLOBAL_ENS_PLOTS
+
+##### End of job script
+------------------------------------------------------------------
