@@ -83,8 +83,9 @@ export COMINmping=/lfs/h2/emc/ptmp/$USER/EVS_out/com/$NET/$evs_ver/prep/$COMPONE
 export COMINccpa=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
 export COMINmrms=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
 export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}//$NET/$evs_ver/$STEP/$COMPONENT
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
+export maillist="marcel.caron@noaa.gov"
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/cam/stats/JEVS_CAM_STATS
