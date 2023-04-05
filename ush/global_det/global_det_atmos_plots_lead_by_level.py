@@ -302,7 +302,7 @@ class LeadByLevel:
                 xticks = xticks[::xtick_intvl]
         vert_profile_levels_int_ticks = vert_profile_levels_int
         if self.plot_info_dict['vert_profile'] == 'all':
-            for del_lev in [925, 700, 400, 250, 150]:
+            for del_lev in [925, 700, 500, 250, 100]:
                 vert_profile_levels_int_ticks = np.delete(
                     vert_profile_levels_int_ticks,
                     np.where(vert_profile_levels_int_ticks == del_lev)
@@ -382,7 +382,9 @@ class LeadByLevel:
         )
         make_colorbar = False
         # Create plot
-        self.logger.info(f"Creating plot for {self.plot_info_dict['stat']} ")
+        self.logger.info(f"Creating plot for {self.plot_info_dict['stat']} "
+                         +"- vertical profile "
+                         +f"{self.plot_info_dict['vert_profile']}")
         fig = plt.figure(figsize=(plot_specs_lbl.fig_size[0],
                                   plot_specs_lbl.fig_size[1]))
         gs = gridspec.GridSpec(gs_row, gs_col,
@@ -540,7 +542,7 @@ class LeadByLevel:
                                             +"to plot, not plotting")
                 else:
                     self.logger.warning("Fully masked array "
-                                        +"for {model_num}, "
+                                        +f"for {model_num}, "
                                         +"no plotting")
                     if os.environ['evs_run_mode'] == 'production' \
                             and model_num_plot_name == 'jma' \
