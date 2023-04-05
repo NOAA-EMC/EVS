@@ -22,10 +22,8 @@ set -x
 ############################################################
 # Set some other environment variables 
 ############################################################
-export SPC_DATE=${SPC_DATE:-`echo ${PDYm8} | cut -c 3-8`}
-export REP_DATE=${REP_DATE:-`echo ${PDYm8} | cut -c 1-8`}
-export ACCUM_BEG=${ACCUM_BEG:-$PDYm8}12
-export ACCUM_END=${ACCUM_END:-$PDYm7}12
+export ACCUM_BEG=${ACCUM_BEG:-${REP_DATE}12}
+export ACCUM_END=${ACCUM_END:-${VDATE}12}
 
 export VERIF_GRID=G211
 export VERIF_GRID_DX=81.271
@@ -36,7 +34,7 @@ export GAUSS_RAD=120
 # Check for SPC report file to process or exit gracefully
 ############################################################
 
-if [ -e $COMINspc/${REP_DATE}/validation_data/weather/spc/spc_reports_${REP_DATE}.csv ]; then
+if [ -s $COMINspc/${REP_DATE}/validation_data/weather/spc/spc_reports_${REP_DATE}.csv ]; then
 
    mkdir -p $COMOUTspc
 
@@ -47,7 +45,7 @@ else
 
    export subject="SPC LSR Data Missing for EVS ${COMPONENT}"
    export maillist=${maillist:-'logan.dawson@noaa.gov,geoffrey.manikin@noaa.gov'}
-   echo "Warning: The SPC report file is missing for ${VDATE}. METplus will not run." > mailmsg
+   echo "Warning: The ${REP_DATE} SPC report file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
    echo "Job Name & ID: $job $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $maillist
    exit 0

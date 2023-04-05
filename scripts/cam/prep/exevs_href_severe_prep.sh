@@ -18,17 +18,21 @@ echo
 set -x
 
 
+############################################################
+## Define surrogate severe settings
+#############################################################
+
+export VERIF_GRID=G211
+export VERIF_GRID_DX=81.271
+export GAUSS_RAD=120
+
 
 ############################################################
 # Set some model-specific environment variables 
 ############################################################
 
-export ACCUM_BEG=${ACCUM_BEG:-$PDYm1}12
-export ACCUM_END=${ACCUM_END:-$PDY}12
-
 export COMINfcst=${DATA}/mem_files
 mkdir -p ${COMINfcst}
-
 
 
 # Define settings for 00Z HREF time-lagged members
@@ -36,20 +40,23 @@ if [ $cyc -eq 00 ];then
 
    nloop=1
 
-   export COMINmem1=${COMOUT}/hiresw.${PDYm1}
-   export COMINmem2=${COMOUT}/hiresw.${PDYm1}
-   export COMINmem3=${COMOUT}/hiresw.${PDYm1}
-   export COMINmem4=${COMOUT}/hrrr.${PDYm1}
-   export COMINmem5=${COMOUT}/nam.${PDYm1}
-   export COMINmem6=${COMOUT}/hiresw.${PDYm2}
-   export COMINmem7=${COMOUT}/hiresw.${PDYm2}
-   export COMINmem8=${COMOUT}/hiresw.${PDYm2}
-   export COMINmem9=${COMOUT}/hrrr.${PDYm2}
-   export COMINmem10=${COMOUT}/nam.${PDYm2}
+   export IDATE_lag=${IDATE_lag:-`$NDATE -12 ${IDATE}${cyc} | cut -c 1-8`}
+
+   export COMINmem1=${COMOUT}/hiresw.${IDATE}
+   export COMINmem2=${COMOUT}/hiresw.${IDATE}
+   export COMINmem3=${COMOUT}/hiresw.${IDATE}
+   export COMINmem4=${COMOUT}/hrrr.${IDATE}
+   export COMINmem5=${COMOUT}/nam.${IDATE}
+   export COMINmem6=${COMOUT}/hiresw.${IDATE_lag}
+   export COMINmem7=${COMOUT}/hiresw.${IDATE_lag}
+   export COMINmem8=${COMOUT}/hiresw.${IDATE_lag}
+   export COMINmem9=${COMOUT}/hrrr.${IDATE_lag}
+   export COMINmem10=${COMOUT}/nam.${IDATE_lag}
 
    export cyc_lag6=18
    export cyc_lag12=12
 
+   fhr_beg1=12
    fhr_end1=36
    fhr_end1_lag6=42
    fhr_end1_lag12=48
@@ -59,24 +66,26 @@ elif [ $cyc -eq 12 ]; then
 
    nloop=2
 
-   export COMINmem1=${COMOUT}/hiresw.${PDYm1}
-   export COMINmem2=${COMOUT}/hiresw.${PDYm1}
-   export COMINmem3=${COMOUT}/hiresw.${PDYm1}
-   export COMINmem4=${COMOUT}/hrrr.${PDYm1}
-   export COMINmem5=${COMOUT}/nam.${PDYm1}
-   export COMINmem6=${COMOUT}/hiresw.${PDYm1}
-   export COMINmem7=${COMOUT}/hiresw.${PDYm1}
-   export COMINmem8=${COMOUT}/hiresw.${PDYm1}
-   export COMINmem9=${COMOUT}/hrrr.${PDYm1}
-   export COMINmem10=${COMOUT}/nam.${PDYm1}
+   export COMINmem1=${COMOUT}/hiresw.${IDATE}
+   export COMINmem2=${COMOUT}/hiresw.${IDATE}
+   export COMINmem3=${COMOUT}/hiresw.${IDATE}
+   export COMINmem4=${COMOUT}/hrrr.${IDATE}
+   export COMINmem5=${COMOUT}/nam.${IDATE}
+   export COMINmem6=${COMOUT}/hiresw.${IDATE}
+   export COMINmem7=${COMOUT}/hiresw.${IDATE}
+   export COMINmem8=${COMOUT}/hiresw.${IDATE}
+   export COMINmem9=${COMOUT}/hrrr.${IDATE}
+   export COMINmem10=${COMOUT}/nam.${IDATE}
 
    export cyc_lag6=06
    export cyc_lag12=00
 
+   fhr_beg1=00
    fhr_end1=24
    fhr_end1_lag6=30
    fhr_end1_lag12=36
    
+   fhr_beg2=24
    fhr_end2=48
    fhr_end2_lag6=54
    fhr_end2_lag12=60
@@ -93,8 +102,8 @@ fi
 # Check for forecast files to process
 ###################################################################
 k=0
-
 min_file_req=7
+data_missing=false
 
 while [ $k -lt $nloop ]; do
 
@@ -104,26 +113,22 @@ i=1
    # Define settings for first and second 24-h periods
    # Only valid for 12Z HREF
    if [ $k -eq 0 ]; then
+      export fhr_beg=$fhr_beg1
       export fhr_end=$fhr_end1
       export fhr_end_lag6=$fhr_end1_lag6
       export fhr_end_lag12=$fhr_end1_lag12
-   elif [ $k -eq 1 ]; then
-      
-      export COMINmem1=${COMOUT}/hiresw.${PDYm2}
-      export COMINmem2=${COMOUT}/hiresw.${PDYm2}
-      export COMINmem3=${COMOUT}/hiresw.${PDYm2}
-      export COMINmem4=${COMOUT}/hrrr.${PDYm2}
-      export COMINmem5=${COMOUT}/nam.${PDYm2}
-      export COMINmem6=${COMOUT}/hiresw.${PDYm2}
-      export COMINmem7=${COMOUT}/hiresw.${PDYm2}
-      export COMINmem8=${COMOUT}/hiresw.${PDYm2}
-      export COMINmem9=${COMOUT}/hrrr.${PDYm2}
-      export COMINmem10=${COMOUT}/nam.${PDYm2}
 
+   elif [ $k -eq 1 ]; then
+      export fhr_beg=$fhr_beg2
       export fhr_end=$fhr_end2
       export fhr_end_lag6=$fhr_end2_lag6
       export fhr_end_lag12=$fhr_end2_lag12
+      
    fi
+
+   # Define accumulation begin/end time
+   export ACCUM_BEG=`$NDATE $fhr_beg ${IDATE}${cyc}`
+   export ACCUM_END=`$NDATE $fhr_end ${IDATE}${cyc}`
 
 
    # Loop over all members to check that they exist
@@ -173,7 +178,7 @@ i=1
       fi
 
       # Copy the member files to working directory if they exist
-      if [ -e $fcst_file ]; then
+      if [ -s $fcst_file ]; then
          echo "File found for member $i. Copying to working directory."
          cp -v $fcst_file $COMINfcst
          nfiles=$((nfiles+1))
@@ -197,14 +202,21 @@ i=1
       ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/GenEnsProd_fcstHREF_MXUPHL_SurrogateSevere.conf
       export err=$?; err_chk
 
+      if [ $SENDCOM = YES ]; then
+         mkdir -p $COMOUT/${modsys}.${IDATE}
+         for FILE in $DATA/sspf/${modsys}.${IDATE}/*; do
+            cp -v $FILE $COMOUT/${modsys}.${IDATE}
+         done
+      fi
+
    else
 
       export subject="${MODELNAME} Forecast Data Missing for EVS ${COMPONENT}"
       export maillist=${maillist:-'logan.dawson@noaa.gov'}
       echo "Warning: Only $nfiles ${MODELNAME} forecast files found for ${cyc}Z ${IDATE} cycle. At least $min_file_req files are required. METplus will not run." > mailmsg
-      echo "Job Name & ID: $job $jobid" >> mailmsg
+      echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $maillist
-      exit 0
+      data_missing=true
 
    fi
 
@@ -213,11 +225,8 @@ i=1
 done
 
 
-if [ $SENDCOM = YES ]; then
-   mkdir -p $COMOUT/${modsys}.${IDATE}
-   for FILE in $DATA/sspf/${modsys}.${IDATE}/*; do
-      cp -v $FILE $COMOUT/${modsys}.${IDATE}
-   done
+if [ $data_missing ]; then
+   exit 0
 fi
 
 

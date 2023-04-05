@@ -18,17 +18,6 @@ echo
 set -x
 
 
-
-############################################################
-# Set some model-specific environment variables 
-############################################################
-
-export COMINfcst=${COMINhiresw}
-export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.arw_5km.f{lead?fmt=%2H}.conus.grib2
-
-export MXUPHL25_THRESH1=75.0
-
-
 ############################################################
 # Define surrogate severe settings
 ############################################################
@@ -41,19 +30,23 @@ export GAUSS_RAD=120
 ############################################################
 # Set some model-specific environment variables 
 ############################################################
-export ACCUM_BEG=${ACCUM_BEG:-$PDYm1}12
-export ACCUM_END=${ACCUM_END:-$PDY}12
+
+export COMINfcst=${COMINhiresw}
+export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.arw_5km.f{lead?fmt=%2H}.conus.grib2
+
+export MXUPHL25_THRESH1=75.0
+
 
 if [ $cyc -eq 00 ];then
    nloop=1
-   fhr_beg1=13
+   fhr_beg1=12
    fhr_end1=36
 
 elif [ $cyc -eq 12 ]; then
    nloop=2
-   fhr_beg=1
+   fhr_beg1=0
    fhr_end1=24
-   fhr_beg2=25
+   fhr_beg2=24
    fhr_end2=48
 
 fi
@@ -63,9 +56,10 @@ fi
 # Check for forecast files to process
 ###################################################################
 k=0
-fhr=$fhr_beg
 min_file_req=24
+data_missing=false
 
+# Do one or more loops depending on number of 24-h periods
 while [ $k -lt $nloop ]; do
 
 nfiles=0
@@ -81,12 +75,22 @@ i=1
    export fhr
    export fhr_end
 
+   # Define accumulation begin/end time
+   export ACCUM_BEG=${ACCUM_BEG:-`$NDATE $fhr ${IDATE}${cyc}`}
+   export ACCUM_END=${ACCUM_END:-`$NDATE $fhr_end ${IDATE}${cyc}`}
 
+   # Increment fhr by 1 at the start of loop for each 24-h period
+   # Correctly skips initial file (F00, F12, F24) that doesn't include necessary data
+   if [ $i -eq 1 ]; then
+      fhr=$((fhr+1))
+   fi
+
+   # Search for required forecast files
    while [ $i -le $min_file_req ]; do
 
       export fcst_file=$COMINfcst/${modsys}.${IDATE}/${modsys}.t${cyc}z.arw_5km.f$(printf "%02d" $fhr).conus.grib2
 
-      if [ -e $fcst_file ]; then
+      if [ -s $fcst_file ]; then
          echo "File number $i found"
          nfiles=$((nfiles+1))
       else
@@ -110,32 +114,38 @@ i=1
       ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/GenEnsProd_fcstCAM_MXUPHL_SurrogateSevere.conf
       export err=$?; err_chk
 
+      # Copy final output to $COMOUT
+      if [ $SENDCOM = YES ]; then
+         mkdir -p $COMOUT/${modsys}.${IDATE}
+         for FILE in $DATA/pcp_combine/${modsys}.${IDATE}/*; do
+            cp -v $FILE $COMOUT/${modsys}.${IDATE}
+         done
+         for FILE in $DATA/sspf/${modsys}.${IDATE}/*; do
+            cp -v $FILE $COMOUT/${modsys}.${IDATE}
+         done
+      fi
+
+
    else
 
       export subject="${MODELNAME} Forecast Data Missing for EVS ${COMPONENT}"
       export maillist=${maillist:-'logan.dawson@noaa.gov'}
-      echo "Warning: Only $nfiles ${MODELNAME} forecast files found for ${cyc}Z ${IDATE} cycle. At least $min_file_req files are required. METplus will not run." > mailmsg
-      echo "Job Name & ID: $job $jobid" >> mailmsg
+      echo "Warning: Only $nfiles ${MODELNAME} forecast files found for ${cyc}Z ${IDATE} cycle. $min_file_req files are required. METplus will not run." > mailmsg
+      echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $maillist
-      exit 0
+      data_missing=true
 
    fi
+
 
    k=$((k+1))
 
 done
 
 
-if [ $SENDCOM = YES ]; then
-   mkdir -p $COMOUT/${modsys}.${IDATE}
-   for FILE in $DATA/pcp_combine/${modsys}.${IDATE}/*; do
-      cp -v $FILE $COMOUT/${modsys}.${IDATE}
-   done
-   for FILE in $DATA/sspf/${modsys}.${IDATE}/*; do
-      cp -v $FILE $COMOUT/${modsys}.${IDATE}
-   done
+if [ $data_missing ]; then
+   exit 0
 fi
 
 
 exit
-
