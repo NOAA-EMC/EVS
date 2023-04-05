@@ -1,0 +1,164 @@
+#!/bin/bash -e
+##---------------------------------------------------------------------------
+##---------------------------------------------------------------------------
+## NCEP EMC VERIFICATION SYSTEM (GEFS SUBSEASONAL)
+##
+## CONTRIBUTORS: Shannon Shields, Shannon.Shields@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+## PURPOSE: Set up configurations to run user requested subseasonal verification
+##---------------------------------------------------------------------------
+##--------------------------------------------------------------------------
+
+echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
+
+####################################################
+# WHAT METPLUS USE CASES TO RUN
+####################################################
+## STATS STEP PRODUCES .STAT FILES FOR PARTIAL SUMS OR CONTINGENCY TABLE COUNTS
+export VERIF_CASE_STEP=${VERIF_CASE}_${STEP}
+####################################################
+# GENERAL SETTINGS APPLIED TO ALL USE CASES
+####################################################
+## FORECAST MODEL SETTINGS
+#model_list:             model names
+#model_stats_dir_list:    directory path to model .stat files
+#model_file_format_list: file format of model files
+export model_list="$MODELNAME"
+export model_stats_dir_list="$COMOUTfinal"
+export model_file_format_list="$COMIN.{init?fmt=%Y%m%d}/gefs/gefs"
+## OUTPUT DATA SETTINGS
+#OUTPUTROOT: base output directory
+export OUTPUTROOT="$DATAROOTtmp/$STEP"
+#export OUTPUTROOT="/lfs/h1/ops/prod/com/$NET/$evs_ver/$STEP"
+## DATE SETTINGS
+#start_date:       verification start date, format YYYYMMDD
+#end_date:         verification end date, format YYYYMMDD
+#make_met_data_by: how to treat dates, "VALID" or "INIT"
+export start_date="$VDATE"
+export end_date="$VDATE"
+export make_met_data_by="VALID"
+## WEB SETTINGS
+#SEND2WEB:  whether or not to send maps to webhost
+#webhost:   webhost(rzdm) computer
+#webhostid: webhost(rzdm) user name
+#webdir:    directory where to send maps on webhost
+export SEND2WEB="NO"
+export webhost="emcrzdm.ncep.noaa.gov"
+export webhostid="$USER"
+export webdir="/home/people/emc/www/htdocs/users/${webhostid}/METplus/TEST"
+## METPLUS SETTINGS
+#met_version:               MET version to use
+#metplus_version:           METplus version to use
+#met_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
+#metplus_verbosity:         DEBUG, INFO, WARN, ERROR (most verbose is DEBUG)
+#log_met_output_to_metplus: log MET output to METplus log, yes or no
+export met_version="$met_ver" 
+export metplus_version="$metplus_ver" 
+export metplus_verbosity="DEBUG"
+export met_verbosity="5"
+export log_met_output_to_metplus="yes"
+## DATA DIRECTIVE SETTINGS
+export SENDARCH="YES"
+export SENDMETVIEWER="NO"
+export KEEPDATA="YES"
+####################################################
+# SETTINGS FOR SPECIFIC USE CASES
+####################################################
+if [ $VERIF_CASE_STEP = grid2grid_stats ]; then
+    #g2gstats_type_list: list type of verifications to run for grid-to-grid: anom, pres, ENSO, OLR, precip, sst, seaice
+    #
+    #        anom:    2-m temp to compare to ECMWF 
+    #        pres:    compare to GFS 
+    #        ENSO:    compare to GHRSST OSPO 
+    #        OLR:     compare to UMD
+    #        precip:  compare to CCPA and MRMS 
+    #        sst:     compare to GHRSST OSPO 
+    #        seaice:  compare to OSI-SAF
+    #g2gstats_*_truth_name_list:   list of reference name for truth files
+    #g2gstats_*_truth_file_format_list: list of truth files
+    #g2gstats_precip_file_format_list:     list of precip files
+    #g2gstats_precip_file_accum_list:      list of precip accumulations in file: hours (HH) or continuous
+    #g2gstats_precip_var_list:             list of the precip variable name to use    
+    #g2gstats_*_fcyc_list:                all forecast cycles to be included in verification: HH
+    #g2gstats_*_vhr_list:               all valid hours to be included in verification: HH
+    #g2gstats_*_fhr_min:                forecast hour to start verification HH[H]
+    #g2gstats_*_fhr_max:                forecast hour to end verification HH[H]
+    #g2gstats_*_fhr_inc:                    frequency to verify forecast hours at HH[H]
+    #g2gstats_*_grid:                   NCEP grid to do verification on
+    #g2gstats_*_gather_by:              how to group the verification data, VSDB, VALID, INIT
+    #g2gstats_mv_database_name: name of the METviewer database to send data to, MUST START WITH "mv"
+    #g2gstats_mv_database_group: name of the group the METviewer database belongs to
+    #g2gstats_mv_database_desc: description of database, can be blank
+    export g2gstats_type_list="sst seaice" 
+    export g2gstats_anom_truth_name_list="ecmwf_anl"
+    export g2gstats_anom_truth_file_format_list="$COMINobs.{valid?fmt=%Y%m%d}/ecmwf/ecmwf.{valid?fmt=%Y%m%d%H}.anl"
+    export g2gstats_anom_fcyc_list="00"
+    export g2gstats_anom_vhr_list="00 12"
+    export g2gstats_anom_fhr_min="24"
+    export g2gstats_anom_fhr_max="840"
+    export g2gstats_anom_fhr_inc=12
+    export g2gstats_anom_grid="G003" 
+    export g2gstats_anom_gather_by="VALID"
+    export g2gstats_pres_truth_name_list="gfs_anl"
+    export g2gstats_pres_truth_file_format_list="$COMINobs.{valid?fmt=%Y%m%d}/gfs/gfs.{valid?fmt=%Y%m%d%H}.anl"
+    export g2gstats_pres_fcyc_list="00"
+    export g2gstats_pres_vhr_list="00 12"
+    export g2gstats_pres_fhr_min="24"
+    export g2gstats_pres_fhr_max="168"
+    export g2gstats_pres_fhr_inc=12
+    export g2gstats_pres_grid="G003"
+    export g2gstats_pres_gather_by="VALID"
+    export g2gstats_ENSO_truth_name_list="ghrsst_anl"
+    export g2gstats_ENSO_truth_file_format_list="$COMINobs.{valid?fmt=%Y%m%d}/ghrsst_ospo/ghrsst_ospo.{valid?fmt=%Y%m%d%H}to{valid?fmt=%Y%m%d%H}.nc"
+    export g2gstats_ENSO_fcyc_list="00"
+    export g2gstats_ENSO_vhr_list="00 12"
+    export g2gstats_ENSO_fhr_min="24"
+    export g2gstats_ENSO_fhr_max="840"
+    export g2gstats_ENSO_fhr_inc=12
+    export g2gstats_ENSO_grid="G003"
+    export g2gstats_ENSO_gather_by="VALID"
+    export g2gstats_OLR_truth_name_list="umd_anl"
+    export g2gstats_OLR_truth_file_format_list="$COMINobs.{valid?fmt=%Y%m%d}/umd/umd.{valid?fmt=%Y%m%d}.nc"
+    export g2gstats_OLR_fcyc_list="00"
+    export g2gstats_OLR_vhr_list="00 12"
+    export g2gstats_OLR_fhr_min="24"
+    export g2gstats_OLR_fhr_max="840"
+    export g2gstats_OLR_fhr_inc=12
+    export g2gstats_OLR_grid="G003"
+    export g2gstats_OLR_gather_by="VALID"
+    export g2gstats_precip_file_format_list="$COMIN.{init?fmt=%Y%m%d}/gefs/gefs"
+    export g2gstats_precip_file_accum_list="24"
+    export g2gstats_precip_truth_name_list="ccpa_anl"
+    export g2gstats_precip_truth_file_format_list="$COMINobs.{valid?fmt=%Y%m%d}/ccpa/ccpa.{valid?fmt=%Y%m%d%H}"
+    export g2gstats_precip_var_list="APCP"
+    export g2gstats_precip_fcyc_list="00"
+    export g2gstats_precip_vhr_list="00 12"
+    export g2gstats_precip_fhr_min="24"
+    export g2gstats_precip_fhr_max="840"
+    export g2gstats_precip_fhr_inc=24
+    export g2gstats_precip_grid="G003"
+    export g2gstats_precip_gather_by="VALID"
+    export g2gstats_sst_truth_name_list="ghrsst_anl"
+    export g2gstats_sst_truth_file_format_list="$COMINobs.{valid?fmt=%Y%m%d}/ghrsst_ospo/ghrsst_ospo.{valid?fmt=%Y%m%d%H}to{valid?fmt=%Y%m%d%H}.nc"
+    export g2gstats_sst_fcyc_list="00"
+    export g2gstats_sst_vhr_list="00 12"
+    export g2gstats_sst_fhr_min="24"
+    export g2gstats_sst_fhr_max="840"
+    export g2gstats_sst_fhr_inc=12
+    export g2gstats_sst_grid="G003"
+    export g2gstats_sst_gather_by="VALID"
+    export g2gstats_seaice_truth_name_list="osi_anl"
+    export g2gstats_seaice_truth_file_format_list="$COMINobs.{valid?fmt=%Y%m%d}/osi_saf/osi_saf.multi.{valid?fmt=%Y%m%d%H}to{valid?fmt=%Y%m%d%H}_G003.nc"
+    export g2gstats_seaice_fcyc_list="00"
+    export g2gstats_seaice_vhr_list="00 12"
+    export g2gstats_seaice_fhr_min="24"
+    export g2gstats_seaice_fhr_max="840"
+    export g2gstats_seaice_fhr_inc=12
+    export g2gstats_seaice_grid="G003"
+    export g2gstats_seaice_gather_by="VALID"
+    export g2gstats_mv_database_name="mv_evs_subseasonal_grid2grid_stats_$MODELNAME"
+    export g2gstats_mv_database_group="$USER"
+    export g2gstats_mv_database_desc="Grid-to-grid METplus subseasonal data for $MODELNAME"
+fi
+
+
+echo "END: $(basename ${BASH_SOURCE[0]})"
