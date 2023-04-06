@@ -910,12 +910,12 @@ elif STEP == 'plots' :
                     + datetime.timedelta(hours=int(CCPA24hr_valid_hr_list[0]))
                 )- datetime.timedelta(hours=fhr)
                 source_model_fhr_pcp_combine_file = os.path.join(
-                    COMINmodel, 'pcp_combine_precip_24hrAccum_init'
+                    COMINmodel, 'pcp_combine_precip_accum24hr_24hrAccum_init'
                     +init_dt.strftime('%Y%m%d%H')+'_fhr'+str(fhr).zfill(3)+'.nc'
                 )
                 dest_model_fhr_pcp_combine_file = os.path.join(
                     VERIF_CASE_STEP_data_dir, model,
-                    model+'_precip_24hrAccum_init'
+                    model+'_precip_accum24hr_24hrAccum_init'
                     +init_dt.strftime('%Y%m%d%H')+'_fhr'+str(fhr).zfill(3)+'.nc'
                 )
                 if not os.path.exists(dest_model_fhr_pcp_combine_file):
