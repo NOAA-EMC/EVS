@@ -55,7 +55,7 @@ if job_type == 'reformat':
     COMINobs = os.environ['COMINobs']
     njob = os.environ['njob']
     USHevs = os.environ['USHevs']
-    SKIP_IF_OUTPUT_EXISTS=os.environ['SKIP_IF_OUTPUT_EXISTS']
+    SKIP_IF_OUTPUT_EXISTS = os.environ['SKIP_IF_OUTPUT_EXISTS']
     if NEST == 'spc_otlk':
         COMINspcotlk = os.environ['COMINspcotlk']
         GRID_POLY_LIST = os.environ['GRID_POLY_LIST']
