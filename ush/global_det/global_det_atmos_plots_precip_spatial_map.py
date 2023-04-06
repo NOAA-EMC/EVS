@@ -135,7 +135,7 @@ class PrecipSpatialMap:
             if model_num == 'obs':
                 model_num_file = os.path.join(
                     model_num_data_dir,
-                    'ccpa_precip_24hrAccum_valid'
+                    'ccpa_precip_accum24hr_24hrAccum_valid'
                     +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
                 )
                 if not os.path.exists(image_name):
@@ -143,7 +143,7 @@ class PrecipSpatialMap:
             else:
                 model_num_file = os.path.join(
                     model_num_data_dir,
-                    model_num_name+'_precip_24hrAccum_init'
+                    model_num_name+'_precip_accum24hr_24hrAccum_init'
                     +init_date_dt.strftime('%Y%m%d%H')+'_'
                     +'fhr'+self.date_info_dict['forecast_hour'].zfill(3)
                     +'.nc'
@@ -156,6 +156,9 @@ class PrecipSpatialMap:
                     self.logger.warning(f"{model_num_file} does not exist, "
                                         +"not making plot")
             else:
+                make_plot = False
+            if model_num_name != 'gfs' \
+                    and self.plot_info_dict['vx_mask'] != 'CONUS':
                 make_plot = False
             if make_plot:
                 self.logger.debug("Plotting data from "+model_num_file)

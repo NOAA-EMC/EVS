@@ -128,8 +128,8 @@ class ValidHourAverage:
                                       +', '.join(format_valid_dates))
                     plot_dates = init_dates
                 # Read in data
-                self.logger.info(f"Reading in model stat files "
-                                 +"from {self.input_dir}")
+                self.logger.info("Reading in model stat files "
+                                 +f"from {self.input_dir}")
                 all_model_df = gda_util.build_df(
                     self.logger, self.input_dir, self.output_dir,
                     self.model_info_dict, self.met_info_dict,
