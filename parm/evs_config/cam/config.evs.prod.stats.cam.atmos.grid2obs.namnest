@@ -40,6 +40,7 @@ else
     exit 1
 fi
 if [ "$NEST" = "conus" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="yes"
     export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.conusnest.hiresf{lead?fmt=%2H}.tm00.grib2"
     if [ "$OBSNAME" = "raob" ]; then
         export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH SBCAPE MLCAPE HPBL"
@@ -56,6 +57,7 @@ if [ "$NEST" = "conus" ]; then
     export FHR_END_SHORT="60"
     export FHR_INCR_SHORT="6"
 elif [ "$NEST" = "subreg" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="yes"
     export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.conusnest.hiresf{lead?fmt=%2H}.tm00.grib2"
     if [ "$OBSNAME" = "raob" ]; then
         export VAR_NAME_LIST=""
@@ -72,6 +74,7 @@ elif [ "$NEST" = "subreg" ]; then
     export FHR_END_SHORT="60"
     export FHR_INCR_SHORT="6"
 elif [ "$NEST" = "ak" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="yes"
     export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.alaskanest.hiresf{lead?fmt=%2H}.tm00.grib2"
     if [ "$OBSNAME" = "raob" ]; then
         export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH SBCAPE MLCAPE HPBL"
@@ -88,6 +91,7 @@ elif [ "$NEST" = "ak" ]; then
     export FHR_END_SHORT="60"
     export FHR_INCR_SHORT="6"
 elif [ "$NEST" = "hi" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="yes"
     export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.hawaiinest.hiresf{lead?fmt=%2H}.tm00.grib2"
     if [ "$OBSNAME" = "raob" ]; then
         export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH"
@@ -104,6 +108,7 @@ elif [ "$NEST" = "hi" ]; then
     export FHR_END_SHORT="60"
     export FHR_INCR_SHORT="6"
 elif [ "$NEST" = "pr" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="yes"
     export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.priconest.hiresf{lead?fmt=%2H}.tm00.grib2"
     if [ "$OBSNAME" = "raob" ]; then
         export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH"
@@ -120,6 +125,7 @@ elif [ "$NEST" = "pr" ]; then
     export FHR_END_SHORT="60"
     export FHR_INCR_SHORT="6"
 elif [ "$NEST" = "firewx" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="yes"
     export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.conusnest.hiresf{lead?fmt=%2H}.tm00.grib2"
     if [ "$OBSNAME" = "raob" ]; then
         export VAR_NAME_LIST="HPBL"
@@ -136,6 +142,7 @@ elif [ "$NEST" = "firewx" ]; then
     export FHR_END_SHORT="36"
     export FHR_INCR_SHORT="6"
 elif [ "$NEST" = "spc_otlk" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="no"
     export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.conusnest.hiresf{lead?fmt=%2H}.tm00.grib2"
     if [ "$OBSNAME" = "raob" ]; then
         export VAR_NAME_LIST="SBCAPE MLCAPE"
