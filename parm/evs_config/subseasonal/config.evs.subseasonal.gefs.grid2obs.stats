@@ -48,16 +48,16 @@ export webhost="emcrzdm.ncep.noaa.gov"
 export webhostid="$USER"
 export webdir="/home/people/emc/www/htdocs/users/${webhostid}/METplus/TEST"
 ## METPLUS SETTINGS
-#MET_version:               MET version to use: 10.1.1
-#METplus_version:           METplus version to use: 4.1.1
-#MET_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
-#METplus_verbosity:         DEBUG, INFO, WARN, ERROR (most verbose is DEBUG)
-#log_MET_output_to_METplus: log MET output to METplus log, yes or no
-export MET_version="$met_ver" #10.1.1
-export METplus_version="$metplus_ver" #4.1.1
-export METplus_verbosity="DEBUG"
-export MET_verbosity="5"
-export log_MET_output_to_METplus="yes"
+#met_version:               MET version to use: 10.1.1
+#metplus_version:           METplus version to use: 4.1.1
+#met_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
+#metplus_verbosity:         DEBUG, INFO, WARN, ERROR (most verbose is DEBUG)
+#log_met_output_to_metplus: log MET output to METplus log, yes or no
+export met_version="$met_ver" #10.1.1
+export metplus_version="$metplus_ver" #4.1.1
+export metplus_verbosity="DEBUG"
+export met_verbosity="5"
+export log_met_output_to_metplus="yes"
 ## DATA DIRECTIVE SETTINGS
 export SENDARCH="YES"
 export SENDMETVIEWER="NO"

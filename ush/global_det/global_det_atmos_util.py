@@ -251,6 +251,23 @@ def get_init_hour(valid_hour, forecast_hour):
         init_hour = init_hour - 24
     return init_hour
 
+def get_valid_hour(init_hour, forecast_hour):
+    """! Get a valid hour
+
+         Args:
+             init_hour    - intit hour/cycle (integer)
+             forecast_hour - forecast hour (integer)
+    """ 
+    valid_hour = (init_hour + (forecast_hour%24))
+    if forecast_hour % 24 == 0:
+        valid_hour = init_hour
+    else:
+        valid_hour = (init_hour + (forecast_hour%24))
+    if valid_hour >= 24:
+        valid_hour = valid_hour - 24
+    return valid_hour
+
+
 def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                   forecast_hour, str_sub_dict):
     """! Creates a filled file path from a format
@@ -1655,19 +1672,24 @@ def initalize_job_env_dict(verif_type, group,
              'MET_ROOT', 'MET_bin_exec', 'met_verbosity', 'MET_TMP_DIR',
              'COMROOT']
         )
-    elif group == 'plot':
+    elif group in ['condense_stats', 'filter_stats', 'make_plots',
+                   'tar_images']:
         job_env_var_list.extend(['MET_ROOT', 'met_ver'])
     job_env_dict = {}
     for env_var in job_env_var_list:
         job_env_dict[env_var] = os.environ[env_var]
-    if group == 'plot':
+    if group in ['condense_stats', 'filter_stats', 'make_plots',
+                 'tar_images']:
         job_env_dict['plot_verbosity'] = (
             os.environ['metplus_verbosity']
         )
     job_env_dict['JOB_GROUP'] = group
-    if group in ['reformat_data', 'assemble_data', 'generate_stats', 'plot']:
+    if group in ['reformat_data', 'assemble_data', 'generate_stats',
+                 'condense_stats', 'filter_stats', 'make_plots',
+                 'tar_images']:
         job_env_dict['VERIF_TYPE'] = verif_type
-        if group == 'plot':
+        if group in ['condense_stats', 'filter_stats', 'make_plots',
+                     'tar_images']:
             job_env_dict['job_var'] = job
         else:
             job_env_dict['job_name'] = job
@@ -1685,6 +1707,13 @@ def initalize_job_env_dict(verif_type, group,
                 os.environ[verif_case_step_abbrev_type+'_valid_hr_list']\
                 .split(' ')
             )
+            if os.environ['VERIF_CASE'] == 'grid2obs' \
+                    and verif_type == 'sfc':
+                if 'CAPE' in job or job in ['PBLHeight',
+                                            'DailyAvg_TempAnom2m']:
+                    for vh in verif_type_valid_hr_list:
+                        if int(vh) % 6 != 0:
+                            verif_type_valid_hr_list.remove(vh)
             job_env_dict['valid_hr_start'] = (
                 verif_type_valid_hr_list[0].zfill(2)
             )
@@ -2039,18 +2068,18 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
             input_dir, model_num+'_'+model_dict['name']+'.stat'
         )
         if len(dates) != 0:
-            if not os.path.exists(condensed_model_file):
-                write_condensed_stat_file = True
-            else:
-                write_condensed_stat_file = False
-            if write_condensed_stat_file:
-                condense_model_stat_files(
-                    logger, input_dir, condensed_model_file, model_dict['name'],
-                    model_dict['obs_name'], grid, vx_mask,
-                    fcst_var_name, obs_var_name, line_type
-                )
-            parsed_model_stat_file = os.path.join(
-                output_dir,
+            #if not os.path.exists(condensed_model_file):
+            #    write_condensed_stat_file = True
+            #else:
+            #    write_condensed_stat_file = False
+            #if write_condensed_stat_file:
+            #    condense_model_stat_files(
+            #        logger, input_dir, condensed_model_file, model_dict['name'],
+            #        model_dict['obs_name'], grid, vx_mask,
+            #        fcst_var_name, obs_var_name, line_type
+            #    )
+            input_parsed_model_stat_file = os.path.join(
+                input_dir,
                 'fcst'+model_dict['name']+'_'
                 +fcst_var_name+fcst_var_level+fcst_var_thresh+'_'
                 +'obs'+model_dict['obs_name']+'_'
@@ -2064,6 +2093,14 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                 +'fhr'+fhr.zfill(3)
                 +'.stat'
             )
+            output_parsed_model_stat_file = os.path.join(
+                output_dir,
+                input_parsed_model_stat_file.rpartition('/')[2]
+            )
+            if os.path.exists(input_parsed_model_stat_file):
+                parsed_model_stat_file = input_parsed_model_stat_file
+            else:
+                parsed_model_stat_file = output_parsed_model_stat_file
             if not os.path.exists(parsed_model_stat_file):
                 write_parse_stat_file = True
                 read_parse_stat_file = True

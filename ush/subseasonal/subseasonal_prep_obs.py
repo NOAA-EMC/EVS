@@ -1,14 +1,14 @@
 '''
 Name: subseasonal_prep_obs.py
 Contact(s): Shannon Shields
-Abstract: 
+Abstract: Retrieves obs data for subseasonal prep step
 '''
 
 import os
 import datetime
 import glob
 import shutil
-import subseasonal_atmos_util as sub_util
+import subseasonal_util as sub_util
 import sys
 
 print("BEGIN: "+os.path.basename(__file__))

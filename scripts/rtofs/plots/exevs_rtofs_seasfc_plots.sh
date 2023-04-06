@@ -10,8 +10,11 @@ set -x
 
 # set up plot variables
 export PERIOD=last60days
-export MASKS="GLB, NATL, SATL, EQATL, NPAC, SPAC, EQPAC, IND, SOC, Arctic, MEDIT"
 export THRESH=""
+export MASKS="GLB, NATL, SATL, EQATL, NPAC, SPAC, EQPAC, IND, SOC, Arctic, MEDIT"
+if [ $RUN = 'ndbc' ] ; then
+  export MASKS="GLB"
+fi
 
 # plot time series
 export PTYPE=time_series
