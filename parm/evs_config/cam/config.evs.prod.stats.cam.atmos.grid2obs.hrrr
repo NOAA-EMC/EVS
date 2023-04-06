@@ -30,6 +30,7 @@ export OBSNAME=${VERIF_TYPE}
 # Additional Verification Settings
 export GRID="FCST"
 if [ "$NEST" = "conus" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="no"
     export FHR_GROUP_LIST="SHORT FULL"
     if [ "$OBSNAME" = "raob" ]; then
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfprsf{lead?fmt=%2H}.grib2"
@@ -51,6 +52,7 @@ if [ "$NEST" = "conus" ]; then
     export FHR_END_SHORT="18"
     export FHR_INCR_SHORT="01"
 elif [ "$NEST" = "subreg" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="no"
     export FHR_GROUP_LIST="SHORT FULL"
     if [ "$OBSNAME" = "raob" ]; then
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfprsf{lead?fmt=%2H}.grib2"
@@ -72,6 +74,7 @@ elif [ "$NEST" = "subreg" ]; then
     export FHR_END_SHORT="18"
     export FHR_INCR_SHORT="01"
 elif [ "$NEST" = "ak" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="no"
     export FHR_GROUP_LIST="SHORT FULL"
     if [ "$OBSNAME" = "raob" ]; then
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/alaska/hrrr.t{init?fmt=%2H}z.wrfprsf{lead?fmt=%2H}.ak.grib2"
@@ -93,6 +96,7 @@ elif [ "$NEST" = "ak" ]; then
     export FHR_END_SHORT="18"
     export FHR_INCR_SHORT="03"
 elif [ "$NEST" = "firewx" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="no"
     export FHR_GROUP_LIST="FULL"
     if [ "$OBSNAME" = "raob" ]; then
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfprsf{lead?fmt=%2H}.grib2"
@@ -114,6 +118,7 @@ elif [ "$NEST" = "firewx" ]; then
     export FHR_END_SHORT="36"
     export FHR_INCR_SHORT="06"
 elif [ "$NEST" = "spc_otlk" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="no"
     export FHR_GROUP_LIST="SHORT FULL"
     if [ "$OBSNAME" = "raob" ]; then
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfprsf{lead?fmt=%2H}.grib2"
