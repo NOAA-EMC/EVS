@@ -24,6 +24,7 @@ RUN = os.environ['RUN']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 COMPONENT = os.environ['COMPONENT']
+JOB_GROUP = os.environ['JOB_GROUP']
 FIXevs = os.environ['FIXevs']
 MET_ROOT = os.environ['MET_ROOT']
 met_ver = os.environ['met_ver']
@@ -34,7 +35,6 @@ plot_verbosity = os.environ['plot_verbosity']
 event_equalization = os.environ['event_equalization']
 job_name = os.environ['job_name']
 line_type = os.environ['line_type']
-stat = os.environ['stat']
 grid = os.environ['grid']
 job_var = os.environ['job_var']
 vx_mask = os.environ['vx_mask']
@@ -46,9 +46,9 @@ fcst_var_thresh_list = os.environ['fcst_var_thresh_list'].split(', ')
 obs_var_name = os.environ['obs_var_name']
 obs_var_level_list = os.environ['obs_var_level_list'].split(', ')
 obs_var_thresh_list = os.environ['obs_var_thresh_list'].split(', ')
-model_list = os.environ['model_list'].split(' ')
-model_plot_name_list = os.environ['model_plot_name_list'].split(' ')
-plots_list = os.environ['plots_list'].split(', ')
+model_list = os.environ['model_list'].split(', ')
+model_plot_name_list = os.environ['model_plot_name_list'].split(', ')
+obs_list = os.environ['obs_list'].split(', ')
 VERIF_TYPE = os.environ['VERIF_TYPE']
 date_type = os.environ['date_type']
 valid_hr_start = os.environ['valid_hr_start']
@@ -60,10 +60,10 @@ init_hr_inc = os.environ['init_hr_inc']
 fhr_start = os.environ['fhr_start']
 fhr_end = os.environ['fhr_end']
 fhr_inc = os.environ['fhr_inc']
-if VERIF_CASE == 'grid2grid' and VERIF_TYPE == 'pres_levs':
-   truth_name_list = os.environ['truth_name_list'].split(' ') 
-else:
-   obs_name = os.environ['obs_name']
+job_id = os.environ['job_id']
+if JOB_GROUP == 'make_plots':
+    stat = os.environ['stat']
+    plot = os.environ['plot']
 
 # Set variables
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
@@ -80,14 +80,14 @@ logging_dir = os.path.join(plot_output_dir, RUN+'.'+end_date, 'logs')
 VERIF_TYPE_image_dir = os.path.join(plot_output_dir, RUN+'.'+end_date,
                                     'images', VERIF_TYPE)
 job_output_dir = os.path.join(plot_output_dir, RUN+'.'+end_date,
-                              VERIF_TYPE,job_name.replace('/','_'))
+                              VERIF_TYPE, job_name.replace('/','_'))
 if not os.path.exists(job_output_dir):
     os.makedirs(job_output_dir)
 
 # Set up logging
 job_logging_file = os.path.join(logging_dir, 'evs_'+COMPONENT+'_'+RUN+'_'
                                 +VERIF_CASE+'_'+STEP+'_'+VERIF_TYPE+'_'
-                                +job_name.replace('/','_')+'_runon'
+                                +JOB_GROUP+'_'+job_id+'_runon'
                                 +now.strftime('%Y%m%d%H%M%S')+'.log')
 logger = logging.getLogger(job_logging_file)
 logger.setLevel(plot_verbosity)
@@ -103,25 +103,6 @@ logger_info = f"Log file: {job_logging_file}"
 print(logger_info)
 logger.info(logger_info)
 
-if len(model_list) > 10:
-    logger.error("TOO MANY MODELS LISTED ("+str(len(model_list))
-                 +", ["+', '.join(model_list)+"]), maximum is 10")
-    sys.exit(1)
-
-# Condense .stat files
-logger.info("Condensing model .stat files for job")
-for model_idx in range(len(model_list)):
-    model = model_list[model_idx]
-    condensed_model_stat_file = os.path.join(job_output_dir, 'model'
-                                             +str(model_idx+1)+'_'+model
-                                             +'.stat')
-    if VERIF_CASE == 'grid2grid' and VERIF_TYPE == 'pres_levs':
-        obs_name = truth_name_list[model_idx]
-    gda_util.condense_model_stat_files(logger, stat_base_dir,
-                                       condensed_model_stat_file, model,
-                                       obs_name, grid, vx_mask, fcst_var_name,
-                                       obs_var_name, line_type)
-
 # Set up model information dictionary
 original_model_info_dict = {}
 for model_idx in range(len(model_list)):
@@ -129,17 +110,8 @@ for model_idx in range(len(model_list)):
     original_model_info_dict['model'+str(model_num)] = {
         'name': model_list[model_idx],
         'plot_name': model_plot_name_list[model_idx],
+        'obs_name': obs_list[model_idx]
     }
-    if VERIF_CASE == 'grid2grid' and VERIF_TYPE == 'pres_levs':
-         original_model_info_dict['model'+str(model_num)]['obs_name'] = (
-             truth_name_list[model_idx]
-         )
-    elif VERIF_CASE == 'grid2grid' and VERIF_TYPE == 'means':
-         original_model_info_dict['model'+str(model_num)]['obs_name'] = (
-             model_list[model_idx]
-         )
-    else:
-        original_model_info_dict['model'+str(model_num)]['obs_name'] = obs_name
 
 # Set up date information dictionary
 original_date_info_dict = {
@@ -157,16 +129,19 @@ init_hrs = list(range(int(init_hr_start),
                       int(init_hr_end)+int(init_hr_inc),
                       int(init_hr_inc)))
 fhrs = list(range(int(fhr_start), int(fhr_end)+int(fhr_inc), int(fhr_inc)))
+if fhrs == list(range(0, 384+6, 6)):
+    fhrs = list(range(0,72,6)) + list(range(72,384+24,24))
 
 # Set up plot information dictionary
 original_plot_info_dict = {
     'line_type': line_type,
     'grid': grid,
-    'stat': stat,
     'vx_mask': vx_mask,
     'interp_method': interp_method,
     'event_equalization': event_equalization
 }
+if JOB_GROUP == 'make_plots':
+    original_plot_info_dict['stat'] = stat
 fcst_var_prod = list(
     itertools.product([fcst_var_name], fcst_var_level_list,
                       fcst_var_thresh_list)
@@ -190,8 +165,104 @@ original_met_info_dict = {
     'version': met_ver
 }
 
-# Make the plots
-for plot in plots_list:
+# Condense .stat files
+if JOB_GROUP == 'condense_stats':
+    logger.info("Condensing model .stat files")
+    for model_idx in range(len(model_list)):
+        model = model_list[model_idx]
+        obs_name = obs_list[model_idx]
+        condensed_model_stat_file = os.path.join(job_output_dir, 'model'
+                                                 +str(model_idx+1)+'_'+model
+                                                 +'.stat')
+        gda_util.condense_model_stat_files(logger, stat_base_dir,
+                                           condensed_model_stat_file, model,
+                                           obs_name, grid, vx_mask,
+                                           fcst_var_name, obs_var_name, line_type)
+elif JOB_GROUP == 'filter_stats':
+    logger.info("Filtering model .stat files")
+    model_info_dict = original_model_info_dict.copy()
+    date_info_dict = original_date_info_dict.copy()
+    plot_info_dict = original_plot_info_dict.copy()
+    met_info_dict = original_met_info_dict.copy()
+    for filter_info in list(
+            itertools.product(valid_hrs, fhrs, var_info,
+                              interp_points_list)
+    ):
+        date_info_dict['valid_hr_start'] = str(filter_info[0])
+        date_info_dict['valid_hr_end'] = str(filter_info[0])
+        date_info_dict['valid_hr_inc'] = '24'
+        date_info_dict['forecast_hour'] = str(filter_info[1])
+        plot_info_dict['fcst_var_name'] = filter_info[2][0][0]
+        plot_info_dict['fcst_var_level'] = filter_info[2][0][1]
+        plot_info_dict['fcst_var_thresh'] = filter_info[2][0][2]
+        plot_info_dict['obs_var_name'] = filter_info[2][1][0]
+        plot_info_dict['obs_var_level'] = filter_info[2][1][1]
+        plot_info_dict['obs_var_thresh'] = filter_info[2][1][2]
+        plot_info_dict['interp_points'] = str(filter_info[3])
+        init_hr = gda_util.get_init_hour(
+            int(date_info_dict['valid_hr_start']),
+            int(date_info_dict['forecast_hour'])
+        )
+        if init_hr in init_hrs:
+            valid_dates, init_dates = gda_util.get_plot_dates(
+                logger, date_info_dict['date_type'],
+                date_info_dict['start_date'],
+                date_info_dict['end_date'],
+                date_info_dict['valid_hr_start'],
+                date_info_dict['valid_hr_end'],
+                date_info_dict['valid_hr_inc'],
+                date_info_dict['init_hr_start'],
+                date_info_dict['init_hr_end'],
+                date_info_dict['init_hr_inc'],
+                date_info_dict['forecast_hour']
+            )
+            format_valid_dates = [valid_dates[d].strftime('%Y%m%d_%H%M%S') \
+                                  for d in range(len(valid_dates))]
+            if len(valid_dates) == 0:
+                plot_dates = np.arange(
+                    datetime.datetime.strptime(
+                        date_info_dict['start_date']
+                        +date_info_dict['valid_hr_start'],
+                        '%Y%m%d%H'
+                    ),
+                    datetime.datetime.strptime(
+                        date_info_dict['end_date']
+                        +date_info_dict['valid_hr_end'],
+                        '%Y%m%d%H'
+                    )
+                    +datetime.timedelta(
+                        hours=int(date_info_dict['valid_hr_inc'])
+                    ),
+                    datetime.timedelta(
+                        hours=int(date_info_dict['valid_hr_inc'])
+                    )
+                ).astype(datetime.datetime)
+            else:
+                plot_dates = valid_dates
+            all_model_df = gda_util.build_df(
+                logger, job_output_dir, job_output_dir,
+                model_info_dict, met_info_dict,
+                plot_info_dict['fcst_var_name'],
+                plot_info_dict['fcst_var_level'],
+                plot_info_dict['fcst_var_thresh'],
+                plot_info_dict['obs_var_name'],
+                plot_info_dict['obs_var_level'],
+                plot_info_dict['obs_var_thresh'],
+                plot_info_dict['line_type'],
+                plot_info_dict['grid'],
+                plot_info_dict['vx_mask'],
+                plot_info_dict['interp_method'],
+                plot_info_dict['interp_points'],
+                date_info_dict['date_type'],
+                valid_dates, format_valid_dates,
+                str(date_info_dict['forecast_hour'])
+            ) 
+elif JOB_GROUP == 'make_plots':
+    logger.info("Making plots")
+    if len(model_list) > 10:
+        logger.error("TOO MANY MODELS LISTED ("+str(len(model_list))
+                     +", ["+', '.join(model_list)+"]), maximum is 10")
+        sys.exit(1)
     plot_specs = PlotSpecs(logger, plot)
     model_info_dict = original_model_info_dict.copy()
     date_info_dict = original_date_info_dict.copy()
@@ -406,7 +477,7 @@ for plot in plots_list:
                 plot_lbd.make_lead_by_date()
     elif plot == 'stat_by_level':
         import global_det_atmos_plots_stat_by_level as gdap_sbl
-        vert_profiles = ['all', 'trop', 'strat', 'ltrop', 'utrop']
+        vert_profiles = [os.environ['vert_profile']]
         for sbl_info in \
                 list(itertools.product(valid_hrs, fhrs, interp_points_list,
                                        vert_profiles)):
@@ -456,11 +527,11 @@ for plot in plots_list:
         import global_det_atmos_plots_lead_by_level as gdap_lbl
         if evs_run_mode == 'production' and int(fhr_inc) == 6:
             fhrs_lbl = list(
-                range(int(fhr_start), int(fhr_end)+int(fhr_inc), 12)
+                range(int(fhr_start), int(fhr_end)+int(fhr_inc), 24)
             )
         else:
             fhrs_lbl = fhrs
-        vert_profiles = ['all', 'trop', 'strat', 'ltrop', 'utrop']
+        vert_profiles = [os.environ['vert_profile']]
         for lbl_info in \
                 list(itertools.product(valid_hrs, interp_points_list,
                                        vert_profiles)):
@@ -584,31 +655,26 @@ for plot in plots_list:
                     plot_pd.make_performance_diagram()
     else:
         logger.warning(plot+" not recongized")
-
-# Create tar file of jobs plots and move to main image directory
-job_output_image_dir = os.path.join(job_output_dir, 'images')
-cwd = os.getcwd()
-if len(glob.glob(job_output_image_dir+'/*')) != 0:
-    os.chdir(job_output_image_dir)
-    tar_file = os.path.join(job_output_image_dir,
-                            job_name.replace('/','_')+'.tar')
-    if os.path.exists(tar_file):
-        os.remove(tar_file)
-    logger.debug("Make tar file "+tar_file+" from "+job_output_image_dir)
-    gda_util.run_shell_command(
-        ['tar', '-cvf', tar_file, '*']
-    )
-    logger.debug(f"Moving {tar_file} to {VERIF_TYPE_image_dir}")
-    gda_util.run_shell_command(
-        ['mv', tar_file, VERIF_TYPE_image_dir+'/.']
-    )
-    os.chdir(cwd)
-else:
-    logger.warning(f"No images generated in {job_output_image_dir}")
-
-# Clean up
-if evs_run_mode == 'production':
-    logger.info(f"Removing {job_output_dir}")
-    shutil.rmtree(job_output_dir)
+elif JOB_GROUP == 'tar_images':
+    logger.info("Tar'ing up images")
+    job_output_image_dir = os.path.join(job_output_dir, 'images')
+    cwd = os.getcwd()
+    if len(glob.glob(job_output_image_dir+'/*')) != 0:
+        os.chdir(job_output_image_dir)
+        tar_file = os.path.join(VERIF_TYPE_image_dir,
+                                job_name.replace('/','_')+'.tar')
+        if os.path.exists(tar_file):
+            os.remove(tar_file)
+        logger.debug(f"Making tar file {tar_file} from {job_output_image_dir}")
+        gda_util.run_shell_command(
+            ['tar', '-cvf', tar_file, '*']
+        )
+        os.chdir(cwd)
+    else:
+        logger.warning(f"No images generated in {job_output_image_dir}")
+     
+    if evs_run_mode == 'production':
+        logger.info(f"Removing {job_output_dir}")
+        shutil.rmtree(job_output_dir)
 
 print("END: "+os.path.basename(__file__))
