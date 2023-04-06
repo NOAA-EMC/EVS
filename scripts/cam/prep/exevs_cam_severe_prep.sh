@@ -2,8 +2,8 @@
 ###############################################################################
 # Name of Script: exevs_cam_severe_prep.sh
 # Contact(s):     Logan Dawson
-# Purpose of Script: This script preprocesses SPC storm reports for 
-#                    CAM severe verification.
+# Purpose of Script: This script preprocesses SPC data (storm reports 
+#                    and outlook areas) for CAM verification.
 # History Log:
 # 1/2023: Initial script assembled by Logan Dawson 
 ###############################################################################
@@ -16,6 +16,23 @@ echo " ENTERING SUB SCRIPT $0 "
 echo
 
 set -x
+
+
+############################################################
+## Copy and preprocess SPC OTLK files
+#############################################################
+mkdir -p $COMOUTotlk
+
+python $USHevs/${COMPONENT}/prep_spc_otlk_files.py
+export err=$?; err_chk
+
+# Copy output to $COMOUT
+if [ $SENDCOM = YES ]; then
+   mkdir -p $COMOUTotlk
+   for FILE in $DATA/gen_vx_mask/*; do
+      cp -v $FILE $COMOUTotlk
+   done
+fi
 
 
 
@@ -36,10 +53,20 @@ export GAUSS_RAD=120
 
 if [ -s $COMINspc/${REP_DATE}/validation_data/weather/spc/spc_reports_${REP_DATE}.csv ]; then
 
-   mkdir -p $COMOUTspc
+   mkdir -p $COMOUTlsr
 
+   # Run METplus
    ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/Point2Grid_obsSPC_PracticallyPerfect.conf
    export err=$?; err_chk
+
+
+   # Copy output to $COMOUT
+   if [ $SENDCOM = YES ]; then
+      mkdir -p $COMOUTlsr
+      for FILE in $DATA/point2grid/*; do
+         cp -v $FILE $COMOUTlsr
+      done
+   fi
 
 else
 
@@ -52,13 +79,6 @@ else
 
 fi
 
-
-if [ $SENDCOM = YES ]; then
-   mkdir -p $COMOUTspc
-   for FILE in $DATA/point2grid/*; do
-      cp -v $FILE $COMOUTspc
-   done
-fi
 
 
 exit
