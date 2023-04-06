@@ -32,10 +32,6 @@ export err=$?; err_chk
 ############################################################
 # Set some other environment variables 
 ############################################################
-export VERIF_GRID=G227
-export VERIF_GRID_DX=5.079
-export GAUSS_RAD=25.395
-export MAX_REGRID_WIDTH=17
 
 
 
@@ -43,47 +39,79 @@ export MAX_REGRID_WIDTH=17
 # Check for MRMS files to process or exit gracefully
 ############################################################
 
-RADAR_FIELDS="REFC RETOP"
-
-#export DOMAIN="conus alaska"
-export DOMAIN=conus
+# Define domains to operate on
+DOMAINS="conus alaska"
 
 # Regrid each MRMS product
-for RADAR_FIELD in ${RADAR_FIELDS}; do
+for DOMAIN in ${DOMAINS}; do
 
-   if [ $RADAR_FIELD = REFC ]; then
-      MRMS_PRODUCT=MergedReflectivityQCComposite_00.50
-   elif [ $RADAR_FIELD = REFD1 ]; then
-      MRMS_PRODUCT=SeamlessHSR_00.00
-   elif [ $RADAR_FIELD = RETOP ]; then
-      MRMS_PRODUCT=EchoTop18_00.50
+   export DOMAIN
+   # Set fields to regrid based on domain
+   if [ $DOMAIN = conus ]; then
+
+      RADAR_FIELDS="REFC RETOP"
+      export VERIF_GRID=G227
+      export VERIF_GRID_DX=5.079
+      export GAUSS_RAD=25.395
+      export MAX_REGRID_WIDTH=17
+
+   elif [ $DOMAIN = alaska ]; then
+
+      RADAR_FIELDS="REFC"
+      export VERIF_GRID=G091
+      export VERIF_GRID_DX=2.976
+      export GAUSS_RAD=25.395
+      export MAX_REGRID_WIDTH=27
+
    fi
 
-   if [ -s $DATA/MRMS_${DOMAIN}_tmp/${MRMS_PRODUCT}_${VDATE}-${cyc}0000.grib2 ]; then
 
-      ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/RegridDataPlane_obsMRMS_${RADAR_FIELD}.conf
-      export err=$?; err_chk
+   for RADAR_FIELD in ${RADAR_FIELDS}; do
 
-   else
+      if [ $RADAR_FIELD = REFC ]; then
+         if [ $DOMAIN = conus ]; then
+            MRMS_PRODUCT=MergedReflectivityQCComposite_00.50
+	    export OBS_VAR=MergedReflectivityQCComposite
+         elif [ $DOMAIN = alaska ]; then
+            MRMS_PRODUCT=MergedReflectivityQComposite_00.50
+	    export OBS_VAR=MergedReflectivityQComposite
+         fi
+      elif [ $RADAR_FIELD = REFD1 ]; then
+         MRMS_PRODUCT=SeamlessHSR_00.00
+      elif [ $RADAR_FIELD = RETOP ]; then
+         MRMS_PRODUCT=EchoTop18_00.50
+      fi
 
-      export subject="MRMS ${MRMS_PRODUCT} Data Missing for EVS ${COMPONENT}"
-      export maillist=${maillist:-'logan.dawson@noaa.gov,geoffrey.manikin@noaa.gov'}
-      echo "Warning: The ${MRMS_PRODUCT} file is missing for valid date ${VDATE}${cyc}. METplus will not run." > mailmsg
-      echo "Job Name & ID: $job $jobid" >> mailmsg
-      cat mailmsg | mail -s "$subject" $maillist
-      exit 0
+      if [ -s $DATA/MRMS_${DOMAIN}_tmp/${MRMS_PRODUCT}_${VDATE}-${cyc}0000.grib2 ]; then
 
-   fi	
+	 # Run METplus
+         ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/RegridDataPlane_obsMRMS_${RADAR_FIELD}.conf
+         export err=$?; err_chk
+
+	 # Copy output to $COMOUT
+         if [ $SENDCOM = YES ]; then
+            mkdir -p $COMOUTmrms/${DOMAIN}
+            for FILE in $DATA/MRMS_${DOMAIN}/*; do
+               cp -v $FILE $COMOUTmrms/${DOMAIN}
+            done
+         fi
+
+      else
+
+         export subject="MRMS ${MRMS_PRODUCT} Data Missing for EVS ${COMPONENT}"
+         export maillist=${maillist:-'logan.dawson@noaa.gov,geoffrey.manikin@noaa.gov'}
+         echo "Warning: The ${MRMS_PRODUCT} file is missing for valid date ${VDATE}${cyc}. METplus will not run." > mailmsg
+         echo "Job Name & ID: $job $jobid" >> mailmsg
+         cat mailmsg | mail -s "$subject" $maillist
+         exit 0
+
+      fi	
+
+   done
 
 done
 
 
-if [ $SENDCOM = YES ]; then
-   mkdir -p $COMOUTmrms/${DOMAIN}
-   for FILE in $DATA/MRMS_${DOMAIN}/*; do
-      cp -v $FILE $COMOUTmrms/${DOMAIN}
-   done
-fi
 
 
 exit
