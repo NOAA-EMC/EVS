@@ -55,6 +55,7 @@ if job_type == 'reformat':
     COMINobs = os.environ['COMINobs']
     njob = os.environ['njob']
     USHevs = os.environ['USHevs']
+    SKIP_IF_OUTPUT_EXISTS = os.environ['SKIP_IF_OUTPUT_EXISTS']
     if NEST == 'spc_otlk':
         COMINspcotlk = os.environ['COMINspcotlk']
         GRID_POLY_LIST = os.environ['GRID_POLY_LIST']
@@ -178,6 +179,7 @@ if job_type == 'reformat':
     job_env_vars_dict['FHR_INCR_FULL'] = FHR_INCR_FULL
     job_env_vars_dict['MIN_IHOUR'] = MIN_IHOUR
     job_env_vars_dict['COMINobs'] = COMINobs
+    job_env_vars_dict['SKIP_IF_OUTPUT_EXISTS'] = SKIP_IF_OUTPUT_EXISTS
     job_iterate_over_env_lists_dict['FHR_GROUP_LIST'] = {
         'list_items': re.split(r'[\s,]+', FHR_GROUP_LIST),
         'exports': ['FHR_END','FHR_INCR']
