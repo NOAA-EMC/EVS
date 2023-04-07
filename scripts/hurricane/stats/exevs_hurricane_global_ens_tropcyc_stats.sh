@@ -1,7 +1,7 @@
 #!/bin/bash
 export PS4=' + exevs_hurricane_global_ens_tropcyc_stats.sh line $LINENO: '
 
-export MetOnMachine=/apps/ops/prod/libs/intel/19.1.3.304/met/10.1.2
+export MetOnMachine=${MetOnMachine:-$MET_ROOT}
 export LEAD_List="-lead 000000 -lead 120000 -lead 240000 -lead 360000 -lead 480000 -lead 600000 -lead 720000 -lead 840000 -lead 960000 -lead 1080000 -lead 1200000 -lead 1320000 -lead 1440000 -lead 1560000 -lead 1680000"
 
 export stormYear=${YYYY}
@@ -107,7 +107,7 @@ export enddate="$YY02$MM02$DD02$HH02"
 echo "$startdate, $enddate"
 
 #--- run for TC_pairs
-cp ${PARMevs}/TCPairs_template.conf .
+cp ${PARMevs}/metplus_config/hurricane/stats/TCPairs_template.conf .
 export SEARCH0="METBASE_template"
 export SEARCH1="INPUT_BASE_template"
 export SEARCH2="OUTPUT_BASE_template"
@@ -130,7 +130,7 @@ run_metplus.py -c $STORMdata/TCPairs_template.conf
 
 #--- run for TC_stat 
 cd $STORMdata
-cp ${PARMevs}/TCStat_template.conf .
+cp ${PARMevs}/metplus_config/hurricane/stats/TCStat_template.conf .
 
 export SEARCHy="LEAD_template"
 sed -i "s|$SEARCH0|$MetOnMachine|g" TCStat_template.conf
@@ -206,7 +206,7 @@ cd $metTCcomout
 #export SEARCH3=INIT_BEG_template
 #export SEARCH4=INIT_END_template
 
-cp ${PARMevs}/TCStat_template_basin.conf .
+cp ${PARMevs}/metplus_config/hurricane/stats/TCStat_template_basin.conf .
 
 #export SEARCHy="LEAD_template"
 sed -i "s|$SEARCH0|$MetOnMachine|g" TCStat_template_basin.conf
