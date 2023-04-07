@@ -1,4 +1,4 @@
-#!/bin/bash -l 
+#!/bin/bash 
 
 #PBS -N evs_narre_stats
 #PBS -j oe

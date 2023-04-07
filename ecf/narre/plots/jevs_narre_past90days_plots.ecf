@@ -65,6 +65,5 @@ export run_mpi=yes
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
 export DATA_IN=${DATA_IN:-/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd}
-export ush_dir=/lfs/h2/emc/vpppg/noscrub/marcel.caron/verif_plotting/ush
 
 ${HOMEevs}/jobs/narre/plots/JEVS_NARRE_PLOTS
