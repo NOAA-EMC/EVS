@@ -22,9 +22,9 @@ export jlogfile=${jlogfile:-${DATA}/jlogfile.${jobid}}
 ####################################
 export NET=${NET:-evs}
 export COMPONENT=${COMPONENT:-hurricane}
-export RUN=${RUN:-global_det}
-export STEP=${STEP:-stats} 
-export VERIF_CASE=${VERIF_CASE:-tropcyc}   
+export RUN=${RUN:-global_det} # global_det, global_ens, regional
+export STEP=${STEP:-stats}  # plots, stats 
+export VERIF_CASE=${VERIF_CASE:-tropcyc}  # tropcyc, tcgen  
 
 ####################################
 # Determine Job Output Name on System
