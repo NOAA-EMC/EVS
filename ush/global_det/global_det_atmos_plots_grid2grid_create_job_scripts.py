@@ -14,11 +14,13 @@ import datetime
 import itertools
 import numpy as np
 import subprocess
+import copy
 import global_det_atmos_util as gda_util
 
 print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
+COMOUT = os.environ['COMOUT']
 DATA = os.environ['DATA']
 NET = os.environ['NET']
 RUN = os.environ['RUN']
@@ -32,6 +34,7 @@ USE_CFP = os.environ['USE_CFP']
 nproc = os.environ['nproc']
 start_date = os.environ['start_date']
 end_date = os.environ['end_date']
+NDAYS = str(os.environ['NDAYS'])
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
@@ -45,1185 +48,309 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
     os.makedirs(JOB_GROUP_jobs_dir)
 
 ################################################
-#### Plotting jobs
+#### Base/Common Plotting Information
 ################################################
-plot_jobs_dict = {
+base_plot_jobs_info_dict = {
     'flux': {},
     'means': {
-        'CAPESfcBased': {'line_type_stat_list': ['SL1L2/FBAR'],
-                         'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                          'TROPICS', 'CONUS', 'N60N90',
-                                          'S60S90', 'NAO', 'SAO',
-                                          'NPO', 'SPO'],
+        'CAPESfcBased': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
+                                      'CONUS', 'N60N90', 'S60S90', 'NAO',
+                                      'SAO', 'NPO', 'SPO'],
                          'fcst_var_dict': {'name': 'CAPE',
-                                           'levels': 'Z0',
-                                           'threshs': 'NA'},
+                                           'levels': ['Z0']},
                          'obs_var_dict': {'name': 'CAPE',
-                                          'levels': 'Z0',
-                                          'threshs': 'NA'},
-                         'interp_dict': {'method': 'NEAREST',
-                                         'points': '1'},
-                         'grid': 'G004',
-                         'plots_list': 'time_series'},
-        'CloudWater': {'line_type_stat_list': ['SL1L2/FBAR'],
-                       'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                        'TROPICS', 'CONUS', 'N60N90',
-                                        'S60S90', 'NAO', 'SAO',
-                                        'NPO', 'SPO'],
-                       'fcst_var_dict': {'name': 'CWAT',
-                                         'levels': 'L0',
-                                         'threshs': 'NA'},
-                       'obs_var_dict': {'name': 'CWAT',
-                                        'levels': 'L0',
-                                        'threshs': 'NA'},
-                       'interp_dict': {'method': 'NEAREST',
-                                       'points': '1'},
-                       'grid': 'G004',
-                       'plots_list': 'time_series'},
-        'GeoHeightTropopause': {'line_type_stat_list': ['SL1L2/FBAR'],
-                                'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                                 'TROPICS', 'CONUS', 'N60N90',
-                                                 'S60S90', 'NAO', 'SAO',
-                                                 'NPO', 'SPO'],
-                                'fcst_var_dict': {'name': 'HGT',
-                                                  'levels': 'TROPOPAUSE',
-                                                  'threshs': 'NA'},
-                                'obs_var_dict': {'name': 'HGT',
-                                                 'levels': 'TROPOPAUSE',
-                                                 'threshs': 'NA'},
-                                'interp_dict': {'method': 'NEAREST',
-                                                'points': '1'},
-                                'grid': 'G004',
-                                'plots_list': 'time_series'},
-        'PBLHeight': {'line_type_stat_list': ['SL1L2/FBAR'],
-                      'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                       'TROPICS', 'CONUS', 'N60N90',
-                                       'S60S90', 'NAO', 'SAO',
-                                       'NPO', 'SPO'],
-                      'fcst_var_dict': {'name': 'HPBL',
-                                        'levels': 'L0',
-                                        'threshs': 'NA'},
-                      'obs_var_dict': {'name': 'HPBL',
-                                       'levels': 'L0',
-                                       'threshs': 'NA'},
-                      'interp_dict': {'method': 'NEAREST',
-                                      'points': '1'},
-                      'grid': 'G004',
-                      'plots_list': 'time_series'},
-        'PrecipWater': {'line_type_stat_list': ['SL1L2/FBAR'],
-                        'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                         'TROPICS', 'CONUS', 'N60N90',
-                                         'S60S90', 'NAO', 'SAO',
-                                         'NPO', 'SPO'],
-                        'fcst_var_dict': {'name': 'PWAT',
-                                          'levels': 'L0',
-                                          'threshs': 'NA'},
-                        'obs_var_dict': {'name': 'PWAT',
-                                         'levels': 'L0',
-                                         'threshs': 'NA'},
-                        'interp_dict': {'method': 'NEAREST',
-                                        'points': '1'},
-                        'grid': 'G004',
-                        'plots_list': 'time_series'},
-        'PresSeaLevel': {'line_type_stat_list': ['SL1L2/FBAR'],
-                         'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                          'TROPICS', 'CONUS', 'N60N90',
-                                          'S60S90', 'NAO', 'SAO',
-                                          'NPO', 'SPO'],
-                         'fcst_var_dict': {'name': 'PRMSL',
-                                           'levels': 'Z0',
-                                           'threshs': 'NA'},
-                         'obs_var_dict': {'name': 'PRMSL',
-                                          'levels': 'Z0',
-                                          'threshs': 'NA'},
-                         'interp_dict': {'method': 'NEAREST',
-                                         'points': '1'},
-                         'grid': 'G004',
-                         'plots_list': 'time_series'},
-        'PresSfc': {'line_type_stat_list': ['SL1L2/FBAR'],
-                    'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                     'TROPICS', 'CONUS', 'N60N90',
-                                     'S60S90', 'NAO', 'SAO',
-                                     'NPO', 'SPO'],
-                    'fcst_var_dict': {'name': 'PRES',
-                                      'levels': 'Z0',
-                                      'threshs': 'NA'},
-                    'obs_var_dict': {'name': 'PRES',
-                                     'levels': 'Z0',
-                                     'threshs': 'NA'},
-                    'interp_dict': {'method': 'NEAREST',
-                                    'points': '1'},
-                    'grid': 'G004',
-                    'plots_list': 'time_series'},
-        'PresTropopause': {'line_type_stat_list': ['SL1L2/FBAR'],
-                           'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                            'TROPICS', 'CONUS', 'N60N90',
-                                            'S60S90', 'NAO', 'SAO',
-                                            'NPO', 'SPO'],
-                           'fcst_var_dict': {'name': 'PRES',
-                                             'levels': 'TROPOPAUSE',
-                                             'threshs': 'NA'},
-                           'obs_var_dict': {'name': 'PRES',
-                                            'levels': 'TROPOPAUSE',
-                                            'threshs': 'NA'},
-                           'interp_dict': {'method': 'NEAREST',
-                                           'points': '1'},
-                           'grid': 'G004',
-                           'plots_list': 'time_series'},
-        'RelHum2m': {'line_type_stat_list': ['SL1L2/FBAR'],
-                     'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                      'TROPICS', 'CONUS', 'N60N90',
-                                      'S60S90', 'NAO', 'SAO',
-                                      'NPO', 'SPO'],
-                     'fcst_var_dict': {'name': 'RH',
-                                       'levels': 'Z2',
-                                       'threshs': 'NA'},
-                     'obs_var_dict': {'name': 'RH',
-                                      'levels': 'Z2',
-                                      'threshs': 'NA'},
-                     'interp_dict': {'method': 'NEAREST',
-                                     'points': '1'},
-                     'grid': 'G004',
-                     'plots_list': 'time_series'},
-        'SnowWaterEqv': {'line_type_stat_list': ['SL1L2/FBAR'],
-                         'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                          'TROPICS', 'CONUS', 'N60N90',
-                                          'S60S90', 'NAO', 'SAO',
-                                          'NPO', 'SPO'],
-                         'fcst_var_dict': {'name': 'WEASD',
-                                           'levels': 'Z0',
-                                           'threshs': 'NA'},
-                         'obs_var_dict': {'name': 'WEASD',
-                                          'levels': 'Z0',
-                                          'threshs': 'NA'},
-                         'interp_dict': {'method': 'NEAREST',
-                                         'points': '1'},
-                         'grid': 'G004',
-                         'plots_list': 'time_series'},
-        'SpefHum2m': {'line_type_stat_list': ['SL1L2/FBAR'],
-                      'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                       'TROPICS', 'CONUS', 'N60N90',
-                                       'S60S90', 'NAO', 'SAO',
-                                       'NPO', 'SPO'],
-                      'fcst_var_dict': {'name': 'SPFH',
-                                        'levels': 'Z2',
-                                        'threshs': 'NA'},
-                      'obs_var_dict': {'name': 'SPFH',
-                                       'levels': 'Z2',
-                                       'threshs': 'NA'},
-                      'interp_dict': {'method': 'NEAREST',
-                                      'points': '1'},
-                      'grid': 'G004',
-                      'plots_list': 'time_series'},
-        'Temp2m': {'line_type_stat_list': ['SL1L2/FBAR'],
-                   'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                    'TROPICS', 'CONUS', 'N60N90',
-                                    'S60S90', 'NAO', 'SAO',
+                                          'levels': ['Z0']}},
+        'CloudWater': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
+                                    'CONUS', 'N60N90', 'S60S90', 'NAO', 'SAO',
                                     'NPO', 'SPO'],
+                       'fcst_var_dict': {'name': 'CWAT',
+                                         'levels': ['L0']},
+                       'obs_var_dict': {'name': 'CWAT',
+                                        'levels': ['L0']}},
+        'GeoHeightTropopause': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM',
+                                             'TROPICS', 'CONUS', 'N60N90',
+                                             'S60S90', 'NAO', 'SAO', 'NPO',
+                                             'SPO'],
+                                'fcst_var_dict': {'name': 'HGT',
+                                                  'levels': ['TROPOPAUSE']},
+                                'obs_var_dict': {'name': 'HGT',
+                                                 'levels': ['TROPOPAUSE']}},
+        'PBLHeight': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
+                                   'CONUS', 'N60N90', 'S60S90', 'NAO', 'SAO',
+                                   'NPO', 'SPO'],
+                      'fcst_var_dict': {'name': 'HPBL',
+                                        'levels': ['L0']},
+                      'obs_var_dict': {'name': 'HPBL',
+                                       'levels': ['L0']}},
+        'PrecipWater': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
+                                     'CONUS', 'N60N90', 'S60S90', 'NAO', 'SAO',
+                                     'NPO', 'SPO'],
+                        'fcst_var_dict': {'name': 'PWAT',
+                                          'levels': ['L0']},
+                        'obs_var_dict': {'name': 'PWAT',
+                                         'levels': ['L0']}},
+        'PresSeaLevel': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
+                                      'CONUS', 'N60N90', 'S60S90', 'NAO',
+                                      'SAO', 'NPO', 'SPO'],
+                         'fcst_var_dict': {'name': 'PRMSL',
+                                           'levels': ['Z0']},
+                         'obs_var_dict': {'name': 'PRMSL',
+                                          'levels': ['Z0']}},
+        'PresSfc': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS', 'CONUS',
+                                 'N60N90', 'S60S90', 'NAO', 'SAO', 'NPO',
+                                 'SPO'],
+                    'fcst_var_dict': {'name': 'PRES',
+                                      'levels': ['Z0']},
+                    'obs_var_dict': {'name': 'PRES',
+                                     'levels': 'Z0'}},
+        'PresTropopause': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
+                                        'CONUS', 'N60N90', 'S60S90', 'NAO',
+                                        'SAO', 'NPO', 'SPO'],
+                           'fcst_var_dict': {'name': 'PRES',
+                                             'levels': ['TROPOPAUSE']},
+                           'obs_var_dict': {'name': 'PRES',
+                                            'levels': ['TROPOPAUSE']}},
+        'RelHum2m': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS', 'CONUS',
+                                  'N60N90', 'S60S90', 'NAO', 'SAO', 'NPO',
+                                  'SPO'],
+                     'fcst_var_dict': {'name': 'RH',
+                                       'levels': ['Z2']},
+                     'obs_var_dict': {'name': 'RH',
+                                      'levels': ['Z2']}},
+        'SnowWaterEqv': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
+                                      'CONUS', 'N60N90', 'S60S90', 'NAO',
+                                      'SAO', 'NPO', 'SPO'],
+                         'fcst_var_dict': {'name': 'WEASD',
+                                           'levels': ['Z0']},
+                         'obs_var_dict': {'name': 'WEASD',
+                                          'levels': ['Z0']}},
+        'SpefHum2m': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
+                                   'CONUS', 'N60N90', 'S60S90', 'NAO', 'SAO',
+                                   'NPO', 'SPO'],
+                      'fcst_var_dict': {'name': 'SPFH',
+                                        'levels': ['Z2']},
+                      'obs_var_dict': {'name': 'SPFH',
+                                       'levels': ['Z2']}},
+        'Temp2m': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS', 'CONUS',
+                                'N60N90', 'S60S90', 'NAO', 'SAO', 'NPO',
+                                'SPO'],
                    'fcst_var_dict': {'name': 'TMP',
-                                     'levels': 'Z2',
-                                     'threshs': 'NA'},
+                                     'levels': ['Z2']},
                    'obs_var_dict': {'name': 'TMP',
-                                    'levels': 'Z2',
-                                    'threshs': 'NA'},
-                   'interp_dict': {'method': 'NEAREST',
-                                   'points': '1'},
-                   'grid': 'G004',
-                   'plots_list': 'time_series'},
-        'TempTropopause': {'line_type_stat_list': ['SL1L2/FBAR'],
-                           'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                            'TROPICS', 'CONUS', 'N60N90',
-                                            'S60S90', 'NAO', 'SAO',
-                                            'NPO', 'SPO'],
+                                    'levels': ['Z2']}},
+        'TempTropopause': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
+                                        'CONUS', 'N60N90', 'S60S90', 'NAO',
+                                        'SAO', 'NPO', 'SPO'],
                            'fcst_var_dict': {'name': 'TMP',
-                                             'levels': 'TROPOPAUSE',
-                                             'threshs': 'NA'},
+                                             'levels': ['TROPOPAUSE']},
                            'obs_var_dict': {'name': 'TMP',
-                                            'levels': 'TROPOPAUSE',
-                                            'threshs': 'NA'},
-                           'interp_dict': {'method': 'NEAREST',
-                                           'points': '1'},
-                           'grid': 'G004',
-                           'plots_list': 'time_series'},
-        'TempSoilTopLayer': {'line_type_stat_list': ['SL1L2/FBAR'],
-                             'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                              'TROPICS', 'CONUS', 'N60N90',
-                                              'S60S90', 'NAO', 'SAO',
-                                              'NPO', 'SPO'],
+                                            'levels': ['TROPOPAUSE']}},
+        'TempSoilTopLayer': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
+                                          'CONUS', 'N60N90', 'S60S90', 'NAO',
+                                          'SAO', 'NPO', 'SPO'],
                              'fcst_var_dict': {'name': 'TSOIL',
-                                               'levels': 'Z0.1-0',
-                                               'threshs': 'NA'},
+                                               'levels': ['Z0.1-0']},
                              'obs_var_dict': {'name': 'TSOIL',
-                                              'levels': 'Z0.1-0',
-                                              'threshs': 'NA'},
-                             'interp_dict': {'method': 'NEAREST',
-                                             'points': '1'},
-                             'grid': 'G004',
-                             'plots_list': 'time_series'},
-        'TotalOzone': {'line_type_stat_list': ['SL1L2/FBAR'],
-                       'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                        'TROPICS', 'CONUS', 'N60N90',
-                                        'S60S90', 'NAO', 'SAO',
-                                        'NPO', 'SPO'],
+                                              'levels': ['Z0.1-0']}},
+        'TotalOzone': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
+                                    'CONUS', 'N60N90', 'S60S90', 'NAO', 'SAO',
+                                    'NPO', 'SPO'],
                        'fcst_var_dict': {'name': 'TOZNE',
-                                         'levels': 'L0',
-                                         'threshs': 'NA'},
+                                         'levels': ['L0']},
                        'obs_var_dict': {'name': 'TOZNE',
-                                        'levels': 'L0',
-                                        'threshs': 'NA'},
-                       'interp_dict': {'method': 'NEAREST',
-                                       'points': '1'},
-                       'grid': 'G004',
-                       'plots_list': 'time_series'},
-        'UWind10m': {'line_type_stat_list': ['SL1L2/FBAR'],
-                     'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                      'TROPICS', 'CONUS', 'N60N90',
-                                      'S60S90', 'NAO', 'SAO',
-                                      'NPO', 'SPO'],
+                                        'levels': ['L0']}},
+        'UWind10m': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS', 'CONUS',
+                                  'N60N90', 'S60S90', 'NAO', 'SAO', 'NPO',
+                                  'SPO'],
                      'fcst_var_dict': {'name': 'UGRD',
-                                       'levels': 'Z10',
-                                       'threshs': 'NA'},
+                                       'levels': ['Z10']},
                      'obs_var_dict': {'name': 'UGRD',
-                                      'levels': 'Z10',
-                                      'threshs': 'NA'},
-                     'interp_dict': {'method': 'NEAREST',
-                                     'points': '1'},
-                     'grid': 'G004',
-                     'plots_list': 'time_series'},
-        'VolSoilMoistTopLayer': {'line_type_stat_list': ['SL1L2/FBAR'],
-                                 'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                                  'TROPICS', 'CONUS', 'N60N90',
-                                                  'S60S90', 'NAO', 'SAO',
-                                                  'NPO', 'SPO'],
+                                      'levels': ['Z10']}},
+        'VolSoilMoistTopLayer': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM',
+                                              'TROPICS', 'CONUS', 'N60N90',
+                                              'S60S90', 'NAO', 'SAO', 'NPO',
+                                              'SPO'],
                                  'fcst_var_dict': {'name': 'SOILW',
-                                                   'levels': 'Z0.1-0',
-                                                   'threshs': 'NA'},
+                                                   'levels': ['Z0.1-0']},
                                  'obs_var_dict': {'name': 'SOILW',
-                                                  'levels': 'Z0.1-0',
-                                                  'threshs': 'NA'},
-                                 'interp_dict': {'method': 'NEAREST',
-                                                 'points': '1'},
-                                 'grid': 'G004',
-                                 'plots_list': 'time_series'},
-        'VWind10m': {'line_type_stat_list': ['SL1L2/FBAR'],
-                     'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                      'TROPICS', 'CONUS', 'N60N90',
-                                      'S60S90', 'NAO', 'SAO',
-                                      'NPO', 'SPO'],
+                                                  'levels': ['Z0.1-0']}},
+        'VWind10m': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS', 'CONUS',
+                                  'N60N90', 'S60S90', 'NAO', 'SAO', 'NPO',
+                                  'SPO'],
                      'fcst_var_dict': {'name': 'VGRD',
-                                       'levels': 'Z10',
-                                       'threshs': 'NA'},
+                                       'levels': ['Z10']},
                      'obs_var_dict': {'name': 'VGRD',
-                                      'levels': 'Z10',
-                                      'threshs': 'NA'},
-                     'interp_dict': {'method': 'NEAREST',
-                                     'points': '1'},
-                     'grid': 'G004',
-                     'plots_list': 'time_series'},
+                                      'levels': ['Z10']}},
     },
     'ozone': {},
     'precip': {
-        '24hrCCPA': {'line_type_stat_list': ['CTC/ETS', 'CTC/FBIAS'],
-                     'vx_mask_list': ['CONUS', 'CONUS_East',
-                                      'CONUS_West', 'CONUS_Central',
-                                      'CONUS_South'],
+        '24hrCCPA': {'vx_masks': ['CONUS', 'CONUS_East', 'CONUS_West',
+                                  'CONUS_Central', 'CONUS_South'],
                      'fcst_var_dict': {'name': 'APCP',
-                                       'levels': 'A24',
-                                       'threshs': ('ge0.1, ge0.5, ge1, ge5, '
-                                                   +'ge10, ge25, ge50, ge75, '
-                                                   +'ge0.254, ge2.54, ge6.35, '
-                                                   +'ge12.7, ge25.4, ge50.8, '
-                                                   +'ge76.2, ge101.6')},
+                                       'levels': ['A24']},
                      'obs_var_dict': {'name': 'APCP',
-                                     'levels': 'A24',
-                                     'threshs': ('ge0.1, ge0.5, ge1, ge5, '
-                                                 +'ge10, ge25, ge50, ge75, '
-                                                 +'ge0.254, ge2.54, ge6.35, '
-                                                 +'ge12.7, ge25.4, ge50.8, '
-                                                 +'ge76.2, ge101.6')},
-                     'interp_dict': {'method': 'NEAREST',
-                                     'points': '1'},
-                     'grid': 'G211',
-                     'obs_name': '24hrCCPA',
-                     'plots_list': 'time_series, lead_average'},
-        '24hrCCPA_Nbrhd1': {'line_type_stat_list': ['NBRCNT/FSS'],
-                            'vx_mask_list': ['CONUS', 'CONUS_East',
-                                             'CONUS_West', 'CONUS_Central',
-                                             'CONUS_South'],
-                            'fcst_var_dict': {'name': 'APCP',
-                                              'levels': 'A24',
-                                              'threshs': ('ge0.1, ge0.5, ge1, '
-                                                          +'ge5, ge10, ge25, '
-                                                          +'ge50, ge75, '
-                                                          +'ge0.254, ge2.54, '
-                                                          +'ge6.35, ge12.7, '
-                                                          +'ge25.4, ge50.8, '
-                                                          +'ge76.2, ge101.6')},
-                            'obs_var_dict': {'name': 'APCP',
-                                             'levels': 'A24',
-                                             'threshs': ('ge0.1, ge0.5, ge1, '
-                                                         +'ge5, ge10, ge25, '
-                                                         +'ge50, ge75, '
-                                                         +'ge0.254, ge2.54, '
-                                                         +'ge6.35, ge12.7, '
-                                                         +'ge25.4, ge50.8, '
-                                                         +'ge76.2, ge101.6')},
-                           'interp_dict': {'method': 'NBRHD_SQUARE',
-                                           'points': '1'},
-                           'grid': 'G240',
-                           'obs_name': '24hrCCPA',
-                           'plots_list': 'time_series, lead_average'},
-        '24hrCCPA_Nbrhd169': {'line_type_stat_list': ['NBRCNT/FSS'],
-                              'vx_mask_list': ['CONUS', 'CONUS_East',
-                                               'CONUS_West', 'CONUS_Central',
-                                               'CONUS_South'],
-                              'fcst_var_dict': {'name': 'APCP',
-                                                'levels': 'A24',
-                                                'threshs': ('ge0.1, ge0.5, ge1, '
-                                                            +'ge5, ge10, ge25, '
-                                                            +'ge50, ge75, '
-                                                            +'ge0.254, ge2.54, '
-                                                            +'ge6.35, ge12.7, '
-                                                            +'ge25.4, ge50.8, '
-                                                            +'ge76.2, ge101.6')},
-                              'obs_var_dict': {'name': 'APCP',
-                                               'levels': 'A24',
-                                               'threshs': ('ge0.1, ge0.5, ge1, '
-                                                           +'ge5, ge10, ge25, '
-                                                           +'ge50, ge75, '
-                                                           +'ge0.254, ge2.54, '
-                                                           +'ge6.35, ge12.7, '
-                                                           +'ge25.4, ge50.8, '
-                                                           +'ge76.2, ge101.6')},
-                             'interp_dict': {'method': 'NBRHD_SQUARE',
-                                             'points': '169'},
-                             'grid': 'G240',
-                             'obs_name': '24hrCCPA',
-                             'plots_list': 'time_series, lead_average'},
-        '24hrCCPA_Nbrhd529': {'line_type_stat_list': ['NBRCNT/FSS'],
-                              'vx_mask_list': ['CONUS', 'CONUS_East',
-                                               'CONUS_West', 'CONUS_Central',
-                                               'CONUS_South'],
-                              'fcst_var_dict': {'name': 'APCP',
-                                                'levels': 'A24',
-                                                'threshs': ('ge0.1, ge0.5, ge1, '
-                                                            +'ge5, ge10, ge25, '
-                                                            +'ge50, ge75, '
-                                                            +'ge0.254, ge2.54, '
-                                                            +'ge6.35, ge12.7, '
-                                                            +'ge25.4, ge50.8, '
-                                                            +'ge76.2, ge101.6')},
-                              'obs_var_dict': {'name': 'APCP',
-                                               'levels': 'A24',
-                                               'threshs': ('ge0.1, ge0.5, ge1, '
-                                                           +'ge5, ge10, ge25, '
-                                                           +'ge50, ge75, '
-                                                           +'ge0.254, ge2.54, '
-                                                           +'ge6.35, ge12.7, '
-                                                           +'ge25.4, ge50.8, '
-                                                           +'ge76.2, ge101.6')},
-                             'interp_dict': {'method': 'NBRHD_SQUARE',
-                                             'points': '529'},
-                             'grid': 'G240',
-                             'obs_name': '24hrCCPA',
-                             'plots_list': 'time_series, lead_average'},
-        '24hrCCPA_Nbrhd1089': {'line_type_stat_list': ['NBRCNT/FSS'],
-                               'vx_mask_list': ['CONUS', 'CONUS_East',
-                                                'CONUS_West', 'CONUS_Central',
-                                                'CONUS_South'],
-                               'fcst_var_dict': {'name': 'APCP',
-                                                 'levels': 'A24',
-                                                 'threshs': ('ge0.1, ge0.5, ge1, '
-                                                             +'ge5, ge10, ge25, '
-                                                             +'ge50, ge75, '
-                                                             +'ge0.254, ge2.54, '
-                                                             +'ge6.35, ge12.7, '
-                                                             +'ge25.4, ge50.8, '
-                                                             +'ge76.2, ge101.6')},
-                               'obs_var_dict': {'name': 'APCP',
-                                                'levels': 'A24',
-                                                'threshs': ('ge0.1, ge0.5, ge1, '
-                                                            +'ge5, ge10, ge25, '
-                                                            +'ge50, ge75, '
-                                                            +'ge0.254, ge2.54, '
-                                                            +'ge6.35, ge12.7, '
-                                                            +'ge25.4, ge50.8, '
-                                                            +'ge76.2, ge101.6')},
-                              'interp_dict': {'method': 'NBRHD_SQUARE',
-                                              'points': '1089'},
-                              'grid': 'G240',
-                              'obs_name': '24hrCCPA',
-                              'plots_list': 'time_series, lead_average'},
-        '24hrCCPA_Nbrhd1849': {'line_type_stat_list': ['NBRCNT/FSS'],
-                               'vx_mask_list': ['CONUS', 'CONUS_East',
-                                                'CONUS_West', 'CONUS_Central',
-                                                'CONUS_South'],
-                               'fcst_var_dict': {'name': 'APCP',
-                                                 'levels': 'A24',
-                                                 'threshs': ('ge0.1, ge0.5, ge1, '
-                                                             +'ge5, ge10, ge25, '
-                                                             +'ge50, ge75, '
-                                                             +'ge0.254, ge2.54, '
-                                                             +'ge6.35, ge12.7, '
-                                                             +'ge25.4, ge50.8, '
-                                                             +'ge76.2, ge101.6')},
-                               'obs_var_dict': {'name': 'APCP',
-                                                'levels': 'A24',
-                                                'threshs': ('ge0.1, ge0.5, ge1, '
-                                                            +'ge5, ge10, ge25, '
-                                                            +'ge50, ge75, '
-                                                            +'ge0.254, ge2.54, '
-                                                            +'ge6.35, ge12.7, '
-                                                            +'ge25.4, ge50.8, '
-                                                            +'ge76.2, ge101.6')},
-                              'interp_dict': {'method': 'NBRHD_SQUARE',
-                                              'points': '1849'},
-                              'grid': 'G240',
-                              'obs_name': '24hrCCPA',
-                              'plots_list': 'time_series, lead_average'},
-        '24hrCCPA_Nbrhd2809': {'line_type_stat_list': ['NBRCNT/FSS'],
-                               'vx_mask_list': ['CONUS', 'CONUS_East',
-                                                'CONUS_West', 'CONUS_Central',
-                                                'CONUS_South'],
-                               'fcst_var_dict': {'name': 'APCP',
-                                                 'levels': 'A24',
-                                                 'threshs': ('ge0.1, ge0.5, ge1, '
-                                                             +'ge5, ge10, ge25, '
-                                                             +'ge50, ge75, '
-                                                             +'ge0.254, ge2.54, '
-                                                             +'ge6.35, ge12.7, '
-                                                             +'ge25.4, ge50.8, '
-                                                             +'ge76.2, ge101.6')},
-                               'obs_var_dict': {'name': 'APCP',
-                                                'levels': 'A24',
-                                                'threshs': ('ge0.1, ge0.5, ge1, '
-                                                            +'ge5, ge10, ge25, '
-                                                            +'ge50, ge75, '
-                                                            +'ge0.254, ge2.54, '
-                                                            +'ge6.35, ge12.7, '
-                                                            +'ge25.4, ge50.8, '
-                                                            +'ge76.2, ge101.6')},
-                              'interp_dict': {'method': 'NBRHD_SQUARE',
-                                              'points': '2809'},
-                              'grid': 'G240',
-                              'obs_name': '24hrCCPA',
-                              'plots_list': 'time_series, lead_average'},
-        '24hrCCPA_Nbrhd3969': {'line_type_stat_list': ['NBRCNT/FSS'],
-                               'vx_mask_list': ['CONUS', 'CONUS_East',
-                                                'CONUS_West', 'CONUS_Central',
-                                                'CONUS_South'],
-                               'fcst_var_dict': {'name': 'APCP',
-                                                 'levels': 'A24',
-                                                 'threshs': ('ge0.1, ge0.5, ge1, '
-                                                             +'ge5, ge10, ge25, '
-                                                             +'ge50, ge75, '
-                                                             +'ge0.254, ge2.54, '
-                                                             +'ge6.35, ge12.7, '
-                                                             +'ge25.4, ge50.8, '
-                                                             +'ge76.2, ge101.6')},
-                               'obs_var_dict': {'name': 'APCP',
-                                                'levels': 'A24',
-                                                'threshs': ('ge0.1, ge0.5, ge1, '
-                                                            +'ge5, ge10, ge25, '
-                                                            +'ge50, ge75, '
-                                                            +'ge0.254, ge2.54, '
-                                                            +'ge6.35, ge12.7, '
-                                                            +'ge25.4, ge50.8, '
-                                                            +'ge76.2, ge101.6')},
-                              'interp_dict': {'method': 'NBRHD_SQUARE',
-                                              'points': '3969'},
-                              'grid': 'G240',
-                              'obs_name': '24hrCCPA',
-                              'plots_list': 'time_series, lead_average'},
-        '24hrCCPAPerfDia': {'line_type_stat_list': ['CTC/PERF_DIA'],
-                            'vx_mask_list': ['CONUS', 'CONUS_East',
-                                             'CONUS_West', 'CONUS_Central',
-                                             'CONUS_South'],
-                            'fcst_var_dict': {'name': 'APCP',
-                                              'levels': 'A24',
-                                              'threshs': ('ge0.1, ge0.5, '
-                                                          +'ge1, ge5, '
-                                                          +'ge10, ge25, '
-                                                          +'ge50, ge75')},
-                            'obs_var_dict': {'name': 'APCP',
-                                             'levels': 'A24',
-                                             'threshs': ('ge0.1, ge0.5, '
-                                                         +'ge1, ge5, '
-                                                         +'ge10, ge25, '
-                                                         +'ge50, ge75')},
-                            'interp_dict': {'method': 'NEAREST',
-                                            'points': '1'},
-                            'grid': 'G211',
-                            'obs_name': '24hrCCPA',
-                            'plots_list': 'performance_diagram'},
-        '24hrAccumMaps': {'line_type_stat_list': ['SL1L2/FBAR'],
-                          'vx_mask_list': ['CONUS', 'AK', 'PR', 'HI'],
-                          'fcst_var_dict': {'name': 'APCP',
-                                            'levels': 'A24',
-                                            'threshs': 'NA'},
-                          'obs_var_dict': {'name': 'APCP',
-                                           'levels': 'A24',
-                                           'threshs': 'NA'},
-                          'interp_dict': {'method': 'NEAREST',
-                                          'points': '1'},
-                          'grid': 'G211',
-                          'obs_name': '24hrCCPA',
-                          'plots_list': 'precip_spatial_map'}
+                                     'levels': ['A24']},
+                     'obs_name': '24hrCCPA'},
     },
     'pres_levs': {
-        'GeoHeight': {'line_type_stat_list': ['SAL1L2/ACC', 'GRAD/S1'],
-                      'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                       'TROPICS'],
+        'GeoHeight': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS'],
                       'fcst_var_dict': {'name': 'HGT',
-                                        'levels': 'P1000, P700, P500, P250',
-                                        'threshs': 'NA'},
+                                        'levels': ['P1000', 'P700',
+                                                   'P500', 'P250']},
                       'obs_var_dict': {'name': 'HGT',
-                                      'levels': 'P1000, P700, P500, P250',
-                                      'threshs': 'NA'},
-                      'interp_dict': {'method': 'NEAREST',
-                                      'points': '1'},
-                      'grid': 'G004',
-                      'plots_list': 'time_series, lead_average, lead_by_date'},
-        'GeoHeight_FourierDecom0-20': {'line_type_stat_list': ['SAL1L2/ACC'],
-                                       'vx_mask_list': ['GLOBAL', 'NHEM',
-                                                        'SHEM', 'TROPICS'],
-                                       'fcst_var_dict': {'name': 'HGT_DECOMP',
-                                                         'levels': 'P500',
-                                                         'threshs': 'NA'},
-                                       'obs_var_dict': {'name': 'HGT_DECOMP',
-                                                        'levels': 'P500',
-                                                        'threshs': 'NA'},
-                                       'interp_dict': {'method': 'WV1_0-20',
-                                                       'points': 'NA'},
-                                       'grid': 'G004',
-                                       'plots_list': ('time_series, '
-                                                      +'lead_average, '
-                                                      +'lead_by_date')},
-        'GeoHeight_FourierDecom0-3': {'line_type_stat_list': ['SAL1L2/ACC'],
-                                      'vx_mask_list': ['GLOBAL', 'NHEM',
-                                                       'SHEM', 'TROPICS'],
-                                      'fcst_var_dict': {'name': 'HGT_DECOMP',
-                                                        'levels': 'P500',
-                                                        'threshs': 'NA'},
-                                      'obs_var_dict': {'name': 'HGT_DECOMP',
-                                                       'levels': 'P500',
-                                                       'threshs': 'NA'},
-                                      'interp_dict': {'method': 'WV1_0-3',
-                                                      'points': 'NA'},
-                                      'grid': 'G004',
-                                      'plots_list': ('time_series, '
-                                                     +'lead_average, '
-                                                     +'lead_by_date')},
-        'GeoHeight_FourierDecom4-9': {'line_type_stat_list': ['SAL1L2/ACC'],
-                                      'vx_mask_list': ['GLOBAL', 'NHEM',
-                                                       'SHEM', 'TROPICS'],
-                                      'fcst_var_dict': {'name': 'HGT_DECOMP',
-                                                        'levels': 'P500',
-                                                        'threshs': 'NA'},
-                                      'obs_var_dict': {'name': 'HGT_DECOMP',
-                                                       'levels': 'P500',
-                                                       'threshs': 'NA'},
-                                      'interp_dict': {'method': 'WV1_4-9',
-                                                      'points': 'NA'},
-                                      'grid': 'G004',
-                                      'plots_list': ('time_series, '
-                                                     +'lead_average, '
-                                                     +'lead_by_date')},
-        'GeoHeight_FourierDecom10-20': {'line_type_stat_list': ['SAL1L2/ACC'],
-                                        'vx_mask_list': ['GLOBAL', 'NHEM',
-                                                         'SHEM', 'TROPICS'],
-                                        'fcst_var_dict': {'name': 'HGT_DECOMP',
-                                                          'levels': 'P500',
-                                                          'threshs': 'NA'},
-                                        'obs_var_dict': {'name': 'HGT_DECOMP',
-                                                         'levels': 'P500',
-                                                         'threshs': 'NA'},
-                                        'interp_dict': {'method': 'WV1_10-20',
-                                                        'points': 'NA'},
-                                        'grid': 'G004',
-                                        'plots_list': ('time_series, '
-                                                       +'lead_average, '
-                                                       +'lead_by_date')},
-        'DailyAvg_GeoHeightAnom': {'line_type_stat_list': ['SL1L2/ME',
-                                                           'SL1L2/RMSE'],
-                                   'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                                    'TROPICS'],
+                                       'levels': ['P1000', 'P700',
+                                                  'P500', 'P250']}},
+        'GeoHeight_FourierDecomp': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM',
+                                                 'TROPICS'],
+                                    'fcst_var_dict': {'name': 'HGT_DECOMP',
+                                                      'levels': ['P500']},
+                                    'obs_var_dict': {'name': 'HGT_DECOMP',
+                                                     'levels': ['P500']}},
+        'DailyAvg_GeoHeightAnom': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM',
+                                               'TROPICS'],
                                    'fcst_var_dict': {'name': 'HGT_ANOM_DAILYAVG',
-                                                     'levels': 'P500',
-                                                     'threshs': 'NA'},
+                                                     'levels': ['P500']},
                                    'obs_var_dict': {'name': 'HGT_ANOM_DAILYAVG',
-                                                    'levels': 'P500',
-                                                    'threshs': 'NA'},
-                                   'interp_dict': {'method': 'NEAREST',
-                                                   'points': '1'},
-                                   'grid': 'G004',
-                                   'plots_list': 'time_series, lead_average'},
-        'Ozone': {'line_type_stat_list': ['SL1L2/ME', 'SL1L2/RMSE'],
-                  'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                   'TROPICS'],
+                                                    'levels': ['P500']}},
+        'Ozone': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS'],
                   'fcst_var_dict': {'name': 'O3MR',
-                                    'levels': ('P925, P100, P70, P50, P30, '
-                                               +'P20, P10, P5, P1'),
-                                    'threshs': 'NA'},
+                                    'levels': ['P925', 'P100', 'P70', 'P50',
+                                               'P30', 'P20', 'P10', 'P5',
+                                               'P1']},
                   'obs_var_dict': {'name': 'O3MR',
-                                   'levels': ('P925, P100, P70, P50, P30, '
-                                              +'P20, P10, P5, P1'),
-                                   'threshs': 'NA'},
-                  'interp_dict': {'method': 'NEAREST',
-                                  'points': '1'},
-                  'grid': 'G004',
-                  'plots_list': ('time_series, lead_average, '
-                                 +'stat_by_level, lead_by_level')},
-        'PresSeaLevel': {'line_type_stat_list': ['SAL1L2/ACC', 'SL1L2/ME',
-                                                 'SL1L2/RMSE', 'GRAD/S1'],
-                         'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                          'TROPICS'],
+                                   'levels': ['P925', 'P100', 'P70', 'P50',
+                                              'P30', 'P20', 'P10', 'P5',
+                                              'P1']}},
+        'PresSeaLevel': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS'],
                          'fcst_var_dict': {'name': 'PRMSL',
-                                           'levels': 'Z0',
-                                           'threshs': 'NA'},
+                                           'levels': ['Z0']},
                          'obs_var_dict': {'name': 'PRMSL',
-                                          'levels': 'Z0',
-                                          'threshs': 'NA'},
-                         'interp_dict': {'method': 'NEAREST',
-                                         'points': '1'},
-                         'grid': 'G004',
-                         'plots_list': ('time_series, lead_average, '
-                                        +'lead_by_date')},
-        'Temp': {'line_type_stat_list': ['SAL1L2/ACC'],
-                 'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                  'TROPICS'],
+                                          'levels': ['Z0']}},
+        'Temp': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS'],
                  'fcst_var_dict': {'name': 'TMP',
-                                   'levels': 'P850, P500, P250',
-                                   'threshs': 'NA'},
+                                   'levels': ['P850', 'P500', 'P250']},
                  'obs_var_dict': {'name': 'TMP',
-                                  'levels': 'P850, P500, P250',
-                                  'threshs': 'NA'},
-                 'interp_dict': {'method': 'NEAREST',
-                                 'points': '1'},
-                 'grid': 'G004',
-                 'plots_list': 'time_series, lead_average, lead_by_date'},
-        'UWind': {'line_type_stat_list': ['SAL1L2/ACC'],
-                  'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                   'TROPICS'],
+                                  'levels': ['P850', 'P500', 'P250']}},
+        'UWind': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS'],
                   'fcst_var_dict': {'name': 'UGRD',
-                                    'levels': 'P850, P500, P250',
-                                    'threshs': 'NA'},
+                                    'levels': ['P850', 'P500', 'P250']},
                   'obs_var_dict': {'name': 'UGRD',
-                                   'levels': 'P850, P500, P250',
-                                   'threshs': 'NA'},
-                  'interp_dict': {'method': 'NEAREST',
-                                  'points': '1'},
-                  'grid': 'G004',
-                  'plots_list': 'time_series, lead_average, lead_by_date'},
-        'VWind': {'line_type_stat_list': ['SAL1L2/ACC'],
-                  'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                   'TROPICS'],
+                                   'levels': ['P850', 'P500', 'P250']}},
+        'VWind': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS'],
                   'fcst_var_dict': {'name': 'VGRD',
-                                    'levels': 'P850, P500, P250',
-                                    'threshs': 'NA'},
+                                    'levels': ['P850', 'P500', 'P250']},
                   'obs_var_dict': {'name': 'VGRD',
-                                   'levels': 'P850, P500, P250',
-                                   'threshs': 'NA'},
-                  'interp_dict': {'method': 'NEAREST',
-                                  'points': '1'},
-                  'grid': 'G004',
-                  'plots_list': 'time_series, lead_average, lead_by_date'},
-        'VectorWind': {'line_type_stat_list': ['VAL1L2/ACC'],
-                       'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                        'TROPICS'],
+                                   'levels': ['P850', 'P500', 'P250']}},
+        'VectorWind': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS'],
                        'fcst_var_dict': {'name': 'UGRD_VGRD',
-                                         'levels': 'P850, P500, P250',
-                                         'threshs': 'NA'},
+                                         'levels': ['P850', 'P500', 'P250']},
                        'obs_var_dict': {'name': 'UGRD_VGRD',
-                                        'levels': 'P850, P500, P250',
-                                        'threshs': 'NA'},
-                       'interp_dict': {'method': 'NEAREST',
-                                       'points': '1'},
-                       'grid': 'G004',
-                       'plots_list': 'time_series, lead_average, lead_by_date'},
-        'WindShear': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/ME'],
-                      'vx_mask_list': ['ATL_MDR', 'EPAC_MDR'],
+                                        'levels': ['P850', 'P500', 'P250']}},
+        'WindShear': {'vx_masks': ['ATL_MDR', 'EPAC_MDR'],
                       'fcst_var_dict': {'name': 'WNDSHR',
-                                        'levels': 'P850-P200',
-                                        'threshs': 'NA'},
+                                        'levels': ['P850-P200']},
                       'obs_var_dict': {'name': 'WNDSHR',
-                                       'levels': 'P850-P200',
-                                       'threshs': 'NA'},
-                      'interp_dict': {'method': 'NEAREST',
-                                      'points': '1'},
-                      'grid': 'G004',
-                      'plots_list': 'time_series, lead_average'},
+                                       'levels': ['P850-P200']}},
     },
     'sea_ice': {
-        'DailyAvg_Concentration': {'line_type_stat_list': ['SL1L2/RMSE',
-                                                           'SL1L2/ME'],
-                                   'vx_mask_list': ['ARCTIC', 'ANTARCTIC'],
+        'DailyAvg_Concentration': {'vx_masks': ['ARCTIC', 'ANTARCTIC'],
                                    'fcst_var_dict': {'name': 'ICEC_DAILYAVG',
-                                                     'levels': 'Z0',
-                                                     'threshs': 'NA'},
+                                                     'levels': ['Z0']},
                                    'obs_var_dict': {'name': 'ice_conc',
-                                                    'levels': "'*,*'",
-                                                    'threshs': 'NA'},
-                                   'interp_dict': {'method': 'NEAREST',
-                                                   'points': '1'},
-                                   'grid': 'G004',
-                                   'obs_name': 'osi_saf',
-                                   'plots_list': 'time_series, lead_average'}, 
-        'DailyAvg_Concentration_Thresh': {'line_type_stat_list': ['CTC/CSI'],
-                                          'vx_mask_list': ['ARCTIC',
-                                                           'ANTARCTIC'],
-                                          'fcst_var_dict': {'name': (
-                                                                'ICEC_DAILYAVG'
-                                                            ),
-                                                            'levels': 'Z0',
-                                                            'threshs': ('ge15, '
-                                                                        +'ge40, '
-                                                                        +'ge80')},
-                                          'obs_var_dict': {'name': 'ice_conc',
-                                                           'levels': "'*,*'",
-                                                           'threshs': ('ge15, '
-                                                                       +'ge40, '
-                                                                       +'ge80')},
-                                          'interp_dict': {'method': 'NEAREST',
-                                                          'points': '1'},
-                                          'grid': 'G004',
-                                          'obs_name': 'osi_saf',
-                                          'plots_list': ('time_series, '
-                                                         +'lead_average')},
-        'DailyAvg_Concentration_PerfDia': {'line_type_stat_list': \
-                                               ['CTC/PERF_DIA'],
-                                           'vx_mask_list': \
-                                               ['ARCTIC', 'ANTARCTIC'],
-                                           'fcst_var_dict': \
-                                               {'name': 'ICEC_DAILYAVG',
-                                                'levels': 'Z0',
-                                                'threshs': ('ge15, ge40, '
-                                                            +'ge80')},
-                                           'obs_var_dict': \
-                                               {'name': 'ice_conc',
-                                                'levels': "'*,*'",
-                                                'threshs': ('ge15, ge40, '
-                                                            +'ge80')},
-                                           'interp_dict': {'method': 'NEAREST',
-                                                           'points': '1'},
-                                           'grid': 'G004',
-                                           'obs_name': 'osi_saf',
-                                           'plots_list': 'performance_diagram'},
+                                                    'levels': ['*,*']},
+                                   'obs_name': 'osi_saf'}
     },
     'snow': {
-        '24hrNOHRSC_Depth': {'line_type_stat_list': ['CTC/ETS', 'CTC/FBIAS'],
-                             'vx_mask_list': ['CONUS', 'CONUS_East',
-                                              'CONUS_West', 'CONUS_Central',
-                                              'CONUS_South'],
+        '24hrNOHRSC_Depth': {'vx_masks': ['CONUS', 'CONUS_East', 'CONUS_West',
+                                          'CONUS_Central', 'CONUS_South'],
                              'fcst_var_dict': {'name': 'SNOD_A24',
-                                               'levels': 'Z0',
-                                               'threshs': ('ge0.0254, '
-                                                           +'ge0.0508, '
-                                                           +'ge0.1016, '
-                                                           +'ge0.2032, '
-                                                           +'ge0.3048')},
+                                               'levels': ['Z0']},
                              'obs_var_dict': {'name': 'ASNOW',
-                                              'levels': 'A24',
-                                              'threshs': ('ge0.0254, '
-                                                          +'ge0.0508, '
-                                                          +'ge0.1016, '
-                                                          +'ge0.2032, '
-                                                          +'ge0.3048')},
-                             'interp_dict': {'method': 'NEAREST',
-                                             'points': '1'},
-                             'grid': 'G211',
-                             'obs_name': '24hrNOHRSC',
-                             'plots_list': 'time_series, lead_average'},
-        '24hrNOHRSC_WaterEqv': {'line_type_stat_list': ['CTC/ETS', 'CTC/FBIAS'],
-                                'vx_mask_list': ['CONUS', 'CONUS_East',
-                                                 'CONUS_West', 'CONUS_Central',
-                                                 'CONUS_South'],
-                                'fcst_var_dict': {'name': 'WEASD_A24',
-                                                  'levels': 'Z0',
-                                                  'threshs': ('ge0.0254, '
-                                                              +'ge0.0508, '
-                                                              +'ge0.1016, '
-                                                              +'ge0.2032, '
-                                                              +'ge0.3048')},
-                                'obs_var_dict': {'name': 'ASNOW',
-                                                 'levels': 'A24',
-                                                 'threshs': ('ge0.0254, '
-                                                             +'ge0.0508, '
-                                                             +'ge0.1016, '
-                                                             +'ge0.2032, '
-                                                             +'ge0.3048')},
-                                'interp_dict': {'method': 'NEAREST',
-                                                'points': '1'},
-                                'grid': 'G211',
-                                'obs_name': '24hrNOHRSC',
-                                'plots_list': 'time_series, lead_average'},
-        '24hrNOHRSC_Depth_Nbrhd1': {'line_type_stat_list': ['NBRCNT/FSS'],
-                                    'vx_mask_list': ['CONUS', 'CONUS_East',
-                                                     'CONUS_West',
-                                                     'CONUS_Central',
-                                                     'CONUS_South'],
-                                    'fcst_var_dict': {'name': 'SNOD_A24',
-                                                      'levels': 'Z0',
-                                                      'threshs': ('ge0.0254, '
-                                                                  +'ge0.0508, '
-                                                                  +'ge0.1016, '
-                                                                  +'ge0.2032, '
-                                                                  +'ge0.3048')},
-                                    'obs_var_dict': {'name': 'ASNOW',
-                                                     'levels': 'A24',
-                                                     'threshs': ('ge0.0254, '
-                                                                 +'ge0.0508, '
-                                                                 +'ge0.1016, '
-                                                                 +'ge0.2032, '
-                                                                 +'ge0.3048')},
-                                    'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                    'points': '1'},
-                                    'grid': 'G240',
-                                    'obs_name': '24hrNOHRSC',
-                                    'plots_list': 'time_series, lead_average'},
-        '24hrNOHRSC_Depth_Nbrhd169': {'line_type_stat_list': ['NBRCNT/FSS'],
-                                      'vx_mask_list': ['CONUS', 'CONUS_East',
-                                                       'CONUS_West',
-                                                       'CONUS_Central',
-                                                       'CONUS_South'],
-                                      'fcst_var_dict': {'name': 'SNOD_A24',
-                                                        'levels': 'Z0',
-                                                        'threshs': ('ge0.0254, '
-                                                                    +'ge0.0508, '
-                                                                    +'ge0.1016, '
-                                                                    +'ge0.2032, '
-                                                                    +'ge0.3048')},
-                                      'obs_var_dict': {'name': 'ASNOW',
-                                                       'levels': 'A24',
-                                                       'threshs': ('ge0.0254, '
-                                                                   +'ge0.0508, '
-                                                                   +'ge0.1016, '
-                                                                   +'ge0.2032, '
-                                                                   +'ge0.3048')},
-                                      'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                      'points': '169'},
-                                      'grid': 'G240',
-                                      'obs_name': '24hrNOHRSC',
-                                      'plots_list': 'time_series, lead_average'},
-        '24hrNOHRSC_Depth_Nbrhd529': {'line_type_stat_list': ['NBRCNT/FSS'],
-                                      'vx_mask_list': ['CONUS', 'CONUS_East',
-                                                       'CONUS_West',
-                                                       'CONUS_Central',
-                                                       'CONUS_South'],
-                                      'fcst_var_dict': {'name': 'SNOD_A24',
-                                                        'levels': 'Z0',
-                                                        'threshs': ('ge0.0254, '
-                                                                    +'ge0.0508, '
-                                                                    +'ge0.1016, '
-                                                                    +'ge0.2032, '
-                                                                    +'ge0.3048')},
-                                      'obs_var_dict': {'name': 'ASNOW',
-                                                       'levels': 'A24',
-                                                       'threshs': ('ge0.0254, '
-                                                                   +'ge0.0508, '
-                                                                   +'ge0.1016, '
-                                                                   +'ge0.2032, '
-                                                                   +'ge0.3048')},
-                                      'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                      'points': '529'},
-                                      'grid': 'G240',
-                                      'obs_name': '24hrNOHRSC',
-                                      'plots_list': 'time_series, lead_average'},
-        '24hrNOHRSC_Depth_Nbrhd1089': {'line_type_stat_list': ['NBRCNT/FSS'],
-                                       'vx_mask_list': ['CONUS', 'CONUS_East',
-                                                        'CONUS_West',
-                                                        'CONUS_Central',
-                                                        'CONUS_South'],
-                                       'fcst_var_dict': {'name': 'SNOD_A24',
-                                                         'levels': 'Z0',
-                                                         'threshs': ('ge0.0254, '
-                                                                     +'ge0.0508, '
-                                                                     +'ge0.1016, '
-                                                                     +'ge0.2032, '
-                                                                     +'ge0.3048')},
-                                       'obs_var_dict': {'name': 'ASNOW',
-                                                        'levels': 'A24',
-                                                        'threshs': ('ge0.0254, '
-                                                                    +'ge0.0508, '
-                                                                    +'ge0.1016, '
-                                                                    +'ge0.2032, '
-                                                                    +'ge0.3048')},
-                                       'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                       'points': '1089'},
-                                       'grid': 'G240',
-                                       'obs_name': '24hrNOHRSC',
-                                       'plots_list': 'time_series, lead_average'},
-        '24hrNOHRSC_Depth_Nbrhd1849': {'line_type_stat_list': ['NBRCNT/FSS'],
-                                       'vx_mask_list': ['CONUS', 'CONUS_East',
-                                                        'CONUS_West',
-                                                        'CONUS_Central',
-                                                        'CONUS_South'],
-                                       'fcst_var_dict': {'name': 'SNOD_A24',
-                                                         'levels': 'Z0',
-                                                         'threshs': ('ge0.0254, '
-                                                                     +'ge0.0508, '
-                                                                     +'ge0.1016, '
-                                                                     +'ge0.2032, '
-                                                                     +'ge0.3048')},
-                                       'obs_var_dict': {'name': 'ASNOW',
-                                                        'levels': 'A24',
-                                                        'threshs': ('ge0.0254, '
-                                                                    +'ge0.0508, '
-                                                                    +'ge0.1016, '
-                                                                    +'ge0.2032, '
-                                                                    +'ge0.3048')},
-                                       'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                       'points': '1849'},
-                                       'grid': 'G240',
-                                       'obs_name': '24hrNOHRSC',
-                                       'plots_list': 'time_series, lead_average'},
-        '24hrNOHRSC_Depth_Nbrhd2809': {'line_type_stat_list': ['NBRCNT/FSS'],
-                                       'vx_mask_list': ['CONUS', 'CONUS_East',
-                                                        'CONUS_West',
-                                                        'CONUS_Central',
-                                                        'CONUS_South'],
-                                       'fcst_var_dict': {'name': 'SNOD_A24',
-                                                         'levels': 'Z0',
-                                                         'threshs': ('ge0.0254, '
-                                                                     +'ge0.0508, '
-                                                                     +'ge0.1016, '
-                                                                     +'ge0.2032, '
-                                                                     +'ge0.3048')},
-                                       'obs_var_dict': {'name': 'ASNOW',
-                                                        'levels': 'A24',
-                                                        'threshs': ('ge0.0254, '
-                                                                    +'ge0.0508, '
-                                                                    +'ge0.1016, '
-                                                                    +'ge0.2032, '
-                                                                    +'ge0.3048')},
-                                       'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                       'points': '2809'},
-                                       'grid': 'G240',
-                                       'obs_name': '24hrNOHRSC',
-                                       'plots_list': 'time_series, lead_average'},
-        '24hrNOHRSC_Depth_Nbrhd3969': {'line_type_stat_list': ['NBRCNT/FSS'],
-                                       'vx_mask_list': ['CONUS', 'CONUS_East',
-                                                        'CONUS_West',
-                                                        'CONUS_Central',
-                                                        'CONUS_South'],
-                                       'fcst_var_dict': {'name': 'SNOD_A24',
-                                                         'levels': 'Z0',
-                                                         'threshs': ('ge0.0254, '
-                                                                     +'ge0.0508, '
-                                                                     +'ge0.1016, '
-                                                                     +'ge0.2032, '
-                                                                     +'ge0.3048')},
-                                       'obs_var_dict': {'name': 'ASNOW',
-                                                        'levels': 'A24',
-                                                        'threshs': ('ge0.0254, '
-                                                                    +'ge0.0508, '
-                                                                    +'ge0.1016, '
-                                                                    +'ge0.2032, '
-                                                                    +'ge0.3048')},
-                                       'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                       'points': '3969'},
-                                       'grid': 'G240',
-                                       'obs_name': '24hrNOHRSC',
-                                       'plots_list': 'time_series, lead_average'},
-        '24hrNOHRSC_WaterEqv_Nbrhd1': {'line_type_stat_list': ['NBRCNT/FSS'],
-                                       'vx_mask_list': ['CONUS', 'CONUS_East',
-                                                        'CONUS_West',
-                                                        'CONUS_Central',
-                                                        'CONUS_South'],
-                                       'fcst_var_dict': {'name': 'WEASD_A24',
-                                                         'levels': 'Z0',
-                                                         'threshs': ('ge0.0254, '
-                                                                     +'ge0.0508, '
-                                                                     +'ge0.1016, '
-                                                                     +'ge0.2032, '
-                                                                     +'ge0.3048')},
-                                       'obs_var_dict': {'name': 'ASNOW',
-                                                        'levels': 'A24',
-                                                        'threshs': ('ge0.0254, '
-                                                                    +'ge0.0508, '
-                                                                    +'ge0.1016, '
-                                                                    +'ge0.2032, '
-                                                                    +'ge0.3048')},
-                                       'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                       'points': '1'},
-                                       'grid': 'G240',
-                                       'obs_name': '24hrNOHRSC',
-                                       'plots_list': 'time_series, lead_average'},
-        '24hrNOHRSC_WaterEqv_Nbrhd169': {'line_type_stat_list': ['NBRCNT/FSS'],
-                                         'vx_mask_list': ['CONUS', 'CONUS_East',
-                                                          'CONUS_West',
-                                                          'CONUS_Central',
-                                                          'CONUS_South'],
-                                         'fcst_var_dict': {'name': 'WEASD_A24',
-                                                           'levels': 'Z0',
-                                                           'threshs': ('ge0.0254, '
-                                                                       +'ge0.0508, '
-                                                                       +'ge0.1016, '
-                                                                       +'ge0.2032, '
-                                                                       +'ge0.3048')},
-                                         'obs_var_dict': {'name': 'ASNOW',
-                                                          'levels': 'A24',
-                                                          'threshs': ('ge0.0254, '
-                                                                      +'ge0.0508, '
-                                                                      +'ge0.1016, '
-                                                                      +'ge0.2032, '
-                                                                      +'ge0.3048')},
-                                         'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                         'points': '169'},
-                                         'grid': 'G240',
-                                         'obs_name': '24hrNOHRSC',
-                                         'plots_list': 'time_series, lead_average'},
-        '24hrNOHRSC_WaterEqv_Nbrhd529': {'line_type_stat_list': ['NBRCNT/FSS'],
-                                         'vx_mask_list': ['CONUS', 'CONUS_East',
-                                                          'CONUS_West',
-                                                          'CONUS_Central',
-                                                          'CONUS_South'],
-                                         'fcst_var_dict': {'name': 'WEASD_A24',
-                                                           'levels': 'Z0',
-                                                           'threshs': ('ge0.0254, '
-                                                                       +'ge0.0508, '
-                                                                       +'ge0.1016, '
-                                                                       +'ge0.2032, '
-                                                                       +'ge0.3048')},
-                                         'obs_var_dict': {'name': 'ASNOW',
-                                                          'levels': 'A24',
-                                                          'threshs': ('ge0.0254, '
-                                                                      +'ge0.0508, '
-                                                                      +'ge0.1016, '
-                                                                      +'ge0.2032, '
-                                                                      +'ge0.3048')},
-                                         'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                         'points': '529'},
-                                         'grid': 'G240',
-                                         'obs_name': '24hrNOHRSC',
-                                         'plots_list': 'time_series, lead_average'},
-        '24hrNOHRSC_WaterEqv_Nbrhd1089': {'line_type_stat_list': ['NBRCNT/FSS'],
-                                          'vx_mask_list': ['CONUS', 'CONUS_East',
-                                                           'CONUS_West',
-                                                           'CONUS_Central',
-                                                           'CONUS_South'],
-                                          'fcst_var_dict': {'name': 'WEASD_A24',
-                                                            'levels': 'Z0',
-                                                            'threshs': ('ge0.0254, '
-                                                                        +'ge0.0508, '
-                                                                        +'ge0.1016, '
-                                                                        +'ge0.2032, '
-                                                                        +'ge0.3048')},
-                                          'obs_var_dict': {'name': 'ASNOW',
-                                                           'levels': 'A24',
-                                                           'threshs': ('ge0.0254, '
-                                                                       +'ge0.0508, '
-                                                                       +'ge0.1016, '
-                                                                       +'ge0.2032, '
-                                                                       +'ge0.3048')},
-                                          'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                          'points': '1089'},
-                                          'grid': 'G240',
-                                          'obs_name': '24hrNOHRSC',
-                                          'plots_list': 'time_series, lead_average'},
-        '24hrNOHRSC_WaterEqv_Nbrhd1849': {'line_type_stat_list': ['NBRCNT/FSS'],
-                                          'vx_mask_list': ['CONUS', 'CONUS_East',
-                                                           'CONUS_West',
-                                                           'CONUS_Central',
-                                                           'CONUS_South'],
-                                          'fcst_var_dict': {'name': 'WEASD_A24',
-                                                            'levels': 'Z0',
-                                                            'threshs': ('ge0.0254, '
-                                                                        +'ge0.0508, '
-                                                                        +'ge0.1016, '
-                                                                        +'ge0.2032, '
-                                                                        +'ge0.3048')},
-                                          'obs_var_dict': {'name': 'ASNOW',
-                                                           'levels': 'A24',
-                                                           'threshs': ('ge0.0254, '
-                                                                       +'ge0.0508, '
-                                                                       +'ge0.1016, '
-                                                                       +'ge0.2032, '
-                                                                       +'ge0.3048')},
-                                          'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                          'points': '1849'},
-                                          'grid': 'G240',
-                                          'obs_name': '24hrNOHRSC',
-                                          'plots_list': 'time_series, lead_average'},
-        '24hrNOHRSC_WaterEqv_Nbrhd2809': {'line_type_stat_list': ['NBRCNT/FSS'],
-                                          'vx_mask_list': ['CONUS', 'CONUS_East',
-                                                           'CONUS_West',
-                                                           'CONUS_Central',
-                                                           'CONUS_South'],
-                                          'fcst_var_dict': {'name': 'WEASD_A24',
-                                                            'levels': 'Z0',
-                                                            'threshs': ('ge0.0254, '
-                                                                        +'ge0.0508, '
-                                                                        +'ge0.1016, '
-                                                                        +'ge0.2032, '
-                                                                        +'ge0.3048')},
-                                          'obs_var_dict': {'name': 'ASNOW',
-                                                           'levels': 'A24',
-                                                           'threshs': ('ge0.0254, '
-                                                                       +'ge0.0508, '
-                                                                       +'ge0.1016, '
-                                                                       +'ge0.2032, '
-                                                                       +'ge0.3048')},
-                                          'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                          'points': '2809'},
-                                          'grid': 'G240',
-                                          'obs_name': '24hrNOHRSC',
-                                          'plots_list': 'time_series, lead_average'},
-        '24hrNOHRSC_WaterEqv_Nbrhd3969': {'line_type_stat_list': ['NBRCNT/FSS'],
-                                          'vx_mask_list': ['CONUS', 'CONUS_East',
-                                                           'CONUS_West',
-                                                           'CONUS_Central',
-                                                           'CONUS_South'],
-                                          'fcst_var_dict': {'name': 'WEASD_A24',
-                                                            'levels': 'Z0',
-                                                            'threshs': ('ge0.0254, '
-                                                                        +'ge0.0508, '
-                                                                        +'ge0.1016, '
-                                                                        +'ge0.2032, '
-                                                                        +'ge0.3048')},
-                                          'obs_var_dict': {'name': 'ASNOW',
-                                                           'levels': 'A24',
-                                                           'threshs': ('ge0.0254, '
-                                                                       +'ge0.0508, '
-                                                                       +'ge0.1016, '
-                                                                       +'ge0.2032, '
-                                                                       +'ge0.3048')},
-                                          'interp_dict': {'method': 'NBRHD_SQUARE',
-                                                          'points': '3969'},
-                                          'grid': 'G240',
-                                          'obs_name': '24hrNOHRSC',
-                                          'plots_list': 'time_series, lead_average'},
-        '24hrNOHRSC_24hrAccumMaps': {'line_type_stat_list': ['SL1L2/FBAR'],
-                                     'vx_mask_list': ['CONUS'],
-                                     'fcst_var_dict': {'name': 'ASNOW',
-                                                       'levels': 'Z0',
-                                                       'threshs': 'NA'},
-                                     'obs_var_dict': {'name': 'ASNOW',
-                                                      'levels': 'Z0',
-                                                      'threshs': 'NA'},
-                                     'interp_dict': {'method': 'NEAREST',
-                                                     'points': '1'},
-                                     'grid': 'G211',
-                                     'obs_name': '24hrNOHRSC',
-                                     'plots_list': 'nohrsc_spatial_map'}
+                                              'levels': ['A24']},
+                             'obs_name': '24hrNOHRSC'},
+        '24hrNOHRSC_WaterEqv': {'vx_masks': ['CONUS', 'CONUS_East',
+                                             'CONUS_West', 'CONUS_Central',
+                                             'CONUS_South'],
+                             'fcst_var_dict': {'name': 'WEASD_A24',
+                                               'levels': ['Z0']},
+                             'obs_var_dict': {'name': 'ASNOW',
+                                              'levels': ['A24']},
+                             'obs_name': '24hrNOHRSC'},
     },
     'sst': {
-        'DailyAvg_SST': {'line_type_stat_list': ['SL1L2/RMSE', 'SL1L2/ME'],
-                         'vx_mask_list': ['GLOBAL', 'NHEM', 'SHEM',
-                                          'TROPICS'],
+        'DailyAvg_SST': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS'],
                          'fcst_var_dict': {'name': 'SST_DAILYAVG',
-                                           'levels': 'Z0',
-                                           'threshs': 'NA'},
+                                           'levels': ['Z0']},
                          'obs_var_dict': {'name': 'analysed_sst',
-                                          'levels': "'0,*,*'",
-                                          'threshs': 'NA'},
-                         'interp_dict': {'method': 'NEAREST',
-                                         'points': '1'},
-                         'grid': 'G004',
-                         'obs_name': 'ghrsst_ospo',
-                         'plots_list': 'time_series, lead_average'},
+                                          'levels': ['0,*,*']},
+                         'obs_name': 'ghrsst_ospo'},
     }
 }
+
+################################################
+#### condense_stats jobs 
+################################################
+condense_stats_jobs_dict = copy.deepcopy(base_plot_jobs_info_dict)
+#### means
+for means_job in list(condense_stats_jobs_dict['means'].keys()):
+    condense_stats_jobs_dict['means'][means_job]['line_types'] = ['SL1L2']
+#### precip
+condense_stats_jobs_dict['precip']['24hrCCPA']['line_types'] = (
+    ['CTC', 'NBRCNT']
+)
+#### pres_levs
+for pres_levs_job in list(condense_stats_jobs_dict['pres_levs'].keys()):
+    if pres_levs_job in ['DailyAvg_GeoHeightAnom', 'Ozone', 'WindShear']:
+        (condense_stats_jobs_dict['pres_levs'][pres_levs_job]\
+         ['line_types']) = ['SL1L2']
+    elif pres_levs_job == 'GeoHeight':
+        (condense_stats_jobs_dict['pres_levs'][pres_levs_job]\
+             ['line_types']) = ['SAL1L2', 'GRAD']
+    elif pres_levs_job == 'PresSeaLevel':
+        (condense_stats_jobs_dict['pres_levs'][pres_levs_job]\
+             ['line_types']) = ['SAL1L2', 'SL1L2', 'GRAD']
+    elif pres_levs_job == 'VectorWind':
+        (condense_stats_jobs_dict['pres_levs'][pres_levs_job]\
+         ['line_types']) = ['VAL1L2']
+    else:
+        (condense_stats_jobs_dict['pres_levs'][pres_levs_job]\
+         ['line_types']) = ['SAL1L2']
+#### sea_ice
+for sea_ice_job in list(condense_stats_jobs_dict['sea_ice'].keys()):
+    condense_stats_jobs_dict['sea_ice'][sea_ice_job]['line_types'] = (
+        ['SL1L2', 'CTC']
+    )
+#### snow
+for snow_job in list(condense_stats_jobs_dict['snow'].keys()):
+    condense_stats_jobs_dict['snow'][snow_job]['line_types'] = (
+        ['CTC', 'NBRCNT']
+    )
+#### sst
+for sst_job in list(condense_stats_jobs_dict['sst'].keys()):
+    condense_stats_jobs_dict['sst'][sst_job]['line_types'] = ['SL1L2']
+if JOB_GROUP == 'condense_stats':
+    JOB_GROUP_dict = condense_stats_jobs_dict
+
+################################################
+#### filter_stats jobs
+################################################
+filter_stats_jobs_dict = copy.deepcopy(base_plot_jobs_info_dict)
+if JOB_GROUP == 'filter_stats':
+    JOB_GROUP_dict = filter_stats_jobs_dict
+
+################################################
+#### make_plots jobs
+################################################
+make_plots_jobs_dict = copy.deepcopy(base_plot_jobs_info_dict)
+if JOB_GROUP == 'make_plots':
+    JOB_GROUP_dict = make_plots_jobs_dict
+
+################################################
+#### tar_images jobs
+################################################
+tar_images_jobs_dict = copy.deepcopy(base_plot_jobs_info_dict)
+if JOB_GROUP == 'tar_images':
+    JOB_GROUP_dict = tar_images_jobs_dict
 
 model_list = os.environ['model_list'].split(' ')
 for verif_type in VERIF_CASE_STEP_type_list:
@@ -1234,7 +361,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
     model_plot_name_list = (
         os.environ[VERIF_CASE_STEP_abbrev+'_model_plot_name_list'].split(' ')
     )
-    verif_type_plot_jobs_dict = plot_jobs_dict[verif_type]
+    verif_type_plot_jobs_dict = JOB_GROUP_dict[verif_type]
     for verif_type_job in list(verif_type_plot_jobs_dict.keys()):
         if verif_type == 'pres_levs':
             obs_list = (
@@ -1248,14 +375,6 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 verif_type_plot_jobs_dict[verif_type_job]['obs_name']
                 for m in model_list
             ]
-        fcst_var_levels = (verif_type_plot_jobs_dict[verif_type_job]\
-                           ['fcst_var_dict']['levels'].split(', '))
-        fcst_var_threshs = (verif_type_plot_jobs_dict[verif_type_job]\
-                            ['fcst_var_dict']['threshs'].split(', '))
-        obs_var_levels = (verif_type_plot_jobs_dict[verif_type_job]\
-                          ['obs_var_dict']['levels'].split(', '))
-        obs_var_threshs = (verif_type_plot_jobs_dict[verif_type_job]\
-                           ['obs_var_dict']['threshs'].split(', '))
         # Initialize job environment dictionary
         job_env_dict = gda_util.initalize_job_env_dict(
             verif_type, JOB_GROUP,
@@ -1264,309 +383,81 @@ for verif_type in VERIF_CASE_STEP_type_list:
         job_env_dict['start_date'] = start_date
         job_env_dict['end_date'] = end_date
         job_env_dict['date_type'] = 'VALID'
-        job_env_dict['event_equalization'] = (
-            os.environ[VERIF_CASE_STEP_abbrev+'_event_equalization']
-        )
-        job_env_dict['interp_method'] = (
-            verif_type_plot_jobs_dict[verif_type_job]\
-            ['interp_dict']['method']
-        )
-        job_env_dict['interp_points_list'] = ("'"+
-            verif_type_plot_jobs_dict[verif_type_job]\
-            ['interp_dict']['points']
-        +"'")
-        job_env_dict['grid'] = (
-            verif_type_plot_jobs_dict[verif_type_job]['grid']
-        )
-        valid_hr_start = int(job_env_dict['valid_hr_start'])
-        valid_hr_end = int(job_env_dict['valid_hr_end'])
-        valid_hr_inc = int(job_env_dict['valid_hr_inc'])
-        valid_hrs = list(range(valid_hr_start,
-                               valid_hr_end+valid_hr_inc,
-                               valid_hr_inc))
-        if 'Daily' in verif_type_job:
-            if job_env_dict['fhr_inc'] != '24':
-                job_env_dict['fhr_inc'] = '24'
-            if int(job_env_dict['fhr_end'])%24 != 0:
-                job_env_dict['fhr_end'] = str(
-                    int(job_env_dict['fhr_end'])
-                     -(int(job_env_dict['fhr_end'])%24)
-                )
-            if int(job_env_dict['fhr_start'])%24 != 0:
-                job_env_dict['fhr_start'] = str(
-                    int(job_env_dict['fhr_start'])
-                    -(int(job_env_dict['fhr_start'])%24)
-                )
-            if int(job_env_dict['fhr_start']) < 24:
-                job_env_dict['fhr_start'] = '24'
+        #valid_hr_start = int(job_env_dict['valid_hr_start'])
+        #valid_hr_end = int(job_env_dict['valid_hr_end'])
+        #valid_hr_inc = int(job_env_dict['valid_hr_inc'])
+        #valid_hrs = list(range(valid_hr_start,
+        #                       valid_hr_end+valid_hr_inc,
+        #                       valid_hr_inc))
+        #if 'Daily' in verif_type_job:
+        #    if job_env_dict['fhr_inc'] != '24':
+        #        job_env_dict['fhr_inc'] = '24'
+        #    if int(job_env_dict['fhr_end'])%24 != 0:
+        #        job_env_dict['fhr_end'] = str(
+        #            int(job_env_dict['fhr_end'])
+        #             -(int(job_env_dict['fhr_end'])%24)
+        #        )
+        #    if int(job_env_dict['fhr_start'])%24 != 0:
+        #        job_env_dict['fhr_start'] = str(
+        #            int(job_env_dict['fhr_start'])
+        #            -(int(job_env_dict['fhr_start'])%24)
+        #        )
+        #    if int(job_env_dict['fhr_start']) < 24:
+        #        job_env_dict['fhr_start'] = '24'
         for data_name in ['fcst', 'obs']:
             job_env_dict[data_name+'_var_name'] =  (
                 verif_type_plot_jobs_dict[verif_type_job]\
                 [data_name+'_var_dict']['name']
             )
-        verif_type_job_loop_list = []
-        for line_type_stat \
-                in verif_type_plot_jobs_dict[verif_type_job]\
-                ['line_type_stat_list']:
-            if JOB_GROUP in ['condense_stats', 'filter_stats', 'tar_images']:
-                if line_type_stat.split('/')[0] not in verif_type_job_loop_list:
-                    verif_type_job_loop_list.append(line_type_stat.split('/')[0])
-            else:
-                verif_type_job_loop_list.append(line_type_stat)
-        for verif_type_job_loop in list(
-                itertools.product(verif_type_job_loop_list,
-                                  verif_type_plot_jobs_dict[verif_type_job]\
-                                  ['vx_mask_list'])
-        ):
-            if '/' in verif_type_job_loop[0]:
-                job_env_dict['line_type'] = (
-                    verif_type_job_loop[0].split('/')[0]
-                )
-                job_env_dict['stat'] = (
-                    verif_type_job_loop[0].split('/')[1]
-                )
-            else:
-                job_env_dict['line_type'] = verif_type_job_loop[0]
-            job_env_dict['vx_mask'] = verif_type_job_loop[1]
-            job_env_dict['job_name'] = (
-                job_env_dict['line_type']+'/'
-                +verif_type_job+'/'
-                +job_env_dict['vx_mask']
-            )
-            job_output_dir = os.path.join(
-                DATA, VERIF_CASE+'_'+STEP, 'plot_output',
-                RUN+'.'+end_date, verif_type,
-                job_env_dict['job_name'].replace('/','_')
-            )
-            if not os.path.exists(job_output_dir):
-                os.makedirs(job_output_dir)
+        if JOB_GROUP == 'condense_stats':
+            JOB_GROUP_verif_type_job_product_loops = list(itertools.product(
+                verif_type_plot_jobs_dict[verif_type_job]['line_types'],
+                verif_type_plot_jobs_dict[verif_type_job]['fcst_var_dict']['levels'],
+                verif_type_plot_jobs_dict[verif_type_job]['vx_masks'],
+                model_list
+            ))
+        for loop_info in JOB_GROUP_verif_type_job_product_loops:
             if JOB_GROUP == 'condense_stats':
-                for JOB_GROUP_loop in list(
-                    itertools.product(model_list, [fcst_var_levels],
-                                      [fcst_var_threshs])
-                ):
-                    job_env_dict['model_list'] = "'"+f"{JOB_GROUP_loop[0]}"+"'"
-                    job_env_dict['model_plot_name_list'] = (
-                        "'"+f"{model_plot_name_list[model_list.index(JOB_GROUP_loop[0])]}"+"'"
-                    )
-                    job_env_dict['obs_list'] = (
-                        "'"+f"{obs_list[model_list.index(JOB_GROUP_loop[0])]}"+"'"
-                    )
-                    job_env_dict['fcst_var_level_list'] = (
-                        "'"+f"{', '.join(JOB_GROUP_loop[1])}"+"'"
-                    )
-                    job_env_dict['fcst_var_thresh_list'] = (
-                        "'"+f"{', '.join(JOB_GROUP_loop[2])}"+"'"
-                    )
-                    job_env_dict['obs_var_level_list'] = (
-                        "'"+f"{', '.join(obs_var_levels)}"+"'"
-                    )
-                    job_env_dict['obs_var_thresh_list'] = (
-                        "'"+f"{', '.join(obs_var_threshs)}"+"'"
-                    )
-                    # Create job file
-                    njobs+=1
-                    job_file = os.path.join(JOB_GROUP_jobs_dir,
-                                            'job'+str(njobs))
-                    print("Creating job script: "+job_file)
-                    job = open(job_file, 'w')
-                    job.write('#!/bin/bash\n')
-                    job.write('set -x\n')
-                    job.write('\n')
-                    # Set any environment variables for special cases
-                    # Write environment variables
-                    job_env_dict['job_id'] = 'job'+str(njobs)
-                    for name, value in job_env_dict.items():
-                        job.write('export '+name+'='+value+'\n')
-                    job.write('\n')
-                    job.write(
-                        gda_util.python_command('global_det_atmos_plots.py',[])
-                    )
-                    job.close()
-            elif JOB_GROUP == 'filter_stats':
-                for JOB_GROUP_loop in list(
-                    itertools.product(model_list, fcst_var_levels,
-                                      fcst_var_threshs, valid_hrs)
-                ):
-                    job_env_dict['model_list'] = "'"+f"{JOB_GROUP_loop[0]}"+"'"
-                    job_env_dict['model_plot_name_list'] = (
-                        "'"+f"{model_plot_name_list[model_list.index(JOB_GROUP_loop[0])]}"+"'"
-                    )
-                    job_env_dict['obs_list'] = (
-                        "'"+f"{obs_list[model_list.index(JOB_GROUP_loop[0])]}"+"'"
-                    )
-                    job_env_dict['fcst_var_level_list'] = (
-                        "'"+f"{JOB_GROUP_loop[1]}"+"'"
-                    )
-                    job_env_dict['fcst_var_thresh_list'] = (
-                        "'"+f"{JOB_GROUP_loop[2]}"+"'"
-                    )
-                    job_env_dict['obs_var_level_list'] = (
-                        "'"+f"{obs_var_levels[fcst_var_levels.index(JOB_GROUP_loop[1])]}"+"'"
-                    )
-                    job_env_dict['obs_var_thresh_list'] = (
-                        "'"+f"{obs_var_threshs[fcst_var_threshs.index(JOB_GROUP_loop[2])]}"+"'"
-                    )
-                    job_env_dict['valid_hr_start'] = (
-                        str(JOB_GROUP_loop[3]).zfill(2)
-                    )
-                    job_env_dict['valid_hr_end'] = (
-                        job_env_dict['valid_hr_start']
-                    )
-                    job_env_dict['valid_hr_inc'] = '24'
-                    # Create job file
-                    njobs+=1
-                    job_file = os.path.join(JOB_GROUP_jobs_dir,
-                                            'job'+str(njobs))
-                    print("Creating job script: "+job_file)
-                    job = open(job_file, 'w')
-                    job.write('#!/bin/bash\n')
-                    job.write('set -x\n')
-                    job.write('\n')
-                    # Set any environment variables for special cases
-                    # Write environment variables
-                    job_env_dict['job_id'] = 'job'+str(njobs)
-                    for name, value in job_env_dict.items():
-                        job.write('export '+name+'='+value+'\n')
-                    job.write('\n')
-                    job.write(
-                        gda_util.python_command('global_det_atmos_plots.py',[])
-                    )
-                    job.close()
-            elif JOB_GROUP == 'make_plots':
-                job_output_images_dir = os.path.join(
-                    DATA, VERIF_CASE+'_'+STEP, 'plot_output',
-                    RUN+'.'+end_date, verif_type,
-                    job_env_dict['job_name'].replace('/','_'), 'images'
+                job_env_dict['fcst_var_level'] = loop_info[1]
+                job_env_dict['obs_var_level'] = (
+                    verif_type_plot_jobs_dict[verif_type_job]\
+                    ['obs_var_dict']['levels'][
+                        verif_type_plot_jobs_dict[verif_type_job]\
+                        ['fcst_var_dict']['levels'].index(loop_info[1])
+                    ]
                 )
-                if not os.path.exists(job_output_images_dir):
-                    os.makedirs(job_output_images_dir)
-                job_env_dict['model_list'] = "'"+f"{', '.join(model_list)}"+"'"
+                job_env_dict['model_list'] = loop_info[3]
                 job_env_dict['model_plot_name_list'] = (
-                    "'"+f"{', '.join(model_plot_name_list)}"+"'"
+                    model_plot_name_list[model_list.index(loop_info[3])]
                 )
                 job_env_dict['obs_list'] = (
-                    "'"+f"{', '.join(obs_list)}"+"'"
+                    obs_list[model_list.index(loop_info[3])]
                 )
-                for plot in verif_type_plot_jobs_dict\
-                        [verif_type_job]['plots_list'].split(', '):
-                    job_env_dict['plot'] = plot
-                    if plot == 'valid_hour_average':
-                        plot_valid_hrs_loop = [valid_hrs]
-                    else:
-                        plot_valid_hrs_loop = valid_hrs
-                    if plot in ['threshold_average', 'performance_diagram']:
-                        plot_fcst_threshs_loop = [fcst_var_threshs]
-                    else:
-                        plot_fcst_threshs_loop = fcst_var_threshs
-                    if plot in ['stat_by_level', 'lead_by_level']:
-                        plot_fcst_levels_loop = ['all', 'trop', 'strat',
-                                                 'ltrop', 'utrop']
-                    else:
-                        plot_fcst_levels_loop = fcst_var_levels
-                    for JOB_GROUP_loop in list(
-                        itertools.product(plot_valid_hrs_loop,
-                                          plot_fcst_threshs_loop,
-                                          plot_fcst_levels_loop)
-                    ):
-                        if plot == 'valid_hour_average':
-                            job_env_dict['valid_hr_start'] = str(
-                                JOB_GROUP_loop[0][0]
-                            ).zfill(2)
-                            job_env_dict['valid_hr_end'] = str(
-                                JOB_GROUP_loop[0][-1]
-                            ).zfill(2)
-                            job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
-                        else:
-                            job_env_dict['valid_hr_start'] = str(
-                                JOB_GROUP_loop[0]
-                            ).zfill(2)
-                            job_env_dict['valid_hr_end'] = str(
-                                JOB_GROUP_loop[0]
-                            ).zfill(2)
-                            job_env_dict['valid_hr_inc'] = '24'
-                        if plot in ['threshold_average',
-                                    'performance_diagram']:
-                            job_env_dict['fcst_var_thresh_list'] = (
-                                "'"+f"{', '.join(JOB_GROUP_loop[1])}"+"'"
-                            )
-                            job_env_dict['obs_var_thresh_list'] = (
-                                "'"+f"{', '.join(obs_var_threshs)}"+"'"
-                            )
-                        else:
-                            job_env_dict['fcst_var_thresh_list'] = (
-                                "'"+f"{JOB_GROUP_loop[1]}"+"'"
-                            )
-                            job_env_dict['obs_var_thresh_list'] = (
-                                "'"+f"{obs_var_threshs[fcst_var_threshs.index(JOB_GROUP_loop[1])]}"+"'"
-                            )
-                        if plot in ['stat_by_level', 'lead_by_level']:
-                            job_env_dict['vert_profile'] = (
-                                "'"+f"{JOB_GROUP_loop[2]}"+"'"
-                            )
-                            job_env_dict['fcst_var_level_list'] = (
-                                "'"+f"{', '.join(fcst_var_levels)}"+"'"
-                            )
-                            job_env_dict['obs_var_level_list'] = (
-                                "'"+f"{', '.join(obs_var_levels)}"+"'"
-                            )
-                        else:
-                            job_env_dict['fcst_var_level_list'] = (
-                                "'"+f"{JOB_GROUP_loop[2]}"+"'"
-                            )
-                            job_env_dict['obs_var_level_list'] = (
-                                "'"+f"{obs_var_levels[fcst_var_levels.index(JOB_GROUP_loop[2])]}"+"'"
-                            )
-                        run_global_det_atmos_plots = ['global_det_atmos_plots.py']
-                        if evs_run_mode == 'production' and \
-                                verif_type in ['pres_levs', 'sfc'] and \
-                                plot in ['lead_average', 'lead_by_level',
-                                         'lead_by_date']:
-                            run_global_det_atmos_plots.append(
-                                'global_det_atmos_plots_production_tof240.py'
-                            )
-                        for run_global_det_atmos_plot in run_global_det_atmos_plots:
-                            # Create job file
-                            njobs+=1
-                            job_file = os.path.join(JOB_GROUP_jobs_dir,
-                                                    'job'+str(njobs))
-                            print("Creating job script: "+job_file)
-                            job = open(job_file, 'w')
-                            job.write('#!/bin/bash\n')
-                            job.write('set -x\n')
-                            job.write('\n')
-                            # Set any environment variables for special cases
-                            # Write environment variables
-                            job_env_dict['job_id'] = 'job'+str(njobs)
-                            for name, value in job_env_dict.items():
-                                job.write('export '+name+'='+value+'\n')
-                            job.write('\n')
-                            job.write(
-                                gda_util.python_command(run_global_det_atmos_plot,
-                                                        [])
-                            )
-                        job.close()
-            elif JOB_GROUP == 'tar_images':
-                job_env_dict['model_list'] = "'"+f"{', '.join(model_list)}"+"'"
-                job_env_dict['model_plot_name_list'] = (
-                    "'"+f"{', '.join(model_plot_name_list)}"+"'"
+                job_env_dict['line_type'] = loop_info[0]
+                job_env_dict['vx_mask'] = loop_info[2]
+                job_env_dict['DATAjob'] = os.path.join(
+                    DATA, f"{VERIF_CASE}_{STEP}", 'plot_output',
+                    f"{RUN}.{end_date}", f"{VERIF_CASE}_{verif_type}",
+                    f"last{NDAYS}days", job_env_dict['line_type'].lower(),
+                    f"{job_env_dict['fcst_var_name'].lower()}_"
+                    +(job_env_dict['fcst_var_level'].lower()\
+                      .replace('.','p').replace('-', '_')),
+                    job_env_dict['vx_mask'].lower()
                 )
-                job_env_dict['obs_list'] = (
-                    "'"+f"{', '.join(obs_list)}"+"'"
+                job_env_dict['COMOUTjob'] = os.path.join(
+                    COMOUT, f"{VERIF_CASE}_{verif_type}",
+                    f"last{NDAYS}days", job_env_dict['line_type'].lower(),
+                    f"{job_env_dict['fcst_var_name'].lower()}_"
+                    +(job_env_dict['fcst_var_level'].lower()\
+                      .replace('.','p').replace('-', '_')),
+                    job_env_dict['vx_mask'].lower()
                 )
-                job_env_dict['fcst_var_level_list'] = (
-                    "'"+f"{', '.join(fcst_var_levels)}"+"'"
-                )
-                job_env_dict['fcst_var_thresh_list'] = (
-                    "'"+f"{', '.join(fcst_var_threshs)}"+"'"
-                )
-                job_env_dict['obs_var_level_list'] = (
-                    "'"+f"{', '.join(obs_var_levels)}"+"'"
-                )
-                job_env_dict['obs_var_thresh_list'] = (
-                    "'"+f"{', '.join(obs_var_threshs)}"+"'"
-                )
-                # Create job file       
+                for output_dir in [job_env_dict['DATAjob'],
+                                   job_env_dict['COMOUTjob']]:
+                    if not os.path.exists(output_dir):
+                        print(f"Creating output directory: {output_dir}")
+                        os.makedirs(output_dir)
+                # Create job file
                 njobs+=1
                 job_file = os.path.join(JOB_GROUP_jobs_dir,
                                         'job'+str(njobs))
@@ -1574,12 +465,12 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job = open(job_file, 'w')
                 job.write('#!/bin/bash\n')
                 job.write('set -x\n')
-                job.write('\n') 
+                job.write('\n')
                 # Set any environment variables for special cases
                 # Write environment variables
                 job_env_dict['job_id'] = 'job'+str(njobs)
                 for name, value in job_env_dict.items():
-                    job.write('export '+name+'='+value+'\n')
+                    job.write('export '+name+'="'+value+'"\n')
                 job.write('\n')
                 job.write(
                     gda_util.python_command('global_det_atmos_plots.py',[])

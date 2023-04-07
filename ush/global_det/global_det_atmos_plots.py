@@ -19,6 +19,9 @@ print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
 DATA = os.environ['DATA']
+DATAjob = os.environ['DATAjob']
+SENDCOM = os.environ['SENDCOM']
+COMOUTjob = os.environ['COMOUTjob']
 NET = os.environ['NET']
 RUN = os.environ['RUN']
 VERIF_CASE = os.environ['VERIF_CASE']
@@ -32,38 +35,39 @@ evs_run_mode = os.environ['evs_run_mode']
 start_date = os.environ['start_date']
 end_date = os.environ['end_date']
 plot_verbosity = os.environ['plot_verbosity']
-event_equalization = os.environ['event_equalization']
-job_name = os.environ['job_name']
 line_type = os.environ['line_type']
-grid = os.environ['grid']
-job_var = os.environ['job_var']
-vx_mask = os.environ['vx_mask']
-interp_method = os.environ['interp_method']
-interp_points_list = os.environ['interp_points_list'].split(', ')
 fcst_var_name = os.environ['fcst_var_name']
-fcst_var_level_list = os.environ['fcst_var_level_list'].split(', ')
-fcst_var_thresh_list = os.environ['fcst_var_thresh_list'].split(', ')
 obs_var_name = os.environ['obs_var_name']
-obs_var_level_list = os.environ['obs_var_level_list'].split(', ')
-obs_var_thresh_list = os.environ['obs_var_thresh_list'].split(', ')
+vx_mask = os.environ['vx_mask']
 model_list = os.environ['model_list'].split(', ')
 model_plot_name_list = os.environ['model_plot_name_list'].split(', ')
 obs_list = os.environ['obs_list'].split(', ')
 VERIF_TYPE = os.environ['VERIF_TYPE']
 date_type = os.environ['date_type']
-valid_hr_start = os.environ['valid_hr_start']
-valid_hr_end = os.environ['valid_hr_end']
-valid_hr_inc = os.environ['valid_hr_inc']
-init_hr_start = os.environ['init_hr_start']
-init_hr_end = os.environ['init_hr_end']
-init_hr_inc = os.environ['init_hr_inc']
-fhr_start = os.environ['fhr_start']
-fhr_end = os.environ['fhr_end']
-fhr_inc = os.environ['fhr_inc']
 job_id = os.environ['job_id']
-if JOB_GROUP == 'make_plots':
-    stat = os.environ['stat']
-    plot = os.environ['plot']
+if JOB_GROUP == 'condense_stats':
+    fcst_var_level = os.environ['fcst_var_level']
+    obs_var_level = os.environ['obs_var_level']
+#valid_hr_start = os.environ['valid_hr_start']
+#valid_hr_end = os.environ['valid_hr_end']
+#valid_hr_inc = os.environ['valid_hr_inc']
+#init_hr_start = os.environ['init_hr_start']
+#init_hr_end = os.environ['init_hr_end']
+#init_hr_inc = os.environ['init_hr_inc']
+#fhr_start = os.environ['fhr_start']
+#fhr_end = os.environ['fhr_end']
+#fhr_inc = os.environ['fhr_inc']
+#grid = os.environ['grid']
+#event_equalization = os.environ['event_equalization']
+#interp_method = os.environ['interp_method']
+#interp_points_list = os.environ['interp_points_list'].split(', ')
+#fcst_var_level_list = os.environ['fcst_var_level_list'].split(', ')
+#fcst_var_thresh_list = os.environ['fcst_var_thresh_list'].split(', ')
+#obs_var_level_list = os.environ['obs_var_level_list'].split(', ')
+#obs_var_thresh_list = os.environ['obs_var_thresh_list'].split(', ')
+#if JOB_GROUP == 'make_plots':
+#    stat = os.environ['stat']
+#    plot = os.environ['plot']
 
 # Set variables
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
@@ -76,13 +80,11 @@ logo_dir = os.path.join(FIXevs, 'logos')
 VERIF_CASE_STEP_dir = os.path.join(DATA, VERIF_CASE_STEP)
 stat_base_dir = os.path.join(VERIF_CASE_STEP_dir, 'data')
 plot_output_dir = os.path.join(VERIF_CASE_STEP_dir, 'plot_output')
-logging_dir = os.path.join(plot_output_dir, RUN+'.'+end_date, 'logs')
-VERIF_TYPE_image_dir = os.path.join(plot_output_dir, RUN+'.'+end_date,
-                                    'images', VERIF_TYPE)
-job_output_dir = os.path.join(plot_output_dir, RUN+'.'+end_date,
-                              VERIF_TYPE, job_name.replace('/','_'))
-if not os.path.exists(job_output_dir):
-    os.makedirs(job_output_dir)
+logging_dir = os.path.join(plot_output_dir, 'logs')
+for output_dir in [logging_dir, DATAjob, COMOUTjob]:
+    if not os.path.exists(output_dir):
+       print(f"Creating output directory: {output_dir}")
+       os.makedirs(output_dir) 
 
 # Set up logging
 job_logging_file = os.path.join(logging_dir, 'evs_'+COMPONENT+'_'+RUN+'_'
@@ -117,47 +119,49 @@ for model_idx in range(len(model_list)):
 original_date_info_dict = {
     'date_type': date_type,
     'start_date': start_date,
-    'end_date': end_date,
-    'init_hr_start': init_hr_start,
-    'init_hr_end': init_hr_end,
-    'init_hr_inc': init_hr_inc,
+    'end_date': end_date
 }
-valid_hrs = list(range(int(valid_hr_start),
-                       int(valid_hr_end)+int(valid_hr_inc),
-                       int(valid_hr_inc)))
-init_hrs = list(range(int(init_hr_start),
-                      int(init_hr_end)+int(init_hr_inc),
-                      int(init_hr_inc)))
-fhrs = list(range(int(fhr_start), int(fhr_end)+int(fhr_inc), int(fhr_inc)))
-if fhrs == list(range(0, 384+6, 6)):
-    fhrs = list(range(0,72,6)) + list(range(72,384+24,24))
+#original_date_info_dict = {
+#    'date_type': date_type,
+#    'start_date': start_date,
+#    'end_date': end_date,
+#    'init_hr_start': init_hr_start,
+#    'init_hr_end': init_hr_end,
+#    'init_hr_inc': init_hr_inc,
+#}
+#valid_hrs = list(range(int(valid_hr_start),
+#                       int(valid_hr_end)+int(valid_hr_inc),
+#                       int(valid_hr_inc)))
+#init_hrs = list(range(int(init_hr_start),
+#                      int(init_hr_end)+int(init_hr_inc),
+#                      int(init_hr_inc)))
+#fhrs = list(range(int(fhr_start), int(fhr_end)+int(fhr_inc), int(fhr_inc)))
+#if fhrs == list(range(0, 384+6, 6)):
+#    fhrs = list(range(0,72,6)) + list(range(72,384+24,24))
 
 # Set up plot information dictionary
 original_plot_info_dict = {
     'line_type': line_type,
-    'grid': grid,
     'vx_mask': vx_mask,
-    'interp_method': interp_method,
-    'event_equalization': event_equalization
 }
-if JOB_GROUP == 'make_plots':
-    original_plot_info_dict['stat'] = stat
-fcst_var_prod = list(
-    itertools.product([fcst_var_name], fcst_var_level_list,
-                      fcst_var_thresh_list)
-)
-obs_var_prod = list(
-    itertools.product([obs_var_name], obs_var_level_list,
-                      obs_var_thresh_list)
-)
-if len(fcst_var_prod) == len(obs_var_prod):
-    var_info = []
-    for v in range(len(fcst_var_prod)):
-        var_info.append((fcst_var_prod[v], obs_var_prod[v]))
-else:
-    logger.error("FORECAST AND OBSERVATION VARIABLE INFORMATION NOT THE "
-                 +"SAME LENGTH")
-    sys.exit(1)
+#if JOB_GROUP == 'make_plots':
+#    original_plot_info_dict['stat'] = stat
+#fcst_var_prod = list(
+#    itertools.product([fcst_var_name], fcst_var_level_list,
+#                      fcst_var_thresh_list)
+#)
+#obs_var_prod = list(
+#    itertools.product([obs_var_name], obs_var_level_list,
+#                      obs_var_thresh_list)
+#)
+#if len(fcst_var_prod) == len(obs_var_prod):
+#    var_info = []
+#    for v in range(len(fcst_var_prod)):
+#        var_info.append((fcst_var_prod[v], obs_var_prod[v]))
+#else:
+#    logger.error("FORECAST AND OBSERVATION VARIABLE INFORMATION NOT THE "
+#                 +"SAME LENGTH")
+#    sys.exit(1)
 
 # Set up MET information dictionary
 original_met_info_dict = {
@@ -167,17 +171,24 @@ original_met_info_dict = {
 
 # Condense .stat files
 if JOB_GROUP == 'condense_stats':
-    logger.info("Condensing model .stat files")
     for model_idx in range(len(model_list)):
         model = model_list[model_idx]
         obs_name = obs_list[model_idx]
-        condensed_model_stat_file = os.path.join(job_output_dir, 'model'
-                                                 +str(model_idx+1)+'_'+model
-                                                 +'.stat')
-        gda_util.condense_model_stat_files(logger, stat_base_dir,
-                                           condensed_model_stat_file, model,
-                                           obs_name, grid, vx_mask,
-                                           fcst_var_name, obs_var_name, line_type)
+        DATAjob_condensed_model_stat_file = gda_util.condense_model_stat_files(
+            logger, stat_base_dir, DATAjob, model, obs_name, vx_mask,
+            fcst_var_name, fcst_var_level, obs_var_name, obs_var_level,
+            line_type
+        )
+        COMOUTjob_condensed_model_stat_file = (
+            DATAjob_condensed_model_stat_file.replace(DATAjob, COMOUTjob)
+        )
+        if SENDCOM == 'YES' \
+                and os.path.exists(DATAjob_condensed_model_stat_file) \
+                and not os.path.exists(COMOUTjob_condensed_model_stat_file):
+            logger.info(f"Copying {DATAjob_condensed_model_stat_file} to "
+                        +f"{COMOUTjob_condensed_model_stat_file}")
+            gda_util.copy_file(DATAjob_condensed_model_stat_file,
+                               COMOUTjob_condensed_model_stat_file)
 elif JOB_GROUP == 'filter_stats':
     logger.info("Filtering model .stat files")
     model_info_dict = original_model_info_dict.copy()

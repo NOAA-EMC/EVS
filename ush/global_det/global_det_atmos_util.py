@@ -1784,7 +1784,8 @@ def initalize_job_env_dict(verif_type, group,
     """
     job_env_var_list = [
         'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA', 'COMROOT',
-        'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'COMIN', 'evs_run_mode'
+        'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'COMIN', 'SENDCOM', 'COMOUT',
+        'evs_run_mode'
     ]
     if group in ['reformat_data', 'assemble_data', 'generate_stats', 'gather_stats']:
         os.environ['MET_TMP_DIR'] = os.path.join(
@@ -1810,16 +1811,11 @@ def initalize_job_env_dict(verif_type, group,
         job_env_dict['plot_verbosity'] = (
             os.environ['metplus_verbosity']
         )
+    job_env_dict['VERIF_TYPE'] = verif_type
     job_env_dict['JOB_GROUP'] = group
+    job_env_dict['job_name'] = job
     if group in ['reformat_data', 'assemble_data', 'generate_stats',
-                 'condense_stats', 'filter_stats', 'make_plots',
-                 'tar_images']:
-        job_env_dict['VERIF_TYPE'] = verif_type
-        if group in ['condense_stats', 'filter_stats', 'make_plots',
-                     'tar_images']:
-            job_env_dict['job_var'] = job
-        else:
-            job_env_dict['job_name'] = job
+                 'filter_stats', 'make_plots', 'tar_images']:
         job_env_dict['fhr_start'] = os.environ[
             verif_case_step_abbrev_type+'_fhr_min'
         ]
@@ -2090,43 +2086,51 @@ def get_daily_stat_file(model_name, source_stats_base_dir,
                 print(f"WARNING: {source_model_date_stat_file} DOES NOT EXIST")
         date_dt = date_dt + datetime.timedelta(days=1)
 
-def condense_model_stat_files(logger, input_dir, output_file, model, obs,
-                              grid, vx_mask, fcst_var_name, obs_var_name,
-                              line_type):
+def condense_model_stat_files(logger, input_dir, output_dir, model, obs,
+                              vx_mask, fcst_var_name, fcst_var_level,
+                              obs_var_name, obs_var_level, line_type):
     """! Condense the individual date model stat file and
          thin out unneeded data
 
          Args:
-             logger        - logger object
-             input_dir     - path to input directory (string)
-             output_file   - path to output file (string)
-             model         - model name (string)
-             obs           - observation name (string)
-             grid          - verification grid (string)
-             vx_mask       - verification masking region (string)
-             fcst_var_name - forecast variable name (string)
-             obs_var_name  - observation variable name (string)
-             line_type     - MET line type (string)
+             logger         - logger object
+             input_dir      - path to input directory (string)
+             output_dir     - path to output directory (string)
+             model          - model name (string)
+             obs            - observation name (string)
+             vx_mask        - verification masking region (string)
+             fcst_var_name  - forecast variable name (string)
+             fcst_var_level - forecast variable level (string)
+             obs_var_name   - observation variable name (string)
+             obs_var_leve   - observation variable level (string)
+             line_type      - MET line type (string)
 
          Returns:
+             output_file - path to the condensed stat file
     """
     model_stat_files_wildcard = os.path.join(input_dir, model, model+'_*.stat')
     model_stat_files = glob.glob(model_stat_files_wildcard, recursive=True)
+    output_file = os.path.join(
+        output_dir, f"condensed_stats_{model.lower()}_{line_type.lower()}_"
+        +f"{fcst_var_name.lower()}_"
+        +f"{fcst_var_level.lower().replace('.','p').replace('-', '_')}_"
+        +f"{vx_mask.lower()}.stat"
+    )
     if len(model_stat_files) == 0:
         logger.warning(f"NO STAT FILES IN MATCHING "
                        +f"{model_stat_files_wildcard}")
     else:
         if not os.path.exists(output_file):
-            logger.debug(f"Condensing down stat files matching "
-                         +f"{model_stat_files_wildcard}")
+            logger.info(f"Condensing down stat files matching "
+                        +f"{model_stat_files_wildcard}")
             with open(model_stat_files[0]) as msf:
                 met_header_cols = msf.readline()
             all_grep_output = ''
             grep_opts = (
                 ' | grep "'+obs+' "'
-                +' | grep "'+grid+' "'
                 +' | grep "'+vx_mask+' "'
                 +' | grep "'+fcst_var_name+' "'
+                +' | grep "'+fcst_var_level+' "'
                 +' | grep "'+obs_var_name+' "'
                 +' | grep "'+line_type+' "'
             )
@@ -2143,6 +2147,9 @@ def condense_model_stat_files(logger, input_dir, output_file, model, obs,
                          +f"{output_file}")
             with open(output_file, 'w') as f:
                 f.write(met_header_cols+all_grep_output)
+        else:
+            logger.info(f"{output_file} exists")
+    return output_file
 
 def build_df(logger, input_dir, output_dir, model_info_dict,
              met_info_dict, fcst_var_name, fcst_var_level, fcst_var_thresh,
@@ -2195,16 +2202,6 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
             input_dir, model_num+'_'+model_dict['name']+'.stat'
         )
         if len(dates) != 0:
-            #if not os.path.exists(condensed_model_file):
-            #    write_condensed_stat_file = True
-            #else:
-            #    write_condensed_stat_file = False
-            #if write_condensed_stat_file:
-            #    condense_model_stat_files(
-            #        logger, input_dir, condensed_model_file, model_dict['name'],
-            #        model_dict['obs_name'], grid, vx_mask,
-            #        fcst_var_name, obs_var_name, line_type
-            #    )
             input_parsed_model_stat_file = os.path.join(
                 input_dir,
                 'fcst'+model_dict['name']+'_'
