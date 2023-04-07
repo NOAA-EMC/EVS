@@ -54,5 +54,28 @@ elif STEP == 'stats':
             gda_util.run_shell_command(
                 ['cp', '-rpv', COMOUT_VDATE, DATA_METplus_VDATE]
             )
+elif STEP == 'plots':
+    end_date = str(os.environ['end_date'])
+    VERIF_CASE = os.environ['VERIF_CASE']
+    NDAYS = str(os.environ['NDAYS'])
+    VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
+    VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
+                                 .split(' '))
+    for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
+        DATA_plot_output = os.path.join(DATA, VERIF_CASE+'_'+STEP,
+                                        'plot_output', RUN+'.'+end_date,
+                                        VERIF_CASE+'_'+VERIF_CASE_STEP_type)
+        COMOUT_RUN_end_date_VERIF_CASE_type_NDAYS = os.path.join(
+            COMOUT, VERIF_CASE+'_'+VERIF_CASE_STEP_type,
+            'last'+NDAYS+'days'
+        )
+        if os.path.exists(COMOUT_RUN_end_date_VERIF_CASE_type_NDAYS):
+            print("Copying COMOUT directory "
+                  +f"{COMOUT_RUN_end_date_VERIF_CASE_type_NDAYS} directory "
+                  +f"into working directory {DATA_plot_output}")
+            gda_util.run_shell_command(
+                ['cp', '-rpv', COMOUT_RUN_end_date_VERIF_CASE_type_NDAYS,
+                 DATA_plot_output]
+            )
 
 print("END: "+os.path.basename(__file__))

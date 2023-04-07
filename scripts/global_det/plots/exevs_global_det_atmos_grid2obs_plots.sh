@@ -52,6 +52,14 @@ status=$?
 [[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_get_data_files.py"
 echo
 
+# Check for restart files
+if [ $evs_run_mode = production ]; then
+    python ${USHevs}/global_det/global_det_atmos_production_restart.py
+    status=$?
+    [[ $status -ne 0 ]] && exit $status
+    [[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/global_det/global_det_atmos_production_restart.py"
+fi
+
 # Create and run job scripts for condense_stats, filter_stats, make_plots, and tar_images
 for group in condense_stats filter_stats make_plots tar_images; do
     export JOB_GROUP=$group
