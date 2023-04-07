@@ -3,31 +3,54 @@
 cd /lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS/ecf/global_ens/stats
 
 qsub jevs_gefs_atmos_grid2grid_stats.ecf
+sleep 120
 qsub jevs_gefs_atmos_grid2obs_stats.ecf
+sleep 120
 qsub jevs_gefs_atmos_precip_stats.ecf
+sleep 120
 qsub jevs_gefs_atmos_snowfall_stats.ecf
+sleep 120
 qsub jevs_gefs_atmos_sea_ice_stats.ecf
+sleep 120
 qsub jevs_gefs_atmos_sst_stats.ecf
+sleep 120
 qsub jevs_gefs_atmos_cnv_stats.ecf
-qsub jevs_gefs_wmo_grid2grid_stats.ecf 
+sleep 120
+qsub jevs_gefs_wmo_grid2grid_stats.ecf
+sleep 120
 qsub jevs_gefs_headline_grid2grid_stats.ecf
+sleep 120
 qsub jevs_gfs_headline_grid2grid_stats.ecf
 
+sleep 120
 qsub jevs_cmce_atmos_grid2grid_stats.ecf
+sleep 120
 qsub jevs_cmce_atmos_grid2obs_stats.ecf
+sleep 120
 qsub jevs_cmce_atmos_precip_stats.ecf
+sleep 120
 qsub jevs_cmce_atmos_snowfall_stats.ecf
+sleep 120
 qsub jevs_cmce_wmo_grid2grid_stats.ecf
-
+sleep 120
 qsub jevs_ecme_atmos_grid2grid_stats.ecf
+sleep 120
 qsub jevs_ecme_atmos_grid2obs_stats.ecf
+sleep 120
 qsub jevs_ecme_atmos_precip_stats.ecf
+sleep 120
 qsub jevs_ecme_atmos_snowfall_stats.ecf
-
+sleep 120
 qsub jevs_naefs_atmos_grid2grid_stats.ecf
+sleep 120
 qsub jevs_naefs7_atmos_grid2grid_stats.ecf
+sleep 120
 qsub jevs_naefs_atmos_grid2obs_stats.ecf
+sleep 120
 qsub jevs_naefs7_atmos_grid2obs_stats.ecf
+sleep 120
 qsub jevs_naefs_atmos_precip_stats.ecf
+sleep 120
 qsub jevs_naefs7_atmos_precip_stats.ecf
+sleep 120
 qsub jevs_naefs_headline_grid2grid_stats.ecf
