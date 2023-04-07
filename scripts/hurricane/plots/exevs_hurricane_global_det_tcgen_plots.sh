@@ -1,7 +1,6 @@
 #!/bin/bash
 export PS4=' + exevs_hurricane_global_det_tcgen_plots.sh line $LINENO: '
 
-#export cartopyDataDir=${cartopyDataDir:-${FIXevs}/cartopy}
 export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
 
 export YEAR=${YYYY}
@@ -11,7 +10,7 @@ export modellist="gfs ecmwf cmc"
 
 noaa_logo() {
   TargetImageName=$1
-  WaterMarkLogoFileName=${FIXevs}/noaa.png
+  WaterMarkLogoFileName=${FIXevs}/logos/noaa.png
   echo "Start NOAA Logo marking... "
   SCALE=50
   composite -gravity northwest -quality 2 \( $WaterMarkLogoFileName -resize $SCALE% \) "$TargetImageName" "$TargetImageName"
@@ -21,7 +20,7 @@ noaa_logo() {
 }
 nws_logo() {
   TargetImageName=$1
-  WaterMarkLogoFileName=${FIXevs}/nws.png
+  WaterMarkLogoFileName=${FIXevs}/logos/nws.png
   echo "Start NWS Logo marking... "
   SCALE=50
   composite -gravity northeast -quality 2 \( $WaterMarkLogoFileName -resize $SCALE% \) "$TargetImageName" "$TargetImageName"

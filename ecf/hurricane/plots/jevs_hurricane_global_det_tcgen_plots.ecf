@@ -55,7 +55,7 @@ export PDY=20221231
 #Define the directories of your TC genesis stats files
 export COMINstats=/lfs/h2/emc/ptmp/$USER/com/evs/${evs_ver}/${COMPONENT}/${RUN}/${VERIF_CASE}/stats
 #Define the directories of your NOAA/NWS logos
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/logos
+export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
 export DATAROOT=/lfs/h2/emc/ptmp/$USER
 export COMROOT=${DATAROOT}/com

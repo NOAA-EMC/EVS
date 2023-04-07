@@ -68,7 +68,7 @@ echo "Name_${stormName}_Name"
 echo "${stormBasin}, ${stormNumber}, ${stormYear}, ${stormName}"
 
 #---Storm Plots 
-export LOGOroot=${FIXevs}
+export LOGOroot=${FIXevs}/logos
 export PLOTDATA=${STORMroot}
 #export RUN="tropcyc"
 export img_quality="low"
@@ -136,7 +136,7 @@ elif [ ${stormBasin} = "wp" ]; then
 fi
 
 #--- Basin-Storms Plots 
-export LOGOroot=${FIXevs}
+export LOGOroot=${FIXevs}/logos
 export PLOTDATA=${metTCcomout}
 #export RUN="tropcyc"
 export img_quality="low"
