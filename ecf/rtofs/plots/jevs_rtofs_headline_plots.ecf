@@ -38,7 +38,6 @@ export RUN=headline
 # set up VDATE and COMIN and COMOUT
 export VDATE=$(date --date="4 days ago" +%Y%m%d)
 
-export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
 export COMOUTfinal=$COMOUT/stats/$COMPONENT
