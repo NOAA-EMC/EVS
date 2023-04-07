@@ -215,7 +215,7 @@ plot_jobs_dict = {
                                            'points': '1'},
                            'fhr_start': '720',
                            'fhr_end': '720',
-                           'fhr_inc': '0',
+                           'fhr_inc': '24',
                            'grid': 'G003',
                            'obs_name': 'ghrsst_ospo',
                            'plots_list': 'time_series'},

@@ -1,6 +1,6 @@
-#PBS -N jevs_subseasonal_grid2grid_sst_plots_31days_00
+#PBS -N jevs_subseasonal_grid2grid_sst_plots_90days_00
 #PBS -j oe
-#PBS -o /lfs/h2/emc/vpppg/noscrub/shannon.shields/EVS/ecf/subseasonal/plots/evs_subseasonal_grid2grid_sst_plots_31days_out.txt
+#PBS -o /lfs/h2/emc/vpppg/noscrub/shannon.shields/EVS/ecf/subseasonal/plots/evs_subseasonal_grid2grid_sst_plots_90days_out.txt
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
@@ -75,14 +75,14 @@ export MODELNAME="gefs cfs"
 #export model_ver=${gefs_ver} ${cfs_ver}
 export VERIF_CASE=grid2grid
 export VERIF_TYPE=sst
-export NDAYS=31
+export NDAYS=90
 
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_subseasonal_test/dev/com
 export COMIN=$COMROOT/$NET/$evs_ver
 export COMINcfs=$COMIN/stats/$COMPONENT/cfs
 export COMINgefs=$COMIN/stats/$COMPONENT/gefs
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
-export VDATE_START=$(date -d "today -32 day" +"%Y%m%d")
+export VDATE_START=$(date -d "today -91 day" +"%Y%m%d")
 export VDATE_END=$(date -d "today -2 day" +"%Y%m%d")
 export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE_END
 
@@ -96,6 +96,6 @@ $HOMEevs/jobs/subseasonal/plots/JEVS_SUBSEASONAL_PLOTS
 ######################################################################
 # Purpose: The job and task scripts work together to generate the
 #          subseasonal grid-to-grid SST statistical plots
-#          for the GEFS and CFS models for past 31 days.
+#          for the GEFS and CFS models for past 90 days.
 ######################################################################
 #%end
