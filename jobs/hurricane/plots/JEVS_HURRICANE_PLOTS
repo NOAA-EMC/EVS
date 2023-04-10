@@ -22,9 +22,10 @@ export jlogfile=${jlogfile:-${DATA}/jlogfile.${jobid}}
 ####################################
 export NET=${NET:-evs}
 export COMPONENT=${COMPONENT:-hurricane}
-export RUN=${RUN:-define_in_ecf}  # global_det global_ens regional
-export STEP=${STEP:-define_in_ecf}   # stats plots
-export VERIF_CASE=${VERIF_CASE:-define_in_ecf}   # tropcyc tcgen
+export RUN=${RUN:-global_det}   # global_det, global_ens, regional
+export STEP=${STEP:-plots}   # plots, stats
+export VERIF_CASE=${VERIF_CASE:-tropcyc}  # tropcyc, tcgen
+
 ####################################
 # Determine Job Output Name on System
 ####################################
@@ -44,21 +45,17 @@ export SENDDBN=${SENDDBN:-NO}
 # Specify Execution Areas
 ####################################
 export HOMEevs=${HOMEevs:-${PACKAGEHOME}}
-#export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts/hurricane/plots}
 export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
-#export USHevs=${USHevs:-$HOMEevs/ush/hurricane/plots}
 export USHevs=${USHevs:-$HOMEevs/ush}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 
 # Run setpdy and initialize PDY variables
 # if not set in upstream ecf script
 #########################################
-
 echo "PDY=$PDY"
 if [ -z $PDY ]; then
-   setpdy.sh
-   . ./PDY
-   echo "PDY=$PDY"
+  setpdy.sh
+  . ./PDY
 fi
 
 ##############################################
@@ -98,6 +95,7 @@ export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
 else
 echo "Job failed: unknown ${RUN} and ${VERIF_CASE}"
 err_exit "FAILED ${jobid} - ERROR IN unknown ${RUN} and ${VERIF_CASE} - ABNORMAL EXIT"
+
 fi
 
 #export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})/${COMPONENT}/${RUN}/${VERIF_CASE}/${STEP}}

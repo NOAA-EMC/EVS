@@ -22,9 +22,10 @@ export jlogfile=${jlogfile:-${DATA}/jlogfile.${jobid}}
 ####################################
 export NET=${NET:-evs}
 export COMPONENT=${COMPONENT:-hurricane}
-export RUN=${RUN:-define_in_ecf}  # global_det global_ens regional
-export STEP=${STEP:-define_in_ecf}   # stats plots
-export VERIF_CASE=${VERIF_CASE:-define_in_ecf}   # tropcyc tcgen
+export RUN=${RUN:-global_det} # global_det, global_ens, regional
+export STEP=${STEP:-stats}  # plots, stats 
+export VERIF_CASE=${VERIF_CASE:-tropcyc}  # tropcyc, tcgen  
+
 ####################################
 # Determine Job Output Name on System
 ####################################
@@ -44,20 +45,15 @@ export SENDDBN=${SENDDBN:-NO}
 # Specify Execution Areas
 ####################################
 export HOMEevs=${HOMEevs:-${PACKAGEHOME}}
-#export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts/hurricane/stats}
 export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
-#export PARMevs=${PARMevs:-$HOMEevs/parm/metplus_config/hurricane/stats}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 
-
-
 # Run setpdy and initialize PDY variables
-# if not set in upstream ecf script
-#########################################
+##############################
 echo "PDY=$PDY"
 if [ -z $PDY ]; then
-   setpdy.sh
-   . ./PDY
+  setpdy.sh
+  . ./PDY
 fi
 
 ##############################################
@@ -81,9 +77,9 @@ export COMINtrack=${COMINtrack:-your/TC/track/file}
 export COMINbdeckNHC=${COMINbdeckNHC:-/your/NHC/bdeck/data/dir}
 export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
 
-elif [ ${RUN} = "global_det" -a ${VERIF_CASE} = "tropcyc" ]; then
+elif [ ${RUN} = "global_det" -a ${VERIF_CASE} = "tcgen" ]; then
 export YYYY=`echo ${PDY} | cut -c1-4`
-export YY22=`echo ${PDY} | cut -c3-4`
+#export YY22=`echo ${PDY} | cut -c3-4`
 
 export COMINgenesis=${COMINgenesis:-/your/TC/genesis/data/dir}
 export COMINadeckNHC=${COMINadeckNHC:-/your/NHC/adeck/data/dir}
@@ -103,6 +99,7 @@ export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
 else
 echo "Job failed: unknown ${RUN} and ${VERIF_CASE}"
 err_exit "FAILED ${jobid} - ERROR IN unknown ${RUN} and ${VERIF_CASE} - ABNORMAL EXIT"
+
 fi
 
 #export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})/${COMPONENT}/${RUN}/${VERIF_CASE}/${STEP}}
