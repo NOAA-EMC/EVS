@@ -244,9 +244,9 @@ done     #stats
 
 #scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/gens/sea_ice
 
-tar -cvf plots.gefs.sea.ice.v${VDATE}.past${past_days}days.tar *.png
+tar -cvf evs.plots.gefs.sea.ice.v${VDATE}.past${past_days}days.tar *.png
 
-cp plots.gefs.sea.ice.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
+cp evs.plots.gefs.sea.ice.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
 
 
 

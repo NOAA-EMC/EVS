@@ -238,9 +238,9 @@ done     #stats
 
 #scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/gens/profile1
 
-tar -cvf plots.gefs.profile1.v${VDATE}.past${past_days}days.tar *.png
+tar -cvf evs.plots.gefs.profile1.v${VDATE}.past${past_days}days.tar *.png
 
-cp  plots.gefs.profile1.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
+cp  evs.plots.gefs.profile1.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
 
 
 

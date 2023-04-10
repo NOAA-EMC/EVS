@@ -277,9 +277,9 @@ done     #stats
 
 #scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/gens/precip
 
-tar -cvf plots.gefs.precip.v${VDATE}.past${past_days}days.tar *.png
+tar -cvf evs.plots.gefs.precip.v${VDATE}.past${past_days}days.tar *.png
 
-cp   plots.gefs.precip.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
+cp   evs.plots.gefs.precip.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
 
 
 

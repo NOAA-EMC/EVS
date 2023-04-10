@@ -306,9 +306,9 @@ done     #vhr
 
 #scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/gens/grid2obs_init_separate
 
-tar -cvf plots.gefs.grid2obs.v${VDATE}.past${past_days}days.separate.init.00.12.tar *.png
+tar -cvf evs.plots.gefs.grid2obs.v${VDATE}.past${past_days}days.separate.init.00.12.tar *.png
 
-cp  plots.gefs.grid2obs.v${VDATE}.past${past_days}days.separate.init.00.12.tar $COMOUT/.
+cp  evs.plots.gefs.grid2obs.v${VDATE}.past${past_days}days.separate.init.00.12.tar $COMOUT/.
 
 
 

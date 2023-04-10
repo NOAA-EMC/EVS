@@ -268,9 +268,9 @@ done     #stats
 
 #scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/gens/grid2obs 
 
-tar -cvf plots.gefs.grid2obs.v${VDATE}.past${past_days}days.all.init.times.tar *.png
+tar -cvf evs.plots.gefs.grid2obs.v${VDATE}.past${past_days}days.all.init.times.tar *.png
 
-cp plots.gefs.grid2obs.v${VDATE}.past${past_days}days.all.init.times.tar  $COMOUT/.  
+cp evs.plots.gefs.grid2obs.v${VDATE}.past${past_days}days.all.init.times.tar  $COMOUT/.  
 
 
 

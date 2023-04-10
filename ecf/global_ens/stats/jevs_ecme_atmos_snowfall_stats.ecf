@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#PBS -N evs_ecme_snowfall
+#PBS -N jevs_ecme_snowfall
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev

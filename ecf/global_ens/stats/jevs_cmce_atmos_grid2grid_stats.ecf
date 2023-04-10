@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#PBS -N evs_cmce_g2g
+#PBS -N jevs_cmce_g2g
 #PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q dev

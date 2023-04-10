@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#PBS -N evs_gefs_sst
+#PBS -N jevs_gefs_sst
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev

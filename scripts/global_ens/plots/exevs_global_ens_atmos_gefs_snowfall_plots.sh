@@ -251,9 +251,9 @@ done     #stats
 
 #scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/gens/snowfall
 
-tar -cvf plots.gefs.snowfall.v${VDATE}.past${past_days}days.tar *.png
+tar -cvf evs.plots.gefs.snowfall.v${VDATE}.past${past_days}days.tar *.png
 
-cp plots.gefs.snowfall.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
+cp evs.plots.gefs.snowfall.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
 
 
 
