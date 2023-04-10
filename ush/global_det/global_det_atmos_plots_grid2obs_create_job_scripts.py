@@ -385,6 +385,11 @@ for pres_levs_job in list(condense_stats_jobs_dict['pres_levs'].keys()):
     else:
         (condense_stats_jobs_dict['pres_levs'][pres_levs_job]\
          ['line_types']) = ['SL1L2']
+#### ptype
+for ptype_job in list(condense_stats_jobs_dict['ptype'].keys()):
+    condense_stats_jobs_dict['ptype'][ptype_job]['line_types'] = (
+        ['CTC']
+    )
 #### sfc
 for sfc_job in list(condense_stats_jobs_dict['sfc'].keys()):
     if sfc_job == 'VectorWind10m':
@@ -403,18 +408,102 @@ for sfc_job in list(condense_stats_jobs_dict['sfc'].keys()):
         condense_stats_jobs_dict['sfc'][sfc_job]['line_types'] = (
             ['SL1L2']
         )
-#### ptype
-for ptype_job in list(condense_stats_jobs_dict['ptype'].keys()):
-    condense_stats_jobs_dict['ptype'][ptype_job]['line_types'] = (
-        ['CTC']
-    )
 if JOB_GROUP == 'condense_stats':
     JOB_GROUP_dict = condense_stats_jobs_dict
 
 ################################################
 #### filter_stats jobs
 ################################################
-filter_stats_jobs_dict = copy.deepcopy(base_plot_jobs_info_dict)
+filter_stats_jobs_dict = copy.deepcopy(condense_stats_jobs_dict)
+#### pres_levs
+for pres_levs_job in list(filter_stats_jobs_dict['pres_levs'].keys()):
+    filter_stats_jobs_dict['pres_levs'][pres_levs_job]['grid'] = 'G004'
+    (filter_stats_jobs_dict['pres_levs'][pres_levs_job]\
+     ['fcst_var_dict']['threshs']) = ['NA']
+    (filter_stats_jobs_dict['pres_levs'][pres_levs_job]\
+     ['obs_var_dict']['threshs']) = ['NA']
+    filter_stats_jobs_dict['pres_levs'][pres_levs_job]['interps'] = [
+        'BILIN/4'
+    ]
+#### ptype
+for ptype_job in list(filter_stats_jobs_dict['ptype'].keys()):
+    filter_stats_jobs_dict['ptype'][ptype_job]['grid'] = 'G104'
+    filter_stats_jobs_dict['ptype'][ptype_job]['interps'] = ['NEAREST/1']
+    filter_stats_jobs_dict['ptype'][ptype_job]['fcst_var_dict']['threshs'] = [
+        'ge1.0'
+    ]
+    if ptype_job == 'Rain':
+        (filter_stats_jobs_dict['ptype'][ptype_job]\
+         ['obs_var_dict']['threshs']) = ['ge161&&le163']
+    elif ptype_job == 'Snow':
+        (filter_stats_jobs_dict['ptype'][ptype_job]\
+         ['obs_var_dict']['threshs']) = ['ge171&&le173']
+    elif ptype_job == 'FrzRain':
+        (filter_stats_jobs_dict['ptype'][ptype_job]\
+         ['obs_var_dict']['threshs']) = ['ge164&&le166']
+    elif ptype_job == 'IcePel':
+        (filter_stats_jobs_dict['ptype'][ptype_job]\
+         ['obs_var_dict']['threshs']) = ['ge174&&le176']
+#### sfc
+for sfc_job in list(filter_stats_jobs_dict['sfc'].keys()):
+    filter_stats_jobs_dict['sfc'][sfc_job]['grid'] = 'G104'
+    filter_stats_jobs_dict['sfc'][sfc_job]['interps'] = ['BILIN/4']
+    if 'CAPE' in sfc_job:
+        filter_stats_jobs_dict['sfc'][sfc_job]['fcst_var_dict']['threshs'] = [
+            'gt0||'
+        ]
+        filter_stats_jobs_dict['sfc'][sfc_job]['obs_var_dict']['threshs'] = [
+            'gt0'
+        ]
+    elif sfc_job == 'Ceiling':
+        filter_stats_jobs_dict['sfc'][sfc_job]['fcst_var_dict']['threshs'] = [
+            'lt152', 'lt305', 'lt914', 'ge914', 'lt1524', 'lt3048'
+        ]
+        filter_stats_jobs_dict['sfc'][sfc_job]['obs_var_dict']['threshs'] = [
+            'lt152', 'lt305', 'lt914', 'ge914', 'lt1524', 'lt3048'
+        ]
+    elif sfc_job == 'Visibility':
+        filter_stats_jobs_dict['sfc'][sfc_job]['fcst_var_dict']['threshs'] = [
+            'lt805', 'lt1609', 'lt4828', 'lt8045', 'ge8045', 'lt16090'
+        ]
+        filter_stats_jobs_dict['sfc'][sfc_job]['obs_var_dict']['threshs'] = [
+            'lt805', 'lt1609', 'lt4828', 'lt8045', 'ge8045', 'lt16090'
+        ]
+    else:
+        filter_stats_jobs_dict['sfc'][sfc_job]['fcst_var_dict']['threshs'] = [
+            'NA'
+        ]
+        filter_stats_jobs_dict['sfc'][sfc_job]['obs_var_dict']['threshs'] = [
+            'NA'
+        ]
+    if sfc_job in ['Dewpoint2m', 'CAPESfcBased', 'CAPEMixedLayer']:
+        filter_stats_jobs_dict['sfc'][sfc_job]['line_types'] = ['SL1L2']
+        filter_stats_jobs_dict['sfc'][f"{sfc_job}_Thresh"] = (
+            filter_stats_jobs_dict['sfc'][sfc_job]
+        )
+        filter_stats_jobs_dict['sfc'][f"{sfc_job}_Thresh"]['line_types'] = [
+            'CTC'
+        ]
+        if 'CAPE' in sfc_job:
+            (filter_stats_jobs_dict['sfc'][f"{sfc_job}_Thresh"]\
+             ['fcst_var_dict']['threshs']) = [
+                'ge500', 'ge1000', 'ge1500', 'ge2000', 'ge3000', 'ge4000',
+                'ge5000'
+             ]
+            (filter_stats_jobs_dict['sfc'][f"{sfc_job}_Thresh"]\
+             ['obs_var_dict']['threshs']) = [
+                'ge500', 'ge1000', 'ge1500', 'ge2000', 'ge3000', 'ge4000',
+                'ge5000'
+             ]
+        elif sfc_job == 'Dewpoint2m':
+            (filter_stats_jobs_dict['sfc'][f"{sfc_job}_Thresh"]\
+             ['fcst_var_dict']['threshs']) = [
+                 'ge277.594', 'ge283.15', 'ge288.706', 'ge294.261'
+             ]
+            (filter_stats_jobs_dict['sfc'][f"{sfc_job}_Thresh"]\
+             ['obs_var_dict']['threshs']) = [
+                 'ge277.594', 'ge283.15', 'ge288.706', 'ge294.261'
+             ]
 if JOB_GROUP == 'filter_stats':
     JOB_GROUP_dict = filter_stats_jobs_dict
 
@@ -455,27 +544,28 @@ for verif_type in VERIF_CASE_STEP_type_list:
         job_env_dict['start_date'] = start_date
         job_env_dict['end_date'] = end_date
         job_env_dict['date_type'] = 'VALID'
-        #valid_hr_start = int(job_env_dict['valid_hr_start'])
-        #valid_hr_end = int(job_env_dict['valid_hr_end'])
-        #valid_hr_inc = int(job_env_dict['valid_hr_inc'])
-        #valid_hrs = list(range(valid_hr_start,
-        #                       valid_hr_end+valid_hr_inc,
-        #                       valid_hr_inc))
-        #if 'Daily' in verif_type_job:
-        #    if job_env_dict['fhr_inc'] != '24':
-        #        job_env_dict['fhr_inc'] = '24'
-        #    if int(job_env_dict['fhr_end'])%24 != 0:
-        #        job_env_dict['fhr_end'] = str(
-        #            int(job_env_dict['fhr_end'])
-        #             -(int(job_env_dict['fhr_end'])%24)
-        #        )
-        #    if int(job_env_dict['fhr_start'])%24 != 0:
-        #        job_env_dict['fhr_start'] = str(
-        #            int(job_env_dict['fhr_start'])
-        #            -(int(job_env_dict['fhr_start'])%24)
-        #        )
-        #    if int(job_env_dict['fhr_start']) < 24:
-        #        job_env_dict['fhr_start'] = '24'
+        if JOB_GROUP in ['filter_stats', 'make_plots']:
+            valid_hr_start = int(job_env_dict['valid_hr_start'])
+            valid_hr_end = int(job_env_dict['valid_hr_end'])
+            valid_hr_inc = int(job_env_dict['valid_hr_inc'])
+            valid_hrs = list(range(valid_hr_start,
+                                   valid_hr_end+valid_hr_inc,
+                                   valid_hr_inc))
+            if 'Daily' in verif_type_job:
+                if job_env_dict['fhr_inc'] != '24':
+                    job_env_dict['fhr_inc'] = '24'
+                if int(job_env_dict['fhr_end'])%24 != 0:
+                    job_env_dict['fhr_end'] = str(
+                        int(job_env_dict['fhr_end'])
+                         -(int(job_env_dict['fhr_end'])%24)
+                    )
+                if int(job_env_dict['fhr_start'])%24 != 0:
+                    job_env_dict['fhr_start'] = str(
+                        int(job_env_dict['fhr_start'])
+                        -(int(job_env_dict['fhr_start'])%24)
+                    )
+                if int(job_env_dict['fhr_start']) < 24:
+                    job_env_dict['fhr_start'] = '24'
         for data_name in ['fcst', 'obs']:
             job_env_dict[data_name+'_var_name'] =  (
                 verif_type_plot_jobs_dict[verif_type_job]\
@@ -488,8 +578,21 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 verif_type_plot_jobs_dict[verif_type_job]['vx_masks'],
                 model_list
             ))
+        elif JOB_GROUP == 'filter_stats':
+            job_env_dict['grid'] = (
+                verif_type_plot_jobs_dict[verif_type_job]['grid']
+            )
+            JOB_GROUP_verif_type_job_product_loops = list(itertools.product(
+                verif_type_plot_jobs_dict[verif_type_job]['line_types'],
+                verif_type_plot_jobs_dict[verif_type_job]['fcst_var_dict']['levels'],
+                verif_type_plot_jobs_dict[verif_type_job]['vx_masks'],
+                model_list,
+                verif_type_plot_jobs_dict[verif_type_job]['fcst_var_dict']['threshs'],
+                verif_type_plot_jobs_dict[verif_type_job]['interps'],
+                valid_hrs
+            ))
         for loop_info in JOB_GROUP_verif_type_job_product_loops:
-            if JOB_GROUP == 'condense_stats':
+            if JOB_GROUP in ['condense_stats', 'filter_stats']:
                 job_env_dict['fcst_var_level'] = loop_info[1]
                 job_env_dict['obs_var_level'] = (
                     verif_type_plot_jobs_dict[verif_type_job]\
@@ -507,6 +610,28 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 )
                 job_env_dict['line_type'] = loop_info[0]
                 job_env_dict['vx_mask'] = loop_info[2]
+                if JOB_GROUP == 'filter_stats':
+                    job_env_dict['event_equalization'] = (
+                        os.environ[VERIF_CASE_STEP_abbrev
+                                   +'_event_equalization']
+                    )
+                    job_env_dict['fcst_var_thresh'] = loop_info[4]
+                    job_env_dict['obs_var_thresh'] = (
+                        verif_type_plot_jobs_dict[verif_type_job]\
+                        ['obs_var_dict']['threshs'][
+                            verif_type_plot_jobs_dict[verif_type_job]\
+                            ['fcst_var_dict']['threshs'].index(loop_info[4])
+                        ]
+                    )
+                    job_env_dict['interp_method'] = loop_info[5].split('/')[0]
+                    job_env_dict['interp_points'] = loop_info[5].split('/')[1]
+                    job_env_dict['valid_hr_start'] = (
+                        str(loop_info[6]).zfill(2)
+                    )
+                    job_env_dict['valid_hr_end'] = (
+                        job_env_dict['valid_hr_start']
+                    )
+                    job_env_dict['valid_hr_inc'] = '24'
                 job_env_dict['DATAjob'] = os.path.join(
                     DATA, f"{VERIF_CASE}_{STEP}", 'plot_output',
                     f"{RUN}.{end_date}", f"{VERIF_CASE}_{verif_type}",
@@ -542,209 +667,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 # Write environment variables
                 job_env_dict['job_id'] = 'job'+str(njobs)
                 for name, value in job_env_dict.items():
-                    job.write('export '+name+'='+value+'\n')
-                job.write('\n')
-                job.write(
-                    gda_util.python_command('global_det_atmos_plots.py',[])
-                )
-                job.close()
-            elif JOB_GROUP == 'filter_stats':
-                for JOB_GROUP_loop in list(
-                    itertools.product(model_list, fcst_var_levels,
-                                      fcst_var_threshs, valid_hrs)
-                ):
-                    job_env_dict['model_list'] = "'"+f"{JOB_GROUP_loop[0]}"+"'"
-                    job_env_dict['model_plot_name_list'] = (
-                        "'"+f"{model_plot_name_list[model_list.index(JOB_GROUP_loop[0])]}"+"'"
-                    )
-                    job_env_dict['obs_list'] = (
-                        "'"+f"{obs_list[model_list.index(JOB_GROUP_loop[0])]}"+"'"
-                    )
-                    job_env_dict['fcst_var_level_list'] = (
-                        "'"+f"{JOB_GROUP_loop[1]}"+"'"
-                    )
-                    job_env_dict['fcst_var_thresh_list'] = (
-                        "'"+f"{JOB_GROUP_loop[2]}"+"'"
-                    )
-                    job_env_dict['obs_var_level_list'] = (
-                        "'"+f"{obs_var_levels[fcst_var_levels.index(JOB_GROUP_loop[1])]}"+"'"
-                    )
-                    job_env_dict['obs_var_thresh_list'] = (
-                        "'"+f"{obs_var_threshs[fcst_var_threshs.index(JOB_GROUP_loop[2])]}"+"'"
-                    )
-                    job_env_dict['valid_hr_start'] = (
-                        str(JOB_GROUP_loop[3]).zfill(2)
-                    )
-                    job_env_dict['valid_hr_end'] = (
-                        job_env_dict['valid_hr_start']
-                    )
-                    job_env_dict['valid_hr_inc'] = '24'
-                    # Create job file
-                    njobs+=1
-                    job_file = os.path.join(JOB_GROUP_jobs_dir,
-                                            'job'+str(njobs))
-                    print("Creating job script: "+job_file)
-                    job = open(job_file, 'w')
-                    job.write('#!/bin/bash\n')
-                    job.write('set -x\n')
-                    job.write('\n')
-                    # Set any environment variables for special cases
-                    # Write environment variables
-                    job_env_dict['job_id'] = 'job'+str(njobs)
-                    for name, value in job_env_dict.items():
-                        job.write('export '+name+'='+value+'\n')
-                    job.write('\n')
-                    job.write(
-                        gda_util.python_command('global_det_atmos_plots.py',[])
-                    )
-                    job.close()
-            elif JOB_GROUP == 'make_plots':
-                job_output_images_dir = os.path.join(
-                    DATA, VERIF_CASE+'_'+STEP, 'plot_output',
-                    RUN+'.'+end_date, verif_type,
-                    job_env_dict['job_name'].replace('/','_'), 'images'
-                )
-                if not os.path.exists(job_output_images_dir):
-                    os.makedirs(job_output_images_dir)
-                job_env_dict['model_list'] = "'"+f"{', '.join(model_list)}"+"'"
-                job_env_dict['model_plot_name_list'] = (
-                    "'"+f"{', '.join(model_plot_name_list)}"+"'"
-                )
-                job_env_dict['obs_list'] = (
-                    "'"+f"{', '.join(obs_list)}"+"'"
-                )
-                for plot in verif_type_plot_jobs_dict\
-                        [verif_type_job]['plots_list'].split(', '):
-                    job_env_dict['plot'] = plot
-                    if plot == 'valid_hour_average':
-                        plot_valid_hrs_loop = [valid_hrs]
-                    else:
-                        plot_valid_hrs_loop = valid_hrs
-                    if plot in ['threshold_average', 'performance_diagram']:
-                        plot_fcst_threshs_loop = [fcst_var_threshs]
-                    else:
-                        plot_fcst_threshs_loop = fcst_var_threshs
-                    if plot in ['stat_by_level', 'lead_by_level']:
-                        plot_fcst_levels_loop = ['all', 'trop', 'strat',
-                                                 'ltrop', 'utrop']
-                    else:
-                        plot_fcst_levels_loop = fcst_var_levels
-                    for JOB_GROUP_loop in list(
-                        itertools.product(plot_valid_hrs_loop,
-                                          plot_fcst_threshs_loop,
-                                          plot_fcst_levels_loop)
-                    ): 
-                        if plot == 'valid_hour_average':
-                            job_env_dict['valid_hr_start'] = str(
-                                JOB_GROUP_loop[0][0]
-                            ).zfill(2)
-                            job_env_dict['valid_hr_end'] = str(
-                                JOB_GROUP_loop[0][-1]
-                            ).zfill(2)
-                            job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
-                        else:
-                            job_env_dict['valid_hr_start'] = str(
-                                JOB_GROUP_loop[0]
-                            ).zfill(2)
-                            job_env_dict['valid_hr_end'] = str(
-                                JOB_GROUP_loop[0]
-                            ).zfill(2)
-                            job_env_dict['valid_hr_inc'] = '24'
-                        if plot in ['threshold_average',
-                                    'performance_diagram']:
-                            job_env_dict['fcst_var_thresh_list'] = (
-                                "'"+f"{', '.join(JOB_GROUP_loop[1])}"+"'"
-                            )
-                            job_env_dict['obs_var_thresh_list'] = (
-                                "'"+f"{', '.join(obs_var_threshs)}"+"'"
-                            )
-                        else:
-                            job_env_dict['fcst_var_thresh_list'] = (
-                                "'"+f"{JOB_GROUP_loop[1]}"+"'"
-                            )
-                            job_env_dict['obs_var_thresh_list'] = (
-                                "'"+f"{obs_var_threshs[fcst_var_threshs.index(JOB_GROUP_loop[1])]}"+"'"
-                            )
-                        if plot in ['stat_by_level', 'lead_by_level']:
-                            job_env_dict['vert_profile'] = (
-                                "'"+f"{JOB_GROUP_loop[2]}"+"'"
-                            )
-                            job_env_dict['fcst_var_level_list'] = (
-                                "'"+f"{', '.join(fcst_var_levels)}"+"'"
-                            )
-                            job_env_dict['obs_var_level_list'] = (
-                                "'"+f"{', '.join(obs_var_levels)}"+"'"
-                            )
-                        else:
-                            job_env_dict['fcst_var_level_list'] = (
-                                "'"+f"{JOB_GROUP_loop[2]}"+"'"
-                            )
-                            job_env_dict['obs_var_level_list'] = (
-                                "'"+f"{obs_var_levels[fcst_var_levels.index(JOB_GROUP_loop[2])]}"+"'"
-                            )
-                        run_global_det_atmos_plots = ['global_det_atmos_plots.py']
-                        if evs_run_mode == 'production' and \
-                                verif_type in ['pres_levs', 'sfc'] and \
-                                plot in ['lead_average', 'lead_by_level',
-                                         'lead_by_date']:
-                            run_global_det_atmos_plots.append(
-                                'global_det_atmos_plots_production_tof240.py'
-                            )
-                        for run_global_det_atmos_plot in run_global_det_atmos_plots:
-                            # Create job file
-                            njobs+=1 
-                            job_file = os.path.join(JOB_GROUP_jobs_dir,
-                                                    'job'+str(njobs))
-                            print("Creating job script: "+job_file)
-                            job = open(job_file, 'w')
-                            job.write('#!/bin/bash\n')
-                            job.write('set -x\n')
-                            job.write('\n')
-                            # Set any environment variables for special cases
-                            # Write environment variables
-                            job_env_dict['job_id'] = 'job'+str(njobs)
-                            for name, value in job_env_dict.items():
-                                job.write('export '+name+'='+value+'\n')
-                            job.write('\n')
-                            job.write(
-                                gda_util.python_command(run_global_det_atmos_plot,
-                                                        [])
-                            )
-                        job.close()
-            elif JOB_GROUP == 'tar_images':
-                job_env_dict['model_list'] = "'"+f"{', '.join(model_list)}"+"'"
-                job_env_dict['model_plot_name_list'] = (
-                    "'"+f"{', '.join(model_plot_name_list)}"+"'"
-                )
-                job_env_dict['obs_list'] = (
-                    "'"+f"{', '.join(obs_list)}"+"'"
-                )
-                job_env_dict['fcst_var_level_list'] = (
-                    "'"+f"{', '.join(fcst_var_levels)}"+"'"
-                )
-                job_env_dict['fcst_var_thresh_list'] = (
-                    "'"+f"{', '.join(fcst_var_threshs)}"+"'"
-                )
-                job_env_dict['obs_var_level_list'] = (
-                    "'"+f"{', '.join(obs_var_levels)}"+"'"
-                )
-                job_env_dict['obs_var_thresh_list'] = (
-                    "'"+f"{', '.join(obs_var_threshs)}"+"'"
-                )
-                # Create job file
-                njobs+=1
-                job_file = os.path.join(JOB_GROUP_jobs_dir,
-                                        'job'+str(njobs))
-                print("Creating job script: "+job_file)
-                job = open(job_file, 'w')
-                job.write('#!/bin/bash\n')
-                job.write('set -x\n')
-                job.write('\n')
-                # Set any environment variables for special cases
-                # Write environment variables
-                job_env_dict['job_id'] = 'job'+str(njobs)
-                for name, value in job_env_dict.items():
-                    job.write('export '+name+'='+value+'\n')
+                    job.write('export '+name+'="'+value+'"\n')
                 job.write('\n')
                 job.write(
                     gda_util.python_command('global_det_atmos_plots.py',[])

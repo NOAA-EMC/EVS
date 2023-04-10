@@ -317,14 +317,14 @@ for pres_levs_job in list(condense_stats_jobs_dict['pres_levs'].keys()):
          ['line_types']) = ['SAL1L2']
 #### sea_ice
 for sea_ice_job in list(condense_stats_jobs_dict['sea_ice'].keys()):
-    condense_stats_jobs_dict['sea_ice'][sea_ice_job]['line_types'] = (
-        ['SL1L2', 'CTC']
-    )
+    condense_stats_jobs_dict['sea_ice'][sea_ice_job]['line_types'] = [
+        'SL1L2', 'CTC'
+    ]
 #### snow
 for snow_job in list(condense_stats_jobs_dict['snow'].keys()):
-    condense_stats_jobs_dict['snow'][snow_job]['line_types'] = (
-        ['CTC', 'NBRCNT']
-    )
+    condense_stats_jobs_dict['snow'][snow_job]['line_types'] = [
+        'CTC', 'NBRCNT'
+    ]
 #### sst
 for sst_job in list(condense_stats_jobs_dict['sst'].keys()):
     condense_stats_jobs_dict['sst'][sst_job]['line_types'] = ['SL1L2']
@@ -334,7 +334,103 @@ if JOB_GROUP == 'condense_stats':
 ################################################
 #### filter_stats jobs
 ################################################
-filter_stats_jobs_dict = copy.deepcopy(base_plot_jobs_info_dict)
+filter_stats_jobs_dict = copy.deepcopy(condense_stats_jobs_dict)
+#### means
+for means_job in list(filter_stats_jobs_dict['means'].keys()):
+    filter_stats_jobs_dict['means'][means_job]['grid'] = 'G004'
+    filter_stats_jobs_dict['means'][means_job]['fcst_var_dict']['threshs'] = [
+        'NA'
+    ]
+    filter_stats_jobs_dict['means'][means_job]['obs_var_dict']['threshs'] = [
+        'NA'
+    ]
+    filter_stats_jobs_dict['means'][means_job]['interps'] = ['NEAREST/1']
+#### precip
+filter_stats_jobs_dict['precip']['24hrCCPA']['line_types'] = ['CTC']
+filter_stats_jobs_dict['precip']['24hrCCPA']['grid'] = 'G211'
+filter_stats_jobs_dict['precip']['24hrCCPA']['fcst_var_dict']['threshs'] = [
+    'ge0.1', 'ge0.5', 'ge1', 'ge5', 'ge10', 'ge25', 'ge50', 'ge75', 'ge0.254',
+    'ge2.54', 'ge6.35', 'ge12.7', 'ge25.4', 'ge50.8', 'ge76.2', 'ge101.6'
+]
+filter_stats_jobs_dict['precip']['24hrCCPA']['obs_var_dict']['threshs'] = [
+    'ge0.1', 'ge0.5', 'ge1', 'ge5', 'ge10', 'ge25', 'ge50', 'ge75', 'ge0.254',
+    'ge2.54', 'ge6.35', 'ge12.7', 'ge25.4', 'ge50.8', 'ge76.2', 'ge101.6'
+]
+filter_stats_jobs_dict['precip']['24hrCCPA']['interps'] = ['NEAREST/1']
+filter_stats_jobs_dict['precip']['24hrCCPA_Nbrhd'] = (
+    filter_stats_jobs_dict['precip']['24hrCCPA']
+)
+filter_stats_jobs_dict['precip']['24hrCCPA_Nbrhd']['line_types'] = ['NBRCNT']
+filter_stats_jobs_dict['precip']['24hrCCPA_Nbrhd']['grid'] = 'G240'
+filter_stats_jobs_dict['precip']['24hrCCPA_Nbrhd']['interps'] = [
+    'NBRHD_SQUARE/1', 'NBRHD_SQUARE/169', 'NBRHD_SQUARE/529',
+    'NBRHD_SQUARE/1089', 'NBRHD_SQUARE/1849', 'NBRHD_SQUARE/2809',
+    'NBRHD_SQUARE/3969'
+]
+#### pres_levs
+for pres_levs_job in list(filter_stats_jobs_dict['pres_levs'].keys()):
+    filter_stats_jobs_dict['pres_levs'][pres_levs_job]['grid'] = 'G004'
+    (filter_stats_jobs_dict['pres_levs'][pres_levs_job]\
+     ['fcst_var_dict']['threshs']) = ['NA']
+    (filter_stats_jobs_dict['pres_levs'][pres_levs_job]\
+     ['obs_var_dict']['threshs']) = ['NA']
+    if pres_levs_job == 'GeoHeight_FourierDecomp':
+        filter_stats_jobs_dict['pres_levs'][pres_levs_job]['interps'] = [
+            'WV1_0-20/NA', 'WV1_0-3/NA', 'WV1_4-9/NA', 'WV1_10-20/NA',
+        ] 
+    else:
+        filter_stats_jobs_dict['pres_levs'][pres_levs_job]['interps'] = [
+            'NEAREST/1'
+        ]
+#### sea_ice
+(filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration']\
+ ['line_types']) = ['SL1L2']
+(filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration']\
+ ['grid']) = 'G004'
+(filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration']\
+ ['fcst_var_dict']['threshs']) = ['NA']
+(filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration']\
+ ['obs_var_dict']['threshs']) = ['NA']
+(filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration']\
+ ['interps']) = ['NEAREST/1']
+filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration_Thresh'] = (
+    filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration']
+)
+(filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration_Thresh']\
+ ['line_types']) = ['CTC']
+(filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration_Thresh']\
+ ['fcst_var_dict']['threshs']) = ['ge15', 'ge40', 'ge80']
+(filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration_Thresh']\
+ ['obs_var_dict']['threshs']) = ['ge15', 'ge40', 'ge80']
+#### snow
+for snow_job in list(filter_stats_jobs_dict['snow'].keys()):
+    filter_stats_jobs_dict['snow'][snow_job]['line_types'] = ['CTC']
+    filter_stats_jobs_dict['snow'][snow_job]['grid'] = 'G211'
+    filter_stats_jobs_dict['snow'][snow_job]['fcst_var_dict']['threshs'] = [
+        'ge0.0254', 'ge0.0508', 'ge0.1016', 'ge0.2032', 'ge0.3048'
+    ]
+    filter_stats_jobs_dict['snow'][snow_job]['obs_var_dict']['threshs'] = [
+        'ge0.0254', 'ge0.0508', 'ge0.1016', 'ge0.2032', 'ge0.3048'
+    ]
+    filter_stats_jobs_dict['snow'][snow_job]['interps'] = ['NEAREST/1']
+    filter_stats_jobs_dict['snow'][f"{snow_job}_Nbrhd"] = (
+        filter_stats_jobs_dict['snow'][snow_job]
+    )
+    filter_stats_jobs_dict['snow'][f"{snow_job}_Nbrhd"]['grid'] = 'G240'
+    filter_stats_jobs_dict['snow'][f"{snow_job}_Nbrhd"]['line_types'] = [
+        'NBRCNT'
+    ]
+    filter_stats_jobs_dict['snow'][f"{snow_job}_Nbrhd"]['interps'] = [
+        'NBRHD_SQUARE/1', 'NBRHD_SQUARE/169', 'NBRHD_SQUARE/529',
+        'NBRHD_SQUARE/1089', 'NBRHD_SQUARE/1849', 'NBRHD_SQUARE/2809',
+        'NBRHD_SQUARE/3969'
+    ]
+#### sst
+for sst_job in list(filter_stats_jobs_dict['sst'].keys()): 
+    filter_stats_jobs_dict['sst'][sst_job]['grid'] = 'G004'
+    filter_stats_jobs_dict['sst'][sst_job]['fcst_var_dict']['threshs'] = ['NA']
+    filter_stats_jobs_dict['sst'][sst_job]['obs_var_dict']['threshs'] = ['NA']
+    filter_stats_jobs_dict['sst'][sst_job]['interps'] = ['NEAREST/1']
 if JOB_GROUP == 'filter_stats':
     JOB_GROUP_dict = filter_stats_jobs_dict
 
@@ -383,27 +479,28 @@ for verif_type in VERIF_CASE_STEP_type_list:
         job_env_dict['start_date'] = start_date
         job_env_dict['end_date'] = end_date
         job_env_dict['date_type'] = 'VALID'
-        #valid_hr_start = int(job_env_dict['valid_hr_start'])
-        #valid_hr_end = int(job_env_dict['valid_hr_end'])
-        #valid_hr_inc = int(job_env_dict['valid_hr_inc'])
-        #valid_hrs = list(range(valid_hr_start,
-        #                       valid_hr_end+valid_hr_inc,
-        #                       valid_hr_inc))
-        #if 'Daily' in verif_type_job:
-        #    if job_env_dict['fhr_inc'] != '24':
-        #        job_env_dict['fhr_inc'] = '24'
-        #    if int(job_env_dict['fhr_end'])%24 != 0:
-        #        job_env_dict['fhr_end'] = str(
-        #            int(job_env_dict['fhr_end'])
-        #             -(int(job_env_dict['fhr_end'])%24)
-        #        )
-        #    if int(job_env_dict['fhr_start'])%24 != 0:
-        #        job_env_dict['fhr_start'] = str(
-        #            int(job_env_dict['fhr_start'])
-        #            -(int(job_env_dict['fhr_start'])%24)
-        #        )
-        #    if int(job_env_dict['fhr_start']) < 24:
-        #        job_env_dict['fhr_start'] = '24'
+        if JOB_GROUP in ['filter_stats', 'make_plots']:
+            valid_hr_start = int(job_env_dict['valid_hr_start'])
+            valid_hr_end = int(job_env_dict['valid_hr_end'])
+            valid_hr_inc = int(job_env_dict['valid_hr_inc'])
+            valid_hrs = list(range(valid_hr_start,
+                                   valid_hr_end+valid_hr_inc,
+                                   valid_hr_inc))
+            if 'Daily' in verif_type_job:
+                if job_env_dict['fhr_inc'] != '24':
+                    job_env_dict['fhr_inc'] = '24'
+                if int(job_env_dict['fhr_end'])%24 != 0:
+                    job_env_dict['fhr_end'] = str(
+                        int(job_env_dict['fhr_end'])
+                         -(int(job_env_dict['fhr_end'])%24)
+                    )
+                if int(job_env_dict['fhr_start'])%24 != 0:
+                    job_env_dict['fhr_start'] = str(
+                        int(job_env_dict['fhr_start'])
+                        -(int(job_env_dict['fhr_start'])%24)
+                    )
+                if int(job_env_dict['fhr_start']) < 24:
+                    job_env_dict['fhr_start'] = '24'
         for data_name in ['fcst', 'obs']:
             job_env_dict[data_name+'_var_name'] =  (
                 verif_type_plot_jobs_dict[verif_type_job]\
@@ -416,8 +513,21 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 verif_type_plot_jobs_dict[verif_type_job]['vx_masks'],
                 model_list
             ))
+        elif JOB_GROUP == 'filter_stats':
+            job_env_dict['grid'] = (
+                verif_type_plot_jobs_dict[verif_type_job]['grid']
+            )
+            JOB_GROUP_verif_type_job_product_loops = list(itertools.product(
+                verif_type_plot_jobs_dict[verif_type_job]['line_types'],
+                verif_type_plot_jobs_dict[verif_type_job]['fcst_var_dict']['levels'],
+                verif_type_plot_jobs_dict[verif_type_job]['vx_masks'],
+                model_list,
+                verif_type_plot_jobs_dict[verif_type_job]['fcst_var_dict']['threshs'],
+                verif_type_plot_jobs_dict[verif_type_job]['interps'],
+                valid_hrs
+            )) 
         for loop_info in JOB_GROUP_verif_type_job_product_loops:
-            if JOB_GROUP == 'condense_stats':
+            if JOB_GROUP in ['condense_stats', 'filter_stats']:
                 job_env_dict['fcst_var_level'] = loop_info[1]
                 job_env_dict['obs_var_level'] = (
                     verif_type_plot_jobs_dict[verif_type_job]\
@@ -435,6 +545,28 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 )
                 job_env_dict['line_type'] = loop_info[0]
                 job_env_dict['vx_mask'] = loop_info[2]
+                if JOB_GROUP == 'filter_stats':
+                    job_env_dict['event_equalization'] = (
+                        os.environ[VERIF_CASE_STEP_abbrev
+                                   +'_event_equalization']
+                    )
+                    job_env_dict['fcst_var_thresh'] = loop_info[4]
+                    job_env_dict['obs_var_thresh'] = (
+                        verif_type_plot_jobs_dict[verif_type_job]\
+                        ['obs_var_dict']['threshs'][
+                            verif_type_plot_jobs_dict[verif_type_job]\
+                            ['fcst_var_dict']['threshs'].index(loop_info[4])
+                        ]
+                    )
+                    job_env_dict['interp_method'] = loop_info[5].split('/')[0]
+                    job_env_dict['interp_points'] = loop_info[5].split('/')[1]
+                    job_env_dict['valid_hr_start'] = (
+                        str(loop_info[6]).zfill(2)
+                    )
+                    job_env_dict['valid_hr_end'] = (
+                        job_env_dict['valid_hr_start']
+                    )
+                    job_env_dict['valid_hr_inc'] = '24'
                 job_env_dict['DATAjob'] = os.path.join(
                     DATA, f"{VERIF_CASE}_{STEP}", 'plot_output',
                     f"{RUN}.{end_date}", f"{VERIF_CASE}_{verif_type}",

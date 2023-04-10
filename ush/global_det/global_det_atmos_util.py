@@ -2184,10 +2184,13 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
              fhr                    - forecast hour (string)
 
          Returns:
+             all_model_df                - dataframe of all the information
+             parsed_model_stat_file_list - list of the files written/read
     """
     met_version_line_type_col_list = get_met_line_type_cols(
         logger, met_info_dict['root'], met_info_dict['version'], line_type
     )
+    parsed_model_stat_file_list = []
     for model_num in list(model_info_dict.keys()):
         model_num_name = (
             model_num+'/'+model_info_dict[model_num]['name']
@@ -2199,11 +2202,15 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
         )
         model_dict = model_info_dict[model_num]
         condensed_model_file = os.path.join(
-            input_dir, model_num+'_'+model_dict['name']+'.stat'
+            input_dir, 'condensed_stats_'
+            +f"{model_info_dict[model_num]['name'].lower()}_"
+            +f"{line_type.lower()}_"
+            +f"{fcst_var_name.lower()}_"
+            +f"{fcst_var_level.lower().replace('.','p').replace('-', '_')}_"
+            +f"{vx_mask.lower()}.stat"
         )
         if len(dates) != 0:
-            input_parsed_model_stat_file = os.path.join(
-                input_dir,
+            parsed_model_stat_file_name = (
                 'fcst'+model_dict['name']+'_'
                 +fcst_var_name+fcst_var_level+fcst_var_thresh+'_'
                 +'obs'+model_dict['obs_name']+'_'
@@ -2215,16 +2222,20 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                 +dates[0].strftime('%Y%m%d%H%M%S')+'to'
                 +dates[-1].strftime('%Y%m%d%H%M%S')+'_'
                 +'fhr'+fhr.zfill(3)
-                +'.stat'
+            ).lower().replace('.','p').replace('-', '_')\
+            .replace('&&', 'and').replace('||', 'or')\
+            .replace('*,*', '').replace('0,*,*', '')+'.stat'
+            input_parsed_model_stat_file = os.path.join(
+                input_dir, parsed_model_stat_file_name
             )
             output_parsed_model_stat_file = os.path.join(
-                output_dir,
-                input_parsed_model_stat_file.rpartition('/')[2]
+                output_dir, parsed_model_stat_file_name
             )
             if os.path.exists(input_parsed_model_stat_file):
                 parsed_model_stat_file = input_parsed_model_stat_file
             else:
                 parsed_model_stat_file = output_parsed_model_stat_file
+            parsed_model_stat_file_list.append(parsed_model_stat_file)
             if not os.path.exists(parsed_model_stat_file):
                 write_parse_stat_file = True
                 read_parse_stat_file = True
@@ -2384,7 +2395,7 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
             all_model_df = model_num_df
         else:
             all_model_df = pd.concat([all_model_df, model_num_df])
-    return all_model_df
+    return all_model_df, parsed_model_stat_file_list
 
 def merge_grid2grid_long_term_stats_datasets(logger, stat_base_dir,
                                              time_range, date_dt_list,
