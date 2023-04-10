@@ -49,8 +49,6 @@ if JOB_GROUP == 'condense_stats':
     fcst_var_level = os.environ['fcst_var_level']
     obs_var_level = os.environ['obs_var_level']
 elif JOB_GROUP == 'filter_stats':
-    fcst_var_level = os.environ['fcst_var_level']
-    obs_var_level = os.environ['obs_var_level']
     valid_hr_start = os.environ['valid_hr_start']
     valid_hr_end = os.environ['valid_hr_end']
     valid_hr_inc = os.environ['valid_hr_inc']
@@ -68,9 +66,26 @@ elif JOB_GROUP == 'filter_stats':
     fcst_var_thresh = os.environ['fcst_var_thresh']
     obs_var_level = os.environ['obs_var_level']
     obs_var_thresh = os.environ['obs_var_thresh']
-#if JOB_GROUP == 'make_plots':
-#    stat = os.environ['stat']
-#    plot = os.environ['plot']
+elif JOB_GROUP == 'make_plots':
+    valid_hr_start = os.environ['valid_hr_start']
+    valid_hr_end = os.environ['valid_hr_end']
+    valid_hr_inc = os.environ['valid_hr_inc']
+    init_hr_start = os.environ['init_hr_start']
+    init_hr_end = os.environ['init_hr_end']
+    init_hr_inc = os.environ['init_hr_inc']
+    fhr_start = os.environ['fhr_start']
+    fhr_end = os.environ['fhr_end']
+    fhr_inc = os.environ['fhr_inc']
+    grid = os.environ['grid']
+    event_equalization = os.environ['event_equalization']
+    interp_method = os.environ['interp_method']
+    interp_points = os.environ['interp_points']
+    fcst_var_level_list = os.environ['fcst_var_level_list'].split(', ')
+    fcst_var_thresh_list = os.environ['fcst_var_thresh_list'].split(', ')
+    obs_var_level_list = os.environ['obs_var_level_list'].split(', ')
+    obs_var_thresh_list = os.environ['obs_var_thresh_list'].split(', ')
+    stat = os.environ['stat']
+    plot = os.environ['plot']
 
 # Set variables
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
@@ -135,7 +150,7 @@ if JOB_GROUP in ['filter_stats', 'make_plots']:
                           int(init_hr_end)+int(init_hr_inc),
                           int(init_hr_inc)))
     fhrs = list(range(int(fhr_start), int(fhr_end)+int(fhr_inc), int(fhr_inc)))
-    if fhrs == list(range(0, 384+6, 6)):
+    if fhrs == list(range(0, 384+6, 6)) and evs_run_mode == 'production':
         fhrs = list(range(0,72,6)) + list(range(72,384+24,24))
 
 # Set up plot information dictionary
@@ -148,14 +163,32 @@ if JOB_GROUP in ['filter_stats', 'make_plots']:
     original_plot_info_dict['interp_method'] = interp_method
     original_plot_info_dict['interp_points'] = interp_points
     original_plot_info_dict['event_equalization'] = event_equalization
-    original_plot_info_dict['fcst_var_name'] = fcst_var_name
-    original_plot_info_dict['fcst_var_level'] = fcst_var_level
-    original_plot_info_dict['fcst_var_thresh'] = fcst_var_thresh
-    original_plot_info_dict['obs_var_name'] = obs_var_name
-    original_plot_info_dict['obs_var_level'] = obs_var_level
-    original_plot_info_dict['obs_var_thresh'] = obs_var_thresh
-    if JOB_GROUP == 'make_plots':
+    if JOB_GROUP == 'filter_stats':
+        original_plot_info_dict['fcst_var_name'] = fcst_var_name
+        original_plot_info_dict['fcst_var_level'] = fcst_var_level
+        original_plot_info_dict['fcst_var_thresh'] = fcst_var_thresh
+        original_plot_info_dict['obs_var_name'] = obs_var_name
+        original_plot_info_dict['obs_var_level'] = obs_var_level
+        original_plot_info_dict['obs_var_thresh'] = obs_var_thresh
+    elif JOB_GROUP == 'make_plots':
         original_plot_info_dict['stat'] = stat
+        fcst_var_prod = list(
+            itertools.product([fcst_var_name], fcst_var_level_list,
+                              fcst_var_thresh_list)
+        )
+        obs_var_prod = list(
+            itertools.product([obs_var_name], obs_var_level_list,
+                              obs_var_thresh_list)
+        )
+        if len(fcst_var_prod) == len(obs_var_prod):
+            var_info = []
+            for v in range(len(fcst_var_prod)):
+                var_info.append((fcst_var_prod[v], obs_var_prod[v]))
+        else:
+            logger.error("FORECAST AND OBSERVATION VARIABLE INFORMATION NOT THE "
+                         +"SAME LENGTH")
+            sys.exit(1)
+     
 
 # Set up MET information dictionary
 original_met_info_dict = {
@@ -269,7 +302,6 @@ elif JOB_GROUP == 'filter_stats':
                         gda_util.copy_file(DATAjob_filter_stats_model_file,
                                            COMOUTjob_filter_stats_model_file)
 elif JOB_GROUP == 'make_plots':
-    logger.info("Making plots")
     if len(model_list) > 10:
         logger.error("TOO MANY MODELS LISTED ("+str(len(model_list))
                      +", ["+', '.join(model_list)+"]), maximum is 10")
@@ -282,8 +314,7 @@ elif JOB_GROUP == 'make_plots':
     if plot == 'time_series':
         import global_det_atmos_plots_time_series as gdap_ts
         for ts_info in \
-                list(itertools.product(valid_hrs, fhrs, var_info,
-                                       interp_points_list)):
+                list(itertools.product(valid_hrs, fhrs, var_info)):
             date_info_dict['valid_hr_start'] = str(ts_info[0])
             date_info_dict['valid_hr_end'] = str(ts_info[0])
             date_info_dict['valid_hr_inc'] = '24'
@@ -294,28 +325,31 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = ts_info[2][1][0]
             plot_info_dict['obs_var_level'] = ts_info[2][1][1]
             plot_info_dict['obs_var_thresh'] = ts_info[2][1][2]
-            plot_info_dict['interp_points'] = str(ts_info[3])
             init_hr = gda_util.get_init_hour(
                 int(date_info_dict['valid_hr_start']),
                 int(date_info_dict['forecast_hour'])
             )
-            image_name = plot_specs.get_savefig_name(
-                os.path.join(job_output_dir, 'images'),
-                plot_info_dict, date_info_dict
+            DATAjob_image_name = plot_specs.get_savefig_name(
+                DATAjob, plot_info_dict, date_info_dict
             )
-            if init_hr in init_hrs:
-                if not os.path.exists(image_name):
-                    make_ts = True
-                else:
-                    make_ts = False
+            COMOUTjob_image_name = (
+                DATAjob_image_name.replace(DATAjob, COMOUTjob)
+            )
+            if init_hr in init_hrs and not os.path.exists(DATAjob_image_name):
+                make_ts = True
             else:
                 make_ts = False
             if make_ts:
-                plot_ts = gdap_ts.TimeSeries(logger, job_output_dir,
-                                             job_output_dir, model_info_dict,
-                                             date_info_dict, plot_info_dict,
-                                             met_info_dict, logo_dir)
+                plot_ts = gdap_ts.TimeSeries(logger, DATAjob+'/..', DATAjob,
+                                             model_info_dict, date_info_dict,
+                                             plot_info_dict, met_info_dict,
+                                             logo_dir)
                 plot_ts.make_time_series()
+                if SENDCOM == 'YES' and os.path.exists(DATAjob_image_name) \
+                        and not os.path.exists(COMOUTjob_image_name):
+                    logger.info(f"Copying {DATAjob_image_name} to "
+                                +f"{COMOUTjob_image_name}")
+                    gda_util.copy_file(DATAjob_image_name, COMOUTjob_image_name)
     elif plot == 'lead_average':
         import global_det_atmos_plots_lead_average as gdap_la
         for la_info in \

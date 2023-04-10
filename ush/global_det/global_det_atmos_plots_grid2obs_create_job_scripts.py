@@ -510,7 +510,10 @@ if JOB_GROUP == 'filter_stats':
 ################################################
 #### make_plots jobs
 ################################################
-make_plots_jobs_dict = copy.deepcopy(base_plot_jobs_info_dict)
+make_plots_jobs_dict = copy.deepcopy(filter_stats_jobs_dict)
+#### pres_levs
+#### ptype
+#### sfc
 if JOB_GROUP == 'make_plots':
     JOB_GROUP_dict = make_plots_jobs_dict
 
@@ -590,6 +593,16 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 verif_type_plot_jobs_dict[verif_type_job]['fcst_var_dict']['threshs'],
                 verif_type_plot_jobs_dict[verif_type_job]['interps'],
                 valid_hrs
+            ))
+        elif JOB_GROUP == 'make_plots':
+            job_env_dict['grid'] = (
+                verif_type_plot_jobs_dict[verif_type_job]['grid']
+            )   
+            JOB_GROUP_verif_type_job_product_loops = list(itertools.product(
+                verif_type_plot_jobs_dict[verif_type_job]['line_type_stats']
+                verif_type_plot_jobs_dict[verif_type_job]['plots']
+                verif_type_plot_jobs_dict[verif_type_job]['vx_masks'],
+                verif_type_plot_jobs_dict[verif_type_job]['interps']
             ))
         for loop_info in JOB_GROUP_verif_type_job_product_loops:
             if JOB_GROUP in ['condense_stats', 'filter_stats']:
@@ -673,6 +686,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     gda_util.python_command('global_det_atmos_plots.py',[])
                 )
                 job.close()
+            elif JOB_GROUP in == 'make_plots':
 
 # If running USE_CFP, create POE scripts
 if USE_CFP == 'YES':
