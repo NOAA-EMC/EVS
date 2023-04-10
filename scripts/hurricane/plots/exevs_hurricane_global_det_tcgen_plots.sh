@@ -1,7 +1,7 @@
 #!/bin/bash
 export PS4=' + exevs_hurricane_global_det_tcgen_plots.sh line $LINENO: '
 
-export cartopyDataDir=${cartopyDataDir:-${FIXevs}/cartopy}
+export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
 
 export YEAR=${YYYY}
 export TCGENdays="TC Genesis(05/01/${YEAR}-11/30/${YEAR})"
@@ -10,7 +10,7 @@ export modellist="gfs ecmwf cmc"
 
 noaa_logo() {
   TargetImageName=$1
-  WaterMarkLogoFileName=${FIXevs}/noaa.png
+  WaterMarkLogoFileName=${FIXevs}/logos/noaa.png
   echo "Start NOAA Logo marking... "
   SCALE=50
   composite -gravity northwest -quality 2 \( $WaterMarkLogoFileName -resize $SCALE% \) "$TargetImageName" "$TargetImageName"
@@ -20,7 +20,7 @@ noaa_logo() {
 }
 nws_logo() {
   TargetImageName=$1
-  WaterMarkLogoFileName=${FIXevs}/nws.png
+  WaterMarkLogoFileName=${FIXevs}/logos/nws.png
   echo "Start NWS Logo marking... "
   SCALE=50
   composite -gravity northeast -quality 2 \( $WaterMarkLogoFileName -resize $SCALE% \) "$TargetImageName" "$TargetImageName"
@@ -40,7 +40,7 @@ if [ ! -d ${OUTPUT} ]; then mkdir -p ${OUTPUT}; fi
 #--- plot the Hits/False Alarms Distribution
 #  /lfs/h2/emc/ptmp/jiayi.peng/com/evs/1.0/hurricane_global_det/tcgen/stats
 cd ${OUTPUT}
-cp ${USHevs}/hits_${basin}.py .
+cp ${USHevs}/hurricane/plots/hits_${basin}.py .
 cp ${COMINstats}/tc_gen_${YEAR}_genmpr_${basin}_${model}.txt tc_gen_${YEAR}_genmpr.txt 
 grep "00    FYOY" tc_gen_${YEAR}_genmpr.txt > tc_gen_hits.txt
 export hitfile="tc_gen_hits.txt"
@@ -61,7 +61,7 @@ error=$?
 
 rm -f TC_genesis.png
 
-cp ${USHevs}/false_${basin}.py .
+cp ${USHevs}/hurricane/plots/false_${basin}.py .
 grep "00    FYON" tc_gen_${YEAR}_genmpr.txt > tc_gen_false.txt
 grep "NA    FYON" tc_gen_${YEAR}_genmpr.txt >> tc_gen_false.txt
 export falsefile="tc_gen_false.txt"
@@ -81,7 +81,7 @@ TargetImageName=$gif_name1
 nws_logo $TargetImageName
 error=$?
 
-cp ${USHevs}/tcgen_space_${basin}.py .
+cp ${USHevs}/hurricane/plots/tcgen_space_${basin}.py .
 python tcgen_space_${basin}.py
 convert TC_genesis.png tcgen_HitFalse_${basin}_${model}.gif
 rm -f TC_genesis.png
@@ -113,7 +113,7 @@ done
 export DATAplot=${DATA}/${basin}
 if [ ! -d ${DATAplot} ]; then mkdir -p ${DATAplot}; fi
 cd ${DATAplot}
-cp ${USHevs}/tcgen_performance_diagram.py .
+cp ${USHevs}/hurricane/plots/tcgen_performance_diagram.py .
 grep "GENESIS_DEV" ${COMINstats}/tc_gen_${YEAR}_ctc_${basin}_gfs.txt > dev_tc_gen_${YEAR}_ctc_${basin}_gfs.txt
 grep "GENESIS_DEV" ${COMINstats}/tc_gen_${YEAR}_ctc_${basin}_ecmwf.txt > dev_tc_gen_${YEAR}_ctc_${basin}_ecmwf.txt
 grep "GENESIS_DEV" ${COMINstats}/tc_gen_${YEAR}_ctc_${basin}_cmc.txt > dev_tc_gen_${YEAR}_ctc_${basin}_cmc.txt
