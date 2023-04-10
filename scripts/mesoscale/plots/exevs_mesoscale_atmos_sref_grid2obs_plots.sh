@@ -293,9 +293,9 @@ for var in hgt tmp ugrd vgrd prmsl rh dpt tcdc cape ; do
 done     #vars
 
 
-tar -cvf plots.sref.grid2obs.v${VDATE}.${past_days}.tar *.png
+tar -cvf evs.plots.sref.grid2obs.${past_days}.v${VDATE}.tar *.png
 
-cp  plots.sref.grid2obs.v${VDATE}.${past_days}.tar  $COMOUT/.  
+cp  evs.plots.sref.grid2obs.${past_days}.v${VDATE}.tar  $COMOUT/.  
 
 
 

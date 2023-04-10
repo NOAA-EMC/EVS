@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#PBS -N evs_sref_precip_spatial_plot
+#PBS -N jevs_sref_precip_spatial_plot
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev

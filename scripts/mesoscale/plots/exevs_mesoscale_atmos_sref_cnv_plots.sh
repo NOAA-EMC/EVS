@@ -197,9 +197,9 @@ for var in hgt vis ; do
 done     #var
 
 
-tar -cvf plots.sref.cnv.v${VDATE}.${past_days}.tar *.png
+tar -cvf evs.plots.sref.cnv.${past_days}.v${VDATE}.tar *.png
 
-cp plots.sref.cnv.v${VDATE}.${past_days}.tar  $COMOUT/.  
+cp evs.plots.sref.cnv.${past_days}.v${VDATE}.tar  $COMOUT/.  
 
 
 

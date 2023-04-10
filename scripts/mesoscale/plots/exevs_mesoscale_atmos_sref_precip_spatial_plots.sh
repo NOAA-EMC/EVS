@@ -78,9 +78,9 @@ for model in $model_list ; do
   done
 done  
 
-tar -cvf plots.href.precip.spatial.map.v${VDATE}.tar *.png
+tar -cvf evs.plots.sref.precip.spatial.map.v${VDATE}.tar *.png
 
-cp plots.href.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
+cp evs.plots.sref.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
 
 
 
