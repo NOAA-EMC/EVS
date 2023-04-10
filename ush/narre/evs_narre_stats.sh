@@ -53,8 +53,8 @@ for prod in mean  ; do
          fi
 
        elif [ $dom = Alaska ] ; then
-         echo  "export verif_grid='G214'" >> run_narre_${model}.${dom}.${range}.sh 
-         echo  "export obsvgrid='G214'" >> run_narre_${model}.${dom}.${range}.sh
+         echo  "export verif_grid='G242'" >> run_narre_${model}.${dom}.${range}.sh 
+         echo  "export obsvgrid='G242'" >> run_narre_${model}.${dom}.${range}.sh
 
          if [ $prod = sclr ] ; then
             echo  "export modelgrid=prob.grd242" >> run_narre_${model}.${dom}.${range}.sh
