@@ -1,5 +1,5 @@
 '''
-Name: global_det_atmos_plots_production_toF240.py
+Name: global_det_atmos_plots_production_tof240.py
 Contact(s): Mallory Row
 Abstract: This script is main driver for the plotting scripts.
           It is only used in production to generate plots to
@@ -19,6 +19,11 @@ from global_det_atmos_plots_specs import PlotSpecs
 
 print("BEGIN: "+os.path.basename(__file__))
 
+if os.environ['JOB_GROUP'] != "make_plots":
+    print(os.path.basename(__file__)+" for JOB_GROUP "
+          +"make_plots only")
+    sys.exit(1)
+
 # Read in environment variables
 DATA = os.environ['DATA']
 NET = os.environ['NET']
@@ -26,6 +31,7 @@ RUN = os.environ['RUN']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 COMPONENT = os.environ['COMPONENT']
+JOB_GROUP = os.environ['JOB_GROUP']
 FIXevs = os.environ['FIXevs']
 MET_ROOT = os.environ['MET_ROOT']
 met_ver = os.environ['met_ver']
@@ -36,7 +42,6 @@ plot_verbosity = os.environ['plot_verbosity']
 event_equalization = os.environ['event_equalization']
 job_name = os.environ['job_name']
 line_type = os.environ['line_type']
-stat = os.environ['stat']
 grid = os.environ['grid']
 job_var = os.environ['job_var']
 vx_mask = os.environ['vx_mask']
@@ -48,9 +53,9 @@ fcst_var_thresh_list = os.environ['fcst_var_thresh_list'].split(', ')
 obs_var_name = os.environ['obs_var_name']
 obs_var_level_list = os.environ['obs_var_level_list'].split(', ')
 obs_var_thresh_list = os.environ['obs_var_thresh_list'].split(', ')
-model_list = os.environ['model_list'].split(' ')
-model_plot_name_list = os.environ['model_plot_name_list'].split(' ')
-plots_list = os.environ['plots_list'].split(', ')
+model_list = os.environ['model_list'].split(', ')
+model_plot_name_list = os.environ['model_plot_name_list'].split(', ')
+obs_list = os.environ['obs_list'].split(', ')
 VERIF_TYPE = os.environ['VERIF_TYPE']
 date_type = os.environ['date_type']
 valid_hr_start = os.environ['valid_hr_start']
@@ -62,10 +67,9 @@ init_hr_inc = os.environ['init_hr_inc']
 fhr_start = os.environ['fhr_start']
 fhr_end = '240'
 fhr_inc = os.environ['fhr_inc']
-if VERIF_CASE == 'grid2grid' and VERIF_TYPE == 'pres_levs':
-   truth_name_list = os.environ['truth_name_list'].split(' ') 
-else:
-   obs_name = os.environ['obs_name']
+job_id = os.environ['job_id']
+stat = os.environ['stat']
+plot = os.environ['plot']
 
 # Set variables
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
@@ -82,14 +86,14 @@ logging_dir = os.path.join(plot_output_dir, RUN+'.'+end_date, 'logs')
 VERIF_TYPE_image_dir = os.path.join(plot_output_dir, RUN+'.'+end_date,
                                     'images', VERIF_TYPE)
 job_output_dir = os.path.join(plot_output_dir, RUN+'.'+end_date,
-                              VERIF_TYPE,job_name.replace('/','_'))
+                              VERIF_TYPE, job_name.replace('/','_'))
 if not os.path.exists(job_output_dir):
     os.makedirs(job_output_dir)
 
 # Set up logging
 job_logging_file = os.path.join(logging_dir, 'evs_'+COMPONENT+'_'+RUN+'_'
                                 +VERIF_CASE+'_'+STEP+'_'+VERIF_TYPE+'_'
-                                +job_name.replace('/','_')+'_runon'
+                                +JOB_GROUP+'_'+job_id+'_runon'
                                 +now.strftime('%Y%m%d%H%M%S')+'.log')
 logger = logging.getLogger(job_logging_file)
 logger.setLevel(plot_verbosity)
@@ -105,25 +109,6 @@ logger_info = f"Log file: {job_logging_file}"
 print(logger_info)
 logger.info(logger_info)
 
-if len(model_list) > 10:
-    logger.error("TOO MANY MODELS LISTED ("+str(len(model_list))
-                 +", ["+', '.join(model_list)+"]), maximum is 10")
-    sys.exit(1)
-
-# Condense .stat files
-logger.info("Condensing model .stat files for job")
-for model_idx in range(len(model_list)):
-    model = model_list[model_idx]
-    condensed_model_stat_file = os.path.join(job_output_dir, 'model'
-                                             +str(model_idx+1)+'_'+model
-                                             +'.stat')
-    if VERIF_CASE == 'grid2grid' and VERIF_TYPE == 'pres_levs':
-        obs_name = truth_name_list[model_idx]
-    gda_util.condense_model_stat_files(logger, stat_base_dir,
-                                       condensed_model_stat_file, model,
-                                       obs_name, grid, vx_mask, fcst_var_name,
-                                       obs_var_name, line_type)
-
 # Set up model information dictionary
 original_model_info_dict = {}
 for model_idx in range(len(model_list)):
@@ -131,17 +116,8 @@ for model_idx in range(len(model_list)):
     original_model_info_dict['model'+str(model_num)] = {
         'name': model_list[model_idx],
         'plot_name': model_plot_name_list[model_idx],
+        'obs_name': obs_list[model_idx]
     }
-    if VERIF_CASE == 'grid2grid' and VERIF_TYPE == 'pres_levs':
-         original_model_info_dict['model'+str(model_num)]['obs_name'] = (
-             truth_name_list[model_idx]
-         )
-    elif VERIF_CASE == 'grid2grid' and VERIF_TYPE == 'means':
-         original_model_info_dict['model'+str(model_num)]['obs_name'] = (
-             model_list[model_idx]
-         )
-    else:
-        original_model_info_dict['model'+str(model_num)]['obs_name'] = obs_name
 
 # Set up date information dictionary
 original_date_info_dict = {
@@ -159,6 +135,8 @@ init_hrs = list(range(int(init_hr_start),
                       int(init_hr_end)+int(init_hr_inc),
                       int(init_hr_inc)))
 fhrs = list(range(int(fhr_start), int(fhr_end)+int(fhr_inc), int(fhr_inc)))
+if fhrs == list(range(0, 240+6, 6)):
+    fhrs = list(range(0,72,6)) + list(range(72,240+24,24))
 
 # Set up plot information dictionary
 original_plot_info_dict = {
@@ -192,8 +170,12 @@ original_met_info_dict = {
     'version': met_ver
 }
 
-# Make the plots
-for plot in plots_list:
+if JOB_GROUP == 'make_plots':
+    logger.info("Making plots")
+    if len(model_list) > 10:
+        logger.error("TOO MANY MODELS LISTED ("+str(len(model_list))
+                     +", ["+', '.join(model_list)+"]), maximum is 10")
+        sys.exit(1)
     plot_specs = PlotSpecs(logger, plot)
     model_info_dict = original_model_info_dict.copy()
     date_info_dict = original_date_info_dict.copy()
@@ -408,7 +390,7 @@ for plot in plots_list:
                 plot_lbd.make_lead_by_date()
     elif plot == 'stat_by_level':
         import global_det_atmos_plots_stat_by_level as gdap_sbl
-        vert_profiles = ['all', 'trop', 'strat', 'ltrop', 'utrop']
+        vert_profiles = [os.environ['vert_profile']]
         for sbl_info in \
                 list(itertools.product(valid_hrs, fhrs, interp_points_list,
                                        vert_profiles)):
@@ -458,11 +440,11 @@ for plot in plots_list:
         import global_det_atmos_plots_lead_by_level as gdap_lbl
         if evs_run_mode == 'production' and int(fhr_inc) == 6:
             fhrs_lbl = list(
-                range(int(fhr_start), int(fhr_end)+int(fhr_inc), 12)
+                range(int(fhr_start), int(fhr_end)+int(fhr_inc), 24)
             )
         else:
             fhrs_lbl = fhrs
-        vert_profiles = ['all', 'trop', 'strat', 'ltrop', 'utrop']
+        vert_profiles = [os.environ['vert_profile']]
         for lbl_info in \
                 list(itertools.product(valid_hrs, interp_points_list,
                                        vert_profiles)):
@@ -505,6 +487,18 @@ for plot in plots_list:
                                                     plot_info_dict,
                                                     met_info_dict, logo_dir)
                     plot_lbl.make_lead_by_level()
+    elif plot == 'nohrsc_spatial_map':
+        import global_det_atmos_plots_nohrsc_spatial_map as gdap_nsm
+        nohrsc_data_dir = os.path.join(VERIF_CASE_STEP_dir, 'data', 'nohrsc')
+        date_info_dict['valid_hr_start'] = str(valid_hrs[0])
+        date_info_dict['valid_hr_end'] = str(valid_hrs[0])
+        date_info_dict['valid_hr_inc'] = '24'
+        plot_info_dict['obs_var_name'] = obs_var_name
+        plot_info_dict['obs_var_level'] = obs_var_level_list[0]
+        plot_nsm = gdap_nsm.NOHRSCSpatialMap(logger, nohrsc_data_dir,
+                                             job_output_dir, date_info_dict,
+                                             plot_info_dict, logo_dir)
+        plot_nsm.make_nohrsc_spatial_map()
     elif plot == 'precip_spatial_map':
         model_info_dict['obs'] = {'name': 'ccpa',
                                   'plot_name': 'ccpa',
