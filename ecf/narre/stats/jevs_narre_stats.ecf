@@ -1,6 +1,6 @@
 #!/bin/bash 
 
-#PBS -N evs_narre_stats
+#PBS -N jevs_narre_stats
 #PBS -j oe
 ##PBS -o /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_narre_stat.o
 ##PBS -e /lfs/h2/emc/ptmp/binbin.zhou/evs/tmpnwprd/evs_narre_stat.e
