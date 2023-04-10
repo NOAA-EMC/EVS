@@ -177,9 +177,8 @@ fi
 
 cd $plot_dir
   
-tar -cvf plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar *.png
-
-cp plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar  $COMOUT/.  
+tar -cvf evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar *.png
+cp evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar  $COMOUT/.  
 
 
 
