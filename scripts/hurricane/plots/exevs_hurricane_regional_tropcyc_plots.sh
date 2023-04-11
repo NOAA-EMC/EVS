@@ -68,12 +68,12 @@ echo "Name_${stormName}_Name"
 echo "${stormBasin}, ${stormNumber}, ${stormYear}, ${stormName}"
 
 #---Storm Plots 
-export LOGOroot=${FIXevs}
+export LOGOroot=${FIXevs}/logos
 export PLOTDATA=${STORMroot}
 #export RUN="tropcyc"
 export img_quality="low"
 
-export fhr_list="0,12,24,36,48,60,72,84,96,108,120"
+export fhr_list="0,6,12,18,24,30,36,42,48,54,60,66,72,78,84,90,96,102,108,114,120,126"
 export model_tmp_atcf_name_list="MD01,MD02,MD03,MD04"
 export model_plot_name_list="GFS,HWRF,HMON,CTCX"
 export plot_CI_bars="NO"
@@ -82,7 +82,7 @@ export tc_name=${stbasin}${under}${stormYear}${under}${stormName}
 export basin=${stbasin}
 export tc_num=${stormNumber}
 export tropcyc_model_type="regional"
-python ${USHevs}/plot_tropcyc_lead_average.py
+python ${USHevs}/hurricane/plots/plot_tropcyc_lead_average.py
 
 #/lfs/h2/emc/ptmp/jiayi.peng/metTC/wp02/plot/WP_2022_MALAKAS/images
 nimgs=$(ls ${STORMroot}/plot/${tc_name}/images/* |wc -l)
@@ -136,12 +136,12 @@ elif [ ${stormBasin} = "wp" ]; then
 fi
 
 #--- Basin-Storms Plots 
-export LOGOroot=${FIXevs}
+export LOGOroot=${FIXevs}/logos
 export PLOTDATA=${metTCcomout}
 #export RUN="tropcyc"
 export img_quality="low"
 
-export fhr_list="0,12,24,36,48,60,72,84,96,108,120"
+export fhr_list="0,6,12,18,24,30,36,42,48,54,60,66,72,78,84,90,96,102,108,114,120,126"
 export model_tmp_atcf_name_list="MD01,MD02,MD03,MD04"
 export model_plot_name_list="GFS,HWRF,HMON,CTCX"
 export plot_CI_bars="NO"
@@ -150,7 +150,7 @@ export tc_name=${stbasin}${under}${stormYear}${under}${stormNameB}
 export basin=${stbasin}
 export tc_num= 
 export tropcyc_model_type="regional"
-python ${USHevs}/plot_tropcyc_lead_average.py
+python ${USHevs}/hurricane/plots/plot_tropcyc_lead_average.py
 
 bimgs=$(ls ${metTCcomout}/plot/${tc_name}/images/* |wc -l)
 if [ $bimgs -ne 0 ]; then
