@@ -50,7 +50,8 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 
 # Run setpdy and initialize PDY variables
-##############################
+# if not set in upstream ecf script
+#########################################
 echo "PDY=$PDY"
 if [ -z $PDY ]; then
   setpdy.sh
