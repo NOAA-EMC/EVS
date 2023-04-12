@@ -55,7 +55,7 @@ export cyc=00
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export DATA_IN=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
-export COMINsrefmean=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
+export COMINsrefmean=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 
 ${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS
 
