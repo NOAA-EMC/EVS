@@ -301,20 +301,18 @@ condense_stats_jobs_dict['precip']['24hrCCPA']['line_types'] = (
 #### pres_levs
 for pres_levs_job in list(condense_stats_jobs_dict['pres_levs'].keys()):
     if pres_levs_job in ['DailyAvg_GeoHeightAnom', 'Ozone', 'WindShear']:
-        (condense_stats_jobs_dict['pres_levs'][pres_levs_job]\
-         ['line_types']) = ['SL1L2']
+        pres_job_line_types = ['SL1L2']
     elif pres_levs_job == 'GeoHeight':
-        (condense_stats_jobs_dict['pres_levs'][pres_levs_job]\
-             ['line_types']) = ['SAL1L2', 'GRAD']
+        pres_job_line_types = ['SAL1L2', 'GRAD']
     elif pres_levs_job == 'PresSeaLevel':
-        (condense_stats_jobs_dict['pres_levs'][pres_levs_job]\
-             ['line_types']) = ['SAL1L2', 'SL1L2', 'GRAD']
+        pres_job_line_types = ['SAL1L2', 'SL1L2', 'GRAD']
     elif pres_levs_job == 'VectorWind':
-        (condense_stats_jobs_dict['pres_levs'][pres_levs_job]\
-         ['line_types']) = ['VAL1L2']
+        pres_job_line_types = ['VAL1L2']
     else:
-        (condense_stats_jobs_dict['pres_levs'][pres_levs_job]\
-         ['line_types']) = ['SAL1L2']
+        pres_job_line_types = ['SAL1L2']
+    condense_stats_jobs_dict['pres_levs'][pres_levs_job]['line_types'] = (
+        pres_job_line_types
+    )
 #### sea_ice
 for sea_ice_job in list(condense_stats_jobs_dict['sea_ice'].keys()):
     condense_stats_jobs_dict['sea_ice'][sea_ice_job]['line_types'] = [
@@ -357,7 +355,7 @@ filter_stats_jobs_dict['precip']['24hrCCPA']['obs_var_dict']['threshs'] = [
     'ge2.54', 'ge6.35', 'ge12.7', 'ge25.4', 'ge50.8', 'ge76.2', 'ge101.6'
 ]
 filter_stats_jobs_dict['precip']['24hrCCPA']['interps'] = ['NEAREST/1']
-filter_stats_jobs_dict['precip']['24hrCCPA_Nbrhd'] = (
+filter_stats_jobs_dict['precip']['24hrCCPA_Nbrhd'] = copy.deepcopy(
     filter_stats_jobs_dict['precip']['24hrCCPA']
 )
 filter_stats_jobs_dict['precip']['24hrCCPA_Nbrhd']['line_types'] = ['NBRCNT']
@@ -375,13 +373,14 @@ for pres_levs_job in list(filter_stats_jobs_dict['pres_levs'].keys()):
     (filter_stats_jobs_dict['pres_levs'][pres_levs_job]\
      ['obs_var_dict']['threshs']) = ['NA']
     if pres_levs_job == 'GeoHeight_FourierDecomp':
-        filter_stats_jobs_dict['pres_levs'][pres_levs_job]['interps'] = [
-            'WV1_0-20/NA', 'WV1_0-3/NA', 'WV1_4-9/NA', 'WV1_10-20/NA',
+        pres_levs_job_interps = [
+            'WV1_0-20/NA', 'WV1_0-3/NA', 'WV1_4-9/NA', 'WV1_10-20/NA'
         ] 
     else:
-        filter_stats_jobs_dict['pres_levs'][pres_levs_job]['interps'] = [
-            'NEAREST/1'
-        ]
+        pres_levs_job_interps = ['NEAREST/1']
+    filter_stats_jobs_dict['pres_levs'][pres_levs_job]['interps'] = (
+        pres_levs_job_interps
+    )
 #### sea_ice
 (filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration']\
  ['line_types']) = ['SL1L2']
@@ -394,7 +393,7 @@ for pres_levs_job in list(filter_stats_jobs_dict['pres_levs'].keys()):
 (filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration']\
  ['interps']) = ['NEAREST/1']
 filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration_Thresh'] = (
-    filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration']
+    copy.deepcopy(filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration'])
 )
 (filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration_Thresh']\
  ['line_types']) = ['CTC']
@@ -413,7 +412,7 @@ for snow_job in list(filter_stats_jobs_dict['snow'].keys()):
         'ge0.0254', 'ge0.0508', 'ge0.1016', 'ge0.2032', 'ge0.3048'
     ]
     filter_stats_jobs_dict['snow'][snow_job]['interps'] = ['NEAREST/1']
-    filter_stats_jobs_dict['snow'][f"{snow_job}_Nbrhd"] = (
+    filter_stats_jobs_dict['snow'][f"{snow_job}_Nbrhd"] = copy.deepcopy(
         filter_stats_jobs_dict['snow'][snow_job]
     )
     filter_stats_jobs_dict['snow'][f"{snow_job}_Nbrhd"]['grid'] = 'G240'
@@ -446,10 +445,156 @@ for means_job in list(make_plots_jobs_dict['means'].keys()):
     ]
     make_plots_jobs_dict['means'][means_job]['plots'] = ['time_series']
 #### precip
+for precip_job in list(make_plots_jobs_dict['precip'].keys()):
+    del make_plots_jobs_dict['precip'][precip_job]['line_types']
+make_plots_jobs_dict['precip']['24hrCCPA']['line_type_stats'] = [
+    'CTC/ETS', 'CTC/FBIAS'
+]
+make_plots_jobs_dict['precip']['24hrCCPA']['plots'] = [
+    'time_series', 'lead_average'
+]
+for nbrhd in make_plots_jobs_dict['precip']['24hrCCPA_Nbrhd']['interps']:
+    make_plots_jobs_dict['precip'][f"24hrCCPA_Nbrhd{nbrhd.split('/')[1]}"] = (
+        copy.deepcopy(make_plots_jobs_dict['precip']['24hrCCPA_Nbrhd'])
+    )
+    (make_plots_jobs_dict['precip'][f"24hrCCPA_Nbrhd{nbrhd.split('/')[1]}"]\
+     ['line_type_stats']) = ['NBRCNT/FSS']
+    (make_plots_jobs_dict['precip'][f"24hrCCPA_Nbrhd{nbrhd.split('/')[1]}"]\
+     ['interps']) = [nbrhd]
+    (make_plots_jobs_dict['precip'][f"24hrCCPA_Nbrhd{nbrhd.split('/')[1]}"]\
+     ['plots']) = ['time_series', 'lead_average']
+del make_plots_jobs_dict['precip']['24hrCCPA_Nbrhd']
+make_plots_jobs_dict['precip']['24hrCCPA_PerfDia'] = copy.deepcopy(
+    make_plots_jobs_dict['precip']['24hrCCPA']
+)
+make_plots_jobs_dict['precip']['24hrCCPA_PerfDia']['line_type_stats'] = [
+    'CTC/PERF_DIA'
+]
+make_plots_jobs_dict['precip']['24hrCCPA_PerfDia']['plots'] = [
+    'performance_diagram'
+]
+make_plots_jobs_dict['precip']['24hrAccumMaps'] = {
+    'vx_masks': ['CONUS', 'AK', 'PR', 'HI'],
+    'fcst_var_dict': {'name': 'APCP',
+                      'levels': ['A24'],
+                      'threshs': ['NA']},
+    'obs_var_dict': {'name': 'APCP',
+                     'levels': ['A24'],
+                     'threshs': ['NA']},
+    'obs_name': '24hrCCPA',
+    'grid': 'G211',
+    'line_type_stats': ['SL1L2/FBAR'],
+    'interps': ['NEAREST/1'],
+    'plots': ['precip_spatial_map']
+}
 #### pres_levs
+for pres_levs_job in list(make_plots_jobs_dict['pres_levs'].keys()):
+    del make_plots_jobs_dict['pres_levs'][pres_levs_job]['line_types']
+    if pres_levs_job in ['DailyAvg_GeoHeightAnom', 'Ozone', 'WindShear']:
+        pres_levs_job_line_type_stats = ['SL1L2/ME', 'SL1L2/RMSE']
+    elif pres_levs_job == 'GeoHeight':
+        pres_levs_job_line_type_stats = ['SAL1L2/ACC', 'GRAD/S1']
+    elif pres_levs_job == 'PresSeaLevel':
+        pres_levs_job_line_type_stats = [
+            'SAL1L2/ACC', 'SL1L2/ME', 'SL1L2/RMSE', 'GRAD/S1'
+        ]
+    elif pres_levs_job == 'VectorWind':
+        pres_levs_job_line_type_stats = ['VAL1L2/ACC']
+    else:
+        pres_levs_job_line_type_stats = ['SAL1L2/ACC']
+    if pres_levs_job == 'Ozone':
+        pres_levs_job_plots = [
+            'time_series', 'lead_average', 'stat_by_level', 'lead_by_level'
+        ]
+    elif pres_levs_job in ['WindShear', 'DailyAvg_GeoHeightAnom']:
+        pres_levs_job_plots = ['time_series', 'lead_average']
+    else:
+        pres_levs_job_plots = ['time_series', 'lead_average', 'lead_by_date']
+    make_plots_jobs_dict['pres_levs'][pres_levs_job]['line_type_stats'] = (
+        pres_levs_job_line_type_stats
+    )
+    make_plots_jobs_dict['pres_levs'][pres_levs_job]['plots'] = (
+        pres_levs_job_plots
+    )
+for decomp in (make_plots_jobs_dict['pres_levs']\
+               ['GeoHeight_FourierDecomp']['interps']):
+    (make_plots_jobs_dict['pres_levs']\
+     [f"GeoHeight_FourierDecomp{decomp.split('/')[0]}"]) = (
+        copy.deepcopy(make_plots_jobs_dict['pres_levs']\
+                      ['GeoHeight_FourierDecomp'])
+    )
+    (make_plots_jobs_dict['pres_levs']\
+     [f"GeoHeight_FourierDecomp{decomp.split('/')[0]}"]) = [decomp]
+del make_plots_jobs_dict['pres_levs']['GeoHeight_FourierDecomp']
 #### sea_ice
+for sea_ice_job in list(make_plots_jobs_dict['sea_ice'].keys()):
+    del make_plots_jobs_dict['sea_ice'][sea_ice_job]['line_types']
+    if sea_ice_job == 'DailyAvg_Concentration':
+        sea_ice_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME']
+    elif sea_ice_job == 'DailyAvg_Concentration_Thresh':
+        sea_ice_job_line_type_stats = ['CTC/CSI']
+    make_plots_jobs_dict['sea_ice'][sea_ice_job]['line_type_stats'] = (
+        sea_ice_job_line_type_stats
+    )
+    make_plots_jobs_dict['sea_ice'][sea_ice_job]['plots'] = [
+        'time_series', 'lead_average'
+    ]
+make_plots_jobs_dict['sea_ice']['DailyAvg_Concentration_PerfDia'] = (
+    copy.deepcopy(make_plots_jobs_dict['sea_ice']['DailyAvg_Concentration'])
+)   
+(make_plots_jobs_dict['sea_ice']['DailyAvg_Concentration_PerfDia']\
+ ['line_type_stats']) = ['CTC/PERF_DIA']
+make_plots_jobs_dict['sea_ice']['DailyAvg_Concentration_PerfDia']['plots'] = [
+    'performance_diagram' 
+]
 #### snow
+for snow_job in list(make_plots_jobs_dict['snow'].keys()):
+    del make_plots_jobs_dict['snow'][snow_job]['line_types']
+for snow_var in ['Depth', 'WaterEqv']:
+    (make_plots_jobs_dict['snow'][f"24hrNOHRSC_{snow_var}"]\
+     ['line_type_stats']) = ['CTC/ETS', 'CTC/FBIAS']
+    (make_plots_jobs_dict['snow'][f"24hrNOHRSC_{snow_var}"]\
+     ['line_type_stats']) = ['time_series', 'lead_average']
+    for nbrhd in (make_plots_jobs_dict['snow']\
+            [f"24hrNOHRSC_{snow_var}_Nbrhd"]['interps']):
+        (make_plots_jobs_dict['snow']\
+         [f"24hrNOHRSC_{snow_var}_Nbrhd{nbrhd.split('/')[1]}"]) = (
+            copy.deepcopy(make_plots_jobs_dict['snow']\
+            [f"24hrNOHRSC_{snow_var}_Nbrhd"])
+        )
+        (make_plots_jobs_dict['snow']\
+         [f"24hrNOHRSC_{snow_var}_Nbrhd{nbrhd.split('/')[1]}"]\
+         ['line_type_stats']) = ['NBRCNT/FSS']
+        (make_plots_jobs_dict['snow']\
+         [f"24hrNOHRSC_{snow_var}_Nbrhd{nbrhd.split('/')[1]}"]\
+         ['interps']) = [nbrhd]
+        (make_plots_jobs_dict['snow']\
+         [f"24hrNOHRSC_{snow_var}_Nbrhd{nbrhd.split('/')[1]}"]\
+         ['plots']) = ['time_series', 'lead_average']
+    del make_plots_jobs_dict['snow'][f"24hrNOHRSC_{snow_var}_Nbrhd"]
+make_plots_jobs_dict['snow']['24hrNOHRSC_24hrAccumMaps'] = {
+    'vx_masks': ['CONUS'],
+    'fcst_var_dict': {'name': 'ASNOW',
+                      'levels': ['Z0'],
+                      'threshs': ['NA']},
+    'obs_var_dict': {'name': 'ASNOW',
+                     'levels': ['Z0'],
+                     'threshs': ['NA']},
+    'obs_name': '24hrNOHRSC',
+    'grid': 'G211',
+    'line_type_stats': ['SL1L2/FBAR'],
+    'interps': ['NEAREST/1'],
+    'plots': ['nohrsc_spatial_map']
+}
 #### sst
+for sst_job in list(make_plots_jobs_dict['sst'].keys()):
+    del make_plots_jobs_dict['sst'][sst_job]['line_types']
+    make_plots_jobs_dict['sst'][sst_job]['line_type_stats'] = [
+        'SL1L2/RMSE', 'SL1L2/ME'
+    ]
+    make_plots_jobs_dict['sst'][sst_job]['plots'] = [
+        'time_series', 'lead_average'
+    ]
 if JOB_GROUP == 'make_plots':
     JOB_GROUP_dict = make_plots_jobs_dict
 
@@ -782,6 +927,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                                     [])
                         )
                         job.close()
+
 # If running USE_CFP, create POE scripts
 if USE_CFP == 'YES':
     job_files = glob.glob(os.path.join(JOB_GROUP_jobs_dir, 'job*'))

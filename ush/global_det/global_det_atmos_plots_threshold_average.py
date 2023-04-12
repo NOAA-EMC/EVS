@@ -73,11 +73,6 @@ class ThresholdAverage:
             self.logger.warning("Cannot make threshold_average for stat "
                                 +f"{self.plot_info_dict['stat']}")
             sys.exit(0)
-        # Make job image directory
-        output_image_dir = os.path.join(self.output_dir, 'images')
-        if not os.path.exists(output_image_dir):
-            os.makedirs(output_image_dir)
-        self.logger.info(f"Plots will be in: {output_image_dir}")
         # Get dates to plot
         self.logger.info("Creating valid and init date arrays")
         valid_dates, init_dates = gda_util.get_plot_dates(
@@ -126,7 +121,7 @@ class ThresholdAverage:
                                    .index(fcst_var_thresh))
             obs_var_thresh = (self.plot_info_dict['obs_var_threshs']\
                               [fcst_var_thresh_idx])
-            all_model_df = gda_util.build_df(
+            all_model_df, file_list = gda_util.build_df(
                 self.logger, self.input_dir, self.output_dir,
                 self.model_info_dict, self.met_info_dict,
                 self.plot_info_dict['fcst_var_name'],
@@ -299,7 +294,7 @@ class ThresholdAverage:
                 )
             )
         image_name = plot_specs_ta.get_savefig_name(
-            output_image_dir, self.plot_info_dict, self.date_info_dict
+            self.output_dir, self.plot_info_dict, self.date_info_dict
         )
         # Create plot
         self.logger.info(f"Creating plot for {self.plot_info_dict['stat']} ")

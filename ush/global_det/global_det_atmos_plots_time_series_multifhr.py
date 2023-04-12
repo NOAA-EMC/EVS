@@ -92,11 +92,6 @@ class TimeSeriesMultiFhr:
             self.date_info_dict['forecast_hours'] = (
                 self.date_info_dict['forecast_hours'][:4]
             )
-        # Make job image directory
-        output_image_dir = os.path.join(self.output_dir, 'images')
-        if not os.path.exists(output_image_dir):
-            os.makedirs(output_image_dir)
-        self.logger.info(f"Plots will be in: {output_image_dir}")
         # Create dataframe for all forecast hours
         self.logger.info("Building dataframe for all forecast hours")
         fcst_units = []
@@ -180,7 +175,7 @@ class TimeSeriesMultiFhr:
                     plot_dates = init_dates
             # Read in data
             self.logger.info(f"Reading in model stat files from {self.input_dir}")
-            all_model_df = gda_util.build_df(
+            all_model_df, file_list = gda_util.build_df(
                 self.logger, self.input_dir, self.output_dir,
                 self.model_info_dict, self.met_info_dict,
                 self.plot_info_dict['fcst_var_name'],
@@ -302,7 +297,7 @@ class TimeSeriesMultiFhr:
             plot_specs_tsmf.get_forecast_hour_plot_settings()
         )
         image_name = plot_specs_tsmf.get_savefig_name(
-            output_image_dir, self.plot_info_dict, self.date_info_dict
+            self.output_dir, self.plot_info_dict, self.date_info_dict
         )
         image_name = image_name.replace(
             'evs.global_det.',

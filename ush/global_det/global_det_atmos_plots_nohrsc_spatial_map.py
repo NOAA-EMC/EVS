@@ -61,11 +61,6 @@ class NOHRSCSpatialMap:
                           +f"{self.date_info_dict}")
         self.logger.debug(f"Plot information dictionary: "
                           +f"{self.plot_info_dict}")
-        # Make job image directory
-        output_image_dir = os.path.join(self.output_dir, 'images')
-        if not os.path.exists(output_image_dir):
-            os.makedirs(output_image_dir)
-        self.logger.info(f"Plots will be in: {output_image_dir}")
         # Set valid date
         valid_date_dt = datetime.datetime.strptime(
             self.date_info_dict['end_date']
@@ -120,7 +115,7 @@ class NOHRSCSpatialMap:
             'AK': 'alaska',
         }
         image_name = os.path.join(
-            output_image_dir,
+            self.output_dir,
             'nohrsc.v'+valid_date_dt.strftime('%Y%m%d%H')+'.024h.'
             +image_region_dict[self.plot_info_dict['vx_mask']]+'.png'
         )

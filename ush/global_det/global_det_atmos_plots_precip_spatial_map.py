@@ -67,11 +67,6 @@ class PrecipSpatialMap:
                           +f"{self.date_info_dict}")
         self.logger.debug(f"Plot information dictionary: "
                           +f"{self.plot_info_dict}")
-        # Make job image directory
-        output_image_dir = os.path.join(self.output_dir, 'images')
-        if not os.path.exists(output_image_dir):
-            os.makedirs(output_image_dir)
-        self.logger.info(f"Plots will be in: {output_image_dir}")
         # Set valid and initialization dates
         valid_date_dt = datetime.datetime.strptime(
             self.date_info_dict['end_date']
@@ -126,7 +121,7 @@ class PrecipSpatialMap:
                 'PR': 'prico'
             }
             image_name = os.path.join(
-                output_image_dir,
+                self.output_dir,
                 image_data_source
                 +'.v'+valid_date_dt.strftime('%Y%m%d%H')+'.'
                 +image_forecast_hour+'h.'

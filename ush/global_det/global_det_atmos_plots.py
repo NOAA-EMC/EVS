@@ -352,9 +352,7 @@ elif JOB_GROUP == 'make_plots':
                     gda_util.copy_file(DATAjob_image_name, COMOUTjob_image_name)
     elif plot == 'lead_average':
         import global_det_atmos_plots_lead_average as gdap_la
-        for la_info in \
-                list(itertools.product(valid_hrs, var_info,
-                                       interp_points_list)):
+        for la_info in list(itertools.product(valid_hrs, var_info)):
             date_info_dict['valid_hr_start'] = str(la_info[0])
             date_info_dict['valid_hr_end'] = str(la_info[0])
             date_info_dict['valid_hr_inc'] = '24'
@@ -365,34 +363,37 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = la_info[1][1][0]
             plot_info_dict['obs_var_level'] = la_info[1][1][1]
             plot_info_dict['obs_var_thresh'] = la_info[1][1][2]
-            plot_info_dict['interp_points'] = str(la_info[2])
-            image_name = plot_specs.get_savefig_name(
-                os.path.join(job_output_dir, 'images'),
-                plot_info_dict, date_info_dict
+            DATAjob_image_name = plot_specs.get_savefig_name(
+                DATAjob, plot_info_dict, date_info_dict
             )
-            if not os.path.exists(image_name):
+            COMOUTjob_image_name = (
+                DATAjob_image_name.replace(DATAjob, COMOUTjob)
+            )
+            if not os.path.exists(DATAjob_image_name) \
+                    and plot_info_dict['stat'] != 'FBAR_OBAR':
                 if len(date_info_dict['forecast_hours']) <= 1:
                     logger.warning("No span of forecast hours to plot, "
                                    +"given 1 forecast hour, skipping "
                                    +"lead_average plots")
                     make_la = False
                 else:
-                    if plot_info_dict['stat'] == 'FBAR_OBAR':
-                        make_la = False
-                    else:
-                        make_la = True
+                    make_la = True
             else:
                 make_la = False
             if make_la:
-                plot_la = gdap_la.LeadAverage(logger, job_output_dir,
-                                              job_output_dir, model_info_dict,
-                                              date_info_dict, plot_info_dict,
-                                              met_info_dict, logo_dir)
+                plot_la = gdap_la.LeadAverage(logger, DATAjob+'/..', DATAjob,
+                                              model_info_dict, date_info_dict,
+                                              plot_info_dict, met_info_dict,
+                                              logo_dir)
                 plot_la.make_lead_average()
+                if SENDCOM == 'YES' and os.path.exists(DATAjob_image_name) \
+                        and not os.path.exists(COMOUTjob_image_name):
+                    logger.info(f"Copying {DATAjob_image_name} to "
+                                +f"{COMOUTjob_image_name}")
+                    gda_util.copy_file(DATAjob_image_name, COMOUTjob_image_name)
     elif plot == 'valid_hour_average':
         import global_det_atmos_plots_valid_hour_average as gdap_vha
-        for vha_info in \
-                list(itertools.product(var_info, interp_points_list)):
+        for vha_info in list(itertools.product(var_info)):
             date_info_dict['valid_hr_start'] = valid_hr_start
             date_info_dict['valid_hr_end'] = valid_hr_end
             date_info_dict['valid_hr_inc'] = valid_hr_inc
@@ -403,12 +404,14 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = vha_info[0][1][0]
             plot_info_dict['obs_var_level'] = vha_info[0][1][1]
             plot_info_dict['obs_var_thresh'] = vha_info[0][1][2]
-            plot_info_dict['interp_points'] = str(vha_info[1])
-            image_name = plot_specs.get_savefig_name(
-                os.path.join(job_output_dir, 'images'),
-                plot_info_dict, date_info_dict
+            DATAjob_image_name = plot_specs.get_savefig_name(
+                DATAjob, plot_info_dict, date_info_dict
             )
-            if not os.path.exists(image_name):
+            COMOUTjob_image_name = (
+                DATAjob_image_name.replace(DATAjob, COMOUTjob)
+            )
+            if not os.path.exists(DATAjob_image_name) \
+                    and plot_info_dict['stat'] != 'FBAR_OBAR':
                 if date_info_dict['valid_hr_start'] \
                         == date_info_dict['valid_hr_end']:
                     logger.warning("No span of valid hours to plot, "
@@ -417,24 +420,24 @@ elif JOB_GROUP == 'make_plots':
                                    +"valid_hour_average plots")
                     make_vha = False
                 else:
-                    if plot_info_dict['stat'] == 'FBAR_OBAR':
-                        make_vha = False
-                    else:
-                        make_vha = True
+                    make_vha = True
             else:
                 make_vha = False
             if make_vha:
-                plot_vha = gdap_vha.ValidHourAverage(logger, job_output_dir,
-                                                     job_output_dir,
-                                                     model_info_dict,
+                plot_vha = gdap_vha.ValidHourAverage(logger, DATAjob+'/..',
+                                                     DATAjob, model_info_dict,
                                                      date_info_dict,
                                                      plot_info_dict,
                                                      met_info_dict, logo_dir)
                 plot_vha.make_valid_hour_average()
+                if SENDCOM == 'YES' and os.path.exists(DATAjob_image_name) \
+                        and not os.path.exists(COMOUTjob_image_name):
+                    logger.info(f"Copying {DATAjob_image_name} to "
+                                +f"{COMOUTjob_image_name}")
+                    gda_util.copy_file(DATAjob_image_name, COMOUTjob_image_name)
     elif plot == 'threshold_average':
         import global_det_atmos_plots_threshold_average as gdap_ta
-        for ta_info in \
-                list(itertools.product(valid_hrs, fhrs, interp_points_list)):
+        for ta_info in list(itertools.product(valid_hrs, fhrs)):
             date_info_dict['valid_hr_start'] = str(ta_info[0])
             date_info_dict['valid_hr_end'] = str(ta_info[0])
             date_info_dict['valid_hr_inc'] = '24'
@@ -444,7 +447,6 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['fcst_var_threshs'] = fcst_var_thresh_list
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['obs_var_threshs'] = obs_var_thresh_list
-            plot_info_dict['interp_points'] = str(ta_info[2])
             init_hr = gda_util.get_init_hour(
                 int(date_info_dict['valid_hr_start']),
                 int(date_info_dict['forecast_hour'])
@@ -452,40 +454,43 @@ elif JOB_GROUP == 'make_plots':
             for l in range(len(fcst_var_level_list)):
                 plot_info_dict['fcst_var_level'] = fcst_var_level_list[l]
                 plot_info_dict['obs_var_level'] = obs_var_level_list[l]
-                image_name = plot_specs.get_savefig_name(
-                    os.path.join(job_output_dir, 'images'),
-                    plot_info_dict, date_info_dict
+                DATAjob_image_name = plot_specs.get_savefig_name(
+                    DATAjob, plot_info_dict, date_info_dict
                 )
-                if init_hr in init_hrs:
-                    if not os.path.exists(image_name):
-                        if len(plot_info_dict['fcst_var_threshs']) <= 1:
-                            logger.warning("No span of thresholds to plot, "
-                                           +"given 1 threshold, skipping "
-                                           +"threshold_average plots")
-                            make_ta = False
-                        else:
-                            if plot_info_dict['stat'] == 'FBAR_OBAR':
-                                make_ta = False
-                            else:
-                                make_ta = True
-                    else:
+                COMOUTjob_image_name = (
+                    DATAjob_image_name.replace(DATAjob, COMOUTjob)
+                )
+                if init_hr in init_hrs \
+                        and not os.path.exists(DATAjob_image_name) \
+                        and plot_info_dict['stat'] != 'FBAR_OBAR':
+                    if len(plot_info_dict['fcst_var_threshs']) <= 1:
+                        logger.warning("No span of thresholds to plot, "
+                                       +"given 1 threshold, skipping "
+                                       +"threshold_average plots")
                         make_ta = False
+                    else:
+                        make_ta = True
                 else:
                      make_ta = False
                 if make_ta:
-                    plot_ta = gdap_ta.ThresholdAverage(logger, job_output_dir,
-                                                       job_output_dir,
+                    plot_ta = gdap_ta.ThresholdAverage(logger, DATAjob+'/..',
+                                                       DATAjob,
                                                        model_info_dict,
                                                        date_info_dict,
                                                        plot_info_dict,
                                                        met_info_dict,
                                                        logo_dir)
                     plot_ta.make_threshold_average()
+                    if SENDCOM == 'YES' \
+                            and os.path.exists(DATAjob_image_name) \
+                            and not os.path.exists(COMOUTjob_image_name):
+                        logger.info(f"Copying {DATAjob_image_name} to "
+                                    +f"{COMOUTjob_image_name}")
+                        gda_util.copy_file(DATAjob_image_name,
+                                           COMOUTjob_image_name)
     elif plot == 'lead_by_date':
         import global_det_atmos_plots_lead_by_date as gdap_lbd
-        for lbd_info in \
-                list(itertools.product(valid_hrs, var_info,
-                                       interp_points_list)):
+        for lbd_info in list(itertools.product(valid_hrs, var_info)):
             date_info_dict['valid_hr_start'] = str(lbd_info[0])
             date_info_dict['valid_hr_end'] = str(lbd_info[0])
             date_info_dict['valid_hr_inc'] = '24'
@@ -496,78 +501,83 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_name'] = lbd_info[1][1][0]
             plot_info_dict['obs_var_level'] = lbd_info[1][1][1]
             plot_info_dict['obs_var_thresh'] = lbd_info[1][1][2]
-            plot_info_dict['interp_points'] = str(lbd_info[2])
-            image_name = plot_specs.get_savefig_name(
-                os.path.join(job_output_dir, 'images'),
-                plot_info_dict, date_info_dict
+            DATAjob_image_name = plot_specs.get_savefig_name(
+                DATAjob, plot_info_dict, date_info_dict
             )
-            if not os.path.exists(image_name):
+            COMOUTjob_image_name = (
+                DATAjob_image_name.replace(DATAjob, COMOUTjob)
+            )
+            if not os.path.exists(DATAjob_image_name) \
+                    and plot_info_dict['stat'] != 'FBAR_OBAR':
                 if len(date_info_dict['forecast_hours']) <= 1:
                     logger.warning("No span of forecast hours to plot, "
                                    +"given 1 forecast hour, skipping "
                                    +"lead_by_date plots")
                     make_lbd = False
                 else:
-                    if plot_info_dict['stat'] == 'FBAR_OBAR':
-                        make_lbd = False
-                    else:
-                        make_lbd = True
+                    make_lbd = True
             else:
                 make_lbd = False
             if make_lbd:
-                plot_lbd = gdap_lbd.LeadByDate(logger, job_output_dir,
-                                               job_output_dir, model_info_dict,
-                                               date_info_dict, plot_info_dict,
-                                               met_info_dict, logo_dir)
+                plot_lbd = gdap_lbd.LeadByDate(logger, DATAjob+'/..', DATAjob,
+                                               model_info_dict, date_info_dict,
+                                               plot_info_dict, met_info_dict,
+                                               logo_dir)
                 plot_lbd.make_lead_by_date()
+                if SENDCOM == 'YES' and os.path.exists(DATAjob_image_name) \
+                        and not os.path.exists(COMOUTjob_image_name):
+                    logger.info(f"Copying {DATAjob_image_name} to "
+                                +f"{COMOUTjob_image_name}")
+                    gda_util.copy_file(DATAjob_image_name, COMOUTjob_image_name)
     elif plot == 'stat_by_level':
         import global_det_atmos_plots_stat_by_level as gdap_sbl
         vert_profiles = [os.environ['vert_profile']]
         for sbl_info in \
-                list(itertools.product(valid_hrs, fhrs, interp_points_list,
-                                       vert_profiles)):
+                list(itertools.product(valid_hrs, fhrs, vert_profiles)):
             date_info_dict['valid_hr_start'] = str(sbl_info[0])
             date_info_dict['valid_hr_end'] = str(sbl_info[0])
             date_info_dict['valid_hr_inc'] = '24'
             date_info_dict['forecast_hour'] = str(sbl_info[1])
             plot_info_dict['fcst_var_name'] = fcst_var_name
             plot_info_dict['obs_var_name'] = obs_var_name
-            plot_info_dict['interp_points'] = str(sbl_info[2])
-            plot_info_dict['vert_profile'] = sbl_info[3]
+            plot_info_dict['vert_profile'] = sbl_info[2]
+            plot_info_dict['fcst_var_level'] = sbl_info[2]
+            plot_info_dict['obs_var_level'] = sbl_info[2]
             init_hr = gda_util.get_init_hour(
                 int(date_info_dict['valid_hr_start']),
                 int(date_info_dict['forecast_hour'])
             )
-            plot_info_dict['fcst_var_level'] = sbl_info[3]
-            plot_info_dict['obs_var_level'] = sbl_info[3]
             for t in range(len(fcst_var_thresh_list)):
                 plot_info_dict['fcst_var_thresh'] = fcst_var_thresh_list[t]
                 plot_info_dict['obs_var_thresh'] = obs_var_thresh_list[t]
-                image_name = plot_specs.get_savefig_name(
-                    os.path.join(job_output_dir, 'images'),
-                    plot_info_dict, date_info_dict
+                DATAjob_image_name = plot_specs.get_savefig_name(
+                    DATAjob, plot_info_dict, date_info_dict
                 )
-                if init_hr in init_hrs:
-                    if not os.path.exists(image_name):
-                        if plot_info_dict['stat'] == 'FBAR_OBAR':
-                            make_sbl = False
-                        else:
+                COMOUTjob_image_name = (
+                    DATAjob_image_name.replace(DATAjob, COMOUTjob)
+                )
+                if init_hr in init_hrs \
+                        and not os.path.exists(DATAjob_image_name) \
+                        and plot_info_dict['stat'] != 'FBAR_OBAR':
                             make_sbl = True
-                    else:
-                        make_sbl = False
                 else:
                     make_sbl = False
                 del plot_info_dict['fcst_var_level']
                 del plot_info_dict['obs_var_level']
                 if make_sbl:
-                    plot_sbl = gdap_sbl.StatByLevel(logger, job_output_dir,
-                                                    job_output_dir,
-                                                    model_info_dict,
+                    plot_sbl = gdap_sbl.StatByLevel(logger, DATAjob+'/..',
+                                                    DATAjob, model_info_dict,
                                                     date_info_dict,
                                                     plot_info_dict,
-                                                    met_info_dict,
-                                                    logo_dir)
+                                                    met_info_dict, logo_dir)
                     plot_sbl.make_stat_by_level()
+                    if SENDCOM == 'YES' \
+                            and os.path.exists(DATAjob_image_name) \
+                            and not os.path.exists(COMOUTjob_image_name):
+                        logger.info(f"Copying {DATAjob_image_name} to "
+                                    +f"{COMOUTjob_image_name}")
+                        gda_util.copy_file(DATAjob_image_name,
+                                           COMOUTjob_image_name)
     elif plot == 'lead_by_level':
         import global_det_atmos_plots_lead_by_level as gdap_lbl
         if evs_run_mode == 'production' and int(fhr_inc) == 6:
@@ -577,48 +587,52 @@ elif JOB_GROUP == 'make_plots':
         else:
             fhrs_lbl = fhrs
         vert_profiles = [os.environ['vert_profile']]
-        for lbl_info in \
-                list(itertools.product(valid_hrs, interp_points_list,
-                                       vert_profiles)):
+        for lbl_info in list(itertools.product(valid_hrs, vert_profiles)):
             date_info_dict['valid_hr_start'] = str(lbl_info[0])
             date_info_dict['valid_hr_end'] = str(lbl_info[0])
             date_info_dict['valid_hr_inc'] = '24'
             date_info_dict['forecast_hours'] = fhrs_lbl
             plot_info_dict['fcst_var_name'] = fcst_var_name
             plot_info_dict['obs_var_name'] = obs_var_name
-            plot_info_dict['interp_points'] = str(lbl_info[1])
-            plot_info_dict['vert_profile'] = lbl_info[2]
-            plot_info_dict['fcst_var_level'] = lbl_info[2]
-            plot_info_dict['obs_var_level'] = lbl_info[2]
+            plot_info_dict['vert_profile'] = lbl_info[1]
+            plot_info_dict['fcst_var_level'] = lbl_info[1]
+            plot_info_dict['obs_var_level'] = lbl_info[1]
             for t in range(len(fcst_var_thresh_list)):
                 plot_info_dict['fcst_var_thresh'] = fcst_var_thresh_list[t]
                 plot_info_dict['obs_var_thresh'] = obs_var_thresh_list[t]
-                image_name = plot_specs.get_savefig_name(
-                    os.path.join(job_output_dir, 'images'),
-                    plot_info_dict, date_info_dict
+                DATAjob_image_name = plot_specs.get_savefig_name(
+                    DATAjob, plot_info_dict, date_info_dict
                 )
-                if not os.path.exists(image_name):
+                COMOUTjob_image_name = (
+                    DATAjob_image_name.replace(DATAjob, COMOUTjob)
+                )
+                if not os.path.exists(DATAjob_image_name) \
+                        and plot_info_dict['stat'] != 'FBAR_OBAR':
                     if len(date_info_dict['forecast_hours']) <= 1:
                         logger.warning("No span of forecast hours to plot, "
                                        +"given 1 forecast hour, skipping "
                                        +"lead_by_level plots")
+                        make_lbl = False
                     else:
-                        if plot_info_dict['stat'] == 'FBAR_OBAR':
-                            make_lbl = False
-                        else:
-                            make_lbl = True
+                        make_lbl = True
                 else:
                     make_lbl = False
                 del plot_info_dict['fcst_var_level']
                 del plot_info_dict['obs_var_level']
                 if make_lbl:
-                    plot_lbl = gdap_lbl.LeadByLevel(logger, job_output_dir,
-                                                    job_output_dir,
-                                                    model_info_dict,
+                    plot_lbl = gdap_lbl.LeadByLevel(logger, DATAjob+'/..',
+                                                    DATAjob, model_info_dict,
                                                     date_info_dict,
                                                     plot_info_dict,
                                                     met_info_dict, logo_dir)
                     plot_lbl.make_lead_by_level()
+                    if SENDCOM == 'YES' \
+                            and os.path.exists(DATAjob_image_name) \
+                            and not os.path.exists(COMOUTjob_image_name):
+                        logger.info(f"Copying {DATAjob_image_name} to "
+                                    +f"{COMOUTjob_image_name}")
+                        gda_util.copy_file(DATAjob_image_name,
+                                           COMOUTjob_image_name)
     elif plot == 'nohrsc_spatial_map':
         import global_det_atmos_plots_nohrsc_spatial_map as gdap_nsm
         nohrsc_data_dir = os.path.join(VERIF_CASE_STEP_dir, 'data', 'nohrsc')
@@ -627,9 +641,9 @@ elif JOB_GROUP == 'make_plots':
         date_info_dict['valid_hr_inc'] = '24'
         plot_info_dict['obs_var_name'] = obs_var_name
         plot_info_dict['obs_var_level'] = obs_var_level_list[0]
-        plot_nsm = gdap_nsm.NOHRSCSpatialMap(logger, nohrsc_data_dir,
-                                             job_output_dir, date_info_dict,
-                                             plot_info_dict, logo_dir)
+        plot_nsm = gdap_nsm.NOHRSCSpatialMap(logger, nohrsc_data_dir, DATAjob,
+                                             date_info_dict, plot_info_dict,
+                                             logo_dir)
         plot_nsm.make_nohrsc_spatial_map()
     elif plot == 'precip_spatial_map':
         model_info_dict['obs'] = {'name': 'ccpa',
@@ -651,8 +665,7 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_thresh'] = 'NA'
             plot_info_dict['interp_points'] = 'NA'
             plot_psm = gdap_psm.PrecipSpatialMap(logger, pcp_combine_base_dir,
-                                                 job_output_dir,
-                                                 model_info_dict,
+                                                 DATAjob, model_info_dict,
                                                  date_info_dict,
                                                  plot_info_dict,
                                                  met_info_dict, logo_dir)
@@ -678,30 +691,37 @@ elif JOB_GROUP == 'make_plots':
             for l in range(len(fcst_var_level_list)):
                 plot_info_dict['fcst_var_level'] = fcst_var_level_list[l]
                 plot_info_dict['obs_var_level'] = obs_var_level_list[l]
-                image_name = plot_specs.get_savefig_name(
-                    os.path.join(job_output_dir, 'images'),
-                    plot_info_dict, date_info_dict
+                DATAjob_image_name = plot_specs.get_savefig_name(
+                    DATAjob, plot_info_dict, date_info_dict
                 )
-                if init_hr in init_hrs:
-                    if not os.path.exists(image_name):
-                        make_pd = True
-                    else:
-                        make_pd = False
+                COMOUTjob_image_name = (
+                    DATAjob_image_name.replace(DATAjob, COMOUTjob)
+                )
+                if init_hr in init_hrs \
+                        and not os.path.exists(DATAjob_image_name) \
+                        and plot_info_dict['stat'] == 'PERF_DIA':
+                    make_pd = True
                 else:
                     make_pd = False
                 if make_pd:
-                    plot_pd = gdap_pd.PerformanceDiagram(logger, job_output_dir,
-                                                         job_output_dir,
+                    plot_pd = gdap_pd.PerformanceDiagram(logger, DATAjob+'/..',
+                                                         DATAjob,
                                                          model_info_dict,
                                                          date_info_dict,
                                                          plot_info_dict,
                                                          met_info_dict,
                                                          logo_dir)
                     plot_pd.make_performance_diagram()
+                    if SENDCOM == 'YES' \
+                            and os.path.exists(DATAjob_image_name) \
+                            and not os.path.exists(COMOUTjob_image_name):
+                        logger.info(f"Copying {DATAjob_image_name} to "
+                                    +f"{COMOUTjob_image_name}")
+                        gda_util.copy_file(DATAjob_image_name,
+                                           COMOUTjob_image_name)
     else:
         logger.warning(plot+" not recongized")
 elif JOB_GROUP == 'tar_images':
-    logger.info("Tar'ing up images")
     job_output_image_dir = os.path.join(job_output_dir, 'images')
     cwd = os.getcwd()
     if len(glob.glob(job_output_image_dir+'/*')) != 0:
