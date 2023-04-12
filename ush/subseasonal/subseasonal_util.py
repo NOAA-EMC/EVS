@@ -470,15 +470,14 @@ def prep_prod_gefs_file(source_afile, source_bfile, prepped_file, dest_file,
                                #'-grib', prepped_file])
     copy_file(prepped_file, dest_file)
 
-def prep_prod_cfs_file(source_pfile, source_ffile, prepped_file, dest_file,
+def prep_prod_cfs_pfile(source_pfile, prepped_pfile, dest_pfile,
                        forecast_hour, prep_method):
-    """! Do prep work for CFS production files
+    """! Do prep work for CFS production pgbf files
 
          Args:
              source_pfile       - source pgbf file format (string)
-             source_ffile       - source flxf file format (string)
-             prepped_file       - prepped file (string)
-             dest_file          - destination file (string)
+             prepped_pfile      - prepped pgbf file (string)
+             dest_pfile         - destination pgbf file (string)
              forecast_hour      - forecast hour (string)
              prep_method        - name of prep method to do
                                   (string)
@@ -489,7 +488,7 @@ def prep_prod_cfs_file(source_pfile, source_ffile, prepped_file, dest_file,
     WGRIB2 = os.environ['WGRIB2']
     EXECevs = os.environ['EXECevs']
     # Working file names
-    working_file1 = prepped_file+'.tmp1'
+    working_file1 = prepped_pfile+'.tmp1'
     # Prep file
     if prep_method == 'full':
         if forecast_hour == 0:
@@ -498,39 +497,71 @@ def prep_prod_cfs_file(source_pfile, source_ffile, prepped_file, dest_file,
             wgrib_fhr = forecast_hour
         thin_var_level_list = [
             'HGT:500 mb',
-            'ULWRF:top of atmosphere',
             'APCP:surface',
+            'UGRD:850 mb',
+            'UGRD:200 mb',
+            'VGRD:850 mb',
+            'VGRD:200 mb'
+        ]
+
+        if check_file_exists_size(source_pfile):
+            run_shell_command(['>', prepped_pfile])
+            for thin_var_level in thin_var_level_list:
+                run_shell_command([WGRIB2, '-match', '"'+thin_var_level+'"',
+                                   source_pfile+'|'+WGRIB2, '-i',
+                                   source_pfile,
+                                   '-grib', working_file1])
+                run_shell_command(['cat', working_file1, '>>', prepped_pfile])
+                os.remove(working_file1)
+    copy_file(prepped_pfile, dest_pfile)
+
+def prep_prod_cfs_ffile(source_ffile, prepped_ffile, dest_ffile,
+                       forecast_hour, prep_method):
+    """! Do prep work for CFS production flxf files
+
+         Args:
+             source_ffile       - source flxf file format (string)
+             prepped_ffile      - prepped flxf file (string)
+             dest_ffile         - destination flxf file (string)
+             forecast_hour      - forecast hour (string)
+             prep_method        - name of prep method to do
+                                  (string)
+
+         Returns:
+    """
+    # Environment variables and executables
+    WGRIB2 = os.environ['WGRIB2']
+    EXECevs = os.environ['EXECevs']
+    # Working file names
+    working_file1 = prepped_ffile+'.tmp1'
+    # Prep file
+    if prep_method == 'full':
+        if forecast_hour == 0:
+            wgrib_fhr = 'anl'
+        else:
+            wgrib_fhr = forecast_hour
+        thin_var_level_list = [
+            'ULWRF:top of atmosphere',
             'ICETK:surface',
             'ICEC:surface',
             'TMP:surface',
             'TMP:2 m above ground',
             'TMAX:2 m above ground',
             'TMIN:2 m above ground',
-            'UGRD:850 mb',
-            'UGRD:200 mb',
             'UGRD:10 m above ground',
-            'VGRD:850 mb',
-            'VGRD:200 mb',
             'VGRD:10 m above ground'
         ]
 
-        if check_file_exists_size(source_pfile) \
-                and check_file_exists_size(source_ffile):
-            run_shell_command(['>', prepped_file])
+        if check_file_exists_size(source_ffile):
+            run_shell_command(['>', prepped_ffile])
             for thin_var_level in thin_var_level_list:
-                run_shell_command([WGRIB2, '-match', '"'+thin_var_level+'"',
-                                   source_pfile+'|'+WGRIB2, '-i',
-                                   source_pfile,
-                                   '-grib', working_file1])
-                run_shell_command(['cat', working_file1, '>>', prepped_file])
                 run_shell_command([WGRIB2, '-match', '"'+thin_var_level+'"',
                                    source_ffile+'|'+WGRIB2, '-i',
                                    source_ffile,
                                    '-grib', working_file1])
-                run_shell_command(['cat', working_file1, '>>', prepped_file])
+                run_shell_command(['cat', working_file1, '>>', prepped_ffile])
                 os.remove(working_file1)
-    copy_file(prepped_file, dest_file)
-
+    copy_file(prepped_ffile, dest_ffile)
 
 def prep_prod_gfs_file(source_file, dest_file):
     """! Do prep work for GFS analysis production files
