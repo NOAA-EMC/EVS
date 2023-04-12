@@ -65,7 +65,7 @@ export cyc=00
 export rum_mpi=yes
 
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export DATA_IN=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
 
 
