@@ -39,7 +39,7 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 export cycle=${cycle:-t${cyc}z}
 setpdy.sh
 . ./PDY
-export VDATE=$PDYm1
+export VDATE=${VDATE:-$PDYm1}
 
 ####################################
 # Define NET/RUN variables
