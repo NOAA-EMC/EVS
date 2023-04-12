@@ -1,6 +1,7 @@
 #!/bin/bash
 export PS4=' + exevs_hurricane_global_det_tcgen_stats.sh line $LINENO: '
 
+export MetOnMachine=${MetOnMachine:-$MET_ROOT}
 export YEAR=${YYYY}
 export basinlist="al ep wp"
 export modellist="gfs ecmwf cmc"
@@ -50,9 +51,10 @@ fi
 
 #--- run for TC_gen
 cd ${OUTPUT}
-cp ${PARMevs}/TCGen_template.conf .
+cp ${PARMevs}/metplus_config/hurricane/stats/TCGen_template.conf .
 export VALID_FREQ=6
 
+export SEARCH0="METBASE_template"
 export SEARCH1="INPUT_BASE_template"
 export SEARCH2="OUTPUT_BASE_template"
 export SEARCH3="YEAR_template"
@@ -60,6 +62,7 @@ export SEARCH4="INIT_FREQ_template"
 export SEARCH5="VALID_FREQ_template"
 export SEARCH6="BASIN_MASK_template"
 
+sed -i "s|$SEARCH0|$MetOnMachine|g" TCGen_template.conf
 sed -i "s|$SEARCH1|$INPUT|g" TCGen_template.conf
 sed -i "s|$SEARCH2|$OUTPUT|g" TCGen_template.conf
 sed -i "s|$SEARCH3|$YEAR|g" TCGen_template.conf
