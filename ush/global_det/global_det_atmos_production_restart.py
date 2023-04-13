@@ -21,17 +21,8 @@ RUN = os.environ['RUN']
 COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
 
-# Do prep restart
-if STEP == 'prep':
-    INITDATE = os.environ['INITDATE']
-    COMOUT_INITDATE = COMOUT+'.'+INITDATE
-    if os.path.exists(COMOUT_INITDATE):
-        print(f"Copying COMOUT {COMOUT_INITDATE} directory "
-              +f"into working directory {cwd}")
-        gda_util.run_shell_command(
-            ['cp', '-rpv', COMOUT_INITDATE, os.path.join(cwd, '.')]
-        )
-elif STEP == 'stats':
+# Copy files for restart
+if STEP == 'stats':
     VDATE = os.environ['VDATE']
     MODELNAME = os.environ['MODELNAME']
     VERIF_CASE = os.environ['VERIF_CASE']
