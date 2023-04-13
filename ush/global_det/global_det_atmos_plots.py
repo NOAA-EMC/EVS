@@ -743,25 +743,24 @@ elif JOB_GROUP == 'make_plots':
         logger.warning(plot+" not recongized")
 elif JOB_GROUP == 'tar_images':
     cwd = os.getcwd()
-    if len(glob.glob(DATAjob+'/*')) != 0:
-        os.chdir(DATAjob)
-        tar_file = os.path.join(
-            DATA, f"{VERIF_CASE}_{STEP}", 'plot_output', 'tar_files',
-            (f"{VERIF_CASE}_{VERIF_TYPE}_"
-             +DATAjob\
-             .replace(os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
-                                   'plot_output', f"{RUN}.{end_date}",
-                                    f"{VERIF_CASE}_{VERIF_TYPE}",
-                                    f"last{NDAYS}days/"), '')\
-             .replace('/', '_')+'.tar')
-        )
-        logger.debug(f"Making tar file {tar_file} from {DATAjob}")
-        gda_util.run_shell_command(
-            ['tar', '-cvf', tar_file, '*']
-        )
-        os.chdir(cwd)
-    else:
-        logger.warning(f"No images generated in {DATAjob}")
+    tar_file = os.path.join(
+        DATA, f"{VERIF_CASE}_{STEP}", 'plot_output', 'tar_files',
+        (f"{VERIF_CASE}_{VERIF_TYPE}_"
+         +DATAjob\
+          .replace(os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
+                                'plot_output', f"{RUN}.{end_date}",
+                                f"{VERIF_CASE}_{VERIF_TYPE}",
+                                f"last{NDAYS}days/"), '')\
+          .replace('/', '_')+'.tar')
+    )   
+    if not os.path.exists(tar_file):
+        if len(glob.glob(DATAjob+'/*')) != 0:
+            os.chdir(DATAjob)
+            logger.debug(f"Making tar file {tar_file} from {DATAjob}")
+            gda_util.run_shell_command(['tar', '-cvf', tar_file, '*'])
+            os.chdir(cwd)
+        else:
+            logger.warning(f"No images generated in {DATAjob}")
     if evs_run_mode == 'production':
         logger.info(f"Removing {DATAjob}")
         shutil.rmtree(DATAjob)
