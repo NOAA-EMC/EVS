@@ -792,8 +792,10 @@ for verif_type in VERIF_CASE_STEP_type_list:
                       .replace('.','p').replace('-', '_')),
                     job_env_dict['vx_mask'].lower()
                 )
-                job_env_dict['COMOUTjob'] = (
-                     job_env_dict['DATAjob'].replace(DATA, COMOUT)
+                job_env_dict['COMOUTjob'] = job_env_dict['DATAjob'].replace(
+                    os.path.join(DATA,f"{VERIF_CASE}_{STEP}", 'plot_output',
+                                 f"{RUN}.{end_date}"),
+                    COMOUT
                 )
                 for output_dir in [job_env_dict['DATAjob'],
                                    job_env_dict['COMOUTjob']]:
@@ -928,9 +930,11 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         job_env_dict['vx_mask'].lower(),
                         job_env_dict['stat'].lower()
                     )
-                    job_env_dict['COMOUTjob'] = (
-                        job_env_dict['DATAjob'].replace(DATA, COMOUT)
-                    )   
+                    job_env_dict['COMOUTjob'] = job_env_dict['DATAjob'].replace(
+                        os.path.join(DATA,f"{VERIF_CASE}_{STEP}",
+                                     'plot_output', f"{RUN}.{end_date}"),
+                        COMOUT
+                    )
                     for output_dir in [job_env_dict['DATAjob'],
                                        job_env_dict['COMOUTjob']]:
                         if not os.path.exists(output_dir):
@@ -967,7 +971,11 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         job.close()
             elif JOB_GROUP == 'tar_images':
                 job_env_dict['DATAjob'] = loop_info
-                job_env_dict['COMOUTjob'] = loop_info.replace(DATA, COMOUT)
+                job_env_dict['COMOUTjob'] = loop_info.replace(
+                    os.path.join(DATA,f"{VERIF_CASE}_{STEP}", 'plot_output',
+                                 f"{RUN}.{end_date}"),
+                    COMOUT
+                )
                 # Create job file
                 njobs+=1 
                 job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
