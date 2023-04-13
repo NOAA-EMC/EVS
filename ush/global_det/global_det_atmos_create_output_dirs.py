@@ -154,6 +154,10 @@ elif STEP == 'plots':
         os.path.join(working_output_base_dir,
                      'logs')
     )
+    working_dir_list.append(
+        os.path.join(working_output_base_dir,
+                     'tar_files')
+    )
     COMROOT_dir_list.append(
         os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
                      RUN+'.'+end_date_dt.strftime('%Y%m%d'))

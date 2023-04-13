@@ -34,21 +34,29 @@ met_ver = os.environ['met_ver']
 evs_run_mode = os.environ['evs_run_mode']
 start_date = os.environ['start_date']
 end_date = os.environ['end_date']
-plot_verbosity = os.environ['plot_verbosity']
-line_type = os.environ['line_type']
-fcst_var_name = os.environ['fcst_var_name']
-obs_var_name = os.environ['obs_var_name']
-vx_mask = os.environ['vx_mask']
-model_list = os.environ['model_list'].split(', ')
-model_plot_name_list = os.environ['model_plot_name_list'].split(', ')
-obs_list = os.environ['obs_list'].split(', ')
-VERIF_TYPE = os.environ['VERIF_TYPE']
 date_type = os.environ['date_type']
+NDAYS = os.environ['NDAYS']
+plot_verbosity = os.environ['plot_verbosity']
+VERIF_TYPE = os.environ['VERIF_TYPE']
 job_id = os.environ['job_id']
 if JOB_GROUP == 'condense_stats':
+    line_type = os.environ['line_type']
+    fcst_var_name = os.environ['fcst_var_name']
+    obs_var_name = os.environ['obs_var_name']
+    vx_mask = os.environ['vx_mask']
+    model_list = os.environ['model_list'].split(', ')
+    model_plot_name_list = os.environ['model_plot_name_list'].split(', ')
+    obs_list = os.environ['obs_list'].split(', ')
     fcst_var_level = os.environ['fcst_var_level']
     obs_var_level = os.environ['obs_var_level']
 elif JOB_GROUP == 'filter_stats':
+    line_type = os.environ['line_type']
+    fcst_var_name = os.environ['fcst_var_name']
+    obs_var_name = os.environ['obs_var_name']
+    vx_mask = os.environ['vx_mask']
+    model_list = os.environ['model_list'].split(', ')
+    model_plot_name_list = os.environ['model_plot_name_list'].split(', ')
+    obs_list = os.environ['obs_list'].split(', ')
     valid_hr_start = os.environ['valid_hr_start']
     valid_hr_end = os.environ['valid_hr_end']
     valid_hr_inc = os.environ['valid_hr_inc']
@@ -67,6 +75,13 @@ elif JOB_GROUP == 'filter_stats':
     obs_var_level = os.environ['obs_var_level']
     obs_var_thresh = os.environ['obs_var_thresh']
 elif JOB_GROUP == 'make_plots':
+    line_type = os.environ['line_type']
+    fcst_var_name = os.environ['fcst_var_name']
+    obs_var_name = os.environ['obs_var_name']
+    vx_mask = os.environ['vx_mask']
+    model_list = os.environ['model_list'].split(', ')
+    model_plot_name_list = os.environ['model_plot_name_list'].split(', ')
+    obs_list = os.environ['obs_list'].split(', ')
     valid_hr_start = os.environ['valid_hr_start']
     valid_hr_end = os.environ['valid_hr_end']
     valid_hr_inc = os.environ['valid_hr_inc']
@@ -125,19 +140,21 @@ logger.info(logger_info)
 
 # Set up model information dictionary
 original_model_info_dict = {}
-for model_idx in range(len(model_list)):
-    model_num = model_idx + 1
-    original_model_info_dict['model'+str(model_num)] = {
-        'name': model_list[model_idx],
-        'plot_name': model_plot_name_list[model_idx],
-        'obs_name': obs_list[model_idx]
-    }
+if JOB_GROUP != 'tar_images':
+    for model_idx in range(len(model_list)):
+        model_num = model_idx + 1
+        original_model_info_dict['model'+str(model_num)] = {
+            'name': model_list[model_idx],
+            'plot_name': model_plot_name_list[model_idx],
+            'obs_name': obs_list[model_idx]
+        }
 
 # Set up date information dictionary
 original_date_info_dict = {
     'date_type': date_type,
     'start_date': start_date,
-    'end_date': end_date
+    'end_date': end_date,
+    'ndays': NDAYS
 }
 if JOB_GROUP in ['filter_stats', 'make_plots']:
     original_date_info_dict['init_hr_start'] = init_hr_start
@@ -154,10 +171,13 @@ if JOB_GROUP in ['filter_stats', 'make_plots']:
         fhrs = list(range(0,72,6)) + list(range(72,384+24,24))
 
 # Set up plot information dictionary
-original_plot_info_dict = {
-    'line_type': line_type,
-    'vx_mask': vx_mask,
-}
+if JOB_GROUP != 'tar_images':
+    original_plot_info_dict = {
+        'line_type': line_type,
+        'vx_mask': vx_mask,
+    }
+else:
+    original_plot_info_dict = {}
 if JOB_GROUP in ['filter_stats', 'make_plots']:
     original_plot_info_dict['grid'] = grid
     original_plot_info_dict['interp_method'] = interp_method
@@ -722,24 +742,28 @@ elif JOB_GROUP == 'make_plots':
     else:
         logger.warning(plot+" not recongized")
 elif JOB_GROUP == 'tar_images':
-    job_output_image_dir = os.path.join(job_output_dir, 'images')
     cwd = os.getcwd()
-    if len(glob.glob(job_output_image_dir+'/*')) != 0:
-        os.chdir(job_output_image_dir)
-        tar_file = os.path.join(VERIF_TYPE_image_dir,
-                                job_name.replace('/','_')+'.tar')
-        if os.path.exists(tar_file):
-            os.remove(tar_file)
-        logger.debug(f"Making tar file {tar_file} from {job_output_image_dir}")
+    if len(glob.glob(DATAjob+'/*')) != 0:
+        os.chdir(DATAjob)
+        tar_file = os.path.join(
+            DATA, f"{VERIF_CASE}_{STEP}", 'plot_output', 'tar_files',
+            (f"{VERIF_CASE}_{VERIF_TYPE}_"
+             +DATAjob\
+             .replace(os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
+                                   'plot_output', f"{RUN}.{end_date}",
+                                    f"{VERIF_CASE}_{VERIF_TYPE}",
+                                    f"last{NDAYS}days/"), '')\
+             .replace('/', '_')+'.tar')
+        )
+        logger.debug(f"Making tar file {tar_file} from {DATAjob}")
         gda_util.run_shell_command(
             ['tar', '-cvf', tar_file, '*']
         )
         os.chdir(cwd)
     else:
-        logger.warning(f"No images generated in {job_output_image_dir}")
-     
+        logger.warning(f"No images generated in {DATAjob}")
     if evs_run_mode == 'production':
-        logger.info(f"Removing {job_output_dir}")
-        shutil.rmtree(job_output_dir)
+        logger.info(f"Removing {DATAjob}")
+        shutil.rmtree(DATAjob)
 
 print("END: "+os.path.basename(__file__))

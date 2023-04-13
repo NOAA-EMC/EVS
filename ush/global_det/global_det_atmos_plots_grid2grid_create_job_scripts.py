@@ -601,7 +601,46 @@ if JOB_GROUP == 'make_plots':
 ################################################
 #### tar_images jobs
 ################################################
-tar_images_jobs_dict = copy.deepcopy(base_plot_jobs_info_dict)
+tar_images_jobs_dict = {
+    'flux': {},
+    'means': {
+        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
+                                        'plot_output', f"{RUN}.{end_date}",
+                                        f"{VERIF_CASE}_means",
+                                        f"last{NDAYS}days")
+    },
+    'ozone': {},
+    'precip': {
+        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
+                                        'plot_output', f"{RUN}.{end_date}",
+                                        f"{VERIF_CASE}_precip",
+                                        f"last{NDAYS}days")
+    },
+    'pres_levs': {
+        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
+                                        'plot_output', f"{RUN}.{end_date}",
+                                        f"{VERIF_CASE}_pres_levs",
+                                        f"last{NDAYS}days")
+    },
+    'sea_ice': {
+        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
+                                        'plot_output', f"{RUN}.{end_date}",
+                                        f"{VERIF_CASE}_sea_ice",
+                                        f"last{NDAYS}days")
+    },
+    'snow': {
+        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
+                                        'plot_output', f"{RUN}.{end_date}",
+                                        f"{VERIF_CASE}_snow",
+                                        f"last{NDAYS}days")
+    },
+    'sst': {
+        'search_base_dir': os.path.join(DATA, f"{VERIF_CASE}_{STEP}",
+                                        'plot_output', f"{RUN}.{end_date}",
+                                        f"{VERIF_CASE}_sst",
+                                        f"last{NDAYS}days")
+    },
+}
 if JOB_GROUP == 'tar_images':
     JOB_GROUP_dict = tar_images_jobs_dict
 
@@ -635,6 +674,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
         )
         job_env_dict['start_date'] = start_date
         job_env_dict['end_date'] = end_date
+        job_env_dict['NDAYS'] = NDAYS
         job_env_dict['date_type'] = 'VALID'
         if JOB_GROUP in ['filter_stats', 'make_plots']:
             valid_hr_start = int(job_env_dict['valid_hr_start'])
@@ -658,11 +698,12 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     )
                 if int(job_env_dict['fhr_start']) < 24:
                     job_env_dict['fhr_start'] = '24'
-        for data_name in ['fcst', 'obs']:
-            job_env_dict[data_name+'_var_name'] =  (
-                verif_type_plot_jobs_dict[verif_type_job]\
-                [data_name+'_var_dict']['name']
-            )
+        if JOB_GROUP in ['condense_stats', 'filter_stats', 'make_plots']:
+            for data_name in ['fcst', 'obs']:
+                job_env_dict[data_name+'_var_name'] =  (
+                    verif_type_plot_jobs_dict[verif_type_job]\
+                    [data_name+'_var_dict']['name']
+                )
         if JOB_GROUP == 'condense_stats':
             JOB_GROUP_verif_type_job_product_loops = list(itertools.product(
                 verif_type_plot_jobs_dict[verif_type_job]['line_types'],
@@ -693,6 +734,14 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 verif_type_plot_jobs_dict[verif_type_job]['vx_masks'],
                 verif_type_plot_jobs_dict[verif_type_job]['interps']
             ))
+        elif JOB_GROUP == 'tar_images':
+            JOB_GROUP_verif_type_job_product_loops = []
+            for root, dirs, files in os.walk(
+                verif_type_plot_jobs_dict['search_base_dir']
+            ):
+                if not dirs \
+                        and root not in JOB_GROUP_verif_type_job_product_loops:
+                    JOB_GROUP_verif_type_job_product_loops.append(root)
         for loop_info in JOB_GROUP_verif_type_job_product_loops:
             if JOB_GROUP in ['condense_stats', 'filter_stats']:
                 job_env_dict['fcst_var_level'] = loop_info[1]
@@ -743,13 +792,8 @@ for verif_type in VERIF_CASE_STEP_type_list:
                       .replace('.','p').replace('-', '_')),
                     job_env_dict['vx_mask'].lower()
                 )
-                job_env_dict['COMOUTjob'] = os.path.join(
-                    COMOUT, f"{VERIF_CASE}_{verif_type}",
-                    f"last{NDAYS}days", job_env_dict['line_type'].lower(),
-                    f"{job_env_dict['fcst_var_name'].lower()}_"
-                    +(job_env_dict['fcst_var_level'].lower()\
-                      .replace('.','p').replace('-', '_')),
-                    job_env_dict['vx_mask'].lower()
+                job_env_dict['COMOUTjob'] = (
+                     job_env_dict['DATAjob'].replace(DATA, COMOUT)
                 )
                 for output_dir in [job_env_dict['DATAjob'],
                                    job_env_dict['COMOUTjob']]:
@@ -883,15 +927,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
                           .replace('-', '_')),
                         job_env_dict['vx_mask'].lower(),
                         job_env_dict['stat'].lower()
-                    )   
-                    job_env_dict['COMOUTjob'] = os.path.join(
-                        COMOUT, f"{VERIF_CASE}_{verif_type}",
-                        f"last{NDAYS}days", job_env_dict['line_type'].lower(),
-                        f"{job_env_dict['fcst_var_name'].lower()}_"
-                        +(plot_loop_info[2].lower().replace('.','p')\
-                          .replace('-', '_')),
-                        job_env_dict['vx_mask'].lower(),
-                        job_env_dict['stat'].lower()
+                    )
+                    job_env_dict['COMOUTjob'] = (
+                        job_env_dict['DATAjob'].replace(DATA, COMOUT)
                     )   
                     for output_dir in [job_env_dict['DATAjob'],
                                        job_env_dict['COMOUTjob']]:
@@ -920,13 +958,34 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         # Write environment variables
                         job_env_dict['job_id'] = 'job'+str(njobs)
                         for name, value in job_env_dict.items():
-                            job.write('export '+name+'='+value+'\n')
+                            job.write('export '+name+'="'+value+'"\n')
                         job.write('\n')
                         job.write(
                             gda_util.python_command(run_global_det_atmos_plot,
                                                     [])
                         )
                         job.close()
+            elif JOB_GROUP == 'tar_images':
+                job_env_dict['DATAjob'] = loop_info
+                job_env_dict['COMOUTjob'] = loop_info.replace(DATA, COMOUT)
+                # Create job file
+                njobs+=1 
+                job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
+                print("Creating job script: "+job_file)
+                job = open(job_file, 'w')
+                job.write('#!/bin/bash\n')
+                job.write('set -x\n')
+                job.write('\n')
+                # Set any environment variables for special cases
+                # Write environment variables
+                job_env_dict['job_id'] = 'job'+str(njobs)
+                for name, value in job_env_dict.items():
+                    job.write('export '+name+'="'+value+'"\n')
+                job.write('\n')
+                job.write(
+                    gda_util.python_command('global_det_atmos_plots.py', [])
+                )
+                job.close()
 
 # If running USE_CFP, create POE scripts
 if USE_CFP == 'YES':

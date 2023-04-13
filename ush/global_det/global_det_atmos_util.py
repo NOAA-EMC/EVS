@@ -1815,7 +1815,7 @@ def initalize_job_env_dict(verif_type, group,
     job_env_dict['JOB_GROUP'] = group
     job_env_dict['job_name'] = job
     if group in ['reformat_data', 'assemble_data', 'generate_stats',
-                 'filter_stats', 'make_plots', 'tar_images']:
+                 'filter_stats', 'make_plots']:
         job_env_dict['fhr_start'] = os.environ[
             verif_case_step_abbrev_type+'_fhr_min'
         ]
