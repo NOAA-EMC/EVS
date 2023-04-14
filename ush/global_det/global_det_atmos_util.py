@@ -2124,7 +2124,8 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
         if plot_job_env_dict['plot'] in ['stat_by_level', 'lead_by_level']:
             dir_level = plot_job_env_dict['vert_profile'].lower()
         else:
-            dir_level = plot_job_env_dict['fcst_var_level_list'].lower()
+            dir_level = (plot_job_env_dict['fcst_var_level_list'].lower()\
+                         .replace('.','p').replace('-', '_'))
     else:
         dir_level = (plot_job_env_dict['fcst_var_level'].lower()\
                      .replace('.','p').replace('-', '_'))
@@ -2217,7 +2218,6 @@ def condense_model_stat_files(logger, input_dir, output_dir, model, obs,
              line_type      - MET line type (string)
 
          Returns:
-             output_file - path to the condensed stat file
     """
     model_stat_files_wildcard = os.path.join(input_dir, model, model+'_*.stat')
     model_stat_files = glob.glob(model_stat_files_wildcard, recursive=True)
@@ -2260,7 +2260,6 @@ def condense_model_stat_files(logger, input_dir, output_dir, model, obs,
                 f.write(met_header_cols+all_grep_output)
         else:
             logger.info(f"{output_file} exists")
-    return output_file
 
 def build_df(logger, input_dir, output_dir, model_info_dict,
              met_info_dict, fcst_var_name, fcst_var_level, fcst_var_thresh,
@@ -2296,12 +2295,10 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
 
          Returns:
              all_model_df                - dataframe of all the information
-             parsed_model_stat_file_list - list of the files written/read
     """
     met_version_line_type_col_list = get_met_line_type_cols(
         logger, met_info_dict['root'], met_info_dict['version'], line_type
     )
-    parsed_model_stat_file_list = []
     for model_num in list(model_info_dict.keys()):
         model_num_name = (
             model_num+'/'+model_info_dict[model_num]['name']
@@ -2346,7 +2343,6 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                 parsed_model_stat_file = input_parsed_model_stat_file
             else:
                 parsed_model_stat_file = output_parsed_model_stat_file
-            parsed_model_stat_file_list.append(parsed_model_stat_file)
             if not os.path.exists(parsed_model_stat_file):
                 write_parse_stat_file = True
                 read_parse_stat_file = True
@@ -2450,6 +2446,8 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                     parsed_model_stat_file, header=met_version_line_type_col_list,
                     index=None, sep=' ', mode='w'
                 )
+            else:
+                logger.debug(f"{condensed_model_file} does not exist")
             if os.path.exists(parsed_model_stat_file):
                 logger.debug(f"Parsed {model_dict['name']} file "
                              +f"at {parsed_model_stat_file}")
@@ -2506,7 +2504,7 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
             all_model_df = model_num_df
         else:
             all_model_df = pd.concat([all_model_df, model_num_df])
-    return all_model_df, parsed_model_stat_file_list
+    return all_model_df
 
 def merge_grid2grid_long_term_stats_datasets(logger, stat_base_dir,
                                              time_range, date_dt_list,

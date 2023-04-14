@@ -208,14 +208,18 @@ if JOB_GROUP == 'make_plots':
                 make_ts = True
             else:
                 make_ts = False
+            if os.path.exists(COMOUTjob_image_name):
+                logger.info(f"Copying {COMOUTjob_image_name} to "
+                            +f"{DATAjob_image_name}")
+                gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
+                make_ts = False
             if make_ts:
                 plot_ts = gdap_ts.TimeSeries(logger, DATAjob+'/..', DATAjob,
                                              model_info_dict, date_info_dict,
                                              plot_info_dict, met_info_dict,
                                              logo_dir)
                 plot_ts.make_time_series()
-                if SENDCOM == 'YES' and os.path.exists(DATAjob_image_name) \
-                        and not os.path.exists(COMOUTjob_image_name):
+                if SENDCOM == 'YES' and os.path.exists(DATAjob_image_name):
                     logger.info(f"Copying {DATAjob_image_name} to "
                                 +f"{COMOUTjob_image_name}")
                     gda_util.copy_file(DATAjob_image_name, COMOUTjob_image_name)
@@ -249,14 +253,18 @@ if JOB_GROUP == 'make_plots':
                     make_la = True
             else:
                 make_la = False
+            if os.path.exists(COMOUTjob_image_name):
+                logger.info(f"Copying {COMOUTjob_image_name} to "
+                            +f"{DATAjob_image_name}")
+                gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
+                make_la = False
             if make_la:
                 plot_la = gdap_la.LeadAverage(logger, DATAjob+'/..', DATAjob,
                                               model_info_dict, date_info_dict,
                                               plot_info_dict, met_info_dict,
                                               logo_dir)
                 plot_la.make_lead_average()
-                if SENDCOM == 'YES' and os.path.exists(DATAjob_image_name) \
-                        and not os.path.exists(COMOUTjob_image_name):
+                if SENDCOM == 'YES' and os.path.exists(DATAjob_image_name):
                     logger.info(f"Copying {DATAjob_image_name} to "
                                 +f"{COMOUTjob_image_name}")
                     gda_util.copy_file(DATAjob_image_name, COMOUTjob_image_name)
@@ -292,6 +300,11 @@ if JOB_GROUP == 'make_plots':
                     make_vha = True
             else:
                 make_vha = False
+            if os.path.exists(COMOUTjob_image_name):
+                logger.info(f"Copying {COMOUTjob_image_name} to "
+                            +f"{DATAjob_image_name}")
+                gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
+                make_vha = False
             if make_vha:
                 plot_vha = gdap_vha.ValidHourAverage(logger, DATAjob+'/..',
                                                      DATAjob, model_info_dict,
@@ -299,8 +312,7 @@ if JOB_GROUP == 'make_plots':
                                                      plot_info_dict,
                                                      met_info_dict, logo_dir)
                 plot_vha.make_valid_hour_average()
-                if SENDCOM == 'YES' and os.path.exists(DATAjob_image_name) \
-                        and not os.path.exists(COMOUTjob_image_name):
+                if SENDCOM == 'YES' and os.path.exists(DATAjob_image_name):
                     logger.info(f"Copying {DATAjob_image_name} to "
                                 +f"{COMOUTjob_image_name}")
                     gda_util.copy_file(DATAjob_image_name, COMOUTjob_image_name)
@@ -341,6 +353,11 @@ if JOB_GROUP == 'make_plots':
                         make_ta = True
                 else:
                      make_ta = False
+                if os.path.exists(COMOUTjob_image_name):
+                    logger.info(f"Copying {COMOUTjob_image_name} to "
+                                +f"{DATAjob_image_name}")
+                    gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
+                    make_ta = False
                 if make_ta:
                     plot_ta = gdap_ta.ThresholdAverage(logger, DATAjob+'/..',
                                                        DATAjob,
@@ -351,8 +368,7 @@ if JOB_GROUP == 'make_plots':
                                                        logo_dir)
                     plot_ta.make_threshold_average()
                     if SENDCOM == 'YES' \
-                            and os.path.exists(DATAjob_image_name) \
-                            and not os.path.exists(COMOUTjob_image_name):
+                            and os.path.exists(DATAjob_image_name):
                         logger.info(f"Copying {DATAjob_image_name} to "
                                     +f"{COMOUTjob_image_name}")
                         gda_util.copy_file(DATAjob_image_name,
@@ -387,14 +403,18 @@ if JOB_GROUP == 'make_plots':
                     make_lbd = True
             else:
                 make_lbd = False
+            if os.path.exists(COMOUTjob_image_name):
+                logger.info(f"Copying {COMOUTjob_image_name} to "
+                            +f"{DATAjob_image_name}")
+                gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
+                make_lbd = False
             if make_lbd:
                 plot_lbd = gdap_lbd.LeadByDate(logger, DATAjob+'/..', DATAjob,
                                                model_info_dict, date_info_dict,
                                                plot_info_dict, met_info_dict,
                                                logo_dir)
                 plot_lbd.make_lead_by_date()
-                if SENDCOM == 'YES' and os.path.exists(DATAjob_image_name) \
-                        and not os.path.exists(COMOUTjob_image_name):
+                if SENDCOM == 'YES' and os.path.exists(DATAjob_image_name):
                     logger.info(f"Copying {DATAjob_image_name} to "
                                 +f"{COMOUTjob_image_name}")
                     gda_util.copy_file(DATAjob_image_name, COMOUTjob_image_name)
@@ -433,6 +453,11 @@ if JOB_GROUP == 'make_plots':
                     make_sbl = False
                 del plot_info_dict['fcst_var_level']
                 del plot_info_dict['obs_var_level']
+                if os.path.exists(COMOUTjob_image_name):
+                    logger.info(f"Copying {COMOUTjob_image_name} to "
+                                +f"{DATAjob_image_name}")
+                    gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
+                    make_sbl = False
                 if make_sbl:
                     plot_sbl = gdap_sbl.StatByLevel(logger, DATAjob+'/..',
                                                     DATAjob, model_info_dict,
@@ -441,8 +466,7 @@ if JOB_GROUP == 'make_plots':
                                                     met_info_dict, logo_dir)
                     plot_sbl.make_stat_by_level()
                     if SENDCOM == 'YES' \
-                            and os.path.exists(DATAjob_image_name) \
-                            and not os.path.exists(COMOUTjob_image_name):
+                            and os.path.exists(DATAjob_image_name):
                         logger.info(f"Copying {DATAjob_image_name} to "
                                     +f"{COMOUTjob_image_name}")
                         gda_util.copy_file(DATAjob_image_name,
@@ -488,6 +512,11 @@ if JOB_GROUP == 'make_plots':
                     make_lbl = False
                 del plot_info_dict['fcst_var_level']
                 del plot_info_dict['obs_var_level']
+                if os.path.exists(COMOUTjob_image_name):
+                    logger.info(f"Copying {COMOUTjob_image_name} to "
+                                +f"{DATAjob_image_name}")
+                    gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
+                    make_lbl = False
                 if make_lbl:
                     plot_lbl = gdap_lbl.LeadByLevel(logger, DATAjob+'/..',
                                                     DATAjob, model_info_dict,
@@ -496,8 +525,7 @@ if JOB_GROUP == 'make_plots':
                                                     met_info_dict, logo_dir)
                     plot_lbl.make_lead_by_level()
                     if SENDCOM == 'YES' \
-                            and os.path.exists(DATAjob_image_name) \
-                            and not os.path.exists(COMOUTjob_image_name):
+                            and os.path.exists(DATAjob_image_name):
                         logger.info(f"Copying {DATAjob_image_name} to "
                                     +f"{COMOUTjob_image_name}")
                         gda_util.copy_file(DATAjob_image_name,
@@ -572,6 +600,11 @@ if JOB_GROUP == 'make_plots':
                     make_pd = True
                 else:
                     make_pd = False
+                if os.path.exists(COMOUTjob_image_name):
+                    logger.info(f"Copying {COMOUTjob_image_name} to "
+                                +f"{DATAjob_image_name}")
+                    gda_util.copy_file(COMOUTjob_image_name, DATAjob_image_name)
+                    make_pd = False
                 if make_pd:
                     plot_pd = gdap_pd.PerformanceDiagram(logger, DATAjob+'/..',
                                                          DATAjob,
@@ -582,8 +615,7 @@ if JOB_GROUP == 'make_plots':
                                                          logo_dir)
                     plot_pd.make_performance_diagram()
                     if SENDCOM == 'YES' \
-                            and os.path.exists(DATAjob_image_name) \
-                            and not os.path.exists(COMOUTjob_image_name):
+                            and os.path.exists(DATAjob_image_name):
                         logger.info(f"Copying {DATAjob_image_name} to "
                                     +f"{COMOUTjob_image_name}")
                         gda_util.copy_file(DATAjob_image_name,

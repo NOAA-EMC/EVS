@@ -121,7 +121,7 @@ class ThresholdAverage:
                                    .index(fcst_var_thresh))
             obs_var_thresh = (self.plot_info_dict['obs_var_threshs']\
                               [fcst_var_thresh_idx])
-            all_model_df, file_list = gda_util.build_df(
+            all_model_df = gda_util.build_df(
                 self.logger, self.input_dir, self.output_dir,
                 self.model_info_dict, self.met_info_dict,
                 self.plot_info_dict['fcst_var_name'],

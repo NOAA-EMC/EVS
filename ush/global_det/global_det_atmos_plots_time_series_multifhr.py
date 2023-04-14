@@ -175,7 +175,7 @@ class TimeSeriesMultiFhr:
                     plot_dates = init_dates
             # Read in data
             self.logger.info(f"Reading in model stat files from {self.input_dir}")
-            all_model_df, file_list = gda_util.build_df(
+            all_model_df = gda_util.build_df(
                 self.logger, self.input_dir, self.output_dir,
                 self.model_info_dict, self.met_info_dict,
                 self.plot_info_dict['fcst_var_name'],
