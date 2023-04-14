@@ -856,8 +856,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     run_global_det_atmos_plots = ['global_det_atmos_plots.py']
                     if evs_run_mode == 'production' and \
                             verif_type in ['pres_levs', 'sfc'] and \
-                            plot in ['lead_average', 'lead_by_level',
-                                     'lead_by_date']:
+                            job_env_dict['plot'] in \
+                            ['lead_average', 'lead_by_level',
+                             'lead_by_date']:
                         run_global_det_atmos_plots.append(
                             'global_det_atmos_plots_production_tof240.py'
                         )

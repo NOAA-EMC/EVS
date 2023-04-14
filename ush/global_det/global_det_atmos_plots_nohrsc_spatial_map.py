@@ -110,14 +110,10 @@ class NOHRSCSpatialMap:
             self.logger.warning("wgrib2 executable not in PATH, "
                                 "not converting file to netCDF")
         make_plot = False
-        image_region_dict = {
-            'CONUS': 'conus',
-            'AK': 'alaska',
-        }
         image_name = os.path.join(
             self.output_dir,
             'nohrsc.v'+valid_date_dt.strftime('%Y%m%d%H')+'.024h.'
-            +image_region_dict[self.plot_info_dict['vx_mask']]+'.png'
+            +self.plot_info_dict['vx_mask']+'.png'
         )
         if not os.path.exists(image_name):
             if os.path.exists(nohrsc_netcdf_file):
@@ -220,11 +216,11 @@ class NOHRSCSpatialMap:
                     right_logo_img_array, right_logo_xpixel_loc,
                     right_logo_ypixel_loc, zorder=1, alpha=right_logo_alpha
                 )
-            if self.plot_info_dict['vx_mask'] == 'CONUS':
+            if self.plot_info_dict['vx_mask'] == 'conus':
                 extent = [-124,-70,18.0,50.0]
                 central_lon = -97.6
                 central_lat = 35.4
-            elif self.plot_info_dict['vx_mask'] == 'AK':
+            elif self.plot_info_dict['vx_mask'] == 'alaska':
                 extent = [-180,-110,45.0,75.0]
                 central_lon = -145
                 central_lat = 60

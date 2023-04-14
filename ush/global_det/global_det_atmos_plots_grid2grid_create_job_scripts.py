@@ -474,7 +474,7 @@ make_plots_jobs_dict['precip']['24hrCCPA_PerfDia']['plots'] = [
     'performance_diagram'
 ]
 make_plots_jobs_dict['precip']['24hrAccumMaps'] = {
-    'vx_masks': ['CONUS', 'AK', 'PR', 'HI'],
+    'vx_masks': ['conus', 'alaska', 'prico', 'hawaii'],
     'fcst_var_dict': {'name': 'APCP',
                       'levels': ['A24'],
                       'threshs': ['NA']},
@@ -573,7 +573,7 @@ for snow_var in ['Depth', 'WaterEqv']:
          ['plots']) = ['time_series', 'lead_average']
     del make_plots_jobs_dict['snow'][f"24hrNOHRSC_{snow_var}_Nbrhd"]
 make_plots_jobs_dict['snow']['24hrNOHRSC_24hrAccumMaps'] = {
-    'vx_masks': ['CONUS'],
+    'vx_masks': ['conus'],
     'fcst_var_dict': {'name': 'ASNOW',
                       'levels': ['Z0'],
                       'threshs': ['NA']},
@@ -924,8 +924,8 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     run_global_det_atmos_plots = ['global_det_atmos_plots.py']
                     if evs_run_mode == 'production' and \
                             verif_type in ['pres_levs', 'sfc'] and \
-                            plot in ['lead_average', 'lead_by_level',
-                                     'lead_by_date']:
+                            job_env_dict['plot'] in \
+                            ['lead_average', 'lead_by_level', 'lead_by_date']:
                         run_global_det_atmos_plots.append(
                             'global_det_atmos_plots_production_tof240.py'
                         )

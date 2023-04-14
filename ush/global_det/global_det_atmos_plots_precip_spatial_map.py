@@ -114,18 +114,12 @@ class PrecipSpatialMap:
                 image_forecast_hour = (
                     self.date_info_dict['forecast_hour'].zfill(3)
                 )
-            image_region_dict = {
-                'CONUS': 'conus',
-                'AK': 'alaska',
-                'HI': 'hawaii',
-                'PR': 'prico'
-            }
             image_name = os.path.join(
                 self.output_dir,
                 image_data_source
                 +'.v'+valid_date_dt.strftime('%Y%m%d%H')+'.'
                 +image_forecast_hour+'h.'
-                +image_region_dict[self.plot_info_dict['vx_mask']]+'.png'
+                +self.plot_info_dict['vx_mask']+'.png'
             )
             if model_num == 'obs':
                 model_num_file = os.path.join(
@@ -153,7 +147,7 @@ class PrecipSpatialMap:
             else:
                 make_plot = False
             if model_num_name != 'gfs' \
-                    and self.plot_info_dict['vx_mask'] != 'CONUS':
+                    and self.plot_info_dict['vx_mask'] != 'conus':
                 make_plot = False
             if make_plot:
                 self.logger.debug("Plotting data from "+model_num_file)
@@ -282,19 +276,19 @@ class PrecipSpatialMap:
                         right_logo_img_array, right_logo_xpixel_loc,
                         right_logo_ypixel_loc, zorder=1, alpha=right_logo_alpha
                     )
-                if self.plot_info_dict['vx_mask'] == 'CONUS':
+                if self.plot_info_dict['vx_mask'] == 'conus':
                     extent = [-124,-70,18.0,50.0]
                     central_lon = -97.6
                     central_lat = 35.4
-                elif self.plot_info_dict['vx_mask'] == 'AK':
+                elif self.plot_info_dict['vx_mask'] == 'alaska':
                     extent = [-180,-110,45.0,75.0]
                     central_lon = -145
                     central_lat = 60
-                elif self.plot_info_dict['vx_mask'] == 'PR':
+                elif self.plot_info_dict['vx_mask'] == 'prico':
                     extent = [-75,-60,12.0,25.0]
                     central_lon = -67.5
                     central_lat = 18.5
-                elif self.plot_info_dict['vx_mask'] == 'HI':
+                elif self.plot_info_dict['vx_mask'] == 'hawaii':
                     extent = [-165,-150,15.0,25.0]
                     central_lon = -157.5
                     central_lat = 20

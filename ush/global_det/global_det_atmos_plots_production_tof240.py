@@ -569,8 +569,7 @@ if JOB_GROUP == 'make_plots':
             plot_psm.make_precip_spatial_map()
     elif plot == 'performance_diagram':
         import global_det_atmos_plots_performance_diagram as gdap_pd
-        for pd_info in \
-                list(itertools.product(valid_hrs, fhrs, interp_points_list)):
+        for pd_info in list(itertools.product(valid_hrs, fhrs)):
             date_info_dict['valid_hr_start'] = str(pd_info[0])
             date_info_dict['valid_hr_end'] = str(pd_info[0])
             date_info_dict['valid_hr_inc'] = '24'
@@ -580,7 +579,6 @@ if JOB_GROUP == 'make_plots':
             plot_info_dict['fcst_var_threshs'] = fcst_var_thresh_list
             plot_info_dict['obs_var_name'] = obs_var_name
             plot_info_dict['obs_var_threshs'] = obs_var_thresh_list
-            plot_info_dict['interp_points'] = str(pd_info[2])
             init_hr = gda_util.get_init_hour(
                 int(date_info_dict['valid_hr_start']),
                 int(date_info_dict['forecast_hour'])
