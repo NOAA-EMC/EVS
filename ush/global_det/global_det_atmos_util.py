@@ -2052,14 +2052,22 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
                       plot_job_env_dict):
     """! Get directories for the plotting job
          Args:
-             DATA_base_dir     -
-             COMOUT_base_dir   -
-             job_group         -
-             plot_job_env_dict -
+             DATA_base_dir     - path to DATA directory
+                                 (string)
+             COMOUT_base_dir   - path to COMOUT directory
+                                 (string)
+             job_group         - plotting job group:
+                                 condense_stats, filter_stats,
+                                 make_plots (string)
+             plot_job_env_dict - dictionary with plotting job
+                                 environment variables to be
+                                 set
 
          Returns:
-             DATAjob_dir    -
-             COMOUTjob_dir  -
+             DATAjob_dir    - path to plotting job's
+                              DATA directory
+             COMOUTjob_dir  - path to plotting job's
+                              COMOUT directory
     """
     region_savefig_dict = {
         'Alaska': 'alaska',
@@ -2100,6 +2108,7 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
         'SRockies': 'buk_srk',
         'TROPICS': 'tropics'
     }
+    dir_step = plot_job_env_dict['STEP'].lower()
     dir_verif_case = plot_job_env_dict['VERIF_CASE'].lower()
     dir_verif_type = plot_job_env_dict['VERIF_TYPE'].lower()
     dir_ndays = ('last'+plot_job_env_dict['NDAYS']+'days').lower()
@@ -2111,16 +2120,22 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
             +(plot_job_env_dict['fcst_var_name']\
               .replace('WV1_', '').replace('-', '_'))
         )
-    dir_level = (plot_job_env_dict['fcst_var_level'].lower()\
-                 .replace('.','p').replace('-', '_'))
+    if job_group == 'make_plots':
+        if plot_job_env_dict['plot'] in ['stat_by_level', 'lead_by_level']:
+            dir_level = plot_job_env_dict['vert_profile'].lower()
+        else:
+            dir_level = plot_job_env_dict['fcst_var_level_list'].lower()
+    else:
+        dir_level = (plot_job_env_dict['fcst_var_level'].lower()\
+                     .replace('.','p').replace('-', '_'))
     if plot_job_env_dict['fcst_var_name'] == 'CAPE':
         dir_level = dir_level.replace('z0', 'l0').replace('p90_0', 'l90')
     dir_region = region_savefig_dict[plot_job_env_dict['vx_mask']]
     if job_group in ['condense_stats', 'filter_stats']:
         DATAjob_dir = os.path.join(
-            DATA_base_dir,
-            f"{dir_verif_case}_{dir_verif_type}", 'plot_output',
+            DATA_base_dir, f"{dir_verif_case}_{dir_step}", 'plot_output',
             f"{plot_job_env_dict['RUN']}.{plot_job_env_dict['end_date']}",
+            f"{dir_verif_case}_{dir_verif_type}",
             dir_ndays, dir_line_type,
             f"{dir_parameter}_{dir_level}",
             dir_region
@@ -2128,16 +2143,16 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
     elif job_group == 'make_plots':
         dir_stat = plot_job_env_dict['stat'].lower()
         DATAjob_dir = os.path.join(
-            DATA_base_dir,
-            f"{dir_verif_case}_{dir_verif_type}", 'plot_output',
+            DATA_base_dir, f"{dir_verif_case}_{dir_step}", 'plot_output',
             f"{plot_job_env_dict['RUN']}.{plot_job_env_dict['end_date']}",
+            f"{dir_verif_case}_{dir_verif_type}",
             dir_ndays, dir_line_type,
             f"{dir_parameter}_{dir_level}",
             dir_region, dir_stat
         )
     COMOUTjob_dir = DATAjob_dir.replace(
         os.path.join(DATA_base_dir,
-                     f"{dir_verif_case}_{dir_verif_type}",
+                     f"{dir_verif_case}_{dir_step}",
                      'plot_output', f"{plot_job_env_dict['RUN']}."
                      +f"{plot_job_env_dict['end_date']}"),
         COMOUT_base_dir
