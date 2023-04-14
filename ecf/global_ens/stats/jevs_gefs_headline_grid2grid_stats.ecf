@@ -59,14 +59,11 @@ export cyc=00
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
-export DATA_IN=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
+export DATA=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
+export job=${PBS_JOBNAME:-jevs_headline_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export jobid=$job.${PBS_JOBID:-$$}
 
 export run_mpi=no
 
 
-#yyyy=2023
-#mm=01
-#for dd in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 ; do
-# export VDATE=$yyyy$mm$dd
-  ${HOMEevs}/jobs/global_ens/stats/JEVS_GLOBAL_ENS_STATS
-#done
+${HOMEevs}/jobs/global_ens/stats/JEVS_GLOBAL_ENS_STATS

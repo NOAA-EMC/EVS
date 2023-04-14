@@ -6,10 +6,9 @@ set -xa
 
 export cycle=t${cyc}z
 
-export DATA_IN=${DATA_IN:-$DATAROOT}
 export pid=$$
-jobid=evs_${RUN}_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}.$$
-export DATA=$DATA_IN/$jobid
+export DATA=${DATA:-${DATAROOT:?}}/${jobid:?}
+rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
 
