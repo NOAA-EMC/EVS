@@ -35,11 +35,9 @@ USER = os.environ['USER']
 if STEP == 'stats':
     COMINobs = os.environ['COMINobs']
     #COMINccpa = os.environ['COMINccpa']
-    #COMINnohrsc = os.environ['COMINnohrsc']
     #COMINobsproc = os.environ['COMINobsproc']
     #COMINosi_saf = os.environ['COMINosi_saf']
-    #COMINghrsst_median = os.environ['COMINghrsst_median']
-    #COMINget_d = os.environ['COMINget_d']
+    #COMINghrsst_ospo = os.environ['COMINghrsst_ospo']
 #if evs_run_mode != 'production':
     #QUEUESERV = os.environ['QUEUESERV']
     #ACCOUNT = os.environ['ACCOUNT']
@@ -87,7 +85,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 VERIF_CASE_STEP_abbrev+'_precip_file_accum_list'
             ].split(' ')
         # Set valid hours
-        if VERIF_CASE_STEP_type in ['pres', 'anom', 'OLR']: 
+        if VERIF_CASE_STEP_type in ['pres', 'OLR']: 
             VERIF_CASE_STEP_type_valid_hr_list = os.environ[
                 VERIF_CASE_STEP_abbrev_type+'_vhr_list'
             ].split(' ')
@@ -130,6 +128,20 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 )
             ]
             VERIF_CASE_STEP_type_valid_hr_list = GHRSST_OSPO_valid_hr_list
+        elif VERIF_CASE_STEP_type == 'anom':
+            (ECMWF_valid_hr_start, ECMWF_valid_hr_end,
+             ECMWF_valid_hr_inc) = sub_util.get_obs_valid_hrs(
+                 'ECMWF'
+            
+            )
+            ECMWF_valid_hr_list = [
+                str(x).zfill(2) for x in range(
+                    ECMWF_valid_hr_start,
+                    ECMWF_valid_hr_end+ECMWF_valid_hr_inc,
+                    ECMWF_valid_hr_inc
+                )
+            ]
+            VERIF_CASE_STEP_type_valid_hr_list = ECMWF_valid_hr_list
         else:
             VERIF_CASE_STEP_type_valid_hr_list = ['12']
         # Set initialization hours
@@ -171,78 +183,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 )
                 if not os.path.exists(VERIF_CASE_STEP_model_dir):
                     os.makedirs(VERIF_CASE_STEP_model_dir)
-                #VERIF_CASE_STEP_model_weekly_dir = os.path.join(
-                    #VERIF_CASE_STEP_data_dir, model, 'weekly'
-                #)
-                #if not os.path.exists(VERIF_CASE_STEP_model_weekly_dir):
-                    #os.makedirs(VERIF_CASE_STEP_model_weekly_dir)
-                #VERIF_CASE_STEP_model_monthly_dir = os.path.join(
-                    #VERIF_CASE_STEP_data_dir, model, 'monthly'
-                #)
-                #if not os.path.exists(VERIF_CASE_STEP_model_monthly_dir):
-                    #os.makedirs(VERIF_CASE_STEP_model_monthly_dir)
-                #if VERIF_CASE_STEP_type == 'precip':
-                    #model_file_format = (
-                        #VERIF_CASE_STEP_precip_file_format_list[model_idx]
-                    #)
-                    #model_accum = (
-                        #VERIF_CASE_STEP_precip_file_accum_list[model_idx]
-                    #)
-                    #model_fcst_dest_file_format = os.path.join(
-                        #VERIF_CASE_STEP_model_dir,
-                        #model+'.precip.{init?fmt=%Y%m%d%H}.f{lead?fmt=%3H}'
-                    #)
-                #else:
-                    #mbr = 1
-                    #total = int(members)
-                    #while mbr <= total:
-                        #mb = str(mbr).zfill(2)
-                        #gefs_file_format = os.path.join(
-                            #model_file_form+'.ens'+mb
-                            #+'.t{init?fmt=%2H}z.pgrb2.0p50.'
-                            #+'f{lead?fmt=%3H}'
-                        #)
-                        #cfs_file_format = os.path.join(
-                            #model_file_form+'.ens'+mb
-                            #+'.t{init?fmt=%2H}z.f{lead?fmt=%3H}'
-                        #)
-                        #model_fcst_dest_file_format = os.path.join(
-                            #VERIF_CASE_STEP_model_dir,
-                            #model+'.ens'+mb+'.{init?fmt=%Y%m%d%H}.'
-                            #+'f{lead?fmt=%3H}'
-                        #)
-                        #if model == 'gefs':
-                            #sub_util.get_model_file(
-                                #time['valid_time'], time['init_time'],
-                                #time['forecast_hour'], gefs_file_format,
-                                #model_fcst_dest_file_format
-                            #)
-                        #elif model == 'cfs':
-                            #sub_util.get_model_file(
-                                #time['valid_time'], time['init_time'],
-                                #time['forecast_hour'], cfs_file_format,
-                                #model_fcst_dest_file_format
-                            #)
-                        #del gefs_file_format
-                        #del cfs_file_format
-                        #mbr = mbr+1
-                if VERIF_CASE_STEP_type == 'flux':
-                    # Get files for flux daily averages, same init
-                    nf = 1
-                    while nf <= 4:
-                        minus_hr = nf * 6
-                        fhr = int(time['forecast_hour'])-minus_hr
-                        if fhr >= 0:
-                            gda_util.get_model_file(
-                                time['valid_time'] \
-                                - datetime.timedelta(hours=minus_hr),
-                                time['init_time'],
-                                str(fhr),
-                                model_file_format,
-                                model_fcst_dest_file_format
-                            )
-                        nf+=1
-                elif VERIF_CASE_STEP_type == 'precip':
+                if VERIF_CASE_STEP_type == 'precip':
                     # Get for 24 hour accumulations
                     fhrs_24hr_accum_list = []
                     if model_accum == 'continuous':
@@ -289,8 +230,6 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                 model_fcst_dest_file_format 
                             )
                 elif VERIF_CASE_STEP_type == 'pres':
-                    # Get files for anomaly daily averages, same init
-                    # get for 00Z and 12Z only
                     mbr = 1
                     total = int(members)
                     while mbr <= total:
@@ -301,16 +240,21 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                 +'.t{init?fmt=%2H}z.pgrb2.0p50.'
                                 +'f{lead?fmt=%3H}'
                             )
+                            model_fcst_dest_file_format = os.path.join(
+                                VERIF_CASE_STEP_model_dir,
+                                model+'.ens'+mb+'.{init?fmt=%Y%m%d%H}.'
+                                +'f{lead?fmt=%3H}'
+                            )
                         elif model == 'cfs':
                             model_file_format = os.path.join(
-                                model_file_form+'.ens'+mb
+                                model_file_form+'.pgbf.ens'+mb
                                 +'.t{init?fmt=%2H}z.f{lead?fmt=%3H}'
                             )
-                        model_fcst_dest_file_format = os.path.join(
-                            VERIF_CASE_STEP_model_dir,
-                            model+'.ens'+mb+'.{init?fmt=%Y%m%d%H}.'
-                            +'f{lead?fmt=%3H}'
-                        )
+                            model_fcst_dest_file_format = os.path.join(
+                                VERIF_CASE_STEP_model_dir,
+                                model+'.pgbf.ens'+mb+'.{init?fmt=%Y%m%d%H}.'
+                                +'f{lead?fmt=%3H}'
+                            )
                         #if time['init_time'].strftime('%H') in ['00'] \
                                 #and int(time['forecast_hour']) % 24 == 0:
                         if int(time['forecast_hour']) == 168:
@@ -335,28 +279,74 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                 nf+=1
                         del model_file_format
                         mbr = mbr+1
-                #elif VERIF_CASE_STEP_type == 'sea_ice':
-                    # OSI-SAF spans PDYm1 00Z to PDY 00Z
-                    #nf = 0
-                    #while nf <= 4:
-                        #if int(time['forecast_hour'])-(6*nf) >= 0:
-                            #gda_util.get_model_file(
-                                #(time['valid_time']
-                                 #-datetime.timedelta(hours=6*nf)),
-                                #time['init_time'],
-                                #str(int(time['forecast_hour'])-(6*nf)),
-                                #model_file_format, model_fcst_dest_file_format
-                            #)
-                        #nf+=1
-                elif VERIF_CASE_STEP_type == 'snow':
-                    # Get for 24 hour accumulations
-                    if int(time['forecast_hour']) - 24 >= 0:
-                        gda_util.get_model_file(
-                            time['valid_time'], time['init_time'],
-                            str(int(time['forecast_hour']) - 24),
-                            model_file_format, model_fcst_dest_file_format
+                elif VERIF_CASE_STEP_type == 'anom':
+                    mbr = 1
+                    total = int(members)
+                    while mbr <= total:
+                        mb = str(mbr).zfill(2)
+                        if model == 'gefs':
+                            model_file_format = os.path.join(
+                                model_file_form+'.ens'+mb
+                                +'.t{init?fmt=%2H}z.pgrb2.0p50.'
+                                +'f{lead?fmt=%3H}'
+                            )
+                        elif model == 'cfs':
+                            model_file_format = os.path.join(
+                                model_file_form+'.ens'+mb
+                                +'.t{init?fmt=%2H}z.f{lead?fmt=%3H}'
+                            )
+                        model_fcst_dest_file_format = os.path.join(
+                            VERIF_CASE_STEP_model_dir,
+                            model+'.ens'+mb+'.{init?fmt=%Y%m%d%H}.'
+                            +'f{lead?fmt=%3H}'
                         )
-                elif VERIF_CASE_STEP_type in ['sst', 'seaice', 'ENSO']:
+                        for time_length in ['weekly', 'days6_10', 'weeks3_4']:
+                            if time_length == 'weekly':
+                                if (time['forecast_hour']) in ['168',
+                                                               '336',
+                                                               '504',
+                                                               '672',
+                                                               '840']:
+                                    nf = 0
+                                    while nf <= 14:
+                                        sub_util.get_model_file(
+                                            (time['valid_time']
+                                             -datetime.timedelta(hours=12*nf)),
+                                            time['init_time'],
+                                            str(int(time['forecast_hour'])-(12*nf)),
+                                            model_file_format,
+                                            model_fcst_dest_file_format
+                                        )
+                                        nf+=1
+                            if time_length == 'days6_10':
+                                if int(time['forecast_hour']) == 240:
+                                    nf = 0
+                                    while nf <= 10:
+                                        sub_util.get_model_file(
+                                            (time['valid_time']
+                                             -datetime.timedelta(hours=12*nf)),
+                                            time['init_time'],
+                                            str(int(time['forecast_hour'])-(12*nf)),
+                                            model_file_format,
+                                            model_fcst_dest_file_format
+                                        )
+                                        nf+=1
+                            if time_length == 'weeks3_4':
+                                if int(time['forecast_hour']) == 672:
+                                    nf = 0
+                                    while nf <= 28:
+                                        sub_util.get_model_file(
+                                            (time['valid_time']
+                                             -datetime.timedelta(hours=12*nf)),
+                                            time['init_time'],
+                                            str(int(time['forecast_hour'])-(12*nf)),
+                                            model_file_format,
+                                            model_fcst_dest_file_format
+                                        )
+                                        nf+=1
+                        del model_file_format
+                        mbr = mbr+1
+                elif VERIF_CASE_STEP_type in ['sst', 'seaice']:
                     mbr = 1
                     total = int(members)
                     while mbr <= total:
