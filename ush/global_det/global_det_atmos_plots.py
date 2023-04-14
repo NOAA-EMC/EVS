@@ -221,21 +221,33 @@ if JOB_GROUP == 'condense_stats':
     for model_idx in range(len(model_list)):
         model = model_list[model_idx]
         obs_name = obs_list[model_idx]
-        DATAjob_condensed_model_stat_file = gda_util.condense_model_stat_files(
-            logger, stat_base_dir, DATAjob, model, obs_name, vx_mask,
-            fcst_var_name, fcst_var_level, obs_var_name, obs_var_level,
-            line_type
+        DATAjob_condensed_model_stat_file = os.path.join(
+            DATAjob, f"condensed_stats_{model.lower()}_{line_type.lower()}_"
+            +f"{fcst_var_name.lower()}_"
+            +f"{fcst_var_level.lower().replace('.','p').replace('-', '_')}_"
+            +f"{vx_mask.lower()}.stat"
         )
         COMOUTjob_condensed_model_stat_file = (
             DATAjob_condensed_model_stat_file.replace(DATAjob, COMOUTjob)
         )
-        if SENDCOM == 'YES' \
-                and os.path.exists(DATAjob_condensed_model_stat_file) \
-                and not os.path.exists(COMOUTjob_condensed_model_stat_file):
-            logger.info(f"Copying {DATAjob_condensed_model_stat_file} to "
-                        +f"{COMOUTjob_condensed_model_stat_file}")
-            gda_util.copy_file(DATAjob_condensed_model_stat_file,
-                               COMOUTjob_condensed_model_stat_file)
+        print(DATAjob_condensed_model_stat_file)
+        print(COMOUTjob_condensed_model_stat_file)
+        exit()
+        #DATAjob_condensed_model_stat_file = gda_util.condense_model_stat_files(
+        #    logger, stat_base_dir, DATAjob, model, obs_name, vx_mask,
+        #    fcst_var_name, fcst_var_level, obs_var_name, obs_var_level,
+        #    line_type
+        #)
+        #COMOUTjob_condensed_model_stat_file = (
+        #    DATAjob_condensed_model_stat_file.replace(DATAjob, COMOUTjob)
+        #)
+        #if SENDCOM == 'YES' \
+        #        and os.path.exists(DATAjob_condensed_model_stat_file) \
+        #        and not os.path.exists(COMOUTjob_condensed_model_stat_file):
+        #    logger.info(f"Copying {DATAjob_condensed_model_stat_file} to "
+        #                +f"{COMOUTjob_condensed_model_stat_file}")
+        #    gda_util.copy_file(DATAjob_condensed_model_stat_file,
+        #                       COMOUTjob_condensed_model_stat_file)
 elif JOB_GROUP == 'filter_stats':
     model_info_dict = original_model_info_dict.copy()
     date_info_dict = original_date_info_dict.copy()
