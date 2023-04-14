@@ -39,8 +39,9 @@ set -x
   export evs_run_mode="standalone"
 
 # EVS Settings
-# export HOMEevs="/lfs/h2/emc/vpppg/noscrub/${USER}/verification/EVS"
-  export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+  export HOMEevs="/lfs/h2/emc/vpppg/noscrub/${USER}/verification/EVS"
+# export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+
 # Subdirectories to EVS Home Directory
   export PARMevs=$HOMEevs/parm
   export USHevs=$HOMEevs/ush
@@ -103,7 +104,11 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
   export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 
 # VAR list to run
-  export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH"
+#  export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH"
+  export VAR_NAME_LIST="SBCAPE MLCAPE HPBL"
+   # Raob
+#  export VAR_NAME_LIST="TMP2m DPT2m RH2m PRESsl UGRD_VGRD10m UGRD10m VGRD10m WIND GUST VIS CEIL"
+   # Metar
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS
