@@ -86,7 +86,6 @@ for cyc in ${cycles} ; do
     match_fhr=$(printf "%02d" "${match_hr}")
     flead=$(printf "%03d" "${fhr}")
     filename=HTSGW_mean.${match_date}.t${match_fhr}z.f${flead}.grib2
-    echo "checking for ${ARCmodel}/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${filename}"
     # check to see if the file is in the archive
     if [[ -s ${ARCmodel}/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${filename} ]]; then
       cp ${ARCmodel}/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${filename} ${DATA}/gribs/.
