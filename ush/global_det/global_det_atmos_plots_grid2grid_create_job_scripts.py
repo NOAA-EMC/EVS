@@ -783,20 +783,11 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         job_env_dict['valid_hr_start']
                     )
                     job_env_dict['valid_hr_inc'] = '24'
-                job_env_dict['DATAjob'] = os.path.join(
-                    DATA, f"{VERIF_CASE}_{STEP}", 'plot_output',
-                    f"{RUN}.{end_date}", f"{VERIF_CASE}_{verif_type}",
-                    f"last{NDAYS}days", job_env_dict['line_type'].lower(),
-                    f"{job_env_dict['fcst_var_name'].lower()}_"
-                    +(job_env_dict['fcst_var_level'].lower()\
-                      .replace('.','p').replace('-', '_')),
-                    job_env_dict['vx_mask'].lower()
+                DATAjob, COMOUTjob = gda_util.get_plot_job_dirs(
+                    DATA, COMOUT, JOB_GROUP, job_env_dict
                 )
-                job_env_dict['COMOUTjob'] = job_env_dict['DATAjob'].replace(
-                    os.path.join(DATA,f"{VERIF_CASE}_{STEP}", 'plot_output',
-                                 f"{RUN}.{end_date}"),
-                    COMOUT
-                )
+                job_env_dict['DATAjob'] = DATAjob
+                job_env_dict['COMOUTjob'] = COMOUTjob
                 for output_dir in [job_env_dict['DATAjob'],
                                    job_env_dict['COMOUTjob']]:
                     if not os.path.exists(output_dir):
@@ -920,21 +911,11 @@ for verif_type in VERIF_CASE_STEP_type_list:
                              ['fcst_var_dict']['levels']\
                              .index(plot_loop_info[2])]
                         )
-                    job_env_dict['DATAjob'] = os.path.join(
-                        DATA, f"{VERIF_CASE}_{STEP}", 'plot_output',
-                        f"{RUN}.{end_date}", f"{VERIF_CASE}_{verif_type}",
-                        f"last{NDAYS}days", job_env_dict['line_type'].lower(),
-                        f"{job_env_dict['fcst_var_name'].lower()}_"
-                        +(plot_loop_info[2].lower().replace('.','p')\
-                          .replace('-', '_')),
-                        job_env_dict['vx_mask'].lower(),
-                        job_env_dict['stat'].lower()
+                    DATAjob, COMOUTjob = gda_util.get_plot_job_dirs(
+                        DATA, COMOUT, JOB_GROUP, job_env_dict
                     )
-                    job_env_dict['COMOUTjob'] = job_env_dict['DATAjob'].replace(
-                        os.path.join(DATA,f"{VERIF_CASE}_{STEP}",
-                                     'plot_output', f"{RUN}.{end_date}"),
-                        COMOUT
-                    )
+                    job_env_dict['DATAjob'] = DATAjob
+                    job_env_dict['COMOUTjob'] = COMOUTjob
                     for output_dir in [job_env_dict['DATAjob'],
                                        job_env_dict['COMOUTjob']]:
                         if not os.path.exists(output_dir):

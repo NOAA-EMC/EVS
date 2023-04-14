@@ -2048,6 +2048,102 @@ def format_thresh(thresh):
    )
    return thresh_symbol, thresh_letter
 
+def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
+                      plot_job_env_dict):
+    """! Get directories for the plotting job
+         Args:
+             DATA_base_dir     -
+             COMOUT_base_dir   -
+             job_group         -
+             plot_job_env_dict -
+
+         Returns:
+             DATAjob_dir    -
+             COMOUTjob_dir  -
+    """
+    region_savefig_dict = {
+        'Alaska': 'alaska',
+        'Appalachia': 'buk_apl',
+        'ANTARCTIC': 'antarctic',
+        'ARCTIC': 'arctic',
+        'ATL_MDR': 'al_mdr',
+        'CONUS': 'buk_conus',
+        'CONUS_East': 'buk_conus_e',
+        'CONUS_Central': 'buk_conus_c',
+        'CONUS_South': 'buk_conus_s',
+        'CONUS_West': 'buk_conus_w',
+        'CPlains': 'buk_cpl',
+        'DeepSouth': 'buk_ds',
+        'EPAC_MDR': 'ep_mdr',
+        'GLOBAL': 'glb',
+        'GreatBasin': 'buk_grb',
+        'GreatLakes': 'buk_grlk',
+        'Mezqutial': 'buk_mez',
+        'MidAtlantic': 'buk_matl',
+        'N60N90': 'n60',
+        'NAO': 'nao',
+        'NHEM': 'nhem',
+        'NorthAtlantic': 'buk_ne',
+        'NPlains': 'buk_npl',
+        'NPO': 'npo',
+        'NRockies': 'buk_nrk',
+        'PacificNW': 'buk_npw',
+        'PacificSW': 'buk_psw',
+        'Prairie': 'buk_pra',
+        'S60S90': 's60',
+        'SAO': 'sao',
+        'SHEM': 'shem',
+        'Southeast': 'buk_se',
+        'Southwest': 'buk_sw',
+        'SPlains': 'buk_spl',
+        'SPO': 'spo',
+        'SRockies': 'buk_srk',
+        'TROPICS': 'tropics'
+    }
+    dir_verif_case = plot_job_env_dict['VERIF_CASE'].lower()
+    dir_verif_type = plot_job_env_dict['VERIF_TYPE'].lower()
+    dir_ndays = ('last'+plot_job_env_dict['NDAYS']+'days').lower()
+    dir_line_type = plot_job_env_dict['line_type'].lower()
+    dir_parameter = plot_job_env_dict['fcst_var_name'].lower()
+    if plot_job_env_dict['fcst_var_name'] == 'HGT_DECOMP':
+        dir_parameter = (
+            dir_parameter+'_'
+            +(plot_job_env_dict['fcst_var_name']\
+              .replace('WV1_', '').replace('-', '_'))
+        )
+    dir_level = (plot_job_env_dict['fcst_var_level'].lower()\
+                 .replace('.','p').replace('-', '_'))
+    if plot_job_env_dict['fcst_var_name'] == 'CAPE':
+        dir_level = dir_level.replace('z0', 'l0').replace('p90_0', 'l90')
+    dir_region = region_savefig_dict[plot_job_env_dict['vx_mask']]
+    if job_group in ['condense_stats', 'filter_stats']:
+        DATAjob_dir = os.path.join(
+            DATA_base_dir,
+            f"{dir_verif_case}_{dir_verif_type}", 'plot_output',
+            f"{plot_job_env_dict['RUN']}.{plot_job_env_dict['end_date']}",
+            dir_ndays, dir_line_type,
+            f"{dir_parameter}_{dir_level}",
+            dir_region
+        )
+    elif job_group == 'make_plots':
+        dir_stat = plot_job_env_dict['stat'].lower()
+        DATAjob_dir = os.path.join(
+            DATA_base_dir,
+            f"{dir_verif_case}_{dir_verif_type}", 'plot_output',
+            f"{plot_job_env_dict['RUN']}.{plot_job_env_dict['end_date']}",
+            dir_ndays, dir_line_type,
+            f"{dir_parameter}_{dir_level}",
+            dir_region, dir_stat
+        )
+    COMOUTjob_dir = DATAjob_dir.replace(
+        os.path.join(DATA_base_dir,
+                     f"{dir_verif_case}_{dir_verif_type}",
+                     'plot_output', f"{plot_job_env_dict['RUN']}."
+                     +f"{plot_job_env_dict['end_date']}"),
+        COMOUT_base_dir
+    )
+    return DATAjob_dir, COMOUTjob_dir
+
 def get_daily_stat_file(model_name, source_stats_base_dir,
                         dest_model_name_stats_dir, 
                         verif_case, start_date_dt, end_date_dt):
