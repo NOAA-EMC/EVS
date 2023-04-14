@@ -446,6 +446,10 @@ class TimeSeries:
         preset_y_axis_tick_inc = ax.get_yticks()[1] - ax.get_yticks()[0]
         if self.plot_info_dict['stat'] in ['ACC']:
             y_axis_tick_inc = 0.1
+        elif self.plot_info_dict['stat'] in ['FBIAS'] \
+                and self.plot_info_dict['fcst_var_name'] \
+                in ['SNOD_A24', 'WEASD_A24']:
+            y_axis_tick_inc = 1
         else:
             y_axis_tick_inc = preset_y_axis_tick_inc
         if np.ma.is_masked(stat_min):
@@ -453,6 +457,10 @@ class TimeSeries:
         else:
             if self.plot_info_dict['stat'] in ['ACC']:
                 y_axis_min = round(stat_min,1) - y_axis_tick_inc
+            elif self.plot_info_dict['stat'] in ['FBIAS'] \
+                    and self.plot_info_dict['fcst_var_name'] \
+                    in ['SNOD_A24', 'WEASD_A24']:
+                y_axis_min = 0
             else:
                 y_axis_min = preset_y_axis_tick_min
                 while y_axis_min > stat_min:
@@ -462,6 +470,10 @@ class TimeSeries:
         else:
             if self.plot_info_dict['stat'] in ['ACC']:
                 y_axis_max = 1
+            elif self.plot_info_dict['stat'] in ['FBIAS'] \
+                    and self.plot_info_dict['fcst_var_name'] \
+                    in ['SNOD_A24', 'WEASD_A24']:
+                y_axis_max = 10
             else:
                 y_axis_max = preset_y_axis_tick_max + y_axis_tick_inc
                 while y_axis_max < stat_max:

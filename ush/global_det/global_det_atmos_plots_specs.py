@@ -515,22 +515,25 @@ class PlotSpecs:
             vx_mask_plot_name = vx_mask
         return vx_mask_plot_name
 
-    def get_dates_plot_name(self, date_type, start_date_hr, end_date_hr,
-                            other_hr_list, forecast_hour_list):
+    def get_dates_plot_name(self, date_type, start_date, end_date,
+                            date_type_hr_list, other_hr_list,
+                            forecast_hour_list, plot_type):
         """! Get the full date information that will be displayed on the plot
 
              Args:
                  date_type          - type of dates
                                       (string, VALID or INIT)
-                 start_date_hr      - starting date and hour
-                                      (string, YYYYmmddHH)
-                 end_date_hr        - ending date and hour
-                                      (string, YYYYmmddHH)
+                 start_date         - starting date and hour
+                                      (string, YYYYmmdd)
+                 end_date           - ending date and hour
+                                      (string, YYYYmmdd)
+                 date_type_hr_list  - list of hours for
+                                      date_type
                  other_hr_list      - list of hours for
                                       opposite of date_type
                                       (strings)
-                 forecast_hour_list - list of forecast hour(s),
-                                      if not applicable is NA
+                 forecast_hour_list - list of forecast hour(s)
+                 plot_type          - type of plot (string)
  
              Returns:
                  date_plot_name - full date information that
@@ -538,19 +541,42 @@ class PlotSpecs:
                                   (string)
         """
         date_plot_name = date_type.lower()+' '
-        start_date_hr_dt = datetime.datetime.strptime(start_date_hr, '%Y%m%d%H')
-        end_date_hr_dt = datetime.datetime.strptime(end_date_hr, '%Y%m%d%H')
+        start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
+        end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
         date_plot_name = (date_plot_name
-                          +start_date_hr_dt.strftime('%d%b%Y %H')+'Z-'
-                          +end_date_hr_dt.strftime('%d%b%Y %H')+'Z, ')
+                          +start_date_dt.strftime('%d%b%Y')+'-'
+                          +end_date_dt.strftime('%d%b%Y')+' ')
+        title_other_hr_list = []
         if date_type == 'VALID':
-            date_plot_name = (date_plot_name
-                              +'cycles: '+', '.join(other_hr_list))
+            for date_type_hr in date_type_hr_list:
+                for forecast_hour in forecast_hour_list:
+                    other_hr = gda_util.get_init_hour(
+                        int(date_type_hr.replace('Z', '')),
+                        int(forecast_hour)
+                    )
+                    if str(other_hr).zfill(2)+'Z' not in title_other_hr_list \
+                            and str(other_hr).zfill(2)+'Z' in other_hr_list:
+                        title_other_hr_list.append(str(other_hr).zfill(2)+'Z')
+            title_other_hr_list.sort()
+            date_plot_name = (date_plot_name+', '.join(date_type_hr_list)
+                              +', cycles: '+', '.join(title_other_hr_list))
         elif date_type == 'INIT':
-            date_plot_name = (date_plot_name
-                              +'valid: '+', '.join(other_hr_list))
-        forecast_day_list = []
-        if forecast_hour_list != 'NA':
+            for date_type_hr in date_type_hr_list:
+                for forecast_hour in forecast_hour_list:
+                    other_hr = gda_util.get_valid_hour(
+                        int(date_type_hr.replace('Z', '')),
+                        int(forecast_hour)
+                    )
+                    if str(other_hr).zfill(2)+'Z' not in title_other_hr_list \
+                            and str(other_hr).zfill(2)+'Z' in other_hr_list:
+                        title_other_hr_list.append(str(other_hr).zfill(2)+'Z')
+                    title_other_hr_list.append(str(init_hr).zfill(2)+'Z')
+            title_other_hr_list.sort()
+            date_plot_name = (date_plot_name+', '.join(date_type_hr_list)
+                              +', valid: '+', '.join(title_other_hr_list))
+        if plot_type not in ['lead_average', 'valid_hour_average',
+                             'lead_by_date', 'lead_by_level']:
+            forecast_day_list = []
             for forecast_hour in forecast_hour_list:
                 forecast_day = int(forecast_hour)/24.
                 if int(forecast_hour) % 24 == 0:
@@ -587,10 +613,13 @@ class PlotSpecs:
             +self.get_vx_mask_plot_name(plot_info_dict['vx_mask'])+'\n'
         )
         if date_info_dict['date_type'] == 'VALID':
-            start_date_hr =  (date_info_dict['start_date']
-                              +date_info_dict['valid_hr_start'])
-            end_date_hr =  (date_info_dict['end_date']
-                            +date_info_dict['valid_hr_end'])
+            date_type_hr_list = [
+                str(hr).zfill(2)+'Z' \
+                for hr in range(int(date_info_dict['valid_hr_start']),
+                                int(date_info_dict['valid_hr_end'])
+                                +int(date_info_dict['valid_hr_inc']),
+                                int(date_info_dict['valid_hr_inc']))
+            ]
             other_hr_list = [
                 str(hr).zfill(2)+'Z' \
                 for hr in range(int(date_info_dict['init_hr_start']),
@@ -599,10 +628,13 @@ class PlotSpecs:
                                 int(date_info_dict['init_hr_inc']))
             ]
         elif date_info_dict['date_type'] == 'INIT':
-            start_date_hr =  (date_info_dict['start_date']
-                              +date_info_dict['init_hr_start'])
-            end_date_hr =  (date_info_dict['end_date']
-                            +date_info_dict['init_hr_end'])
+            date_type_hr_list = [
+                str(hr).zfill(2)+'Z' \
+                for hr in range(int(date_info_dict['init_hr_start']),
+                                int(date_info_dict['init_hr_end'])
+                                +int(date_info_dict['init_hr_inc']),
+                                int(date_info_dict['init_hr_inc']))
+            ]
             other_hr_list = [
                 str(hr).zfill(2)+'Z' \
                 for hr in range(int(date_info_dict['valid_hr_start']),
@@ -613,12 +645,8 @@ class PlotSpecs:
         if self.plot_type in ['time_series', 'stat_by_level',
                               'performance_diagram', 'threshold_average']:
             fhr_for_title = [date_info_dict['forecast_hour']]
-        elif self.plot_type == 'time_series_multifhr':
+        else:
             fhr_for_title = date_info_dict['forecast_hours']
-        elif self.plot_type in ['lead_average', 'valid_hour_average',
-                                'lead_by_date', 'lead_by_level',
-                                'time_series_multifhr']:
-            fhr_for_title = 'NA'
         if plot_info_dict['fcst_var_name'] == 'HGT_DECOMP':
             var_name_for_title = (plot_info_dict['fcst_var_name']
                                   +'_'+plot_info_dict['interp_method'])
@@ -669,8 +697,10 @@ class PlotSpecs:
                           +plot_info_dict['interp_points'])
         plot_title = (plot_title+'\n'
                       +self.get_dates_plot_name(date_info_dict['date_type'],
-                                                start_date_hr, end_date_hr,
-                                                other_hr_list, fhr_for_title))
+                                                date_info_dict['start_date'],
+                                                date_info_dict['end_date'],
+                                                date_type_hr_list, other_hr_list,
+                                                fhr_for_title, self.plot_type))
         return plot_title
 
     def get_savefig_name(self, image_dir, plot_info_dict, date_info_dict):
@@ -769,7 +799,8 @@ class PlotSpecs:
                  +''.join(['f'+f.zfill(3) for \
                             f in date_info_dict['forecast_hours']])
             )
-        else:
+        elif self.plot_type in ['lead_average', 'lead_by_level',
+                                'lead_by_date']:
             plot_type_savefig_name = (
                  plot_type_savefig_name+'_'
                  +'f'+str(date_info_dict['forecast_hours'][-1]).zfill(3)
@@ -1054,13 +1085,13 @@ class PlotSpecs:
                                      (strings)
         """
         vert_profile_levels_dict = {
-            'all': ['P1000', 'P925', 'P850', 'P700', 'P500', 'P400', 'P300',
-                    'P250', 'P200', 'P150', 'P100', 'P50', 'P20', 'P10',
+            'all': ['P1000', 'P925', 'P850', 'P700', 'P500', 'P300',
+                    'P250', 'P200', 'P100', 'P50', 'P20', 'P10',
                     'P5'],
             'ltrop': ['P1000', 'P925', 'P850', 'P700', 'P500'],
-            'utrop': ['P500', 'P400', 'P300', 'P250', 'P200', 'P150', 'P100'],
-            'trop': ['P1000', 'P925', 'P850', 'P700', 'P500', 'P400',
-                     'P300', 'P250', 'P200', 'P150', 'P100'],
+            'utrop': ['P500', 'P300', 'P250', 'P200', 'P100'],
+            'trop': ['P1000', 'P925', 'P850', 'P700', 'P500',
+                     'P300', 'P250', 'P200', 'P100'],
             'strat': ['P100', 'P50', 'P20', 'P10', 'P5']
         }
         if vert_profile in list(vert_profile_levels_dict.keys()):

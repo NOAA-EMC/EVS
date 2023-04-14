@@ -93,6 +93,7 @@ else
     done
 fi
 
+sleep 6
 for NEST in $NEST_LIST; do
     export NEST=$NEST
     if [ $RUN_ENVIR = nco ]; then
