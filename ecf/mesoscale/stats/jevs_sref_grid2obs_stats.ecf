@@ -54,8 +54,10 @@ export KEEPDATA=YES
 export cyc=00
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
-export DATA_IN=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
+export DATA=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
 export COMINsrefmean=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
+export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export jobid=$job.${PBS_JOBID:-$$}
 
 ${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS
 

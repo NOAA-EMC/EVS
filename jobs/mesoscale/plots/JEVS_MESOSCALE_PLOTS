@@ -11,10 +11,12 @@ export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
 export pid=$$
-jobid=evs_${RUN}_${COMPONENT}_${VERIF_CASE}_${STEP}.$$
-export DATA=$DATA_IN/$jobid
+
+export DATA=${DATA:-${DATAROOT:?}}/${jobid:?}
+rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
+
 
 setpdy.sh
 . $DATA/PDY
