@@ -13,16 +13,25 @@ DATA = os.environ['DATA']
 MET_PLUS_OUT = os.path.join(DATA, VERIF_CASE, 'METplus_output')
 met_process_names = [
     'point_stat', 'genvxmask', 'pcp_combine', 'grid_stat', 'pb2nc', 'ascii2nc'
-]
+] # used for defining list of paths to read from
+
+# Filter log files and then lines based on whether or not they contain the ... 
+# ... following list of strings, used to find lines with a specific error ...  
+# ... that relates to missing files.  You may define two such lines.
 error_search_strs1 = ["ERROR", "Could not find", "file", "using template"]
 error_search_strs2 = ["FileNotFoundError", "No such file or directory"]
+
+# For "E" specific error related to a missing file, the string that ...
+# ... precedes the name of the file is idxE_str1 and the string that ...
+# ... follows the name of the file is idxE_str2. 
 idx1_str1 = "file"
 idx1_str2 = "using"
 idx2_str1 = "directory: '"
 idx2_str2 = "'"
 max_num_files=10
 
-# Get list of directories
+# Define the list of paths to log directories that contain METplus log files 
+# ... to be searched for missing data files
 log_dirs = []
 log_dirs.append(os.path.join(MET_PLUS_OUT, 'gather_small', 'stat_analysis', 'logs'))
 log_dirs.append(os.path.join(MET_PLUS_OUT, 'stat_analysis', 'logs'))
@@ -68,6 +77,7 @@ for fname in log_fnames:
                                     f"^.*{idx1_str1}(.*?){idx1_str2}.*$", 
                                     line    
                                 ).group(1).replace(' ','')
+                                .replace("'","").replace('"','')
                             )
                     if look_in2:
                         if all(search_str in line for search_str in error_search_strs2):
@@ -76,6 +86,7 @@ for fname in log_fnames:
                                     f"^.*{idx2_str1}(.*?){idx2_str2}.*$", 
                                     line    
                                 ).group(1).replace(' ','')
+                                .replace("'","").replace('"','')
                             )
 quit_msg = ("A search of METplus output log files discovered no missing"
             + f" data.")

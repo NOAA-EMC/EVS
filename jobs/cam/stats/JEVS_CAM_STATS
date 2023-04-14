@@ -87,6 +87,7 @@ export err=$?; err_chk
 if [ "$COMPONENT" = "cam" ] ; then
    if [ "$err" -ne "0" ]; then
       python $USHevs/${COMPONENT}/${COMPONENT}_${STEP}_mail_message.py
+      wait
       msg="JOB $job HAS COMPLETED WITH SOME ERRORS."
    else
       msg="JOB $job HAS COMPLETED NORMALLY."
