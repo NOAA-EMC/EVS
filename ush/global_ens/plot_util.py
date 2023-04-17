@@ -625,8 +625,8 @@ def get_stat_plot_name(logger, stat):
       stat_plot_name = 'Heidke Skill Score'
    elif stat == 'si':
       stat_plot_name = 'Scatter Index'
-   elif stat == 'p90':
-      stat_plot_name = '90th Percentile'
+   elif stat == 'p95':
+      stat_plot_name = '95th Percentile'
    else:
       logger.error(stat+" is not a valid option")
       exit(1)

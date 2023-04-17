@@ -1,9 +1,9 @@
 ###############################################################################
 #
 # Name:          lead_average.py
-# Contact(s):    Marcel Caron
 # Developed:     Nov. 18, 2021 by Marcel Caron 
-# Last Modified: Nov. 02, 2022 by Marcel Caron             
+# Modified:      Nov. 02, 2022 by Marcel Caron             
+#                Nov. 16, 2022 by L. Gwen Chen (lichuan.chen@noaa.gov)
 # Title:         Line plot of verification metric as a function of 
 #                lead time
 # Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
@@ -61,14 +61,15 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                       xlabel: str = 'Forecast Lead Hour', 
                       date_type: str = 'VALID', date_hours: list = [0,6,12,18], 
                       verif_type: str = 'pres', save_dir: str = '.',
+                      fix_dir: str = '.',
                       requested_var: str = 'HGT', line_type: str = 'SL1L2',
-                      dpi: int = 300, confidence_intervals: bool = False,
+                      dpi: int = 100, confidence_intervals: bool = False,
                       bs_nrep: int = 5000, bs_method: str = 'MATCHED_PAIRS', 
                       ci_lev: float = .95, bs_min_samp: int = 30, 
                       eval_period: str = 'TEST', save_header: str = '', 
                       display_averages: bool = True, 
-                      plot_group: str = 'sfc_upper',
-                      sample_equalization: bool = True,
+                      plot_group: str = 'sfc_upper', obtype: str = '',
+                      sample_equalization: bool = True, run: str = '',
                       plot_logo_left: bool = False, 
                       plot_logo_right: bool = False, path_logo_left: str = '.',
                       path_logo_right: str = '.', zoom_logo_left: float = 1.,
@@ -819,7 +820,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         bbox_to_anchor=(0.5, -0.08), ncol=4, frameon=True, numpoints=2, 
         borderpad=.8, labelspacing=2., columnspacing=3., handlelength=3., 
         handletextpad=.4, borderaxespad=.5) 
-    fig.subplots_adjust(bottom=.2, wspace=0, hspace=0)
+    fig.subplots_adjust(bottom=.15, wspace=0, hspace=0)
     ax.grid(
         b=True, which='major', axis='both', alpha=.5, linestyle='--', 
         linewidth=.5, zorder=0
@@ -830,17 +831,17 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         for count, xval in zip(counts, x_vals1.tolist()):
             if not isinstance(count, str):
                 count = str(int(count))
-            ax.annotate(
-                f'{count}', xy=(xval,1.), 
-                xycoords=('data', 'axes fraction'), xytext=(0,18),
-                textcoords='offset points', va='top', fontsize=16,
-                color='dimgrey', ha='center'
-            )
-        ax.annotate(
-            '#SAMPLES', xy=(0.,1.), xycoords='axes fraction',
-            xytext=(-50, 21), textcoords='offset points', va='top', 
-            fontsize=11, color='dimgrey', ha='center'
-        )
+        #    ax.annotate(
+        #        f'{count}', xy=(xval,1.), 
+        #        xycoords=('data', 'axes fraction'), xytext=(0,18),
+        #        textcoords='offset points', va='top', fontsize=14,
+        #        color='dimgrey', ha='center'
+        #    )
+        #ax.annotate(
+        #    '#SAMPLES', xy=(0.,1.), xycoords='axes fraction',
+        #    xytext=(-50, 21), textcoords='offset points', va='top', 
+        #    fontsize=11, color='dimgrey', ha='center'
+        #)
         fig.subplots_adjust(top=.9)
 
     # Title
@@ -864,41 +865,65 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     if str(verif_type).lower() in ['pres', 'upper_air'] or 'P' in str(level):
         level_num = level.replace('P', '')
         level_string = f'{level_num} hPa '
-        level_savename = f'{level_num}MB_'
+        level_savename = f'{level_num}MB'
     elif str(verif_type).lower() in ['sfc', 'conus_sfc', 'polar_sfc', 'mrms']:
         if 'Z' in str(level):
             if str(level).upper() == 'Z0':
                 level_string = 'Surface '
-                level_savename = 'SFC_'
+                level_savename = 'SFC'
             else:
                 level_num = level.replace('Z', '')
                 if var_savename in ['TSOIL', 'SOILW']:
                     level_string = f'{level_num}-cm '
-                    level_savename = f'{level_num}CM_'
+                    level_savename = f'{level_num}CM'
                 else:
                     level_string = f'{level_num}-m '
-                    level_savename = f'{level_num}M_'
+                    level_savename = f'{level_num}M'
         elif 'L' in str(level) or 'A' in str(level):
             level_string = ''
             level_savename = ''
         else:
             level_string = f'{level} '
-            level_savename = f'{level}_'
+            level_savename = f'{level}'
+    elif str(verif_type).lower() in ['wave']:
+        level_string = ''
+        print_varname = df['FCST_VAR'].tolist()[0]
+        if print_varname == 'WIND':
+            level_savename = 'Z10'
+        else:
+            level_savename = 'L0'
+    elif str(verif_type).lower() in ['rtofs_sfc']:
+        if 'Z' in str(level):
+            if str(level).upper() == 'Z0':
+                level_string = ''
+                level_savename = 'Z0'
+        else:
+            level_num = level.replace('Z', '')
+            level_string = f'{level_num}-m '
+            level_savename = f'{level_num}M'
+    elif str(verif_type).lower() in ['wave']:
+        if 'Z' in str(level):
+            level_num = level.replace('Z', '')
+            level_string = f'{level_num}-m '
+            level_savename = f'{level_num}M'
+        else:
+            level_string = ''
+            level_savename = 'L0'
     elif str(verif_type).lower() in ['ccpa']:
         if 'A' in str(level):
             level_num = level.replace('A', '')
             level_string = f'{level_num}-hour '
-            level_savename = f'{level_num}H_'
+            level_savename = f'{level_num}H'
         else:
             level_string = f''
             level_savename = f''
     else:
-        level_string = f'{level}'
-        level_savename = f'{level}_'
+        level_string = f'{level} '
+        level_savename = f'{level}'
     if metric2_name is not None:
-        title1 = f'{metric1_string} and {metric2_string}'
+        title1 = f'{metric1_string} and {metric2_string} - {domain_string}'
     else:
-        title1 = f'{metric1_string}'
+        title1 = f'{metric1_string} - {domain_string}'
     if thresh and '' not in thresh:
         thresholds_phrase = ', '.join([
             f'{opt}{thresh_label}' for thresh_label in thresh_labels
@@ -909,20 +934,20 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         ])
         if units:
             title2 = (f'{level_string}{var_long_name} ({thresholds_phrase} '
-                      + f'{units}), {domain_string}')
+                      + f'{units})')
         else:
             title2 = (f'{level_string}{var_long_name} ({thresholds_phrase} '
-                      + f'unitless), {domain_string}')
+                      + f'unitless)')
     else:
         if units:
-            title2 = f'{level_string}{var_long_name} ({units}), {domain_string}'
+            title2 = f'{level_string}{var_long_name} ({units})'
         else:
-            title2 = f'{level_string}{var_long_name} (unitless), {domain_string}'
+            title2 = f'{level_string}{var_long_name} (unitless)'
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
               + f'{date_start_string} to {date_end_string}')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
-        title_pad=40
+        title_pad=20
     else:
         title_pad=None
     ax.set_title(title_center, loc=plotter.title_loc, pad=title_pad) 
@@ -977,20 +1002,42 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         time_period_savename = f'{date_start_savename}-{date_end_savename}'
     else:
         time_period_savename = f'{eval_period}'
-    save_name = (f'lead_average_regional_'
-                 + f'{str(domain).lower()}_{str(date_type).lower()}_'
-                 + f'{str(date_hours_savename).lower()}_'
-                 + f'{str(level_savename).lower()}'
-                 + f'{str(var_savename).lower()}_{str(metric1_name).lower()}')
+    if str(models_savename).lower() == 'gefs':
+        models_savename='global_ens'
+    elif str(models_savename).lower() == 'gfs':
+        models_savename='global_det'
+    if str(metric1_name).lower() == 'pcor':
+        metric1_name = 'corr'
+    if str(metric2_name).lower() == 'pcor':
+        metric2_name = 'corr'
+    domain_string = domain_string.replace(', ','_')
+    save_name = (f'evs.'
+                 + f'{str(models_savename).lower()}.'
+                 + f'{str(metric1_name).lower()}.'
+                 + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
+                 + f'{str(time_period_savename).lower()}.'
+                 + f'fhr_{str(date_type).lower()}{str(date_hours_savename).lower()}.'
+                 + f'{str(domain_string).lower()}')
     if metric2_name is not None:
-        save_name+=f'_{str(metric2_name).lower()}'
+        save_name = (f'evs.'
+                     + f'{str(models_savename).lower()}.'
+                     + f'{str(metric1_name).lower()}_{str(metric2_name).lower()}.'
+                     + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
+                     + f'{str(time_period_savename).lower()}.'
+                     + f'fhr_{str(date_type).lower()}{str(date_hours_savename).lower()}.'
+                     + f'{str(domain_string).lower()}')
     if thresh and '' not in thresh:
-        save_name+=f'_{str(thresholds_save_phrase).lower()}'
+        save_name = (f'evs.'
+                     + f'{str(models_savename).lower()}.'
+                     + f'{str(metric1_name).lower()}_{str(thresholds_save_phrase).lower()}.'
+                     + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
+                     + f'{str(time_period_savename).lower()}.'
+                     + f'fhr_{str(date_type).lower()}{str(date_hours_savename).lower()}.'
+                     + f'{str(domain).lower()}')
     if save_header:
         save_name = f'{save_header}_'+save_name
     save_subdir = os.path.join(
-        save_dir, f'{str(plot_group).lower()}', 
-        f'{str(time_period_savename).lower()}'
+        save_dir, f'{str(run).lower()}' 
     )
     if not os.path.isdir(save_subdir):
         os.makedirs(save_subdir)
@@ -1244,7 +1291,7 @@ def main():
                     logger, STATS_DIR, PRUNE_DIR, OUTPUT_BASE_TEMPLATE, VERIF_CASE, 
                     VERIF_TYPE, LINE_TYPE, DATE_TYPE, date_range, EVAL_PERIOD, 
                     date_hours, FLEADS, requested_var, fcst_var_names, obs_var_names, 
-                    MODELS, domain, INTERP, MET_VERSION, clear_prune_dir
+                    MODELS, OBTYPE, domain, INTERP, MET_VERSION, clear_prune_dir
                 )
                 if df is None:
                     continue
@@ -1258,8 +1305,9 @@ def main():
                     x_min_limit=X_MIN_LIMIT, x_max_limit=X_MAX_LIMIT, 
                     x_lim_lock=X_LIM_LOCK, xlabel=f'Forecast Lead Hour', 
                     verif_type=VERIF_TYPE, line_type=LINE_TYPE, 
-                    date_hours=date_hours, save_dir=SAVE_DIR, 
-                    eval_period=EVAL_PERIOD, display_averages=display_averages, 
+                    date_hours=date_hours, save_dir=SAVE_DIR, fix_dir=FIX_DIR, 
+                    eval_period=EVAL_PERIOD, obtype=OBTYPE, run=RUN,
+                    display_averages=display_averages, 
                     save_header=URL_HEADER, plot_group=plot_group, 
                     confidence_intervals=CONFIDENCE_INTERVALS, bs_nrep=bs_nrep, 
                     bs_method=bs_method, ci_lev=ci_lev, 
@@ -1289,9 +1337,12 @@ if __name__ == "__main__":
     STATS_DIR = OUTPUT_BASE_DIR
     PRUNE_DIR = check_PRUNE_DIR(os.environ['PRUNE_DIR'])
     SAVE_DIR = check_SAVE_DIR(os.environ['SAVE_DIR'])
+    FIX_DIR = check_FIX_DIR(os.environ['FIX_DIR'])
     DATE_TYPE = check_DATE_TYPE(os.environ['DATE_TYPE'])
     LINE_TYPE = check_LINE_TYPE(os.environ['LINE_TYPE'])
     INTERP = check_INTERP(os.environ['INTERP'])
+    RUN = check_RUN(os.environ['RUN'])
+    OBTYPE = check_OBTYPE(os.environ['OBTYPE'])
     MODELS = check_MODEL(os.environ['MODEL']).replace(' ','').split(',')
     DOMAINS = check_VX_MASK_LIST(os.environ['VX_MASK_LIST']).replace(' ','').split(',')
 
