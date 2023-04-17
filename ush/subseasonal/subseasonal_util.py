@@ -933,29 +933,8 @@ def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
     if not os.path.exists(dest_file):
         source_file = format_filler(source_file_format, valid_time_dt,
                                     init_time_dt, forecast_hour, {})
-        if 'dcom/navgem' in source_file:
-            prep_prod_fnmoc_file(source_file, dest_file, forecast_hour, 'full')
-        elif 'wgrbbul/jma_' in source_file:
-            prep_prod_jma_file(source_file, dest_file, forecast_hour, 'full')
-        elif 'wgrbbul/ecmwf' in source_file:
+        if 'wgrbbul/ecmwf' in source_file:
             prep_prod_ecmwf_file(source_file, dest_file, forecast_hour, 'full')
-        elif 'wgrbbul/ukmet_hires' in source_file:
-            prep_prod_ukmet_file(source_file, dest_file, forecast_hour, 'full')
-        elif 'qpf_verif/jma' in source_file:
-            prep_prod_jma_file(source_file, dest_file, forecast_hour,
-                               'precip')
-        elif 'qpf_verif/UWD' in source_file:
-            prep_prod_ecmwf_file(source_file, dest_file, forecast_hour,
-                                 'precip')
-        elif 'qpf_verif/ukmo' in source_file:
-            prep_prod_ukmet_file(source_file, dest_file, forecast_hour,
-                                 'precip')
-        elif 'qpf_verif/dwd' in source_file:
-            prep_prod_dwd_file(source_file, dest_file, forecast_hour,
-                               'precip')
-        elif 'qpf_verif/METFRA' in source_file:
-            prep_prod_metfra_file(source_file, dest_file, forecast_hour,
-                                  'precip')
         else:
             if os.path.exists(source_file):
                 print("Linking "+source_file+" to "+dest_file)
@@ -964,7 +943,7 @@ def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
                 print("WARNING: "+source_file+" DOES NOT EXIST")
 
 def get_truth_file(valid_time_dt, source_file_format, dest_file_format):
-    """! This gets a model file and saves it in the specified
+    """! This gets a truth/obs file and saves it in the specified
          destination
          
          Args:
@@ -1964,18 +1943,18 @@ def get_obs_valid_hrs(obs):
         '24hrCCPA': {'valid_hr_start': 12,
                      'valid_hr_end': 12,
                      'valid_hr_inc': 24},
-        '24hrNOHRSC': {'valid_hr_start': 12,
-                       'valid_hr_end': 12,
-                       'valid_hr_inc': 24},
         'OSI-SAF': {'valid_hr_start': 00,
                     'valid_hr_end': 00,
                     'valid_hr_inc': 24},
         'GHRSST-OSPO': {'valid_hr_start': 00,
                         'valid_hr_end': 00,
                         'valid_hr_inc': 24},
-        'GET_D': {'valid_hr_start': 00,
+        'ECMWF': {'valid_hr_start': 00,
                   'valid_hr_end': 00,
-                  'valid_hr_inc': 24},
+                  'valid_hr_inc': 12},
+        'BUFR': {'valid_hr_start': 00,
+                 'valid_hr_end': 00,
+                 'valid_hr_inc': 12},
     }
     if obs in list(obs_valid_hr_dict.keys()):
         valid_hr_start = obs_valid_hr_dict[obs]['valid_hr_start']
