@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#PBS -N jevs_global_ens_snowfall_plot
+#PBS -N jevs_gefs_snowfall_past31days_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -47,7 +47,7 @@ export envir=prod
 
 export NET=evs
 export STEP=plots
-export COMPONENT=global_ens
+export COMPONENT=gefs
 export RUN=atmos
 export VERIF_CASE=snowfall
 export MODELNAME=gefs
@@ -66,4 +66,4 @@ export DATA=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-${HOMEevs}/jobs/global_ens/plots/JEVS_GLOBAL_ENS_PLOTS
+${HOMEevs}/jobs/gefs/plots/JEVS_GLOBAL_ENS_PLOTS
