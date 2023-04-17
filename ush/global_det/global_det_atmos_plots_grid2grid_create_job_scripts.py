@@ -102,7 +102,7 @@ base_plot_jobs_info_dict = {
                     'fcst_var_dict': {'name': 'PRES',
                                       'levels': ['Z0']},
                     'obs_var_dict': {'name': 'PRES',
-                                     'levels': 'Z0'}},
+                                     'levels': ['Z0']}},
         'PresTropopause': {'vx_masks': ['GLOBAL', 'NHEM', 'SHEM', 'TROPICS',
                                         'CONUS', 'N60N90', 'S60S90', 'NAO',
                                         'SAO', 'NPO', 'SPO'],
