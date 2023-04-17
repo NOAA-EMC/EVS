@@ -2118,12 +2118,12 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
     dir_ndays = ('last'+plot_job_env_dict['NDAYS']+'days').lower()
     dir_line_type = plot_job_env_dict['line_type'].lower()
     dir_parameter = plot_job_env_dict['fcst_var_name'].lower()
-    if plot_job_env_dict['fcst_var_name'] == 'HGT_DECOMP':
-        dir_parameter = (
-            dir_parameter+'_'
-            +(plot_job_env_dict['fcst_var_name']\
-              .replace('WV1_', '').replace('-', '_'))
-        )
+    #if plot_job_env_dict['fcst_var_name'] == 'HGT_DECOMP':
+    #    dir_parameter = (
+    #        dir_parameter+'_'
+    #        +(plot_job_env_dict['interp_method']\
+    #          .replace('WV1_', '').replace('-', '_'))
+    #    )
     if job_group == 'make_plots':
         if plot_job_env_dict['plot'] in ['stat_by_level', 'lead_by_level']:
             dir_level = plot_job_env_dict['vert_profile'].lower()
@@ -2336,7 +2336,7 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                 +'fhr'+fhr.zfill(3)
             ).lower().replace('.','p').replace('-', '_')\
             .replace('&&', 'and').replace('||', 'or')\
-            .replace('*,*', '').replace('0,*,*', '')+'.stat'
+            .replace('0,*,*', '').replace('*,*', '')+'.stat'
             input_parsed_model_stat_file = os.path.join(
                 input_dir, parsed_model_stat_file_name
             )

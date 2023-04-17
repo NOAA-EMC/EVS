@@ -583,6 +583,8 @@ tar_images_jobs_dict = {
                                         f"last{NDAYS}days")
     }
 }
+if JOB_GROUP == 'tar_images':
+    JOB_GROUP_dict = tar_images_jobs_dict
 
 model_list = os.environ['model_list'].split(' ')
 for verif_type in VERIF_CASE_STEP_type_list:
@@ -595,10 +597,6 @@ for verif_type in VERIF_CASE_STEP_type_list:
     )
     verif_type_plot_jobs_dict = JOB_GROUP_dict[verif_type]
     for verif_type_job in list(verif_type_plot_jobs_dict.keys()):
-        obs_list = [
-            verif_type_plot_jobs_dict[verif_type_job]['obs_name']
-            for m in model_list
-        ]
         # Initialize job environment dictionary
         job_env_dict = gda_util.initalize_job_env_dict(
             verif_type, JOB_GROUP,
@@ -631,6 +629,10 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 if int(job_env_dict['fhr_start']) < 24:
                     job_env_dict['fhr_start'] = '24'
         if JOB_GROUP in ['condense_stats', 'filter_stats', 'make_plots']:
+            obs_list = [
+                verif_type_plot_jobs_dict[verif_type_job]['obs_name']
+                for m in model_list
+            ]
             for data_name in ['fcst', 'obs']:
                 job_env_dict[data_name+'_var_name'] =  (
                     verif_type_plot_jobs_dict[verif_type_job]\
@@ -826,11 +828,11 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     if job_env_dict['plot'] in ['stat_by_level',
                                                 'lead_by_level']:
                         job_env_dict['vert_profile'] = plot_loop_info[2]
-                        job_env_dict['fcst_var_levels_list'] = ', '.join(
+                        job_env_dict['fcst_var_level_list'] = ', '.join(
                             verif_type_plot_jobs_dict[verif_type_job]\
                             ['fcst_var_dict']['levels']
                         )
-                        job_env_dict['obs_var_levels_list'] = ', '.join(
+                        job_env_dict['obs_var_level_list'] = ', '.join(
                             verif_type_plot_jobs_dict[verif_type_job]\
                             ['obs_var_dict']['levels']
                         )

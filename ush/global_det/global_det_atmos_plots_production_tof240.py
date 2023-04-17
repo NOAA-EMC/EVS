@@ -144,7 +144,7 @@ original_plot_info_dict = {
     'grid': grid,
     'interp_method': interp_method,
     'interp_points': interp_points,
-    'event_equalization': event_equalization
+    'event_equalization': event_equalization,
     'stat': stat
 }
 fcst_var_prod = list(
@@ -155,14 +155,16 @@ obs_var_prod = list(
     itertools.product([obs_var_name], obs_var_level_list,
                        obs_var_thresh_list)
 )
+print(len(fcst_var_prod))
+print(len(obs_var_prod))
 if len(fcst_var_prod) == len(obs_var_prod):
     var_info = []
     for v in range(len(fcst_var_prod)):
         var_info.append((fcst_var_prod[v], obs_var_prod[v]))
-    else:
-       logger.error("FORECAST AND OBSERVATION VARIABLE INFORMATION NOT THE "
-                    +"SAME LENGTH")
-       sys.exit(1)
+else:
+   logger.error("FORECAST AND OBSERVATION VARIABLE INFORMATION NOT THE "
+                +"SAME LENGTH")
+   sys.exit(1)
 
 # Set up MET information dictionary
 original_met_info_dict = {

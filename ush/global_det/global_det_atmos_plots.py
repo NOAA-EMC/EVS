@@ -324,7 +324,7 @@ elif JOB_GROUP == 'filter_stats':
                      +'fhr'+str(date_info_dict['forecast_hour']).zfill(3))\
                     .lower().replace('.','p').replace('-', '_')\
                     .replace('&&', 'and').replace('||', 'or')\
-                    .replace('*,*', '').replace('0,*,*', '')\
+                    .replace('0,*,*', '').replace('*,*', '')\
                     +'.stat'
                 )
                 COMOUTjob_filter_stats_model_file = (
@@ -730,8 +730,8 @@ elif JOB_GROUP == 'make_plots':
         plot_info_dict['obs_var_name'] = obs_var_name
         plot_info_dict['obs_var_level'] = obs_var_level_list[0]
         plot_nsm = gdap_nsm.NOHRSCSpatialMap(logger, nohrsc_data_dir, DATAjob,
-                                             date_info_dict, plot_info_dict,
-                                             logo_dir)
+                                             COMOUTjob, date_info_dict,
+                                             plot_info_dict, logo_dir)
         plot_nsm.make_nohrsc_spatial_map()
     elif plot == 'precip_spatial_map':
         model_info_dict['obs'] = {'name': 'ccpa',
@@ -753,7 +753,8 @@ elif JOB_GROUP == 'make_plots':
             plot_info_dict['obs_var_thresh'] = 'NA'
             plot_info_dict['interp_points'] = 'NA'
             plot_psm = gdap_psm.PrecipSpatialMap(logger, pcp_combine_base_dir,
-                                                 DATAjob, model_info_dict,
+                                                 DATAjob, COMOUTjob,
+                                                 model_info_dict,
                                                  date_info_dict,
                                                  plot_info_dict,
                                                  met_info_dict, logo_dir)
@@ -831,8 +832,8 @@ elif JOB_GROUP == 'tar_images':
             os.chdir(cwd)
         else:
             logger.warning(f"No images generated in {DATAjob}")
-    if evs_run_mode == 'production':
-        logger.info(f"Removing {DATAjob}")
-        shutil.rmtree(DATAjob)
+    #if evs_run_mode == 'production':
+    #    logger.info(f"Removing {DATAjob}")
+    #    shutil.rmtree(DATAjob)
 
 print("END: "+os.path.basename(__file__))

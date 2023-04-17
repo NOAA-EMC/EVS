@@ -473,6 +473,15 @@ make_plots_jobs_dict['precip']['24hrCCPA_PerfDia']['line_type_stats'] = [
 make_plots_jobs_dict['precip']['24hrCCPA_PerfDia']['plots'] = [
     'performance_diagram'
 ]
+(make_plots_jobs_dict['precip']['24hrCCPA_PerfDia']\
+ ['fcst_var_dict']['threshs']) = [
+    'ge0.1', 'ge0.5', 'ge1', 'ge5', 'ge10', 'ge25', 'ge50', 'ge75'
+]
+(make_plots_jobs_dict['precip']['24hrCCPA_PerfDia']\
+ ['obs_var_dict']['threshs']) = [
+    'ge0.1', 'ge0.5', 'ge1', 'ge5', 'ge10', 'ge25', 'ge50', 'ge75'
+]
+
 make_plots_jobs_dict['precip']['24hrAccumMaps'] = {
     'vx_masks': ['conus', 'alaska', 'prico', 'hawaii'],
     'fcst_var_dict': {'name': 'APCP',
@@ -524,7 +533,7 @@ for decomp in (make_plots_jobs_dict['pres_levs']\
                       ['GeoHeight_FourierDecomp'])
     )
     (make_plots_jobs_dict['pres_levs']\
-     [f"GeoHeight_FourierDecomp{decomp.split('/')[0]}"]) = [decomp]
+     [f"GeoHeight_FourierDecomp{decomp.split('/')[0]}"]['interps']) = [decomp]
 del make_plots_jobs_dict['pres_levs']['GeoHeight_FourierDecomp']
 #### sea_ice
 for sea_ice_job in list(make_plots_jobs_dict['sea_ice'].keys()):
@@ -540,7 +549,8 @@ for sea_ice_job in list(make_plots_jobs_dict['sea_ice'].keys()):
         'time_series', 'lead_average'
     ]
 make_plots_jobs_dict['sea_ice']['DailyAvg_Concentration_PerfDia'] = (
-    copy.deepcopy(make_plots_jobs_dict['sea_ice']['DailyAvg_Concentration'])
+    copy.deepcopy(make_plots_jobs_dict['sea_ice']\
+                  ['DailyAvg_Concentration_Thresh'])
 )   
 (make_plots_jobs_dict['sea_ice']['DailyAvg_Concentration_PerfDia']\
  ['line_type_stats']) = ['CTC/PERF_DIA']
@@ -554,7 +564,7 @@ for snow_var in ['Depth', 'WaterEqv']:
     (make_plots_jobs_dict['snow'][f"24hrNOHRSC_{snow_var}"]\
      ['line_type_stats']) = ['CTC/ETS', 'CTC/FBIAS']
     (make_plots_jobs_dict['snow'][f"24hrNOHRSC_{snow_var}"]\
-     ['line_type_stats']) = ['time_series', 'lead_average']
+     ['plots']) = ['time_series', 'lead_average']
     for nbrhd in (make_plots_jobs_dict['snow']\
             [f"24hrNOHRSC_{snow_var}_Nbrhd"]['interps']):
         (make_plots_jobs_dict['snow']\
@@ -655,18 +665,6 @@ for verif_type in VERIF_CASE_STEP_type_list:
     )
     verif_type_plot_jobs_dict = JOB_GROUP_dict[verif_type]
     for verif_type_job in list(verif_type_plot_jobs_dict.keys()):
-        if verif_type == 'pres_levs':
-            obs_list = (
-                os.environ[VERIF_CASE_STEP_abbrev_type+'_truth_name_list']\
-                .split(' ')
-            )
-        elif verif_type == 'means':
-            obs_list = model_list
-        else:   
-            obs_list = [
-                verif_type_plot_jobs_dict[verif_type_job]['obs_name']
-                for m in model_list
-            ]
         # Initialize job environment dictionary
         job_env_dict = gda_util.initalize_job_env_dict(
             verif_type, JOB_GROUP,
@@ -699,6 +697,18 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 if int(job_env_dict['fhr_start']) < 24:
                     job_env_dict['fhr_start'] = '24'
         if JOB_GROUP in ['condense_stats', 'filter_stats', 'make_plots']:
+            if verif_type == 'pres_levs':
+                obs_list = (
+                    os.environ[VERIF_CASE_STEP_abbrev_type+'_truth_name_list']\
+                    .split(' ')
+                )
+            elif verif_type == 'means':
+                obs_list = model_list
+            else:
+                obs_list = [
+                    verif_type_plot_jobs_dict[verif_type_job]['obs_name']
+                    for m in model_list
+                ]
             for data_name in ['fcst', 'obs']:
                 job_env_dict[data_name+'_var_name'] =  (
                     verif_type_plot_jobs_dict[verif_type_job]\
@@ -894,11 +904,11 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     if job_env_dict['plot'] in ['stat_by_level',
                                                 'lead_by_level']:
                         job_env_dict['vert_profile'] = plot_loop_info[2]
-                        job_env_dict['fcst_var_levels_list'] = ', '.join(
+                        job_env_dict['fcst_var_level_list'] = ', '.join(
                             verif_type_plot_jobs_dict[verif_type_job]\
                             ['fcst_var_dict']['levels']
                         )
-                        job_env_dict['obs_var_levels_list'] = ', '.join(
+                        job_env_dict['obs_var_level_list'] = ', '.join(
                             verif_type_plot_jobs_dict[verif_type_job]\
                             ['obs_var_dict']['levels']
                         )
