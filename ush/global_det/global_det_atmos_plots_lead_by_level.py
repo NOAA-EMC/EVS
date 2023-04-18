@@ -148,7 +148,7 @@ class LeadByLevel:
                     f"{self.plot_info_dict['fcst_var_name'].lower()}_"
                     +f"{level.lower()}",
                     (self.plot_info_dict['vx_mask'].lower()\
-                     .replace('global', 'glb'))
+                     .replace('global', 'glb').replace('conus', 'buk_conus'))
                 )
                 self.logger.info("Reading in model stat files from "
                                  +f"{level_input_dir}")

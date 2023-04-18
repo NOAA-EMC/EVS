@@ -832,8 +832,8 @@ elif JOB_GROUP == 'tar_images':
             os.chdir(cwd)
         else:
             logger.warning(f"No images generated in {DATAjob}")
-    #if evs_run_mode == 'production':
-    #    logger.info(f"Removing {DATAjob}")
-    #    shutil.rmtree(DATAjob)
+    if evs_run_mode == 'production':
+        logger.info(f"Removing {DATAjob}")
+        shutil.rmtree(DATAjob)
 
 print("END: "+os.path.basename(__file__))
