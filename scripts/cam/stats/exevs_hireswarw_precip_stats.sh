@@ -288,6 +288,7 @@ status=$?
 [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_precip_create_job_script.py ($job_type)"
 export njob=$((njob+1))
 
+
 # Create Gather 2 POE Job Scripts
 if [ $USE_CFP = YES ]; then
     python $USHevs/cam/cam_stats_precip_create_poe_job_scripts.py

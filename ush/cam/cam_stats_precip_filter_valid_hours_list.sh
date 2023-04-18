@@ -48,5 +48,6 @@ elif [ $cyc -ge 22 ] && [ $cyc -le 23 ]; then
 fi
 echo "FILTERED LIST OF VALID HOURS (BASED ON CYCLE): $NEW_VHOUR_LIST"
 export VHOUR_LIST=$NEW_VHOUR_LIST
+[[ -z "$VHOUR_LIST" ]] && { echo "All VHOURs were filtered out based on the cycle."; }
 
 echo "END: $(basename ${BASH_SOURCE[0]})"

@@ -13,7 +13,7 @@
 set -x
 
 # Set Basic Environment Variables
-last_cyc="18"
+last_cyc="21"
 NEST_LIST="conus ak spc_otlk firewx subreg"
 VERIF_TYPES="raob metar"
 
@@ -194,18 +194,20 @@ for VERIF_TYPE in $VERIF_TYPES; do
         source $config
         source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
     fi
-    # Create Output Directories
-    python $USHevs/cam/cam_create_output_dirs.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
+    if [[ ! -z $VHOUR_LIST ]]; then
+        # Create Output Directories
+        python $USHevs/cam/cam_create_output_dirs.py
+        status=$?
+        [[ $status -ne 0 ]] && exit $status
+        [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
     
-    # Create Gather Job Script
-    python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_grid2obs_create_job_script.py ($job_type)"
-    export njob=$((njob+1))
+        # Create Gather Job Script
+        python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
+        status=$?
+        [[ $status -ne 0 ]] && exit $status
+        [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_grid2obs_create_job_script.py ($job_type)"
+        export njob=$((njob+1))
+    fi
 done
 
 
@@ -250,27 +252,32 @@ fi
 
 export job_type="gather2"
 export njob=1
-if [ $RUN_ENVIR = nco ]; then
-    export evs_run_mode="production"
-    source $config
-    source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
-else
-    export evs_run_mode=$evs_run_mode
-    source $config
-    source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
-fi
-# Create Output Directories
-python $USHevs/cam/cam_create_output_dirs.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
+for VERIF_TYPE in $VERIF_TYPES; do
+    export VERIF_TYPE=$VERIF_TYPE
+    if [ $RUN_ENVIR = nco ]; then
+        export evs_run_mode="production"
+        source $config
+        source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
+    else
+        export evs_run_mode=$evs_run_mode
+        source $config
+        source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
+    fi
+    if [[ ! -z $VHOUR_LIST ]]; then
+        # Create Output Directories
+        python $USHevs/cam/cam_create_output_dirs.py
+        status=$?
+        [[ $status -ne 0 ]] && exit $status
+        [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
 
-# Create Gather 2 Job Script
-python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran cam_stats_grid2obs_create_job_script.py ($job_type)"
-export njob=$((njob+1))
+        # Create Gather 2 Job Script
+        python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
+        status=$?
+        [[ $status -ne 0 ]] && exit $status
+        [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_grid2obs_create_job_script.py ($job_type)"
+        export njob=$((njob+1))
+    fi
+done
 
 # Create Gather 2 POE Job Scripts
 if [ $USE_CFP = YES ]; then
