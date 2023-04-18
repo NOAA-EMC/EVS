@@ -198,7 +198,7 @@ base_plot_jobs_info_dict = {
                          'obs_var_dict': {'name': 'CAPE',
                                           'levels': ['L100000-0']},
                          'obs_name': 'ADPUPA'},
-        'Ceiling': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East'
+        'Ceiling': {'vx_masks': ['CONUS', 'CONUS_Central', 'CONUS_East',
                                  'CONUS_South', 'CONUS_West', 'Appalachia',
                                  'CPlains', 'DeepSouth', 'GreatBasin',
                                  'GreatLakes', 'Mezqutial', 'MidAtlantic',
