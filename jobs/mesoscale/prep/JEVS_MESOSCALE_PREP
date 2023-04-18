@@ -1,0 +1,69 @@
+#!/bin/bash -e
+
+# =============================================================================
+#
+# NAME: JEVS_MESOSCALE_STATS
+# CONTRIBUTOR(S): MR, mallory.row@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# PURPOSE: Use ECF environment variables to define and run an EVS job
+# DEPENDENCIES: $HOMEevs/ecf/mesoscale/prep/jevs_mesoscale_precip_stats.ecf
+#
+# =============================================================================
+
+########################################
+# Preliminary data setup step  
+########################################
+set -xa
+
+echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
+
+# Shell Processing Variables
+export PS4='$SECONDS + '
+date
+
+# LSF id (jobid) and Temp Directories
+export pid=$$
+jobid=evs_${VERIF_CASE}_${STEP}.$$ 
+# Determine Job Output Name on System
+export pgmout="OUTPUT.${pid}"
+
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+
+# General I/O Settings
+# in production, the following will be set to DATAROOT
+#export DATA_IN=${DATA_IN:-$DATAROOT} #sref
+export DATA_IN=${DATA_IN:-$DATAROOTtmp} #nam/rap
+export DATA=$DATA_IN/${jobid}
+rm -rf $DATA
+mkdir -p $DATA
+cd $DATA
+
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
+export FIXevs=${FIXevs:-/lfs/h1/ops/prod/packages/evs.${evs_ver}/fix}
+
+# in production the following will be set using compath.py
+export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
+export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
+export COMINmrms=$DCOMROOT/ldmdata/obs/upperair/mrms
+# in production, the following will be set to the approp. COMOUT dir
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
+mkdir -p $COMOUT.${INITDATE}
+
+# Execute the Script
+$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${VERIF_CASE}_${STEP}.sh
+export err=$?; err_chk
+
+# Clean Up
+cat $pgmout
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATA_IN
+  rm -rf $DATA
+fi
+
+echo "END: $(basename ${BASH_SOURCE[0]})"
