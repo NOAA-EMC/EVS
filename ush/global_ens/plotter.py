@@ -7,7 +7,7 @@ import numpy as np
 class Plotter():
     def __init__(self, font_weight='bold',   axis_title_weight='bold',  
                 axis_title_size=20,         axis_offset=False,
-                axis_title_pad=15,          axis_label_weight='bold',  
+                axis_title_pad=13,          axis_label_weight='bold',  
                 axis_label_size=16,         axis_label_pad=10,
                 xtick_label_size=16,        xtick_major_pad=10,        
                 ytick_label_size=16,        ytick_major_pad=10, 
