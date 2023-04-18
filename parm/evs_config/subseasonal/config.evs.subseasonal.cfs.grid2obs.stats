@@ -14,8 +14,6 @@ echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 # WHAT METPLUS USE CASES TO RUN
 ####################################################
 ## STATS STEP PRODUCES .STAT FILES FOR PARTIAL SUMS OR CONTINGENCY TABLE COUNTS
-## EDIT SECTIONS BELOW FOR VERIFICATION TYPES REQUESTED
-#RUN_GRID2OBS_STATS:  runs METplus pb2nc, point_stat, stat_analysis
 export VERIF_CASE_STEP=${VERIF_CASE}_${STEP}
 ####################################################
 # GENERAL SETTINGS APPLIED TO ALL USE CASES
@@ -48,13 +46,13 @@ export webhost="emcrzdm.ncep.noaa.gov"
 export webhostid="$USER"
 export webdir="/home/people/emc/www/htdocs/users/${webhostid}/METplus/TEST"
 ## METPLUS SETTINGS
-#met_version:               MET version to use: 10.1.1
-#metplus_version:           METplus version to use: 4.1.1
+#met_version:               MET version to use
+#metplus_version:           METplus version to use
 #met_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
 #metplus_verbosity:         DEBUG, INFO, WARN, ERROR (most verbose is DEBUG)
 #log_met_output_to_metplus: log MET output to METplus log, yes or no
-export met_version="$met_ver" #10.1.1
-export metplus_version="$metplus_ver" #4.1.1
+export met_version="$met_ver" 
+export metplus_version="$metplus_ver" 
 export metplus_verbosity="DEBUG"
 export met_verbosity="5"
 export log_met_output_to_metplus="yes"
@@ -67,8 +65,7 @@ export KEEPDATA="YES"
 ####################################################
 if [ $VERIF_CASE_STEP = grid2obs_stats ]; then
     #g2ostats_type_list: list type of verifications to run for grid-to-obs: PrepBufr
-    #### PrepBufr:  compare 2m temp to NAM prepbufr obs
-    #####    g2ostats_[type]_msg_type_list: observation message type(s) to be used
+    #### PrepBufr:  compare 2m temp (and anomalies) to NAM prepbufr obs
     #####    g2ostats_[type]_fyc_list:      all forecast cycles to be included in verification: HH
     #####    g2ostats_[type]_vhr_list:      all valid hours to be included in verification: HH
     #####    g2ostats_[type]_fhr_min:       forecast hour to start verification HH[H]
@@ -79,15 +76,13 @@ if [ $VERIF_CASE_STEP = grid2obs_stats ]; then
     #g2ostats_mv_database_group: name of the group the METviewer database belongs to
     #g2ostats_mv_database_desc: description of database, can be blank
     export g2ostats_type_list="PrepBufr" 
-    export g2ostats_PrepBufr_msg_type_list="ONLYSF"
     export g2ostats_PrepBufr_truth_name_list="nam_anl"
     export g2ostats_PrepBufr_truth_file_format_list="$COMINobs.{valid?fmt=%Y%m%d}/prepbufr_nam/prepbufr.nam.{valid?fmt=%Y%m%d%H}"
     export g2ostats_PrepBufr_fcyc_list="00"
     export g2ostats_PrepBufr_vhr_list="00 12"
     export g2ostats_PrepBufr_fhr_min="24"
     export g2ostats_PrepBufr_fhr_max="840"
-    export g2ostats_PrepBufr_daily_fhr_inc=24
-    export g2ostats_PrepBufr_weekly_fhr_inc=168
+    export g2ostats_PrepBufr_fhr_inc=12
     export g2ostats_PrepBufr_grid="G003"
     export g2ostats_PrepBufr_gather_by="VALID"
     export g2ostats_mv_database_name="mv_evs_subseasonal_grid2obs_stats_$MODELNAME"

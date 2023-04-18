@@ -1,0 +1,104 @@
+#!/bin/bash
+# Program Name: exevs_subseasonal_grid2grid_plots.sh
+# Author(s)/Contact(s): Shannon Shields
+# Abstract: This script generates grid-to-grid verification plots
+#           using python for the subseasonal models
+# History Log:
+
+set -x
+
+echo
+echo "===== RUNNING GRID-TO-GRID PLOTS VERIFICATION  ====="
+export STEP="plots"
+export VERIF_CASE_STEP="grid2grid_plots"
+export VERIF_CASE_STEP_abbrev="g2gplots"
+
+# Set up directories
+mkdir -p $VERIF_CASE_STEP
+cd $VERIF_CASE_STEP
+
+# Set number of days being plotted
+start_date_seconds=$(date +%s -d ${start_date})
+end_date_seconds=$(date +%s -d ${end_date})
+diff_seconds=$(expr $end_date_seconds - $start_date_seconds)
+diff_days=$(expr $diff_seconds \/ 86400)
+total_days=$(expr $diff_days + 1)
+NDAYS=${NDAYS:-total_days}
+
+# Check user's configuration file
+python $USHevs/subseasonal/check_subseasonal_config_plots.py
+status=$?
+[[ $status -ne 0 ]] && exit $status
+[[ $status -eq 0 ]] && echo "Successfully ran check_subseasonal_config_plots.py"
+echo
+
+# Create output directories
+python $USHevs/subseasonal/create_METplus_subseasonal_output_dirs.py
+status=$?
+[[ $status -ne 0 ]] && exit $status
+[[ $status -eq 0 ]] && echo "Successfully ran create_METplus_subseasonal_output_dirs.py"
+echo
+
+# Link needed data files and set up model information
+python $USHevs/subseasonal/get_subseasonal_stat_files.py
+status=$?
+[[ $status -ne 0 ]] && exit $status
+[[ $status -eq 0 ]] && echo "Successfully ran get_subseasonal_stat_files.py"
+echo
+
+# Create job scripts
+python $USHevs/subseasonal/subseasonal_plots_grid2grid_create_job_scripts.py
+status=$?
+[[ $status -ne 0 ]] && exit $status
+[[ $status -eq 0 ]] && echo "Successfully ran subseasonal_plots_grid2grid_create_job_scripts.py"
+
+# Run job scripts
+chmod u+x $DATA/$VERIF_CASE_STEP/plot_job_scripts/*
+ncount_job=$(ls -l  $DATA/$VERIF_CASE_STEP/plot_job_scripts/job* |wc -l)
+nc=1
+if [ $USE_CFP = YES ]; then
+    ncount_poe=$(ls -l  $DATA/$VERIF_CASE_STEP/plot_job_scripts/poe* |wc -l)
+    while [ $nc -le $ncount_poe ]; do
+	poe_script=$DATA/$VERIF_CASE_STEP/plot_job_scripts/poe_jobs${nc}
+	chmod 775 $poe_script
+	export MP_PGMMODEL=mpmd
+	export MP_CMDFILE=${poe_script}
+	if [ $machine = WCOSS2 ]; then
+	    export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
+	    nselect=$(cat $PBS_NODEFILE | wc -l)
+	    nnp=$(($nselect * $nproc))
+	    launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+	elif [ $machine = HERA -o $machine = ORION ]; then
+	    export SLURM_KILL_BAD_EXIT=0
+	    launcher="srun --export=ALL --multi-prog"
+	fi
+	$launcher $MP_CMDFILE
+	nc=$((nc+1))
+    done
+else
+    while [ $nc -le $ncount_job ]; do
+	sh +x $DATA/$VERIF_CASE_STEP/plot_job_scripts/job${nc}
+	nc=$((nc+1))
+    done
+fi
+
+# Copy files to desired location
+if [ $SENDCOM = YES ]; then
+    # Make and copy tar file
+    cd $DATA/$VERIF_CASE_STEP/plot_output/${RUN}.${end_date}/images
+    for VERIF_TYPE_SUBDIR_PATH in $DATA/$VERIF_CASE_STEP/plot_output/$RUN.${end_date}/images/*; do
+	VERIF_TYPE_SUBDIR=$(echo ${VERIF_TYPE_SUBDIR_PATH##*/})
+	cd $VERIF_TYPE_SUBDIR
+	VERIF_TYPE_fhr_max=$(eval echo \$g2gplots_${VERIF_TYPE_SUBDIR}_fhr_max)
+	large_tar_file=${DATA}/${VERIF_CASE_STEP}/plot_output/${RUN}.${end_date}/images/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${PDYm2}.tar
+        tar -cvf $large_tar_file *.tar
+	cp -v $large_tar_file $COMOUT/.
+    done
+    cd $DATA
+fi
+
+# Clean up
+if [ $KEEPDATA != "YES" ]; then
+    cd $DATAROOTtmp
+    rm -rf $DATA
+fi
