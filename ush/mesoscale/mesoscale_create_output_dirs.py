@@ -1,7 +1,8 @@
 # =============================================================================
 #
-# NAME: cam_create_output_dirs.py
+# NAME: mesoscale_create_output_dirs.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# CONTRIBUTOR(S): Roshan Shrestha, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Define working/ output directories and create them if they don't
 #          exist.
 # DEPENDENCIES: os.path.join([
@@ -14,10 +15,10 @@
 import os
 import re
 from datetime import datetime, timedelta as td
-from cam_plots_grid2obs_graphx_defs import graphics as graphics_g2o
-from cam_plots_precip_graphx_defs import graphics as graphics_pcp
-from cam_plots_headline_graphx_defs import graphics as graphics_hdl
-import cam_util as cutil
+from mesoscale_plots_grid2obs_graphx_defs import graphics as graphics_g2o
+from mesoscale_plots_precip_graphx_defs import graphics as graphics_pcp
+from mesoscale_plots_headline_graphx_defs import graphics as graphics_hdl
+import mesoscale_util as cutil
 
 print(f"BEGIN: {os.path.basename(__file__)}")
 
@@ -54,7 +55,7 @@ if VERIF_CASE == "precip":
 elif VERIF_CASE == "grid2obs":
     if STEP == 'prep':
         NEST = os.environ['NEST']
-    elif STEP == 'stats':
+    if STEP == 'stats':
         NEST = os.environ['NEST']
         FHR_END_FULL = os.environ['FHR_END_FULL']
         FHR_END_SHORT = os.environ['FHR_END_SHORT']
@@ -78,7 +79,7 @@ if VERIF_CASE == 'precip':
     if STEP == 'prep':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
         data_dir_list.append(os.path.join(data_base_dir, OBSNAME))
-    elif STEP == 'stats':
+    if STEP == 'stats':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
         data_dir_list.append(os.path.join(data_base_dir, OBSNAME))
 elif VERIF_CASE == 'grid2obs':
@@ -334,7 +335,7 @@ elif STEP == 'plots':
                     working_output_base_dir, 'out', str(plot_group).lower(), 
                     str(eval_period).lower()
                 ))
-    elif VERIF_CASE == 'headline':
+    if VERIF_CASE == 'headline':
 
         working_output_base_dir = os.path.join(
             DATA, VERIF_CASE
