@@ -143,9 +143,17 @@ class LeadByLevel:
                                       +', '.join(format_valid_dates))
                     plot_dates = init_dates
                 # Read in data
-                self.logger.info(f"Reading in model stat files from {self.input_dir}")
+                level_input_dir = os.path.join(
+                    self.input_dir, '..', '..',
+                    f"{self.plot_info_dict['fcst_var_name'].lower()}_"
+                    +f"{level.lower()}",
+                    (self.plot_info_dict['vx_mask'].lower()\
+                     .replace('global', 'glb'))
+                )
+                self.logger.info("Reading in model stat files from "
+                                 +f"{level_input_dir}")
                 all_model_df = gda_util.build_df(
-                    self.logger, self.input_dir, self.output_dir,
+                    self.logger, level_input_dir, self.output_dir,
                     self.model_info_dict, self.met_info_dict,
                     self.plot_info_dict['fcst_var_name'],
                     level,
