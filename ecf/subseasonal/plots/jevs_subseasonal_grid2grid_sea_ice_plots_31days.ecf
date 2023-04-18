@@ -4,7 +4,7 @@
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=02:00:00
+#PBS -l walltime=00:30:00
 #PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
 #PBS -l debug=true
 #PBS -V
@@ -71,7 +71,7 @@ export evs_ver=${evs_ver}
 export STEP=plots
 export COMPONENT=subseasonal
 export RUN=atmos
-export MODELNAME=gefs cfs
+export MODELNAME="gefs cfs"
 #export model_ver=${gefs_ver} ${cfs_ver}
 export VERIF_CASE=grid2grid
 export VERIF_TYPE=sea_ice
@@ -82,8 +82,9 @@ export COMIN=$COMROOT/$NET/$evs_ver
 export COMINcfs=$COMIN/stats/$COMPONENT/cfs
 export COMINgefs=$COMIN/stats/$COMPONENT/gefs
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
-export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT
-export VDATE=$(date -d "today -22 day" +"%Y%m%d")
+export VDATE_START=$(date -d "today -32 day" +"%Y%m%d")
+export VDATE_END=$(date -d "today -2 day" +"%Y%m%d")
+export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE_END
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.${COMPONENT}.${VERIF_CASE}.${STEP}.${VERIF_TYPE}
 
