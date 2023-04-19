@@ -15,7 +15,7 @@
 ############################################################
 set -x
 
-export EVS=/lfs/h2/emc/vpppg/noscrub/$USER/EVS_gwen_rtofs
+export EVS=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 source $EVS/versions/run.ver
 
 module reset
