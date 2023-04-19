@@ -72,7 +72,6 @@ for fname in log_fnames:
             with open(fname) as f:
                 for line in f:
                     if look_in1:
-                        print(2)
                         if all(search_str in line for search_str in error_search_strs1):
                             error_lines.append(
                                 re.search(
@@ -100,9 +99,9 @@ else:
     for error_line in error_lines:
         keep = 1
         # Ensure lowest- and next-lowest-level directories exist
-        if not os.access(os.path.dirname(error_line), os.W_OK):
+        if not os.access(os.path.dirname(error_line), os.F_OK):
             if not os.access(os.path.dirname(
-                    os.path.dirname(error_line)), os.W_OK):
+                    os.path.dirname(error_line)), os.F_OK):
                 keep = 0
         if keep:
             filtered_error_lines.append(os.path.split(error_line)[-1])
@@ -257,7 +256,7 @@ else:
                                + f" EVS {COMPONENT}")
                     DATAmsg_head = (f"Warning: No {DATAsubj} data were"
                                     + f" available for valid date {VDATE}{CYC}"
-                                    + f" {lead_string}.")
+                                    + f" f{lead_hours[0]}.")
                 else:
                     lead_string = ', '.join([f'f{lead}' for lead in lead_hours])
                     subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
