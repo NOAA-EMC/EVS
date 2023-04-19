@@ -67,7 +67,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                      date_hours: list = [0,6,12,18], verif_type: str = 'pres', 
                      save_dir: str = '.', fix_dir: str = '.',
                      requested_var: str = 'HGT', 
-                     line_type: str = 'SL1L2', dpi: int = 300, 
+                     line_type: str = 'SL1L2', dpi: int = 100, 
                      confidence_intervals: bool = False,
                      bs_nrep: int = 5000, bs_method: str = 'MATCHED_PAIRS',
                      ci_lev: float = .95, bs_min_samp: int = 30,
@@ -956,7 +956,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
               + f'cycles: {date_hours_string} Forecast Day {fcst_day} (Hour {flead[0]})')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
-        title_pad=40
+        title_pad=20
     else:
         title_pad=None
     ax.set_title(title_center, loc=plotter.title_loc, pad=title_pad) 
