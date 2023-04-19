@@ -2,9 +2,9 @@
 #PBS -N jevs_cam_radar_prep
 #PBS -j oe
 #PBS -S /bin/bash
-#PBS -q debug
+#PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=0:15:00
+#PBS -l walltime=0:12:00
 #PBS -l select=1:ncpus=1
 #PBS -l debug=true
 #PBS -V
@@ -34,11 +34,11 @@ export MODELNAME=cam
 export job=${PBS_JOBNAME:-jevs_cam_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}/${STEP}/${COMPONENT}
 
 export MET_bin_exec=bin
 export metplus_verbosity=DEBUG
-export met_verbosity=5
+export met_verbosity=2
 export log_met_output_to_metplus=yes
 ############################################################
 
@@ -84,15 +84,9 @@ export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-NO}
 
 
-#which python
-#which python3
-#which pip
-#pip list
-
 
 # CALL executable job script here
-#$HOMEevs/jobs/cam/prep/JEVS_CAM_PREP
-$HOMEevs/jobs/cam/prep/JEVS_CAM_RADAR_PREP
+$HOMEevs/jobs/cam/prep/JEVS_CAM_PREP
 
 
 ######################################################################

@@ -2,9 +2,9 @@
 #PBS -N jevs_cam_severe_prep
 #PBS -j oe
 #PBS -S /bin/bash
-#PBS -q debug
+#PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=0:15:00
+#PBS -l walltime=0:05:00
 #PBS -l select=1:ncpus=1
 #PBS -l debug=true
 #PBS -V
@@ -35,14 +35,12 @@ export job=${PBS_JOBNAME:-jevs_cam_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}
 export COMINspc=/lfs/h1/ops/dev/dcom
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}/${STEP}/${COMPONENT}
 
 export MET_bin_exec=bin
 export metplus_verbosity=DEBUG
-export met_verbosity=5
+export met_verbosity=2
 export log_met_output_to_metplus=yes
-
-export DOGRAPHX=YES
 ############################################################
 
 
@@ -88,13 +86,12 @@ export KEEPDATA=${KEEPDATA:-NO}
 
 
 # CALL executable job script here
-#$HOMEevs/jobs/cam/prep/JEVS_CAM_PREP
-$HOMEevs/jobs/cam/prep/JEVS_CAM_RADAR_PREP
+$HOMEevs/jobs/cam/prep/JEVS_CAM_PREP
 
 
 ######################################################################
-# Purpose: This job preprocesses SPC storm reports for use in
-#          CAM severe verification job
+# Purpose: This job preprocesses SPC storm reports and outlook
+#          areas for use in the CAM severe verification job
 ######################################################################
 
 

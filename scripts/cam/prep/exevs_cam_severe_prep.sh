@@ -6,6 +6,7 @@
 #                    and outlook areas) for CAM verification.
 # History Log:
 # 1/2023: Initial script assembled by Logan Dawson 
+# 4/2023: Script updated to handle storm reports and outlook areas 
 ###############################################################################
 
 
@@ -21,19 +22,32 @@ set -x
 ############################################################
 ## Copy and preprocess SPC OTLK files
 #############################################################
-mkdir -p $COMOUTotlk
 
-python $USHevs/${COMPONENT}/prep_spc_otlk_files.py
-export err=$?; err_chk
+if [ -s $COMINspc/${OTLK_DATE}/validation_data/weather/spc/day*otlk_{OTLK_DATE}*.zip ]; then
 
-# Copy output to $COMOUT
-if [ $SENDCOM = YES ]; then
    mkdir -p $COMOUTotlk
-   for FILE in $DATA/gen_vx_mask/*; do
-      cp -v $FILE $COMOUTotlk
-   done
-fi
 
+   python $USHevs/${COMPONENT}/prep_spc_otlk_files.py
+   export err=$?; err_chk
+
+   # Copy output to $COMOUT
+   if [ $SENDCOM = YES ]; then
+      mkdir -p $COMOUTotlk
+      for FILE in $DATA/gen_vx_mask/*; do
+         cp -v $FILE $COMOUTotlk
+      done
+   fi
+
+else
+
+   export subject="SPC OTLK Data Missing for EVS ${COMPONENT}"
+   export maillist=${maillist:-'logan.dawson@noaa.gov,geoffrey.manikin@noaa.gov'}
+   echo "Warning: The ${OTLK_DATE} SPC outlook file(s) is missing. METplus will not run." > mailmsg
+   echo "Missing file is $COMINspc/${OTLK_DATE}/validation_data/weather/spc/day*otlk_{OTLK_DATE}*.zip" >> mailmsg
+   echo "Job Name & ID: $job $jobid" >> mailmsg
+   cat mailmsg | mail -s "$subject" $maillist
+
+fi
 
 
 ############################################################
@@ -73,9 +87,9 @@ else
    export subject="SPC LSR Data Missing for EVS ${COMPONENT}"
    export maillist=${maillist:-'logan.dawson@noaa.gov,geoffrey.manikin@noaa.gov'}
    echo "Warning: The ${REP_DATE} SPC report file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+   echo "Missing file is $COMINspc/${REP_DATE}/validation_data/weather/spc/spc_reports_${REP_DATE}.csv" >> mailmsg
    echo "Job Name & ID: $job $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $maillist
-   exit 0
 
 fi
 

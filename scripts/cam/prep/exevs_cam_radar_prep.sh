@@ -101,7 +101,6 @@ for DOMAIN in ${DOMAINS}; do
          echo "Warning: The ${MRMS_PRODUCT} file is missing for valid date ${VDATE}${cyc}. METplus will not run." > mailmsg
          echo "Job Name & ID: $job $jobid" >> mailmsg
          cat mailmsg | mail -s "$subject" $maillist
-         exit 0
 
       fi	
 
@@ -111,14 +110,5 @@ done
 
 
 
-
 exit
-
-
-
-
-
-
-
-
 

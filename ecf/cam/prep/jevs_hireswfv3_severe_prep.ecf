@@ -2,7 +2,7 @@
 #PBS -N jevs_hireswfv3_severe_prep_00
 #PBS -j oe
 #PBS -S /bin/bash
-#PBS -q debug
+#PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=0:30:00
 #PBS -l select=1:ncpus=1
@@ -89,8 +89,7 @@ export KEEPDATA=${KEEPDATA:-NO}
 
 
 # CALL executable job script here
-#$HOMEevs/jobs/cam/prep/JEVS_CAM_PREP
-$HOMEevs/jobs/cam/prep/JEVS_CAM_RADAR_PREP
+$HOMEevs/jobs/cam/prep/JEVS_CAM_PREP
 
 
 ######################################################################
