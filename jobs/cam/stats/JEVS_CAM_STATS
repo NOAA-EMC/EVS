@@ -69,6 +69,7 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
 export MASKS=${MASKS:-$FIXevs/masks} 
 export MET_PLUS_CONF="${PARMevs}/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}"
+export maillist=${maillist:-'geoffrey.manikin@noaa.gov'}
 
 export pid=$$
 jobid=evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$
@@ -79,6 +80,12 @@ cd $DATA
 export pgmout="OUTPUT.${pid}"
 
 $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+export err=$?; err_check
+
+if [ "$COMPONENT" = "cam" ] ; then
+    if [ "$err" -ne "0" ]; then
+        python $USHevs/${COMPONENT}/${COMPONENT}_${STEP}_mail_message.py
+        wait
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$msg"
