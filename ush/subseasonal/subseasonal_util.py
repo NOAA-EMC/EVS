@@ -1085,10 +1085,11 @@ def check_weekly_model_files(job_dict):
         fhr_check_dict[str(fhr)] = {}
         init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
         if job_dict['JOB_GROUP'] == 'reformat_data':
-            if job_dict['VERIF_CASE'] == 'grid2grid':
-                if job_dict['VERIF_TYPE'] in ['seaice', 'sst'] \
+            if job_dict['VERIF_CASE'] in ['grid2grid', 'grid2obs']:
+                if job_dict['VERIF_TYPE'] in ['seaice', 'sst', 'PrepBufr'] \
                       and job_dict['job_name'] in ['Concentration',
-                                                   'SST']:
+                                                   'SST',
+                                                   'GenEnsProd']:
                     mb = str(members).zfill(2)
                     model_file_format = os.path.join(verif_case_dir, 'data',
                                                      model,
@@ -1111,6 +1112,20 @@ def check_weekly_model_files(job_dict):
                         'init_date': init_date_dt,
                         'forecast_hour': str(fhr)
                     }
+        elif job_dict['JOB_GROUP'] == 'assemble_data':
+            if job_dict['VERIF_CASE'] == 'grid2obs':
+                if job_dict['VERIF_TYPE'] == 'PrepBufr' \
+                      and job_dict['job_name'] == 'TempAnom2m':
+                    model_file_format = os.path.join(verif_case_dir,
+                                                     'METplus_output',
+                                                     job_dict['RUN']+'.'
+                                                     +'{valid?fmt=%Y%m%d}',
+                                                     job_dict['MODEL'],
+                                                     job_dict['VERIF_CASE'],
+                                                     'gen_ens_prod_'
+                                                     +job_dict['VERIF_TYPE']
+                                                     +'_'+job_dict['job_name']
+                                                     +'.nc')
         fhr+=fhr_inc
     for fhr_key in list(fhr_check_dict.keys()):
         fhr_key_files_exist_list = []
@@ -1126,7 +1141,14 @@ def check_weekly_model_files(job_dict):
                 fhr_key_files_exist_list.append(True)
                 if job_dict['JOB_GROUP'] == 'reformat_data' \
                         and job_dict['job_name'] in ['Concentration',
-                                                     'SST']:
+                                                     'SST',
+                                                     'GenEnsProd']:
+                    fhr_list.append(
+                        fhr_check_dict[fhr_key][fhr_fileN_key]\
+                        ['forecast_hour']
+                    )
+                if job_dict['JOB_GROUP'] == 'assemble_data' \
+                        and job_dict['job_name'] == 'TempAnom2m':
                     fhr_list.append(
                         fhr_check_dict[fhr_key][fhr_fileN_key]\
                         ['forecast_hour']
@@ -1451,17 +1473,6 @@ def check_model_files(job_dict):
                             'init_date': init_date_dt,
                             'forecast_hour': str(fhr_in_accum)
                         }
-                elif job_dict['VERIF_TYPE'] == 'snow':
-                    fhr_check_dict[str(fhr)]['file1'] = {
-                        'valid_date': valid_date_dt,
-                        'init_date': init_date_dt,
-                        'forecast_hour': str(fhr)
-                    }
-                    fhr_check_dict[str(fhr)]['file2'] = {
-                        'valid_date': valid_date_dt,
-                        'init_date': init_date_dt,
-                        'forecast_hour': str(fhr-24)
-                    }
                 elif job_dict['VERIF_TYPE'] == 'sst' \
                         and job_dict['job_name'] == 'DailyAvg_SST':
                     nf = 0
@@ -1574,15 +1585,6 @@ def check_model_files(job_dict):
                         +'_init{init?fmt=%Y%m%d%H}_'
                         +'valid{valid_shift?fmt=%Y%m%d%H?shift=-720}'
                         +'to{valid?fmt=%Y%m%d%H}.nc'
-                    )
-                elif job_dict['VERIF_TYPE'] == 'snow':
-                    model_file_format = os.path.join(
-                        verif_case_dir, 'METplus_output',
-                        job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
-                        model, job_dict['VERIF_CASE'], 'pcp_combine_'
-                        +job_dict['VERIF_TYPE']+'_24hrAccum_'
-                        +job_dict['file_name_var']+'_init'
-                        +'{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
                     )
                 elif job_dict['VERIF_TYPE'] == 'sst' \
                         and job_dict['job_name'] == 'DailyAvg_SST':

@@ -38,14 +38,13 @@ MET_bin_exec = os.environ['MET_bin_exec']
 PARMevs = os.environ['PARMevs']
 model_list = os.environ['model_list'].split(' ')
 members = os.environ['members']
-njobs = os.environ['njobs']
 
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
 start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
 end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
 
 # Set up job directory
-#njobs = 0
+njobs = 0
 JOB_GROUP_jobs_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                   'METplus_job_scripts', JOB_GROUP)
 if not os.path.exists(JOB_GROUP_jobs_dir):
@@ -373,6 +372,12 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
             valid_date_inc = int(job_env_dict['valid_hr_inc'])
             date_dt = valid_start_date_dt
             while date_dt <= valid_end_date_dt:
+                wdate_dt = date_dt - datetime.timedelta(days=7)
+                job_env_dict['WEEKLYSTART'] = wdate_dt.strftime('%Y%m%d')
+                6_10date_dt = date_dt - datetime.timedelta(days=5)
+                job_env_dict['6_10START'] = 6_10date_dt.strftime('%Y%m%d')
+                3_4date_dt = date_dt - datetime.timedelta(days=14)
+                job_env_dict['3_4START'] = 3_4date_dt.strftime('%Y%m%d')
                 job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
                 job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
                 job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
@@ -408,10 +413,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                                      +job_env_dict['FIXevs']
                                                      +"/masks/"+mask+".nc, ")
                         job_env_dict['mask_list'] = env_var_mask_list
-                    if JOB_GROUP == 'generate_stats':
-                        if verif_type_job == 'DailyAvg_TempAnom2m':
-                            if int(job_env_dict['fhr_inc']) < 24:
-                                job_env_dict['fhr_inc'] = '24'
+                    #if JOB_GROUP == 'generate_stats':
+                        #if verif_type_job == 'DailyAvg_TempAnom2m':
+                            #if int(job_env_dict['fhr_inc']) < 24:
+                                #job_env_dict['fhr_inc'] = '24'
                     # Do file checks
                     check_model_files = True
                     if check_model_files:
@@ -576,7 +581,7 @@ if USE_CFP == 'YES':
                                        'job*'))
     njob_files = len(job_files)
     if njob_files == 0:
-        print("ERROR: No job files created in "
+        print("WARNING: No job files created in "
               +os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
                             JOB_GROUP))
     poe_files = glob.glob(os.path.join(DATA, VERIF_CASE_STEP,

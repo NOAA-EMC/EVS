@@ -78,7 +78,7 @@ echo
 # Create job scripts to run METplus for reformat_data, assemble_data, generate_stats, and gather_stats
 for group in reformat_data assemble_data generate_stats gather_stats; do
     export JOB_GROUP=$group
-    if [ "${JOB_GROUP}" = "reformat_data" ]; then
+    if [ "${JOB_GROUP}" in ["reformat_data", "assemble_data"] ]; then
 	echo "Creating and running jobs for grid-to-obs stats: ${JOB_GROUP}"
 	export njobs=0
 	WEEKLY_LIST="Week1 Week2 Week3 Week4 Week5"
@@ -268,7 +268,7 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
 	    [[ $status -ne 0 ]] && exit $status
 	    [[ $status -eq 0 ]] && echo "Successfully ran subseasonal_stats_grid2obs_create_poe_job_scripts.py"
 	fi
-    else
+    elif [ "${JOB_GROUP}" in ["generate_stats", "gather_stats"] ]; then
         echo "Creating and running jobs for grid-to-obs stats: ${JOB_GROUP}"
         python $USHevs/subseasonal/subseasonal_stats_grid2obs_create_job_scripts.py
         status=$?
