@@ -23,27 +23,40 @@ set -x
 ## Copy and preprocess SPC OTLK files
 #############################################################
 
-if [ -s $COMINspc/${OTLK_DATE}/validation_data/weather/spc/day*otlk_{OTLK_DATE}*.zip ]; then
+python $USHevs/${COMPONENT}/evs_prep_spc_otlk.py
+export err=$?; err_chk
 
-   mkdir -p $COMOUTotlk
+# Check for output in tmp working directory before copying to COMOUT 
+if [ -d $DATA/gen_vx_mask ]; then
 
-   python $USHevs/${COMPONENT}/evs_prep_spc_otlk.py
-   export err=$?; err_chk
+   if [ "$(ls -A $DATA/gen_vx_mask)" ]; then
 
-   # Copy output to $COMOUT
-   if [ $SENDCOM = YES ]; then
       mkdir -p $COMOUTotlk
-      for FILE in $DATA/gen_vx_mask/*; do
-         cp -v $FILE $COMOUTotlk
-      done
+
+      # Copy output to $COMOUT
+      if [ $SENDCOM = YES ]; then
+         mkdir -p $COMOUTotlk
+         for FILE in $DATA/gen_vx_mask/*; do
+            cp -v $FILE $COMOUTotlk
+         done
+      fi
+
+   else
+      data_missing=true
    fi
 
 else
+   data_missing=true
+fi
+
+
+# Send missing data alert if needed
+if [ $data_missing ]; then
 
    export subject="SPC OTLK Data Missing for EVS ${COMPONENT}"
    export maillist=${maillist:-'logan.dawson@noaa.gov,geoffrey.manikin@noaa.gov'}
    echo "Warning: The ${OTLK_DATE} SPC outlook file(s) is missing. METplus will not run." > mailmsg
-   echo "Missing file is $COMINspc/${OTLK_DATE}/validation_data/weather/spc/day*otlk_{OTLK_DATE}*.zip" >> mailmsg
+   echo "Missing files are $COMINspc/${OTLK_DATE}/validation_data/weather/spc/day*otlk_{OTLK_DATE}*.zip" >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $maillist
 

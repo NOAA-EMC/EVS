@@ -37,8 +37,6 @@ SPC_PROD_DIR = os.environ['COMINspc']+'/'+OTLK_DATE+'/validation_data/weather/sp
 VERIF_GRIDS = ['G211','G221','G227','3km']
 CATS = ['TSTM','MRGL','SLGT','ENH','MDT','HIGH']
 
-check_missing_otlk = []
-
 for DAY in range(1,4):
 
     # Set up temporary working directory
@@ -50,87 +48,92 @@ for DAY in range(1,4):
 
     search_path = SPC_PROD_DIR+'/day'+f'{DAY}'+'otlk_'+OTLK_DATE+'*-shp.zip'
     file_list = [f for f in glob.glob(search_path)]
+    print(file_list)
 
-    if DAY == 1:
-        OTLK = '1200'
-        V1DATE = day1_datetime.strftime('%Y%m%d%H') 
-        V2DATE = day2_datetime.strftime('%Y%m%d%H') 
+    if len(file_list) > 0:
 
-    elif DAY == 2:
-        OTLK = '1730'
-        V1DATE = day2_datetime.strftime('%Y%m%d%H') 
-        V2DATE = day3_datetime.strftime('%Y%m%d%H') 
+        if DAY == 1:
+            OTLK = '1200'
+            V1DATE = day1_datetime.strftime('%Y%m%d%H') 
+            V2DATE = day2_datetime.strftime('%Y%m%d%H') 
 
-    elif DAY == 3:
-        V1DATE = day3_datetime.strftime('%Y%m%d%H') 
-        V2DATE = day4_datetime.strftime('%Y%m%d%H') 
+        elif DAY == 2:
+            OTLK = '1730'
+            V1DATE = day2_datetime.strftime('%Y%m%d%H') 
+            V2DATE = day3_datetime.strftime('%Y%m%d%H') 
 
-        if '_0730-' in file_list[0]:
-            OTLK = '0730'
-        elif '_0830-' in file_list[0]:
-            OTLK = '0830'
-        os.environ['DAY3_OTLK'] = OTLK
+        elif DAY == 3:
+            V1DATE = day3_datetime.strftime('%Y%m%d%H') 
+            V2DATE = day4_datetime.strftime('%Y%m%d%H') 
 
-    print(f'Copying and unzipping SPC Day {DAY} Outlook issued at {OTLK}Z {OTLK_DATE}')
+            if '_0730-' in file_list[0]:
+                OTLK = '0730'
+            elif '_0830-' in file_list[0]:
+                OTLK = '0830'
+            os.environ['DAY3_OTLK'] = OTLK
 
-    for fil in file_list:
+        print(f'Copying and unzipping SPC Day {DAY} Outlook issued at {OTLK}Z {OTLK_DATE}')
 
-        # Copy and unzip file
-        filename=fil[-30:]
-        os.system('cp '+SPC_PROD_DIR+'/'+filename+' '+OTLK_DIR+'/'+filename)
-        os.system('unzip '+OTLK_DIR+'/'+filename)
+        for fil in file_list:
+
+            # Copy and unzip file
+            filename=fil[-30:]
+            os.system('cp '+SPC_PROD_DIR+'/'+filename+' '+OTLK_DIR+'/'+filename)
+            os.system('unzip '+OTLK_DIR+'/'+filename)
     
-        SHP_FILE = f'day{DAY}otlk_{OTLK_DATE}_{OTLK}_cat' 
-        os.environ['SHP_FILE'] = SHP_FILE
+            SHP_FILE = f'day{DAY}otlk_{OTLK_DATE}_{OTLK}_cat' 
+            os.environ['SHP_FILE'] = SHP_FILE
 
-        if os.path.isfile(os.path.join(OTLK_DIR,f'{SHP_FILE}.dbf')):
-            N_REC = cutil.run_shell_command([
-                    'gis_dump_dbf', 
-                    os.path.join(OTLK_DIR,f'{SHP_FILE}.dbf'), 
-                    '|', 'grep', 'n_records', 
-                    '|', 'cut', '-d\'=\'', '-f2', 
-                    '|', 'tr', '-d', '\' \''], 
-                    capture_output=True)
-        else:
-            N_REC = 0
+            # Check the number of records in the shapefile
+            if os.path.isfile(os.path.join(OTLK_DIR,f'{SHP_FILE}.dbf')):
+                N_REC = cutil.run_shell_command([
+                        'gis_dump_dbf', 
+                        os.path.join(OTLK_DIR,f'{SHP_FILE}.dbf'), 
+                        '|', 'grep', 'n_records', 
+                        '|', 'cut', '-d\'=\'', '-f2', 
+                        '|', 'tr', '-d', '\' \''], 
+                        capture_output=True)
+            else:
+                N_REC = 0
 
-        if int(N_REC) > 0:
-            print(f'Processing {N_REC} records.')
-            for REC in np.arange(int(N_REC)):
-                for VERIF_GRID in VERIF_GRIDS:
+            # Process each record in the shapefile 
+            if int(N_REC) > 0:
+                print(f'Processing {N_REC} records.')
+                for REC in np.arange(int(N_REC)):
+                    for VERIF_GRID in VERIF_GRIDS:
+ 
+                        NAME = cutil.run_shell_command([
+                               'gis_dump_dbf', 
+                               os.path.join(OTLK_DIR,f'{SHP_FILE}.dbf'),
+                               '|', 'egrep', '-A', '5', f'"^Record {REC}"',
+                               '|', 'tail','-1',
+                               '|', 'cut', '-d\'"\'', '-f2'],
+                               capture_output=True)
+                        NAME = NAME.replace('\n','')
 
-                    NAME = cutil.run_shell_command([
-                           'gis_dump_dbf', 
-                           os.path.join(OTLK_DIR,f'{SHP_FILE}.dbf'),
-                           '|', 'egrep', '-A', '5', f'"^Record {REC}"',
-                           '|', 'tail','-1',
-                           '|', 'cut', '-d\'"\'', '-f2'],
-                           capture_output=True)
-                    NAME = NAME.replace('\n','')
+                        print(f'Processing Record Number #{REC}: {NAME}')
 
-                    print(f'Processing Record Number #{REC}: {NAME}')
+                        MASK_FNAME = f'spc_otlk.day{DAY}_{OTLK}_{NAME}.v{V1DATE}-{V2DATE}.{VERIF_GRID}'
+                        if DAY == 3:
+                            MASK_NAME = f"DAY{DAY}_{NAME}"
+                        else:
+                            MASK_NAME = f"DAY{DAY}_{OTLK}_{NAME}"
 
-                    MASK_FNAME = f'spc_otlk.day{DAY}_{OTLK}_{NAME}.v{V1DATE}-{V2DATE}.{VERIF_GRID}'
-                    if DAY == 3:
-                        MASK_NAME = f"DAY{DAY}_{NAME}"
-                    else:
-                        MASK_NAME = f"DAY{DAY}_{OTLK}_{NAME}"
+                        os.environ['VERIF_GRID'] = VERIF_GRID
+                        os.environ['REC'] = str(REC)
+                        os.environ['MASK_FNAME'] = MASK_FNAME
+                        os.environ['MASK_NAME'] = MASK_NAME
 
-                    os.environ['VERIF_GRID'] = VERIF_GRID
-                    os.environ['REC'] = str(REC)
-                    os.environ['MASK_FNAME'] = MASK_FNAME
-                    os.environ['MASK_NAME'] = MASK_NAME
+                        cutil.run_shell_command([
+                        os.path.join(os.environ['METPLUS_PATH'],'ush','run_metplus.py'), '-c',
+                        os.path.join(os.environ['PARMevs'],'metplus_config','machine.conf'),
+                        os.path.join(os.environ['PARMevs'],'metplus_config',
+                                     'cam/severe/prep','GenVxMask_SPC_OTLK.conf')])
 
-                    cutil.run_shell_command([
-                    os.path.join(os.environ['METPLUS_PATH'],'ush','run_metplus.py'), '-c',
-                    os.path.join(os.environ['PARMevs'],'metplus_config','machine.conf'),
-                    os.path.join(os.environ['PARMevs'],'metplus_config',
-                                 'cam/severe/prep','GenVxMask_SPC_OTLK.conf')])
+            else:
+                print(f'No Day {DAY} outlook areas were issued at {OTLK}Z on {OTLK_DATE}')
+                continue
 
-        else:
-            print(f'No Day {DAY} outlook areas were issued at {OTLK}Z on {OTLK_DATE}')
-            check_missing_otlk.append(1)
-            continue
 
 exit()
 
