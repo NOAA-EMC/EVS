@@ -98,7 +98,7 @@ export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
 export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
 export COMINprepbufr=${COMINprepbufr:-$(compath.py  obsproc/${obsproc_ver})}
 export COMINsnow=$DCOMROOT
-export COMINspcotlk=${COMINspcotlk:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
+export COMINspcotlk=${COMINspcotlk:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT)}
 
 # LCD COMMENT: COMOUT should not be different between HREF and other CAMs
 if [ $MODELNAME = href ] ; then
