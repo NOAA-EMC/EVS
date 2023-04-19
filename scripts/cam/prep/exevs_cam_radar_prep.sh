@@ -23,7 +23,7 @@ set -x
 ############################################################
 mkdir -p $COMOUTmrms
 
-python $USHevs/${COMPONENT}/prep_mrms_radar_files.py
+python $USHevs/${COMPONENT}/evs_prep_mrms_radar.py
 export err=$?; err_chk
 
 

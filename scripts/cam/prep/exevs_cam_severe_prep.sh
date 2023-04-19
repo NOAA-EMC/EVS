@@ -27,7 +27,7 @@ if [ -s $COMINspc/${OTLK_DATE}/validation_data/weather/spc/day*otlk_{OTLK_DATE}*
 
    mkdir -p $COMOUTotlk
 
-   python $USHevs/${COMPONENT}/prep_spc_otlk_files.py
+   python $USHevs/${COMPONENT}/evs_prep_spc_otlk.py
    export err=$?; err_chk
 
    # Copy output to $COMOUT
