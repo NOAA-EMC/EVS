@@ -26,7 +26,7 @@ export VERIF_CASE_STEP=${VERIF_CASE}_${STEP}
 export model_list="$MODELNAME"
 export model_dir_list="$COMINgefs $COMINcfs"
 export model_plots_dir_list="$COMOUT $COMOUT"
-#export model_file_format_list="gefs.{init?fmt=%Y%m%d}/{init?fmt=%2H} cfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}"
+export model_file_format_list="gefs.{init?fmt=%Y%m%d}/{init?fmt=%2H} cfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}"
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory
 export OUTPUTROOT="$DATAROOTtmp/$STEP"
