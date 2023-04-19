@@ -44,7 +44,7 @@ else
    export maillist=${maillist:-'logan.dawson@noaa.gov,geoffrey.manikin@noaa.gov'}
    echo "Warning: The ${OTLK_DATE} SPC outlook file(s) is missing. METplus will not run." > mailmsg
    echo "Missing file is $COMINspc/${OTLK_DATE}/validation_data/weather/spc/day*otlk_{OTLK_DATE}*.zip" >> mailmsg
-   echo "Job Name & ID: $job $jobid" >> mailmsg
+   echo "Job ID: $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $maillist
 
 fi
@@ -88,7 +88,7 @@ else
    export maillist=${maillist:-'logan.dawson@noaa.gov,geoffrey.manikin@noaa.gov'}
    echo "Warning: The ${REP_DATE} SPC report file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
    echo "Missing file is $COMINspc/${REP_DATE}/validation_data/weather/spc/spc_reports_${REP_DATE}.csv" >> mailmsg
-   echo "Job Name & ID: $job $jobid" >> mailmsg
+   echo "Job ID: $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $maillist
 
 fi
