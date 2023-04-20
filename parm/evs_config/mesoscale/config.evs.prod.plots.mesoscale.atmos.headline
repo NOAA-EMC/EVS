@@ -23,7 +23,7 @@ export LOG_LEVEL="DEBUG"
 
 # Model/Obs Settings
 export STAT_OUTPUT_BASE_DIR="${COMIN}"
-export STAT_OUTPUT_BASE_TEMPLATE="*.{valid?fmt=%Y%m%d}/${NET}.stats.{MODEL}*grid2obs*v{valid?fmt=%Y%m%d}.stat"
+export STAT_OUTPUT_BASE_TEMPLATE="*/{MODEL}.{valid?fmt=%Y%m%d}/${NET}.stats.{MODEL}*grid2obs*v{valid?fmt=%Y%m%d}.stat"
 
 # Additional Verification Settings
 export IMG_HEADER="${NET}.${COMPONENT}"

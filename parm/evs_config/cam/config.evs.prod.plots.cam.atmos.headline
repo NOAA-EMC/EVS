@@ -28,7 +28,7 @@ export STAT_OUTPUT_BASE_TEMPLATE="*.{valid?fmt=%Y%m%d}/${NET}.stats.{MODEL}*grid
 # Additional Verification Settings
 export IMG_HEADER="${NET}.${COMPONENT}"
 export PRUNE_DIR="${DATA}/${VERIF_CASE}/data"
-export USH_DIR=${USHevs}/headline
+export USH_DIR=${USHevs}/${COMPONENT}
 export PYTHONDONTWRITEBYTECODE=1
 
 echo "END: $(basename ${BASH_SOURCE[0]})"
