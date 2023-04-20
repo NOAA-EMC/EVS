@@ -234,6 +234,38 @@ def get_time_info(date_start, date_end, date_type, init_hr_list, valid_hr_list,
         date_dt = date_dt + datetime.timedelta(hours=int(date_type_hr_inc))
     return time_info
 
+def get_init_hour(valid_hour, forecast_hour):
+    """! Get a initialization hour/cycle
+
+         Args:
+             valid_hour    - valid hour (integer)
+             forecast_hour - forecast hour (integer)
+    """
+    init_hour = 24 + (valid_hour - (forecast_hour%24))
+    if forecast_hour % 24 == 0:
+        init_hour = valid_hour
+    else:
+        init_hour = 24 + (valid_hour - (forecast_hour%24))
+    if init_hour >= 24:
+        init_hour = init_hour - 24
+    return init_hour
+
+def get_valid_hour(init_hour, forecast_hour):
+    """! Get a valid hour
+
+         Args:
+             init_hour    - intit hour/cycle (integer)
+             forecast_hour - forecast hour (integer)
+    """
+    valid_hour = (init_hour + (forecast_hour%24))
+    if forecast_hour % 24 == 0:
+        valid_hour = init_hour
+    else:
+        valid_hour = (init_hour + (forecast_hour%24))
+    if valid_hour >= 24:
+        valid_hour = valid_hour - 24
+    return valid_hour
+
 def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                   forecast_hour, str_sub_dict):
     """! Creates a filled file path from a format
@@ -438,15 +470,14 @@ def prep_prod_gefs_file(source_afile, source_bfile, prepped_file, dest_file,
                                #'-grib', prepped_file])
     copy_file(prepped_file, dest_file)
 
-def prep_prod_cfs_file(source_pfile, source_ffile, prepped_file, dest_file,
+def prep_prod_cfs_pfile(source_pfile, prepped_pfile, dest_pfile,
                        forecast_hour, prep_method):
-    """! Do prep work for CFS production files
+    """! Do prep work for CFS production pgbf files
 
          Args:
              source_pfile       - source pgbf file format (string)
-             source_ffile       - source flxf file format (string)
-             prepped_file       - prepped file (string)
-             dest_file          - destination file (string)
+             prepped_pfile      - prepped pgbf file (string)
+             dest_pfile         - destination pgbf file (string)
              forecast_hour      - forecast hour (string)
              prep_method        - name of prep method to do
                                   (string)
@@ -457,7 +488,7 @@ def prep_prod_cfs_file(source_pfile, source_ffile, prepped_file, dest_file,
     WGRIB2 = os.environ['WGRIB2']
     EXECevs = os.environ['EXECevs']
     # Working file names
-    working_file1 = prepped_file+'.tmp1'
+    working_file1 = prepped_pfile+'.tmp1'
     # Prep file
     if prep_method == 'full':
         if forecast_hour == 0:
@@ -466,39 +497,71 @@ def prep_prod_cfs_file(source_pfile, source_ffile, prepped_file, dest_file,
             wgrib_fhr = forecast_hour
         thin_var_level_list = [
             'HGT:500 mb',
-            'ULWRF:top of atmosphere',
             'APCP:surface',
+            'UGRD:850 mb',
+            'UGRD:200 mb',
+            'VGRD:850 mb',
+            'VGRD:200 mb'
+        ]
+
+        if check_file_exists_size(source_pfile):
+            run_shell_command(['>', prepped_pfile])
+            for thin_var_level in thin_var_level_list:
+                run_shell_command([WGRIB2, '-match', '"'+thin_var_level+'"',
+                                   source_pfile+'|'+WGRIB2, '-i',
+                                   source_pfile,
+                                   '-grib', working_file1])
+                run_shell_command(['cat', working_file1, '>>', prepped_pfile])
+                os.remove(working_file1)
+    copy_file(prepped_pfile, dest_pfile)
+
+def prep_prod_cfs_ffile(source_ffile, prepped_ffile, dest_ffile,
+                       forecast_hour, prep_method):
+    """! Do prep work for CFS production flxf files
+
+         Args:
+             source_ffile       - source flxf file format (string)
+             prepped_ffile      - prepped flxf file (string)
+             dest_ffile         - destination flxf file (string)
+             forecast_hour      - forecast hour (string)
+             prep_method        - name of prep method to do
+                                  (string)
+
+         Returns:
+    """
+    # Environment variables and executables
+    WGRIB2 = os.environ['WGRIB2']
+    EXECevs = os.environ['EXECevs']
+    # Working file names
+    working_file1 = prepped_ffile+'.tmp1'
+    # Prep file
+    if prep_method == 'full':
+        if forecast_hour == 0:
+            wgrib_fhr = 'anl'
+        else:
+            wgrib_fhr = forecast_hour
+        thin_var_level_list = [
+            'ULWRF:top of atmosphere',
             'ICETK:surface',
             'ICEC:surface',
             'TMP:surface',
             'TMP:2 m above ground',
             'TMAX:2 m above ground',
             'TMIN:2 m above ground',
-            'UGRD:850 mb',
-            'UGRD:200 mb',
             'UGRD:10 m above ground',
-            'VGRD:850 mb',
-            'VGRD:200 mb',
             'VGRD:10 m above ground'
         ]
 
-        if check_file_exists_size(source_pfile) \
-                and check_file_exists_size(source_ffile):
-            run_shell_command(['>', prepped_file])
+        if check_file_exists_size(source_ffile):
+            run_shell_command(['>', prepped_ffile])
             for thin_var_level in thin_var_level_list:
-                run_shell_command([WGRIB2, '-match', '"'+thin_var_level+'"',
-                                   source_pfile+'|'+WGRIB2, '-i',
-                                   source_pfile,
-                                   '-grib', working_file1])
-                run_shell_command(['cat', working_file1, '>>', prepped_file])
                 run_shell_command([WGRIB2, '-match', '"'+thin_var_level+'"',
                                    source_ffile+'|'+WGRIB2, '-i',
                                    source_ffile,
                                    '-grib', working_file1])
-                run_shell_command(['cat', working_file1, '>>', prepped_file])
+                run_shell_command(['cat', working_file1, '>>', prepped_ffile])
                 os.remove(working_file1)
-    copy_file(prepped_file, dest_file)
-
+    copy_file(prepped_ffile, dest_ffile)
 
 def prep_prod_gfs_file(source_file, dest_file):
     """! Do prep work for GFS analysis production files
@@ -870,29 +933,8 @@ def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
     if not os.path.exists(dest_file):
         source_file = format_filler(source_file_format, valid_time_dt,
                                     init_time_dt, forecast_hour, {})
-        if 'dcom/navgem' in source_file:
-            prep_prod_fnmoc_file(source_file, dest_file, forecast_hour, 'full')
-        elif 'wgrbbul/jma_' in source_file:
-            prep_prod_jma_file(source_file, dest_file, forecast_hour, 'full')
-        elif 'wgrbbul/ecmwf' in source_file:
+        if 'wgrbbul/ecmwf' in source_file:
             prep_prod_ecmwf_file(source_file, dest_file, forecast_hour, 'full')
-        elif 'wgrbbul/ukmet_hires' in source_file:
-            prep_prod_ukmet_file(source_file, dest_file, forecast_hour, 'full')
-        elif 'qpf_verif/jma' in source_file:
-            prep_prod_jma_file(source_file, dest_file, forecast_hour,
-                               'precip')
-        elif 'qpf_verif/UWD' in source_file:
-            prep_prod_ecmwf_file(source_file, dest_file, forecast_hour,
-                                 'precip')
-        elif 'qpf_verif/ukmo' in source_file:
-            prep_prod_ukmet_file(source_file, dest_file, forecast_hour,
-                                 'precip')
-        elif 'qpf_verif/dwd' in source_file:
-            prep_prod_dwd_file(source_file, dest_file, forecast_hour,
-                               'precip')
-        elif 'qpf_verif/METFRA' in source_file:
-            prep_prod_metfra_file(source_file, dest_file, forecast_hour,
-                                  'precip')
         else:
             if os.path.exists(source_file):
                 print("Linking "+source_file+" to "+dest_file)
@@ -901,7 +943,7 @@ def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
                 print("WARNING: "+source_file+" DOES NOT EXIST")
 
 def get_truth_file(valid_time_dt, source_file_format, dest_file_format):
-    """! This gets a model file and saves it in the specified
+    """! This gets a truth/obs file and saves it in the specified
          destination
          
          Args:
@@ -1901,18 +1943,18 @@ def get_obs_valid_hrs(obs):
         '24hrCCPA': {'valid_hr_start': 12,
                      'valid_hr_end': 12,
                      'valid_hr_inc': 24},
-        '24hrNOHRSC': {'valid_hr_start': 12,
-                       'valid_hr_end': 12,
-                       'valid_hr_inc': 24},
         'OSI-SAF': {'valid_hr_start': 00,
                     'valid_hr_end': 00,
                     'valid_hr_inc': 24},
         'GHRSST-OSPO': {'valid_hr_start': 00,
                         'valid_hr_end': 00,
                         'valid_hr_inc': 24},
-        'GET_D': {'valid_hr_start': 00,
+        'ECMWF': {'valid_hr_start': 00,
                   'valid_hr_end': 00,
-                  'valid_hr_inc': 24},
+                  'valid_hr_inc': 12},
+        'BUFR': {'valid_hr_start': 00,
+                 'valid_hr_end': 00,
+                 'valid_hr_inc': 12},
     }
     if obs in list(obs_valid_hr_dict.keys()):
         valid_hr_start = obs_valid_hr_dict[obs]['valid_hr_start']
@@ -2011,7 +2053,7 @@ def initalize_job_env_dict(verif_type, group,
         job_env_dict[env_var] = os.environ[env_var]
     if group == 'plot':
         job_env_dict['plot_verbosity'] = (
-            os.environ['METplus_verbosity']
+            os.environ['metplus_verbosity']
         )
     job_env_dict['JOB_GROUP'] = group
     if group in ['reformat_data', 'assemble_data', 'generate_stats', 'plot']:
@@ -2056,7 +2098,7 @@ def initalize_job_env_dict(verif_type, group,
                 valid_hr_start, valid_hr_end, valid_hr_inc = (
                     get_obs_valid_hrs('24hrNOHRSC')
                 )
-            elif verif_type == 'seaice':
+            elif verif_type in ['seaice', 'sea_ice']:
                 valid_hr_start, valid_hr_end, valid_hr_inc = (
                     get_obs_valid_hrs('OSI-SAF')
                 )
@@ -2163,7 +2205,7 @@ def get_plot_dates(logger, date_type, start_date, end_date,
 
 def get_met_line_type_cols(logger, met_root, met_version, met_line_type):
     """! Get the MET columns for a specific line type and MET
-         verison
+         version
 
          Args:
              logger        - logger object
@@ -2171,7 +2213,7 @@ def get_met_line_type_cols(logger, met_root, met_version, met_line_type):
              met_version   - MET version number (string)
              met_line_type - MET line type (string)
          Returns:
-             met_version_line_type_col_list - list of MET versoin
+             met_version_line_type_col_list - list of MET version
                                               line type colums (strings)
     """
     if met_version.count('.') == 2:
@@ -2632,6 +2674,8 @@ def calculate_stat(logger, data_df, line_type, stat):
        FY_ON = data_df.loc[:]['FY_ON']
        FN_OY = data_df.loc[:]['FN_OY']
        FN_ON = data_df.loc[:]['FN_ON']
+       if line_type == 'CTC':
+           EC_VALUE = data_df.loc[:]['EC_VALUE']
    elif line_type in ['CTS', 'NBRCTS']:
        BASER = data_df.loc[:]['BASER']
        BASER_NCL = data_df.loc[:]['BASER_NCL']
@@ -2725,6 +2769,10 @@ def calculate_stat(logger, data_df, line_type, stat):
        BAGSS = data_df.loc[:]['BAGSS']
        BAGSS_BCL = data_df.loc[:]['BAGSS_BCL']
        BAGSS_BCU = data_df.loc[:]['BAGSS_BCU']
+       if line_type == 'CTS':
+           EC_VALUE = data_df.loc[:]['EC_VALUE']
+   elif line_type == 'MCTC':
+       F1_O1 = data_df.loc[:]['F1_O1']
    elif line_type == 'NBRCNT':
        FBS = data_df.loc[:]['FBS']
        FBS_BCL = data_df.loc[:]['FBS_BCL']
@@ -2760,6 +2808,8 @@ def calculate_stat(logger, data_df, line_type, stat):
        UVFOABAR = data_df.loc[:]['UVFOABAR']
        UVFFABAR = data_df.loc[:]['UVFFABAR']
        UVOOABAR = data_df.loc[:]['UVOOABAR']
+       FA_SPEED_BAR = data_df.loc[:]['FA_SPEED_BAR']
+       OA_SPEED_BAR = data_df.loc[:]['OA_SPEED_BAR']
    elif line_type == 'VCNT':
        FBAR = data_df.loc[:]['FBAR']
        OBAR = data_df.loc[:]['OBAR']
@@ -2779,16 +2829,24 @@ def calculate_stat(logger, data_df, line_type, stat):
        SPEED_ABSERR = data_df.loc[:]['SPEED_ABSERR']
        DIR_ERR = data_df.loc[:]['DIR_ERR']
        DIR_ABSERR = data_df.loc[:]['DIR_ABSERR']
+       ANOM_CORR = data_df.loc[:]['ANOM_CORR']
+       ANOM_CORR_NCL = data_df.loc[:]['ANOM_CORR_NCL']
+       ANOM_CORR_NCU = data_df.loc[:]['ANOM_CORR_NCU']
+       ANOM_CORR_BCL = data_df.loc[:]['ANOM_CORR_BCL']
+       ANOM_CORR_BCU = data_df.loc[:]['ANOM_CORR_BCU']
+       ANOM_CORR_UNCNTR = data_df.loc[:]['ANOM_CORR_UNCNTR']
+       ANOM_CORR_UNCNTR_BCL = data_df.loc[:]['ANOM_CORR_UNCNTR_BCL']
+       ANOM_CORR_UNCNTR_BCU = data_df.loc[:]['ANOM_CORR_UNCNTR_BCU']
    if stat == 'ACC': # Anomaly Correlation Coefficient
        if line_type == 'SAL1L2':
            stat_df = (FOABAR - FABAR*OABAR) \
                      /np.sqrt((FFABAR - FABAR*FABAR)*
                               (OOABAR - OABAR*OABAR))
-       elif line_type == 'CNT':
+       elif line_type in ['CNT', 'VCNT']:
            stat_df = ANOM_CORR
        elif line_type == 'VAL1L2':
            stat_df = UVFOABAR/np.sqrt(UVFFABAR*UVOOABAR)
-   elif stat == 'BIAS': # Bias
+   elif stat in ['BIAS', 'ME']: # Bias/Mean Error
        if line_type == 'SL1L2':
            stat_df = FBAR - OBAR
        elif line_type == 'CNT':
@@ -2798,6 +2856,9 @@ def calculate_stat(logger, data_df, line_type, stat):
    elif stat == 'CSI': # Critical Success Index'
        if line_type == 'CTC':
            stat_df = FY_OY/(FY_OY + FY_ON + FN_OY)
+   elif stat == 'F1_O1': # Count of forecast category 1 and observation category 1
+       if line_type == 'MCTC':
+           stat_df = F1_O1
    elif stat in ['ETS', 'GSS']: # Equitable Threat Score/Gilbert Skill Score
        if line_type == 'CTC':
            TOTAL = FY_OY + FY_ON + FN_OY + FN_ON
@@ -2896,6 +2957,6 @@ def calculate_average(logger, average_method, line_type, stat, df):
             )
             average_value = avg_array[0]
     else:
-        logger.warning(f"{average_method} not recongnized..."
+        logger.warning(f"{average_method} not recognized..."
                        +"use mean, or aggregation...returning NaN")
     return average_value
