@@ -24,61 +24,73 @@ def get_data_type(fname):
             'and':[''],
             'or':['prepbufr'],
             'not':[],
+            'type': 'anl'
         },
         'NOHRSC': {
             'and':[''],
             'or':['sfav2'],
             'not':[],
+            'type': 'gen'
         },
         'mPING': {
             'and':[''],
             'or':['mPING', 'mping'],
             'not':[],
+            'type': 'gen'
         },
         'FireWX Nest': {
             'and':[''],
             'or':['firewx'],
             'not':[],
+            'type': 'anl'
         },
         'SPC Outlook Area': {
             'and':[''],
             'or':['spc_otlk'],
             'not':[],
+            'type': 'gen'
         },
         'CCPA': {
             'and':[''],
             'or':['ccpa'],
             'not':[],
+            'type': 'gen'
         },
         'MRMS': {
             'and':[''],
             'or':['mrms'],
             'not':[],
+            'type': 'gen'
         },
         'NAM Nest Forecast': {
             'and':['nam', 'nest'],
             'or':[''],
             'not':[],
+            'type': 'fcst'
         },
         'HRRR Forecast': {
             'and':['hrrr'],
             'or':[''],
             'not':[],
+            'type': 'fcst'
         },
         'HiRes Window ARW Forecast': {
             'and':['hiresw','arw'],
             'or':[''],
             'not':['mem2'],
+            'type': 'fcst'
         },
         'HiRes Window ARW2 Forecast': {
             'and':['hiresw','arw','mem2'],
             'or':[''],
             'not':[],
+            'type': 'fcst'
         },
         'HiRes Window FV3 Forecast': {
             'and':['hiresw','fv3'],
             'or':[''],
             'not':[],
+            'type': 'fcst'
         },
     }
     for k in data_type_dict:
@@ -98,9 +110,10 @@ def get_data_type(fname):
     ]
     if len(data_names) == 1:
         data_name = data_names[0]
+        return data_name, data_type_dict[data_name]['type']
     else:
-        data_name = "Unknown Data Type"
-    return data_name
+        data_name = "Unknown"
+        return data_name, 'unk'
 
 def get_all_eval_periods(graphics):
     all_eval_periods = []
