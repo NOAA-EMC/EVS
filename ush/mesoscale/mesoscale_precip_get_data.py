@@ -1,15 +1,13 @@
 '''
-Name: mesoscale_precip_prep.py
+Name: mesoscale_precip_get_data.py
 Contact(s): Mallory Row
-Abstract: 
+Abstract: This gather model and observation data files
 '''
 
 import os
 import datetime
-import glob
 import shutil
-import sys
-import datetime
+import mesoscale_util as m_util
 
 print(f"BEGIN: {os.path.basename(__file__)}")
 
@@ -34,153 +32,6 @@ jobid = os.environ['jobid']
 
 mail_cmd = 'mail -s "$subject" $maillist'
 
-def check_file(file_path):
-    """! Check file exists and not zero size
-         Args:
-             file_path - full path to file (string)
-         Returns:
-             file_good - full call to METplus (boolean)
-    """
-    if os.path.exists(file_path):
-        if os.path.getsize(file_path) > 0:
-            file_good = True
-        else:
-            file_good = False
-    else:
-        file_good = False
-    return file_good
-
-def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
-                  forecast_hour, str_sub_dict):
-    """! Creates a filled file path from a format
-         Args:
-             unfilled_file_format - file naming convention (string)
-             valid_time_dt        - valid time (datetime)
-             init_time_dt         - initialization time (datetime)
-             forecast_hour        - forecast hour (string)
-             str_sub_dict         - other strings to substitue (dictionary)
-         Returns:
-             filled_file_format - file_format filled in with verifying
-                                  time information (string)
-    """
-    filled_file_format = '/'
-    format_opt_list = ['lead', 'lead_shift', 'valid', 'valid_shift',
-                       'init', 'init_shift', 'cycle']
-    if len(list(str_sub_dict.keys())) != 0:
-        format_opt_list = format_opt_list+list(str_sub_dict.keys())
-    for filled_file_format_chunk in unfilled_file_format.split('/'):
-        for format_opt in format_opt_list:
-            nformat_opt = (
-                filled_file_format_chunk.count('{'+format_opt+'?fmt=')
-            )
-            if nformat_opt > 0:
-               format_opt_count = 1
-               while format_opt_count <= nformat_opt:
-                   if format_opt in ['lead_shift', 'valid_shift',
-                                     'init_shift']:
-                       shift = (filled_file_format_chunk \
-                                .partition('shift=')[2] \
-                                .partition('}')[0])
-                       format_opt_count_fmt = (
-                           filled_file_format_chunk \
-                           .partition('{'+format_opt+'?fmt=')[2] \
-                           .rpartition('?')[0]
-                       )
-                   else:
-                       format_opt_count_fmt = (
-                           filled_file_format_chunk \
-                           .partition('{'+format_opt+'?fmt=')[2] \
-                           .partition('}')[0]
-                       )
-                   if format_opt == 'valid':
-                       replace_format_opt_count = valid_time_dt.strftime(
-                           format_opt_count_fmt
-                       )
-                   elif format_opt == 'lead':
-                       if format_opt_count_fmt == '%1H':
-                           if int(forecast_hour) < 10:
-                               replace_format_opt_count = forecast_hour[1]
-                           else:
-                               replace_format_opt_count = forecast_hour
-                       elif format_opt_count_fmt == '%2H':
-                           replace_format_opt_count = forecast_hour.zfill(2)
-                       elif format_opt_count_fmt == '%3H':
-                           replace_format_opt_count = forecast_hour.zfill(3)
-                       else:
-                           replace_format_opt_count = forecast_hour
-                   elif format_opt == 'init':
-                       replace_format_opt_count = init_time_dt.strftime(
-                           format_opt_count_fmt
-                       )
-                   elif format_opt == 'cycle':
-                       replace_format_opt_count = init_time_dt.strftime(
-                           format_opt_count_fmt
-                       ) 
-                   elif format_opt == 'lead_shift':
-                       shift = (filled_file_format_chunk.partition('shift=')[2]\
-                                .partition('}')[0])
-                       forecast_hour_shift = str(int(forecast_hour)
-                                                 + int(shift))
-                       if format_opt_count_fmt == '%1H':
-                           if int(forecast_hour_shift) < 10:
-                               replace_format_opt_count = (
-                                   forecast_hour_shift[1]
-                               )
-                           else:
-                               replace_format_opt_count = forecast_hour_shift
-                       elif format_opt_count_fmt == '%2H':
-                           replace_format_opt_count = (
-                               forecast_hour_shift.zfill(2)
-                           )
-                       elif format_opt_count_fmt == '%3H':
-                           replace_format_opt_count = (
-                               forecast_hour_shift.zfill(3)
-                           )
-                       else:
-                           replace_format_opt_count = forecast_hour_shift
-                   elif format_opt == 'init_shift':
-                       shift = (filled_file_format_chunk.partition('shift=')[2]\
-                                .partition('}')[0])
-                       init_shift_time_dt = (
-                           init_time_dt + datetime.timedelta(hours=int(shift))
-                       )
-                       replace_format_opt_count = init_shift_time_dt.strftime(
-                           format_opt_count_fmt
-                       )
-                   elif format_opt == 'valid_shift':
-                       shift = (filled_file_format_chunk.partition('shift=')[2]\
-                                .partition('}')[0])
-                       valid_shift_time_dt = (
-                           valid_time_dt + datetime.timedelta(hours=int(shift))
-                       )
-                       replace_format_opt_count = valid_shift_time_dt.strftime(
-                           format_opt_count_fmt
-                       )
-                   else:
-                       replace_format_opt_count = str_sub_dict[format_opt]
-                   if format_opt in ['lead_shift', 'valid_shift', 'init_shift']:
-                       filled_file_format_chunk = (
-                           filled_file_format_chunk.replace(
-                               '{'+format_opt+'?fmt='
-                               +format_opt_count_fmt
-                               +'?shift='+shift+'}',
-                               replace_format_opt_count
-                           )
-                       )
-                   else:
-                       filled_file_format_chunk = (
-                           filled_file_format_chunk.replace(
-                               '{'+format_opt+'?fmt='
-                               +format_opt_count_fmt+'}',
-                               replace_format_opt_count
-                           )
-                       )
-                   format_opt_count+=1
-        filled_file_format = os.path.join(filled_file_format,
-                                          filled_file_format_chunk)
-    return filled_file_format
-
-VHOUR_LIST=['12']
 for VHOUR in VHOUR_LIST:
     # What accumulations stats will be run for
     accum_list = ['01']
@@ -218,11 +69,11 @@ for VHOUR in VHOUR_LIST:
                     model_file_pairs_for_accum_list = []
                     if MODELNAME == 'nam':
                         if accum == '01':
-                            COMINmodel_file = format_filler(
+                            COMINmodel_file = m_util.format_filler(
                                 COMINmodel_file_template, valid_dt, init_dt,
                                 str(fhr), {}
                             )
-                            DATAmodel_file = format_filler(
+                            DATAmodel_file = m_util.format_filler(
                                 DATAmodel_file_template, valid_dt, init_dt,
                                 str(fhr), {}
                             )
@@ -234,11 +85,11 @@ for VHOUR in VHOUR_LIST:
                             else:
                                 precip_bucket = 3
                             if fhr % precip_bucket != 1 and fhr-1 >=0:
-                                COMINmodel_file = format_filler(
+                                COMINmodel_file = m_util.format_filler(
                                     COMINmodel_file_template, valid_dt,
                                     init_dt, str(fhr-1), {}
                                 )
-                                DATAmodel_file = format_filler(
+                                DATAmodel_file = m_util.format_filler(
                                     DATAmodel_file_template, valid_dt, init_dt,
                                     str(fhr-1), {}
                                 )
@@ -251,11 +102,11 @@ for VHOUR in VHOUR_LIST:
                             while nfile <= nfiles_in_accum:
                                 nfile_fhr = fhr - ((nfile-1)*3)
                                 if nfile_fhr >= 0:
-                                    COMINmodel_file = format_filler(
+                                    COMINmodel_file = m_util.format_filler(
                                         COMINmodel_file_template, valid_dt,
                                         init_dt, str(nfile_fhr), {}
                                     )
-                                    DATAmodel_file = format_filler(
+                                    DATAmodel_file = m_util.format_filler(
                                         DATAmodel_file_template, valid_dt, init_dt,
                                         str(nfile_fhr), {}
                                     )
@@ -265,11 +116,11 @@ for VHOUR in VHOUR_LIST:
                                 nfile+=1
                     else:
                         # Assuming continuous precip buckets
-                        COMINmodel_file = format_filler(
+                        COMINmodel_file = m_util.format_filler(
                             COMINmodel_file_template, valid_dt, init_dt,
                             str(fhr), {}
                         )
-                        DATAmodel_file = format_filler(
+                        DATAmodel_file = m_util.format_filler(
                             DATAmodel_file_template, valid_dt, init_dt,
                             str(fhr), {}
                         )
@@ -277,11 +128,11 @@ for VHOUR in VHOUR_LIST:
                             (COMINmodel_file, DATAmodel_file)
                         )
                         if fhr - int(accum) >= 0:
-                            COMINmodel_file = format_filler(
+                            COMINmodel_file = m_util.format_filler(
                                 COMINmodel_file_template, valid_dt, init_dt,
                                 str(fhr - int(accum)), {}
                             )
-                            DATAmodel_file = format_filler(
+                            DATAmodel_file = m_util.format_filler(
                                 DATAmodel_file_template, valid_dt, init_dt,
                                 str(fhr - int(accum)), {}
                             )
@@ -292,7 +143,7 @@ for VHOUR in VHOUR_LIST:
                         COMINmodel_file = model_file_pair[0]
                         DATAmodel_file = model_file_pair[1]
                         if not os.path.exists(DATAmodel_file):
-                            if check_file(COMINmodel_file):
+                            if m_util.check_file(COMINmodel_file):
                                 print(f"Linking {COMINmodel_file} to "
                                       +f"{DATAmodel_file}")
                                 os.symlink(COMINmodel_file, DATAmodel_file)
@@ -391,7 +242,7 @@ for VHOUR in VHOUR_LIST:
                 DATAccpa, f"ccpa.accum{ccpa_file_accum}hr."
                 +f"v{ccpa_file_dt_in_accum:%Y%m%d%H}"
             )
-            if check_file(COMINccpa_file):
+            if m_util.check_file(COMINccpa_file):
                 print(f"Linking {COMINccpa_file} to {DATAccpa_file}")
                 os.symlink(COMINccpa_file, DATAccpa_file)
             else:
@@ -445,7 +296,7 @@ for VHOUR in VHOUR_LIST:
                  f"MultiSensor_QPE_{accum}H_Pass2_00.00_"
                 +f"{accum_end_dt:%Y%m%d}-{accum_end_dt:%H}0000.grib2.gz"
             )
-            if check_file(COMINmrms_gzfile):
+            if m_util.check_file(COMINmrms_gzfile):
                 DATAmrms_gzfile = os.path.join(
                     DATAmrms, COMINmrms_gzfile.rpartition('/')[2]
                 )
