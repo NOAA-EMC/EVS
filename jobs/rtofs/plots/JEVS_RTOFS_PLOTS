@@ -19,6 +19,8 @@ export COMOUTfinal=${COMOUTfinal:-$COMOUT/stats/$COMPONENT/$COMPONENT.$VDATE}
 export COMOUTplots=${COMOUTplots:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
 export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
 
+mkdir -p $COMOUTplots
+
 # make plots; run scripts for each RUN;
 # RUN is the validation source: ghrsst, smos, smap etc.
 for rcase in ghrsst smos smap aviso ndbc; do
