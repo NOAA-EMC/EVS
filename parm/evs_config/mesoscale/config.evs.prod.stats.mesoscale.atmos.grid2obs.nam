@@ -76,9 +76,9 @@ else
     export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G240_CONUS.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_South.nc"
     export MASK_CUSTOM_LIST=""
     export MIN_IHOUR="00"
-    export FHR_END_FULL="48"
+    export FHR_END_FULL="84"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="18"
+    export FHR_END_SHORT="21"
     export FHR_INCR_SHORT="01"
   
   elif [ "$NEST" = "subreg" ]; then 
@@ -99,9 +99,9 @@ else
     export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G218_Appalachia.nc, ${FIXevs}/masks/Bukovsky_G218_CPlains.nc, ${FIXevs}/masks/Bukovsky_G218_DeepSouth.nc, ${FIXevs}/masks/Bukovsky_G218_GreatBasin.nc, ${FIXevs}/masks/Bukovsky_G218_GreatLakes.nc, ${FIXevs}/masks/Bukovsky_G218_Mezquital.nc, ${FIXevs}/masks/Bukovsky_G218_MidAtlantic.nc, ${FIXevs}/masks/Bukovsky_G218_NorthAtlantic.nc, ${FIXevs}/masks/Bukovsky_G218_NPlains.nc, ${FIXevs}/masks/Bukovsky_G218_NRockies.nc, ${FIXevs}/masks/Bukovsky_G218_PacificNW.nc, ${FIXevs}/masks/Bukovsky_G218_PacificSW.nc, ${FIXevs}/masks/Bukovsky_G218_Prairie.nc, ${FIXevs}/masks/Bukovsky_G218_Southeast.nc, ${FIXevs}/masks/Bukovsky_G218_SPlains.nc, ${FIXevs}/masks/Bukovsky_G218_SRockies.nc"
     export MASK_CUSTOM_LIST=""
     export MIN_IHOUR="00"
-    export FHR_END_FULL="48"
+    export FHR_END_FULL="84"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="18"
+    export FHR_END_SHORT="21"
     export FHR_INCR_SHORT="01"
   
   elif [ "$NEST" = "ak" ]; then
@@ -122,9 +122,9 @@ else
     export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc"
     export MASK_CUSTOM_LIST=""
     export MIN_IHOUR="00"
-    export FHR_END_FULL="48"
+    export FHR_END_FULL="84"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="18"
+    export FHR_END_SHORT="21"
     export FHR_INCR_SHORT="03"
 
   elif [ "$NEST" = "spc_otlk" ]; then
@@ -145,9 +145,9 @@ else
     export GRID_POLY_LIST="${FIXevs}/masks/Bukovsky_G240_CONUS.nc"
     export NEST_INPUT_TEMPLATE=""
     export MIN_IHOUR="00"
-    export FHR_END_FULL="48"
+    export FHR_END_FULL="84"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="18"
+    export FHR_END_SHORT="21"
     export FHR_INCR_SHORT="01"
   else
     echo "The provided NEST, $NEST, is not supported for $MODELNAME"
