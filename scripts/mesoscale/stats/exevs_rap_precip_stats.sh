@@ -27,12 +27,13 @@ mkdir -p $DATA/data
 mkdir -p $DATA/tmp
 mkdir -p $DATA/jobs
 mkdir -p $DATA/${MODELNAME}.${VDATE}
+mkdir -p $DATA/${RUN}.${VDATE}/$MODELNAME/$VERIF_CASE
 
 # Get RAP, MRMS, and CCPA data
-python $USHevs/mesoscale/mesoscale_precip_get_data.py
+python $USHevs/mesoscale/mesoscale_precip_stats_get_data.py
 status=$?
 [[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Succesfully ran mesoscale_precip_get_data.py"
+[[ $status -eq 0 ]] && echo "Succesfully ran mesoscale_precip_stats_get_data.py"
 
 # Send for missing files
 export maillist=${maillist:-'geoffrey.manikin@noaa.gov,mallory.row@noaa.gov'}
@@ -52,10 +53,10 @@ done
 #    export JOB_GROUP=$group
 #    mkdir -p $DATA/jobs/$JOB_GROUP
 #    echo "Creating and running jobs for precip stats: ${JOB_GROUP}"
-#    python $USHevs/mesoscale/mesoscale_precip_get_data_create_job_scripts.py
+#    python $USHevs/mesoscale/mesoscale_precip_stats_create_job_scripts.py
 #    status=$?
 #    [[ $status -ne 0 ]] && exit $status
-#    [[ $status -eq 0 ]] && echo "Succesfully ran mesoscale_precip_get_data_create_job_scripts.py"
+#    [[ $status -eq 0 ]] && echo "Succesfully ran mesoscale_precip_stats_create_job_scripts.py"
 #done
 
 # Copy output files into the correct EVS COMOUT directory
