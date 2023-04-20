@@ -57,7 +57,8 @@ for VHOUR in VHOUR_LIST:
         for area in ['CONUS', 'AK']:
             COMINmodel_file_template = os.environ[f"{area}_MODEL_INPUT_TEMPLATE"]
             DATAmodel_file_template = os.path.join(
-                DATAmodel, MODELNAME+'.{init?fmt=%Y%m%d%H}.f{lead?fmt=%3H}'
+                DATAmodel, MODELNAME+'.'+area.lower()+'.{init?fmt=%Y%m%d%H}.'
+                +'f{lead?fmt=%3H}'
             )
             for fhr in fhrs:
                 init_dt = valid_dt - datetime.timedelta(hours=fhr)
