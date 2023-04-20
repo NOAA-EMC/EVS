@@ -4,7 +4,8 @@ mkdir -p $DATA/logs
 mkdir -p $DATA/stat
 
 export OBSDIR=OBS
-export modnam=cs
+export dirnam=aqm
+export gridspec=793
 export fcstmax=72
 
 export MASK_DIR=/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix
@@ -61,30 +62,27 @@ do
 
 # check to see that model files exist, and list which forecast hours are to be used
 
-    fhr=0
+    let ihr=0
     numo3fcst=0
     numpmfcst=0
-    while [ $fhr -le $fcstmax ]
+    while [ ${ihr} -le $fcstmax ]
     do
-      if [ $fhr -lt 10 ]
-      then
-        fhr=0$fhr
-      fi
+      fhr=`printf %3.3d ${ihr}`
       export fhr
 
       export datehr=${VDATE}${cyc}
-      adate=`$NDATE -$fhr $datehr`
+      adate=`$NDATE -${ihr} $datehr`
       aday=`echo $adate |cut -c1-8`
       acyc=`echo $adate |cut -c9-10`
       if [ $acyc = 06 -o $acyc = 12 ]
       then
-      if [ -e $COMINaqm/cs.${aday}/aqm.t${acyc}z.awpozcon${bctag}.f${fhr}.148.grib2 ]
+      if [ -e $COMINaqm/${dirname}.${aday}/${acyc}/aqm.t${acyc}z.awpozcon${bctag}.f${fhr}.${gridspec}.grib2 ]
       then
         echo "$fhr found"
         echo $fhr >> $DATA/fcstlist_o3
         let "numo3fcst=numo3fcst+1"
       fi 
-      if [ -e $COMINaqm/cs.${aday}/aqm.t${acyc}z.pm25${bctag}.f${fhr}.148.grib2 ]
+      if [ -e $COMINaqm/${dirname}.${aday}/${acyc}/aqm.t${acyc}z.pm25${bctag}.f${fhr}.${gridspec}.grib2 ]
       then
         echo "$fhr found"
         echo $fhr >> $DATA/fcstlist_pm
@@ -92,7 +90,7 @@ do
       fi
 
       fi
-      let "fhr=fhr+1"
+      ((ihr++))
     done
     export fcsthours_o3=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcstlist_o3`
     export fcsthours_pm=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcstlist_pm`
@@ -180,15 +178,15 @@ then
 
       ozmax8=0
       ozobs2=0
-      if [ -e $COMINaqmproc/atmos.${VDATE}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.148.grib2 ]
+      if [ -e $COMINaqmproc/atmos.${VDATE}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 ]
       then
         ozmax8=1
       fi
-      if [ -e $COMINaqmproc/atmos.${PDYm4}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.148.grib2 ]
+      if [ -e $COMINaqmproc/atmos.${PDYm4}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 ]
       then
        let "ozmax8=ozmax8+1"
       fi
-      if [ -e $COMINaqmproc/atmos.${PDYm5}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.148.grib2 ]
+      if [ -e $COMINaqmproc/atmos.${PDYm5}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 ]
       then
         let "ozmax8=ozmax8+1"
       fi
@@ -250,15 +248,15 @@ then
 
       pmave1=0
       pmobs2=0
-      if [ -e $COMINaqm/cs.${VDATE}/aqm.t${hour}z.ave_24hr_pm25${bctag}.148.grib2 ]
+      if [ -e $COMINaqm/${dirname}.${VDATE}/${hour}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2 ]
       then
         pmave1=1
       fi
-      if [ -e $COMINaqm/cs.${PDYm4}/aqm.t${hour}z.ave_24hr_pm25${bctag}.148.grib2 ]
+      if [ -e $COMINaqm/${dirname}.${PDYm4}/${hour}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2 ]
       then
        let "pmave1=pmave1+1" 
       fi
-      if [ -e $COMINaqm/cs.${PDYm5}/aqm.t${hour}z.ave_24hr_pm25${bctag}.148.grib2 ]
+      if [ -e $COMINaqm/${dirname}.${PDYm5}/${hour}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2 ]
       then
         let "pmave1=pmave1+1"
       fi
