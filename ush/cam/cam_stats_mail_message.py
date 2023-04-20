@@ -149,7 +149,7 @@ else:
                 DATAsubj = ', '.join(unk_names)
             subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
             DATAmsg_head = (f"Warning: Some unrecognized data were unavailable"
-                            + f" for valid date {VDATE}{CYC}.")
+                            + f" for valid date {VDATE} and cycle {CYC}Z.")
             if len(unk_fnames) > max_num_files:
                 DATAmsg_body1 = (f"\nMissing files are: (showing"
                             + f" {max_num_files} of"
@@ -181,7 +181,7 @@ else:
                 DATAsubj = ', '.join(gen_names)
             subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
             DATAmsg_head = (f"Warning: No {DATAsubj} data were available"
-                            + f" for valid date {VDATE}{CYC}.")
+                            + f" for valid date {VDATE} and cycle {CYC}Z.")
             if len(gen_fnames) > max_num_files:
                 DATAmsg_body1 = (f"\nMissing files are: (showing"
                             + f" {max_num_files} of"
@@ -213,7 +213,7 @@ else:
                 DATAsubj = ', '.join(anl_names)
             subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
             DATAmsg_head = (f"Warning: No {DATAsubj} data were available"
-                            + f" for valid date {VDATE}{CYC}.")
+                            + f" for valid date {VDATE} and cycle {CYC}Z.")
             if len(anl_fnames) > max_num_files:
                 DATAmsg_body1 = (f"\nMissing files are: (showing"
                             + f" {max_num_files} of"
@@ -247,7 +247,8 @@ else:
                 re.search('f(\d+)', fcst_fname) for fcst_fname in fcst_fnames
             ]
             lead_hours = [
-                str(int(match.group(1))).zfill(3) for match in lead_hour_matches if match
+                str(int(match.group(1))).zfill(3) 
+                for match in lead_hour_matches if match
             ]
             lead_hours = np.unique(lead_hours)
             if lead_hours:
@@ -255,13 +256,16 @@ else:
                     subject = (f"F{lead_hours[0]} {DATAsubj} Data Missing for"
                                + f" EVS {COMPONENT}")
                     DATAmsg_head = (f"Warning: No {DATAsubj} data were"
-                                    + f" available for valid date {VDATE}{CYC}"
-                                    + f" f{lead_hours[0]}.")
+                                    + f" available for valid date {VDATE},"
+                                    + f" cycle {CYC}Z, and f{lead_hours[0]}.")
                 else:
-                    lead_string = ', '.join([f'f{lead}' for lead in lead_hours])
+                    lead_string = ', '.join(
+                        [f'f{lead}' for lead in lead_hours]
+                    )
                     subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
-                    DATAmsg_head = (f"Warning: No {DATAsubj} data were available"
-                                + f" for valid date {VDATE}{CYC} {lead_string}.")
+                    DATAmsg_head = (f"Warning: No {DATAsubj} data were"
+                                    + f" available for valid date {VDATE},"
+                                    + f" cycle {CYC}Z, and {lead_string}.")
             if len(fcst_fnames) > max_num_files:
                 DATAmsg_body1 = (f"\nMissing files are: (showing"
                             + f" {max_num_files} of"
