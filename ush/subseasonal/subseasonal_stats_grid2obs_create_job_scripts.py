@@ -396,6 +396,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         if verif_type == 'PrepBufr':
                             job_env_dict['grid'] = 'G003'
                             mask_list = [
+                                'G003_GLOBAL',
                                 'Bukovsky_G003_CONUS',
                                 'Hawaii_G003',
                                 'Alaska_G003'
