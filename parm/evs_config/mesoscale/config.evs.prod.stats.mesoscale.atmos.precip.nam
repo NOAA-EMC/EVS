@@ -12,13 +12,13 @@
 echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 
 # METplus Settings
-export MET_PLUS_OUT=${DATA}/${VERIF_CASE}/METplus_output
+#export MET_PLUS_OUT=${DATA}/${VERIF_CASE}/METplus_output
 #export MET_PLUS_OUT=${DATAROOTtmp}/${VERIF_CASE}/METplus_output
 export MET_CONFIG_OVERRIDES=""
 
 # Logging
 export METPLUS_VERBOSITY="DEBUG"
-export MET_VERBOSITY="5"
+export MET_VERBOSITY="2"
 export LOG_MET_OUTPUT_TO_METPLUS="yes"
 
 # Time Settings

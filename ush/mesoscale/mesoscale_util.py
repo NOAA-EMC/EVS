@@ -6,6 +6,7 @@ Abstract: Utilities for mesoscale component
 
 import os
 import datetime
+import sys
 
 def check_file(file_path):
     """! Check file exists and not zero size
@@ -152,3 +153,204 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
         filled_file_format = os.path.join(filled_file_format,
                                           filled_file_format_chunk)
     return filled_file_format
+
+def initalize_job_env_dict():
+    """! This initializes a dictionary of environment variables and their
+         values to be set for the job pulling from environment variables
+         already set previously
+         Args:
+
+         Returns:
+             job_env_dict - dictionary of job settings
+    """
+    os.environ['MET_TMP_DIR'] = os.path.join(os.environ['DATA'], 'tmp')
+    job_env_var_list = [
+        'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA',
+        'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'evs_run_mode',
+        'COMROOT', 'COMIN', 'COMOUT', 'COMOUTsmall', 'COMOUTfinal',
+        'METPLUS_PATH','LOG_MET_OUTPUT_TO_METPLUS', 'METPLUS_VERBOSITY',
+        'MET_ROOT', 'MET_bin_exec', 'MET_VERBOSITY',
+        'MET_TMP_DIR', 'MODELNAME', 'JOB_GROUP'
+    ]
+    job_env_dict = {}
+    for env_var in job_env_var_list:
+        job_env_dict[env_var] = os.environ[env_var]
+        if env_var in ['LOG_MET_OUTPUT_TO_METPLUS',
+                       'METPLUS_VERBOSITY', 'MET_VERBOSITY']:
+            job_env_dict[env_var.lower()] = os.environ[env_var]
+    return job_env_dict
+
+def metplus_command(conf_file_name):
+    """! Write out full call to METplus
+         Args:
+             conf_file_name - METplus conf file name (string)
+         Returns:
+             metplus_cmd - full call to METplus (string)
+    """
+    run_metplus = os.path.join(os.environ['METPLUS_PATH'], 'ush',
+                               'run_metplus.py')
+    machine_conf = os.path.join(os.environ['PARMevs'], 'metplus_config',
+                                'machine.conf')
+    conf_file = os.path.join(os.environ['PARMevs'], 'metplus_config',
+                             os.environ['COMPONENT'], os.environ['VERIF_CASE'],
+                             os.environ['STEP'], conf_file_name)
+    if not os.path.exists(conf_file):
+        print("ERROR: "+conf_file+" DOES NOT EXIST")
+        sys.exit(1)
+    metplus_cmd = run_metplus+' -c '+machine_conf+' -c '+conf_file
+    return metplus_cmd
+
+def precip_check_obs_input_COMOUT_files(job_dict):
+    """! Check precip observation input and COMOUT files
+         Args:
+             job_dict - job dictionary
+         Returns:
+             all_input_file_exist  - if all expected
+                                     input files exist
+                                     (boolean)
+             input_files_list      - list of input files
+                                     (strings)
+             all_COMOUT_file_exist - if all expected
+                                     output COMOUT files
+                                     exist (boolean)
+             COMOUT_files_list     - list of output COMOUT
+                                     files (strings)
+    """
+    valid_date_dt = datetime.datetime.strptime(
+        job_dict['DATE']+job_dict['valid_hour_start'],
+        '%Y%m%d%H'
+    )
+    # Expected input file
+    input_files_list = []
+    if job_dict['JOB_GROUP'] == 'assemble_data':
+        if job_dict['job_name'] == '24hrCCPA':
+            nccpa_files = 4
+            n = 1
+            while n <= 4:
+                nccpa_file = os.path.join(
+                    job_dict['DATA'], 'data', 'ccpa', 'ccpa.accum06hr.v'
+                    +(valid_date_dt-datetime.timedelta(hours=(n-1)*6))\
+                    .strftime('%Y%m%d%H')
+                )
+                input_files_list.append(nccpa_file)
+                n+=1
+    input_files_exist_list = []
+    for input_file in input_files_list:
+        if check_file(input_file):
+            input_files_exist_list.append(True)
+        else:
+            input_files_exist_list.append(False)
+    if all(x == True for x in input_files_exist_list) \
+            and len(input_files_exist_list) > 0:
+        all_input_file_exist = True
+    else:
+        all_input_file_exist = False
+    # Expected output files (in COMOUT)
+    COMOUT_files_list = []
+    if job_dict['JOB_GROUP'] == 'assemble_data':
+        if job_dict['job_name'] == '24hrCCPA':
+            COMOUT_files_list.append(
+                os.path.join(job_dict['COMOUTsmall'],
+                             f"pcp_combine_ccpa_accum24hr_valid"
+                             +f"{valid_date_dt:%Y%m%d%H}.nc")
+            )
+    COMOUT_files_exist_list = []
+    for COMOUT_file in COMOUT_files_list:
+        if check_file(COMOUT_file):
+            COMOUT_files_exist_list.append(True)
+        else:
+            COMOUT_files_exist_list.append(False)
+    if all(x == True for x in COMOUT_files_exist_list) \
+            and len(COMOUT_files_exist_list) > 0:
+        all_COMOUT_file_exist = True
+    else:
+        all_COMOUT_file_exist = False
+    return (all_input_file_exist, input_files_list, \
+            all_COMOUT_file_exist, COMOUT_files_list)
+
+
+def precip_check_model_input_COMOUT_files(job_dict):
+    """! Check precip model input and COMOUT files
+         Args:
+             job_dict - job dictionary
+         Returns:
+             all_input_file_exist  - if all expected
+                                     input files exist
+                                     (boolean)
+             input_files_list      - list of input files
+                                     (strings)
+             all_COMOUT_file_exist - if all expected
+                                     output COMOUT files
+                                     exist (boolean)
+             COMOUT_files_list     - list of output COMOUT
+                                     files (strings)
+    """
+    valid_date_dt = datetime.datetime.strptime(
+        job_dict['DATE']+job_dict['valid_hour_start'],
+        '%Y%m%d%H'
+    )
+    init_date_dt = (valid_date_dt
+                    - datetime.timedelta(hours=int(job_dict['fcst_hour'])))
+    # Expected input file
+    input_files_list = []
+    if job_dict['JOB_GROUP'] == 'assemble_data':
+        if job_dict['pcp_combine_method'] == 'SUBTRACT':
+            for fhr in [job_dict['fcst_hour'],
+                        str(int(job_dict['fcst_hour'])
+                            - int(job_dict['accum']))]:
+                input_files_list.append(
+                    os.path.join(job_dict['DATA'], 'data',
+                                 job_dict['MODELNAME'],
+                                 f"{job_dict['MODELNAME']}."
+                                 +f"{job_dict['area']}."
+                                 +f"init{init_date_dt:%Y%m%d%H}."
+                                 +f"f{fhr.zfill(3)}")
+                )
+        elif job_dict['pcp_combine_method'] == 'SUM':
+            naccum_files = int(job_dict['accum'])/int(job_dict['input_accum'])
+            n = 1 
+            while n <= naccum_files:
+                naccum_file = os.path.join(
+                    job_dict['DATA'], 'data', job_dict['MODELNAME'],
+                    f"{job_dict['MODELNAME']}.{job_dict['area']}."
+                    +f"init{init_date_dt:%Y%m%d%H}.f"
+                    +str(int(job_dict['fcst_hour'])
+                         -((n-1)*int(job_dict['input_accum']))).zfill(3)
+                )
+                input_files_list.append(naccum_file)
+                n+=1
+    input_files_exist_list = []
+    for input_file in input_files_list:
+        if check_file(input_file):
+            input_files_exist_list.append(True)
+        else:
+            input_files_exist_list.append(False)
+    if all(x == True for x in input_files_exist_list) \
+            and len(input_files_exist_list) > 0:
+        all_input_file_exist = True
+    else:
+        all_input_file_exist = False
+    # Expected output files (in COMOUT)
+    COMOUT_files_list = []
+    if job_dict['JOB_GROUP'] == 'assemble_data':
+        COMOUT_files_list.append(
+            os.path.join(job_dict['COMOUTsmall'],
+                         f"pcp_combine_{job_dict['MODELNAME']}_"
+                         +f"accum{job_dict['accum']}hr_"
+                         +f"{job_dict['area']}_"
+                         +f"init{init_date_dt:%Y%m%d%H}_"
+                         +f"fhr{job_dict['fcst_hour'].zfill(3)}.nc")
+        )
+    COMOUT_files_exist_list = []
+    for COMOUT_file in COMOUT_files_list:
+        if check_file(COMOUT_file):
+            COMOUT_files_exist_list.append(True)
+        else:
+            COMOUT_files_exist_list.append(False)
+    if all(x == True for x in COMOUT_files_exist_list) \
+            and len(COMOUT_files_exist_list) > 0:
+        all_COMOUT_file_exist = True
+    else:
+        all_COMOUT_file_exist = False
+    return (all_input_file_exist, input_files_list, \
+            all_COMOUT_file_exist, COMOUT_files_list)

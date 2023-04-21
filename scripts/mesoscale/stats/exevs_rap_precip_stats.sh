@@ -36,28 +36,58 @@ status=$?
 [[ $status -eq 0 ]] && echo "Succesfully ran mesoscale_precip_stats_get_data.py"
 
 # Send for missing files
-export maillist=${maillist:-'geoffrey.manikin@noaa.gov,mallory.row@noaa.gov'}
-for FILE in $DATA/mail_*; do
-    $FILE
-done
-
-# What jobs to run
-#if [ $cyc = 23 ]; then
-#    JOB_GROUP_list="assemble_data generate_stats gather_stats"
-#else
-#    JOB_GROUP_list="assemble_data generate_stats"
+#export maillist=${maillist:-'geoffrey.manikin@noaa.gov,mallory.row@noaa.gov'}
+#if ls ${DATA}/mail_** 1> /dev/null 2>&1; then
+#    for FILE in $DATA/mail_*; do
+#        $FILE
+#    done
 #fi
 
+# What jobs to run
+if [ $cyc = 23 ]; then
+    JOB_GROUP_list="assemble_data generate_stats gather_stats"
+else
+    JOB_GROUP_list="assemble_data generate_stats"
+fi
+
 # Create and run job scripts
-#for group in $JOB_GROUP_list; do
-#    export JOB_GROUP=$group
-#    mkdir -p $DATA/jobs/$JOB_GROUP
-#    echo "Creating and running jobs for precip stats: ${JOB_GROUP}"
-#    python $USHevs/mesoscale/mesoscale_precip_stats_create_job_scripts.py
-#    status=$?
-#    [[ $status -ne 0 ]] && exit $status
-#    [[ $status -eq 0 ]] && echo "Succesfully ran mesoscale_precip_stats_create_job_scripts.py"
-#done
+for group in $JOB_GROUP_list; do
+    export JOB_GROUP=$group
+    mkdir -p $DATA/jobs/$JOB_GROUP
+    echo "Creating and running jobs for precip stats: ${JOB_GROUP}"
+    python $USHevs/mesoscale/mesoscale_precip_stats_create_job_scripts.py
+    status=$?
+    [[ $status -ne 0 ]] && exit $status
+    [[ $status -eq 0 ]] && echo "Succesfully ran mesoscale_precip_stats_create_job_scripts.py"
+    chmod u+x jobs/$JOB_GROUP/*
+    group_ncount_job=$(ls -l jobs/$JOB_GROUP/job* |wc -l)
+    nc=1
+    if [ $USE_CFP = YES ]; then
+        group_ncount_poe=$(ls -l jobs/$JOB_GROUP/poe* |wc -l)
+        while [ $nc -le $group_ncount_poe ]; do
+            poe_script=$DATA/jobs/$JOB_GROUP/poe_jobs${nc}
+            chmod 775 $poe_script
+            export MP_PGMMODEL=mpmd
+            export MP_CMDFILE=${poe_script}
+            if [ $machine = WCOSS2 ]; then
+                export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
+                nselect=$(cat $PBS_NODEFILE | wc -l)
+                nnp=$(($nselect * $nproc))
+                launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+            elif [ $machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
+                export SLURM_KILL_BAD_EXIT=0
+                launcher="srun --export=ALL --multi-prog"
+            fi
+            $launcher $MP_CMDFILE
+            nc=$((nc+1))
+        done
+    else
+        while [ $nc -le $group_ncount_job ]; do
+            sh +x $DATA/jobs/$JOB_GROUP/job${nc}
+            nc=$((nc+1))
+        done
+    fi
+done
 
 # Copy output files into the correct EVS COMOUT directory
 #  if [ $SENDCOM = YES ]; then
