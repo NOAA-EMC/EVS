@@ -113,10 +113,11 @@ for DAY in range(1,4):
 
                         print(f'Processing Record Number #{REC}: {NAME}')
 
-                        MASK_FNAME = f'spc_otlk.day{DAY}_{OTLK}_{NAME}.v{V1DATE}-{V2DATE}.{VERIF_GRID}'
                         if DAY == 3:
+                            MASK_FNAME = f'spc_otlk.day{DAY}_{NAME}.v{V1DATE}-{V2DATE}.{VERIF_GRID}'
                             MASK_NAME = f"DAY{DAY}_{NAME}"
                         else:
+                            MASK_FNAME = f'spc_otlk.day{DAY}_{OTLK}_{NAME}.v{V1DATE}-{V2DATE}.{VERIF_GRID}'
                             MASK_NAME = f"DAY{DAY}_{OTLK}_{NAME}"
 
                         os.environ['VERIF_GRID'] = VERIF_GRID
