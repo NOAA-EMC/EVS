@@ -25,24 +25,21 @@ COMPONENT = os.environ['COMPONENT']
 VERIF_TYPE = os.environ['VERIF_TYPE']
 job_name = os.environ['job_name']
 MODEL = os.environ['MODEL']
+START = os.environ['START']
 DATE = os.environ['DATE']
-valid_hr_start = '06'
 valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
 valid_hr_inc = os.environ['valid_hr_inc']
-fhr_list = os.environ['fhr_list'].split(',')
-#fhr_start = os.environ['fhr_start']
-#fhr_end = os.environ['fhr_end']
-#fhr_inc = os.environ['fhr_inc']
+fhr_list = os.environ['CORRECT_LEAD_SEQ'].split(',')
 
-# Process run time agruments
+# Process run time arguments
 if len(sys.argv) != 3:
-    print("ERROR: Not given correct number of run time agruments..."
+    print("ERROR: Not given correct number of run time arguments..."
           +os.path.basename(__file__)+" VARNAME_VARLEVEL FILE_FORMAT")
     sys.exit(1)
 else:
     if '_' not in sys.argv[1]:
-        print("ERROR: variable and level runtime agrument formated "
+        print("ERROR: variable and level runtime argument formatted "
               +"incorrectly, be sure to separate variable and level with "
               +"an underscore (_), example TMP_Z2")
         sys.exit(1)
@@ -66,7 +63,7 @@ MET_MPR_column_list = [
 
 # Create fcst and obs anomaly data
 STARTDATE_dt = datetime.datetime.strptime(
-    DATE+valid_hr_start, '%Y%m%d%H'
+    START+valid_hr_start, '%Y%m%d%H'
 )
 ENDDATE_dt = datetime.datetime.strptime(
     DATE+valid_hr_end, '%Y%m%d%H'
@@ -76,14 +73,14 @@ while valid_date_dt <= ENDDATE_dt:
     for fhr_str in fhr_list:
         fhr = int(fhr_str)
         init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
-        input_file = gda_util.format_filler(
+        input_file = sub_util.format_filler(
             file_format, valid_date_dt, init_date_dt, str(fhr), {}
         )
         if os.path.exists(input_file):
             print("\nInput file: "+input_file)
             with open(input_file, 'r') as infile:
                 input_file_header = infile.readline()
-            gda_util.run_shell_command(['sed', '-i', '"s/   a//g"',
+            sub_util.run_shell_command(['sed', '-i', '"s/   a//g"',
                                         input_file])
             input_file_df = pd.read_csv(input_file, sep=" ", skiprows=1,
                                         skipinitialspace=True, header=None,
@@ -113,7 +110,7 @@ while valid_date_dt <= ENDDATE_dt:
             output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP,
                                       'METplus_output',
                                        RUN+'.'
-                                       +valid_date_dt.strftime('%Y%m%d'),
+                                       +ENDDATE_dt.strftime('%Y%m%d'),
                                        MODEL, VERIF_CASE)
             output_file = os.path.join(output_dir, 'anomaly_'
                                        +VERIF_TYPE+'_'+job_name+'_init'

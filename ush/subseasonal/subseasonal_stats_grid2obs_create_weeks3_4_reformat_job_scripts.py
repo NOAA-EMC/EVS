@@ -90,7 +90,7 @@ assemble_data_model_jobs_dict = {
         'TempAnom2m': {'env': {'prepbufr': 'nam',
                                'obs_window': '900',
                                'msg_type': 'ADPSFC',
-                               'var1_fcst_name': 'TMP',
+                               'var1_fcst_name': 'TMP_Z2_ENS_MEAN',
                                'var1_fcst_levels': 'Z2',
                                'var1_fcst_options': '',
                                'var1_obs_name': 'TMP',
@@ -112,7 +112,7 @@ assemble_data_model_jobs_dict = {
                                              '${VERIF_CASE}_${STEP}',
                                              'METplus_output',
                                              '${RUN}.'
-                                             +'{valid?fmt=%Y%m%d}',
+                                             +'$DATE',
                                              '$MODEL', '$VERIF_CASE',
                                              'point_stat_'
                                              +'${VERIF_TYPE}_'

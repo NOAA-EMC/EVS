@@ -86,7 +86,7 @@ assemble_data_model_jobs_dict = {
         'TempAnom2m': {'env': {'prepbufr': 'nam',
                                'obs_window': '900',
                                'msg_type': 'ADPSFC',
-                               'var1_fcst_name': 'TMP',
+                               'var1_fcst_name': 'TMP_Z2_ENS_MEAN',
                                'var1_fcst_levels': 'Z2',
                                'var1_fcst_options': '',
                                'var1_obs_name': 'TMP',
@@ -108,7 +108,7 @@ assemble_data_model_jobs_dict = {
                                              '${VERIF_CASE}_${STEP}',
                                              'METplus_output',
                                              '${RUN}.'
-                                             +'{valid?fmt=%Y%m%d}',
+                                             +'$DATE',
                                              '$MODEL', '$VERIF_CASE',
                                              'point_stat_'
                                              +'${VERIF_TYPE}_'
@@ -147,7 +147,7 @@ generate_stats_jobs_dict = {
                                                        '${VERIF_CASE}_${STEP}',
                                                        'METplus_output',
                                                        '${RUN}.'
-                                                       +'{valid?fmt=%Y%m%d}',
+                                                       +'$DATE',
                                                        '$MODEL', '$VERIF_CASE',
                                                        'anomaly_${VERIF_TYPE}_'
                                                        +'TempAnom2m_init'
@@ -157,7 +157,7 @@ generate_stats_jobs_dict = {
                                                  os.path.join(
                                                      '$COMIN', 'stats',
                                                      '$COMPONENT',
-                                                     '${RUN}.{valid?fmt=%Y%m%d}',
+                                                     '${RUN}.$DATE',
                                                      '$MODEL', '$VERIF_CASE',
                                                      'anomaly_${VERIF_TYPE}_'
                                                      +'TempAnom2m_init'
@@ -179,7 +179,8 @@ generate_stats_jobs_dict = {
                                              sub_util.metplus_command(
                                                  'StatAnalysis_'
                                                  +'fcstSUBSEASONAL_'
-                                                 +'obsPrepbufr_MPRtoSL1L2.conf'
+                                                 +'obsPrepbufr_'
+                                                 +'WeeklyMPRtoSL1L2.conf'
                                              ),
                                              'fi']},
         'Days6_10Avg_TempAnom2m': {'env': {'prepbufr': 'nam',
@@ -202,7 +203,7 @@ generate_stats_jobs_dict = {
                                                          '${VERIF_CASE}_${STEP}',
                                                          'METplus_output',
                                                          '${RUN}.'
-                                                         +'{valid?fmt=%Y%m%d}',
+                                                         +'$DATE',
                                                          '$MODEL', '$VERIF_CASE',
                                                          'anomaly_${VERIF_TYPE}_'
                                                          +'TempAnom2m_init'
@@ -212,7 +213,7 @@ generate_stats_jobs_dict = {
                                                    os.path.join(
                                                        '$COMIN', 'stats',
                                                        '$COMPONENT',
-                                                       '${RUN}.{valid?fmt=%Y%m%d}',
+                                                       '${RUN}.$DATE',
                                                        '$MODEL', '$VERIF_CASE',
                                                        'anomaly_${VERIF_TYPE}_'
                                                        +'TempAnom2m_init'
@@ -234,7 +235,8 @@ generate_stats_jobs_dict = {
                                                sub_util.metplus_command(
                                                    'StatAnalysis_'
                                                    +'fcstSUBSEASONAL_'
-                                                   +'obsPrepbufr_MPRtoSL1L2.conf'
+                                                   +'obsPrepbufr_'
+                                                   +'Days6_10MPRtoSL1L2.conf'
                                                ),
                                                'fi']},
         'Weeks3_4Avg_TempAnom2m': {'env': {'prepbufr': 'nam',
@@ -257,7 +259,7 @@ generate_stats_jobs_dict = {
                                                          '${VERIF_CASE}_${STEP}',
                                                          'METplus_output',
                                                          '${RUN}.'
-                                                         +'{valid?fmt=%Y%m%d}',
+                                                         +'$DATE',
                                                          '$MODEL', '$VERIF_CASE',
                                                          'anomaly_${VERIF_TYPE}_'
                                                          +'TempAnom2m_init'
@@ -267,7 +269,7 @@ generate_stats_jobs_dict = {
                                                    os.path.join(
                                                        '$COMIN', 'stats',
                                                        '$COMPONENT',
-                                                       '${RUN}.{valid?fmt=%Y%m%d}',
+                                                       '${RUN}.$DATE',
                                                        '$MODEL', '$VERIF_CASE',
                                                        'anomaly_${VERIF_TYPE}_'
                                                        +'TempAnom2m_init'
@@ -289,7 +291,8 @@ generate_stats_jobs_dict = {
                                                sub_util.metplus_command(
                                                    'StatAnalysis_'
                                                    +'fcstSUBSEASONAL_'
-                                                   +'obsPrepbufr_MPRtoSL1L2.conf'
+                                                   +'obsPrepbufr_'
+                                                   +'Weeks3_4MPRtoSL1L2.conf'
                                                ),
                                                'fi']},
         #'Temp2m': {'env': {'prepbufr': 'nam',
