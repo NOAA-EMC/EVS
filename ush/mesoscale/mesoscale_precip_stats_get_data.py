@@ -57,7 +57,7 @@ for VHOUR in VHOUR_LIST:
         for area in ['CONUS', 'AK']:
             COMINmodel_file_template = os.environ[f"{area}_MODEL_INPUT_TEMPLATE"]
             DATAmodel_file_template = os.path.join(
-                DATAmodel, MODELNAME+'.'+area.lower()+'.{init?fmt=%Y%m%d%H}.'
+                DATAmodel, MODELNAME+'.'+area.lower()+'.init{init?fmt=%Y%m%d%H}.'
                 +'f{lead?fmt=%3H}'
             )
             for fhr in fhrs:
@@ -150,9 +150,9 @@ for VHOUR in VHOUR_LIST:
                                 os.symlink(COMINmodel_file, DATAmodel_file)
                             else:
                                 mail_COMINmodel_file = os.path.join(
-                                    DATA, f"mail_{MODELNAME}_init"
-                                    +f"{init_dt:%Y%m%d%H}_f{str(fhr).zfill(3)}"
-                                    +f".sh"
+                                    DATA, f"mail_{MODELNAME}_{area.lower()}_"
+                                    +f"init{init_dt:%Y%m%d%H}_"
+                                    +f"{str(fhr).zfill(3)}.sh"
                                 )
                                 print("MISSING or ZERO SIZE: "
                                       +f"{COMINmodel_file}")
