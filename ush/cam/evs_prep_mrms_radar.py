@@ -1,6 +1,6 @@
 ###############################################################################
-# Name of Script: prep_mrms_radar_files.py
-# Contact(s):     Logan Dawson
+# Name of Script: evs_prep_mrms_radar.py
+# Contact(s):     Logan C. Dawson (logan.dawson@noaa.gov)
 # Purpose of Script: Copy and unzip MRMS radar files that are closest to top of hour
 #
 # History Log:

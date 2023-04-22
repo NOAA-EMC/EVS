@@ -1,11 +1,13 @@
 ###############################################################################
-# Name of Script: prep_spc_otlk_files.py
-# Contact(s):     Logan Dawson
-# Purpose of Script: Copy and unzip MRMS radar files that are closest to top of hour
+# Name of Script: evs_prep_spc_otlk.py
+# Contact(s):     Marcel Caron (marcel.caron@noaa.gov)
+#                 Logan C. Dawson (logan.dawson@noaa.gov)
+# Purpose of Script: Copy and unzip SPC outlook shapefiles on a daily basis
+#                    and run METplus to generate VX_MASK regions
 #
 # History Log:
-#   2020:       Initial script assembled and run in dev
-#   12/22/2022: Initial script modified to follow NCO standards
+#   1/2023: Initial script assembled
+#   4/2023: Script modified to generate masks on a daily basis
 ###############################################################################
 
 import sys, os, shutil, subprocess

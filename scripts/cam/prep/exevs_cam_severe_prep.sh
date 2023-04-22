@@ -1,7 +1,7 @@
 #!/bin/bash
 ###############################################################################
 # Name of Script: exevs_cam_severe_prep.sh
-# Contact(s):     Logan Dawson
+# Contact(s):     Logan C. Dawson (logan.dawson@noaa.gov)
 # Purpose of Script: This script preprocesses SPC data (storm reports 
 #                    and outlook areas) for CAM verification.
 # History Log:
@@ -30,8 +30,6 @@ export err=$?; err_chk
 if [ -d $DATA/gen_vx_mask ]; then
 
    if [ "$(ls -A $DATA/gen_vx_mask)" ]; then
-
-      mkdir -p $COMOUTotlk
 
       # Copy output to $COMOUT
       if [ $SENDCOM = YES ]; then

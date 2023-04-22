@@ -1,7 +1,7 @@
 #!/bin/bash
 ###############################################################################
 # Name of Script: exevs_namnest_severe_prep.sh
-# Contact(s):     Logan Dawson
+# Contact(s):     Logan C. Dawson (logan.dawson@noaa.gov)
 # Purpose of Script: This script preprocesses NAM Nest UH data for 
 #                    CAM severe verification.
 # History Log:
@@ -76,7 +76,6 @@ fi
 ###################################################################
 k=0
 min_file_req=24
-data_missing=false
 
 # Do one or more loops depending on number of 24-h periods
 while [ $k -lt $nloop ]; do

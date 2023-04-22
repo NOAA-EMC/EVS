@@ -1,7 +1,7 @@
 #!/bin/bash
 ###############################################################################
 # Name of Script: exevs_hrrr_severe_prep.sh
-# Contact(s):     Logan Dawson
+# Contact(s):     Logan C. Dawson (logan.dawson@noaa.gov)
 # Purpose of Script: This script preprocesses HRRR UH data for 
 #                    CAM severe verification.
 # History Log:
@@ -67,7 +67,6 @@ fi
 ###################################################################
 k=0
 min_file_req=24
-data_missing=false
 
 # Do one or more loops depending on number of 24-h periods
 while [ $k -lt $nloop ]; do
@@ -143,7 +142,6 @@ i=1
       echo "Warning: Only $nfiles ${MODELNAME} forecast files found for ${cyc}Z ${IDATE} cycle. $min_file_req files are required. METplus will not run." > mailmsg
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $maillist
-      data_missing=true
 
    fi
 
@@ -152,10 +150,6 @@ i=1
 
 done
 
-
-if [ $data_missing ]; then
-   exit 0
-fi
 
 
 exit
