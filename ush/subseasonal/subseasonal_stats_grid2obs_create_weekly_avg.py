@@ -70,7 +70,7 @@ print("\nCreating weekly average files")
 valid_hr = int(valid_hr_start)
 while valid_hr <= int(valid_hr_end):
     weekly_avg_valid_end = datetime.datetime.strptime(DATE+str(valid_hr),
-                                                     '%Y%m%d%H')
+                                                      '%Y%m%d%H')
     weekly_avg_valid_start = datetime.datetime.strptime(WEEKLYSTART
                                                         +str(valid_hr),
                                                         '%Y%m%d%H')

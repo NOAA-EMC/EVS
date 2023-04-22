@@ -65,160 +65,160 @@ MET_MPR_column_list = [
 output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
                           RUN+'.'+DATE, MODEL, VERIF_CASE)
 
-# Create weekly average files
-print("\nCreating weekly average files")
+# Create Days 6-10 average files
+print("\nCreating Days 6-10 average files")
 valid_hr = int(valid_hr_start)
 while valid_hr <= int(valid_hr_end):
-    weekly_avg_valid_end = datetime.datetime.strptime(DATE+str(valid_hr),
-                                                     '%Y%m%d%H')
-    weekly_avg_valid_start = datetime.datetime.strptime(6_10START
-                                                        +str(valid_hr),
-                                                        '%Y%m%d%H')
-    weekly_avg_day_end = int(fhr_end)/24
-    weekly_avg_day_start = 7
-    weekly_avg_day = weekly_avg_day_start
-    while weekly_avg_day <= weekly_avg_day_end:
-        weekly_avg_file_list = []
-        weekly_avg_day_fhr_end = weekly_avg_day * 24
-        weekly_avg_day_fhr_start = weekly_avg_day_fhr_end - 168
-        weekly_avg_day_init = (weekly_avg_valid_end
-                              - datetime.timedelta(days=weekly_avg_day))
-        weekly_avg_day_fhr = weekly_avg_day_fhr_start
-        output_file = os.path.join(output_dir, 'weekly_avg_'
+    days_avg_valid_end = datetime.datetime.strptime(DATE+str(valid_hr),
+                                                    '%Y%m%d%H')
+    days_avg_valid_start = datetime.datetime.strptime(6_10START
+                                                      +str(valid_hr),
+                                                      '%Y%m%d%H')
+    days_avg_day_end = int(fhr_end)/24
+    days_avg_day_start = 10
+    days_avg_day = days_avg_day_start
+    while days_avg_day <= days_avg_day_end:
+        days_avg_file_list = []
+        days_avg_day_fhr_end = days_avg_day * 24
+        days_avg_day_fhr_start = days_avg_day_fhr_end - 120
+        days_avg_day_init = (days_avg_valid_end
+                             - datetime.timedelta(days=days_avg_day))
+        days_avg_day_fhr = days_avg_day_fhr_start
+        output_file = os.path.join(output_dir, 'days6_10_avg_'
                                    +VERIF_TYPE+'_'+job_name+'_init'
-                                   +weekly_avg_day_init.strftime('%Y%m%d%H')
+                                   +days_avg_day_init.strftime('%Y%m%d%H')
                                    +'_valid'
-                                   +weekly_avg_valid_start\
+                                   +days_avg_valid_start\
                                    .strftime('%Y%m%d%H')+'to'
-                                   +weekly_avg_valid_end\
+                                   +days_avg_valid_end\
                                    .strftime('%Y%m%d%H')+'.stat')
         if os.path.exists(output_file):
             os.remove(output_file)
-        while weekly_avg_day_fhr <= weekly_avg_day_fhr_end:
-            weekly_avg_day_fhr_valid = (
-                weekly_avg_day_init
-                + datetime.timedelta(hours=weekly_avg_day_fhr)
+        while days_avg_day_fhr <= days_avg_day_fhr_end:
+            days_avg_day_fhr_valid = (
+                days_avg_day_init
+                + datetime.timedelta(hours=days_avg_day_fhr)
             )
-            weekly_avg_day_fhr_DATAROOT_input_file = sub_util.format_filler(
-                    DATAROOT_file_format, weekly_avg_day_fhr_valid,
-                    weekly_avg_day_init,
-                    str(weekly_avg_day_fhr), {}
+            days_avg_day_fhr_DATAROOT_input_file = sub_util.format_filler(
+                    DATAROOT_file_format, days_avg_day_fhr_valid,
+                    days_avg_day_init,
+                    str(days_avg_day_fhr), {}
             )
-            weekly_avg_day_fhr_COMIN_input_file = sub_util.format_filler(
-                    COMIN_file_format, weekly_avg_day_fhr_valid,
-                    weekly_avg_day_init,
-                    str(weekly_avg_day_fhr), {}
+            days_avg_day_fhr_COMIN_input_file = sub_util.format_filler(
+                    COMIN_file_format, days_avg_day_fhr_valid,
+                    days_avg_day_init,
+                    str(days_avg_day_fhr), {}
             )
-            if os.path.exists(weekly_avg_day_fhr_COMIN_input_file):
-                weekly_avg_day_fhr_input_file = (
-                    weekly_avg_day_fhr_COMIN_input_file)
+            if os.path.exists(days_avg_day_fhr_COMIN_input_file):
+                days_avg_day_fhr_input_file = (
+                    days_avg_day_fhr_COMIN_input_file)
             else:
-                weekly_avg_day_fhr_input_file = (
-                    weekly_avg_day_fhr_DATAROOT_input_file
+                days_avg_day_fhr_input_file = (
+                    days_avg_day_fhr_DATAROOT_input_file
                 )
-            if os.path.exists(weekly_avg_day_fhr_input_file):
-                print("Input file for forecast hour "+str(weekly_avg_day_fhr)
-                      +', valid '+str(weekly_avg_day_fhr_valid)
-                      +', init '+str(weekly_avg_day_init)+": "
-                      +weekly_avg_day_fhr_input_file)
-                weekly_avg_file_list.append(weekly_avg_day_fhr_input_file)
+            if os.path.exists(days_avg_day_fhr_input_file):
+                print("Input file for forecast hour "+str(days_avg_day_fhr)
+                      +', valid '+str(days_avg_day_fhr_valid)
+                      +', init '+str(days_avg_day_init)+": "
+                      +days_avg_day_fhr_input_file)
+                days_avg_file_list.append(days_avg_day_fhr_input_file)
             else:
-                print("No input file for forecast hour "+str(weekly_avg_day_fhr)
-                      +', valid '+str(weekly_avg_day_fhr_valid)
-                      +', init '+str(weekly_avg_day_init)+" "
-                      +weekly_avg_day_fhr_DATAROOT_input_file+" or "
-                      +weekly_avg_day_fhr_COMIN_input_file)
-            weekly_avg_day_fhr+=12
-        weekly_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
-        if len(weekly_avg_file_list) == 15:
+                print("No input file for forecast hour "+str(days_avg_day_fhr)
+                      +', valid '+str(days_avg_day_fhr_valid)
+                      +', init '+str(days_avg_day_init)+" "
+                      +days_avg_day_fhr_DATAROOT_input_file+" or "
+                      +days_avg_day_fhr_COMIN_input_file)
+            days_avg_day_fhr+=12
+        days_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
+        if len(days_avg_file_list) == 11:
             print("Output File: "+output_file)
-            all_weekly_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
-            for weekly_avg_file in weekly_avg_file_list:
-                with open(weekly_avg_file, 'r') as infile:
+            all_days_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
+            for days_avg_file in days_avg_file_list:
+                with open(days_avg_file, 'r') as infile:
                     input_file_header = infile.readline()
-                weekly_avg_file_df = pd.read_csv(weekly_avg_file, sep=" ", skiprows=1,
+                days_avg_file_df = pd.read_csv(days_avg_file, sep=" ", skiprows=1,
                                                 skipinitialspace=True, header=None,
                                                 names=MET_MPR_column_list,
                                                 na_filter=False, dtype=str)
-                all_weekly_avg_df = all_weekly_avg_df.append(weekly_avg_file_df,
+                all_days_avg_df = all_days_avg_df.append(days_avg_file_df,
                                                            ignore_index=True)
-            for obtype in all_weekly_avg_df['OBTYPE'].unique():
-                all_weekly_avg_obtype_df = all_weekly_avg_df.loc[
-                    all_weekly_avg_df['OBTYPE'] == obtype
+            for obtype in all_days_avg_df['OBTYPE'].unique():
+                all_days_avg_obtype_df = all_days_avg_df.loc[
+                    all_days_avg_df['OBTYPE'] == obtype
                 ]
-                for sid in all_weekly_avg_obtype_df['OBS_SID'].unique():
-                    all_weekly_avg_obtype_sid_df = (
-                        all_weekly_avg_obtype_df.loc[
-                            all_weekly_avg_obtype_df['OBS_SID'] == sid
+                for sid in all_days_avg_obtype_df['OBS_SID'].unique():
+                    all_days_avg_obtype_sid_df = (
+                        all_days_avg_obtype_df.loc[
+                            all_days_avg_obtype_df['OBS_SID'] == sid
                         ]
                     )
                     for vx_mask \
-                            in all_weekly_avg_obtype_sid_df['VX_MASK'].unique():
-                        all_weekly_avg_obtype_sid_vx_mask_df = (
-                            all_weekly_avg_obtype_sid_df.loc[
-                                all_weekly_avg_obtype_sid_df['VX_MASK']\
+                            in all_days_avg_obtype_sid_df['VX_MASK'].unique():
+                        all_days_avg_obtype_sid_vx_mask_df = (
+                            all_days_avg_obtype_sid_df.loc[
+                                all_days_avg_obtype_sid_df['VX_MASK']\
                                 == vx_mask
                             ]
                         )
-                        if len(all_weekly_avg_obtype_sid_vx_mask_df) != 15:
+                        if len(all_days_avg_obtype_sid_vx_mask_df) != 11:
                             continue
-                        all_weekly_avg_obtype_sid_vx_mask_fcst_mean = (
+                        all_days_avg_obtype_sid_vx_mask_fcst_mean = (
                             np.array(
-                                all_weekly_avg_obtype_sid_vx_mask_df['FCST']\
+                                all_days_avg_obtype_sid_vx_mask_df['FCST']\
                                 .values, dtype=float
                             ).mean()
                         )
-                        all_weekly_avg_obtype_sid_vx_mask_obs_mean = (
+                        all_days_avg_obtype_sid_vx_mask_obs_mean = (
                             np.array(
-                                all_weekly_avg_obtype_sid_vx_mask_df['OBS']\
+                                all_days_avg_obtype_sid_vx_mask_df['OBS']\
                                 .values, dtype=float
                             ).mean()
                         )
-                        weekly_avg_obtype_sid_vx_mask_df = pd.DataFrame.copy(
-                            all_weekly_avg_obtype_sid_vx_mask_df.iloc[0,:],
+                        days_avg_obtype_sid_vx_mask_df = pd.DataFrame.copy(
+                            all_days_avg_obtype_sid_vx_mask_df.iloc[0,:],
                             deep=True
                         )
-                        weekly_avg_obtype_sid_vx_mask_df['FCST_LEAD'] = (
-                            str(weekly_avg_day_fhr_end).zfill(2)+'0000'
+                        days_avg_obtype_sid_vx_mask_df['FCST_LEAD'] = (
+                            str(days_avg_day_fhr_end).zfill(2)+'0000'
                         )
-                        weekly_avg_obtype_sid_vx_mask_df['FCST_VALID_BEG'] = (
-                            weekly_avg_valid_end.strftime('%Y%m%d_%H%M%S')
+                        days_avg_obtype_sid_vx_mask_df['FCST_VALID_BEG'] = (
+                            days_avg_valid_end.strftime('%Y%m%d_%H%M%S')
                         )
-                        weekly_avg_obtype_sid_vx_mask_df['FCST_VALID_END'] = (
-                            weekly_avg_valid_end.strftime('%Y%m%d_%H%M%S')
+                        days_avg_obtype_sid_vx_mask_df['FCST_VALID_END'] = (
+                            days_avg_valid_end.strftime('%Y%m%d_%H%M%S')
                         )
-                        weekly_avg_obtype_sid_vx_mask_df['OBS_VALID_BEG'] = (
-                            weekly_avg_valid_end.strftime('%Y%m%d_%H%M%S')
+                        days_avg_obtype_sid_vx_mask_df['OBS_VALID_BEG'] = (
+                            days_avg_valid_end.strftime('%Y%m%d_%H%M%S')
                         )
-                        weekly_avg_obtype_sid_vx_mask_df['OBS_VALID_END'] = (
-                            weekly_avg_valid_end.strftime('%Y%m%d_%H%M%S')
+                        days_avg_obtype_sid_vx_mask_df['OBS_VALID_END'] = (
+                            days_avg_valid_end.strftime('%Y%m%d_%H%M%S')
                         )
-                        weekly_avg_obtype_sid_vx_mask_df['FCST_VAR'] = (
-                            weekly_avg_obtype_sid_vx_mask_df['FCST_VAR']
-                            +'_WEEKLYAVG'
+                        days_avg_obtype_sid_vx_mask_df['FCST_VAR'] = (
+                            days_avg_obtype_sid_vx_mask_df['FCST_VAR']
+                            +'_DAYS6_10AVG'
                         )
-                        weekly_avg_obtype_sid_vx_mask_df['OBS_VAR'] = (
-                            weekly_avg_obtype_sid_vx_mask_df['OBS_VAR']
-                            +'_WEEKLYAVG'
+                        days_avg_obtype_sid_vx_mask_df['OBS_VAR'] = (
+                            days_avg_obtype_sid_vx_mask_df['OBS_VAR']
+                            +'_DAYS6_10AVG'
                         )
-                        weekly_avg_obtype_sid_vx_mask_df['FCST'] = str(
-                            all_weekly_avg_obtype_sid_vx_mask_fcst_mean
+                        days_avg_obtype_sid_vx_mask_df['FCST'] = str(
+                            all_days_avg_obtype_sid_vx_mask_fcst_mean
                         )
-                        weekly_avg_obtype_sid_vx_mask_df['OBS'] = str(
-                            all_weekly_avg_obtype_sid_vx_mask_obs_mean
+                        days_avg_obtype_sid_vx_mask_df['OBS'] = str(
+                            all_days_avg_obtype_sid_vx_mask_obs_mean
                         )
-                        weekly_avg_df = weekly_avg_df.append(
-                            weekly_avg_obtype_sid_vx_mask_df,
+                        days_avg_df = days_avg_df.append(
+                            days_avg_obtype_sid_vx_mask_df,
                             ignore_index=True
                         )
-            weekly_avg_df.to_csv(
+            days_avg_df.to_csv(
                 output_file, header=input_file_header,
                 index=None, sep=' ', mode='w'
             )
         else:
-            print("WARNING: Need 15 files to create weekly average")
+            print("WARNING: Need 11 files to create Days 6-10 average")
         print("")
-        weekly_avg_day+=7
+        days_avg_day+=1
     valid_hr+=int(valid_hr_inc)
 
 print("END: "+os.path.basename(__file__))
