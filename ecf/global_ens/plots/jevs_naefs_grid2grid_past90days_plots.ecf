@@ -47,7 +47,7 @@ export envir=prod
 
 export NET=evs
 export STEP=plots
-export COMPONENT=gefs
+export COMPONENT=global_ens
 export RUN=atmos
 export VERIF_CASE=grid2grid
 export MODELNAME=naefs
@@ -68,4 +68,4 @@ export DATA=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-${HOMEevs}/jobs/gefs/plots/JEVS_GLOBAL_ENS_PLOTS
+${HOMEevs}/jobs/global_ens/plots/JEVS_GLOBAL_ENS_PLOTS
