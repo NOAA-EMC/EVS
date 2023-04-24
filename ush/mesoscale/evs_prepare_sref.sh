@@ -75,9 +75,11 @@ if [ $modnam = ccpa ] ; then
 
   export output_base=${WORK}/ccpa.${vday}
 
+ if [ -s $COMINccpa/ccpa.${vday}/18/ccpa.t18z.03h.hrap.conus.gb2 ] ; then
+
   #ccpa hrap is in G240	
   cd ${WORK}/ccpa.${vday}
-  
+
   export cyc
   for cyc in 00 06 12 18 ; do
     export ccpapath=$COMINccpa/ccpa.${vday}/$cyc
@@ -143,6 +145,15 @@ if [ $modnam = ccpa ] ; then
 
     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA06h.conf
 
+ else
+    export subject="CCPA Data Missing for EVS ${COMPONENT}"
+    export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
+    echo "Warning:  No CCPA data available for ${VDATE}" > mailmsg
+    echo Missing file is $COMINccpa/ccpa.${vday}/??/ccpa.t??z.03h.hrap.conus.gb2  >> mailmsg
+    echo "Job ID: $jobid" >> mailmsg
+    cat mailmsg | mail -s "$subject" $maillist
+    exit
+ fi
 fi
 
 
@@ -152,7 +163,9 @@ if [ $modnam = prepbufr ] ; then
 
 export output_base=${WORK}/pb2nc
 
- for cyc in 00  06  12  18  ; do
+ if [ -s $COMINprepbufr/gfs.${vday}/18/atmos/gfs.t18z.prepbufr ] ; then 
+
+   for cyc in 00  06  12  18  ; do
 
      export vbeg=${cyc}
      export vend=${cyc}
@@ -160,7 +173,20 @@ export output_base=${WORK}/pb2nc
      ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr.cong
      cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${vday} 
 
-  done
+   done
+
+ else
+
+   export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
+   export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
+   echo "Warning:  No Prepbufr data available for ${VDATE}" > mailmsg
+   echo Missing file is $COMINprepbufr/gfs.${vday}/??/atmos/gfs.t??z.prepbufr  >> mailmsg
+   echo "Job ID: $jobid" >> mailmsg
+   cat mailmsg | mail -s "$subject" $maillist
+   exit
+
+ fi
+
 
 fi 
 

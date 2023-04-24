@@ -60,5 +60,8 @@ export jobid=$job.${PBS_JOBID:-$$}
 
 export run_mpi=yes
 
+export maillist='binbin.zhou@noaa.gov'
+#export maillist='geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'
+
 ${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS
 
