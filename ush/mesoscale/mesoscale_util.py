@@ -200,8 +200,9 @@ def metplus_command(conf_file_name):
     metplus_cmd = run_metplus+' -c '+machine_conf+' -c '+conf_file
     return metplus_cmd
 
-def precip_check_obs_input_COMOUT_files(job_dict):
-    """! Check precip observation input and COMOUT files
+def precip_check_obs_input_output_files(job_dict):
+    """! Check precip observation input and output files
+         in COMOUT and DATA
          Args:
              job_dict - job dictionary
          Returns:
@@ -215,6 +216,8 @@ def precip_check_obs_input_COMOUT_files(job_dict):
                                      exist (boolean)
              COMOUT_files_list     - list of output COMOUT
                                      files (strings)
+             DATA_files_list       - list of output DATA
+                                     files (strings)
     """
     valid_date_dt = datetime.datetime.strptime(
         job_dict['DATE']+job_dict['valid_hour_start'],
@@ -223,17 +226,41 @@ def precip_check_obs_input_COMOUT_files(job_dict):
     # Expected input file
     input_files_list = []
     if job_dict['JOB_GROUP'] == 'assemble_data':
-        if job_dict['job_name'] == '24hrCCPA':
-            nccpa_files = 4
+        if job_dict['job_name'] in ['24hrCCPA', '03hrCCPA', '01hrCCPA']:
+            nccpa_files = (
+                int(job_dict['accum'])
+                /int(job_dict['ccpa_file_accum'])
+            )
             n = 1
-            while n <= 4:
+            while n <= nccpa_files:
                 nccpa_file = os.path.join(
-                    job_dict['DATA'], 'data', 'ccpa', 'ccpa.accum06hr.v'
-                    +(valid_date_dt-datetime.timedelta(hours=(n-1)*6))\
+                    job_dict['DATA'], 'data', 'ccpa', 
+                    f"ccpa.accum{job_dict['ccpa_file_accum'].zfill(2)}hr.v"
+                    +(valid_date_dt
+                      -datetime.timedelta(hours=(n-1)
+                                                 *int(job_dict['ccpa_file_accum'])))\
                     .strftime('%Y%m%d%H')
                 )
                 input_files_list.append(nccpa_file)
                 n+=1
+    elif job_dict['JOB_GROUP'] == 'generate_stats':
+        if job_dict['obs'] == 'ccpa':
+            input_files_list.append(
+                os.path.join(job_dict['COMOUT'],
+                             f"{job_dict['RUN']}.{valid_date_dt:%Y%m%d}",
+                             job_dict['MODELNAME'], job_dict['VERIF_CASE'],
+                             "pcp_combine_ccpa_accum"
+                             +f"{job_dict['accum']}hr_valid"
+                             +f"{valid_date_dt:%Y%m%d%H}.nc")
+            )
+        elif job_dict['obs'] == 'mrms':
+            input_files_list.append(
+                os.path.join(job_dict['DATA'], 'data', job_dict['obs'],
+                             f"{job_dict['area']}_MultiSensor_QPE_"
+                             +f"{job_dict['accum']}H_Pass2_00.00_"
+                             +f"{valid_date_dt:%Y%m%d}-"
+                             +f"{valid_date_dt:%H%M%S}.grib2")
+            )
     input_files_exist_list = []
     for input_file in input_files_list:
         if check_file(input_file):
@@ -245,15 +272,26 @@ def precip_check_obs_input_COMOUT_files(job_dict):
         all_input_file_exist = True
     else:
         all_input_file_exist = False
-    # Expected output files (in COMOUT)
+    # Expected output files (in COMOUT and DATA)
     COMOUT_files_list = []
+    DATA_files_list = []
     if job_dict['JOB_GROUP'] == 'assemble_data':
-        if job_dict['job_name'] == '24hrCCPA':
+        if job_dict['job_name'] in ['24hrCCPA', '03hrCCPA', '01hrCCPA']:
+            file_name = ("pcp_combine_ccpa_accum"
+                         +f"{job_dict['accum']}hr_valid"
+                         +f"{valid_date_dt:%Y%m%d%H}.nc")
             COMOUT_files_list.append(
-                os.path.join(job_dict['COMOUTsmall'],
-                             f"pcp_combine_ccpa_accum24hr_valid"
-                             +f"{valid_date_dt:%Y%m%d%H}.nc")
+                os.path.join(job_dict['COMOUT'],
+                             f"{job_dict['RUN']}.{valid_date_dt:%Y%m%d}",
+                             job_dict['MODELNAME'], job_dict['VERIF_CASE'],
+                             file_name)
             )
+            DATA_files_list.append(
+                os.path.join(job_dict['DATA'],
+                             f"{job_dict['RUN']}.{valid_date_dt:%Y%m%d}",
+                             job_dict['MODELNAME'], job_dict['VERIF_CASE'],
+                             file_name)
+            ) 
     COMOUT_files_exist_list = []
     for COMOUT_file in COMOUT_files_list:
         if check_file(COMOUT_file):
@@ -266,11 +304,13 @@ def precip_check_obs_input_COMOUT_files(job_dict):
     else:
         all_COMOUT_file_exist = False
     return (all_input_file_exist, input_files_list, \
-            all_COMOUT_file_exist, COMOUT_files_list)
+            all_COMOUT_file_exist, COMOUT_files_list,
+            DATA_files_list)
 
 
-def precip_check_model_input_COMOUT_files(job_dict):
-    """! Check precip model input and COMOUT files
+def precip_check_model_input_output_files(job_dict):
+    """! Check precip model input and output files
+         in COMOUT and DATA
          Args:
              job_dict - job dictionary
          Returns:
@@ -283,6 +323,8 @@ def precip_check_model_input_COMOUT_files(job_dict):
                                      output COMOUT files
                                      exist (boolean)
              COMOUT_files_list     - list of output COMOUT
+                                     files (strings)
+             DATA_files_list       - list of output DATA
                                      files (strings)
     """
     valid_date_dt = datetime.datetime.strptime(
@@ -319,6 +361,17 @@ def precip_check_model_input_COMOUT_files(job_dict):
                 )
                 input_files_list.append(naccum_file)
                 n+=1
+    elif job_dict['JOB_GROUP'] == 'generate_stats':
+        input_files_list.append(
+            os.path.join(job_dict['COMOUT'],
+                         f"{job_dict['RUN']}.{valid_date_dt:%Y%m%d}",
+                         job_dict['MODELNAME'], job_dict['VERIF_CASE'],
+                         f"pcp_combine_{job_dict['MODELNAME']}_"
+                         +f"accum{job_dict['accum']}hr_"
+                         +f"{job_dict['area']}_"
+                         +f"init{init_date_dt:%Y%m%d%H}_"
+                         +f"fhr{job_dict['fcst_hour'].zfill(3)}.nc")
+        )
     input_files_exist_list = []
     for input_file in input_files_list:
         if check_file(input_file):
@@ -330,16 +383,42 @@ def precip_check_model_input_COMOUT_files(job_dict):
         all_input_file_exist = True
     else:
         all_input_file_exist = False
-    # Expected output files (in COMOUT)
+    # Expected output files (in COMOUT and DATA)
     COMOUT_files_list = []
+    DATA_files_list = []
     if job_dict['JOB_GROUP'] == 'assemble_data':
+        file_name = (f"pcp_combine_{job_dict['MODELNAME']}_"
+                     +f"accum{job_dict['accum']}hr_"
+                     +f"{job_dict['area']}_"
+                     +f"init{init_date_dt:%Y%m%d%H}_"
+                     +f"fhr{job_dict['fcst_hour'].zfill(3)}.nc")
         COMOUT_files_list.append(
-            os.path.join(job_dict['COMOUTsmall'],
-                         f"pcp_combine_{job_dict['MODELNAME']}_"
-                         +f"accum{job_dict['accum']}hr_"
-                         +f"{job_dict['area']}_"
-                         +f"init{init_date_dt:%Y%m%d%H}_"
-                         +f"fhr{job_dict['fcst_hour'].zfill(3)}.nc")
+            os.path.join(job_dict['COMOUT'],
+                         f"{job_dict['RUN']}.{valid_date_dt:%Y%m%d}",
+                         job_dict['MODELNAME'], job_dict['VERIF_CASE'],
+                         file_name)
+        )
+        DATA_files_list.append(
+            os.path.join(job_dict['DATA'],
+                         f"{job_dict['RUN']}.{valid_date_dt:%Y%m%d}",
+                         job_dict['MODELNAME'], job_dict['VERIF_CASE'],
+                         file_name)
+        )
+    elif job_dict['JOB_GROUP'] == 'generate_stats':
+        file_name = (f"grid_stat_{job_dict['job_name']}_"
+                     f"{job_dict['fcst_hour'].zfill(2)}0000L_"
+                     +f"{valid_date_dt:%Y%m%d_%H%M%S}V.stat")
+        COMOUT_files_list.append(
+            os.path.join(job_dict['COMOUT'],
+                         f"{job_dict['RUN']}.{valid_date_dt:%Y%m%d}",
+                         job_dict['MODELNAME'], job_dict['VERIF_CASE'],
+                         file_name)
+        )
+        DATA_files_list.append(
+            os.path.join(job_dict['DATA'],
+                         f"{job_dict['RUN']}.{valid_date_dt:%Y%m%d}",
+                         job_dict['MODELNAME'], job_dict['VERIF_CASE'],
+                         file_name)
         )
     COMOUT_files_exist_list = []
     for COMOUT_file in COMOUT_files_list:
@@ -353,4 +432,5 @@ def precip_check_model_input_COMOUT_files(job_dict):
     else:
         all_COMOUT_file_exist = False
     return (all_input_file_exist, input_files_list, \
-            all_COMOUT_file_exist, COMOUT_files_list)
+            all_COMOUT_file_exist, COMOUT_files_list,
+            DATA_files_list)

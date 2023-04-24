@@ -50,9 +50,9 @@ export CONUS_MODEL_INPUT_TEMPLATE="${COMINrap}/rap.{init?fmt=%Y%m%d}/rap.t{init?
 export CONUS_VERIF_SOURCE="ccpa"
 export CONUS_CTC_GRID="G212"
 export CONUS_NBRCNT_GRID="G240"
-export AK_MODEL_INPUT_TEMPLATE="${COMINrap}/rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awp242f{lead?fmt=%2H}.grib2"
-export AK_VERIF_SOURCE="mrms"
-export AK_CTC_GRID="G216"
-export AK_NBRCNT_GRID="G091"
+export ALASKA_MODEL_INPUT_TEMPLATE="${COMINrap}/rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awp242f{lead?fmt=%2H}.grib2"
+export ALASKA_VERIF_SOURCE="mrms"
+export ALASKA_CTC_GRID="G216"
+export ALASKA_NBRCNT_GRID="G091"
 
 echo "END: $(basename ${BASH_SOURCE[0]})"

@@ -54,7 +54,7 @@ for VHOUR in VHOUR_LIST:
         print(f"\nGetting {MODELNAME} files for accumulation {accum}hr valid "
               +f"{accum_start_dt:%Y%m%d %H}Z to {accum_end_dt:%Y%m%d %H}Z")
         fhrs = range(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr))
-        for area in ['CONUS', 'AK']:
+        for area in ['CONUS', 'ALASKA']:
             COMINmodel_file_template = os.environ[f"{area}_MODEL_INPUT_TEMPLATE"]
             DATAmodel_file_template = os.path.join(
                 DATAmodel, MODELNAME+'.'+area.lower()+'.init{init?fmt=%Y%m%d%H}.'
@@ -287,13 +287,18 @@ for VHOUR in VHOUR_LIST:
         if not os.path.exists(DATAmrms):
             os.makedirs(DATAmrms)
             print(f"Making directory {DATAmrms}")
-        for area in ['alaska']:
+        mrms_area_list = []
+        if os.environ['CONUS_VERIF_SOURCE'] == 'mrms':
+            mrms_area_list.append('conus')
+        if os.environ['ALASKA_VERIF_SOURCE'] == 'mrms':
+            mrms_area_list.append('alaska')
+        for mrms_area in mrms_area_list:
             print(f"\nGetting MRMS files for accumulation {accum}hr valid "
                   +f"{accum_start_dt:%Y%m%d %H} to {accum_end_dt:%Y%m%d %H}Z "
-                  +f"over {area.title()}")
-            COMINmrms_area = os.path.join(COMINmrms, area, 'MultiSensorQPE')
+                  +f"over {mrms_area.title()}")
+            COMINmrms_area = os.path.join(COMINmrms, mrms_area, 'MultiSensorQPE')
             COMINmrms_gzfile = os.path.join(
-                COMINmrms, area, 'MultiSensorQPE',
+                COMINmrms, mrms_area, 'MultiSensorQPE',
                  f"MultiSensor_QPE_{accum}H_Pass2_00.00_"
                 +f"{accum_end_dt:%Y%m%d}-{accum_end_dt:%H}0000.grib2.gz"
             )
@@ -307,7 +312,7 @@ for VHOUR in VHOUR_LIST:
                 print(f"Unzipping {DATAmrms_gzfile}")
                 os.system(f"gunzip {DATAmrms_gzfile}")
                 DATAmrms_file = os.path.join(
-                    DATAmrms, f"{area}_"
+                    DATAmrms, f"{mrms_area}_"
                     +(DATAmrms_gzfile.rpartition('/')[2]\
                       .replace('.gz', ''))
                 )
@@ -319,7 +324,7 @@ for VHOUR in VHOUR_LIST:
                          +f"{DATAmrms_file}")
             else:
                 mail_COMINmrms_file = os.path.join(
-                    DATA, f"mail_mrms_accum{accum}hr_{area}_"
+                    DATA, f"mail_mrms_accum{accum}hr_{mrms_area}_"
                     +f"valid{accum_end_dt:%Y%m%d%H}.sh"
                 )
                 print(f"MISSING or ZERO SIZE: {COMINmrms_gzfile}")
@@ -329,7 +334,7 @@ for VHOUR in VHOUR_LIST:
                     mailmsg.write('#!/bin/bash\n')
                     mailmsg.write('set -x\n\n')
                     mailmsg.write(
-                        'export subject="MRMS '+area.title()+' Accum '
+                        'export subject="MRMS '+mrms_area.title()+' Accum '
                         +accum+'hr Data Missing for EVS '
                         +COMPONENT+'"\n'
                     )
@@ -338,9 +343,9 @@ for VHOUR in VHOUR_LIST:
                         +"@noaa.gov'}\n"
                     )
                     mailmsg.write(
-                        'echo "Warning: No MRMS '+area.title()+' accumulation '
-                        +accum+' hour data was available for valid date '
-                        +f'{accum_end_dt:%Y%m%d%H}" '
+                        'echo "Warning: No MRMS '+mrms_area.title()+' '
+                        +'accumulation '+accum+' hour data was available '
+                        +f'for valid date {accum_end_dt:%Y%m%d%H}" '
                         +'> mailmsg\n'
                     )
                     mailmsg.write(
