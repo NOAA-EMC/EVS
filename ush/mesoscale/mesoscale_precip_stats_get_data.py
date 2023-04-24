@@ -230,9 +230,10 @@ for VHOUR in VHOUR_LIST:
                 )
             else:
                 COMINccpa_file_dir = os.path.join(
-                    COMINccpa, 
-                    ((ccpa_file_dt_in_accum+datetime.timedelta(days=1))\
-                     .strptime('%Y%m%d')), '00'
+                    COMINccpa, 'ccpa.'+((ccpa_file_dt_in_accum
+                                         +datetime.timedelta(days=1))\
+                                         .strftime('%Y%m%d')),
+                    '00'
                 )
             COMINccpa_file = os.path.join(
                 COMINccpa_file_dir,
