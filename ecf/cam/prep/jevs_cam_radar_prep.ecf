@@ -48,13 +48,10 @@ export log_met_output_to_metplus=yes
 ############################################################
 module reset
 
-#export HPC_OPT=/apps/ops/prod/libs
-#module use /apps/ops/prod/libs/modulefiles/compiler/intel/${intel_ver}
-#module use /apps/dev/modulefiles/
-#module load ve/evs/${ve_evs_ver}
-#module load PrgEnv-intel/${PrgEnvintel_ver}
-module load intel/${intel_ver}
-module load craype/${craype_ver}
+export HPC_OPT=/apps/ops/para/libs
+module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
+module use /apps/dev/modulefiles/
+module load ve/evs/${ve_evs_ver}
 module load cray-mpich/${craympich_ver}
 module load cray-pals/${craypals_ver}
 module load libjpeg/${libjpeg_ver}
@@ -63,18 +60,14 @@ module load zlib/${zlib_ver}
 module load jasper/${jasper_ver}
 module load cfp/${cfp_ver}
 module load gsl/${gsl_ver}
-module load python/${python_ver}
-module load proj/${proj_ver}
-module load geos/${geos_ver}
-module load netcdf/${netcdf_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
 module load prod_util/${produtil_ver}
 module load prod_envir/${prodenvir_ver}
 
-module list
-
 export cyc
+
+export maillist=${maillist:-'logan.dawson@noaa.gov,geoffrey.manikin@noaa.gov'}
 
 export OBSNAME=mrms
 
@@ -83,10 +76,17 @@ export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-NO}
 
+if [ -z "$maillist" ]; then
 
+   echo "maillist variable is not defined. Exiting without continuing."
 
-# CALL executable job script here
-$HOMEevs/jobs/cam/prep/JEVS_CAM_PREP
+else
+
+   # CALL executable job script here
+   $HOMEevs/jobs/cam/prep/JEVS_CAM_PREP
+
+fi
+
 
 
 ######################################################################

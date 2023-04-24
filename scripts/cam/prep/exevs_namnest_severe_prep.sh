@@ -147,7 +147,6 @@ i=1
    else
 
       export subject="${MODELNAME} Forecast Data Missing for EVS ${COMPONENT}"
-      export maillist=${maillist:-'logan.dawson@noaa.gov,geoffrey.manikin@noaa.gov'}
       echo "Warning: Only $nfiles ${MODELNAME} forecast files found for ${cyc}Z ${IDATE} cycle. $min_file_req files are required. METplus will not run." > mailmsg
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $maillist
