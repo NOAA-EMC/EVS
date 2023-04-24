@@ -248,6 +248,24 @@ def check_OBTYPE(OBTYPE):
         #sys.exit(1)
     return OBTYPE
 
+# RUN
+# info case:
+# warning case:
+# error case: should be a string, should be comma-separated or contain no other symbols than letters, numbers, dashes, and underlines
+def check_RUN(RUN):
+    if not isinstance(RUN, str):
+        sys.exit(f"The provided RUN ('{RUN}') is not a string."
+                     + f" RUN must be a string. Check the plotting"
+                     + f" configuration file.")
+        #sys.exit(1)
+    if not re.search(r'(^[ A-Za-z0-9,\-_]+)$', RUN):
+        sys.exit(f"The provided RUN ('{RUN}') is not valid. RUN may"
+                     + f" contain letters, numbers, hyphens, underscores,"
+                     + f" commas, and spaces only. Check the plotting"
+                     + f" configuration file.")
+        #sys.exit(1)
+    return RUN
+
 # DATE_TYPE
 # info case:
 # warning case:
