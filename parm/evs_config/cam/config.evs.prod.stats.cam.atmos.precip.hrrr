@@ -100,7 +100,6 @@ if [ "$BOOL_NBRHD" = True ]; then
         export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G240_CONUS.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_South.nc"
     elif [ "$NEST" = "ak" ]; then
         export VERIF_TYPE="mrms"
-        export MET_GRIB_TABLES=$PARMevs/metplus_config/cam/precip/stats/grib2_mrms.txt
         export COMINobs=${COMINmrms}
         export OBSNAME="mrms"
         export FHR_INCR_SHORT="3"
@@ -127,7 +126,6 @@ else
         export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G212_CONUS.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_South.nc"
     elif [ "$NEST" = "ak" ]; then
         export VERIF_TYPE="mrms"
-        export MET_GRIB_TABLES=$PARMevs/metplus_config/cam/precip/stats/grib2_mrms.txt
         export COMINobs=${COMINmrms}
         export OBSNAME="mrms"
         export FHR_INCR_SHORT="3"
