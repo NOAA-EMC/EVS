@@ -1,4 +1,4 @@
-#PBS -N jevs_rtofs_stats
+#PBS -N jevs_rtofs_argo_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -35,6 +35,10 @@ module list
 # specify environment variables
 export NET=evs
 export STEP=stats
+export RUN=argo
+export RUNupper=ARGO
+export VERIF_CASE=grid2obs
+export VARS="temp psal"
 export COMPONENT=rtofs
 
 # set up VDATE and COMIN and COMOUT

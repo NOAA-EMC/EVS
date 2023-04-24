@@ -96,6 +96,7 @@ if STEP == 'stats':
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'generate'))
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather'))
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather2'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather3'))
 if STEP == 'plots':
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'plotting_job_scripts'))
 for job_scripts_dir in job_scripts_dirs:
@@ -138,6 +139,10 @@ elif STEP == 'stats':
             working_output_base_dir = os.path.join(
                 DATA, VERIF_CASE, 'METplus_output'
             )
+        if job_type == 'gather3':
+            working_output_base_dir = os.path.join(
+                DATA, VERIF_CASE, 'METplus_output'
+            )
         working_dir_list.append(working_output_base_dir)
         if job_type == 'reformat':
             working_dir_list.append(os.path.join(
@@ -163,7 +168,7 @@ elif STEP == 'stats':
                 working_output_base_dir, 'grid_stat', 
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
-        if job_type in ['gather', 'gather2']:
+        if job_type in ['gather', 'gather2', 'gather3']:
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'stat_analysis', 'confs'
             ))
@@ -210,6 +215,10 @@ elif STEP == 'stats':
             working_output_base_dir = os.path.join(
                 DATA, VERIF_CASE, 'METplus_output'
             )
+        if job_type == 'gather3':
+            working_output_base_dir = os.path.join(
+                DATA, VERIF_CASE, 'METplus_output'
+            )
         working_dir_list.append(working_output_base_dir)
         if job_type == 'reformat':
             working_dir_list.append(os.path.join(
@@ -249,7 +258,7 @@ elif STEP == 'stats':
                 working_output_base_dir, 'point_stat', 
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
-        if job_type in ['gather', 'gather2']:
+        if job_type in ['gather', 'gather2', 'gather3']:
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'stat_analysis', 'confs'
             ))
