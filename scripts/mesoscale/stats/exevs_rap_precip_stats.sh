@@ -86,11 +86,12 @@ for group in $JOB_GROUP_list; do
             nc=$((nc+1))
         done
     fi
+    if [ $JOB_GROUP = gather_stats]; then
+        # Copy output files into the correct EVS COMOUT directory
+        if [ $SENDCOM = YES ]; then
+            cp -v $DATA/${MODELNAME}.${VDATE}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal/.
+        fi
+    fi
 done
-
-# Copy output files into the correct EVS COMOUT directory
-if [ $SENDCOM = YES ]; then
-    cp -v $DATA/${MODELNAME}.${VDATE}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal/.
-fi
 
 exit
