@@ -135,6 +135,9 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                 verif_type, JOB_GROUP, VERIF_CASE_STEP_abbrev_type,
                 verif_type_job
             )
+            job_env_dict.pop('fhr_start')
+            job_env_dict.pop('fhr_end')
+            job_env_dict.pop('fhr_inc')
             # Add job specific environment variables
             for verif_type_job_env_var in \
                     list(JOB_GROUP_obs_jobs_dict[verif_type]\
@@ -143,9 +146,6 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                     JOB_GROUP_obs_jobs_dict[verif_type]\
                     [verif_type_job]['env'][verif_type_job_env_var]
                 )
-            fhr_start = job_env_dict['fhr_start']
-            fhr_end = job_env_dict['fhr_end']
-            fhr_inc = job_env_dict['fhr_inc']
             verif_type_job_commands_list = (
                 JOB_GROUP_obs_jobs_dict[verif_type]\
                 [verif_type_job]['commands']
@@ -212,9 +212,6 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                     verif_type, JOB_GROUP, VERIF_CASE_STEP_abbrev_type,
                     verif_type_job
                 )
-                job_env_dict.pop('fhr_start')
-                job_env_dict.pop('fhr_end')
-                job_env_dict.pop('fhr_inc')
                 # Add job specific environment variables
                 for verif_type_job_env_var in \
                         list(JOB_GROUP_jobs_dict[verif_type]\
@@ -223,6 +220,9 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                         JOB_GROUP_jobs_dict[verif_type]\
                         [verif_type_job]['env'][verif_type_job_env_var]
                     )
+                fhr_start = job_env_dict['fhr_start']
+                fhr_end = job_env_dict['fhr_end']
+                fhr_inc = job_env_dict['fhr_inc']
                 verif_type_job_commands_list = (
                     JOB_GROUP_jobs_dict[verif_type]\
                     [verif_type_job]['commands']
@@ -286,6 +286,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                             job_env_dict['mask_list'] = env_var_mask_list
                         # Do file checks
                         check_model_files = True
+                        check_truth_files = False
+                        if JOB_GROUP == 'reformat_data' \
+                                and verif_type_job == 'TempAnom2m':
+                            check_model_files = False
                         if check_model_files:
                             model_files_exist = (
                                 sub_util.check_weekly_model_files(job_env_dict)
@@ -293,9 +297,6 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                             job_env_dict.pop('fhr_start')
                             job_env_dict.pop('fhr_end')
                             job_env_dict.pop('fhr_inc')
-                        if JOB_GROUP == 'reformat_data':
-                                and verif_type_job == 'TempAnom2m':
-                            check_truth_files = True
                         if check_truth_files:
                             all_truth_file_exist = sub_util.check_truth_files(
                                 job_env_dict
@@ -308,7 +309,11 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                             if model_files_exist:
                                 write_job_cmds = True
                             else:
-                                write_job_cmds = False
+                                if JOB_GROUP == 'reformat_data' \
+                                        and verif_type_job == 'TempAnom2m':
+                                    write_job_cmds = True
+                                else:
+                                    write_job_cmds = False
                         # Write environment variables
                         for name, value in job_env_dict.items():
                             job.write('export '+name+'='+value+'\n')
