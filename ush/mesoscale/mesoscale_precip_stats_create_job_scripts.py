@@ -328,6 +328,10 @@ generate_stats_jobs_dict = {
 ################################################
 #### gather_stats jobs
 ################################################
+gather_stats_jobs_dict = {'env': {},
+                          'commands': [m_util.metplus_command(
+                              'StatAnalysis_fcstMESOSCALE_precip.conf'
+                          )]}
 
 # Write jobs
 njob = 0
@@ -648,7 +652,46 @@ elif JOB_GROUP == 'generate_stats':
                                                   f" job {job_file}: {job_model_input_file}")
                             job.close()
                 date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
-    #elif JOB_GROUP == 'gather_stats':
+elif JOB_GROUP == 'gather_stats':
+    # Loop through and write job script for dates
+    print(f"----> Making job scripts for {VERIF_CASE} {STEP} "
+          +f"for job group {JOB_GROUP}")
+    valid_start_date_dt = datetime.datetime.strptime(VDATE, '%Y%m%d')
+    valid_end_date_dt = datetime.datetime.strptime(VDATE, '%Y%m%d')
+    valid_date_inc = 24
+    date_dt = valid_start_date_dt
+    while date_dt <= valid_end_date_dt:
+        # Write jobs
+        job_env_dict = m_util.initalize_job_env_dict()
+        job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
+        # Create job file
+        njob+=1
+        job_env_dict['job_id'] = 'job'+str(njob)
+        job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njob))
+        print("Creating job script: "+job_file)
+        job = open(job_file, 'w')
+        job.write('#!/bin/bash\n')
+        job.write('set -x\n')
+        job.write('\n')
+        # Write environment variables
+        for name, value in job_env_dict.items():
+            job.write(f"export {name}='{value}'\n")
+        job.write('\n')
+        # Check files exist
+        check_DATE_stat_dir = os.path.join(
+            COMOUT, f"{RUN}.{date_dt:%Y%m%d}", MODELNAME, VERIF_CASE
+        )
+        if len(glob.glob(check_DATE_stat_dir+'/*.stat')) != 0:
+            write_job_cmds = True
+        else:
+            write_job_cmds = False
+            print(f"WARNING: No files matching {check_DATE_stat_dir}/*.stat")
+        # Write job commands
+        if write_job_cmds:
+            for cmd in gather_stats_jobs_dict['commands']:
+                job.write(cmd+'\n')
+        job.close()
+        date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
 
 # If running USE_CFP, create POE scripts
 if USE_CFP == 'YES':
