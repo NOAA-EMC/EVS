@@ -21,6 +21,7 @@ from cam_stats_grid2obs_var_defs import generate_stats_jobs_dict as var_defs
 print(f"BEGIN: {os.path.basename(__file__)}")
 
 # Read in environment variables
+cyc = os.environ['cyc']
 job_type = os.environ['job_type']
 PYTHONPATH = os.environ['PYTHONPATH']
 COMPONENT = os.environ['COMPONENT']
@@ -85,7 +86,7 @@ elif job_type == 'generate':
 elif job_type == 'gather':
     VERIF_TYPE = os.environ['VERIF_TYPE']
     njob = os.environ['njob']
-elif job_type == 'gather2':
+elif job_type in ['gather2','gather3']:
     njob = os.environ['njob']
 
 # Get expanded details from variable name
@@ -146,6 +147,7 @@ if job_type == 'generate':
 
 # Make a dictionary of environment variables needed to run this particular job
 job_env_vars_dict = {
+    'cyc': cyc,
     'PYTHONPATH': PYTHONPATH,
     'VERIF_CASE': VERIF_CASE,
     'MODELNAME': MODELNAME,
@@ -371,6 +373,13 @@ elif STEP == 'stats':
             + f'_GatherByDay.conf'
         )
     elif job_type == 'gather2':
+        job_cmd_list.append(
+            f'{metplus_launcher} -c '
+            + f'{MET_PLUS_CONF}/'
+            + f'StatAnalysis_fcst{COMPONENT.upper()}'
+            + f'_GatherByCycle.conf'
+        )
+    elif job_type == 'gather3':
         job_cmd_list.append(
             f'{metplus_launcher} -c '
             + f'{MET_PLUS_CONF}/'
