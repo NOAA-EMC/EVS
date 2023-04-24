@@ -75,10 +75,10 @@ status=$?
 [[ $status -eq 0 ]] && echo "Successfully ran subseasonal_get_data_files.py"
 echo
 
-# Create job scripts to run METplus for reformat_data, assemble_data, generate_stats, and gather_stats
-for group in reformat_data assemble_data generate_stats gather_stats; do
+# Create job scripts to run METplus for reformat_data, generate_stats, and gather_stats
+for group in reformat_data generate_stats gather_stats; do
     export JOB_GROUP=$group
-    if [ "${JOB_GROUP}" in ["reformat_data", "assemble_data"] ]; then
+    if [ "${JOB_GROUP}" = "reformat_data" ]; then
 	echo "Creating and running jobs for grid-to-obs stats: ${JOB_GROUP}"
 	export njobs=0
 	WEEKLY_LIST="Week1 Week2 Week3 Week4 Week5"
@@ -104,11 +104,11 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
 	    status=$?
 	    [[ $status -ne 0 ]] && exit $status
 	    [[ $status -eq 0 ]] && echo "Successfully ran subseasonal_stats_grid2obs_create_weekly_reformat_job_scripts.py"
-	    export njobs=$((njobs+1))
+	    export njobs=$((njobs+3))
 	done
 	DAYS6_10_LIST="Days6_10"
 	for DAYS in $DAYS6_10_LIST; do
-	    export njobs=5
+	    export njobs=15
 	    export DAYS=$DAYS
 	    if [ "${DAYS}" = "Days6_10" ]; then
 		export CORRECT_INIT_DATE=$PDYm12
@@ -121,7 +121,7 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
 	done
 	WEEKS3_4_LIST="Weeks3_4"
 	for WEEKS in $WEEKS3_4_LIST; do
-	    export njobs=6
+	    export njobs=18
 	    export WEEKS=$WEEKS
 	    if [ "${WEEKS}" = "Weeks3_4" ]; then
 		export CORRECT_INIT_DATE=$PDYm30
@@ -268,7 +268,7 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
 	    [[ $status -ne 0 ]] && exit $status
 	    [[ $status -eq 0 ]] && echo "Successfully ran subseasonal_stats_grid2obs_create_poe_job_scripts.py"
 	fi
-    elif [ "${JOB_GROUP}" in ["generate_stats", "gather_stats"] ]; then
+    else
         echo "Creating and running jobs for grid-to-obs stats: ${JOB_GROUP}"
         python $USHevs/subseasonal/subseasonal_stats_grid2obs_create_job_scripts.py
         status=$?
