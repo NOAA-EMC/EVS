@@ -19,7 +19,7 @@ set -x
 export evs_ver=v1.0
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
-source $HOMEevs/versions/run.ver
+source $HOMEevs/versions/run.ver.metplus5.0.0
 export met_ver=11.0.0
 export metplus_ver=5.0.0
 

@@ -19,7 +19,7 @@ set -x
 export OMP_NUM_THREADS=1
 export evs_ver=v1.0
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
-source $HOMEevs/versions/run.ver
+source $HOMEevs/versions/run.ver.metplus5.0.0
 
 module reset
 module load envvar/$envvar_ver
@@ -67,6 +67,7 @@ export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
+export maillist='geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov' 
 
 ${HOMEevs}/jobs/global_ens/prep/JEVS_GLOBAL_ENS_PREP
 
