@@ -20,6 +20,7 @@ import cam_util as cutil
 print(f"BEGIN: {os.path.basename(__file__)}")
 
 # Read in environment variables
+cyc = os.environ['cyc']
 job_type = os.environ['job_type']
 PYTHONPATH = os.environ['PYTHONPATH']
 STEP = os.environ['STEP']
@@ -74,7 +75,7 @@ elif job_type == 'gather':
     VERIF_TYPE = os.environ['VERIF_TYPE']
     NEST = os.environ['NEST']
     njob = os.environ['njob']
-elif job_type == 'gather2':
+elif job_type in ['gather2', 'gather3']:
     njob = os.environ['njob']
 if VERIF_CASE == 'precip':
     if job_type == 'reformat':
@@ -99,11 +100,12 @@ if VERIF_CASE == 'precip':
     elif job_type == 'gather':
         COMPONENT = os.environ['COMPONENT']
         OBSNAME = os.environ['OBSNAME']
-    elif job_type == 'gather2':
+    elif job_type in ['gather2', 'gather3']:
         COMPONENT = os.environ['COMPONENT']
 
 # Make a dictionary of environment variables needed to run this particular job
 job_env_vars_dict = {
+    'cyc': cyc,
     'PYTHONPATH': PYTHONPATH,
     'VERIF_CASE': VERIF_CASE,
     'MODELNAME': MODELNAME,
@@ -254,6 +256,13 @@ if VERIF_CASE == 'precip':
                 + f'_GatherByDay.conf'
             )
         elif job_type == 'gather2':
+            job_cmd_list.append(
+                f'{metplus_launcher} -c '
+                + f'{MET_PLUS_CONF}/'
+                + f'StatAnalysis_fcst{COMPONENT.upper()}'
+                + f'_GatherByCycle.conf'
+            )
+        elif job_type == 'gather3':
             job_cmd_list.append(
                 f'{metplus_launcher} -c '
                 + f'{MET_PLUS_CONF}/'

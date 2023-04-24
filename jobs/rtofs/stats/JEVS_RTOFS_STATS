@@ -18,54 +18,18 @@ export COMINobs=${COMINobs:-$(compath.py $envir/dcom)}
 export COMINfcst=${COMINfcst:-$(compath.py $NET/${evs_ver}/prep/$COMPONENT)}
 export COMINclimo=${COMINclimo:-$EVS/fix/climos/$COMPONENT}
 export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
+export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE
 export COMOUTfinal=${COMOUTfinal:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
 export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
 
-# run grid2grid verifications for each RUN;
-# RUN is the validation source: ghrsst, smos, smap etc.
-for rcase in ghrsst smos smap aviso osisaf; do
-  export RUN=$rcase
-  export VERIF_CASE=grid2grid
-  export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE
-
-  if [ $rcase = 'ghrsst' ] ; then
-     export RUNupper=GHRSST
-     export VAR=sst
+  if [ $RUN = 'argo' ] ; then
+     for VAR in $VARS; do
+	 export VAR
+	 export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/$VAR
+	 $EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${STEP}.sh
+     done
+  else
+     $EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${STEP}.sh
   fi
-
-  if [ $rcase = 'smos' ] ; then
-     export RUNupper=SMOS
-     export VAR=sss
-  fi
-
-  if [ $rcase = 'smap' ] ; then
-     export RUNupper=SMAP
-     export VAR=sss
-  fi
-
-  if [ $rcase = 'aviso' ] ; then
-     export RUNupper=AVISO
-     export VAR=ssh
-  fi
-
-  if [ $rcase = 'osisaf' ] ; then
-     export RUNupper=OSISAF
-     export VAR=sic
-  fi
-
-  $EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${STEP}.sh
-done
-
-# run grid2obs verifications with Argo data
-export VERIF_CASE=grid2obs
-export RUN=argo
-export RUNupper=ARGO
-
-for vari in temp psal; do
-  export VAR=$vari
-  export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/$VAR
-
-  $EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${STEP}.sh
-done
 
 ################################# END OF JOB ##################################
