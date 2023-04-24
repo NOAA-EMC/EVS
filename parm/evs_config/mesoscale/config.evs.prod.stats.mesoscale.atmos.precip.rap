@@ -11,11 +11,6 @@
 
 echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 
-# METplus Settings
-#export MET_PLUS_OUT=${DATA}/${VERIF_CASE}/METplus_output
-#export MET_PLUS_OUT=${DATAROOTtmp}/${VERIF_CASE}/METplus_output
-export MET_CONFIG_OVERRIDES=""
-
 # Logging
 export METPLUS_VERBOSITY="DEBUG"
 export MET_VERBOSITY="2"
@@ -33,12 +28,6 @@ export ACCUM03_FHR_INCR=3
 export ACCUM24_FHR_START=24
 export ACCUM24_FHR_END=51
 export ACCUM24_FHR_INCR=3
-
-export job=${NET}_${COMPONENT}_${RUN}
-export job_name=${NET}'_'${COMPONENT}'_'${RUN}'_'${VERIF_CASE}'_'${STEP}
-
-# Model/Obs Settings
-export COMINfcst=${COMINrap}
 
 # Additional Verification Settings
 export ACCUM01_THRESH="ge0.254,ge1.27,ge2.54,ge6.35,ge12.7,ge19.05,ge25.4"
