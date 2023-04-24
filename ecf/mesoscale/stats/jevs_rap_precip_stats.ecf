@@ -38,6 +38,7 @@ set -x
 # export envir="dev"
   export envir="prod"
   export evs_run_mode="production"
+  export maillist='geoffrey.manikin@noaa.gov,mallory.row@noaa.gov'
 
 # EVS Settings
 # export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS

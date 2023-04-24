@@ -36,12 +36,11 @@ status=$?
 [[ $status -eq 0 ]] && echo "Succesfully ran mesoscale_precip_stats_get_data.py"
 
 # Send for missing files
-#export maillist=${maillist:-'geoffrey.manikin@noaa.gov,mallory.row@noaa.gov'}
-#if ls ${DATA}/mail_** 1> /dev/null 2>&1; then
-#    for FILE in $DATA/mail_*; do
-#        $FILE
-#    done
-#fi
+if ls ${DATA}/mail_** 1> /dev/null 2>&1; then
+    for FILE in $DATA/mail_*; do
+        $FILE
+    done
+fi
 
 # What jobs to run
 if [ $cyc = 23 ]; then
