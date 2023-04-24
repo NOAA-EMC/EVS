@@ -28,7 +28,6 @@ export PrgEnvintel_ver=8.1.0
 export prod_envir_ver=2.0.6
 export prod_util_ver=2.0.13
 export proj_ver=7.1.0
-export python_ver=3.10.4
 export rsync_ver=3.2.2
 export sigio_ver=2.3.2
 export sp_ver=2.3.3
