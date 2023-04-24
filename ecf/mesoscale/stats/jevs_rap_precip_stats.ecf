@@ -37,7 +37,7 @@ set -x
   
 # export envir="dev"
   export envir="prod"
-  export evs_run_mode="standalone"
+  export evs_run_mode="production"
 
 # EVS Settings
 # export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
