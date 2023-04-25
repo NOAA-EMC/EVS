@@ -1,5 +1,5 @@
 '''
-Program Name: subseasonal_stats_grid2obs_create_weeks3_4_reformat_job_scripts.py
+Program Name: subseasonal_stats_grid2obs_create_weeks3_4_assemble_job_scripts.py
 Contact(s): Shannon Shields
 Abstract: This creates multiple independent job scripts. These
           jobs contain all the necessary environment variables
@@ -55,26 +55,48 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
     os.makedirs(JOB_GROUP_jobs_dir)
 
 ################################################
-#### reformat_data jobs
+#### assemble_data jobs
 ################################################
-reformat_data_obs_jobs_dict = {
-    'PrepBufr': {
-        'PrepbufrNAM': {'env': {'prepbufr': 'nam',
-                                'obs_window': '900',
-                                'msg_type': 'ADPSFC',
-                                'obs_bufr_var_list': "'TOB'"},
-                        'commands': [sub_util.metplus_command(
-                                         'PB2NC_obsPrepbufr.conf'
-                                     )]},
-    }
+assemble_data_obs_jobs_dict = {
+    'PrepBufr': {}
 }
-reformat_data_model_jobs_dict = {
+assemble_data_model_jobs_dict = {
     'PrepBufr': {
-        'GenEnsProd': {'env': {'var1_name': 'TMP',
-                               'var1_levels': 'Z2'},
+        'TempAnom2m': {'env': {'prepbufr': 'nam',
+                               'obs_window': '900',
+                               'msg_type': 'ADPSFC',
+                               'var1_fcst_name': 'TMP_Z2_ENS_MEAN',
+                               'var1_fcst_levels': 'Z2',
+                               'var1_fcst_options': '',
+                               'var1_obs_name': 'TMP',
+                               'var1_obs_levels': 'Z2',
+                               'var1_obs_options': '',
+                               'met_config_overrides': ("'climo_mean "
+                                                        +"= obs;'")},
                        'commands': [sub_util.metplus_command(
-                                        'GenEnsProd_fcstSUBSEASONAL_'
-                                        +'Weeks3_4NetCDF.conf'
+                                        'PointStat_fcstSUBSEASONAL_'
+                                        +'obsPrepbufr_climoERA5_'
+                                        +'Weeks3_4MPR.conf'
+                                    ),
+                                    sub_util.python_command(
+                                        'subseasonal_stats_'
+                                        'grid2obs_create_anomaly.py',
+                                        ['TMP_Z2',
+                                         os.path.join(
+                                             '$DATA',
+                                             '${VERIF_CASE}_${STEP}',
+                                             'METplus_output',
+                                             '${RUN}.'
+                                             +'$DATE',
+                                             '$MODEL', '$VERIF_CASE',
+                                             'point_stat_'
+                                             +'${VERIF_TYPE}_'
+                                             +'${job_name}_'
+                                             +'{lead?fmt=%2H}0000L_'
+                                             +'{valid?fmt=%Y%m%d}_'
+                                             +'{valid?fmt=%H}0000V'
+                                             +'.stat'
+                                         )]
                                     )]},
     }
 }
@@ -115,7 +137,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                 [verif_type_job]['commands']
             ) 
             # Loop through and write job script for dates and models
-            if JOB_GROUP == 'reformat_data':
+            if JOB_GROUP == 'assemble_data':
                 if verif_type == 'PrepBufr':
                     job_env_dict['valid_hr_start'] = '00'
                     job_env_dict['valid_hr_end'] = '00'
@@ -192,7 +214,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                     [verif_type_job]['commands']
                 )
                 # Loop through and write job script for dates and models
-                if JOB_GROUP == 'reformat_data':
+                if JOB_GROUP == 'assemble_data':
                     if verif_type == 'PrepBufr' \
                             and verif_type_job == 'TempAnom2m':
                         job_env_dict['valid_hr_start'] = '00'
@@ -212,6 +234,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                 job_env_dict['CORRECT_LEAD_SEQ'] = CORRECT_LEAD_SEQ
                 date_dt = valid_start_date_dt
                 while date_dt <= valid_end_date_dt:
+                    sdate_dt = date_dt - datetime.timedelta(days=14)
+                    job_env_dict['START'] = sdate_dt.strftime('%Y%m%d')
                     job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
                     job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
                     job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
@@ -226,7 +250,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                         job.write('set -x\n')
                         job.write('\n')
                         # Set any environment variables for special cases
-                        if JOB_GROUP == 'reformat_data':
+                        if JOB_GROUP == 'assemble_data':
                             if verif_type == 'PrepBufr':
                                 job_env_dict['grid'] = 'G003'
                                 mask_list = [
@@ -250,7 +274,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                             job_env_dict['mask_list'] = env_var_mask_list
                         # Do file checks
                         check_model_files = True
-                        check_truth_files = False
+                        check_truth_files = True
                         if check_model_files:
                             model_files_exist = (
                                 sub_util.check_weeks3_4_model_files(job_env_dict)

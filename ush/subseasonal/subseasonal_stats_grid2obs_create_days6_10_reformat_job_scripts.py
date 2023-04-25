@@ -76,42 +76,6 @@ reformat_data_model_jobs_dict = {
                                         'GenEnsProd_fcstSUBSEASONAL_'
                                         +'Days6_10NetCDF.conf'
                                     )]},
-        'TempAnom2m': {'env': {'prepbufr': 'nam',
-                               'obs_window': '900',
-                               'msg_type': 'ADPSFC',
-                               'var1_fcst_name': 'TMP_Z2_ENS_MEAN',
-                               'var1_fcst_levels': 'Z2',
-                               'var1_fcst_options': '',
-                               'var1_obs_name': 'TMP',
-                               'var1_obs_levels': 'Z2',
-                               'var1_obs_options': '',
-                               'met_config_overrides': ("'climo_mean "
-                                                        +"= fcst;'")},
-                       'commands': [sub_util.metplus_command(
-                                        'PointStat_fcstSUBSEASONAL_'
-                                        +'obsPrepbufr_climoERA5_'
-                                        +'Days6_10MPR.conf'
-                                    ),
-                                    sub_util.python_command(
-                                        'subseasonal_stats_'
-                                        'grid2obs_create_anomaly.py',
-                                        ['TMP_Z2',
-                                         os.path.join(
-                                             '$DATA',
-                                             '${VERIF_CASE}_${STEP}',
-                                             'METplus_output',
-                                             '${RUN}.'
-                                             +'$DATE',
-                                             '$MODEL', '$VERIF_CASE',
-                                             'point_stat_'
-                                             +'${VERIF_TYPE}_'
-                                             +'${job_name}_'
-                                             +'{lead?fmt=%2H}0000L_'
-                                             +'{valid?fmt=%Y%m%d}_'
-                                             +'{valid?fmt=%H}0000V'
-                                             +'.stat'
-                                         )]
-                                    )]},
     }
 }
 
@@ -287,9 +251,6 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                         # Do file checks
                         check_model_files = True
                         check_truth_files = False
-                        if JOB_GROUP == 'reformat_data' \
-                                and verif_type_job == 'TempAnom2m':
-                            check_model_files = False
                         if check_model_files:
                             model_files_exist = (
                                 sub_util.check_days6_10_model_files(job_env_dict)
@@ -309,11 +270,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                             if model_files_exist:
                                 write_job_cmds = True
                             else:
-                                if JOB_GROUP == 'reformat_data' \
-                                        and verif_type_job == 'TempAnom2m':
-                                    write_job_cmds = True
-                                else:
-                                    write_job_cmds = False
+                                write_job_cmds = False
                         # Write environment variables
                         for name, value in job_env_dict.items():
                             job.write('export '+name+'='+value+'\n')

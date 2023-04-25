@@ -25,7 +25,7 @@ COMPONENT = os.environ['COMPONENT']
 VERIF_TYPE = os.environ['VERIF_TYPE']
 job_name = os.environ['job_name']
 MODEL = os.environ['MODEL']
-3_4START = os.environ['3_4START']
+W3_4START = os.environ['W3_4START']
 DATE = os.environ['DATE']
 valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
@@ -71,7 +71,7 @@ valid_hr = int(valid_hr_start)
 while valid_hr <= int(valid_hr_end):
     weeks_avg_valid_end = datetime.datetime.strptime(DATE+str(valid_hr),
                                                      '%Y%m%d%H')
-    weeks_avg_valid_start = datetime.datetime.strptime(3_4START
+    weeks_avg_valid_start = datetime.datetime.strptime(W3_4START
                                                        +str(valid_hr),
                                                        '%Y%m%d%H')
     weeks_avg_day_end = int(fhr_end)/24

@@ -97,7 +97,7 @@ assemble_data_model_jobs_dict = {
                        'commands': [sub_util.metplus_command(
                                         'PointStat_fcstSUBSEASONAL_'
                                         +'obsPrepbufr_climoERA5_'
-                                        +'MPR.conf'
+                                        +'WeeklyMPR.conf'
                                     ),
                                     sub_util.python_command(
                                         'subseasonal_stats_'
@@ -377,10 +377,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
             while date_dt <= valid_end_date_dt:
                 wdate_dt = date_dt - datetime.timedelta(days=7)
                 job_env_dict['WEEKLYSTART'] = wdate_dt.strftime('%Y%m%d')
-                6_10date_dt = date_dt - datetime.timedelta(days=5)
-                job_env_dict['6_10START'] = 6_10date_dt.strftime('%Y%m%d')
-                3_4date_dt = date_dt - datetime.timedelta(days=14)
-                job_env_dict['3_4START'] = 3_4date_dt.strftime('%Y%m%d')
+                dys6_10date_dt = date_dt - datetime.timedelta(days=5)
+                job_env_dict['D6_10START'] = dys6_10date_dt.strftime('%Y%m%d')
+                w3_4date_dt = date_dt - datetime.timedelta(days=14)
+                job_env_dict['W3_4START'] = w3_4date_dt.strftime('%Y%m%d')
                 job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
                 job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
                 job_env_dict['valid_hr_end'] = date_dt.strftime('%H')

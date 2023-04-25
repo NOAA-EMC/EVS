@@ -25,7 +25,7 @@ COMPONENT = os.environ['COMPONENT']
 VERIF_TYPE = os.environ['VERIF_TYPE']
 job_name = os.environ['job_name']
 MODEL = os.environ['MODEL']
-6_10START = os.environ['6_10START']
+D6_10START = os.environ['D6_10START']
 DATE = os.environ['DATE']
 valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
@@ -71,7 +71,7 @@ valid_hr = int(valid_hr_start)
 while valid_hr <= int(valid_hr_end):
     days_avg_valid_end = datetime.datetime.strptime(DATE+str(valid_hr),
                                                     '%Y%m%d%H')
-    days_avg_valid_start = datetime.datetime.strptime(6_10START
+    days_avg_valid_start = datetime.datetime.strptime(D6_10START
                                                       +str(valid_hr),
                                                       '%Y%m%d%H')
     days_avg_day_end = int(fhr_end)/24
