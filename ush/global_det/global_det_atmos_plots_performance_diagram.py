@@ -475,7 +475,7 @@ def main():
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',
-        'version': '10.1.1'
+        'version': '11.0.1'
     }
     # Create OUTPUT_DIR
     if not os.path.exists(OUTPUT_DIR):
