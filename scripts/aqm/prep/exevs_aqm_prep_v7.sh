@@ -1,7 +1,7 @@
 set -x
 
 export dirname=aqm
-export gridspec=148
+export gridspec=793
 
 mkdir -p $DATA/modelinput
 cd $DATA/modelinput
