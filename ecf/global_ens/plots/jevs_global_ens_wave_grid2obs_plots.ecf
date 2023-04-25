@@ -28,7 +28,7 @@ export obsproc_ver=$obsproc_ver
 # Load modules
 ############################################################
 module reset
-#export HPC_OPT=/apps/ops/prod/libs
+export HPC_OPT=/apps/ops/prod/libs
 module use /apps/ops/prod/libs/modulefiles/compiler/intel/${intel_ver}
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module --ignore-cache load intel/${intel_ver}
@@ -50,7 +50,8 @@ module list
 ############################################################
 # set some variables
 ############################################################
-export envir=dev
+#export envir=dev
+export envir=prod
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
@@ -69,6 +70,13 @@ export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export OUTPUTROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}
+######################################
+# Correct MET/METplus roots (Aug 2022)
+######################################
+export MET_ROOT=/apps/ops/prod/libs/intel/${intel_ver}/met/${met_ver}
+export MET_BASE=${MET_ROOT}/share/met
+export METPLUS_PATH=/apps/ops/prod/libs/intel/${intel_ver}/metplus/${metplus_ver}
+export PATH=${METPLUS_PATH}/ush:${MET_ROOT}/bin:${PATH}
 
 export run_mpi='yes'
 export gather='yes'

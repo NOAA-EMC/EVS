@@ -70,8 +70,7 @@ VERIF_CASE_STEP = os.environ['VERIF_CASE_STEP']
 VCS = os.environ['VERIF_CASE_STEP']
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 VCS_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
-if VERIF_CASE_STEP != 'tropcyc':
-    VCS_type_list = os.environ[VERIF_CASE_STEP_abbrev+'_type_list'].split(' ')
+VCS_type_list = os.environ[VERIF_CASE_STEP_abbrev+'_type_list'].split(' ')
 
 # Build dictionary
 env_var_dict = {}
@@ -96,15 +95,10 @@ if VCS in ['grid2grid_stats', 'grid2obs_stats']:
         env_var_dict[VCS_abbrev_type+'_init_hr_end'] = VCS_abbrev_type_fcyc_end
         env_var_dict[VCS_abbrev_type+'_init_hr_inc'] = VCS_abbrev_type_fcyc_inc
         # Process valid hours
-        # note: precip and satellite require special processing
+        # note: precip requires special processing
         if 'precip' in VCS:
             if VCS_type == 'ccpa_accum24hr':
                 VCS_abbrev_type_vhr_list = [ '12' ]
-                VCS_abbrev_type_obs_daily_file = 'True'
-        elif 'satellite' in VCS:
-            if VCS_type in ['ghrsst_ncei_avhrr_anl',
-                            'ghrsst_ospo_geopolar_anl']:
-                VCS_abbrev_type_vhr_list = [ '00' ]
                 VCS_abbrev_type_obs_daily_file = 'True'
         else:
             VCS_abbrev_type_vhr_list = (
@@ -122,23 +116,18 @@ if VCS in ['grid2grid_stats', 'grid2obs_stats']:
         env_var_dict[VCS_abbrev_type+'_valid_hr_beg'] = VCS_abbrev_type_vhr_beg
         env_var_dict[VCS_abbrev_type+'_valid_hr_end'] = VCS_abbrev_type_vhr_end
         env_var_dict[VCS_abbrev_type+'_valid_hr_inc'] = VCS_abbrev_type_vhr_inc
-        if VCS in ['precip_stats', 'satellite_stats']:
+        if VCS == 'precip_stats':
             env_var_dict[VCS_abbrev_type+'_obs_daily_file'] = (
                 VCS_abbrev_type_obs_daily_file
             )
         # Process forecast hours
-        # note: precip and satellite require special processing
+        # note: precip requires special processing
         VCS_abbrev_type_fhr_min = os.environ[VCS_abbrev_type+'_fhr_min']
         VCS_abbrev_type_fhr_max = os.environ[VCS_abbrev_type+'_fhr_max']
-        if 'precip' in VCS or 'satellite' in VCS:
-            if 'precip' in VCS:
-                VCS_abbrev_type_accum_length = (
-                    VCS_type.split('accum')[1].replace('hr','')
-                )
-            elif 'satellite' in VCS:
-                if VCS_type in ['ghrsst_ncei_avhrr_anl',
-                                'ghrsst_ospo_geopolar_anl']:
-                    VCS_abbrev_type_accum_length = '24'
+        if 'precip' in VCS:
+            VCS_abbrev_type_accum_length = (
+                VCS_type.split('accum')[1].replace('hr','')
+            )
             if int(VCS_abbrev_type_fhr_min) \
                     < int(VCS_abbrev_type_accum_length):
                 VCS_abbrev_type_fhr_min = VCS_abbrev_type_accum_length
