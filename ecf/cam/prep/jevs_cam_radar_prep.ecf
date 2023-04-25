@@ -65,6 +65,8 @@ module load metplus/${metplus_ver}
 module load prod_util/${produtil_ver}
 module load prod_envir/${prodenvir_ver}
 
+module list
+
 export cyc
 
 export maillist=${maillist:-'logan.dawson@noaa.gov,geoffrey.manikin@noaa.gov'}
@@ -88,10 +90,8 @@ else
 fi
 
 
-
 ######################################################################
 # Purpose: This job preprocesses MRMS radar observations for use in
 #          CAM radar verification job
 ######################################################################
-
 
