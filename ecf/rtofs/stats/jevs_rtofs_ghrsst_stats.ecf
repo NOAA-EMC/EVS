@@ -1,4 +1,4 @@
-#PBS -N jevs_rtofs_ndbc_stats
+#PBS -N jevs_rtofs_ghrsst_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -35,10 +35,10 @@ module list
 # specify environment variables
 export NET=evs
 export STEP=stats
-export RUN=ndbc
-export RUNupper=NDBC_STANDARD
-export VERIF_CASE=grid2obs
+export RUN=ghrsst
+export RUNupper=GHRSST
 export VAR=sst
+export VERIF_CASE=grid2grid
 export COMPONENT=rtofs
 
 # set up VDATE and COMIN and COMOUT
@@ -62,8 +62,7 @@ $EVS/jobs/$COMPONENT/$STEP/JEVS_RTOFS_STATS
 #%manual
 ######################################################################
 # Purpose: The job and task scripts work together to create stat
-#          files for RTOFS forecasts verified with NDBC data using
-#          MET/METplus.
+#          files for RTOFS forecast verification using MET/METplus.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
 ######################################################################
 #%end
