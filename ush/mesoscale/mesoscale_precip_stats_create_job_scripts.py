@@ -407,9 +407,17 @@ if JOB_GROUP == 'assemble_data':
                                         input_accum = '03'
                                         input_level = 'A3'
                                 if pcp_combine_method == 'SUBTRACT':
-                                    shift_sec = str(
-                                        (fhr - int(bucket_intvl)) * 3600
-                                    )
+                                    if fhr < int(bucket_intvl):
+                                        shift_sec = '0'
+                                    elif int(bucket_intvl) == 3:
+                                        shift_sec = str(
+                                            (fhr - int(bucket_intvl)) * 3600
+                                        )
+                                    elif int(bucket_intvl) == 12:
+                                        shift_sec = str(
+                                            ((fhr - int(bucket_intvl)) * 3600)
+                                            + (fhr % 12) * 3600
+                                        )
                                     input_accum = (
                                         'A{lead?fmt=%H?shift=-'+shift_sec+'}'
                                     )
@@ -692,7 +700,7 @@ elif JOB_GROUP == 'gather_stats':
                 job.write(cmd+'\n')
         job.close()
         date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
-
+exit()
 # If running USE_CFP, create POE scripts
 if USE_CFP == 'YES':
     job_files = glob.glob(os.path.join(DATA, 'jobs', JOB_GROUP, 'job*'))
