@@ -20,6 +20,9 @@ export PREP_SAVE_DIR=${COMOUT}.${VDATE}/${MODELNAME}
 export dirname=cs
 export gridspec=148
 
+export model1=`echo $MODELNAME | tr a-z A-Z`
+echo $model1
+
 ## Pre-Processed EPA AIRNOW ASCII input file to METPlus NetCDF input for PointStat
 ##
 ## Hourly AirNOW observation
@@ -34,10 +37,10 @@ while [ ${ic} -le ${endvhr} ]; do
     checkfile=${COMINobs}/${VDATE}/airnow/${input_prefix}_${VDATE}${vldhr}.dat
     if [ -s ${checkfile} ]; then
         export VHOUR=${vldhr}
-	if [ -s ${conf_dir}/ASCII2NC_hourly_obsAIRNOW.conf ]; then
-        run_metplus.py ${conf_dir}ASCII2NC_hourly_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
+	if [ -s ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf ]; then
+        run_metplus.py ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
         else
-            echo "can not find ${conf_dir}/ASCII2NC_hourly_obsAIRNOW.conf"
+            echo "can not find ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf"
 	fi
     else
 	## add email function
@@ -50,10 +53,10 @@ done
 ##
 checkfile=${COMINobs}/${VDATE}/airnow/daily_data_v2.dat
 if [ -s ${checkfile} ]; then
-    if [ -s ${conf_dir}/ASCII2NC_daily_obsAIRNOW.conf ]; then
-        run_metplus.py ${conf_dir}/ASCII2NC_daily_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
+    if [ -s ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf ]; then
+        run_metplus.py ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
     else
-            echo "can not find ${conf_dir}/ASCII2NC_daily_obsAIRNOW.conf"
+            echo "can not find ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf"
     fi
 else
     ## add email function
