@@ -35,6 +35,10 @@ module list
 # specify environment variables
 export NET=evs
 export STEP=stats
+export RUN=ndbc
+export RUNupper=NDBC_STANDARD
+export VERIF_CASE=grid2obs
+export VAR=sst
 export COMPONENT=rtofs
 
 # set up VDATE and COMIN and COMOUT
@@ -52,7 +56,7 @@ export CONFIGevs=$EVS/parm/metplus_config/$COMPONENT
 export ARCHevs=/lfs/h2/emc/vpppg/noscrub/$USER/stat_archive/RTOFS
 
 # call j-job
-$EVS/jobs/$COMPONENT/$STEP/JEVS_RTOFS_NDBC_STATS
+$EVS/jobs/$COMPONENT/$STEP/JEVS_RTOFS_STATS
 
 #%include <tail.h>
 #%manual
