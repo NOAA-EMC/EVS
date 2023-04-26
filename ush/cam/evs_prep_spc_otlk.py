@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 ###############################################################################
 # Name of Script: evs_prep_spc_otlk.py
 # Contact(s):     Marcel Caron (marcel.caron@noaa.gov)

@@ -81,7 +81,6 @@ export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-NO}
 
-
 if [ -z "$maillist" ]; then
 
    echo "maillist variable is not defined. Exiting without continuing."
@@ -98,5 +97,4 @@ fi
 # Purpose: This job preprocesses RRFS data for use in
 #          CAM severe verification jobs
 ######################################################################
-
 

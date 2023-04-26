@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 ###############################################################################
 # Name of Script: evs_prep_mrms_radar.py
 # Contact(s):     Logan C. Dawson (logan.dawson@noaa.gov)

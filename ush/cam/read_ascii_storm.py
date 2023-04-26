@@ -1,3 +1,14 @@
+#!/usr/bin/env python3
+
+###############################################################################
+# Name of Script: read_ascii_storm.py
+# Contact(s):     Logan C. Dawson (logan.dawson@noaa.gov)
+# Purpose of Script: Read SPC LSR data in csv format and output to 
+#                    a MET-compatible netcdf file
+#
+# History Log:
+#   1/2023: Script copied from METplus repository
+###############################################################################
 
 import pandas as pd
 import os
