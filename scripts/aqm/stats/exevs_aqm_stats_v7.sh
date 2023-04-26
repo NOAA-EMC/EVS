@@ -3,9 +3,9 @@ set -x
 mkdir -p $DATA/logs
 mkdir -p $DATA/stat
 
-export OBSDIR=OBS
-export dirnam=cs
-export gridspec=148
+export airnow_id=hourly_aqobs
+export dirnam=aqm
+export gridspec=793
 export fcstmax=72
 
 export MASK_DIR=/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix
@@ -67,7 +67,7 @@ do
     numpmfcst=0
     while [ ${ihr} -le $fcstmax ]
     do
-      filehr=$(printf %2.2d ${ihr})    ## fhr of grib2 filename is in 3 digit for aqmv7 and 2 digit for aqmv6
+      filehr=$(printf %3.3d ${ihr})    ## fhr of grib2 filename is in 3 digit for aqmv7 and 2 digit for aqmv6
       fhr=$(printf %2.2d ${ihr})       ## fhr for the processing valid hour is in 2 digit
       export fhr
 
@@ -150,8 +150,6 @@ done
 if [ $cyc = 11 ]
 then
 
-  export OBSDIR=OBSMAX
-
   for biastyp in raw bc
   do
 
@@ -219,8 +217,6 @@ fi
 
 if [ $cyc = 04 ]
 then
-
-  export OBSDIR=OBSMAX
 
   for biastyp in raw bc
   do

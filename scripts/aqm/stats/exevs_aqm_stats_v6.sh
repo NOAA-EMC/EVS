@@ -3,7 +3,7 @@ set -x
 mkdir -p $DATA/logs
 mkdir -p $DATA/stat
 
-export OBSDIR=OBS
+export airnow_id=hourly_aqobs
 export dirnam=cs
 export gridspec=148
 export fcstmax=72
@@ -150,7 +150,6 @@ done
 if [ $cyc = 11 ]
 then
 
-  export OBSDIR=OBSMAX
 
   for biastyp in raw bc
   do
@@ -219,8 +218,6 @@ fi
 
 if [ $cyc = 04 ]
 then
-
-  export OBSDIR=OBSMAX
 
   for biastyp in raw bc
   do

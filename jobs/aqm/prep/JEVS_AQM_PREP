@@ -47,7 +47,7 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 echo $COMPATH
 
 export COMIN=${COMIN:-$(compath.py evs/${evs_ver}/)}
-export COMINobs=${COMINobs:-$(compath.py obsproc/${obsproc_ver})}
+export COMINobs=${COMINobs:-${DCOMROOT}}
 export COMINaqm=${COMINaqm:-$(compath.py ${modsys}/${mod_ver})}
 export COMOUT=${COMOUT:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
 
