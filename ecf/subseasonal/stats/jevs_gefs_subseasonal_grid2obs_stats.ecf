@@ -54,6 +54,8 @@ export MET_ROOT=/apps/ops/prod/libs/intel/${intel_ver}/met/${met_ver}
 export MET_BASE=${MET_ROOT}/share/met
 export PATH=${MET_ROOT}/bin:${PATH}
 export MET_bin_exec=bin
+export METviewer_AWS_scripts_dir=/lfs/h2/emc/vpppg/save/emc.vpppg/verification/metplus/metviewer_aws_scripts
+
 
 
 export USER=$USER
