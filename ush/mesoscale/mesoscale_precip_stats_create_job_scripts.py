@@ -700,7 +700,7 @@ elif JOB_GROUP == 'gather_stats':
                 job.write(cmd+'\n')
         job.close()
         date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
-exit()
+
 # If running USE_CFP, create POE scripts
 if USE_CFP == 'YES':
     job_files = glob.glob(os.path.join(DATA, 'jobs', JOB_GROUP, 'job*'))
