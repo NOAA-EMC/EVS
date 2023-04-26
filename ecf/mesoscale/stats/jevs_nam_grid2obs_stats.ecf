@@ -55,7 +55,8 @@ set -x
 
 # Load Modules
 
-source $HOMEevs/versions/run.ver
+#source $HOMEevs/versions/run.ver
+source $HOMEevs/versions/run.ver.metplus5.0.0
 
 source /usr/share/lmod/lmod/init/sh
 module reset
@@ -103,6 +104,12 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
   export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/logan.dawson/evs/v1.0/prep/cam
   export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
   export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
+
+#  export DATA=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+#  export COMINnam=
+#  export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
+#  export cyc=$(date -d "today" +"%H")
+#  export maillist="roshan.shrestha@noaa.gov"
 
 # VAR list to run
 #  export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH"
