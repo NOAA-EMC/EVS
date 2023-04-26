@@ -11,7 +11,8 @@ export model=evs
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
-source $HOMEevs/versions/run.ver
+## source $HOMEevs/versions/run.ver
+#source $HOMEevs/versions/run.ver.metplus5.0.0
 
 ###%include <head.h>
 ###%include <envir-p1.h>
