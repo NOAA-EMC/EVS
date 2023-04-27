@@ -58,15 +58,7 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 #### reformat_data jobs
 ################################################
 reformat_data_obs_jobs_dict = {
-    'PrepBufr': {
-        'PrepbufrNAM': {'env': {'prepbufr': 'nam',
-                                'obs_window': '900',
-                                'msg_type': 'ADPSFC',
-                                'obs_bufr_var_list': "'TOB'"},
-                        'commands': [sub_util.metplus_command(
-                                         'PB2NC_obsPrepbufr.conf'
-                                     )]},
-    }
+    'PrepBufr': {}
 }
 reformat_data_model_jobs_dict = {
     'PrepBufr': {
@@ -131,8 +123,6 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
             valid_date_inc = int(job_env_dict['valid_hr_inc'])
             date_dt = valid_start_date_dt
             while date_dt <= valid_end_date_dt:
-                sdate_dt = date_dt - datetime.timedelta(days=5)
-                job_env_dict['START'] = sdate_dt.strftime('%Y%m%d')
                 job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
                 job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
                 job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
