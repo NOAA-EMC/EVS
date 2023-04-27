@@ -386,14 +386,14 @@ if [ $modnam = prepbufr ] ; then
       echo  "export vbeg=${cyc}" >> run_pb2nc.${cyc}.sh
       echo  "export vend=${cyc}" >> run_pb2nc.${cyc}.sh
 
-      if [ -s $COMINprepbufr/gfs.${vday}/${cyc}/atmos/gfs.t${cyc}z.prepbufr ] ; then
+      if [ -s $COMINprepbufr/gdas.${vday}/${cyc}/atmos/gdas.t${cyc}z.prepbufr ] ; then
         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr.cong" >> run_pb2nc.${cyc}.sh
         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr_Profile.cong" >> run_pb2nc.${cyc}.sh
       else
         export subject="Prepbufr  Data Missing for EVS ${COMPONENT}"
         export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
         echo "Warning:  No prepbufr analysis available for ${INITDATE}${cyc}" > mailmsg
-        echo Missing file is $COMINprepbufr/gfs.${vday}/${cyc}/atmos/gfs.t${cyc}z.prepbufr  >> mailmsg
+        echo Missing file is $COMINprepbufr/gdas.${vday}/${cyc}/atmos/gdas.t${cyc}z.prepbufr  >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
         cat mailmsg | mail -s "$subject" $maillist
       fi 
