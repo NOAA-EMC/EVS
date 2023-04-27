@@ -38,6 +38,15 @@ set -x
   export envir="prod"
   export evs_run_mode="standalone"
 
+  export ACCOUNT=VERF-DEV
+  export QUEUESERV="dev_transfer"
+  export QUEUE="dev"
+  export QUEUESHARED="dev_shared"
+  export PARTITION_BATCH=""
+  #export nproc="128" #24
+  #export USE_CFP="YES"
+
+
 # EVS Settings
   export HOMEevs="/lfs/h2/emc/vpppg/noscrub/${USER}/verification/EVS"
 # export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
