@@ -16,6 +16,21 @@
 #
 set -x
 
+#######################################################################
+# Define INPUT OBS DATA TYPE for ASCII2NC 
+#######################################################################
+#
+hourly_type=aqobs
+if [ "${hourly_type}" == "aqobs" ]; then
+    export HOURLY_INPUT_TYPE=HourlyAQObs
+    export HOURLY_OUTPUT_TYPE=hourly_aqobs
+    export HOURLY_ASCII2NC_FORMAT=airnowhourlyaqobs
+else
+    export HOURLY_INPUT_TYPE=HourlyData
+    export HOURLY_OUTPUT_TYPE=hourly_data
+    export HOURLY_ASCII2NC_FORMAT=airnowhourly
+fi
+#
 export PREP_SAVE_DIR=${COMOUT}.${VDATE}/${MODELNAME}
 export dirname=cs
 export gridspec=148

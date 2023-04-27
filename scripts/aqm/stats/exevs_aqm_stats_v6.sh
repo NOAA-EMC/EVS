@@ -3,7 +3,16 @@ set -x
 mkdir -p $DATA/logs
 mkdir -p $DATA/stat
 
-export airnow_id=hourly_aqobs
+#######################################################################
+# Define INPUT OBS DATA TYPE for PointStat
+#######################################################################
+#
+hourly_type=aqobs
+if [ "${hourly_type}" == "aqobs" ]; then
+    export HOURLY_INPUT_TYPE=hourly_aqobs
+else
+    export HOURLY_INPUT_TYPE=hourly_data
+fi
 export dirnam=cs
 export gridspec=148
 export fcstmax=72

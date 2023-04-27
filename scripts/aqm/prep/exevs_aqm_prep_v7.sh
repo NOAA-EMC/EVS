@@ -16,6 +16,21 @@
 #
 set -x
 
+#######################################################################
+# Define INPUT OBS DATA TYPE for ASCII2NC 
+#######################################################################
+#
+hourly_type=aqobs
+if [ "${hourly_type}" == "aqobs" ]; then
+    export HOURLY_INPUT_TYPE=HourlyAQObs
+    export HOURLY_OUTPUT_TYPE=hourly_aqobs
+    export HOURLY_ASCII2NC_FORMAT=airnowhourlyaqobs
+else
+    export HOURLY_INPUT_TYPE=HourlyData
+    export HOURLY_OUTPUT_TYPE=hourly_data
+    export HOURLY_ASCII2NC_FORMAT=airnowhourly
+fi
+#
 export PREP_SAVE_DIR=${COMOUT}.${VDATE}/${MODELNAME}
 export dirname=aqm
 export gridspec=793
@@ -29,12 +44,10 @@ echo $model1
 ##
 let ic=0
 let endvhr=23
-export input_prefix=HourlyAQObs
-export output_id=hourly_aqobs
 conf_dir=$PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}
 while [ ${ic} -le ${endvhr} ]; do
     vldhr=$(printf %2.2d ${ic})
-    checkfile=${COMINobs}/${VDATE}/airnow/${input_prefix}_${VDATE}${vldhr}.dat
+    checkfile=${COMINobs}/${VDATE}/airnow/${HOURLY_INPUT_TYPE}_${VDATE}${vldhr}.dat
     if [ -s ${checkfile} ]; then
         export VHOUR=${vldhr}
 	if [ -s ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf ]; then
