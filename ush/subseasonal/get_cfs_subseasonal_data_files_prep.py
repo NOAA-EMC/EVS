@@ -308,27 +308,45 @@ if STEP == 'prep':
                             model, model_dir,
                             model_ffile_format
                         )
-                        prep_file = get_dest_file(
+                        prep_pfile = get_dest_file(
                             valid_time, init_time, lead,
                             model,
-                            work_model_dir, 'getcfs.'
+                            work_model_dir, 'pgbfcfs.'
                             +mb+'.{init?fmt=%2H}z'
                             +'.f{lead?fmt=%3H}'
                         )
-                        dest_model_file = get_dest_file(
+                        prep_ffile = get_dest_file(
+                            valid_time, init_time, lead,
+                            model,
+                            work_model_dir, 'flxfcfs.'
+                            +mb+'.{init?fmt=%2H}z'
+                            +'.f{lead?fmt=%3H}'
+                        )
+                        dest_model_pfile = get_dest_file(
                             valid_time, init_time, lead,
                             model, 
+                            dest_model_dir, model+'.pgbf.'
+                            +'ens'+mb+'.t{init?fmt=%2H}z.'
+                            +'f{lead?fmt=%3H}'
+                        )
+                        dest_model_ffile = get_dest_file(
+                            valid_time, init_time, lead,
+                            model,
                             dest_model_dir, model+'.'
                             +'ens'+mb+'.t{init?fmt=%2H}z.'
                             +'f{lead?fmt=%3H}'
                         )
-                        sub_util.prep_prod_cfs_file(model_pfile,
-                                                    model_ffile,
-                                                    prep_file,
-                                                    dest_model_file,
-                                                    lead,
-                                                    'full')
+                        sub_util.prep_prod_cfs_pfile(model_pfile,
+                                                     prep_pfile,
+                                                     dest_model_pfile,
+                                                     lead,
+                                                     'full')
                         del model_pfile_format
+                        sub_util.prep_prod_cfs_ffile(model_ffile,
+                                                     prep_ffile,
+                                                     dest_model_ffile,
+                                                     lead,
+                                                     'full')
                         del model_ffile_format
                         mbr = mbr+1
 
