@@ -41,7 +41,7 @@ while [ $n -le $past_days ] ; do
   hrs=$((n*24))
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
-  sh $USHevs/mesoscale/evs_get_sref_stat_file_link_plots.sh $day "$model_list"
+  $USHevs/mesoscale/evs_get_sref_stat_file_link_plots.sh $day "$model_list"
   n=$((n+1))
 done 
 
@@ -176,7 +176,7 @@ elif [ $stats = fss ] ; then
 
          chmod +x  run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.sh
 
-         echo "sh run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.sh
+         echo "run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.sh
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.sh 
          echo " run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.sh" >> run_all_poe.sh
@@ -203,7 +203,7 @@ if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
    mpiexec -np 54 -ppn 15 --cpu-bind verbose,depth cfp run_all_poe.sh
 else
- sh run_all_poe.sh
+  run_all_poe.sh
 fi
 
 cd $plot_dir

@@ -54,4 +54,4 @@ MODEL=`echo $modnam | tr '[a-z]' '[A-Z]'`
 
 chmod +x run_gather_all_poe.sh
 
-sh run_gather_all_poe.sh
+ run_gather_all_poe.sh

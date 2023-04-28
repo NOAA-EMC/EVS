@@ -110,7 +110,7 @@ if [ $run_mpi = yes ] ; then
   mpiexec  -n 4 -ppn 4 --cpu-bind core --depth=2 cfp run_all_sref_precip_poe
 
 else
-  sh run_all_sref_precip_poe
+   run_all_sref_precip_poe
 fi 
 
 
