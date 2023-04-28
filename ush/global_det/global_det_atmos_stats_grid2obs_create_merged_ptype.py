@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Program Name: global_det_atmos_stats_grid2obs_create_merged_ptype.py
 Contact(s): Mallory Row

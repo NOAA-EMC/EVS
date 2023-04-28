@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_long_term_annual_mean.py
 Contact(s): Mallory Row

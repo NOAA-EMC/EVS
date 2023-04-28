@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: global_det_atmos_stats_grid2grid_create_wind_shear
 Contact(s): Mallory Row

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_time_series_multifhr.py
 Contact(s): Mallory Row

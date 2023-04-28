@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_long_term_useful_forecast_days.py
 Contact(s): Mallory Row

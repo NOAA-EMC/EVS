@@ -1,3 +1,9 @@
+#!/usr/bin/env python3
+'''
+Name: global_det_atmos_plots_specs.py
+Contact(s): Mallory Row
+Abstract: This script contains plotting specifications.
+'''
 import matplotlib
 import matplotlib.pyplot as plt
 import datetime

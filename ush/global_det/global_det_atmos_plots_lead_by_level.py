@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_lead_by_level.py
 Contact(s): Mallory Row
