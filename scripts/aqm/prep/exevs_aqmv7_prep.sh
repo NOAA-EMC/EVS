@@ -32,8 +32,8 @@ else
 fi
 #
 export PREP_SAVE_DIR=${COMOUT}.${VDATE}/${MODELNAME}
-export dirname=cs
-export gridspec=148
+export dirname=aqm
+export gridspec=793
 
 export model1=`echo $MODELNAME | tr a-z A-Z`
 echo $model1
@@ -44,16 +44,14 @@ echo $model1
 ##
 let ic=0
 let endvhr=23
-export input_prefix=HourlyAQObs
-export output_id=hourly_aqobs
 conf_dir=$PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}
 while [ ${ic} -le ${endvhr} ]; do
     vldhr=$(printf %2.2d ${ic})
-    checkfile=${COMINobs}/${VDATE}/airnow/${input_prefix}_${VDATE}${vldhr}.dat
+    checkfile=${COMINobs}/${VDATE}/airnow/${HOURLY_INPUT_TYPE}_${VDATE}${vldhr}.dat
     if [ -s ${checkfile} ]; then
         export VHOUR=${vldhr}
 	if [ -s ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf ]; then
-        run_metplus.py ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
+            run_metplus.py ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
         else
             echo "can not find ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf"
 	fi
@@ -71,7 +69,7 @@ if [ -s ${checkfile} ]; then
     if [ -s ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf ]; then
         run_metplus.py ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
     else
-            echo "can not find ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf"
+        echo "can not find ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf"
     fi
 else
     ## add email function

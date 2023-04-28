@@ -56,11 +56,14 @@ export COMINobs=${COMINobs:-${DCOMROOT}}
 export COMINaqm=${COMINaqm:-$(compath.py ${modsys}/${mod_ver})}
 export COMOUT=${COMOUT:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
 
+vfcst_ver=$(echo ${mod_ver} | cut -c1-8 )
+export fcst_input_ver=${fcst_input_ver:-${vfcst_ver}}
+
 #######################################################################
 # Execute the script.
 #######################################################################
 
-$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${STEP}.sh
+$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}${fcst_input_ver}_${STEP}.sh
 
 cat $pgmout
 

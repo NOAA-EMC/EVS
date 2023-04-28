@@ -57,6 +57,8 @@ export COMOUT=${COMOUT:-${COMIN}/${STEP}/${COMPONENT}}
 export COMOUTplots=${COMOUTplots:-${COMOUT}/${RUN}.${VDATE}}
 mkdir -m 775 -p $COMOUT
 
+vfcst_ver=$(echo ${mod_ver} | cut -c1-8 )
+export fcst_input_ver=${fcst_input_ver:-${vfcst_ver}}
 
 #######################################################################
 # Execute the script.

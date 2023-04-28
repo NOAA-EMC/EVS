@@ -62,11 +62,14 @@ export COMOUT=${COMOUT:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RU
 export COMOUTsmall=${COMOUTsmall:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE})}
 export COMOUTfinal=${COMOUTfinal:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${MODELNAME}.${VDATE})}
 
+vfcst_ver=$(echo ${mod_ver} | cut -c1-8 )
+export fcst_input_ver=${fcst_input_ver:-${vfcst_ver}}
+
 #######################################################################
 # Execute the script.
 #######################################################################
 
-$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${STEP}.sh
+$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}${fcst_input_ver}_${STEP}.sh
 
 cat $pgmout
 

@@ -32,8 +32,8 @@ else
 fi
 #
 export PREP_SAVE_DIR=${COMOUT}.${VDATE}/${MODELNAME}
-export dirname=aqm
-export gridspec=793
+export dirname=cs
+export gridspec=148
 
 export model1=`echo $MODELNAME | tr a-z A-Z`
 echo $model1
@@ -51,7 +51,7 @@ while [ ${ic} -le ${endvhr} ]; do
     if [ -s ${checkfile} ]; then
         export VHOUR=${vldhr}
 	if [ -s ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf ]; then
-        run_metplus.py ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
+            run_metplus.py ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
         else
             echo "can not find ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf"
 	fi
@@ -69,7 +69,7 @@ if [ -s ${checkfile} ]; then
     if [ -s ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf ]; then
         run_metplus.py ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
     else
-            echo "can not find ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf"
+        echo "can not find ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf"
     fi
 else
     ## add email function
