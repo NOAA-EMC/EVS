@@ -13,8 +13,8 @@ if [ "${hourly_type}" == "aqobs" ]; then
 else
     export HOURLY_INPUT_TYPE=hourly_data
 fi
-export dirnam=cs
-export gridspec=148
+export dirnam=aqm
+export gridspec=793
 export fcstmax=72
 
 export MASK_DIR=/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix
@@ -23,30 +23,30 @@ export model1=`echo $MODELNAME | tr a-z A-Z`
 echo $model1
 
 # Begin verification of both the hourly data of ozone and PM
+#
+# The valid time of forecast model output is the reference here in PointStat
+# Because of the valid time definition between forecat outp[ut and observation is different
+#     For average concentration of a period [ cyc-1 to cyc ], aqm output is defined at cyc Z
+#     while observation is defined at cyc-1 Z
+# Thus, the one hour back OBS input will be checked and used in PointStat
+#     [OBS_POINT_STAT_INPUT_TEMPLATE=****_{valid?fmt=%Y%m%d%H?shift=-3600}.nc]
+#
+cdate=${VDATE}${cyc}
+vld_date=$(${NDATE} -1 ${cdate} | cut -c1-8)
+vld_time=$(${NDATE} -1 ${cdate} | cut -c1-10)
 
-o3found=0
-pmfound=0
+VDAYm1=$(${NDATE} -24 ${cdate} | cut -c1-8)
+VDAYm2=$(${NDATE} -24 ${cdate} | cut -c1-8)
+VDAYm3=$(${NDATE} -24 ${cdate} | cut -c1-8)
 
-for outtyp in awpozcon pm25
-do
-
-# Checks for observation files
-
- if [ $outtyp = "awpozcon" ]
- then
-  if [ -e $COMINobs/hourly.${VDATE}/aqm.t12z.prepbufr.tm00 ]
-  then
-   o3found=1
-  fi
- fi
- if [ $outtyp = "pm25" ]
- then
-  if [ -e $COMINobs/hourly.${PDYm2}/aqm.t12z.anowpm.pb.tm024 ]
-  then
-   pmfound=1
-  fi
- fi
- echo "o3found,pmfound=", $o3found, $pmfound
+check_file=${COMINaqmproc}/${RUN}.${vld_date}/${MODELNAME}/airnow_${HOURLY_INPUT_TYPE}_${vld_time}.nc
+obs_hourly_found=0
+if [ -s ${check_file} }; then
+    obs_hourly_found=1
+    echo "Can not find pre-processed obs hourly input ${check_file}"
+    ## add email function here
+fi
+echo "obs_hourly_found = ${obs_hourly_found}"
 
 # Verification to be done both on raw output files and bias-corrected files
 
@@ -76,7 +76,7 @@ do
     numpmfcst=0
     while [ ${ihr} -le $fcstmax ]
     do
-      filehr=$(printf %2.2d ${ihr})    ## fhr of grib2 filename is in 3 digit for aqmv7 and 2 digit for aqmv6
+      filehr=$(printf %3.3d ${ihr})    ## fhr of grib2 filename is in 3 digit for aqmv7 and 2 digit for aqmv6
       fhr=$(printf %2.2d ${ihr})       ## fhr for the processing valid hour is in 2 digit
       export fhr
 
@@ -86,13 +86,13 @@ do
       acyc=`echo $adate |cut -c9-10`
       if [ $acyc = 06 -o $acyc = 12 ]
       then
-      if [ -e $COMINaqm/${dirname}.${aday}/${acyc}/aqm.t${acyc}z.awpozcon${bctag}.f${filehr}.${gridspec}.grib2 ]
+      if [ -s $COMINaqm/${dirname}.${aday}/${acyc}/aqm.t${acyc}z.awpozcon${bctag}.f${filehr}.${gridspec}.grib2 ]
       then
         echo "$fhr found"
         echo $fhr >> $DATA/fcstlist_o3
         let "numo3fcst=numo3fcst+1"
       fi 
-      if [ -e $COMINaqm/${dirname}.${aday}/${acyc}/aqm.t${acyc}z.pm25${bctag}.f${filehr}.${gridspec}.grib2 ]
+      if [ -s $COMINaqm/${dirname}.${aday}/${acyc}/aqm.t${acyc}z.pm25${bctag}.f${filehr}.${gridspec}.grib2 ]
       then
         echo "$fhr found"
         echo $fhr >> $DATA/fcstlist_pm
@@ -111,7 +111,7 @@ do
 
     case $outtyp in
 
-        awpozcon) if [ $numo3fcst -gt 0 -a $o3found -eq 1 ]
+        awpozcon) if [ $numo3fcst -gt 0 -a $obs_hourly_found -eq 1 ]
                   then
                   export fcsthours=$fcsthours_o3
                   run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstOZONE_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
@@ -126,10 +126,10 @@ do
                   fi
                   else
                   echo "NO O3 FORECAST OR OBS TO VERIFY"
-                  echo "NUM FCST, NUM OBS", $numo3fcst, $o3found
+                  echo "NUM FCST, NUM OBS", $numo3fcst, $obs_hourly_found
                   fi
                   ;;
-      pm25) if [ $numpmfcst -gt 0 -a $pmfound -eq 1 ]
+      pm25) if [ $numpmfcst -gt 0 -a $obs_hourly_found -eq 1 ]
             then
             export fcsthours=$fcsthours_pm
             run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstPM2p5_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
@@ -144,7 +144,7 @@ do
             fi
             else
             echo "NO PM FORECAST OR OBS TO VERIFY"
-            echo "NUM FCST, NUM OBS", $numpmfcst, $pmfound
+            echo "NUM FCST, NUM OBS", $numpmfcst, $obs_hourly_found
             fi
             ;;
     esac
@@ -156,9 +156,18 @@ done
 # Daily verification of the daily maximum of 8-hr ozone
 # Verification being done on both raw and bias-corrected output data
 
+check_file=${COMINaqmproc}/${RUN}.${VDATE}/${MODELNAME}/airnow_daily_${VDATE}.nc
+obs_daily_found=0
+if [ -s ${check_file} }; then
+    obs_daily_found=1
+    echo "Can not find pre-processed obs daily input ${check_file}"
+    ## add email function here
+fi
+echo "obs_daily_found = ${obs_daily_found}"
+
+
 if [ $cyc = 11 ]
 then
-
 
   for biastyp in raw bc
   do
@@ -186,25 +195,20 @@ then
 #  search for model file and 2nd obs file for the daily 8-hr ozone max
 
       ozmax8=0
-      ozobs2=0
-      if [ -e $COMINaqmproc/atmos.${VDATE}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 ]
+      if [ -s $COMINaqmproc/atmos.${VDAYm1}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 ]
       then
         ozmax8=1
       fi
-      if [ -e $COMINaqmproc/atmos.${PDYm4}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 ]
+      if [ -s $COMINaqmproc/atmos.${VDAYm2}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 ]
       then
        let "ozmax8=ozmax8+1"
       fi
-      if [ -e $COMINaqmproc/atmos.${PDYm5}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 ]
+      if [ -s $COMINaqmproc/atmos.${VDAYm3}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 ]
       then
         let "ozmax8=ozmax8+1"
       fi
-      if [ -e $COMINobs/hourly.${PDYm2}/aqm.t12z.prepbufr.tm00 ]
-      then
-       ozobs2=1
-      fi
-      echo "ozmax8, ozobs2=",$ozmax8,$ozobs2
-      if [ $ozmax8 -gt 0 -a $ozobs2 -gt 0 ]
+      echo "ozmax8, obs_daily_found=",$ozmax8,$obs_daily_found
+      if [ $ozmax8 -gt 0 -a $obs_daily_found -gt 0 ]
       then 
         run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstOZONEMAX_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
 	export err=$?; err_chk
@@ -214,7 +218,7 @@ then
 	export err=$?; err_chk
        else
          echo "NO OZMAX8 OBS OR MODEL DATA"
-         echo "OZMAX8, OZOBS2", $ozmax8, $ozobs2
+         echo "OZMAX8, OBS_DAILY_FOUND", $ozmax8, $obs_daily_found
        fi
     done
 
@@ -254,25 +258,20 @@ then
 #  search for model file and 2nd obs file for the daily average PM
 
       pmave1=0
-      pmobs2=0
-      if [ -e $COMINaqm/${dirname}.${VDATE}/${hour}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2 ]
+      if [ -s $COMINaqm/${dirname}.${VDAYm1}/${hour}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2 ]
       then
         pmave1=1
       fi
-      if [ -e $COMINaqm/${dirname}.${PDYm4}/${hour}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2 ]
+      if [ -s $COMINaqm/${dirname}.${VDAYm2}/${hour}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2 ]
       then
        let "pmave1=pmave1+1" 
       fi
-      if [ -e $COMINaqm/${dirname}.${PDYm5}/${hour}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2 ]
+      if [ -s $COMINaqm/${dirname}.${VDAYm3}/${hour}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2 ]
       then
         let "pmave1=pmave1+1"
       fi
-      if [ -e $COMINobs/hourly.${PDYm1}/aqm.t12z.anowpm.pb.tm024 ]
-      then
-       pmobs2=1
-      fi
-      echo "pmave1, pmobs2=",$pmave1,$pmobs2
-      if [ $pmave1 -gt 0 -a $pmobs2 -gt 0 ]
+      echo "pmave1, obs_daily_found=",$pmave1,$obs_daily_found
+      if [ $pmave1 -gt 0 -a $obs_daily_found -gt 0 ]
       then
         run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstPMAVE_obsANOWPM.conf $PARMevs/metplus_config/machine.conf
 	export err=$?; err_chk
@@ -282,7 +281,7 @@ then
 	export err=$?; err_chk
        else
          echo "NO PMAVE OBS OR MODEL DATA"
-         echo "PMAVE1, PMOBS2", $pmave1, $pmobs2
+         echo "PMAVE1, OBS_DAILY_FOUND", $pmave1, $obs_daily_found
        fi
     done
 

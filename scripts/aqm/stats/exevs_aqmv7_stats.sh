@@ -13,8 +13,15 @@ if [ "${hourly_type}" == "aqobs" ]; then
 else
     export HOURLY_INPUT_TYPE=hourly_data
 fi
-export dirnam=aqm
-export gridspec=793
+if [ "${fcst_input_ver}" == "v6" ]; then
+    export dirnam=cs
+    export gridspec=148
+elif [ "${fcst_input_ver}" == "v7" ]; then
+    export dirnam=aqm
+    export gridspec=793
+else
+    echo "*A*W* The AQM version number is not defined :: ${fcst_input_ver}"
+fi
 export fcstmax=72
 
 export MASK_DIR=/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix
@@ -114,7 +121,7 @@ echo "obs_hourly_found = ${obs_hourly_found}"
         awpozcon) if [ $numo3fcst -gt 0 -a $obs_hourly_found -eq 1 ]
                   then
                   export fcsthours=$fcsthours_o3
-                  run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstOZONE_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
+                  run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstOZONE_obsAIRNOW_${fcst_input_ver}.conf $PARMevs/metplus_config/machine.conf
                   export err=$?; err_chk
                   mkdir -p $COMOUTsmall
                   cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
@@ -132,7 +139,7 @@ echo "obs_hourly_found = ${obs_hourly_found}"
       pm25) if [ $numpmfcst -gt 0 -a $obs_hourly_found -eq 1 ]
             then
             export fcsthours=$fcsthours_pm
-            run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstPM2p5_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
+            run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstPM2p5_obsAIRNOW_${fcst_input_ver}.conf $PARMevs/metplus_config/machine.conf
             export err=$?; err_chk
             mkdir -p $COMOUTsmall
             cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
@@ -210,7 +217,7 @@ then
       echo "ozmax8, obs_daily_found=",$ozmax8,$obs_daily_found
       if [ $ozmax8 -gt 0 -a $obs_daily_found -gt 0 ]
       then 
-        run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstOZONEMAX_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
+        run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstOZONEMAX_obsAIRNOW_${fcst_input_ver}.conf $PARMevs/metplus_config/machine.conf
 	export err=$?; err_chk
         cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
         export outtyp=OZMAX8
@@ -273,7 +280,7 @@ then
       echo "pmave1, obs_daily_found=",$pmave1,$obs_daily_found
       if [ $pmave1 -gt 0 -a $obs_daily_found -gt 0 ]
       then
-        run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstPMAVE_obsANOWPM.conf $PARMevs/metplus_config/machine.conf
+        run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstPMAVE_obsANOWPM_${fcst_input_ver}.conf $PARMevs/metplus_config/machine.conf
 	export err=$?; err_chk
         cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
         export outtyp=PMAVE
