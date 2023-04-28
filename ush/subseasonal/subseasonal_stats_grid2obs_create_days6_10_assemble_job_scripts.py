@@ -80,7 +80,8 @@ assemble_data_model_jobs_dict = {
                                     ),
                                     sub_util.python_command(
                                         'subseasonal_stats_'
-                                        'grid2obs_create_anomaly.py',
+                                        'grid2obs_create_'
+                                        'days6_10_anomaly.py',
                                         ['TMP_Z2',
                                          os.path.join(
                                              '$DATA',
@@ -102,7 +103,7 @@ assemble_data_model_jobs_dict = {
 }
 
 
-# Do reformat_data observation jobs
+# Do assemble_data observation jobs
 if JOB_GROUP in ['reformat_data', 'assemble_data']:
     if JOB_GROUP == 'reformat_data':
         JOB_GROUP_obs_jobs_dict = reformat_data_obs_jobs_dict
@@ -235,7 +236,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                 date_dt = valid_start_date_dt
                 while date_dt <= valid_end_date_dt:
                     sdate_dt = date_dt - datetime.timedelta(days=5)
-                    job_env_dict['START'] = sdate_dt.strftime('%Y%m%d')
+                    job_env_dict['D6_10START'] = sdate_dt.strftime('%Y%m%d')
                     job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
                     job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
                     job_env_dict['valid_hr_end'] = date_dt.strftime('%H')

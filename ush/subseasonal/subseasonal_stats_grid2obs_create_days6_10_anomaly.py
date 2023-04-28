@@ -1,5 +1,5 @@
 '''
-Name: subseasonal_stats_grid2obs_create_anomaly.py
+Name: subseasonal_stats_grid2obs_create_days6_10_anomaly.py
 Contact(s): Shannon Shields
 Abstract: This script is used to create anomaly
           data from MET point_stat MPR output
@@ -25,7 +25,7 @@ COMPONENT = os.environ['COMPONENT']
 VERIF_TYPE = os.environ['VERIF_TYPE']
 job_name = os.environ['job_name']
 MODEL = os.environ['MODEL']
-START = os.environ['START']
+D6_10START = os.environ['D6_10START']
 DATE = os.environ['DATE']
 valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end']
@@ -63,7 +63,7 @@ MET_MPR_column_list = [
 
 # Create fcst and obs anomaly data
 STARTDATE_dt = datetime.datetime.strptime(
-    START+valid_hr_start, '%Y%m%d%H'
+    D6_10START+valid_hr_start, '%Y%m%d%H'
 )
 ENDDATE_dt = datetime.datetime.strptime(
     DATE+valid_hr_end, '%Y%m%d%H'
