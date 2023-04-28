@@ -391,11 +391,11 @@ if JOB_GROUP == 'assemble_data':
                                 continue
                             if MODELNAME == 'nam':
                                 if f"{init_dt:%H}" in ['06', '18']:
-                                    bucket_intvl = '3'
+                                    bucket_intvl = 3
                                 elif f"{init_dt:%H}" in ['00', '12']:
-                                    bucket_intvl = '12'
+                                    bucket_intvl = 12
                                 if accum == '01' and \
-                                        fhr % int(bucket_intvl) != 1:
+                                        fhr % bucket_intvl != 1:
                                     pcp_combine_method = 'SUBTRACT'
                                 else:
                                     pcp_combine_method = 'SUM'
@@ -407,19 +407,13 @@ if JOB_GROUP == 'assemble_data':
                                         input_accum = '03'
                                         input_level = 'A3'
                                 if pcp_combine_method == 'SUBTRACT':
-                                    if fhr < int(bucket_intvl):
-                                        shift_sec = '0'
-                                    elif int(bucket_intvl) == 3:
-                                        shift_sec = str(
-                                            (fhr - int(bucket_intvl)) * 3600
-                                        )
-                                    elif int(bucket_intvl) == 12:
-                                        shift_sec = str(
-                                            ((fhr - int(bucket_intvl)) * 3600)
-                                            + (fhr % 12) * 3600
-                                        )
+                                    accum_in_fhr_file = fhr % bucket_intvl
+                                    if accum_in_fhr_file == 0:
+                                        accum_in_fhr_file = bucket_intvl
+                                    shift_sec = (fhr - accum_in_fhr_file)*3600
                                     input_accum = (
-                                        'A{lead?fmt=%H?shift=-'+shift_sec+'}'
+                                        'A{lead?fmt=%H?shift=-'+str(shift_sec)
+                                        +'}'
                                     )
                                     input_level = input_accum
                             else: # assuming continuous buckets
@@ -435,7 +429,7 @@ if JOB_GROUP == 'assemble_data':
                             job_env_dict['input_accum'] = input_accum
                             job_env_dict['input_level'] = input_level
                             job_env_dict['bucket_intvl'] = (
-                                bucket_intvl+'H'
+                                str(bucket_intvl)+'H'
                             )
                             # Check for expected job input and output files
                             (job_all_model_input_file_exist,
