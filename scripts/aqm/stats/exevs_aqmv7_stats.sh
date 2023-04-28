@@ -20,7 +20,7 @@ elif [ "${fcst_input_ver}" == "v7" ]; then
     export dirnam=aqm
     export gridspec=793
 else
-    echo "*A*W* The AQM version number is not defined :: ${fcst_input_ver}"
+    echo "EVS_CHECK :: The AQM version number is not defined :: ${fcst_input_ver}"
 fi
 export fcstmax=72
 
