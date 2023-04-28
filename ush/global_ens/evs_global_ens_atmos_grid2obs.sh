@@ -278,7 +278,7 @@ if [ $run_mpi = yes ] ; then
    fi
 
 else
-   sh run_all_gens_g2o_poe.sh
+    run_all_gens_g2o_poe.sh
 fi 
 
 

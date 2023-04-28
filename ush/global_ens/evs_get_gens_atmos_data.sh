@@ -406,7 +406,7 @@ if [ $modnam = prepbufr ] ; then
       echo "cp ${WORK}/pb2nc/prepbufr_nc/*.nc $COMOUT_gefs" >> run_pb2nc.sh  
 
   chmod +x run_pb2nc.sh
-  sh run_pb2nc.sh
+  run_pb2nc.sh
 
 
 fi  
