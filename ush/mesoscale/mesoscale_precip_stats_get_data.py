@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: mesoscale_precip_get_data.py
 Contact(s): Mallory Row

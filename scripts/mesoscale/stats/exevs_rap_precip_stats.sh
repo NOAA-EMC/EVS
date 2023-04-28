@@ -58,11 +58,11 @@ for group in $JOB_GROUP_list; do
     status=$?
     [[ $status -ne 0 ]] && exit $status
     [[ $status -eq 0 ]] && echo "Succesfully ran mesoscale_precip_stats_create_job_scripts.py"
-    chmod u+x jobs/$JOB_GROUP/*
-    group_ncount_job=$(ls -l jobs/$JOB_GROUP/job* |wc -l)
+    chmod u+x $DATA/jobs/$JOB_GROUP/*
+    group_ncount_job=$(ls -l $DATA/jobs/$JOB_GROUP/job* |wc -l)
     nc=1
     if [ $USE_CFP = YES ]; then
-        group_ncount_poe=$(ls -l jobs/$JOB_GROUP/poe* |wc -l)
+        group_ncount_poe=$(ls -l $DATA/jobs/$JOB_GROUP/poe* |wc -l)
         while [ $nc -le $group_ncount_poe ]; do
             poe_script=$DATA/jobs/$JOB_GROUP/poe_jobs${nc}
             chmod 775 $poe_script

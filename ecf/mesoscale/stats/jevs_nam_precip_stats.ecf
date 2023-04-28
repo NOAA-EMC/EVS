@@ -1,4 +1,3 @@
-#!/bin/bash
 #PBS -N jevs_nam_precip_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
@@ -30,8 +29,7 @@ export RUN="atmos"
 export cyc=$(date +"%H")
 export cycle=t${cyc}z
 
-#export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
-export HOMEevs="/lfs/h2/emc/vpppg/noscrub/mallory.row/verification/regional/feature_nam_rap_precip/EVS"
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 export PARMevs=$HOMEevs/parm
 export USHevs=$HOMEevs/ush
 export EXECevs=$HOMEevs/exec
@@ -78,9 +76,8 @@ export MET_bin_exec="bin"
 module list
 
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
-#export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/mallory.row/verification/regional/feature_nam_rap_precip/$NET/$evs_ver/$STEP/$COMPONENT
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 
 # Job Settings and Run
-. ${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS
+${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS
 

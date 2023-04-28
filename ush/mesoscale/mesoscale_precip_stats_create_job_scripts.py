@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Program Name: mesoscale_precip_stats_create_job_scripts.py
 Contact(s): Mallory Row
