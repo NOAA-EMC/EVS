@@ -3,13 +3,13 @@
 ########################################
 # Preliminary data setup step
 ########################################
-set -xa
 
 # ###################################
 # SET SHELL PROCESSING VARIABLES
 # ###################################
-export PS4='$SECONDS + '
 date
+export PS4='$SECONDS + '
+set -xa
 
 ###########################################################
 # obtain unique LSF id (jobid) and make temp directories
@@ -20,12 +20,15 @@ export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
 
+export cycle=${cycle:-t${cyc}z}
+setpdy.sh
+. ./PDY
+
 ####################################
 # Determine Job Output Name on System
 ####################################
 export pgmout="OUTPUT.${pid}"
 
-export cycle=t${cyc}z
 ##################################################
 # SAVEGES  - Copy Files From TMPDIR to $GESdir
 # SENDECF  - Flag Events on ecFLOW
@@ -45,6 +48,8 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 # Define COMIN/COMOUT variables:
 
 echo $COMPATH
+
+export VDATE=${VDATE:-${PDYm3}}
 
 export COMIN=${COMIN:-$(compath.py evs/${evs_ver}/)}
 export COMINobs=${COMINobs:-${DCOMROOT}}

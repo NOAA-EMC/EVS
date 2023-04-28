@@ -3,13 +3,13 @@
 ########################################
 # Preliminary data setup step
 ########################################
-set -xa
 
 # ###################################
 # SET SHELL PROCESSING VARIABLES
 # ###################################
-export PS4='$SECONDS + '
 date
+export PS4='$SECONDS + '
+set -xa
 
 ###########################################################
 # obtain unique LSF id (jobid) and make temp directories
@@ -20,12 +20,14 @@ export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
 
+export cycle=${cycle:-t${cyc}z}
+setpdy.sh
+. ./PDY
+
 ####################################
 # Determine Job Output Name on System
 ####################################
 export pgmout="OUTPUT.${pid}"
-
-export cycle=t${cyc}z
 
 ##################################################
 # SAVEGES  - Copy Files From TMPDIR to $GESdir
@@ -47,11 +49,14 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 
 echo $COMPATH
 
+export VDATE=${VDATE:-${PDYm3}}
+
 export COMIN=${COMIN:-$(compath.py ${envir}/com/evs/${evs_ver}/)}
 export COMINaqm=${COMINaqm:-$(compath.py ${envir}/com/evs/${evs_ver}/stats/${COMPONENT})}
 export COMOUT=${COMOUT:-${COMIN}/${STEP}/${COMPONENT}}
 export COMOUTplots=${COMOUTplots:-${COMOUT}/${RUN}.${VDATE}}
 mkdir -m 775 -p $COMOUT
+
 
 #######################################################################
 # Execute the script.

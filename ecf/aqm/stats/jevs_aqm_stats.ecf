@@ -54,22 +54,24 @@ export MET_bin_exec=bin
 export config=$HOMEevs/parm/evs_config/aqm/config.evs.aqm.prod
 source $config
 
+########################################################################
+## The following setting is for parallel test and need to be removed for operational code
+########################################################################
 export DATA=/lfs/h2/emc/ptmp/$USER/EVS/${cyc}_${MODELNAME}
 
 rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
 
-export cycle=t${cyc}z
-setpdy.sh
-. ./PDY
-
-export VDATE=$PDYm2
-
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMOUT=$COMIN/${STEP}/${COMPONENT}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
+## Need VDATE setting
+setpdy.sh
+. ./PDY
+export VDATE=PDYm3
 export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
+########################################################################
 
 # CALL executable job script here
 $HOMEevs/jobs/aqm/stats/JEVS_AQM_STATS
