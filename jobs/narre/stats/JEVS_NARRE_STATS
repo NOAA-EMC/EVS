@@ -10,9 +10,7 @@ set -xa
 export cycle=t${cyc}z
 
 export pid=$$
-export DATA_IN=${DATA_IN:-$DATAROOT}
-export DATA=$DATA_IN/evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$
-#export DATA=$DATA_IN/test_${MODELNAME}_${VERIF_CASE}_${STEP}
+export DATA=${DATA:-${DATAROOT:?}}/${jobid:?}
 mkdir -p $DATA
 cd $DATA
 
@@ -74,7 +72,7 @@ export pgmout="OUTPUT.${pid}"
 ####################################
 
 
-sh $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${STEP}.sh 
+$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${STEP}.sh 
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"

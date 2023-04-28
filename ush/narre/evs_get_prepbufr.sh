@@ -13,7 +13,8 @@ if [ $modnam = prepbufr ] ; then
 
  if [ -s $COMINobs/rap.${VDATE}/rap.t00z.prepbufr.tm00 ] ; then 
   for grid in G130 G242 ; do
-   for cyc in 00 01 02 03 04 05 06 07 08  09 10 11 12 13 14 15 16 17 18 19 20  21 22 23  ; do
+   #for cyc in 00 01 02 03 04 05 06 07 08  09 10 11 12 13 14 15 16 17 18 19 20  21 22 23  ; do
+   for cyc in 00  03  06  09  12  15  18   21  ; do
      export vbeg=${cyc}
      export vend=${cyc}
      export verif_grid=$grid

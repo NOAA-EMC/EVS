@@ -12,7 +12,7 @@ export regrid='NONE'
 
 export vday=$VDATE
 
-$USHevs/check_files_existing.sh
+$USHevs/narre/check_files_existing.sh
 
 echo COMOUTsmall=$COMOUTsmall
 
@@ -114,7 +114,7 @@ chmod 775 run_all_narre_poe.sh
 if [ $run_mpi = yes ] ; then
   mpiexec  -n 8 -ppn 8 --cpu-bind core --depth=2 cfp  run_all_narre_poe.sh
 else
-  sh run_all_narre_poe.sh
+   run_all_narre_poe.sh
 fi
 
 if [ $gather = yes ] ; then

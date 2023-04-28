@@ -36,7 +36,7 @@ while [ $n -le $past_days ] ; do
   hrs=$((n*24))
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
-  sh $USHevs/narre/evs_get_narre_stat_file_link.sh $day
+  $USHevs/narre/evs_get_narre_stat_file_link.sh $day
   n=$((n+1))
 done 
 
@@ -145,7 +145,7 @@ for grid in $VX_MASK_LIST ; do
 
      chmod +x run_py.${var}_${line_type}.${score_type}.${grid}.sh
 
-     echo "sh run_py.${var}_${line_type}.${score_type}.${grid}.sh" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+     echo "run_py.${var}_${line_type}.${score_type}.${grid}.sh" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
  
 
      #evs.component.metric1_metricX.parameter_level(_obtype).lastXXdays.plottype.grid_region.png
@@ -172,7 +172,7 @@ if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
    mpiexec -np 4 -ppn 4 --cpu-bind verbose,depth cfp run_all_poe.sh
 else
- sh run_all_poe.sh
+  run_all_poe.sh
 fi
 
 cd $plot_dir

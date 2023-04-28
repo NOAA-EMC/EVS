@@ -15,9 +15,8 @@ export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
 export pid=$$
-export DATA_IN=${DATA_IN:-$DATAROOT}
-export DATA=$DATA_IN/evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$
-
+export DATA=${DATA:-${DATAROOT:?}}/${jobid:?}
+rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
 
@@ -69,7 +68,7 @@ setpdy.sh
 
 export VDATE=${VDATE:-$PDYm1}
 
-sh $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${STEP}.sh 
+$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${STEP}.sh 
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
