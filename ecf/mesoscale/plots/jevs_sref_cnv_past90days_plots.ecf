@@ -17,7 +17,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
 source $HOMEevs/versions/run.ver.metplus5.0.0
 
-module purge
+module reset
 module load envvar/$envvar_ver
 module load PrgEnv-intel/$PrgEnv_intel_ver
 module load intel/$intel_ver

@@ -250,7 +250,7 @@ for stats in  ets fbias fss  ; do
 done     #stats
 
 
-tar -cvf plots.sref.precip.${past_days}.v${VDATE}.tar *.png
+tar -cvf evs.plots.sref.precip.${past_days}.v${VDATE}.tar *.png
 
 cp evs.plots.sref.precip.${past_days}.v${VDATE}.tar  $COMOUT/.  
 
