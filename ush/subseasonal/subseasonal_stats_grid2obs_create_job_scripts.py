@@ -101,7 +101,8 @@ assemble_data_model_jobs_dict = {
                                     ),
                                     sub_util.python_command(
                                         'subseasonal_stats_'
-                                        'grid2obs_create_anomaly.py',
+                                        'grid2obs_create_'
+                                        'weekly_anomaly.py',
                                         ['TMP_Z2',
                                          os.path.join(
                                              '$DATA',
