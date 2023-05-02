@@ -434,3 +434,178 @@ def precip_check_model_input_output_files(job_dict):
     return (all_input_file_exist, input_files_list, \
             all_COMOUT_file_exist, COMOUT_files_list,
             DATA_files_list)
+
+def snowfall_check_obs_input_output_files(job_dict):
+    """! Check snowfall observation input and output files
+         in COMOUT and DATA
+         Args:
+             job_dict - job dictionary
+         Returns:
+             all_input_file_exist  - if all expected
+                                     input files exist
+                                     (boolean)
+             input_files_list      - list of input files
+                                     (strings)
+             all_COMOUT_file_exist - if all expected
+                                     output COMOUT files
+                                     exist (boolean)
+             COMOUT_files_list     - list of output COMOUT
+                                     files (strings)
+             DATA_files_list       - list of output DATA
+                                     files (strings)
+    """
+    valid_date_dt = datetime.datetime.strptime(
+        job_dict['DATE']+job_dict['valid_hour_start'],
+        '%Y%m%d%H'
+    )
+    # Expected input file
+    input_files_list = []
+    if job_dict['JOB_GROUP'] == 'generate_stats':
+        if job_dict['obs'] == 'nohrsc':
+            input_files_list.append(
+                os.path.join(job_dict['DATA'], 'data', 'nohrsc',
+                             f"nohrsc.accum{job_dict['accum']}hr."
+                             +f"v{valid_date_dt:%Y%m%d%H}")
+            )
+    input_files_exist_list = []
+    for input_file in input_files_list:
+        if check_file(input_file):
+            input_files_exist_list.append(True)
+        else:
+            input_files_exist_list.append(False)
+    if all(x == True for x in input_files_exist_list) \
+            and len(input_files_exist_list) > 0:
+        all_input_file_exist = True
+    else:
+        all_input_file_exist = False
+    # Expected output files (in COMOUT and DATA)
+    COMOUT_files_list = []
+    DATA_files_list = []
+    #
+    COMOUT_files_exist_list = []
+    for COMOUT_file in COMOUT_files_list:
+        if check_file(COMOUT_file):
+            COMOUT_files_exist_list.append(True)
+        else:
+            COMOUT_files_exist_list.append(False)
+    if all(x == True for x in COMOUT_files_exist_list) \
+            and len(COMOUT_files_exist_list) > 0:
+        all_COMOUT_file_exist = True
+    else:
+        all_COMOUT_file_exist = False
+    return (all_input_file_exist, input_files_list, \
+            all_COMOUT_file_exist, COMOUT_files_list,
+            DATA_files_list)
+
+def snowfall_check_model_input_output_files(job_dict):
+    """! Check snowfall model input and output files
+         in COMOUT and DATA
+         Args:
+             job_dict - job dictionary
+         Returns:
+             all_input_file_exist  - if all expected
+                                     input files exist
+                                     (boolean)
+             input_files_list      - list of input files
+                                     (strings)
+             all_COMOUT_file_exist - if all expected
+                                     output COMOUT files
+                                     exist (boolean)
+             COMOUT_files_list     - list of output COMOUT
+                                     files (strings)
+             DATA_files_list       - list of output DATA
+                                     files (strings)
+    """
+    valid_date_dt = datetime.datetime.strptime(
+        job_dict['DATE']+job_dict['valid_hour_start'],
+        '%Y%m%d%H'
+    )
+    init_date_dt = (valid_date_dt
+                    - datetime.timedelta(hours=int(job_dict['fcst_hour'])))
+    # Expected input file
+    input_files_list = []
+    if job_dict['JOB_GROUP'] == 'assemble_data':
+        if job_dict['pcp_combine_method'] in ['SUBTRACT', 'USER_DEFINED']:
+            for fhr in [job_dict['fcst_hour'],
+                        str(int(job_dict['fcst_hour'])
+                            - int(job_dict['accum']))]:
+                input_files_list.append(
+                    os.path.join(job_dict['DATA'], 'data',
+                                 job_dict['MODELNAME'],
+                                 f"{job_dict['MODELNAME']}."
+                                 +f"init{init_date_dt:%Y%m%d%H}."
+                                 +f"f{fhr.zfill(3)}")
+                )
+    elif job_dict['JOB_GROUP'] == 'generate_stats':
+        input_files_list.append(
+            os.path.join(job_dict['COMOUT'],
+                         f"{job_dict['RUN']}.{valid_date_dt:%Y%m%d}",
+                         job_dict['MODELNAME'], job_dict['VERIF_CASE'],
+                         f"pcp_combine_{job_dict['MODELNAME']}_"
+                         +f"accum{job_dict['accum']}hr_"
+                         +f"{job_dict['snow_var']}_"
+                         +f"init{init_date_dt:%Y%m%d%H}_"
+                         +f"fhr{job_dict['fcst_hour'].zfill(3)}.nc")
+        )
+    input_files_exist_list = []
+    for input_file in input_files_list:
+        if check_file(input_file):
+            input_files_exist_list.append(True)
+        else:
+            input_files_exist_list.append(False)
+    if all(x == True for x in input_files_exist_list) \
+            and len(input_files_exist_list) > 0:
+        all_input_file_exist = True
+    else:
+        all_input_file_exist = False
+    # Expected output files (in COMOUT and DATA)
+    COMOUT_files_list = []
+    DATA_files_list = []
+    if job_dict['JOB_GROUP'] == 'assemble_data':
+        file_name = (f"pcp_combine_{job_dict['MODELNAME']}_"
+                     +f"accum{job_dict['accum']}hr_"
+                     +f"{job_dict['snow_var']}_"
+                     +f"init{init_date_dt:%Y%m%d%H}_"
+                     +f"fhr{job_dict['fcst_hour'].zfill(3)}.nc")
+        COMOUT_files_list.append(
+            os.path.join(job_dict['COMOUT'],
+                         f"{job_dict['RUN']}.{valid_date_dt:%Y%m%d}",
+                         job_dict['MODELNAME'], job_dict['VERIF_CASE'],
+                         file_name)
+        )
+        DATA_files_list.append(
+            os.path.join(job_dict['DATA'],
+                         f"{job_dict['RUN']}.{valid_date_dt:%Y%m%d}",
+                         job_dict['MODELNAME'], job_dict['VERIF_CASE'],
+                         file_name)
+        )
+    elif job_dict['JOB_GROUP'] == 'generate_stats':
+        file_name = (f"grid_stat_{job_dict['job_name']}_"
+                     f"{job_dict['fcst_hour'].zfill(2)}0000L_"
+                     +f"{valid_date_dt:%Y%m%d_%H%M%S}V.stat")
+        COMOUT_files_list.append(
+            os.path.join(job_dict['COMOUT'],
+                         f"{job_dict['RUN']}.{valid_date_dt:%Y%m%d}",
+                         job_dict['MODELNAME'], job_dict['VERIF_CASE'],
+                         file_name)
+        )
+        DATA_files_list.append(
+            os.path.join(job_dict['DATA'],
+                         f"{job_dict['RUN']}.{valid_date_dt:%Y%m%d}",
+                         job_dict['MODELNAME'], job_dict['VERIF_CASE'],
+                         file_name)
+        )
+    COMOUT_files_exist_list = []
+    for COMOUT_file in COMOUT_files_list:
+        if check_file(COMOUT_file):
+            COMOUT_files_exist_list.append(True)
+        else:
+            COMOUT_files_exist_list.append(False)
+    if all(x == True for x in COMOUT_files_exist_list) \
+            and len(COMOUT_files_exist_list) > 0:
+        all_COMOUT_file_exist = True
+    else:
+        all_COMOUT_file_exist = False
+    return (all_input_file_exist, input_files_list, \
+            all_COMOUT_file_exist, COMOUT_files_list,
+            DATA_files_list) 

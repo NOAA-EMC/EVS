@@ -11,6 +11,8 @@
 # DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_grid2obs_stats.ecf
 # DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_nam_precip_stats.ecf
 # DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_precip_stats.ecf
+# DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_nam_snowfall_stats.ecf
+# DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_snowfall_stats.ecf
 # DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_sref_grid2obs_stats.ecf
 #
 # =============================================================================
@@ -48,14 +50,14 @@ setpdy.sh
 . $DATA/PDY
 
 if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
-# in production the following will be set using compath.py
   export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
   export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
   export COMINrap=${COMINrap:-$(compath.py ${envir}/com/rap/${rap_ver})}
   export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
   export COMINobs=$COMINobsproc
   export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
-  export COMINmrms=$DCOMROOT/ldmdata/obs/upperair/mrms
+  export COMINmrms=${COMINmrms:-$DCOMROOT/ldmdata/obs/upperair/mrms}
+  export COMINnohrsc=${COMINnohrsc:-$DCOMROOT}
   export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
   export COMOUTfinal=${COMOUTfinal:-$COMOUT/${MODELNAME}.${VDATE}}
   export COMOUTsmall=${COMOUTsmall:-$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE}
