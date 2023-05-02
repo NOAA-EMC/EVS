@@ -40,7 +40,8 @@ set -x
 		  export VAR_NAME=${WVAR}
 ######################################################################################################
 # Set Basic Environment Variables
-NEST_LIST="conus ak spc_otlk subreg"
+# NEST_LIST="conus ak spc_otlk subreg"
+NEST_LIST="conus ak spc_otlk"
 VERIF_TYPES="raob metar"
 
 # Reformat MET Data
@@ -53,9 +54,11 @@ for NEST in $NEST_LIST; do
 		if [ $RUN_ENVIR = nco ]; then
 			export evs_run_mode="production"
 			source $config
+			#source $USHevs/mesoscale/mesoscale_stats_grid2obs_filter_valid_hours_list.sh
 		else
 			export evs_run_mode=$evs_run_mode
 			source $config
+			#source $USHevs/mesoscale/mesoscale_stats_grid2obs_filter_valid_hours_list.sh
 		fi
 		echo "RUN MODE: $evs_run_mode"
 		for VHOUR in $VHOUR_LIST; do
@@ -344,6 +347,7 @@ fi
 ######################################################################################################
 	  else
 ### Already done VV
+    source $config
     # select var to work on
     export VAR_NAME=${WVAR}
     # Verification Var
