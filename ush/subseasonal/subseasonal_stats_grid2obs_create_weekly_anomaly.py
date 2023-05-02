@@ -68,61 +68,63 @@ STARTDATE_dt = datetime.datetime.strptime(
 ENDDATE_dt = datetime.datetime.strptime(
     DATE+valid_hr_end, '%Y%m%d%H'
 )
+fhr_start = int(fhr_list[0])
+fhr_end = int(fhr_list[-1])
 valid_date_dt = STARTDATE_dt
-while valid_date_dt <= ENDDATE_dt:
-    for fhr_str in fhr_list:
-        fhr = int(fhr_str)
-        init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
-        input_file = sub_util.format_filler(
-            file_format, valid_date_dt, init_date_dt, str(fhr), {}
+fhr = fhr_start
+while valid_date_dt <= ENDDATE_dt and fhr <= fhr_end:
+    init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
+    input_file = sub_util.format_filler(
+        file_format, valid_date_dt, init_date_dt, str(fhr), {}
+    )
+    if os.path.exists(input_file):
+        print("\nInput file: "+input_file)
+        with open(input_file, 'r') as infile:
+            input_file_header = infile.readline()
+        sub_util.run_shell_command(['sed', '-i', '"s/   a//g"',
+                                    input_file])
+        input_file_df = pd.read_csv(input_file, sep=" ", skiprows=1,
+                                    skipinitialspace=True, header=None,
+                                    names=MET_MPR_column_list, 
+                                    na_filter=False, dtype=str)
+        input_file_var_level_df = input_file_df[
+            (input_file_df['FCST_VAR'] == var) & (input_file_df['FCST_LEV'] == level)
+        ]
+        fcst_var_level = np.array(
+            input_file_var_level_df['FCST'].values, dtype=float
         )
-        if os.path.exists(input_file):
-            print("\nInput file: "+input_file)
-            with open(input_file, 'r') as infile:
-                input_file_header = infile.readline()
-            sub_util.run_shell_command(['sed', '-i', '"s/   a//g"',
-                                        input_file])
-            input_file_df = pd.read_csv(input_file, sep=" ", skiprows=1,
-                                        skipinitialspace=True, header=None,
-                                        names=MET_MPR_column_list, 
-                                        na_filter=False, dtype=str)
-            input_file_var_level_df = input_file_df[
-                (input_file_df['FCST_VAR'] == var) & (input_file_df['FCST_LEV'] == level)
-            ]
-            fcst_var_level = np.array(
-                input_file_var_level_df['FCST'].values, dtype=float
-            )
-            obs_var_level = np.array(
-                input_file_var_level_df['OBS'].values, dtype=float
-            )
-            climo_mean_var_level = np.array(
-                input_file_var_level_df['CLIMO_MEAN'].values, dtype=float
-            )
-            fcst_anom_var_level = fcst_var_level - climo_mean_var_level
-            obs_anom_var_level = obs_var_level - climo_mean_var_level
-            output_file_df = pd.DataFrame.copy(input_file_var_level_df,
-                                               deep=True)
-            output_file_df['CLIMO_MEAN'] = 'NA'
-            output_file_df['FCST'] = fcst_anom_var_level
-            output_file_df['OBS'] = obs_anom_var_level
-            output_file_df['FCST_VAR'] = var+'_ANOM'
-            output_file_df['OBS_VAR'] = var+'_ANOM'
-            output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP,
-                                      'METplus_output',
-                                       RUN+'.'
-                                       +ENDDATE_dt.strftime('%Y%m%d'),
-                                       MODEL, VERIF_CASE)
-            output_file = os.path.join(output_dir, 'anomaly_'
-                                       +VERIF_TYPE+'_'+job_name+'_init'
-                                       +init_date_dt.strftime('%Y%m%d%H')+'_'
-                                       +'fhr'+str(fhr).zfill(3)+'.stat')
-            print("Output File: "+output_file)
-            if os.path.exists(output_file):
-                os.remove(output_file)
-            output_file_df.to_csv(output_file, header=input_file_header,
-                                  index=None, sep=' ', mode='w')
-        else:
-           print("\nWARNING: "+input_file+" does not exist")
+        obs_var_level = np.array(
+            input_file_var_level_df['OBS'].values, dtype=float
+        )
+        climo_mean_var_level = np.array(
+            input_file_var_level_df['CLIMO_MEAN'].values, dtype=float
+        )
+        fcst_anom_var_level = fcst_var_level - climo_mean_var_level
+        obs_anom_var_level = obs_var_level - climo_mean_var_level
+        output_file_df = pd.DataFrame.copy(input_file_var_level_df,
+                                           deep=True)
+        output_file_df['CLIMO_MEAN'] = 'NA'
+        output_file_df['FCST'] = fcst_anom_var_level
+        output_file_df['OBS'] = obs_anom_var_level
+        output_file_df['FCST_VAR'] = var+'_ANOM'
+        output_file_df['OBS_VAR'] = var+'_ANOM'
+        output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP,
+                                  'METplus_output',
+                                  RUN+'.'
+                                  +ENDDATE_dt.strftime('%Y%m%d'),
+                                  MODEL, VERIF_CASE)
+        output_file = os.path.join(output_dir, 'anomaly_'
+                                   +VERIF_TYPE+'_'+job_name+'_init'
+                                   +init_date_dt.strftime('%Y%m%d%H')+'_'
+                                   +'fhr'+str(fhr).zfill(3)+'.stat')
+        print("Output File: "+output_file)
+        if os.path.exists(output_file):
+            os.remove(output_file)
+        output_file_df.to_csv(output_file, header=input_file_header,
+                              index=None, sep=' ', mode='w')
+    else:
+        print("\nWARNING: "+input_file+" does not exist")
     valid_date_dt = valid_date_dt + datetime.timedelta(hours=int(valid_hr_inc))
+    fhr+=int(valid_hr_inc)
 
 print("END: "+os.path.basename(__file__))
