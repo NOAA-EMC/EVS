@@ -182,7 +182,7 @@ i=1
          cp -v $fcst_file $COMINfcst
          nfiles=$((nfiles+1))
       else
-         echo "Forecast file not found for member $i. METplus will not run without $min_file_req members available."
+         echo "Forecast file $fcst_file not found for member $i." >> missing_file_list
       fi
    
       fhr=$((fhr+1))
@@ -212,7 +212,7 @@ i=1
 
       export subject="${MODELNAME} Forecast Data Missing for EVS ${COMPONENT}"
       echo "Warning: Only $nfiles ${MODELNAME} forecast files found for ${cyc}Z ${IDATE} cycle. At least $min_file_req files are required. METplus will not run." > mailmsg
-      echo "Job ID: $jobid" >> mailmsg
+      echo -e "`cat missing_file_list`" >> mailmsg
       cat mailmsg | mail -s "$subject" $maillist
 
    fi

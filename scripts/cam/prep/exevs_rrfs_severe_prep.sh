@@ -26,16 +26,14 @@ export VERIF_GRID=G211
 export VERIF_GRID_DX=81.271
 export GAUSS_RAD=120
 
+export MXUPHL25_THRESH1=160.0
+
 
 ############################################################
 # Set some model-specific environment variables 
 ############################################################
 
 export COMINfcst=${COMINrrfs}
-export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/{init?fmt=%2H}/${MODELNAME}.t{init?fmt=%2H}z.prslev.f{lead?fmt=%3H}.conus_3km.grib2
-
-export MXUPHL25_THRESH1=160.0
-
 
 if [ $cyc -eq 00 ];then
    nloop=2
@@ -68,6 +66,85 @@ else
    exit 0
 
 fi
+
+export nloop
+export fhr_beg1
+export fhr_end1
+export fhr_beg2
+export fhr_end2
+
+
+############################################################
+# Write poescript for each domain and use case
+############################################################
+
+njob=0
+
+# Create output directory for GridStat (and EnsembleStat) runs
+mkdir -p $DATA/gen_ens_prod
+mkdir -p $DATA/pcp_combine
+mkdir -p $DATA/sspf
+
+MEMNUM="ctl"
+echo "${USHevs}/${COMPONENT}/evs_rrfs_severe_prep.sh $MEMNUM $njob" >> $DATA/poescript
+njob=$((njob+1))
+
+
+for member in {1..9}; do
+   MEMNUM="mem000${member}"
+   echo "${USHevs}/${COMPONENT}/evs_rrfs_severe_prep.sh $MEMNUM $njob" >> $DATA/poescript
+   njob=$((njob+1))
+done
+
+
+###################################################################
+# Run the command file
+###################################################################
+
+chmod 775 $DATA/poescript
+
+export MP_PGMMODEL=mpmd
+export MP_CMDFILE=${DATA}/poescript
+
+if [ $USE_CFP = YES ]; then
+
+   echo "running cfp"
+   mpiexec -np $nproc --cpu-bind verbose,core cfp ${MP_CMDFILE}
+   export err=$?; err_chk
+   echo "done running cfp"
+
+else
+
+   echo "not running cfp"
+   ${MP_CMDFILE}
+   export err=$?; err_chk
+
+fi
+
+
+###################################################################
+# Copy hourly output to $COMOUT
+###################################################################
+
+output_dirs="pcp_combine sspf"
+
+if [ $SENDCOM = YES ]; then
+
+   mkdir -p $COMOUT/${modsys}.${IDATE}
+
+   for output_dir in ${output_dirs}; do
+      if [ "$(ls -A $DATA/$output_dir)" ]; then
+         for FILE in $DATA/${output_dir}/${modsys}.${IDATE}/*; do
+            cp -v $FILE $COMOUT/${modsys}.${IDATE}
+         done
+      fi
+   done
+fi
+
+
+
+exit
+
 
 
 ###################################################################
@@ -119,7 +196,6 @@ i=1
 
    done
 
-
    ###################################################################
    # Run METplus if all forecast files exist or exit gracefully
    ###################################################################
@@ -131,32 +207,3 @@ i=1
       ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/GenEnsProd_fcstCAM_MXUPHL_SurrogateSevere.conf
       export err=$?; err_chk
 
-      # Copy final output to $COMOUT
-      if [ $SENDCOM = YES ]; then
-         mkdir -p $COMOUT/${modsys}.${IDATE}
-         for FILE in $DATA/pcp_combine/${modsys}.${IDATE}/*; do
-            cp -v $FILE $COMOUT/${modsys}.${IDATE}
-         done
-         for FILE in $DATA/sspf/${modsys}.${IDATE}/*; do
-            cp -v $FILE $COMOUT/${modsys}.${IDATE}
-         done
-      fi
-
-
-   else
-
-      export subject="${MODELNAME} Forecast Data Missing for EVS ${COMPONENT}"
-      echo "Warning: Only $nfiles ${MODELNAME} forecast files found for ${cyc}Z ${IDATE} cycle. $min_file_req files are required. METplus will not run." > mailmsg
-      echo "Job ID: $jobid" >> mailmsg
-      cat mailmsg | mail -s "$subject" $maillist
-
-   fi
-
-
-   k=$((k+1))
-
-done
-
-
-
-exit
