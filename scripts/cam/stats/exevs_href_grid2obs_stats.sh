@@ -60,7 +60,7 @@ fi
 
 >run_href_all_grid2obs_poe
 
-#system: 6 jobs
+#system: 10 jobs (8 on CONUS, 2 on Alaska)
 if [ $verif_system = yes ] ; then 
   $USHevs/cam/evs_href_grid2obs_system.sh 
   cat run_all_href_system_poe.sh >> run_href_all_grid2obs_poe
@@ -79,7 +79,7 @@ if [ $verif_product = yes ] ; then
 fi
 
 
-#totall: 32 jobs for all (both conus and alaska, profile, system and product)
+#totall: 36 jobs for all (both conus and alaska, profile, system and product)
 chmod 775 run_href_all_grid2obs_poe
 
 
@@ -87,7 +87,7 @@ if [ $run_mpi = yes ] ; then
 
     export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
 
-    mpiexec -np 32 -ppn 32 --cpu-bind verbose,depth cfp  run_href_all_grid2obs_poe
+    mpiexec -np 36 -ppn 36 --cpu-bind verbose,depth cfp  run_href_all_grid2obs_poe
 
 else
     run_href_all_grid2obs_poe
