@@ -302,7 +302,7 @@ def main():
     # Need settings
     INPUT_DIR = os.environ['HOME']
     OUTPUT_DIR = os.environ['HOME']
-    LOGO_DIR = os.environ['HOME'],
+    LOGO_DIR = os.environ['HOME']
     DATE_INFO_DICT = {
         'date_type': 'DATE_TYPE',
         'start_date': 'START_DATE',
