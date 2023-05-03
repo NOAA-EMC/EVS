@@ -516,7 +516,7 @@ class ThresholdAverage:
                         thresh_ci = (
                             cmasked_model_num_model1_diff_ci_data[thresh_idx]
                         )
-                        ax2.bar(fhr, 2*np.absolute(thresh_ci),
+                        ax2.bar(thresh, 2*np.absolute(thresh_ci),
                                 bottom=-1*np.absolute(thresh_ci),
                                 width=(cmasked_ci_bar_max_widths[thresh_idx]
                                        -(cmasked_ci_bar_intvl_widths[thresh_idx]
