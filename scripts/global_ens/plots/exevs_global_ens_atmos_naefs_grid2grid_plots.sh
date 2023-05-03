@@ -220,9 +220,9 @@ done     #stats
 
 #scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/naefs/grid2grid
 
-tar -cvf plots.naefs.grid2grid.v${VDATE}.past${past_days}days.tar *.png
+tar -cvf evs.plots.naefs.grid2grid.v${VDATE}.past${past_days}days.tar *.png
 
-cp  plots.naefs.grid2grid.v${VDATE}.past${past_days}days.tar $COMOUT/.  
+cp  evs.plots.naefs.grid2grid.v${VDATE}.past${past_days}days.tar $COMOUT/.  
 
 
 

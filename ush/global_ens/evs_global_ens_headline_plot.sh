@@ -97,7 +97,6 @@ sed -e "s!YYYY!${last_year}!g" -e "s!December!$last!g"  $USHevs/global_ens/evs_g
 
 python evs_global_ens_headline_plot.py
 
-cp NH_H500_PAC_${last_year}.png.png $COMOUT/evs_gefs.headline.acc.hgt_p500.${last_year}.fhrmean_valid00.g003_nhem.png 
-#scp NH_H500_PAC_${last_year}.png.png  wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/gens/headline
+cp NH_H500_PAC_${last_year}.png.png $COMOUT/evs.plot.gefs.headline.hgt_p500.${last_year}.nhem.png 
 
 
