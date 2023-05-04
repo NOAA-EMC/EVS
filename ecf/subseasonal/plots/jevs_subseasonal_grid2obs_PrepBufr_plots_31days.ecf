@@ -1,6 +1,5 @@
 #PBS -N jevs_subseasonal_grid2obs_PrepBufr_plots_31days_00
 #PBS -j oe
-#PBS -o /lfs/h2/emc/vpppg/noscrub/shannon.shields/EVS/ecf/subseasonal/plots/evs_subseasonal_grid2obs_PrepBufr_plots_31days_out.txt
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
@@ -35,18 +34,13 @@ module load gsl/${gsl_ver}
 module load netcdf/${netcdf_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
-module load intel/${intel_ver}
-module load PrgEnv-intel/${PrgEnvintel_ver}
 module load prod_envir/${prod_envir_ver}
 module load prod_util/${prod_util_ver}
-module load craype/${craype_ver}
 module load cray-mpich/${craympich_ver}
 module load cray-pals/${craypals_ver}
 module load cfp/${cfp_ver}
 module load g2c/${g2c_ver}
 module load wgrib2/${wgrib2_ver}
-module load proj/${proj_ver}
-module load geos/${geos_ver}
 module load libpng/${libpng_ver}
 module load libjpeg/${libjpeg_ver}
 module load udunits/${udunits_ver}
