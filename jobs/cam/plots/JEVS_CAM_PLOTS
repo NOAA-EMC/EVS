@@ -5,43 +5,28 @@
 ########################################
 set -xa
 
-
-####################################
+# ###################################
 # SET SHELL PROCESSING VARIABLES
-####################################
+# ###################################
 export PS4='$SECONDS + '
 date
-
 
 ###########################################################
 # obtain unique LSF id (jobid) and make temp directories
 ###########################################################
 export pid=$$
-export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+
+export DATA=${DATA:-${DATAROOT:?}}/${jobid:?}
 rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
-
 
 ####################################
 # Determine Job Output Name on System
 ####################################
 export pgmout="OUTPUT.${pid}"
 
-
-####################################
-# Set EVS directories
-####################################
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
-export EXECevs=${EXECevs:-$HOMEevs/exec}
-export FIXevs=${FIXevs:-$HOMEevs/fix}
-export PARMevs=${PARMevs:-$HOMEevs/parm}
-export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
-export USHevs=${USHevs:-$HOMEevs/ush}
-export MASKS=${MASKS:-$FIXevs/masks}
-export MET_PLUS_CONF="${PARMevs}/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}"
-export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
-
+export cycle=t${cyc}z
 
 ##################################################
 # SAVEGES  - Copy Files From TMPDIR to $GESdir
@@ -53,75 +38,42 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
+export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
 
-####################################
-# Run setpdy and initialize PDY variables
-####################################
-export cycle=${cycle:-t${cyc}z}
-setpdy.sh 31
-. ./PDY
-
-if [ $VERIF_CASE = grid2obs ] ; then
-    export VDATE=${VDATE:-$PDYm1}
-
-elif [ $VERIF_CASE = precip ] ; then
-    export VDATE=${VDATE:-$PDYm2}
-
-elif [ $VERIF_CASE = radar ] ; then
-    export VDATE=${VDATE:-$PDYm1}
-
-elif [ $VERIF_CASE = severe ] ; then
-
-   # Set verification date
-   export VDATE=${VDATE:-$PDYm7}
-  
-   # Set correct date for SPC report data 
-   export REP_DATE=${REP_DATE:-$(date -d "$VDATE -1 day" +"%Y%m%d")}
-
+if [[ ${COMPONENT} == "cam" ]]; then
+    export VDATE=$(date -d "today -1 day" +"%Y%m%d")
 else
-
-   echo "The provided VERIF_CASE, $VERIF_CASE, is not supported for the $COMPONENT $STEP step"
-   exit 1
-
+    setpdy.sh 31
+    . ./PDY
+    export VDATE=$PDYm1
 fi
 
-
-####################################
-# Define NET/RUN variables
-####################################
-export NET=${NET:-evs}
-export STEP=${STEP:-stats}
-export COMPONENT=${COMPONENT:-cam}
-export RUN=${RUN:-atmos}
-
-
-####################################
-# Define COMIN/COMOUT variables
-####################################
-export COMIN=${COMIN:-$(compath.py $NET/$evs_ver)}
+# Define COMIN/COMOUT variables:
+export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
+export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
-
-mkdir -p $COMOUT
 
 echo $COMPATH
 
+#######################################################################
+# Execute the script.
+#######################################################################
 
-####################################
-# Execute the script 
-####################################
 $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
-export err=$?; err_chk
 
-if [ -e "$pgmout" ]; then
-   cat $pgmout
-fi
+cat $pgmout
 
 msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$msg"
+postmsg "$jlogfile" "$msg"
 
-if [ "$KEEPDATA" != "YES" ]; then
-   cd $DATAROOT
-   rm -rf $DATA
-fi
+#if [ "$KEEPDATA" != "YES" ] ; then
+#  cd $DATAROOT
+#  rm -rf $DATA
+#fi
 
-date
+
