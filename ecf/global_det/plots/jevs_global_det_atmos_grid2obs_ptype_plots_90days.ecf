@@ -87,7 +87,6 @@ export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=$COMROOT/$NET/$evs_ver
 export COMINgfs=$COMIN/stats/$COMPONENT/gfs
 export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1
-export OUTPUTROOT=/lfs/h2/emc/stmp/$USER/evs_global_det_atmos_test
 
 # Set config file
 export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${VERIF_TYPE}
