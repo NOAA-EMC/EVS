@@ -2374,19 +2374,24 @@ def initalize_job_env_dict(verif_type, group,
              'MET_ROOT', 'MET_bin_exec', 'met_verbosity', 'MET_TMP_DIR',
              'COMROOT']
         )
-    elif group == 'plot':
+    elif group in ['condense_stats', 'filter_stats', 'make_plots',
+                   'tar_images']:
         job_env_var_list.extend(['MET_ROOT', 'met_ver'])
     job_env_dict = {}
     for env_var in job_env_var_list:
         job_env_dict[env_var] = os.environ[env_var]
-    if group == 'plot':
+    if group in ['condense_stats', 'filter_stats', 'make_plots',
+                 'tar_images']:
         job_env_dict['plot_verbosity'] = (
             os.environ['metplus_verbosity']
         )
     job_env_dict['JOB_GROUP'] = group
-    if group in ['reformat_data', 'assemble_data', 'generate_stats', 'plot']:
+    if group in ['reformat_data', 'assemble_data', 'generate_stats',
+                 'condense_stats', 'filter_stats', 'make_plots',
+                 'tar_images']:
         job_env_dict['VERIF_TYPE'] = verif_type
-        if group == 'plot':
+        if group in ['condense_stats', 'filter_stats', 'make_plots',
+                     'tar_images']:
             job_env_dict['job_var'] = job
         else:
             job_env_dict['job_name'] = job
@@ -2461,6 +2466,28 @@ def initalize_job_env_dict(verif_type, group,
             verif_type_init_hr_inc = 24
         job_env_dict['init_hr_inc'] = str(verif_type_init_hr_inc)
     return job_env_dict
+
+def get_logger(log_file):
+    """! Get logger
+         Args:
+             log_file - full path to log file (string)
+         Returns:
+             logger - logger object
+    """
+    log_formatter = logging.Formatter(
+        '%(asctime)s.%(msecs)03d (%(filename)s:%(lineno)d) %(levelname)s: '
+        + '%(message)s',
+        '%m/%d %H:%M:%S'
+    )
+    logger = logging.getLogger(log_file)
+    logger.setLevel('DEBUG')
+    file_handler = logging.FileHandler(log_file, mode='a')
+    file_handler.setFormatter(log_formatter)
+    logger.addHandler(file_handler)
+    logger_info = f"Log file: {log_file}"
+    print(logger_info)
+    logger.info(logger_info)
+    return logger
 
 def get_plot_dates(logger, date_type, start_date, end_date,
                    valid_hr_start, valid_hr_end, valid_hr_inc,
@@ -2581,29 +2608,16 @@ def format_thresh(thresh):
          thresh_symbol  - threshold with symbols (string)
          thresh_letters - treshold with letters (string)
    """
-   for opt in ['>=', '>', '==', '!=', '<=', '<',
-               'ge', 'gt', 'eq', 'ne', 'le', 'lt']:
-       if opt in thresh:
-           thresh_opt = opt
-           thresh_value = thresh.replace(opt, '')
-   if thresh_opt in ['>', 'gt']:
-       thresh_symbol = '>'+thresh_value
-       thresh_letter = 'gt'+thresh_value
-   elif thresh_opt in ['>=', 'ge']:
-       thresh_symbol = '>='+thresh_value
-       thresh_letter = 'ge'+thresh_value
-   elif thresh_opt in ['<', 'lt']:
-       thresh_symbol = '<'+thresh_value
-       thresh_letter = 'lt'+thresh_value
-   elif thresh_opt in ['<=', 'le']:
-       thresh_symbol = '<='+thresh_value
-       thresh_letter = 'le'+thresh_value
-   elif thresh_opt in ['==', 'eq']:
-      thresh_symbol = '=='+thresh_value
-      thresh_letter = 'eq'+thresh_value
-   elif thresh_opt in ['!=', 'ne']:
-       thresh_symbol = '!='+thresh_value
-       thresh_letter = 'ne'+thresh_value
+   thresh_symbol = (
+       thresh.replace('ge', '>=').replace('gt', '>')\
+       .replace('eq', '==').replace('ne', '!=')\
+       .replace('le', '<=').replace('lt', '<')
+   )
+   thresh_letter = (
+       thresh.replace('>=', 'ge').replace('>', 'gt')\
+       .replace('==', 'eq').replace('!=', 'ne')\
+       .replace('<=', 'le').replace('<', 'lt')
+   )
    return thresh_symbol, thresh_letter
 
 def condense_model_stat_files(logger, input_dir, output_file, model, obs,
@@ -2697,14 +2711,6 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
     met_version_line_type_col_list = get_met_line_type_cols(
         logger, met_info_dict['root'], met_info_dict['version'], line_type
     )
-    df_dtype_dict = {}
-    float_idx = met_version_line_type_col_list.index('TOTAL')
-    for col in met_version_line_type_col_list:
-        col_idx = met_version_line_type_col_list.index(col)
-        if col_idx < float_idx:
-            df_dtype_dict[col] = str
-        else:
-            df_dtype_dict[col] = np.float64
     for model_num in list(model_info_dict.keys()):
         model_num_name = (
             model_num+'/'+model_info_dict[model_num]['name']
@@ -2714,12 +2720,13 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
             [[model_num_name], met_format_valid_dates],
             names=['model', 'valid_dates']
         )
-        model_num_df = pd.DataFrame(np.nan, index=model_num_df_index,
-                                    columns=met_version_line_type_col_list)
         model_dict = model_info_dict[model_num]
+        condensed_model_file = os.path.join(
+            input_dir, model_num+'_'+model_dict['name']+'.stat'
+        )
         if len(dates) != 0:
-            parsed_model_stat_file = os.path.join(
-                output_dir,
+            input_parsed_model_stat_file = os.path.join(
+                input_dir,
                 'fcst'+model_dict['name']+'_'
                 +fcst_var_name+fcst_var_level+fcst_var_thresh+'_'
                 +'obs'+model_dict['obs_name']+'_'
@@ -2733,6 +2740,14 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                 +'fhr'+fhr.zfill(3)
                 +'.stat'
             )
+            output_parsed_model_stat_file = os.path.join(
+                output_dir,
+                input_parsed_model_stat_file.rpartition('/')[2]
+            )
+            if os.path.exists(input_parsed_model_stat_file):
+                parsed_model_stat_file = input_parsed_model_stat_file
+            else:
+                parsed_model_stat_file = output_parsed_model_stat_file
             if not os.path.exists(parsed_model_stat_file):
                 write_parse_stat_file = True
                 read_parse_stat_file = True
@@ -2742,16 +2757,38 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
         else:
             write_parse_stat_file = False
             read_parse_stat_file = False
-        if write_parse_stat_file:
-            condensed_model_file = os.path.join(
-                input_dir, model_num+'_'+model_dict['name']+'.stat'
+        if os.path.exists(condensed_model_file) and line_type == 'MCTC':
+            tmp_df = pd.read_csv(
+                condensed_model_file, sep=" ", skiprows=1,
+                skipinitialspace=True,
+                keep_default_na=False, dtype='str', header=None
             )
-            if not os.path.exists(condensed_model_file):
-                condense_model_stat_files(
-                    logger, input_dir, condensed_model_file, model_dict['name'],
-                    model_dict['obs_name'], grid, vx_mask,
-                    fcst_var_name, obs_var_name, line_type
+            if len(tmp_df) > 0:
+                ncat = int(tmp_df[25][0])
+                new_met_version_line_type_col_list = []
+                for col in met_version_line_type_col_list:
+                    if col == '(N_CAT)':
+                        new_met_version_line_type_col_list.append('N_CAT')
+                    elif col == 'F[0-9]*_O[0-9]*':
+                        fcount = 1
+                        ocount = 1
+                        totcount = 1
+                        while totcount <= ncat*ncat:
+                            new_met_version_line_type_col_list.append(
+                                'F'+str(fcount)+'_'+'O'+str(ocount)
+                            )
+                            if ocount < ncat:
+                                ocount+=1
+                            elif ocount == ncat:
+                                ocount = 1
+                                fcount+=1
+                            totcount+=1
+                    else:
+                        new_met_version_line_type_col_list.append(col)
+                met_version_line_type_col_list = (
+                    new_met_version_line_type_col_list
                 )
+        if write_parse_stat_file:
             if fcst_var_thresh != 'NA':
                 fcst_var_thresh_symbol, fcst_vat_thresh_letter = (
                     format_thresh(fcst_var_thresh)
@@ -2819,6 +2856,8 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                              +f"at {parsed_model_stat_file}")
             else:
                 logger.debug(f"Could not create {parsed_model_stat_file}")
+        model_num_df = pd.DataFrame(np.nan, index=model_num_df_index,
+                                    columns=met_version_line_type_col_list)
         if read_parse_stat_file:
             if os.path.exists(parsed_model_stat_file):
                 logger.debug(f"Reading {parsed_model_stat_file} for "
@@ -2828,6 +2867,14 @@ def build_df(logger, input_dir, output_dir, model_info_dict,
                     skipinitialspace=True, names=met_version_line_type_col_list,
                     na_values=['NA'], header=None
                 )
+                df_dtype_dict = {}
+                float_idx = met_version_line_type_col_list.index('TOTAL')
+                for col in met_version_line_type_col_list:
+                    col_idx = met_version_line_type_col_list.index(col)
+                    if col_idx < float_idx:
+                        df_dtype_dict[col] = str
+                    else:
+                        df_dtype_dict[col] = np.float64
                 model_stat_file_df = model_stat_file_df.astype(df_dtype_dict)
                 for valid_date in met_format_valid_dates:
                     model_stat_file_df_valid_date_idx_list = (
