@@ -331,7 +331,7 @@ generate_stats_jobs_dict = {
 ################################################
 gather_stats_jobs_dict = {'env': {},
                           'commands': [m_util.metplus_command(
-                              'StatAnalysis_fcstMESOSCALE_precip.conf'
+                              'StatAnalysis_fcstMESOSCALE.conf'
                           )]}
 
 # Write jobs
