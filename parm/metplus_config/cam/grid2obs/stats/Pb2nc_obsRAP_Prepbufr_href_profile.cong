@@ -128,8 +128,7 @@ METPLUS_CONF = {OUTPUT_BASE}/final_pb2nc_{ENV[vbeg]}_{ENV[verif_grid]}.conf
 # End of [dir] section and start of [filename_templates] section
 [filename_templates]
 # Template to look for forecast input to PB2NC relative to PB2NC_INPUT_DIR
-#PB2NC_INPUT_TEMPLATE = ndas.t{valid?fmt=%2H}z.prepbufr.tm{offset?fmt=%2H}.{valid?fmt=%Y%m%d}.nr
-PB2NC_INPUT_TEMPLATE = rap.{da_init?fmt=%Y%m%d}/rap.t{da_init?fmt=%H}z.prepbufr.tm00.nr
+PB2NC_INPUT_TEMPLATE = rap.{da_init?fmt=%Y%m%d}/rap.t{da_init?fmt=%H}z.prepbufr.tm00
 
 # Template to use to write output from PB2NC
 PB2NC_OUTPUT_TEMPLATE = prepbufr_profile.t{da_init?fmt=%H}z.{ENV[verif_grid]}.nc
