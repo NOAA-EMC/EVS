@@ -20,7 +20,7 @@ for dom in CONUS Alaska ; do
 
       export domain=CONUS
 
-      for valid_at in 1fhr 2fhr 3fhr 4fhr ; do
+      for valid_at in 1fhr 2fhr 3fhr 4fhr  5fhr 6fhr 7fhr 8fhr ; do
       
          >run_href_${domain}.${valid_at}_system.sh
 
@@ -41,13 +41,21 @@ for dom in CONUS Alaska ; do
          echo  "export valid_increment=10800" >> run_href_${domain}.${valid_at}_system.sh
 
          if [ $valid_at = 1fhr ] ; then 
-           echo  "export lead='3,6,9,12'" >> run_href_${domain}.${valid_at}_system.sh
-         elif [ $valid_at = 2fhr ] ; then
-	   echo  "export lead='15,18,21,24'" >> run_href_${domain}.${valid_at}_system.sh	 
+           echo  "export lead='3,6'" >> run_href_${domain}.${valid_at}_system.sh
+	 elif [ $valid_at = 2fhr ] ; then
+	   echo  "export lead='9,12'" >> run_href_${domain}.${valid_at}_system.sh
          elif [ $valid_at = 3fhr ] ; then
-           echo  "export lead='27,30,33,36'" >> run_href_${domain}.${valid_at}_system.sh
-	 elif [ $valid_at = 4fhr ] ; then
-           echo  "export lead='39,42,45,48'" >> run_href_${domain}.${valid_at}_system.sh
+	   echo  "export lead='15,18'" >> run_href_${domain}.${valid_at}_system.sh	 
+         elif [ $valid_at = 4fhr ] ; then
+	   echo  "export lead='21,24'" >> run_href_${domain}.${valid_at}_system.sh	 
+         elif [ $valid_at = 5fhr ] ; then
+           echo  "export lead='27,30'" >> run_href_${domain}.${valid_at}_system.sh
+	 elif [ $valid_at = 6fhr ] ; then
+           echo  "export lead='33,36'" >> run_href_${domain}.${valid_at}_system.sh
+	 elif [ $valid_at = 7fhr ] ; then
+           echo  "export lead='39,42'" >> run_href_${domain}.${valid_at}_system.sh
+	 elif [ $valid_at = 8fhr ] ; then
+           echo  "export lead='45,48'" >> run_href_${domain}.${valid_at}_system.sh
          elif [ $valid_at = test ] ; then
            echo  "export vbeg=18" >>run_href_${domain}.${valid_at}_system.sh
            echo  "export vend=18" >>run_href_${domain}.${valid_at}_system.sh
