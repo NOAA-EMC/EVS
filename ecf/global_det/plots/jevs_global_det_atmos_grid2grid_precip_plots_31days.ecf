@@ -46,8 +46,6 @@ module load netcdf/${netcdf_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
 module load cray-pals/${craypals_ver}
-module load PrgEnv-intel/${PrgEnvintel_ver}
-module load intel/${intel_ver}
 module load prod_envir/${prod_envir_ver}
 module load prod_util/${prod_util_ver}
 module load cfp/${cfp_ver}
