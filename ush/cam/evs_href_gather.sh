@@ -21,6 +21,8 @@ if [ $verify = precip ] ; then
  MODELS='HREF HREF_MEAN HREF_PMMN HREF_LPMM HREF_AVRG  HREF_PROB HREF_EAS HREF_SNOW'
 elif [ $verify = grid2obs ] ; then
  MODELS='HREF HREF_MEAN HREF_PROB'
+elif [ $verify = severe ] ; then
+ MODELS='HREF_MEAN'
 fi 
 
 for MODL in $MODELS ; do
@@ -42,13 +44,13 @@ for MODL in $MODELS ; do
     echo  "export MODEL=${MODL}" >> run_gather_${verify}_${MODL}.sh
     echo  "export modl=$modl" >> run_gather_${verify}_${MODL}.sh
 
-    if [ $verify = grid2obs ] ; then 
+    if [ $verify = grid2obs ] || [ $verify = severe ] ; then 
       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/StatAnlysis_fcstHREF_obsPREPBUFR_GatherByDay.conf " >> run_gather_${verify}_${MODL}.sh
     elif [ $verify = precip ] ; then
       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/StatAnlysis_fcstHREF_obsAnalysis_GatherByDay.conf " >> run_gather_${verify}_${MODL}.sh
    fi
 
-    echo "cp ${WORK}/gather/${vday}/${MODL}_${verify}_${vday}.stat  $COMOUTfinal/evs.stats.${modl}_${verify}_v${vday}.stat" >> run_gather_${verify}_${MODL}.sh
+    echo "cp ${WORK}/gather/${vday}/${MODL}_${verify}_${vday}.stat  $COMOUTfinal/evs.stats.${modl}.${verify}.v${vday}.stat" >> run_gather_${verify}_${MODL}.sh
 
     chmod +x run_gather_${verify}_${MODL}.sh
  
@@ -58,7 +60,7 @@ done
 
 chmod 775 run_gather_all_poe.sh
 
-sh run_gather_all_poe.sh
+ run_gather_all_poe.sh
 
 exit
 
