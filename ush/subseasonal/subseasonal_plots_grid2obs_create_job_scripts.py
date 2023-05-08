@@ -229,6 +229,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     job_env_dict['obs_var_thresh_list'] = (
                         "'"+f"{', '.join(obs_var_threshs)}"+"'"
                     )
+                    job_env_dict['valid_hr_inc'] = '24'
                     # Create job file
                     njobs+=1
                     job_file = os.path.join(JOB_GROUP_jobs_dir,
@@ -423,6 +424,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job_env_dict['obs_var_thresh_list'] = (
                     "'"+f"{', '.join(obs_var_threshs)}"+"'"
                 )
+                job_env_dict['valid_hr_inc'] = '24'
                 # Create job file
                 njobs+=1
                 job_file = os.path.join(JOB_GROUP_jobs_dir,
