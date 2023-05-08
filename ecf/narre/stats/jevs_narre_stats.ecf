@@ -73,5 +73,12 @@ export maillist='geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
+if [ -z "$maillist" ]; then
 
-${HOMEevs}/jobs/narre/stats/JEVS_NARRE_STATS
+   echo "maillist variable is not defined. Exiting without continuing."
+
+else
+
+  ${HOMEevs}/jobs/narre/stats/JEVS_NARRE_STATS
+
+fi
