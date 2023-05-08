@@ -58,6 +58,8 @@ if [ "$VAR_NAME_LIST" = "HGT TMP UGRD VGRD UGRD_VGRD SPFH" ]; then
 else
 #=============
 
+export MET_PLUS_OUT=${DATA}/${VERIF_CASE}/METplus_output/${NEST}
+
   if [ "$NEST" = "conus" ]; then
     export SKIP_IF_OUTPUT_EXISTS="no"
     export FHR_GROUP_LIST="SHORT FULL"
