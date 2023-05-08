@@ -1,3 +1,5 @@
+#!/bin/ksh
+
 set -x
 
 modnam=$1

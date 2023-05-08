@@ -60,8 +60,13 @@ export jobid=$job.${PBS_JOBID:-$$}
 
 export run_mpi=yes
 
-export maillist='binbin.zhou@noaa.gov'
-#export maillist='geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'
+export maillist='geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'
 
-${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS
+if [ -z "$maillist" ]; then
+
+   echo "maillist variable is not defined. Exiting without continuing."
+
+else
+ ${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS
+fi
 

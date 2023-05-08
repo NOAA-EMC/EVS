@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 '''
 Name: sref_atmos_plots.py
 Contact(s): Mallory Row
