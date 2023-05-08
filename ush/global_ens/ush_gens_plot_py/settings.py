@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 from datetime import datetime, timedelta as td
 import numpy as np
 
@@ -649,7 +651,10 @@ class ModelSpecs():
             'SREF': {'color': '#fb2020',
                      'marker': 'o', 'markersize': 12,
                      'linestyle': 'solid', 'linewidth': 5.},
-            'NAEFS': {'color': '#7f00ff',
+            'NAEFS': {'color': '#00ff00',
+                     'marker': 'o', 'markersize': 12,
+                     'linestyle': 'solid', 'linewidth': 5.},
+            'NAEFSv7': {'color': '#ff0000',   
                      'marker': 'o', 'markersize': 12,
                      'linestyle': 'solid', 'linewidth': 5.},
             'NARRE_MEAN': {'color': '#000000',

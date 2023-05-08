@@ -38,7 +38,7 @@ export USHevs=$HOMEevs/ush
 export SCRIPTevs=$HOMEevs/scripts
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 
-export run_mpi=yes
+export run_mpi=${run_mpi:-yes}
 
 
 #export ush_dir=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS_plots/verif_plotting/ush

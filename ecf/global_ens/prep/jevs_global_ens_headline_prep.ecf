@@ -53,14 +53,14 @@ export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 export maillist='geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'
-
 export gefs_number=20
 
-#yyyy=2023
-#mm=03
-#for dd in 17 18 19 20  ; do
-#  export INITDATE=$yyyy$mm$dd
+if [ -z "$maillist" ]; then
+
+   echo "maillist variable is not defined. Exiting without continuing."
+
+else
+
   ${HOMEevs}/jobs/global_ens/prep/JEVS_GLOBAL_ENS_PREP
-#done
 
-
+fi
