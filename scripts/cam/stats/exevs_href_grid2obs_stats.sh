@@ -46,6 +46,7 @@ export vday=$VDATE
 
 #  domain = conus or alaska or all
 export domain="all"
+#export domain="HI"
 
 
 msg="$job HAS BEGUN"
@@ -53,18 +54,19 @@ postmsg "$jlogfile" "$msg"
 
 if [ $prepare = yes ] ; then
   $USHevs/cam/evs_href_preppare.sh prepbufr
+  $USHevs/cam/evs_href_preppare.sh gfs_prepbufr
 fi 
 
 
 >run_href_all_grid2obs_poe
 
-#system: 4 jobs
+#system: 10 jobs (8 on CONUS, 2 on Alaska)
 if [ $verif_system = yes ] ; then 
   $USHevs/cam/evs_href_grid2obs_system.sh 
   cat run_all_href_system_poe.sh >> run_href_all_grid2obs_poe
 fi
 
-#profile: total 6 jobs (4 for conus and 2 for alaska)
+#profile: total 10 jobs (4 for conus and 2 for alaska)
 if [ $verif_profile = yes ] ; then 
   $USHevs/cam/evs_href_grid2obs_profile.sh $domain
   cat run_all_href_profile_poe.sh >> run_href_all_grid2obs_poe 
@@ -77,17 +79,18 @@ if [ $verif_product = yes ] ; then
 fi
 
 
-#totall: 28 jobs for all (both conus and alaska, profile, system and product)
+#totall: 36 jobs for all (both conus and alaska, profile, system and product)
 chmod 775 run_href_all_grid2obs_poe
+
 
 if [ $run_mpi = yes ] ; then
 
     export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
 
-    mpiexec -np 128 -ppn 128 --cpu-bind verbose,depth cfp  run_href_all_grid2obs_poe
+    mpiexec -np 36 -ppn 36 --cpu-bind verbose,depth cfp  run_href_all_grid2obs_poe
 
 else
-   sh run_href_all_grid2obs_poe
+    run_href_all_grid2obs_poe
 
 fi
 

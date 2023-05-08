@@ -6,7 +6,7 @@
 set -x
 
 data=$1
-
+domain=$2
 
 #Note original ccpa hrap data are G240 grid
 #     original hrefmean/prob/member  data are G227 grid
@@ -17,15 +17,15 @@ export vday=$VDATE
 nextday=`$NDATE +24 ${vday}09 |cut -c1-8`
 prevday=`$NDATE -24 ${vday}09 |cut -c1-8`
 
-#NOTE: COPYGB2 is using option -i3 (budget)   
- 
 if [ $data = ccpa01h03h ] ; then
 
 export  ccpadir=${WORK}/ccpa.${vday}
 
 mkdir -p $ccpadir
 cd $ccpadir
- 
+
+ if [ -s $COMCCPA/ccpa.${vday}/00/ccpa.t00z.03h.hrap.conus.gb2 ] && [ -s $COMCCPA/ccpa.${vday}/00/ccpa.t00z.01h.hrap.conus.gb2 ] ; then 
+
      for cyc in 00 ; do
        cp $COMCCPA/ccpa.${vday}/00/ccpa.t${cyc}z.01h.hrap.conus.gb2  $ccpadir/ccpa01h.t${cyc}z.G240.grib2
        cp $COMCCPA/ccpa.${vday}/00/ccpa.t${cyc}z.03h.hrap.conus.gb2  $ccpadir/ccpa03h.t${cyc}z.G240.grib2
@@ -64,6 +64,15 @@ cd $ccpadir
        cp $COMCCPA/ccpa.${nextday}/00/ccpa.t${cyc}z.03h.hrap.conus.gb2 $ccpadir/ccpa03h.t${cyc}z.G240.grib2
      done
 
+  else
+     export subject="CCPA Data Missing for EVS ${COMPONENT}"
+     export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
+     echo "Warning:  No CCPA data available for ${VDATE}" > mailmsg
+     echo Missing file is $COMCCPA/ccpa.${vday}/00/ccpa.t00z.03h.hrap.conus.gb2 or $COMCCPA/ccpa.${vday}/00/ccpa.t00z.01h.hrap.conus.gb2 >> mailmsg
+     echo "Job ID: $jobid" >> mailmsg
+     cat mailmsg | mail -s "$subject" $maillist
+  fi
+
 fi
 
 if [ $data = ccpa24h ] ; then
@@ -82,6 +91,11 @@ mkdir -p $ccpa24
   cp ${COMCCPA}/ccpa.${prevday}/18/ccpa.t18z.06h.hrap.conus.gb2 $ccpa24/ccpa4
 
   ${METPLUS_PATH}/ush/master_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA24h.conf
+
+  #mkdir -p ${COMOUT}/${RUN}.${VDATE}/href/precip_mean24
+  #cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUT}/${RUN}.${VDATE}/href/precip_mean24
+  mkdir -p ${COMOUTfinal}/precip_mean24
+  cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUTfinal}/precip_mean24
 
  done
 
@@ -118,6 +132,10 @@ for fhr in 24 30 36 42 48 ; do
  
      ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstHREF_APCP24h.conf
      mv $output_base/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}/.
+     #mkdir -p ${COMOUT}/${RUN}.${fyyyymmdd}/href/precip_mean24
+     #cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ${COMOUT}/${RUN}.${fyyyymmdd}/href/precip_mean24 
+     mkdir -p ${COMOUT}/href.${fyyyymmdd}/precip_mean24
+     cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ${COMOUT}/href.${fyyyymmdd}/precip_mean24
 
   done
 
@@ -184,14 +202,16 @@ if [ $data = prepbufr ] ; then
    grids="G227 G198"
  fi
 
- if [ $lvl = profile ] ; then
+ #lvl is set in /scripts/exevs_href_grid2obs_stats.sh (lvl=both)
+ if [ $lvl = profile ] || [ $VERIF_CASE = severe ] ; then
     cycs="00 12"
  else
     cycs="00 01 02 03 04 05 06 07 08  09 10 11 12 13 14 15 16 17 18 19 20  21 22 23"
  fi
 
- for grid in $grids ; do
-  for cyc in $cycs  ; do
+ if [ -s $COMINobsproc/rap.${VDATE}/rap.t12z.prepbufr.tm00 ] ; then
+  for grid in $grids ; do
+   for cyc in $cycs  ; do
 
      export vbeg=${cyc}
      export vend=${cyc}
@@ -208,10 +228,63 @@ if [ $data = prepbufr ] ; then
        fi
      fi
 
+   done
   done
- done
 
   cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${vday}
+
+ else
+
+   export subject="RAP Prepbufr Data Missing for EVS ${COMPONENT}"
+   export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
+   echo "Warning:  No RAP Prepbufr data available for ${VDATE}" > mailmsg
+   echo Missing file is $COMINobsproc/rap.${VDATE}/rap.t??z.prepbufr.tm00  >> mailmsg
+   echo "Job ID: $jobid" >> mailmsg
+   cat mailmsg | mail -s "$subject" $maillist
+
+ fi
+
+
+
+fi
+
+
+if [ $data = gfs_prepbufr ] ; then
+
+    mkdir -p $WORK/prepbufr.$vday
+    export output_base=${WORK}/pb2nc
+
+ if [ -s $COMINobsproc/gdas.${vday}/18/atmos/gdas.t18z.prepbufr ] ; then 
+
+  for domain in Hawaii PRico ; do
+
+   if [ $domain = Hawaii ] ; then
+     grid=G139
+   elif [ $domain = PRico ] ; then
+     grid=G200
+   fi
+
+   export verif_grid=$grid
+
+   for cyc in 00 12 ; do
+      export vbeg=${cyc}
+      export vend=${cyc}
+
+      ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr_Profile.cong
+   done
+   cp ${WORK}/pb2nc/prepbufr_nc/*${grid}.nc $WORK/prepbufr.$vday 
+
+  done
+
+  else
+     export subject="GFS Prepbufr Data Missing for EVS ${COMPONENT}"
+     export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
+     echo "Warning:  No GFS Prepbufr data available for ${VDATE}" > mailmsg
+     echo Missing file is $COMINobsproc/gfs.${vday}/??/atmos/gfs.t??z.prepbufr  >> mailmsg
+     echo "Job ID: $jobid" >> mailmsg
+     cat mailmsg | mail -s "$subject" $maillist
+  fi
+
 
 fi
 
@@ -220,24 +293,25 @@ if [ $data = mrms ] ; then
 
 export accum
 
-for accum in 01 03 24 ; do 	
+ if [ -s $COMINmrms/MultiSensor_QPE_03H_Pass2_00.00_${vday}-120000.grib2.gz ] ; then 
 
- if [ $accum = 03 ] ; then
-   cycs="00 03 06 09 12 15 18 21"
- elif [ $accum = 24 ] ; then
-   cycs="00 06 12  18"
- elif [ $accum = 01 ] ; then
-   cycs="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
- fi
+  for accum in 01 03 24 ; do 	
 
- export cyc
- export output_base=$WORK/mrms${accum}h
- export mrmsdir=$WORK/mrms.$vday
- mkdir -p $mrmsdir
- cd $mrmsdir
+   if [ $accum = 03 ] ; then
+    cycs="00 03 06 09 12 15 18 21"
+   elif [ $accum = 24 ] ; then
+    cycs="00 06 12  18"
+   elif [ $accum = 01 ] ; then
+    cycs="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
+   fi
 
-  #for cyc in 00 03 06 09 12 15 18 21 ; do
-  for cyc in $cycs ; do
+   export cyc
+   export output_base=$WORK/mrms${accum}h
+   export mrmsdir=$WORK/mrms.$vday
+   mkdir -p $mrmsdir
+   cd $mrmsdir
+
+   for cyc in $cycs ; do
 
     export vbeg=$vday$cyc
     export vend=$vday$cyc
@@ -260,11 +334,22 @@ for accum in 01 03 24 ; do
     export grid=G255
     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsMRMSqpf_toMRMSnc.conf
 
-  done 
+   done 
 
     cp ${output_base}/*.nc $mrmsdir
 
-done
+  done
+
+ else
+
+   export subject="MRMS Data Missing for EVS ${COMPONENT}"
+   export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
+   echo "Warning:  No MRMS data available for ${VDATE}" > mailmsg
+   echo Missing file is $COMINmrms/MultiSensor_QPE_??H_Pass2_00.00_${vday}-120000.grib2.gz  >> mailmsg
+   echo "Job ID: $jobid" >> mailmsg
+   cat mailmsg | mail -s "$subject" $maillist
+ fi
+
 
 fi 
 
