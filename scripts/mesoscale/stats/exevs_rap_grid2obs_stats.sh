@@ -35,7 +35,17 @@ set -x
   echo $model1
   
   for WVAR in $VAR_NAME_LIST; do
-	  if [ $WVAR = SBCAPE ] || [ $WVAR = MLCAPE ]; then
+          if [ $WVAR = SBCAPE ] || [ $WVAR = MLCAPE ] || [ $WVAR = HPBL ] || \
+	       [ $WVAR = TMP2m ] || [ $WVAR = DPT2m ] || [ $WVAR = RH2m ] || \
+	       [ $WVAR = PRESsl ] || [ $WVAR = UGRD_VGRD10m ] || \
+	       [ $WVAR = UGRD10m ] || [ $WVAR = VGRD10m ] || [ $WVAR = WIND ] || \
+	       [ $WVAR = GUST ] || [ $WVAR = VIS ] || [ $WVAR = CEIL ]  ; then
+		  Testdev=yes
+# SBCAPE MLCAPE HPBL TMP2m DPT2m RH2m PRESsl UGRD_VGRD10m UGRD10m VGRD10m WIND GUST VIS CEIL
+          else
+		  Testdev=no
+	  fi
+	  if [ $Testdev = yes ]; then
 		  # New dev works here
 		  export VAR_NAME=${WVAR}
 ######################################################################################################
