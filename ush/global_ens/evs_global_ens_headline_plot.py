@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 # library to get a directory listing
 
 import glob
