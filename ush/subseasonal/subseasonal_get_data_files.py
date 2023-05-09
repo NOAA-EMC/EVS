@@ -66,10 +66,6 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
             VERIF_CASE_STEP_pres_truth_format_list = os.environ[
                 VERIF_CASE_STEP_abbrev+'_pres_truth_file_format_list'
             ].split(' ')
-        elif VERIF_CASE_STEP_type == 'anom':
-            VERIF_CASE_STEP_anom_truth_format_list = os.environ[
-                VERIF_CASE_STEP_abbrev+'_anom_truth_file_format_list'
-            ].split(' ')
         elif VERIF_CASE_STEP_type == 'OLR':
             VERIF_CASE_STEP_OLR_truth_format_list = os.environ[
                 VERIF_CASE_STEP_abbrev+'_OLR_truth_file_format_list'
@@ -506,37 +502,17 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                     VERIF_CASE_STEP_ecmwf_dir,
                     'ecmwf.{valid?fmt=%Y%m%d%H}.anl'
                 )
-                for time_length in ['weekly', 'days6_10', 'weeks3_4']:
-                    if time_length == 'weekly':
-                        nf = 0
-                        while nf <= 14:
-                            sub_util.get_truth_file(
-                                (VERIF_CASE_STEP_type_valid_time
-                                -datetime.timedelta(hours=12*nf)),
-                                anom_truth_file_format,
-                                anom_dest_file_format
-                            )
-                            nf+=1
-                    if time_length == 'days6_10':
-                        nf = 0
-                        while nf <= 10:
-                            sub_util.get_truth_file(
-                                (VERIF_CASE_STEP_type_valid_time
-                                -datetime.timedelta(hours=12*nf)),
-                                anom_truth_file_format,
-                                anom_dest_file_format
-                            )
-                            nf+=1
-                    if time_length == 'weeks3_4':
-                        nf = 0
-                        while nf <= 28:
-                            sub_util.get_truth_file(
-                                (VERIF_CASE_STEP_type_valid_time
-                                -datetime.timedelta(hours=12*nf)),
-                                anom_truth_file_format,
-                                anom_dest_file_format
-                            )
-                            nf+=1
+                # Weeks 3-4 obs span covers weekly and Days 6-10 so only
+                # need to loop once to retrieve data
+                nf = 0
+                while nf <= 28:
+                    sub_util.get_truth_file(
+                        (VERIF_CASE_STEP_type_valid_time
+                        -datetime.timedelta(hours=12*nf)),
+                        anom_truth_file_format,
+                        anom_dest_file_format
+                    )
+                    nf+=1
             elif VERIF_CASE_STEP_type == 'seaice':
                 # OSI_SAF
                 VERIF_CASE_STEP_osi_saf_dir = os.path.join(

@@ -1,5 +1,5 @@
 '''
-Program Name: subseasonal_stats_grid2grid_create_weekly_reformat_job_scripts.py
+Program Name: subseasonal_stats_grid2grid_create_weeks3_4_reformat_job_scripts.py
 Contact(s): Shannon Shields
 Abstract: This creates multiple independent job scripts. These
           jobs contain all the necessary environment variables
@@ -29,7 +29,7 @@ USE_CFP = os.environ['USE_CFP']
 nproc = os.environ['nproc']
 start_date = os.environ['start_date']
 end_date = os.environ['end_date']
-WEEK = os.environ['WEEK']
+WEEKS = os.environ['WEEKS']
 CORRECT_INIT_DATE = os.environ['CORRECT_INIT_DATE']
 CORRECT_LEAD_SEQ = os.environ['CORRECT_LEAD_SEQ']
 VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
@@ -75,16 +75,16 @@ reformat_data_model_jobs_dict = {
                                )},
                        'commands': [sub_util.metplus_command(
                                         'GenEnsProd_fcstSUBSEASONAL_'
-                                        +'WeeklyNetCDF.conf'
+                                        +'Weeks3_4NetCDF.conf'
                                     ),
                                     sub_util.metplus_command(
                                         'GridStat_fcstSUBSEASONAL_'
                                         +'obsECMWF_climoERA5_'
-                                        +'WeeklyNetCDF.conf'
+                                        +'Weeks3_4NetCDF.conf'
                                     ),
                                     sub_util.python_command(
                                         'subseasonal_stats_grid2grid'
-                                        '_create_weekly_anomaly.py',
+                                        '_create_weeks3_4_anomaly.py',
                                         ['TMP_Z2',
                                          os.path.join(
                                              '$DATA',
@@ -132,30 +132,8 @@ reformat_data_model_jobs_dict = {
                                              #)]
                                        #)]},
     },
-    'seaice': {
-        'Concentration': {'env': {'var1_name': 'ICEC',
-                                  'var1_levels': 'Z0',},
-                          'commands': [sub_util.metplus_command(
-                                           'GenEnsProd_fcstSUBSEASONAL_'
-                                           +'WeeklyNetCDF.conf'
-                                       ),
-                                       sub_util.metplus_command(
-                                           'GridStat_fcstSUBSEASONAL_'
-                                           +'WeeklyNetCDF.conf'
-                                       )]},
-    },
-    'sst': {
-        'SST': {'env': {'var1_name': 'TMP',
-                        'var1_levels': 'Z0'},
-                'commands': [sub_util.metplus_command(
-                                 'GenEnsProd_fcstSUBSEASONAL_'
-                                 +'WeeklyNetCDF.conf'
-                             ),
-                             sub_util.metplus_command(
-                                 'GridStat_fcstSUBSEASONAL_'
-                                 +'WeeklyNetCDF.conf'
-                             )]},
-    },
+    'seaice': {},
+    'sst': {},
 }
 
 
@@ -198,7 +176,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
             if JOB_GROUP == 'reformat_data':
                 if verif_type in ['sst', 'seaice', 'anom']:
                     job_env_dict['valid_hr_start'] = '00'
-                    job_env_dict['valid_hr_end'] = '00' #12
+                    job_env_dict['valid_hr_end'] = '00' 
                     job_env_dict['valid_hr_inc'] = '12'
                 if verif_type == 'pres' \
                         and verif_type_job == 'GeoHeightAnom':
@@ -216,7 +194,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                 '%Y%m%d%H'
             )
             valid_date_inc = int(job_env_dict['valid_hr_inc'])
-            job_env_dict['WEEK'] = WEEK
+            job_env_dict['WEEKS'] = WEEKS
             job_env_dict['CORRECT_INIT_DATE'] = CORRECT_INIT_DATE
             job_env_dict['CORRECT_LEAD_SEQ'] = CORRECT_LEAD_SEQ
             date_dt = valid_start_date_dt
@@ -248,7 +226,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     check_model_files = True
                     if check_model_files:
                         model_files_exist = (
-                            sub_util.check_weekly_model_files(job_env_dict)
+                            sub_util.check_weeks3_4_model_files(job_env_dict)
                         )
                         #job_env_dict['fhr_list'] = (
                             #'"'+','.join(valid_date_fhr_list)+'"'
