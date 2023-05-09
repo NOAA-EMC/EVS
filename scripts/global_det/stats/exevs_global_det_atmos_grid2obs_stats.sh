@@ -51,7 +51,7 @@ if [ $evs_run_mode = production ]; then
     [[ $status -ne 0 ]] && exit $status
     [[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/global_det/global_det_atmos_production_restart.py"
 fi
-exit
+
 # Create and run job scripts for reformat_data, assemble_data, generate_stats, and gather_stats
 for group in reformat_data assemble_data generate_stats gather_stats; do
     export JOB_GROUP=$group
