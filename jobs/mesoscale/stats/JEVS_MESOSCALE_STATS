@@ -26,22 +26,17 @@ date
 
 # LSF id (jobid) and Temp Directories
 export pid=$$
-jobid=evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$ 
-# Determine Job Output Name on System
 export pgmout="OUTPUT.${pid}"
 
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
-# General I/O Settings
-# in production, the following will be set to DATAROOT
-#export DATA_IN=${DATA_IN:-$DATAROOT} #sref
-export DATA_IN=${DATA_IN:-$DATAROOTtmp} #nam/rap
-export DATA=$DATA_IN/${jobid}
+export DATA=${DATA:-${DATAROOT:?}}/${jobid:?}
 rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
+
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
@@ -103,3 +98,4 @@ if [ "$KEEPDATA" != "YES" ] ; then
 fi
 
 echo "END: $(basename ${BASH_SOURCE[0]})"
+
