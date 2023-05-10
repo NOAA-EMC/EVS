@@ -75,7 +75,7 @@ export VERIF_CASE=grid2grid
 export VERIF_TYPE=sea_ice
 export NDAYS=90
 
-export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_subseasonal_test/dev/com
+export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=$COMROOT/$NET/$evs_ver
 export COMINcfs=$COMIN/stats/$COMPONENT/cfs
 export COMINgefs=$COMIN/stats/$COMPONENT/gefs
