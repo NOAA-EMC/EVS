@@ -72,11 +72,6 @@ class PerformanceDiagram:
             self.logger.warning("Cannot make performance diagram for stat "
                                 +f"{self.plot_info_dict['stat']}")
             sys.exit(0)
-        # Make job image directory
-        output_image_dir = os.path.join(self.output_dir, 'images')
-        if not os.path.exists(output_image_dir):
-            os.makedirs(output_image_dir)
-        self.logger.info(f"Plots will be in: {output_image_dir}")
         # Set stats to calculate for diagram
         perf_dia_stat_list = ['SRATIO', 'POD', 'CSI']
         # Get dates to plot
@@ -260,7 +255,7 @@ class PerformanceDiagram:
                 )
             )
         image_name = plot_specs_pd.get_savefig_name(
-            output_image_dir, self.plot_info_dict, self.date_info_dict
+            self.output_dir, self.plot_info_dict, self.date_info_dict
         )
         self.logger.info(f"Creating performance diagram")
         fig, ax = plt.subplots(1,1, figsize=(plot_specs_pd.fig_size[0],

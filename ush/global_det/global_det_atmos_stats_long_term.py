@@ -252,6 +252,8 @@ def make_model_time_range_file(time_range, model_COMIN_file,
                                           (string)
          Returns:
     """
+    print('Model DATA file: '+model_DATA_file)
+    print('Model COMIN file: '+model_COMIN_file)
     if os.path.exists(model_COMIN_file):
         model_COMIN_df = pd.read_table(
             model_COMIN_file, delimiter=' ', dtype='str',
@@ -442,15 +444,12 @@ for avg_time_range in avg_time_range_list:
                 obs_name = g2g_model_info_dict[model_num]['obs_name']
                 plot_name = g2g_model_info_dict[model_num]['plot_name']
                 logger.debug("Condensing model .stat files for job")
-                condensed_model_stat_file = os.path.join(
-                     stat_var_dir, model_num+'_'+model+'.stat'
-                )
-                gda_util.condense_model_stat_files(
-                    logger, avg_time_range_daily_g2g_stats_dir,
-                    condensed_model_stat_file, model,
-                    obs_name, g2g_grid, vx_mask,
-                    var_name, var_name, line_type
-                )
+                for var_level in g2g_stats_var_dict[line_type_stat][var_name]:
+                    gda_util.condense_model_stat_files(
+                        logger, avg_time_range_daily_g2g_stats_dir,
+                        stat_var_dir, model, obs_name, vx_mask,
+                        var_name, var_level, var_name, var_level, line_type
+                    )
             for loop2_info in list(
                     itertools.product(g2g_valid_hour_list,
                                       g2g_stats_var_dict[line_type_stat]\
@@ -641,14 +640,10 @@ for avg_time_range in avg_time_range_list:
             for model_num in list(precip_model_info_dict.keys()):
                 model = precip_model_info_dict[model_num]['name']
                 logger.debug("Condensing model .stat files for job")
-                condensed_model_stat_file = os.path.join(
-                     stat_var_dir, model_num+'_'+model+'.stat'
-                )
                 gda_util.condense_model_stat_files(
                     logger, avg_time_range_daily_precip_stats_dir,
-                    condensed_model_stat_file, model,
-                    obs_name, grid, vx_mask,
-                    var_name, var_name, line_type
+                    stat_var_dir, model, obs_name, vx_mask,
+                    var_name, 'A24', var_name, 'A24', line_type
                 )
             for loop2_info in list(
                 itertools.product(precip_valid_hour_list,
