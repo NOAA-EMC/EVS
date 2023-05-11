@@ -24,6 +24,16 @@ this_year=${VDATE:0:4}
 past=`$NDATE -8760 ${VDATE}01`
 last_year=${past:0:4} 
 
+mm=${VDATE:4:2}
+dd=${VDATE:6:2}
+
+if [ $mm = 01 ] && [ $dd = 17 ] ; then
+  run_entire_year=yes
+else
+  run_entire_year=no
+  last_year=$this_year
+fi 
+
 export PLOT_CONF=$PARMevs/metplus_config/global_ens/headline_grid2grid/plots
 $USHevs/global_ens/evs_global_ens_headline_plot.sh $last_year $this_year 
 
