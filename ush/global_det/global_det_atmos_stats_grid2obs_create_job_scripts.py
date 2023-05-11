@@ -872,6 +872,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                 for model_idx in range(len(model_list)):
                     job_env_dict['MODEL'] = model_list[model_idx]
                     njobs+=1
+                    job_env_dict['job_num'] = str(njobs)
                     # Create job file
                     job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
                     print("Creating job script: "+job_file)

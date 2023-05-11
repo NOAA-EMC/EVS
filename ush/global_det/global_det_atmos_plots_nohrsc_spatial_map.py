@@ -29,22 +29,24 @@ class NOHRSCSpatialMap:
     Create a NOHRSC spatial map graphic
     """
 
-    def __init__(self, logger, input_dir, output_dir, date_info_dict,
-                 plot_info_dict, logo_dir):
+    def __init__(self, logger, input_dir, DATA_output_dir, COMOUT_output_dir,
+                 date_info_dict, plot_info_dict, logo_dir):
         """! Initalize NOHRSCSpatialMap class
              Args:
-                 logger          - logger object
-                 input_dir       - path to input directory (string)
-                 output_dir      - path to output directory (string)
-                 plot_info_dict  - plot information dictionary (strings)
-                 date_info_dict  - date information dictionary (strings)
-                 logo_dir        - directory with logo images (string)
+                 logger            - logger object
+                 input_dir         - path to input directory (string)
+                 DATA_output_dir   - path to DATA output directory (string)
+                 COMOUT_output_dir - path to COMOUT output directory (string)
+                 plot_info_dict    - plot information dictionary (strings)
+                 date_info_dict    - date information dictionary (strings)
+                 logo_dir          - directory with logo images (string)
  
              Returns:
         """
         self.logger = logger
         self.input_dir = input_dir
-        self.output_dir = output_dir
+        self.DATA_output_dir = DATA_output_dir
+        self.COMOUT_output_dir = COMOUT_output_dir
         self.date_info_dict = date_info_dict
         self.plot_info_dict = plot_info_dict
         self.logo_dir = logo_dir
@@ -56,16 +58,11 @@ class NOHRSCSpatialMap:
         """
         self.logger.info(f"Creating NOHRSC spatial map...")
         self.logger.debug(f"Input directory: {self.input_dir}")
-        self.logger.debug(f"Output directory: {self.output_dir}")
+        self.logger.debug(f"Output directory: {self.DATA_output_dir}")
         self.logger.debug(f"Date information dictionary: "
                           +f"{self.date_info_dict}")
         self.logger.debug(f"Plot information dictionary: "
                           +f"{self.plot_info_dict}")
-        # Make job image directory
-        output_image_dir = os.path.join(self.output_dir, 'images')
-        if not os.path.exists(output_image_dir):
-            os.makedirs(output_image_dir)
-        self.logger.info(f"Plots will be in: {output_image_dir}")
         # Set valid date
         valid_date_dt = datetime.datetime.strptime(
             self.date_info_dict['end_date']
@@ -114,26 +111,29 @@ class NOHRSCSpatialMap:
         else:
             self.logger.warning("wgrib2 executable not in PATH, "
                                 "not converting file to netCDF")
-        make_plot = False
-        image_region_dict = {
-            'CONUS': 'conus',
-            'AK': 'alaska',
-        }
-        image_name = os.path.join(
-            output_image_dir,
+        make_png = False
+        make_gif = False
+        DATA_png_name = os.path.join(
+            self.DATA_output_dir,
             'nohrsc.v'+valid_date_dt.strftime('%Y%m%d%H')+'.024h.'
-            +image_region_dict[self.plot_info_dict['vx_mask']]+'.png'
+            +self.plot_info_dict['vx_mask']+'.png'
         )
-        if not os.path.exists(image_name):
+        COMOUT_png_name = DATA_png_name.replace(
+            self.DATA_output_dir, self.COMOUT_output_dir
+        )
+        if not os.path.exists(DATA_png_name):
             if os.path.exists(nohrsc_netcdf_file):
-                make_plot = True
+                make_png = True
             else:
-                make_plot = False
+                make_png = False
                 self.logger.warning(f"{nohrsc_netcdf_file} does not exist, "
                                     +"not making plot")
         else:
-            make_plot = False
-        if make_plot:
+            make_png = False
+        if make_png and os.path.exists(COMOUT_png_name):
+            gda_util.copy_file(COMOUT_png_name, DATA_png_name)
+            make_png = False
+        if make_png:
             self.logger.debug("Plotting data from "+nohrsc_netcdf_file)
             nohrsc_data = netcdf.Dataset(nohrsc_netcdf_file)
             nohrsc_lat = nohrsc_data.variables['latitude'][:]
@@ -225,11 +225,11 @@ class NOHRSCSpatialMap:
                     right_logo_img_array, right_logo_xpixel_loc,
                     right_logo_ypixel_loc, zorder=1, alpha=right_logo_alpha
                 )
-            if self.plot_info_dict['vx_mask'] == 'CONUS':
+            if self.plot_info_dict['vx_mask'] == 'conus':
                 extent = [-124,-70,18.0,50.0]
                 central_lon = -97.6
                 central_lat = 35.4
-            elif self.plot_info_dict['vx_mask'] == 'AK':
+            elif self.plot_info_dict['vx_mask'] == 'alaska':
                 extent = [-180,-110,45.0,75.0]
                 central_lon = -145
                 central_lat = 60
@@ -279,21 +279,29 @@ class NOHRSCSpatialMap:
                         str(round(tick,3)).rstrip('0')
                     )
             cbar.ax.set_xticklabels(cbar_tick_labels_list)
-            self.logger.info("Saving image as "+image_name)
-            plt.savefig(image_name)
+            self.logger.info("Saving image as "+DATA_png_name)
+            plt.savefig(DATA_png_name)
             plt.clf()
             plt.close('all')
+        DATA_gif_name = DATA_png_name.replace('.png', '.gif')
+        COMOUT_gif_name = COMOUT_png_name.replace('.png', '.gif')
+        if os.path.exists(COMOUT_gif_name):
+            gda_util.copy_file(COMOUT_gif_name, DATA_gif_name)
+            make_gif = False
+        elif os.path.exists(DATA_png_name) \
+                and not os.path.exists(DATA_gif_name):
+            make_gif = True
+        if make_gif:
             # Convert png to gif, if possible
             check_convert = subprocess.run(
                 ['which', 'convert'], stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL
             )
             if check_convert.returncode == 0:
-                self.logger.info(f"Converting {image_name} to "
-                                 +f"{image_name.replace('.png', '.gif')}")
+                self.logger.info(f"Converting {DATA_png_name} to "
+                                 +f"{DATA_gif_name}")
                 run_convert = subprocess.run(
-                    ['convert', image_name,
-                     image_name.replace('.png', '.gif')]
+                    ['convert', DATA_png_name, DATA_gif_name]
                 )
             else:
                 self.logger.warning("convert executable not in PATH, "
@@ -302,8 +310,9 @@ class NOHRSCSpatialMap:
 def main():
     # Need settings
     INPUT_DIR = os.environ['HOME']
-    OUTPUT_DIR = os.environ['HOME']
-    LOGO_DIR = os.environ['HOME'],
+    DATA_OUTPUT_DIR = os.environ['HOME']
+    COMOUT_OUTPUT_DIR = os.environ['HOME']
+    LOGO_DIR = os.environ['HOME']
     DATE_INFO_DICT = {
         'date_type': 'DATE_TYPE',
         'start_date': 'START_DATE',
@@ -343,7 +352,7 @@ def main():
     logger_info = f"Log file: {job_logging_file}"
     print(logger_info)
     logger.info(logger_info)
-    p = NOHRSCSpatialMap(logger, INPUT_DIR, OUTPUT_DIR,
+    p = NOHRSCSpatialMap(logger, INPUT_DIR, DATA_OUTPUT_DIR, COMOUT_OUTPUT_DIR,
                          DATE_INFO_DICT, PLOT_INFO_DICT, LOGO_DIR)
     p.make_nohrsc_spatial_map()
 
