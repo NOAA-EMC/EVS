@@ -143,6 +143,7 @@ if STEP == 'stats':
                     )
         date_dt = date_dt + datetime.timedelta(days=1)
 elif STEP == 'plots':
+    NDAYS = str(os.environ['NDAYS'])
     working_output_base_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                            'plot_output')
     working_dir_list.append(working_output_base_dir)
@@ -152,24 +153,29 @@ elif STEP == 'plots':
     )
     working_dir_list.append(
         os.path.join(working_output_base_dir,
-                     RUN+'.'+end_date_dt.strftime('%Y%m%d'),
                      'logs')
+    )
+    working_dir_list.append(
+        os.path.join(working_output_base_dir,
+                     'tar_files')
+    )
+    COMROOT_dir_list.append(
+        os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
+                     RUN+'.'+end_date_dt.strftime('%Y%m%d'))
     )
     for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
         working_dir_list.append(
             os.path.join(working_output_base_dir,
                          RUN+'.'+end_date_dt.strftime('%Y%m%d'),
-                         'images', VERIF_CASE_STEP_type)
+                         VERIF_CASE+'_'+VERIF_CASE_STEP_type,
+                         'last'+NDAYS+'days')
         )
-        working_dir_list.append(
-            os.path.join(working_output_base_dir,
+        COMROOT_dir_list.append(
+            os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
                          RUN+'.'+end_date_dt.strftime('%Y%m%d'),
-                         VERIF_CASE_STEP_type)
+                         VERIF_CASE+'_'+VERIF_CASE_STEP_type,
+                         'last'+NDAYS+'days')
         )
-    COMROOT_dir_list.append(
-        os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
-                     RUN+'.'+end_date_dt.strftime('%Y%m%d'))
-    )
 
 # Create working output directories
 for working_output_dir in working_dir_list:

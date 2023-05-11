@@ -73,11 +73,6 @@ class LeadByLevel:
             self.logger.warning("Cannot make lead_by_level for stat "
                                 +f"{self.plot_info_dict['stat']}")
             sys.exit(0)
-        # Make job image directory
-        output_image_dir = os.path.join(self.output_dir, 'images')
-        if not os.path.exists(output_image_dir):
-            os.makedirs(output_image_dir)
-        self.logger.info(f"Plots will be in: {output_image_dir}")
         plot_specs_lbl = PlotSpecs(self.logger, 'lead_by_level')
         self.logger.info(f"Gathering data for {self.plot_info_dict['stat']} "
                          +"- vertical profile "
@@ -149,9 +144,17 @@ class LeadByLevel:
                                       +', '.join(format_valid_dates))
                     plot_dates = init_dates
                 # Read in data
-                self.logger.info(f"Reading in model stat files from {self.input_dir}")
+                level_input_dir = os.path.join(
+                    self.input_dir, '..', '..',
+                    f"{self.plot_info_dict['fcst_var_name'].lower()}_"
+                    +f"{level.lower()}",
+                    (self.plot_info_dict['vx_mask'].lower()\
+                     .replace('global', 'glb').replace('conus', 'buk_conus'))
+                )
+                self.logger.info("Reading in model stat files from "
+                                 +f"{level_input_dir}")
                 all_model_df = gda_util.build_df(
-                    self.logger, self.input_dir, self.output_dir,
+                    self.logger, level_input_dir, self.output_dir,
                     self.model_info_dict, self.met_info_dict,
                     self.plot_info_dict['fcst_var_name'],
                     level,
@@ -352,7 +355,7 @@ class LeadByLevel:
                 )
             )
         image_name = plot_specs_lbl.get_savefig_name(
-            output_image_dir, self.plot_info_dict, self.date_info_dict
+            self.output_dir, self.plot_info_dict, self.date_info_dict
         )
         subplot0_cmap, subplotsN_cmap = plot_specs_lbl.get_plot_colormaps(
             self.plot_info_dict['stat']

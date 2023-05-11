@@ -141,15 +141,13 @@ for model_num in list(headline1_model_info_dict.keys()):
                                  'grid2grid', headline1_start_date_dt,
                                  headline1_end_date_dt)
     logger1.info("Condensing model .stat files for job")
-    condensed_model_stat_file = os.path.join(headline1_output_dir,
-                                             model_num+'_'+model
-                                             +'.stat')
     gda_util.condense_model_stat_files(
-        logger1, stat_base_dir, condensed_model_stat_file, model,
-        obs_name, headline1_plot_info_dict['grid'],
-        headline1_plot_info_dict['vx_mask'],
+        logger1, stat_base_dir, headline1_output_dir, model,
+        obs_name, headline1_plot_info_dict['vx_mask'],
         headline1_plot_info_dict['fcst_var_name'],
+        headline1_plot_info_dict['fcst_var_level'],
         headline1_plot_info_dict['obs_var_name'],
+        headline1_plot_info_dict['obs_var_level'],
         headline1_plot_info_dict['line_type']
     )
 # Make plot
@@ -164,7 +162,7 @@ plot_ts = gdap_ts.TimeSeries(logger1, headline1_output_dir,
 plot_ts.make_time_series()
 # Rename and copy to main image directory
 for headline1_image_name in glob.glob(
-    os.path.join(headline1_output_dir, 'images', '*')
+    os.path.join(headline1_output_dir, '*.png')
 ):
     headline1_copy_image_name = os.path.join(
         images_dir,
@@ -257,16 +255,13 @@ for stat in ['ME', 'RMSE']:
         obs_name = headline2_model_info_dict[model_num]['obs_name']
         stat_model_dir = os.path.join(stat_base_dir, model)
         logger2.info("Condensing model .stat files for job")
-        condensed_model_stat_file = os.path.join(headline2_output_dir,
-                                                 model_num+'_'+model
-                                                 +'.stat')
         gda_util.condense_model_stat_files(
-            logger2, stat_base_dir,
-            condensed_model_stat_file, model,
-            obs_name, headline2_plot_info_dict['grid'],
-            headline2_plot_info_dict['vx_mask'],
+            logger2, stat_base_dir, headline2_output_dir, model,
+            obs_name, headline2_plot_info_dict['vx_mask'],
             headline2_plot_info_dict['fcst_var_name'],
+            headline2_plot_info_dict['fcst_var_level'],
             headline2_plot_info_dict['obs_var_name'],
+            headline2_plot_info_dict['obs_var_level'],
             headline2_plot_info_dict['line_type']
         )
     # Make plot
@@ -281,7 +276,7 @@ for stat in ['ME', 'RMSE']:
     plot_tsmf.make_time_series_multifhr()
     # Rename and copy to main image directory
     for headline2_image_name in glob.glob(
-        os.path.join(headline2_output_dir, 'images', '*')
+        os.path.join(headline2_output_dir, '*.png')
     ):
         headline2_copy_image_name = os.path.join(
             images_dir,

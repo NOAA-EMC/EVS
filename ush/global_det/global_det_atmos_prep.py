@@ -36,6 +36,7 @@ COMINukmet_precip = os.environ['COMINukmet_precip']
 COMINosi_saf = os.environ['COMINosi_saf']
 COMINghrsst_ospo = os.environ['COMINghrsst_ospo']
 COMINget_d = os.environ['COMINget_d']
+SENDCOM = os.environ['SENDCOM']
 COMOUT = os.environ['COMOUT']
 INITDATE = os.environ['INITDATE']
 NET = os.environ['NET']
@@ -49,6 +50,10 @@ OBSNAME = os.environ['OBSNAME'].split(' ')
 COMOUT_INITDATE = COMOUT+'.'+INITDATE
 if not os.path.exists(COMOUT_INITDATE):
     os.makedirs(COMOUT_INITDATE)
+
+# Set up text file for missing production files
+log_missing_files = os.path.join(DATA, COMPONENT+'_'+RUN+'_'+STEP+'_'
+                                  +'missing_files.txt')
 
 ###### MODELS
 # Get operational global deterministic model data
@@ -65,7 +70,7 @@ if not os.path.exists(COMOUT_INITDATE):
 # Météo-France - metfra
 
 global_det_model_dict = {
-    'cfs': {'prod_fcst_file_format': os.path.join(COMINcfs,
+    'cfs': {'COMIN_fcst_file_format': os.path.join(COMINcfs,
                                                   '{init?fmt=%H}',
                                                   '6hrly_grib_01',
                                                   'pgbf{valid?fmt=%Y%m%d%H}.01'
@@ -73,101 +78,102 @@ global_det_model_dict = {
                                                   +'.grb2'),
             'cycles': ['00', '06', '12', '18'],
             'fcst_hrs': range(0, 384+6, 6)},
-    'cmc': {'prod_fcst_file_format': os.path.join(COMINcmc,
+    'cmc': {'COMIN_fcst_file_format': os.path.join(COMINcmc,
+                                                   'cmc_{init?fmt=%Y%m%d%H}'
+                                                   +'f{lead?fmt=%3H}'),
+            'COMIN_anl_file_format': os.path.join(COMINcmc,
                                                   'cmc_{init?fmt=%Y%m%d%H}'
-                                                  +'f{lead?fmt=%3H}'),
-            'prod_anl_file_format': os.path.join(COMINcmc,
-                                                 'cmc_{init?fmt=%Y%m%d%H}'
-                                                 +'f000'),
-            'prod_precip_file_format': os.path.join(COMINcmc_precip, 'cmcglb_'
-                                                    +'{init?fmt=%Y%m%d%H}_'
-                                                    +'{lead_shift?fmt=%3H?'
-                                                    +'shift=-24}_'
-                                                    +'{lead?fmt=%3H}.grb2'),
+                                                  +'f000'),
+            'COMIN_precip_file_format': os.path.join(COMINcmc_precip,
+                                                     'cmcglb_'
+                                                     +'{init?fmt=%Y%m%d%H}_'
+                                                     +'{lead_shift?fmt=%3H?'
+                                                     +'shift=-24}_'
+                                                     +'{lead?fmt=%3H}.grb2'),
             'cycles': ['00', '12'],
             'fcst_hrs': range(0, 240+6, 6)},
-    'cmc_regional': {'prod_precip_file_format': os.path.join(COMINcmc_regional_precip,
-                                                             'cmc_'
-                                                             +'{init?fmt=%Y%m%d%H}_'
-                                                             +'{lead_shift?fmt=%3H?'
-                                                             +'shift=-24}_'
-                                                             +'{lead?fmt=%3H}'),
+    'cmc_regional': {'COMIN_precip_file_format': os.path.join(COMINcmc_regional_precip,
+                                                              'cmc_'
+                                                              +'{init?fmt=%Y%m%d%H}_'
+                                                              +'{lead_shift?fmt=%3H?'
+                                                              +'shift=-24}_'
+                                                              +'{lead?fmt=%3H}'),
                      'cycles': ['00', '12'],
                      'fcst_hrs': range(24, 48+12, 12)},
-    'dwd': {'prod_precip_file_format': os.path.join(COMINdwd_precip, 'dwd_'
-                                                    +'{init?fmt=%Y%m%d%H}_'
-                                                    +'{lead_shift?fmt=%3H?'
-                                                    +'shift=-24}_'
-                                                    +'{lead?fmt=%3H}'),
+    'dwd': {'COMIN_precip_file_format': os.path.join(COMINdwd_precip, 'dwd_'
+                                                     +'{init?fmt=%Y%m%d%H}_'
+                                                     +'{lead_shift?fmt=%3H?'
+                                                     +'shift=-24}_'
+                                                     +'{lead?fmt=%3H}'),
             'cycles': ['00', '12'],
             'fcst_hrs': range(24, 72+12, 12)},
-    'ecmwf': {'prod_fcst_file_format': os.path.join(COMINecmwf,
+    'ecmwf': {'COMIN_fcst_file_format': os.path.join(COMINecmwf,
+                                                     'U1D{init?fmt=%m%d%H}00'
+                                                     +'{valid?fmt=%m%d%H}001'),
+              'COMIN_anl_file_format': os.path.join(COMINecmwf,
                                                     'U1D{init?fmt=%m%d%H}00'
-                                                    +'{valid?fmt=%m%d%H}001'),
-              'prod_anl_file_format': os.path.join(COMINecmwf,
-                                                   'U1D{init?fmt=%m%d%H}00'
-                                                   +'{init?fmt=%m%d%H}011'),
-              'prod_precip_file_format': os.path.join(COMINecmwf_precip,
-                                                      'UWD{init?fmt=%Y%m%d%H%M}'
-                                                      +'{valid?fmt=%m%d%H%M}1'),
+                                                    +'{init?fmt=%m%d%H}011'),
+              'COMIN_precip_file_format': os.path.join(COMINecmwf_precip,
+                                                       'UWD{init?fmt=%Y%m%d%H%M}'
+                                                       +'{valid?fmt=%m%d%H%M}1'),
               'cycles': ['00', '12'],
               'fcst_hrs': range(0, 240+6, 6)},
-    'fnmoc': {'prod_fcst_file_format': os.path.join(COMINfnmoc,
-                                                    'US058GMET-OPSbd2.NAVGEM'
-                                                    +'{lead?fmt=%3H}-'
-                                                    +'{init?fmt=%Y%m%d%H}-'
-                                                    +'NOAA-halfdeg.gr2'),
-              'prod_anl_file_format': os.path.join(COMINfnmoc,
+    'fnmoc': {'COMIN_fcst_file_format': os.path.join(COMINfnmoc,
+                                                     'US058GMET-OPSbd2.NAVGEM'
+                                                     +'{lead?fmt=%3H}-'
+                                                     +'{init?fmt=%Y%m%d%H}-'
+                                                     +'NOAA-halfdeg.gr2'),
+              'COMIN_anl_file_format': os.path.join(COMINfnmoc,
                                                     'US058GMET-OPSbd2.NAVGEM'
                                                     +'000-'
                                                     +'{init?fmt=%Y%m%d%H}-'
                                                     +'NOAA-halfdeg.gr2'),
               'cycles': ['00', '12'],
               'fcst_hrs': range(0, 180+6, 6)},
-    'imd': {'prod_fcst_file_format': os.path.join(COMINimd,
+    'imd': {'COMIN_fcst_file_format': os.path.join(COMINimd,
+                                                   'gdas1.t{init?fmt=%2H}z.'
+                                                   +'grbf{lead?fmt=%2H}'),
+            'COMIN_anl_file_format': os.path.join(COMINimd,
                                                   'gdas1.t{init?fmt=%2H}z.'
-                                                  +'grbf{lead?fmt=%2H}'),
-            'prod_anl_file_format': os.path.join(COMINimd,
-                                                 'gdas1.t{init?fmt=%2H}z.'
-                                                 +'grbf00'),
+                                                  +'grbf00'),
             'cycles': ['00', '12'],
             'fcst_hrs': range(0, 240+6, 6)},
-    'jma': {'prod_fcst_file_format': os.path.join(COMINjma,
+    'jma': {'COMIN_fcst_file_format': os.path.join(COMINjma,
+                                                   'jma_{hem?fmt=str}'
+                                                   +'_{init?fmt=%H}'),
+            'COMIN_anl_file_format': os.path.join(COMINjma,
                                                   'jma_{hem?fmt=str}'
                                                   +'_{init?fmt=%H}'),
-            'prod_anl_file_format': os.path.join(COMINjma,
-                                                 'jma_{hem?fmt=str}'
-                                                 +'_{init?fmt=%H}'),
-            'prod_precip_file_format': os.path.join(COMINjma_precip, 'jma_'
-                                                    +'{init?fmt=%Y%m%d%H}00'
-                                                    +'.grib'),
+            'COMIN_precip_file_format': os.path.join(COMINjma_precip, 'jma_'
+                                                     +'{init?fmt=%Y%m%d%H}00'
+                                                     +'.grib'),
             'cycles': ['00', '12'],
             'fcst_hrs': range(0, 192+24, 24)},
-    'metfra': {'prod_precip_file_format': os.path.join(COMINmetfra_precip,
-                                                       'METFRA_'
-                                                       +'{init?fmt=%H}_'
-                                                       +'{init?fmt=%Y%m%d}'),
+    'metfra': {'COMIN_precip_file_format': os.path.join(COMINmetfra_precip,
+                                                        'METFRA_'
+                                                        +'{init?fmt=%H}_'
+                                                        +'{init?fmt=%Y%m%d}'),
                'cycles': ['00', '12'],
                'fcst_hrs': range(24, 72+12, 12)},
-    'ukmet': {'prod_fcst_file_format': os.path.join(COMINukmet,
-                                                    'GAB{init?fmt=%2H}'
-                                                    +'{letter?fmt=str}.GRB'),
-              'prod_anl_file_format': os.path.join(COMINukmet,
-                                                   'GAB{init?fmt=%2H}AAT.GRB'),
-              'prod_precip_file_format': os.path.join(COMINukmet_precip, 'ukmo.'
-                                                      +'{init?fmt=%Y%m%d%H}'),
+    'ukmet': {'COMIN_fcst_file_format': os.path.join(COMINukmet,
+                                                     'GAB{init?fmt=%2H}'
+                                                     +'{letter?fmt=str}.GRB'),
+              'COMIN_anl_file_format': os.path.join(COMINukmet,
+                                                    'GAB{init?fmt=%2H}AAT.GRB'),
+              'COMIN_precip_file_format': os.path.join(COMINukmet_precip, 'ukmo.'
+                                                       +'{init?fmt=%Y%m%d%H}'),
               'cycles': ['00', '12'],
               'fcst_hrs': range(0, 144+6, 6)}
 }
 
-arch_fcst_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
+DATA_fcst_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
                                      '{model?fmt=%str}',
                                      '{model?fmt=%str}.t{init?fmt=%2H}z.'
                                      +'f{lead?fmt=%3H}')
-arch_anl_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
+DATA_anl_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
                                     '{model?fmt=%str}',
                                     '{model?fmt=%str}.t{init?fmt=%2H}z.anl')
-arch_precip_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
+DATA_precip_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
                                        '{model?fmt=%str}',
                                        '{model?fmt=%str}.precip.'
                                        +'t{init?fmt=%2H}z.'
@@ -177,227 +183,258 @@ for MODEL in MODELNAME:
     if MODEL not in list(global_det_model_dict.keys()):
         print("ERROR: "+MODEL+" not recongized")
         sys.exit(1)
+    if MODEL == 'cmc_regional':
+        max_precip_fhr = 48
+    else:
+        max_precip_fhr = 72
     print("---- Prepping data for "+MODEL+" for init "+INITDATE)
     model_dict = global_det_model_dict[MODEL]
     for cycle in model_dict['cycles']:
         CDATE = INITDATE+cycle
         CDATE_dt = datetime.datetime.strptime(CDATE, '%Y%m%d%H')
         # Forecast files
-        for fcst_hr in model_dict['fcst_hrs']:
+        if MODEL == 'jma' and cycle == '00':
+            fcst_hrs = range(0, 72+24, 24)
+        else:
+            fcst_hrs = model_dict['fcst_hrs']
+        for fcst_hr in fcst_hrs:
             VDATE_dt = CDATE_dt + datetime.timedelta(hours=int(fcst_hr))
-            if 'prod_fcst_file_format' in list(model_dict.keys()):
-                prod_fcst_file = gda_util.format_filler(
-                    model_dict['prod_fcst_file_format'], VDATE_dt, CDATE_dt,
+            if 'COMIN_fcst_file_format' in list(model_dict.keys()):
+                COMIN_fcst_file = gda_util.format_filler(
+                    model_dict['COMIN_fcst_file_format'], VDATE_dt, CDATE_dt,
                     str(fcst_hr), {}
                 )
-                arch_fcst_file = gda_util.format_filler(
-                    arch_fcst_file_format, VDATE_dt, CDATE_dt,
+                DATA_fcst_file = gda_util.format_filler(
+                    DATA_fcst_file_format, VDATE_dt, CDATE_dt,
                     str(fcst_hr), {'model': MODEL}
                 )
                 COMOUT_fcst_file = os.path.join(
-                    COMOUT_INITDATE, MODEL, arch_fcst_file.rpartition('/')[2]
+                    COMOUT_INITDATE, MODEL, DATA_fcst_file.rpartition('/')[2]
                 )
-                if not os.path.exists(COMOUT_fcst_file) \
-                        and not os.path.exists(arch_fcst_file):
-                    print("----> Trying to create "+arch_fcst_file)
-                    arch_fcst_file_dir = arch_fcst_file.rpartition('/')[0]
-                    if not os.path.exists(arch_fcst_file_dir):
-                        os.makedirs(arch_fcst_file_dir)
+                if not os.path.exists(COMOUT_fcst_file):
+                    print("----> Trying to create "+DATA_fcst_file)
+                    DATA_fcst_file_dir = DATA_fcst_file.rpartition('/')[0]
+                    if not os.path.exists(DATA_fcst_file_dir):
+                        os.makedirs(DATA_fcst_file_dir)
                         if MODEL in ['ecmwf']:
                              gda_util.run_shell_command(['chmod', '750',
-                                                         arch_fcst_file_dir])
+                                                         DATA_fcst_file_dir])
                              gda_util.run_shell_command(['chgrp', 'rstprod',
-                                                         arch_fcst_file_dir])
+                                                         DATA_fcst_file_dir])
                     if MODEL == 'jma':
-                        gda_util.prep_prod_jma_file(prod_fcst_file,
-                                                    arch_fcst_file,
+                        gda_util.prep_prod_jma_file(COMIN_fcst_file,
+                                                    DATA_fcst_file,
                                                     str(fcst_hr),
-                                                    'full')
+                                                    'full',
+                                                    log_missing_files)
                     elif MODEL == 'ecmwf':
-                        gda_util.prep_prod_ecmwf_file(prod_fcst_file,
-                                                      arch_fcst_file,
+                        if fcst_hr == 0:
+                            COMIN_fcst_file = COMIN_fcst_file[:-2]+'11'
+                        gda_util.prep_prod_ecmwf_file(COMIN_fcst_file,
+                                                      DATA_fcst_file,
                                                       str(fcst_hr),
-                                                     'full')
+                                                      'full',
+                                                      log_missing_files)
                     elif MODEL == 'ukmet':
-                        gda_util.prep_prod_ukmet_file(prod_fcst_file,
-                                                      arch_fcst_file,
+                        gda_util.prep_prod_ukmet_file(COMIN_fcst_file,
+                                                      DATA_fcst_file,
                                                       str(fcst_hr),
-                                                      'full')
+                                                      'full',
+                                                      log_missing_files)
                     elif MODEL == 'fnmoc':
-                        gda_util.prep_prod_fnmoc_file(prod_fcst_file,
-                                                      arch_fcst_file,
+                        gda_util.prep_prod_fnmoc_file(COMIN_fcst_file,
+                                                      DATA_fcst_file,
                                                       str(fcst_hr),
-                                                      'full')
+                                                      'full',
+                                                      log_missing_files)
                     else:
-                        gda_util.copy_file(prod_fcst_file, arch_fcst_file)
-            if 'prod_precip_file_format' in list(model_dict.keys()):
-                prod_precip_file = gda_util.format_filler(
-                    model_dict['prod_precip_file_format'], VDATE_dt,
+                        gda_util.copy_file(COMIN_fcst_file, DATA_fcst_file)
+                        if not os.path.exists(COMIN_fcst_file):
+                            gda_util.log_missing_file(log_missing_files,
+                                                      COMIN_fcst_file)
+                    if SENDCOM == 'YES':
+                        gda_util.copy_file(DATA_fcst_file, COMOUT_fcst_file)
+                else:
+                    print(f"{COMOUT_fcst_file} exists")
+            if 'COMIN_precip_file_format' in list(model_dict.keys()):
+                COMIN_precip_file = gda_util.format_filler(
+                    model_dict['COMIN_precip_file_format'], VDATE_dt,
                     CDATE_dt, str(fcst_hr), {}
                 )
-                arch_precip_file = gda_util.format_filler(
-                    arch_precip_file_format, VDATE_dt,
+                DATA_precip_file = gda_util.format_filler(
+                    DATA_precip_file_format, VDATE_dt,
                     CDATE_dt, str(fcst_hr), {'model': MODEL}
                 )
                 COMOUT_precip_file = os.path.join(
-                    COMOUT_INITDATE, MODEL, arch_precip_file.rpartition('/')[2]
+                    COMOUT_INITDATE, MODEL, DATA_precip_file.rpartition('/')[2]
                 )
-                if not os.path.exists(COMOUT_precip_file) \
-                        and not os.path.exists(arch_precip_file) and fcst_hr != 0:
-                    print("----> Trying to create "+arch_precip_file)
-                    arch_precip_file_dir = (
-                        arch_precip_file.rpartition('/')[0]
-                    )
-                    if not os.path.exists(arch_precip_file_dir):
-                        os.makedirs(arch_precip_file_dir)
-                        if MODEL in ['ecmwf']:
-                             gda_util.run_shell_command(
-                                 ['chmod', '750', arch_precip_file_dir]
-                             )
-                             gda_util.run_shell_command(
-                                 ['chgrp', 'rstprod',
-                                   arch_precip_file_dir]
-                             )
-                    if MODEL == 'jma':
-                        gda_util.prep_prod_jma_file(prod_precip_file,
-                                                    arch_precip_file,
-                                                    str(fcst_hr),
-                                                    'precip')
-                    elif MODEL == 'ecmwf':
-                        gda_util.prep_prod_ecmwf_file(prod_precip_file,
-                                                      arch_precip_file,
-                                                      str(fcst_hr),
-                                                      'precip')
-                    elif MODEL == 'ukmet':
-                        gda_util.prep_prod_ukmet_file(prod_precip_file,
-                                                      arch_precip_file,
-                                                      str(fcst_hr),
-                                                      'precip')
-                    elif MODEL == 'fnmoc':
-                        gda_util.prep_prod_fnmoc_file(prod_precip_file,
-                                                      arch_precip_file,
-                                                      str(fcst_hr),
-                                                      'precip')
-                    elif MODEL == 'dwd':
-                        gda_util.prep_prod_dwd_file(prod_precip_file,
-                                                    arch_precip_file,
-                                                    str(fcst_hr),
-                                                    'precip')
-                    elif MODEL == 'metfra':
-                        gda_util.prep_prod_metfra_file(prod_precip_file,
-                                                       arch_precip_file,
-                                                       str(fcst_hr),
-                                                       'precip')
-                    else:
-                        gda_util.copy_file(prod_precip_file,
-                                           arch_precip_file)
+                if not os.path.exists(COMOUT_precip_file):
+                    if fcst_hr >= 24 and VDATE_dt.strftime('%H') == '12' \
+                            and fcst_hr <= max_precip_fhr \
+                            and fcst_hr % 24 == 0:
+                        print("----> Trying to create "+DATA_precip_file)
+                        DATA_precip_file_dir = (
+                            DATA_precip_file.rpartition('/')[0]
+                        )
+                        if not os.path.exists(DATA_precip_file_dir):
+                            os.makedirs(DATA_precip_file_dir)
+                            if MODEL in ['ecmwf']:
+                                 gda_util.run_shell_command(
+                                     ['chmod', '750', DATA_precip_file_dir]
+                                 )
+                                 gda_util.run_shell_command(
+                                     ['chgrp', 'rstprod',
+                                       DATA_precip_file_dir]
+                                 )
+                        if MODEL == 'jma':
+                            gda_util.prep_prod_jma_file(COMIN_precip_file,
+                                                        DATA_precip_file,
+                                                        str(fcst_hr),
+                                                        'precip',
+                                                        log_missing_files)
+                        elif MODEL == 'ecmwf':
+                            if cycle == '12':
+                                gda_util.prep_prod_ecmwf_file(COMIN_precip_file,
+                                                              DATA_precip_file,
+                                                              str(fcst_hr),
+                                                              'precip',
+                                                              log_missing_files)
+                        elif MODEL == 'ukmet':
+                            gda_util.prep_prod_ukmet_file(COMIN_precip_file,
+                                                          DATA_precip_file,
+                                                          str(fcst_hr),
+                                                          'precip',
+                                                           log_missing_files)
+                        elif MODEL == 'fnmoc':
+                            gda_util.prep_prod_fnmoc_file(COMIN_precip_file,
+                                                          DATA_precip_file,
+                                                          str(fcst_hr),
+                                                          'precip',
+                                                          log_missing_files)
+                        elif MODEL == 'dwd':
+                            gda_util.prep_prod_dwd_file(COMIN_precip_file,
+                                                        DATA_precip_file,
+                                                        str(fcst_hr),
+                                                        'precip',
+                                                        log_missing_files)
+                        elif MODEL == 'metfra':
+                            gda_util.prep_prod_metfra_file(COMIN_precip_file,
+                                                           DATA_precip_file,
+                                                           str(fcst_hr),
+                                                           'precip',
+                                                           log_missing_files)
+                        else:
+                            gda_util.copy_file(COMIN_precip_file,
+                                               DATA_precip_file)
+                            if not os.path.exists(COMIN_precip_file):
+                                gda_util.log_missing_file(log_missing_files,
+                                                          COMIN_precip_file)
+                        if SENDCOM == 'YES':
+                            gda_util.copy_file(DATA_precip_file,
+                                               COMOUT_precip_file)
+                else:
+                    print(f"{COMOUT_precip_file} exists")
         # Analysis file
-        if 'prod_anl_file_format' in list(model_dict.keys()):
-            prod_anl_file = gda_util.format_filler(
-                model_dict['prod_anl_file_format'], CDATE_dt, CDATE_dt,
+        if 'COMIN_anl_file_format' in list(model_dict.keys()):
+            COMIN_anl_file = gda_util.format_filler(
+                model_dict['COMIN_anl_file_format'], CDATE_dt, CDATE_dt,
                 'anl', {}
             )
-            arch_anl_file = gda_util.format_filler(
-                arch_anl_file_format, CDATE_dt, CDATE_dt,
+            DATA_anl_file = gda_util.format_filler(
+                DATA_anl_file_format, CDATE_dt, CDATE_dt,
                 'anl', {'model': MODEL}
             )
             COMOUT_anl_file = os.path.join(
-                COMOUT_INITDATE, MODEL, arch_anl_file.rpartition('/')[2]
+                COMOUT_INITDATE, MODEL, DATA_anl_file.rpartition('/')[2]
             )
-            if not os.path.exists(COMOUT_anl_file) \
-                    and not os.path.exists(arch_anl_file):
-                arch_anl_file_dir = arch_anl_file.rpartition('/')[0]
-                if not os.path.exists(arch_anl_file_dir):
-                    os.makedirs(arch_anl_file_dir)
+            if not os.path.exists(COMOUT_anl_file):
+                print("----> Trying to create "+DATA_anl_file)
+                DATA_anl_file_dir = DATA_anl_file.rpartition('/')[0]
+                if not os.path.exists(DATA_anl_file_dir):
+                    os.makedirs(DATA_anl_file_dir)
                     if MODEL in ['ecmwf']:
                          gda_util.run_shell_command(['chmod', '750',
-                                                     arch_anl_file_dir])
+                                                     DATA_anl_file_dir])
                          gda_util.run_shell_command(['chgrp', 'rstprod',
-                                                     arch_anl_file_dir])
-                print("----> Trying to create "+arch_anl_file)
+                                                     DATA_anl_file_dir])
                 if MODEL == 'jma':
-                    gda_util.prep_prod_jma_file(prod_anl_file,
-                                                arch_anl_file,
+                    gda_util.prep_prod_jma_file(COMIN_anl_file,
+                                                DATA_anl_file,
                                                 'anl',
-                                                'full')
+                                                'full',
+                                                log_missing_files)
                 elif MODEL == 'ecmwf':
-                    gda_util.prep_prod_ecmwf_file(prod_anl_file,
-                                                  arch_anl_file,
+                    gda_util.prep_prod_ecmwf_file(COMIN_anl_file,
+                                                  DATA_anl_file,
                                                   'anl',
-                                                  'full')
-                    if os.path.exists(arch_anl_file):
-                        ecmwf_f000_file = gda_util.format_filler(
-                            arch_fcst_file_format, CDATE_dt, CDATE_dt,
-                            '00', {'model': MODEL}
-                        )
-                        shutil.copy2(arch_anl_file, ecmwf_f000_file)
+                                                  'full',
+                                                  log_missing_files)
                 elif MODEL == 'ukmet':
-                    gda_util.prep_prod_ukmet_file(prod_anl_file,
-                                                  arch_anl_file,
+                    gda_util.prep_prod_ukmet_file(COMIN_anl_file,
+                                                  DATA_anl_file,
                                                   'anl',
-                                                  'full')
+                                                  'full',
+                                                  log_missing_files)
                 elif MODEL == 'fnmoc':
-                    gda_util.prep_prod_fnmoc_file(prod_anl_file,
-                                                  arch_anl_file,
+                    gda_util.prep_prod_fnmoc_file(COMIN_anl_file,
+                                                  DATA_anl_file,
                                                   'anl',
-                                                  'full')
+                                                  'full',
+                                                  log_missing_files)
                 else:
-                    gda_util.copy_file(prod_anl_file, arch_anl_file)
+                    gda_util.copy_file(COMIN_anl_file, DATA_anl_file)
+                    if not os.path.exists(COMIN_anl_file):
+                        gda_util.log_missing_file(log_missing_files,
+                                                  COMIN_anl_file)
+                if SENDCOM == 'YES':
+                    gda_util.copy_file(DATA_anl_file, COMOUT_anl_file)
+            else:
+                print(f"{COMOUT_anl_file} exists")
 
 ###### OBS
 # Get operational observation data
 # Nortnern & Southern Hemisphere 10 km OSI-SAF multi-sensor analysis - osi_saf
 global_det_obs_dict = {
-    'osi_saf': {'daily_prod_file_format': os.path.join(COMINosi_saf,
-                                                       '{init_shift?fmt=%Y%m%d'
-                                                       +'?shift=-12}',
-                                                       'seaice', 'osisaf',
-                                                       'ice_conc_{hem?fmt=str}_'
-                                                       +'polstere-100_multi_'
-                                                       +'{init_shift?fmt=%Y%m%d%H'
-                                                       +'?shift=-12}'
-                                                       +'00.nc'),
-                'daily_arch_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
-                                                       'osi_saf',
-                                                       'osi_saf.multi.'
-                                                       +'{init_shift?fmt=%Y%m%d%H'
-                                                       +'?shift=-24}to'
-                                                       +'{init?fmt=%Y%m%d%H}'
-                                                       +'_G004.nc'),
-                'weekly_arch_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
-                                                       'osi_saf',
-                                                       'osi_saf.multi.'
-                                                       +'{init_shift?fmt=%Y%m%d%H?'
-                                                       +'shift=-168}'
-                                                       +'to'
-                                                       +'{init?fmt=%Y%m%d%H}'
-                                                       +'_G004.nc'),
+    'osi_saf': {'COMIN_file_format': os.path.join(COMINosi_saf,
+                                                  '{init_shift?fmt=%Y%m%d'
+                                                  +'?shift=-12}',
+                                                  'seaice', 'osisaf',
+                                                  'ice_conc_{hem?fmt=str}_'
+                                                  +'polstere-100_multi_'
+                                                  +'{init_shift?fmt=%Y%m%d%H'
+                                                  +'?shift=-12}'
+                                                  +'00.nc'),
+                'DATA_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
+                                                 'osi_saf', 'osi_saf.multi.'
+                                                 +'{init_shift?fmt=%Y%m%d%H'
+                                                 +'?shift=-24}to'
+                                                 +'{init?fmt=%Y%m%d%H}'
+                                                 +'_G004.nc'),
                 'cycles': ['00']},
-    'ghrsst_ospo': {'prod_file_format': os.path.join(COMINghrsst_ospo,
-                                                     '{init_shift?fmt=%Y%m%d'
-                                                     +'?shift=-24}',
-                                                     'validation_data', 'marine',
-                                                     'ghrsst',
-                                                     '{init_shift?fmt=%Y%m%d'
-                                                     +'?shift=-24}_OSPO_L4_'
-                                                     +'GHRSST.nc'),
-                    'arch_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
+    'ghrsst_ospo': {'COMIN_file_format': os.path.join(COMINghrsst_ospo,
+                                                      '{init_shift?fmt=%Y%m%d'
+                                                      +'?shift=-24}',
+                                                      'validation_data', 'marine',
+                                                      'ghrsst',
+                                                      '{init_shift?fmt=%Y%m%d'
+                                                      +'?shift=-24}_OSPO_L4_'
+                                                      +'GHRSST.nc'),
+                    'DATA_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
                                                      'ghrsst_ospo',
                                                      'ghrsst_ospo.'
                                                      +'{init_shift?fmt=%Y%m%d%H'
                                                      +'?shift=-24}to'
                                                      +'{init?fmt=%Y%m%d%H}.nc'),
                     'cycles': ['00']},
-    'get_d': {'prod_file_format': os.path.join(COMINget_d, 'get_d',
-                                               'GETDL3_DAL_CONUS_'
-                                               +'{init?fmt=%Y%j}_1.0.nc'),
-                      'arch_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
-                                                       'get_d',
-                                                       'get_d.'
-                                                       '{init_shift?fmt=%Y%m%d%H'
-                                                       +'?shift=-24}to'
-                                                       '{init?fmt=%Y%m%d%H}.nc'),
-                      'cycles': ['00']},
+    'get_d': {'COMIN_file_format': os.path.join(COMINget_d, 'get_d',
+                                                'GETDL3_DAL_CONUS_'
+                                                +'{init?fmt=%Y%j}_1.0.nc'),
+              'DATA_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
+                                               'get_d', 'get_d.'
+                                               '{init_shift?fmt=%Y%m%d%H'
+                                               +'?shift=-24}to'
+                                               '{init?fmt=%Y%m%d%H}.nc'),
+              'cycles': ['00']},
 }
 
 for OBS in OBSNAME:
@@ -409,74 +446,40 @@ for OBS in OBSNAME:
     for cycle in obs_dict['cycles']:
         CDATE = INITDATE+cycle
         CDATE_dt = datetime.datetime.strptime(CDATE, '%Y%m%d%H')
-        if OBS == 'osi_saf':
-            CDATEm7_dt = CDATE_dt + datetime.timedelta(hours=-168)
-            daily_prod_file = gda_util.format_filler(
-                obs_dict['daily_prod_file_format'], CDATE_dt, CDATE_dt,
-                'anl', {}
-            )
-            daily_arch_file = gda_util.format_filler(
-                obs_dict['daily_arch_file_format'], CDATE_dt, CDATE_dt,
-                'anl', {}
-            )
-            weekly_arch_file = gda_util.format_filler(
-                obs_dict['weekly_arch_file_format'], CDATE_dt, CDATE_dt,
-                'anl', {}
-            )
-            daily_COMOUT_file = os.path.join(
-                COMOUT_INITDATE, OBS, daily_arch_file.rpartition('/')[2]
-            )
-            daily_COMOUT_file_format = os.path.join(
-                COMOUT+'.{init?fmt=%Y%m%d}', OBS,
-                obs_dict['daily_arch_file_format'].rpartition('/')[2]
-            )
-            if not os.path.exists(daily_COMOUT_file) \
-                    and not os.path.exists(daily_arch_file):
-                arch_file_dir = daily_arch_file.rpartition('/')[0]
-                if not os.path.exists(arch_file_dir):
-                    os.makedirs(arch_file_dir)
-                print("----> Trying to create "+daily_arch_file+" and "
-                      +weekly_arch_file)
-                weekly_file_list = [daily_arch_file]
-                CDATEm_dt = CDATE_dt - datetime.timedelta(hours=24)
-                while CDATEm_dt > CDATEm7_dt:
-                    CDATEm_arch_file = gda_util.format_filler(
-                        daily_COMOUT_file_format, CDATEm_dt, CDATEm_dt,
-                        'anl', {}
-                    )
-                    weekly_file_list.append(CDATEm_arch_file)
-                    CDATEm_dt = CDATEm_dt - datetime.timedelta(hours=24)
+        COMIN_file = gda_util.format_filler(
+            obs_dict['COMIN_file_format'], CDATE_dt, CDATE_dt,
+            'anl', {}
+        )
+        DATA_file = gda_util.format_filler(
+           obs_dict['DATA_file_format'], CDATE_dt, CDATE_dt,
+           'anl', {}
+        )
+        COMOUT_file = os.path.join(
+            COMOUT_INITDATE, OBS, DATA_file.rpartition('/')[2]
+        )
+        if not os.path.exists(COMOUT_file):
+            print("----> Trying to create "+DATA_file)
+            DATA_file_dir = DATA_file.rpartition('/')[0]
+            if not os.path.exists(DATA_file_dir):
+                os.makedirs(DATA_file_dir)
+            if OBS == 'osi_saf':
                 gda_util.prep_prod_osi_saf_file(
-                    daily_prod_file, daily_arch_file,
-                    weekly_file_list, weekly_arch_file, (CDATEm7_dt,CDATE_dt)
+                    COMIN_file, DATA_file, CDATE_dt,
+                    log_missing_files
                 )
+            elif OBS == 'ghrsst_ospo':
+                gda_util.prep_prod_ghrsst_ospo_file(
+                    COMIN_file, DATA_file, CDATE_dt,
+                    log_missing_files
+                )
+            elif OBS == 'get_d':
+                gda_util.prep_prod_get_d_file(
+                    COMIN_file, DATA_file, CDATE_dt,
+                    log_missing_files
+                )
+            if SENDCOM == 'YES':
+                gda_util.copy_file(DATA_file, COMOUT_file)
         else:
-            prod_file = gda_util.format_filler(
-                obs_dict['prod_file_format'], CDATE_dt, CDATE_dt,
-                'anl', {}
-            )
-            arch_file = gda_util.format_filler(
-                obs_dict['arch_file_format'], CDATE_dt, CDATE_dt,
-                'anl', {}
-            )
-            COMOUT_file = os.path.join(
-                COMOUT_INITDATE, OBS, arch_file.rpartition('/')[2]
-            )
-            if not os.path.exists(COMOUT_file) \
-                    and not os.path.exists(arch_file):
-                arch_file_dir = arch_file.rpartition('/')[0]
-                if not os.path.exists(arch_file_dir):
-                    os.makedirs(arch_file_dir)
-                print("----> Trying to create "+arch_file)
-                if OBS == 'ghrsst_ospo':
-                    gda_util.prep_prod_ghrsst_ospo_file(
-                        prod_file, arch_file,
-                        datetime.datetime.strptime(CDATE, '%Y%m%d%H')
-                    )
-                elif OBS == 'get_d':
-                    gda_util.prep_prod_get_d_file(
-                        prod_file, arch_file,
-                        datetime.datetime.strptime(CDATE, '%Y%m%d%H')
-                    )
+            print(f"{COMOUT_file} exists")
 
 print("END: "+os.path.basename(__file__))

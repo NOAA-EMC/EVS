@@ -74,11 +74,6 @@ class LeadByDate:
             self.logger.warning("Cannot make lead_by_date for stat "
                                 +f"{self.plot_info_dict['stat']}")
             sys.exit(0)
-        # Make job image directory
-        output_image_dir = os.path.join(self.output_dir, 'images')
-        if not os.path.exists(output_image_dir):
-            os.makedirs(output_image_dir)
-        self.logger.info(f"Plots will be in: {output_image_dir}")
         # Create dataframe for all forecast hours
         self.logger.info("Building dataframe for all forecast hours")
         forecast_hours_stat_df_dict = {}
@@ -330,7 +325,7 @@ class LeadByDate:
                 )
             )
         image_name = plot_specs_lbd.get_savefig_name(
-            output_image_dir, self.plot_info_dict, self.date_info_dict
+            self.output_dir, self.plot_info_dict, self.date_info_dict
         )
         subplot0_cmap, subplotsN_cmap = plot_specs_lbd.get_plot_colormaps(
             self.plot_info_dict['stat']
