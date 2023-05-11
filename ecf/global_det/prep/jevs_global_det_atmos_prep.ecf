@@ -20,7 +20,7 @@ echo $PBS_O_WORKDIR
 module reset
 #export HOMEevs=$(eval "cd ../../../;pwd")
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
-versionfile=$HOMEevs/versions/run.ver.metplus5.0.0
+versionfile=$HOMEevs/versions/run.ver
 . $versionfile
 export evs_ver=$evs_ver
 export envir=dev
