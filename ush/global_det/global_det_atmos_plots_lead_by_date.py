@@ -391,7 +391,7 @@ class LeadByDate:
             ax.set_xlim([self.date_info_dict['forecast_hours'][0],
                           self.date_info_dict['forecast_hours'][-1]])
             ax.set_xticks(xticks)
-            if ax.is_last_row() \
+            if ax.get_subplotspec().is_last_row() \
                     or (nsubplots % 2 != 0 and model_idx_list.index(model_idx)\
                         == nsubplots-1):
                 ax.set_xlabel('Forecast Hour')
@@ -411,7 +411,7 @@ class LeadByDate:
                     ax.yaxis.set_minor_locator(md.DayLocator())
                 else:
                     ax.yaxis.set_minor_locator(md.MonthLocator())
-            if ax.is_first_col():
+            if ax.get_subplotspec().is_first_col():
                 ax.set_ylabel(self.date_info_dict['date_type'].title()+' Date')
             else:
                 plt.setp(ax.get_yticklabels(), visible=False)

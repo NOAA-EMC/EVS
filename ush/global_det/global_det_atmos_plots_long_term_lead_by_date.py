@@ -458,7 +458,7 @@ class LongTermLeadByDate:
                 ax.set_xticklabels(self.forecast_day_list)
                 ax.set_xlim([forecast_day_float_list[0],
                              forecast_day_float_list[-1]])
-                if ax.is_last_row() or (nsubplots % 2 != 0 \
+                if ax.get_subplotspec().is_last_row() or (nsubplots % 2 != 0 \
                         and self.model_list.index(model) == nsubplots-2):
                     ax.set_xlabel('Forecast Day')
                 else:
@@ -472,7 +472,7 @@ class LongTermLeadByDate:
                     ax.set_yticks(run_length_date_dt_list[::4])
                     ax.yaxis.set_major_formatter(md.DateFormatter('%Y'))
                 ax.yaxis.set_major_formatter(md.DateFormatter('%Y'))
-                if ax.is_first_col():
+                if ax.get_subplotspec().is_first_col():
                     ax.set_ylabel('Year')
                 else:
                     plt.setp(ax.get_yticklabels(), visible=False)

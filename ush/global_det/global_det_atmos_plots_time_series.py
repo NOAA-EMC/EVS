@@ -396,10 +396,10 @@ class TimeSeries:
                 ax.plot_date(
                     np.ma.compressed(masked_plot_dates),
                     np.ma.compressed(masked_model_num_data),
+                    fmt=model_num_plot_settings_dict['marker'],
                     color = model_num_plot_settings_dict['color'],
                     linestyle = model_num_plot_settings_dict['linestyle'],
                     linewidth = model_num_plot_settings_dict['linewidth'],
-                    marker = model_num_plot_settings_dict['marker'],
                     markersize = model_num_plot_settings_dict['markersize'],
                     label = (model_num_plot_name+' '+model_num_avg_label+' '
                              +str(model_num_npts)+' days'),
@@ -423,10 +423,10 @@ class TimeSeries:
                         ax.plot_date(
                             np.ma.compressed(obar_masked_plot_dates),
                             np.ma.compressed(obar_masked_model_num_data),
+                            fmt = obs_plot_settings_dict['marker'],
                             color = obs_plot_settings_dict['color'],
                             linestyle = obs_plot_settings_dict['linestyle'],
                             linewidth = obs_plot_settings_dict['linewidth'],
-                            marker = obs_plot_settings_dict['marker'],
                             markersize = obs_plot_settings_dict['markersize'],
                             label = ('obs '+obar_model_num_avg_label+' '
                                      +str(obar_model_num_npts)+' days'),

@@ -388,10 +388,10 @@ class TimeSeriesMultiFhr:
                 ax.plot_date(
                     np.ma.compressed(masked_plot_dates),
                     np.ma.compressed(masked_forecast_hour_data),
+                    fmt = forecast_hour_plot_settings_dict['marker'],
                     color = forecast_hour_plot_settings_dict['color'],
                     linestyle = forecast_hour_plot_settings_dict['linestyle'],
                     linewidth = forecast_hour_plot_settings_dict['linewidth'],
-                    marker = forecast_hour_plot_settings_dict['marker'],
                     markersize = forecast_hour_plot_settings_dict['markersize'],
                     label = (f"Day {str(int(int(forecast_hour)/24))}"+' '
                              +forecast_hour_avg_label+' '

@@ -420,7 +420,7 @@ class LeadByLevel:
             ax.set_xlim([self.date_info_dict['forecast_hours'][0],
                          self.date_info_dict['forecast_hours'][-1]])
             ax.set_xticks(xticks)
-            if ax.is_last_row() \
+            if ax.get_subplotspec().is_last_row() \
                     or (nsubplots % 2 != 0 \
                         and model_idx_list.index(model_idx) \
                         == nsubplots-1):
@@ -433,7 +433,7 @@ class LeadByLevel:
             ax.set_yticklabels(vert_profile_levels_int_ticks)
             ax.set_ylim([vert_profile_levels_int[0],
                          vert_profile_levels_int[-1]])
-            if ax.is_first_col() \
+            if ax.get_subplotspec().is_first_col() \
                     or (nsubplots % 2 != 0 \
                         and model_idx_list.index(model_idx) \
                         == nsubplots -1):

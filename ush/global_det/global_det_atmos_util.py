@@ -2420,8 +2420,9 @@ def merge_grid2grid_long_term_stats_datasets(logger, stat_base_dir,
                     model_all_verif_sys_df = model_verif_sys_df.copy()
                     set_new_df = False
                 else:
-                    model_all_verif_sys_df = model_all_verif_sys_df.append(
-                        model_verif_sys_df, ignore_index=True
+                    model_all_verif_sys_df = pd.concat(
+                        [model_all_verif_sys_df, model_verif_sys_df],
+                        ignore_index=True
                     )
             else:
                 logger.warning(f"{model_verif_sys_file_name} does not exist")
@@ -2612,8 +2613,9 @@ def merge_precip_long_term_stats_datasets(logger, stat_base_dir,
                     model_all_verif_sys_df = model_verif_sys_df.copy()
                     set_new_df = False
                 else:
-                    model_all_verif_sys_df = model_all_verif_sys_df.append(
-                        model_verif_sys_df, ignore_index=True
+                    model_all_verif_sys_df = pd.concat(
+                        [model_all_verif_sys_df, model_verif_sys_df],
+                        ignore_index=True
                     )
             else:
                 logger.warning(f"{model_verif_sys_file_name} does not exist")
