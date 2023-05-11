@@ -44,6 +44,14 @@ status=$?
 [[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_get_data_files.py"
 echo
 
+# Check for restart files
+if [ $evs_run_mode = production ]; then
+    python ${USHevs}/global_det/global_det_atmos_production_restart.py
+    status=$?
+    [[ $status -ne 0 ]] && exit $status
+    [[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/global_det/global_det_atmos_production_restart.py"
+fi
+
 # Create and run job scripts for reformat_data, assemble_data, generate_stats, and gather_stats
 for group in reformat_data assemble_data generate_stats gather_stats; do
     export JOB_GROUP=$group
@@ -80,20 +88,26 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
             nc=$((nc+1))
         done
     fi
+    if [ $SENDCOM = YES ]; then
+        # Copy atmos
+        for RUN_DATE_PATH in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$RUN.*; do
+            RUN_DATE_DIR=$(echo ${RUN_DATE_PATH##*/})
+            for RUN_DATE_SUBDIR_PATH in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$RUN_DATE_DIR/*; do
+                RUN_DATE_SUBDIR=$(echo ${RUN_DATE_SUBDIR_PATH##*/})
+                if [ $(ls -A "$RUN_DATE_SUBDIR_PATH/$VERIF_CASE" | wc -l) -ne 0 ]; then
+                    for FILE in $RUN_DATE_SUBDIR_PATH/$VERIF_CASE/*; do
+                        if [ ! -f $COMOUT/$RUN_DATE_DIR/$RUN_DATE_SUBDIR/$VERIF_CASE/${FILE##*/} ]; then
+                            cp -v $FILE $COMOUT/$RUN_DATE_DIR/$RUN_DATE_SUBDIR/$VERIF_CASE/${FILE##*/}
+                        fi
+                    done
+                fi
+            done
+        done
+    fi
 done
 
 # Copy files to desired location
 if [ $SENDCOM = YES ]; then
-    # Copy atmos
-    for RUN_DATE_PATH in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$RUN.*; do
-        RUN_DATE_DIR=$(echo ${RUN_DATE_PATH##*/})
-        for RUN_DATE_SUBDIR_PATH in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$RUN_DATE_DIR/*; do
-            RUN_DATE_SUBDIR=$(echo ${RUN_DATE_SUBDIR_PATH##*/})
-            for FILE in $RUN_DATE_SUBDIR_PATH/$VERIF_CASE/*; do
-                cp -v $FILE $COMOUT/$RUN_DATE_DIR/$RUN_DATE_SUBDIR/$VERIF_CASE/.
-            done
-        done
-    done
     # Copy model files
     for MODEL in $model_list; do
         for MODEL_DATE_PATH in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$MODEL.*; do

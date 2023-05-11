@@ -72,11 +72,6 @@ class ValidHourAverage:
             self.logger.warning("Cannot make valid_hour_average for stat "
                                 +f"{self.plot_info_dict['stat']}")
             sys.exit(0)
-        # Make job image directory
-        output_image_dir = os.path.join(self.output_dir, 'images')
-        if not os.path.exists(output_image_dir):
-            os.makedirs(output_image_dir)
-        self.logger.info(f"Plots will be in: {output_image_dir}")
         # Create dataframe for all valid hour
         self.logger.info("Building dataframe for all valid hours")
         fcst_units = []
@@ -234,7 +229,7 @@ class ValidHourAverage:
                         model_idx_model1_diff_mean_std_err = (
                             model_idx_model1_diff_std/np.sqrt(nsamples-1)
                         )
-                        if nsamples > 80:
+                        if nsamples >= 80:
                             ci = 1.960 * model_idx_model1_diff_mean_std_err
                         elif nsamples >=40 and nsamples < 80:
                             ci = 2.000 * model_idx_model1_diff_mean_std_err
@@ -309,7 +304,7 @@ class ValidHourAverage:
                 )
             )
         image_name = plot_specs_vha.get_savefig_name(
-            output_image_dir, self.plot_info_dict, self.date_info_dict
+            self.output_dir, self.plot_info_dict, self.date_info_dict
         )
         # Create plot
         self.logger.info(f"Creating plot for {self.plot_info_dict['stat']} ")
