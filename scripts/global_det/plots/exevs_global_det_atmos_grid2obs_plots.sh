@@ -93,12 +93,10 @@ done
 # Copy files to desired location
 if [ $SENDCOM = YES ]; then
     # Make and copy tar file
-    cd ${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/images
-    for VERIF_TYPE_SUBDIR_PATH in $DATA/${VERIF_CASE}_${STEP}/plot_output/$RUN.${end_date}/images/*; do
-        VERIF_TYPE_SUBDIR=$(echo ${VERIF_TYPE_SUBDIR_PATH##*/})
-        cd $VERIF_TYPE_SUBDIR
-        large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/images/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${end_date}.tar
-        tar -cvf $large_tar_file *.tar
+    cd ${VERIF_CASE}_${STEP}/plot_output/tar_files
+    for VERIF_TYPE in $g2op_type_list; do
+        large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.last${NDAYS}days.v${end_date}.tar
+        tar -cvf $large_tar_file ${VERIF_CASE}_${VERIF_TYPE}*.tar
         cp -v $large_tar_file $COMOUT/.
     done
     cd $DATA
