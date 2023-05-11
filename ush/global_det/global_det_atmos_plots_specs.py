@@ -860,12 +860,13 @@ class PlotSpecs:
             +plot_type_savefig_name+'.'
             +grid_savefig_name+'_'+region_savefig_name
             +'.png'
-        )
-        image_path = os.path.join(image_dir, savefig_name.lower())
+        ).lower()
         if plot_info_dict['fcst_var_name'] == 'CAPE':
-            image_path = image_path.replace('_z0', '_l0').replace('_p90_0', '_l90')
+            savefig_name = (savefig_name.replace('_z0', '_l0')\
+                            .replace('_p90_0', '_l90'))
             if plot_info_dict['stat'] in ['RMSE', 'BIAS', 'ME', 'FBAR_OBAR']:
-                image_path = image_path.replace('_gt0||', '')
+                savefig_name = savefig_name.replace('_gt0||', '')
+        image_path = os.path.join(image_dir, savefig_name)
         return image_path
 
     def get_logo_location(self, position, x_figsize, y_figsize, dpi):

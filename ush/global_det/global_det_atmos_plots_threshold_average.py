@@ -73,11 +73,6 @@ class ThresholdAverage:
             self.logger.warning("Cannot make threshold_average for stat "
                                 +f"{self.plot_info_dict['stat']}")
             sys.exit(0)
-        # Make job image directory
-        output_image_dir = os.path.join(self.output_dir, 'images')
-        if not os.path.exists(output_image_dir):
-            os.makedirs(output_image_dir)
-        self.logger.info(f"Plots will be in: {output_image_dir}")
         # Get dates to plot
         self.logger.info("Creating valid and init date arrays")
         valid_dates, init_dates = gda_util.get_plot_dates(
@@ -217,7 +212,7 @@ class ThresholdAverage:
                         model_idx_model1_diff_mean_std_err = (
                             model_idx_model1_diff_std/np.sqrt(nsamples-1)
                         )
-                        if nsamples > 80:
+                        if nsamples >= 80:
                             ci = 1.960 * model_idx_model1_diff_mean_std_err
                         elif nsamples >=40 and nsamples < 80:
                             ci = 2.000 * model_idx_model1_diff_mean_std_err
@@ -299,7 +294,7 @@ class ThresholdAverage:
                 )
             )
         image_name = plot_specs_ta.get_savefig_name(
-            output_image_dir, self.plot_info_dict, self.date_info_dict
+            self.output_dir, self.plot_info_dict, self.date_info_dict
         )
         # Create plot
         self.logger.info(f"Creating plot for {self.plot_info_dict['stat']} ")
@@ -521,7 +516,7 @@ class ThresholdAverage:
                         thresh_ci = (
                             cmasked_model_num_model1_diff_ci_data[thresh_idx]
                         )
-                        ax2.bar(fhr, 2*np.absolute(thresh_ci),
+                        ax2.bar(thresh, 2*np.absolute(thresh_ci),
                                 bottom=-1*np.absolute(thresh_ci),
                                 width=(cmasked_ci_bar_max_widths[thresh_idx]
                                        -(cmasked_ci_bar_intvl_widths[thresh_idx]

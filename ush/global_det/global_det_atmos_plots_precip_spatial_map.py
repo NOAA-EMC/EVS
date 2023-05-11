@@ -29,24 +29,27 @@ class PrecipSpatialMap:
     Create a precipitation spatial map graphic
     """
 
-    def __init__(self, logger, input_dir, output_dir, model_info_dict,
-                 date_info_dict, plot_info_dict, met_info_dict, logo_dir):
+    def __init__(self, logger, input_dir, DATA_output_dir, COMOUT_output_dir,
+                 model_info_dict, date_info_dict, plot_info_dict,
+                 met_info_dict, logo_dir):
         """! Initalize PrecipSpatialMap class
              Args:
-                 logger          - logger object
-                 input_dir       - path to input directory (string)
-                 output_dir      - path to output directory (string)
-                 model_info_dict - model infomation dictionary (strings)
-                 plot_info_dict  - plot information dictionary (strings)
-                 date_info_dict  - date information dictionary (strings)
-                 met_info_dict   - MET information dictionary (strings)
-                 logo_dir        - directory with logo images (string)
+                 logger            - logger object
+                 input_dir         - path to input directory (string)
+                 DATA_output_dir   - path to DATA output directory (string)
+                 COMOUT_outpur_dir - path to COMOUT output directory (string)
+                 model_info_dict   - model infomation dictionary (strings)
+                 plot_info_dict    - plot information dictionary (strings)
+                 date_info_dict    - date information dictionary (strings)
+                 met_info_dict     - MET information dictionary (strings)
+                 logo_dir          - directory with logo images (string)
  
              Returns:
         """
         self.logger = logger
         self.input_dir = input_dir
-        self.output_dir = output_dir
+        self.DATA_output_dir = DATA_output_dir
+        self.COMOUT_output_dir = COMOUT_output_dir
         self.model_info_dict = model_info_dict
         self.date_info_dict = date_info_dict
         self.plot_info_dict = plot_info_dict
@@ -60,18 +63,13 @@ class PrecipSpatialMap:
         """
         self.logger.info(f"Creating preciptation spatial map...")
         self.logger.debug(f"Input directory: {self.input_dir}")
-        self.logger.debug(f"Output directory: {self.output_dir}")
+        self.logger.debug(f"Output directory: {self.DATA_output_dir}")
         self.logger.debug(f"Model information dictionary: "
                           +f"{self.model_info_dict}")
         self.logger.debug(f"Date information dictionary: "
                           +f"{self.date_info_dict}")
         self.logger.debug(f"Plot information dictionary: "
                           +f"{self.plot_info_dict}")
-        # Make job image directory
-        output_image_dir = os.path.join(self.output_dir, 'images')
-        if not os.path.exists(output_image_dir):
-            os.makedirs(output_image_dir)
-        self.logger.info(f"Plots will be in: {output_image_dir}")
         # Set valid and initialization dates
         valid_date_dt = datetime.datetime.strptime(
             self.date_info_dict['end_date']
@@ -110,7 +108,8 @@ class PrecipSpatialMap:
             model_num_plot_name = model_num_dict['plot_name']
             model_num_obs_name = model_num_dict['obs_name']
             model_num_data_dir = os.path.join(self.input_dir, model_num_name)
-            make_plot = False
+            make_png = False
+            make_gif = False
             if model_num == 'obs':
                 image_data_source = 'qpe'
                 image_forecast_hour = '024'
@@ -119,18 +118,15 @@ class PrecipSpatialMap:
                 image_forecast_hour = (
                     self.date_info_dict['forecast_hour'].zfill(3)
                 )
-            image_region_dict = {
-                'CONUS': 'conus',
-                'AK': 'alaska',
-                'HI': 'hawaii',
-                'PR': 'prico'
-            }
-            image_name = os.path.join(
-                output_image_dir,
+            DATA_png_name = os.path.join(
+                self.DATA_output_dir,
                 image_data_source
                 +'.v'+valid_date_dt.strftime('%Y%m%d%H')+'.'
                 +image_forecast_hour+'h.'
-                +image_region_dict[self.plot_info_dict['vx_mask']]+'.png'
+                +self.plot_info_dict['vx_mask']+'.png'
+            )
+            COMOUT_png_name = DATA_png_name.replace(
+                self.DATA_output_dir, self.COMOUT_output_dir
             )
             if model_num == 'obs':
                 model_num_file = os.path.join(
@@ -138,8 +134,8 @@ class PrecipSpatialMap:
                     'ccpa_precip_accum24hr_24hrAccum_valid'
                     +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
                 )
-                if not os.path.exists(image_name):
-                    make_plot = True
+                if not os.path.exists(DATA_png_name):
+                    make_png = True
             else:
                 model_num_file = os.path.join(
                     model_num_data_dir,
@@ -148,19 +144,22 @@ class PrecipSpatialMap:
                     +'fhr'+self.date_info_dict['forecast_hour'].zfill(3)
                     +'.nc'
                 )
-            if not os.path.exists(image_name):
+            if not os.path.exists(DATA_png_name):
                 if os.path.exists(model_num_file):
-                    make_plot = True
+                    make_png = True
                 else:
-                    make_plot = False
+                    make_png = False
                     self.logger.warning(f"{model_num_file} does not exist, "
                                         +"not making plot")
             else:
-                make_plot = False
+                make_png = False
             if model_num_name != 'gfs' \
-                    and self.plot_info_dict['vx_mask'] != 'CONUS':
-                make_plot = False
-            if make_plot:
+                    and self.plot_info_dict['vx_mask'] != 'conus':
+                make_png = False
+            if make_png and os.path.exists(COMOUT_png_name):
+                gda_util.copy_file(COMOUT_png_name, DATA_png_name)
+                make_png = False
+            if make_png:
                 self.logger.debug("Plotting data from "+model_num_file)
                 precip_data = netcdf.Dataset(model_num_file)
                 precip_lat = precip_data.variables['lat'][:]
@@ -287,19 +286,19 @@ class PrecipSpatialMap:
                         right_logo_img_array, right_logo_xpixel_loc,
                         right_logo_ypixel_loc, zorder=1, alpha=right_logo_alpha
                     )
-                if self.plot_info_dict['vx_mask'] == 'CONUS':
+                if self.plot_info_dict['vx_mask'] == 'conus':
                     extent = [-124,-70,18.0,50.0]
                     central_lon = -97.6
                     central_lat = 35.4
-                elif self.plot_info_dict['vx_mask'] == 'AK':
+                elif self.plot_info_dict['vx_mask'] == 'alaska':
                     extent = [-180,-110,45.0,75.0]
                     central_lon = -145
                     central_lat = 60
-                elif self.plot_info_dict['vx_mask'] == 'PR':
+                elif self.plot_info_dict['vx_mask'] == 'prico':
                     extent = [-75,-60,12.0,25.0]
                     central_lon = -67.5
                     central_lat = 18.5
-                elif self.plot_info_dict['vx_mask'] == 'HI':
+                elif self.plot_info_dict['vx_mask'] == 'hawaii':
                     extent = [-165,-150,15.0,25.0]
                     central_lon = -157.5
                     central_lat = 20
@@ -348,21 +347,29 @@ class PrecipSpatialMap:
                             str(round(tick,3)).rstrip('0')
                         )
                 cbar.ax.set_xticklabels(cbar_tick_labels_list)
-                self.logger.info("Saving image as "+image_name)
-                plt.savefig(image_name)
+                self.logger.info("Saving image as "+DATA_png_name)
+                plt.savefig(DATA_png_name)
                 plt.clf()
                 plt.close('all')
+            DATA_gif_name = DATA_png_name.replace('.png', '.gif')
+            COMOUT_gif_name = COMOUT_png_name.replace('.png', '.gif')
+            if os.path.exists(COMOUT_gif_name):
+                gda_util.copy_file(COMOUT_gif_name, DATA_gif_name)
+                make_gif = False
+            elif os.path.exists(DATA_png_name) \
+                    and not os.path.exists(DATA_gif_name):
+                make_gif = True
+            if make_gif:
                 # Convert png to gif, if possible
                 check_convert = subprocess.run(
                     ['which', 'convert'], stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL
                 )
                 if check_convert.returncode == 0:
-                    self.logger.info(f"Converting {image_name} to "
-                                     +f"{image_name.replace('.png', '.gif')}")
+                    self.logger.info(f"Converting {DATA_png_name} to "
+                                     +f"{DATA_gif_name}")
                     run_convert = subprocess.run(
-                        ['convert', image_name,
-                         image_name.replace('.png', '.gif')]
+                        ['convert', DATA_png_name, DATA_gif_name]
                     )
                 else:
                     self.logger.warning("convert executable not in PATH, "
@@ -371,8 +378,9 @@ class PrecipSpatialMap:
 def main():
     # Need settings
     INPUT_DIR = os.environ['HOME']
-    OUTPUT_DIR = os.environ['HOME']
-    LOGO_DIR = os.environ['HOME'],
+    DATA_OUTPUT_DIR = os.environ['HOME']
+    COMOUT_OUTPUT_DIR = os.environ['HOME']
+    LOGO_DIR = os.environ['HOME']
     MODEL_INFO_DICT = {
         'model1': {'name': 'MODEL_A',
                    'plot_name': 'PLOT_MODEL_A',
@@ -436,9 +444,9 @@ def main():
     logger_info = f"Log file: {job_logging_file}"
     print(logger_info)
     logger.info(logger_info)
-    p = PrecipSpatialMap(logger, INPUT_DIR, OUTPUT_DIR, MODEL_INFO_DICT,
-                         DATE_INFO_DICT, PLOT_INFO_DICT, MET_INFO_DICT,
-                         LOGO_DIR)
+    p = PrecipSpatialMap(logger, INPUT_DIR, DATA_OUTPUT_DIR, COMOUT_OUTPUT_DIR,
+                         MODEL_INFO_DICT, DATE_INFO_DICT, PLOT_INFO_DICT,
+                         MET_INFO_DICT, LOGO_DIR)
     p.make_precip_spatial_map()
 
 if __name__ == "__main__":
