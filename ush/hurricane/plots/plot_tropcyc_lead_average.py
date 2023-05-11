@@ -436,7 +436,7 @@ if os.path.exists(summary_tcst_filename):
                                    fontsize=legend_fontsize)
                 plt.draw()
                 legend_box = legend.get_window_extent() \
-                    .inverse_transformed(ax.transData)
+                    .transformed(ax.transData.inverted())
                 if stat_max > legend_box.y1:
                     while stat_max > legend_box.y1:
                         y_axis_max = y_axis_max + y_axis_tick_inc
@@ -454,7 +454,7 @@ if os.path.exists(summary_tcst_filename):
                         plt.draw()
                         legend_box = (
                             legend.get_window_extent() \
-                            .inverse_transformed(ax.transData)
+                            .transformed(ax.transData.inverted())
                         )
             # Add number of cases
             x_axis_ticks_fraction = np.linspace(0, 1,len(fhrs), endpoint=True)
