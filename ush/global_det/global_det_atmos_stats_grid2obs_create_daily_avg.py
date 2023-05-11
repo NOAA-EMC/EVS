@@ -127,7 +127,15 @@ while valid_hr <= int(valid_hr_end):
             daily_avg_day_fhr+=12
         daily_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
         if len(daily_avg_file_list) == 2:
-            print("Output File: "+output_file)
+            if not os.path.exists(output_file):
+                make_daily_avg_output_file = True
+            else:
+                make_daily_avg_output_file = False
+        else:
+            print("WARNING: Need 2 files to create daily average")
+            make_daily_avg_output_file = False
+        if make_daily_avg_output_file:
+            print(f"Output File: {output_file}")
             all_daily_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
             for daily_avg_file in daily_avg_file_list:
                 with open(daily_avg_file, 'r') as infile:
@@ -211,8 +219,6 @@ while valid_hr <= int(valid_hr_end):
                 output_file, header=input_file_header,
                 index=None, sep=' ', mode='w'
             )
-        else:
-            print("WARNING: Need 2 files to create daily average")
         print("")
         daily_avg_day+=1
     valid_hr+=int(valid_hr_inc)
