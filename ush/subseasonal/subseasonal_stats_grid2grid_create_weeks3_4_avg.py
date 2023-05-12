@@ -1,7 +1,7 @@
 '''
-Name: subseasonal_stats_grid2grid_create_weekly_avg.py
+Name: subseasonal_stats_grid2grid_create_weeks3_4_avg.py
 Contact(s): Shannon Shields
-Abstract: This script is used to create weekly average
+Abstract: This script is used to create Weeks 3-4 average
           for variable from netCDF output
 '''
 
@@ -25,15 +25,13 @@ COMPONENT = os.environ['COMPONENT']
 VERIF_TYPE = os.environ['VERIF_TYPE']
 job_name = os.environ['job_name']
 MODEL = os.environ['MODEL']
-WEEKLYSTART = os.environ['WEEKLYSTART']
+W3_4START = os.environ['W3_4START']
 DATE = os.environ['DATE']
 valid_hr_start = os.environ['valid_hr_start']
 valid_hr_end = os.environ['valid_hr_end'] 
 valid_hr_inc = os.environ['valid_hr_inc']
 fhr_list = os.environ['fhr_list'].split(',')
 fhr_inc = '12'
-#fhr_end = os.environ['fhr_end']
-#fhr_inc = os.environ['fhr_inc']
 
 # Process run time arguments
 if len(sys.argv) != 4:
@@ -57,80 +55,69 @@ else:
 output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
                           RUN+'.'+DATE)
 
-# Create weekly average files
-print("\nCreating weekly average files")
+# Create Weeks 3-4 average files
+print("\nCreating Weeks 3-4 average files")
 valid_hr = int(valid_hr_start)
 while valid_hr <= int(valid_hr_end):
-    if job_name == 'DailyAvg_GeoHeightAnom':
-        if int(valid_hr) % 12 != 0 :
-            valid_hr+=int(valid_hr_inc)
-            continue
-    weekly_avg_valid_end = datetime.datetime.strptime(DATE+str(valid_hr),
-                                                      '%Y%m%d%H')
-    if job_name == 'DailyAvg_GeoHeightAnom':
-        weekly_avg_valid_start = (weekly_avg_valid_end
-                                  - datetime.timedelta(hours=156))
-    else:
-        weekly_avg_valid_start = datetime.datetime.strptime(WEEKLYSTART
-                                                            +str(valid_hr),
-                                                            '%Y%m%d%H')
-    weekly_avg_day_end = int(fhr_list[-1])/24
-    weekly_avg_day_start = 7
-    weekly_avg_day = weekly_avg_day_start
-    while weekly_avg_day <= weekly_avg_day_end:
-        weekly_avg_day_fhr_end = int(weekly_avg_day * 24)
-        weekly_avg_file_list = []
-        if job_name == 'DailyAvg_GeoHeightAnom':
-            weekly_avg_day_fhr_start = weekly_avg_day_fhr_end - 156
-        else:
-            weekly_avg_day_fhr_start = weekly_avg_day_fhr_end - 168
-        weekly_avg_day_init = (weekly_avg_valid_end
-                              - datetime.timedelta(days=weekly_avg_day))
-        weekly_avg_day_fhr = weekly_avg_day_fhr_start
+    weeks_avg_valid_end = datetime.datetime.strptime(DATE+str(valid_hr),
+                                                     '%Y%m%d%H')
+    weeks_avg_valid_start = datetime.datetime.strptime(W3_4START
+                                                       +str(valid_hr),
+                                                       '%Y%m%d%H')
+    weeks_avg_day_end = int(fhr_list[-1])/24
+    weeks_avg_day_start = 28
+    weeks_avg_day = weeks_avg_day_start
+    while weeks_avg_day <= weeks_avg_day_end:
+        weeks_avg_day_fhr_end = int(weeks_avg_day * 24)
+        weeks_avg_file_list = []
+        weeks_avg_day_fhr_start = weeks_avg_day_fhr_end - 336
+        weeks_avg_day_init = (weeks_avg_valid_end
+                             - datetime.timedelta(days=weeks_avg_day))
+        weeks_avg_day_fhr = weeks_avg_day_fhr_start
         output_file = os.path.join(output_dir, MODEL,
                                    VERIF_CASE,
-                                   'weekly_avg_'
+                                   'weeks3_4_avg_'
                                    +VERIF_TYPE+'_'+job_name+'_init'
-                                   +weekly_avg_day_init.strftime('%Y%m%d%H')
+                                   +weeks_avg_day_init.strftime('%Y%m%d%H')
                                    +'_valid'
-                                   +weekly_avg_valid_start\
+                                   +weeks_avg_valid_start\
                                    .strftime('%Y%m%d%H')+'to'
-                                   +weekly_avg_valid_end\
+                                   +weeks_avg_valid_end\
                                    .strftime('%Y%m%d%H')+'.nc')
         if os.path.exists(output_file):
             os.remove(output_file)
-        weekly_avg_fcst_sum = 0
-        weekly_avg_fcst_file_list = []
-        weekly_avg_obs_sum = 0
-        weekly_avg_obs_file_list = []
-        while weekly_avg_day_fhr <= weekly_avg_day_fhr_end:
-            weekly_avg_day_fhr_valid = (
-                weekly_avg_day_init
-                + datetime.timedelta(hours=weekly_avg_day_fhr)
+        weeks_avg_fcst_sum = 0
+        weeks_avg_fcst_file_list = []
+        weeks_avg_obs_sum = 0
+        weeks_avg_obs_file_list = []
+        while weeks_avg_day_fhr <= weeks_avg_day_fhr_end:
+            weeks_avg_day_fhr_valid = (
+                weeks_avg_day_init
+                + datetime.timedelta(hours=weeks_avg_day_fhr)
             )
-            weekly_avg_day_fhr_DATAROOT_input_file = sub_util.format_filler(
-                    DATAROOT_file_format, weekly_avg_day_fhr_valid,
-                    weekly_avg_day_init, 
-                    str(weekly_avg_day_fhr), {}
+            weeks_avg_day_fhr_DATAROOT_input_file = sub_util.format_filler(
+                    DATAROOT_file_format, weeks_avg_day_fhr_valid,
+                    weeks_avg_day_init, 
+                    str(weeks_avg_day_fhr), {}
             )
-            weekly_avg_day_fhr_COMIN_input_file = sub_util.format_filler(
-                    COMIN_file_format, weekly_avg_day_fhr_valid,
-                    weekly_avg_day_init,
-                    str(weekly_avg_day_fhr), {}
+            weeks_avg_day_fhr_COMIN_input_file = sub_util.format_filler(
+                    COMIN_file_format, weeks_avg_day_fhr_valid,
+                    weeks_avg_day_init,
+                    str(weeks_avg_day_fhr), {}
             )
-            if os.path.exists(weekly_avg_day_fhr_COMIN_input_file):
-                weekly_avg_day_fhr_input_file = (
-                    weekly_avg_day_fhr_COMIN_input_file)
+            if os.path.exists(weeks_avg_day_fhr_COMIN_input_file):
+                weeks_avg_day_fhr_input_file = (
+                    weeks_avg_day_fhr_COMIN_input_file)
             else:
-                weekly_avg_day_fhr_input_file = (
-                    weekly_avg_day_fhr_DATAROOT_input_file
+                weeks_avg_day_fhr_input_file = (
+                    weeks_avg_day_fhr_DATAROOT_input_file
                 )
-            if os.path.exists(weekly_avg_day_fhr_input_file):
-                print("Input file for forecast hour "+str(weekly_avg_day_fhr)
-                      +', valid '+str(weekly_avg_day_fhr_valid)
-                      +', init '+str(weekly_avg_day_init)+": "
-                      +weekly_avg_day_fhr_input_file)
-                input_file_data = netcdf.Dataset(weekly_avg_day_fhr_input_file)
+            if os.path.exists(weeks_avg_day_fhr_input_file):
+                print("Input file for forecast hour "+str(weeks_avg_day_fhr)
+                      +', valid '+str(weeks_avg_day_fhr_valid)
+                      +', init '+str(weeks_avg_day_init)+": "
+                      +weeks_avg_day_fhr_input_file)
+                input_file_data = netcdf.Dataset(weeks_avg_day_fhr_input_file)
                 input_file_data_var_list = list(input_file_data.variables.keys())
                 fcst_var_level = 'fcst_var_hold'
                 obs_var_level = 'obs_var_hold'
@@ -140,54 +127,46 @@ while valid_hr <= int(valid_hr_end):
                     if 'OBS_'+var_level in input_var:
                         obs_var_level = input_var
                 if fcst_var_level in input_file_data_var_list:
-                    weekly_avg_fcst_sum = (weekly_avg_fcst_sum +
-                                          input_file_data.variables[
-                                              fcst_var_level
-                                          ][:])
-                    weekly_avg_fcst_file_list.append(weekly_avg_day_fhr_input_file)
-                if obs_var_level in input_file_data_var_list:
-                    weekly_avg_obs_sum = (weekly_avg_obs_sum +
+                    weeks_avg_fcst_sum = (weeks_avg_fcst_sum +
                                          input_file_data.variables[
-                                             obs_var_level
+                                             fcst_var_level
                                          ][:])
-                    weekly_avg_obs_file_list.append(weekly_avg_day_fhr_input_file)
+                    weeks_avg_fcst_file_list.append(weeks_avg_day_fhr_input_file)
+                if obs_var_level in input_file_data_var_list:
+                    weeks_avg_obs_sum = (weeks_avg_obs_sum +
+                                        input_file_data.variables[
+                                            obs_var_level
+                                        ][:])
+                    weeks_avg_obs_file_list.append(weeks_avg_day_fhr_input_file)
             else:
-                print("No input file for forecast hour "+str(weekly_avg_day_fhr)
-                      +', valid '+str(weekly_avg_day_fhr_valid)
-                      +', init '+str(weekly_avg_day_init)+" "
-                      +weekly_avg_day_fhr_DATAROOT_input_file+" or "
-                      +weekly_avg_day_fhr_COMIN_input_file)
-            if job_name == 'DailyAvg_GeoHeightAnom':
-                weekly_avg_day_fhr+=12
-            else:
-                weekly_avg_day_fhr+=int(fhr_inc)
-        if len(weekly_avg_fcst_file_list) != 0:
-            weekly_avg_fcst = (
-                weekly_avg_fcst_sum/len(weekly_avg_fcst_file_list)
+                print("No input file for forecast hour "+str(weeks_avg_day_fhr)
+                      +', valid '+str(weeks_avg_day_fhr_valid)
+                      +', init '+str(weeks_avg_day_init)+" "
+                      +weeks_avg_day_fhr_DATAROOT_input_file+" or "
+                      +weeks_avg_day_fhr_COMIN_input_file)
+            weeks_avg_day_fhr+=int(fhr_inc)
+        if len(weeks_avg_fcst_file_list) != 0:
+            weeks_avg_fcst = (
+                weeks_avg_fcst_sum/len(weeks_avg_fcst_file_list)
             )
-        if len(weekly_avg_obs_file_list) != 0:
-            weekly_avg_obs = (
-                weekly_avg_obs_sum/len(weekly_avg_obs_file_list)
+        if len(weeks_avg_obs_file_list) != 0:
+            weeks_avg_obs = (
+                weeks_avg_obs_sum/len(weeks_avg_obs_file_list)
             )
-        if job_name == 'DailyAvg_GeoHeightAnom':
-            expected_nfiles = 14
-        else:
-            if fhr_inc == '6':
-                expected_nfiles = 29
-            elif fhr_inc == '12':
-                expected_nfiles = 15
-        if len(weekly_avg_fcst_file_list) == expected_nfiles \
-                and len(weekly_avg_obs_file_list) == expected_nfiles:
+        if fhr_inc == '12':
+            expected_nfiles = 29
+        if len(weeks_avg_fcst_file_list) == expected_nfiles \
+                and len(weeks_avg_obs_file_list) == expected_nfiles:
             print("Output File: "+output_file)
             output_file_data = netcdf.Dataset(output_file, 'w',
                                               format='NETCDF3_CLASSIC')
             for attr in input_file_data.ncattrs():
                 if attr == 'FileOrigins':
                     output_file_data.setncattr(
-                        attr, 'Weekly Fcst Mean from '
-                        +','.join(weekly_avg_fcst_file_list)+';'
-                        +'Weekly Obs Mean from '
-                        +','.join(weekly_avg_obs_file_list)
+                        attr, 'Weeks 3-4 Fcst Mean from '
+                        +','.join(weeks_avg_fcst_file_list)+';'
+                        +'Weeks 3-4 Obs Mean from '
+                        +','.join(weeks_avg_obs_file_list)
                     )
                 else:
                     output_file_data.setncattr(
@@ -203,21 +182,21 @@ while valid_hr <= int(valid_hr_end):
                     if data_name+'_'+var_level in input_var:
                         input_var_level = input_var
                 write_data_name_var = output_file_data.createVariable(
-                    data_name+'_'+var_level+'_WEEKLYAVG',
+                    data_name+'_'+var_level+'_WEEKS3_4AVG',
                     input_file_data.variables[input_var_level]\
                     .datatype,
                     input_file_data.variables[input_var_level]\
                     .dimensions
                 )
-                k_valid_time = weekly_avg_valid_end.strftime('%Y%m%d_%H%M%S')
+                k_valid_time = weeks_avg_valid_end.strftime('%Y%m%d_%H%M%S')
                 k_valid_time_ut = int(
-                    (weekly_avg_valid_end
+                    (weeks_avg_valid_end
                      -datetime.datetime.strptime('19700101','%Y%m%d'))\
                     .total_seconds()
                 )
-                k_init_time = weekly_avg_day_init.strftime('%Y%m%d_%H%M%S')
+                k_init_time = weeks_avg_day_init.strftime('%Y%m%d_%H%M%S')
                 k_init_time_ut = int(
-                    (weekly_avg_day_init
+                    (weeks_avg_day_init
                      -datetime.datetime.strptime('19700101','%Y%m%d'))\
                     .total_seconds()
                 )
@@ -256,9 +235,9 @@ while valid_hr <= int(valid_hr_end):
                              ].getncattr(k)}
                         )
                 if data_name == 'FCST':
-                    write_data_name_var[:] = weekly_avg_fcst
+                    write_data_name_var[:] = weeks_avg_fcst
                 elif data_name == 'OBS':
-                    write_data_name_var[:] = weekly_avg_obs
+                    write_data_name_var[:] = weeks_avg_obs
             if len(list(output_file_data.variables.keys())) == 0:
                 print("No variables in "+output_file+", removing")
                 output_file_data.close()
@@ -267,13 +246,10 @@ while valid_hr <= int(valid_hr_end):
                 output_file_data.close()
             input_file_data.close()
         else:
-            print("WARNING: Cannot create weekly average file "+output_file+" "
+            print("WARNING: Cannot create Weeks 3-4 average file "
+                  +output_file+" "
                   +"; need "+str(expected_nfiles)+" input files")
-        if job_name == 'DailyAvg_GeoHeightAnom':
-            weekly_avg_day+=1
-        else:
-            weekly_avg_day+=7
-            #weekly_avg_day+=int(fhr_inc)/24.
+        weeks_avg_day+=1
         print("")
     valid_hr+=int(valid_hr_inc)
     

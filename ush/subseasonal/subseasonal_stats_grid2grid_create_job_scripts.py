@@ -157,7 +157,113 @@ assemble_data_obs_jobs_dict = {
     'sst': {},
 }
 assemble_data_model_jobs_dict = {
-    'anom': {},
+    'anom': {
+        'WeeklyAvg_TempAnom2m': {'env': {'var1_name': 'TMP',
+                                         'var1_levels': 'Z2'},
+                                 'commands': [sub_util.python_command(
+                                                  'subseasonal_'
+                                                  +'stats_grid2grid'
+                                                  +'_create_weekly_avg.py',
+                                                  ['TMP_ANOM_Z2',
+                                                   os.path.join(
+                                                       '$DATA',
+                                                       '${VERIF_CASE}_'
+                                                       +'${STEP}',
+                                                       'METplus_output',
+                                                       '${RUN}.'
+                                                       +'{valid?fmt=%Y%m%d}',
+                                                       '$MODEL',
+                                                       '$VERIF_CASE',
+                                                       'anomaly_'
+                                                       +'${VERIF_TYPE}_'
+                                                       +'TempAnom2m_init'
+                                                       +'{init?fmt=%Y%m%d%H}_'
+                                                       +'fhr{lead?fmt=%3H}.nc'
+                                                   ),
+                                                   os.path.join(
+                                                       '$COMOUT',
+                                                       '${RUN}.'
+                                                       +'{valid?fmt=%Y%m%d}',
+                                                       '$MODEL',
+                                                       '$VERIF_CASE',
+                                                       'anomaly_'
+                                                       +'${VERIF_TYPE}_'
+                                                       +'TempAnom2m_init'
+                                                       +'{init?fmt=%Y%m%d%H}_'
+                                                       +'fhr{lead?fmt=%3H}.nc'
+                                                   )]
+                                              )]},
+        'Days6_10Avg_TempAnom2m': {'env': {'var1_name': 'TMP',
+                                           'var1_levels': 'Z2'},
+                                   'commands': [sub_util.python_command(
+                                                    'subseasonal_'
+                                                    +'stats_grid2grid'
+                                                    +'_create_days6_10_avg.py',
+                                                    ['TMP_ANOM_Z2',
+                                                     os.path.join(
+                                                         '$DATA',
+                                                         '${VERIF_CASE}_'
+                                                         +'${STEP}',
+                                                         'METplus_output',
+                                                         '${RUN}.'
+                                                         +'{valid?fmt=%Y%m%d}',
+                                                         '$MODEL',
+                                                         '$VERIF_CASE',
+                                                         'anomaly_'
+                                                         +'${VERIF_TYPE}_'
+                                                         +'TempAnom2m_init'
+                                                         +'{init?fmt=%Y%m%d%H}_'
+                                                         +'fhr{lead?fmt=%3H}.nc'
+                                                     ),
+                                                     os.path.join(
+                                                         '$COMOUT',
+                                                         '${RUN}.'
+                                                         +'{valid?fmt=%Y%m%d}',
+                                                         '$MODEL',
+                                                         '$VERIF_CASE',
+                                                         'anomaly_'
+                                                         +'${VERIF_TYPE}_'
+                                                         +'TempAnom2m_init'
+                                                         +'{init?fmt=%Y%m%d%H}_'
+                                                         +'fhr{lead?fmt=%3H}.nc'
+                                                     )]
+                                                )]},
+        'Weeks3_4Avg_TempAnom2m': {'env': {'var1_name': 'TMP',
+                                           'var1_levels': 'Z2'},
+                                   'commands': [sub_util.python_command(
+                                                    'subseasonal_'
+                                                    +'stats_grid2grid'
+                                                    +'_create_weeks3_4_avg.py',
+                                                    ['TMP_ANOM_Z2',
+                                                     os.path.join(
+                                                         '$DATA',
+                                                         '${VERIF_CASE}_'
+                                                         +'${STEP}',
+                                                         'METplus_output',
+                                                         '${RUN}.'
+                                                         +'{valid?fmt=%Y%m%d}',
+                                                         '$MODEL',
+                                                         '$VERIF_CASE',
+                                                         'anomaly_'
+                                                         +'${VERIF_TYPE}_'
+                                                         +'TempAnom2m_init'
+                                                         +'{init?fmt=%Y%m%d%H}_'
+                                                         +'fhr{lead?fmt=%3H}.nc'
+                                                     ),
+                                                     os.path.join(
+                                                         '$COMOUT',
+                                                         '${RUN}.'
+                                                         +'{valid?fmt=%Y%m%d}',
+                                                         '$MODEL',
+                                                         '$VERIF_CASE',
+                                                         'anomaly_'
+                                                         +'${VERIF_TYPE}_'
+                                                         +'TempAnom2m_init'
+                                                         +'{init?fmt=%Y%m%d%H}_'
+                                                         +'fhr{lead?fmt=%3H}.nc'
+                                                     )]
+                                                )]},
+    },
     'ENSO': {},
     'OLR': {},
     'precip': {

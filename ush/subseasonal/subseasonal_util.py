@@ -2157,13 +2157,36 @@ def check_truth_files(job_dict):
     truth_file_list = []
     if job_dict['JOB_GROUP'] == 'reformat_data':
         if job_dict['VERIF_CASE'] == 'grid2grid':
-            if job_dict['VERIF_TYPE'] == 'pres_levs':
-                model_truth_file = os.path.join(
-                    verif_case_dir, 'data', job_dict['MODEL'],
-                    job_dict['MODEL']+'.'+valid_date_dt.strftime('%Y%m%d%H')
-                    +'.truth'
+            if job_dict['VERIF_TYPE'] == 'anom':
+                truth_file_format = os.path.join(
+                    verif_case_dir, 'data', 'ecmwf',
+                    'ecmwf.{valid?fmt=%Y%m%d%H}.anl'
                 )
-                truth_file_list.append(model_truth_file)
+                nf = 0
+                while nf <= 28:
+                    truth_file = format_filler(
+                        truth_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    truth_file_list.append(truth_file)
+                    nf+=1
+            elif job_dict['VERIF_TYPE'] == 'pres':
+                truth_file_format = os.path.join(
+                    verif_case_dir, 'data', 'gfs',
+                    'gfs.{valid?fmt=%Y%m%d%H}.anl'
+                )
+                nf = 0
+                while nf <= 28:
+                    truth_file = format_filler(
+                        truth_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    truth_file_list.append(truth_file)
+                    nf+=1
         elif job_dict['VERIF_CASE'] == 'grid2obs':
             if job_dict['VERIF_TYPE'] == 'PrepBufr' \
                     and 'Prepbufr' in job_dict['job_name']:
