@@ -96,7 +96,7 @@ for model in gfs gefs naefs ; do
     export MODEL=`echo $model | tr '[a-z]' '[A-Z]'`
     >${MODEL}_500HGT_NH_PAC_${yyyy}.txt
 
-    export beg_day=${last_year}0102
+    export beg_day=${last_year}0101
     if [ $run_entire_year = yes] ; then
       export end_day=${this_year}0116
     else
