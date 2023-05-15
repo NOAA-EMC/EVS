@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=0:45:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
+#PBS -l walltime=00:35:00
+#PBS -l place=vscatter:exclhost,select=1:ncpus=40:ompthreads=1:mem=20GB
 #PBS -l debug=true
 #PBS -V
 
@@ -63,7 +63,7 @@ export machine=WCOSS2
 
 # Set job information
 export USE_CFP=YES
-export nproc=128
+export nproc=40
 
 # Set cycle
 export cyc=00
