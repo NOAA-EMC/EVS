@@ -492,13 +492,36 @@ generate_stats_jobs_dict = {
     'ENSO': {},
     'OLR': {},
     'anom': {
-        #'Temp2m': {'env': {'var1_name': 'TMP',
-                           #'var1_level': 'Z2',
-                           #'var1_options': ''},
-                   #'commands': [sub_util.metplus_command(
-                                    #'GridStat_fcstSUBSEASONAL_'
-                                    #+'obsECMWF_climoERA5.conf'
-                                #)]},
+        'WeeklyAvg_TempAnom2m': {'env': {'var1_name': 'TMP',
+                                         'var1_levels': 'Z2',
+                                         'met_config_overrides': (
+                                             "'climo_mean = fcst;'"
+                                         )},
+                                 'commands': [sub_util.metplus_command(
+                                                  'GridStat_fcstSUBSEASONAL_'
+                                                  +'obsECMWF_WeeklyAvgAnom'
+                                                  +'.conf'
+                                              )]},
+        'Days6_10Avg_TempAnom2m': {'env': {'var1_name': 'TMP',
+                                           'var1_levels': 'Z2',
+                                           'met_config_overrides': (
+                                               "'climo_mean = fcst;'"
+                                           )},
+                                   'commands': [sub_util.metplus_command(
+                                                    'GridStat_fcstSUBSEASONAL_'
+                                                    +'obsECMWF_Days6_10AvgAnom'
+                                                    +'.conf'
+                                                )]},
+        'Weeks3_4Avg_TempAnom2m': {'env': {'var1_name': 'TMP',
+                                           'var1_levels': 'Z2',
+                                           'met_config_overrides': (
+                                               "'climo_mean = fcst;'"
+                                           )},
+                                   'commands': [sub_util.metplus_command(
+                                                    'GridStat_fcstSUBSEASONAL_'
+                                                    +'obsECMWF_Weeks3_4AvgAnom'
+                                                    +'.conf'
+                                                )]},
     },
     'precip': {
         #'24hrCCPA': {'env': {'met_config_overrides': ''},
@@ -721,6 +744,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                 job_env_dict['WEEKLYSTART'] = wdate_dt.strftime('%Y%m%d')
                 mdate_dt = date_dt - datetime.timedelta(days=30)
                 job_env_dict['MONTHLYSTART'] = mdate_dt.strftime('%Y%m%d')
+                dys6_10date_dt = date_dt - datetime.timedelta(days=5)
+                job_env_dict['D6_10START'] = dys6_10date_dt.strftime('%Y%m%d')
+                w3_4date_dt = date_dt - datetime.timedelta(days=14)
+                job_env_dict['W3_4START'] = w3_4date_dt.strftime('%Y%m%d')
                 job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
                 job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
                 job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
@@ -791,9 +818,14 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     elif JOB_GROUP == 'assemble_data':
                         check_truth_files = False
                     elif JOB_GROUP == 'generate_stats':
-                        if verif_type == 'pres' \
+                        if verif_type in ['pres', 'anom'] \
                                 and verif_type_job in [
-                                    'DailyAvg_GeoHeightAnom']:
+                                    'WeeklyAvg_GeoHeightAnom',
+                                    'Days6_10Avg_GeoHeightAnom',
+                                    'Weeks3_4Avg_GeoHeightAnom',
+                                    'WeeklyAvg_TempAnom2m',
+                                    'Days6_10Avg_TempAnom2m',
+                                    'Weeks3_4Avg_TempAnom2m']:
                             check_truth_files = False
                         else:
                             check_truth_files = True
