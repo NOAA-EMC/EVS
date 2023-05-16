@@ -34,7 +34,7 @@ set -x
   export model0=`echo $MODELNAME | tr A-Z a-z`
   echo $model1
   
-  for WVAR in $VAR_NAME_LIST; do
+  for WVAR in $VAR_NAME_LISTJ; do
 	  if [ $WVAR = SBCAPE ] || [ $WVAR = MLCAPE ] || [ $WVAR = HPBL ] || \
 	       [ $WVAR = TMP2m ] || [ $WVAR = DPT2m ] || [ $WVAR = RH2m ] || \
 	       [ $WVAR = PRESsl ] || [ $WVAR = UGRD_VGRD10m ] || \
