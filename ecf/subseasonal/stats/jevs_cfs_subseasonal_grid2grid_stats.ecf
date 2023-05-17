@@ -83,13 +83,13 @@ export cfs_ver=${cfs_ver}
 #export obsproc_ver=${obsproc_ver}
 export VERIF_CASE=grid2grid
 
-export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_subseasonal_test/dev/com
+export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 #export COMIN=$COMROOT/$NET/$evs_ver
-export COMIN=/lfs/h2/emc/vpppg/noscrub/shannon.shields/EVS_Data/$NET/$evs_ver/prep/$COMPONENT/$RUN
-export COMINobs=/lfs/h2/emc/vpppg/noscrub/shannon.shields/EVS_Data/$NET/$evs_ver/prep/$COMPONENT/$RUN
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/prep/$COMPONENT/$RUN
+export COMINobs=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/prep/$COMPONENT/$RUN
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export COMINclimo=$FIXevs/climos/atmos
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_subseasonal_test/dev/com/$NET/$evs_ver/$STEP/$COMPONENT
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT
 #export VDATE=$(date -d "today -26 day" +"%Y%m%d")
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.subseasonal.cfs.grid2grid.stats
