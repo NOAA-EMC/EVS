@@ -69,10 +69,7 @@ reformat_data_obs_jobs_dict = {
 reformat_data_model_jobs_dict = {
     'anom': {
         'TempAnom2m': {'env': {'var1_name': 'TMP',
-                               'var1_levels': 'Z2',
-                               'met_config_overrides': (
-                                   "'climo_mean = obs;'"
-                               )},
+                               'var1_levels': 'Z2'},
                        'commands': [sub_util.metplus_command(
                                         'GenEnsProd_fcstSUBSEASONAL_'
                                         +'WeeklyNetCDF.conf'
@@ -134,7 +131,7 @@ reformat_data_model_jobs_dict = {
     },
     'seaice': {
         'Concentration': {'env': {'var1_name': 'ICEC',
-                                  'var1_levels': 'Z0',},
+                                  'var1_levels': 'Z0'},
                           'commands': [sub_util.metplus_command(
                                            'GenEnsProd_fcstSUBSEASONAL_'
                                            +'WeeklyNetCDF.conf'
