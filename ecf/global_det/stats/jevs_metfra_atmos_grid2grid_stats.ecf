@@ -63,7 +63,7 @@ export machine=WCOSS2
 
 # Set job information
 export USE_CFP=YES
-export nproc=128
+export nproc=11
 
 # Set cycle
 export cyc=00

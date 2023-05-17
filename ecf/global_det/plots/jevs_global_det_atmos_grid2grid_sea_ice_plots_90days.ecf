@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:10:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=22:ompthreads=1:mem=15GB
+#PBS -l place=vscatter:exclhost,select=1:ncpus=22:ompthreads=1:mem=20GB
 #PBS -l debug=true
 #PBS -V
 
@@ -46,6 +46,8 @@ module load netcdf/${netcdf_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
 module load cray-pals/${craypals_ver}
+module load prod_envir/${prod_envir_ver}
+module load prod_util/${prod_util_ver}
 module load cfp/${cfp_ver}
 module load libjpeg/${libjpeg_ver}
 module load libpng/${libpng_ver}
@@ -62,7 +64,7 @@ export machine=WCOSS2
 
 # Set job information
 export USE_CFP=YES
-export nproc=128
+export nproc=22
 
 # Set cycle
 export cyc=00
