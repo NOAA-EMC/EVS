@@ -93,8 +93,6 @@ while valid_hr <= int(valid_hr_end):
                                    .strftime('%Y%m%d%H')+'to'
                                    +daily_avg_valid_end\
                                    .strftime('%Y%m%d%H')+'.nc')
-        if os.path.exists(output_file):
-            os.remove(output_file)
         daily_avg_fcst_sum = 0
         daily_avg_fcst_file_list = []
         daily_avg_obs_sum = 0
@@ -174,6 +172,16 @@ while valid_hr <= int(valid_hr_end):
                 expected_nfiles = 3
         if len(daily_avg_fcst_file_list) == expected_nfiles \
                 and len(daily_avg_obs_file_list) == expected_nfiles:
+            if not os.path.exists(output_file):
+                make_daily_avg_output_file = True
+            else:
+                make_daily_avg_output_file = False
+                print(f"Output File exists: {output_file}")
+        else:
+            print("WARNING: Cannot create daily average file "+output_file+" "
+                  +"; need "+str(expected_nfiles)+" input files")
+            make_daily_avg_output_file = False
+        if make_daily_avg_output_file:
             print("Output File: "+output_file)
             output_file_data = netcdf.Dataset(output_file, 'w',
                                               format='NETCDF3_CLASSIC')
@@ -262,9 +270,6 @@ while valid_hr <= int(valid_hr_end):
             else:
                 output_file_data.close()
             input_file_data.close()
-        else:
-            print("WARNING: Cannot create daily average file "+output_file+" "
-                  +"; need "+str(expected_nfiles)+" input files")
         if job_name == 'DailyAvg_GeoHeightAnom':
             daily_avg_day+=1
         else:
