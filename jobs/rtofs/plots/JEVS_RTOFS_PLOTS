@@ -20,6 +20,7 @@ export COMOUTplots=${COMOUTplots:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
 export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
 
 mkdir -p $COMOUTplots
+mkdir -p $DATA/$STEP/$COMPONENT.$VDATE
 
 # make plots; run scripts for each RUN;
 # RUN is the validation source: ghrsst, smos, smap etc.

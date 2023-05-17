@@ -20,6 +20,9 @@ export COMOUTfinal=${COMOUTfinal:-$COMOUT/stats/$COMPONENT/$COMPONENT.$VDATE}
 export COMOUTplots=${COMOUTplots:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
 export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
 
+mkdir -p $COMOUTplots
+mkdir -p $DATA/$STEP/$COMPONENT.$VDATE
+
 # make headline score plots
 $EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_headline_${STEP}.sh
 
