@@ -31,7 +31,7 @@ else
     export HOURLY_ASCII2NC_FORMAT=airnowhourly
 fi
 #
-export PREP_SAVE_DIR=${COMOUT}.${VDATE}/${MODELNAME}
+export PREP_SAVE_DIR=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}
 export dirname=aqm
 export gridspec=793
 

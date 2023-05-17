@@ -41,6 +41,7 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
+export envir=${envir:-prod}
 export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXvevs=${FIXevs:-$HOMEevs/fix}
@@ -50,6 +51,17 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 # Define COMIN/COMOUT variables:
 
 echo $COMPATH
+
+export NET=${NET:-evs}
+export STEP=${STEP:-stats}
+export COMPONENT=${COMPONENT:-aqm}
+export RUN=${RUN:-atmos}
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+export MODELNAME=${MODELNAME:-aqm}
+export modsys=${modsys:-aqm}
+export mod_ver=${mod_ver:-${aqm_ver}}
+
+export MET_bin_exec=${MET_bin_exec:-bin}
 
 export VDATE=${VDATE:-${PDYm3}}
 

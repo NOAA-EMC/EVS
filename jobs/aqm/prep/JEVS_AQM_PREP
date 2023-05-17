@@ -39,6 +39,7 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
+export envir=${envir:-prod}
 export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXvevs=${FIXevs:-$HOMEevs/fix}
@@ -49,11 +50,23 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 
 echo $COMPATH
 
+export NET=${NET:-evs}
+export STEP=${STEP:-prep}
+export COMPONENT=${COMPONENT:-aqm}
+export RUN=${RUN:-atmos}
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+export MODELNAME=${MODELNAME:-aqm}
+export modsys=${modsys:-aqm}
+export mod_ver=${mod_ver:-${aqm_ver}}
+
+export MET_bin_exec=${MET_bin_exec:-bin}
+
+
 export VDATE=${VDATE:-${PDYm3}}
 
-export COMIN=${COMIN:-$(compath.py evs/${evs_ver}/)}
+export COMIN=${COMIN:-$(compath.py ${envir}/com/evs/${evs_ver}/)}
 export COMINobs=${COMINobs:-${DCOMROOT}}
-export COMINaqm=${COMINaqm:-$(compath.py ${modsys}/${mod_ver})}
+export COMINaqm=${COMINaqm:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
 export COMOUT=${COMOUT:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
 
 vfcst_ver=$(echo ${mod_ver} | cut -c1-2 )

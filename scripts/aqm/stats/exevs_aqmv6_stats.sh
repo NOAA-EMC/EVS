@@ -18,7 +18,7 @@ fi
 ## Check for correct scripts called
 ##
 if [ "${fcst_input_ver}" == "v6" ]; then
-    export dirnam=cs
+    export dirname=cs
     export gridspec=148
 elif [ "${fcst_input_ver}" == "v7" ]; then
     echo "EVS_CHECK :: This script exevs_aqmv6_stats.sh is not for ${fcst_input_ver}"
@@ -51,12 +51,16 @@ VDAYm3=$(${NDATE} -24 ${cdate} | cut -c1-8)
 
 check_file=${COMINaqmproc}/${RUN}.${vld_date}/${MODELNAME}/airnow_${HOURLY_INPUT_TYPE}_${vld_time}.nc
 obs_hourly_found=0
-if [ -s ${check_file} }; then
+if [ -s ${check_file} ]; then
     obs_hourly_found=1
+else
     echo "Can not find pre-processed obs hourly input ${check_file}"
     ## add email function here
 fi
 echo "obs_hourly_found = ${obs_hourly_found}"
+
+for outtyp in awpozcon pm25
+do
 
 # Verification to be done both on raw output files and bias-corrected files
 
@@ -162,14 +166,14 @@ echo "obs_hourly_found = ${obs_hourly_found}"
   done
 
 done
-
 # Daily verification of the daily maximum of 8-hr ozone
 # Verification being done on both raw and bias-corrected output data
 
 check_file=${COMINaqmproc}/${RUN}.${VDATE}/${MODELNAME}/airnow_daily_${VDATE}.nc
 obs_daily_found=0
-if [ -s ${check_file} }; then
+if [ -s ${check_file} ]; then
     obs_daily_found=1
+else
     echo "Can not find pre-processed obs daily input ${check_file}"
     ## add email function here
 fi

@@ -63,17 +63,27 @@ rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
 
-
-export COMINaqm=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
-export fcst_input_ver=v6
-
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
-export COMOUT=$COMIN/${STEP}/${COMPONENT}
-export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
+export COMIN=/lfs/h2/emc/physics/noscrub/$USER/${NET}/${evs_ver}
+
+## export COMINaqm=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
+
+export enivr=v70c55
+export fcst_input_ver=v7
+export COMINaqm=/lfs/h2/emc/vpppg/noscrub/$USER/verification/${MODELNAME}/${envir}
+
+export enivr=prod
+export fcst_input_ver=v6
+export COMINaqm=/lfs/h2/emc/physics/noscrub/$USER/verification/${MODELNAME}/${envir}
+
 ## Need VDATE setting
+export cycle=t${cyc}z
 setpdy.sh
 . ./PDY
-export VDATE=PDYm3
+export VDATE=${PDYm3}
+
+export COMOUT=$COMIN/${STEP}/${COMPONENT}
+export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
 ########################################################################
 
