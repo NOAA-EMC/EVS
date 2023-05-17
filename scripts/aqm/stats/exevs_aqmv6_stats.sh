@@ -46,8 +46,8 @@ vld_date=$(${NDATE} -1 ${cdate} | cut -c1-8)
 vld_time=$(${NDATE} -1 ${cdate} | cut -c1-10)
 
 VDAYm1=$(${NDATE} -24 ${cdate} | cut -c1-8)
-VDAYm2=$(${NDATE} -24 ${cdate} | cut -c1-8)
-VDAYm3=$(${NDATE} -24 ${cdate} | cut -c1-8)
+VDAYm2=$(${NDATE} -48 ${cdate} | cut -c1-8)
+VDAYm3=$(${NDATE} -72 ${cdate} | cut -c1-8)
 
 check_file=${COMINaqmproc}/${RUN}.${vld_date}/${MODELNAME}/airnow_${HOURLY_INPUT_TYPE}_${vld_time}.nc
 obs_hourly_found=0
@@ -211,14 +211,17 @@ then
       ozmax8=0
       if [ -s $COMINaqmproc/atmos.${VDAYm1}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 ]
       then
+	      echo "find $COMINaqmproc/atmos.${VDAYm1}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2"
         ozmax8=1
       fi
       if [ -s $COMINaqmproc/atmos.${VDAYm2}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 ]
       then
+	      echo "find $COMINaqmproc/atmos.${VDAYm2}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2"
        let "ozmax8=ozmax8+1"
       fi
       if [ -s $COMINaqmproc/atmos.${VDAYm3}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 ]
       then
+	      echo "find $COMINaqmproc/atmos.${VDAYm3}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2"
         let "ozmax8=ozmax8+1"
       fi
       echo "ozmax8, obs_daily_found=",$ozmax8,$obs_daily_found
@@ -274,14 +277,17 @@ then
       pmave1=0
       if [ -s $COMINaqm/${dirname}.${VDAYm1}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2 ]
       then
+	      echo "find $COMINaqm/${dirname}.${VDAYm1}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2"
         pmave1=1
       fi
       if [ -s $COMINaqm/${dirname}.${VDAYm2}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2 ]
       then
+	      echo "find $COMINaqm/${dirname}.${VDAYm2}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2"
        let "pmave1=pmave1+1" 
       fi
       if [ -s $COMINaqm/${dirname}.${VDAYm3}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2 ]
       then
+	      echo "find $COMINaqm/${dirname}.${VDAYm3}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2"
         let "pmave1=pmave1+1"
       fi
       echo "pmave1, obs_daily_found=",$pmave1,$obs_daily_found

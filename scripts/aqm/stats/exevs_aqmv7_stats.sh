@@ -42,8 +42,8 @@ vld_date=$(${NDATE} -1 ${cdate} | cut -c1-8)
 vld_time=$(${NDATE} -1 ${cdate} | cut -c1-10)
 
 VDAYm1=$(${NDATE} -24 ${cdate} | cut -c1-8)
-VDAYm2=$(${NDATE} -24 ${cdate} | cut -c1-8)
-VDAYm3=$(${NDATE} -24 ${cdate} | cut -c1-8)
+VDAYm2=$(${NDATE} -48 ${cdate} | cut -c1-8)
+VDAYm3=$(${NDATE} -72 ${cdate} | cut -c1-8)
 
 check_file=${COMINaqmproc}/${RUN}.${vld_date}/${MODELNAME}/airnow_${HOURLY_INPUT_TYPE}_${vld_time}.nc
 obs_hourly_found=0

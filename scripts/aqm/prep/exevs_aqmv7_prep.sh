@@ -106,20 +106,31 @@ fi
 
 if [ $hour -eq 06 ]
 then
-wgrib2 -d 1 $COMINaqm/${dirname}.${VDATE}/${hour}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 -set_ftime "6-29 hour ave fcst"  -grib out1.grb2
-wgrib2 -d 2 $COMINaqm/${dirname}.${VDATE}/${hour}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 -set_ftime "30-53 hour ave fcst" -grib out2.grb2
-wgrib2 -d 3 $COMINaqm/${dirname}.${VDATE}/${hour}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 -set_ftime "54-77 hour ave fcst" -grib out3.grb2
-cat out1.grb2 out2.grb2 out3.grb2 > ${PREP_SAVE_DIR}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+    ozmax8_file=$COMINaqm/${dirname}.${VDATE}/${hour}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+    if [ -s ${ozmax8_file} ]; then
+        wgrib2 -d 1 ${ozmax8_file} -set_ftime "6-29 hour ave fcst"  -grib out1.grb2
+        wgrib2 -d 2 ${ozmax8_file} -set_ftime "30-53 hour ave fcst" -grib out2.grb2
+        wgrib2 -d 3 ${ozmax8_file} -set_ftime "54-77 hour ave fcst" -grib out3.grb2
+        cat out1.grb2 out2.grb2 out3.grb2 > ${PREP_SAVE_DIR}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+    else
+        echo "ADD EMAIL FUNCTION; Can not find ${ozmax8_file}"
+    fi
 fi
 
 
 if [ $hour -eq 12 ]
 then
-wgrib2 -d 1 $COMINaqm/${dirname}.${VDATE}/${hour}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 -set_ftime "0-23 hour ave fcst" -grib out1.grb2
-wgrib2 -d 2 $COMINaqm/${dirname}.${VDATE}/${hour}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 -set_ftime "24-47 hour ave fcst" -grib out2.grb2
-wgrib2 -d 3 $COMINaqm/${dirname}.${VDATE}/${hour}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 -set_ftime "48-71 hour ave fcst" -grib out3.grb2
-cat out1.grb2 out2.grb2 out3.grb2 > ${PREP_SAVE_DIR}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+    ozmax8_file=$COMINaqm/${dirname}.${VDATE}/${hour}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+    if [ -s ${ozmax8_file} ]; then
+        wgrib2 -d 1 ${ozmax8_file} -set_ftime "0-23 hour ave fcst" -grib out1.grb2
+        wgrib2 -d 2 ${ozmax8_file} -set_ftime "24-47 hour ave fcst" -grib out2.grb2
+        wgrib2 -d 3 ${ozmax8_file} -set_ftime "48-71 hour ave fcst" -grib out3.grb2
+        cat out1.grb2 out2.grb2 out3.grb2 > ${PREP_SAVE_DIR}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+    else
+        echo "ADD EMAIL FUNCTION; Can not find ${ozmax8_file}"
+    fi
 fi
+
 
 done
 done
