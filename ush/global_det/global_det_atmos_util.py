@@ -736,101 +736,33 @@ def prep_prod_metfra_file(source_file, dest_file, forecast_hour, prep_method,
         #    log_missing_file(log_missing_files, source_file)
     copy_file(prepped_file, dest_file)
 
-def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
+def prep_prod_osi_saf_file(daily_source_file, daily_dest_file,
                            date_dt, log_missing_files):
     """! Do prep work for OSI-SAF production files
 
          Args:
-             daily_source_file_format - daily source file format (string)
-             daily_dest_file          - daily destination file (string)
-             date_dt                  - date (datetime object)
-             log_missing_files        - text file path to write that
+             daily_source_file - daily source file (string)
+             daily_dest_file   - daily destination file (string)
+             date_dt           - date (datetime object)
+             log_missing_files - text file path to write that
                                         production file is missing (string)
          Returns:
     """
     # Environment variables and executables
-    FIXevs = os.environ['FIXevs']
-    CDO_ROOT = os.environ['CDO_ROOT']
     # Temporary file names
-    daily_prepped_file = os.path.join(os.getcwd(), 'atmos.'
-                                      +daily_dest_file.rpartition('/')[2])
-    # Prep daily file
-    for hem in ['nh', 'sh']:
-        hem_source_file = daily_source_file_format.replace('{hem?fmt=str}',
-                                                           hem)
-        hem_dest_file = daily_dest_file.replace('multi.', 'multi.'+hem+'.')
-        hem_prepped_file = os.path.join(os.getcwd(), 'atmos.'
-                                        +hem_dest_file.rpartition('/')[2])
-        if check_file_exists_size(hem_source_file):
-            run_shell_command(
-                [os.path.join(CDO_ROOT, 'bin', 'cdo'),
-                'remapbil,'
-                +os.path.join(FIXevs, 'cdo_grids', 'G004.grid'),
-                hem_source_file, hem_prepped_file]
+    prepped_file = os.path.join(os.getcwd(), 'atmos.'
+                                +daily_dest_file.rpartition('/')[2])
+    if check_file_exists_size(daily_source_file):
+        copy_file(daily_source_file, prepped_file)
+        if check_file_exists_size(prepped_file):
+            prepped_data = netcdf.Dataset(prepped_file, 'a')
+            prepped_data.variables['time'][:] = (
+               prepped_data.variables['time'][:] + 43200
             )
-        else:
-           log_missing_file(log_missing_files, hem_source_file)
-        if hem == 'nh':
-            nh_prepped_file = hem_prepped_file
-        elif hem == 'sh':
-            sh_prepped_file = hem_prepped_file
-    if check_file_exists_size(nh_prepped_file) \
-            and check_file_exists_size(sh_prepped_file):
-        nh_data = netcdf.Dataset(nh_prepped_file)
-        sh_data = netcdf.Dataset(sh_prepped_file)
-        merged_data = netcdf.Dataset(daily_prepped_file, 'w',
-                                     format='NETCDF3_CLASSIC')
-        for attr in nh_data.ncattrs():
-            if attr == 'history':
-                merged_data.setncattr(
-                    attr, nh_data.getncattr(attr)+' '
-                    +sh_data.getncattr(attr)
-                )
-            elif attr == 'southernmost_latitude':
-                merged_data.setncattr(attr, '-90')
-            elif attr == 'area':
-                merged_data.setncattr(attr, 'Global')
-            else:
-                merged_data.setncattr(attr, nh_data.getncattr(attr))
-        for dim in list(nh_data.dimensions.keys()):
-            merged_data.createDimension(dim, len(nh_data.dimensions[dim]))
-        for var in ['time', 'time_bnds', 'lat', 'lon']:
-            merged_var = merged_data.createVariable(
-                var, nh_data.variables[var].datatype,
-                nh_data.variables[var].dimensions
-            )
-            for k in nh_data.variables[var].ncattrs():
-                merged_var.setncatts(
-                    {k: nh_data.variables[var].getncattr(k)}
-                )
-            if var == 'time':
-                merged_var[:] = nh_data.variables[var][:] + 43200
-            else:
-                merged_var[:] = nh_data.variables[var][:]
-        for var in ['ice_conc', 'raw_ice_conc_values',
-                    'status_flag', 'total_uncertainty',
-                    'smearing_uncertainty', 'algorithm_uncertainty']:
-            merged_var = merged_data.createVariable(
-                var, nh_data.variables[var].datatype,
-                ('lat', 'lon')
-            )
-            for k in nh_data.variables[var].ncattrs():
-                if k == 'long_name':
-                    merged_var.setncatts(
-                        {k: nh_data.variables[var].getncattr(k)\
-                        .replace('northern hemisphere', 'globe')}
-                    )
-                else:
-                    merged_var.setncatts(
-                        {k: nh_data.variables[var].getncattr(k)}
-                    )
-            merged_var_vals = np.ma.masked_equal(
-                np.vstack((sh_data.variables[var][0,:180,:],
-                           nh_data.variables[var][0,180:,:]))
-               ,nh_data.variables[var]._FillValue)
-            merged_var[:] = merged_var_vals
-        merged_data.close()
-    copy_file(daily_prepped_file, daily_dest_file)
+            prepped_data.close()
+            copy_file(prepped_file, daily_dest_file)
+    else:
+        log_missing_file(log_missing_files, daily_source_file)
 
 def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt,
                                log_missing_files):
