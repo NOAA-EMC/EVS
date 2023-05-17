@@ -63,6 +63,10 @@ rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
 
+
+export COMINaqm=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
+export fcst_input_ver=v6
+
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMOUT=$COMIN/${STEP}/${COMPONENT}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
