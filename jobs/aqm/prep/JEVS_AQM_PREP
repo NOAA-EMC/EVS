@@ -62,6 +62,10 @@ export mod_ver=${mod_ver:-${aqm_ver}}
 export MET_bin_exec=${MET_bin_exec:-bin}
 
 
+#
+#  The AirNOW obs in DCOM will continue to be updated upto 48 hours.
+#  Process the observation input only when it stop updating.
+#
 export VDATE=${VDATE:-${PDYm3}}
 
 export COMIN=${COMIN:-$(compath.py ${envir}/com/evs/${evs_ver}/)}
