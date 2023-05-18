@@ -5,6 +5,11 @@ set -xa
 export PS4='$SECONDS + '
 date
 
+# Version of MET listed in the metplus .stat files used to create graphics
+# Because Python code will convert it to a float variable,
+# keep at most one dot(.) and remove extra from MET_VERSION.
+export MET_VERSION=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
+
 ############################################
 # Working Directory                                                                                                                                      
 ############################################

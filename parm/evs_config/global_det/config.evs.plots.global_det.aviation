@@ -103,8 +103,6 @@ export OUTPUT_BASE_DIR=$OUTPUT_BASE_DIR
 # Logfile settings. Log level options are "DEBUG", "INFO", "WARNING", "ERROR", and "CRITICAL"
 export LOG_METPLUS="${DATA}/logs/${OBSERVATION}_${NDAYS}_${RESOLUTION}_${PLOT_TYPE}_plotting_${VDATE}.out"
 export LOG_LEVEL="DEBUG"
-# Version of MET listed in the metplus .stat files used to create graphics
-export MET_VERSION="10.1"
 
 # Will use statistics for all comma-separated models.  Names must match the model naming convention
 # in ${OUTPUT_BASE_DIR}
