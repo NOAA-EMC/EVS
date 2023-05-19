@@ -171,7 +171,7 @@ assemble_data_model_jobs_dict = {
                                                        +'${STEP}',
                                                        'METplus_output',
                                                        '${RUN}.'
-                                                       +'{valid?fmt=%Y%m%d}',
+                                                       +'$DATE',
                                                        '$MODEL',
                                                        '$VERIF_CASE',
                                                        'anomaly_'
@@ -183,7 +183,7 @@ assemble_data_model_jobs_dict = {
                                                    os.path.join(
                                                        '$COMOUT',
                                                        '${RUN}.'
-                                                       +'{valid?fmt=%Y%m%d}',
+                                                       +'$DATE',
                                                        '$MODEL',
                                                        '$VERIF_CASE',
                                                        'anomaly_'
@@ -206,7 +206,7 @@ assemble_data_model_jobs_dict = {
                                                          +'${STEP}',
                                                          'METplus_output',
                                                          '${RUN}.'
-                                                         +'{valid?fmt=%Y%m%d}',
+                                                         +'$DATE',
                                                          '$MODEL',
                                                          '$VERIF_CASE',
                                                          'anomaly_'
@@ -218,7 +218,7 @@ assemble_data_model_jobs_dict = {
                                                      os.path.join(
                                                          '$COMOUT',
                                                          '${RUN}.'
-                                                         +'{valid?fmt=%Y%m%d}',
+                                                         +'$DATE',
                                                          '$MODEL',
                                                          '$VERIF_CASE',
                                                          'anomaly_'
@@ -241,7 +241,7 @@ assemble_data_model_jobs_dict = {
                                                          +'${STEP}',
                                                          'METplus_output',
                                                          '${RUN}.'
-                                                         +'{valid?fmt=%Y%m%d}',
+                                                         +'$DATE',
                                                          '$MODEL',
                                                          '$VERIF_CASE',
                                                          'anomaly_'
@@ -253,7 +253,7 @@ assemble_data_model_jobs_dict = {
                                                      os.path.join(
                                                          '$COMOUT',
                                                          '${RUN}.'
-                                                         +'{valid?fmt=%Y%m%d}',
+                                                         +'$DATE',
                                                          '$MODEL',
                                                          '$VERIF_CASE',
                                                          'anomaly_'
