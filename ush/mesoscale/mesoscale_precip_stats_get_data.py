@@ -55,7 +55,11 @@ for VHOUR in VHOUR_LIST:
         print(f"\nGetting {MODELNAME} files for accumulation {accum}hr valid "
               +f"{accum_start_dt:%Y%m%d %H}Z to {accum_end_dt:%Y%m%d %H}Z")
         fhrs = range(int(fhr_start), int(fhr_end)+int(fhr_incr), int(fhr_incr))
-        for area in ['CONUS', 'ALASKA']:
+        area_list = ['CONUS', 'ALASKA']
+        if accum == '24':
+            area_list.append('HAWAII')
+            area_list.append('PUERTO_RICO')
+        for area in area_list:
             COMINmodel_file_template = os.environ[f"{area}_MODEL_INPUT_TEMPLATE"]
             DATAmodel_file_template = os.path.join(
                 DATAmodel, MODELNAME+'.'+area.lower()+'.init{init?fmt=%Y%m%d%H}.'

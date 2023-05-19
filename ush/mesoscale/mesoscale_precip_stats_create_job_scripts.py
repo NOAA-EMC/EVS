@@ -76,6 +76,14 @@ assemble_data_model_jobs_dict = {
                               'commands': [m_util.metplus_command(
                                               'PcpCombine_fcstMESOSCALE_APCP.conf'
                                            )]},
+        '24hrAccum_HAWAII': {'env': {'area': 'hawaii'},
+                             'commands': [m_util.metplus_command(
+                                             'PcpCombine_fcstMESOSCALE_APCP.conf'
+                                          )]},
+        '24hrAccum_PUERTO_RICO': {'env': {'area': 'puerto_rico'},
+                                          'commands': [m_util.metplus_command(
+                                                           'PcpCombine_''fcstMESOSCALE_APCP.conf'
+                                                       )]},
     },
     'accum03hr': {
         '03hrAccum_CONUS': {'env': {'area': 'conus'},
@@ -404,6 +412,11 @@ if JOB_GROUP == 'assemble_data':
                                     if accum == '01':
                                         input_accum = '01'
                                         input_level = 'A1'
+                                    elif job_env_dict['area'] \
+                                            in ['hawaii', 'puerto_rico'] \
+                                            and f"{init_dt:%H}" in ['00', '12']:
+                                        input_accum = '12'
+                                        input_level = 'A12'
                                     else:
                                         input_accum = '03'
                                         input_level = 'A3'

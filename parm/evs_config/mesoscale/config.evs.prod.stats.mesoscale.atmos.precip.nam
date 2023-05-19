@@ -43,5 +43,7 @@ export ALASKA_MODEL_INPUT_TEMPLATE="${COMINnam}/nam.{init?fmt=%Y%m%d}/nam.t{init
 export ALASKA_VERIF_SOURCE="mrms"
 export ALASKA_CTC_GRID="G216"
 export ALASKA_NBRCNT_GRID="G091"
+export HAWAII_MODEL_INPUT_TEMPLATE="${COMINnam}/nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.awiphi{lead?fmt=%2H}.tm00.grib2"
+export PUERTO_RICO_MODEL_INPUT_TEMPLATE="${COMINnam}/nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.awp237{lead?fmt=%2H}.tm00.grib2"
 
 echo "END: $(basename ${BASH_SOURCE[0]})"
