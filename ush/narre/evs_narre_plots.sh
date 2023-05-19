@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash
 
 # ================================================================================================
 # NCEP EMC PYTHON PLOTTING OF CAM VERIFICATION
@@ -178,6 +178,10 @@ export STATS="stat_list"
 # String of True or False. If "True", will plot bootstrap confidence intervals. Other confidence 
 # interval settings can be configured in ${USH_DIR}/settings.py
 export CONFIDENCE_INTERVALS="False"
+
+# Will use statistics for all comma-separated interpolation points
+#export INTERP_PNTS="3969"
+export INTERP_PNTS=''
 
 
 # String defining the type of plot to make. Options are "lead_average", "performance_diagram", 

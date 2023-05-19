@@ -12,7 +12,7 @@ export regrid='NONE'
 
 export vday=$VDATE
 
-$USHevs/check_files_existing.sh
+$USHevs/narre/check_files_existing.sh
 
 echo COMOUTsmall=$COMOUTsmall
 
@@ -53,8 +53,8 @@ for prod in mean  ; do
          fi
 
        elif [ $dom = Alaska ] ; then
-         echo  "export verif_grid='G214'" >> run_narre_${model}.${dom}.${range}.sh 
-         echo  "export obsvgrid='G214'" >> run_narre_${model}.${dom}.${range}.sh
+         echo  "export verif_grid='G242'" >> run_narre_${model}.${dom}.${range}.sh 
+         echo  "export obsvgrid='G242'" >> run_narre_${model}.${dom}.${range}.sh
 
          if [ $prod = sclr ] ; then
             echo  "export modelgrid=prob.grd242" >> run_narre_${model}.${dom}.${range}.sh
@@ -114,7 +114,7 @@ chmod 775 run_all_narre_poe.sh
 if [ $run_mpi = yes ] ; then
   mpiexec  -n 8 -ppn 8 --cpu-bind core --depth=2 cfp  run_all_narre_poe.sh
 else
-  sh run_all_narre_poe.sh
+   run_all_narre_poe.sh
 fi
 
 if [ $gather = yes ] ; then
