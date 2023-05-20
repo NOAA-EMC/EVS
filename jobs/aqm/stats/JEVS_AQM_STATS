@@ -43,10 +43,14 @@ export SENDECF=${SENDECF:-YES}
 
 export envir=${envir:-prod}
 export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
+
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXvevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
+export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
 export USHevs=${USHevs:-$HOMEevs/ush}
+export MASKS=${MASKS:-$FIXevs/masks}
 
 # Define COMIN/COMOUT variables:
 
@@ -65,17 +69,19 @@ export MET_bin_exec=${MET_bin_exec:-bin}
 
 export VDATE=${VDATE:-${PDYm3}}
 
-export COMIN=${COMIN:-$(compath.py ${envir}/com/evs/${evs_ver}/)}
+export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver}/)}
 ## export COMINobs=${COMINobs:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
 export COMINobs=${COMINobs:-${DCOMROOT}}
 export COMINaqm=${COMINaqm:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
 export COMINaqmproc=${COMINaqmproc:-$COMIN/prep/${COMPONENT}}
-export COMOUT=${COMOUT:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
-export COMOUTsmall=${COMOUTsmall:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE})}
-export COMOUTfinal=${COMOUTfinal:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${MODELNAME}.${VDATE})}
+export COMOUT=${COMOUT:-$(compath.py ${envir}/com/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
+export COMOUTsmall=${COMOUTsmall:-$(compath.py ${envir}/com/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE})}
+export COMOUTfinal=${COMOUTfinal:-$(compath.py ${envir}/com/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${MODELNAME}.${VDATE})}
 
 vfcst_ver=$(echo ${mod_ver} | cut -c1-2 )
 export fcst_input_ver=${fcst_input_ver:-${vfcst_ver}}
+
+export KEEPDATA=${KEEPDATA:-YES}
 
 #######################################################################
 # Execute the script.
@@ -83,13 +89,15 @@ export fcst_input_ver=${fcst_input_ver:-${vfcst_ver}}
 
 $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}${fcst_input_ver}_${STEP}.sh
 
-cat $pgmout
+if [ -e "$pgmout" ]; then
+    cat $pgmout
+fi
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
 
-#if [ "$KEEPDATA" != "YES" ] ; then
-#  cd $DATAROOT
-#  rm -rf $DATA
-#fi
+if [ "$KEEPDATA" != "YES" ] ; then
+    cd $DATAROOT
+    rm -rf $DATA
+fi
 

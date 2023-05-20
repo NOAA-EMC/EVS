@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=02:00:00
+#PBS -l walltime=00:15:00
 #PBS -l select=1:ncpus=1:mem=2GB
 #PBS -l debug=true
 
@@ -72,20 +72,27 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMIN=/lfs/h2/emc/physics/noscrub/$USER/${NET}/${evs_ver}
 
 ## export COMINaqm=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
+export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
 export enivr=v70c55
 export fcst_input_ver=v7
 export COMINaqm=/lfs/h2/emc/vpppg/noscrub/$USER/verification/${MODELNAME}/${envir}
+export MASKS=/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/G793
 
 export enivr=prod
 export fcst_input_ver=v6
 export COMINaqm=/lfs/h2/emc/physics/noscrub/$USER/verification/${MODELNAME}/${envir}
+export MASKS=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks
 
 ## Need VDATE setting
 export cycle=t${cyc}z
 setpdy.sh
 . ./PDY
+#
+## export KEEPDATA=NO
+#
 export VDATE=${PDYm3}
+#
 
 export COMOUT=$COMIN/${STEP}/${COMPONENT}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}

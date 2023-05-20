@@ -79,8 +79,11 @@ export COMINaqm=${COMIN}/stats/${COMPONENT}/${MODELNAME}
 ## Need VDATE setting
 setpdy.sh
 . ./PDY
-export VDATE=PDYm3
+export VDATE=${PDYm3}
 export COMOUTplots=${COMOUT}/plots/${COMPONENT}/${RUN}.${VDATE}
+#
+## export KEEPDATA=NO
+#
 ########################################################################
 
 # CALL executable job script here

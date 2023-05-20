@@ -29,6 +29,7 @@ fi
 export fcstmax=72
 
 export MASK_DIR=/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix
+## export MASK_DIR=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks
 
 export model1=`echo $MODELNAME | tr a-z A-Z`
 echo $model1

@@ -10,6 +10,8 @@
 ##   Change Logs:
 ##
 ##   04/26/2023   Ho-Chun Huang  add AirNOW ASCII2NC processing
+##   05/01/2023   Ho-Chun Huang  separate v6 and v7 version becasuse
+##                               of directory path difference
 ##
 ##
 #######################################################################
@@ -30,10 +32,12 @@ else
     export HOURLY_OUTPUT_TYPE=hourly_data
     export HOURLY_ASCII2NC_FORMAT=airnowhourly
 fi
-#
-export PREP_SAVE_DIR=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}
+ 
 export dirname=cs
 export gridspec=148
+
+export PREP_SAVE_DIR=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}
+mkdir -p ${PREP_SAVE_DIR}
 
 export model1=`echo $MODELNAME | tr a-z A-Z`
 echo $model1
@@ -82,7 +86,7 @@ fi
 mkdir -p $DATA/modelinput
 cd $DATA/modelinput
 
-mkdir -p $COMOUT.${VDATE}/${MODELNAME}
+## mkdir -p $COMOUT.${VDATE}/${MODELNAME}
 
 for hour in 06 12
 do
@@ -132,6 +136,5 @@ fi
     
 done
 done
-
 exit
 

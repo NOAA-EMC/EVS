@@ -24,7 +24,7 @@ else
 fi
 export fcstmax=72
 
-export MASK_DIR=/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix
+export MASK_DIR=/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/G793
 
 export model1=`echo $MODELNAME | tr a-z A-Z`
 echo $model1
@@ -46,7 +46,7 @@ VDAYm1=$(${NDATE} -24 ${cdate} | cut -c1-8)
 VDAYm2=$(${NDATE} -48 ${cdate} | cut -c1-8)
 VDAYm3=$(${NDATE} -72 ${cdate} | cut -c1-8)
 
-check_file=${COMINaqmproc}/${RUN}.${vld_date}/${MODELNAME}/airnow_${HOURLY_INPUT_TYPE}_${vld_time}.nc
+check_file=${COMINaqmproc}/${RUN}.${vld_date}/${MODELNAME}${fcst_input_ver}/airnow_${HOURLY_INPUT_TYPE}_${vld_time}.nc
 obs_hourly_found=0
 if [ -s ${check_file} ]; then
     obs_hourly_found=1
@@ -166,7 +166,7 @@ done
 # Daily verification of the daily maximum of 8-hr ozone
 # Verification being done on both raw and bias-corrected output data
 
-check_file=${COMINaqmproc}/${RUN}.${VDATE}/${MODELNAME}/airnow_daily_${VDATE}.nc
+check_file=${COMINaqmproc}/${RUN}.${VDATE}/${MODELNAME}${fcst_input_ver}/airnow_daily_${VDATE}.nc
 obs_daily_found=0
 if [ -s ${check_file} ]; then
     obs_daily_found=1
