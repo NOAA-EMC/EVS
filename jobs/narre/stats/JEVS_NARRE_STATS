@@ -10,8 +10,7 @@ set -xa
 export cycle=t${cyc}z
 
 export pid=$$
-export DATA_IN=${DATA_IN:-$DATAROOT}
-export DATA=$DATA_IN/evs_${MODELNAME}_${VERIF_CASE}_${STEP}.$$
+export DATA=${DATA:-${DATAROOT:?}}/${jobid:?}
 mkdir -p $DATA
 cd $DATA
 
@@ -47,7 +46,7 @@ export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export EXECevs=$HOMEevs/exec
 export PARMevs=$HOMEevs/parm
 export USHevs=$HOMEevs/ush
-export FIXevs=${FIXevs:-/lfs/h1/ops/prod/packages/evs.${evs_ver}/fix}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
 export MASKS=$FIXevs/masks
 
 
@@ -73,7 +72,7 @@ export pgmout="OUTPUT.${pid}"
 ####################################
 
 
-sh $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${STEP}.sh 
+$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${STEP}.sh 
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
