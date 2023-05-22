@@ -25,9 +25,9 @@ for  obsv in ccpa ; do
   $USHevs/mesoscale/evs_prepare_sref.sh $obsv 
 
 
-
   if [ $obsv = ccpa ] ; then
     $USHevs/mesoscale/evs_prepare_sref.sh  sref_apcp06
+    $USHevs/mesoscale/evs_prepare_sref.sh sref_apcp24_mean
   fi
 
 
@@ -95,7 +95,7 @@ for  obsv in ccpa ; do
        echo "cp \$output_base/stat/*.stat $COMOUTsmall" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
 
        chmod +x run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-       echo "${DATA}/run_sref_mpi_${domain}.${obsv}.${fhr}.sh" >> run_all_sref_precip_poe
+       echo "run_sref_mpi_${domain}.${obsv}.${fhr}.sh" >> run_all_sref_precip_poe
 
   done
 
@@ -110,7 +110,7 @@ if [ $run_mpi = yes ] ; then
   mpiexec  -n 4 -ppn 4 --cpu-bind core --depth=2 cfp run_all_sref_precip_poe
 
 else
-  sh run_all_sref_precip_poe
+   run_all_sref_precip_poe
 fi 
 
 
