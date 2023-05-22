@@ -1,4 +1,18 @@
 #!/bin/ksh
+#######################################################################
+##  UNIX Script Documentation Block
+##                      .
+## Script name:         exevs_aqmv6_stats.sh
+## Script description:  Perform MetPlus PointStat of Air Quality Model.
+## Original Author   :  Perry Shafran
+##
+##   Change Logs:
+##
+##   04/26/2023   Ho-Chun Huang  modification for using AirNOW ASCII2NC
+##
+##
+#######################################################################
+#
 set -x
 
 mkdir -p $DATA/logs

@@ -2,7 +2,7 @@
 #######################################################################
 ##  UNIX Script Documentation Block
 ##                      .
-## Script name:         exevs_aqm_prep.sh
+## Script name:         exevs_aqmv6_prep.sh
 ## Script description:  Pre-processed input data for the MetPlus PointStat 
 ##                      of Air Quality Model.
 ## Original Author   :  Perry Shafran

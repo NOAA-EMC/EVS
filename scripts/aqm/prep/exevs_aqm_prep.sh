@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/ksh
 #######################################################################
 ##  UNIX Script Documentation Block
 ##                      .
@@ -10,6 +10,10 @@
 ##   Change Logs:
 ##
 ##   04/26/2023   Ho-Chun Huang  add AirNOW ASCII2NC processing
+##   05/01/2023   Ho-Chun Huang  separate v6 and v7 version becasuse
+##                               of directory path difference
+##   05/22/2023   Ho-Chun Huang  copy from exevs_aqmv6_prep.sh for current
+##                               operational AQM
 ##
 ##
 #######################################################################
@@ -30,10 +34,12 @@ else
     export HOURLY_OUTPUT_TYPE=hourly_data
     export HOURLY_ASCII2NC_FORMAT=airnowhourly
 fi
-#
-export PREP_SAVE_DIR=${COMOUT}.${VDATE}/${MODELNAME}
-export dirname=aqm
-export gridspec=793
+ 
+export dirname=cs
+export gridspec=148
+
+export PREP_SAVE_DIR=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}
+mkdir -p ${PREP_SAVE_DIR}
 
 export model1=`echo $MODELNAME | tr a-z A-Z`
 echo $model1
@@ -51,7 +57,7 @@ while [ ${ic} -le ${endvhr} ]; do
     if [ -s ${checkfile} ]; then
         export VHOUR=${vldhr}
 	if [ -s ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf ]; then
-        run_metplus.py ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
+            run_metplus.py ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
         else
             echo "can not find ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf"
 	fi
@@ -69,7 +75,7 @@ if [ -s ${checkfile} ]; then
     if [ -s ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf ]; then
         run_metplus.py ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
     else
-            echo "can not find ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf"
+        echo "can not find ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf"
     fi
 else
     ## add email function
@@ -82,7 +88,7 @@ fi
 mkdir -p $DATA/modelinput
 cd $DATA/modelinput
 
-mkdir -p $COMOUT.${VDATE}/${MODELNAME}
+## mkdir -p $COMOUT.${VDATE}/${MODELNAME}
 
 for hour in 06 12
 do
@@ -103,26 +109,34 @@ then
 export bctag=_bc
 fi
 
-
 if [ $hour -eq 06 ]
 then
-wgrib2 -d 1 $COMINaqm/${dirname}.${VDATE}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 -set_ftime "6-29 hour ave fcst"  -grib out1.grb2
-wgrib2 -d 2 $COMINaqm/${dirname}.${VDATE}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 -set_ftime "30-53 hour ave fcst" -grib out2.grb2
-wgrib2 -d 3 $COMINaqm/${dirname}.${VDATE}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 -set_ftime "54-77 hour ave fcst" -grib out3.grb2
-cat out1.grb2 out2.grb2 out3.grb2 > ${PREP_SAVE_DIR}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+    ozmax8_file=$COMINaqm/${dirname}.${VDATE}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+    if [ -s ${ozmax8_file} ]; then
+        wgrib2 -d 1 ${ozmax8_file} -set_ftime "6-29 hour ave fcst"  -grib out1.grb2
+        wgrib2 -d 2 ${ozmax8_file} -set_ftime "30-53 hour ave fcst" -grib out2.grb2
+        wgrib2 -d 3 ${ozmax8_file} -set_ftime "54-77 hour ave fcst" -grib out3.grb2
+        cat out1.grb2 out2.grb2 out3.grb2 > ${PREP_SAVE_DIR}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+    else
+        echo "ADD EMAIL FUNCTION; Can not find ${ozmax8_file}"
+    fi
 fi
 
 
 if [ $hour -eq 12 ]
 then
-wgrib2 -d 1 $COMINaqm/${dirname}.${VDATE}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 -set_ftime "0-23 hour ave fcst" -grib out1.grb2
-wgrib2 -d 2 $COMINaqm/${dirname}.${VDATE}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 -set_ftime "24-47 hour ave fcst" -grib out2.grb2
-wgrib2 -d 3 $COMINaqm/${dirname}.${VDATE}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 -set_ftime "48-71 hour ave fcst" -grib out3.grb2
-cat out1.grb2 out2.grb2 out3.grb2 > ${PREP_SAVE_DIR}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+    ozmax8_file=$COMINaqm/${dirname}.${VDATE}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+    if [ -s ${ozmax8_file} ]; then
+        wgrib2 -d 1 ${ozmax8_file} -set_ftime "0-23 hour ave fcst" -grib out1.grb2
+        wgrib2 -d 2 ${ozmax8_file} -set_ftime "24-47 hour ave fcst" -grib out2.grb2
+        wgrib2 -d 3 ${ozmax8_file} -set_ftime "48-71 hour ave fcst" -grib out3.grb2
+        cat out1.grb2 out2.grb2 out3.grb2 > ${PREP_SAVE_DIR}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+    else
+        echo "ADD EMAIL FUNCTION; Can not find ${ozmax8_file}"
+    fi
 fi
-
+    
 done
 done
-
 exit
 

@@ -2,7 +2,7 @@
 #######################################################################
 ##  UNIX Script Documentation Block
 ##                      .
-## Script name:         exevs_aqm_prep.sh
+## Script name:         exevs_aqmv7_prep.sh
 ## Script description:  Pre-processed input data for the MetPlus PointStat 
 ##                      of Air Quality Model.
 ## Original Author   :  Perry Shafran
@@ -38,7 +38,7 @@ export gridspec=793
 #
 ## put in different directory from v6 as current operational
 #
-export PREP_SAVE_DIR=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}"v7"
+export PREP_SAVE_DIR=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}
 mkdir -p ${PREP_SAVE_DIR}
 
 export model1=`echo $MODELNAME | tr a-z A-Z`

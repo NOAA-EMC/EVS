@@ -1,4 +1,20 @@
 #!/bin/ksh
+#######################################################################
+##  UNIX Script Documentation Block
+##                      .
+## Script name:         exevs_aqmv7_stats.sh
+## Script description:  Perform MetPlus PointStat of Air Quality Model.
+## Original Author   :  Perry Shafran
+##
+##   Change Logs:
+##
+##   04/26/2023   Ho-Chun Huang  modification for using AirNOW ASCII2NC
+##   05/22/2023   Ho-Chun Huang  separate hourly ozone by model cycle time becasuse
+##                               of directory path depends on model cycle hour.
+##
+##
+#######################################################################
+#
 set -x
 
 mkdir -p $DATA/logs
@@ -46,7 +62,7 @@ VDAYm1=$(${NDATE} -24 ${cdate} | cut -c1-8)
 VDAYm2=$(${NDATE} -48 ${cdate} | cut -c1-8)
 VDAYm3=$(${NDATE} -72 ${cdate} | cut -c1-8)
 
-check_file=${COMINaqmproc}/${RUN}.${vld_date}/${MODELNAME}${fcst_input_ver}/airnow_${HOURLY_INPUT_TYPE}_${vld_time}.nc
+check_file=${COMINaqmproc}/${RUN}.${vld_date}/${MODELNAME}/airnow_${HOURLY_INPUT_TYPE}_${vld_time}.nc
 obs_hourly_found=0
 if [ -s ${check_file} ]; then
     obs_hourly_found=1
@@ -56,117 +72,124 @@ else
 fi
 echo "obs_hourly_found = ${obs_hourly_found}"
 
-for outtyp in awpozcon pm25
+for hour in 06 12
 do
 
-# Verification to be done both on raw output files and bias-corrected files
+    export hour
+    export mdl_cyc=${hour}
 
-  for biastyp in raw bc
-  do
-
-    export outtyp
-    export biastyp
-    echo $biastyp
-
-    if [ $biastyp = "raw" ]
-    then
-      export bctag=
-      export bcout=_raw
-    fi
-
-    if [ $biastyp = "bc" ]
-    then
-      export bctag=_bc
-      export bcout=_bc
-    fi
-
-# check to see that model files exist, and list which forecast hours are to be used
-
-    let ihr=0
-    numo3fcst=0
-    numpmfcst=0
-    while [ ${ihr} -le $fcstmax ]
+    for outtyp in awpozcon pm25
     do
-      filehr=$(printf %3.3d ${ihr})    ## fhr of grib2 filename is in 3 digit for aqmv7 and 2 digit for aqmv6
-      fhr=$(printf %2.2d ${ihr})       ## fhr for the processing valid hour is in 2 digit
-      export fhr
-
-      export datehr=${VDATE}${cyc}
-      adate=`$NDATE -${ihr} $datehr`
-      aday=`echo $adate |cut -c1-8`
-      acyc=`echo $adate |cut -c9-10`
-      if [ $acyc = 06 -o $acyc = 12 ]
-      then
-      if [ -s $COMINaqm/${dirname}.${aday}/${acyc}/aqm.t${acyc}z.awpozcon${bctag}.f${filehr}.${gridspec}.grib2 ]
-      then
-        echo "$fhr found"
-        echo $fhr >> $DATA/fcstlist_o3
-        let "numo3fcst=numo3fcst+1"
-      fi 
-      if [ -s $COMINaqm/${dirname}.${aday}/${acyc}/aqm.t${acyc}z.pm25${bctag}.f${filehr}.${gridspec}.grib2 ]
-      then
-        echo "$fhr found"
-        echo $fhr >> $DATA/fcstlist_pm
-        let "numpmfcst=numpmfcst+1"
-      fi
-
-      fi
-      ((ihr++))
+    
+    # Verification to be done both on raw output files and bias-corrected files
+    
+      for biastyp in raw bc
+      do
+    
+        export outtyp
+        export biastyp
+        echo $biastyp
+    
+        if [ $biastyp = "raw" ]
+        then
+          export bctag=
+          export bcout=_raw
+        fi
+    
+        if [ $biastyp = "bc" ]
+        then
+          export bctag=_bc
+          export bcout=_bc
+        fi
+    
+    # check to see that model files exist, and list which forecast hours are to be used
+    
+        let ihr=0
+        numo3fcst=0
+        numpmfcst=0
+        while [ ${ihr} -le $fcstmax ]
+        do
+          filehr=$(printf %3.3d ${ihr})    ## fhr of grib2 filename is in 3 digit for aqmv7 and 2 digit for aqmv6
+          fhr=$(printf %2.2d ${ihr})       ## fhr for the processing valid hour is in 2 digit
+          export fhr
+    
+          export datehr=${VDATE}${cyc}
+          adate=`$NDATE -${ihr} $datehr`
+          aday=`echo $adate |cut -c1-8`
+          acyc=`echo $adate |cut -c9-10`
+          if [ $acyc = ${hour} ]
+          then
+          if [ -s $COMINaqm/${dirname}.${aday}/${acyc}/aqm.t${acyc}z.awpozcon${bctag}.f${filehr}.${gridspec}.grib2 ]
+          then
+            echo "$fhr found"
+            echo $fhr >> $DATA/fcstlist_o3
+            let "numo3fcst=numo3fcst+1"
+          fi 
+          if [ -s $COMINaqm/${dirname}.${aday}/${acyc}/aqm.t${acyc}z.pm25${bctag}.f${filehr}.${gridspec}.grib2 ]
+          then
+            echo "$fhr found"
+            echo $fhr >> $DATA/fcstlist_pm
+            let "numpmfcst=numpmfcst+1"
+          fi
+    
+          fi
+          ((ihr++))
+        done
+        export fcsthours_o3=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcstlist_o3`
+        export fcsthours_pm=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcstlist_pm`
+        export numo3fcst
+        export numpmfcst
+        rm $DATA/fcstlist_o3 $DATA/fcstlist_pm
+        echo "numo3fcst,numpmfcst", $numo3fcst, $numpmfcst
+    
+        case $outtyp in
+    
+            awpozcon) if [ $numo3fcst -gt 0 -a $obs_hourly_found -eq 1 ]
+                      then
+                      export fcsthours=$fcsthours_o3
+                      run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstOZONE_obsAIRNOW_${fcst_input_ver}.conf $PARMevs/metplus_config/machine.conf
+                      export err=$?; err_chk
+                      mkdir -p $COMOUTsmall
+                      cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
+                      if [ $cyc = 23 ]
+                      then
+                        mkdir -p $COMOUTfinal
+                        run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstOZONE_obsAIRNOW_GatherByDay.conf $PARMevs/metplus_config/machine.conf
+                        export err=$?; err_chk
+                      fi
+                      else
+                      echo "NO O3 FORECAST OR OBS TO VERIFY"
+                      echo "NUM FCST, NUM OBS", $numo3fcst, $obs_hourly_found
+                      fi
+                      ;;
+          pm25) if [ $numpmfcst -gt 0 -a $obs_hourly_found -eq 1 ]
+                then
+                export fcsthours=$fcsthours_pm
+                run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstPM2p5_obsAIRNOW_${fcst_input_ver}.conf $PARMevs/metplus_config/machine.conf
+                export err=$?; err_chk
+                mkdir -p $COMOUTsmall
+                cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
+                if [ $cyc = 23 ]
+                then
+                   mkdir -p $COMOUTfinal
+                   run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstPM_obsANOWPM_GatherByDay.conf $PARMevs/metplus_config/machine.conf
+                   export err=$?; err_chk
+                fi
+                else
+                echo "NO PM FORECAST OR OBS TO VERIFY"
+                echo "NUM FCST, NUM OBS", $numpmfcst, $obs_hourly_found
+                fi
+                ;;
+        esac
+    
+      done
+    
     done
-    export fcsthours_o3=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcstlist_o3`
-    export fcsthours_pm=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcstlist_pm`
-    export numo3fcst
-    export numpmfcst
-    rm $DATA/fcstlist_o3 $DATA/fcstlist_pm
-    echo "numo3fcst,numpmfcst", $numo3fcst, $numpmfcst
-
-    case $outtyp in
-
-        awpozcon) if [ $numo3fcst -gt 0 -a $obs_hourly_found -eq 1 ]
-                  then
-                  export fcsthours=$fcsthours_o3
-                  run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstOZONE_obsAIRNOW_${fcst_input_ver}.conf $PARMevs/metplus_config/machine.conf
-                  export err=$?; err_chk
-                  mkdir -p $COMOUTsmall
-                  cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
-                  if [ $cyc = 23 ]
-                  then
-                    mkdir -p $COMOUTfinal
-                    run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstOZONE_obsAIRNOW_GatherByDay.conf $PARMevs/metplus_config/machine.conf
-                    export err=$?; err_chk
-                  fi
-                  else
-                  echo "NO O3 FORECAST OR OBS TO VERIFY"
-                  echo "NUM FCST, NUM OBS", $numo3fcst, $obs_hourly_found
-                  fi
-                  ;;
-      pm25) if [ $numpmfcst -gt 0 -a $obs_hourly_found -eq 1 ]
-            then
-            export fcsthours=$fcsthours_pm
-            run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstPM2p5_obsAIRNOW_${fcst_input_ver}.conf $PARMevs/metplus_config/machine.conf
-            export err=$?; err_chk
-            mkdir -p $COMOUTsmall
-            cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
-            if [ $cyc = 23 ]
-            then
-               mkdir -p $COMOUTfinal
-               run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstPM_obsANOWPM_GatherByDay.conf $PARMevs/metplus_config/machine.conf
-               export err=$?; err_chk
-            fi
-            else
-            echo "NO PM FORECAST OR OBS TO VERIFY"
-            echo "NUM FCST, NUM OBS", $numpmfcst, $obs_hourly_found
-            fi
-            ;;
-    esac
-
-  done
-
 done
 # Daily verification of the daily maximum of 8-hr ozone
 # Verification being done on both raw and bias-corrected output data
 
-check_file=${COMINaqmproc}/${RUN}.${VDATE}/${MODELNAME}${fcst_input_ver}/airnow_daily_${VDATE}.nc
+check_file=${COMINaqmproc}/${RUN}.${VDATE}/${MODELNAME}/airnow_daily_${VDATE}.nc
 obs_daily_found=0
 if [ -s ${check_file} ]; then
     obs_daily_found=1
@@ -202,6 +225,7 @@ then
     do
 
       export hour
+      export mdl_cyc=${hour}
 
 #  search for model file and 2nd obs file for the daily 8-hr ozone max
 
@@ -265,6 +289,7 @@ then
     do
 
       export hour
+      export mdl_cyc=${hour}
 
 #  search for model file and 2nd obs file for the daily average PM
 

@@ -1,3 +1,20 @@
+#!/bin/ksh
+#######################################################################
+##  UNIX Script Documentation Block
+##                      .
+## Script name:         exevs_aqm_stats.sh
+## Script description:  Perform MetPlus PointStat of Air Quality Model.
+## Original Author   :  Perry Shafran
+##
+##   Change Logs:
+##
+##   04/26/2023   Ho-Chun Huang  modification for using AirNOW ASCII2NC
+##   05/22/2023   Ho-Chun Huang  copy from exevs_aqmv6_stats.sh for current
+##                               operational AQM
+##
+##
+#######################################################################
+#
 set -x
 
 mkdir -p $DATA/logs
@@ -13,18 +30,22 @@ if [ "${hourly_type}" == "aqobs" ]; then
 else
     export HOURLY_INPUT_TYPE=hourly_data
 fi
+## 
+## Note the v6 and v7 comout directory structure are different
+## Check for correct scripts called
+##
 if [ "${fcst_input_ver}" == "v6" ]; then
-    export dirnam=cs
+    export dirname=cs
     export gridspec=148
 elif [ "${fcst_input_ver}" == "v7" ]; then
-    export dirnam=aqm
-    export gridspec=793
+    echo "EVS_CHECK :: This script exevs_aqmv6_stats.sh is not for ${fcst_input_ver}"
 else
     echo "EVS_CHECK :: The AQM version number is not defined :: ${fcst_input_ver}"
 fi
 export fcstmax=72
 
 export MASK_DIR=/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix
+## export MASK_DIR=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks
 
 export model1=`echo $MODELNAME | tr a-z A-Z`
 echo $model1
@@ -43,17 +64,21 @@ vld_date=$(${NDATE} -1 ${cdate} | cut -c1-8)
 vld_time=$(${NDATE} -1 ${cdate} | cut -c1-10)
 
 VDAYm1=$(${NDATE} -24 ${cdate} | cut -c1-8)
-VDAYm2=$(${NDATE} -24 ${cdate} | cut -c1-8)
-VDAYm3=$(${NDATE} -24 ${cdate} | cut -c1-8)
+VDAYm2=$(${NDATE} -48 ${cdate} | cut -c1-8)
+VDAYm3=$(${NDATE} -72 ${cdate} | cut -c1-8)
 
 check_file=${COMINaqmproc}/${RUN}.${vld_date}/${MODELNAME}/airnow_${HOURLY_INPUT_TYPE}_${vld_time}.nc
 obs_hourly_found=0
-if [ -s ${check_file} }; then
+if [ -s ${check_file} ]; then
     obs_hourly_found=1
+else
     echo "Can not find pre-processed obs hourly input ${check_file}"
     ## add email function here
 fi
 echo "obs_hourly_found = ${obs_hourly_found}"
+
+for outtyp in awpozcon pm25
+do
 
 # Verification to be done both on raw output files and bias-corrected files
 
@@ -83,7 +108,7 @@ echo "obs_hourly_found = ${obs_hourly_found}"
     numpmfcst=0
     while [ ${ihr} -le $fcstmax ]
     do
-      filehr=$(printf %3.3d ${ihr})    ## fhr of grib2 filename is in 3 digit for aqmv7 and 2 digit for aqmv6
+      filehr=$(printf %2.2d ${ihr})    ## fhr of grib2 filename is in 3 digit for aqmv7 and 2 digit for aqmv6
       fhr=$(printf %2.2d ${ihr})       ## fhr for the processing valid hour is in 2 digit
       export fhr
 
@@ -93,13 +118,13 @@ echo "obs_hourly_found = ${obs_hourly_found}"
       acyc=`echo $adate |cut -c9-10`
       if [ $acyc = 06 -o $acyc = 12 ]
       then
-      if [ -s $COMINaqm/${dirname}.${aday}/${acyc}/aqm.t${acyc}z.awpozcon${bctag}.f${filehr}.${gridspec}.grib2 ]
+      if [ -s $COMINaqm/${dirname}.${aday}/aqm.t${acyc}z.awpozcon${bctag}.f${filehr}.${gridspec}.grib2 ]
       then
         echo "$fhr found"
         echo $fhr >> $DATA/fcstlist_o3
         let "numo3fcst=numo3fcst+1"
       fi 
-      if [ -s $COMINaqm/${dirname}.${aday}/${acyc}/aqm.t${acyc}z.pm25${bctag}.f${filehr}.${gridspec}.grib2 ]
+      if [ -s $COMINaqm/${dirname}.${aday}/aqm.t${acyc}z.pm25${bctag}.f${filehr}.${gridspec}.grib2 ]
       then
         echo "$fhr found"
         echo $fhr >> $DATA/fcstlist_pm
@@ -159,14 +184,14 @@ echo "obs_hourly_found = ${obs_hourly_found}"
   done
 
 done
-
 # Daily verification of the daily maximum of 8-hr ozone
 # Verification being done on both raw and bias-corrected output data
 
 check_file=${COMINaqmproc}/${RUN}.${VDATE}/${MODELNAME}/airnow_daily_${VDATE}.nc
 obs_daily_found=0
-if [ -s ${check_file} }; then
+if [ -s ${check_file} ]; then
     obs_daily_found=1
+else
     echo "Can not find pre-processed obs daily input ${check_file}"
     ## add email function here
 fi
@@ -204,14 +229,17 @@ then
       ozmax8=0
       if [ -s $COMINaqmproc/atmos.${VDAYm1}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 ]
       then
+	      echo "find $COMINaqmproc/atmos.${VDAYm1}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2"
         ozmax8=1
       fi
       if [ -s $COMINaqmproc/atmos.${VDAYm2}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 ]
       then
+	      echo "find $COMINaqmproc/atmos.${VDAYm2}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2"
        let "ozmax8=ozmax8+1"
       fi
       if [ -s $COMINaqmproc/atmos.${VDAYm3}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 ]
       then
+	      echo "find $COMINaqmproc/atmos.${VDAYm3}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2"
         let "ozmax8=ozmax8+1"
       fi
       echo "ozmax8, obs_daily_found=",$ozmax8,$obs_daily_found
@@ -265,16 +293,19 @@ then
 #  search for model file and 2nd obs file for the daily average PM
 
       pmave1=0
-      if [ -s $COMINaqm/${dirname}.${VDAYm1}/${hour}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2 ]
+      if [ -s $COMINaqm/${dirname}.${VDAYm1}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2 ]
       then
+	      echo "find $COMINaqm/${dirname}.${VDAYm1}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2"
         pmave1=1
       fi
-      if [ -s $COMINaqm/${dirname}.${VDAYm2}/${hour}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2 ]
+      if [ -s $COMINaqm/${dirname}.${VDAYm2}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2 ]
       then
+	      echo "find $COMINaqm/${dirname}.${VDAYm2}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2"
        let "pmave1=pmave1+1" 
       fi
-      if [ -s $COMINaqm/${dirname}.${VDAYm3}/${hour}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2 ]
+      if [ -s $COMINaqm/${dirname}.${VDAYm3}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2 ]
       then
+	      echo "find $COMINaqm/${dirname}.${VDAYm3}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2"
         let "pmave1=pmave1+1"
       fi
       echo "pmave1, obs_daily_found=",$pmave1,$obs_daily_found
