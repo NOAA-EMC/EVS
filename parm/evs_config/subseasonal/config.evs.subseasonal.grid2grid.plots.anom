@@ -74,10 +74,10 @@ if [ $VERIF_CASE_STEP = grid2grid_plots ]; then
     #####    g2gplots_*_event_eq:        do event equalization (YES) or not (NO)
     export g2gplots_model_plot_name_list="gefs_mean cfs_mean"
     export g2gplots_type_list="anom"
-    export g2gplots_sea_ice_fcyc_list="00"
-    export g2gplots_sea_ice_fhr_min=168
-    export g2gplots_sea_ice_fhr_max=840
-    export g2gplots_sea_ice_fhr_inc=24
+    export g2gplots_anom_fcyc_list="00"
+    export g2gplots_anom_fhr_min=168
+    export g2gplots_anom_fhr_max=840
+    export g2gplots_anom_fhr_inc=24
     export g2gplots_event_eq="NO"
 fi
 
