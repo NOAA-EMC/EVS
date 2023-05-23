@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #!/bin/bash
 
 ########################################
@@ -27,7 +26,7 @@
 ####################################
   export pgmout="OUTPUT.${pid}"
 
-export cycle=t${cyc}z
+  export cycle=t${cyc}z
 
 ##################################################
 # SAVEGES  - Copy Files From TMPDIR to $GESdir
@@ -40,8 +39,8 @@ export cycle=t${cyc}z
   export SENDECF=${SENDECF:-YES}
 
   export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
-export EXECevs=${EXECevs:-$HOMEevs/exec}
+  export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
+  export EXECevs=${EXECevs:-$HOMEevs/exec}
   export FIXevs=${FIXevs:-$HOMEevs/fix}
   export PARMevs=${PARMevs:-$HOMEevs/parm}
   export USHevs=${USHevs:-$HOMEevs/ush}
@@ -54,86 +53,57 @@ else
     export VDATE=$PDYm1
 fi
 
+
+if [ $MODELNAME = sref ] ; then
+setpdy.sh
+. $DATA/PDY
+  export VDATE=${VDATE:-$PDYm2}
+fi
+
+
 # Define COMIN/COMOUT variables:
+if [ $MODELNAME = nam ] || [ $MODELNAME = rap ] ; then
   export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
   export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
   export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 
   echo $COMPATH
 
-#######################################################################
-# Execute the script.
-#######################################################################
+  $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 
-$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+elif  [ $MODELNAME = sref ] ; then
+  export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$MODELNAME.$VDATE
+  export COMINapcp24mean=${COMINspatial:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT
+  export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/${evs_ver})}/$STEP/$COMPONENT/$RUN.$VDATE
+  export DATA_IN=${DATA_IN:-$DATAROOT}
+  mkdir -p $COMOUT
+
+  export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs_gens.${evs_ver}}
+  export EXECevs=$HOMEevs/exec
+  export PARMevs=$HOMEevs/parm
+  export USHevs=$HOMEevs/ush
+  export SCRIPTevs=$HOMEevs/scripts
+  export FIXevs=${FIXevs:-$HOMEevs/fix}
+
+  if [ $VERIF_CASE = precip ] ; then
+    export ush_dir=$USHevs/mesoscale/ush_sref_plot_precip_py
+  elif [ $VERIF_CASE = cnv ] ; then
+    export ush_dir=$USHevs/mesoscale/ush_sref_plot_cnv_py
+  else
+    export ush_dir=$USHevs/mesoscale/ush_sref_plot_py
+  fi
+  
+  if [ $RUN = atmos ] ; then
+    export INITDATE=${INITDATE:-$PDYm2}
+  fi
+
+  $SCRIPTevs/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+fi
 
 cat $pgmout
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
-
-#if [ "$KEEPDATA" != "YES" ] ; then
-#  cd $DATAROOT
-#  rm -rf $DATA
-#fi
-
-=======
-#!/bin/ksh
-
-set -xa
-#######################################################
-#######################################################
-
-export cycle=t${cyc}z
-
-export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-YES}
-export SENDECF=${SENDECF:-YES}
-
-export pid=$$
-
-export DATA=${DATA:-${DATAROOT:?}}/${jobid:?}
-rm -rf $DATA
-mkdir -p $DATA
-cd $DATA
-
-
-setpdy.sh
-. $DATA/PDY
-
-if [ $MODELNAME = sref ] ; then
-  export VDATE=${VDATE:-$PDYm2}
-fi
-
-export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$MODELNAME.$VDATE
-export COMINapcp24mean=${COMINspatial:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT
-export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/${evs_ver})}/$STEP/$COMPONENT/$RUN.$VDATE
-export DATA_IN=${DATA_IN:-$DATAROOT}
-mkdir -p $COMOUT
-
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs_gens.${evs_ver}}
-export EXECevs=$HOMEevs/exec
-export PARMevs=$HOMEevs/parm
-export USHevs=$HOMEevs/ush
-export SCRIPTevs=$HOMEevs/scripts
-export FIXevs=${FIXevs:-$HOMEevs/fix}
-
-if [ $VERIF_CASE = precip ] ; then
-  export ush_dir=$USHevs/mesoscale/ush_sref_plot_precip_py
-elif [ $VERIF_CASE = cnv ] ; then
-  export ush_dir=$USHevs/mesoscale/ush_sref_plot_cnv_py
-else  
-  export ush_dir=$USHevs/mesoscale/ush_sref_plot_py
-fi
-
-if [ $RUN = atmos ] ; then
-  export INITDATE=${INITDATE:-$PDYm2}
-fi
-
-$SCRIPTevs/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
-
-msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$msg"
 
 if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT
@@ -141,5 +111,73 @@ if [ "$KEEPDATA" != "YES" ] ; then
 fi
 
 date
->>>>>>> 1cdd27e8dab201cc84c9ea31a685a33619e4788c
+
+
+
+
+
+## =======
+## #!/bin/ksh
+##
+## set -xa
+#######################################################
+#######################################################
+##
+## export cycle=t${cyc}z
+## 
+## export SENDCOM=${SENDCOM:-YES}
+## export SENDDBN=${SENDDBN:-YES}
+## export SENDECF=${SENDECF:-YES}
+##
+## export pid=$$
+## 
+## export DATA=${DATA:-${DATAROOT:?}}/${jobid:?}
+## rm -rf $DATA
+## mkdir -p $DATA
+## cd $DATA
+##
+##
+## setpdy.sh
+## . $DATA/PDY
+## 
+## if [ $MODELNAME = sref ] ; then
+##   export VDATE=${VDATE:-$PDYm2}
+## fi
+## 
+## export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$MODELNAME.$VDATE
+## export COMINapcp24mean=${COMINspatial:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT
+## export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/${evs_ver})}/$STEP/$COMPONENT/$RUN.$VDATE
+## export DATA_IN=${DATA_IN:-$DATAROOT}
+## mkdir -p $COMOUT
+## 
+## export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs_gens.${evs_ver}}
+## export EXECevs=$HOMEevs/exec
+## export PARMevs=$HOMEevs/parm
+## export USHevs=$HOMEevs/ush
+## export SCRIPTevs=$HOMEevs/scripts
+## export FIXevs=${FIXevs:-$HOMEevs/fix}
+## 
+## if [ $VERIF_CASE = precip ] ; then
+##  export ush_dir=$USHevs/mesoscale/ush_sref_plot_precip_py
+## elif [ $VERIF_CASE = cnv ] ; then
+##  export ush_dir=$USHevs/mesoscale/ush_sref_plot_cnv_py
+## else  
+##  export ush_dir=$USHevs/mesoscale/ush_sref_plot_py
+## fi
+##
+## if [ $RUN = atmos ] ; then
+##  export INITDATE=${INITDATE:-$PDYm2}
+## fi
+## 
+## $SCRIPTevs/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+## 
+## msg="JOB $job HAS COMPLETED NORMALLY."
+## postmsg "$msg"
+## 
+## if [ "$KEEPDATA" != "YES" ] ; then
+##  cd $DATAROOT
+##  rm -rf $DATA
+## fi
+##
+## date
 
