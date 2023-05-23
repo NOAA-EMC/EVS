@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_long_term_time_series_diff.py
 Contact(s): Mallory Row
@@ -364,10 +365,9 @@ class LongTermTimeSeriesDiff:
                 ax2.plot_date(
                     run_length_date_dt_list,
                     np.zeros_like(run_length_date_dt_list),
+                    fmt='-', linewidth=2, markersize=0,
                     color=(all_model_plot_settings_dict\
                            [self.model_list[0]]['color']),
-                    linestyle='solid', linewidth=2,
-                    marker=None, markersize=0,
                 )
                 for model in self.model_list:
                     model_plot_settings_dict = (
@@ -393,9 +393,8 @@ class LongTermTimeSeriesDiff:
                         ax1.plot_date(
                             run_length_date_dt_list,
                             model_forecast_day_running_mean,
+                            fmt='-', linewidth=2, markersize=0,
                             color=model_plot_settings_dict['color'],
-                            linestyle='solid', linewidth=2,
-                            marker=None, markersize=0,
                             zorder=((len(self.model_list)
                                     -self.model_list.index(model))+4),
                             label=model_label
@@ -411,9 +410,8 @@ class LongTermTimeSeriesDiff:
                         ax2.plot_date(
                             run_length_date_dt_list,
                             model_model0_forecast_day_running_mean_diff,
+                            fmt='-', linewidth=2, markersize=0,
                             color=model_plot_settings_dict['color'],
-                            linestyle='solid', linewidth=2,
-                            marker=None, markersize=0,
                             zorder=((len(self.model_list)
                                     -self.model_list.index(model))+4)
                         )

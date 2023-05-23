@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_long_term_time_series_multifhr.py
 Contact(s): Mallory Row
@@ -345,10 +346,8 @@ class LongTermTimeSeriesMultiFhr:
                     ax.plot_date(
                         run_length_date_dt_list,
                         forecast_day_data,
+                        fmt='-', linewidth=2, markersize=0,
                         color=forecast_hour_plot_settings_dict['color'],
-                        linestyle='solid',
-                        linewidth=2,
-                        marker=None, markersize=0,
                         zorder=((len(self.forecast_day_list)
                                 -self.forecast_day_list.index(forecast_day))
                                 +4),
