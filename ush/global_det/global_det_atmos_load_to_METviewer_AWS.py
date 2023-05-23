@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Program Name: global_det_atmos_load_to_METviewer_AWS.py
 Contact(s): Mallory Row

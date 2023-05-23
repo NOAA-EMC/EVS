@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_long_term_useful_forecast_days.py
 Contact(s): Mallory Row
@@ -375,9 +376,8 @@ class LongTermUsefulForecastDays:
                             run_length_model_group_useful_fday_df\
                             .loc[(model)][[ufd_thresh]].to_numpy(dtype=float)
                         ),
+                        fmt='.', linewidth=1, markersize=0,
                         color=ufd_stat_threshold_colors_dict[ufd_thresh],
-                        linestyle='dotted', linewidth=1,
-                        marker=None, markersize=0,
                     )
                     ax.plot_date(
                         run_length_date_dt_list,
@@ -385,9 +385,8 @@ class LongTermUsefulForecastDays:
                             run_length_model_group_useful_fday_running_mean_df\
                             .loc[(model)][[ufd_thresh]].to_numpy(dtype=float)
                         ),
+                        fmt='-', linewidth=2, markersize=0,
                         color=ufd_stat_threshold_colors_dict[ufd_thresh],
-                        linestyle='solid', linewidth=2,
-                        marker=None, markersize=0,
                         label=f"{self.stat}={ufd_thresh}"
                     )
                 if len(ax.lines) != 0:
@@ -509,9 +508,8 @@ class LongTermUsefulForecastDays:
                             run_length_model_group_useful_fday_df\
                             .loc[(model)][[ufd_thresh]].to_numpy(dtype=float)
                         ),
+                        fmt='.', linewidth=1, markersize=0,
                         color=model_plot_settings_dict['color'],
-                        linestyle='dotted', linewidth=1,
-                        marker=None, markersize=0
                     )
                     if ufd_thresh == ufd_two_thresh[0]:
                         model_label = model
@@ -523,9 +521,9 @@ class LongTermUsefulForecastDays:
                             run_length_model_group_useful_fday_running_mean_df\
                             .loc[(model)][[ufd_thresh]].to_numpy(dtype=float)
                         ),
+                        fmt='-', linewidth=2, markersize=0,
                         color=model_plot_settings_dict['color'],
-                        linestyle='solid', linewidth=2,
-                        marker=None, markersize=0, label=model_label
+                        label=model_label
                     )
             if self.stat == 'ACC':
                 ax.text(1.01, 0.83, f"{self.stat}={ufd_two_thresh[0]}",
