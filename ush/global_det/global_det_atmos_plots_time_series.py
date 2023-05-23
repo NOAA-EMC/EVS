@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_time_series.py
 Contact(s): Mallory Row
@@ -390,10 +391,10 @@ class TimeSeries:
                 ax.plot_date(
                     np.ma.compressed(masked_plot_dates),
                     np.ma.compressed(masked_model_num_data),
+                    fmt=model_num_plot_settings_dict['marker'],
                     color = model_num_plot_settings_dict['color'],
                     linestyle = model_num_plot_settings_dict['linestyle'],
                     linewidth = model_num_plot_settings_dict['linewidth'],
-                    marker = model_num_plot_settings_dict['marker'],
                     markersize = model_num_plot_settings_dict['markersize'],
                     label = (model_num_plot_name+' '+model_num_avg_label+' '
                              +str(model_num_npts)+' days'),
@@ -417,10 +418,10 @@ class TimeSeries:
                         ax.plot_date(
                             np.ma.compressed(obar_masked_plot_dates),
                             np.ma.compressed(obar_masked_model_num_data),
+                            fmt = obs_plot_settings_dict['marker'],
                             color = obs_plot_settings_dict['color'],
                             linestyle = obs_plot_settings_dict['linestyle'],
                             linewidth = obs_plot_settings_dict['linewidth'],
-                            marker = obs_plot_settings_dict['marker'],
                             markersize = obs_plot_settings_dict['markersize'],
                             label = ('obs '+obar_model_num_avg_label+' '
                                      +str(obar_model_num_npts)+' days'),
@@ -526,7 +527,7 @@ def main():
     # Need settings
     INPUT_DIR = os.environ['HOME']
     OUTPUT_DIR = os.environ['HOME']
-    LOGO_DIR = os.environ['HOME'],
+    LOGO_DIR = os.environ['HOME']
     MODEL_INFO_DICT = {
         'model1': {'name': 'MODEL_A',
                    'plot_name': 'PLOT_MODEL_A',
@@ -561,7 +562,7 @@ def main():
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',
-        'version': '10.1.1'
+        'version': '11.0.2'
     }
     # Create OUTPUT_DIR
     if not os.path.exists(OUTPUT_DIR):
