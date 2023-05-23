@@ -1218,14 +1218,25 @@ def check_model_files(job_dict):
                     }
         elif job_dict['JOB_GROUP'] == 'generate_stats':
             if job_dict['VERIF_CASE'] == 'grid2grid':
-                output_file_format = os.path.join(
-                    verif_case_dir, 'METplus_output',
-                    job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
-                    model, job_dict['VERIF_CASE'],
-                    'grid_stat_'+job_dict['VERIF_TYPE']+'_'
-                    +job_dict['job_name']+'_{lead?fmt=%2H}'
-                    '0000L_{valid?fmt=%Y%m%d_%H%M%S}V.stat'
-                )
+                if job_dict['VERIF_TYPE'] == 'sea_ice' \
+                        and 'DailyAvg_Extent' in job_dict['job_name']:
+                    output_file_format = os.path.join(
+                        verif_case_dir, 'METplus_output',
+                        job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
+                        model, job_dict['VERIF_CASE'],
+                        'stat_analysis_fcst'+model+'_obsosi_saf_'
+                        +job_dict['job_name']+'_SL1L2_'
+                        '{valid?fmt=%Y%m%d%H}.stat'
+                    )
+                else:
+                    output_file_format = os.path.join(
+                        verif_case_dir, 'METplus_output',
+                        job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
+                        model, job_dict['VERIF_CASE'],
+                        'grid_stat_'+job_dict['VERIF_TYPE']+'_'
+                        +job_dict['job_name']+'_{lead?fmt=%2H}'
+                        '0000L_{valid?fmt=%Y%m%d_%H%M%S}V.stat'
+                    )
                 fhr_check_output_dict[str(fhr)]['file1'] = {
                     'valid_date': valid_date_dt,
                     'init_date': init_date_dt,
@@ -1267,8 +1278,9 @@ def check_model_files(job_dict):
                         verif_case_dir, 'METplus_output',
                         job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
                         model, job_dict['VERIF_CASE'], 'daily_avg_'
-                        +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
-                        +'_init{init?fmt=%Y%m%d%H}_'
+                        +job_dict['VERIF_TYPE']+'_DailyAvg_Concentration'
+                        +job_dict['hemisphere'].upper()+'_'
+                        +'init{init?fmt=%Y%m%d%H}_'
                         +'valid{valid_shift?fmt=%Y%m%d%H?shift=-24}'
                         +'to{valid?fmt=%Y%m%d%H}.nc'
                     )
@@ -1374,7 +1386,8 @@ def check_model_files(job_dict):
                 fhr_key_input_files_exist_list.append(True)
                 if job_dict['JOB_GROUP'] == 'reformat_data' \
                         and job_dict['job_name'] in ['GeoHeightAnom',
-                                                     'Concentration',
+                                                     'ConcentrationNH',
+                                                     'ConcentrationSH',
                                                      'SST']:
                     fhr_list.append(
                         fhr_check_input_dict[fhr_key][fhr_fileN_key]\
@@ -1454,6 +1467,25 @@ def check_truth_files(job_dict):
                     +'.truth'
                 )
                 truth_input_file_list.append(model_truth_file)
+            elif job_dict['VERIF_TYPE'] == 'sea_ice':
+                osi_saf_file = os.path.join(
+                    verif_case_dir, 'data', 'osi_saf',
+                    'osi_saf.multi.'+job_dict['hemisphere']+'.'
+                    +(valid_date_dt-datetime.timedelta(hours=24))\
+                    .strftime('%Y%m%d%H')
+                    +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
+                )
+                truth_input_file_list.append(osi_saf_file)
+                osi_saf_output = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
+                    'osi_saf', job_dict['VERIF_CASE'], 'regrid_data_plane_'
+                    +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']+'_valid'
+                    +(valid_date_dt-datetime.timedelta(hours=24))\
+                    .strftime('%Y%m%d%H')
+                    +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
+                )
+                truth_output_file_list.append(osi_saf_output)
         elif job_dict['VERIF_CASE'] == 'grid2obs':
             if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc', 'ptype'] \
                     and 'Prepbufr' in job_dict['job_name']:
@@ -1530,13 +1562,26 @@ def check_truth_files(job_dict):
                 )
                 truth_input_file_list.append(ccpa_file)
             elif job_dict['VERIF_TYPE'] == 'sea_ice':
-                osi_saf_file = os.path.join(
-                    verif_case_dir, 'data', 'osi_saf',
-                    'osi_saf.multi.'
-                    +(valid_date_dt-datetime.timedelta(hours=24))\
-                    .strftime('%Y%m%d%H')
-                    +'to'+valid_date_dt.strftime('%Y%m%d%H')+'_G004.nc'
-                )
+                if 'DailyAvg_Concentration' in job_dict['job_name']:
+                    osi_saf_file = os.path.join(
+                        verif_case_dir, 'data', 'osi_saf',
+                        'osi_saf.multi.'+job_dict['hemisphere']+'.'
+                        +(valid_date_dt-datetime.timedelta(hours=24))\
+                        .strftime('%Y%m%d%H')
+                        +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
+                    )
+                elif 'DailyAvg_Extent' in job_dict['job_name']:
+                    osi_saf_file = os.path.join(
+                        verif_case_dir, 'METplus_output',
+                        job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
+                        'osi_saf', job_dict['VERIF_CASE'],
+                        'regrid_data_plane_sea_ice_'
+                        +'DailyAvg_Concentration'
+                        +job_dict['hemisphere'].upper()+'_valid'
+                        +(valid_date_dt-datetime.timedelta(hours=24))\
+                        .strftime('%Y%m%d%H')
+                        +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
+                    )
                 truth_input_file_list.append(osi_saf_file)
             elif job_dict['VERIF_TYPE'] == 'snow':
                 nohrsc_file = os.path.join(

@@ -127,6 +127,17 @@ if STEP == 'stats':
                                      RUN+'.'+date_dt.strftime('%Y%m%d'), 'ccpa',
                                      VERIF_CASE)
                     )
+                elif VERIF_CASE_STEP_type in 'sea_ice':
+                    COMROOT_dir_list.append(
+                        os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
+                                     RUN+'.'+date_dt.strftime('%Y%m%d'), 'osi_saf',
+                                     VERIF_CASE)
+                    )
+                    working_dir_list.append(
+                        os.path.join(working_output_base_dir,
+                                     RUN+'.'+date_dt.strftime('%Y%m%d'), 'osi_saf',
+                                     VERIF_CASE)
+                    )
         elif VERIF_CASE_STEP == 'grid2obs_stats':
             for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
                 if VERIF_CASE_STEP_type in ['pres_levs', 'sfc', 'ptype']:
