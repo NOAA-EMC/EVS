@@ -1,24 +1,26 @@
-#!/bin/bash -e
+#!/bin/bash
 
 # =============================================================================
 #
 # NAME: JEVS_MESOSCALE_STATS
 # CONTRIBUTOR(S): RS, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # CONTRIBUTOR(S): BZ, binbin.zhou@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# CONTRIBUTOR(S): MR, mallory.row@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Use ECF environment variables to define and run an EVS job
 # DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_nam_grid2obs_stats.ecf
 # DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_grid2obs_stats.ecf
+# DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_nam_precip_stats.ecf
+# DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_precip_stats.ecf
+# DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_nam_snowfall_stats.ecf
+# DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_snowfall_stats.ecf
 # DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_sref_grid2obs_stats.ecf
 #
 # =============================================================================
-
 
 ########################################
 # Preliminary data setup step  
 ########################################
 set -xa
-
-echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 
 # Shell Processing Variables
 export PS4='$SECONDS + '
@@ -27,16 +29,14 @@ date
 # LSF id (jobid) and Temp Directories
 export pid=$$
 export pgmout="OUTPUT.${pid}"
-
-export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-YES}
-export SENDECF=${SENDECF:-YES}
-
 export DATA=${DATA:-${DATAROOT:?}}/${jobid:?}
 rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
 
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
@@ -45,37 +45,39 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 export FIXevs=${FIXevs:-/lfs/h1/ops/prod/packages/evs.${evs_ver}/fix}
 export MASKS=$FIXevs/masks
 
+export cycle=t${cyc}z
+setpdy.sh
+. $DATA/PDY
+
 if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
-# in production the following will be set using compath.py
   export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
   export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
   export COMINrap=${COMINrap:-$(compath.py ${envir}/com/rap/${rap_ver})}
   export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
   export COMINobs=$COMINobsproc
   export COMINspcotlk=${COMINspcotlk:-$(compath.py -o $NET/$evs_ver/prep/cam)}
+  export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
+  export COMINmrms=${COMINmrms:-$DCOMROOT/ldmdata/obs/upperair/mrms}
+  export COMINnohrsc=${COMINnohrsc:-$DCOMROOT}
 
 # in production, the following will be set to the approp. COMOUT dir
   export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
-  export COMOUTfinal=$COMOUT/${MODELNAME}.${VDATE}
-  export COMOUTsmall=${COMOUTsmall:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE})}
-
+  export COMOUTfinal=${COMOUTfinal:-$COMOUT/${MODELNAME}.${VDATE}}
+  export COMOUTsmall=${COMOUTsmall:-$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE}
+  export VDATE=${VDATE:-$PDYm1}
+  mkdir -p $COMOUT $COMOUTfinal $COMOUTsmall
 #  source $config
+#  source $config
+
 elif [ $MODELNAME = sref ]; then
-  export cycle=t${cyc}z
-
-  setpdy.sh 
-  . $DATA/PDY
   export VDATE=${VDATE:-$PDYm2}
-
   export COMIN=${COMIN:-$(compath.py  $NET/$evs_ver)}/prep/$COMPONENT/$RUN
   export COMINsref=${COMINsref:-$(compath.py  sref/$sref_ver)}
   export COMINprepbufr=${COMINprepbufr:-$(compath.py  obsproc/${obsproc_ver})}
   export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
   export COMINsrefmean=${COMINsrefmean:-$(compath.py  $NET/$evs_ver)}/prep/$COMPONENT
-
   export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}/$STEP/$COMPONENT
   mkdir -p $COMOUT
-
   export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
   export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
   mkdir -p $COMOUTfinal $COMOUTsmall
@@ -99,3 +101,4 @@ fi
 
   echo "END: $(basename ${BASH_SOURCE[0]})"
 
+date
