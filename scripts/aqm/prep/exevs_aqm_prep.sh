@@ -2,7 +2,7 @@
 #######################################################################
 ##  UNIX Script Documentation Block
 ##                      .
-## Script name:         exevs_aqm_prep.sh
+## Script name:         exevs_aqmv6_prep.sh
 ## Script description:  Pre-processed input data for the MetPlus PointStat 
 ##                      of Air Quality Model.
 ## Original Author   :  Perry Shafran
@@ -12,8 +12,6 @@
 ##   04/26/2023   Ho-Chun Huang  add AirNOW ASCII2NC processing
 ##   05/01/2023   Ho-Chun Huang  separate v6 and v7 version becasuse
 ##                               of directory path difference
-##   05/22/2023   Ho-Chun Huang  copy from exevs_aqmv6_prep.sh for current
-##                               operational AQM
 ##
 ##
 #######################################################################
@@ -62,8 +60,14 @@ while [ ${ic} -le ${endvhr} ]; do
             echo "can not find ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf"
 	fi
     else
-	## add email function
-        echo "can not find ${checkfile}"
+        export subject="AIRNOW ASCII Hourly Data Missing for EVS ${COMPONENT}"
+        echo "Warning: No AIRNOW ASCII data was available for valid date ${VDATE}${vldhr}" > mailmsg
+        echo "Missing file is ${checkfile}" >> mailmsg
+        echo "Job ID: $jobid" >> mailmsg
+        cat mailmsg | mail -s "$subject" $maillist 
+
+        echo "Warning: No AIRNOW ASCII data was available for valid date ${VDATE}${vldhr}"
+        echo "Warning: Missing file is ${checkfile}"
     fi
     ((ic++))
 done
@@ -78,8 +82,14 @@ if [ -s ${checkfile} ]; then
         echo "can not find ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf"
     fi
 else
-    ## add email function
-    echo "can not find ${checkfile}"
+    export subject="AIRNOW ASCII Daily Data Missing for EVS ${COMPONENT}"
+    echo "Warning: No AIRNOW ASCII data was available for valid date ${VDATE}" > mailmsg
+    echo "Missing file is ${checkfile}" >> mailmsg
+    echo "Job ID: $jobid" >> mailmsg
+    cat mailmsg | mail -s "$subject" $maillist 
+
+    echo "Warning: No AIRNOW ASCII data was available for valid date ${VDATE}"
+    echo "Warning: Missing file is ${checkfile}"
 fi
 #
 ##
@@ -118,7 +128,14 @@ then
         wgrib2 -d 3 ${ozmax8_file} -set_ftime "54-77 hour ave fcst" -grib out3.grb2
         cat out1.grb2 out2.grb2 out3.grb2 > ${PREP_SAVE_DIR}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
     else
-        echo "ADD EMAIL FUNCTION; Can not find ${ozmax8_file}"
+        export subject="t${hour}z OZMAX8${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
+        echo "Warning: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z" > mailmsg
+        echo "Missing file is ${ozmax8_file}" >> mailmsg
+        echo "Job ID: $jobid" >> mailmsg
+        cat mailmsg | mail -s "$subject" $maillist
+
+        echo "Warning: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z"
+        echo "Missing file is ${ozmax8_file}"
     fi
 fi
 
@@ -132,7 +149,14 @@ then
         wgrib2 -d 3 ${ozmax8_file} -set_ftime "48-71 hour ave fcst" -grib out3.grb2
         cat out1.grb2 out2.grb2 out3.grb2 > ${PREP_SAVE_DIR}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
     else
-        echo "ADD EMAIL FUNCTION; Can not find ${ozmax8_file}"
+        export subject="t${hour}z OZMAX8${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
+        echo "Warning: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z" > mailmsg
+        echo "Missing file is ${ozmax8_file}" >> mailmsg
+        echo "Job ID: $jobid" >> mailmsg
+        cat mailmsg | mail -s "$subject" $maillist
+
+        echo "Warning: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z"
+        echo "Missing file is ${ozmax8_file}"
     fi
 fi
     

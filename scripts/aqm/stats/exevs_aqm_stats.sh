@@ -53,7 +53,7 @@ echo $model1
 # Begin verification of both the hourly data of ozone and PM
 #
 # The valid time of forecast model output is the reference here in PointStat
-# Because of the valid time definition between forecat outp[ut and observation is different
+# Because of the valid time definition between forecat output and observation is different
 #     For average concentration of a period [ cyc-1 to cyc ], aqm output is defined at cyc Z
 #     while observation is defined at cyc-1 Z
 # Thus, the one hour back OBS input will be checked and used in PointStat

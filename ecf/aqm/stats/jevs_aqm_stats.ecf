@@ -99,8 +99,19 @@ export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
 ########################################################################
 
-# CALL executable job script here
-$HOMEevs/jobs/aqm/stats/JEVS_AQM_STATS
+export maillist=${maillist:-'ho-chun.huang@noaa.gov,geoffrey.manikin@noaa.gov'}
+## export maillist=${maillist:-'perry.shafran@noaa.gov,geoffrey.manikin@noaa.gov'}
+
+if [ -z "$maillist" ]; then
+
+   echo "maillist variable is not defined. Exiting without continuing."
+
+else
+
+   # CALL executable job script here
+   $HOMEevs/jobs/aqm/stats/JEVS_AQM_STATS
+
+fi
 
 ######################################################################
 ## Purpose: This job will generate the grid2obs statistics for the AQM
