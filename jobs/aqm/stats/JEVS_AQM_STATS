@@ -70,13 +70,12 @@ export MET_bin_exec=${MET_bin_exec:-bin}
 export VDATE=${VDATE:-${PDYm3}}
 
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver}/)}
-## export COMINobs=${COMINobs:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
 export COMINobs=${COMINobs:-${DCOMROOT}}
 export COMINaqm=${COMINaqm:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
 export COMINaqmproc=${COMINaqmproc:-$COMIN/prep/${COMPONENT}}
-export COMOUT=${COMOUT:-$(compath.py ${envir}/com/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
-export COMOUTsmall=${COMOUTsmall:-$(compath.py ${envir}/com/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE})}
-export COMOUTfinal=${COMOUTfinal:-$(compath.py ${envir}/com/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${MODELNAME}.${VDATE})}
+export COMOUT=${COMOUT:-$(compath.py ${envir}/com/${NET}/${evs_ver}/${STEP}/${COMPONENT})}
+export COMOUTsmall=${COMOUTsmall:-${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}}
+export COMOUTfinal=${COMOUTfinal:-${COMOUT}/${MODELNAME}.${VDATE}}
 
 vfcst_ver=$(echo ${mod_ver} | cut -c1-2 )
 export fcst_input_ver=${fcst_input_ver:-${vfcst_ver}}
@@ -94,7 +93,7 @@ if [ -e "$pgmout" ]; then
 fi
 
 msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
+postmsg "$msg"
 
 if [ "$KEEPDATA" != "YES" ] ; then
     cd $DATAROOT

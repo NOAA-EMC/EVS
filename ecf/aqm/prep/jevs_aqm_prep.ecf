@@ -71,15 +71,27 @@ export cycle=t${cyc}z
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMIN=/lfs/h2/emc/physics/noscrub/$USER/${NET}/${evs_ver}
-## export COMINaqm=/lfs/h2/emc/physics/noscrub/$USER/verification/${MODELNAME}/${envir}
+##
+## For AQMv6 restrospective output
+## export COMINaqm=/lfs/h2/emc/physics/noscrub/ho-chun.huang/verification/${MODELNAME}/${envir}
+##
 export COMOUT=$COMIN/${STEP}/${COMPONENT}
 
 #
 ## export KEEPDATA=NO
 #
+########################################################################
+## VDATE = ${PDYm2} is okay after 01Z today for the default
+##               "export airnow_hourly_type=aqobs"
+##         VDATE = ${PDYm3} is currrently set as default in
+###              /EVS/jobs/aqm/prep/JEVS_AQM_PREP
+## VDATE = ${PDYm3} is needed after 00Z and before 01Z today for a
+##         option that is not "aqobs", i.e., one is using hourly input
+##         HourlyData_yyyymmddhh.dat but not the HourlAQObs_yyyymmddhh.dat
+########################################################################
+#
 ## export VDATE=20230513
 #
-########################################################################
 
 export maillist=${maillist:-'ho-chun.huang@noaa.gov,geoffrey.manikin@noaa.gov'}
 ## export maillist=${maillist:-'perry.shafran@noaa.gov,geoffrey.manikin@noaa.gov'}

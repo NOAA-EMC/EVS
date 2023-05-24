@@ -22,8 +22,7 @@ set -x
 # Define INPUT OBS DATA TYPE for ASCII2NC 
 #######################################################################
 #
-hourly_type=aqobs
-if [ "${hourly_type}" == "aqobs" ]; then
+if [ "${airnow_hourly_type}" == "aqobs" ]; then
     export HOURLY_INPUT_TYPE=HourlyAQObs
     export HOURLY_OUTPUT_TYPE=hourly_aqobs
     export HOURLY_ASCII2NC_FORMAT=airnowhourlyaqobs

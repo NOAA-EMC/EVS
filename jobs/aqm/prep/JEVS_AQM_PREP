@@ -80,6 +80,9 @@ export COMOUT=${COMOUT:-$(compath.py ${envir}/com/${NET}/${evs_ver}/${STEP}/${CO
 vfcst_ver=$(echo ${mod_ver} | cut -c1-2 )
 export fcst_input_ver=${fcst_input_ver:-${vfcst_ver}}
 
+# alternative choice is data
+export airnow_hourly_type=${airnow_hourly_type:-aqobs}
+
 export KEEPDATA=${KEEPDATA:-YES}
 
 #######################################################################
