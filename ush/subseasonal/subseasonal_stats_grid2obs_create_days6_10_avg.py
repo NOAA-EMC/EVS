@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: subseasonal_stats_grid2obs_create_days6_10_avg.py
 Contact(s): Shannon Shields

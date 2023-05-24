@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Program Name: check_subseasonal_config_plots.py
 Contact(s): Shannon Shields

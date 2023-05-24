@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Program Name: copy_subseasonal_stat_files.py
 Contact(s): Shannon Shields

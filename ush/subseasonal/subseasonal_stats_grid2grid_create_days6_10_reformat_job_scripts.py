@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Program Name: subseasonal_stats_grid2grid_create_days6_10_reformat_job_scripts.py
 Contact(s): Shannon Shields

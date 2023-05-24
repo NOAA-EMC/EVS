@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: subseasonal_stats_grid2grid_create_weeks3_4_avg.py
 Contact(s): Shannon Shields

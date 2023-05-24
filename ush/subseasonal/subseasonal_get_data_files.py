@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: subseasonal_get_data_files.py
 Contact(s): Shannon Shields
