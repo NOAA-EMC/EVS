@@ -64,7 +64,11 @@ if [ $verify = upper ] ; then
       elif [ $modnam = naefs ] ; then
         $USHevs/global_ens/evs_gens_atmos_g2g_reset_naefs.sh
         anl=gfsanl
-        mbrs=50
+	if [ $gefs_number = 20 ] ; then
+	  mbrs=40
+        elif [ $gefs_number = 30 ] ; then	  
+          mbrs=50
+	fi 
       elif [ $modnam = gfs ] ; then 
 	anl=gfsanl
 	mbrs=1
