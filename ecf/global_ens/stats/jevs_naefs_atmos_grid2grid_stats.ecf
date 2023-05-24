@@ -1,25 +1,26 @@
-#PBS -N evs_naefs_g2g_stats_%CYC%
+#!/bin/bash
+#
+#PBS -N jevs_naefs_g2g
 #PBS -j oe
 #PBS -S /bin/bash
-#PBS -q %QUEUE%
-#PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=01:30:00
+#PBS -q dev
+#PBS -A VERF-DEV
+#PBS -l walltime=00:30:00
 #PBS -l place=vscatter:exclhost,select=1:ncpus=4:mem=100GB
 #PBS -l debug=true
 
-%include <head.h>
-%include <envir-p1.h>
 
-export model=evs
-%include <model_ver.h>
-
-############################################################
-## Load modules
-#############################################################
-
+export OMP_NUM_THREADS=1
+# 2 processes (naefs/upper) + 1 (24h apcp)
+#
 set -x
 
-module purge
+export evs_ver=v1.0
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+
+source $HOMEevs/versions/run.ver.metplus5.0.0
+
+module reset
 module load envvar/$envvar_ver
 module load PrgEnv-intel/$PrgEnv_intel_ver
 module load intel/$intel_ver
@@ -34,8 +35,8 @@ module load zlib/$zlib_ver
 module load jasper/$jasper_ver
 module load netcdf/$netcdf_ver
 module load cfp/$cfp_ver
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/$intel_ver
+export HPC_OPT=/apps/ops/prod/libs
+module use /apps/ops/prod/libs/modulefiles/compiler/intel/$intel_ver
 module load gsl/${gsl_ver}
 module load python/$python_ver
 module load met/$met_ver
@@ -43,12 +44,6 @@ module load metplus/$metplus_ver
 module load udunits/${udunits_ver}
 
 module list
-
-export OMP_NUM_THREADS=1
-
-export cyc=%CYC%
-export cycles="%CYCLES%"
-
 
 
 export NET=evs
@@ -58,20 +53,18 @@ export COMPONENT=global_ens
 export VERIF_CASE=grid2grid
 export MODELNAME=naefs
 
+export KEEPDATA=YES
+
+
+export cyc=00
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
+export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
+export DATA=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
+export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export jobid=$job.${PBS_JOBID:-$$}
+
+export gefs_number=20
+
 
 ${HOMEevs}/jobs/global_ens/stats/JEVS_GLOBAL_ENS_STATS
-
-%include <tail.h>
-%manual
-################################################################################
-##TASKSCRIPT DOCUMENTATION BLOCK
-##
-##PURPOSE:  To execute the job that creates the ncepdate on IBMSP
-########################################################################
-########################################################################
-### Job specific troubleshooting instructions:
-##  see generic troubleshoot manual page
-##
-#######################################################################
-%end
-

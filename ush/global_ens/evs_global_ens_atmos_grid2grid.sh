@@ -49,8 +49,8 @@ elif  [ $model_list = ecme ] ; then
 elif  [ $model_list = naefs ] ; then
    $USHevs/global_ens/evs_gens_atmos_check_input_files.sh gfsanl
    $USHevs/global_ens/evs_gens_atmos_check_input_files.sh cmcanl
-   $USHevs/global_ens/evs_gens_atmos_check_input_files.sh gefs
-   $USHevs/global_ens/evs_gens_atmos_check_input_files.sh cmce
+   $USHevs/global_ens/evs_gens_atmos_check_input_files.sh gefs_bc
+   $USHevs/global_ens/evs_gens_atmos_check_input_files.sh cmce_bc
 fi
 
 
@@ -91,7 +91,11 @@ for  verify in $verifys ; do
       elif [ $modnam = naefs ] ; then
         $USHevs/global_ens/evs_gens_atmos_g2g_reset_naefs.sh
         anl=gfsanl
-        mbrs=50
+	if [ $gefs_number = 20 ] ; then
+            mbrs=40
+	elif [ $gefs_number = 30 ] ; then
+            mbrs=50
+	fi
       else
         echo "wrong model: $modnam"
       fi 
@@ -128,8 +132,15 @@ for  verify in $verifys ; do
 	else	
                 echo  "export modelgrid=grid3.f" >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
 	fi
+
         echo  "export model=$modnam"  >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
-        echo  "export MODEL=$MODL" >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
+
+	if [ $gefs_number = 30 ] && [ ${modnam} = naefs ] ; then
+	  echo  "export MODEL=${MODL}v7" >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh 
+	else
+           echo  "export MODEL=$MODL" >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
+	fi
+
         echo  "export modelhead=$modnam" >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
 
         echo  "export vbeg=$cyc" >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
@@ -160,10 +171,14 @@ for  verify in $verifys ; do
 
         if [ $modnam = naefs ] ; then 
 
-          echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/GenEnsProd_fcstNAEFS_obsModelAnalysis_climoERA5.conf " >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
+          #echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/GenEnsProd_fcstNAEFS_obsModelAnalysis_climoERA5.conf " >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
+          echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/GenEnsProd_fcstNAEFSbc_obsModelAnalysis_climoERA5.conf " >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
 
-	  echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/EnsembleStat_fcstNAEFS_obsModelAnalysis_climoERA5.conf " >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
-          echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/GridStat_fcstNAEFS_obsModelAnalysis_climoERA5_mean.conf " >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
+	  #echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/EnsembleStat_fcstNAEFS_obsModelAnalysis_climoERA5.conf " >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
+	  echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/EnsembleStat_fcstNAEFSbc_obsModelAnalysis_climoERA5.conf " >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
+
+	  #echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/GridStat_fcstNAEFS_obsModelAnalysis_climoERA5_mean.conf " >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
+          echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/GridStat_fcstNAEFSbc_obsModelAnalysis_climoERA5_mean.conf " >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
 
         elif [ $modnam = ecme ] ; then
 
@@ -222,7 +237,11 @@ for  verify in $verifys ; do
        mbrs=20
      elif [ $modnam = naefs ] ; then
        $USHevs/global_ens/evs_gens_atmos_precip_create_naefs.sh
-       mbrs=50
+       if [ $gefs_number = 20 ] ; then
+          mbrs=20
+       elif [ $gefs_number = 30 ] ; then
+	  mbrs=30
+       fi
      elif [ $modnam = ecme ] ; then
        mbrs=50
      else
@@ -263,10 +282,17 @@ for  verify in $verifys ; do
          else
 		 echo  "export modelgrid=grid3.24h.f" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
 	 fi
-         echo  "export modeltail='.nc'" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
+
+	 if [ $modnam = naefs ] ; then
+	    echo  "export modeltail='.grib2'" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
+	 else
+            echo  "export modeltail='.nc'" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
+	 fi
+
          echo  "export valid_increment=21600" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
          echo  "export climpath_apcp24_prob=$CLIMO/ccpa" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
-       elif [ $apcp = 06h ] ; then  
+
+        elif [ $apcp = 06h ] ; then  
          echo  "export vbeg=$cyc" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
          echo  "export vend=$cyc" >>  run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
          echo  "export valid_increment=21600" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh 
@@ -280,7 +306,13 @@ for  verify in $verifys ; do
        echo  "export ccpapath=$COM_IN" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
 
        echo  "export model=$modnam"  >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
-       echo  "export MODEL=$MODNAM" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
+
+       if [ $modnam = naefs ] && [ $gefs_number = 30 ] ; then
+	  echo  "export MODEL=${MODNAM}v7" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh 
+       else
+          echo  "export MODEL=$MODNAM" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
+       fi
+
        echo  "export modelhead=$modnam" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
        echo  "export extradir='atmos/'" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
        echo  "export members=$mbrs" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
@@ -306,7 +338,6 @@ for  verify in $verifys ; do
          fi
 
        elif  [ $modnam = naefs ] ; then
-
 	       
          echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/GenEnsProd_fcstNAEFS_obsCCPA${apcp}.conf " >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
 
@@ -318,6 +349,11 @@ for  verify in $verifys ; do
 
 
        echo "cp \$output_base/stat/${modnam}/*.stat $COMOUTsmall_precip" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
+
+       if [ $apcp = 24h ] ; then
+         mkdir -p $COMOUT/$RUN.$VDATE/apcp24_mean/$MODELNAME
+         echo "cp \$output_base/stat/${modnam}/GenEnsProd*APCP24*.nc  $COMOUT/$RUN.$VDATE/apcp24_mean/$MODELNAME" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
+       fi	
 
        chmod +x run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
 
