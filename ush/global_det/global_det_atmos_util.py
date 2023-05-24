@@ -3240,6 +3240,11 @@ def calculate_stat(logger, data_df, line_type, stat):
            stat_df = ME
        elif line_type == 'VL1L2':
            stat_df = np.sqrt(UVFFBAR) - np.sqrt(UVOOBAR)
+   elif stat == 'CORR': # Pearson Correlation Coefficient
+       if line_type == 'SL1L2':
+           var_f = FFBAR - FBAR*FBAR
+           var_o = OOBAR - OBAR*OBAR
+           stat_df = (FOBAR - (FBAR*OBAR))/np.sqrt(var_f*var_o)
    elif stat == 'CSI': # Critical Success Index'
        if line_type == 'CTC':
            stat_df = FY_OY/(FY_OY + FY_ON + FN_OY)
@@ -3293,6 +3298,11 @@ def calculate_stat(logger, data_df, line_type, stat):
    elif stat == 'SRATIO': # Success Ratio
        if line_type == 'CTC':
            stat_df = 1 - (FY_ON/(FY_ON + FY_OY))
+   elif stat == 'STDEV_ERR': # Standard Deviation of Error
+       if line_type == 'SL1L2':
+           stat_df = np.sqrt(
+               FFBAR + OOBAR - FBAR*FBAR - OBAR*OBAR - 2*FOBAR + 2*FBAR*OBAR
+           )
    else:
         logger.error(stat+" IS NOT AN OPTION")
         sys.exit(1)
