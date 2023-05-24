@@ -73,6 +73,8 @@ elif job_type == 'gather':
     OBSNAME = os.environ['OBSNAME']
     RUN = os.environ['RUN']
     njob = os.environ['njob']
+elif job_type in ['gather2', 'gather3']:
+    njob = os.environ['njob']
 if VERIF_CASE == 'snowfall':
     if job_type == 'reformat':
         ACC = os.environ['ACC']
@@ -87,6 +89,8 @@ if VERIF_CASE == 'snowfall':
         NBRHD_WIDTHS = os.environ['NBRHD_WIDTHS']
         GRID = os.environ['GRID']
         VAR_NAME = os.environ['VAR_NAME']
+    elif job_type in ['gather', 'gather2', 'gather3']:
+        COMPONENT = os.environ['COMPONENT']
 
 # Get expanded details from variable name
 if job_type in ['generate', 'reformat']:
@@ -104,6 +108,10 @@ if job_type in ['generate', 'reformat']:
                 OBS_VAR_LEVELS = var_def['var1_obs_levels']
                 OBS_VAR_THRESHOLDS = var_def['var1_obs_thresholds']
                 OBS_VAR_OPTIONS = var_def['var1_obs_options']
+                if job_type == 'reformat':
+                    MODEL_PCP_COMBINE_COMMAND = MODEL_PCP_COMBINE_COMMAND.replace(
+                        '{FCST_VAR_NAME}', FCST_VAR_NAME
+                    )
     if not plot_this_var:
         print(f"ERROR: VAR_NAME \"{VAR_NAME}\" is not valid for VERIF_TYPE "
               + f"\"{VERIF_TYPE}\" and MODEL \"{MODELNAME}\". Check "
@@ -247,6 +255,21 @@ if VERIF_CASE == 'snowfall':
                 + f'StatAnalysis_fcst{COMPONENT.upper()}_obs{OBSNAME.upper()}'
                 + f'_GatherByDay.conf'
             )
+        elif job_type == 'gather2':
+            job_cmd_list.append(
+                f'{metplus_launcher} -c '
+                + f'{MET_PLUS_CONF}/'
+                + f'StatAnalysis_fcst{COMPONENT.upper()}'
+                + f'_GatherByCycle.conf'
+            )
+        elif job_type == 'gather3':
+            job_cmd_list.append(
+                f'{metplus_launcher} -c '
+                + f'{MET_PLUS_CONF}/'
+                + f'StatAnalysis_fcst{COMPONENT.upper()}'
+                + f'_GatherByDay.conf'
+            )
+
     elif STEP == 'plots':
         pass
 

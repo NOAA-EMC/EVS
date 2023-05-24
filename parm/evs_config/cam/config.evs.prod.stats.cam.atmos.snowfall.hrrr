@@ -30,7 +30,7 @@ export COMINfcst=${COMINhrrr}
 
 # Additional Verification Settings
 if [ "$ACC" = "06" ]; then
-    export FHR_GROUP_LIST="SHORT, FULL"
+    export FHR_GROUP_LIST="SHORT FULL"
     export MODEL_ACC="06"
     export OBS_ACC="06"
     export BUCKET_INTERVAL="6"

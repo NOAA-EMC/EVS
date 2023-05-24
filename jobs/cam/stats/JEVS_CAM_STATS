@@ -33,7 +33,11 @@ if [ $MODELNAME = href ] ; then
         export VDATE=${VDATE:-$PDYm2}
     fi
 else
-    export VDATE=$(date -d "today -1 day" +"%Y%m%d")
+    if [ $VERIF_CASE = snowfall ] ; then
+        export VDATE=$(date -d "today -2 day" +"%Y%m%d")
+    else
+        export VDATE=$(date -d "today -1 day" +"%Y%m%d")
+    fi
 fi
 
 export COMIN=${COMIN:-$(compath.py  $NET/$evs_ver)}

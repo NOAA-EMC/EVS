@@ -43,6 +43,13 @@ for NEST in $NEST_LIST; do
             [[ $status -eq 0 ]] && echo "Successfully ran cam_check_settings.py ($job_type)"
             echo
      
+            # Check Availability of Input Data
+            python $USHevs/cam/cam_check_input_data.py
+            status=$?
+            [[ $status -ne 0 ]] && exit $status
+            [[ $status -eq 0 ]] && echo "Successfully ran cam_check_input_data.py ($job_type)"
+            echo
+     
             # Create Output Directories
             python $USHevs/cam/cam_create_output_dirs.py
             status=$?
