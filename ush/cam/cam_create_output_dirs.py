@@ -252,7 +252,10 @@ elif STEP == 'stats':
             working_dir_list.append(os.path.join(
                 working_output_base_dir, NEST, 'ascii2nc', 'tmp'
             ))
+            '''
             if NEST in ['spc_otlk', 'firewx']:
+            '''
+            if NEST in ['firewx']:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'genvxmask', 'confs'
                 ))

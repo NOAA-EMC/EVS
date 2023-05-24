@@ -83,6 +83,8 @@ elif job_type == 'generate':
     njob = os.environ['njob']
     GRID = os.environ['GRID']
     USHevs = os.environ['USHevs']
+    if NEST == 'spc_otlk':
+        COMINspcotlk = os.environ['COMINspcotlk']
 elif job_type == 'gather':
     VERIF_TYPE = os.environ['VERIF_TYPE']
     njob = os.environ['njob']
@@ -193,11 +195,13 @@ if job_type == 'reformat':
         job_env_vars_dict['metplus_launcher'] = metplus_launcher
         job_env_vars_dict['COMINspcotlk'] = COMINspcotlk
         job_env_vars_dict['GRID_POLY_LIST'] = GRID_POLY_LIST
+        '''
         job_iterate_over_custom_lists_dict['DAY'] = {
             'custom_list': '1 2 3',
             'export_value': '{DAY}',
             'dependent_vars': {}
         }
+        '''
     if NEST == 'firewx':
         job_env_vars_dict['GRID_POLY_LIST'] = GRID_POLY_LIST
     job_dependent_vars['FHR_START'] = {
@@ -289,14 +293,14 @@ elif job_type == 'generate':
             'bash_conditional': '[[ ${VHOUR} -lt 12 ]]',
             'bash_conditional_value': '"' + ', '.join(
                 glob.glob(os.path.join(
-                    MET_PLUS_OUT,VERIF_TYPE,'genvxmask',f'spc_otlk.{VDATE}',
-                    f'spc_otlk_*_v*-{VDATE}1200_for{VHOUR}Z*'
+                    COMINspcotlk,f'spc_otlk.*',
+                    f'spc_otlk.*.v*-{VDATE}12.3km*'
                 ))
             ) + '"',
             'bash_conditional_else_value': '"' + ', '.join(
                 glob.glob(os.path.join(
-                    MET_PLUS_OUT,VERIF_TYPE,'genvxmask',f'spc_otlk.{VDATE}',
-                    f'spc_otlk_*_v{VDATE}*for{VHOUR}Z*'
+                    COMINspcotlk,f'spc_otlk.*',
+                    f'spc_otlk.*.v{VDATE}*3km*'
                 ))
             ) + '"'
         }
@@ -328,18 +332,20 @@ if STEP == 'prep':
     pass
 elif STEP == 'stats':
     if job_type == 'reformat':
-        if NEST == 'spc_otlk':
-            job_cmd_list_iterative.append(
-                f'python '
-                + f'{USHevs}/{COMPONENT}/'
-                + f'{COMPONENT}_{STEP}_{VERIF_CASE}_gen_{NEST}_mask.py'
-            )
-        elif NEST == 'firewx':
+        if NEST == 'firewx':
             job_cmd_list_iterative.append(
                 f'{metplus_launcher} -c '
                 + f'{MET_PLUS_CONF}/'
                 + f'GenVxMask_{str(NEST).upper()}.conf'
             )
+        '''
+        elif NEST == 'spc_otlk':
+            job_cmd_list_iterative.append(
+                f'python '
+                + f'{USHevs}/{COMPONENT}/'
+                + f'{COMPONENT}_{STEP}_{VERIF_CASE}_gen_{NEST}_mask.py'
+            )
+        '''
         if VERIF_TYPE == 'mping':
             job_cmd_list_iterative.append(
                 f'{metplus_launcher} -c '

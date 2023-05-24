@@ -12,7 +12,8 @@
 set -x
 
 # Set Basic Environment Variables
-NEST_LIST="conus spc_otlk"
+#NEST_LIST="conus spc_otlk"
+NEST_LIST="conus"
 export VERIF_TYPE="mping"
 
 # Loop through HiRes Window ARW2 Grid2Obs configs
