@@ -21,13 +21,13 @@ class Toggle():
             'bs_method': 'FORECASTS', # bootstrap method. 'FORECASTS' bootstraps the lines in the stat files, 'MATCHED_PAIRS' bootstraps the f-o matched pairs
             'bs_min_samp': 30, # Minimum number of samples allowed for boostrapping to performed (if there are fewer samples, no confidence intervals)
             'display_averages': False, # display mean statistic for each model, averaged across the dimension of the independent variable
-            'sample_equalization': True, # equalize samples along each value of the independent variable where data exist
+            'sample_equalization': False, # equalize samples along each value of the independent variable where data exist
             'keep_shared_events_only': False, # functional for time_series only.
             'clear_prune_directory': True, # remove the intermediate directory created to store pruned data files temporarily
             'plot_logo_left': True,
             'plot_logo_right': True,
-            'zoom_logo_left': 1.0, 
-            'zoom_logo_right': 1.0,
+            'zoom_logo_left': .95, 
+            'zoom_logo_right': .95,
         }
 
 class Templates():
@@ -506,6 +506,10 @@ class ModelSpecs():
                 'settings_key':'LAMX', 
                 'plot_name':'FV3LAM-X'
             },
+            'gfs': {
+                'settings_key':'GFS', 
+                'plot_name':'GFS'
+            },
             'NAM_NEST': {
                 'settings_key':'NAM_NEST', 
                 'plot_name':'NAM Nest'
@@ -517,6 +521,10 @@ class ModelSpecs():
             'namnest': {
                 'settings_key':'NAM_NEST', 
                 'plot_name':'NAM Nest'
+            },
+            'nam': {
+                'settings_key':'NAM', 
+                'plot_name':'NAM'
             },
             'HRRRAK': {
                 'settings_key':'HRRR', 
@@ -535,6 +543,10 @@ class ModelSpecs():
                 'plot_name':'RAP'
             },
             'RAPNA': {
+                'settings_key':'RAP', 
+                'plot_name':'RAP'
+            },
+            'rap': {
                 'settings_key':'RAP', 
                 'plot_name':'RAP'
             },
@@ -663,6 +675,9 @@ class ModelSpecs():
             'HREFX_MEAN': {'color': '#000000',
                      'marker': 'P', 'markersize': 14,
                      'linestyle': 'dashed', 'linewidth': 3.},
+            'RAP': {'color': '#fb2020',
+                     'marker': 'o', 'markersize': 12,
+                     'linestyle': 'solid', 'linewidth': 3.},
             'HRRR': {'color': '#fb2020',
                      'marker': 'o', 'markersize': 12,
                      'linestyle': 'solid', 'linewidth': 3.},
@@ -711,6 +726,22 @@ class ModelSpecs():
 class Reference():
     def __init__(self):
         '''
+        Plotting jobs for the variables in this list will attempt to replace
+        threshold labels with category labels according to the sub-dictionary,
+        if the key of the sub-dictionary matches the value of 'FCST_VAR_NAME'
+        in the input stat file(s).  Currently only functional for mctc 
+        performance diagrams.
+        '''
+        self.thresh_categ_translator = {
+            'PTYPE': {
+                '1': 'rain',
+                '2': 'snow',
+                '3': 'freezing rain',
+                '4': 'ice pellets',
+            }
+        }
+
+        '''
         The plotting scripts will convert MET units if they are listed below.
         The name of the unit must match one of the keys in the 
         unit_conversions dictionary.  The name of the new unit will become the
@@ -721,6 +752,10 @@ class Reference():
         '''
         self.unit_conversions = {
             'kg/m^2': {
+                'convert_to': 'in',
+                'formula': self.formulas.mm_to_in
+            },
+            'mm': {
                 'convert_to': 'in',
                 'formula': self.formulas.mm_to_in
             },
@@ -743,6 +778,10 @@ class Reference():
             'm': {
                 'convert_to': 'mi',
                 'formula': self.formulas.m_to_mi
+            },
+            'm_snow': {
+                'convert_to': 'in',
+                'formula': self.formulas.m_snow_to_in
             },
         }
 
@@ -792,6 +831,24 @@ class Reference():
                                     'SOILW': ('Volumetric Soil Moisture'
                                               + ' Content'),
                                     'WEASD': 'Accum. Snow Depth Water Equiv.',
+                                    'WEASD_06': ('6-hour Accum. Snow Depth'
+                                                 + ' Water Equiv.'),
+                                    'WEASD_24': ('24-hour Accum. Snow Depth'
+                                                 + ' Water Equiv.'),
+                                    'WEASD_A06': ('6-hour Accum. Snow Depth'
+                                                 + ' Water Equiv.'),
+                                    'WEASD_A24': ('24-hour Accum. Snow Depth'
+                                                 + ' Water Equiv.'),
+                                    'SNOD': 'Accum. Snow Depth',
+                                    'SNOD_06': ('6-hour Accum. Snow Depth'),
+                                    'SNOD_24': ('24-hour Accum. Snow Depth'),
+                                    'SNOD_A06': ('6-hour Accum. Snow Depth'),
+                                    'SNOD_A24': ('24-hour Accum. Snow Depth'),
+                                    'ASNOW': 'Total Snowfall',
+                                    'ASNOW_06': ('6-hour Total Snowfall'),
+                                    'ASNOW_24': ('24-hour Total Snowfall'),
+                                    'ASNOW_A06': ('6-hour Total Snowfall'),
+                                    'ASNOW_A24': ('24-hour Total Snowfall'),
                                     'APCP': ('Accumulated'
                                                 + ' Precipitation'),
                                     'APCP_01': ('Accumulated'
@@ -3389,6 +3446,163 @@ class Reference():
                     }
                 }
             },
+            'snowfall_nohrsc': {
+                'NBRCNT': {
+                    'plot_stats_list': ('fss, afss, ufss, frate, orate'),
+                    'interp': 'NBRHD_SQUARE, NBRHD_CIRCLE',
+                    'vx_mask_list' : [
+                        'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 
+                        'CONUS_South', 'Alaska', 
+                    ],
+                    'var_dict': {
+                        'WEASD_06': {'fcst_var_names': ['WEASD', 'WEASD_06', 'WEASD_A06'],
+                                    'fcst_var_levels': ['Z0','A06','A6'],
+                                    'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                            + ' >=0.1016,'
+                                                            + ' >=0.2032,'
+                                                            + ' >=0.3048,'),
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['ASNOW', 'ASNOW_06'],
+                                    'obs_var_levels': ['A06','A6'],
+                                    'obs_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                           + ' >=0.1016,'
+                                                           + ' >=0.2032,'
+                                                           + ' >=0.3048,'),
+                                    'obs_var_options': '',
+                                    'plot_group':'precip'},
+                        'WEASD_24': {'fcst_var_names': ['WEASD', 'WEASD_24', 'WEASD_A24'],
+                                    'fcst_var_levels': ['Z0','A24'],
+                                    'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                            + ' >=0.1016,'
+                                                            + ' >=0.2032,'
+                                                            + ' >=0.3048,'),
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['ASNOW', 'ASNOW_24'],
+                                    'obs_var_levels': ['A24'],
+                                    'obs_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                           + ' >=0.1016,'
+                                                           + ' >=0.2032,'
+                                                           + ' >=0.3048,'),
+                                    'obs_var_options': '',
+                                    'plot_group':'precip'},
+                        'SNOD_06': {'fcst_var_names': [
+                                        'SNOD', 'ASNOW', 'SNOD_06', 'ASNOW_06', 
+                                        'SNOD_A06', 'ASNOW_A06'
+                                    ],
+                                    'fcst_var_levels': ['Z0','A06','A6'],
+                                    'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                            + ' >=0.1016,'
+                                                            + ' >=0.2032,'
+                                                            + ' >=0.3048,'),
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['ASNOW', 'ASNOW_06'],
+                                    'obs_var_levels': ['A06','A6'],
+                                    'obs_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                           + ' >=0.1016,'
+                                                           + ' >=0.2032,'
+                                                           + ' >=0.3048,'),
+                                    'obs_var_options': '',
+                                    'plot_group':'precip'},
+                        'SNOD_24': {'fcst_var_names': [
+                                        'SNOD', 'ASNOW', 'SNOD_24', 'ASNOW_24',
+                                        'SNOD_A24', 'ASNOW_A24'
+                                    ],
+                                    'fcst_var_levels': ['Z0','A24'],
+                                    'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                            + ' >=0.1016,'
+                                                            + ' >=0.2032,'
+                                                            + ' >=0.3048,'),
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['ASNOW', 'ASNOW_24'],
+                                    'obs_var_levels': ['A24'],
+                                    'obs_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                           + ' >=0.1016,'
+                                                           + ' >=0.2032,'
+                                                           + ' >=0.3048,'),
+                                    'obs_var_options': '',
+                                    'plot_group':'precip'}
+                    }
+                },
+                'CTC': {
+                    'plot_stats_list': ('me, ets, fss, csi, fbias, fbar,'
+                                        + ' obar, pod, faratio, farate, sratio'),
+                    'interp': 'NEAREST',
+                    'vx_mask_list' : [
+                        'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 
+                        'CONUS_South', 'G130', 'G214', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
+                        'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
+                        'LMV', 'GMC', 'APL', 'NAK', 'SAK'
+                    ],
+                    'var_dict': {
+                        'WEASD_06': {'fcst_var_names': ['WEASD', 'WEASD_06', 'WEASD_A06'],
+                                    'fcst_var_levels': ['Z0','A06','A6'],
+                                    'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                            + ' >=0.1016,'
+                                                            + ' >=0.2032,'
+                                                            + ' >=0.3048,'),
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['ASNOW', 'ASNOW_06'],
+                                    'obs_var_levels': ['A06','A6'],
+                                    'obs_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                           + ' >=0.1016,'
+                                                           + ' >=0.2032,'
+                                                           + ' >=0.3048,'),
+                                    'obs_var_options': '',
+                                    'plot_group':'precip'},
+                        'WEASD_24': {'fcst_var_names': ['WEASD', 'WEASD_24', 'WEASD_A24'],
+                                    'fcst_var_levels': ['Z0','A24'],
+                                    'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                            + ' >=0.1016,'
+                                                            + ' >=0.2032,'
+                                                            + ' >=0.3048,'),
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['ASNOW', 'ASNOW_24'],
+                                    'obs_var_levels': ['A24'],
+                                    'obs_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                           + ' >=0.1016,'
+                                                           + ' >=0.2032,'
+                                                           + ' >=0.3048,'),
+                                    'obs_var_options': '',
+                                    'plot_group':'precip'},
+                        'SNOD_06': {'fcst_var_names': [
+                                        'SNOD', 'ASNOW', 'SNOD_06', 'ASNOW_06',
+                                        'SNOD_A06', 'ASNOW_A06'
+                                    ],
+                                    'fcst_var_levels': ['Z0','A06','A6'],
+                                    'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                            + ' >=0.1016,'
+                                                            + ' >=0.2032,'
+                                                            + ' >=0.3048,'),
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['ASNOW', 'ASNOW_06'],
+                                    'obs_var_levels': ['A06','A6'],
+                                    'obs_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                           + ' >=0.1016,'
+                                                           + ' >=0.2032,'
+                                                           + ' >=0.3048,'),
+                                    'obs_var_options': '',
+                                    'plot_group':'precip'},
+                        'SNOD_24': {'fcst_var_names': [
+                                        'SNOD', 'ASNOW', 'SNOD_24', 'ASNOW_24',
+                                        'SNOD_A24', 'ASNOW_A24'
+                                    ],
+                                    'fcst_var_levels': ['Z0','A24'],
+                                    'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                            + ' >=0.1016,'
+                                                            + ' >=0.2032,'
+                                                            + ' >=0.3048,'),
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['ASNOW', 'ASNOW_24'],
+                                    'obs_var_levels': ['A24'],
+                                    'obs_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                           + ' >=0.1016,'
+                                                           + ' >=0.2032,'
+                                                           + ' >=0.3048,'),
+                                    'obs_var_options': '',
+                                    'plot_group':'precip'}
+                    }
+                }
+            },
             'satellite_ghrsst_ncei_avhrr_anl': {
                 'SL1L2': {
                     'plot_stats_list': 'me, rmse',
@@ -3545,3 +3759,14 @@ class Reference():
                 else:
                     mi_vals = np.divide(m_vals, 1609.34)
                 return mi_vals
+        def m_snow_to_in(m_vals, rounding=False, return_terms=False):
+            if return_terms:
+                M = 39.3701
+                C = 0.
+                return M, C
+            else:
+                if rounding:
+                    in_vals = (np.multiply(m_vals, 39.37)).round(decimals=2)
+                else:
+                    in_vals = np.multiply(m_vals, 39.37)
+                return in_vals

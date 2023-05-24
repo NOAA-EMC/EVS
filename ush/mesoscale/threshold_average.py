@@ -1,9 +1,9 @@
 ###############################################################################
 #
-# Name:          performance_diagram.py
+# Name:          threshold_average.py
 # Contact(s):    Marcel Caron
 # Developed:     Nov. 22, 2021 by Marcel Caron 
-# Last Modified: Jun. 3, 2022 by Marcel Caron             
+# Last Modified: May 19, 2023 by Marcel Caron             
 # Title:         Line plot of verification metric as a function of 
 #                forecast threshold
 # Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
@@ -16,6 +16,7 @@
 import os
 import sys
 import numpy as np
+import math
 import pandas as pd
 import logging
 from functools import reduce
@@ -26,7 +27,7 @@ import matplotlib.colors as colors
 import matplotlib.image as mpimg
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from datetime import datetime, timedelta as td
-
+from decimal import Decimal
 
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
@@ -39,7 +40,7 @@ from check_variables import *
 
 # ================ GLOBALS AND CONSTANTS ================
 
-plotter = Plotter(fig_size=(20., 14.))
+plotter = Plotter(fig_size=(28.,14.))
 plotter.set_up_plots()
 toggle = Toggle()
 templates = Templates()
@@ -52,23 +53,21 @@ reference = Reference()
 # =================== FUNCTIONS =========================
 
 
-def get_bias_label_position(bias_value, radius):
-    x = np.sqrt(np.power(radius, 2)/(np.power(bias_value, 2)+1))
-    y = np.sqrt(np.power(radius, 2) - np.power(x, 2))
-    return (x, y)
-
-def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger, 
+def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger, 
                       date_range: tuple, model_list: list, num: int = 0, 
-                      level: str = '500', flead='all', thresh: list = ['<20'], 
-                      metric1_name: str = 'SRATIO', metric2_name: str = 'POD', 
-                      metric3_name: str = 'CSI', date_type: str = 'VALID', 
-                      date_hours: list = [0,6,12,18], verif_type: str = 'pres', 
-                      line_type: str = 'CTC', save_dir: str = '.', dpi: int = 300, 
-                      confidence_intervals: bool = False, interp_pts: list = [],
-                      bs_nrep: int = 5000, 
-                      bs_method: str = 'MATCHED_PAIRS', ci_lev: float = .95, 
-                      bs_min_samp: int = 30, eval_period: str = 'TEST', 
-                      display_averages: bool = True, save_header: str = '', 
+                      levels: list = ['500'], flead='all', thresh: list = ['<20'], 
+                      metric_name: str = 'BCRMSE', 
+                      y_min_limit: float = -10., y_max_limit: float = 10., 
+                      y_lim_lock: bool = False, ylabel: str = '',  
+                      date_type: str = 'VALID', date_hours: list = [0,6,12,18], 
+                      verif_type: str = 'pres', save_dir: str = '.',
+                      requested_var: str = 'HGT', line_type: str = 'SL1L2',
+                      dpi: int = 300, confidence_intervals: bool = False,
+                      interp_pts: list = [],
+                      bs_nrep: int = 5000, bs_method: str = 'MATCHED_PAIRS', 
+                      ci_lev: float = .95, bs_min_samp: int = 30,
+                      eval_period: str = 'TEST', save_header: str = '', 
+                      display_averages: bool = True, 
                       plot_group: str = 'sfc_upper',
                       sample_equalization: bool = True,
                       plot_logo_left: bool = False,
@@ -78,20 +77,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
 
     logger.info("========================================")
     logger.info(f"Creating Plot {num} ...")
-
-    if (str(metric1_name).upper() != 'SRATIO' 
-            or str(metric2_name).upper() != 'POD' 
-            or str(metric3_name).upper() != 'CSI'):
-        w1 = (f"The performance diagram may not plot correctly unless the"
-              + f" order of metrics provided is \'SRATIO\', \'POD\', and"
-              + f" \'CSI\'.")
-        w2 = (f"The order provided is \'{metric1_name}\', \'{metric2_name}\',"
-              + f" and \'{metric3_name}\'.")
-        w3 = "Continuing ..."
-        logger.warning(w1)
-        logger.warning(w2)
-        logger.warning(w3)
-
+   
     if df.empty:
         logger.warning(f"Empty Dataframe. Continuing onto next plot...")
         logger.info("========================================")
@@ -103,7 +89,12 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     model_settings = model_colors.model_settings
 
     # filter by level
-    df = df[df['FCST_LEV'].astype(str).eq(str(level))]
+    df = df[df['FCST_LEV'].astype(str).isin([str(level) for level in levels])]
+    if len(levels) > 1:
+        logger.warning(f"Multiple levels were provided.  Choosing the first"
+                       + f" level ({levels[0]}) for figure title and file"
+                       + f" name labeling purposes.")
+    level = levels[0]
 
     if df.empty:
         logger.warning(f"Empty Dataframe. Continuing onto next plot...")
@@ -115,7 +106,6 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                        + f" plot...")
         logger.info("========================================")
         return None
-
     # filter by forecast lead times
     if isinstance(flead, list):
         if len(flead) <= 8:
@@ -131,8 +121,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         frange_save_string = f'F{frange_save_phrase}'
         df = df[df['LEAD_HOURS'].isin(flead)]
     elif isinstance(flead, tuple):
-        frange_string = (f'Forecast Hours {flead[0]:02d}'+u'\u2013'
-                         + f'{flead[1]:02d}')
+        frange_string = (f'Forecast Hours {flead[0]:02d}'
+                         + u'\u2013' + f'{flead[1]:02d}')
         frange_save_string = f'F{flead[0]:03d}-F{flead[1]:03d}'
         df = df[
             (df['LEAD_HOURS'] >= flead[0]) & (df['LEAD_HOURS'] <= flead[1])
@@ -147,7 +137,12 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         logger.error(e1)
         logger.error(e2)
         raise ValueError(e1+"\n"+e2)
-
+    if df.empty:
+        logger.warning(f"Empty Dataframe. Continuing onto next plot...")
+        plt.close(num)
+        logger.info("========================================")
+        return None
+    
     # Remove from date_hours the valid/init hours that don't exist in the 
     # dataframe
     date_hours = np.array(date_hours)[[
@@ -201,11 +196,10 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         zip(*[plot_util.format_thresh(t) for t in thresh])
     )
     symbol_found = False
-    for opt in ['>=', '>', '==','!=','<=', '<']: 
+    for opt in ['>=', '>', '==','!=','<=', '<']:
         if any(opt in t for t in requested_thresh_symbol):
             if all(opt in t for t in requested_thresh_symbol):
                 symbol_found = True
-                opt_letter = requested_thresh_letter[0][:2]
                 break
             else:
                 e = ("Threshold operands do not match among all requested"
@@ -218,25 +212,12 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         logger.error(e)
         logger.error("Quitting ...")
         raise ValueError(e+"\nQuitting ...")
-    if df.empty:
-        logger.warning(f"Empty Dataframe. Continuing onto next plot...")
-        plt.close(num)
-        logger.info("========================================")
-        return None
-    try:
-        df_thresh_symbol, df_thresh_letter = list(
-            zip(*[plot_util.format_thresh(t) for t in df['FCST_THRESH']])
-        )
-    except ValueError as e:
-        print(f"ERROR: {e}")
-        #print(f"df['FCST_THRESH']:{df['FCST_THRESH']}")
-        #print(f"In list form: {[t for t in df['FCST_THRESH']]}")
-        sys.exit(1)
+    
+    df_thresh_symbol, df_thresh_letter = list(
+        zip(*[plot_util.format_thresh(t) for t in df['FCST_THRESH']])
+    )
     df['FCST_THRESH_SYMBOL'] = df_thresh_symbol
     df['FCST_THRESH_VALUE'] = [str(item)[2:] for item in df_thresh_letter]
-    requested_thresh_value = [
-        str(item)[2:] for item in requested_thresh_letter
-    ]
     df = df[df['FCST_THRESH_SYMBOL'].isin(requested_thresh_symbol)]
     thresholds_removed = (
         np.array(requested_thresh_symbol)[
@@ -261,17 +242,17 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
 
     # Remove from model_list the models that don't exist in the dataframe
     cols_to_keep = [
-        str(model)
+        str(model) 
         in df['MODEL'].tolist() 
         for model in model_list
     ]
     models_removed = [
-        str(m)
+        str(m) 
         for (m, keep) in zip(model_list, cols_to_keep) if not keep
     ]
     models_removed_string = ', '.join(models_removed)
     model_list = [
-        str(m)
+        str(m) 
         for (m, keep) in zip(model_list, cols_to_keep) if keep
     ]
     if not all(cols_to_keep):
@@ -284,6 +265,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         plt.close(num)
         logger.info("========================================")
         return None
+    
     group_by = ['MODEL','FCST_THRESH_VALUE']
     if sample_equalization:
         df, bool_success = plot_util.equalize_samples(logger, df, group_by)
@@ -296,7 +278,10 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             return None
     df_groups = df.groupby(group_by)
     # Aggregate unit statistics before calculating metrics
-    df_aggregated = df_groups.sum()
+    if str(line_type).upper() == 'CTC':
+        df_aggregated = df_groups.sum()
+    else:
+        df_aggregated = df_groups.mean()
     if sample_equalization:
         df_aggregated['COUNTS']=df_groups.size()
     # Remove data if they exist for some but not all models at some value of 
@@ -313,37 +298,67 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         df_aggregated.index.get_level_values('FCST_THRESH_VALUE')
         .isin(df_reduced.index)
     ]
+
     if df_aggregated.empty:
         logger.warning(f"Empty Dataframe. Continuing onto next plot...")
         plt.close(num)
         logger.info("========================================")
         return None
 
-    # Calculate desired metric
-    metric_long_names = []
-    for metric_name in [metric1_name, metric2_name, metric3_name]:
-        stat_output = plot_util.calculate_stat(
-            logger, df_aggregated, str(metric_name).lower(), [None, None]
-        )
-        df_aggregated[str(metric_name).upper()] = stat_output[0]
-        metric_long_names.append(stat_output[2])
-        if confidence_intervals:
-            ci_output = df_groups.apply(
-                lambda x: plot_util.calculate_bootstrap_ci(
-                    logger, bs_method, x, str(metric_name).lower(), bs_nrep,
-                    ci_lev, bs_min_samp, [None, None]
+    units = df['FCST_UNITS'].tolist()[0]
+    metrics_using_var_units = [
+        'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
+        'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR',
+        'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
+    ]
+    coef, const = (None, None)
+    unit_convert = False
+    if units in reference.unit_conversions:
+        unit_convert = True
+        var_long_name_key = df['FCST_VAR'].tolist()[0]
+        if str(var_long_name_key).upper() == 'HGT':
+            if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
+                if units in ['m', 'gpm']:
+                    units = 'gpm'
+            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+                unit_convert = False
+            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
+                unit_convert = False
+        elif any(field in str(var_long_name_key).upper() for field in ['WEASD', 'SNOD', 'ASNOW']):
+            if units in ['m']:
+                units = 'm_snow'
+        if unit_convert:
+            if str(metric_name).upper() in metrics_using_var_units:
+                coef, const = (
+                    reference.unit_conversions[units]['formula'](
+                        None,
+                        return_terms=True
+                    )
                 )
+
+    # Calculate desired metric
+    stat_output = plot_util.calculate_stat(
+        logger, df_aggregated, str(metric_name).lower(), [coef, const]
+    )
+    df_aggregated[str(metric_name).upper()] = stat_output[0]
+    metric_long_name = stat_output[2]
+    if confidence_intervals:
+        ci_output = df_groups.apply(
+            lambda x: plot_util.calculate_bootstrap_ci(
+                logger, bs_method, x, str(metric_name).lower(), bs_nrep,
+                ci_lev, bs_min_samp, [coef, const]
             )
-            if any(ci_output['STATUS'] == 1):
-                logger.warning(f"Failed attempt to compute bootstrap"
-                               + f" confidence intervals.  Sample size"
-                               + f" for one or more groups is too small."
-                               + f" Minimum sample size can be changed"
-                               + f" in settings.py.")
-                logger.warning(f"Confidence intervals will not be"
-                               + f" plotted.")
-                confidence_intervals = False
-                continue
+        )
+        if any(ci_output['STATUS'] == 1):
+            logger.warning(f"Failed attempt to compute bootstrap"
+                           + f" confidence intervals.  Sample size"
+                           + f" for one or more groups is too small."
+                           + f" Minimum sample size can be changed"
+                           + f" in settings.py.")
+            logger.warning(f"Confidence intervals will not be"
+                           + f" plotted.")
+            confidence_intervals = False
+        else:
             ci_output = ci_output.reset_index(level=2, drop=True)
             ci_output = (
                 ci_output
@@ -356,29 +371,17 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             df_aggregated[str(metric_name).upper()+'_BUERR'] = ci_output[
                 'CI_UPPER'
             ].values
-    df_aggregated[str(metric1_name).upper()] = (
-        df_aggregated[str(metric1_name).upper()]
-    ).astype(float).tolist()
-    df_aggregated[str(metric2_name).upper()] = (
-        df_aggregated[str(metric2_name).upper()]
-    ).astype(float).tolist()
-    df_aggregated[str(metric3_name).upper()] = (
-        df_aggregated[str(metric3_name).upper()]
+
+    df_aggregated[str(metric_name).upper()] = (
+        df_aggregated[str(metric_name).upper()]
     ).astype(float).tolist()
 
     df_aggregated = df_aggregated[
         df_aggregated.index.isin(model_list, level='MODEL')
     ]
-    pivot_metric1 = pd.pivot_table(
-        df_aggregated, values=str(metric1_name).upper(), columns='MODEL', 
-        index='FCST_THRESH_VALUE'
-    )
-    pivot_metric2 = pd.pivot_table(
-        df_aggregated, values=str(metric2_name).upper(), columns='MODEL', 
-        index='FCST_THRESH_VALUE'
-    )
-    pivot_metric3 = pd.pivot_table(
-        df_aggregated, values=str(metric3_name).upper(), columns='MODEL', 
+
+    pivot_metric = pd.pivot_table(
+        df_aggregated, values=str(metric_name).upper(), columns='MODEL', 
         index='FCST_THRESH_VALUE'
     )
     if sample_equalization:
@@ -386,154 +389,27 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             df_aggregated, values='COUNTS', columns='MODEL',
             index='FCST_THRESH_VALUE'
         )
-    pivot_metric1 = pivot_metric1.dropna() 
-    pivot_metric2 = pivot_metric2.dropna() 
-    pivot_metric3 = pivot_metric3.dropna() 
-    all_thresh_idx = np.unique(
-        np.concatenate([
-            pivot_metric1.index, 
-            pivot_metric2.index, 
-            pivot_metric3.index
-        ])
-    )
-    all_model_col = np.unique(
-        np.concatenate([
-            pivot_metric1.columns,
-            pivot_metric2.columns,
-            pivot_metric3.columns
-        ])
-    )
+    pivot_metric = pivot_metric.dropna()
     if confidence_intervals:
-        pivot_ci_lower1 = pd.pivot_table(
-            df_aggregated, values=str(metric1_name).upper()+'_BLERR',
+        pivot_ci_lower = pd.pivot_table(
+            df_aggregated, values=str(metric_name).upper()+'_BLERR', 
             columns='MODEL', index='FCST_THRESH_VALUE'
         )
-        pivot_ci_upper1 = pd.pivot_table(
-            df_aggregated, values=str(metric1_name).upper()+'_BUERR',
+        pivot_ci_upper = pd.pivot_table(
+            df_aggregated, values=str(metric_name).upper()+'_BUERR', 
             columns='MODEL', index='FCST_THRESH_VALUE'
         )
-        pivot_ci_lower2 = pd.pivot_table(
-            df_aggregated, values=str(metric2_name).upper()+'_BLERR',
-            columns='MODEL', index='FCST_THRESH_VALUE'
-        )
-        pivot_ci_upper2 = pd.pivot_table(
-            df_aggregated, values=str(metric2_name).upper()+'_BUERR',
-            columns='MODEL', index='FCST_THRESH_VALUE'
-        )
-        all_ci_thresh_idx = np.unique(
-            np.concatenate([
-                pivot_ci_lower1.index,
-                pivot_ci_upper1.index,
-                pivot_ci_lower2.index,
-                pivot_ci_upper2.index
-            ])
-        )
-        
-    for thresh_idx in all_thresh_idx:
-        if np.any([
-                thresh_idx not in pivot_metric.index for pivot_metric 
-                in [pivot_metric1, pivot_metric2, pivot_metric3]]):
-            pivot_metric1.drop(
-                labels=thresh_idx, inplace=True, errors='ignore'
-            )
-            pivot_metric2.drop(
-                labels=thresh_idx, inplace=True, errors='ignore'
-            )
-            pivot_metric3.drop(
-                labels=thresh_idx, inplace=True, errors='ignore'
-            )
-            if sample_equalization:
-                pivot_counts.drop(
-                    labels=thresh_idx, inplace=True, errors='ignore'
-                )
-    if confidence_intervals:
-        for ci_thresh_idx in all_ci_thresh_idx:
-            if np.any([
-                    ci_thresh_idx not in pivot_metric.index for pivot_metric
-                    in [pivot_metric1, pivot_metric2, pivot_metric3]]):
-                pivot_ci_lower1.drop(
-                    labels=ci_thresh_idx, inplace=True, errors='ignore'
-                )
-                pivot_ci_upper1.drop(
-                    labels=ci_thresh_idx, inplace=True, errors='ignore'
-                )
-                pivot_ci_lower2.drop(
-                    labels=ci_thresh_idx, inplace=True, errors='ignore'
-                )
-                pivot_ci_upper2.drop(
-                    labels=ci_thresh_idx, inplace=True, errors='ignore'
-                )
-    models_in_pivot_metric = []
-    for model_col in all_model_col:
-        if np.any([
-                model_col not in pivot_metric.columns for pivot_metric
-                in [pivot_metric1, pivot_metric2, pivot_metric3]]):
-            pivot_metric1.drop(
-                columns=model_col, inplace=True, errors='ignore'
-            )
-            pivot_metric2.drop(
-                columns=model_col, inplace=True, errors='ignore'
-            )
-            pivot_metric3.drop(
-                columns=model_col, inplace=True, errors='ignore'
-            )
-            if sample_equalization:
-                pivot_counts.drop(
-                    columns=model_col, inplace=True, errors='ignore'
-                )
-            if confidence_intervals:
-                pivot_ci_lower1.drop(
-                    columns=model_col, inplace=True, errors='ignore'
-                )
-                pivot_ci_upper1.drop(
-                    columns=model_col, inplace=True, errors='ignore'
-                )
-                pivot_ci_lower2.drop(
-                    columns=model_col, inplace=True, errors='ignore'
-                )
-                pivot_ci_upper2.drop(
-                    columns=model_col, inplace=True, errors='ignore'
-                )
-        else:
-            models_in_pivot_metric.append(model_col)
-    cols_to_keep = [
-        str(model)
-        in models_in_pivot_metric 
-        for model in model_list
-    ]
-    models_removed = [
-        str(m)
-        for (m, keep) in zip(model_list, cols_to_keep) if not keep
-    ]
-    models_removed_string = ', '.join(models_removed)
-    model_list = [
-        str(m)
-        for (m, keep) in zip(model_list, cols_to_keep) if keep
-    ]
-    if not all(cols_to_keep):
-        logger.warning(
-            f"{models_removed_string} data were all NaNs and will not be"
-            + f" plotted."
-        )
-    if pivot_metric1.empty or pivot_metric2.empty:
+    if pivot_metric.empty:
         print_varname = df['FCST_VAR'].tolist()[0]
         logger.warning(
-            f"Could not find (and cannot plot) {metric1_name} and/or"
-            + f" {metric2_name} stats for {print_varname} at any threshold. "
-        )
-        logger.warning(
-            f"This may occur if no forecast or observed events were counted "
-            + f"at any threshold for any model, so that all performance "
-            + f"statistics are undefined. Continuing ..."
+            f"Could not find (and cannot plot) {metric_name}"
+            + f" stats for {print_varname} at any level. "
+            + f"Continuing ..."
         )
         plt.close(num)
         logger.info("========================================")
-        print(
-            "Continuing due to missing data.  Check the log file for details."
-        )
+        print("Quitting due to missing data.  Check the log file for details.")
         return None
-
-
     models_renamed = []
     count_renamed = 1
     for requested_model in model_list:
@@ -562,17 +438,16 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                     np.array(temp_colors)==c
                 ]
                 if np.flatnonzero(np.core.defchararray.find(
-                        models_sharing_colors, 'model'
-                    )!=-1):
-                    need_to_rename = models_sharing_colors[np.flatnonzero(
-                        np.core.defchararray.find(
+                        models_sharing_colors, 'model')!=-1):
+                    need_to_rename = models_sharing_colors[
+                        np.flatnonzero(np.core.defchararray.find(
                             models_sharing_colors, 'model'
-                        )!=-1
-                    )[0]]
+                        )!=-1)[0]
+                    ]
                 else:
                     continue
                 models_renamed[models_renamed==need_to_rename] = (
-                    'model' + str(count_renamed)
+                    'model'+str(count_renamed)
                 )
                 count_renamed+=1
             temp_colors = [
@@ -588,135 +463,49 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
 
     # Plot data
     logger.info("Begin plotting ...")
-    gray_colors = [
-        '#ffffff',
-        '#f5f5f5',
-        '#ececec',
-        '#dfdfdf',
-        '#cbcbcb',
-        '#b2b2b2',
-        '#8e8e8e',
-        '#6f6f6f',
-        '#545454',
-        '#3f3f3f',
-    ]
 
-    cmap = colors.ListedColormap(gray_colors)
-    grid_ticks = np.arange(0.001, 1.001, 0.001)
-    sr_g, pod_g = np.meshgrid(grid_ticks, grid_ticks)
-    bias = pod_g / sr_g
-    csi = 1.0 / (1.0 / sr_g + 1.0 / pod_g - 1.0)
-    bias_contour_vals = [
-        0.1, 0.2, 0.4, 0.6, 0.8, 1., 1.2, 1.5, 2., 3., 5., 10.
-    ]
-    b_contour = plt.contour(
-        sr_g, pod_g, bias, bias_contour_vals, 
-        colors='gray', linestyles='dashed'
-    )
-    csi_contour = plt.contourf(
-        sr_g, pod_g, csi, np.arange(0., 1.1, 0.1), cmap=cmap, extend='neither'
-    )
-    plt.clabel(
-        b_contour, fmt='%1.1f', 
-        manual=[
-            get_bias_label_position(bias_value, .75) 
-            for bias_value in bias_contour_vals
-        ]
-    )
-    y_min = 0.
-    y_max = 1.
-    thresh_labels = pivot_metric1.index
-    thresh_argsort = np.argsort(thresh_labels.astype(float))
-    requested_thresh_argsort = np.argsort([
-        float(item) for item in requested_thresh_value
-    ])
-    thresh_labels = [thresh_labels[i] for i in thresh_argsort]
-    requested_thresh_labels = [
-        requested_thresh_value[i] for i in requested_thresh_argsort
-    ]
-    thresh_markers = [
-        ('o',12),('P',14),('^',14),('X',14),('s',12),('D',12),('v',14),
-        ('p',14),('<',14),('d',14),(r'$\spadesuit$',14),('>',14),
-        (r'$\clubsuit$',14)
-    ]
-    if len(thresh_labels)+len(model_list) > 12:
-        e = (f"The plot legend may be cut off.  Consider reducing the number"
-             + f" of models or thresholds and rerunning the plotting job.")
-        logger.warning(e)
-        logger.warning("Continuing ...")
-    if len(thresh_labels) > len(thresh_markers):
-        e = (f"Too many thresholds were requested.  Only {len(thresh_markers)}"
-             + f" or fewer thresholds may be plotted.")
-        logger.error(e)
-        logger.error("Quitting ...")
-        plt.close(num)
-        logger.info("========================================")
-        return None
-    units = df['FCST_UNITS'].tolist()[0]
-    unit_convert = False
-    if units in reference.unit_conversions:
-        unit_convert = True
-        var_long_name_key = df['FCST_VAR'].tolist()[0]
-        if str(var_long_name_key).upper() == 'HGT':
-            if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
-                if units in ['m', 'gpm']:
-                    units = 'gpm'
-            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
-                unit_convert = False
-            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
-                unit_convert = False
-        if unit_convert:
-            thresh_labels = [float(tlab) for tlab in thresh_labels]
-            thresh_labels = reference.unit_conversions[units]['formula'](
-                thresh_labels,
-                rounding=True
-            )
-            thresh_diff_categories = np.array([
-                [np.power(10., y)]
-                for y in [-5,-4,-3,-2,-1,0,1,2,3,4,5]
-            ]).flatten()
-            precision_scale_indiv_mult = [
-                thresh_diff_categories[item] 
-                for item in np.digitize(thresh_labels, thresh_diff_categories)
+    if confidence_intervals:
+        indices_in_common = list(set.intersection(*map(
+            set, 
+            [
+                pivot_metric.index, 
+                pivot_ci_lower.index, 
+                pivot_ci_upper.index
             ]
-            precision_scale_collective_mult = 100/min(precision_scale_indiv_mult)
-            precision_scale = np.multiply(
-                precision_scale_indiv_mult, precision_scale_collective_mult
-            )
-            thresh_labels = [
-                f'{np.round(tlab)/precision_scale[t]}' 
-                for t, tlab in enumerate(
-                    np.multiply(thresh_labels, precision_scale)
-                )
-            ]
-            #thresh_labels = [f'{tlab}' for tlab in thresh_labels]
-            units = reference.unit_conversions[units]['convert_to']
+        )))
+        if pivot_metric[pivot_metric.index.isin(indices_in_common)].empty:
+            e = ("Some confidence intervals are missing. Turning "
+                 + f"confidence intervals off to avoid empty pivot tables.")
+            logger.warning(e)
+            confidence_intervals = False
+        else:
+            pivot_metric = pivot_metric[pivot_metric.index.isin(indices_in_common)]
+            pivot_ci_lower = pivot_ci_lower[pivot_ci_lower.index.isin(indices_in_common)]
+            pivot_ci_upper = pivot_ci_upper[pivot_ci_upper.index.isin(indices_in_common)]
+            if sample_equalization:
+                pivot_counts = pivot_counts[pivot_counts.index.isin(indices_in_common)]
+    x_vals = pivot_metric.index.astype(float).tolist()
+    if unit_convert:
+        x_vals = reference.unit_conversions[units]['formula'](
+            x_vals,
+            rounding=True
+        )
     if units == '-':
         units = ''
-    f = lambda m,c,ls,lw,ms,mec: plt.plot(
-        [], [], marker=m, mec=mec, mew=2., c=c, ls=ls, lw=lw, ms=ms)[0]
-    handles = [
-        f(
-            thresh_markers[i][0], 'white','solid',0.,thresh_markers[i][1], 
-            'black'
-        ) for i, item in enumerate(thresh_labels)
-    ]
-    labels = [
-        f'{opt}{thresh_label} {units}'
-        for thresh_label in thresh_labels
-    ]
-    
-    if sample_equalization:
-        counts = pivot_counts.mean(axis=1, skipna=True).fillna('')
-        counts = [
-            str(int(count)) if not isinstance(count,str) else count 
-            for count in counts
-        ]
-        labels = [
-            label+f' ({counts[l]})' 
-            for l, label in enumerate(labels)
-        ]
-    
+    x_vals_argsort = np.argsort(x_vals)
+    x_vals = np.sort(x_vals)
+    x_vals_incr = np.diff(x_vals)
+    if len(x_vals) > 1:
+        min_incr = np.min(x_vals_incr)
+    else:
+        min_incr = 0
+    incrs = [.05,.1,.5,1.,5.,10.,50.,100.,500.,1E3,5E3,1E4,5E4,1E5,5E5]
+    incr_idx = np.digitize(min_incr, incrs)
+    if incr_idx < 1:
+        incr_idx = 1
+    incr = incrs[incr_idx-1]
+    y_min = y_min_limit
+    y_max = y_max_limit
     n_mods = 0
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
@@ -725,90 +514,174 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             )
         else:
             model_plot_name = model_list[m]
-        if str(model_list[m]) not in pivot_metric1:
+        if str(model_list[m]) not in pivot_metric:
             continue
-        x_vals = [
-            pivot_metric1[str(model_list[m])].values[i] 
-            for i in thresh_argsort
-        ]
-        y_vals = [
-            pivot_metric2[str(model_list[m])].values[i] 
-            for i in thresh_argsort
-        ]
-        mosaic_vals = pivot_metric3[str(model_list[m])].values
-        x_mean = np.nanmean(x_vals)
-        y_mean = np.nanmean(y_vals)
-        mosaic_mean = np.nanmean(mosaic_vals)
+        y_vals_metric = pivot_metric[str(model_list[m])].values
+        y_vals_metric = np.array([y_vals_metric[i] for i in x_vals_argsort])
+        y_vals_metric_mean = np.nanmean(y_vals_metric)
         if confidence_intervals:
-            x_vals_ci_lower = pivot_ci_lower1[
-                str(model_list[m])
-            ].values
-            x_vals_ci_upper = pivot_ci_upper1[
-                str(model_list[m])
-            ].values
-            y_vals_ci_lower = pivot_ci_lower2[
-                str(model_list[m])
-            ].values
-            y_vals_ci_upper = pivot_ci_upper2[
-                str(model_list[m])
-            ].values
+            if (str(model_list[m]) not in pivot_ci_lower 
+                    or str(model_list[m]) not in pivot_ci_upper):
+                e = ("Some confidence intervals are missing. Turning "
+                     + f"confidence intervals off to avoid indexing errors.")
+                logger.warning(e)
+                confidence_intervals = False
+            else:
+                y_vals_ci_lower = pivot_ci_lower[
+                    str(model_list[m])
+                ].values
+                y_vals_ci_upper = pivot_ci_upper[
+                    str(model_list[m])
+                ].values
+        if not y_lim_lock:
+            if np.any(y_vals_metric != np.inf):
+                y_vals_metric_min = np.nanmin(y_vals_metric[y_vals_metric != np.inf])
+                y_vals_metric_max = np.nanmax(y_vals_metric[y_vals_metric != np.inf])
+            else:
+                y_vals_metric_min = np.nanmin(y_vals_metric)
+                y_vals_metric_max = np.nanmax(y_vals_metric)
+            if n_mods == 0:
+                y_mod_min = y_vals_metric_min
+                y_mod_max = y_vals_metric_max
+                n_mods+=1
+            else:
+                if math.isinf(y_mod_min):
+                    y_mod_min = y_vals_metric_min
+                else:
+                    y_mod_min = np.nanmin([y_mod_min, y_vals_metric_min])
+                if math.isinf(y_mod_max):
+                    y_mod_max = y_vals_metric_max
+                else:
+                    y_mod_max = np.nanmax([y_mod_max, y_vals_metric_max])
+            if (y_vals_metric_min > y_min_limit 
+                    and y_vals_metric_min <= y_mod_min):
+                y_min = y_vals_metric_min
+            if (y_vals_metric_max < y_max_limit 
+                    and y_vals_metric_max >= y_mod_max):
+                y_max = y_vals_metric_max
         if display_averages:
-            metric_mean_fmt_string = (f'{model_plot_name} ({x_mean:.2f},'
-                                      + f' {y_mean:.2f}, {mosaic_mean:.2f})')
+            if np.abs(y_vals_metric_mean) < 1E4:
+                metric_mean_fmt_string = (f'{model_plot_name}'
+                                          + f' ({y_vals_metric_mean:.2f})')
+            else:
+                metric_mean_fmt_string = (f'{model_plot_name}'
+                                          + f' ({y_vals_metric_mean:.2E})')
         else:
             metric_mean_fmt_string = f'{model_plot_name}'
         plt.plot(
-            x_vals, y_vals, marker='None', c=mod_setting_dicts[m]['color'], 
-            mew=2., mec='white', figure=fig, ms=0, 
-            ls=mod_setting_dicts[m]['linestyle'], 
-            lw=mod_setting_dicts[m]['linewidth']
+            x_vals, y_vals_metric, 
+            marker='o', c=mod_setting_dicts[m]['color'], mew=2., mec='white', 
+            figure=fig, ms=12, ls=mod_setting_dicts[m]['linestyle'], 
+            lw=mod_setting_dicts[m]['linewidth'],
+            label=f'{metric_mean_fmt_string}'
         )
-        for i, item in enumerate(x_vals):
-            plt.scatter(
-                x_vals[i], y_vals[i], marker=thresh_markers[i][0], 
-                c=mod_setting_dicts[m]['color'], linewidths=2., 
-                edgecolors='white', figure=fig, s=thresh_markers[i][1]**2,
-                zorder=10
-            )
         if confidence_intervals:
-            pc = plotter.get_error_boxes(
-                x_vals, y_vals, [x_vals_ci_lower, x_vals_ci_upper],
-                [y_vals_ci_lower, y_vals_ci_upper], 
-                ec=mod_setting_dicts[m]['color'],
-                ls=mod_setting_dicts[m]['linestyle'], lw=2.
+            plt.errorbar(
+                x_vals.tolist(), y_vals_metric,
+                yerr=[np.abs(y_vals_ci_lower), y_vals_ci_upper],
+                fmt='none', ecolor=mod_setting_dicts[m]['color'],
+                elinewidth=mod_setting_dicts[m]['linewidth'],
+                capsize=10., capthick=mod_setting_dicts[m]['linewidth'],
+                alpha=.70, zorder=0
             )
-            ax.add_collection(pc)
-        handles+=[
-            f(
-                '', mod_setting_dicts[m]['color'], 
-                mod_setting_dicts[m]['linestyle'], 
-                2*mod_setting_dicts[m]['linewidth'], 0, 'white'
-            )
-        ]
-        labels+=[f'{metric_mean_fmt_string}']
+    # Zero line
+    plt.axhline(y=0, color='black', linestyle='--', linewidth=1, zorder=0) 
+    metrics_with_axline_at_1 = [
+        'FBIAS','RSD'
+    ]
+    if str(metric_name).upper() in metrics_with_axline_at_1:
+        plt.axhline(y=1, color='black', linestyle='--', linewidth=1, zorder=0)
 
     # Configure axis ticks
-    xticks_min = 0.
-    xticks_max = 1.
-    incr = .1
+    if unit_convert:
+        x_vals_incr = reference.unit_conversions[units]['formula'](x_vals)
+        units = reference.unit_conversions[units]['convert_to']
+
+    xticks_min = np.min(x_vals)
+    xticks_max = np.max(x_vals)
+    xlim_min = np.floor(xticks_min/incr)*incr
+    xlim_max = np.ceil(xticks_max/incr)*incr
+    if incr < 1.:
+        precision_scale = 100/incr
+    else:
+        precision_scale = 1.
     xticks = [
-        x_val for x_val in np.arange(xticks_min, xticks_max+incr, incr)
-    ] 
-    xtick_labels = [f'{xtick:.1f}' for xtick in xticks]
+        x_val for x_val 
+        in np.arange(
+            xlim_min*precision_scale, 
+            xlim_max*precision_scale+incr*precision_scale, 
+            incr*precision_scale
+        )
+    ]
+    xticks=np.divide(xticks,precision_scale)
+    xtick_labels = [f'{opt}{xtick}' for xtick in xticks]
+    number_of_ticks_dig = [25,50,75,100,125,150,175,200]
+    show_xtick_every = np.ceil((
+        np.digitize(len(xtick_labels), number_of_ticks_dig) + 2
+    )/2.)*2
+    xtick_labels_with_blanks = ['' for item in xtick_labels]
+    #for i, item in enumerate(xtick_labels[::int(show_xtick_every)]):
+    #     xtick_labels_with_blanks[int(show_xtick_every)*i] = item
+     
+    replace_xticks = [
+        xtick for xtick in xticks 
+        if np.any([
+            np.absolute(xtick-x_val) < incr/2.*show_xtick_every 
+            for x_val in x_vals.tolist()
+        ])
+    ]
+    res_xticks = [val for val in xticks if val not in replace_xticks]
+    res_xlabels = [
+        xtick_labels_with_blanks[v] if val not in replace_xticks
+        else '' for v, val in enumerate(xticks)  
+    ]
+    add_labels = [
+        f'{opt}{np.round(x_val)/precision_scale}' for x_val in x_vals*precision_scale
+    ]
+    xticks_argsort = np.argsort(np.concatenate((xticks, x_vals.tolist())))
+    xticks = np.concatenate((
+        xticks, x_vals.tolist()
+    ))[xticks_argsort]
+    xtick_labels_with_blanks = np.concatenate((
+        res_xlabels, add_labels
+    ))[xticks_argsort]
+    #xticks_argsort = np.argsort(x_vals.tolist())
+    #xticks = np.array(x_vals.tolist())[xticks_argsort]
+    #xtick_labels_with_blanks = np.array(add_labels)[xticks_argsort]
+    res_diff = np.diff(
+        [xtick for x, xtick in enumerate(xticks) if xtick_labels_with_blanks[x]]
+    )
+    arg_xtick_labels = [
+        i for i, lab in enumerate(xtick_labels_with_blanks) if lab
+    ]
+    for i, d in enumerate(res_diff):
+        if d < (incr/2.*show_xtick_every):
+            xtick_labels_with_blanks[arg_xtick_labels[i+1]] = ''
+
     x_buffer_size = .015
     ax.set_xlim(
-        xticks_min-incr*x_buffer_size, xticks_max+incr*x_buffer_size
+        xlim_min-incr*x_buffer_size, xlim_max+incr*x_buffer_size
     )
-    yticks_min = 0.
-    yticks_max = 1.
-    yticks = [
-        y_val for y_val in np.arange(yticks_min, yticks_max+incr, incr)
-    ] 
-    ytick_labels = [f'{ytick:.1f}' for ytick in yticks]
-    y_buffer_size = .015
-    ax.set_ylim(
-        yticks_min-incr*y_buffer_size, yticks_max+incr*y_buffer_size
-    )
+    y_range_categories = np.array([
+        [np.power(10.,y), 2.*np.power(10.,y)] 
+        for y in [-5,-4,-3,-2,-1,0,1,2,3,4,5]
+    ]).flatten()
+    round_to_nearest_categories = y_range_categories/20.
+    if math.isinf(y_min):
+        y_min = y_min_limit
+    if math.isinf(y_max):
+        y_max = y_max_limit
+    y_range = y_max-y_min
+    round_to_nearest =  round_to_nearest_categories[
+        np.digitize(y_range, y_range_categories[:-1])
+    ]
+    ylim_min = np.floor(y_min/round_to_nearest)*round_to_nearest
+    ylim_max = np.ceil(y_max/round_to_nearest)*round_to_nearest
+    if len(str(ylim_min)) > 5 and np.abs(ylim_min) < 1.:
+        ylim_min = float(
+            np.format_float_scientific(ylim_min, unique=False, precision=3)
+        )
+    yticks = np.arange(ylim_min, ylim_max+round_to_nearest, round_to_nearest)
     var_long_name_key = df['FCST_VAR'].tolist()[0]
     if str(var_long_name_key).upper() == 'HGT':
         if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
@@ -816,15 +689,20 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
             var_long_name_key = 'HPBL'
     var_long_name = variable_translator[var_long_name_key]
-    metrics_using_var_units = [
-        'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
-        'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR',
-        'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
-    ]
-    ax.set_ylabel(f'{metric_long_names[1]}')
-    ax.set_xlabel(f'{metric_long_names[0]}') 
-    ax.set_xticklabels(xtick_labels)
-    ax.set_yticklabels(ytick_labels)
+    if str(metric_name).upper() in metrics_using_var_units:
+        if units:
+            ylabel = f'{var_long_name} ({units})'
+        else:
+            ylabel = f'{var_long_name} (unitless)'
+    else:
+        ylabel = f'{metric_long_name}'
+    ax.set_ylim(ylim_min, ylim_max)
+    ax.set_ylabel(ylabel)
+    if units:
+        ax.set_xlabel(f'Forecast Threshold ({units})') 
+    else:
+        ax.set_xlabel(f'Forecast Threshold (unitless)')
+    ax.set_xticklabels(xtick_labels_with_blanks)
     ax.set_yticks(yticks)
     ax.set_xticks(xticks)
     ax.tick_params(
@@ -832,43 +710,48 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     )
     ax.tick_params(
         left=False, labelleft=False, labelright=False, labelbottom=False, 
-        labeltop=False, which='minor', pad=15
+        labeltop=False, which='minor', axis='y', pad=15
     )
-
+    majticks = [i for i, item in enumerate(xtick_labels_with_blanks) if item]
+    for mt in majticks:
+        ax.xaxis.get_major_ticks()[mt].tick1line.set_markersize(8)
     ax.legend(
-        handles, labels, loc='upper center', fontsize=15, framealpha=1, 
-        bbox_to_anchor=(0.5, -0.08), ncol=5, frameon=True, numpoints=1, 
+        loc='upper center', fontsize=15, framealpha=1, 
+        bbox_to_anchor=(0.5, -0.08), ncol=4, frameon=True, numpoints=2, 
         borderpad=.8, labelspacing=2., columnspacing=3., handlelength=3., 
         handletextpad=.4, borderaxespad=.5) 
+    fig.subplots_adjust(bottom=.2, wspace=0, hspace=0)
     ax.grid(
-        visible=True, which='major', axis='both', alpha=.35, linestyle='--', 
-        linewidth=.5, c='black', zorder=0
+        visible=True, which='major', axis='both', alpha=.5, linestyle='--', 
+        linewidth=.5, zorder=0
     )
 
-    fig.subplots_adjust(bottom=.2, right=.77, left=.23, wspace=0, hspace=0)
-    cax = fig.add_axes([.775, .2, .01, .725])
-    cbar_ticks = [0.,.1,.2,.3,.4,.5,.6,.7,.8,.9,1.]
-    cb = plt.colorbar(
-        csi_contour, orientation='vertical', cax=cax, ticks=cbar_ticks,
-        spacing='uniform', drawedges=True
-    )
-    cb.dividers.set_color('black')
-    cb.dividers.set_linewidth(2)
-    cb.ax.tick_params(
-        labelsize=8, labelright=True, labelleft=False, right=False
-    )
-    cb.ax.set_yticklabels(
-        [f'{cbar_tick:.1f}' for cbar_tick in cbar_ticks], 
-        fontdict={'fontsize': 12}
-    )
-    cax.hlines([0, 1], 0, 1, colors='black', linewidth=4)
-    cb.set_label(f'{metric_long_names[2]}')
+    if sample_equalization:
+        annot_y_offset = 18
+        counts = pivot_counts.mean(axis=1, skipna=True).fillna('')
+        for count, xval in zip(counts, x_vals.tolist()):
+            if not isinstance(count, str):
+                count = str(int(count))
+            ax.annotate(
+                f'{count}', xy=(xval,1.),
+                xycoords=('data','axes fraction'), xytext=(0,annot_y_offset),
+                textcoords='offset points', va='top', fontsize=16,
+                color='dimgrey', ha='center'
+            )
+        ax.annotate(
+            '#SAMPLES', xy=(0.,1.), xycoords='axes fraction',
+            xytext=(-50, annot_y_offset+3), textcoords='offset points', va='top',
+            fontsize=11, color='dimgrey', ha='center'
+        )
+        fig.subplots_adjust(top=.9)
+    else:
+        annot_y_offset = 0
 
     # Title
     domain = df['VX_MASK'].tolist()[0]
     var_savename = df['FCST_VAR'].tolist()[0]
-    if 'APCP' in var_savename.upper():
-        var_savename = 'APCP'
+    if any(field in var_savename.upper() for field in ['APCP']):
+        var_savename = re.sub('[^a-zA-Z \n\.]', '', var_savename)
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
         var_savename = 'HPBL'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['MSLET','MSLMA','PRMSL']:
@@ -890,6 +773,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     '''
     date_start_string = date_range[0].strftime('%d %b %Y')
     date_end_string = date_range[1].strftime('%d %b %Y')
+    metric_string = metric_long_name
     if str(level).upper() in ['CEILING', 'TOTAL', 'PBL']:
         if str(level).upper() == 'CEILING':
             level_string = ''
@@ -915,8 +799,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         else:
             level_string = ''
             level_savename = f'{level}'
-    elif (str(verif_type).lower() 
-            in ['sfc', 'conus_sfc', 'polar_sfc', 'mrms', 'metar']):
+    elif str(verif_type).lower() in ['sfc', 'conus_sfc', 'polar_sfc', 'mrms', 'metar']:
         if 'Z' in str(level):
             if str(level).upper() == 'Z0':
                 if str(var_long_name_key).upper() in ['MLSP', 'MSLET', 'MSLMA', 'PRMSL']:
@@ -933,17 +816,17 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                 else:
                     level_string = f'{level_num}-m '
                     level_savename = f'{level}'
-        elif 'L' in str(level):
+        elif 'L' in str(level): 
             level_string = ''
             level_savename = f'{level}'
-        elif 'A' in str(level):
+        elif 'A' in str(level): 
             level_num = level.replace('A', '')
             level_string = f'{level_num}-hour '
             level_savename = f'A{level_num.zfill(2)}'
         else:
             level_string = f'{level} '
             level_savename = f'{level}'
-    elif str(verif_type).lower() in ['ccpa','mrms']:
+    elif str(verif_type).lower() in ['ccpa', 'mrms', 'nohrsc']:
         if 'A' in str(level):
             level_num = level.replace('A', '')
             level_string = f'{level_num}-hour '
@@ -954,35 +837,31 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     else:
         level_string = f'{level} '
         level_savename = f'{level}'
-    thresholds_phrase = ', '.join([
-        f'{opt}{thresh_label}' for thresh_label in thresh_labels
-    ])
-    thresholds_save_phrase = ''.join([
-        f'{opt_letter}{thresh_label}' 
-        for thresh_label in requested_thresh_labels
-    ]).replace('.','p')
-    thresholds_string = f'Forecast Thresholds {thresholds_phrase}'
-    title1 = f'Performance Diagram'
+    title1 = f'{metric_string}'
     if interp_pts and '' not in interp_pts:
         title1+=f' {interp_pts_string}'
-    if not units:
-        title2 = (f'{level_string}{var_long_name} (unitless), {domain_string}')
+    if units:
+        title2 = f'{level_string}{var_long_name} ({units}), {domain_string}'
     else:
-        title2 = (f'{level_string}{var_long_name} ({units}), {domain_string}')
+        title2 = f'{level_string}{var_long_name} (unitless), {domain_string}'
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
               + f'{date_start_string} to {date_end_string}, {frange_string}')
     title_center = '\n'.join([title1, title2, title3])
-    ax.set_title(title_center, loc=plotter.title_loc) 
+    if sample_equalization:
+        title_pad=40
+    else:
+        title_pad=None
+    ax.set_title(title_center, loc=plotter.title_loc, pad=title_pad) 
     logger.info("... Plotting complete.")
 
     # Logos
     if plot_logo_left:
         if os.path.exists(path_logo_left):
             left_logo_arr = mpimg.imread(path_logo_left)
-            left_image_box = OffsetImage(left_logo_arr, zoom=zoom_logo_left*.8)
+            left_image_box = OffsetImage(left_logo_arr, zoom=zoom_logo_left)
             ab_left = AnnotationBbox(
                 left_image_box, xy=(0.,1.), xycoords='axes fraction',
-                xybox=(0, 3), boxcoords='offset points', frameon = False,
+                xybox=(0, annot_y_offset+2), boxcoords='offset points', frameon = False,
                 box_alignment=(0,0)
             )
             ax.add_artist(ab_left)
@@ -994,10 +873,10 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     if plot_logo_right:
         if os.path.exists(path_logo_right):
             right_logo_arr = mpimg.imread(path_logo_right)
-            right_image_box = OffsetImage(right_logo_arr, zoom=zoom_logo_right*.8)
+            right_image_box = OffsetImage(right_logo_arr, zoom=zoom_logo_right)
             ab_right = AnnotationBbox(
                 right_image_box, xy=(1.,1.), xycoords='axes fraction',
-                xybox=(0, 3), boxcoords='offset points', frameon = False,
+                xybox=(0, annot_y_offset+2), boxcoords='offset points', frameon = False,
                 box_alignment=(1,0)
             )
             ax.add_artist(ab_right)
@@ -1027,14 +906,12 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
 
     plot_info = '_'.join(
         [item for item in [
-            f'perfdiag',
+            f'threshmean',
             f'{str(date_type).lower()}{str(date_hours_savename).lower()}',
             f'{str(frange_save_string).lower()}',
         ] if item]
     )
-    save_name = (
-        f'ctc'
-    )
+    save_name = (f'{str(metric_name).lower()}')
     if interp_pts and '' not in interp_pts:
         save_name+=f'_{str(interp_pts_save_string).lower()}'
     save_name+=f'.{str(var_savename).lower()}'
@@ -1152,9 +1029,9 @@ def main():
     logger.debug(f"Y_MIN_LIMIT: {Y_MIN_LIMIT}")
     logger.debug(f"Y_MAX_LIMIT: {Y_MAX_LIMIT}")
     logger.debug(f"Y_LIM_LOCK: {Y_LIM_LOCK}")
-    logger.debug(f"X_MIN_LIMIT: Ignored for performance diagrams")
-    logger.debug(f"X_MAX_LIMIT: Ignored for performance diagrams")
-    logger.debug(f"X_LIM_LOCK: Ignored for performance_diagrams")
+    logger.debug(f"X_MIN_LIMIT: Ignored for series by threshold")
+    logger.debug(f"X_MAX_LIMIT: Ignored for series by threshold")
+    logger.debug(f"X_LIM_LOCK: Ignored for series by threshold")
     logger.debug(f"Display averages? {'yes' if display_averages else 'no'}")
     logger.debug(
         f"Clear prune directories? {'yes' if clear_prune_dir else 'no'}"
@@ -1282,47 +1159,48 @@ def main():
                 logger.warning(e)
                 logger.warning("Continuing ...")
                 continue
-            for domain in DOMAINS:
-                if str(domain) not in case_specs['vx_mask_list']:
-                    e = (f"The requested domain is not valid for the"
+        for domain in DOMAINS:
+            if str(domain) not in case_specs['vx_mask_list']:
+                e = (f"The requested domain is not valid for the requested"
+                     + f" case type ({VERIF_CASETYPE}) and line_type"
+                     + f" ({LINE_TYPE}): {domain}")
+                logger.warning(e)
+                logger.warning("Continuing ...")
+                continue
+            df = df_preprocessing.get_preprocessed_data(
+                logger, STATS_DIR, PRUNE_DIR, OUTPUT_BASE_TEMPLATE, VERIF_CASE, VERIF_TYPE, 
+                LINE_TYPE, DATE_TYPE, date_range, EVAL_PERIOD, date_hours, 
+                FLEADS, requested_var, fcst_var_names, obs_var_names, MODELS, 
+                domain, INTERP, MET_VERSION, clear_prune_dir
+            )
+            logger.info("test")
+            if df is None:
+                continue
+            for metric in metrics:
+                if (str(metric).lower()
+                        not in case_specs['plot_stats_list']
+                        .replace(' ','').split(',')):
+                    e = (f"The requested metric is not valid for the"
                          + f" requested case type ({VERIF_CASETYPE}) and"
-                         + f" line_type ({LINE_TYPE}): {domain}")
+                         + f" line_type ({LINE_TYPE}): {metric}")
                     logger.warning(e)
                     logger.warning("Continuing ...")
                     continue
-                df = df_preprocessing.get_preprocessed_data(
-                    logger, STATS_DIR, PRUNE_DIR, OUTPUT_BASE_TEMPLATE, VERIF_CASE, 
-                    VERIF_TYPE, LINE_TYPE, DATE_TYPE, date_range, EVAL_PERIOD, 
-                    date_hours, FLEADS, requested_var, fcst_var_names, 
-                    obs_var_names, MODELS, domain, INTERP, MET_VERSION, 
-                    clear_prune_dir
-                )
-                if df is None:
-                    continue
-                for metric in metrics:
-                    if (str(metric).lower()
-                            not in case_specs['plot_stats_list']
-                            .replace(' ','').split(',')):
-                        e = (f"The requested metric is not valid for the"
-                             + f" requested case type ({VERIF_CASETYPE}) and"
-                             + f" line_type ({LINE_TYPE}): {metric}")
-                        logger.warning(e)
-                        logger.warning("Continuing ...")
-                        continue
                 df_metric = df
-                plot_performance_diagram(
+                plot_threshold_average(
                     df_metric, logger, date_range, MODELS, num=num, 
-                    flead=FLEADS, level=fcst_level, thresh=fcst_thresh, 
-                    metric1_name=metrics[0], metric2_name=metrics[1],
-                    metric3_name=metrics[2], date_type=DATE_TYPE,  
-                    verif_type=VERIF_TYPE, line_type=LINE_TYPE, 
+                    flead=FLEADS, levels=FCST_LEVELS, thresh=fcst_thresh, 
+                    metric_name=metric, date_type=DATE_TYPE, 
+                    y_min_limit=Y_MIN_LIMIT, y_max_limit=Y_MAX_LIMIT, 
+                    y_lim_lock=Y_LIM_LOCK, ylabel='Metric (unitless)', 
+                    line_type=LINE_TYPE, verif_type=VERIF_TYPE, 
                     date_hours=date_hours, save_dir=SAVE_DIR, 
-                    eval_period=EVAL_PERIOD, 
-                    display_averages=display_averages, save_header=IMG_HEADER,
-                    plot_group=plot_group, 
+                    eval_period=EVAL_PERIOD,
+                    display_averages=display_averages, 
+                    save_header=IMG_HEADER, plot_group=plot_group,
                     confidence_intervals=CONFIDENCE_INTERVALS, 
                     interp_pts=INTERP_PNTS,
-                    bs_nrep=bs_nrep, bs_method=bs_method, ci_lev=ci_lev, 
+                    bs_nrep=bs_nrep, bs_method=bs_method, ci_lev=ci_lev,
                     bs_min_samp=bs_min_samp,
                     sample_equalization=sample_equalization,
                     plot_logo_left=plot_logo_left,
@@ -1385,7 +1263,7 @@ if __name__ == "__main__":
     FCST_THRESH = FCST_THRESH.replace(' ','').split(',')
     
     # requires two metrics to plot
-    METRICS = check_STATS(os.environ['STATS']).replace(' ','').split(',')[:3]
+    METRICS = check_STATS(os.environ['STATS']).replace(' ','').split(',')
 
     # set the lowest possible lower (and highest possible upper) axis limits. 
     # E.g.: If Y_LIM_LOCK == True, use Y_MIN_LIMIT as the definitive lower 

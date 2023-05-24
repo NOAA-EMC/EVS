@@ -53,7 +53,9 @@ setpdy.sh 31
 if [ $VERIF_CASE = grid2obs ]; then
     export VDATE=${VDATE:-$PDYm1}
 elif [ $VERIF_CASE = precip ]; then
-    export vDATE=${VDATE:-$PDYm1}
+    export VDATE=${VDATE:-$PDYm1}
+elif [ $VERIF_CASE = snowfall ]; then
+    export VDATE=${VDATE:-$PDYm1}
 else
     echo "The provided VERIF_CASE, $VERIF_CASE, is not supported for the $COMPONENT $STEP step"
     exit 1

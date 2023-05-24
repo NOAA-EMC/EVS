@@ -2,11 +2,11 @@
 
 # =============================================================================
 # 
-# NAME: config.evs.prod.plots.mesoscale.atmos.precip
+# NAME: config.evs.prod.plots.mesoscale.atmos.snowfall
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 #                 Roshan Shrestha, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Set up configurations to run EVS Mesoscale Precip - Plots
-# DEPENDENCIES: $HOMEevs/ecf/mesoscale/plots/jevs_mesoscale_precip_plots.ecf
+# PURPOSE: Set up configurations to run EVS Mesoscale Snowfall - Plots
+# DEPENDENCIES: $HOMEevs/ecf/cam/plots/jevs_mesoscale_snowfall_plots.ecf
 # 
 # =============================================================================
 

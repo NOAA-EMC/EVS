@@ -3,13 +3,13 @@
 # Name:          performance_diagram.py
 # Contact(s):    Marcel Caron
 # Developed:     Nov. 22, 2021 by Marcel Caron 
-# Last Modified: Jun. 3, 2022 by Marcel Caron             
-# Title:         Line plot of verification metric as a function of 
-#                forecast threshold
-# Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
-#                varying by forecast threshold, which represents the x-axis. 
-#                Line colors and styles are unique for each model, and several
-#                models can be plotted at once.
+# Last Modified: May 19, 2023 by Marcel Caron             
+# Title:         Performance Diagram: plot displaying multiple skill scores
+# Abstract:      Plots METplus output as a line plot, expressed as prob. 
+#                of detection as a function of success ratio but displaying 
+#                multiple skill scores per model (distinguished by line color 
+#                and linestyle) and per forecast threshold (distinguished by 
+#                marker shape).  
 #
 ###############################################################################
 
@@ -59,7 +59,7 @@ def get_bias_label_position(bias_value, radius):
 
 def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger, 
                       date_range: tuple, model_list: list, num: int = 0, 
-                      level: str = '500', flead='all', thresh: list = ['<20'], 
+                      levels: list = ['500'], flead='all', thresh: list = ['<20'], 
                       metric1_name: str = 'SRATIO', metric2_name: str = 'POD', 
                       metric3_name: str = 'CSI', date_type: str = 'VALID', 
                       date_hours: list = [0,6,12,18], verif_type: str = 'pres', 
@@ -100,17 +100,23 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     fig, ax = plotter.get_plots(num)  
     variable_translator = reference.variable_translator
     domain_translator = reference.domain_translator
+    thresh_categ_translator = reference.thresh_categ_translator
     model_settings = model_colors.model_settings
 
     # filter by level
-    df = df[df['FCST_LEV'].astype(str).eq(str(level))]
+    df = df[df['FCST_LEV'].astype(str).isin([str(level) for level in levels])]
+    if len(levels) > 1:
+        logger.warning(f"Multiple levels were provided.  Choosing the first"
+                       + f" level ({levels[0]}) for figure title and file"
+                       + f" name labeling purposes.")
+    level = levels[0]
 
     if df.empty:
         logger.warning(f"Empty Dataframe. Continuing onto next plot...")
         plt.close(num)
         logger.info("========================================")
         return None
-    if str(line_type).upper() == 'CTC' and np.array(thresh).size == 0:
+    if str(line_type).upper() in ['MCTC', 'CTC'] and np.array(thresh).size == 0:
         logger.warning(f"Empty list of thresholds. Continuing onto next"
                        + f" plot...")
         logger.info("========================================")
@@ -229,35 +235,63 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         )
     except ValueError as e:
         print(f"ERROR: {e}")
-        #print(f"df['FCST_THRESH']:{df['FCST_THRESH']}")
-        #print(f"In list form: {[t for t in df['FCST_THRESH']]}")
         sys.exit(1)
     df['FCST_THRESH_SYMBOL'] = df_thresh_symbol
-    df['FCST_THRESH_VALUE'] = [str(item)[2:] for item in df_thresh_letter]
-    requested_thresh_value = [
-        str(item)[2:] for item in requested_thresh_letter
-    ]
-    df = df[df['FCST_THRESH_SYMBOL'].isin(requested_thresh_symbol)]
-    thresholds_removed = (
-        np.array(requested_thresh_symbol)[
-            ~np.isin(requested_thresh_symbol, df['FCST_THRESH_SYMBOL'])
+    if str(line_type).upper() == 'MCTC':
+        df['FCST_THRESH_VALUES'] = [str(item)[2:] for item in df_thresh_letter]
+        requested_thresh_value = [
+            str(item)[2:] for item in requested_thresh_letter
         ]
-    )
-    requested_thresh_symbol = (
-        np.array(requested_thresh_symbol)[
-            np.isin(requested_thresh_symbol, df['FCST_THRESH_SYMBOL'])
+        df = plot_util.convert_MCTC_to_CTC(df, 'FCST_THRESH_VALUES', 'FCST_THRESH_VALUE')
+        df = df[df['FCST_THRESH_VALUE'].isin(requested_thresh_value)]
+        thresholds_removed = (
+            np.array(requested_thresh_symbol)[
+                ~np.isin(requested_thresh_symbol, df['FCST_THRESH_VALUE'])
+            ]
+        )
+        requested_thresh_value = (
+            np.array(requested_thresh_value)[
+                np.isin(requested_thresh_value, df['FCST_THRESH_SYMBOL'])
+            ]
+        )
+        if thresholds_removed.size > 0:
+            thresholds_removed_string = ', '.join(
+                [opt+str(t) for t in thresholds_removed]
+            )
+            if len(thresholds_removed) > 1:
+                warning_string = (f"{thresholds_removed_string} thresholds were"
+                                  + f" not found and will not be plotted.")
+            else:
+                warning_string = (f"{thresholds_removed_string} threshold was"
+                                  + f" not found and will not be plotted.")
+            logger.warning(warning_string)
+            logger.warning("Continuing ...")
+    else:
+        df['FCST_THRESH_VALUE'] = [str(item)[2:] for item in df_thresh_letter]
+        requested_thresh_value = [
+            str(item)[2:] for item in requested_thresh_letter
         ]
-    )
-    if thresholds_removed.size > 0:
-        thresholds_removed_string = ', '.join(thresholds_removed)
-        if len(thresholds_removed) > 1:
-            warning_string = (f"{thresholds_removed_string} thresholds were"
-                              + f" not found and will not be plotted.")
-        else:
-            warning_string = (f"{thresholds_removed_string} threshold was"
-                              + f" not found and will not be plotted.")
-        logger.warning(warning_string)
-        logger.warning("Continuing ...")
+        df = df[df['FCST_THRESH_SYMBOL'].isin(requested_thresh_symbol)]
+        thresholds_removed = (
+            np.array(requested_thresh_symbol)[
+                ~np.isin(requested_thresh_symbol, df['FCST_THRESH_SYMBOL'])
+            ]
+        )
+        requested_thresh_symbol = (
+            np.array(requested_thresh_symbol)[
+                np.isin(requested_thresh_symbol, df['FCST_THRESH_SYMBOL'])
+            ]
+        )
+        if thresholds_removed.size > 0:
+            thresholds_removed_string = ', '.join(thresholds_removed)
+            if len(thresholds_removed) > 1:
+                warning_string = (f"{thresholds_removed_string} thresholds were"
+                                  + f" not found and will not be plotted.")
+            else:
+                warning_string = (f"{thresholds_removed_string} threshold was"
+                                  + f" not found and will not be plotted.")
+            logger.warning(warning_string)
+            logger.warning("Continuing ...")
 
     # Remove from model_list the models that don't exist in the dataframe
     cols_to_keep = [
@@ -652,11 +686,11 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         plt.close(num)
         logger.info("========================================")
         return None
+    var_long_name_key = df['FCST_VAR'].tolist()[0]
     units = df['FCST_UNITS'].tolist()[0]
     unit_convert = False
     if units in reference.unit_conversions:
         unit_convert = True
-        var_long_name_key = df['FCST_VAR'].tolist()[0]
         if str(var_long_name_key).upper() == 'HGT':
             if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
                 if units in ['m', 'gpm']:
@@ -665,6 +699,9 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                 unit_convert = False
             elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
                 unit_convert = False
+        elif any(field in str(var_long_name_key).upper() for field in ['WEASD', 'SNOD', 'ASNOW']):
+            if units in ['m']:
+                units = 'm_snow'
         if unit_convert:
             thresh_labels = [float(tlab) for tlab in thresh_labels]
             thresh_labels = reference.unit_conversions[units]['formula'](
@@ -693,6 +730,21 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             units = reference.unit_conversions[units]['convert_to']
     if units == '-':
         units = ''
+    thresh_categ = False
+    if str(var_long_name_key).upper() in thresh_categ_translator:
+        thresh_categ = True
+        var_thresh_categ_translator = thresh_categ_translator[
+            str(var_long_name_key).upper()
+        ]
+        new_thresh_labels = []
+        for lab in thresh_labels:
+            if str(int(float(lab))) in var_thresh_categ_translator:
+                new_thresh_labels.append(
+                    var_thresh_categ_translator[str(int(float(lab)))]
+                )
+            else:
+                new_thresh_labels.append(str(int(float(lab))))
+
     f = lambda m,c,ls,lw,ms,mec: plt.plot(
         [], [], marker=m, mec=mec, mew=2., c=c, ls=ls, lw=lw, ms=ms)[0]
     handles = [
@@ -701,10 +753,13 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             'black'
         ) for i, item in enumerate(thresh_labels)
     ]
-    labels = [
-        f'{opt}{thresh_label} {units}'
-        for thresh_label in thresh_labels
-    ]
+    if thresh_categ:
+        labels = new_thresh_labels
+    else:
+        labels = [
+            f'{opt}{thresh_label} {units}'
+            for thresh_label in thresh_labels
+        ]
     
     if sample_equalization:
         counts = pivot_counts.mean(axis=1, skipna=True).fillna('')
@@ -757,12 +812,13 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                                       + f' {y_mean:.2f}, {mosaic_mean:.2f})')
         else:
             metric_mean_fmt_string = f'{model_plot_name}'
-        plt.plot(
-            x_vals, y_vals, marker='None', c=mod_setting_dicts[m]['color'], 
-            mew=2., mec='white', figure=fig, ms=0, 
-            ls=mod_setting_dicts[m]['linestyle'], 
-            lw=mod_setting_dicts[m]['linewidth']
-        )
+        if not thresh_categ:
+            plt.plot(
+                x_vals, y_vals, marker='None', c=mod_setting_dicts[m]['color'], 
+                mew=2., mec='white', figure=fig, ms=0, 
+                ls=mod_setting_dicts[m]['linestyle'], 
+                lw=mod_setting_dicts[m]['linewidth']
+            )
         for i, item in enumerate(x_vals):
             plt.scatter(
                 x_vals[i], y_vals[i], marker=thresh_markers[i][0], 
@@ -867,8 +923,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     # Title
     domain = df['VX_MASK'].tolist()[0]
     var_savename = df['FCST_VAR'].tolist()[0]
-    if 'APCP' in var_savename.upper():
-        var_savename = 'APCP'
+    if any(field in var_savename.upper() for field in ['APCP']):
+        var_savename = re.sub('[^a-zA-Z \n\.]', '', var_savename)
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
         var_savename = 'HPBL'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['MSLET','MSLMA','PRMSL']:
@@ -943,7 +999,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         else:
             level_string = f'{level} '
             level_savename = f'{level}'
-    elif str(verif_type).lower() in ['ccpa','mrms']:
+    elif str(verif_type).lower() in ['ccpa','mrms','ptype','nohrsc']:
         if 'A' in str(level):
             level_num = level.replace('A', '')
             level_string = f'{level_num}-hour '
@@ -982,7 +1038,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             left_image_box = OffsetImage(left_logo_arr, zoom=zoom_logo_left*.8)
             ab_left = AnnotationBbox(
                 left_image_box, xy=(0.,1.), xycoords='axes fraction',
-                xybox=(0, 3), boxcoords='offset points', frameon = False,
+                xybox=(-80, 9), boxcoords='offset points', frameon = False,
                 box_alignment=(0,0)
             )
             ax.add_artist(ab_left)
@@ -997,7 +1053,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             right_image_box = OffsetImage(right_logo_arr, zoom=zoom_logo_right*.8)
             ab_right = AnnotationBbox(
                 right_image_box, xy=(1.,1.), xycoords='axes fraction',
-                xybox=(0, 3), boxcoords='offset points', frameon = False,
+                xybox=(80, 9), boxcoords='offset points', frameon = False,
                 box_alignment=(1,0)
             )
             ax.add_artist(ab_right)
@@ -1282,57 +1338,57 @@ def main():
                 logger.warning(e)
                 logger.warning("Continuing ...")
                 continue
-            for domain in DOMAINS:
-                if str(domain) not in case_specs['vx_mask_list']:
-                    e = (f"The requested domain is not valid for the"
+        for domain in DOMAINS:
+            if str(domain) not in case_specs['vx_mask_list']:
+                e = (f"The requested domain is not valid for the"
+                     + f" requested case type ({VERIF_CASETYPE}) and"
+                     + f" line_type ({LINE_TYPE}): {domain}")
+                logger.warning(e)
+                logger.warning("Continuing ...")
+                continue
+            df = df_preprocessing.get_preprocessed_data(
+                logger, STATS_DIR, PRUNE_DIR, OUTPUT_BASE_TEMPLATE, VERIF_CASE, 
+                VERIF_TYPE, LINE_TYPE, DATE_TYPE, date_range, EVAL_PERIOD, 
+                date_hours, FLEADS, requested_var, fcst_var_names, 
+                obs_var_names, MODELS, domain, INTERP, MET_VERSION, 
+                clear_prune_dir
+            )
+            if df is None:
+                continue
+            for metric in metrics:
+                if (str(metric).lower()
+                        not in case_specs['plot_stats_list']
+                        .replace(' ','').split(',')):
+                    e = (f"The requested metric is not valid for the"
                          + f" requested case type ({VERIF_CASETYPE}) and"
-                         + f" line_type ({LINE_TYPE}): {domain}")
+                         + f" line_type ({LINE_TYPE}): {metric}")
                     logger.warning(e)
                     logger.warning("Continuing ...")
                     continue
-                df = df_preprocessing.get_preprocessed_data(
-                    logger, STATS_DIR, PRUNE_DIR, OUTPUT_BASE_TEMPLATE, VERIF_CASE, 
-                    VERIF_TYPE, LINE_TYPE, DATE_TYPE, date_range, EVAL_PERIOD, 
-                    date_hours, FLEADS, requested_var, fcst_var_names, 
-                    obs_var_names, MODELS, domain, INTERP, MET_VERSION, 
-                    clear_prune_dir
-                )
-                if df is None:
-                    continue
-                for metric in metrics:
-                    if (str(metric).lower()
-                            not in case_specs['plot_stats_list']
-                            .replace(' ','').split(',')):
-                        e = (f"The requested metric is not valid for the"
-                             + f" requested case type ({VERIF_CASETYPE}) and"
-                             + f" line_type ({LINE_TYPE}): {metric}")
-                        logger.warning(e)
-                        logger.warning("Continuing ...")
-                        continue
-                df_metric = df
-                plot_performance_diagram(
-                    df_metric, logger, date_range, MODELS, num=num, 
-                    flead=FLEADS, level=fcst_level, thresh=fcst_thresh, 
-                    metric1_name=metrics[0], metric2_name=metrics[1],
-                    metric3_name=metrics[2], date_type=DATE_TYPE,  
-                    verif_type=VERIF_TYPE, line_type=LINE_TYPE, 
-                    date_hours=date_hours, save_dir=SAVE_DIR, 
-                    eval_period=EVAL_PERIOD, 
-                    display_averages=display_averages, save_header=IMG_HEADER,
-                    plot_group=plot_group, 
-                    confidence_intervals=CONFIDENCE_INTERVALS, 
-                    interp_pts=INTERP_PNTS,
-                    bs_nrep=bs_nrep, bs_method=bs_method, ci_lev=ci_lev, 
-                    bs_min_samp=bs_min_samp,
-                    sample_equalization=sample_equalization,
-                    plot_logo_left=plot_logo_left,
-                    plot_logo_right=plot_logo_right,
-                    path_logo_left=path_logo_left,
-                    path_logo_right=path_logo_right,
-                    zoom_logo_left=zoom_logo_left,
-                    zoom_logo_right=zoom_logo_right
-                )
-                num+=1
+            df_metric = df
+            plot_performance_diagram(
+                df_metric, logger, date_range, MODELS, num=num, 
+                flead=FLEADS, levels=FCST_LEVELS, thresh=fcst_thresh, 
+                metric1_name=metrics[0], metric2_name=metrics[1],
+                metric3_name=metrics[2], date_type=DATE_TYPE,  
+                verif_type=VERIF_TYPE, line_type=LINE_TYPE, 
+                date_hours=date_hours, save_dir=SAVE_DIR, 
+                eval_period=EVAL_PERIOD, 
+                display_averages=display_averages, save_header=IMG_HEADER,
+                plot_group=plot_group, 
+                confidence_intervals=CONFIDENCE_INTERVALS, 
+                interp_pts=INTERP_PNTS,
+                bs_nrep=bs_nrep, bs_method=bs_method, ci_lev=ci_lev, 
+                bs_min_samp=bs_min_samp,
+                sample_equalization=sample_equalization,
+                plot_logo_left=plot_logo_left,
+                plot_logo_right=plot_logo_right,
+                path_logo_left=path_logo_left,
+                path_logo_right=path_logo_right,
+                zoom_logo_left=zoom_logo_left,
+                zoom_logo_right=zoom_logo_right
+            )
+            num+=1
 
 
 # ============ START USER CONFIGURATIONS ================

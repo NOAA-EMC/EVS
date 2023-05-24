@@ -2,7 +2,7 @@
 #
 # NAME: mesoscale_create_output_dirs.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# CONTRIBUTOR(S): Roshan Shrestha, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+#                 Roshan Shrestha, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Define working/ output directories and create them if they don't
 #          exist.
 # DEPENDENCIES: os.path.join([
@@ -17,6 +17,7 @@ import re
 from datetime import datetime, timedelta as td
 from mesoscale_plots_grid2obs_graphx_defs import graphics as graphics_g2o
 from mesoscale_plots_precip_graphx_defs import graphics as graphics_pcp
+from mesoscale_plots_snowfall_graphx_defs import graphics as graphics_sno
 import mesoscale_util as cutil
 
 print(f"BEGIN: {os.path.basename(__file__)}")
@@ -64,6 +65,13 @@ elif VERIF_CASE == "grid2obs":
         OBSNAME = os.environ['OBSNAME']
     elif STEP == 'plots':
         all_eval_periods = cutil.get_all_eval_periods(graphics_g2o)
+elif VERIF_CASE == "snowfall":
+    if STEP == 'prep':
+        pass
+    elif STEP == 'stats':
+        pass
+    elif STEP == 'plots':
+        all_eval_periods = cutil.get_all_eval_periods(graphics_sno)
 if STEP == 'stats':
     job_type = os.environ['job_type']
 
@@ -81,6 +89,9 @@ if VERIF_CASE == 'precip':
 elif VERIF_CASE == 'grid2obs':
     if STEP == 'stats':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
+elif VERIF_CASE == 'snowfall':
+    if STEP == 'stats':
+        pass
 
 # Create data directories and subdirectories
 for data_dir in data_dir_list:
@@ -97,6 +108,7 @@ if STEP == 'stats':
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'generate'))
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather'))
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather2'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather3'))
 if STEP == 'plots':
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'plotting_job_scripts'))
 for job_scripts_dir in job_scripts_dirs:
@@ -139,6 +151,10 @@ elif STEP == 'stats':
             working_output_base_dir = os.path.join(
                 DATA, VERIF_CASE, 'METplus_output'
             )
+        if job_type == 'gather3':
+            working_output_base_dir = os.path.join(
+                DATA, VERIF_CASE, 'METplus_output'
+            )
         working_dir_list.append(working_output_base_dir)
         if job_type == 'reformat':
             working_dir_list.append(os.path.join(
@@ -164,7 +180,7 @@ elif STEP == 'stats':
                 working_output_base_dir, 'grid_stat', 
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
-        if job_type in ['gather', 'gather2']:
+        if job_type in ['gather', 'gather2', 'gather3']:
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'stat_analysis', 'confs'
             ))
@@ -211,6 +227,10 @@ elif STEP == 'stats':
             working_output_base_dir = os.path.join(
                 DATA, VERIF_CASE, 'METplus_output'
             )
+        if job_type == 'gather3':
+            working_output_base_dir = os.path.join(
+                DATA, VERIF_CASE, 'METplus_output'
+            )
         working_dir_list.append(working_output_base_dir)
         if job_type == 'reformat':
             working_dir_list.append(os.path.join(
@@ -250,7 +270,7 @@ elif STEP == 'stats':
                 working_output_base_dir, 'point_stat', 
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
-        if job_type in ['gather', 'gather2']:
+        if job_type in ['gather', 'gather2', 'gather3']:
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'stat_analysis', 'confs'
             ))
@@ -280,6 +300,8 @@ elif STEP == 'stats':
                     MODELNAME+'.'+date_dt.strftime('init%Y%m%d')
                 ))
             date_dt+=td(days=1)
+    elif VERIF_CASE == "snowfall":
+        pass
 elif STEP == 'plots':
     if VERIF_CASE == 'grid2obs':
 
@@ -326,6 +348,29 @@ elif STEP == 'plots':
             COMOUT, 
         ))
         for plot_group in ['precip', 'radar', 'rtofs_sfc', 'sfc_upper']:
+            for eval_period in all_eval_periods:
+                working_dir_list.append(os.path.join(
+                    working_output_base_dir, 'out', str(plot_group).lower(), 
+                    str(eval_period).lower()
+                ))
+    elif VERIF_CASE == 'snowfall':
+        working_output_base_dir = os.path.join(
+            DATA, VERIF_CASE
+        )
+        working_dir_list.append(working_output_base_dir)
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'data'
+        ))
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'out'
+        ))
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'out', 'logs'
+        ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUT,
+        ))
+        for plot_group in ['precip']:
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'out', str(plot_group).lower(), 

@@ -3,7 +3,7 @@
 # Name:          stat_by_level.py
 # Contact(s):    Marcel Caron
 # Developed:     Oct. 14, 2021 by Marcel Caron 
-# Last Modified: Dec. 02, 2022 by Marcel Caron             
+# Last Modified: May 19, 2023 by Marcel Caron             
 # Title:         Line plot of pressure level as a function of 
 #                verification metric
 # Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
@@ -261,6 +261,9 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
                 unit_convert = False
             elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
                 unit_convert = False
+        elif any(field in str(var_long_name_key).upper() for field in ['WEASD', 'SNOD', 'ASNOW']):
+            if units in ['m']:
+                units = 'm_snow'
         if unit_convert:
             if metric2_name is not None:
                 if (str(metric1_name).upper() in metrics_using_var_units
