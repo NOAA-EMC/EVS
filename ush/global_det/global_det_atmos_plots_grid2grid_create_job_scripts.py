@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Program Name: global_det_atmos_plots_grid2grid_create_job_scripts.py
 Contact(s): Mallory Row

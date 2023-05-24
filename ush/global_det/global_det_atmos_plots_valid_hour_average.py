@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_valid_hour_average.py
 Contact(s): Mallory Row
@@ -205,7 +206,8 @@ class ValidHourAverage:
                     self.logger, avg_method, self.plot_info_dict['line_type'],
                     self.plot_info_dict['stat'], calc_avg_df
                 )
-                if not np.isnan(model_idx_valid_hour_avg):
+                if not np.isnan(model_idx_valid_hour_avg) \
+                        and not np.ma.is_masked(model_idx_valid_hour_avg):
                     valid_hours_avg_df.loc[model_idx, valid_hour] = (
                         model_idx_valid_hour_avg
                     )
@@ -225,7 +227,7 @@ class ValidHourAverage:
                     ##F*SD/sqrt(N-1),
                     ##F=1.96 for infinite samples, F=2.0 for nsz=60,
                     ##F=2.042 for nsz=30, F=2.228 for nsz=10
-                    if nsamples > 0:
+                    if nsamples > 1:
                         model_idx_model1_diff_mean_std_err = (
                             model_idx_model1_diff_std/np.sqrt(nsamples-1)
                         )
@@ -237,7 +239,7 @@ class ValidHourAverage:
                             ci = 2.042 * model_idx_model1_diff_mean_std_err
                         elif nsamples > 0 and nsamples < 20:
                             ci = 2.228 * model_idx_model1_diff_mean_std_err
-                    elif nsamples == 0:
+                    else:
                         ci = np.nan
                     valid_hours_ci_df.loc[model_idx, valid_hour] = ci
                     #from scipy import stats
@@ -623,7 +625,7 @@ def main():
     # Need settings
     INPUT_DIR = os.environ['HOME']
     OUTPUT_DIR = os.environ['HOME']
-    LOGO_DIR = os.environ['HOME'],
+    LOGO_DIR = os.environ['HOME']
     MODEL_INFO_DICT = {
         'model1': {'name': 'MODEL_A',
                    'plot_name': 'PLOT_MODEL_A',
@@ -658,7 +660,7 @@ def main():
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',
-        'version': '10.1.1'
+        'version': '11.0.2'
     }
     # Create OUTPUT_DIR
     if not os.path.exists(OUTPUT_DIR):
