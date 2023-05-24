@@ -9,6 +9,14 @@ set -x
 export WORK=$DATA
 cd $WORK
 
+#Just for testing ver MET/METplus version
+#if [ $met_ver = 11.0.0 ] ; then
+#  export MET_BASE=/apps/ops/para/libs/intel/$intel_ver/met/$met_ver/share/met
+#  export MET_ROOT=/apps/ops/para/libs/intel/$intel_ver/met/$met_ver
+#  #export PATH=/apps/ops/para/libs/intel/$intel_ver/met/$met_ver/bin:${PATH}
+#fi 
+
+
 export MET_bin_exec='bin'
 export log_met_output_to_metplus=''
 export metplus_verbosity=2

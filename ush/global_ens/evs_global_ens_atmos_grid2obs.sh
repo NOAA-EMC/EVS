@@ -49,7 +49,11 @@ for modnam in $models ; do
      mbrs=20
    elif [ $modnam = naefs ] ; then
      $USHevs/global_ens/evs_gens_atmos_g2o_create_naefs.sh 
-     mbrs=50
+     if [ $gefs_number = 20 ] ; then
+       mbrs=40
+     elif [ $gefs_number = 30 ] ; then
+       mbrs=50
+     fi
    elif [ $modnam = ecme ] ; then
      mbrs=50
    else
@@ -100,8 +104,12 @@ for modnam in $models ; do
     echo  "export prepbufrgrid=prepbufr.f00.nc" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
     echo  "export prepbufrpath=$COM_IN" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
     echo  "export model=$modnam"  >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
-    echo  "export MODEL=$MODNAM" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
- 
+    if [ $modnam = naefs ] && [ $gefs_number = 30 ] ; then
+      echo  "export MODEL=${MODNAM}v7" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+    else
+      echo  "export MODEL=${MODNAM}" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+    fi
+
     echo  "export vbeg=$cyc" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
     echo  "export vend=$cyc" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
     echo  "export valid_increment=100" >>  run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
@@ -201,24 +209,46 @@ for modnam in $models ; do
 
     if [ $field = cloud ] ; then 
 
+      if [ $modnam = gefs ] || [ $modnam = cmce ] || [ $modnam = ecme ] ; then
 
-      echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcst${MODNAM}_obsPREPBUFR_CLOUD.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcst${MODNAM}_obsPREPBUFR_CLOUD.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcst${MODNAM}_obsPREPBUFR_CLOUD.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcst${MODNAM}_obsPREPBUFR_CLOUD_mean.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcst${MODNAM}_obsPREPBUFR_CLOUD_prob.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
 
-      echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcst${MODNAM}_obsPREPBUFR_CLOUD.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
-      echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcst${MODNAM}_obsPREPBUFR_CLOUD_mean.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
-      echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcst${MODNAM}_obsPREPBUFR_CLOUD_prob.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+      fi
 
     elif [ $field = sfc ] ; then
 
-      echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcst${MODNAM}_obsPREPBUFR_SFC_climoERA5.conf  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+      if [ $modnam = gefs ] || [ $modnam = cmce ] || [ $modnam = ecme ] ; then
 
-      echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcst${MODNAM}_obsPREPBUFR_SFC_climoERA5.conf  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
-      echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcst${MODNAM}_obsPREPBUFR_SFC_mean_climoERA5.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcst${MODNAM}_obsPREPBUFR_SFC_climoERA5.conf  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcst${MODNAM}_obsPREPBUFR_SFC_climoERA5.conf  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcst${MODNAM}_obsPREPBUFR_SFC_mean_climoERA5.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+
+       elif [ $modnam = naefs ] ; then
+
+        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcstNAEFSbc_obsPREPBUFR_SFC_climoERA5.conf  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+	echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstNAEFSbc_obsPREPBUFR_SFC_climoERA5.conf  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+	echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstNAEFSbc_obsPREPBUFR_SFC_mean_climoERA5.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+      
+      fi
 
     elif [ $field = profile ] ; then
 
-      echo  "export prepbufrgrid=prepbufr_profile.f00.nc" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
-      echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcst${MODNAM}_obsPREPBUFR_PROFILE.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+      if [ $modnam = gefs ] || [ $modnam = cmce ] || [ $modnam = ecme ] ; then
+
+        echo  "export prepbufrgrid=prepbufr_profile.f00.nc" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcst${MODNAM}_obsPREPBUFR_PROFILE.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+ 
+      elif [ $modnam = naefs ] ; then
+
+        echo  "export prepbufrgrid=prepbufr_profile.f00.nc" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+	echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcstNAEFSbc_obsPREPBUFR_UPPER_climoERA5.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+	echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstNAEFSbc_obsPREPBUFR_UPPER.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstNAEFSbc_obsPREPBUFR_UPPER_mean_climoERA5.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+
+      fi
 
     fi 
 
@@ -248,7 +278,7 @@ if [ $run_mpi = yes ] ; then
    fi
 
 else
-   sh run_all_gens_g2o_poe.sh
+    run_all_gens_g2o_poe.sh
 fi 
 
 
