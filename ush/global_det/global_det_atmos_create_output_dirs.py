@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Program Name: global_det_atmos_create_output_dirs.py
 Contact(s): Mallory Row
