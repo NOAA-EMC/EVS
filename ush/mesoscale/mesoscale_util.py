@@ -42,6 +42,19 @@ def get_fhr_start(vhour, acc, fhr_incr, min_ihour):
     )
     return int(fhr_start)
 
+def get_fhr_start(vhour, acc, fhr_incr, min_ihour):
+    fhr_start = (
+        float(vhour) + float(min_ihour)
+        + (
+            float(fhr_incr)
+            * np.ceil(
+                (float(acc)-float(vhour)-float(min_ihour))
+                / float(fhr_incr)
+            )
+        )
+    )
+    return int(fhr_start)
+
 def run_shell_command(command, capture_output=False):
     """! Run shell command
 

@@ -112,6 +112,9 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 # in production the following will be set to yesterday's date
   export VDATE=$(date -d "today -1 day" +"%Y%m%d")
 
+  export cyc=$(date -d "today" +"%H")
+#  export maillist="roshan.shrestha@noaa.gov"
+
 # Developer Settings
   export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/logan.dawson/evs/v1.0/prep/cam
   export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT

@@ -22,12 +22,13 @@ from mesoscale_stats_grid2obs_var_defs import generate_stats_jobs_dict as var_de
 print(f"BEGIN: {os.path.basename(__file__)}")
 
 # Read in environment variables
+cyc = os.environ['cyc'] 
 job_type = os.environ['job_type']
 PYTHONPATH = os.environ['PYTHONPATH']
 COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
 VERIF_CASE = os.environ['VERIF_CASE']
-VERIF_TYPE = os.environ['VERIF_TYPE']
+# VERIF_TYPE = os.environ['VERIF_TYPE']
 MODELNAME = os.environ['MODELNAME']
 MET_PLUS_PATH = os.environ['MET_PLUS_PATH']
 MET_PATH = os.environ['MET_PATH']
@@ -40,9 +41,11 @@ MET_CONFIG_OVERRIDES = os.environ['MET_CONFIG_OVERRIDES']
 METPLUS_VERBOSITY = os.environ['METPLUS_VERBOSITY']
 MET_VERBOSITY = os.environ['MET_VERBOSITY']
 LOG_MET_OUTPUT_TO_METPLUS = os.environ['LOG_MET_OUTPUT_TO_METPLUS']
-NEST = os.environ['NEST']
+# NEST = os.environ['NEST']
 metplus_launcher = 'run_metplus.py'
 if job_type == 'reformat':
+    VERIF_TYPE = os.environ['VERIF_TYPE']
+    NEST = os.environ['NEST']
     VHOUR = os.environ['VHOUR']
     #FHR_START = os.environ['FHR_START']
     #FHR_INCR = os.environ['FHR_INCR']
@@ -56,7 +59,13 @@ if job_type == 'reformat':
     COMINobs = os.environ['COMINobs']
     njob = os.environ['njob']
     USHevs = os.environ['USHevs']
+    SKIP_IF_OUTPUT_EXISTS = os.environ['SKIP_IF_OUTPUT_EXISTS']
+    if NEST == 'spc_otlk': 
+        COMINspcotlk = os.environ['COMINspcotlk']
+        GRID_POLY_LIST = os.environ['GRID_POLY_LIST']
 elif job_type == 'generate':
+    VERIF_TYPE = os.environ['VERIF_TYPE']
+    NEST = os.environ['NEST']
     VHOUR = os.environ['VHOUR']
     #FHR_START = os.environ['FHR_START']
     #FHR_INCR = os.environ['FHR_INCR']
@@ -76,6 +85,9 @@ elif job_type == 'generate':
     GRID = os.environ['GRID']
     USHevs = os.environ['USHevs']
 elif job_type == 'gather':
+    VERIF_TYPE = os.environ['VERIF_TYPE']
+    njob = os.environ['njob']
+elif job_type in ['gather2','gather3']:
     njob = os.environ['njob']
 
 # Get expanded details from variable name
@@ -90,19 +102,19 @@ if job_type == 'generate':
                 FCST_VAR1_LEVELS = var_def['var1_fcst_levels']
                 FCST_VAR1_THRESHOLDS = var_def['var1_fcst_thresholds']
                 FCST_VAR1_OPTIONS = var_def['var1_fcst_options']
-                OBS_VAR1_NAME = var_def['var1_fcst_name']
-                OBS_VAR1_LEVELS = var_def['var1_fcst_levels']
-                OBS_VAR1_THRESHOLDS = var_def['var1_fcst_thresholds']
-                OBS_VAR1_OPTIONS = var_def['var1_fcst_options']
+                OBS_VAR1_NAME = var_def['var1_obs_name']
+                OBS_VAR1_LEVELS = var_def['var1_obs_levels']
+                OBS_VAR1_THRESHOLDS = var_def['var1_obs_thresholds']
+                OBS_VAR1_OPTIONS = var_def['var1_obs_options']
                 if 'var2_fcst_name' in var_def:
                     FCST_VAR2_NAME = var_def['var2_fcst_name']
                     FCST_VAR2_LEVELS = var_def['var2_fcst_levels']
                     FCST_VAR2_THRESHOLDS = var_def['var2_fcst_thresholds']
                     FCST_VAR2_OPTIONS = var_def['var2_fcst_options']
-                    OBS_VAR2_NAME = var_def['var2_fcst_name']
-                    OBS_VAR2_LEVELS = var_def['var2_fcst_levels']
-                    OBS_VAR2_THRESHOLDS = var_def['var2_fcst_thresholds']
-                    OBS_VAR2_OPTIONS = var_def['var2_fcst_options']
+                    OBS_VAR2_NAME = var_def['var2_obs_name']
+                    OBS_VAR2_LEVELS = var_def['var2_obs_levels']
+                    OBS_VAR2_THRESHOLDS = var_def['var2_obs_thresholds']
+                    OBS_VAR2_OPTIONS = var_def['var2_obs_options']
                 else:
                     FCST_VAR2_NAME = ''
                     FCST_VAR2_LEVELS = ''
@@ -124,6 +136,9 @@ if job_type == 'generate':
                 OUTPUT_FLAG_CNT = (
                     var_defs[VAR_NAME][VERIF_TYPE]['output_types']['CNT']
                 )
+                OUTPUT_FLAG_VCNT = (
+                    var_defs[VAR_NAME][VERIF_TYPE]['output_types']['VCNT']
+                )
     if not plot_this_var:
         print(f"ERROR: VAR_NAME \"{VAR_NAME}\" is not valid for VERIF_TYPE "
               + f"\"{VERIF_TYPE}\" and MODEL \"{MODELNAME}\". Check "
@@ -133,6 +148,7 @@ if job_type == 'generate':
 
 # Make a dictionary of environment variables needed to run this particular job
 job_env_vars_dict = {
+    'cyc': cyc,
     'PYTHONPATH': PYTHONPATH,
     'VERIF_CASE': VERIF_CASE,
     'VERIF_TYPE': VERIF_TYPE,
@@ -154,6 +170,8 @@ job_iterate_over_env_lists_dict = {}
 job_iterate_over_custom_lists_dict = {}
 job_dependent_vars = {}
 if job_type == 'reformat':
+    job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE
+    job_env_vars_dict['NEST'] = NEST
     job_env_vars_dict['VHOUR'] = VHOUR
     #job_env_vars_dict['FHR_START'] = FHR_START
     #job_env_vars_dict['FHR_INCR'] = FHR_INCR
@@ -166,12 +184,15 @@ if job_type == 'reformat':
     job_env_vars_dict['FHR_INCR_FULL'] = FHR_INCR_FULL
     job_env_vars_dict['MIN_IHOUR'] = MIN_IHOUR
     job_env_vars_dict['COMINobs'] = COMINobs
+    job_env_vars_dict['SKIP_IF_OUTPUT_EXISTS'] = SKIP_IF_OUTPUT_EXISTS
     job_iterate_over_env_lists_dict['FHR_GROUP_LIST'] = {
         'list_items': re.split(r'[\s,]+', FHR_GROUP_LIST),
         'exports': ['FHR_END','FHR_INCR']
     }
     if NEST == 'spc_otlk':
         job_env_vars_dict['metplus_launcher'] = metplus_launcher
+        job_env_vars_dict['COMINspcotlk'] = COMINspcotlk
+        job_env_vars_dict['GRID_POLY_LIST'] = GRID_POLY_LIST
         job_iterate_over_custom_lists_dict['DAY'] = {
             'custom_list': '1 2 3',
             'export_value': '{DAY}',
@@ -184,9 +205,12 @@ if job_type == 'reformat':
             + '\'${VHOUR}\',0,\'${FHR_INCR}\',\'${MIN_IHOUR}\'))\")'
         ),
         'bash_conditional': '',
-        'bash_conditional_value': ''
+        'bash_conditional_value': '',
+        'bash_conditional_else_value': ''
     }
 elif job_type == 'generate':
+    job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE
+    job_env_vars_dict['NEST'] = NEST
     job_env_vars_dict['VHOUR'] = VHOUR
     #job_env_vars_dict['FHR_START'] = FHR_START
     #job_env_vars_dict['FHR_INCR'] = FHR_INCR
@@ -199,6 +223,7 @@ elif job_type == 'generate':
     job_env_vars_dict['MIN_IHOUR'] = MIN_IHOUR
     job_env_vars_dict['COMINfcst'] = COMINfcst
     job_env_vars_dict['MODEL_INPUT_TEMPLATE'] = MODEL_INPUT_TEMPLATE
+    job_env_vars_dict['VAR_NAME'] = VAR_NAME
     job_env_vars_dict['FCST_VAR1_NAME'] = FCST_VAR1_NAME
     job_env_vars_dict['FCST_VAR1_LEVELS'] = FCST_VAR1_LEVELS
     job_env_vars_dict['FCST_VAR1_THRESHOLDS'] = FCST_VAR1_THRESHOLDS
@@ -220,6 +245,7 @@ elif job_type == 'generate':
     job_env_vars_dict['OUTPUT_FLAG_SL1L2'] = OUTPUT_FLAG_SL1L2
     job_env_vars_dict['OUTPUT_FLAG_VL1L2'] = OUTPUT_FLAG_VL1L2
     job_env_vars_dict['OUTPUT_FLAG_CNT'] = OUTPUT_FLAG_CNT
+    job_env_vars_dict['OUTPUT_FLAG_VCNT'] = OUTPUT_FLAG_VCNT
     job_iterate_over_env_lists_dict['FHR_GROUP_LIST'] = {
         'list_items': re.split(r'[\s,]+', FHR_GROUP_LIST),
         'exports': ['FHR_END','FHR_INCR']
@@ -238,7 +264,8 @@ elif job_type == 'generate':
                 + '${VDATE}'+ f'/{NEST}.t{VHOUR}z_'+ 'f${FHR}.nc'
             ),
             'bash_conditional': '',
-            'bash_conditional_value': ''
+            'bash_conditional_value': '',
+            'bash_conditional_else_value': ''
         }
         '''
         job_iterate_over_custom_lists_dict['FHR'] = {
@@ -257,17 +284,19 @@ elif job_type == 'generate':
         job_dependent_vars['MASK_POLY_LIST'] = {
             'exec_value': '',
             'bash_value': '',
-            'bash_conditional': '[[ ${VHOUR} -lt 1200 ]]',
-            'bash_conditional_value': ', '.join(
+            'bash_conditional': '[[ ${VHOUR} -lt 12 ]]',
+            'bash_conditional_value': '"' + ', '.join(       
                 glob.glob(os.path.join(
-                    MET_PLUS_OUT,VERIF_TYPE,'genvxmask',f'spc_otlk.{VDATE}',f'spc_otlk_*_v*_{VDATE}1200*'
+                    MET_PLUS_OUT,VERIF_TYPE,'genvxmask',f'spc_otlk.{VDATE}',
+                    f'spc_otlk_*_v*-{VDATE}1200_for{VHOUR}Z*'
                 ))
-            ),
-            'bash_conditional_else_value': ', '.join(
+            ) + '"',
+            'bash_conditional_else_value': '"' + ', '.join(
                 glob.glob(os.path.join(
-                    MET_PLUS_OUT,'genvxmask',f'spc_otlk.{VDATE}',f'spc_otlk_*_v{VDATE}*'
+                    MET_PLUS_OUT,VERIF_TYPE,'genvxmask',f'spc_otlk.{VDATE}',
+                    f'spc_otlk_*_v{VDATE}*for{VHOUR}Z*'
                 ))
-            )
+            ) + '"'
         }
     else:
         job_env_vars_dict['MASK_POLY_LIST'] = MASK_POLY_LIST
@@ -278,8 +307,12 @@ elif job_type == 'generate':
             + '\'${VHOUR}\',0,\'${FHR_INCR}\',\'${MIN_IHOUR}\'))\")'
         ),
         'bash_conditional': '',
-        'bash_conditional_value': ''
+        'bash_conditional_value': '',
+        'bash_conditional_else_value': '' 
     }
+elif job_type == 'gather':
+    job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE 
+
 # Make a list of commands needed to run this particular job
 job_cmd_list_iterative = []
 job_cmd_list = []
@@ -340,6 +373,20 @@ elif STEP == 'stats':
             + f'StatAnalysis_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}'
             + f'_GatherByDay.conf'
         )
+    elif job_type == 'gather2':
+        job_cmd_list.append(
+            f'{metplus_launcher} -c '
+            + f'{MET_PLUS_CONF}/'
+            + f'StatAnalysis_fcst{COMPONENT.upper()}'
+            + f'_GatherByCycle.conf'
+        )
+    elif job_type == 'gather3':
+        job_cmd_list.append(
+            f'{metplus_launcher} -c '
+            + f'{MET_PLUS_CONF}/'
+            + f'StatAnalysis_fcst{COMPONENT.upper()}'
+            + f'_GatherByDay.conf' 
+        )
 elif STEP == 'plots':
     pass
 
@@ -353,7 +400,7 @@ if not os.path.exists(job_dir):
 job_file = os.path.join(job_dir, f'job{njob}')
 print(f"Creating job script: {job_file}")
 job = open(job_file, 'w')
-job.write('#!/bin/sh\n')
+job.write('#!/bin/bash\n')
 job.write('set -x \n')
 job.write('\n')
 job.write(f'export job_name=\"job{njob}\"\n')
@@ -381,8 +428,10 @@ for name, value in job_dependent_vars.items():
         )
     elif value["bash_value"]:
         job.write(f'{indent}export {name}={value["bash_value"]}\n')
-    if (value["bash_conditional"] 
-            and value["bash_conditional_value"]):
+    if (value["bash_conditional"]
+            and (
+            value["bash_conditional_value"]
+            or value["bash_conditional_else_value"])):
         job.write(
             f'{indent}if {value["bash_conditional"]};'
             + f' then\n'
@@ -393,7 +442,7 @@ for name, value in job_dependent_vars.items():
         )
         if (value["bash_conditional_else_value"]):
             job.write(
-                f'{indent}else;'
+                f'{indent}else'
                 + f'\n'
             )
             job.write(

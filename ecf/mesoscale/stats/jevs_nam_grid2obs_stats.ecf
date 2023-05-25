@@ -118,7 +118,7 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
   export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 
 #  export DATA=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
-#  export cyc=$(date -d "today" +"%H")
+  export cyc=$(date -d "today" +"%H")
 #  export maillist="roshan.shrestha@noaa.gov"
 
 # VAR list to run

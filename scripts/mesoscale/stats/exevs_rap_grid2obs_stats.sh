@@ -64,11 +64,11 @@ for NEST in $NEST_LIST; do
 		if [ $RUN_ENVIR = nco ]; then
 			export evs_run_mode="production"
 			source $config
-			#source $USHevs/mesoscale/mesoscale_stats_grid2obs_filter_valid_hours_list.sh
+			source $USHevs/mesoscale/mesoscale_stats_grid2obs_filter_valid_hours_list.sh
 		else
 			export evs_run_mode=$evs_run_mode
 			source $config
-			#source $USHevs/mesoscale/mesoscale_stats_grid2obs_filter_valid_hours_list.sh
+			source $USHevs/mesoscale/mesoscale_stats_grid2obs_filter_valid_hours_list.sh
 		fi
 		echo "RUN MODE: $evs_run_mode"
 		for VHOUR in $VHOUR_LIST; do
@@ -104,6 +104,14 @@ if [ $USE_CFP = YES ]; then
 	[[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
 fi
 
+
+
+echo "*****************************
+echo "Reformat jobs begin"
+date
+echo "*****************************
+
+
 # Run All RAP grid2obs/stats Reformat Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
@@ -134,6 +142,11 @@ else
 		nc=$((nc+1))
 	done
 fi
+
+echo "*****************************
+echo "Reformat jobs done"
+date
+echo "*****************************
 
 # Generate MET Data
 export job_type="generate"
@@ -185,6 +198,13 @@ if [ $USE_CFP = YES ]; then
 	        [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
 fi
 
+
+echo "*****************************
+echo "Generate jobs begin"
+date
+echo "*****************************
+
+
 # Run All RAP grid2obs/stats Generate Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
@@ -215,6 +235,14 @@ else
 		nc=$((nc+1))
 	done
 fi
+
+
+
+echo "*****************************
+echo "Generate jobs done"
+date
+echo "*****************************
+
 
 export job_type="gather"
 export njob=1
@@ -250,6 +278,12 @@ if [ $USE_CFP = YES ]; then
     [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
 fi
 
+
+echo "*****************************
+echo "Gather jobs begin"
+date
+echo "*****************************
+
 # Run All RAP grid2obs/stats Gather Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
@@ -281,6 +315,12 @@ else
 	done
 fi
 
+
+echo "*****************************
+echo "Gather jobs done"
+date
+echo "*****************************
+
 export job_type="gather2"
 export njob=1
 if [ $RUN_ENVIR = nco ]; then
@@ -310,6 +350,12 @@ if [ $USE_CFP = YES ]; then
 	    [[ $status -ne 0 ]] && exit $status
 	        [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
 fi
+
+
+echo "*****************************
+echo "Gather2 jobs begin"
+date
+echo "*****************************
 
 # Run All RAP grid2obs/stats Gather 2 Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
@@ -341,6 +387,12 @@ else
 		nc=$((nc+1))
 	done
 fi
+
+
+echo "*****************************
+echo "Gather2 jobs done"
+date
+echo "*****************************
 
 
 
