@@ -1,61 +1,134 @@
-#!/bin/bash -e
+#!/bin/bash
 
-# =============================================================================
-#
-# NAME: JEVS_CAM_PREP
-# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Use ECF environment variables to define and run an EVS job
-# DEPENDENCIES: $HOMEevs/ecf/cam/prep/jevs_$MODELNAME_$VERIF_CASE_prep.ecf
-#
-# =============================================================================
-
+########################################
+# Preliminary data setup step
+########################################
 set -xa
 
-echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 
-# Shell Processing Variables
+####################################
+# SET SHELL PROCESSING VARIABLES
+####################################
 export PS4='$SECONDS + '
 date
 
-# LSF id (jobid) and Temp Directories
+
+###########################################################
+# obtain unique LSF id (jobid) and make temp directories
+###########################################################
 export pid=$$
-export DATA=${DATA:-${DATAROOT:?}}/${jobid:?}
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
 
-# General I/O Settings
-export pgmout="OUTPUT.${pid}"
-export VDATE=$(date -d "today -1 day" +"%Y%m%d")
-export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
-export COMINccpa=${COMINccpa:-$(compath.py prod/ccpa/$ccpa_ver)}
-export COMINmrms=$DCOMROOT/ldmdata/obs/upperair/mrms
-export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
-export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
-export COMINhiresw=${COMINhiresw:-$(compath.py ${envir}/com/hiresw/${hiresw_ver})}
-export COMINhrrr=${COMINhrrr:-$(compath.py ${envir}/com/hrrr/${hrrr_ver})}
-export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
-export mPINGToken=${mPINGToken:-9999}
 
-# Subdirectories to EVS Home Directory
-export PARMevs=${PARMevs:-$HOMEevs/parm}
-export USHevs=${USHevs:-$HOMEevs/ush}
+####################################
+# Determine Job Output Name on System
+####################################
+export pgmout="OUTPUT.${pid}"
+
+
+####################################
+# Set EVS directories
+####################################
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
 export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
+export USHevs=${USHevs:-$HOMEevs/ush}
 export MET_PLUS_CONF="${PARMevs}/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}"
 
-# Execute the Script
-$SCRIPTSevs/$COMPONENT/$STEP/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
-export err=$?; err_chk
 
-# Clean Up
-cat $pgmout
-msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
-if [ "$KEEPDATA" != "YES" ] ; then
-  cd $DATA_IN
-  rm -rf $DATA
+####################################
+# Run setpdy and initialize PDY variables
+####################################
+export cycle=${cycle:-t${cyc}z}
+setpdy.sh 8
+. ./PDY
+
+if [ $VERIF_CASE = grid2obs ] ; then
+   export VDATE=${VDATE:-$PDYm1}
+
+elif [ $VERIF_CASE = precip ] ; then
+   export VDATE=${VDATE:-$PDYm1}
+ 
+elif [ $VERIF_CASE = radar ] ; then
+   export VDATE=${VDATE:-$PDYm1}
+ 
+elif [ $VERIF_CASE = severe ] ; then
+
+   # Set verification date for severe job
+   export VDATE=${VDATE:-$PDYm7}
+  
+   # Set correct date for SPC report data (must be relative to VDATE) 
+   export REP_DATE=${REP_DATE:-$(date -d "$VDATE -1 day" +"%Y%m%d")}
+
+   # Set correct date for SPC outlook data 
+   export OTLK_DATE=${OTLK_DATE:-$PDYm1}
+
+   # Set initialization date (only for forecast prep step)
+   export IDATE=${IDATE:-$PDYm1}
+
+else
+
+   echo "The provided VERIF_CASE, $VERIF_CASE, is not supported for the $COMPONENT $STEP step"
+   exit 1
+
 fi
 
-echo "END: $(basename ${BASH_SOURCE[0]})"
+
+####################################
+# Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-prep}
+export COMPONENT=${COMPONENT:-cam}
+export RUN=${RUN:-atmos}
+
+
+####################################
+# Define COMIN/COMOUT variables
+####################################
+export COMIN=${COMIN:-$(compath.py $NET/$evs_ver)}
+export COMINccpa=${COMINccpa:-$(compath.py prod/ccpa/$ccpa_ver)}
+export COMINhiresw=${COMINhiresw:-$(compath.py ${envir}/com/hiresw/${hiresw_ver})}
+export COMINhrrr=${COMINhrrr:-$(compath.py ${envir}/com/hrrr/${hrrr_ver})}
+export COMINmrms=$DCOMROOT/ldmdata/obs/upperair/mrms
+export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
+export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
+export COMINspc=${COMINspc:-$DCOMROOT}
+
+export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
+
+mkdir -p $COMOUT
+
+export COMOUTmrms=${COMOUT}/mrms.${VDATE}
+
+if [ $VERIF_CASE = severe ] ; then
+   export COMOUTlsr=${COMOUT}/spc_lsr.${REP_DATE}
+   export COMOUTotlk=${COMOUT}/spc_otlk.${OTLK_DATE}
+elif [ $VERIF_CASE = grid2obs ] ; then
+   export mPINGToken=${mPINGToken:-9999}
+fi
+
+####################################
+# Execute the script 
+####################################
+$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+export err=$?; err_chk
+
+if [ -e "$pgmout" ]; then
+   cat $pgmout
+fi
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$msg"
+
+if [ "$KEEPDATA" != "YES" ]; then
+   cd $DATAROOT
+   rm -rf $DATA
+fi
+
+date

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_lead_by_level.py
 Contact(s): Mallory Row
@@ -72,11 +73,6 @@ class LeadByLevel:
             self.logger.warning("Cannot make lead_by_level for stat "
                                 +f"{self.plot_info_dict['stat']}")
             sys.exit(0)
-        # Make job image directory
-        output_image_dir = os.path.join(self.output_dir, 'images')
-        if not os.path.exists(output_image_dir):
-            os.makedirs(output_image_dir)
-        self.logger.info(f"Plots will be in: {output_image_dir}")
         plot_specs_lbl = PlotSpecs(self.logger, 'lead_by_level')
         self.logger.info(f"Gathering data for {self.plot_info_dict['stat']} "
                          +"- vertical profile "
@@ -148,9 +144,17 @@ class LeadByLevel:
                                       +', '.join(format_valid_dates))
                     plot_dates = init_dates
                 # Read in data
-                self.logger.info(f"Reading in model stat files from {self.input_dir}")
+                level_input_dir = os.path.join(
+                    self.input_dir, '..', '..',
+                    f"{self.plot_info_dict['fcst_var_name'].lower()}_"
+                    +f"{level.lower()}",
+                    (self.plot_info_dict['vx_mask'].lower()\
+                     .replace('global', 'glb').replace('conus', 'buk_conus'))
+                )
+                self.logger.info("Reading in model stat files from "
+                                 +f"{level_input_dir}")
                 all_model_df = gda_util.build_df(
-                    self.logger, self.input_dir, self.output_dir,
+                    self.logger, level_input_dir, self.output_dir,
                     self.model_info_dict, self.met_info_dict,
                     self.plot_info_dict['fcst_var_name'],
                     level,
@@ -351,7 +355,7 @@ class LeadByLevel:
                 )
             )
         image_name = plot_specs_lbl.get_savefig_name(
-            output_image_dir, self.plot_info_dict, self.date_info_dict
+            self.output_dir, self.plot_info_dict, self.date_info_dict
         )
         subplot0_cmap, subplotsN_cmap = plot_specs_lbl.get_plot_colormaps(
             self.plot_info_dict['stat']
@@ -419,7 +423,7 @@ class LeadByLevel:
             ax.set_xlim([self.date_info_dict['forecast_hours'][0],
                          self.date_info_dict['forecast_hours'][-1]])
             ax.set_xticks(xticks)
-            if ax.is_last_row() \
+            if ax.get_subplotspec().is_last_row() \
                     or (nsubplots % 2 != 0 \
                         and model_idx_list.index(model_idx) \
                         == nsubplots-1):
@@ -432,7 +436,7 @@ class LeadByLevel:
             ax.set_yticklabels(vert_profile_levels_int_ticks)
             ax.set_ylim([vert_profile_levels_int[0],
                          vert_profile_levels_int[-1]])
-            if ax.is_first_col() \
+            if ax.get_subplotspec().is_first_col() \
                     or (nsubplots % 2 != 0 \
                         and model_idx_list.index(model_idx) \
                         == nsubplots -1):
@@ -583,7 +587,7 @@ def main():
     # Need settings
     INPUT_DIR = os.environ['HOME']
     OUTPUT_DIR = os.environ['HOME']
-    LOGO_DIR = os.environ['HOME'],
+    LOGO_DIR = os.environ['HOME']
     MODEL_INFO_DICT = {
         'model1': {'name': 'MODEL_A',
                    'plot_name': 'PLOT_MODEL_A',
@@ -617,7 +621,7 @@ def main():
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',
-        'version': '10.1.1'
+        'version': '11.0.2'
     }
     # Create OUTPUT_DIR
     if not os.path.exists(OUTPUT_DIR):

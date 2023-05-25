@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Program Name: global_det_atmos_get_machine.py
 Contact(s): Mallory Row

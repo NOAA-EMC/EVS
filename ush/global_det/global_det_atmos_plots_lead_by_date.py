@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_lead_by_date.py
 Contact(s): Mallory Row
@@ -73,11 +74,6 @@ class LeadByDate:
             self.logger.warning("Cannot make lead_by_date for stat "
                                 +f"{self.plot_info_dict['stat']}")
             sys.exit(0)
-        # Make job image directory
-        output_image_dir = os.path.join(self.output_dir, 'images')
-        if not os.path.exists(output_image_dir):
-            os.makedirs(output_image_dir)
-        self.logger.info(f"Plots will be in: {output_image_dir}")
         # Create dataframe for all forecast hours
         self.logger.info("Building dataframe for all forecast hours")
         forecast_hours_stat_df_dict = {}
@@ -329,7 +325,7 @@ class LeadByDate:
                 )
             )
         image_name = plot_specs_lbd.get_savefig_name(
-            output_image_dir, self.plot_info_dict, self.date_info_dict
+            self.output_dir, self.plot_info_dict, self.date_info_dict
         )
         subplot0_cmap, subplotsN_cmap = plot_specs_lbd.get_plot_colormaps(
             self.plot_info_dict['stat']
@@ -390,7 +386,7 @@ class LeadByDate:
             ax.set_xlim([self.date_info_dict['forecast_hours'][0],
                           self.date_info_dict['forecast_hours'][-1]])
             ax.set_xticks(xticks)
-            if ax.is_last_row() \
+            if ax.get_subplotspec().is_last_row() \
                     or (nsubplots % 2 != 0 and model_idx_list.index(model_idx)\
                         == nsubplots-1):
                 ax.set_xlabel('Forecast Hour')
@@ -410,7 +406,7 @@ class LeadByDate:
                     ax.yaxis.set_minor_locator(md.DayLocator())
                 else:
                     ax.yaxis.set_minor_locator(md.MonthLocator())
-            if ax.is_first_col():
+            if ax.get_subplotspec().is_first_col():
                 ax.set_ylabel(self.date_info_dict['date_type'].title()+' Date')
             else:
                 plt.setp(ax.get_yticklabels(), visible=False)
@@ -537,7 +533,7 @@ def main():
     # Need settings
     INPUT_DIR = os.environ['HOME']
     OUTPUT_DIR = os.environ['HOME']
-    LOGO_DIR = os.environ['HOME'],
+    LOGO_DIR = os.environ['HOME']
     MODEL_INFO_DICT = {
         'model1': {'name': 'MODEL_A',
                    'plot_name': 'PLOT_MODEL_A',
@@ -572,7 +568,7 @@ def main():
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',
-        'version': '10.1.1'
+        'version': '11.0.2'
     }
     # Create OUTPUT_DIR
     if not os.path.exists(OUTPUT_DIR):

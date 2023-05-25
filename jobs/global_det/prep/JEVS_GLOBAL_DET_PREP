@@ -72,6 +72,12 @@ export COMINget_d=${COMINget_d:-$DCOMROOT}
 export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 mkdir -p $COMOUT.${INITDATE}
+for mname in $MODELNAME; do
+    mkdir -p $COMOUT.$INITDATE/$mname
+done
+for oname in $OBSNAME; do
+    mkdir -p $COMOUT.$INITDATE/$oname
+done
 
 #######################################################################
 # Execute the script

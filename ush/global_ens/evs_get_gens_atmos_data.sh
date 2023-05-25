@@ -23,13 +23,36 @@ if [ $modnam = gfsanl ]; then
   echo $modnam is print here ...............
 
   for cyc in 00 06 12 18 ; do
-    cp $COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.f000 $COMOUT_gefs/gfsanl.t${cyc}z.grid3.f000.grib2
-  done
+    ###cp $COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.f000 $COMOUT_gefs/gfsanl.t${cyc}z.grid3.f000.grib2
 
+    #check if gfsanl is missing:
+    missing=no
+    if [ ! -s $COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.anl ] ; then
+       export subject="GFS Analysis Data Missing for EVS ${COMPONENT}"
+       export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
+       echo "Warning: No GFS analysis available for ${INITDATE}${cyc}" > mailmsg
+       echo Missing file is $COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.anl >> mailmsg
+     echo "Job ID: $jobid" >> mailmsg
+     cat mailmsg | mail -s "$subject" $maillist
+     missing=yes
+    fi
+
+   if [ $missing = no ] ; then 
+    cp $COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.anl $COMOUT_gefs/gfsanl.t${cyc}z.grid3.f000.grib2
+    #There are no U10, V10 in GFS analysis, so use GFS*f000 as alternative
+    GFSf000=$COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.f000 
+    $WGRIB2  $GFSf000|grep "UGRD:10 m above ground"|$WGRIB2 -i $GFSf000 -grib $WORK/U10_f000.${cyc}
+    cat $WORK/U10_f000.${cyc} >> $COMOUT_gefs/gfsanl.t${cyc}z.grid3.f000.grib2
+    $WGRIB2  $GFSf000|grep "VGRD:10 m above ground"|$WGRIB2 -i $GFSf000 -grib $WORK/V10_f000.${cyc}
+    cat $WORK/V10_f000.${cyc} >> $COMOUT_gefs/gfsanl.t${cyc}z.grid3.f000.grib2
+   fi 
+ done
+
+   if [ $missing = no ] ; then
     #For WMO 1.5 deg verification 
     $wgrib2 $COMOUT_gefs/gfsanl.t00z.grid3.f000.grib2 -set_grib_type same -new_grid_winds earth -new_grid latlon 0:240:1.5 -90:121:1.5 $COMOUT_gefs/gfsanl.t00z.deg1.5.f000.grib2 
+   fi
 fi
-
 
 #Note CMCE has no DPT 
 if [ $modnam = cmcanl ] ; then
@@ -51,6 +74,18 @@ if [ $modnam = cmcanl ] ; then
         cmcanl=$origin/cmc_gec00.t${cyc}z.pgrb2a.0p50.anl
       fi
 
+     missing=no
+     if [ ! -s $cmcanl ] ; then
+         export subject="CMC Analysis Data Missing for EVS ${COMPONENT}"
+         export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
+         echo "Warning: No CMC analysis available for ${INITDATE}${cyc}" > mailmsg
+         echo Missing file is $cmcanl >> mailmsg
+         echo "Job ID: $jobid" >> mailmsg
+         cat mailmsg | mail -s "$subject" $maillist
+         missing=yes
+    fi
+
+   if [ $missing = no ] ; then
      for level in 10 50 100 200 250 300 400 500 700 850 925 1000 ; do
       $WGRIB2  $cmcanl|grep "UGRD:$level mb"|grep "anl:ENS=low-res"|$WGRIB2 -i $cmcanl -grib $WORK/output.${cyc}
       cat $WORK/output.${cyc} >> $WORK/cmce.upper.${cyc}.${mb}.${h3}
@@ -86,10 +121,13 @@ if [ $modnam = cmcanl ] ; then
        $wgrib2 $WORK/cmce.upper.${cyc}.${mb}.${h3} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $outdata/cmcanl.t${cyc}z.grid3.f000.grib2
 
       rm   $WORK/cmce.upper.${cyc}.${mb}.${h3} $WORK/cmce.sfc.${cyc}.${mb}.${h3}  $WORK/output.${cyc}
+
+    fi
    done
 
+   if [ $missing = no ] ; then
     $wgrib2 $COMOUT_cmce/cmcanl.t00z.grid3.f000.grib2 -set_grib_type same -new_grid_winds earth -new_grid latlon 0:240:1.5 -90:121:1.5 $COMOUT_cmce/cmcanl.t00z.deg1.5.f000.grib2
-
+   fi
 fi 
 
 
@@ -339,6 +377,8 @@ if [ $modnam = prepbufr ] ; then
 
    for cyc in 00 06 12 18 ; do
 
+    	   
+
       > run_pb2nc.${cyc}.sh
       
       echo  "export output_base=${WORK}/pb2nc" >> run_pb2nc.${cyc}.sh
@@ -346,9 +386,16 @@ if [ $modnam = prepbufr ] ; then
       echo  "export vbeg=${cyc}" >> run_pb2nc.${cyc}.sh
       echo  "export vend=${cyc}" >> run_pb2nc.${cyc}.sh
 
-      if [ -s $COMINprepbufr/gfs.${vday}/${cyc}/atmos/gfs.t${cyc}z.prepbufr ] ; then
-        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr.cong" >> run_pb2nc.${cyc}.sh
-        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr_Profile.cong" >> run_pb2nc.${cyc}.sh
+      if [ -s $COMINprepbufr/gdas.${vday}/${cyc}/atmos/gdas.t${cyc}z.prepbufr ] ; then
+        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr.conf" >> run_pb2nc.${cyc}.sh
+        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr_Profile.conf" >> run_pb2nc.${cyc}.sh
+      else
+        export subject="Prepbufr  Data Missing for EVS ${COMPONENT}"
+        export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
+        echo "Warning:  No prepbufr analysis available for ${INITDATE}${cyc}" > mailmsg
+        echo Missing file is $COMINprepbufr/gdas.${vday}/${cyc}/atmos/gdas.t${cyc}z.prepbufr  >> mailmsg
+        echo "Job ID: $jobid" >> mailmsg
+        cat mailmsg | mail -s "$subject" $maillist
       fi 
 
       chmod +x run_pb2nc.${cyc}.sh
@@ -359,7 +406,7 @@ if [ $modnam = prepbufr ] ; then
       echo "cp ${WORK}/pb2nc/prepbufr_nc/*.nc $COMOUT_gefs" >> run_pb2nc.sh  
 
   chmod +x run_pb2nc.sh
-  sh run_pb2nc.sh
+  run_pb2nc.sh
 
 
 fi  
@@ -371,7 +418,16 @@ if [ $modnam = ccpa ] ; then
   export vday_1=${day1:0:8}
 
   for cyc in 00 06 12 18 ; do
+    if [ -s $COMINccpa/ccpa.${vday}/$cyc/ccpa.t${cyc}z.06h.1p0.conus.gb2 ] ; then
       $wgrib2 $COMINccpa/ccpa.${vday}/$cyc/ccpa.t${cyc}z.06h.1p0.conus.gb2 -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  ${COMOUT_gefs}/ccpa.t${cyc}z.grid3.06h.f00.grib2
+    else
+        export subject="CCPA  Data Missing for EVS ${COMPONENT}"
+        export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
+        echo "Warning:  No CCPA analysis available for ${INITDATE}${cyc}" > mailmsg
+        echo Missing file is $COMINccpa/ccpa.${vday}/$cyc/ccpa.t${cyc}z.06h.1p0.conus.gb2  >> mailmsg
+        echo "Job ID: $jobid" >> mailmsg
+        cat mailmsg | mail -s "$subject" $maillist
+    fi 
   done
 
   export output_base=${WORK}/precip
@@ -523,7 +579,16 @@ if [ $modnam = nohrsc24h ] ; then
  
   for cyc in 00 12 ; do
     snowfall=$COMINsnow/${vday}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_24h_${vday}${cyc}_grid184.grb2
-    cp $snowfall $COMOUT_gefs/nohrsc.t${cyc}z.grid184.grb2
+    if [ -s $snowfall ] ; then
+      cp $snowfall $COMOUT_gefs/nohrsc.t${cyc}z.grid184.grb2
+    else
+        export subject="NOHRSC Data Missing for EVS ${COMPONENT}"
+        export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
+        echo "Warning:  No NOHRSC analysis available for ${INITDATE}${cyc}" > mailmsg
+        echo Missing file is $snowfall  >> mailmsg
+        echo "Job ID: $jobid" >> mailmsg
+        cat mailmsg | mail -s "$subject" $maillist
+    fi
   done
 
 fi
@@ -619,8 +684,19 @@ fi
 
 if [ $modnam = osi_saf ] ; then
    
-   python ${USHevs}/global_ens/global_det_sea_ice_prep.py
-   cp $WORK/atmos.${INITDATE}/osi_saf/*.nc $COMOUT_osi_saf/.
+   osi=$COMINosi_saf/$INITDATE/seaice/osisaf/ice_conc_nh_polstere-100_multi_${INITDATE}1200.nc	
+   if [ -s $osi ] ; then
+     python ${USHevs}/global_ens/global_det_sea_ice_prep.py
+     cp $WORK/atmos.${INITDATE}/osi_saf/*.nc $COMOUT_osi_saf/.
+   else
+
+        export subject="OSI_SAF Data Missing for EVS ${COMPONENT}"
+        export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
+        echo "Warning:  No OSI_SAF data  available for ${INITDATE}" > mailmsg
+        echo Missing file is $osi  >> mailmsg
+        echo "Job ID: $jobid" >> mailmsg
+        cat mailmsg | mail -s "$subject" $maillist
+    fi 
 fi
 
 # Ice concentration starts from f000. There is amount of ice at beginning.

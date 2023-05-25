@@ -4,6 +4,8 @@ set -x
 
 day=$1
 MODEL=NARRE_MEAN
+model=narre_mean
+
 archive=$output_base_dir
 
 prefix=${COMIN%%$VDATE*}
@@ -16,12 +18,16 @@ narre_stat=${COM_IN}${day}
 
 yyyymm=${day:0:6} 
 
-narre_archive_yyyymm=${archive}/${VERIF_CASE}/$MODEL/$yyyymm
-mkdir -p $narre_archive_yyyymm
+narre_archive_yyyymmdd=${archive}/${model}
+#narre_archive_yyyymmdd=${archive}/${model}/${MODEL}_${day}
+#narre_archive_yyyymm=${archive}/${VERIF_CASE}/$MODEL/$yyyymm
+mkdir -p $narre_archive_yyyymmdd
 
-cd ${narre_archive_yyyymm}
+cd ${narre_archive_yyyymmdd}
 
-ln -sf ${narre_stat}/${MODEL}_${VERIF_CASE}_${day}.stat ${MODEL}_${day}.stat
+if [ -s ${narre_stat}/evs.stats.narremean.mean.${VERIF_CASE}.v${day}.stat ] ; then
+  ln -sf ${narre_stat}/evs.stats.narremean.mean.${VERIF_CASE}.v${day}.stat ${MODEL}_${day}.stat
+fi
 
   
 
