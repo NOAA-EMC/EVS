@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_precip_spatial_map.py
 Contact(s): Mallory Row
@@ -306,8 +307,6 @@ class PrecipSpatialMap:
                                              central_latitude=central_lat,
                                              false_easting=0.0,
                                              false_northing=0.0,
-                                             secant_latitudes=None,
-                                             standard_parallels=None,
                                              globe=None)
                 ax1 = fig.add_subplot(gs[0], projection=myproj)
                 ax1.set_extent(extent)
@@ -320,7 +319,8 @@ class PrecipSpatialMap:
                 CF1 = ax1.contourf(x, y, precip_APCP_A24,
                                    transform=ccrs.PlateCarree(),
                                    levels=clevs, norm=norm,
-                                   cmap=cmap, extend='max')
+                                   cmap=cmap, extend='max',
+                                   transform_first=True)
                 CF1.cmap.set_over(cmap_over_color)
                 cbar_left = gs.get_grid_positions(fig)[2][0]
                 cbar_width = (gs.get_grid_positions(fig)[3][-1]
@@ -418,7 +418,7 @@ def main():
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',
-        'version': '10.1.1'
+        'version': '11.0.2'
     }
     # Create OUTPUT_DIR
     if not os.path.exists(OUTPUT_DIR):
