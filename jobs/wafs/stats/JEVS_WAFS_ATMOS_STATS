@@ -5,16 +5,12 @@ set -xa
 export PS4='$SECONDS + '
 date
 
-# Version of MET listed in the metplus .stat files used to create graphics
-# Because Python code will convert it to a float variable,
-# keep at most one dot(.) and remove extra from MET_VERSION.
-export MET_VERSION=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
-
 ############################################
 # Working Directory                                                                                                                                      
 ############################################
 export DATA=${DATA:-${DATAROOT}/${jobid:?}}
 mkdir -p $DATA
+mkdir -p $DATA/semifinal
 cd $DATA
 
 ############################################
@@ -40,13 +36,15 @@ export VDATE=${VDATE:-$PDYm1}
 # Set up the NET and RUN                                                                                                                         
 ############################################
 export NET=${NET:-evs}
-export STEP=${STEP:-plots} # prep stats plot
-export COMPONENT=${COMPONENT:-global_det}
-export RUN=${RUN:-aviation}
+export STEP=${STEP:-stats} # prep stats plot
+export COMPONENT=${COMPONENT:-wafs}
+export RUN=${RUN:-atmos}
 export VERIF_CASE=${VERIF_CASE:-grid2grid}
 
 # WAFS is the general MODELNAME for data structure
 # while the center (us/uk/blend or gfs) will be the actual MODEL
+# parm/metplus_config/wafs/atmos/stats/GridStat_fcstWAFS_obsGCIP.conf
+# parm/metplus_config/wafs/atmos/stats/StatAnalysis_fcstWAFS_obsGCIP_GatherbyDay.conf
 export MODELNAME=${MODELNAME:-wafs}
 
 ############################################
@@ -56,13 +54,18 @@ export MODELNAME=${MODELNAME:-wafs}
 # COMIN folder of analysis and forecast grib2 data
 # gfs_ver defined in versions/run.ver
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export COMINstat=$COMIN/stats/$COMPONENT  # will be appended with wafs.$VDATE or gfs.$VDATE
+export COMINuk=${COMINuk:-$DCOMROOT} # $VDATE/wgrbbul/ukmet_wafs}
+export COMINgfs=${COMINgfs:-$(compath.py gfs/${gfs_ver})}
+export COMINobs=$COMINgfs
 
 # COMOUT folder
 # evs_ver defined in versions/run.ver
-export COMOUT=${COMOUT:-$COMIN/$STEP/$COMPONENT/$RUN.$VDATE}
+export COMOUT=${COMOUT:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
+export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
+export COMOUTfinal=$COMOUT/$STEP/$COMPONENT/$MODELNAME.$VDATE
 
-mkdir -p $COMOUT
+mkdir -p $COMOUTsmall $COMOUTfinal
+rm $COMOUTsmall/* $COMOUTfinal/*
 
 ############################################
 # Specify HOME Directory
@@ -76,44 +79,62 @@ export JOBSevs=${JOBSevs:-$HOMEevs/jobs/$COMPONENT} # step
 export PARMevs=${PARMevs:-$HOMEevs/parm/metplus_config/$COMPONENT/$RUN} # step
 export USHevs=${USHevs:-$HOMEevs/ush/$COMPONENT} # all pool
 
+export MACHINE_CONF=$HOMEevs/parm/metplus_config/machine.conf
+
 export MASKS=${MASKS:-$FIXevs/masks}
 
-# To integrate plotting python scripts from Marcel Caron
-export USH_DIR=${USH_DIR:-$HOMEevs/ush/$COMPONENT}
-
 ############################################
-# Execute the script.
+# Execute the script using MPMD
 ############################################
-export DAYS_LIST=${DAYS_LIST:-"90 31"}
+rm wafs_stat.cmdfile
 
-export DATAplot=$DATA/plot
-mkdir -p $DATAplot
+export MPIRUN=${MPIRUN:-"mpiexec"}
+ic=0
+observations="GCIP GFS"
+for observation in $observations ; do
+    if [ $observation = "GCIP" ] ; then
+	# For ICING, there are 2 different resoltions (before Nov 2023) and 3 centers
+	resolutions="0P25 1P25"
+	centers="blend uk us"
+    elif [ $observation = "GFS" ] ; then
+	# For wind/temperature, only 1 resolution so far
+	resolutions="1P25"
+	centers="gfs"
+    fi
 
-export MPIRUN=${MPIRUN:-"mpiexec -np 4 -cpu-bind verbose,core cfp"}
-
-OBSERVATIONS="GCIP GFS"
-rm wafs_plots.cmdfile
-n=0
-for observation in $OBSERVATIONS ; do
-    for ndays in $DAYS_LIST ; do
-	if [ `echo $MPIRUN | cut -d " " -f1` = 'srun' ] ; then
-	    echo $n $SCRIPTSevs/plots/exevs_global_det_aviation_plots.sh $observation $ndays  >> wafs_plots.cmdfile
-	else
-	    echo $SCRIPTSevs/plots/exevs_global_det_aviation_plots.sh $observation $ndays  >> wafs_plots.cmdfile
-	    export MP_PGMMODEL=mpmd
-	fi
-	n=$(( n + 1 ))
+    for resolution in $resolutions ; do
+	for center in $centers; do
+	    if [ `echo $MPIRUN | cut -d " " -f1` = 'srun' ] ; then
+		echo $ic $SCRIPTSevs/stats/exevs_wafs_atmos_stats.sh $observation $resolution $center  >> wafs_stat.cmdfile
+	    else
+		echo $SCRIPTSevs/stats/exevs_wafs_atmos_stats.sh $observation $resolution $center  >> wafs_stat.cmdfile
+		export MP_PGMMODEL=mpmd
+	    fi
+	    ic=`expr $ic + 1`
+	done
     done
 done
-$MPIRUN wafs_plots.cmdfile
 
-cd $DATAplot
-for ndays in $DAYS_LIST ; do
-    eval_period="last${ndays}days"
-    tar -cvf $COMOUT/$NET.$STEP.${COMPONENT}.${RUN}.${VERIF_CASE}.$eval_period.v${VDATE}.tar *${eval_period}*png
-done
+export MPIRUN="$MPIRUN -np $ic -cpu-bind verbose,core cfp"
+$MPIRUN wafs_stat.cmdfile
 
 export err=$?; err_chk
+
+# Combine icing files from different centers ( blend, uk, us) to $COMOUTfinal
+#===============================
+resolutions="0P25 1P25"
+centers="blend uk us"
+cd $DATA/semifinal
+for resolution in $resolutions ; do
+    for center in $centers ; do
+	file=`ls ${center}_$resolution.*`
+	finalfile=${file#*\.}
+	cat $file >> $finalfile
+    done
+    if [[ -s $finalfile ]] ; then
+	awk '!seen[$0]++' $finalfile > $COMOUTfinal/$finalfile
+    fi
+done
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 echo $msg
@@ -123,5 +144,4 @@ if [ "$KEEPDATA" != "YES" ] ; then
 fi
 
 date
-
 exit

@@ -18,8 +18,8 @@ from datetime import timedelta as td
 
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
-from evs_global_det_aviation_plot_prune_stat_files import prune_data
-import evs_global_det_aviation_plot_util as plot_util
+from evs_wafs_atmos_plot_prune_stat_files import prune_data
+import evs_wafs_atmos_plot_util as plot_util
 
 
 # =================== FUNCTIONS =========================

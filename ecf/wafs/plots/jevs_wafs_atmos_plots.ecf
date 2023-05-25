@@ -1,17 +1,12 @@
-#PBS -N jevs_aviation_stats
+#PBS -N jevs_wafs_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=01:30:00
-#PBS -l select=1:ncpus=2:mem=4GB
+#PBS -l walltime=00:30:00
+#PBS -l select=1:ncpus=40:mem=200GB
 #PBS -l debug=true
 #PBS -V
-
-##PBS -q debug
-##PBS -A GFS-DEV
-##PBS -q dev
-##PBS -A VERF-DEV
 
 export OMP_NUM_THREADS=1
 
@@ -41,7 +36,6 @@ module load cfp/$cfp_ver
 module load gsl/$gsl_ver
 module load met/$met_ver
 module load metplus/$metplus_ver
-export MET_bin_exec=bin
 
 set -xa
 module list
@@ -49,31 +43,36 @@ module list
 ############################################################
 # environment variables set
 ############################################################
-export envir=prod
+export envir=dev
 
 export NET=evs
-export STEP=stats
-export COMPONENT=global_det
-export RUN=aviation
+export STEP=plots
+export COMPONENT=wafs
+export RUN=atmos
 export VERIF_CASE=grid2grid
+
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/evs/$evs_ver
 
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs/$evs_ver
+export USH_DIR=$HOMEevs/ush/$COMPONENT
+export DAYS_LIST="90 31"
 
 ############################################################
 # CALL executable job script here
 ############################################################
+export KEEPDATA=YES
+
 export pid=${pid:-$$}
 export DATA=/lfs/h2/emc/ptmp/$USER/evs/working/${STEP}.$pid
 
-export KEEPDATA=YES
-
-$HOMEevs/jobs/global_det/stats/JEVS_GLOBAL_DET_AVIATION_STATS
+$HOMEevs/jobs/wafs/plots/JEVS_WAFS_ATMOS_PLOTS
 
 ############################################################
 ## Purpose: This job generates the grid2grid statistics stat
 ##          files for GFS WAFS
 ############################################################
 #
+
 exit
+

@@ -5,6 +5,11 @@ set -xa
 export PS4='$SECONDS + '
 date
 
+# Version of MET listed in the metplus .stat files used to create graphics
+# Because Python code will convert it to a float variable,
+# keep at most one dot(.) and remove extra from MET_VERSION.
+export MET_VERSION=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
+
 ############################################
 # Working Directory                                                                                                                                      
 ############################################
@@ -35,15 +40,13 @@ export VDATE=${VDATE:-$PDYm1}
 # Set up the NET and RUN                                                                                                                         
 ############################################
 export NET=${NET:-evs}
-export STEP=${STEP:-stats} # prep stats plot
-export COMPONENT=${COMPONENT:-global_det}
-export RUN=${RUN:-aviation}
+export STEP=${STEP:-plots} # prep stats plot
+export COMPONENT=${COMPONENT:-wafs}
+export RUN=${RUN:-atmos}
 export VERIF_CASE=${VERIF_CASE:-grid2grid}
 
 # WAFS is the general MODELNAME for data structure
 # while the center (us/uk/blend or gfs) will be the actual MODEL
-# parm/metplus_config/global_det/aviation/stats/GridStat_fcstWAFS_obsGCIP.conf
-# parm/metplus_config/global_det/aviation/stats/StatAnalysis_fcstWAFS_obsGCIP_GatherbyDay.conf
 export MODELNAME=${MODELNAME:-wafs}
 
 ############################################
@@ -53,17 +56,13 @@ export MODELNAME=${MODELNAME:-wafs}
 # COMIN folder of analysis and forecast grib2 data
 # gfs_ver defined in versions/run.ver
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export COMINuk=${COMINuk:-$DCOMROOT} # $VDATE/wgrbbul/ukmet_wafs}
-export COMINgfs=${COMINgfs:-$(compath.py gfs/${gfs_ver})}
-export COMINobs=$COMINgfs
+export COMINstat=$COMIN/stats/$COMPONENT  # will be appended with wafs.$VDATE or gfs.$VDATE
 
 # COMOUT folder
 # evs_ver defined in versions/run.ver
-export COMOUT=${COMOUT:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
-export COMOUTfinal=$COMOUT/$STEP/$COMPONENT/$MODELNAME.$VDATE
+export COMOUT=${COMOUT:-$COMIN/$STEP/$COMPONENT/$RUN.$VDATE}
 
-mkdir -p $COMOUTsmall $COMOUTfinal
+mkdir -p $COMOUT
 
 ############################################
 # Specify HOME Directory
@@ -77,28 +76,58 @@ export JOBSevs=${JOBSevs:-$HOMEevs/jobs/$COMPONENT} # step
 export PARMevs=${PARMevs:-$HOMEevs/parm/metplus_config/$COMPONENT/$RUN} # step
 export USHevs=${USHevs:-$HOMEevs/ush/$COMPONENT} # all pool
 
-export MACHINE_CONF=$HOMEevs/parm/metplus_config/machine.conf
-
 export MASKS=${MASKS:-$FIXevs/masks}
+
+# To integrate plotting python scripts from Marcel Caron
+export USH_DIR=${USH_DIR:-$HOMEevs/ush/$COMPONENT}
 
 ############################################
 # Execute the script.
 ############################################
-export MPIRUN=${MPIRUN:-"mpiexec -np 2 -cpu-bind verbose,core cfp"}
+export DAYS_LIST=${DAYS_LIST:-"90 31"}
 
-rm wafs_stat.cmdfile
-if [ `echo $MPIRUN | cut -d " " -f1` = 'srun' ] ; then
-    echo 0 $SCRIPTSevs/stats/exevs_global_det_aviation_stats.sh GCIP  >> wafs_stat.cmdfile
-    echo 1 $SCRIPTSevs/stats/exevs_global_det_aviation_stats.sh GFS >> wafs_stat.cmdfile
-else
-    echo $SCRIPTSevs/stats/exevs_global_det_aviation_stats.sh GCIP  >> wafs_stat.cmdfile
-    echo $SCRIPTSevs/stats/exevs_global_det_aviation_stats.sh GFS >> wafs_stat.cmdfile
-    export MP_PGMMODEL=mpmd
-fi
+export DATAplot=$DATA/plot
+mkdir -p $DATAplot
 
-$MPIRUN wafs_stat.cmdfile
+export MPIRUN=${MPIRUN:-"mpiexec"}
+
+OBSERVATIONS="GCIP GFS"
+rm wafs_plots.cmdfile
+ic=0
+export VX_MASK_ALL="ASIA AUNZ EAST NAMER NATL_AR2 NHEM NPO SHEM TROPICS"
+for observation in $OBSERVATIONS ; do
+    for ndays in $DAYS_LIST ; do
+	for subregion in $VX_MASK_ALL ; do
+	    if [ `echo $MPIRUN | cut -d " " -f1` = 'srun' ] ; then
+		echo $ic $SCRIPTSevs/plots/exevs_wafs_atmos_plots.sh $observation $ndays $subregion >> wafs_plots.cmdfile
+	    else
+		echo $SCRIPTSevs/plots/exevs_wafs_atmos_plots.sh $observation $ndays $subregion >> wafs_plots.cmdfile
+		export MP_PGMMODEL=mpmd
+	    fi
+	    ic=$(( ic + 1 ))
+	done
+	# plot for global (all subregions)
+	if [ $ic -gt 1 ] ; then
+	    if [ `echo $MPIRUN | cut -d " " -f1` = 'srun' ] ; then
+		echo $ic $SCRIPTSevs/plots/exevs_wafs_atmos_plots.sh $observation $ndays 'all' >> wafs_plots.cmdfile
+	    else
+		echo $SCRIPTSevs/plots/exevs_wafs_atmos_plots.sh $observation $ndays 'all' >> wafs_plots.cmdfile
+		export MP_PGMMODEL=mpmd
+	    fi
+	    ic=$(( ic + 1 ))
+	fi
+    done
+done
+export MPIRUN="$MPIRUN -np $ic -cpu-bind verbose,core cfp"
+$MPIRUN wafs_plots.cmdfile
 
 export err=$?; err_chk
+
+cd $DATAplot
+for ndays in $DAYS_LIST ; do
+    eval_period="last${ndays}days"
+    tar -cvf $COMOUT/$NET.$STEP.${COMPONENT}.${RUN}.${VERIF_CASE}.$eval_period.v${VDATE}.tar *${eval_period}*png
+done
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 echo $msg
@@ -108,4 +137,5 @@ if [ "$KEEPDATA" != "YES" ] ; then
 fi
 
 date
+
 exit

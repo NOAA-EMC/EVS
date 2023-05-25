@@ -1,8 +1,8 @@
 #!/bin/sh
 ########################################################################################
-# Name of Script: exevs_global_det_aviation_plots.sh
+# Name of Script: exevs_wafs_atmos_plots.sh
 # Purpose of Script: To plot the verification products for WAFS verification
-# Arguments: exevs_global_det_aviation_plots.sh
+# Arguments: exevs_wafs_atmos_plots.sh
 #   
 ########################################################################################
 # OBSERVATION  CENTERS        RESOLUTION  PLOT_TYPE    ||  LINE_TYPE  STAT
@@ -20,6 +20,10 @@ echo $msg
 
 export OBSERVATION=$1
 export NDAYS=$2
+export VX_MASK_LIST=$3
+if [ $VX_MASK_LIST = 'all' ] ; then
+    export VX_MASK_LIST="`echo $VX_MASK_ALL | sed 's/ /, /g'`"
+fi
 
 export VALID_END=$VDATE
 export VALID_BEG=`date -d "$VDATE - $NDAYS days" +%Y%m%d`
@@ -49,9 +53,9 @@ for RESOLUTION in $resolutions ; do
     
     export OUTPUT_BASE_DIR=$DATA/datainput/${OBSERVATION}_${RESOLUTION}
     mkdir -p $OUTPUT_BASE_DIR
-    rm $OUTPUT_BASE_DIR/*
+    #rm $OUTPUT_BASE_DIR/*
 
-    source $HOMEevs/parm/evs_config/global_det/config.evs.stats.global_det.aviation.standalone
+    source $HOMEevs/parm/evs_config/wafs/config.evs.stats.wafs.atmos.standalone
 
     if [ $OBSERVATION = "GCIP" ] ; then
         stat_file_suffix=`echo $VAR1_NAME | sed -e "s|mean||" -e "s|max||" | tr '[:upper:]' '[:lower:]'`
@@ -75,13 +79,16 @@ for RESOLUTION in $resolutions ; do
 	fi
 
 	# Re-organize data for plotting
-	rm $OUTPUT_BASE_DIR/*
+	#rm $OUTPUT_BASE_DIR/*
 	n=0
 	while [[ $n -le $NDAYS ]] ; do
 	    day=`date -d "$VDATE - $n days" +%Y%m%d`
 	    sourefile=$COMINstat/${MODELNAME}.$day/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
-	    if [[ -f "$sourefile" ]] ; then
-		ln -s $sourefile $OUTPUT_BASE_DIR/.
+	    targetfile=$OUTPUT_BASE_DIR/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
+	    if [[ ! -f "$targetfile" ]] ; then
+		if [[ -f "$sourefile" ]] ; then
+		    ln -s $sourefile $OUTPUT_BASE_DIR/.
+		fi
 	    fi
 	    n=$((n+1))
 	done
@@ -96,7 +103,7 @@ for RESOLUTION in $resolutions ; do
 		export STATS="rmse"
 	    fi
 	    # Set the config and run python scripts to generate plots
-	    sh $HOMEevs/parm/evs_config/global_det/config.evs.plots.global_det.aviation
+	    sh $HOMEevs/parm/evs_config/wafs/config.evs.plots.wafs.atmos
 	done
     done
 
@@ -104,7 +111,7 @@ done
 
 #####################################################################
 # GOOD RUN
-echo "********SCRIPT exevs_global_det_aviation_plots.sh $1 $2 COMPLETED NORMALLY on `date`"
+echo "********SCRIPT exevs_wafs_atmos_plots.sh $1 $2 COMPLETED NORMALLY on `date`"
 exit 0
 #####################################################################
 

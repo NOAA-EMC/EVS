@@ -32,12 +32,12 @@ SETTINGS_DIR=os.environ['USHevs']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
-from evs_global_det_aviation_plot_settings import Toggle, Templates, Presets, ModelSpecs, Reference
-from evs_global_det_aviation_plot_plotter import Plotter
-from evs_global_det_aviation_plot_prune_stat_files import prune_data
-import evs_global_det_aviation_plot_util as plot_util
-import evs_global_det_aviation_plot_df_preprocessing as df_preprocessing
-from evs_global_det_aviation_plot_check_variables import *
+from evs_wafs_atmos_plot_settings import Toggle, Templates, Presets, ModelSpecs, Reference
+from evs_wafs_atmos_plot_plotter import Plotter
+from evs_wafs_atmos_plot_prune_stat_files import prune_data
+import evs_wafs_atmos_plot_util as plot_util
+import evs_wafs_atmos_plot_df_preprocessing as df_preprocessing
+from evs_wafs_atmos_plot_check_variables import *
 
 # ================ GLOBALS AND CONSTANTS ================
 
@@ -77,7 +77,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                      keep_shared_events_only: bool = False,
                      plot_group: str = 'sfc_upper',
                      sample_equalization: bool = True,
-                     regrid: str = 'g193', component: str = 'global_det',
+                     regrid: str = 'g193', component: str = 'wafs',
                   ):
 
     logger.info("========================================")
@@ -1119,12 +1119,14 @@ def main():
                     # WAFS needs a global plotting
                     if domain in DOMAINS[-1]:
                         if df is None:
-                            df_metrics = [ df_all ]
+                            continue
                         else:
-                            df_all=pd.concat([df_all,df], ignore_index=True)
-                            df_all['VX_MASK'] = REGRID.upper()
-                            df_metrics = [ df, df_all ]
-                    else:
+                            if len(DOMAINS) == 1:
+                                df_all = df
+                            else:
+                                df_all=pd.concat([df_all,df])
+                                df_all['VX_MASK'] = REGRID.upper()
+                    else: # collect df of all sub-domains.
                         if df is None:
                             continue
                         else:
@@ -1133,31 +1135,28 @@ def main():
                                 # Only change one subdomain to global for plotting and avoid duplicate records
                                 #df_all=df_all.assign(VX_MASK=REGRID.upper())
                             else:
-                                df_all=pd.concat([df_all,df], ignore_index=True)
+                                df_all=pd.concat([df_all,df])
                             df_all['VX_MASK'] = REGRID.upper()
-                            df_metrics = [ df ]
-                    for df_metric in df_metrics:
-                        plot_time_series(
-                            df_metric, logger, date_range, MODELS, num=num, flead=flead,
-                            level=fcst_level, thresh=fcst_thresh, 
-                            metric1_name=metrics[0], metric2_name=metrics[1], 
-                            date_type=DATE_TYPE, y_min_limit=Y_MIN_LIMIT, 
-                            y_max_limit=Y_MAX_LIMIT, y_lim_lock=Y_LIM_LOCK, 
-                            xlabel=f'{str(date_type_string).capitalize()} Date', 
-                            verif_type=VERIF_TYPE, date_hours=date_hours, 
-                            line_type=LINE_TYPE, save_dir=SAVE_DIR, 
-                            eval_period=EVAL_PERIOD, 
-                            display_averages=display_averages, 
-                            keep_shared_events_only=keep_shared_events_only,
-                            save_header=URL_HEADER, plot_group=plot_group,
-                            confidence_intervals=CONFIDENCE_INTERVALS,
-                            bs_nrep=bs_nrep, bs_method=bs_method, ci_lev=ci_lev,
-                            bs_min_samp=bs_min_samp,
-                            sample_equalization=sample_equalization,
-                            regrid=REGRID, component=COMPONENT
-                        )
-                        num+=1
-
+                plot_time_series(
+                    df_all, logger, date_range, MODELS, num=num, flead=flead,
+                    level=fcst_level, thresh=fcst_thresh, 
+                    metric1_name=metrics[0], metric2_name=metrics[1], 
+                    date_type=DATE_TYPE, y_min_limit=Y_MIN_LIMIT, 
+                    y_max_limit=Y_MAX_LIMIT, y_lim_lock=Y_LIM_LOCK, 
+                    xlabel=f'{str(date_type_string).capitalize()} Date', 
+                    verif_type=VERIF_TYPE, date_hours=date_hours, 
+                    line_type=LINE_TYPE, save_dir=SAVE_DIR, 
+                    eval_period=EVAL_PERIOD, 
+                    display_averages=display_averages, 
+                    keep_shared_events_only=keep_shared_events_only,
+                    save_header=URL_HEADER, plot_group=plot_group,
+                    confidence_intervals=CONFIDENCE_INTERVALS,
+                    bs_nrep=bs_nrep, bs_method=bs_method, ci_lev=ci_lev,
+                    bs_min_samp=bs_min_samp,
+                    sample_equalization=sample_equalization,
+                    regrid=REGRID, component=COMPONENT
+                )
+                num+=1
 
 # ============ START USER CONFIGURATIONS ================
 
