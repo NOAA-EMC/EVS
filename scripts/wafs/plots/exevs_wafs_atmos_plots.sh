@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ########################################################################################
 # Name of Script: exevs_wafs_atmos_plots.sh
 # Purpose of Script: To plot the verification products for WAFS verification
@@ -103,7 +103,7 @@ for RESOLUTION in $resolutions ; do
 		export STATS="rmse"
 	    fi
 	    # Set the config and run python scripts to generate plots
-	    sh $HOMEevs/parm/evs_config/wafs/config.evs.plots.wafs.atmos
+	    $HOMEevs/parm/evs_config/wafs/config.evs.plots.wafs.atmos
 	done
     done
 

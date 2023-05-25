@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ##############################################################################
 # Script Name: evs_wafs_atmos_stats.sh
 # Purpose:  This script prepares unified templates for UK, GFS and blended forecasts

@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 ########################################################################################
 # Name of Script: exevs_wafs_atmos_stats.sh
 # Purpose of Script: To generate the verification products for WAFS verification
@@ -32,7 +32,7 @@ else
 fi
 
 # Prepare data
-sh $USHevs/evs_wafs_atmos_stats.sh
+$USHevs/evs_wafs_atmos_stats.sh
 
 # run stat files
 ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $DATA/GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
