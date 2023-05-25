@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Program Name: global_det_atmos_stats_grid2obs_create_merged_ptype.py
 Contact(s): Mallory Row
@@ -70,7 +71,7 @@ while valid_date_dt <= ENDDATE_dt:
         for input_ptype_file in [input_crain_file, input_csnow_file,
                                  input_cfrzr_file, input_cicep_file]:
             if not os.path.exists(input_ptype_file):
-                print("WARNING: "+input_ptype_file+" does not exist")
+                print(f"WARNING: {input_ptype_file} does not exist")
                 all_input_ptype_files_exist = False
         output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP,
                                   'METplus_output',
@@ -82,10 +83,18 @@ while valid_date_dt <= ENDDATE_dt:
             +'_fhr'+str(fhr).zfill(3)+'.nc'
         )
         if all_input_ptype_files_exist:
-            print("\nInput CRAIN File: "+input_crain_file)
-            print("Input CSNOW File: "+input_csnow_file)
-            print("Input CFRZR File: "+input_cfrzr_file)
-            print("Input CICEP File: "+input_cicep_file)
+            if not os.path.exists(output_merged_ptype_file):
+                make_merged_ptype_output_file = True
+            else:
+                make_merged_ptype_output_file = False
+                print(f"Output File exists: {output_merged_ptype_file}") 
+        else:
+            make_merged_ptype_output_file = False
+        if make_merged_ptype_output_file:
+            print(f"\nInput CRAIN File: {input_crain_file}")
+            print(f"Input CSNOW File: {input_csnow_file}")
+            print(f"Input CFRZR File: {input_cfrzr_file}")
+            print(f"Input CICEP File: {input_cicep_file}")
             input_crain_data = netcdf.Dataset(input_crain_file)
             input_csnow_data = netcdf.Dataset(input_csnow_file)
             input_cfrzr_data = netcdf.Dataset(input_cfrzr_file)
@@ -94,9 +103,7 @@ while valid_date_dt <= ENDDATE_dt:
             input_csnow = input_csnow_data.variables['CSNOW'][:]
             input_cfrzr = input_cfrzr_data.variables['CFRZR'][:]
             input_cicep = input_cicep_data.variables['CICEP'][:]
-            print("Output Merged Ptype File: "+output_merged_ptype_file)
-            if os.path.exists(output_merged_ptype_file):
-                os.remove(output_merged_ptype_file)
+            print(f"Output Merged Ptype File: {output_merged_ptype_file}")
             merged_ptype = np.zeros_like(input_crain)
             for x in range(len(input_crain[:,0])):
                 for y in range(len(input_crain[0,:])):
@@ -156,9 +163,6 @@ while valid_date_dt <= ENDDATE_dt:
             input_csnow_data.close()
             input_cfrzr_data.close()
             input_cicep_data.close()
-        else:
-            print("\nWARNING: Missing input files cannot make output file "
-                  +output_merged_ptype_file)
     valid_date_dt = valid_date_dt + datetime.timedelta(hours=int(valid_hr_inc))
 
 print("END: "+os.path.basename(__file__))

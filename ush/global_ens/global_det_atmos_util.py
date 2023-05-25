@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 import os
 import datetime
 import numpy as np
@@ -834,8 +836,8 @@ def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
                 merged_var[:] = nh_data.variables[var][:] + 43200
             else:
                 merged_var[:] = nh_data.variables[var][:]
-        for var in ['ice_conc', 'ice_conc_unfiltered', 'masks',
-                    'confidence_level', 'status_flag', 'total_uncertainty',
+        for var in ['ice_conc', 
+                    'status_flag', 'total_uncertainty',
                     'smearing_uncertainty', 'algorithm_uncertainty']:
             merged_var = merged_data.createVariable(
                 var, nh_data.variables[var].datatype,

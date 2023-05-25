@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_time_series_multifhr.py
 Contact(s): Mallory Row
@@ -92,11 +93,6 @@ class TimeSeriesMultiFhr:
             self.date_info_dict['forecast_hours'] = (
                 self.date_info_dict['forecast_hours'][:4]
             )
-        # Make job image directory
-        output_image_dir = os.path.join(self.output_dir, 'images')
-        if not os.path.exists(output_image_dir):
-            os.makedirs(output_image_dir)
-        self.logger.info(f"Plots will be in: {output_image_dir}")
         # Create dataframe for all forecast hours
         self.logger.info("Building dataframe for all forecast hours")
         fcst_units = []
@@ -302,7 +298,7 @@ class TimeSeriesMultiFhr:
             plot_specs_tsmf.get_forecast_hour_plot_settings()
         )
         image_name = plot_specs_tsmf.get_savefig_name(
-            output_image_dir, self.plot_info_dict, self.date_info_dict
+            self.output_dir, self.plot_info_dict, self.date_info_dict
         )
         image_name = image_name.replace(
             'evs.global_det.',
@@ -387,10 +383,10 @@ class TimeSeriesMultiFhr:
                 ax.plot_date(
                     np.ma.compressed(masked_plot_dates),
                     np.ma.compressed(masked_forecast_hour_data),
+                    fmt = forecast_hour_plot_settings_dict['marker'],
                     color = forecast_hour_plot_settings_dict['color'],
                     linestyle = forecast_hour_plot_settings_dict['linestyle'],
                     linewidth = forecast_hour_plot_settings_dict['linewidth'],
-                    marker = forecast_hour_plot_settings_dict['marker'],
                     markersize = forecast_hour_plot_settings_dict['markersize'],
                     label = (f"Day {str(int(int(forecast_hour)/24))}"+' '
                              +forecast_hour_avg_label+' '
@@ -479,7 +475,7 @@ def main():
     # Need settings
     INPUT_DIR = os.environ['HOME']
     OUTPUT_DIR = os.environ['HOME']
-    LOGO_DIR = os.environ['HOME'],
+    LOGO_DIR = os.environ['HOME']
     MODEL_INFO_DICT = {
         'model1': {'name': 'MODEL_A',
                    'plot_name': 'PLOT_MODEL_A',
@@ -514,7 +510,7 @@ def main():
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',
-        'version': '10.1.1'
+        'version': '11.0.2'
     }
     # Create OUTPUT_DIR
     if not os.path.exists(OUTPUT_DIR):

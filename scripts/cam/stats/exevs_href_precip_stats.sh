@@ -42,6 +42,7 @@ if [ $prepare = yes ] ; then
  done
 fi
 
+
 > run_all_precip_poe.sh
 if [ $verif_precip = yes ] ; then
  $USHevs/cam/evs_href_precip.sh
@@ -61,7 +62,7 @@ if [ -s run_all_precip_poe.sh ]  ; then
     export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
     mpiexec  -n 44 -ppn 44 --cpu-bind core --depth=2 cfp run_all_precip_poe.sh
   else
-   sh run_all_precip_poe.sh
+   run_all_precip_poe.sh
   fi
 
 fi
