@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Program Name: set_init_valid_fhr_subseasonal_prep_info.py
 Contact(s): Shannon Shields

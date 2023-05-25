@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: subseasonal_stats_grid2grid_create_anomaly
 Contact(s): Shannon Shields
