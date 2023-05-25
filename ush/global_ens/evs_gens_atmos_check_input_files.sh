@@ -169,11 +169,17 @@ if [ $var = ghrsst ] ; then
 fi
 
 
-if [ $var = gefs ] ; then 
+if [ $var = gefs ] || [ $var = gefs_bc ] ; then 
 
  cyc_fhr_ok=0
  cyc_fhr_missing=0
- for cyc in  00 06 12 18 ; do 
+ if [  $var = gefs ] ; then
+   cycs="00 06 12 18"
+ else
+   cycs="00 12"
+ fi 
+
+ for cyc in  $cycs ; do 
 
   obsv_cyc=${vday}${cyc}
 
@@ -224,7 +230,7 @@ fi
 
 
 
-if [ $var = cmce ] ; then 
+if [ $var = cmce ] || [ $var = cmce_bc ] ; then 
 
  cyc_fhr_ok=0
  cyc_fhr_missing=0
@@ -245,7 +251,7 @@ if [ $var = cmce ] ; then
 
     cmce_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ; do 
-      cmce=$COMIN.${fday}/cmce/cmce.ens${mb}.t${fcyc}z.grid3.f${hhh}.grib2
+      cmce=$COMIN.${fday}/${var}/${var}.ens${mb}.t${fcyc}z.grid3.f${hhh}.grib2
       #echo $cmce
 
       if [ -s $cmce ] ; then

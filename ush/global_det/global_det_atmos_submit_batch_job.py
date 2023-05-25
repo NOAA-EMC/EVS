@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Program Name: global_det_atmos_run_batch.py
 Contact(s): Mallory Row

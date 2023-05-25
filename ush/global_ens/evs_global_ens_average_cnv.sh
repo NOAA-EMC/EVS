@@ -53,7 +53,7 @@ for vcyc in 00 06 12 18 ; do
 	  if [ $line -eq 1 ] ; then
 	      echo  ${data[0]}  ${data[1]}  ${data[2]}  ${data[3]}  ${data[4]}  ${data[5]}  ${data[6]}  ${data[7]}  ${data[8]}  ${data[9]}  ${data[10]}  ${data[11]}  ${data[12]}  ${data[13]}  ${data[14]}  ${data[15]} ${data[16]}  ${data[17]}  ${data[18]}  ${data[19]} ${data[20]}  ${data[21]}  ${data[22]}  ${data[23]}  ${data[24]}  >> point_stat_GEFS_PREPBUFR_CONUS_FHR${fhr}_CNV_${fhr}0000L_${vday}_${vcyc}0000V.stat
           else
-	      echo  ${data[0]}  ${data[1]}  ${data[2]}  ${data[3]}  ${data[4]}  ${data[5]}  ${data[6]}  ${data[7]}  ${data[8]}  ${data[9]}  ${data[10]}  ${data[11]}  ${data[12]}  ${data[13]}  ${data[14]}  ${data[15]} ${data[16]}  ${data[17]}  ${data[18]}  ${data[19]} ${data[20]}  ${data[21]}  ${data[22]}  ${data[23]}  ${data[24]}  ${data[25]}  ${data[26]}  ${data[27]} ${data[28]} >> point_stat_GEFS_PREPBUFR_CONUS_FHR${fhr}_CNV_${fhr}0000L_${vday}_${vcyc}0000V.stat
+	      echo  ${data[0]}  ${data[1]}  ${data[2]}  ${data[3]}  ${data[4]}  ${data[5]}  ${data[6]}  ${data[7]}  ${data[8]}  ${data[9]}  ${data[10]}  ${data[11]}  ${data[12]}  ${data[13]}  ${data[14]}  ${data[15]} ${data[16]}  ${data[17]}  ${data[18]}  ${data[19]} ${data[20]}  ${data[21]}  ${data[22]}  ${data[23]}  ${data[24]}  ${data[25]}  ${data[26]}  ${data[27]} ${data[28]} 0.5 >> point_stat_GEFS_PREPBUFR_CONUS_FHR${fhr}_CNV_${fhr}0000L_${vday}_${vcyc}0000V.stat
           fi
 	fi
        line=$((line+1))
