@@ -76,7 +76,7 @@ export MET_PLUS_OUT=${DATA}/${VERIF_CASE}/METplus_output/${NEST}
       echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
       exit 1
     fi
-    export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G240_CONUS.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_South.nc"
+    export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G221_CONUS.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_South.nc"
     export MASK_CUSTOM_LIST=""
     export MIN_IHOUR="00"
     export FHR_END_FULL="84"
@@ -99,7 +99,7 @@ export MET_PLUS_OUT=${DATA}/${VERIF_CASE}/METplus_output/${NEST}
       echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
       exit 1
     fi
-    export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G218_Appalachia.nc, ${FIXevs}/masks/Bukovsky_G218_CPlains.nc, ${FIXevs}/masks/Bukovsky_G218_DeepSouth.nc, ${FIXevs}/masks/Bukovsky_G218_GreatBasin.nc, ${FIXevs}/masks/Bukovsky_G218_GreatLakes.nc, ${FIXevs}/masks/Bukovsky_G218_Mezquital.nc, ${FIXevs}/masks/Bukovsky_G218_MidAtlantic.nc, ${FIXevs}/masks/Bukovsky_G218_NorthAtlantic.nc, ${FIXevs}/masks/Bukovsky_G218_NPlains.nc, ${FIXevs}/masks/Bukovsky_G218_NRockies.nc, ${FIXevs}/masks/Bukovsky_G218_PacificNW.nc, ${FIXevs}/masks/Bukovsky_G218_PacificSW.nc, ${FIXevs}/masks/Bukovsky_G218_Prairie.nc, ${FIXevs}/masks/Bukovsky_G218_Southeast.nc, ${FIXevs}/masks/Bukovsky_G218_SPlains.nc, ${FIXevs}/masks/Bukovsky_G218_SRockies.nc"
+    export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G221_Appalachia.nc, ${FIXevs}/masks/Bukovsky_G221_CPlains.nc, ${FIXevs}/masks/Bukovsky_G221_DeepSouth.nc, ${FIXevs}/masks/Bukovsky_G221_GreatBasin.nc, ${FIXevs}/masks/Bukovsky_G221_GreatLakes.nc, ${FIXevs}/masks/Bukovsky_G221_Mezquital.nc, ${FIXevs}/masks/Bukovsky_G221_MidAtlantic.nc, ${FIXevs}/masks/Bukovsky_G221_NorthAtlantic.nc, ${FIXevs}/masks/Bukovsky_G221_NPlains.nc, ${FIXevs}/masks/Bukovsky_G221_NRockies.nc, ${FIXevs}/masks/Bukovsky_G221_PacificNW.nc, ${FIXevs}/masks/Bukovsky_G221_PacificSW.nc, ${FIXevs}/masks/Bukovsky_G221_Prairie.nc, ${FIXevs}/masks/Bukovsky_G221_Southeast.nc, ${FIXevs}/masks/Bukovsky_G221_SPlains.nc, ${FIXevs}/masks/Bukovsky_G221_SRockies.nc"
     export MASK_CUSTOM_LIST=""
     export MIN_IHOUR="00"
     export FHR_END_FULL="84"

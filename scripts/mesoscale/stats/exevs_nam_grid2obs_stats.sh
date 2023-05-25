@@ -50,8 +50,8 @@ set -x
 		  export VAR_NAME=${WVAR}
 ######################################################################################################
 # Set Basic Environment Variables
-# NEST_LIST="conus ak spc_otlk subreg"
-NEST_LIST="conus ak spc_otlk"
+NEST_LIST="conus ak spc_otlk subreg"
+# NEST_LIST="conus ak spc_otlk"
 VERIF_TYPES="raob metar"
 
 # Reformat MET Data
@@ -182,7 +182,7 @@ if [ $USE_CFP = YES ]; then
     python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
         status=$?
 	    [[ $status -ne 0 ]] && exit $status
-	        [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
+    	    [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
 fi
 
 # Run All NAM grid2obs/stats Generate Jobs
