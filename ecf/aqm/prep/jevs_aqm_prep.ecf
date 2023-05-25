@@ -92,6 +92,7 @@ export COMOUT=$COMIN/${STEP}/${COMPONENT}
 #
 ## export VDATE=20230513
 #
+########################################################################
 
 export maillist=${maillist:-'ho-chun.huang@noaa.gov,geoffrey.manikin@noaa.gov'}
 ## export maillist=${maillist:-'perry.shafran@noaa.gov,geoffrey.manikin@noaa.gov'}

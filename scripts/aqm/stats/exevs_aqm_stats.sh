@@ -2,15 +2,13 @@
 #######################################################################
 ##  UNIX Script Documentation Block
 ##                      .
-## Script name:         exevs_aqm_stats.sh
+## Script name:         exevs_aqmv6_stats.sh
 ## Script description:  Perform MetPlus PointStat of Air Quality Model.
 ## Original Author   :  Perry Shafran
 ##
 ##   Change Logs:
 ##
 ##   04/26/2023   Ho-Chun Huang  modification for using AirNOW ASCII2NC
-##   05/22/2023   Ho-Chun Huang  copy from exevs_aqmv6_stats.sh for current
-##                               operational AQM
 ##
 ##
 #######################################################################
@@ -24,8 +22,7 @@ mkdir -p $DATA/stat
 # Define INPUT OBS DATA TYPE for PointStat
 #######################################################################
 #
-hourly_type=aqobs
-if [ "${hourly_type}" == "aqobs" ]; then
+if [ "${airnow_hourly_type}" == "aqobs" ]; then
     export HOURLY_INPUT_TYPE=hourly_aqobs
 else
     export HOURLY_INPUT_TYPE=hourly_data
@@ -43,10 +40,9 @@ else
     echo "EVS_CHECK :: The AQM version number is not defined :: ${fcst_input_ver}"
 fi
 export fcstmax=72
-
-export MASK_DIR=/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix
-## export MASK_DIR=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks
-
+#
+## export MASK_DIR is declared in the ~/EVS/jobs/aqm/stats/JEVS_AQM_STATS 
+#
 export model1=`echo $MODELNAME | tr a-z A-Z`
 echo $model1
 
@@ -118,18 +114,39 @@ do
       acyc=`echo $adate |cut -c9-10`
       if [ $acyc = 06 -o $acyc = 12 ]
       then
-      if [ -s $COMINaqm/${dirname}.${aday}/aqm.t${acyc}z.awpozcon${bctag}.f${filehr}.${gridspec}.grib2 ]
-      then
-        echo "$fhr found"
-        echo $fhr >> $DATA/fcstlist_o3
-        let "numo3fcst=numo3fcst+1"
-      fi 
-      if [ -s $COMINaqm/${dirname}.${aday}/aqm.t${acyc}z.pm25${bctag}.f${filehr}.${gridspec}.grib2 ]
-      then
-        echo "$fhr found"
-        echo $fhr >> $DATA/fcstlist_pm
-        let "numpmfcst=numpmfcst+1"
-      fi
+        fcst_file=$COMINaqm/${dirname}.${aday}/aqm.t${acyc}z.awpozcon${bctag}.f${filehr}.${gridspec}.grib2
+        if [ -s ${fcst_file} ]
+        then
+          echo "$fhr found"
+          echo $fhr >> $DATA/fcstlist_o3
+          let "numo3fcst=numo3fcst+1"
+        else
+          export subject="t${acyc}z ozone${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
+          echo "Warning: No AQM awpozcon${bctag} forecast was available for ${aday} t${acyc}z" > mailmsg
+          echo "Missing file is ${fcst_file}" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $maillist
+
+          echo "Warning: No AQM awpozcon${bctag} forecast was available for ${aday} t${acyc}z"
+          echo "Missing file is ${fcst_file}"
+        fi 
+
+        fcst_file=$COMINaqm/${dirname}.${aday}/aqm.t${acyc}z.pm25${bctag}.f${filehr}.${gridspec}.grib2
+        if [ -s ${fcst_file} ]
+        then
+          echo "$fhr found"
+          echo $fhr >> $DATA/fcstlist_pm
+          let "numpmfcst=numpmfcst+1"
+        else
+          export subject="t${acyc}z pm25${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
+          echo "Warning: No AQM awpozcon${bctag} forecast was available for ${aday} t${acyc}z" > mailmsg
+          echo "Missing file is ${fcst_file}" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $maillist
+
+          echo "Warning: No AQM pm25${bctag} forecast was available for ${aday} t${acyc}z"
+          echo "Missing file is ${fcst_file}"
+        fi
 
       fi
       ((ihr++))
@@ -227,20 +244,32 @@ then
 #  search for model file and 2nd obs file for the daily 8-hr ozone max
 
       ozmax8=0
-      if [ -s $COMINaqmproc/atmos.${VDAYm1}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 ]
+      ozmax8_preprocessed_file=$COMINaqmproc/atmos.${VDAYm1}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+      if [ -s ${ozmax8_preprocessed_file} ]
       then
-	      echo "find $COMINaqmproc/atmos.${VDAYm1}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2"
         ozmax8=1
+      else
+        ## This is checking output from the PREP step, thus no email will be sent but for logile meaasge
+        echo "Warning: No AQM max_8hr_o3${bctag} forecast was available for ${VDAYm1} t${hour}z"
+        echo "Missing file is ${ozmax8_preprocessed_file}"
       fi
-      if [ -s $COMINaqmproc/atmos.${VDAYm2}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 ]
+      ozmax8_preprocessed_file=$COMINaqmproc/atmos.${VDAYm2}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+      if [ -s ${ozmax8_preprocessed_file} ]
       then
-	      echo "find $COMINaqmproc/atmos.${VDAYm2}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2"
        let "ozmax8=ozmax8+1"
+      else
+        ## This is checking output from the PREP step, thus no email will be sent but for logile meaasge
+        echo "Warning: No AQM max_8hr_o3${bctag} forecast was available for ${VDAYm2} t${hour}z"
+        echo "Missing file is ${ozmax8_preprocessed_file}"
       fi
-      if [ -s $COMINaqmproc/atmos.${VDAYm3}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2 ]
+      ozmax8_preprocessed_file=$COMINaqmproc/atmos.${VDAYm3}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+      if [ -s ${ozmax8_preprocessed_file} ]
       then
-	      echo "find $COMINaqmproc/atmos.${VDAYm3}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2"
         let "ozmax8=ozmax8+1"
+      else
+        ## This is checking output from the PREP step, thus no email will be sent but for logile meaasge
+        echo "Warning: No AQM max_8hr_o3${bctag} forecast was available for ${VDAYm3} t${hour}z"
+        echo "Missing file is ${ozmax8_preprocessed_file}"
       fi
       echo "ozmax8, obs_daily_found=",$ozmax8,$obs_daily_found
       if [ $ozmax8 -gt 0 -a $obs_daily_found -gt 0 ]
@@ -293,20 +322,47 @@ then
 #  search for model file and 2nd obs file for the daily average PM
 
       pmave1=0
-      if [ -s $COMINaqm/${dirname}.${VDAYm1}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2 ]
+      fcst_file=$COMINaqm/${dirname}.${VDAYm1}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2
+      if [ -s ${fcst_file} ]
       then
-	      echo "find $COMINaqm/${dirname}.${VDAYm1}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2"
         pmave1=1
+      else
+        export subject="t${hour}z PMAVE${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
+        echo "Warning: No AQM ave_24hr_pm25${bctag} forecast was available for ${VDAYm1} t${hour}z" > mailmsg
+        echo "Missing file is $fcst_file}" >> mailmsg
+        echo "Job ID: $jobid" >> mailmsg
+        cat mailmsg | mail -s "$subject" $maillist
+
+        echo "Warning: No AQM ave_24hr_pm25${bctag} forecast was available for ${VDAYm1} t${hour}z"
+        echo "Missing file is $fcst_file}"
       fi
-      if [ -s $COMINaqm/${dirname}.${VDAYm2}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2 ]
+      fcst_file=$COMINaqm/${dirname}.${VDAYm2}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2
+      if [ -s ${fcst_file} ]
       then
-	      echo "find $COMINaqm/${dirname}.${VDAYm2}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2"
        let "pmave1=pmave1+1" 
+      else
+        export subject="t${hour}z PMAVE${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
+        echo "Warning: No AQM ave_24hr_pm25${bctag} forecast was available for ${VDAYm2} t${hour}z" > mailmsg
+        echo "Missing file is $fcst_file}" >> mailmsg
+        echo "Job ID: $jobid" >> mailmsg
+        cat mailmsg | mail -s "$subject" $maillist
+
+        echo "Warning: No AQM ave_24hr_pm25${bctag} forecast was available for ${VDAYm2} t${hour}z"
+        echo "Missing file is $fcst_file}"
       fi
-      if [ -s $COMINaqm/${dirname}.${VDAYm3}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2 ]
+      fcst_file=$COMINaqm/${dirname}.${VDAYm3}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2
+      if [ -s ${fcst_file} ]
       then
-	      echo "find $COMINaqm/${dirname}.${VDAYm3}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2"
         let "pmave1=pmave1+1"
+      else
+        export subject="t${hour}z PMAVE${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
+        echo "Warning: No AQM ave_24hr_pm25${bctag} forecast was available for ${VDAYm3} t${hour}z" > mailmsg
+        echo "Missing file is $fcst_file}" >> mailmsg
+        echo "Job ID: $jobid" >> mailmsg
+        cat mailmsg | mail -s "$subject" $maillist
+
+        echo "Warning: No AQM ave_24hr_pm25${bctag} forecast was available for ${VDAYm3} t${hour}z"
+        echo "Missing file is $fcst_file}"
       fi
       echo "pmave1, obs_daily_found=",$pmave1,$obs_daily_found
       if [ $pmave1 -gt 0 -a $obs_daily_found -gt 0 ]
