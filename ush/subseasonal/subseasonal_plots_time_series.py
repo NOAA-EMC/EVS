@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: subseasonal_plots_time_series.py
 Contact(s): Shannon Shields

@@ -120,7 +120,7 @@ if [ $run_mpi = yes ] ; then
   mpiexec -n 14 -ppn 14 --cpu-bind verbose,depth cfp run_all_gens_cnv_poe.sh
 
 else
-   sh run_all_gens_cnv_poe.sh
+    run_all_gens_cnv_poe.sh
 fi 
 
 if [ $gather = yes ] ; then

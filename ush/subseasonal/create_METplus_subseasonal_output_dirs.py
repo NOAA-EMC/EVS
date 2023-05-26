@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Program Name: create_METplus_subseasonal_output_dirs.py
 Contact(s): Shannon Shields
