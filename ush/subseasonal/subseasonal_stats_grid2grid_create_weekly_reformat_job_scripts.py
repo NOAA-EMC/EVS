@@ -101,34 +101,38 @@ reformat_data_model_jobs_dict = {
     'ENSO': {},
     'OLR': {},
     'precip': {},
-    'pres': {
-        #'GeoHeightAnom': {'env': {'var1_name': 'HGT',
-                                  #'var1_levels': 'P500',
-                                  #'met_config_overrides': (
-                                      #"'climo_mean = fcst;'"
-                                  #)},
-                          #'commands': [sub_util.metplus_command(
-                                           #'GridStat_fcstSUBSEASONAL_'
-                                            #+'obsGFS_climoERA5_'
-                                            #+'NetCDF.conf'
-                                       #),
-                                       #sub_util.python_command(
-                                           #'subseasonal_stats_grid2grid'
-                                           #'_create_anomaly.py',
-                                           #['HGT_P500',
-                                            #os.path.join(
-                                                #'$DATA',
-                                                #'${VERIF_CASE}_${STEP}',
-                                                #'METplus_output',
-                                                #'${RUN}.{valid?fmt=%Y%m%d}',
-                                                #'$MODEL', '$VERIF_CASE',
-                                                #'grid_stat_${VERIF_TYPE}_'
-                                                #+'${job_name}_'
-                                                #+'{lead?fmt=%2H}0000L_'
-                                                #+'{valid?fmt=%Y%m%d}_'
-                                                #+'{valid?fmt=%H}0000V_pairs.nc'
-                                             #)]
-                                       #)]},
+    'pres_lvls': {
+        'GeoHeightAnom': {'env': {'var1_name': 'HGT',
+                                  'var1_levels': 'P500',
+                                  'met_config_overrides': (
+                                      "'climo_mean = obs;'"
+                                  )},
+                          'commands': [sub_util.metplus_command(
+                                           'GenEnsProd_fcstSUBSEASONAL_'
+                                           +'WeeklyNetCDF.conf'
+                                       ),
+                                       sub_util.metplus_command(
+                                           'GridStat_fcstSUBSEASONAL_'
+                                           +'obsGFS_climoERA5_'
+                                           +'WeeklyNetCDF.conf'
+                                       ),
+                                       sub_util.python_command(
+                                           'subseasonal_stats_grid2grid'
+                                           '_create_weekly_anomaly.py',
+                                           ['HGT_P500',
+                                            os.path.join(
+                                                '$DATA',
+                                                '${VERIF_CASE}_${STEP}',
+                                                'METplus_output',
+                                                '${RUN}.$DATE',
+                                                '$MODEL', '$VERIF_CASE',
+                                                'grid_stat_${VERIF_TYPE}_'
+                                                +'${job_name}_'
+                                                +'{lead?fmt=%2H}0000L_'
+                                                +'{valid?fmt=%Y%m%d}_'
+                                                +'{valid?fmt=%H}0000V_pairs.nc'
+                                             )]
+                                       )]},
     },
     'seaice': {
         'Concentration': {'env': {'var1_name': 'ICEC',
@@ -192,17 +196,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
             ) 
             # Loop through and write job script for dates and models
             if JOB_GROUP == 'reformat_data':
-                if verif_type in ['sst', 'seaice', 'anom']:
+                if verif_type in ['sst', 'seaice', 'anom', 'pres_lvls']:
                     job_env_dict['valid_hr_start'] = '00'
                     job_env_dict['valid_hr_end'] = '00' #12
                     job_env_dict['valid_hr_inc'] = '12'
-                if verif_type == 'pres' \
-                        and verif_type_job == 'GeoHeightAnom':
-                    if int(job_env_dict['valid_hr_start']) - 12 > 0:
-                        job_env_dict['valid_hr_start'] = str(
-                            int(job_env_dict['valid_hr_start']) - 12
-                        )
-                        job_env_dict['valid_hr_inc'] = '12'
             valid_start_date_dt = datetime.datetime.strptime(
                 start_date+job_env_dict['valid_hr_start'],
                 '%Y%m%d%H'
@@ -234,11 +231,6 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                     job.write('set -x\n')
                     job.write('\n')
                     # Set any environment variables for special cases
-                    #if JOB_GROUP == 'reformat_data':
-                        #if verif_type == 'pres':
-                            #job_env_dict['TRUTH'] = os.environ[
-                                #VERIF_CASE_STEP_abbrev_type+'_truth_name_list'
-                            #].split(' ')[model_idx]
                     # Do file checks
                     all_truth_file_exist = False
                     model_files_exist = False
@@ -258,6 +250,9 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                     if JOB_GROUP == 'reformat_data':
                         if verif_type == 'anom' \
                                 and verif_type_job == 'TempAnom2m':
+                            check_truth_files = True
+                        if verif_type == 'pres_lvls' \
+                                and verif_type_job == 'GeoHeightAnom':
                             check_truth_files = True
                         else:
                             check_truth_files = False
