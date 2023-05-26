@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 ###############################################################################
 #
 # Name:          performance_diagram.py
@@ -64,7 +66,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                       metric3_name: str = 'CSI', date_type: str = 'VALID', 
                       date_hours: list = [0,6,12,18], verif_type: str = 'pres', 
                       line_type: str = 'CTC', save_dir: str = '.', dpi: int = 300, 
-                      confidence_intervals: bool = False, bs_nrep: int = 5000, 
+                      confidence_intervals: bool = False, interp_pts: list = [],
+                      bs_nrep: int = 5000, 
                       bs_method: str = 'MATCHED_PAIRS', ci_lev: float = .95, 
                       bs_min_samp: int = 30, eval_period: str = 'TEST', 
                       display_averages: bool = True, save_header: str = '', 
@@ -122,23 +125,23 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                 frange_phrase = 's '+', '.join([str(f) for f in flead])
             else:
                 frange_phrase = ' '+', '.join([str(f) for f in flead])
-            frange_save_phrase = '-'.join([str(f) for f in flead])
+            frange_save_phrase = '-'.join([str(f).zfill(3) for f in flead])
         else:
             frange_phrase = f's {flead[0]}'+u'\u2013'+f'{flead[-1]}'
-            frange_save_phrase = f'{flead[0]}_TO_F{flead[-1]}'
+            frange_save_phrase = f'{flead[0]:03d}-F{flead[-1]:03d}'
         frange_string = f'Forecast Hour{frange_phrase}'
         frange_save_string = f'F{frange_save_phrase}'
         df = df[df['LEAD_HOURS'].isin(flead)]
     elif isinstance(flead, tuple):
         frange_string = (f'Forecast Hours {flead[0]:02d}'+u'\u2013'
                          + f'{flead[1]:02d}')
-        frange_save_string = f'F{flead[0]:02d}-F{flead[1]:02d}'
+        frange_save_string = f'F{flead[0]:03d}-F{flead[1]:03d}'
         df = df[
             (df['LEAD_HOURS'] >= flead[0]) & (df['LEAD_HOURS'] <= flead[1])
         ]
     elif isinstance(flead, np.int):
         frange_string = f'Forecast Hour {flead:02d}'
-        frange_save_string = f'F{flead:02d}'
+        frange_save_string = f'F{flead:03d}'
         df = df[df['LEAD_HOURS'] == flead]
     else:
         e1 = f"Invalid forecast lead: \'{flead}\'"
@@ -153,6 +156,48 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         str(x) in df[str(date_type).upper()].dt.hour.astype(str).tolist() 
         for x in date_hours
     ]]
+
+    if interp_pts and '' not in interp_pts:
+        interp_shape = list(df['INTERP_MTHD'])[0]
+        if 'SQUARE' in interp_shape:
+            widths = [int(np.sqrt(float(p))) for p in interp_pts]
+        elif 'CIRCLE' in interp_shape:
+            widths = [int(np.sqrt(float(p)+4)) for p in interp_pts]
+        elif np.all([int(p) == 1 for p in interp_pts]):
+            widths = [1 for p in interp_pts]
+        else:
+            error_string = (
+                f"Unknown INTERP_MTHD used to compute INTERP_PNTS: {interp_shape}."
+                + f" Check the INTERP_MTHD column in your METplus stats files."
+                + f" INTERP_MTHD must have either \"SQUARE\" or \"CIRCLE\""
+                + f" in the name."
+            )
+            logger.error(error_string)
+            raise ValueError(error_string)
+        if isinstance(interp_pts, list):
+            if len(interp_pts) <= 8:
+                if len(interp_pts) > 1:
+                    interp_pts_phrase = 's '+', '.join([str(p) for p in widths])
+                else:
+                    interp_pts_phrase = ' '+', '.join([str(p) for p in widths])
+                interp_pts_save_phrase = '-'.join([str(p) for p in widths])
+            else:
+                interp_pts_phrase = f's {widths[0]}'+u'\u2013'+f'{widths[-1]}'
+                interp_pts_save_phrase = f'{widths[0]}-{widths[-1]}'
+            interp_pts_string = f'(Width{interp_pts_phrase})'
+            interp_pts_save_string = f'width{interp_pts_save_phrase}'
+            df = df[df['INTERP_PNTS'].isin(interp_pts)]
+        elif isinstance(interp_pts, np.int):
+            interp_pts_string = f'(Width {widths:d})'
+            interp_pts_save_string = f'width{widths:d}'
+            df = df[df['INTERP_PNTS'] == widths]
+        else:
+            error_string = (
+                f"Invalid interpolation points entry: \'{interp_pts}\'\n"
+                + f"Please check settings for interpolation points."
+            )
+            logger.error(error_string)
+            raise ValueError(error_string)
 
     requested_thresh_symbol, requested_thresh_letter = list(
         zip(*[plot_util.format_thresh(t) for t in thresh])
@@ -175,10 +220,20 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         logger.error(e)
         logger.error("Quitting ...")
         raise ValueError(e+"\nQuitting ...")
-
-    df_thresh_symbol, df_thresh_letter = list(
-        zip(*[plot_util.format_thresh(t) for t in df['FCST_THRESH']])
-    )
+    if df.empty:
+        logger.warning(f"Empty Dataframe. Continuing onto next plot...")
+        plt.close(num)
+        logger.info("========================================")
+        return None
+    try:
+        df_thresh_symbol, df_thresh_letter = list(
+            zip(*[plot_util.format_thresh(t) for t in df['FCST_THRESH']])
+        )
+    except ValueError as e:
+        print(f"ERROR: {e}")
+        #print(f"df['FCST_THRESH']:{df['FCST_THRESH']}")
+        #print(f"In list form: {[t for t in df['FCST_THRESH']]}")
+        sys.exit(1)
     df['FCST_THRESH_SYMBOL'] = df_thresh_symbol
     df['FCST_THRESH_VALUE'] = [str(item)[2:] for item in df_thresh_letter]
     requested_thresh_value = [
@@ -236,6 +291,11 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         df, bool_success = plot_util.equalize_samples(logger, df, group_by)
         if not bool_success:
             sample_equalization = False
+        if df.empty:
+            logger.warning(f"Empty Dataframe. Continuing onto next plot...")
+            plt.close(num)
+            logger.info("========================================")
+            return None
     df_groups = df.groupby(group_by)
     # Aggregate unit statistics before calculating metrics
     df_aggregated = df_groups.sum()
@@ -265,7 +325,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     metric_long_names = []
     for metric_name in [metric1_name, metric2_name, metric3_name]:
         stat_output = plot_util.calculate_stat(
-            logger, df_aggregated, str(metric_name).lower()
+            logger, df_aggregated, str(metric_name).lower(), [None, None]
         )
         df_aggregated[str(metric_name).upper()] = stat_output[0]
         metric_long_names.append(stat_output[2])
@@ -273,7 +333,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             ci_output = df_groups.apply(
                 lambda x: plot_util.calculate_bootstrap_ci(
                     logger, bs_method, x, str(metric_name).lower(), bs_nrep,
-                    ci_lev, bs_min_samp
+                    ci_lev, bs_min_samp, [None, None]
                 )
             )
             if any(ci_output['STATUS'] == 1):
@@ -595,29 +655,44 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         logger.info("========================================")
         return None
     units = df['FCST_UNITS'].tolist()[0]
+    unit_convert = False
     if units in reference.unit_conversions:
-        thresh_labels = [float(tlab) for tlab in thresh_labels]
-        thresh_labels = reference.unit_conversions[units]['formula'](thresh_labels)
-        thresh_diff_categories = np.array([
-            [np.power(10., y)]
-            for y in [-5,-4,-3,-2,-1,0,1,2,3,4,5]
-        ]).flatten()
-        precision_scale_indiv_mult = [
-            thresh_diff_categories[item] 
-            for item in np.digitize(thresh_labels, thresh_diff_categories)
-        ]
-        precision_scale_collective_mult = 100/min(precision_scale_indiv_mult)
-        precision_scale = np.multiply(
-            precision_scale_indiv_mult, precision_scale_collective_mult
-        )
-        thresh_labels = [
-            f'{np.round(tlab)/precision_scale[t]}' 
-            for t, tlab in enumerate(
-                np.multiply(thresh_labels, precision_scale)
+        unit_convert = True
+        var_long_name_key = df['FCST_VAR'].tolist()[0]
+        if str(var_long_name_key).upper() == 'HGT':
+            if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
+                if units in ['m', 'gpm']:
+                    units = 'gpm'
+            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+                unit_convert = False
+            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
+                unit_convert = False
+        if unit_convert:
+            thresh_labels = [float(tlab) for tlab in thresh_labels]
+            thresh_labels = reference.unit_conversions[units]['formula'](
+                thresh_labels,
+                rounding=True
             )
-        ]
-        #thresh_labels = [f'{tlab}' for tlab in thresh_labels]
-        units = reference.unit_conversions[units]['convert_to']
+            thresh_diff_categories = np.array([
+                [np.power(10., y)]
+                for y in [-5,-4,-3,-2,-1,0,1,2,3,4,5]
+            ]).flatten()
+            precision_scale_indiv_mult = [
+                thresh_diff_categories[item] 
+                for item in np.digitize(thresh_labels, thresh_diff_categories)
+            ]
+            precision_scale_collective_mult = 100/min(precision_scale_indiv_mult)
+            precision_scale = np.multiply(
+                precision_scale_indiv_mult, precision_scale_collective_mult
+            )
+            thresh_labels = [
+                f'{np.round(tlab)/precision_scale[t]}' 
+                for t, tlab in enumerate(
+                    np.multiply(thresh_labels, precision_scale)
+                )
+            ]
+            #thresh_labels = [f'{tlab}' for tlab in thresh_labels]
+            units = reference.unit_conversions[units]['convert_to']
     if units == '-':
         units = ''
     f = lambda m,c,ls,lw,ms,mec: plt.plot(
@@ -644,6 +719,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             for l, label in enumerate(labels)
         ]
     
+    n_mods = 0
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -651,6 +727,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             )
         else:
             model_plot_name = model_list[m]
+        if str(model_list[m]) not in pivot_metric1:
+            continue
         x_vals = [
             pivot_metric1[str(model_list[m])].values[i] 
             for i in thresh_argsort
@@ -735,8 +813,10 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     )
     var_long_name_key = df['FCST_VAR'].tolist()[0]
     if str(var_long_name_key).upper() == 'HGT':
-        if str(df['OBS_VAR'].tolist()[0]).upper() == 'CEILING':
+        if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
             var_long_name_key = 'HGTCLDCEIL'
+        elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+            var_long_name_key = 'HPBL'
     var_long_name = variable_translator[var_long_name_key]
     metrics_using_var_units = [
         'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
@@ -763,7 +843,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         borderpad=.8, labelspacing=2., columnspacing=3., handlelength=3., 
         handletextpad=.4, borderaxespad=.5) 
     ax.grid(
-        b=True, which='major', axis='both', alpha=.35, linestyle='--', 
+        visible=True, which='major', axis='both', alpha=.35, linestyle='--', 
         linewidth=.5, c='black', zorder=0
     )
 
@@ -789,10 +869,18 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     # Title
     domain = df['VX_MASK'].tolist()[0]
     var_savename = df['FCST_VAR'].tolist()[0]
+    if 'APCP' in var_savename.upper():
+        var_savename = 'APCP'
+    elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+        var_savename = 'HPBL'
+    elif str(df['OBS_VAR'].tolist()[0]).upper() in ['MSLET','MSLMA','PRMSL']:
+        var_savename = 'MSLET'
     if domain in list(domain_translator.keys()):
-        domain_string = domain_translator[domain]
+        domain_string = domain_translator[domain]['long_name']
+        domain_save_string = domain_translator[domain]['save_name']
     else:
         domain_string = domain
+        domain_save_string = domain
     date_hours_string = plot_util.get_name_for_listed_items(
         [f'{date_hour:02d}' for date_hour in date_hours],
         ', ', '', 'Z', 'and ', ''
@@ -804,50 +892,81 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     '''
     date_start_string = date_range[0].strftime('%d %b %Y')
     date_end_string = date_range[1].strftime('%d %b %Y')
-    if str(verif_type).lower() in ['pres', 'upper_air'] or 'P' in str(level):
-        level_num = level.replace('P', '')
-        level_string = f'{level_num} hPa '
-        level_savename = f'{level_num}MB_'
+    if str(level).upper() in ['CEILING', 'TOTAL', 'PBL']:
+        if str(level).upper() == 'CEILING':
+            level_string = ''
+            level_savename = 'L0'
+        elif str(level).upper() == 'TOTAL':
+            level_string = 'Total '
+            level_savename = 'L0'
+        elif str(level).upper() == 'PBL':
+            level_string = ''
+            level_savename = 'L0'
+    elif str(verif_type).lower() in ['pres', 'upper_air', 'raob'] or 'P' in str(level):
+        if 'P' in str(level):
+            if str(level).upper() == 'P90-0':
+                level_string = f'Mixed-Layer '
+                level_savename = f'L90'
+            else:
+                level_num = level.replace('P', '')
+                level_string = f'{level_num} hPa '
+                level_savename = f'{level}'
+        elif str(level).upper() == 'L0':
+            level_string = f'Surface-Based '
+            level_savename = f'{level}'
+        else:
+            level_string = ''
+            level_savename = f'{level}'
     elif (str(verif_type).lower() 
-            in ['sfc', 'conus_sfc', 'polar_sfc', 'mrms']):
+            in ['sfc', 'conus_sfc', 'polar_sfc', 'mrms', 'metar']):
         if 'Z' in str(level):
             if str(level).upper() == 'Z0':
-                level_string = 'Surface '
-                level_savename = 'SFC_'
+                if str(var_long_name_key).upper() in ['MLSP', 'MSLET', 'MSLMA', 'PRMSL']:
+                    level_string = ''
+                    level_savename = f'{level}'
+                else:
+                    level_string = 'Surface '
+                    level_savename = f'{level}'
             else:
                 level_num = level.replace('Z', '')
                 if var_savename in ['TSOIL', 'SOILW']:
                     level_string = f'{level_num}-cm '
-                    level_savename = f'{level_num}CM_'
+                    level_savename = f'{level_num}CM'
                 else:
                     level_string = f'{level_num}-m '
-                    level_savename = f'{level_num}M_'
-        elif 'L' in str(level) or 'A' in str(level):
+                    level_savename = f'{level}'
+        elif 'L' in str(level):
             level_string = ''
-            level_savename = ''
+            level_savename = f'{level}'
+        elif 'A' in str(level):
+            level_num = level.replace('A', '')
+            level_string = f'{level_num}-hour '
+            level_savename = f'A{level_num.zfill(2)}'
         else:
             level_string = f'{level} '
-            level_savename = f'{level}_'
-    elif str(verif_type).lower() in ['ccpa']:
+            level_savename = f'{level}'
+    elif str(verif_type).lower() in ['ccpa','mrms']:
         if 'A' in str(level):
             level_num = level.replace('A', '')
             level_string = f'{level_num}-hour '
-            level_savename = f'{level_num}H_'
+            level_savename = f'A{level_num.zfill(2)}'
         else:
             level_string = f''
-            level_savename = f''
+            level_savename = f'{level}'
     else:
         level_string = f'{level} '
-        level_savename = f'{level}_'
+        level_savename = f'{level}'
     thresholds_phrase = ', '.join([
         f'{opt}{thresh_label}' for thresh_label in thresh_labels
     ])
     thresholds_save_phrase = ''.join([
         f'{opt_letter}{thresh_label}' 
         for thresh_label in requested_thresh_labels
-    ])
+    ]).replace('.','p')
     thresholds_string = f'Forecast Thresholds {thresholds_phrase}'
     title1 = f'Performance Diagram'
+    if interp_pts and '' not in interp_pts:
+        title1+=f' {interp_pts_string}'
     if not units:
         title2 = (f'{level_string}{var_long_name} (unitless), {domain_string}')
     else:
@@ -907,22 +1026,35 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         time_period_savename = f'{date_start_savename}-{date_end_savename}'
     else:
         time_period_savename = f'{eval_period}'
-    save_name = (f'performance_diagram_regional_'
-                 + f'{str(domain).lower()}_{str(date_type).lower()}_'
-                 + f'{str(date_hours_savename).lower()}_'
-                 + f'{str(level_savename).lower()}'
-                 + f'{str(var_savename).lower()}_'
-                 + f'{str(frange_save_string).lower()}_'
-                 + f'{str(thresholds_save_phrase).lower()}')
+
+    plot_info = '_'.join(
+        [item for item in [
+            f'perfdiag',
+            f'{str(date_type).lower()}{str(date_hours_savename).lower()}',
+            f'{str(frange_save_string).lower()}',
+        ] if item]
+    )
+    save_name = (
+        f'ctc'
+    )
+    if interp_pts and '' not in interp_pts:
+        save_name+=f'_{str(interp_pts_save_string).lower()}'
+    save_name+=f'.{str(var_savename).lower()}'
+    if level_savename:
+        save_name+=f'_{str(level_savename).lower()}'
+    save_name+=f'.{str(time_period_savename).lower()}'
+    save_name+=f'.{plot_info}'
+    save_name+=f'.{str(domain_save_string).lower()}'
+
     if save_header:
-        save_name = f'{save_header}_'+save_name
+        save_name = f'{save_header}.'+save_name
     save_subdir = os.path.join(
         save_dir, f'{str(plot_group).lower()}', 
         f'{str(time_period_savename).lower()}'
     )
     if not os.path.isdir(save_subdir):
         os.makedirs(save_subdir)
-    save_path = os.path.join(save_name+'.png')
+    save_path = os.path.join(save_subdir, save_name+'.png')
     fig.savefig(save_path, dpi=dpi)
     logger.info(u"\u2713"+f" plot saved successfully as {save_path}")
     plt.close(num)
@@ -933,21 +1065,21 @@ def main():
 
     # Logging
     log_metplus_dir = '/'
-    for subdir in LOG_METPLUS.split('/')[:-1]:
+    for subdir in LOG_TEMPLATE.split('/')[:-1]:
         log_metplus_dir = os.path.join(log_metplus_dir, subdir)
     if not os.path.isdir(log_metplus_dir):
         os.makedirs(log_metplus_dir)
-    logger = logging.getLogger(LOG_METPLUS)
+    logger = logging.getLogger(LOG_TEMPLATE)
     logger.setLevel(LOG_LEVEL)
     formatter = logging.Formatter(
         '%(asctime)s.%(msecs)03d (%(filename)s:%(lineno)d) %(levelname)s: '
         + '%(message)s',
         '%m/%d %H:%M:%S'
     )
-    file_handler = logging.FileHandler(LOG_METPLUS, mode='a')
+    file_handler = logging.FileHandler(LOG_TEMPLATE, mode='a')
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
-    logger_info = f"Log file: {LOG_METPLUS}"
+    logger_info = f"Log file: {LOG_TEMPLATE}"
     print(logger_info)
     logger.info(logger_info)
 
@@ -981,8 +1113,8 @@ def main():
     logger.debug("Config file settings")
     logger.debug(f"LOG_LEVEL: {LOG_LEVEL}")
     logger.debug(f"MET_VERSION: {MET_VERSION}")
-    logger.debug(f"URL_HEADER: {URL_HEADER if URL_HEADER else 'No header'}")
-    logger.debug(f"OUTPUT_BASE_DIR: {OUTPUT_BASE_DIR}")
+    logger.debug(f"IMG_HEADER: {IMG_HEADER if IMG_HEADER else 'No header'}")
+    logger.debug(f"STAT_OUTPUT_BASE_DIR: {STAT_OUTPUT_BASE_DIR}")
     logger.debug(f"STATS_DIR: {STATS_DIR}")
     logger.debug(f"PRUNE_DIR: {PRUNE_DIR}")
     logger.debug(f"SAVE_DIR: {SAVE_DIR}")
@@ -1015,6 +1147,7 @@ def main():
     logger.debug(f"LINE_TYPE: {LINE_TYPE}")
     logger.debug(f"METRICS: {METRICS}")
     logger.debug(f"CONFIDENCE_INTERVALS: {CONFIDENCE_INTERVALS}")
+    logger.debug(f"INTERP_PNTS: {INTERP_PNTS if INTERP_PNTS else 'No interpolation points'}")
 
     logger.debug('----------------------------------------')
     logger.debug(f"Advanced settings (configurable in {SETTINGS_DIR}/settings.py)")
@@ -1147,7 +1280,7 @@ def main():
             if (FCST_LEVELS[l] not in var_specs['fcst_var_levels'] 
                     or OBS_LEVELS[l] not in var_specs['obs_var_levels']):
                 e = (f"The requested variable/level combination is not valid:"
-                     + f" {requested_var}/{level}")
+                     + f" {requested_var}/{fcst_level}")
                 logger.warning(e)
                 logger.warning("Continuing ...")
                 continue
@@ -1187,9 +1320,10 @@ def main():
                     verif_type=VERIF_TYPE, line_type=LINE_TYPE, 
                     date_hours=date_hours, save_dir=SAVE_DIR, 
                     eval_period=EVAL_PERIOD, 
-                    display_averages=display_averages, save_header=URL_HEADER,
+                    display_averages=display_averages, save_header=IMG_HEADER,
                     plot_group=plot_group, 
                     confidence_intervals=CONFIDENCE_INTERVALS, 
+                    interp_pts=INTERP_PNTS,
                     bs_nrep=bs_nrep, bs_method=bs_method, ci_lev=ci_lev, 
                     bs_min_samp=bs_min_samp,
                     sample_equalization=sample_equalization,
@@ -1207,20 +1341,20 @@ def main():
 
 if __name__ == "__main__":
     print("\n=================== CHECKING CONFIG VARIABLES =====================\n")
-    LOG_METPLUS = check_LOG_METPLUS(os.environ['LOG_METPLUS'])
+    LOG_TEMPLATE = check_LOG_TEMPLATE(os.environ['LOG_TEMPLATE'])
     LOG_LEVEL = check_LOG_LEVEL(os.environ['LOG_LEVEL'])
     MET_VERSION = check_MET_VERSION(os.environ['MET_VERSION'])
-    URL_HEADER = check_URL_HEADER(os.environ['URL_HEADER'])
+    IMG_HEADER = check_IMG_HEADER(os.environ['IMG_HEADER'])
     VERIF_CASE = check_VERIF_CASE(os.environ['VERIF_CASE'])
     VERIF_TYPE = check_VERIF_TYPE(os.environ['VERIF_TYPE'])
-    OUTPUT_BASE_DIR = check_OUTPUT_BASE_DIR(os.environ['OUTPUT_BASE_DIR'])
-    STATS_DIR = OUTPUT_BASE_DIR
+    STAT_OUTPUT_BASE_DIR = check_STAT_OUTPUT_BASE_DIR(os.environ['STAT_OUTPUT_BASE_DIR'])
+    STATS_DIR = STAT_OUTPUT_BASE_DIR
     PRUNE_DIR = check_PRUNE_DIR(os.environ['PRUNE_DIR'])
     SAVE_DIR = check_SAVE_DIR(os.environ['SAVE_DIR'])
     DATE_TYPE = check_DATE_TYPE(os.environ['DATE_TYPE'])
     LINE_TYPE = check_LINE_TYPE(os.environ['LINE_TYPE'])
     INTERP = check_INTERP(os.environ['INTERP'])
-    MODELS = check_MODEL(os.environ['MODEL']).replace(' ','').split(',')
+    MODELS = check_MODELS(os.environ['MODELS']).replace(' ','').split(',')
     DOMAINS = check_VX_MASK_LIST(os.environ['VX_MASK_LIST']).replace(' ','').split(',')
 
     # valid hour (each plot will use all available valid_hours listed below)
@@ -1272,6 +1406,9 @@ if __name__ == "__main__":
     ci_lev = toggle.plot_settings['ci_lev']
     bs_min_samp = toggle.plot_settings['bs_min_samp']
 
+    # list of points used in interpolation method
+    INTERP_PNTS = check_INTERP_PTS(os.environ['INTERP_PNTS']).replace(' ','').split(',')
+
     # At each value of the independent variable, whether or not to remove
     # samples used to aggregate each statistic if the samples are not shared
     # by all models.  Required to display sample sizes
@@ -1291,12 +1428,12 @@ if __name__ == "__main__":
     path_logo_left = paths.logo_left_path
     path_logo_right = paths.logo_right_path
 
-    OUTPUT_BASE_TEMPLATE = templates.output_base_template
+    OUTPUT_BASE_TEMPLATE = os.environ['STAT_OUTPUT_BASE_TEMPLATE']
 
     print("\n===================================================================\n")
     # ============= END USER CONFIGURATIONS =================
 
-    LOG_METPLUS = str(LOG_METPLUS)
+    LOG_TEMPLATE = str(LOG_TEMPLATE)
     LOG_LEVEL = str(LOG_LEVEL)
     MET_VERSION = float(MET_VERSION)
     VALID_HOURS = [
@@ -1306,6 +1443,7 @@ if __name__ == "__main__":
         int(init_hour) if init_hour else None for init_hour in INIT_HOURS
     ]
     FLEADS = [int(flead) for flead in FLEADS]
+    INTERP_PNTS = [str(pts) for pts in INTERP_PNTS]
     VERIF_CASETYPE = str(VERIF_CASE).lower() + '_' + str(VERIF_TYPE).lower()
     FCST_LEVELS = [str(level) for level in FCST_LEVELS]
     OBS_LEVELS = [str(level) for level in OBS_LEVELS]
