@@ -5,6 +5,10 @@
 ########################################
 set -xa
 
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+
 # ###################################
 # SET SHELL PROCESSING VARIABLES
 # ###################################
@@ -17,6 +21,7 @@ date
 export pid=$$
 
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
 
@@ -33,15 +38,28 @@ export cycle=t${cyc}z
 # SENDCOM  - Copy Files From TMPDIR to $COMOUT
 # SENDDBN  - Issue DBNet Client Calls
 ##################################################
-export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-YES}
-export SENDECF=${SENDECF:-YES}
 
 export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
-export FIXvevs=${FIXevs:-$HOMEevs/fix}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
+export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
 export USHevs=${USHevs:-$HOMEevs/ush}
+
+# Run setpdy and initialize PDY variables
+ setpdy.sh 31
+ . ./PDY
+
+export VDATE=${VDATE:-$PDYm1}
+
+####################################
+### Define NET/RUN variables
+######################################
+export NET=${NET:-evs}
+export STEP=${STEP:-plots}
+export COMPONENT=${COMPONENT:-analyses}
+export RUN=${RUN:-atmos}
 
 # Define COMIN/COMOUT variables:
 
@@ -59,14 +77,16 @@ mkdir -m 775 -p $COMOUTplots
 
 $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${VERIF_CASE}_${STEP}.sh
 
-cat $pgmout
+if [ -e "$pgmout" ]; then
+  cat $pgmout
+fi
 
 msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
+postmsg ""$msg"
 
-#if [ "$KEEPDATA" != "YES" ] ; then
-#  cd $DATAROOT
-#  rm -rf $DATA
-#fi
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATAROOT
+  rm -rf $DATA
+fi
 
-}
+date
