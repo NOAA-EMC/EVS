@@ -285,7 +285,7 @@ elif job_type == 'generate':
             'exec_value': '',
             'bash_value': '',
             'bash_conditional': '[[ ${VHOUR} -lt 12 ]]',
-            'bash_conditional_value': '"' + ', '.join(       
+            'bash_conditional_value': '"' + ', '.join(
                 glob.glob(os.path.join(
                     MET_PLUS_OUT,VERIF_TYPE,'genvxmask',f'spc_otlk.{VDATE}',
                     f'spc_otlk_*_v*-{VDATE}1200_for{VHOUR}Z*'
@@ -320,6 +320,7 @@ if STEP == 'prep':
     pass
 elif STEP == 'stats':
     if job_type == 'reformat':
+        """
         if NEST == 'spc_otlk':
             job_cmd_list_iterative.append(
                 f'python '
@@ -332,6 +333,7 @@ elif STEP == 'stats':
                 + f'{MET_PLUS_CONF}/'
                 + f'GenVxMask_{str(NEST).upper()}.conf'
             )
+        """    
         job_cmd_list_iterative.append(
             f'{metplus_launcher} -c '
             + f'{MET_PLUS_CONF}/'
@@ -339,6 +341,7 @@ elif STEP == 'stats':
         )
     if job_type == 'generate':
         if FCST_VAR2_NAME:
+            """
             if NEST == 'firewx':
                 job_cmd_list_iterative.append(
                     f'{metplus_launcher} -c '
@@ -347,12 +350,14 @@ elif STEP == 'stats':
                     + f'obs{VERIF_TYPE.upper()}_{str(NEST).upper()}_VAR2.conf'
                 )
             else:
-                job_cmd_list_iterative.append(
-                    f'{metplus_launcher} -c '
-                    + f'{MET_PLUS_CONF}/'
-                    + f'PointStat_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}_VAR2.conf'
-                )
+            """
+            job_cmd_list_iterative.append(
+                f'{metplus_launcher} -c '
+                + f'{MET_PLUS_CONF}/'
+                + f'PointStat_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}_VAR2.conf'
+            )
         else:
+            """
             if NEST == 'firewx':
                 job_cmd_list_iterative.append(
                     f'{metplus_launcher} -c '
@@ -361,11 +366,12 @@ elif STEP == 'stats':
                     + f'obs{VERIF_TYPE.upper()}_{str(NEST).upper()}.conf'
                 )
             else:
-                job_cmd_list_iterative.append(
-                    f'{metplus_launcher} -c '
-                    + f'{MET_PLUS_CONF}/'
-                    + f'PointStat_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}.conf'
-                )
+            """
+            job_cmd_list_iterative.append(
+                f'{metplus_launcher} -c '
+                + f'{MET_PLUS_CONF}/'
+                + f'PointStat_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}.conf'
+            )
     elif job_type == 'gather':
         job_cmd_list.append(
             f'{metplus_launcher} -c '
