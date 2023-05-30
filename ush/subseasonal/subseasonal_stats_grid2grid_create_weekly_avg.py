@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: subseasonal_stats_grid2grid_create_weekly_avg.py
 Contact(s): Shannon Shields
@@ -35,15 +36,15 @@ fhr_inc = '12'
 #fhr_end = os.environ['fhr_end']
 #fhr_inc = os.environ['fhr_inc']
 
-# Process run time agruments
+# Process run time arguments
 if len(sys.argv) != 4:
-    print("ERROR: Not given correct number of run time agruments..."
+    print("ERROR: Not given correct number of run time arguments..."
           +os.path.basename(__file__)+" VARNAME_VARLEVEL DATAROOT_FILE_FORMAT "
-          +"COMIN_FILE_FORMART")
+          +"COMIN_FILE_FORMAT")
     sys.exit(1)
 else:
     if '_' not in sys.argv[1]:
-        print("ERROR: variable and level runtime agrument formated "
+        print("ERROR: variable and level runtime argument formatted "
               +"incorrectly, be sure to separate variable and level with "
               +"an underscore (_), example HGT_P500")
         sys.exit(1)

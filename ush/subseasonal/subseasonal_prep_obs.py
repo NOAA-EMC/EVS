@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: subseasonal_prep_obs.py
 Contact(s): Shannon Shields
