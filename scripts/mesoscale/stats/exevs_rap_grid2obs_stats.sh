@@ -443,6 +443,7 @@ echo "*****************************"
     done
 ### Already done ^^
 	  fi
+	  break
   done
   
   # Copy output files into the correct EVS COMOUT directory
