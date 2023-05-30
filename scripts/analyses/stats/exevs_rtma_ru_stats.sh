@@ -1,13 +1,14 @@
+#/bin/bash
+
 set -x
 
 mkdir -p $DATA/logs
 mkdir -p $DATA/stat
 
-export modsys=rtma2p5
 export regionnest=rtma
 export fcstmax=$g2os_sfc_fhr_max
 
-export maskdir=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks
+export maskdir=$MASKS
 
 # search to see if obs file exists
 
@@ -20,6 +21,12 @@ obhr=`echo $datehr |cut -c9-10`
 if [ -e $COMINobs/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}00z.prepbufr.tm00 ]
 then
  obfound=1
+else
+ export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
+ echo "Warning: The ${obday} prepbufr file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+ echo "Missing file is $COMINobs/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00" >> mailmsg
+ echo "Job ID: $jobid" >> mailmsg
+ cat mailmsg | mail -s "$subject" $maillist
 fi
 
 echo $obfound
@@ -46,8 +53,6 @@ if [ $modnam = "rtma2p5_ru" ]
 then
 	rtmafound=0
 	export grid=CONUS
-#	export poly=/lfs/h2/emc/vpppg/noscrub/logan.dawson/CAM_verif/masks/Bukovsky_CONUS/EVS_fix/Bukovsky_50m_CONUS.nc
-#        export poly=$maskdir/Bukovsky_RTMA_CONUS.nc
         export masks=$maskdir/Bukovsky_RTMA_CONUS.nc,$maskdir/Bukovsky_RTMA_CONUS_East.nc,$maskdir/Bukovsky_RTMA_CONUS_West.nc,$maskdir/Bukovsky_RTMA_CONUS_Central.nc,$maskdir/Bukovsky_RTMA_CONUS_South.nc
 
 fi
@@ -55,6 +60,12 @@ fi
        if [ -e $COMINfcst/${modnam}.${VDATE}/${modnam}.t${cyc}00z.${outtyp}_ndfd.grb2 ]
        then
          rtmafound=1
+       else
+         export subject="CONUS Analysis Missing for EVS ${COMPONENT}"
+         echo "Warning: The CONUS Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+         echo "Missing file is $COMINfcst/${modnam}.${VDATE}/${modnam}.t${cyc}z.${outtyp}_ndfd.grb2_wexp" >> mailmsg
+         echo "Job ID: $jobid" >> mailmsg
+         cat mailmsg | mail -s "$subject" $maillist
        fi
 
 if [ $rtmafound -eq 1 -a $obfound -eq 1 ]
@@ -66,7 +77,7 @@ mkdir -p $COMOUTsmall
 cp $DATA/point_stat/${MODELNAME}${typtag}/* $COMOUTsmall
 
 else
-  echo "NO RTMA-RU OR OBS DATA"
+  echo "NO RTMA-RU OR OBS DATA, METplus will not run."
   echo "RTMAFOUND, OBFOUND", $rtmafound, $obfound
 fi
 
@@ -77,6 +88,8 @@ then
        mkdir -p $COMOUTfinal
        run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstANALYSES_obsNDAS_GatherByDay.conf $PARMevs/metplus_config/machine.conf
        export err=$?; err_chk
+else
+       echo "NO RTMA OR OBS DATA, or not gather time yet, METplus gather job will not run"
 fi
 
 done

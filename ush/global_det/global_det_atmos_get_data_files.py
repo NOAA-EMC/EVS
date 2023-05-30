@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: global_det_atmos_get_data_files.py
 Contact(s): Mallory Row

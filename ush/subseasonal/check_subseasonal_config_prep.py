@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Program Name: check_subseasonal_config_prep.py
 Contact(s): Shannon Shields
