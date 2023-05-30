@@ -54,25 +54,30 @@ NEST_LIST="conus ak spc_otlk subreg"
 # NEST_LIST="conus ak spc_otlk"
 VERIF_TYPES="raob metar"
 
+echo "*****************************"
+echo "Reformat setup begin"
+date
+echo "*****************************"
+
 # Reformat MET Data
 export job_type="reformat"
 export njob=1
 for NEST in $NEST_LIST; do
-	export NEST=$NEST
-	for VERIF_TYPE in $VERIF_TYPES; do
-		export VERIF_TYPE=$VERIF_TYPE
-		if [ $RUN_ENVIR = nco ]; then
-			export evs_run_mode="production"
-			source $config
-			source $USHevs/mesoscale/mesoscale_stats_grid2obs_filter_valid_hours_list.sh
-		else
-			export evs_run_mode=$evs_run_mode
-			source $config
-			source $USHevs/mesoscale/mesoscale_stats_grid2obs_filter_valid_hours_list.sh
-		fi
-		echo "RUN MODE: $evs_run_mode"
-		for VHOUR in $VHOUR_LIST; do
-			export VHOUR=$VHOUR
+    export NEST=$NEST
+    for VERIF_TYPE in $VERIF_TYPES; do
+        export VERIF_TYPE=$VERIF_TYPE
+	if [ $RUN_ENVIR = nco ]; then
+	    export evs_run_mode="production"
+	    source $config
+	    #source $USHevs/mesoscale/mesoscale_stats_grid2obs_filter_valid_hours_list.sh
+	else
+	    export evs_run_mode=$evs_run_mode
+	    source $config
+	    #source $USHevs/mesoscale/mesoscale_stats_grid2obs_filter_valid_hours_list.sh
+	fi
+	echo "RUN MODE: $evs_run_mode"
+	for VHOUR in $VHOUR_LIST; do
+	    export VHOUR=$VHOUR
             # Check User's Configuration Settings
             python $USHevs/mesoscale/mesoscale_check_settings.py
             status=$?
@@ -92,8 +97,11 @@ for NEST in $NEST_LIST; do
             [[ $status -ne 0 ]] && exit $status
             [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_job_script.py ($job_type)"
             export njob=$((njob+1))
+	    echo "Done $VHOUR"
         done
+	echo "Done $VERIF_TYPE"
     done
+    echo "Done $NEST"
 done
 
 # Create Reformat POE Job Scripts
@@ -106,10 +114,10 @@ fi
 
 
 
-echo "*****************************
+echo "*****************************"
 echo "Reformat jobs begin"
 date
-echo "*****************************
+echo "*****************************"
 
 
 # Run All RAP grid2obs/stats Reformat Jobs
@@ -143,10 +151,10 @@ else
 	done
 fi
 
-echo "*****************************
+echo "*****************************"
 echo "Reformat jobs done"
 date
-echo "*****************************
+echo "*****************************"
 
 # Generate MET Data
 export job_type="generate"
@@ -199,10 +207,10 @@ if [ $USE_CFP = YES ]; then
 fi
 
 
-echo "*****************************
+echo "*****************************"
 echo "Generate jobs begin"
 date
-echo "*****************************
+echo "*****************************"
 
 
 # Run All RAP grid2obs/stats Generate Jobs
@@ -238,10 +246,10 @@ fi
 
 
 
-echo "*****************************
+echo "*****************************"
 echo "Generate jobs done"
 date
-echo "*****************************
+echo "*****************************"
 
 
 export job_type="gather"
@@ -279,10 +287,10 @@ if [ $USE_CFP = YES ]; then
 fi
 
 
-echo "*****************************
+echo "*****************************"
 echo "Gather jobs begin"
 date
-echo "*****************************
+echo "*****************************"
 
 # Run All RAP grid2obs/stats Gather Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
@@ -316,10 +324,10 @@ else
 fi
 
 
-echo "*****************************
+echo "*****************************"
 echo "Gather jobs done"
 date
-echo "*****************************
+echo "*****************************"
 
 export job_type="gather2"
 export njob=1
@@ -352,10 +360,10 @@ if [ $USE_CFP = YES ]; then
 fi
 
 
-echo "*****************************
+echo "*****************************"
 echo "Gather2 jobs begin"
 date
-echo "*****************************
+echo "*****************************"
 
 # Run All RAP grid2obs/stats Gather 2 Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
@@ -389,10 +397,10 @@ else
 fi
 
 
-echo "*****************************
+echo "*****************************"
 echo "Gather2 jobs done"
 date
-echo "*****************************
+echo "*****************************"
 
 
 

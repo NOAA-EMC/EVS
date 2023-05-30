@@ -136,9 +136,9 @@ if job_type == 'generate':
                 OUTPUT_FLAG_CNT = (
                     var_defs[VAR_NAME][VERIF_TYPE]['output_types']['CNT']
                 )
-                OUTPUT_FLAG_VCNT = (
-                    var_defs[VAR_NAME][VERIF_TYPE]['output_types']['VCNT']
-                )
+                #OUTPUT_FLAG_VCNT = (
+                #    var_defs[VAR_NAME][VERIF_TYPE]['output_types']['VCNT']
+                #)
     if not plot_this_var:
         print(f"ERROR: VAR_NAME \"{VAR_NAME}\" is not valid for VERIF_TYPE "
               + f"\"{VERIF_TYPE}\" and MODEL \"{MODELNAME}\". Check "
@@ -164,7 +164,7 @@ job_env_vars_dict = {
     'METPLUS_VERBOSITY': METPLUS_VERBOSITY,
     'MET_VERBOSITY': MET_VERBOSITY,
     'LOG_MET_OUTPUT_TO_METPLUS': LOG_MET_OUTPUT_TO_METPLUS,
-    'NEST': NEST,
+    #'NEST': NEST,
 }
 job_iterate_over_env_lists_dict = {}
 job_iterate_over_custom_lists_dict = {}
@@ -245,7 +245,7 @@ elif job_type == 'generate':
     job_env_vars_dict['OUTPUT_FLAG_SL1L2'] = OUTPUT_FLAG_SL1L2
     job_env_vars_dict['OUTPUT_FLAG_VL1L2'] = OUTPUT_FLAG_VL1L2
     job_env_vars_dict['OUTPUT_FLAG_CNT'] = OUTPUT_FLAG_CNT
-    job_env_vars_dict['OUTPUT_FLAG_VCNT'] = OUTPUT_FLAG_VCNT
+    #job_env_vars_dict['OUTPUT_FLAG_VCNT'] = OUTPUT_FLAG_VCNT
     job_iterate_over_env_lists_dict['FHR_GROUP_LIST'] = {
         'list_items': re.split(r'[\s,]+', FHR_GROUP_LIST),
         'exports': ['FHR_END','FHR_INCR']
