@@ -86,7 +86,7 @@ fi
     export MIN_IHOUR="00"
     export FHR_END_FULL="51"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="51"
+    export FHR_END_SHORT="21"
     export FHR_INCR_SHORT="03"
   
   elif [ "$NEST" = "subreg" ]; then 
@@ -106,7 +106,7 @@ fi
     export MIN_IHOUR="00"
     export FHR_END_FULL="51"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="51"
+    export FHR_END_SHORT="21"
     export FHR_INCR_SHORT="03"
   
   elif [ "$NEST" = "ak" ]; then
@@ -126,7 +126,7 @@ fi
     export MIN_IHOUR="00"
     export FHR_END_FULL="51"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="51"
+    export FHR_END_SHORT="21"
     export FHR_INCR_SHORT="03"
 
   elif [ "$NEST" = "spc_otlk" ]; then
@@ -146,7 +146,7 @@ fi
     export MIN_IHOUR="00"
     export FHR_END_FULL="51"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="51"
+    export FHR_END_SHORT="21"
     export FHR_INCR_SHORT="03"
   else
     echo "The provided NEST, $NEST, is not supported for $MODELNAME"
