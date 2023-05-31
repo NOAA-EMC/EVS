@@ -400,6 +400,10 @@ elif JOB_GROUP == 'make_plots':
                 make_ts = True
             else:
                 make_ts = False
+            if plot_info_dict['stat'] == 'FBAR_OBAR' \
+                    and str(date_info_dict['forecast_hour']) not in \
+                    ['24', '72', '120']:
+                make_ts = False
             if os.path.exists(COMOUTjob_image_name):
                 logger.info(f"Copying {COMOUTjob_image_name} to "
                             +f"{DATAjob_image_name}")
