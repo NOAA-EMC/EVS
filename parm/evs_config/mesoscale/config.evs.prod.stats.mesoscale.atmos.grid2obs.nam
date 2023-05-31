@@ -71,7 +71,9 @@ else
     echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
     exit 1
 fi
-
+#---
+# Insert $NEST = Namer here
+#---
   if [ "$NEST" = "conus" ]; then
     export SKIP_IF_OUTPUT_EXISTS="yes"
     export FHR_GROUP_LIST="SHORT FULL"
@@ -114,7 +116,7 @@ fi
     export FHR_INCR_SHORT="06"
   
   elif [ "$NEST" = "ak" ]; then
-    export SKIP_IF_OUTPUT_EXISTS="no"
+    export SKIP_IF_OUTPUT_EXISTS="yes"
     export FHR_GROUP_LIST="SHORT FULL"
     export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.awip32{lead?fmt=%2H}.tm00.grib2"
     if [ "$OBSNAME" = "raob" ]; then
@@ -134,7 +136,7 @@ fi
     export FHR_INCR_SHORT="06"
 
   elif [ "$NEST" = "spc_otlk" ]; then
-    export SKIP_IF_OUTPUT_EXISTS="no"
+    export SKIP_IF_OUTPUT_EXISTS="yes"
     export FHR_GROUP_LIST="SHORT FULL"
     export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.awip32{lead?fmt=%2H}.tm00.grib2"
     if [ "$OBSNAME" = "raob" ]; then

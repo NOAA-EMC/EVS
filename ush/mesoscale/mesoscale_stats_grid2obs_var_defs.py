@@ -730,7 +730,7 @@ generate_stats_jobs_dict = {
     'MSLP': {
         'metar': {
             'nam': {
-                'var1_fcst_name': 'MSLMA',
+                'var1_fcst_name': 'MSLET',
                 'var1_fcst_levels': 'Z0',
                 'var1_fcst_thresholds': '',
                 'var1_fcst_options': 'set_attr_units = \\"hPa\\"; convert(p)=PA_to_HPA(p);',

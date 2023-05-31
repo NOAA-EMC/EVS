@@ -70,7 +70,7 @@ fi
 
 
   if [ "$NEST" = "conus" ]; then
-    export SKIP_IF_OUTPUT_EXISTS="no"
+    export SKIP_IF_OUTPUT_EXISTS="yes"
     export FHR_GROUP_LIST="SHORT FULL"
     export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awip32f{lead?fmt=%2H}.grib2"
     if [ "$OBSNAME" = "raob" ]; then
@@ -90,7 +90,7 @@ fi
     export FHR_INCR_SHORT="03"
   
   elif [ "$NEST" = "subreg" ]; then 
-    export SKIP_IF_OUTPUT_EXISTS="no"
+    export SKIP_IF_OUTPUT_EXISTS="yes"
     export FHR_GROUP_LIST="SHORT FULL"
     export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awip32f{lead?fmt=%2H}.grib2"
     if [ "$OBSNAME" = "raob" ]; then
@@ -110,7 +110,7 @@ fi
     export FHR_INCR_SHORT="03"
   
   elif [ "$NEST" = "ak" ]; then
-    export SKIP_IF_OUTPUT_EXISTS="no"
+    export SKIP_IF_OUTPUT_EXISTS="yes"
     export FHR_GROUP_LIST="SHORT FULL"
     export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awip32f{lead?fmt=%2H}.grib2"
     if [ "$OBSNAME" = "raob" ]; then
@@ -130,7 +130,7 @@ fi
     export FHR_INCR_SHORT="03"
 
   elif [ "$NEST" = "spc_otlk" ]; then
-    export SKIP_IF_OUTPUT_EXISTS="no"
+    export SKIP_IF_OUTPUT_EXISTS="yes"
     export FHR_GROUP_LIST="SHORT FULL"
     export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awip32f{lead?fmt=%2H}.grib2"
     if [ "$OBSNAME" = "raob" ]; then
