@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+import pickle
 import os
 import datetime as datetime
 import time
@@ -329,7 +332,11 @@ def get_stat_file_line_type_columns(logger, met_version, line_type):
          logger.error("VCNT is not a valid LINE_TYPE in METV"+met_version)
          exit(1)
    elif line_type == 'CTC':
-      if met_version >= 6.0:
+      if met_version >= 11.0:
+         stat_file_line_type_columns = [
+            'TOTAL', 'FY_OY', 'FY_ON', 'FN_OY', 'FN_ON', 'EC_VALUE'
+         ]
+      elif met_version >= 6.0:
          stat_file_line_type_columns = [
             'TOTAL', 'FY_OY', 'FY_ON', 'FN_OY', 'FN_ON'
          ]
@@ -530,14 +537,20 @@ def get_stat_plot_name(logger, stat):
          stat_plot_name - string of the formal statistic
                           name being plotted
    """
-   if stat == 'bias':
-      stat_plot_name = 'Bias'
+   if stat == 'me':
+      stat_plot_name = 'Mean Error (Bias)'
    elif stat == 'rmse':
       stat_plot_name = 'Root Mean Square Error'
    elif stat == 'bcrmse':
       stat_plot_name = 'Bias-Corrected Root Mean Square Error'
    elif stat == 'msess':
       stat_plot_name = "Murphy's Mean Square Error Skill Score"
+   elif stat == 'fsd':
+      stat_plot_name = 'Standard Deviation of the Forecast'
+   elif stat == 'osd':
+      stat_plot_name = 'Standard Deviation of the Observation'
+   elif stat == 'esd':
+      stat_plot_name = 'Standard Deviation of the Error'
    elif stat == 'rsd':
       stat_plot_name = 'Ratio of the Standard Deviation'
    elif stat == 'rmse_md':
@@ -937,7 +950,7 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
    else:
       logger.error(bs_method+" is not a valid option")
       exit(1)
-   if stat == 'bias':
+   if stat == 'me':
       if str(bs_method).upper() in ['MATCHED_PAIRS','FORECASTS']:
          if line_type == 'SL1L2':
             stat_values_mean = np.mean(fbar_est_mean) - np.mean(obar_est_mean)
@@ -1021,12 +1034,12 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
    elif stat == 'pcor':
       if str(bs_method).upper() in ['MATCHED_PAIRS','FORECASTS']:
          if line_type == 'SL1L2':
-            var_f_mean = ffbar_est_mean - fbar_est_mean*obar_est_mean
+            var_f_mean = ffbar_est_mean - fbar_est_mean*fbar_est_mean
             var_o_mean = oobar_est_mean - obar_est_mean*obar_est_mean
             covar_mean = fobar_est_mean - fbar_est_mean*obar_est_mean
             stat_values_pre_mean = covar_mean/np.sqrt(var_f_mean*var_o_mean)
             stat_values_mean = np.mean(stat_values_pre_mean)
-            var_f = ffbar_est_samp - fbar_est_samp*obar_est_samp
+            var_f = ffbar_est_samp - fbar_est_samp*fbar_est_samp
             var_o = oobar_est_samp - obar_est_samp*obar_est_samp
             covar = fobar_est_samp - fbar_est_samp*obar_est_samp
             stat_values = covar/np.sqrt(var_f*var_o)
@@ -1296,7 +1309,7 @@ def calculate_stat(logger, model_data, stat):
          logger.error("Could not recognize line type from columns")
          exit(1)
    stat_plot_name = get_stat_plot_name(logger, stat)
-   if stat == 'bias':
+   if stat == 'me':
       if line_type == 'SL1L2':
          stat_values = fbar - obar
       elif line_type == 'VL1L2':
@@ -1330,6 +1343,18 @@ def calculate_stat(logger, model_data, stat):
          mse = uvffbar + uvoobar - 2*uvfobar
          var_o = uvoobar - uobar*uobar - vobar*vobar
          stat_values = 1 - mse/var_o
+   elif stat == 'fsd':
+      if line_type == 'SL1L2':
+         var_f = ffbar - fbar*fbar
+         stat_values = np.sqrt(var_f)
+   elif stat == 'osd':
+      if line_type == 'SL1L2':
+         var_o = oobar - obar*obar
+         stat_values = np.sqrt(var_o)
+   elif stat == 'esd':
+      if line_type == 'SL1L2':
+         var_e = ffbar + oobar - fbar*fbar - obar*obar - 2*fobar + 2*fbar*obar
+         stat_values = np.sqrt(var_e)
    elif stat == 'rsd':
       if line_type == 'SL1L2':
          var_f = ffbar - fbar*fbar
@@ -1361,7 +1386,7 @@ def calculate_stat(logger, model_data, stat):
          stat_values = np.sqrt(var_f + var_o - 2*np.sqrt(var_f*var_o)*R)
    elif stat == 'pcor':
       if line_type == 'SL1L2':
-         var_f = ffbar - fbar*obar
+         var_f = ffbar - fbar*fbar
          var_o = oobar - obar*obar
          covar = fobar - fbar*obar
          stat_values = covar/np.sqrt(var_f*var_o)
@@ -1627,7 +1652,7 @@ def equalize_samples(logger, df, group_by):
     cols_to_check = [
         key for key in [
             'LEAD_HOURS', 'VALID', 'INIT', 'FCST_THRESH_SYMBOL', 
-            'FCST_THRESH_VALUE', 'OBS_LEV', 'VX_MASK']
+            'FCST_THRESH_VALUE', 'OBS_LEV']
         if key in df.keys()
     ]
     df_groups = df.groupby(group_by)

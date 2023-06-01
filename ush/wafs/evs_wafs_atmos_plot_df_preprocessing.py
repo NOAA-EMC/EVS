@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 ###############################################################################
 #
 # Name:          df_preprocessing.py
@@ -18,8 +20,8 @@ from datetime import timedelta as td
 
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
-from evs_global_det_aviation_plot_prune_stat_files import prune_data
-import evs_global_det_aviation_plot_util as plot_util
+from evs_wafs_atmos_plot_prune_stat_files import prune_data
+import evs_wafs_atmos_plot_util as plot_util
 
 
 # =================== FUNCTIONS =========================
@@ -131,7 +133,7 @@ def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range,
             ))
             df_tmp = pd.read_csv(
                 fpath, delim_whitespace=True, header=None, skiprows=1,
-                names=df_colnames, dtype=np.str
+                names=df_colnames, dtype=str
             )
             i = -1*len(df_line_type_colnames)
             for col_name in df_colnames[i:]:
