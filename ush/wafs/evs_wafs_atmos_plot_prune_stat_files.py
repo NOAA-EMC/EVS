@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 
 '''
 Program Name: prune_stat_files.py
@@ -17,7 +18,7 @@ import numpy as np
 from datetime import datetime, timedelta as td
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
-import evs_global_det_aviation_plot_string_template_substitution as string_template_substitution
+import evs_wafs_atmos_plot_string_template_substitution as string_template_substitution
 
 def daterange(start, end, td):
    curr = start

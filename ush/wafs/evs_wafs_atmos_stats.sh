@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 ##############################################################################
-# Script Name: evs_global_det_aviation_stats.sh
+# Script Name: evs_wafs_atmos_stats.sh
 # Purpose:  This script prepares unified templates for UK, GFS and blended forecasts
 # History:  Yali Mao Aug 2022
 ###############################################################################
@@ -70,15 +70,45 @@ if [[ $OBSERVATION = "GCIP" ]] ; then
 	sourcedir=$COMINgfs/gfs.$VDATE/$cc/atmos
 	
 	targetdir=$GRID_STAT_INPUT_BASE/gfs.$VDATE/$cc/atmos
-	mkdir -p $targetdir
-	ln -sf $sourcedir/gfs.t${cc}z.gcip.f00.grib2 $targetdir/.
+	sourcefile=$sourcedir/gfs.t${cc}z.gcip.f00.grib2
+	if [[ -f $sourcefile ]] ; then
+	    mkdir -p $targetdir
+	    ln -sf $sourcefile $targetdir/.
+	else
+	    export subject="GCIP Analysis Data Missing for EVS ${COMPONENT}"
+	    echo "Warning: No GCIP analysis was available for valid date ${VDATE}${cc}" > mailmsg
+	    echo “Missing file is $sourcefile” >> mailmsg
+	    echo "Job ID: $jobid" >> mailmsg
+	    cat mailmsg | mail -s "$subject" $maillist
+	fi
 	
 	cc2=$(( 10#$cc + 3 ))
 	cc2="$(printf "%02d" $(( 10#$cc2 )) )"
 	targetdir=$GRID_STAT_INPUT_BASE/gfs.$VDATE/$cc2/atmos
-	mkdir -p $targetdir
-	ln -sf $sourcedir/gfs.t${cc2}z.gcip.f00.grib2 $targetdir/.
+	sourcefile=$sourcedir/gfs.t${cc2}z.gcip.f00.grib2
+	if [[ -f $sourcefile ]] ; then
+            mkdir -p $targetdir
+            ln -sf $sourcefile $targetdir/.
+	else
+	    export subject="GCIP Analysis Data Missing for EVS ${COMPONENT}"
+	    echo "Warning: No GCIP analysis was available for valid date ${VDATE}${cc2}" > mailmsg
+	    echo “Missing file is $sourcefile” >> mailmsg
+	    echo "Job ID: $jobid" >> mailmsg
+	    cat mailmsg | mail -s "$subject" $maillist
+        fi
     done
+elif [[ $OBSERVATION = "GFS" ]] ; then
+    for cc in $cycles ; do
+        sourcedir=$COMINgfs/gfs.$VDATE/$cc/atmos
+	sourcefile=$sourcedir/gfs.t${cc}z.pgrb2.0p25.anl
+	if [[ ! -f $sourcefile ]] ; then
+	    export subject="GFS Analysis Data Missing for EVS ${COMPONENT}"
+            echo "Warning: No GFS analysis was available for valid date ${VDATE}${cc}" > mailmsg
+            echo “Missing file is $sourcefile” >> mailmsg
+            echo "Job ID: $jobid" >> mailmsg
+            cat mailmsg | mail -s "$subject" $maillist
+	fi
+    done    
 fi
 
 exit
