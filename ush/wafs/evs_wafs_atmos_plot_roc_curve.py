@@ -1,13 +1,15 @@
+#!/usr/bin/env python3
+
 ###############################################################################
 #
-# Name:          fbias.py
+# Name:          roc_curve.py
 # Contact(s):    Marcel Caron
 # Developed:     Sep. 26, 2022 by Marcel Caron 
-# Last Modified: Oct. 31, 2022 by Yali Mao
-# Title:         Frequency Bias
-# Abstract:      Plots METplus CTC output as a line plot, frequency bias,
-#                which represents the y-axis, varying by forecast thresholds,
-#                which represents the x-axis. Line colors and styles are 
+# Last Modified: Sep. 26, 2022 by Marcel Caron             
+# Title:         Receiver Operator Characteristic (ROC) curve
+# Abstract:      Plots METplus CTC output as a line plot, probability of
+#                detection, which represents the y-axis, varying by false alarm 
+#                rate, which represents the x-axis. Line colors and styles are 
 #                unique for each model, and several models can be plotted at 
 #                once.
 #
@@ -31,12 +33,12 @@ SETTINGS_DIR=os.environ['USHevs']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
-from evs_global_det_aviation_plot_settings import Toggle, Templates, Presets, ModelSpecs, Reference
-from evs_global_det_aviation_plot_plotter import Plotter
-from evs_global_det_aviation_plot_prune_stat_files import prune_data
-import evs_global_det_aviation_plot_util as plot_util
-import evs_global_det_aviation_plot_df_preprocessing as df_preprocessing
-from evs_global_det_aviation_plot_check_variables import *
+from evs_wafs_atmos_plot_settings import Toggle, Templates, Presets, ModelSpecs, Reference
+from evs_wafs_atmos_plot_plotter import Plotter
+from evs_wafs_atmos_plot_prune_stat_files import prune_data
+import evs_wafs_atmos_plot_util as plot_util
+import evs_wafs_atmos_plot_df_preprocessing as df_preprocessing
+from evs_wafs_atmos_plot_check_variables import *
 
 # ================ GLOBALS AND CONSTANTS ================
 
@@ -57,7 +59,7 @@ def get_bias_label_position(bias_value, radius):
     y = np.sqrt(np.power(radius, 2) - np.power(x, 2))
     return (x, y)
 
-def plot_fbias(df: pd.DataFrame, logger: logging.Logger, 
+def plot_roc_curve(df: pd.DataFrame, logger: logging.Logger, 
                       date_range: tuple, model_list: list, num: int = 0, 
                       level: str = '500', flead='all', thresh: list = ['<20'], 
                       metric1_name: str = 'SRATIO', metric2_name: str = 'POD', 
@@ -70,18 +72,19 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
                       display_averages: bool = True, save_header: str = '', 
                       plot_group: str = 'sfc_upper',
                       sample_equalization: bool = True,
-                      regrid: str = 'g193', component: str = 'global_det',
-                      xlabel: str = "Forecast Threshold",
+                      regrid: str = 'g193', component: str = 'wafs',
                       fcst_var_names: list = ['ICIPmean'], var_name: str = 'icip'
-               ):
+                   ):
 
     logger.info("========================================")
     logger.info(f"Creating Plot {num} ...")
 
-    if (str(metric1_name).upper() != 'FBIAS' ):
-        w1 = (f"The frequency bias  may not plot correctly unless the"
-              + f" metric provided is \'FBIAS\'.")
-        w2 = (f"The metric provided is \'{metric1_name}\'.")
+    if (str(metric1_name).upper() != 'FARATE' 
+            or str(metric2_name).upper() != 'POD'):
+        w1 = (f"The ROC curve may not plot correctly unless the"
+              + f" order of metrics provided is \'FARATE\' and \'POD\'.")
+        w2 = (f"The order provided is \'{metric1_name}\', and"
+              + f" \'{metric2_name}\'.")
         w3 = "Continuing ..."
         logger.warning(w1)
         logger.warning(w2)
@@ -132,7 +135,7 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
         df = df[
             (df['LEAD_HOURS'] >= flead[0]) & (df['LEAD_HOURS'] <= flead[1])
         ]
-    elif isinstance(flead, np.int):
+    elif isinstance(flead, int):
         frange_string = f'Forecast Hour {flead:02d}'
         frange_save_string = f'F{flead:03d}'
         df = df[df['LEAD_HOURS'] == flead]
@@ -154,7 +157,7 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
         zip(*[plot_util.format_thresh(t) for t in thresh])
     )
     symbol_found = False
-    for opt in ['>=', '>', '==','!=','<=', '<']: 
+    for opt in ['>=', '>', '==', '!=', '<=', '<']: 
         if any(opt in t for t in requested_thresh_symbol):
             if all(opt in t for t in requested_thresh_symbol):
                 symbol_found = True
@@ -203,8 +206,6 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
         logger.warning(warning_string)
         logger.warning("Continuing ...")
 
-    y_min = 99999.
-    y_max = -99999.
     # If ICIPmean and ICIPmax, will plot them together
     df0 = df.copy()
     model_list0 = model_list.copy()
@@ -214,16 +215,16 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
         cols_to_keep = [
             str(model)
             in df['MODEL'].tolist() 
-            for model in model_list
+            for model in model_list0
         ]
         models_removed = [
             str(m)
-            for (m, keep) in zip(model_list, cols_to_keep) if not keep
+            for (m, keep) in zip(model_list0, cols_to_keep) if not keep
         ]
         models_removed_string = ', '.join(models_removed)
         model_list = [
             str(m)
-            for (m, keep) in zip(model_list, cols_to_keep) if keep
+            for (m, keep) in zip(model_list0, cols_to_keep) if keep
         ]
         if not all(cols_to_keep):
             logger.warning(
@@ -265,7 +266,7 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
 
         # Calculate desired metric
         metric_long_names = []
-        for metric_name in [metric1_name]:
+        for metric_name in [metric1_name, metric2_name]:
             stat_output = plot_util.calculate_stat(
                 logger, df_aggregated, str(metric_name).lower()
             )
@@ -303,27 +304,35 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
         df_aggregated[str(metric1_name).upper()] = (
             df_aggregated[str(metric1_name).upper()]
         ).astype(float).tolist()
-        if metric2_name is not None:
-            df_aggregated[str(metric2_name).upper()] = (
-                df_aggregated[str(metric2_name).upper()]
-            ).astype(float).tolist()
+        df_aggregated[str(metric2_name).upper()] = (
+            df_aggregated[str(metric2_name).upper()]
+        ).astype(float).tolist()
 
         df_aggregated = df_aggregated[
             df_aggregated.index.isin(model_list, level='MODEL')
         ]
-
         pivot_metric1 = pd.pivot_table(
             df_aggregated, values=str(metric1_name).upper(), columns='MODEL', 
             index='FCST_THRESH_VALUE'
         )
+        pivot_metric2 = pd.pivot_table(
+            df_aggregated, values=str(metric2_name).upper(), columns='MODEL', 
+            index='FCST_THRESH_VALUE'
+        )
         pivot_metric1 = pivot_metric1.dropna() 
-        if metric2_name is not None:
-            pivot_metric2 = pd.pivot_table(
-                df_aggregated, values=str(metric2_name).upper(), columns='MODEL', 
-                index='FCST_THRESH_VALUE'
-            )
-            pivot_metric2 = pivot_metric2.dropna() 
-
+        pivot_metric2 = pivot_metric2.dropna() 
+        all_thresh_idx = np.unique(
+            np.concatenate([
+                pivot_metric1.index, 
+                pivot_metric2.index, 
+            ])
+        )
+        all_model_col = np.unique(
+            np.concatenate([
+                pivot_metric1.columns,
+                pivot_metric2.columns,
+            ])
+        )
         if confidence_intervals:
             pivot_ci_lower1 = pd.pivot_table(
                 df_aggregated, values=str(metric1_name).upper()+'_BLERR',
@@ -333,39 +342,112 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
                 df_aggregated, values=str(metric1_name).upper()+'_BUERR',
                 columns='MODEL', index='FCST_THRESH_VALUE'
             )
-            if metric2_name is not None:
-                pivot_ci_lower2 = pd.pivot_table(
-                    df_aggregated, values=str(metric2_name).upper()+'_BLERR',
-                    columns='MODEL', index='FCST_THRESH_VALUE'
+            pivot_ci_lower2 = pd.pivot_table(
+                df_aggregated, values=str(metric2_name).upper()+'_BLERR',
+                columns='MODEL', index='FCST_THRESH_VALUE'
+            )
+            pivot_ci_upper2 = pd.pivot_table(
+                df_aggregated, values=str(metric2_name).upper()+'_BUERR',
+                columns='MODEL', index='FCST_THRESH_VALUE'
+            )
+            all_ci_thresh_idx = np.unique(
+                np.concatenate([
+                    pivot_ci_lower1.index,
+                    pivot_ci_upper1.index,
+                    pivot_ci_lower2.index,
+                    pivot_ci_upper2.index
+                ])
+            )
+        
+        for thresh_idx in all_thresh_idx:
+            if np.any([
+                    thresh_idx not in pivot_metric.index for pivot_metric 
+                    in [pivot_metric1, pivot_metric2]]):
+                pivot_metric1.drop(
+                    labels=thresh_idx, inplace=True, errors='ignore'
                 )
-                pivot_ci_upper2 = pd.pivot_table(
-                    df_aggregated, values=str(metric2_name).upper()+'_BUERR',
-                    columns='MODEL', index='FCST_THRESH_VALUE'
+                pivot_metric2.drop(
+                    labels=thresh_idx, inplace=True, errors='ignore'
                 )
-
-        if (metric2_name and (pivot_metric1.empty or pivot_metric2.empty)):
+        
+        if confidence_intervals:
+            for ci_thresh_idx in all_ci_thresh_idx:
+                if np.any([
+                        ci_thresh_idx not in pivot_metric.index for pivot_metric
+                        in [pivot_metric1, pivot_metric2]]):
+                    pivot_ci_lower1.drop(
+                        labels=ci_thresh_idx, inplace=True, errors='ignore'
+                    )
+                    pivot_ci_upper1.drop(
+                        labels=ci_thresh_idx, inplace=True, errors='ignore'
+                    )
+                    pivot_ci_lower2.drop(
+                        labels=ci_thresh_idx, inplace=True, errors='ignore'
+                    )
+                    pivot_ci_upper2.drop(
+                        labels=ci_thresh_idx, inplace=True, errors='ignore'
+                    )
+        models_in_pivot_metric = []
+        for model_col in all_model_col:
+            if np.any([
+                    model_col not in pivot_metric.columns for pivot_metric
+                    in [pivot_metric1, pivot_metric2]]):
+                pivot_metric1.drop(
+                    columns=model_col, inplace=True, errors='ignore'
+                )
+                pivot_metric2.drop(
+                    columns=model_col, inplace=True, errors='ignore'
+                )
+                if confidence_intervals:
+                    pivot_ci_lower1.drop(
+                        columns=model_col, inplace=True, errors='ignore'
+                    )
+                    pivot_ci_upper1.drop(
+                        columns=model_col, inplace=True, errors='ignore'
+                    )
+                    pivot_ci_lower2.drop(
+                        columns=model_col, inplace=True, errors='ignore'
+                    )
+                    pivot_ci_upper2.drop(
+                        columns=model_col, inplace=True, errors='ignore'
+                    )
+            else:
+                models_in_pivot_metric.append(model_col)
+        cols_to_keep = [
+            str(model)
+            in models_in_pivot_metric 
+            for model in model_list
+        ]
+        models_removed = [
+            str(m)
+            for (m, keep) in zip(model_list, cols_to_keep) if not keep
+        ]
+        models_removed_string = ', '.join(models_removed)
+        model_list = [
+            str(m)
+            for (m, keep) in zip(model_list, cols_to_keep) if keep
+        ]
+        if not all(cols_to_keep):
+            logger.warning(
+                f"{models_removed_string} data were all NaNs and will not be"
+                + f" plotted."
+            )
+        if pivot_metric1.empty or pivot_metric2.empty:
             print_varname = df['FCST_VAR'].tolist()[0]
             logger.warning(
                 f"Could not find (and cannot plot) {metric1_name} and/or"
                 + f" {metric2_name} stats for {print_varname} at any threshold. "
-                + f"Continuing ..."
+            )
+            logger.warning(
+                f"This may occur if no forecast or observed events were counted "
+                + f"at any threshold for any model, so that all performance "
+                + f"statistics are undefined. Continuing ..."
             )
             plt.close(num)
             logger.info("========================================")
             print(
                 "Continuing due to missing data.  Check the log file for details."
             )
-            return None
-        elif not metric2_name and pivot_metric1.empty:
-            print_varname = df['FCST_VAR'].tolist()[0]
-            logger.warning(
-                f"Could not find (and cannot plot) {metric1_name}"
-                f" stats for {print_varname} at any threshold. "
-                + f"Continuing ..."
-            )
-            plt.close(num)
-            logger.info("========================================")
-            print("Quitting due to missing data.  Check the log file for details.")
             return None
 
         models_renamed = []
@@ -437,38 +519,7 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
         ]
 
         cmap = colors.ListedColormap(gray_colors)
-
-        grid_ticks = np.arange(0.001, 1.001, 0.001)
-        fr_g, pod_g = np.meshgrid(grid_ticks, grid_ticks)
-
-        bias = pod_g / sr_g
-        csi = 1.0 / (1.0 / sr_g + 1.0 / pod_g - 1.0)
-        bias_contour_vals = [
-        0.1, 0.2, 0.4, 0.6, 0.8, 1., 1.2, 1.5, 2., 3., 5., 10.
-        ]
-        b_contour = plt.contour(
-           sr_g, pod_g, bias, bias_contour_vals, 
-           colors='gray', linestyles='dashed'
-        )
-        csi_contour = plt.contourf(
-           sr_g, pod_g, csi, np.arange(0., 1.1, 0.1), cmap=cmap, extend='neither'
-        )
-        plt.clabel(
-            b_contour, fmt='%1.1f', 
-            manual=[
-                get_bias_label_position(bias_value, .75) 
-                for bias_value in bias_contour_vals
-            ]
-        )
         '''
-        '''
-        random_contour = plt.contour(
-           fr_g, pod_g, pod_g / fr_g, [1.],
-           colors='gray', linestyles='dashed'
-        )
-        '''
-        x_vals = pivot_metric1.index.tolist()
-        x_vals = [ float(x) for x in x_vals ]
 
         thresh_labels = pivot_metric1.index
         thresh_argsort = np.argsort(thresh_labels.astype(float))
@@ -534,32 +585,25 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
             else:
                 model_plot_name = model_list[m]
             model_plot_name = model_plot_name + " " + var_name_suffix
-            try:
-                y_vals = [
-                    pivot_metric1[str(model_list[m])].values[i] 
-                    for i in thresh_argsort
-                ]
-            except:
-                print("Exception when obtainting y_vals for model=",model_plot_name)
-                logger.info("Exception when obtainting y_vals")
-                plt.close(num)
-                logger.info("========================================")
-                return None
-            for yy in y_vals:
-                if yy == np.inf or yy == -np.inf:
-                    print("Incorrect value when obtainting y_vals for model=",model_plot_name)
-                    logger.info("Incorrect value when obtainting y_vals")
-                    plt.close(num)
-                    logger.info("========================================")
-                    return None
-
-            y_max = max([y_max] + y_vals)
-            y_min = min([y_min] + y_vals)
-
+            x_vals = [
+                pivot_metric1[str(model_list[m])].values[i] 
+                for i in thresh_argsort
+            ]
+            y_vals = [
+                pivot_metric2[str(model_list[m])].values[i] 
+                for i in thresh_argsort
+            ]
             #mosaic_vals = pivot_metric3[str(model_list[m])].values
+            x_mean = np.nanmean(x_vals)
             y_mean = np.nanmean(y_vals)
             #mosaic_mean = np.nanmean(mosaic_vals)
             if confidence_intervals:
+                x_vals_ci_lower = pivot_ci_lower1[
+                    str(model_list[m])
+                ].values
+                x_vals_ci_upper = pivot_ci_upper1[
+                    str(model_list[m])
+                ].values
                 y_vals_ci_lower = pivot_ci_lower2[
                     str(model_list[m])
                 ].values
@@ -578,7 +622,8 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
                 plt_marker = mod_setting_dicts[m]['marker']
                 plt_ls = mod_setting_dicts[m]['linestyle']
             plt.plot(
-                x_vals, y_vals,
+                np.concatenate(([1.],x_vals,[0.])), 
+                np.concatenate(([1.],y_vals,[0.])), 
                 marker=plt_marker, c=mod_setting_dicts[m]['color'], 
                 mew=2., mec='white', figure=fig, ms=mod_setting_dicts[m]['markersize'], 
                 ls=plt_ls,
@@ -603,40 +648,36 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
                 )
                 ax.add_collection(pc)
 
-    # draw the perfect score line
-    y_vals = [1.0 for i in range(len(x_vals))]
-    plt.plot(x_vals, y_vals, linewidth=0.8,  color='gray',linestyle="dashed")
+    # Draw a diagonal line
+    grid_ticks = np.arange(0.001, 1.001, 0.001)
+    fr_g, pod_g = np.meshgrid(grid_ticks, grid_ticks)
+    random_contour = plt.contour(
+        fr_g, pod_g, pod_g / fr_g, [1.],
+        colors='gray', linestyles='dashed'
+    )
 
     # Configure axis ticks
-    xticks_min = min(x_vals)
-    xticks_max = max(x_vals)
-    incr = x_vals[1] - x_vals[0]
-    if incr >= 1. :
-        xticks = [
-            x_val for x_val in np.arange(xticks_min, xticks_max+incr, incr)
-        ]
-        xtick_labels = [f'{int(xtick):1d}' for xtick in xticks]
-    else:
-        xticks = [
-            x_val for x_val in np.arange(xticks_min, xticks_max+incr, incr)
-        ]
-        xtick_labels = [f'{xtick:.1f}' for xtick in xticks]
-    ax.set_xlim(xticks_min, xticks_max)
-
-    yticks_min = y_min
-    yticks_max = y_max
-
-    incr = (yticks_max - yticks_min) / 6.
+    xticks_min = 0.
+    xticks_max = 1.
+    incr = .1
+    xticks = [
+        x_val for x_val in np.arange(xticks_min, xticks_max+incr, incr)
+    ] 
+    xtick_labels = [f'{xtick:.1f}' for xtick in xticks]
+    x_buffer_size = .015
+    ax.set_xlim(
+        xticks_min-incr*x_buffer_size, xticks_max+incr*x_buffer_size
+    )
+    yticks_min = 0.
+    yticks_max = 1.
     yticks = [
         y_val for y_val in np.arange(yticks_min, yticks_max+incr, incr)
     ] 
     ytick_labels = [f'{ytick:.1f}' for ytick in yticks]
-
-    y_buffer_size = 0.
+    y_buffer_size = .015
     ax.set_ylim(
         yticks_min-incr*y_buffer_size, yticks_max+incr*y_buffer_size
     )
-
     #var_long_name_key = df['FCST_VAR'].tolist()[0]
     var_long_name_key = var_name
     if str(var_long_name_key).upper() == 'HGT':
@@ -648,8 +689,8 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
         'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR',
         'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
     ]
-    ax.set_ylabel(f'{metric_long_names[0]}')
-    ax.set_xlabel(xlabel)
+    ax.set_ylabel(f'{metric_long_names[1]}')
+    ax.set_xlabel(f'{metric_long_names[0]}') 
     ax.set_xticklabels(xtick_labels)
     ax.set_yticklabels(ytick_labels)
     ax.set_yticks(yticks)
@@ -669,7 +710,7 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
         handletextpad=.4, borderaxespad=.5)
     '''
     ax.grid(
-        b=True, which='major', axis='both', alpha=.35, linestyle='--', 
+        visible=True, which='major', axis='both', alpha=.35, linestyle='--', 
         linewidth=.5, c='black', zorder=0
     )
     '''
@@ -759,7 +800,7 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
         for thresh_label in requested_thresh_labels
     ])
     thresholds_string = f'Forecast Thresholds {thresholds_phrase}'
-    title1 = f'Frequency Bias'
+    title1 = f'ROC Curve'
     if not units:
         title2 = (f'{level_string}{var_long_name} (-), {domain_string}')
     else:
@@ -790,7 +831,7 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
             box_alignment=(1,0)
         )
         ax.add_artist(ab_right)
-        
+
     # Saving
     if len(date_hours) <= 8: 
         date_hours_savename = '_'.join([
@@ -811,7 +852,7 @@ def plot_fbias(df: pd.DataFrame, logger: logging.Logger,
                  + f'{str(var_savename).lower()}_'
                  + f'{str(level_savename).lower()}.'
                  + f'{time_period_savename}.'
-                 + f'fbias_{str(frange_save_string).lower()}.')
+                 + f'roc_{str(frange_save_string).lower()}.')
     if str(domain).lower() == str(regrid).lower():
         save_name = save_name + f'{str(regrid)}'
     else:
@@ -920,9 +961,9 @@ def main():
     logger.debug(f"Y_MIN_LIMIT: {Y_MIN_LIMIT}")
     logger.debug(f"Y_MAX_LIMIT: {Y_MAX_LIMIT}")
     logger.debug(f"Y_LIM_LOCK: {Y_LIM_LOCK}")
-    logger.debug(f"X_MIN_LIMIT: Ignored for Frequency Bias")
-    logger.debug(f"X_MAX_LIMIT: Ignored for Frequency Bias")
-    logger.debug(f"X_LIM_LOCK: Ignored for Frequency Bias")
+    logger.debug(f"X_MIN_LIMIT: Ignored for ROC curves")
+    logger.debug(f"X_MAX_LIMIT: Ignored for ROC curves")
+    logger.debug(f"X_LIM_LOCK: Ignored for ROC curves")
     logger.debug(f"Display averages? {'yes' if display_averages else 'no'}")
     logger.debug(
         f"Clear prune directories? {'yes' if clear_prune_dir else 'no'}"
@@ -1000,14 +1041,14 @@ def main():
         letter_keep = []
         for fcst_thresh, obs_thresh in list(
                 zip(*[fcst_thresh_symbol, obs_thresh_symbol])):
-            if (fcst_thresh in var_specs['fcst_var_thresholds'] 
+            if (fcst_thresh in var_specs['fcst_var_thresholds']
                     and obs_thresh in var_specs['obs_var_thresholds']):
                 symbol_keep.append(True)
             else:
                 symbol_keep.append(False)
         for fcst_thresh, obs_thresh in list(
                 zip(*[fcst_thresh_letter, obs_thresh_letter])):
-            if (fcst_thresh in var_specs['fcst_var_thresholds'] 
+            if (fcst_thresh in var_specs['fcst_var_thresholds']
                     and obs_thresh in var_specs['obs_var_thresholds']):
                 letter_keep.append(True)
             else:
@@ -1058,12 +1099,14 @@ def main():
                     # WAFS needs a global plotting
                     if domain in DOMAINS[-1]:
                         if df is None:
-                            df_metrics = [ df_all ]
+                            continue
                         else:
-                            df_all=pd.concat([df_all,df], ignore_index=True)
-                            df_all['VX_MASK'] = REGRID.upper()
-                            df_metrics = [ df, df_all ]
-                    else:
+                            if len(DOMAINS) == 1:
+                                df_all = df
+                            else:
+                                df_all=pd.concat([df_all,df])
+                                df_all['VX_MASK'] = REGRID.upper()
+                    else: # collect df of all sub-domains.
                         if df is None:
                             continue
                         else:
@@ -1072,27 +1115,25 @@ def main():
                                 # Only change one subdomain to global for plotting and avoid duplicate records
                                 #df_all=df_all.assign(VX_MASK=REGRID.upper())
                             else:
-                                df_all=pd.concat([df_all,df], ignore_index=True)
+                                df_all=pd.concat([df_all,df])
                             df_all['VX_MASK'] = REGRID.upper()
-                            df_metrics = [ df ]
-                    for df_metric in df_metrics:
-                        plot_fbias(
-                            df_metric, logger, date_range, MODELS, num=num, 
-                            flead=flead, level=fcst_level, thresh=fcst_thresh, 
-                            metric1_name=metrics[0], metric2_name=None,
-                            date_type=DATE_TYPE,  verif_type=VERIF_TYPE, 
-                            line_type=LINE_TYPE, date_hours=date_hours, 
-                            save_dir=SAVE_DIR, eval_period=EVAL_PERIOD, 
-                            display_averages=display_averages, save_header=URL_HEADER,
-                            plot_group=plot_group, 
-                            confidence_intervals=CONFIDENCE_INTERVALS, 
-                            bs_nrep=bs_nrep, bs_method=bs_method, ci_lev=ci_lev, 
-                            bs_min_samp=bs_min_samp,
-                            sample_equalization=sample_equalization,
-                            regrid=REGRID, component=COMPONENT,xlabel="Forecast Threshold",
-                            fcst_var_names=fcst_var_names, var_name=requested_var
-                        )
-                        num+=1
+                plot_roc_curve(
+                    df_all, logger, date_range, MODELS, num=num, 
+                    flead=flead, level=fcst_level, thresh=fcst_thresh, 
+                    metric1_name=metrics[0], metric2_name=metrics[1],
+                    date_type=DATE_TYPE,  verif_type=VERIF_TYPE, 
+                    line_type=LINE_TYPE, date_hours=date_hours, 
+                    save_dir=SAVE_DIR, eval_period=EVAL_PERIOD, 
+                    display_averages=display_averages, save_header=URL_HEADER,
+                    plot_group=plot_group, 
+                    confidence_intervals=CONFIDENCE_INTERVALS, 
+                    bs_nrep=bs_nrep, bs_method=bs_method, ci_lev=ci_lev, 
+                    bs_min_samp=bs_min_samp,
+                    sample_equalization=sample_equalization,
+                    regrid=REGRID, component=COMPONENT,
+                    fcst_var_names=fcst_var_names, var_name=requested_var
+                )
+                num+=1
 
 # ============ START USER CONFIGURATIONS ================
 
@@ -1183,7 +1224,7 @@ if __name__ == "__main__":
     zoom_logo_left = toggle.plot_settings['zoom_logo_left']
     zoom_logo_right = toggle.plot_settings['zoom_logo_right']
     logo_alpha = toggle.plot_settings['logo_alpha']
-    
+
     OUTPUT_BASE_TEMPLATE = templates.output_base_template
 
     print("\n===================================================================\n")

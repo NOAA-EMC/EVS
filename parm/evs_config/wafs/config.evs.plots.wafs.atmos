@@ -76,7 +76,7 @@
 set -x
 
 # Case type settings are used to check if settings are allowed. **
-export VERIF_CASE=$RUN
+export VERIF_CASE=$COMPONENT
 export VERIF_TYPE="analysis"
 
 # Used to name the graphics ouput files. File names will start with the URL_HEADER, followed by plot 
@@ -103,8 +103,6 @@ export OUTPUT_BASE_DIR=$OUTPUT_BASE_DIR
 # Logfile settings. Log level options are "DEBUG", "INFO", "WARNING", "ERROR", and "CRITICAL"
 export LOG_METPLUS="${DATA}/logs/${OBSERVATION}_${NDAYS}_${RESOLUTION}_${PLOT_TYPE}_plotting_${VDATE}.out"
 export LOG_LEVEL="DEBUG"
-# Version of MET listed in the metplus .stat files used to create graphics
-export MET_VERSION="10.1"
 
 # Will use statistics for all comma-separated models.  Names must match the model naming convention
 # in ${OUTPUT_BASE_DIR}
@@ -136,7 +134,7 @@ export FCST_VALID_HOUR=$FCST_VALID_HOUR
 export FCST_LEVEL="$VAR1_LEVELS_FCST"
 export OBS_LEVEL="$VAR1_LEVELS_OBS"
 export var_name="$VAR_NAME"
-export VX_MASK_LIST="ASIA, AUNZ, EAST, NAMER, NATL_AR2, NHEM, NPO, SHEM, TROPICS"
+export VX_MASK_LIST=${VX_MASK_LIST:-"ASIA, AUNZ, EAST, NAMER, NATL_AR2, NHEM, NPO, SHEM, TROPICS"}
 
 # Will use statistics for all comma-separated lead times 
 export FCST_LEAD="$FHOURS_EVSlist"
@@ -168,6 +166,6 @@ export COMPONENT=$COMPONENT
 # "stat_by_level", "threshold_average", "time_series", and "valid_hour_average".
 export PLOT_TYPE=$PLOT_TYPE
 # Executes the desired python script.  No need to edit this. 
-python $USHevs/evs_global_det_aviation_plot_${PLOT_TYPE}.py
+python $USHevs/evs_wafs_atmos_plot_${PLOT_TYPE}.py
 
 exit 0
