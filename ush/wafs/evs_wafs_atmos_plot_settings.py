@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from datetime import datetime, timedelta as td
 import numpy as np
 
@@ -735,7 +737,7 @@ class Reference():
                                   'SHEM': 'Southern Hemisphere',
                                   'TROPICS': 'Tropics',
                                   'G193': 'Global',
-                                  'G45': 'Global',
+                                  'G045': 'Global',
                                   'G002': 'Global',
                                   'G003': 'Global',
                                   'G130': 'CONUS - NCEP Grid 130',
@@ -2069,13 +2071,13 @@ class Reference():
                     }
                 }
             },
-            'aviation_analysis': {
+            'wafs_analysis': {
                 'CTC': {
                     'plot_stats_list': ('bias, ets, fss, csi, fbias, fbar,'
                                         + ' obar, pod, farate, faratio, sratio'),
                     'interp': 'NEAREST',
                     'vx_mask_list' : [
-                        'G45','G193','ASIA','AUNZ','EAST','NAMER','NATL_AR2','NHEM','NPO','SHEM','TROPICS'
+                        'G045','G193','ASIA','AUNZ','EAST','NAMER','NATL_AR2','NHEM','NPO','SHEM','TROPICS'
                     ],
                     'var_dict': {
                         'ICESEV': {'fcst_var_names': ['ICESEV'],
@@ -2102,7 +2104,7 @@ class Reference():
                     'plot_stats_list': 'bias, rmse, fbar_obar',
                     'interp': 'NEAREST',
                     'vx_mask_list' : [
-                        'G45','G193','ASIA','AUNZ','EAST','NAMER','NATL_AR2','NHEM','NPO','SHEM','TROPICS'
+                        'G045','G193','ASIA','AUNZ','EAST','NAMER','NATL_AR2','NHEM','NPO','SHEM','TROPICS'
                     ],
                     'var_dict': {
                         'TMP': {'fcst_var_names': ['TMP'],

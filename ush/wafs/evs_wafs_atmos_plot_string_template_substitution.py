@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 
 Program Name: string_template_substitution.py
@@ -16,7 +18,7 @@ import sys
 import re
 import datetime
 from dateutil.relativedelta import relativedelta
-import evs_global_det_aviation_plot_time_util
+import evs_wafs_atmos_plot_time_util
 
 TEMPLATE_IDENTIFIER_BEGIN = "{"
 TEMPLATE_IDENTIFIER_END = "}"
