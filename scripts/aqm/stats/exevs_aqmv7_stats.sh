@@ -105,9 +105,7 @@ do
     #
     # AQMv7 does not output IC, i.e., f000.  Thus the forecast file will be chekced from f001 to f072
     #
-    let ihr=1
-    
-        let ihr=0
+        let ihr=1
         numo3fcst=0
         numpmfcst=0
         while [ ${ihr} -le $fcstmax ]
