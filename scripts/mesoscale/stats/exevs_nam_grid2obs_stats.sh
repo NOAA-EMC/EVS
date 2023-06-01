@@ -50,8 +50,11 @@ set -x
 		  export VAR_NAME=${WVAR}
 ######################################################################################################
 # Set Basic Environment Variables
-NEST_LIST="conus ak spc_otlk subreg"
+NEST_LIST="namer conusc akc"
+# NEST_LIST="conus ak spc_otlk subreg"
+# NEST_LIST="namer conus conusc ak akc spc_otlk subreg"
 # NEST_LIST="conus ak spc_otlk"
+
 VERIF_TYPES="raob metar"
 
 echo "*****************************"
@@ -77,6 +80,10 @@ for NEST in $NEST_LIST; do
 	    #source $USHevs/mesoscale/mesoscale_stats_grid2obs_filter_valid_hours_list.sh
 	fi
 	echo "RUN MODE: $evs_run_mode"
+        if [ ${#VAR_NAME_LIST} -lt 1 ]; then
+                continue
+        fi
+	
 	for VHOUR in $VHOUR_LIST; do
 	    export VHOUR=$VHOUR
             # Check User's Configuration Settings
@@ -172,6 +179,10 @@ for NEST in $NEST_LIST; do
 			export evs_run_mode=$evs_run_mode
 			source $config
 		fi
+           if [ ${#VAR_NAME_LIST} -lt 1 ]; then
+                continue
+           fi
+
 		for VAR_NAME in $VAR_NAME_LIST; do
 			export VAR_NAME=$VAR_NAME
 			for VHOUR in $VHOUR_LIST; do
@@ -262,6 +273,10 @@ for VERIF_TYPE in $VERIF_TYPES; do
 		export evs_run_mode=$evs_run_mode
 		source $config
 	fi
+        if [ ${#VAR_NAME_LIST} -lt 1 ]; then
+                continue
+        fi
+
     # Create Output Directories
     python $USHevs/mesoscale/mesoscale_create_output_dirs.py
     status=$?

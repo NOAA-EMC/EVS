@@ -74,7 +74,29 @@ fi
 #---
 # Insert $NEST = Namer here
 #---
-  if [ "$NEST" = "conus" ]; then
+
+  if [ "$NEST" = "namer" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="yes"
+    export FHR_GROUP_LIST="SHORT FULL"
+    export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.awip32{lead?fmt=%2H}.tm00.grib2"
+    if [ "$OBSNAME" = "raob" ]; then
+      export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH"
+    elif [ "$OBSNAME" = "metar" ]; then
+      export VAR_NAME_LIST=""
+    else
+      echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
+      exit 1
+    fi
+    export MASK_POLY_LIST="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/G221_NAMER.nc"
+    export MASK_CUSTOM_LIST=""
+    export FHR_GROUP_LIST="FULL"
+    export MIN_IHOUR="00"
+    export FHR_END_FULL="84"
+    export FHR_INCR_FULL="06"
+    export FHR_END_SHORT="84"
+    export FHR_INCR_SHORT="06"
+
+  elif [ "$NEST" = "conus" ]; then
     export SKIP_IF_OUTPUT_EXISTS="yes"
     export FHR_GROUP_LIST="SHORT FULL"
     export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.awip32{lead?fmt=%2H}.tm00.grib2"
@@ -94,7 +116,27 @@ fi
     export FHR_INCR_FULL="06"
     export FHR_END_SHORT="84"
     export FHR_INCR_SHORT="06"
-  
+
+  elif [ "$NEST" = "conusc" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="yes"
+    export FHR_GROUP_LIST="SHORT FULL"
+    export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.awip32{lead?fmt=%2H}.tm00.grib2"
+    if [ "$OBSNAME" = "raob" ]; then
+      export VAR_NAME_LIST=""
+    elif [ "$OBSNAME" = "metar" ]; then
+      export VAR_NAME_LIST=""
+    else
+      echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
+      exit 1
+    fi
+    export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G221_CONUS.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_South.nc"
+    export MASK_CUSTOM_LIST=""
+    export MIN_IHOUR="00"
+    export FHR_END_FULL="84"
+    export FHR_INCR_FULL="06"
+    export FHR_END_SHORT="84"
+    export FHR_INCR_SHORT="06"
+
   elif [ "$NEST" = "subreg" ]; then 
     export SKIP_IF_OUTPUT_EXISTS="yes"
     export FHR_GROUP_LIST="SHORT FULL"
@@ -124,6 +166,26 @@ fi
     elif [ "$OBSNAME" = "metar" ]; then
       export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING"
     else 
+      echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
+      exit 1
+    fi
+    export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc"
+    export MASK_CUSTOM_LIST=""
+    export MIN_IHOUR="00"
+    export FHR_END_FULL="84"
+    export FHR_INCR_FULL="06"
+    export FHR_END_SHORT="51"
+    export FHR_INCR_SHORT="06"
+
+  elif [ "$NEST" = "akc" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="yes"
+    export FHR_GROUP_LIST="SHORT FULL"
+    export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.awip32{lead?fmt=%2H}.tm00.grib2"
+    if [ "$OBSNAME" = "raob" ]; then
+      export VAR_NAME_LIST=""
+    elif [ "$OBSNAME" = "metar" ]; then
+      export VAR_NAME_LIST=""
+    else
       echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
       exit 1
     fi
