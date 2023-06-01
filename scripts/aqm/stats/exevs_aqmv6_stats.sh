@@ -98,8 +98,10 @@ do
     fi
 
 # check to see that model files exist, and list which forecast hours are to be used
-
-    let ihr=0
+#
+# AQMv6 does not output IC, i.e., f00.  Thus the forecast file will be chekced from f01 to f72
+#
+    let ihr=1
     numo3fcst=0
     numpmfcst=0
     while [ ${ihr} -le $fcstmax ]
