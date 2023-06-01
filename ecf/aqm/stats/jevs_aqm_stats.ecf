@@ -75,7 +75,6 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
 ## For aqmv7 NRT runs
-## export enivr=v70c55
 ## export fcst_input_ver=v7
 ## export COMINaqm=/lfs/h2/emc/ptmp/jianping.huang/emc.para/com/aqm/v7.0
 
