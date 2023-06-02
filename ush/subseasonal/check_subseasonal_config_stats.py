@@ -40,13 +40,15 @@ VCS_type_env_vars_dict = {
                         'g2gstats_anom_fhr_min', 'g2gstats_anom_fhr_max',
                         'g2gstats_anom_fhr_inc',
                         'g2gstats_anom_grid', 'g2gstats_anom_gather_by',
-                        'g2gstats_pres_truth_name_list',
-                        'g2gstats_pres_truth_file_format_list',
-                        'g2gstats_pres_fcyc_list', 
-                        'g2gstats_pres_vhr_list',
-                        'g2gstats_pres_fhr_min', 'g2gstats_pres_fhr_max',
-                        'g2gstats_pres_fhr_inc',
-                        'g2gstats_pres_grid', 'g2gstats_pres_gather_by',
+                        'g2gstats_pres_lvls_truth_name_list',
+                        'g2gstats_pres_lvls_truth_file_format_list',
+                        'g2gstats_pres_lvls_fcyc_list', 
+                        'g2gstats_pres_lvls_vhr_list',
+                        'g2gstats_pres_lvls_fhr_min', 
+                        'g2gstats_pres_lvls_fhr_max',
+                        'g2gstats_pres_lvls_fhr_inc',
+                        'g2gstats_pres_lvls_grid', 
+                        'g2gstats_pres_lvls_gather_by',
                         'g2gstats_ENSO_truth_name_list',
                         'g2gstats_ENSO_truth_file_format_list',
                         'g2gstats_ENSO_fcyc_list',
@@ -141,7 +143,7 @@ if datetime.datetime.strptime(os.environ['end_date'], '%Y%m%d') \
 
 # Do check for valid config options
 valid_VCS_type_opts_dict = {
-    'grid2grid_stats': ['anom', 'pres', 'ENSO', 'OLR', 'precip', 'sst', 
+    'grid2grid_stats': ['anom', 'pres_lvls', 'ENSO', 'OLR', 'precip', 'sst', 
                         'seaice'],
     'grid2obs_stats': ['PrepBufr']
 }

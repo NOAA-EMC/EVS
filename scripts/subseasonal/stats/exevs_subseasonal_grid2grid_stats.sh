@@ -268,11 +268,11 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
 	    status=$?
 	    [[ $status -ne 0 ]] && exit $status
 	    [[ $status -eq 0 ]] && echo "Successfully ran subseasonal_stats_grid2grid_create_weekly_reformat_job_scripts.py"
-	    export njobs=$((njobs+3)) 
+	    export njobs=$((njobs+4)) 
         done
 	MONTHLY_LIST="Month1"
 	for MONTH in $MONTHLY_LIST; do
-	    export njobs=50
+	    export njobs=55
 	    export MONTH=$MONTH
 	    if [ "${MONTH}" = "Month1" ]; then
 		export CORRECT_INIT_DATE=$PDYm32
@@ -285,7 +285,7 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
         done
 	DAYS6_10_LIST="Days6_10"
 	for DAYS in $DAYS6_10_LIST; do
-	    export njobs=52
+	    export njobs=57
 	    export DAYS=$DAYS
 	    if [ "${DAYS}" = "Days6_10" ]; then
 		export CORRECT_INIT_DATE=$PDYm12
@@ -298,7 +298,7 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
 	done
 	WEEKS3_4_LIST="Weeks3_4"
 	for WEEKS in $WEEKS3_4_LIST; do
-	    export njobs=53
+	    export njobs=59
 	    export WEEKS=$WEEKS
 	    if [ "${WEEKS}" = "Weeks3_4" ]; then
 		export CORRECT_INIT_DATE=$PDYm30

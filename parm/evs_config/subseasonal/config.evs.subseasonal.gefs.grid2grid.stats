@@ -64,15 +64,15 @@ export KEEPDATA="YES"
 # SETTINGS FOR SPECIFIC USE CASES
 ####################################################
 if [ $VERIF_CASE_STEP = grid2grid_stats ]; then
-    #g2gstats_type_list: list type of verifications to run for grid-to-grid: anom, pres, ENSO, OLR, precip, sst, seaice
+    #g2gstats_type_list: list type of verifications to run for grid-to-grid: anom, pres_lvls, ENSO, OLR, precip, sst, seaice
     #
-    #        anom:    2-m temp to compare to ECMWF 
-    #        pres:    compare to GFS 
-    #        ENSO:    compare to GHRSST OSPO 
-    #        OLR:     compare to UMD
-    #        precip:  compare to CCPA and MRMS 
-    #        sst:     compare to GHRSST OSPO 
-    #        seaice:  compare to OSI-SAF
+    #        anom:      2-m temperature anomaly to compare to ECMWF 
+    #        pres_lvls: pressure level variables to compare to GFS 
+    #        ENSO:      compare to GHRSST OSPO 
+    #        OLR:       compare to UMD
+    #        precip:    compare to CCPA and MRMS 
+    #        sst:       compare to GHRSST OSPO 
+    #        seaice:    compare to OSI-SAF
     #g2gstats_*_truth_name_list:   list of reference name for truth files
     #g2gstats_*_truth_file_format_list: list of truth files
     #g2gstats_precip_file_format_list:     list of precip files
@@ -88,7 +88,7 @@ if [ $VERIF_CASE_STEP = grid2grid_stats ]; then
     #g2gstats_mv_database_name: name of the METviewer database to send data to, MUST START WITH "mv"
     #g2gstats_mv_database_group: name of the group the METviewer database belongs to
     #g2gstats_mv_database_desc: description of database, can be blank
-    export g2gstats_type_list="sst seaice anom" 
+    export g2gstats_type_list="sst seaice anom pres_lvls" 
     export g2gstats_anom_truth_name_list="ecmwf_anl"
     export g2gstats_anom_truth_file_format_list="$COMINobs.{valid?fmt=%Y%m%d}/ecmwf/ecmwf.{valid?fmt=%Y%m%d%H}.anl"
     export g2gstats_anom_fcyc_list="00"
@@ -98,15 +98,15 @@ if [ $VERIF_CASE_STEP = grid2grid_stats ]; then
     export g2gstats_anom_fhr_inc=12
     export g2gstats_anom_grid="G003" 
     export g2gstats_anom_gather_by="VALID"
-    export g2gstats_pres_truth_name_list="gfs_anl"
-    export g2gstats_pres_truth_file_format_list="$COMINobs.{valid?fmt=%Y%m%d}/gfs/gfs.{valid?fmt=%Y%m%d%H}.anl"
-    export g2gstats_pres_fcyc_list="00"
-    export g2gstats_pres_vhr_list="00 12"
-    export g2gstats_pres_fhr_min="24"
-    export g2gstats_pres_fhr_max="168"
-    export g2gstats_pres_fhr_inc=12
-    export g2gstats_pres_grid="G003"
-    export g2gstats_pres_gather_by="VALID"
+    export g2gstats_pres_lvls_truth_name_list="gfs_anl"
+    export g2gstats_pres_lvls_truth_file_format_list="$COMINobs.{valid?fmt=%Y%m%d}/gfs/gfs.{valid?fmt=%Y%m%d%H}.anl"
+    export g2gstats_pres_lvls_fcyc_list="00"
+    export g2gstats_pres_lvls_vhr_list="00 12"
+    export g2gstats_pres_lvls_fhr_min="24"
+    export g2gstats_pres_lvls_fhr_max="840"
+    export g2gstats_pres_lvls_fhr_inc=12
+    export g2gstats_pres_lvls_grid="G003"
+    export g2gstats_pres_lvls_gather_by="VALID"
     export g2gstats_ENSO_truth_name_list="ghrsst_anl"
     export g2gstats_ENSO_truth_file_format_list="$COMINobs.{valid?fmt=%Y%m%d}/ghrsst_ospo/ghrsst_ospo.{valid?fmt=%Y%m%d%H}to{valid?fmt=%Y%m%d%H}.nc"
     export g2gstats_ENSO_fcyc_list="00"
