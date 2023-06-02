@@ -402,14 +402,13 @@ global_det_obs_dict = {
                                                   'ice_conc_{hem?fmt=str}_'
                                                   +'polstere-100_multi_'
                                                   +'{init_shift?fmt=%Y%m%d%H'
-                                                  +'?shift=-12}'
-                                                  +'00.nc'),
+                                                  +'?shift=-12}00.nc'),
                 'DATA_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
                                                  'osi_saf', 'osi_saf.multi.'
+                                                 +'{hem?fmt=str}.'
                                                  +'{init_shift?fmt=%Y%m%d%H'
                                                  +'?shift=-24}to'
-                                                 +'{init?fmt=%Y%m%d%H}'
-                                                 +'_G004.nc'),
+                                                 +'{init?fmt=%Y%m%d%H}.nc'),
                 'cycles': ['00']},
     'ghrsst_ospo': {'COMIN_file_format': os.path.join(COMINghrsst_ospo,
                                                       '{init_shift?fmt=%Y%m%d'
@@ -457,22 +456,34 @@ for OBS in OBSNAME:
         COMOUT_file = os.path.join(
             COMOUT_INITDATE, OBS, DATA_file.rpartition('/')[2]
         )
-        if not os.path.exists(COMOUT_file):
-            print("----> Trying to create "+DATA_file)
-            DATA_file_dir = DATA_file.rpartition('/')[0]
-            if not os.path.exists(DATA_file_dir):
-                os.makedirs(DATA_file_dir)
-            if OBS == 'osi_saf':
-                gda_util.prep_prod_osi_saf_file(
-                    COMIN_file, DATA_file, CDATE_dt,
-                    log_missing_files
-                )
-            elif OBS == 'ghrsst_ospo':
+        DATA_file_dir = DATA_file.rpartition('/')[0]
+        if not os.path.exists(DATA_file_dir):
+            os.makedirs(DATA_file_dir)
+        if OBS == 'osi_saf':
+            for hem in ['nh', 'sh']:
+                COMIN_hem_file = COMIN_file.replace('{hem?fmt=str}', hem)
+                DATA_hem_file = DATA_file.replace('{hem?fmt=str}', hem)
+                COMOUT_hem_file = COMOUT_file.replace('{hem?fmt=str}', hem)
+                if not os.path.exists(COMOUT_hem_file):
+                    print("----> Trying to create "+DATA_hem_file)
+                    gda_util.prep_prod_osi_saf_file(
+                        COMIN_hem_file, DATA_hem_file, CDATE_dt,
+                        log_missing_files
+                    )
+                    if SENDCOM == 'YES':
+                        gda_util.copy_file(DATA_hem_file, COMOUT_hem_file)
+        elif OBS == 'ghrsst_ospo':
+            if not os.path.exists(COMOUT_file):
+                print("----> Trying to create "+DATA_file)
                 gda_util.prep_prod_ghrsst_ospo_file(
                     COMIN_file, DATA_file, CDATE_dt,
                     log_missing_files
                 )
-            elif OBS == 'get_d':
+                if SENDCOM == 'YES':
+                    gda_util.copy_file(DATA_file, COMOUT_file)
+        elif OBS == 'get_d':
+            if not os.path.exists(COMOUT_file):
+                print("----> Trying to create "+DATA_file)
                 gda_util.prep_prod_get_d_file(
                     COMIN_file, DATA_file, CDATE_dt,
                     log_missing_files

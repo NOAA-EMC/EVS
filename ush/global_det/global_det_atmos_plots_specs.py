@@ -205,6 +205,7 @@ class PlotSpecs:
         stat_plot_name_dict = {
             'ACC': 'Anomaly Correlation Coefficient',
             'BIAS': 'Bias (Mean Error)',
+            'CORR': 'Pearson Correlation Coefficient',
             'CSI': 'Critical Success Index',
             'ETS': 'Equitable Threat Score',
             'FBAR': 'Forecast Mean',
@@ -220,7 +221,8 @@ class PlotSpecs:
             'PERF_DIA': 'Performance Diagram',
             'RMSE': 'Root Mean Square Error',
             'S1': 'S1 Score',
-            'SRATIO': 'Success Ratio (1-FAR)'
+            'SRATIO': 'Success Ratio (1-FAR)',
+            'STDEV_ERR': 'Standard Deviation of Error'
         }
         if stat in list(stat_plot_name_dict.keys()):
             stat_plot_name = stat_plot_name_dict[stat]
@@ -289,7 +291,7 @@ class PlotSpecs:
                                           +'Waves 10-20'), 
             'HPBL/L0': 'Planetary Boundary Layer Height',
             'ICEC_DAILYAVG/Z0': 'Daily Avg Ice Concentration',
-            'ICEC_WEEKLYAVG/Z0': 'Weekly Avg Ice Concentration',
+            'ICEEX_DAILYAVG/Z0': 'Daily Avg Ice Extent',
             'O3MR/all': 'Ozone Mixing Ratio - All Levels',
             'O3MR/trop': 'Ozone Mixing Ratio - Troposphere',
             'O3MR/ltrop': 'Ozone Mixing Ratio - Lower Troposphere',
@@ -673,6 +675,9 @@ class PlotSpecs:
         plot_title = (plot_title
                       +self.get_var_plot_name(var_name_for_title,
                                               var_level_for_title))
+        if plot_info_dict['fcst_var_name'] == 'ICEEX_DAILYAVG' \
+                and units == '10^6_km^2':
+            units = 'x'+units.replace('_', ' ')
         plot_title = plot_title+' '+'('+units+')'
         if var_thresh_for_title != 'NA':
             plot_title = plot_title+', '+var_thresh_for_title+' '+units
