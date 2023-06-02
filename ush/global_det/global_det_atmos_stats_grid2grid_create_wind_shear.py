@@ -115,6 +115,19 @@ while valid_date_dt <= ENDDATE_dt:
                 output_file_data.createDimension(
                     dim, len(input_file_data.dimensions[dim])
                 )
+            for input_var_name in ['lat', 'lon']:
+                write_data_name_var = output_file_data.createVariable(
+                    input_var_name,
+                    input_file_data.variables[input_var_name].datatype,
+                    input_file_data.variables[input_var_name].dimensions
+                )
+                for k in (input_file_data.variables[input_var_name].ncattrs()):
+                    write_data_name_var.setncatts(
+                        {k: input_file_data.variables[input_var_name].getncattr(k)}
+                    )
+                write_data_name_var[:] = (
+                    input_file_data.variables[input_var_name][:]
+                )
             for data_name in ['FCST', 'OBS']:
                 data_name_ugrd850 = (
                     input_file_data.variables[data_name+'_UGRD_P850_FULL'][:]
