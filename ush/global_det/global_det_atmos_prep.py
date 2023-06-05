@@ -494,6 +494,10 @@ for OBS in OBSNAME:
         )
         if OBS == 'osi_saf':
             for hem in ['nh', 'sh']:
+                log_missing_file = os.path.join(
+                    DATA, 'mail_missing_'+OBS+'_'+hem+'_valid'
+                    +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
+                )
                 COMIN_hem_file = COMIN_file.replace('{hem?fmt=str}', hem)
                 DATA_hem_file = DATA_file.replace('{hem?fmt=str}', hem)
                 COMOUT_hem_file = COMOUT_file.replace('{hem?fmt=str}', hem)
@@ -506,6 +510,10 @@ for OBS in OBSNAME:
                     if SENDCOM == 'YES':
                         gda_util.copy_file(DATA_hem_file, COMOUT_hem_file)
         elif OBS == 'ghrsst_ospo':
+            log_missing_file = os.path.join(
+                DATA, 'mail_missing_'+OBS+'_valid'
+                +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
+            )
             if not os.path.exists(COMOUT_file):
                 print("----> Trying to create "+DATA_file)
                 gda_util.prep_prod_ghrsst_ospo_file(
@@ -515,6 +523,10 @@ for OBS in OBSNAME:
                 if SENDCOM == 'YES':
                     gda_util.copy_file(DATA_file, COMOUT_file)
         elif OBS == 'get_d':
+            log_missing_file = os.path.join(
+                DATA, 'mail_missing_'+OBS+'_valid'
+                +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
+            )
             if not os.path.exists(COMOUT_file):
                 print("----> Trying to create "+DATA_file)
                 gda_util.prep_prod_get_d_file(

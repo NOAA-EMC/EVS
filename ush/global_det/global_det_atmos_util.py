@@ -100,7 +100,8 @@ def check_file_exists_size(file_name):
         file_good = False
     return file_good
 
-def log_missing_file_model(log_missing_file, missing_file, model, init_dt, fhr):
+def log_missing_file_model(log_missing_file, missing_file, model, init_dt,
+                           fhr):
     """! This write a missing file to a log
 
          Args:
@@ -128,6 +129,8 @@ def log_missing_file_model(log_missing_file, missing_file, model, init_dt, fhr):
         lmf.write(f'echo "Job ID: $jobid" >> mailmsg\n')
         lmf.write(f'cat mailmsg | mail -s "$subject" $maillist\n')
     os.chmod(log_missing_file, 0o755)
+
+
 
 def copy_file(source_file, dest_file):
     """! This copies a file from one location to another
@@ -773,15 +776,15 @@ def prep_prod_metfra_file(source_file, dest_file, init_dt, forecast_hour,
     copy_file(prepped_file, dest_file)
 
 def prep_prod_osi_saf_file(daily_source_file, daily_dest_file,
-                           date_dt, log_missing_files):
+                           date_dt, log_missing_file):
     """! Do prep work for OSI-SAF production files
 
          Args:
              daily_source_file - daily source file (string)
              daily_dest_file   - daily destination file (string)
              date_dt           - date (datetime object)
-             log_missing_files - text file path to write that
-                                        production file is missing (string)
+             log_missing_file  - text file path to write that
+                                 production file is missing (string)
          Returns:
     """
     # Environment variables and executables
@@ -798,18 +801,28 @@ def prep_prod_osi_saf_file(daily_source_file, daily_dest_file,
             prepped_data.close()
             copy_file(prepped_file, daily_dest_file)
     else:
-        log_missing_file(log_missing_files, daily_source_file)
+        with open(log_missing_file, "a") as lmf:
+            lmf.write("#!/bin/bash\n")
+            lmf.write('export subject="OSI-SAF Data Missing for EVS '
+                      +'global_det"\n')
+            lmf.write('echo "Warning: No OSI-SAF data was available for '
+                      +f'valid date {date_dt:%Y%m%d%H}" > mailmsg\n')
+            lmf.write(f'echo "Missing file is {daily_source_file}" >> mailmsg\n')
+            lmf.write(f'echo "Job ID: $jobid" >> mailmsg\n')
+            lmf.write(f'cat mailmsg | mail -s "$subject" $maillist\n')
+        os.chmod(log_missing_file, 0o755)
+
 
 def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt,
-                               log_missing_files):
+                               log_missing_file):
     """! Do prep work for GHRSST OSPO production files
 
          Args:
-             source_file       - source file (string)
-             dest_file         - destination file (string)
-             date_dt           - date (datetime object)
-             log_missing_files - text file path to write that
-                                 production file is missing (string)
+             source_file      - source file (string)
+             dest_file        - destination file (string)
+             date_dt          - date (datetime object)
+             log_missing_file - text file path to write that
+                                production file is missing (string)
          Returns:
     """
     # Environment variables and executables
@@ -817,9 +830,19 @@ def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt,
     prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                 +source_file.rpartition('/')[2])
     # Prep file
-    if not os.path.exists(source_file):
-        log_missing_file(log_missing_files, hem_source_file)
-    copy_file(source_file, prepped_file)
+    if os.path.exists(source_file):
+        copy_file(source_file, prepped_file)
+    else:
+        with open(log_missing_file, "a") as lmf:
+            lmf.write("#!/bin/bash\n")
+            lmf.write('export subject="GHRSST OSPO Data Missing for EVS '
+                      +'global_det"\n')
+            lmf.write('echo "Warning: No GHRSST OSPO data was available for '
+                      +f'valid date {date_dt:%Y%m%d%H}" > mailmsg\n')
+            lmf.write(f'echo "Missing file is {source_file}" >> mailmsg\n')
+            lmf.write(f'echo "Job ID: $jobid" >> mailmsg\n')
+            lmf.write(f'cat mailmsg | mail -s "$subject" $maillist\n')
+        os.chmod(log_missing_file, 0o755)
     if check_file_exists_size(prepped_file):
         prepped_data = netcdf.Dataset(prepped_file, 'a',
                                       format='NETCDF3_CLASSIC')
@@ -847,21 +870,20 @@ def prep_prod_get_d_file(source_file, dest_file, date_dt,
     prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                 +source_file.rpartition('/')[2])
     # Prep file
-    if not os.path.exists(source_file):
-        log_missing_file(log_missing_files, hem_source_file)
-    #copy_file(prod_file, prepped_file)
-    ##########################################################################
-    # Temporary until NCO brings in data feed
-    ftp_file = ('ftp://ftp.star.nesdis.noaa.gov/'
-                +'pub/smcd/emb/lfang/GET-D_ET_H_updated/'
-                +date_dt.strftime('%Y')+'/'
-                +'GETDL3_DAL_CONUS_'+date_dt.strftime('%Y%j')+'_1.0.nc')
-    run_shell_command(
-        ['wget', ftp_file]
-    )
-    copy_file(os.path.join(os.getcwd(),ftp_file.rpartition('/')[2]), prepped_file)
-    ##########################################################################
-    copy_file(prepped_file, dest_file)
+    if os.path.exists(source_file):
+        copy_file(prepped_file, dest_file)
+    else:
+        with open(log_missing_file, "a") as lmf:
+            lmf.write("#!/bin/bash\n")
+            lmf.write('export subject="GET-D Data Missing for EVS '
+                      +'global_det"\n')
+            lmf.write('echo "Warning: No GET-D data was available for '
+                      +f'valid date {date_dt:%Y%m%d%H}" > mailmsg\n')
+            lmf.write(f'echo "Missing file is {source_file}" >> mailmsg\n')
+            lmf.write(f'echo "Job ID: $jobid" >> mailmsg\n')
+            lmf.write(f'cat mailmsg | mail -s "$subject" $maillist\n')
+        os.chmod(log_missing_file, 0o755)
+
 
 def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
                    source_file_format, dest_file_format,
