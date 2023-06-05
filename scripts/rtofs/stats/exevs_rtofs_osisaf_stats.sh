@@ -120,7 +120,7 @@ run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
 -c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstRTOFS.conf
 
 # archive final stat file
-rsync -av $COMOUTfinal $ARCHevs
+#rsync -av $COMOUTfinal $ARCHevs
 
 exit
 

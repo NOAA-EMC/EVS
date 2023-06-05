@@ -15,8 +15,8 @@
 ############################################################
 set -x
 
-export EVS=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
-source $EVS/versions/run.ver
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+source $HOMEevs/versions/run.ver
 
 module reset
 #export HPC_OPT=/apps/ops/prod/libs
@@ -49,13 +49,13 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
 export COMOUTprep=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}/$STEP/$COMPONENT
 export DATA=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver}
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/cdo_grids
-export USHevs=$EVS/ush/$COMPONENT
-export CONFIGevs=$EVS/parm/metplus_config/$COMPONENT
+export USHevs=$HOMEevs/ush/$COMPONENT
+export CONFIGevs=$HOMEevs/parm/metplus_config/$COMPONENT
 
 export maillist=${maillist:-'geoffrey.manikin@noaa.gov,lichuan.chen@noaa.gov'}
 
 # call j-job
-$EVS/jobs/$COMPONENT/$STEP/JEVS_RTOFS_PREP
+$HOMEevs/jobs/$COMPONENT/$STEP/JEVS_RTOFS_PREP
 
 #%include <tail.h>
 #%manual

@@ -8,19 +8,19 @@
 set -x
 
 # set up paths
-export FIXevs=${FIXevs:-$EVS/fix/logos}
-export USHevs=${USHevs:-$EVS/ush/$COMPONENT}
-export CONFIGevs=${CONFIGevs:-$EVS/parm/metplus_config/$COMPONENT}
+export FIXevs=${FIXevs:-$HOMEevs/fix/logos}
+export USHevs=${USHevs:-$HOMEevs/ush/$COMPONENT}
+export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config/$COMPONENT}
 
 # define COMIN/COMOUT variables
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
+export COMINstats=${COMINstats:-$COMIN/stats/$COMPONENT}
 export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
-export COMOUTfinal=${COMOUTfinal:-$COMOUT/stats/$COMPONENT/$COMPONENT.$VDATE}
 export COMOUTplots=${COMOUTplots:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
 export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
 
 mkdir -p $COMOUTplots
-mkdir -p $DATA/$STEP/$COMPONENT.$VDATE
+mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE
 
 # make plots; run scripts for each RUN;
 # RUN is the validation source: ghrsst, smos, smap etc.
@@ -59,7 +59,7 @@ for rcase in ghrsst smos smap aviso ndbc; do
     export OLVL=Z0
   fi
 
-  $EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_seasfc_${STEP}.sh
+  $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_seasfc_${STEP}.sh
 done
 
 for rcase in osisaf; do
@@ -68,7 +68,7 @@ for rcase in osisaf; do
   export VAR=SIC
   export VERIF_CASE=grid2grid
 
-  $EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_seaice_${STEP}.sh
+  $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_seaice_${STEP}.sh
 done
 
 export RUN=argo
@@ -77,7 +77,7 @@ export VERIF_CASE=grid2obs
 
 for vari in TEMP PSAL; do
   export VAR=$vari
-  $EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_profile_${STEP}.sh
+  $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_profile_${STEP}.sh
 done
 
 ################################# END OF JOB ##################################

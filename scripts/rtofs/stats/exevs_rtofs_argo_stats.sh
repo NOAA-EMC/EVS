@@ -83,7 +83,7 @@ if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f192_daily_3ztio.$RUN.nc
 fi
 
 # create subregions using ice mask; call the rtofs_regions.sh script
-$EVS/scripts/$COMPONENT/$STEP/rtofs_regions.sh
+$HOMEevs/scripts/$COMPONENT/$STEP/rtofs_regions.sh
 
 # get the months for the climo files:
 #     for day < 15, use the month before + valid month
@@ -161,7 +161,7 @@ run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
 -c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstRTOFS.conf
 
 # archive final stat file
-rsync -av $COMOUTfinal $ARCHevs
+#rsync -av $COMOUTfinal $ARCHevs
 
 exit
 

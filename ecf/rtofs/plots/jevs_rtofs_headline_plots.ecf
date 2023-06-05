@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=06:00:00
+#PBS -l walltime=01:00:00
 #PBS -l select=1:ncpus=1:mem=500GB
 #PBS -l debug=true
 
@@ -15,8 +15,8 @@
 ############################################################
 set -x
 
-export EVS=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
-source $EVS/versions/run.ver
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+source $HOMEevs/versions/run.ver
 
 module reset
 #export HPC_OPT=/apps/ops/prod/libs
@@ -43,16 +43,16 @@ export RUN=headline
 export VDATE=$(date --date="4 days ago" +%Y%m%d)
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
+export COMINstats=$COMIN/stats/$COMPONENT
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
-export COMOUTfinal=$COMOUT/stats/$COMPONENT
 export COMOUTplots=$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE
 export DATA=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver}
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/logos
-export USHevs=$EVS/ush/$COMPONENT
-export CONFIGevs=$EVS/parm/metplus_config/$COMPONENT
+export USHevs=$HOMEevs/ush/$COMPONENT
+export CONFIGevs=$HOMEevs/parm/metplus_config/$COMPONENT
 
 # call j-job
-$EVS/jobs/$COMPONENT/$STEP/JEVS_RTOFS_HEADLINE_PLOTS
+$HOMEevs/jobs/$COMPONENT/$STEP/JEVS_RTOFS_HEADLINE_PLOTS
 
 #%include <tail.h>
 #%manual

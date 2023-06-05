@@ -9,21 +9,21 @@
 set -x
 
 # set up paths
-export FIXevs=${FIXevs:-$EVS/fix/logos}
-export USHevs=${USHevs:-$EVS/ush/$COMPONENT}
-export CONFIGevs=${CONFIGevs:-$EVS/parm/metplus_config/$COMPONENT}
+export FIXevs=${FIXevs:-$HOMEevs/fix/logos}
+export USHevs=${USHevs:-$HOMEevs/ush/$COMPONENT}
+export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config/$COMPONENT}
 
 # define COMIN/COMOUT variables
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
+export COMINstats=${COMINstats:-$COMIN/stats/$COMPONENT}
 export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
-export COMOUTfinal=${COMOUTfinal:-$COMOUT/stats/$COMPONENT/$COMPONENT.$VDATE}
 export COMOUTplots=${COMOUTplots:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
 export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
 
 mkdir -p $COMOUTplots
-mkdir -p $DATA/$STEP/$COMPONENT.$VDATE
+mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE
 
 # make headline score plots
-$EVS/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_headline_${STEP}.sh
+$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_headline_${STEP}.sh
 
 ################################# END OF JOB ##################################
