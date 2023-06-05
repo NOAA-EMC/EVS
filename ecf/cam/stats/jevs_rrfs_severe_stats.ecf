@@ -1,11 +1,11 @@
 #!/bin/bash
-#PBS -N jevs_hireswarwmem2_radar_stats_00
+#PBS -N jevs_rrfs_severe_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q debug
 #PBS -A VERF-DEV
 #PBS -l walltime=0:30:00
-#PBS -l place=vscatter,select=1:ncpus=12:mem=500GB
+#PBS -l select=1:ncpus=5:mem=500MB
 #PBS -l debug=true
 #PBS -V
 
@@ -32,7 +32,6 @@ module use /apps/dev/modulefiles/
 module load ve/evs/${ve_evs_ver}
 module load cray-mpich/${craympich_ver}
 module load cray-pals/${craypals_ver}
-module load cfp/${cfp_ver}
 module load libjpeg/${libjpeg_ver}
 module load libpng/${libpng_ver}
 module load zlib/${zlib_ver}
@@ -57,16 +56,15 @@ export NET=evs
 export STEP=stats
 export COMPONENT=cam
 export RUN=atmos
-export VERIF_CASE=radar
-export MODELNAME=hireswarwmem2
-export modsys=hiresw
+export VERIF_CASE=severe
+export MODELNAME=rrfs
+export modsys=rrfs
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
-export COMINmrms=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
+export COMINfcst=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
+export COMINspclsr=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
 export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
-export USE_CFP=YES
-export nproc=3
 
 export MET_bin_exec=bin
 export metplus_verbosity=DEBUG
@@ -98,7 +96,7 @@ fi
 
 
 ######################################################################
-# Purpose: This job generates radar verification statistics
-#          for the HiResW ARW2
+# Purpose: This job generates severe verification statistics
+#          for the RRFS deterministic member
 ######################################################################
 
