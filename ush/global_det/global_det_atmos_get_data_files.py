@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: global_det_atmos_get_data_files.py
 Contact(s): Mallory Row
@@ -496,51 +497,44 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 )
                 if not os.path.exists(VERIF_CASE_STEP_osi_saf_dir):
                     os.makedirs(VERIF_CASE_STEP_osi_saf_dir)
-                #for time_length in ['daily', 'weekly']:
-                for time_length in ['daily']:
-                    if time_length == 'daily':
-                        valid_shift_hrs = '-24'
-                    elif time_length == 'weekly':
-                        valid_shift_hrs = '-168'
-                    osi_saf_prod_file_format = os.path.join(
+                for hem in ['nh', 'sh']:
+                    osi_saf_hem_prod_file_format = os.path.join(
                         COMINosi_saf, 'prep',
                         COMPONENT, RUN+'.{valid?fmt=%Y%m%d}',
-                        'osi_saf', 'osi_saf.multi.'
-                        +'{valid_shift?fmt=%Y%m%d%H?shift='
-                        +valid_shift_hrs+'}to'
-                        +'{valid?fmt=%Y%m%d%H}_G004.nc'
+                        'osi_saf', 'osi_saf.multi.'+hem+'.'
+                        +'{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
+                        +'{valid?fmt=%Y%m%d%H}.nc'
                     )
-                    osi_saf_dest_file_format = os.path.join(
+                    osi_saf_hem_dest_file_format = os.path.join(
                         VERIF_CASE_STEP_osi_saf_dir,
-                        'osi_saf.multi.'
-                        +'{valid_shift?fmt=%Y%m%d%H?shift='
-                        +valid_shift_hrs+'}to'
-                        +'{valid?fmt=%Y%m%d%H}_G004.nc'
+                        'osi_saf.multi.'+hem+'.'
+                        +'{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
+                        +'{valid?fmt=%Y%m%d%H}.nc'
                     )
                     if evs_run_mode != 'production':
-                        osi_saf_arch_file_format = os.path.join(
+                        osi_saf_hem_arch_file_format = os.path.join(
                             archive_obs_data_dir, 'osi_saf',
-                            'osi_saf.multi.'
-                            +'{valid_shift?fmt=%Y%m%d%H?shift='
-                            +valid_shift_hrs+'}to'
-                            +'{valid?fmt=%Y%m%d%H}_G004.nc'
+                            'osi_saf.multi.'+hem+'.'
+                            +'{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
+                            +'{valid?fmt=%Y%m%d%H}.nc'
                         )
-                    osi_saf_dest_file = gda_util.format_filler(
-                        osi_saf_dest_file_format,
+                    osi_saf_hem_dest_file = gda_util.format_filler(
+                        osi_saf_hem_dest_file_format,
                         VERIF_CASE_STEP_type_valid_time,
                         VERIF_CASE_STEP_type_valid_time, ['anl'], {}
                     )
                     gda_util.get_truth_file(
                         VERIF_CASE_STEP_type_valid_time,
-                        osi_saf_prod_file_format,
-                        osi_saf_dest_file_format,
+                        osi_saf_hem_prod_file_format,
+                        osi_saf_hem_dest_file_format,
                         log_missing_files
                     )
-                    if not os.path.exists(osi_saf_dest_file) \
+                    if not os.path.exists(osi_saf_hem_dest_file) \
                             and evs_run_mode != 'production':
                         gda_util.get_truth_file(
                             VERIF_CASE_STEP_type_valid_time,
-                            osi_saf_arch_file_format, osi_saf_dest_file_format,
+                            osi_saf_hem_arch_file_format,
+                            osi_saf_hem_dest_file_format,
                             log_missing_files
                         )
             elif VERIF_CASE_STEP_type == 'snow':

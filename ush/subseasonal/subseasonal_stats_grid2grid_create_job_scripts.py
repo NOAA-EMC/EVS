@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Program Name: subseasonal_stats_grid2grid_create_job_scripts.py
 Contact(s): Shannon Shields
@@ -55,7 +56,7 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 ################################################
 reformat_data_obs_jobs_dict = {
     'anom': {},
-    'pres': {},
+    'pres_lvls': {},
     'ENSO': {},
     'OLR': {},
     'precip': {},
@@ -67,7 +68,7 @@ reformat_data_model_jobs_dict = {
     'ENSO': {},
     'OLR': {},
     'precip': {},
-    'pres': {
+    'pres_lvls': {
         #'GeoHeightAnom': {'env': {'var1_name': 'HGT',
                                   #'var1_levels': 'P500',
                                   #'met_config_overrides': (
@@ -152,12 +153,118 @@ assemble_data_obs_jobs_dict = {
                                       #'PCPCombine_obs24hrCCPA.conf'
                                   #)]}
     },
-    'pres': {},
+    'pres_lvls': {},
     'seaice': {},
     'sst': {},
 }
 assemble_data_model_jobs_dict = {
-    'anom': {},
+    'anom': {
+        'WeeklyAvg_TempAnom2m': {'env': {'var1_name': 'TMP',
+                                         'var1_levels': 'Z2'},
+                                 'commands': [sub_util.python_command(
+                                                  'subseasonal_'
+                                                  +'stats_grid2grid'
+                                                  +'_create_weekly_avg.py',
+                                                  ['TMP_ANOM_Z2',
+                                                   os.path.join(
+                                                       '$DATA',
+                                                       '${VERIF_CASE}_'
+                                                       +'${STEP}',
+                                                       'METplus_output',
+                                                       '${RUN}.'
+                                                       +'$DATE',
+                                                       '$MODEL',
+                                                       '$VERIF_CASE',
+                                                       'anomaly_'
+                                                       +'${VERIF_TYPE}_'
+                                                       +'TempAnom2m_init'
+                                                       +'{init?fmt=%Y%m%d%H}_'
+                                                       +'fhr{lead?fmt=%3H}.nc'
+                                                   ),
+                                                   os.path.join(
+                                                       '$COMOUT',
+                                                       '${RUN}.'
+                                                       +'$DATE',
+                                                       '$MODEL',
+                                                       '$VERIF_CASE',
+                                                       'anomaly_'
+                                                       +'${VERIF_TYPE}_'
+                                                       +'TempAnom2m_init'
+                                                       +'{init?fmt=%Y%m%d%H}_'
+                                                       +'fhr{lead?fmt=%3H}.nc'
+                                                   )]
+                                              )]},
+        'Days6_10Avg_TempAnom2m': {'env': {'var1_name': 'TMP',
+                                           'var1_levels': 'Z2'},
+                                   'commands': [sub_util.python_command(
+                                                    'subseasonal_'
+                                                    +'stats_grid2grid'
+                                                    +'_create_days6_10_avg.py',
+                                                    ['TMP_ANOM_Z2',
+                                                     os.path.join(
+                                                         '$DATA',
+                                                         '${VERIF_CASE}_'
+                                                         +'${STEP}',
+                                                         'METplus_output',
+                                                         '${RUN}.'
+                                                         +'$DATE',
+                                                         '$MODEL',
+                                                         '$VERIF_CASE',
+                                                         'anomaly_'
+                                                         +'${VERIF_TYPE}_'
+                                                         +'TempAnom2m_init'
+                                                         +'{init?fmt=%Y%m%d%H}_'
+                                                         +'fhr{lead?fmt=%3H}.nc'
+                                                     ),
+                                                     os.path.join(
+                                                         '$COMOUT',
+                                                         '${RUN}.'
+                                                         +'$DATE',
+                                                         '$MODEL',
+                                                         '$VERIF_CASE',
+                                                         'anomaly_'
+                                                         +'${VERIF_TYPE}_'
+                                                         +'TempAnom2m_init'
+                                                         +'{init?fmt=%Y%m%d%H}_'
+                                                         +'fhr{lead?fmt=%3H}.nc'
+                                                     )]
+                                                )]},
+        'Weeks3_4Avg_TempAnom2m': {'env': {'var1_name': 'TMP',
+                                           'var1_levels': 'Z2'},
+                                   'commands': [sub_util.python_command(
+                                                    'subseasonal_'
+                                                    +'stats_grid2grid'
+                                                    +'_create_weeks3_4_avg.py',
+                                                    ['TMP_ANOM_Z2',
+                                                     os.path.join(
+                                                         '$DATA',
+                                                         '${VERIF_CASE}_'
+                                                         +'${STEP}',
+                                                         'METplus_output',
+                                                         '${RUN}.'
+                                                         +'$DATE',
+                                                         '$MODEL',
+                                                         '$VERIF_CASE',
+                                                         'anomaly_'
+                                                         +'${VERIF_TYPE}_'
+                                                         +'TempAnom2m_init'
+                                                         +'{init?fmt=%Y%m%d%H}_'
+                                                         +'fhr{lead?fmt=%3H}.nc'
+                                                     ),
+                                                     os.path.join(
+                                                         '$COMOUT',
+                                                         '${RUN}.'
+                                                         +'$DATE',
+                                                         '$MODEL',
+                                                         '$VERIF_CASE',
+                                                         'anomaly_'
+                                                         +'${VERIF_TYPE}_'
+                                                         +'TempAnom2m_init'
+                                                         +'{init?fmt=%Y%m%d%H}_'
+                                                         +'fhr{lead?fmt=%3H}.nc'
+                                                     )]
+                                                )]},
+    },
     'ENSO': {},
     'OLR': {},
     'precip': {
@@ -167,42 +274,112 @@ assemble_data_model_jobs_dict = {
                                        #+'24hrAccum_precip.conf'
                                    #)]}
     },
-    'pres': {
-        #'DailyAvg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
-                                           #'var1_levels': 'P500',},
-                                   #'commands': [sub_util.python_command(
-                                                    #'subseasonal_'
-                                                    #+'stats_grid2grid'
-                                                    #+'_create_daily_avg.py',
-                                                    #['HGT_ANOM_P500',
-                                                     #os.path.join(
-                                                         #'$DATA',
-                                                         #'${VERIF_CASE}_'
-                                                         #+'${STEP}',
-                                                         #'METplus_output',
-                                                         #'${RUN}.'
-                                                         #+'{valid?fmt=%Y%m%d}#',
-                                                         #'$MODEL',
-                                                         #'$VERIF_CASE',
-                                                         #'anomaly_'
-                                                         #+'${VERIF_TYPE}_'
-                                                         #+'GeoHeightAnom_init#'
-                                                         #+'{init?fmt=%Y%m%d%H#}_'
-                                                         #+'fhr{lead?fmt=%3H}.#nc'
-                                                     #),
-                                                     #os.path.join(
-                                                         #'$COMOUT',
-                                                         #'${RUN}.'
-                                                         #+'{valid?fmt=%Y%m%d}#',
-                                                         #'$MODEL',
-                                                         #'$VERIF_CASE',
-                                                         #'anomaly_'
-                                                         #+'${VERIF_TYPE}_'
-                                                         #+'GeoHeightAnom_init#'
-                                                         #+'{init?fmt=%Y%m%d%H#}_'
-                                                         #+'fhr{lead?fmt=%3H}.#nc'
-                                                     #)]
-                                                #)]},
+    'pres_lvls': {
+        'WeeklyAvg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
+                                            'var1_levels': 'P500'},
+                                    'commands': [sub_util.python_command(
+                                                     'subseasonal_'
+                                                     +'stats_grid2grid'
+                                                     +'_create_weekly_avg.py',
+                                                     ['HGT_ANOM_P500',
+                                                      os.path.join(
+                                                          '$DATA',
+                                                          '${VERIF_CASE}_'
+                                                          +'${STEP}',
+                                                          'METplus_output',
+                                                          '${RUN}.'
+                                                          +'$DATE',
+                                                          '$MODEL',
+                                                          '$VERIF_CASE',
+                                                          'anomaly_'
+                                                          +'${VERIF_TYPE}_'
+                                                          +'GeoHeightAnom_init'
+                                                          +'{init?fmt=%Y%m%d%H}_'
+                                                          +'fhr{lead?fmt=%3H}.nc'
+                                                      ),
+                                                      os.path.join(
+                                                          '$COMOUT',
+                                                          '${RUN}.'
+                                                          +'$DATE',
+                                                          '$MODEL',
+                                                          '$VERIF_CASE',
+                                                          'anomaly_'
+                                                          +'${VERIF_TYPE}_'
+                                                          +'GeoHeightAnom_init'
+                                                          +'{init?fmt=%Y%m%d%H}_'
+                                                          +'fhr{lead?fmt=%3H}.nc'
+                                                      )]
+                                                 )]},
+        'Days6_10Avg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
+                                              'var1_levels': 'P500'},
+                                      'commands': [sub_util.python_command(
+                                                       'subseasonal_'
+                                                       +'stats_grid2grid'
+                                                       +'_create_days6_10_avg.py',
+                                                       ['HGT_ANOM_P500',
+                                                        os.path.join(
+                                                            '$DATA',
+                                                            '${VERIF_CASE}_'
+                                                            +'${STEP}',
+                                                            'METplus_output',
+                                                            '${RUN}.'
+                                                            +'$DATE',
+                                                            '$MODEL',
+                                                            '$VERIF_CASE',
+                                                            'anomaly_'
+                                                            +'${VERIF_TYPE}_'
+                                                            +'GeoHeightAnom_init'
+                                                            +'{init?fmt=%Y%m%d%H}_'
+                                                            +'fhr{lead?fmt=%3H}.nc'
+                                                        ),
+                                                        os.path.join(
+                                                            '$COMOUT',
+                                                            '${RUN}.'
+                                                            +'$DATE',
+                                                            '$MODEL',
+                                                            '$VERIF_CASE',
+                                                            'anomaly_'
+                                                            +'${VERIF_TYPE}_'
+                                                            +'GeoHeightAnom_init'
+                                                            +'{init?fmt=%Y%m%d%H}_'
+                                                            +'fhr{lead?fmt=%3H}.nc'
+                                                        )]
+                                                   )]},
+        'Weeks3_4Avg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
+                                              'var1_levels': 'P500'},
+                                      'commands': [sub_util.python_command(
+                                                       'subseasonal_'
+                                                       +'stats_grid2grid'
+                                                       +'_create_weeks3_4_avg.py',
+                                                       ['HGT_ANOM_P500',
+                                                        os.path.join(
+                                                            '$DATA',
+                                                            '${VERIF_CASE}_'
+                                                            +'${STEP}',
+                                                            'METplus_output',
+                                                            '${RUN}.'
+                                                            +'$DATE',
+                                                            '$MODEL',
+                                                            '$VERIF_CASE',
+                                                            'anomaly_'
+                                                            +'${VERIF_TYPE}_'
+                                                            +'GeoHeightAnom_init'
+                                                            +'{init?fmt=%Y%m%d%H}_'
+                                                            +'fhr{lead?fmt=%3H}.nc'
+                                                        ),
+                                                        os.path.join(
+                                                            '$COMOUT',
+                                                            '${RUN}.'
+                                                            +'$DATE',
+                                                            '$MODEL',
+                                                            '$VERIF_CASE',
+                                                            'anomaly_'
+                                                            +'${VERIF_TYPE}_'
+                                                            +'GeoHeightAnom_init'
+                                                            +'{init?fmt=%Y%m%d%H}_'
+                                                            +'fhr{lead?fmt=%3H}.nc'
+                                                        )]
+                                                   )]},
     },
     'seaice': {
         'WeeklyAvg_Concentration': {'env': {'var1_name': 'ICEC',
@@ -386,13 +563,36 @@ generate_stats_jobs_dict = {
     'ENSO': {},
     'OLR': {},
     'anom': {
-        #'Temp2m': {'env': {'var1_name': 'TMP',
-                           #'var1_level': 'Z2',
-                           #'var1_options': ''},
-                   #'commands': [sub_util.metplus_command(
-                                    #'GridStat_fcstSUBSEASONAL_'
-                                    #+'obsECMWF_climoERA5.conf'
-                                #)]},
+        'WeeklyAvg_TempAnom2m': {'env': {'var1_name': 'TMP',
+                                         'var1_levels': 'Z2',
+                                         'met_config_overrides': (
+                                             "'climo_mean = fcst;'"
+                                         )},
+                                 'commands': [sub_util.metplus_command(
+                                                  'GridStat_fcstSUBSEASONAL_'
+                                                  +'obsECMWF_WeeklyAvgAnom'
+                                                  +'.conf'
+                                              )]},
+        'Days6_10Avg_TempAnom2m': {'env': {'var1_name': 'TMP',
+                                           'var1_levels': 'Z2',
+                                           'met_config_overrides': (
+                                               "'climo_mean = fcst;'"
+                                           )},
+                                   'commands': [sub_util.metplus_command(
+                                                    'GridStat_fcstSUBSEASONAL_'
+                                                    +'obsECMWF_Days6_10AvgAnom'
+                                                    +'.conf'
+                                                )]},
+        'Weeks3_4Avg_TempAnom2m': {'env': {'var1_name': 'TMP',
+                                           'var1_levels': 'Z2',
+                                           'met_config_overrides': (
+                                               "'climo_mean = fcst;'"
+                                           )},
+                                   'commands': [sub_util.metplus_command(
+                                                    'GridStat_fcstSUBSEASONAL_'
+                                                    +'obsECMWF_Weeks3_4AvgAnom'
+                                                    +'.conf'
+                                                )]},
     },
     'precip': {
         #'24hrCCPA': {'env': {'met_config_overrides': ''},
@@ -450,7 +650,7 @@ generate_stats_jobs_dict = {
                                             #+'obs24hrCCPA_Nbrhd.conf'
                                         #)]}
     },
-    'pres': {
+    'pres_lvls': {
         #'GeoHeight': {'env': {'var1_name': 'HGT',
                               #'var1_levels': 'P500',
                               #'var1_options': '',
@@ -459,16 +659,36 @@ generate_stats_jobs_dict = {
                                        #'GridStat_fcstSUBSEASONAL_'
                                        #+'obsGFS_climoERA5.conf'
                                    #)]}
-        #'DailyAvg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
-                                           #'var1_levels': 'P500',
-                                           #'met_config_overrides': (
-                                               #"'climo_mean = fcst;'"
-                                           #)},
-                                   #'commands': [sub_util.metplus_command(
-                                                    #'GridStat_fcstSUBSEASONAL#_'
-                                                    #+'obsGFS_DailyAvgAnom'
-                                                    #+'.conf'
-                                                #)]},
+        'WeeklyAvg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
+                                            'var1_levels': 'P500',
+                                            'met_config_overrides': (
+                                                "'climo_mean = fcst;'"
+                                            )},
+                                    'commands': [sub_util.metplus_command(
+                                                     'GridStat_fcstSUBSEASONAL_'
+                                                     +'obsGFS_WeeklyAvgAnom'
+                                                     +'.conf'
+                                                 )]},
+        'Days6_10Avg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
+                                              'var1_levels': 'P500',
+                                              'met_config_overrides': (
+                                                  "'climo_mean = fcst;'"
+                                              )},
+                                      'commands': [sub_util.metplus_command(
+                                                       'GridStat_fcstSUBSEASONAL_'
+                                                       +'obsGFS_Days6_10AvgAnom'
+                                                       +'.conf'
+                                                   )]},
+        'Weeks3_4Avg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
+                                              'var1_levels': 'P500',
+                                              'met_config_overrides': (
+                                                  "'climo_mean = fcst;'"
+                                              )},
+                                      'commands': [sub_util.metplus_command(
+                                                       'GridStat_fcstSUBSEASONAL_'
+                                                       +'obsGFS_Weeks3_4AvgAnom'
+                                                       +'.conf'
+                                                   )]},
         #'Temp': {'env': {'var1_name': 'TMP',
                          #'var1_levels': "'P850, P500'",
                          #'var1_options': '',
@@ -615,6 +835,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                 job_env_dict['WEEKLYSTART'] = wdate_dt.strftime('%Y%m%d')
                 mdate_dt = date_dt - datetime.timedelta(days=30)
                 job_env_dict['MONTHLYSTART'] = mdate_dt.strftime('%Y%m%d')
+                dys6_10date_dt = date_dt - datetime.timedelta(days=5)
+                job_env_dict['D6_10START'] = dys6_10date_dt.strftime('%Y%m%d')
+                w3_4date_dt = date_dt - datetime.timedelta(days=14)
+                job_env_dict['W3_4START'] = w3_4date_dt.strftime('%Y%m%d')
                 job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
                 job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
                 job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
@@ -629,11 +853,11 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     job.write('set -x\n')
                     job.write('\n')
                     # Set any environment variables for special cases
-                    if JOB_GROUP == 'reformat_data':
-                        if verif_type == 'pres':
-                            job_env_dict['TRUTH'] = os.environ[
-                                VERIF_CASE_STEP_abbrev_type+'_truth_name_list'
-                            ].split(' ')[model_idx]
+                    #if JOB_GROUP == 'reformat_data':
+                        #if verif_type == 'pres':
+                            #job_env_dict['TRUTH'] = os.environ[
+                                #VERIF_CASE_STEP_abbrev_type+'_truth_name_list'
+                            #].split(' ')[model_idx]
                     if JOB_GROUP == 'assemble_data':
                         if verif_type == 'precip':
                             job_env_dict['MODEL_var'] = (
@@ -652,14 +876,11 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                 job_env_dict['MODEL_levels'] = (
                                     'A'+job_env_dict['MODEL_accum']
                                 )
-                    elif JOB_GROUP == 'generate_stats':
-                        if verif_type == 'pres':
-                            job_env_dict['TRUTH'] = os.environ[
-                                VERIF_CASE_STEP_abbrev_type+'_truth_name_list'
-                            ].split(' ')[model_idx]
-                            if verif_type_job == 'DailyAvg_GeoHeightAnom':
-                                if int(job_env_dict['fhr_inc']) < 24:
-                                    job_env_dict['fhr_inc'] = '24'
+                    #elif JOB_GROUP == 'generate_stats':
+                        #if verif_type == 'pres':
+                            #job_env_dict['TRUTH'] = os.environ[
+                                #VERIF_CASE_STEP_abbrev_type+'_truth_name_list'
+                            #].split(' ')[model_idx]
                     # Do file checks
                     all_truth_file_exist = False
                     model_files_exist = False
@@ -676,18 +897,17 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         job_env_dict.pop('fhr_end')
                         job_env_dict.pop('fhr_inc')
                         #job_env_dict['INIT'] = init_dt.strftime('%Y%m%d%H')
-                    if JOB_GROUP == 'reformat_data':
-                        if verif_type == 'pres' \
-                                and verif_type_job == 'GeoHeightAnom':
-                            check_truth_files = True
-                        else:
-                            check_truth_files = False
-                    elif JOB_GROUP == 'assemble_data':
+                    if JOB_GROUP == 'assemble_data':
                         check_truth_files = False
                     elif JOB_GROUP == 'generate_stats':
-                        if verif_type == 'pres' \
+                        if verif_type in ['pres_lvls', 'anom'] \
                                 and verif_type_job in [
-                                    'DailyAvg_GeoHeightAnom']:
+                                    'WeeklyAvg_GeoHeightAnom',
+                                    'Days6_10Avg_GeoHeightAnom',
+                                    'Weeks3_4Avg_GeoHeightAnom',
+                                    'WeeklyAvg_TempAnom2m',
+                                    'Days6_10Avg_TempAnom2m',
+                                    'Weeks3_4Avg_TempAnom2m']:
                             check_truth_files = False
                         else:
                             check_truth_files = True

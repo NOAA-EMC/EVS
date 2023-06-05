@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import datetime
 import numpy as np
@@ -736,101 +737,33 @@ def prep_prod_metfra_file(source_file, dest_file, forecast_hour, prep_method,
         #    log_missing_file(log_missing_files, source_file)
     copy_file(prepped_file, dest_file)
 
-def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
+def prep_prod_osi_saf_file(daily_source_file, daily_dest_file,
                            date_dt, log_missing_files):
     """! Do prep work for OSI-SAF production files
 
          Args:
-             daily_source_file_format - daily source file format (string)
-             daily_dest_file          - daily destination file (string)
-             date_dt                  - date (datetime object)
-             log_missing_files        - text file path to write that
+             daily_source_file - daily source file (string)
+             daily_dest_file   - daily destination file (string)
+             date_dt           - date (datetime object)
+             log_missing_files - text file path to write that
                                         production file is missing (string)
          Returns:
     """
     # Environment variables and executables
-    FIXevs = os.environ['FIXevs']
-    CDO_ROOT = os.environ['CDO_ROOT']
     # Temporary file names
-    daily_prepped_file = os.path.join(os.getcwd(), 'atmos.'
-                                      +daily_dest_file.rpartition('/')[2])
-    # Prep daily file
-    for hem in ['nh', 'sh']:
-        hem_source_file = daily_source_file_format.replace('{hem?fmt=str}',
-                                                           hem)
-        hem_dest_file = daily_dest_file.replace('multi.', 'multi.'+hem+'.')
-        hem_prepped_file = os.path.join(os.getcwd(), 'atmos.'
-                                        +hem_dest_file.rpartition('/')[2])
-        if check_file_exists_size(hem_source_file):
-            run_shell_command(
-                [os.path.join(CDO_ROOT, 'bin', 'cdo'),
-                'remapbil,'
-                +os.path.join(FIXevs, 'cdo_grids', 'G004.grid'),
-                hem_source_file, hem_prepped_file]
+    prepped_file = os.path.join(os.getcwd(), 'atmos.'
+                                +daily_dest_file.rpartition('/')[2])
+    if check_file_exists_size(daily_source_file):
+        copy_file(daily_source_file, prepped_file)
+        if check_file_exists_size(prepped_file):
+            prepped_data = netcdf.Dataset(prepped_file, 'a')
+            prepped_data.variables['time'][:] = (
+               prepped_data.variables['time'][:] + 43200
             )
-        else:
-           log_missing_file(log_missing_files, hem_source_file)
-        if hem == 'nh':
-            nh_prepped_file = hem_prepped_file
-        elif hem == 'sh':
-            sh_prepped_file = hem_prepped_file
-    if check_file_exists_size(nh_prepped_file) \
-            and check_file_exists_size(sh_prepped_file):
-        nh_data = netcdf.Dataset(nh_prepped_file)
-        sh_data = netcdf.Dataset(sh_prepped_file)
-        merged_data = netcdf.Dataset(daily_prepped_file, 'w',
-                                     format='NETCDF3_CLASSIC')
-        for attr in nh_data.ncattrs():
-            if attr == 'history':
-                merged_data.setncattr(
-                    attr, nh_data.getncattr(attr)+' '
-                    +sh_data.getncattr(attr)
-                )
-            elif attr == 'southernmost_latitude':
-                merged_data.setncattr(attr, '-90')
-            elif attr == 'area':
-                merged_data.setncattr(attr, 'Global')
-            else:
-                merged_data.setncattr(attr, nh_data.getncattr(attr))
-        for dim in list(nh_data.dimensions.keys()):
-            merged_data.createDimension(dim, len(nh_data.dimensions[dim]))
-        for var in ['time', 'time_bnds', 'lat', 'lon']:
-            merged_var = merged_data.createVariable(
-                var, nh_data.variables[var].datatype,
-                nh_data.variables[var].dimensions
-            )
-            for k in nh_data.variables[var].ncattrs():
-                merged_var.setncatts(
-                    {k: nh_data.variables[var].getncattr(k)}
-                )
-            if var == 'time':
-                merged_var[:] = nh_data.variables[var][:] + 43200
-            else:
-                merged_var[:] = nh_data.variables[var][:]
-        for var in ['ice_conc', 'raw_ice_conc_values',
-                    'status_flag', 'total_uncertainty',
-                    'smearing_uncertainty', 'algorithm_uncertainty']:
-            merged_var = merged_data.createVariable(
-                var, nh_data.variables[var].datatype,
-                ('lat', 'lon')
-            )
-            for k in nh_data.variables[var].ncattrs():
-                if k == 'long_name':
-                    merged_var.setncatts(
-                        {k: nh_data.variables[var].getncattr(k)\
-                        .replace('northern hemisphere', 'globe')}
-                    )
-                else:
-                    merged_var.setncatts(
-                        {k: nh_data.variables[var].getncattr(k)}
-                    )
-            merged_var_vals = np.ma.masked_equal(
-                np.vstack((sh_data.variables[var][0,:180,:],
-                           nh_data.variables[var][0,180:,:]))
-               ,nh_data.variables[var]._FillValue)
-            merged_var[:] = merged_var_vals
-        merged_data.close()
-    copy_file(daily_prepped_file, daily_dest_file)
+            prepped_data.close()
+            copy_file(prepped_file, daily_dest_file)
+    else:
+        log_missing_file(log_missing_files, daily_source_file)
 
 def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt,
                                log_missing_files):
@@ -1286,14 +1219,25 @@ def check_model_files(job_dict):
                     }
         elif job_dict['JOB_GROUP'] == 'generate_stats':
             if job_dict['VERIF_CASE'] == 'grid2grid':
-                output_file_format = os.path.join(
-                    verif_case_dir, 'METplus_output',
-                    job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
-                    model, job_dict['VERIF_CASE'],
-                    'grid_stat_'+job_dict['VERIF_TYPE']+'_'
-                    +job_dict['job_name']+'_{lead?fmt=%2H}'
-                    '0000L_{valid?fmt=%Y%m%d_%H%M%S}V.stat'
-                )
+                if job_dict['VERIF_TYPE'] == 'sea_ice' \
+                        and 'DailyAvg_Extent' in job_dict['job_name']:
+                    output_file_format = os.path.join(
+                        verif_case_dir, 'METplus_output',
+                        job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
+                        model, job_dict['VERIF_CASE'],
+                        'stat_analysis_fcst'+model+'_obsosi_saf_'
+                        +job_dict['job_name']+'_SL1L2_'
+                        '{valid?fmt=%Y%m%d%H}.stat'
+                    )
+                else:
+                    output_file_format = os.path.join(
+                        verif_case_dir, 'METplus_output',
+                        job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
+                        model, job_dict['VERIF_CASE'],
+                        'grid_stat_'+job_dict['VERIF_TYPE']+'_'
+                        +job_dict['job_name']+'_{lead?fmt=%2H}'
+                        '0000L_{valid?fmt=%Y%m%d_%H%M%S}V.stat'
+                    )
                 fhr_check_output_dict[str(fhr)]['file1'] = {
                     'valid_date': valid_date_dt,
                     'init_date': init_date_dt,
@@ -1335,8 +1279,9 @@ def check_model_files(job_dict):
                         verif_case_dir, 'METplus_output',
                         job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
                         model, job_dict['VERIF_CASE'], 'daily_avg_'
-                        +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']
-                        +'_init{init?fmt=%Y%m%d%H}_'
+                        +job_dict['VERIF_TYPE']+'_DailyAvg_Concentration'
+                        +job_dict['hemisphere'].upper()+'_'
+                        +'init{init?fmt=%Y%m%d%H}_'
                         +'valid{valid_shift?fmt=%Y%m%d%H?shift=-24}'
                         +'to{valid?fmt=%Y%m%d%H}.nc'
                     )
@@ -1442,7 +1387,8 @@ def check_model_files(job_dict):
                 fhr_key_input_files_exist_list.append(True)
                 if job_dict['JOB_GROUP'] == 'reformat_data' \
                         and job_dict['job_name'] in ['GeoHeightAnom',
-                                                     'Concentration',
+                                                     'ConcentrationNH',
+                                                     'ConcentrationSH',
                                                      'SST']:
                     fhr_list.append(
                         fhr_check_input_dict[fhr_key][fhr_fileN_key]\
@@ -1522,6 +1468,25 @@ def check_truth_files(job_dict):
                     +'.truth'
                 )
                 truth_input_file_list.append(model_truth_file)
+            elif job_dict['VERIF_TYPE'] == 'sea_ice':
+                osi_saf_file = os.path.join(
+                    verif_case_dir, 'data', 'osi_saf',
+                    'osi_saf.multi.'+job_dict['hemisphere']+'.'
+                    +(valid_date_dt-datetime.timedelta(hours=24))\
+                    .strftime('%Y%m%d%H')
+                    +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
+                )
+                truth_input_file_list.append(osi_saf_file)
+                osi_saf_output = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
+                    'osi_saf', job_dict['VERIF_CASE'], 'regrid_data_plane_'
+                    +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']+'_valid'
+                    +(valid_date_dt-datetime.timedelta(hours=24))\
+                    .strftime('%Y%m%d%H')
+                    +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
+                )
+                truth_output_file_list.append(osi_saf_output)
         elif job_dict['VERIF_CASE'] == 'grid2obs':
             if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc', 'ptype'] \
                     and 'Prepbufr' in job_dict['job_name']:
@@ -1598,13 +1563,26 @@ def check_truth_files(job_dict):
                 )
                 truth_input_file_list.append(ccpa_file)
             elif job_dict['VERIF_TYPE'] == 'sea_ice':
-                osi_saf_file = os.path.join(
-                    verif_case_dir, 'data', 'osi_saf',
-                    'osi_saf.multi.'
-                    +(valid_date_dt-datetime.timedelta(hours=24))\
-                    .strftime('%Y%m%d%H')
-                    +'to'+valid_date_dt.strftime('%Y%m%d%H')+'_G004.nc'
-                )
+                if 'DailyAvg_Concentration' in job_dict['job_name']:
+                    osi_saf_file = os.path.join(
+                        verif_case_dir, 'data', 'osi_saf',
+                        'osi_saf.multi.'+job_dict['hemisphere']+'.'
+                        +(valid_date_dt-datetime.timedelta(hours=24))\
+                        .strftime('%Y%m%d%H')
+                        +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
+                    )
+                elif 'DailyAvg_Extent' in job_dict['job_name']:
+                    osi_saf_file = os.path.join(
+                        verif_case_dir, 'METplus_output',
+                        job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
+                        'osi_saf', job_dict['VERIF_CASE'],
+                        'regrid_data_plane_sea_ice_'
+                        +'DailyAvg_Concentration'
+                        +job_dict['hemisphere'].upper()+'_valid'
+                        +(valid_date_dt-datetime.timedelta(hours=24))\
+                        .strftime('%Y%m%d%H')
+                        +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
+                    )
                 truth_input_file_list.append(osi_saf_file)
             elif job_dict['VERIF_TYPE'] == 'snow':
                 nohrsc_file = os.path.join(
@@ -2667,8 +2645,9 @@ def merge_grid2grid_long_term_stats_datasets(logger, stat_base_dir,
                     model_all_verif_sys_df = model_verif_sys_df.copy()
                     set_new_df = False
                 else:
-                    model_all_verif_sys_df = model_all_verif_sys_df.append(
-                        model_verif_sys_df, ignore_index=True
+                    model_all_verif_sys_df = pd.concat(
+                        [model_all_verif_sys_df, model_verif_sys_df],
+                        ignore_index=True
                     )
             else:
                 logger.warning(f"{model_verif_sys_file_name} does not exist")
@@ -2859,8 +2838,9 @@ def merge_precip_long_term_stats_datasets(logger, stat_base_dir,
                     model_all_verif_sys_df = model_verif_sys_df.copy()
                     set_new_df = False
                 else:
-                    model_all_verif_sys_df = model_all_verif_sys_df.append(
-                        model_verif_sys_df, ignore_index=True
+                    model_all_verif_sys_df = pd.concat(
+                        [model_all_verif_sys_df, model_verif_sys_df],
+                        ignore_index=True
                     )
             else:
                 logger.warning(f"{model_verif_sys_file_name} does not exist")
@@ -3260,6 +3240,11 @@ def calculate_stat(logger, data_df, line_type, stat):
            stat_df = ME
        elif line_type == 'VL1L2':
            stat_df = np.sqrt(UVFFBAR) - np.sqrt(UVOOBAR)
+   elif stat == 'CORR': # Pearson Correlation Coefficient
+       if line_type == 'SL1L2':
+           var_f = FFBAR - FBAR*FBAR
+           var_o = OOBAR - OBAR*OBAR
+           stat_df = (FOBAR - (FBAR*OBAR))/np.sqrt(var_f*var_o)
    elif stat == 'CSI': # Critical Success Index'
        if line_type == 'CTC':
            stat_df = FY_OY/(FY_OY + FY_ON + FN_OY)
@@ -3313,6 +3298,11 @@ def calculate_stat(logger, data_df, line_type, stat):
    elif stat == 'SRATIO': # Success Ratio
        if line_type == 'CTC':
            stat_df = 1 - (FY_ON/(FY_ON + FY_OY))
+   elif stat == 'STDEV_ERR': # Standard Deviation of Error
+       if line_type == 'SL1L2':
+           stat_df = np.sqrt(
+               FFBAR + OOBAR - FBAR*FBAR - OBAR*OBAR - 2*FOBAR + 2*FBAR*OBAR
+           )
    else:
         logger.error(stat+" IS NOT AN OPTION")
         sys.exit(1)

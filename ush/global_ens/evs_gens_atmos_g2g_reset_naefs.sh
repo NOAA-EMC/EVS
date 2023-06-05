@@ -36,21 +36,39 @@ for vcyc in $vcycs ; do
    fhr=$lead
    typeset -Z3 fhr
 
-   for mbr in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
-     ln -sf  ${COMIN}.${fyyyymmdd}/gefs/gefs.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  gefs.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2 
+   if [ $gefs_number = 20 ] ; then
+    mbrs="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20"
+   elif [ $gefs_number = 30 ] ; then
+    mbrs="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30"
+   fi
+
+   for mbr in $mbrs ; do
+    if [ $RUN = headline ] ; then
+      ln -sf  ${COMIN}.${fyyyymmdd}/gefs/gefs.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  gefs.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2
+    else 
+      ln -sf  ${COMIN}.${fyyyymmdd}/gefs_bc/gefs_bc.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  gefs.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2
+    fi  
    done
 
    for mbr in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ; do
+    if [ $RUN = headline ] ; then
      ln -sf  ${COMIN}.${fyyyymmdd}/cmce/cmce.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  cmce.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2
+    else
+     ln -sf  ${COMIN}.${fyyyymmdd}/cmce_bc/cmce_bc.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  cmce.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2
+    fi
    done
 
-   sed -e "s!CYC!$fcyc!g" -e "s!GRID!3!g" -e "s!FHR!$fhr!g" $ENS_LIST/evs_g2g_gefs_file_list > gefs_file_list.t${fcyc}z.f${fhr}
+   if [ $gefs_number = 20 ] ; then
+     sed -e "s!CYC!$fcyc!g" -e "s!GRID!3!g" -e "s!FHR!$fhr!g" $ENS_LIST/evs_g2g_gefs_file_list.20 > gefs_file_list.t${fcyc}z.f${fhr}
+   elif [  $gefs_number = 30 ] ; then      
+     sed -e "s!CYC!$fcyc!g" -e "s!GRID!3!g" -e "s!FHR!$fhr!g" $ENS_LIST/evs_g2g_gefs_file_list.30 > gefs_file_list.t${fcyc}z.f${fhr}
+   fi 
+
    sed -e "s!CYC!$fcyc!g" -e "s!GRID!3!g" -e "s!FHR!$fhr!g" $ENS_LIST/evs_g2g_cmce_file_list > cmce_file_list.t${fcyc}z.f${fhr}
 
    echo "gefs_file_list.t${fcyc}z.f${fhr}  cmce_file_list.t${fcyc}z.f${fhr}"|$EXECevs/evs_g2g_adjustCMC.x
 
-   for mb in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
-   #for mb in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 ; do
+   for mb in $mbrs ; do
      mbr=$mb
      typeset -Z2 mbr
      mv gefs.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2     naefs.ens${mbr}.${fyyyymmdd}.t${fcyc}z.grid3.f${fhr}.grib2
@@ -59,7 +77,12 @@ for vcyc in $vcycs ; do
    for mb in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 ; do
      mbr=$mb
      typeset -Z2 mbr
-     mbr50=$((mb+30))
+     if [ $gefs_number = 20 ] ; then
+	mbr50=$((mb+20))
+     elif [ $gefs_number = 30 ] ; then
+        mbr50=$((mb+30))
+     fi 
+
      if [ -s cmce.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2.adj ] ; then
       mv cmce.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2.adj naefs.ens${mbr50}.${fyyyymmdd}.t${fcyc}z.grid3.f${fhr}.grib2
      fi 

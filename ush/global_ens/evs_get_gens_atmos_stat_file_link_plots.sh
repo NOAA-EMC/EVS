@@ -4,27 +4,43 @@ set -x
 
 day=$1
 MODEL_LIST=$2
+if [ ${VERIF_CASE} = sst ] ; then
+  VRF_CASE=${VERIF_CASE}24h
+elif [ ${VERIF_CASE} = profile1 ] || [ ${VERIF_CASE} = profile2 ] || [ ${VERIF_CASE} = profile3 ] || [ ${VERIF_CASE} = profile4 ]; then
+  VRF_CASE=grid2obs
+else
+  VRF_CASE=${VERIF_CASE}
+fi
 
 for MODEL in $MODEL_LIST ; do
  
   model=`echo $MODEL | tr '[A-Z]' '[a-z]'`
 
   archive=$output_base_dir
-  prefix=${COMIN%%gefs*}
+  prefix=${COMIN%%${MODELNAME}*}
   index=${#prefix}
   echo $index
   COM_IN=${COMIN:0:$index}
   echo $COM_IN
 
   model_stat_dir=${COM_IN}${model}.${day}
+  if [ $model = naefsv7 ] ; then
+    model_stat_dir=${COM_IN}naefs.${day}
+
+  fi 
 
   gens_archive_yyyymmdd=${archive}/${model}
   mkdir -p $gens_archive_yyyymmdd
 
   cd ${gens_archive_yyyymmdd}
 
-  if [ -s ${model_stat_dir}/evs.stats.${model}_atmos_${VERIF_CASE}_v${day}.stat ] ; then
-    ln -sf ${model_stat_dir}/evs.stats.${model}_atmos_${VERIF_CASE}_v${day}.stat ${MODEL}_${day}.stat
+  stat=${model_stat_dir}/evs.stats.${model}.atmos.${VRF_CASE}.v${day}.stat
+  if [ $model = naefsv7 ] ; then
+    stat=${model_stat_dir}/evs.stats.naefs.v7.atmos.${VRF_CASE}.v${day}.stat
+  fi 
+
+  if [ -s ${stat} ] ; then
+    ln -sf ${stat} ${MODEL}_${day}.stat
   fi
 
   if [ $MODEL = ECME ] ; then

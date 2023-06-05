@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: global_det_atmos_stats_grid2grid_create_anomaly
 Contact(s): Mallory Row
@@ -117,6 +118,20 @@ while valid_date_dt <= ENDDATE_dt:
             for dim in list(input_file_data.dimensions.keys()):
                 output_file_data.createDimension(
                     dim, len(input_file_data.dimensions[dim])
+                )
+            for input_var_name in ['lat', 'lon']:
+                write_data_name_var = output_file_data.createVariable(
+                    input_var_name,
+                    input_file_data.variables[input_var_name].datatype,
+                    input_file_data.variables[input_var_name].dimensions
+                )
+                for k in input_file_data.variables[input_var_name].ncattrs():
+                    write_data_name_var.setncatts(
+                        {k: input_file_data.variables[input_var_name]\
+                            .getncattr(k)}
+                    )
+                write_data_name_var[:] = (
+                    input_file_data.variables[input_var_name][:]
                 )
             for data_name in ['FCST', 'OBS']:
                 input_var_level = 'input_var_hold'

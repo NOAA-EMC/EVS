@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Program Name: global_det_atmos_stats_grid2grid_create_job_scripts.py
 Contact(s): Mallory Row
@@ -59,7 +60,20 @@ reformat_data_obs_jobs_dict = {
     'precip_accum24hr': {},
     'precip_accum3hr': {},
     'pres_levs': {},
-    'sea_ice': {},
+    'sea_ice': {
+        'DailyAvg_ConcentrationNH': {'env': {'hemisphere': 'nh',
+                                             'grid': 'G219'},
+                                     'commands': [gda_util.metplus_command(
+                                                      'RegridDataPlane_'
+                                                      +'obsOSI-SAF.conf'
+                                                  )]},
+        'DailyAvg_ConcentrationSH': {'env': {'hemisphere': 'sh',
+                                             'grid': 'G220'},
+                                     'commands': [gda_util.metplus_command(
+                                                      'RegridDataPlane_'
+                                                      +'obsOSI-SAF.conf'
+                                                  )]},
+    },
     'snow': {},
     'sst': {},
 }
@@ -72,13 +86,14 @@ reformat_data_model_jobs_dict = {
     'pres_levs': {
         'GeoHeightAnom': {'env': {'var1_name': 'HGT',
                                   'var1_levels': 'P500',
+                                  'grid': 'G004',
                                   'met_config_overrides': (
                                       "'climo_mean = fcst;'"
                                   )},
                           'commands': [gda_util.metplus_command(
                                            'GridStat_fcstGLOBAL_DET_'
-                                            +'obsModelAnalysis_climoERA5_'
-                                            +'NetCDF.conf'
+                                           +'obsModelAnalysis_climoERA5_'
+                                           +'NetCDF.conf'
                                        ),
                                        gda_util.python_command(
                                            'global_det_atmos_stats_grid2grid'
@@ -101,6 +116,7 @@ reformat_data_model_jobs_dict = {
                               'var1_levels': '"P850, P200"',
                               'var2_name': 'VGRD',
                               'var2_levels': '"P850, P200"',
+                              'grid': 'G004',
                               'met_config_overrides': ''},
                       'commands': [gda_util.metplus_command(
                                        'GridStat_fcstGLOBAL_DET_'
@@ -123,17 +139,31 @@ reformat_data_model_jobs_dict = {
                                    )]}
     },
     'sea_ice': {
-        'Concentration': {'env': {'var1_name': 'ICEC',
-                                  'var1_levels': 'Z0',},
-                          'commands': [gda_util.metplus_command(
-                                           'GridStat_fcstGLOBAL_DET_'
-                                            +'NetCDF.conf'
-                                       )]},
+        'ConcentrationNH': {'env': {'var1_name': 'ICEC',
+                                    'var1_levels': 'Z0',
+                                    'hemisphere': 'nh',
+                                    'grid': 'G219',
+                                    'met_config_overrides': ''},
+                            'commands': [gda_util.metplus_command(
+                                             'GridStat_fcstGLOBAL_DET_'
+                                              +'NetCDF.conf'
+                                         )]},
+        'ConcentrationSH': {'env': {'var1_name': 'ICEC',
+                                    'var1_levels': 'Z0',
+                                    'hemisphere': 'sh',
+                                    'grid': 'G220',
+                                    'met_config_overrides': ''},
+                            'commands': [gda_util.metplus_command(
+                                             'GridStat_fcstGLOBAL_DET_'
+                                              +'NetCDF.conf'
+                                         )]}
     },
     'snow': {},
     'sst': {
         'SST': {'env': {'var1_name': 'TMP',
-                        'var1_levels': 'Z0'},
+                        'var1_levels': 'Z0',
+                        'grid': 'G004',
+                        'met_config_overrides': ''},
                 'commands': [gda_util.metplus_command(
                                  'GridStat_fcstGLOBAL_DET_'
                                  +'NetCDF.conf'
@@ -214,45 +244,102 @@ assemble_data_model_jobs_dict = {
                                                 )]},
     },
     'sea_ice': {
-        'DailyAvg_Concentration': {'env': {'var1_name': 'ICEC',
-                                           'var1_levels': 'Z0',},
-                                   'commands': [gda_util.python_command(
-                                                    'global_det_atmos_stats_'
-                                                    +'grid2grid_create_'
-                                                    +'daily_avg.py',
-                                                    ['ICEC_Z0',
-                                                     os.path.join(
-                                                         '$DATA',
-                                                         '${VERIF_CASE}_'
-                                                         +'${STEP}',
-                                                         'METplus_output',
-                                                         '${RUN}.'
-                                                         +'{valid?fmt=%Y%m%d}',
-                                                         '$MODEL',
-                                                         '$VERIF_CASE',
-                                                         'grid_stat_'
-                                                         +'${VERIF_TYPE}_'
-                                                         +'Concentration_'
-                                                         +'{lead?fmt=%2H}0000L_'
-                                                         +'{valid?fmt=%Y%m%d}_'
-                                                         +'{valid?fmt=%H}0000V_'
-                                                         +'pairs.nc'
-                                                     ),
-                                                     os.path.join(
-                                                         '$COMIN', 'stats',
-                                                         '$COMPONENT',
-                                                         '${RUN}.'
-                                                         +'{valid?fmt=%Y%m%d}',
-                                                         '$MODEL',
-                                                         '$VERIF_CASE',
-                                                         'grid_stat_'
-                                                         +'${VERIF_TYPE}_'
-                                                         +'Concentration_'
-                                                         +'{lead?fmt=%2H}0000L_'
-                                                         +'{valid?fmt=%Y%m%d}_'
-                                                         +'{valid?fmt=%H}0000V_'
-                                                         +'pairs.nc'
-                                                     )])]},
+        'DailyAvg_ConcentrationNH': {'env': {'hemisphere': 'nh',
+                                             'grid': 'G219',
+                                             'var1_name': 'ICEC',
+                                             'var1_levels': 'Z0',},
+                                     'commands': [gda_util.python_command(
+                                                      'global_det_atmos_'
+                                                      +'stats_grid2grid_'
+                                                      +'create_daily_avg.py',
+                                                      ['ICEC_Z0',
+                                                       os.path.join(
+                                                           '$DATA',
+                                                           '${VERIF_CASE}_'
+                                                           +'${STEP}',
+                                                           'METplus_output',
+                                                           '${RUN}.{valid?'
+                                                           +'fmt=%Y%m%d}',
+                                                           '$MODEL',
+                                                           '$VERIF_CASE',
+                                                           'grid_stat_'
+                                                           +'${VERIF_TYPE}_'
+                                                           +'ConcentrationNH_'
+                                                           +'{lead?fmt=%2H}'
+                                                           +'0000L_'
+                                                           +'{valid?fmt='
+                                                           +'%Y%m%d}_'
+                                                           +'{valid?fmt=%H}'
+                                                           +'0000V_'
+                                                           +'pairs.nc'
+                                                       ),
+                                                       os.path.join(
+                                                           '$COMIN', 'stats',
+                                                           '$COMPONENT',
+                                                           '${RUN}.'
+                                                           +'{valid?'
+                                                           +'fmt=%Y%m%d}',
+                                                           '$MODEL',
+                                                           '$VERIF_CASE',
+                                                           'grid_stat_'
+                                                           +'${VERIF_TYPE}_'
+                                                           +'ConcentrationNH_'
+                                                           +'{lead?fmt=%2H}'
+                                                           +'0000L_'
+                                                           +'{valid?fmt='
+                                                           +'%Y%m%d}_'
+                                                           +'{valid?fmt=%H}'
+                                                           +'0000V_'
+                                                           +'pairs.nc'
+                                                       )])]},
+        'DailyAvg_ConcentrationSH': {'env': {'hemisphere': 'sh',
+                                             'grid': 'G220',
+                                             'var1_name': 'ICEC',
+                                             'var1_levels': 'Z0',},
+                                     'commands': [gda_util.python_command(
+                                                      'global_det_atmos_'
+                                                      +'stats_grid2grid_'
+                                                      +'create_daily_avg.py',
+                                                      ['ICEC_Z0',
+                                                       os.path.join(
+                                                           '$DATA',
+                                                           '${VERIF_CASE}_'
+                                                           +'${STEP}',
+                                                           'METplus_output',
+                                                           '${RUN}.{valid?'
+                                                           +'fmt=%Y%m%d}',
+                                                           '$MODEL',
+                                                           '$VERIF_CASE',
+                                                           'grid_stat_'
+                                                           +'${VERIF_TYPE}_'
+                                                           +'ConcentrationSH_'
+                                                           +'{lead?fmt=%2H}'
+                                                           +'0000L_'
+                                                           +'{valid?fmt='
+                                                           +'%Y%m%d}_'
+                                                           +'{valid?fmt=%H}'
+                                                           +'0000V_'
+                                                           +'pairs.nc'
+                                                       ),
+                                                       os.path.join(
+                                                           '$COMIN', 'stats',
+                                                           '$COMPONENT',
+                                                           '${RUN}.'
+                                                           +'{valid?'
+                                                           +'fmt=%Y%m%d}',
+                                                           '$MODEL',
+                                                           '$VERIF_CASE',
+                                                           'grid_stat_'
+                                                           +'${VERIF_TYPE}_'
+                                                           +'ConcentrationSH_'
+                                                           +'{lead?fmt=%2H}'
+                                                           +'0000L_'
+                                                           +'{valid?fmt='
+                                                           +'%Y%m%d}_'
+                                                           +'{valid?fmt=%H}'
+                                                           +'0000V_'
+                                                           +'pairs.nc'
+                                                       )])]},
     },
     'snow': {
         '24hrAccum_WaterEqv': {'env': {'MODEL_var': 'WEASD'},
@@ -652,11 +739,36 @@ generate_stats_jobs_dict = {
                                    )]}
     },
     'sea_ice': {
-        'DailyAvg_Concentration': {'env': {},
-                                   'commands': [gda_util.metplus_command(
-                                                   'GridStat_fcstGLOBAL_DET_'
-                                                   +'obsOSI-SAF_DailyAvg.conf'
-                                                )]},
+        'DailyAvg_ConcentrationNH': {'env': {'grid': 'G219',
+                                             'hemisphere': 'nh',
+                                             'vx_mask': 'ARCTIC'},
+                                     'commands': [gda_util.metplus_command(
+                                                     'GridStat_fcstGLOBAL_DET_'
+                                                     +'obsOSI-SAF_DailyAvg.conf'
+                                                  )]},
+        'DailyAvg_ConcentrationSH': {'env': {'grid': 'G220',
+                                             'hemisphere': 'sh',
+                                             'vx_mask': 'ANTARCTIC'},
+                                     'commands': [gda_util.metplus_command(
+                                                     'GridStat_fcstGLOBAL_DET_'
+                                                     +'obsOSI-SAF_DailyAvg.conf'
+                                                  )]},
+        'DailyAvg_ExtentNH': {'env': {'grid': 'G219',
+                                      'hemisphere': 'nh',
+                                      'vx_mask': 'ARCTIC'},
+                              'commands': [gda_util.metplus_command(
+                                               'StatAnalysis_fcstGLOBAL_DET_'
+                                                +'obsOSI-SAF_DailyAvg_Extent_'
+                                                +'MPRtoSL1L2.conf'
+                                           )]},
+        'DailyAvg_ExtentSH': {'env': {'grid': 'G220',
+                                      'hemisphere': 'sh',
+                                      'vx_mask': 'ANTARCTIC'},
+                              'commands': [gda_util.metplus_command(
+                                               'StatAnalysis_fcstGLOBAL_DET_'
+                                                +'obsOSI-SAF_DailyAvg_Extent_'
+                                                +'MPRtoSL1L2.conf'
+                                           )]}
     },
     'snow': {
         '24hrNOHRSC_WaterEqv_G211': {'env': {'grid': 'G211',
