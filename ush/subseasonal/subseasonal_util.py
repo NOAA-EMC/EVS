@@ -982,20 +982,25 @@ def check_daily_model_files(job_dict):
         job_dict['DATE']+job_dict['valid_hr_start'],
         '%Y%m%d%H'
     )
+    init_date_dt = datetime.datetime.strptime(
+        job_dict['CORRECT_INIT_DATE']+job_dict['init_hr_start'],
+        '%Y%m%d%H'
+    )
     verif_case_dir = os.path.join(
         job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
     )
     model = job_dict['MODEL']
     members = job_dict['members']
-    fhr_min = int(job_dict['fhr_start'])
-    fhr_max = int(job_dict['fhr_end'])
-    fhr_inc = 24
+    lead_seq = job_dict['CORRECT_LEAD_SEQ'].split(',')
+    fhr_min = int(lead_seq[0])
+    fhr_max = int(lead_seq[-1])
+    fhr_inc = 12
     fhr = fhr_min
     fhr_list = []
     fhr_check_dict = {}
     while fhr <= fhr_max:
         fhr_check_dict[str(fhr)] = {}
-        init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
+        valid_date_dt = init_date_dt + datetime.timedelta(hours=fhr)
         if job_dict['JOB_GROUP'] == 'reformat_data':
             if job_dict['VERIF_CASE'] == 'grid2grid':
                 if job_dict['VERIF_TYPE'] == 'sst' \
@@ -1006,17 +1011,6 @@ def check_daily_model_files(job_dict):
                                                      model+'.ens'+mb
                                                      +'.{init?fmt=%Y%m%d%H}.'
                                                      +'f{lead?fmt=%3H}')
-                    nf = 0
-                    while nf <= 2:
-                        if fhr-(12*nf) >= 0:
-                            fhr_check_dict[str(fhr)]['file'+str(nf+1)] = {
-                                'valid_date': (valid_date_dt
-                                               -datetime.timedelta(hours=12*nf)),
-                                'init_date': init_date_dt,
-                                'forecast_hour': str(fhr-(12*nf))
-                            }
-                            nf+=1
-                else:
                     fhr_check_dict[str(fhr)]['file1'] = {
                         'valid_date': valid_date_dt,
                         'init_date': init_date_dt,
@@ -1053,7 +1047,7 @@ def check_daily_model_files(job_dict):
         model_files_exist = True
     else:
         model_files_exist = False
-    return model_files_exist
+    return model_files_exist, fhr_list
 
 
 def check_weekly_model_files(job_dict):
