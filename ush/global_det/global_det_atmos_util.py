@@ -582,8 +582,9 @@ def prep_prod_ecmwf_file(source_file, dest_file, init_dt, forecast_hour, prep_me
                 [PCPCONFORM, 'ecmwf', source_file, prepped_file]
             )
         else:
-            log_missing_file_model(log_missing_file, source_file, 'ecmwf',
-                                   init_dt, str(forecast_hour).zfill(3))
+            if int(datetime.datetime.now().strftime('%H')) > 18:
+                log_missing_file_model(log_missing_file, source_file, 'ecmwf',
+                                       init_dt, str(forecast_hour).zfill(3))
     if os.path.exists(prepped_file):
         run_shell_command(['chmod', '750', prepped_file])
         run_shell_command(['chgrp', 'rstprod', prepped_file])
