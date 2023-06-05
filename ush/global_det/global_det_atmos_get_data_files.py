@@ -153,18 +153,18 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
             ]
             VERIF_CASE_STEP_type_valid_hr_list = OSI_SAF_valid_hr_list
         elif VERIF_CASE_STEP_type == 'sst':
-            (GHRSST_MEDIAN_valid_hr_start, GHRSST_MEDIAN_valid_hr_end,
-             GHRSST_MEDIAN_valid_hr_inc) = gda_util.get_obs_valid_hrs(
-                 'GHRSST-MEDIAN'
+            (GHRSST_OSPO_valid_hr_start, GHRSST_OSPO_valid_hr_end,
+             GHRSST_OSPO_valid_hr_inc) = gda_util.get_obs_valid_hrs(
+                 'GHRSST-OSPO'
             )
-            GHRSST_MEDIAN_valid_hr_list = [
+            GHRSST_OSPO_valid_hr_list = [
                 str(x).zfill(2) for x in range(
-                    GHRSST_MEDIAN_valid_hr_start,
-                    GHRSST_MEDIAN_valid_hr_end+GHRSST_MEDIAN_valid_hr_inc,
-                    GHRSST_MEDIAN_valid_hr_inc
+                    GHRSST_OSPO_valid_hr_start,
+                    GHRSST_OSPO_valid_hr_end+GHRSST_OSPO_valid_hr_inc,
+                    GHRSST_OSPO_valid_hr_inc
                 )
             ]
-            VERIF_CASE_STEP_type_valid_hr_list = GHRSST_MEDIAN_valid_hr_list
+            VERIF_CASE_STEP_type_valid_hr_list = GHRSST_OSPO_valid_hr_list
         else:
             VERIF_CASE_STEP_type_valid_hr_list = ['12']
         # Set initialization hours
@@ -349,7 +349,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                             log_missing_files
                         )
                 elif VERIF_CASE_STEP_type == 'sst':
-                    # GHRSST Median spans PDYm1 00Z to PDY 00Z
+                    # GHRSST OSPO spans PDYm1 00Z to PDY 00Z
                     nf = 0
                     while nf <= 4:
                         if int(time['forecast_hour'])-(6*nf) >= 0:

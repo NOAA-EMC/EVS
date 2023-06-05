@@ -1738,9 +1738,9 @@ def get_obs_valid_hrs(obs):
         'OSI-SAF': {'valid_hr_start': 00,
                     'valid_hr_end': 00,
                     'valid_hr_inc': 24},
-        'GHRSST-MEDIAN': {'valid_hr_start': 00,
-                          'valid_hr_end': 00,
-                          'valid_hr_inc': 24},
+        'GHRSST-OSPO': {'valid_hr_start': 00,
+                        'valid_hr_end': 00,
+                        'valid_hr_inc': 24},
         'GET_D': {'valid_hr_start': 00,
                   'valid_hr_end': 00,
                   'valid_hr_inc': 24},
@@ -1905,7 +1905,7 @@ def initalize_job_env_dict(verif_type, group,
                 )
             elif verif_type == 'sst':
                 valid_hr_start, valid_hr_end, valid_hr_inc = (
-                    get_obs_valid_hrs('GHRSST-MEDIAN')
+                    get_obs_valid_hrs('GHRSST-OSPO')
                 )
             else:
                  valid_hr_start, valid_hr_end, valid_hr_inc = 12, 12, 23
