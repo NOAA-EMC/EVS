@@ -102,7 +102,7 @@ def check_file_exists_size(file_name):
 
 def log_missing_file_model(log_missing_file, missing_file, model, init_dt,
                            fhr):
-    """! This write a missing file to a log
+    """! This writes a missing model file to a log
 
          Args:
              log_missing_file - log of missing file (string)
@@ -111,25 +111,46 @@ def log_missing_file_model(log_missing_file, missing_file, model, init_dt,
              init_dt          - initialization date (datetime)
              fhr              - forecast hour (string)
     """
-    with open(log_missing_file, "a") as lmf:
-        lmf.write("#!/bin/bash\n")
-        if fhr == 'anl':
-            lmf.write(f'export subject="{model.upper()} Analysis '
-                      +'Data Missing for EVS global_det"\n')
-            lmf.write(f'echo "Warning: No {model.upper()} analysis was '
-                      +f'available for valid date {init_dt:%Y%m%d%H}" '
-                      +'> mailmsg\n')
-        else:
-            lmf.write(f'export subject="F{fhr} {model.upper()} Forecast '
-                      +'Data Missing for EVS global_det"\n')
-            lmf.write(f'echo "Warning: No {model.upper()} forecast was '
-                      +f'available for {init_dt:%Y%m%d%H}f{fhr}" '
-                      +'> mailmsg\n')
-        lmf.write(f'echo "Missing file is {missing_file}" >> mailmsg\n')
-        lmf.write(f'echo "Job ID: $jobid" >> mailmsg\n')
-        lmf.write(f'cat mailmsg | mail -s "$subject" $maillist\n')
-    os.chmod(log_missing_file, 0o755)
+    if not os.path.exists(log_missing_file):
+        with open(log_missing_file, "w") as lmf:
+            lmf.write("#!/bin/bash\n")
+            if fhr == 'anl':
+                lmf.write(f'export subject="{model.upper()} Analysis '
+                          +'Data Missing for EVS global_det"\n')
+                lmf.write(f'echo "Warning: No {model.upper()} analysis was '
+                          +f'available for valid date {init_dt:%Y%m%d%H}" '
+                          +'> mailmsg\n')
+            else:
+                lmf.write(f'export subject="F{fhr} {model.upper()} Forecast '
+                          +'Data Missing for EVS global_det"\n')
+                lmf.write(f'echo "Warning: No {model.upper()} forecast was '
+                          +f'available for {init_dt:%Y%m%d%H}f{fhr}" '
+                          +'> mailmsg\n')
+            lmf.write(f'echo "Missing file is {missing_file}" >> mailmsg\n')
+            lmf.write(f'echo "Job ID: $jobid" >> mailmsg\n')
+            lmf.write(f'cat mailmsg | mail -s "$subject" $maillist\n')
+        os.chmod(log_missing_file, 0o755)
 
+def log_missing_file_truth(log_missing_file, missing_file, obs, valid_dt):
+    """! This writes a missing truth file to a log
+
+         Args:
+             log_missing_file - log of missing file (string)
+             missing_file     - missing file path (string)
+             obs              - observation name (string)
+             valid_dt         - initialization date (datetime)
+    """
+    if not os.path.exists(log_missing_file):
+        with open(log_missing_file, "a") as lmf:
+            lmf.write("#!/bin/bash\n")
+            lmf.write(f'export subject="{obs} Data Missing for EVS '
+                      +'global_det"\n')
+            lmf.write(f'echo "Warning: No {obs} data was available for '
+                      +f'valid date {valid_dt:%Y%m%d%H}" > mailmsg\n')
+            lmf.write(f'echo "Missing file is {missing_file}" >> mailmsg\n')
+            lmf.write(f'echo "Job ID: $jobid" >> mailmsg\n')
+            lmf.write(f'cat mailmsg | mail -s "$subject" $maillist\n')
+        os.chmod(log_missing_file, 0o755)
 
 
 def copy_file(source_file, dest_file):
@@ -802,17 +823,12 @@ def prep_prod_osi_saf_file(daily_source_file, daily_dest_file,
             prepped_data.close()
             copy_file(prepped_file, daily_dest_file)
     else:
-        with open(log_missing_file, "a") as lmf:
-            lmf.write("#!/bin/bash\n")
-            lmf.write('export subject="OSI-SAF Data Missing for EVS '
-                      +'global_det"\n')
-            lmf.write('echo "Warning: No OSI-SAF data was available for '
-                      +f'valid date {date_dt:%Y%m%d%H}" > mailmsg\n')
-            lmf.write(f'echo "Missing file is {daily_source_file}" >> mailmsg\n')
-            lmf.write(f'echo "Job ID: $jobid" >> mailmsg\n')
-            lmf.write(f'cat mailmsg | mail -s "$subject" $maillist\n')
-        os.chmod(log_missing_file, 0o755)
-
+        if '_nh_' in daily_source_file:
+            hem = 'nh'
+        elif '_sh_' in daily_source_file:
+            hem = 'sh'
+        log_missing_file_truth(log_missing_file, daily_source_file,
+                               f"OSI-SAF {hem.upper()}", date_dt)
 
 def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt,
                                log_missing_file):
@@ -834,16 +850,8 @@ def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt,
     if os.path.exists(source_file):
         copy_file(source_file, prepped_file)
     else:
-        with open(log_missing_file, "a") as lmf:
-            lmf.write("#!/bin/bash\n")
-            lmf.write('export subject="GHRSST OSPO Data Missing for EVS '
-                      +'global_det"\n')
-            lmf.write('echo "Warning: No GHRSST OSPO data was available for '
-                      +f'valid date {date_dt:%Y%m%d%H}" > mailmsg\n')
-            lmf.write(f'echo "Missing file is {source_file}" >> mailmsg\n')
-            lmf.write(f'echo "Job ID: $jobid" >> mailmsg\n')
-            lmf.write(f'cat mailmsg | mail -s "$subject" $maillist\n')
-        os.chmod(log_missing_file, 0o755)
+        log_missing_file_truth(log_missing_file, source_file,
+                               'GHRSST OSPO', date_dt)
     if check_file_exists_size(prepped_file):
         prepped_data = netcdf.Dataset(prepped_file, 'a',
                                       format='NETCDF3_CLASSIC')
@@ -874,21 +882,11 @@ def prep_prod_get_d_file(source_file, dest_file, date_dt,
     if os.path.exists(source_file):
         copy_file(prepped_file, dest_file)
     else:
-        with open(log_missing_file, "a") as lmf:
-            lmf.write("#!/bin/bash\n")
-            lmf.write('export subject="GET-D Data Missing for EVS '
-                      +'global_det"\n')
-            lmf.write('echo "Warning: No GET-D data was available for '
-                      +f'valid date {date_dt:%Y%m%d%H}" > mailmsg\n')
-            lmf.write(f'echo "Missing file is {source_file}" >> mailmsg\n')
-            lmf.write(f'echo "Job ID: $jobid" >> mailmsg\n')
-            lmf.write(f'cat mailmsg | mail -s "$subject" $maillist\n')
-        os.chmod(log_missing_file, 0o755)
-
+        log_missing_file_truth(log_missing_file, source_file,
+                               'GET-D', date_dt)
 
 def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
-                   source_file_format, dest_file_format,
-                   log_missing_file):
+                   source_file_format, dest_file_format):
     """! This get a model file and saves it in the specificed
          destination
          
@@ -898,13 +896,16 @@ def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
              forecast_hour      - forecast hour (string)
              source_file_format - source file format (string)
              dest_file_format   - destination file format (string)
-             log_missing_file   - text file path to write that
-                                  production file is missing (string) 
 
          Returns:
     """
     dest_file = format_filler(dest_file_format, valid_time_dt,
                               init_time_dt, forecast_hour, {})
+    log_missing_dir = dest_file.rpartition('/')[0].rpartition('/')[0]
+    model = dest_file.rpartition('/')[0].rpartition('/')[2]
+    log_missing_file = os.path.join(log_missing_dir, 'mail_missing_'
+                                    +dest_file.rpartition('/')[2]\
+                                     .replace('.', '_')+'.sh')
     if not os.path.exists(dest_file):
         source_file = format_filler(source_file_format, valid_time_dt,
                                     init_time_dt, forecast_hour, {})
@@ -941,31 +942,50 @@ def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
                 os.symlink(source_file, dest_file)   
             else:
                 print("WARNING: "+source_file+" DOES NOT EXIST")
+                log_missing_file_model(log_missing_file, source_file,
+                                       model, init_time_dt,
+                                       str(forecast_hour).zfill(3))
 
-def get_truth_file(valid_time_dt, source_file_format, dest_file_format,
-                   log_missing_file):
-    """! This get a model file and saves it in the specificed
+def get_truth_file(valid_time_dt, obs, source_prod_file_format,
+                   source_arch_file_format, evs_run_mode,
+                   dest_file_format):
+    """! This get a truth/observation file and saves it in the specificed
          destination
          
          Args:
-             valid_time_dt      - valid time (datetime)
-             source_file_format - source file format (string)
-             dest_file_format   - destination file format (string)
-             log_missing_file   - text file path to write that
-                                  production file is missing (string)
+             valid_time_dt           - valid time (datetime)
+             obs                     - observation name (string)
+             source_prod_file_format - source productoin file format (string)
+             source_arch_file_format - source archive file format (string)
+             evs_run_mode            - mode EVS is running in (string) 
+             dest_file_format        - destination file format (string)
          Returns:
     """
     dest_file = format_filler(dest_file_format, valid_time_dt,
                               valid_time_dt, ['anl'], {})
-    if not os.path.exists(dest_file):
+    log_missing_dir = dest_file.rpartition('/')[0].rpartition('/')[0]
+    source_loc_list = ['prod']
+    if evs_run_mode != 'production':
+        source_loc_list.append('arch')
+    for source_loc in source_loc_list:
+        if source_loc == 'prod':
+            source_file_format = source_prod_file_format
+        elif source_loc == 'arch':
+            source_file_format = source_arch_file_format
+        log_missing_file = os.path.join(log_missing_dir, 'mail_missing_'
+                                        +source_loc+'_'
+                                        +dest_file.rpartition('/')[2]\
+                                        .replace('.', '_')+'.sh')
         source_file = format_filler(source_file_format, valid_time_dt,
                                     valid_time_dt, ['anl'], {})
-        if os.path.exists(source_file):
-            print("Linking "+source_file+" to "+dest_file)
-            os.symlink(source_file, dest_file)
-        else:
-            print("WARNING: "+source_file+" DOES NOT EXIST")
-            #log_missing_file(log_missing_file, source_file)
+        if not os.path.exists(dest_file):
+            if os.path.exists(source_file):
+                print("Linking "+source_file+" to "+dest_file)
+                os.symlink(source_file, dest_file)
+            else:
+                print("WARNING: "+source_file+" DOES NOT EXIST")
+                log_missing_file_truth(log_missing_file, source_file,
+                                       obs, valid_time_dt)
 
 def check_model_files(job_dict):
     """! Check what model files or don't exist

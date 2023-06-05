@@ -44,6 +44,13 @@ status=$?
 [[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_get_data_files.py"
 echo
 
+# Send for missing files
+if ls $DATA/grid2grid_stats/data/mail_* 1> /dev/null 2>&1; then
+    for FILE in $DATA/grid2grid_stats/data/mail_*; do
+        $FILE
+    done
+fi
+
 # Check for restart files
 if [ $evs_run_mode = production ]; then
     python ${USHevs}/global_det/global_det_atmos_production_restart.py
