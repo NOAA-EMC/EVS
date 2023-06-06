@@ -50,10 +50,19 @@ set -x
 		  export VAR_NAME=${WVAR}
 ######################################################################################################
 # Set Basic Environment Variables
-NEST_LIST="namer conusc akc"
+las_cyc=21
+# NEST_LIST="namer conusc akc"
 # NEST_LIST="conus ak spc_otlk subreg"
-# NEST_LIST="namer conus conusc ak akc spc_otlk subreg"
+NEST_LIST="namer conus conusc ak akc spc_otlk subreg"
 # NEST_LIST="conus ak spc_otlk"
+# NEST_LIST="namer"
+# NEST_LIST="conus"
+# NEST_LIST="conusc"
+# NEST_LIST="ak"
+# NEST_LIST="akc"
+# NEST_LIST="spc_otlk"
+# NEST_LIST="subreg"
+
 
 VERIF_TYPES="raob metar"
 
