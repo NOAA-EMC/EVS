@@ -183,39 +183,7 @@ reformat_data_model_jobs_dict = {
     'ENSO': {},
     'OLR': {},
     'precip': {},
-    'pres_lvls': {
-        #'GeoHeightAnom': {'env': {'var1_name': 'HGT',
-                                  #'var1_levels': 'P500',
-                                  #'met_config_overrides': (
-                                      #"'climo_mean = obs;'"
-                                  #)},
-                          #'commands': [sub_util.metplus_command(
-                                           #'GenEnsProd_fcstSUBSEASONAL_'
-                                           #+'WeeklyNetCDF.conf'
-                                       #),
-                                       #sub_util.metplus_command(
-                                           #'GridStat_fcstSUBSEASONAL_'
-                                           #+'obsGFS_climoERA5_'
-                                           #+'WeeklyNetCDF.conf'
-                                       #),
-                                       #sub_util.python_command(
-                                           #'subseasonal_stats_grid2grid'
-                                           #'_create_weekly_anomaly.py',
-                                           #['HGT_P500',
-                                            #os.path.join(
-                                                #'$DATA',
-                                                #'${VERIF_CASE}_${STEP}',
-                                                #'METplus_output',
-                                                #'${RUN}.$DATE',
-                                                #'$MODEL', '$VERIF_CASE',
-                                                #'grid_stat_${VERIF_TYPE}_'
-                                                #+'${job_name}_'
-                                                #+'{lead?fmt=%2H}0000L_'
-                                                #+'{valid?fmt=%Y%m%d}_'
-                                                #+'{valid?fmt=%H}0000V_pairs.nc'
-                                            #)]
-                                       #)]},
-    },
+    'pres_lvls': {},
     'seaice': {
         'Concentration': {'env': {'var1_name': 'ICEC',
                                   'var1_levels': 'Z0'},
@@ -326,16 +294,15 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                     write_job_cmds = False
                     check_model_files = True
                     if check_model_files:
-                        model_files_exist = (
+                        model_files_exist, valid_date_fhr_list = (
                             sub_util.check_weekly_model_files(job_env_dict)
                         )
-                        #job_env_dict['fhr_list'] = (
-                            #'"'+','.join(valid_date_fhr_list)+'"'
-                        #)
+                        job_env_dict['fhr_list'] = (
+                            '"'+','.join(valid_date_fhr_list)+'"'
+                        )
                         job_env_dict.pop('fhr_start')
                         job_env_dict.pop('fhr_end')
                         job_env_dict.pop('fhr_inc')
-                        #job_env_dict['INIT'] = init_dt.strftime('%Y%m%d%H')
                     if JOB_GROUP == 'reformat_data':
                         if verif_type == 'anom' \
                                 and verif_type_job == 'TempAnom2m':
@@ -369,7 +336,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                         for cmd in verif_type_job_commands_list:
                             job.write(cmd+'\n')
                     job.close()
-                    #job_env_dict.pop('fhr_list')
+                    job_env_dict.pop('fhr_list')
                     job_env_dict['fhr_start'] = fhr_start
                     job_env_dict['fhr_end'] = fhr_end
                     job_env_dict['fhr_inc'] = fhr_inc

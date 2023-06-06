@@ -278,8 +278,11 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                         check_model_files = True
                         check_truth_files = True
                         if check_model_files:
-                            model_files_exist = (
+                            model_files_exist, valid_date_fhr_list = (
                                 sub_util.check_days6_10_model_files(job_env_dict)
+                            )
+                            job_env_dict['fhr_list'] = (
+                                '"'+','.join(valid_date_fhr_list)+'"'
                             )
                             job_env_dict.pop('fhr_start')
                             job_env_dict.pop('fhr_end')
@@ -306,6 +309,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                             for cmd in verif_type_job_commands_list:
                                 job.write(cmd+'\n')
                         job.close()
+                        job_env_dict.pop('fhr_list')
                         job_env_dict['fhr_start'] = fhr_start
                         job_env_dict['fhr_end'] = fhr_end
                         job_env_dict['fhr_inc'] = fhr_inc

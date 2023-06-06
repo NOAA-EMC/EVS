@@ -975,8 +975,10 @@ def check_daily_model_files(job_dict):
                         job is running with (strings)
 
          Returns:
-             model_files_exist - if non-zero number of  model files
+             model_files_exist - if correct number of model files
                                  exist or not (boolean)
+             fhr_list          - list of forecast hours that model
+                                 files exist for (string)
     """
     valid_date_dt = datetime.datetime.strptime(
         job_dict['DATE']+job_dict['valid_hr_start'],
@@ -1043,7 +1045,7 @@ def check_daily_model_files(job_dict):
     fhr_list = list(
         np.asarray(np.unique(np.asarray(fhr_list, dtype=int)),dtype=str)
     )
-    if len(fhr_list) != 0:
+    if len(fhr_list) == 3:
         model_files_exist = True
     else:
         model_files_exist = False
@@ -1058,11 +1060,17 @@ def check_weekly_model_files(job_dict):
                         job is running with (strings)
 
          Returns:
-             model_files_exist - if non-zero number of  model files
+             model_files_exist - if 80% of model files
                                  exist or not (boolean)
+             fhr_list          - list of forecast hours that model
+                                 files exist for (string)
     """
     valid_date_dt = datetime.datetime.strptime(
         job_dict['DATE']+job_dict['valid_hr_start'],
+        '%Y%m%d%H'
+    )
+    init_date_dt = datetime.datetime.strptime(
+        job_dict['CORRECT_INIT_DATE']+job_dict['init_hr_start'],
         '%Y%m%d%H'
     )
     verif_case_dir = os.path.join(
@@ -1070,15 +1078,16 @@ def check_weekly_model_files(job_dict):
     )
     model = job_dict['MODEL']
     members = job_dict['members']
-    fhr_min = int(job_dict['fhr_start'])
-    fhr_max = int(job_dict['fhr_end'])
-    fhr_inc = 24
+    lead_seq = job_dict['CORRECT_LEAD_SEQ'].split(',')
+    fhr_min = int(lead_seq[0])
+    fhr_max = int(lead_seq[-1])
+    fhr_inc = 12
     fhr = fhr_min
     fhr_list = []
     fhr_check_dict = {}
     while fhr <= fhr_max:
         fhr_check_dict[str(fhr)] = {}
-        init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
+        valid_date_dt = init_date_dt + datetime.timedelta(hours=fhr)
         if job_dict['JOB_GROUP'] == 'reformat_data':
             if job_dict['VERIF_CASE'] in ['grid2grid', 'grid2obs']:
                 if job_dict['VERIF_TYPE'] in ['seaice', 'sst', 
@@ -1105,17 +1114,6 @@ def check_weekly_model_files(job_dict):
                                                          model+'.ens'+mb
                                                          +'.{init?fmt=%Y%m%d%H}.'
                                                          +'f{lead?fmt=%3H}')
-                    if str(fhr) in ['168', '336', '504', '672', '840']:
-                        nf = 0
-                        while nf <= 14:
-                            fhr_check_dict[str(fhr)]['file'+str(nf+1)] = {
-                                'valid_date': (valid_date_dt
-                                               -datetime.timedelta(hours=12*nf)),
-                                'init_date': init_date_dt,
-                                'forecast_hour': str(fhr-(12*nf))
-                            }
-                            nf+=1
-                else:
                     fhr_check_dict[str(fhr)]['file1'] = {
                         'valid_date': valid_date_dt,
                         'init_date': init_date_dt,
@@ -1138,16 +1136,11 @@ def check_weekly_model_files(job_dict):
                                                      +'_{valid?fmt=%Y%m%d}'
                                                      +'_{valid?fmt=%H}0000V'
                                                      +'_ens.nc')
-                    if str(fhr) in ['168', '336', '504', '672', '840']:
-                        nf = 0
-                        while nf <= 14:
-                            fhr_check_dict[str(fhr)]['file'+str(nf+1)] = {
-                                'valid_date': (valid_date_dt
-                                               -datetime.timedelta(hours=12*nf)),
-                                'init_date': init_date_dt,
-                                'forecast_hour': str(fhr-(12*nf))
-                            }
-                            nf+=1
+                    fhr_check_dict[str(fhr)]['file1'] = {
+                        'valid_date': valid_date_dt,
+                        'init_date': init_date_dt,
+                        'forecast_hour': str(fhr)
+                    }
         fhr+=fhr_inc
     for fhr_key in list(fhr_check_dict.keys()):
         fhr_key_files_exist_list = []
@@ -1185,11 +1178,11 @@ def check_weekly_model_files(job_dict):
     fhr_list = list(
         np.asarray(np.unique(np.asarray(fhr_list, dtype=int)),dtype=str)
     )
-    if len(fhr_list) != 0:
+    if len(fhr_list) >= 12:
         model_files_exist = True
     else:
         model_files_exist = False
-    return model_files_exist
+    return model_files_exist, fhr_list
 
 
 def check_monthly_model_files(job_dict):
@@ -1200,11 +1193,17 @@ def check_monthly_model_files(job_dict):
                         job is running with (strings)
 
          Returns:
-             model_files_exist - if non-zero number of  model files
+             model_files_exist - if 80% of model files
                                  exist or not (boolean)
+             fhr_list          - list of forecast hours that model
+                                 files exist for (string)
     """
     valid_date_dt = datetime.datetime.strptime(
         job_dict['DATE']+job_dict['valid_hr_start'],
+        '%Y%m%d%H'
+    )
+    init_date_dt = datetime.datetime.strptime(
+        job_dict['CORRECT_INIT_DATE']+job_dict['init_hr_start'],
         '%Y%m%d%H'
     )
     verif_case_dir = os.path.join(
@@ -1212,15 +1211,16 @@ def check_monthly_model_files(job_dict):
     )
     model = job_dict['MODEL']
     members = job_dict['members']
-    fhr_min = int(job_dict['fhr_start'])
-    fhr_max = int(job_dict['fhr_end'])
-    fhr_inc = 24
+    lead_seq = job_dict['CORRECT_LEAD_SEQ'].split(',')
+    fhr_min = int(lead_seq[0])
+    fhr_max = int(lead_seq[-1])
+    fhr_inc = 12
     fhr = fhr_min
     fhr_list = []
     fhr_check_dict = {}
     while fhr <= fhr_max:
         fhr_check_dict[str(fhr)] = {}
-        init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
+        valid_date_dt = init_date_dt + datetime.timedelta(hours=fhr)
         if job_dict['JOB_GROUP'] == 'reformat_data':
             if job_dict['VERIF_CASE'] == 'grid2grid':
                 if job_dict['VERIF_TYPE'] in ['seaice', 'sst'] \
@@ -1232,17 +1232,6 @@ def check_monthly_model_files(job_dict):
                                                      model+'.ens'+mb
                                                      +'.{init?fmt=%Y%m%d%H}.'
                                                      +'f{lead?fmt=%3H}')
-                    if fhr == 720:
-                        nf = 0
-                        while nf <= 60:
-                            fhr_check_dict[str(fhr)]['file'+str(nf+1)] = {
-                                'valid_date': (valid_date_dt
-                                               -datetime.timedelta(hours=12*nf)),
-                                'init_date': init_date_dt,
-                                'forecast_hour': str(fhr-(12*nf))
-                            }
-                            nf+=1
-                else:
                     fhr_check_dict[str(fhr)]['file1'] = {
                         'valid_date': valid_date_dt,
                         'init_date': init_date_dt,
@@ -1276,11 +1265,11 @@ def check_monthly_model_files(job_dict):
     fhr_list = list(
         np.asarray(np.unique(np.asarray(fhr_list, dtype=int)),dtype=str)
     )
-    if len(fhr_list) != 0:
+    if len(fhr_list) >= 49:
         model_files_exist = True
     else:
         model_files_exist = False
-    return model_files_exist
+    return model_files_exist, fhr_list
 
 
 def check_days6_10_model_files(job_dict):
@@ -1291,11 +1280,17 @@ def check_days6_10_model_files(job_dict):
                         job is running with (strings)
 
          Returns:
-             model_files_exist - if non-zero number of  model files
+             model_files_exist - if 80% of model files
                                  exist or not (boolean)
+             fhr_list          - list of forecast hours that model
+                                 files exist for (string)
     """
     valid_date_dt = datetime.datetime.strptime(
         job_dict['DATE']+job_dict['valid_hr_start'],
+        '%Y%m%d%H'
+    )
+    init_date_dt = datetime.datetime.strptime(
+        job_dict['CORRECT_INIT_DATE']+job_dict['init_hr_start'],
         '%Y%m%d%H'
     )
     verif_case_dir = os.path.join(
@@ -1303,15 +1298,16 @@ def check_days6_10_model_files(job_dict):
     )
     model = job_dict['MODEL']
     members = job_dict['members']
-    fhr_min = int(job_dict['fhr_start'])
-    fhr_max = int(job_dict['fhr_end'])
-    fhr_inc = 24
+    lead_seq = job_dict['CORRECT_LEAD_SEQ'].split(',')
+    fhr_min = int(lead_seq[0])
+    fhr_max = int(lead_seq[-1])
+    fhr_inc = 12
     fhr = fhr_min
     fhr_list = []
     fhr_check_dict = {}
     while fhr <= fhr_max:
         fhr_check_dict[str(fhr)] = {}
-        init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
+        valid_date_dt = init_date_dt + datetime.timedelta(hours=fhr)
         if job_dict['JOB_GROUP'] == 'reformat_data':
             if job_dict['VERIF_CASE'] in ['grid2grid', 'grid2obs']:
                 if job_dict['VERIF_TYPE'] in ['anom', 'PrepBufr',
@@ -1335,16 +1331,11 @@ def check_days6_10_model_files(job_dict):
                                                          model+'.ens'+mb
                                                          +'.{init?fmt=%Y%m%d%H}.'
                                                          +'f{lead?fmt=%3H}')
-                    if fhr == 240:
-                        nf = 0
-                        while nf <= 10:
-                            fhr_check_dict[str(fhr)]['file'+str(nf+1)] = {
-                                'valid_date': (valid_date_dt
-                                               -datetime.timedelta(hours=12*nf)),
-                                'init_date': init_date_dt,
-                                'forecast_hour': str(fhr-(12*nf))
-                            }
-                            nf+=1
+                    fhr_check_dict[str(fhr)]['file1'] = {
+                        'valid_date': valid_date_dt,
+                        'init_date': init_date_dt,
+                        'forecast_hour': str(fhr)
+                    }
         elif job_dict['JOB_GROUP'] == 'assemble_data':
             if job_dict['VERIF_CASE'] == 'grid2obs':
                 if job_dict['VERIF_TYPE'] == 'PrepBufr' \
@@ -1362,16 +1353,11 @@ def check_days6_10_model_files(job_dict):
                                                      +'_{valid?fmt=%Y%m%d}'
                                                      +'_{valid?fmt=%H}0000V'
                                                      +'_ens.nc')
-                    if fhr == 240:
-                        nf = 0
-                        while nf <= 10:
-                            fhr_check_dict[str(fhr)]['file'+str(nf+1)] = {
-                                'valid_date': (valid_date_dt
-                                               -datetime.timedelta(hours=12*nf)),
-                                'init_date': init_date_dt,
-                                'forecast_hour': str(fhr-(12*nf))
-                            }
-                            nf+=1
+                    fhr_check_dict[str(fhr)]['file1'] = {
+                        'valid_date': valid_date_dt,
+                        'init_date': init_date_dt,
+                        'forecast_hour': str(fhr)
+                    }
         fhr+=fhr_inc
     for fhr_key in list(fhr_check_dict.keys()):
         fhr_key_files_exist_list = []
@@ -1407,11 +1393,11 @@ def check_days6_10_model_files(job_dict):
     fhr_list = list(
         np.asarray(np.unique(np.asarray(fhr_list, dtype=int)),dtype=str)
     )
-    if len(fhr_list) != 0:
+    if len(fhr_list) >= 9:
         model_files_exist = True
     else:
         model_files_exist = False
-    return model_files_exist
+    return model_files_exist, fhr_list
 
 
 def check_weeks3_4_model_files(job_dict):
@@ -1422,11 +1408,17 @@ def check_weeks3_4_model_files(job_dict):
                         job is running with (strings)
 
          Returns:
-             model_files_exist - if non-zero number of  model files
+             model_files_exist - if 80% of model files
                                  exist or not (boolean)
+             fhr_list          - list of forecast hours that model
+                                 files exist for (string)
     """
     valid_date_dt = datetime.datetime.strptime(
         job_dict['DATE']+job_dict['valid_hr_start'],
+        '%Y%m%d%H'
+    )
+    init_date_dt = datetime.datetime.strptime(
+        job_dict['CORRECT_INIT_DATE']+job_dict['init_hr_start'],
         '%Y%m%d%H'
     )
     verif_case_dir = os.path.join(
@@ -1434,15 +1426,16 @@ def check_weeks3_4_model_files(job_dict):
     )
     model = job_dict['MODEL']
     members = job_dict['members']
-    fhr_min = int(job_dict['fhr_start'])
-    fhr_max = int(job_dict['fhr_end'])
-    fhr_inc = 24
+    lead_seq = job_dict['CORRECT_LEAD_SEQ'].split(',')
+    fhr_min = int(lead_seq[0])
+    fhr_max = int(lead_seq[-1])
+    fhr_inc = 12
     fhr = fhr_min
     fhr_list = []
     fhr_check_dict = {}
     while fhr <= fhr_max:
         fhr_check_dict[str(fhr)] = {}
-        init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
+        valid_date_dt = init_date_dt + datetime.timedelta(hours=fhr)
         if job_dict['JOB_GROUP'] == 'reformat_data':
             if job_dict['VERIF_CASE'] in ['grid2grid', 'grid2obs']:
                 if job_dict['VERIF_TYPE'] in ['anom', 'PrepBufr',
@@ -1466,16 +1459,11 @@ def check_weeks3_4_model_files(job_dict):
                                                          model+'.ens'+mb
                                                          +'.{init?fmt=%Y%m%d%H}.'
                                                          +'f{lead?fmt=%3H}')
-                    if fhr == 672:
-                        nf = 0
-                        while nf <= 28:
-                            fhr_check_dict[str(fhr)]['file'+str(nf+1)] = {
-                                'valid_date': (valid_date_dt
-                                               -datetime.timedelta(hours=12*nf)),
-                                'init_date': init_date_dt,
-                                'forecast_hour': str(fhr-(12*nf))
-                            }
-                            nf+=1
+                    fhr_check_dict[str(fhr)]['file1'] = {
+                        'valid_date': valid_date_dt,
+                        'init_date': init_date_dt,
+                        'forecast_hour': str(fhr)
+                    }
         elif job_dict['JOB_GROUP'] == 'assemble_data':
             if job_dict['VERIF_CASE'] == 'grid2obs':
                 if job_dict['VERIF_TYPE'] == 'PrepBufr' \
@@ -1493,16 +1481,11 @@ def check_weeks3_4_model_files(job_dict):
                                                      +'_{valid?fmt=%Y%m%d}'
                                                      +'_{valid?fmt=%H}0000V'
                                                      +'_ens.nc')
-                    if fhr == 672:
-                        nf = 0
-                        while nf <= 28:
-                            fhr_check_dict[str(fhr)]['file'+str(nf+1)] = {
-                                'valid_date': (valid_date_dt
-                                               -datetime.timedelta(hours=12*nf)),
-                                'init_date': init_date_dt,
-                                'forecast_hour': str(fhr-(12*nf))
-                            }
-                            nf+=1
+                    fhr_check_dict[str(fhr)]['file1'] = {
+                        'valid_date': valid_date_dt,
+                        'init_date': init_date_dt,
+                        'forecast_hour': str(fhr)
+                    }
         fhr+=fhr_inc
     for fhr_key in list(fhr_check_dict.keys()):
         fhr_key_files_exist_list = []
@@ -1538,11 +1521,11 @@ def check_weeks3_4_model_files(job_dict):
     fhr_list = list(
         np.asarray(np.unique(np.asarray(fhr_list, dtype=int)),dtype=str)
     )
-    if len(fhr_list) != 0:
+    if len(fhr_list) >= 23:
         model_files_exist = True
     else:
         model_files_exist = False
-    return model_files_exist
+    return model_files_exist, fhr_list
 
 
 def check_model_files(job_dict):
