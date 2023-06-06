@@ -1,3 +1,5 @@
+#!/bin/bash
+
 set -x
 
 mkdir -p $DATA/plots
@@ -12,8 +14,6 @@ mkdir -p $PRUNEDIR
 
 model1=`echo $MODELNAME | tr a-z A-Z`
 export model1
-
-module load imagemagick/7.0.8-7
 
 STARTDATE=${VDATE}00
 ENDDATE=${PDYm31}00
@@ -33,7 +33,9 @@ while [ $DATE -ge $ENDDATE ]; do
         fi
 
 	sed "s/$model1/$MODELNAME/g" $STATDIR/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat > $STATDIR/temp.stat
-	mv $STATDIR/temp.stat $STATDIR/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat
+	sed "s/FULL/FireWx/g" $STATDIR/temp.stat > $STATDIR/temp2.stat
+	mv $STATDIR/temp2.stat $STATDIR/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat
+	rm -f $STATDIR/temp*stat
 
 	DATE=`$NDATE -24 $DATE`
 
@@ -51,30 +53,34 @@ do
 	export datetyp=VALID
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
-        mv ${DATA}/lead_average* ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
+        mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
 
 	export plottyp=valid_hour
 	export datetyp=INIT
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
-        mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
+        mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
 
 	if [ $varb = DPT ]
 	then 
 		export plottyp=threshold_average
 		export datetyp=INIT
+		export linetype=CTC
+		export stat=fbias
                 export thresh=">=277.59, >=283.15, >=288.7, >=294.26"
 		sh $USHevs/${COMPONENT}/py_plotting.config_thresh
 
-		mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.threshmean.firewx.png
+		mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png
 	elif [ $varb = RH ]
 	then
 		export plottyp=threshold_average
 		export datetyp=INIT
+		export linetype=CTC
+		export stat=fbias
 		export thresh="<=15, <=20, <=25, <=30"
 		sh $USHevs/${COMPONENT}/py_plotting.config_thresh
 
-		mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.threshmean.firewx.png
+		mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png
 	fi
 done
 
@@ -96,13 +102,13 @@ do
 	export datetyp=VALID
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
-        mv ${DATA}/lead_average* ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
+        mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
 
 	export plottyp=valid_hour
 	export datetyp=INIT
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
-	mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
+	mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
 
 done
 
@@ -118,13 +124,13 @@ do
 	export datetyp=VALID
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
-        mv ${DATA}/lead_average* ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
+        mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
 
 	export plottyp=valid_hour
 	export datetyp=INIT
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
-	mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
+	mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
 done
 
 for varb in PBL
@@ -139,19 +145,22 @@ do
 	export datetyp=VALID
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
-	mv ${DATA}/lead_average* ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
+	mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
 
 	export plottyp=valid_hour
 	export datetyp=INIT
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
-	mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
+	mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
 
 done
 
+cd ${PLOTDIR}
+tar -cvf evs.plots.${MODELNAME}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar *png
+        
+mkdir -m 775 -p $COMOUTplots
+cp evs.plots.${MODELNAME}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
 
 exit
-
-
 
 
