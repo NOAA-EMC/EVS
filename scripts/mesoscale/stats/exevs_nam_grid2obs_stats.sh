@@ -55,6 +55,17 @@ last_cyc=21
 # NEST_LIST="conus ak spc_otlk subreg"
 NEST_LIST="namer conus conusc ak akc spc_otlk subreg"
 # NEST_LIST="conus ak spc_otlk"
+# NEST_LIST="namer"
+# NEST_LIST="conus"
+# NEST_LIST="conusc"
+# NEST_LIST="ak"
+# NEST_LIST="akc"
+# NEST_LIST="spc_otlk"
+# NEST_LIST="subreg"
+
+
+
+
 
 VERIF_TYPES="raob metar"
 
@@ -266,17 +277,17 @@ echo "*****************************"
 export job_type="gather"
 export njob=1
 for VERIF_TYPE in $VERIF_TYPES; do
-	export VERIF_TYPE=$VERIF_TYPE
-	if [ $RUN_ENVIR = nco ]; then
-		export evs_run_mode="production"
-		source $config
-	else
-		export evs_run_mode=$evs_run_mode
-		source $config
-	fi
-        if [ ${#VAR_NAME_LIST} -lt 1 ]; then
-                continue
-        fi
+    export VERIF_TYPE=$VERIF_TYPE
+    if [ $RUN_ENVIR = nco ]; then
+	export evs_run_mode="production"
+	source $config
+    else
+	export evs_run_mode=$evs_run_mode
+	source $config
+    fi
+    if [ ${#VAR_NAME_LIST} -lt 1 ]; then
+        continue
+    fi
 
     # Create Output Directories
     python $USHevs/mesoscale/mesoscale_create_output_dirs.py
@@ -377,7 +388,7 @@ echo "*****************************"
 #-- 
 #-- echo "*****************************"
 #-- echo "Gather2 jobs begin"
-#-- date 
+#-- date
 #-- echo "*****************************"
 #-- 
 #-- # Run All NAM grid2obs/stats Gather 2 Jobs
@@ -413,7 +424,7 @@ echo "*****************************"
 #-- 
 #-- echo "*****************************"
 #-- echo "Gather2 jobs done"
-#-- date 
+#-- date
 #-- echo "*****************************"
 #-- 
 
