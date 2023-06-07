@@ -60,7 +60,89 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 ################################################
 reformat_data_obs_jobs_dict = {
     'anom': {},
-    'pres': {},
+    'pres_lvls': {},
+    'ENSO': {},
+    'OLR': {},
+    'precip': {},
+    'seaice': {},
+    'sst': {},
+}
+reformat_data_gefs_jobs_dict = {
+    'pres_lvls': {
+        'GeoHeightAnom': {'env': {'var1_name': 'HGT',
+                                  'var1_levels': 'P500',
+                                  'met_config_overrides': (
+                                      "'climo_mean = obs;'"
+                                  )},
+                          'commands': [sub_util.metplus_command(
+                                           'GenEnsProd_fcstSUBSEASONAL_'
+                                           +'WeeklyNetCDF.conf'
+                                       ),
+                                       sub_util.metplus_command(
+                                           'GridStat_fcstSUBSEASONAL_'
+                                           +'obsGFS_climoERA5_'
+                                           +'WeeklyNetCDF.conf'
+                                       ),
+                                       sub_util.python_command(
+                                           'subseasonal_stats_grid2grid'
+                                           '_create_weekly_anomaly.py',
+                                           ['HGT_P500',
+                                            os.path.join(
+                                                '$DATA',
+                                                '${VERIF_CASE}_${STEP}',
+                                                'METplus_output',
+                                                '${RUN}.$DATE',
+                                                '$MODEL', '$VERIF_CASE',
+                                                'grid_stat_${VERIF_TYPE}_'
+                                                +'${job_name}_'
+                                                +'{lead?fmt=%2H}0000L_'
+                                                +'{valid?fmt=%Y%m%d}_'
+                                                +'{valid?fmt=%H}0000V_pairs.nc'
+                                            )]
+                                       )]},
+    },
+    'anom': {},
+    'ENSO': {},
+    'OLR': {},
+    'precip': {},
+    'seaice': {},
+    'sst': {},
+}
+reformat_data_cfs_jobs_dict = {
+    'pres_lvls': {
+        'GeoHeightAnom': {'env': {'var1_name': 'HGT',
+                                  'var1_levels': 'P500',
+                                  'met_config_overrides': (
+                                      "'climo_mean = obs;'"
+                                  )},
+                          'commands': [sub_util.metplus_command(
+                                           'GenEnsProd_fcstCFS_'
+                                           +'WeeklyNetCDF.conf'
+                                       ),
+                                       sub_util.metplus_command(
+                                           'GridStat_fcstSUBSEASONAL_'
+                                           +'obsGFS_climoERA5_'
+                                           +'WeeklyNetCDF.conf'
+                                       ),
+                                       sub_util.python_command(
+                                           'subseasonal_stats_grid2grid'
+                                           '_create_weekly_anomaly.py',
+                                           ['HGT_P500',
+                                            os.path.join(
+                                                '$DATA',
+                                                '${VERIF_CASE}_${STEP}',
+                                                'METplus_output',
+                                                '${RUN}.$DATE',
+                                                '$MODEL', '$VERIF_CASE',
+                                                'grid_stat_${VERIF_TYPE}_'
+                                                +'${job_name}_'
+                                                +'{lead?fmt=%2H}0000L_'
+                                                +'{valid?fmt=%Y%m%d}_'
+                                                +'{valid?fmt=%H}0000V_pairs.nc'
+                                            )]
+                                       )]},
+    },
+    'anom': {},
     'ENSO': {},
     'OLR': {},
     'precip': {},
@@ -101,33 +183,37 @@ reformat_data_model_jobs_dict = {
     'ENSO': {},
     'OLR': {},
     'precip': {},
-    'pres': {
+    'pres_lvls': {
         #'GeoHeightAnom': {'env': {'var1_name': 'HGT',
                                   #'var1_levels': 'P500',
                                   #'met_config_overrides': (
-                                      #"'climo_mean = fcst;'"
+                                      #"'climo_mean = obs;'"
                                   #)},
                           #'commands': [sub_util.metplus_command(
+                                           #'GenEnsProd_fcstSUBSEASONAL_'
+                                           #+'WeeklyNetCDF.conf'
+                                       #),
+                                       #sub_util.metplus_command(
                                            #'GridStat_fcstSUBSEASONAL_'
-                                            #+'obsGFS_climoERA5_'
-                                            #+'NetCDF.conf'
+                                           #+'obsGFS_climoERA5_'
+                                           #+'WeeklyNetCDF.conf'
                                        #),
                                        #sub_util.python_command(
                                            #'subseasonal_stats_grid2grid'
-                                           #'_create_anomaly.py',
+                                           #'_create_weekly_anomaly.py',
                                            #['HGT_P500',
                                             #os.path.join(
                                                 #'$DATA',
                                                 #'${VERIF_CASE}_${STEP}',
                                                 #'METplus_output',
-                                                #'${RUN}.{valid?fmt=%Y%m%d}',
+                                                #'${RUN}.$DATE',
                                                 #'$MODEL', '$VERIF_CASE',
                                                 #'grid_stat_${VERIF_TYPE}_'
                                                 #+'${job_name}_'
                                                 #+'{lead?fmt=%2H}0000L_'
                                                 #+'{valid?fmt=%Y%m%d}_'
                                                 #+'{valid?fmt=%H}0000V_pairs.nc'
-                                             #)]
+                                            #)]
                                        #)]},
     },
     'seaice': {
@@ -168,6 +254,13 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
               +verif_type+" for job group "+JOB_GROUP)
         VERIF_CASE_STEP_abbrev_type = (VERIF_CASE_STEP_abbrev+'_'
                                        +verif_type)
+        if verif_type == 'pres_lvls':
+            for model_idx in range(len(model_list)):
+                model = model_list[model_idx]
+                if model == 'gefs':
+                    JOB_GROUP_jobs_dict = reformat_data_gefs_jobs_dict
+                elif model == 'cfs':
+                    JOB_GROUP_jobs_dict = reformat_data_cfs_jobs_dict
         # Read in environment variables for verif_type
         for verif_type_job in list(JOB_GROUP_jobs_dict[verif_type].keys()):
             # Initialize job environment dictionary
@@ -192,17 +285,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
             ) 
             # Loop through and write job script for dates and models
             if JOB_GROUP == 'reformat_data':
-                if verif_type in ['sst', 'seaice', 'anom']:
+                if verif_type in ['sst', 'seaice', 'anom', 'pres_lvls']:
                     job_env_dict['valid_hr_start'] = '00'
                     job_env_dict['valid_hr_end'] = '00' #12
                     job_env_dict['valid_hr_inc'] = '12'
-                if verif_type == 'pres' \
-                        and verif_type_job == 'GeoHeightAnom':
-                    if int(job_env_dict['valid_hr_start']) - 12 > 0:
-                        job_env_dict['valid_hr_start'] = str(
-                            int(job_env_dict['valid_hr_start']) - 12
-                        )
-                        job_env_dict['valid_hr_inc'] = '12'
             valid_start_date_dt = datetime.datetime.strptime(
                 start_date+job_env_dict['valid_hr_start'],
                 '%Y%m%d%H'
@@ -234,11 +320,6 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                     job.write('set -x\n')
                     job.write('\n')
                     # Set any environment variables for special cases
-                    #if JOB_GROUP == 'reformat_data':
-                        #if verif_type == 'pres':
-                            #job_env_dict['TRUTH'] = os.environ[
-                                #VERIF_CASE_STEP_abbrev_type+'_truth_name_list'
-                            #].split(' ')[model_idx]
                     # Do file checks
                     all_truth_file_exist = False
                     model_files_exist = False
@@ -258,6 +339,9 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                     if JOB_GROUP == 'reformat_data':
                         if verif_type == 'anom' \
                                 and verif_type_job == 'TempAnom2m':
+                            check_truth_files = True
+                        if verif_type == 'pres_lvls' \
+                                and verif_type_job == 'GeoHeightAnom':
                             check_truth_files = True
                         else:
                             check_truth_files = False

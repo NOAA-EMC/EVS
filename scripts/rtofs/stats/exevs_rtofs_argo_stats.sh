@@ -10,80 +10,80 @@ set -x
 
 # check if argo nc file exists; exit if not
 if [ ! -s $COMINfcst/rtofs.$VDATE/$RUN/argo.$VDATE.nc ] ; then
-  echo "Missing argo nc file for $VDATE" 
-  exit
+   echo "Missing Argo data file for $VDATE"
+   exit 0
 fi
 
 # check if fcst files exist; exit if not
 #   f000 forecast for VDATE
 if [ ! -s $COMINfcst/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_ice.$RUN.nc ] ; then
    echo "Missing RTOFS f000 ice file for $VDATE" 
-   exit
+   exit 0
 fi
 
 if [ ! -s $COMINfcst/rtofs.$VDATE/$RUN/rtofs_glo_3dz_f000_daily_3ztio.$RUN.nc ] ; then
    echo "Missing RTOFS f000 3dz file for $VDATE" 
-   exit
+   exit 0
 fi
 
 #   f024 forecast for VDATE was issued 1 day earlier
 INITDATE=$(date --date="$VDATE -1 day" +%Y%m%d)
 if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f024_daily_3ztio.$RUN.nc ] ; then
    echo "Missing RTOFS f024 3dz file for $VDATE" 
-   exit
+   exit 0
 fi
 
 #   f048 forecast for VDATE was issued 2 days earlier
 INITDATE=$(date --date="$VDATE -2 days" +%Y%m%d)
 if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f048_daily_3ztio.$RUN.nc ] ; then
    echo "Missing RTOFS f048 3dz file for $VDATE" 
-   exit 
+   exit 0
 fi
 
 #   f072 forecast for VDATE was issued 3 days earlier
 INITDATE=$(date --date="$VDATE -3 days" +%Y%m%d)
 if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f072_daily_3ztio.$RUN.nc ] ; then
    echo "Missing RTOFS f072 3dz file for $VDATE" 
-   exit 
+   exit 0
 fi
 
 #   f096 forecast for VDATE was issued 4 days earlier
 INITDATE=$(date --date="$VDATE -4 days" +%Y%m%d)
 if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f096_daily_3ztio.$RUN.nc ] ; then
    echo "Missing RTOFS f096 3dz file for $VDATE" 
-   exit 
+   exit 0
 fi
 
 #   f120 forecast for VDATE was issued 5 days earlier
 INITDATE=$(date --date="$VDATE -5 days" +%Y%m%d)
 if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f120_daily_3ztio.$RUN.nc ] ; then
    echo "Missing RTOFS f120 3dz file for $VDATE" 
-   exit 
+   exit 0
 fi
 
 #   f144 forecast for VDATE was issued 6 days earlier
 INITDATE=$(date --date="$VDATE -6 days" +%Y%m%d)
 if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f144_daily_3ztio.$RUN.nc ] ; then
    echo "Missing RTOFS f144 3dz file for $VDATE" 
-   exit 
+   exit 0
 fi
 
 #   f168 forecast for VDATE was issued 7 days earlier
 INITDATE=$(date --date="$VDATE -7 days" +%Y%m%d)
 if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f168_daily_3ztio.$RUN.nc ] ; then
    echo "Missing RTOFS f168 3dz file for $VDATE" 
-   exit 
+   exit 0
 fi
 
 #   f192 forecast for VDATE was issued 8 days earlier
 INITDATE=$(date --date="$VDATE -8 days" +%Y%m%d)
 if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f192_daily_3ztio.$RUN.nc ] ; then
    echo "Missing RTOFS f192 3dz file for $VDATE" 
-   exit 
+   exit 0
 fi
 
 # create subregions using ice mask; call the rtofs_regions.sh script
-$EVS/scripts/$COMPONENT/$STEP/rtofs_regions.sh
+$HOMEevs/scripts/$COMPONENT/$STEP/rtofs_regions.sh
 
 # get the months for the climo files:
 #     for day < 15, use the month before + valid month
@@ -149,9 +149,9 @@ for levl in 0 50 125 200 400 700 1000 1400; do
 done
 
 # check if stat files exist; exit if not
-if [ ! -s $COMOUTsmall/point_stat_RTOFS_ARGO_${VAR}_Z1000_1920000L_${VDATE}_000000V.stat ] ; then
+if [ ! -s $COMOUTsmall/point_stat_RTOFS_ARGO_${VAR}_Z1400_1920000L_${VDATE}_000000V.stat ] ; then
    echo "Missing RTOFS_ARGO_$VAR stat files for $VDATE" 
-   exit
+   exit 0
 fi
 
 # sum small stat files into one big file using Stat_Analysis
@@ -161,7 +161,7 @@ run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
 -c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstRTOFS.conf
 
 # archive final stat file
-rsync -av $COMOUTfinal $ARCHevs
+#rsync -av $COMOUTfinal $ARCHevs
 
 exit
 

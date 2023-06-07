@@ -63,11 +63,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
         VERIF_CASE_STEP_abbrev_type = (VERIF_CASE_STEP_abbrev+'_'
                                        +VERIF_CASE_STEP_type)
         # Read in VERIF_CASE_STEP_type related environment variables
-        if VERIF_CASE_STEP_type == 'pres':
-            VERIF_CASE_STEP_pres_truth_format_list = os.environ[
-                VERIF_CASE_STEP_abbrev+'_pres_truth_file_format_list'
-            ].split(' ')
-        elif VERIF_CASE_STEP_type == 'OLR':
+        if VERIF_CASE_STEP_type == 'OLR':
             VERIF_CASE_STEP_OLR_truth_format_list = os.environ[
                 VERIF_CASE_STEP_abbrev+'_OLR_truth_file_format_list'
             ].split(' ')
@@ -82,11 +78,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 VERIF_CASE_STEP_abbrev+'_precip_file_accum_list'
             ].split(' ')
         # Set valid hours
-        if VERIF_CASE_STEP_type in ['pres', 'OLR']: 
-            VERIF_CASE_STEP_type_valid_hr_list = os.environ[
-                VERIF_CASE_STEP_abbrev_type+'_vhr_list'
-            ].split(' ')
-        elif VERIF_CASE_STEP_type == 'precip':
+        if VERIF_CASE_STEP_type == 'precip':
             (CCPA24hr_valid_hr_start, CCPA24hr_valid_hr_end,
              CCPA24hr_valid_hr_inc) = sub_util.get_obs_valid_hrs(
                  '24hrCCPA'
@@ -138,6 +130,19 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 )
             ]
             VERIF_CASE_STEP_type_valid_hr_list = ECMWF_valid_hr_list
+        elif VERIF_CASE_STEP_type == 'pres_lvls':
+            (GFS_valid_hr_start, GFS_valid_hr_end,
+             GFS_valid_hr_inc) = sub_util.get_obs_valid_hrs(
+                 'GFS'
+            )
+            GFS_valid_hr_list = [
+                str(x).zfill(2) for x in range(
+                    GFS_valid_hr_start,
+                    GFS_valid_hr_end+GFS_valid_hr_inc,
+                    GFS_valid_hr_inc
+                )
+            ]
+            VERIF_CASE_STEP_type_valid_hr_list = GFS_valid_hr_list
         else:
             VERIF_CASE_STEP_type_valid_hr_list = ['12']
         # Set initialization hours
@@ -225,7 +230,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                 fhr, model_file_format,
                                 model_fcst_dest_file_format 
                             )
-                elif VERIF_CASE_STEP_type == 'pres':
+                elif VERIF_CASE_STEP_type == 'pres_lvls':
                     mbr = 1
                     total = int(members)
                     while mbr <= total:
@@ -251,28 +256,50 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                                 model+'.pgbf.ens'+mb+'.{init?fmt=%Y%m%d%H}.'
                                 +'f{lead?fmt=%3H}'
                             )
-                        #if time['init_time'].strftime('%H') in ['00'] \
-                                #and int(time['forecast_hour']) % 24 == 0:
-                        if int(time['forecast_hour']) == 168:
-                            nf = 0
-                            while nf <= 12:
-                                sub_util.get_model_file(
-                                    time['valid_time'] \
-                                    - datetime.timedelta(hours=12*nf),
-                                    time['init_time'],
-                                    str(int(time['forecast_hour'])-(12*nf)),
-                                    model_file_format,
-                                    model_fcst_dest_file_format
-                                )
-                                #sub_util.get_model_file(
-                                    #time['valid_time'] \
-                                    #- datetime.timedelta(hours=12),
-                                    #time['init_time'],
-                                    #str(fhr),
-                                    #model_file_format,
-                                    #model_fcst_dest_file_format
-                                #)
-                                nf+=1
+                        for time_length in ['weekly', 'days6_10', 'weeks3_4']:
+                            if time_length == 'weekly':
+                                if (time['forecast_hour']) in ['168',
+                                                               '336',
+                                                               '504',
+                                                               '672',
+                                                               '840']:
+                                    nf = 0
+                                    while nf <= 14:
+                                        sub_util.get_model_file(
+                                            (time['valid_time']
+                                             -datetime.timedelta(hours=12*nf)),
+                                            time['init_time'],
+                                            str(int(time['forecast_hour'])-(12*nf)),
+                                            model_file_format,
+                                            model_fcst_dest_file_format
+                                        )
+                                        nf+=1
+                            if time_length == 'days6_10':
+                                if int(time['forecast_hour']) == 240:
+                                    nf = 0
+                                    while nf <= 10:
+                                        sub_util.get_model_file(
+                                            (time['valid_time']
+                                             -datetime.timedelta(hours=12*nf)),
+                                            time['init_time'],
+                                            str(int(time['forecast_hour'])-(12*nf)),
+                                            model_file_format,
+                                            model_fcst_dest_file_format
+                                        )
+                                        nf+=1
+                            if time_length == 'weeks3_4':
+                                if int(time['forecast_hour']) == 672:
+                                    nf = 0
+                                    while nf <= 28:
+                                        sub_util.get_model_file(
+                                            (time['valid_time']
+                                             -datetime.timedelta(hours=12*nf)),
+                                            time['init_time'],
+                                            str(int(time['forecast_hour'])-(12*nf)),
+                                            model_file_format,
+                                            model_fcst_dest_file_format
+                                        )
+                                        nf+=1
                         del model_file_format
                         mbr = mbr+1
                 elif VERIF_CASE_STEP_type == 'anom':
@@ -462,30 +489,30 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                         )
                     accum_valid = (accum_valid -
                                    datetime.timedelta(hours=6))
-            elif VERIF_CASE_STEP_type == 'pres':
+            elif VERIF_CASE_STEP_type == 'pres_lvls':
                 # GFS Analysis
-                pres_truth_file_format = os.path.join(
+                pres_lvls_truth_file_format = os.path.join(
                     COMINobs+'.{valid?fmt=%Y%m%d}', 'gfs',
                     'gfs.{valid?fmt=%Y%m%d%H}.anl'
                 )
                 VERIF_CASE_STEP_gfs_dir = os.path.join(
                     VERIF_CASE_STEP_data_dir, 'gfs'
                 )
-                pres_dest_file_format = os.path.join(
+                if not os.path.exists(VERIF_CASE_STEP_gfs_dir):
+                    os.makedirs(VERIF_CASE_STEP_gfs_dir)
+                pres_lvls_dest_file_format = os.path.join(
                     VERIF_CASE_STEP_gfs_dir,
                     'gfs.{valid?fmt=%Y%m%d%H}.anl'
                 )
-                if not os.path.exists(VERIF_CASE_STEP_gfs_dir):
-                    os.makedirs(VERIF_CASE_STEP_gfs_dir)
+                # Weeks 3-4 obs span covers weekly and Days 6-10 so only
+                # need to loop once to retrieve data
                 nf = 0
-                while nf <= 14:
-                    sub_util.get_model_file(
+                while nf <= 28:
+                    sub_util.get_truth_file(
                         (VERIF_CASE_STEP_type_valid_time
                         -datetime.timedelta(hours=12*nf)),
-                        (VERIF_CASE_STEP_type_valid_time
-                        -datetime.timedelta(hours=12*nf)),
-                        'anl', pres_truth_file_format,
-                        pres_dest_file_format
+                        pres_lvls_truth_file_format,
+                        pres_lvls_dest_file_format
                     )
                     nf+=1
             elif VERIF_CASE_STEP_type == 'anom':
