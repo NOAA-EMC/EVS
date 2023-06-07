@@ -135,8 +135,13 @@ init_hrs = list(range(int(init_hr_start),
                       int(init_hr_end)+int(init_hr_inc),
                       int(init_hr_inc)))
 fhrs = list(range(int(fhr_start), int(fhr_end)+int(fhr_inc), int(fhr_inc)))
-if fhrs == list(range(0, 240+6, 6)) and evs_run_mode == 'production':
-    fhrs = list(range(0,72,6)) + list(range(72,240+24,24))
+if VERIF_CASE == 'grid2obs' and evs_run_mode == 'production':
+    if fhrs == list(range(0, 240+6, 6)) and VERIF_TYPE == 'pres_levs':
+        fhrs = list(range(0,72,6)) + list(range(72,240+24,24))
+    if fhrs == list(range(0, 240+3, 3)) and VERIF_TYPE == 'sfc':
+        fhrs_on = list(range(0,72,6)) + list(range(72,240+24,24))
+        fhrs_off = list(range(3,75,6)) + list(range(75,219+24,24))
+        fhrs = sorted(fhrs_off + fhrs_on)
 
 # Set up plot information dictionary
 original_plot_info_dict = {
@@ -156,8 +161,6 @@ obs_var_prod = list(
     itertools.product([obs_var_name], obs_var_level_list,
                        obs_var_thresh_list)
 )
-print(len(fcst_var_prod))
-print(len(obs_var_prod))
 if len(fcst_var_prod) == len(obs_var_prod):
     var_info = []
     for v in range(len(fcst_var_prod)):
