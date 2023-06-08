@@ -204,7 +204,7 @@ def check_MODELS(MODELS):
                      + f" MODELS must be a string. Check the plotting"
                      + f" configuration file.")
         #sys.exit(1)
-    if not re.search(r'(^[ A-Za-z0-9,\-_]+)$', MODELS):
+    if not re.search(r'(^[ A-Za-z0-9,\-_?=]+)$', MODELS):
         sys.exit(f"The provided MODELS ('{MODELS}') is not valid. MODELS may"
                      + f" contain letters, numbers, hyphens, underscores,"
                      + f" commas, and spaces only. Check the plotting"

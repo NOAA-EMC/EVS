@@ -3,7 +3,7 @@
 # Name:          threshold_average.py
 # Contact(s):    Marcel Caron
 # Developed:     Nov. 22, 2021 by Marcel Caron 
-# Last Modified: May 19, 2023 by Marcel Caron             
+# Last Modified: Jun. 7, 2023 by Marcel Caron             
 # Title:         Line plot of verification metric as a function of 
 #                forecast threshold
 # Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
@@ -28,6 +28,7 @@ import matplotlib.image as mpimg
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from datetime import datetime, timedelta as td
 from decimal import Decimal
+from urllib.parse import urlparse, parse_qs
 
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
@@ -54,9 +55,10 @@ reference = Reference()
 
 
 def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger, 
-                      date_range: tuple, model_list: list, num: int = 0, 
-                      levels: list = ['500'], flead='all', thresh: list = ['<20'], 
-                      metric_name: str = 'BCRMSE', 
+                      date_range: tuple, model_list: list, 
+                      model_queries: list = [{}], num: int = 0, 
+                      levels: list = ['500'], flead='all', 
+                      thresh: list = ['<20'], metric_name: str = 'BCRMSE', 
                       y_min_limit: float = -10., y_max_limit: float = 10., 
                       y_lim_lock: bool = False, ylabel: str = '',  
                       date_type: str = 'VALID', date_hours: list = [0,6,12,18], 
@@ -119,18 +121,81 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
             frange_save_phrase = f'{flead[0]:03d}-F{flead[-1]:03d}'
         frange_string = f'Forecast Hour{frange_phrase}'
         frange_save_string = f'F{frange_save_phrase}'
-        df = df[df['LEAD_HOURS'].isin(flead)]
+        if any(model_queries):
+            for m, model in enumerate(model_list):
+                if 'shift' in model_queries[m]:
+                    flead_shift = [
+                        int(f)-int(model_queries[m]['shift'][0]) for f in flead
+                    ]
+                else:
+                    flead_shift = flead
+                if m == 0:
+                    df_tmp = df[
+                        (df['LEAD_HOURS'].isin(flead_shift))
+                        & (df['MODEL'] == model)
+                    ]
+                else:
+                    df_tmp2 = df[
+                        (df['LEAD_HOURS'].isin(flead_shift))
+                        & (df['MODEL'] == model)
+                    ]
+                    df_tmp = pd.concat([df_tmp, df_tmp2])
+            df = df_tmp
+        else:
+            df = df[df['LEAD_HOURS'].isin(flead)]
     elif isinstance(flead, tuple):
         frange_string = (f'Forecast Hours {flead[0]:02d}'
                          + u'\u2013' + f'{flead[1]:02d}')
         frange_save_string = f'F{flead[0]:03d}-F{flead[1]:03d}'
-        df = df[
-            (df['LEAD_HOURS'] >= flead[0]) & (df['LEAD_HOURS'] <= flead[1])
-        ]
+        if any(model_queries):
+            for m, model in enumerate(model_list):
+                if 'shift' in model_queries[m]:
+                    flead_shift = [
+                        int(f)-int(model_queries[m]['shift'][0]) for f in flead
+                    ]
+                else:
+                    flead_shift = flead
+                if m == 0:
+                    df_tmp = df[
+                        (df['LEAD_HOURS'] >= flead_shift[0])
+                        & (df['LEAD_HOURS'] <= flead_shift[1])
+                        & (df['MODEL'] == model)
+                    ]
+                else:
+                    df_tmp2 = df[
+                        (df['LEAD_HOURS'] >= flead_shift[0])
+                        & (df['LEAD_HOURS'] <= flead_shift[1])
+                        & (df['MODEL'] == model)
+                    ]
+                    df_tmp = pd.concat([df_tmp, df_tmp2])
+            df = df_tmp
+        else:
+            df = df[
+                (df['LEAD_HOURS'] >= flead[0]) & (df['LEAD_HOURS'] <= flead[1])
+            ]
     elif isinstance(flead, np.int):
         frange_string = f'Forecast Hour {flead:02d}'
         frange_save_string = f'F{flead:03d}'
-        df = df[df['LEAD_HOURS'] == flead]
+        if any(model_queries):
+            for m, model in enumerate(model_list):
+                if 'shift' in model_queries[m]:
+                    flead_shift = int(flead)-int(model_queries[m]['shift'][0])
+                else:
+                    flead_shift = flead
+                if m == 0:
+                    df_tmp = df[
+                        (df['LEAD_HOURS'] == flead_shift)
+                        & (df['MODEL'] == model)
+                    ]
+                else:
+                    df_tmp2 = df[
+                        (df['LEAD_HOURS'] == flead_shift)
+                        & (df['MODEL'] == model)
+                    ]
+                    df_tmp = pd.concat([df_tmp, df_tmp2])
+            df = df_tmp
+        else:
+            df = df[df['LEAD_HOURS'] == flead]
     else:
         e1 = f"Invalid forecast lead: \'{flead}\'"
         e2 = f"Please check settings for forecast leads."
@@ -254,6 +319,10 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     model_list = [
         str(m) 
         for (m, keep) in zip(model_list, cols_to_keep) if keep
+    ]
+    model_queries = [
+        m 
+        for (m, keep) in zip(model_queries, cols_to_keep) if keep
     ]
     if not all(cols_to_keep):
         logger.warning(
@@ -514,6 +583,30 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
             )
         else:
             model_plot_name = model_list[m]
+        if 'shift' in model_queries[m]:
+            if str(date_type).upper() == 'INIT':
+                dhs = [
+                    datetime.strptime(str(date_hour).zfill(2), '%H')
+                    for date_hour in date_hours
+                ]
+                dhs_shift = [
+                    dh+td(hours=int(model_queries[m]['shift'][0])) 
+                    for dh in dhs
+                ]
+                date_hours_shift = [
+                    dh_shift.strftime('%H') 
+                    for dh_shift in dhs_shift
+                ]
+                date_hours_shift_string = plot_util.get_name_for_listed_items(
+                    [
+                        str(date_hour_shift).zfill(2) 
+                        for date_hour_shift in date_hours_shift
+                    ],
+                    ', ', '', 'Z', '& ', ''
+                )
+                model_plot_name+=f" ({date_hours_shift_string})"
+            else:
+                model_plot_name+=model_queries[m]['shift'][0]+'H'
         if str(model_list[m]) not in pivot_metric:
             continue
         y_vals_metric = pivot_metric[str(model_list[m])].values
@@ -1057,6 +1150,13 @@ def main():
         )
     logger.debug('========================================')
 
+    models = []
+    model_queries = []
+    for model in MODELS:
+        parsed_model = urlparse(model)
+        models.append(parsed_model.path)
+        model_queries.append(parse_qs(parsed_model.query))
+
     metrics = METRICS
     date_range = (
         datetime.strptime(date_beg, '%Y%m%d'), 
@@ -1168,10 +1268,11 @@ def main():
                 logger.warning("Continuing ...")
                 continue
             df = df_preprocessing.get_preprocessed_data(
-                logger, STATS_DIR, PRUNE_DIR, OUTPUT_BASE_TEMPLATE, VERIF_CASE, VERIF_TYPE, 
-                LINE_TYPE, DATE_TYPE, date_range, EVAL_PERIOD, date_hours, 
-                FLEADS, requested_var, fcst_var_names, obs_var_names, MODELS, 
-                domain, INTERP, MET_VERSION, clear_prune_dir
+                logger, STATS_DIR, PRUNE_DIR, OUTPUT_BASE_TEMPLATE, VERIF_CASE, 
+                VERIF_TYPE, LINE_TYPE, DATE_TYPE, date_range, EVAL_PERIOD, 
+                date_hours, FLEADS, requested_var, fcst_var_names, 
+                obs_var_names, models, model_queries, domain, INTERP, 
+                MET_VERSION, clear_prune_dir
             )
             logger.info("test")
             if df is None:
@@ -1188,15 +1289,15 @@ def main():
                     continue
                 df_metric = df
                 plot_threshold_average(
-                    df_metric, logger, date_range, MODELS, num=num, 
-                    flead=FLEADS, levels=FCST_LEVELS, thresh=fcst_thresh, 
+                    df_metric, logger, date_range, models, 
+                    model_queries=model_queries, num=num, flead=FLEADS, 
+                    levels=FCST_LEVELS, thresh=fcst_thresh, 
                     metric_name=metric, date_type=DATE_TYPE, 
                     y_min_limit=Y_MIN_LIMIT, y_max_limit=Y_MAX_LIMIT, 
                     y_lim_lock=Y_LIM_LOCK, ylabel='Metric (unitless)', 
                     line_type=LINE_TYPE, verif_type=VERIF_TYPE, 
                     date_hours=date_hours, save_dir=SAVE_DIR, 
-                    eval_period=EVAL_PERIOD,
-                    display_averages=display_averages, 
+                    eval_period=EVAL_PERIOD, display_averages=display_averages, 
                     save_header=IMG_HEADER, plot_group=plot_group,
                     confidence_intervals=CONFIDENCE_INTERVALS, 
                     interp_pts=INTERP_PNTS,
