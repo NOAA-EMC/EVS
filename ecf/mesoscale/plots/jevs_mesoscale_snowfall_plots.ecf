@@ -77,7 +77,7 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # Developer Settings
 export DATA=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
-export COMIN=/lfs/h2/emc/vpppg/noscrub/marcel.caron/temp/test_stats/$NET/$evs_ver/stats/
+export COMIN=/lfs/h2/emc/vpppg/noscrub/mallory.row/evs_global_det_atmos_test/dev/com/$NET/$evs_ver/stats/
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/$STEP/$COMPONENT/
 export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
 export cyc=$(date -d "today" +"%H")
