@@ -90,6 +90,7 @@ elif job_type == 'gather':
     VERIF_TYPE = os.environ['VERIF_TYPE']
     njob = os.environ['njob']
 elif job_type in ['gather2','gather3']:
+    VERIF_TYPE = os.environ['VERIF_TYPE']
     njob = os.environ['njob']
 
 # Get expanded details from variable name
@@ -153,7 +154,7 @@ job_env_vars_dict = {
     'cyc': cyc,
     'PYTHONPATH': PYTHONPATH,
     'VERIF_CASE': VERIF_CASE,
-    'VERIF_TYPE': VERIF_TYPE,
+##    'VERIF_TYPE': VERIF_TYPE,
     'MODELNAME': MODELNAME,
     'MET_PLUS_PATH': MET_PLUS_PATH,
     'MET_PATH': MET_PATH,
@@ -255,6 +256,7 @@ elif job_type == 'generate':
         'exports': ['FHR_END','FHR_INCR']
     }
     if NEST == 'spc_otlk':
+        print('testing mask file RSRS')
         job_dependent_vars['MASK_POLY_LIST'] = {
             'exec_value': '',
             'bash_value': '',
@@ -263,23 +265,24 @@ elif job_type == 'generate':
                 glob.glob(os.path.join(
                     COMINspcotlk,f'spc_otlk.*',
                     f'spc_otlk.*.v*-{VDATE}12.G221*'
-                    '''
-                    MET_PLUS_OUT,VERIF_TYPE,'genvxmask',f'spc_otlk.{VDATE}',
-                    f'spc_otlk_*_v*-{VDATE}1200_for{VHOUR}Z*'
-                    '''
+                   # '''
+                   # MET_PLUS_OUT,VERIF_TYPE,'genvxmask',f'spc_otlk.{VDATE}',
+                   # f'spc_otlk_*_v*-{VDATE}1200_for{VHOUR}Z*'
+                   # '''
                 ))
             ) + '"',
             'bash_conditional_else_value': '"' + ', '.join(
                 glob.glob(os.path.join(
                     COMINspcotlk,f'spc_otlk.*',
                     f'spc_otlk.*.v{VDATE}*G221*'
-                    '''
-                    MET_PLUS_OUT,VERIF_TYPE,'genvxmask',f'spc_otlk.{VDATE}',
-                    f'spc_otlk_*_v{VDATE}*for{VHOUR}Z*'
-                    '''
+                   # '''
+                   # MET_PLUS_OUT,VERIF_TYPE,'genvxmask',f'spc_otlk.{VDATE}',
+                   # f'spc_otlk_*_v{VDATE}*for{VHOUR}Z*'
+                   # '''
                 ))
             ) + '"'
         }
+        print('maskRSRS',job_dependent_vars['MASK_POLY_LIST'])
     else:
         job_env_vars_dict['MASK_POLY_LIST'] = MASK_POLY_LIST
     job_dependent_vars['FHR_START'] = {
@@ -293,6 +296,8 @@ elif job_type == 'generate':
         'bash_conditional_else_value': '' 
     }
 elif job_type == 'gather':
+    job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE 
+elif job_type == 'gather3':
     job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE 
 
 # Make a list of commands needed to run this particular job

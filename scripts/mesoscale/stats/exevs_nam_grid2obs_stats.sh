@@ -54,6 +54,7 @@ last_cyc=21
 # NEST_LIST="namer conusc akc"
 # NEST_LIST="conus ak spc_otlk subreg"
 NEST_LIST="namer conus conusc ak akc spc_otlk subreg"
+# NEST_LIST="conus conusc ak akc spc_otlk subreg"
 # NEST_LIST="conus ak spc_otlk"
 # NEST_LIST="namer"
 # NEST_LIST="conus"
@@ -62,6 +63,7 @@ NEST_LIST="namer conus conusc ak akc spc_otlk subreg"
 # NEST_LIST="akc"
 # NEST_LIST="spc_otlk"
 # NEST_LIST="subreg"
+# NEST_LIST="namer conus conusc ak akc subreg"
 
 
 
@@ -429,9 +431,29 @@ echo "*****************************"
 #-- 
 
 
+# Copy stat output files to EVS COMOUTsmall directory
+if [ $SENDCOM = YES ]; then
+   for VERIF_TYPE in $VERIF_TYPES;do
+      for MODEL_DIR_PATH in $MET_PLUS_OUT/$VERIF_TYPE/point_stat/$MODELNAME*; do
+	if [ -d $MODEL_DIR_PATH ]; then
+           MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
+           mkdir -p $COMOUTsmall/$MODEL_DIR
+           for FILE in $MODEL_DIR_PATH/*; do
+             cp -v $FILE $COMOUTsmall/$MODEL_DIR/.
+           done
+	fi
+      done
+  done
+fi
+
+echo "*****************************"
+echo "Gather3 jobs begin"
+date 
+echo "*****************************"
+
     
 # Final Stats Job
-if [ "$cyc" -ge "$last_cyc" ]; then
+# if [ "$cyc" -ge "$last_cyc" ]; then
     export job_type="gather3"
     export njob=1
     if [ $RUN_ENVIR = nco ]; then
@@ -494,8 +516,14 @@ if [ "$cyc" -ge "$last_cyc" ]; then
             nc=$((nc+1))
         done
     fi
-fi
+#fi
 
+
+echo "*****************************"
+echo "Gather3 jobs done"
+date
+echo "*****************************"
+ 
 
 
 
@@ -537,6 +565,7 @@ fi
 	  fi
 	  break
   done
+#-------------------------------
   
   # Copy output files into the correct EVS COMOUT directory
     if [ $SENDCOM = YES ]; then
@@ -545,13 +574,6 @@ fi
         mkdir -p $COMOUT/$MODEL_DIR
         for FILE in $MODEL_DIR_PATH/*; do
           cp -v $FILE $COMOUT/$MODEL_DIR/.
-        done
-      done
-      for MODEL_DIR_PATH in $MET_PLUS_OUT/raob/point_stat/$MODELNAME*; do
-        MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
-        mkdir -p $COMOUTsmall/$MODEL_DIR
-        for FILE in $MODEL_DIR_PATH/*; do
-          cp -v $FILE $COMOUTsmall/$MODEL_DIR/.
         done
       done
     fi
