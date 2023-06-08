@@ -67,8 +67,7 @@ for stats in me rmse acc; do
 done
 
 # tar all plots together
-#tar -cvf $COMOUTplots/evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplots/$RUN/*.png
-tar -cvf $COMOUTplots/evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar $DATA/plots/rtofs.${VDATE}/$RUN/*.png
+tar -cvf $COMOUTplots/evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN/*.png
 
 exit
 
