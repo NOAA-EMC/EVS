@@ -47,6 +47,13 @@ export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=narre
 
+# set variables needed/used in j-job called by this ecf script
+export rum_mpi=yes  # rum?
+
+export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
+export DATA=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
+
 ${HOMEevs}/jobs/narre/stats/JEVS_NARRE_STATS
 
 if [ $? -ne 0 ]; then
