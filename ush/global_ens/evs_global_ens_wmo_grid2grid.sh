@@ -1,20 +1,16 @@
 #!/bin/ksh
 
-# Script: evs_global_ens_grid2grid.sh
-# Purpose: run Global ensembles (GEFS, CMCE, EC and NAES)  grid2grid verification for upper fields 
-#            end 24hr APCP by setting several METPlus environment variables and running METplus conf files 
+# Script: evs_global_ens_wmo_grid2grid.sh
+# Purpose: run Global ensembles (GEFS, CMCE  grid2grid verification for WMO  
 # Input parameters:
-#   (1) model_list: either gefs or cmce or ecme or naefs or all
-#   (2) verify_list: either upper or precip or all
+#   (1) model_list: either gefs or cmce  or all
+#   (2) verify_list:  upper 
 # Execution steps:
-#   Both upper and precip have similar steps:
 #   (1) Set/export environment parameters for METplus conf files and put them into  procedure files 
 #   (2) Set running conf files and put them into  procedure files           
 #   (3) Put all MPI procedure files into one MPI script file run_all_gens_g2g_poe.sh
 #   (4) If $run_mpi is yes, run the MPI script  in paraalel
 #        otherwise run the MPI script in sequence
-# Note: total number of parallels = grid2grid (models x cycles) + precip (models)
-#   The maximum (4 models) = 4 + 2 + 2 + 2 + 4 = 14,  in this case 14 nodes should be set in its ecf,   
 #
 # Author: Binbin Zhou, Lynker
 # Update log: 9/4/2022, beginning version  

@@ -399,14 +399,14 @@ if [ $modnam = prepbufr ] ; then
       fi 
 
       chmod +x run_pb2nc.${cyc}.sh
-      echo "run_pb2nc.${cyc}.sh" >> run_pb2nc.sh
+      echo "${DATA}/run_pb2nc.${cyc}.sh" >> run_pb2nc.sh
            
   done
 
       echo "cp ${WORK}/pb2nc/prepbufr_nc/*.nc $COMOUT_gefs" >> run_pb2nc.sh  
 
   chmod +x run_pb2nc.sh
-  run_pb2nc.sh
+  ${DATA}/run_pb2nc.sh
 
 
 fi  
