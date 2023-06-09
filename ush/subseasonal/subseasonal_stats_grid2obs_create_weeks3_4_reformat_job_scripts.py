@@ -147,7 +147,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                 job.write('\n')
                 # Set any environment variables for special cases
                 # Do file checks
-                all_truth_file_exist = sub_util.check_truth_files(
+                all_truth_file_exist = sub_util.check_weeks3_4_truth_files(
                     job_env_dict
                 )
                 if all_truth_file_exist:

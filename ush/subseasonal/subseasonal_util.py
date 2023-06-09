@@ -1563,21 +1563,6 @@ def check_model_files(job_dict):
         init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
         if job_dict['JOB_GROUP'] == 'reformat_data':
             if job_dict['VERIF_CASE'] == 'grid2grid':
-                #if job_dict['VERIF_TYPE'] == 'pres_levs' \
-                        #and job_dict['job_name'] == 'GeoHeightAnom':
-                    #if init_date_dt.strftime('%H') in ['00', '12'] \
-                            #and fhr % 24 == 0:
-                        #fhr_check_dict[str(fhr)]['file1'] = {
-                            #'valid_date': valid_date_dt,
-                            #'init_date': init_date_dt,
-                            #'forecast_hour': str(fhr)
-                        #}
-                        #fhr_check_dict[str(fhr)]['file2'] = {
-                            #'valid_date': valid_date_dt,
-                            #'init_date': (valid_date_dt
-                                          #-datetime.timedelta(hours=fhr-12)),
-                            #'forecast_hour': str(fhr-12)
-                        #}
                 if job_dict['VERIF_TYPE'] in ['seaice', 'sst'] \
                       and job_dict['job_name'] in ['Concentration',
                                                    'SST']:
@@ -1597,44 +1582,6 @@ def check_model_files(job_dict):
                                 'forecast_hour': str(fhr-(12*nf))
                             }
                             nf+=1
-                #elif job_dict['VERIF_TYPE'] in ['seaice', 'sst'] \
-                        #and job_dict['job_name'] in ['Weekly_Concentration',
-                                                     #'Weekly_SST']:
-                    #mb = str(members).zfill(2)
-                    #model_file_format = os.path.join(verif_case_dir, 'data',
-                                                     #model, 'weekly',
-                                                     #model+'.ens'+mb
-                                                     #+'.{init?fmt=%Y%m%d%H}.'
-                                                     #+'f{lead?fmt=%3H}')
-                    #if str(fhr) in ['168', '336', '504', '672', '840']:
-                        #nf = 0
-                        #while nf <= 14:
-                            #fhr_check_dict[str(fhr)]['file'+str(nf+1)] = {
-                                #'valid_date': (valid_date_dt
-                                               #-datetime.timedelta(hours=12*nf)),
-                                #'init_date': init_date_dt,
-                                #'forecast_hour': str(fhr-(12*nf))
-                            #}
-                            #nf+=1
-                #elif job_dict['VERIF_TYPE'] in ['seaice', 'sst'] \
-                        #and job_dict['job_name'] in ['Monthly_Concentration',
-                                                     #'Monthly_SST']:
-                    #mb = str(members).zfill(2)
-                    #model_file_format = os.path.join(verif_case_dir, 'data',
-                                                     #model, 'monthly',
-                                                     #model+'.ens'+mb
-                                                     #+'.{init?fmt=%Y%m%d%H}.'
-                                                     #+'f{lead?fmt=%3H}')
-                    #if fhr == 720:
-                        #nf = 0
-                        #while nf <= 60:
-                            #fhr_check_dict[str(fhr)]['file'+str(nf+1)] = {
-                                #'valid_date': (valid_date_dt
-                                               #-datetime.timedelta(hours=12*nf)),
-                                #'init_date': init_date_dt,
-                                #'forecast_hour': str(fhr-(12*nf))
-                            #}
-                            #nf+=1
                 else:
                     fhr_check_dict[str(fhr)]['file1'] = {
                         'valid_date': valid_date_dt,
@@ -2154,6 +2101,321 @@ def check_model_files(job_dict):
     else:
         model_files_exist = False
     return model_files_exist, fhr_list
+
+def check_weekly_truth_files(job_dict):
+    """! Check if obs files exist for weekly reformat and assemble step
+
+         Args:
+             job_dict - dictionary containing settings
+                        job is running with (strings)
+
+         Returns:
+             truth_files_exist - if 80% of truth files
+                                 exist or not (boolean)
+    """
+    valid_date_dt = datetime.datetime.strptime(
+        job_dict['DATE']+job_dict['valid_hr_start'],
+        '%Y%m%d%H'
+    )
+    verif_case_dir = os.path.join(
+        job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
+    )
+    truth_file_list = []
+    if job_dict['JOB_GROUP'] == 'reformat_data':
+        if job_dict['VERIF_CASE'] == 'grid2grid':
+            if job_dict['VERIF_TYPE'] == 'anom':
+                truth_file_format = os.path.join(
+                    verif_case_dir, 'data', 'ecmwf',
+                    'ecmwf.{valid?fmt=%Y%m%d%H}.anl'
+                )
+                nf = 0
+                while nf <= 14:
+                    truth_file = format_filler(
+                        truth_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    truth_file_list.append(truth_file)
+                    nf+=1
+            elif job_dict['VERIF_TYPE'] == 'pres_lvls':
+                truth_file_format = os.path.join(
+                    verif_case_dir, 'data', 'gfs',
+                    'gfs.{valid?fmt=%Y%m%d%H}.anl'
+                )
+                nf = 0
+                while nf <= 14:
+                    truth_file = format_filler(
+                        truth_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    truth_file_list.append(truth_file)
+                    nf+=1
+        elif job_dict['VERIF_CASE'] == 'grid2obs':
+            if job_dict['VERIF_TYPE'] == 'PrepBufr' \
+                    and 'Prepbufr' in job_dict['job_name']:
+                prepbufr_name = (job_dict['job_name'].replace('Prepbufr', '')\
+                                 .lower())
+                prepbufr_file_format = os.path.join(
+                    verif_case_dir, 'data', 'prepbufr_'+prepbufr_name,
+                    'prepbufr.'+prepbufr_name+'.'
+                    +'{valid?fmt=%Y%m%d%H}'
+                )
+                nf = 0
+                while nf <= 14:
+                    prepbufr_file = format_filler(
+                        prepbufr_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    truth_file_list.append(prepbufr_file)
+                    nf+=1
+    elif job_dict['JOB_GROUP'] == 'assemble_data':
+        if job_dict['VERIF_CASE'] == 'grid2obs':
+            if job_dict['VERIF_TYPE'] == 'PrepBufr' \
+                    and job_dict['job_name'] == 'TempAnom2m':
+                pb2nc_file_format = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
+                    'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
+                    +job_dict['VERIF_TYPE']+'_'+job_dict['prepbufr']+'_valid'
+                    +'{valid?fmt=%Y%m%d%H}.nc'
+                )
+                nf = 0
+                while nf <= 14:
+                    pb2nc_file = format_filler(
+                        pb2nc_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    truth_file_list.append(pb2nc_file)
+                    nf+=1
+    truth_files_exist_list = []
+    for truth_file in truth_file_list:
+        if os.path.exists(truth_file):
+            truth_files_exist_list.append(True)
+        else:
+            truth_files_exist_list.append(False)
+    if all(x == True for x in truth_files_exist_list) \
+            and len(truth_files_exist_list) >= 12:
+        truth_files_exist = True
+    else:
+        truth_files_exist = False
+    return truth_files_exist
+
+def check_days6_10_truth_files(job_dict):
+    """! Check if obs files exist for Days 6-10 reformat and assemble step
+
+         Args:
+             job_dict - dictionary containing settings
+                        job is running with (strings)
+
+         Returns:
+             truth_files_exist - if 80% of truth files
+                                 exist or not (boolean)
+    """
+    valid_date_dt = datetime.datetime.strptime(
+        job_dict['DATE']+job_dict['valid_hr_start'],
+        '%Y%m%d%H'
+    )
+    verif_case_dir = os.path.join(
+        job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
+    )
+    truth_file_list = []
+    if job_dict['JOB_GROUP'] == 'reformat_data':
+        if job_dict['VERIF_CASE'] == 'grid2grid':
+            if job_dict['VERIF_TYPE'] == 'anom':
+                truth_file_format = os.path.join(
+                    verif_case_dir, 'data', 'ecmwf',
+                    'ecmwf.{valid?fmt=%Y%m%d%H}.anl'
+                )
+                nf = 0
+                while nf <= 10:
+                    truth_file = format_filler(
+                        truth_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    truth_file_list.append(truth_file)
+                    nf+=1
+            elif job_dict['VERIF_TYPE'] == 'pres_lvls':
+                truth_file_format = os.path.join(
+                    verif_case_dir, 'data', 'gfs',
+                    'gfs.{valid?fmt=%Y%m%d%H}.anl'
+                )
+                nf = 0
+                while nf <= 10:
+                    truth_file = format_filler(
+                        truth_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    truth_file_list.append(truth_file)
+                    nf+=1
+        elif job_dict['VERIF_CASE'] == 'grid2obs':
+            if job_dict['VERIF_TYPE'] == 'PrepBufr' \
+                    and 'Prepbufr' in job_dict['job_name']:
+                prepbufr_name = (job_dict['job_name'].replace('Prepbufr', '')\
+                                 .lower())
+                prepbufr_file_format = os.path.join(
+                    verif_case_dir, 'data', 'prepbufr_'+prepbufr_name,
+                    'prepbufr.'+prepbufr_name+'.'
+                    +'{valid?fmt=%Y%m%d%H}'
+                )
+                nf = 0
+                while nf <= 10:
+                    prepbufr_file = format_filler(
+                        prepbufr_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    truth_file_list.append(prepbufr_file)
+                    nf+=1
+    elif job_dict['JOB_GROUP'] == 'assemble_data':
+        if job_dict['VERIF_CASE'] == 'grid2obs':
+            if job_dict['VERIF_TYPE'] == 'PrepBufr' \
+                    and job_dict['job_name'] == 'TempAnom2m':
+                pb2nc_file_format = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
+                    'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
+                    +job_dict['VERIF_TYPE']+'_'+job_dict['prepbufr']+'_valid'
+                    +'{valid?fmt=%Y%m%d%H}.nc'
+                )
+                nf = 0
+                while nf <= 10:
+                    pb2nc_file = format_filler(
+                        pb2nc_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    truth_file_list.append(pb2nc_file)
+                    nf+=1
+    truth_files_exist_list = []
+    for truth_file in truth_file_list:
+        if os.path.exists(truth_file):
+            truth_files_exist_list.append(True)
+        else:
+            truth_files_exist_list.append(False)
+    if all(x == True for x in truth_files_exist_list) \
+            and len(truth_files_exist_list) >= 9:
+        truth_files_exist = True
+    else:
+        truth_files_exist = False
+    return truth_files_exist
+
+def check_weeks3_4_truth_files(job_dict):
+    """! Check if obs files exist for Weeks 3-4 reformat and assemble step
+
+         Args:
+             job_dict - dictionary containing settings
+                        job is running with (strings)
+
+         Returns:
+             truth_files_exist - if 80% of truth files
+                                 exist or not (boolean)
+    """
+    valid_date_dt = datetime.datetime.strptime(
+        job_dict['DATE']+job_dict['valid_hr_start'],
+        '%Y%m%d%H'
+    )
+    verif_case_dir = os.path.join(
+        job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
+    )
+    truth_file_list = []
+    if job_dict['JOB_GROUP'] == 'reformat_data':
+        if job_dict['VERIF_CASE'] == 'grid2grid':
+            if job_dict['VERIF_TYPE'] == 'anom':
+                truth_file_format = os.path.join(
+                    verif_case_dir, 'data', 'ecmwf',
+                    'ecmwf.{valid?fmt=%Y%m%d%H}.anl'
+                )
+                nf = 0
+                while nf <= 28:
+                    truth_file = format_filler(
+                        truth_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    truth_file_list.append(truth_file)
+                    nf+=1
+            elif job_dict['VERIF_TYPE'] == 'pres_lvls':
+                truth_file_format = os.path.join(
+                    verif_case_dir, 'data', 'gfs',
+                    'gfs.{valid?fmt=%Y%m%d%H}.anl'
+                )
+                nf = 0
+                while nf <= 28:
+                    truth_file = format_filler(
+                        truth_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    truth_file_list.append(truth_file)
+                    nf+=1
+        elif job_dict['VERIF_CASE'] == 'grid2obs':
+            if job_dict['VERIF_TYPE'] == 'PrepBufr' \
+                    and 'Prepbufr' in job_dict['job_name']:
+                prepbufr_name = (job_dict['job_name'].replace('Prepbufr', '')\
+                                 .lower())
+                prepbufr_file_format = os.path.join(
+                    verif_case_dir, 'data', 'prepbufr_'+prepbufr_name,
+                    'prepbufr.'+prepbufr_name+'.'
+                    +'{valid?fmt=%Y%m%d%H}'
+                )
+                nf = 0
+                while nf <= 28:
+                    prepbufr_file = format_filler(
+                        prepbufr_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    truth_file_list.append(prepbufr_file)
+                    nf+=1
+    elif job_dict['JOB_GROUP'] == 'assemble_data':
+        if job_dict['VERIF_CASE'] == 'grid2obs':
+            if job_dict['VERIF_TYPE'] == 'PrepBufr' \
+                    and job_dict['job_name'] == 'TempAnom2m':
+                pb2nc_file_format = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
+                    'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
+                    +job_dict['VERIF_TYPE']+'_'+job_dict['prepbufr']+'_valid'
+                    +'{valid?fmt=%Y%m%d%H}.nc'
+                )
+                nf = 0
+                while nf <= 28:
+                    pb2nc_file = format_filler(
+                        pb2nc_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    truth_file_list.append(pb2nc_file)
+                    nf+=1
+    truth_files_exist_list = []
+    for truth_file in truth_file_list:
+        if os.path.exists(truth_file):
+            truth_files_exist_list.append(True)
+        else:
+            truth_files_exist_list.append(False)
+    if all(x == True for x in truth_files_exist_list) \
+            and len(truth_files_exist_list) >= 23:
+        truth_files_exist = True
+    else:
+        truth_files_exist = False
+    return truth_files_exist
 
 def check_truth_files(job_dict):
     """!

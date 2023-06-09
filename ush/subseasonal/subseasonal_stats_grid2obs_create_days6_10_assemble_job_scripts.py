@@ -288,8 +288,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                             job_env_dict.pop('fhr_end')
                             job_env_dict.pop('fhr_inc')
                         if check_truth_files:
-                            all_truth_file_exist = sub_util.check_truth_files(
-                                job_env_dict
+                            all_truth_file_exist = (
+                                sub_util.check_days6_10_truth_files(job_env_dict)
                             )
                             if model_files_exist and all_truth_file_exist:
                                 write_job_cmds = True
