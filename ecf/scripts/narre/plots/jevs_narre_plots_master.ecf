@@ -1,10 +1,10 @@
 #PBS -S /bin/bash
-#PBS -N jevs_narre_stats_%CYC%
+#PBS -N jevs_narre_plots_%LAG%_%CYC%
 #PBS -j oe
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=00:30:00
-#PBS -l place=vscatter,select=1:ncpus=16:mem=500GB
+#PBS -l walltime=02:30:00
+#PBS -l place=vscatter:exclhost,select=1:ncpus=8:mem=100GB
 #PBS -l debug=true
 
 model="evs"
@@ -13,6 +13,9 @@ export NET=%NET%
 
 %include <head.h>
 %include <envir-p1.h>
+
+# I am 100% positive this needs to be part of the HOMEevs/versions/run.ver
+source $HOMEevs/versions/run.ver.metplus5.0.0
 
 module load envvar/$envvar_ver
 module load PrgEnv-intel/$PrgEnv_intel_ver
@@ -28,11 +31,8 @@ module load zlib/$zlib_ver
 module load jasper/$jasper_ver
 module load netcdf/$netcdf_ver
 module load cfp/$cfp_ver
-
-# Not sure why HPC_OPT is being defined.  It is set in `envvar` module.
-# NCO will remove this line and the next module use line.
-export HPC_OPT=/apps/ops/prod/libs
-module use /apps/ops/prod/libs/modulefiles/compiler/intel/$intel_ver
+export HPC_OPT=/apps/ops/para/libs
+module use /apps/ops/para/libs/modulefiles/compiler/intel/$intel_ver
 module load gsl/${gsl_ver}
 module load python/$python_ver
 module load met/$met_ver
@@ -41,13 +41,23 @@ module load udunits/${udunits_ver}
 
 module list
 
-export STEP=stats
+export STEP=plots
 export COMPONENT=narre
 export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=narre
 
-${HOMEevs}/jobs/narre/stats/JEVS_NARRE_STATS
+export past_days=%LAG%
+
+# set variables needed/used in j-job called by this ecf script
+export met_v=${met_ver:0:4}
+export run_mpi=yes
+
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
+export DATA=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
+
+${HOMEevs}/jobs/narre/plots/JEVS_NARRE_PLOTS
 
 if [ $? -ne 0 ]; then
    ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
