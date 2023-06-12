@@ -83,9 +83,9 @@ done
 
 #scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/gens/spaticl
 
-tar -cvf plots.global_ens.precip.spatial.map.v${VDATE}.tar *.png
+tar -cvf evs.plots.gefs.precip.spatial.map.v${VDATE}.tar *.png
 
-cp plots.global_ens.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
+cp evs.plots.gefs.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
 
 
 
