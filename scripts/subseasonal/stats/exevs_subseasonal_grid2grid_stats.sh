@@ -268,11 +268,11 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
 	    status=$?
 	    [[ $status -ne 0 ]] && exit $status
 	    [[ $status -eq 0 ]] && echo "Successfully ran subseasonal_stats_grid2grid_create_weekly_reformat_job_scripts.py"
-	    export njobs=$((njobs+2)) #+3
+	    export njobs=$((njobs+4)) 
         done
 	MONTHLY_LIST="Month1"
 	for MONTH in $MONTHLY_LIST; do
-	    export njobs=45 #50
+	    export njobs=55
 	    export MONTH=$MONTH
 	    if [ "${MONTH}" = "Month1" ]; then
 		export CORRECT_INIT_DATE=$PDYm32
@@ -283,32 +283,32 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
 	    [[ $status -ne 0 ]] && exit $status
 	    [[ $status -eq 0 ]] && echo "Successfully ran subseasonal_stats_grid2grid_create_monthly_reformat_job_scripts.py"
         done
-	#DAYS6_10_LIST="Days6_10"
-	#for DAYS in $DAYS6_10_LIST; do
-	    #export njobs=52
-	    #export DAYS=$DAYS
-	    #if [ "${DAYS}" = "Days6_10" ]; then
-		#export CORRECT_INIT_DATE=$PDYm12
-		#export CORRECT_LEAD_SEQ=120,132,144,156,168,180,192,204,216,228,240
-	    #fi
-	    #python $USHevs/subseasonal/subseasonal_stats_grid2grid_create_days6_10_reformat_job_scripts.py
-	    #status=$?
-	    #[[ $status -ne 0 ]] && exit $status
-	    #[[ $status -eq 0 ]] && echo "Successfully ran subseasonal_stats_grid2grid_create_days6_10_reformat_job_scripts.py"
-	#done
-	#WEEKS3_4_LIST="Weeks3_4"
-	#for WEEKS in $WEEKS3_4_LIST; do
-	    #export njobs=53
-	    #export WEEKS=$WEEKS
-	    #if [ "${WEEKS}" = "Weeks3_4" ]; then
-		#export CORRECT_INIT_DATE=$PDYm30
-		#export CORRECT_LEAD_SEQ=336,348,360,372,384,396,408,420,432,444,456,468,480,492,504,516,528,540,552,564,576,588,600,612,624,636,648,660,672
-	    #fi
-	    #python $USHevs/subseasonal/subseasonal_stats_grid2grid_create_weeks3_4_reformat_job_scripts.py
-	    #status=$?
-	    #[[ $status -ne 0 ]] && exit $status
-	    #[[ $status -eq 0 ]] && echo "Successfully ran subseasonal_stats_grid2grid_create_weeks3_4_reformat_job_scripts.py"
-	#done
+	DAYS6_10_LIST="Days6_10"
+	for DAYS in $DAYS6_10_LIST; do
+	    export njobs=57
+	    export DAYS=$DAYS
+	    if [ "${DAYS}" = "Days6_10" ]; then
+		export CORRECT_INIT_DATE=$PDYm12
+		export CORRECT_LEAD_SEQ=120,132,144,156,168,180,192,204,216,228,240
+	    fi
+	    python $USHevs/subseasonal/subseasonal_stats_grid2grid_create_days6_10_reformat_job_scripts.py
+	    status=$?
+	    [[ $status -ne 0 ]] && exit $status
+	    [[ $status -eq 0 ]] && echo "Successfully ran subseasonal_stats_grid2grid_create_days6_10_reformat_job_scripts.py"
+	done
+	WEEKS3_4_LIST="Weeks3_4"
+	for WEEKS in $WEEKS3_4_LIST; do
+	    export njobs=59
+	    export WEEKS=$WEEKS
+	    if [ "${WEEKS}" = "Weeks3_4" ]; then
+		export CORRECT_INIT_DATE=$PDYm30
+		export CORRECT_LEAD_SEQ=336,348,360,372,384,396,408,420,432,444,456,468,480,492,504,516,528,540,552,564,576,588,600,612,624,636,648,660,672
+	    fi
+	    python $USHevs/subseasonal/subseasonal_stats_grid2grid_create_weeks3_4_reformat_job_scripts.py
+	    status=$?
+	    [[ $status -ne 0 ]] && exit $status
+	    [[ $status -eq 0 ]] && echo "Successfully ran subseasonal_stats_grid2grid_create_weeks3_4_reformat_job_scripts.py"
+	done
 	# Create reformat_data POE job scripts
 	if [ $USE_CFP = YES ]; then
 	    python $USHevs/subseasonal/subseasonal_stats_grid2grid_create_poe_job_scripts.py

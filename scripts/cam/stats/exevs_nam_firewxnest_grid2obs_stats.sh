@@ -39,6 +39,15 @@ do
      then
        echo $fhr >> $DATA/fcstlist
        let "fcstnum=fcstnum+1"
+     else
+       if [ $acyc = 00 -o $acyc = 06 -o $acyc = 12 -o $acyc = 18 ]
+       then
+       export subject="NAM Firewx File Missing for EVS ${COMPONENT}"
+       echo "Warning: The NAM Firewx file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+       echo "Missing file is $COMINnam/nam.${aday}/nam.t${acyc}z.${regionnest}.${outtyp}${fhr}.tm00.grib2" >> mailmsg
+       echo "Job ID: $jobid" >> mailmsg
+       cat mailmsg | mail -s "$subject" $maillist
+       fi
      fi
      let "shr=shr+1"
 done
@@ -85,11 +94,17 @@ then
  obcyc=00
 fi
 
-if [ -e $COMINobs/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum} ]
+if [ -e $COMINobsproc/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum} ]
 then
  obfound=1
  mkdir -p $DATA/$OBSDIR/nam.${obday}
-  cp $COMINobs/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum} $DATA/$OBSDIR/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum}
+  cp $COMINobsproc/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum} $DATA/$OBSDIR/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum}
+else
+  export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
+  echo "Warning: The ${obday} prepbufr file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+  echo "Missing file is $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obcyc}z.prepbufr.tm${tmnum}" >> mailmsg
+  echo "Job ID: $jobid" >> mailmsg
+  cat mailmsg | mail -s "$subject" $maillist
 fi
 
 echo $obfound
@@ -97,7 +112,7 @@ echo $obfound
 if [ $obfound = 1 -a $fcstnum -gt 0 ]
 then
 
-  run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstCAM_obsNDAS_PrepBufr.conf $PARMevs/metplus_config/machine.conf
+  run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstNAM_FIREWXNEST_obsPREPBUFR.conf $PARMevs/metplus_config/machine.conf
   export err=$?; err_chk
 
   mkdir -p $COMOUTsmall
@@ -107,19 +122,19 @@ then
   then
        mkdir -p $COMOUTfinal
        cd $DATA/statanalysis
-       run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstCAM_obsONLYSF_GatherByDay.conf $PARMevs/metplus_config/machine.conf
+       run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstNAM_FIREWXNEST_obsONLYSF_GatherByDay.conf $PARMevs/metplus_config/machine.conf
        export err=$?; err_chk
 
-       run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstCAM_obsADPUPA_GatherByDay.conf $PARMevs/metplus_config/machine.conf
+       run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstNAM_FIREWXNEST_obsADPUPA_GatherByDay.conf $PARMevs/metplus_config/machine.conf
        export err=$?; err_chk
 
-       cat *ADPUPA >> *stat
-       cp *stat $COMOUTfinal
+       cat *ADPUPA >> evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat
+       cp evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat  $COMOUTfinal
   fi
 
 else
 
-  echo "NO OBS OR MODEL DATA"
+  echo "NO OBS OR MODEL DATA, METplus will not run"
   echo "NUMFCST, NUMOBS", $fcstnum, $obfound
 
 fi
