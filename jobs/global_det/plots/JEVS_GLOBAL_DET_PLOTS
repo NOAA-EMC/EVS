@@ -66,7 +66,7 @@ export COMINimd=${COMINimd:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/imd)}
 export COMINjma=${COMINjma:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/jma)}
 export COMINmetfra=${COMINmetfra:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/metfra)}
 export COMINukmet=${COMINukmet:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/ukmet)}
-export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1)}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE_END)}
 mkdir -p $COMOUT
 
 #######################################################################

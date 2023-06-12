@@ -254,12 +254,30 @@ base_plot_jobs_info_dict = {
                                        'levels': ['P850-P200']}},
     },
     'sea_ice': {
-        'DailyAvg_Concentration': {'vx_masks': ['ARCTIC', 'ANTARCTIC'],
-                                   'fcst_var_dict': {'name': 'ICEC_DAILYAVG',
-                                                     'levels': ['Z0']},
-                                   'obs_var_dict': {'name': 'ice_conc',
-                                                    'levels': ['*,*']},
-                                   'obs_name': 'osi_saf'}
+        'DailyAvg_ConcentrationNH': {'vx_masks': ['ARCTIC'],
+                                     'fcst_var_dict': {'name': 'ICEC_DAILYAVG',
+                                                       'levels': ['Z0']},
+                                     'obs_var_dict': {'name': 'ice_conc',
+                                                      'levels': ['0,*,*']},
+                                     'obs_name': 'osi_saf'},
+        'DailyAvg_ConcentrationSH': {'vx_masks': ['ANTARCTIC'],
+                                     'fcst_var_dict': {'name': 'ICEC_DAILYAVG',
+                                                       'levels': ['Z0']},
+                                     'obs_var_dict': {'name': 'ice_conc',
+                                                      'levels': ['0,*,*']},
+                                     'obs_name': 'osi_saf'},
+        'DailyAvg_ExtentNH': {'vx_masks': ['ARCTIC'],
+                              'fcst_var_dict': {'name': 'ICEEX_DAILYAVG',
+                                                'levels': ['Z0']},
+                              'obs_var_dict': {'name': 'ICEEX_DAILYAVG',
+                                               'levels': ['Z0']},
+                              'obs_name': 'osi_saf'},
+        'DailyAvg_ExtentSH': {'vx_masks': ['ANTARCTIC'],
+                              'fcst_var_dict': {'name': 'ICEEX_DAILYAVG',
+                                                'levels': ['Z0']},
+                              'obs_var_dict': {'name': 'ICEEX_DAILYAVG',
+                                               'levels': ['Z0']},
+                              'obs_name': 'osi_saf'}
     },
     'snow': {
         '24hrNOHRSC_Depth': {'vx_masks': ['CONUS', 'CONUS_East', 'CONUS_West',
@@ -316,9 +334,14 @@ for pres_levs_job in list(condense_stats_jobs_dict['pres_levs'].keys()):
     )
 #### sea_ice
 for sea_ice_job in list(condense_stats_jobs_dict['sea_ice'].keys()):
-    condense_stats_jobs_dict['sea_ice'][sea_ice_job]['line_types'] = [
-        'SL1L2', 'CTC'
-    ]
+    if 'DailyAvg_Concentration' in sea_ice_job:
+        condense_stats_jobs_dict['sea_ice'][sea_ice_job]['line_types'] = [
+            'SL1L2', 'CTC'
+        ]
+    elif 'DailyAvg_Extent' in sea_ice_job:
+        condense_stats_jobs_dict['sea_ice'][sea_ice_job]['line_types'] = [
+            'SL1L2'
+        ]
 #### snow
 for snow_job in list(condense_stats_jobs_dict['snow'].keys()):
     condense_stats_jobs_dict['snow'][snow_job]['line_types'] = [
@@ -383,25 +406,30 @@ for pres_levs_job in list(filter_stats_jobs_dict['pres_levs'].keys()):
         pres_levs_job_interps
     )
 #### sea_ice
-(filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration']\
- ['line_types']) = ['SL1L2']
-(filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration']\
- ['grid']) = 'G004'
-(filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration']\
- ['fcst_var_dict']['threshs']) = ['NA']
-(filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration']\
- ['obs_var_dict']['threshs']) = ['NA']
-(filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration']\
- ['interps']) = ['NEAREST/1']
-filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration_Thresh'] = (
-    copy.deepcopy(filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration'])
-)
-(filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration_Thresh']\
- ['line_types']) = ['CTC']
-(filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration_Thresh']\
- ['fcst_var_dict']['threshs']) = ['ge15', 'ge40', 'ge80']
-(filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration_Thresh']\
- ['obs_var_dict']['threshs']) = ['ge15', 'ge40', 'ge80']
+for sea_ice_job in list(condense_stats_jobs_dict['sea_ice'].keys()):
+    filter_stats_jobs_dict['sea_ice'][sea_ice_job]['line_types'] = ['SL1L2']
+    (filter_stats_jobs_dict['sea_ice'][sea_ice_job]['fcst_var_dict']\
+     ['threshs']) = ['NA']
+    (filter_stats_jobs_dict['sea_ice'][sea_ice_job]['obs_var_dict']\
+     ['threshs']) = ['NA']
+    filter_stats_jobs_dict['sea_ice'][sea_ice_job]['interps'] = ['NEAREST/1']
+    if 'NH' in sea_ice_job:
+        filter_stats_jobs_dict['sea_ice'][sea_ice_job]['grid'] = 'G219'
+    elif 'SH' in sea_ice_job:
+        filter_stats_jobs_dict['sea_ice'][sea_ice_job]['grid'] = 'G220'
+for hemisphere in ['NH', 'SH']:
+    (filter_stats_jobs_dict['sea_ice']\
+     ['DailyAvg_Concentration'+hemisphere+'_Thresh']) = copy.deepcopy(
+        filter_stats_jobs_dict['sea_ice']['DailyAvg_Concentration'+hemisphere]
+    )
+    (filter_stats_jobs_dict['sea_ice']\
+     ['DailyAvg_Concentration'+hemisphere+'_Thresh']['line_types']) = ['CTC']
+    (filter_stats_jobs_dict['sea_ice']\
+     ['DailyAvg_Concentration'+hemisphere+'_Thresh']\
+     ['fcst_var_dict']['threshs']) = ['ge15', 'ge40', 'ge80']
+    (filter_stats_jobs_dict['sea_ice']\
+     ['DailyAvg_Concentration'+hemisphere+'_Thresh']\
+     ['obs_var_dict']['threshs']) = ['ge15', 'ge40', 'ge80']
 #### snow
 for snow_job in list(filter_stats_jobs_dict['snow'].keys()):
     filter_stats_jobs_dict['snow'][snow_job]['line_types'] = ['CTC']
@@ -539,25 +567,34 @@ del make_plots_jobs_dict['pres_levs']['GeoHeight_FourierDecomp']
 #### sea_ice
 for sea_ice_job in list(make_plots_jobs_dict['sea_ice'].keys()):
     del make_plots_jobs_dict['sea_ice'][sea_ice_job]['line_types']
-    if sea_ice_job == 'DailyAvg_Concentration':
-        sea_ice_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME']
-    elif sea_ice_job == 'DailyAvg_Concentration_Thresh':
-        sea_ice_job_line_type_stats = ['CTC/CSI']
+    if 'DailyAvg_Concentration' in sea_ice_job:
+        if 'Thresh' in sea_ice_job:
+            sea_ice_job_line_type_stats = ['CTC/CSI']
+        else:
+            sea_ice_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME']
+    elif 'DailyAvg_Extent' in sea_ice_job:
+        sea_ice_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME',
+                                       'SL1L2/STDEV_ERR', 'SL1L2/CORR']
     make_plots_jobs_dict['sea_ice'][sea_ice_job]['line_type_stats'] = (
         sea_ice_job_line_type_stats
     )
     make_plots_jobs_dict['sea_ice'][sea_ice_job]['plots'] = [
         'time_series', 'lead_average'
     ]
-make_plots_jobs_dict['sea_ice']['DailyAvg_Concentration_PerfDia'] = (
-    copy.deepcopy(make_plots_jobs_dict['sea_ice']\
-                  ['DailyAvg_Concentration_Thresh'])
-)   
-(make_plots_jobs_dict['sea_ice']['DailyAvg_Concentration_PerfDia']\
- ['line_type_stats']) = ['CTC/PERF_DIA']
-make_plots_jobs_dict['sea_ice']['DailyAvg_Concentration_PerfDia']['plots'] = [
-    'performance_diagram' 
-]
+for hemisphere in ['NH', 'SH']:
+    (make_plots_jobs_dict['sea_ice']\
+     ['DailyAvg_Concentration'+hemisphere+'_PerfDia']) = copy.deepcopy(
+         make_plots_jobs_dict['sea_ice']\
+         ['DailyAvg_Concentration'+hemisphere+'_Thresh']
+    )
+    (make_plots_jobs_dict['sea_ice']\
+     ['DailyAvg_Concentration'+hemisphere+'_PerfDia']['line_type_stats']) = [
+        'CTC/PERF_DIA'
+    ]
+    (make_plots_jobs_dict['sea_ice']\
+     ['DailyAvg_Concentration'+hemisphere+'_PerfDia']['plots']) = [
+        'performance_diagram'
+    ]
 #### snow
 for snow_job in list(make_plots_jobs_dict['snow'].keys()):
     del make_plots_jobs_dict['snow'][snow_job]['line_types']

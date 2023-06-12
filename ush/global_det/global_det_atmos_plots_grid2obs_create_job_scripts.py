@@ -526,8 +526,18 @@ for sfc_job in list(make_plots_jobs_dict['sfc'].keys()):
     del make_plots_jobs_dict['sfc'][sfc_job]['line_types']
     if sfc_job in ['CAPEMixedLayer', 'CAPESfcBased', 'PBLHeight',
                    'TotCloudCover']:
-        sfc_job_line_type_stats = [
-            'SL1L2/RMSE', 'SL1L2/ME', 'SL1L2/FBAR_OBAR'
+        sfc_job_line_type_stats = ['SL1L2/RMSE', 'SL1L2/ME']
+        make_plots_jobs_dict['sfc'][sfc_job+'_FBAR_OBAR'] = copy.deepcopy(
+            make_plots_jobs_dict['sfc'][sfc_job]
+        )
+        make_plots_jobs_dict['sfc'][sfc_job+'_FBAR_OBAR']['line_type_stats']=[
+            'SL1L2/FBAR_OBAR'
+        ]
+        make_plots_jobs_dict['sfc'][sfc_job+'_FBAR_OBAR']['vx_masks']=[
+            'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South'
+        ]
+        make_plots_jobs_dict['sfc'][sfc_job+'_FBAR_OBAR']['plots'] = [
+            'time_series'
         ]
     elif sfc_job in ['CAPEMixedLayer_Thresh', 'CAPESfcBased_Thresh',
                      'Dewpoint2m_Thresh']:

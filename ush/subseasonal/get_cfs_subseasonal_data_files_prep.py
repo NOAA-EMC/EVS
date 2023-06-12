@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Program Name: get_cfs_subseasonal_data_files_prep.py
 Contact(s): Shannon Shields

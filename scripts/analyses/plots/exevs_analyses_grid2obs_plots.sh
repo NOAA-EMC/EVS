@@ -1,3 +1,5 @@
+#!/bin/bash
+ 
 set -x
 
 mkdir -p $DATA/plots
@@ -107,9 +109,9 @@ do
 	smvar=`echo $varb | tr A-Z a-z`
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
-	if [ -e valid_hour* ]
+	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
 	then
-        mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png
+        mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png
         else
 	echo "NO PLOT FOR",$varb,$region,$anl
         fi
@@ -125,9 +127,9 @@ do
         smvar=`echo $varb | tr A-Z a-z`
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
-	if [ -e valid_hour* ]
+	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
 	then
-        mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png
+        mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png
         else
 	echo "NO PLOT FOR",$varb,$region,$anl
         fi
@@ -143,9 +145,9 @@ do
         smvar=`echo $varb | tr A-Z a-z`
 	sh $USHevs/${COMPONENT}/py_plotting.config
 
-	if [ -e valid_hour* ]
+	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
 	then
-        mv ${DATA}/valid_hour* ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png
+        mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png
         else
 	echo "NO PLOT FOR",$varb,$region,$anl
         fi
@@ -174,9 +176,9 @@ do
 	smvar=`echo $varb | tr A-Z a-z`
 	sh $USHevs/${COMPONENT}/py_plotting.config_perf
 
-	if [ -e perf* ]
+	if [ -e ${PLOTDIR}/ceil_vis/*/evs*png ]
 	then
-	mv ${DATA}/perf* ${PLOTDIR}/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png
+	mv ${PLOTDIR}/ceil_vis/*/evs*png ${PLOTDIR}/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png
         else
 	echo "NO PLOT FOR",$varb,$region,$anl
         fi
@@ -187,9 +189,9 @@ do
 	export stat
 
 	sh $USHevs/${COMPONENT}/py_plotting.config_thresh
-	if [ -e thresh* ]
+	if [ -e ${PLOTDIR}/ceil_vis/*/evs*png ]
 	then
-	mv ${DATA}/thresh* ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png
+	mv ${PLOTDIR}/ceil_vis/*/evs*png ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png
         else
 	echo "NO PLOT FOR",$varb,$region,$anl
         fi
@@ -213,9 +215,9 @@ done
 	export stat
 
 	sh $USHevs/${COMPONENT}/py_plotting.config_thresh
-	if [ -e thresh* ]
+	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
 	then
-	mv ${DATA}/thresh* ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png
+	mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png
         else
 	echo "NO PLOT FOR",$var,$region,$anl
         fi
