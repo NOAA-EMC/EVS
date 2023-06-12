@@ -65,7 +65,8 @@ reformat_data_obs_jobs_dict = {
                                 'msg_type': 'ADPSFC',
                                 'obs_bufr_var_list': "'TOB'"},
                         'commands': [sub_util.metplus_command(
-                                         'PB2NC_obsPrepbufr.conf'
+                                         'PB2NC_obsPrepbufr_'
+                                         +'Weeks3_4.conf'
                                      )]},
     }
 }
@@ -130,10 +131,11 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                 '%Y%m%d%H'
             )
             valid_date_inc = int(job_env_dict['valid_hr_inc'])
+            job_env_dict['WEEKS'] = WEEKS
             date_dt = valid_start_date_dt
             while date_dt <= valid_end_date_dt:
                 sdate_dt = date_dt - datetime.timedelta(days=14)
-                job_env_dict['START'] = sdate_dt.strftime('%Y%m%d')
+                job_env_dict['W3_4START'] = sdate_dt.strftime('%Y%m%d')
                 job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
                 job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
                 job_env_dict['valid_hr_end'] = date_dt.strftime('%H')

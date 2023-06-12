@@ -732,7 +732,8 @@ def weekly_osi_saf_file(weekly_source_file_list, weekly_dest_file,
             print(f"WARNING: {weekly_source_file} does not exist, "
                   +"not using in weekly average file")
             weekly_source_file_list.remove(weekly_source_file)
-    if len(weekly_source_file_list) == 7:
+    # 80% file check from expected 7
+    if len(weekly_source_file_list) >= 6:
         ncea_cmd_list = ['ncea']
         for weekly_source_file in weekly_source_file_list:
             ncea_cmd_list.append(weekly_source_file)
@@ -780,7 +781,8 @@ def monthly_osi_saf_file(monthly_source_file_list,
             print(f"WARNING: {monthly_source_file} does not exist, "
                   +"not using in monthly average file")
             monthly_source_file_list.remove(monthly_source_file)
-    if len(monthly_source_file_list) == 30:
+    # 80% file check from expected 30
+    if len(monthly_source_file_list) >= 24:
         ncea_cmd_list = ['ncea']
         for monthly_source_file in monthly_source_file_list:
             ncea_cmd_list.append(monthly_source_file)
@@ -828,7 +830,8 @@ def weekly_ghrsst_ospo_file(weekly_source_file_list, weekly_dest_file,
             print(f"WARNING: {weekly_source_file} does not exist, "
                   +"not using in weekly average file")
             weekly_source_file_list.remove(weekly_source_file)
-    if len(weekly_source_file_list) == 7:
+    # 80% file check from expected 7
+    if len(weekly_source_file_list) >= 6:
         ncea_cmd_list = ['ncea']
         for weekly_source_file in weekly_source_file_list:
             ncea_cmd_list.append(weekly_source_file)
@@ -881,7 +884,8 @@ def monthly_ghrsst_ospo_file(monthly_source_file_list,
             print(f"WARNING: {monthly_source_file} does not exist, "
                   +"not using in monthly average file")
             monthly_source_file_list.remove(monthly_source_file)
-    if len(monthly_source_file_list) == 30:
+    # 80% file check from expected 30
+    if len(monthly_source_file_list) >= 24:
         ncea_cmd_list = ['ncea']
         for monthly_source_file in monthly_source_file_list:
             ncea_cmd_list.append(monthly_source_file)

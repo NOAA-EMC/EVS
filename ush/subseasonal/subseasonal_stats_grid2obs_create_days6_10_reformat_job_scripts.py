@@ -59,7 +59,16 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 #### reformat_data jobs
 ################################################
 reformat_data_obs_jobs_dict = {
-    'PrepBufr': {}
+    'PrepBufr': {
+        'PrepbufrNAM': {'env': {'prepbufr': 'nam',
+                                'obs_window': '900',
+                                'msg_type': 'ADPSFC',
+                                'obs_bufr_var_list': "'TOB'"},
+                        'commands': [sub_util.metplus_command(
+                                         'PB2NC_obsPrepbufr_'
+                                         +'Days6_10.conf'
+                                     )]},
+    }
 }
 reformat_data_model_jobs_dict = {
     'PrepBufr': {
@@ -122,8 +131,11 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                 '%Y%m%d%H'
             )
             valid_date_inc = int(job_env_dict['valid_hr_inc'])
+            job_env_dict['DAYS'] = DAYS
             date_dt = valid_start_date_dt
             while date_dt <= valid_end_date_dt:
+                sdate_dt = date_dt - datetime.timedelta(days=5)
+                job_env_dict['D6_10START'] = sdate_dt.strftime('%Y%m%d')
                 job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
                 job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
                 job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
@@ -137,7 +149,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                 job.write('\n')
                 # Set any environment variables for special cases
                 # Do file checks
-                all_truth_file_exist = sub_util.check_truth_files(
+                all_truth_file_exist = sub_util.check_days6_10_truth_files(
                     job_env_dict
                 )
                 if all_truth_file_exist:
