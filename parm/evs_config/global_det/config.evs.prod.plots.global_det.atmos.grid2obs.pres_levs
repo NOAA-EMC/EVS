@@ -57,12 +57,15 @@ export SENDMETVIEWER="NO"
 if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     #g2op_model_plot_name_list: list of models reference name on plots
     #g2op_type_list: list type of verifications to run for grid-to-grid: pres_levs, ptype, sfc
-    #g2op_*_init_hr_list:      initialization hours to be included in verification: HH
-    #g2op_*_valid_hr_list:     valid hours to be included in verification: HH
-    #g2op_*_fhr_min:           forecast hour to start verification HH[H]
-    #g2op_*_fhr_max:           forecast hour to end verification HH[H]
-    #g2op_*_fhr_inc:           frequency to verify forecast hours at HH[H]
     #g2op_event_equalization: do event equalization (YES) or not (NO)
+    #g2op_*_init_hr_list: list of cycles/initialization hours to be included in verification: HH
+    #g2op_*_valid_hr_list: list of valid hours to be included in verification: HH
+    #For defining forecast hours:
+    #    g2op*_fhr_list: list of forecast hours: HH[H]
+    #OR 
+    #    g2op_*_fhr_min: forecast hour to start verification: HH[H]
+    #    g2op_*_fhr_max: forecast hour to end verification: HH[H]
+    #    g2op_*_fhr_inc: frequency to verify forecast hours: at HH[H]
     export g2op_model_plot_name_list="gfs ecmwf cmc ukmet jma imd fnmoc cfs"
     export g2op_type_list="pres_levs"
     export g2op_event_equalization="NO"

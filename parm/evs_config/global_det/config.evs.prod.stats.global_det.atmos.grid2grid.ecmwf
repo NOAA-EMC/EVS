@@ -64,17 +64,19 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
     #    snow:             compare to NOHRSC
     #    sst:              compare to GHRSST Median
     #    sea_ice:          compare to OSI-SAF
-    #    means:            compute forecast hour means for various variables
-    #g2gs_pres_levs_truth_name_list:   list of reference name for truth files
+    #g2gs_pres_levs_truth_name_list: list of reference name for truth files
     #g2gs_pres_levs_truth_format_list: list of truth file format(s)
     #g2gs_precip_accum*_file_format_list: list of precip file format(s)
-    #g2gs_precip_accum*_file_accum_list:  list of precip accumulations in file: hours (HH) or continuous
-    #g2gs_precip_accum*_var_list:         list of the precip variable name to use
-    #g2gs_*_init_hr_list:      forecst init_hrs to be included in verification: HH
-    #g2gs_*_valid_hr_list:     valid hours to be included in verification: HH
-    #g2gs_*_fhr_min:           forecast hour to start verification HH[H]
-    #g2gs_*_fhr_max:           forecast hour to end verification HH[H]
-    #g2gs_*_fhr_inc:           frequency to verify forecast hours at HH[H]
+    #g2gs_precip_accum*_file_accum_list: list of precip accumulations in file: hours (HH) or continuous
+    #g2gs_precip_accum*_var_list: list of the precip variable name to use
+    #g2gs_*_init_hr_list: list of cycles/initialization hours to be included in verification: HH
+    #g2gs_*_valid_hr_list: list of valid hours to be included in verification: HH
+    #For defining forecast hours:
+    #    g2gs*_fhr_list: list of forecast hours: HH[H]
+    #OR 
+    #    g2gs_*_fhr_min: forecast hour to start verification: HH[H]
+    #    g2gs_*_fhr_max: forecast hour to end verification: HH[H]
+    #    g2gs_*_fhr_inc: frequency to verify forecast hours: HH[H]
     export g2gs_type_list="pres_levs precip_accum24hr snow"
     export g2gs_precip_accum24hr_file_format_list="${COMINecmwf}.{init?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.precip.t{init?fmt=%H}z.f{lead?fmt=%3H}"
     export g2gs_precip_accum24hr_file_accum_list="continuous"
