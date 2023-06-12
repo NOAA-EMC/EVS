@@ -1,3 +1,5 @@
+#/bin/bash
+
 set -x
 
 mkdir -p $DATA/logs
@@ -6,7 +8,7 @@ mkdir -p $DATA/stat
 export regionnest=urma
 export fcstmax=$g2os_sfc_fhr_max
 
-export maskdir=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks
+export maskdir=$MASKS
 
 # search to see if obs file exists
 
@@ -19,6 +21,12 @@ obhr=`echo $datehr |cut -c9-10`
 if [ -e $COMINobs/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00 ]
 then
  obfound=1
+else
+ export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
+ echo "Warning: The ${obday} prepbufr file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+ echo "Missing file is $COMINobs/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00" >> mailmsg
+ echo "Job ID: $jobid" >> mailmsg
+ cat mailmsg | mail -s "$subject" $maillist
 fi
 
 echo $obfound
@@ -53,6 +61,12 @@ then
 	if [ -e $COMINfcst/${modnam}.${VDATE}/${modnam}.t${cyc}z.${outtyp}_ndfd.grb2_wexp ]
         then
           urmafound=1
+        else
+          export subject="CONUS Analysis Missing for EVS ${COMPONENT}"
+          echo "Warning: The CONUS Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+          echo "Missing file is $COMINfcst/${modnam}.${VDATE}/${modnam}.t${cyc}z.${outtyp}_ndfd.grb2_wexp" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $maillist
        fi
 
 fi
@@ -70,6 +84,12 @@ then
         if [ -e $COMINfcst/${modnam}.${VDATE}/${modnam}.t${cyc}z.${outtyp}_ndfd.grb2 ]
         then
           urmafound=1
+        else
+          export subject="Alaska Analysis Missing for EVS ${COMPONENT}"
+          echo "Warning: The Alaska Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+          echo "Missing file is $COMINfcst/${modnam}.${VDATE}/${modnam}.t${cyc}z.${outtyp}_ndfd.grb2" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $maillist
         fi
 
 fi
@@ -87,6 +107,12 @@ then
         if [ -e $COMINfcst/${modnam}.${VDATE}/${modnam}.t${cyc}z.${outtyp}_ndfd.grb2 ]
         then    
           urmafound=1
+        else 
+          export subject="Hawaii Analysis Missing for EVS ${COMPONENT}"
+          echo "Warning: The Hawaii Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+          echo "Missing file is $COMINfcst/${modnam}.${VDATE}/${modnam}.t${cyc}z.${outtyp}_ndfd.grb2" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $maillist	    
         fi
 
 fi
@@ -102,6 +128,12 @@ then
         if [ -e $COMINfcst/${modnam}.${VDATE}/${modnam}.t${cyc}z.${outtyp}_ndfd.grb2 ]
         then
           urmafound=1
+        else
+          export subject="Puerto Rico Analysis Missing for EVS ${COMPONENT}"
+          echo "Warning: The Puerto Rico Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+          echo "Missing file is $COMINfcst/${modnam}.${VDATE}/${modnam}.t${cyc}z.${outtyp}_ndfd.grb2" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $maillist
         fi
 
 fi
@@ -115,7 +147,7 @@ export err=$?; err_chk
 mkdir -p $COMOUTsmall
 cp $DATA/point_stat/${modnam}${typtag}/* $COMOUTsmall
 else
-echo "NO URMA OR OBS DATA"
+echo "NO URMA OR OBS DATA, METplus will not run"
 echo "URMAFOUND, OBFOUND", $urmafound, $obfound
 fi
 
@@ -127,6 +159,8 @@ then
        mkdir -p $COMOUTfinal
        run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstANALYSES_obsNDAS_GatherByDay.conf $PARMevs/metplus_config/machine.conf
        export err=$?; err_chk
+else    
+       echo "NO RTMA OR OBS DATA, or not gather time yet, METplus gather job will not run"
 fi
 
 done

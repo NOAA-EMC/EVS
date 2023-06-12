@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_threshold_average.py
 Contact(s): Mallory Row
@@ -73,11 +74,6 @@ class ThresholdAverage:
             self.logger.warning("Cannot make threshold_average for stat "
                                 +f"{self.plot_info_dict['stat']}")
             sys.exit(0)
-        # Make job image directory
-        output_image_dir = os.path.join(self.output_dir, 'images')
-        if not os.path.exists(output_image_dir):
-            os.makedirs(output_image_dir)
-        self.logger.info(f"Plots will be in: {output_image_dir}")
         # Get dates to plot
         self.logger.info("Creating valid and init date arrays")
         valid_dates, init_dates = gda_util.get_plot_dates(
@@ -193,7 +189,8 @@ class ThresholdAverage:
                     self.logger, avg_method, self.plot_info_dict['line_type'],
                     self.plot_info_dict['stat'], calc_avg_df
                 )
-                if not np.isnan(model_idx_thresh_avg):
+                if not np.isnan(model_idx_thresh_avg) \
+                        and not np.ma.is_masked(model_idx_thresh_avg):
                     threshs_avg_df.loc[model_idx, fcst_var_thresh] = (
                         model_idx_thresh_avg
                     )
@@ -213,11 +210,11 @@ class ThresholdAverage:
                     ##F*SD/sqrt(N-1),
                     ##F=1.96 for infinite samples, F=2.0 for nsz=60,
                     ##F=2.042 for nsz=30, F=2.228 for nsz=10
-                    if nsamples > 0:
+                    if nsamples > 1:
                         model_idx_model1_diff_mean_std_err = (
                             model_idx_model1_diff_std/np.sqrt(nsamples-1)
                         )
-                        if nsamples > 80:
+                        if nsamples >= 80:
                             ci = 1.960 * model_idx_model1_diff_mean_std_err
                         elif nsamples >=40 and nsamples < 80:
                             ci = 2.000 * model_idx_model1_diff_mean_std_err
@@ -225,7 +222,7 @@ class ThresholdAverage:
                             ci = 2.042 * model_idx_model1_diff_mean_std_err
                         elif nsamples > 0 and nsamples < 20:
                             ci = 2.228 * model_idx_model1_diff_mean_std_err
-                    elif nsamples == 0:
+                    else:
                         ci = np.nan
                     threshs_ci_df.loc[model_idx, fcst_var_thresh] = ci
                     #from scipy import stats
@@ -299,7 +296,7 @@ class ThresholdAverage:
                 )
             )
         image_name = plot_specs_ta.get_savefig_name(
-            output_image_dir, self.plot_info_dict, self.date_info_dict
+            self.output_dir, self.plot_info_dict, self.date_info_dict
         )
         # Create plot
         self.logger.info(f"Creating plot for {self.plot_info_dict['stat']} ")
@@ -464,7 +461,7 @@ class ThresholdAverage:
                     color = model_num_plot_settings_dict['color'],
                     linestyle = model_num_plot_settings_dict['linestyle'],
                     linewidth = model_num_plot_settings_dict['linewidth'],
-                    marker = model_num_plot_settings_dict['marker'],
+                    marker = None,
                     markersize = model_num_plot_settings_dict['markersize'],
                     zorder = (len(list(self.model_info_dict.keys()))
                               - model_idx_list.index(model_idx) + 4)
@@ -521,7 +518,7 @@ class ThresholdAverage:
                         thresh_ci = (
                             cmasked_model_num_model1_diff_ci_data[thresh_idx]
                         )
-                        ax2.bar(fhr, 2*np.absolute(thresh_ci),
+                        ax2.bar(thresh, 2*np.absolute(thresh_ci),
                                 bottom=-1*np.absolute(thresh_ci),
                                 width=(cmasked_ci_bar_max_widths[thresh_idx]
                                        -(cmasked_ci_bar_intvl_widths[thresh_idx]
@@ -631,7 +628,7 @@ def main():
     # Need settings
     INPUT_DIR = os.environ['HOME']
     OUTPUT_DIR = os.environ['HOME']
-    LOGO_DIR = os.environ['HOME'],
+    LOGO_DIR = os.environ['HOME']
     MODEL_INFO_DICT = {
         'model1': {'name': 'MODEL_A',
                    'plot_name': 'PLOT_MODEL_A',
@@ -666,7 +663,7 @@ def main():
     }
     MET_INFO_DICT = {
         'root': '/PATH/TO/MET',
-        'version': '10.1.1'
+        'version': '11.0.2'
     }
     # Create OUTPUT_DIR
     if not os.path.exists(OUTPUT_DIR):

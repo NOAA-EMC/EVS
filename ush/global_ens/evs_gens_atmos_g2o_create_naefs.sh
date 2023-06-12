@@ -23,15 +23,26 @@ for vcyc in 00 12 ; do
    fhr=$lead
    typeset -Z3 fhr
 
-   for mbr in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
-     ln -sf  ${COMIN}.${fyyyymmdd}/gefs/gefs.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  naefs.ens${mbr}.${fyyyymmdd}.t${fcyc}z.grid3.f${fhr}.grib2
+   if [ $gefs_number = 20 ] ; then
+     mbrs="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20"
+   elif [ $gefs_number = 30 ] ; then
+     mbrs="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30"
+   fi 
+
+   for mbr in $mbrs ; do
+     ln -sf  ${COMIN}.${fyyyymmdd}/gefs_bc/gefs_bc.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  naefs.ens${mbr}.${fyyyymmdd}.t${fcyc}z.grid3.f${fhr}.grib2
    done
 
    for mb in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 ; do 
      mbr=$mb
      typeset -Z2 mbr
-     mbr40=$((mb+30))
-     ln -sf  ${COMIN}.${fyyyymmdd}/cmce/cmce.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  naefs.ens${mbr40}.${fyyyymmdd}.t${fcyc}z.grid3.f${fhr}.grib2
+     if [ $gefs_number = 20 ] ; then
+       mbr40=$((mb+20))
+     elif [ $gefs_number = 30 ] ; then
+       mbr40=$((mb+30))
+     fi
+
+     ln -sf  ${COMIN}.${fyyyymmdd}/cmce_bc/cmce_bc.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  naefs.ens${mbr40}.${fyyyymmdd}.t${fcyc}z.grid3.f${fhr}.grib2
    done
 
   

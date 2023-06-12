@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_long_term_annual_mean.py
 Contact(s): Mallory Row
@@ -359,12 +360,12 @@ class LongTermAnnualMean:
                 ax.set_xticklabels(self.forecast_day_list)
                 ax.set_xlim([self.forecast_day_list[0],
                              self.forecast_day_list[-1]])
-                if ax.is_last_row() or (nsubplots % 2 != 0 \
+                if ax.get_subplotspec().is_last_row() or (nsubplots % 2 != 0 \
                         and self.model_list.index(model) == nsubplots-2):
                     ax.set_xlabel('Forecast Day')
                 else:
                     plt.setp(ax.get_xticklabels(), visible=False)
-                if ax.is_first_col():
+                if ax.get_subplotspec().is_first_col():
                     ax.set_ylabel('Mean')
                 else:
                     plt.setp(ax.get_yticklabels(), visible=False)

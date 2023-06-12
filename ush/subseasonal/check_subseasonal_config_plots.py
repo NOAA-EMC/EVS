@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Program Name: check_subseasonal_config_plots.py
 Contact(s): Shannon Shields
@@ -36,14 +37,12 @@ VCS_type_env_vars_dict = {
                         'g2gplots_event_eq'],
     'grid2obs_plots': ['g2oplots_model_plot_name_list', 
                        'g2oplots_type_list',
-                       'g2oplots_PrepBufr_msg_type_list',
-                       'g2oplots_PrepBufr_gather_by_list',
                        'g2oplots_PrepBufr_fcyc_list',
-                       'g2oplots_PrepBufr_vhr_list', 
+                       'g2oplots_PrepBufr_valid_hr_list', 
                        'g2oplots_PrepBufr_fhr_min',
-                       'g2oplots_PrepBufr_fhr_max', 
-                       'g2oplots_PrepBufr_event_eq',
-                       'g2oplots_PrepBufr_grid']
+                       'g2oplots_PrepBufr_fhr_max',
+                       'g2oplots_PrepBufr_fhr_inc',
+                       'g2oplots_event_eq']
 }
 VCS_type_env_check_list = ['shared', VERIF_CASE_STEP]
 for VCS_type_env_check in VCS_type_env_check_list:
@@ -84,7 +83,7 @@ if datetime.datetime.strptime(os.environ['end_date'], '%Y%m%d') \
 # Do check for valid config options
 VCS_type_list = os.environ[VERIF_CASE_STEP_abbrev+'_type_list'].split(' ')
 valid_VCS_type_opts_dict = {
-    'grid2grid_plots': ['anom', 'pres', 'ENSO', 'OLR', 'precip', 'sst', 
+    'grid2grid_plots': ['anom', 'pres_lvls', 'ENSO', 'OLR', 'precip', 'sst', 
                         'sea_ice'],
     'grid2obs_plots': ['PrepBufr']
 }
@@ -144,31 +143,6 @@ if VERIF_CASE_STEP == 'grid2grid_plots':
 elif VERIF_CASE_STEP == 'grid2obs_plots':
     valid_config_var_values_dict[VCS_abbrev
                                  +'_event_eq'] = ['YES', 'NO']
-    #for VCS_type in VCS_type_list:
-        #VCS_abbrev_type = VERIF_CASE_STEP_abbrev+'_'+VCS_type
-        #valid_config_var_values_dict[VCS_abbrev_type
-                                     #+'_msg_type_list'] = ['ADPUPA',
-                                                           #'AIRCAR',
-                                                           #'AIRCFT',
-                                                           #'ADPSFC',
-                                                           #'ERS1DA',
-                                                           #'GOESND',
-                                                           #'GPSIPW',
-                                                           #'MSONET',
-                                                           #'PROFLR',
-                                                           #'QKSWND',
-                                                           #'RASSDA',
-                                                           #'SATEMP',
-                                                           #'SATWND',
-                                                           #'SFCBOG',
-                                                           #'SFCSHP',
-                                                           #'SPSSMI',
-                                                           #'SYNDAT',
-                                                           #'VADWND',
-                                                           #'SURFACE',
-                                                           #'ANYAIR',
-                                                           #'ANYSFC',
-                                                           #'ONLYSF']
 
 # Run through and check config variables from dictionary
 for config_var in list(valid_config_var_values_dict.keys()):

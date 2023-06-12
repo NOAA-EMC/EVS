@@ -41,6 +41,7 @@ export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
+export SCRIPTevs=$HOMEevs/scripts
 
 
 ####################################
@@ -50,15 +51,27 @@ export cycle=t${cyc}z
 setpdy.sh 31
 . ./PDY
 
-if [ $VERIF_CASE = grid2obs ]; then
-    export VDATE=${VDATE:-$PDYm1}
-elif [ $VERIF_CASE = precip ]; then
-    export VDATE=${VDATE:-$PDYm1}
-elif [ $VERIF_CASE = snowfall ]; then
-    export VDATE=${VDATE:-$PDYm1}
+if [ $MODELNAME = sref ] ; then
+    export VDATE=${VDATE:-$PDYm2}
+    if [ $VERIF_CASE = precip ] ; then
+        export ush_dir=$USHevs/mesoscale/ush_sref_plot_precip_py
+    elif [ $VERIF_CASE = cnv ] ; then
+        export ush_dir=$USHevs/mesoscale/ush_sref_plot_cnv_py
+    else  
+        export ush_dir=$USHevs/mesoscale/ush_sref_plot_py
+    fi
+fi
 else
-    echo "The provided VERIF_CASE, $VERIF_CASE, is not supported for the $COMPONENT $STEP step"
-    exit 1
+    if [ $VERIF_CASE = grid2obs ]; then
+        export VDATE=${VDATE:-$PDYm1}
+    elif [ $VERIF_CASE = precip ]; then
+        export VDATE=${VDATE:-$PDYm1}
+    elif [ $VERIF_CASE = snowfall ]; then
+        export VDATE=${VDATE:-$PDYm1}
+    else
+        echo "The provided VERIF_CASE, $VERIF_CASE, is not supported for the $COMPONENT $STEP step"
+        exit 1
+    fi
 fi
 
 
@@ -70,11 +83,16 @@ export STEP=${STEP:-stats}
 export COMPONENT=${COMPONENT:-mesoscale}
 export RUN=${RUN:-atmos}
 
+if [ $RUN = atmos ] ; then
+  export INITDATE=${INITDATE:-$PDYm2}
+fi
+
 
 ####################################
 # Define COMIN/COMOUT variables:
 ####################################
 export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
+export COMINapcp24mean=${COMINspatial:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
 export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
@@ -87,7 +105,12 @@ echo $COMPATH
 ####################################
 # Execute the script.
 ####################################
-$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+if [ $MODELNAME = sref ] ; then
+    $SCRIPTevs/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+else
+    $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+fi 
+
 export err=$?; err_chk
 
 if [ -e "$pgmout" ]; then

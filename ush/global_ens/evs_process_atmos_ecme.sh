@@ -91,11 +91,21 @@ while [ ${hourix} -lt 31 ]; do
 
   if [ ${hourix} = 0 ] ; then
     DCD=${dcom}/$yyyymmdd/wgrbbul/ecmwf/DCD${imdh}00${vmdh}001
-    >$outdata/ecmanl.t${cyc}z.grid3.f000.grib1
-    for n in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 ; do
-     $WGRIB $DCD|grep "${VAR[$n]}"|$WGRIB -i -grib $DCD -o x 
-     cat x >> $outdata/ecmanl.t${cyc}z.grid3.f000.grib1
-    done
+
+    if [ -s $DCD ] ; then
+      >$outdata/ecmanl.t${cyc}z.grid3.f000.grib1
+      for n in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 ; do
+       $WGRIB $DCD|grep "${VAR[$n]}"|$WGRIB -i -grib $DCD -o x 
+       cat x >> $outdata/ecmanl.t${cyc}z.grid3.f000.grib1
+      done
+     else
+        export subject="ECME Data Missing for EVS ${COMPONENT}"
+        export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
+        echo "Warning:  No ECME data for ${ymdh}" > mailmsg
+        echo Missing files are in ${dcom}/$yyyymmdd/wgrbbul/ecmwf  >> mailmsg
+        echo "Job ID: $jobid" >> mailmsg
+        cat mailmsg | mail -s "$subject" $maillist
+     fi 
   fi 
 
   E1E=${dcom}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}001

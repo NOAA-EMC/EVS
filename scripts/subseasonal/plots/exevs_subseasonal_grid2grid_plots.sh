@@ -47,40 +47,43 @@ status=$?
 echo
 
 # Create job scripts
-python $USHevs/subseasonal/subseasonal_plots_grid2grid_create_job_scripts.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran subseasonal_plots_grid2grid_create_job_scripts.py"
-
-# Run job scripts
-chmod u+x $DATA/$VERIF_CASE_STEP/plot_job_scripts/*
-ncount_job=$(ls -l  $DATA/$VERIF_CASE_STEP/plot_job_scripts/job* |wc -l)
-nc=1
-if [ $USE_CFP = YES ]; then
-    ncount_poe=$(ls -l  $DATA/$VERIF_CASE_STEP/plot_job_scripts/poe* |wc -l)
-    while [ $nc -le $ncount_poe ]; do
-	poe_script=$DATA/$VERIF_CASE_STEP/plot_job_scripts/poe_jobs${nc}
-	chmod 775 $poe_script
-	export MP_PGMMODEL=mpmd
-	export MP_CMDFILE=${poe_script}
-	if [ $machine = WCOSS2 ]; then
-	    export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-	    nselect=$(cat $PBS_NODEFILE | wc -l)
-	    nnp=$(($nselect * $nproc))
-	    launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
-	elif [ $machine = HERA -o $machine = ORION ]; then
-	    export SLURM_KILL_BAD_EXIT=0
-	    launcher="srun --export=ALL --multi-prog"
-	fi
-	$launcher $MP_CMDFILE
-	nc=$((nc+1))
-    done
-else
-    while [ $nc -le $ncount_job ]; do
-	sh +x $DATA/$VERIF_CASE_STEP/plot_job_scripts/job${nc}
-	nc=$((nc+1))
-    done
-fi
+for group in condense_stats filter_stats make_plots tar_images; do
+    export JOB_GROUP=$group
+    echo "Creating and running jobs for grid-to-grid plots: ${JOB_GROUP}"
+    python $USHevs/subseasonal/subseasonal_plots_grid2grid_create_job_scripts.py
+    status=$?
+    [[ $status -ne 0 ]] && exit $status
+    [[ $status -eq 0 ]] && echo "Successfully ran subseasonal_plots_grid2grid_create_job_scripts.py"
+    # Run job scripts
+    chmod u+x $DATA/$VERIF_CASE_STEP/plot_job_scripts/$group/*
+    group_ncount_job=$(ls -l  $DATA/$VERIF_CASE_STEP/plot_job_scripts/$group/job* |wc -l)
+    nc=1
+    if [ $USE_CFP = YES ]; then
+        group_ncount_poe=$(ls -l  $DATA/$VERIF_CASE_STEP/plot_job_scripts/$group/poe* |wc -l)
+        while [ $nc -le $group_ncount_poe ]; do
+	    poe_script=$DATA/$VERIF_CASE_STEP/plot_job_scripts/$group/poe_jobs${nc}
+	    chmod 775 $poe_script
+	    export MP_PGMMODEL=mpmd
+	    export MP_CMDFILE=${poe_script}
+	    if [ $machine = WCOSS2 ]; then
+	        export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
+	        nselect=$(cat $PBS_NODEFILE | wc -l)
+	        nnp=$(($nselect * $nproc))
+	        launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+	    elif [ $machine = HERA -o $machine = ORION ]; then
+	        export SLURM_KILL_BAD_EXIT=0
+	        launcher="srun --export=ALL --multi-prog"
+	    fi
+	    $launcher $MP_CMDFILE
+	    nc=$((nc+1))
+        done
+    else
+        while [ $nc -le $group_ncount_job ]; do
+	    sh +x $DATA/$VERIF_CASE_STEP/plot_job_scripts/$group/job${nc}
+	    nc=$((nc+1))
+        done
+    fi
+done
 
 # Copy files to desired location
 if [ $SENDCOM = YES ]; then
@@ -89,7 +92,6 @@ if [ $SENDCOM = YES ]; then
     for VERIF_TYPE_SUBDIR_PATH in $DATA/$VERIF_CASE_STEP/plot_output/$RUN.${end_date}/images/*; do
 	VERIF_TYPE_SUBDIR=$(echo ${VERIF_TYPE_SUBDIR_PATH##*/})
 	cd $VERIF_TYPE_SUBDIR
-	VERIF_TYPE_fhr_max=$(eval echo \$g2gplots_${VERIF_TYPE_SUBDIR}_fhr_max)
 	large_tar_file=${DATA}/${VERIF_CASE_STEP}/plot_output/${RUN}.${end_date}/images/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${PDYm2}.tar
         tar -cvf $large_tar_file *.tar
 	cp -v $large_tar_file $COMOUT/.

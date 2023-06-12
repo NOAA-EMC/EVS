@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: global_det_atmos_stats_grid2grid_create_daily_avg.py
 Contact(s): Mallory Row
@@ -93,8 +94,6 @@ while valid_hr <= int(valid_hr_end):
                                    .strftime('%Y%m%d%H')+'to'
                                    +daily_avg_valid_end\
                                    .strftime('%Y%m%d%H')+'.nc')
-        if os.path.exists(output_file):
-            os.remove(output_file)
         daily_avg_fcst_sum = 0
         daily_avg_fcst_file_list = []
         daily_avg_obs_sum = 0
@@ -174,6 +173,16 @@ while valid_hr <= int(valid_hr_end):
                 expected_nfiles = 3
         if len(daily_avg_fcst_file_list) == expected_nfiles \
                 and len(daily_avg_obs_file_list) == expected_nfiles:
+            if not os.path.exists(output_file):
+                make_daily_avg_output_file = True
+            else:
+                make_daily_avg_output_file = False
+                print(f"Output File exists: {output_file}")
+        else:
+            print("WARNING: Cannot create daily average file "+output_file+" "
+                  +"; need "+str(expected_nfiles)+" input files")
+            make_daily_avg_output_file = False
+        if make_daily_avg_output_file:
             print("Output File: "+output_file)
             output_file_data = netcdf.Dataset(output_file, 'w',
                                               format='NETCDF3_CLASSIC')
@@ -193,6 +202,23 @@ while valid_hr <= int(valid_hr_end):
                 output_file_data.createDimension(
                     dim,
                     len(input_file_data.dimensions[dim])
+                )
+            for input_var_name in ['lat', 'lon']:
+                write_data_name_var = output_file_data.createVariable(
+                    input_var_name,
+                    input_file_data.variables[input_var_name]\
+                    .datatype,
+                    input_file_data.variables[input_var_name]\
+                    .dimensions
+                )
+                for k in input_file_data.variables[input_var_name].ncattrs():
+                    write_data_name_var.setncatts(
+                        {k: input_file_data.variables[
+                                input_var_name
+                         ].getncattr(k)}
+                    )
+                write_data_name_var[:] = (
+                    input_file_data.variables[input_var_name][:]
                 )
             for data_name in ['FCST', 'OBS']:
                 for input_var in input_file_data_var_list:
@@ -262,9 +288,6 @@ while valid_hr <= int(valid_hr_end):
             else:
                 output_file_data.close()
             input_file_data.close()
-        else:
-            print("WARNING: Cannot create daily average file "+output_file+" "
-                  +"; need "+str(expected_nfiles)+" input files")
         if job_name == 'DailyAvg_GeoHeightAnom':
             daily_avg_day+=1
         else:

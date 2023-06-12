@@ -82,10 +82,20 @@ if [ $get_nohrsc24h = yes ] ; then
 fi
 
 if [ $get_ghrsst = yes ] ; then
-  cp $COMINsst/$vday/validation_data/marine/ghrsst/${vday}120000-UKMO-L4_GHRSST-SSTfnd-GMPE-GLOB-v03.0-fv03.0.nc $COMOUT_gefs/ghrsst.t00z.nc
+  #cp $COMINsst/$vday/validation_data/marine/ghrsst/${vday}120000-UKMO-L4_GHRSST-SSTfnd-GMPE-GLOB-v03.0-fv03.0.nc $COMOUT_gefs/ghrsst.t00z.nc
+  if [ -s $COMINsst/$vday/validation_data/marine/ghrsst/${vday}_OSPO_L4_GHRSST.nc ] ; then
+    cp $COMINsst/$vday/validation_data/marine/ghrsst/${vday}_OSPO_L4_GHRSST.nc $COMOUT_gefs/ghrsst.t00z.nc
+  else
+     export subject="GHRSST OSPO Data Missing for EVS ${COMPONENT}"
+     export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
+     echo "Warning: No GHRSST OSPO data was available for valid date ${vday}" > mailmsg
+     echo Missing file is  $COMINsst/$vday/validation_data/marine/ghrsst/${vday}_OSPO_L4_GHRSST.nc >> mailmsg
+     echo "Job ID: $jobid" >> mailmsg
+     cat mailmsg | mail -s "$subject" $maillist 
+  fi
 fi
 
-get_gefs_icec24h
+#get_gefs_icec24h
 #if [ $get_gefs_icec = yes ] || [ $test_icec = yes ] ; then
 #  $USHevs/global_ens/evs_get_gens_atmos_data.sh gefs_icec24h 
 #  $USHevs/global_ens/evs_get_gens_atmos_data.sh gefs_icec7day
