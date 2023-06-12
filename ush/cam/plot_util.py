@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import sys
 import datetime as datetime
@@ -330,8 +332,12 @@ def get_stat_file_line_type_columns(logger, met_version, line_type):
          logger.error("VCNT is not a valid LINE_TYPE in METV"+met_version)
          exit(1)
    elif line_type == 'CTC':
-      if met_version >= 6.0:
+       if met_version >= 11.0:
          stat_file_line_type_columns = [
+           'TOTAL', 'FY_OY', 'FY_ON', 'FN_OY', 'FN_ON', 'EC_VALUE'
+         ]
+       elif met_version >= 6.0:
+          stat_file_line_type_columns = [
             'TOTAL', 'FY_OY', 'FY_ON', 'FN_OY', 'FN_ON'
          ]
    elif line_type == 'NBRCNT':
