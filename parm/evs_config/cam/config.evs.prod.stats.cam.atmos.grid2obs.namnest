@@ -106,7 +106,7 @@ elif [ "$NEST" = "hi" ]; then
     if [ "$OBSNAME" = "raob" ]; then
         export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH"
     elif [ "$OBSNAME" = "metar" ]; then
-        export VAR_NAME_LIST=""
+        export VAR_NAME_LIST="TMP2m DPT2m UGRD_VGRD10m"
     elif [ "$OBSNAME" = "mping" ]; then
         export VAR_NAME_LIST=""
     else
