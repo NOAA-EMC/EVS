@@ -2302,7 +2302,7 @@ class Reference():
                                   'fcst_var_options': '',
                                   'obs_var_names': ['DPT'],
                                   'obs_var_levels': ['Z2'],
-                                  'obs_var_thresholds': '>=277.594,>=283.15,>=288.706,>=294.261',
+                                  'obs_var_thresholds': '>=272.039,>=277.594,>=283.15,>=288.706,>=294.261',
                                   'obs_var_options': '',
                                   'plot_group':'sfc_upper'},
                     }

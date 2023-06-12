@@ -138,7 +138,7 @@ graphics = {
                                     'FCST_LEVEL':'Z2',
                                     'OBS_LEVEL':'Z2',
                                     'FCST_THRESHs':['',''],
-                                    'OBS_THRESHs':['','>=277.594'],
+                                    'OBS_THRESHs':['','>=272.039'],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'BILIN',
                                     'INTERP_PNTSs':[''],
