@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Program Name: subseasonal_stats_grid2grid_create_monthly_reformat_job_scripts.py
 Contact(s): Shannon Shields
@@ -59,7 +60,7 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 ################################################
 reformat_data_obs_jobs_dict = {
     'anom': {},
-    'pres': {},
+    'pres_lvls': {},
     'ENSO': {},
     'OLR': {},
     'precip': {},
@@ -71,35 +72,7 @@ reformat_data_model_jobs_dict = {
     'ENSO': {},
     'OLR': {},
     'precip': {},
-    'pres': {
-        #'GeoHeightAnom': {'env': {'var1_name': 'HGT',
-                                  #'var1_levels': 'P500',
-                                  #'met_config_overrides': (
-                                      #"'climo_mean = fcst;'"
-                                  #)},
-                          #'commands': [sub_util.metplus_command(
-                                           #'GridStat_fcstSUBSEASONAL_'
-                                            #+'obsGFS_climoERA5_'
-                                            #+'NetCDF.conf'
-                                       #),
-                                       #sub_util.python_command(
-                                           #'subseasonal_stats_grid2grid'
-                                           #'_create_anomaly.py',
-                                           #['HGT_P500',
-                                            #os.path.join(
-                                                #'$DATA',
-                                                #'${VERIF_CASE}_${STEP}',
-                                                #'METplus_output',
-                                                #'${RUN}.{valid?fmt=%Y%m%d}',
-                                                #'$MODEL', '$VERIF_CASE',
-                                                #'grid_stat_${VERIF_TYPE}_'
-                                                #+'${job_name}_'
-                                                #+'{lead?fmt=%2H}0000L_'
-                                                #+'{valid?fmt=%Y%m%d}_'
-                                                #+'{valid?fmt=%H}0000V_pairs.nc'
-                                             #)]
-                                       #)]},
-    },
+    'pres_lvls': {},
     'seaice': {
         'Concentration': {'env': {'var1_name': 'ICEC',
                                   'var1_levels': 'Z0',},
@@ -128,13 +101,11 @@ reformat_data_model_jobs_dict = {
 
 
 # Create job scripts
-if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
+if JOB_GROUP in ['reformat_data', 'assemble_data']:
     if JOB_GROUP == 'reformat_data':
         JOB_GROUP_jobs_dict = reformat_data_model_jobs_dict
     elif JOB_GROUP == 'assemble_data':
         JOB_GROUP_jobs_dict = assemble_data_model_jobs_dict
-    elif JOB_GROUP == 'generate_stats':
-        JOB_GROUP_jobs_dict = generate_stats_jobs_dict
     for verif_type in VERIF_CASE_STEP_type_list:
         print("----> Making job scripts for "+VERIF_CASE_STEP+" "
               +verif_type+" for job group "+JOB_GROUP)
@@ -168,13 +139,6 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     job_env_dict['valid_hr_start'] = '00'
                     job_env_dict['valid_hr_end'] = '00' #12
                     job_env_dict['valid_hr_inc'] = '12'
-                if verif_type == 'pres' \
-                        and verif_type_job == 'GeoHeightAnom':
-                    if int(job_env_dict['valid_hr_start']) - 12 > 0:
-                        job_env_dict['valid_hr_start'] = str(
-                            int(job_env_dict['valid_hr_start']) - 12
-                        )
-                        job_env_dict['valid_hr_inc'] = '12'
             valid_start_date_dt = datetime.datetime.strptime(
                 start_date+job_env_dict['valid_hr_start'],
                 '%Y%m%d%H'
@@ -204,11 +168,6 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     job.write('set -x\n')
                     job.write('\n')
                     # Set any environment variables for special cases
-                    #if JOB_GROUP == 'reformat_data':
-                        #if verif_type == 'pres':
-                            #job_env_dict['TRUTH'] = os.environ[
-                                #VERIF_CASE_STEP_abbrev_type+'_truth_name_list'
-                            #].split(' ')[model_idx]
                     # Do file checks
                     all_truth_file_exist = False
                     model_files_exist = False
@@ -226,20 +185,9 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         job_env_dict.pop('fhr_inc')
                         #job_env_dict['INIT'] = init_dt.strftime('%Y%m%d%H')
                     if JOB_GROUP == 'reformat_data':
-                        if verif_type == 'pres' \
-                                and verif_type_job == 'GeoHeightAnom':
-                            check_truth_files = True
-                        else:
-                            check_truth_files = False
+                        check_truth_files = False
                     elif JOB_GROUP == 'assemble_data':
                         check_truth_files = False
-                    elif JOB_GROUP == 'generate_stats':
-                        if verif_type == 'pres' \
-                                and verif_type_job in [
-                                    'DailyAvg_GeoHeightAnom']:
-                            check_truth_files = False
-                        else:
-                            check_truth_files = True
                     if check_truth_files:
                         all_truth_file_exist = sub_util.check_truth_files(
                             job_env_dict
@@ -337,46 +285,5 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             job.write(cmd+'\n')
                     job.close()
                     date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
-elif JOB_GROUP == 'gather_stats':
-    print("----> Making job scripts for "+VERIF_CASE_STEP+" "
-      +"for job group "+JOB_GROUP)
-    # Initialize job environment dictionary
-    job_env_dict = sub_util.initalize_job_env_dict(
-        JOB_GROUP, JOB_GROUP,
-        VERIF_CASE_STEP_abbrev, JOB_GROUP
-    )
-    # Loop through and write job script for dates and models
-    date_dt = start_date_dt
-    while date_dt <= end_date_dt:
-        #sdate_dt = date_dt - datetime.timedelta(days=28)
-        #job_env_dict['DATESTART'] = sdate_dt.strftime('%Y%m%d')
-        job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
-        for model_idx in range(len(model_list)):
-            job_env_dict['MODEL'] = model_list[model_idx]
-            njobs+=1
-            # Create job file
-            job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
-            print("Creating job script: "+job_file)
-            job = open(job_file, 'w')
-            job.write('#!/bin/bash\n')
-            job.write('set -x\n')
-            job.write('\n')
-            # Set any environment variables for special cases
-            # Write environment variables
-            for name, value in job_env_dict.items():
-                job.write('export '+name+'='+value+'\n')
-            job.write('\n')
-            # Do file checks
-            stat_files_exist = sub_util.check_stat_files(job_env_dict)
-            if stat_files_exist:
-                write_job_cmds = True
-            else:
-                write_job_cmds = False
-            # Write job commands
-            if write_job_cmds:
-                for cmd in gather_stats_jobs_dict['commands']:
-                    job.write(cmd+'\n')
-            job.close()
-        date_dt = date_dt + datetime.timedelta(days=1)
 
 print("END: "+os.path.basename(__file__))

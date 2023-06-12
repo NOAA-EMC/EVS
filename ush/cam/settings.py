@@ -768,6 +768,7 @@ class Reference():
                                     'RH': 'Relative Humidity',
                                     'SPFH': 'Specific Humidity',
                                     'DPT': 'Dewpoint Temperature',
+                                    'TDO': 'Observed Dew Point',
                                     'UGRD': 'Zonal Wind Speed',
                                     'VGRD': 'Meridional Wind Speed',
                                     'UGRD_VGRD': 'Vector Wind',
@@ -789,6 +790,7 @@ class Reference():
                                     'TOZNE': 'Total Ozone',
                                     'OZCON1': 'OZCON1',
                                     'HPBL': 'Planetary Boundary Layer Height',
+                                    'PBL': 'Planetary Boundary Layer Height',
                                     'TSOIL': 'Soil Temperature',
                                     'SOILW': ('Volumetric Soil Moisture'
                                               + ' Content'),
@@ -2402,28 +2404,28 @@ class Reference():
                         'DAY1_0100_TSTM'
                     ],
                     'var_dict': {
-                        'DPT2m': {'fcst_var_names': ['DPT'],
-                                  'fcst_var_levels': ['Z2'],
-                                  'fcst_var_thresholds': (' >=277.594, >=283.15,'
-                                                          + ' >=288.706, >=294.261'),
-                                  'fcst_var_options': '',
-                                  'obs_var_names': ['DPT'],
-                                  'obs_var_levels': ['Z2'],
-                                  'obs_var_thresholds': (' >=277.594, >=283.15,'
+                       'DPT2m': {'fcst_var_names': ['DPT'],
+                                 'fcst_var_levels': ['Z2'],
+                                 'fcst_var_thresholds': (' >=277.594, >=283.15,'
                                                          + ' >=288.706, >=294.261'),
-                                  'obs_var_options': '',
-                                  'plot_group':'sfc_upper'},
-                        'RH2m': {'fcst_var_names': ['RH'],
-                                  'fcst_var_levels': ['Z2'],
-                                  'fcst_var_thresholds': (' <=15, >=15, <=20, >=20, '
-                                                          + ' <=25, >=25, <=30, >=30'),
-                                  'fcst_var_options': '',
-                                  'obs_var_names': ['RH'],
-                                  'obs_var_levels': ['Z2'],
-                                  'obs_var_thresholds': (' <=15, >=15, <=20, >=20, '
+                                 'fcst_var_options': '',
+                                 'obs_var_names': ['DPT'],
+                                 'obs_var_levels': ['Z2'],
+                                 'obs_var_thresholds': (' >=277.594, >=283.15,'
+                                                        + ' >=288.706, >=294.261'),
+                                 'obs_var_options': '',
+                                 'plot_group':'sfc_upper'},
+                       'RH2m': {'fcst_var_names': ['RH'],
+                                 'fcst_var_levels': ['Z2'],
+                                 'fcst_var_thresholds': (' <=15, >=15, <=20, >=20, '
                                                          + ' <=25, >=25, <=30, >=30'),
-                                  'obs_var_options': '',
-                                  'plot_group':'sfc_upper'},
+                                 'fcst_var_options': '',
+                                 'obs_var_names': ['RH'],
+                                 'obs_var_levels': ['Z2'],
+                                 'obs_var_thresholds': (' <=15, >=15, <=20, >=20, '
+                                                        + ' <=25, >=25, <=30, >=30'),
+                                 'obs_var_options': '',
+                                 'plot_group':'sfc_upper'},
                         'VIS': {'fcst_var_names': ['VIS'],
                                    'fcst_var_levels': ['Z0'],
                                    'fcst_var_thresholds': ('<=805, <=1609,'
@@ -2500,7 +2502,7 @@ class Reference():
                     'vx_mask_list' : [
                         'CONUS', 'G130', 'G214', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GMC', 'APL', 'NAK', 'SAK'
+                        'LMV', 'GMC', 'APL', 'NAK', 'SAK', 'FireWx'
                     ],
                     'var_dict': {
                         'TMP2m': {'fcst_var_names': ['TMP'],
@@ -2525,7 +2527,7 @@ class Reference():
                                   'fcst_var_levels': ['Z2'],
                                   'fcst_var_thresholds': '',
                                   'fcst_var_options': '',
-                                  'obs_var_names': ['DPT'],
+                                  'obs_var_names': ['TDO'],
                                   'obs_var_levels': ['Z2'],
                                   'obs_var_thresholds': '',
                                   'obs_var_options': '',
@@ -2580,7 +2582,7 @@ class Reference():
                                     'fcst_var_levels': ['Z0'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['GUST'],
+                                    'obs_var_names': ['MXGS'],
                                     'obs_var_levels': ['Z0'],
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
@@ -2590,6 +2592,15 @@ class Reference():
                                  'fcst_var_thresholds': '',
                                  'fcst_var_options': '',
                                  'obs_var_names': ['HPBL'],
+                                 'obs_var_levels': ['L0'],
+                                 'obs_var_thresholds': '',
+                                 'obs_var_options': '',
+                                 'plot_group':'sfc_upper'},
+                        'PBL': {'fcst_var_names': ['HGT'],
+                                 'fcst_var_levels': ['L0'],
+                                 'fcst_var_thresholds': '',
+                                 'fcst_var_options': '',
+                                 'obs_var_names': ['PBL'],
                                  'obs_var_levels': ['L0'],
                                  'obs_var_thresholds': '',
                                  'obs_var_options': '',
@@ -2612,6 +2623,15 @@ class Reference():
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'sfc_upper'},
+                        'WIND10m': {'fcst_var_names': ['WIND'],
+                                    'fcst_var_levels': ['Z10'],
+                                    'fcst_var_thresholds': '',
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['WIND'],
+                                    'obs_var_levels': ['Z10'],
+                                    'obs_var_thresholds': '',
+                                    'obs_var_options': '',
+                                    'plot_group':'sfc_upper'},
                     }
                 },
                 'VL1L2': {
@@ -2621,7 +2641,7 @@ class Reference():
                     'vx_mask_list' : [
                         'CONUS', 'G130', 'G214', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GMC', 'APL', 'NAK', 'SAK'
+                        'LMV', 'GMC', 'APL', 'NAK', 'SAK', 'FireWx'
                     ],
                     'var_dict': {
                         'UGRD_VGRD10m': {'fcst_var_names': ['UGRD_VGRD'],
@@ -2642,7 +2662,7 @@ class Reference():
                     'vx_mask_list' : [
                         'CONUS', 'G130', 'G214', 'G221', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
-                        'LMV', 'GMC', 'APL', 'NAK', 'SAK'
+                        'LMV', 'GMC', 'APL', 'NAK', 'SAK', 'FireWx'
                     ],
                     'var_dict': {
                          'RH2m': {'fcst_var_names': ['RH'],
@@ -2658,13 +2678,11 @@ class Reference():
                                   'plot_group':'sfc_upper'},
                          'DPT2m': {'fcst_var_names': ['DPT'],
                                   'fcst_var_levels': ['Z2'],
-                                  'fcst_var_thresholds': (' >=4.4, >=10,'
-                                                          + ' >=15.55, >=21.11'),
+                                  'fcst_var_thresholds': '>=277.59,>=283.15,>=288.7,>=294.26',
                                   'fcst_var_options': '',
                                   'obs_var_names': ['TDO'],
                                   'obs_var_levels': ['Z2'],
-                                  'obs_var_thresholds': (' >=4.4, >=10,'
-                                                         + ' >=15.55, >=21.11'),
+                                  'obs_var_thresholds': '>=277.59,>=283.15,>=288.7,>=294.26',
                                   'obs_var_options': '',
                                   'plot_group':'sfc_upper'},
                         'VISsfc': {'fcst_var_names': ['VIS'],

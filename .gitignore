@@ -1,0 +1,20 @@
+# Ignore all compiled files
+#--------------------------
+__pycache__
+*.pyc
+*.[aox]
+*.mod
+._*
+.DS_Store
+nohup.out
+
+# Ignore editor generated backup files
+#-------------------------------------
+*~
+*.sw[a-p]
+
+# Ignore folders
+#-------------------
+exec/
+.idea/
+.vscode/
