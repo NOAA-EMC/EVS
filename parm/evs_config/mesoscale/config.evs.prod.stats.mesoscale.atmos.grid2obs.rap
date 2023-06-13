@@ -25,6 +25,7 @@ export LOG_MET_OUTPUT_TO_METPLUS="yes"
 export FHR_START=0
 export FHR_INCR=1
 export FHR_END="51"
+#export FHR_END="21"
 
 # Model/Obs Settings
 export COMINfcst=${COMINrap}
@@ -50,10 +51,10 @@ if [ "$VAR_NAME_LISTJ" = "HGT TMP UGRD VGRD UGRD_VGRD SPFH" ]; then
   export FHR_GROUP_LIST="FULL"
   export FHR_END_FULL="51"
   export FHR_INCR_FULL="06"
-  export FHR_END_SHORT="51"
+  export FHR_END_SHORT="21"
   export FHR_INCR_SHORT="01"
   export MIN_IHOUR="00"
-    
+  
   echo "END: $(basename ${BASH_SOURCE[0]})"
 
 else
@@ -73,11 +74,13 @@ fi
 
   if [ "$NEST" = "namer" ]; then
     export SKIP_IF_OUTPUT_EXISTS="yes"
-    #export FHR_GROUP_LIST="SHORT FULL"
-    export FHR_GROUP_LIST="FULL"
+    export FHR_GROUP_LIST="SHORT FULL"
+    # export FHR_GROUP_LIST="FULL"
+    # export FHR_GROUP_LIST="SHORT"
     export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awip32f{lead?fmt=%2H}.grib2"
     if [ "$OBSNAME" = "raob" ]; then
       export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH"
+      # export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD"
     elif [ "$OBSNAME" = "metar" ]; then
       export VAR_NAME_LIST=""
     else
@@ -86,7 +89,9 @@ fi
     fi
     export MASK_POLY_LIST="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/G221_NAMER.nc"
     export MASK_CUSTOM_LIST=""
-    export FHR_GROUP_LIST="FULL"
+    #export FHR_GROUP_LIST="FULL"
+    export FHR_GROUP_LIST="SHORT"
+    # try using SHORT
     export MIN_IHOUR="00"
     export FHR_END_FULL="51"
     export FHR_INCR_FULL="06"
@@ -95,8 +100,9 @@ fi
 
   elif [ "$NEST" = "conus" ]; then
     export SKIP_IF_OUTPUT_EXISTS="yes"
-    # export FHR_GROUP_LIST="SHORT FULL"
-    export FHR_GROUP_LIST="FULL"
+    export FHR_GROUP_LIST="SHORT FULL"
+    #export FHR_GROUP_LIST="FULL"
+    #export FHR_GROUP_LIST="SHORT"
     export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awip32f{lead?fmt=%2H}.grib2"
     # export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awp130pgrbf{lead?fmt=%2H}.grib2"
     if [ "$OBSNAME" = "raob" ]; then
@@ -119,8 +125,9 @@ fi
 
   elif [ "$NEST" = "conusc" ]; then
     export SKIP_IF_OUTPUT_EXISTS="yes"
-    # export FHR_GROUP_LIST="SHORT FULL"
-    export FHR_GROUP_LIST="FULL"
+    export FHR_GROUP_LIST="SHORT FULL"
+    # export FHR_GROUP_LIST="FULL"
+    # export FHR_GROUP_LIST="SHORT"
     # export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awip32f{lead?fmt=%2H}.grib2"
     export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awp130pgrbf{lead?fmt=%2H}.grib2"
     if [ "$OBSNAME" = "raob" ]; then
@@ -143,8 +150,9 @@ fi
   
   elif [ "$NEST" = "subreg" ]; then 
     export SKIP_IF_OUTPUT_EXISTS="yes"
-    # export FHR_GROUP_LIST="SHORT FULL"
-    export FHR_GROUP_LIST="FULL"
+    export FHR_GROUP_LIST="SHORT FULL"
+    # export FHR_GROUP_LIST="FULL"
+    # export FHR_GROUP_LIST="SHORT"
     export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awip32f{lead?fmt=%2H}.grib2"
     if [ "$OBSNAME" = "raob" ]; then
       export VAR_NAME_LIST=""
@@ -164,8 +172,9 @@ fi
   
   elif [ "$NEST" = "ak" ]; then
     export SKIP_IF_OUTPUT_EXISTS="yes"
-    # export FHR_GROUP_LIST="SHORT FULL"
-    export FHR_GROUP_LIST="FULL"
+    export FHR_GROUP_LIST="SHORT FULL"
+    # export FHR_GROUP_LIST="FULL"
+    # export FHR_GROUP_LIST="SHORT"
     export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awip32f{lead?fmt=%2H}.grib2"
     # export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awp242f{lead?fmt=%2H}.grib2"
     if [ "$OBSNAME" = "raob" ]; then
@@ -187,8 +196,9 @@ fi
 
   elif [ "$NEST" = "akc" ]; then
     export SKIP_IF_OUTPUT_EXISTS="yes"
-    # export FHR_GROUP_LIST="SHORT FULL"
-    export FHR_GROUP_LIST="FULL"
+    export FHR_GROUP_LIST="SHORT FULL"
+    # export FHR_GROUP_LIST="FULL"
+    # export FHR_GROUP_LIST="SHORT"
     # export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awip32f{lead?fmt=%2H}.grib2"
     export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awp242f{lead?fmt=%2H}.grib2"
     if [ "$OBSNAME" = "raob" ]; then
@@ -211,8 +221,9 @@ fi
 
   elif [ "$NEST" = "spc_otlk" ]; then
     export SKIP_IF_OUTPUT_EXISTS="yes"
-    # export FHR_GROUP_LIST="SHORT FULL"
-    export FHR_GROUP_LIST="FULL"
+    export FHR_GROUP_LIST="SHORT FULL"
+    # export FHR_GROUP_LIST="FULL"
+    # export FHR_GROUP_LIST="SHORT"
     export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awip32f{lead?fmt=%2H}.grib2"
     if [ "$OBSNAME" = "raob" ]; then
       export VAR_NAME_LIST="SBCAPE MLCAPE"
