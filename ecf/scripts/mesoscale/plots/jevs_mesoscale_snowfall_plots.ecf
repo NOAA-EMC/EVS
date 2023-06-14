@@ -1,4 +1,4 @@
-#!/bin/bash
+#PBS -S /bin/bash
 #PBS -N jevs_mesoscale_snowfall_plots
 #PBS -j oe
 #PBS -S /bin/bash
@@ -36,7 +36,7 @@ export VERIF_CASE="snowfall"
 export MODELNAME=${COMPONENT}
 
 # EVS Settings
-export HOMEevs="/lfs/h2/emc/vpppg/noscrub/$USER/temp/EVS"
+export HOMEevs="/lfs/h2/emc/vpppg/noscrub/$USER/EVS"
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}
 

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: mesoscale_plots_precip_spatial_map.py
 Contact(s): Marcel Caron, Mallory Row, Roshan Shrestha

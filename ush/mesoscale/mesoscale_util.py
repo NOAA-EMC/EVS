@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # =============================================================================
 #
 # NAME: mesoscale_util.py
@@ -9,7 +10,8 @@
 # =============================================================================
 
 import os
-from collections.abc import Iterable
+import sys
+import datetime
 import numpy as np
 import subprocess
 from collections.abc import Iterable
