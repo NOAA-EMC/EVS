@@ -1,5 +1,5 @@
 #PBS -S /bin/bash
-#PBS -N jevs_narre_plots_%LAG%_%CYC%
+#PBS -N jevs_narre_plots_31days_%CYC%
 #PBS -j oe
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
