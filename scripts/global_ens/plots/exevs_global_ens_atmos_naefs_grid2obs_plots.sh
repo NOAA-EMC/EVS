@@ -212,7 +212,7 @@ for stats in  acc bias_mae crps rmse_spread me_mae ; do
 
     for var in $vars ; do
       if [ $var = tmp ] || [ $var = dpt ] ; then
-	 levels='2m 250mb'
+	 levels='2m 850mb'
       elif [ $var = ugrd ] || [ $var = vgrd ] ; then
 	 levels='10m 850mb 250mb'
       fi
