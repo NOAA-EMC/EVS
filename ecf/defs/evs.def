@@ -28,10 +28,8 @@ suite evs
                         endfamily  # stats
                         family plots
                             task jevs_narre_plots_31days
-                                edit LAG "31"
                                 trigger ../stats/jevs_narre_stats == complete
                             task jevs_narre_plots_90days
-                                edit LAG "90"
                                 trigger ../stats/jevs_narre_stats == complete
                         endfamily  # plots
                     endfamily  # narre

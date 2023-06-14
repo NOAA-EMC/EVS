@@ -47,7 +47,7 @@ export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=narre
 
-export past_days=%LAG%
+export past_days=31
 
 # set variables needed/used in j-job called by this ecf script
 export met_v=${met_ver:0:4}
