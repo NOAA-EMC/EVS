@@ -199,7 +199,7 @@ fi
 
 cd $plot_dir
 
-for stats in  acc bias_mae crps rmse_spread me ; do
+for stats in  acc bias_mae crps rmse_spread me_mae ; do
  for score_type in lead_average ; do
 
     leads='.png'
@@ -212,7 +212,7 @@ for stats in  acc bias_mae crps rmse_spread me ; do
 
     for var in $vars ; do
       if [ $var = tmp ] || [ $var = dpt ] ; then
-	 levels='2m'
+	 levels='2m 250mb'
       elif [ $var = ugrd ] || [ $var = vgrd ] ; then
 	 levels='10m 850mb 250mb'
       fi
