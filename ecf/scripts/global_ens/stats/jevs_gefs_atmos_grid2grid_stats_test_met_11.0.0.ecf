@@ -35,7 +35,7 @@ module load wgrib2/$wgrib2_ver
 module load libpng/$libpng_ver
 module load zlib/$zlib_ver
 module load jasper/$jasper_ver
-module load netcdf/$netcdf_ver
+#module load netcdf/$netcdf_ver
 module load cfp/$cfp_ver
 module load udunits/${udunits_ver}
 

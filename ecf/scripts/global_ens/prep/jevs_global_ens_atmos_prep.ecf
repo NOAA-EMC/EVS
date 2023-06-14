@@ -5,7 +5,7 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=05:45:00
+#PBS -l walltime=05:00:00
 #PBS -l place=vscatter,select=3:ncpus=58:mem=500GB
 #PBS -l debug=true
 
@@ -27,7 +27,6 @@ export HPC_OPT=/apps/ops/para/libs
 module use /apps/dev/modulefiles/
 module load ve/evs/${ve_evs_ver}
 module load gsl/${gsl_ver}
-module load netcdf/${netcdf_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
 module load cray-pals/${craypals_ver}
@@ -66,6 +65,7 @@ export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 export maillist='geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov' 
+
 
 if [ -z "$maillist" ]; then
    echo "maillist variable is not defined. Exiting without continuing."

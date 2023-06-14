@@ -22,8 +22,8 @@ class Toggle():
             'bs_method': 'FORECASTS', # bootstrap method. 'FORECASTS' bootstraps the lines in the stat files, 'MATCHED_PAIRS' bootstraps the f-o matched pairs
             'bs_min_samp': 30, # Minimum number of samples allowed for boostrapping to performed (if there are fewer samples, no confidence intervals)
             'display_averages': False, # display mean statistic for each model, averaged across the dimension of the independent variable
-            'sample_equalization': True, 
-            #'sample_equalization': False,  
+            'sample_equalization': True, # equalize samples along each value of the independent variable where data exist
+            #'sample_equalization': False, # just for SREF-GEFS comparison! 
             'keep_shared_events_only': False, # functional for time_series only.
             'clear_prune_directory': False, # remove the intermediate directory created to store pruned data files temporarily
             #'clear_prune_directory': True, # remove the intermediate directory created to store pruned data files temporarily
@@ -31,8 +31,8 @@ class Toggle():
             'plot_logo_right': True,
             'zoom_logo_left': 1.0, 
             'zoom_logo_right': 1.0,
-            #'delete_intermed_data': True 
-            'delete_intermed_data': False 
+            'delete_intermed_data': True 
+            #'delete_intermed_data': False # Just for SREF/GEFS comparison since they have different lead times. whether or not to delete DataFrame rows if, for any model, rows include NaN (currently only used in lead_average.py)
         }
 
 class Templates():
@@ -531,19 +531,7 @@ class ModelSpecs():
             },
             'NAEFS': {
                 'settings_key':'NAEFS',
-                'plot_name':'NAEFSv6 (bias-corrected)'
-            },
-            'NAEFSv7': {
-                'settings_key':'NAEFSv7',
-                'plot_name':'NAEFSv7 (bias-corrected)'
-            },
-            'GEFS': {
-                'settings_key':'GEFS',
-                'plot_name':'GEFS (raw)'
-            },
-            'CMCE': {
-                'settings_key':'CMCE',
-                'plot_name':'CMCE (raw)'
+                'plot_name':'NAEFS(bias-corrected)'
             },
         }
 
@@ -655,10 +643,10 @@ class ModelSpecs():
             'GFS_DASHED': {'color': '#000000',
                            'marker': 'o', 'markersize': 12,
                            'linestyle': 'dashed', 'linewidth': 5.},
-            'GEFS': {'color': '#0000ff',
+            'GEFS': {'color': '#000000',
                      'marker': 'o', 'markersize': 12,
                      'linestyle': 'solid', 'linewidth': 5.},
-            'CMCE': {'color': '#00ff00',
+            'CMCE': {'color': '#1e3cff',
                      'marker': 'o', 'markersize': 12,
                      'linestyle': 'solid', 'linewidth': 5.},
             'ECME': {'color': '#fb2020',
@@ -667,10 +655,7 @@ class ModelSpecs():
             'SREF': {'color': '#fb2020',
                      'marker': 'o', 'markersize': 12,
                      'linestyle': 'solid', 'linewidth': 5.},
-            'NAEFS': {'color': '#ff0000',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 5.},
-            'NAEFSv7': {'color': '#000000',   
+            'NAEFS': {'color': '#00ff00',
                      'marker': 'o', 'markersize': 12,
                      'linestyle': 'solid', 'linewidth': 5.},
             'NARRE_MEAN': {'color': '#000000',
@@ -1748,7 +1733,7 @@ class Reference():
             },
             'grid2obs_upper_air': {
                 'SL1L2': {
-                    'plot_stats_list': ('bias, mae, rmse, bcrmse, fbar_obar, fbar,'
+                    'plot_stats_list': ('bias, rmse, bcrmse, fbar_obar, fbar,'
                                         + ' obar'),
                     'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
@@ -3233,11 +3218,11 @@ class Reference():
                                     'plot_group':'precip'},
                         'APCP_24': {'fcst_var_names': ['APCP', 'APCP_24'],
                                     'fcst_var_levels': ['A24'],
-                                    'fcst_var_thresholds': '>0, >1, >2, >5, >10, >20, >25, >35, >50, >75',
+                                    'fcst_var_thresholds': '>1, >2, >5, >10, >20, >25, >35, >50, >75',
                                     'fcst_var_options': '',
                                     'obs_var_names': ['APCP', 'APCP_24', 'APCP_01_Z0'],
                                     'obs_var_levels': ['A24'],
-                                    'obs_var_thresholds': '>0, >1, >2, >5, >10, >20, >25, >35, >50, >75',
+                                    'obs_var_thresholds': '>1, >2, >5, >10, >20, >25, >35, >50, >75',
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
                         'WEASD_24': {'fcst_var_names': ['WEASD_L0'],
@@ -3338,7 +3323,7 @@ class Reference():
                                     'plot_group':'precip'},
                         'APCP_24': {'fcst_var_names': ['APCP', 'APCP_24'],
                                     'fcst_var_levels': ['A24'],
-                                    'fcst_var_thresholds': ('>=0.254, >=2.54,>0,>1,>2,>5,>10,>20,>25,>50,>75'
+                                    'fcst_var_thresholds': ('>=0.254, >=2.54,>1,>2,>5,>10,>20,>25,>50,>75'
                                                             + ' >=6.35,'
                                                             + ' >=12.7,'
                                                             + ' >=25.4,'
@@ -3350,7 +3335,7 @@ class Reference():
                                     'fcst_var_options': '',
                                     'obs_var_names': ['APCP', 'APCP_24', 'APCP_01_Z0'],
                                     'obs_var_levels': ['A24'],
-                                    'obs_var_thresholds': ('>=0.254, >=2.54,>0,>1,>2,>5,>10,>20,>25,>50,>75'
+                                    'obs_var_thresholds': ('>=0.254, >=2.54,>1,>2,>5,>10,>20,>25,>50,>75'
                                                            + ' >=6.35,'
                                                            + ' >=12.7,'
                                                            + ' >=25.4,'
