@@ -126,48 +126,38 @@ evs_global_det_atmos_settings_dict['RUN_GRID2OBS_PLOTS'] = [
 
 verif_case_step_settings_dict = {
     'RUN_GRID2GRID_STATS': {
-        'flux': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
-        'means': ['init_hr_list', 'valid_hr_list',
-                  'fhr_min', 'fhr_max', 'fhr_inc'],
-        'ozone': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+        'flux': ['init_hr_list'],
+        'means': ['init_hr_list', 'valid_hr_list'],
+        'ozone': ['init_hr_list'],
         'precip_accum24hr': ['file_format_list', 'file_accum_list', 'var_list',
-                             'init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+                             'init_hr_list'],
         'precip_accum3hr': ['file_format_list', 'file_accum_list', 'var_list',
-                            'init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+                            'init_hr_list'],
         'pres_levs': ['truth_name_list', 'truth_format_list',
-                      'init_hr_list', 'valid_hr_list',
-                      'fhr_min', 'fhr_max', 'fhr_inc'],
-        'sea_ice': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
-        'snow': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
-        'sst': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc']
+                      'init_hr_list', 'valid_hr_list'],
+        'sea_ice': ['init_hr_list'],
+        'snow': ['init_hr_list'],
+        'sst': ['init_hr_list']
     },
     'RUN_GRID2GRID_PLOTS': {
         'flux': [],
-        'means': ['init_hr_list', 'valid_hr_list',
-                  'fhr_min', 'fhr_max', 'fhr_inc'],
+        'means': ['init_hr_list', 'valid_hr_list'],
         'ozone': [],
-        'precip': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
-        'pres_levs': ['truth_name_list', 'init_hr_list', 'valid_hr_list',
-                      'fhr_min', 'fhr_max', 'fhr_inc'],
+        'precip': ['init_hr_list'],
+        'pres_levs': ['truth_name_list', 'init_hr_list', 'valid_hr_list'],
         'sea_ice': [],
-        'snow': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+        'snow': ['init_hr_list'],
         'sst': []
     },
     'RUN_GRID2OBS_STATS': {
-        'pres_levs': ['init_hr_list', 'valid_hr_list',
-                      'fhr_min', 'fhr_max', 'fhr_inc'],
-        'ptype': ['init_hr_list', 'valid_hr_list',
-                  'fhr_min', 'fhr_max', 'fhr_inc'],
-        'sfc': ['init_hr_list', 'valid_hr_list',
-                'fhr_min', 'fhr_max', 'fhr_inc']
+        'pres_levs': ['init_hr_list', 'valid_hr_list'],
+        'ptype': ['init_hr_list', 'valid_hr_list'],
+        'sfc': ['init_hr_list', 'valid_hr_list']
     },
     'RUN_GRID2OBS_PLOTS': {
-        'pres_levs': ['init_hr_list', 'valid_hr_list',
-                      'fhr_min', 'fhr_max', 'fhr_inc'],
-        'ptype': ['init_hr_list', 'valid_hr_list',
-                  'fhr_min', 'fhr_max', 'fhr_inc'],
-        'sfc': ['init_hr_list', 'valid_hr_list',
-                'fhr_min', 'fhr_max', 'fhr_inc']
+        'pres_levs': ['init_hr_list', 'valid_hr_list'],
+        'ptype': ['init_hr_list', 'valid_hr_list'],
+        'sfc': ['init_hr_list', 'valid_hr_list']
     }
 }
 
@@ -198,6 +188,13 @@ for verif_type in verif_type_list:
             'RUN_'+VERIF_CASE.upper()+'_'+STEP.upper()
         ][verif_type]
     )
+    if f"{VERIF_CASE_STEP_abbrev}_{verif_type}_fhr_list" \
+            in list(os.environ.keys()):
+        verif_type_env_var_list.append('fhr_list')
+    else:
+        verif_type_env_var_list.append('fhr_min')
+        verif_type_env_var_list.append('fhr_max')
+        verif_type_env_var_list.append('fhr_inc')
     for verif_type_env_var in verif_type_env_var_list:
          env_var_check = (VERIF_CASE_STEP_abbrev+'_'+verif_type+'_'
                           +verif_type_env_var)
