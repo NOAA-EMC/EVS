@@ -2158,13 +2158,10 @@ def check_weekly_truth_files(job_dict):
                     truth_file_list.append(truth_file)
                     nf+=1
         elif job_dict['VERIF_CASE'] == 'grid2obs':
-            if job_dict['VERIF_TYPE'] == 'PrepBufr' \
-                    and 'Prepbufr' in job_dict['job_name']:
-                prepbufr_name = (job_dict['job_name'].replace('Prepbufr', '')\
-                                 .lower())
+            if job_dict['VERIF_TYPE'] == 'PrepBufr':
                 prepbufr_file_format = os.path.join(
-                    verif_case_dir, 'data', 'prepbufr_'+prepbufr_name,
-                    'prepbufr.'+prepbufr_name+'.'
+                    verif_case_dir, 'data', 'prepbufr_nam',
+                    'prepbufr.nam.'
                     +'{valid?fmt=%Y%m%d%H}'
                 )
                 nf = 0
@@ -2263,13 +2260,10 @@ def check_days6_10_truth_files(job_dict):
                     truth_file_list.append(truth_file)
                     nf+=1
         elif job_dict['VERIF_CASE'] == 'grid2obs':
-            if job_dict['VERIF_TYPE'] == 'PrepBufr' \
-                    and 'Prepbufr' in job_dict['job_name']:
-                prepbufr_name = (job_dict['job_name'].replace('Prepbufr', '')\
-                                 .lower())
+            if job_dict['VERIF_TYPE'] == 'PrepBufr':
                 prepbufr_file_format = os.path.join(
-                    verif_case_dir, 'data', 'prepbufr_'+prepbufr_name,
-                    'prepbufr.'+prepbufr_name+'.'
+                    verif_case_dir, 'data', 'prepbufr_nam',
+                    'prepbufr.nam.'
                     +'{valid?fmt=%Y%m%d%H}'
                 )
                 nf = 0

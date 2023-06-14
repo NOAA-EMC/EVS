@@ -59,16 +59,7 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 #### reformat_data jobs
 ################################################
 reformat_data_obs_jobs_dict = {
-    'PrepBufr': {
-        'PrepbufrNAM': {'env': {'prepbufr': 'nam',
-                                'obs_window': '900',
-                                'msg_type': 'ADPSFC',
-                                'obs_bufr_var_list': "'TOB'"},
-                        'commands': [sub_util.metplus_command(
-                                         'PB2NC_obsPrepbufr_'
-                                         +'Weekly.conf'
-                                     )]},
-    }
+    'PrepBufr': {}
 }
 reformat_data_model_jobs_dict = {
     'PrepBufr': {
@@ -253,7 +244,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                             job_env_dict['mask_list'] = env_var_mask_list
                         # Do file checks
                         check_model_files = True
-                        check_truth_files = False
+                        check_truth_files = True
                         if check_model_files:
                             model_files_exist, valid_date_fhr_list = (
                                 sub_util.check_weekly_model_files(job_env_dict)
@@ -265,13 +256,14 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                             job_env_dict.pop('fhr_end')
                             job_env_dict.pop('fhr_inc')
                         if check_truth_files:
-                            all_truth_file_exist = sub_util.check_truth_files(
-                                job_env_dict
+                            all_truth_file_exist = (
+                                sub_util.check_weekly_truth_files(job_env_dict)
                             )
                             if model_files_exist and all_truth_file_exist:
                                 write_job_cmds = True
                             else:
                                 write_job_cmds = False
+                                print("Missing > 80% of files")
                         else:
                             if model_files_exist:
                                 write_job_cmds = True

@@ -156,6 +156,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                     write_job_cmds = True
                 else:
                     write_job_cmds = False
+                    print("Missing > 80% of obs files")
                 # Write environment variables
                 for name, value in job_env_dict.items():
                     job.write('export '+name+'='+value+'\n')
@@ -265,8 +266,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                             job_env_dict.pop('fhr_end')
                             job_env_dict.pop('fhr_inc')
                         if check_truth_files:
-                            all_truth_file_exist = sub_util.check_truth_files(
-                                job_env_dict
+                            all_truth_file_exist = (
+                                sub_util.check_weeks3_4_truth_files(job_env_dict)
                             )
                             if model_files_exist and all_truth_file_exist:
                                 write_job_cmds = True
