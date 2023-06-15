@@ -191,8 +191,11 @@ class PrecipSpatialMap:
                 precip_data = netcdf.Dataset(model_num_file)
                 precip_lat = precip_data.variables['lat'][:]
                 precip_lon = precip_data.variables['lon'][:]
-                if model_num_name == 'mrms':
-                    precip_var_key = 'APCP_A24'
+                if model_num == 'obs':
+                    if model_num_name == 'mrms':
+                        precip_var_key = 'APCP_A24'
+                    else:
+                        precip_var_key = 'APCP_24'
                 else:
                     precip_var_key = 'APCP_A24'
                 precip_APCP_A24 = precip_data.variables[precip_var_key][:]

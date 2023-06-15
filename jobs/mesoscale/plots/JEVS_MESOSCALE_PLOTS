@@ -60,7 +60,6 @@ if [ $MODELNAME = sref ] ; then
     else  
         export ush_dir=$USHevs/mesoscale/ush_sref_plot_py
     fi
-fi
 else
     if [ $VERIF_CASE = grid2obs ]; then
         export VDATE=${VDATE:-$PDYm1}
