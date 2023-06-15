@@ -71,8 +71,6 @@ if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     export g2op_event_equalization="NO"
     export g2op_pres_levs_init_hr_list="00 06 12 18"
     export g2op_pres_levs_valid_hr_list="00 12"
-    export g2op_pres_levs_fhr_min=00
-    export g2op_pres_levs_fhr_max=384
-    export g2op_pres_levs_fhr_inc=6
+    export g2op_pres_levs_fhr_list="0 6 12 18 24 30 36 42 48 54 60 66 72 96 120 144 168 192 216 240 264 288 312 336 360 384"
 fi
 echo "END: $(basename ${BASH_SOURCE[0]})"
