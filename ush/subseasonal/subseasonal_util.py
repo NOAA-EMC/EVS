@@ -2094,8 +2094,8 @@ def check_model_files(job_dict):
                     )
             else:
                 fhr_key_files_exist_list.append(False)
-        if all(x == True for x in fhr_key_files_exist_list) \
-                and len(fhr_key_files_exist_list) > 0:
+        #if all(x == True for x in fhr_key_files_exist_list) \
+        if len(fhr_key_files_exist_list) > 0:
             fhr_list.append(fhr_key)
     fhr_list = list(
         np.asarray(np.unique(np.asarray(fhr_list, dtype=int)),dtype=str)
