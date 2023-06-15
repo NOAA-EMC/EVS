@@ -153,6 +153,8 @@ fi
  
 if [ $nfcst > 0 ] && [ $obs_lsr_found = 1 ]; then
 
+   export fhrs=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcst_list`
+
    run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/GridStat_fcstSSPF_obsLSR.conf
    export err=$?; err_chk
 
@@ -167,6 +169,8 @@ fi
 ######################################################################
 
 if [ $nfcst > 0 ] && [ $obs_ppf_found = 1 ]; then
+
+   export fhrs=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcst_list`
 
    run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/GridStat_fcstSSPF_obsPPF.conf
    export err=$?; err_chk
