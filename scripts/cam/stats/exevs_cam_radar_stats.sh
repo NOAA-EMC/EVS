@@ -144,8 +144,14 @@ if [ $cyc = 23 ]; then
 
       if [ $MODELNAME = href ]; then
 
-         run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/StatAnalysis_fcstHREF_obsMRMS_gatherByDay.conf
-         export err=$?; err_chk
+         HREF_MODS="href_pmmn href_prob href"
+         HREF_MODS="href_pmmn href_prob"
+
+         for HREF_MOD in ${HREF_MODS}; do
+	    export HREF_MOD
+            run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/StatAnalysis_fcstHREF_obsMRMS_gatherByDay.conf
+            export err=$?; err_chk
+         done
 
       else
 
