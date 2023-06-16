@@ -107,7 +107,7 @@ for NEST in $NEST_LIST; do
          echo
 
          # Check for data files
-         python $USHevs/cam/cam_check_input_data.py
+         python $USHevs/mesoscale/mesoscale_check_input_data.py
          status=$?
          [[ $status -ne 0 ]] && exit $status
          [[ $status -eq 0 ]] && echo "Successfully ran cam_check_input_data.py ($job_type)"

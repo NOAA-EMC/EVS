@@ -80,6 +80,7 @@ if proceed:
             print(f"The provided MODELNAME ({MODELNAME}) is not recognized. Quitting ...")
             sys.exit(1)
 
+    vdates = [vdate]
 
     leads_list = []
     if STEP == 'stats':
@@ -161,11 +162,11 @@ if proceed:
     elif NEST == 'ak':
         mask_files = np.hstack((mask_files, ak_mask_files))
     elif NEST == 'namer':
-        mask_files = np.hstack((mask_files, hi_mask_files))
+        mask_files = np.hstack((mask_files, namer_mask_files))
     elif NEST == 'conusc':
-        mask_files = np.hstack((mask_files, pr_mask_files))
+        mask_files = np.hstack((mask_files, conusc_mask_files))
     elif NEST == 'akc':
-        mask_files = np.hstack((mask_files, gu_mask_files))
+        mask_files = np.hstack((mask_files, akc_mask_files))
     mask_paths = [
         os.path.join(FIXevs, 'masks', mask_file) for mask_file in mask_files
     ]
@@ -187,7 +188,7 @@ if proceed:
     # Check for missing forecasts
     # Make list of paths
     if STEP == 'stats':
-            fcst_templates = []
+        fcst_templates = []
         if MODELNAME == 'nam':
             if NEST == 'conus':
                 fcst_templates.append(os.path.join(
