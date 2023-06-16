@@ -63,9 +63,9 @@ fi
     export MASK_CUSTOM_LIST=""
     export FHR_GROUP_LIST="SHORT FULL"
     export MIN_IHOUR="00"
-    export FHR_END_FULL="21"
+    export FHR_END_FULL="51"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="51"
+    export FHR_END_SHORT="21"
     export FHR_INCR_SHORT="01"
 
 
@@ -87,9 +87,9 @@ fi
     export MASK_CUSTOM_LIST=""
     export FHR_GROUP_LIST="SHORT FULL"
     export MIN_IHOUR="00"
-    export FHR_END_FULL="21"
+    export FHR_END_FULL="51"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="51"
+    export FHR_END_SHORT="21"
     export FHR_INCR_SHORT="01"
 
 
@@ -111,9 +111,9 @@ fi
     export MASK_CUSTOM_LIST=""
     export FHR_GROUP_LIST="SHORT FULL"
     export MIN_IHOUR="00"
-    export FHR_END_FULL="21"
+    export FHR_END_FULL="51"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="51"
+    export FHR_END_SHORT="21"
     export FHR_INCR_SHORT="01"
 
   
@@ -132,9 +132,9 @@ fi
     export MASK_CUSTOM_LIST=""
     export FHR_GROUP_LIST="SHORT FULL"
     export MIN_IHOUR="00"
-    export FHR_END_FULL="21"
+    export FHR_END_FULL="51"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="51"
+    export FHR_END_SHORT="21"
     export FHR_INCR_SHORT="01"
 
   
@@ -155,9 +155,9 @@ fi
     export MASK_CUSTOM_LIST=""
     export FHR_GROUP_LIST="SHORT FULL"
     export MIN_IHOUR="00"
-    export FHR_END_FULL="21"
+    export FHR_END_FULL="51"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="51"
+    export FHR_END_SHORT="21"
     export FHR_INCR_SHORT="01"
 
 
@@ -177,9 +177,9 @@ fi
     export MASK_CUSTOM_LIST=""
     export FHR_GROUP_LIST="SHORT FULL"
     export MIN_IHOUR="00"
-    export FHR_END_FULL="21"
+    export FHR_END_FULL="51"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="51"
+    export FHR_END_SHORT="21"
     export FHR_INCR_SHORT="01"
 
 
@@ -198,9 +198,9 @@ fi
     export NEST_INPUT_TEMPLATE=""
     export FHR_GROUP_LIST="SHORT FULL"
     export MIN_IHOUR="00"
-    export FHR_END_FULL="21"
+    export FHR_END_FULL="51"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="51"
+    export FHR_END_SHORT="21"
     export FHR_INCR_SHORT="01"
 
 

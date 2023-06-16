@@ -90,9 +90,17 @@ if proceed:
                     if group == 'SHORT':
                         fhr_incr = int(FHR_INCR_SHORT)
                         fhr_end = int(FHR_END_SHORT)
+                        if MODELNAME == 'nam':
+                            MIN_IHOUR = "00"
+                        elif MODELNAME == 'rap':
+                            MIN_IHOUR = "00"
                     elif group == 'FULL':
                         fhr_incr = int(FHR_INCR_FULL)
                         fhr_end = int(FHR_END_FULL)
+                        if MODELNAME == 'nam':
+                            MIN_IHOUR = "00"
+                        elif MODELNAME == 'rap':
+                            MIN_IHOUR = "03"
                     else:
                         print(f"Unrecognized FHR_GROUP ({group}) ... Quitting.")
                         sys.exit(1)
