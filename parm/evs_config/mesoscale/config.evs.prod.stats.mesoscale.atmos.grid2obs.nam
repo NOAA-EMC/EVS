@@ -65,7 +65,7 @@ fi
     export MIN_IHOUR="00"
     export FHR_END_FULL="84"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="84"
+    export FHR_END_SHORT="81"
     export FHR_INCR_SHORT="06"
 
   elif [ "$NEST" = "conus" ]; then
@@ -87,7 +87,7 @@ fi
     export MIN_IHOUR="00"
     export FHR_END_FULL="84"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="84"
+    export FHR_END_SHORT="81"
     export FHR_INCR_SHORT="06"
 
   elif [ "$NEST" = "conusc" ]; then
@@ -108,7 +108,7 @@ fi
     export MIN_IHOUR="00"
     export FHR_END_FULL="84"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="84"
+    export FHR_END_SHORT="81"
     export FHR_INCR_SHORT="06"
 
   elif [ "$NEST" = "subreg" ]; then 
@@ -129,7 +129,7 @@ fi
     export MIN_IHOUR="00"
     export FHR_END_FULL="84"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="84"
+    export FHR_END_SHORT="81"
     export FHR_INCR_SHORT="06"
   
   elif [ "$NEST" = "ak" ]; then
@@ -150,7 +150,7 @@ fi
     export MIN_IHOUR="00"
     export FHR_END_FULL="84"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="51"
+    export FHR_END_SHORT="81"
     export FHR_INCR_SHORT="06"
 
   elif [ "$NEST" = "akc" ]; then
@@ -171,7 +171,7 @@ fi
     export MIN_IHOUR="00"
     export FHR_END_FULL="84"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="51"
+    export FHR_END_SHORT="81"
     export FHR_INCR_SHORT="06"
 
   elif [ "$NEST" = "spc_otlk" ]; then
@@ -192,7 +192,7 @@ fi
     export MIN_IHOUR="00"
     export FHR_END_FULL="84"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="51"
+    export FHR_END_SHORT="81"
     export FHR_INCR_SHORT="06"
   else
     echo "The provided NEST, $NEST, is not supported for $MODELNAME"

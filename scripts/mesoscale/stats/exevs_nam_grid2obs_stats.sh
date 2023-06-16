@@ -52,9 +52,6 @@ NEST_LIST="namer conus conusc ak akc spc_otlk subreg"
 # NEST_LIST="namer conus conusc ak akc subreg"
 
 
-
-
-
 VERIF_TYPES="raob metar"
 
 echo "*****************************"
@@ -97,7 +94,7 @@ for NEST in $NEST_LIST; do
 	    python $USHevs/mesoscale/mesoscale_check_input_data.py
 	    status=$?
 	    [[ $status -ne 0 ]] && exit $status
-	    [[ $status -eq 0 ]] && echo "Successfully ran cam_check_input_data.py ($job_type)"
+	    [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_check_input_data.py ($job_type)"
 	    echo
     	 
             # Create Output Directories	    
