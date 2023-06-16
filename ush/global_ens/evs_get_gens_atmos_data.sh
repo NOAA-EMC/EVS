@@ -447,7 +447,12 @@ if [ $modnam = ccpa ] ; then
        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_obsCCPA24h.conf
        cp $output_base/ccpa.t12z.grid3.24h.f00.nc $COMOUT_gefs/.
     else
-       echo "At least one of ccpa06h files is missing!"
+       export subject="06h CCPA Data Missing for 24h CCPA generation"
+       export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
+       echo "Warning: At least one of ccpa06h files is missing  for ${INITDATE}${cyc}" > mailmsg
+       echo Missing file is ${COMOUT_gefs}/ccpa.t12z.grid3.06h.f00.grib2 or ${COMOUT}.${vday_1}/gefs/ccpa.t18z.grid3.06h.f00.grib2  >> mailmsg
+       echo "Job ID: $jobid" >> mailmsg
+       cat mailmsg | mail -s "$subject" $maillist
        exit 
     fi  
   done
