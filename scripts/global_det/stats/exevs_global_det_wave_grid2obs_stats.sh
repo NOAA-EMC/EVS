@@ -55,7 +55,6 @@ fhrs='fhr1 fhr2 fhr3 fhr4 fhr5 fhr6 fhr7 fhr8 fhr9'
 export GRID2OBS_CONF="${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}"
 
 cd ${DATA}
-#touch run_all_${MODELNAME}_${RUN}_g2o_poe.sh
 
 for cyc in ${cycles} ; do
 
