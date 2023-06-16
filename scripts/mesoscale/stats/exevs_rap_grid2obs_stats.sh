@@ -77,59 +77,74 @@ echo "*****************************"
 export job_type="reformat"
 export njob=1
 for NEST in $NEST_LIST; do
-    export NEST=$NEST
-    for VERIF_TYPE in $VERIF_TYPES; do
-        export VERIF_TYPE=$VERIF_TYPE
+   export NEST=$NEST
+   for VERIF_TYPE in $VERIF_TYPES; do
+      export VERIF_TYPE=$VERIF_TYPE
 
-	if [ $RUN_ENVIR = nco ]; then
-	    export evs_run_mode="production"
-	    source $config
-	    #source $USHevs/mesoscale/mesoscale_stats_grid2obs_filter_valid_hours_list.sh
-	else
-	    export evs_run_mode=$evs_run_mode
-	    source $config
-	    #source $USHevs/mesoscale/mesoscale_stats_grid2obs_filter_valid_hours_list.sh
-	fi
-	echo "RUN MODE: $evs_run_mode"
-	if [ ${#VAR_NAME_LIST} -lt 1 ]; then
-		continue
-	fi
+      if [ $RUN_ENVIR = nco ]; then
+         export evs_run_mode="production"
+	 source $config
+	 #source $USHevs/mesoscale/mesoscale_stats_grid2obs_filter_valid_hours_list.sh
+      else
+	 export evs_run_mode=$evs_run_mode
+	 source $config
+	 #source $USHevs/mesoscale/mesoscale_stats_grid2obs_filter_valid_hours_list.sh
+      fi
+      echo "RUN MODE: $evs_run_mode"
+      if [ ${#VAR_NAME_LIST} -lt 1 ]; then
+         continue
+      fi
 
-	for VHOUR in $VHOUR_LIST; do
-	    export VHOUR=$VHOUR
-            # Check User's Configuration Settings
-            python $USHevs/mesoscale/mesoscale_check_settings.py
-            status=$?
-            [[ $status -ne 0 ]] && exit $status
-            [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_check_settings.py ($job_type)"
-            echo
+      export FHR_GROUP_LIST="FULL"
 
-            # Create Output Directories	    
-            python $USHevs/mesoscale/mesoscale_create_output_dirs.py
-	    status=$?
-	    [[ $status -ne 0 ]] && exit $status
-	    [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_create_output_dirs.py ($job_type)"
+      for VHOUR in $VHOUR_LIST; do
+         export VHOUR=$VHOUR
+         # Check User's Configuration Settings
+         python $USHevs/mesoscale/mesoscale_check_settings.py
+         status=$?
+         [[ $status -ne 0 ]] && exit $status
+         [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_check_settings.py ($job_type)"
+         echo
 
-            # Create Reformat Job Script
-            python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
-            status=$?
-            [[ $status -ne 0 ]] && exit $status
-            [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_job_script.py ($job_type)"
-            export njob=$((njob+1))
-	    echo "Done $VHOUR"
-        done
-	echo "Done $VERIF_TYPE"
-    done
-    echo "Done $NEST"
+         # Create Output Directories	    
+         python $USHevs/mesoscale/mesoscale_create_output_dirs.py
+	 status=$?
+	 [[ $status -ne 0 ]] && exit $status
+	 [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_create_output_dirs.py ($job_type)"
+
+
+         # Check for data files
+	 
+
+	 # Check for restart files
+           if [ $evs_run_mode = production ]; then
+               python ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py
+               status=$?
+               [[ $status -ne 0 ]] && exit $status
+               [[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py"
+           fi
+
+
+         # Create Reformat Job Script
+         python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
+         status=$?
+         [[ $status -ne 0 ]] && exit $status
+         [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_job_script.py ($job_type)"
+         export njob=$((njob+1))
+	 echo "Done $VHOUR"
+      done
+      echo "Done $VERIF_TYPE"
+   done
+   echo "Done $NEST"
 done
 
 # Create Reformat POE Job Scripts
 if [ $USE_CFP = YES ]; then
 # if [ $USE_CFP = YES ] && [ ${#VAR_NAME_LIST} -ge 1 ]; then
-	python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
-	status=$?
-	[[ $status -ne 0 ]] && exit $status
-	[[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
+   python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
+   status=$?
+   [[ $status -ne 0 ]] && exit $status
+   [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
 fi
 
 
@@ -145,30 +160,30 @@ chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
 nc=1
 if [ $USE_CFP = YES ]; then
-	ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe* |wc -l)
-	while [ $nc -le $ncount_poe ]; do
-		poe_script=${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe_jobs${nc}
-		chmod 775 $poe_script
-		export MP_PGMMODEL=mpmd
-		export MP_CMDFILE=${poe_script}
-		if [ $machine = WCOSS2 ]; then
-			export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-			launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
-		elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
-			export SLURM_KILL_BAD_EXIT=0
-			launcher="srun --export=ALL --multi-prog"
-		else
-			echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-			exit 1
-		fi
-		$launcher $MP_CMDFILE
-		nc=$((nc+1))
-	done
+   ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe* |wc -l)
+   while [ $nc -le $ncount_poe ]; do
+      poe_script=${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe_jobs${nc}
+      chmod 775 $poe_script
+      export MP_PGMMODEL=mpmd
+      export MP_CMDFILE=${poe_script}
+      if [ $machine = WCOSS2 ]; then
+         export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
+	 launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
+      elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
+         export SLURM_KILL_BAD_EXIT=0
+	 launcher="srun --export=ALL --multi-prog"
+      else
+         echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
+	 exit 1
+      fi
+      $launcher $MP_CMDFILE
+      nc=$((nc+1))
+   done
 else
-	while [ $nc -le $ncount_job ]; do
-		sh +x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
-		nc=$((nc+1))
-	done
+   while [ $nc -le $ncount_job ]; do
+      sh +x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+      nc=$((nc+1))
+   done
 fi
 
 echo "*****************************"
@@ -180,46 +195,61 @@ echo "*****************************"
 export job_type="generate"
 export njob=1
 for NEST in $NEST_LIST; do
-	export NEST=$NEST
-	for VERIF_TYPE in $VERIF_TYPES; do
-		export VERIF_TYPE=$VERIF_TYPE
-		if [ $RUN_ENVIR = nco ]; then
-			export evs_run_mode="production"
-			source $config
-		else
-			export evs_run_mode=$evs_run_mode
-			source $config
-		fi
-	        if [ ${#VAR_NAME_LIST} -lt 1 ]; then
-	                continue
-        	fi
-	
-		for VAR_NAME in $VAR_NAME_LIST; do
-			export VAR_NAME=$VAR_NAME
-			for VHOUR in $VHOUR_LIST; do
-				export VHOUR=$VHOUR
-                # Check User's Configuration Settings
-                python $USHevs/mesoscale/mesoscale_check_settings.py
-                status=$?
-                [[ $status -ne 0 ]] && exit $status
-                [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_check_settings.py ($job_type)"
-                echo
+   export NEST=$NEST
+   for VERIF_TYPE in $VERIF_TYPES; do
+      export VERIF_TYPE=$VERIF_TYPE
+      if [ $RUN_ENVIR = nco ]; then
+         export evs_run_mode="production"
+	 source $config
+      else
+         export evs_run_mode=$evs_run_mode
+	 source $config
+      fi
+      if [ ${#VAR_NAME_LIST} -lt 1 ]; then
+         continue
+      fi
+          
+      for VAR_NAME in $VAR_NAME_LIST; do
+         export VAR_NAME=$VAR_NAME
+	 for VHOUR in $VHOUR_LIST; do
+             export VHOUR=$VHOUR
 
-               # Create Output Directories
-               python $USHevs/mesoscale/mesoscale_create_output_dirs.py
-                status=$?
-                 [[ $status -ne 0 ]] && exit $status
-                 [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_create_output_dirs.py ($job_type)"
+#	     if [[ "$VHOUR" = "00" || "$VHOUR" = "06" || "$VHOUR" = "12" || "$VHOUR" = "18" ]]; then
+#                export MIN_IHOUR="00"
+#                export FHR_END_FULL="51"
+#                export FHR_INCR_FULL="06"
+#                export FHR_END_SHORT="21"
+#                export FHR_INCR_SHORT="01"
+#	     elif [[ "$VHOUR" = "03" || "$VHOUR" = "09" || "$VHOUR" = "15" || "$VHOUR" = "21" ]]; then
+#                export MIN_IHOUR="00"
+#                export FHR_END_FULL="51"
+#                export FHR_INCR_FULL="06"
+#                export FHR_END_SHORT="21"
+#                export FHR_INCR_SHORT="01"
+#	     fi
 
-                # Create Generate Job Script
-                python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
-                status=$?
-                [[ $status -ne 0 ]] && exit $status
-                [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_job_script.py ($job_type)"
-                export njob=$((njob+1))
-            done
-        done
-    done 
+	     # Check User's Configuration Settings
+             python $USHevs/mesoscale/mesoscale_check_settings.py
+             status=$?
+             [[ $status -ne 0 ]] && exit $status
+             [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_check_settings.py ($job_type)"
+             echo
+
+             # Create Output Directories
+             python $USHevs/mesoscale/mesoscale_create_output_dirs.py
+             status=$?
+             [[ $status -ne 0 ]] && exit $status
+             [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_create_output_dirs.py ($job_type)"
+
+             # Create Generate Job Script
+             python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
+             status=$?
+             [[ $status -ne 0 ]] && exit $status
+             [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_job_script.py ($job_type)"
+             export njob=$((njob+1))
+         done
+      done
+   done 
 done
 
 # Create Generate POE Job Scripts
@@ -522,7 +552,6 @@ echo "*****************************"
 echo "Gather3 jobs done"
 date
 echo "*****************************"
-
 
 
 

@@ -74,9 +74,6 @@ fi
 
   if [ "$NEST" = "namer" ]; then
     export SKIP_IF_OUTPUT_EXISTS="yes"
-    export FHR_GROUP_LIST="SHORT FULL"
-    # export FHR_GROUP_LIST="FULL"
-    # export FHR_GROUP_LIST="SHORT"
     export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awip32f{lead?fmt=%2H}.grib2"
     if [ "$OBSNAME" = "raob" ]; then
       export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH"
@@ -89,20 +86,22 @@ fi
     fi
     export MASK_POLY_LIST="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/G221_NAMER.nc"
     export MASK_CUSTOM_LIST=""
-    #export FHR_GROUP_LIST="FULL"
-    export FHR_GROUP_LIST="SHORT"
-    # try using SHORT
+    export FHR_GROUP_LIST="SHORT FULL"
+    # if [ "$job_type" = "reformat" ]; then
+    #   export FHR_GROUP_LIST="FULL"; fi
+    # # export FHR_GROUP_LIST="SHORT"
+    # # try using SHORT
     export MIN_IHOUR="00"
     export FHR_END_FULL="51"
     export FHR_INCR_FULL="06"
     export FHR_END_SHORT="21"
-    export FHR_INCR_SHORT="03"
+    export FHR_INCR_SHORT="01"
+
+# echo ${COMINrap}/${MODEL_INPUT_TEMPLATE}
+# sleep 30
 
   elif [ "$NEST" = "conus" ]; then
     export SKIP_IF_OUTPUT_EXISTS="yes"
-    export FHR_GROUP_LIST="SHORT FULL"
-    #export FHR_GROUP_LIST="FULL"
-    #export FHR_GROUP_LIST="SHORT"
     export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awip32f{lead?fmt=%2H}.grib2"
     # export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awp130pgrbf{lead?fmt=%2H}.grib2"
     if [ "$OBSNAME" = "raob" ]; then
@@ -117,17 +116,22 @@ fi
     fi
     export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G221_CONUS.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_South.nc"
     export MASK_CUSTOM_LIST=""
+    export FHR_GROUP_LIST="SHORT FULL"
+    # if [ "$job_type" = "reformat" ]; then
+    #   export FHR_GROUP_LIST="FULL"; fi
+    # # export FHR_GROUP_LIST="FULL"
+    # # export FHR_GROUP_LIST="SHORT"
     export MIN_IHOUR="00"
     export FHR_END_FULL="51"
     export FHR_INCR_FULL="06"
     export FHR_END_SHORT="21"
-    export FHR_INCR_SHORT="03"
+    export FHR_INCR_SHORT="01"
+
+# echo ${COMINrap}/${MODEL_INPUT_TEMPLATE}
+# sleep 30
 
   elif [ "$NEST" = "conusc" ]; then
     export SKIP_IF_OUTPUT_EXISTS="yes"
-    export FHR_GROUP_LIST="SHORT FULL"
-    # export FHR_GROUP_LIST="FULL"
-    # export FHR_GROUP_LIST="SHORT"
     # export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awip32f{lead?fmt=%2H}.grib2"
     export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awp130pgrbf{lead?fmt=%2H}.grib2"
     if [ "$OBSNAME" = "raob" ]; then
@@ -142,17 +146,22 @@ fi
     fi
     export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G221_CONUS.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_South.nc"
     export MASK_CUSTOM_LIST=""
+    export FHR_GROUP_LIST="SHORT FULL"
+    # if [ "$job_type" = "reformat" ]; then
+    #   export FHR_GROUP_LIST="FULL"; fi
+    # # export FHR_GROUP_LIST="FULL"
+    # # export FHR_GROUP_LIST="SHORT"
     export MIN_IHOUR="00"
     export FHR_END_FULL="51"
     export FHR_INCR_FULL="06"
     export FHR_END_SHORT="21"
-    export FHR_INCR_SHORT="03"
+    export FHR_INCR_SHORT="01"
+
+# echo ${COMINrap}/${MODEL_INPUT_TEMPLATE}
+# sleep 30
   
   elif [ "$NEST" = "subreg" ]; then 
     export SKIP_IF_OUTPUT_EXISTS="yes"
-    export FHR_GROUP_LIST="SHORT FULL"
-    # export FHR_GROUP_LIST="FULL"
-    # export FHR_GROUP_LIST="SHORT"
     export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awip32f{lead?fmt=%2H}.grib2"
     if [ "$OBSNAME" = "raob" ]; then
       export VAR_NAME_LIST=""
@@ -164,17 +173,22 @@ fi
     fi
     export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G221_Appalachia.nc, ${FIXevs}/masks/Bukovsky_G221_CPlains.nc, ${FIXevs}/masks/Bukovsky_G221_DeepSouth.nc, ${FIXevs}/masks/Bukovsky_G221_GreatBasin.nc, ${FIXevs}/masks/Bukovsky_G221_GreatLakes.nc, ${FIXevs}/masks/Bukovsky_G221_Mezquital.nc, ${FIXevs}/masks/Bukovsky_G221_MidAtlantic.nc, ${FIXevs}/masks/Bukovsky_G221_NorthAtlantic.nc, ${FIXevs}/masks/Bukovsky_G221_NPlains.nc, ${FIXevs}/masks/Bukovsky_G221_NRockies.nc, ${FIXevs}/masks/Bukovsky_G221_PacificNW.nc, ${FIXevs}/masks/Bukovsky_G221_PacificSW.nc, ${FIXevs}/masks/Bukovsky_G221_Prairie.nc, ${FIXevs}/masks/Bukovsky_G221_Southeast.nc, ${FIXevs}/masks/Bukovsky_G221_SPlains.nc, ${FIXevs}/masks/Bukovsky_G221_SRockies.nc"
     export MASK_CUSTOM_LIST=""
+    export FHR_GROUP_LIST="SHORT FULL"
+    # if [ "$job_type" = "reformat" ]; then
+    #   export FHR_GROUP_LIST="FULL"; fi
+    # # export FHR_GROUP_LIST="FULL"
+    # # export FHR_GROUP_LIST="SHORT"
     export MIN_IHOUR="00"
     export FHR_END_FULL="51"
     export FHR_INCR_FULL="06"
     export FHR_END_SHORT="21"
-    export FHR_INCR_SHORT="03"
+    export FHR_INCR_SHORT="01"
+
+# echo ${COMINrap}/${MODEL_INPUT_TEMPLATE}
+# sleep 30
   
   elif [ "$NEST" = "ak" ]; then
     export SKIP_IF_OUTPUT_EXISTS="yes"
-    export FHR_GROUP_LIST="SHORT FULL"
-    # export FHR_GROUP_LIST="FULL"
-    # export FHR_GROUP_LIST="SHORT"
     export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awip32f{lead?fmt=%2H}.grib2"
     # export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awp242f{lead?fmt=%2H}.grib2"
     if [ "$OBSNAME" = "raob" ]; then
@@ -188,17 +202,22 @@ fi
     fi
     export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc"
     export MASK_CUSTOM_LIST=""
+    export FHR_GROUP_LIST="SHORT FULL"
+    # if [ "$job_type" = "reformat" ]; then
+    #   export FHR_GROUP_LIST="FULL"; fi
+    # # export FHR_GROUP_LIST="FULL"
+    # # export FHR_GROUP_LIST="SHORT"
     export MIN_IHOUR="00"
     export FHR_END_FULL="51"
     export FHR_INCR_FULL="06"
     export FHR_END_SHORT="21"
-    export FHR_INCR_SHORT="03"
+    export FHR_INCR_SHORT="01"
+
+# echo ${COMINrap}/${MODEL_INPUT_TEMPLATE}
+# sleep 30
 
   elif [ "$NEST" = "akc" ]; then
     export SKIP_IF_OUTPUT_EXISTS="yes"
-    export FHR_GROUP_LIST="SHORT FULL"
-    # export FHR_GROUP_LIST="FULL"
-    # export FHR_GROUP_LIST="SHORT"
     # export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awip32f{lead?fmt=%2H}.grib2"
     export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awp242f{lead?fmt=%2H}.grib2"
     if [ "$OBSNAME" = "raob" ]; then
@@ -213,17 +232,22 @@ fi
     fi
     export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc"
     export MASK_CUSTOM_LIST=""
+    export FHR_GROUP_LIST="SHORT FULL"
+    # if [ "$job_type" = "reformat" ]; then
+    #   export FHR_GROUP_LIST="FULL"; fi
+    # # export FHR_GROUP_LIST="FULL"
+    # # export FHR_GROUP_LIST="SHORT"
     export MIN_IHOUR="00"
     export FHR_END_FULL="51"
     export FHR_INCR_FULL="06"
     export FHR_END_SHORT="21"
-    export FHR_INCR_SHORT="03"
+    export FHR_INCR_SHORT="01"
+
+# echo ${COMINrap}/${MODEL_INPUT_TEMPLATE}
+# sleep 30
 
   elif [ "$NEST" = "spc_otlk" ]; then
     export SKIP_IF_OUTPUT_EXISTS="yes"
-    export FHR_GROUP_LIST="SHORT FULL"
-    # export FHR_GROUP_LIST="FULL"
-    # export FHR_GROUP_LIST="SHORT"
     export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awip32f{lead?fmt=%2H}.grib2"
     if [ "$OBSNAME" = "raob" ]; then
       export VAR_NAME_LIST="SBCAPE MLCAPE"
@@ -235,11 +259,20 @@ fi
     fi
     export GRID_POLY_LIST="${FIXevs}/masks/Bukovsky_G221_CONUS.nc"
     export NEST_INPUT_TEMPLATE=""
+    export FHR_GROUP_LIST="SHORT FULL"
+    # if [ "$job_type" = "reformat" ]; then
+    #   export FHR_GROUP_LIST="FULL"; fi
+    # # export FHR_GROUP_LIST="FULL"
+    # # export FHR_GROUP_LIST="SHORT"
     export MIN_IHOUR="00"
     export FHR_END_FULL="51"
     export FHR_INCR_FULL="06"
     export FHR_END_SHORT="21"
-    export FHR_INCR_SHORT="03"
+    export FHR_INCR_SHORT="01"
+
+# echo ${COMINrap}/${MODEL_INPUT_TEMPLATE}
+# sleep 30
+
   else
     echo "The provided NEST, $NEST, is not supported for $MODELNAME"
     exit 1

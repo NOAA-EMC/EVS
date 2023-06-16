@@ -119,7 +119,7 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 #  export DATA=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
   export cyc=$(date -d "today" +"%H")
-#  export maillist="roshan.shrestha@noaa.gov"
+  export maillist="roshan.shrestha@noaa.gov"
 
 # VAR list to run
 #  export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH"

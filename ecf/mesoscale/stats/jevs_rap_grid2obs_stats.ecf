@@ -5,7 +5,7 @@
 #PBS -q "dev"
 #PBS -A VERF-DEV
 #PBS -l walltime=4:59:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=12GB
+#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=128GB
 #PBS -l debug=true
 
 #PBS -l select=1:ncpus=1:mem=12GB
@@ -113,7 +113,7 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
   export VDATE=$(date -d "today -1 day" +"%Y%m%d")
 
   export cyc=$(date -d "today" +"%H")
-#  export maillist="roshan.shrestha@noaa.gov"
+  export maillist="roshan.shrestha@noaa.gov"
 
 # Developer Settings
   export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/logan.dawson/evs/v1.0/prep/cam

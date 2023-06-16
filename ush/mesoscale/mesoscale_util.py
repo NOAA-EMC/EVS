@@ -15,6 +15,65 @@ import sys
 
 import numpy as np
 import subprocess
+from collections.abc import Iterable
+
+def flatten(xs):
+    for x in xs:
+        if isinstance(x, Iterable) and not isinstance(x, (str, bytes)):
+            yield from flatten(x)
+        else:
+            yield x
+
+def get_data_type(fname):
+    data_type_dict = {
+        'PrepBUFR': {
+            'and':[''],
+            'or':['prepbufr'],
+            'not':[],
+            'type': 'anl'
+        },
+        'SPC Outlook Area': {
+            'and':[''],
+            'or':['spc_otlk'],
+            'not':[],
+            'type': 'gen'
+        },
+        'NAM': {
+            'and':[''],
+            'or':['nam'],
+            'not':[],
+            'type': 'fcst'
+        },
+        'RAP': {
+            'and':[''],
+            'or':['rap'],
+            'not':[],
+            'type': 'fcst'
+        },
+    }
+    for k in data_type_dict:
+        if not data_type_dict[k]['and'] or not any(data_type_dict[k]['and']):
+            data_type_dict[k]['and'] = ['']
+        if not data_type_dict[k]['or'] or not any(data_type_dict[k]['or']):
+            data_type_dict[k]['or'] = ['']
+        if not data_type_dict[k]['not'] or not any(data_type_dict[k]['not']):
+            data_type_dict[k]['not'] = []
+    data_names = [
+        k for k in data_type_dict
+        if (
+            all(map(fname.__contains__, data_type_dict[k]['and']))
+            and any(map(fname.__contains__, data_type_dict[k]['or']))
+            and not any(map(fname.__contains__, data_type_dict[k]['not']))
+        )
+    ]
+    if len(data_names) == 1:
+        data_name = data_names[0]
+        return data_name, data_type_dict[data_name]['type']
+    else:
+        data_name = "Unknown"
+        return data_name, 'unk'
+
+
 
 def get_all_eval_periods(graphics):
     all_eval_periods = []

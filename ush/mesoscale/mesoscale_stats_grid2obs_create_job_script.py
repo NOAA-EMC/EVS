@@ -203,6 +203,13 @@ if job_type == 'reformat':
             'dependent_vars': {}
         }
         '''
+    job_dependent_vars['MIN_IHOUR'] = {
+        'exec_value': '',
+        'bash_value': '',
+        'bash_conditional': '[[ ${FHR_GROUP} -eq "FULL" ]]',
+        'bash_conditional_value': '"03"',
+        'bash_conditional_else_value': '"00"'
+    }   
     job_dependent_vars['FHR_START'] = {
         'exec_value': '',
         'bash_value': (
@@ -213,6 +220,7 @@ if job_type == 'reformat':
         'bash_conditional_value': '',
         'bash_conditional_else_value': ''
     }
+
 elif job_type == 'generate':
     job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE
     job_env_vars_dict['NEST'] = NEST
@@ -285,6 +293,15 @@ elif job_type == 'generate':
         print('maskRSRS',job_dependent_vars['MASK_POLY_LIST'])
     else:
         job_env_vars_dict['MASK_POLY_LIST'] = MASK_POLY_LIST
+
+
+    job_dependent_vars['MIN_IHOUR'] = {
+        'exec_value': '',
+        'bash_value': '',
+        'bash_conditional': '[[ ${FHR_GROUP} -eq "FULL" ]]',
+        'bash_conditional_value': '"03"',
+        'bash_conditional_else_value': '"00"'
+    }   
     job_dependent_vars['FHR_START'] = {
         'exec_value': '',
         'bash_value': (
