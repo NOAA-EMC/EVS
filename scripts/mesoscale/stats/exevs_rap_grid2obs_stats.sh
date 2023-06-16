@@ -34,21 +34,7 @@ set -x
   export model0=`echo $MODELNAME | tr A-Z a-z`
   echo $model1
   
-  for WVAR in $VAR_NAME_LISTJ; do
-          if [ $WVAR = SBCAPE ] || [ $WVAR = MLCAPE ] || [ $WVAR = HPBL ] || \
-	       [ $WVAR = TMP2m ] || [ $WVAR = DPT2m ] || [ $WVAR = RH2m ] || \
-	       [ $WVAR = PRESsl ] || [ $WVAR = UGRD_VGRD10m ] || \
-	       [ $WVAR = UGRD10m ] || [ $WVAR = VGRD10m ] || [ $WVAR = WIND ] || \
-	       [ $WVAR = GUST ] || [ $WVAR = VIS ] || [ $WVAR = CEIL ]  ; then
-		  Testdev=yes
-# SBCAPE MLCAPE HPBL TMP2m DPT2m RH2m PRESsl UGRD_VGRD10m UGRD10m VGRD10m WIND GUST VIS CEIL
-          else
-		  Testdev=no
-	  fi
-	  if [ $Testdev = yes ]; then
-		  # New dev works here
-		  export VAR_NAME=${WVAR}
-######################################################################################################
+##
 # Set Basic Environment Variables
 last_cyc=21
 # NEST_LIST="namer conusc akc"
@@ -389,78 +375,6 @@ echo "Gather jobs done"
 date
 echo "*****************************"
 
-#-- 
-#-- export job_type="gather2"
-#-- export njob=1
-#-- if [ $RUN_ENVIR = nco ]; then
-#-- 	export evs_run_mode="production"
-#-- 	source $config
-#-- else
-#-- 	export evs_run_mode=$evs_run_mode
-#-- 	source $config
-#-- fi
-#-- 
-#-- # Create Output Directories
-#-- python $USHevs/mesoscale/mesoscale_create_output_dirs.py
-#-- status=$?
-#-- [[ $status -ne 0 ]] && exit $status
-#-- [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_create_output_dirs.py ($job_type)"
-#-- 
-#-- # Create Gather 2 Job Script
-#-- python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
-#-- [[ $status -ne 0 ]] && exit $status
-#-- [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_job_script.py ($job_type)"
-#-- export njob=$((njob+1))
-#-- 
-#-- # Create Gather 2 POE Job Scripts
-#-- if [ $USE_CFP = YES ]; then
-#--     python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
-#--         status=$?
-#-- 	    [[ $status -ne 0 ]] && exit $status
-#-- 	        [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
-#-- fi
-#-- 
-#-- echo "*****************************"
-#-- echo "Gather2 jobs begin"
-#-- date
-#-- echo "*****************************"
-#-- 
-#-- # Run All RAP grid2obs/stats Gather 2 Jobs
-#-- chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
-#-- ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job* |wc -l)
-#-- nc=1
-#-- if [ $USE_CFP = YES ]; then
-#-- 	ncount_poe=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe* |wc -l)
-#-- 	while [ $nc -le $ncount_poe ]; do
-#-- 		poe_script=${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/poe_jobs${nc}
-#-- 		chmod 775 $poe_script
-#-- 		export MP_PGMMODEL=mpmd
-#-- 		export MP_CMDFILE=${poe_script}
-#-- 		if [ $machine = WCOSS2 ]; then
-#-- 			export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-#-- 			launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
-#-- 		elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
-#-- 			export SLURM_KILL_BAD_EXIT=0
-#-- 			launcher="srun --export=ALL --multi-prog"
-#-- 		else
-#-- 			echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-#-- 			exit 1
-#-- 		fi
-#-- 		$launcher $MP_CMDFILE
-#-- 		nc=$((nc+1))
-#-- 	done
-#-- else
-#-- 	while [ $nc -le $ncount_job ]; do
-#-- 		sh +x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
-#-- 		nc=$((nc+1))
-#-- 	done
-#-- fi
-#-- 
-#-- echo "*****************************"
-#-- echo "Gather2 jobs done"
-#-- date
-#-- echo "*****************************"
-#-- 
 
 # Copy stat output files to EVS COMOUTsmall directory
 if [ $SENDCOM = YES ]; then
@@ -556,48 +470,6 @@ date
 echo "*****************************"
 
 
-
-
-
-
-
-
-
-######################################################################################################
-	  else
-### Already done VV
-    source $config
-    # select var to work on
-    export VAR_NAME=${WVAR}
-    # Verification Var
-    source ${USHevs}/mesoscale/run_var_${model0}.sh
-  
-    for VHOUR in $VHOUR_LIST; do
-      export VHOUR=$VHOUR
-      cyc=$VHOUR
-      
-      if [ $cyc = 00 ] || [ $cyc = 06 ] || [ $cyc = 12 ] || [ $cyc = 18 ];  then
-        run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PB2NC_obsRAOB.conf 
-        # export err=$?; err_chk
-  
-        run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstMESOSCALE_obsRAOB.conf
-        # export err=$?; err_chk
-  
-      fi
-      
-      if [ $cyc = 23 ];   then
-        mkdir -p $COMOUTfinal
-        run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstMESOSCALE_obsRAOB_GatherByDay.conf 
-  
-      fi
-    done
-### Already done ^^
-	  fi
-	  break
-  done
-#---------------------------------
-
-
   # Copy output files into the correct EVS COMOUT directory
     if [ $SENDCOM = YES ]; then
       for MODEL_DIR_PATH in $MET_PLUS_OUT/gather_small/stat_analysis/$MODELNAME*; do
@@ -607,13 +479,6 @@ echo "*****************************"
           cp -v $FILE $COMOUT/$MODEL_DIR/.
         done
       done
-  #    for MODEL_DIR_PATH in $MET_PLUS_OUT/raob/point_stat/$MODELNAME*; do
-  #      MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
-  #      mkdir -p $COMOUTsmall/$MODEL_DIR
-  #      for FILE in $MODEL_DIR_PATH/*; do
-  #        cp -v $FILE $COMOUTsmall/$MODEL_DIR/.
-  #      done
-  #    done
     fi
   
 exit
