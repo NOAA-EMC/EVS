@@ -1,10 +1,10 @@
-#PBS -N jevs_gfs_atmos_grid2obs_stats_00
+#PBS -N jevs_global_det_atmos_grid2obs_sfc_plots_90days_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=01:30:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=225GB
+#PBS -l walltime=01:00:00
+#PBS -l place=vscatter:exclhost,select=5:ncpus=128:ompthreads=1:mem=175GB
 #PBS -l debug=true
 #PBS -V
 
@@ -27,11 +27,12 @@ export RUN_ENVIR=nco
 export SENDCOM=YES
 export KEEPDATA=NO
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_global_det_atmos_test/$envir/tmp
-export job=${PBS_JOBNAME:-jevs_gfs_atmos_grid2obs_stats}
+export job=${PBS_JOBNAME:-jevs_global_det_atmos_grid2obs_sfc_plots_90days}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
 ############################################################
+
 
 ############################################################
 # Load modules
@@ -70,27 +71,28 @@ export cyc=00
 
 # Set verification information
 export NET=evs
-export STEP=stats
+export STEP=plots
 export COMPONENT=global_det
 export RUN=atmos
 export VERIF_CASE=grid2obs
-export MODELNAME=gfs
+export VERIF_TYPE=sfc
+export NDAYS=90
 
 # Set COM paths
-export COMINgfs=$(compath.py prod/gfs/$gfs_ver)
+export PDYm1=$(date -d "24 hours ago" '+%Y%m%d')
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 #export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com
 export COMIN=$COMROOT/$NET/$evs_ver
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT
-#export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT
+export COMINgfs=$COMIN/stats/$COMPONENT/gfs
+export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1
 
 # Set config file
-export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
+export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${VERIF_TYPE}
 
 # CALL executable job script here
-$HOMEevs/jobs/global_det/stats/JEVS_GLOBAL_DET_STATS
+$HOMEevs/jobs/global_det/plots/JEVS_GLOBAL_DET_PLOTS
 
 ######################################################################
-# Purpose: This does the statistics work for the global deterministic
-#          atmospheric grid-to-observations component for GFS
+# Purpose: This does the plotting work for the global deterministic
+#          atmospheric grid-to-observations sfc past 90 days
 ######################################################################

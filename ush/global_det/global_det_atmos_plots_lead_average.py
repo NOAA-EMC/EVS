@@ -444,7 +444,7 @@ class LeadAverage:
                     color = model_num_plot_settings_dict['color'],
                     linestyle = model_num_plot_settings_dict['linestyle'],
                     linewidth = model_num_plot_settings_dict['linewidth'],
-                    marker = model_num_plot_settings_dict['marker'],
+                    marker = None,
                     markersize = model_num_plot_settings_dict['markersize'],
                     zorder = (len(list(self.model_info_dict.keys()))
                               - model_idx_list.index(model_idx) + 4)

@@ -1,10 +1,10 @@
-#PBS -N jevs_imd_atmos_grid2grid_stats_00
+#PBS -N jevs_ukmet_atmos_grid2grid_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:20:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=43:ompthreads=1:mem=10GB
+#PBS -l walltime=00:15:00
+#PBS -l place=vscatter:exclhost,select=1:ncpus=32:ompthreads=1:mem=10GB
 #PBS -l debug=true
 #PBS -V
 
@@ -27,7 +27,7 @@ export RUN_ENVIR=nco
 export SENDCOM=YES
 export KEEPDATA=NO
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_global_det_atmos_test/$envir/tmp
-export job=${PBS_JOBNAME:-jevs_imd_atmos_grid2grid_stats}
+export job=${PBS_JOBNAME:-jevs_ukmet_atmos_grid2grid_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
@@ -63,7 +63,7 @@ export machine=WCOSS2
 
 # Set job information
 export USE_CFP=YES
-export nproc=43
+export nproc=32
 
 # Set cycle
 export cyc=00
@@ -74,13 +74,13 @@ export STEP=stats
 export COMPONENT=global_det
 export RUN=atmos
 export VERIF_CASE=grid2grid
-export MODELNAME=imd
+export MODELNAME=ukmet
 
 # Set COM paths
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 #export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com
 export COMIN=$COMROOT/$NET/$evs_ver
-export COMINimd=$COMIN/prep/$COMPONENT/$RUN
+export COMINukmet=$COMIN/prep/$COMPONENT/$RUN
 export COMINghrsst_ospo=$COMIN
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT
 #export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs_global_det_atmos_test/$envir/com/$NET/$evs_ver/$STEP/$COMPONENT
@@ -93,5 +93,5 @@ $HOMEevs/jobs/global_det/stats/JEVS_GLOBAL_DET_STATS
 
 ######################################################################
 # Purpose: This does the statistics work for the global deterministic
-#          atmospheric grid-to-grid component for IMD/NCMRWF
+#          atmospheric grid-to-grid component for UKMET
 ######################################################################
