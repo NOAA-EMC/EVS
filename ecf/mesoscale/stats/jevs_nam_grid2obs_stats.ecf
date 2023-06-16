@@ -5,7 +5,7 @@
 #PBS -q "dev"
 #PBS -A VERF-DEV
 #PBS -l walltime=4:59:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=12GB
+#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=128GB
 #PBS -l debug=true
 
 ####PBS -l select=1:ncpus=1:mem=12GB
@@ -66,8 +66,8 @@ set -x
 
 # Load Modules
 
-source $HOMEevs/versions/run.ver
-#source $HOMEevs/versions/run.ver.metplus5.0.0
+#source $HOMEevs/versions/run.ver
+source $HOMEevs/versions/run.ver.metplus5.0.0
 
 source /usr/share/lmod/lmod/init/sh
 module reset

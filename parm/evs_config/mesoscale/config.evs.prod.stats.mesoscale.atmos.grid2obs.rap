@@ -24,8 +24,8 @@ export LOG_MET_OUTPUT_TO_METPLUS="yes"
 # Time Settings
 export FHR_START=0
 export FHR_INCR=1
-export FHR_END="51"
-#export FHR_END="21"
+#export FHR_END="51"
+export FHR_END="21"
 
 # Model/Obs Settings
 export COMINfcst=${COMINrap}
@@ -49,9 +49,9 @@ if [ "$VAR_NAME_LISTJ" = "HGT TMP UGRD VGRD UGRD_VGRD SPFH" ]; then
 
   export MASK_CUSTOM_LIST=""
   export FHR_GROUP_LIST="FULL"
-  export FHR_END_FULL="51"
+  export FHR_END_FULL="21"
   export FHR_INCR_FULL="06"
-  export FHR_END_SHORT="21"
+  export FHR_END_SHORT="51"
   export FHR_INCR_SHORT="01"
   export MIN_IHOUR="00"
   
@@ -92,9 +92,9 @@ fi
     # # export FHR_GROUP_LIST="SHORT"
     # # try using SHORT
     export MIN_IHOUR="00"
-    export FHR_END_FULL="51"
+    export FHR_END_FULL="21"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="21"
+    export FHR_END_SHORT="51"
     export FHR_INCR_SHORT="01"
 
 # echo ${COMINrap}/${MODEL_INPUT_TEMPLATE}
@@ -122,9 +122,9 @@ fi
     # # export FHR_GROUP_LIST="FULL"
     # # export FHR_GROUP_LIST="SHORT"
     export MIN_IHOUR="00"
-    export FHR_END_FULL="51"
+    export FHR_END_FULL="21"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="21"
+    export FHR_END_SHORT="51"
     export FHR_INCR_SHORT="01"
 
 # echo ${COMINrap}/${MODEL_INPUT_TEMPLATE}
@@ -152,9 +152,9 @@ fi
     # # export FHR_GROUP_LIST="FULL"
     # # export FHR_GROUP_LIST="SHORT"
     export MIN_IHOUR="00"
-    export FHR_END_FULL="51"
+    export FHR_END_FULL="21"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="21"
+    export FHR_END_SHORT="51"
     export FHR_INCR_SHORT="01"
 
 # echo ${COMINrap}/${MODEL_INPUT_TEMPLATE}
@@ -179,9 +179,9 @@ fi
     # # export FHR_GROUP_LIST="FULL"
     # # export FHR_GROUP_LIST="SHORT"
     export MIN_IHOUR="00"
-    export FHR_END_FULL="51"
+    export FHR_END_FULL="21"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="21"
+    export FHR_END_SHORT="51"
     export FHR_INCR_SHORT="01"
 
 # echo ${COMINrap}/${MODEL_INPUT_TEMPLATE}
@@ -208,9 +208,9 @@ fi
     # # export FHR_GROUP_LIST="FULL"
     # # export FHR_GROUP_LIST="SHORT"
     export MIN_IHOUR="00"
-    export FHR_END_FULL="51"
+    export FHR_END_FULL="21"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="21"
+    export FHR_END_SHORT="51"
     export FHR_INCR_SHORT="01"
 
 # echo ${COMINrap}/${MODEL_INPUT_TEMPLATE}
@@ -238,9 +238,9 @@ fi
     # # export FHR_GROUP_LIST="FULL"
     # # export FHR_GROUP_LIST="SHORT"
     export MIN_IHOUR="00"
-    export FHR_END_FULL="51"
+    export FHR_END_FULL="21"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="21"
+    export FHR_END_SHORT="51"
     export FHR_INCR_SHORT="01"
 
 # echo ${COMINrap}/${MODEL_INPUT_TEMPLATE}
@@ -265,9 +265,9 @@ fi
     # # export FHR_GROUP_LIST="FULL"
     # # export FHR_GROUP_LIST="SHORT"
     export MIN_IHOUR="00"
-    export FHR_END_FULL="51"
+    export FHR_END_FULL="21"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="21"
+    export FHR_END_SHORT="51"
     export FHR_INCR_SHORT="01"
 
 # echo ${COMINrap}/${MODEL_INPUT_TEMPLATE}

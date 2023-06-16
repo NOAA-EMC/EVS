@@ -120,12 +120,12 @@ for NEST in $NEST_LIST; do
 	 [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_create_output_dirs.py ($job_type)"
 
 	 # Check for restart files
-         if [ $evs_run_mode = production ]; then
-            python ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py
-            status=$?
-            [[ $status -ne 0 ]] && exit $status
-            [[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py"
-         fi
+#         if [ $evs_run_mode = production ]; then
+#            python ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py
+#            status=$?
+#            [[ $status -ne 0 ]] && exit $status
+#            [[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py"
+#         fi
 
          # Create Reformat Job Script
          python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
