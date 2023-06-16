@@ -295,7 +295,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                                 write_job_cmds = True
                             else:
                                 write_job_cmds = False
-                                print("Missing > 80% of files")
+                                print("WARNING: Missing > 80% of files")
                         else:
                             if model_files_exist:
                                 write_job_cmds = True

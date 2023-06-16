@@ -156,7 +156,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                     write_job_cmds = True
                 else:
                     write_job_cmds = False
-                    print("Missing > 80% of obs files")
+                    print("WARNING: Missing > 80% of obs files")
                 # Write environment variables
                 for name, value in job_env_dict.items():
                     job.write('export '+name+'='+value+'\n')

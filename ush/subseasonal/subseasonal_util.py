@@ -2201,8 +2201,8 @@ def check_weekly_truth_files(job_dict):
             truth_files_exist_list.append(True)
         else:
             truth_files_exist_list.append(False)
-    if all(x == True for x in truth_files_exist_list) \
-            and len(truth_files_exist_list) >= 12:
+    #if all(x == True for x in truth_files_exist_list) \
+    if len(truth_files_exist_list) >= 12:
         truth_files_exist = True
     else:
         truth_files_exist = False
@@ -2303,8 +2303,8 @@ def check_days6_10_truth_files(job_dict):
             truth_files_exist_list.append(True)
         else:
             truth_files_exist_list.append(False)
-    if all(x == True for x in truth_files_exist_list) \
-            and len(truth_files_exist_list) >= 9:
+    #if all(x == True for x in truth_files_exist_list) \
+    if len(truth_files_exist_list) >= 9:
         truth_files_exist = True
     else:
         truth_files_exist = False
@@ -2408,8 +2408,8 @@ def check_weeks3_4_truth_files(job_dict):
             truth_files_exist_list.append(True)
         else:
             truth_files_exist_list.append(False)
-    if all(x == True for x in truth_files_exist_list) \
-            and len(truth_files_exist_list) >= 23:
+    #if all(x == True for x in truth_files_exist_list) \
+    if len(truth_files_exist_list) >= 23:
         truth_files_exist = True
     else:
         truth_files_exist = False
