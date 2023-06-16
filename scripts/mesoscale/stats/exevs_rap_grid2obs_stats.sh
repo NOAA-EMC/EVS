@@ -106,24 +106,26 @@ for NEST in $NEST_LIST; do
          [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_check_settings.py ($job_type)"
          echo
 
+         # Check for data files
+         python $USHevs/cam/cam_check_input_data.py
+         status=$?
+         [[ $status -ne 0 ]] && exit $status
+         [[ $status -eq 0 ]] && echo "Successfully ran cam_check_input_data.py ($job_type)"
+         echo
+
          # Create Output Directories	    
          python $USHevs/mesoscale/mesoscale_create_output_dirs.py
 	 status=$?
 	 [[ $status -ne 0 ]] && exit $status
 	 [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_create_output_dirs.py ($job_type)"
 
-
-         # Check for data files
-	 
-
 	 # Check for restart files
-           if [ $evs_run_mode = production ]; then
-               python ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py
-               status=$?
-               [[ $status -ne 0 ]] && exit $status
-               [[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py"
-           fi
-
+         if [ $evs_run_mode = production ]; then
+            python ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py
+            status=$?
+            [[ $status -ne 0 ]] && exit $status
+            [[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py"
+         fi
 
          # Create Reformat Job Script
          python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
