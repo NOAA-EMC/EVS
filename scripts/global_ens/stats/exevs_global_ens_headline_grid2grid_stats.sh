@@ -27,7 +27,6 @@ postmsg "$jlogfile" "$msg"
 export run_mpi=${run_mpi:-'yes'}
 export gather=${gather:-'yes'}
 
-export maillist='geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'
 
 export vday=$1
 ens=$2 

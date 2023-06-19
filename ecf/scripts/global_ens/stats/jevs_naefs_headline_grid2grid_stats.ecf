@@ -66,4 +66,6 @@ export run_mpi=no
 
 export gefs_number=20
 
+export maillist='geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'
+
 ${HOMEevs}/jobs/global_ens/stats/JEVS_GLOBAL_ENS_STATS
