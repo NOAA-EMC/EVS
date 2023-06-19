@@ -113,7 +113,7 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
   export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 
   export cyc=$(date -d "today" +"%H")
-  export maillist="roshan.shrestha@noaa.gov"
+  export maillist="roshan.shrestha@noaa.gov,geoffrey.manikin@noaa.gov"
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS
