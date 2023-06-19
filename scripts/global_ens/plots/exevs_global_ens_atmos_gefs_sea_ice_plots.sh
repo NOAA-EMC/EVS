@@ -222,7 +222,7 @@ for stats in  rmse_me csi ; do
 	  lead_time=${lead:0:$index}
       fi	      
     else
-      lead_time=''
+      lead_time=_f384
     fi
 
    for domain in arctic antarctic ; do

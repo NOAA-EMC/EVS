@@ -223,7 +223,7 @@ for stats in  crps ets fbias fss ; do
       if [ $score_type = time_series ] ; then
           lead_time=_${lead:1:4}
       else
-          lead_time=''
+          lead_time=_f384
      fi
 
      for domain in conus conus_east conus_west conus_south conus_central ; do

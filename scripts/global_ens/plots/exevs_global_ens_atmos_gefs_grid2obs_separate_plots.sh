@@ -250,7 +250,7 @@ for stats in ets_fbias ; do
          if [ $score_type = time_series ] ; then
              lead_time=_${lead:1:4}
          else
-             lead_time=''
+             lead_time=_f384
          fi
 
          for domain in conus conus_east conus_west conus_south conus_central  ; do
@@ -279,7 +279,7 @@ for ihr in 00z 12z ; do
     if [ $score_type = time_series ] ; then
 	lead_time=_${lead:1:4}
     else
-        lead_time=''
+        lead_time=_f384
     fi
 
     for domain in conus conus_east conus_west conus_south conus_central alaska ; do

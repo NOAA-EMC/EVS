@@ -77,7 +77,8 @@ for model in $model_list ; do
   for fhr in 024 048 072 096 120 144 168 192 216 240 ; do
     past=`$NDATE -$fhr ${VDATE}12`
     INITDATE=${past:0:8}    
-    mv ${model}.v${VDATE}12.${fhr}h.${mask}.png  evs.${model}.spatial_map.apcp_a24.init${INITDATE}.vlid${VDATE}12.f${fhr}.buk_${mask}.png
+    #mv ${model}.v${VDATE}12.${fhr}h.${mask}.png  evs.${model}.spatial_map.apcp_a24.init${INITDATE}.vlid${VDATE}12.f${fhr}.buk_${mask}.png
+    mv ${model}.v${VDATE}12.${fhr}h.${mask}.png  evs.${model}.spatial_map.apcp_a24.vlid12z_f${fhr}.buk_${mask}.png
   done
 done  
 

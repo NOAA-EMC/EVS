@@ -199,7 +199,7 @@ for stats in mae ; do
     if [ $score_type = time_series ] ; then
 	lead_time=_${lead:1:4}
     else
-        lead_time=''
+        lead_time=_f384
     fi
 
    for domain in g003 nhem shem tropics conus ; do
