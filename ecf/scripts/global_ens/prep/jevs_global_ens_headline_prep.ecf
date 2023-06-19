@@ -5,14 +5,10 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=02:50:00
+#PBS -l walltime=00:05:00
 #PBS -l place=vscatter,select=1:ncpus=2:mem=10GB
 #PBS -l debug=true
 
-
-#Total 87 processes: 64(gefs_atmos) + 4(gefs_precip) + 16(cmce_atmos) + 2(cmce_precip) + 1 (ecme_atmos, ecme_precip)
-#Total 2x87=174 cpu cores,  cpu cores are assigned to 3 node
-#Completed in about 1hr 40min
 
 set -x
 export OMP_NUM_THREADS=1
