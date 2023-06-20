@@ -43,7 +43,6 @@ if  [ $ens = gefs ] || [ $ens = naefs ] || [ $ens = gfs ] ; then
     if [ ! -s ${COMIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2 ] ; then
          	       
        export subject="GFS analysis data missing for $ens headline stat job"
-       export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
        echo "Warning: No GFS analysis available for ${VDATE}" > mailmsg 
        echo Missing file is ${COMIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2  >> mailmsg
        echo "Job ID: $jobid" >> mailmsg
@@ -55,7 +54,6 @@ if  [ $ens = gefs ] || [ $ens = naefs ] || [ $ens = gfs ] ; then
    if [ $ens = naefs ] ; then 
       if [ ! -s ${COMIN}.${VDATE}/cmce/cmcanl.t00z.grid3.f000.grib2 ] || [ ! -s ${COMIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2 ] ; then
         export subject="GFS or CMC analysis data missing for $ens headline stat job"
-        export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
         echo "Warning: No GFS or CMC analysis available for ${VDATE}" > mailmsg
         echo Missing file is ${COMIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2 or ${COMIN}.${VDATE}/cmce/cmcanl.t00z.grid3.f000.grib2  >> mailmsg
         echo "Job ID: $jobid" >> mailmsg

@@ -41,7 +41,6 @@ if  [ $ens = gefs ] ||  [ $ens = cmce ] ; then
 
    if [ $ens = gefs ] && [ ! -s ${COMIN_wmo}.${VDATE}/gefs/gfsanl.t00z.deg1.5.f000.grib2 ] ; then
        export subject="GFS analysis data missing for WMO gefs verif"
-       export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
        echo "Warning: No GFS analysis available for ${VDATE}" > mailmsg
        echo Missing file is ${COMIN_wmo}.${VDATE}/gefs/gfsanl.t00z.deg1.5.f000.grib2  >> mailmsg
        echo "Job ID: $jobid" >> mailmsg
@@ -51,7 +50,6 @@ if  [ $ens = gefs ] ||  [ $ens = cmce ] ; then
 
     if [ $ens = cmce ] && [ ! -s ${COMIN_wmo}.${VDATE}/cmce/cmcanl.t00z.deg1.5.f000.grib2 ] ; then
        export subject="CMC analysis data missing for WMO cmce verif"
-       export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
        echo "Warning: No CMC analysis available for ${VDATE}" > mailmsg
        echo Missing file is ${COMIN_wmo}.${VDATE}/cmce/cmcanl.t00z.deg1.5.f000.grib2  >> mailmsg
        echo "Job ID: $jobid" >> mailmsg

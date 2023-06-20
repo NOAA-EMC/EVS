@@ -48,7 +48,6 @@ export verif_case=$3
 if [ $ens = all ] || [ $ens = gefs ] || [ $ens = cmce ] || [ $ens = naefs ] || [ $ens = ecme ] ; then 	
     if [ ! -s ${COMIN}.${VDATE}/gefs/gfs.t00z.prepbufr.f00.nc ] ; then
        export subject="PREPBUFR data file missing "
-       export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
        echo "Warning: No PREPBUFR data available for ${VDATE}" > mailmsg 
        echo Missing file is ${COMIN}.${VDATE}/gefs/gfs.t00z.prepbufr.f00.nc  >> mailmsg
        echo "Job ID: $jobid" >> mailmsg

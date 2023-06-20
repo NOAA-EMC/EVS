@@ -50,7 +50,6 @@ if [ $ens = all ] || [ $ens = gefs ] || [ $ens = cmce ] || [ $ens = naefs ] || [
 
      if [ ! -s ${COMIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2 ] ; then
        export subject="GFS analysis data missing "
-       export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
        echo "Warning: No GFS analysis available for ${VDATE}" > mailmsg 
        echo Missing file is ${COMIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2  >> mailmsg
        echo "Job ID: $jobid" >> mailmsg
@@ -62,7 +61,6 @@ if [ $ens = all ] || [ $ens = gefs ] || [ $ens = cmce ] || [ $ens = naefs ] || [
 
      if [ ! -s ${COMIN}.${VDATE}/cmce/cmcanl.t00z.grid3.f000.grib2 ] ; then
        export subject="CMC analysis data missing "
-       export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
        echo "Warning: No CMC analysis available for ${VDATE}" > mailmsg 
        echo Missing file is ${COMIN}.${VDATE}/cmce/cmcanl.t00z.grid3.f000.grib2  >> mailmsg
        echo "Job ID: $jobid" >> mailmsg
@@ -74,7 +72,6 @@ if [ $ens = all ] || [ $ens = gefs ] || [ $ens = cmce ] || [ $ens = naefs ] || [
 
       if [ ! -s ${COMIN}.${VDATE}/cmce/cmcanl.t00z.grid3.f000.grib2 ] ; then
        export subject="EC analysis data missing "
-       export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
        echo "Warning: No EC analysis available for ${VDATE}" > mailmsg 
        echo Missing file is ${COMIN}.${VDATE}/ecme/ecmanl.t00z.grid3.f000.grib2  >> mailmsg
        echo "Job ID: $jobid" >> mailmsg
@@ -86,7 +83,6 @@ if [ $ens = all ] || [ $ens = gefs ] || [ $ens = cmce ] || [ $ens = naefs ] || [
 
       if [ ! -s ${COMIN}.${VDATE}/cmce/cmcanl.t00z.grid3.f000.grib2 ] || [ ! -s ${COMIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2 ] ; then
        export subject="GFS or CMC analysis data missing for NAEFS "
-       export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
        echo "Warning: No GFS or CMC analysis available for ${VDATE}" > mailmsg 
        echo Missing file is ${COMIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2 or ${COMIN}.${VDATE}/cmce/cmcanl.t00z.grid3.f000.grib2  >> mailmsg
        echo "Job ID: $jobid" >> mailmsg
@@ -98,7 +94,6 @@ if [ $ens = all ] || [ $ens = gefs ] || [ $ens = cmce ] || [ $ens = naefs ] || [
 
       if [ ! -s ${COMIN}.${VDATE}/gefs/ccpa.t12z.grid3.24h.f00.nc ] ; then
        export subject="24h CCAP data missing "
-       export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
        echo "Warning: No 24hCCAP data available for ${VDATE}" > mailmsg 
        echo Missing file is ${COMIN}.${VDATE}/gefs/ccpa.t12z.grid3.24h.f00.nc  >> mailmsg
        echo "Job ID: $jobid" >> mailmsg
@@ -121,7 +116,6 @@ if [ $verif_case = snowfall ] || [ $verif_case = sea_ice ] ; then
 
   if [ $verif_case = snowfall ] && [ ! -s ${COMIN}.${VDATE}/gefs/nohrsc.t00z.grid184.grb2 ] ; then
        export subject="NOHRSC Snowfall analysis data missing "
-       export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
        echo "Warning: No NOHRSC snowfall analysis available for ${VDATE}" > mailmsg 
        echo Missing file is ${COMIN}.${VDATE}/gefs/nohrsc.t00z.grid184.grb2  >> mailmsg
        echo "Job ID: $jobid" >> mailmsg
@@ -129,7 +123,6 @@ if [ $verif_case = snowfall ] || [ $verif_case = sea_ice ] ; then
        exit
    elif [ $verif_case = sea_ice ] && [ ! -s ${COMIN}.${VDATE}/osi_saf/osi_saf.multi.${VDATE_1}00to${VDATE}00_G004.nc ] ; then
        export subject="OSI_SAF analysis data missing "
-       export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
        echo "Warning: No OSI_SAF analysis available for ${VDATE}" > mailmsg 
        echo Missing file is ${COMIN}.${VDATE}/osi_saf/osi_saf.multi.${VDATE_1}00to${VDATE}00_G004.nc  >> mailmsg
        echo "Job ID: $jobid" >> mailmsg
@@ -146,7 +139,6 @@ if [ $verif_case = sst ] ; then
   if [ ! -s ${COMIN}.${VDATE}/gefs/ghrsst.t00z.nc ] ; then
 
        export subject="GHRSST analysis data missing "
-       export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
        echo "Warning: No GHRSST analysis available for ${VDATE}" > mailmsg 
        echo Missing file is ${COMIN}.${VDATE}/gefs/ghrsst.t00z.nc >> mailmsg
        echo "Job ID: $jobid" >> mailmsg
