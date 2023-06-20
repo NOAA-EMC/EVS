@@ -29,7 +29,6 @@ if [ $modnam = gfsanl ]; then
     missing=no
     if [ ! -s $COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.anl ] ; then
        export subject="GFS Analysis Data Missing for EVS ${COMPONENT}"
-       export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
        echo "Warning: No GFS analysis available for ${INITDATE}${cyc}" > mailmsg
        echo Missing file is $COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.anl >> mailmsg
      echo "Job ID: $jobid" >> mailmsg
@@ -77,7 +76,6 @@ if [ $modnam = cmcanl ] ; then
      missing=no
      if [ ! -s $cmcanl ] ; then
          export subject="CMC Analysis Data Missing for EVS ${COMPONENT}"
-         export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
          echo "Warning: No CMC analysis available for ${INITDATE}${cyc}" > mailmsg
          echo Missing file is $cmcanl >> mailmsg
          echo "Job ID: $jobid" >> mailmsg
@@ -391,7 +389,6 @@ if [ $modnam = prepbufr ] ; then
         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr_Profile.conf" >> run_pb2nc.${cyc}.sh
       else
         export subject="Prepbufr  Data Missing for EVS ${COMPONENT}"
-        export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
         echo "Warning:  No prepbufr analysis available for ${INITDATE}${cyc}" > mailmsg
         echo Missing file is $COMINprepbufr/gdas.${vday}/${cyc}/atmos/gdas.t${cyc}z.prepbufr  >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
@@ -399,14 +396,14 @@ if [ $modnam = prepbufr ] ; then
       fi 
 
       chmod +x run_pb2nc.${cyc}.sh
-      echo "run_pb2nc.${cyc}.sh" >> run_pb2nc.sh
+      echo "${DATA}/run_pb2nc.${cyc}.sh" >> run_pb2nc.sh
            
   done
 
       echo "cp ${WORK}/pb2nc/prepbufr_nc/*.nc $COMOUT_gefs" >> run_pb2nc.sh  
 
   chmod +x run_pb2nc.sh
-  run_pb2nc.sh
+  ${DATA}/run_pb2nc.sh
 
 
 fi  
@@ -422,7 +419,6 @@ if [ $modnam = ccpa ] ; then
       $wgrib2 $COMINccpa/ccpa.${vday}/$cyc/ccpa.t${cyc}z.06h.1p0.conus.gb2 -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  ${COMOUT_gefs}/ccpa.t${cyc}z.grid3.06h.f00.grib2
     else
         export subject="CCPA  Data Missing for EVS ${COMPONENT}"
-        export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
         echo "Warning:  No CCPA analysis available for ${INITDATE}${cyc}" > mailmsg
         echo Missing file is $COMINccpa/ccpa.${vday}/$cyc/ccpa.t${cyc}z.06h.1p0.conus.gb2  >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
@@ -447,7 +443,11 @@ if [ $modnam = ccpa ] ; then
        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_obsCCPA24h.conf
        cp $output_base/ccpa.t12z.grid3.24h.f00.nc $COMOUT_gefs/.
     else
-       echo "At least one of ccpa06h files is missing!"
+       export subject="06h CCPA Data Missing for 24h CCPA generation"
+       echo "Warning: At least one of ccpa06h files is missing  for ${INITDATE}${cyc}" > mailmsg
+       echo Missing file is ${COMOUT_gefs}/ccpa.t12z.grid3.06h.f00.grib2 or ${COMOUT}.${vday_1}/gefs/ccpa.t18z.grid3.06h.f00.grib2  >> mailmsg
+       echo "Job ID: $jobid" >> mailmsg
+       cat mailmsg | mail -s "$subject" $maillist
        exit 
     fi  
   done
@@ -583,7 +583,6 @@ if [ $modnam = nohrsc24h ] ; then
       cp $snowfall $COMOUT_gefs/nohrsc.t${cyc}z.grid184.grb2
     else
         export subject="NOHRSC Data Missing for EVS ${COMPONENT}"
-        export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
         echo "Warning:  No NOHRSC analysis available for ${INITDATE}${cyc}" > mailmsg
         echo Missing file is $snowfall  >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
@@ -691,7 +690,6 @@ if [ $modnam = osi_saf ] ; then
    else
 
         export subject="OSI_SAF Data Missing for EVS ${COMPONENT}"
-        export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
         echo "Warning:  No OSI_SAF data  available for ${INITDATE}" > mailmsg
         echo Missing file is $osi  >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
