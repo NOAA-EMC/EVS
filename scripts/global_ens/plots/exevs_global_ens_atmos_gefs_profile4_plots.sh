@@ -141,11 +141,11 @@ fi
 
          chmod +x  run_py.${stats}.${score_type}.${lead}.${VAR}.${line_type}.sh
 
-         echo "run_py.${stats}.${score_type}.${lead}.${VAR}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${line_type}.sh
+         echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${line_type}.sh
 
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${line_type}.sh 
-         echo " run_${stats}.${score_type}.${lead}.${VAR}.${line_type}.sh" >> run_all_poe.sh
+         echo " ${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${line_type}.sh" >> run_all_poe.sh
 
       done #end of line_type
 
@@ -161,9 +161,9 @@ chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 160 -ppn 160 --cpu-bind verbose,depth cfp run_all_poe.sh
+   mpiexec -np 160 -ppn 160 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
-  run_all_poe.sh
+  ${DATA}/run_all_poe.sh
 fi
 
 
@@ -189,7 +189,7 @@ for stats in mae; do
 
     for var in hgt tmp ugrd vgrd rh ; do
 
-         mv ${score_type}_regional_${domain}_valid_12z_${var}_${stats}_f${lead}.png  evs.global_ens.${stats}.${var}.last${past_days}days.${scoretype}.${valid_time}.f${new_lead}.g003_${domain_new}.png
+         mv ${score_type}_regional_${domain}_valid_12z_${var}_${stats}_f${lead}.png  evs.global_ens.${stats}.${var}.last${past_days}days.${scoretype}.${valid_time}_f${new_lead}.g003_${domain_new}.png
 
     done #var
    done  #domain
