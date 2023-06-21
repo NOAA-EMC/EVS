@@ -256,7 +256,7 @@ for modnam in $models ; do
 
    chmod +x run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
 
-   echo "run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh" >> run_all_gens_g2o_poe.sh 
+   echo "${DATA}/run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh" >> run_all_gens_g2o_poe.sh 
 
   done # end of fhr 
 
@@ -272,13 +272,13 @@ if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
 
    if [ ${models} = gefs ] ; then
-    mpiexec -n 44 -ppn 44 --cpu-bind verbose,depth cfp run_all_gens_g2o_poe.sh
+    mpiexec -n 44 -ppn 44 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_g2o_poe.sh
    else
-    mpiexec -n 20 -ppn 20 --cpu-bind verbose,depth cfp run_all_gens_g2o_poe.sh
+    mpiexec -n 20 -ppn 20 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_g2o_poe.sh
    fi
 
 else
-    run_all_gens_g2o_poe.sh
+    ${DATA}/run_all_gens_g2o_poe.sh
 fi 
 
 
