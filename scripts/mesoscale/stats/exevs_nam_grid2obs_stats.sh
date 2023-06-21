@@ -37,20 +37,7 @@ set -x
 ##
 # Set Basic Environment Variables
 last_cyc=21
-# NEST_LIST="namer conusc akc"
-# NEST_LIST="conus ak spc_otlk subreg"
 NEST_LIST="namer conus conusc ak akc spc_otlk subreg"
-# NEST_LIST="conus conusc ak akc spc_otlk subreg"
-# NEST_LIST="conus ak spc_otlk"
-# NEST_LIST="namer"
-# NEST_LIST="conus"
-# NEST_LIST="conusc"
-# NEST_LIST="ak"
-# NEST_LIST="akc"
-# NEST_LIST="spc_otlk"
-# NEST_LIST="subreg"
-# NEST_LIST="namer conus conusc ak akc subreg"
-
 
 VERIF_TYPES="raob metar"
 
@@ -58,7 +45,6 @@ echo "*****************************"
 echo "Reformat setup begin"
 date
 echo "*****************************"
-
 
 # Reformat MET Data
 export job_type="reformat"
@@ -70,11 +56,9 @@ for NEST in $NEST_LIST; do
 	if [ $RUN_ENVIR = nco ]; then
 	    export evs_run_mode="production"
 	    source $config
-	    #source $USHevs/mesoscale/mesoscale_stats_grid2obs_filter_valid_hours_list.sh
 	else
 	    export evs_run_mode=$evs_run_mode
 	    source $config
-	    #source $USHevs/mesoscale/mesoscale_stats_grid2obs_filter_valid_hours_list.sh
 	fi
 	echo "RUN MODE: $evs_run_mode"
         if [ ${#VAR_NAME_LIST} -lt 1 ]; then
@@ -133,13 +117,10 @@ if [ $USE_CFP = YES ]; then
 	[[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
 fi
 
-
 echo "*****************************"
 echo "Reformat jobs begin"
 date
 echo "*****************************"
-
-
 
 # Run All NAM grid2obs/stats Reformat Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
@@ -192,9 +173,9 @@ for NEST in $NEST_LIST; do
 			export evs_run_mode=$evs_run_mode
 			source $config
 		fi
-           if [ ${#VAR_NAME_LIST} -lt 1 ]; then
-                continue
-           fi
+     		if [ ${#VAR_NAME_LIST} -lt 1 ]; then
+			continue
+     		fi
 
 		for VAR_NAME in $VAR_NAME_LIST; do
 			export VAR_NAME=$VAR_NAME
@@ -232,7 +213,6 @@ if [ $USE_CFP = YES ]; then
     	    [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
 fi
 
-
 echo "*****************************"
 echo "Generate jobs begin"
 date
@@ -269,7 +249,6 @@ else
 	done
 fi
 
-
 echo "*****************************"
 echo "Generate jobs done"
 date 
@@ -304,7 +283,6 @@ for VERIF_TYPE in $VERIF_TYPES; do
     export njob=$((njob+1))
 done
 
-
 # Create Gather POE Job Scripts
 if [ $USE_CFP = YES ]; then
     python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
@@ -313,12 +291,10 @@ if [ $USE_CFP = YES ]; then
     [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
 fi
 
-
 echo "*****************************"
 echo "Gather jobs begin"
 date 
 echo "*****************************"
-
 
 # Run All NAM grid2obs/stats Gather Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
@@ -356,7 +332,6 @@ echo "Gather jobs done"
 date 
 echo "*****************************"
 
-
 # Copy stat output files to EVS COMOUTsmall directory
 if [ $SENDCOM = YES ]; then
    for VERIF_TYPE in $VERIF_TYPES;do
@@ -376,7 +351,6 @@ echo "*****************************"
 echo "Gather3 jobs begin"
 date 
 echo "*****************************"
-
     
 # Final Stats Job
 # if [ "$cyc" -ge "$last_cyc" ]; then
@@ -444,13 +418,11 @@ echo "*****************************"
     fi
 #fi
 
-
 echo "*****************************"
 echo "Gather3 jobs done"
 date
 echo "*****************************"
- 
-  
+   
   # Copy output files into the correct EVS COMOUT directory
     if [ $SENDCOM = YES ]; then
       for MODEL_DIR_PATH in $MET_PLUS_OUT/gather_small/stat_analysis/$MODELNAME*; do

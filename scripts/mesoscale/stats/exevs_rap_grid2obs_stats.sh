@@ -37,20 +37,7 @@ set -x
 ##
 # Set Basic Environment Variables
 last_cyc=21
-# NEST_LIST="namer conusc akc"
-# NEST_LIST="conus ak spc_otlk subreg"
 NEST_LIST="namer conus conusc ak akc spc_otlk subreg"
-# NEST_LIST="conus conusc ak akc spc_otlk subreg"
-# NEST_LIST="conus ak spc_otlk"
-# NEST_LIST="namer"
-# NEST_LIST="conus"
-# NEST_LIST="conusc"
-# NEST_LIST="ak"
-# NEST_LIST="akc"
-# NEST_LIST="spc_otlk"
-# NEST_LIST="subreg"
-# NEST_LIST="namer conus conusc ak akc subreg"
-
 
 VERIF_TYPES="raob metar"
 
@@ -70,11 +57,9 @@ for NEST in $NEST_LIST; do
       if [ $RUN_ENVIR = nco ]; then
          export evs_run_mode="production"
 	 source $config
-	 #source $USHevs/mesoscale/mesoscale_stats_grid2obs_filter_valid_hours_list.sh
       else
 	 export evs_run_mode=$evs_run_mode
 	 source $config
-	 #source $USHevs/mesoscale/mesoscale_stats_grid2obs_filter_valid_hours_list.sh
       fi
       echo "RUN MODE: $evs_run_mode"
       if [ ${#VAR_NAME_LIST} -lt 1 ]; then
@@ -128,20 +113,16 @@ done
 
 # Create Reformat POE Job Scripts
 if [ $USE_CFP = YES ]; then
-# if [ $USE_CFP = YES ] && [ ${#VAR_NAME_LIST} -ge 1 ]; then
    python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
    status=$?
    [[ $status -ne 0 ]] && exit $status
    [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
 fi
 
-
-
 echo "*****************************"
 echo "Reformat jobs begin"
 date
 echo "*****************************"
-
 
 # Run All RAP grid2obs/stats Reformat Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
@@ -202,20 +183,6 @@ for NEST in $NEST_LIST; do
 	 for VHOUR in $VHOUR_LIST; do
              export VHOUR=$VHOUR
 
-#	     if [[ "$VHOUR" = "00" || "$VHOUR" = "06" || "$VHOUR" = "12" || "$VHOUR" = "18" ]]; then
-#                export MIN_IHOUR="00"
-#                export FHR_END_FULL="51"
-#                export FHR_INCR_FULL="06"
-#                export FHR_END_SHORT="21"
-#                export FHR_INCR_SHORT="01"
-#	     elif [[ "$VHOUR" = "03" || "$VHOUR" = "09" || "$VHOUR" = "15" || "$VHOUR" = "21" ]]; then
-#                export MIN_IHOUR="00"
-#                export FHR_END_FULL="51"
-#                export FHR_INCR_FULL="06"
-#                export FHR_END_SHORT="21"
-#                export FHR_INCR_SHORT="01"
-#	     fi
-
 	     # Check User's Configuration Settings
              python $USHevs/mesoscale/mesoscale_check_settings.py
              status=$?
@@ -248,12 +215,10 @@ if [ $USE_CFP = YES ]; then
 	    [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
 fi
 
-
 echo "*****************************"
 echo "Generate jobs begin"
 date
 echo "*****************************"
-
 
 # Run All RAP grid2obs/stats Generate Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/*
@@ -286,13 +251,10 @@ else
 	done
 fi
 
-
-
 echo "*****************************"
 echo "Generate jobs done"
 date
 echo "*****************************"
-
 
 export job_type="gather"
 export njob=1
@@ -324,7 +286,6 @@ for VERIF_TYPE in $VERIF_TYPES; do
     export njob=$((njob+1))
 done
 
-
 # Create Gather POE Job Scripts
 if [ $USE_CFP = YES ]; then
     python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
@@ -332,7 +293,6 @@ if [ $USE_CFP = YES ]; then
     [[ $status -ne 0 ]] && exit $status
     [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
 fi
-
 
 echo "*****************************"
 echo "Gather jobs begin"
@@ -375,7 +335,6 @@ echo "Gather jobs done"
 date
 echo "*****************************"
 
-
 # Copy stat output files to EVS COMOUTsmall directory
 if [ $SENDCOM = YES ]; then
    for VERIF_TYPE in $VERIF_TYPES;do
@@ -395,7 +354,6 @@ echo "*****************************"
 echo "Gather3 jobs begin"
 date 
 echo "*****************************"
-
 
 # Final Stats Job
 # if [ "$cyc" -ge "$last_cyc" ]; then
@@ -463,12 +421,10 @@ echo "*****************************"
     fi
 #fi
 
-
 echo "*****************************"
 echo "Gather3 jobs done"
 date
 echo "*****************************"
-
 
   # Copy output files into the correct EVS COMOUT directory
     if [ $SENDCOM = YES ]; then
