@@ -74,7 +74,8 @@ export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=$COMROOT/$NET/$evs_ver
 export COMINdailystats=$COMIN/stats/$COMPONENT
 export COMINyearlystats=$COMIN/stats/$COMPONENT/long_term/annual_means
-export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1
+#export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1
+export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1
 
 # CALL executable job script here
 $HOMEevs/jobs/global_det/plots/JEVS_GLOBAL_DET_ATMOS_HEADLINE_PLOTS

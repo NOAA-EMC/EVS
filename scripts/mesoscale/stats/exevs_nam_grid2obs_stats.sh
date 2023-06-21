@@ -62,14 +62,14 @@ done
 
 # Copy output files into the correct EVS COMOUT directory
   if [ $SENDCOM = YES ]; then
-    for MODEL_DIR_PATH in $MET_PLUS_OUT/gather_small/stat_analysis/$MODELNAME*; do
+    for MODEL_DIR_PATH in $MET_PLUS_OUT/gather_small/stat_analysis/$MODELNAME; do
         MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
         mkdir -p $COMOUT/$MODEL_DIR
         for FILE in $MODEL_DIR_PATH/*; do
             cp -v $FILE $COMOUT/$MODEL_DIR/.
         done
     done
-    for MODEL_DIR_PATH in $MET_PLUS_OUT/raob/point_stat/$MODELNAME*; do
+    for MODEL_DIR_PATH in $MET_PLUS_OUT/raob/point_stat/$MODELNAME; do
         MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
         mkdir -p $COMOUTsmall/$MODEL_DIR
         for FILE in $MODEL_DIR_PATH/*; do

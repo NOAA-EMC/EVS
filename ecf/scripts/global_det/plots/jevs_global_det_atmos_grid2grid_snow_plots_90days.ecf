@@ -92,7 +92,8 @@ export COMINfnmoc=$COMIN/stats/$COMPONENT/fnmoc
 export COMINimd=$COMIN/stats/$COMPONENT/imd
 export COMINjma=$COMIN/stats/$COMPONENT/jma
 export COMINukmet=$COMIN/stats/$COMPONENT/ukmet
-export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1
+#export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1
+export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1
 
 # Set config file
 export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${VERIF_TYPE}

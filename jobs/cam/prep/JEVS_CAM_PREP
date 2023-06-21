@@ -49,10 +49,12 @@ setpdy.sh 8
 . ./PDY
 
 if [ $VERIF_CASE = grid2obs ] ; then
-   export VDATE=${VDATE:-$PDYm1}
+#  export VDATE=${VDATE:-$PDYm1}
+   export VDATE=$(date -d "today -1 day" +"%Y%m%d")
 
 elif [ $VERIF_CASE = precip ] ; then
-   export VDATE=${VDATE:-$PDYm1}
+#   export VDATE=${VDATE:-$PDYm1}
+   export VDATE=$(date -d "today -1 day" +"%Y%m%d")
  
 elif [ $VERIF_CASE = radar ] ; then
    export VDATE=${VDATE:-$PDYm1}
