@@ -25,6 +25,7 @@ class Toggle():
             'sample_equalization': False, # equalize samples along each value of the independent variable where data exist
             'keep_shared_events_only': False, # functional for time_series only.
             'clear_prune_directory': True, # remove the intermediate directory created to store pruned data files temporarily
+            'delete_intermed_data': True, # if True, delete rows of data if, for any model, rows include NaN (lead_average only)
             'plot_logo_left': True,
             'plot_logo_right': True,
             'zoom_logo_left': .95, 

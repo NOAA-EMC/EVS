@@ -876,6 +876,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                 )
                 model_plot_name+=f" ({date_hours_shift_string})"
             else:
+                if int(model_queries[m]['shift'][0]) >= 0:
+                    model_plot_name+='+'
                 model_plot_name+=model_queries[m]['shift'][0]+'H'
         if str(model_list[m]) not in pivot_metric1:
             continue

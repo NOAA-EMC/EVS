@@ -4,7 +4,7 @@
 # Name:          time_series.py
 # Contact(s):    Marcel Caron
 # Developed:     Oct. 14, 2021 by Marcel Caron 
-# Last Modified: May 19, 2023 by Marcel Caron             
+# Last Modified: Jun. 15, 2023 by Marcel Caron             
 # Title:         Line plot of verification metric as a function of 
 #                valid or init time
 # Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
@@ -28,6 +28,7 @@ import matplotlib.colors as colors
 import matplotlib.image as mpimg
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from datetime import datetime, timedelta as td
+from urllib.parse import urlparse, parse_qs
 
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
@@ -60,7 +61,8 @@ def daterange(start: datetime, end: datetime, td: td) -> datetime:
         curr+=td
 
 def plot_time_series(df: pd.DataFrame, logger: logging.Logger, 
-                     date_range: tuple, model_list: list, num: int = 0, 
+                     date_range: tuple, model_list: list, 
+                     model_queries: list = [{}], num: int = 0, 
                      level: str = '500', flead='all', thresh: list = ['<20'], 
                      metric1_name: str = 'BCRMSE', metric2_name: str = 'BIAS',
                      y_min_limit: float = -10., y_max_limit: float = 10., 
@@ -117,18 +119,81 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             frange_save_phrase = f'{flead[0]:03d}-F{flead[-1]:03d}'
         frange_string = f'Forecast Hour{frange_phrase}'
         frange_save_string = f'F{frange_save_phrase}'
-        df = df[df['LEAD_HOURS'].isin(flead)]
+        if any(model_queries):
+            for m, model in enumerate(model_list):
+                if 'shift' in model_queries[m]:
+                    flead_shift = [
+                        int(f)-int(model_queries[m]['shift'][0]) for f in flead
+                    ]
+                else:
+                    flead_shift = flead
+                if m == 0:
+                    df_tmp = df[
+                        (df['LEAD_HOURS'].isin(flead_shift))
+                        & (df['MODEL'] == model)
+                    ]
+                else:
+                    df_tmp2 = df[
+                        (df['LEAD_HOURS'].isin(flead_shift))
+                        & (df['MODEL'] == model)
+                    ]
+                    df_tmp = pd.concat([df_tmp, df_tmp2])
+            df=df_tmp
+        else:
+            df = df[df['LEAD_HOURS'].isin(flead)]
     elif isinstance(flead, tuple):
         frange_string = (f'Forecast Hours {flead[0]:02d}'
                          + u'\u2013' + f'{flead[1]:02d}')
         frange_save_string = f'F{flead[0]:03d}-F{flead[1]:03d}'
-        df = df[
-            (df['LEAD_HOURS'] >= flead[0]) & (df['LEAD_HOURS'] <= flead[1])
-        ]
+        if any(model_queries):
+            for m, model in enumerate(model_list):
+                if 'shift' in model_queries[m]:
+                    flead_shift = [
+                        int(f)-int(model_queries[m]['shift'][0]) for f in flead
+                    ]
+                else:
+                    flead_shift = flead
+                if m == 0:
+                    df_tmp = df[
+                        (df['LEAD_HOURS'] >= flead_shift[0])
+                        & (df['LEAD_HOURS'] <= flead_shift[1])
+                        & (df['MODEL'] == model)
+                    ]
+                else:
+                    df_tmp2 = df[
+                        (df['LEAD_HOURS'] >= flead_shift[0])
+                        & (df['LEAD_HOURS'] <= flead_shift[1])
+                        & (df['MODEL'] == model)
+                    ]
+                    df_tmp = pd.concat([df_tmp, df_tmp2])
+            df = df_tmp
+        else:
+            df = df[
+                (df['LEAD_HOURS'] >= flead[0]) & (df['LEAD_HOURS'] <= flead[1])
+            ]
     elif isinstance(flead, np.int):
         frange_string = f'Forecast Hour {flead:02d}'
         frange_save_string = f'F{flead:03d}'
-        df = df[df['LEAD_HOURS'] == flead]
+        if any(model_queries):
+            for m, model in enumerate(model_list):
+                if 'shift' in model_queries[m]:
+                    flead_shift = int(flead)-int(model_queries[m]['shift'][0])
+                else:
+                    flead_shift = flead
+                if m == 0:
+                    df_tmp = df[
+                        (df['LEAD_HOURS'] == flead_shift)
+                        & (df['MODEL'] == model)
+                    ]
+                else:
+                    df_tmp2 = df[
+                        (df['LEAD_HOURS'] == flead_shift)
+                        & (df['MODEL'] == model)
+                    ]
+                    df_tmp = pd.concat([df_tmp, df_tmp2])
+            df = df_tmp
+        else:
+            df = df[df['LEAD_HOURS'] == flead]
     else:
         error_string = (
             f"Invalid forecast lead: \'{flead}\'\nPlease check settings for"
@@ -253,6 +318,10 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     model_list = [
         str(m) 
         for (m, keep) in zip(model_list, cols_to_keep) if keep
+    ]
+    model_queries = [
+        m
+        for (m, keep) in zip(model_queries, cols_to_keep) if keep
     ]
     if not all(cols_to_keep):
         logger.warning(
@@ -668,6 +737,32 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             )
         else:
             model_plot_name = model_list[m]
+        if 'shift' in model_queries[m]:
+            if str(date_type).upper() == 'INIT':
+                dhs = [
+                    datetime.strptime(str(date_hour).zfill(2), '%H')
+                    for date_hour in date_hours
+                ]
+                dhs_shift = [
+                    dh+td(hours=int(model_queries[m]['shift'][0]))
+                    for dh in dhs
+                ]
+                date_hours_shift = [
+                    dh_shift.strftime('%H')
+                    for dh_shift in dhs_shift
+                ]
+                date_hours_shift_string = plot_util.get_name_for_listed_items(
+                    [
+                        str(date_hour_shift).zfill(2)
+                        for date_hour_shift in date_hours_shift
+                    ],
+                    ', ', '', 'Z', '& ', ''
+                )
+                model_plot_name+=f" ({date_hours_shift_string})"
+            else:
+                if int(model_queries[m]['shift'][0]) >= 0:
+                    model_plot_name+='+'
+                model_plot_name+=model_queries[m]['shift'][0]+'H'
         if str(model_list[m]) not in pivot_metric1:
             continue
         y_vals_metric1 = pivot_metric1[str(model_list[m])].values
@@ -708,7 +803,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             if n_mods == 0:
                 y_mod_min = y_vals_metric_min
                 y_mod_max = y_vals_metric_max
-                counts = pivot_counts[str(model_list[m])].values
+                if sample_equalization:
+                    counts = pivot_counts[str(model_list[m])].values
                 n_mods+=1
             else:
                 if math.isinf(y_mod_min):
@@ -1285,6 +1381,13 @@ def main():
         )
     logger.debug('========================================')
 
+    models = []
+    model_queries = []
+    for model in MODELS:
+        parsed_model = urlparse(model)
+        models.append(parsed_model.path)
+        model_queries.append(parse_qs(parsed_model.query))
+
     date_range = (
         datetime.strptime(date_beg, '%Y%m%d'), 
         datetime.strptime(date_end, '%Y%m%d')+td(days=1)-td(milliseconds=1)
@@ -1408,13 +1511,14 @@ def main():
                     logger, STATS_DIR, PRUNE_DIR, OUTPUT_BASE_TEMPLATE, VERIF_CASE, 
                     VERIF_TYPE, LINE_TYPE, DATE_TYPE, date_range, EVAL_PERIOD, 
                     date_hours, FLEADS, requested_var, fcst_var_names, 
-                    obs_var_names, MODELS, domain, INTERP, MET_VERSION, 
-                    clear_prune_dir
+                    obs_var_names, models, model_queries, domain, INTERP, 
+                    MET_VERSION, clear_prune_dir
                 )
                 if df is None:
                     continue
                 plot_time_series(
-                    df, logger, date_range, MODELS, num=num, flead=FLEADS, 
+                    df, logger, date_range, models, 
+                    model_queries=model_queries, num=num, flead=FLEADS, 
                     level=fcst_level, thresh=fcst_thresh, 
                     metric1_name=metrics[0], metric2_name=metrics[1], 
                     date_type=DATE_TYPE, y_min_limit=Y_MIN_LIMIT, 

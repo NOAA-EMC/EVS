@@ -5,7 +5,48 @@ graphics = {
     'mesoscale':{
         'grid2obs':{
             'raob':{
-                'nam, rap, gfs': {
+                'lead_average_group, nam, rap, gfs': {
+                    'lead_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South,Alaska,Appalachia,CPlains,DeepSouth,GreatLakes,Mezquital,MidAtlantic,NorthAtlantic,NPlains,NRockies,PacificNW,PacificSW,Prairie,Southeast,SPlains,SRockies',
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'sl1l2':{
+                                'HPBL':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0,6,12,18,24,30,36,42,48,54,60,66,72,78,84'],
+                                    'FCST_LEVEL':'PBL',
+                                    'OBS_LEVEL':'L0',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                            'ctc':{
+                                'HPBL':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['0,6,12,18,24,30,36,42,48,54,60,66,72,78,84'],
+                                    'FCST_LEVEL':'PBL',
+                                    'OBS_LEVEL':'L0',
+                                    'FCST_THRESHs':['<=500','>=2000'],
+                                    'OBS_THRESHs':['<=500','>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
+                },
+                'nam, rap?shift=-3, gfs': {
                     'time_series':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -126,45 +167,6 @@ graphics = {
                             },
                         }
                     },
-                    'lead_average':{
-                        'DATE_TYPE':'INIT',
-                        'VALID_BEG':'',
-                        'VALID_END':'',
-                        'INIT_BEG':'',
-                        'INIT_END':'',
-                        'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South,Alaska,Appalachia,CPlains,DeepSouth,GreatLakes,Mezquital,MidAtlantic,NorthAtlantic,NPlains,NRockies,PacificNW,PacificSW,Prairie,Southeast,SPlains,SRockies',
-                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
-                        'FCST_VALID_HOURS':[''],
-                        'FCST_INIT_HOURS':['0','12'],
-                        'VARIABLES':{
-                            'sl1l2':{
-                                'HPBL':{
-                                    'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,6,12,18,24,30,36,42,48,54,60,66,72,78,84'],
-                                    'FCST_LEVEL':'PBL',
-                                    'OBS_LEVEL':'L0',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'BILIN',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            },
-                            'ctc':{
-                                'HPBL':{
-                                    'STATSs':['csi','fbias'],
-                                    'FCST_LEADS':['0,6,12,18,24,30,36,42,48,54,60,66,72,78,84'],
-                                    'FCST_LEVEL':'PBL',
-                                    'OBS_LEVEL':'L0',
-                                    'FCST_THRESHs':['<=500','>=2000'],
-                                    'OBS_THRESHs':['<=500','>=2000'],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'BILIN',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            }
-                        }
-                    },
                     'valid_hour_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -279,7 +281,7 @@ graphics = {
                         }
                     }
                 },
-                'nam, rap': {
+                'nam, rap?shift=-3': {
                     'stat_by_level':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -366,7 +368,7 @@ graphics = {
                 }
             },
             'metar':{
-                'nam, rap, gfs': {
+                'lead_average_group, nam, rap, gfs': {
                     'lead_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -483,6 +485,8 @@ graphics = {
                             },
                         }
                     },
+                },
+                'nam, rap?shift=-3, gfs': {
                     'valid_hour_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
