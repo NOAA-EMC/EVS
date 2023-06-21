@@ -528,7 +528,11 @@ class ModelSpecs():
             'wafs': {
                 'settings_key':'WAFS', 
                 'plot_name':'WAFS'
-            }
+            },
+            'NAEFS': {
+                'settings_key':'NAEFS',
+                'plot_name':'NAEFS(bias-corrected)'
+            },
         }
 
         '''
@@ -652,9 +656,6 @@ class ModelSpecs():
                      'marker': 'o', 'markersize': 12,
                      'linestyle': 'solid', 'linewidth': 5.},
             'NAEFS': {'color': '#00ff00',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 5.},
-            'NAEFSv7': {'color': '#ff0000',   
                      'marker': 'o', 'markersize': 12,
                      'linestyle': 'solid', 'linewidth': 5.},
             'NARRE_MEAN': {'color': '#000000',
@@ -1807,6 +1808,40 @@ class Reference():
                                                    'P300', 'P250', 'P200',
                                                    'P150', 'P100', 'P50',
                                                    'P10', 'P5', 'P1'],
+                                'obs_var_thresholds': '',
+                                'obs_var_options': '',
+                                'plot_group':'sfc_upper'},
+                        'UGRD': {'fcst_var_names': ['UGRD'],
+                                'fcst_var_levels': ['P1000', 'P925', 'P850',
+                                                    'P700', 'P500', 'P400',
+                                                    'P300', 'P250', 'P200',
+                                                    'P150', 'P100', 'P50', 'P10'
+                                ],
+                                'fcst_var_thresholds': '',
+                                'fcst_var_options': '',
+                                'obs_var_names': ['UGRD'],
+                                'obs_var_levels': ['P1000', 'P925', 'P850',
+                                                   'P700', 'P500', 'P400',
+                                                   'P300', 'P250', 'P200',
+                                                   'P150', 'P100', 'P50', 'P10'
+                                ],
+                                'obs_var_thresholds': '',
+                                'obs_var_options': '',
+                                'plot_group':'sfc_upper'},
+                        'VGRD': {'fcst_var_names': ['VGRD'],
+                                'fcst_var_levels': ['P1000', 'P925', 'P850',
+                                                    'P700', 'P500', 'P400',
+                                                    'P300', 'P250', 'P200',
+                                                    'P150', 'P100', 'P50', 'P10'
+                                ],
+                                'fcst_var_thresholds': '',
+                                'fcst_var_options': '',
+                                'obs_var_names': ['VGRD'],
+                                'obs_var_levels': ['P1000', 'P925', 'P850',
+                                                   'P700', 'P500', 'P400',
+                                                   'P300', 'P250', 'P200',
+                                                   'P150', 'P100', 'P50', 'P10'
+                                ],
                                 'obs_var_thresholds': '',
                                 'obs_var_options': '',
                                 'plot_group':'sfc_upper'},

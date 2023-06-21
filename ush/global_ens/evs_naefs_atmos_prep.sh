@@ -49,7 +49,7 @@ if [ $get_model_bc = yes ] ; then
          echo "$USHevs/global_ens/evs_get_naefs_atmos_data.sh $model $cyc $fhr_beg $fhr_end" >> get_data_${model}_${cyc}_${fhr_range}.sh
 
          chmod +x get_data_${model}_${cyc}_${fhr_range}.sh
-         echo "get_data_${model}_${cyc}_${fhr_range}.sh" >> run_get_all_naefs_atmos_poe.sh
+         echo "${DATA}/get_data_${model}_${cyc}_${fhr_range}.sh" >> run_get_all_naefs_atmos_poe.sh
 
        done
       done
@@ -64,7 +64,7 @@ if [ $get_gefs_bc_apcp24h = yes ] ; then
     >get_data_${model}_${cyc}_apcp24h.sh
     echo "$USHevs/global_ens/evs_get_naefs_atmos_data.sh ${model}_apcp24h $cyc 0 384" >> get_data_${model}_${cyc}_apcp24h.sh
     chmod +x get_data_${model}_${cyc}_apcp24h.sh
-    echo "get_data_${model}_${cyc}_apcp24h.sh" >> run_get_all_naefs_atmos_poe.sh
+    echo "${DATA}/get_data_${model}_${cyc}_apcp24h.sh" >> run_get_all_naefs_atmos_poe.sh
   done
  done
 fi
@@ -75,14 +75,14 @@ if [ $run_mpi = yes ] ; then
 
  if [ -s run_get_all_naefs_atmos_poe.sh ] ; then
    chmod +x run_get_all_naefs_atmos_poe.sh 
-   mpiexec  -n 34 -ppn 34 --cpu-bind core --depth=2 cfp  run_get_all_naefs_atmos_poe.sh
+   mpiexec  -n 34 -ppn 34 --cpu-bind core --depth=2 cfp  ${DATA}/run_get_all_naefs_atmos_poe.sh
  fi
 
 else
 
  if [ -s run_get_all_naefs_atmos_poe.sh ] ; then
    chmod +x run_get_all_naefs_atmos_poe.sh 
-   run_get_all_naefs_atmos_poe.sh
+   ${DATA}/run_get_all_naefs_atmos_poe.sh
  fi
 
 fi 
