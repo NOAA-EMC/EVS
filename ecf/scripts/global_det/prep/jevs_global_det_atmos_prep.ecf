@@ -53,6 +53,8 @@ module list
 
 export cyc=00
 
+export maillist='geoffrey.manikin@noaa.gov,mallory.row@noaa.gov'
+
 export NET=evs
 export STEP=prep
 export COMPONENT=global_det
