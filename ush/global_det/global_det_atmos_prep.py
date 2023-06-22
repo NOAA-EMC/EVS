@@ -51,10 +51,6 @@ COMOUT_INITDATE = COMOUT+'.'+INITDATE
 if not os.path.exists(COMOUT_INITDATE):
     os.makedirs(COMOUT_INITDATE)
 
-# Set up text file for missing production files
-log_missing_files = os.path.join(DATA, COMPONENT+'_'+RUN+'_'+STEP+'_'
-                                  +'missing_files.txt')
-
 ###### MODELS
 # Get operational global deterministic model data
 # Climate Forecast System - cfs
@@ -213,6 +209,11 @@ for MODEL in MODELNAME:
                 )
                 if not os.path.exists(COMOUT_fcst_file):
                     print("----> Trying to create "+DATA_fcst_file)
+                    log_missing_file = os.path.join(
+                        DATA, 'mail_missing_'+MODEL+'_fhr'
+                        +str(fcst_hr).zfill(3)+'_init'
+                        +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
+                    )
                     DATA_fcst_file_dir = DATA_fcst_file.rpartition('/')[0]
                     if not os.path.exists(DATA_fcst_file_dir):
                         os.makedirs(DATA_fcst_file_dir)
@@ -224,34 +225,40 @@ for MODEL in MODELNAME:
                     if MODEL == 'jma':
                         gda_util.prep_prod_jma_file(COMIN_fcst_file,
                                                     DATA_fcst_file,
+                                                    CDATE_dt,
                                                     str(fcst_hr),
                                                     'full',
-                                                    log_missing_files)
+                                                    log_missing_file)
                     elif MODEL == 'ecmwf':
                         if fcst_hr == 0:
                             COMIN_fcst_file = COMIN_fcst_file[:-2]+'11'
                         gda_util.prep_prod_ecmwf_file(COMIN_fcst_file,
                                                       DATA_fcst_file,
+                                                      CDATE_dt,
                                                       str(fcst_hr),
                                                       'full',
-                                                      log_missing_files)
+                                                      log_missing_file)
                     elif MODEL == 'ukmet':
                         gda_util.prep_prod_ukmet_file(COMIN_fcst_file,
                                                       DATA_fcst_file,
+                                                      CDATE_dt,
                                                       str(fcst_hr),
                                                       'full',
-                                                      log_missing_files)
+                                                      log_missing_file)
                     elif MODEL == 'fnmoc':
                         gda_util.prep_prod_fnmoc_file(COMIN_fcst_file,
                                                       DATA_fcst_file,
+                                                      CDATE_dt,
                                                       str(fcst_hr),
                                                       'full',
-                                                      log_missing_files)
+                                                      log_missing_file)
                     else:
                         gda_util.copy_file(COMIN_fcst_file, DATA_fcst_file)
                         if not os.path.exists(COMIN_fcst_file):
-                            gda_util.log_missing_file(log_missing_files,
-                                                      COMIN_fcst_file)
+                            gda_util.log_missing_file_model(
+                                log_missing_file, COMIN_fcst_file, MODEL,
+                                CDATE_dt, str(fcst_hr).zfill(3)
+                            )
                     if SENDCOM == 'YES':
                         gda_util.copy_file(DATA_fcst_file, COMOUT_fcst_file)
                 else:
@@ -273,6 +280,11 @@ for MODEL in MODELNAME:
                             and fcst_hr <= max_precip_fhr \
                             and fcst_hr % 24 == 0:
                         print("----> Trying to create "+DATA_precip_file)
+                        log_missing_file = os.path.join(
+                            DATA, 'mail_missing_'+MODEL+'_fhr'
+                            +str(fcst_hr).zfill(3)+'_init'
+                            +CDATE_dt.strftime('%Y%m%d%H')+'_precip.sh'
+                        )
                         DATA_precip_file_dir = (
                             DATA_precip_file.rpartition('/')[0]
                         )
@@ -289,46 +301,53 @@ for MODEL in MODELNAME:
                         if MODEL == 'jma':
                             gda_util.prep_prod_jma_file(COMIN_precip_file,
                                                         DATA_precip_file,
+                                                        CDATE_dt,
                                                         str(fcst_hr),
                                                         'precip',
-                                                        log_missing_files)
+                                                        log_missing_file)
                         elif MODEL == 'ecmwf':
                             if cycle == '12':
                                 gda_util.prep_prod_ecmwf_file(COMIN_precip_file,
                                                               DATA_precip_file,
+                                                              CDATE_dt,
                                                               str(fcst_hr),
                                                               'precip',
-                                                              log_missing_files)
+                                                              log_missing_file)
                         elif MODEL == 'ukmet':
                             gda_util.prep_prod_ukmet_file(COMIN_precip_file,
                                                           DATA_precip_file,
+                                                          CDATE_dt,
                                                           str(fcst_hr),
                                                           'precip',
-                                                           log_missing_files)
+                                                           log_missing_file)
                         elif MODEL == 'fnmoc':
                             gda_util.prep_prod_fnmoc_file(COMIN_precip_file,
                                                           DATA_precip_file,
                                                           str(fcst_hr),
                                                           'precip',
-                                                          log_missing_files)
+                                                          log_missing_file)
                         elif MODEL == 'dwd':
                             gda_util.prep_prod_dwd_file(COMIN_precip_file,
                                                         DATA_precip_file,
+                                                        CDATE_dt,
                                                         str(fcst_hr),
                                                         'precip',
-                                                        log_missing_files)
+                                                        log_missing_file)
                         elif MODEL == 'metfra':
                             gda_util.prep_prod_metfra_file(COMIN_precip_file,
                                                            DATA_precip_file,
+                                                           CDATE_dt,
                                                            str(fcst_hr),
                                                            'precip',
-                                                           log_missing_files)
+                                                           log_missing_file)
                         else:
                             gda_util.copy_file(COMIN_precip_file,
                                                DATA_precip_file)
                             if not os.path.exists(COMIN_precip_file):
-                                gda_util.log_missing_file(log_missing_files,
-                                                          COMIN_precip_file)
+                                gda_util.log_missing_file_model(
+                                    log_missing_file, COMIN_precip_file, MODEL,
+                                    CDATE_dt, str(fcst_hr).zfill(3)
+                                )
                         if SENDCOM == 'YES':
                             gda_util.copy_file(DATA_precip_file,
                                                COMOUT_precip_file)
@@ -349,6 +368,10 @@ for MODEL in MODELNAME:
             )
             if not os.path.exists(COMOUT_anl_file):
                 print("----> Trying to create "+DATA_anl_file)
+                log_missing_file = os.path.join(
+                        DATA, 'mail_missing_'+MODEL+'_anl_valid'
+                        +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
+                    )
                 DATA_anl_file_dir = DATA_anl_file.rpartition('/')[0]
                 if not os.path.exists(DATA_anl_file_dir):
                     os.makedirs(DATA_anl_file_dir)
@@ -360,32 +383,38 @@ for MODEL in MODELNAME:
                 if MODEL == 'jma':
                     gda_util.prep_prod_jma_file(COMIN_anl_file,
                                                 DATA_anl_file,
+                                                CDATE_dt,
                                                 'anl',
                                                 'full',
-                                                log_missing_files)
+                                                log_missing_file)
                 elif MODEL == 'ecmwf':
                     gda_util.prep_prod_ecmwf_file(COMIN_anl_file,
                                                   DATA_anl_file,
+                                                  CDATE_dt,
                                                   'anl',
                                                   'full',
-                                                  log_missing_files)
+                                                  log_missing_file)
                 elif MODEL == 'ukmet':
                     gda_util.prep_prod_ukmet_file(COMIN_anl_file,
                                                   DATA_anl_file,
+                                                  CDATE_dt,
                                                   'anl',
                                                   'full',
-                                                  log_missing_files)
+                                                  log_missing_file)
                 elif MODEL == 'fnmoc':
                     gda_util.prep_prod_fnmoc_file(COMIN_anl_file,
                                                   DATA_anl_file,
+                                                  CDATE_dt,
                                                   'anl',
                                                   'full',
-                                                  log_missing_files)
+                                                  log_missing_file)
                 else:
                     gda_util.copy_file(COMIN_anl_file, DATA_anl_file)
                     if not os.path.exists(COMIN_anl_file):
-                        gda_util.log_missing_file(log_missing_files,
-                                                  COMIN_anl_file)
+                        gda_util.log_missing_file_model(
+                            log_missing_file, COMIN_anl_file, MODEL,
+                            CDATE_dt, 'anl'
+                        )
                 if SENDCOM == 'YES':
                     gda_util.copy_file(DATA_anl_file, COMOUT_anl_file)
             else:
@@ -459,8 +488,16 @@ for OBS in OBSNAME:
         DATA_file_dir = DATA_file.rpartition('/')[0]
         if not os.path.exists(DATA_file_dir):
             os.makedirs(DATA_file_dir)
+        log_missing_file = os.path.join(
+            DATA, 'mail_missing_'+OBS+'_valid'
+            +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
+        )
         if OBS == 'osi_saf':
             for hem in ['nh', 'sh']:
+                log_missing_file = os.path.join(
+                    DATA, 'mail_missing_'+OBS+'_'+hem+'_valid'
+                    +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
+                )
                 COMIN_hem_file = COMIN_file.replace('{hem?fmt=str}', hem)
                 DATA_hem_file = DATA_file.replace('{hem?fmt=str}', hem)
                 COMOUT_hem_file = COMOUT_file.replace('{hem?fmt=str}', hem)
@@ -468,25 +505,33 @@ for OBS in OBSNAME:
                     print("----> Trying to create "+DATA_hem_file)
                     gda_util.prep_prod_osi_saf_file(
                         COMIN_hem_file, DATA_hem_file, CDATE_dt,
-                        log_missing_files
+                        log_missing_file
                     )
                     if SENDCOM == 'YES':
                         gda_util.copy_file(DATA_hem_file, COMOUT_hem_file)
         elif OBS == 'ghrsst_ospo':
+            log_missing_file = os.path.join(
+                DATA, 'mail_missing_'+OBS+'_valid'
+                +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
+            )
             if not os.path.exists(COMOUT_file):
                 print("----> Trying to create "+DATA_file)
                 gda_util.prep_prod_ghrsst_ospo_file(
                     COMIN_file, DATA_file, CDATE_dt,
-                    log_missing_files
+                    log_missing_file
                 )
                 if SENDCOM == 'YES':
                     gda_util.copy_file(DATA_file, COMOUT_file)
         elif OBS == 'get_d':
+            log_missing_file = os.path.join(
+                DATA, 'mail_missing_'+OBS+'_valid'
+                +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
+            )
             if not os.path.exists(COMOUT_file):
                 print("----> Trying to create "+DATA_file)
                 gda_util.prep_prod_get_d_file(
                     COMIN_file, DATA_file, CDATE_dt,
-                    log_missing_files
+                    log_missing_file
                 )
             if SENDCOM == 'YES':
                 gda_util.copy_file(DATA_file, COMOUT_file)
