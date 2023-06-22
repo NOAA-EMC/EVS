@@ -1,0 +1,85 @@
+#!/bin/bash
+
+#################################
+# SET SHELL PROCESSING VARIABLES 
+#################################
+set -xa
+# ###################################
+# # SET SHELL PROCESSING VARIABLES
+# # ###################################
+export PS4='$SECONDS + '
+date
+
+###########################################################
+### obtain unique LSF id (jobid) and make temp directories
+#############################################################
+export pid=$$
+
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+rm -rf $DATA
+mkdir -p $DATA
+cd $DATA
+
+####################################
+### Determine Job Output Name on System
+######################################
+export pgmout="OUTPUT.${pid}"
+export cycle=t${cyc}z
+
+setpdy.sh 8
+. ./PDY
+
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config/$COMPONENT}
+export USHevs=${USHevs:-$HOMEevs/ush/$COMPONENT}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
+export MASKS=${MASKS:-$FIXevs/masks}
+#export VDATE=${PDYm3}
+
+export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
+export COMINobs=${COMINobs:-$(compath.py $envir/dcom)}
+export COMINfcst=${COMINfcst:-$(compath.py $NET/${evs_ver}/prep/$COMPONENT)}
+export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
+export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE
+export COMOUTfinal=${COMOUTfinal:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
+export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
+
+#######################################################################
+## Execute the script.
+#########################################################################
+if [ $OBTTYPE = 'icap' ] ; then
+	for VAR in $VARS; do
+	export VAR
+	export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$OBTTYPE.$VDATE
+	$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${OBTTYPE}_${STEP}.sh
+        done
+elif [ $OBTTYPE = 'geos5' ] ; then
+	for VAR in $VARS; do
+	export VAR
+        export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$OBTTYPE.$VDATE
+	$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${OBTTYPE}_${STEP}.sh
+        done
+elif [ $OBTTYPE = 'viirs' ] ; then			
+        export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$OBTTYPE.$VDATE
+	$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${OBTTYPE}_${STEP}.sh
+elif [ $OBTTYPE = 'abi' ] ; then
+	export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$OBTTYPE.$VDATE
+	$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${OBTTYPE}_${STEP}.sh
+     fi
+     else
+       	echo "Wrong RUN: $RUN"
+         exit 
+fi
+
+cat $pgmout
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+
+if [ "$KEEPDATA" != "YES" ]; then
+      cd $DATAROOT
+      rm -rf $DATA
+fi
+

@@ -1,0 +1,63 @@
+#!/bin/bash
+
+set -xa
+
+###################################
+# SET SHELL PROCESSING VARIABLES
+# ###################################
+export PS4='$SECONDS + '
+date
+
+# ###########################################################
+# # obtain unique LSF id (jobid) and make temp directories
+# ###########################################################
+export pid=$$
+
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+rm -rf $DATA
+mkdir -p $DATA
+cd $DATA
+
+####################################
+## Determine Job Output Name on System
+#####################################
+
+export pgmout="OUTPUT.${pid}"
+export cycle=t${cyc}z
+
+setpdy.sh 8
+. ./PDY
+
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export USHevs=${USHevs:-$HOMEevs/ush/$COMPONENT}
+export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config/$COMPONENT}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export PARMevs=${PARMevs:-$HOMEevs/parm/metplus_config}
+export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
+
+echo $COMPATH
+
+# define COMIN/COMOUT variables
+export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
+export COMINobs=${COMINobs:-$(compath.py $envir/dcom)}
+export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
+export COMOUTprep=${COMOUTprep:-$COMOUT/$STEP/$COMPONENT}
+export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
+
+#######################################################################
+# Execute the script.
+#######################################################################
+$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${RUN}_${VERIF_CASE}_${STEP}.sh
+
+if [ -e "$pgmout" ]; then
+	   cat $pgmout
+fi
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+
+if [ "$KEEPDATA" != "YES" ]; then
+	   cd $DATAROOT
+	      rm -rf $DATA
+fi
+
