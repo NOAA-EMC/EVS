@@ -22,8 +22,8 @@ cd $DATA
 export cycle=${cycle:-t00z}
 setpdy.sh 90
 . ./PDY
-export PDYm90=${PDYm90}
-export VDATE=${PDYm1}
+export PDYm90=${PDYm90:-${PDYm90}}
+export VDATE=${VDATE:-${PDYm1}}
 
 ######################################
 # Determine Job Output Name on System 
@@ -43,10 +43,10 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 # Correct MET/METplus roots (Aug 2022)
 ######################################
 # for use with METplus/4.1.1
-export MET_ROOT=/apps/ops/para/libs/intel/${intel_ver}/met/${met_ver}
-export MET_BASE=${MET_ROOT}/share/met
-export METPLUS_PATH=/apps/ops/para/libs/intel/${intel_ver}/metplus/${metplus_ver}
-export PATH=${METPLUS_PATH}/ush:${MET_ROOT}/bin:${PATH}
+#export MET_ROOT=/apps/ops/para/libs/intel/${intel_ver}/met/${met_ver}
+#export MET_BASE=${MET_ROOT}/share/met
+#export METPLUS_PATH=/apps/ops/para/libs/intel/${intel_ver}/metplus/${metplus_ver}
+#export PATH=${METPLUS_PATH}/ush:${MET_ROOT}/bin:${PATH}
 
 ####################################
 # Define NET/RUN variables          
@@ -65,9 +65,9 @@ export VERIF_CASE=${VERIF_CASE:-grid2obs}
 # Define COMIN/COMOUT variables     
 ####################################
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export COMOUT=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export COMOUTstats=${COMOUT}/stats/${COMPONENT}/${MODELNAME}.${VDATE}
-export COMOUTplots=${COMOUT}/${STEP}/${COMPONENT}/${MODELNAME}.${VDATE}
+export COMOUT=${COMOUT:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
+export COMINstats=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${VDATE}
+export COMOUTplots=${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}
 
 # make the directory where the plots will be kept
 mkdir -p ${COMOUTplots}
