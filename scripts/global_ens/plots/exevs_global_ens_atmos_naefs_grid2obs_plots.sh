@@ -58,27 +58,27 @@ verif_case=$VERIF_CASE
 
 > run_all_poe.sh
 
-for stats in acc bias_mae crps rmse_spread me ; do 
+for stats in acc bias_mae crps rmse_spread me_mae ; do 
  if [ $stats = acc ] ; then
   stat_list='acc'
   line_tp='sal1l2'
-  VARs='TMP2m DPT2m UGRD10m VGRD10m'
+  VARs='TMP2m UGRD10m VGRD10m UGRD VGRD TMP'
  elif [ $stats = bias_mae  ] ; then
   stat_list='bias, mae'
   line_tp='sl1l2'
-  VARs='TMP2m DPT2m UGRD10m VGRD10m '
+  VARs='TMP2m  UGRD10m VGRD10m '
  elif [ $stats = crps ] ; then
   stat_list='crps'
   line_tp='ecnt'
-  VARs='TMP2m DPT2m UGRD10m VGRD10m UGRD VGRD'
+  VARs='TMP2m  UGRD10m VGRD10m UGRD VGRD TMP'
  elif [ $stats = rmse_spread  ] ; then
   stat_list='rmse, spread'
   line_tp='ecnt'
-  VARs='TMP2m DPT2m UGRD10m VGRD10m UGRD VGRD'
- elif [ $stats = me ] ; then
-  stat_list='me'
+  VARs='TMP2m UGRD10m VGRD10m UGRD VGRD TMP'
+ elif [ $stats = me_mae ] ; then
+  stat_list='me, mae'
   line_tp='ecnt'
-  VARs='UGRD VGRD'
+  VARs='UGRD VGRD TMP'
  else
   echo $stats is wrong stat
   exit
@@ -105,6 +105,9 @@ for stats in acc bias_mae crps rmse_spread me ; do
        elif [ $VAR = UGRD ] || [ $VAR = VGRD ] ; then
           FCST_LEVEL_values="P850 P250"
 	  VX_MASK_LIST="NHEM, SHEM, TROPICS"
+       elif [ $VAR = TMP ]  ; then
+	  FCST_LEVEL_values="P850"
+          VX_MASK_LIST="NHEM, SHEM, TROPICS"
        fi
 
      for FCST_LEVEL_value in $FCST_LEVEL_values ; do 
@@ -117,11 +120,18 @@ for stats in acc bias_mae crps rmse_spread me ; do
 
          > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh  
 
-	if [ $VAR = UGRD ] || [ $VAR = VGRD ] ; then
-	   verif_type=upper_air
-        else	   
-           verif_type=conus_sfc
-	fi
+	if [ $VAR = UGRD ] || [ $VAR = VGRD ] || [ $VAR = TMP ] ; then
+              if [ $line_type = sal1l2 ] ; then
+	         verif_case=grid2grid
+	         verif_type=anom
+	      else
+	         verif_case=$VERIF_CASE
+	         verif_type=upper_air
+	      fi
+         else
+             verif_case=$VERIF_CASE
+             verif_type=conus_sfc
+	 fi	
 
         echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
@@ -159,11 +169,11 @@ for stats in acc bias_mae crps rmse_spread me ; do
 
          chmod +x  run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
-         echo "run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+         echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh 
-         echo " run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
+         echo " ${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
 
       done #end of line_type
 
@@ -182,19 +192,19 @@ chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 28 -ppn 28 --cpu-bind verbose,depth cfp run_all_poe.sh
+   mpiexec -np 37 -ppn 37 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
-  run_all_poe.sh
+  ${DATA}/run_all_poe.sh
 fi
 
 cd $plot_dir
 
-for stats in  acc bias_mae crps rmse_spread me ; do
+for stats in  acc bias_mae crps rmse_spread me_mae ; do
  for score_type in lead_average ; do
 
     leads='.png'
     scoretype='fhrmean'
-    vars='tmp dpt ugrd vgrd'
+    vars='tmp ugrd vgrd'
 
   for lead in $leads ; do
     
@@ -202,7 +212,7 @@ for stats in  acc bias_mae crps rmse_spread me ; do
 
     for var in $vars ; do
       if [ $var = tmp ] || [ $var = dpt ] ; then
-	 levels='2m'
+	 levels='2m 850mb'
       elif [ $var = ugrd ] || [ $var = vgrd ] ; then
 	 levels='10m 850mb 250mb'
       fi

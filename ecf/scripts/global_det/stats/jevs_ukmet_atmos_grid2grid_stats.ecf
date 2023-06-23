@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:15:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=32:ompthreads=1:mem=10GB
+#PBS -l place=vscatter,select=1:ncpus=32:ompthreads=1:mem=10GB
 #PBS -l debug=true
 #PBS -V
 
@@ -67,6 +67,9 @@ export nproc=32
 
 # Set cycle
 export cyc=00
+
+# Set mail list
+export maillist='geoffrey.manikin@noaa.gov,mallory.row@noaa.gov'
 
 # Set verification information
 export NET=evs
