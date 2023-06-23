@@ -341,9 +341,11 @@ if [ $SENDCOM = YES ]; then
       for MODEL_DIR_PATH in $MET_PLUS_OUT/$VERIF_TYPE/point_stat/$MODELNAME*; do
         if [ -d $MODEL_DIR_PATH ]; then
            MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
-           mkdir -p $COMOUTsmall/$MODEL_DIR
+           # mkdir -p $COMOUTsmall/$MODEL_DIR
+           mkdir -p $COMOUTsmall
            for FILE in $MODEL_DIR_PATH/*; do	      
-             cp -v $FILE $COMOUTsmall/$MODEL_DIR/.
+             # cp -v $FILE $COMOUTsmall/$MODEL_DIR/.
+             cp -v $FILE $COMOUTsmall/.
            done
         fi
       done

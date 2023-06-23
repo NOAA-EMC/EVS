@@ -66,8 +66,6 @@ if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
   export COMOUTsmall=${COMOUTsmall:-$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE}
   export VDATE=${VDATE:-$PDYm1}
   mkdir -p $COMOUT $COMOUTfinal $COMOUTsmall
-#  source $config
-#  source $config
 
 elif [ $MODELNAME = sref ]; then
   export VDATE=${VDATE:-$PDYm2}
