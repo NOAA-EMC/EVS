@@ -23,8 +23,8 @@ cd $DATA
 export cycle=${cycle:-t00z}
 setpdy.sh 20
 . ./PDY
-export INITDATE=${PDYm1}
-export NEXTDATE=${PDY}
+export INITDATE=${INITDATE:-${PDYm1}}
+export NEXTDATE=${NEXTDATE:-${PDY}}
 
 ######################################
 # Determine Job Output Name on System 

@@ -22,8 +22,8 @@ cd $DATA
 export cycle=${cycle:-t00z}
 setpdy.sh 20
 . ./PDY
-export INITDATE=${PDYm1}
-export NEXTDATE=${PDY}
+export INITDATE=${INITDATE:-${PDYm1}}
+export NEXTDATE=${NEXTDATE:-${PDY}}
 
 ######################################
 # Determine Job Output Name on System 
@@ -68,7 +68,7 @@ export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 export COMINmodel=${COMINmodel:-$(compath.py ${envir}/com/${MODELNAME}/${model_ver})} 
 export COMINgdas=${COMINobs:-$(compath.py ${envir}/com/obsproc/${obsproc_ver}/gdas)}
 
-export COMOUT=${COMIN}/${STEP}/${COMPONENT}/${RUN}
+export COMOUT=${COMOUT:-${COMIN}/${STEP}/${COMPONENT}/${RUN}}
 export ARCgfs=${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
 
 # make the directory where the ARCgfs and gdasnc will be kept
