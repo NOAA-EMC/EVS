@@ -21,8 +21,8 @@ cd $DATA
 export cycle=${cycle:-t00z}
 setpdy.sh 17
 . ./PDY
-export VDATE=${PDYm1}
-export NEXTDATE=${PDY}
+export VDATE=${VDATE:-${PDYm1}}
+export NEXTDATE=${NEXTDATE:-${PDY}}
 
 ######################################
 # Determine Job Output Name on System 
@@ -68,7 +68,7 @@ export COMINmodel=${COMINmodel:-$(compath.py ${envir}/com/${RUN}_${MODELNAME}/${
 export COMINgdasnc=${COMIN}/prep/${COMPONENT}
 export ARCmodel=${COMIN}/prep/${COMPONENT}
 
-export COMOUT=${COMIN}/${STEP}/${COMPONENT}
+export COMOUT=${COMOUT:-${COMIN}/${STEP}/${COMPONENT}}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
 
