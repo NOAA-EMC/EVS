@@ -35,20 +35,167 @@ export job=${NET}_${COMPONENT}_${RUN}
 export job_name=${NET}'_'${COMPONENT}'_'${RUN}'_'${VERIF_CASE}'_'${STEP}
 
 # Additional Verification Settings
-export VERIF_TYPE="raob"
 export GRID="FCST"
-export VHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
 
-export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.awip32{lead?fmt=%2H}.tm00.grib2"
+if [ "$OBSNAME" = "raob" ]; then
+    export VHOUR_LIST="00 06 12 18"
+elif [ "$OBSNAME" = "metar" ]; then
+    export VHOUR_LIST="00 03 06 09 12 15 18 21"
+else
+    echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
+    exit 1
+fi
 
-export MASK_POLY_LIST="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/G221_NAMER.nc"
-
+  if [ "$NEST" = "namer" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="yes"
+    export FHR_GROUP_LIST="FULL"
+    export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.awip32{lead?fmt=%2H}.tm00.grib2"
+    if [ "$OBSNAME" = "raob" ]; then
+      export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH"
+    elif [ "$OBSNAME" = "metar" ]; then
+      export VAR_NAME_LIST=""
+    else
+      echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
+      exit 1
+    fi
+    export MASK_POLY_LIST="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/G221_NAMER.nc"
     export MASK_CUSTOM_LIST=""
     export FHR_GROUP_LIST="FULL"
+    export MIN_IHOUR="00"
     export FHR_END_FULL="84"
     export FHR_INCR_FULL="06"
-    export FHR_END_SHORT="84"
-    export FHR_INCR_SHORT="01"
+    export FHR_END_SHORT="81"
+    export FHR_INCR_SHORT="06"
+
+  elif [ "$NEST" = "conus" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="yes"
+    export FHR_GROUP_LIST="SHORT FULL"
+    export FHR_GROUP_LIST="FULL"
+    export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.awip32{lead?fmt=%2H}.tm00.grib2"
+    if [ "$OBSNAME" = "raob" ]; then
+      export VAR_NAME_LIST="SBCAPE MLCAPE HPBL"
+    elif [ "$OBSNAME" = "metar" ]; then
+      export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING"
+    else
+      echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
+      exit 1
+    fi
+    export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G221_CONUS.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_South.nc"
+    export MASK_CUSTOM_LIST=""
     export MIN_IHOUR="00"
-    
-    echo "END: $(basename ${BASH_SOURCE[0]})"
+    export FHR_END_FULL="84"
+    export FHR_INCR_FULL="06"
+    export FHR_END_SHORT="81"
+    export FHR_INCR_SHORT="06"
+
+  elif [ "$NEST" = "conusc" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="yes"
+    export FHR_GROUP_LIST="SHORT FULL"
+    export FHR_GROUP_LIST="FULL"
+    export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.awip32{lead?fmt=%2H}.tm00.grib2"
+    if [ "$OBSNAME" = "raob" ]; then
+      export VAR_NAME_LIST=""
+    elif [ "$OBSNAME" = "metar" ]; then
+      export VAR_NAME_LIST=""
+    else
+      echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
+      exit 1
+    fi
+    export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G221_CONUS.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_South.nc"
+    export MASK_CUSTOM_LIST=""
+    export MIN_IHOUR="00"
+    export FHR_END_FULL="84"
+    export FHR_INCR_FULL="06"
+    export FHR_END_SHORT="81"
+    export FHR_INCR_SHORT="06"
+
+  elif [ "$NEST" = "subreg" ]; then 
+    export SKIP_IF_OUTPUT_EXISTS="yes"
+    export FHR_GROUP_LIST="SHORT FULL"
+    export FHR_GROUP_LIST="FULL"
+    export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.awip32{lead?fmt=%2H}.tm00.grib2"
+    if [ "$OBSNAME" = "raob" ]; then
+      export VAR_NAME_LIST=""
+    elif [ "$OBSNAME" = "metar" ]; then
+      export VAR_NAME_LIST="TMP2m DPT2m RH2m UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc VIS CEILING"
+    else
+      echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
+      exit 1
+    fi
+    export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G221_Appalachia.nc, ${FIXevs}/masks/Bukovsky_G221_CPlains.nc, ${FIXevs}/masks/Bukovsky_G221_DeepSouth.nc, ${FIXevs}/masks/Bukovsky_G221_GreatBasin.nc, ${FIXevs}/masks/Bukovsky_G221_GreatLakes.nc, ${FIXevs}/masks/Bukovsky_G221_Mezquital.nc, ${FIXevs}/masks/Bukovsky_G221_MidAtlantic.nc, ${FIXevs}/masks/Bukovsky_G221_NorthAtlantic.nc, ${FIXevs}/masks/Bukovsky_G221_NPlains.nc, ${FIXevs}/masks/Bukovsky_G221_NRockies.nc, ${FIXevs}/masks/Bukovsky_G221_PacificNW.nc, ${FIXevs}/masks/Bukovsky_G221_PacificSW.nc, ${FIXevs}/masks/Bukovsky_G221_Prairie.nc, ${FIXevs}/masks/Bukovsky_G221_Southeast.nc, ${FIXevs}/masks/Bukovsky_G221_SPlains.nc, ${FIXevs}/masks/Bukovsky_G221_SRockies.nc"
+    export MASK_CUSTOM_LIST=""
+    export MIN_IHOUR="00"
+    export FHR_END_FULL="84"
+    export FHR_INCR_FULL="06"
+    export FHR_END_SHORT="81"
+    export FHR_INCR_SHORT="06"
+  
+  elif [ "$NEST" = "ak" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="yes"
+    export FHR_GROUP_LIST="SHORT FULL"
+    export FHR_GROUP_LIST="FULL"
+    export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.awip32{lead?fmt=%2H}.tm00.grib2"
+    if [ "$OBSNAME" = "raob" ]; then
+      export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH SBCAPE MLCAPE HPBL"
+    elif [ "$OBSNAME" = "metar" ]; then
+      export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING"
+    else 
+      echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
+      exit 1
+    fi
+    export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc"
+    export MASK_CUSTOM_LIST=""
+    export MIN_IHOUR="00"
+    export FHR_END_FULL="84"
+    export FHR_INCR_FULL="06"
+    export FHR_END_SHORT="81"
+    export FHR_INCR_SHORT="06"
+
+  elif [ "$NEST" = "akc" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="yes"
+    export FHR_GROUP_LIST="SHORT FULL"
+    export FHR_GROUP_LIST="FULL"
+    export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.awip32{lead?fmt=%2H}.tm00.grib2"
+    if [ "$OBSNAME" = "raob" ]; then
+      export VAR_NAME_LIST=""
+    elif [ "$OBSNAME" = "metar" ]; then
+      export VAR_NAME_LIST=""
+    else
+      echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
+      exit 1
+    fi
+    export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc"
+    export MASK_CUSTOM_LIST=""
+    export MIN_IHOUR="00"
+    export FHR_END_FULL="84"
+    export FHR_INCR_FULL="06"
+    export FHR_END_SHORT="81"
+    export FHR_INCR_SHORT="06"
+
+  elif [ "$NEST" = "spc_otlk" ]; then
+    export SKIP_IF_OUTPUT_EXISTS="yes"
+    export FHR_GROUP_LIST="SHORT FULL"
+    export FHR_GROUP_LIST="FULL"
+    export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.awip32{lead?fmt=%2H}.tm00.grib2"
+    if [ "$OBSNAME" = "raob" ]; then
+      export VAR_NAME_LIST="SBCAPE MLCAPE"
+    elif [ "$OBSNAME" = "metar" ]; then
+       export VAR_NAME_LIST=""
+    else
+      echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
+      exit 1
+    fi
+    export GRID_POLY_LIST="${FIXevs}/masks/Bukovsky_G221_CONUS.nc"
+    export NEST_INPUT_TEMPLATE=""
+    export MIN_IHOUR="00"
+    export FHR_END_FULL="84"
+    export FHR_INCR_FULL="06"
+    export FHR_END_SHORT="81"
+    export FHR_INCR_SHORT="06"
+  else
+    echo "The provided NEST, $NEST, is not supported for $MODELNAME"
+    exit 1
+  fi
+
+  echo "END: $(basename ${BASH_SOURCE[0]})"
+
