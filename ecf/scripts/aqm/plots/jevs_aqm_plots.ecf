@@ -65,22 +65,17 @@ source $config
 ########################################################################
 ## The following setting is for parallel test and need to be removed for operational code
 ########################################################################
-export DATA=/lfs/h2/emc/ptmp/$USER/EVS/${cyc}_${MODELNAME}
-
-rm -rf $DATA
-mkdir -p $DATA
-cd $DATA
+export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
+export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
+export KEEPDATA=YES
+export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export jobid=$job.${PBS_JOBID:-$$}
 
 export cycle=t${cyc}z
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMINaqm=${COMIN}/stats/${COMPONENT}/${MODELNAME}
-## Need VDATE setting
-setpdy.sh
-. ./PDY
-export VDATE=${PDYm3}
-export COMOUTplots=${COMOUT}/plots/${COMPONENT}/${RUN}.${VDATE}
 #
 ## export KEEPDATA=NO
 #
