@@ -60,6 +60,7 @@ export COMINdwd_precip=${COMINdwd_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
 export COMINecmwf=${COMINecmwf:-$DCOMROOT/${INITDATE}/wgrbbul/ecmwf}
 export COMINecmwf_precip=${COMINecmwf_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
 export COMINfnmoc=${COMINfnmoc:-$DCOMROOT/navgem}
+export COMINgfs=${COMINgfs:-$(compath.py prod/gfs/$gfs_ver/gfs.$INITDATE)}
 export COMINimd=${COMINimd:-$DCOMROOT/${INITDATE}/wgrbbul/ncmrwf_gdas}
 export COMINjma=${COMINjma:-$DCOMROOT/${INITDATE}/wgrbbul}
 export COMINjma_precip=${COMINjma_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
