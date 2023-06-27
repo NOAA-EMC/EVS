@@ -209,7 +209,7 @@ for vhr in ${valid_hours} ; do
                     cp -v $COMINmodelfilename $DATAmodelfilename
                 fi
             else
-                echo "DOES NOT EXIST $DATAmodelfilename"
+                echo "DOES NOT EXIST $COMINmodelfilename"
             fi
             if [[ -s $COMOUTstatfilename ]]; then
                 cp -v $COMOUTstatfilename $DATAstatfilename
