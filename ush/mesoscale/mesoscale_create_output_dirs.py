@@ -15,8 +15,6 @@
 import os
 import re
 from datetime import datetime, timedelta as td
-from mesoscale_plots_grid2obs_graphx_defs import graphics as graphics_g2o
-from mesoscale_plots_precip_graphx_defs import graphics as graphics_pcp
 import mesoscale_util as cutil
 
 print(f"BEGIN: {os.path.basename(__file__)}")
