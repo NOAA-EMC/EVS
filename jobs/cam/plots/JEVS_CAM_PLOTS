@@ -62,7 +62,7 @@ if [[ ${COMPONENT} == "cam" ]] ; then
 else
     setpdy.sh 31
     . ./PDY
-    export VDATE=$PDYm1
+    export VDATE=${VDATE:-$PDYm1}
 fi
 
 # Define COMIN/COMOUT variables:
