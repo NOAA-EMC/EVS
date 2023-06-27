@@ -74,9 +74,11 @@ export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
 export COMOUTsmall=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
 export COMOUTfinal=$COMOUT/$MODELNAME.$VDATE
 mkdir -p $COMOUT $COMOUTsmall $COMOUTfinal
-if [ $VERIF_CASE == grid2grid ]; then
-    export COMOUTccpa=$COMOUT/$RUN.$VDATE/ccpa/$VERIF_CASE
-    mkdir -p $COMOUTccpa
+if [ $RUN = atmos ]; then
+    if [ $VERIF_CASE == grid2grid ]; then
+        export COMOUTccpa=$COMOUT/$RUN.$VDATE/ccpa/$VERIF_CASE
+        mkdir -p $COMOUTccpa
+    fi
 fi
 if [ $VERIF_CASE == grid2obs ]; then
     export COMOUTprepbufr=$COMOUT/$RUN.$VDATE/prepbufr/$VERIF_CASE
@@ -88,11 +90,7 @@ fi
 #######################################################################
 env
 
-if [ $RUN = atmos ]; then
-    $HOMEevs/scripts/global_det/stats/exevs_global_det_${RUN}_${VERIF_CASE}_stats.sh
-else
-    $HOMEevs/scripts/global_det/stats/exevs_global_det_${RUN}_stats.sh
-fi
+$HOMEevs/scripts/global_det/stats/exevs_global_det_${RUN}_${VERIF_CASE}_stats.sh
 export err=$?; err_chk
 
 cat $pgmout

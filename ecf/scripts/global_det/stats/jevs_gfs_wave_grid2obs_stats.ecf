@@ -1,10 +1,10 @@
-#PBS -N jevs_global_det_wave_g2o_stats
+#PBS -N jevs_gfs_wave_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=01:00:00
-#PBS -l place=vscatter,select=1:ncpus=128:mem=100G
+#PBS -l walltime=00:45:00
+#PBS -l place=vscatter,select=1:ncpus=25:mem=60G
 #PBS -l debug=true
 #PBS -V
 
@@ -13,16 +13,27 @@ set -x
 ##%include <head.h>
 ##%include <envir-p1.h>
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+export model=evs
 
 ############################################################
-# read version file and set model_ver
+# For dev testing
 ############################################################
+cd $PBS_O_WORKDIR
+echo $PBS_O_WORKDIR
+module reset
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 versionfile=$HOMEevs/versions/run.ver
 . $versionfile
 export evs_ver=$evs_ver
-export model_ver=$gfs_ver
-export obsproc_ver=$obsproc_ver
+export envir=dev
+export SENDCOM=YES
+export KEEPDATA=NO
+export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output/$envir/tmp
+export job=${PBS_JOBNAME:-jevs_gfs_wave_grid2obs_stats}
+export jobid=$job.${PBS_JOBID:-$$}
+export TMPDIR=$DATAROOT
+export SITE=$(cat /etc/cluster_name)
+############################################################
 
 ############################################################
 # Load modules
@@ -42,44 +53,29 @@ module load met/${met_ver}
 module load metplus/${metplus_ver}
 module load cray-pals/${craypals_ver}
 module load cfp/${cfp_ver}
-##### load prod_envir sets: OPSROOT, OPSROOTssd, COMROOT, DATAROOT, 
-##### DCOOMROOT, PACKAGEROOT, SIPHONROOT
-##### load prod_util sets: UTILROOT, MDATE, NDATE, NHOUR, FSYNC, 
-##### COMDATEROOT, COMLISTROOT, COMLOGSROOT
-###### and prepends path for PATH, PYTHONPATH
-
 module list
 
-############################################################
-# set some variables
-############################################################
-export envir=prod
-export SENDCOM=${SENDCOM:-YES}
-export SENDECF=${SENDECF:-YES}
-export SENDDBN=${SENDDBN:-YES}
-export KEEPDATA=${KEEPDATA:-YES}
+# Set job information
+export USE_CFP=YES
+export nproc=25
 
-export MODELNAME=gfs
-export OBTYPE=GDAS
+# Set cycle
+export cyc=00
+
+# Set mail list
+export maillist='geoffrey.manikin@noaa.gov,mallory.row@noaa.gov'
+
 export NET=evs
-export COMPONENT=global_det
 export STEP=stats
+export COMPONENT=global_det
 export RUN=wave
 export VERIF_CASE=grid2obs
+export MODELNAME=gfs
 
-## developers directories
-export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output
+export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
+export COMIN=$COMROOT/$NET/$evs_ver
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT
 export FIXevs='/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix'
-export OUTPUTROOT="/lfs/h2/emc/vpppg/noscrub/$USER"
-export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}
-
-export run_mpi='yes'
-export gather='yes'
-
-export job=${PBS_JOBNAME:-jevs_global_det_wave_g2o_stats}
-export jobid=$job.${PBS_JOBID:-$$}
-export TMPDIR=$DATAROOT
-export SITE=$(cat /etc/cluster_name)
 
 export metplus_verbosity="INFO"
 export met_verbosity="2"
@@ -89,12 +85,12 @@ export MET_bin_exec=bin
 ############################################################
 # CALL executable job script here
 ############################################################
-$HOMEevs/jobs/global_det/stats/JEVS_GLOBAL_DET_WAVE_GRID2OBS_STATS
+$HOMEevs/jobs/global_det/stats/JEVS_GLOBAL_DET_STATS
 
 ##%include <tail.h>
 ##%manual
 #######################################################################
-# Purpose: This calculates the stats for the global_det GFS-Wave model
+# Purpose: This does the statistics work for the global deterministic
+#          wave grid-to-obs component for GFS
 #######################################################################
 ##%end
-exit
