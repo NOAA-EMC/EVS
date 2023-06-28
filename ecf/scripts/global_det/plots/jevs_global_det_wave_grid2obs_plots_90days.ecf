@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:45:00
-#PBS -l place=vscatter,select=1:ncpus=25:mem=150G
+#PBS -l place=vscatter,select=1:ncpus=10:mem=150G
 #PBS -l debug=true
 #PBS -V
 
@@ -58,7 +58,7 @@ module list
 
 # Set job information
 export USE_CFP=YES
-export nproc=25
+export nproc=10
 
 # Set cycle
 export cyc=00
