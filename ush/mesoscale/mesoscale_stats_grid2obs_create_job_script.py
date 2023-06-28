@@ -139,9 +139,15 @@ if job_type == 'generate':
                 OUTPUT_FLAG_CNT = (
                     var_defs[VAR_NAME][VERIF_TYPE]['output_types']['CNT']
                 )
-                #OUTPUT_FLAG_VCNT = (
-                #    var_defs[VAR_NAME][VERIF_TYPE]['output_types']['VCNT']
-                #)
+                OUTPUT_FLAG_VCNT = (
+                    var_defs[VAR_NAME][VERIF_TYPE]['output_types']['VCNT']
+                )
+                OUTPUT_FLAG_NBRCNT = (
+                    var_defs[VAR_NAME][VERIF_TYPE]['output_types']['NBRCNT']
+                )
+                OUTPUT_FLAG_MCTC = (
+                    var_defs[VAR_NAME][VERIF_TYPE]['output_types']['MCTC']
+                )
     if not plot_this_var:
         print(f"ERROR: VAR_NAME \"{VAR_NAME}\" is not valid for VERIF_TYPE "
               + f"\"{VERIF_TYPE}\" and MODEL \"{MODELNAME}\". Check "

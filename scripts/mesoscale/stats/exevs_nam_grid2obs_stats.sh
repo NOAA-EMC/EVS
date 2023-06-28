@@ -34,10 +34,13 @@ set -x
   export model0=`echo $MODELNAME | tr A-Z a-z`
   echo $model1
   
-##
+
 # Set Basic Environment Variables
 last_cyc=21
-NEST_LIST="namer conus conusc ak akc spc_otlk subreg"
+# NEST_LIST="namer conus conusc ak akc spc_otlk subreg"
+##
+# NEST_LIST="namer conus conusc ak akc spc_otlk subreg conusp"
+NEST_LIST="conusp"
 
 VERIF_TYPES="raob metar"
 
