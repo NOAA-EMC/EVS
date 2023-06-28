@@ -83,10 +83,10 @@ for period in ${periods} ; do
         esac
         echo "export PTYPE=${ptype}" >> ${DATA}/jobs/plot_${wvar}_v${vhr}z_${stats}_${ptype}_${period}.sh
         # Make COMOUT restart directory
-        COMOUTjob=$COMOUT/$VERIF_CASE/last${NDAYS}days/sl1l2/${image_var}_${image_level}/global_0p25/${image_stat}
+        COMOUTjob=$COMOUT/$VERIF_CASE/last${NDAYS}days/sl1l2/${image_var}_${image_level}/glb/${image_stat}
         mkdir -p $COMOUTjob
         #Define DATA and COMOUT image name
-        imagename=evs.${COMPONENT}.${image_stat}.${image_var}_${image_level}_sfcshp.past${NDAYS}days.fhrmean_valid${vhr}z_f384.global_0p25.png
+        imagename=evs.${COMPONENT}.${image_stat}.${image_var}_${image_level}_sfcshp.past${NDAYS}days.fhrmean_valid${vhr}z_f384.glb.png
         COMOUTimage=$COMOUTjob/$imagename
         DATAimage=$DATA/images/$imagename
         # Add commands

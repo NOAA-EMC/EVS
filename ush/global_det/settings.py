@@ -794,6 +794,7 @@ class Reference():
                                   'G002': 'Global',
                                   'G003': 'Global',
                                   'Global': 'Global',
+                                  'GLOBAL': 'Global',
                                   'FULL': 'Global, 0p25',
                                   'G130': 'CONUS - NCEP Grid 130',
                                   'G211': 'CONUS - NCEP Grid 211',
@@ -2302,7 +2303,7 @@ class Reference():
                 'SL1L2': {
                     'plot_stats_list': ('me, esd, rmse, bcrmse, corr, si, fbar, obar'),
                     'interp': 'NEAREST',
-                    'vx_mask_list' : ['FULL'],
+                    'vx_mask_list' : ['GLOBAL'],
                     'var_dict': {
                         'HTSGW': {'fcst_var_names': ['HTSGW'],
                                      'fcst_var_levels': ['L0'],
