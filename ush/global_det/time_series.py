@@ -939,16 +939,16 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             for thresh_label in requested_thresh_labels
         ])
         if units:
-            title2 = (f'{level_string} Daily Avg {var_long_name} ({thresholds_phrase}'
+            title2 = (f'{level_string} {var_long_name} ({thresholds_phrase}'
                       + f' {units})')
         else:
-            title2 = (f'{level_string} Daily Avg {var_long_name} ({thresholds_phrase}'
+            title2 = (f'{level_string} {var_long_name} ({thresholds_phrase}'
                       + f' unitless)')
     else:
         if units:
-            title2 = f'{level_string} Daily Avg {var_long_name} ({units})'
+            title2 = f'{level_string} {var_long_name} ({units})'
         else:
-            title2 = f'{level_string} Daily Avg {var_long_name} (unitless)'
+            title2 = f'{level_string} {var_long_name} (unitless)'
 #    title3 = f'{str(date_type).capitalize()} {date_hours_string} '
 #              + f'{date_start_string} to {date_end_string}, {frange_string}'
     fcst_day=int(flead[0]/24)
