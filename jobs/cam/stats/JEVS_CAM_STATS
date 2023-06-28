@@ -64,16 +64,14 @@ elif [ $VERIF_CASE = radar ] ; then
 
 elif [ $VERIF_CASE = severe ] ; then
 
-   # Set verification date
-   if [ $MODELNAME = href ] ; then
-      #for SPC outlook 
-      export VDATE=${VDATE:-$PDYm1}
-   else
-      export VDATE=${VDATE:-$PDYm7}
-   fi
+   export VDATE=${VDATE:-$PDYm7}
 
    # Set correct date for SPC report data 
    export REP_DATE=${REP_DATE:-$(date -d "$VDATE -1 day" +"%Y%m%d")}
+
+elif [ $VERIF_CASE = spcoutlook ] ; then
+   #for HREF grid2obs SPC outlook 
+   export VDATE=${VDATE:-$PDYm1}
 
 else
 

@@ -62,16 +62,8 @@ if [[ ${COMPONENT} == "cam" ]] ; then
 else
     setpdy.sh 31
     . ./PDY
-    export VDATE=$PDYm1
+    export VDATE=${VDATE:-$PDYm1}
 fi
-
-if [ $MODELNAME = nam_firewxnest ]
-then
- setpdy.sh 31
- . $DATA/PDY
- export VDATE=${VDATE:-$PDYm1}
-fi
-
 
 # Define COMIN/COMOUT variables:
 if  [ $MODELNAME = href ] ; then
@@ -88,9 +80,6 @@ else
   export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
   export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
   echo $COMPATH
-  export COMINnam=${COMINnam:-$COMIN/stats/${COMPONENT}/${MODELNAME}}
-  export COMOUTplots=$COMOUT/$STEP/$COMPONENT/$RUN.${VDATE}
-  mkdir -p $COMOUTplots
 fi
 
 
@@ -99,12 +88,11 @@ fi
 #######################################################################
 
 $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
-export err=$?; err_chk
 
 cat $pgmout
 
 msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$msg"
+postmsg "$jlogfile" "$msg"
 
 #if [ "$KEEPDATA" != "YES" ] ; then
 #  cd $DATAROOT
