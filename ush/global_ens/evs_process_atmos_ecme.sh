@@ -100,7 +100,6 @@ while [ ${hourix} -lt 31 ]; do
       done
      else
         export subject="ECME Data Missing for EVS ${COMPONENT}"
-        export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
         echo "Warning:  No ECME data for ${ymdh}" > mailmsg
         echo Missing files are in ${dcom}/$yyyymmdd/wgrbbul/ecmwf  >> mailmsg
         echo "Job ID: $jobid" >> mailmsg

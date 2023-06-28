@@ -25,7 +25,6 @@ mask_day3=${COMINspcotlk:0:$index}/cam/spc_otlk.$day3
 
 if [ ! -d  $mask_day1 ] && [ ! -d  $mask_day2 ] && [ ! -d  $mask_day3 ] ; then
     export subject="SPC outlook mask files are Missing for EVS ${COMPONENT}"
-    export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
     echo "Warning:  No SPC outlook mask files available for ${VDATE}" > mailmsg
     echo Missing mask directories are $mask_day1 , $mask_day2 and $mask_day3   >> mailmsg
     echo "Job ID: $jobid" >> mailmsg
@@ -122,7 +121,7 @@ for prod in mean ; do
        echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
 
        chmod +x run_href_${model}.${dom}.${valid}_spcoutlook.sh
-       echo "run_href_${model}.${dom}.${valid}_spcoutlook.sh" >> run_all_href_spcoutlook_poe.sh
+       echo "${DATA}/run_href_${model}.${dom}.${valid}_spcoutlook.sh" >> run_all_href_spcoutlook_poe.sh
 
     done # end of valid
 

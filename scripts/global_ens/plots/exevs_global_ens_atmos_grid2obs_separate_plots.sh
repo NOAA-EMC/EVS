@@ -168,11 +168,11 @@ for stats in acc bias_mae crpss rmse_spread ; do
 
          chmod +x  run_py.${fcst_valid_hour}.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
-         echo "sh run_py.${fcst_valid_hour}.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${fcst_valid_hour}_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+         echo "sh ${DATA}/run_py.${fcst_valid_hour}.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${fcst_valid_hour}_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
 
          chmod +x  run_${fcst_valid_hour}_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh 
-         echo " run_${fcst_valid_hour}_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
+         echo " ${DATA}/run_${fcst_valid_hour}_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
 
       done #end of line_type
 
@@ -192,9 +192,9 @@ chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 144 -ppn 144 --cpu-bind verbose,depth cfp run_all_poe.sh
+   mpiexec -np 144 -ppn 144 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
- sh run_all_poe.sh
+ sh ${DATA}/run_all_poe.sh
 fi
 
 

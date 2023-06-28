@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 ###############################################################################
 #
 # Name:          lead_average.py
@@ -976,7 +978,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     fig.subplots_adjust(bottom=.15, wspace=0, hspace=0)
     fig.subplots_adjust(top=0.85)
     ax.grid(
-        b=True, which='major', axis='both', alpha=.5, linestyle='--', 
+        visible=True, which='major', axis='both', alpha=.5, linestyle='--', 
         linewidth=.5, zorder=0
     )
 
@@ -1168,14 +1170,16 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     # Saving
     models_savename = '_'.join([str(model) for model in model_list])
     if len(date_hours) <= 8: 
-        date_hours_savename = '_'.join([
-            f'{date_hour:02d}Z' for date_hour in date_hours
-        ])
+        #date_hours_savename = '_'.join([
+        #    f'{date_hour:02d}Z' for date_hour in date_hours
+        #])
+        date_hours_savename='available_times'
     else:
-        date_hours_savename = '-'.join([
-            f'{date_hour:02d}Z' 
-            for date_hour in [date_hours[0], date_hours[-1]]
-        ])
+        #date_hours_savename = '-'.join([
+        #    f'{date_hour:02d}Z' 
+        #    for date_hour in [date_hours[0], date_hours[-1]]
+        #])
+        date_hours_savename='available_times'
     date_start_savename = date_range[0].strftime('%Y%m%d')
     date_end_savename = date_range[1].strftime('%Y%m%d')
     if str(eval_period).upper() == 'TEST':
