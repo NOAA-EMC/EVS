@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 import matplotlib.pyplot as plt
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Rectangle, PathPatch
