@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 ###############################################################################
 #
 # Name:          stat_by_level.py
@@ -809,7 +811,7 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     fig.subplots_adjust(bottom=.15, wspace=0., hspace=0)
     fig.subplots_adjust(top=0.85)
     ax.grid(
-        b=True, which='major', axis='both', alpha=.5, linestyle='--', 
+        visible=True, which='major', axis='both', alpha=.5, linestyle='--', 
         linewidth=.5, zorder=0
     )
 
