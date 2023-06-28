@@ -1,22 +1,23 @@
-#PBS -S /bin/bash
-#PBS -N jevs_narre_plots_31days_%CYC%
+#!/bin/bash
+
+#PBS -N jevs_narre_plot
 #PBS -j oe
-#PBS -q %QUEUE%
-#PBS -A %PROJ%-%PROJENVIR%
+#PBS -S /bin/bash
+#PBS -q dev
+#PBS -A VERF-DEV
 #PBS -l walltime=02:30:00
 #PBS -l place=vscatter:exclhost,select=1:ncpus=8:mem=100GB
 #PBS -l debug=true
 
-model="evs"
-export cyc=%CYC%
-export NET=%NET%
 
-%include <head.h>
-%include <envir-p1.h>
+export OMP_NUM_THREADS=1
 
-# I am 100% positive this needs to be part of the HOMEevs/versions/run.ver
+export evs_ver=v1.0
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+
 source $HOMEevs/versions/run.ver.metplus5.0.0
 
+module reset
 module load envvar/$envvar_ver
 module load PrgEnv-intel/$PrgEnv_intel_ver
 module load intel/$intel_ver
@@ -38,35 +39,35 @@ module load python/$python_ver
 module load met/$met_ver
 module load metplus/$metplus_ver
 module load udunits/${udunits_ver}
+ 
+export met_v=${met_ver:0:4}
 
 module list
 
+
+export envir=prod
+
+export NET=evs
 export STEP=plots
 export COMPONENT=narre
 export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=narre
 
+export KEEPDATA=YES
+
+export cyc=00
+#export VDATE=20221218
 export past_days=31
 
-# set variables needed/used in j-job called by this ecf script
-export met_v=${met_ver:0:4}
 export run_mpi=yes
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export DATA=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
 
+export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export jobid=$job.${PBS_JOBID:-$$}
+
+
 ${HOMEevs}/jobs/narre/plots/JEVS_NARRE_PLOTS
-
-if [ $? -ne 0 ]; then
-   ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
-   ecflow_client --abort
-   exit
-fi
-
-%include <tail.h>
-
-%manual
-
-%end
