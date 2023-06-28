@@ -72,7 +72,7 @@ for stats in rmse_spread ; do
 
   export fcst_init_hour="0,6,12,18"
   export fcst_valid_hour="0,6,12,18"
-  valid_time='valid00z_06z_12z_18z'
+  valid_time='available_times'
   init_time='init00z_06z_12z_18z'
 
   export fcst_leads="6,12,18,24,30,36,42,48"
@@ -139,11 +139,11 @@ for stats in rmse_spread ; do
 
          chmod +x  run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
-         echo "run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+         echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh 
-         echo " run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
+         echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
 
       done #end of line_type
 
@@ -162,9 +162,9 @@ chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 24 -ppn 24 --cpu-bind verbose,depth cfp run_all_poe.sh
+   mpiexec -np 24 -ppn 24 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
-  run_all_poe.sh
+  ${DATA}/run_all_poe.sh
 fi
 
 
@@ -176,7 +176,7 @@ for stats in  rmse_spread ; do
   scoretype=fhrmean
   vars='prmsl tmp dpt ugrd vgrd rh wind gust mslet hpbl'
 
-   for domain in conus conus_east conus_west conus_south conus_central alaska appalachia cPlains deepSouth greatBasin greatLakes mezquital midatlantic northatlantic nolains nrockies pacificnw pacificsw prairie southeast southwest splains srockies ; do
+   for domain in conus conus_east conus_west conus_south conus_central alaska appalachia cplains deepsouth greatbasin greatlakes mezquital midatlantic northatlantic nolains nrockies pacificnw pacificsw prairie southeast southwest splains nplains srockies ; do
 
     for var in $vars ; do
 
@@ -195,24 +195,12 @@ for stats in  rmse_spread ; do
       fi
 
 
-      if [  $var = hpbl ] ; then 
-	  if [ $domain = alaska ] ; then
-	      valid=valid_00z_06z_12z_18z
-	  elif [ $domain = conus_south ] || [ $domain = conus ] ; then
-	      valid=valid_00z_06z_12z
-          else
-              valid=valid_00z_12z
-          fi 	    
-      fi
+     valid=valid_available_times
 
       if [ $var = mslet ] || [ $var = gust ] || [  $var = hpbl ] ; then
-  	if [  $var = hpbl ] ; then  
-           mv ${score_type}_regional_${domain}_${valid}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}.${valid_time}.buk_${domain}.png
-        else
-           mv ${score_type}_regional_${domain}_valid_00z_06z_12z_18z_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}.${valid_time}.buk_${domain}.png
-        fi
+        mv ${score_type}_regional_${domain}_${valid}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}.${valid_time}.buk_${domain}.png
       else
-        mv ${score_type}_regional_${domain}_valid_00z_06z_12z_18z_${level}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}.${valid_time}.buk_${domain}.png
+        mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}.${valid_time}.buk_${domain}.png
       fi
 
      done #var

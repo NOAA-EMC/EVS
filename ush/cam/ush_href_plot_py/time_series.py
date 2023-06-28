@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 ###############################################################################
 #
 # Name:          time_series.py
@@ -883,7 +885,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     fig.subplots_adjust(bottom=.15, wspace=0, hspace=0)
     fig.subplots_adjust(top=.85)
     ax.grid(
-        b=True, which='major', axis='both', alpha=.5, linestyle='--', 
+        visible=True, which='major', axis='both', alpha=.5, linestyle='--', 
         linewidth=.5, zorder=0
     )
     
