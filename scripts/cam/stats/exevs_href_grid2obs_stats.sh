@@ -53,8 +53,22 @@ msg="$job HAS BEGUN"
 postmsg "$jlogfile" "$msg"
 
 if [ $prepare = yes ] ; then
-  $USHevs/cam/evs_href_preppare.sh prepbufr
-  $USHevs/cam/evs_href_preppare.sh gfs_prepbufr
+
+  if [ -s $COMINobsproc/rap.${VDATE}/rap.t12z.prepbufr.tm00 ] && [ -s $COMINobsproc/gdas.${vday}/00/atmos/gdas.t00z.prepbufr ] ; then
+
+     $USHevs/cam/evs_href_preppare.sh prepbufr
+     $USHevs/cam/evs_href_preppare.sh gfs_prepbufr
+
+  else
+       export subject="GFS or RAP Prepbufr Data Missing for EVS ${COMPONENT}"
+       export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
+       echo "Warning:  No GFS or RAP Prepbufr data available for ${VDATE}" > mailmsg
+       echo Missing file is $COMINobsproc/rap.${VDATE}/rap.t12z.prepbufr.tm00 or $COMINobsproc/gdas.${vday}/00/atmos/gdas.t00z.prepbufr  >> mailmsg
+       echo "Job ID: $jobid" >> mailmsg
+       cat mailmsg | mail -s "$subject" $maillist
+       exit
+  fi
+
 fi 
 
 
@@ -63,19 +77,19 @@ fi
 #system: 10 jobs (8 on CONUS, 2 on Alaska)
 if [ $verif_system = yes ] ; then 
   $USHevs/cam/evs_href_grid2obs_system.sh 
-  cat run_all_href_system_poe.sh >> run_href_all_grid2obs_poe
+  cat ${DATA}/run_all_href_system_poe.sh >> run_href_all_grid2obs_poe
 fi
 
 #profile: total 10 jobs (4 for conus and 2 for alaska)
 if [ $verif_profile = yes ] ; then 
   $USHevs/cam/evs_href_grid2obs_profile.sh $domain
-  cat run_all_href_profile_poe.sh >> run_href_all_grid2obs_poe 
+  cat ${DATA}/run_all_href_profile_poe.sh >> run_href_all_grid2obs_poe 
 fi 
 
 #Product: 16 jobs
 if [ $verif_product = yes ] ; then
   $USHevs/cam/evs_href_grid2obs_product.sh
-  cat run_all_href_product_poe.sh >> run_href_all_grid2obs_poe
+  cat ${DATA}/run_all_href_product_poe.sh >> run_href_all_grid2obs_poe
 fi
 
 
@@ -87,10 +101,10 @@ if [ $run_mpi = yes ] ; then
 
     export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
 
-    mpiexec -np 36 -ppn 36 --cpu-bind verbose,depth cfp  run_href_all_grid2obs_poe
+    mpiexec -np 36 -ppn 36 --cpu-bind verbose,depth cfp  ${DATA}/run_href_all_grid2obs_poe
 
 else
-    run_href_all_grid2obs_poe
+    ${DATA}/run_href_all_grid2obs_poe
 
 fi
 

@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 '''
 Name: href_atmos_plots.py
 Contact(s): Mallory Row
