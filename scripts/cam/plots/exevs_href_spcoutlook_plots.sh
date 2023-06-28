@@ -138,10 +138,10 @@ for stats in csi_fbias ratio_pod_csi ; do
 
          chmod +x  run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
-         echo "run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+         echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh 
-         echo " run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
+         echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
 
       done #end of line_type
 
@@ -160,9 +160,9 @@ chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 6 -ppn 6 --cpu-bind verbose,depth cfp run_all_poe.sh
+   mpiexec -np 6 -ppn 6 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
-  run_all_poe.sh
+  ${DATA}/run_all_poe.sh
 fi
 
 
@@ -179,7 +179,7 @@ for domain in day1_mrgl day1_slgt day1_tstm day1_enh day1_mdt day1_high day2_mrg
     level=ml
     valid=valid_00z_12z
   fi
-  mv lead_average_regional_${domain}_${valid}_${var}*.png  evs.href.csi_fbias.${var_new}_${level}.last${past_days}days.fhrmean.${valid}.buk_${domain}.png
+  mv lead_average_regional_${domain}_valid_available_times_${var}*.png  evs.href.csi_fbias.${var_new}_${level}.last${past_days}days.fhrmean.${valid}.buk_${domain}.png
   mv threshold_average_regional_${domain}_${valid}_${var}_csi*.png  evs.href.csi.${var_new}_${level}.last${past_days}days.thresholdmean.${valid}.buk_${domain}.png
   mv threshold_average_regional_${domain}_${valid}_${var}_fbias*.png  evs.href.fbias.${var_new}_${level}.last${past_days}days.thresholdmean.${valid}.buk_${domain}.png
   mv performance_diagram_regional_${domain}_${valid}_${var}*.png evs.href.ctc.${var_new}_${level}.last${past_days}days.perfdiag.${valid}.buk_${domain}.png
