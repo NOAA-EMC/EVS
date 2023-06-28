@@ -2300,7 +2300,7 @@ class Reference():
             },
             'grid2obs_wave': {
                 'SL1L2': {
-                    'plot_stats_list': ('me, esd, rmse, bcrmse, pcor, si, fbar, obar'),
+                    'plot_stats_list': ('me, esd, rmse, bcrmse, corr, si, fbar, obar'),
                     'interp': 'NEAREST',
                     'vx_mask_list' : ['FULL'],
                     'var_dict': {

@@ -50,7 +50,7 @@ for period in ${periods} ; do
             ;;
           'stats2')
             image_stat="corr"
-            echo "export METRIC=pcor " >> ${DATA}/jobs/plot_${wvar}_v${vhr}z_${stats}_${ptype}_${period}.sh
+            echo "export METRIC=corr " >> ${DATA}/jobs/plot_${wvar}_v${vhr}z_${stats}_${ptype}_${period}.sh
             ;;
           'stats3')
             image_stat="fbar_obar"
