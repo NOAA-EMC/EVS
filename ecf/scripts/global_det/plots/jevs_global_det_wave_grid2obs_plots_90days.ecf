@@ -1,10 +1,10 @@
-#PBS -N jevs_global_det_wave_g2o_plots
+#PBS -N jevs_global_det_wave_grid2obs_plots_90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=01:15:00
-#PBS -l place=vscatter,select=1:ncpus=128:mem=500G
+#PBS -l walltime=00:45:00
+#PBS -l place=vscatter,select=1:ncpus=25:mem=150G
 #PBS -l debug=true
 #PBS -V
 
@@ -13,16 +13,27 @@ set -x
 #%include <head.h>
 #%include <envir-p1.h>
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+export model=evs
 
 ############################################################
-# read version file and set model_ver
+# For dev testing
 ############################################################
+cd $PBS_O_WORKDIR
+module reset
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 versionfile=$HOMEevs/versions/run.ver
 . $versionfile
 export evs_ver=$evs_ver
-export model_ver=$gfs_ver
-export obsproc_ver=$obsproc_ver
+export envir=dev
+export RUN_ENVIR=nco
+export SENDCOM=YES
+export KEEPDATA=NO
+export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output/$envir/tmp
+export job=${PBS_JOBNAME:-jevs_global_det_wave_grid2obs_plots_90days}
+export jobid=$job.${PBS_JOBID:-$$}
+export TMPDIR=$DATAROOT
+export SITE=$(cat /etc/cluster_name)
+############################################################
 
 ############################################################
 # Load modules
@@ -45,51 +56,36 @@ module load cfp/${cfp_ver}
 
 module list
 
-############################################################
-# set some variables
-############################################################
-export envir=prod
-export SENDCOM=${SENDCOM:-YES}
-export SENDECF=${SENDECF:-YES}
-export SENDDBN=${SENDDBN:-YES}
-export KEEPDATA=${KEEPDATA:-YES}
+# Set job information
+export USE_CFP=YES
+export nproc=25
 
-export MODELNAME=gfs
-export OBTYPE=GDAS
+# Set cycle
+export cyc=00
+
+# Set verification information
 export NET=evs
-export COMPONENT=global_det
 export STEP=plots
+export COMPONENT=global_det
 export RUN=wave
 export VERIF_CASE=grid2obs
+export NDAYS=90
 
-## developers directories
-export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
-export OUTPUTROOT=/lfs/h2/emc/vpppg/noscrub/$USER
-export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}
-export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver}
-
-export run_mpi='yes'
-export gather='yes'
-
-export metplus_verbosity="INFO"
-export met_verbosity="2"
-export log_met_output_to_metplus="yes"
-export MET_bin_exec=bin
-
-export job=${PBS_JOBNAME:-jevs_global_det_wave_g2o_prep}
-export jobid=$job.${PBS_JOBID:-$$}
-export TMPDIR=$DATAROOT
-export SITE=$(cat /etc/cluster_name)
+export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
+export COMIN=$COMROOT/$NET/$evs_ver
+export PDYm1=$(date -d "24 hours ago" '+%Y%m%d')
+export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1
+export FIXevs='/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix'
 
 ############################################################
 # CALL executable job script here
 ############################################################
-${HOMEevs}/jobs/global_det/plots/JEVS_GLOBAL_DET_WAVE_GRID2OBS_PLOTS
+${HOMEevs}/jobs/global_det/plots/JEVS_GLOBAL_DET_PLOTS
 
 #%include <tail.h>
 #%manual
 #########################################################################
-# Purpose: This job creates the plots for the global_det GFS-Wave model
+# Purpose: This does the plotting work for the global deterministic
+#          wave grid-to-obs for past 31 days
 #########################################################################
 #%end
