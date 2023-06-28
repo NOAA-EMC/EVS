@@ -127,18 +127,18 @@ do
 	smvar=ozone
 	sh $USHevs/${COMPONENT}/py_plotting_awpozcon.config
 
-	if [ -e lead_average* ]
+	if [ -e $PLOTDIR/aq/*/evs*png ]
 	then
-	mv ${DATA}/lead_average* ${PLOTDIR}/evs.$COMPONENT.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png
+	mv $PLOTDIR/aq/*/evs*png ${PLOTDIR}/evs.$COMPONENT.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png
         else
 	echo "NO PLOT FOR",$var,$region
         fi
 
 	sh $USHevs/${COMPONENT}/py_plotting_awpozcon_fbar.config
 	
-	if [ -e lead_average* ]
+	if [ -e $PLOTDIR/aq/*/evs*png ]
 	then
-	mv ${DATA}/lead_average* ${PLOTDIR}/evs.$COMPONENT.fbar_obar.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png
+	mv $PLOTDIR/aq/*/evs*png ${PLOTDIR}/evs.$COMPONENT.fbar_obar.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png
         else
 	echo "NO PLOT FOR",$var,$region
         fi
@@ -151,17 +151,17 @@ do
         smvar=pm25
         sh $USHevs/${COMPONENT}/py_plotting_pm25.config
 
-	if [ -e lead_average* ]
+	if [ -e $PLOTDIR/aq/*/evs*png ]
 	then
-        mv ${DATA}/lead_average* ${PLOTDIR}/evs.$COMPONENT.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png
+        mv $PLOTDIR/aq/*/evs*png ${PLOTDIR}/evs.$COMPONENT.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png
         else
 	echo "NO PLOT FOR",$var,$region
         fi
 
         sh $USHevs/${COMPONENT}/py_plotting_pm25_fbar.config
-	if [ -e lead_average* ]
+	if [ -e $PLOTDIR/aq/*/evs*png ]
 	then
-        mv ${DATA}/lead_average* ${PLOTDIR}/evs.$COMPONENT.fbar_obar.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png
+        mv $PLOTDIR/aq/*/evs*png ${PLOTDIR}/evs.$COMPONENT.fbar_obar.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png
         else
 	echo "NO PLOT FOR",$var,$region
         fi
@@ -180,9 +180,9 @@ do
 	smvar=`echo $var | tr A-Z a-z`
 
 	sh $USHevs/${COMPONENT}/py_plotting_ozmax8.config
-	if [ -e performance* ]
+	if [ -e $PLOTDIR/aq/*/evs*png ]
 	then
-	mv ${DATA}/performance* ${PLOTDIR}/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png
+	mv $PLOTDIR/aq/*/evs*png ${PLOTDIR}/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png
         else
 	echo "NO PLOT FOR",$var,$region
         fi
@@ -201,9 +201,9 @@ do
 	smvar=`echo $var | tr A-Z a-z`
 
 	sh $USHevs/${COMPONENT}/py_plotting_ozmax8.config
-	if [ -e performance* ]
+	if [ -e $PLOTDIR/aq/*/evs*png ]
 	then
-	mv ${DATA}/performance* ${PLOTDIR}/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png
+	mv $PLOTDIR/aq/*/evs*png ${PLOTDIR}/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png
         else
 	echo "NO PLOT FOR",$var,$region
         fi
@@ -222,9 +222,9 @@ do
 	smvar=`echo $var | tr A-Z a-z`
 
 	sh $USHevs/${COMPONENT}/py_plotting_pmave.config
-	if [ -e performance* ]
+	if [ -e $PLOTDIR/aq/*/evs*png ]
 	then
-	mv ${DATA}/performance* ${PLOTDIR}/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png
+	mv $PLOTDIR/aq/*/evs*png ${PLOTDIR}/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png
         else
 	echo "NO PLOT FOR",$var,$region
         fi
@@ -243,9 +243,9 @@ do
 	smvar=`echo $var | tr A-Z a-z`
 
 	sh $USHevs/${COMPONENT}/py_plotting_pmave.config
-	if [ -e performance* ]
+	if [ -e $PLOTDIR/aq/*/evs*png ]
 	then
-	mv ${DATA}/performance* ${PLOTDIR}/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png
+	mv $PLOTDIR/aq/*/evs*png ${PLOTDIR}/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png
         else
 	echo "NO PLOT FOR",$var,$region
         fi

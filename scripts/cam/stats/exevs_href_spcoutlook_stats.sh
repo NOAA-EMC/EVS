@@ -69,7 +69,7 @@ fi
 #Spc_outlook: 2 job
 if [ $verif_spcoutlook = yes ] ; then
   $USHevs/cam/evs_href_spcoutlook.sh
-  cat run_all_href_spcoutlook_poe.sh >> run_href_all_grid2obs_poe
+  cat ${DATA}/run_all_href_spcoutlook_poe.sh >> run_href_all_grid2obs_poe
 fi
 
 
@@ -81,14 +81,14 @@ if [ $run_mpi = yes ] ; then
 
     export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
 
-    mpiexec -np 2 -ppn 2 --cpu-bind verbose,depth cfp  run_href_all_grid2obs_poe
+    mpiexec -np 2 -ppn 2 --cpu-bind verbose,depth cfp  ${DATA}/run_href_all_grid2obs_poe
 
 else
-    run_href_all_grid2obs_poe
+    ${DATA}/run_href_all_grid2obs_poe
 
 fi
 
-if [ $gather = yes ] && [ -s run_href_all_grid2obs_poe ] ; then
+if [ $gather = yes ] && [ -s ${DATA}/run_href_all_grid2obs_poe ] ; then
   $USHevs/cam/evs_href_gather.sh $VERIF_CASE  
 fi
 

@@ -106,7 +106,7 @@ for dom in CONUS Alaska ; do
          echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${domain}.${valid_at}_system.sh
 
          chmod +x run_href_${domain}.${valid_at}_system.sh
-         echo "run_href_${domain}.${valid_at}_system.sh" >> run_all_href_system_poe.sh
+         echo "${DATA}/run_href_${domain}.${valid_at}_system.sh" >> run_all_href_system_poe.sh
 
       done
 
@@ -163,7 +163,7 @@ for dom in CONUS Alaska ; do
 
 	 echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall" >> run_href_${domain}.${valid_at}_system.sh
          chmod +x run_href_${domain}.${valid_at}_system.sh
-         echo "run_href_${domain}.${valid_at}_system.sh" >> run_all_href_system_poe.sh
+         echo "${DATA}/run_href_${domain}.${valid_at}_system.sh" >> run_all_href_system_poe.sh
 
       done
 
