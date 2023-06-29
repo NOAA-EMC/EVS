@@ -70,6 +70,7 @@ export STEP=plots
 export COMPONENT=subseasonal
 export RUN=atmos
 export MODELNAME="gefs cfs"
+#export model_ver=${gefs_ver} ${cfs_ver}
 export VERIF_CASE=grid2obs
 export VERIF_TYPE=PrepBufr
 export NDAYS=90

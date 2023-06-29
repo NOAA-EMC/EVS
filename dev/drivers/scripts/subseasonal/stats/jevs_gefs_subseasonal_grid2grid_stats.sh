@@ -77,6 +77,10 @@ export COMPONENT=subseasonal
 export RUN=atmos
 export MODELNAME=gefs
 export gefs_ver=${gefs_ver}
+#export OBSNAME=gfs
+#export gfs_ver=${gfs_ver}
+#export ccpa_ver=${ccpa_ver}
+#export obsproc_ver=${obsproc_ver}
 export VERIF_CASE=grid2grid
 
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
