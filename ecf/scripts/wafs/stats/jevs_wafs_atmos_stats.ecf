@@ -76,6 +76,7 @@ export DATA=/lfs/h2/emc/ptmp/$USER/evs/working/${STEP}.$pid
 
 export KEEPDATA=YES
 
+export icao2023=no
 $HOMEevs/jobs/wafs/stats/JEVS_WAFS_ATMOS_STATS
 
 ############################################################

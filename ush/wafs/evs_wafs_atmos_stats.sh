@@ -52,7 +52,7 @@ done
 if [[ $OBSERVATION = "GCIP" ]] ; then
     for cc in $cycles ; do
 	sourcedir=$COMINgfs/gfs.$VDATE/$cc/atmos
-	
+
 	targetdir=$GRID_STAT_INPUT_BASE/gfs.$VDATE/$cc/atmos
 	sourcefile=$sourcedir/gfs.t${cc}z.gcip.f00.grib2
 	if [[ -f $sourcefile ]] ; then
