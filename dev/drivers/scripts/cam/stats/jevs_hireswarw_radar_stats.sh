@@ -1,8 +1,8 @@
 #!/bin/bash
-#PBS -N jevs_hrrr_radar_stats_00
+#PBS -N jevs_hireswarw_radar_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
-#PBS -q debug
+#PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=0:30:00
 #PBS -l place=vscatter,select=1:ncpus=12:mem=500GB
@@ -57,8 +57,8 @@ export STEP=stats
 export COMPONENT=cam
 export RUN=atmos
 export VERIF_CASE=radar
-export MODELNAME=hrrr
-export modsys=hrrr
+export MODELNAME=hireswarw
+export modsys=hiresw
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 export COMINmrms=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
@@ -97,6 +97,6 @@ fi
 
 ######################################################################
 # Purpose: This job generates radar verification statistics
-#          for the HRRR
+#          for the HiResW ARW
 ######################################################################
 

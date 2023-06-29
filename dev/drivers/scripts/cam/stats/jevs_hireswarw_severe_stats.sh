@@ -1,8 +1,8 @@
 #!/bin/bash
-#PBS -N jevs_hrrr_severe_stats_00
+#PBS -N jevs_hireswarw_severe_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
-#PBS -q debug
+#PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=0:30:00
 #PBS -l select=1:ncpus=5:mem=500MB
@@ -56,8 +56,8 @@ export STEP=stats
 export COMPONENT=cam
 export RUN=atmos
 export VERIF_CASE=severe
-export MODELNAME=hrrr
-export modsys=hrrr
+export MODELNAME=hireswarw
+export modsys=hiresw
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 export COMINfcst=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
@@ -95,6 +95,6 @@ fi
 
 ######################################################################
 # Purpose: This job generates severe verification statistics
-#          for the HRRR
+#          for the HiResW ARW
 ######################################################################
 

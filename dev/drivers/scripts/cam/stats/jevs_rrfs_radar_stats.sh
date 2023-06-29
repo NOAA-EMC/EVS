@@ -2,7 +2,7 @@
 #PBS -N jevs_rrfs_radar_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
-#PBS -q debug
+#PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=0:30:00
 #PBS -l place=vscatter,select=1:ncpus=12:mem=500GB
