@@ -152,7 +152,7 @@ fi
 # Run METplus (GridStat) if the forecast and observation files exist
 ######################################################################
  
-if [ $nfcst >= 1 ] && [ $obs_lsr_found = 1 ]; then
+if [ $nfcst -ge 1 ] && [ $obs_lsr_found = 1 ]; then
 
    export fhrs=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcst_list`
 
@@ -169,7 +169,7 @@ fi
 # Run METplus (GridStat) if the forecast and observation files exist
 ######################################################################
 
-if [ $nfcst >= 1 ] && [ $obs_ppf_found = 1 ]; then
+if [ $nfcst -ge 1 ] && [ $obs_ppf_found = 1 ]; then
 
    export fhrs=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcst_list`
 
