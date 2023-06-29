@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 ###############################################################################
 #
 # Name:          df_preprocessing.py
@@ -73,7 +75,7 @@ def run_prune_data(logger, stats_dir, prune_dir, output_base_template, verif_cas
                 str(eval_period).upper(), str(verif_case).lower(), 
                 str(verif_type).lower(), str(line_type).upper(), 
                 str(domain), 
-                [str(fcst_var_name).upper() for fcst_var_name in fcst_var_names], 
+                [str(fcst_var_name) for fcst_var_name in fcst_var_names],
                 str(var_name).upper(), model_list
             )
         else:
@@ -131,7 +133,7 @@ def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range,
             ))
             df_tmp = pd.read_csv(
                 fpath, delim_whitespace=True, header=None, skiprows=1,
-                names=df_colnames, dtype=np.str
+                names=df_colnames, dtype=str
             )
             i = -1*len(df_line_type_colnames)
             for col_name in df_colnames[i:]:
@@ -172,7 +174,7 @@ def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range,
             "Nonexistent dataframe. Check the logfile for more details."
         )
         logger.error("Quitting ...")
-        sys.exit(1)
+        sys.exit(0)
 
 def filter_by_level_type(df, logger, verif_type):
     if df is None:

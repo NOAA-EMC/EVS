@@ -2,8 +2,8 @@
 
 set +x
 #For testing: 
-vday=20221108
-COMIN=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/prep/global_ens/headline
+
+#COMIN=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/prep/global_ens/headline
 
 var=$1
 typeset -Z2 cyc
