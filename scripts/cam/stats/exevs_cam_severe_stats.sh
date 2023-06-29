@@ -62,7 +62,7 @@ export VERIF_GRID=G211
 export ADD_CONUS_REGIONS=False
 export ADD_CONUS_SUBREGIONS=False
 
-python $USHevs/${COMPONENT}/evs_stats_check_otlk.py
+python $USHevs/${COMPONENT}/evs_cam_stats_check_otlk.py
 export err=$?; err_chk
 
 if [ -s $DATA/mask_list ]; then

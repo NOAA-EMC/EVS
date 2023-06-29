@@ -29,7 +29,7 @@ export VERIF_GRID=G227
 export ADD_CONUS_REGIONS=True
 export ADD_CONUS_SUBREGIONS=False
 
-python $USHevs/${COMPONENT}/evs_stats_check_otlk.py
+python $USHevs/${COMPONENT}/evs_cam_stats_check_otlk.py
 export err=$?; err_chk
 
 
