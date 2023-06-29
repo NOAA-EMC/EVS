@@ -13,8 +13,8 @@ set -x
 ##%include <head.h>
 ##%include <envir-p1.h>
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
-
+#export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/gitworkspace/EVS
 ############################################################
 # read version file and set model_ver
 ############################################################
@@ -24,31 +24,21 @@ export evs_ver=$evs_ver
 export model_ver=$gefs_ver
 export obsproc_ver=$obsproc_ver
 
+
+export MODELNAME=gefs
+export OBTYPE=GDAS
+export NET=evs
+export COMPONENT=global_ens
+export STEP=stats
+export RUN=wave
+export VERIF_CASE=grid2obs
+
+
 ############################################################
 # Load modules
 ############################################################
 module reset
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
-module use /apps/dev/modulefiles/
-module load ve/evs/${ve_evs_ver}
-module load gsl/${gsl_ver}
-module load prod_envir/${prod_envir_ver}
-module load prod_util/${prod_util_ver}
-module load libjpeg/${libjpeg_ver}
-module load grib_util/${grib_util_ver}
-module load wgrib2/${wgrib2_ver}
-module load met/${met_ver}
-module load metplus/${metplus_ver}
-module load cray-pals/${craypals_ver}
-module load cfp/${cfp_ver}
-##### load prod_envir sets: OPSROOT, OPSROOTssd, COMROOT, DATAROOT, 
-##### DCOOMROOT, PACKAGEROOT, SIPHONROOT
-##### load prod_util sets: UTILROOT, MDATE, NDATE, NHOUR, FSYNC, 
-##### COMDATEROOT, COMLISTROOT, COMLOGSROOT
-###### and prepends path for PATH, PYTHONPATH
-
-module list
+source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 ############################################################
 # set some variables
@@ -59,19 +49,15 @@ export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export KEEPDATA=${KEEPDATA:-YES}
 
-export MODELNAME=gefs
-export OBTYPE=GDAS
-export NET=evs
-export COMPONENT=global_ens
-export STEP=stats
-export RUN=wave
-export VERIF_CASE=grid2obs
 
 ## developers directories
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output
 export FIXevs='/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix'
 export OUTPUTROOT=/lfs/h2/emc/vpppg/noscrub/$USER
+#EVS parallel directory
+#export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/${NET}/${evs_ver}
 export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}
+export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver}/${STEP}/${COMPONENT}
 ######################################
 # Correct MET/METplus roots (Aug 2022)
 ######################################
