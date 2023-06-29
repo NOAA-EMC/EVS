@@ -120,6 +120,7 @@ while [ $fhr -le $fhr_max ]; do
    export INIT_HR=`$NDATE -$fhr ${VDATE}12 | cut -c 9-10`
 
    export fcst_file=${modsys}.${IDATE}/${MODELNAME}.t${INIT_HR}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr}.nc
+   export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${MODELNAME}.t{init?fmt=%2H}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f{lead?fmt=%2H}.nc
 
    if [ -s $COMINfcst/${fcst_file} ]; then
       echo $fhr >> $DATA/fcst_list
@@ -151,7 +152,7 @@ fi
 # Run METplus (GridStat) if the forecast and observation files exist
 ######################################################################
  
-if [ $nfcst > 0 ] && [ $obs_lsr_found = 1 ]; then
+if [ $nfcst >= 1 ] && [ $obs_lsr_found = 1 ]; then
 
    export fhrs=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcst_list`
 
@@ -168,7 +169,7 @@ fi
 # Run METplus (GridStat) if the forecast and observation files exist
 ######################################################################
 
-if [ $nfcst > 0 ] && [ $obs_ppf_found = 1 ]; then
+if [ $nfcst >= 1 ] && [ $obs_ppf_found = 1 ]; then
 
    export fhrs=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcst_list`
 

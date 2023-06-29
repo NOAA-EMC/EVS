@@ -239,7 +239,7 @@ fi
 # Run METplus (GridStat or EnsembleStat) if the fcst and obs files exist
 #########################################################################
 
-if [ $nfcst > 0 ] && [ $obs_found = 1 ]; then
+if [ $nfcst >=1 ] && [ $obs_found = 1 ]; then
 
    export fhrs=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/job${JOBNUM}_fcst_list`
 
