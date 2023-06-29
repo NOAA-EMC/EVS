@@ -4,7 +4,7 @@
 #PBS -q "dev"
 #PBS -A VERF-DEV
 #PBS -l walltime=00:10:00
-#PBS -l place=vscatter,select=1:ncpus=48:ompthreads=1:mem=10GB
+#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=10GB
 #PBS -l debug=true
 #PBS -V
 
@@ -59,7 +59,7 @@ export QUEUE=dev
 export QUEUESHARED=dev_shared
 export QUEUESERV=dev_transfer
 export PARTITION_BATCH=
-export nproc=48
+export nproc=128
 export USE_CFP=YES
 export met_ver=${met_ver}
 export metplus_ver=${metplus_ver}
