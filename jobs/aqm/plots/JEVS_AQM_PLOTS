@@ -21,8 +21,8 @@ mkdir -p $DATA
 cd $DATA
 
 export cycle=${cycle:-t${cyc}z}
-setpdy.sh
-. ./PDY
+setpdy.sh 31
+. ./PDY 
 
 ####################################
 # Determine Job Output Name on System
@@ -95,4 +95,4 @@ if [ "$KEEPDATA" != "YES" ] ; then
     rm -rf $DATA
 fi
 
-}
+

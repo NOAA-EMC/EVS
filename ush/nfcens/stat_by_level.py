@@ -111,7 +111,7 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         df = df[
             (df['LEAD_HOURS'] >= flead[0]) & (df['LEAD_HOURS'] <= flead[1])
         ]
-    elif isinstance(flead, np.int):
+    elif isinstance(flead, int):
         frange_string = f'Forecast Hour {flead:02d}'
         frange_save_string = f'F{flead:02d}'
         df = df[df['LEAD_HOURS'] == flead]
@@ -760,7 +760,7 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         handletextpad=.4, borderaxespad=.5) 
     fig.subplots_adjust(bottom=.2, wspace=0., hspace=0)
     ax.grid(
-        b=True, which='major', axis='both', alpha=.5, linestyle='--', 
+        visible=True, which='major', axis='both', alpha=.5, linestyle='--', 
         linewidth=.5, zorder=0
     )
 

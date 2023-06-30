@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 
 '''
 Program Name: prune_stat_files.py

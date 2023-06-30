@@ -56,7 +56,6 @@ fhrs='fhr1 fhr2 fhr3 fhr4 fhr5'
 export GRID2OBS_CONF="${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}"
 
 cd ${DATA}
-touch run_all_${MODELNAME}_${RUN}_g2o_poe.sh
 
 for cyc in ${cycles} ; do
 
@@ -239,22 +238,22 @@ for cyc in ${cycles} ; do
       
       chmod +x run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
       
-      echo "$DATA/run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh" >> run_all_${MODELNAME}_${RUN}_g2o_poe.sh
+      echo "$DATA/run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh" >> ${DATA}/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
     done  # end of fhr
   fi # found cycle    
 done  # end of cycles 
 
-chmod 775 run_all_${MODELNAME}_${RUN}_g2o_poe.sh
+chmod 775 ${DATA}/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
 
 #######################
 # Run the command file 
 #######################
 if [ ${run_mpi} = 'yes' ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-    mpiexec -np 36 --cpu-bind verbose,core --depth 3 cfp run_all_${MODELNAME}_${RUN}_g2o_poe.sh
+    mpiexec -np 36 --cpu-bind verbose,core --depth 3 cfp ${DATA}/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
   else
     echo "not running mpiexec"
-    sh run_all_${MODELNAME}_${RUN}_g2o_poe.sh
+    sh ${DATA}/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
 fi
 
 #######################
