@@ -173,8 +173,6 @@ for env_var in list(valid_config_var_values_dict.keys()):
     else:
             continue
 
-print(f"END: {os.path.basename(__file__)}")
-
 # Get values for other environment variables
 RUN = os.environ['RUN']
 NET = os.environ['NET']
