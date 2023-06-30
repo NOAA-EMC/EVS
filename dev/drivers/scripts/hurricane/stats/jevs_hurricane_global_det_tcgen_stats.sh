@@ -16,7 +16,7 @@
 # Load modules
 ############################################################
 module reset
-export HOMEevs=/lfs/h2/emc/vpppg/save/$USER/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 source ${HOMEevs}/versions/run.ver
 
 module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}

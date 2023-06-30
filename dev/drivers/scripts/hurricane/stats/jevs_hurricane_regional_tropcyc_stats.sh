@@ -46,7 +46,7 @@ rm -rf $COMINstats
 mkdir -p $COMINstats
 
 export COMROOT=${DATAROOT}/com
-export KEEPDATA=NO
+export KEEPDATA=YES
 
 
 # CALL executable job script here
