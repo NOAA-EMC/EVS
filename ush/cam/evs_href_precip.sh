@@ -394,7 +394,7 @@ for obsvtype in ccpa mrms ; do
 
        echo "cp \$output_base/stat/${MODEL}/*.stat $COMOUTsmall/${MODEL}" >> run_href_precip_${prod}.${obsv}.sh
        chmod +x run_href_precip_${prod}.${obsv}.sh
-       echo "run_href_precip_${prod}.${obsv}.sh" >> run_all_href_precip_poe.sh
+       echo "${DATA}/run_href_precip_${prod}.${obsv}.sh" >> run_all_href_precip_poe.sh
 
     done #end of prod
 

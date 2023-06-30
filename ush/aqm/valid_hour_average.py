@@ -1,9 +1,11 @@
+#!/usr/bin/env python3
+
 ###############################################################################
 #
 # Name:          valid_hour_average.py
 # Contact(s):    Marcel Caron
 # Developed:     Nov. 22, 2021 by Marcel Caron 
-# Last Modified: Nov. 02, 2022 by Marcel Caron             
+# Last Modified: Dec. 01, 2022 by Marcel Caron             
 # Title:         Line plot of verification metric as a function of 
 #                valid or init hour
 # Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
@@ -54,7 +56,8 @@ reference = Reference()
 
 def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger, 
                       date_range: tuple, model_list: list, num: int = 0, 
-                      level: str = '500', flead='all', thresh: list = ['<20'], 
+                      level: str = '500', flead='all', 
+                      fcst_thresh: list = ['<20'], obs_thresh: list = [''],
                       metric1_name: str = 'BCRMSE', metric2_name: str = 'ME', 
                       y_min_limit: float = -10., y_max_limit: float = 10., 
                       y_lim_lock: bool = False,
@@ -64,6 +67,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                       verif_type: str = 'pres', save_dir: str = '.',
                       requested_var: str = 'HGT', line_type: str = 'SL1L2',
                       dpi: int = 300, confidence_intervals: bool = False,
+                      interp_pts: list = [],
                       bs_nrep: int = 5000, bs_method: str = 'MATCHED_PAIRS', 
                       ci_lev: float = .95, bs_min_samp: int = 30,
                       eval_period: str = 'TEST', save_header: str = '', 
@@ -82,7 +86,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         logger.warning(f"Empty Dataframe. Continuing onto next plot...")
         logger.info("========================================")
         return None
-    if str(line_type).upper() == 'CTC' and np.array(thresh).size == 0:
+    if str(line_type).upper() == 'CTC' and np.array(fcst_thresh).size == 0:
         logger.warning(f"Empty list of thresholds. Continuing onto next"
                        + f" plot...")
         logger.info("========================================")
@@ -109,23 +113,23 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                 frange_phrase = 's '+', '.join([str(f) for f in flead])
             else:
                 frange_phrase = ' '+', '.join([str(f) for f in flead])
-            frange_save_phrase = '-'.join([str(f) for f in flead])
+            frange_save_phrase = '-'.join([str(f).zfill(3) for f in flead])
         else:
             frange_phrase = f's {flead[0]}'+u'\u2013'+f'{flead[-1]}'
-            frange_save_phrase = f'{flead[0]}_TO_F{flead[-1]}'
+            frange_save_phrase = f'{flead[0]:03d}-F{flead[-1]:03d}'
         frange_string = f'Forecast Hour{frange_phrase}'
         frange_save_string = f'F{frange_save_phrase}'
         df = df[df['LEAD_HOURS'].isin(flead)]
     elif isinstance(flead, tuple):
         frange_string = (f'Forecast Hours {flead[0]:02d}'
                          + u'\u2013' + f'{flead[1]:02d}')
-        frange_save_string = f'F{flead[0]:02d}-F{flead[1]:02d}'
+        frange_save_string = f'F{flead[0]:03d}-F{flead[1]:03d}'
         df = df[
             (df['LEAD_HOURS'] >= flead[0]) & (df['LEAD_HOURS'] <= flead[1])
         ]
     elif isinstance(flead, np.int):
         frange_string = f'Forecast Hour {flead:02d}'
-        frange_save_string = f'F{flead:02d}'
+        frange_save_string = f'F{flead:03d}'
         df = df[df['LEAD_HOURS'] == flead]
     else:
         e1 = f"Invalid forecast lead: \'{flead}\'"
@@ -152,55 +156,152 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         int(x) in df['ANTI_DATE_HOURS'].tolist() for x in anti_date_hours
     ]]
 
-    if thresh and '' not in thresh:
-        requested_thresh_symbol, requested_thresh_letter = list(
-            zip(*[plot_util.format_thresh(t) for t in thresh])
+    if interp_pts and '' not in interp_pts:
+        interp_shape = list(df['INTERP_MTHD'])[0]
+        if 'SQUARE' in interp_shape:
+            widths = [int(np.sqrt(float(p))) for p in interp_pts]
+        elif 'CIRCLE' in interp_shape:
+            widths = [int(np.sqrt(float(p)+4)) for p in interp_pts]
+        elif np.all([int(p) == 1 for p in interp_pts]):
+            widths = [1 for p in interp_pts]
+        else:
+            error_string = (
+                f"Unknown INTERP_MTHD used to compute INTERP_PNTS: {interp_shape}."
+                + f" Check the INTERP_MTHD column in your METplus stats files."
+                + f" INTERP_MTHD must have either \"SQUARE\" or \"CIRCLE\""
+                + f" in the name."
+            )
+            logger.error(error_string)
+            raise ValueError(error_string)
+        if isinstance(interp_pts, list):
+            if len(interp_pts) <= 8:
+                if len(interp_pts) > 1:
+                    interp_pts_phrase = 's '+', '.join([str(p) for p in widths])
+                else:
+                    interp_pts_phrase = ' '+', '.join([str(p) for p in widths])
+                interp_pts_save_phrase = '-'.join([str(p) for p in widths])
+            else:
+                interp_pts_phrase = f's {widths[0]}'+u'\u2013'+f'{widths[-1]}'
+                interp_pts_save_phrase = f'{widths[0]}-{widths[-1]}'
+            interp_pts_string = f'(Width{interp_pts_phrase})'
+            interp_pts_save_string = f'width{interp_pts_save_phrase}'
+            df = df[df['INTERP_PNTS'].isin(interp_pts)]
+        elif isinstance(interp_pts, np.int):
+            interp_pts_string = f'(Width {widths:d})'
+            interp_pts_save_string = f'width{widths:d}'
+            df = df[df['INTERP_PNTS'] == widths]
+        else:
+            error_string = (
+                f"Invalid interpolation points entry: \'{interp_pts}\'\n"
+                + f"Please check settings for interpolation points."
+            )
+            logger.error(error_string)
+            raise ValueError(error_string)
+
+    if obs_thresh and '' not in obs_thresh:
+        requested_obs_thresh_symbol, requested_obs_thresh_letter = list(
+            zip(*[plot_util.format_thresh(t) for t in obs_thresh])
         )
         symbol_found = False
         for opt in ['>=', '>', '==', '!=', '<=', '<']:
-            if any(opt in t for t in requested_thresh_symbol):
-                if all(opt in t for t in requested_thresh_symbol):
+            if any(opt in t for t in requested_obs_thresh_symbol):
+                if all(opt in t for t in requested_obs_thresh_symbol):
                     symbol_found = True
-                    opt_letter = requested_thresh_letter[0][:2]
+                    opt_letter = requested_obs_thresh_letter[0][:2]
                     break
                 else:
                     e = ("Threshold operands do not match among all requested"
-                         + f" thresholds.")
+                         + f" obs thresholds.")
                     logger.error(e)
                     logger.error("Quitting ...")
                     raise ValueError(e+"\nQuitting ...")
         if not symbol_found:
-            e = "None of the requested thresholds contain a valid symbol."
+            e = "None of the requested obs thresholds contain a valid symbol."
             logger.error(e)
             logger.error("Quitting ...")
             raise ValueError(e+"\nQuitting ...")
-        df_thresh_symbol, df_thresh_letter = list(
-            zip(*[plot_util.format_thresh(t) for t in df['FCST_THRESH']])
+        df_obs_thresh_symbol, df_obs_thresh_letter = list(
+            zip(*[
+                plot_util.format_thresh(t) 
+                for t in df['OBS_THRESH'].replace(np.nan, '', regex=True)
+            ])
         )
-        df['FCST_THRESH_SYMBOL'] = df_thresh_symbol
-        df['FCST_THRESH_VALUE'] = [str(item)[2:] for item in df_thresh_letter]
-        requested_thresh_value = [
-            str(item)[2:] for item in requested_thresh_letter
+        df['OBS_THRESH_SYMBOL'] = df_obs_thresh_symbol
+        df['OBS_THRESH_VALUE'] = [str(item)[2:] for item in df_obs_thresh_letter]
+        requested_obs_thresh_value = [
+            str(item)[2:] for item in requested_obs_thresh_letter
         ]
-        df = df[df['FCST_THRESH_SYMBOL'].isin(requested_thresh_symbol)]
+        df = df[df['OBS_THRESH_SYMBOL'].isin(requested_obs_thresh_symbol)]
         thresholds_removed = (
-            np.array(requested_thresh_symbol)[
-                ~np.isin(requested_thresh_symbol, df['FCST_THRESH_SYMBOL'])
+            np.array(requested_obs_thresh_symbol)[
+                ~np.isin(requested_obs_thresh_symbol, df['OBS_THRESH_SYMBOL'])
             ]
         )
-        requested_thresh_symbol = (
-            np.array(requested_thresh_symbol)[
-                np.isin(requested_thresh_symbol, df['FCST_THRESH_SYMBOL'])
+        requested_obs_thresh_symbol = (
+            np.array(requested_obs_thresh_symbol)[
+                np.isin(requested_obs_thresh_symbol, df['OBS_THRESH_SYMBOL'])
             ]
         )
         if thresholds_removed.size > 0:
             thresholds_removed_string = ', '.join(thresholds_removed)
             if len(thresholds_removed) > 1:
-                warning_string = (f"{thresholds_removed_string} thresholds"
+                warning_string = (f"{thresholds_removed_string} obs thresholds"
                                   + f" were not found and will not be"
                                   + f" plotted.")
             else:
-                warning_string = (f"{thresholds_removed_string} threshold was"
+                warning_string = (f"{thresholds_removed_string} obs threshold was"
+                                  + f" not found and will not be plotted.")
+            logger.warning(warning_string)
+            logger.warning("Continuing ...")
+    if fcst_thresh and '' not in fcst_thresh:
+        requested_fcst_thresh_symbol, requested_fcst_thresh_letter = list(
+            zip(*[plot_util.format_thresh(t) for t in fcst_thresh])
+        )
+        symbol_found = False
+        for opt in ['>=', '>', '==', '!=', '<=', '<']:
+            if any(opt in t for t in requested_fcst_thresh_symbol):
+                if all(opt in t for t in requested_fcst_thresh_symbol):
+                    symbol_found = True
+                    opt_letter = requested_fcst_thresh_letter[0][:2]
+                    break
+                else:
+                    e = ("Threshold operands do not match among all requested"
+                         + f" fcst thresholds.")
+                    logger.error(e)
+                    logger.error("Quitting ...")
+                    raise ValueError(e+"\nQuitting ...")
+        if not symbol_found:
+            e = "None of the requested fcst thresholds contain a valid symbol."
+            logger.error(e)
+            logger.error("Quitting ...")
+            raise ValueError(e+"\nQuitting ...")
+        df_fcst_thresh_symbol, df_fcst_thresh_letter = list(
+            zip(*[plot_util.format_thresh(t) for t in df['FCST_THRESH']])
+        )
+        df['FCST_THRESH_SYMBOL'] = df_fcst_thresh_symbol
+        df['FCST_THRESH_VALUE'] = [str(item)[2:] for item in df_fcst_thresh_letter]
+        requested_fcst_thresh_value = [
+            str(item)[2:] for item in requested_fcst_thresh_letter
+        ]
+        df = df[df['FCST_THRESH_SYMBOL'].isin(requested_fcst_thresh_symbol)]
+        thresholds_removed = (
+            np.array(requested_fcst_thresh_symbol)[
+                ~np.isin(requested_fcst_thresh_symbol, df['FCST_THRESH_SYMBOL'])
+            ]
+        )
+        requested_fcst_thresh_symbol = (
+            np.array(requested_fcst_thresh_symbol)[
+                np.isin(requested_fcst_thresh_symbol, df['FCST_THRESH_SYMBOL'])
+            ]
+        )
+        if thresholds_removed.size > 0:
+            thresholds_removed_string = ', '.join(thresholds_removed)
+            if len(thresholds_removed) > 1:
+                warning_string = (f"{thresholds_removed_string} fcst thresholds"
+                                  + f" were not found and will not be"
+                                  + f" plotted.")
+            else:
+                warning_string = (f"{thresholds_removed_string} fcst threshold was"
                                   + f" not found and will not be plotted.")
             logger.warning(warning_string)
             logger.warning("Continuing ...")
@@ -235,6 +336,11 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         df, bool_success = plot_util.equalize_samples(logger, df, group_by)
         if not bool_success:
             sample_equalization = False
+        if df.empty:
+            logger.warning(f"Empty Dataframe. Continuing onto next plot...")
+            plt.close(num)
+            logger.info("========================================")
+            return None
     df_groups = df.groupby(group_by)
     # Aggregate unit statistics before calculating metrics
     if str(line_type).upper() == 'CTC':
@@ -264,12 +370,48 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         logger.info("========================================")
         return None
 
+    coef, const = (None, None)
+    units = df['FCST_UNITS'].tolist()[0]
+    metrics_using_var_units = [
+        'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
+        'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR',
+        'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
+    ]
+    unit_convert = False
+    if units in reference.unit_conversions:
+        unit_convert = True
+        var_long_name_key = df['FCST_VAR'].tolist()[0]
+        if str(var_long_name_key).upper() == 'HGT':
+            if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
+                if units in ['m', 'gpm']:
+                    units = 'gpm'
+            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+                unit_convert = False
+            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
+                unit_convert = False
+        if unit_convert:
+            if metric2_name is not None:
+                if (str(metric1_name).upper() in metrics_using_var_units
+                        and str(metric2_name).upper() in metrics_using_var_units):
+                    coef, const = (
+                        reference.unit_conversions[units]['formula'](
+                            None,
+                            return_terms=True
+                        )
+                    )
+            elif str(metric1_name).upper() in metrics_using_var_units:
+                coef, const = (
+                    reference.unit_conversions[units]['formula'](
+                        None,
+                        return_terms=True
+                    )
+                )
     # Calculate desired metric
     metric_long_names = []
     for stat in [metric1_name, metric2_name]:
         if stat:
             stat_output = plot_util.calculate_stat(
-                logger, df_aggregated, str(stat).lower()
+                logger, df_aggregated, str(stat).lower(), [coef, const]
             )
             df_aggregated[str(stat).upper()] = stat_output[0]
             metric_long_names.append(stat_output[2])
@@ -277,7 +419,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                 ci_output = df_groups.apply(
                     lambda x: plot_util.calculate_bootstrap_ci(
                         logger, bs_method, x, str(stat).lower(), bs_nrep,
-                        ci_lev, bs_min_samp
+                        ci_lev, bs_min_samp, [coef, const]
                     )
                 )
                 if any(ci_output['STATUS'] == 1):
@@ -457,15 +599,25 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         x_vals2 = pivot_metric2.index
     y_min = y_min_limit
     y_max = y_max_limit
-    if thresh and '' not in thresh:
-        thresh_labels = np.unique(df['FCST_THRESH_VALUE'])
-        thresh_argsort = np.argsort(thresh_labels.astype(float))
-        requested_thresh_argsort = np.argsort([
-            float(item) for item in requested_thresh_value
+    if obs_thresh and '' not in obs_thresh:
+        obs_thresh_labels = np.unique(df['OBS_THRESH_VALUE'])
+        obs_thresh_argsort = np.argsort(obs_thresh_labels.astype(float))
+        requested_obs_thresh_argsort = np.argsort([
+            float(item) for item in requested_obs_thresh_value
         ])
-        thresh_labels = [thresh_labels[i] for i in thresh_argsort]
-        requested_thresh_labels = [
-            requested_thresh_value[i] for i in requested_thresh_argsort
+        obs_thresh_labels = [obs_thresh_labels[i] for i in obs_thresh_argsort]
+        requested_obs_thresh_labels = [
+            requested_obs_thresh_value[i] for i in requested_obs_thresh_argsort
+        ]
+    if fcst_thresh and '' not in fcst_thresh:
+        fcst_thresh_labels = np.unique(df['FCST_THRESH_VALUE'])
+        fcst_thresh_argsort = np.argsort(fcst_thresh_labels.astype(float))
+        requested_fcst_thresh_argsort = np.argsort([
+            float(item) for item in requested_fcst_thresh_value
+        ])
+        fcst_thresh_labels = [fcst_thresh_labels[i] for i in fcst_thresh_argsort]
+        requested_fcst_thresh_labels = [
+            requested_fcst_thresh_value[i] for i in requested_fcst_thresh_argsort
         ]
     plot_reference = [False, False]
     ref_metrics = ['OBAR']
@@ -543,6 +695,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
     else:
         handles = []
         labels = []
+    n_mods = 0
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -550,6 +703,8 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
             )
         else:
             model_plot_name = model_list[m]
+        if str(model_list[m]) not in pivot_metric1:
+            continue
         y_vals_metric1 = pivot_metric1[str(model_list[m])].values
         y_vals_metric1_mean = np.nanmean(y_vals_metric1)
         if metric2_name is not None:
@@ -585,9 +740,10 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                 else:
                     y_vals_metric_min = np.nanmin(y_vals_metric1)
                     y_vals_metric_max = np.nanmax(y_vals_metric1)
-            if m == 0:
+            if n_mods == 0:
                 y_mod_min = y_vals_metric_min
                 y_mod_max = y_vals_metric_max
+                n_mods+=1
             else:
                 if math.isinf(y_mod_min):
                     y_mod_min = y_vals_metric_min
@@ -746,6 +902,10 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         for y in [-5,-4,-3,-2,-1,0,1,2,3,4,5]
     ]).flatten()
     round_to_nearest_categories = y_range_categories/20.
+    if math.isinf(y_min):
+        y_min = y_min_limit
+    if math.isinf(y_max):
+        y_max = y_max_limit
     y_range = y_max-y_min
     round_to_nearest =  round_to_nearest_categories[
         np.digitize(y_range, y_range_categories[:-1])
@@ -759,23 +919,33 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
     yticks = np.arange(ylim_min, ylim_max+round_to_nearest, round_to_nearest)
     var_long_name_key = df['FCST_VAR'].tolist()[0]
     if str(var_long_name_key).upper() == 'HGT':
-        if str(df['OBS_VAR'].tolist()[0]).upper() == 'CEILING':
+        if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
             var_long_name_key = 'HGTCLDCEIL'
+        elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+            var_long_name_key = 'HPBL'
     var_long_name = variable_translator[var_long_name_key]
-    units = df['FCST_UNITS'].tolist()[0]
-    if units in reference.unit_conversions:
-        if thresh and '' not in thresh:
-            thresh_labels = [float(tlab) for tlab in thresh_labels]
-            thresh_labels = reference.unit_conversions[units]['formula'](thresh_labels)
-            thresh_labels = [str(tlab) for tlab in thresh_labels]
+    if unit_convert:
+        if fcst_thresh and '' not in fcst_thresh:
+            fcst_thresh_labels = [float(tlab) for tlab in fcst_thresh_labels]
+            fcst_thresh_labels = (
+                reference.unit_conversions[units]['formula'](
+                    fcst_thresh_labels, 
+                    rounding=True
+                )
+            )
+            fcst_thresh_labels = [str(tlab) for tlab in fcst_thresh_labels]
+        if obs_thresh and '' not in obs_thresh:
+            obs_thresh_labels = [float(tlab) for tlab in obs_thresh_labels]
+            obs_thresh_labels = (
+                reference.unit_conversions[units]['formula'](
+                    obs_thresh_labels,
+                    rounding=True
+                )
+            )
+            obs_thresh_labels = [str(tlab) for tlab in obs_thresh_labels]
         units = reference.unit_conversions[units]['convert_to']
     if units == '-':
         units = ''
-    metrics_using_var_units = [
-        'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
-        'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR',
-        'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
-    ]
     if metric2_name is not None:
         metric1_string, metric2_string = metric_long_names
         if (str(metric1_name).upper() in metrics_using_var_units
@@ -816,7 +986,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         handletextpad=.4, borderaxespad=.5) 
     fig.subplots_adjust(bottom=.2, wspace=0, hspace=0)
     ax.grid(
-        b=True, which='major', axis='both', alpha=.5, linestyle='--', 
+        visible=True, which='major', axis='both', alpha=.5, linestyle='--', 
         linewidth=.5, zorder=0
     )
 
@@ -841,10 +1011,18 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
     # Title
     domain = df['VX_MASK'].tolist()[0]
     var_savename = df['FCST_VAR'].tolist()[0]
+    if 'APCP' in var_savename.upper():
+        var_savename = 'APCP'
+    elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+        var_savename = 'HPBL'
+    elif str(df['OBS_VAR'].tolist()[0]).upper() in ['MSLET','MSLMA','PRMSL']:
+        var_savename = 'MSLET'
     if domain in list(domain_translator.keys()):
-        domain_string = domain_translator[domain]
+        domain_string = domain_translator[domain]['long_name']
+        domain_save_string = domain_translator[domain]['save_name']
     else:
         domain_string = domain
+        domain_save_string = domain
     date_hours_string = plot_util.get_name_for_listed_items(
         [f'{date_hour:02d}' for date_hour in date_hours],
         ', ', '', 'Z', 'and ', ''
@@ -856,57 +1034,108 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
     '''
     date_start_string = date_range[0].strftime('%d %b %Y')
     date_end_string = date_range[1].strftime('%d %b %Y')
-    if str(verif_type).lower() in ['pres', 'upper_air'] or 'P' in str(level):
-        level_num = level.replace('P', '')
-        level_string = f'{level_num} hPa '
-        level_savename = f'{level_num}MB_'
-    elif str(verif_type).lower() in ['sfc', 'conus_sfc', 'polar_sfc', 'mrms']:
+    if str(level).upper() in ['CEILING', 'TOTAL', 'PBL']:
+        if str(level).upper() == 'CEILING':
+            level_string = ''
+            level_savename = 'L0'
+        elif str(level).upper() == 'TOTAL':
+            level_string = 'Total '
+            level_savename = 'L0'
+        elif str(level).upper() == 'PBL':
+            level_string = ''
+            level_savename = 'L0'
+    elif str(verif_type).lower() in ['pres', 'upper_air', 'raob'] or 'P' in str(level):
+        if 'P' in str(level):
+            if str(level).upper() == 'P90-0':
+                level_string = f'Mixed-Layer '
+                level_savename = f'L90'
+            else:
+                level_num = level.replace('P', '')
+                level_string = f'{level_num} hPa '
+                level_savename = f'{level}'
+        elif str(level).upper() == 'L0':
+            level_string = f'Surface-Based '
+            level_savename = f'{level}'
+        else:
+            level_string = ''
+            level_savename = f'{level}'
+    elif str(verif_type).lower() in ['sfc', 'conus_sfc', 'polar_sfc', 'mrms', 'metar']:
         if 'Z' in str(level):
             if str(level).upper() == 'Z0':
-                level_string = 'Surface '
-                level_savename = 'SFC_'
+                if str(var_long_name_key).upper() in ['MLSP', 'MSLET', 'MSLMA', 'PRMSL']:
+                    level_string = ''
+                    level_savename = f'{level}'
+                else:
+                    level_string = 'Surface '
+                    level_savename = f'{level}'
             else:
                 level_num = level.replace('Z', '')
                 if var_savename in ['TSOIL', 'SOILW']:
                     level_string = f'{level_num}-cm '
-                    level_savename = f'{level_num}CM_'
+                    level_savename = f'{level_num}CM'
                 else:
                     level_string = f'{level_num}-m '
-                    level_savename = f'{level_num}M_'
-        elif 'L' in str(level) or 'A' in str(level):
+                    level_savename = f'{level}'
+        elif 'L' in str(level):
             level_string = ''
-            level_savename = ''
+            level_savename = f'{level}'
+        elif 'A' in str(level):
+            level_num = level.replace('A', '')
+            level_string = f'{level_num}-hour '
+            level_savename = f'A{level_num.zfill(2)}'
         else:
             level_string = f'{level} '
-            level_savename = f'{level}_'
-    elif str(verif_type).lower() in ['ccpa']:
+            level_savename = f'{level}'
+    elif str(verif_type).lower() in ['ccpa', 'mrms']:
         if 'A' in str(level):
             level_num = level.replace('A', '')
             level_string = f'{level_num}-hour '
-            level_savename = f'{level_num}H_'
+            level_savename = f'A{level_num.zfill(2)}'
         else:
             level_string = f''
-            level_savename = f''
+            level_savename = f'{level}'
     else:
-        level_string = f'{level}'
-        level_savename = f'{level}_'
+        level_string = f'{level} '
+        level_savename = f'{level}'
     if metric2_name is not None:
         title1 = f'{metric1_string} and {metric2_string}'
     else:
         title1 = f'{metric1_string}'
-    if thresh and '' not in thresh:
-        thresholds_phrase = ', '.join([
-            f'{opt}{thresh_label}' for thresh_label in thresh_labels
+    if interp_pts and '' not in interp_pts:
+        title1+=f' {interp_pts_string}'
+    fcst_thresh_on = (fcst_thresh and '' not in fcst_thresh)
+    obs_thresh_on = (obs_thresh and '' not in obs_thresh)
+    if fcst_thresh_on:
+        fcst_thresholds_phrase = ', '.join([
+            f'{opt}{fcst_thresh_label}' 
+            for fcst_thresh_label in fcst_thresh_labels
         ])
-        thresholds_save_phrase = ''.join([
-            f'{opt_letter}{thresh_label}' 
-            for thresh_label in requested_thresh_labels
+        fcst_thresholds_save_phrase = ''.join([
+            f'{opt_letter}{fcst_thresh_label}' 
+            for fcst_thresh_label in requested_fcst_thresh_labels
+        ]).replace('.','p')
+    if obs_thresh_on:
+        obs_thresholds_phrase = ', '.join([
+            f'obs{opt}{obs_thresh_label}' 
+            for obs_thresh_label in obs_thresh_labels
         ])
+        obs_thresholds_save_phrase = ''.join([
+            f'obs{opt_letter}{obs_thresh_label}' 
+            for obs_thresh_label in requested_obs_thresh_labels
+        ]).replace('.','p')
+    if fcst_thresh_on:
         if units:
-            title2 = (f'{level_string}{var_long_name} ({thresholds_phrase}'
+            title2 = (f'{level_string}{var_long_name} ({fcst_thresholds_phrase}'
                       + f' {units}), {domain_string}')
         else:
-            title2 = (f'{level_string}{var_long_name} ({thresholds_phrase}'
+            title2 = (f'{level_string}{var_long_name} ({fcst_thresholds_phrase}'
+                      + f' unitless), {domain_string}')
+    elif obs_thresh_on:
+        if units:
+            title2 = (f'{level_string}{var_long_name} ({obs_thresholds_phrase}'
+                      + f' {units}), {domain_string}')
+        else:
+            title2 = (f'{level_string}{var_long_name} ({obs_thresholds_phrase}'
                       + f' unitless), {domain_string}')
     else:
         if units:
@@ -972,25 +1201,33 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         time_period_savename = f'{date_start_savename}-{date_end_savename}'
     else:
         time_period_savename = f'{eval_period}'
-    save_name = (f'valid_hour_average_regional_'
-                 + f'{str(domain).lower()}_{str(date_type).lower()}_'
-                 + f'{str(date_hours_savename).lower()}_'
-                 + f'{str(level_savename).lower()}'
-                 + f'{str(var_savename).lower()}_{str(metric1_name).lower()}')
+
+    plot_info = f'vhrmean'
+    save_name = (f'{str(metric1_name).lower()}')
     if metric2_name is not None:
         save_name+=f'_{str(metric2_name).lower()}'
-    save_name+=f'_{str(frange_save_string).lower()}'
-    if thresh and '' not in thresh:
-        save_name+=f'_{str(thresholds_save_phrase).lower()}'
+    if fcst_thresh_on:
+        save_name+=f'_{str(fcst_thresholds_save_phrase).lower()}'
+    elif obs_thresh_on:
+        save_name+=f'_{str(obs_thresholds_save_phrase).lower()}'
+    if interp_pts and '' not in interp_pts:
+        save_name+=f'_{str(interp_pts_save_string).lower()}'
+    save_name+=f'.{str(var_savename).lower()}'
+    if level_savename:
+        save_name+=f'_{str(level_savename).lower()}'
+    save_name+=f'.{str(time_period_savename).lower()}'
+    save_name+=f'.{plot_info}'
+    save_name+=f'.{str(domain_save_string).lower()}'
+    
     if save_header:
-        save_name = f'{save_header}_'+save_name
+        save_name = f'{save_header}.'+save_name
     save_subdir = os.path.join(
         save_dir, f'{str(plot_group).lower()}', 
         f'{str(time_period_savename).lower()}'
     )
     if not os.path.isdir(save_subdir):
         os.makedirs(save_subdir)
-    save_path = os.path.join(save_name+'.png')
+    save_path = os.path.join(save_subdir, save_name+'.png')
     fig.savefig(save_path, dpi=dpi)
     logger.info(u"\u2713"+f" plot saved successfully as {save_path}")
     plt.close(num)
@@ -1001,21 +1238,21 @@ def main():
 
     # Logging
     log_metplus_dir = '/'
-    for subdir in LOG_METPLUS.split('/')[:-1]:
+    for subdir in LOG_TEMPLATE.split('/')[:-1]:
         log_metplus_dir = os.path.join(log_metplus_dir, subdir)
     if not os.path.isdir(log_metplus_dir):
         os.makedirs(log_metplus_dir)
-    logger = logging.getLogger(LOG_METPLUS)
+    logger = logging.getLogger(LOG_TEMPLATE)
     logger.setLevel(LOG_LEVEL)
     formatter = logging.Formatter(
         '%(asctime)s.%(msecs)03d (%(filename)s:%(lineno)d) %(levelname)s: '
         + '%(message)s',
         '%m/%d %H:%M:%S'
     )
-    file_handler = logging.FileHandler(LOG_METPLUS, mode='a')
+    file_handler = logging.FileHandler(LOG_TEMPLATE, mode='a')
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
-    logger_info = f"Log file: {LOG_METPLUS}"
+    logger_info = f"Log file: {LOG_TEMPLATE}"
     print(logger_info)
     logger.info(logger_info)
 
@@ -1055,8 +1292,8 @@ def main():
     logger.debug("Config file settings")
     logger.debug(f"LOG_LEVEL: {LOG_LEVEL}")
     logger.debug(f"MET_VERSION: {MET_VERSION}")
-    logger.debug(f"URL_HEADER: {URL_HEADER if URL_HEADER else 'No header'}")
-    logger.debug(f"OUTPUT_BASE_DIR: {OUTPUT_BASE_DIR}")
+    logger.debug(f"IMG_HEADER: {IMG_HEADER if IMG_HEADER else 'No header'}")
+    logger.debug(f"STAT_OUTPUT_BASE_DIR: {STAT_OUTPUT_BASE_DIR}")
     logger.debug(f"STATS_DIR: {STATS_DIR}")
     logger.debug(f"PRUNE_DIR: {PRUNE_DIR}")
     logger.debug(f"SAVE_DIR: {SAVE_DIR}")
@@ -1089,6 +1326,7 @@ def main():
     logger.debug(f"LINE_TYPE: {LINE_TYPE}")
     logger.debug(f"METRICS: {METRICS}")
     logger.debug(f"CONFIDENCE_INTERVALS: {CONFIDENCE_INTERVALS}")
+    logger.debug(f"INTERP_PNTS: {INTERP_PNTS if INTERP_PNTS else 'No interpolation points'}")
 
     logger.debug('----------------------------------------')
     logger.debug(f"Advanced settings (configurable in {SETTINGS_DIR}/settings.py)")
@@ -1231,7 +1469,7 @@ def main():
             if (FCST_LEVELS[l] not in var_specs['fcst_var_levels'] 
                     or OBS_LEVELS[l] not in var_specs['obs_var_levels']):
                 e = (f"The requested variable/level combination is not valid: "
-                     + f"{requested_var}/{level}")
+                     + f"{requested_var}/{fcst_level}")
                 logger.warning(e)
                 continue
             for domain in DOMAINS:
@@ -1253,17 +1491,18 @@ def main():
                 df_metric = df
                 plot_valid_hour_average(
                     df_metric, logger, date_range, MODELS, num=num, 
-                    flead=FLEADS, level=fcst_level, thresh=fcst_thresh, 
+                    flead=FLEADS, level=fcst_level, fcst_thresh=fcst_thresh,
+                    obs_thresh=obs_thresh,
                     metric1_name=metrics[0], metric2_name=metrics[1], 
                     date_type=DATE_TYPE, y_min_limit=Y_MIN_LIMIT, 
                     y_max_limit=Y_MAX_LIMIT, y_lim_lock=Y_LIM_LOCK, 
                     xlabel=xlabel, line_type=LINE_TYPE, verif_type=VERIF_TYPE, 
                     date_hours=date_hours, anti_date_hours=anti_date_hours, 
                     eval_period=EVAL_PERIOD, save_dir=SAVE_DIR, 
-                    display_averages=display_averages, save_header=URL_HEADER, 
+                    display_averages=display_averages, save_header=IMG_HEADER, 
                     plot_group=plot_group, 
                     confidence_intervals=CONFIDENCE_INTERVALS, bs_nrep=bs_nrep, 
-                    bs_method=bs_method, ci_lev=ci_lev, 
+                    interp_pts=INTERP_PNTS, bs_method=bs_method, ci_lev=ci_lev, 
                     bs_min_samp=bs_min_samp,
                     sample_equalization=sample_equalization,
                     plot_logo_left=plot_logo_left,
@@ -1279,20 +1518,20 @@ def main():
 # ============ START USER CONFIGURATIONS ================
 if __name__ == "__main__":
     print("\n=================== CHECKING CONFIG VARIABLES =====================\n")
-    LOG_METPLUS = check_LOG_METPLUS(os.environ['LOG_METPLUS'])
+    LOG_TEMPLATE = check_LOG_TEMPLATE(os.environ['LOG_TEMPLATE'])
     LOG_LEVEL = check_LOG_LEVEL(os.environ['LOG_LEVEL'])
     MET_VERSION = check_MET_VERSION(os.environ['MET_VERSION'])
-    URL_HEADER = check_URL_HEADER(os.environ['URL_HEADER'])
+    IMG_HEADER = check_IMG_HEADER(os.environ['IMG_HEADER'])
     VERIF_CASE = check_VERIF_CASE(os.environ['VERIF_CASE'])
     VERIF_TYPE = check_VERIF_TYPE(os.environ['VERIF_TYPE'])
-    OUTPUT_BASE_DIR = check_OUTPUT_BASE_DIR(os.environ['OUTPUT_BASE_DIR'])
-    STATS_DIR = OUTPUT_BASE_DIR
+    STAT_OUTPUT_BASE_DIR = check_STAT_OUTPUT_BASE_DIR(os.environ['STAT_OUTPUT_BASE_DIR'])
+    STATS_DIR = STAT_OUTPUT_BASE_DIR
     PRUNE_DIR = check_PRUNE_DIR(os.environ['PRUNE_DIR'])
     SAVE_DIR = check_SAVE_DIR(os.environ['SAVE_DIR'])
     DATE_TYPE = check_DATE_TYPE(os.environ['DATE_TYPE'])
     LINE_TYPE = check_LINE_TYPE(os.environ['LINE_TYPE'])
     INTERP = check_INTERP(os.environ['INTERP'])
-    MODELS = check_MODEL(os.environ['MODEL']).replace(' ','').split(',')
+    MODELS = check_MODELS(os.environ['MODELS']).replace(' ','').split(',')
     DOMAINS = check_VX_MASK_LIST(os.environ['VX_MASK_LIST']).replace(' ','').split(',')
 
     # valid hour (each plot will use all available valid_hours listed below)
@@ -1344,6 +1583,9 @@ if __name__ == "__main__":
     ci_lev = toggle.plot_settings['ci_lev']
     bs_min_samp = toggle.plot_settings['bs_min_samp']
 
+    # list of points used in interpolation method
+    INTERP_PNTS = check_INTERP_PTS(os.environ['INTERP_PNTS']).replace(' ','').split(',')
+
     # At each value of the independent variable, whether or not to remove
     # samples used to aggregate each statistic if the samples are not shared
     # by all models.  Required to display sample sizes
@@ -1363,12 +1605,12 @@ if __name__ == "__main__":
     path_logo_left = paths.logo_left_path
     path_logo_right = paths.logo_right_path
 
-    OUTPUT_BASE_TEMPLATE = templates.output_base_template
+    OUTPUT_BASE_TEMPLATE = os.environ['STAT_OUTPUT_BASE_TEMPLATE']
 
     print("\n===================================================================\n")
     # ============= END USER CONFIGURATIONS =================
 
-    LOG_METPLUS = str(LOG_METPLUS)
+    LOG_TEMPLATE = str(LOG_TEMPLATE)
     LOG_LEVEL = str(LOG_LEVEL)
     MET_VERSION = float(MET_VERSION)
     VALID_HOURS = [
@@ -1378,6 +1620,7 @@ if __name__ == "__main__":
         int(init_hour) if init_hour else None for init_hour in INIT_HOURS
     ]
     FLEADS = [int(flead) for flead in FLEADS]
+    INTERP_PNTS = [str(pts) for pts in INTERP_PNTS]
     VERIF_CASETYPE = str(VERIF_CASE).lower() + '_' + str(VERIF_TYPE).lower()
     FCST_LEVELS = [str(level) for level in FCST_LEVELS]
     OBS_LEVELS = [str(level) for level in OBS_LEVELS]

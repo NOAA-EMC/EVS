@@ -195,10 +195,10 @@ for stats in csi_fbias ets_fbias ratio_pod_csi ; do
 
          chmod +x  run_py.${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
 
-         echo "run_py.${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
+         echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh 
-         echo " run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
+         echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
 
       done #end of line_type
 
@@ -219,9 +219,9 @@ chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 102 -ppn 102 --cpu-bind verbose,depth cfp run_all_poe.sh
+   mpiexec -np 102 -ppn 102 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
-  run_all_poe.sh
+  ${DATA}/run_all_poe.sh
 fi
 
 cd $plot_dir
@@ -264,28 +264,25 @@ for score_type in lead_average threshold_average; do
        var_new=$var
        level=l0
        stats="csi_fbias csi fbias"
-       valid=valid_00z_03z_06z_09z_12z_15z_18z_21z
    elif [ $var = hgt ] ; then
        var_new=ceiling
        level=l0
        stats="csi_fbias csi fbias"
-       valid=valid_00z_03z_06z_09z_12z_15z_18z_21z
    elif [ $var = cape ] ; then
        var_new=cape
        level=l0
        stats="csi_fbias  csi fbias"
-       valid=valid_00z_12z
    elif [ $var = mlcape ] ; then
        var_new=mlcape
        level=ml
        stats="csi_fbias csi fbias"
-       valid=valid_00z_12z
    elif [ $var = tcdc ] ; then
        var_new=tatal_cloud
        level=l0
        stats="ets_fbias ets fbias" 
-       valid=valid_00z_03z_06z_09z_12z_15z_18z_21z
    fi
+   
+   valid="valid_available_times"
 
   if [ $score_type = lead_average ] ; then
      scoretype=fhrmean
@@ -297,7 +294,7 @@ for score_type in lead_average threshold_average; do
 
     for domain in conus conus_east conus_west conus_south conus_central alaska appalachia cplains deepsouth greatbasin greatlakes mezquital midatlantic northatlantic nolains nrockies pacificnw pacificsw prairie southeast southwest splains nplains srockies ; do
 
-     mv ${score_type}_regional_${domain}_valid*_${var}_${stats}*.png evs.href.${stats}.${var_new}_${level}.last${past_days}days.${scoretype}.${valid}.buk_${domain}.png
+     mv ${score_type}_regional_${domain}_valid*_${var}_${stat}*.png evs.href.${stat}.${var_new}_${level}.last${past_days}days.${scoretype}.${valid}.buk_${domain}.png
 
        done #domain
     done #stat
