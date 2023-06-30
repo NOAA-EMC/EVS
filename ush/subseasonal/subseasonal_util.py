@@ -1556,10 +1556,8 @@ def check_model_files(job_dict):
     members = job_dict['members']
     fhr_min = int(job_dict['fhr_start'])
     fhr_max = int(job_dict['fhr_end'])
-    #fhr_inc = int(job_dict['fhr_inc'])
     fhr_inc = 24
     fhr = fhr_min
-    #fhr = fhr_max
     fhr_list = []
     fhr_check_dict = {}
     while fhr <= fhr_max:
@@ -2094,8 +2092,8 @@ def check_model_files(job_dict):
                     )
             else:
                 fhr_key_files_exist_list.append(False)
-        #if all(x == True for x in fhr_key_files_exist_list) \
-        if len(fhr_key_files_exist_list) > 0:
+        if any(x == True for x in fhr_key_files_exist_list) \
+                and fhr_key_files_exist_list.count(True) > 0:
             fhr_list.append(fhr_key)
     fhr_list = list(
         np.asarray(np.unique(np.asarray(fhr_list, dtype=int)),dtype=str)
@@ -2201,8 +2199,8 @@ def check_weekly_truth_files(job_dict):
             truth_files_exist_list.append(True)
         else:
             truth_files_exist_list.append(False)
-    #if all(x == True for x in truth_files_exist_list) \
-    if len(truth_files_exist_list) >= 12:
+    if any(x == True for x in truth_files_exist_list) \
+            and truth_files_exist_list.count(True) >= 12:
         truth_files_exist = True
     else:
         truth_files_exist = False
@@ -2303,8 +2301,8 @@ def check_days6_10_truth_files(job_dict):
             truth_files_exist_list.append(True)
         else:
             truth_files_exist_list.append(False)
-    #if all(x == True for x in truth_files_exist_list) \
-    if len(truth_files_exist_list) >= 9:
+    if any(x == True for x in truth_files_exist_list) \
+            and truth_files_exist_list.count(True) >= 9:
         truth_files_exist = True
     else:
         truth_files_exist = False
@@ -2408,8 +2406,8 @@ def check_weeks3_4_truth_files(job_dict):
             truth_files_exist_list.append(True)
         else:
             truth_files_exist_list.append(False)
-    #if all(x == True for x in truth_files_exist_list) \
-    if len(truth_files_exist_list) >= 23:
+    if any(x == True for x in truth_files_exist_list) \
+            and truth_files_exist_list.count(True) >= 23:
         truth_files_exist = True
     else:
         truth_files_exist = False

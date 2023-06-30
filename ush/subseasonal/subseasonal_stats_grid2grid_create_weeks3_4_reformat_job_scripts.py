@@ -282,11 +282,9 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                         job_env_dict.pop('fhr_end')
                         job_env_dict.pop('fhr_inc')
                     if JOB_GROUP == 'reformat_data':
-                        if verif_type == 'anom' \
-                                and verif_type_job == 'TempAnom2m':
-                            check_truth_files = True
-                        if verif_type == 'pres_lvls' \
-                                and verif_type_job == 'GeoHeightAnom':
+                        if verif_type in ['anom', 'pres_lvls'] \
+                                and verif_type_job in ['TempAnom2m',
+                                                       'GeoHeightAnom']:
                             check_truth_files = True
                         else:
                             check_truth_files = False
