@@ -52,9 +52,7 @@ export RUN=atmos
 export VERIF_CASE=grid2grid
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/evs/$evs_ver
-export COMIN=/lfs/h2/emc/ptmp/yali.mao/evs/$evs_ver
-export COMOUT=/lfs/h2/emc/ptmp/yali.mao/evs.newplot
-export VDATE=20230629
+
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
 export USH_DIR=$HOMEevs/ush/$COMPONENT
