@@ -47,27 +47,13 @@ export evs_run_mode="production"
 export maillist='geoffrey.manikin@noaa.gov,mallory.row@noaa.gov'
 export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
-# Load Modules
-source $HOMEevs/versions/run.ver
-module reset
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
-module use /apps/dev/modulefiles/
-module load ve/evs/${ve_evs_ver}
-module load cray-pals/${craypals_ver}
-module load libjpeg/${libjpeg_ver}
-module load libpng/${libpng_ver}
-module load zlib/${zlib_ver}
-module load jasper/${jasper_ver}
-module load cfp/${cfp_ver}
-module load gsl/${gsl_ver}
-module load netcdf/${netcdf_ver}
-module load met/${met_ver}
-module load metplus/${metplus_ver}
-module load prod_util/${prod_util_ver}
-module load prod_envir/${prod_envir_ver}
+
+source /usr/share/lmod/lmod/init/sh
 export MET_bin_exec="bin"
-module list
+
+module reset
+source $HOMEevs/versions/run.ver
+source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
