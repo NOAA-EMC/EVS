@@ -1,11 +1,11 @@
 #!/bin/bash
-#PBS -N jevs_cam_severe_prep
+#PBS -N jevs_rrfs_severe_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=0:15:00
-#PBS -l select=1:ncpus=1:mem=10GB
+#PBS -l walltime=0:30:00
+#PBS -l select=1:ncpus=5:mem=500MB
 #PBS -l debug=true
 #PBS -V
 
@@ -52,16 +52,18 @@ export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=YES
 export NET=evs
-export STEP=prep
+export STEP=stats
 export COMPONENT=cam
 export RUN=atmos
 export VERIF_CASE=severe
-export MODELNAME=cam
-export job=${PBS_JOBNAME:-jevs_cam_${VERIF_CASE}_${STEP}}
+export MODELNAME=rrfs
+export modsys=rrfs
+export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
-export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}
-export COMINspc=/lfs/h1/ops/dev/dcom
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}/${STEP}/${COMPONENT}
+export COMINfcst=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
+export COMINspclsr=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
+export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 
 export MET_bin_exec=bin
 export metplus_verbosity=DEBUG
@@ -69,13 +71,14 @@ export met_verbosity=2
 export log_met_output_to_metplus=yes
 ############################################################
 
-export cyc
+export cyc=${cyc:-${cyc}}
 
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-NO}
 
+export maillist=logan.dawson@noaa.gov
 export maillist=${maillist:-'logan.dawson@noaa.gov,geoffrey.manikin@noaa.gov'}
 
 if [ -z "$maillist" ]; then
@@ -85,13 +88,13 @@ if [ -z "$maillist" ]; then
 else
 
    # CALL executable job script here
-   $HOMEevs/jobs/cam/prep/JEVS_CAM_PREP
+   $HOMEevs/jobs/cam/stats/JEVS_CAM_STATS
 
 fi
 
 
 ######################################################################
-# Purpose: This job preprocesses SPC storm reports and outlook
-#          areas for use in the CAM severe verification job
+# Purpose: This job generates severe verification statistics
+#          for the RRFS deterministic member
 ######################################################################
 
