@@ -58,12 +58,16 @@ export cycle=${cycle:-t${cyc}z}
 setpdy.sh 31
 . ./PDY
 
-if [  $MODELNAME = href ] ; then
+if [ $MODELNAME = href ] ; then
    export VDATE=${VDATE:-$PDYm2}
    export INITDATE=${INITDATE:-$PDYm2}
 else
-   export VDATE=${VDATE:-$PDYm1}
-  #export VDATE=$(date -d "today -1 day" +"%Y%m%d")
+   if [ $VERIF_CASE = severe ] ; then
+      export VDATE=${VDATE:-$PDYm7}
+   else
+      export VDATE=${VDATE:-$PDYm1}
+     #export VDATE=$(date -d "today -1 day" +"%Y%m%d")
+   fi
 fi
 
 
