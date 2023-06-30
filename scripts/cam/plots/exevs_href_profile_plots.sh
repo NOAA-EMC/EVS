@@ -159,11 +159,11 @@ fi
 
          chmod +x  run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
-         echo "run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+         echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh 
-         echo " run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
+         echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
 
       done #end of line_type
 
@@ -181,9 +181,9 @@ chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 10 -ppn 10 --cpu-bind verbose,depth cfp run_all_poe.sh
+   mpiexec -np 10 -ppn 10 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
-  run_all_poe.sh
+  ${DATA}/run_all_poe.sh
 fi
 
 cd $plot_dir
@@ -228,13 +228,15 @@ for stats in rmse_spread bss_smpl ; do
 	  lead=_eq0.10000.png	
 	  var_new='tmp.lt.0C.p850'
 	fi
+	valid="valid_available_times"
       else
         level=''
 	var_new=$var
+	valid="valid_00z_12z"
       fi	
 
       
-       mv ${score_type}_regional_${domain}_valid_00z_12z_${var}_${stats}${lead}  href.${stats}.${var_new}.last${past_days}days.${scoretype}.${valid_time}.${init_time}.buk_${domain}.png
+       mv ${score_type}_regional_${domain}_${valid}_${var}_${stats}${lead}  evs.href.${stats}.${var_new}.last${past_days}days.${scoretype}.${valid_time}.${init_time}.buk_${domain}.png
 
     done #var
    done  #domain
@@ -242,7 +244,6 @@ for stats in rmse_spread bss_smpl ; do
  done    #score_type
 done     #stats
 
-#scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_evs.plots.href/profile
 
 tar -cvf evs.plots.href.profile.past${past_days}days.v${VDATE}.tar *.png
 
