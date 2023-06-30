@@ -9,6 +9,8 @@
 #PBS -l debug=true
 #PBS -V
 
+set -x
+
 #%include <head.h>
 #%include <envir-p1.h>
 

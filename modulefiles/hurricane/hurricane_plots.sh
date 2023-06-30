@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set +x
+
 module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}/
 export HPC_OPT=/apps/ops/para/libs
 module use /apps/dev/modulefiles/
@@ -18,3 +20,4 @@ module load imagemagick/${imagemagick_ver}
 
 module list
 
+set -x
