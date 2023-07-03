@@ -66,11 +66,11 @@ cd $ccpadir
 
   else
      export subject="CCPA Data Missing for EVS ${COMPONENT}"
-     export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
      echo "Warning:  No CCPA data available for ${VDATE}" > mailmsg
      echo Missing file is $COMCCPA/ccpa.${vday}/00/ccpa.t00z.03h.hrap.conus.gb2 or $COMCCPA/ccpa.${vday}/00/ccpa.t00z.01h.hrap.conus.gb2 >> mailmsg
      echo "Job ID: $jobid" >> mailmsg
      cat mailmsg | mail -s "$subject" $maillist
+     exit
   fi
 
 fi
@@ -90,12 +90,18 @@ mkdir -p $ccpa24
   cp ${COMCCPA}/ccpa.${vday}/00/ccpa.t00z.06h.hrap.conus.gb2 $ccpa24/ccpa3
   cp ${COMCCPA}/ccpa.${prevday}/18/ccpa.t18z.06h.hrap.conus.gb2 $ccpa24/ccpa4
 
-  ${METPLUS_PATH}/ush/master_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA24h.conf
-
-  #mkdir -p ${COMOUT}/${RUN}.${VDATE}/href/precip_mean24
-  #cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUT}/${RUN}.${VDATE}/href/precip_mean24
-  mkdir -p ${COMOUTfinal}/precip_mean24
-  cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUTfinal}/precip_mean24
+  if [ -s $ccpa24/ccpa1 ] && [ -s $ccpa24/ccpa2 ] && [ -s $ccpa24/ccpa3 ] && [ -s $ccpa24/ccpa4 ] ; then
+    ${METPLUS_PATH}/ush/master_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA24h.conf
+    mkdir -p ${COMOUTfinal}/precip_mean24
+    cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUTfinal}/precip_mean24
+  else
+    export subject="06h CCPA Data Missing for 24h CCPA generation"
+    echo "Warning: At least one of ccpa06h files is missing  for ${VDATE}" > mailmsg
+    echo Missing file is ${COMCCPA}/ccpa.${vday}/12/ccpa.t12z.06h.hrap.conus.gb2 or ${COMCCPA}/ccpa.${prevday}/18/ccpa.t18z.06h.hrap.conus.gb2  >> mailmsg
+    echo "Job ID: $jobid" >> mailmsg
+    cat mailmsg | mail -s "$subject" $maillist
+    exit
+  fi
 
  done
 
@@ -132,8 +138,6 @@ for fhr in 24 30 36 42 48 ; do
  
      ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstHREF_APCP24h.conf
      mv $output_base/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc $WORK/href.${fyyyymmdd}/.
-     #mkdir -p ${COMOUT}/${RUN}.${fyyyymmdd}/href/precip_mean24
-     #cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ${COMOUT}/${RUN}.${fyyyymmdd}/href/precip_mean24 
      mkdir -p ${COMOUT}/href.${fyyyymmdd}/precip_mean24
      cp $WORK/href.${fyyyymmdd}/href${prod}.t${fcyc}z.G227.24h.f${fhr}.nc ${COMOUT}/href.${fyyyymmdd}/precip_mean24
 
@@ -236,12 +240,11 @@ if [ $data = prepbufr ] ; then
  else
 
    export subject="RAP Prepbufr Data Missing for EVS ${COMPONENT}"
-   export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
    echo "Warning:  No RAP Prepbufr data available for ${VDATE}" > mailmsg
    echo Missing file is $COMINobsproc/rap.${VDATE}/rap.t??z.prepbufr.tm00  >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $maillist
-
+   exit 
  fi
 
 
@@ -278,11 +281,11 @@ if [ $data = gfs_prepbufr ] ; then
 
   else
      export subject="GFS Prepbufr Data Missing for EVS ${COMPONENT}"
-     export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
      echo "Warning:  No GFS Prepbufr data available for ${VDATE}" > mailmsg
      echo Missing file is $COMINobsproc/gfs.${vday}/??/atmos/gfs.t??z.prepbufr  >> mailmsg
      echo "Job ID: $jobid" >> mailmsg
      cat mailmsg | mail -s "$subject" $maillist
+     exit
   fi
 
 
@@ -343,11 +346,11 @@ export accum
  else
 
    export subject="MRMS Data Missing for EVS ${COMPONENT}"
-   export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
    echo "Warning:  No MRMS data available for ${VDATE}" > mailmsg
    echo Missing file is $COMINmrms/MultiSensor_QPE_??H_Pass2_00.00_${vday}-120000.grib2.gz  >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $maillist
+   exit
  fi
 
 
