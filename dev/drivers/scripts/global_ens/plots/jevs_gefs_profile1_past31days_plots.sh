@@ -17,31 +17,6 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
 source $HOMEevs/versions/run.ver
 
-module reset
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/dev/modulefiles/
-module load ve/evs/${ve_evs_ver}
-module load gsl/${gsl_ver}
-module load met/${met_ver}
-module load metplus/${metplus_ver}
-module load cray-pals/${craypals_ver}
-module load prod_envir/${prod_envir_ver}
-module load prod_util/${prod_util_ver}
-module load cfp/${cfp_ver}
-module load libjpeg/${libjpeg_ver}
-module load libpng/${libpng_ver}
-module load zlib/${zlib_ver}
-module load jasper/${jasper_ver}
-module load udunits/${udunits_ver}
-module load grib_util/${grib_util_ver}
-module load wgrib2/${wgrib2_ver}
-export MET_bin_exec=bin
-
-module list
-
-
-export envir=prod
 
 export NET=evs
 export STEP=plots
@@ -49,6 +24,20 @@ export COMPONENT=global_ens
 export RUN=atmos
 export VERIF_CASE=profile1
 export MODELNAME=gefs
+
+
+
+module reset
+
+source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
+
+
+export MET_bin_exec=bin
+
+
+
+export envir=prod
+
 
 export KEEPDATA=YES
 
