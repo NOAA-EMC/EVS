@@ -16,7 +16,6 @@ mkdir -p $COMOUTsmall/HREF_SNOW
 #NOHRSC data missing alert
 if [ ! -s $COMSNOW/${VDATE}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_24h_${VDATE}12_grid184.grb2 ] ; then 
    export subject="NOHRSC Data Missing for EVS ${COMPONENT}"
-   export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
    echo "Warning:  No NOHRSC data available for ${VDATE}" > mailmsg
    echo Missing file is  $COMSNOW/${VDATE}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_24h_${VDATE}12_grid184.grb2  >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
@@ -79,7 +78,7 @@ fi
 
         echo "cp \$output_base/stat/\${MODEL}/*.stat $COMOUTsmall/HREF_SNOW" >> run_href_snow${obsv}.sh
        chmod +x run_href_snow${obsv}.sh
-       echo "run_href_snow${obsv}.sh" >> run_all_href_snowfall_poe.sh
+       echo "${DATA}/run_href_snow${obsv}.sh" >> run_all_href_snowfall_poe.sh
 
 
 done  #end of obsv
