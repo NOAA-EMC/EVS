@@ -20,13 +20,13 @@ set -x
 
 
 ############################################################
-# Set some additional job-wide variables
+# Set some job-wide environment variables
 ############################################################
 
 export USH_DIR=${USHevs}/${COMPONENT}
 
 export PRUNE_DIR=${DATA}/data
-export STAT_OUTPUT_BASE_DIR=${COMIN}
+export STAT_OUTPUT_BASE_DIR=${DATA}/stat_archive
 export STAT_OUTPUT_BASE_TEMPLATE="{MODEL}.{valid?fmt=%Y%m%d}/${NET}.stats.{MODEL}.${RUN}.${VERIF_CASE}.v{valid?fmt=%Y%m%d}.stat"
 
 export SAVE_DIR=${DATA}/out
@@ -46,9 +46,8 @@ export MET_VERSION="${MET_VERSION%.}"
 
 
 ############################################################
-# Update Mask List and Include SPC OLTKs if Valid
-# Mask Files Exist in COMINspcotlk
-# Only for CONUS verification
+# Define some configuration settings to define
+# plots to be created.
 ############################################################
 
 
@@ -56,12 +55,14 @@ export MODELS="namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr"
 export VERIF_TYPE="mrms"
 export DATE_TYPE="INIT"
 export EVAL_PERIOD="LAST31DAYS"
+export eval_period=`echo ${EVAL_PERIOD} | tr '[:upper:]' '[:lower:]'`
+export pastdays=31
 export VALID_BEG=""
 export VALID_END=""
 export INIT_BEG=""
 export INIT_END=""
 export FCST_VALID_HOUR=""
-export FCST_LEAD="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60"
+export FCST_LEAD="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60"
 
 
 PLOT_TYPES="threshold_average lead_average performance_diagram"
@@ -72,11 +73,44 @@ FCST_INIT_HOURS="0 6 12 18"
 # Write poescript for each domain and use case
 ############################################################
 
+# Create working directories 
+mkdir -p ${PRUNE_DIR}
+mkdir -p ${SAVE_DIR}/logs
+mkdir -p ${SAVE_DIR}/${VERIF_CASE}/${eval_period}
+mkdir -p ${STAT_OUTPUT_BASE_DIR}
+
+
+
+export model_list=hireswarw hireswarwmem2 hireswfv3 hrrr namnest href_pmmn'
+
+for model in ${model_list}; do
+   n=0
+   while [ $n -le $pastdays ]; do
+      hrs=$((n*24))
+      day=`$NDATE -$hrs ${VDATE}00 | cut -c1-8`
+
+      mkdir -p ${STAT_OUTPUT_BASE_DIR}/${model}.${day}
+
+      stat_file=evs.stats.${model}.${RUN}.${VERIF_CASE}.v${day}.stat
+      dest=${STAT_OUTPUT_BASE_DIR}/${model}.${day}/${stat_file}
+
+      if [ ${model:0:4} = href ]; then
+	 origin=${COMIN}/${STEP}/${COMPONENT}/${model:0:4}.${day}/${stat_file}
+      else
+	 origin=${COMIN}/${STEP}/${COMPONENT}/${model}.${day}/${stat_file}
+      fi
+
+      if [ -s $origin ]; then
+         ln -sf ${origin} ${dest}
+      fi
+
+      n=$((n+1))
+   done
+done
+
+
+
 njob=0
-
-# Create output directories 
-mkdir -p $SAVE_DIR $PRUNE_DIR
-
 
 #Loop over plot types
 for PLOT_TYPE in ${PLOT_TYPES}; do
@@ -132,7 +166,7 @@ chmod 775 $DATA/poescript
 export MP_PGMMODEL=mpmd
 export MP_CMDFILE=${DATA}/poescript
 
-USE_CFP=NO
+#USE_CFP=NO
 if [ $USE_CFP = YES ]; then
 
 #  export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH

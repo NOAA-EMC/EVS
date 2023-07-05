@@ -31,7 +31,7 @@ if [ $DOMAIN = conus ]; then
    export DOM=$DOMAIN
    export NBR_WIDTH=17
    export INTERP_PNTS=289
-   export VX_MASK_LIST="CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South,Alaska"
+   export VX_MASK_LIST="CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South"
 
    if [ $var_name = REFC ]; then
       MRMS_PRODUCT=MergedReflectivityQCComposite
@@ -59,6 +59,7 @@ fi
 
 if [ $var_name = REFC ]; then
 
+   export FCST_THRESHs=">=20 >=30 >=40 >=50"
    export FCST_THRESH=">=20,>=30,>=40,>=50"
    export FCST_LEVEL="L0"
 
@@ -67,6 +68,7 @@ if [ $var_name = REFC ]; then
 
 elif [ $var_name = RETOP ]; then
 
+   export FCST_THRESHs=">=20 >=30 >=40"
    export FCST_THRESH=">=20,>=30,>=40"
    export FCST_LEVEL="L0"
 
@@ -88,7 +90,7 @@ if [ $PLOT_TYPE = performance_diagram ]; then
    python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
    export err=$?; err_chk
 
-else
+elif [ $PLOT_TYPE = threshold_average ]; then
 
    if [ $LINE_TYPE = nbrcnt ]; then
 
@@ -107,6 +109,31 @@ else
       export err=$?; err_chk
 
    fi
+
+elif [ $PLOT_TYPE = lead_average ]; then
+
+   for FCST_THRESH in ${FCST_THRESHs}; do
+
+      OBS_THRESH=${FCST_THRESH}
+
+      if [ $LINE_TYPE = nbrcnt ]; then
+
+         export STATS="fss"
+         python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
+         export err=$?; err_chk
+
+      elif [ $LINE_TYPE = nbrctc ]; then
+
+         export STATS="csi"
+         python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
+         export err=$?; err_chk
+
+         export STATS="fbias"
+         python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
+         export err=$?; err_chk
+      fi
+
+   done
 
 fi
 
