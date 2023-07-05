@@ -65,7 +65,8 @@ reformat_data_obs_jobs_dict = {
                                 'msg_type': 'ADPSFC',
                                 'obs_bufr_var_list': "'TOB'"},
                         'commands': [sub_util.metplus_command(
-                                         'PB2NC_obsPrepbufr.conf'
+                                         'PB2NC_obsPrepbufr_'
+                                         +'Weeks3_4.conf'
                                      )]},
     }
 }
@@ -130,10 +131,11 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                 '%Y%m%d%H'
             )
             valid_date_inc = int(job_env_dict['valid_hr_inc'])
+            job_env_dict['WEEKS'] = WEEKS
             date_dt = valid_start_date_dt
             while date_dt <= valid_end_date_dt:
                 sdate_dt = date_dt - datetime.timedelta(days=14)
-                job_env_dict['START'] = sdate_dt.strftime('%Y%m%d')
+                job_env_dict['W3_4START'] = sdate_dt.strftime('%Y%m%d')
                 job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
                 job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
                 job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
@@ -147,13 +149,14 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                 job.write('\n')
                 # Set any environment variables for special cases
                 # Do file checks
-                all_truth_file_exist = sub_util.check_truth_files(
+                all_truth_file_exist = sub_util.check_weeks3_4_truth_files(
                     job_env_dict
                 )
                 if all_truth_file_exist:
                     write_job_cmds = True
                 else:
                     write_job_cmds = False
+                    print("WARNING: Missing > 80% of obs files")
                 # Write environment variables
                 for name, value in job_env_dict.items():
                     job.write('export '+name+'='+value+'\n')
@@ -253,15 +256,18 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                         check_model_files = True
                         check_truth_files = False
                         if check_model_files:
-                            model_files_exist = (
+                            model_files_exist, valid_date_fhr_list = (
                                 sub_util.check_weeks3_4_model_files(job_env_dict)
+                            )
+                            job_env_dict['fhr_list'] = (
+                                '"'+','.join(valid_date_fhr_list)+'"'
                             )
                             job_env_dict.pop('fhr_start')
                             job_env_dict.pop('fhr_end')
                             job_env_dict.pop('fhr_inc')
                         if check_truth_files:
-                            all_truth_file_exist = sub_util.check_truth_files(
-                                job_env_dict
+                            all_truth_file_exist = (
+                                sub_util.check_weeks3_4_truth_files(job_env_dict)
                             )
                             if model_files_exist and all_truth_file_exist:
                                 write_job_cmds = True
@@ -281,6 +287,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                             for cmd in verif_type_job_commands_list:
                                 job.write(cmd+'\n')
                         job.close()
+                        job_env_dict.pop('fhr_list')
                         job_env_dict['fhr_start'] = fhr_start
                         job_env_dict['fhr_end'] = fhr_end
                         job_env_dict['fhr_inc'] = fhr_inc
