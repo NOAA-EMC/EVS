@@ -51,7 +51,7 @@ export MET_VERSION="${MET_VERSION%.}"
 ############################################################
 
 
-export MODELS="namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr"
+export MODELS="hrrr, namnest, hireswarw, hireswarwmem2, hireswfv3, href_pmmn"
 export VERIF_TYPE="mrms"
 export DATE_TYPE="INIT"
 export EVAL_PERIOD="LAST31DAYS"
@@ -81,7 +81,7 @@ mkdir -p ${STAT_OUTPUT_BASE_DIR}
 
 
 
-model_list="hireswarw hireswarwmem2 hireswfv3 hrrr namnest href_pmmn"
+model_list="hrrr namnest hireswarw hireswarwmem2 hireswfv3 href_pmmn"
 
 for model in ${model_list}; do
    n=0
