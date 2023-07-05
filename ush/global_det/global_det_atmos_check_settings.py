@@ -90,7 +90,7 @@ else:
         'VERIF_CASE', 'envir', 'evs_run_mode', 'job', 'jobid',
         'pid', 'OUTPUTROOT', 'DATA', 'machine', 'ACCOUNT',
         'QUEUE', 'QUEUESHARED', 'QUEUESERV', 'PARTITION_BATCH', 'nproc',
-        'USE_CFP', 'MET_bin_exec', 'evs_ver', 'ccpa_ver', 'obsproc_ver',
+        'USE_CFP', 'evs_ver', 'ccpa_ver', 'obsproc_ver',
         'PARMevs', 'USHevs', 'EXECevs', 'FIXevs', 'archive_obs_data_dir',
         'METviewer_AWS_scripts_dir', 'DATAROOT', 'COMROOT', 'COMIN', 'COMOUT',
         'VERIF_CASE_STEP_abbrev'
@@ -102,9 +102,8 @@ if STEP.upper() == 'STATS':
     )
 evs_global_det_atmos_settings_dict['shared'] = [
     'model_list', 'model_evs_data_dir_list', 'model_file_format_list',
-    'OUTPUTROOT', 'start_date', 'end_date', 'metplus_verbosity',
-    'met_verbosity','log_met_output_to_metplus', 'KEEPDATA',
-    'SENDCOM', 'SENDARCH', 'SENDMETVIEWER'
+    'OUTPUTROOT', 'start_date', 'end_date', 'KEEPDATA', 'SENDCOM',
+    'SENDARCH', 'SENDMETVIEWER'
 ]
 evs_global_det_atmos_settings_dict['modules'] = ['MET_ROOT', 'METPLUS_PATH']
 evs_global_det_atmos_settings_dict['RUN_GRID2GRID_STATS'] = [
@@ -263,9 +262,6 @@ for config_var in check_config_var_len_list:
 
 # Set valid list of options settings
 valid_config_var_values_dict = {
-    'metplus_verbosity': ['DEBUG', 'INFO', 'WARN', 'ERORR'],
-    'met_verbosity': ['0', '1', '2', '3', '4', '5'],
-    'log_met_output_to_metplus': ['yes', 'no'],
     'KEEPDATA': ['YES', 'NO'],
     'SENDCOM': ['YES', 'NO'],
 }

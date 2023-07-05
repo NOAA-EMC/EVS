@@ -26,7 +26,6 @@ export cyc=00
 module reset
 source $HOMEevs/versions/run.ver
 source $HOMEevs/modulefiles/global_det/global_det_stats.sh
-export MET_bin_exec=bin
 
 export machine=WCOSS2
 export USE_CFP=YES

@@ -1857,9 +1857,7 @@ def initalize_job_env_dict(verif_type, group,
         if not os.path.exists(os.environ['MET_TMP_DIR']):
             os.makedirs(os.environ['MET_TMP_DIR'])
         job_env_var_list.extend(
-            ['METPLUS_PATH','log_met_output_to_metplus', 'metplus_verbosity',
-             'MET_ROOT', 'MET_bin_exec', 'met_verbosity', 'MET_TMP_DIR',
-             'COMROOT']
+            ['METPLUS_PATH', 'MET_ROOT', 'MET_TMP_DIR', 'COMROOT']
         )
     elif group in ['condense_stats', 'filter_stats', 'make_plots',
                    'tar_images']:
@@ -1869,9 +1867,7 @@ def initalize_job_env_dict(verif_type, group,
         job_env_dict[env_var] = os.environ[env_var]
     if group in ['condense_stats', 'filter_stats', 'make_plots',
                  'tar_images']:
-        job_env_dict['plot_verbosity'] = (
-            os.environ['metplus_verbosity']
-        )
+        job_env_dict['plot_verbosity'] = 'DEBUG'
     job_env_dict['VERIF_TYPE'] = verif_type
     job_env_dict['JOB_GROUP'] = group
     job_env_dict['job_name'] = job
