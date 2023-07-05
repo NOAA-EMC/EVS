@@ -162,11 +162,11 @@ while valid_hr <= int(valid_hr_end):
                 daily_avg_day_fhr+=12
             else:
                 daily_avg_day_fhr+=int(fhr_inc)
-        if len(daily_avg_fcst_file_list) != 0:
+        if len(daily_avg_fcst_file_list) == 3:
             daily_avg_fcst = (
                 daily_avg_fcst_sum/len(daily_avg_fcst_file_list)
             )
-        if len(daily_avg_obs_file_list) != 0:
+        if len(daily_avg_obs_file_list) == 3:
             daily_avg_obs = (
                 daily_avg_obs_sum/len(daily_avg_obs_file_list)
             )
