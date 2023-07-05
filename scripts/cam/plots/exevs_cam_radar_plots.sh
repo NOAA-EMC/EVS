@@ -81,7 +81,7 @@ mkdir -p ${STAT_OUTPUT_BASE_DIR}
 
 
 
-export model_list=hireswarw hireswarwmem2 hireswfv3 hrrr namnest href_pmmn'
+model_list="hireswarw hireswarwmem2 hireswfv3 hrrr namnest href_pmmn"
 
 for model in ${model_list}; do
    n=0
@@ -95,9 +95,9 @@ for model in ${model_list}; do
       dest=${STAT_OUTPUT_BASE_DIR}/${model}.${day}/${stat_file}
 
       if [ ${model:0:4} = href ]; then
-	 origin=${COMIN}/${STEP}/${COMPONENT}/${model:0:4}.${day}/${stat_file}
+	 origin=${COMIN}/stats/${COMPONENT}/${model:0:4}.${day}/${stat_file}
       else
-	 origin=${COMIN}/${STEP}/${COMPONENT}/${model}.${day}/${stat_file}
+	 origin=${COMIN}/stats/${COMPONENT}/${model}.${day}/${stat_file}
       fi
 
       if [ -s $origin ]; then
