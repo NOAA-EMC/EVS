@@ -5,7 +5,7 @@
 #PBS -q debug
 #PBS -A VERF-DEV
 #PBS -l walltime=0:30:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=1:mem=100GB
+#PBS -l place=vscatter:exclhost,select=1:ncpus=6:mem=250GB
 #PBS -l debug=true
 #PBS -V
 
@@ -60,7 +60,7 @@ export VERIF_CASE=radar
 export MODELNAME=${COMPONENT}
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
-export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/stats/$COMPONENT
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 export USE_CFP=YES
 export nproc=128
