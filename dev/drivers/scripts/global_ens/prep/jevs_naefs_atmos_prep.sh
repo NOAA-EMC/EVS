@@ -26,7 +26,7 @@ export MODELNAME=gefs
 
 module reset
 
-source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
+source $HOMEevs/modulefiles/global_ens/global_ens_${STEP}.sh
 
 export MET_bin_exec=bin
 
