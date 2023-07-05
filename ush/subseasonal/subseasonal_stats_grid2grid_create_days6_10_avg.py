@@ -146,18 +146,18 @@ while valid_hr <= int(valid_hr_end):
                       +days_avg_day_fhr_DATAROOT_input_file+" or "
                       +days_avg_day_fhr_COMIN_input_file)
             days_avg_day_fhr+=int(fhr_inc)
-        if len(days_avg_fcst_file_list) != 0:
+        if len(days_avg_fcst_file_list) >= 9:
             days_avg_fcst = (
                 days_avg_fcst_sum/len(days_avg_fcst_file_list)
             )
-        if len(days_avg_obs_file_list) != 0:
+        if len(days_avg_obs_file_list) >= 9:
             days_avg_obs = (
                 days_avg_obs_sum/len(days_avg_obs_file_list)
             )
         if fhr_inc == '12':
-            expected_nfiles = 11
-        if len(days_avg_fcst_file_list) == expected_nfiles \
-                and len(days_avg_obs_file_list) == expected_nfiles:
+            expected_nfiles = 9
+        if len(days_avg_fcst_file_list) >= expected_nfiles \
+                and len(days_avg_obs_file_list) >= expected_nfiles:
             print("Output File: "+output_file)
             output_file_data = netcdf.Dataset(output_file, 'w',
                                               format='NETCDF3_CLASSIC')
@@ -249,7 +249,7 @@ while valid_hr <= int(valid_hr_end):
         else:
             print("WARNING: Cannot create Days 6-10 average file "
                   +output_file+" "
-                  +"; need "+str(expected_nfiles)+" input files")
+                  +"; need at least "+str(expected_nfiles)+" input files")
         days_avg_day+=1
         print("")
     valid_hr+=int(valid_hr_inc)
