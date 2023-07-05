@@ -49,6 +49,16 @@ source $config
 ########################################################################
 ## The following setting is for parallel test and need to be removed for operational code
 ########################################################################
+##
+## Instruction for Pull-Request testing
+##     point COMIN to personal directory
+##     output can be found at $COMOUTplot (defined in JEVS_AQM_PLOTS based on COMIN setting below)
+## 
+## (1) input from the pull-request stats output
+##     export COMINaqm=" to $COMOUT in jevs_aqm_stats.sh"+"/${MODELNAME}"
+## or (2) Use EVSv1.0 parallel stats archive, 
+##     export COMINaqm="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/evs/v1.0/stats/aqm/aqm"
+##
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=YES
@@ -57,8 +67,9 @@ export jobid=$job.${PBS_JOBID:-$$}
 
 export cycle=t${cyc}z
 
+## export COMIN=/lfs/h2/emc/physics/noscrub/$USER/${NET}/${evs_ver}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
+export COMOUT=${COMIN}/${STEP}/${COMPONENT}
 export COMINaqm=${COMIN}/stats/${COMPONENT}/${MODELNAME}
 #
 ## export KEEPDATA=NO
