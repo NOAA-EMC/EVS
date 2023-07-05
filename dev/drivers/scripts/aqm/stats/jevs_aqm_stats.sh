@@ -53,8 +53,21 @@ rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
 
+##
+## Instruction for Pull-Request testing
+##     point COMIN to personal directory
+##     output can be found at $COMOUTfinal (defined in JEVS_AQM_STATS based on COMIN setting below)
+## 
+## "Stats" needs previous three days' PREP for day3 verification
+## Default VDATE is PDYm3
+## (1) Repeat pull-request prep step for PDYm3, PDYm4, and PDYm5 and
+##     "export COMINaqmproc=" to $COMOUT in jevs_aqm_prep.sh
+## or (2) Use EVSv1.0 parallel preps archive, 
+##     export COMINaqmproc="export COMINaqmproc=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/evs/v1.0/prep/aqm"
+##
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 ## export COMIN=/lfs/h2/emc/physics/noscrub/$USER/${NET}/${evs_ver}
+export COMOUT=${COMIN}/${STEP}/${COMPONENT}
 
 ## export COMINaqm=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix

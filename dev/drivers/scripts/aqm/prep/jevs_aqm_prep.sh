@@ -54,6 +54,11 @@ cd $DATA
 
 export cycle=t${cyc}z
 
+##
+## Instruction for Pull-Request testing
+## point COMIN to personal directory
+## output can be found at $COMOUT
+##
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMIN=/lfs/h2/emc/physics/noscrub/$USER/${NET}/${evs_ver}
 ##
