@@ -54,10 +54,8 @@ source $config
 ##     point COMIN to personal directory
 ##     output can be found at $COMOUTplot (defined in JEVS_AQM_PLOTS based on COMIN setting below)
 ## 
-## (1) input from the pull-request stats output
-##     export COMINaqm=" to $COMOUT in jevs_aqm_stats.sh"+"/${MODELNAME}"
-## or (2) Use EVSv1.0 parallel stats archive, 
-##     export COMINaqm="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/evs/v1.0/stats/aqm/aqm"
+## (1) input from the pull-request stats output (see example (a) below)
+## or (2) Use EVSv1.0 parallel stats archive (see example (b) below)
 ##
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
@@ -67,19 +65,26 @@ export jobid=$job.${PBS_JOBID:-$$}
 
 export cycle=t${cyc}z
 #
+
+##
+## Note plot step in general needs previous 31 days of data (it is okay for missing days)
+##
+## Example a
+## setting to use stats generated from pull-request stats testing
+## USE THE SAME "export COMIN=" as in stats step during pull-request testing
+## export COMINaqm=${COMIN}/stats/${COMPONENT}/${MODELNAME}
+#
+## Example b
+## setting to use stats from EVSv1.0 parallel output directory
+#
 ## setting to produce output to personal directory
 ## export COMIN=/lfs/h2/emc/physics/noscrub/$USER/${NET}/${evs_ver}
 ## export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMIN=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver}
 mkdir -p ${COMIN}
-export COMOUT=${COMIN}/${STEP}/${COMPONENT}
-
-#
-## setting to use stats from personal directory
-## export COMINaqm=${COMIN}/stats/${COMPONENT}/${MODELNAME}
-#
-## setting to use stats from EVSv1.0 parallel output directory
 export COMINaqm=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/evs/v1.0/stats/aqm/aqm
+
+export COMOUT=${COMIN}/${STEP}/${COMPONENT}
 #
 ## export KEEPDATA=NO
 #
