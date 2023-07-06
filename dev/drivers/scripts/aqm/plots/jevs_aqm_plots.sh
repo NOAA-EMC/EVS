@@ -66,11 +66,20 @@ export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 export cycle=t${cyc}z
-
+#
+## setting to produce output to personal directory
 ## export COMIN=/lfs/h2/emc/physics/noscrub/$USER/${NET}/${evs_ver}
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
+## export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
+export COMIN=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver}
+mkdir -p ${COMIN}
 export COMOUT=${COMIN}/${STEP}/${COMPONENT}
-export COMINaqm=${COMIN}/stats/${COMPONENT}/${MODELNAME}
+
+#
+## setting to use stats from personal directory
+## export COMINaqm=${COMIN}/stats/${COMPONENT}/${MODELNAME}
+#
+## setting to use stats from EVSv1.0 parallel output directory
+export COMINaqm=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/evs/v1.0/stats/aqm/aqm
 #
 ## export KEEPDATA=NO
 #
