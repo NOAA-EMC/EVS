@@ -37,7 +37,7 @@ fhr_end = os.environ['fhr_list'].split(',')[-1]
 if len(sys.argv) != 4:
     print("ERROR: Not given correct number of run time arguments..."
           +os.path.basename(__file__)+" VARNAME_VARLEVEL DATAROOT_FILE_FORMAT "
-          +"COMIN_FILE_FORMART")
+          +"COMIN_FILE_FORMAT")
     sys.exit(1)
 else:
     if '_' not in sys.argv[1]:
@@ -131,7 +131,7 @@ while valid_hr <= int(valid_hr_end):
                       +weekly_avg_day_fhr_COMIN_input_file)
             weekly_avg_day_fhr+=12
         weekly_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
-        if len(weekly_avg_file_list) == 15:
+        if len(weekly_avg_file_list) >= 12:
             print("Output File: "+output_file)
             all_weekly_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
             for weekly_avg_file in weekly_avg_file_list:
@@ -161,7 +161,7 @@ while valid_hr <= int(valid_hr_end):
                                 == vx_mask
                             ]
                         )
-                        if len(all_weekly_avg_obtype_sid_vx_mask_df) != 15:
+                        if len(all_weekly_avg_obtype_sid_vx_mask_df) < 12:
                             continue
                         all_weekly_avg_obtype_sid_vx_mask_fcst_mean = (
                             np.array(
@@ -217,7 +217,7 @@ while valid_hr <= int(valid_hr_end):
                 index=None, sep=' ', mode='w'
             )
         else:
-            print("WARNING: Need 15 files to create weekly average")
+            print("WARNING: Need at least 12 files to create weekly average")
         print("")
         weekly_avg_day+=7
     valid_hr+=int(valid_hr_inc)
