@@ -51,47 +51,6 @@ else
     err_exit "FATAL ERROR: ${MODELNAME} NOT VALID"
 fi
 
-#for vhr in ${valid_hours} ; do
-#  echo ' '
-#  echo 'Copying model fcst files'
-#  for fhr in ${lead_hours} ; do
-#    matchtime=$(date --date="${VDATE} ${vhr} ${fhr} hours ago" +"%Y%m%d %H")
-#    match_date=$(echo ${matchtime} | awk '{print $1}')
-#    match_hr=$(echo ${matchtime} | awk '{print $2}')
-#    match_fhr=$(printf "%02d" "${match_hr}")
-#    flead=$(printf "%03d" "${fhr}")
-#    if [ $MODELNAME == "gfs" ]; then
-#        COMINfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${MODELNAME}${RUN}.${match_date}.t${match_fhr}z.global.0p25.f${flead}.grib2
-#    fi
-#    DATAfilename=$DATA/gribs/${MODELNAME}${RUN}.${match_date}.t${match_fhr}z.global.0p25.f${flead}.grib2
-#    # check to see if the file is in prep archive
-#    if [[ -s $COMINfilename ]]; then
-#        if [[ ! -s $DATAfilename ]]; then
-#            cp -v $COMINfilename $DATAfilename
-#        fi
-#    else
-#        echo "DOES NOT EXIST $DATAfilename"
-#    fi
-#  done
-#done
-####################
-# quick error check 
-####################
-#nc=$(ls ${DATA}/gribs/* | wc -l | awk '{print $1}')
-#if [ "${nc}" != '0' ]; then
-#    echo "Successfully copied ${nc} ${MODELNAME} files for valid date ${VDATE}"
-#else
-#    echo ' '
-#    echo '**************************************** '
-#    echo "*** ERROR : NO ${MODELNAME} FILES ***"
-#    echo "      for valid date ${VDATE}"
-#    echo '**************************************** '
-#    echo ' '
-#    echo "${MODELNAME}_${RUN} $VDATE : ${MODELNAME} files missing."
-#    ./postmsg "$jlogfile" "FATAL ERROR : NO ${MODELNAME} FILES for valid date ${VDATE}"
-#    err_exit "FATAL ERROR: Did not copy the ${MODELNAME} files for valid date ${VDATE}"
-#fi
-
 ############################################
 # create PB2NC GDAS files
 ############################################
