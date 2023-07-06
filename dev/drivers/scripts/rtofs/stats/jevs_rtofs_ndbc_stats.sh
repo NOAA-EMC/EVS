@@ -15,24 +15,12 @@
 ############################################################
 set -x
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/evs_rtofs_module/EVS
 source $HOMEevs/versions/run.ver
 
 module reset
-#export HPC_OPT=/apps/ops/prod/libs
-#module use /apps/ops/prod/libs/modulefiles/compiler/intel/${intel_ver}
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
-module use /apps/dev/modulefiles
-module load ve/evs/${ve_evs_ver}
-module load gsl/${gsl_ver}
-module load netcdf/${netcdf_ver}
-module load met/${met_ver}
-module load metplus/${metplus_ver}
-module load prod_util/${prod_util_ver}
-module load prod_envir/${prod_envir_ver}
-module load rsync/${rsync_ver}
-module list
+
+source $HOMEevs/modulefiles/rtofs/rtofs_stats.sh
 
 # specify environment variables
 export NET=evs
