@@ -194,7 +194,7 @@ if [ $SENDCOM = YES ]; then
    mkdir -p $COMOUT/${RUN}.${VDATE}
 
    if [ -s $tarfile ]; then
-      cp -v $tarfile $COMOUT/${COMPONENT}.${VDATE}
+      cp -v $tarfile $COMOUT/${RUN}.${VDATE}/
    else
       echo "tarfile creation was not completed. Need to rerun"
    fi
