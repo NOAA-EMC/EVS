@@ -10,64 +10,42 @@
 
 set -x 
 
-##%include <head.h>
-##%include <envir-p1.h>
+cd $PBS_O_WORKDIR
 
 export model=evs
-
-############################################################
-# For dev testing
-############################################################
-cd $PBS_O_WORKDIR
-echo $PBS_O_WORKDIR
-module reset
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
-versionfile=$HOMEevs/versions/run.ver
-. $versionfile
-export evs_ver=$evs_ver
-export envir=dev
+
 export SENDCOM=YES
 export KEEPDATA=NO
-export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output/$envir/tmp
+export RUN_ENVIR=nco
 export job=${PBS_JOBNAME:-jevs_global_det_wave_prep}
 export jobid=$job.${PBS_JOBID:-$$}
-export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
-############################################################
-
-############################################################
-# Load modules
-############################################################
-module reset
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
-module use /apps/dev/modulefiles/
-module load prod_envir/${prod_envir_ver}
-module load prod_util/${prod_util_ver}
-module list
-
 export cyc=00
+
+module reset
+source $HOMEevs/versions/run.ver
+source $HOMEevs/modulefiles/global_det/global_det_prep.sh
 
 export maillist='geoffrey.manikin@noaa.gov,mallory.row@noaa.gov'
 
+export envir=dev
 export NET=evs
 export STEP=prep
 export COMPONENT=global_det
 export RUN=wave
 
+export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
+export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+export TMPDIR=$DATAROOT
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
+
 export MODELNAME="gfs"
 export OBSNAME=""
 
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
-
-############################################################
 # CALL executable job script here
-############################################################
 $HOMEevs/jobs/global_det/prep/JEVS_GLOBAL_DET_PREP
 
-##%include <tail.h>
-##%manual
 #####################################################################
 # Purpose: This does the prep work for the global deterministic wave
 #####################################################################
-##%end

@@ -10,61 +10,30 @@
 
 set -x 
 
-##%include <head.h>
-##%include <envir-p1.h>
+cd $PBS_O_WORKDIR
 
 export model=evs
-
-############################################################
-# For dev testing
-############################################################
-cd $PBS_O_WORKDIR
-echo $PBS_O_WORKDIR
-module reset
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
-versionfile=$HOMEevs/versions/run.ver
-. $versionfile
-export evs_ver=$evs_ver
-export envir=dev
+
 export SENDCOM=YES
 export KEEPDATA=NO
-export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output/$envir/tmp
-export job=${PBS_JOBNAME:-jevs_gfs_wave_grid2obs_stats}
+export RUN_ENVIR=nco
+export job=${PBS_JOBNAME:-jevs_wave_atmos_grid2obs_stats}
 export jobid=$job.${PBS_JOBID:-$$}
-export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
-############################################################
+export cyc=00
 
-############################################################
-# Load modules
-############################################################
 module reset
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
-module use /apps/dev/modulefiles/
-module load ve/evs/${ve_evs_ver}
-module load gsl/${gsl_ver}
-module load prod_envir/${prod_envir_ver}
-module load prod_util/${prod_util_ver}
-module load libjpeg/${libjpeg_ver}
-module load grib_util/${grib_util_ver}
-module load wgrib2/${wgrib2_ver}
-module load met/${met_ver}
-module load metplus/${metplus_ver}
-module load cray-pals/${craypals_ver}
-module load cfp/${cfp_ver}
-module list
+source $HOMEevs/versions/run.ver
+source $HOMEevs/modulefiles/global_det/global_det_stats.sh
 
-# Set job information
+export machine=WCOSS2
 export USE_CFP=YES
 export nproc=25
 
-# Set cycle
-export cyc=00
-
-# Set mail list
 export maillist='geoffrey.manikin@noaa.gov,mallory.row@noaa.gov'
 
+export envir=dev
 export NET=evs
 export STEP=stats
 export COMPONENT=global_det
@@ -72,25 +41,17 @@ export RUN=wave
 export VERIF_CASE=grid2obs
 export MODELNAME=gfs
 
+export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
+export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+export TMPDIR=$DATAROOT
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=$COMROOT/$NET/$evs_ver
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT
-export FIXevs='/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix'
+export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT
 
-export metplus_verbosity="INFO"
-export met_verbosity="2"
-export log_met_output_to_metplus="yes"
-export MET_bin_exec=bin
-
-############################################################
 # CALL executable job script here
-############################################################
 $HOMEevs/jobs/global_det/stats/JEVS_GLOBAL_DET_STATS
 
-##%include <tail.h>
-##%manual
 #######################################################################
 # Purpose: This does the statistics work for the global deterministic
 #          wave grid-to-obs component for GFS
 #######################################################################
-##%end
