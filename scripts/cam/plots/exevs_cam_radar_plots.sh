@@ -87,7 +87,7 @@ for model in ${model_list}; do
    n=0
    while [ $n -le $pastdays ]; do
       hrs=$((n*24))
-      day=`$NDATE -$hrs ${VDATE}00 | cut -c1-8`
+      day=`$NDATE -$hrs ${VDATE}00 | cut -c 1-8`
 
       mkdir -p ${STAT_OUTPUT_BASE_DIR}/${model}.${day}
 

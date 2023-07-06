@@ -20,6 +20,29 @@ set -x
 
 
 ############################################################
+# Define some configuration settings to define
+# plots to be created.
+############################################################
+
+export MODELS="hrrr, namnest, hireswarw, hireswarwmem2, hireswfv3, href"
+export VERIF_TYPE="lsr"
+export DATE_TYPE="INIT"
+export EVAL_PERIOD="LAST31DAYS"
+export eval_period=`echo ${EVAL_PERIOD} | tr '[:upper:]' '[:lower:]'`
+export pastdays=`echo ${EVAL_PERIOD} | cut -c 5-6`
+export VALID_BEG=""
+export VALID_END=""
+export INIT_BEG=""
+export INIT_END=""
+export FCST_VALID_HOUR=""
+export FCST_LEAD="24,30,36,42,48,54,60"
+
+#PLOT_TYPES="threshold_average lead_average performance_diagram"
+DOMAINS="conus"
+FCST_INIT_HOURS="0 6 12 18"
+
+
+############################################################
 # Set some job-wide environment variables
 ############################################################
 
@@ -30,9 +53,11 @@ export STAT_OUTPUT_BASE_DIR=${DATA}/stat_archive
 export STAT_OUTPUT_BASE_TEMPLATE="{MODEL}.{valid?fmt=%Y%m%d}/${NET}.stats.{MODEL}.${RUN}.${VERIF_CASE}.v{valid?fmt=%Y%m%d}.stat"
 
 export SAVE_DIR=${DATA}/out
+export LOG_DIR=${SAVE_DIR}/logs
+export OUTPUT_DIR=${SAVE_DIR}/${VERIF_CASE}/${eval_period}
 export IMG_HEADER=${NET}.${COMPONENT}
 
-export LOG_TEMPLATE="${SAVE_DIR}/logs/EVS_verif_plotting_job{njob}_`date '+%Y%m%d-%H%M%S'`_$$.out"
+export LOG_TEMPLATE="${LOG_DIR}/EVS_verif_plotting_job{njob}_`date '+%Y%m%d-%H%M%S'`_$$.out"
 export LOG_LEVEL="DEBUG"
 
 export PYTHONDONTWRITEBYTECODE=1
@@ -46,39 +71,14 @@ export MET_VERSION="${MET_VERSION%.}"
 
 
 ############################################################
-# Define some configuration settings to define
-# plots to be created.
-############################################################
-
-
-export MODELS="href, hrrr, namnest, hireswarw, hireswarwmem2, hireswfv3"
-export VERIF_TYPE="lsr"
-export DATE_TYPE="INIT"
-export EVAL_PERIOD="LAST31DAYS"
-export eval_period=`echo ${EVAL_PERIOD} | tr '[:upper:]' '[:lower:]'`
-export pastdays=31
-export VALID_BEG=""
-export VALID_END=""
-export INIT_BEG=""
-export INIT_END=""
-export FCST_VALID_HOUR=""
-export FCST_LEAD="24,30,36,42,48,54,60"
-
-
-PLOT_TYPES="threshold_average lead_average performance_diagram"
-DOMAINS="conus"
-FCST_INIT_HOURS="0 6 12 18"
-
-############################################################
 # Write poescript for each domain and use case
 ############################################################
 
 # Create working directories 
 mkdir -p ${PRUNE_DIR}
-mkdir -p ${SAVE_DIR}/logs
-mkdir -p ${SAVE_DIR}/${VERIF_CASE}/${eval_period}
 mkdir -p ${STAT_OUTPUT_BASE_DIR}
-
+mkdir -p ${LOG_DIR}
+mkdir -p ${OUTPUT_DIR}
 
 
 model_list="hrrr namnest hireswarw hireswarwmem2 hireswfv3 href"
@@ -87,7 +87,7 @@ for model in ${model_list}; do
    n=0
    while [ $n -le $pastdays ]; do
       hrs=$((n*24))
-      day=`$NDATE -$hrs ${VDATE}00 | cut -c1-8`
+      day=`$NDATE -$hrs ${VDATE}00 | cut -c 1-8`
 
       mkdir -p ${STAT_OUTPUT_BASE_DIR}/${model}.${day}
 
@@ -110,39 +110,36 @@ done
 
 
 
+
+if [ $LINE_TYPE = nbrcnt ]; then
+   PLOT_TYPES="lead_average threshold_average"
+elif [ $LINE_TYPE = nbrctc ]; then
+   PLOT_TYPES="lead_average performance_diagram threshold_average"
+elif [ $LINE_TYPE = pstd ]; then
+   PLOT_TYPES="lead_average threshold_average"
+fi
+
+
 njob=0
 
 #Loop over plot types
 for PLOT_TYPE in ${PLOT_TYPES}; do
 
-   if [ $PLOT_TYPE = lead_average ]; then
-      LINE_TYPES="nbrcnt"
-   elif [ $PLOT_TYPE = performance_diagram ]; then
-      LINE_TYPES="nbrctc"
-   elif [ $PLOT_TYPE = threshold_average ]; then
-      LINE_TYPES="nbrcnt nbrctc"
-   fi
-
    # Loop over domains
    for DOMAIN in ${DOMAINS}; do
 
-      # Loop over line types
-      for LINE_TYPE in ${LINE_TYPES}; do
-
-         # Loop over forecast initializations
-         for FCST_INIT_HOUR in ${FCST_INIT_HOURS}; do
+      # Loop over forecast initializations
+      for FCST_INIT_HOUR in ${FCST_INIT_HOURS}; do
 	
-            echo "${USHevs}/${COMPONENT}/evs_cam_plots_severe.sh $PLOT_TYPE $DOMAIN $LINE_TYPE $FCST_INIT_HOUR $njob" >> $DATA/poescript
-            njob=$((njob+1))
+         echo "${USHevs}/${COMPONENT}/evs_cam_plots_severe.sh $PLOT_TYPE $DOMAIN $LINE_TYPE $FCST_INIT_HOUR $njob" >> $DATA/poescript
+         njob=$((njob+1))
 
-         done
 
       done
 
    done
 
 done
-
 
 
 ###################################################################
@@ -172,71 +169,24 @@ else
 fi
 
 
-exit
-
-python $USHevs/${COMPONENT}/cam_plots_radar_create_job_scripts.py
-export err=$?; err_chk
-
-
-
 ###################################################################
-# Copy hourly output to $COMOUT
+# Copy output to $COMOUT
 ###################################################################
 
-if [ $MODELNAME = href ] || [ $MODELNAME = rrfs ]; then
-   output_dirs="ensemble_stat grid_stat"
-else
-   output_dirs="grid_stat"
-fi
+cd $OUTPUT_DIR
+
+export tarfile=${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${LINE_TYPE}.${eval_period}.v${VDATE}.tar
+
+tar -cvf ${tarfile} ./*.png
 
 if [ $SENDCOM = YES ]; then
-   for output_dir in ${output_dirs}; do
-      if [ "$(ls -A $DATA/$output_dir)" ]; then
-         for FILE in $DATA/${output_dir}/*; do
-            cp -v $FILE $COMOUTsmall
-         done
-      fi
-   done
-fi
 
+   mkdir -p $COMOUT/${RUN}.${VDATE}
 
-###################################################################
-# Run METplus (StatAnalysis) if GridStat output exists
-###################################################################
-
-if [ $cyc = 23 ]; then
-
-   if [ "$(ls -A $COMOUTsmall)" ]; then
-
-      if [ $MODELNAME = href ]; then
-
-         HREF_MODS="href_pmmn href_prob href"
-         HREF_MODS="href_pmmn href_prob"
-
-         for HREF_MOD in ${HREF_MODS}; do
-	    export HREF_MOD
-            run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/StatAnalysis_fcstHREF_obsMRMS_gatherByDay.conf
-            export err=$?; err_chk
-         done
-
-      else
-
-         run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/StatAnalysis_fcstCAM_obsMRMS_gatherByDay.conf
-         export err=$?; err_chk
-
-      fi
-
-      # Copy output to $COMOUTfinal
-      if [ $SENDCOM = YES ]; then
-         mkdir -p $COMOUTfinal
-         for FILE in $DATA/stat_analysis/*; do
-            cp -v $FILE $COMOUTfinal
-         done
-      fi
-
+   if [ -s $tarfile ]; then
+      cp -v $tarfile $COMOUT/${RUN}.${VDATE}/
    else
-      echo "Missing stat output for ${VDATE}. METplus will not run."
-
+      echo "tarfile creation was not completed. Need to rerun"
    fi
 
 fi
