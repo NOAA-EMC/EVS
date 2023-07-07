@@ -38,13 +38,6 @@ export OUTPUTROOT="$DATAROOT"
 #end_date:         verification end date, format YYYYMMDD
 export start_date=$VDATE_START
 export end_date=$VDATE_END
-## METPLUS SETTINGS
-#metplus_verbosity:         DEBUG, INFO, WARN, ERROR (most verbose is DEBUG)
-#met_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
-#log_met_output_to_metplus: log MET output to METplus log, yes or no
-export metplus_verbosity="INFO"
-export met_verbosity="2"
-export log_met_output_to_metplus="yes"
 ## DATA DIRECTIVE SETTINGS
 export KEEPDATA=${KEEPDATA:-"NO"}
 export SENDCOM="YES"
@@ -57,19 +50,20 @@ export SENDMETVIEWER="NO"
 if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     #g2op_model_plot_name_list: list of models reference name on plots
     #g2op_type_list: list type of verifications to run for grid-to-grid: pres_levs, ptype, sfc
-    #g2op_*_init_hr_list:      initialization hours to be included in verification: HH
-    #g2op_*_valid_hr_list:     valid hours to be included in verification: HH
-    #g2op_*_fhr_min:           forecast hour to start verification HH[H]
-    #g2op_*_fhr_max:           forecast hour to end verification HH[H]
-    #g2op_*_fhr_inc:           frequency to verify forecast hours at HH[H]
     #g2op_event_equalization: do event equalization (YES) or not (NO)
+    #g2op_*_init_hr_list: list of cycles/initialization hours to be included in verification: HH
+    #g2op_*_valid_hr_list: list of valid hours to be included in verification: HH
+    #For defining forecast hours:
+    #    g2op*_fhr_list: list of forecast hours: HH[H]
+    #OR 
+    #    g2op_*_fhr_min: forecast hour to start verification: HH[H]
+    #    g2op_*_fhr_max: forecast hour to end verification: HH[H]
+    #    g2op_*_fhr_inc: frequency to verify forecast hours: at HH[H]
     export g2op_model_plot_name_list="gfs"
     export g2op_type_list="sfc"
     export g2op_event_equalization="NO"
     export g2op_sfc_init_hr_list="00 06 12 18"
     export g2op_sfc_valid_hr_list="00 03 06 09 12 15 18 21"
-    export g2op_sfc_fhr_min=00
-    export g2op_sfc_fhr_max=384
-    export g2op_sfc_fhr_inc=3
+    export g2op_sfc_fhr_list="0 3 6 9 12 15 18 21 24 27 30 33 36 39 42 45 48 51 54 57 60 63 66 69 72 75 96 99 120 123 144 147 168 171 192 195 216 219 240 243 264 267 288 291 312 315 336 339 360 363 384"
 fi
 echo "END: $(basename ${BASH_SOURCE[0]})"
