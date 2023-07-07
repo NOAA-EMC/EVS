@@ -625,20 +625,11 @@ for verif_type in VERIF_CASE_STEP_type_list:
                                    valid_hr_end+valid_hr_inc,
                                    valid_hr_inc))
             if 'Daily' in verif_type_job:
-                if job_env_dict['fhr_inc'] != '24':
-                    job_env_dict['fhr_inc'] = '24'
-                if int(job_env_dict['fhr_end'])%24 != 0:
-                    job_env_dict['fhr_end'] = str(
-                        int(job_env_dict['fhr_end'])
-                         -(int(job_env_dict['fhr_end'])%24)
-                    )
-                if int(job_env_dict['fhr_start'])%24 != 0:
-                    job_env_dict['fhr_start'] = str(
-                        int(job_env_dict['fhr_start'])
-                        -(int(job_env_dict['fhr_start'])%24)
-                    )
-                if int(job_env_dict['fhr_start']) < 24:
-                    job_env_dict['fhr_start'] = '24'
+                daily_fhr_list = []
+                for fhr in job_env_dict['fhr_list'].split(','):
+                    if int(fhr) >= 24 and int(fhr) % 24 == 0:
+                        daily_fhr_list.append(str(fhr))
+                    job_env_dict['fhr_list'] = ','.join(daily_fhr_list)
         if JOB_GROUP in ['condense_stats', 'filter_stats', 'make_plots']:
             obs_list = [
                 verif_type_plot_jobs_dict[verif_type_job]['obs_name']
