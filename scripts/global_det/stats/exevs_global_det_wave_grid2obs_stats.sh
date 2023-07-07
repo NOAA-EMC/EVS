@@ -57,21 +57,14 @@ fi
 poe_script=${DATA}/jobs/run_all_2NC_poe.sh
 echo ' '
 echo 'Creating NDBC ascii2nc files'
-VDATEp1=$(date --date="${VDATE} 24 hours" +"%Y%m%d")
-COMINasciiNDBC=$COMINndbc/${VDATEp1}/validation_data/marine/buoy
+COMINasciiNDBC=$COMINndbc/prep/${COMPONENT}/wave.${VDATE}/ndbc
 DATAascii2ncNDBC=${DATA}/ncfiles/ndbc.${VDATE}.nc
 COMOUTascii2ncNDBC=$COMOUTndbc/ndbc.${VDATE}.nc
 if [[ -s $COMOUTascii2ncNDBC ]]; then
     cp -v $COMOUTascii2ncNDBC $DATAascii2ncNDBC
 else
     nbdc_txt_ncount=$(ls -l ${COMINasciiNDBC}/*.txt |wc -l)
-    if [[ $nbdc_txt_ncount -eq 0 ]]; then
-        export subject="NDBC Data Missing for EVS ${COMPONENT}"
-        echo "Warning: No NDBC data was available for valid date ${VDATE}" > mailmsg
-        echo “Missing files are located at $COMINasciiNDBC” >> mailmsg
-        echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
-    else
+    if [[ $nbdc_txt_ncount -ne 0 ]]; then
         echo "#!/bin/bash" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         echo "" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         echo "export COMINndbc=${COMINndbc}" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh

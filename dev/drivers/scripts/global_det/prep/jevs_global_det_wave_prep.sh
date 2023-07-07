@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:05:00
-#PBS -l select=1:ncpus=1:mem=10GB
+#PBS -l select=1:ncpus=1:mem=15GB
 #PBS -l debug=true
 #PBS -V
 
@@ -38,10 +38,11 @@ export RUN=wave
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
+export COMINndbc=/lfs/h1/ops/dev/dcom
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
 
 export MODELNAME="gfs"
-export OBSNAME=""
+export OBSNAME="ndbc"
 
 # CALL executable job script here
 $HOMEevs/jobs/global_det/prep/JEVS_GLOBAL_DET_PREP

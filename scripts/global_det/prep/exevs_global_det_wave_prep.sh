@@ -42,14 +42,37 @@ for MODEL in $MODELNAME; do
                     echo "Job ID: $jobid" >> mailmsg
                     cat mailmsg | mail -s "$subject" $maillist
                 else
-                    cp -v $COMINfilename $DATAfilename
-                    if [ $SENDCOM = YES ]; then
-                        cp -v $DATAfilename $COMOUTfilename
+                    if [ ! -s $COMOUTfilename ] ; then
+                        cp -v $COMINfilename $DATAfilename
+                        if [ $SENDCOM = YES ]; then
+                            cp -v $DATAfilename $COMOUTfilename
+                        fi
                     fi
                 fi
             done
         done
     fi 
+done
+
+for OBS in $OBSNAME; do
+    echo ' '
+    echo ' *************************************'
+    echo " *** ${OBSNAME}-${RUN} prep ***"
+    echo ' *************************************'
+    echo ' '
+    if [ $OBS == "ndbc" ]; then
+        INITDATEp1=$(date --date="${INITDATE} 24 hours" +"%Y%m%d")
+        nbdc_txt_ncount=$(ls -l $COMINndbc/${INITDATEp1}/validation_data/marine/buoy/*.txt |wc -l)
+        if [[ $nbdc_txt_ncount -eq 0 ]]; then
+            export subject="NDBC Data Missing for EVS ${COMPONENT}"
+            echo "Warning: No NDBC data was available for valid date ${VDATE}" > mailmsg
+            echo “Missing files are located at $COMINndbc/${INITDATEp1}/validation_data/marine/buoy” >> mailmsg
+            echo "Job ID: $jobid" >> mailmsg
+            cat mailmsg | mail -s "$subject" $maillist
+        else
+            python $USHevs/${COMPONENT}/global_det_wave_trim_ndbc_files.py
+        fi
+    fi
 done
 
 echo ' '
