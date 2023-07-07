@@ -119,7 +119,7 @@ if [ $verify = sea_ice ] ; then
 
         chmod +x run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
 
-        echo "run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh" >> run_all_gens_sea_ice_poe.sh
+        echo "${DATA}/run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh" >> run_all_gens_sea_ice_poe.sh
 
    done 
 
@@ -132,7 +132,7 @@ fi
 
 
 if [ -s run_all_gens_sea_ice_poe.sh ] ; then
-    run_all_gens_sea_ice_poe.sh	 
+    ${DATA}/run_all_gens_sea_ice_poe.sh	 
 fi
 
 

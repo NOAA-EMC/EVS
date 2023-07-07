@@ -209,7 +209,7 @@ for  verify in $verifys ; do
 
         chmod +x run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
 
-        echo "run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh" >> run_all_gens_g2g_poe.sh
+        echo "${DATA}/run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh" >> run_all_gens_g2g_poe.sh
 
 
       done #end of fhr 
@@ -357,7 +357,7 @@ for  verify in $verifys ; do
 
        chmod +x run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
 
-       echo "run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh" >> run_all_gens_g2g_poe.sh
+       echo "${DATA}/run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh" >> run_all_gens_g2g_poe.sh
 
       done #end of cyc
 
@@ -381,24 +381,24 @@ if [ -s run_all_gens_g2g_poe.sh ] ; then
     if [ ${models} = gefs ] ; then
       if [ $verify_list = all ] ; then
        ####mpiexec  -n 9 -ppn 9 --cpu-bind core --depth=2 cfp run_all_gens_g2g_poe.sh
-         mpiexec -np 9 -ppn 9 --cpu-bind verbose,depth cfp run_all_gens_g2g_poe.sh 
+         mpiexec -np 9 -ppn 9 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_g2g_poe.sh 
       elif [ $verify_list = upper ] ; then
-        mpiexec  -n 4 -ppn 4 --cpu-bind core --depth=2 cfp run_all_gens_g2g_poe.sh
+        mpiexec  -n 4 -ppn 4 --cpu-bind core --depth=2 cfp ${DATA}/run_all_gens_g2g_poe.sh
       elif [ $verify_list = precip ] ; then
-        mpiexec  -n 5 -ppn 5 --cpu-bind core --depth=2 cfp run_all_gens_g2g_poe.sh
+        mpiexec  -n 5 -ppn 5 --cpu-bind core --depth=2 cfp ${DATA}/run_all_gens_g2g_poe.sh
       fi
     else
       if [ $verify_list = all ] ; then
-	 mpiexec  -n 3 -ppn 3 --cpu-bind core --depth=2 cfp run_all_gens_g2g_poe.sh
+	 mpiexec  -n 3 -ppn 3 --cpu-bind core --depth=2 cfp ${DATA}/run_all_gens_g2g_poe.sh
       elif [ $verify_list = upper ] ; then
-	 mpiexec  -n 2 -ppn 2 --cpu-bind core --depth=2 cfp run_all_gens_g2g_poe.sh
+	 mpiexec  -n 2 -ppn 2 --cpu-bind core --depth=2 cfp ${DATA}/run_all_gens_g2g_poe.sh
       elif [ $verify_list = precip ] ; then
-	 mpiexec  -n 1 -ppn 1 --cpu-bind core --depth=2 cfp run_all_gens_g2g_poe.sh
+	 mpiexec  -n 1 -ppn 1 --cpu-bind core --depth=2 cfp ${DATA}/run_all_gens_g2g_poe.sh
       fi
     fi
 
  else
-   run_all_gens_g2g_poe.sh	 
+   ${DATA}/run_all_gens_g2g_poe.sh	 
  fi
 
 fi
