@@ -15,8 +15,6 @@ export model=evs
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
-source $HOMEevs/versions/run.ver
-
 ###%include <head.h>
 ###%include <envir-p1.h>
 
@@ -25,22 +23,9 @@ source $HOMEevs/versions/run.ver
 ############################################################
 module reset
 
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}/
-module use /apps/dev/modulefiles/
-module load ve/evs/${ve_evs_ver}
-module load cray-mpich/${craympich_ver}
-module load cray-pals/${craypals_ver}
-module load libjpeg/${libjpeg_ver}
-module load grib_util/${grib_util_ver}
-module load wgrib2/${wgrib2_ver}
-module load gsl/${gsl_ver}
-module load met/${met_ver}
-module load metplus/${metplus_ver}
-module load prod_util/${produtil_ver}
-module load prod_envir/${prodenvir_ver}
+source $HOMEevs/versions/run.ver
 
-module list
+source $HOMEevs/modulefiles/aqm/aqm_prep.sh
 
 export cyc=00
 echo $cyc
@@ -69,6 +54,11 @@ cd $DATA
 
 export cycle=t${cyc}z
 
+##
+## Instruction for Pull-Request testing
+## point COMIN to personal directory
+## output can be found at $COMOUT
+##
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMIN=/lfs/h2/emc/physics/noscrub/$USER/${NET}/${evs_ver}
 ##
