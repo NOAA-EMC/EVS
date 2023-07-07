@@ -118,7 +118,7 @@ graphics = {
                         'VX_MASK_LIST':'Alaska',
                         'EVAL_PERIODS':['LAST90DAYS'],
                         'FCST_VALID_HOURS':[''],
-                        'FCST_INIT_HOURS':['0'],
+                        'FCST_INIT_HOURS':['6'],
                         'VARIABLES':{
                             'sl1l2':{
                                 'TMP2m':{
