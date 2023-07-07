@@ -35,7 +35,6 @@ VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
 METPLUS_PATH = os.environ['METPLUS_PATH']
 MET_ROOT = os.environ['MET_ROOT']
-MET_bin_exec = os.environ['MET_bin_exec']
 PARMevs = os.environ['PARMevs']
 model_list = os.environ['model_list'].split(' ')
 
@@ -840,9 +839,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     JOB_GROUP_jobs_dict[verif_type]\
                     [verif_type_job]['env'][verif_type_job_env_var]
                 )
-            fhr_start = job_env_dict['fhr_start']
-            fhr_end = job_env_dict['fhr_end']
-            fhr_inc = job_env_dict['fhr_inc']
+            fhr_list = job_env_dict['fhr_list']
             verif_type_job_commands_list = (
                 JOB_GROUP_jobs_dict[verif_type]\
                 [verif_type_job]['commands']
@@ -867,6 +864,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
             valid_date_inc = int(job_env_dict['valid_hr_inc'])
             date_dt = valid_start_date_dt
             while date_dt <= valid_end_date_dt:
+                job_env_dict['fhr_list'] = fhr_list
                 job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
                 job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
                 job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
@@ -931,8 +929,13 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         job_env_dict['mask_list'] = env_var_mask_list
                     if JOB_GROUP == 'generate_stats':
                         if verif_type_job == 'DailyAvg_TempAnom2m':
-                            if int(job_env_dict['fhr_inc']) < 24:
-                                job_env_dict['fhr_inc'] = '24'
+                            job_fhr_list = fhr_list.split(',')
+                            for fhr in job_fhr_list:
+                                if int(fhr) % 24 != 0:
+                                    job_fhr_list.remove(fhr)
+                                job_env_dict['fhr_list'] = ','.join(
+                                    job_fhr_list
+                                )
                     # Do file checks
                     check_model_files = True
                     if check_model_files:
@@ -942,9 +945,6 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         job_env_dict['fhr_list'] = (
                             '"'+','.join(valid_date_fhr_list)+'"'
                         )
-                        job_env_dict.pop('fhr_start')
-                        job_env_dict.pop('fhr_end')
-                        job_env_dict.pop('fhr_inc')
                     if JOB_GROUP == 'assemble_data':
                         check_truth_files = False
                     elif JOB_GROUP in ['reformat_data', 'generate_stats']:
@@ -985,10 +985,6 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         for cmd in verif_type_job_commands_list:
                             job.write(cmd+'\n')
                     job.close()
-                    job_env_dict.pop('fhr_list')
-                    job_env_dict['fhr_start'] = fhr_start
-                    job_env_dict['fhr_end'] = fhr_end
-                    job_env_dict['fhr_inc'] = fhr_inc
                 date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
         # Do reformat_data and assemble_data observation jobs
         if JOB_GROUP in ['reformat_data', 'assemble_data']:
@@ -1003,9 +999,6 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     verif_type, JOB_GROUP, VERIF_CASE_STEP_abbrev_type,
                     verif_type_job
                 )
-                job_env_dict.pop('fhr_start')
-                job_env_dict.pop('fhr_end')
-                job_env_dict.pop('fhr_inc')
                 # Add job specific environment variables
                 for verif_type_job_env_var in \
                         list(JOB_GROUP_obs_jobs_dict[verif_type]\
