@@ -198,7 +198,7 @@ for stats in rmse_me ; do
 
       for level in z0 ; do
 
-        mv ${score_type}_regional_${domain}_valid_00z_sfc_${var}_${level}_mean_${stats}${lead}  evs.global_ens.${stats}.sst.last${past_days}days.${scoretype}.${valid_time}${lead_time}.g003_${domain_new}.png
+        mv ${score_type}_regional_${domain}_valid_00z_sfc_${var}_${level}_mean_${stats}${lead}  evs.global_ens.${stats}.sst.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
                
       done #level
 

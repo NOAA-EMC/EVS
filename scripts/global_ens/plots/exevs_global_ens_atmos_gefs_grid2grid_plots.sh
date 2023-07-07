@@ -276,9 +276,9 @@ for stats in acc bias_mae crpss rmse_spread ; do
          if [ $var = prmsl ] ; then
 
              if [ $stats = acc ] ; then 
-                  mv ${score_type}_regional_${domain}_valid_00z_12z_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}.${valid_time}${lead_time}.g003_${domain_new}.png
+                  mv ${score_type}_regional_${domain}_valid_00z_12z_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
              else  
-		  mv ${score_type}_regional_${domain}_valid_00z_12z_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}.${valid_time}${lead_time}.g003_${domain_new}.png
+		  mv ${score_type}_regional_${domain}_valid_00z_12z_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
              fi
 
          else
@@ -286,14 +286,14 @@ for stats in acc bias_mae crpss rmse_spread ; do
              if [ $var = ugrd ] || [ $var = vgrd ] ; then
 
 	       if [ $level = 10 ] && [ $stats = acc ] ; then
-	           mv ${score_type}_regional_${domain}_valid_00z_12z_10m_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}.${valid_time}${lead_time}.g003_${domain_new}.png
+	           mv ${score_type}_regional_${domain}_valid_00z_12z_10m_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
                else
-	           mv ${score_type}_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}.${valid_time}${lead_time}.g003_${domain_new}.png	     
+	           mv ${score_type}_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png	     
                fi
 
             else
 
-               mv ${score_type}_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}.${valid_time}${lead_time}.g003_${domain_new}.png
+               mv ${score_type}_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
 
             fi
         fi

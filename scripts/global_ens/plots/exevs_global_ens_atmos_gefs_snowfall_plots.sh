@@ -237,9 +237,9 @@ for stats in  crps ets fbias fss ; do
 	fi 
 
         if [ $stats = fss ] ; then	     
-          mv ${score_type}_regional_${domain}_valid_12z_${var}_${stats}_width1-3-5-7-9-11${lead} evs.global_ens.${stats}.${var_new}.last${past_days}days.${scoretype}.valid_12z${lead_time}.buk_${domain}.png  
+          mv ${score_type}_regional_${domain}_valid_12z_${var}_${stats}_width1-3-5-7-9-11${lead} evs.global_ens.${stats}.${var_new}.last${past_days}days.${scoretype}_valid_12z${lead_time}.buk_${domain}.png  
        else
-	  mv ${score_type}_regional_${domain}_valid_12z_${var}_${stats}${lead} evs.global_ens.${stats}.${var_new}.last${past_days}days.${scoretype}.valid_12z${lead_time}.buk_${domain}.png
+	  mv ${score_type}_regional_${domain}_valid_12z_${var}_${stats}${lead} evs.global_ens.${stats}.${var_new}.last${past_days}days.${scoretype}_valid_12z${lead_time}.buk_${domain}.png
         fi
 
       done #var	

@@ -254,7 +254,7 @@ for stats in ets_fbias ; do
          fi
 
          for domain in conus conus_east conus_west conus_south conus_central  ; do
-           mv ${score_type}_regional_${domain}_init_${ihr}_cape_${stats}${lead}  evs.global_ens.${stats}.cape_l0.last${past_days}days.${scoretype}.init${ihr}.${valid_time}${lead_time}.buk_${domain}.png
+           mv ${score_type}_regional_${domain}_init_${ihr}_cape_${stats}${lead}  evs.global_ens.${stats}.cape_l0.last${past_days}days.${scoretype}_init${ihr}_${valid_time}${lead_time}.buk_${domain}.png
          done
        done
     done
@@ -293,7 +293,7 @@ for ihr in 00z 12z ; do
 
        for level in $levels ; do
 
-        mv ${score_type}_regional_${domain}_init_${ihr}_${level}_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${level}.last${past_days}days.${scoretype}.init${ihr}.${valid_time}${lead_time}.buk_${domain}.png
+        mv ${score_type}_regional_${domain}_init_${ihr}_${level}_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${level}.last${past_days}days.${scoretype}_init${ihr}_${valid_time}${lead_time}.buk_${domain}.png
                
       done #level
 

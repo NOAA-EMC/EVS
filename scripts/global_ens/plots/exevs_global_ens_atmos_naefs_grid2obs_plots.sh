@@ -236,9 +236,9 @@ for stats in  acc bias_mae crps rmse_spread me_mae ; do
       for domain in $domains ; do
 
         if [ $domain = nhem ] || [ $domain = shem ] || [ $domain = tropics ] ; then
-           mv ${score_type}_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}${lead}  evs.naefs.${stats}.${var}_${level_new}.last${past_days}days.${scoretype}.${valid_time}${lead_time}.g003_${domain}.png
+           mv ${score_type}_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}${lead}  evs.naefs.${stats}.${var}_${level_new}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain}.png
 	else
-           mv ${score_type}_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}${lead}  evs.naefs.${stats}.${var}_${level_new}.last${past_days}days.${scoretype}.${valid_time}${lead_time}.buk_${domain}.png
+           mv ${score_type}_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}${lead}  evs.naefs.${stats}.${var}_${level_new}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.buk_${domain}.png
         fi
                
       done #domain

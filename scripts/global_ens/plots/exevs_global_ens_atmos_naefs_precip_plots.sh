@@ -212,7 +212,7 @@ for stats in ets_fbias fss ; do
 
       for var in $vars ; do
 
-         mv ${score_type}_regional_${domain}_valid_12z_24h_${var}_${stats}_${lead} evs.naefs.${stats}.apcp_a24.last${past_days}days.${scoretype}.valid_12z.buk_${domain}.png
+         mv ${score_type}_regional_${domain}_valid_12z_24h_${var}_${stats}_${lead} evs.naefs.${stats}.apcp_a24.last${past_days}days.${scoretype}_valid_12z.buk_${domain}.png
 
       done #var	
      done  #domain

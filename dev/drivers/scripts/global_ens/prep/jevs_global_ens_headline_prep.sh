@@ -5,7 +5,7 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:05:00
+#PBS -l walltime=01:00:00
 #PBS -l place=vscatter,select=1:ncpus=2:mem=10GB
 #PBS -l debug=true
 
@@ -13,7 +13,8 @@
 set -x
 export OMP_NUM_THREADS=1
 export evs_ver=v1.0
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/gitworkspace/EVS
+#export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
 source $HOMEevs/versions/run.ver
 
@@ -49,7 +50,8 @@ echo $INITDATE
 export cyc=00
 export run_mpi=no
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
+#export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
+export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export DATA=/lfs/h2/emc/stmp/${USER}/evs/tmpnwprd
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix

@@ -225,7 +225,7 @@ for stats in rmse_spread me ; do
 
          plevel=p${level}
 
-         mv ${score_type}_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}.${valid_time}${lead_time}.g003_${domain_new}.png
+         mv ${score_type}_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
 
       done #level
 
