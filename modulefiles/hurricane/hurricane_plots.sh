@@ -18,6 +18,9 @@ module load prod_envir/${prodenvir_ver}
 module load libfabric/${libfabric_ver}
 module load imagemagick/${imagemagick_ver}
 
+module load geos/${geos_ver}
+module load proj/${proj_ver}
+
 module list
 
 set -x

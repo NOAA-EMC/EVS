@@ -42,7 +42,6 @@ export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/bdeck/Year20
 export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/bdeck/Year2022
 
 export DATAROOT=/lfs/h2/emc/ptmp/$USER
-export COMINstats=/lfs/h2/emc/ptmp/$USER/com/${NET}/${evs_ver}/${COMPONENT}/${RUN}/${VERIF_CASE}/stats
 
 rm -rf $COMINstats
 mkdir -p $COMINstats

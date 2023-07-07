@@ -31,8 +31,6 @@ export job=jevs_hurricane_global_det_tcgen_plots_${cyc}
 ############################################################
 module reset
 source ${HOMEevs}/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
-module load geos/${geos_ver}
-module load proj/${proj_ver}
 
 #Set PDY to override setpdy.sh called in the j-jobs
 export PDY=20221231
