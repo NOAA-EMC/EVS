@@ -52,79 +52,6 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
     os.makedirs(JOB_GROUP_jobs_dir)
 
 ################################################
-#### reformat_data jobs
-################################################
-reformat_data_obs_jobs_dict = {
-    'PrepBufr': {
-        'PrepbufrNAM': {'env': {'prepbufr': 'nam',
-                                'obs_window': '900',
-                                'msg_type': 'ADPSFC',
-                                'obs_bufr_var_list': "'TOB'"},
-                        'commands': [sub_util.metplus_command(
-                                         'PB2NC_obsPrepbufr.conf'
-                                     )]},
-    }
-}
-reformat_data_model_jobs_dict = {
-    'PrepBufr': {
-        'GenEnsProd': {'env': {'var1_name': 'TMP',
-                               'var1_levels': 'Z2'},
-                       'commands': [sub_util.metplus_command(
-                                        'GenEnsProd_fcstSUBSEASONAL_'
-                                        +'WeeklyNetCDF.conf'
-                                    )]},
-        }
-}
-
-################################################
-#### assemble_data jobs
-################################################
-assemble_data_obs_jobs_dict = {
-    'PrepBufr': {}
-}
-assemble_data_model_jobs_dict = {
-    'PrepBufr': {
-        'TempAnom2m': {'env': {'prepbufr': 'nam',
-                               'obs_window': '900',
-                               'msg_type': 'ADPSFC',
-                               'var1_fcst_name': 'TMP_Z2_ENS_MEAN',
-                               'var1_fcst_levels': 'Z2',
-                               'var1_fcst_options': '',
-                               'var1_obs_name': 'TMP',
-                               'var1_obs_levels': 'Z2',
-                               'var1_obs_options': '',
-                               'met_config_overrides': ("'climo_mean "
-                                                        +"= fcst;'")},
-                       'commands': [sub_util.metplus_command(
-                                        'PointStat_fcstSUBSEASONAL_'
-                                        +'obsPrepbufr_climoERA5_'
-                                        +'WeeklyMPR.conf'
-                                    ),
-                                    sub_util.python_command(
-                                        'subseasonal_stats_'
-                                        'grid2obs_create_'
-                                        'weekly_anomaly.py',
-                                        ['TMP_Z2',
-                                         os.path.join(
-                                             '$DATA',
-                                             '${VERIF_CASE}_${STEP}',
-                                             'METplus_output',
-                                             '${RUN}.'
-                                             +'$DATE',
-                                             '$MODEL', '$VERIF_CASE',
-                                             'point_stat_'
-                                             +'${VERIF_TYPE}_'
-                                             +'${job_name}_'
-                                             +'{lead?fmt=%2H}0000L_'
-                                             +'{valid?fmt=%Y%m%d}_'
-                                             +'{valid?fmt=%H}0000V'
-                                             +'.stat'
-                                         )]
-                                    )]},
-    }
-}
-
-################################################
 #### generate_stats jobs
 ################################################
 generate_stats_jobs_dict = {
@@ -323,9 +250,7 @@ gather_stats_jobs_dict = {'env': {},
                                        )]}
 
 # Create job scripts
-if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
-    if JOB_GROUP == 'reformat_data':
-        JOB_GROUP_jobs_dict = reformat_data_model_jobs_dict
+if JOB_GROUP in ['assemble_data', 'generate_stats']:
     if JOB_GROUP == 'assemble_data':
         JOB_GROUP_jobs_dict = assemble_data_model_jobs_dict
     elif JOB_GROUP == 'generate_stats':
@@ -358,14 +283,6 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                 [verif_type_job]['commands']
             ) 
             # Loop through and write job script for dates and models
-            if JOB_GROUP == 'assemble_data':
-                if verif_type == 'PrepBufr' \
-                        and verif_type_job == 'TempAnom2m':
-                    if int(job_env_dict['valid_hr_start']) - 12 > 0:
-                        job_env_dict['valid_hr_start'] = str(
-                            int(job_env_dict['valid_hr_start']) - 12
-                        )
-                        job_env_dict['valid_hr_inc'] = '12'
             valid_start_date_dt = datetime.datetime.strptime(
                 start_date+job_env_dict['valid_hr_start'],
                 '%Y%m%d%H'
@@ -419,10 +336,6 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                                      +job_env_dict['FIXevs']
                                                      +"/masks/"+mask+".nc, ")
                         job_env_dict['mask_list'] = env_var_mask_list
-                    #if JOB_GROUP == 'generate_stats':
-                        #if verif_type_job == 'DailyAvg_TempAnom2m':
-                            #if int(job_env_dict['fhr_inc']) < 24:
-                                #job_env_dict['fhr_inc'] = '24'
                     # Do file checks
                     check_model_files = True
                     if check_model_files:
@@ -435,14 +348,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         job_env_dict.pop('fhr_start')
                         job_env_dict.pop('fhr_end')
                         job_env_dict.pop('fhr_inc')
-                    if JOB_GROUP == 'assemble_data':
-                        check_truth_files = False
-                    elif JOB_GROUP in ['reformat_data', 'generate_stats']:
-                        if verif_type == 'ptype' \
-                                and JOB_GROUP == 'reformat_data':
-                            check_truth_files = False
-                        else: 
-                            check_truth_files = True
+                    check_truth_files = False
                     if check_truth_files:
                         all_truth_file_exist = sub_util.check_truth_files(
                             job_env_dict

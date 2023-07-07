@@ -64,9 +64,7 @@ elif JOB_GROUP == 'filter_stats':
     init_hr_start = os.environ['init_hr_start']
     init_hr_end = os.environ['init_hr_end']
     init_hr_inc = os.environ['init_hr_inc']
-    fhr_start = os.environ['fhr_start']
-    fhr_end = os.environ['fhr_end']
-    fhr_inc = os.environ['fhr_inc']
+    fhr_list = os.environ['fhr_list']
     grid = os.environ['grid']
     event_equalization = os.environ['event_equalization']
     interp_method = os.environ['interp_method']
@@ -89,9 +87,7 @@ elif JOB_GROUP == 'make_plots':
     init_hr_start = os.environ['init_hr_start']
     init_hr_end = os.environ['init_hr_end']
     init_hr_inc = os.environ['init_hr_inc']
-    fhr_start = os.environ['fhr_start']
-    fhr_end = os.environ['fhr_end']
-    fhr_inc = os.environ['fhr_inc']
+    fhr_list = os.environ['fhr_list']
     grid = os.environ['grid']
     event_equalization = os.environ['event_equalization']
     interp_method = os.environ['interp_method']
@@ -167,14 +163,7 @@ if JOB_GROUP in ['filter_stats', 'make_plots']:
     init_hrs = list(range(int(init_hr_start),
                           int(init_hr_end)+int(init_hr_inc),
                           int(init_hr_inc)))
-    fhrs = list(range(int(fhr_start), int(fhr_end)+int(fhr_inc), int(fhr_inc)))
-    if VERIF_CASE == 'grid2obs' and evs_run_mode == 'production':
-        if fhrs == list(range(0, 384+6, 6)) and VERIF_TYPE == 'pres_levs':
-            fhrs = list(range(0,72,6)) + list(range(72,384+24,24))
-        if fhrs == list(range(0, 384+3, 3)) and VERIF_TYPE == 'sfc':
-            fhrs_on = list(range(0,72,6)) + list(range(72,384+24,24))
-            fhrs_off = list(range(3,75,6)) + list(range(75,363+24,24))
-            fhrs = sorted(fhrs_off + fhrs_on)
+    fhrs = [int(i) for i in fhr_list.split(',')]
 
 # Set up plot information dictionary
 if JOB_GROUP != 'tar_images':
@@ -674,10 +663,11 @@ elif JOB_GROUP == 'make_plots':
                                            COMOUTjob_image_name)
     elif plot == 'lead_by_level':
         import global_det_atmos_plots_lead_by_level as gdap_lbl
-        if evs_run_mode == 'production' and int(fhr_inc) == 6:
-            fhrs_lbl = list(
-                range(int(fhr_start), int(fhr_end)+int(fhr_inc), 24)
-            )
+        if evs_run_mode == 'production':
+            fhrs_lbl = []
+            for fhr in fhrs:
+                if fhr % 24 == 0:
+                    fhrs_lbl.append(fhr)
         else:
             fhrs_lbl = fhrs
         vert_profiles = [os.environ['vert_profile']]
