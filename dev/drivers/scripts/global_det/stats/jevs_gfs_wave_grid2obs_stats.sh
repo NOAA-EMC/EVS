@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:45:00
-#PBS -l place=vscatter,select=1:ncpus=25:mem=60G
+#PBS -l place=vscatter,select=1:ncpus=25:mem=75GB
 #PBS -l debug=true
 #PBS -V
 
@@ -46,6 +46,7 @@ export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=$COMROOT/$NET/$evs_ver
+export COMINndbc=/lfs/h1/ops/dev/dcom
 export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT
 
 # CALL executable job script here
