@@ -488,6 +488,10 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
             x_vals,
             rounding=True
         )
+        requested_thresh_value = reference.unit_conversions[units]['formula'](
+            requested_thresh_value,
+            rounding=True
+        )
     if units == '-':
         units = ''
     x_vals_argsort = np.argsort(x_vals)
