@@ -59,9 +59,7 @@ valid_hr_inc = os.environ['valid_hr_inc']
 init_hr_start = os.environ['init_hr_start']
 init_hr_end = os.environ['init_hr_end']
 init_hr_inc = os.environ['init_hr_inc']
-fhr_start = os.environ['fhr_start']
-fhr_end = '240'
-fhr_inc = os.environ['fhr_inc']
+fhr_list = os.environ['fhr_list']
 grid = os.environ['grid']
 event_equalization = os.environ['event_equalization']
 interp_method = os.environ['interp_method']
@@ -134,14 +132,10 @@ valid_hrs = list(range(int(valid_hr_start),
 init_hrs = list(range(int(init_hr_start),
                       int(init_hr_end)+int(init_hr_inc),
                       int(init_hr_inc)))
-fhrs = list(range(int(fhr_start), int(fhr_end)+int(fhr_inc), int(fhr_inc)))
-if VERIF_CASE == 'grid2obs' and evs_run_mode == 'production':
-    if fhrs == list(range(0, 240+6, 6)) and VERIF_TYPE == 'pres_levs':
-        fhrs = list(range(0,72,6)) + list(range(72,240+24,24))
-    if fhrs == list(range(0, 240+3, 3)) and VERIF_TYPE == 'sfc':
-        fhrs_on = list(range(0,72,6)) + list(range(72,240+24,24))
-        fhrs_off = list(range(3,75,6)) + list(range(75,219+24,24))
-        fhrs = sorted(fhrs_off + fhrs_on)
+fhrs = []
+for fhr in fhr_list.split(','):
+    if int(fhr) <= 240:
+        fhrs.append(int(fhr))
 
 # Set up plot information dictionary
 original_plot_info_dict = {
@@ -479,10 +473,11 @@ if JOB_GROUP == 'make_plots':
                                            COMOUTjob_image_name)
     elif plot == 'lead_by_level':
         import global_det_atmos_plots_lead_by_level as gdap_lbl
-        if evs_run_mode == 'production' and int(fhr_inc) == 6:
-            fhrs_lbl = list(
-                range(int(fhr_start), int(fhr_end)+int(fhr_inc), 24)
-            )
+        if evs_run_mode == 'production':
+            fhrs_lbl = []
+            for fhr in fhrs:
+                if fhr % 24 == 0:
+                    fhrs_lbl.append(fhr)
         else:
             fhrs_lbl = fhrs
         vert_profiles = [os.environ['vert_profile']]

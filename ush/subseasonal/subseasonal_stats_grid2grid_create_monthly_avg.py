@@ -36,15 +36,15 @@ fhr_inc = '12'
 #fhr_end = os.environ['fhr_end']
 #fhr_inc = os.environ['fhr_inc']
 
-# Process run time agruments
+# Process run time arguments
 if len(sys.argv) != 4:
-    print("ERROR: Not given correct number of run time agruments..."
+    print("ERROR: Not given correct number of run time arguments..."
           +os.path.basename(__file__)+" VARNAME_VARLEVEL DATAROOT_FILE_FORMAT "
-          +"COMIN_FILE_FORMART")
+          +"COMIN_FILE_FORMAT")
     sys.exit(1)
 else:
     if '_' not in sys.argv[1]:
-        print("ERROR: variable and level runtime agrument formated "
+        print("ERROR: variable and level runtime agrument formatted "
               +"incorrectly, be sure to separate variable and level with "
               +"an underscore (_), example HGT_P500")
         sys.exit(1)
@@ -162,11 +162,11 @@ while valid_hr <= int(valid_hr_end):
                 monthly_avg_day_fhr+=12
             else:
                 monthly_avg_day_fhr+=int(fhr_inc)
-        if len(monthly_avg_fcst_file_list) != 0:
+        if len(monthly_avg_fcst_file_list) >= 49:
             monthly_avg_fcst = (
                 monthly_avg_fcst_sum/len(monthly_avg_fcst_file_list)
             )
-        if len(monthly_avg_obs_file_list) != 0:
+        if len(monthly_avg_obs_file_list) >= 49:
             monthly_avg_obs = (
                 monthly_avg_obs_sum/len(monthly_avg_obs_file_list)
             )
@@ -176,9 +176,9 @@ while valid_hr <= int(valid_hr_end):
             if fhr_inc == '6':
                 expected_nfiles = 29
             elif fhr_inc == '12':
-                expected_nfiles = 61
-        if len(monthly_avg_fcst_file_list) == expected_nfiles \
-                and len(monthly_avg_obs_file_list) == expected_nfiles:
+                expected_nfiles = 49
+        if len(monthly_avg_fcst_file_list) >= expected_nfiles \
+                and len(monthly_avg_obs_file_list) >= expected_nfiles:
             print("Output File: "+output_file)
             output_file_data = netcdf.Dataset(output_file, 'w',
                                               format='NETCDF3_CLASSIC')
@@ -269,7 +269,7 @@ while valid_hr <= int(valid_hr_end):
             input_file_data.close()
         else:
             print("WARNING: Cannot create monthly average file "+output_file+" "
-                  +"; need "+str(expected_nfiles)+" input files")
+                  +"; need at least "+str(expected_nfiles)+" input files")
         if job_name == 'MonthlyAvg_GeoHeightAnom':
             monthly_avg_day+=1
         else:
