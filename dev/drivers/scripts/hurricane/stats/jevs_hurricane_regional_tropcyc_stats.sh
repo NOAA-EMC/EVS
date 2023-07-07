@@ -43,9 +43,6 @@ export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/bdeck/Year2
 
 export DATAROOT=/lfs/h2/emc/ptmp/$USER
 
-rm -rf $COMINstats
-mkdir -p $COMINstats
-
 export COMROOT=${DATAROOT}/com
 export KEEPDATA=YES
 
