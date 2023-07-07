@@ -2,7 +2,7 @@
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
-#PBS -A VERF-DEV
+#PBS -A EVS-DEV
 #PBS -l walltime=01:00:00
 #PBS -l select=1:ncpus=7:mem=10GB
 #PBS -l debug=true
@@ -11,7 +11,7 @@
 ##PBS -q debug
 ##PBS -A GFS-DEV
 ##PBS -q dev
-##PBS -A VERF-DEV
+##PBS -A EVS-DEV
 
 export OMP_NUM_THREADS=1
 

@@ -3,7 +3,7 @@
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
-#PBS -A VERF-DEV
+#PBS -A EVS-DEV
 #PBS -l walltime=4:59:00
 #PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=32GB
 #PBS -l debug=true
@@ -39,15 +39,15 @@ set -x
   export envir="prod"
   export evs_run_mode="standalone"
 
-  export ACCOUNT=VERF-DEV
+  export ACCOUNT=EVS-DEV
   export QUEUESERV="dev_transfer"
   export QUEUE="dev"
   export QUEUESHARED="dev_shared"
   export PARTITION_BATCH=""
 
 # EVS Settings
-  export HOMEevs="/lfs/h2/emc/vpppg/noscrub/${USER}/verification/EVS"
-# export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+#  export HOMEevs="/lfs/h2/emc/vpppg/noscrub/${USER}/verification/EVS"
+ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
 # Subdirectories to EVS Home Directory
   export PARMevs=$HOMEevs/parm

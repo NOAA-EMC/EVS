@@ -2,7 +2,7 @@
 #PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q "dev"
-#PBS -A VERF-DEV
+#PBS -A EVS-DEV
 #PBS -l walltime=02:00:00
 #PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=140GB
 #PBS -l debug=true
@@ -57,7 +57,7 @@ module load cdo/${cdo_ver}
 module list
 
 export USER=$USER
-export ACCOUNT=VERF-DEV
+export ACCOUNT=EVS-DEV
 export QUEUE=dev
 export QUEUESHARED=dev_shared
 export QUEUESERV=dev_transfer
