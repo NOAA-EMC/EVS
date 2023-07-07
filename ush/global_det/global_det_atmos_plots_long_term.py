@@ -18,6 +18,7 @@ pd.plotting.deregister_matplotlib_converters()
 import numpy as np
 import itertools
 import global_det_atmos_util as gda_util
+import glob
 
 print("BEGIN: "+os.path.basename(__file__))
 
@@ -290,15 +291,13 @@ for model_num in list(yyyymm_acc_model_info_dict.keys()):
                                     +"DOES NOT EXIST")
         date_dt = date_dt + datetime.timedelta(days=1)
     acc_logger.info("Condensing model .stat files for job")
-    condensed_model_stat_file = os.path.join(acc_output_dir,
-                                             model_num+'_'+model
-                                             +'.stat')
     gda_util.condense_model_stat_files(
-        acc_logger, yyyymm_acc_data_dir, condensed_model_stat_file,
-        model, obs_name, yyyymm_acc_plot_info_dict['grid'],
-        yyyymm_acc_plot_info_dict['vx_mask'],
+        acc_logger, yyyymm_acc_data_dir, acc_output_dir,
+        model, obs_name, yyyymm_acc_plot_info_dict['vx_mask'],
         yyyymm_acc_plot_info_dict['fcst_var_name'],
+        yyyymm_acc_plot_info_dict['fcst_var_level'],
         yyyymm_acc_plot_info_dict['obs_var_name'],
+        yyyymm_acc_plot_info_dict['obs_var_level'],
         yyyymm_acc_plot_info_dict['line_type']
     )
 # Make time series and forecast mean plots
@@ -337,8 +336,8 @@ VDATEYYYY_VDATEmm_ndays = int(
                                   '%Y%m%d')).total_seconds()/86400
 
 ) + 1
-for old_image_name in os.listdir(os.path.join(acc_output_dir, 'images')):
-    old_image = os.path.join(acc_output_dir, 'images', old_image_name)
+for old_image in glob.glob(os.path.join(acc_output_dir, '*.png')):
+    old_image_name = old_image.rpartition('/')[2]
     new_image = os.path.join(
         yyyymm_acc_images_dir,
         old_image_name.replace('last'+str(VDATEYYYY_VDATEmm_ndays)+'days',
