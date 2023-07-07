@@ -1,8 +1,7 @@
-#!/bin/bash -e
- 
+#!/usr/bin/env python3
 # =============================================================================
 #
-# NAME: cam_prep_grid2obs_create_poe_job_scripts.sh
+# NAME: cam_prep_grid2obs_create_poe_job_scripts.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Create EVS CAM Grid2Obs - Prepare POE job scripts
 # DEPENDENCIES: $SCRIPTSevs/cam/prep/exevs_$MODELNAME_grid2obs_prep.sh

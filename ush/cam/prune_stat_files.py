@@ -19,6 +19,7 @@ from datetime import datetime, timedelta as td
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
 import string_template_substitution
+import plot_util
 
 def daterange(start, end, td):
    curr = start
@@ -80,6 +81,16 @@ def prune_data(data_dir, prune_dir, tmp_dir, output_base_template, valid_range,
       with open(met_stat_files[0]) as msf:
          met_header_cols = msf.readline()
       all_grep_output = ''
+      print("Pruning "+data_dir+" files for model "+model+", vx_mask "
+            +vx_mask+", variable "+'/'.join(fcst_var_names)+", line_type "+line_type
+            +", interp "+os.environ['INTERP'])
+      filter_cmd = (
+         ' | grep " '+vx_mask
+         +' " | grep "'+'\|'.join(fcst_var_names)
+         +'" | grep " '+line_type
+         +' " | grep " '+os.environ['INTERP']+' "'
+      )
+      '''
       if RUN_type == 'anom' and 'HGT' in var_name:
          print("Pruning "+data_dir+" files for model "+model+", vx_mask "
                +vx_mask+", variable "+'/'.join(fcst_var_names)+", line_type "+line_type
@@ -98,6 +109,7 @@ def prune_data(data_dir, prune_dir, tmp_dir, output_base_template, valid_range,
             +' " | grep "'+'\|'.join(fcst_var_names)
             +'" | grep " '+line_type+' "'
          )
+      '''   
       # Prune the MET .stat files and write to new file
       for met_stat_file in met_stat_files:
          ps = subprocess.Popen('grep -R "'+model+'" '+met_stat_file+filter_cmd,

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import matplotlib
 import matplotlib.pyplot as plt
 import datetime
@@ -215,6 +216,7 @@ class PlotSpecs:
             'APCP_A24/A24': '24-hour Accumulated Precipitation',
             'APCP_24/A24': '24-hour Accumulated Precipitation',
             'APCP_01_Z0/Z0': '24-hour Accumulated Precipitation', 
+            'MultiSensor_QPE_01H_Pass2_Z0/Z0': '24-hour Accumulated Precipitation',
             'CAPE/P90-0': 'Mixed-Layer CAPE',
             'CAPE/Z0': 'Surface Based CAPE',
             'CFRZR/L0': 'Precipitation Type - Freezing Rain',
