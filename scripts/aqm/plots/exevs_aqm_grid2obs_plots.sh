@@ -32,12 +32,13 @@ while [ $DATE -ge $ENDDATE ]; do
 	MONTH=`cut -c 1-6 curdate`
 	HOUR=`cut -c 9-10 curdate`
 
-	if [ -e ${COMINaqm}.$DAY/evs.stats.${COMPONENT}_${biasc}.${RUN}.${VERIF_CASE}_${aqmtyp}.v${DAY}.stat ]
-	then
-	cp ${COMINaqm}.$DAY/evs.stats.${COMPONENT}_${biasc}.${RUN}.${VERIF_CASE}_${aqmtyp}.v${DAY}.stat $STATDIR
+	cpfile=evs.stats.${COMPONENT}_${biasc}.${RUN}.${VERIF_CASE}_${aqmtyp}.v${DAY}.stat
+	if [ -e ${COMINaqm}.$DAY/${cpfile} ]; then
+	    cp ${COMINaqm}.$DAY/${cpfile} $STATDIR
+            sed "s/$model1/${aqmtyp}_${biasc}/g" $STATDIR/${cpfile} > $STATDIR/evs.stats.${aqmtyp}_${biasc}.${RUN}.${VERIF_CASE}.v${DAY}.stat
+        else
+            echo "WARNING ${COMPONENT} ${STEP} :: Can not find ${COMINaqm}.$DAY/${cpfile}"
         fi
-
-	sed "s/$model1/${aqmtyp}_${biasc}/g" $STATDIR/evs.stats.${COMPONENT}_${biasc}.${RUN}.${VERIF_CASE}_${aqmtyp}.v${DAY}.stat > $STATDIR/evs.stats.${aqmtyp}_${biasc}.${RUN}.${VERIF_CASE}.v${DAY}.stat
 
 	DATE=`$NDATE -24 $DATE`
 

@@ -9,42 +9,28 @@
 #PBS -l debug=true
 #PBS -V
 
+set -x
+
 #%include <head.h>
 #%include <envir-p1.h>
 
-############################################################
-# Load modules
-############################################################
-module reset
-export HOMEevs=/lfs/h2/emc/vpppg/save/$USER/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/Fork/EVS
 source ${HOMEevs}/versions/run.ver
-
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/dev/modulefiles/
-module load ve/evs/${ve_evs_ver}
-module load gsl/${gsl_ver}
-module load netcdf/${netcdf_ver}
-module load met/${met_ver}
-module load metplus/${metplus_ver}
-
-module load libjpeg/$libjpeg_ver
-module load grib_util/$grib_util_ver
-module load prod_util/${produtil_ver}
-module load prod_envir/${prodenvir_ver}
-module load imagemagick/${imagemagick_ver}
-
-module list
 
 export NET=evs
 export COMPONENT=hurricane
 export RUN=global_ens
 export STEP=stats
 export VERIF_CASE=tropcyc
-
 export envir=dev
 export cyc=00
 export job=jevs_hurricane_global_ens_tropcyc_stats_${cyc}
+
+############################################################
+# Load modules
+############################################################
+module reset
+source ${HOMEevs}/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
 #Set PDY to override setpdy.sh called in the j-jobs
 export PDY=20221231

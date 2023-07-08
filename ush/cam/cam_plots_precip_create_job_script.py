@@ -1,8 +1,7 @@
-#!/bin/bash -e
- 
+#!/usr/bin/env python3
 # =============================================================================
 #
-# NAME: cam_plots_precip_create_job_script.sh
+# NAME: cam_plots_precip_create_job_script.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Create EVS CAM Precipitation - Plots job scripts
 # DEPENDENCIES: $SCRIPTSevs/cam/stats/exevs_$MODELNAME_precip_plots.sh
