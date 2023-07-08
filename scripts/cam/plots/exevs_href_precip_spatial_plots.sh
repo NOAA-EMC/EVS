@@ -72,12 +72,11 @@ for model in $model_list ; do
   for fhr in 24 48 ; do
     past=`$NDATE -$fhr ${VDATE}12`
     INITDATE=${past:0:8}    
-    mv ${model}.v${VDATE}12.0${fhr}h.${mask}.png  evs.${model}.spatial_map.apcp_a24.init${INITDATE}.vlid${VDATE}12.f${fhr}.buk_${mask}.png
+    mv ${model}.v${VDATE}12.0${fhr}h.${mask}.png  evs.${model}.spatial_map.apcp_a24.vlid12z.f${fhr}.buk_${mask}.png
   done
 done  
 
-#scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/gens/spaticl
-
+mv qpe.v${VDATE}12.024h.conus.png evs.ccpa.spatial_map.apcp_a24.vlid12z.f00.buk_conus.png
 tar -cvf evs.plots.href.precip.spatial.map.v${VDATE}.tar *.png
 
 cp evs.plots.href.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
