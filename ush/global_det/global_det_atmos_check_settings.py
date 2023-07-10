@@ -90,7 +90,7 @@ else:
         'VERIF_CASE', 'envir', 'evs_run_mode', 'job', 'jobid',
         'pid', 'OUTPUTROOT', 'DATA', 'machine', 'ACCOUNT',
         'QUEUE', 'QUEUESHARED', 'QUEUESERV', 'PARTITION_BATCH', 'nproc',
-        'USE_CFP', 'MET_bin_exec', 'evs_ver', 'ccpa_ver', 'obsproc_ver',
+        'USE_CFP', 'evs_ver', 'ccpa_ver', 'obsproc_ver',
         'PARMevs', 'USHevs', 'EXECevs', 'FIXevs', 'archive_obs_data_dir',
         'METviewer_AWS_scripts_dir', 'DATAROOT', 'COMROOT', 'COMIN', 'COMOUT',
         'VERIF_CASE_STEP_abbrev'
@@ -102,9 +102,8 @@ if STEP.upper() == 'STATS':
     )
 evs_global_det_atmos_settings_dict['shared'] = [
     'model_list', 'model_evs_data_dir_list', 'model_file_format_list',
-    'OUTPUTROOT', 'start_date', 'end_date', 'metplus_verbosity',
-    'met_verbosity','log_met_output_to_metplus', 'KEEPDATA',
-    'SENDCOM', 'SENDARCH', 'SENDMETVIEWER'
+    'OUTPUTROOT', 'start_date', 'end_date', 'KEEPDATA', 'SENDCOM',
+    'SENDARCH', 'SENDMETVIEWER'
 ]
 evs_global_det_atmos_settings_dict['modules'] = ['MET_ROOT', 'METPLUS_PATH']
 evs_global_det_atmos_settings_dict['RUN_GRID2GRID_STATS'] = [
@@ -126,48 +125,38 @@ evs_global_det_atmos_settings_dict['RUN_GRID2OBS_PLOTS'] = [
 
 verif_case_step_settings_dict = {
     'RUN_GRID2GRID_STATS': {
-        'flux': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
-        'means': ['init_hr_list', 'valid_hr_list',
-                  'fhr_min', 'fhr_max', 'fhr_inc'],
-        'ozone': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+        'flux': ['init_hr_list'],
+        'means': ['init_hr_list', 'valid_hr_list'],
+        'ozone': ['init_hr_list'],
         'precip_accum24hr': ['file_format_list', 'file_accum_list', 'var_list',
-                             'init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+                             'init_hr_list'],
         'precip_accum3hr': ['file_format_list', 'file_accum_list', 'var_list',
-                            'init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+                            'init_hr_list'],
         'pres_levs': ['truth_name_list', 'truth_format_list',
-                      'init_hr_list', 'valid_hr_list',
-                      'fhr_min', 'fhr_max', 'fhr_inc'],
-        'sea_ice': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
-        'snow': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
-        'sst': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc']
+                      'init_hr_list', 'valid_hr_list'],
+        'sea_ice': ['init_hr_list'],
+        'snow': ['init_hr_list'],
+        'sst': ['init_hr_list']
     },
     'RUN_GRID2GRID_PLOTS': {
         'flux': [],
-        'means': ['init_hr_list', 'valid_hr_list',
-                  'fhr_min', 'fhr_max', 'fhr_inc'],
+        'means': ['init_hr_list', 'valid_hr_list'],
         'ozone': [],
-        'precip': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
-        'pres_levs': ['truth_name_list', 'init_hr_list', 'valid_hr_list',
-                      'fhr_min', 'fhr_max', 'fhr_inc'],
+        'precip': ['init_hr_list'],
+        'pres_levs': ['truth_name_list', 'init_hr_list', 'valid_hr_list'],
         'sea_ice': [],
-        'snow': ['init_hr_list', 'fhr_min', 'fhr_max', 'fhr_inc'],
+        'snow': ['init_hr_list'],
         'sst': []
     },
     'RUN_GRID2OBS_STATS': {
-        'pres_levs': ['init_hr_list', 'valid_hr_list',
-                      'fhr_min', 'fhr_max', 'fhr_inc'],
-        'ptype': ['init_hr_list', 'valid_hr_list',
-                  'fhr_min', 'fhr_max', 'fhr_inc'],
-        'sfc': ['init_hr_list', 'valid_hr_list',
-                'fhr_min', 'fhr_max', 'fhr_inc']
+        'pres_levs': ['init_hr_list', 'valid_hr_list'],
+        'ptype': ['init_hr_list', 'valid_hr_list'],
+        'sfc': ['init_hr_list', 'valid_hr_list']
     },
     'RUN_GRID2OBS_PLOTS': {
-        'pres_levs': ['init_hr_list', 'valid_hr_list',
-                      'fhr_min', 'fhr_max', 'fhr_inc'],
-        'ptype': ['init_hr_list', 'valid_hr_list',
-                  'fhr_min', 'fhr_max', 'fhr_inc'],
-        'sfc': ['init_hr_list', 'valid_hr_list',
-                'fhr_min', 'fhr_max', 'fhr_inc']
+        'pres_levs': ['init_hr_list', 'valid_hr_list'],
+        'ptype': ['init_hr_list', 'valid_hr_list'],
+        'sfc': ['init_hr_list', 'valid_hr_list']
     }
 }
 
@@ -198,6 +187,13 @@ for verif_type in verif_type_list:
             'RUN_'+VERIF_CASE.upper()+'_'+STEP.upper()
         ][verif_type]
     )
+    if f"{VERIF_CASE_STEP_abbrev}_{verif_type}_fhr_list" \
+            in list(os.environ.keys()):
+        verif_type_env_var_list.append('fhr_list')
+    else:
+        verif_type_env_var_list.append('fhr_min')
+        verif_type_env_var_list.append('fhr_max')
+        verif_type_env_var_list.append('fhr_inc')
     for verif_type_env_var in verif_type_env_var_list:
          env_var_check = (VERIF_CASE_STEP_abbrev+'_'+verif_type+'_'
                           +verif_type_env_var)
@@ -266,9 +262,6 @@ for config_var in check_config_var_len_list:
 
 # Set valid list of options settings
 valid_config_var_values_dict = {
-    'metplus_verbosity': ['DEBUG', 'INFO', 'WARN', 'ERORR'],
-    'met_verbosity': ['0', '1', '2', '3', '4', '5'],
-    'log_met_output_to_metplus': ['yes', 'no'],
     'KEEPDATA': ['YES', 'NO'],
     'SENDCOM': ['YES', 'NO'],
 }

@@ -67,7 +67,7 @@ export MET_bin_exec=${MET_bin_exec:-bin}
 export VDATE=${VDATE:-${PDYm3}}
 
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver}/)}
-export COMINaqm=${COMINaqm:-$(compath.py ${envir}/com/${NET}/${evs_ver}/stats/${COMPONENT})}
+export COMINaqm=${COMINaqm:-$(compath.py ${envir}/com/${NET}/${evs_ver}/stats/${COMPONENT}/${MODELNAME})}
 export COMOUT=${COMOUT:-${COMIN}/${STEP}/${COMPONENT}}
 export COMOUTplots=${COMOUTplots:-${COMOUT}/${RUN}.${VDATE}}
 mkdir -m 775 -p $COMOUT
