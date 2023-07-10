@@ -243,17 +243,17 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         df = df[df['FCST_THRESH_VALUE'].isin(requested_thresh_value)]
         thresholds_removed = (
             np.array(requested_thresh_symbol)[
-                ~np.isin(requested_thresh_symbol, df['FCST_THRESH_VALUE'])
+                ~np.isin(requested_thresh_symbol, opt+df['FCST_THRESH_VALUE'])
             ]
         )
         requested_thresh_value = (
             np.array(requested_thresh_value)[
-                np.isin(requested_thresh_value, df['FCST_THRESH_SYMBOL'])
+                np.isin(requested_thresh_symbol, opt+df['FCST_THRESH_SYMBOL'])
             ]
         )
         if thresholds_removed.size > 0:
             thresholds_removed_string = ', '.join(
-                [opt+str(t) for t in thresholds_removed]
+                [str(t) for t in thresholds_removed]
             )
             if len(thresholds_removed) > 1:
                 warning_string = (f"{thresholds_removed_string} thresholds were"

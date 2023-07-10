@@ -81,8 +81,8 @@ export COMINmrms=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
 export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/logan.dawson/$NET/$evs_ver/prep/$COMPONENT
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
-#export cyc=$(date -d "today" +"%H")
-export cyc=12
+export cyc=$(date -d "today" +"%H")
+#export cyc=12
 export maillist="marcel.caron@noaa.gov"
 
 # Job Settings and Run

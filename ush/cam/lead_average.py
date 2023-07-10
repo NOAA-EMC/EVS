@@ -823,7 +823,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
             else:
                 if connect_points:
                     x_vals2_plot = x_vals2[~np.isnan(y_vals_metric2)]
-                    y_vals2_plot = y_vals_metric2[~np.isnan(y_vals_metrics2)]
+                    y_vals2_plot = y_vals_metric2[~np.isnan(y_vals_metric2)]
                 else:
                     x_vals2_plot = x_vals2
                     y_vals2_plot = y_vals_metric2

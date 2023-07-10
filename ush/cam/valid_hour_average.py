@@ -306,6 +306,21 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
             logger.warning(warning_string)
             logger.warning("Continuing ...")
 
+    if df.empty:
+        logger.warning(f"Empty Dataframe. Continuing onto next plot...")
+        plt.close(num)
+        logger.info("========================================")
+        return None
+    group_by = ['MODEL','ANTI_DATE_HOURS']
+    if sample_equalization:
+        df, bool_success = plot_util.equalize_samples(logger, df, group_by)
+        if not bool_success:
+            sample_equalization = False
+        if df.empty:
+            logger.warning(f"Empty Dataframe. Continuing onto next plot...")
+            plt.close(num)
+            logger.info("========================================")
+            return None
     # Remove from model_list the models that don't exist in the dataframe
     cols_to_keep = [
         str(model) 
@@ -331,16 +346,6 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         plt.close(num)
         logger.info("========================================")
         return None
-    group_by = ['MODEL','ANTI_DATE_HOURS']
-    if sample_equalization:
-        df, bool_success = plot_util.equalize_samples(logger, df, group_by)
-        if not bool_success:
-            sample_equalization = False
-        if df.empty:
-            logger.warning(f"Empty Dataframe. Continuing onto next plot...")
-            plt.close(num)
-            logger.info("========================================")
-            return None
     df_groups = df.groupby(group_by)
     # Aggregate unit statistics before calculating metrics
     if str(line_type).upper() == 'CTC':
