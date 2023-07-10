@@ -1018,14 +1018,10 @@ def check_model_files(job_dict):
         job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
     )
     model = job_dict['MODEL']
-    fhr_min = int(job_dict['fhr_start'])
-    fhr_max = int(job_dict['fhr_end'])
-    fhr_inc = int(job_dict['fhr_inc'])
-    fhr = fhr_min
     fhr_list = []
     fhr_check_input_dict = {}
     fhr_check_output_dict = {}
-    while fhr <= fhr_max:
+    for fhr in [int(i) for i in job_dict['fhr_list'].split(',')]:
         fhr_check_input_dict[str(fhr)] = {}
         fhr_check_output_dict[str(fhr)] = {}
         init_date_dt = valid_date_dt - datetime.timedelta(hours=fhr)
@@ -1089,7 +1085,7 @@ def check_model_files(job_dict):
                             'forecast_hour': str(fhr_in_avg)
                         }
                         nf+=1
-                        fhr_in_avg+=int(job_dict['fhr_inc'])
+                        fhr_in_avg+=12
                 else:
                     fhr_check_input_dict[str(fhr)]['file1'] = {
                         'valid_date': valid_date_dt,
@@ -1459,7 +1455,6 @@ def check_model_files(job_dict):
                 'init_date': init_date_dt,
                 'forecast_hour': str(fhr)
             }  
-        fhr+=fhr_inc
     # Check input files
     for fhr_key in list(fhr_check_input_dict.keys()):
         fhr_key_input_files_exist_list = []
@@ -1862,9 +1857,7 @@ def initalize_job_env_dict(verif_type, group,
         if not os.path.exists(os.environ['MET_TMP_DIR']):
             os.makedirs(os.environ['MET_TMP_DIR'])
         job_env_var_list.extend(
-            ['METPLUS_PATH','log_met_output_to_metplus', 'metplus_verbosity',
-             'MET_ROOT', 'MET_bin_exec', 'met_verbosity', 'MET_TMP_DIR',
-             'COMROOT']
+            ['METPLUS_PATH', 'MET_ROOT', 'MET_TMP_DIR', 'COMROOT']
         )
     elif group in ['condense_stats', 'filter_stats', 'make_plots',
                    'tar_images']:
@@ -1874,23 +1867,25 @@ def initalize_job_env_dict(verif_type, group,
         job_env_dict[env_var] = os.environ[env_var]
     if group in ['condense_stats', 'filter_stats', 'make_plots',
                  'tar_images']:
-        job_env_dict['plot_verbosity'] = (
-            os.environ['metplus_verbosity']
-        )
+        job_env_dict['plot_verbosity'] = 'DEBUG'
     job_env_dict['VERIF_TYPE'] = verif_type
     job_env_dict['JOB_GROUP'] = group
     job_env_dict['job_name'] = job
     if group in ['reformat_data', 'assemble_data', 'generate_stats',
                  'filter_stats', 'make_plots']:
-        job_env_dict['fhr_start'] = os.environ[
-            verif_case_step_abbrev_type+'_fhr_min'
-        ]
-        job_env_dict['fhr_end'] = os.environ[
-            verif_case_step_abbrev_type+'_fhr_max'
-        ]
-        job_env_dict['fhr_inc'] = os.environ[
-            verif_case_step_abbrev_type+'_fhr_inc'
-        ]
+        if verif_case_step_abbrev_type+'_fhr_list' in list(os.environ.keys()):
+            fhr_list = (
+                os.environ[verif_case_step_abbrev_type+'_fhr_list'].split(' ')
+            )
+        else:
+            fhr_range = range(
+                int(os.environ[verif_case_step_abbrev_type+'_fhr_min']),
+                int(os.environ[verif_case_step_abbrev_type+'_fhr_max'])
+                +int(os.environ[verif_case_step_abbrev_type+'_fhr_inc']),
+                int(os.environ[verif_case_step_abbrev_type+'_fhr_inc'])
+            )
+            fhr_list = [str(i) for i in fhr_range]
+        job_env_dict['fhr_list'] = ','.join(fhr_list)
         if verif_type in ['pres_levs', 'means', 'sfc', 'ptype']:
             verif_type_valid_hr_list = (
                 os.environ[verif_case_step_abbrev_type+'_valid_hr_list']\

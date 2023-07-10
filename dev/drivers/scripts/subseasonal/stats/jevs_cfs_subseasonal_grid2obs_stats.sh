@@ -4,7 +4,7 @@
 #PBS -q "dev"
 #PBS -A VERF-DEV
 #PBS -l walltime=00:40:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=60GB
+#PBS -l place=vscatter,select=1:ncpus=8:ompthreads=1:mem=60GB
 #PBS -l debug=true
 #PBS -V
 
@@ -63,7 +63,7 @@ export QUEUE=dev
 export QUEUESHARED=dev_shared
 export QUEUESERV=dev_transfer
 export PARTITION_BATCH=
-export nproc=128
+export nproc=8
 export USE_CFP=YES
 export met_ver=${met_ver}
 export metplus_ver=${metplus_ver}
@@ -76,10 +76,6 @@ export COMPONENT=subseasonal
 export RUN=atmos
 export MODELNAME=cfs
 export cfs_ver=${cfs_ver}
-#export OBSNAME=gfs
-#export gfs_ver=${gfs_ver}
-#export ccpa_ver=${ccpa_ver}
-#export obsproc_ver=${obsproc_ver}
 export VERIF_CASE=grid2obs
 
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER

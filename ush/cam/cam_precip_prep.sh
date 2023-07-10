@@ -1,4 +1,5 @@
-########################################
+#!/bin/bash
+#########################################
 #
 # NAME: cam_precip_prep.sh 
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
