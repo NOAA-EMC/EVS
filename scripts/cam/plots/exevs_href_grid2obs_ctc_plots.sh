@@ -287,7 +287,7 @@ for score_type in lead_average threshold_average; do
   if [ $score_type = lead_average ] ; then
      scoretype=fhrmean
   elif [ $score_type = threshold_average ] ; then
-     scoretype=thresholdmean
+     scoretype=threshmean
   fi 
 
   for stat in $stats ; do

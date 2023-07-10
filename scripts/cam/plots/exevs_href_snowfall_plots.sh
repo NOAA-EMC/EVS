@@ -178,7 +178,7 @@ cd $plot_dir
 
 for stats in ets fbias fss ; do
   score_type='threshold_average' 
-  scoretype='thresholdmean'
+  scoretype='threshmean'
 
   for var in weasd ; do
    for level in 06h 24h ; do

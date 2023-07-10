@@ -197,7 +197,7 @@ cd $plot_dir
 
 for stats in ets fbias fss ; do
   score_type='threshold_average' 
-  scoretype='thresholdmean'
+  scoretype='threshmean'
 
   for var in apcp_01 apcp_03 apcp_24 ; do
     level=${var:5:2}h
