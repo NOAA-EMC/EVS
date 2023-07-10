@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import os
 from datetime import datetime, timedelta as td
 import numpy as np
@@ -2997,7 +2996,7 @@ class Reference():
                         'CONUS_South', 
                     ],
                     'var_dict': {
-                        'APCP_01': {'fcst_var_names': ['APCP', 'APCP_01'],
+                        'APCP_01': {'fcst_var_names': ['APCP_01'],
                                     'fcst_var_levels': ['A01','A1'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
@@ -3006,7 +3005,7 @@ class Reference():
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_03': {'fcst_var_names': ['APCP', 'APCP_03'],
+                        'APCP_03': {'fcst_var_names': ['APCP_03'],
                                     'fcst_var_levels': ['A03','A3'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
@@ -3015,7 +3014,7 @@ class Reference():
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_06': {'fcst_var_names': ['APCP', 'APCP_06'],
+                        'APCP_06': {'fcst_var_names': ['APCP_06'],
                                     'fcst_var_levels': ['A06','A6'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
@@ -3024,7 +3023,7 @@ class Reference():
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_24': {'fcst_var_names': ['APCP', 'APCP_24'],
+                        'APCP_24': {'fcst_var_names': ['APCP_24'],
                                     'fcst_var_levels': ['A24'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
@@ -3043,7 +3042,7 @@ class Reference():
                         'CONUS_South', 'Alaska', 
                     ],
                     'var_dict': {
-                        'APCP_01': {'fcst_var_names': ['APCP', 'APCP_01'],
+                        'APCP_01': {'fcst_var_names': ['APCP_01'],
                                     'fcst_var_levels': ['A01','A1'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3062,7 +3061,7 @@ class Reference():
                                                            + ' >=25.4,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_03': {'fcst_var_names': ['APCP', 'APCP_03'],
+                        'APCP_03': {'fcst_var_names': ['APCP_03'],
                                     'fcst_var_levels': ['A03','A3'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3081,7 +3080,7 @@ class Reference():
                                                            + ' >=25.4,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_06': {'fcst_var_names': ['APCP', 'APCP_06'],
+                        'APCP_06': {'fcst_var_names': ['APCP_06'],
                                     'fcst_var_levels': ['A06','A6'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3100,7 +3099,7 @@ class Reference():
                                                            + ' >=25.4,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_24': {'fcst_var_names': ['APCP', 'APCP_24'],
+                        'APCP_24': {'fcst_var_names': ['APCP_24'],
                                     'fcst_var_levels': ['A24'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3132,7 +3131,7 @@ class Reference():
                         'LMV', 'GMC', 'APL', 'NAK', 'SAK'
                     ],
                     'var_dict': {
-                        'APCP_01': {'fcst_var_names': ['APCP', 'APCP_01'],
+                        'APCP_01': {'fcst_var_names': ['APCP_01'],
                                     'fcst_var_levels': ['A01','A1'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3151,7 +3150,7 @@ class Reference():
                                                            + ' >=25.4,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_03': {'fcst_var_names': ['APCP', 'APCP_03'],
+                        'APCP_03': {'fcst_var_names': ['APCP_03'],
                                     'fcst_var_levels': ['A03','A3'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3172,7 +3171,7 @@ class Reference():
                                                            + ' >=50.8,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_06': {'fcst_var_names': ['APCP', 'APCP_06'],
+                        'APCP_06': {'fcst_var_names': ['APCP_06'],
                                     'fcst_var_levels': ['A06','A6'],
                                     'fcst_var_thresholds': ('>=0.254, >=2.54,'
                                                             + ' >=6.35,'
@@ -3197,7 +3196,7 @@ class Reference():
                                                            + ' >=101.6'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_24': {'fcst_var_names': ['APCP', 'APCP_24'],
+                        'APCP_24': {'fcst_var_names': ['APCP_24'],
                                     'fcst_var_levels': ['A24'],
                                     'fcst_var_thresholds': ('>=0.254, >=2.54,'
                                                             + ' >=6.35,'
@@ -3234,7 +3233,7 @@ class Reference():
                         'Alaska', 'PuertoRico', 'Hawaii'
                     ],
                     'var_dict': {
-                        'APCP_01': {'fcst_var_names': ['APCP', 'APCP_01'],
+                        'APCP_01': {'fcst_var_names': ['APCP_01'],
                                     'fcst_var_levels': ['A01','A1'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
@@ -3243,7 +3242,7 @@ class Reference():
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_03': {'fcst_var_names': ['APCP', 'APCP_03'],
+                        'APCP_03': {'fcst_var_names': ['APCP_03'],
                                     'fcst_var_levels': ['A03','A3'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
@@ -3252,7 +3251,7 @@ class Reference():
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_06': {'fcst_var_names': ['APCP', 'APCP_06'],
+                        'APCP_06': {'fcst_var_names': ['APCP_06'],
                                     'fcst_var_levels': ['A06','A6'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
@@ -3261,7 +3260,7 @@ class Reference():
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_24': {'fcst_var_names': ['APCP', 'APCP_24'],
+                        'APCP_24': {'fcst_var_names': ['APCP_24'],
                                     'fcst_var_levels': ['A24'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
@@ -3279,7 +3278,7 @@ class Reference():
                         'Alaska', 'Hawaii', 'PuertoRico'
                     ],
                     'var_dict': {
-                        'APCP_01': {'fcst_var_names': ['APCP', 'APCP_01'],
+                        'APCP_01': {'fcst_var_names': ['APCP_01'],
                                     'fcst_var_levels': ['A01','A1'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3298,7 +3297,7 @@ class Reference():
                                                            + ' >=25.4,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_03': {'fcst_var_names': ['APCP', 'APCP_03'],
+                        'APCP_03': {'fcst_var_names': ['APCP_03'],
                                     'fcst_var_levels': ['A03','A3'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3317,7 +3316,7 @@ class Reference():
                                                            + ' >=25.4,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_06': {'fcst_var_names': ['APCP', 'APCP_06'],
+                        'APCP_06': {'fcst_var_names': ['APCP_06'],
                                     'fcst_var_levels': ['A06','A6'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3336,7 +3335,7 @@ class Reference():
                                                            + ' >=25.4,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_24': {'fcst_var_names': ['APCP', 'APCP_24'],
+                        'APCP_24': {'fcst_var_names': ['APCP_24'],
                                     'fcst_var_levels': ['A24'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3365,7 +3364,7 @@ class Reference():
                         'Alaska'
                     ],
                     'var_dict': {
-                        'APCP_01': {'fcst_var_names': ['APCP', 'APCP_01'],
+                        'APCP_01': {'fcst_var_names': ['APCP_01'],
                                     'fcst_var_levels': ['A01','A1'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3384,7 +3383,7 @@ class Reference():
                                                            + ' >=25.4,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_03': {'fcst_var_names': ['APCP', 'APCP_03'],
+                        'APCP_03': {'fcst_var_names': ['APCP_03'],
                                     'fcst_var_levels': ['A03','A3'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3405,7 +3404,7 @@ class Reference():
                                                            + ' >=50.8,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_06': {'fcst_var_names': ['APCP', 'APCP_06'],
+                        'APCP_06': {'fcst_var_names': ['APCP_06'],
                                     'fcst_var_levels': ['A06','A6'],
                                     'fcst_var_thresholds': ('>=0.254, >=2.54,'
                                                             + ' >=6.35,'
@@ -3430,7 +3429,7 @@ class Reference():
                                                            + ' >=101.6'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_24': {'fcst_var_names': ['APCP', 'APCP_24'],
+                        'APCP_24': {'fcst_var_names': ['APCP_24'],
                                     'fcst_var_levels': ['A24'],
                                     'fcst_var_thresholds': ('>=0.254, >=2.54,'
                                                             + ' >=6.35,'
