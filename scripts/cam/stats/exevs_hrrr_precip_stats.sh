@@ -109,10 +109,12 @@ if [ $USE_CFP = YES ]; then
         nc=$((nc+1))
     done
 else
+    set +x
     while [ $nc -le $ncount_job ]; do
-        sh +x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+        ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
         nc=$((nc+1))
     done
+    set -x
 fi
 
 # Generate MET Data
@@ -202,10 +204,12 @@ if [ $USE_CFP = YES ]; then
         nc=$((nc+1))
     done
 else
+    set +x
     while [ $nc -le $ncount_job ]; do
-        sh +x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+        ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
         nc=$((nc+1))
     done
+    set -x
 fi
 
 # Create Gather Job Script
@@ -267,10 +271,12 @@ if [ $USE_CFP = YES ]; then
         nc=$((nc+1))
     done
 else
+    set +x
     while [ $nc -le $ncount_job ]; do
-        sh +x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+        ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
         nc=$((nc+1))
     done
+    set -x
 fi
 
 # Create Gather 2 Job Script
@@ -329,10 +335,12 @@ if [ $USE_CFP = YES ]; then
         nc=$((nc+1))
     done
 else
+    set +x
     while [ $nc -le $ncount_job ]; do
-        sh +x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+        ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
         nc=$((nc+1))
     done
+    set -x
 fi
 
 # Copy files to desired location
@@ -414,10 +422,12 @@ if [ "$cyc" -ge "$last_cyc" ]; then
             nc=$((nc+1))
         done
     else
+        set +x
         while [ $nc -le $ncount_job ]; do
-            sh +x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+            ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
             nc=$((nc+1))
         done
+        set -x
     fi
 fi
 

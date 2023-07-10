@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Name: cam_plots_precip_spatial_map.py
 Contact(s): Marcel Caron, Mallory Row
@@ -189,7 +190,7 @@ class PrecipSpatialMap:
                 precip_lat = precip_data.variables['lat'][:]
                 precip_lon = precip_data.variables['lon'][:]
                 if model_num_name == 'mrms':
-                    precip_var_key = 'APCP_01_Z0'
+                    precip_var_key = 'MultiSensor_QPE_01H_Pass2_Z0'
                 else:
                     precip_var_key = 'APCP_24'
                 precip_APCP_A24 = precip_data.variables[precip_var_key][:]
