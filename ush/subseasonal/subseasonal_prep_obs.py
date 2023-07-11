@@ -137,10 +137,6 @@ for OBS in OBSNAME:
             +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
         )
         if OBS == 'nam':
-            log_missing_file = os.path.join(
-                DATA, 'mail_missing_'+OBS+'_valid'
-                +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
-            )
             offset_hr = str(int(CDATE_dt.strftime('%H'))%6
             ).zfill(2)
             offset_CDATE_dt = (
@@ -200,10 +196,6 @@ for OBS in OBSNAME:
                     CDATE_dt, log_missing_file
                 )
         elif OBS == 'ghrsst':
-            log_missing_file = os.path.join(
-                DATA, 'mail_missing_'+OBS+'_valid'
-                +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
-            )
             daily_prod_file = sub_util.format_filler(
                 obs_dict['daily_prod_file_format'], CDATE_dt, CDATE_dt,
                 'anl', {}
@@ -249,17 +241,9 @@ for OBS in OBSNAME:
                     os.makedirs(arch_file_dir)
                 print("----> Trying to create "+arch_file)
                 if OBS == 'gfs':
-                    log_missing_file = os.path.join(
-                        DATA, 'mail_missing_'+OBS+'_valid'
-                        +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
-                    )
                     sub_util.prep_prod_gfs_file(
                         prod_file, arch_file, CDATE_dt, log_missing_file)
                 else:
-                    log_missing_file = os.path.join(
-                        DATA, 'mail_missing_'+OBS+'_valid'
-                        +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
-                    )
                     sub_util.copy_file(prod_file, arch_file)
                     if not os.path.exists(prod_file):
                         sub_util.log_missing_file_obs(

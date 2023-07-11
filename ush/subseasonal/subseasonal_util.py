@@ -134,7 +134,7 @@ def log_missing_file_obs(log_missing_file, missing_file, obs, valid_dt):
              valid_dt         - initialization date (datetime)
     """
     if not os.path.exists(log_missing_file):
-        with open(log_missing_file, "a") as lmf:
+        with open(log_missing_file, "w") as lmf:
             lmf.write("#!/bin/bash\n")
             if obs == 'nam':
                 lmf.write(f'export subject="{obs.upper()} prepbufr Data '
@@ -529,7 +529,7 @@ def prep_prod_gefs_file(source_afile, source_bfile, prepped_file, dest_file,
 
 def prep_prod_cfs_pfile(source_pfile, prepped_pfile, dest_pfile,
                         init_dt, forecast_hour, prep_method, 
-                        log_missing_file):
+                        log_missing_pfile):
     """! Do prep work for CFS production pgbf files
 
          Args:
@@ -540,7 +540,7 @@ def prep_prod_cfs_pfile(source_pfile, prepped_pfile, dest_pfile,
              forecast_hour      - forecast hour (string)
              prep_method        - name of prep method to do
                                   (string)
-             log_missing_file   - text file path to write that
+             log_missing_pfile  - text file path to write that
                                   production file is missing (string)
 
          Returns:
@@ -575,14 +575,14 @@ def prep_prod_cfs_pfile(source_pfile, prepped_pfile, dest_pfile,
                 run_shell_command(['cat', working_file1, '>>', prepped_pfile])
                 os.remove(working_file1)
         else:
-            log_missing_file_model(log_missing_file, source_pfile,
+            log_missing_file_model(log_missing_pfile, source_pfile,
                                    'cfs', init_dt,
                                    str(forecast_hour).zfill(3))
     copy_file(prepped_pfile, dest_pfile)
 
 def prep_prod_cfs_ffile(source_ffile, prepped_ffile, dest_ffile,
                         init_dt, forecast_hour, prep_method,
-                        log_missing_file):
+                        log_missing_ffile):
     """! Do prep work for CFS production flxf files
 
          Args:
@@ -593,7 +593,7 @@ def prep_prod_cfs_ffile(source_ffile, prepped_ffile, dest_ffile,
              forecast_hour      - forecast hour (string)
              prep_method        - name of prep method to do
                                   (string)
-             log_missing_file   - text file path to write that
+             log_missing_ffile  - text file path to write that
                                   production file is missing (string)
 
          Returns:
@@ -631,7 +631,7 @@ def prep_prod_cfs_ffile(source_ffile, prepped_ffile, dest_ffile,
                 run_shell_command(['cat', working_file1, '>>', prepped_ffile])
                 os.remove(working_file1)
         else:
-            log_missing_file_model(log_missing_file, source_ffile,
+            log_missing_file_model(log_missing_ffile, source_ffile,
                                    'cfs', init_dt,
                                    str(forecast_hour).zfill(3))
     copy_file(prepped_ffile, dest_ffile)

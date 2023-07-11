@@ -329,8 +329,15 @@ if STEP == 'prep':
                             +'ens'+mb+'.t{init?fmt=%2H}z.'
                             +'f{lead?fmt=%3H}'
                         )
-                        log_missing_file = os.path.join(
-                            DATA, 'mail_missing_'+model+'_fhr'
+                        log_missing_pfile = os.path.join(
+                            DATA, 'mail_missing_'+model+'_pgbf_'
+                            +'member'+mb+'_fhr'
+                            +lead.zfill(3)+'_init'
+                            +init_time.strftime('%Y%m%d%H')+'.sh'
+                        )
+                        log_missing_ffile = os.path.join(
+                            DATA, 'mail_missing_'+model+'_flxf_'
+                            +'member'+mb+'_fhr'
                             +lead.zfill(3)+'_init'
                             +init_time.strftime('%Y%m%d%H')+'.sh'
                         )
@@ -340,7 +347,7 @@ if STEP == 'prep':
                                                      init_time,
                                                      lead,
                                                      'full',
-                                                     log_missing_file)
+                                                     log_missing_pfile)
                         del model_pfile_format
                         sub_util.prep_prod_cfs_ffile(model_ffile,
                                                      prep_ffile,
@@ -348,7 +355,7 @@ if STEP == 'prep':
                                                      init_time,
                                                      lead,
                                                      'full',
-                                                     log_missing_file)
+                                                     log_missing_ffile)
                         del model_ffile_format
                         mbr = mbr+1
 
