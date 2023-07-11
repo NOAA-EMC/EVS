@@ -37,9 +37,6 @@ export end_date=$VDATE
 #metplus_verbosity:         DEBUG, INFO, WARN, ERROR (most verbose is DEBUG)
 #met_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
 #log_met_output_to_metplus: log MET output to METplus log, yes or no
-export metplus_verbosity="DEBUG"
-export met_verbosity="2"
-export log_met_output_to_metplus="yes"
 ## DATA DIRECTIVE SETTINGS
 export KEEPDATA="YES"
 export SENDCOM="YES"
