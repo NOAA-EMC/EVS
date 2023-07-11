@@ -702,7 +702,6 @@ class Reference():
                                     'VIS': 'Visibility',
                                     'ICEC_Z0_mean': 'Sea Ice Concentration',
                                     'ICESEV': 'Icing Severity',
-                                    'ICIP': 'Icing Potential',
                                     'WIND': 'Wind Speed',
                                     'WIND80': 'Wind Speed >= 80knots',
                                     'REFC': 'Composite Reflectivity',
@@ -2087,15 +2086,6 @@ class Reference():
                                   'obs_var_names': ['ICESEV'],
                                   'obs_var_levels': ['P800','P700','P600','P500','P400'],
                                   'obs_var_thresholds': '>=1, >=2, >=3, >=4',
-                                  'obs_var_options': '',
-                                  'plot_group':'aviation'},
-                        'ICIP': {'fcst_var_names': ['ICIPmean', 'ICIPmax'],
-                                  'fcst_var_levels': ['P800','P700','P600','P500','P400'],
-                                  'fcst_var_thresholds': '>=0.1, >=0.2, >=0.3, >=0.4, >=0.5, >=0.6, >=0.7, >=0.8, >=0.9',
-                                  'fcst_var_options': '',
-                                  'obs_var_names': ['ICIP'],
-                                  'obs_var_levels': ['P800','P700','P600','P500','P400'],
-                                  'obs_var_thresholds': '>=0.1, >=0.2, >=0.3, >=0.4, >=0.5, >=0.6, >=0.7, >=0.8, >=0.9',
                                   'obs_var_options': '',
                                   'plot_group':'aviation'}
                     }
