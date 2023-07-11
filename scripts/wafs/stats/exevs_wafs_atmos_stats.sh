@@ -25,11 +25,7 @@ export STAT_ANALYSIS_OUTPUT_DIR=$DATA/${OBSERVATION}_${RESOLUTION}_${CENTER}_sta
 
 source $HOMEevs/parm/evs_config/wafs/config.evs.stats.wafs.atmos.standalone
 
-if [[ $RESOLUTION = "0P25" ]] && [[ $OBSERVATION = "GCIP" ]] ; then
-    sed "s|.*_VAR2_.*|#|" $PARMevs/$STEP/GridStat_fcstWAFS_obs${OBSERVATION}.conf > GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
-else
-    cp $PARMevs/$STEP/GridStat_fcstWAFS_obs${OBSERVATION}.conf GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
-fi
+cp $PARMevs/$STEP/GridStat_fcstWAFS_obs${OBSERVATION}.conf GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
 
 # Prepare data
 $USHevs/evs_wafs_atmos_stats.sh
@@ -50,7 +46,7 @@ ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/$STEP/StatAnalys
 
 
 if [ $OBSERVATION = "GCIP" ] ; then
-    stat_file_suffix=`echo $VAR1_NAME | sed -e "s|mean||" -e "s|max||" | tr '[:upper:]' '[:lower:]'`
+    stat_file_suffix=`echo $VAR1_NAME | tr '[:upper:]' '[:lower:]'`
 elif [ $OBSERVATION = "GFS" ] ; then
     stat_file_suffix='uvt'$resolution
 fi
