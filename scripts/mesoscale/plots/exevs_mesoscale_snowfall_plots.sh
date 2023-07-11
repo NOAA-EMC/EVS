@@ -2,11 +2,11 @@
 
 # =============================================================================
 #
-# NAME: exevs_mesoscale_grid2obs_plots.sh
+# NAME: exevs_mesoscale_snowfall_plots.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 #                 Roshan Shrestha, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Handle all components of an EVS Mesoscale Grid2Obs - Plots job
-# DEPENDENCIES: $HOMEevs/jobs/cam/plots/JEVS_MESOSCALE_PLOTS 
+# PURPOSE: Handle all components of an EVS Mesoscale Snowfall - Plots job
+# DEPENDENCIES: $HOMEevs/jobs/mesoscale/plots/JEVS_MESOSCALE_PLOTS 
 #
 # =============================================================================
 
@@ -37,21 +37,21 @@ status=$?
 [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_create_output_dirs.py"
 
 # Create Job Script 
-python $USHevs/mesoscale/mesoscale_plots_grid2obs_create_job_scripts.py
+python $USHevs/mesoscale/mesoscale_plots_snowfall_create_job_scripts.py
 status=$?
 [[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran mesoscale_plots_grid2obs_create_job_scripts.py"
+[[ $status -eq 0 ]] && echo "Successfully ran mesoscale_plots_snowfall_create_job_scripts.py"
 export njob=$((njob+1))
 
 # Create POE Job Scripts
 if [ $USE_CFP = YES ]; then
-    python $USHevs/mesoscale/mesoscale_plots_grid2obs_create_poe_job_scripts.py
+    python $USHevs/mesoscale/mesoscale_plots_snowfall_create_poe_job_scripts.py
     status=$?
     [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_plots_grid2obs_create_poe_job_scripts.py"
+    [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_plots_snowfall_create_poe_job_scripts.py"
 fi
 
-# Run All Mesoscale grid2obs/plots Jobs
+# Run All Mesoscale snowfall/plots Jobs
 chmod u+x ${DATA}/${VERIF_CASE}/${STEP}/plotting_job_scripts/*
 ncount_job=$(ls -l ${DATA}/${VERIF_CASE}/${STEP}/plotting_job_scripts/job* |wc -l)
 nc=1
@@ -87,7 +87,8 @@ fi
 # Copy files to desired location
 #all commands to copy output files into the correct EVS COMOUT directory
 if [ $SENDCOM = YES ]; then
-    find ${DATA}/${VERIF_CASE}/out/*/*/*.png -type f -print | tar -cvf ${COMOUT}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar -T -
+    find ${DATA}/${VERIF_CASE}/out/*/*/*.png -type f -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar -T -
+    cp ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar ${COMOUT}/.
 fi
 
 # Non-production jobs
