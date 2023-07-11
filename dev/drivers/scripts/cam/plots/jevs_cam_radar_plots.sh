@@ -14,36 +14,23 @@ set -x
 
 cd $PBS_O_WORKDIR
 
-export model=evs
-
-export HOMEevs=/lfs/h2/emc/vpppg/save/${USER}/EVS
-source $HOMEevs/versions/run.ver
-
 
 ############################################################
 # Load modules
 ############################################################
+
 module reset
 
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
-module use /apps/dev/modulefiles/
-module load ve/evs/${ve_evs_ver}
-module load cray-mpich/${craympich_ver}
-module load cray-pals/${craypals_ver}
-module load cfp/${cfp_ver}
-module load libjpeg/${libjpeg_ver}
-module load libpng/${libpng_ver}
-module load zlib/${zlib_ver}
-module load jasper/${jasper_ver}
-module load cfp/${cfp_ver}
-module load gsl/${gsl_ver}
-module load met/${met_ver}
-module load metplus/${metplus_ver}
-module load prod_util/${prod_util_ver}
-module load prod_envir/${prod_envir_ver}
+export model=evs
+export NET=evs
+export COMPONENT=cam
+export STEP=plots
+export RUN=atmos
 
-module list
+export HOMEevs=/lfs/h2/emc/vpppg/save/${USER}/EVS
+source $HOMEevs/versions/run.ver
+
+source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 
 ############################################################
@@ -53,17 +40,12 @@ export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export LINE_TYPE=${LINE_TYPE:-${LINE_TYPE}}
 export KEEPDATA=YES
-export NET=evs
-export STEP=plots
-export COMPONENT=cam
-export RUN=atmos
 export VERIF_CASE=radar
 export MODELNAME=${COMPONENT}
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${LINE_TYPE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
-export USE_CFP=YES
 export nproc=64
 ############################################################
 

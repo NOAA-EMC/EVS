@@ -158,7 +158,8 @@ chmod 775 $DATA/poescript
 export MP_PGMMODEL=mpmd
 export MP_CMDFILE=${DATA}/poescript
 
-#USE_CFP=NO
+export USE_CFP=YES
+
 if [ $USE_CFP = YES ]; then
 
 #  export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
