@@ -1095,6 +1095,14 @@ def main():
             logger.warning(e)
             logger.warning("Continuing ...")
         plot_group = var_specs['plot_group']
+        if FCST_LEVELS in presets.level_presets:
+            FCST_LEVELS = re.split(r',(?![0*])', preset.level_presets[FCST_LEVELS].replace(' ',''))
+        else:
+            FCST_LEVELS = re.split(r',(?![0*])', FCST_LEVELS.replace(' ',''))
+        if OBS_LEVELS in presets.level_presets:
+            OBS_LEVELS = re.split(r',(?![0*])', preset.level_presets[OBS_LEVELS].replace(' ',''))
+        else:
+            OBS_LEVELS = re.split(r',(?![0*])', OBS_LEVELS.replace(' ',''))
         for l, fcst_level in enumerate(FCST_LEVELS):
             if len(FCST_LEVELS) != len(OBS_LEVELS):
                 e = ("FCST_LEVELS and OBS_LEVELS must be lists of the same"
@@ -1196,8 +1204,8 @@ if __name__ == "__main__":
     FLEADS = check_FCST_LEAD(os.environ['FCST_LEAD']).replace(' ','').split(',')
 
     # list of levels
-    FCST_LEVELS = check_FCST_LEVEL(os.environ['FCST_LEVEL']).replace(' ','').split(',')
-    OBS_LEVELS = check_OBS_LEVEL(os.environ['OBS_LEVEL']).replace(' ','').split(',')
+    FCST_LEVELS = check_FCST_LEVEL(os.environ['FCST_LEVEL'])
+    OBS_LEVELS = check_OBS_LEVEL(os.environ['OBS_LEVEL'])
 
     FCST_THRESH = check_FCST_THRESH(os.environ['FCST_THRESH'], LINE_TYPE)
     OBS_THRESH = check_OBS_THRESH(os.environ['OBS_THRESH'], FCST_THRESH, LINE_TYPE).replace(' ','').split(',')
@@ -1250,8 +1258,6 @@ if __name__ == "__main__":
     ]
     FLEADS = [int(flead) for flead in FLEADS]
     VERIF_CASETYPE = str(VERIF_CASE).lower() + '_' + str(VERIF_TYPE).lower()
-    FCST_LEVELS = [str(level) for level in FCST_LEVELS]
-    OBS_LEVELS = [str(level) for level in OBS_LEVELS]
     CONFIDENCE_INTERVALS = str(CONFIDENCE_INTERVALS).lower() in [
         'true', '1', 't', 'y', 'yes'
     ]
