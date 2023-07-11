@@ -1,64 +1,125 @@
-#!/bin/ksh
+#!/bin/bash
 
+####################################
+# Preliminary data setup step
+####################################
 set -xa
-#######################################################
-#######################################################
-
-export cycle=t${cyc}z
 
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
-export pid=$$
 
+####################################
+# SET SHELL PROCESSING VARIABLES
+####################################
+export PS4='$SECONDS + '
+date
+
+
+####################################
+# obtain unique LSF id (jobid) and make temp directories
+####################################
+export pid=$$
 export DATA=${DATA:-${DATAROOT:?}}/${jobid:?}
 rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
 
 
-setpdy.sh
-. $DATA/PDY
+####################################
+# Determine Job Output Name on System
+####################################
+export pgmout="OUTPUT.${pid}"
+
+
+####################################
+# Set EVS directories
+####################################
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
+export SCRIPTevs=$HOMEevs/scripts
+
+
+####################################
+# Run setpdy and initialize PDY variables
+####################################
+export cycle=t${cyc}z
+setpdy.sh 31
+. ./PDY
 
 if [ $MODELNAME = sref ] ; then
-  export VDATE=${VDATE:-$PDYm2}
+    export VDATE=${VDATE:-$PDYm2}
+    if [ $VERIF_CASE = precip ] ; then
+        export ush_dir=$USHevs/mesoscale/ush_sref_plot_precip_py
+    elif [ $VERIF_CASE = cnv ] ; then
+        export ush_dir=$USHevs/mesoscale/ush_sref_plot_cnv_py
+    else  
+        export ush_dir=$USHevs/mesoscale/ush_sref_plot_py
+    fi
+else
+    if [ $VERIF_CASE = grid2obs ]; then
+        export VDATE=${VDATE:-$PDYm1}
+    elif [ $VERIF_CASE = precip ]; then
+        export VDATE=${VDATE:-$PDYm1}
+    elif [ $VERIF_CASE = snowfall ]; then
+        export VDATE=${VDATE:-$PDYm1}
+    else
+        echo "The provided VERIF_CASE, $VERIF_CASE, is not supported for the $COMPONENT $STEP step"
+        exit 1
+    fi
 fi
 
-export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$MODELNAME.$VDATE
-export COMINapcp24mean=${COMINspatial:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT
-export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/${evs_ver})}/$STEP/$COMPONENT/$RUN.$VDATE
-export DATA_IN=${DATA_IN:-$DATAROOT}
-mkdir -p $COMOUT
 
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs_gens.${evs_ver}}
-export EXECevs=$HOMEevs/exec
-export PARMevs=$HOMEevs/parm
-export USHevs=$HOMEevs/ush
-export SCRIPTevs=$HOMEevs/scripts
-export FIXevs=${FIXevs:-$HOMEevs/fix}
-
-if [ $VERIF_CASE = precip ] ; then
-  export ush_dir=$USHevs/mesoscale/ush_sref_plot_precip_py
-elif [ $VERIF_CASE = cnv ] ; then
-  export ush_dir=$USHevs/mesoscale/ush_sref_plot_cnv_py
-else  
-  export ush_dir=$USHevs/mesoscale/ush_sref_plot_py
-fi
+####################################
+# Define NET/RUN variables:
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-stats}
+export COMPONENT=${COMPONENT:-mesoscale}
+export RUN=${RUN:-atmos}
 
 if [ $RUN = atmos ] ; then
   export INITDATE=${INITDATE:-$PDYm2}
 fi
 
-$SCRIPTevs/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+
+####################################
+# Define COMIN/COMOUT variables:
+####################################
+export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
+export COMINapcp24mean=${COMINspatial:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT
+export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
+export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
+export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
+
+mkdir -p $COMOUT
+
+echo $COMPATH
+
+
+####################################
+# Execute the script.
+####################################
+if [ $MODELNAME = sref ] ; then
+    $SCRIPTevs/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+else
+    $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+fi 
+
+export err=$?; err_chk
+
+if [ -e "$pgmout" ]; then
+   cat $pgmout
+fi
 
 msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$msg"
+postmsg "$jlogfile" "$msg"
 
 if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT
   rm -rf $DATA
 fi
-
-date
-
