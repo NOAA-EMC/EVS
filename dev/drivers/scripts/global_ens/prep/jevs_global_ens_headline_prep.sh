@@ -1,6 +1,6 @@
 #!/bin/bash 
 #
-#PBS -N jevs_headline_prep
+#PBS -N jevs_global_ens_headline_prep
 #PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q dev

@@ -43,11 +43,19 @@ export COMINsst=${COMINsst:-/lfs/h1/ops/dev/dcom}
 
 export COMINgefs_bc=${COMINgefs_bc:-$COMINnaefs}
 export COMINcmce_bc=${DCOMIN}
+export COMIN_gefs=${COMIN_gefs:-${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/gefs}
+export COMIN_gefs_bc=${COMIN_gefs_bc:-${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/gefs_bc}
+export COMIN_cmce=${COMIN_cmce:-${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/cmce}
+export COMIN_cmce_bc=${COMIN_cmce_bc:-${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/cmce_bc}
 
 
-
-export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/${evs_ver})}/$STEP/global_ens/$RUN
+export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/${evs_ver})}/$STEP/${COMPONENT}
 mkdir -p $COMOUT
+
+export COMOUT_gefs=${COMOUT_gefs:-${COMOUT}/${RUN}.${INITDATE}/gefs}
+export COMOUT_cmce=${COMOUT_cmce:-${COMOUT}/${RUN}.${INITDATE}/cmce}
+
+mkdir -p $COMOUT_gefs $COMOUT_cmce
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs_gens.${evs_ver}}
 export EXECevs=$HOMEevs/exec

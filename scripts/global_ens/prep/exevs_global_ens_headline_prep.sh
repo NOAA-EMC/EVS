@@ -14,16 +14,10 @@ export vday=$INITDATE
 
 export run_mpi=${run_mpi:-'yes'}
 
-export COMIN_gefs=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/gefs
-export COMIN_gefs_bc=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/gefs_bc
-export COMIN_cmce=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/cmce
-export COMIN_cmce_bc=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/cmce_bc
 
 
-export COMOUT_gefs=${COMIN}/${STEP}/${COMPONENT}/headline.${INITDATE}/gefs
-export COMOUT_cmce=${COMIN}/${STEP}/${COMPONENT}/headline.${INITDATE}/cmce
 
-mkdir -p $COMOUT_gefs $COMOUT_cmce
+
 
 #get ensemble member data by sequentail(non-mpi) or mpi run
 $USHevs/${COMPONENT}/evs_get_gens_headline_data.sh
