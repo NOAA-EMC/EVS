@@ -34,7 +34,7 @@ if [ $DOMAIN = conus ]; then
 
 fi
 
-export var_name="'Prob_MXUPHL25_A24_geHWT"
+export var_name="Prob_MXUPHL25_A24_geHWT"
 export FCST_THRESHs=">=0.0 >=0.02 >=0.05 >=0.10 >=0.15 >=0.30 >=0.45 >=0.60 >=1.0"
 export FCST_THRESH=">=0.0,>=0.02,>=0.05,>=0.10,>=0.15,>=0.30,>=0.45,>=0.60,>=1.0"
 export FCST_LEVEL="A1"
@@ -88,28 +88,42 @@ elif [ $PLOT_TYPE = threshold_average ]; then
 
 elif [ $PLOT_TYPE = lead_average ]; then
 
-   for FCST_THRESH in ${FCST_THRESHs}; do
+   if [ $LINE_TYPE = pstd ]; then
 
-      OBS_THRESH=${FCST_THRESH}
+      export STATS="bss_smpl"
+      python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
+      export err=$?; err_chk
 
-      if [ $LINE_TYPE = nbrcnt ]; then
+      export STATS="bs"
+      python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
+      export err=$?; err_chk
 
-         export STATS="fss"
-         python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
-         export err=$?; err_chk
+   else
 
-      elif [ $LINE_TYPE = nbrctc ]; then
+      for FCST_THRESH in ${FCST_THRESHs}; do
 
-         export STATS="csi"
-         python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
-         export err=$?; err_chk
+         OBS_THRESH=${FCST_THRESH}
 
-         export STATS="fbias"
-         python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
-         export err=$?; err_chk
-      fi
+         if [ $LINE_TYPE = nbrcnt ]; then
 
-   done
+            export STATS="fss"
+            python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
+            export err=$?; err_chk
+
+         elif [ $LINE_TYPE = nbrctc ]; then
+
+            export STATS="csi"
+            python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
+            export err=$?; err_chk
+
+            export STATS="fbias"
+            python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
+            export err=$?; err_chk
+         fi
+
+      done
+   
+   fi
 
 fi
 

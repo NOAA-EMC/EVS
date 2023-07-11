@@ -37,10 +37,6 @@ export INIT_END=""
 export FCST_VALID_HOUR=""
 export FCST_LEAD="24,30,36,42,48,54,60"
 
-#PLOT_TYPES="threshold_average lead_average performance_diagram"
-DOMAINS="conus"
-FCST_INIT_HOURS="0 6 12 18"
-
 
 ############################################################
 # Set some job-wide environment variables
@@ -71,7 +67,8 @@ export MET_VERSION="${MET_VERSION%.}"
 
 
 ############################################################
-# Write poescript for each domain and use case
+# Symlink .stat files from COMIN
+# Mainly for HREF when product is included in model name 
 ############################################################
 
 # Create working directories 
@@ -109,7 +106,11 @@ for model in ${model_list}; do
 done
 
 
+############################################################
+# Write poescript for each domain and use case
+############################################################
 
+DOMAINS="conus"
 
 if [ $LINE_TYPE = nbrcnt ]; then
    PLOT_TYPES="lead_average threshold_average"
@@ -124,6 +125,12 @@ njob=0
 
 #Loop over plot types
 for PLOT_TYPE in ${PLOT_TYPES}; do
+
+   if [ $PLOT_TYPE = lead_average ]; then
+      FCST_INIT_HOURS="0,6,12,18"
+   else
+      FCST_INIT_HOURS="0 6 12 18"
+   fi
 
    # Loop over domains
    for DOMAIN in ${DOMAINS}; do
