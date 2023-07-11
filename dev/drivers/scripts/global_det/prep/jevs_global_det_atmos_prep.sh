@@ -1,13 +1,8 @@
 #PBS -N jevs_global_det_atmos_prep_00
 #PBS -j oe
 #PBS -S /bin/bash
-<<<<<<< HEAD
-#PBS -q dev_transfer
-#PBS -A EVS-DEV
-=======
 #PBS -q dev
-#PBS -A VERF-DEV
->>>>>>> develop
+#PBS -A EVS-DEV
 #PBS -l walltime=00:30:00
 #PBS -l select=1:ncpus=1:mem=30GB
 #PBS -l debug=true
