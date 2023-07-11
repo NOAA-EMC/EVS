@@ -2766,7 +2766,7 @@ class Reference():
                                   'fcst_var_levels': ['A1'],
                                   'fcst_var_thresholds': '',
                                   'fcst_var_options': '',
-                                  'obs_var_names': ['COPO'],
+                                  'obs_var_names': ['OZONE'],
                                   'obs_var_levels': ['A1'],
                                   'obs_var_thresholds': '',
                                   'obs_var_options': '',
@@ -2775,7 +2775,7 @@ class Reference():
                                 'fcst_var_levels': ['L1'],
                                 'fcst_var_thresholds': '',
                                 'fcst_var_options': '',
-                                'obs_var_names': ['COPOPM'],
+                                'obs_var_names': ['PM25'],
                                 'obs_var_levels': ['A1'],
                                 'obs_var_thresholds': '',
                                 'obs_var_options': '',
@@ -2802,7 +2802,7 @@ class Reference():
                                                           + '>75, >85, >105,'
                                                           + '>125, >150'),
                                   'fcst_var_options': '',
-                                  'obs_var_names': ['COPO'],
+                                  'obs_var_names': ['OZONE'],
                                   'obs_var_levels': ['A1'],
                                   'obs_var_thresholds': ('>50, >60, >65, >70,'
                                                          + '>75, >85, >105,'
