@@ -73,7 +73,7 @@ def plot_roc_curve(df: pd.DataFrame, logger: logging.Logger,
                       plot_group: str = 'sfc_upper',
                       sample_equalization: bool = True,
                       regrid: str = 'g193', component: str = 'wafs',
-                      fcst_var_names: list = ['ICIPmean'], var_name: str = 'icip'
+                      fcst_var_names: list = ['ICESEV'], var_name: str = 'icesev'
                    ):
 
     logger.info("========================================")
@@ -206,7 +206,7 @@ def plot_roc_curve(df: pd.DataFrame, logger: logging.Logger,
         logger.warning(warning_string)
         logger.warning("Continuing ...")
 
-    # If ICIPmean and ICIPmax, will plot them together
+    # If fcst_var_names have more than one variables, they will be plotted together.
     df0 = df.copy()
     model_list0 = model_list.copy()
     for fcst_var_name in fcst_var_names:
@@ -573,7 +573,7 @@ def plot_roc_curve(df: pd.DataFrame, logger: logging.Logger,
             units = reference.unit_conversions[units]['convert_to']
         if units == '-':
             units = ''
-        # ICIP may have suffix of  mean/max
+        # If a variable has a suffix, like mean, max, etc.
         var_name_suffix = ""
         if fcst_var_name.find(var_name) != -1:
             var_name_suffix = fcst_var_name[fcst_var_name.find(var_name)+len(var_name):]
