@@ -74,9 +74,10 @@ for model in $model_list ; do
   for fhr in 24 48 72 ; do
     past=`$NDATE -$fhr ${VDATE}12`
     INITDATE=${past:0:8}    
-    mv ${model}.v${VDATE}12.0${fhr}h.${mask}.png  evs.${model}.spatial_map.apcp_a24.init${INITDATE}.vlid${VDATE}12.f${fhr}.buk_${mask}.png
+    mv ${model}.v${VDATE}12.0${fhr}h.${mask}.png  evs.${model}.spatial_map.apcp_a24.vlid12z.f0${fhr}.${mask}.png
   done
 done  
+
 
 tar -cvf evs.plots.sref.precip.spatial.map.v${VDATE}.tar *.png
 

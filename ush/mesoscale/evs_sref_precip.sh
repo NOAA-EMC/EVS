@@ -95,7 +95,7 @@ for  obsv in ccpa ; do
        echo "cp \$output_base/stat/*.stat $COMOUTsmall" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
 
        chmod +x run_sref_mpi_${domain}.${obsv}.${fhr}.sh
-       echo "run_sref_mpi_${domain}.${obsv}.${fhr}.sh" >> run_all_sref_precip_poe
+       echo "${DATA}/run_sref_mpi_${domain}.${obsv}.${fhr}.sh" >> run_all_sref_precip_poe
 
   done
 
@@ -107,10 +107,10 @@ if [ $run_mpi = yes ] ; then
 
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
 
-  mpiexec  -n 4 -ppn 4 --cpu-bind core --depth=2 cfp run_all_sref_precip_poe
+  mpiexec  -n 4 -ppn 4 --cpu-bind core --depth=2 cfp ${DATA}/run_all_sref_precip_poe
 
 else
-   run_all_sref_precip_poe
+   ${DATA}/run_all_sref_precip_poe
 fi 
 
 
