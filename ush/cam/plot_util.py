@@ -349,6 +349,11 @@ def get_stat_file_line_type_columns(logger, met_version, line_type):
           stat_file_line_type_columns = [
             'TOTAL', 'FY_OY', 'FY_ON', 'FN_OY', 'FN_ON'
          ]
+   elif line_type == 'NBRCTC':
+       if met_version >= 6.0:
+          stat_file_line_type_columns = [
+            'TOTAL', 'FY_OY', 'FY_ON', 'FN_OY', 'FN_ON'
+         ]
    elif line_type == 'NBRCNT':
       if met_version >= 6.0:
          stat_file_line_type_columns = [
@@ -356,6 +361,30 @@ def get_stat_file_line_type_columns(logger, met_version, line_type):
             'AFSS', 'AFSS_BCL', 'AFSS_BCU', 'UFSS', 'UFSS_BCL', 'UFSS_BCU',
             'F_RATE', 'F_RATE_BCL', 'F_RATE_BCU',
             'O_RATE', 'O_RATE_BCL', 'O_RATE_BCU'
+         ]
+   elif line_type == 'ECNT':
+      if met_version < 11.0:
+         stat_file_line_type_columns = [
+            'TOTAL', 'N_ENS', 'CRPS', 'CRPSS', 'IGN', 'ME', 'RMSE', 'SPREAD',
+            'ME_OERR', 'RMSE_OERR', 'SPREAD_OERR', 'SPREAD_PLUS_OERR',
+            'CRPSCL', 'CRPS_EMP', 'CRPSCL_EMP', 'CRPSS_EMP'
+         ]
+      elif met_version >= 11.0:
+         stat_file_line_type_columns = [
+             'TOTAL', 'N_ENS', 'CRPS', 'CRPSS', 'IGN', 'ME', 'RMSE', 'SPREAD',
+             'ME_OERR', 'RMSE_OERR', 'SPREAD_OERR', 'SPREAD_PLUS_OERR',
+             'CRPSCL', 'CRPS_EMP', 'CRPSCL_EMP', 'CRPSS_EMP',
+             'CRPS_EMP_FAIR', 'SPREAD_MD', 'MAE', 'MAE_OERR', 'BIAS_RATIO',
+             'N_GE_OBS', 'ME_GE_OBS', 'N_LT_OBS', 'ME_LT_OBS'
+         ] 
+   elif line_type == 'PSTD':
+      if met_version >= 6.0:
+         stat_file_line_type_columns = [
+            'TOTAL', 'N_THRESH', 'BASER', 'BASER_NCL', 'BASER_NCU', 'RELIABILITY',
+            'RESOLUTION', 'UNCERTAINTY', 'ROC_AUC', 'BRIER', 'BRIER_NCL', 'BRIER_NCU',
+            'BRIERCL', 'BRIERCL_NCL', 'BRIERCL_NCU', 'BSS', 'BSS_SMPL',
+            'THRESH_1', 'THRESH_2', 'THRESH_3', 'THRESH_4', 'THRESH_5', 'THRESH_6',
+            'THRESH_7', 'THRESH_8', 'THRESH_9', 'THRESH_10', 'THRESH_11'
          ]
    return stat_file_line_type_columns
 
@@ -650,6 +679,24 @@ def get_stat_plot_name(logger, stat):
       stat_plot_name = 'Peirce Skill Score'
    elif stat == 'hss':
       stat_plot_name = 'Heidke Skill Score'
+   elif stat == 'crps':
+      stat_plot_name = 'CRPS'
+   elif stat == 'crpss':
+      stat_plot_name = 'CRPSS'
+   elif stat == 'spread':
+      stat_plot_name = 'Spread'
+   elif stat == 'me':
+      stat_plot_name = 'Mean Error (Bias)'
+   elif stat == 'mae':
+      stat_plot_name = 'Mean Absolute Error'
+   elif stat == 'bs':
+      stat_plot_name = 'Brier Score'
+   elif stat == 'roc_area':
+      stat_plot_name = 'ROC Area'
+   elif stat == 'bss':
+      stat_plot_name = 'Brier Skill Score'
+   elif stat == 'bss_smpl':
+      stat_plot_name = 'Brier Skill Score'
    else:
       logger.error(stat+" is not a valid option")
       exit(1)
@@ -1591,6 +1638,24 @@ def calculate_stat(logger, model_data, stat, conversion):
           ufss = model_data.loc[:]['UFSS']
           frate = model_data.loc[:]['F_RATE']
           orate = model_data.loc[:]['O_RATE']
+      elif all(elem in model_data_columns for elem in
+            ['CRPS', 'CRPSS', 'RMSE', 'SPREAD', 'ME', 'MAE']):
+         line_type = 'ECNT'
+         total  = model_data.loc[:]['TOTAL']
+         crps   = model_data.loc[:]['CRPS']
+         crpss  = model_data.loc[:]['CRPSS']
+         rmse   = model_data.loc[:]['RMSE']
+         spread = model_data.loc[:]['SPREAD']
+         me     = model_data.loc[:]['ME']
+         mae     = model_data.loc[:]['MAE']
+      elif all(elem in model_data_columns for elem in
+            ['ROC_AUC', 'BRIER', 'BSS', 'BSS_SMPL']):
+         line_type = 'PSTD'
+         total  = model_data.loc[:]['TOTAL']
+         roc_area =  model_data.loc[:]['ROC_AUC']
+         bs =  model_data.loc[:]['BRIER']
+         bss =  model_data.loc[:]['BSS']
+         bss_smpl =  model_data.loc[:]['BSS_SMPL']
       else:
          logger.error("Could not recognize line type from columns")
          exit(1)
@@ -1609,6 +1674,37 @@ def calculate_stat(logger, model_data, stat, conversion):
          stat_values = np.sqrt(ffbar + oobar - 2*fobar)
       elif line_type == 'VL1L2':
          stat_values = np.sqrt(uvffbar + uvoobar - 2*uvfobar)
+      elif line_type == 'ECNT':
+         stat_values = rmse
+   elif stat == 'crps':
+      if line_type == 'ECNT':
+        stat_values = crps
+   elif stat == 'crpss':
+      if line_type == 'ECNT':
+        stat_values = crpss
+   elif stat == 'spread':
+      if line_type == 'ECNT':
+        stat_values = spread
+   elif stat == 'me':
+      if line_type == 'ECNT':
+        stat_values = me
+   elif stat == 'mae':
+      if line_type == 'SL1L2':
+        stat_values = mae
+      elif line_type == 'ECNT':
+        stat_values = mae
+   elif stat == 'bs':
+      if line_type == 'PSTD':
+        stat_values = bs
+   elif stat == 'bss':
+      if line_type == 'PSTD':
+        stat_values = bss
+   elif stat == 'bss_smpl':
+      if line_type == 'PSTD':
+        stat_values = bss_smpl
+   elif stat == 'roc_area':
+      if line_type == 'PSTD':
+        stat_values = roc_area
    elif stat == 'bcrmse':
       if line_type == 'SL1L2':
          var_f = ffbar - fbar*fbar
@@ -1761,10 +1857,10 @@ def calculate_stat(logger, model_data, stat, conversion):
       if line_type == 'CTC':
          stat_values = (fy_oy + fn_on)/total
    elif stat == 'fbias':
-      if line_type == 'CTC':
+      if line_type == 'CTC' or line_type == 'NBRCTC':
          stat_values = (fy_oy + fy_on)/(fy_oy + fn_oy)
    elif stat == 'pod' or stat == 'hrate':
-      if line_type == 'CTC':
+      if line_type == 'CTC' or line_type == 'NBRCTC':
          stat_values = fy_oy/(fy_oy + fn_oy)
    elif stat == 'pofd' or stat == 'farate':
       if line_type == 'CTC':
@@ -1773,13 +1869,13 @@ def calculate_stat(logger, model_data, stat, conversion):
       if line_type == 'CTC':
          stat_values = fn_on/(fy_on + fn_on)
    elif stat == 'faratio':
-      if line_type == 'CTC':
+      if line_type == 'CTC' or line_type == 'NBRCTC':
          stat_values = fy_on/(fy_on + fy_oy)
    elif stat == 'sratio':
-      if line_type == 'CTC':
+      if line_type == 'CTC' or line_type == 'NBRCTC':
          stat_values = 1. - (fy_on/(fy_on + fy_oy))
    elif stat == 'csi' or stat == 'ts':
-      if line_type == 'CTC':
+      if line_type == 'CTC' or line_type == 'NBRCTC':
          stat_values = fy_oy/(fy_oy + fy_on + fn_oy)
    elif stat == 'gss' or stat == 'ets':
       if line_type == 'CTC':
