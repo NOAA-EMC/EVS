@@ -36,7 +36,7 @@ export EVAL_PERIOD="LAST${NDAYS}DAYS"
 if [ $OBSERVATION = "GCIP" ] ; then
     # export CENTERS="blend us uk"
     export CENTERS="blend"
-    resolutions="0P25 1P25"
+    resolutions="0P25"
     plot_types="roc_curve fbias"
 ################################################
 # Part 2: U/V/T Verification
@@ -58,7 +58,7 @@ for RESOLUTION in $resolutions ; do
     source $HOMEevs/parm/evs_config/wafs/config.evs.stats.wafs.atmos.standalone
 
     if [ $OBSERVATION = "GCIP" ] ; then
-        stat_file_suffix=`echo $VAR1_NAME | sed -e "s|mean||" -e "s|max||" | tr '[:upper:]' '[:lower:]'`
+        stat_file_suffix=`echo $VAR1_NAME | tr '[:upper:]' '[:lower:]'`
     elif [ $OBSERVATION = "GFS" ] ; then
 	stat_file_suffix="uvt$resolution"
 	#===================================================================================================#
