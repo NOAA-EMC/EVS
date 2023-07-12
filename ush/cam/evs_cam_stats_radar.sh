@@ -69,7 +69,7 @@ if [ ${MODELNAME} = hireswarw ]; then
    fhr_max=48
    fhr_inc=1
 
-   export COMINfcst=${COMINhiresw}
+   export MODEL_INPUT_DIR=${COMINhiresw}
    export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.arw_5km.f{lead?fmt=%2H}.${DOM}.grib2
 
 elif [ ${MODELNAME} = hireswarwmem2 ]; then
@@ -78,7 +78,7 @@ elif [ ${MODELNAME} = hireswarwmem2 ]; then
    fhr_max=48
    fhr_inc=1
 
-   export COMINfcst=${COMINhiresw}
+   export MODEL_INPUT_DIR=${COMINhiresw}
    export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.arw_5km.f{lead?fmt=%2H}.${DOM}mem2.grib2
 
 elif [ ${MODELNAME} = hireswfv3 ]; then
@@ -87,7 +87,7 @@ elif [ ${MODELNAME} = hireswfv3 ]; then
    fhr_max=60
    fhr_inc=1
 
-   export COMINfcst=${COMINhiresw}
+   export MODEL_INPUT_DIR=${COMINhiresw}
    export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.fv3_5km.f{lead?fmt=%2H}.${DOM}.grib2
 
 elif [ ${MODELNAME} = href ]; then
@@ -102,7 +102,7 @@ elif [ ${MODELNAME} = href ]; then
    fhr_max=48
    fhr_inc=1
 
-   export COMINfcst=${COMINhref}
+   export MODEL_INPUT_DIR=${COMINhref}
    export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/ensprod/${modsys}.t{init?fmt=%2H}z.${DOM}.${ENSPROD}.f{lead?fmt=%2H}.grib2
 
 elif [ ${MODELNAME} = hrrr ]; then
@@ -111,7 +111,7 @@ elif [ ${MODELNAME} = hrrr ]; then
    fhr_max=48
    fhr_inc=1
 
-   export COMINfcst=${COMINhrrr}
+   export MODEL_INPUT_DIR=${COMINhrrr}
    if [ $DOMAIN = alaska ]; then
       export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${DOMAIN}/${modsys}.t{init?fmt=%2H}z.wrfprsf{lead?fmt=%2H}.${DOM}.grib2
    elif [ $DOMAIN = conus ]; then
@@ -124,7 +124,7 @@ elif [ ${MODELNAME} = namnest ]; then
    fhr_max=60
    fhr_inc=1
 
-   export COMINfcst=${COMINnam}
+   export MODEL_INPUT_DIR=${COMINnam}
    export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.${DOMAIN}nest.hiresf{lead?fmt=%2H}.tm00.grib2
 
 elif [ ${MODELNAME} = rrfs ]; then
@@ -133,7 +133,7 @@ elif [ ${MODELNAME} = rrfs ]; then
    fhr_max=60
    fhr_inc=1
 
-   export COMINfcst=${COMINrrfs}
+   export MODEL_INPUT_DIR=${COMINrrfs}
    export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/{init?fmt=%H}/${modsys}.t{init?fmt=%2H}z.prslev.f{lead?fmt=%3H}.conus_3km.grib2
 
 fi
@@ -178,12 +178,12 @@ while [ $fhr -le $fhr_max ]; do
    fi
 
    # Check for the existence of each forecast file 
-   if [ -s $COMINfcst/${fcst_file} ]; then
+   if [ -s ${MODEL_INPUT_DIR}/${fcst_file} ]; then
       echo $fhr >> $DATA/job${JOBNUM}_fcst_list
       nfcst=$((nfcst+1))
 
    else
-      echo "Missing file is $COMINfcst/${fcst_file}\n" >> $DATA/job${JOBNUM}_missing_fcst_list
+      echo "Missing file is ${MODEL_INPUT_DIR}/${fcst_file}\n" >> $DATA/job${JOBNUM}_missing_fcst_list
 
    fi
 
