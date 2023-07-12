@@ -69,9 +69,9 @@ done
 # Make the command files for cfp 
 #################################
 ## time_series
-${USHevs}/${COMPONENT}/global_det_wave_timeseries.sh
+${USHevs}/${COMPONENT}/global_det_wave_plots_grid2obs_timeseries.sh
 ## lead_averages
-${USHevs}/${COMPONENT}/global_det_wave_leadaverages.sh
+${USHevs}/${COMPONENT}/global_det_wave_plots_grid2obs_leadaverages.sh
 
 chmod 775 $DATA/jobs/run_all_${RUN}_g2o_plots_poe.sh
 
