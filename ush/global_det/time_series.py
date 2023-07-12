@@ -949,6 +949,10 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             title2 = f'{level_string} {var_long_name} ({units})'
         else:
             title2 = f'{level_string} {var_long_name} (unitless)'
+    if obtype == 'SFCSHP':
+        title2 = title2+f', Observations: Surface Marine (Ship, Buoy, C-MAN Platform)'
+    elif obtype == 'NDBC_STANDARD':
+        title2 = title2+f', Observations: NDBC Buoys'
 #    title3 = f'{str(date_type).capitalize()} {date_hours_string} '
 #              + f'{date_start_string} to {date_end_string}, {frange_string}'
     fcst_day=int(flead[0]/24)
