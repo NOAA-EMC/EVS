@@ -5,7 +5,6 @@ set -x
 cd $DATA
 
 export machine=WCOSS2
-export COMROOT=${COMROOT:-$(compath.py $envir/com)}
 
 export VERIF_CASE=grid2grid
 export evs_run_mode=production

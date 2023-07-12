@@ -31,6 +31,8 @@ export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/${evs_ver})}/$STEP/$COMP
 export DATA_IN=${DATA_IN:-$DATAROOT}
 mkdir -p $COMOUT
 
+export COMROOT=${COMROOT:-$(compath.py $envir/com)}
+
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs_gens.${evs_ver}}
 export EXECevs=$HOMEevs/exec
 export PARMevs=$HOMEevs/parm
