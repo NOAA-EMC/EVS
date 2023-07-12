@@ -67,17 +67,17 @@ python $USHevs/cam/ush_href_plot_py/href_atmos_plots.py
 
 cd $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/precip/SL1L2_FBAR_24hrAccumMaps_CONUS_precip_spatial_map/images
 
-mask=`echo $vx_mask | tr '[A-Z]' '[a-z]'`
-for model in $model_list ; do
-  for fhr in 24 48 ; do
-    past=`$NDATE -$fhr ${VDATE}12`
-    INITDATE=${past:0:8}    
-    mv ${model}.v${VDATE}12.0${fhr}h.${mask}.png  evs.${model}.spatial_map.apcp_a24.vlid12z.f0${fhr}.${mask}.png
-  done
-done  
+#mask=`echo $vx_mask | tr '[A-Z]' '[a-z]'`
+#for model in $model_list ; do
+#  for fhr in 24 48 ; do
+#    past=`$NDATE -$fhr ${VDATE}12`
+#    INITDATE=${past:0:8}    
+#    mv ${model}.v${VDATE}12.0${fhr}h.${mask}.png  evs.${model}.spatial_map.apcp_a24.vlid12z.f0${fhr}.${mask}.png
+#  done
+#done  
 
-mv qpe.v${VDATE}12.024h.conus.png evs.ccpa.spatial_map.apcp_a24.vlid12z.f00.conus.png
-tar -cvf evs.plots.href.precip.spatial.map.v${VDATE}.tar *.png
+#mv qpe.v${VDATE}12.024h.conus.png evs.ccpa.spatial_map.apcp_a24.vlid12z.f00.conus.png
+tar -cvf evs.plots.href.precip.spatial.map.v${VDATE}.tar *.png *.gif
 
 cp evs.plots.href.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
 
