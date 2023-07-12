@@ -1,17 +1,22 @@
-#!/bin/bash -e
+#!/bin/bash
 
 # =============================================================================
-#
-# NAME: JEVS_MESOSCALE_STATS
-# CONTRIBUTOR(S): RS, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# CONTRIBUTOR(S): BZ, binbin.zhou@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Use ECF environment variables to define and run an EVS job
-# DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_nam_grid2obs_stats.ecf
-# DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_grid2obs_stats.ecf
-# DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_sref_grid2obs_stats.ecf
-#
+# 
+#  NAME: JEVS_MESOSCALE_STATS
+#  CONTRIBUTOR(S): RS, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+#  CONTRIBUTOR(S): BZ, binbin.zhou@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+#  CONTRIBUTOR(S): MR, mallory.row@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+#  PURPOSE: Use ECF environment variables to define and run an EVS job
+#  DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_nam_grid2obs_stats.ecf
+#  DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_grid2obs_stats.ecf
+#  DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_nam_precip_stats.ecf
+#  DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_precip_stats.ecf
+#  DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_nam_snowfall_stats.ecf
+#  DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_snowfall_stats.ecf
+#  DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_sref_grid2obs_stats.ecf
+# 
 # =============================================================================
-
+#
 
 ########################################
 # Preliminary data setup step  
