@@ -1,8 +1,9 @@
+#!/usr/bin/env python3
 # =============================================================================
 #
 # NAME: mesoscale_check_settings.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# CONTRIBUTOR(S): Roshan Shrestha, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+#                 Roshan Shrestha, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Check User's Settings
 # DEPENDENCIES: os.path.join([
 #                   SCRIPTSevs,COMPONENT,STEP,
@@ -171,8 +172,6 @@ for env_var in list(valid_config_var_values_dict.keys()):
             sys.exit(1)
     else:
             continue
-
-print(f"END: {os.path.basename(__file__)}")
 
 # Get values for other environment variables
 RUN = os.environ['RUN']

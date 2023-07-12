@@ -1,5 +1,5 @@
 #PBS -S /bin/bash
-#PBS -N jevs_mesoscale_precip_plots
+#PBS -N jevs_mesoscale_snowfall_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -21,7 +21,7 @@ export SENDCOM=YES
 export KEEPDATA=YES
 export SENDDBN=YES
 export SENDDBN_NTC=
-export job=${PBS_JOBNAME:-jevs_mesoscale_precip_plots}
+export job=${PBS_JOBNAME:-jevs_mesoscale_snowfall_plots}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export USE_CFP=YES
@@ -32,7 +32,7 @@ export NET="evs"
 export STEP="plots"
 export COMPONENT="mesoscale"
 export RUN="atmos"
-export VERIF_CASE="precip"
+export VERIF_CASE="snowfall"
 export MODELNAME=${COMPONENT}
 
 # EVS Settings
@@ -52,10 +52,7 @@ export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # Developer Settings
-export DATA=/lfs/h2/emc/ptmp/$USER/evs_test/$envir/tmp
-export COMINccpa=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT/$RUN
-export COMINmrms=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT/$RUN
-export COMINspcotlk=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT/$RUN
+export DATA=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/$NET/$evs_ver/stats/
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver/$STEP/$COMPONENT/
 export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"

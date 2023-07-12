@@ -19,20 +19,14 @@ for past_day in 0 1 2 ; do
 	   if [ $CENTER = "uk" ] ; then
 	       if [ $RESOLUTION = "0P25" ] ; then
 		   sourcefile=$COMINuk/$day/wgrbbul/ukmet_wafs/EGRR_WAFS_0p25_icing_unblended_${day}_${cc}z_t${ff}.grib2
-	       elif [ $RESOLUTION = "1P25" ] ; then
-		   sourcefile=$COMINuk/$day/wgrbbul/ukmet_wafs/EGRR_WAFS_unblended_${day}_${cc}z_t${ff}.grib2
 	       fi
 	   elif [ $CENTER = "us" ] ; then
 	       if [ $RESOLUTION = "0P25" ] ; then
 		   sourcefile=$COMINgfs/gfs.$day/$cc/atmos/gfs.t${cc}z.wafs_0p25_unblended.f${ff}.grib2
-	       elif [ $RESOLUTION = "1P25" ] ; then
-		   sourcefile=$COMINgfs/gfs.$day/$cc/atmos/gfs.t${cc}z.wafs_grb45f${ff}.grib2
 	       fi
 	   elif [ $CENTER = "blend" ] ; then
                if [ $RESOLUTION = "0P25" ] ; then
 		   sourcefile=$COMINgfs/gfs.$day/$cc/atmos/WAFS_0p25_blended_${day}${cc}f${ff}.grib2
-	       elif [ $RESOLUTION = "1P25" ] ; then
-		   sourcefile=$COMINgfs/gfs.$day/$cc/atmos/WAFS_blended_${day}${cc}f${ff}.grib2
 	       fi
 	   elif [ $CENTER = "gfs" ] ; then
 	       if [ $RESOLUTION = "1P25" ] ; then
@@ -40,17 +34,7 @@ for past_day in 0 1 2 ; do
 	       fi
 	   fi
 
-	   if [[ $RESOLUTION = "1P25" ]] && [[ $OBSERVATION = "GCIP" ]] ; then
-	       if [[ -f $sourcefile ]] ; then
-		   # 1. Seperate ICIP ave and max 2. Convert tempalte 4.15 to 4.0
-		   $WGRIB2 $sourcefile | grep ICIP | grep ave | $WGRIB2 -i $sourcefile -grib ave.$CENTER.${day}${cc}.f${ff}.grib2
-		   $WGRIB2 $sourcefile | grep ICIP | grep max | $WGRIB2 -i $sourcefile -grib max.$CENTER.${day}${cc}.f${ff}.grib2.tmp
-		   $WGRIB2 max.$CENTER.${day}${cc}.f${ff}.grib2.tmp -if "var0_[0-9]+_[0-9]+_[0-9]+_19_20" -set_var ALBDO -grib max.$CENTER.${day}${cc}.f${ff}.grib2
-		   cat ave.$CENTER.${day}${cc}.f${ff}.grib2 max.$CENTER.${day}${cc}.f${ff}.grib2 > combo.$CENTER.${day}${cc}.f${ff}.grib2
-		   $WGRIB2 combo.$CENTER.${day}${cc}.f${ff}.grib2 -set_pdt +0 -grib $GRID_STAT_INPUT_BASE/$CENTER.${day}${cc}.f${ff}.grib2
-		   rm *.$CENTER.${day}${cc}.f${ff}.grib2*
-	       fi
-	   elif [[ $RESOLUTION = "1P25" ]] && [[ $OBSERVATION = "GFS" ]] ; then
+	   if [[ $RESOLUTION = "1P25" ]] && [[ $OBSERVATION = "GFS" ]] ; then
 	       if [[ -f $sourcefile ]] ; then
 		   # Convert tempalte 4.15 to 4.0
                    $WGRIB2 $sourcefile -set_pdt +0 -grib $GRID_STAT_INPUT_BASE/$CENTER.${day}${cc}.f${ff}.grib2
@@ -68,7 +52,7 @@ done
 if [[ $OBSERVATION = "GCIP" ]] ; then
     for cc in $cycles ; do
 	sourcedir=$COMINgfs/gfs.$VDATE/$cc/atmos
-	
+
 	targetdir=$GRID_STAT_INPUT_BASE/gfs.$VDATE/$cc/atmos
 	sourcefile=$sourcedir/gfs.t${cc}z.gcip.f00.grib2
 	if [[ -f $sourcefile ]] ; then
