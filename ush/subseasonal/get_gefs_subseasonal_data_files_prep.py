@@ -320,12 +320,20 @@ if STEP == 'prep':
                             +'.pgrb2.0p50.'
                             +'f{lead?fmt=%3H}'
                         )
+                        log_missing_file = os.path.join(
+                            DATA, 'mail_missing_'+model+'_'
+                            +'member'+mb+'_fhr'
+                            +lead.zfill(3)+'_init'
+                            +init_time.strftime('%Y%m%d%H')+'.sh'
+                        )
                         sub_util.prep_prod_gefs_file(model_afile,
                                                      model_bfile,
                                                      prep_file,
                                                      dest_model_file,
+                                                     init_time,
                                                      lead,
-                                                     'full')
+                                                     'full',
+                                                     log_missing_file)
                         del model_afile_format
                         del model_bfile_format
                         mbr = mbr+1

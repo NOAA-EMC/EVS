@@ -455,7 +455,8 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
     return filled_file_format
 
 def prep_prod_gefs_file(source_afile, source_bfile, prepped_file, dest_file, 
-                        forecast_hour, prep_method):
+                        init_dt, forecast_hour, prep_method,
+                        log_missing_file):
     """! Do prep work for GEFS production files
 
          Args:
@@ -463,9 +464,12 @@ def prep_prod_gefs_file(source_afile, source_bfile, prepped_file, dest_file,
              source_bfile       - source b file format (string)
              prepped_file       - prepped file (string)
              dest_file          - destination file (string)
+             init_dt            - initialization date (datetime)
              forecast_hour      - forecast hour (string)
              prep_method        - name of prep method to do
                                   (string)
+             log_missing_file   - text file path to write that
+                                  production file is missing (string)
 
          Returns:
     """
@@ -473,8 +477,6 @@ def prep_prod_gefs_file(source_afile, source_bfile, prepped_file, dest_file,
     WGRIB2 = os.environ['WGRIB2']
     EXECevs = os.environ['EXECevs']
     # Working file names
-    #prepped_file = os.path.join(os.getcwd(),
-                                #'atmos.'+dest_file.rpartition('/')[2])
     working_file1 = prepped_file+'.tmp1'
     # Prep file
     if prep_method == 'full': 
@@ -515,6 +517,10 @@ def prep_prod_gefs_file(source_afile, source_bfile, prepped_file, dest_file,
                                    '-grib', working_file1])
                 run_shell_command(['cat', working_file1, '>>', prepped_file])
                 os.remove(working_file1)
+        else:
+            log_missing_file_model(log_missing_file, source_afile,
+                                   'gefs', init_dt,
+                                   str(forecast_hour).zfill(3))
     #elif 'precip' in prep_method:
         #if int(forecast_hour) % 24 == 0:
             #thin_var_level = ('APCP:surface:0-'
