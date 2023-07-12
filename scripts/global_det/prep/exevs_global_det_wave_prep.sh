@@ -70,7 +70,7 @@ for OBS in $OBSNAME; do
             echo "Job ID: $jobid" >> mailmsg
             cat mailmsg | mail -s "$subject" $maillist
         else
-            python $USHevs/${COMPONENT}/global_det_wave_trim_ndbc_files.py
+            python $USHevs/${COMPONENT}/global_det_wave_prep_trim_ndbc_files.py
         fi
     fi
 done
