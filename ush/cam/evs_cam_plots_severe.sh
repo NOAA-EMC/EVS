@@ -35,8 +35,8 @@ if [ $DOMAIN = conus ]; then
 fi
 
 export var_name="Prob_MXUPHL25_A24_geHWT"
-export FCST_THRESHs=">=0.0 >=0.02 >=0.05 >=0.10 >=0.15 >=0.30 >=0.45 >=0.60 >=1.0"
-export FCST_THRESH=">=0.0,>=0.02,>=0.05,>=0.10,>=0.15,>=0.30,>=0.45,>=0.60,>=1.0"
+export FCST_THRESHs=">=0.02 >=0.05 >=0.10 >=0.15 >=0.30 >=0.45 >=0.60"
+export FCST_THRESH=">=0.02,>=0.05,>=0.10,>=0.15,>=0.30,>=0.45,>=0.60"
 export FCST_LEVEL="A1"
 
 export OBS_LEVEL="*,*"
@@ -45,15 +45,27 @@ export OBS_LEVEL="*,*"
 if [ $LINE_TYPE = nbrcnt ] || [ $LINE_TYPE = nbrctc ]; then
 
    export INTERP="NBRHD_SQUARE"
-   export OBS_THRESH=">=0.0,>=0.02,>=0.05,>=0.10,>=0.15,>=0.30,>=0.45,>=0.60,>=1.0"
+   export OBS_THRESH=">=0.02,>=0.05,>=0.10,>=0.15,>=0.30,>=0.45,>=0.60"
 
-elif [ ${LINE_TYPE:0:1} = p ]; then
+elif [ $LINE_TYPE = pstd ]; then
 
    export INTERP="NEAREST"
    export OBS_THRESH=">=1.0"
 
 fi
 
+
+if [ $FCST_INIT_HOUR = "0,6,12,18" ]; then
+   export FCST_LEAD="24,30,36,42,48,54,60"
+elif [ $FCST_INIT_HOUR = 0 ]; then
+   export FCST_LEAD="36,60"
+elif [ $FCST_INIT_HOUR = 6 ]; then
+   export FCST_LEAD="30,54"
+elif [ $FCST_INIT_HOUR = 12 ]; then
+   export FCST_LEAD="24,48"
+elif [ $FCST_INIT_HOUR = 18 ]; then
+   export FCST_LEAD="42"
+fi
 
 
 ###################################################################
@@ -81,6 +93,16 @@ elif [ $PLOT_TYPE = threshold_average ]; then
       export err=$?; err_chk
 
       export STATS="fbias"
+      python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
+      export err=$?; err_chk
+
+   elif [ $LINE_TYPE = pstd ]; then
+
+      export STATS="bss_smpl"
+      python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
+      export err=$?; err_chk
+
+      export STATS="bs"
       python ${USHevs}/${COMPONENT}/${PLOT_TYPE}.py
       export err=$?; err_chk
 

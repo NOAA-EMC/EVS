@@ -188,7 +188,9 @@ cd $OUTPUT_DIR
 
 export tarfile=${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${LINE_TYPE}.${eval_period}.v${VDATE}.tar
 
-tar -cvf ${tarfile} ./*.png
+if [ "$(ls -A $OUTPUT_DIR)" ]; then
+   tar -cvf ${tarfile} ./*.png
+fi
 
 if [ $SENDCOM = YES ]; then
 

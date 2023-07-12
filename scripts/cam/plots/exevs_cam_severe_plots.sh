@@ -35,7 +35,6 @@ export VALID_END=""
 export INIT_BEG=""
 export INIT_END=""
 export FCST_VALID_HOUR=""
-export FCST_LEAD="24,30,36,42,48,54,60"
 
 
 ############################################################
@@ -158,7 +157,7 @@ chmod 775 $DATA/poescript
 export MP_PGMMODEL=mpmd
 export MP_CMDFILE=${DATA}/poescript
 
-export USE_CFP=YES
+export USE_CFP=NO
 
 if [ $USE_CFP = YES ]; then
 
@@ -185,7 +184,9 @@ cd $OUTPUT_DIR
 
 export tarfile=${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${LINE_TYPE}.${eval_period}.v${VDATE}.tar
 
-tar -cvf ${tarfile} ./*.png
+if [ "$(ls -A $OUTPUT_DIR)" ]; then
+   tar -cvf ${tarfile} ./*.png
+fi
 
 if [ $SENDCOM = YES ]; then
 
