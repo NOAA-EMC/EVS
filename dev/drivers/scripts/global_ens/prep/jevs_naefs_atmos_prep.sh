@@ -20,9 +20,11 @@ source $HOMEevs/versions/run.ver
 export NET=evs
 export RUN=atmos
 export STEP=prep
-export COMPONENT=naefs
+#export COMPONENT=naefs
+export COMPONENT=global_ens
 export VERIF_CASE=grid2grid
-export MODELNAME=gefs
+#export MODELNAME=gefs
+export MODELNAME=naefs
 
 
 module reset
@@ -38,6 +40,7 @@ export KEEPDATA=YES
 #This var is only for testing, if not set, then run operational 
 
 export cyc=00
+export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export DATA=/lfs/h2/emc/stmp/${USER}/evs/tmpnwprd
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
@@ -45,7 +48,7 @@ export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 
-export COMINgefs_bc=/lfs/h2/emc/ptmp/bo.cui/com/naefs/v7.0
+#export COMINgefs_bc=/lfs/h2/emc/ptmp/bo.cui/com/naefs/v7.0
 
 export maillist='geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'
 

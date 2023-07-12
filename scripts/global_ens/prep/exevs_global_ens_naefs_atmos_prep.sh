@@ -19,10 +19,10 @@ export run_mpi=${run_mpi:-'yes'}
 export CLIMO=$FIXevs/climos/atmos
 export MASKS=$FIXevs/mask
 
-export COMOUT_gefs_bc=${COMOUT}.${INITDATE}/gefs_bc
-export COMOUT_cmce_bc=${COMOUT}.${INITDATE}/cmce_bc
-mkdir -p $COMOUT_gefs_bc
-mkdir -p $COMOUT_cmce_bc
+#export COMOUT_gefs_bc=${COMOUT}.${INITDATE}/gefs_bc
+#export COMOUT_cmce_bc=${COMOUT}.${INITDATE}/cmce_bc
+#mkdir -p $COMOUT_gefs_bc
+#mkdir -p $COMOUT_cmce_bc
 
 #get ensemble member data by sequentail(non-mpi) or mpi run
 $USHevs/global_ens/evs_naefs_atmos_prep.sh

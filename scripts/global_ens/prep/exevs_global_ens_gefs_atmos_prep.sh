@@ -43,15 +43,15 @@ export run_mpi=${run_mpi:-'yes'}
 export CLIMO=$FIXevs/climos/atmos
 export MASKS=$FIXevs/mask
 
-export COMOUT_gefs=${COMOUT}.${INITDATE}/gefs
-export COMOUT_cmce=${COMOUT}.${INITDATE}/cmce
-export COMOUT_ecme=${COMOUT}.${INITDATE}/ecme
-export COMOUT_naefs=${COMOUT}
-export COMOUT_osi_saf=${COMOUT}.${INITDATE}/osi_saf
-mkdir -p $COMOUT_gefs
-mkdir -p $COMOUT_cmce
-mkdir -p $COMOUT_ecme
-mkdir -p $COMOUT_osi_saf
+#export COMOUT_gefs=${COMOUT}.${INITDATE}/gefs
+#export COMOUT_cmce=${COMOUT}.${INITDATE}/cmce
+#export COMOUT_ecme=${COMOUT}.${INITDATE}/ecme
+#export COMOUT_naefs=${COMOUT}
+#export COMOUT_osi_saf=${COMOUT}.${INITDATE}/osi_saf
+#mkdir -p $COMOUT_gefs
+#mkdir -p $COMOUT_cmce
+#mkdir -p $COMOUT_ecme
+#mkdir -p $COMOUT_osi_saf
 
 
 export GRID2GRID_CONF=$PARMevs/metplus_config/${COMPONENT}/${RUN}_grid2grid/stats
