@@ -63,17 +63,14 @@ elif [ $VERIF_CASE = radar ] ; then
     export VDATE=${VDATE:-$PDYm1}
 
 elif [ $VERIF_CASE = severe ] ; then
+   export VDATE=${VDATE:-$PDYm7}
 
-   # Set verification date
-   if [ $MODELNAME = href ] ; then
-      #for SPC outlook 
-      export VDATE=${VDATE:-$PDYm1}
-   else
-      export VDATE=${VDATE:-$PDYm7}
-   fi
+   # Set correct date for SPC report data (set relative to VDATE) 
+   export REP_DATE=$(date -d "$VDATE -1 day" +"%Y%m%d")
 
-   # Set correct date for SPC report data 
-   export REP_DATE=${REP_DATE:-$(date -d "$VDATE -1 day" +"%Y%m%d")}
+elif [ $VERIF_CASE = spcoutlook ] ; then
+   #for HREF grid2obs SPC outlook 
+   export VDATE=${VDATE:-$PDYm1}
 
 else
 
@@ -105,17 +102,26 @@ export COMINprepbufr=${COMINprepbufr:-$(compath.py  obsproc/${obsproc_ver})}
 export COMINsnow=$DCOMROOT
 export COMINspcotlk=${COMINspcotlk:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
 
-# LCD COMMENT: COMOUT should not be different between HREF and other CAMs
-if [ $MODELNAME = href ] ; then
+if [ $VERIF_CASE = severe ] ; then
+   export COMINfcst=${COMINfcst:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT)}
+   export COMINspclsr=${COMINspclsr:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT)}
+fi
+
+
+if [ $MODELNAME = href ] && [ $VERIF_CASE = precip ] ; then
    export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
    export COMINmrms=$DCOMROOT/ldmdata/obs/upperair/mrms/alaska/MultiSensorQPE
-   export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}/$STEP/$COMPONENT
-
 else
    export COMINccpa=${COMINccpa:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
    export COMINmrms=${COMINmrms:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
-   export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
+fi
 
+# LCD COMMENT: COMOUT should not be different between HREF and other CAMs
+# I'm leaving this discrepancy for now, but we'll need to clean this up before EE2 review
+if [ $MODELNAME = href ] ; then
+   export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}/$STEP/$COMPONENT
+else
+   export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 fi
 
 mkdir -p $COMOUT
@@ -128,7 +134,12 @@ mkdir -p $COMOUTfinal $COMOUTsmall
 ####################################
 # Execute the script 
 ####################################
-$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+if [ $VERIF_CASE = radar ] || [ $VERIF_CASE = severe ]; then
+   $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${VERIF_CASE}_${STEP}.sh
+else
+   $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+fi
+
 export err=$?; err_chk
 
 if [ -e "$pgmout" ]; then

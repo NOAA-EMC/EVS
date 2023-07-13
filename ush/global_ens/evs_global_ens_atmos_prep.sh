@@ -83,7 +83,7 @@ for model in gefs cmce ecme ; do
         echo "$USHevs/global_ens/evs_get_gens_atmos_data.sh $model $cyc $fhr_beg $fhr_end" >> get_data_${model}_${cyc}_${fhr_range}.sh
 
 	chmod +x get_data_${model}_${cyc}_${fhr_range}.sh
-        echo "get_data_${model}_${cyc}_${fhr_range}.sh" >> run_get_all_gens_atmos_poe.sh
+        echo "${DATA}/get_data_${model}_${cyc}_${fhr_range}.sh" >> run_get_all_gens_atmos_poe.sh
 
       done	 
      done
@@ -97,7 +97,7 @@ for model in gefs cmce ecme ; do
  
          echo "$USHevs/global_ens/evs_get_gens_atmos_data.sh ${model}_apcp06h $cyc 0 384" >> get_data_${model}_${cyc}_apcp06h.sh
          chmod +x get_data_${model}_${cyc}_apcp06h.sh
-         echo "get_data_${model}_${cyc}_apcp06h.sh" >> run_get_all_gens_atmos_poe.sh
+         echo "${DATA}/get_data_${model}_${cyc}_apcp06h.sh" >> run_get_all_gens_atmos_poe.sh
 
        done
      fi
@@ -109,7 +109,7 @@ for model in gefs cmce ecme ; do
 
          echo "$USHevs/global_ens/evs_get_gens_atmos_data.sh ${model}_apcp24h $cyc 0 384" >> get_data_${model}_${cyc}_apcp24h.sh
          chmod +x get_data_${model}_${cyc}_apcp24h.sh
-         echo "get_data_${model}_${cyc}_apcp24h.sh" >> run_get_all_gens_apcp24h_poe.sh
+         echo "${DATA}/get_data_${model}_${cyc}_apcp24h.sh" >> run_get_all_gens_apcp24h_poe.sh
 
        done	
      fi			
@@ -121,7 +121,7 @@ for model in gefs cmce ecme ; do
 
         echo "$USHevs/global_ens/evs_get_gens_atmos_data.sh ${model}_snow24h $cyc 0 384" >> get_data_${model}_${cyc}_snow24h.sh
         chmod +x get_data_${model}_${cyc}_snow24h.sh
-        echo "get_data_${model}_${cyc}_snow24h.sh" >> run_get_all_gens_snow24h_poe.sh
+        echo "${DATA}/get_data_${model}_${cyc}_snow24h.sh" >> run_get_all_gens_snow24h_poe.sh
 
        done
      fi
@@ -132,14 +132,14 @@ for model in gefs cmce ecme ; do
            echo "$USHevs/global_ens/evs_get_gens_atmos_data.sh  gefs_icec24h" >> get_data_${model}_icec.sh
            #echo "$USHevs/global_ens/evs_get_gens_atmos_data.sh  gefs_icec7day" >> get_data_${model}_icec.sh
            chmod +x get_data_${model}_icec.sh
-           echo "get_data_${model}_icec.sh" >> run_get_all_gens_icec_poe.sh
+           echo "${DATA}/get_data_${model}_icec.sh" >> run_get_all_gens_icec_poe.sh
      fi
 
      if [ $get_gefs_sst24h = yes ] ; then
 	   >get_data_${model}_sst24h.sh
            echo "$USHevs/global_ens/evs_get_gens_atmos_data.sh  gefs_sst24h" >> get_data_${model}_sst24h.sh
            chmod +x get_data_${model}_sst24h.sh
-	   echo "get_data_${model}_sst24h.sh" >> run_get_all_gens_sst24h_poe.sh
+	   echo "${DATA}/get_data_${model}_sst24h.sh" >> run_get_all_gens_sst24h_poe.sh
      fi 
 
    elif [ $model = cmce ] ; then  
@@ -188,7 +188,7 @@ for model in gefs cmce ecme ; do
          echo "$USHevs/global_ens/evs_get_gens_atmos_data.sh $model $cyc $fhr_beg $fhr_end" >> get_data_${model}_${cyc}_${fhr_range}.sh
 
          chmod +x get_data_${model}_${cyc}_${fhr_range}.sh
-         echo "get_data_${model}_${cyc}_${fhr_range}.sh" >> run_get_all_gens_atmos_poe.sh
+         echo "${DATA}/get_data_${model}_${cyc}_${fhr_range}.sh" >> run_get_all_gens_atmos_poe.sh
 
        done
       done
@@ -202,7 +202,7 @@ for model in gefs cmce ecme ; do
 
           echo "$USHevs/global_ens/evs_get_gens_atmos_data.sh ${model}_apcp06h $cyc 0 384" >> get_data_${model}_${cyc}_apcp06h.sh
           chmod +x get_data_${model}_${cyc}_apcp06h.sh
-          echo "get_data_${model}_${cyc}_apcp06h.sh" >> run_get_all_gens_atmos_poe.sh
+          echo "${DATA}/get_data_${model}_${cyc}_apcp06h.sh" >> run_get_all_gens_atmos_poe.sh
 
         done
      fi 
@@ -214,7 +214,7 @@ for model in gefs cmce ecme ; do
 
           echo "$USHevs/global_ens/evs_get_gens_atmos_data.sh ${model}_apcp24h $cyc 0 384" >> get_data_${model}_${cyc}_apcp24h.sh
           chmod +x get_data_${model}_${cyc}_apcp24h.sh
-          echo "get_data_${model}_${cyc}_apcp24h.sh" >> run_get_all_gens_apcp24h_poe.sh
+          echo "${DATA}/get_data_${model}_${cyc}_apcp24h.sh" >> run_get_all_gens_apcp24h_poe.sh
 
         done
      fi      
@@ -227,7 +227,7 @@ for model in gefs cmce ecme ; do
 
           echo "$USHevs/global_ens/evs_get_gens_atmos_data.sh ${model}_snow24h $cyc 0 384" >> get_data_${model}_${cyc}_snow24h.sh
           chmod +x get_data_${model}_${cyc}_snow24h.sh
-          echo "get_data_${model}_${cyc}_snow24h.sh" >> run_get_all_gens_snow24h_poe.sh
+          echo "${DATA}/get_data_${model}_${cyc}_snow24h.sh" >> run_get_all_gens_snow24h_poe.sh
 
         done
      fi
@@ -239,7 +239,7 @@ for model in gefs cmce ecme ; do
        >get_data_${model}_atmos.sh
        echo "$USHevs/global_ens/evs_get_gens_atmos_data.sh $model " >> get_data_${model}_atmos.sh 
        chmod +x get_data_${model}_atmos.sh
-       echo "get_data_${model}_atmos.sh" >> run_get_all_gens_atmos_poe.sh
+       echo "${DATA}/get_data_${model}_atmos.sh" >> run_get_all_gens_atmos_poe.sh
        #already include get_ecme_apcp06h in this process
      fi
 
@@ -247,14 +247,14 @@ for model in gefs cmce ecme ; do
       >get_data_${model}_apcp24h.sh
       echo "$USHevs/global_ens/evs_get_gens_atmos_data.sh ${model}_apcp24h" >> get_data_${model}_apcp24h.sh     
       chmod +x get_data_${model}_apcp24h.sh
-      echo "get_data_${model}_apcp24h.sh" >> run_get_all_gens_apcp24h_poe.sh
+      echo "${DATA}/get_data_${model}_apcp24h.sh" >> run_get_all_gens_apcp24h_poe.sh
      fi
 
      if [ $get_ecme_snow24h = yes ] ; then
        >get_data_${model}_snow24h.sh
        echo "$USHevs/global_ens/evs_get_gens_atmos_data.sh ${model}_snow24h" >> get_data_${model}_snow24h.sh
        chmod +x get_data_${model}_snow24h.sh
-       echo "get_data_${model}_snow24h.sh" >> run_get_all_gens_snow24h_poe.sh
+       echo "${DATA}/get_data_${model}_snow24h.sh" >> run_get_all_gens_snow24h_poe.sh
     fi
 
 
@@ -272,56 +272,56 @@ if [ $run_mpi = yes ] ; then
 
  if [ -s run_get_all_gens_atmos_poe.sh ] ; then
    chmod +x run_get_all_gens_atmos_poe.sh 
-   mpiexec  -n 174 -ppn 174 --cpu-bind core --depth=2 cfp  run_get_all_gens_atmos_poe.sh
+   mpiexec  -n 174 -ppn 174 --cpu-bind core --depth=2 cfp  ${DATA}/run_get_all_gens_atmos_poe.sh
  fi
 
  #Only after the above jobs are finished, following jobs can be run!
 
  if [ -s run_get_all_gens_apcp24h_poe.sh ] ; then
    chmod +x run_get_all_gens_apcp24h_poe.sh
-   run_get_all_gens_apcp24h_poe.sh
+   ${DATA}/run_get_all_gens_apcp24h_poe.sh
  fi
 
   if [ -s run_get_all_gens_snow24h_poe.sh ] ; then
     chmod +x run_get_all_gens_snow24h_poe.sh
-    run_get_all_gens_snow24h_poe.sh
+    ${DATA}/run_get_all_gens_snow24h_poe.sh
   fi
 
   if [ -s run_get_all_gens_icec_poe.sh ] ; then
      chmod +x run_get_all_gens_icec_poe.sh
-     run_get_all_gens_icec_poe.sh
+     ${DATA}/run_get_all_gens_icec_poe.sh
   fi     
 
 
     if [ -s run_get_all_gens_sst24h_poe.sh ] ; then
       chmod +x run_get_all_gens_sst24h_poe.sh
-      run_get_all_gens_sst24h_poe.sh
+      ${DATA}/run_get_all_gens_sst24h_poe.sh
     fi
 
 else
 
  if [ -s run_get_all_gens_atmos_poe.sh ] ; then
    chmod +x run_get_all_gens_atmos_poe.sh 
-   run_get_all_gens_atmos_poe.sh
+   ${DATA}/run_get_all_gens_atmos_poe.sh
  fi
  if [ -s run_get_all_gens_apcp24h_poe.sh ] ; then
    chmod +x run_get_all_gens_apcp24h_poe.sh
-   run_get_all_gens_apcp24h_poe.sh
+   ${DATA}/run_get_all_gens_apcp24h_poe.sh
  fi
 
  if [ -s run_get_all_gens_snow24h_poe.sh ] ; then
     chmod +x run_get_all_gens_snow24h_poe.sh
-    run_get_all_gens_snow24h_poe.sh
+    ${DATA}/run_get_all_gens_snow24h_poe.sh
  fi
 
  if [ -s run_get_all_gens_icec_poe.sh ] ; then
     chmod +x run_get_all_gens_icec_poe.sh
-    run_get_all_gens_icec_poe.sh
+    ${DATA}/run_get_all_gens_icec_poe.sh
  fi
 
  if [ -s run_get_all_gens_sst24h_poe.sh ] ; then
     chmod +x run_get_all_gens_sst24h_poe.sh
-    run_get_all_gens_sst24h_poe.sh
+    ${DATA}/run_get_all_gens_sst24h_poe.sh
  fi
 
 fi 

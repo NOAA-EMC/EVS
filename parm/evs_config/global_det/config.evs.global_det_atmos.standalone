@@ -39,13 +39,6 @@ export OUTPUTROOT="/lfs/h2/emc/stmp/$USER/evs_global_det_atmos_standalone"
 yday=$(date -d "24 hours ago" '+%Y%m%d')
 export start_date=$yday
 export end_date=$yday
-## METPLUS SETTINGS
-#metplus_verbosity:         DEBUG, INFO, WARN, ERROR (most verbose is DEBUG)
-#met_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
-#log_met_output_to_metplus: log MET output to METplus log, yes or no
-export metplus_verbosity="DEBUG"
-export met_verbosity="2"
-export log_met_output_to_metplus="yes"
 ## DATA DIRECTIVE SETTINGS
 export KEEPDATA="YES"
 export SENDCOM="YES"
@@ -64,16 +57,19 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
     #    snow:             compare to NOHRSC
     #    sst:              compare to GHRSST Median
     #    sea_ice:          compare to OSI-SAF
-    #g2gs_pres_levs_truth_name_list:   list of reference name for truth files
+    #g2gs_pres_levs_truth_name_list: list of reference name for truth files
     #g2gs_pres_levs_truth_format_list: list of truth file format(s)
     #g2gs_precip_accum*_file_format_list: list of precip file format(s)
-    #g2gs_precip_accum*_file_accum_list:  list of precip accumulations in file: hours (HH) or continuous
-    #g2gs_precip_accum*_var_list:         list of the precip variable name to use
-    #g2gs_*_init_hr_list:      forecst init_hrs to be included in verification: HH
-    #g2gs_*_valid_hr_list:     valid hours to be included in verification: HH
-    #g2gs_*_fhr_min:           forecast hour to start verification HH[H]
-    #g2gs_*_fhr_max:           forecast hour to end verification HH[H]
-    #g2gs_*_fhr_inc:           frequency to verify forecast hours at HH[H]
+    #g2gs_precip_accum*_file_accum_list: list of precip accumulations in file: hours (HH) or continuous
+    #g2gs_precip_accum*_var_list: list of the precip variable name to use
+    #g2gs_*_init_hr_list: list of cycles/initialization hours to be included in verification: HH
+    #g2gs_*_valid_hr_list: list of valid hours to be included in verification: HH
+    #For defining forecast hours:
+    #    g2gs*_fhr_list: list of forecast hours: HH[H]
+    #OR 
+    #    g2gs_*_fhr_min: forecast hour to start verification: HH[H]
+    #    g2gs_*_fhr_max: forecast hour to end verification: HH[H]
+    #    g2gs_*_fhr_inc: frequency to verify forecast hours: HH[H]
     export g2gs_type_list="means precip_accum24hr precip_accum3hr pres_levs sea_ice snow sst"
     export g2gs_means_init_hr_list="00 06 12 18"
     export g2gs_means_valid_hr_list="00 06 12 18"
@@ -122,13 +118,16 @@ if [ $RUN_GRID2GRID_PLOTS = YES ]; then
     #g2gp_model_plot_name_list: list of models reference name on plots
     #g2gp_type_list: list type of verifications to run for grid-to-grid: flux, means, precip,
     #                                                                    pres_levs, sea_ice, snow, sst
-    #g2gp_*_init_hr_list:      initialization hours to be included in verification: HH
-    #g2gp_*_valid_hr_list:     valid hours to be included in verification: HH
-    #g2gp_*_fhr_min:           forecast hour to start verification HH[H]
-    #g2gp_*_fhr_max:           forecast hour to end verification HH[H]
-    #g2gp_*_fhr_inc:           frequency to verify forecast hours at HH[H]
     #g2gp_event_equalization: do event equalization (YES) or not (NO)
-    #g2gp_pres_levs_truth_name_list:   list of reference name for truth files
+    #g2gp_pres_levs_truth_name_list: list of reference name for truth files
+    #g2gp_*_init_hr_list: list of cycles/initialization hours to be included in verification: HH
+    #g2gp_*_valid_hr_list: list of valid hours to be included in verification: HH
+    #For defining forecast hours:
+    #    g2gp*_fhr_list: list of forecast hours: HH[H]
+    #OR 
+    #    g2gp_*_fhr_min: forecast hour to start verification: HH[H]
+    #    g2gp_*_fhr_max: forecast hour to end verification: HH[H]
+    #    g2gp_*_fhr_inc: frequency to verify forecast hours: HH[H]
     export g2gp_model_plot_name_list="ops_gfs"
     export g2gp_type_list="flux means ozone precip pres_levs sea_ice snow sst"
     export g2gp_event_equalization="YES"
@@ -158,11 +157,14 @@ if [ $RUN_GRID2OBS_STATS = YES ]; then
     #    pres_levs:  compare variables on pressure levels to GDAS prepbufr obs
     #    ptype:      compare precip-type variables to NAM/RAP prepbufr obs
     #    sfc:        compare surface variables to GDAS and NAM/RAP prepbufr obs
-    #g2os_*_init_hr_list:      initialization hours to be included in verification: HH
-    #g2os_*_valid_hr_list:     valid hours to be included in verification: HH
-    #g2os_*_fhr_min:           forecast hour to start verification HH[H]
-    #g2os_*_fhr_max:           forecast hour to end verification HH[H]
-    #g2os_*_fhr_inc:           frequency to verify forecast hours at HH[H]
+    #g2os_*_init_hr_list: list of cycles/initialization hours to be included in verification: HH
+    #g2os_*_valid_hr_list: list of valid hours to be included in verification: HH
+    #For defining forecast hours:
+    #    g2os*_fhr_list: list of forecast hours: HH[H]
+    #OR 
+    #    g2os_*_fhr_min: forecast hour to start verification: HH[H]
+    #    g2os_*_fhr_max: forecast hour to end verification: HH[H]
+    #    g2os_*_fhr_inc: frequency to verify forecast hours: at HH[H]
     export g2os_type_list="pres_levs sfc"
     export g2os_pres_levs_init_hr_list="00 06 12 18"
     export g2os_pres_levs_valid_hr_list="00 06 12 18"
@@ -187,12 +189,15 @@ fi
 if [ $RUN_GRID2OBS_PLOTS = YES ]; then
     #g2op_model_plot_name_list: list of models reference name on plots
     #g2op_type_list: list type of verifications to run for grid-to-grid: pres_levs, ptype, sfc
-    #g2op_*_init_hr_list:      initialization hours to be included in verification: HH
-    #g2op_*_valid_hr_list:     valid hours to be included in verification: HH
-    #g2op_*_fhr_min:           forecast hour to start verification HH[H]
-    #g2op_*_fhr_max:           forecast hour to end verification HH[H]
-    #g2op_*_fhr_inc:           frequency to verify forecast hours at HH[H]
     #g2op_event_equalization: do event equalization (YES) or not (NO)
+    #g2op_*_init_hr_list: list of cycles/initialization hours to be included in verification: HH
+    #g2op_*_valid_hr_list: list of valid hours to be included in verification: HH
+    #For defining forecast hours:
+    #    g2op*_fhr_list: list of forecast hours: HH[H]
+    #OR 
+    #    g2op_*_fhr_min: forecast hour to start verification: HH[H]
+    #    g2op_*_fhr_max: forecast hour to end verification: HH[H]
+    #    g2op_*_fhr_inc: frequency to verify forecast hours: at HH[H]
     export g2op_model_plot_name_list="ops_gfs"
     export g2op_type_list="pres_levs ptype sfc"
     export g2op_event_equalization="YES"

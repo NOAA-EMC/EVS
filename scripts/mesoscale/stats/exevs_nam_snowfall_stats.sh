@@ -17,6 +17,7 @@ if [ $RUN_ENVIR = nco ]; then
     source $config
 else
     export evs_run_mode=$evs_run_mode
+    source $config
 fi
 echo "RUN MODE:$evs_run_mode"
 

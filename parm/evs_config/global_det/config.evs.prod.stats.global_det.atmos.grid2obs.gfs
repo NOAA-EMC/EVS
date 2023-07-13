@@ -39,13 +39,6 @@ export OUTPUTROOT="$DATAROOT"
 #end_date:         verification end date, format YYYYMMDD
 export start_date=$VDATE
 export end_date=$VDATE
-## METPLUS SETTINGS
-#metplus_verbosity:         DEBUG, INFO, WARN, ERROR (most verbose is DEBUG)
-#met_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
-#log_met_output_to_metplus: log MET output to METplus log, yes or no
-export metplus_verbosity="INFO"
-export met_verbosity="2"
-export log_met_output_to_metplus="yes"
 ## DATA DIRECTIVE SETTINGS
 export KEEPDATA=${KEEPDATA:-"NO"}
 export SENDCOM="YES"
@@ -60,11 +53,14 @@ if [ $RUN_GRID2OBS_STATS = YES ]; then
     #    pres_levs:  compare variables on pressure levels to GDAS prepbufr obs
     #    ptype:      compare precip-type variables to NAM/RAP prepbufr obs
     #    sfc:        compare surface variables to GDAS and NAM/RAP prepbufr obs
-    #g2os_*_init_hr_list:      initialization hours to be included in verification: HH
-    #g2os_*_valid_hr_list:     valid hours to be included in verification: HH
-    #g2os_*_fhr_min:           forecast hour to start verification HH[H]
-    #g2os_*_fhr_max:           forecast hour to end verification HH[H]
-    #g2os_*_fhr_inc:           frequency to verify forecast hours at HH[H]
+    #g2os_*_init_hr_list: list of cycles/initialization hours to be included in verification: HH
+    #g2os_*_valid_hr_list: list of valid hours to be included in verification: HH
+    #For defining forecast hours:
+    #    g2os*_fhr_list: list of forecast hours: HH[H]
+    #OR 
+    #    g2os_*_fhr_min: forecast hour to start verification: HH[H]
+    #    g2os_*_fhr_max: forecast hour to end verification: HH[H]
+    #    g2os_*_fhr_inc: frequency to verify forecast hours: at HH[H]
     export g2os_type_list="pres_levs ptype sfc"
     export g2os_pres_levs_init_hr_list="00 06 12 18"
     export g2os_pres_levs_valid_hr_list="00 06 12 18"

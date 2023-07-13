@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 ###############################################################################
 #
 # Name:          performance_diagram.py
@@ -808,7 +810,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         borderpad=.8, labelspacing=2., columnspacing=3., handlelength=3., 
         handletextpad=.4, borderaxespad=.5) 
     ax.grid(
-        b=True, which='major', axis='both', alpha=.35, linestyle='--', 
+        visible=True, which='major', axis='both', alpha=.35, linestyle='--', 
         linewidth=.5, c='black', zorder=0
     )
 

@@ -318,8 +318,6 @@ class PrecipSpatialMap:
                                              central_latitude=central_lat,
                                              false_easting=0.0,
                                              false_northing=0.0,
-                                             secant_latitudes=None,
-                                             standard_parallels=None,
                                              globe=None)
                 ax1 = fig.add_subplot(gs[0], projection=myproj)
                 ax1.set_extent(extent)
