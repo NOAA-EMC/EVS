@@ -1260,29 +1260,29 @@ def main():
         level_savename=''
         if FCST_LEVELS in presets.level_presets:
             level_savename=FCST_LEVELS
-            FCST_LEVELS = re.split(r',(?![0*])', preset.level_presets[FCST_LEVELS].replace(' ',''))
+            fcst_levels = re.split(r',(?![0*])', presets.level_presets[FCST_LEVELS].replace(' ',''))
         else:
-            FCST_LEVELS = re.split(r',(?![0*])', FCST_LEVELS.replace(' ',''))
+            fcst_levels = re.split(r',(?![0*])', FCST_LEVELS.replace(' ',''))
         if OBS_LEVELS in presets.level_presets:
-            OBS_LEVELS = re.split(r',(?![0*])', preset.level_presets[OBS_LEVELS].replace(' ',''))
+            obs_levels = re.split(r',(?![0*])', presets.level_presets[OBS_LEVELS].replace(' ',''))
         else:
-            OBS_LEVELS = re.split(r',(?![0*])', OBS_LEVELS.replace(' ',''))
-        if len(FCST_LEVELS) != len(OBS_LEVELS):
+            obs_levels = re.split(r',(?![0*])', OBS_LEVELS.replace(' ',''))
+        if len(fcst_levels) != len(obs_levels):
             e = ("FCST_LEVELS and OBS_LEVELS must be lists of the same"
                  + f" size")
             logger.error(e)
             logger.error("Quitting ...")
             raise ValueError(e+"\nQuitting ...")
         keep = []
-        for l, fcst_level in enumerate(FCST_LEVELS):
-            if (FCST_LEVELS[l] not in var_specs['fcst_var_levels']
-                    or OBS_LEVELS[l] not in var_specs['obs_var_levels']):
+        for l, fcst_level in enumerate(fcst_levels):
+            if (fcst_levels[l] not in var_specs['fcst_var_levels']
+                    or obs_levels[l] not in var_specs['obs_var_levels']):
                 keep.append(False)
             else:
                 keep.append(True)
         keep = np.array(keep)
-        dropped_items = np.array(FCST_LEVELS)[~keep].tolist()
-        fcst_levels = np.array(FCST_LEVELS)[keep].tolist()
+        dropped_items = np.array(fcst_levels)[~keep].tolist()
+        fcst_levels = np.array(fcst_levels)[keep].tolist()
         if dropped_items:
             dropped_items_string = ', '.join(dropped_items)
             e = (f"The requested levels are not valid for the requested"
