@@ -218,7 +218,7 @@ class PlotSpecs:
             'ME': 'Mean Error (Bias)',
             'OBAR': 'Observation Mean',
             'POD': 'Probability of Detection',
-            'PERF_DIA': 'Performance Diagram',
+            'PERFDIAG': 'Performance Diagram',
             'RMSE': 'Root Mean Square Error',
             'S1': 'S1 Score',
             'SRATIO': 'Success Ratio (1-FAR)',
@@ -728,7 +728,7 @@ class PlotSpecs:
                               be saved as (string)
         """
         component_savefig_name = 'global_det'
-        if plot_info_dict['stat'] == 'PERF_DIA':
+        if plot_info_dict['stat'] == 'PERFDIAG':
             metric_savefig_name = 'ctc'
         else:
             metric_savefig_name = plot_info_dict['stat']
@@ -777,7 +777,7 @@ class PlotSpecs:
         elif self.plot_type == 'lead_by_level':
             plot_type_savefig_name = 'vertprof_fhrmean'
         elif self.plot_type == 'performance_diagram':
-            plot_type_savefig_name = 'perfdia'
+            plot_type_savefig_name = 'perfdiag'
         elif self.plot_type == 'stat_by_level':
             plot_type_savefig_name = 'vertprof'
         elif self.plot_type == 'threshold_average':
