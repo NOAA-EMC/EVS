@@ -1,4 +1,4 @@
-#PBS -N jevs_global_det_wave_prep
+#PBS -N jevs_global_det_wave_prep_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev

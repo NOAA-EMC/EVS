@@ -1,4 +1,4 @@
-#PBS -N jevs_global_det_wave_grid2obs_plots_31days
+#PBS -N jevs_global_det_wave_grid2obs_plots_31days_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
