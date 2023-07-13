@@ -1,4 +1,4 @@
-#PBS -N jevs_gfs_wave_grid2obs_stats
+#PBS -N jevs_global_det_wave_gfs_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -18,7 +18,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 export SENDCOM=YES
 export KEEPDATA=NO
 export RUN_ENVIR=nco
-export job=${PBS_JOBNAME:-jevs_wave_atmos_grid2obs_stats}
+export job=${PBS_JOBNAME:-jevs_global_det_wave_gfs_grid2obs_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export cyc=00
