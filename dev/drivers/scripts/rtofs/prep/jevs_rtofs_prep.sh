@@ -20,7 +20,7 @@ source $HOMEevs/versions/run.ver
 
 module reset
 
-source $HOMEevs/modules/rtofs/rtofs_prep.sh
+source $HOMEevs/modulefiles/rtofs/rtofs_prep.sh
 
 # specify environment variables
 export NET=evs
