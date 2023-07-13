@@ -51,25 +51,25 @@ export ENS_LIST=$PARMevs/metplus_config/${COMPONENT}/atmos_grid2grid/prep
 export CONF_PREP=$PARMevs/metplus_config/${COMPONENT}/atmos_grid2grid/prep
 
 if [ $get_gfs = yes ] ; then
- $USHevs/global_ens/evs_get_gens_atmos_data.sh gfs
+ $USHevs/${COMPONENT}/evs_get_${COMPONENT}_${RUN}_data.sh gfs
 fi
 
 if [ $get_anl = yes ] ; then
- $USHevs/global_ens/evs_get_gens_atmos_data.sh gfsanl
- $USHevs/global_ens/evs_get_gens_atmos_data.sh cmcanl
+ $USHevs/${COMPONENT}/evs_get_${COMPONENT}_${RUN}_data.sh gfsanl
+ $USHevs/${COMPONENT}/evs_get_${COMPONENT}_${RUN}_data.sh cmcanl
 fi
 
 if [ $get_prepbufr = yes ] ; then
- $USHevs/global_ens/evs_get_gens_atmos_data.sh prepbufr
+ $USHevs/${COMPONENT}/evs_get_${COMPONENT}_${RUN}_data.sh prepbufr
 fi
 
 
 if [ $get_ccpa = yes ] ; then
- $USHevs/global_ens/evs_get_gens_atmos_data.sh ccpa
+ $USHevs/${COMPONENT}/evs_get_${COMPONENT}_${RUN}_data.sh ccpa
 fi
 
 if [ $get_nohrsc24h = yes ] ; then
- $USHevs/global_ens/evs_get_gens_atmos_data.sh nohrsc24h 
+ $USHevs/${COMPONENT}/evs_get_${COMPONENT}_${RUN}_data.sh nohrsc24h 
 fi
 
 if [ $get_ghrsst = yes ] ; then
@@ -88,21 +88,21 @@ fi
 
 #get_gefs_icec24h
 #if [ $get_gefs_icec = yes ] || [ $test_icec = yes ] ; then
-#  $USHevs/global_ens/evs_get_gens_atmos_data.sh gefs_icec24h 
-#  $USHevs/global_ens/evs_get_gens_atmos_data.sh gefs_icec7day
+#  $USHevs/${COMPONENT}/evs_get_${COMPONENT}_${RUN}_data.sh gefs_icec24h 
+#  $USHevs/${COMPONENT}/evs_get_${COMPONENT}_${RUN}_data.sh gefs_icec7day
 #exit 
 #fi
 
 
 #if [ $get_gefs_snow24h = yes ] ; then
 #just for testing  
-#  $USHevs/global_ens/evs_get_gens_atmos_data.sh gefs_snow24h 
+#  $USHevs/${COMPONENT}/evs_get_${COMPONENT}_${RUN}_data.sh gefs_snow24h 
 #  exit
 #fi
 
 
 #if [ $get_gefs_sst24h = yes ] ; then
-#  $USHevs/global_ens/evs_get_gens_atmos_data.sh gefs_sst24h
+#  $USHevs/${COMPONENT}/evs_get_${COMPONENT}_${RUN}_data.sh gefs_sst24h
 #  exit
 #fi
 
@@ -125,19 +125,19 @@ if [ $get_osi_saf = yes ] ; then
  export COMINukmet_precip=
  export COMINosi_saf=${COMINosi_saf:-/lfs/h1/ops/dev/dcom}
 
- $USHevs/global_ens/evs_get_gens_atmos_data.sh osi_saf
+ $USHevs/${COMPONENT}/evs_get_${COMPONENT}_${RUN}_data.sh osi_saf
  export MODELNAME=gefs
 
 fi
 
 #get ensemble member data by sequentail(non-mpi) or mpi run
 if [ $get_forecast = yes ] ; then
- $USHevs/global_ens/evs_global_ens_atmos_prep.sh
+ $USHevs/${COMPONENT}/evs_${COMPONENT}_${RUN}_prep.sh
 fi
 
 
 if [ $get_naefs = yes ] ; then
- $USHevs/global_ens/evs_gens_atmos_g2g_prep_naefs.sh
+ $USHevs/${COMPONENT}/evs_${COMPONENT}_${RUN}_g2g_prep_naefs.sh
 fi
 
 
