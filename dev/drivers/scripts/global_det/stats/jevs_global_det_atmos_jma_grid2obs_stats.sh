@@ -1,4 +1,4 @@
-#PBS -N jevs_cmc_atmos_grid2obs_stats_00
+#PBS -N jevs_global_det_atmos_jma_grid2obs_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -18,7 +18,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 export SENDCOM=YES
 export KEEPDATA=NO
 export RUN_ENVIR=nco
-export job=${PBS_JOBNAME:-jevs_cmc_atmos_grid2obs_stats}
+export job=${PBS_JOBNAME:-jevs_global_det_atmos_jma_grid2obs_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export cyc=00
@@ -39,14 +39,14 @@ export STEP=stats
 export COMPONENT=global_det
 export RUN=atmos
 export VERIF_CASE=grid2obs
-export MODELNAME=cmc
+export MODELNAME=jma
 
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=$COMROOT/$NET/$evs_ver
-export COMINcmc=$COMIN/prep/$COMPONENT/$RUN
+export COMINjma=$COMIN/prep/$COMPONENT/$RUN
 export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT
 
 export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
@@ -56,5 +56,5 @@ $HOMEevs/jobs/global_det/stats/JEVS_GLOBAL_DET_STATS
 
 ######################################################################
 # Purpose: This does the statistics work for the global deterministic
-#          atmospheric grid-to-observations component for CMC
+#          atmospheric grid-to-observations component for JMA
 ######################################################################
