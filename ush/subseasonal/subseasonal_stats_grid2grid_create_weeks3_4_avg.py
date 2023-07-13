@@ -146,18 +146,18 @@ while valid_hr <= int(valid_hr_end):
                       +weeks_avg_day_fhr_DATAROOT_input_file+" or "
                       +weeks_avg_day_fhr_COMIN_input_file)
             weeks_avg_day_fhr+=int(fhr_inc)
-        if len(weeks_avg_fcst_file_list) != 0:
+        if len(weeks_avg_fcst_file_list) >= 23:
             weeks_avg_fcst = (
                 weeks_avg_fcst_sum/len(weeks_avg_fcst_file_list)
             )
-        if len(weeks_avg_obs_file_list) != 0:
+        if len(weeks_avg_obs_file_list) >= 23:
             weeks_avg_obs = (
                 weeks_avg_obs_sum/len(weeks_avg_obs_file_list)
             )
         if fhr_inc == '12':
-            expected_nfiles = 29
-        if len(weeks_avg_fcst_file_list) == expected_nfiles \
-                and len(weeks_avg_obs_file_list) == expected_nfiles:
+            expected_nfiles = 23
+        if len(weeks_avg_fcst_file_list) >= expected_nfiles \
+                and len(weeks_avg_obs_file_list) >= expected_nfiles:
             print("Output File: "+output_file)
             output_file_data = netcdf.Dataset(output_file, 'w',
                                               format='NETCDF3_CLASSIC')
@@ -249,7 +249,7 @@ while valid_hr <= int(valid_hr_end):
         else:
             print("WARNING: Cannot create Weeks 3-4 average file "
                   +output_file+" "
-                  +"; need "+str(expected_nfiles)+" input files")
+                  +"; need at least "+str(expected_nfiles)+" input files")
         weeks_avg_day+=1
         print("")
     valid_hr+=int(valid_hr_inc)
