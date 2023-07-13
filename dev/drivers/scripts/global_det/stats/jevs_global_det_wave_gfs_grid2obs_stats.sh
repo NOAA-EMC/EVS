@@ -1,4 +1,4 @@
-#PBS -N jevs_global_det_wave_gfs_grid2obs_stats
+#PBS -N jevs_global_det_wave_gfs_grid2obs_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
