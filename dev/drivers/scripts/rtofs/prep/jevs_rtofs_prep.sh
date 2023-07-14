@@ -25,7 +25,7 @@ export NET=evs
 export STEP=prep
 export COMPONENT=rtofs
 
-source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT)_${STEP}.sh
+source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
 # set up VDATE and COMIN and COMOUT
 export VDATE=$(date --date="3 days ago" +%Y%m%d)

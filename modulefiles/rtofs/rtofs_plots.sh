@@ -3,6 +3,7 @@
 
 set +x
 
+export HPC_OPT=/apps/ops/para/libs
 module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
 module use /apps/dev/modulefiles
 module load ve/evs/${ve_evs_ver}

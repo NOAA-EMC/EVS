@@ -26,7 +26,7 @@ export STEP=plots
 export COMPONENT=rtofs
 export RUN=headline
 
-source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT)_${STEP}.sh
+source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
 # set up VDATE and COMIN and COMOUT
 export VDATE=$(date --date="4 days ago" +%Y%m%d)
