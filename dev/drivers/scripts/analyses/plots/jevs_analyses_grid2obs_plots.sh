@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N jevs_analyses_plots
+#PBS -N jevs_analyses_grid2obs_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
