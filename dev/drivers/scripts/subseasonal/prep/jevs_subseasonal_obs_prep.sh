@@ -76,7 +76,7 @@ export ccpa_ver=${ccpa_ver}
 export obsproc_ver=${obsproc_ver}
 export PREP_TYPE=obs
 
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/EVS_Data/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.subseasonal.obs.prep
