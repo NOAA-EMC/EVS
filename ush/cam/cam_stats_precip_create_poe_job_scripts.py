@@ -1,8 +1,7 @@
-#!/bin/bash -e
- 
+#!/usr/bin/env python3
 # =============================================================================
 #
-# NAME: cam_stats_precip_create_poe_job_scripts.sh
+# NAME: cam_stats_precip_create_poe_job_scripts.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Create EVS CAM Precipitation - Statistics POE job scripts
 # DEPENDENCIES: $SCRIPTSevs/cam/stats/exevs_$MODELNAME_precip_stats.sh

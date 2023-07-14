@@ -169,21 +169,27 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
             VERIF_CASE_STEP_abbrev_type+'_init_hr_list'
         ].split(' ')
         # Set forecast hours
-        VERIF_CASE_STEP_type_fhr_min = (
-            os.environ[VERIF_CASE_STEP_abbrev_type+'_fhr_min']
-        )
-        VERIF_CASE_STEP_type_fhr_max = (
-            os.environ[VERIF_CASE_STEP_abbrev_type+'_fhr_max']
-        )
-        VERIF_CASE_STEP_type_fhr_inc = (
-            os.environ[VERIF_CASE_STEP_abbrev_type+'_fhr_inc']
-        )
-        VERIF_CASE_STEP_type_fhr_list = list(
-            range(int(VERIF_CASE_STEP_type_fhr_min),
-                  int(VERIF_CASE_STEP_type_fhr_max)
-                  +int(VERIF_CASE_STEP_type_fhr_inc),
-                  int(VERIF_CASE_STEP_type_fhr_inc))
-        )
+        if VERIF_CASE_STEP_abbrev_type+'_fhr_list' in list(os.environ.keys()):
+            VERIF_CASE_STEP_type_fhr_list = [
+                int(i) for i in
+                os.environ[VERIF_CASE_STEP_abbrev_type+'_fhr_list'].split(' ')
+            ]
+        else:
+            VERIF_CASE_STEP_type_fhr_min = (
+                os.environ[VERIF_CASE_STEP_abbrev_type+'_fhr_min']
+            )
+            VERIF_CASE_STEP_type_fhr_max = (
+                os.environ[VERIF_CASE_STEP_abbrev_type+'_fhr_max']
+            )
+            VERIF_CASE_STEP_type_fhr_inc = (
+                os.environ[VERIF_CASE_STEP_abbrev_type+'_fhr_inc']
+            )
+            VERIF_CASE_STEP_type_fhr_list = list(
+                range(int(VERIF_CASE_STEP_type_fhr_min),
+                      int(VERIF_CASE_STEP_type_fhr_max)
+                      +int(VERIF_CASE_STEP_type_fhr_inc),
+                      int(VERIF_CASE_STEP_type_fhr_inc))
+            )
         # Get time information
         VERIF_CASE_STEP_type_time_info_dict = gda_util.get_time_info(
             start_date, end_date, 'VALID', VERIF_CASE_STEP_type_init_hr_list,
@@ -550,21 +556,27 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
             VERIF_CASE_STEP_abbrev_type+'_init_hr_list'
         ].split(' ')
         # Set forecast hours
-        VERIF_CASE_STEP_type_fhr_min = (
-            os.environ[VERIF_CASE_STEP_abbrev_type+'_fhr_min']
-        )
-        VERIF_CASE_STEP_type_fhr_max = (
-            os.environ[VERIF_CASE_STEP_abbrev_type+'_fhr_max']
-        )
-        VERIF_CASE_STEP_type_fhr_inc = (
-            os.environ[VERIF_CASE_STEP_abbrev_type+'_fhr_inc']
-        )
-        VERIF_CASE_STEP_type_fhr_list = list(
-            range(int(VERIF_CASE_STEP_type_fhr_min),
-                  int(VERIF_CASE_STEP_type_fhr_max)
-                  +int(VERIF_CASE_STEP_type_fhr_inc),
-                  int(VERIF_CASE_STEP_type_fhr_inc))
-        )
+        if VERIF_CASE_STEP_abbrev_type+'_fhr_list' in list(os.environ.keys()):
+            VERIF_CASE_STEP_type_fhr_list = [
+                int(i) for i in
+                os.environ[VERIF_CASE_STEP_abbrev_type+'_fhr_list'].split(' ')
+            ]
+        else:
+            VERIF_CASE_STEP_type_fhr_min = (
+                os.environ[VERIF_CASE_STEP_abbrev_type+'_fhr_min']
+            )
+            VERIF_CASE_STEP_type_fhr_max = (
+                os.environ[VERIF_CASE_STEP_abbrev_type+'_fhr_max']
+            )
+            VERIF_CASE_STEP_type_fhr_inc = (
+                os.environ[VERIF_CASE_STEP_abbrev_type+'_fhr_inc']
+            )
+            VERIF_CASE_STEP_type_fhr_list = list(
+                range(int(VERIF_CASE_STEP_type_fhr_min),
+                      int(VERIF_CASE_STEP_type_fhr_max)
+                      +int(VERIF_CASE_STEP_type_fhr_inc),
+                      int(VERIF_CASE_STEP_type_fhr_inc))
+           )
         # Get time information
         VERIF_CASE_STEP_type_time_info_dict = gda_util.get_time_info(
             start_date, end_date, 'VALID', VERIF_CASE_STEP_type_init_hr_list,
@@ -768,21 +780,29 @@ elif STEP == 'plots' :
                 CCPA24hr_valid_hr_inc
             )
         ]
-        VERIF_CASE_STEP_precip_fhr_min = (
-            os.environ[VERIF_CASE_STEP_abbrev+'_precip_fhr_min']
-        )
-        VERIF_CASE_STEP_precip_fhr_max = (
-            os.environ[VERIF_CASE_STEP_abbrev+'_precip_fhr_max']
-        )
-        VERIF_CASE_STEP_precip_fhr_inc = (
-            os.environ[VERIF_CASE_STEP_abbrev+'_precip_fhr_inc']
-        )
-        VERIF_CASE_STEP_precip_fhr_list = list(
-            range(int(VERIF_CASE_STEP_precip_fhr_min),
-                  int(VERIF_CASE_STEP_precip_fhr_max)
-                  +int(VERIF_CASE_STEP_precip_fhr_inc),
-                  int(VERIF_CASE_STEP_precip_fhr_inc))
-        )
+        if VERIF_CASE_STEP_abbrev+'_precip_fhr_list' \
+                in list(os.environ.keys()):
+            VERIF_CASE_STEP_precip_fhr_list = [
+                int(i) for i in
+                os.environ[VERIF_CASE_STEP_abbrev+'_precip_fhr_list']\
+                .split(' ')
+            ]
+        else:
+            VERIF_CASE_STEP_precip_fhr_min = (
+                os.environ[VERIF_CASE_STEP_abbrev+'_precip_fhr_min']
+            )
+            VERIF_CASE_STEP_precip_fhr_max = (
+                os.environ[VERIF_CASE_STEP_abbrev+'_precip_fhr_max']
+            )
+            VERIF_CASE_STEP_precip_fhr_inc = (
+                os.environ[VERIF_CASE_STEP_abbrev+'_precip_fhr_inc']
+            )
+            VERIF_CASE_STEP_precip_fhr_list = list(
+                range(int(VERIF_CASE_STEP_precip_fhr_min),
+                      int(VERIF_CASE_STEP_precip_fhr_max)
+                      +int(VERIF_CASE_STEP_precip_fhr_inc),
+                      int(VERIF_CASE_STEP_precip_fhr_inc))
+            )
         COMINccpa = os.path.join(
             COMIN, 'stats', COMPONENT,
             RUN+'.'+end_date_dt.strftime('%Y%m%d'),
