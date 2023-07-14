@@ -132,7 +132,7 @@ fi
 
 #get ensemble member data by sequentail(non-mpi) or mpi run
 if [ $get_forecast = yes ] ; then
- $USHevs/${COMPONENT}/evs_gens_${RUN}_prep.sh
+ $USHevs/${COMPONENT}/evs_global_ens_${RUN}_prep.sh
 fi
 
 
