@@ -1,9 +1,10 @@
+#!/usr/bin/env python3
 ###############################################################################
 #
 # Name:          df_preprocessing.py
 # Contact(s):    Marcel Caron
 # Developed:     Dec. 2, 2021 by Marcel Caron
-# Last Modified: Apr. 22, 2022 by Marcel Caron
+# Last Modified: Jun. 7, 2023 by Marcel Caron
 # Abstract:      Collection of functions that initialize and filter dataframes
 #
 ###############################################################################
@@ -14,7 +15,7 @@ import shutil
 import uuid
 import numpy as np
 import pandas as pd
-from datetime import timedelta as td
+from datetime import datetime, timedelta as td
 
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
@@ -50,9 +51,9 @@ def get_valid_range(logger, date_type, date_range, date_hours, fleads):
         raise ValueError(e)
     return valid_range
 
-def run_prune_data(logger, stats_dir, prune_dir, output_base_template, verif_case, 
-                   verif_type, line_type, valid_range, eval_period, var_name, 
-                   fcst_var_names, model_list, domain):
+def run_prune_data(logger, stats_dir, prune_dir, output_base_template, 
+                   verif_case, verif_type, line_type, valid_range, eval_period, 
+                   var_name, fcst_var_names, model_list, domain):
     model_list = [str(model) for model in model_list]
     tmp_dir = 'tmp'+str(uuid.uuid4().hex)
     pruned_data_dir = os.path.join(
@@ -69,10 +70,9 @@ def run_prune_data(logger, stats_dir, prune_dir, output_base_template, verif_cas
             logger.info(f"Looking for stat files in {stats_dir} using the"
                         + f" template: {output_base_template}")
             prune_data(
-                stats_dir, prune_dir, tmp_dir, output_base_template, valid_range, 
-                str(eval_period).upper(), str(verif_case).lower(), 
-                str(verif_type).lower(), str(line_type).upper(), 
-                str(domain), 
+                stats_dir, prune_dir, tmp_dir, output_base_template, 
+                valid_range, str(eval_period).upper(), str(verif_case).lower(), 
+                str(verif_type).lower(), str(line_type).upper(), str(domain), 
                 [str(fcst_var_name) for fcst_var_name in fcst_var_names],
                 str(var_name).upper(), model_list
             )
@@ -123,19 +123,16 @@ def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range,
             logger.debug(f"Creating dataframe using pruned data from {fpath}")
         try:
             df_og_colnames = plot_util.get_stat_file_base_columns(met_version)
-            # df_line_type_colnames = plot_util.get_stat_file_line_type_columns(
-            #     logger, met_version, str(line_type).upper(), df_og_colnames, fpath
-            # )
-            # logger, met_version, line_type
             df_line_type_colnames = plot_util.get_stat_file_line_type_columns(
-                logger, met_version, str(line_type).upper() 
+                logger, met_version, str(line_type).upper(), df_og_colnames, 
+                fpath
             )
             df_colnames = np.concatenate((
                 df_og_colnames, df_line_type_colnames
             ))
             df_tmp = pd.read_csv(
                 fpath, delim_whitespace=True, header=None, skiprows=1,
-                names=df_colnames, dtype=np.str
+                names=df_colnames, dtype=str
             )
             i = -1*len(df_line_type_colnames)
             for col_name in df_colnames[i:]:
@@ -258,22 +255,88 @@ def create_init_datetime(df, logger):
     else:
         return df
 
-def filter_by_date_range(df, logger, date_type, date_range):
+def filter_by_date_range(df, logger, date_type, date_range, model_list, 
+                         model_queries):
     if df is None:
         return None
-    df = df.loc[
-        (df[str(date_type).upper()] >= date_range[0]) 
-        & (df[str(date_type).upper()] <= date_range[1])
-    ]
+    if any(model_queries) and str(date_type).upper() == 'INIT':
+        for m, model in enumerate(model_list):
+            if 'shift' in model_queries[m]:
+                date_range_shift = [
+                    dt+td(hours=int(model_queries[m]['shift'][0])) 
+                    for dt in date_range
+                ]
+            else:
+                date_range_shift = date_range
+            if m == 0:
+                df_tmp = df.loc[
+                    (df[str(date_type).upper()] >= date_range_shift[0])
+                    & (df[str(date_type).upper()] <= date_range_shift[1])
+                    & (df['MODEL'] == model)
+                ]
+            else:
+                df_tmp2 = df.loc[
+                    (df[str(date_type).upper()] >= date_range_shift[0])
+                    & (df[str(date_type).upper()] <= date_range_shift[1])
+                    & (df['MODEL'] == model)
+                ]
+                df_tmp = pd.concat([df_tmp, df_tmp2])
+        df = df_tmp
+    else:
+        df = df.loc[
+            (df[str(date_type).upper()] >= date_range[0]) 
+            & (df[str(date_type).upper()] <= date_range[1])
+        ]
     if check_empty(df, logger, 'filter_by_date_range'):
         return None
     else:
         return df
 
-def filter_by_hour(df, logger, date_type, date_hours):
+def filter_by_hour(df, logger, date_type, date_hours, model_list, 
+                   model_queries):
     if df is None:
         return None
-    df = df.loc[[x in date_hours for x in df[str(date_type).upper()].dt.hour]]
+    if any(model_queries) and str(date_type).upper() == 'INIT':
+        for m, model in enumerate(model_list):
+            if 'shift' in model_queries[m]:
+                dhs = [
+                    datetime.strptime(str(date_hour).zfill(2), '%H') 
+                    for date_hour in date_hours
+                ]
+                dhs_shift = [
+                    dh+td(hours=int(model_queries[m]['shift'][0])) 
+                    for dh in dhs
+                ]
+                date_hours_shift = [
+                    int(dh_shift.strftime('%H')) for dh_shift in dhs_shift
+                ]
+            else:
+                date_hours_shift = date_hours
+            if m == 0:
+                df_tmp = df.loc[
+                    [
+                        x in date_hours_shift 
+                        for x in df[str(date_type).upper()].dt.hour
+                    ]
+                    & (df['MODEL'] == model)
+                ]
+            else:
+                df_tmp2 = df.loc[
+                    [
+                        x in date_hours_shift 
+                        for x in df[str(date_type).upper()].dt.hour
+                    ]
+                    & (df['MODEL'] == model)
+                ]
+                df_tmp = pd.concat([df_tmp, df_tmp2])
+        df = df_tmp
+    else:
+        df = df.loc[
+            [
+                x in date_hours 
+                for x in df[str(date_type).upper()].dt.hour
+            ]
+        ]
     if check_empty(df, logger, 'filter_by_hour'):
         return None
     else:
@@ -283,14 +346,15 @@ def get_preprocessed_data(logger, stats_dir, prune_dir, output_base_template,
                           verif_case, verif_type, line_type, date_type, 
                           date_range, eval_period, date_hours, fleads, 
                           var_name, fcst_var_names, obs_var_names, model_list, 
-                          domain, interp, met_version, clear_prune_dir):
+                          model_queries, domain, interp, met_version, 
+                          clear_prune_dir):
     valid_range = get_valid_range(
         logger, date_type, date_range, date_hours, fleads
     )
     pruned_data_dir = run_prune_data(
-        logger, stats_dir, prune_dir, output_base_template, verif_case, verif_type, 
-        line_type, valid_range, eval_period, var_name, fcst_var_names, model_list, 
-        domain
+        logger, stats_dir, prune_dir, output_base_template, verif_case, 
+        verif_type, line_type, valid_range, eval_period, var_name, 
+        fcst_var_names, model_list, domain
     )
     df = create_df(
         logger, stats_dir, pruned_data_dir, line_type, date_range, model_list,
@@ -303,7 +367,11 @@ def get_preprocessed_data(logger, stats_dir, prune_dir, output_base_template,
     df = create_lead_hours(df, logger)
     df = create_valid_datetime(df, logger)
     df = create_init_datetime(df, logger)
-    df = filter_by_date_range(df, logger, date_type, date_range)
-    df = filter_by_hour(df, logger, date_type, date_hours)
+    df = filter_by_date_range(
+        df, logger, date_type, date_range, model_list, model_queries
+    )
+    df = filter_by_hour(
+        df, logger, date_type, date_hours, model_list, model_queries
+    )
     return df
 

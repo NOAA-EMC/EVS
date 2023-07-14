@@ -1,9 +1,10 @@
+#!/usr/bin/env python3
 ###############################################################################
 #
 # Name:          valid_hour_average.py
 # Contact(s):    Marcel Caron
 # Developed:     Nov. 22, 2021 by Marcel Caron 
-# Last Modified: Dec. 01, 2022 by Marcel Caron             
+# Last Modified: May 19, 2023 by Marcel Caron             
 # Title:         Line plot of verification metric as a function of 
 #                valid or init hour
 # Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
@@ -387,6 +388,9 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                 unit_convert = False
             elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
                 unit_convert = False
+        elif any(field in str(var_long_name_key).upper() for field in ['WEASD', 'SNOD', 'ASNOW']):
+            if units in ['m']:
+                units = 'm_snow'
         if unit_convert:
             if metric2_name is not None:
                 if (str(metric1_name).upper() in metrics_using_var_units
@@ -693,7 +697,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
     else:
         handles = []
         labels = []
-    if np.all([val==1 for val in pivot_metric1.count(axix=1)]):
+    if np.all([val==1 for val in pivot_metric1.count(axis=1)]):
         connect_points = True
     else:
         connect_points = False
@@ -772,10 +776,9 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                     x_vals1_plot = x_vals1[~np.isnan(reference1)]
                     y_vals1_plot = reference1[~np.isnan(reference1)]
                 else:
-                    x_vals1_plot - x_vals1
+                    x_vals1_plot = x_vals1
                     y_vals1_plot = reference1
                 plt.plot(
-#                    x_vals1.tolist(), reference1,
                     x_vals1_plot.tolist(), y_vals1_plot,
                     marker=ref_color_dict['marker'],
                     c=ref_color_dict['color'], mew=2., mec='white',
@@ -789,9 +792,8 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                 y_vals1_plot = y_vals_metric1[~np.isnan(y_vals_metric1)]
             else:
                 x_vals1_plot = x_vals1
-                y_vals1_plot - y_vals_metric1
+                y_vals1_plot = y_vals_metric1
             plt.plot(
-#                x_vals1.tolist(), y_vals_metric1, 
                 x_vals1_plot.tolist(), y_vals1_plot, 
                 marker=mod_setting_dicts[m]['marker'], 
                 c=mod_setting_dicts[m]['color'], mew=2., mec='white', 
@@ -813,7 +815,6 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                         x_vals2_plot = x_vals2
                         y_vals2_plot = reference2
                     plt.plot(
-#                        x_vals2.tolist(), reference2,
                         x_vals2_plot.tolist(), y_vals2_plot,
                         marker=ref_color_dict['marker'],
                         c=ref_color_dict['color'], mew=2., mec='white',
@@ -829,7 +830,6 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                     x_vals2_plot = x_vals2
                     y_vals2_plot = y_vals_metric2
                 plt.plot(
-#                    x_vals2.tolist(), y_vals_metric2, 
                     x_vals2_plot.tolist(), y_vals2_plot, 
                     marker=mod_setting_dicts[m]['marker'], 
                     c=mod_setting_dicts[m]['color'], mew=2., mec='white', 
@@ -1016,27 +1016,30 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         handletextpad=.4, borderaxespad=.5) 
     fig.subplots_adjust(bottom=.2, wspace=0, hspace=0)
     ax.grid(
-        b=True, which='major', axis='both', alpha=.5, linestyle='--', 
+        visible=True, which='major', axis='both', alpha=.5, linestyle='--', 
         linewidth=.5, zorder=0
     )
 
     if sample_equalization:
+        annot_y_offset = 18
         counts = pivot_counts.mean(axis=1, skipna=True).fillna('')
         for count, xval in zip(counts, x_vals1.tolist()):
             if not isinstance(count, str):
                 count = str(int(count))
             ax.annotate(
                 f'{count}', xy=(xval,1.),
-                xycoords=('data','axes fraction'), xytext=(0,18),
+                xycoords=('data','axes fraction'), xytext=(0,annot_y_offset),
                 textcoords='offset points', va='top', fontsize=16,
                 color='dimgrey', ha='center'
             )
         ax.annotate(
             '#SAMPLES', xy=(0.,1.), xycoords='axes fraction',
-            xytext=(-50, 21), textcoords='offset points', va='top', 
+            xytext=(-50, annot_y_offset+3), textcoords='offset points', va='top', 
             fontsize=11, color='dimgrey', ha='center'
         )
         fig.subplots_adjust(top=.9)
+    else:
+        annot_y_offset = 0
 
     # Title
     domain = df['VX_MASK'].tolist()[0]
@@ -1189,7 +1192,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
             left_image_box = OffsetImage(left_logo_arr, zoom=zoom_logo_left)
             ab_left = AnnotationBbox(
                 left_image_box, xy=(0.,1.), xycoords='axes fraction',
-                xybox=(0, 20), boxcoords='offset points', frameon = False,
+                xybox=(0, annot_y_offset+2), boxcoords='offset points', frameon = False,
                 box_alignment=(0,0)
             )
             ax.add_artist(ab_left)
@@ -1204,7 +1207,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
             right_image_box = OffsetImage(right_logo_arr, zoom=zoom_logo_right)
             ab_right = AnnotationBbox(
                 right_image_box, xy=(1.,1.), xycoords='axes fraction',
-                xybox=(0, 20), boxcoords='offset points', frameon = False,
+                xybox=(0, annot_y_offset+2), boxcoords='offset points', frameon = False,
                 box_alignment=(1,0)
             )
             ax.add_artist(ab_right)
