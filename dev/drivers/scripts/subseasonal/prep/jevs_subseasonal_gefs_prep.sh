@@ -17,42 +17,14 @@ module reset
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
-versionfile=$HOMEevs/versions/run.ver
-. $versionfile
+source $HOMEevs/versions/run.ver
+source $HOMEevs/modulefiles/subseasonal/subseasonal_prep.sh
 
 export DATAROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
-export job=${PBS_JOBNAME:-jevs_subseasonal_prep}
+export job=${PBS_JOBNAME:-jevs_subseasonal_gefs_prep}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOTtmp
 export SITE=$(cat /etc/cluster_name)
-
-
-############################################################
-# Load modules
-############################################################
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}/
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/dev/modulefiles/
-module load ve/evs/${ve_evs_ver}
-module load gsl/${gsl_ver}
-module load netcdf/${netcdf_ver}
-module load met/${met_ver}
-module load metplus/${metplus_ver}
-module load prod_envir/${prod_envir_ver}
-module load prod_util/${prod_util_ver}
-module load cray-mpich/${craympich_ver}
-module load cray-pals/${craypals_ver}
-module load cfp/${cfp_ver}
-module load g2c/${g2c_ver}
-module load wgrib2/${wgrib2_ver}
-module load libpng/${libpng_ver}
-module load libjpeg/${libjpeg_ver}
-module load udunits/${udunits_ver}
-module load nco/${nco_ver}
-module load grib_util/${grib_util_ver}
-module load cdo/${cdo_ver}
-
-module list
 
 export maillist='geoffrey.manikin@noaa.gov,shannon.shields@noaa.gov'
 
@@ -74,7 +46,7 @@ export MODELNAME=gefs
 export gefs_ver=${gefs_ver}
 export PREP_TYPE=gefs
 
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/EVS_Data/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.subseasonal.gefs.prep
