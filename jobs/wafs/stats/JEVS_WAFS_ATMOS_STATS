@@ -94,7 +94,7 @@ observations="GCIP GFS"
 for observation in $observations ; do
     if [ $observation = "GCIP" ] ; then
 	# For ICING, there are 2 different resoltions (before Nov 2023) and 3 centers
-	resolutions="0P25 1P25"
+	resolutions="0P25"
 	centers="blend uk us"
     elif [ $observation = "GFS" ] ; then
 	# For wind/temperature, only 1 resolution so far
@@ -122,7 +122,7 @@ export err=$?; err_chk
 
 # Combine icing files from different centers ( blend, uk, us) to $COMOUTfinal
 #===============================
-resolutions="0P25 1P25"
+resolutions="0P25"
 centers="blend uk us"
 cd $DATA/semifinal
 for resolution in $resolutions ; do
