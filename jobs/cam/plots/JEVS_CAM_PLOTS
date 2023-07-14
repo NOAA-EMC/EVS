@@ -15,6 +15,7 @@ date
 # obtain unique LSF id (jobid) and make temp directories
 ###########################################################
 export pid=$$
+
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 rm -rf $DATA
 mkdir -p $DATA
@@ -67,8 +68,7 @@ else
    elif [ $VERIF_CASE = radar ] ; then
       export VDATE=${VDATE:-$PDYm2}
    else
-      export VDATE=${VDATE:-$PDYm1}
-     #export VDATE=$(date -d "today -1 day" +"%Y%m%d")
+      export VDATE=$(date -d "today -1 day" +"%Y%m%d")
    fi
 fi
 
@@ -76,11 +76,10 @@ fi
 ####################################
 # Define COMIN/COMOUT variables
 ####################################
+export COMROOT=${COMROOT:-$(compath.py $envir/com)}
 export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
 
 if  [ $MODELNAME = href ] ; then
-  setpdy.sh
-  . $DATA/PDY
   export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$MODELNAME.$VDATE
   export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/${evs_ver})}/$STEP/$COMPONENT/$RUN.$VDATE
   export COMINapcp24mean=${COMINspatial:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT
