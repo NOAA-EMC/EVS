@@ -141,11 +141,11 @@ for PLOT_TYPE in ${PLOT_TYPES}; do
           # export FCST_LEADs="24,30,36,42,48,54,60"
             export FCST_LEADs="24,36,48,60"
          elif [ $FCST_INIT_HOUR = 0 ]; then
-            export FCST_LEADs="36,60"
+            export FCST_LEADs="36 60"
          elif [ $FCST_INIT_HOUR = 6 ]; then
-            export FCST_LEADs="30,54"
+            export FCST_LEADs="30 54"
          elif [ $FCST_INIT_HOUR = 12 ]; then
-            export FCST_LEADs="24,48"
+            export FCST_LEADs="24 48"
          elif [ $FCST_INIT_HOUR = 18 ]; then
             export FCST_LEADs="42"
          fi

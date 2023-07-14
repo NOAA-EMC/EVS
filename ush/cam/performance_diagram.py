@@ -870,6 +870,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     var_savename = df['FCST_VAR'].tolist()[0]
     if 'APCP' in var_savename.upper():
         var_savename = 'APCP'
+    elif 'PROB_MXUPHL25_A24_GEHWT' in var_savename.upper():
+        var_savename = 'MXUPHL25'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
         var_savename = 'HPBL'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['MSLET','MSLMA','PRMSL']:
@@ -949,6 +951,13 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             level_num = level.replace('A', '')
             level_string = f'{level_num}-hour '
             level_savename = f'A{level_num.zfill(2)}'
+        else:
+            level_string = f''
+            level_savename = f'{level}'
+    elif str(verif_type).lower() in ['lsr']:
+        if 'A' in str(level):
+            level_string = f'24-h '
+            level_savename = f'A24'
         else:
             level_string = f''
             level_savename = f'{level}'

@@ -741,12 +741,12 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     var_savename = df['FCST_VAR'].tolist()[0]
     if 'APCP' in var_savename.upper():
         var_savename = 'APCP'
+    elif 'PROB_MXUPHL25_A24_GEHWT' in var_savename.upper():
+        var_savename = 'MXUPHL25'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
         var_savename = 'HPBL'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['MSLET','MSLMA','PRMSL']:
         var_savename = 'MSLET'
-    elif 'Prob_MXUPHL25_A24_geHWT' in var_savename.upper():
-        var_savename = 'MXUPHL25'
     if domain in list(domain_translator.keys()):
         domain_string = domain_translator[domain]['long_name']
         domain_save_string = domain_translator[domain]['save_name']
