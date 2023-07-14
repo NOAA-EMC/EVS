@@ -21,8 +21,6 @@ set -x
 
 module reset
 
-source $HOMEevs/modulefiles/analyses/analyses_plots.sh
-
 ############################################################
 ### For dev testing
 ##############################################################
@@ -40,6 +38,8 @@ export VERIF_CASE=grid2obs
 export MODELNAME=rtma
 export modsys=rtma
 export mod_ver=${rtma_ver}
+
+source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP).sh
 
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
