@@ -27,6 +27,7 @@ module load proj/${proj_ver}
 module load geos/${geos_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
+module load imagemagick/${imagemagick_ver}
 
 module list
 set -x

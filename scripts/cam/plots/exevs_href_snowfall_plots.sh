@@ -174,12 +174,11 @@ else
   ${DATA}/run_all_poe.sh
 fi
 
-
 cd $plot_dir
 
 for stats in ets fbias fss ; do
   score_type='threshold_average' 
-  scoretype='thresholdmean'
+  scoretype='threshmean'
 
   for var in weasd ; do
    for level in 06h 24h ; do
@@ -202,7 +201,7 @@ for stats in ets fbias fss ; do
     fi
 
    for domain in conus conus_east conus_west conus_south conus_central  ; do
-      mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}.${valid}.buk_${domain}.png
+      mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_valid_all_times.buk_${domain}.png
    done
 
   done
@@ -224,7 +223,7 @@ for var in weasd ; do
     fi
 
    for domain in conus conus_east conus_west conus_south conus_central  ; do
-      mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${lead}.png  evs.href.ctc.${var}_${level}.last${past_days}days.${scoretype}.${valid}.buk_${domain}.png
+      mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${lead}.png  evs.href.ctc.${var}_${level}.last${past_days}days.${scoretype}_valid_all_times.buk_${domain}.png
    done
  done
 done
