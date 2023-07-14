@@ -67,9 +67,9 @@ for grid in $VX_MASK_LIST ; do
     if [ $grid = G130 ] ; then
       echo "export mask=buk_conus" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
       echo "export grd=g130"  >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-    elif [ $grid = G214 ] ; then
+    elif [ $grid = G242 ] ; then
       echo "export mask=alaska" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-      echo "export grd=g214"  >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+      echo "export grd=g242"  >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
     fi
 
       echo "export PLOT_TYPE=$score_type" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
