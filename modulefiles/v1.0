@@ -2,9 +2,9 @@
 
 #%Module#########################################################
 ## 
-## For modules used by EVS/v1.0 on WCOSS2      
+## Required to compile executables for EVS/v1.0 on WCOSS2      
 ##___________________________________________________
-#Note, set top #!/bin/ksh can not load modules, must set bash ot not set it 
+#Note, set top #!/bin/ksh can not load modules, must set bash or not set it 
 #set -x
 echo Loading modules........
 

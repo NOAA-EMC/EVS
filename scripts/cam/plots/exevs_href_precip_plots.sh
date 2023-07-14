@@ -197,7 +197,7 @@ cd $plot_dir
 
 for stats in ets fbias fss ; do
   score_type='threshold_average' 
-  scoretype='thresholdmean'
+  scoretype='threshmean'
 
   for var in apcp_01 apcp_03 apcp_24 ; do
     level=${var:5:2}h
@@ -226,7 +226,7 @@ for stats in ets fbias fss ; do
     fi
 
    for domain in conus conus_east conus_west conus_south conus_central alaska  ; do
-      mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var}h.last${past_days}days.${scoretype}.buk_${domain}.png
+      mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var}h.last${past_days}days.${scoretype}_valid_all_times.buk_${domain}.png
    done
 
  done
@@ -250,7 +250,7 @@ for var in apcp_01 apcp_03 apcp_24 ; do
     fi
 
    for domain in conus conus_east conus_west conus_south conus_central alaska  ; do
-      mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${lead}.png  evs.href.ctc.${var}h.last${past_days}days.${scoretype}.buk_${domain}.png
+      mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${lead}.png  evs.href.ctc.${var}h.last${past_days}days.${scoretype}_valid_all_times.buk_${domain}.png
    done
 
 done
