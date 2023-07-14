@@ -40,7 +40,7 @@ export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
 export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
-
+export COMROOT=${COMROOT:-$(compath.py $envir/com)}
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
