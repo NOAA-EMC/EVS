@@ -274,7 +274,8 @@ elif job_type == 'generate':
     job_env_vars_dict['OUTPUT_FLAG_SL1L2'] = OUTPUT_FLAG_SL1L2
     job_env_vars_dict['OUTPUT_FLAG_VL1L2'] = OUTPUT_FLAG_VL1L2
     job_env_vars_dict['OUTPUT_FLAG_CNT'] = OUTPUT_FLAG_CNT
-    #job_env_vars_dict['OUTPUT_FLAG_VCNT'] = OUTPUT_FLAG_VCNT
+    job_env_vars_dict['OUTPUT_FLAG_VCNT'] = OUTPUT_FLAG_VCNT
+    job_env_vars_dict['OUTPUT_FLAG_MCTC'] = OUTPUT_FLAG_MCTC
     job_iterate_over_env_lists_dict['FHR_GROUP_LIST'] = {
         'list_items': re.split(r'[\s,]+', FHR_GROUP_LIST),
         'exports': ['FHR_END','FHR_INCR']
@@ -362,11 +363,20 @@ elif STEP == 'stats':
                 + f'PointStat_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}_VAR2.conf'
             )
         else:
-            job_cmd_list_iterative.append(
-                f'{metplus_launcher} -c '
-                + f'{MET_PLUS_CONF}/'
-                + f'PointStat_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}.conf'
-            )
+            if NEST == 'conusp':
+                if VAR_NAME == 'PTYPE':
+                    job_cmd_list_iterative.append(
+                        f'{metplus_launcher} -c '
+                        + f'{MET_PLUS_CONF}/'
+                        + f'PointStat_fcst{COMPONENT.upper()}_'
+                        + f'obs{VERIF_TYPE.upper()}_{VAR_NAME}.conf'
+                        )
+            else:
+                job_cmd_list_iterative.append(
+                    f'{metplus_launcher} -c '
+                    + f'{MET_PLUS_CONF}/'
+                    + f'PointStat_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}.conf'
+                    )
     elif job_type == 'gather':
         job_cmd_list.append(
             f'{metplus_launcher} -c '

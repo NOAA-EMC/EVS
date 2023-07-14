@@ -50,6 +50,9 @@ generate_stats_jobs_dict = {
                 'SL1L2': 'STAT',
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
+                'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
+                'MCTC': 'NONE',
             }
         },
     },
@@ -104,6 +107,9 @@ generate_stats_jobs_dict = {
                 'SL1L2': 'STAT',
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
+                'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
+                'MCTC': 'NONE',
             }
         },
     },
@@ -198,6 +204,9 @@ generate_stats_jobs_dict = {
                 'SL1L2': 'NONE',
                 'VL1L2': 'STAT',
                 'CNT': 'NONE',
+                'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
+                'MCTC': 'NONE',
             }
         },
     },
@@ -252,6 +261,9 @@ generate_stats_jobs_dict = {
                 'SL1L2': 'STAT',
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
+                'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
+                'MCTC': 'NONE',
             }
         },
     },
@@ -306,6 +318,9 @@ generate_stats_jobs_dict = {
                 'SL1L2': 'STAT',
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
+                'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
+                'MCTC': 'NONE',
             }
         },
     },
@@ -360,6 +375,9 @@ generate_stats_jobs_dict = {
                 'SL1L2': 'STAT',
                 'VL1L2': 'NONE',
                 'CNT': 'NONE',
+                'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
+                'MCTC': 'NONE',
             }
         },
     },
@@ -386,10 +404,13 @@ generate_stats_jobs_dict = {
                 'var1_obs_options': 'cnt_thresh = [ >0 ]; cnt_logic = UNION;',
             },
             'output_types': {
-                'CTC': 'NONE',
+                'CTC': 'STAT',
                 'SL1L2': 'STAT',
                 'VL1L2': 'NONE',
                 'CNT': 'STAT',
+                'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
+                'MCTC': 'NONE',
             }
         },
     },
@@ -416,10 +437,13 @@ generate_stats_jobs_dict = {
                 'var1_obs_options': 'cnt_thresh = [ >0 ]; cnt_logic = UNION;',
             },
             'output_types': {
-                'CTC': 'NONE',
+                'CTC': 'STAT',
                 'SL1L2': 'STAT',
                 'VL1L2': 'NONE',
                 'CNT': 'STAT',
+                'VCNT': 'NONE',
+                'NBRCNT': 'NONE',
+                'MCTC': 'NONE',
             }
         },
     },
@@ -452,7 +476,7 @@ generate_stats_jobs_dict = {
                 'CNT': 'NONE',
                 'VCNT': 'NONE', 
                 'NBRCNT': 'NONE',
-                'MCTC': 'NONE'
+                'MCTC': 'NONE',
             }
         },
     },
@@ -485,7 +509,7 @@ generate_stats_jobs_dict = {
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
                 'NBRCNT': 'NONE',
-                'MCTC': 'NONE'
+                'MCTC': 'NONE',
             }
         },
     },
@@ -518,7 +542,7 @@ generate_stats_jobs_dict = {
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
                 'NBRCNT': 'NONE',
-                'MCTC': 'NONE'
+                'MCTC': 'NONE',
             }
         },
     },
@@ -551,7 +575,7 @@ generate_stats_jobs_dict = {
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
                 'NBRCNT': 'NONE',
-                'MCTC': 'NONE'
+                'MCTC': 'NONE',
             }
         },
     },
@@ -600,7 +624,7 @@ generate_stats_jobs_dict = {
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
                 'NBRCNT': 'NONE',
-                'MCTC': 'NONE'
+                'MCTC': 'NONE',
             }
         },
     },
@@ -633,7 +657,7 @@ generate_stats_jobs_dict = {
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
                 'NBRCNT': 'NONE',
-                'MCTC': 'NONE'
+                'MCTC': 'NONE',
             }
         },
     },
@@ -666,7 +690,7 @@ generate_stats_jobs_dict = {
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
                 'NBRCNT': 'NONE',
-                'MCTC': 'NONE'
+                'MCTC': 'NONE',
             }
         },
     },
@@ -699,7 +723,7 @@ generate_stats_jobs_dict = {
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
                 'NBRCNT': 'NONE',
-                'MCTC': 'NONE'
+                'MCTC': 'NONE',
             }
         },
     },
@@ -732,7 +756,7 @@ generate_stats_jobs_dict = {
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
                 'NBRCNT': 'NONE',
-                'MCTC': 'NONE'
+                'MCTC': 'NONE',
             }
         },
     },
@@ -765,7 +789,7 @@ generate_stats_jobs_dict = {
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
                 'NBRCNT': 'NONE',
-                'MCTC': 'NONE'
+                'MCTC': 'NONE',
             }
         },
     },
@@ -798,7 +822,7 @@ generate_stats_jobs_dict = {
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
                 'NBRCNT': 'NONE',
-                'MCTC': 'NONE'
+                'MCTC': 'NONE',
             }
         },
     },
@@ -807,21 +831,21 @@ generate_stats_jobs_dict = {
             'nam': {
                 'var1_fcst_name': 'VIS',
                 'var1_fcst_levels': 'Z0',
-                'var1_fcst_thresholds': 'le805,le1609,le4828,le8045,le16090,ge8045',
-                'var1_fcst_options': 'censor_thresh = gt16093.44; censor_val = 16093.44;',
+                'var1_fcst_thresholds': 'lt805,lt1609,lt4828,lt8045,ge8045,lt16090',
+                'var1_fcst_options': 'censor_thresh = gt16090; censor_val = 16090;',
                 'var1_obs_name': 'VIS',
                 'var1_obs_levels': 'Z0',
-                'var1_obs_thresholds': 'le805,le1609,le4828,le8045,le16090,ge8045',
+                'var1_obs_thresholds': 'lt805,lt1609,lt4828,lt8045,ge8045,lt16090',
                 'var1_obs_options': '',
             },
             'rap': {
                 'var1_fcst_name': 'VIS',
                 'var1_fcst_levels': 'Z0',
-                'var1_fcst_thresholds': 'le805,le1609,le4828,le8045,le16090,ge8045',
-                'var1_fcst_options': 'censor_thresh = gt16093.44; censor_val = 16093.44;',
+                'var1_fcst_thresholds': 'lt805,lt1609,lt4828,lt8045,ge8045,lt16090',
+                'var1_fcst_options': 'censor_thresh = gt16090; censor_val = 16090;',
                 'var1_obs_name': 'VIS',
                 'var1_obs_levels': 'Z0',
-                'var1_obs_thresholds': 'le805,le1609,le4828,le8045,le16090,ge8045',
+                'var1_obs_thresholds': 'lt805,lt1609,lt4828,lt8045,ge8045,lt16090',
                 'var1_obs_options': '',
             },
             'output_types': {
@@ -831,7 +855,7 @@ generate_stats_jobs_dict = {
                 'CNT': 'STAT',
                 'VCNT': 'NONE',
                 'NBRCNT': 'NONE',
-                'MCTC': 'NONE'
+                'MCTC': 'NONE',
             }
         },
     },
@@ -840,21 +864,21 @@ generate_stats_jobs_dict = {
             'nam': {
                 'var1_fcst_name': 'HGT',
                 'var1_fcst_levels': 'L0',
-                'var1_fcst_thresholds': 'le152,le305,le914,le1524,le3048,ge914',
+                'var1_fcst_thresholds': 'lt152,lt305,lt914,ge914,lt1524,lt3048',
                 'var1_fcst_options': 'GRIB_lvl_typ = 215; censor_thresh = lt0; censor_val = -9999; set_attr_level = \\"CEILING\\";',
                 'var1_obs_name': 'CEILING',
                 'var1_obs_levels': 'L0',
-                'var1_obs_thresholds': 'le152,le305,le914,le1524,le3048,ge914',
+                'var1_obs_thresholds': 'lt152,lt305,lt914,ge914,lt1524,lt3048',
                 'var1_obs_options': 'GRIB_lvl_typ = 215;',
             },
             'rap': {
                 'var1_fcst_name': 'HGT',
                 'var1_fcst_levels': 'L0',
-                'var1_fcst_thresholds': 'le152,le305,le914,le1524,le3048,ge914',
+                'var1_fcst_thresholds': 'lt152,lt305,lt914,ge914,lt1524,lt3048',
                 'var1_fcst_options': 'GRIB_lvl_typ = 215; censor_thresh = lt0; censor_val = -9999; set_attr_level = \\"CEILING\\";',
                 'var1_obs_name': 'CEILING',
                 'var1_obs_levels': 'L0',
-                'var1_obs_thresholds': 'le152,le305,le914,le1524,le3048,ge914',
+                'var1_obs_thresholds': 'lt152,lt305,lt914,ge914,lt1524,lt3048',
                 'var1_obs_options': 'GRIB_lvl_typ = 215;',
             },
             'output_types': {
@@ -864,7 +888,7 @@ generate_stats_jobs_dict = {
                 'CNT': 'STAT',
                 'VCNT': 'NONE',
                 'NBRCNT': 'NONE',
-                'MCTC': 'NONE'
+                'MCTC': 'NONE',
             }
         },
     },
@@ -888,7 +912,7 @@ generate_stats_jobs_dict = {
                 'CNT': 'NONE',
                 'VCNT': 'NONE',
                 'NBRCNT': 'NONE',
-                'MCTC': 'STAT'
+                'MCTC': 'STAT',
             }
         },
         'mping': {
