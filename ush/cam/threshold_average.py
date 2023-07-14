@@ -304,7 +304,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     units = df['FCST_UNITS'].tolist()[0]
     var_long_name_key = df['FCST_VAR'].tolist()[0]
     if str(var_long_name_key).upper() == 'PROB_MXUPHL25_A24_GEHWT':
-        units = '%'
+        units = 'decimal'
     metrics_using_var_units = [
         'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
         'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR',

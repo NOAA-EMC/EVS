@@ -746,6 +746,10 @@ class Reference():
                 'convert_to': 'mi',
                 'formula': self.formulas.m_to_mi
             },
+            'decimal': {
+                'convert_to': '%',
+                'formula': self.formulas.dec_to_perc
+            },
         }
 
         '''
@@ -3750,3 +3754,14 @@ class Reference():
                 else:
                     mi_vals = np.divide(m_vals, 1609.34)
                 return mi_vals
+        def dec_to_perc(dec_vals, rounding=False, return_terms=False):
+            if return_terms:
+                M = 100.
+                C = 0.
+                return M, C
+            else:
+                if rounding:
+                    perc_vals = (np.multiply(dec_vals, 100.)).round()
+                else:
+                    perc_vals = np.multiply(dec_vals, 100.)
+                return perc_vals
