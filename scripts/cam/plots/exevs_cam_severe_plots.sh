@@ -137,9 +137,27 @@ for PLOT_TYPE in ${PLOT_TYPES}; do
       # Loop over forecast initializations
       for FCST_INIT_HOUR in ${FCST_INIT_HOURS}; do
 	
-         echo "${USHevs}/${COMPONENT}/evs_cam_plots_severe.sh $PLOT_TYPE $DOMAIN $LINE_TYPE $FCST_INIT_HOUR $njob" >> $DATA/poescript
-         njob=$((njob+1))
+         if [ $FCST_INIT_HOUR = "0,6,12,18" ]; then
+          # export FCST_LEADs="24,30,36,42,48,54,60"
+            export FCST_LEADs="24,36,48,60"
+         elif [ $FCST_INIT_HOUR = 0 ]; then
+            export FCST_LEADs="36,60"
+         elif [ $FCST_INIT_HOUR = 6 ]; then
+            export FCST_LEADs="30,54"
+         elif [ $FCST_INIT_HOUR = 12 ]; then
+            export FCST_LEADs="24,48"
+         elif [ $FCST_INIT_HOUR = 18 ]; then
+            export FCST_LEADs="42"
+         fi
 
+         # Loop over forecast initializations
+         for FCST_LEAD in ${FCST_LEADs}; do
+	
+            echo "${USHevs}/${COMPONENT}/evs_cam_plots_severe.sh $PLOT_TYPE $DOMAIN $LINE_TYPE $FCST_INIT_HOUR $FCST_LEAD $njob" >> $DATA/poescript
+            njob=$((njob+1))
+
+
+         done
 
       done
 

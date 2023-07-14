@@ -16,7 +16,8 @@ export PLOT_TYPE=$1
 export DOMAIN=$2
 export LINE_TYPE=$3
 export FCST_INIT_HOUR=$4
-export JOBNUM=$5
+export FCST_LEAD=$5
+export JOBNUM=$6
 export job_name="job${JOBNUM}"
 
 export LOG_TEMPLATE="${LOG_DIR}/EVS_verif_plotting_job${JOBNUM}_`date '+%Y%m%d-%H%M%S'`_$$.out"
@@ -55,17 +56,6 @@ elif [ $LINE_TYPE = pstd ]; then
 fi
 
 
-if [ $FCST_INIT_HOUR = "0,6,12,18" ]; then
-   export FCST_LEAD="24,30,36,42,48,54,60"
-elif [ $FCST_INIT_HOUR = 0 ]; then
-   export FCST_LEAD="36,60"
-elif [ $FCST_INIT_HOUR = 6 ]; then
-   export FCST_LEAD="30,54"
-elif [ $FCST_INIT_HOUR = 12 ]; then
-   export FCST_LEAD="24,48"
-elif [ $FCST_INIT_HOUR = 18 ]; then
-   export FCST_LEAD="42"
-fi
 
 
 ###################################################################
