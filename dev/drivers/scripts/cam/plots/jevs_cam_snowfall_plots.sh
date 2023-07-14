@@ -55,9 +55,10 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 # Developer Settings
 export DATA=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/stats/$COMPONENT
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
-export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
 export cyc=$(date -d "today" +"%H")
+export VDATE=$(date -d "today" +"%Y%m%d")
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE
+export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/cam/plots/JEVS_CAM_PLOTS
