@@ -820,7 +820,7 @@ class Reference():
                                     'REFC': 'Composite Reflectivity',
                                     'REFD': 'Above Ground Level Reflectivity',
                                     'RETOP': 'Echo Top Height',
-                                    'Prob_MXUPHL25_A24_geHWT': '2-5km UH Surrogate Severe',
+                                    'Prob_MXUPHL25_A24_geHWT': '2-5km UH - Surrogate Severe',
                                     'WIND_ENS_FREQ_ge20.58': 'Wind speed >= 40kt',
                                     'APCP_24_ENS_FREQ_gt1': 'APCP_24hr > 1 mm',
                                     'APCP_24_ENS_FREQ_gt2': 'APCP_24hr > 2 mm',
