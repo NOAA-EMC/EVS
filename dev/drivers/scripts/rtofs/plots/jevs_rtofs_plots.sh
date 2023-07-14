@@ -15,17 +15,17 @@
 ############################################################
 set -x
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/evs_rtofs_module/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 source $HOMEevs/versions/run.ver
 
 module reset
-
-source $HOMEevs/modulefiles/rtofs/rtofs_plots.sh
 
 # specify environment variables
 export NET=evs
 export STEP=plots
 export COMPONENT=rtofs
+
+source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT)_${STEP}.sh
 
 # set up VDATE and COMIN and COMOUT
 export VDATE=$(date --date="4 days ago" +%Y%m%d)

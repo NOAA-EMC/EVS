@@ -15,12 +15,10 @@
 ############################################################
 set -x
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/evs_rtofs_module/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 source $HOMEevs/versions/run.ver
 
 module reset
-
-source $HOMEevs/modulefiles/rtofs/rtofs_stats.sh
 
 # specify environment variables
 export NET=evs
@@ -30,6 +28,8 @@ export RUNupper=NDBC_STANDARD
 export VERIF_CASE=grid2obs
 export VAR=sst
 export COMPONENT=rtofs
+
+source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT)_${STEP}.sh
 
 # set up VDATE and COMIN and COMOUT
 export VDATE=$(date --date="3 days ago" +%Y%m%d)
