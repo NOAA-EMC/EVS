@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N jevs_hrrr_severe_prep
+#PBS -N jevs_cam_hrrr_severe_prep
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -44,7 +44,7 @@ export KEEPDATA=YES
 export VERIF_CASE=severe
 export MODELNAME=hrrr
 export modsys=hrrr
-export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}_${cyc}}
+export job=${PBS_JOBNAME:-jevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}_${cyc}}
 export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}
 export COMINspc=/lfs/h1/ops/dev/dcom

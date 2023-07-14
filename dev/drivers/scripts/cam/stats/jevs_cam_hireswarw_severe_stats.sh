@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N jevs_hireswarw_severe_stats_00
+#PBS -N jevs_cam_hireswarw_severe_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -42,7 +42,7 @@ export KEEPDATA=YES
 export VERIF_CASE=severe
 export MODELNAME=hireswarw
 export modsys=hiresw
-export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export job=${PBS_JOBNAME:-jevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}_${cyc}}
 export jobid=$job.${PBS_JOBID:-$$}
 export COMINfcst=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
 export COMINspclsr=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT

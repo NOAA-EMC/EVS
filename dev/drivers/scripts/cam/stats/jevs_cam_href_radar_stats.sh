@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N jevs_href_radar_stats
+#PBS -N jevs_cam_href_radar_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -44,7 +44,7 @@ export KEEPDATA=YES
 export VERIF_CASE=radar
 export MODELNAME=href
 export modsys=href
-export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}_${cyc}}
+export job=${PBS_JOBNAME:-jevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}_${cyc}}
 export jobid=$job.${PBS_JOBID:-$$}
 export COMINmrms=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
 export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
