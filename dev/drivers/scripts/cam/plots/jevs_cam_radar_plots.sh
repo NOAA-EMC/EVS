@@ -2,10 +2,10 @@
 #PBS -N jevs_cam_radar_plots_00
 #PBS -j oe
 #PBS -S /bin/bash
-#PBS -q debug
+#PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=0:30:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=64:mem=250GB
+#PBS -l walltime=0:45:00
+#PBS -l place=vscatter:exclhost,select=1:ncpus=64:mem=500GB
 #PBS -l debug=true
 #PBS -V
 
@@ -39,6 +39,7 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export LINE_TYPE=${LINE_TYPE:-${LINE_TYPE}}
+export EVAL_PERIOD=${EVAL_PERIOD:-${EVAL_PERIOD}}
 export KEEPDATA=YES
 export VERIF_CASE=radar
 export MODELNAME=${COMPONENT}
