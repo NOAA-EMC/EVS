@@ -21,6 +21,8 @@ export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
 export COMOUTprep=${COMOUTprep:-$COMOUT/$STEP/$COMPONENT}
 export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
 
+mkdir -d $COMOUT $COMOUTprep
+
 # run scripts
 #  get RTOFS production data from /com
 $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${STEP}.sh
