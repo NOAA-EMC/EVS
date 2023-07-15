@@ -95,6 +95,7 @@ fi
 	  export FHR_GROUP_LIST="SHORT FULL"
 	  export FHR_GROUP_LIST="FULL"
 	  export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.awip12{lead?fmt=%2H}.tm00.grib2"
+          export VHOUR_LIST="00 06 12 18"
 	  if [ "$OBSNAME" = "raob" ]; then
 		  export VAR_NAME_LIST=""
 	  elif [ "$OBSNAME" = "metar" ]; then
@@ -112,7 +113,6 @@ fi
 	  export FHR_INCR_FULL="06"
 	  export FHR_END_SHORT="81"
 	  export FHR_INCR_SHORT="06"
-	  #-------
 
   elif [ "$NEST" = "conusc" ]; then
     export SKIP_IF_OUTPUT_EXISTS="yes"
@@ -167,13 +167,16 @@ fi
     export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.awip32{lead?fmt=%2H}.tm00.grib2"
     if [ "$OBSNAME" = "raob" ]; then
       export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH SBCAPE MLCAPE HPBL"
+    # export VAR_NAME_LIST=" SBCAPE MLCAPE HPBL"
     elif [ "$OBSNAME" = "metar" ]; then
       export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING"
     else 
       echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
       exit 1
     fi
-    export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc, ${FIXevs}/masks/Alaska_G221.nc"
+    # export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc"
+    export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G221.nc"
+    # export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc, ${FIXevs}/masks/Alaska_G221.nc"
     export MASK_CUSTOM_LIST=""
     export MIN_IHOUR="00"
     export FHR_END_FULL="84"
