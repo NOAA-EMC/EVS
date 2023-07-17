@@ -796,6 +796,11 @@ class Reference():
                                   'Global': 'Global',
                                   'GLOBAL': 'Global',
                                   'FULL': 'Global, 0p25',
+                                  'SEUS_CARB': 'Southeast US/Caribbean',
+                                  'GOM': 'Gulf of Mexico',
+                                  'NEUS_CAN': 'Northeast US/Canada',
+                                  'WCOAST_AK': 'West Coast US/Alaska',
+                                  'HAWAII': 'Hawaii',
                                   'G130': 'CONUS - NCEP Grid 130',
                                   'G211': 'CONUS - NCEP Grid 211',
                                   'G221': 'CONUS - NCEP Grid 221',
@@ -2303,7 +2308,8 @@ class Reference():
                 'SL1L2': {
                     'plot_stats_list': ('me, esd, rmse, bcrmse, corr, si, fbar, obar'),
                     'interp': 'NEAREST',
-                    'vx_mask_list' : ['GLOBAL'],
+                    'vx_mask_list' : ['GLOBAL', 'SEUS_CARB', 'GOM', 'NEUS_CAN',
+                                      'WCOAST_AK', 'HAWAII'],
                     'var_dict': {
                         'HTSGW': {'fcst_var_names': ['HTSGW'],
                                      'fcst_var_levels': ['L0'],

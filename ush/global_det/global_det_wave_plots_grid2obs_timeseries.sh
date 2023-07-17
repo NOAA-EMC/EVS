@@ -37,84 +37,94 @@ for period in ${periods} ; do
           for obsname in $obsnames; do
               if [ $obsname = "GDAS" ]; then
                   OBTYPE="SFCSHP"
+                  regions="GLOBAL"
               elif [ $obsname = "NDBC" ]; then
                   OBTYPE="NDBC_STANDARD"
+                  regions="GLOBAL SEUS_CARB GOM NEUS_CAN WCOAST_AK HAWAII"
               fi
-              echo "export VERIF_CASE=${VERIF_CASE} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-              echo "export RUN=${RUN} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-              echo "export COMPONENT=${COMPONENT}" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-              echo "export USHevs=${USHevs} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-              echo "export FIXevs=${FIXevs}  " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-              echo "export DATA=${DATA} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-              echo "export MODNAM=${modnam_list} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-              echo "export PERIOD=${period} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-              echo "export VERIF_CASE=${VERIF_CASE} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-              echo "export OBTYPE=${OBTYPE} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-              echo "export plot_start_date=${VDATE_START} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-              echo "export plot_end_date=${VDATE_END} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-              echo "export VHR=${vhr} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-              case ${stats} in
-                'stats1')
-                  image_stat="me_rmse"
-                  echo "export METRIC='me, rmse' " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-                  ;;
-                'stats2')
-                  image_stat="corr"
-                  echo "export METRIC=corr " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-                  ;;
-                'stats3')
-                  image_stat="fbar_obar"
-                  echo "export METRIC='fbar, obar' " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-                  ;;
-                'stats4')
-                  image_stat="esd"
-                  echo "export METRIC=esd " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-                  ;; 
-                'stats5')
-                  image_stat="si"
-                  echo "export METRIC=si "  >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-                  ;;
-                'stats6')
-                  image_stat="p95"
-                  echo "export METRIC=p95 "  >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-                  ;;
-              esac
-              echo "export FHR=${fhr}"        >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-              echo "export WVAR=${wvar}"      >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-              case ${wvar} in
-                'WIND')
-                  image_level="z10"
-                  echo "export OBS_LEVEL=Z10"  >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-                  ;;
-                *)
-                  image_level="l0"
-                  echo "export OBS_LEVEL=L0"  >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-                  ;;
-              esac
-              echo "export PTYPE=${ptype}" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-              # Make COMOUT restart directory
-              COMOUTjob=$COMOUT/$VERIF_CASE/last${NDAYS}days/sl1l2/${image_var}_${image_level}/glb/${image_stat}
-              mkdir -p $COMOUTjob
-              #Define DATA and COMOUT image name
               obtypel=`echo $OBTYPE | tr '[A-Z]' '[a-z]'`
-              imagename=evs.${COMPONENT}.${image_stat}.${image_var}_${image_level}_${obtypel}.past${NDAYS}days.timeseries_valid${vhr}z_f${fhr}.glb.png
-              COMOUTimage=$COMOUTjob/$imagename
-              DATAimage=$DATA/images/$imagename
-              # Add commands
-              if [[ -s $COMOUTimage ]]; then
-                  echo "cp -v $COMOUTimage $DATAimage" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-              else
-                  echo "${GRID2OBS_CONF}/py_plotting_wave.config"  >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-                  echo "export err=$?; err_chk" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-                  if [ $SENDCOM = YES ]; then
-                      echo "cp -v $DATAimage $COMOUTimage" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-                      echo "export err=$?; err_chk" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
+              for region in $regions; do
+                  if [ $region = "GLOBAL" ]; then
+                      regionl="glb"
+                  else
+                      regionl=`echo $region | tr '[A-Z]' '[a-z]'`
                   fi
-              fi
+                  echo "export VERIF_CASE=${VERIF_CASE} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  echo "export RUN=${RUN} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  echo "export COMPONENT=${COMPONENT}" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  echo "export USHevs=${USHevs} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  echo "export FIXevs=${FIXevs}  " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  echo "export DATA=${DATA} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  echo "export MODNAM=${modnam_list} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  echo "export PERIOD=${period} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  echo "export VERIF_CASE=${VERIF_CASE} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  echo "export OBTYPE=${OBTYPE} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  echo "export plot_start_date=${VDATE_START} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  echo "export plot_end_date=${VDATE_END} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  echo "export VHR=${vhr} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  echo "export REGION=${region} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  case ${stats} in
+                    'stats1')
+                      image_stat="me_rmse"
+                      echo "export METRIC='me, rmse' " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                      ;;
+                    'stats2')
+                      image_stat="corr"
+                      echo "export METRIC=corr " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                      ;;
+                    'stats3')
+                      image_stat="fbar_obar"
+                      echo "export METRIC='fbar, obar' " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                      ;;
+                    'stats4')
+                      image_stat="esd"
+                      echo "export METRIC=esd " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                      ;; 
+                    'stats5')
+                      image_stat="si"
+                      echo "export METRIC=si "  >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                      ;;
+                    'stats6')
+                      image_stat="p95"
+                      echo "export METRIC=p95 "  >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                      ;;
+                  esac
+                  echo "export FHR=${fhr}"        >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  echo "export WVAR=${wvar}"      >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  case ${wvar} in
+                    'WIND')
+                      image_level="z10"
+                      echo "export OBS_LEVEL=Z10"  >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                      ;;
+                    *)
+                      image_level="l0"
+                      echo "export OBS_LEVEL=L0"  >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                      ;;
+                  esac
+                  echo "export PTYPE=${ptype}" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  # Make COMOUT restart directory
+                  COMOUTjob=$COMOUT/$VERIF_CASE/last${NDAYS}days/sl1l2/${image_var}_${image_level}/${regionl}/${image_stat}
+                  mkdir -p $COMOUTjob
+                  #Define DATA and COMOUT image name
+                  imagename=evs.${COMPONENT}.${image_stat}.${image_var}_${image_level}_${obtypel}.past${NDAYS}days.timeseries_valid${vhr}z_f${fhr}.latlon_0p25_${regionl}.png
+                  COMOUTimage=$COMOUTjob/$imagename
+                  DATAimage=$DATA/images/$imagename
+                  # Add commands
+                  if [[ -s $COMOUTimage ]]; then
+                      echo "cp -v $COMOUTimage $DATAimage" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  else
+                      echo "${GRID2OBS_CONF}/py_plotting_wave.config"  >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                      echo "export err=$?; err_chk" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                      if [ $SENDCOM = YES ]; then
+                          echo "cp -v $DATAimage $COMOUTimage" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                          echo "export err=$?; err_chk" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                      fi
+                  fi
  
-              chmod +x ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh
-          
-              echo "${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}.sh" >> ${DATA}/jobs/run_all_${RUN}_g2o_plots_poe.sh
+                  chmod +x ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+      
+                  echo "${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh" >> ${DATA}/jobs/run_all_${RUN}_g2o_plots_poe.sh
+              done # end of regions
           done # end of obsnames
         done  # end of fcst hrs
       done  # end of stats

@@ -1024,10 +1024,10 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     if str(metric2_name).lower() == 'pcor':
         metric2_name = 'corr'
     domain_string = domain_string.replace(', ','_')
-    if domain_string == 'Global':
+    if domain == 'GLOBAL':
         domain_savename = 'glb'
     else:
-        domain_savename = domain_string
+        domain_savename = domain
     save_name = (f'evs.'
                  + f'{str(models_savename).lower()}.'
                  + f'{str(metric1_name).lower()}.'
@@ -1035,7 +1035,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                  + f'{str(time_period_savename).lower()}.'
                  + f'timeseries_{str(date_type).lower()}{str(date_hours_savename).lower()}_'
                  + f'{str(frange_save_string).lower()}.'
-                 + f'{str(domain_savename).lower()}')
+                 + f'latlon_0p25_{str(domain_savename).lower()}')
     if metric2_name is not None:
         save_name = (f'evs.'
                  + f'{str(models_savename).lower()}.'
@@ -1044,7 +1044,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                  + f'{str(time_period_savename).lower()}.'
                  + f'timeseries_{str(date_type).lower()}{str(date_hours_savename).lower()}_'
                  + f'{str(frange_save_string).lower()}.'
-                 + f'{str(domain_savename).lower()}')
+                 + f'latlon_0p25_{str(domain_savename).lower()}')
     if thresh and '' not in thresh:
         save_name = (f'evs.'
                  + f'{str(models_savename).lower()}.'
@@ -1053,7 +1053,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                  + f'{str(time_period_savename).lower()}.'
                  + f'timeseries_{str(date_type).lower()}{str(date_hours_savename).lower()}_'
                  + f'{str(frange_save_string).lower()}.'
-                 + f'{str(domain_savename).lower()}')
+                 + f'latlon_0p25_{str(domain_savename).lower()}')
     if save_header:
         save_name = f'{save_header}_'+save_name
     #save_subdir = os.path.join(
