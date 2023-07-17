@@ -48,7 +48,7 @@ export fcst_valid_hour="0,3,6,9,12,15,18,21"
 export fcst_lead="1,2,3,4,5,6,7,8,9,10,11,12"
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
-
+mkdir -p ${plot_dir}
 
 > run_all_poe.sh 
 for grid in $VX_MASK_LIST ; do
