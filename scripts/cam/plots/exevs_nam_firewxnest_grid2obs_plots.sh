@@ -158,7 +158,7 @@ done
 cd ${PLOTDIR}
 tar -cvf evs.plots.${MODELNAME}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar *png
         
-mkdir -m 775 -p $COMOUTplots
+##mkdir -m 775 -p $COMOUTplots
 cp evs.plots.${MODELNAME}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
 
 exit

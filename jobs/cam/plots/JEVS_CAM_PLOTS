@@ -57,13 +57,21 @@ if [[ ${COMPONENT} == "cam" ]] ; then
       export VDATE=${VDATE:-$PDYm2}
       export INITDATE=${INITDATE:-$PDYm2}
   else
-    export VDATE=$(date -d "today -1 day" +"%Y%m%d")
+    export VDATE=${VDATE:-$PDYm1}
   fi 
 else
     setpdy.sh 31
     . ./PDY
     export VDATE=${VDATE:-$PDYm1}
 fi
+
+if [ $MODELNAME = nam_firewxnest ]
+then
+    setpdy.sh 31
+    . ./PDY
+    export VDATE=${VDATE:-$PDYm1}
+fi
+
 
 # Define COMIN/COMOUT variables:
 if  [ $MODELNAME = href ] ; then
@@ -79,6 +87,8 @@ else
   export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
   export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
   export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
+  export COMOUTplots=$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE
+  mkdir -p $COMOUT $COMOUTplots
   echo $COMPATH
 fi
 
