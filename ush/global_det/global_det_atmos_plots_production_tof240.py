@@ -595,7 +595,7 @@ if JOB_GROUP == 'make_plots':
                 )
                 if init_hr in init_hrs \
                         and not os.path.exists(DATAjob_image_name) \
-                        and plot_info_dict['stat'] == 'PERF_DIA':
+                        and plot_info_dict['stat'] == 'PERFDIAG':
                     make_pd = True
                 else:
                     make_pd = False
