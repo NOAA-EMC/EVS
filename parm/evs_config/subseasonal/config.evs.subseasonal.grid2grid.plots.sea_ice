@@ -39,25 +39,14 @@ export start_date="$VDATE_START"
 export end_date="$VDATE_END"
 export plot_by="VALID"
 ## WEB SETTINGS
-#SEND2WEB:  whether or not to send maps to webhost
+#SEND2WEB:  whether or not to send plots to webhost
 #webhost:   webhost(rzdm) computer
 #webhostid: webhost(rzdm) user name
-#webdir:    directory where to send maps on webhost
+#webdir:    directory where to send plots on webhost
 export SEND2WEB="NO"
 export webhost="emcrzdm.ncep.noaa.gov"
 export webhostid="$USER"
-export webdir="/home/people/emc/www/htdocs/users/${webhostid}/METplus/TEST"
-## METPLUS SETTINGS
-#met_version:               MET version to use
-#metplus_version:           METplus version to use
-#met_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
-#metplus_verbosity:         DEBUG, INFO, WARN, ERROR (most verbose is DEBUG)
-#log_met_output_to_metplus: log MET output to METplus log, yes or no
-export met_version="$met_ver"
-export metplus_version="$metplus_ver"
-export metplus_verbosity="INFO"
-export met_verbosity="2"
-export log_met_output_to_metplus="yes"
+export webdir="/home/people/emc/www/htdocs/users/verification/global/subseasonal/para/atmos/tar_files"
 ## DATA DIRECTIVE SETTINGS
 export SENDARCH="YES"
 export KEEPDATA="YES"
