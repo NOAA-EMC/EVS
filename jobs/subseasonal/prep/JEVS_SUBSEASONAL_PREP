@@ -50,13 +50,6 @@ export gefs_members="30"
 
 export cfs_members="4"
 
-###################################
-# Set up the UTILITIES
-###################################
-# for wwgrib: find the path of wgrib2: 
-#export WGRIBpath=`echo $WGRIB | sed 's/\/wgrib//'`
-
-
 # Run setpdy and initialize PDY variables
 export cycle=${cycle:-t${cyc}z}
 setpdy.sh
@@ -88,12 +81,12 @@ echo Actual output starts here
 ################################################
 # Run the config file to set up model variables
 ################################################
-. $PARMevs/evs_config/$COMPONENT/config.evs.$COMPONENT.$STEP
+. $PARMevs/evs_config/$COMPONENT/config.evs.${COMPONENT}.${PREP_TYPE}.${STEP}
 
 #######################################################################
 # Execute the script.
 #######################################################################
-$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${STEP}.sh
+$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${PREP_TYPE}_${STEP}.sh
 export err=$?; err_chk
 
 cat $pgmout

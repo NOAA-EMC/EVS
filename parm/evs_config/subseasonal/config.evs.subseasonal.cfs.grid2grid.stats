@@ -36,26 +36,11 @@ export OUTPUTROOT="$DATAROOTtmp/$STEP"
 export start_date="$VDATE"
 export end_date="$VDATE"
 export make_met_data_by="VALID"
-## WEB SETTINGS
-#SEND2WEB:  whether or not to send maps to webhost
-#webhost:   webhost(rzdm) computer
-#webhostid: webhost(rzdm) user name
-#webdir:    directory where to send maps on webhost
-export SEND2WEB="NO"
-export webhost="emcrzdm.ncep.noaa.gov"
-export webhostid="$USER"
-export webdir="/home/people/emc/www/htdocs/users/${webhostid}/METplus/TEST"
 ## METPLUS SETTINGS
 #met_version:               MET version to use
 #metplus_version:           METplus version to use
-#met_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
-#metplus_verbosity:         DEBUG, INFO, WARN, ERROR (most verbose is DEBUG)
-#log_met_output_to_metplus: log MET output to METplus log, yes or no
 export met_version="$met_ver" 
-export metplus_version="$metplus_ver" 
-export metplus_verbosity="DEBUG"
-export met_verbosity="5"
-export log_met_output_to_metplus="yes"
+export metplus_version="$metplus_ver"
 ## DATA DIRECTIVE SETTINGS
 export SENDARCH="YES"
 export SENDMETVIEWER="NO"
