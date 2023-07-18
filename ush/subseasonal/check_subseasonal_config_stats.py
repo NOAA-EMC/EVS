@@ -28,9 +28,8 @@ VCS_type_env_vars_dict = {
                'model_file_format_list',
                'OUTPUTROOT',
                'start_date', 'end_date', 'make_met_data_by',
-               'SEND2WEB', 'webhost', 'webhostid', 'webdir', 'met_version',
-               'metplus_version', 'metplus_verbosity', 'met_verbosity',
-               'log_met_output_to_metplus', 'SENDARCH', 'SENDMETVIEWER',
+               'met_version', 'metplus_version',
+               'SENDARCH', 'SENDMETVIEWER',
                'KEEPDATA'],
     'grid2grid_stats': ['g2gstats_type_list',
                         'g2gstats_anom_truth_name_list',
@@ -170,10 +169,6 @@ for config_var in check_config_var_len_list:
 # Do check for valid list config variable options
 valid_config_var_values_dict = {
     'make_met_data_by': ['VALID', 'INIT'],
-    'SEND2WEB': ['YES', 'NO'],
-    'metplus_verbosity': ['DEBUG', 'INFO', 'WARN', 'ERROR'],
-    'met_verbosity': ['0', '1', '2', '3', '4', '5'],
-    'log_met_output_to_metplus': ['yes', 'no'],
     'SENDARCH': ['YES', 'NO'],
     'SENDMETVIEWER': ['YES', 'NO'],
     'KEEPDATA': ['YES', 'NO']
@@ -196,29 +191,6 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
 elif VERIF_CASE_STEP == 'grid2obs_stats':
     for VCS_type in VCS_type_list:
         VCS_abbrev_type = VERIF_CASE_STEP_abbrev+'_'+VCS_type
-        #valid_config_var_values_dict[VCS_abbrev_type
-                                     #+'_msg_type_list'] = ['ADPUPA',
-                                                           #'AIRCAR',
-                                                           #'AIRCFT',
-                                                           #'ADPSFC',
-                                                           #'ERS1DA',
-                                                           #'GOESND',
-                                                           #'GPSIPW',
-                                                           #'MSONET',
-                                                           #'PROFLR',
-                                                           #'QKSWND',
-                                                           #'RASSDA',
-                                                           #'SATEMP',
-                                                           #'SATWND',
-                                                           #'SFCBOG',
-                                                           #'SFCSHP',
-                                                           #'SPSSMI',
-                                                           #'SYNDAT',
-                                                           #'VADWND',
-                                                           #'SURFACE',
-                                                           #'ANYAIR',
-                                                           #'ANYSFC',
-                                                           #'ONLYSF']
         valid_config_var_values_dict[VCS_abbrev_type
                                      +'_truth_name_list'] = ['nam_anl']
         valid_config_var_values_dict[VCS_abbrev_type
