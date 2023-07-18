@@ -69,12 +69,12 @@ class PerformanceDiagram:
         self.logger.debug(f"Plot information dictionary: "
                           +f"{self.plot_info_dict}")
         # Check stat
-        if self.plot_info_dict['stat'] != 'PERF_DIA':
+        if self.plot_info_dict['stat'] != 'PERFDIAG':
             self.logger.warning("Cannot make performance diagram for stat "
                                 +f"{self.plot_info_dict['stat']}")
             sys.exit(0)
         # Set stats to calculate for diagram
-        perf_dia_stat_list = ['SRATIO', 'POD', 'CSI']
+        perf_diag_stat_list = ['SRATIO', 'POD', 'CSI']
         # Get dates to plot
         self.logger.info("Creating valid and init date arrays")
         valid_dates, init_dates = gda_util.get_plot_dates(
@@ -148,16 +148,16 @@ class PerformanceDiagram:
                 all_model_df.index.get_level_values(0).unique().tolist()
             )
             if fcst_var_thresh == self.plot_info_dict['fcst_var_threshs'][0]:
-                perf_dia_stat_avg_df = pd.DataFrame(
+                perf_diag_stat_avg_df = pd.DataFrame(
                     np.nan, pd.MultiIndex.from_product(
                         [model_idx_list,
-                         perf_dia_stat_list],
+                         perf_diag_stat_list],
                          names=['model', 'stat']
                     ),
                     columns=self.plot_info_dict['fcst_var_threshs']
                 )
             # Calculate statistics mean
-            for stat in perf_dia_stat_list:
+            for stat in perf_diag_stat_list:
                 self.logger.info(f"Calculating statstic {stat} from line type "
                                  +f"{self.plot_info_dict['line_type']}")
                 stat_df, stat_array = gda_util.calculate_stat(
@@ -194,7 +194,7 @@ class PerformanceDiagram:
                        self.plot_info_dict['line_type'], stat, calc_avg_df
                     )
                     if not np.isnan(model_idx_fcst_var_thresh_avg):
-                        perf_dia_stat_avg_df.loc[(model_idx,stat),
+                        perf_diag_stat_avg_df.loc[(model_idx,stat),
                                                   fcst_var_thresh] = (
                             model_idx_fcst_var_thresh_avg    
                         )
@@ -364,7 +364,7 @@ class PerformanceDiagram:
             model_num_name = model_idx.split('/')[1]
             model_num_plot_name = model_idx.split('/')[2]
             model_num_obs_name = self.model_info_dict[model_num]['obs_name']
-            model_num_data = perf_dia_stat_avg_df.loc[model_idx]
+            model_num_data = perf_diag_stat_avg_df.loc[model_idx]
             if model_num_name in list(model_plot_settings_dict.keys()):
                 model_num_plot_settings_dict = (
                     model_plot_settings_dict[model_num_name]

@@ -1,0 +1,53 @@
+#!/bin/bash -e
+##---------------------------------------------------------------------------
+##---------------------------------------------------------------------------
+## NCEP EMC VERIFICATION SYSTEM (SUBSEASONAL GEFS PREP)
+##
+## CONTRIBUTORS: Shannon Shields, Shannon.Shields@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+## PURPOSE: Set up configurations to run user requested subseasonal prep step
+##---------------------------------------------------------------------------
+##--------------------------------------------------------------------------
+
+echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
+
+####################################################
+# WHAT METPLUS USE CASES TO RUN
+####################################################
+## PREP STEP RETRIEVES DATA TO SAVE IN PREP DIRECTORY
+####################################################
+# GENERAL SETTINGS APPLIED TO ALL USE CASES
+####################################################
+## FORECAST MODEL SETTINGS
+#model_list:             model names
+#model_dir_list:         directory path to model forecast files
+#model_prep_dir_list:    directory path to model prep data files
+#model_file_format_list: file format of model files
+export model_list="$MODELNAME"
+export model_dir_list="$COMINgefs"
+export model_prep_dir_list="$COMOUT.$INITDATE"
+export model_file_format_list="{init?fmt=%2H}/atmos"
+export gefs_file_type="pgrb2a pgrb2b"
+## OUTPUT DATA SETTINGS
+#OUTPUTROOT: base output directory
+export OUTPUTROOT="$DATAROOTtmp/$STEP"
+#export OUTPUTROOT="/lfs/h1/ops/prod/com/$NET/$evs_ver/$STEP"
+## DATE SETTINGS
+#start_date:       verification start date, format YYYYMMDD
+#end_date:         verification end date, format YYYYMMDD
+#make_met_data_by: how to treat dates, "VALID" or "INIT"
+export start_date="$INITDATE"
+export end_date="$INITDATE"
+export make_met_data_by="INIT"
+## DATA DIRECTIVE SETTINGS
+export SENDARCH="YES"
+export KEEPDATA="YES"
+####################################################
+# SETTINGS FOR USE CASES
+####################################################
+export fcyc_list="00"
+export vhr_list="00 12"
+export fhr_min="00"
+export fhr_max="840"
+export gather_by="INIT"
+
+echo "END: $(basename ${BASH_SOURCE[0]})"
