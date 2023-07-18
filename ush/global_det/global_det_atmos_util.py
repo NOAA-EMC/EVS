@@ -776,26 +776,35 @@ def prep_prod_metfra_file(source_file, dest_file, init_dt, forecast_hour,
          Returns:
     """
     # Environment variables and executables
-    EXECevs = os.environ['EXECevs']
     WGRIB = os.environ['WGRIB']
     # Temporary file names
     prepped_file = os.path.join(os.getcwd(),
                                 'atmos.'+dest_file.rpartition('/')[2])
+    working_file1 = os.path.join(os.getcwd(),
+                                 'atmos.'+source_file.rpartition('/')[2])
+    working_file2 = os.path.join(os.getcwd(),
+                                 'atmos.'+source_file.rpartition('/')[2]\
+                                 .replace('.gz', ''))
     # Prep file
     if 'precip' in prep_method:
-        file_accum = 24
-        fhr_accum_start = int(forecast_hour)-file_accum
-        if check_file_exists_size(source_file):
+        if not check_file_exists_size(working_file2):
+            if check_file_exists_size(source_file):
+                copy_file(source_file, working_file1)
+                if check_file_exists_size(working_file1):
+                    run_shell_command(['gunzip', working_file1])
+            else:
+                log_missing_file_model(log_missing_file, source_file, 'metfra',
+                                       init_dt, str(forecast_hour).zfill(3))
+        if check_file_exists_size(working_file2):
+            file_accum = 24
+            fhr_accum_start = int(forecast_hour)-file_accum
             run_shell_command(
-                [WGRIB+' '+source_file+' | grep "'
+                [WGRIB+' '+working_file2+' | grep "'
                  +str(fhr_accum_start)+'-'
-                 +forecast_hour+'hr" | '+WGRIB+' '+source_file
+                 +forecast_hour+'hr" | '+WGRIB+' '+working_file2
                  +' -i -grib -o '+prepped_file]
             )
-        else:
-            log_missing_file_model(log_missing_file, source_file, 'metfra',
-                                   init_dt, str(forecast_hour).zfill(3))
-    copy_file(prepped_file, dest_file)
+            copy_file(prepped_file, dest_file)
 
 def prep_prod_osi_saf_file(daily_source_file, daily_dest_file,
                            date_dt, log_missing_file):
