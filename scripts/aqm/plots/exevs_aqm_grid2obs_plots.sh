@@ -82,9 +82,9 @@ do
 	smvar=`echo $var | tr A-Z a-z`
 
 	sh $USHevs/${COMPONENT}/py_plotting_ozmax8_headline.config
-	if [ -e $PLOTDIR/aq/*/evs*png ]
+	if [ -e ${PLOTDIR_headline}/aq/*/evs*png ]
 	then
-	mv $PLOTDIR/aq/*/evs*png ${PLOTDIR_headline}/headline_$COMPONENT.csi_gt70.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
+	mv ${PLOTDIR_headline}/aq/*/evs*png ${PLOTDIR_headline}/headline_$COMPONENT.csi_gt70.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
         else
 	echo "NO PLOT FOR",$var,$region
         fi
@@ -103,9 +103,9 @@ do
 	smvar=`echo $var | tr A-Z a-z`
 
 	sh $USHevs/${COMPONENT}/py_plotting_pmave_headline.config
-	if [ -e $PLOTDIR/aq/*/evs*png ]
+	if [ -e ${PLOTDIR_headline}/aq/*/evs*png ]
 	then
-	mv $PLOTDIR/aq/*/evs*png ${PLOTDIR_headline}/headline_$COMPONENT.csi_gt35.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
+	mv ${PLOTDIR_headline}/aq/*/evs*png ${PLOTDIR_headline}/headline_$COMPONENT.csi_gt35.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
         else
 	echo "NO PLOT FOR",$var,$region
         fi
