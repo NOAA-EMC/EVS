@@ -15,6 +15,37 @@ mkdir -p $OUTDIR
 model1=`echo $MODELNAME | tr a-z A-Z`
 export model1
 
+for aqmtyp in ozmax8 pmave
+do
+for biasc in bc
+do
+
+STARTDATE=${VDATE}00
+ENDDATE=${PDYm31}00
+DATE=$STARTDATE
+
+while [ $DATE -ge $ENDDATE ]; do
+
+	echo $DATE > curdate
+	DAY=`cut -c 1-8 curdate`
+	YEAR=`cut -c 1-4 curdate`
+	MONTH=`cut -c 1-6 curdate`
+	HOUR=`cut -c 9-10 curdate`
+
+	cpfile=evs.stats.${COMPONENT}_${biasc}.${RUN}.${VERIF_CASE}_${aqmtyp}.v${DAY}.stat
+	if [ -e ${COMINaqm}.$DAY/${cpfile} ]; then
+	    cp ${COMINaqm}.$DAY/${cpfile} $STATDIR
+            sed "s/$model1/${aqmtyp}_${biasc}/g" $STATDIR/${cpfile} > $STATDIR/evs.stats.${aqmtyp}_${biasc}.${RUN}.${VERIF_CASE}.v${DAY}.stat
+        else
+            echo "WARNING ${COMPONENT} ${STEP} :: Can not find ${COMINaqm}.$DAY/${cpfile}"
+        fi
+
+	DATE=`$NDATE -24 $DATE`
+
+done
+done
+done
+
 ##
 ## Headline Plots
 ##
