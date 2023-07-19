@@ -1493,10 +1493,8 @@ if __name__ == "__main__":
     # limit (ditto with Y_MAX_LIMIT)
     # If Y_LIM_LOCK == False, then allow lower and upper limits to adjust to 
     # data as long as limits don't overcome Y_MIN_LIMIT or Y_MAX_LIMIT 
-    test_chk_metric=os.environ['var_name']
-    print("test_chk_metric = "+test_chk_metric)
-    print("VARIABLES = "+VARIABLES)
-    if VARIABLES[0] == "csi":
+    chk_metric=os.environ['STATS']
+    if chk_metric[0:3] == "csi":
         Y_MIN_LIMIT = 0.0
         Y_MAX_LIMIT = 1.0
         Y_LIM_LOCK = True
@@ -1504,9 +1502,6 @@ if __name__ == "__main__":
         Y_MIN_LIMIT = toggle.plot_settings['y_min_limit']
         Y_MAX_LIMIT = toggle.plot_settings['y_max_limit']
         Y_LIM_LOCK = toggle.plot_settings['y_lim_lock']
-    Y_MIN_LIMIT = 0.0
-    Y_MAX_LIMIT = 1.0
-    Y_LIM_LOCK = True
 
 
     # configure CIs
