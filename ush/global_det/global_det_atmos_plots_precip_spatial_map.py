@@ -351,6 +351,7 @@ class PrecipSpatialMap:
                 plt.savefig(DATA_png_name)
                 plt.clf()
                 plt.close('all')
+                gda_util.copy_file(DATA_png_name, COMOUT_png_name)
             DATA_gif_name = DATA_png_name.replace('.png', '.gif')
             COMOUT_gif_name = COMOUT_png_name.replace('.png', '.gif')
             if os.path.exists(COMOUT_gif_name):
@@ -371,6 +372,7 @@ class PrecipSpatialMap:
                     run_convert = subprocess.run(
                         ['convert', DATA_png_name, DATA_gif_name]
                     )
+                    gda_util.copy_file(DATA_gif_name, COMOUT_gif_name)
                 else:
                     self.logger.warning("convert executable not in PATH, "
                                         "not creating gif of image")

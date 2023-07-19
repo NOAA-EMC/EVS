@@ -1,14 +1,14 @@
 #!/bin/bash
-# Program Name: exevs_subseasonal_prep
+# Program Name: exevs_subseasonal_gefs_prep
 # Author(s)/Contact(s): Shannon Shields
-# Abstract: Retrieve data for subseasonal grid-to-grid and grid-to-obs verification
+# Abstract: Retrieve data for subseasonal GEFS verification
 # History Log:
 
 set -x
 
 
 echo
-echo "===== RUNNING EVS SUBSEASONAL DATA PREP  ====="
+echo "===== RUNNING EVS SUBSEASONAL GEFS PREP  ====="
 export STEP="prep"
 
 
@@ -17,10 +17,10 @@ mkdir -p $STEP
 cd $STEP
 
 # Check user's configuration file
-python $USHevs/subseasonal/check_subseasonal_config_prep.py
+python $USHevs/subseasonal/check_subseasonal_config_gefs_prep.py
 status=$?
 [[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran check_subseasonal_config_prep.py"
+[[ $status -eq 0 ]] && echo "Successfully ran check_subseasonal_config_gefs_prep.py"
 echo
 
 # Set up environment variables for initialization, valid, and forecast hours and source them
@@ -43,14 +43,9 @@ status=$?
 [[ $status -eq 0 ]] && echo "Successfully ran get_gefs_subseasonal_data_files_prep.py"
 echo
 
-python $USHevs/subseasonal/get_cfs_subseasonal_data_files_prep.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran get_cfs_subseasonal_data_files_prep.py"
-echo
-
-python $USHevs/subseasonal/subseasonal_prep_obs.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran subseasonal_prep_obs.py"
-echo
+# Send for missing files
+if ls $DATA/mail_* 1> /dev/null 2>&1; then
+    for FILE in $DATA/mail_*; do
+        $FILE
+    done
+fi

@@ -35,7 +35,6 @@ VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
 METPLUS_PATH = os.environ['METPLUS_PATH']
 MET_ROOT = os.environ['MET_ROOT']
-MET_bin_exec = os.environ['MET_bin_exec']
 PARMevs = os.environ['PARMevs']
 model_list = os.environ['model_list'].split(' ')
 members = os.environ['members']
