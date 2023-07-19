@@ -5,10 +5,11 @@ set -x
 mkdir -p $DATA/logs
 export STATDIR=$DATA/stats
 export PLOTDIR=$DATA/plots
+export PLOTDIR_headline=$DATA/plots_headline
 export OUTDIR=$DATA/out
 export PRUNEDIR=$DATA/prune
 mkdir -p $STATDIR
-mkdir =p $PLOTDIR
+mkdir -p $PLOTDIR ${PLOTDIR_headline}
 mkdir -p $PRUNEDIR
 mkdir -p $OUTDIR
 
@@ -83,7 +84,7 @@ do
 	sh $USHevs/${COMPONENT}/py_plotting_ozmax8_headline.config
 	if [ -e $PLOTDIR/aq/*/evs*png ]
 	then
-	mv $PLOTDIR/aq/*/evs*png ${PLOTDIR}/headline_$COMPONENT.csi_gt70.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
+	mv $PLOTDIR/aq/*/evs*png ${PLOTDIR_headline}/headline_$COMPONENT.csi_gt70.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
         else
 	echo "NO PLOT FOR",$var,$region
         fi
@@ -104,7 +105,7 @@ do
 	sh $USHevs/${COMPONENT}/py_plotting_pmave_headline.config
 	if [ -e $PLOTDIR/aq/*/evs*png ]
 	then
-	mv $PLOTDIR/aq/*/evs*png ${PLOTDIR}/headline_$COMPONENT.csi_gt35.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
+	mv $PLOTDIR/aq/*/evs*png ${PLOTDIR_headline}/headline_$COMPONENT.csi_gt35.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
         else
 	echo "NO PLOT FOR",$var,$region
         fi
@@ -112,11 +113,12 @@ do
         done
 done
 
-cd ${PLOTDIR}
-tar -cvf evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar *png
+cd ${PLOTDIR_headline}
+tarfile=evs.plots.${COMPONENT}.${RUN}.headline.v${VDATE}.tar
+tar -cvf ${tarfile} *png
 
-mkdir -m 775 -p $COMOUTplots
-cp evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
+mkdir -m 775 -p ${COMOUTheadline}
+cp ${tarfile} ${COMOUTheadline}
 
 exit
 
