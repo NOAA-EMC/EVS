@@ -37,6 +37,7 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 # Run setpdy and initialize PDY variables
 ####################################
 export cycle=${cycle:-t${cyc}z}
+export NDAYS=${NDAYS:-31}
 setpdy.sh $NDAYS
 . ./PDY
 export VDATE_START=${VDATE_START:-$(eval echo \$PDYm$NDAYS)}
@@ -74,10 +75,10 @@ mkdir -p $COMOUT
 #######################################################################
 env
 
-if [ $RUN = atmos ]; then
-    $HOMEevs/scripts/global_det/plots/exevs_global_det_${RUN}_${VERIF_CASE}_plots.sh
+if [ $RUN = headline ]; then
+    $HOMEevs/scripts/global_det/plots/exevs_global_det_atmos_${RUN}_plots.sh
 else
-    $HOMEevs/scripts/global_det/plots/exevs_global_det_${RUN}_plots.sh
+    $HOMEevs/scripts/global_det/plots/exevs_global_det_${RUN}_${VERIF_CASE}_plots.sh
 fi
 export err=$?; err_chk
 
