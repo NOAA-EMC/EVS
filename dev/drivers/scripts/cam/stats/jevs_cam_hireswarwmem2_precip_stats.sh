@@ -1,5 +1,5 @@
-#!/bin/bash
-#PBS -N jevs_hireswfv3_snowfall_stats
+#PBS -S /bin/bash
+#PBS -N jevs_cam_hireswarwmem2_precip_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -21,7 +21,7 @@ export SENDCOM=YES
 export KEEPDATA=YES
 export SENDDBN=YES
 export SENDDBN_NTC=
-export job=${PBS_JOBNAME:-jevs_hireswfv3_snowfall_stats}
+export job=${PBS_JOBNAME:-jevs_cam_hireswarwmem2_precip_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export USE_CFP=YES
@@ -32,8 +32,8 @@ export NET="evs"
 export STEP="stats"
 export COMPONENT="cam"
 export RUN="atmos"
-export VERIF_CASE="snowfall"
-export MODELNAME="hireswfv3"
+export VERIF_CASE="precip"
+export MODELNAME="hireswarwmem2"
 
 # EVS Settings
 export HOMEevs="/lfs/h2/emc/vpppg/noscrub/$USER/EVS"
@@ -53,6 +53,9 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # Developer Settings
 export DATA=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+export COMINccpa=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
+export COMINmrms=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
+export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
 export cyc=$(date -d "today" +"%H")

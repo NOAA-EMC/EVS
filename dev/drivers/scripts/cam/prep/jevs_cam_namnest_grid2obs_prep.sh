@@ -1,11 +1,11 @@
-#!/bin/bash
-#PBS -N jevs_hireswarw_snowfall_stats
+#PBS -S /bin/bash
+#PBS -N jevs_cam_namnest_grid2obs_prep
 #PBS -j oe
 #PBS -S /bin/bash
-#PBS -q dev
+#PBS -q dev_transfer
 #PBS -A VERF-DEV
-#PBS -l walltime=10:00:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
+#PBS -l walltime=1:00:00
+#PBS -l select=1:ncpus=1:mem=5GB
 #PBS -l debug=true
 #PBS -V
 
@@ -21,19 +21,19 @@ export SENDCOM=YES
 export KEEPDATA=YES
 export SENDDBN=YES
 export SENDDBN_NTC=
-export job=${PBS_JOBNAME:-jevs_hireswarw_snowfall_stats}
+export job=${PBS_JOBNAME:-jevs_cam_namnest_grid2obs_prep}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
-export USE_CFP=YES
+export USE_CFP=NO
 export nproc=128
 
 # General Verification Settings
 export NET="evs"
-export STEP="stats"
+export STEP="prep"
 export COMPONENT="cam"
 export RUN="atmos"
-export VERIF_CASE="snowfall"
-export MODELNAME="hireswarw"
+export VERIF_CASE="grid2obs"
+export MODELNAME="namnest"
 
 # EVS Settings
 export HOMEevs="/lfs/h2/emc/vpppg/noscrub/$USER/EVS"
@@ -52,11 +52,10 @@ export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # Developer Settings
-export DATA=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+export DATA=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp/${jobid:?}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
 export cyc=$(date -d "today" +"%H")
-export maillist="marcel.caron@noaa.gov"
 
 # Job Settings and Run
-. ${HOMEevs}/jobs/cam/stats/JEVS_CAM_STATS
+. ${HOMEevs}/jobs/cam/prep/JEVS_CAM_PREP

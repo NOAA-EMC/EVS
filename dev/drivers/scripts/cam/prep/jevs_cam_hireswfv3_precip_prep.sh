@@ -1,11 +1,11 @@
 #PBS -S /bin/bash
-#PBS -N jevs_hireswfv3_grid2obs_prep
+#PBS -N jevs_cam_hireswfv3_precip_prep
 #PBS -j oe
 #PBS -S /bin/bash
-#PBS -q dev_transfer
+#PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=1:00:00
-#PBS -l select=1:ncpus=1:mem=5GB
+#PBS -l walltime=10:00:00
+#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
 #PBS -l debug=true
 #PBS -V
 
@@ -21,7 +21,7 @@ export SENDCOM=YES
 export KEEPDATA=YES
 export SENDDBN=YES
 export SENDDBN_NTC=
-export job=${PBS_JOBNAME:-jevs_hireswfv3_grid2obs_prep}
+export job=${PBS_JOBNAME:-jevs_cam_hireswfv3_precip_prep}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export USE_CFP=NO
@@ -32,7 +32,7 @@ export NET="evs"
 export STEP="prep"
 export COMPONENT="cam"
 export RUN="atmos"
-export VERIF_CASE="grid2obs"
+export VERIF_CASE="precip"
 export MODELNAME="hireswfv3"
 
 # EVS Settings

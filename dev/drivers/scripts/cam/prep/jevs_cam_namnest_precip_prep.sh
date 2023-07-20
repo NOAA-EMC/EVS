@@ -1,5 +1,5 @@
 #PBS -S /bin/bash
-#PBS -N jevs_hrrr_precip_prep
+#PBS -N jevs_cam_namnest_precip_prep
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -21,7 +21,7 @@ export SENDCOM=YES
 export KEEPDATA=YES
 export SENDDBN=YES
 export SENDDBN_NTC=
-export job=${PBS_JOBNAME:-jevs_hrrr_precip_prep}
+export job=${PBS_JOBNAME:-jevs_cam_namnest_precip_prep}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export USE_CFP=NO
@@ -33,7 +33,7 @@ export STEP="prep"
 export COMPONENT="cam"
 export RUN="atmos"
 export VERIF_CASE="precip"
-export MODELNAME="hrrr"
+export MODELNAME="namnest"
 
 # EVS Settings
 export HOMEevs="/lfs/h2/emc/vpppg/noscrub/$USER/EVS"

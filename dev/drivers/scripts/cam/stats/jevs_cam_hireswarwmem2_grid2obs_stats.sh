@@ -1,5 +1,5 @@
 #PBS -S /bin/bash
-#PBS -N jevs_hireswarw_precip_stats
+#PBS -N jevs_cam_hireswarwmem2_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -21,7 +21,7 @@ export SENDCOM=YES
 export KEEPDATA=YES
 export SENDDBN=YES
 export SENDDBN_NTC=
-export job=${PBS_JOBNAME:-jevs_hireswarw_precip_stats}
+export job=${PBS_JOBNAME:-jevs_cam_hireswarwmem2_grid2obs_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export USE_CFP=YES
@@ -32,8 +32,8 @@ export NET="evs"
 export STEP="stats"
 export COMPONENT="cam"
 export RUN="atmos"
-export VERIF_CASE="precip"
-export MODELNAME="hireswarw"
+export VERIF_CASE="grid2obs"
+export MODELNAME="hireswarwmem2"
 
 # EVS Settings
 export HOMEevs="/lfs/h2/emc/vpppg/noscrub/$USER/EVS"
