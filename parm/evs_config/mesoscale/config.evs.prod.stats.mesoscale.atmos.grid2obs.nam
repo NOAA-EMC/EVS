@@ -25,6 +25,8 @@ export LOG_MET_OUTPUT_TO_METPLUS="yes"
 export FHR_START=0
 export FHR_INCR=6
 export FHR_END="84"
+export FHR_GROUP_LIST="FULL"
+export MIN_IHOUR="00"
 
 # Model/Obs Settings
 export COMINfcst=${COMINnam}
@@ -95,6 +97,7 @@ fi
 	  export FHR_GROUP_LIST="SHORT FULL"
 	  export FHR_GROUP_LIST="FULL"
 	  export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.awip12{lead?fmt=%2H}.tm00.grib2"
+	  #export MODEL_INPUT_TEMPLATE="nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.conusnest.hiresf{lead?fmt=%2H}.tm00.grib2"
           export VHOUR_LIST="00 06 12 18"
 	  if [ "$OBSNAME" = "raob" ]; then
 		  export VAR_NAME_LIST=""
@@ -109,9 +112,9 @@ fi
 	  export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G218_CONUS.nc, ${FIXevs}/masks/Bukovsky_G218_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G218_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G218_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G218_CONUS_South.nc, ${FIXevs}/masks/Alaska_G221.nc"
 	  export MASK_CUSTOM_LIST=""
 	  export MIN_IHOUR="00"
-	  export FHR_END_FULL="84"
+	  export FHR_END_FULL="60"
 	  export FHR_INCR_FULL="06"
-	  export FHR_END_SHORT="81"
+	  export FHR_END_SHORT="60"
 	  export FHR_INCR_SHORT="06"
 
   elif [ "$NEST" = "conusc" ]; then
