@@ -351,13 +351,15 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                while format_opt_count <= nformat_opt:
                    if format_opt in ['lead_shift', 'valid_shift',
                                      'init_shift']:
-                       shift = (filled_file_format_chunk \
-                                .partition('shift=')[2] \
-                                .partition('}')[0])
+                       shift = (
+                           filled_file_format_chunk \
+                           .partition('{'+format_opt+'?fmt=')[2] \
+                           .partition('}')[0].partition('shift=')[2]
+                       )
                        format_opt_count_fmt = (
                            filled_file_format_chunk \
                            .partition('{'+format_opt+'?fmt=')[2] \
-                           .rpartition('?')[0]
+                           .partition('}')[0].partition('?')[0]
                        )
                    else:
                        format_opt_count_fmt = (
@@ -390,8 +392,11 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                            format_opt_count_fmt
                        ) 
                    elif format_opt == 'lead_shift':
-                       shift = (filled_file_format_chunk.partition('shift=')[2]\
-                                .partition('}')[0])
+                       shift = (
+                           filled_file_format_chunk \
+                           .partition('{'+format_opt+'?fmt=')[2] \
+                           .partition('}')[0].partition('shift=')[2]
+                       )
                        forecast_hour_shift = str(int(forecast_hour)
                                                  + int(shift))
                        if format_opt_count_fmt == '%1H':
@@ -412,8 +417,11 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                        else:
                            replace_format_opt_count = forecast_hour_shift
                    elif format_opt == 'init_shift':
-                       shift = (filled_file_format_chunk.partition('shift=')[2]\
-                                .partition('}')[0])
+                       shift = (
+                           filled_file_format_chunk \
+                           .partition('{'+format_opt+'?fmt=')[2] \
+                           .partition('}')[0].partition('shift=')[2]
+                       )
                        init_shift_time_dt = (
                            init_time_dt + datetime.timedelta(hours=int(shift))
                        )
@@ -421,8 +429,11 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                            format_opt_count_fmt
                        )
                    elif format_opt == 'valid_shift':
-                       shift = (filled_file_format_chunk.partition('shift=')[2]\
-                                .partition('}')[0])
+                       shift = (
+                           filled_file_format_chunk \
+                           .partition('{'+format_opt+'?fmt=')[2] \
+                           .partition('}')[0].partition('shift=')[2]
+                       )
                        valid_shift_time_dt = (
                            valid_time_dt + datetime.timedelta(hours=int(shift))
                        )
