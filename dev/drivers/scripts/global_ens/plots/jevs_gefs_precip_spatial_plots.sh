@@ -9,7 +9,6 @@
 #PBS -l place=vscatter:exclhost,select=1:ncpus=2:mem=200GB
 #PBS -l debug=true
 
-export evs_ver=v1.0
 #export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/gitworkspace/EVS
 source $HOMEevs/versions/run.ver
