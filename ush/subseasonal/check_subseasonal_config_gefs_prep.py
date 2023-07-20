@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 '''
-Program Name: check_subseasonal_config_plots.py
+Program Name: check_subseasonal_config_gefs_prep.py
 Contact(s): Shannon Shields
 Abstract: This script is run by all scripts in scripts/.
           This does a check on the user's settings in
@@ -16,40 +16,25 @@ print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
 RUN = os.environ['RUN']
-VERIF_CASE_STEP = os.environ['VERIF_CASE_STEP']
-VCS = os.environ['VERIF_CASE_STEP']
-VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
-VCS_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 
 # Do check for all environment variables needed by config
-VCS_type_env_vars_dict = {
+env_vars_dict = {
     'shared': ['model_list',
-               'model_dir_list', 'model_plots_dir_list',
-               'model_file_format_list',
-               'OUTPUTROOT',
-               'start_date', 'end_date', 'plot_by',
-               'SEND2WEB', 'webhost', 'webhostid', 'webdir',
-               'SENDARCH',
-               'KEEPDATA'],
-    'grid2grid_plots': ['g2gplots_model_plot_name_list', 
-                        'g2gplots_type_list',
-                        'g2gplots_event_eq'],
-    'grid2obs_plots': ['g2oplots_model_plot_name_list', 
-                       'g2oplots_type_list',
-                       'g2oplots_PrepBufr_fcyc_list',
-                       'g2oplots_PrepBufr_valid_hr_list', 
-                       'g2oplots_PrepBufr_fhr_min',
-                       'g2oplots_PrepBufr_fhr_max',
-                       'g2oplots_PrepBufr_fhr_inc',
-                       'g2oplots_event_eq']
+               'model_dir_list', 'model_prep_dir_list',
+               'gefs_file_type',
+               'model_file_format_list', 'OUTPUTROOT',
+               'start_date', 'end_date', 'make_met_data_by',
+               'SENDARCH', 'KEEPDATA',
+               'fcyc_list', 'vhr_list', 'fhr_min', 'fhr_max',
+               'gather_by']
 }
-VCS_type_env_check_list = ['shared', VERIF_CASE_STEP]
-for VCS_type_env_check in VCS_type_env_check_list:
-    VCS_type_env_var_check_list = VCS_type_env_vars_dict[VCS_type_env_check]
-    for VCS_type_env_var_check in VCS_type_env_var_check_list:
-        if not VCS_type_env_var_check in os.environ:
-            print("ERROR: "+VCS_type_env_var_check+" not set in config "
-                  +"under "+VCS_type_env_check+" settings")
+env_check_list = ['shared']
+for env_check in env_check_list:
+    env_var_check_list = env_vars_dict[env_check]
+    for env_var_check in env_var_check_list:
+        if not env_var_check in os.environ:
+            print("ERROR: "+env_var_check+" not set in config "
+                  +"under "+env_check+" settings")
             sys.exit(1)
 
 
@@ -79,25 +64,10 @@ if datetime.datetime.strptime(os.environ['end_date'], '%Y%m%d') \
           +"start_date ("+os.environ['start_date']+")")
     sys.exit(1)
 
-# Do check for valid config options
-VCS_type_list = os.environ[VERIF_CASE_STEP_abbrev+'_type_list'].split(' ')
-valid_VCS_type_opts_dict = {
-    'grid2grid_plots': ['anom', 'pres_lvls', 'ENSO', 'OLR', 'precip', 'sst', 
-                        'sea_ice'],
-    'grid2obs_plots': ['PrepBufr']
-}
-for VCS_type in VCS_type_list:
-    if VCS_type not in valid_VCS_type_opts_dict[VCS]:
-        print("ERROR: "+VCS_type+" not a valid option for "
-              +VCS_abbrev+"_type_list. Valid options are "
-              +', '.join(valid_VCS_type_opts_dict[VCS]))
-        sys.exit(1)
 
 # Do check for list config variables lengths
-check_config_var_len_list = ['model_dir_list', 'model_plots_dir_list',
+check_config_var_len_list = ['model_dir_list', 'model_prep_dir_list',
                              'model_file_format_list']
-if VERIF_CASE_STEP in ['grid2grid_plots', 'grid2obs_plots']:
-    check_config_var_len_list.append(VCS_abbrev+'_model_plot_name_list')
 
 for config_var in check_config_var_len_list:
     if len(os.environ[config_var].split(' ')) \
@@ -111,14 +81,12 @@ for config_var in check_config_var_len_list:
 
 # Do check for valid list config variable options
 valid_config_var_values_dict = {
-    'plot_by': ['VALID', 'INIT'],
-    'SEND2WEB': ['YES', 'NO'],
+    'make_met_data_by': ['VALID', 'INIT'],
+    'gather_by': ['VALID', 'INIT'],
     'SENDARCH': ['YES', 'NO'],
     'KEEPDATA': ['YES', 'NO']
 }
-if VERIF_CASE_STEP in ['grid2grid_plots', 'grid2obs_plots']:
-    valid_config_var_values_dict[VCS_abbrev
-                                 +'_event_eq'] = ['YES', 'NO']
+        
 
 # Run through and check config variables from dictionary
 for config_var in list(valid_config_var_values_dict.keys()):

@@ -34,7 +34,6 @@ NET = os.environ['NET']
 RUN = os.environ['RUN']
 COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
-#MODELNAME = os.environ['MODELNAME'].split(' ')
 OBSNAME = os.environ['OBSNAME'].split(' ')
 
 # Make COMOUT directory for dates
@@ -133,6 +132,10 @@ for OBS in OBSNAME:
     for cycle in obs_dict['cycles']:
         CDATE = INITDATE+cycle
         CDATE_dt = datetime.datetime.strptime(CDATE, '%Y%m%d%H')
+        log_missing_file = os.path.join(
+            DATA, 'mail_missing_'+OBS+'_valid'
+            +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
+        )
         if OBS == 'nam':
             offset_hr = str(int(CDATE_dt.strftime('%H'))%6
             ).zfill(2)
@@ -161,6 +164,11 @@ for OBS in OBSNAME:
                     os.makedirs(arch_file_dir)
                 print("----> Trying to create "+arch_file)
                 sub_util.copy_file(prod_file, arch_file)
+                if not os.path.exists(prod_file):
+                    sub_util.log_missing_file_obs(
+                        log_missing_file, prod_file, OBS,
+                        CDATE_dt
+                    )
         elif OBS == 'osi':
             daily_prod_file = sub_util.format_filler(
                 obs_dict['daily_prod_file_format'], CDATE_dt, CDATE_dt,
@@ -185,6 +193,7 @@ for OBS in OBSNAME:
                 print("----> Trying to create "+daily_arch_file)
                 sub_util.prep_prod_osi_saf_file(
                     daily_prod_file, daily_arch_file,
+                    CDATE_dt, log_missing_file
                 )
         elif OBS == 'ghrsst':
             daily_prod_file = sub_util.format_filler(
@@ -211,6 +220,7 @@ for OBS in OBSNAME:
                 print("----> Trying to create "+daily_arch_file)
                 sub_util.prep_prod_ghrsst_ospo_file(
                     daily_prod_file, daily_arch_file,
+                    CDATE_dt, log_missing_file
                 )
         else:
             prod_file = sub_util.format_filler(
@@ -232,8 +242,13 @@ for OBS in OBSNAME:
                 print("----> Trying to create "+arch_file)
                 if OBS == 'gfs':
                     sub_util.prep_prod_gfs_file(
-                        prod_file, arch_file)
+                        prod_file, arch_file, CDATE_dt, log_missing_file)
                 else:
                     sub_util.copy_file(prod_file, arch_file)
+                    if not os.path.exists(prod_file):
+                        sub_util.log_missing_file_obs(
+                            log_missing_file, prod_file, OBS,
+                            CDATE_dt
+                        )
 
 print("END: "+os.path.basename(__file__))

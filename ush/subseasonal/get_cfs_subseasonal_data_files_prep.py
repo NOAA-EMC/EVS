@@ -217,27 +217,19 @@ def get_dest_file(valid_time_dt, init_time_dt, lead_str,
 
 # Read in common environment variables
 RUN = os.environ['RUN']
-#VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 DATA = os.environ['DATA']
 model_list = os.environ['model_list'].split(' ')
 model_dir_list = os.environ['model_dir_list'].split(' ')
-#truth_dir_list = os.environ['truth_dir_list'].split(' ')
-#OBSNAME = os.environ['OBSNAME']
 model_prep_dir_list = os.environ['model_prep_dir_list'].split(' ')
 model_file_format_list = os.environ['model_file_format_list'].split(' ')
 cfs_file_type = os.environ['cfs_file_type']
+cfs_members = os.environ['cfs_members']
 INITDATE = os.environ['INITDATE']
 start_date = os.environ['start_date']
 end_date = os.environ['end_date']
 make_met_data_by = os.environ['make_met_data_by']
 machine = os.environ['machine']
-#VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
-#VCS = VERIF_CASE+'_'+STEP
-#VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
-#VCS_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
-#VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
-                            #.split(' '))
 
 # Set some common variables
 cwd = os.getcwd()
@@ -288,7 +280,7 @@ if STEP == 'prep':
                     os.makedirs(dest_model_dir)
                 if model == 'cfs':
                     mbr = 1
-                    total = 4
+                    total = int(cfs_members)
                     while mbr <= total:
                         mb = str(mbr).zfill(2)
                         model_pfile_format = os.path.join(
@@ -337,17 +329,33 @@ if STEP == 'prep':
                             +'ens'+mb+'.t{init?fmt=%2H}z.'
                             +'f{lead?fmt=%3H}'
                         )
+                        log_missing_pfile = os.path.join(
+                            DATA, 'mail_missing_'+model+'_pgbf_'
+                            +'member'+mb+'_fhr'
+                            +lead.zfill(3)+'_init'
+                            +init_time.strftime('%Y%m%d%H')+'.sh'
+                        )
+                        log_missing_ffile = os.path.join(
+                            DATA, 'mail_missing_'+model+'_flxf_'
+                            +'member'+mb+'_fhr'
+                            +lead.zfill(3)+'_init'
+                            +init_time.strftime('%Y%m%d%H')+'.sh'
+                        )
                         sub_util.prep_prod_cfs_pfile(model_pfile,
                                                      prep_pfile,
                                                      dest_model_pfile,
+                                                     init_time,
                                                      lead,
-                                                     'full')
+                                                     'full',
+                                                     log_missing_pfile)
                         del model_pfile_format
                         sub_util.prep_prod_cfs_ffile(model_ffile,
                                                      prep_ffile,
                                                      dest_model_ffile,
+                                                     init_time,
                                                      lead,
-                                                     'full')
+                                                     'full',
+                                                     log_missing_ffile)
                         del model_ffile_format
                         mbr = mbr+1
 
