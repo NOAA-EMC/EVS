@@ -368,6 +368,17 @@ elif STEP == 'stats':
                     job_cmd_list_iterative.append(
                         f'{metplus_launcher} -c '
                         + f'{MET_PLUS_CONF}/'
+                        + f'RegridDataPlane_fcst{COMPONENT.upper()}_PTYPE.conf'
+                    )
+                    job_cmd_list_iterative.append(
+                        f'python '
+                        + f'{USHevs}/{COMPONENT}/'
+                        + f'{COMPONENT}_{STEP}_{VERIF_CASE}_create_merged_ptype.py'
+                    )
+
+                    job_cmd_list_iterative.append(
+                        f'{metplus_launcher} -c '
+                        + f'{MET_PLUS_CONF}/'
                         + f'PointStat_fcst{COMPONENT.upper()}_'
                         + f'obs{VERIF_TYPE.upper()}_{VAR_NAME}.conf'
                         )
