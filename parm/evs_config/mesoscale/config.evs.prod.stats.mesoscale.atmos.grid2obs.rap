@@ -169,8 +169,8 @@ fi
       echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
       exit 1
     fi
-    export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc"
-    # export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G221.nc"
+    #export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc"
+     export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G221.nc"
     # export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc, ${FIXevs}/masks/Alaska_G221.nc"
     export MASK_CUSTOM_LIST=""
     export FHR_GROUP_LIST="SHORT FULL"
@@ -191,7 +191,8 @@ fi
       echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
       exit 1
     fi
-    export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc, ${FIXevs}/masks/Alaska_G221.nc"
+    # export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc, ${FIXevs}/masks/Alaska_G221.nc"
+    export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G221.nc"
     export MASK_CUSTOM_LIST=""
     export FHR_GROUP_LIST="SHORT FULL"
     export MIN_IHOUR="00"
