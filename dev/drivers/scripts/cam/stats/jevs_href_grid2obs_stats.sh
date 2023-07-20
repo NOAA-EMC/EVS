@@ -6,13 +6,11 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=04:30:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=72:mem=500GB
+#PBS -l place=vscatter,select=1:ncpus=72:mem=500GB
 #PBS -l debug=true
 
 export OMP_NUM_THREADS=1
 
-#total 28 processes 
-export evs_ver=v1.0
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 source $HOMEevs/versions/run.ver
 
