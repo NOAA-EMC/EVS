@@ -10,6 +10,7 @@ import numpy as np
 import glob
 import pandas as pd
 import logging
+import copy
 from time import sleep
 
 def run_shell_command(command):
@@ -1020,6 +1021,8 @@ def check_model_files(job_dict):
                                  exist or not (boolean)
              fhr_list          - list of forecast hours that model
                                  files exist for (string)
+             model_copy_output_DATA2COMOUT_list - list of file to copy from
+                                                  DATA to COMOUT
     """
     valid_date_dt = datetime.datetime.strptime(
         job_dict['DATE']+job_dict['valid_hr_start'],
@@ -1041,8 +1044,16 @@ def check_model_files(job_dict):
                                              model+'.{init?fmt=%Y%m%d%H}.'
                                              +'f{lead?fmt=%3H}')
             if job_dict['VERIF_CASE'] == 'grid2grid':
-                output_file_format = os.path.join(
+                output_DATA_file_format = os.path.join(
                     verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.'+'{valid?fmt=%Y%m%d}',
+                    job_dict['MODEL'], job_dict['VERIF_CASE'],
+                    'grid_stat_'+job_dict['VERIF_TYPE']+'_'
+                    +job_dict['job_name']+'_{lead?fmt=%2H}'
+                    '0000L_{valid?fmt=%Y%m%d_%H%M%S}V_pairs.nc'
+                )
+                output_COMOUT_file_format = os.path.join(
+                    job_dict['COMOUT'],
                     job_dict['RUN']+'.'+'{valid?fmt=%Y%m%d}',
                     job_dict['MODEL'], job_dict['VERIF_CASE'],
                     'grid_stat_'+job_dict['VERIF_TYPE']+'_'
@@ -1502,25 +1513,27 @@ def check_model_files(job_dict):
     fhr_list = list(
         np.asarray(np.unique(np.asarray(fhr_list, dtype=int)),dtype=str)
     )
-    # UKMET data doesn't have RH for fhr 132 or 144
-    if job_dict['MODEL'] == 'ukmet' \
-            and job_dict['VERIF_CASE'] == 'grid2obs' \
-            and job_dict['VERIF_TYPE'] == 'pres_levs' \
-            and job_dict['job_name'] == 'RelHum':
-        for fhr_rm in ['132', '144']:
-            if fhr_rm in fhr_list:
-                fhr_list.remove(fhr_rm)
+    input_fhr_list = copy.deepcopy(fhr_list)
     # Check output files
+    model_copy_output_DATA2COMOUT_list = []
     for fhr_key in list(fhr_check_output_dict.keys()):
         for fhr_fileN_key in list(fhr_check_output_dict[fhr_key].keys()):
-            fhr_fileN = format_filler(
-                output_file_format,
+            fhr_fileN_DATA = format_filler(
+                output_DATA_file_format,
                 fhr_check_output_dict[fhr_key][fhr_fileN_key]['valid_date'],
                 fhr_check_output_dict[fhr_key][fhr_fileN_key]['init_date'],
                 fhr_check_output_dict[fhr_key][fhr_fileN_key]['forecast_hour'],
                 {}
             )
-            if os.path.exists(fhr_fileN):
+            fhr_fileN_COMOUT = format_filler(
+                output_COMOUT_file_format,
+                fhr_check_output_dict[fhr_key][fhr_fileN_key]['valid_date'],
+                fhr_check_output_dict[fhr_key][fhr_fileN_key]['init_date'],
+                fhr_check_output_dict[fhr_key][fhr_fileN_key]['forecast_hour'],
+                {}
+            )
+            if os.path.exists(fhr_fileN_COMOUT):
+                copy_file(fhr_fileN_COMOUT,fhr_fileN_DATA)
                 if fhr_check_input_dict[fhr_key]\
                         [fhr_fileN_key]['forecast_hour'] \
                         in fhr_list:
@@ -1528,11 +1541,21 @@ def check_model_files(job_dict):
                         fhr_check_input_dict[fhr_key][fhr_fileN_key]\
                         ['forecast_hour']
                     )
+            else:
+                model_copy_output_DATA2COMOUT_list.append(
+                    (fhr_fileN_DATA, fhr_fileN_COMOUT)
+                )
     if len(fhr_list) != 0:
         model_files_exist = True
     else:
         model_files_exist = False
-    return model_files_exist, fhr_list
+    if job_dict['JOB_GROUP'] == 'reformat_data' \
+            and job_dict['VERIF_CASE'] == 'grid2grid':
+        if (job_dict['job_name'] == 'GeoHeightAnom' \
+                and int(job_dict['valid_hr_start']) % 12 == 0)\
+               or job_dict['job_name'] == 'WindShear':
+            fhr_list = input_fhr_list
+    return model_files_exist, fhr_list, model_copy_output_DATA2COMOUT_list
 
 def check_truth_files(job_dict):
     """!
@@ -1543,6 +1566,8 @@ def check_truth_files(job_dict):
          Returns:
              all_truth_file_exist - if all needed truth files
                                     exist or not (boolean)
+             truth_copy_output_DATA2COMOUT_list - list of files to copy
+                                                  from DATA to COMOUT
     """
     valid_date_dt = datetime.datetime.strptime(
         job_dict['DATE']+job_dict['valid_hr_start'],
@@ -1571,7 +1596,7 @@ def check_truth_files(job_dict):
                     +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
                 )
                 truth_input_file_list.append(osi_saf_file)
-                osi_saf_output = os.path.join(
+                osi_saf_DATA_output = os.path.join(
                     verif_case_dir, 'METplus_output',
                     job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
                     'osi_saf', job_dict['VERIF_CASE'], 'regrid_data_plane_'
@@ -1580,7 +1605,17 @@ def check_truth_files(job_dict):
                     .strftime('%Y%m%d%H')
                     +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
                 )
-                truth_output_file_list.append(osi_saf_output)
+                osi_saf_COMOUT_output = os.path.join(
+                    job_dict['COMOUT'],
+                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
+                    'osi_saf', job_dict['VERIF_CASE'], 'regrid_data_plane_'
+                    +job_dict['VERIF_TYPE']+'_'+job_dict['job_name']+'_valid'
+                    +(valid_date_dt-datetime.timedelta(hours=24))\
+                    .strftime('%Y%m%d%H')
+                    +'to'+valid_date_dt.strftime('%Y%m%d%H')+'.nc'
+                )
+                truth_output_file_list.append((osi_saf_DATA_output,
+                                               osi_saf_COMOUT_output))
         elif job_dict['VERIF_CASE'] == 'grid2obs':
             if job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc', 'ptype'] \
                     and 'Prepbufr' in job_dict['job_name']:
@@ -1704,9 +1739,12 @@ def check_truth_files(job_dict):
                 )
                 truth_input_file_list.append(pb2nc_file)
     truth_output_files_exist_list = []
-    for truth_file in truth_output_file_list:
-        if os.path.exists(truth_file):
+    truth_copy_output_DATA2COMOUT_list = truth_output_file_list
+    for truth_file_tuple in truth_output_file_list:
+        if os.path.exists(truth_file_tuple[1]):
             truth_output_files_exist_list.append(True)
+            copy_file(truth_file_tuple[1], truth_file_tuple[0])
+            truth_copy_output_DATA2COMOUT_list.remove(truth_file_tuple)
         else:
             truth_output_files_exist_list.append(False)
     if all(x == True for x in truth_output_files_exist_list) \
@@ -1724,7 +1762,7 @@ def check_truth_files(job_dict):
             all_truth_file_exist = True
         else:
             all_truth_file_exist = False
-    return all_truth_file_exist
+    return all_truth_file_exist, truth_copy_output_DATA2COMOUT_list
 
 def check_stat_files(job_dict):
     """! Check for MET .stat files
