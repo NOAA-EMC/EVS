@@ -52,6 +52,7 @@ if VERIF_CASE == "precip":
         OBSNAME = os.environ['OBSNAME']
     elif STEP == 'plots':
         all_eval_periods = cutil.get_all_eval_periods(graphics_pcp)
+        COMOUTplots = os.environ['COMOUTplots']
 elif VERIF_CASE == "grid2obs":
     if STEP == 'prep':
         NEST = os.environ['NEST']
@@ -65,6 +66,7 @@ elif VERIF_CASE == "grid2obs":
         OBSNAME = os.environ['OBSNAME']
     elif STEP == 'plots':
         all_eval_periods = cutil.get_all_eval_periods(graphics_g2o)
+        COMOUTplots = os.environ['COMOUTplots']
 elif VERIF_CASE == "snowfall":
     if STEP == 'prep':
         pass
@@ -78,6 +80,7 @@ elif VERIF_CASE == "snowfall":
         OBSNAME = os.environ['OBSNAME']
     elif STEP == 'plots':
         all_eval_periods = cutil.get_all_eval_periods(graphics_sno)
+        COMOUTplots = os.environ['COMOUTplots']
 if STEP == 'stats':
     job_type = os.environ['job_type']
 
@@ -403,7 +406,7 @@ elif STEP == 'plots':
             COMOUT, 
         ))
         COMOUT_dir_list.append(os.path.join(
-            COMOUT, RUN+'.'+VDATE
+            COMOUTplots
         ))
         for plot_group in [
                 'aq', 'aviation', 'cape', 'ceil_vis', 'precip', 
@@ -432,7 +435,7 @@ elif STEP == 'plots':
             COMOUT, 
         ))
         COMOUT_dir_list.append(os.path.join(
-            COMOUT, RUN+'.'+VDATE
+            COMOUTplots
         ))
         for plot_group in ['precip', 'radar', 'rtofs_sfc', 'sfc_upper']:
             for eval_period in all_eval_periods:
@@ -458,7 +461,7 @@ elif STEP == 'plots':
             COMOUT, 
         ))
         COMOUT_dir_list.append(os.path.join(
-            COMOUT, RUN+'.'+VDATE
+            COMOUTplots
         ))
         for plot_group in ['precip']:
             for eval_period in all_eval_periods:
