@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#PBS -N jevs_global_ens_grid2grid_past90days_plots.sh
+#PBS -N jevs_global_ens_grid2grid_past90days_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev

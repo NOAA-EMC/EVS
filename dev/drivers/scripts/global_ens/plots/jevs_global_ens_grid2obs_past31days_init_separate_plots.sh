@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#PBS -N jevs_global_ens_grid2obs_past31days_init_separate_plots.sh
+#PBS -N jevs_global_ens_grid2obs_past31days_init_separate_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
