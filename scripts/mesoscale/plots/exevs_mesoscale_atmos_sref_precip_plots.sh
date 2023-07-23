@@ -252,7 +252,7 @@ done     #stats
 
 tar -cvf evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar *.png
 
-cp evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
+cp evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
 
 
 

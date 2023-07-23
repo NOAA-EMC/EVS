@@ -2,8 +2,6 @@
 
 SORCevs_gens=`pwd`
 
-source ../modulefiles/v1.0
-
 source ../versions/build.ver
 
 set -x

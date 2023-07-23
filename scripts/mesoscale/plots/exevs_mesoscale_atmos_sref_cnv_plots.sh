@@ -199,7 +199,7 @@ done     #var
 
 tar -cvf evs.plots.sref.cnv.past${past_days}days.v${VDATE}.tar *.png
 
-cp evs.plots.sref.cnv.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
+cp evs.plots.sref.cnv.past${past_days}days.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
 
 
 
