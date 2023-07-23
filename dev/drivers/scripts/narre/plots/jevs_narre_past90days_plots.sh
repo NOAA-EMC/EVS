@@ -30,7 +30,6 @@ export MODELNAME=narre
 
 module reset
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
-export MET_bin_exec=bin
 
 export KEEPDATA=YES
 
