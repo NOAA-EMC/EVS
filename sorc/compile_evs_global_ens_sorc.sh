@@ -4,6 +4,8 @@ SORCevs_gens=`pwd`
 
 source ../versions/build.ver
 
+source ../modulefiles/v1.0
+
 set -x
 
 #SORCevs_gefs=`pwd`
