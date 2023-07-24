@@ -31,46 +31,65 @@ njob = os.environ['njob']
 COMPONENT = os.environ['COMPONENT']
 NEST = os.environ['NEST']
 USHevs = os.environ['USHevs']
-if NEST == 'spc_otlk':
+if NEST == 'conus':
+    DAY = os.environ['DAY']
+    VHOUR_GROUP = os.environ['VHOUR_GROUP']
+    URL_HEAD = os.environ['URL_HEAD']
+    mPINGToken = os.environ['mPINGToken']
+    OBSNAME = os.environ['OBSNAME']
+'''
+elif NEST == 'spc_otlk':
     if STEP == 'prep':
         TEMP_DIR = os.environ['TEMP_DIR']
         DAY = os.environ['DAY']
         VHOUR_GROUP = os.environ['VHOUR_GROUP']
         URL_HEAD = os.environ['URL_HEAD']
         metplus_launcher = os.environ['metplus_launcher']
+'''
 
 # Make a dictionary of environment variables needed to run this particular job
 job_env_vars_dict = {}
-if NEST == 'spc_otlk':
-    if STEP == 'prep':
-        job_env_vars_dict['NEST'] = NEST
-        job_env_vars_dict['VDATE'] = VDATE
-        job_env_vars_dict['DAY'] = DAY
-        job_env_vars_dict['VHOUR_GROUP'] = VHOUR_GROUP
-        job_env_vars_dict['URL_HEAD'] = URL_HEAD
-        job_env_vars_dict['TEMP_DIR'] = TEMP_DIR
-
+if NEST == 'conus':
+    job_env_vars_dict['NEST'] = NEST
+    job_env_vars_dict['VDATE'] = VDATE
+    job_env_vars_dict['DAY'] = DAY
+    job_env_vars_dict['VHOUR_GROUP'] = VHOUR_GROUP
+    job_env_vars_dict['URL_HEAD'] = URL_HEAD
+    job_env_vars_dict['mPINGToken'] = mPINGToken
+    job_env_vars_dict['OBSNAME'] = OBSNAME
+'''
+elif NEST == 'spc_otlk':
+    job_env_vars_dict['NEST'] = NEST
+    job_env_vars_dict['VDATE'] = VDATE
+    job_env_vars_dict['DAY'] = DAY
+    job_env_vars_dict['VHOUR_GROUP'] = VHOUR_GROUP
+    job_env_vars_dict['URL_HEAD'] = URL_HEAD
+    job_env_vars_dict['TEMP_DIR'] = TEMP_DIR
+'''
 
 # Make a list of commands needed to run this particular job
 job_cmd_list = []
-if STEP == 'prep':
-    if COMPONENT == 'cam':
-        if NEST == 'spc_otlk':
-            job_cmd_list.append(
-                f"python {USHevs}/{COMPONENT}/"
-                + f"{COMPONENT}_{STEP}_{VERIF_CASE}_gen_{NEST}_mask.py"
-            )
-        else:
-            print(f"ERROR: {NEST} is not a valid NEST for"
-                  + f" cam/grid2obs/prep")
-            sys.exit(1)
+if COMPONENT == 'cam':
+    '''
+    if NEST == 'spc_otlk':
+        job_cmd_list.append(
+            f"python {USHevs}/{COMPONENT}/"
+            + f"{COMPONENT}_{STEP}_{VERIF_CASE}_gen_{NEST}_mask.py"
+        )
+    elif NEST == 'conus:
+    '''
+    if NEST == 'conus':
+        job_cmd_list.append(
+            f"python {USHevs}/{COMPONENT}/"
+            + f"{COMPONENT}_{STEP}_{VERIF_CASE}_get_mPING.py"
+        )
     else:
-        print(f"ERROR: {COMPONENT} is not a valid COMPONENT for"
-              + f" cam/grid2obs/prep (please use 'cam')")
+        print(f"ERROR: {NEST} is not a valid NEST for"
+              + f" cam/grid2obs/prep")
         sys.exit(1)
 else:
-    print(f"ERROR: {STEP} is not a valid STEP for cam/grid2obs/prep (please"
-          + f" use 'prep')")
+    print(f"ERROR: {COMPONENT} is not a valid COMPONENT for"
+          + f" cam/grid2obs/prep (please use 'cam')")
     sys.exit(1)
 
 # Write job script

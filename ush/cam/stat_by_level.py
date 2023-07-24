@@ -55,7 +55,8 @@ reference = Reference()
 
 def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger, 
                        date_range: tuple, model_list: list, num: int = 0, 
-                       levels: list = ['P500'], flead='all', metric1_name: str = 'BCRMSE', 
+                       levels: list = ['P500'], level_savename: str = '', 
+                       flead='all', metric1_name: str = 'BCRMSE', 
                        metric2_name: str = 'ME', x_min_limit: float = -10., 
                        x_max_limit: float = 10., x_lim_lock: bool = False, 
                        y_min_limit: float = 50., y_max_limit: float = 1000., 
@@ -1014,6 +1015,8 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     if interp_pts and '' not in interp_pts:
         save_name+=f'_{str(interp_pts_save_string).lower()}'
     save_name+=f'.{str(var_savename).lower()}'
+    if level_savename:
+        save_name+=f'_{str(level_savename).lower()}'
     save_name+=f'.{str(time_period_savename).lower()}'
     save_name+=f'.{plot_info}'
     save_name+=f'.{str(domain_save_string).lower()}'
@@ -1254,22 +1257,32 @@ def main():
             logger.warning(e)
             logger.warning("Continuing ...")
         plot_group = var_specs['plot_group']
-        if len(FCST_LEVELS) != len(OBS_LEVELS):
+        level_savename=''
+        if FCST_LEVELS in presets.level_presets:
+            level_savename=FCST_LEVELS
+            fcst_levels = re.split(r',(?![0*])', presets.level_presets[FCST_LEVELS].replace(' ',''))
+        else:
+            fcst_levels = re.split(r',(?![0*])', FCST_LEVELS.replace(' ',''))
+        if OBS_LEVELS in presets.level_presets:
+            obs_levels = re.split(r',(?![0*])', presets.level_presets[OBS_LEVELS].replace(' ',''))
+        else:
+            obs_levels = re.split(r',(?![0*])', OBS_LEVELS.replace(' ',''))
+        if len(fcst_levels) != len(obs_levels):
             e = ("FCST_LEVELS and OBS_LEVELS must be lists of the same"
                  + f" size")
             logger.error(e)
             logger.error("Quitting ...")
             raise ValueError(e+"\nQuitting ...")
         keep = []
-        for l, fcst_level in enumerate(FCST_LEVELS):
-            if (FCST_LEVELS[l] not in var_specs['fcst_var_levels']
-                    or OBS_LEVELS[l] not in var_specs['obs_var_levels']):
+        for l, fcst_level in enumerate(fcst_levels):
+            if (fcst_levels[l] not in var_specs['fcst_var_levels']
+                    or obs_levels[l] not in var_specs['obs_var_levels']):
                 keep.append(False)
             else:
                 keep.append(True)
         keep = np.array(keep)
-        dropped_items = np.array(FCST_LEVELS)[~keep].tolist()
-        fcst_levels = np.array(FCST_LEVELS)[keep].tolist()
+        dropped_items = np.array(fcst_levels)[~keep].tolist()
+        fcst_levels = np.array(fcst_levels)[keep].tolist()
         if dropped_items:
             dropped_items_string = ', '.join(dropped_items)
             e = (f"The requested levels are not valid for the requested"
@@ -1295,7 +1308,7 @@ def main():
                 continue
             plot_stat_by_level(
                 df, logger, date_range, MODELS, num=num, 
-                flead=FLEADS, levels=fcst_levels, 
+                flead=FLEADS, levels=fcst_levels, level_savename=level_savename,
                 metric1_name=metrics[0], metric2_name=metrics[1], 
                 date_type=DATE_TYPE, x_min_limit=X_MIN_LIMIT, 
                 x_max_limit=X_MAX_LIMIT, x_lim_lock=X_LIM_LOCK, 
@@ -1357,9 +1370,9 @@ if __name__ == "__main__":
     FLEADS = check_FCST_LEAD(os.environ['FCST_LEAD']).replace(' ','').split(',')
 
     # list of levels
-    FCST_LEVELS = re.split(r',(?![0*])', check_FCST_LEVEL(os.environ['FCST_LEVEL']).replace(' ',''))
-    OBS_LEVELS = re.split(r',(?![0*])', check_OBS_LEVEL(os.environ['OBS_LEVEL']).replace(' ',''))
-
+    FCST_LEVELS = check_FCST_LEVEL(os.environ['FCST_LEVEL'])
+    OBS_LEVELS = check_OBS_LEVEL(os.environ['OBS_LEVEL'])
+        
     FCST_THRESH = check_FCST_THRESH(os.environ['FCST_THRESH'], LINE_TYPE)
     OBS_THRESH = check_OBS_THRESH(os.environ['OBS_THRESH'], FCST_THRESH, LINE_TYPE).replace(' ','').split(',')
     FCST_THRESH = FCST_THRESH.replace(' ','').split(',')
