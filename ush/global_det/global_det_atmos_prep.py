@@ -156,8 +156,8 @@ global_det_model_dict = {
                                                      +'{letter?fmt=str}.GRB'),
               'COMIN_anl_file_format': os.path.join(COMINukmet,
                                                     'GAB{init?fmt=%2H}AAT.GRB'),
-              'COMIN_precip_file_format': os.path.join(COMINukmet_precip, 'ukmo.'
-                                                       +'{init?fmt=%Y%m%d%H}'),
+              #'COMIN_precip_file_format': os.path.join(COMINukmet_precip, 'ukmo.'
+              #                                         +'{init?fmt=%Y%m%d%H}'),
               'cycles': ['00', '12'],
               'fcst_hrs': range(0, 144+6, 6)}
 }
