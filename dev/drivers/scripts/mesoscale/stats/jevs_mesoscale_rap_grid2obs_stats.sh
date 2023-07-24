@@ -62,7 +62,6 @@ set -x
   export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
 source /usr/share/lmod/lmod/init/sh
-export MET_bin_exec="bin"
 
 module reset
 source $HOMEevs/versions/run.ver

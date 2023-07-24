@@ -62,7 +62,6 @@ set -x
 
 
 source /usr/share/lmod/lmod/init/sh
-export MET_bin_exec="bin"
 
 module reset
 source $HOMEevs/versions/run.ver
