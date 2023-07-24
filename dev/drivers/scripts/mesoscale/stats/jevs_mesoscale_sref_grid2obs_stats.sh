@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#PBS -N jevs_mesoscale_sref_g2o_stats
+#PBS -N jevs_mesoscale_sref_grid2obs_stats
 #PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q dev

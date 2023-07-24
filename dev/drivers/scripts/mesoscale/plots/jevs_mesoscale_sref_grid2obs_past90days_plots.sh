@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#PBS -N jevs_mesoscale_sref_grid2obs_plot
+#PBS -N jevs_mesoscale_sref_grid2obs_past90days_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
