@@ -30,8 +30,8 @@ COMINfcst = os.environ['COMINfcst']
 MODEL_INPUT_TEMPLATE = os.environ['MODEL_INPUT_TEMPLATE']
 VDATE = os.environ['VDATE']
 VHOUR= os.environ['VHOUR']
-#fhr = os.environ['FHR']
-fhr = os.environ['FHR_START']
+fhr = os.environ['FHR']
+#fhr = os.environ['FHR_START']
 fhr = int(fhr)
 
 # Create merged ptype data

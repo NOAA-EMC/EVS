@@ -327,7 +327,14 @@ elif job_type == 'generate':
                 'bash_conditional_value': '"00"',
                 'bash_conditional_else_value': '"00"'
         }
-
+#---
+    if VAR_NAME == 'PTYPE' and NEST == 'conusp':
+        job_iterate_over_custom_lists_dict['FHR'] = {
+                'custom_list': '`seq ${FHR_START} ${FHR_INCR} ${FHR_END}`',
+                'export_value': '(printf "%02d" $FHR)',
+                'dependent_vars': {}
+        }
+#---
     job_dependent_vars['FHR_START'] = {
         'exec_value': '',
         'bash_value': (
