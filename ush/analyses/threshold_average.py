@@ -321,6 +321,10 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
                 unit_convert = False
             elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
                 unit_convert = False
+        if str(var_long_name_key).upper() == 'HGTCLDCEIL':
+           if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
+              if units in ['m', 'gpm']:
+                  units = 'gpm'
         if unit_convert:
             if str(metric_name).upper() in metrics_using_var_units:
                 coef, const = (

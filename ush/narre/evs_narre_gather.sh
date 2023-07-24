@@ -46,11 +46,11 @@ for verify in $verifys   ; do
 
   chmod +x run_gather_${verify}.sh
 
-  echo "run_gather_${verify}.sh" >> run_gather_all_poe.sh 
+  echo "${DATA}/run_gather_${verify}.sh" >> run_gather_all_poe.sh 
 
 
 done 
 
 chmod 775 run_gather_all_poe.sh
 
- run_gather_all_poe.sh
+ ${DATA}/run_gather_all_poe.sh
