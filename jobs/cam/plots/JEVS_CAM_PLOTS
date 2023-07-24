@@ -78,7 +78,8 @@ if  [ $MODELNAME = href ] ; then
 else
   export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
   export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
-  export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
+  export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
+  export COMOUTplots=${COMOUTplots:-$COMOUT/$RUN.$VDATE}
   echo $COMPATH
 fi
 

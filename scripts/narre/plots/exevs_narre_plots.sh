@@ -48,7 +48,7 @@ export fcst_valid_hour="0,3,6,9,12,15,18,21"
 export fcst_lead="1,2,3,4,5,6,7,8,9,10,11,12"
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
-
+mkdir -p ${plot_dir}
 
 > run_all_poe.sh 
 for grid in $VX_MASK_LIST ; do
@@ -67,9 +67,9 @@ for grid in $VX_MASK_LIST ; do
     if [ $grid = G130 ] ; then
       echo "export mask=buk_conus" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
       echo "export grd=g130"  >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-    elif [ $grid = G214 ] ; then
+    elif [ $grid = G242 ] ; then
       echo "export mask=alaska" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-      echo "export grd=g214"  >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+      echo "export grd=g242"  >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
     fi
 
       echo "export PLOT_TYPE=$score_type" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
@@ -148,12 +148,9 @@ for grid in $VX_MASK_LIST ; do
      echo "run_py.${var}_${line_type}.${score_type}.${grid}.sh" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
  
 
-     #evs.component.metric1_metricX.parameter_level(_obtype).lastXXdays.plottype.grid_region.png
-     #evs.global_det.acc.hgt_p500.last90days.timeseries_valid00z_f120.g004_glb.png
-     #evs.cam_ens.ctc.vis_l0.last31days.perfdiag_f048.buk_conus.png
-     if [ $score_type = performance_diagram ] ; then
-        echo "mv ${plot_dir}/${score_type}_regional_*\${grd}*_*\${vname}*.png ${plot_dir}/evs.narre.ctc.\${field}.last${past_days}days.perfdiag.f012.\${mask}.png" >>  run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-     fi 
+#     if [ $score_type = performance_diagram ] ; then
+#        echo "mv ${plot_dir}/${score_type}_regional_*\${grd}*_*\${vname}*.png ${plot_dir}/evs.narre.ctc.\${field}.last${past_days}days.perfdiag.f012.\${mask}.png" >>  run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+#     fi 
      
      chmod +x  run_narre_${grid}.${score_type}.${var}.${line_type}.sh
      echo "run_narre_${grid}.${score_type}.${var}.${line_type}.sh" >> run_all_poe.sh
@@ -176,12 +173,27 @@ else
 fi
 
 cd $plot_dir
+
+for grid in g130 g242 ; do 
+  if [ $grid = g130 ] ; then
+   domain=buk_conus
+  elif [ $grid = g242 ] ; then
+   domain=buk_alaska  
+  fi
+
+  for var in vis hgt ; do
+    if [ $var = vis ] ; then
+	  field=vis_l0
+	  thrsh=_lt805lt1609lt4828lt8045lt16090
+    elif [ $var = hgt ] ; then
+          field=ceiling_l0
+	  thrsh=_lt152lt305lt914lt1524lt3048
+    fi	  
   
+    mv  performance_diagram_regional_${grid}_valid_00z_03z_06z_09z_12z_15z_18z_21z_${var}_f1_to_f12_${thrsh}.png evs.narre.ctc.${field}.last${past_days}days.perfdiag_valid_all_times.${domain}.png
+  done
+done
+
 tar -cvf evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar *.png
 
-cp evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar  $COMOUT/.  
-
-
-
-
-
+cp evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar  $COMOUT/.
