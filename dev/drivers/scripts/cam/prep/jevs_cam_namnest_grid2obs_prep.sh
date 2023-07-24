@@ -56,6 +56,7 @@ export DATA=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp/${jobid:?}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
 export cyc=$(date -d "today" +"%H")
+export mPINGToken="9dd1b109ab13bc9454d14d5bf631398d88fec93d"
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/cam/prep/JEVS_CAM_PREP

@@ -56,6 +56,7 @@ if VERIF_CASE == "precip":
 elif VERIF_CASE == "grid2obs":
     if STEP == 'prep':
         NEST = os.environ['NEST']
+        OBSNAME = os.environ['OBSNAME']
     if STEP == 'stats':
         NEST = os.environ['NEST']
         FHR_END_FULL = os.environ['FHR_END_FULL']
@@ -98,6 +99,10 @@ if VERIF_CASE == 'precip':
 elif VERIF_CASE == 'grid2obs':
     if STEP == 'stats':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
+        data_dir_list.append(os.path.join(
+            data_base_dir, MODELNAME, 'merged_ptype'
+        ))
+        data_dir_list.append(os.path.join(data_base_dir, MODELNAME, 'tmp'))
 elif VERIF_CASE == 'snowfall':
     if STEP == 'stats':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
@@ -138,6 +143,14 @@ if STEP == 'prep':
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'data', 
             NEST+'.'+vdate_dt.strftime('%Y%m%d')
+        ))
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'data', 
+            OBSNAME+'.'+vdate_dt.strftime('%Y%m%d')
+        ))
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'data', 
+            OBSNAME+'.'+(vdate_dt-td(hours=1)).strftime('%Y%m%d')
         ))
         COMOUT_dir_list.append(os.path.join(
             COMOUT, 
@@ -252,7 +265,19 @@ elif STEP == 'stats':
             working_dir_list.append(os.path.join(
                 working_output_base_dir, NEST, 'pb2nc', 'tmp'
             ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, NEST, 'ascii2nc', 'confs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, NEST, 'ascii2nc', 'logs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, NEST, 'ascii2nc', 'tmp'
+            ))
+            '''
             if NEST in ['spc_otlk', 'firewx']:
+            '''
+            if NEST in ['firewx']:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'genvxmask', 'confs'
                 ))
@@ -267,6 +292,19 @@ elif STEP == 'stats':
                     NEST+'.'+vdate_dt.strftime('%Y%m%d')
                 ))
         if job_type == 'generate':
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'regrid_data_plane', 'confs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'regrid_data_plane', 'logs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'regrid_data_plane', 'tmp'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'regrid_data_plane',
+                MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
+            ))
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'point_stat', 'confs'
             ))
