@@ -46,7 +46,6 @@ source $HOMEevs/versions/run.ver
 source /usr/share/lmod/lmod/init/sh
 module reset
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
-export MET_bin_exec="bin"
 export MET_PLUS_PATH="/apps/ops/para/libs/intel/${intel_ver}/metplus/${metplus_ver}"
 export MET_PATH="/apps/ops/para/libs/intel/${intel_ver}/met/${met_ver}"
 export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
