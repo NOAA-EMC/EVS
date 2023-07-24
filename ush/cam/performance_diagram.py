@@ -4,13 +4,13 @@
 # Name:          performance_diagram.py
 # Contact(s):    Marcel Caron
 # Developed:     Nov. 22, 2021 by Marcel Caron 
-# Last Modified: Jun. 3, 2022 by Marcel Caron             
-# Title:         Line plot of verification metric as a function of 
-#                forecast threshold
-# Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
-#                varying by forecast threshold, which represents the x-axis. 
-#                Line colors and styles are unique for each model, and several
-#                models can be plotted at once.
+# Last Modified: Mar. 15, 2023 by Marcel Caron             
+# Title:         Performance Diagram: plot displaying multiple skill scores
+# Abstract:      Plots METplus output as a line plot, expressed as prob. 
+#                of detection as a function of success ratio but displaying 
+#                multiple skill scores per model (distinguished by line color 
+#                and linestyle) and per forecast threshold (distinguished by 
+#                marker shape).  
 #
 ###############################################################################
 
@@ -101,6 +101,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     fig, ax = plotter.get_plots(num)  
     variable_translator = reference.variable_translator
     domain_translator = reference.domain_translator
+    thresh_categ_translator = reference.thresh_categ_translator
     model_settings = model_colors.model_settings
 
     # filter by level
@@ -111,7 +112,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         plt.close(num)
         logger.info("========================================")
         return None
-    if str(line_type).upper() == 'CTC' and np.array(thresh).size == 0:
+    if str(line_type).upper() in ['MCTC', 'CTC'] and np.array(thresh).size == 0:
         logger.warning(f"Empty list of thresholds. Continuing onto next"
                        + f" plot...")
         logger.info("========================================")
@@ -230,35 +231,63 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         )
     except ValueError as e:
         print(f"ERROR: {e}")
-        #print(f"df['FCST_THRESH']:{df['FCST_THRESH']}")
-        #print(f"In list form: {[t for t in df['FCST_THRESH']]}")
         sys.exit(1)
     df['FCST_THRESH_SYMBOL'] = df_thresh_symbol
-    df['FCST_THRESH_VALUE'] = [str(item)[2:] for item in df_thresh_letter]
-    requested_thresh_value = [
-        str(item)[2:] for item in requested_thresh_letter
-    ]
-    df = df[df['FCST_THRESH_SYMBOL'].isin(requested_thresh_symbol)]
-    thresholds_removed = (
-        np.array(requested_thresh_symbol)[
-            ~np.isin(requested_thresh_symbol, df['FCST_THRESH_SYMBOL'])
+    if str(line_type).upper() == 'MCTC':
+        df['FCST_THRESH_VALUES'] = [str(item)[2:] for item in df_thresh_letter]
+        requested_thresh_value = [
+            str(item)[2:] for item in requested_thresh_letter
         ]
-    )
-    requested_thresh_symbol = (
-        np.array(requested_thresh_symbol)[
-            np.isin(requested_thresh_symbol, df['FCST_THRESH_SYMBOL'])
+        df = plot_util.convert_MCTC_to_CTC(df, 'FCST_THRESH_VALUES', 'FCST_THRESH_VALUE')
+        df = df[df['FCST_THRESH_VALUE'].isin(requested_thresh_value)]
+        thresholds_removed = (
+            np.array(requested_thresh_symbol)[
+                ~np.isin(requested_thresh_symbol, opt+df['FCST_THRESH_VALUE'])
+            ]
+        )
+        requested_thresh_value = (
+            np.array(requested_thresh_value)[
+                np.isin(requested_thresh_symbol, opt+df['FCST_THRESH_SYMBOL'])
+            ]
+        )
+        if thresholds_removed.size > 0:
+            thresholds_removed_string = ', '.join(
+                [str(t) for t in thresholds_removed]
+            )
+            if len(thresholds_removed) > 1:
+                warning_string = (f"{thresholds_removed_string} thresholds were"
+                                  + f" not found and will not be plotted.")
+            else:
+                warning_string = (f"{thresholds_removed_string} threshold was"
+                                  + f" not found and will not be plotted.")
+            logger.warning(warning_string)
+            logger.warning("Continuing ...")
+    else:
+        df['FCST_THRESH_VALUE'] = [str(item)[2:] for item in df_thresh_letter]
+        requested_thresh_value = [
+            str(item)[2:] for item in requested_thresh_letter
         ]
-    )
-    if thresholds_removed.size > 0:
-        thresholds_removed_string = ', '.join(thresholds_removed)
-        if len(thresholds_removed) > 1:
-            warning_string = (f"{thresholds_removed_string} thresholds were"
-                              + f" not found and will not be plotted.")
-        else:
-            warning_string = (f"{thresholds_removed_string} threshold was"
-                              + f" not found and will not be plotted.")
-        logger.warning(warning_string)
-        logger.warning("Continuing ...")
+        df = df[df['FCST_THRESH_SYMBOL'].isin(requested_thresh_symbol)]
+        thresholds_removed = (
+            np.array(requested_thresh_symbol)[
+                ~np.isin(requested_thresh_symbol, df['FCST_THRESH_SYMBOL'])
+            ]
+        )
+        requested_thresh_symbol = (
+            np.array(requested_thresh_symbol)[
+                np.isin(requested_thresh_symbol, df['FCST_THRESH_SYMBOL'])
+            ]
+        )
+        if thresholds_removed.size > 0:
+            thresholds_removed_string = ', '.join(thresholds_removed)
+            if len(thresholds_removed) > 1:
+                warning_string = (f"{thresholds_removed_string} thresholds were"
+                                  + f" not found and will not be plotted.")
+            else:
+                warning_string = (f"{thresholds_removed_string} threshold was"
+                                  + f" not found and will not be plotted.")
+            logger.warning(warning_string)
+            logger.warning("Continuing ...")
 
     # Remove from model_list the models that don't exist in the dataframe
     cols_to_keep = [
@@ -653,11 +682,11 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         plt.close(num)
         logger.info("========================================")
         return None
+    var_long_name_key = df['FCST_VAR'].tolist()[0]
     units = df['FCST_UNITS'].tolist()[0]
     unit_convert = False
     if units in reference.unit_conversions:
         unit_convert = True
-        var_long_name_key = df['FCST_VAR'].tolist()[0]
         if str(var_long_name_key).upper() == 'HGT':
             if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
                 if units in ['m', 'gpm']:
@@ -694,6 +723,21 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             units = reference.unit_conversions[units]['convert_to']
     if units == '-':
         units = ''
+    thresh_categ = False
+    if str(var_long_name_key).upper() in thresh_categ_translator:
+        thresh_categ = True
+        var_thresh_categ_translator = thresh_categ_translator[
+            str(var_long_name_key).upper()
+        ]
+        new_thresh_labels = []
+        for lab in thresh_labels:
+            if str(int(float(lab))) in var_thresh_categ_translator:
+                new_thresh_labels.append(
+                    var_thresh_categ_translator[str(int(float(lab)))]
+                )
+            else:
+                new_thresh_labels.append(str(int(float(lab))))
+
     f = lambda m,c,ls,lw,ms,mec: plt.plot(
         [], [], marker=m, mec=mec, mew=2., c=c, ls=ls, lw=lw, ms=ms)[0]
     handles = [
@@ -702,10 +746,13 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             'black'
         ) for i, item in enumerate(thresh_labels)
     ]
-    labels = [
-        f'{opt}{thresh_label} {units}'
-        for thresh_label in thresh_labels
-    ]
+    if thresh_categ:
+        labels = new_thresh_labels
+    else:
+        labels = [
+            f'{opt}{thresh_label} {units}'
+            for thresh_label in thresh_labels
+        ]
     
     if sample_equalization:
         counts = pivot_counts.mean(axis=1, skipna=True).fillna('')
@@ -758,12 +805,13 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                                       + f' {y_mean:.2f}, {mosaic_mean:.2f})')
         else:
             metric_mean_fmt_string = f'{model_plot_name}'
-        plt.plot(
-            x_vals, y_vals, marker='None', c=mod_setting_dicts[m]['color'], 
-            mew=2., mec='white', figure=fig, ms=0, 
-            ls=mod_setting_dicts[m]['linestyle'], 
-            lw=mod_setting_dicts[m]['linewidth']
-        )
+        if not thresh_categ:
+            plt.plot(
+                x_vals, y_vals, marker='None', c=mod_setting_dicts[m]['color'], 
+                mew=2., mec='white', figure=fig, ms=0, 
+                ls=mod_setting_dicts[m]['linestyle'], 
+                lw=mod_setting_dicts[m]['linewidth']
+            )
         for i, item in enumerate(x_vals):
             plt.scatter(
                 x_vals[i], y_vals[i], marker=thresh_markers[i][0], 
@@ -944,7 +992,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         else:
             level_string = f'{level} '
             level_savename = f'{level}'
-    elif str(verif_type).lower() in ['ccpa','mrms']:
+    elif str(verif_type).lower() in ['ccpa','mrms','ptype']:
         if 'A' in str(level):
             level_num = level.replace('A', '')
             level_string = f'{level_num}-hour '
@@ -1269,15 +1317,23 @@ def main():
             logger.warning(e)
             logger.warning("Continuing ...")
         plot_group = var_specs['plot_group']
-        for l, fcst_level in enumerate(FCST_LEVELS):
-            if len(FCST_LEVELS) != len(OBS_LEVELS):
+        if FCST_LEVELS in presets.level_presets:
+            fcst_levels = re.split(r',(?![0*])', presets.level_presets[FCST_LEVELS].replace(' ',''))
+        else:
+            fcst_levels = re.split(r',(?![0*])', FCST_LEVELS.replace(' ',''))
+        if OBS_LEVELS in presets.level_presets:
+            obs_levels = re.split(r',(?![0*])', presets.level_presets[OBS_LEVELS].replace(' ',''))
+        else:
+            obs_levels = re.split(r',(?![0*])', OBS_LEVELS.replace(' ',''))
+        for l, fcst_level in enumerate(fcst_levels):
+            if len(fcst_levels) != len(obs_levels):
                 e = ("FCST_LEVELS and OBS_LEVELS must be lists of the same"
                      + f" size")
                 logger.error(e)
                 logger.error("Quitting ...")
                 raise ValueError(e+"\nQuitting ...")
-            if (FCST_LEVELS[l] not in var_specs['fcst_var_levels'] 
-                    or OBS_LEVELS[l] not in var_specs['obs_var_levels']):
+            if (fcst_levels[l] not in var_specs['fcst_var_levels'] 
+                    or obs_levels[l] not in var_specs['obs_var_levels']):
                 e = (f"The requested variable/level combination is not valid:"
                      + f" {requested_var}/{fcst_level}")
                 logger.warning(e)
@@ -1378,8 +1434,8 @@ if __name__ == "__main__":
     FLEADS = check_FCST_LEAD(os.environ['FCST_LEAD']).replace(' ','').split(',')
 
     # list of levels
-    FCST_LEVELS = re.split(r',(?![0*])', check_FCST_LEVEL(os.environ['FCST_LEVEL']).replace(' ',''))
-    OBS_LEVELS = re.split(r',(?![0*])', check_OBS_LEVEL(os.environ['OBS_LEVEL']).replace(' ',''))
+    FCST_LEVELS = check_FCST_LEVEL(os.environ['FCST_LEVEL'])
+    OBS_LEVELS = check_OBS_LEVEL(os.environ['OBS_LEVEL'])
 
     FCST_THRESH = check_FCST_THRESH(os.environ['FCST_THRESH'], LINE_TYPE)
     OBS_THRESH = check_OBS_THRESH(os.environ['OBS_THRESH'], FCST_THRESH, LINE_TYPE).replace(' ','').split(',')
@@ -1444,8 +1500,6 @@ if __name__ == "__main__":
     FLEADS = [int(flead) for flead in FLEADS]
     INTERP_PNTS = [str(pts) for pts in INTERP_PNTS]
     VERIF_CASETYPE = str(VERIF_CASE).lower() + '_' + str(VERIF_TYPE).lower()
-    FCST_LEVELS = [str(level) for level in FCST_LEVELS]
-    OBS_LEVELS = [str(level) for level in OBS_LEVELS]
     CONFIDENCE_INTERVALS = str(CONFIDENCE_INTERVALS).lower() in [
         'true', '1', 't', 'y', 'yes'
     ]
