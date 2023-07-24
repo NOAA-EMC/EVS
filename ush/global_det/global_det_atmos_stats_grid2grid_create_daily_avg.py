@@ -18,6 +18,8 @@ print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
 DATA = os.environ['DATA']
+COMOUT = os.environ['COMOUT']
+SENDCOM = os.environ['SENDCOM']
 RUN = os.environ['RUN']
 NET = os.environ['NET']
 VERIF_CASE = os.environ['VERIF_CASE']
@@ -38,7 +40,7 @@ fhr_inc = '12'
 # Process run time agruments
 if len(sys.argv) != 4:
     print("ERROR: Not given correct number of run time agruments..."
-          +os.path.basename(__file__)+" VARNAME_VARLEVEL DATAROOT_FILE_FORMAT "
+          +os.path.basename(__file__)+" VARNAME_VARLEVEL DATA_FILE_FORMAT "
           +"COMIN_FILE_FORMART")
     sys.exit(1)
 else:
@@ -50,12 +52,8 @@ else:
     else:
         var_level = sys.argv[1]
         print("Using var_level = "+var_level)
-    DATAROOT_file_format = sys.argv[2]
+    DATA_file_format = sys.argv[2]
     COMIN_file_format = sys.argv[3]
-
-# Set input and output directories
-output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
-                          RUN+'.'+DATE, MODEL, VERIF_CASE)
 
 # Create daily average files
 print("\nCreating daily average files")
@@ -86,7 +84,8 @@ while valid_hr <= int(valid_hr_end):
         daily_avg_day_init = (daily_avg_valid_end
                               - datetime.timedelta(days=daily_avg_day))
         daily_avg_day_fhr = daily_avg_day_fhr_start
-        output_file = os.path.join(output_dir, 'daily_avg_'
+        output_file = os.path.join(DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
+                                   RUN+'.'+DATE, MODEL, VERIF_CASE,'daily_avg_'
                                    +VERIF_TYPE+'_'+job_name+'_init'
                                    +daily_avg_day_init.strftime('%Y%m%d%H')
                                    +'_valid'
@@ -103,8 +102,8 @@ while valid_hr <= int(valid_hr_end):
                 daily_avg_day_init
                 + datetime.timedelta(hours=daily_avg_day_fhr)
             )
-            daily_avg_day_fhr_DATAROOT_input_file = gda_util.format_filler(
-                    DATAROOT_file_format, daily_avg_day_fhr_valid,
+            daily_avg_day_fhr_DATA_input_file = gda_util.format_filler(
+                    DATA_file_format, daily_avg_day_fhr_valid,
                     daily_avg_day_init,
                     str(daily_avg_day_fhr), {}
             )
@@ -118,7 +117,7 @@ while valid_hr <= int(valid_hr_end):
                     daily_avg_day_fhr_COMIN_input_file)
             else:
                 daily_avg_day_fhr_input_file = (
-                    daily_avg_day_fhr_DATAROOT_input_file
+                    daily_avg_day_fhr_DATA_input_file
                 )
             if os.path.exists(daily_avg_day_fhr_input_file):
                 print("Input file for forecast hour "+str(daily_avg_day_fhr)
@@ -150,7 +149,7 @@ while valid_hr <= int(valid_hr_end):
                 print("No input file for forecast hour "+str(daily_avg_day_fhr)
                       +', valid '+str(daily_avg_day_fhr_valid)
                       +', init '+str(daily_avg_day_init)+" "
-                      +daily_avg_day_fhr_DATAROOT_input_file+" or "
+                      +daily_avg_day_fhr_DATA_input_file+" or "
                       +daily_avg_day_fhr_COMIN_input_file)
             if job_name == 'DailyAvg_GeoHeightAnom':
                 daily_avg_day_fhr+=12
