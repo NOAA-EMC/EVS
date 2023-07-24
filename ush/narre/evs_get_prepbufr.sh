@@ -26,7 +26,6 @@ if [ $modnam = prepbufr ] ; then
   done
  else 
    export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
-   export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
    echo "Warning:  No Prepbufr data available for ${VDATE}" > mailmsg
    echo Missing file is $COMINobs/rap.${VDATE}/rap.t??z.prepbufr.tm00  >> mailmsg
    echo "Job ID: $jobid" >> mailmsg

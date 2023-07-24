@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 '''
-Program Name: check_subseasonal_config_prep.py
+Program Name: check_subseasonal_config_cfs_prep.py
 Contact(s): Shannon Shields
 Abstract: This script is run by all scripts in scripts/.
           This does a check on the user's settings in
@@ -21,7 +21,7 @@ RUN = os.environ['RUN']
 env_vars_dict = {
     'shared': ['model_list',
                'model_dir_list', 'model_prep_dir_list',
-               'gefs_file_type', 'cfs_file_type',
+               'cfs_file_type',
                'model_file_format_list', 'OUTPUTROOT',
                'start_date', 'end_date', 'make_met_data_by',
                'SENDARCH', 'KEEPDATA',
