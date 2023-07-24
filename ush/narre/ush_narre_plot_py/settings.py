@@ -2636,7 +2636,7 @@ class Reference():
                                         + ' faratio, sratio'),
                     'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
-                        'CONUS', 'G130', 'G214', 'G221', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
+                        'CONUS', 'G130', 'G242', 'G214', 'G221', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
                         'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
                         'LMV', 'GMC', 'APL', 'NAK', 'SAK',
                         'G003', 'NHEM', 'SHEM', 'TROPICS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South', 'Alaska',
