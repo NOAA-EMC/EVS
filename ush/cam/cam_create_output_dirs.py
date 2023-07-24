@@ -51,9 +51,11 @@ if VERIF_CASE == "precip":
         OBSNAME = os.environ['OBSNAME']
     elif STEP == 'plots':
         all_eval_periods = cutil.get_all_eval_periods(graphics_pcp)
+        COMOUTplots = os.environ['COMOUTplots']
 elif VERIF_CASE == "grid2obs":
     if STEP == 'prep':
         NEST = os.environ['NEST']
+        OBSNAME = os.environ['OBSNAME']
     if STEP == 'stats':
         NEST = os.environ['NEST']
         FHR_END_FULL = os.environ['FHR_END_FULL']
@@ -64,6 +66,7 @@ elif VERIF_CASE == "grid2obs":
         OBSNAME = os.environ['OBSNAME']
     elif STEP == 'plots':
         all_eval_periods = cutil.get_all_eval_periods(graphics_g2o)
+        COMOUTplots = os.environ['COMOUTplots']
 if STEP == 'stats':
     job_type = os.environ['job_type']
 
@@ -81,6 +84,10 @@ if VERIF_CASE == 'precip':
 elif VERIF_CASE == 'grid2obs':
     if STEP == 'stats':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
+        data_dir_list.append(os.path.join(
+            data_base_dir, MODELNAME, 'merged_ptype'
+        ))
+        data_dir_list.append(os.path.join(data_base_dir, MODELNAME, 'tmp'))
 
 # Create data directories and subdirectories
 for data_dir in data_dir_list:
@@ -117,6 +124,14 @@ if STEP == 'prep':
         working_dir_list.append(os.path.join(
             working_output_base_dir, 'data', 
             NEST+'.'+vdate_dt.strftime('%Y%m%d')
+        ))
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'data', 
+            OBSNAME+'.'+vdate_dt.strftime('%Y%m%d')
+        ))
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'data', 
+            OBSNAME+'.'+(vdate_dt-td(hours=1)).strftime('%Y%m%d')
         ))
         COMOUT_dir_list.append(os.path.join(
             COMOUT, 
@@ -231,7 +246,19 @@ elif STEP == 'stats':
             working_dir_list.append(os.path.join(
                 working_output_base_dir, NEST, 'pb2nc', 'tmp'
             ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, NEST, 'ascii2nc', 'confs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, NEST, 'ascii2nc', 'logs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, NEST, 'ascii2nc', 'tmp'
+            ))
+            '''
             if NEST in ['spc_otlk', 'firewx']:
+            '''
+            if NEST in ['firewx']:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'genvxmask', 'confs'
                 ))
@@ -246,6 +273,19 @@ elif STEP == 'stats':
                     NEST+'.'+vdate_dt.strftime('%Y%m%d')
                 ))
         if job_type == 'generate':
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'regrid_data_plane', 'confs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'regrid_data_plane', 'logs'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'regrid_data_plane', 'tmp'
+            ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'regrid_data_plane',
+                MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
+            ))
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'point_stat', 'confs'
             ))
@@ -308,6 +348,9 @@ elif STEP == 'plots':
         COMOUT_dir_list.append(os.path.join(
             COMOUT, 
         ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUTplots
+        ))
         for plot_group in [
                 'aq', 'aviation', 'cape', 'ceil_vis', 'precip', 
                 'radar', 'rtofs_sfc', 'sfc_upper'
@@ -333,6 +376,9 @@ elif STEP == 'plots':
         ))
         COMOUT_dir_list.append(os.path.join(
             COMOUT, 
+        ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUTplots
         ))
         for plot_group in ['precip', 'radar', 'rtofs_sfc', 'sfc_upper']:
             for eval_period in all_eval_periods:

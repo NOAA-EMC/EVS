@@ -29,6 +29,7 @@ class Toggle():
             'plot_logo_right': True,
             'zoom_logo_left': 1.0, 
             'zoom_logo_right': 1.0,
+            'delete_intermed_data': True # whether of not to delete DataFrame rows if, for any model, rows include NaN (currently only used in lead_average.py)
         }
 
 class Templates():
@@ -78,7 +79,15 @@ class Paths():
 
 class Presets():
     def __init__(self):
-        
+
+        self.level_presets = {
+            'all': 'P1000,P925,P850,P700,P500,P400,P300,P200,P150,P100,P50',
+            'ltrop': 'P1000,P950,P900,P850,P800,P750,P700,P650,P600,P550,P500',
+            'strat': 'P100,P75,P50,P30,P20,P10',
+            'trop': 'P1000,P900,P850,P700,P600,P500,P400,P300,P200,P100',
+            'utrop': 'P500,P450,P400,P350,P300,P250,P200,P150,P100'
+        }
+
         '''
         Evaluation periods that are requested regularly can be defined here 
         and then requested as the 'EVAL_PERIOD' variable in the plotting 
@@ -712,6 +721,22 @@ class ModelSpecs():
 class Reference():
     def __init__(self):
         '''
+        Plotting jobs for the variables in this list will attempt to replace
+        threshold labels with category labels according to the sub-dictionary,
+        if the key of the sub-dictionary matches the value of 'FCST_VAR_NAME'
+        in the input stat file(s).  Currently only functional for mctc 
+        performance diagrams.
+        '''
+        self.thresh_categ_translator = {
+            'PTYPE': {
+                '1': 'rain',
+                '2': 'snow',
+                '3': 'freezing rain',
+                '4': 'ice pellets',
+            }
+        }
+
+        '''
         The plotting scripts will convert MET units if they are listed below.
         The name of the unit must match one of the keys in the 
         unit_conversions dictionary.  The name of the new unit will become the
@@ -806,6 +831,7 @@ class Reference():
                                     'APCP_24': ('Accumulated'
                                                 + ' Precipitation'),
                                     'PWAT': 'Precipitable Water',
+                                    'PTYPE': 'Precipitation Type',
                                     'CWAT': 'Cloud Water',
                                     'TCDC': 'Cloud Area Fraction',
                                     'HGTCLDCEIL': 'Cloud Ceiling Height',
@@ -2491,6 +2517,28 @@ class Reference():
                                  'obs_var_thresholds': '',
                                  'obs_var_options': '',
                                  'plot_group':'sfc_upper'},
+                    }
+                },
+            },
+            'grid2obs_ptype': {
+                'MCTC': {
+                    'plot_stats_list': ('csi, ets, fbias, pod,'
+                                        + ' faratio, sratio'),
+                    'interp': 'BILIN',
+                    'vx_mask_list' : [
+                        'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
+                        'Alaska',
+                    ],
+                    'var_dict': {
+                        'PTYPE': {'fcst_var_names': ['PTYPE'],
+                                 'fcst_var_levels': ['Z0'],
+                                 'fcst_var_thresholds': '>=1.0,>=2.0,>=3.0,>=4.0',
+                                 'fcst_var_options': '',
+                                 'obs_var_names': ['PTYPE','PRWE'],
+                                 'obs_var_levels': ['Z0'],
+                                 'obs_var_thresholds': '>=1.0,>=2.0,>=3.0,>=4.0',
+                                 'obs_var_options': '',
+                                 'plot_group':'precip'},
                     }
                 },
             },
