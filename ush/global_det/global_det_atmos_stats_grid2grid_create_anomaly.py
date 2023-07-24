@@ -91,11 +91,11 @@ while valid_date_dt <= ENDDATE_dt:
                     +job_name+'_init'+init_date_dt.strftime('%Y%m%d%H')+'_'
                     +'fhr'+str(fhr).zfill(3)+'.nc'
                 )
-                if gda_util.check_file_exists_size(output_COMOUT_file):
+                if os.path.exists(output_COMOUT_file):
                     gda_util.copy_file(output_COMOUT_file, output_DATA_file)
                     make_anomaly_output_file = False
                 else:
-                    if not gda_util.check_file_exists_size(output_DATA_file):
+                    if not os.path.exists(output_DATA_file):
                         make_anomaly_output_file = True
                     else:
                         make_anomaly_output_file = False
