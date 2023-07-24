@@ -62,6 +62,9 @@ elif [ $VERIF_CASE = precip ] ; then
 elif [ $VERIF_CASE = radar ] ; then
     export VDATE=${VDATE:-$PDYm1}
 
+elif [ $VERIF_CASE = snowfall ] ; then
+    export VDATE=${VDATE:-$PDYm2}
+
 elif [ $VERIF_CASE = severe ] ; then
    export VDATE=${VDATE:-$PDYm7}
 
@@ -149,17 +152,7 @@ if [ -e "$pgmout" ]; then
    cat $pgmout
 fi
 
-if [ "$COMPONENT" = "cam" ] ; then
-   if [ "$err" -ne "0" ]; then
-      python $USHevs/${COMPONENT}/${COMPONENT}_${STEP}_mail_message.py
-      wait
-      msg="JOB $job HAS COMPLETED WITH SOME ERRORS."
-   else
-      msg="JOB $job HAS COMPLETED NORMALLY."
-   fi
-else
-   msg="JOB $job HAS COMPLETED NORMALLY."
-fi
+msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$msg"
 
 if [ "$KEEPDATA" != "YES" ]; then

@@ -31,7 +31,7 @@ export OBS_ACC="01"
 
 # Additional Verification Settings
 if [ "$ACC" = "01" ]; then
-    export FHR_GROUP_LIST="SHORT, FULL"
+    export FHR_GROUP_LIST="SHORT FULL"
     export MODEL_ACC="01"
     export BUCKET_INTERVAL=$MODEL_ACC
     export FCST_LEV="A1"
@@ -48,7 +48,7 @@ if [ "$ACC" = "01" ]; then
     export MODEL_PCP_COMBINE_METHOD="ADD"
     export MODEL_PCP_COMBINE_COMMAND=""
 elif [ "$ACC" = "03" ]; then
-    export FHR_GROUP_LIST="SHORT, FULL"
+    export FHR_GROUP_LIST="SHORT FULL"
     export MODEL_ACC="01"
     export BUCKET_INTERVAL=$MODEL_ACC
     export FCST_LEV="A3"
