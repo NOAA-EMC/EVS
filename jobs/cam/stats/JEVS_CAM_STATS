@@ -98,6 +98,7 @@ export COMINhref=${COMINhref:-$(compath.py  href/$href_ver)}
 export COMINhrrr=${COMINhrrr:-$(compath.py ${envir}/com/hrrr/${hrrr_ver})}
 export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
 export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
+export COMINmping=${COMINmping:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
 export COMINprepbufr=${COMINprepbufr:-$(compath.py  obsproc/${obsproc_ver})}
 export COMINsnow=$DCOMROOT
 export COMINspcotlk=${COMINspcotlk:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
@@ -130,6 +131,8 @@ export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 mkdir -p $COMOUTfinal $COMOUTsmall
 
+export maillist=${maillist:-'geoffrey.manikin@noaa.gov'}
+
 
 ####################################
 # Execute the script 
@@ -146,7 +149,17 @@ if [ -e "$pgmout" ]; then
    cat $pgmout
 fi
 
-msg="JOB $job HAS COMPLETED NORMALLY."
+if [ "$COMPONENT" = "cam" ] ; then
+   if [ "$err" -ne "0" ]; then
+      python $USHevs/${COMPONENT}/${COMPONENT}_${STEP}_mail_message.py
+      wait
+      msg="JOB $job HAS COMPLETED WITH SOME ERRORS."
+   else
+      msg="JOB $job HAS COMPLETED NORMALLY."
+   fi
+else
+   msg="JOB $job HAS COMPLETED NORMALLY."
+fi
 postmsg "$msg"
 
 if [ "$KEEPDATA" != "YES" ]; then
