@@ -667,6 +667,10 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                 unit_convert = False
             elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
                 unit_convert = False
+        if str(var_long_name_key).upper() == 'HGTCLDCEIL':
+            if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
+               if units in ['m', 'gpm']:
+                   units = 'gpm'
         if unit_convert:
             thresh_labels = [float(tlab) for tlab in thresh_labels]
             thresh_labels = reference.unit_conversions[units]['formula'](
