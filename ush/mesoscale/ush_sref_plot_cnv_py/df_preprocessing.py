@@ -133,7 +133,7 @@ def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range,
             ))
             df_tmp = pd.read_csv(
                 fpath, delim_whitespace=True, header=None, skiprows=1,
-                names=df_colnames, dtype=np.str
+                names=df_colnames, dtype=str
             )
             i = -1*len(df_line_type_colnames)
             for col_name in df_colnames[i:]:
