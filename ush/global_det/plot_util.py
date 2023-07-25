@@ -549,6 +549,8 @@ def get_stat_plot_name(logger, stat):
       stat_plot_name = 'Root Mean Square Error from Pattern Variation'
    elif stat == 'pcor':
       stat_plot_name = 'Pattern Correlation'
+   elif stat == 'corr':
+      stat_plot_name = 'Correlation Coefficient'
    elif stat == 'acc':
       stat_plot_name = 'Anomaly Correlation Coefficient'
    elif stat == 'fbar':
@@ -1029,7 +1031,7 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
             covar = fobar_est_samp - fbar_est_samp*obar_est_samp
             R = covar/np.sqrt(var_f*var_o)
             stat_values = np.sqrt(var_f + var_o - 2*np.sqrt(var_f*var_o)*R)
-   elif stat == 'pcor':
+   elif stat == 'pcor' or stat == 'corr':
       if str(bs_method).upper() in ['MATCHED_PAIRS','FORECASTS']:
          if line_type == 'SL1L2':
             #var_f_mean = ffbar_est_mean - fbar_est_mean*obar_est_mean
@@ -1387,7 +1389,7 @@ def calculate_stat(logger, model_data, stat):
          covar = uvfobar - ufbar*uobar - vfbar*vobar
          R = covar/np.sqrt(var_f*var_o)
          stat_values = np.sqrt(var_f + var_o - 2*np.sqrt(var_f*var_o)*R)
-   elif stat == 'pcor':
+   elif stat == 'pcor' or stat == 'corr':
       if line_type == 'SL1L2':
          #var_f = ffbar - fbar*obar
          var_f = ffbar - fbar*fbar
