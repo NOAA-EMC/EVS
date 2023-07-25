@@ -1235,9 +1235,9 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     if write_job_cmds:
                         for cmd in verif_type_job_commands_list:
                             job.write(cmd+'\n')
-                        for truth_output_file_tuple \
-                                in truth_copy_output_DATA2COMOUT_list:
-                            if job_env_dict['SENDCOM']:
+                        if job_env_dict['SENDCOM'] == 'YES':
+                            for truth_output_file_tuple \
+                                    in truth_copy_output_DATA2COMOUT_list:
                                 job.write(f"cp -v {truth_output_file_tuple[0]} "
                                           +f"{truth_output_file_tuple[1]}\n")
                     job.close()
