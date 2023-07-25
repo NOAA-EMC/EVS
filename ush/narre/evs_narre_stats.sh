@@ -102,7 +102,7 @@ for prod in mean  ; do
        echo "cp \$output_base/stat/*.stat $COMOUTsmall" >> run_narre_${model}.${dom}.${range}.sh
 
        chmod +x run_narre_${model}.${dom}.${range}.sh
-       echo "run_narre_${model}.${dom}.${range}.sh" >> run_all_narre_poe.sh
+       echo "${DATA}/run_narre_${model}.${dom}.${range}.sh" >> run_all_narre_poe.sh
 
    done #end of range loop
 
@@ -112,9 +112,9 @@ done #end of prod loop
 
 chmod 775 run_all_narre_poe.sh
 if [ $run_mpi = yes ] ; then
-  mpiexec  -n 8 -ppn 8 --cpu-bind core --depth=2 cfp  run_all_narre_poe.sh
+  mpiexec  -n 8 -ppn 8 --cpu-bind core --depth=2 cfp  ${DATA}/run_all_narre_poe.sh
 else
-   run_all_narre_poe.sh
+   ${DATA}/run_all_narre_poe.sh
 fi
 
 if [ $gather = yes ] ; then

@@ -146,7 +146,7 @@ if STEP.upper() == 'STATS':
         '0', '1', '2', '3', '4', '5'
     ]
     valid_config_var_values_dict['LOG_MET_OUTPUT_TO_METPLUS'] = ['yes', 'no']
-    valid_config_var_values_dict['NEST'] = ['ak', 'conus', 'subreg', 'spc_otlk', 'firewx', 'hi', 'pr', 'gu','namer','conusc','akc']
+    valid_config_var_values_dict['NEST'] = ['ak', 'conus', 'subreg', 'spc_otlk', 'firewx', 'hi', 'pr', 'gu','namer','conusc','akc','conusp']
     valid_config_var_values_dict['BOOL_NBRHD'] = ['True', 'False']
     valid_config_var_values_dict['OUTPUT_FLAG_NBRHD'] = ['NONE', 'STAT', 'BOTH']
     valid_config_var_values_dict['OUTPUT_FLAG_CATEG'] = ['NONE', 'STAT', 'BOTH']

@@ -128,7 +128,7 @@ def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range,
         try:
             df_colnames = plot_util.get_stat_file_base_columns(met_version)
             df_line_type_colnames = plot_util.get_stat_file_line_type_columns(
-                logger, met_version, str(line_type).upper()
+                logger, met_version, str(line_type).upper(), df_colnames, fpath
             )
             df_colnames = np.concatenate((
                 df_colnames, df_line_type_colnames
