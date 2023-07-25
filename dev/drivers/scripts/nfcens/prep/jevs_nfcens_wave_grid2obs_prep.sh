@@ -52,8 +52,9 @@ export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export OUTPUTROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 
-export job=${PBS_JOBNAME:-jevs_nfcens_g2o_prep}
+export job=${PBS_JOBNAME:-jevs_nfcens_grid2obs_prep}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
