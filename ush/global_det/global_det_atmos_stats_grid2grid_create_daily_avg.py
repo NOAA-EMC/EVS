@@ -84,15 +84,20 @@ while valid_hr <= int(valid_hr_end):
         daily_avg_day_init = (daily_avg_valid_end
                               - datetime.timedelta(days=daily_avg_day))
         daily_avg_day_fhr = daily_avg_day_fhr_start
-        output_file = os.path.join(DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
-                                   RUN+'.'+DATE, MODEL, VERIF_CASE,'daily_avg_'
-                                   +VERIF_TYPE+'_'+job_name+'_init'
-                                   +daily_avg_day_init.strftime('%Y%m%d%H')
-                                   +'_valid'
-                                   +daily_avg_valid_start\
-                                   .strftime('%Y%m%d%H')+'to'
-                                   +daily_avg_valid_end\
-                                   .strftime('%Y%m%d%H')+'.nc')
+        output_DATA_file = os.path.join(
+            DATA, VERIF_CASE+'_'+STEP, 'METplus_output', RUN+'.'+DATE, MODEL,
+            VERIF_CASE, 'daily_avg_'+VERIF_TYPE+'_'+job_name+'_init'
+            +daily_avg_day_init.strftime('%Y%m%d%H')+'_valid'
+            +daily_avg_valid_start.strftime('%Y%m%d%H')+'to'
+            +daily_avg_valid_end.strftime('%Y%m%d%H')+'.nc'
+        )
+        output_COMOUT_file = os.path.join(
+            COMOUT, RUN+'.'+DATE, MODEL,
+            VERIF_CASE, 'daily_avg_'+VERIF_TYPE+'_'+job_name+'_init'
+            +daily_avg_day_init.strftime('%Y%m%d%H')+'_valid'
+            +daily_avg_valid_start.strftime('%Y%m%d%H')+'to'
+            +daily_avg_valid_end.strftime('%Y%m%d%H')+'.nc'
+        )
         daily_avg_fcst_sum = 0
         daily_avg_fcst_file_list = []
         daily_avg_obs_sum = 0
@@ -170,20 +175,33 @@ while valid_hr <= int(valid_hr_end):
                 expected_nfiles = 5
             elif fhr_inc == '12':
                 expected_nfiles = 3
-        if len(daily_avg_fcst_file_list) == expected_nfiles \
-                and len(daily_avg_obs_file_list) == expected_nfiles:
-            if not os.path.exists(output_file):
-                make_daily_avg_output_file = True
-            else:
+        if os.path.exists(output_COMOUT_file):
+            if not os.path.exists(output_DATA_file):
+                gda_util.copy_file(output_COMOUT_file, output_DATA_file)
                 make_daily_avg_output_file = False
-                print(f"Output File exists: {output_file}")
         else:
-            print("WARNING: Cannot create daily average file "+output_file+" "
-                  +"; need "+str(expected_nfiles)+" input files")
-            make_daily_avg_output_file = False
+            if len(daily_avg_fcst_file_list) == expected_nfiles \
+                    and len(daily_avg_obs_file_list) == expected_nfiles:
+                if not os.path.exists(output_DATA_file):
+                    make_daily_avg_output_file = True
+                else:
+                    make_daily_avg_output_file = False
+                    print(f"DATA Output File exists: {output_DATA_file}")
+                    if SENDCOM == 'YES' \
+                            and gda_util.check_file_exists_size(
+                                output_DATA_file
+                            ):
+                        gda_util.copy_file(output_DATA_file,
+                                           output_COMOUT_file)
+            else:
+                print("WARNING: Cannot create daily average file "
+                      +output_DATA_file+"; need "+str(expected_nfiles)+" "
+                      +"input files")
+                make_daily_avg_output_file = False
         if make_daily_avg_output_file:
-            print("Output File: "+output_file)
-            output_file_data = netcdf.Dataset(output_file, 'w',
+            print(f"DATA Output File: {output_DATA_file}")
+            print(f"COMOUT Output File: {output_COMOUT_file}")
+            output_file_data = netcdf.Dataset(output_DATA_file, 'w',
                                               format='NETCDF3_CLASSIC')
             for attr in input_file_data.ncattrs():
                 if attr == 'FileOrigins':
@@ -287,6 +305,9 @@ while valid_hr <= int(valid_hr_end):
             else:
                 output_file_data.close()
             input_file_data.close()
+            if SENDCOM == 'YES' \
+                    and gda_util.check_file_exists_size(output_DATA_file):
+                gda_util.copy_file(output_DATA_file, output_COMOUT_file)
         if job_name == 'DailyAvg_GeoHeightAnom':
             daily_avg_day+=1
         else:
