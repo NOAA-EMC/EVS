@@ -93,7 +93,6 @@ else
 fi
 
 # Execute the Script
-#$SCRIPTSevs/$COMPONENT/$STEP/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
 
