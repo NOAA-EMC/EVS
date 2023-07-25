@@ -139,9 +139,15 @@ if job_type == 'generate':
                 OUTPUT_FLAG_CNT = (
                     var_defs[VAR_NAME][VERIF_TYPE]['output_types']['CNT']
                 )
-                #OUTPUT_FLAG_VCNT = (
-                #    var_defs[VAR_NAME][VERIF_TYPE]['output_types']['VCNT']
-                #)
+                OUTPUT_FLAG_VCNT = (
+                    var_defs[VAR_NAME][VERIF_TYPE]['output_types']['VCNT']
+                )
+                OUTPUT_FLAG_NBRCNT = (
+                    var_defs[VAR_NAME][VERIF_TYPE]['output_types']['NBRCNT']
+                )
+                OUTPUT_FLAG_MCTC = (
+                    var_defs[VAR_NAME][VERIF_TYPE]['output_types']['MCTC']
+                )
     if not plot_this_var:
         print(f"ERROR: VAR_NAME \"{VAR_NAME}\" is not valid for VERIF_TYPE "
               + f"\"{VERIF_TYPE}\" and MODEL \"{MODELNAME}\". Check "
@@ -268,7 +274,8 @@ elif job_type == 'generate':
     job_env_vars_dict['OUTPUT_FLAG_SL1L2'] = OUTPUT_FLAG_SL1L2
     job_env_vars_dict['OUTPUT_FLAG_VL1L2'] = OUTPUT_FLAG_VL1L2
     job_env_vars_dict['OUTPUT_FLAG_CNT'] = OUTPUT_FLAG_CNT
-    #job_env_vars_dict['OUTPUT_FLAG_VCNT'] = OUTPUT_FLAG_VCNT
+    job_env_vars_dict['OUTPUT_FLAG_VCNT'] = OUTPUT_FLAG_VCNT
+    job_env_vars_dict['OUTPUT_FLAG_MCTC'] = OUTPUT_FLAG_MCTC
     job_iterate_over_env_lists_dict['FHR_GROUP_LIST'] = {
         'list_items': re.split(r'[\s,]+', FHR_GROUP_LIST),
         'exports': ['FHR_END','FHR_INCR']
@@ -320,7 +327,14 @@ elif job_type == 'generate':
                 'bash_conditional_value': '"00"',
                 'bash_conditional_else_value': '"00"'
         }
-
+#---
+    if VAR_NAME == 'PTYPE' and NEST == 'conusp':
+        job_iterate_over_custom_lists_dict['FHR'] = {
+                'custom_list': '`seq ${FHR_START} ${FHR_INCR} ${FHR_END}`',
+                'export_value': '(printf "%02d" $FHR)',
+                'dependent_vars': {}
+        }
+#---
     job_dependent_vars['FHR_START'] = {
         'exec_value': '',
         'bash_value': (
@@ -356,11 +370,31 @@ elif STEP == 'stats':
                 + f'PointStat_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}_VAR2.conf'
             )
         else:
-            job_cmd_list_iterative.append(
-                f'{metplus_launcher} -c '
-                + f'{MET_PLUS_CONF}/'
-                + f'PointStat_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}.conf'
-            )
+            if NEST == 'conusp':
+                if VAR_NAME == 'PTYPE':
+                    job_cmd_list_iterative.append(
+                        f'{metplus_launcher} -c '
+                        + f'{MET_PLUS_CONF}/'
+                        + f'RegridDataPlane_fcst{COMPONENT.upper()}_PTYPE.conf'
+                    )
+                    job_cmd_list_iterative.append(
+                        f'python '
+                        + f'{USHevs}/{COMPONENT}/'
+                        + f'{COMPONENT}_{STEP}_{VERIF_CASE}_create_merged_ptype.py'
+                    )
+
+                    job_cmd_list_iterative.append(
+                        f'{metplus_launcher} -c '
+                        + f'{MET_PLUS_CONF}/'
+                        + f'PointStat_fcst{COMPONENT.upper()}_'
+                        + f'obs{VERIF_TYPE.upper()}_{VAR_NAME}.conf'
+                        )
+            else:
+                job_cmd_list_iterative.append(
+                    f'{metplus_launcher} -c '
+                    + f'{MET_PLUS_CONF}/'
+                    + f'PointStat_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}.conf'
+                    )
     elif job_type == 'gather':
         job_cmd_list.append(
             f'{metplus_launcher} -c '
