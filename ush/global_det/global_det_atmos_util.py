@@ -1126,8 +1126,16 @@ def check_model_files(job_dict):
                         'init_date': init_date_dt,
                         'forecast_hour': str(fhr)
                     }
-                    output_file_format = os.path.join(
+                    output_DATA_file_format = os.path.join(
                         verif_case_dir, 'METplus_output',
+                        job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
+                        model, job_dict['VERIF_CASE'], 'regrid_data_plane_'
+                        +job_dict['VERIF_TYPE']+'_'
+                        +job_dict['job_name']+'_init'
+                        +'{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
+                    )
+                    output_COMOUT_file_format = os.path.join(
+                        job_dict['COMOUT'],
                         job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
                         model, job_dict['VERIF_CASE'], 'regrid_data_plane_'
                         +job_dict['VERIF_TYPE']+'_'
@@ -1690,14 +1698,22 @@ def check_truth_files(job_dict):
                     +valid_date_dt.strftime('%Y%m%d%H')
                 )
                 truth_input_file_list.append(prepbufr_file)
-                pb2nc_output = os.path.join(
+                pb2nc_DATA_output = os.path.join(
                     verif_case_dir, 'METplus_output',
                     job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
                     'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
                     +job_dict['VERIF_TYPE']+'_'+job_dict['prepbufr']+'_valid'
                     +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
                 )
-                truth_output_file_list.append(pb2nc_output)
+                pb2nc_COMOUT_output = os.path.join(
+                    job_dict['COMOUT'],
+                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
+                    'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
+                    +job_dict['VERIF_TYPE']+'_'+job_dict['prepbufr']+'_valid'
+                    +valid_date_dt.strftime('%Y%m%d%H')+'.nc'
+                )
+                truth_output_file_list.append((pb2nc_DATA_output,
+                                               pb2nc_COMOUT_output))
     elif job_dict['JOB_GROUP'] == 'assemble_data':
         if job_dict['VERIF_CASE'] == 'grid2grid':
             if job_dict['VERIF_TYPE'] == 'precip_accum24hr' \
