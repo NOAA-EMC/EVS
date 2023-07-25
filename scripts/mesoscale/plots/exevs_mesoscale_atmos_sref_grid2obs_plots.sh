@@ -175,10 +175,10 @@ for stats in  crps rmse_spread me ets_fbias; do
 
          chmod +x  run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
-         echo "run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+         echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh 
-         echo " run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
+         echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
 
       done #end of line_type
 
@@ -197,9 +197,9 @@ chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 54 -ppn 54 --cpu-bind verbose,depth cfp run_all_poe.sh
+   mpiexec -np 54 -ppn 54 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
-  run_all_poe.sh
+   ${DATA}/run_all_poe.sh
 fi
 
 
@@ -266,23 +266,23 @@ for var in hgt tmp ugrd vgrd prmsl rh dpt tcdc cape ; do
 
       
          if [ $unit = mb ] || [ $unit = m ] ; then	    
-            mv ${score_type}_regional_conus_valid_00z_06z_12z_18z_${level}${unit}_${var}_${stat}${end}  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}.valid_00z_06z_12z_18z.conus_glb.png
+            mv ${score_type}_regional_conus_valid_00z_06z_12z_18z_${level}${unit}_${var}_${stat}${end}  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}_valid_00z_06z_12z_18z.conus_glb.png
          else
-           mv ${score_type}_regional_conus_valid_00z_06z_12z_18z_${var}_${stat}${end}  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}.valid_00z_06z_12z_18z.conus_glb.png
+           mv ${score_type}_regional_conus_valid_00z_06z_12z_18z_${var}_${stat}${end}  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}_valid_00z_06z_12z_18z.conus_glb.png
  
          fi
                
       else
 
-         scoretype=thresholdmean
+         scoretype=threshmean
          if [ $stat = ets ] || [ $stat = fbias ] ; then
 	   end='f6_to_f87.png'
 
            if [ $unit = m ] ; then
 	    	   
-	     mv ${score_type}_regional_conus_valid_00z_06z_12z_18z_${level}${unit}_${var}_${stat}_${end}  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}.valid_00z_06z_12z_18z.conus_glb.png
+	     mv ${score_type}_regional_conus_valid_00z_06z_12z_18z_${level}${unit}_${var}_${stat}_${end}  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}_valid_00z_06z_12z_18z.conus_glb.png
 	   else
-             mv ${score_type}_regional_conus_valid_00z_06z_12z_18z_${var}_${stat}_${end}  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}.valid_00z_06z_12z_18z.conus_glb.png
+             mv ${score_type}_regional_conus_valid_00z_06z_12z_18z_${var}_${stat}_${end}  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}_valid_00z_06z_12z_18z.conus_glb.png
            fi
          fi
       fi	 
@@ -293,9 +293,9 @@ for var in hgt tmp ugrd vgrd prmsl rh dpt tcdc cape ; do
 done     #vars
 
 
-tar -cvf evs.plots.sref.grid2obs.${past_days}.v${VDATE}.tar *.png
+tar -cvf evs.plots.sref.grid2obs.past${past_days}days.v${VDATE}.tar *.png
 
-cp  evs.plots.sref.grid2obs.${past_days}.v${VDATE}.tar  $COMOUT/.  
+cp  evs.plots.sref.grid2obs.past${past_days}days.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
 
 
 
