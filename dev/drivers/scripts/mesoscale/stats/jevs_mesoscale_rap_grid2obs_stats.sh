@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N jevs_rap_grid2obs_stats_00
+#PBS -N jevs_mesoscale_rap_grid2obs_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -62,7 +62,6 @@ set -x
   export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
 source /usr/share/lmod/lmod/init/sh
-export MET_bin_exec="bin"
 
 module reset
 source $HOMEevs/versions/run.ver
@@ -86,7 +85,8 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
   export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 
   export cyc=$(date -d "today" +"%H")
-  export maillist="roshan.shrestha@noaa.gov,geoffrey.manikin@noaa.gov"
+  # export maillist="roshan.shrestha@noaa.gov,geoffrey.manikin@noaa.gov"
+  export maillist="roshan.shrestha@noaa.gov"
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS
