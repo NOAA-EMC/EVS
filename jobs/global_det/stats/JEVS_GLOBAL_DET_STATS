@@ -65,22 +65,33 @@ export COMINjma=${COMINjma:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
 export COMINmetfra=${COMINmetfra:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
 export COMINukmet=${COMINukmet:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
 export COMINccpa=${COMINccpa:-$(compath.py prod/ccpa/$ccpa_ver)}
+export COMINghrsst_ospo=${COMINghrsst_ospo:-$(compath.py -o $NET/$evs_ver)}
+export COMINget_d=${COMINget_d:-$(compath.py -o $NET/$evs_ver)}
+export COMINndbc=${COMINndbc:-$(compath.py -o $NET/$evs_ver)}
 export COMINnohrsc=${COMINnohrsc:-$DCOMROOT}
 export COMINobsproc=${COMINobsproc:-$(compath.py prod/obsproc/$obsproc_ver)}
 export COMINosi_saf=${COMINosi_saf:-$(compath.py -o $NET/$evs_ver)}
-export COMINghrsst_ospo=${COMINghrsst_ospo:-$(compath.py -o $NET/$evs_ver)}
-export COMINget_d=${COMINget_d:-$(compath.py -o $NET/$evs_ver)}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
 export COMOUTsmall=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
 export COMOUTfinal=$COMOUT/$MODELNAME.$VDATE
 mkdir -p $COMOUT $COMOUTsmall $COMOUTfinal
-if [ $VERIF_CASE == grid2grid ]; then
-    export COMOUTccpa=$COMOUT/$RUN.$VDATE/ccpa/$VERIF_CASE
-    mkdir -p $COMOUTccpa
+if [ $RUN = atmos ]; then
+    if [ $VERIF_CASE == grid2grid ]; then
+        export COMOUTccpa=$COMOUT/$RUN.$VDATE/ccpa/$VERIF_CASE
+        mkdir -p $COMOUTccpa
+    fi
+    if [ $VERIF_CASE == grid2obs ]; then
+        export COMOUTprepbufr=$COMOUT/$RUN.$VDATE/prepbufr/$VERIF_CASE
+        mkdir -p $COMOUTprepbufr
+    fi
 fi
-if [ $VERIF_CASE == grid2obs ]; then
-    export COMOUTprepbufr=$COMOUT/$RUN.$VDATE/prepbufr/$VERIF_CASE
-    mkdir -p $COMOUTprepbufr
+if [ $RUN = wave ]; then
+    if [ $VERIF_CASE == grid2obs ]; then
+        export COMOUTprepbufr=$COMOUT/$RUN.$VDATE/prepbufr/$VERIF_CASE
+        mkdir -p $COMOUTprepbufr
+        export COMOUTndbc=$COMOUT/$RUN.$VDATE/ndbc/$VERIF_CASE
+        mkdir -p $COMOUTndbc
+    fi
 fi
 
 #######################################################################
@@ -88,11 +99,7 @@ fi
 #######################################################################
 env
 
-if [ $RUN = atmos ]; then
-    $HOMEevs/scripts/global_det/stats/exevs_global_det_${RUN}_${VERIF_CASE}_stats.sh
-else
-    $HOMEevs/scripts/global_det/stats/exevs_global_det_${RUN}_stats.sh
-fi
+$HOMEevs/scripts/global_det/stats/exevs_global_det_${RUN}_${VERIF_CASE}_stats.sh
 export err=$?; err_chk
 
 cat $pgmout

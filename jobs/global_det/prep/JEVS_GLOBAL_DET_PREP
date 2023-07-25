@@ -60,6 +60,7 @@ export COMINdwd_precip=${COMINdwd_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
 export COMINecmwf=${COMINecmwf:-$DCOMROOT/${INITDATE}/wgrbbul/ecmwf}
 export COMINecmwf_precip=${COMINecmwf_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
 export COMINfnmoc=${COMINfnmoc:-$DCOMROOT/navgem}
+export COMINgfs=${COMINgfs:-$(compath.py prod/gfs/$gfs_ver/gfs.$INITDATE)}
 export COMINimd=${COMINimd:-$DCOMROOT/${INITDATE}/wgrbbul/ncmrwf_gdas}
 export COMINjma=${COMINjma:-$DCOMROOT/${INITDATE}/wgrbbul}
 export COMINjma_precip=${COMINjma_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
@@ -69,6 +70,7 @@ export COMINukmet_precip=${COMINukmet_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
 export COMINosi_saf=${COMINosi_saf:-/lfs/h1/ops/dev/dcom}
 export COMINghrsst_ospo=${COMINghrsst_ospo:-/lfs/h1/ops/dev/dcom}
 export COMINget_d=${COMINget_d:-$DCOMROOT}
+export COMINndbc=${COMINndbc:-$DCOMROOT}
 export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 mkdir -p $COMOUT.${INITDATE}
