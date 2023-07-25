@@ -50,15 +50,11 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 export SCRIPTevs=$HOMEevs/scripts
 
 
-if [[ ${COMPONENT} == "cam" ]] ; then
-  if [  $MODELNAME = href ] ; then
-      setpdy.sh
-      . $DATA/PDY
-      export VDATE=${VDATE:-$PDYm2}
-      export INITDATE=${INITDATE:-$PDYm2}
-  else
-    export VDATE=$(date -d "today -1 day" +"%Y%m%d")
-  fi 
+if [  $MODELNAME = href ] ; then
+    setpdy.sh
+    . $DATA/PDY
+    export VDATE=${VDATE:-$PDYm2}
+    export INITDATE=${INITDATE:-$PDYm2}
 else
     setpdy.sh 31
     . ./PDY
