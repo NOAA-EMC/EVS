@@ -109,6 +109,8 @@ export COMOUTmrms=${COMOUT}/mrms.${VDATE}
 if [ $VERIF_CASE = severe ] ; then
    export COMOUTlsr=${COMOUT}/spc_lsr.${REP_DATE}
    export COMOUTotlk=${COMOUT}/spc_otlk.${OTLK_DATE}
+elif [ $VERIF_CASE = grid2obs ] ; then
+   export mPINGToken=${mPINGToken:-9999}
 fi
 
 ####################################
