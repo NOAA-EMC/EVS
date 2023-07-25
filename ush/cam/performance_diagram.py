@@ -695,6 +695,9 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                 unit_convert = False
             elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
                 unit_convert = False
+        elif any(field in str(var_long_name_key).upper() for field in ['WEASD', 'SNOD', 'ASNOW']):
+            if units in ['m']:
+                units = 'm_snow'
         if unit_convert:
             thresh_labels = [float(tlab) for tlab in thresh_labels]
             thresh_labels = reference.unit_conversions[units]['formula'](
@@ -916,8 +919,10 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     # Title
     domain = df['VX_MASK'].tolist()[0]
     var_savename = df['FCST_VAR'].tolist()[0]
-    if 'APCP' in var_savename.upper():
-        var_savename = 'APCP'
+    if any(field in var_savename.upper() for field in ['APCP']): 
+        var_savename = re.sub('[^a-zA-Z \n\.]', '', var_savename)
+    elif any(field in var_savename.upper() for field in ['ASNOW','SNOD']):
+        var_savename = 'ASNOW'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
         var_savename = 'HPBL'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['MSLET','MSLMA','PRMSL']:
@@ -992,7 +997,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         else:
             level_string = f'{level} '
             level_savename = f'{level}'
-    elif str(verif_type).lower() in ['ccpa','mrms','ptype']:
+    elif str(verif_type).lower() in ['ccpa','mrms', 'ptype','nohrsc']:
         if 'A' in str(level):
             level_num = level.replace('A', '')
             level_string = f'{level_num}-hour '

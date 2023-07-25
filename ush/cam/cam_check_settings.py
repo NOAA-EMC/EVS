@@ -79,7 +79,7 @@ evs_cam_settings_dict['RUN_PRECIP_STATS'] = [
 evs_cam_settings_dict['RUN_PRECIP_PLOTS'] = ['COMOUTplots']
 evs_cam_settings_dict['RUN_SNOWFALL_PREP'] = []
 evs_cam_settings_dict['RUN_SNOWFALL_STATS'] = []
-evs_cam_settings_dict['RUN_SNOWFALL_PLOTS'] = []
+evs_cam_settings_dict['RUN_SNOWFALL_PLOTS'] = ['COMOUTplots']
 
 # Check for existence of required env vars, by group in the dictionary
 env_group_list = [
