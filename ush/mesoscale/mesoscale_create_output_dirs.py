@@ -89,6 +89,8 @@ if VERIF_CASE == 'precip':
 elif VERIF_CASE == 'grid2obs':
     if STEP == 'stats':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
+        data_dir_list.append(os.path.join(data_base_dir, MODELNAME, 'merged_ptype'))
+        data_dir_list.append(os.path.join(data_base_dir, MODELNAME, 'tmp'))
 elif VERIF_CASE == 'snowfall':
     if STEP == 'stats':
         pass
@@ -257,6 +259,19 @@ elif STEP == 'stats':
                     NEST+'.'+vdate_dt.strftime('%Y%m%d')
                 ))
         if job_type == 'generate':
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'regrid_data_plane', 'confs'
+                ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'regrid_data_plane', 'logs'
+                ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'regrid_data_plane', 'tmp'
+                ))
+            working_dir_list.append(os.path.join(
+                working_output_base_dir, 'regrid_data_plane',
+                MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
+                ))
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'point_stat', 'confs'
             ))
