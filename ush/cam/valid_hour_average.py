@@ -4,7 +4,7 @@
 # Name:          valid_hour_average.py
 # Contact(s):    Marcel Caron
 # Developed:     Nov. 22, 2021 by Marcel Caron 
-# Last Modified: Dec. 01, 2022 by Marcel Caron             
+# Last Modified: Apr. 07, 2023 by Marcel Caron             
 # Title:         Line plot of verification metric as a function of 
 #                valid or init hour
 # Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
@@ -305,6 +305,21 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
             logger.warning(warning_string)
             logger.warning("Continuing ...")
 
+    if df.empty:
+        logger.warning(f"Empty Dataframe. Continuing onto next plot...")
+        plt.close(num)
+        logger.info("========================================")
+        return None
+    group_by = ['MODEL','ANTI_DATE_HOURS']
+    if sample_equalization:
+        df, bool_success = plot_util.equalize_samples(logger, df, group_by)
+        if not bool_success:
+            sample_equalization = False
+        if df.empty:
+            logger.warning(f"Empty Dataframe. Continuing onto next plot...")
+            plt.close(num)
+            logger.info("========================================")
+            return None
     # Remove from model_list the models that don't exist in the dataframe
     cols_to_keep = [
         str(model) 
@@ -330,16 +345,6 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         plt.close(num)
         logger.info("========================================")
         return None
-    group_by = ['MODEL','ANTI_DATE_HOURS']
-    if sample_equalization:
-        df, bool_success = plot_util.equalize_samples(logger, df, group_by)
-        if not bool_success:
-            sample_equalization = False
-        if df.empty:
-            logger.warning(f"Empty Dataframe. Continuing onto next plot...")
-            plt.close(num)
-            logger.info("========================================")
-            return None
     df_groups = df.groupby(group_by)
     # Aggregate unit statistics before calculating metrics
     if str(line_type).upper() == 'CTC':
@@ -694,6 +699,10 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
     else:
         handles = []
         labels = []
+    if np.all([val==1 for val in pivot_metric1.count(axis=1)]):
+        connect_points = True
+    else:
+        connect_points = False
     n_mods = 0
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
@@ -765,8 +774,14 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         if plot_reference[0]:
             if not plotted_reference[0]:
                 ref_color_dict = model_colors.get_color_dict('obs')
+                if connect_points:
+                    x_vals1_plot = x_vals1[~np.isnan(reference1)]
+                    y_vals1_plot = reference1[~np.isnan(reference1)]
+                else:
+                    x_vals1_plot = x_vals1
+                    y_vals1_plot = reference1
                 plt.plot(
-                    x_vals1.tolist(), reference1,
+                    x_vals1_plot.tolist(), y_vals1_plot,
                     marker=ref_color_dict['marker'],
                     c=ref_color_dict['color'], mew=2., mec='white',
                     figure=fig, ms=ref_color_dict['markersize'], ls='solid',
@@ -774,8 +789,14 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                 )
                 plotted_reference[0] = True
         else:
+            if connect_points:
+                x_vals1_plot = x_vals1[~np.isnan(y_vals_metric1)]
+                y_vals1_plot = y_vals_metric1[~np.isnan(y_vals_metric1)]
+            else:
+                x_vals1_plot = x_vals1
+                y_vals1_plot = y_vals_metric1
             plt.plot(
-                x_vals1.tolist(), y_vals_metric1, 
+                x_vals1_plot.tolist(), y_vals1_plot, 
                 marker=mod_setting_dicts[m]['marker'], 
                 c=mod_setting_dicts[m]['color'], mew=2., mec='white', 
                 figure=fig, ms=mod_setting_dicts[m]['markersize'], ls='solid', 
@@ -789,8 +810,14 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
             if plot_reference[1]:
                 if not plotted_reference[1]:
                     ref_color_dict = model_colors.get_color_dict('obs')
+                    if connect_points:
+                        x_vals2_plot = x_vals2[~np.isnan(reference2)]
+                        y_vals2_plot = reference2[~np.isnan(reference2)]
+                    else:
+                        x_vals2_plot = x_vals2
+                        y_vals2_plot = reference2
                     plt.plot(
-                        x_vals2.tolist(), reference2,
+                        x_vals2_plot.tolist(), y_vals2_plot,
                         marker=ref_color_dict['marker'],
                         c=ref_color_dict['color'], mew=2., mec='white',
                         figure=fig, ms=ref_color_dict['markersize'], ls='dashed',
@@ -798,8 +825,14 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                     )
                     plotted_reference[1] = True
             else:
+                if connect_points:
+                    x_vals2_plot = x_vals2[~np.isnan(y_vals_metric2)]
+                    y_vals2_plot = y_vals_metric2[~np.isnan(y_vals_metric2)]
+                else:
+                    x_vals2_plot = x_vals2
+                    y_vals2_plot = y_vals_metric2
                 plt.plot(
-                    x_vals2.tolist(), y_vals_metric2, 
+                    x_vals2_plot.tolist(), y_vals2_plot, 
                     marker=mod_setting_dicts[m]['marker'], 
                     c=mod_setting_dicts[m]['color'], mew=2., mec='white', 
                     figure=fig, ms=mod_setting_dicts[m]['markersize'], ls='dashed', 
@@ -1458,15 +1491,23 @@ def main():
             logger.warning(e)
             logger.warning("Continuing ...")
         plot_group = var_specs['plot_group']
-        for l, fcst_level in enumerate(FCST_LEVELS):
-            if len(FCST_LEVELS) != len(OBS_LEVELS):
+        if FCST_LEVELS in presets.level_presets:
+            fcst_levels = re.split(r',(?![0*])', presets.level_presets[FCST_LEVELS].replace(' ',''))
+        else:
+            fcst_levels = re.split(r',(?![0*])', FCST_LEVELS.replace(' ',''))
+        if OBS_LEVELS in presets.level_presets:
+            obs_levels = re.split(r',(?![0*])', presets.level_presets[OBS_LEVELS].replace(' ',''))
+        else:
+            obs_levels = re.split(r',(?![0*])', OBS_LEVELS.replace(' ',''))
+        for l, fcst_level in enumerate(fcst_levels):
+            if len(fcst_levels) != len(obs_levels):
                 e = ("FCST_LEVELS and OBS_LEVELS must be lists of the same"
                      + f" size")
                 logger.error(e)
                 logger.error("Quitting ...")
                 raise ValueError(e+"\nQuitting ...")
-            if (FCST_LEVELS[l] not in var_specs['fcst_var_levels'] 
-                    or OBS_LEVELS[l] not in var_specs['obs_var_levels']):
+            if (fcst_levels[l] not in var_specs['fcst_var_levels'] 
+                    or obs_levels[l] not in var_specs['obs_var_levels']):
                 e = (f"The requested variable/level combination is not valid: "
                      + f"{requested_var}/{fcst_level}")
                 logger.warning(e)
@@ -1555,8 +1596,8 @@ if __name__ == "__main__":
     FLEADS = check_FCST_LEAD(os.environ['FCST_LEAD']).replace(' ','').split(',')
 
     # list of levels
-    FCST_LEVELS = re.split(r',(?![0*])', check_FCST_LEVEL(os.environ['FCST_LEVEL']).replace(' ',''))
-    OBS_LEVELS = re.split(r',(?![0*])', check_OBS_LEVEL(os.environ['OBS_LEVEL']).replace(' ',''))
+    FCST_LEVELS = check_FCST_LEVEL(os.environ['FCST_LEVEL'])
+    OBS_LEVELS = check_OBS_LEVEL(os.environ['OBS_LEVEL'])
 
     FCST_THRESH = check_FCST_THRESH(os.environ['FCST_THRESH'], LINE_TYPE)
     OBS_THRESH = check_OBS_THRESH(os.environ['OBS_THRESH'], FCST_THRESH, LINE_TYPE).replace(' ','').split(',')
@@ -1621,8 +1662,6 @@ if __name__ == "__main__":
     FLEADS = [int(flead) for flead in FLEADS]
     INTERP_PNTS = [str(pts) for pts in INTERP_PNTS]
     VERIF_CASETYPE = str(VERIF_CASE).lower() + '_' + str(VERIF_TYPE).lower()
-    FCST_LEVELS = [str(level) for level in FCST_LEVELS]
-    OBS_LEVELS = [str(level) for level in OBS_LEVELS]
     CONFIDENCE_INTERVALS = str(CONFIDENCE_INTERVALS).lower() in [
         'true', '1', 't', 'y', 'yes'
     ]

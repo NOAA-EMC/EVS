@@ -198,9 +198,9 @@ for stats in  rmse_spread ; do
      valid=valid_available_times
 
       if [ $var = mslet ] || [ $var = gust ] || [  $var = hpbl ] ; then
-        mv ${score_type}_regional_${domain}_${valid}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}.${valid_time}.buk_${domain}.png
+        mv ${score_type}_regional_${domain}_${valid}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_${valid_time}.buk_${domain}.png
       else
-        mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}.${valid_time}.buk_${domain}.png
+        mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_${valid_time}.buk_${domain}.png
       fi
 
      done #var

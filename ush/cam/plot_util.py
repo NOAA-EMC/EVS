@@ -370,10 +370,6 @@ def get_stat_file_line_type_columns(logger, met_version, line_type,
             'TOTAL', 'FY_OY', 'FY_ON', 'FN_OY', 'FN_ON', 'EC_VALUE'
          ]
       elif met_version >= 6.0:
-         stat_file_line_type_columns = [
-           'TOTAL', 'FY_OY', 'FY_ON', 'FN_OY', 'FN_ON', 'EC_VALUE'
-         ]
-       elif met_version >= 6.0:
           stat_file_line_type_columns = [
             'TOTAL', 'FY_OY', 'FY_ON', 'FN_OY', 'FN_ON'
          ]
@@ -393,7 +389,7 @@ def get_stat_file_line_type_columns(logger, met_version, line_type,
             stat_file_base_columns, stat_file_line_type_columns_start
          ))
          df_read_tmp = pd.read_csv(
-            fpath, delim_whitespace=True, header=None, skiprows=1, dtype=np.str
+            fpath, delim_whitespace=True, header=None, skiprows=1, dtype=str
          )
          categs = np.arange(int(
             df_read_tmp[
@@ -416,7 +412,7 @@ def get_stat_file_line_type_columns(logger, met_version, line_type,
             stat_file_og_columns, stat_file_line_type_columns_start
          ))
          df_read_tmp = pd.read_csv(
-            fname, delim_whitespace=True, header=None, skiprows=1, dtype=np.str
+            fname, delim_whitespace=True, header=None, skiprows=1, dtype=str
          )
          categs = np.arange(int(
             df_read_tmp[
