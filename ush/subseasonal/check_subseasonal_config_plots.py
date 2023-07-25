@@ -28,9 +28,8 @@ VCS_type_env_vars_dict = {
                'model_file_format_list',
                'OUTPUTROOT',
                'start_date', 'end_date', 'plot_by',
-               'SEND2WEB', 'webhost', 'webhostid', 'webdir', 'met_version',
-               'metplus_version', 'metplus_verbosity', 'met_verbosity',
-               'log_met_output_to_metplus', 'SENDARCH',
+               'SEND2WEB', 'webhost', 'webhostid', 'webdir',
+               'SENDARCH',
                'KEEPDATA'],
     'grid2grid_plots': ['g2gplots_model_plot_name_list', 
                         'g2gplots_type_list',
@@ -99,12 +98,6 @@ check_config_var_len_list = ['model_dir_list', 'model_plots_dir_list',
                              'model_file_format_list']
 if VERIF_CASE_STEP in ['grid2grid_plots', 'grid2obs_plots']:
     check_config_var_len_list.append(VCS_abbrev+'_model_plot_name_list')
-    #for VCS_type in VCS_type_list:
-        #VCS_abbrev_type = VERIF_CASE_STEP_abbrev+'_'+VCS_type
-        #if VERIF_CASE_STEP == 'grid2grid_plots':
-          #check_config_var_len_list.append(
-              #VCS_abbrev_type+'_truth_name_list'
-          #)
 
 for config_var in check_config_var_len_list:
     if len(os.environ[config_var].split(' ')) \
@@ -120,27 +113,10 @@ for config_var in check_config_var_len_list:
 valid_config_var_values_dict = {
     'plot_by': ['VALID', 'INIT'],
     'SEND2WEB': ['YES', 'NO'],
-    'metplus_verbosity': ['DEBUG', 'INFO', 'WARN', 'ERROR'],
-    'met_verbosity': ['0', '1', '2', '3', '4', '5'],
-    'log_met_output_to_metplus': ['yes', 'no'],
     'SENDARCH': ['YES', 'NO'],
     'KEEPDATA': ['YES', 'NO']
 }
-if VERIF_CASE_STEP == 'grid2grid_plots':
-    valid_config_var_values_dict[VCS_abbrev
-                                 +'_event_eq'] = ['YES', 'NO']
-    #for VCS_type in VCS_type_list:
-        #VCS_abbrev_type = VERIF_CASE_STEP_abbrev+'_'+VCS_type
-        #valid_config_var_values_dict[VCS_abbrev_type
-                                     #+'_truth_name_list'] = ['gfs_anl',
-                                                             #'ecmwf_f00',
-                                                             #'ccpa_anl',
-                                                             #'mrmsak_anl',
-                                                             #'mrmshi_anl',
-                                                             #'umd_anl',
-                                                             #'ghrsst_anl',
-                                                             #'osi_anl']
-elif VERIF_CASE_STEP == 'grid2obs_plots':
+if VERIF_CASE_STEP in ['grid2grid_plots', 'grid2obs_plots']:
     valid_config_var_values_dict[VCS_abbrev
                                  +'_event_eq'] = ['YES', 'NO']
 
