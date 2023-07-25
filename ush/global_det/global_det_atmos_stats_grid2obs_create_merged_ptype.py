@@ -18,6 +18,8 @@ print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
 DATA = os.environ['DATA']
+COMOUT = os.environ['COMOUT']
+SENDCOM = os.environ['SENDCOM']
 RUN = os.environ['RUN']
 NET = os.environ['NET']
 VERIF_CASE = os.environ['VERIF_CASE']
@@ -73,23 +75,40 @@ while valid_date_dt <= ENDDATE_dt:
             if not os.path.exists(input_ptype_file):
                 print(f"WARNING: {input_ptype_file} does not exist")
                 all_input_ptype_files_exist = False
-        output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP,
-                                  'METplus_output',
-                                  RUN+'.'+valid_date_dt.strftime('%Y%m%d'),
-                                  MODEL, VERIF_CASE)
-        output_merged_ptype_file = os.path.join(
-            output_dir, 'merged_ptype_'+VERIF_TYPE+'_'+job_name+'_'
+        output_DATA_merged_ptype_file = os.path.join(
+            DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
+            RUN+'.'+valid_date_dt.strftime('%Y%m%d'), MODEL, VERIF_CASE,
+            'merged_ptype_'+VERIF_TYPE+'_'+job_name+'_'
             +'init'+init_date_dt.strftime('%Y%m%d%H')
             +'_fhr'+str(fhr).zfill(3)+'.nc'
         )
-        if all_input_ptype_files_exist:
-            if not os.path.exists(output_merged_ptype_file):
-                make_merged_ptype_output_file = True
+        output_COMOUT_merged_ptype_file = os.path.join(
+            COMOUT,
+            RUN+'.'+valid_date_dt.strftime('%Y%m%d'), MODEL, VERIF_CASE,
+            'merged_ptype_'+VERIF_TYPE+'_'+job_name+'_'
+            +'init'+init_date_dt.strftime('%Y%m%d%H')
+            +'_fhr'+str(fhr).zfill(3)+'.nc'
+        )
+        if os.path.exists(output_COMOUT_merged_ptype_file):
+            if not os.path.exits(output_DATA_merged_ptype_file):
+                gda_util.copy_file(output_COMOUT_merged_ptype_file,
+                                   output_DATA_merged_ptype_file)
+        else:
+            if all_input_ptype_files_exist:
+                if not os.path.exists(output_DATA_merged_ptype_file):
+                    make_merged_ptype_output_file = True
+                else:
+                    make_merged_ptype_output_file = False
+                    print("DATA Output File exists: "
+                          +output_DATA_merged_ptype_file)
+                    if SENDCOM == 'YES' \
+                            and gda_util.check_file_exists_size(
+                                output_DATA_merged_ptype_file
+                            ):
+                        gda_util.copy_file(output_DATA_merged_ptype_file,
+                                           output_COMOUT_merged_ptype_file)
             else:
                 make_merged_ptype_output_file = False
-                print(f"Output File exists: {output_merged_ptype_file}") 
-        else:
-            make_merged_ptype_output_file = False
         if make_merged_ptype_output_file:
             print(f"\nInput CRAIN File: {input_crain_file}")
             print(f"Input CSNOW File: {input_csnow_file}")
@@ -103,7 +122,10 @@ while valid_date_dt <= ENDDATE_dt:
             input_csnow = input_csnow_data.variables['CSNOW'][:]
             input_cfrzr = input_cfrzr_data.variables['CFRZR'][:]
             input_cicep = input_cicep_data.variables['CICEP'][:]
-            print(f"Output Merged Ptype File: {output_merged_ptype_file}")
+            print("DATA Output Merged Ptype File: "
+                  +output_DATA_merged_ptype_file)
+            print("COMOUT Output Merged Ptype File: "
+                  +output_COMOUT_merged_ptype_file)
             merged_ptype = np.zeros_like(input_crain)
             for x in range(len(input_crain[:,0])):
                 for y in range(len(input_crain[0,:])):
@@ -124,7 +146,7 @@ while valid_date_dt <= ENDDATE_dt:
                     elif ptype_xy_list.count('1.0') > 1: # more than ptype
                         print("more than 1 ptype")
             output_merged_ptype_data = netcdf.Dataset(
-                output_merged_ptype_file, 'w', format='NETCDF3_CLASSIC'
+                output_DATA_merged_ptype_file, 'w', format='NETCDF3_CLASSIC'
             )
             for attr in input_crain_data.ncattrs():
                 output_merged_ptype_data.setncattr(
@@ -163,6 +185,12 @@ while valid_date_dt <= ENDDATE_dt:
             input_csnow_data.close()
             input_cfrzr_data.close()
             input_cicep_data.close()
+            if SENDCOM == 'YES' \
+                    and gda_util.check_file_exists_size(
+                        output_DATA_merged_ptype_file
+                    ):
+                gda_util.copy_file(output_DATA_merged_ptype_file,
+                                   output_COMOUT_merged_ptype_file)
     valid_date_dt = valid_date_dt + datetime.timedelta(hours=int(valid_hr_inc))
 
 print("END: "+os.path.basename(__file__))

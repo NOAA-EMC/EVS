@@ -1003,6 +1003,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                     in model_copy_output_DATA2COMOUT_list:
                                 job.write(f"cp -v {model_output_file_tuple[0]} "
                                           +f"{model_output_file_tuple[1]}\n")
+                    else:
+                        if JOB_GROUP == 'assemble_data':
+                            if verif_type_job == 'TempAnom2m':
+                                job.write(verif_type_job_commands_list[1])
                     job.close()
                 date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
         # Do reformat_data and assemble_data observation jobs

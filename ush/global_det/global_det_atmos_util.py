@@ -1335,13 +1335,21 @@ def check_model_files(job_dict):
                                       -datetime.timedelta(hours=fhr-12)),
                         'forecast_hour': str(fhr-12)
                     }
-                    output_file_format = os.path.join(
+                    output_DATA_file_format = os.path.join(
                         verif_case_dir, 'METplus_output',
                         job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
-                        model, job_dict['VERIF_CASE'], 'anomaly_'
-                        +job_dict['VERIF_TYPE']+'_'
-                        +job_dict['job_name']+'_init'
-                        +'{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.stat'
+                        model, job_dict['VERIF_CASE'],
+                        'point_stat_'+job_dict['VERIF_TYPE']+'_'
+                        +job_dict['job_name']+'_{lead?fmt=%2H}'
+                        '0000L_{valid?fmt=%Y%m%d_%H%M%S}V.stat'
+                    )
+                    output_COMOUT_file_format = os.path.join(
+                        job_dict['COMOUT'],
+                        job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
+                        model, job_dict['VERIF_CASE'],
+                        'point_stat_'+job_dict['VERIF_TYPE']+'_'
+                        +job_dict['job_name']+'_{lead?fmt=%2H}'
+                        '0000L_{valid?fmt=%Y%m%d_%H%M%S}V.stat'
                     )
                     fhr_check_output_dict[str(fhr)]['file1'] = {
                         'valid_date': valid_date_dt,
@@ -1360,8 +1368,16 @@ def check_model_files(job_dict):
                         'init_date': init_date_dt,
                         'forecast_hour': str(fhr)
                     }
-                    output_file_format = os.path.join( 
+                    output_DATA_file_format = os.path.join(
                         verif_case_dir, 'METplus_output',
+                        job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
+                        model, job_dict['VERIF_CASE'], 'merged_ptype_'
+                        +job_dict['VERIF_TYPE']+'_'
+                        +job_dict['job_name']+'_init'
+                        +'{init?fmt=%Y%m%d%H}_fhr{lead?fmt=%3H}.nc'
+                    )
+                    output_COMOUT_file_format = os.path.join(
+                        job_dict['COMOUT'],
                         job_dict['RUN']+'.{valid?fmt=%Y%m%d}',
                         model, job_dict['VERIF_CASE'], 'merged_ptype_'
                         +job_dict['VERIF_TYPE']+'_'
@@ -1625,6 +1641,10 @@ def check_model_files(job_dict):
         if (job_dict['job_name'] == 'GeoHeightAnom' \
                 and int(job_dict['valid_hr_start']) % 12 == 0)\
                or job_dict['job_name'] == 'WindShear':
+            fhr_list = input_fhr_list
+    if job_dict['JOB_GROUP'] == 'assemble_data' \
+            and job_dict['VERIF_CASE'] == 'grid2obs':
+        if job_dict['job_name'] == 'TempAnom2m':
             fhr_list = input_fhr_list
     return model_files_exist, fhr_list, model_copy_output_DATA2COMOUT_list
 
