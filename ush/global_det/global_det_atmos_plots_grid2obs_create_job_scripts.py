@@ -560,12 +560,12 @@ for sfc_job in list(make_plots_jobs_dict['sfc'].keys()):
     )
     make_plots_jobs_dict['sfc'][sfc_job]['plots'] = sfc_job_plots
 for cape_level in ['MixedLayer', 'SfcBased']:
-    make_plots_jobs_dict['sfc'][f"CAPE{cape_level}_PerfDia"] = copy.deepcopy(
+    make_plots_jobs_dict['sfc'][f"CAPE{cape_level}_PerfDiag"] = copy.deepcopy(
         make_plots_jobs_dict['sfc'][f"CAPE{cape_level}_Thresh"]
     )
-    (make_plots_jobs_dict['sfc'][f"CAPE{cape_level}_PerfDia"]\
-     ['line_type_stats']) = ['CTC/PERF_DIA']
-    make_plots_jobs_dict['sfc'][f"CAPE{cape_level}_PerfDia"]['plots'] = [
+    (make_plots_jobs_dict['sfc'][f"CAPE{cape_level}_PerfDiag"]\
+     ['line_type_stats']) = ['CTC/PERFDIAG']
+    make_plots_jobs_dict['sfc'][f"CAPE{cape_level}_PerfDiag"]['plots'] = [
         'performance_diagram'
     ]
 if JOB_GROUP == 'make_plots':

@@ -9,6 +9,7 @@ import netCDF4 as netcdf
 import numpy as np
 import glob
 import pandas as pd
+import logging
 from time import sleep
 
 def run_shell_command(command):
@@ -98,6 +99,61 @@ def check_file_exists_size(file_name):
         print("WARNING: "+file_name+" does not exist")
         file_good = False
     return file_good
+
+def log_missing_file_model(log_missing_file, missing_file, model, init_dt,
+                           fhr):
+    """! This writes a missing model file to a log
+
+         Args:
+             log_missing_file - log of missing file (string)
+             missing_file     - missing file path (string)
+             model            - model name (string)
+             init_dt          - initialization date (datetime)
+             fhr              - forecast hour (string)
+    """
+    if not os.path.exists(log_missing_file):
+        with open(log_missing_file, "w") as lmf:
+            lmf.write("#!/bin/bash\n")
+            lmf.write(f'export subject="F{fhr} {model.upper()} Forecast '
+                      +'Data Missing for EVS subseasonal"\n')
+            lmf.write(f'echo "Warning: No {model.upper()} forecast was '
+                      +f'available for {init_dt:%Y%m%d%H}f{fhr}" '
+                      +'> mailmsg\n')
+            lmf.write(f'echo "Missing file is {missing_file}" >> mailmsg\n')
+            lmf.write(f'echo "Job ID: $jobid" >> mailmsg\n')
+            lmf.write(f'cat mailmsg | mail -s "$subject" $maillist\n')
+        os.chmod(log_missing_file, 0o755)
+
+def log_missing_file_obs(log_missing_file, missing_file, obs, valid_dt):
+    """! This writes a missing obs file to a log
+
+         Args:
+             log_missing_file - log of missing file (string)
+             missing_file     - missing file path (string)
+             obs              - observation name (string)
+             valid_dt         - initialization date (datetime)
+    """
+    if not os.path.exists(log_missing_file):
+        with open(log_missing_file, "w") as lmf:
+            lmf.write("#!/bin/bash\n")
+            if obs == 'nam':
+                lmf.write(f'export subject="{obs.upper()} prepbufr Data '
+                          +'Missing for '
+                          +'EVS subseasonal"\n')
+                lmf.write(f'echo "Warning: No {obs.upper()} prepbufr data '
+                          +f'was available for '
+                          +f'valid date {valid_dt:%Y%m%d%H}" > mailmsg\n')
+            else:
+                lmf.write(f'export subject="{obs.upper()} Analysis Data '
+                          +'Missing for '
+                          +'EVS subseasonal"\n')
+                lmf.write(f'echo "Warning: No {obs.upper()} Analysis data '
+                          +f'was available for '
+                          +f'valid date {valid_dt:%Y%m%d%H}" > mailmsg\n')
+            lmf.write(f'echo "Missing file is {missing_file}" >> mailmsg\n')
+            lmf.write(f'echo "Job ID: $jobid" >> mailmsg\n')
+            lmf.write(f'cat mailmsg | mail -s "$subject" $maillist\n')
+        os.chmod(log_missing_file, 0o755)
 
 def copy_file(source_file, dest_file):
     """! This copies a file from one location to another
@@ -399,7 +455,8 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
     return filled_file_format
 
 def prep_prod_gefs_file(source_afile, source_bfile, prepped_file, dest_file, 
-                        forecast_hour, prep_method):
+                        init_dt, forecast_hour, prep_method,
+                        log_missing_file):
     """! Do prep work for GEFS production files
 
          Args:
@@ -407,9 +464,12 @@ def prep_prod_gefs_file(source_afile, source_bfile, prepped_file, dest_file,
              source_bfile       - source b file format (string)
              prepped_file       - prepped file (string)
              dest_file          - destination file (string)
+             init_dt            - initialization date (datetime)
              forecast_hour      - forecast hour (string)
              prep_method        - name of prep method to do
                                   (string)
+             log_missing_file   - text file path to write that
+                                  production file is missing (string)
 
          Returns:
     """
@@ -417,8 +477,6 @@ def prep_prod_gefs_file(source_afile, source_bfile, prepped_file, dest_file,
     WGRIB2 = os.environ['WGRIB2']
     EXECevs = os.environ['EXECevs']
     # Working file names
-    #prepped_file = os.path.join(os.getcwd(),
-                                #'atmos.'+dest_file.rpartition('/')[2])
     working_file1 = prepped_file+'.tmp1'
     # Prep file
     if prep_method == 'full': 
@@ -459,6 +517,10 @@ def prep_prod_gefs_file(source_afile, source_bfile, prepped_file, dest_file,
                                    '-grib', working_file1])
                 run_shell_command(['cat', working_file1, '>>', prepped_file])
                 os.remove(working_file1)
+        else:
+            log_missing_file_model(log_missing_file, source_afile,
+                                   'gefs', init_dt,
+                                   str(forecast_hour).zfill(3))
     #elif 'precip' in prep_method:
         #if int(forecast_hour) % 24 == 0:
             #thin_var_level = ('APCP:surface:0-'
@@ -472,16 +534,20 @@ def prep_prod_gefs_file(source_afile, source_bfile, prepped_file, dest_file,
     copy_file(prepped_file, dest_file)
 
 def prep_prod_cfs_pfile(source_pfile, prepped_pfile, dest_pfile,
-                       forecast_hour, prep_method):
+                        init_dt, forecast_hour, prep_method, 
+                        log_missing_pfile):
     """! Do prep work for CFS production pgbf files
 
          Args:
              source_pfile       - source pgbf file format (string)
              prepped_pfile      - prepped pgbf file (string)
              dest_pfile         - destination pgbf file (string)
+             init_dt            - initialization date (datetime)
              forecast_hour      - forecast hour (string)
              prep_method        - name of prep method to do
                                   (string)
+             log_missing_pfile  - text file path to write that
+                                  production file is missing (string)
 
          Returns:
     """
@@ -514,19 +580,27 @@ def prep_prod_cfs_pfile(source_pfile, prepped_pfile, dest_pfile,
                                    '-grib', working_file1])
                 run_shell_command(['cat', working_file1, '>>', prepped_pfile])
                 os.remove(working_file1)
+        else:
+            log_missing_file_model(log_missing_pfile, source_pfile,
+                                   'cfs', init_dt,
+                                   str(forecast_hour).zfill(3))
     copy_file(prepped_pfile, dest_pfile)
 
 def prep_prod_cfs_ffile(source_ffile, prepped_ffile, dest_ffile,
-                       forecast_hour, prep_method):
+                        init_dt, forecast_hour, prep_method,
+                        log_missing_ffile):
     """! Do prep work for CFS production flxf files
 
          Args:
              source_ffile       - source flxf file format (string)
              prepped_ffile      - prepped flxf file (string)
              dest_ffile         - destination flxf file (string)
+             init_dt            - initialization date (datetime)
              forecast_hour      - forecast hour (string)
              prep_method        - name of prep method to do
                                   (string)
+             log_missing_ffile  - text file path to write that
+                                  production file is missing (string)
 
          Returns:
     """
@@ -562,14 +636,21 @@ def prep_prod_cfs_ffile(source_ffile, prepped_ffile, dest_ffile,
                                    '-grib', working_file1])
                 run_shell_command(['cat', working_file1, '>>', prepped_ffile])
                 os.remove(working_file1)
+        else:
+            log_missing_file_model(log_missing_ffile, source_ffile,
+                                   'cfs', init_dt,
+                                   str(forecast_hour).zfill(3))
     copy_file(prepped_ffile, dest_ffile)
 
-def prep_prod_gfs_file(source_file, dest_file):
+def prep_prod_gfs_file(source_file, dest_file, date_dt, log_missing_file):
     """! Do prep work for GFS analysis production files
 
          Args:
-             source_file - source file format (string)
-             dest_file          - destination file (string)
+             source_file       - source file format (string)
+             dest_file         - destination file (string)
+             date_dt           - date (datetime object)
+             log_missing_file  - text file path to write that
+                                 production file is missing (string)
 
          Returns:
     """
@@ -596,14 +677,21 @@ def prep_prod_gfs_file(source_file, dest_file):
                                '-grib', working_file1])
             run_shell_command(['cat', working_file1, '>>', prepped_file])
             os.remove(working_file1)
+    else:
+        log_missing_file_obs(log_missing_file, source_file,
+                             'GFS', date_dt)
     copy_file(prepped_file, dest_file)
 
-def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file):
+def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
+                           date_dt, log_missing_file):
     """! Do prep work for OSI-SAF production files
 
          Args:
              daily_source_file_format - daily source file format (string)
              daily_dest_file          - daily destination file (string)
+             date_dt                  - date (datetime object)
+             log_missing_file         - text file path to write that
+                                        production file is missing (string)
          Returns:
     """
     # Environment variables and executables
@@ -626,6 +714,9 @@ def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file):
                 +os.path.join(FIXevs, 'cdo_grids', 'G003.grid'),
                 hem_source_file, hem_prepped_file]
             )
+        else:
+            log_missing_file_obs(log_missing_file, hem_source_file,
+                                 f"OSI-SAF {hem.upper()}", date_dt)
         if hem == 'nh':
             nh_prepped_file = hem_prepped_file
         elif hem == 'sh':
@@ -688,19 +779,27 @@ def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file):
         merged_data.close()
     copy_file(daily_prepped_file, daily_dest_file)
 
-def prep_prod_ghrsst_ospo_file(daily_source_file, daily_dest_file):
+def prep_prod_ghrsst_ospo_file(daily_source_file, daily_dest_file,
+                               date_dt, log_missing_file):
     """! Do prep work for GHRSST OSPO production files
 
          Args:
              daily_source_file - daily source file (string)
              daily_dest_file   - daily destination file (string)
+             date_dt           - date (datetime object)
+             log_missing_file  - text file path to write that
+                                 production file is missing (string)
          Returns:
     """
     # Temporary file name
     daily_prepped_file = os.path.join(os.getcwd(), 'atmos.'
                                       +daily_source_file.rpartition('/')[2])
     # Prep daily file
-    copy_file(daily_source_file, daily_prepped_file)
+    if os.path.exists(daily_source_file):
+        copy_file(daily_source_file, daily_prepped_file)
+    else:
+        log_missing_file_obs(log_missing_file, daily_source_file,
+                               'GHRSST OSPO', date_dt)
     if check_file_exists_size(daily_prepped_file):
         dly_prepped_data = netcdf.Dataset(daily_prepped_file, 'a',
                                           format='NETCDF3_CLASSIC')
@@ -2776,8 +2875,7 @@ def initalize_job_env_dict(verif_type, group,
         if not os.path.exists(os.environ['MET_TMP_DIR']):
             os.makedirs(os.environ['MET_TMP_DIR'])
         job_env_var_list.extend(
-            ['METPLUS_PATH','log_met_output_to_metplus', 'metplus_verbosity',
-             'MET_ROOT', 'MET_bin_exec', 'met_verbosity', 'MET_TMP_DIR',
+            ['METPLUS_PATH', 'MET_ROOT', 'MET_TMP_DIR',
              'COMROOT']
         )
     elif group in ['condense_stats', 'filter_stats', 'make_plots',
@@ -2788,9 +2886,7 @@ def initalize_job_env_dict(verif_type, group,
         job_env_dict[env_var] = os.environ[env_var]
     if group in ['condense_stats', 'filter_stats', 'make_plots',
                  'tar_images']:
-        job_env_dict['plot_verbosity'] = (
-            os.environ['metplus_verbosity']
-        )
+        job_env_dict['plot_verbosity'] = ('INFO')
     job_env_dict['JOB_GROUP'] = group
     if group in ['reformat_data', 'assemble_data', 'generate_stats',
                  'condense_stats', 'filter_stats', 'make_plots',
@@ -3000,7 +3096,7 @@ def get_met_line_type_cols(logger, met_root, met_version, met_line_type):
                     line_type_cols = line.split(' : ')[-1]
                     break
     else:
-        logger.error(f"{met_minor_version_col_file} DOES NOT EXISTS, "
+        logger.error(f"{met_minor_version_col_file} DOES NOT EXIST, "
                      +"cannot determine MET data column structure")
         sys.exit(1)
     met_version_line_type_col_list = (

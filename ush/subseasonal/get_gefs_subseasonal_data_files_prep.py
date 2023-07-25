@@ -217,27 +217,19 @@ def get_dest_file(valid_time_dt, init_time_dt, lead_str,
 
 # Read in common environment variables
 RUN = os.environ['RUN']
-#VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 DATA = os.environ['DATA']
 model_list = os.environ['model_list'].split(' ')
 model_dir_list = os.environ['model_dir_list'].split(' ')
-#truth_dir_list = os.environ['truth_dir_list'].split(' ')
-#OBSNAME = os.environ['OBSNAME']
 model_prep_dir_list = os.environ['model_prep_dir_list'].split(' ')
 model_file_format_list = os.environ['model_file_format_list'].split(' ')
 gefs_file_type = os.environ['gefs_file_type']
+gefs_members = os.environ['gefs_members']
 INITDATE = os.environ['INITDATE']
 start_date = os.environ['start_date']
 end_date = os.environ['end_date']
 make_met_data_by = os.environ['make_met_data_by']
 machine = os.environ['machine']
-#VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
-#VCS = VERIF_CASE+'_'+STEP
-#VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
-#VCS_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
-#VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
-                            #.split(' '))
 
 # Set some common variables
 cwd = os.getcwd()
@@ -280,7 +272,6 @@ if STEP == 'prep':
                     not in vhr_list:
                 continue
             else:
-                #cwdm = os.path.join(cwd, INITDATE)
                 work_model_dir = os.path.join(cwd, 'data', 'gefs')
                 if not os.path.exists(work_model_dir):
                     os.makedirs(work_model_dir)
@@ -289,7 +280,7 @@ if STEP == 'prep':
                     os.makedirs(dest_model_dir)
                 if model == 'gefs':
                     mbr = 1
-                    total = 30
+                    total = int(gefs_members)
                     while mbr <= total:
                         mb = str(mbr).zfill(2)
                         model_afile_format = os.path.join(
@@ -329,12 +320,20 @@ if STEP == 'prep':
                             +'.pgrb2.0p50.'
                             +'f{lead?fmt=%3H}'
                         )
+                        log_missing_file = os.path.join(
+                            DATA, 'mail_missing_'+model+'_'
+                            +'member'+mb+'_fhr'
+                            +lead.zfill(3)+'_init'
+                            +init_time.strftime('%Y%m%d%H')+'.sh'
+                        )
                         sub_util.prep_prod_gefs_file(model_afile,
                                                      model_bfile,
                                                      prep_file,
                                                      dest_model_file,
+                                                     init_time,
                                                      lead,
-                                                     'full')
+                                                     'full',
+                                                     log_missing_file)
                         del model_afile_format
                         del model_bfile_format
                         mbr = mbr+1

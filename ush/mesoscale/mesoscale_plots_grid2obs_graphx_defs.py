@@ -1,302 +1,341 @@
+#!/usr/bin/env python3
 import os
 from datetime import datetime
 graphics = {
     'mesoscale':{
         'grid2obs':{
             'raob':{
-                'nam, rap': {
-#                    """
-#                    'time_series':{
-#                        'DATE_TYPE':'INIT',
-#                        'VALID_BEG':'',
-#                        'VALID_END':'',
-#                        'INIT_BEG':'',
-#                        'INIT_END':'',
-#                        'VX_MASK_LIST':'G221_NAMER',
-#                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
-#                        'FCST_VALID_HOURS':['0','6','12','18'],
-#                        'FCST_INIT_HOURS':['0','12'],
-#                        'VARIABLES':{
-#                            'sl1l2':{
-#                                'SBCAPE':{
-#                                    'STATSs':['fbar,obar'],
-#                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
-#                                    'FCST_LEVEL':'L0',
-#                                    'OBS_LEVEL':'L100000-0',
-#                                    'FCST_THRESHs':[''],
-#                                    'OBS_THRESHs':[''],
-#                                    'CONFIDENCE_INTERVALS':'False',
-#                                    'INTERP':'BILIN',
-#                                    'INTERP_PNTSs':[''],
-#                                },
-#                                'MLCAPE':{
-#                                    'STATSs':['fbar,obar'],
-#                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
-#                                    'FCST_LEVEL':'P90-0',
-#                                    'OBS_LEVEL':'L90000-0',
-#                                    'FCST_THRESHs':[''],
-#                                    'OBS_THRESHs':[''],
-#                                    'CONFIDENCE_INTERVALS':'False',
-#                                    'INTERP':'BILIN',
-#                                    'INTERP_PNTSs':[''],
-#                                },
-#                            },
-#                        }
-#                    },
-#                    'stat_by_level':{
-#                        'DATE_TYPE':'INIT',
-#                        'VALID_BEG':'',
-#                        'VALID_END':'',
-#                        'INIT_BEG':'',
-#                        'INIT_END':'',
-#                        'VX_MASK_LIST':'G221_NAMER',
-#                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
-#                        'FCST_VALID_HOURS':['0','6','12','18'],
-#                        'FCST_INIT_HOURS':['0','12'],
-#                        'VARIABLES':{
-#                            'sl1l2':{
-#                                'HGT':{
-#                                    'STATSs':['bcrmse,me'],
-#                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
-#                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
-#                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
-#                                    'FCST_THRESHs':[''],
-#                                    'OBS_THRESHs':[''],
-#                                    'CONFIDENCE_INTERVALS':'False',
-#                                    'INTERP':'NEAREST',
-#                                    'INTERP_PNTSs':['1'],
-#                                },
-#                                'TMP':{
-#                                    'STATSs':['bcrmse,me'],
-#                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
-#                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
-#                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
-#                                    'FCST_THRESHs':[''],
-#                                    'OBS_THRESHs':[''],
-#                                    'CONFIDENCE_INTERVALS':'False',
-#                                    'INTERP':'NEAREST',
-#                                    'INTERP_PNTSs':['1'],
-#                                },
-#                                'UGRD':{
-#                                    'STATSs':['bcrmse,me'],
-#                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
-#                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
-#                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
-#                                    'FCST_THRESHs':[''],
-#                                    'OBS_THRESHs':[''],
-#                                    'CONFIDENCE_INTERVALS':'False',
-#                                    'INTERP':'NEAREST',
-#                                    'INTERP_PNTSs':['1'],
-#                                },
-#                                'VGRD':{
-#                                    'STATSs':['bcrmse,me'],
-#                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
-#                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
-#                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
-#                                    'FCST_THRESHs':[''],
-#                                    'OBS_THRESHs':[''],
-#                                    'CONFIDENCE_INTERVALS':'False',
-#                                    'INTERP':'NEAREST',
-#                                    'INTERP_PNTSs':['1'],
-#                                },
-#                            },
-#                            'vl1l2':{
-#                                'UGRD_VGRD':{
-#                                    'STATSs':['bcrmse,me'],
-#                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
-#                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
-#                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
-#                                    'FCST_THRESHs':[''],
-#                                    'OBS_THRESHs':[''], 
-#                                    'CONFIDENCE_INTERVALS':'False',
-#                                    'INTERP':'BILIN',
-#                                    'INTERP_PNTSs':[''],
-#                                }
-#                            },
-#                        }
-#                    },
-#                    """
-                    'lead_average':{
+                'nam, rap, gfs': {
+                    'time_series':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
                         'VALID_END':'',
                         'INIT_BEG':'',
                         'INIT_END':'',
-                        'VX_MASK_LIST':'G221_NAMER',
+                        'VX_MASK_LIST':'CONUS, CONUS_East, CONUS_West, CONUS_Central, CONUS_South, Alaska',
                         'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
-                        'FCST_VALID_HOURS':['0','6','12','18'],
+                        'FCST_VALID_HOURS':[''],
                         'FCST_INIT_HOURS':['0','12'],
                         'VARIABLES':{
-                            'sl1l2':{ 
-                                'HGT':{
-                                    'STATSs':['bcrmse,me'],
-#                                    'STATSs':['bcrmse,bias'],
-#                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
-                                    'FCST_LEADS':['0,6,12,18,24,30,36,42,48,54,60,66,72,78,84'],
-                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
-                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'NEAREST',
-                                    'INTERP_PNTSs':[''],
-                                },
-                                'SPFH':{
-                                    'STATSs':['bcrmse,me'],
-#                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
-                                    'FCST_LEADS':['0,6,12,18,24,30,36,42,48,54,60,66,72,78,84'],
-                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
-                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'NEAREST',
-                                    'INTERP_PNTSs':[''],
-                                },
-                                'TMP':{
-                                    'STATSs':['bcrmse,me'],
-#                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
-                                    'FCST_LEADS':['0,6,12,18,24,30,36,42,48,54,60,66,72,78,84'],
-                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
-                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'NEAREST',
-                                    'INTERP_PNTSs':[''],
-                                },
-                                'UGRD':{
-                                    'STATSs':['bcrmse,me'],
-#                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
-                                    'FCST_LEADS':['0,6,12,18,24,30,36,42,48,54,60,66,72,78,84'],
-                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
-                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'NEAREST',
-                                    'INTERP_PNTSs':[''],
-                                },
-                                'VGRD':{
-                                    'STATSs':['bcrmse,me'],
-#                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
-                                    'FCST_LEADS':['0,6,12,18,24,30,36,42,48,54,60,66,72,78,84'],
-                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
-                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
-                                    'FCST_THRESHs':[''],
-                                    'OBS_THRESHs':[''],
-                                    'CONFIDENCE_INTERVALS':'False',
-                                    'INTERP':'NEAREST',
-                                    'INTERP_PNTSs':[''],
-                                },
-                            },
-                            'vl1l2':{
-                                'UGRD_VGRD':{
-                                    'STATSs':['bcrmse,me'],
-#                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
-                                    'FCST_LEADS':['0,6,12,18,24,30,36,42,48,54,60,66,72,78,84'],
-                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
-                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50,P20,P10',
+                            'sl1l2':{
+                                'SBCAPE':{
+                                    'STATSs':['fbar,obar'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
+                                    'FCST_LEVEL':'L0',
+                                    'OBS_LEVEL':'L100000-0',
                                     'FCST_THRESHs':[''],
                                     'OBS_THRESHs':[''],
                                     'CONFIDENCE_INTERVALS':'False',
                                     'INTERP':'BILIN',
                                     'INTERP_PNTSs':[''],
-                                }
+                                },
+                                'MLCAPE':{
+                                    'STATSs':['fbar,obar'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
+                                    'FCST_LEVEL':'P90-0',
+                                    'OBS_LEVEL':'L90000-0',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
                             },
                         }
-                    }
-#                    """
-#                    },
-#                    'threshold_average':{
-#                        'DATE_TYPE':'INIT',
-#                        'VALID_BEG':'',
-#                        'VALID_END':'',
-#                        'INIT_BEG':'',
-#                        'INIT_END':'',
-#                        'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South,Alaska,Appalachia,CPlains,DeepSouth,GreatLakes,Mezquital,MidAtlantic,NorthAtlantic,NPlains,NRockies,PacificNW,PacificSW,Prairie,Southeast,SPlains,SRockies',
-#                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
-#                        'FCST_VALID_HOURS':[''],
-#                        'FCST_INIT_HOURS':['0','12'],
-#                        'VARIABLES':{
-#                            'ctc':{
-#                                'SBCAPE':{
-#                                    'STATSs':['csi','fbias'],
-#                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
-#                                    'FCST_LEVEL':'L0',
-#                                    'OBS_LEVEL':'L100000-0',
-#                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
-#                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
-#                                    'CONFIDENCE_INTERVALS':'False',
-#                                    'INTERP':'BILIN',
-#                                    'INTERP_PNTSs':[''],
-#                                },
-#                                'MLCAPE':{
-#                                    'STATSs':['csi','fbias'],
-#                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
-#                                    'FCST_LEVEL':'P90-0',
-#                                    'OBS_LEVEL':'L90000-0',
-#                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
-#                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
-#                                    'CONFIDENCE_INTERVALS':'False',
-#                                    'INTERP':'BILIN',
-#                                    'INTERP_PNTSs':[''],
-#                                },
-#                            },
-#                        }
-#                    },
-#                    'performance_diagram':{
-#                        'DATE_TYPE':'INIT',
-#                        'VALID_BEG':'',
-#                        'VALID_END':'',
-#                        'INIT_BEG':'',
-#                        'INIT_END':'',
-#                        'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South,Alaska,Appalachia,CPlains,DeepSouth,GreatLakes,Mezquital,MidAtlantic,NorthAtlantic,NPlains,NRockies,PacificNW,PacificSW,Prairie,Southeast,SPlains,SRockies',
-#                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
-#                        'FCST_VALID_HOURS':[''],
-#                        'FCST_INIT_HOURS':['0','12'],
-#                        'VARIABLES':{
-#                            'ctc':{
-#                                'SBCAPE':{
-#                                    'STATSs':['sratio,pod,csi'],
-#                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
-#                                    'FCST_LEVEL':'L0',
-#                                    'OBS_LEVEL':'L100000-0',
-#                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
-#                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
-#                                    'CONFIDENCE_INTERVALS':'False',
-#                                    'INTERP':'BILIN',
-#                                    'INTERP_PNTSs':[''],
-#                                },
-#                                'MLCAPE':{
-#                                    'STATSs':['sratio,pod,csi'],
-#                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
-#                                    'FCST_LEVEL':'P90-0',
-#                                    'OBS_LEVEL':'L90000-0',
-#                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
-#                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
-#                                    'CONFIDENCE_INTERVALS':'False',
-#                                    'INTERP':'BILIN',
-#                                    'INTERP_PNTSs':[''],
-#                                },
-#                            },
-#                        }
-#                    }
-#                    """    
-                },
-                'namnest, hrrr': {
+                    },
                     'stat_by_level':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
                         'VALID_END':'',
                         'INIT_BEG':'',
                         'INIT_END':'',
-                        'VX_MASK_LIST':'CONUS, Alaska, Hawaii, PuertoRico',
+                        'VX_MASK_LIST':'CONUS, Alaska',
                         'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
                         'FCST_VALID_HOURS':[''],
                         'FCST_INIT_HOURS':['0','12'],
                         'VARIABLES':{
                             'sl1l2':{
+                                'HGT':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
+                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
+                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'TMP':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
+                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
+                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'UGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
+                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
+                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'VGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
+                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
+                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'SPFH':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
+                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300',
+                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                            'vl1l2':{
+                                'UGRD_VGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
+                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
+                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''], 
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                }
+                            },
+                        }
+                    },
+                    'lead_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South,Alaska,Appalachia,CPlains,DeepSouth,GreatLakes,Mezquital,MidAtlantic,NorthAtlantic,NPlains,NRockies,PacificNW,PacificSW,Prairie,Southeast,SPlains,SRockies',
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'sl1l2':{
+                                'HPBL':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0,6,12,18,24,30,36,42,48,54,60,66,72,78,84'],
+                                    'FCST_LEVEL':'PBL',
+                                    'OBS_LEVEL':'L0',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                            'ctc':{
+                                'HPBL':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['0,6,12,18,24,30,36,42,48,54,60,66,72,78,84'],
+                                    'FCST_LEVEL':'PBL',
+                                    'OBS_LEVEL':'L0',
+                                    'FCST_THRESHs':['<=500','>=2000'],
+                                    'OBS_THRESHs':['<=500','>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
+                    'valid_hour_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South,Alaska,Appalachia,CPlains,DeepSouth,GreatLakes,Mezquital,MidAtlantic,NorthAtlantic,NPlains,NRockies,PacificNW,PacificSW,Prairie,Southeast,SPlains,SRockies',
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':['0,6,12,18'],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'sl1l2':{
+                                'HPBL':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0,6,12,18,24,30,36,42,48,54,60,66,72,78,84'],
+                                    'FCST_LEVEL':'PBL',
+                                    'OBS_LEVEL':'L0',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                            'ctc':{
+                                'HPBL':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['0,6,12,18,24,30,36,42,48,54,60,66,72,78,84'],
+                                    'FCST_LEVEL':'PBL',
+                                    'OBS_LEVEL':'L0',
+                                    'FCST_THRESHs':['<=500','>=2000'],
+                                    'OBS_THRESHs':['<=500','>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            }
+                        }
+                    },
+                    'threshold_average':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South,Alaska,Appalachia,CPlains,DeepSouth,GreatLakes,Mezquital,MidAtlantic,NorthAtlantic,NPlains,NRockies,PacificNW,PacificSW,Prairie,Southeast,SPlains,SRockies',
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'SBCAPE':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
+                                    'FCST_LEVEL':'L0',
+                                    'OBS_LEVEL':'L100000-0',
+                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'MLCAPE':{
+                                    'STATSs':['csi','fbias'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
+                                    'FCST_LEVEL':'P90-0',
+                                    'OBS_LEVEL':'L90000-0',
+                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    },
+                    'performance_diagram':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South,Alaska,Appalachia,CPlains,DeepSouth,GreatLakes,Mezquital,MidAtlantic,NorthAtlantic,NPlains,NRockies,PacificNW,PacificSW,Prairie,Southeast,SPlains,SRockies',
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'ctc':{
+                                'SBCAPE':{
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
+                                    'FCST_LEVEL':'L0',
+                                    'OBS_LEVEL':'L100000-0',
+                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'MLCAPE':{
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
+                                    'FCST_LEVEL':'P90-0',
+                                    'OBS_LEVEL':'L90000-0',
+                                    'FCST_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'OBS_THRESHs':['>=250,>=500,>=1000,>=2000'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    }
+                },
+                'nam, rap': {
+                    'stat_by_level':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'Hawaii, PuertoRico',
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'sl1l2':{
+                                'HGT':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
+                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
+                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'TMP':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
+                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
+                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'UGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
+                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
+                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                                'VGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
+                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
+                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
                                 'SPFH':{
                                     'STATSs':['bcrmse,me'],
                                     'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
@@ -309,12 +348,25 @@ graphics = {
                                     'INTERP_PNTSs':[''],
                                 },
                             },
+                            'vl1l2':{
+                                'UGRD_VGRD':{
+                                    'STATSs':['bcrmse,me'],
+                                    'FCST_LEADS':['0','6','12','18','24','30','36','42','48','54','60','66','72','78','84'],
+                                    'FCST_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
+                                    'OBS_LEVEL':'P1000,P925,P850,P700,P500,P400,P300,P250,P200,P150,P100,P50',
+                                    'FCST_THRESHs':[''],
+                                    'OBS_THRESHs':[''], 
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                }
+                            },
                         }
                     },
                 }
             },
             'metar':{
-                'namnest, hireswarw, hireswarwmem2, hireswfv3, hrrr': {
+                'nam, rap, gfs': {
                     'lead_average':{
                         'DATE_TYPE':'INIT',
                         'VALID_BEG':'',
@@ -329,7 +381,7 @@ graphics = {
                             'sl1l2':{
                                 'TMP2m':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84'],
                                     'FCST_LEVEL':'Z2',
                                     'OBS_LEVEL':'Z2',
                                     'FCST_THRESHs':[''],
@@ -340,7 +392,7 @@ graphics = {
                                 },
                                 'DPT2m':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84'],
                                     'FCST_LEVEL':'Z2',
                                     'OBS_LEVEL':'Z2',
                                     'FCST_THRESHs':['','','','',''],
@@ -351,7 +403,7 @@ graphics = {
                                 },
                                 'RH2m':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84'],
                                     'FCST_LEVEL':'Z2',
                                     'OBS_LEVEL':'Z2',
                                     'FCST_THRESHs':['','','','',''],
@@ -362,7 +414,7 @@ graphics = {
                                 },
                                 'MSLP':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84'],
                                     'FCST_LEVEL':'Z0',
                                     'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':[''],
@@ -373,7 +425,7 @@ graphics = {
                                 },
                                 'UGRD10m':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84'],
                                     'FCST_LEVEL':'Z10',
                                     'OBS_LEVEL':'Z10',
                                     'FCST_THRESHs':[''],
@@ -384,7 +436,7 @@ graphics = {
                                 },
                                 'VGRD10m':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84'],
                                     'FCST_LEVEL':'Z10',
                                     'OBS_LEVEL':'Z10',
                                     'FCST_THRESHs':[''],
@@ -395,7 +447,7 @@ graphics = {
                                 },
                                 'WIND10m':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84'],
                                     'FCST_LEVEL':'Z10',
                                     'OBS_LEVEL':'Z10',
                                     'FCST_THRESHs':[''],
@@ -406,7 +458,7 @@ graphics = {
                                 },
                                 'GUSTsfc':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84'],
                                     'FCST_LEVEL':'Z0',
                                     'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':[''],
@@ -419,7 +471,7 @@ graphics = {
                             'vl1l2':{
                                 'UGRD_VGRD10m':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84'],
                                     'FCST_LEVEL':'Z10',
                                     'OBS_LEVEL':'Z10',
                                     'FCST_THRESHs':[''],
@@ -445,7 +497,7 @@ graphics = {
                             'sl1l2':{
                                 'TMP2m':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84'],
                                     'FCST_LEVEL':'Z2',
                                     'OBS_LEVEL':'Z2',
                                     'FCST_THRESHs':[''],
@@ -456,7 +508,7 @@ graphics = {
                                 },
                                 'DPT2m':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84'],
                                     'FCST_LEVEL':'Z2',
                                     'OBS_LEVEL':'Z2',
                                     'FCST_THRESHs':['','','','',''],
@@ -467,7 +519,7 @@ graphics = {
                                 },
                                 'RH2m':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84'],
                                     'FCST_LEVEL':'Z2',
                                     'OBS_LEVEL':'Z2',
                                     'FCST_THRESHs':['','','','',''],
@@ -478,7 +530,7 @@ graphics = {
                                 },
                                 'MSLP':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84'],
                                     'FCST_LEVEL':'Z0',
                                     'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':[''],
@@ -489,7 +541,7 @@ graphics = {
                                 },
                                 'UGRD10m':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84'],
                                     'FCST_LEVEL':'Z10',
                                     'OBS_LEVEL':'Z10',
                                     'FCST_THRESHs':[''],
@@ -500,7 +552,7 @@ graphics = {
                                 },
                                 'VGRD10m':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84'],
                                     'FCST_LEVEL':'Z10',
                                     'OBS_LEVEL':'Z10',
                                     'FCST_THRESHs':[''],
@@ -511,7 +563,7 @@ graphics = {
                                 },
                                 'WIND10m':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84'],
                                     'FCST_LEVEL':'Z10',
                                     'OBS_LEVEL':'Z10',
                                     'FCST_THRESHs':[''],
@@ -522,7 +574,7 @@ graphics = {
                                 },
                                 'GUSTsfc':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84'],
                                     'FCST_LEVEL':'Z0',
                                     'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':[''],
@@ -535,7 +587,7 @@ graphics = {
                             'vl1l2':{
                                 'UGRD_VGRD10m':{
                                     'STATSs':['bcrmse,me'],
-                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60'],
+                                    'FCST_LEADS':['0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84'],
                                     'FCST_LEVEL':'Z10',
                                     'OBS_LEVEL':'Z10',
                                     'FCST_THRESHs':[''],
@@ -561,7 +613,7 @@ graphics = {
                             'ctc':{
                                 'DPT2m':{
                                     'STATSs':['fbias'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60','63','66','69','72','75','78','81','84'],
                                     'FCST_LEVEL':'Z2',
                                     'OBS_LEVEL':'Z2',
                                     'FCST_THRESHs':['>=277.594,>=283.15,>=288.706,>=294.261'],
@@ -572,7 +624,7 @@ graphics = {
                                 },
                                 'RH2m':{
                                     'STATSs':['fbias'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60','63','66','69','72','75','78','81','84'],
                                     'FCST_LEVEL':'Z2',
                                     'OBS_LEVEL':'Z2',
                                     'FCST_THRESHs':['<=15,<=20,<=25,<=30'],
@@ -583,7 +635,7 @@ graphics = {
                                 },
                                 'VIS':{
                                     'STATSs':['csi','fbias'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60','63','66','69','72','75','78','81','84'],
                                     'FCST_LEVEL':'Z0',
                                     'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['<=805,<=1609,<=4828,<=8045,<=16090'],
@@ -594,7 +646,7 @@ graphics = {
                                 },
                                 'CEILING':{
                                     'STATSs':['csi','fbias'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60','63','66','69','72','75','78','81','84'],
                                     'FCST_LEVEL':'CEILING',
                                     'OBS_LEVEL':'L0',
                                     'FCST_THRESHs':['<=152,<=305,<=914,<=1524,<=3048'],
@@ -605,7 +657,7 @@ graphics = {
                                 },
                                 'TCDC':{
                                     'STATSs':['csi','fbias'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60','63','66','69','72','75','78','81','84'],
                                     'FCST_LEVEL':'TOTAL',
                                     'OBS_LEVEL':'L0',
                                     'FCST_THRESHs':['>10,>50,>90'],
@@ -631,7 +683,7 @@ graphics = {
                             'ctc':{
                                 'VIS':{
                                     'STATSs':['sratio,pod,csi'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60','63','66','69','72','75','78','81','84'],
                                     'FCST_LEVEL':'Z0',
                                     'OBS_LEVEL':'Z0',
                                     'FCST_THRESHs':['<=805,<=1609,<=4828,<=8045,<=16090'],
@@ -642,7 +694,7 @@ graphics = {
                                 },
                                 'CEILING':{
                                     'STATSs':['sratio,pod,csi'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60','63','66','69','72','75','78','81','84'],
                                     'FCST_LEVEL':'CEILING',
                                     'OBS_LEVEL':'L0',
                                     'FCST_THRESHs':['<=152,<=305,<=914,<=1524,<=3048'],
@@ -653,7 +705,7 @@ graphics = {
                                 },
                                 'TCDC':{
                                     'STATSs':['sratio,pod,csi'],
-                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60'],
+                                    'FCST_LEADS':['0','3','6','9','12','15','18','21','24','27','30','33','36','39','42','45','48','51','54','57','60','63','66','69','72','75','78','81','84'],
                                     'FCST_LEVEL':'TOTAL',
                                     'OBS_LEVEL':'L0',
                                     'FCST_THRESHs':['>10,>50,>90'],

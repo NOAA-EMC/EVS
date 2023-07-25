@@ -40,7 +40,7 @@ export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
 export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
-
+export COMROOT=${COMROOT:-$(compath.py $envir/com)}
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
@@ -78,7 +78,8 @@ if  [ $MODELNAME = href ] ; then
 else
   export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
   export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
-  export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
+  export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
+  export COMOUTplots=${COMOUTplots:-$COMOUT/$RUN.$VDATE}
   echo $COMPATH
 fi
 

@@ -1,90 +1,17 @@
+#!/usr/bin/env python3
 # =============================================================================
 #
 # NAME: mesoscale_util.py
-# CONTRIBUTOR(S): Mallory Row, mallory.row@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-#                 RS, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# CONTRIBUTOR(S): RS, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+#                 Mallory Row, mallory.row@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 #                 Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Various Utilities for EVS MESOSCALE Verification
 # 
 # =============================================================================
 
 import os
-import datetime
 import sys
-import numpy as np
-import subprocess
-
-def get_all_eval_periods(graphics):
-    all_eval_periods = []
-    for component in graphics:                                                               
-        for verif_case in graphics[component]:                                                 
-            for verif_type in graphics[component][verif_case]:                                     
-                verif_type_dict = graphics[component][verif_case][verif_type]
-                for models in verif_type_dict:
-                    for plot_type in verif_type_dict[models]:           
-                        all_eval_periods.append(
-                            verif_type_dict[models][plot_type]['EVAL_PERIODS']
-                        )
-    return np.unique(np.hstack(all_eval_periods))
-
-def get_fhr_start(vhour, acc, fhr_incr, min_ihour):
-    fhr_start = (
-        float(vhour) + float(min_ihour)
-        + (
-            float(fhr_incr)
-            * np.ceil(
-                (float(acc)-float(vhour)-float(min_ihour))
-                / float(fhr_incr)
-            )
-        )
-    )
-    return int(fhr_start)
-
-def run_shell_command(command, capture_output=False):
-    """! Run shell command
-
-        Args:
-            command - list of argument entries (string)
-
-        Returns:
-
-    """
-    print("Running "+' '.join(command))
-    if any(mark in ' '.join(command) for mark in ['"', "'", '|', '*', '>']):
-        run_command = subprocess.run(
-            ' '.join(command), shell=True, capture_output=capture_output
-        )
-    else:
-        run_command = subprocess.run(command, capture_output=capture_output)
-    if run_command.returncode != 0:
-        print("ERROR: "+''.join(run_command.args)+" gave return code "
-              + str(run_command.returncode))
-    else:
-        if capture_output:
-            return run_command.stdout.decode('utf-8')
-
-def format_thresh(thresh):
-   """! Format threshold with letter and symbol options
-
-      Args:
-         thresh         - the threshold (string)
-
-      Return:
-         thresh_symbol  - threshold with symbols (string)
-         thresh_letters - treshold with letters (string)
-   """
-   thresh_symbol = (
-       thresh.replace('ge', '>=').replace('gt', '>')\
-       .replace('eq', '==').replace('ne', '!=')\
-       .replace('le', '<=').replace('lt', '<')
-   )
-   thresh_letter = (
-       thresh.replace('>=', 'ge').replace('>', 'gt')\
-       .replace('==', 'eq').replace('!=', 'ne')\
-       .replace('<=', 'le').replace('<', 'lt')
-   )
-   return thresh_symbol, thresh_letter
-
+import datetime
 import numpy as np
 import subprocess
 from collections.abc import Iterable
@@ -144,8 +71,6 @@ def get_data_type(fname):
     else:
         data_name = "Unknown"
         return data_name, 'unk'
-
-
 
 def get_all_eval_periods(graphics):
     all_eval_periods = []

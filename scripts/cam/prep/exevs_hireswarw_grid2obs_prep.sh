@@ -12,7 +12,9 @@
 set -x
 
 # Set Basic Environment Variables
-NEST_LIST="spc_otlk"
+#NEST_LIST="conus spc_otlk"
+NEST_LIST="conus"
+export VERIF_TYPE="mping"
 
 # Loop through HiRes Window ARW Grid2Obs configs
 export njob=1
@@ -109,11 +111,15 @@ for NEST in $NEST_LIST; do
     #all commands to copy output files into the correct EVS COMOUT directory
     if [ $SENDCOM = YES ]; then
         for OBS_DIR_PATH in $DATA/$VERIF_CASE/data/*; do
-            OBS_DIR=$(echo ${OBS_DIR_PATH##*/})
-            mkdir -p $COMOUT/$OBS_DIR
-            for FILE in $OBS_DIR_PATH/*; do
-                cp -v $FILE $COMOUT/$OBS_DIR/.
-            done
+            if [ -z "$(ls -A $OBS_DIR_PATH)" ]; then
+                echo "${OBS_DIR_PATH} is empty."
+            else
+                OBS_DIR=$(echo ${OBS_DIR_PATH##*/})
+                mkdir -p $COMOUT/$OBS_DIR
+                for FILE in $OBS_DIR_PATH/*; do
+                    cp -v $FILE $COMOUT/$OBS_DIR/.
+                done
+            fi
         done
     fi
 

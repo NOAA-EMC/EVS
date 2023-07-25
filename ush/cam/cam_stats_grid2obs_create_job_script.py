@@ -82,6 +82,8 @@ elif job_type == 'generate':
     njob = os.environ['njob']
     GRID = os.environ['GRID']
     USHevs = os.environ['USHevs']
+    if NEST == 'spc_otlk':
+        COMINspcotlk = os.environ['COMINspcotlk']
 elif job_type == 'gather':
     VERIF_TYPE = os.environ['VERIF_TYPE']
     njob = os.environ['njob']
@@ -137,6 +139,9 @@ if job_type == 'generate':
                 OUTPUT_FLAG_VCNT = (
                     var_defs[VAR_NAME][VERIF_TYPE]['output_types']['VCNT']
                 )
+                OUTPUT_FLAG_MCTC = (
+                    var_defs[VAR_NAME][VERIF_TYPE]['output_types']['MCTC']
+                )
     if not plot_this_var:
         print(f"ERROR: VAR_NAME \"{VAR_NAME}\" is not valid for VERIF_TYPE "
               + f"\"{VERIF_TYPE}\" and MODEL \"{MODELNAME}\". Check "
@@ -189,11 +194,13 @@ if job_type == 'reformat':
         job_env_vars_dict['metplus_launcher'] = metplus_launcher
         job_env_vars_dict['COMINspcotlk'] = COMINspcotlk
         job_env_vars_dict['GRID_POLY_LIST'] = GRID_POLY_LIST
+        '''
         job_iterate_over_custom_lists_dict['DAY'] = {
             'custom_list': '1 2 3',
             'export_value': '{DAY}',
             'dependent_vars': {}
         }
+        '''
     if NEST == 'firewx':
         job_env_vars_dict['GRID_POLY_LIST'] = GRID_POLY_LIST
     job_dependent_vars['FHR_START'] = {
@@ -244,11 +251,12 @@ elif job_type == 'generate':
     job_env_vars_dict['OUTPUT_FLAG_VL1L2'] = OUTPUT_FLAG_VL1L2
     job_env_vars_dict['OUTPUT_FLAG_CNT'] = OUTPUT_FLAG_CNT
     job_env_vars_dict['OUTPUT_FLAG_VCNT'] = OUTPUT_FLAG_VCNT
+    job_env_vars_dict['OUTPUT_FLAG_MCTC'] = OUTPUT_FLAG_MCTC
     job_iterate_over_env_lists_dict['FHR_GROUP_LIST'] = {
         'list_items': re.split(r'[\s,]+', FHR_GROUP_LIST),
         'exports': ['FHR_END','FHR_INCR']
     }
-    if NEST == 'firewx':
+    if NEST == 'firewx': 
         '''
         job_env_vars_dict['MASK_POLY_LIST'] = (
             f'{MET_PLUS_OUT}/{VERIF_TYPE}/genvxmask/{NEST}.'
@@ -277,7 +285,6 @@ elif job_type == 'generate':
                 )],
             }
         }
-        
     elif NEST == 'spc_otlk':
         job_dependent_vars['MASK_POLY_LIST'] = {
             'exec_value': '',
@@ -285,19 +292,25 @@ elif job_type == 'generate':
             'bash_conditional': '[[ ${VHOUR} -lt 12 ]]',
             'bash_conditional_value': '"' + ', '.join(
                 glob.glob(os.path.join(
-                    MET_PLUS_OUT,VERIF_TYPE,'genvxmask',f'spc_otlk.{VDATE}',
-                    f'spc_otlk_*_v*-{VDATE}1200_for{VHOUR}Z*'
+                    COMINspcotlk,f'spc_otlk.*',
+                    f'spc_otlk.*.v*-{VDATE}12.3km*'
                 ))
             ) + '"',
             'bash_conditional_else_value': '"' + ', '.join(
                 glob.glob(os.path.join(
-                    MET_PLUS_OUT,VERIF_TYPE,'genvxmask',f'spc_otlk.{VDATE}',
-                    f'spc_otlk_*_v{VDATE}*for{VHOUR}Z*'
+                    COMINspcotlk,f'spc_otlk.*',
+                    f'spc_otlk.*.v{VDATE}*3km*'
                 ))
             ) + '"'
         }
     else:
         job_env_vars_dict['MASK_POLY_LIST'] = MASK_POLY_LIST
+    if VAR_NAME == 'PTYPE' and NEST != 'firewx':
+        job_iterate_over_custom_lists_dict['FHR'] = {
+            'custom_list': '`seq ${FHR_START} ${FHR_INCR} ${FHR_END}`',
+            'export_value': '(printf "%02d" $FHR)',
+            'dependent_vars': {}
+        }
     job_dependent_vars['FHR_START'] = {
         'exec_value': '',
         'bash_value': (
@@ -318,23 +331,32 @@ if STEP == 'prep':
     pass
 elif STEP == 'stats':
     if job_type == 'reformat':
-        if NEST == 'spc_otlk':
-            job_cmd_list_iterative.append(
-                f'python '
-                + f'{USHevs}/{COMPONENT}/'
-                + f'{COMPONENT}_{STEP}_{VERIF_CASE}_gen_{NEST}_mask.py'
-            )
-        elif NEST == 'firewx':
+        if NEST == 'firewx':
             job_cmd_list_iterative.append(
                 f'{metplus_launcher} -c '
                 + f'{MET_PLUS_CONF}/'
                 + f'GenVxMask_{str(NEST).upper()}.conf'
             )
-        job_cmd_list_iterative.append(
-            f'{metplus_launcher} -c '
-            + f'{MET_PLUS_CONF}/'
-            + f'PB2NC_obs{VERIF_TYPE.upper()}.conf'
-        )
+        '''
+        elif NEST == 'spc_otlk':
+            job_cmd_list_iterative.append(
+                f'python '
+                + f'{USHevs}/{COMPONENT}/'
+                + f'{COMPONENT}_{STEP}_{VERIF_CASE}_gen_{NEST}_mask.py'
+            )
+        '''
+        if VERIF_TYPE == 'mping':
+            job_cmd_list_iterative.append(
+                f'{metplus_launcher} -c '
+                + f'{MET_PLUS_CONF}/'
+                + f'ASCII2NC_obs{VERIF_TYPE.upper()}.conf'
+            )
+        else:
+            job_cmd_list_iterative.append(
+                f'{metplus_launcher} -c '
+                + f'{MET_PLUS_CONF}/'
+                + f'PB2NC_obs{VERIF_TYPE.upper()}.conf'
+            )
     if job_type == 'generate':
         if FCST_VAR2_NAME:
             if NEST == 'firewx':
@@ -352,18 +374,56 @@ elif STEP == 'stats':
                 )
         else:
             if NEST == 'firewx':
-                job_cmd_list_iterative.append(
-                    f'{metplus_launcher} -c '
-                    + f'{MET_PLUS_CONF}/'
-                    + f'PointStat_fcst{COMPONENT.upper()}_'
-                    + f'obs{VERIF_TYPE.upper()}_{str(NEST).upper()}.conf'
-                )
+                if VAR_NAME == 'PTYPE':
+                    job_cmd_list_iterative.append(
+                        f'{metplus_launcher} -c '
+                        + f'{MET_PLUS_CONF}/'
+                        + f'RegridDataPlane_fcst{COMPONENT.upper()}_PTYPE.conf'
+                    )
+                    job_cmd_list_iterative.append(
+                        f'python '
+                        + f'{USHevs}/{COMPONENT}/'
+                        + f'{COMPONENT}_{STEP}_{VERIF_CASE}_create_merged_ptype.py'
+                    )
+                    job_cmd_list_iterative.append(
+                        f'{metplus_launcher} -c '
+                        + f'{MET_PLUS_CONF}/'
+                        + f'PointStat_fcst{COMPONENT.upper()}_'
+                        + f'obs{VERIF_TYPE.upper()}_'
+                        + f'{str(NEST).upper()}_{VAR_NAME}.conf'
+                    )
+                else:
+                    job_cmd_list_iterative.append(
+                        f'{metplus_launcher} -c '
+                        + f'{MET_PLUS_CONF}/'
+                        + f'PointStat_fcst{COMPONENT.upper()}_'
+                        + f'obs{VERIF_TYPE.upper()}_{str(NEST).upper()}.conf'
+                    )
             else:
-                job_cmd_list_iterative.append(
-                    f'{metplus_launcher} -c '
-                    + f'{MET_PLUS_CONF}/'
-                    + f'PointStat_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}.conf'
-                )
+                if VAR_NAME == 'PTYPE':
+                    job_cmd_list_iterative.append(
+                        f'{metplus_launcher} -c '
+                        + f'{MET_PLUS_CONF}/'
+                        + f'RegridDataPlane_fcst{COMPONENT.upper()}_PTYPE.conf'
+                    )
+                    job_cmd_list_iterative.append(
+                        f'python '
+                        + f'{USHevs}/{COMPONENT}/'
+                        + f'{COMPONENT}_{STEP}_{VERIF_CASE}_create_merged_ptype.py'
+                    )
+                    job_cmd_list_iterative.append(
+                        f'{metplus_launcher} -c '
+                        + f'{MET_PLUS_CONF}/'
+                        + f'PointStat_fcst{COMPONENT.upper()}_'
+                        + f'obs{VERIF_TYPE.upper()}_{VAR_NAME}.conf'
+                    )
+                else:
+                    job_cmd_list_iterative.append(
+                        f'{metplus_launcher} -c '
+                        + f'{MET_PLUS_CONF}/'
+                        + f'PointStat_fcst{COMPONENT.upper()}_'
+                        + f'obs{VERIF_TYPE.upper()}.conf'
+                    )
     elif job_type == 'gather':
         job_cmd_list.append(
             f'{metplus_launcher} -c '
