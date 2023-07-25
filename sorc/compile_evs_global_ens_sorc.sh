@@ -6,6 +6,8 @@ source ../versions/build.ver
 
 source ../modulefiles/v1.0
 
+mkdir -p ../exec
+
 set -x
 
 #SORCevs_gefs=`pwd`

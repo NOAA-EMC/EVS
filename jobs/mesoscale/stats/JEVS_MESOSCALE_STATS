@@ -1,26 +1,29 @@
 #!/bin/bash
 
 # =============================================================================
-#
-# NAME: JEVS_MESOSCALE_STATS
-# CONTRIBUTOR(S): RS, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# CONTRIBUTOR(S): BZ, binbin.zhou@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# CONTRIBUTOR(S): MR, mallory.row@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Use ECF environment variables to define and run an EVS job
-# DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_nam_grid2obs_stats.ecf
-# DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_grid2obs_stats.ecf
-# DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_nam_precip_stats.ecf
-# DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_precip_stats.ecf
-# DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_nam_snowfall_stats.ecf
-# DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_snowfall_stats.ecf
-# DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_sref_grid2obs_stats.ecf
-#
+# 
+#  NAME: JEVS_MESOSCALE_STATS
+#  CONTRIBUTOR(S): RS, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+#  CONTRIBUTOR(S): BZ, binbin.zhou@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+#  CONTRIBUTOR(S): MR, mallory.row@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+#  PURPOSE: Use ECF environment variables to define and run an EVS job
+#  DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_nam_grid2obs_stats.ecf
+#  DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_grid2obs_stats.ecf
+#  DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_nam_precip_stats.ecf
+#  DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_precip_stats.ecf
+#  DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_nam_snowfall_stats.ecf
+#  DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_snowfall_stats.ecf
+#  DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_sref_grid2obs_stats.ecf
+# 
 # =============================================================================
+#
 
 ########################################
 # Preliminary data setup step  
 ########################################
 set -xa
+
+echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 
 # Shell Processing Variables
 export PS4='$SECONDS + '
@@ -29,14 +32,16 @@ date
 # LSF id (jobid) and Temp Directories
 export pid=$$
 export pgmout="OUTPUT.${pid}"
+
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+
 export DATA=${DATA:-${DATAROOT:?}}/${jobid:?}
 rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
 
-export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-YES}
-export SENDECF=${SENDECF:-YES}
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
@@ -60,7 +65,7 @@ if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
   export COMINmrms=${COMINmrms:-$DCOMROOT/ldmdata/obs/upperair/mrms}
   export COMINnohrsc=${COMINnohrsc:-$DCOMROOT}
 
-# in production, the following will be set to the approp. COMOUT dir
+ # in production, the following will be set to the approp. COMOUT dir
   export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
   export COMOUTfinal=${COMOUTfinal:-$COMOUT/${MODELNAME}.${VDATE}}
   export COMOUTsmall=${COMOUTsmall:-$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE}
@@ -69,13 +74,16 @@ if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
 
 elif [ $MODELNAME = sref ]; then
   export VDATE=${VDATE:-$PDYm2}
+
   export COMIN=${COMIN:-$(compath.py  $NET/$evs_ver)}/prep/$COMPONENT/$RUN
   export COMINsref=${COMINsref:-$(compath.py  sref/$sref_ver)}
   export COMINprepbufr=${COMINprepbufr:-$(compath.py  obsproc/${obsproc_ver})}
   export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
   export COMINsrefmean=${COMINsrefmean:-$(compath.py  $NET/$evs_ver)}/prep/$COMPONENT
+
   export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}/$STEP/$COMPONENT
   mkdir -p $COMOUT
+
   export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
   export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
   mkdir -p $COMOUTfinal $COMOUTsmall
@@ -85,18 +93,17 @@ else
 fi
 
 # Execute the Script
-  $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
-  export err=$?; err_chk
+$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+export err=$?; err_chk
 
 # Clean Up
-  cat $pgmout
-  msg="JOB $job HAS COMPLETED NORMALLY."
-  postmsg "$jlogfile" "$msg"
-  if [ "$KEEPDATA" != "YES" ] ; then
-    cd $DATA_IN
-    rm -rf $DATA
-  fi
+cat $pgmout
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATA_IN
+  rm -rf $DATA
+fi
 
-  echo "END: $(basename ${BASH_SOURCE[0]})"
+echo "END: $(basename ${BASH_SOURCE[0]})"
 
-date
