@@ -1,4 +1,4 @@
-#PBS -N jevs_nam_snowfall_stats_00
+#PBS -N jevs_mesoscale_nam_snowfall_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"

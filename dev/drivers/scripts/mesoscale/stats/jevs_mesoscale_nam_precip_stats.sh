@@ -1,4 +1,4 @@
-#PBS -N jevs_rap_precip_stats_00
+#PBS -N jevs_mesoscale_nam_precip_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -20,7 +20,7 @@ export SENDCOM=YES
 export KEEPDATA=NO
 export SENDDBN=YES
 export SENDDBN_NTC=
-export job=${PBS_JOBNAME:-jevs_rap_precip_stats}
+export job=${PBS_JOBNAME:-jevs_nam_precip_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)  
 export envir="dev"
@@ -39,7 +39,7 @@ export VDATE=$(date -d "today -2 day" +"%Y%m%d")
 export STEP="stats"
 export COMPONENT="mesoscale"
 export VERIF_CASE="precip"
-export MODELNAME="rap" 
+export MODELNAME="nam" 
 export machine=WCOSS2
 export USE_CFP=YES
 export nproc=128  
