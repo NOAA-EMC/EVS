@@ -939,16 +939,20 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             for thresh_label in requested_thresh_labels
         ])
         if units:
-            title2 = (f'{level_string} Daily Avg {var_long_name} ({thresholds_phrase}'
+            title2 = (f'{level_string} {var_long_name} ({thresholds_phrase}'
                       + f' {units})')
         else:
-            title2 = (f'{level_string} Daily Avg {var_long_name} ({thresholds_phrase}'
+            title2 = (f'{level_string} {var_long_name} ({thresholds_phrase}'
                       + f' unitless)')
     else:
         if units:
-            title2 = f'{level_string} Daily Avg {var_long_name} ({units})'
+            title2 = f'{level_string} {var_long_name} ({units})'
         else:
-            title2 = f'{level_string} Daily Avg {var_long_name} (unitless)'
+            title2 = f'{level_string} {var_long_name} (unitless)'
+    if obtype == 'SFCSHP':
+        title2 = title2+f', Observations: Surface Marine (Ship, Buoy, C-MAN Platform)'
+    elif obtype == 'NDBC_STANDARD':
+        title2 = title2+f', Observations: NDBC Buoys'
 #    title3 = f'{str(date_type).capitalize()} {date_hours_string} '
 #              + f'{date_start_string} to {date_end_string}, {frange_string}'
     fcst_day=int(flead[0]/24)
@@ -1020,6 +1024,10 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     if str(metric2_name).lower() == 'pcor':
         metric2_name = 'corr'
     domain_string = domain_string.replace(', ','_')
+    if domain == 'GLOBAL':
+        domain_savename = 'glb'
+    else:
+        domain_savename = domain
     save_name = (f'evs.'
                  + f'{str(models_savename).lower()}.'
                  + f'{str(metric1_name).lower()}.'
@@ -1027,7 +1035,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                  + f'{str(time_period_savename).lower()}.'
                  + f'timeseries_{str(date_type).lower()}{str(date_hours_savename).lower()}_'
                  + f'{str(frange_save_string).lower()}.'
-                 + f'{str(domain_string).lower()}')
+                 + f'latlon_0p25_{str(domain_savename).lower()}')
     if metric2_name is not None:
         save_name = (f'evs.'
                  + f'{str(models_savename).lower()}.'
@@ -1036,7 +1044,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                  + f'{str(time_period_savename).lower()}.'
                  + f'timeseries_{str(date_type).lower()}{str(date_hours_savename).lower()}_'
                  + f'{str(frange_save_string).lower()}.'
-                 + f'{str(domain_string).lower()}')
+                 + f'latlon_0p25_{str(domain_savename).lower()}')
     if thresh and '' not in thresh:
         save_name = (f'evs.'
                  + f'{str(models_savename).lower()}.'
@@ -1045,11 +1053,14 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                  + f'{str(time_period_savename).lower()}.'
                  + f'timeseries_{str(date_type).lower()}{str(date_hours_savename).lower()}_'
                  + f'{str(frange_save_string).lower()}.'
-                 + f'{str(domain_string).lower()}')
+                 + f'latlon_0p25_{str(domain_savename).lower()}')
     if save_header:
         save_name = f'{save_header}_'+save_name
+    #save_subdir = os.path.join(
+    #    save_dir, f'{str(obtype).lower()}'
+    #)
     save_subdir = os.path.join(
-        save_dir, f'{str(obtype).lower()}'
+        save_dir, 'images'              
     )
     if not os.path.isdir(save_subdir):
         os.makedirs(save_subdir)
