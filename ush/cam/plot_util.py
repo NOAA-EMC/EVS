@@ -280,7 +280,8 @@ def get_stat_file_base_columns(met_version):
       ]
    return stat_file_base_columns
 
-def get_stat_file_line_type_columns(logger, met_version, line_type):
+def get_stat_file_line_type_columns(logger, met_version, line_type, 
+                                    stat_file_base_columns, fpath):
    """! Get the MET .stat file columns for line type based on 
       version number
          Args:
@@ -315,13 +316,36 @@ def get_stat_file_line_type_columns(logger, met_version, line_type):
             'UVFFBAR', 'UVOOBAR', 'F_SPEED_BAR', 'O_SPEED_BAR'
          ]
    elif line_type == 'VAL1L2':
-      if met_version >= 6.0:
+      if met_version >= 11.0:
+         stat_file_line_type_columns = [
+            'TOTAL', 'UFABAR', 'VFABAR', 'UOABAR', 'VOABAR', 'UVFOABAR', 
+            'UVFFABAR', 'UVOOABAR', 'FA_SPEED_BAR', 'OA_SPEED_BAR'
+         ]
+      elif met_version >= 6.0:
          stat_file_line_type_columns = [
             'TOTAL', 'UFABAR', 'VFABAR', 'UOABAR', 'VOABAR', 'UVFOABAR', 
             'UVFFABAR', 'UVOOABAR'
          ]
    elif line_type == 'VCNT':
-      if met_version >= 7.0:
+      if met_version >= 11.0:
+         stat_file_line_type_columns = [
+            'TOTAL', 'FBAR', 'FBAR_BCL', 'FBAR_BCU', 'OBAR', 'OBAR_BCL', 
+            'OBAR_BCU', 'FS_RMS', 'FS_RMS_BCL', 'FS_RMS_BCU', 'OS_RMS',
+            'OS_RMS_BCL', 'OS_RMS_BCU', 'MSVE', 'MSVE_BCL', 'MSVE_BCU',
+            'RMSVE', 'RMSVE_BCL', 'RMSVE_BCU', 'FSTDEV', 'FSTDEV_BCL',
+            'FSTDEV_BCU', 'OSTDEV', 'OSTDEV_BCL', 'OSTDEV_BCU', 'FDIR', 
+            'FDIR_BCL', 'FDIR_BCU', 'ODIR', 'ODIR_BCL', 'ODIR_BCU', 
+            'FBAR_SPEED', 'FBAR_SPEED_BCL', 'FBAR_SPEED_BCU', 'OBAR_SPEED', 
+            'OBAR_SPEED_BCL', 'OBAR_SPEED_BCU', 'VDIFF_SPEED', 
+            'VDIFF_SPEED_BCL', 'VDIFF_SPEED_BCU', 'VDIFF_DIR',
+            'VDIFF_DIR_BCL', 'VDIFF_DIR_BCU', 'SPEED_ERR', 'SPEED_ERR_BCL',
+            'SPEED_ERR_BCU', 'SPEED_ABSERR', 'SPEED_ABSERR_BCL',
+            'SPEED_ABSERR_BCU', 'DIR_ERR', 'DIR_ERR_BCL', 'DIR_ERR_BCU',
+            'DIR_ABSERR', 'DIR_ABSERR_BCL', 'DIR_ABSERR_BCU', 'ANOM_CORR',
+            'ANOM_CORR_NCL', 'ANOM_CORR_NCU', 'ANOM_CORR_BCL', 'ANOM_CORR_BCU',
+            'ANOM_CORR_UNCNT', 'ANOM_CORR_UNCNTR_BCL', 'ANOM_CORR_UNCNTR_BCU'
+         ]
+      elif met_version >= 7.0:
          stat_file_line_type_columns = [
             'TOTAL', 'FBAR', 'FBAR_NCL', 'FBAR_NCU', 'OBAR', 'OBAR_NCL', 
             'OBAR_NCU', 'FS_RMS', 'FS_RMS_NCL', 'FS_RMS_NCU', 'OS_RMS',
@@ -341,11 +365,11 @@ def get_stat_file_line_type_columns(logger, met_version, line_type):
          logger.error("VCNT is not a valid LINE_TYPE in METV"+met_version)
          exit(1)
    elif line_type == 'CTC':
-       if met_version >= 11.0:
+      if met_version >= 11.0:
          stat_file_line_type_columns = [
-           'TOTAL', 'FY_OY', 'FY_ON', 'FN_OY', 'FN_ON', 'EC_VALUE'
+            'TOTAL', 'FY_OY', 'FY_ON', 'FN_OY', 'FN_ON', 'EC_VALUE'
          ]
-       elif met_version >= 6.0:
+      elif met_version >= 6.0:
           stat_file_line_type_columns = [
             'TOTAL', 'FY_OY', 'FY_ON', 'FN_OY', 'FN_ON'
          ]
@@ -357,6 +381,52 @@ def get_stat_file_line_type_columns(logger, met_version, line_type):
             'F_RATE', 'F_RATE_BCL', 'F_RATE_BCU',
             'O_RATE', 'O_RATE_BCL', 'O_RATE_BCU'
          ]
+   elif line_type == 'MCTC':
+      if met_version >= 11.0:
+         # need to pull in stat_file_og_columns and fname as args!
+         stat_file_line_type_columns_start = ['TOTAL', 'N_CAT']
+         stat_file_all_columns_start = np.concatenate((
+            stat_file_base_columns, stat_file_line_type_columns_start
+         ))
+         df_read_tmp = pd.read_csv(
+            fpath, delim_whitespace=True, header=None, skiprows=1, dtype=str
+         )
+         categs = np.arange(int(
+            df_read_tmp[
+                np.argwhere(stat_file_all_columns_start=='N_CAT')[0]
+            ].max()
+         ))
+         variable_columns = []
+         for Fcateg in categs:
+            for Ocateg in categs:
+               variable_columns.append(f'F{Fcateg}_O{Ocateg}')
+         stat_file_line_type_columns = np.concatenate((
+            stat_file_line_type_columns_start,
+            variable_columns,
+            ['EC_VALUE']
+         ))
+      elif met_version >= 6.0:
+         # need to pull in stat_file_og_columns and fname as args!
+         stat_file_line_type_columns_start = ['TOTAL', 'N_CAT']
+         stat_file_all_columns_start = np.concatenate((
+            stat_file_og_columns, stat_file_line_type_columns_start
+         ))
+         df_read_tmp = pd.read_csv(
+            fname, delim_whitespace=True, header=None, skiprows=1, dtype=str
+         )
+         categs = np.arange(int(
+            df_read_tmp[
+                np.argwhere(stat_file_all_columns_start=='N_CAT')[0]
+            ].max()
+         ))
+         variable_columns = []
+         for Fcateg in categs:
+            for Ocateg in categs:
+               variable_columns.append(f'F{Fcat}_O{Ocat}')
+         stat_file_line_type_columns = np.concatenate((
+            stat_file_line_type_columns_start,
+            variable_columns
+         ))
    return stat_file_line_type_columns
 
 def get_clevels(data, spacing):
@@ -842,6 +912,35 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          fy_on = model_data.loc[:]['FY_ON']
          fn_oy = model_data.loc[:]['FN_OY']
          fn_on = model_data.loc[:]['FN_ON']
+      elif all(elem in model_data_columns for elem in 
+            ['N_CAT', 'F0_O0']):
+         line_type = 'MCTC'
+         total = model_data.loc[:]['TOTAL']
+         counts = model_data.loc[:]['COUNTS']
+         n_cat = model_data.loc[:]['N_CAT']/counts
+         i_val = model_data.loc[:]['i_vals']/counts
+         fy_oy_cols = get_MCTC_cols_for_sum(n_cat, i_val, 'fy_oy')
+         fy_on_cols = get_MCTC_cols_for_sum(n_cat, i_val, 'fy_on')
+         fn_oy_cols = get_MCTC_cols_for_sum(n_cat, i_val, 'fn_oy')
+         fy_oy = np.array(
+            [
+                model_data.reset_index().loc[i, fy_oy_cols[i]].sum() 
+                for i in model_data.reset_index().index
+            ]
+         )
+         fy_on = np.array(
+            [
+                model_data.reset_index().loc[i, fy_on_cols[i]].sum() 
+                for i in model_data.reset_index.index
+            ]
+         )
+         fn_oy = np.array(
+            [
+                model_data.reset_index().loc[i, fn_oy_cols[i]].sum() 
+                for i in model_data.reset_index().index
+            ]
+         )
+         fn_on = total - fy_oy - fy_on - fn_oy
       elif all(elem in model_data_columns for elem in
             ['FBS','FSS','AFSS','UFSS','F_RATE','O_RATE']):
          line_type = 'NBRCNT'
@@ -866,7 +965,7 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          )
       lower_pctile = 100.*((1.-level)/2.)
       upper_pctile = 100.-lower_pctile
-      if line_type == 'CTC':
+      if line_type in ['MCTC','CTC']:
          fy_oy_all = fy_oy.sum()
          fy_on_all = fy_on.sum()
          fn_oy_all = fn_oy.sum()
@@ -968,7 +1067,7 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          )
       lower_pctile = 100.*((1.-level)/2.)
       upper_pctile = 100.-lower_pctile
-      if line_type == 'CTC':
+      if line_type in ['MCTC','CTC']:
          ctc = np.array([fy_oy, fy_on, fn_oy, fn_on])
          fy_oy_samp, fy_on_samp, fn_oy_samp, fn_on_samp = [
             [] for item in range(4)
@@ -1132,7 +1231,7 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          if line_type == 'SL1L2':
             stat_values_mean = np.mean(fbar_est_mean) - np.mean(obar_est_mean)
             stat_values = fbar_est_samp - obar_est_samp
-         elif line_type == 'CTC':
+         elif line_type in ['MCTC','CTC']:
             stat_values = (fy_oy_samp + fy_on_samp)/(fy_oy_samp + fn_oy_samp)
    elif stat == 'rmse':
       if str(bs_method).upper() in ['MATCHED_PAIRS','FORECASTS']:
@@ -1260,7 +1359,7 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
              stat_values_mean = np.mean(ufss_est_mean)
              stat_values = ufss_est_samp
    elif stat == 'orate' or stat == 'baser':
-      if line_type == 'CTC':
+      if line_type in ['MCTC','CTC']:
          total_mean = (
             np.sum(fy_oy)+np.sum(fy_on)+np.sum(fn_oy)+np.sum(fn_on)
          )
@@ -1271,7 +1370,7 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          stat_values_mean = np.mean(orate)
          stat_values = orate_est_samp
    elif stat == 'frate':
-      if line_type == 'CTC':
+      if line_type in ['MCTC','CTC']:
          total_mean = (
             np.sum(fy_oy)+np.sum(fy_on)+np.sum(fn_oy)+np.sum(fn_on)
          )
@@ -1282,7 +1381,7 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          stat_values_mean = np.mean(frate)
          stat_values = frate_est_samp
    elif stat == 'orate_frate' or stat == 'baser_frate':
-      if line_type == 'CTC':
+      if line_type in ['MCTC','CTC']:
          total_mean = (
             np.sum(fy_oy)+np.sum(fy_on)+np.sum(fn_oy)+np.sum(fn_on)
          )
@@ -1302,7 +1401,7 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
             [stat_values_fbar, stat_values_obar], axis=1
          )
    elif stat == 'accuracy':
-      if line_type == 'CTC':
+      if line_type in ['MCTC','CTC']:
          total_mean = (
             np.sum(fy_oy)+np.sum(fy_on)+np.sum(fn_oy)+np.sum(fn_on)
          )
@@ -1312,43 +1411,43 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          total = (fy_oy_samp + fy_on_samp + fn_oy_samp + fn_on_samp)
          stat_values = (fy_oy_samp + fn_on_samp)/total
    elif stat == 'fbias':
-      if line_type == 'CTC':
+      if line_type in ['MCTC','CTC']:
          stat_values_mean = (
             (np.sum(fy_oy)+np.sum(fy_on))
             /(np.sum(fy_oy)+np.sum(fn_oy))
          )
          stat_values = (fy_oy_samp + fy_on_samp)/(fy_oy_samp + fn_oy_samp)
    elif stat == 'pod' or stat == 'hrate':
-      if line_type == 'CTC':
+      if line_type in ['MCTC','CTC']:
          stat_values_mean = np.sum(fy_oy)/(np.sum(fy_oy)+np.sum(fn_oy))
          stat_values = fy_oy_samp/(fy_oy_samp + fn_oy_samp)
    elif stat == 'pofd' or stat == 'farate':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          stat_values_mean = np.sum(fy_on)/(np.sum(fy_on)+np.sum(fn_on))
          stat_values = fy_on_samp/(fy_on_samp + fn_on_samp)
    elif stat == 'podn':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          stat_values_mean = np.sum(fn_on)/(np.sum(fy_on)+np.sum(fn_on))
          stat_values = fn_on_samp/(fy_on_samp + fn_on_samp)
    elif stat == 'faratio':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          stat_values_mean = np.sum(fy_on)/(np.sum(fy_on)+np.sum(fy_oy))
          stat_values = fy_on_samp/(fy_on_samp + fy_oy_samp)
    elif stat == 'sratio':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          stat_values_mean = (
             1. - (np.sum(fy_on)/(np.sum(fy_on)+np.sum(fy_oy)))
          )
          stat_values = 1. - (fy_on_samp/(fy_on_samp + fy_oy_samp))
    elif stat == 'csi' or stat == 'ts':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          stat_values_mean = (
             np.sum(fy_oy)
             /(np.sum(fy_oy)+np.sum(fy_on)+np.sum(fn_oy))
          )
          stat_values = fy_oy_samp/(fy_oy_samp + fy_on_samp + fn_oy_samp)
    elif stat == 'gss' or stat == 'ets':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          total_mean = (
             np.sum(fy_oy)+np.sum(fy_on)+np.sum(fn_oy)+np.sum(fn_on)
          )
@@ -1366,7 +1465,7 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
             (fy_oy_samp - C)/(fy_oy_samp + fy_on_samp + fn_oy_samp - C)
          )
    elif stat == 'hk' or stat == 'tss' or stat == 'pss':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          stat_values_mean = (
             (np.sum(fy_oy)*np.sum(fn_on)-np.sum(fy_on)*np.sum(fn_oy))
             /(
@@ -1379,7 +1478,7 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
             /((fy_oy_samp+fn_oy_samp)*(fy_on_samp+fn_on_samp))
          )
    elif stat == 'hss':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          total_mean = (
             np.sum(fy_oy)+np.sum(fy_on)+np.sum(fn_oy)+np.sum(fn_on)
          )
@@ -1582,6 +1681,38 @@ def calculate_stat(logger, model_data, stat, conversion):
          fn_oy = model_data.loc[:]['FN_OY']
          fn_on = model_data.loc[:]['FN_ON']
       elif all(elem in model_data_columns for elem in 
+            ['N_CAT', 'F0_O0']):
+         line_type = 'MCTC'
+         total = model_data.loc[:]['TOTAL']
+         counts = model_data.loc[:]['COUNTS']
+         n_cat = model_data.loc[:]['N_CAT']/counts
+         i_val = model_data.loc[:]['i_vals']/counts
+         fy_oy_cols = get_MCTC_cols_for_sum(n_cat, i_val, 'fy_oy')
+         fy_on_cols = get_MCTC_cols_for_sum(n_cat, i_val, 'fy_on')
+         fn_oy_cols = get_MCTC_cols_for_sum(n_cat, i_val, 'fn_oy')
+         fy_oy = np.array(
+            [
+                model_data.reset_index().loc[i, fy_oy_cols[i]].sum() 
+                for i in model_data.reset_index().index
+            ]
+         )
+         fy_on = np.array(
+            [
+                model_data.reset_index().loc[i, fy_on_cols[i]].sum() 
+                for i in model_data.reset_index().index
+            ]
+         )
+         fn_oy = np.array(
+            [
+                model_data.reset_index().loc[i, fn_oy_cols[i]].sum() 
+                for i in model_data.reset_index().index
+            ]
+         )
+         fy_oy = pd.DataFrame(fy_oy, index=total.index)[0]
+         fy_on = pd.DataFrame(fy_on, index=total.index)[0]
+         fn_oy = pd.DataFrame(fn_oy, index=total.index)[0]
+         fn_on = total - fy_oy - fy_on - fn_oy
+      elif all(elem in model_data_columns for elem in 
             ['FBS','FSS','AFSS','UFSS','F_RATE','O_RATE']):
           line_type = 'NBRCNT'
           total = model_data.loc[:]['TOTAL']
@@ -1602,7 +1733,7 @@ def calculate_stat(logger, model_data, stat, conversion):
          stat_values = np.sqrt(uvffbar) - np.sqrt(uvoobar)
       elif line_type == 'VCNT':
          stat_values = fbar - obar
-      elif line_type == 'CTC':
+      elif line_type in ['MCTC', 'CTC']:
          stat_values = (fy_oy + fy_on)/(fy_oy + fn_oy)
    elif stat == 'rmse':
       if line_type == 'SL1L2':
@@ -1732,12 +1863,12 @@ def calculate_stat(logger, model_data, stat, conversion):
       if line_type == 'VCNT':
          stat_values = fdir
    elif stat == 'orate' or stat == 'baser':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          stat_values = (fy_oy + fn_oy)/total
       elif line_type == 'NBRCNT':
          stat_values = orate
    elif stat == 'frate':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          stat_values = (fy_oy + fy_on)/total
       elif line_type == 'NBRCNT':
          stat_values = frate
@@ -1751,47 +1882,47 @@ def calculate_stat(logger, model_data, stat, conversion):
       if line_type == 'NBRCNT':
          stat_values = ufss
    elif stat == 'orate_frate' or stat == 'baser_frate':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          stat_values_fbar = (fy_oy + fy_on)/total
          stat_values_obar = (fy_oy + fn_oy)/total
          stat_values = pd.concat(
             [stat_values_fbar, stat_values_obar], axis=1
          )
    elif stat == 'accuracy':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          stat_values = (fy_oy + fn_on)/total
    elif stat == 'fbias':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          stat_values = (fy_oy + fy_on)/(fy_oy + fn_oy)
    elif stat == 'pod' or stat == 'hrate':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          stat_values = fy_oy/(fy_oy + fn_oy)
    elif stat == 'pofd' or stat == 'farate':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          stat_values = fy_on/(fy_on + fn_on)
    elif stat == 'podn':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          stat_values = fn_on/(fy_on + fn_on)
    elif stat == 'faratio':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          stat_values = fy_on/(fy_on + fy_oy)
    elif stat == 'sratio':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          stat_values = 1. - (fy_on/(fy_on + fy_oy))
    elif stat == 'csi' or stat == 'ts':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          stat_values = fy_oy/(fy_oy + fy_on + fn_oy)
    elif stat == 'gss' or stat == 'ets':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          C = ((fy_oy + fy_on)*(fy_oy + fn_oy))/total
          stat_values = (fy_oy - C)/(fy_oy + fy_on + fn_oy - C)
    elif stat == 'hk' or stat == 'tss' or stat == 'pss':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          stat_values = (
             ((fy_oy*fn_on)-(fy_on*fn_oy))/((fy_oy+fn_oy)*(fy_on+fn_on))
          )
    elif stat == 'hss':
-      if line_type == 'CTC':
+      if line_type in ['MCTC', 'CTC']:
          Ca = (fy_oy+fy_on)*(fy_oy+fn_oy)
          Cb = (fn_oy+fn_on)*(fy_on+fn_on)
          C = (Ca + Cb)/total
@@ -2054,4 +2185,56 @@ def get_name_for_listed_items(listed_items, joinchars, prechars, postchars, prec
                     )
                 start=item
     return joinchars.join(new_items)
+
+def get_MCTC_i_vals(df_ctc, col_var, rename_col_var):
+    try:
+        i = np.argwhere(np.isin(
+            df_ctc.loc[:][col_var].split(','), 
+            df_ctc.loc[:][rename_col_var].replace('>=','')
+        ))[0][0]
+        if df_ctc.loc[:]['N_CAT'] != len(df_ctc.loc[:][col_var].split(',')):
+            i+=1
+    except IndexError:
+        i = 'NA'
+    return i
+
+def convert_MCTC_to_CTC(df_mctc, col_var, rename_col_var):
+    ctc_vals = np.unique([mctc_vals.split(',') for mctc_vals in df_mctc[col_var]])
+    ctc_vals_dict = {}
+    for v, val in enumerate(ctc_vals):
+        ctc_vals_dict[f'val{v+1}'] = val
+    df_ctc = df_mctc.assign(**ctc_vals_dict).melt(df_mctc.keys())
+    df_ctc = df_ctc.rename(columns={'value': rename_col_var})
+    df_ctc['i_vals'] = df_ctc.apply(lambda x: get_MCTC_i_vals(x, col_var, rename_col_var), axis=1)
+    return df_ctc
+
+def get_MCTC_cols_for_sum(n_cats, i_vals, ctc_metric_name):
+    cols = []
+    if ctc_metric_name.lower() in ['fy_oy','a']:
+        for i_val in i_vals:
+            F_num = int(i_val)
+            O_num = int(i_val)
+            cols.append([f'F{F_num}_O{O_num}'])
+    elif ctc_metric_name.lower() in ['fy_on','b']:
+        for n, i_val in enumerate(i_vals):
+            cols_for_sum = []
+            for ii in np.arange(n_cats[n], dtype='int'):
+                if int(i_val) != int(ii):
+                    F_num = int(i_val)
+                    O_num = int(ii)
+                    cols_for_sum.append(f'F{F_num}_O{O_num}')
+            cols.append(cols_for_sum)
+    elif ctc_metric_name.lower() in ['fn_oy','c']:
+        for n, i_val in enumerate(i_vals):
+            cols_for_sum = []
+            for ii in np.arange(n_cats[n], dtype='int'):
+                if int(i_val) != int(ii):
+                    F_num = int(ii)
+                    O_num = int(i_val)
+                    cols_for_sum.append(f'F{F_num}_O{O_num}')
+            cols.append(cols_for_sum)
+    else:
+        print(f"ctc_metric_name, {ctc_metric_name} is not permitted.")
+        sys.exit(1)
+    return cols
 
