@@ -42,13 +42,11 @@ export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=$COMROOT/$NET/$evs_ver
-export COMINdailystats=$COMIN/stats/$COMPONENT
-export COMINyearlystats=$COMIN/stats/$COMPONENT/long_term/annual_means
 export VDATE_END=$(date -d "24 hours ago" '+%Y%m%d')
 export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE_END
 
 # CALL executable job script here
-$HOMEevs/jobs/global_det/plots/JEVS_GLOBAL_DET_ATMOS_HEADLINE_PLOTS
+$HOMEevs/jobs/global_det/plots/JEVS_GLOBAL_DET_PLOTS
 
 ######################################################################
 # Purpose: This does the plotting work for the global deterministic
