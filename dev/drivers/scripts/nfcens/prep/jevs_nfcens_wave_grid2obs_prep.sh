@@ -13,8 +13,7 @@ set -x
 ##%include <head.h>
 ##%include <envir-p1.h>
 
-#export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/githubwkspc/forks/SM/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 export MODELNAME=nfcens
 export NET=evs

@@ -13,8 +13,7 @@ set -x
 #%include <head.h>
 #%include <envir-p1.h>
 
-#export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/githubwkspc/forks/SM/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 export MODELNAME=nfcens
 export OBTYPE=GDAS
@@ -50,8 +49,7 @@ export KEEPDATA=${KEEPDATA:-YES}
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export OUTPUTROOT=/lfs/h2/emc/vpppg/noscrub/$USER
-#export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}
-export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/${NET}/${evs_ver}
+export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}
 export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver}
 
 export run_mpi='yes'
