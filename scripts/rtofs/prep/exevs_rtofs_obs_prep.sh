@@ -10,12 +10,14 @@ set -x
 # convert OSI-SAF data into lat-lon grid
 export RUN=osisaf
 mkdir -p $COMOUTprep/rtofs.$VDATE/$RUN
+mkdir -p $DATA/rtofs.$VDATE/$RUN
 
 if [ -s $COMINobs/$VDATE/validation_data/seaice/osisaf/ice_conc_nh_polstere-100_multi_${VDATE}1200.nc ] ; then
   for ftype in nh sh; do
     cdo remapbil,$FIXevs/rtofs_$RUN.grid \
     $COMINobs/$VDATE/validation_data/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc \
-    $COMOUTprep/rtofs.$VDATE/$RUN/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc
+    $DATA/rtofs.$VDATE/$RUN/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc
+    cp $DATA/rtofs.$VDATE/$RUN/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc $COMOUTprep/rtofs.$VDATE/$RUN
   done
 else
   export subject="OSI-SAF Data Missing for EVS RTOFS"
