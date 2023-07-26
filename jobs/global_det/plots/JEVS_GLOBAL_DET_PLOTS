@@ -50,6 +50,7 @@ export NET=${NET:-evs}
 export STEP=${STEP:-plots}
 export COMPONENT=${COMPONENT:-global_det}
 export RUN=${RUN:-atmos}
+export VERIF_CASE=${VERIF_CASE:-grid2grid}
 
 ####################################
 # Define COMIN/COMOUT variables
@@ -69,7 +70,11 @@ export COMINmetfra=${COMINmetfra:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT
 export COMINukmet=${COMINukmet:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/ukmet)}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE_END)}
 mkdir -p $COMOUT
-
+if [ $RUN = atmos ]; then
+    mkdir -p $COMOUT/${VERIF_CASE}_${VERIF_TYPE}/last${NDAYS}days
+elif [ $RUN = wave ]; then
+    mkdir -p $COMOUT/$VERIF_CASE/last${NDAYS}days
+fi
 #######################################################################
 # Execute the script
 #######################################################################
