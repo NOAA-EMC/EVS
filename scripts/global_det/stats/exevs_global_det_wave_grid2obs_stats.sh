@@ -1,341 +1,309 @@
 #!/bin/bash
 ################################################################################
-# Name of Script: exevs_global_det_wave_grid2obs_stats.sh                       
-# Deanna Spindler / Deanna.Spindler@noaa.gov                                    
-# Purpose of Script: Run the grid2obs stats for any global wave model           
-#                    (deterministic and ensemble: GEFS-Wave, GFS-Wave, NWPS)    
-#                                                                               
-# Usage:                                                                        
-#  Parameters: None                                                             
-#  Input files:                                                                 
-#     gdas.${validdate}.nc                                                      
-#  Output files:                                                                
-#     point_stat_fcstGFS_obsGDAS_climoERA5_${lead}L_$VDATE_${valid}V.stat       
-#  User controllable options: None                                              
+# Name of Script: exevs_global_det_wave_grid2obs_stats.sh            
+# Deanna Spindler / Deanna.Spindler@noaa.gov
+# Mallory Row / Mallory.Row@noaa.gov                       
+# Purpose of Script: Run the grid2obs stats for any global deterministic wave model           
 ################################################################################
 
 set -x 
-# Use LOUD variable to turn on/off trace.  Defaults to YES (on).
-export LOUD=${LOUD:-YES}; [[ $LOUD = yes ]] && export LOUD=YES
-[[ "$LOUD" != YES ]] && set +x
 
 #############################
 ## grid2obs wave model stats 
 #############################
 
 cd $DATA
-echo "in $0 JLOGFILE is $jlogfile"
-echo "Starting grid2obs_stats for ${MODELNAME}_${RUN}"
-
-set +x
-echo ' '
-echo ' ******************************************'
-echo " *** ${MODELNAME}-${RUN} grid2obs stats ***"
-echo ' ******************************************'
-echo ' '
+echo "in $0 JLOGFILE"
+echo "Starting grid2obs_stats for ${MODELNAME} ${RUN}"
 echo "Starting at : `date`"
-echo '-------------'
 echo ' '
-[[ "$LOUD" = YES ]] && set -x
+echo " *** ${MODELNAME}-${RUN} grid2obs stats ***"
+echo ' '
 
+export MODNAM=`echo $MODELNAME | tr '[a-z]' '[A-Z]'`
 mkdir -p ${DATA}/gribs
 mkdir -p ${DATA}/ncfiles
-mkdir ${DATA}/all_stats
+mkdir -p ${DATA}/all_stats
+mkdir -p ${DATA}/jobs
+mkdir -p ${DATA}/logs
+mkdir -p ${DATA}/confs
+mkdir -p ${DATA}/tmp
 
-cycles='0 6 12 18'
-
-lead_hours='0 6 12 18 24 30 36 42 48 54 60 66 72 78
-            84 90 96 102 108 114 120 126 132 138 144 150 156 162
-            168 174 180 186 192 198 204 210 216 222 228 234 240 246
-            252 258 264 270 276 282 288 294 300 306 312 318 324 330 
-            336 342 348 354 360 366 372 378 384'
-
-fhrs='fhr1 fhr2 fhr3 fhr4 fhr5 fhr6 fhr7 fhr8 fhr9'
-
-export GRID2OBS_CONF="${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}"
-
-cd ${DATA}
-
-for cyc in ${cycles} ; do
-
-  ##########################
-  # get the model fcst files
-  ##########################
-  set +x
-  echo ' '
-  echo 'Copying model fcst files :'
-  echo '-----------------------------'
-  [[ "$LOUD" = YES ]] && set -x
-
-  # clear lead_hrs# from previous cycle
-  lead_hrs1=''
-  lead_hrs2=''
-  lead_hrs3=''
-  lead_hrs4=''
-  lead_hrs5=''
-  lead_hrs6=''
-  lead_hrs7=''
-  lead_hrs8=''
-  lead_hrs9=''
-  for fhr in ${lead_hours} ; do
-    matchtime=$(date --date="${VDATE} ${cyc} ${fhr} hours ago" +"%Y%m%d %H")
-    match_date=$(echo ${matchtime} | awk '{print $1}')
-    match_hr=$(echo ${matchtime} | awk '{print $2}')
-    match_fhr=$(printf "%02d" "${match_hr}")
-    flead=$(printf "%03d" "${fhr}")
-    filename=${MODELNAME}${RUN}.${match_date}.t${match_fhr}z.global.0p25.f${flead}.grib2
-    # check to see if the file is in the archive
-    if [[ -s ${ARCgfs}/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${filename} ]]; then
-      cp ${ARCgfs}/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${filename} ${DATA}/gribs/.
-    fi
-    # check to see if the file was copied successfully
-    if [[ -s ${DATA}/gribs/${filename} ]] ; then
-      if (( ${fhr} <= 36 )) ; then
-        lead_hrs1="${lead_hrs1}${lead_hrs1:+,}${fhr}"
-      elif (( ${fhr} > 36 & ${fhr} <= 78 )) ; then
-        lead_hrs2="${lead_hrs2}${lead_hrs2:+,}${fhr}"
-      elif (( ${fhr} > 78 & ${fhr} <= 120 )) ; then
-        lead_hrs3="${lead_hrs3}${lead_hrs3:+,}${fhr}"
-      elif (( ${fhr} > 120 & ${fhr} <= 162 )) ; then
-        lead_hrs4="${lead_hrs4}${lead_hrs4:+,}${fhr}"
-      elif (( ${fhr} > 162 & ${fhr} <= 204 )) ; then
-        lead_hrs5="${lead_hrs5}${lead_hrs5:+,}${fhr}"
-      elif (( ${fhr} > 204 & ${fhr} <= 246 )) ; then
-        lead_hrs6="${lead_hrs6}${lead_hrs6:+,}${fhr}"
-      elif (( ${fhr} > 246 & ${fhr} <= 288 )) ; then
-        lead_hrs7="${lead_hrs7}${lead_hrs7:+,}${fhr}"
-      elif (( ${fhr} > 288 & ${fhr} <= 336 )) ; then
-        lead_hrs8="${lead_hrs8}${lead_hrs8:+,}${fhr}"
-      elif (( ${fhr} > 336 & ${fhr} <= 384 )) ; then
-        lead_hrs9="${lead_hrs9}${lead_hrs9:+,}${fhr}"
-      fi
-    fi
-  done
-
-  ####################
-  # quick error check 
-  ####################
-  nc=$(ls ${DATA}/gribs/${MODELNAME}*${cyc}*.grib2 | wc -l | awk '{print $1}')
-  if [ "${nc}" != '0' ]
-  then
-    set +x
-    echo "Successfully copied ${nc} GFS-Wave grib2 files for ${VDATE} ${cyc}"
-    [[ "$LOUD" = YES ]] && set -x
-  else
-    set +x
+valid_hours='0 6 12 18'
+##########################
+# get the model fcst files
+##########################
+if [ $MODELNAME == "gfs" ]; then
+    cycles='0 6 12 18'
+    lead_hours='0 6 12 18 24 30 36 42 48 54 60 66 72 78
+                84 90 96 102 108 114 120 126 132 138 144 150 156 162
+                168 174 180 186 192 198 204 210 216 222 228 234 240 246
+                252 258 264 270 276 282 288 294 300 306 312 318 324 330 
+                336 342 348 354 360 366 372 378 384'
+else
     echo ' '
     echo '**************************************** '
-    echo '*** ERROR : NO GFS-Wave grib2 FILES *** '
-    echo "      for ${VDATE} ${cyc}"
+    echo "*** ERROR : ${MODELNAME} NOT VALID ***"
     echo '**************************************** '
     echo ' '
-    echo "${MODELNAME}_${RUN} $VDATE $cyc : GFS-Wave grib2 files missing."
-    [[ "$LOUD" = YES ]] && set -x
-    ./postmsg "$jlogfile" "FATAL ERROR : NO GFS-Wave GRIB2 FILES for ${VDATE} ${cyc}"
-    err_exit "FATAL ERROR: Did not copy the GFS-Wave grib2 files for ${VDATE} ${cyc}"
-  fi 
-  
-  #########################
-  # copy the gdas nc files 
-  #########################
-  set +x
-  echo ' '
-  echo 'Copying GDAS netcdf files :'
-  echo '-----------------------------'
-  [[ "$LOUD" = YES ]] && set -x
-  
-  # check to see if the file is in the archive
-  cyc=$(printf "%02d" "${cyc}")
-  if [[ -s ${COMINgdasnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${VDATE}${cyc}.nc ]] ; then
-    cp ${COMINgdasnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${VDATE}${cyc}.nc ${DATA}/ncfiles/.
-    # check to see if the file was copied successfully
-    if [[ -s ${DATA}/ncfiles/gdas.${VDATE}${cyc}.nc ]] ; then
-      found_cycles="${found_cycles}${found_cycles:+ }${cyc}"
-    fi
-  fi
+    echo "${MODELNAME}_${RUN} $VDATE : ${MODELNAME} not valid."
+    ./postmsg "$jlogfile" "FATAL ERROR : ${MODELNAME} NOT VALID"
+    err_exit "FATAL ERROR: ${MODELNAME} NOT VALID"
+fi
 
-  ####################
-  # quick error check 
-  ####################
-  nc=`ls ${DATA}/ncfiles/gdas.${VDATE}${cyc}.nc | wc -l | awk '{print $1}'`
-  echo " Found ${DATA}/ncfiles/gdas.${VDATE}${cyc}.nc for ${VDATE} ${cyc}"
-  if [ "${nc}" != '0' ]
-  then
-    found_cycle='yes'
-    set +x
-    echo "Successfully copied ${nc} GDAS netcdf files for ${VDATE} ${cyc}"
-    [[ "$LOUD" = YES ]] && set -x
-  else
-    found_cycle='no'
-    set +x
+############################################
+# create ASCII2NC NBDC files and PB2NC GDAS files 
+############################################
+poe_script=${DATA}/jobs/run_all_2NC_poe.sh
+echo ' '
+echo 'Creating NDBC ascii2nc files'
+COMINasciiNDBC=$COMINndbc/prep/${COMPONENT}/wave.${VDATE}/ndbc
+DATAascii2ncNDBC=${DATA}/ncfiles/ndbc.${VDATE}.nc
+COMOUTascii2ncNDBC=$COMOUTndbc/ndbc.${VDATE}.nc
+if [[ -s $COMOUTascii2ncNDBC ]]; then
+    cp -v $COMOUTascii2ncNDBC $DATAascii2ncNDBC
+else
+    nbdc_txt_ncount=$(ls -l ${COMINasciiNDBC}/*.txt |wc -l)
+    if [[ $nbdc_txt_ncount -ne 0 ]]; then
+        echo "#!/bin/bash" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
+        echo "" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
+        echo "export COMINndbc=${COMINndbc}" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
+        echo "export DATA=$DATA" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
+        echo "export VDATE=$VDATE" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
+        echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}/ASCII2NC_obsNDBC.conf" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
+        echo "export err=$?; err_chk" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
+        if [ $SENDCOM = YES ]; then
+            echo "cp -v $DATAascii2ncNDBC $COMOUTascii2ncNDBC" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
+            echo "export err=$?; err_chk" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
+        fi
+        chmod +x ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
+        echo "${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh" >> $poe_script
+    fi
+fi
+echo ' '
+echo 'Creating GDAS pb2nc files'
+for vhr in ${valid_hours} ; do
+    vhr2=$(printf "%02d" "${vhr}")
+    COMINprepbufrGDAS=$COMINobsproc/gdas.${VDATE}/${vhr2}/atmos/gdas.t${vhr2}z.prepbufr
+    DATApb2ncGDAS=${DATA}/ncfiles/gdas.${VDATE}${vhr2}.nc
+    COMOUTpb2ncGDAS=$COMOUTprepbufr/gdas.${VDATE}${vhr2}.nc
+    if [[ -s $COMOUTpb2ncGDAS ]]; then
+        cp -v $COMOUTpb2ncGDAS $DATApb2ncGDAS
+    else
+        if [ ! -s $COMINprepbufrGDAS ] ; then
+            export subject="GDAS Prepbufr Data Missing for EVS ${COMPONENT}"
+            echo "Warning: No GDAS Prepbufr was available for valid date ${VDATE}${vhr}" > mailmsg
+            echo “Missing file is $COMINprepbufrGDAS” >> mailmsg
+            echo "Job ID: $jobid" >> mailmsg
+            cat mailmsg | mail -s "$subject" $maillist
+        else
+            echo "#!/bin/bash" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
+            echo "" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
+            echo "export COMINobsproc=${COMINobsproc}" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
+            echo "export DATA=$DATA" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
+            echo "export VDATE=$VDATE" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
+            echo "export vhr2=$vhr2" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
+            echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}/PB2NC_obsPrepbufrGDAS.conf" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
+            echo "export err=$?; err_chk" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
+            if [ $SENDCOM = YES ]; then
+                echo "cp -v $DATApb2ncGDAS $COMOUTpb2ncGDAS" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
+                echo "export err=$?; err_chk" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
+            fi
+            chmod +x ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
+            echo "${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh" >> $poe_script
+        fi
+    fi
+done
+ncount_job=$(ls -l ${DATA}/jobs/run*2NC_*.sh |wc -l)
+if [[ $ncount_job -gt 0 ]]; then
+    if [ $USE_CFP = YES ]; then
+        chmod 775 $poe_script
+        export MP_PGMMODEL=mpmd
+        export MP_CMDFILE=${poe_script}
+        export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
+        nselect=$(cat $PBS_NODEFILE | wc -l)
+        nnp=$(($nselect * $nproc))
+        launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+        $launcher $MP_CMDFILE
+    else
+        /bin/bash ${poe_script}
+    fi
+fi
+####################
+# quick error check 
+####################
+nc=`ls ${DATA}/ncfiles/gdas.${VDATE}*.nc | wc -l | awk '{print $1}'`
+echo " Found ${DATA}/ncfiles/gdas.${VDATE}*.nc for ${VDATE}"
+if [ "${nc}" != '0' ]; then
+    echo "Successfully found ${nc} GDAS pb2nc files for valid date ${VDATE}"
+else
     echo ' '
     echo '**************************************** '
     echo '*** ERROR : NO GDAS netcdf FILES *** '
-    echo "      for ${VDATE} ${cyc} "
+    echo "      for valid date ${VDATE} "
     echo '**************************************** '
     echo ' '
-    echo "${MODELNAME}_${RUN} $VDATE $cyc : GDAS netcdf files missing."
-    [[ "$LOUD" = YES ]] && set -x
-    ./postmsg "$jlogfile" "FATAL ERROR : NO GDAS NETCDF FILES for ${VDATE} ${cyc}"
-    err_exit "FATAL ERROR: Did not copy the GDAS netcdf files for ${VDATE} ${cyc}"
-  fi
-
-  #################################
-  # Make the command files for cfp 
-  #################################
-  
-  # only run for those cycles with GDAS data
-  if [ ${found_cycle} = 'yes' ] ; then
-  
-    if [ ${cyc} = '00' ] ; then
-      wind_level_str="'{ name=\"WIND\"; level=\"(0,*,*)\"; }'"
-      htsgw_level_str="'{ name=\"HTSGW\"; level=\"(0,*,*)\"; }'"
-      perpw_level_str="'{ name=\"PERPW\"; level=\"(0,*,*)\"; }'"
-    elif [ ${cyc} = '06' ] ; then
-      wind_level_str="'{ name=\"WIND\"; level=\"(2,*,*)\"; }'"
-      htsgw_level_str="'{ name=\"HTSGW\"; level=\"(2,*,*)\"; }'"
-      perpw_level_str="'{ name=\"PERPW\"; level=\"(2,*,*)\"; }'"
-    elif [ ${cyc} = '12' ] ; then
-      wind_level_str="'{ name=\"WIND\"; level=\"(4,*,*)\"; }'"
-      htsgw_level_str="'{ name=\"HTSGW\"; level=\"(4,*,*)\"; }'"
-      perpw_level_str="'{ name=\"PERPW\"; level=\"(4,*,*)\"; }'"
-    elif [ ${cyc} = '18' ] ; then
-      wind_level_str="'{ name=\"WIND\"; level=\"(6,*,*)\"; }'"
-      htsgw_level_str="'{ name=\"HTSGW\"; level=\"(6,*,*)\"; }'"
-      perpw_level_str="'{ name=\"PERPW\"; level=\"(6,*,*)\"; }'"
-    fi
-    
-    for fhr in ${fhrs} ; do
-    # write the commands
-      echo "export wind_level_str=${wind_level_str}" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-      echo "export htsgw_level_str=${htsgw_level_str}" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-      echo "export perpw_level_str=${perpw_level_str}" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-      echo "export CYC=${cyc}" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-      echo "export fhr=${fhr}" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-      case ${fhr} in
-        'fhr1')
-          echo "export lead_hrs=${lead_hrs1}"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-          ;;
-        'fhr2')
-          echo "export lead_hrs=${lead_hrs2}"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-          ;;
-        'fhr3')
-          echo "export lead_hrs=${lead_hrs3}"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-          ;;
-        'fhr4')
-          echo "export lead_hrs=${lead_hrs4}"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-          ;;
-        'fhr5')
-          echo "export lead_hrs=${lead_hrs5}"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-          ;;
-        'fhr6')
-          echo "export lead_hrs=${lead_hrs6}"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-          ;;
-        'fhr7')
-          echo "export lead_hrs=${lead_hrs7}"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-          ;;
-        'fhr8')
-          echo "export lead_hrs=${lead_hrs8}"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-          ;;
-        'fhr9')
-          echo "export lead_hrs=${lead_hrs9}"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-          ;;
-      esac
-      echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstGFS_obsGDAS_climoERA5_Wave_Multifield.conf"  >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-      echo "export err=$?; err_chk" >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-      echo "cpreq ${DATA}/stats_${cyc}_${fhr}/*.stat ${COMOUTsmall}/." >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-      echo "mv ${DATA}/stats_${cyc}_${fhr}/*.stat ${DATA}/all_stats/." >> run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-      
-      chmod +x run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh
-      
-      echo "${DATA}/run_${MODELNAME}_${RUN}_${cyc}_${fhr}_g2o.sh" >> ${DATA}/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
-    done  # end of fhr
-  fi # found cycle    
-done  # end of cycles 
-
-chmod 775 ${DATA}/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
-
-#######################
-# Run the command file 
-#######################
-if [ ${run_mpi} = 'yes' ] ; then
-  export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-    mpiexec -np 36 --cpu-bind verbose,core --depth 3 cfp ${DATA}/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
+    echo "${MODELNAME}_${RUN} $VDATE : GDAS pb2nc files missing."
+    ./postmsg "$jlogfile" "FATAL ERROR : NO GDAS PB2NC FILES for valid date ${VDATE}"
+    err_exit "FATAL ERROR: Did not copy the GDAS pb2nc files for valid date ${VDATE}"
+fi
+nc=`ls ${DATA}/ncfiles/ndbc.${VDATE}*.nc | wc -l | awk '{print $1}'`
+echo " Found ${DATA}/ncfiles/ndbc.${VDATE}*.nc for ${VDATE}"
+if [ "${nc}" != '0' ]; then
+    echo "Successfully found ${nc} NDBC ascii2nc files for valid date ${VDATE}"
 else
-  echo "not running mpiexec"
-  sh ${DATA}/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
+    echo ' '
+    echo '**************************************** '
+    echo '*** ERROR : NO NDBC netcdf FILES *** '
+    echo "      for valid date ${VDATE} "
+    echo '**************************************** '
+    echo ' '
+    echo "${MODELNAME}_${RUN} $VDATE : NDBC ascii2nc files missing."
+    ./postmsg "$jlogfile" "FATAL ERROR : NO NDBC ASCII2NC FILES for valid date ${VDATE}"
+    err_exit "FATAL ERROR: Did not copy the NDBC ascii2nc files for valid date ${VDATE}"
 fi
 
-#######################
-# Gather all the files 
-#######################
-if [ $gather = yes ] ; then
+############################################
+# create point_stat files
+############################################
+echo ' '
+echo 'Creating point_stat files'
+poe_script=${DATA}/jobs/run_all_PointStat_poe.sh
+for vhr in ${valid_hours} ; do
+    vhr2=$(printf "%02d" "${vhr}")
+    if [ ${vhr2} = '00' ] ; then
+        wind_level_str="'{ name=\"WIND\"; level=\"(0,*,*)\"; }'"
+        htsgw_level_str="'{ name=\"HTSGW\"; level=\"(0,*,*)\"; }'"
+        perpw_level_str="'{ name=\"PERPW\"; level=\"(0,*,*)\"; }'"
+    elif [ ${vhr2} = '06' ] ; then
+        wind_level_str="'{ name=\"WIND\"; level=\"(2,*,*)\"; }'"
+        htsgw_level_str="'{ name=\"HTSGW\"; level=\"(2,*,*)\"; }'"
+        perpw_level_str="'{ name=\"PERPW\"; level=\"(2,*,*)\"; }'"
+    elif [ ${vhr2} = '12' ] ; then
+        wind_level_str="'{ name=\"WIND\"; level=\"(4,*,*)\"; }'"
+        htsgw_level_str="'{ name=\"HTSGW\"; level=\"(4,*,*)\"; }'"
+        perpw_level_str="'{ name=\"PERPW\"; level=\"(4,*,*)\"; }'"
+    elif [ ${vhr2} = '18' ] ; then
+        wind_level_str="'{ name=\"WIND\"; level=\"(6,*,*)\"; }'"
+        htsgw_level_str="'{ name=\"HTSGW\"; level=\"(6,*,*)\"; }'"
+        perpw_level_str="'{ name=\"PERPW\"; level=\"(6,*,*)\"; }'"
+    fi
+    for fhr in ${lead_hours} ; do
+        matchtime=$(date --date="${VDATE} ${vhr} ${fhr} hours ago" +"%Y%m%d %H")
+        match_date=$(echo ${matchtime} | awk '{print $1}')
+        match_hr=$(echo ${matchtime} | awk '{print $2}')
+        match_fhr=$(printf "%02d" "${match_hr}")
+        flead=$(printf "%03d" "${fhr}")
+        flead2=$(printf "%02d" "${fhr}")
+        if [ $MODELNAME == "gfs" ]; then
+            COMINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${MODELNAME}${RUN}.${match_date}.t${match_fhr}z.global.0p25.f${flead}.grib2
+        fi
+        DATAmodelfilename=$DATA/gribs/${MODELNAME}${RUN}.${match_date}.t${match_fhr}z.global.0p25.f${flead}.grib2
+        if [[ -s $COMINmodelfilename ]]; then
+            if [[ ! -s $DATAmodelfilename ]]; then
+                cp -v $COMINmodelfilename $DATAmodelfilename
+            fi
+        else
+            echo "DOES NOT EXIST $COMINmodelfilename"
+        fi
+        if [[ -s $DATAmodelfilename ]]; then
+            for OBSNAME in GDAS NDBC; do
+                if [ $OBSNAME = GDAS ]; then
+                    DATAOBSNAME=${DATA}/ncfiles/gdas.${VDATE}${vhr2}.nc
+                elif [ $OBSNAME = NDBC ]; then
+                    DATAOBSNAME=${DATA}/ncfiles/ndbc.${VDATE}.nc
+                fi
+                DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+                COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obs${OBSNAME}_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+                if [[ -s $COMOUTstatfilename ]]; then
+                    cp -v $COMOUTstatfilename $DATAstatfilename
+                else
+                    if [[ -s $DATAOBSNAME ]]; then
+                        echo "#!/bin/bash" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
+                        echo "" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
+                        echo "export FIXevs=$FIXevs" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
+                        echo "export DATA=$DATA" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
+                        echo "export VDATE=$VDATE" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
+                        echo "export vhr2=$vhr2" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
+                        echo "export wind_level_str=${wind_level_str}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
+                        echo "export htsgw_level_str=${htsgw_level_str}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
+                        echo "export perpw_level_str=${perpw_level_str}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
+                        echo "export flead=${flead}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
+                        echo "export MODNAM=${MODNAM}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
+                        echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}/PointStat_fcstGLOBAL_DET_obs${OBSNAME}_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
+                        echo "export err=$?; err_chk" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
+                        if [ $SENDCOM = YES ]; then
+                            echo "cp -v $DATAstatfilename $COMOUTstatfilename" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
+                            echo "export err=$?; err_chk" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
+                        fi
+                        chmod +x ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
+                        echo "${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh" >> $poe_script
+                    fi
+                fi
+            done
+        fi
+    done
+done
+ncount_job=$(ls -l ${DATA}/jobs/run_PointStat*.sh |wc -l)
+if [[ $ncount_job -gt 0 ]]; then
+    if [ $USE_CFP = YES ]; then
+        chmod 775 $poe_script
+        export MP_PGMMODEL=mpmd
+        export MP_CMDFILE=${poe_script}
+        export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
+        nselect=$(cat $PBS_NODEFILE | wc -l)
+        nnp=$(($nselect * $nproc))
+        launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+        $launcher $MP_CMDFILE
+    else
+        /bin/bash ${poe_script}
+    fi
+fi
 
-  # check to see if the small stat files are there
-  nc=$(ls ${DATA}/all_stats/*stat | wc -l | awk '{print $1}')
-  echo " Found ${nc} ${DATA}/all_stats/*stat files for ${VDATE} "
-  if [ "${nc}" != '0' ]
-  then
-    set +x
-    echo "Small stat files found for ${VDATE}"
-    [[ "$LOUD" = YES ]] && set -x
-  else
-    set +x
+####################
+# gather all the files
+####################
+nc=$(ls ${DATA}/all_stats/*stat | wc -l | awk '{print $1}')
+echo " Found ${nc} ${DATA}/all_stats/*stat files for valid date ${VDATE} "
+if [ "${nc}" != '0' ]; then
+    echo "Small stat files found for valid date ${VDATE}"
+    # Use StatAnalysis to gather the small stat files into one file
+    run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}/StatAnalysis_fcstGLOBAL_DET.conf
+else
     echo ' '
     echo '**************************************** '
     echo '*** ERROR : NO SMALL STAT FILES *** '
-    echo "      found for ${VDATE} "
+    echo "      found for valid date ${VDATE} "
     echo '**************************************** '
     echo ' '
-    echo "${MODELNAME}_${RUN} $VDATE $cycle : small STAT files missing."
-    [[ "$LOUD" = YES ]] && set -x
-    ./postmsg "$jlogfile" "FATAL ERROR : NO SMALL STAT FILES FOR ${VDATE}"
-    err_exit "FATAL ERROR: Did not find any small stat files for ${VDATE}"
-  fi
-  
-  mkdir -p ${DATA}/stats
-  # Use StatAnalysis to gather the small stat files into one file
-  run_metplus.py ${PARMevs}/metplus_config/machine.conf \
-           ${GRID2OBS_CONF}/StatAnalysis_fcstGFS_obsGDAS.conf
-
-  # check to see if the large stat file was made, copy it to $COMOUTfinal
-  nc=$(ls ${DATA}/stats/*stat | wc -l | awk '{print $1}')
-  echo " Found ${nc} ${DATA}/stats/*stat files for ${VDATE} "
-  if [ "${nc}" != '0' ]
-  then
-    set +x
+    echo "${MODELNAME}_${RUN} $VDATE : small STAT files missing."
+    ./postmsg "$jlogfile" "FATAL ERROR : NO SMALL STAT FILES FOR valid date ${VDATE}"
+    err_exit "FATAL ERROR: Did not find any small stat files for valid date ${VDATE}"
+fi
+# check to see if the large stat file was made, copy it to $COMOUTfinal
+nc=$(ls ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat | wc -l | awk '{print $1}')
+echo " Found ${nc} large stat file for valid date ${VDATE} "
+if [ "${nc}" != '0' ]; then
     echo "Large stat file found for ${VDATE}"
-    [[ "$LOUD" = YES ]] && set -x
-    cpreq ${DATA}/stats/*stat ${COMOUTfinal}/.
-  else
-    set +x
+    if [ $SENDCOM = YES ]; then
+        cp -v ${DATA}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
+    fi
+else
     echo ' '
     echo '**************************************** '
     echo '*** ERROR : NO LARGE STAT FILE *** '
-    echo "      found for ${VDATE} "
+    echo "      found for valid date ${VDATE} "
     echo '**************************************** '
     echo ' '
-    echo "${MODELNAME}_${RUN} $VDATE $cyc : large STAT file missing."
-    [[ "$LOUD" = YES ]] && set -x
-    ./postmsg "$jlogfile" "FATAL ERROR : NO LARGE STAT FILE FOR ${VDATE}"
-    err_exit "FATAL ERROR: Did not find the large stat file for ${VDATE}"
-  fi
-else  
-  echo "not gathering small metplus stat files right now"
+    echo "${MODELNAME}_${RUN} $VDATE : large STAT file missing."
+    ./postmsg "$jlogfile" "FATAL ERROR : NO LARGE STAT FILE FOR valid date ${VDATE}"
+    err_exit "FATAL ERROR: Did not find the large stat file for valid date ${VDATE}"
 fi
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
 
-# --------------------------------------------------------------------------- #
-# Ending output                                                                
-
-set +x
 echo ' '
+echo "Ending grid2obs_stats for ${MODELNAME} ${RUN}"
 echo "Ending at : `date`"
 echo ' '
-echo " *** End of ${MODELNAME}-${RUN} grid2obs stat *** "
-echo ' '
-[[ "$LOUD" = YES ]] && set -x
-
-# End of GFS-Wave grid2obs stat script -------------------------------------- #

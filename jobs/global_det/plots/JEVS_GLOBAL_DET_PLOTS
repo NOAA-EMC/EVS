@@ -37,6 +37,7 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 # Run setpdy and initialize PDY variables
 ####################################
 export cycle=${cycle:-t${cyc}z}
+export NDAYS=${NDAYS:-31}
 setpdy.sh $NDAYS
 . ./PDY
 export VDATE_START=${VDATE_START:-$(eval echo \$PDYm$NDAYS)}
@@ -49,6 +50,7 @@ export NET=${NET:-evs}
 export STEP=${STEP:-plots}
 export COMPONENT=${COMPONENT:-global_det}
 export RUN=${RUN:-atmos}
+export VERIF_CASE=${VERIF_CASE:-grid2grid}
 
 ####################################
 # Define COMIN/COMOUT variables
@@ -68,17 +70,17 @@ export COMINmetfra=${COMINmetfra:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT
 export COMINukmet=${COMINukmet:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/ukmet)}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE_END)}
 mkdir -p $COMOUT
-
+if [ $RUN = atmos ]; then
+    mkdir -p $COMOUT/${VERIF_CASE}_${VERIF_TYPE}/last${NDAYS}days
+elif [ $RUN = wave ]; then
+    mkdir -p $COMOUT/$VERIF_CASE/last${NDAYS}days
+fi
 #######################################################################
 # Execute the script
 #######################################################################
 env
 
-if [ $RUN = atmos ]; then
-    $HOMEevs/scripts/global_det/plots/exevs_global_det_${RUN}_${VERIF_CASE}_plots.sh
-else
-    $HOMEevs/scripts/global_det/plots/exevs_global_det_${RUN}_plots.sh
-fi
+$HOMEevs/scripts/global_det/plots/exevs_global_det_${RUN}_${VERIF_CASE}_plots.sh
 export err=$?; err_chk
 
 cat $pgmout

@@ -149,7 +149,6 @@ if [ $modnam = ccpa ] ; then
 
  else
     export subject="CCPA Data Missing for EVS ${COMPONENT}"
-    export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
     echo "Warning:  No CCPA data available for ${VDATE}" > mailmsg
     echo Missing file is $COMINccpa/ccpa.${vday}/??/ccpa.t??z.03h.hrap.conus.gb2  >> mailmsg
     echo "Job ID: $jobid" >> mailmsg
@@ -180,7 +179,6 @@ export output_base=${WORK}/pb2nc
  else
 
    export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
-   export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
    echo "Warning:  No Prepbufr data available for ${VDATE}" > mailmsg
    echo Missing file is $COMINprepbufr/gfs.${vday}/??/atmos/gfs.t??z.prepbufr  >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
