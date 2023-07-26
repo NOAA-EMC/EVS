@@ -20,7 +20,7 @@ export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
 export COMOUTplots=${COMOUTplots:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
 export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
 
-mkdir -p $COMOUTplots
+mkdir -p $COMOUT $COMOUTplots
 mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE
 
 # make headline score plots
