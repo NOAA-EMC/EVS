@@ -80,7 +80,11 @@ fi
 #######################################################################
 env
 
-$HOMEevs/scripts/global_det/plots/exevs_global_det_${RUN}_${VERIF_CASE}_plots.sh
+if [ $RUN = headline ]; then
+    $HOMEevs/scripts/global_det/plots/exevs_global_det_atmos_${RUN}_plots.sh
+else
+    $HOMEevs/scripts/global_det/plots/exevs_global_det_${RUN}_${VERIF_CASE}_plots.sh
+fi
 export err=$?; err_chk
 
 cat $pgmout

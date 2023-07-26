@@ -25,13 +25,18 @@ NET = os.environ['NET']
 RUN = os.environ['RUN']
 STEP = os.environ['STEP']
 COMPONENT = os.environ['COMPONENT']
+COMIN = os.environ['COMIN']
 FIXevs = os.environ['FIXevs']
+VDATE_END = os.environ['VDATE_END']
 MET_ROOT = os.environ['MET_ROOT']
 met_ver = os.environ['met_ver']
 evs_run_mode = os.environ['evs_run_mode']
 envir = os.environ['envir']
-COMINdailystats = os.environ['COMINdailystats']
-COMINyearlystats = os.environ['COMINyearlystats']
+
+# Set more specific COMIN paths
+COMINdailystats = os.path.join(COMIN, 'stats', COMPONENT)
+COMINyearlystats = os.path.join(COMIN, 'stats', COMPONENT, 'long_term',
+                                'annual_means')
 
 # Set up directory paths
 logo_dir = os.path.join(FIXevs, 'logos')
@@ -47,6 +52,9 @@ met_info_dict = {
     'root': MET_ROOT,
     'version': met_ver
 }
+
+# Set up end valid date
+VDATE_END_dt = datetime.datetime.strptime(VDATE_END, '%Y%m%d')
 
 ### Headline Score Plot 1: Grid-to-Grid - Geopotential Height 500-hPa ACC Day 5 NH Last 31 days 00Z
 print("\nHeadline Score Plot 1: Grid-to-Grid - Geopotential Height 500-hPa "
@@ -92,9 +100,9 @@ headline1_plot_info_dict = {
 now = datetime.datetime.now()
 headline1_date_info_dict = {
     'date_type': 'VALID',
-    'start_date': (now - datetime.timedelta(days=headline1_ndays))\
+    'start_date': (VDATE_END_dt - datetime.timedelta(days=headline1_ndays))\
                    .strftime('%Y%m%d'),
-    'end_date': (now - datetime.timedelta(days=1)).strftime('%Y%m%d'),
+    'end_date': VDATE_END_dt.strftime('%Y%m%d'),
     'valid_hr_start': '00',
     'valid_hr_end': '00',
     'valid_hr_inc': '24',
@@ -199,9 +207,9 @@ headline2_plot_info_dict = {
 }
 headline2_date_info_dict = {
     'date_type': 'VALID',
-    'start_date': (now - datetime.timedelta(days=headline2_ndays))\
+    'start_date': (VDATE_END_dt - datetime.timedelta(days=headline2_ndays))\
                    .strftime('%Y%m%d'),
-    'end_date': (now - datetime.timedelta(days=1)).strftime('%Y%m%d'),
+    'end_date': VDATE_END_dt.strftime('%Y%m%d'),
     'valid_hr_start': '00',
     'valid_hr_end': '00',
     'valid_hr_inc': '24',
@@ -286,7 +294,7 @@ for stat in ['ME', 'RMSE']:
               +headline2_copy_image_name)
         shutil.copy2(headline2_image_name, headline2_copy_image_name)
 
-if evs_run_mode != 'production' and envir != 'prod':
+if evs_run_mode == 'production' and envir != 'dev':
     print("\nAll production global_det atmos headline plots produced")
 else:
     print("\nMaking development global_det atmos headline plots")
@@ -308,7 +316,7 @@ else:
                                                  'fnmoc', 'ukmet', 'cfs'],
                                   'gfs_ecmwf': ['ecmwf', 'gfs']}
     headline3_start_YYYY = '1984'
-    headline3_end_YYYY = str(int(datetime.datetime.now().strftime('%Y'))-1)
+    headline3_end_YYYY = str(int(VDATE_END_dt.strftime('%Y'))-1)
     headline3_all_dt_list = list(
         dateutil.rrule.rrule(
             dateutil.rrule.YEARLY,
@@ -376,7 +384,7 @@ else:
     headline4_avg_time_range = 'yearly'
     headline4_valid_hr = '00'
     headline4_start_YYYY = '1989'
-    headline4_end_YYYY = str(int(datetime.datetime.now().strftime('%Y'))-1)
+    headline4_end_YYYY = str(int(VDATE_END_dt.strftime('%Y'))-1)
     headline4_all_dt_list = list(
         dateutil.rrule.rrule(
             dateutil.rrule.YEARLY,
@@ -438,7 +446,7 @@ else:
     headline5_stat_thresh_dict = {'FSS': ['ge10mm', 'ge25mm'],
                                   'ETS': ['ge1in', 'ge2in', 'ge3in']}
     headline5_start_YYYY = '2002'
-    headline5_end_YYYY = str(int(datetime.datetime.now().strftime('%Y'))-1)
+    headline5_end_YYYY = str(int(VDATE_END_dt.strftime('%Y'))-1)
     headline5_all_dt_list = list(
         dateutil.rrule.rrule(
             dateutil.rrule.YEARLY,
