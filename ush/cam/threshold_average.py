@@ -69,6 +69,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
                       ci_lev: float = .95, bs_min_samp: int = 30,
                       eval_period: str = 'TEST', save_header: str = '', 
                       display_averages: bool = True, 
+                      include_all_requested_thresholds: bool = True,
                       plot_group: str = 'sfc_upper',
                       sample_equalization: bool = True,
                       plot_logo_left: bool = False,
@@ -191,6 +192,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     requested_thresh_symbol, requested_thresh_letter = list(
         zip(*[plot_util.format_thresh(t) for t in thresh])
     )
+    requested_thresh_value = [float(str(item)[2:]) for item in requested_thresh_letter]
     symbol_found = False
     for opt in ['>=', '>', '==','!=','<=', '<']:
         if any(opt in t for t in requested_thresh_symbol):
@@ -320,6 +322,9 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
                 unit_convert = False
             elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
                 unit_convert = False
+        elif any(field in str(var_long_name_key).upper() for field in ['WEASD', 'SNOD', 'ASNOW']):
+            if units in ['m']:
+                units = 'm_snow'
         if unit_convert:
             if str(metric_name).upper() in metrics_using_var_units:
                 coef, const = (
@@ -482,12 +487,20 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
             x_vals,
             rounding=True
         )
+        requested_thresh_value = reference.unit_conversions[units]['formula'](
+            requested_thresh_value,
+            rounding=True
+        )
     if units == '-':
         units = ''
     x_vals_argsort = np.argsort(x_vals)
     x_vals = np.sort(x_vals)
-    x_vals_incr = np.diff(x_vals)
-    if len(x_vals) > 1:
+    if include_all_requested_thresholds:
+        x_axis_vals = np.array(requested_thresh_value)
+    else:
+        x_axis_vals = np.array(x_vals)
+    x_vals_incr = np.diff(x_axis_vals)
+    if len(x_axis_vals) > 1:
         min_incr = np.min(x_vals_incr)
     else:
         min_incr = 0
@@ -589,8 +602,8 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         x_vals_incr = reference.unit_conversions[units]['formula'](x_vals)
         units = reference.unit_conversions[units]['convert_to']
 
-    xticks_min = np.min(x_vals)
-    xticks_max = np.max(x_vals)
+    xticks_min = np.min(x_axis_vals)
+    xticks_max = np.max(x_axis_vals)
     xlim_min = np.floor(xticks_min/incr)*incr
     xlim_max = np.ceil(xticks_max/incr)*incr
     if incr < 1.:
@@ -619,7 +632,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         xtick for xtick in xticks 
         if np.any([
             np.absolute(xtick-x_val) < incr/2.*show_xtick_every 
-            for x_val in x_vals.tolist()
+            for x_val in x_axis_vals.tolist()
         ])
     ]
     res_xticks = [val for val in xticks if val not in replace_xticks]
@@ -628,11 +641,11 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         else '' for v, val in enumerate(xticks)  
     ]
     add_labels = [
-        f'{opt}{np.round(x_val)/precision_scale}' for x_val in x_vals*precision_scale
+        f'{opt}{np.round(x_val)/precision_scale}' for x_val in x_axis_vals*precision_scale
     ]
-    xticks_argsort = np.argsort(np.concatenate((xticks, x_vals.tolist())))
+    xticks_argsort = np.argsort(np.concatenate((xticks, x_axis_vals.tolist())))
     xticks = np.concatenate((
-        xticks, x_vals.tolist()
+        xticks, x_axis_vals.tolist()
     ))[xticks_argsort]
     xtick_labels_with_blanks = np.concatenate((
         res_xlabels, add_labels
@@ -739,8 +752,10 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     # Title
     domain = df['VX_MASK'].tolist()[0]
     var_savename = df['FCST_VAR'].tolist()[0]
-    if 'APCP' in var_savename.upper():
-        var_savename = 'APCP'
+    if any(field in var_savename.upper() for field in ['APCP']):
+        var_savename = re.sub('[^a-zA-Z \n\.]', '', var_savename)
+    elif any(field in var_savename.upper() for field in ['ASNOW','SNOD']):
+        var_savename = 'ASNOW'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
         var_savename = 'HPBL'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['MSLET','MSLMA','PRMSL']:
@@ -815,7 +830,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         else:
             level_string = f'{level} '
             level_savename = f'{level}'
-    elif str(verif_type).lower() in ['ccpa', 'mrms']:
+    elif str(verif_type).lower() in ['ccpa', 'mrms', 'nohrsc']:
         if 'A' in str(level):
             level_num = level.replace('A', '')
             level_string = f'{level_num}-hour '
@@ -1023,6 +1038,10 @@ def main():
     logger.debug(f"X_LIM_LOCK: Ignored for series by threshold")
     logger.debug(f"Display averages? {'yes' if display_averages else 'no'}")
     logger.debug(
+        f"Include all requested thresholds?"
+        + f" {'yes' if include_all_requested_thresholds else 'no'}"
+    )
+    logger.debug(
         f"Clear prune directories? {'yes' if clear_prune_dir else 'no'}"
     )
     logger.debug(f"Plot upper-left logo? {'yes' if plot_logo_left else 'no'}")
@@ -1194,6 +1213,7 @@ def main():
                         date_hours=date_hours, save_dir=SAVE_DIR, 
                         eval_period=EVAL_PERIOD,
                         display_averages=display_averages, 
+                        include_all_requested_thresholds=include_all_requested_thresholds,
                         save_header=IMG_HEADER, plot_group=plot_group,
                         confidence_intervals=CONFIDENCE_INTERVALS, 
                         interp_pts=INTERP_PNTS,
@@ -1289,6 +1309,11 @@ if __name__ == "__main__":
 
     # Whether or not to display average values beside legend labels
     display_averages = toggle.plot_settings['display_averages']
+
+    # Whether to include all requested thresholds in the x-axis labels or 
+    # only those that remain after filtering
+    include_all_requested_thresholds = toggle.plot_settings['include_all_requested_thresholds']
+
 
     # Whether or not to clear the intermediate directory that stores pruned data
     clear_prune_dir = toggle.plot_settings['clear_prune_directory']

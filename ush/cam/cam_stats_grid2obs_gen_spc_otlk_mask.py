@@ -10,6 +10,9 @@ VDATE = os.environ['VDATE']
 VHOUR = os.environ['VHOUR']
 DAY = os.environ['DAY']
 metplus_launcher = os.environ['metplus_launcher']
+machine_conf = os.path.join(
+    os.environ['PARMevs'], 'metplus_config', 'machine.conf'
+)
 COMINspcotlk = os.environ['COMINspcotlk']
 MET_PLUS_CONF = os.environ['MET_PLUS_CONF']
 
@@ -116,7 +119,7 @@ for OTLK in OTLKs:
                     os.environ['MASK_NAME'] = MASK_NAME
 
                     cutil.run_shell_command([
-                        metplus_launcher, '-c', 
+                        metplus_launcher, '-c', machine_conf, '-c',
                         os.path.join(MET_PLUS_CONF, 'GenVxMask_SPC_OTLK.conf')
                     ])
             else:

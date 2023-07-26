@@ -50,23 +50,12 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 export SCRIPTevs=$HOMEevs/scripts
 
 
-if [[ ${COMPONENT} == "cam" ]] ; then
-  if [  $MODELNAME = href ] ; then
-      setpdy.sh
-      . $DATA/PDY
-      export VDATE=${VDATE:-$PDYm2}
-      export INITDATE=${INITDATE:-$PDYm2}
-  else
-    export VDATE=${VDATE:-$PDYm1}
-  fi 
+if [  $MODELNAME = href ] ; then
+    setpdy.sh
+    . $DATA/PDY
+    export VDATE=${VDATE:-$PDYm2}
+    export INITDATE=${INITDATE:-$PDYm2}
 else
-    setpdy.sh 31
-    . ./PDY
-    export VDATE=${VDATE:-$PDYm1}
-fi
-
-if [ $MODELNAME = nam_firewxnest ]
-then
     setpdy.sh 31
     . ./PDY
     export VDATE=${VDATE:-$PDYm1}
