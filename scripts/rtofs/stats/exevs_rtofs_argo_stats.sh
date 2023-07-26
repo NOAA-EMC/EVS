@@ -82,12 +82,13 @@ if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f192_daily_3ztio.$RUN.nc
    exit 0
 fi
 
-# create subregions using ice mask; call the rtofs_regions.sh script
-$HOMEevs/scripts/$COMPONENT/$STEP/rtofs_regions.sh
-
 # get the months for the climo files:
 #     for day < 15, use the month before + valid month
 #     for day >= 15, use valid month + the month after
+
+export STATSDIR=$DATA/stats
+mkdir -p $STATSDIR
+
 MM=$(date --date=$VDATE +%m)
 DD=$(date --date=$VDATE +%d)
 if [ $DD -lt 15 ] ; then
@@ -148,6 +149,9 @@ for levl in 0 50 125 200 400 700 1000 1400; do
   -c $CONFIGevs/${VERIF_CASE}/$STEP/PointStat_fcstRTOFS_obsARGO_climoWOA23_$VAR.conf
 done
 
+cp $STATSDIR/$RUN.$VDATE/$VAR/*stat $COMOUTsmall
+export STATSOUT=$STATSDIR/$RUN.$VDATE/$VAR
+
 # check if stat files exist; exit if not
 if [ ! -s $COMOUTsmall/point_stat_RTOFS_ARGO_${VAR}_Z1400_1920000L_${VDATE}_000000V.stat ] ; then
    echo "Missing RTOFS_ARGO_$VAR stat files for $VDATE" 
@@ -159,6 +163,8 @@ mkdir -p $COMOUTfinal
 
 run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
 -c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstRTOFS.conf
+
+cp $STATSOUT/evs*stat $COMOUTfinal
 
 # archive final stat file
 #rsync -av $COMOUTfinal $ARCHevs

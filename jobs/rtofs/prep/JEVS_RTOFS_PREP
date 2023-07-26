@@ -8,6 +8,53 @@
 
 set -x
 
+########################################
+# Preliminary data setup step
+########################################
+
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+
+# ###################################
+# SET SHELL PROCESSING VARIABLES
+# ###################################
+export PS4='$SECONDS + '
+date
+
+###########################################################
+# obtain unique LSF id (jobid) and make temp directories
+###########################################################
+export pid=$$
+
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+rm -rf $DATA
+mkdir -p $DATA
+cd $DATA
+
+# Determine Job Output Name on System
+####################################
+export pgmout="OUTPUT.${pid}"
+
+export cycle=t00z
+
+###################################
+# Set EVS directories
+####################################
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
+export USHevs=${USHevs:-$HOMEevs/ush}
+export MASKS=${MASKS:-$FIXevs/masks}
+
+# Run setpdy and initialize PDY variables
+setpdy.sh
+. ./PDY
+
+export VDATE=${VDATE:-$PDYm1}
+
 # set up paths
 export FIXevs=${FIXevs:-$HOMEevs/fix/cdo_grids}
 export USHevs=${USHevs:-$HOMEevs/ush/$COMPONENT}
@@ -20,6 +67,8 @@ export COMINrtofs=${COMINrtofs:-$(compath.py $envir/com/$COMPONENT/${rtofs_ver})
 export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
 export COMOUTprep=${COMOUTprep:-$COMOUT/$STEP/$COMPONENT}
 export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
+
+mkdir -d $COMOUT $COMOUTprep
 
 # run scripts
 #  get RTOFS production data from /com
@@ -34,5 +83,21 @@ done
 
 #  process obs data
 $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_obs_${STEP}.sh
+
+export err=$?; err_chk
+
+if [ -e "$pgmout" ]; then
+    cat $pgmout
+fi
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$msg"
+
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATAROOT
+###  rm -rf $DATA
+fi
+
+date
 
 ################################# END OF JOB ##################################
