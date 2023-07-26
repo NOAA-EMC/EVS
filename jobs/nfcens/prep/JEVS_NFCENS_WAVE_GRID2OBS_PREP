@@ -68,13 +68,10 @@ export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 export COMINmodel=${COMINmodel:-$(compath.py ${envir}/com/${RUN}_${MODELNAME}/${model_ver})} 
 export COMINgdas=${COMINobs:-$(compath.py ${envir}/com/obsproc/${obsproc_ver}/gdas)}
 
-#export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver)}
-#export ARCmodel=${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
 export ARCmodel=${COMOUT}/$STEP/$COMPONENT/${RUN}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
 
 # make the directory where the ARCmodel and gdasnc will be kept
-#mkdir -p ${COMOUT}/$STEP/$COMPONENT/${RUN}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
 mkdir -p $ARCmodel
 
 export jlogfile=${DATA}/${MODELNAME}_${RUN}_PB2NC.log
