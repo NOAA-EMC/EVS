@@ -96,7 +96,11 @@ export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
 export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
 
-mkdir -p $COMOUT
+if [ $MODELNAME = sref ] ; then 
+  mkdir -p $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE
+else
+ mkdir -p $COMOUT
+fi
 
 echo $COMPATH
 

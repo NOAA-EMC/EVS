@@ -943,6 +943,10 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
             title2 = f'{level_string}{var_long_name} ({units})'
         else:
             title2 = f'{level_string}{var_long_name} (unitless)'
+    if obtype == 'SFCSHP':
+        title2 = title2+f', Observations: Surface Marine (Ship, Buoy, C-MAN Platform)'
+    elif obtype == 'NDBC_STANDARD':
+        title2 = title2+f', Observations: NDBC Buoys'
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
               + f'{date_start_string} to {date_end_string}')
     title_center = '\n'.join([title1, title2, title3])
@@ -1011,33 +1015,40 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     if str(metric2_name).lower() == 'pcor':
         metric2_name = 'corr'
     domain_string = domain_string.replace(', ','_')
+    if domain == 'GLOBAL':
+        domain_savename = 'glb'
+    else:
+        domain_savename = domain
     save_name = (f'evs.'
                  + f'{str(models_savename).lower()}.'
                  + f'{str(metric1_name).lower()}.'
                  + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
                  + f'{str(time_period_savename).lower()}.'
-                 + f'fhr_{str(date_type).lower()}{str(date_hours_savename).lower()}.'
-                 + f'{str(domain_string).lower()}')
+                 + f'fhrmean_{str(date_type).lower()}{str(date_hours_savename).lower()}_f{str(flead[-1])}.'
+                 + f'latlon_0p25_{str(domain_savename).lower()}')
     if metric2_name is not None:
         save_name = (f'evs.'
                      + f'{str(models_savename).lower()}.'
                      + f'{str(metric1_name).lower()}_{str(metric2_name).lower()}.'
                      + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
                      + f'{str(time_period_savename).lower()}.'
-                     + f'fhr_{str(date_type).lower()}{str(date_hours_savename).lower()}.'
-                     + f'{str(domain_string).lower()}')
+                     + f'fhrmean_{str(date_type).lower()}{str(date_hours_savename).lower()}_f{str(flead[-1])}.'
+                     + f'latlon_0p25_{str(domain_savename).lower()}')
     if thresh and '' not in thresh:
         save_name = (f'evs.'
                      + f'{str(models_savename).lower()}.'
                      + f'{str(metric1_name).lower()}_{str(thresholds_save_phrase).lower()}.'
                      + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
                      + f'{str(time_period_savename).lower()}.'
-                     + f'fhr_{str(date_type).lower()}{str(date_hours_savename).lower()}.'
-                     + f'{str(domain).lower()}')
+                     + f'fhrmean_{str(date_type).lower()}{str(date_hours_savename).lower()}_f{str(flead[-1])}.'
+                     + f'latlon_0p25_{str(domain_savename).lower()}')
     if save_header:
         save_name = f'{save_header}_'+save_name
+    #save_subdir = os.path.join(
+    #    save_dir, f'{str(run).lower()}' 
+    #)
     save_subdir = os.path.join(
-        save_dir, f'{str(run).lower()}' 
+        save_dir, 'images' 
     )
     if not os.path.isdir(save_subdir):
         os.makedirs(save_subdir)
