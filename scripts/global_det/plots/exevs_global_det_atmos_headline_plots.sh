@@ -28,8 +28,8 @@ status=$?
 if [ $SENDCOM = YES ]; then
     # Make and copy tar file
     cd $DATA/images
-    tar -cvf $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${PDYm1}.tar *.png
-    cp -v $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${PDYm1}.tar $COMOUT/.
+    tar -cvf $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar *.png
+    cp -v $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar $COMOUT/.
 fi
 cd $DATA
 
