@@ -80,6 +80,12 @@ evs_cam_settings_dict['RUN_PRECIP_PLOTS'] = ['COMOUTplots']
 evs_cam_settings_dict['RUN_SNOWFALL_PREP'] = []
 evs_cam_settings_dict['RUN_SNOWFALL_STATS'] = []
 evs_cam_settings_dict['RUN_SNOWFALL_PLOTS'] = ['COMOUTplots']
+evs_cam_settings_dict['RUN_HEADLINE_PREP'] = []
+evs_cam_settings_dict['RUN_HEADLINE_STATS'] = []
+evs_cam_settings_dict['RUN_HEADLINE_PLOTS'] = [
+        'MET_VERSION','IMG_HEADER','PRUNE_DIR','SAVE_DIR','LOG_TEMPLATE',
+        'LOG_LEVEL','STAT_OUTPUT_BASE_DIR','STAT_OUTPUT_BASE_TEMPLATE',
+        'COMOUTplots']
 
 # Check for existence of required env vars, by group in the dictionary
 env_group_list = [

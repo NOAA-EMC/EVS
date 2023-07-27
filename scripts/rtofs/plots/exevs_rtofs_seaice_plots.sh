@@ -79,7 +79,8 @@ for stats in csi; do
 done
 
 # tar all plots together
-tar -cvf $COMOUTplots/evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN/*.png
+cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN
+tar -cvf $COMOUTplots/evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
 
 exit
 
