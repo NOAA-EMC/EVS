@@ -85,12 +85,13 @@ if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f192_diag.$RUN.nc ] ; th
    exit 0
 fi
 
-# create subregions using ice mask; call the rtofs_regions.sh script
-$HOMEevs/scripts/$COMPONENT/$STEP/rtofs_regions.sh
-
 # get the months for the climo files:
 #     for day < 15, use the month before + valid month
 #     for day >= 15, use valid month + the month after
+
+export STATSDIR=$DATA/stats
+mkdir -p $STATSDIR
+
 MM=$(date --date=$VDATE +%m)
 DD=$(date --date=$VDATE +%d)
 if [ $DD -lt 15 ] ; then
@@ -115,6 +116,9 @@ fi
 run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
 -c $CONFIGevs/${VERIF_CASE}/$STEP/GridStat_fcstRTOFS_obsAVISO_climoHYCOM.conf
 
+cp $STATSDIR/$RUN.$VDATE/*stat $COMOUTsmall
+export STATSOUT=$STATSDIR/$RUN.$VDATE
+
 # check if stat files exist; exit if not
 if [ ! -s $COMOUTsmall/grid_stat_RTOFS_AVISO_SSH_1920000L_${VDATE}_000000V.stat ] ; then
    echo "Missing RTOFS_AVISO_SSH stat files for $VDATE" 
@@ -122,13 +126,11 @@ if [ ! -s $COMOUTsmall/grid_stat_RTOFS_AVISO_SSH_1920000L_${VDATE}_000000V.stat 
 fi
 
 # sum small stat files into one big file using Stat_Analysis
-mkdir -p $COMOUTfinal
 
 run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
 -c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstRTOFS.conf
 
-# archive final stat file
-#rsync -av $COMOUTfinal $ARCHevs
+cp $STATSOUT/evs*stat $COMOUTfinal
 
 exit
 
