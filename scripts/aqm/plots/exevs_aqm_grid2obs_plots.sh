@@ -284,6 +284,8 @@ do
 	 smregion=conus
 	fi
 
+        # Forecast lead option for init::06z are day1::F29, day2::F53, and day3::F77
+        # Forecast lead option for init::12z are day1::F23, day2::F47, and day3::F71
 	for flead in 47
 	do
 	export flead
@@ -295,16 +297,22 @@ do
 	smlev=`echo $lev | tr A-Z a-z`
 	smvar=`echo $var | tr A-Z a-z`
 
+        ## selected csi values need to be defined in settings.py ('grid2obs_aq'::'CTC'::'var_dict'::'OZMAX8'::'obs_var_thresholds' and 'fcst_var_thresholds')
+	export select_headline_csi="70"
+	export select_headline_threshold=">${select_headline_csi}"
+
 	sh $USHevs/${COMPONENT}/py_plotting_ozmax8_headline.config
 	if [ -e ${PLOTDIR_headline}/aq/*/evs*png ]
 	then
-	mv ${PLOTDIR_headline}/aq/*/evs*png ${PLOTDIR_headline}/headline_$COMPONENT.csi_gt70.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
+	mv ${PLOTDIR_headline}/aq/*/evs*png ${PLOTDIR_headline}/headline_$COMPONENT.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
         else
 	echo "NO PLOT FOR",$var,$region
         fi
 
         done
-
+	 
+        # Forecast lead option for init::06z are day1::F22, day2::F46, and day3::F70
+        # Forecast lead option for init::12z are day1::F16, day2::F40, and day3::F64
 	for flead in 40
 	do
 	export flead
@@ -316,10 +324,14 @@ do
 	smlev=`echo $lev | tr A-Z a-z`
 	smvar=`echo $var | tr A-Z a-z`
 
+        ## selected csi values need to be defined in settings.py ('grid2obs_aq'::'CTC'::'var_dict'::'PMAVE'::'obs_var_thresholds' and 'fcst_var_thresholds')
+	export select_headline_csi="35"
+	export select_headline_threshold=">${select_headline_csi}"
+
 	sh $USHevs/${COMPONENT}/py_plotting_pmave_headline.config
 	if [ -e ${PLOTDIR_headline}/aq/*/evs*png ]
 	then
-	mv ${PLOTDIR_headline}/aq/*/evs*png ${PLOTDIR_headline}/headline_$COMPONENT.csi_gt35.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
+	mv ${PLOTDIR_headline}/aq/*/evs*png ${PLOTDIR_headline}/headline_$COMPONENT.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
         else
 	echo "NO PLOT FOR",$var,$region
         fi
