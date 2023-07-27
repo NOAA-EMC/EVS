@@ -21,9 +21,6 @@ echo $msg
 export OBSERVATION=$1
 export NDAYS=$2
 export VX_MASK_LIST=$3
-if [ $VX_MASK_LIST = 'all' ] ; then
-    export VX_MASK_LIST="`echo $VX_MASK_ALL | sed 's/ /, /g'`"
-fi
 
 export VALID_END=$VDATE
 export VALID_BEG=`date -d "$VDATE - $NDAYS days" +%Y%m%d`
@@ -50,6 +47,14 @@ fi
 for RESOLUTION in $resolutions ; do
     export RESOLUTION
     resolution=`echo $RESOLUTION | tr '[:upper:]' '[:lower:]'`
+    
+    if [ $VX_MASK_LIST = 'GLB' ] ; then
+	if [ $RESOLUTION = "0P25" ] ; then
+	    export VX_MASK_LIST="G193"
+	elif [ $RESOLUTION = "1P25" ] ; then
+	    export VX_MASK_LIST="G045"
+	fi
+    fi
     
     export OUTPUT_BASE_DIR=$DATA/datainput/${OBSERVATION}_${RESOLUTION}
     mkdir -p $OUTPUT_BASE_DIR
