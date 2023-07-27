@@ -5,8 +5,54 @@
 #          MET/METplus.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
 ###############################################################################
-
+ 
 set -x
+
+# Preliminary data setup step
+########################################
+
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+
+# ###################################
+# SET SHELL PROCESSING VARIABLES
+# ###################################
+export PS4='$SECONDS + '
+date
+
+###########################################################
+# obtain unique LSF id (jobid) and make temp directories
+###########################################################
+export pid=$$
+
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+rm -rf $DATA
+mkdir -p $DATA
+cd $DATA
+
+# Determine Job Output Name on System
+####################################
+export pgmout="OUTPUT.${pid}"
+
+export cycle=t00z
+
+###################################
+# Set EVS directories
+####################################
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
+export USHevs=${USHevs:-$HOMEevs/ush}
+export MASKS=${MASKS:-$FIXevs/masks}
+
+# Run setpdy and initialize PDY variables
+setpdy.sh
+. ./PDY
+
+export VDATE=${VDATE:-$PDYm1}
 
 # set up paths
 export FIXevs=${FIXevs:-$HOMEevs/fix}
@@ -22,14 +68,33 @@ export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE
 export COMOUTfinal=${COMOUTfinal:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
 export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
 
+mkdir -p $COMOUT $COMOUTsmall $COMOUTfinal
+
 if [ $RUN = 'argo' ] ; then
   for vari in ${VARS}; do
     export VAR=$vari
     export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/$VAR
+    mkdir -p $COMOUTsmall
     $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${STEP}.sh
   done
 else
   $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${STEP}.sh
 fi
+
+export err=$?; err_chk
+
+if [ -e "$pgmout" ]; then
+  cat $pgmout
+fi
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$msg"
+
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATAROOT
+##  rm -rf $DATA
+fi
+
+date
 
 ################################# END OF JOB ##################################

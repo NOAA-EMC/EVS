@@ -5,7 +5,6 @@ set -x
 cd $DATA
 
 export machine=WCOSS2
-export COMROOT=${COMROOT:-$(compath.py $envir/com)}
 
 export VERIF_CASE=grid2grid
 export evs_run_mode=production
@@ -69,18 +68,19 @@ python $USHevs/mesoscale/ush_sref_plot_precip_py/sref_atmos_plots.py
 
 cd $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/precip/SL1L2_FBAR_24hrAccumMaps_CONUS_precip_spatial_map/images
 
-mask=`echo $vx_mask | tr '[A-Z]' '[a-z]'`
-for model in $model_list ; do
-  for fhr in 24 48 72 ; do
-    past=`$NDATE -$fhr ${VDATE}12`
-    INITDATE=${past:0:8}    
-    mv ${model}.v${VDATE}12.0${fhr}h.${mask}.png  evs.${model}.spatial_map.apcp_a24.init${INITDATE}.vlid${VDATE}12.f${fhr}.buk_${mask}.png
-  done
-done  
+#mask=`echo $vx_mask | tr '[A-Z]' '[a-z]'`
+#for model in $model_list ; do
+#  for fhr in 24 48 72 ; do
+#    past=`$NDATE -$fhr ${VDATE}12`
+#    INITDATE=${past:0:8}    
+#    mv ${model}.v${VDATE}12.0${fhr}h.${mask}.png  evs.${model}.spatial_map.apcp_a24.vlid12z.f0${fhr}.${mask}.png
+#  done
+#done  
 
-tar -cvf evs.plots.sref.precip.spatial.map.v${VDATE}.tar *.png
 
-cp evs.plots.sref.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
+tar -cvf evs.plots.sref.precip.spatial.map.v${VDATE}.tar *.gif
+
+cp evs.plots.sref.precip.spatial.map.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
 
 
 

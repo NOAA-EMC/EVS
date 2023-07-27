@@ -978,7 +978,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     #New add
     fig.subplots_adjust(top=.85)
     ax.grid(
-        b=True, which='major', axis='both', alpha=.5, linestyle='--', 
+        visible=True, which='major', axis='both', alpha=.5, linestyle='--', 
         linewidth=.5, zorder=0
     )
 

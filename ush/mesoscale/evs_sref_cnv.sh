@@ -67,7 +67,7 @@ for  obsv in prepbufr ; do
        echo "cp \$output_base/stat/*CNV*.stat $COMOUTsmall" >> run_sref_cnv_${fhr}.sh
 
        chmod +x run_sref_cnv_${fhr}.sh
-       echo "run_sref_cnv_${fhr}.sh" >> run_all_sref_cnv_poe.sh
+       echo "${DATA}/run_sref_cnv_${fhr}.sh" >> run_all_sref_cnv_poe.sh
 
   done
 
@@ -77,9 +77,9 @@ done
 chmod 775 run_all_sref_cnv_poe.sh
 if [ $run_mpi = yes ] ; then
    export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec  -n 15 -ppn 15 --cpu-bind core --depth=2 cfp run_all_sref_cnv_poe.sh
+   mpiexec  -n 15 -ppn 15 --cpu-bind core --depth=2 cfp ${DATA}/run_all_sref_cnv_poe.sh
 else
-   run_all_sref_cnv_poe.sh
+   ${DATA}/run_all_sref_cnv_poe.sh
 fi 
 
 if [ $gather = yes ] ; then 

@@ -32,7 +32,6 @@ export pgmout="OUTPUT.${pid}"
 # Set EVS directories
 ####################################
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
-#export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
@@ -68,7 +67,7 @@ else
    elif [ $VERIF_CASE = radar ] ; then
       export VDATE=${VDATE:-$PDYm2}
    else
-      export VDATE=$(date -d "today -1 day" +"%Y%m%d")
+      export VDATE=${VDATE:-$PDYm1}
    fi
 fi
 
@@ -87,7 +86,9 @@ if  [ $MODELNAME = href ] ; then
   export ush_dir=$USHevs/cam/ush_href_plot_py
 else
   export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
-  export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
+  export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
+  export COMOUTplots=${COMOUTplots:-$COMOUT/$RUN.$VDATE}
+  echo $COMPATH
 fi
 
 mkdir -p $COMOUT

@@ -884,7 +884,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         handletextpad=.4, borderaxespad=.5) 
     fig.subplots_adjust(bottom=.15, wspace=0, hspace=0)
     ax.grid(
-        b=True, which='major', axis='both', alpha=.5, linestyle='--', 
+        visible=True, which='major', axis='both', alpha=.5, linestyle='--', 
         linewidth=.5, zorder=0
     )
     

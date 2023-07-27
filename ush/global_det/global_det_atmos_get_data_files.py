@@ -809,12 +809,12 @@ elif STEP == 'plots' :
             'ccpa', 'grid2grid'
         )
         source_ccpa_pcp_combine_file = os.path.join(
-            COMINccpa, 'pcp_combine_precip_24hrCCPA_valid'
+            COMINccpa, 'pcp_combine_precip_accum24hr_24hrCCPA_valid'
             +end_date_dt.strftime('%Y%m%d')+CCPA24hr_valid_hr_list[0]+'.nc'
         )
         dest_ccpa_pcp_combine_file = os.path.join(
             VERIF_CASE_STEP_data_dir, 'ccpa',
-            'ccpa_precip_24hrAccum_valid'
+            'ccpa_precip_accum24hr_24hrAccum_valid'
             +end_date_dt.strftime('%Y%m%d')+CCPA24hr_valid_hr_list[0]+'.nc'
         )
         if not os.path.exists(dest_ccpa_pcp_combine_file):
