@@ -29,7 +29,7 @@ export RUN=headline
 source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
 # set up VDATE and COMIN and COMOUT
-export VDATE=$(date --date="4 days ago" +%Y%m%d)
+export VDATE=$(date --date="3 days ago" +%Y%m%d)
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
 export COMINstats=$COMIN/stats/$COMPONENT
