@@ -37,7 +37,8 @@ set -x
 ##
 # Set Basic Environment Variables
 last_cyc=21
-NEST_LIST="namer conus conusc ak akc spc_otlk subreg"
+ NEST_LIST="namer conus conusc ak akc spc_otlk subreg"
+##
 
 VERIF_TYPES="raob metar"
 

@@ -60,7 +60,7 @@ for  obsv in prepbufr ; do
        echo "cp \$output_base/stat/*.stat $COMOUTsmall" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
 
        chmod +x run_sref_g2o_${domain}.${obsv}.${fhr}.sh
-       echo "run_sref_g2o_${domain}.${obsv}.${fhr}.sh" >> run_all_sref_g2o_poe.sh
+       echo "${DATA}/run_sref_g2o_${domain}.${obsv}.${fhr}.sh" >> run_all_sref_g2o_poe.sh
 
   done
 
@@ -70,9 +70,9 @@ done
 chmod 775 run_all_sref_g2o_poe.sh
 if [ $run_mpi = yes ] ; then
    export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec  -n 2 -ppn 2 --cpu-bind core --depth=2 cfp run_all_sref_g2o_poe.sh
+   mpiexec  -n 2 -ppn 2 --cpu-bind core --depth=2 cfp ${DATA}/run_all_sref_g2o_poe.sh
 else
-   run_all_sref_g2o_poe.sh
+   ${DATA}/run_all_sref_g2o_poe.sh
 fi 
 
 if [ $gather = yes ] ; then 

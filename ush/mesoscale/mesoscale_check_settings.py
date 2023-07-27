@@ -80,6 +80,12 @@ evs_mesoscale_settings_dict['RUN_PRECIP_PLOTS'] = []
 evs_mesoscale_settings_dict['RUN_SNOWFALL_PREP'] = []
 evs_mesoscale_settings_dict['RUN_SNOWFALL_STATS'] = []
 evs_mesoscale_settings_dict['RUN_SNOWFALL_PLOTS'] = []
+evs_mesoscale_settings_dict['RUN_HEADLINE_PREP'] = []
+evs_mesoscale_settings_dict['RUN_HEADLINE_STATS'] = []
+evs_mesoscale_settings_dict['RUN_HEADLINE_PLOTS'] = [
+        'MET_VERSION','IMG_HEADER','PRUNE_DIR','SAVE_DIR','LOG_TEMPLATE',
+        'LOG_LEVEL','STAT_OUTPUT_BASE_DIR','STAT_OUTPUT_BASE_TEMPLATE'
+        ]
 
 # Check for existence of required env vars, by group in the dictionary
 env_group_list = [
@@ -146,7 +152,7 @@ if STEP.upper() == 'STATS':
         '0', '1', '2', '3', '4', '5'
     ]
     valid_config_var_values_dict['LOG_MET_OUTPUT_TO_METPLUS'] = ['yes', 'no']
-    valid_config_var_values_dict['NEST'] = ['ak', 'conus', 'subreg', 'spc_otlk', 'firewx', 'hi', 'pr', 'gu','namer','conusc','akc']
+    valid_config_var_values_dict['NEST'] = ['ak', 'conus', 'subreg', 'spc_otlk', 'firewx', 'hi', 'pr', 'gu','namer','conusc','akc','conusp']
     valid_config_var_values_dict['BOOL_NBRHD'] = ['True', 'False']
     valid_config_var_values_dict['OUTPUT_FLAG_NBRHD'] = ['NONE', 'STAT', 'BOTH']
     valid_config_var_values_dict['OUTPUT_FLAG_CATEG'] = ['NONE', 'STAT', 'BOTH']
