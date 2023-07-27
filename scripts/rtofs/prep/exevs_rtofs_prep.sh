@@ -19,18 +19,6 @@ done
 wait
 rm -f *hvr*.nc  # don't need these
 
-# touch RTOFS data in previous 12 days to keep them in scrub space
-TDATE=$(date --date="$VDATE -1 day" +%Y%m%d)
-EDATE=$(date --date="$VDATE -12 days" +%Y%m%d)
-while [ $TDATE -ge $EDATE ] ; do 
-  cd $COMOUTprep/rtofs.$TDATE
-  touch *.nc
-  for dir in $(ls -d */); do
-    touch $dir/*.nc
-  done
-
-  TDATE=$(date --date="$TDATE -1 day" +%Y%m%d)
-done
 exit
 
 ################################ END OF SCRIPT ################################

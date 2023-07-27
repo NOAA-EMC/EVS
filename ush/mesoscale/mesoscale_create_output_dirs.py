@@ -17,6 +17,7 @@ import re
 from datetime import datetime, timedelta as td
 from mesoscale_plots_grid2obs_graphx_defs import graphics as graphics_g2o
 from mesoscale_plots_precip_graphx_defs import graphics as graphics_pcp
+from mesoscale_plots_headline_graphx_defs import graphics as graphics_hdl
 from mesoscale_plots_snowfall_graphx_defs import graphics as graphics_sno
 import mesoscale_util as cutil
 
@@ -65,6 +66,9 @@ elif VERIF_CASE == "grid2obs":
         OBSNAME = os.environ['OBSNAME']
     elif STEP == 'plots':
         all_eval_periods = cutil.get_all_eval_periods(graphics_g2o)
+elif VERIF_CASE == "headline":
+    if STEP == 'plots':
+        all_eval_periods = cutil.get_all_eval_periods(graphics_hdl)
 elif VERIF_CASE == "snowfall":
     if STEP == 'prep':
         pass
@@ -386,6 +390,32 @@ elif STEP == 'plots':
             COMOUT,
         ))
         for plot_group in ['precip']:
+            for eval_period in all_eval_periods:
+                working_dir_list.append(os.path.join(
+                    working_output_base_dir, 'out', str(plot_group).lower(), 
+                    str(eval_period).lower()
+                ))
+    elif VERIF_CASE == 'headline':
+        working_output_base_dir = os.path.join(
+            DATA, VERIF_CASE
+        )
+        working_dir_list.append(working_output_base_dir)
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'data'
+        ))
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'out'
+        ))
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'out', 'logs'
+        ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUT, 
+        ))
+        for plot_group in [
+                'aq', 'aviation', 'cape', 'ceil_vis', 'precip', 
+                'radar', 'rtofs_sfc', 'sfc_upper'
+            ]:
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'out', str(plot_group).lower(), 

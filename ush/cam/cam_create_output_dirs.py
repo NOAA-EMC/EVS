@@ -18,6 +18,7 @@ from datetime import datetime, timedelta as td
 from cam_plots_grid2obs_graphx_defs import graphics as graphics_g2o
 from cam_plots_precip_graphx_defs import graphics as graphics_pcp
 from cam_plots_snowfall_graphx_defs import graphics as graphics_sno
+from cam_plots_headline_graphx_defs import graphics as graphics_hdl
 import cam_util as cutil
 
 print(f"BEGIN: {os.path.basename(__file__)}")
@@ -57,7 +58,7 @@ elif VERIF_CASE == "grid2obs":
     if STEP == 'prep':
         NEST = os.environ['NEST']
         OBSNAME = os.environ['OBSNAME']
-    if STEP == 'stats':
+    elif STEP == 'stats':
         NEST = os.environ['NEST']
         FHR_END_FULL = os.environ['FHR_END_FULL']
         FHR_END_SHORT = os.environ['FHR_END_SHORT']
@@ -82,6 +83,10 @@ elif VERIF_CASE == "snowfall":
     elif STEP == 'plots':
         all_eval_periods = cutil.get_all_eval_periods(graphics_sno)
         COMOUTplots = os.environ['COMOUTplots']
+elif VERIF_CASE == "headline":
+    if STEP == 'plots':
+        all_eval_periods = cutil.get_all_eval_periods(graphics_hdl)
+        COMOUTplots = os.environ['COMOUTplots']
 if STEP == 'stats':
     job_type = os.environ['job_type']
 
@@ -93,7 +98,7 @@ if VERIF_CASE == 'precip':
     if STEP == 'prep':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
         data_dir_list.append(os.path.join(data_base_dir, OBSNAME))
-    if STEP == 'stats':
+    elif STEP == 'stats':
         data_dir_list.append(os.path.join(data_base_dir, MODELNAME))
         data_dir_list.append(os.path.join(data_base_dir, OBSNAME))
 elif VERIF_CASE == 'grid2obs':
@@ -502,6 +507,35 @@ elif STEP == 'plots':
             COMOUTplots
         ))
         for plot_group in ['precip']:
+            for eval_period in all_eval_periods:
+                working_dir_list.append(os.path.join(
+                    working_output_base_dir, 'out', str(plot_group).lower(), 
+                    str(eval_period).lower()
+                ))
+    elif VERIF_CASE == 'headline':
+        working_output_base_dir = os.path.join(
+            DATA, VERIF_CASE
+        )
+        working_dir_list.append(working_output_base_dir)
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'data'
+        ))
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'out'
+        ))
+        working_dir_list.append(os.path.join(
+            working_output_base_dir, 'out', 'logs'
+        ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUT, 
+        ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUTplots
+        ))
+        for plot_group in [
+                'aq', 'aviation', 'cape', 'ceil_vis', 'precip', 
+                'radar', 'rtofs_sfc', 'sfc_upper'
+            ]:
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'out', str(plot_group).lower(), 
