@@ -2,7 +2,6 @@
 
 #PBS -N jevs_cam_href_snowfall_past90days_plots
 #PBS -j oe
-#PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=01:00:00

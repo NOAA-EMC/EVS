@@ -1,8 +1,7 @@
 #!/bin/bash
 
-#PBS -N jevs_cam_href_precip_stat
+#PBS -N jevs_cam_href_precip_stats
 #PBS -j oe
-#PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=02:00:00
