@@ -1,8 +1,7 @@
-#!/bin/bash
-
 #PBS -N jevs_cam_href_precip_stats
 #PBS -j oe
 #PBS -q dev
+#PBS -S /bin/bash
 #PBS -A VERF-DEV
 #PBS -l walltime=02:00:00
 #PBS -l place=vscatter,select=1:ncpus=88:mem=10GB

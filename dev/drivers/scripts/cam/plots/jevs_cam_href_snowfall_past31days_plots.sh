@@ -1,8 +1,7 @@
-#!/bin/bash
-
 #PBS -N jevs_cam_href_snowfall_past31days_plots
 #PBS -j oe
 #PBS -q dev
+#PBS -S /bin/bash
 #PBS -A VERF-DEV
 #PBS -l walltime=01:00:00
 #PBS -l place=vscatter,select=1:ncpus=60:mem=100GB
