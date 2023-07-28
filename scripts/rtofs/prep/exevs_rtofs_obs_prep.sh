@@ -12,7 +12,7 @@ export RUN=osisaf
 mkdir -p $COMOUTprep/rtofs.$VDATE/$RUN
 mkdir -p $DATA/rtofs.$VDATE/$RUN
 
-if [ -s $COMINobs/$VDATE//seaice/osisaf/ice_conc_nh_polstere-100_multi_${VDATE}1200.nc ] ; then
+if [ -s $COMINobs/$VDATE/seaice/osisaf/ice_conc_nh_polstere-100_multi_${VDATE}1200.nc ] ; then
   for ftype in nh sh; do
     cdo remapbil,$FIXevs/rtofs_$RUN.grid \
     $COMINobs/$VDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc \
