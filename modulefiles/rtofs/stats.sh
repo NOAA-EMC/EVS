@@ -12,8 +12,7 @@ module load netcdf/${netcdf_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
 module load prod_util/${prod_util_ver}
-module load prod_envir/${prod_envir_ver}
-module load cdo/${cdo_ver}
+module load rsync/${rsync_ver}
 
 module list
 set -x
