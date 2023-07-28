@@ -68,9 +68,9 @@ export COMINmodel=${COMINmodel:-$(compath.py ${envir}/com/${RUN}_${MODELNAME}/${
 export COMINgdasnc=${COMIN}/prep/${COMPONENT}
 export ARCmodel=${COMIN}/prep/${COMPONENT}
 
-export COMOUT=${COMOUT:-${COMIN}/${STEP}/${COMPONENT}}
-export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
-export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver)}
+export COMOUTsmall=${COMOUT}/$STEP/$COMPONENT/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
+export COMOUTfinal=${COMOUT}/$STEP/$COMPONENT/${MODELNAME}.${VDATE}
 
 mkdir -p ${COMOUT} ${COMOUTsmall} ${COMOUTfinal} 
 
@@ -81,7 +81,7 @@ export jlogfile=${DATA}/${MODELNAME}_${RUN}_PointStat.log
 ####################################
 env
 
-$HOMEevs/scripts/nfcens/stats/exevs_nfcens_wave_grid2obs_stats.sh 1>>$pgmout 2>errfile.${pid}
+$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh 1>>$pgmout 2>errfile.${pid}
 
 export err=$?; err_chk
 
