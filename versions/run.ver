@@ -1,6 +1,4 @@
 export evs_ver=v1.0
-export met_ver=11.0.0
-export metplus_ver=5.0.0
 
 export bacio_ver=2.4.1
 export bufr_dump_ver=1.0.0
