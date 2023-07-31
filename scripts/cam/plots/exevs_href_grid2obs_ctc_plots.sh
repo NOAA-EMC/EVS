@@ -175,7 +175,7 @@ for stats in csi_fbias ets_fbias ratio_pod_csi ; do
          echo "export obs_level=$OBS_LEVEL_value" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
 
          echo "export line_type=$line_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
-         echo "export interp=NEAREST" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
+         echo "export interp=BILIN" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
          echo "export score_py=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
 
 	 if [ $VAR = CAPEsfc ] || [ $VAR = MLCAPE ] ; then
