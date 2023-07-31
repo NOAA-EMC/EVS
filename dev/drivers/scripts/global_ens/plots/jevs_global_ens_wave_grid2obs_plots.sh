@@ -21,10 +21,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/gitworkspace/EVS
 ############################################################
 versionfile=$HOMEevs/versions/run.ver
 . $versionfile
-#export evs_ver=$evs_ver
 export model_ver=$gefs_ver
-export obsproc_ver=$obsproc_ver
-
 export MODELNAME=gefs
 export OBTYPE=GDAS
 export NET=evs

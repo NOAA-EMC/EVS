@@ -17,7 +17,6 @@ source $HOMEevs/versions/run.ver
 export NET=evs
 export RUN=atmos
 export STEP=prep
-#export COMPONENT=naefs
 export COMPONENT=global_ens
 export VERIF_CASE=grid2grid
 #export MODELNAME=gefs
@@ -26,7 +25,7 @@ export MODELNAME=naefs
 
 module reset
 
-source $HOMEevs/modulefiles/global_ens/global_ens_${STEP}.sh
+source $HOMEevs/modulefiles/${COMPONENT}/global_ens_${STEP}.sh
 
 
 
@@ -36,7 +35,7 @@ export KEEPDATA=YES
 #This var is only for testing, if not set, then run operational 
 
 export cyc=00
-export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/$NET/$evs_ver
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export DATA=/lfs/h2/emc/stmp/${USER}/evs/tmpnwprd
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
