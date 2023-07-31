@@ -5,10 +5,11 @@ set -x
 mkdir -p $DATA/logs
 export STATDIR=$DATA/stats
 export PLOTDIR=$DATA/plots
+export PLOTDIR_headline=$DATA/plots_headline
 export OUTDIR=$DATA/out
 export PRUNEDIR=$DATA/prune
 mkdir -p $STATDIR
-mkdir =p $PLOTDIR
+mkdir -p $PLOTDIR ${PLOTDIR_headline}
 mkdir -p $PRUNEDIR
 mkdir -p $OUTDIR
 
@@ -259,6 +260,91 @@ tar -cvf evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar *p
 
 mkdir -m 775 -p $COMOUTplots
 cp evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
+
+##
+## Headline Plots
+##
+for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central
+do
+	export region
+        if [ $region = CONUS_East ]
+	then
+	 smregion=conus_e
+	elif [ $region = CONUS_West ]
+	then
+	 smregion=conus_w
+	elif [ $region = CONUS_South ]
+	then
+	 smregion=conus_s
+	elif [ $region = CONUS_Central ]
+	then
+	 smregion=conus_c
+	elif [ $region = CONUS ]
+	then
+	 smregion=conus
+	fi
+
+        # Forecast lead option for init::06z are day1::F29, day2::F53, and day3::F77
+        # Forecast lead option for init::12z are day1::F23, day2::F47, and day3::F71
+	for flead in 47
+	do
+	export flead
+	export var=OZMAX8
+	export lev=L1
+	export lev_obs=A8
+	export linetype=CTC
+	export inithr=12
+	smlev=`echo $lev | tr A-Z a-z`
+	smvar=`echo $var | tr A-Z a-z`
+
+        ## selected csi values need to be defined in settings.py ('grid2obs_aq'::'CTC'::'var_dict'::'OZMAX8'::'obs_var_thresholds' and 'fcst_var_thresholds')
+	export select_headline_csi="70"
+	export select_headline_threshold=">${select_headline_csi}"
+
+	sh $USHevs/${COMPONENT}/py_plotting_ozmax8_headline.config
+	if [ -e ${PLOTDIR_headline}/aq/*/evs*png ]
+	then
+	mv ${PLOTDIR_headline}/aq/*/evs*png ${PLOTDIR_headline}/headline_${COMPONENT}.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
+        else
+	echo "NO PLOT FOR",$var,$region
+        fi
+
+        done
+	 
+        # Forecast lead option for init::06z are day1::F22, day2::F46, and day3::F70
+        # Forecast lead option for init::12z are day1::F16, day2::F40, and day3::F64
+	for flead in 40
+	do
+	export flead
+	export var=PMAVE
+	export lev=A23
+	export lev_obs=A1
+	export linetype=CTC
+        export inithr=12
+	smlev=`echo $lev | tr A-Z a-z`
+	smvar=`echo $var | tr A-Z a-z`
+
+        ## selected csi values need to be defined in settings.py ('grid2obs_aq'::'CTC'::'var_dict'::'PMAVE'::'obs_var_thresholds' and 'fcst_var_thresholds')
+	export select_headline_csi="35"
+	export select_headline_threshold=">${select_headline_csi}"
+
+	sh $USHevs/${COMPONENT}/py_plotting_pmave_headline.config
+	if [ -e ${PLOTDIR_headline}/aq/*/evs*png ]
+	then
+	mv ${PLOTDIR_headline}/aq/*/evs*png ${PLOTDIR_headline}/headline_${COMPONENT}.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
+        else
+	echo "NO PLOT FOR",$var,$region
+        fi
+
+        done
+done
+
+cd ${PLOTDIR_headline}
+tarfile=evs.plots.${COMPONENT}.${RUN}.headline.v${VDATE}.tar
+tar -cvf ${tarfile} *png
+
+mkdir -m 775 -p ${COMOUTheadline}
+cp ${tarfile} ${COMOUTheadline}
 
 exit
 

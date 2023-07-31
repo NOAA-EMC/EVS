@@ -1077,7 +1077,7 @@ class Reference():
             'grid2grid_anom': {
                 'SAL1L2': {
                     'plot_stats_list': 'acc',
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     #'vx_mask_list' : ['NHX', 'SHX', 'PNA', 'TRO'], 
                     #Added 'G003','NHEM','SHEM','TROPICS','CONUS' for global_ens: 
                     'vx_mask_list' : ['NHX', 'SHX', 'PNA', 'TRO', 'G003','NHEM','SHEM','TROPICS','CONUS'],
@@ -1187,7 +1187,7 @@ class Reference():
                 },
                 'VAL1L2': {
                     'plot_stats_list': 'acc',
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : ['NHX', 'SHX', 'PNA', 'TRO'],
                     'var_dict': {
                         'UGRD_VGRD': {'fcst_var_names': ['UGRD_VGRD'],
@@ -1210,7 +1210,7 @@ class Reference():
                 'SL1L2': {
                     'plot_stats_list': ('bias, rmse, msess, rsd, rmse_md,'
                                         + ' rmse_pv, mae, me' ),
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : ['NHX', 'SHX', 'PNA', 'TRO',
                                       'G003','NHEM','SHEM','TROPICS','CONUS', 'CONUS_East',
                                       'CONUS_West', 'CONUS_Central', 'CONUS_South', 'Alaska'
@@ -1296,7 +1296,7 @@ class Reference():
                 'VL1L2': {
                     'plot_stats_list': ('bias, rmse, msess, rsd, rmse_md,'
                                         + ' rmse_pv'),
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : ['NHX', 'SHX', 'PNA', 'TRO'],
                     'var_dict': {
                         'UGRD_VGRD': {'fcst_var_names': ['UGRD_VGRD'],
@@ -1320,7 +1320,7 @@ class Reference():
                 },
                 'ECNT': {
                     'plot_stats_list': ('crps, crpss, rmse, spread, me, mae'),
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
                         'G003','NHEM','SHEM','TROPICS','CONUS', 'CONUS_East',
                         'CONUS_West', 'CONUS_Central', 'CONUS_South', 'Alaska'
@@ -1384,7 +1384,7 @@ class Reference():
             'grid2grid_sfc': {
                 'SL1L2': {
                     'plot_stats_list': ('fbar, bias, mae'),
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
                         'NHX', 'SHX', 'N60', 'S60', 'TRO', 'NPO', 'SPO', 
                         'NAO', 'SAO', 'G130', 'CONUS',
@@ -1585,7 +1585,7 @@ class Reference():
                 },
                 'ECNT': {
                     'plot_stats_list': ('crps, crpss, rmse, spread, me, mae'),
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
                         'G003','NHEM','SHEM','TROPICS','CONUS', 'CONUS_East',
                         'CONUS_West', 'CONUS_Central', 'CONUS_South', 'Alaska'
@@ -1842,7 +1842,7 @@ class Reference():
                 },
                 'ECNT':{
                     'plot_stats_list': ('crps, crpss, rmse, spread, me, mae'),
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
                         'G003','NHEM','SHEM','TROPICS','CONUS', 'CONUS_East',
                         'CONUS_West', 'CONUS_Central', 'CONUS_South', 'Alaska',
@@ -1938,7 +1938,7 @@ class Reference():
                 },
                 'PSTD': {
                     'plot_stats_list': ('bs,bss,bss_smpl'),
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
                         'CONUS', 'CONUS_East', 'CONUS_West',
                         'CONUS_Central', 'CONUS_South', 'Alaska',
@@ -2748,7 +2748,7 @@ class Reference():
                 #Added for Global_ens,  Binbin Zhou
                 'SAL1L2': {
                     'plot_stats_list': 'acc',
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
                         'G003','NHEM','SHEM','TROPICS','CONUS', 'CONUS_East', 
                         'CONUS_West', 'CONUS_Central', 'CONUS_South', 'Alaska'
@@ -2804,7 +2804,7 @@ class Reference():
                 #Added for ensemble,  Binbin Zhou
                 'ECNT':{
                     'plot_stats_list': ('crps, crpss, rmse, spread, me, mae'),
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
                         'G003','NHEM','SHEM','TROPICS','CONUS', 'CONUS_East',
                         'CONUS_West', 'CONUS_Central', 'CONUS_South', 'Alaska',
@@ -2940,7 +2940,7 @@ class Reference():
             'grid2obs_polar_sfc': {
                 'SL1L2': {
                     'plot_stats_list': 'bias, rmse, fbar_obar',
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : ['ARCTIC'],
                     'var_dict': {
                         'TMP2m': {'fcst_var_names': ['TMP'],
@@ -2976,7 +2976,7 @@ class Reference():
             'grid2grid_rtofs_sfc': {
                 'SL1L2': {
                     'plot_stats_list': 'bias, rmse, fbar_obar, estdev',
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
                         'Global','North_Atlantic','South_Atlantic','Equatorial_Atlantic',
                         'North_Pacific','South_Pacific','Equatorial_Pacific','Indian',
@@ -3023,7 +3023,7 @@ class Reference():
                 },
                 'SAL1L2': {
                     'plot_stats_list': 'acc',
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
                         'Global','North_Atlantic','South_Atlantic','Equatorial_Atlantic',
                         'North_Pacific','South_Pacific','Equatorial_Pacific','Indian',
@@ -3070,7 +3070,7 @@ class Reference():
                 },
                 'CTC': {
                     'plot_stats_list': 'sratio, pod, csi, hss',
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
                         'Global','North_Atlantic','South_Atlantic','Equatorial_Atlantic',
                         'North_Pacific','South_Pacific','Equatorial_Pacific','Indian',
@@ -3102,7 +3102,7 @@ class Reference():
                 'SL1L2': {
                     'plot_stats_list': ('bias, rmse, bcrmse, fbar_obar, fbar,'
                                         + ' obar'),
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
                         'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 
                         'CONUS_South', 'Alaska', 'G130', 'G214', 'WEST', 'EAST', 
@@ -3150,7 +3150,7 @@ class Reference():
                 },
                 'NBRCNT': {
                     'plot_stats_list': ('fss, afss, ufss'),
-                    'interp': 'NEAREST, NBRHD_SQUARE',
+                    'interp': 'NEAREST, NBRHD_SQUARE, BILIN',
                     'vx_mask_list' : [
                         'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central',
                         'CONUS_South', 'Alaska', 'G130', 'G214', 'WEST', 'EAST',
@@ -3217,7 +3217,7 @@ class Reference():
                 'CTC': {
                     'plot_stats_list': ('bias, ets, fss, csi, fbias, fbar,'
                                         + ' obar, pod, faratio, farate, sratio'),
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
                         'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 
                         'CONUS_South', 'Alaska', 'G130', 'G214', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
@@ -3348,7 +3348,7 @@ class Reference():
                #Added for ensemble: Binbin Zhou
                 'ECNT': {
                     'plot_stats_list': ('crps, crpss, rmse, spread, me, mae'),
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [ 
                         'CONUS', 'CONUS_East', 'CONUS_West',
                         'CONUS_Central', 'CONUS_South', 'Alaska'
@@ -3395,7 +3395,7 @@ class Reference():
                 #added for ensemble Binbin Zhou
                 'PSTD': {
                     'plot_stats_list': ('bs'),
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [ 
                         'CONUS', 'CONUS_East', 'CONUS_West',
                         'CONUS_Central', 'CONUS_South', 'Alaska'
@@ -3470,7 +3470,7 @@ class Reference():
             'satellite_ghrsst_ncei_avhrr_anl': {
                 'SL1L2': {
                     'plot_stats_list': 'bias, rmse',
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
                         'NH', 'SH', 'POLAR', 'ARCTIC', 'SEA_ICE', 
                         'SEA_ICE_FREE', 'SEA_ICE_POLAR', 'SEA_ICE_FREE_POLAR'
@@ -3498,7 +3498,7 @@ class Reference():
                 },
                 'ECNT': {
                     'plot_stats_list': 'rmse, me, mae',
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [ 'ARCTIC', 'ANTARCTIC' 
                     ], 
                     'var_dict': {
@@ -3515,7 +3515,7 @@ class Reference():
                 },
                 'CTC': {
                     'plot_stats_list': 'csi, fbias, pod, sratio',
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [ 'ARCTIC', 'ANTARCTIC' 
                     ],   
                     'var_dict': {
@@ -3534,7 +3534,7 @@ class Reference():
             'satellite_ghrsst_ospo_geopolar_anl': {
                 'SL1L2': {
                     'plot_stats_list': 'bias, rmse',
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
                         'NH', 'SH', 'POLAR', 'ARCTIC', 'SEA_ICE', 
                         'SEA_ICE_FREE', 'SEA_ICE_POLAR', 'SEA_ICE_FREE_POLAR'
@@ -3565,7 +3565,7 @@ class Reference():
                 'CTC': {
                     'plot_stats_list': ('bias, ets, fss, csi, fbias, fbar,'
                                         + ' obar, pod, farate, faratio, sratio'),
-                    'interp': 'NEAREST',
+                    'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
                         'AR2','ASIA','AUNZ','EAST','NAMR','NHM','NPCF','SHM','TRP'
                     ],
