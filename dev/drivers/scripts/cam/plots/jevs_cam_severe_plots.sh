@@ -1,4 +1,3 @@
-#!/bin/bash
 #PBS -N jevs_cam_severe_plots_00
 #PBS -j oe
 #PBS -S /bin/bash
