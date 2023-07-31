@@ -38,8 +38,6 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 ############################################################
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export LINE_TYPE=${LINE_TYPE:-${LINE_TYPE}}
-export EVAL_PERIOD=${EVAL_PERIOD:-${EVAL_PERIOD}}
 export KEEPDATA=YES
 export VERIF_CASE=radar
 export MODELNAME=${COMPONENT}
@@ -51,6 +49,8 @@ export nproc=64
 ############################################################
 
 export cyc=${cyc:-${cyc}}
+export EVAL_PERIOD=${EVAL_PERIOD:-${EVAL_PERIOD}}
+export LINE_TYPE=${LINE_TYPE:-${LINE_TYPE}}
 
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}

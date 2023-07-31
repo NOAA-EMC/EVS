@@ -27,7 +27,6 @@ set -x
 export MODELS="hrrr, namnest, hireswarw, hireswarwmem2, hireswfv3, href_pmmn"
 export VERIF_TYPE="mrms"
 export DATE_TYPE="INIT"
-export EVAL_PERIOD="LAST31DAYS"
 export eval_period=`echo ${EVAL_PERIOD} | tr '[:upper:]' '[:lower:]'`
 export pastdays=`echo ${EVAL_PERIOD} | cut -c 5-6`
 export VALID_BEG=""
