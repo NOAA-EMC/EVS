@@ -1,18 +1,15 @@
-#!/bin/bash
-
-#PBS -N jevs_href_grid2obs_ctc_past31days_plots
+#PBS -N jevs_cam_href_grid2obs_ctc_past31days_plots
 #PBS -j oe
-#PBS -S /bin/bash
 #PBS -q dev
+#PBS -S /bin/bash
 #PBS -A VERF-DEV
 #PBS -l walltime=00:30:00
-#PBS -l place=vscatter:exclhost,select=2:ncpus=102:mem=100GB
+#PBS -l place=vscatter,select=2:ncpus=102:mem=100GB
 #PBS -l debug=true
 
 
 export OMP_NUM_THREADS=1
 
-export evs_ver=v1.0
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
 source $HOMEevs/versions/run.ver
@@ -31,7 +28,6 @@ export MODELNAME=href
 
 module reset
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
-export MET_bin_exec=bin
 
 
 export KEEPDATA=YES
