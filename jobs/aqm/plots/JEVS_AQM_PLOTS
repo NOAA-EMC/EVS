@@ -70,6 +70,7 @@ export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver}/)}
 export COMINaqm=${COMINaqm:-$(compath.py ${envir}/com/${NET}/${evs_ver}/stats/${COMPONENT}/${MODELNAME})}
 export COMOUT=${COMOUT:-${COMIN}/${STEP}/${COMPONENT}}
 export COMOUTplots=${COMOUTplots:-${COMOUT}/${RUN}.${VDATE}}
+export COMOUTheadline=${COMOUTheadline:-${COMOUT}/headline.${VDATE}}
 mkdir -m 775 -p $COMOUT
 
 vfcst_ver=$(echo ${mod_ver} | cut -c1-2 )
