@@ -1,5 +1,3 @@
-#!/bin/bash 
-#
 #PBS -N jevs_global_ens_naefs_atmos_prep
 #PBS -j oe 
 #PBS -S /bin/bash
@@ -30,7 +28,6 @@ module reset
 
 source $HOMEevs/modulefiles/global_ens/global_ens_${STEP}.sh
 
-export MET_bin_exec=bin
 
 
 

@@ -1,5 +1,3 @@
-#!/bin/bash
-
 #PBS -N jevs_global_ens_gefs_atmos_sst_stats
 #PBS -j oe
 #PBS -S /bin/bash
@@ -33,7 +31,6 @@ module reset
 
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-export MET_bin_exec=bin
 
 
 
