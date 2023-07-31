@@ -25,7 +25,7 @@ export MODELNAME=naefs
 
 module reset
 
-source $HOMEevs/modulefiles/${COMPONENT}/global_ens_${STEP}.sh
+source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
 
 
