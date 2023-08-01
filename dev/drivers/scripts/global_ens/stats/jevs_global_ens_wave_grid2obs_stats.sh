@@ -13,18 +13,13 @@ set -x
 ##%include <head.h>
 ##%include <envir-p1.h>
 
-#export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/gitworkspace/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 ############################################################
 # read version file and set model_ver
 ############################################################
 versionfile=$HOMEevs/versions/run.ver
 . $versionfile
-#export evs_ver=$evs_ver
 export model_ver=$gefs_ver
-export obsproc_ver=$obsproc_ver
-
-
 export MODELNAME=gefs
 export OBTYPE=GDAS
 export NET=evs
@@ -54,8 +49,6 @@ export KEEPDATA=${KEEPDATA:-YES}
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output
 export FIXevs='/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix'
 export OUTPUTROOT=/lfs/h2/emc/vpppg/noscrub/$USER
-#EVS parallel directory
-#export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/${NET}/${evs_ver}
 export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}
 export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver}/${STEP}/${COMPONENT}
 ######################################

@@ -13,19 +13,14 @@ set -x
 ##%include <head.h>
 ##%include <envir-p1.h>
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/gitworkspace/EVS
-#export HOMEevs=/u/$USER/gittest/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 ############################################################
 # read version file and set model_ver
 ############################################################
 versionfile=$HOMEevs/versions/run.ver
 . $versionfile
-#export evs_ver=$evs_ver
 export model_ver=$gefs_ver
-export obsproc_ver=$obsproc_ver
-
-
 export MODELNAME=gefs
 export NET=evs
 export COMPONENT=global_ens

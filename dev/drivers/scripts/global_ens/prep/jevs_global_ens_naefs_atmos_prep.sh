@@ -10,8 +10,7 @@
 
 set -x
 export OMP_NUM_THREADS=1
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/gitworkspace/EVS
-#export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 source $HOMEevs/versions/run.ver
 
 export NET=evs
@@ -19,7 +18,6 @@ export RUN=atmos
 export STEP=prep
 export COMPONENT=global_ens
 export VERIF_CASE=grid2grid
-#export MODELNAME=gefs
 export MODELNAME=naefs
 
 

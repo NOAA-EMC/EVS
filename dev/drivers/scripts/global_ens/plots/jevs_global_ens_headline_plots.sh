@@ -10,8 +10,7 @@
 
 set -x
 export OMP_NUM_THREADS=1
-#export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/gitworkspace/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
 source $HOMEevs/versions/run.ver
 
@@ -42,8 +41,7 @@ export cyc=00
 export run_mpi=no
 export run_entire_year=no
 
-#export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
-export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/$NET/$evs_ver
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export DATA=/lfs/h2/emc/stmp/${USER}/evs/tmpnwprd
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}

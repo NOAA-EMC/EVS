@@ -14,8 +14,7 @@ export OMP_NUM_THREADS=1
 #
 set -x
 
-#export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/gitworkspace/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
 source $HOMEevs/versions/run.ver
 
@@ -38,8 +37,7 @@ export KEEPDATA=YES
 
 
 export cyc=00
-#export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
-export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/$NET/$evs_ver
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATA=/lfs/h2/emc/stmp/${USER}/evs/tmpnwprd
