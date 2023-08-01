@@ -29,7 +29,7 @@ export SITE=$(cat /etc/cluster_name)
 export maillist='geoffrey.manikin@noaa.gov,shannon.shields@noaa.gov'
 
 export USER=$USER
-export ACCOUNT=VERF-DEV
+export ACCOUNT=EVS-DEV
 export QUEUE=dev
 export QUEUESHARED=dev_shared
 export QUEUESERV=dev_transfer
