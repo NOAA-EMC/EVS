@@ -37,7 +37,8 @@ set -x
 ##
 # Set Basic Environment Variables
 last_cyc=21
- NEST_LIST="namer conus conusc ak akc spc_otlk subreg"
+ NEST_LIST="namer"
+# NEST_LIST="namer conus conusc ak akc spc_otlk subreg"
 ##
 
 VERIF_TYPES="raob metar"
@@ -91,19 +92,23 @@ for NEST in $NEST_LIST; do
 	 [[ $status -ne 0 ]] && exit $status
 	 [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_create_output_dirs.py ($job_type)"
 
-	 # Check for restart files
+	 # Check for restart files reformat
+	 echo " Check for restart files reformat begin"
 #         if [ $evs_run_mode = production ]; then
-#            python ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py
-#            status=$?
-#            [[ $status -ne 0 ]] && exit $status
-#            [[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py"
+            python ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py
+            status=$?
+            [[ $status -ne 0 ]] && exit $status
+            [[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py"
 #         fi
+	 echo " Check for restart files reformat done"
 
          # Create Reformat Job Script
+         echo " Create Reformat Job Script begin"
          python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
          status=$?
          [[ $status -ne 0 ]] && exit $status
          [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_job_script.py ($job_type)"
+         echo " Create Reformat Job Script done"
          export njob=$((njob+1))
 	 echo "Done $VHOUR"
       done
@@ -196,6 +201,15 @@ for NEST in $NEST_LIST; do
              status=$?
              [[ $status -ne 0 ]] && exit $status
              [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_create_output_dirs.py ($job_type)"
+
+
+	 # Check for restart files generate
+#         if [ $evs_run_mode = production ]; then
+            python ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py
+            status=$?
+            [[ $status -ne 0 ]] && exit $status
+            [[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py"
+#         fi
 
              # Create Generate Job Script
              python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
