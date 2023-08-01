@@ -764,7 +764,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     unit_convert = False
     if units in reference.unit_conversions:
         unit_convert = True
-        if str(var_long_name_key).upper() == 'HGT':
+        if str(var_long_name_key).upper() in ['HGT','HPBL']:
             if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
                 if units in ['m', 'gpm']:
                     units = 'gpm'
@@ -1430,15 +1430,23 @@ def main():
             logger.warning(e)
             logger.warning("Continuing ...")
         plot_group = var_specs['plot_group']
-        for l, fcst_level in enumerate(FCST_LEVELS):
-            if len(FCST_LEVELS) != len(OBS_LEVELS):
+        if FCST_LEVELS in presets.level_presets:
+            fcst_levels = re.split(r',(?![0*])', presets.level_presets[FCST_LEVELS].replace(' ',''))
+        else:
+            fcst_levels = re.split(r',(?![0*])', FCST_LEVELS.replace(' ',''))
+        if OBS_LEVELS in presets.level_presets:
+            obs_levels = re.split(r',(?![0*])', presets.level_presets[OBS_LEVELS].replace(' ',''))
+        else:
+            obs_levels = re.split(r',(?![0*])', OBS_LEVELS.replace(' ',''))
+        for l, fcst_level in enumerate(fcst_levels):
+            if len(fcst_levels) != len(obs_levels):
                 e = ("FCST_LEVELS and OBS_LEVELS must be lists of the same"
                      + f" size")
                 logger.error(e)
                 logger.error("Quitting ...")
                 raise ValueError(e+"\nQuitting ...")
-            if (FCST_LEVELS[l] not in var_specs['fcst_var_levels'] 
-                    or OBS_LEVELS[l] not in var_specs['obs_var_levels']):
+            if (fcst_levels[l] not in var_specs['fcst_var_levels'] 
+                    or obs_levels[l] not in var_specs['obs_var_levels']):
                 e = (f"The requested variable/level combination is not valid:"
                      + f" {requested_var}/{fcst_level}")
                 logger.warning(e)
@@ -1475,7 +1483,7 @@ def main():
             plot_performance_diagram(
                 df_metric, logger, date_range, models, 
                 model_queries=model_queries, num=num, flead=FLEADS, 
-                levels=FCST_LEVELS, thresh=fcst_thresh, 
+                levels=fcst_levels, thresh=fcst_thresh, 
                 metric1_name=metrics[0], metric2_name=metrics[1],
                 metric3_name=metrics[2], date_type=DATE_TYPE,  
                 verif_type=VERIF_TYPE, line_type=LINE_TYPE, 
@@ -1540,8 +1548,8 @@ if __name__ == "__main__":
     FLEADS = check_FCST_LEAD(os.environ['FCST_LEAD']).replace(' ','').split(',')
 
     # list of levels
-    FCST_LEVELS = re.split(r',(?![0*])', check_FCST_LEVEL(os.environ['FCST_LEVEL']).replace(' ',''))
-    OBS_LEVELS = re.split(r',(?![0*])', check_OBS_LEVEL(os.environ['OBS_LEVEL']).replace(' ',''))
+    FCST_LEVELS = check_FCST_LEVEL(os.environ['FCST_LEVEL'])
+    OBS_LEVELS = check_OBS_LEVEL(os.environ['OBS_LEVEL'])
 
     FCST_THRESH = check_FCST_THRESH(os.environ['FCST_THRESH'], LINE_TYPE)
     OBS_THRESH = check_OBS_THRESH(os.environ['OBS_THRESH'], FCST_THRESH, LINE_TYPE).replace(' ','').split(',')
@@ -1606,8 +1614,6 @@ if __name__ == "__main__":
     FLEADS = [int(flead) for flead in FLEADS]
     INTERP_PNTS = [str(pts) for pts in INTERP_PNTS]
     VERIF_CASETYPE = str(VERIF_CASE).lower() + '_' + str(VERIF_TYPE).lower()
-    FCST_LEVELS = [str(level) for level in FCST_LEVELS]
-    OBS_LEVELS = [str(level) for level in OBS_LEVELS]
     CONFIDENCE_INTERVALS = str(CONFIDENCE_INTERVALS).lower() in [
         'true', '1', 't', 'y', 'yes'
     ]

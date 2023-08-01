@@ -97,6 +97,26 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     domain_translator = reference.domain_translator
     model_settings = model_colors.model_settings
 
+    # Add shift date hours into date_hours list
+    if any(model_queries):
+        for m, model in enumerate(model_list):
+            if 'shift' in model_queries[m]:
+                if str(date_type).upper() == 'INIT':
+                    dhs = [
+                        datetime.strptime(str(date_hour).zfill(2), '%H')
+                        for date_hour in date_hours
+                    ]
+                    dhs_shift = [
+                        dh+td(hours=int(model_queries[m]['shift'][0]))
+                        for dh in dhs
+                    ]
+                    date_hours_shift = [
+                        int(dh_shift.strftime('%H'))
+                        for dh_shift in dhs_shift
+                    ]
+                    date_hours = np.concatenate((date_hours, date_hours_shift))
+        date_hours = np.sort(np.unique(date_hours)).tolist()
+
     # filter by level
     df = df[df['FCST_LEV'].astype(str).eq(str(level))]
 
@@ -208,6 +228,13 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         str(x) in df[str(date_type).upper()].dt.hour.astype(str).tolist() 
         for x in date_hours
     ]]
+    if not list(date_hours):
+        logger.warning(f"All {str(date_type).lower()} hours were removed"
+                       + f" because they don't exist in the dataframe."
+                       + f" Continuing onto next plot...")
+        plt.close(num)
+        logger.info("========================================")
+        return None
 
     if interp_pts and '' not in interp_pts:
         interp_shape = list(df['INTERP_MTHD'])[0]
@@ -386,7 +413,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     if units in reference.unit_conversions:
         unit_convert = True
         var_long_name_key = df['FCST_VAR'].tolist()[0]
-        if str(var_long_name_key).upper() == 'HGT':
+        if str(var_long_name_key).upper() in ['HGT','HPBL']:
             if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
                 if units in ['m','gpm']:
                     units = 'gpm'
@@ -479,8 +506,10 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             df_aggregated, values='COUNTS', columns='MODEL',
             index=str(date_type).upper()
         )
+    print(pivot_metric1)
     if keep_shared_events_only:
         pivot_metric1 = pivot_metric1.dropna() 
+    print(pivot_metric1)
     if metric2_name is not None:
         pivot_metric2 = pd.pivot_table(
             df_aggregated, values=str(metric2_name).upper(), columns='MODEL', 
@@ -514,6 +543,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         min_incr = np.min(date_hours_incr)
     incrs = [1,6,12,24]
     incr_idx = np.digitize(min_incr, incrs)
+    incrs = [1,6,12,24]
     if incr_idx < 1:
         incr_idx = 1
     incr = incrs[incr_idx-1]
@@ -525,7 +555,9 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             td(hours=incr)
         )
     ]
+    print(pivot_metric1)
     pivot_metric1 = pivot_metric1.reindex(idx, fill_value=np.nan)
+    print(pivot_metric1)
     if sample_equalization:
         pivot_counts = pivot_counts.reindex(idx, fill_value=np.nan)
     if confidence_intervals:
@@ -612,6 +644,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
 
     # Plot data
     logger.info("Begin plotting ...")
+    print(pivot_metric1)
     if confidence_intervals:
         indices_in_common1 = list(set.intersection(*map(
             set, 
@@ -638,6 +671,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             pivot_metric2 = pivot_metric2[pivot_metric2.index.isin(indices_in_common2)]
             pivot_ci_lower2 = pivot_ci_lower2[pivot_ci_lower2.index.isin(indices_in_common2)]
             pivot_ci_upper2 = pivot_ci_upper2[pivot_ci_upper2.index.isin(indices_in_common2)]
+    print(pivot_metric1)
     x_vals1 = pivot_metric1.index
     if metric2_name is not None:
         x_vals2 = pivot_metric2.index
@@ -1486,15 +1520,23 @@ def main():
             logger.warning(e)
             logger.warning("Continuing ...")
         plot_group = var_specs['plot_group']
-        for l, fcst_level in enumerate(FCST_LEVELS):
-            if len(FCST_LEVELS) != len(OBS_LEVELS):
+        if FCST_LEVELS in presets.level_presets:
+            fcst_levels = re.split(r',(?![0*])', presets.level_presets[FCST_LEVELS].replace(' ',''))
+        else:
+            fcst_levels = re.split(r',(?![0*])', FCST_LEVELS.replace(' ',''))
+        if OBS_LEVELS in presets.level_presets:
+            obs_levels = re.split(r',(?![0*])', presets.level_presets[OBS_LEVELS].replace(' ',''))
+        else:
+            obs_levels = re.split(r',(?![0*])', OBS_LEVELS.replace(' ',''))
+        for l, fcst_level in enumerate(fcst_levels):
+            if len(fcst_levels) != len(obs_levels):
                 e = ("FCST_LEVELS and OBS_LEVELS must be lists of the same"
                      + f" size")
                 logger.error(e)
                 logger.error("Quitting ...")
                 raise ValueError(e+"\nQuitting ...")
-            if (FCST_LEVELS[l] not in var_specs['fcst_var_levels'] 
-                    or OBS_LEVELS[l] not in var_specs['obs_var_levels']):
+            if (fcst_levels[l] not in var_specs['fcst_var_levels'] 
+                    or obs_levels[l] not in var_specs['obs_var_levels']):
                 e = (f"The requested variable/level combination is not valid: "
                      + f"{requested_var}/{level}")
                 logger.warning(e)
@@ -1587,8 +1629,8 @@ if __name__ == "__main__":
     FLEADS = check_FCST_LEAD(os.environ['FCST_LEAD']).replace(' ','').split(',')
 
     # list of levels
-    FCST_LEVELS = re.split(r',(?![0*])', check_FCST_LEVEL(os.environ['FCST_LEVEL']).replace(' ',''))
-    OBS_LEVELS = re.split(r',(?![0*])', check_OBS_LEVEL(os.environ['OBS_LEVEL']).replace(' ',''))
+    FCST_LEVELS = check_FCST_LEVEL(os.environ['FCST_LEVEL'])
+    OBS_LEVELS = check_OBS_LEVEL(os.environ['OBS_LEVEL'])
 
     FCST_THRESH = check_FCST_THRESH(os.environ['FCST_THRESH'], LINE_TYPE)
     OBS_THRESH = check_OBS_THRESH(os.environ['OBS_THRESH'], FCST_THRESH, LINE_TYPE).replace(' ','').split(',')
@@ -1656,8 +1698,6 @@ if __name__ == "__main__":
     FLEADS = [int(flead) for flead in FLEADS]
     INTERP_PNTS = [str(pts) for pts in INTERP_PNTS]
     VERIF_CASETYPE = str(VERIF_CASE).lower() + '_' + str(VERIF_TYPE).lower()
-    FCST_LEVELS = [str(level) for level in FCST_LEVELS]
-    OBS_LEVELS = [str(level) for level in OBS_LEVELS]
     CONFIDENCE_INTERVALS = str(CONFIDENCE_INTERVALS).lower() in [
         'true', '1', 't', 'y', 'yes'
     ]
