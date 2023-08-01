@@ -1,12 +1,10 @@
-#!/bin/bash
-
-#PBS -N jevs_href_precip_stat
+#PBS -N jevs_cam_href_precip_stats
 #PBS -j oe
-#PBS -S /bin/bash
 #PBS -q dev
-#PBS -A EVS-DEV
+#PBS -S /bin/bash
+#PBS -A VERF-DEV
 #PBS -l walltime=02:00:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=88:mem=10GB
+#PBS -l place=vscatter,select=1:ncpus=88:mem=10GB
 #PBS -l debug=true
 
 export OMP_NUM_THREADS=1
@@ -14,7 +12,6 @@ export OMP_NUM_THREADS=1
 ## 3x7 conus(ccpa) + 3x7 alaska(mrms) + 2 snow = 44 jobs 
 ##
 
-export evs_ver=v1.0
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 source $HOMEevs/versions/run.ver
 
@@ -30,7 +27,6 @@ export KEEPDATA=YES
 
 module reset
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
-export MET_bin_exec=bin
 
 export cyc=00
 
