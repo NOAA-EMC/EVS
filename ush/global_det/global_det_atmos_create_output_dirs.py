@@ -138,7 +138,7 @@ if STEP == 'stats':
         elif VERIF_CASE_STEP == 'grid2obs_stats':
             for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
                 if VERIF_CASE_STEP_type in ['pres_levs', 'sfc', 'ptype']:
-                    COMPUT_dir_list.append(
+                    COMOUT_dir_list.append(
                         os.path.join(COMOUT, RUN+'.'+date_dt.strftime('%Y%m%d'),
                                      'prepbufr', VERIF_CASE)
                     )
