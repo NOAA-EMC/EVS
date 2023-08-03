@@ -70,14 +70,15 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
     #    g2gs_*_fhr_min: forecast hour to start verification: HH[H]
     #    g2gs_*_fhr_max: forecast hour to end verification: HH[H]
     #    g2gs_*_fhr_inc: frequency to verify forecast hours: HH[H]
-    export g2gs_type_list="pres_levs precip_accum24hr sst"
-    export g2gs_precip_accum24hr_file_format_list="${COMINukmet}.{init?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.precip.t{init?fmt=%H}z.f{lead?fmt=%3H}"
-    export g2gs_precip_accum24hr_file_accum_list="12"
-    export g2gs_precip_accum24hr_var_list="APCP"
-    export g2gs_precip_accum24hr_init_hr_list="12"
-    export g2gs_precip_accum24hr_fhr_min=24
-    export g2gs_precip_accum24hr_fhr_max=72
-    export g2gs_precip_accum24hr_fhr_inc=24
+    #export g2gs_type_list="pres_levs precip_accum24hr sst"
+    #export g2gs_precip_accum24hr_file_format_list="${COMINukmet}.{init?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.precip.t{init?fmt=%H}z.f{lead?fmt=%3H}"
+    #export g2gs_precip_accum24hr_file_accum_list="12"
+    #export g2gs_precip_accum24hr_var_list="APCP"
+    #export g2gs_precip_accum24hr_init_hr_list="12"
+    #export g2gs_precip_accum24hr_fhr_min=24
+    #export g2gs_precip_accum24hr_fhr_max=72
+    #export g2gs_precip_accum24hr_fhr_inc=24
+    export g2gs_type_list="pres_levs sst"
     export g2gs_pres_levs_truth_name_list="${MODELNAME}_anl"
     export g2gs_pres_levs_truth_format_list="${COMINukmet}.{valid?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.t{valid?fmt=%H}z.anl"
     export g2gs_pres_levs_init_hr_list="00 12"
