@@ -39,7 +39,7 @@ export COMPONENT=wafs
 export RUN=atmos
 export VERIF_CASE=grid2grid
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/evs/$evs_ver
+export COMIN=${COMIN:-/lfs/h2/emc/vpppg/noscrub/$USER/evs/$evs_ver}
 
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 

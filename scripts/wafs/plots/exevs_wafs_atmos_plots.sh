@@ -90,14 +90,14 @@ for RESOLUTION in $resolutions ; do
 	    day=`date -d "$VDATE - $n days" +%Y%m%d`
 	    if [ $NDAYS -gt 90 ] ; then
 		yyyy=`echo $day | cut -c 1-4`
-		sourefile=$COMIN/$yyyy/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
+		sourcefile=$COMIN/$yyyy/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
 	    else
-		sourefile=$COMINstat/${MODELNAME}.$day/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
+		sourcefile=$COMINstat/${MODELNAME}.$day/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
 	    fi
 	    targetfile=$OUTPUT_BASE_DIR/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
 	    if [[ ! -f "$targetfile" ]] ; then
-		if [[ -f "$sourefile" ]] ; then
-		    ln -s $sourefile $OUTPUT_BASE_DIR/.
+		if [[ -f "$sourcefile" ]] ; then
+		    ln -s $sourcefile $OUTPUT_BASE_DIR/.
 		fi
 	    fi
 	    n=$((n+1))
