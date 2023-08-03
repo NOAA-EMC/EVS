@@ -78,7 +78,8 @@ mkdir -p $COMOUT $COMOUTsmall $COMOUTfinal
 if [ $RUN = atmos ]; then
     if [ $VERIF_CASE == grid2grid ]; then
         export COMOUTccpa=$COMOUT/$RUN.$VDATE/ccpa/$VERIF_CASE
-        mkdir -p $COMOUTccpa
+        export COMOUTosi_saf=$COMOUT/$RUN.$VDATE/osi_saf/$VERIF_CASE
+        mkdir -p $COMOUTccpa $COMOUTosi_saf
     fi
     if [ $VERIF_CASE == grid2obs ]; then
         export COMOUTprepbufr=$COMOUT/$RUN.$VDATE/prepbufr/$VERIF_CASE
