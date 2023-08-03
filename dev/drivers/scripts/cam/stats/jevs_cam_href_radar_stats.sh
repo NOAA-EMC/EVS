@@ -1,4 +1,3 @@
-#!/bin/bash
 #PBS -N jevs_cam_href_radar_stats
 #PBS -j oe
 #PBS -S /bin/bash

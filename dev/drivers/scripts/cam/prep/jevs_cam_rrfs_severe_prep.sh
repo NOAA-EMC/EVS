@@ -1,4 +1,3 @@
-#!/bin/bash
 #PBS -N jevs_cam_rrfs_severe_prep
 #PBS -j oe
 #PBS -S /bin/bash
