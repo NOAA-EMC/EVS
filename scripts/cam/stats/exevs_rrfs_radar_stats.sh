@@ -28,7 +28,7 @@ if [ ${MODELNAME} = rrfs ]; then
    fhr_max=60
    fhr_inc=1
 
-   export COMINfcst=${COMINrrfs}
+   export MODEL_INPUT_DIR=${COMINrrfs}
    export CONUS_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/{init?fmt=%H}/${modsys}.t{init?fmt=%2H}z.prslev.f{lead?fmt=%3H}.conus_3km.grib2
 
 fi
@@ -58,24 +58,24 @@ while [ $fhr -le $fhr_max ]; do
    fi
 
    # Check for the existence of each forecast file 
-   if [ -s $COMINfcst/${conus_file} ]; then
+   if [ -s ${MODEL_INPUT_DIR}/${conus_file} ]; then
       echo $fhr >> $DATA/conus_fcst_list
       nfcst_conus=$((nfcst_conus+1))
       conus_fcst_found=1
 
    else
-      echo "Missing file(s) is $COMINfcst/${conus_file}" >> $DATA/missing_fcst_list
+      echo "Missing file(s) is ${MODEL_INPUT_DIR}/${conus_file}" >> $DATA/missing_fcst_list
 
    fi
 
    # Check for the existence of each forecast file 
-#  if [ -s $COMINfcst/${ak_file} ]; then
+#  if [ -s ${MODEL_INPUT_DIR}/${ak_file} ]; then
 #     echo $fhr >> $DATA/ak_fcst_list
 #     nfcst_ak=$((nfcst_ak+1))
 #     ak_fcst_found=1
 
 #  else
-#     echo "Missing file(s) is $COMINfcst/${ak_file}" >> $DATA/missing_fcst_list
+#     echo "Missing file(s) is ${MODEL_INPUT_DIR}/${ak_file}" >> $DATA/missing_fcst_list
 
 #  fi
 
