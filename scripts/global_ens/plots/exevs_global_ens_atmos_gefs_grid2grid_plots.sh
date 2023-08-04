@@ -232,13 +232,14 @@ for stats in acc bias_mae crpss rmse_spread ; do
         lead_time=_f384
     fi
 
-   for domain in g003 nhem shem tropics conus ; do
- 
+   for domain in g003 nhem shem tropics conus ; do 
      if [ $domain = g003 ] ; then
 	 domain_new=glb
      else
 	 domain_new=$domain
      fi
+
+
 
     for var in hgt tmp ugrd vgrd prmsl ; do
       if [ $var = hgt ] ; then
