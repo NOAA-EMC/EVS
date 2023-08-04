@@ -4,7 +4,7 @@
 # Name:          valid_hour_average.py
 # Contact(s):    Marcel Caron
 # Developed:     Nov. 22, 2021 by Marcel Caron 
-# Last Modified: Apr. 07, 2023 by Marcel Caron             
+# Last Modified: Jul. 05, 2023 by Marcel Caron             
 # Title:         Line plot of verification metric as a function of 
 #                valid or init hour
 # Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
@@ -393,6 +393,9 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                 unit_convert = False
             elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
                 unit_convert = False
+        elif any(field in str(var_long_name_key).upper() for field in ['WEASD', 'SNOD', 'ASNOW']):
+            if units in ['m']:
+                units = 'm_snow'
         if unit_convert:
             if metric2_name is not None:
                 if (str(metric1_name).upper() in metrics_using_var_units
@@ -966,6 +969,18 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                 )
             )
             fcst_thresh_labels = [str(tlab) for tlab in fcst_thresh_labels]
+            requested_fcst_thresh_labels = [
+                float(tlab) for tlab in requested_fcst_thresh_labels
+            ]
+            requested_fcst_thresh_labels = (
+                reference.unit_conversions[units]['formula'](
+                    requested_fcst_thresh_labels,
+                    rounding=True
+                )
+            )
+            requested_fcst_thresh_labels = [
+                str(tlab) for tlab in requested_fcst_thresh_labels
+            ]
         if obs_thresh and '' not in obs_thresh:
             obs_thresh_labels = [float(tlab) for tlab in obs_thresh_labels]
             obs_thresh_labels = (
@@ -975,6 +990,18 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                 )
             )
             obs_thresh_labels = [str(tlab) for tlab in obs_thresh_labels]
+            requested_obs_thresh_labels = [
+                float(tlab) for tlab in requested_obs_thresh_labels
+            ]
+            requested_obs_thresh_labels = (
+                reference.unit_conversions[units]['formula'](
+                    requested_obs_thresh_labels,
+                    rounding=True
+                )
+            )
+            requested_obs_thresh_labels = [
+                str(tlab) for tlab in requested_obs_thresh_labels
+            ]
         units = reference.unit_conversions[units]['convert_to']
     if units == '-':
         units = ''
@@ -1045,6 +1072,8 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
     var_savename = df['FCST_VAR'].tolist()[0]
     if 'APCP' in var_savename.upper():
         var_savename = 'APCP'
+    elif any(field in var_savename.upper() for field in ['ASNOW','SNOD']):
+        var_savename = 'ASNOW'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
         var_savename = 'HPBL'
     elif str(df['OBS_VAR'].tolist()[0]).upper() in ['MSLET','MSLMA','PRMSL']:
@@ -1137,20 +1166,33 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         title1+=f' {interp_pts_string}'
     fcst_thresh_on = (fcst_thresh and '' not in fcst_thresh)
     obs_thresh_on = (obs_thresh and '' not in obs_thresh)
+    tail_dot_rgx = re.compile(r'(?:(\.)|(\.\d*?[1-9]\d*?))0+(?=\b|[^0-9])')
     if fcst_thresh_on:
+        fcst_thresh_labels = [
+            tail_dot_rgx.sub(r'\2', lab) for lab in fcst_thresh_labels
+        ]
         fcst_thresholds_phrase = ', '.join([
             f'{opt}{fcst_thresh_label}' 
             for fcst_thresh_label in fcst_thresh_labels
         ])
+        requested_fcst_thresh_labels = [
+            tail_dot_rgx.sub(r'\2', lab) for lab in requested_fcst_thresh_labels
+        ]
         fcst_thresholds_save_phrase = ''.join([
             f'{opt_letter}{fcst_thresh_label}' 
             for fcst_thresh_label in requested_fcst_thresh_labels
         ]).replace('.','p')
     if obs_thresh_on:
+        obs_thresh_labels = [
+            tail_dot_rgx.sub(r'\2', lab) for lab in obs_thresh_labels
+        ]
         obs_thresholds_phrase = ', '.join([
             f'obs{opt}{obs_thresh_label}' 
             for obs_thresh_label in obs_thresh_labels
         ])
+        requested_obs_thresh_labels = [
+            tail_dot_rgx.sub(r'\2', lab) for lab in requested_obs_thresh_labels
+        ]
         obs_thresholds_save_phrase = ''.join([
             f'obs{opt_letter}{obs_thresh_label}' 
             for obs_thresh_label in requested_obs_thresh_labels

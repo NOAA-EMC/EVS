@@ -163,6 +163,13 @@ if proceed:
     akc_mask_files = [
         'Alaska_G091.nc',
     ]
+    conusp_mask_files = [
+        'Bukovsky_G218_CONUS.nc',
+        'Bukovsky_G218_CONUS_East.nc',
+        'Bukovsky_G218_CONUS_West.nc',
+        'Bukovsky_G218_CONUS_Central.nc',
+        'Bukovsky_G218_CONUS_South.nc',
+    ]
     if NEST == 'conus':
         mask_files = np.hstack((mask_files, conus_mask_files))
     elif NEST == 'subreg':
@@ -175,6 +182,8 @@ if proceed:
         mask_files = np.hstack((mask_files, conusc_mask_files))
     elif NEST == 'akc':
         mask_files = np.hstack((mask_files, akc_mask_files))
+    elif NEST == 'conusp':
+        mask_files = np.hstack((mask_files, conusp_mask_files))
     mask_paths = [
         os.path.join(FIXevs, 'masks', mask_file) for mask_file in mask_files
     ]
@@ -221,6 +230,12 @@ if proceed:
                     COMINfcst,
                     'nam.{IDATE}',
                     'nam.t{IHOUR}z.awip32{FHR}.tm00.grib2'
+                ))
+            elif NEST == 'conusp':
+                fcst_templates.append(os.path.join(
+                    COMINfcst,
+                    'nam.{IDATE}',
+                    'nam.t{IHOUR}z.awip12{FHR}.tm00.grib2'
                 ))
             else:
                 fcst_templates.append(os.path.join(

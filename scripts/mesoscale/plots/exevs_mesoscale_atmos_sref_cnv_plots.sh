@@ -139,10 +139,10 @@ for stats in  ets  fbias; do
 
          chmod +x  run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
-         echo "run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+         echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
   
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh 
-         echo " run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
+         echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
 
       done #end of line_type
 
@@ -161,9 +161,9 @@ chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 54 -ppn 54 --cpu-bind verbose,depth cfp run_all_poe.sh
+   mpiexec -np 8 -ppn 8 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
- run_all_poe.sh
+ ${DATA}/run_all_poe.sh
 fi
 
 
@@ -178,7 +178,7 @@ for var in hgt vis ; do
 	   scoretype=fhrmean
 	 elif [ $score_type = threshold_average ] ; then
 	   end=f6_to_f87.png
-	   scoretype=thresholdmean
+	   scoretype=threshmean
 	 fi
      elif [ $var = vis ] ; then
 	 if [ $score_type = lead_average ] ; then
@@ -186,20 +186,20 @@ for var in hgt vis ; do
 	   scoretype=fhrmean
 	 elif [  $score_type = threshold_average ] ; then
            end=f6_to_f87.png
-	   scoretype=thresholdmean
+	   scoretype=threshmean
          fi
       fi
 
-      mv ${score_type}_regional_conus_valid_00z_06z_12z_18z_${var}_${stat}_${end}  evs.sref.${stat}.${var}.last${past_days}days.${scoretype}.valid_00z_06z_12z_18z.buk_conus.png
+      mv ${score_type}_regional_conus_valid_00z_06z_12z_18z_${var}_${stat}_${end}  evs.sref.${stat}.${var}.last${past_days}days.${scoretype}_valid_00z_06z_12z_18z.buk_conus.png
 
   done    #score_type
  done     #stat
 done     #var
 
 
-tar -cvf evs.plots.sref.cnv.${past_days}.v${VDATE}.tar *.png
+tar -cvf evs.plots.sref.cnv.past${past_days}days.v${VDATE}.tar *.png
 
-cp evs.plots.sref.cnv.${past_days}.v${VDATE}.tar  $COMOUT/.  
+cp evs.plots.sref.cnv.past${past_days}days.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
 
 
 

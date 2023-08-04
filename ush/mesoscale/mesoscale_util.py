@@ -17,7 +17,7 @@ import subprocess
 from collections.abc import Iterable
 
 def flatten(xs):
-    for x in xs: 
+    for x in xs:
         if isinstance(x, Iterable) and not isinstance(x, (str, bytes)):
             yield from flatten(x)
         else:
@@ -31,69 +31,21 @@ def get_data_type(fname):
             'not':[],
             'type': 'anl'
         },
-        'NOHRSC': {
-            'and':[''],
-            'or':['sfav2'],
-            'not':[],
-            'type': 'gen'
-        },
-        'mPING': {
-            'and':[''],
-            'or':['mPING', 'mping'],
-            'not':[],
-            'type': 'gen'
-        },
-        'FireWX Nest': {
-            'and':[''],
-            'or':['firewx'],
-            'not':[],
-            'type': 'anl'
-        },
         'SPC Outlook Area': {
             'and':[''],
             'or':['spc_otlk'],
             'not':[],
             'type': 'gen'
         },
-        'CCPA': {
+        'NAM': {
             'and':[''],
-            'or':['ccpa'],
+            'or':['nam'],
             'not':[],
-            'type': 'gen'
+            'type': 'fcst'
         },
-        'MRMS': {
+        'RAP': {
             'and':[''],
-            'or':['mrms'],
-            'not':[],
-            'type': 'gen'
-        },
-        'NAM Nest Forecast': {
-            'and':['nam', 'nest'],
-            'or':[''],
-            'not':[],
-            'type': 'fcst'
-        },
-        'HRRR Forecast': {
-            'and':['hrrr'],
-            'or':[''],
-            'not':[],
-            'type': 'fcst'
-        },
-        'HiRes Window ARW Forecast': {
-            'and':['hiresw','arw'],
-            'or':[''],
-            'not':['mem2'],
-            'type': 'fcst'
-        },
-        'HiRes Window ARW2 Forecast': {
-            'and':['hiresw','arw','mem2'],
-            'or':[''],
-            'not':[],
-            'type': 'fcst'
-        },
-        'HiRes Window FV3 Forecast': {
-            'and':['hiresw','fv3'],
-            'or':[''],
+            'or':['rap'],
             'not':[],
             'type': 'fcst'
         },
@@ -106,10 +58,10 @@ def get_data_type(fname):
         if not data_type_dict[k]['not'] or not any(data_type_dict[k]['not']):
             data_type_dict[k]['not'] = []
     data_names = [
-        k for k in data_type_dict 
+        k for k in data_type_dict
         if (
-            all(map(fname.__contains__, data_type_dict[k]['and'])) 
-            and any(map(fname.__contains__, data_type_dict[k]['or'])) 
+            all(map(fname.__contains__, data_type_dict[k]['and']))
+            and any(map(fname.__contains__, data_type_dict[k]['or']))
             and not any(map(fname.__contains__, data_type_dict[k]['not']))
         )
     ]

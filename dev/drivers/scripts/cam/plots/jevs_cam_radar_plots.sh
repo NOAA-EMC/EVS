@@ -1,90 +1,78 @@
-#PBS -S /bin/bash
-#PBS -N jevs_mesoscale_grid2obs_plots
+#PBS -N jevs_cam_radar_plots_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=10:00:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
+#PBS -l walltime=1:50:00
+#PBS -l place=vscatter:exclhost,select=1:ncpus=64:mem=500GB
 #PBS -l debug=true
 #PBS -V
 
+
 set -x
-export model=evs
+
+cd $PBS_O_WORKDIR
+
+
+############################################################
+# Load modules
+############################################################
+
 module reset
-export machine=WCOSS2
 
-# ECF Settings
-export RUN_ENVIR=nco
-export SENDECF=YES
-export SENDCOM=YES
-export KEEPDATA=YES
-export SENDDBN=YES
-export SENDDBN_NTC=
-export job=${PBS_JOBNAME:-jevs_mesoscale_grid2obs_plots}
-export jobid=$job.${PBS_JOBID:-$$}
-export SITE=$(cat /etc/cluster_name)
-export USE_CFP=YES
-export nproc=128
+export model=evs
+export NET=evs
+export COMPONENT=cam
+export STEP=plots
+export RUN=atmos
 
-# General Verification Settings
-export NET="evs"
-export STEP="plots"
-export COMPONENT="mesoscale"
-export RUN="atmos"
-export VERIF_CASE="grid2obs"
-export MODELNAME=${COMPONENT}
-
-# EVS Settings
-export HOMEevs="/lfs/h2/emc/vpppg/noscrub/$USER/temp/EVS"
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
-export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}
-
-# Load Modules
+export HOMEevs=/lfs/h2/emc/vpppg/save/${USER}/EVS
 source $HOMEevs/versions/run.ver
 
-source /usr/share/lmod/lmod/init/sh
-module reset
-export HPC_OPT=/apps/ops/para/libs
-export MET_bin_exec="bin"
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
-module use /apps/dev/modulefiles/
-module load ve/evs/${ve_evs_ver}
-module load cray-mpich/${craympich_ver}
-module load cray-pals/${craypals_ver}
-module load cfp/${cfp_ver}
-module load libjpeg/${libjpeg_ver}
-module load libpng/${libpng_ver}
-module load zlib/${zlib_ver}
-module load jasper/${jasper_ver}
-module load udunits/${udunits_ver}
-module load gsl/${gsl_ver}
-module load netcdf/${netcdf_ver}
-module load nco/${nco_ver}
-module load prod_util/${prod_util_ver}
-module load prod_envir/${prod_envir_ver}
-module load cdo/${cdo_ver}
-module load grib_util/${grib_util_ver}
-module load wgrib2/${wgrib2_ver}
-module load proj/${proj_ver}
-module load geos/${geos_ver}
-module load met/${met_ver}
-module load metplus/${metplus_ver}
-export MET_PLUS_PATH="/apps/ops/para/libs/intel/${intel_ver}/metplus/${metplus_ver}"
-export MET_PATH="/apps/ops/para/libs/intel/${intel_ver}/met/${met_ver}"
-export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
-export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
+source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-# Developer Settings
-export DATA=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
-export COMINccpa=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT/$RUN
-export COMINmrms=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT/$RUN
-export COMINspcotlk=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT/$RUN
-#export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/$NET/$evs_ver/stats/
-export COMIN=/lfs/h2/emc/vpppg/noscrub/marcel.caron/temp/test_stats/
-export COMOUT=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/$STEP/$COMPONENT/
-export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
-export cyc=$(date -d "today" +"%H")
 
-# Job Settings and Run
-. ${HOMEevs}/jobs/mesoscale/plots/JEVS_MESOSCALE_PLOTS
+############################################################
+# For dev testing
+############################################################
+export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
+export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
+export KEEPDATA=YES
+export VERIF_CASE=radar
+export MODELNAME=${COMPONENT}
+export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${LINE_TYPE}_${STEP}}
+export jobid=$job.${PBS_JOBID:-$$}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
+export nproc=64
+############################################################
+
+export cyc=${cyc:-${cyc}}
+export EVAL_PERIOD=${EVAL_PERIOD:-${EVAL_PERIOD}}
+export LINE_TYPE=${LINE_TYPE:-${LINE_TYPE}}
+
+export SENDCOM=${SENDCOM:-YES}
+export SENDECF=${SENDECF:-YES}
+export SENDDBN=${SENDDBN:-NO}
+export KEEPDATA=${KEEPDATA:-NO}
+
+export maillist=logan.dawson@noaa.gov
+export maillist=${maillist:-'logan.dawson@noaa.gov,geoffrey.manikin@noaa.gov'}
+
+if [ -z "$maillist" ]; then
+
+   echo "maillist variable is not defined. Exiting without continuing."
+
+else
+
+   # CALL executable job script here
+   $HOMEevs/jobs/cam/plots/JEVS_CAM_PLOTS
+
+fi
+
+
+######################################################################
+# Purpose: This job generates radar verification graphics
+#          for the CAM component (deterministic and ensemble CAMs)
+######################################################################
+

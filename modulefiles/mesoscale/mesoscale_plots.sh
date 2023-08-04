@@ -1,5 +1,5 @@
 #!/bin/bash
-# modulefile for EVS mesoscale component, plots step
+# modulefile for EVS mesoscale (NAM, RAP, SREF) component, plots step
 
 set +x
 
@@ -27,6 +27,8 @@ module load proj/${proj_ver}
 module load geos/${geos_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
+module load imagemagick/${imagemagick_ver}
+
 
 module list
 set -x

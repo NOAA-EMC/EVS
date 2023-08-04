@@ -78,7 +78,7 @@ export jlogfile=${DATA}/${MODELNAME}_${RUN}_plots.log
 # Execute the script                
 ####################################
 env
-$HOMEevs/scripts/nfcens/plots/exevs_nfcens_wave_grid2obs_plots.sh 1>>$pgmout 2>errfile.${pid}
+$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh 1>>$pgmout 2>errfile.${pid}
 export err=$?; err_chk
 
 cat $pgmout

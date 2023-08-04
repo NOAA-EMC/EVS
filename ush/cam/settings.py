@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import os
 from datetime import datetime, timedelta as td
 import numpy as np
@@ -22,9 +23,10 @@ class Toggle():
             'bs_method': 'FORECASTS', # bootstrap method. 'FORECASTS' bootstraps the lines in the stat files, 'MATCHED_PAIRS' bootstraps the f-o matched pairs
             'bs_min_samp': 30, # Minimum number of samples allowed for boostrapping to performed (if there are fewer samples, no confidence intervals)
             'display_averages': False, # display mean statistic for each model, averaged across the dimension of the independent variable
+            'include_all_requested_thresholds': True, # functional for threshold_average only; label x-axis with all requested thresholds rather than only plotted thresholds
             'sample_equalization': True, # equalize samples along each value of the independent variable where data exist
             'keep_shared_events_only': False, # functional for time_series only.
-            'clear_prune_directory': True, # remove the intermediate directory created to store pruned data files temporarily
+            'clear_prune_directory': False, # remove the intermediate directory created to store pruned data files temporarily
             'plot_logo_left': True,
             'plot_logo_right': True,
             'zoom_logo_left': 1.0, 
@@ -770,6 +772,14 @@ class Reference():
                 'convert_to': 'mi',
                 'formula': self.formulas.m_to_mi
             },
+            'm_snow': {
+                'convert_to': 'in',
+                'formula': self.formulas.m_snow_to_in
+            },
+            'decimal': {
+                'convert_to': '%',
+                'formula': self.formulas.dec_to_perc
+            },
         }
 
         '''
@@ -820,6 +830,16 @@ class Reference():
                                     'SOILW': ('Volumetric Soil Moisture'
                                               + ' Content'),
                                     'WEASD': 'Accum. Snow Depth Water Equiv.',
+                                    'WEASD_06': ('6-hour Accum. Snow Depth'
+                                                + ' Water Equiv.'),
+                                    'WEASD_24': ('24-hour Accum. Snow Depth'
+                                                + ' Water Equiv.'),
+                                    'SNOD': 'Accum. Snow Depth',
+                                    'SNOD_06': ('6-hour Accum. Snow Depth'),
+                                    'SNOD_24': ('24-hour Accum. Snow Depth'),
+                                    'ASNOW': 'Total Snowfall',
+                                    'ASNOW_06': ('6-hour Total Snowfall'),
+                                    'ASNOW_24': ('24-hour Total Snowfall'),
                                     'APCP': ('Accumulated'
                                                 + ' Precipitation'),
                                     'APCP_01': ('Accumulated'
@@ -844,7 +864,16 @@ class Reference():
                                     'ICESEV': 'Icing Severity',
                                     'REFC': 'Composite Reflectivity',
                                     'REFD': 'Above Ground Level Reflectivity',
-                                    'RETOP': 'Echo Top Height'}
+                                    'RETOP': 'Echo Top Height',
+                                    'Prob_MXUPHL25_A24_geHWT': '2-5km UH - Surrogate Severe',
+                                    'WIND_ENS_FREQ_ge20.58': 'Wind speed >= 40kt',
+                                    'APCP_24_ENS_FREQ_gt1': 'APCP_24hr > 1 mm',
+                                    'APCP_24_ENS_FREQ_gt2': 'APCP_24hr > 2 mm',
+                                    'APCP_24_ENS_FREQ_gt5': 'APCP_24hr > 5 mm',
+                                    'APCP_24_ENS_FREQ_gt10': 'APCP_24hr > 10 mm',
+                                    'APCP_24_ENS_FREQ_gt20': 'APCP_24hr > 20 mm',
+                                    'APCP_24_ENS_FREQ_gt25': 'APCP_24hr > 25 mm',
+                                    'APCP_24_ENS_FREQ_gt50': 'APCP_24hr > 50 mm'}
 
         '''
         Given a domain requested in the plotting configuration file, the
@@ -1350,6 +1379,13 @@ class Reference():
                                         'UFSS','UFSS_BCL','UFSS_BCU',
                                         'F_RATE','F_RATE_BCL','F_RATE_BCU',
                                         'O_RATE','O_RATE_BCL','O_RATE_BCU'],
+                              'ECNT':['TOTAL', 'N_ENS', 'CRPS', 'CRPSS', 'IGN',
+                                      'ME', 'RMSE', 'SPREAD',
+                                      'ME_OERR', 'RMSE_OERR', 'SPREAD_OERR',
+                                      'SPREAD_PLUS_OERR', 'CRPSCL', 'CRPS_EMP',
+                                      'CRPSCL_EMP', 'CRPSS_EMP',  'CRPS_EMP_FAIR',
+                                      'SPREAD_MD', 'MAE', 'MAE_OERR', 'BIAS_RATIO',
+                                      'N_GE_OBS', 'ME_GE_OBS', 'N_LT_OBS', 'ME_LT_OBS'],
                               'GRAD':['TOTAL','FGBAR','OGBAR','MGBAR','EGBAR',
                                       'S1','S1_OG','FGOG_RATIO','DX','DY'],
                               'DMAP':['TOTAL','FY','OY','FBIAS','BADDELEY',
@@ -1858,50 +1894,219 @@ class Reference():
             },
             'radar_mrms':{
                 'CTC': {
-                    'plot_stats_list': ('fss, csi, fbias, pod, faratio,'
+                    'plot_stats_list': ('csi, fbias, pod, faratio,'
                                         + ' sratio'),
-                    'interp': 'NEAREST, NBRHD_CIRCLE, BILIN',
+                    'interp': 'NEAREST, NBRHD_CIRCLE, NBRHD_SQUARE, BILIN',
                     'vx_mask_list' : [
-                        'CONUS', 'G130', 'APL', 'GMC', 'GRB', 'LMV', 'MDW', 'NEC', 
-                        'NMT', 'NPL', 'NWC', 'SEC', 'SMT', 'SPL', 'SWC', 
-                        'SWD', 'DAY1_1200_TSTM', 'DAY2_1730_TSTM'
+                        'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 
+                        'CONUS_South', 'Alaska' 
                     ],
                     'var_dict': {
                         'REFC': {'fcst_var_names': ['REFC'],
                                  'fcst_var_levels': ['L0'],
-                                 'fcst_var_thresholds': ('>=20, >=30, >=40,'
-                                                         + ' >=50'),
+                                 'fcst_var_thresholds': ('>=20, >=30, >=40, >=50'),
                                  'fcst_var_options': '',
                                  'obs_var_names': [
-                                     'MergedReflectivityQCComposite'
+                                     'MergedReflectivityQCComposite',
+                                     'MergedReflectivityQComposite'
                                  ],
                                  'obs_var_levels': ['Z500'],
-                                 'obs_var_thresholds': ('>=20, >=30, >=40,'
-                                                        + ' >=50'),
+                                 'obs_var_thresholds': ('>=20, >=30, >=40, >=50'),
                                  'obs_var_options': '',
                                  'plot_group':'radar'},
                         'RETOP': {'fcst_var_names': ['RETOP'],
                                  'fcst_var_levels': ['L0','Z1000'],
-                                 'fcst_var_thresholds': ('>=20, >=30, >=40,'
-                                                         + ' >=50'),
+                                 'fcst_var_thresholds': ('>=20, >=30, >=40'),
                                  'fcst_var_options': '',
                                  'obs_var_names': ['EchoTop18'],
                                  'obs_var_levels': ['L0','Z500'],
-                                 'obs_var_thresholds': ('>=20, >=30, >=40,'
-                                                        + ' >=50'),
+                                 'obs_var_thresholds': ('>=20, >=30, >=40'),
                                  'obs_var_options': '',
                                  'plot_group':'radar'},
                         'REFD': {'fcst_var_names': ['REFD'],
                                  'fcst_var_levels': ['L0','Z1000'],
-                                 'fcst_var_thresholds': ('>=20, >=30, >=40,'
-                                                         + ' >=50'),
+                                 'obs_var_thresholds': ('>=20, >=30, >=40, >=50'),
                                  'fcst_var_options': '',
                                  'obs_var_names': ['SeamlessHSR'],
                                  'obs_var_levels': ['L0','Z500'],
-                                 'obs_var_thresholds': ('>=20, >=30, >=40,'
-                                                        + ' >=50'),
+                                 'obs_var_thresholds': ('>=20, >=30, >=40, >=50'),
                                  'obs_var_options': '',
                                  'plot_group':'radar'}
+                    }
+                },
+                'NBRCTC': {
+                    'plot_stats_list': ('csi, fbias, pod, faratio,'
+                                        + ' sratio'),
+                    'interp': 'NBRHD_CIRCLE, NBRHD_SQUARE',
+                    'vx_mask_list' : [
+                        'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 
+                        'CONUS_South', 'Alaska' 
+                    ],
+                    'var_dict': {
+                        'REFC': {'fcst_var_names': ['REFC'],
+                                 'fcst_var_levels': ['L0'],
+                                 'fcst_var_thresholds': ('>=20, >=30, >=40, >=50'),
+                                 'fcst_var_options': '',
+                                 'obs_var_names': [
+                                     'MergedReflectivityQCComposite',
+                                     'MergedReflectivityQComposite'
+                                 ],
+                                 'obs_var_levels': ['Z500'],
+                                 'obs_var_thresholds': ('>=20, >=30, >=40, >=50'),
+                                 'obs_var_options': '',
+                                 'plot_group':'radar'},
+                        'RETOP': {'fcst_var_names': ['RETOP'],
+                                 'fcst_var_levels': ['L0','Z1000'],
+                                 'fcst_var_thresholds': ('>=20, >=30, >=40'),
+                                 'fcst_var_options': '',
+                                 'obs_var_names': ['EchoTop18'],
+                                 'obs_var_levels': ['L0','Z500'],
+                                 'obs_var_thresholds': ('>=20, >=30, >=40'),
+                                 'obs_var_options': '',
+                                 'plot_group':'radar'},
+                        'REFD': {'fcst_var_names': ['REFD'],
+                                 'fcst_var_levels': ['L0','Z1000'],
+                                 'obs_var_thresholds': ('>=20, >=30, >=40, >=50'),
+                                 'fcst_var_options': '',
+                                 'obs_var_names': ['SeamlessHSR'],
+                                 'obs_var_levels': ['L0','Z500'],
+                                 'obs_var_thresholds': ('>=20, >=30, >=40, >=50'),
+                                 'obs_var_options': '',
+                                 'plot_group':'radar'}
+                    }
+                },
+                'NBRCNT': {
+                    'plot_stats_list': ('fss, afss, ufss, frate, orate'),
+                    'interp': 'NBRHD_SQUARE, NBRHD_CIRCLE',
+                    'vx_mask_list' : [
+                        'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 
+                        'CONUS_South', 'Alaska' 
+                    ],
+                    'var_dict': {
+                        'REFC': {'fcst_var_names': ['REFC'],
+                                 'fcst_var_levels': ['L0'],
+                                 'fcst_var_thresholds': ('>=20, >=30, >=40, >=50'),
+                                 'fcst_var_options': '',
+                                 'obs_var_names': [
+                                     'MergedReflectivityQCComposite',
+                                     'MergedReflectivityQComposite'
+                                 ],
+                                 'obs_var_levels': ['Z500'],
+                                 'obs_var_thresholds': ('>=20, >=30, >=40, >=50'),
+                                 'obs_var_options': '',
+                                 'plot_group':'radar'},
+                        'RETOP': {'fcst_var_names': ['RETOP'],
+                                 'fcst_var_levels': ['L0','Z1000'],
+                                 'fcst_var_thresholds': ('>=20, >=30, >=40'),
+                                 'fcst_var_options': '',
+                                 'obs_var_names': ['EchoTop18'],
+                                 'obs_var_levels': ['L0','Z500'],
+                                 'obs_var_thresholds': ('>=20, >=30, >=40'),
+                                 'obs_var_options': '',
+                                 'plot_group':'radar'},
+                        'REFD': {'fcst_var_names': ['REFD'],
+                                 'fcst_var_levels': ['L0','Z1000'],
+                                 'obs_var_thresholds': ('>=20, >=30, >=40, >=50'),
+                                 'fcst_var_options': '',
+                                 'obs_var_names': ['SeamlessHSR'],
+                                 'obs_var_levels': ['L0','Z500'],
+                                 'obs_var_thresholds': ('>=20, >=30, >=40, >=50'),
+                                 'obs_var_options': '',
+                                 'plot_group':'radar'}
+                    }
+                }
+            },
+            'severe_lsr':{
+                'NBRCNT': {
+                    'plot_stats_list': ('fss, afss, ufss, frate, orate'),
+                    'interp': 'NBRHD_CIRCLE, NBRHD_SQUARE',
+                    'vx_mask_list' : [
+                        'CONUS' 
+                    ],
+                    'var_dict': {
+                        'Prob_MXUPHL25_A24_geHWT': {'fcst_var_names': [
+                                 'Prob_MXUPHL25_A24_geHWT'
+                                 ],
+                                 'fcst_var_levels': ['A1','A24'],
+                                 'fcst_var_thresholds': ('>=0.02,'
+                                                      + ' >=0.05,'
+                                                      + ' >=0.10,'
+                                                      + ' >=0.15,'
+                                                      + ' >=0.30,'
+                                                      + ' >=0.45,'
+                                                      + ' >=0.60'),
+                                 'fcst_var_options': '',
+                                 'obs_var_names': ['LSR_PPF'],
+                                 'obs_var_levels': ['*,*'],
+                                 'obs_var_thresholds': ('>=0.02,'
+                                                     + ' >=0.05,'
+                                                     + ' >=0.10,'
+                                                     + ' >=0.15,'
+                                                     + ' >=0.30,'
+                                                     + ' >=0.45,'
+                                                     + ' >=0.60'),
+                                 'obs_var_options': '',
+                                 'plot_group':'severe'}
+                    }
+                },
+                'NBRCTC': {
+                    'plot_stats_list': ('csi, fbias, pod, faratio,'
+                                        + ' sratio'),
+                    'interp': 'NBRHD_CIRCLE, NBRHD_SQUARE',
+                    'vx_mask_list' : [
+                        'CONUS' 
+                    ],
+                    'var_dict': {
+                        'Prob_MXUPHL25_A24_geHWT': {'fcst_var_names': [
+                                 'Prob_MXUPHL25_A24_geHWT'
+                                 ],
+                                 'fcst_var_levels': ['A1','A24'],
+                                 'fcst_var_thresholds': ('>=0.02,'
+                                                      + ' >=0.05,'
+                                                      + ' >=0.10,'
+                                                      + ' >=0.15,'
+                                                      + ' >=0.30,'
+                                                      + ' >=0.45,'
+                                                      + ' >=0.60'),
+                                 'fcst_var_options': '',
+                                 'obs_var_names': ['LSR_PPF'],
+                                 'obs_var_levels': ['*,*'],
+                                 'obs_var_thresholds': ('>=0.02,'
+                                                     + ' >=0.05,'
+                                                     + ' >=0.10,'
+                                                     + ' >=0.15,'
+                                                     + ' >=0.30,'
+                                                     + ' >=0.45,'
+                                                     + ' >=0.60'),
+                                 'obs_var_options': '',
+                                 'plot_group':'severe'}
+                    }
+                },
+                'PSTD': {
+                    'plot_stats_list': ('bs, bsss, bss_smpl'),
+                    'interp': 'NEAREST',
+                    'vx_mask_list' : [
+                        'CONUS' 
+                    ],
+                    'var_dict': {
+                        'Prob_MXUPHL25_A24_geHWT': {'fcst_var_names': [
+                                 'Prob_MXUPHL25_A24_geHWT'
+                                 ],
+                                 'fcst_var_levels': ['A1','A24'],
+                                 'fcst_var_thresholds': ('>=0.02,'
+                                                      + '>=0.05,'
+                                                      + '>=0.10,'
+                                                      + '>=0.15,'
+                                                      + '>=0.30,'
+                                                      + '>=0.45,'
+                                                      + '>=0.60,'
+                                                      + '>=1.0'),
+                                 'fcst_var_options': '',
+                                 'obs_var_names': ['Fscale_mask'],
+                                 'obs_var_levels': ['*,*'],
+                                 'obs_var_thresholds': ('>=1.0'),
+                                 'obs_var_options': '',
+                                 'plot_group':'severe'}
                     }
                 }
             },
@@ -2306,6 +2511,55 @@ class Reference():
                                  'plot_group':'sfc_upper'},
                     }
                 }
+            },
+            'headline_metar': {
+                'SL1L2': {
+                    'plot_stats_list': ('bcrmse, me'),
+                    'interp': 'NEAREST, BILIN',
+                    'vx_mask_list' : [
+                        'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
+                        'Alaska', 'Hawaii'
+                    ],
+                    'var_dict': {
+                        'TMP2m': {'fcst_var_names': ['TMP'],
+                                  'fcst_var_levels': ['Z2'],
+                                  'fcst_var_thresholds': '',
+                                  'fcst_var_options': '',
+                                  'obs_var_names': ['TMP'],
+                                  'obs_var_levels': ['Z2'],
+                                  'obs_var_thresholds': '',
+                                  'obs_var_options': '',
+                                  'plot_group':'sfc_upper'},
+                        'DPT2m': {'fcst_var_names': ['DPT'],
+                                  'fcst_var_levels': ['Z2'],
+                                  'fcst_var_thresholds': '',
+                                  'fcst_var_options': '',
+                                  'obs_var_names': ['DPT'],
+                                  'obs_var_levels': ['Z2'],
+                                  'obs_var_thresholds': '>=272.039,>=277.594,>=283.15,>=288.706,>=294.261',
+                                  'obs_var_options': '',
+                                  'plot_group':'sfc_upper'},
+                    }
+                },
+                'VL1L2': {
+                    'plot_stats_list': ('bcrmse, me'),
+                    'interp': 'NEAREST, BILIN',
+                    'vx_mask_list' : [
+                        'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
+                        'Alaska', 'Hawaii'
+                    ],
+                    'var_dict': {
+                        'UGRD_VGRD10m': {'fcst_var_names': ['UGRD_VGRD'],
+                                         'fcst_var_levels': ['Z10'],
+                                         'fcst_var_thresholds': '',
+                                         'fcst_var_options': '',
+                                         'obs_var_names': ['UGRD_VGRD'],
+                                         'obs_var_levels': ['Z10'],
+                                         'obs_var_thresholds': '',
+                                         'obs_var_options': '',
+                                         'plot_group':'sfc_upper'},
+                    }
+                },
             },
             'grid2obs_metar': {
                 'SL1L2': {
@@ -2995,7 +3249,7 @@ class Reference():
                         'CONUS_South', 
                     ],
                     'var_dict': {
-                        'APCP_01': {'fcst_var_names': ['APCP_01'],
+                        'APCP_01': {'fcst_var_names': ['APCP', 'APCP_01'],
                                     'fcst_var_levels': ['A01','A1'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
@@ -3004,7 +3258,7 @@ class Reference():
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_03': {'fcst_var_names': ['APCP_03'],
+                        'APCP_03': {'fcst_var_names': ['APCP', 'APCP_03'],
                                     'fcst_var_levels': ['A03','A3'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
@@ -3013,7 +3267,7 @@ class Reference():
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_06': {'fcst_var_names': ['APCP_06'],
+                        'APCP_06': {'fcst_var_names': ['APCP', 'APCP_06'],
                                     'fcst_var_levels': ['A06','A6'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
@@ -3022,7 +3276,7 @@ class Reference():
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_24': {'fcst_var_names': ['APCP_24'],
+                        'APCP_24': {'fcst_var_names': ['APCP', 'APCP_24'],
                                     'fcst_var_levels': ['A24'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
@@ -3041,7 +3295,7 @@ class Reference():
                         'CONUS_South', 'Alaska', 
                     ],
                     'var_dict': {
-                        'APCP_01': {'fcst_var_names': ['APCP_01'],
+                        'APCP_01': {'fcst_var_names': ['APCP', 'APCP_01'],
                                     'fcst_var_levels': ['A01','A1'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3060,7 +3314,7 @@ class Reference():
                                                            + ' >=25.4,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_03': {'fcst_var_names': ['APCP_03'],
+                        'APCP_03': {'fcst_var_names': ['APCP', 'APCP_03'],
                                     'fcst_var_levels': ['A03','A3'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3079,7 +3333,7 @@ class Reference():
                                                            + ' >=25.4,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_06': {'fcst_var_names': ['APCP_06'],
+                        'APCP_06': {'fcst_var_names': ['APCP', 'APCP_06'],
                                     'fcst_var_levels': ['A06','A6'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3098,7 +3352,7 @@ class Reference():
                                                            + ' >=25.4,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_24': {'fcst_var_names': ['APCP_24'],
+                        'APCP_24': {'fcst_var_names': ['APCP', 'APCP_24'],
                                     'fcst_var_levels': ['A24'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3130,7 +3384,7 @@ class Reference():
                         'LMV', 'GMC', 'APL', 'NAK', 'SAK'
                     ],
                     'var_dict': {
-                        'APCP_01': {'fcst_var_names': ['APCP_01'],
+                        'APCP_01': {'fcst_var_names': ['APCP', 'APCP_01'],
                                     'fcst_var_levels': ['A01','A1'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3149,7 +3403,7 @@ class Reference():
                                                            + ' >=25.4,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_03': {'fcst_var_names': ['APCP_03'],
+                        'APCP_03': {'fcst_var_names': ['APCP', 'APCP_03'],
                                     'fcst_var_levels': ['A03','A3'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3170,7 +3424,7 @@ class Reference():
                                                            + ' >=50.8,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_06': {'fcst_var_names': ['APCP_06'],
+                        'APCP_06': {'fcst_var_names': ['APCP', 'APCP_06'],
                                     'fcst_var_levels': ['A06','A6'],
                                     'fcst_var_thresholds': ('>=0.254, >=2.54,'
                                                             + ' >=6.35,'
@@ -3195,7 +3449,7 @@ class Reference():
                                                            + ' >=101.6'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_24': {'fcst_var_names': ['APCP_24'],
+                        'APCP_24': {'fcst_var_names': ['APCP', 'APCP_24'],
                                     'fcst_var_levels': ['A24'],
                                     'fcst_var_thresholds': ('>=0.254, >=2.54,'
                                                             + ' >=6.35,'
@@ -3232,7 +3486,7 @@ class Reference():
                         'Alaska', 'PuertoRico', 'Hawaii'
                     ],
                     'var_dict': {
-                        'APCP_01': {'fcst_var_names': ['APCP_01'],
+                        'APCP_01': {'fcst_var_names': ['APCP', 'APCP_01'],
                                     'fcst_var_levels': ['A01','A1'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
@@ -3241,7 +3495,7 @@ class Reference():
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_03': {'fcst_var_names': ['APCP_03'],
+                        'APCP_03': {'fcst_var_names': ['APCP', 'APCP_03'],
                                     'fcst_var_levels': ['A03','A3'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
@@ -3250,7 +3504,7 @@ class Reference():
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_06': {'fcst_var_names': ['APCP_06'],
+                        'APCP_06': {'fcst_var_names': ['APCP', 'APCP_06'],
                                     'fcst_var_levels': ['A06','A6'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
@@ -3259,7 +3513,7 @@ class Reference():
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_24': {'fcst_var_names': ['APCP_24'],
+                        'APCP_24': {'fcst_var_names': ['APCP', 'APCP_24'],
                                     'fcst_var_levels': ['A24'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
@@ -3277,7 +3531,7 @@ class Reference():
                         'Alaska', 'Hawaii', 'PuertoRico'
                     ],
                     'var_dict': {
-                        'APCP_01': {'fcst_var_names': ['APCP_01'],
+                        'APCP_01': {'fcst_var_names': ['APCP', 'APCP_01'],
                                     'fcst_var_levels': ['A01','A1'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3296,7 +3550,7 @@ class Reference():
                                                            + ' >=25.4,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_03': {'fcst_var_names': ['APCP_03'],
+                        'APCP_03': {'fcst_var_names': ['APCP', 'APCP_03'],
                                     'fcst_var_levels': ['A03','A3'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3315,7 +3569,7 @@ class Reference():
                                                            + ' >=25.4,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_06': {'fcst_var_names': ['APCP_06'],
+                        'APCP_06': {'fcst_var_names': ['APCP', 'APCP_06'],
                                     'fcst_var_levels': ['A06','A6'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3334,7 +3588,7 @@ class Reference():
                                                            + ' >=25.4,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_24': {'fcst_var_names': ['APCP_24'],
+                        'APCP_24': {'fcst_var_names': ['APCP', 'APCP_24'],
                                     'fcst_var_levels': ['A24'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3363,7 +3617,7 @@ class Reference():
                         'Alaska'
                     ],
                     'var_dict': {
-                        'APCP_01': {'fcst_var_names': ['APCP_01'],
+                        'APCP_01': {'fcst_var_names': ['APCP', 'APCP_01'],
                                     'fcst_var_levels': ['A01','A1'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3382,7 +3636,7 @@ class Reference():
                                                            + ' >=25.4,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_03': {'fcst_var_names': ['APCP_03'],
+                        'APCP_03': {'fcst_var_names': ['APCP', 'APCP_03'],
                                     'fcst_var_levels': ['A03','A3'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3403,7 +3657,7 @@ class Reference():
                                                            + ' >=50.8,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_06': {'fcst_var_names': ['APCP_06'],
+                        'APCP_06': {'fcst_var_names': ['APCP', 'APCP_06'],
                                     'fcst_var_levels': ['A06','A6'],
                                     'fcst_var_thresholds': ('>=0.254, >=2.54,'
                                                             + ' >=6.35,'
@@ -3428,7 +3682,7 @@ class Reference():
                                                            + ' >=101.6'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_24': {'fcst_var_names': ['APCP_24'],
+                        'APCP_24': {'fcst_var_names': ['APCP', 'APCP_24'],
                                     'fcst_var_levels': ['A24'],
                                     'fcst_var_thresholds': ('>=0.254, >=2.54,'
                                                             + ' >=6.35,'
@@ -3451,6 +3705,151 @@ class Reference():
                                                            + ' >=76.2,'
                                                            + ' >=101.6'
                                                            + ' >=152.4'),
+                                    'obs_var_options': '',
+                                    'plot_group':'precip'}
+                    }
+                }
+            },
+            'snowfall_nohrsc': {
+                'NBRCNT': {
+                    'plot_stats_list': ('fss, afss, ufss, frate, orate'),
+                    'interp': 'NBRHD_SQUARE, NBRHD_CIRCLE',
+                    'vx_mask_list' : [
+                        'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 
+                        'CONUS_South', 'Alaska', 
+                    ],
+                    'var_dict': {
+                        'WEASD_06': {'fcst_var_names': ['WEASD', 'WEASD_06'],
+                                    'fcst_var_levels': ['Z0','A06','A6'],
+                                    'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                            + ' >=0.1016,'
+                                                            + ' >=0.2032,'
+                                                            + ' >=0.3048,'),
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['ASNOW', 'ASNOW_06'],
+                                    'obs_var_levels': ['A06','A6'],
+                                    'obs_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                           + ' >=0.1016,'
+                                                           + ' >=0.2032,'
+                                                           + ' >=0.3048,'),
+                                    'obs_var_options': '',
+                                    'plot_group':'precip'},
+                        'WEASD_24': {'fcst_var_names': ['WEASD', 'WEASD_24'],
+                                    'fcst_var_levels': ['Z0','A24'],
+                                    'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                            + ' >=0.1016,'
+                                                            + ' >=0.2032,'
+                                                            + ' >=0.3048,'),
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['ASNOW', 'ASNOW_24'],
+                                    'obs_var_levels': ['A24'],
+                                    'obs_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                           + ' >=0.1016,'
+                                                           + ' >=0.2032,'
+                                                           + ' >=0.3048,'),
+                                    'obs_var_options': '',
+                                    'plot_group':'precip'},
+                        'SNOD_06': {'fcst_var_names': ['SNOD', 'ASNOW', 'SNOD_06', 'ASNOW_06'],
+                                    'fcst_var_levels': ['Z0','A06','A6'],
+                                    'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                            + ' >=0.1016,'
+                                                            + ' >=0.2032,'
+                                                            + ' >=0.3048,'),
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['ASNOW', 'ASNOW_06'],
+                                    'obs_var_levels': ['A06','A6'],
+                                    'obs_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                           + ' >=0.1016,'
+                                                           + ' >=0.2032,'
+                                                           + ' >=0.3048,'),
+                                    'obs_var_options': '',
+                                    'plot_group':'precip'},
+                        'SNOD_24': {'fcst_var_names': ['SNOD', 'ASNOW', 'SNOD_24', 'ASNOW_24'],
+                                    'fcst_var_levels': ['Z0','A24'],
+                                    'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                            + ' >=0.1016,'
+                                                            + ' >=0.2032,'
+                                                            + ' >=0.3048,'),
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['ASNOW', 'ASNOW_24'],
+                                    'obs_var_levels': ['A24'],
+                                    'obs_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                           + ' >=0.1016,'
+                                                           + ' >=0.2032,'
+                                                           + ' >=0.3048,'),
+                                    'obs_var_options': '',
+                                    'plot_group':'precip'}
+                    }
+                },
+                'CTC': {
+                    'plot_stats_list': ('me, ets, fss, csi, fbias, fbar,'
+                                        + ' obar, pod, faratio, farate, sratio'),
+                    'interp': 'NEAREST',
+                    'vx_mask_list' : [
+                        'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 
+                        'CONUS_South', 'G130', 'G214', 'WEST', 'EAST', 'MDW', 'NPL', 'SPL', 'NEC', 
+                        'SEC', 'NWC', 'SWC', 'NMT', 'SMT', 'SWD', 'GRB', 
+                        'LMV', 'GMC', 'APL', 'NAK', 'SAK'
+                    ],
+                    'var_dict': {
+                        'WEASD_06': {'fcst_var_names': ['WEASD', 'WEASD_06'],
+                                    'fcst_var_levels': ['Z0','A06','A6'],
+                                    'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                            + ' >=0.1016,'
+                                                            + ' >=0.2032,'
+                                                            + ' >=0.3048,'),
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['ASNOW', 'ASNOW_06'],
+                                    'obs_var_levels': ['A06','A6'],
+                                    'obs_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                           + ' >=0.1016,'
+                                                           + ' >=0.2032,'
+                                                           + ' >=0.3048,'),
+                                    'obs_var_options': '',
+                                    'plot_group':'precip'},
+                        'WEASD_24': {'fcst_var_names': ['WEASD', 'WEASD_24'],
+                                    'fcst_var_levels': ['Z0','A24'],
+                                    'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                            + ' >=0.1016,'
+                                                            + ' >=0.2032,'
+                                                            + ' >=0.3048,'),
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['ASNOW', 'ASNOW_24'],
+                                    'obs_var_levels': ['A24'],
+                                    'obs_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                           + ' >=0.1016,'
+                                                           + ' >=0.2032,'
+                                                           + ' >=0.3048,'),
+                                    'obs_var_options': '',
+                                    'plot_group':'precip'},
+                        'SNOD_06': {'fcst_var_names': ['SNOD', 'ASNOW', 'SNOD_06', 'ASNOW_06'],
+                                    'fcst_var_levels': ['Z0','A06','A6'],
+                                    'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                            + ' >=0.1016,'
+                                                            + ' >=0.2032,'
+                                                            + ' >=0.3048,'),
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['ASNOW', 'ASNOW_06'],
+                                    'obs_var_levels': ['A06','A6'],
+                                    'obs_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                           + ' >=0.1016,'
+                                                           + ' >=0.2032,'
+                                                           + ' >=0.3048,'),
+                                    'obs_var_options': '',
+                                    'plot_group':'precip'},
+                        'SNOD_24': {'fcst_var_names': ['SNOD', 'ASNOW', 'SNOD_24', 'ASNOW_24'],
+                                    'fcst_var_levels': ['Z0','A24'],
+                                    'fcst_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                            + ' >=0.1016,'
+                                                            + ' >=0.2032,'
+                                                            + ' >=0.3048,'),
+                                    'fcst_var_options': '',
+                                    'obs_var_names': ['ASNOW', 'ASNOW_24'],
+                                    'obs_var_levels': ['A24'],
+                                    'obs_var_thresholds': ('>=0.0254, >=0.0508,'
+                                                           + ' >=0.1016,'
+                                                           + ' >=0.2032,'
+                                                           + ' >=0.3048,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'}
                     }
@@ -3612,3 +4011,25 @@ class Reference():
                 else:
                     mi_vals = np.divide(m_vals, 1609.34)
                 return mi_vals
+        def m_snow_to_in(m_vals, rounding=False, return_terms=False):
+            if return_terms:
+                M = 39.3701
+                C = 0.
+                return M, C
+            else:
+                if rounding:
+                    in_vals = (np.multiply(m_vals, 39.37)).round(decimals=2)
+                else:
+                    in_vals = np.multiply(m_vals, 39.37)
+                return in_vals
+        def dec_to_perc(dec_vals, rounding=False, return_terms=False):
+            if return_terms:
+                M = 100.
+                C = 0.
+                return M, C
+            else:
+                if rounding:
+                    perc_vals = (np.multiply(dec_vals, 100.)).round()
+                else:
+                    perc_vals = np.multiply(dec_vals, 100.)
+                return perc_vals
