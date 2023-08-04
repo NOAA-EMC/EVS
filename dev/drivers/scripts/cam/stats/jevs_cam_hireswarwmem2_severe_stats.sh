@@ -1,10 +1,10 @@
-#PBS -N jevs_cam_radar_prep
+#PBS -N jevs_cam_hireswarwmem2_severe_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=0:45:00
-#PBS -l select=1:ncpus=1:mem=25GB
+#PBS -l walltime=0:30:00
+#PBS -l select=1:ncpus=5:mem=500MB
 #PBS -l debug=true
 #PBS -V
 
@@ -17,12 +17,11 @@ cd $PBS_O_WORKDIR
 ############################################################
 # Load modules
 ############################################################
-
 module reset
 
 export model=evs
 export NET=evs
-export STEP=prep
+export STEP=stats
 export COMPONENT=cam
 export RUN=atmos
 
@@ -32,22 +31,24 @@ source $HOMEevs/versions/run.ver
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 
-export cyc=${cyc:-${cyc}}
-
-
 ############################################################
 # For dev testing
 ############################################################
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=YES
-export VERIF_CASE=radar
-export MODELNAME=cam
-export job=${PBS_JOBNAME:-jevs_cam_${VERIF_CASE}_${STEP}_${cyc}}
+export VERIF_CASE=severe
+export MODELNAME=hireswarwmem2
+export modsys=hiresw
+export job=${PBS_JOBNAME:-jevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}_${cyc}}
 export jobid=$job.${PBS_JOBID:-$$}
-export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}/${STEP}/${COMPONENT}
+export COMINfcst=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
+export COMINspclsr=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
+export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 ############################################################
+
+export cyc=${cyc:-${cyc}}
 
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
@@ -63,13 +64,13 @@ if [ -z "$maillist" ]; then
 else
 
    # CALL executable job script here
-   $HOMEevs/jobs/cam/prep/JEVS_CAM_PREP
+   $HOMEevs/jobs/cam/stats/JEVS_CAM_STATS
 
 fi
 
 
 ######################################################################
-# Purpose: This job preprocesses MRMS radar observations for use in
-#          CAM radar verification job
+# Purpose: This job generates severe verification statistics
+#          for the HiResW ARW2
 ######################################################################
 

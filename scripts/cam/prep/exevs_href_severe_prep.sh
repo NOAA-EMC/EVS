@@ -31,8 +31,8 @@ export GAUSS_RAD=120
 # Set some model-specific environment variables 
 ############################################################
 
-export COMINfcst=${DATA}/mem_files
-mkdir -p ${COMINfcst}
+export MODEL_INPUT_DIR=${DATA}/mem_files
+mkdir -p ${MODEL_INPUT_DIR}
 
 
 # Define settings for 00Z HREF time-lagged members
@@ -42,16 +42,16 @@ if [ $cyc -eq 00 ];then
 
    export IDATE_lag=${IDATE_lag:-`$NDATE -12 ${IDATE}${cyc} | cut -c 1-8`}
 
-   export COMINmem1=${COMOUT}/hiresw.${IDATE}
-   export COMINmem2=${COMOUT}/hiresw.${IDATE}
-   export COMINmem3=${COMOUT}/hiresw.${IDATE}
-   export COMINmem4=${COMOUT}/hrrr.${IDATE}
-   export COMINmem5=${COMOUT}/nam.${IDATE}
-   export COMINmem6=${COMOUT}/hiresw.${IDATE_lag}
-   export COMINmem7=${COMOUT}/hiresw.${IDATE_lag}
-   export COMINmem8=${COMOUT}/hiresw.${IDATE_lag}
-   export COMINmem9=${COMOUT}/hrrr.${IDATE_lag}
-   export COMINmem10=${COMOUT}/nam.${IDATE_lag}
+   export MEM1_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE}
+   export MEM2_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE}
+   export MEM3_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE}
+   export MEM4_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hrrr.${IDATE}
+   export MEM5_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/nam.${IDATE}
+   export MEM6_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE_lag}
+   export MEM7_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE_lag}
+   export MEM8_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE_lag}
+   export MEM9_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hrrr.${IDATE_lag}
+   export MEM10_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/nam.${IDATE_lag}
 
    export cyc_lag6=18
    export cyc_lag12=12
@@ -66,16 +66,16 @@ elif [ $cyc -eq 12 ]; then
 
    nloop=2
 
-   export COMINmem1=${COMOUT}/hiresw.${IDATE}
-   export COMINmem2=${COMOUT}/hiresw.${IDATE}
-   export COMINmem3=${COMOUT}/hiresw.${IDATE}
-   export COMINmem4=${COMOUT}/hrrr.${IDATE}
-   export COMINmem5=${COMOUT}/nam.${IDATE}
-   export COMINmem6=${COMOUT}/hiresw.${IDATE}
-   export COMINmem7=${COMOUT}/hiresw.${IDATE}
-   export COMINmem8=${COMOUT}/hiresw.${IDATE}
-   export COMINmem9=${COMOUT}/hrrr.${IDATE}
-   export COMINmem10=${COMOUT}/nam.${IDATE}
+   export MEM1_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE}
+   export MEM2_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE}
+   export MEM3_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE}
+   export MEM4_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hrrr.${IDATE}
+   export MEM5_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/nam.${IDATE}
+   export MEM6_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE}
+   export MEM7_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE}
+   export MEM8_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE}
+   export MEM9_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hrrr.${IDATE}
+   export MEM10_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/nam.${IDATE}
 
    export cyc_lag6=06
    export cyc_lag12=00
@@ -136,50 +136,50 @@ i=1
       # Define path to forecast file for each member
       if [ $i -eq 1 ]; then
 	 export mem1=hireswarw.t${cyc}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
-         export fcst_file=${COMINmem1}/${mem1}
+         export fcst_file=${MEM1_INPUT_DIR}/${mem1}
 
       elif [ $i -eq 2 ]; then
 	 export mem2=hireswarwmem2.t${cyc}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
-         export fcst_file=${COMINmem2}/${mem2}
+         export fcst_file=${MEM2_INPUT_DIR}/${mem2}
 
       elif [ $i -eq 3 ]; then
 	 export mem3=hireswfv3.t${cyc}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
-         export fcst_file=${COMINmem3}/${mem3}
+         export fcst_file=${MEM3_INPUT_DIR}/${mem3}
 
       elif [ $i -eq 4 ]; then
 	 export mem4=hrrr.t${cyc}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
-         export fcst_file=${COMINmem4}/${mem4}
+         export fcst_file=${MEM4_INPUT_DIR}/${mem4}
 
       elif [ $i -eq 5 ]; then
 	 export mem5=namnest.t${cyc}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
-         export fcst_file=${COMINmem5}/${mem5}
+         export fcst_file=${MEM5_INPUT_DIR}/${mem5}
 
       elif [ $i -eq 6 ]; then
 	 export mem6=hireswarw.t${cyc_lag12}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag12}.nc
-         export fcst_file=${COMINmem6}/${mem6}
+         export fcst_file=${MEM6_INPUT_DIR}/${mem6}
 
       elif [ $i -eq 7 ]; then
 	 export mem7=hireswarwmem2.t${cyc_lag12}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag12}.nc
-         export fcst_file=${COMINmem7}/${mem7}
+         export fcst_file=${MEM7_INPUT_DIR}/${mem7}
 
       elif [ $i -eq 8 ]; then
 	 export mem8=hireswfv3.t${cyc_lag12}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag12}.nc
-         export fcst_file=${COMINmem8}/${mem8}
+         export fcst_file=${MEM8_INPUT_DIR}/${mem8}
 
       elif [ $i -eq 9 ]; then
 	 export mem9=hrrr.t${cyc_lag6}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag6}.nc
-         export fcst_file=${COMINmem9}/${mem9}
+         export fcst_file=${MEM9_INPUT_DIR}/${mem9}
 
       elif [ $i -eq 10 ]; then
 	 export mem10=namnest.t${cyc_lag6}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end_lag6}.nc
-         export fcst_file=${COMINmem10}/${mem10}
+         export fcst_file=${MEM10_INPUT_DIR}/${mem10}
 
       fi
 
       # Copy the member files to working directory if they exist
       if [ -s $fcst_file ]; then
          echo "File found for member $i. Copying to working directory."
-         cp -v $fcst_file $COMINfcst
+         cp -v $fcst_file ${MODEL_INPUT_DIR}
          nfiles=$((nfiles+1))
       else
          echo "Forecast file $fcst_file not found for member $i." >> missing_file_list
