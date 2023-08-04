@@ -229,7 +229,7 @@ valid_time=valid00z_12z
 
 for ihr in 00z 12z ; do
  for domain in conus conus_east conus_west conus_south conus_central ; do
-   mv performance_diagram_regional_${domain}_init_${ihr}_cape_f12_to_f384__ge250ge500ge1000ge2000.png  evs.global_ens.ctc.cape_l0.last${past_days}days.perfdiag_${valid_time}_f12_to_f384.buk_${domain}.png
+   mv performance_diagram_regional_${domain}_init_${ihr}_cape_f12_to_f384__ge250ge500ge1000ge2000.png  evs.global_ens.ctc.cape_l0.last${past_days}days.perfdiag_${valid_time}_f384.buk_${domain}.png
  done
 done
 

@@ -182,7 +182,7 @@ fi
 cd $plot_dir
 
 for domain in arctic antarctic ; do
- mv performance_diagram_regional_${domain}_valid_00z_z0_icec_z0_mean_f24_to_f384__gt10gt40gt80.png  evs.global_ens.ctc.icec.last${past_days}days.perfdiag_${valid_time}_f24_to_f384.${domain}_glb.png
+ mv performance_diagram_regional_${domain}_valid_00z_z0_icec_z0_mean_f24_to_f384__gt10gt40gt80.png  evs.global_ens.ctc.icec.last${past_days}days.perfdiag_${valid_time}_f384.${domain}_glb.png
 done
 
 for stats in  rmse_me csi ; do
