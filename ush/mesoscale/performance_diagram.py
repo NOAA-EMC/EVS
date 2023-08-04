@@ -61,7 +61,8 @@ def get_bias_label_position(bias_value, radius):
 def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger, 
                       date_range: tuple, model_list: list, 
                       model_queries: list = [{}], num: int = 0, 
-                      levels: list = ['500'], flead='all', thresh: list = ['<20'], 
+                      levels: list = ['500'], flead='all', thresh: list = ['<20'],
+                      requested_var: str = 'HGT',
                       metric1_name: str = 'SRATIO', metric2_name: str = 'POD', 
                       metric3_name: str = 'CSI', date_type: str = 'VALID', 
                       date_hours: list = [0,6,12,18], verif_type: str = 'pres', 
@@ -106,6 +107,12 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     model_settings = model_colors.model_settings
 
     # filter by level
+    if 'PBL' in levels:
+        levels.append('L0')
+        levels = np.unique(levels).tolist()
+    elif requested_var in ['CAPE', 'SBCAPE'] and 'L0' in levels:
+        levels.append('Z0')
+        levels = np.unique(levels).tolist()
     df = df[df['FCST_LEV'].astype(str).isin([str(level) for level in levels])]
     if len(levels) > 1:
         logger.warning(f"Multiple levels were provided.  Choosing the first"
@@ -1484,6 +1491,7 @@ def main():
                 df_metric, logger, date_range, models, 
                 model_queries=model_queries, num=num, flead=FLEADS, 
                 levels=fcst_levels, thresh=fcst_thresh, 
+                requested_var=requested_var,
                 metric1_name=metrics[0], metric2_name=metrics[1],
                 metric3_name=metrics[2], date_type=DATE_TYPE,  
                 verif_type=VERIF_TYPE, line_type=LINE_TYPE, 

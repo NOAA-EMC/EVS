@@ -67,6 +67,7 @@ for VERIF_TYPE in graphics[COMPONENT][VERIF_CASE]:
                                                 os.environ['OBS_THRESH'] = plot_type_settings['VARIABLES'][LINE_TYPE][VARIABLE]['OBS_THRESHs'][thresh_idx]
                                                 os.environ['CONFIDENCE_INTERVALS'] = plot_type_settings['VARIABLES'][LINE_TYPE][VARIABLE]['CONFIDENCE_INTERVALS']
                                                 os.environ['INTERP_PNTS'] = INTERP_PNTS
+                                                os.environ['DELETE_INTERMED_TOGGLE'] = plot_type_settings['VARIABLES'][LINE_TYPE][VARIABLE]['DELETE_INTERMED_TOGGLE']
                                                 cutil.run_shell_command(['python',f'{USHevs}/{COMPONENT}/{COMPONENT}_{STEP}_{VERIF_CASE}_create_job_script.py'])
                                                 njob+=1
                                                 os.environ['njob'] = str(njob)

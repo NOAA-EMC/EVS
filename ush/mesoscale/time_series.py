@@ -97,28 +97,13 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     domain_translator = reference.domain_translator
     model_settings = model_colors.model_settings
 
-    # Add shift date hours into date_hours list
-    if any(model_queries):
-        for m, model in enumerate(model_list):
-            if 'shift' in model_queries[m]:
-                if str(date_type).upper() == 'INIT':
-                    dhs = [
-                        datetime.strptime(str(date_hour).zfill(2), '%H')
-                        for date_hour in date_hours
-                    ]
-                    dhs_shift = [
-                        dh+td(hours=int(model_queries[m]['shift'][0]))
-                        for dh in dhs
-                    ]
-                    date_hours_shift = [
-                        int(dh_shift.strftime('%H'))
-                        for dh_shift in dhs_shift
-                    ]
-                    date_hours = np.concatenate((date_hours, date_hours_shift))
-        date_hours = np.sort(np.unique(date_hours)).tolist()
-
     # filter by level
-    df = df[df['FCST_LEV'].astype(str).eq(str(level))]
+    if str(level) in ['PBL']:
+        df = df[df['FCST_LEV'].astype(str).isin(['PBL','L0'])]
+    elif requested_var in ['CAPE', 'SBCAPE'] and str(level) in ['L0']:
+        df = df[df['FCST_LEV'].astype(str).isin(['L0','Z0'])]
+    else:
+        df = df[df['FCST_LEV'].astype(str).eq(str(level))]
 
     if df.empty:
         logger.warning(f"Empty Dataframe. Continuing onto next plot...")
@@ -360,6 +345,15 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         plt.close(num)
         logger.info("========================================")
         return None
+    # Add shift date hours into date_hours list
+    if any(model_queries):
+        for m, model in enumerate(model_list):
+            if 'shift' in model_queries[m]:
+                if str(date_type).upper() == 'INIT':
+                    df.loc[df.MODEL == model, str(date_type).upper()] = (
+                        df.loc[df.MODEL == model, str(date_type).upper()] 
+                        - pd.DateOffset(hours=int(model_queries[m]['shift'][0]))
+                    )
     group_by = ['MODEL',str(date_type).upper()]
     if sample_equalization:
         df, bool_success = plot_util.equalize_samples(logger, df, group_by)
@@ -506,10 +500,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             df_aggregated, values='COUNTS', columns='MODEL',
             index=str(date_type).upper()
         )
-    print(pivot_metric1)
     if keep_shared_events_only:
         pivot_metric1 = pivot_metric1.dropna() 
-    print(pivot_metric1)
     if metric2_name is not None:
         pivot_metric2 = pd.pivot_table(
             df_aggregated, values=str(metric2_name).upper(), columns='MODEL', 
@@ -541,9 +533,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         min_incr = 24
     else:
         min_incr = np.min(date_hours_incr)
-    incrs = [1,6,12,24]
+    incrs = [1,3,6,12,24]
     incr_idx = np.digitize(min_incr, incrs)
-    incrs = [1,6,12,24]
     if incr_idx < 1:
         incr_idx = 1
     incr = incrs[incr_idx-1]
@@ -555,9 +546,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             td(hours=incr)
         )
     ]
-    print(pivot_metric1)
     pivot_metric1 = pivot_metric1.reindex(idx, fill_value=np.nan)
-    print(pivot_metric1)
     if sample_equalization:
         pivot_counts = pivot_counts.reindex(idx, fill_value=np.nan)
     if confidence_intervals:
@@ -644,7 +633,6 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
 
     # Plot data
     logger.info("Begin plotting ...")
-    print(pivot_metric1)
     if confidence_intervals:
         indices_in_common1 = list(set.intersection(*map(
             set, 
@@ -671,7 +659,6 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             pivot_metric2 = pivot_metric2[pivot_metric2.index.isin(indices_in_common2)]
             pivot_ci_lower2 = pivot_ci_lower2[pivot_ci_lower2.index.isin(indices_in_common2)]
             pivot_ci_upper2 = pivot_ci_upper2[pivot_ci_upper2.index.isin(indices_in_common2)]
-    print(pivot_metric1)
     x_vals1 = pivot_metric1.index
     if metric2_name is not None:
         x_vals2 = pivot_metric2.index
@@ -1561,7 +1548,8 @@ def main():
                 plot_time_series(
                     df, logger, date_range, models, 
                     model_queries=model_queries, num=num, flead=FLEADS, 
-                    level=fcst_level, thresh=fcst_thresh, 
+                    level=fcst_level, thresh=fcst_thresh,
+                    requested_var=requested_var,
                     metric1_name=metrics[0], metric2_name=metrics[1], 
                     date_type=DATE_TYPE, y_min_limit=Y_MIN_LIMIT, 
                     y_max_limit=Y_MAX_LIMIT, y_lim_lock=Y_LIM_LOCK, 

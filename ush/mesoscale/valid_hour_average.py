@@ -99,7 +99,12 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
     model_settings = model_colors.model_settings
 
     # filter by level
-    df = df[df['FCST_LEV'].astype(str).eq(str(level))]
+    if str(level) in ['PBL']:
+        df = df[df['FCST_LEV'].astype(str).isin(['PBL','L0'])]
+    elif requested_var in ['CAPE', 'SBCAPE'] and str(level) in ['L0']:
+        df = df[df['FCST_LEV'].astype(str).isin(['L0','Z0'])]
+    else:
+        df = df[df['FCST_LEV'].astype(str).eq(str(level))]
 
     if df.empty:
         logger.warning(f"Empty Dataframe. Continuing onto next plot...")
@@ -1675,6 +1680,7 @@ def main():
                     model_queries=model_queries, num=num, 
                     flead=FLEADS, level=fcst_level, fcst_thresh=fcst_thresh,
                     obs_thresh=obs_thresh,
+                    requested_var=requested_var,
                     metric1_name=metrics[0], metric2_name=metrics[1], 
                     date_type=DATE_TYPE, y_min_limit=Y_MIN_LIMIT, 
                     y_max_limit=Y_MAX_LIMIT, y_lim_lock=Y_LIM_LOCK, 

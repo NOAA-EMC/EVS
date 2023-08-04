@@ -92,6 +92,10 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     domain_translator = reference.domain_translator
     model_settings = model_colors.model_settings
 
+    # Remove from the df any 'ANYAIR' or 'AIRUPA' values for OBTYPE column (temporary fix)
+    df = df[df.OBTYPE != 'ANYAIR']
+    df = df[df.OBTYPE != 'AIRUPA']
+
     # filter by levels
     df = df[df['FCST_LEV'].astype(str).isin(levels)]
 

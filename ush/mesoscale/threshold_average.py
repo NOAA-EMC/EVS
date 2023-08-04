@@ -92,6 +92,12 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     model_settings = model_colors.model_settings
 
     # filter by level
+    if 'PBL' in levels:
+        levels.append('L0')
+        levels = np.unique(levels).tolist()
+    elif requested_var in ['CAPE', 'SBCAPE'] and 'L0' in levels:
+        levels.append('Z0')
+        levels = np.unique(levels).tolist()
     df = df[df['FCST_LEV'].astype(str).isin([str(level) for level in levels])]
     if len(levels) > 1:
         logger.warning(f"Multiple levels were provided.  Choosing the first"
@@ -1302,7 +1308,8 @@ def main():
                     df_metric, logger, date_range, models, 
                     model_queries=model_queries, num=num, flead=FLEADS, 
                     levels=fcst_levels, thresh=fcst_thresh, 
-                    metric_name=metric, date_type=DATE_TYPE, 
+                    metric_name=metric, date_type=DATE_TYPE,
+                    requested_var=requested_var,
                     y_min_limit=Y_MIN_LIMIT, y_max_limit=Y_MAX_LIMIT, 
                     y_lim_lock=Y_LIM_LOCK, ylabel='Metric (unitless)', 
                     line_type=LINE_TYPE, verif_type=VERIF_TYPE, 

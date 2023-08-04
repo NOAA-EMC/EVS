@@ -95,7 +95,12 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     model_settings = model_colors.model_settings
 
     # filter by level
-    df = df[df['FCST_LEV'].astype(str).eq(str(level))]
+    if str(level) in ['PBL']:
+        df = df[df['FCST_LEV'].astype(str).isin(['PBL','L0'])]
+    elif requested_var in ['CAPE', 'SBCAPE'] and str(level) in ['L0']:
+        df = df[df['FCST_LEV'].astype(str).isin(['L0','Z0'])]
+    else:
+        df = df[df['FCST_LEV'].astype(str).eq(str(level))]
 
     if df.empty:
         logger.warning(f"Empty Dataframe. Continuing onto next plot...")
@@ -791,7 +796,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     else:
         handles = []
         labels = []
-    if np.all([val==1 for val in pivot_metric1.count(axis=1)]):
+    if not delete_intermed_data or np.all([val==1 for val in pivot_metric1.count(axis=1)]):
         connect_points = True
     else:
         connect_points = False
@@ -1745,6 +1750,7 @@ def main():
                     model_queries=model_queries, num=num, flead=FLEADS, 
                     level=fcst_level, fcst_thresh=fcst_thresh, 
                     obs_thresh=obs_thresh,
+                    requested_var=requested_var,
                     metric1_name=metrics[0], metric2_name=metrics[1], 
                     date_type=DATE_TYPE, y_min_limit=Y_MIN_LIMIT, 
                     y_max_limit=Y_MAX_LIMIT, y_lim_lock=Y_LIM_LOCK, 
@@ -1915,6 +1921,9 @@ if __name__ == "__main__":
     INTERP_PNTS = [str(pts) for pts in INTERP_PNTS]
     VERIF_CASETYPE = str(VERIF_CASE).lower() + '_' + str(VERIF_TYPE).lower()
     CONFIDENCE_INTERVALS = str(CONFIDENCE_INTERVALS).lower() in [
+        'true', '1', 't', 'y', 'yes'
+    ]
+    delete_intermed_data = str(delete_intermed_data).lower() in [
         'true', '1', 't', 'y', 'yes'
     ]
     main()
