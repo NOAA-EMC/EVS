@@ -707,7 +707,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         minorLocator = mdates.DayLocator()
         majorFormatter = mdates.DateFormatter('%Y-%m-%d')
     else:
-        majorlocator =  mdates.DayLocator(bymonthday=range(1,32,3))
+        majorlocator =  mdates.DayLocator(bymonthday=range(1,31,3))
         minorLocator = mdates.DayLocator()
         majorFormatter = mdates.DateFormatter('%Y-%m-%d')
 
