@@ -222,7 +222,7 @@ for stats in  acc bias_mae crps rmse_spread me_mae ; do
       if [ $level = 850mb ] || [ $level = 250mb ] ; then
 	  domains='nhem shem tropics'
       else
-	  domains='conus conus_east conus_west conus_south conus_central alaska'
+	  domains='conus conus_e conus_w conus_s conus_c alaska'
       fi
 
       if [ $level = 850mb ] ; then

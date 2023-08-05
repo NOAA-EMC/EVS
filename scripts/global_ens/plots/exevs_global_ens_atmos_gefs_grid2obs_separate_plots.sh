@@ -228,7 +228,18 @@ cd $plot_dir
 
 for ihr in 00z 12z ; do
  for domain in conus conus_east conus_west conus_south conus_central ; do
-   mv performance_diagram_regional_${domain}_init_${ihr}_cape_f12_to_f384__ge250ge500ge1000ge2000.png  evs.global_ens.ctc.cape_l0.last${past_days}days.perfdiag_${valid_time}_f384.buk_${domain}.png
+     if [ $domain = conus_east ]; then
+        evs_graphic_domain="conus_e"
+     elif [ $domain = conus_west ]; then
+        evs_graphic_domain="conus_w"
+     elif [ $domain = conus_south ]; then
+        evs_graphic_domain="conus_s"
+     elif [ $domain = conus_central ]; then
+        evs_graphic_domain="conus_c"
+     else
+	evs_graphic_domain=$domain
+     fi
+   mv performance_diagram_regional_${domain}_init_${ihr}_cape_f12_to_f384__ge250ge500ge1000ge2000.png  evs.global_ens.ctc.cape_l0.last${past_days}days.perfdiag_${valid_time}_f384.buk_${evs_graphic_domain}.png
  done
 done
 
@@ -253,7 +264,18 @@ for stats in ets_fbias ; do
          fi
 
          for domain in conus conus_east conus_west conus_south conus_central  ; do
-           mv ${score_type}_regional_${domain}_init_${ihr}_cape_${stats}${lead}  evs.global_ens.${stats}.cape_l0.last${past_days}days.${scoretype}_init${ihr}${lead_time}.buk_${domain}.png
+             if [ $domain = conus_east ]; then
+                 evs_graphic_domain="conus_e"
+             elif [ $domain = conus_west ]; then
+                 evs_graphic_domain="conus_w"
+             elif [ $domain = conus_south ]; then
+                 evs_graphic_domain="conus_s"
+             elif [ $domain = conus_central ]; then
+                 evs_graphic_domain="conus_c"
+             else
+                 evs_graphic_domain=$domain
+             fi 
+             mv ${score_type}_regional_${domain}_init_${ihr}_cape_${stats}${lead}  evs.global_ens.${stats}.cape_l0.last${past_days}days.${scoretype}_init${ihr}${lead_time}.buk_${evs_graphic_domain}.png
          done
        done
     done
@@ -282,6 +304,17 @@ for ihr in 00z 12z ; do
     fi
 
     for domain in conus conus_east conus_west conus_south conus_central alaska ; do
+        if [ $domain = conus_east ]; then
+            evs_graphic_domain="conus_e"
+        elif [ $domain = conus_west ]; then
+            evs_graphic_domain="conus_w"
+        elif [ $domain = conus_south ]; then
+            evs_graphic_domain="conus_s"
+        elif [ $domain = conus_central ]; then
+            evs_graphic_domain="conus_c"
+        else
+            evs_graphic_domain=$domain
+        fi
 
      for var in tmp dpt ugrd vgrd rh ; do
       if [ $var = tmp ] || [ $var = dpt ] || [ $var = rh ]; then
@@ -292,7 +325,7 @@ for ihr in 00z 12z ; do
 
        for level in $levels ; do
 
-        mv ${score_type}_regional_${domain}_init_${ihr}_${level}_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${level}.last${past_days}days.${scoretype}_init${ihr}${lead_time}.buk_${domain}.png
+        mv ${score_type}_regional_${domain}_init_${ihr}_${level}_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${level}.last${past_days}days.${scoretype}_init${ihr}${lead_time}.buk_${evs_graphic_domain}.png
                
       done #level
 

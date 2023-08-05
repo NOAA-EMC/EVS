@@ -183,6 +183,8 @@ for stats in mae; do
    for domain in g003 nhem shem tropics conus ; do
      if [ $domain = g003 ] ; then
         domain_new=glb
+     elif [ $domain = conus ]; then
+        domain_new="buk_conus" 	
      else
         domain_new=$domain
      fi
