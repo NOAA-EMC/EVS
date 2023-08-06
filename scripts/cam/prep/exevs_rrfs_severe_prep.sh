@@ -33,7 +33,7 @@ export MXUPHL25_THRESH1=160.0
 # Set some model-specific environment variables 
 ############################################################
 
-export COMINfcst=${COMINrrfs}
+export MODEL_INPUT_DIR=${COMINrrfs}
 
 if [ $cyc -eq 00 ];then
    nloop=2
