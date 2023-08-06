@@ -121,6 +121,29 @@ def run_shell_command(command, capture_output=False):
         if capture_output:
             return run_command.stdout.decode('utf-8')
 
+def run_shell_commandc(command, capture_output=True):
+    """! Run shell command
+
+        Args:
+            command - list of argument entries (string)
+
+        Returns:
+
+    """
+    print("Running "+' '.join(command))
+    if any(mark in ' '.join(command) for mark in ['"', "'", '|', '*', '>']):
+        run_command = subprocess.run(
+            ' '.join(command), shell=True, capture_output=capture_output
+        )
+    else:
+        run_command = subprocess.run(command, capture_output=capture_output)
+    if run_command.returncode != 0:
+        print("ERROR: "+''.join(run_command.args)+" gave return code "
+              + str(run_command.returncode))
+    else:
+        if capture_output:
+            return run_command.stdout.decode('utf-8')
+
 def format_thresh(thresh):
    """! Format threshold with letter and symbol options
 
