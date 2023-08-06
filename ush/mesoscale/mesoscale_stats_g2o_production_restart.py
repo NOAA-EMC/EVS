@@ -45,42 +45,40 @@ if STEP == 'stats':
     )
 
     DAT1 = DATA.rsplit('/',1)[0]
-
     COMOUT_RUN_VDATE_VERIF_CASE3 = glob.glob(
         os.path.join(VERIF_CASE,'METplus_output',VERIF_TYPE+'/point_stat',
                      MODELNAME+'.'+VDATE)
     )
-
     DAT2 = cutil.run_shell_commandc(
             ['find', DAT1, '-type d | grep', VERIF_CASE, '| grep', 
              VERIF_TYPE+'/point_stat', '| grep', MODELNAME+'.'+VDATE,
              '| sort | uniq']
             )
-    
     DAT3 = DAT2.splitlines()
-
     for DAT4 in DAT3:
-        # print(f"DAT4 = {DAT4}")
+        print(f"DAT4 = {DAT4}")
         COMOUT_RUN_VDATE_VERIF_CASE.append(
             DAT4
         )
 
     DATA_METplus_V = os.path.join(DATA_METplus_output, VERIF_TYPE+'/point_stat')
-
     for COMOUT_VDATE in COMOUT_RUN_VDATE_VERIF_CASE:
         if os.path.exists(COMOUT_VDATE):
             DATA_METplus_VDATE = COMOUT_VDATE.replace(
                 COMOUT, DATA_METplus_output
             ).rpartition('/')[0]
             DATA_METplus_VDATE = os.path.join(DATA_METplus_V, MODELNAME+'.'+VDATE)
+            
             cutil.run_shell_command(
                 ['mkdir', '-p', DATA_METplus_VDATE]
             )
+
             CN = os.system('ls '+COMOUT_VDATE+'/ | wc -l')
             if ( CN > 0):
                 print(f"Copying COMOUT directory {COMOUT_VDATE} directory "                                    +f"into working directory {DATA_METplus_VDATE}")
                 cutil.run_shell_command(
                     ['cp', '-pv', COMOUT_VDATE+'/*.*', DATA_METplus_VDATE+'/']
                 )
+
 
 print("END: "+os.path.basename(__file__))
