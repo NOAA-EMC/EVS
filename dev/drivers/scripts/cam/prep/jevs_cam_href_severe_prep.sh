@@ -1,10 +1,9 @@
-#!/bin/bash
-#PBS -N jevs_hireswarwmem2_severe_prep_00
+#PBS -N jevs_cam_href_severe_prep
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=0:05:00
+#PBS -l walltime=0:30:00
 #PBS -l select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
 #PBS -V
@@ -14,35 +13,25 @@ set -x
 
 cd $PBS_O_WORKDIR
 
-export model=evs
-
-export HOMEevs=/lfs/h2/emc/vpppg/save/${USER}/EVS
-source $HOMEevs/versions/run.ver
-
 
 ############################################################
 # Load modules
 ############################################################
+
 module reset
 
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
-module use /apps/dev/modulefiles/
-module load ve/evs/${ve_evs_ver}
-module load cray-mpich/${craympich_ver}
-module load cray-pals/${craypals_ver}
-module load libjpeg/${libjpeg_ver}
-module load libpng/${libpng_ver}
-module load zlib/${zlib_ver}
-module load jasper/${jasper_ver}
-module load cfp/${cfp_ver}
-module load gsl/${gsl_ver}
-module load met/${met_ver}
-module load metplus/${metplus_ver}
-module load prod_util/${prod_util_ver}
-module load prod_envir/${prod_envir_ver}
+export model=evs
+export NET=evs
+export STEP=prep
+export COMPONENT=cam
+export RUN=atmos
 
-module list
+export HOMEevs=/lfs/h2/emc/vpppg/save/${USER}/EVS
+source $HOMEevs/versions/run.ver
+
+source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
+
+export cyc=${cyc:-${cyc}}
 
 
 ############################################################
@@ -51,26 +40,15 @@ module list
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=YES
-export NET=evs
-export STEP=prep
-export COMPONENT=cam
-export RUN=atmos
 export VERIF_CASE=severe
-export MODELNAME=hireswarwmem2
-export modsys=hiresw
-export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export MODELNAME=href
+export modsys=href
+export job=${PBS_JOBNAME:-jevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}_${cyc}}
 export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}
 export COMINspc=/lfs/h1/ops/dev/dcom
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}/${STEP}/${COMPONENT}
-
-export MET_bin_exec=bin
-export metplus_verbosity=DEBUG
-export met_verbosity=2
-export log_met_output_to_metplus=yes
 ############################################################
-
-export cyc
 
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
@@ -92,7 +70,7 @@ fi
 
 
 ######################################################################
-# Purpose: This job preprocesses HiResW ARW2 data for use in
-#          CAM severe verification jobs
+# Purpose: This job preprocesses HREF member data for use in
+#          CAM severe verification job
 ######################################################################
 
