@@ -393,7 +393,9 @@ elif STEP == 'stats':
                         )
             else:
                 pstat_file_exist = cutil.check_pstat_files(job_env_vars_dict)
-                if not pstat_file_exist:
+                if pstat_file_exist:
+                    print(f"skip this run, pstat already exist")
+                else:
                     job_cmd_list_iterative.append(
                         f'{metplus_launcher} -c '
                         + f'{MET_PLUS_CONF}/'
