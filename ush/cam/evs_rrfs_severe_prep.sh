@@ -19,7 +19,7 @@ export JOBNUM=$2
 # Set some model-specific environment variables 
 ############################################################
 
-export COMINfcst=${COMINrrfs}
+export MODEL_INPUT_DIR=${COMINrrfs}
 
 if [ $MEMNUM = ctl ]; then
    export MODEL_INPUT_TEMPLATE=rrfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}/${MODELNAME}.t{init?fmt=%2H}z.prslev.f{lead?fmt=%3H}.conus_3km.grib2
@@ -69,7 +69,7 @@ i=1
          export fcst_file=refs.${IDATE}/${cyc}/${MEMNUM}/${MODELNAME}.t${cyc}z.prslev.f$(printf "%03d" $fhr).conus_3km.grib2
       fi
 
-      if [ -s $COMINfcst/$fcst_file ]; then
+      if [ -s ${MODEL_INPUT_DIR}/$fcst_file ]; then
          echo "File number $i found"
          nfiles=$((nfiles+1))
       else
