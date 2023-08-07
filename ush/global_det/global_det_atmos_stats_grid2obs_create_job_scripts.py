@@ -639,13 +639,15 @@ generate_stats_jobs_dict = {
                               'var1_fcst_name': 'HPBL',
                               'var1_fcst_levels': 'L0',
                               'var1_fcst_options': '',
+                              'var1_fcst_threshs': "'le500, ge2000'",
                               'var1_obs_name': 'HPBL',
                               'var1_obs_levels': 'L0',
                               'var1_obs_options': '',
+                              'var1_obs_threshs': "'le500, ge2000'",
                               'met_config_overrides': ''},
                       'commands': [gda_util.metplus_command(
                                        'PointStat_fcstGLOBAL_DET_'
-                                       +'obsPrepbufr.conf'
+                                       +'obsPrepbufr_Thresh.conf'
                                    )]},
         'RelHum2m': {'env': {'prepbufr': 'nam',
                              'obs_window': '900',
