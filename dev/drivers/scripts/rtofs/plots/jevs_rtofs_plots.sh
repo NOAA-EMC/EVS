@@ -32,7 +32,7 @@ export VDATE=$(date --date="3 days ago" +%Y%m%d)
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
 export COMINstats=$COMIN/stats/$COMPONENT
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
+export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver}
 export COMOUTplots=$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/logos
