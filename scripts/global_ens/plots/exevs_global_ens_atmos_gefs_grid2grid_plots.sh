@@ -51,6 +51,7 @@ export fcst_init_hour="0,12"
 export fcst_valid_hour="0,12"
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
+mkdir -p $plot_dir
 
 
 verif_case=$VERIF_CASE

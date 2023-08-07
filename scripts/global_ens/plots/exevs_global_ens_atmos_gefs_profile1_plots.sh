@@ -54,6 +54,7 @@ init_time='init00z_12z'
 
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
+mkdir -p $plot_dir
 
 verif_case=grid2obs
 verif_type=upper_air

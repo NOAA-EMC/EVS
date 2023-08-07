@@ -54,6 +54,7 @@ valid_time='valid00z_12z'
 
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
+mkdir -p $plot_dir
 
 
 verif_case=$VERIF_CASE

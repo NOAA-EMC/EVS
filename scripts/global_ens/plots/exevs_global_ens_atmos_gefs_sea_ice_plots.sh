@@ -53,6 +53,7 @@ valid_time='valid00z'
 init_time='init00z'
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
+mkdir -p $plot_dir
 
 
 verif_case=satellite
