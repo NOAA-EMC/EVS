@@ -36,6 +36,7 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 ####################################
 # Run setpdy and initialize PDY variables
 ####################################
+export cyc=${cyc:-"00"}
 export cycle=${cycle:-t${cyc}z}
 setpdy.sh
 . ./PDY
