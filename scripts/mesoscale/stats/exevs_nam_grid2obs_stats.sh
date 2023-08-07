@@ -67,6 +67,16 @@ for NEST in $NEST_LIST; do
          continue
       fi
 
+      # Check for restart files reformat
+      echo " Check for restart files reformat begin"
+     if [ $evs_run_mode = production ]; then
+         python ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py
+         status=$?
+         [[ $status -ne 0 ]] && exit $status
+         [[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py"
+     fi
+      echo " Check for restart files reformat done"
+
       for VHOUR in $VHOUR_LIST; do
          export VHOUR=$VHOUR
          # Check User's Configuration Settings
@@ -88,16 +98,6 @@ for NEST in $NEST_LIST; do
          status=$?
          [[ $status -ne 0 ]] && exit $status
          [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_create_output_dirs.py ($job_type)"
-
-         # Check for restart files reformat
-         echo " Check for restart files reformat begin"
-#         if [ $evs_run_mode = production ]; then
-            python ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py
-            status=$?
-            [[ $status -ne 0 ]] && exit $status
-            [[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py"
-#         fi
-         echo " Check for restart files reformat done"
 
          # Create Reformat Job Script
          python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py

@@ -73,11 +73,10 @@ if STEP == 'stats':
                 ['mkdir', '-p', DATA_METplus_VDATE]
             )
 
-            CN = os.system('ls '+COMOUT_VDATE+'/ | wc -l')
-            if ( CN > 0):
+            if (os.path.exists(COMOUT_VDATE)):
                 print(f"Copying COMOUT directory {COMOUT_VDATE} directory "                                    +f"into working directory {DATA_METplus_VDATE}")
                 cutil.run_shell_command(
-                    ['cp', '-pv', COMOUT_VDATE+'/*.*', DATA_METplus_VDATE+'/']
+                    ['rsync', '-av --ignore-existing', COMOUT_VDATE+'/', DATA_METplus_VDATE+'/']
                 )
 
 
