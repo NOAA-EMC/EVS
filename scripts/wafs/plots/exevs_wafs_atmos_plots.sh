@@ -21,9 +21,6 @@ echo $msg
 export OBSERVATION=$1
 export NDAYS=$2
 export VX_MASK_LIST=$3
-if [ $VX_MASK_LIST = 'all' ] ; then
-    export VX_MASK_LIST="`echo $VX_MASK_ALL | sed 's/ /, /g'`"
-fi
 
 export VALID_END=$VDATE
 export VALID_BEG=`date -d "$VDATE - $NDAYS days" +%Y%m%d`
@@ -50,6 +47,14 @@ fi
 for RESOLUTION in $resolutions ; do
     export RESOLUTION
     resolution=`echo $RESOLUTION | tr '[:upper:]' '[:lower:]'`
+    
+    if [ $VX_MASK_LIST = 'GLB' ] ; then
+	if [ $RESOLUTION = "0P25" ] ; then
+	    export VX_MASK_LIST="G193"
+	elif [ $RESOLUTION = "1P25" ] ; then
+	    export VX_MASK_LIST="G045"
+	fi
+    fi
     
     export OUTPUT_BASE_DIR=$DATA/datainput/${OBSERVATION}_${RESOLUTION}
     mkdir -p $OUTPUT_BASE_DIR
@@ -83,11 +88,16 @@ for RESOLUTION in $resolutions ; do
 	n=0
 	while [[ $n -le $NDAYS ]] ; do
 	    day=`date -d "$VDATE - $n days" +%Y%m%d`
-	    sourefile=$COMINstat/${MODELNAME}.$day/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
+	    if [ $NDAYS -gt 90 ] ; then
+		yyyy=`echo $day | cut -c 1-4`
+		sourcefile=$COMIN/$yyyy/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
+	    else
+		sourcefile=$COMINstat/${MODELNAME}.$day/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
+	    fi
 	    targetfile=$OUTPUT_BASE_DIR/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
 	    if [[ ! -f "$targetfile" ]] ; then
-		if [[ -f "$sourefile" ]] ; then
-		    ln -s $sourefile $OUTPUT_BASE_DIR/.
+		if [[ -f "$sourcefile" ]] ; then
+		    ln -s $sourcefile $OUTPUT_BASE_DIR/.
 		fi
 	    fi
 	    n=$((n+1))

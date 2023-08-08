@@ -38,8 +38,6 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_$STEP.sh
 ############################################################
 # environment variables set
 ############################################################
-export MET_bin_exec=bin
-
 export envir=prod
 
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
