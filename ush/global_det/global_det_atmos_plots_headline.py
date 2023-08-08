@@ -100,7 +100,7 @@ headline1_plot_info_dict = {
 now = datetime.datetime.now()
 headline1_date_info_dict = {
     'date_type': 'VALID',
-    'start_date': (VDATE_END_dt - datetime.timedelta(days=headline1_ndays))\
+    'start_date': (VDATE_END_dt - datetime.timedelta(days=headline1_ndays-1))\
                    .strftime('%Y%m%d'),
     'end_date': VDATE_END_dt.strftime('%Y%m%d'),
     'valid_hr_start': '00',
@@ -207,7 +207,7 @@ headline2_plot_info_dict = {
 }
 headline2_date_info_dict = {
     'date_type': 'VALID',
-    'start_date': (VDATE_END_dt - datetime.timedelta(days=headline2_ndays))\
+    'start_date': (VDATE_END_dt - datetime.timedelta(days=headline2_ndays-1))\
                    .strftime('%Y%m%d'),
     'end_date': VDATE_END_dt.strftime('%Y%m%d'),
     'valid_hr_start': '00',
