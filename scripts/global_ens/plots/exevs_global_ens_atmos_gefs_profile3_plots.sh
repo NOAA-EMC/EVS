@@ -192,7 +192,7 @@ for stats in rmse_spread me ; do
 
     for var in hgt tmp ugrd vgrd rh ; do
 
-         mv ${score_type}_regional_${domain}_valid_12z_${var}_${stats}_f${lead}.png  evs.global_ens.${stats}.${var}.last${past_days}days.${scoretype}_${valid_time}_f${new_lead}.g003_${domain_new}.png
+         mv ${score_type}_regional_${domain}_valid_12z_${var}_${stats}_f${lead}.png  evs.global_ens.${stats}.${var}_all.last${past_days}days.${scoretype}_${valid_time}_f${new_lead}.g003_${domain_new}.png
 
     done #var
    done  #domain
