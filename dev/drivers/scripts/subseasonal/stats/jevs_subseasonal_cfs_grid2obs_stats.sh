@@ -1,4 +1,4 @@
-#PBS -N jevs_cfs_subseasonal_grid2obs_stats_00
+#PBS -N jevs_subseasonal_cfs_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
