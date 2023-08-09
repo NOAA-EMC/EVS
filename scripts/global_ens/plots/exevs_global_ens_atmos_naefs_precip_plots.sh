@@ -232,6 +232,18 @@ for stats in ets_fbias fss bs crps ; do
 
      for domain in conus conus_east conus_west conus_south conus_central ; do
 
+         if [ $domain = conus_east ]; then
+             domain="conus_e"
+         elif [ $domain = conus_west ]; then
+             domain="conus_w"
+         elif [ $domain = conus_south ]; then
+             domain="conus_s"
+         elif [ $domain = conus_central ]; then
+             domain="conus_c"
+         else
+             domain=$domain
+         fi
+
       for var in $vars ; do
          if [ $stats = bs ] ; then
              var2=apcp_a24.${var:17:4}             

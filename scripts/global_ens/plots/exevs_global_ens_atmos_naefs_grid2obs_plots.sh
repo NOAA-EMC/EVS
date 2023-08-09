@@ -222,7 +222,7 @@ for stats in  acc bias_mae crps rmse_spread me_mae ; do
       if [ $level = 850mb ] || [ $level = 250mb ] ; then
 	  domains='nhem shem tropics'
       else
-	  domains='conus conus_e conus_w conus_s conus_c alaska'
+	  domains='conus conus_east conus_west conus_south conus_central alaska'
       fi
 
       if [ $level = 850mb ] ; then
@@ -234,6 +234,18 @@ for stats in  acc bias_mae crps rmse_spread me_mae ; do
       fi
 
       for domain in $domains ; do
+	
+         if [ $domain = conus_east ]; then
+             domain="conus_e"
+         elif [ $domain = conus_west ]; then
+             domain="conus_w"
+         elif [ $domain = conus_south ]; then
+             domain="conus_s"
+         elif [ $domain = conus_central ]; then
+             domain="conus_c"
+         else
+             domain=$domain
+         fi
 
         if [ $domain = nhem ] || [ $domain = shem ] || [ $domain = tropics ] ; then
            mv ${score_type}_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}${lead}  evs.naefs.${stats}.${var}_${level_new}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain}.png
