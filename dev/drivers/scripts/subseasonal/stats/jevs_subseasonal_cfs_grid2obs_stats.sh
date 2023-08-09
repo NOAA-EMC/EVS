@@ -1,4 +1,4 @@
-#PBS -N jevs_gefs_subseasonal_grid2obs_stats_00
+#PBS -N jevs_subseasonal_cfs_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -44,8 +44,8 @@ export evs_ver=${evs_ver}
 export STEP=stats
 export COMPONENT=subseasonal
 export RUN=atmos
-export MODELNAME=gefs
-export gefs_ver=${gefs_ver}
+export MODELNAME=cfs
+export cfs_ver=${cfs_ver}
 export VERIF_CASE=grid2obs
 
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
@@ -57,7 +57,7 @@ export COMINclimo=$FIXevs/climos/atmos
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT
 #export VDATE=$(date -d "today -22 day" +"%Y%m%d")
 
-export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.subseasonal.gefs.grid2obs.stats
+export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.subseasonal.cfs.grid2obs.stats
 
 # Call executable job script
 $HOMEevs/jobs/subseasonal/stats/JEVS_SUBSEASONAL_STATS
@@ -66,7 +66,7 @@ $HOMEevs/jobs/subseasonal/stats/JEVS_SUBSEASONAL_STATS
 #%manual
 ######################################################################
 # Purpose: The job and task scripts work together to generate the
-#          subseasonal verification grid-to-obs statistics for the GEFS model 
+#          subseasonal verification grid-to-obs statistics for the CFS model 
 #          and create the stat files in the databases.
 ######################################################################
 #%end
