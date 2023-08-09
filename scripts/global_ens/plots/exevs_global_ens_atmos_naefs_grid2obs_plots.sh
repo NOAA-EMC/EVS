@@ -236,21 +236,21 @@ for stats in  acc bias_mae crps rmse_spread me_mae ; do
       for domain in $domains ; do
 	
          if [ $domain = conus_east ]; then
-             domain="conus_e"
+             evs_graphic_domain="conus_e"
          elif [ $domain = conus_west ]; then
-             domain="conus_w"
+             evs_graphic_domain="conus_w"
          elif [ $domain = conus_south ]; then
-             domain="conus_s"
+             evs_graphic_domain="conus_s"
          elif [ $domain = conus_central ]; then
-             domain="conus_c"
+             evs_graphic_domain="conus_c"
          else
-             domain=$domain
+             evs_graphic_domain=$domain
          fi
 
         if [ $domain = nhem ] || [ $domain = shem ] || [ $domain = tropics ] ; then
-           mv ${score_type}_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}${lead}  evs.naefs.${stats}.${var}_${level_new}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain}.png
+           mv ${score_type}_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}${lead}  evs.naefs.${stats}.${var}_${level_new}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${evs_graphic_domain}.png
 	else
-           mv ${score_type}_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}${lead}  evs.naefs.${stats}.${var}_${level_new}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.buk_${domain}.png
+           mv ${score_type}_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}${lead}  evs.naefs.${stats}.${var}_${level_new}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.buk_${evs_graphic_domain}.png
         fi
                
       done #domain

@@ -233,25 +233,25 @@ for stats in ets_fbias fss bs crps ; do
      for domain in conus conus_east conus_west conus_south conus_central ; do
 
          if [ $domain = conus_east ]; then
-             domain="conus_e"
+             evs_graphic_domain="conus_e"
          elif [ $domain = conus_west ]; then
-             domain="conus_w"
+             evs_graphic_domain="conus_w"
          elif [ $domain = conus_south ]; then
-             domain="conus_s"
+             evs_graphic_domain="conus_s"
          elif [ $domain = conus_central ]; then
-             domain="conus_c"
+             evs_graphic_domain="conus_c"
          else
-             domain=$domain
+             evs_graphic_domain=$domain
          fi
 
       for var in $vars ; do
          if [ $stats = bs ] ; then
              var2=apcp_a24.${var:17:4}             
-	     mv ${score_type}_regional_${domain}_valid_12z_24h_${var}_${stats}_${lead} evs.naefs.${stats}.${var2}.last${past_days}days.${scoretype}_valid_12z.buk_${domain}.png
+	     mv ${score_type}_regional_${domain}_valid_12z_24h_${var}_${stats}_${lead} evs.naefs.${stats}.${var2}.last${past_days}days.${scoretype}_valid_12z.buk_${evs_graphic_domain}.png
          elif  [ $stats = crps ] ; then   
-	    mv ${score_type}_regional_${domain}_valid_12z_24h_${var}_${stats}.${lead} evs.naefs.${stats}.apcp_a24.last${past_days}days.${scoretype}_valid_12z.buk_${domain}.png         
+	    mv ${score_type}_regional_${domain}_valid_12z_24h_${var}_${stats}.${lead} evs.naefs.${stats}.apcp_a24.last${past_days}days.${scoretype}_valid_12z.buk_${evs_graphic_domain}.png         
          else
-            mv ${score_type}_regional_${domain}_valid_12z_24h_${var}_${stats}_${lead} evs.naefs.${stats}.apcp_a24.last${past_days}days.${scoretype}_valid_12z.buk_${domain}.png
+            mv ${score_type}_regional_${domain}_valid_12z_24h_${var}_${stats}_${lead} evs.naefs.${stats}.apcp_a24.last${past_days}days.${scoretype}_valid_12z.buk_${evs_graphic_domain}.png
          fi 
       done #var	
      done  #domain
