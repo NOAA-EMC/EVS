@@ -75,6 +75,13 @@ status=$?
 [[ $status -eq 0 ]] && echo "Successfully ran subseasonal_get_data_files.py"
 echo
 
+# Check for restart files
+#python $USHevs/subseasonal/subseasonal_stats_g2o_prod_restart.py
+#status=$?
+#[[ $status -ne 0 ]] && exit $status
+#[[ $status -eq 0 ]] && echo "Successfully ran subseasonal_stats_g2o_prod_restart.py"
+#echo
+
 # Create job scripts to run METplus for reformat_data, assemble_data, generate_stats, and gather_stats
 for group in reformat_data assemble_data generate_stats gather_stats; do
     export JOB_GROUP=$group

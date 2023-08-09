@@ -43,6 +43,13 @@ status=$?
 [[ $status -eq 0 ]] && echo "Successfully ran get_gefs_subseasonal_data_files_prep.py"
 echo
 
+# Check for restart files
+#python $USHevs/subseasonal/subseasonal_prep_prod_restart.py
+#status=$?
+#[[ $status -ne 0 ]] && exit $status
+#[[ $status -eq 0 ]] && echo "Successfully ran subseasonal_prep_prod_restart.py"
+#echo
+
 # Send for missing files
 if ls $DATA/mail_* 1> /dev/null 2>&1; then
     for FILE in $DATA/mail_*; do
