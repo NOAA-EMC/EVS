@@ -460,6 +460,10 @@ elif STEP == 'plots':
                     working_output_base_dir, 'out', str(plot_group).lower(), 
                     str(eval_period).lower()
                 ))
+                COMOUT_dir_list.append(os.path.join(
+                    COMOUTplots, 'restart', str(plot_group).lower(), 
+                    str(eval_period).lower()
+                ))
     elif VERIF_CASE == 'precip':
         working_output_base_dir = os.path.join(
             DATA, VERIF_CASE
@@ -486,6 +490,10 @@ elif STEP == 'plots':
                     working_output_base_dir, 'out', str(plot_group).lower(), 
                     str(eval_period).lower()
                 ))
+                COMOUT_dir_list.append(os.path.join(
+                    COMOUTplots, 'restart', str(plot_group).lower(), 
+                    str(eval_period).lower()
+                ))
     elif VERIF_CASE == 'snowfall':
         working_output_base_dir = os.path.join(
             DATA, VERIF_CASE
@@ -510,6 +518,10 @@ elif STEP == 'plots':
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'out', str(plot_group).lower(), 
+                    str(eval_period).lower()
+                ))
+                COMOUT_dir_list.append(os.path.join(
+                    COMOUTplots, 'restart', str(plot_group).lower(), 
                     str(eval_period).lower()
                 ))
     elif VERIF_CASE == 'headline':
@@ -539,6 +551,10 @@ elif STEP == 'plots':
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'out', str(plot_group).lower(), 
+                    str(eval_period).lower()
+                ))
+                COMOUT_dir_list.append(os.path.join(
+                    COMOUTplots, 'restart', str(plot_group).lower(), 
                     str(eval_period).lower()
                 ))
 # Create working output and COMOUT directories

@@ -433,3 +433,14 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                                           filled_file_format_chunk)
     return filled_file_format
 
+def get_completed_jobs(completed_jobs_file):
+    completed_jobs = set()
+    if os.path.exists(completed_jobs_file):
+        with open(completed_jobs_file, 'r') as f:
+            completed_jobs = set(f.read().splitlines())
+    return completed_jobs
+
+def mark_job_completed(completed_jobs_file, job_name):
+    with open(completed_jobs_file, 'a') as f:
+        f.write(job_name + "\n")
+ 
