@@ -227,7 +227,7 @@ for stats in  acc bias_mae crps rmse_spread me_mae ; do
 
       if [ $level = 850mb ] ; then
 	 level_new=p850
-      elif [ $level = 850mb ] ; then
+      elif [ $level = 250mb ] ; then
 	 level_new=p250
       else
 	 level_new=$level
