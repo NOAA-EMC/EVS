@@ -1,4 +1,4 @@
-#PBS -N jevs_subseasonal_grid2obs_PrepBufr_plots_31days_00
+#PBS -N jevs_subseasonal_grid2obs_PrepBufr_plots_31days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"

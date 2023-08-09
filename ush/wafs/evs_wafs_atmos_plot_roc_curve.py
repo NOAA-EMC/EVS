@@ -758,8 +758,9 @@ def plot_roc_curve(df: pd.DataFrame, logger: logging.Logger,
     date_start_string = date_range[0].strftime('%d %b %Y')
     date_end_string = date_range[1].strftime('%d %b %Y')
     if str(verif_type).lower() in ['pres', 'upper_air'] or 'P' in str(level):
-        level_num = int(float(level.replace('P', '')))
+        level_num = float(level.replace('P', ''))
         level_string = f'{level_num} hPa '
+        level_num = int(level_num)
         level_savename = f'p{level_num}'
     elif (str(verif_type).lower() 
             in ['sfc', 'conus_sfc', 'polar_sfc', 'mrms']):
@@ -1080,7 +1081,6 @@ def main():
                 logger.warning("Continuing ...")
                 continue
             for flead in FLEADS:
-                df_all = pd.DataFrame()
                 for domain in DOMAINS:
                     if str(domain) not in case_specs['vx_mask_list']:
                         e = (f"The requested domain is not valid for the"
@@ -1096,44 +1096,25 @@ def main():
                         obs_var_names, MODELS, domain, INTERP, MET_VERSION, 
                         clear_prune_dir
                     )
-                    # WAFS needs a global plotting
-                    if domain in DOMAINS[-1]:
-                        if df is None:
-                            continue
-                        else:
-                            if len(DOMAINS) == 1:
-                                df_all = df
-                            else:
-                                df_all=pd.concat([df_all,df])
-                                df_all['VX_MASK'] = REGRID.upper()
-                    else: # collect df of all sub-domains.
-                        if df is None:
-                            continue
-                        else:
-                            if df_all.empty:
-                                df_all = df.copy()
-                                # Only change one subdomain to global for plotting and avoid duplicate records
-                                #df_all=df_all.assign(VX_MASK=REGRID.upper())
-                            else:
-                                df_all=pd.concat([df_all,df])
-                            df_all['VX_MASK'] = REGRID.upper()
-                plot_roc_curve(
-                    df_all, logger, date_range, MODELS, num=num, 
-                    flead=flead, level=fcst_level, thresh=fcst_thresh, 
-                    metric1_name=metrics[0], metric2_name=metrics[1],
-                    date_type=DATE_TYPE,  verif_type=VERIF_TYPE, 
-                    line_type=LINE_TYPE, date_hours=date_hours, 
-                    save_dir=SAVE_DIR, eval_period=EVAL_PERIOD, 
-                    display_averages=display_averages, save_header=URL_HEADER,
-                    plot_group=plot_group, 
-                    confidence_intervals=CONFIDENCE_INTERVALS, 
-                    bs_nrep=bs_nrep, bs_method=bs_method, ci_lev=ci_lev, 
-                    bs_min_samp=bs_min_samp,
-                    sample_equalization=sample_equalization,
-                    regrid=REGRID, component=COMPONENT,
-                    fcst_var_names=fcst_var_names, var_name=requested_var
-                )
-                num+=1
+                    if df is None:
+                        continue
+                    plot_roc_curve(
+                        df, logger, date_range, MODELS, num=num, 
+                        flead=flead, level=fcst_level, thresh=fcst_thresh, 
+                        metric1_name=metrics[0], metric2_name=metrics[1],
+                        date_type=DATE_TYPE,  verif_type=VERIF_TYPE, 
+                        line_type=LINE_TYPE, date_hours=date_hours, 
+                        save_dir=SAVE_DIR, eval_period=EVAL_PERIOD, 
+                        display_averages=display_averages, save_header=URL_HEADER,
+                        plot_group=plot_group, 
+                        confidence_intervals=CONFIDENCE_INTERVALS, 
+                        bs_nrep=bs_nrep, bs_method=bs_method, ci_lev=ci_lev, 
+                        bs_min_samp=bs_min_samp,
+                        sample_equalization=sample_equalization,
+                        regrid=REGRID, component=COMPONENT,
+                        fcst_var_names=fcst_var_names, var_name=requested_var
+                    )
+                    num+=1
 
 # ============ START USER CONFIGURATIONS ================
 

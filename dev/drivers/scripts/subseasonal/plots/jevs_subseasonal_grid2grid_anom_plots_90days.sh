@@ -1,4 +1,4 @@
-#PBS -N jevs_subseasonal_grid2grid_anom_plots_90days_00
+#PBS -N jevs_subseasonal_grid2grid_anom_plots_90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
