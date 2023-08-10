@@ -451,6 +451,9 @@ elif STEP == 'plots':
         COMOUT_dir_list.append(os.path.join(
             COMOUTplots
         ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUTplots, VERIF_CASE
+        ))
         for plot_group in [
                 'aq', 'aviation', 'cape', 'ceil_vis', 'precip', 
                 'radar', 'rtofs_sfc', 'sfc_upper'
@@ -461,7 +464,7 @@ elif STEP == 'plots':
                     str(eval_period).lower()
                 ))
                 COMOUT_dir_list.append(os.path.join(
-                    COMOUTplots, 'restart', str(plot_group).lower(), 
+                    COMOUTplots, VERIF_CASE, 'restart', str(plot_group).lower(), 
                     str(eval_period).lower()
                 ))
     elif VERIF_CASE == 'precip':
@@ -484,6 +487,9 @@ elif STEP == 'plots':
         COMOUT_dir_list.append(os.path.join(
             COMOUTplots
         ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUTplots, VERIF_CASE
+        ))
         for plot_group in ['precip', 'radar', 'rtofs_sfc', 'sfc_upper']:
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
@@ -491,7 +497,7 @@ elif STEP == 'plots':
                     str(eval_period).lower()
                 ))
                 COMOUT_dir_list.append(os.path.join(
-                    COMOUTplots, 'restart', str(plot_group).lower(), 
+                    COMOUTplots, VERIF_CASE, 'restart', str(plot_group).lower(), 
                     str(eval_period).lower()
                 ))
     elif VERIF_CASE == 'snowfall':
@@ -514,6 +520,9 @@ elif STEP == 'plots':
         COMOUT_dir_list.append(os.path.join(
             COMOUTplots
         ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUTplots, VERIF_CASE
+        ))
         for plot_group in ['precip']:
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
@@ -521,7 +530,7 @@ elif STEP == 'plots':
                     str(eval_period).lower()
                 ))
                 COMOUT_dir_list.append(os.path.join(
-                    COMOUTplots, 'restart', str(plot_group).lower(), 
+                    COMOUTplots, VERIF_CASE, 'restart', str(plot_group).lower(), 
                     str(eval_period).lower()
                 ))
     elif VERIF_CASE == 'headline':
@@ -544,6 +553,9 @@ elif STEP == 'plots':
         COMOUT_dir_list.append(os.path.join(
             COMOUTplots
         ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUTplots, VERIF_CASE
+        ))
         for plot_group in [
                 'aq', 'aviation', 'cape', 'ceil_vis', 'precip', 
                 'radar', 'rtofs_sfc', 'sfc_upper'
@@ -554,7 +566,7 @@ elif STEP == 'plots':
                     str(eval_period).lower()
                 ))
                 COMOUT_dir_list.append(os.path.join(
-                    COMOUTplots, 'restart', str(plot_group).lower(), 
+                    COMOUTplots, VERIF_CASE, 'restart', str(plot_group).lower(), 
                     str(eval_period).lower()
                 ))
 # Create working output and COMOUT directories
