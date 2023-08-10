@@ -234,11 +234,6 @@ for domain in conus conus_east conus_west conus_south conus_central ; do
         evs_graphic_domain="buk_conus_c"
     fi
     for stat in bs crps ets fbias fss ; do
-        if [ $stat = bs ]; then
-            evs_graphic_stat="bss"
-        else
-            evs_graphic_stat=$stat
-        fi
         if [ $stat = crps ]; then
             threshs="NA"
         else
@@ -267,7 +262,7 @@ for domain in conus conus_east conus_west conus_south conus_central ; do
                     graphic_name=lead_average_regional_${domain}_valid_12z_24h_apcp_24_${stat}${nbhrd_graphic}${thresh_graphic}.png
                 fi
                 if [ -s $graphic_name ]; then
-                    evs_graphic_name=evs.global_ens.${evs_graphic_stat}${nbhrd_graphic}${thresh_graphic}.apcp_a24.last${past_days}days.fhrmean_valid12z_f384.g003_${evs_graphic_domain}.png
+                    evs_graphic_name=evs.global_ens.${stat}${nbhrd_graphic}${thresh_graphic}.apcp_a24.last${past_days}days.fhrmean_valid12z_f384.g003_${evs_graphic_domain}.png
                     mv $graphic_name $evs_graphic_name
                 fi
                 for lead in 120 240 360; do
@@ -278,7 +273,7 @@ for domain in conus conus_east conus_west conus_south conus_central ; do
                         graphic_name=time_series_regional_${domain}_valid_12z_24h_apcp_24_${stat}${nbhrd_graphic}${lead_graphic}${thresh_graphic}.png 
                     fi
                     if [ -s $graphic_name ]; then
-                        evs_graphic_name=evs.global_ens.${evs_graphic_stat}${nbhrd_graphic}${thresh_graphic}.apcp_a24.last${past_days}days.timeseries_valid12z${lead_graphic}.g003_${evs_graphic_domain}.png
+                        evs_graphic_name=evs.global_ens.${stat}${nbhrd_graphic}${thresh_graphic}.apcp_a24.last${past_days}days.timeseries_valid12z${lead_graphic}.g003_${evs_graphic_domain}.png
                         mv $graphic_name $evs_graphic_name
                     fi
                 done
