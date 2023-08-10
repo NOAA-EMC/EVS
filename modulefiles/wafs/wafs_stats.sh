@@ -8,6 +8,7 @@ module load craype/$craype_ver
 module load cray-pals/$craypals_ver
 module load libjpeg/$libjpeg_ver
 module load prod_util/$prod_util_ver
+module load prod_envir/$prod_envir_ver
 module load wgrib2/$wgrib2_ver
 module load libpng/$libpng_ver
 module load zlib/$zlib_ver

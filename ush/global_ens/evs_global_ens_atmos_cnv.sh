@@ -108,7 +108,7 @@ for fhr in $fhrs ; do
 
     chmod +x run_${modnam}_${fhr}_cnv.sh
 
-    echo "run_${modnam}_${fhr}_cnv.sh" >> run_all_gens_cnv_poe.sh 
+    echo "${DATA}/run_${modnam}_${fhr}_cnv.sh" >> run_all_gens_cnv_poe.sh 
 
   done # end of fhr 
 done #end of model
@@ -117,10 +117,10 @@ chmod 775 run_all_gens_cnv_poe.sh
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-  mpiexec -n 14 -ppn 14 --cpu-bind verbose,depth cfp run_all_gens_cnv_poe.sh
+  mpiexec -n 14 -ppn 14 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_cnv_poe.sh
 
 else
-    run_all_gens_cnv_poe.sh
+    ${DATA}/run_all_gens_cnv_poe.sh
 fi 
 
 if [ $gather = yes ] ; then
