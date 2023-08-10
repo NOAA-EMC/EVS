@@ -359,7 +359,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     ]
     pivot_metric1 = pd.pivot_table(
         df_aggregated, values=str(metric1_name).upper(), columns='MODEL', 
-        index=str(date_type).upper()
+        index=str(date_type).upper(), dropna=False
     )
     if sample_equalization:
         pivot_counts = pd.pivot_table(
@@ -371,7 +371,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     if metric2_name is not None:
         pivot_metric2 = pd.pivot_table(
             df_aggregated, values=str(metric2_name).upper(), columns='MODEL', 
-            index=str(date_type).upper()
+            index=str(date_type).upper(), dropna=False
         )
         if keep_shared_events_only:
             pivot_metric2 = pivot_metric2.dropna()

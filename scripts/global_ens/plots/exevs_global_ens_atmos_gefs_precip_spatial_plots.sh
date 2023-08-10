@@ -72,19 +72,12 @@ fi
 python $USHevs/global_ens/ush_gens_plot_py/global_det_atmos_plots.py
 
 cd $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/precip/SL1L2_FBAR_24hrAccumMaps_CONUS_precip_spatial_map/images
-mask=`echo $vx_mask | tr '[A-Z]' '[a-z]'`
-for model in $model_list ; do
-  for fhr in 024 048 072 096 120 144 168 192 216 240 ; do
-    past=`$NDATE -$fhr ${VDATE}12`
-    INITDATE=${past:0:8}    
-    #mv ${model}.v${VDATE}12.${fhr}h.${mask}.png  evs.${model}.spatial_map.apcp_a24.init${INITDATE}.vlid${VDATE}12.f${fhr}.buk_${mask}.png
-    mv ${model}.v${VDATE}12.${fhr}h.${mask}.png  evs.${model}.spatial_map.apcp_a24.vlid12z_f${fhr}.buk_${mask}.png
-  done
-done  
 
 #scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/gens/spaticl
 
-tar -cvf evs.plots.gefs.precip.spatial.map.v${VDATE}.tar *.png
+mv qpe.v${VDATE}12.024h.conus.png evs.ccpa.spatial_map.apcp_a24_vlid12z_f000.conus.png
+
+tar -cvf evs.plots.gefs.precip.spatial.map.v${VDATE}.tar *.gif
 
 cp evs.plots.gefs.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
 

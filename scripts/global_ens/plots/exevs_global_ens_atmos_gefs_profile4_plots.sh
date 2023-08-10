@@ -54,6 +54,7 @@ init_time='init00z_12z'
 
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
+mkdir -p $plot_dir
 
 verif_case=grid2obs
 verif_type=upper_air
@@ -183,13 +184,15 @@ for stats in mae; do
    for domain in g003 nhem shem tropics conus ; do
      if [ $domain = g003 ] ; then
         domain_new=glb
+     elif [ $domain = conus ]; then
+        domain_new="buk_conus" 	
      else
         domain_new=$domain
      fi
 
     for var in hgt tmp ugrd vgrd rh ; do
 
-         mv ${score_type}_regional_${domain}_valid_12z_${var}_${stats}_f${lead}.png  evs.global_ens.${stats}.${var}.last${past_days}days.${scoretype}.${valid_time}_f${new_lead}.g003_${domain_new}.png
+         mv ${score_type}_regional_${domain}_valid_12z_${var}_${stats}_f${lead}.png  evs.global_ens.${stats}.${var}_all.last${past_days}days.${scoretype}_${valid_time}_f${new_lead}.g003_${domain_new}.png
 
     done #var
    done  #domain
