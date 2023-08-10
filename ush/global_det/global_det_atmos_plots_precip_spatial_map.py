@@ -319,8 +319,7 @@ class PrecipSpatialMap:
                 CF1 = ax1.contourf(x, y, precip_APCP_A24,
                                    transform=ccrs.PlateCarree(),
                                    levels=clevs, norm=norm,
-                                   cmap=cmap, extend='max',
-                                   transform_first=True)
+                                   cmap=cmap, extend='max')
                 CF1.cmap.set_over(cmap_over_color)
                 cbar_left = gs.get_grid_positions(fig)[2][0]
                 cbar_width = (gs.get_grid_positions(fig)[3][-1]
