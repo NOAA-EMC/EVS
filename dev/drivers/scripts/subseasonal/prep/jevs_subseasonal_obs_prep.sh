@@ -1,4 +1,4 @@
-#PBS -N jevs_subseasonal_obs_prep_00
+#PBS -N jevs_subseasonal_obs_prep
 #PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q "dev"

@@ -85,7 +85,7 @@ if [ $verify = sst24h ] ; then
 
         chmod +x run_${modnam}_valid_at_t${cyc}z_${verify}.sh
 
-        echo "run_${modnam}_valid_at_t${cyc}z_${verify}.sh" >> run_all_gens_sst24h_poe.sh
+        echo "${DATA}/run_${modnam}_valid_at_t${cyc}z_${verify}.sh" >> run_all_gens_sst24h_poe.sh
 
    chmod 775 run_all_gens_sst24h_poe.sh
 
@@ -96,7 +96,7 @@ fi
 
 
 if [ -s run_all_gens_sst24h_poe.sh ] ; then
-    run_all_gens_sst24h_poe.sh	 
+    ${DATA}/run_all_gens_sst24h_poe.sh	 
 fi
 
 
