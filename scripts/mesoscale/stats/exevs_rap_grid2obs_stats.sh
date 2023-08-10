@@ -72,10 +72,8 @@ for NEST in $NEST_LIST; do
       # Check for restart files reformat
       echo " Check for restart files reformat begin"
       if [ $evs_run_mode = production ]; then
-         python ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py
-         status=$?
-         [[ $status -ne 0 ]] && exit $status
-         [[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py"
+	 ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.sh
+	 export err=$?; err_chk
       fi
       echo " Check for restart files reformat done"
 
