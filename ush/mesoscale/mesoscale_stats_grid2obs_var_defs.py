@@ -1,6 +1,6 @@
 generate_stats_jobs_dict = {
     'HGT': {
-        '#raob': {
+        'raob': {
             'nam': {
                 'var1_fcst_name': 'HGT',
                 'var1_fcst_levels': ("'P1000, P975, P950, P925, P900, P875, "
