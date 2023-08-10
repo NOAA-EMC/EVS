@@ -51,6 +51,7 @@ export fcst_init_hour="0,12"
 export fcst_valid_hour="0,12"
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
+mkdir -p $plot_dir
 
 
 verif_case=$VERIF_CASE
@@ -232,13 +233,16 @@ for stats in acc bias_mae crpss rmse_spread ; do
         lead_time=_f384
     fi
 
-   for domain in g003 nhem shem tropics conus ; do
- 
+   for domain in g003 nhem shem tropics conus ; do 
      if [ $domain = g003 ] ; then
 	 domain_new=glb
-     else
+     elif [ $domain = conus ]; then
+        domain_new="buk_conus"
+     else 
 	 domain_new=$domain
      fi
+
+
 
     for var in hgt tmp ugrd vgrd prmsl ; do
       if [ $var = hgt ] ; then
@@ -276,9 +280,9 @@ for stats in acc bias_mae crpss rmse_spread ; do
          if [ $var = prmsl ] ; then
 
              if [ $stats = acc ] ; then 
-                  mv ${score_type}_regional_${domain}_valid_00z_12z_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}.${valid_time}${lead_time}.g003_${domain_new}.png
+                  mv ${score_type}_regional_${domain}_valid_00z_12z_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
              else  
-		  mv ${score_type}_regional_${domain}_valid_00z_12z_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}.${valid_time}${lead_time}.g003_${domain_new}.png
+		  mv ${score_type}_regional_${domain}_valid_00z_12z_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
              fi
 
          else
@@ -286,14 +290,14 @@ for stats in acc bias_mae crpss rmse_spread ; do
              if [ $var = ugrd ] || [ $var = vgrd ] ; then
 
 	       if [ $level = 10 ] && [ $stats = acc ] ; then
-	           mv ${score_type}_regional_${domain}_valid_00z_12z_10m_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}.${valid_time}${lead_time}.g003_${domain_new}.png
+	           mv ${score_type}_regional_${domain}_valid_00z_12z_10m_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
                else
-	           mv ${score_type}_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}.${valid_time}${lead_time}.g003_${domain_new}.png	     
+	           mv ${score_type}_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png	     
                fi
 
             else
 
-               mv ${score_type}_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}.${valid_time}${lead_time}.g003_${domain_new}.png
+               mv ${score_type}_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
 
             fi
         fi

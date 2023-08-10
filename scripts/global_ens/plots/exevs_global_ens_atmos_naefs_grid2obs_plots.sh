@@ -51,7 +51,7 @@ valid_time='valid00z_12z'
 init_time='init00z_12z'
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
-
+mkdir -p $plot_dir
 
 verif_case=$VERIF_CASE
 
@@ -227,18 +227,30 @@ for stats in  acc bias_mae crps rmse_spread me_mae ; do
 
       if [ $level = 850mb ] ; then
 	 level_new=p850
-      elif [ $level = 850mb ] ; then
+      elif [ $level = 250mb ] ; then
 	 level_new=p250
       else
 	 level_new=$level
       fi
 
       for domain in $domains ; do
+	
+         if [ $domain = conus_east ]; then
+             evs_graphic_domain="conus_e"
+         elif [ $domain = conus_west ]; then
+             evs_graphic_domain="conus_w"
+         elif [ $domain = conus_south ]; then
+             evs_graphic_domain="conus_s"
+         elif [ $domain = conus_central ]; then
+             evs_graphic_domain="conus_c"
+         else
+             evs_graphic_domain=$domain
+         fi
 
         if [ $domain = nhem ] || [ $domain = shem ] || [ $domain = tropics ] ; then
-           mv ${score_type}_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}${lead}  evs.naefs.${stats}.${var}_${level_new}.last${past_days}days.${scoretype}.${valid_time}${lead_time}.g003_${domain}.png
+           mv ${score_type}_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}${lead}  evs.naefs.${stats}.${var}_${level_new}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${evs_graphic_domain}.png
 	else
-           mv ${score_type}_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}${lead}  evs.naefs.${stats}.${var}_${level_new}.last${past_days}days.${scoretype}.${valid_time}${lead_time}.buk_${domain}.png
+           mv ${score_type}_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}${lead}  evs.naefs.${stats}.${var}_${level_new}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.buk_${evs_graphic_domain}.png
         fi
                
       done #domain
