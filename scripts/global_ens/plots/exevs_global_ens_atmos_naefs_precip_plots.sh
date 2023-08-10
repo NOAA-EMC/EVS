@@ -50,14 +50,14 @@ export fcst_init_hour="0,12"
 export fcst_valid_hour="12"
 
 export plot_dir=$DATA/out/precip/${valid_beg}-${valid_end}
-
+mkdir -p $plot_dir
 
 verif_case=$VERIF_CASE
 verif_type=ccpa
 
 > run_all_poe.sh
 
-for stats in ets_fbias fss ; do 
+for stats in crps ets_fbias fss bs ; do 
   if [ $stats = ets_fbias ] ; then
     stat_list='ets, fbias'
     line_tp='ctc'
@@ -68,6 +68,16 @@ for stats in ets_fbias fss ; do
     line_tp='nbrcnt'
     VARs='APCP_24'
     threshes='>1,>5,>10,>25,>50'
+  elif [ $stats = bs ] ; then
+    stat_list='bs'
+    line_tp='pstd'
+    VARs='APCP24_gt1 APCP24_gt5  APCP24_gt10 APCP24_gt25 APCP24_gt50'
+    threshes=''
+  elif [ $stats = crps  ] ; then
+    stat_list='crps'
+    line_tp='ecnt'
+    VARs='APCP_24'
+    threshes=''
   else
     echo $stats is wrong stat
   exit
@@ -89,8 +99,7 @@ for stats in ets_fbias fss ; do
  
   for lead in $fcst_leads ; do 
 
-   #export fcst_lead="24, 48, 72, 96, 120, 144, 168, 192, 216, 240, 264, 288, 312, 336, 360, 384"
-     export fcst_lead="12, 24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384"
+    export fcst_lead="12, 24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384"
 
     for VAR in  $VARs; do 
 
@@ -154,8 +163,13 @@ for stats in ets_fbias fss ; do
 	 fi
          echo "export score_py=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
      
-        thresh_fcst=$threshes
-        thresh_obs=$threshes
+        if [ $line_tp = pstd ] ; then
+            thresh_fcst='==0.10000'
+            thresh_obs=$threshes
+        else
+            thresh_fcst=$threshes
+            thresh_obs=$threshes
+        fi
 
          sed -e "s!model_list!$models!g" -e "s!stat_list!$stat_list!g"  -e "s!thresh_fcst!$thresh_fcst!g" -e "s!thresh_obs!$thresh_obs!g"  -e "s!fcst_init_hour!$fcst_init_hour!g" -e "s!fcst_valid_hour!$fcst_valid_hour!g" -e "s!fcst_lead!$fcst_lead!g" -e "s!interp_pnts!$interp_pnts!g"  $USHevs/global_ens/evs_gens_atmos_plots_config.sh > run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
@@ -183,7 +197,7 @@ chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 2 -ppn 2 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 8 -ppn 8 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi
@@ -191,17 +205,25 @@ fi
 
 cd $plot_dir
 
-for stats in ets_fbias fss ; do
+for stats in ets_fbias fss bs crps ; do
 
+ if [ $stats = bs ] ; then
+    vars='apcp_24_ens_freq_gt1 apcp_24_ens_freq_gt5 apcp_24_ens_freq_gt10 apcp_24_ens_freq_gt25 apcp_24_ens_freq_gt50'
+ else
  vars='apcp_24'
+ fi
 
  for score_type in  lead_average ; do
 
 
    if [ $stats = ets_fbias ] ; then
      leads='gt1gt5gt10gt25gt50.png'
-   else
+   elif [ $stats = bs ] ; then
+     leads='eq0.10000.png'
+   elif [ $stats = fss ] ; then
      leads='width1-3-5-7-9-11_gt1gt5gt10gt25gt50.png'
+   elif [ $stats = crps ] ; then 
+     leads='png'
    fi
 
      scoretype='fhrmean'
@@ -210,10 +232,27 @@ for stats in ets_fbias fss ; do
 
      for domain in conus conus_east conus_west conus_south conus_central ; do
 
+         if [ $domain = conus_east ]; then
+             evs_graphic_domain="conus_e"
+         elif [ $domain = conus_west ]; then
+             evs_graphic_domain="conus_w"
+         elif [ $domain = conus_south ]; then
+             evs_graphic_domain="conus_s"
+         elif [ $domain = conus_central ]; then
+             evs_graphic_domain="conus_c"
+         else
+             evs_graphic_domain=$domain
+         fi
+
       for var in $vars ; do
-
-         mv ${score_type}_regional_${domain}_valid_12z_24h_${var}_${stats}_${lead} evs.naefs.${stats}.apcp_a24.last${past_days}days.${scoretype}.valid_12z.buk_${domain}.png
-
+         if [ $stats = bs ] ; then
+             var2=apcp_a24.${var:17:4}             
+	     mv ${score_type}_regional_${domain}_valid_12z_24h_${var}_${stats}_${lead} evs.naefs.${stats}.${var2}.last${past_days}days.${scoretype}_valid_12z.buk_${evs_graphic_domain}.png
+         elif  [ $stats = crps ] ; then   
+	    mv ${score_type}_regional_${domain}_valid_12z_24h_${var}_${stats}.${lead} evs.naefs.${stats}.apcp_a24.last${past_days}days.${scoretype}_valid_12z.buk_${evs_graphic_domain}.png         
+         else
+            mv ${score_type}_regional_${domain}_valid_12z_24h_${var}_${stats}_${lead} evs.naefs.${stats}.apcp_a24.last${past_days}days.${scoretype}_valid_12z.buk_${evs_graphic_domain}.png
+         fi 
       done #var	
      done  #domain
   done   #lead
