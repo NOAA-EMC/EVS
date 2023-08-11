@@ -238,7 +238,9 @@ if job_type == 'reformat':
     }
 
 elif job_type == 'generate':
+    job_env_vars_dict['MODEL'] = MODELNAME
     job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE
+    job_env_vars_dict['VERIF_CASE'] = VERIF_CASE
     job_env_vars_dict['NEST'] = NEST
     job_env_vars_dict['VHOUR'] = VHOUR
     #job_env_vars_dict['FHR_START'] = FHR_START
@@ -390,10 +392,14 @@ elif STEP == 'stats':
                         + f'obs{VERIF_TYPE.upper()}_{VAR_NAME}.conf'
                         )
             else:
-                job_cmd_list_iterative.append(
-                    f'{metplus_launcher} -c '
-                    + f'{MET_PLUS_CONF}/'
-                    + f'PointStat_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}.conf'
+                pstat_file_exist = cutil.check_pstat_files(job_env_vars_dict)
+                if pstat_file_exist:
+                    print(f"skip this run, pstat already exist")
+                else:
+                    job_cmd_list_iterative.append(
+                        f'{metplus_launcher} -c '
+                        + f'{MET_PLUS_CONF}/'
+                        + f'PointStat_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}.conf'
                     )
     elif job_type == 'gather':
         job_cmd_list.append(
