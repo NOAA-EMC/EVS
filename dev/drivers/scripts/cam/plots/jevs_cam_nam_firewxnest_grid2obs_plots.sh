@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N jevs_nam_firewxnest_grid2obs_plots_00
+#PBS -N jevs_cam_nam_firewxnest_grid2obs_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -23,22 +23,6 @@ source $HOMEevs/versions/run.ver
 set -x
 
 module reset
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
-module use /apps/dev/modulefiles
-module load ve/evs/${ve_evs_ver}
-module load cray-mpich/${craympich_ver}
-module load cray-pals/${craypals_ver}
-module load grib_util/${grib_util_ver}
-module load wgrib2/${wgrib2_ver}
-module load gsl/${gsl_ver}
-module load met/${met_ver}
-module load metplus/${metplus_ver}
-module load prod_util/${produtil_ver}
-module load prod_envir/${prodenvir_ver}
-module load imagemagick/${imagemagick_ver}
-
-module list
 
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
@@ -55,6 +39,8 @@ export MODELNAME=nam_firewxnest
 export modsys=nam
 export mod_ver=${nam_ver}
 
+source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
+
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
@@ -62,7 +48,7 @@ export config=$HOMEevs/parm/evs_config/cam/config.evs.cam_nam_firewxnest.prod
 source $config
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}/$STEP/$COMPONENT
 export COMINnam=${COMIN}/stats/${COMPONENT}/${MODELNAME}
 
 # CALL executable job script here

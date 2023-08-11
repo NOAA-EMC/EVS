@@ -13,6 +13,7 @@ import os
 import sys
 import datetime
 import numpy as np
+import glob
 import subprocess
 from collections.abc import Iterable
 
@@ -121,6 +122,29 @@ def run_shell_command(command, capture_output=False):
         if capture_output:
             return run_command.stdout.decode('utf-8')
 
+def run_shell_commandc(command, capture_output=True):
+    """! Run shell command
+
+        Args:
+            command - list of argument entries (string)
+
+        Returns:
+
+    """
+    print("Running "+' '.join(command))
+    if any(mark in ' '.join(command) for mark in ['"', "'", '|', '*', '>']):
+        run_command = subprocess.run(
+            ' '.join(command), shell=True, capture_output=capture_output
+        )
+    else:
+        run_command = subprocess.run(command, capture_output=capture_output)
+    if run_command.returncode != 0:
+        print("ERROR: "+''.join(run_command.args)+" gave return code "
+              + str(run_command.returncode))
+    else:
+        if capture_output:
+            return run_command.stdout.decode('utf-8')
+
 def format_thresh(thresh):
    """! Format threshold with letter and symbol options
 
@@ -158,6 +182,65 @@ def check_file(file_path):
     else:
         file_good = False
     return file_good
+
+def check_stat_files(job_dict):
+    """! Check for MET .stat files
+
+         Args:
+             job_dict - dictionary containing settings
+                        job is running with (strings)
+
+         Returns:
+             stat_files_exist - if .stat files
+                                exist or not (boolean)
+    """
+    model_stat_file_dir = os.path.join(
+        job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP'],
+        'METplus_output', job_dict['RUN']+'.'+job_dict['DATE'],
+        job_dict['MODEL'], job_dict['VERIF_CASE']
+    )
+    stat_file_list = glob.glob(os.path.join(model_stat_file_dir, '*.stat'))
+    if len(stat_file_list) != 0:
+        stat_files_exist = True
+    else:
+        stat_files_exist = False
+    return stat_files_exist
+
+
+def check_pstat_files(job_dict):
+    """! Check for MET point_stat files
+
+         Args:
+             job_dict - dictionary containing settings
+                        job is running with (strings)
+
+         Returns:
+             pstat_files_exist - if point_stat files
+                                exist or not (boolean)
+    """
+    FHR_START = os.environ ['FHR_START']
+    FHR_START2= str(FHR_START).zfill(2)
+    model_stat_file_dir = os.path.join(
+        job_dict['DATA'], job_dict['VERIF_CASE'],
+        'METplus_output', job_dict['VERIF_TYPE'],'point_stat',
+        job_dict['MODEL']+'.'+job_dict['VDATE']
+    )
+
+    pstat_file = os.path.join(
+            model_stat_file_dir, 'point_stat_'+job_dict['MODEL']+
+            '_'+job_dict['NEST']+'_'+job_dict['VAR_NAME']+
+            '_OBS_*0000L_'+job_dict['VDATE']+'_'+job_dict['VHOUR']+'0000V.stat'
+            )
+
+    stat_file_list = glob.glob(pstat_file) 
+
+    if len(stat_file_list) != 0:
+        pstat_files_exist = True
+    else:
+        pstat_files_exist = False
+    return pstat_files_exist
+
+
 
 def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                   forecast_hour, str_sub_dict):
