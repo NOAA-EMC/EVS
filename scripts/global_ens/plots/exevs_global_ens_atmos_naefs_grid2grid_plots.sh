@@ -59,7 +59,7 @@ verif_case=$VERIF_CASE
 
 > run_all_poe.sh
 
-for stats in acc bias_mae crps rmse_spread ; do 
+for stats in acc me_mae crps rmse_spread ; do 
 if [ $stats = acc ] ; then
   stat_list='acc'
   line_tp='sal1l2'
@@ -69,9 +69,9 @@ elif [ $stats = bias ] ; then
 elif [ $stats = mae ] ; then
   stat_list='mae'
   line_tp='sl1l2'
-elif [ $stats = bias_mae  ] ; then
-  stat_list='bias, mae'
-  line_tp='sl1l2'
+elif [ $stats = me_mae  ] ; then
+  stat_list='me, mae'
+  line_tp='ecnt'
 elif [ $stats = crps  ] ; then
   stat_list='crps'
   line_tp='ecnt'
@@ -184,7 +184,7 @@ fi
 
 cd $plot_dir
 
-for stats in acc bias_mae crps rmse_spread ; do
+for stats in acc me_mae crps rmse_spread ; do
  for score_type in lead_average ; do
 
     leads='.png'
@@ -218,13 +218,7 @@ for stats in acc bias_mae crps rmse_spread ; do
  done    #score_type
 done     #stats
 
-#scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/naefs/grid2grid
-
 tar -cvf evs.plots.naefs.grid2grid.v${VDATE}.past${past_days}days.tar *.png
-
-cp  evs.plots.naefs.grid2grid.v${VDATE}.past${past_days}days.tar $COMOUT/.  
-
-
-
-
-
+if [ $SENDCOM = YES ]; then
+    cp  evs.plots.naefs.grid2grid.v${VDATE}.past${past_days}days.tar $COMOUT/. 
+fi 
