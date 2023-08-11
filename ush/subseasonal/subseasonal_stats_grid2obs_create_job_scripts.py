@@ -83,8 +83,7 @@ generate_stats_jobs_dict = {
                                                        +'fhr{lead?fmt=%3H}.stat'
                                                  ),
                                                  os.path.join(
-                                                     '$COMIN', 'stats',
-                                                     '$COMPONENT',
+                                                     '$COMOUT',
                                                      '${RUN}.$DATE',
                                                      '$MODEL', '$VERIF_CASE',
                                                      'anomaly_${VERIF_TYPE}_'
@@ -139,8 +138,7 @@ generate_stats_jobs_dict = {
                                                          +'fhr{lead?fmt=%3H}.stat'
                                                    ),
                                                    os.path.join(
-                                                       '$COMIN', 'stats',
-                                                       '$COMPONENT',
+                                                       '$COMOUT',
                                                        '${RUN}.$DATE',
                                                        '$MODEL', '$VERIF_CASE',
                                                        'anomaly_${VERIF_TYPE}_'
@@ -195,8 +193,7 @@ generate_stats_jobs_dict = {
                                                          +'fhr{lead?fmt=%3H}.stat'
                                                    ),
                                                    os.path.join(
-                                                       '$COMIN', 'stats',
-                                                       '$COMPONENT',
+                                                       '$COMOUT',
                                                        '${RUN}.$DATE',
                                                        '$MODEL', '$VERIF_CASE',
                                                        'anomaly_${VERIF_TYPE}_'
@@ -223,20 +220,6 @@ generate_stats_jobs_dict = {
                                                    +'Weeks3_4MPRtoSL1L2.conf'
                                                ),
                                                'fi']},
-        #'Temp2m': {'env': {'prepbufr': 'nam',
-                           #'obs_window': '900',
-                           #'msg_type': 'ADPSFC',
-                           #'var1_fcst_name': 'TMP',
-                           #'var1_fcst_levels': 'Z2',
-                           #'var1_fcst_options': '',
-                           #'var1_obs_name': 'TMP',
-                           #'var1_obs_levels': 'Z2',
-                           #'var1_obs_options': '',
-                           #'met_config_overrides': ''},
-                   #'commands': [sub_util.metplus_command(
-                                    #'PointStat_fcstSUBSEASONAL_'
-                                    #+'obsPrepbufr.conf'
-                                #)]},
     }
 }
 
