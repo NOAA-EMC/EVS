@@ -793,13 +793,13 @@ class Reference():
                                     'TMP_ENS_FREQ_lt273.15': 'TMP < 0 C',
                                     'WIND_ENS_FREQ_ge15.4':  'Wind speed >= 30kt',
                                     'WIND_ENS_FREQ_ge20.58': 'Wind speed >= 40kt',
-                                    'APCP_24_ENS_FREQ_gt1': 'APCP_24hr > 1 mm',
-                                    'APCP_24_ENS_FREQ_gt2': 'APCP_24hr > 2 mm',
-                                    'APCP_24_ENS_FREQ_gt5': 'APCP_24hr > 5 mm',
-                                    'APCP_24_ENS_FREQ_gt10': 'APCP_24hr > 10 mm',
-                                    'APCP_24_ENS_FREQ_gt20': 'APCP_24hr > 20 mm',
-                                    'APCP_24_ENS_FREQ_gt25': 'APCP_24hr > 25 mm',
-                                    'APCP_24_ENS_FREQ_gt50': 'APCP_24hr > 50 mm'}
+                                    'APCP_24_ENS_FREQ_gt1': 'Accumulated Precipitation (> 1 mm)',
+                                    'APCP_24_ENS_FREQ_gt2': 'Accumulated Precipitation (> 2 mm)',
+                                    'APCP_24_ENS_FREQ_gt5': 'Accumulated Precipitation (> 5 mm)',
+                                    'APCP_24_ENS_FREQ_gt10': 'Accumulated Precipitation (> 10 mm)',
+                                    'APCP_24_ENS_FREQ_gt20': 'Accumulated Precipitation (> 20 mm)',
+                                    'APCP_24_ENS_FREQ_gt25': 'Accumulated Precipitation (> 25 mm)',
+                                    'APCP_24_ENS_FREQ_gt50': 'Accumulated Precipitation (> 50 mm)'}
         '''
         Given a domain requested in the plotting configuration file, the
         plotting scripts will print the long name of that domain according

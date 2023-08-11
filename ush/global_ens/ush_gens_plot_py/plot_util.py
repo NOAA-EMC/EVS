@@ -666,7 +666,7 @@ def get_stat_plot_name(logger, stat):
    elif stat == 'hss':
       stat_plot_name = 'Heidke Skill Score'
    elif stat == 'crps':
-      stat_plot_name = 'CRPS'
+      stat_plot_name = 'Continuous Ranked Probability Score'
    elif stat == 'crpss':
       stat_plot_name = 'CRPSS'
    elif stat == 'spread':
