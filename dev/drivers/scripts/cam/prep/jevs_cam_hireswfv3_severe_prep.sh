@@ -18,7 +18,6 @@ cd $PBS_O_WORKDIR
 # Load modules
 ############################################################
 
-module reset
 
 export model=evs
 export NET=evs
@@ -28,6 +27,8 @@ export RUN=atmos
 
 export HOMEevs=/lfs/h2/emc/vpppg/save/${USER}/EVS
 source $HOMEevs/versions/run.ver
+module reset
+module load prod_envir/${prod_envir_ver}
 
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
