@@ -15,7 +15,7 @@ cd $PBS_O_WORKDIR
 
 export model=evs
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS_analyses_restart/EVS
 
 source $HOMEevs/versions/run.ver
 
@@ -40,7 +40,7 @@ export COMPONENT=analyses
 export RUN=atmos
 export VERIF_CASE=grid2obs
 
-source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP).sh
+source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
