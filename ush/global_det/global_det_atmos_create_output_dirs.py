@@ -14,7 +14,7 @@ print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
 evs_ver = os.environ['evs_ver']
-COMROOT = os.environ['COMROOT']
+COMOUT = os.environ['COMOUT']
 DATA = os.environ['DATA']
 NET = os.environ['NET']
 RUN = os.environ['RUN']
@@ -84,9 +84,9 @@ if not os.path.exists(job_scripts_dir):
     print("Creating job script directory: "+job_scripts_dir)
     os.makedirs(job_scripts_dir, mode=0o755)
 
-# Build information of working and COMROOT output directories
+# Build information of working and COMOUT output directories
 working_dir_list = []
-COMROOT_dir_list = []
+COMOUT_dir_list = []
 if STEP == 'stats':
     working_output_base_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                            'METplus_output')
@@ -97,14 +97,12 @@ if STEP == 'stats':
     date_dt = start_date_dt
     while date_dt <= end_date_dt:
         for model in model_list:
-            COMROOT_dir_list.append(
-                os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
-                             RUN+'.'+date_dt.strftime('%Y%m%d'), model,
+            COMOUT_dir_list.append(
+                os.path.join(COMOUT, RUN+'.'+date_dt.strftime('%Y%m%d'), model,
                              VERIF_CASE)
             )
-            COMROOT_dir_list.append(
-                os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
-                             model+'.'+date_dt.strftime('%Y%m%d'))
+            COMOUT_dir_list.append(
+                os.path.join(COMOUT, model+'.'+date_dt.strftime('%Y%m%d'))
             )
             working_dir_list.append(
                 os.path.join(working_output_base_dir,
@@ -118,10 +116,9 @@ if STEP == 'stats':
         if VERIF_CASE_STEP == 'grid2grid_stats':
             for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
                 if VERIF_CASE_STEP_type in ['precip_accum24hr', 'precip_accum3hr']:
-                    COMROOT_dir_list.append(
-                        os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
-                                     RUN+'.'+date_dt.strftime('%Y%m%d'), 'ccpa',
-                                     VERIF_CASE)
+                    COMOUT_dir_list.append(
+                        os.path.join(COMOUT, RUN+'.'+date_dt.strftime('%Y%m%d'),
+                                     'ccpa', VERIF_CASE)
                     )
                     working_dir_list.append(
                         os.path.join(working_output_base_dir,
@@ -129,10 +126,9 @@ if STEP == 'stats':
                                      VERIF_CASE)
                     )
                 elif VERIF_CASE_STEP_type in 'sea_ice':
-                    COMROOT_dir_list.append(
-                        os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
-                                     RUN+'.'+date_dt.strftime('%Y%m%d'), 'osi_saf',
-                                     VERIF_CASE)
+                    COMOUT_dir_list.append(
+                        os.path.join(COMOUT, RUN+'.'+date_dt.strftime('%Y%m%d'),
+                                     'osi_saf', VERIF_CASE)
                     )
                     working_dir_list.append(
                         os.path.join(working_output_base_dir,
@@ -142,10 +138,9 @@ if STEP == 'stats':
         elif VERIF_CASE_STEP == 'grid2obs_stats':
             for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
                 if VERIF_CASE_STEP_type in ['pres_levs', 'sfc', 'ptype']:
-                    COMROOT_dir_list.append(
-                        os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
-                                     RUN+'.'+date_dt.strftime('%Y%m%d'), 'prepbufr',
-                                     VERIF_CASE)
+                    COMOUT_dir_list.append(
+                        os.path.join(COMOUT, RUN+'.'+date_dt.strftime('%Y%m%d'),
+                                     'prepbufr', VERIF_CASE)
                     )
                     working_dir_list.append(
                         os.path.join(working_output_base_dir,
@@ -170,10 +165,6 @@ elif STEP == 'plots':
         os.path.join(working_output_base_dir,
                      'tar_files')
     )
-    COMROOT_dir_list.append(
-        os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
-                     RUN+'.'+end_date_dt.strftime('%Y%m%d'))
-    )
     for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
         working_dir_list.append(
             os.path.join(working_output_base_dir,
@@ -181,10 +172,8 @@ elif STEP == 'plots':
                          VERIF_CASE+'_'+VERIF_CASE_STEP_type,
                          'last'+NDAYS+'days')
         )
-        COMROOT_dir_list.append(
-            os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
-                         RUN+'.'+end_date_dt.strftime('%Y%m%d'),
-                         VERIF_CASE+'_'+VERIF_CASE_STEP_type,
+        COMOUT_dir_list.append(
+            os.path.join(COMOUT, VERIF_CASE+'_'+VERIF_CASE_STEP_type,
                          'last'+NDAYS+'days')
         )
 
@@ -194,10 +183,10 @@ for working_output_dir in working_dir_list:
         print("Creating working output directory: "+working_output_dir)
         os.makedirs(working_output_dir, mode=0o755, exist_ok=True)
 
-# Create COMROOT output directories
-for COMROOT_dir in COMROOT_dir_list:
-    if not os.path.exists(COMROOT_dir):
-        print("Creating COMROOT output directory: "+COMROOT_dir)
-        os.makedirs(COMROOT_dir, mode=0o755, exist_ok=True)
+# Create COMOUT output directories
+for COMOUT_dir in COMOUT_dir_list:
+    if not os.path.exists(COMOUT_dir):
+        print("Creating COMOUT output directory: "+COMOUT_dir)
+        os.makedirs(COMOUT_dir, mode=0o755, exist_ok=True)
 
 print("END: "+os.path.basename(__file__))

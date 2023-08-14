@@ -37,6 +37,7 @@ set -x
 ##
 # Set Basic Environment Variables
 last_cyc=21
+ #NEST_LIST="namer"
  NEST_LIST="namer conus conusc ak akc spc_otlk subreg"
 ##
 
@@ -57,10 +58,10 @@ for NEST in $NEST_LIST; do
 
       if [ $RUN_ENVIR = nco ]; then
          export evs_run_mode="production"
-	 source $config
+         source $config
       else
-	 export evs_run_mode=$evs_run_mode
-	 source $config
+         export evs_run_mode=$evs_run_mode
+         source $config
       fi
       echo "RUN MODE: $evs_run_mode"
       if [ ${#VAR_NAME_LIST} -lt 1 ]; then
@@ -68,6 +69,13 @@ for NEST in $NEST_LIST; do
       fi
 
       export FHR_GROUP_LIST="FULL"
+      # Check for restart files reformat
+      echo " Check for restart files reformat begin"
+      if [ $evs_run_mode = production ]; then
+	 ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.sh
+	 export err=$?; err_chk
+      fi
+      echo " Check for restart files reformat done"
 
       for VHOUR in $VHOUR_LIST; do
          export VHOUR=$VHOUR
@@ -87,17 +95,9 @@ for NEST in $NEST_LIST; do
 
          # Create Output Directories	    
          python $USHevs/mesoscale/mesoscale_create_output_dirs.py
-	 status=$?
-	 [[ $status -ne 0 ]] && exit $status
-	 [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_create_output_dirs.py ($job_type)"
-
-	 # Check for restart files
-#         if [ $evs_run_mode = production ]; then
-#            python ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py
-#            status=$?
-#            [[ $status -ne 0 ]] && exit $status
-#            [[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/mesoscale/mesoscale_stats_g2o_production_restart.py"
-#         fi
+         status=$?
+         [[ $status -ne 0 ]] && exit $status
+         [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_create_output_dirs.py ($job_type)"
 
          # Create Reformat Job Script
          python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
@@ -105,7 +105,7 @@ for NEST in $NEST_LIST; do
          [[ $status -ne 0 ]] && exit $status
          [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_job_script.py ($job_type)"
          export njob=$((njob+1))
-	 echo "Done $VHOUR"
+         echo "Done $VHOUR"
       done
       echo "Done $VERIF_TYPE"
    done

@@ -50,7 +50,7 @@ export fcst_init_hour="0,12"
 export fcst_valid_hour="12"
 
 export plot_dir=$DATA/out/precip/${valid_beg}-${valid_end}
-
+mkdir -p $plot_dir
 
 verif_case=precip
 verif_type=ccpa
@@ -227,6 +227,18 @@ for stats in  crps ets fbias fss ; do
      fi
 
      for domain in conus conus_east conus_west conus_south conus_central ; do
+     
+         if [ $domain = conus_east ]; then
+             evs_graphic_domain="conus_e"
+         elif [ $domain = conus_west ]; then
+             evs_graphic_domain="conus_w"
+         elif [ $domain = conus_south ]; then
+             evs_graphic_domain="conus_s"
+         elif [ $domain = conus_central ]; then
+             evs_graphic_domain="conus_c"
+         else
+             evs_graphic_domain=$domain
+         fi
 
       for var in $vars ; do
     
@@ -237,9 +249,9 @@ for stats in  crps ets fbias fss ; do
 	fi 
 
         if [ $stats = fss ] ; then	     
-          mv ${score_type}_regional_${domain}_valid_12z_${var}_${stats}_width1-3-5-7-9-11${lead} evs.global_ens.${stats}.${var_new}.last${past_days}days.${scoretype}.valid_12z${lead_time}.buk_${domain}.png  
+          mv ${score_type}_regional_${domain}_valid_12z_${var}_${stats}_width1-3-5-7-9-11${lead} evs.global_ens.${stats}.${var_new}.last${past_days}days.${scoretype}_valid_12z${lead_time}.buk_${evs_graphic_domain}.png  
        else
-	  mv ${score_type}_regional_${domain}_valid_12z_${var}_${stats}${lead} evs.global_ens.${stats}.${var_new}.last${past_days}days.${scoretype}.valid_12z${lead_time}.buk_${domain}.png
+	  mv ${score_type}_regional_${domain}_valid_12z_${var}_${stats}${lead} evs.global_ens.${stats}.${var_new}.last${past_days}days.${scoretype}_valid_12z${lead_time}.buk_${evs_graphic_domain}.png
         fi
 
       done #var	

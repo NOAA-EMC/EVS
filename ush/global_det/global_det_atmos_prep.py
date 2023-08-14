@@ -148,7 +148,7 @@ global_det_model_dict = {
     'metfra': {'COMIN_precip_file_format': os.path.join(COMINmetfra_precip,
                                                         'METFRA_'
                                                         +'{init?fmt=%H}_'
-                                                        +'{init?fmt=%Y%m%d}'),
+                                                        +'{init?fmt=%Y%m%d}.gz'),
                'cycles': ['00', '12'],
                'fcst_hrs': range(24, 72+12, 12)},
     'ukmet': {'COMIN_fcst_file_format': os.path.join(COMINukmet,
@@ -156,8 +156,8 @@ global_det_model_dict = {
                                                      +'{letter?fmt=str}.GRB'),
               'COMIN_anl_file_format': os.path.join(COMINukmet,
                                                     'GAB{init?fmt=%2H}AAT.GRB'),
-              'COMIN_precip_file_format': os.path.join(COMINukmet_precip, 'ukmo.'
-                                                       +'{init?fmt=%Y%m%d%H}'),
+              #'COMIN_precip_file_format': os.path.join(COMINukmet_precip, 'ukmo.'
+              #                                         +'{init?fmt=%Y%m%d%H}'),
               'cycles': ['00', '12'],
               'fcst_hrs': range(0, 144+6, 6)}
 }
@@ -509,6 +509,8 @@ for OBS in OBSNAME:
                     )
                     if SENDCOM == 'YES':
                         gda_util.copy_file(DATA_hem_file, COMOUT_hem_file)
+                else:
+                    print(f"{COMOUT_hem_file} exists")
         elif OBS == 'ghrsst_ospo':
             log_missing_file = os.path.join(
                 DATA, 'mail_missing_'+OBS+'_valid'
@@ -522,6 +524,8 @@ for OBS in OBSNAME:
                 )
                 if SENDCOM == 'YES':
                     gda_util.copy_file(DATA_file, COMOUT_file)
+            else:
+                print(f"{COMOUT_file} exists")
         elif OBS == 'get_d':
             log_missing_file = os.path.join(
                 DATA, 'mail_missing_'+OBS+'_valid'
@@ -533,9 +537,9 @@ for OBS in OBSNAME:
                     COMIN_file, DATA_file, CDATE_dt,
                     log_missing_file
                 )
-            if SENDCOM == 'YES':
-                gda_util.copy_file(DATA_file, COMOUT_file)
-        else:
-            print(f"{COMOUT_file} exists")
+                if SENDCOM == 'YES':
+                    gda_util.copy_file(DATA_file, COMOUT_file)
+            else:
+                print(f"{COMOUT_file} exists")
 
 print("END: "+os.path.basename(__file__))

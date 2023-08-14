@@ -141,7 +141,7 @@ if [ $verify = snowfall ] ; then
 
         chmod +x run_${modnam}_${verify}_${type}.sh
 
-        echo "run_${modnam}_${verify}_${type}.sh" >> run_all_gens_snowfall_poe.sh
+        echo "${DATA}/run_${modnam}_${verify}_${type}.sh" >> run_all_gens_snowfall_poe.sh
 
    done
 
@@ -153,7 +153,7 @@ fi #end of if verify=snowfall
 
 
 if [ -s run_all_gens_snowfall_poe.sh ] ; then
-    run_all_gens_snowfall_poe.sh	 
+    ${DATA}/run_all_gens_snowfall_poe.sh	 
 fi
 
 

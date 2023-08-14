@@ -207,7 +207,7 @@ fi
 cd $plot_dir
 
 for domain in g003 nhem shem tropics conus ; do
-   mv performance_diagram_regional_${domain}_valid_00z_12z_cape_f12_to_f384_ge250ge500ge1000ge2000.png  evs.global_ens.ctc.cape_l0.last31days.perfdiag_valid_00z_12z_f12_to_f384.${domain}.png
+   mv performance_diagram_regional_${domain}_valid_00z_12z_cape_f12_to_f384_ge250ge500ge1000ge2000.png  evs.global_ens.ctc.cape_l0.last31days.perfdiag_valid_00z_12z_f384.${domain}.png
 
 done
 
