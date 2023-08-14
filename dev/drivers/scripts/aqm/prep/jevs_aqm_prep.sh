@@ -21,9 +21,10 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 ############################################################
 # Load modules
 ############################################################
-module reset
 
 source $HOMEevs/versions/run.ver
+module reset
+module load prod_envir/${prod_envir_ver}
 
 source $HOMEevs/modulefiles/aqm/aqm_prep.sh
 
