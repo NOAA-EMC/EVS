@@ -310,13 +310,8 @@ for stats in acc me_mae crpss rmse_spread ; do
  done    #score_type
 done     #stats
 
-#scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/gens/grid2grid
-
 tar -cvf evs.plots.gefs.grid2grid.v${VDATE}.past${past_days}days.tar *.png
 
-cp evs.plots.gefs.grid2grid.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
-
-
-
-
-
+if [ $SENDCOM = YES ]; then
+    cp evs.plots.gefs.grid2grid.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
+fi
