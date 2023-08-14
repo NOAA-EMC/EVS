@@ -77,6 +77,7 @@ set -x
 # Case type settings are used to check if settings are allowed. **
 export VERIF_CASE="grid2obs"
 export VERIF_TYPE="conus_sfc"
+export MODELS="nam_firewxnest"
 
 # Used to name the graphics ouput files. File names will start with the URL_HEADER, followed by plot 
 # details.  Leave blank ("") to include only plot details in the file names.
@@ -105,7 +106,7 @@ export MET_VERSION="11.0"
 
 # Will use statistics for all comma-separated models.  Case-insensitive by default, but names must 
 # match the model naming convention in ${OUTPUT_BASE_DIR}
-export MODELS="nam_firewxnest, namnest, hrrr"
+##export MODEL="$MODELNAME"
 
 # Will use valid or init datetimes based on the setting below. Options are "VALID" or "INIT"
 export DATE_TYPE="$datetyp"
@@ -134,8 +135,7 @@ export var_name="$var"
 export VX_MASK_LIST="FireWx"
 
 # Will use statistics for all comma-separated lead times 
-#export FCST_LEAD="01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36"
-export FCST_LEAD="03, 09, 15, 21, 27, 33"
+export FCST_LEAD="01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36"
 
 # Line type in metplus .stat files used to compute desired metric(s). **
 export LINE_TYPE="$linetype"
@@ -145,12 +145,12 @@ export INTERP="BILIN"
 
 # Will use statistics for all comma-separated thresholds. Use symbols (e.g., >=) to define 
 # thresholds. **
-export FCST_THRESH="$thresh"
-export OBS_THRESH="$thresh"
+export FCST_THRESH=""
+export OBS_THRESH=""
 
 # Will plot all comma-separated metrics.  For performance diagram, metrics must be "sratio,pod,csi". 
 # Depending on the VERIF_CASE, VERIF_TYPE, and LINE_TYPE, only some settings are allowed. **
-export STATS="fbias"
+export STATS="bcrmse,me"
 
 # String of True or False. If "True", will plot bootstrap confidence intervals. Other confidence 
 # interval settings can be configured in ${USH_DIR}/settings.py
@@ -160,6 +160,6 @@ export CONFIDENCE_INTERVALS="False"
 # Executes the desired python script.  Scripts in $USH_DIR currently include {lead_average.py, 
 # performance_diagram.py, stat_by_level.py, threshold_average.py, time_series.py, 
 # valid_hour_average.py}
-python $USH_DIR/${plottyp}.py
+python $USH_DIR/${plottyp}_average.py
 
 exit 0
