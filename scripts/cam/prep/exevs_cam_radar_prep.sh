@@ -67,13 +67,13 @@ for DOMAIN in ${DOMAINS}; do
    for RADAR_FIELD in ${RADAR_FIELDS}; do
 
       if [ $RADAR_FIELD = REFC ]; then
-         if [ $DOMAIN = conus ]; then
-            MRMS_PRODUCT=MergedReflectivityQCComposite_00.50
-	    export OBS_VAR=MergedReflectivityQCComposite
-         elif [ $DOMAIN = alaska ]; then
-            MRMS_PRODUCT=MergedReflectivityQComposite_00.50
-	    export OBS_VAR=MergedReflectivityQComposite
-         fi
+         MRMS_PRODUCT=MergedReflectivityQCComposite_00.50
+	 export OBS_VAR=MergedReflectivityQCComposite
+      #  if [ $DOMAIN = conus ]; then
+      #  elif [ $DOMAIN = alaska ]; then
+      #     MRMS_PRODUCT=MergedReflectivityQComposite_00.50
+      #     export OBS_VAR=MergedReflectivityQComposite
+      #  fi
       elif [ $RADAR_FIELD = REFD1 ]; then
          MRMS_PRODUCT=SeamlessHSR_00.00
       elif [ $RADAR_FIELD = RETOP ]; then
