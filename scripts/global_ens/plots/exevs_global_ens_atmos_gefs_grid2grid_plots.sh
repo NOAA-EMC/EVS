@@ -268,7 +268,7 @@ for stats in acc me_mae crpss rmse_spread ; do
          if [ $level = 1000 ] || [ $level = 850 ] ||  [ $level = 500  ] ||  [ $level = 250  ] ||  [ $level = 700 ] ; then
            plevel=p${level}
          elif [ $level = 10 ] ; then
-           plevel=${level}m
+           plevel=z${level}
          else
 	   if [ $var = prmsl ] ; then 
 	      plevel=z0
