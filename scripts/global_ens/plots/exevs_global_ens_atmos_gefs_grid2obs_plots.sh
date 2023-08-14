@@ -58,16 +58,16 @@ verif_case=$VERIF_CASE
 
 > run_all_poe.sh
 
-#for stats in acc bias_mae crpss rmse_spread ets_fbias sratio_pod_csi ; do 
-for stats in acc bias_mae crpss rmse_spread  ; do 
+#for stats in acc me_mae crpss rmse_spread ets_fbias sratio_pod_csi ; do 
+for stats in acc me_mae crpss rmse_spread  ; do 
  if [ $stats = acc ] ; then
   stat_list='acc'
   line_tp='sal1l2'
   VARs='PRMSL TMP2m DPT2m UGRD10m VGRD10m'
   score_types='time_series lead_average'
- elif [ $stats = bias_mae  ] ; then
-  stat_list='bias, mae'
-  line_tp='sl1l2'
+ elif [ $stats = me_mae  ] ; then
+  stat_list='me, mae'
+  line_tp='ecnt'
   score_types='time_series lead_average'
  elif [ $stats = crpss ] ; then
   stat_list='crpss'
@@ -196,19 +196,8 @@ fi
 
 cd $plot_dir
 
-for stats in  acc bias_mae crpss rmse_spread ; do
+for stats in  acc me_mae crpss rmse_spread ; do
  for score_type in time_series lead_average ; do
-
-  if [ $stats = ets_fbias ] ; then
-    if [ $score_type = time_series ] ; then
-      leads='_f120_ge250ge500ge1000ge2000.png _f240_ge250ge500ge1000ge2000.png _f360_ge250ge500ge1000ge2000.png'
-      scoretype='timeseries'
-    elif [ $score_type = lead_average ] ; then
-      leads='_ge250ge500ge1000ge2000.png'
-      scoretype='fhrmean'
-    fi
-    vars='cape'
-  else
 
     if [ $score_type = time_series ] ; then
       leads='_f120.png _f240.png _f360.png'
@@ -218,7 +207,6 @@ for stats in  acc bias_mae crpss rmse_spread ; do
       scoretype='fhrmean'
     fi
     vars='prmsl tmp dpt ugrd vgrd rh'
-  fi
 
   for lead in $leads ; do
     
@@ -250,13 +238,19 @@ for stats in  acc bias_mae crpss rmse_spread ; do
       fi
 
       for level in $levels ; do
-
+         if [ $level = '2m' ]; then
+            evs_graphic_level='z2'
+         elif [ $level = '10m' ]; then
+            evs_graphic_level='z10'
+         else
+            evs_graphic_level=$level
+         fi
          if [ $var = prmsl ] || [ $var = cape ] ; then
 
-             mv ${score_type}_regional_${domain}_valid_00z_12z_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${level}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
+             mv ${score_type}_regional_${domain}_valid_00z_12z_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${evs_graphic_level}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
 
          else
-             mv ${score_type}_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${level}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
+             mv ${score_type}_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${evs_graphic_level}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
 
         fi
                
@@ -268,14 +262,8 @@ for stats in  acc bias_mae crpss rmse_spread ; do
  done    #score_type
 done     #stats
 
-
-#scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/gens/grid2obs 
-
 tar -cvf evs.plots.gefs.grid2obs.v${VDATE}.past${past_days}days.all.init.times.tar *.png
 
-cp evs.plots.gefs.grid2obs.v${VDATE}.past${past_days}days.all.init.times.tar  $COMOUT/.  
-
-
-
-
-
+if [ $SENDCOM = YES ]; then 
+    cp evs.plots.gefs.grid2obs.v${VDATE}.past${past_days}days.all.init.times.tar  $COMOUT/.
+fi
