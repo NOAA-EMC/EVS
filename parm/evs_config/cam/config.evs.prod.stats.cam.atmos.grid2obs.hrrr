@@ -24,7 +24,6 @@ export LOG_MET_OUTPUT_TO_METPLUS="yes"
 
 # Model/Obs Settings
 export COMINfcst=${COMINhrrr}
-export COMINobs=${COMINobsproc}
 export OBSNAME=${VERIF_TYPE}
 
 # Additional Verification Settings
@@ -33,13 +32,20 @@ if [ "$NEST" = "conus" ]; then
     export SKIP_IF_OUTPUT_EXISTS="no"
     export FHR_GROUP_LIST="SHORT FULL"
     if [ "$OBSNAME" = "raob" ]; then
+        export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfprsf{lead?fmt=%2H}.grib2"
         export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH SBCAPE MLCAPE HPBL"
         export VHOUR_LIST="00 06 12 18"
     elif [ "$OBSNAME" = "metar" ]; then
+        export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.grib2"
-        export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING"
+        export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING PTYPE"
         export VHOUR_LIST="00 03 06 09 12 15 18 21"
+    elif [ "$OBSNAME" = "mping" ]; then
+        export COMINobs=${COMINmping}
+        export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.grib2"
+        export VAR_NAME_LIST="PTYPE"
+        export VHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
     else
         echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
         exit 1
@@ -55,13 +61,20 @@ elif [ "$NEST" = "subreg" ]; then
     export SKIP_IF_OUTPUT_EXISTS="no"
     export FHR_GROUP_LIST="SHORT FULL"
     if [ "$OBSNAME" = "raob" ]; then
+        export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfprsf{lead?fmt=%2H}.grib2"
         export VAR_NAME_LIST=""
         export VHOUR_LIST="00 06 12 18"
     elif [ "$OBSNAME" = "metar" ]; then
+        export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.grib2"
         export VAR_NAME_LIST="TMP2m DPT2m RH2m UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc VIS CEILING"
         export VHOUR_LIST="00 03 06 09 12 15 18 21"
+    elif [ "$OBSNAME" = "mping" ]; then
+        export COMINobs=${COMINmping}
+        export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.grib2"
+        export VAR_NAME_LIST=""
+        export VHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
     else
         echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
         exit 1
@@ -77,13 +90,20 @@ elif [ "$NEST" = "ak" ]; then
     export SKIP_IF_OUTPUT_EXISTS="no"
     export FHR_GROUP_LIST="SHORT FULL"
     if [ "$OBSNAME" = "raob" ]; then
+        export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/alaska/hrrr.t{init?fmt=%2H}z.wrfprsf{lead?fmt=%2H}.ak.grib2"
         export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH SBCAPE MLCAPE HPBL"
         export VHOUR_LIST="00 06 12 18"
     elif [ "$OBSNAME" = "metar" ]; then
+        export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/alaska/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.ak.grib2"
-        export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING"
+        export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING PTYPE"
         export VHOUR_LIST="00 03 06 09 12 15 18 21"
+    elif [ "$OBSNAME" = "mping" ]; then
+        export COMINobs=${COMINmping}
+        export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/alaska/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.ak.grib2"
+        export VAR_NAME_LIST=""
+        export VHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
     else
         echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
         exit 1
@@ -99,13 +119,20 @@ elif [ "$NEST" = "firewx" ]; then
     export SKIP_IF_OUTPUT_EXISTS="no"
     export FHR_GROUP_LIST="FULL"
     if [ "$OBSNAME" = "raob" ]; then
+        export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfprsf{lead?fmt=%2H}.grib2"
         export VAR_NAME_LIST="HPBL"
         export VHOUR_LIST="00 06 12 18"
     elif [ "$OBSNAME" = "metar" ]; then
+        export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.grib2"
         export VAR_NAME_LIST="TMP2m DPT2m RH2m UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc"
         export VHOUR_LIST="00 03 06 09 12 15 18 21"
+    elif [ "$OBSNAME" = "mping" ]; then
+        export COMINobs=${COMINmping}
+        export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.grib2"
+        export VAR_NAME_LIST=""
+        export VHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
     else
         echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
         exit 1
@@ -121,13 +148,20 @@ elif [ "$NEST" = "spc_otlk" ]; then
     export SKIP_IF_OUTPUT_EXISTS="no"
     export FHR_GROUP_LIST="SHORT FULL"
     if [ "$OBSNAME" = "raob" ]; then
+        export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfprsf{lead?fmt=%2H}.grib2"
         export VAR_NAME_LIST="SBCAPE MLCAPE"
         export VHOUR_LIST="00 06 12 18"
     elif [ "$OBSNAME" = "metar" ]; then
+        export COMINobs=${COMINobsproc}
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.grib2"
         export VAR_NAME_LIST=""
         export VHOUR_LIST="00 03 06 09 12 15 18 21"
+    elif [ "$OBSNAME" = "mping" ]; then
+        export COMINobs=${COMINmping}
+        export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.grib2"
+        export VAR_NAME_LIST=""
+        export VHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
     else
         echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
         exit 1

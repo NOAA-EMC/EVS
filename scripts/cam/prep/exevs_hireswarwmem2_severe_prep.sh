@@ -31,7 +31,7 @@ export GAUSS_RAD=120
 # Set some model-specific environment variables 
 ############################################################
 
-export COMINfcst=${COMINhiresw}
+export MODEL_INPUT_DIR=${COMINhiresw}
 export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.arw_5km.f{lead?fmt=%2H}.conusmem2.grib2
 
 export MXUPHL25_THRESH1=75.0
@@ -87,7 +87,7 @@ i=1
    # Search for required forecast files
    while [ $i -le $min_file_req ]; do
 
-      export fcst_file=$COMINfcst/${modsys}.${IDATE}/${modsys}.t${cyc}z.arw_5km.f$(printf "%02d" $fhr).conusmem2.grib2
+      export fcst_file=${MODEL_INPUT_DIR}/${modsys}.${IDATE}/${modsys}.t${cyc}z.arw_5km.f$(printf "%02d" $fhr).conusmem2.grib2
 
       if [ -s $fcst_file ]; then
          echo "File number $i found"

@@ -94,7 +94,7 @@ export MPIRUN=${MPIRUN:-"mpiexec"}
 OBSERVATIONS="GCIP GFS"
 rm wafs_plots.cmdfile
 ic=0
-export VX_MASK_ALL="ASIA AUNZ EAST NAMER NATL_AR2 NHEM NPO SHEM TROPICS"
+export VX_MASK_ALL="GLB ASIA AUNZ EAST NAMER NATL_AR2 NHEM NPO SHEM TROPICS"
 for observation in $OBSERVATIONS ; do
     for ndays in $DAYS_LIST ; do
 	for subregion in $VX_MASK_ALL ; do
@@ -106,16 +106,6 @@ for observation in $OBSERVATIONS ; do
 	    fi
 	    ic=$(( ic + 1 ))
 	done
-	# plot for global (all subregions)
-	if [ $ic -gt 1 ] ; then
-	    if [ `echo $MPIRUN | cut -d " " -f1` = 'srun' ] ; then
-		echo $ic $SCRIPTSevs/plots/exevs_wafs_atmos_plots.sh $observation $ndays 'all' >> wafs_plots.cmdfile
-	    else
-		echo $SCRIPTSevs/plots/exevs_wafs_atmos_plots.sh $observation $ndays 'all' >> wafs_plots.cmdfile
-		export MP_PGMMODEL=mpmd
-	    fi
-	    ic=$(( ic + 1 ))
-	fi
     done
 done
 export MPIRUN="$MPIRUN -np $ic -cpu-bind verbose,core cfp"

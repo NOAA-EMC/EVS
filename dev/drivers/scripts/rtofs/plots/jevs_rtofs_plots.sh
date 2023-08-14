@@ -15,40 +15,32 @@
 ############################################################
 set -x
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/evs_rtofs_module/EVS
 source $HOMEevs/versions/run.ver
 
 module reset
-#export HPC_OPT=/apps/ops/prod/libs
-#module use /apps/ops/prod/libs/modulefiles/compiler/intel/${intel_ver}
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
-module use /apps/dev/modulefiles
-module load ve/evs/${ve_evs_ver}
-module load gsl/${gsl_ver}
-module load netcdf/${netcdf_ver}
-module load met/${met_ver}
-module load metplus/${metplus_ver}
-module load prod_util/${prod_util_ver}
-module load prod_envir/${prod_envir_ver}
-module list
 
 # specify environment variables
 export NET=evs
 export STEP=plots
 export COMPONENT=rtofs
 
+source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
+
 # set up VDATE and COMIN and COMOUT
-export VDATE=$(date --date="4 days ago" +%Y%m%d)
+export VDATE=$(date --date="3 days ago" +%Y%m%d)
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
 export COMINstats=$COMIN/stats/$COMPONENT
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
 export COMOUTplots=$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE
-export DATA=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver}
+export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/logos
 export USHevs=$HOMEevs/ush/$COMPONENT
 export CONFIGevs=$HOMEevs/parm/metplus_config/$COMPONENT
+
+export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export jobid=$job.${PBS_JOBID:-$$}
 
 # call j-job
 $HOMEevs/jobs/$COMPONENT/$STEP/JEVS_RTOFS_PLOTS

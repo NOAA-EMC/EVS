@@ -7,11 +7,14 @@ MODEL_LIST=$2
 VRF_CASE=${VERIF_CASE}
 
 archive=$output_base_dir
-prefix=${COMIN%%mesoscale*}
-index=${#prefix}
-echo $index
-COM_IN=${COMIN:0:$index}
-echo $COM_IN
+#prefix=${COMIN%%mesoscale*}
+#index=${#prefix}
+#echo $index
+#COM_IN=${COMIN:0:$index}
+#echo $COM_IN
+
+COM_IN=${COMIN}/stats/
+
 
 for MODEL in $MODEL_LIST ; do
  

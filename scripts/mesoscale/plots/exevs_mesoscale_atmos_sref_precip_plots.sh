@@ -176,10 +176,10 @@ elif [ $stats = fss ] ; then
 
          chmod +x  run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.sh
 
-         echo "run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.sh
+         echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.sh
 
          chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.sh 
-         echo " run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.sh" >> run_all_poe.sh
+         echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.sh" >> run_all_poe.sh
 
 
        done #end of thresh
@@ -201,9 +201,9 @@ chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 54 -ppn 15 --cpu-bind verbose,depth cfp run_all_poe.sh
+   mpiexec -np 54 -ppn 15 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
-  run_all_poe.sh
+  ${DATA}/run_all_poe.sh
 fi
 
 cd $plot_dir
@@ -226,7 +226,7 @@ for stats in  ets fbias fss  ; do
     fi
   elif [ $score_type = threshold_average ] ; then
       threshes='f24-36-48-60-72-84'
-      scoretype='threshholdmean'
+      scoretype='threshmean'
   fi
 
   var='apcp_06'
@@ -237,12 +237,12 @@ for stats in  ets fbias fss  ; do
 
     if [ $score_type = lead_average ] ; then
       if [ $stats = ets ] || [ $stats = fbias ] ; then
-         mv ${score_type}_regional_conus_valid_00z_03z_06z_09z_12z_15z_18z_21z_6h_apcp_06_${stats}_${thresh}.png evs.sref.${stats}.apcp_6a.${thresh}.last${past_days}days.${scoretype}.valid00z_03z_06z_09z_12z_15z_18z_21z.buk_conus.png
+         mv ${score_type}_regional_conus_valid_00z_03z_06z_09z_12z_15z_18z_21z_6h_apcp_06_${stats}_${thresh}.png evs.sref.${stats}.apcp_6a.${thresh}.last${past_days}days.${scoretype}_valid00z_03z_06z_09z_12z_15z_18z_21z.buk_conus.png
       elif [ $stats = fss ] ; then
-         mv ${score_type}_regional_conus_valid_00z_03z_06z_09z_12z_15z_18z_21z_6h_apcp_06_${stats}_${thresh}.png evs.sref.${stats}.apcp_6a.last${past_days}days.${scoretype}.valid00z_03z_06z_09z_12z_15z_18z_21z.buk_conus.png	    
+         mv ${score_type}_regional_conus_valid_00z_03z_06z_09z_12z_15z_18z_21z_6h_apcp_06_${stats}_${thresh}.png evs.sref.${stats}.apcp_6a.last${past_days}days.${scoretype}_valid00z_03z_06z_09z_12z_15z_18z_21z.buk_conus.png	    
       fi
     elif [ $score_type = threshold_average ] ; then
-         mv ${score_type}_regional_conus_valid_00z_03z_06z_09z_12z_15z_18z_21z_6h_apcp_06_${stats}_${thresh}.png evs.sref.${stats}.apcp_6a.last${past_days}days.${scoretype}.valid00z_03z_06z_09z_12z_15z_18z_21z.buk_conus.png
+         mv ${score_type}_regional_conus_valid_00z_03z_06z_09z_12z_15z_18z_21z_6h_apcp_06_${stats}_${thresh}.png evs.sref.${stats}.apcp_6a.last${past_days}days.${scoretype}_valid00z_03z_06z_09z_12z_15z_18z_21z.buk_conus.png
     fi	 
 
   done   # thresh
@@ -250,9 +250,9 @@ for stats in  ets fbias fss  ; do
 done     #stats
 
 
-tar -cvf evs.plots.sref.precip.${past_days}.v${VDATE}.tar *.png
+tar -cvf evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar *.png
 
-cp evs.plots.sref.precip.${past_days}.v${VDATE}.tar  $COMOUT/.  
+cp evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
 
 
 

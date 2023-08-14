@@ -28,12 +28,17 @@ export VHOUR_GROUPS="LT1200 GE1200"
 
 # Additional Verification Settings
 if [ "$NEST" = "spc_otlk" ]; then
+    export OBSNAME=""
     export TEMP_DIR="${DATA}/${VERIF_CASE}/data/${NEST}.${VDATE}"
     export GRID_DIR="${FIXevs}/masks"
     export URL_HEAD="https://www.spc.noaa.gov/products/outlook/archive"
     export MASK_POLY_LIST="${GRID_DIR}/Bukovsky_G104_CONUS"
 elif [ "$NEST" = "firewx" ]; then
+    export OBSNAME=""
     export TEMP_DIR="${DATA}/${VERIF_CASE}/data/${NEST}.${VDATE}"
+elif [ "$NEST" = "conus" ]; then
+    export OBSNAME="${VERIF_TYPE}"
+    export URL_HEAD="https://mping.ou.edu/mping/api/v2/reports"
 else
     echo "The provided NEST, $NEST, is not supported for $MODELNAME"
     exit 1
