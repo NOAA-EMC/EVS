@@ -1,6 +1,6 @@
 '''
-Name: global_det_atmos_production_restart.py
-Contact(s): Mallory Row
+Name: cam_production_restart.py
+Contact(s): Marcel Caron
 Abstract: 
 '''
 
@@ -22,6 +22,7 @@ COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
 
 # Copy files for restart
+'''
 if STEP == 'stats':
     VDATE = os.environ['VDATE']
     MODELNAME = os.environ['MODELNAME']
@@ -45,6 +46,17 @@ if STEP == 'stats':
             cutil.run_shell_command(
                 ['cp', '-rpv', COMOUT_VDATE, DATA_METplus_VDATE]
             )
+'''
+if STEP == 'stats':
+    VERIF_CASE = os.environ['VERIF_CASE']
+    RESTART_DIR = os.environ['RESTART_DIR']
+    working_dir = os.path.join(DATA, VERIF_CASE)
+    if os.path.exists(RESTART_DIR):
+        print(f"Copying restart directory {RESTART_DIR} "
+              +f"into working directory {working_dir}")
+        cutil.run_shell_command(
+            ['cp', '-rpv', os.path.join(RESTART_DIR,'*'), working_dir]
+        )
 elif STEP == 'plots':
     COMOUTplots = os.environ['COMOUTplots']
     RESTART_DIR = os.environ['RESTART_DIR']

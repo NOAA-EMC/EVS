@@ -2,7 +2,7 @@
 
 # =============================================================================
 # 
-# NAME: config.evs.prod.stats.cam.atmos.precip.conusnest 
+# NAME: config.evs.prod.stats.cam.atmos.precip.namnest 
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Set up configurations to run EVS NAM Nest Precipitation - Statistics
 # DEPENDENCIES: $HOMEevs/ecf/cam/stats/jevs_namnest_precip_stats.ecf
@@ -19,6 +19,9 @@ export MET_CONFIG_OVERRIDES=""
 export METPLUS_VERBOSITY="DEBUG"
 export MET_VERBOSITY="5"
 export LOG_MET_OUTPUT_TO_METPLUS="yes"
+
+# Restart Settings
+export RESTART_DIR="${COMOUTsmall}/restart/c${cyc}"
 
 # Time Settings
 export FHR_GROUP_LIST="FULL"

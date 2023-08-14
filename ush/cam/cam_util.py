@@ -12,7 +12,7 @@ from collections.abc import Iterable
 import numpy as np
 import subprocess
 from collections.abc import Iterable
-
+import glob
 
 def flatten(xs):
     for x in xs: 
@@ -443,4 +443,82 @@ def get_completed_jobs(completed_jobs_file):
 def mark_job_completed(completed_jobs_file, job_name):
     with open(completed_jobs_file, 'a') as f:
         f.write(job_name + "\n")
- 
+
+def copy_data_to_restart(data_dir, restart_dir, met_tool, net, run, step, 
+                         model, vdate, verif_case, verif_type, vx_mask, 
+                         job_type):
+    sub_dirs = []
+    copy_files = []
+    if met_tool == "ascii2nc":
+        sub_dirs.append(os.path.join(
+            'METplus_output',
+            verif_type, 
+            vx_mask, 
+            met_tool, 
+            '*.nc'
+        ))
+        copy_files.append('*.nc')
+    elif met_tool == 'genvxmask':
+        sub_dirs.append(os.path.join(
+            'METplus_output',
+            verif_type,
+            met_tool,
+            f'{vx_mask}.{vdate}',
+        ))
+        copy_files.append(f'{vx_mask}*.nc')
+    elif met_tool == 'pb2nc':
+        sub_dirs.append(os.path.join(
+            'METplus_output',
+            verif_type,
+            vx_mask,
+            met_tool,
+        ))
+        copy_files.append(f'*.nc')
+    elif met_tool == 'point_stat':
+        sub_dirs.append(os.path.join(
+            'METplus_output',
+            verif_type,
+            met_tool,
+            f'{model}.{vdate}'
+        ))
+        copy_files.append(f'{met_tool}_{model}_{vx_mask}_*.stat')
+    elif met_tool == 'regrid_data_plane':
+        sub_dirs.append(os.path.join(
+            'METplus_output',
+            verif_type,
+            met_tool,
+            f'{model}.{vdate}'
+        ))
+        copy_files.append(f'{met_tool}_{model}_*_{verif_type}_{vx_mask}*.nc')
+    elif met_tool == 'stat_analysis':
+        if job_type == 'gather':
+            sub_dirs.append(os.path.join(
+                'METplus_output',
+                'gather_small',
+                met_tool,
+                f'{model}.{vdate}'
+            ))
+            copy_files.append(
+                f'{net}.{step}.{model}.{run}.{verif_case}.{verif_type}'
+                + f'.v{vdate}.stat'
+            )
+        elif job_type == 'gather2':
+            sub_dirs.append(os.path.join(
+                'METplus_output',
+                met_tool,
+                f'{model}.{vdate}'
+            ))
+            copy_files.append(f'*.stat')
+    for d, sub_dir in enumerate(sub_dirs):
+        origin_path = os.path.join(data_dir, sub_dir, copy_files[d])
+        dest_path = os.path.join(restart_dir, sub_dir)
+        if not glob.glob(origin_path):
+            pass
+        if not os.path.exists(dest_path):
+            print(f"ERROR: Could not copy METplus output to COMOUT directory"
+                  + f" {dest_path} because the path does not already exist")
+            pass
+        run_shell_command(
+            ['cp', '-rpv', origin_path, os.path.join(dest_path,'.')]
+        )
+
