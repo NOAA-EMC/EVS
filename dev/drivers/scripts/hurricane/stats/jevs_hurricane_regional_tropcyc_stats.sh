@@ -30,6 +30,7 @@ export job=jevs_hurricane_regional_tropcyc_stats_${cyc}
 # Load modules
 ############################################################
 module reset
+module load prod_envir/${prod_envir_ver}
 source ${HOMEevs}/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh 
 
 export PDY=20221231 
