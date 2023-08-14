@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N jevs_rtma_ru_stats_00
+#PBS -N jevs_analyses_rtma_ru_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -10,7 +10,7 @@
 
 export model=evs
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS_analyses_module/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 source $HOMEevs/versions/run.ver
 
