@@ -9,24 +9,8 @@ export PS4='$SECONDS + '
 date
 
 export machine="WCOSS2"
-
-###########################################################
-# obtain unique process id (pid) and make temp directories
-###########################################################
-export pid=$$
-#export DATA_IN=${DATA_IN:-$DATAROOT}
-export DATA_IN=${DATA_IN:-$DATAROOTtmp}
-export DATA=$DATA_IN/${pid}
-
-
-#rm -rf $DATA_IN
 mkdir -p $DATA
 cd $DATA 
-
-###############################
-# Determine Job Output Name on System
-###############################
-export pgmout="OUTPUT.${pid}" 
 
 ################################################################
 # SENDCOM=YES--Copy files from TMPDIR to $COMOUT
@@ -45,12 +29,12 @@ export EXECevs=${EXECevs:-$HOMEevs/exec}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
-
 export gefs_members="30"
 
 export cfs_members="4"
 
 # Run setpdy and initialize PDY variables
+export cyc=${cyc:-00}
 export cycle=${cycle:-t${cyc}z}
 setpdy.sh
 . ./PDY
@@ -89,13 +73,11 @@ echo Actual output starts here
 $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${PREP_TYPE}_${STEP}.sh
 export err=$?; err_chk
 
-cat $pgmout
-
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
 
 if [ "$KEEPDATA" != "YES" ] ; then
-  cd $DATAROOTtmp
+  cd $DATAROOT
   rm -rf $DATA
 fi
 
