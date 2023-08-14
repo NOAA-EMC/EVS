@@ -58,7 +58,7 @@ verif_case=$VERIF_CASE
 
 > run_all_poe.sh
 
-for stats in acc bias_mae crpss rmse_spread ; do 
+for stats in acc me_mae crpss rmse_spread ; do 
 if [ $stats = acc ] ; then
   stat_list='acc'
   line_tp='sal1l2'
@@ -71,9 +71,9 @@ elif [ $stats = mae ] ; then
   stat_list='mae'
   line_tp='sl1l2'
   #verif_type='pres'
-elif [ $stats = bias_mae  ] ; then
-  stat_list='bias, mae'
-  line_tp='sl1l2'
+elif [ $stats = me_mae  ] ; then
+  stat_list='me, mae'
+  line_tp='ecnt'
   #verif_type='pres'
 elif [ $stats = crps  ] ; then
   stat_list='crps'
@@ -212,7 +212,7 @@ fi
 
 
 cd $plot_dir
-for stats in acc bias_mae crpss rmse_spread ; do
+for stats in acc me_mae crpss rmse_spread ; do
  for score_type in time_series lead_average ; do
 
   if [ $score_type = time_series ] ; then

@@ -668,7 +668,7 @@ def get_stat_plot_name(logger, stat):
    elif stat == 'crps':
       stat_plot_name = 'Continuous Ranked Probability Score'
    elif stat == 'crpss':
-      stat_plot_name = 'CRPSS'
+      stat_plot_name = 'Continuous Ranked Probability Skill Score'
    elif stat == 'spread':
       stat_plot_name = 'Spread'
    elif stat == 'me':
