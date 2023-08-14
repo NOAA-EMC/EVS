@@ -40,7 +40,11 @@ elif [ $OBSERVATION = "GFS" ] ; then
     
     if [ $RESOLUTION = "1P25" ] ; then
         export REGRID=G045
-        export VAR_NAME="TMP, WIND, WIND80" # For plotting only
+	if [[ $WDIR = 'yes' ]] ; then
+            export VAR_NAME="TMP, WIND, WIND80, WDIR" # For plotting only
+	else
+            export VAR_NAME="TMP, WIND, WIND80" # For plotting only
+	fi
 	export VAR_LEVELS="P850, P700, P600, P500, P400, P300, P250, P200, P150, P100"
 
 	export VAR1_NAME=TMP

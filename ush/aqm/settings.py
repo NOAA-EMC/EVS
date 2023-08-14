@@ -789,10 +789,10 @@ class Reference():
                                     'O3MR': 'Ozone Mixing Ratio',
                                     'TOZNE': 'Total Ozone',
                                     'OZCON1': 'OZCON1',
-                                    'OZMAX8': 'Max 8-hr ozone',
-                                    'OZONE-8HR': 'Max 8-hr ozone',
-                                    'PMAVE': '24-hr average PM',
-                                    'PM2.5-24hr': '24-hr average PM',
+                                    'OZMAX8': 'Daily Max 8-hr average ozone',
+                                    'OZONE-8HR': 'Daily Max 8-hr average ozone',
+                                    'PMAVE': '24-hr average PM2.5',
+                                    'PM2.5-24hr': '24-hr average PM2.5',
                                     'PMTF': '2.5 micron particulate matter',
                                     'HPBL': 'Planetary Boundary Layer Height',
                                     'TSOIL': 'Soil Temperature',
@@ -2838,12 +2838,14 @@ class Reference():
                          'PMAVE': {'fcst_var_names': ['PMAVE'],
                                   'fcst_var_levels': ['A23'],
                                   'fcst_var_thresholds': ('>5, >10, >12, >15,'
-                                                          + '>20, >25, >30'),
+                                                          + '>20, >25, >30,'
+                                                          + '>35, >40, >45'),
                                   'fcst_var_options': '',
                                   'obs_var_names': ['PM2.5-24hr'],
                                   'obs_var_levels': ['A1'],
                                   'obs_var_thresholds': ('>5, >10, >12, >15,'
-                                                         + '>20, >25, >30'),
+                                                          + '>20, >25, >30,'
+                                                          + '>35, >40, >45'),
                                   'obs_var_options': '',
                                   'plot_group':'aq'},
                     }

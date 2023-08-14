@@ -53,6 +53,7 @@ valid_time='valid00z'
 init_time='init00z'
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
+mkdir -p $plot_dir
 
 
 verif_case=satellite
@@ -182,7 +183,7 @@ fi
 cd $plot_dir
 
 for domain in arctic antarctic ; do
- mv performance_diagram_regional_${domain}_valid_00z_z0_icec_z0_mean_f24_to_f384__gt10gt40gt80.png  evs.global_ens.ctc.icec.last${past_days}days.perfdiag_${valid_time}_f24_to_f384.${domain}_glb.png
+ mv performance_diagram_regional_${domain}_valid_00z_z0_icec_z0_mean_f24_to_f384__gt10gt40gt80.png  evs.global_ens.ctc.icec.last${past_days}days.perfdiag_${valid_time}_f384.${domain}_glb.png
 done
 
 for stats in  rmse_me csi ; do
@@ -231,7 +232,7 @@ for stats in  rmse_me csi ; do
 
       for level in z0 ; do
 
-        mv ${score_type}_regional_${domain}_valid_00z_z0_${var}_${level}_mean_${stats}${lead}  evs.global_ens.${stats}.${var}.last${past_days}days.${scoretype}.${valid_time}${lead_time}.g003_${domain}.png
+        mv ${score_type}_regional_${domain}_valid_00z_z0_${var}_${level}_mean_${stats}${lead}  evs.global_ens.${stats}.${var}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain}.png
                
       done #level
 
