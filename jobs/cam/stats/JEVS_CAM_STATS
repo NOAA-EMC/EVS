@@ -142,6 +142,8 @@ export maillist=${maillist:-'geoffrey.manikin@noaa.gov'}
 ####################################
 if [ $VERIF_CASE = radar ] || [ $VERIF_CASE = severe ]; then
    $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${VERIF_CASE}_${STEP}.sh
+elif [ $MODELNAME = nam_firewxnest ]; then
+   $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 else
    $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 fi

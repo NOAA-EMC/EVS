@@ -20,7 +20,7 @@ export ndate=$NDATE
 if [ $modnam = gefs_bc ] ; then
 
   cd $WORK
-  total=30
+  total=20
 
    export outdata=$COMOUT_gefs_bc
 
@@ -30,7 +30,6 @@ if [ $modnam = gefs_bc ] ; then
     for cyc in $naefs_cyc  ; do
   
       origin=$COMINgefs_bc/gefs.$vday/$cyc/pgrb2ap5_bc
-      bo_cui=/lfs/h2/emc/ptmp/bo.cui/com/naefs/v7.0/gefs.$vday/$cyc/pgrb2ap5_bc
 
       mbr=1
        while [ $mbr -le $total ] ; do
@@ -44,11 +43,7 @@ if [ $modnam = gefs_bc ] ; then
            hhh=$nfhrs
            typeset -Z3 hhh
 
-	   if [ $mbr -le 20 ] ; then
              gefs_bc=$origin/gep${mb}.t${cyc}z.pgrb2a.0p50_bcf${hhh}
-           else
-	     gefs_bc=$bo_cui/gep${mb}.t${cyc}z.pgrb2a.0p50_bcf${hhh}
-	   fi
 
              >$WORK/gefs.upper.${cyc}.${mb}.${hhh}
 
@@ -181,7 +176,6 @@ if [ $modnam = gefs_bc_apcp24h ] ; then
     for cyc in $naefs_cyc ; do
 
        origin=$COMINgefs_bc/gefs.$vday/$cyc/prcp_bc_gb2
-       bo_cui=/lfs/h2/emc/ptmp/bo.cui/com/naefs/v7.0/gefs.$vday/$cyc/prcp_bc_gb2
 
 
        for  hhh in  024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384 ; do
@@ -189,16 +183,12 @@ if [ $modnam = gefs_bc_apcp24h ] ; then
         #apcp24_bc=$origin/geprcp.t${cyc}z.pgrb2a.0p50.bc_24hf${hhh}
 
 	>$WORK/grabmbr.${cyc}.${hhh}
-        for mbr in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
+        for mbr in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 ; do
 
           mb=$mbr
           typeset -Z2 mb
 
-	  if [ $mbr -le 20 ] ; then
 	     apcp24_bc=$origin/geprcp.t${cyc}z.pgrb2a.0p50.bc_24hf${hhh}
-	  else
-	     apcp24_bc=$bo_cui/geprcp.t${cyc}z.pgrb2a.0p50.bc_24hf${hhh}
-	  fi
 
           $wgrib2 $apcp24_bc|grep "ENS=+${mbr}"|$WGRIB2 -i $apcp24_bc -grib $WORK/grabmbr.${cyc}.${hhh}
                    
