@@ -62,7 +62,7 @@ export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config/$COMPONENT}
 
 # define COMIN/COMOUT variables
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
-export COMINobs=${COMINobs:-$(compath.py $envir/dcom)}
+export COMINobs=${DCOMROOT:-"/lfs/h1/ops/dev/dcom"}
 export COMINrtofs=${COMINrtofs:-$(compath.py $envir/com/$COMPONENT/${rtofs_ver})}
 export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
 export COMOUTprep=${COMOUTprep:-$COMOUT/$STEP/$COMPONENT}
