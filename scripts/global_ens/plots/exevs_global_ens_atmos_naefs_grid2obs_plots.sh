@@ -196,71 +196,51 @@ fi
 cd $plot_dir
 
 for stats in  acc crps rmse_spread me_mae ; do
- for score_type in lead_average ; do
-
-    leads='.png'
-    scoretype='fhrmean'
-    vars='tmp ugrd vgrd'
-
-  for lead in $leads ; do
-    
-    lead_time=''
-
-    for var in $vars ; do
-      if [ $var = tmp ] || [ $var = dpt ] ; then
-	 levels='2m 850mb'
-      elif [ $var = ugrd ] || [ $var = vgrd ] ; then
-	 levels='10m 850mb 250mb'
-      fi
-
-     for level in $levels ; do
-        
-      if [ $level = 850mb ] || [ $level = 250mb ] ; then
-	  domains='nhem shem tropics'
-      else
-	  domains='conus conus_east conus_west conus_south conus_central alaska'
-      fi
-
-      if [ $level = 850mb ] ; then
-	 level_new=p850
-      elif [ $level = 250mb ] ; then
-	 level_new=p250
-      elif [ $level = 2m ] ; then
-         level_new=z2
-      elif [ $level = 10m ] ; then
-         level_new=z10
-      else
-	 level_new=$level
-      fi
-
-      for domain in $domains ; do
-	
-         if [ $domain = conus ]; then
-            evs_graphic_domain="buk_conus"
-        elif [ $domain = conus_east ]; then
-            evs_graphic_domain="buk_conus_e"
-        elif [ $domain = conus_west ]; then
-            evs_graphic_domain="buk_conus_w"
-        elif [ $domain = conus_south ]; then
-            evs_graphic_domain="buk_conus_s"
-        elif [ $domain = conus_central ]; then
-            evs_graphic_domain="buk_conus_c"
-        else
-            evs_graphic_domain=$domain
+    for var in tmp ugrd vgrd ; do
+        if [ $var = tmp ] || [ $var = dpt ] ; then
+	    levels='2m 850mb'
+        elif [ $var = ugrd ] || [ $var = vgrd ] ; then
+	    levels='10m 850mb 250mb'
         fi
-
-        if [ $domain = nhem ] || [ $domain = shem ] || [ $domain = tropics ] || [ $domain = alaska ]; then
-           mv ${score_type}_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}${lead}  evs.naefs.${stats}.${var}_${level_new}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${evs_graphic_domain}.png
-	else
-           mv ${score_type}_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}${lead}  evs.naefs.${stats}.${var}_${level_new}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g212_${evs_graphic_domain}.png
-        fi
-               
-      done #domain
-
-    done #level
-   done  #domain
-  done   #var
- done    #score_type
+        for level in $levels ; do     
+            if [ $level = 850mb ] || [ $level = 250mb ] ; then
+                domains='nhem shem tropics'
+            else
+	        domains='conus conus_east conus_west conus_south conus_central alaska'
+            fi
+            if [ $level = 850mb ] ; then
+                level_new=p850
+            elif [ $level = 250mb ] ; then
+                level_new=p250
+            elif [ $level = 2m ] ; then
+                level_new=z2
+            elif [ $level = 10m ] ; then
+                level_new=z10
+            else
+	        level_new=$level
+            fi
+            for domain in $domains ; do	
+                if [ $domain = conus ]; then
+                    evs_graphic_domain="buk_conus"
+                elif [ $domain = conus_east ]; then
+                    evs_graphic_domain="buk_conus_e"
+                elif [ $domain = conus_west ]; then
+                    evs_graphic_domain="buk_conus_w"
+                elif [ $domain = conus_south ]; then
+                    evs_graphic_domain="buk_conus_s"
+                elif [ $domain = conus_central ]; then
+                    evs_graphic_domain="buk_conus_c"
+                else
+                    evs_graphic_domain=$domain
+                fi
+                if [ $domain = nhem ] || [ $domain = shem ] || [ $domain = tropics ] || [ $domain = alaska ]; then
+                    mv lead_average_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}.png  evs.naefs.${stats}.${var}_${level_new}.last${past_days}days.fhrmean_valid_00z_12z_f384.g003_${evs_graphic_domain}.png
+                else
+                    mv lead_average_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}.png  evs.naefs.${stats}.${var}_${level_new}.last${past_days}days.fhrmean_valid_00z_12z_f384.g212_${evs_graphic_domain}.png
+                fi
+            done #domain
+        done #level
+    done   #var
 done     #stats
 
 tar -cvf evs.plots.naefs.grid2obs.v${VDATE}.past${past_days}days.tar *.png

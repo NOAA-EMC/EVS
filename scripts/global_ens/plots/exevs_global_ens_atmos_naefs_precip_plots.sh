@@ -248,13 +248,9 @@ for domain in conus conus_east conus_west conus_south conus_central ; do
                     nbhrd_graphic=$(echo "_width${nbrhd}")
                 fi
                 if [ $stat = bs ]; then
-                    graphic_name=lead_average_regional_${domain}_valid_12z_24h_apcp_24_ens_freq${thresh_graphic}_bs.png
+                    mv lead_average_regional_${domain}_valid_12z_24h_apcp_24_ens_freq${thresh_graphic}_bs.png evs.naefs.${stat}${nbhrd_graphic}${thresh_graphic}.apcp_a24.last${past_days}days.fhrmean_valid12z_f384.g212_${evs_graphic_domain}.png
                 else
-                    graphic_name=lead_average_regional_${domain}_valid_12z_24h_apcp_24_${stat}${nbhrd_graphic}${thresh_graphic}.png
-                fi
-                if [ -s $graphic_name ]; then
-                    evs_graphic_name=evs.naefs.${stat}${nbhrd_graphic}${thresh_graphic}.apcp_a24.last${past_days}days.fhrmean_valid12z_f384.g212_${evs_graphic_domain}.png
-                    mv $graphic_name $evs_graphic_name
+                    mv lead_average_regional_${domain}_valid_12z_24h_apcp_24_${stat}${nbhrd_graphic}${thresh_graphic}.png evs.naefs.${stat}${nbhrd_graphic}${thresh_graphic}.apcp_a24.last${past_days}days.fhrmean_valid12z_f384.g212_${evs_graphic_domain}.png
                 fi
             done
         done
@@ -262,6 +258,7 @@ for domain in conus conus_east conus_west conus_south conus_central ; do
 done
 
 tar -cvf evs.plots.naefs.precip.v${VDATE}.past${past_days}days.tar *.png
+
 if [ $SENDCOM = YES ]; then
     cp evs.plots.naefs.precip.v${VDATE}.past${past_days}days.tar  $COMOUT/.
 fi

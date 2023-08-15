@@ -185,40 +185,25 @@ fi
 cd $plot_dir
 
 for stats in acc me_mae crps rmse_spread ; do
- for score_type in lead_average ; do
-
-    leads='.png'
-    scoretype='fhrmean'
-
-
-  for lead in $leads ; do
-
-   for domain in  nhem shem tropics  ; do
-
-    for var in hgt tmp  ; do
-      if [ $var = hgt ] ; then
-	 levels='500  1000'
-	 unit='mb'
-      elif [ $var = tmp ] ; then
-	 levels='850'
-	 unit='mb'
-      fi
-
-      for level in $levels ; do
-
-         plevel=p${level}
-
-         mv ${score_type}_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}${lead}  evs.naefs.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}_${valid_time}.g003_${domain}.png
-               
-      done #level
-
-    done #var
-   done  #domain
-  done   #lead
- done    #score_type
+    for domain in  nhem shem tropics  ; do
+        for var in hgt tmp  ; do
+            if [ $var = hgt ] ; then
+                levels='500  1000'
+                unit='mb'
+            elif [ $var = tmp ] ; then
+                levels='850'
+                unit='mb'
+            fi
+            for level in $levels ; do
+                plevel=p${level}
+                mv lead_average_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}.png  evs.naefs.${stats}.${var}_${plevel}.last${past_days}days.fhrmean_valid_00z_12z_f384.g003_${domain}.png        
+            done #level
+        done #var
+    done  #domain
 done     #stats
 
 tar -cvf evs.plots.naefs.grid2grid.v${VDATE}.past${past_days}days.tar *.png
+
 if [ $SENDCOM = YES ]; then
     cp  evs.plots.naefs.grid2grid.v${VDATE}.past${past_days}days.tar $COMOUT/. 
 fi 
