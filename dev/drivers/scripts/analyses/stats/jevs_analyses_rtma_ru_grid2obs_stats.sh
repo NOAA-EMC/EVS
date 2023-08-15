@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N jevs_rtma_ru_stats_00
+#PBS -N jevs_analyses_rtma_ru_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -23,6 +23,7 @@ source $HOMEevs/versions/run.ver
 set -x
 
 module reset
+module load prod_envir/${prod_envir_ver}
 
 ############################################################
 ### For dev testing
@@ -46,10 +47,6 @@ export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMOUT=$COMIN/${STEP}/${COMPONENT}
 
-export MET_bin_exec=bin
-export metplus_verbosity=DEBUG
-export met_verbosity=2
-export log_met_output_to_metplus=yes
 
 export cyc
 echo $cyc

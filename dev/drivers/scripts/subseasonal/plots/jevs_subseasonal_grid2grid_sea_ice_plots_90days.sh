@@ -13,11 +13,12 @@ set -x
 export model=evs
 
 cd $PBS_O_WORKDIR
-module reset
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 source $HOMEevs/versions/run.ver
+module reset
+module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/subseasonal/subseasonal_plots.sh
 #%include <head.h>
 #%include <envir-p1.h>

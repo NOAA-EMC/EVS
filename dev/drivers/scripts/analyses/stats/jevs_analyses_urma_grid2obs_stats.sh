@@ -1,6 +1,6 @@
 #!/bin/bash
  
-#PBS -N jevs_urma_stats_00
+#PBS -N jevs_analyses_urma_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -24,6 +24,7 @@ source $HOMEevs/versions/run.ver
 set -x
 
 module reset
+module load prod_envir/${prod_envir_ver}
 
 ## For dev testing
 ##############################################################

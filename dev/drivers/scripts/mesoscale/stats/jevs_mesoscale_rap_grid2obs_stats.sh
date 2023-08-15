@@ -47,7 +47,6 @@ set -x
         
 
 # EVS Settings
-#  export HOMEevs="/lfs/h2/emc/vpppg/noscrub/${USER}/verification/EVS"
  export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
 # Subdirectories to EVS Home Directory
@@ -63,8 +62,9 @@ set -x
 
 source /usr/share/lmod/lmod/init/sh
 
-module reset
 source $HOMEevs/versions/run.ver
+module reset
+module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
 export MET_PLUS_PATH="/apps/ops/para/libs/intel/${intel_ver}/metplus/${metplus_ver}"

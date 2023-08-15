@@ -11,7 +11,6 @@
 
 set -x
 export model=evs
-module reset
 export machine=WCOSS2
 
 # ECF Settings
@@ -44,6 +43,7 @@ export config=$HOMEevs/parm/evs_config/cam/config.evs.prod.${STEP}.${COMPONENT}.
 source $HOMEevs/versions/run.ver
 source /usr/share/lmod/lmod/init/sh
 module reset
+module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 export MET_PLUS_PATH="/apps/ops/para/libs/intel/${intel_ver}/metplus/${metplus_ver}"
 export MET_PATH="/apps/ops/para/libs/intel/${intel_ver}/met/${met_ver}"
