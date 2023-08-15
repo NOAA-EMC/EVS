@@ -1007,8 +1007,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         linewidth=.5, c='black', zorder=0
     )
 
-    fig.subplots_adjust(bottom=.2, right=.77, left=.23, wspace=0, hspace=0)
-    cax = fig.add_axes([.775, .2, .01, .725])
+    fig.subplots_adjust(bottom=.2, top=.91, right=.77, left=.23, wspace=0, hspace=0)
+    cax = fig.add_axes([.775, .2, .01, .71])
     cbar_ticks = [0.,.1,.2,.3,.4,.5,.6,.7,.8,.9,1.]
     cb = plt.colorbar(
         csi_contour, orientation='vertical', cax=cax, ticks=cbar_ticks,
