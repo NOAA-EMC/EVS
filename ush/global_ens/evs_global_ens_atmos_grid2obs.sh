@@ -45,8 +45,10 @@ for modnam in $models ; do
    MODNAM=`echo $model | tr '[a-z]' '[A-Z]'`
    if [ $modnam = gefs ] ; then
      mbrs=30
+     fields="sfc profile cloud upper"
    elif [ $modnam = cmce ] ; then
      mbrs=20
+     fields="sfc profile cloud upper"
    elif [ $modnam = naefs ] ; then
      $USHevs/global_ens/evs_gens_atmos_g2o_create_naefs.sh 
      if [ $gefs_number = 20 ] ; then
@@ -54,8 +56,10 @@ for modnam in $models ; do
      elif [ $gefs_number = 30 ] ; then
        mbrs=50
      fi
+     fields="sfc cloud upper"
    elif [ $modnam = ecme ] ; then
      mbrs=50
+     fields="sfc profile cloud"
    else
      echo "wrong model"
    fi
@@ -66,12 +70,11 @@ for modnam in $models ; do
    cycles="00 12"
   fi 
 
-
  for cyc in ${cycles}  ; do
 
-  for field in sfc profile cloud ; do
+  for field in $fields ; do
 
-  if [ $field = profile ] ; then
+  if [ $field = profile ] || [ $field = upper ] ; then
      fhrs='fhr1 fhr2 fhr3 fhr4'
   elif [ $field = cloud ] ; then
     if [  $modnam = gefs ] ; then	  
@@ -116,7 +119,7 @@ for modnam in $models ; do
 
     if [ $modnam = gefs ] ; then
 
-       #For profile
+       #For profile/upper
        if [ $fhr = fhr1 ] ; then
           echo  "export lead='  6, 12, 18, 24, 30, 36, 42, 48,  54, 60, 66, 72, 78, 84, 90, 96' " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
        elif [ $fhr = fhr2 ] ; then
@@ -156,7 +159,7 @@ for modnam in $models ; do
         
 
 
-       #For profile
+       #For profile/upper
        elif [ $fhr = fhr1 ] ; then
             echo  "export lead=' 12, 24, 36, 48, 60, 72, 84, 96' " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
        elif [ $fhr = fhr2 ] ; then
@@ -241,16 +244,27 @@ for modnam in $models ; do
         echo  "export prepbufrgrid=prepbufr_profile.f00.nc" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcst${MODNAM}_obsPREPBUFR_PROFILE.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
  
-      elif [ $modnam = naefs ] ; then
+      fi
 
-        echo  "export prepbufrgrid=prepbufr_profile.f00.nc" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
-	echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcstNAEFSbc_obsPREPBUFR_UPPER_climoERA5.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
-	echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstNAEFSbc_obsPREPBUFR_UPPER.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
-        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstNAEFSbc_obsPREPBUFR_UPPER_mean_climoERA5.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+    elif [ $field = upper ] ; then
+
+      if [ $modnam = gefs ] || [ $modnam = cmce ] ; then
+
+	 echo  "export prepbufrgrid=prepbufr_profile.f00.nc" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcst${MODNAM}_obsPREPBUFR_UPPER_climoERA5.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+		         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcst${MODNAM}_obsPREPBUFR_UPPER_mean_climoERA5.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+
+       elif [ $modnam = naefs ] ; then
+
+	 echo  "export prepbufrgrid=prepbufr_profile.f00.nc" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+	 echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/GenEnsProd_fcstNAEFSbc_obsPREPBUFR_UPPER_climoERA5.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+	 #There is no PROFILE for NAEFS, so have EnsembleStat_fcstNAEFSbc_obsPREPBUFR_UPPER.conf for ECNT for the upper level fields 
+	 echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/EnsembleStat_fcstNAEFSbc_obsPREPBUFR_UPPER.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+	 echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstNAEFSbc_obsPREPBUFR_UPPER_mean_climoERA5.conf " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
 
       fi
 
-    fi 
+    fi      
 
    echo  "cp \$output_base/stat/${modnam}/*.stat $COMOUTsmall" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh 
 
@@ -268,13 +282,16 @@ done #end of model
 
 chmod 775 run_all_gens_g2o_poe.sh
 
+
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
 
    if [ ${models} = gefs ] ; then
-    mpiexec -n 44 -ppn 44 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_g2o_poe.sh
-   else
-    mpiexec -n 20 -ppn 20 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_g2o_poe.sh
+    mpiexec -n 60 -ppn 60 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_g2o_poe.sh
+   elif [ ${models} = cmce ] || [ ${models} = ecme ] ; then 
+    mpiexec -n 24 -ppn 24 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_g2o_poe.sh
+   else 
+    mpiexec -n 16 -ppn 16 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_g2o_poe.sh
    fi
 
 else
