@@ -1,10 +1,10 @@
 #!/bin/bash
-#PBS -N jevs_rtma_ru_stats_00
+#PBS -N jevs_analyses_rtma_ru_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=00:30:00
+#PBS -l walltime=00:15:00
 #PBS -l select=1:ncpus=1:mem=2GB
 #PBS -l debug=true
 
@@ -38,7 +38,9 @@ export COMPONENT=analyses
 export RUN=atmos
 export VERIF_CASE=grid2obs
 
-source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP).sh
+module load prod_envir/${prod_envir_ver}
+
+source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
@@ -46,10 +48,6 @@ export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMOUT=$COMIN/${STEP}/${COMPONENT}
 
-export MET_bin_exec=bin
-export metplus_verbosity=DEBUG
-export met_verbosity=2
-export log_met_output_to_metplus=yes
 
 export cyc
 echo $cyc

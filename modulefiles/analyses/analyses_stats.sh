@@ -12,7 +12,6 @@ module load grib_util/${grib_util_ver}
 module load wgrib2/${wgrib2_ver}
 module load gsl/${gsl_ver}
 module load prod_util/${produtil_ver}
-module load prod_envir/${prodenvir_ver}
 export HPC_OPT=/apps/ops/para/libs
 module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
 module load met/${met_ver}
