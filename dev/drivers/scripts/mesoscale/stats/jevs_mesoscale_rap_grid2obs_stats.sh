@@ -47,8 +47,7 @@ set -x
         
 
 # EVS Settings
-  export HOMEevs="/lfs/h2/emc/vpppg/noscrub/${USER}/verification/EVS"
-# export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+  export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
 # Subdirectories to EVS Home Directory
   export PARMevs=$HOMEevs/parm
