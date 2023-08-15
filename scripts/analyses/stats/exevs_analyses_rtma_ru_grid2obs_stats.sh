@@ -9,6 +9,7 @@ export regionnest=rtma
 export fcstmax=$g2os_sfc_fhr_max
 
 export maskdir=$MASKS
+export fhr="00"
 
 # search to see if obs file exists
 
@@ -39,6 +40,7 @@ then
 elif [ $type = "2dvarges" ]
 then
         export typtag="_ges"
+	fhr="01"
 fi
 for modnam in rtma2p5_ru
 do
@@ -68,6 +70,8 @@ fi
          cat mailmsg | mail -s "$subject" $maillist
        fi
 
+if [ ! -e $COMOUTsmall/point_stat_${modnam}${typtag}_${fhr}0000L_${VDATE}_${cyc}0000V.stat ]
+then
 if [ $rtmafound -eq 1 -a $obfound -eq 1 ]
 then
 run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstANALYSES_RU_obsNDAS_PrepBufr.conf $PARMevs/metplus_config/machine.conf
@@ -79,6 +83,9 @@ cp $DATA/point_stat/${MODELNAME}${typtag}/* $COMOUTsmall
 else
   echo "NO RTMA-RU OR OBS DATA, METplus will not run."
   echo "RTMAFOUND, OBFOUND", $rtmafound, $obfound
+fi
+else
+  echo "RESTART - $COMOUTsmall/point_stat_${modnam}${typtag}_${fhr}_${VDATE}_${cyc}0000V.stat exists"
 fi
 
 done
