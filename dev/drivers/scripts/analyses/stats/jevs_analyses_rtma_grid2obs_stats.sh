@@ -52,11 +52,6 @@ export COMOUT=$COMIN/${STEP}/${COMPONENT}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
 
-export MET_bin_exec=bin
-export metplus_verbosity=DEBUG
-export met_verbosity=2
-export log_met_output_to_metplus=yes
-
 export cyc
 echo $cyc
 

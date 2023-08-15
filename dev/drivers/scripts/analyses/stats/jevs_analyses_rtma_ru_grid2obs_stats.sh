@@ -48,10 +48,6 @@ export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMOUT=$COMIN/${STEP}/${COMPONENT}
 
-export MET_bin_exec=bin
-export metplus_verbosity=DEBUG
-export met_verbosity=2
-export log_met_output_to_metplus=yes
 
 export cyc
 echo $cyc
