@@ -6,6 +6,7 @@ set +x
 export HPC_OPT=/apps/ops/para/libs
 module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
 module use /apps/dev/modulefiles/
+module use /apps/prod/lmodules/intel/${intel_ver}
 module load ve/evs/${ve_evs_ver}
 module load cray-mpich/${craympich_ver}
 module load cray-pals/${craypals_ver}
