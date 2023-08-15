@@ -1,6 +1,6 @@
 #!/bin/bash
  
-#PBS -N jevs_urma_stats_00
+#PBS -N jevs_analyses_urma_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -38,7 +38,9 @@ export COMPONENT=analyses
 export RUN=atmos
 export VERIF_CASE=grid2obs
 
-source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP).sh
+module load prod_envir/${prod_envir_ver}
+
+source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
