@@ -1,0 +1,75 @@
+#!/bin/ksh
+#  JOB card cerated for running METPlus-based Global enesmble verifications
+#   By Binbin Zhou, IMSG@EMC/NCEP
+#   Feb 2, 2022
+#
+set -xa
+#######################################################
+#######################################################
+
+export cyc=${cyc:-"00"}
+export cycle=${cycle:-t${cyc}z}
+
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+
+export pid=$$
+export DATA=${DATA:-${DATAROOT}/${jobid:?}}
+rm -rf $DATA
+mkdir -p $DATA
+cd $DATA
+
+setpdy.sh
+. $DATA/PDY
+
+mkdir -p $DATA/logs
+
+export VDATE=${VDATE:-$PDYm1}
+
+export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$MODELNAME.$VDATE
+export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/$evs_ver)}/$STEP/$COMPONENT/$RUN.$VDATE
+mkdir -p $COMOUT
+
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
+export EXECevs=$HOMEevs/exec
+export PARMevs=$HOMEevs/parm
+export USHevs=$HOMEevs/ush
+
+export FIXevs=${FIXevs:-/lfs/h1/ops/prod/packages/evs.${evs_ver}/fix}
+export MASKS=$FIXevs/masks
+
+#export ush_dir=/lfs/h2/emc/vpppg/noscrub/marcel.caron/verif_plotting/ush
+#export ush_dir=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS_plots/verif_plotting/ush
+export ush_dir=$USHevs/narre/ush_narre_plot_py
+
+
+####################################
+# File To Log Msgs
+####################################
+export jlogfile=${jlogfile:-${DATA}/jlogfile}
+
+####################################
+# Determine Job Output Name on System
+####################################
+export outid="LL$job"
+export jobid="${outid}.o${pid}"
+export pgmout="OUTPUT.${pid}"
+
+export cycle=t${cyc}z
+
+####################################
+# Specify codes and scripts locaton
+####################################
+$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${STEP}.sh 
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATAROOT
+  rm -rf $DATA
+fi
+
+#date
+
