@@ -38,9 +38,9 @@ export COMPONENT=analyses
 export RUN=atmos
 export VERIF_CASE=grid2obs
 
-source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
-
 module load prod_envir/${prodenvir_ver}
+
+source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
