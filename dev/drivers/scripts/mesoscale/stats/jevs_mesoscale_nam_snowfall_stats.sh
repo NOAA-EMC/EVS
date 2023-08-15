@@ -50,8 +50,9 @@ export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPO
 source /usr/share/lmod/lmod/init/sh
 export MET_bin_exec="bin"
 
-module reset
 source $HOMEevs/versions/run.ver
+module reset
+module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
