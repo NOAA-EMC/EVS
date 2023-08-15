@@ -21,9 +21,10 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 ############################################################
 # Load modules
 ############################################################
-module reset
 
 source $HOMEevs/versions/run.ver
+module reset
+module load prod_envir/${prod_envir_ver}
 
 source $HOMEevs/modulefiles/aqm/aqm_prep.sh
 
@@ -60,7 +61,6 @@ export cycle=t${cyc}z
 ## output can be found at $COMOUT
 ##
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
-export COMIN=/lfs/h2/emc/physics/noscrub/$USER/${NET}/${evs_ver}
 ##
 ## For aqmv7 NRT runs
 ## export fcst_input_ver=v7
