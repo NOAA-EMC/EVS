@@ -1,6 +1,6 @@
 #!/bin/bash
  
-#PBS -N jevs_urma_stats_00
+#PBS -N jevs_analyses_urma_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"

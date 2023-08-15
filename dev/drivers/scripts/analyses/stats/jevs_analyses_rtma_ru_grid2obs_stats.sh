@@ -1,10 +1,10 @@
 #!/bin/bash
-#PBS -N jevs_rtma_ru_stats_00
+#PBS -N jevs_analyses_rtma_ru_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=00:30:00
+#PBS -l walltime=00:15:00
 #PBS -l select=1:ncpus=1:mem=2GB
 #PBS -l debug=true
 
@@ -47,10 +47,6 @@ export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMOUT=$COMIN/${STEP}/${COMPONENT}
 
-export MET_bin_exec=bin
-export metplus_verbosity=DEBUG
-export met_verbosity=2
-export log_met_output_to_metplus=yes
 
 export cyc
 echo $cyc
