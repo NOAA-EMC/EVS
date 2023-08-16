@@ -32,14 +32,14 @@ export job=jevs_hurricane_regional_tropcyc_stats_${cyc}
 module reset
 source ${HOMEevs}/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh 
 
-export PDY=20221231 
+export PDY=20230816 
 #Set PDY to override setpdy.sh called in the j-jobs
 
 #Define TC-vital file, TC track file and the directory for Bdeck files
-export COMINvit=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/TCvital/syndat_tcvitals.2022
-export COMINtrack=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/regionalTrack/Year2022/tracks.atcfunix.22
-export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/bdeck/Year2022
-export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/bdeck/Year2022
+export COMINvit=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/TCvital/syndat_tcvitals.2023
+export COMINtrack=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/regionalTrack/tracks.atcfunix.23
+export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/bdeck
+export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/bdeck
 
 export DATAROOT=/lfs/h2/emc/ptmp/$USER
 

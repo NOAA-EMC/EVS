@@ -61,7 +61,7 @@ fi
 ##############################################
 if [ ${RUN} = "global_det" -a ${VERIF_CASE} = "tropcyc" ]; then
 export YYYY=`echo ${PDY} | cut -c1-4`
-export YY22=`echo ${PDY} | cut -c3-4`
+export YY23=`echo ${PDY} | cut -c3-4`
 
 export COMINvit=${COMINvit:-/your/TC/vitals/file}
 export COMINtrack=${COMINtrack:-your/TC/track/file}
@@ -70,7 +70,7 @@ export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
 
 elif [ ${RUN} = "global_ens" -a ${VERIF_CASE} = "tropcyc" ]; then
 export YYYY=`echo ${PDY} | cut -c1-4`
-export YY22=`echo ${PDY} | cut -c3-4`
+export YY23=`echo ${PDY} | cut -c3-4`
 
 export COMINvit=${COMINvit:-/your/TC/vitals/file}
 export COMINtrack=${COMINtrack:-your/TC/track/file}
@@ -79,7 +79,7 @@ export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
 
 elif [ ${RUN} = "global_det" -a ${VERIF_CASE} = "tcgen" ]; then
 export YYYY=`echo ${PDY} | cut -c1-4`
-#export YY22=`echo ${PDY} | cut -c3-4`
+#export YY23=`echo ${PDY} | cut -c3-4`
 
 export COMINgenesis=${COMINgenesis:-/your/TC/genesis/data/dir}
 export COMINadeckNHC=${COMINadeckNHC:-/your/NHC/adeck/data/dir}
@@ -89,7 +89,7 @@ export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
 
 elif [ ${RUN} = "regional" -a ${VERIF_CASE} = "tropcyc" ]; then
 export YYYY=`echo ${PDY} | cut -c1-4`
-export YY22=`echo ${PDY} | cut -c3-4`
+export YY23=`echo ${PDY} | cut -c3-4`
 
 export COMINvit=${COMINvit:-/your/TC/vitals/file}
 export COMINtrack=${COMINtrack:-your/TC/track/file}
