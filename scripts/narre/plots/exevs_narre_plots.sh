@@ -8,6 +8,7 @@ export prune_dir=$DATA/data
 export save_dir=$DATA/out
 export output_base_dir=$DATA/stat_archive
 export log_metplus=$DATA/logs/NARRE_verif_plotting_job.out
+export met_v=${met_ver:0:4}
 mkdir -p $prune_dir
 mkdir -p $save_dir
 mkdir -p $output_base_dir
