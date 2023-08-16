@@ -408,7 +408,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     ]
     pivot_metric1 = pd.pivot_table(
         df_aggregated, values=str(metric1_name).upper(), columns='MODEL', 
-        index='LEAD_HOURS'
+        index='LEAD_HOURS', dropna=False
     )
     if sample_equalization:
         pivot_counts = pd.pivot_table(
@@ -419,7 +419,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     if metric2_name is not None:
         pivot_metric2 = pd.pivot_table(
             df_aggregated, values=str(metric2_name).upper(), columns='MODEL', 
-            index='LEAD_HOURS'
+            index='LEAD_HOURS', dropna=False
         )
         #pivot_metric2 = pivot_metric2.dropna() 
     if confidence_intervals:

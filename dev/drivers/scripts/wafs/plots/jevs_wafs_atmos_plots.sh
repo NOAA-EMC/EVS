@@ -24,8 +24,9 @@ export VERIF_CASE=grid2grid
 ############################################################
 # Load modules
 ############################################################
-module reset
 source $HOMEevs/versions/run.ver
+module reset
+module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_$STEP.sh
 
 ############################################################
@@ -39,12 +40,12 @@ export COMPONENT=wafs
 export RUN=atmos
 export VERIF_CASE=grid2grid
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/evs/$evs_ver
+export COMIN=${COMIN:-/lfs/h2/emc/vpppg/noscrub/$USER/evs/$evs_ver}
 
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
 export USH_DIR=$HOMEevs/ush/$COMPONENT
-export DAYS_LIST="90 31"
+export DAYS_LIST=${DAYS_LIST:-"90 31"}
 
 ############################################################
 # CALL executable job script here
