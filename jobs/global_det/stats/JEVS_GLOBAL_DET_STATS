@@ -20,11 +20,6 @@ mkdir -p $DATA
 cd $DATA
 
 ####################################
-# Determine Job Output Name on System
-####################################
-export pgmout="OUTPUT.${pid}"
-
-####################################
 # Set EVS directories
 ####################################
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
@@ -36,6 +31,7 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 ####################################
 # Run setpdy and initialize PDY variables
 ####################################
+export cyc=${cyc:-"00"}
 export cycle=${cycle:-t${cyc}z}
 setpdy.sh
 . ./PDY
@@ -48,7 +44,7 @@ export NET=${NET:-evs}
 export STEP=${STEP:-stats}
 export COMPONENT=${COMPONENT:-global_det}
 export RUN=${RUN:-atmos}
-
+export machine=${machine:-WCOSS2}
 ####################################
 # Define COMIN/COMOUT variables
 ####################################
@@ -78,8 +74,7 @@ mkdir -p $COMOUT $COMOUTsmall $COMOUTfinal
 if [ $RUN = atmos ]; then
     if [ $VERIF_CASE == grid2grid ]; then
         export COMOUTccpa=$COMOUT/$RUN.$VDATE/ccpa/$VERIF_CASE
-        export COMOUTosi_saf=$COMOUT/$RUN.$VDATE/osi_saf/$VERIF_CASE
-        mkdir -p $COMOUTccpa $COMOUTosi_saf
+        mkdir -p $COMOUTccpa
     fi
     if [ $VERIF_CASE == grid2obs ]; then
         export COMOUTprepbufr=$COMOUT/$RUN.$VDATE/prepbufr/$VERIF_CASE
@@ -102,8 +97,6 @@ env
 
 $HOMEevs/scripts/global_det/stats/exevs_global_det_${RUN}_${VERIF_CASE}_stats.sh
 export err=$?; err_chk
-
-cat $pgmout
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"

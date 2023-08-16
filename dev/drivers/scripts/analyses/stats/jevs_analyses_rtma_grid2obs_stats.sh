@@ -24,6 +24,7 @@ source $HOMEevs/versions/run.ver
 #############################################################
 
 module reset
+module load prod_envir/${prod_envir_ver}
 
 
 ############################################################
@@ -39,8 +40,6 @@ export STEP=stats
 export COMPONENT=analyses
 export RUN=atmos
 export VERIF_CASE=grid2obs
-
-module load prod_envir/${prod_envir_ver}
 
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
