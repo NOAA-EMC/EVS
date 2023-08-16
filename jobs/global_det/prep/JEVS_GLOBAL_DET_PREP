@@ -20,11 +20,6 @@ mkdir -p $DATA
 cd $DATA
 
 ####################################
-# Determine Job Output Name on System
-####################################
-export pgmout="OUTPUT.${pid}"
-
-####################################
 # Set EVS directories
 ####################################
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
@@ -36,6 +31,7 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 ####################################
 # Run setpdy and initialize PDY variables
 ####################################
+export cyc=${cyc:-"00"}
 export cycle=${cycle:-t${cyc}z}
 setpdy.sh
 . ./PDY
@@ -87,8 +83,6 @@ done
 env
 $HOMEevs/scripts/global_det/prep/exevs_global_det_${RUN}_prep.sh
 export err=$?; err_chk
-
-cat $pgmout
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
