@@ -31,15 +31,14 @@ export VERIF_CASE=grid2grid
 ############################################################
 # Load modules
 ############################################################
-module reset
 source $HOMEevs/versions/run.ver
+module reset
+module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_$STEP.sh
 
 ############################################################
 # environment variables set
 ############################################################
-export MET_bin_exec=bin
-
 export envir=prod
 
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix

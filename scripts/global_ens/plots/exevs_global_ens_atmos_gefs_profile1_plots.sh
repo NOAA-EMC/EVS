@@ -54,6 +54,7 @@ init_time='init00z_12z'
 
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
+mkdir -p $plot_dir
 
 verif_case=grid2obs
 verif_type=upper_air
@@ -203,9 +204,10 @@ for stats in rmse_spread me ; do
     fi
 
    for domain in g003 nhem shem tropics conus ; do
-
      if [ $domain = g003 ] ; then
 	 domain_new=glb
+     elif [ $domain = conus ]; then
+         domain_new="buk_conus"
      else
          domain_new=$domain
      fi
@@ -225,7 +227,7 @@ for stats in rmse_spread me ; do
 
          plevel=p${level}
 
-         mv ${score_type}_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}.${valid_time}${lead_time}.g003_${domain_new}.png
+         mv ${score_type}_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
 
       done #level
 

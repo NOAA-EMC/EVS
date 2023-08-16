@@ -1,4 +1,4 @@
-#PBS -N jevs_subseasonal_gefs_prep_00
+#PBS -N jevs_subseasonal_gefs_prep
 #PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -13,11 +13,12 @@ set -x
 export model=evs
 
 cd $PBS_O_WORKDIR
-module reset
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 source $HOMEevs/versions/run.ver
+module reset
+module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/subseasonal/subseasonal_prep.sh
 
 export DATAROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
