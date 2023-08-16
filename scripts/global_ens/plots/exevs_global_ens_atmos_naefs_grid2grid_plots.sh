@@ -53,7 +53,7 @@ init_time=init00z_12z
 valid_time=valid00z_12z
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
-
+mkdir -p $plot_dir
 
 verif_case=$VERIF_CASE
 
@@ -208,7 +208,7 @@ for stats in acc bias_mae crps rmse_spread ; do
 
          plevel=p${level}
 
-         mv ${score_type}_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}${lead}  evs.naefs.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}.${valid_time}.g003_${domain}.png
+         mv ${score_type}_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}${lead}  evs.naefs.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}_${valid_time}.g003_${domain}.png
                
       done #level
 

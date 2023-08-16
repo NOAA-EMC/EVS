@@ -100,6 +100,7 @@ for anl in rtma urma rtma_ru
 do
 for varb in TMP DPT
 do
+        mkdir $COMOUTplots/$varb	
 	export var=${varb}2m
 	export region
 	export lev=Z2
@@ -107,54 +108,81 @@ do
 	export linetype=SL1L2
 	smlev=`echo $lev | tr A-Z a-z`
 	smvar=`echo $varb | tr A-Z a-z`
+	if [ ! -e $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
+	then
 	sh $USHevs/${COMPONENT}/py_plotting.config
+        else
+	echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $PLOTDIR
+	fi
 
 	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
 	then
         mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png
-        else
+	cp ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $COMOUTplots/$varb
+        elif [ ! -e  ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
+	then
 	echo "NO PLOT FOR",$varb,$region,$anl
         fi
 done
 
 for varb in WIND
 do
+	mkdir $COMOUTplots/$varb
 	export var=${varb}10m
 	export lev=Z10
 	export lev_obs=Z10
         export linetype=SL1L2
 	smlev=`echo $lev | tr A-Z a-z`
         smvar=`echo $varb | tr A-Z a-z`
+	if [ ! -e $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
+	then
 	sh $USHevs/${COMPONENT}/py_plotting.config
+        else
+	echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $PLOTDIR
+	fi
 
 	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
 	then
         mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png
-        else
+	cp ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $COMOUTplots/$varb
+        elif [ ! -e ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
+        then
 	echo "NO PLOT FOR",$varb,$region,$anl
         fi
 done
 
 for varb in GUST
 do
+	mkdir $COMOUTplots/$varb
 	export var=${varb}sfc
 	export lev=Z10
 	export lev_obs=Z0
 	export linetype=SL1L2
 	smlev=`echo $lev | tr A-Z a-z`
         smvar=`echo $varb | tr A-Z a-z`
+	if [ ! -e $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
+	then
 	sh $USHevs/${COMPONENT}/py_plotting.config
+        else
+	echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $PLOTDIR
+	fi
 
 	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
 	then
         mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png
-        else
+	cp ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $COMOUTplots/$varb
+        elif [ ! -e ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
+        then
 	echo "NO PLOT FOR",$varb,$region,$anl
         fi
 done
 
 for varb in VIS CEILING
 do
+	mkdir $COMOUTplots/$varb
 	if [ $varb = "VIS" ]
 	then
 	 export var=${varb}sfc
@@ -174,12 +202,19 @@ do
 	fi
 	smlev=`echo $lev | tr A-Z a-z`
 	smvar=`echo $varb | tr A-Z a-z`
+	if [ ! -e $COMOUTplots/$varb/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png ]; then
 	sh $USHevs/${COMPONENT}/py_plotting.config_perf
+        else
+	echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$varb/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png $PLOTDIR
+	fi
 
 	if [ -e ${PLOTDIR}/ceil_vis/*/evs*png ]
 	then
 	mv ${PLOTDIR}/ceil_vis/*/evs*png ${PLOTDIR}/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png
-        else
+	cp ${PLOTDIR}/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png $COMOUTplots/$varb
+        elif [ ! -e ${PLOTDIR}/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png ]
+	then
 	echo "NO PLOT FOR",$varb,$region,$anl
         fi
 
@@ -188,11 +223,19 @@ do
 
 	export stat
 
+	if [ ! -e $COMOUTplots/$varb/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]; then
 	sh $USHevs/${COMPONENT}/py_plotting.config_thresh
+        else
+	echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$varb/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png $PLOTDIR
+	fi
+
 	if [ -e ${PLOTDIR}/ceil_vis/*/evs*png ]
 	then
 	mv ${PLOTDIR}/ceil_vis/*/evs*png ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png
-        else
+	cp ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png $COMOUTplots/$varb
+        elif [ ! -e ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]
+	then
 	echo "NO PLOT FOR",$varb,$region,$anl
         fi
 
@@ -203,6 +246,7 @@ done
         if [ $anl = rtma -o $anl = urma ]
 	then
         export var=TCDC
+	mkdir $COMOUTplots/$var
 	export lev=L0
 	export lev_obs=L0
 	export linetype=CTC
@@ -214,11 +258,19 @@ done
 	do
 	export stat
 
+	if [ ! -e $COMOUTplots/$var/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]; then
 	sh $USHevs/${COMPONENT}/py_plotting.config_thresh
+        else
+        echo "RESTART - plot exists; copying over to plot directory"
+        cp $COMOUTplots/$var/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png $PLOTDIR
+        fi
+
 	if [ -e ${PLOTDIR}/sfc_upper/*/evs*png ]
 	then
 	mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png
-        else
+	cp ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png $COMOUTplots/$var
+        elif [ ! -e ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]
+	then
 	echo "NO PLOT FOR",$var,$region,$anl
         fi
         done
