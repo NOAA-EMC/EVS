@@ -58,7 +58,7 @@ def expand_met_stat_files(met_stat_files, data_dir, output_base_template, RUN_ca
 
 def prune_data(data_dir, prune_dir, tmp_dir, output_base_template, valid_range, 
                eval_period, RUN_case, RUN_type, line_type, vx_mask, 
-               fcst_var_names, var_name, model_list):
+               fcst_var_names, var_name, model_list, fcst_lev):
 
    print("BEGIN: "+os.path.basename(__file__))
    # Get list of models and loop through
@@ -82,12 +82,13 @@ def prune_data(data_dir, prune_dir, tmp_dir, output_base_template, valid_range,
       all_grep_output = ''
       print("Pruning "+data_dir+" files for model "+model+", vx_mask "
             +vx_mask+", variable "+'/'.join(fcst_var_names)+", line_type "+line_type
-            +", interp "+os.environ['INTERP'])
+            +", interp "+os.environ['INTERP']+", level "+'/'.join(fcst_lev))
       filter_cmd = (
          ' | grep " '+vx_mask
          +' " | grep "'+'\|'.join(fcst_var_names)
          +'" | grep " '+line_type
-         +' " | grep " '+os.environ['INTERP']+' "'
+         +' " | grep " '+os.environ['INTERP']
+         +' " | grep "'+'\|'.join(fcst_lev)+'"'
       )
       '''
       if RUN_type == 'anom' and 'HGT' in var_name:

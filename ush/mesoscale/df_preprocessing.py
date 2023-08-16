@@ -53,7 +53,7 @@ def get_valid_range(logger, date_type, date_range, date_hours, fleads):
 
 def run_prune_data(logger, stats_dir, prune_dir, output_base_template, 
                    verif_case, verif_type, line_type, valid_range, eval_period, 
-                   var_name, fcst_var_names, model_list, domain):
+                   var_name, fcst_var_names, model_list, domain, fcst_lev):
     model_list = [str(model) for model in model_list]
     tmp_dir = 'tmp'+str(uuid.uuid4().hex)
     pruned_data_dir = os.path.join(
@@ -69,12 +69,22 @@ def run_prune_data(logger, stats_dir, prune_dir, output_base_template,
         if len(os.listdir(stats_dir)):
             logger.info(f"Looking for stat files in {stats_dir} using the"
                         + f" template: {output_base_template}")
+            if type(fcst_lev) == str:
+                fcst_lev = [fcst_lev]
+            elif type(fcst_lev) != list:
+                e = (f"fcst_lev ({fcst_lev}) is neither a string nor a list."
+                     + f" Please check the plotting script"
+                     + f" (e.g., \"lead_average.py\") to make sure"
+                     + f" fcst_level(s) is preprocessed correctly.")
+                logger.error(e)
+                raise TypeError(e)
             prune_data(
                 stats_dir, prune_dir, tmp_dir, output_base_template, 
                 valid_range, str(eval_period).upper(), str(verif_case).lower(), 
                 str(verif_type).lower(), str(line_type).upper(), str(domain), 
                 [' '+str(fcst_var_name)+' ' for fcst_var_name in fcst_var_names],
-                str(var_name).upper(), model_list
+                str(var_name).upper(), model_list, 
+                [' '+str(lev)+' ' for lev in fcst_lev]
             )
         else:
             e1 = f"{stats_dir} exists but is empty."
@@ -155,7 +165,7 @@ def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range,
             total_memory, _, _ = map(
                 int, os.popen('free -t -m').readlines()[-1].split()[1:]
             )
-            logger.debug(f"RAM memory available: {total_memory}")
+            logger.debug(f"RAM memory available: {total_memory} MiB")
         except pd.errors.EmptyDataError as e:
             logger.error(e)
             logger.error(f"The file in question:")
@@ -339,14 +349,14 @@ def get_preprocessed_data(logger, stats_dir, prune_dir, output_base_template,
                           date_range, eval_period, date_hours, fleads, 
                           var_name, fcst_var_names, obs_var_names, model_list, 
                           model_queries, domain, interp, met_version, 
-                          clear_prune_dir):
+                          clear_prune_dir, fcst_lev):
     valid_range = get_valid_range(
         logger, date_type, date_range, date_hours, fleads
     )
     pruned_data_dir = run_prune_data(
         logger, stats_dir, prune_dir, output_base_template, verif_case, 
         verif_type, line_type, valid_range, eval_period, var_name, 
-        fcst_var_names, model_list, domain
+        fcst_var_names, model_list, domain, fcst_lev
     )
     df = create_df(
         logger, stats_dir, pruned_data_dir, line_type, date_range, model_list,
