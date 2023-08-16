@@ -46,6 +46,7 @@ export KEEPDATA=${KEEPDATA:-YES}
 
 
 ## developers directories
+#export VDATE=20230813
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export OUTPUTROOT=/lfs/h2/emc/vpppg/noscrub/$USER

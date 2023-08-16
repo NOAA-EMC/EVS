@@ -43,6 +43,7 @@ export INITDATE=${INITDATE:-${PAST:0:8}}
 
 echo $INITDATE
 export cyc=00
+#export VDATE=20230813
 export run_mpi=no
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver

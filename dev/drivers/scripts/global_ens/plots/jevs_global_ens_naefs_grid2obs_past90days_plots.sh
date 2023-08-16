@@ -36,13 +36,14 @@ export envir=prod
 export KEEPDATA=YES
 
 export cyc=00
-#export VDATE=20221227
+#export VDATE=20230813
 export past_days=90
 
 export met_v=${met_ver:0:4}
 export valid_time=both
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
+#export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver
 export DATA=/lfs/h2/emc/stmp/${USER}/evs/tmpnwprd
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}

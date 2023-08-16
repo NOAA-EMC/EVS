@@ -39,6 +39,7 @@ export KEEPDATA=YES
 #This var is only for testing, if not set, then run operational 
 
 export cyc=00
+#export VDATE=20230813
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 #export DATA=/lfs/h2/emc/ptmp/${USER}/evs/tmpnwprd
