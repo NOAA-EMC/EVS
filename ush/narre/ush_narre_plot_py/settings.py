@@ -718,7 +718,7 @@ class Reference():
         '''
         self.variable_translator = {'TMP': 'Temperature',
                                     'TMP_Z0_mean': 'Temperature',
-                                    'HGT': 'Geopotential Height',
+                                    'HGT': 'Ceiling Height',
                                     'HGT_WV1_0-3': ('Geopotential Height:' 
                                                     + ' Waves 0-3'),
                                     'HGT_WV1_4-9': ('Geopotential Height:'
