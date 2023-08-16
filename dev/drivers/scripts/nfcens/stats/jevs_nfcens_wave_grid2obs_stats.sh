@@ -34,6 +34,7 @@ export model_ver=$nfcens_ver
 # Load modules
 ############################################################
 module reset
+module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 ############################################################
