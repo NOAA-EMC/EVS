@@ -18,16 +18,16 @@ export stormNumber=${num}
 
 if [ ${stormBasin} = "al" ]; then
   COMINbdeck=${COMINbdeckNHC}
-  export COMOUTatl=${COMOUT}/Atlantic
-  if [ ! -d ${COMOUTatl} ]; then mkdir -p ${COMOUTatl}; fi
+  export comoutatl=${COMOUT}/Atlantic
+  if [ ! -d ${comoutatl} ]; then mkdir -p ${comoutatl}; fi
 elif [ ${stormBasin} = "ep" ]; then
   COMINbdeck=${COMINbdeckNHC}
-  export COMOUTepa=${COMOUT}/EastPacific
-  if [ ! -d ${COMOUTepa} ]; then mkdir -p ${COMOUTepa}; fi
+  export comoutepa=${COMOUT}/EastPacific
+  if [ ! -d ${comoutepa} ]; then mkdir -p ${comoutepa}; fi
 elif [ ${stormBasin} = "wp" ]; then
   COMINbdeck=${COMINbdeckJTWC}
-  export COMOUTwpa=${COMOUT}/WestPacific
-  if [ ! -d ${COMOUTwpa} ]; then mkdir -p ${COMOUTwpa}; fi
+  export comoutwpa=${COMOUT}/WestPacific
+  if [ ! -d ${comoutwpa} ]; then mkdir -p ${comoutwpa}; fi
 fi
 
 export bdeckfile=${COMINbdeck}/b${stormBasin}${stormNumber}${stormYear}.dat
@@ -36,8 +36,8 @@ numrecs=`cat ${bdeckfile} | wc -l`
 if [ ${numrecs} -gt 0 ]; then
 ### two ifs start
 
-export COMOUTroot=${COMOUT}/${bas}${num}
-if [ ! -d ${COMOUTroot} ]; then mkdir -p ${COMOUTroot}; fi
+export comoutroot=${COMOUT}/${bas}${num}
+if [ ! -d ${comoutroot} ]; then mkdir -p ${comoutroot}; fi
 
 #export COMINstats=/lfs/h2/emc/ptmp/$USER/com/evs/1.0/hurricane_global_ens/tropcyc/stats
 export STORMroot=${DATA}/${bas}${num}
@@ -82,7 +82,7 @@ export tc_name=${stbasin}${under}${stormYear}${under}${stormName}
 export basin=${stbasin}
 export tc_num=${stormNumber}
 export tropcyc_model_type="global"
-python ${USHevs}/hurricane/plots/plot_tropcyc_lead_average.py
+python ${USHevs}/${COMPONENT}/${STEP}/plot_tropcyc_lead_average.py
 
 #/lfs/h2/emc/ptmp/jiayi.peng/metTC/wp02/plot/WP_2022_MALAKAS/images
 nimgs=$(ls ${STORMroot}/plot/${tc_name}/images/* |wc -l)
@@ -90,17 +90,16 @@ if [ $nimgs -ne 0 ]; then
   cd ${STORMroot}/plot/${tc_name}/images
   convert ABSAMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.png ABSAMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif
   convert AMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.png AMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif
-
   convert ABSTK_ERR_fhrmean_${tc_name}_global.png ABSTK_ERR_fhrmean_${tc_name}_global.gif
   convert ALTK_ERR_fhrmean_${tc_name}_global.png ALTK_ERR_fhrmean_${tc_name}_global.gif
   convert CRTK_ERR_fhrmean_${tc_name}_global.png CRTK_ERR_fhrmean_${tc_name}_global.gif
   rm -f *.png
   if [ "$SENDCOM" = 'YES' ]; then
-    cp ${STORMroot}/plot/${tc_name}/images/ABSAMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif ${COMOUTroot}/evs.hurricane_global_ens.abswind_err.${stormBasin}.${stormYear}.${stormName}${stormNumber}.png
-    cp ${STORMroot}/plot/${tc_name}/images/AMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif ${COMOUTroot}/evs.hurricane_global_ens.wind_bias.${stormBasin}.${stormYear}.${stormName}${stormNumber}.png 
-    cp ${STORMroot}/plot/${tc_name}/images/ABSTK_ERR_fhrmean_${tc_name}_global.gif ${COMOUTroot}/evs.hurricane_global_ens.abstk_err.${stormBasin}.${stormYear}.${stormName}${stormNumber}.png
-    cp ${STORMroot}/plot/${tc_name}/images/ALTK_ERR_fhrmean_${tc_name}_global.gif ${COMOUTroot}/evs.hurricane_global_ens.altk_bias.${stormBasin}.${stormYear}.${stormName}${stormNumber}.png
-    cp ${STORMroot}/plot/${tc_name}/images/CRTK_ERR_fhrmean_${tc_name}_global.gif ${COMOUTroot}/evs.hurricane_global_ens.crtk_bias.${stormBasin}.${stormYear}.${stormName}${stormNumber}.png
+    cp ${STORMroot}/plot/${tc_name}/images/ABSAMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif ${comoutroot}/evs.hurricane_global_ens.abswind_err.${stormBasin}.${stormYear}.${stormName}${stormNumber}.png
+    cp ${STORMroot}/plot/${tc_name}/images/AMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif ${comoutroot}/evs.hurricane_global_ens.wind_bias.${stormBasin}.${stormYear}.${stormName}${stormNumber}.png 
+    cp ${STORMroot}/plot/${tc_name}/images/ABSTK_ERR_fhrmean_${tc_name}_global.gif ${comoutroot}/evs.hurricane_global_ens.abstk_err.${stormBasin}.${stormYear}.${stormName}${stormNumber}.png
+    cp ${STORMroot}/plot/${tc_name}/images/ALTK_ERR_fhrmean_${tc_name}_global.gif ${comoutroot}/evs.hurricane_global_ens.altk_bias.${stormBasin}.${stormYear}.${stormName}${stormNumber}.png
+    cp ${STORMroot}/plot/${tc_name}/images/CRTK_ERR_fhrmean_${tc_name}_global.gif ${comoutroot}/evs.hurricane_global_ens.crtk_bias.${stormBasin}.${stormYear}.${stormName}${stormNumber}.png
   fi
 fi
 
@@ -113,21 +112,21 @@ done
 #export COMINstats=/lfs/h2/emc/ptmp/$USER/com/evs/1.0/hurricane_global_ens/tropcyc/stats
 
 if [ ${stormBasin} = "al" ]; then
-  export COMOUTbas=${COMOUTatl}
+  export comoutbas=${comoutatl}
   export metTCcomout=${DATA}/Atlantic
   if [ ! -d $metTCcomout ]; then mkdir -p $metTCcomout; fi
   cd $metTCcomout
   cp -r ${COMINstats}/Atlantic/tc_stat .
   cp $metTCcomout/tc_stat/tc_stat_basin.out $metTCcomout/tc_stat/tc_stat.out
 elif [ ${stormBasin} = "ep" ]; then
-  export COMOUTbas=${COMOUTepa}
+  export comoutbas=${comoutepa}
   export metTCcomout=${DATA}/EastPacific
   if [ ! -d $metTCcomout ]; then mkdir -p $metTCcomout; fi
   cd $metTCcomout
   cp -r ${COMINstats}/EastPacific/tc_stat .
   cp $metTCcomout/tc_stat/tc_stat_basin.out $metTCcomout/tc_stat/tc_stat.out
 elif [ ${stormBasin} = "wp" ]; then
-  export COMOUTbas=${COMOUTwpa}
+  export comoutbas=${comoutwpa}
   export metTCcomout=${DATA}/WestPacific
   if [ ! -d $metTCcomout ]; then mkdir -p $metTCcomout; fi
   cd $metTCcomout
@@ -150,24 +149,23 @@ export tc_name=${stbasin}${under}${stormYear}${under}${stormNameB}
 export basin=${stbasin}
 export tc_num= 
 export tropcyc_model_type="global"
-python ${USHevs}/hurricane/plots/plot_tropcyc_lead_average.py
+python ${USHevs}/${COMPONENT}/${STEP}/plot_tropcyc_lead_average.py
 
 bimgs=$(ls ${metTCcomout}/plot/${tc_name}/images/* |wc -l)
 if [ $bimgs -ne 0 ]; then
   cd ${metTCcomout}/plot/${tc_name}/images
   convert ABSAMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.png ABSAMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif
   convert AMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.png AMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif
-
   convert ABSTK_ERR_fhrmean_${tc_name}_global.png ABSTK_ERR_fhrmean_${tc_name}_global.gif
   convert ALTK_ERR_fhrmean_${tc_name}_global.png ALTK_ERR_fhrmean_${tc_name}_global.gif
   convert CRTK_ERR_fhrmean_${tc_name}_global.png CRTK_ERR_fhrmean_${tc_name}_global.gif
   rm -f *.png
   if [ "$SENDCOM" = 'YES' ]; then
-    cp -r ${metTCcomout}/plot/${tc_name}/images/ABSAMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif ${COMOUTbas}/evs.hurricane_global_ens.abswind_err.${stormBasin}.${stormYear}.season.png
-    cp -r ${metTCcomout}/plot/${tc_name}/images/AMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif ${COMOUTbas}/evs.hurricane_global_ens.wind_bias.${stormBasin}.${stormYear}.season.png
-    cp -r ${metTCcomout}/plot/${tc_name}/images/ABSTK_ERR_fhrmean_${tc_name}_global.gif ${COMOUTbas}/evs.hurricane_global_ens.abstk_err.${stormBasin}.${stormYear}.season.png
-    cp -r ${metTCcomout}/plot/${tc_name}/images/ALTK_ERR_fhrmean_${tc_name}_global.gif ${COMOUTbas}/evs.hurricane_global_ens.altk_bias.${stormBasin}.${stormYear}.season.png
-    cp -r ${metTCcomout}/plot/${tc_name}/images/CRTK_ERR_fhrmean_${tc_name}_global.gif ${COMOUTbas}/evs.hurricane_global_ens.crtk_bias.${stormBasin}.${stormYear}.season.png
+    cp -r ${metTCcomout}/plot/${tc_name}/images/ABSAMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif ${comoutbas}/evs.hurricane_global_ens.abswind_err.${stormBasin}.${stormYear}.season.png
+    cp -r ${metTCcomout}/plot/${tc_name}/images/AMAX_WIND-BMAX_WIND_fhrmean_${tc_name}_global.gif ${comoutbas}/evs.hurricane_global_ens.wind_bias.${stormBasin}.${stormYear}.season.png
+    cp -r ${metTCcomout}/plot/${tc_name}/images/ABSTK_ERR_fhrmean_${tc_name}_global.gif ${comoutbas}/evs.hurricane_global_ens.abstk_err.${stormBasin}.${stormYear}.season.png
+    cp -r ${metTCcomout}/plot/${tc_name}/images/ALTK_ERR_fhrmean_${tc_name}_global.gif ${comoutbas}/evs.hurricane_global_ens.altk_bias.${stormBasin}.${stormYear}.season.png
+    cp -r ${metTCcomout}/plot/${tc_name}/images/CRTK_ERR_fhrmean_${tc_name}_global.gif ${comoutbas}/evs.hurricane_global_ens.crtk_bias.${stormBasin}.${stormYear}.season.png
   fi
 fi
 ### bas do loop end

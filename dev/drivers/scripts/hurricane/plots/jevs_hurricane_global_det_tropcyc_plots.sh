@@ -33,7 +33,7 @@ module reset
 source ${HOMEevs}/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
 #Set PDY to override setpdy.sh called in the j-jobs
-export PDY=20230816
+export PDY=20231231
 
 #Define the directory for TC-stats file 
 export COMINstats=/lfs/h2/emc/ptmp/$USER/com/evs/${evs_ver}/${COMPONENT}/${RUN}/${VERIF_CASE}/stats

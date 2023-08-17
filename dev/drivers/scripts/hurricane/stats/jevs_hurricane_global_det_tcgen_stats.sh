@@ -24,7 +24,7 @@ export STEP=stats
 export VERIF_CASE=tcgen
 export envir=dev
 export cyc=00
-export job=jevs_hurricane_global_det_tcgen_stats_${cyc}
+export job=jevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}_${cyc}
 
 ############################################################
 # Load modules
@@ -33,14 +33,14 @@ module reset
 source ${HOMEevs}/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
 #Set PDY to override setpdy.sh called in the j-jobs
-export PDY=20221231
+export PDY=20231231
 
 #Define the directories of your TC genesis data and A/Bdeck files
-export COMINgenesis=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/TCgen/Year2022
-export COMINadeckNHC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/adeck/Year2022
-export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/bdeck/Year2022
-export COMINadeckJTWC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/adeck/Year2022
-export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/bdeck/Year2022
+export COMINgenesis=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/TCgen
+export COMINadeckNHC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/adeck
+export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/bdeck
+export COMINadeckJTWC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/adeck
+export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/bdeck
 
 export DATAROOT=/lfs/h2/emc/ptmp/$USER
 export COMROOT=${DATAROOT}/com

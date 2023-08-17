@@ -33,7 +33,7 @@ module reset
 source ${HOMEevs}/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
 #Set PDY to override setpdy.sh called in the j-jobs
-export PDY=20230816
+export PDY=20231231
 
 #Define TC-vital file, TC track file and the directory for Bdeck files
 export COMINvit=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/TCvital/syndat_tcvitals.2023

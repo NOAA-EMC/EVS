@@ -24,7 +24,7 @@ export STEP=stats
 export VERIF_CASE=tropcyc
 export envir=dev
 export cyc=00
-export job=jevs_hurricane_global_ens_tropcyc_stats_${cyc}
+export job=jevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}_${cyc}
 
 ############################################################
 # Load modules
@@ -37,7 +37,7 @@ export PDY=20231231
 
 #Define TC-vital file, TC track file and the directory for Bdeck files
 export COMINvit=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/TCvital/syndat_tcvitals.2023
-export COMINtrack=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/regionalTrack/tracks.atcfunix.23
+export COMINtrack=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/globalTrack/tracks.atcfunix.23
 export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/bdeck
 export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/bdeck
 
@@ -46,7 +46,7 @@ export COMROOT=${DATAROOT}/com
 export KEEPDATA=YES
 
 # CALL executable job script here
-$HOMEevs/jobs/hurricane/stats/JEVS_HURRICANE_STATS
+$HOMEevs/jobs/${COMPONENT}/${STEP}/JEVS_HURRICANE_STATS
 
 %include <tail.h>
 %manual

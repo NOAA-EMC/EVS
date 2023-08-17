@@ -72,14 +72,13 @@ sed -i "s|$SEARCH6|$BASIN_MASK|g" TCGen_template.conf
 
 run_metplus.py -c ${OUTPUT}/TCGen_template.conf
 
-export COMOUTroot=${COMOUT}
 if [ "$SENDCOM" = 'YES' ]; then
-  if [ ! -d ${COMOUTroot} ]; then mkdir -p ${COMOUTroot}; fi
-  cp ${OUTPUT}/tc_gen_${YEAR}_ctc.txt ${COMOUTroot}/tc_gen_${YEAR}_ctc_${basin}_${model}.txt
-  cp ${OUTPUT}/tc_gen_${YEAR}_cts.txt ${COMOUTroot}/tc_gen_${YEAR}_cts_${basin}_${model}.txt
-  cp ${OUTPUT}/tc_gen_${YEAR}_genmpr.txt ${COMOUTroot}/tc_gen_${YEAR}_genmpr_${basin}_${model}.txt
-  cp ${OUTPUT}/tc_gen_${YEAR}.stat ${COMOUTroot}/tc_gen_${YEAR}_${basin}_${model}.stat
-  cp ${OUTPUT}/tc_gen_${YEAR}_pairs.nc ${COMOUTroot}/tc_gen_${YEAR}_pairs_${basin}_${model}.nc
+  if [ ! -d ${COMOUT} ]; then mkdir -p ${COMOUT}; fi
+  cp ${OUTPUT}/tc_gen_${YEAR}_ctc.txt ${COMOUT}/tc_gen_${YEAR}_ctc_${basin}_${model}.txt
+  cp ${OUTPUT}/tc_gen_${YEAR}_cts.txt ${COMOUT}/tc_gen_${YEAR}_cts_${basin}_${model}.txt
+  cp ${OUTPUT}/tc_gen_${YEAR}_genmpr.txt ${COMOUT}/tc_gen_${YEAR}_genmpr_${basin}_${model}.txt
+  cp ${OUTPUT}/tc_gen_${YEAR}.stat ${COMOUT}/tc_gen_${YEAR}_${basin}_${model}.stat
+  cp ${OUTPUT}/tc_gen_${YEAR}_pairs.nc ${COMOUT}/tc_gen_${YEAR}_pairs_${basin}_${model}.nc
 fi
 
 ### model do loop end

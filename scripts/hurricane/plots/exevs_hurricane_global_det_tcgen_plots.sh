@@ -61,7 +61,7 @@ error=$?
 
 rm -f TC_genesis.png
 
-cp ${USHevs}/hurricane/plots/false_${basin}.py .
+cp ${USHevs}/${COMPONENT}/${STEP}/false_${basin}.py .
 grep "00    FYON" tc_gen_${YEAR}_genmpr.txt > tc_gen_false.txt
 grep "NA    FYON" tc_gen_${YEAR}_genmpr.txt >> tc_gen_false.txt
 export falsefile="tc_gen_false.txt"
@@ -81,7 +81,7 @@ TargetImageName=$gif_name1
 nws_logo $TargetImageName
 error=$?
 
-cp ${USHevs}/hurricane/plots/tcgen_space_${basin}.py .
+cp ${USHevs}/${COMPONENT}/${STEP}/tcgen_space_${basin}.py .
 python tcgen_space_${basin}.py
 convert TC_genesis.png tcgen_HitFalse_${basin}_${model}.gif
 rm -f TC_genesis.png
@@ -98,12 +98,11 @@ TargetImageName=$gif_name2
 nws_logo $TargetImageName
 error=$?
 
-export COMOUTroot=${COMOUT}
-if [ ! -d ${COMOUTroot} ]; then mkdir -p ${COMOUTroot}; fi
+if [ ! -d ${COMOUT} ]; then mkdir -p ${COMOUT}; fi
 if [ "$SENDCOM" = 'YES' ]; then
-  cp ${OUTPUT}/tcgen_hits_${basin}_${model}.gif ${COMOUTroot}/evs.hurricane_global_det.hits.${basin}.${YEAR}.${model}.season.tcgen.png
-  cp ${OUTPUT}/tcgen_falseAlarm_${basin}_${model}.gif ${COMOUTroot}/evs.hurricane_global_det.fals.${basin}.${YEAR}.${model}.season.tcgen.png
-  cp ${OUTPUT}/tcgen_HitFalse_${basin}_${model}.gif ${COMOUTroot}/evs.hurricane_global_det.hitfals.${basin}.${YEAR}.${model}.season.tcgen.png
+  cp ${OUTPUT}/tcgen_hits_${basin}_${model}.gif ${COMOUT}/evs.hurricane_global_det.hits.${basin}.${YEAR}.${model}.season.tcgen.png
+  cp ${OUTPUT}/tcgen_falseAlarm_${basin}_${model}.gif ${COMOUT}/evs.hurricane_global_det.fals.${basin}.${YEAR}.${model}.season.tcgen.png
+  cp ${OUTPUT}/tcgen_HitFalse_${basin}_${model}.gif ${COMOUT}/evs.hurricane_global_det.hitfals.${basin}.${YEAR}.${model}.season.tcgen.png
 fi
 
 ### model do loop end
@@ -113,7 +112,7 @@ done
 export DATAplot=${DATA}/${basin}
 if [ ! -d ${DATAplot} ]; then mkdir -p ${DATAplot}; fi
 cd ${DATAplot}
-cp ${USHevs}/hurricane/plots/tcgen_performance_diagram.py .
+cp ${USHevs}/${COMPONENT}/${STEP}/tcgen_performance_diagram.py .
 grep "GENESIS_DEV" ${COMINstats}/tc_gen_${YEAR}_ctc_${basin}_gfs.txt > dev_tc_gen_${YEAR}_ctc_${basin}_gfs.txt
 grep "GENESIS_DEV" ${COMINstats}/tc_gen_${YEAR}_ctc_${basin}_ecmwf.txt > dev_tc_gen_${YEAR}_ctc_${basin}_ecmwf.txt
 grep "GENESIS_DEV" ${COMINstats}/tc_gen_${YEAR}_ctc_${basin}_cmc.txt > dev_tc_gen_${YEAR}_ctc_${basin}_cmc.txt
@@ -136,7 +135,7 @@ nws_logo $TargetImageName
 error=$?
 
 if [ "$SENDCOM" = 'YES' ]; then
-  cp ${DATAplot}/tcgen_performance_diagram_${basin}.gif ${COMOUTroot}/evs.hurricane_global_det.performancediagram.${basin}.${YEAR}.season.tcgen.png
+  cp ${DATAplot}/tcgen_performance_diagram_${basin}.gif ${COMOUT}/evs.hurricane_global_det.performancediagram.${basin}.${YEAR}.season.tcgen.png
 fi
 ### basin do loop end
 done

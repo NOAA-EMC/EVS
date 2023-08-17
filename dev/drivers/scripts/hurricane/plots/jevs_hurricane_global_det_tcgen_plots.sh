@@ -24,7 +24,7 @@ export STEP=plots
 export VERIF_CASE=tcgen
 export envir=dev
 export cyc=00
-export job=jevs_hurricane_global_det_tcgen_plots_${cyc}
+export job=jevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}_${cyc}
 
 ############################################################
 # Load modules
@@ -33,7 +33,7 @@ module reset
 source ${HOMEevs}/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
 #Set PDY to override setpdy.sh called in the j-jobs
-export PDY=20221231
+export PDY=20231231
 
 #Define the directories of your TC genesis stats files
 export COMINstats=/lfs/h2/emc/ptmp/$USER/com/evs/${evs_ver}/${COMPONENT}/${RUN}/${VERIF_CASE}/stats
@@ -46,7 +46,7 @@ export KEEPDATA=YES
 
 
 # CALL executable job script here
-$HOMEevs/jobs/hurricane/plots/JEVS_HURRICANE_PLOTS
+$HOMEevs/jobs/${COMPONENT}/${STEP}/JEVS_HURRICANE_PLOTS
 
 %include <tail.h>
 %manual

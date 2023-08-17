@@ -24,7 +24,7 @@ export STEP=plots
 export VERIF_CASE=tropcyc
 export envir=dev
 export cyc=00
-export job=jevs_hurricane_global_ens_tropcyc_plots_${cyc}
+export job=jevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}_${cyc}
 
 ############################################################
 # Load modules
@@ -50,7 +50,7 @@ export COMROOT=${DATAROOT}/com
 export KEEPDATA=YES
 
 # CALL executable job script here
-$HOMEevs/jobs/hurricane/plots/JEVS_HURRICANE_PLOTS
+$HOMEevs/jobs/${COMPONENT}/${STEP}/JEVS_HURRICANE_PLOTS
 
 %include <tail.h>
 %manual
