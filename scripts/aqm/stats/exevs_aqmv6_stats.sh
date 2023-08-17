@@ -218,6 +218,7 @@ echo "obs_daily_found = ${obs_daily_found}"
 
 
 if [ $cyc = 11 ]
+fcstmax=48
 then
 
   for biastyp in raw bc
@@ -296,6 +297,7 @@ fi
 # Verification is being done on both raw and bias-corrected output data
 
 if [ $cyc = 04 ]
+fcstmax=48
 then
 
   for biastyp in raw bc

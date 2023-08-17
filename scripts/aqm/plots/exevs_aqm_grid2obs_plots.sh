@@ -123,48 +123,83 @@ do
 	
 	export inithr
 	export var=OZCON1
+	mkdir $COMOUTplots/$var
 	export lev=A1
 	export linetype=SL1L2
 	smlev=`echo $lev | tr A-Z a-z`
 	smvar=ozone
+	if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png ]
+	then
 	sh $USHevs/${COMPONENT}/py_plotting_awpozcon.config
+        else
+	echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$var/evs.$COMPONENT.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png $PLOTDIR
+	fi
 
 	if [ -e $PLOTDIR/aq/*/evs*png ]
 	then
 	mv $PLOTDIR/aq/*/evs*png ${PLOTDIR}/evs.$COMPONENT.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png
-        else
+	cp ${PLOTDIR}/evs.$COMPONENT.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png $COMOUTplots/$var
+        elif [ ! -e ${PLOTDIR}/evs.$COMPONENT.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png ]
+	then
 	echo "NO PLOT FOR",$var,$region
         fi
 
+	if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.fbar_obar.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png ]
+	then
 	sh $USHevs/${COMPONENT}/py_plotting_awpozcon_fbar.config
+        else
+        echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$var/evs.$COMPONENT.fbar_obar.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png $PLOTDIR
+	fi
 	
 	if [ -e $PLOTDIR/aq/*/evs*png ]
 	then
 	mv $PLOTDIR/aq/*/evs*png ${PLOTDIR}/evs.$COMPONENT.fbar_obar.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png
-        else
+	cp ${PLOTDIR}/evs.$COMPONENT.fbar_obar.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png $COMOUTplots/$var
+        elif [ ! -e ${PLOTDIR}/evs.$COMPONENT.fbar_obar.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png ]
+        then
 	echo "NO PLOT FOR",$var,$region
         fi
 
 	export var=PMTF
+	mkdir $COMOUTplots/$var
         export lev=L1
 	export lev_obs=A1
         export linetype=SL1L2
 	smlev=`echo $lev | tr A-Z a-z`
         smvar=pm25
+	if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png ]
+	then
         sh $USHevs/${COMPONENT}/py_plotting_pm25.config
+        else
+	echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$var/evs.$COMPONENT.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png $PLOTDIR
+	fi
 
 	if [ -e $PLOTDIR/aq/*/evs*png ]
 	then
         mv $PLOTDIR/aq/*/evs*png ${PLOTDIR}/evs.$COMPONENT.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png
-        else
+	cp ${PLOTDIR}/evs.$COMPONENT.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png $COMOUTplots/$var
+        elif [ ! -e ${PLOTDIR}/evs.$COMPONENT.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png ]
+	then
 	echo "NO PLOT FOR",$var,$region
         fi
 
+	if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.fbar_obar.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png ]
+	then
         sh $USHevs/${COMPONENT}/py_plotting_pm25_fbar.config
+        else
+	echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$var/evs.$COMPONENT.fbar_obar.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png $PLOTDIR
+	fi
+
 	if [ -e $PLOTDIR/aq/*/evs*png ]
 	then
         mv $PLOTDIR/aq/*/evs*png ${PLOTDIR}/evs.$COMPONENT.fbar_obar.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png
-        else
+	cp ${PLOTDIR}/evs.$COMPONENT.fbar_obar.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png $COMOUTplots/$var
+        elif [ ! -e ${PLOTDIR}/evs.$COMPONENT.fbar_obar.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png ]
+	then
 	echo "NO PLOT FOR",$var,$region
         fi
 
@@ -174,6 +209,7 @@ do
 	do
 	export flead
 	export var=OZMAX8
+	mkdir $COMOUTplots/$var
 	export lev=L1
 	export lev_obs=A8
 	export linetype=CTC
@@ -181,11 +217,20 @@ do
 	smlev=`echo $lev | tr A-Z a-z`
 	smvar=`echo $var | tr A-Z a-z`
 
+        if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png ]
+	then
 	sh $USHevs/${COMPONENT}/py_plotting_ozmax8.config
+        else
+        echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$var/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png $PLOTDIR
+	fi
+
 	if [ -e $PLOTDIR/aq/*/evs*png ]
 	then
 	mv $PLOTDIR/aq/*/evs*png ${PLOTDIR}/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png
-        else
+	cp ${PLOTDIR}/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png $COMOUTplots/$var
+        elif [ ! -e ${PLOTDIR}/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png ]
+	then
 	echo "NO PLOT FOR",$var,$region
         fi
 
@@ -195,6 +240,7 @@ do
 	do
 	export flead
 	export var=OZMAX8
+	mkdir $COMOUTplots/$var
 	export lev=L1
 	export lev_obs=A8
 	export linetype=CTC
@@ -202,11 +248,20 @@ do
 	smlev=`echo $lev | tr A-Z a-z`
 	smvar=`echo $var | tr A-Z a-z`
 
+	if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png ]
+	then
 	sh $USHevs/${COMPONENT}/py_plotting_ozmax8.config
+	else
+        echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$var/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png $PLOTDIR
+	fi
+
 	if [ -e $PLOTDIR/aq/*/evs*png ]
 	then
 	mv $PLOTDIR/aq/*/evs*png ${PLOTDIR}/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png
-        else
+	cp ${PLOTDIR}/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png $COMOUTplots/$var
+        elif [ ! -e ${PLOTDIR}/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png ]
+	then
 	echo "NO PLOT FOR",$var,$region
         fi
 
@@ -216,6 +271,7 @@ do
 	do
 	export flead
 	export var=PMAVE
+	mkdir $COMOUTplots/$var
 	export lev=A23
 	export lev_obs=A1
 	export linetype=CTC
@@ -223,11 +279,20 @@ do
 	smlev=`echo $lev | tr A-Z a-z`
 	smvar=`echo $var | tr A-Z a-z`
 
+	if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png ]
+	then
 	sh $USHevs/${COMPONENT}/py_plotting_pmave.config
+        else
+	echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$var/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png $PLOTDIR
+	fi
+
 	if [ -e $PLOTDIR/aq/*/evs*png ]
 	then
 	mv $PLOTDIR/aq/*/evs*png ${PLOTDIR}/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png
-        else
+	cp ${PLOTDIR}/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png $COMOUTplots/$var
+        elif [ ! -e ${PLOTDIR}/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png ]
+	then
 	echo "NO PLOT FOR",$var,$region
         fi
 
@@ -237,6 +302,7 @@ do
 	do
 	export flead
 	export var=PMAVE
+	mkdir $COMOUTplots/$var
 	export lev=A23
 	export lev_obs=A1
 	export linetype=CTC
@@ -244,11 +310,20 @@ do
 	smlev=`echo $lev | tr A-Z a-z`
 	smvar=`echo $var | tr A-Z a-z`
 
+	if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png ]
+	then
 	sh $USHevs/${COMPONENT}/py_plotting_pmave.config
+        else
+	echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/$var/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png $PLOTDIR
+	fi
+
 	if [ -e $PLOTDIR/aq/*/evs*png ]
 	then
 	mv $PLOTDIR/aq/*/evs*png ${PLOTDIR}/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png
-        else
+	cp ${PLOTDIR}/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png $COMOUTplots/$var
+        elif [ ! -e ${PLOTDIR}/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png ]
+	then
 	echo "NO PLOT FOR",$var,$region
         fi
 
@@ -264,6 +339,8 @@ cp evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTp
 ##
 ## Headline Plots
 ##
+
+mkdir $COMOUTplots/headline
 for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central
 do
 	export region
@@ -301,11 +378,20 @@ do
 	export select_headline_csi="70"
 	export select_headline_threshold=">${select_headline_csi}"
 
+	if [ ! -e $COMOUTplots/headline/headline_${COMPONENT}.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png ]
+	then
 	sh $USHevs/${COMPONENT}/py_plotting_ozmax8_headline.config
+        else
+	echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/headline/headline_${COMPONENT}.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png ${PLOTDIR_headline}
+	fi
+
 	if [ -e ${PLOTDIR_headline}/aq/*/evs*png ]
 	then
 	mv ${PLOTDIR_headline}/aq/*/evs*png ${PLOTDIR_headline}/headline_${COMPONENT}.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
-        else
+	cp ${PLOTDIR_headline}/headline_${COMPONENT}.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png $COMOUTplots/headline
+        elif [ ! -e ${PLOTDIR_headline}/headline_${COMPONENT}.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png ]
+	then
 	echo "NO PLOT FOR",$var,$region
         fi
 
@@ -328,11 +414,20 @@ do
 	export select_headline_csi="35"
 	export select_headline_threshold=">${select_headline_csi}"
 
+	if [ ! -e $COMOUTplots/headline/headline_${COMPONENT}.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png ]
+	then
 	sh $USHevs/${COMPONENT}/py_plotting_pmave_headline.config
+        else
+        echo "RESTART - plot exists; copying over to plot directory"
+	cp $COMOUTplots/headline/headline_${COMPONENT}.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png ${PLOTDIR_headline}
+	fi
+
 	if [ -e ${PLOTDIR_headline}/aq/*/evs*png ]
 	then
 	mv ${PLOTDIR_headline}/aq/*/evs*png ${PLOTDIR_headline}/headline_${COMPONENT}.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
-        else
+	cp ${PLOTDIR_headline}/headline_${COMPONENT}.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png $COMOUTplots/headline
+        elif [ ! -e ${PLOTDIR_headline}/headline_${COMPONENT}.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png ]
+	then
 	echo "NO PLOT FOR",$var,$region
         fi
 
