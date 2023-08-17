@@ -1092,7 +1092,7 @@ class Reference():
                                   },
                                   'PacificNW': {
                                       'long_name': 'Pacific Northwest',
-                                      'save_name': 'buk_pnw',
+                                      'save_name': 'buk_npw',
                                   },
                                   'SWC': {
                                       'long_name': 'Southwest Coast',
