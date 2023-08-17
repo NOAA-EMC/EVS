@@ -9,6 +9,11 @@ export PS4='$SECONDS + '
 date
 
 export machine="WCOSS2"
+
+###########################################################
+# obtain unique LSF id (jobid) and make temp directories
+###########################################################
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA 
 
