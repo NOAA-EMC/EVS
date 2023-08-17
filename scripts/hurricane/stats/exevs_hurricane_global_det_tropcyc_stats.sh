@@ -1,4 +1,6 @@
 #!/bin/bash
+
+set -x
 export PS4=' + exevs_hurricane_global_det_tropcyc_stats.sh line $LINENO: '
 
 export MetOnMachine=${MetOnMachine:-$MET_ROOT}
@@ -21,16 +23,16 @@ export stormNumber=${num}
 
 if [ ${stormBasin} = "al" ]; then
   COMINbdeck=${COMINbdeckNHC}
-  export COMOUTatl=${COMOUT}/Atlantic
-  if [ ! -d ${COMOUTatl} ]; then mkdir -p ${COMOUTatl}; fi
+  export comoutatl=${COMOUT}/Atlantic
+  if [ ! -d ${comoutatl} ]; then mkdir -p ${comoutatl}; fi
 elif [ ${stormBasin} = "ep" ]; then
   COMINbdeck=${COMINbdeckNHC}
-  export COMOUTepa=${COMOUT}/EastPacific
-  if [ ! -d ${COMOUTepa} ]; then mkdir -p ${COMOUTepa}; fi
+  export comoutepa=${COMOUT}/EastPacific
+  if [ ! -d ${comoutepa} ]; then mkdir -p ${comoutepa}; fi
 elif [ ${stormBasin} = "wp" ]; then
   COMINbdeck=${COMINbdeckJTWC}
-  export COMOUTwpa=${COMOUT}/WestPacific
-  if [ ! -d ${COMOUTwpa} ]; then mkdir -p ${COMOUTwpa}; fi
+  export comoutwpa=${COMOUT}/WestPacific
+  if [ ! -d ${comoutwpa} ]; then mkdir -p ${comoutwpa}; fi
 fi
 
 export bdeckfile=${COMINbdeck}/b${stormBasin}${stormNumber}${stormYear}.dat
@@ -43,8 +45,8 @@ export STORMroot=${DATA}/metTC/${bas}${num}
 if [ ! -d ${STORMroot} ]; then mkdir -p ${STORMroot}; fi
 export STORMdata=${STORMroot}/data
 if [ ! -d ${STORMdata} ]; then mkdir -p ${STORMdata}; fi
-export COMOUTroot=${COMOUT}/${bas}${num}
-if [ ! -d ${COMOUTroot} ]; then mkdir -p ${COMOUTroot}; fi
+export comoutroot=${COMOUT}/${bas}${num}
+if [ ! -d ${comoutroot} ]; then mkdir -p ${comoutroot}; fi
 cd ${STORMdata}
 
 #---get the storm name from TC-vital file "syndat_tcvitals.${YYYY}"
@@ -73,15 +75,17 @@ stormName=$(sed "s/ //g" <<< $VARIABLE2)
 echo "Name_${stormName}_Name"
 echo "${stormBasin}, ${stormNumber}, ${stormYear}, ${stormName}"
 
-#---get the model forecast tracks "AVNO/EMX/CMC" from archive file "tracks.atcfunix.${YY22}"
-grep "${stbasin}, ${stormNumber}" ${COMINtrack} > tracks.atcfunix.${YY22}_${stormBasin}${stormNumber}
-grep "03, AVNO" tracks.atcfunix.${YY22}_${stormBasin}${stormNumber} > a${stormBasin}${stormNumber}${stormYear}.dat
-grep "03,  EMX" tracks.atcfunix.${YY22}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
-grep "03,  CMC" tracks.atcfunix.${YY22}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
+#---get the model forecast tracks "AVNO/EMX/CMC" from archive file "tracks.atcfunix.${YY23}"
+grep "${stbasin}, ${stormNumber}" ${COMINtrack} > tracks.atcfunix.${YY23}_${stormBasin}${stormNumber}
+grep "03, AVNO" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} > a${stormBasin}${stormNumber}${stormYear}.dat
+#grep "03,  EMX" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
+grep "03,  CMC" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
 sed -i 's/03, AVNO/03, MD01/' a${stormBasin}${stormNumber}${stormYear}.dat
-sed -i 's/03,  EMX/03, MD02/' a${stormBasin}${stormNumber}${stormYear}.dat
-sed -i 's/03,  CMC/03, MD03/' a${stormBasin}${stormNumber}${stormYear}.dat
-export Model_List="MD01,MD02,MD03"
+#sed -i 's/03,  EMX/03, MD02/' a${stormBasin}${stormNumber}${stormYear}.dat
+sed -i 's/03,  CMC/03, MD02/' a${stormBasin}${stormNumber}${stormYear}.dat
+#sed -i 's/03,  CMC/03, MD03/' a${stormBasin}${stormNumber}${stormYear}.dat
+export Model_List="MD01,MD02"
+#export Model_List="MD01,MD02,MD03"
 #export Model_Plot="GFS,ECMWF,CMC"
 
 #---get the $startdate, $enddate[YYMMDDHH] from the best track file  
@@ -107,7 +111,7 @@ export enddate="$YY02$MM02$DD02$HH02"
 echo "$startdate, $enddate"
 
 #--- run for TC_pairs
-cp ${PARMevs}/metplus_config/hurricane/stats/TCPairs_template.conf .
+cp ${PARMevs}/metplus_config/${COMPONENT}/${STEP}/TCPairs_template.conf .
 export SEARCH0="METBASE_template"
 export SEARCH1="INPUT_BASE_template"
 export SEARCH2="OUTPUT_BASE_template"
@@ -130,7 +134,7 @@ run_metplus.py -c $STORMdata/TCPairs_template.conf
 
 #--- run for TC_stat 
 cd $STORMdata
-cp ${PARMevs}/metplus_config/hurricane/stats/TCStat_template.conf .
+cp ${PARMevs}/metplus_config/${COMPONENT}/${STEP}/TCStat_template.conf .
 
 export SEARCHy="LEAD_template"
 sed -i "s|$SEARCH0|$MetOnMachine|g" TCStat_template.conf
@@ -154,16 +158,16 @@ sed -i "s|$SEARCH8|$eymdh|g" TCStat_template.conf
 run_metplus.py -c $STORMdata/TCStat_template.conf
 
 if [ "$SENDCOM" = 'YES' ]; then
-  if [ ! -d ${COMOUTroot}/tc_pairs ]; then mkdir -p ${COMOUTroot}/tc_pairs; fi
-  if [ ! -d ${COMOUTroot}/tc_stat ]; then mkdir -p ${COMOUTroot}/tc_stat; fi
-  cp -r ${STORMroot}/tc_pairs/* ${COMOUTroot}/tc_pairs/.
-  cp -r ${STORMroot}/tc_stat/* ${COMOUTroot}/tc_stat/.
+  if [ ! -d ${comoutroot}/tc_pairs ]; then mkdir -p ${comoutroot}/tc_pairs; fi
+  if [ ! -d ${comoutroot}/tc_stat ]; then mkdir -p ${comoutroot}/tc_stat; fi
+  cp -r ${STORMroot}/tc_pairs/* ${comoutroot}/tc_pairs/.
+  cp -r ${STORMroot}/tc_stat/* ${comoutroot}/tc_stat/.
   if [ ${stormBasin} = "al" ]; then
-    cp ${COMOUTroot}/tc_stat/tc_stat_summary.tcst ${COMOUTatl}/${stormBasin}${stormNumber}${stormYear}_stat_summary.tcst 
+    cp ${comoutroot}/tc_stat/tc_stat_summary.tcst ${comoutatl}/${stormBasin}${stormNumber}${stormYear}_stat_summary.tcst 
   elif [ ${stormBasin} = "ep" ]; then
-    cp ${COMOUTroot}/tc_stat/tc_stat_summary.tcst ${COMOUTepa}/${stormBasin}${stormNumber}${stormYear}_stat_summary.tcst
+    cp ${comoutroot}/tc_stat/tc_stat_summary.tcst ${comoutepa}/${stormBasin}${stormNumber}${stormYear}_stat_summary.tcst
   elif [ ${stormBasin} = "wp" ]; then
-    cp ${COMOUTroot}/tc_stat/tc_stat_summary.tcst ${COMOUTwpa}/${stormBasin}${stormNumber}${stormYear}_stat_summary.tcst
+    cp ${comoutroot}/tc_stat/tc_stat_summary.tcst ${comoutwpa}/${stormBasin}${stormNumber}${stormYear}_stat_summary.tcst
   fi
 fi
 
@@ -175,19 +179,19 @@ done
 
 #---  Atlantic/EastPacific/WestPacific Basin TC_Stat 
 if [ ${stormBasin} = "al" ]; then
-  export COMOUTbas=${COMOUTatl}
+  export comoutbas=${comoutatl}
 elif [ ${stormBasin} = "ep" ]; then
-  export COMOUTbas=${COMOUTepa}
+  export comoutbas=${comoutepa}
 elif [ ${stormBasin} = "wp" ]; then
-  export COMOUTbas=${COMOUTwpa}
+  export comoutbas=${comoutwpa}
 fi
 
-nfile=$(ls ${COMOUTbas}/*.tcst |wc -l)
+nfile=$(ls ${comoutbas}/*.tcst |wc -l)
 if [ $nfile -ne 0 ]; then
 
 export mdh=010100
 export startdateB=${YYYY}${mdh}
-export metTCcomin=${COMOUTbas}
+export metTCcomin=${comoutbas}
 
 if [ ${stormBasin} = "al" ]; then
   export metTCcomout=${DATA}/metTC/atlantic
@@ -206,7 +210,7 @@ cd $metTCcomout
 #export SEARCH3=INIT_BEG_template
 #export SEARCH4=INIT_END_template
 
-cp ${PARMevs}/metplus_config/hurricane/stats/TCStat_template_basin.conf .
+cp ${PARMevs}/metplus_config/${COMPONENT}/${STEP}/TCStat_template_basin.conf .
 
 #export SEARCHy="LEAD_template"
 sed -i "s|$SEARCH0|$MetOnMachine|g" TCStat_template_basin.conf
@@ -230,9 +234,9 @@ sed -i "s|$SEARCH8|$eymdhB|g" TCStat_template_basin.conf
 
 run_metplus.py -c ${metTCcomout}/TCStat_template_basin.conf
 if [ "$SENDCOM" = 'YES' ]; then
-  if [ ! -d ${COMOUTbas}/tc_stat ]; then mkdir -p ${COMOUTbas}/tc_stat; fi
-  cp ${metTCcomout}/tc_stat/tc_stat.out ${COMOUTbas}/tc_stat/tc_stat_basin.out
-  cp ${metTCcomout}/tc_stat/tc_stat_summary.tcst ${COMOUTbas}/tc_stat/tc_stat_summary_basin.tcst
+  if [ ! -d ${comoutbas}/tc_stat ]; then mkdir -p ${comoutbas}/tc_stat; fi
+  cp ${metTCcomout}/tc_stat/tc_stat.out ${comoutbas}/tc_stat/tc_stat_basin.out
+  cp ${metTCcomout}/tc_stat/tc_stat_summary.tcst ${comoutbas}/tc_stat/tc_stat_summary_basin.tcst
 fi
 fi
 

@@ -113,7 +113,7 @@ postmsg "$jlogfile" "$msg"
 
 #############################################################
 # Execute the script
-${SCRIPTSevs}/hurricane/stats/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
+${SCRIPTSevs}/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
 
 #############################################################

@@ -32,7 +32,7 @@ export job=jevs_hurricane_regional_tropcyc_stats_${cyc}
 module reset
 source ${HOMEevs}/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh 
 
-export PDY=20230816 
+export PDY=20231231 
 #Set PDY to override setpdy.sh called in the j-jobs
 
 #Define TC-vital file, TC track file and the directory for Bdeck files
