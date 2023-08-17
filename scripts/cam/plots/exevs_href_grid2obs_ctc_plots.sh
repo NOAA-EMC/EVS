@@ -228,6 +228,12 @@ cd $plot_dir
 
 for domain in conus conus_east conus_west conus_south conus_central alaska  appalachia cplains deepsouth greatbasin greatlakes mezquital midatlantic northatlantic nolains nrockies pacificnw pacificsw prairie southeast southwest splains nplains srockies ; do
 
+ if [ $domain = alaska ] ; then
+    new_domain=$domain
+ else
+    new_domain=buk_${domain}
+ fi
+
  for var in vis hgt cape mlcape tcdc ; do
   if [ $var = vis ] ; then
     var_new=$var
@@ -251,7 +257,7 @@ for domain in conus conus_east conus_west conus_south conus_central alaska  appa
     valid=valid_00z_03z_06z_09z_12z_15z_18z_21z
   fi
 
-  mv performance_diagram_regional_${domain}_valid*_${var}_*.png evs.href.ctc.${var_new}_${level}.last${past_days}days.perfdiag_${valid}.buk_${domain}.png
+  mv performance_diagram_regional_${domain}_valid*_${var}_*.png evs.href.ctc.${var_new}_${level}.last${past_days}days.perfdiag_${valid}.${new_domain}.png
 
  done
 done
@@ -294,7 +300,13 @@ for score_type in lead_average threshold_average; do
 
     for domain in conus conus_east conus_west conus_south conus_central alaska appalachia cplains deepsouth greatbasin greatlakes mezquital midatlantic northatlantic nolains nrockies pacificnw pacificsw prairie southeast southwest splains nplains srockies ; do
 
-     mv ${score_type}_regional_${domain}_valid*_${var}_${stat}*.png evs.href.${stat}.${var_new}_${level}.last${past_days}days.${scoretype}_${valid}.buk_${domain}.png
+     if [ $domain = alaska ] ; then
+         new_domain=$domain
+     else
+         new_domain=buk_${domain}
+     fi
+
+     mv ${score_type}_regional_${domain}_valid*_${var}_${stat}*.png evs.href.${stat}.${var_new}_${level}.last${past_days}days.${scoretype}_${valid}.${new_domain}.png
 
        done #domain
     done #stat

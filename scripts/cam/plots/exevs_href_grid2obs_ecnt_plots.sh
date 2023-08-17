@@ -178,6 +178,13 @@ for stats in  rmse_spread ; do
 
    for domain in conus conus_east conus_west conus_south conus_central alaska appalachia cplains deepsouth greatbasin greatlakes mezquital midatlantic northatlantic nolains nrockies pacificnw pacificsw prairie southeast southwest splains nplains srockies ; do
 
+    if [ $domain = alaska ] ; then
+        new_domain=$domain
+    else
+        new_domain=buk_${domain}
+    fi
+
+
     for var in $vars ; do
 
       if [ $var = mslet ] ; then
@@ -198,9 +205,9 @@ for stats in  rmse_spread ; do
      valid=valid_available_times
 
       if [ $var = mslet ] || [ $var = gust ] || [  $var = hpbl ] ; then
-        mv ${score_type}_regional_${domain}_${valid}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_${valid_time}.buk_${domain}.png
+        mv ${score_type}_regional_${domain}_${valid}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_${valid_time}.${new_domain}.png
       else
-        mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_${valid_time}.buk_${domain}.png
+        mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_${valid_time}.${new_domain}.png
       fi
 
      done #var

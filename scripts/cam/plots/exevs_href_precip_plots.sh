@@ -250,7 +250,14 @@ for var in apcp_01 apcp_03 apcp_24 ; do
     fi
 
    for domain in conus conus_east conus_west conus_south conus_central alaska  ; do
-      mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${lead}.png  evs.href.ctc.${var}h.last${past_days}days.${scoretype}_valid_all_times.buk_${domain}.png
+
+    if [ $domain = alaska ] ; then
+         new_domain=$domain
+    else
+        new_domain=buk_${domain}
+    fi
+
+      mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${lead}.png  evs.href.ctc.${var}h.last${past_days}days.${scoretype}_valid_all_times.${new_domain}.png
    done
 
 done

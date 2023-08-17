@@ -46,7 +46,6 @@ done
 
 
 VX_MASK_LIST="CONUS, Alaska, Hawaii, PRico"
-#VX_MASK_LIST="PRico"
 
 export fcst_init_hour="0,6,12,18"
 export fcst_valid_hour="0,12"
@@ -72,8 +71,7 @@ elif [ $stats = bss ] ; then
   stat_list='bss_smpl'
   line_tp='pstd'  
   score_types='lead_average'
-  VARS='TMP_lt0C'
-  #VARS='TMP_lt0C WIND_ge30kt WIND_ge40kt'
+  VARS='TMP_lt0C WIND_ge30kt WIND_ge40kt'
 else
   echo $stats is wrong stat
   exit
@@ -212,20 +210,28 @@ for stats in rmse_spread bss_smpl ; do
     
    for domain in conus alaska hawaii prico; do
 
+       if [ $domain = conus ] ; then
+	    new_domain='buk_conus'
+       else
+            new_domain=$domain
+       fi
+
+
     for var in $vars ; do
 
       if [ $score_type = lead_average  ] ; then
 	level=p${var:0:3}
+	lead=_eq0.10000.png
+
 	if [ $var = 700mb_wind_ens_freq_ge15.4 ] ; then
 	  var_new='windspeed.ge.30kt.p700'
 	elif [ $var = 700mb_wind_ens_freq_ge20.58 ] ; then
-	  var_new='windspeed.ge.40KT.P700'
+	  var_new='windspeed.ge.40kt.P700'
 	elif [ $var = 850mb_wind_ens_freq_ge15.4 ] ; then
 	  var_new='windspeed.ge.30kt.p850'
         elif [ $var = 850mb_wind_ens_freq_ge20.58 ] ; then
           var_new='windspeed.ge.40kt.p850'	
         elif [ $var = 850mb_tmp_ens_freq_lt273.15 ] ; then
-	  lead=_eq0.10000.png	
 	  var_new='tmp.lt.0C.p850'
 	fi
 	valid="valid_available_times"
@@ -236,7 +242,7 @@ for stats in rmse_spread bss_smpl ; do
       fi	
 
       
-       mv ${score_type}_regional_${domain}_${valid}_${var}_${stats}${lead}  evs.href.${stats}.${var_new}.last${past_days}days.${scoretype}_${valid_time}.${init_time}.buk_${domain}.png
+       mv ${score_type}_regional_${domain}_${valid}_${var}_${stats}${lead}  evs.href.${stats}.${var_new}.last${past_days}days.${scoretype}_${valid_time}.${init_time}.${new_domain}.png
 
     done #var
    done  #domain
