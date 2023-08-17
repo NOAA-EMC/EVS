@@ -1,4 +1,4 @@
-#PBS -N jevs_aqm_grid2obs_plots_00
+#PBS -N jevs_aqm_grid2obs_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
