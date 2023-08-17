@@ -177,7 +177,7 @@ cd $plot_dir
 
 for grid in g130 g242 ; do 
   if [ $grid = g130 ] ; then
-   domain=conus
+   domain=buk_conus
   elif [ $grid = g242 ] ; then
    domain=alaska  
   fi
