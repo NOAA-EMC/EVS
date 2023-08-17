@@ -1,9 +1,9 @@
-#PBS -N jevs_aqm_grid2obs_plots_00
+#PBS -N jevs_aqm_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=02:00:00
+#PBS -l walltime=00:15:00
 #PBS -l select=1:ncpus=1:mem=2GB
 #PBS -l debug=true
 
@@ -26,23 +26,19 @@ source $HOMEevs/versions/run.ver
 module reset
 module load prod_envir/${prod_envir_ver}
 
-source $HOMEevs/modulefiles/aqm/aqm_plots.sh
+source $HOMEevs/modulefiles/aqm/aqm_stats.sh
 
-############################################################
-## For dev testing
-#############################################################
-export cyc=00
+export cyc
+echo $cyc
 export envir=prod
 export NET=evs
-export STEP=plots
+export STEP=stats
 export COMPONENT=aqm
 export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=aqm
 export modsys=aqm
-export mod_ver=${aqm}
-
-export MET_bin_exec=bin
+export mod_ver=${aqm_ver}
 
 export config=$HOMEevs/parm/evs_config/aqm/config.evs.aqm.prod
 source $config
@@ -50,48 +46,53 @@ source $config
 ########################################################################
 ## The following setting is for parallel test and need to be removed for operational code
 ########################################################################
+
 ##
 ## Instruction for Pull-Request testing
 ##     point COMIN to personal directory
-##     output can be found at $COMOUTplot (defined in JEVS_AQM_PLOTS based on COMIN setting below)
+##     output can be found at $COMOUTfinal (defined in JEVS_AQM_STATS based on COMIN setting below)
 ## 
-## (1) input from the pull-request stats output (see example (a) below)
-## or (2) Use EVSv1.0 parallel stats archive (see example (b) below)
+## "Stats" needs previous three days' PREP for day3 verification
+## Default VDATE is PDYm3
+## (1) Repeat pull-request prep step for PDYm3, PDYm4, and PDYm5 and
+##     "export COMINaqmproc=" to $COMOUT in jevs_aqm_prep.sh
+## or (2) Use EVSv1.0 parallel preps archive, 
+##     export COMINaqmproc="export COMINaqmproc=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/evs/v1.0/prep/aqm"
 ##
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
+## export COMIN=/lfs/h2/emc/physics/noscrub/$USER/${NET}/${evs_ver}
+export COMOUT=${COMIN}/${STEP}/${COMPONENT}
+
+## export COMINaqm=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=YES
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
+## For aqmv7 NRT runs
+## export fcst_input_ver=v7
+## export COMINaqm=/lfs/h2/emc/ptmp/jianping.huang/emc.para/com/aqm/v7.0
+
+## For aqmv6 restrospective runs
+## export fcst_input_ver=v6
+## export COMINaqm=/lfs/h2/emc/physics/noscrub/$USER/verification/${MODELNAME}/${envir}
+
+## Need VDATE setting
 export cycle=t${cyc}z
-#
-
-##
-## Note plot step in general needs previous 31 days of data (it is okay for missing days)
-##
-## Example a
-## setting to use stats generated from pull-request stats testing
-## USE THE SAME "export COMIN=" as in stats step during pull-request testing
-## export COMINaqm=${COMIN}/stats/${COMPONENT}/${MODELNAME}
-#
-## Example b
-## setting to use stats from EVSv1.0 parallel output directory
-#
-## setting to produce output to personal directory
-## export COMIN=/lfs/h2/emc/physics/noscrub/$USER/${NET}/${evs_ver}
-## export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
-export COMIN=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver}
-mkdir -p ${COMIN}
-export COMINaqm=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/evs/v1.0/stats/aqm/aqm
-
-export COMOUT=${COMIN}/${STEP}/${COMPONENT}
+setpdy.sh
+. ./PDY
 #
 ## export KEEPDATA=NO
 #
+export VDATE=${PDYm3}
+#
+export COMOUT=$COMIN/${STEP}/${COMPONENT}
+export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
+export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
 ########################################################################
 
-export maillist=${maillist:-'perry.shafran@noaa.gov,geoffrey.manikin@noaa.gov'}
+export maillist=${maillist:-'ho-chun.huang@noaa.gov,geoffrey.manikin@noaa.gov'}
+## export maillist=${maillist:-'perry.shafran@noaa.gov,geoffrey.manikin@noaa.gov'}
 
 if [ -z "$maillist" ]; then
 
@@ -100,14 +101,15 @@ if [ -z "$maillist" ]; then
 else
 
    # CALL executable job script here
-   $HOMEevs/jobs/aqm/plots/JEVS_AQM_PLOTS
+   $HOMEevs/jobs/aqm/stats/JEVS_AQM_STATS
 
 fi
 
 ######################################################################
-## Purpose: This job will generate the grid2obs statistics for the NAM_FIREWXNEST
+## Purpose: This job will generate the grid2obs statistics for the AQM
 ##          model and generate stat files.
 #######################################################################
 #
-exit
+
+
 

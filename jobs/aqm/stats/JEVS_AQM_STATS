@@ -65,8 +65,6 @@ export MODELNAME=${MODELNAME:-aqm}
 export modsys=${modsys:-aqm}
 export mod_ver=${mod_ver:-${aqm_ver}}
 
-export MET_bin_exec=${MET_bin_exec:-bin}
-
 export VDATE=${VDATE:-${PDYm3}}
 
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver}/)}
@@ -89,7 +87,7 @@ export KEEPDATA=${KEEPDATA:-YES}
 # Execute the script.
 #######################################################################
 
-$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}${fcst_input_ver}_${STEP}.sh
+$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}${fcst_input_ver}_${VERIF_CASE}_${STEP}.sh
 
 if [ -e "$pgmout" ]; then
     cat $pgmout
