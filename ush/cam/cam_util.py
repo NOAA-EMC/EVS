@@ -444,9 +444,13 @@ def mark_job_completed(completed_jobs_file, job_name):
     with open(completed_jobs_file, 'a') as f:
         f.write(job_name + "\n")
 
-def copy_data_to_restart(data_dir, restart_dir, met_tool, net, run, step, 
-                         model, vdate, verif_case, verif_type, vx_mask, 
-                         job_type):
+# add to args: cyc, vhour, fhr, var_name, njob
+def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None, 
+                         run=None, step=None, model=None, vdate=None, cyc=None, 
+                         verif_case=None, verif_type=None, vx_mask=None, 
+                         job_type=None, var_name=None, vhour=None, 
+                         fhr_start=None, fhr_end=None, fhr_incr=None, 
+                         njob=None):
     sub_dirs = []
     copy_files = []
     if met_tool == "ascii2nc":
@@ -455,9 +459,8 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool, net, run, step,
             verif_type, 
             vx_mask, 
             met_tool, 
-            '*.nc'
         ))
-        copy_files.append('*.nc')
+        copy_files.append('{verif_type}.{vdate}{vhour}.nc')
     elif met_tool == 'genvxmask':
         sub_dirs.append(os.path.join(
             'METplus_output',
@@ -465,7 +468,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool, net, run, step,
             met_tool,
             f'{vx_mask}.{vdate}',
         ))
-        copy_files.append(f'{vx_mask}*.nc')
+        copy_files.append(f'{vx_mask}_t{vhour}z_f{fhr}.nc')
     elif met_tool == 'pb2nc':
         sub_dirs.append(os.path.join(
             'METplus_output',
@@ -473,7 +476,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool, net, run, step,
             vx_mask,
             met_tool,
         ))
-        copy_files.append(f'*.nc')
+        copy_files.append(f'prepbufr.*.{vdate}{vhour}.nc')
     elif met_tool == 'point_stat':
         sub_dirs.append(os.path.join(
             'METplus_output',
@@ -481,7 +484,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool, net, run, step,
             met_tool,
             f'{model}.{vdate}'
         ))
-        copy_files.append(f'{met_tool}_{model}_{vx_mask}_*.stat')
+        copy_files.append(f'{met_tool}_{model}_{vx_mask}_{var_name}_OBS_{fhr}0000L_{vdate}_{vhour}0000V.stat')
     elif met_tool == 'regrid_data_plane':
         sub_dirs.append(os.path.join(
             'METplus_output',
@@ -489,7 +492,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool, net, run, step,
             met_tool,
             f'{model}.{vdate}'
         ))
-        copy_files.append(f'{met_tool}_{model}_*_{verif_type}_{vx_mask}*.nc')
+        copy_files.append(f'{met_tool}_{model}_t{vhour}z_{verif_type}_{vx_mask}_job{njob}_fhr{fhr}.nc')
     elif met_tool == 'stat_analysis':
         if job_type == 'gather':
             sub_dirs.append(os.path.join(
@@ -508,16 +511,16 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool, net, run, step,
                 met_tool,
                 f'{model}.{vdate}'
             ))
-            copy_files.append(f'*.stat')
+            copy_files.append(f'{net}.{step}.{model}.{run}.{verif_case}.v{vdate}.c{cyc}z.stat')
     for d, sub_dir in enumerate(sub_dirs):
         origin_path = os.path.join(data_dir, sub_dir, copy_files[d])
         dest_path = os.path.join(restart_dir, sub_dir)
         if not glob.glob(origin_path):
-            pass
+            continue
         if not os.path.exists(dest_path):
             print(f"ERROR: Could not copy METplus output to COMOUT directory"
                   + f" {dest_path} because the path does not already exist")
-            pass
+            continue
         run_shell_command(
             ['cp', '-rpv', origin_path, os.path.join(dest_path,'.')]
         )
