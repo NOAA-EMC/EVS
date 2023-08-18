@@ -9,6 +9,11 @@ export PS4='$SECONDS + '
 date
 
 export machine="WCOSS2"
+
+###########################################################
+# obtain unique LSF id (jobid) and make temp directories
+###########################################################
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA 
 
@@ -53,7 +58,7 @@ export COMINecmwf=$DCOMROOT
 export COMINccpa=${COMINccpa:-$(compath.py ${envir}/com/ccpa/${ccpa_ver})}
 export COMINmrmsak=$DCOMROOT/ldmdata/obs/upperair/mrms/alaska/MultiSensorQPE
 export COMINmrmshi=$DCOMROOT/ldmdata/obs/upperair/mrms/hawaii/MultiSensorQPE
-export COMINosi=${COMINosi:-/lfs/h1/ops/dev/dcom}
+export COMINosi=${COMINosi:-/lfs/h1/ops/prod/dcom}
 export COMINghrsst=${COMINghrsst:-/lfs/h1/ops/dev/dcom}
 export COMINumd=${COMINumd:-/lfs/h1/ops/dev/dcom}
 export COMINnam=${COMINnam:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}

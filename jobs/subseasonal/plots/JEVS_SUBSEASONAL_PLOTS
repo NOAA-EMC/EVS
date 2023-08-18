@@ -9,9 +9,14 @@ export PS4='$SECONDS + '
 date
 
 export machine="WCOSS2"
+
+###########################################################
+# obtain unique LSF id (jobid) and make temp directories
+###########################################################
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA 
-
+ 
 ################################################################
 # SENDCOM=YES--Copy files from TMPDIR to $COMOUT
 # SENDECF=YES--Flag events on ecflow

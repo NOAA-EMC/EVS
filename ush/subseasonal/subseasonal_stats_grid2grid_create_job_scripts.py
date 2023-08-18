@@ -504,71 +504,8 @@ generate_stats_jobs_dict = {
                                                     +'.conf'
                                                 )]},
     },
-    'precip': {
-        #'24hrCCPA': {'env': {'met_config_overrides': ''},
-                          #'commands': [sub_util.metplus_command(
-                                           #'GridStat_fcstSUBSEASONAL_'
-                                           #+'obs24hrCCPA.conf'
-                                       #)]},
-        #'24hrCCPA_Nbrhd1': {'env': {'nbhrd_list': ("'1,3,5,7,9,11,13,"
-                                                   #+"15,17,19'"),
-                                    #'met_config_overrides': ''},
-                            #'commands': [sub_util.metplus_command(
-                                             #'GridStat_fcstSUBSEASONAL_'
-                                             #+'obs24hrCCPA_Nbrhd.conf'
-                                         #)]},
-        #'24hrCCPA_Nbrhd2': {'env': {'nbhrd_list': "'21,23,25,27,29'",
-                                    #'met_config_overrides': ''},
-                            #'commands': [sub_util.metplus_command(
-                                             #'GridStat_fcstSUBSEASONAL_'
-                                             #+'obs24hrCCPA_Nbrhd.conf'
-                                         #)]},
-        #'24hrCCPA_Nbrhd3': {'env': {'nbhrd_list': "'31,33,35,37'",
-                                    #'met_config_overrides': ''},
-                            #'commands': [sub_util.metplus_command(
-                                             #'GridStat_fcstSUBSEASONAL_'
-                                             #+'obs24hrCCPA_Nbrhd.conf'
-                                         #)]},
-        #'24hrCCPA_Nbrhd4': {'env': {'nbhrd_list': "'39,41,43'",
-                                    #'met_config_overrides': ''},
-                            #'commands': [sub_util.metplus_command(
-                                             #'GridStat_fcstSUBSEASONAL_'
-                                             #+'obs24hrCCPA_Nbrhd.conf'
-                                         #)]},
-        #'24hrCCPA_Nbrhd5': {'env': {'nbhrd_list': "'45,47,49'",
-                                    #'met_config_overrides': ''},
-                           #'commands': [sub_util.metplus_command(
-                                            #'GridStat_fcstSUBSEASONAL_'
-                                            #+'obs24hrCCPA_Nbrhd.conf'
-                                        #)]},
-        #'24hrCCPA_Nbrhd6': {'env': {'nbhrd_list': "'51,53,55'",
-                                    #'met_config_overrides': ''},
-                           #'commands': [sub_util.metplus_command(
-                                            #'GridStat_fcstSUBSEASONAL_'
-                                            #+'obs24hrCCPA_Nbrhd.conf'
-                                        #)]},
-        #'24hrCCPA_Nbrhd7': {'env': {'nbhrd_list': "'57,59'",
-                                    #'met_config_overrides': ''},
-                           #'commands': [sub_util.metplus_command(
-                                            #'GridStat_fcstSUBSEASONAL_'
-                                            #+'obs24hrCCPA_Nbrhd.conf'
-                                        #)]},
-        #'24hrCCPA_Nbrhd8': {'env': {'nbhrd_list': "'61,63'",
-                                    #'met_config_overrides': ''},
-                           #'commands': [sub_util.metplus_command(
-                                            #'GridStat_fcstSUBSEASONAL_'
-                                            #+'obs24hrCCPA_Nbrhd.conf'
-                                        #)]}
-    },
+    'precip': {},
     'pres_lvls': {
-        #'GeoHeight': {'env': {'var1_name': 'HGT',
-                              #'var1_levels': 'P500',
-                              #'var1_options': '',
-                              #'met_config_overrides': "'climo_mean = fcst;'"}#,
-                      #'commands': [sub_util.metplus_command(
-                                       #'GridStat_fcstSUBSEASONAL_'
-                                       #+'obsGFS_climoERA5.conf'
-                                   #)]}
         'WeeklyAvg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
                                             'var1_levels': 'P500',
                                             'met_config_overrides': (
@@ -599,40 +536,6 @@ generate_stats_jobs_dict = {
                                                        +'obsGFS_Weeks3_4AvgAnom'
                                                        +'.conf'
                                                    )]},
-        #'Temp': {'env': {'var1_name': 'TMP',
-                         #'var1_levels': "'P850, P500'",
-                         #'var1_options': '',
-                         #'met_config_overrides': "'climo_mean = fcst;'"},
-                 #'commands': [sub_util.metplus_command(
-                                  #'GridStat_fcstSUBSEASONAL_'
-                                  #+'obsGFS_climoERA5.conf'
-                              #)]},
-        #'UWind': {'env': {'var1_name': 'UGRD',
-                          #'var1_levels': "'P850, P500, P250'",
-                          #'var1_options': '',
-                          #'met_config_overrides': "'climo_mean = fcst;'"},
-                  #'commands': [sub_util.metplus_command(
-                                   #'GridStat_fcstSUBSEASONAL_'
-                                   #+'obsGFS_climoERA5.conf'
-                               #)]},
-        #'VWind': {'env': {'var1_name': 'VGRD',
-                          #'var1_levels': "'P850, P500, P250'",
-                          #'var1_options': '',
-                          #'met_config_overrides': "'climo_mean = fcst;'"},
-                  #'commands': [sub_util.metplus_command(
-                                   #'GridStat_fcstSUBSEASONAL_'
-                                   #+'obsGFS_climoERA5.conf'
-                               #)]},
-        #'VectorWind': {'env': {'var1_name': 'UGRD',
-                               #'var1_levels': "'P850, P500, P250'",
-                               #'var2_name': 'VGRD',
-                               #'var2_levels': "'P850, P500, P250'",
-                               #'met_config_overrides': "'climo_mean = fcst;'"#},
-                       #'commands': [sub_util.metplus_command(
-                                        #'GridStat_fcstSUBSEASONAL_'
-                                        #+'obsGFS_climoERA5_'
-                                        #+'VectorWind.conf'
-                                    #)]},
     },
     'seaice': {
         'WeeklyAvg_Concentration': {'env': {},
