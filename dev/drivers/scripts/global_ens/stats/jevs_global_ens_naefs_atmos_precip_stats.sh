@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=01:00:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=2:mem=100GB
+#PBS -l place=vscatter,select=1:ncpus=2:mem=100GB
 #PBS -l debug=true
 
 
@@ -37,7 +37,6 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 export KEEPDATA=YES
 
 export cyc=00
-#export VDATE=20230813
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
