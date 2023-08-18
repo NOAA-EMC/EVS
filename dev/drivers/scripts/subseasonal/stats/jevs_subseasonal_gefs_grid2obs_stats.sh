@@ -16,6 +16,7 @@ cd $PBS_O_WORKDIR
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
+export job=${PBS_JOBNAME:-jevs_subseasonal_gefs_grid2obs_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 
 source $HOMEevs/versions/run.ver
