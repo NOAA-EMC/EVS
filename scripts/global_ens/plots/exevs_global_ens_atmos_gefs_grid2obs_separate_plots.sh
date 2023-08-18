@@ -246,113 +246,94 @@ fi
 cd $plot_dir
 
 for ihr in 00z 12z ; do
- for domain in conus conus_east conus_west conus_south conus_central ; do
-     if [ $domain = conus_east ]; then
-        evs_graphic_domain="conus_e"
-     elif [ $domain = conus_west ]; then
-        evs_graphic_domain="conus_w"
-     elif [ $domain = conus_south ]; then
-        evs_graphic_domain="conus_s"
-     elif [ $domain = conus_central ]; then
-        evs_graphic_domain="conus_c"
-     else
-	evs_graphic_domain=$domain
-     fi
-     for lead in 120 240 360; do
-         mv performance_diagram_regional_${domain}_init_${ihr}_cape_f${lead}__ge250ge500ge1000ge2000.png  evs.global_ens.ctc.cape_l0.last${past_days}days.perfdiag_${valid_time}_f${lead}.g212_buk_${evs_graphic_domain}.png
-     done
- done
-done
-
-for stats in ets fbias ; do 
- for ihr in 00z 12z ; do
-    for thresh in ge250 ge500 ge1000 ge2000 ; do
-         for domain in conus conus_east conus_west conus_south conus_central  ; do
-             if [ $domain = conus_east ]; then
-                 evs_graphic_domain="conus_e"
-             elif [ $domain = conus_west ]; then
-                 evs_graphic_domain="conus_w"
-             elif [ $domain = conus_south ]; then
-                 evs_graphic_domain="conus_s"
-             elif [ $domain = conus_central ]; then
-                 evs_graphic_domain="conus_c"
-             else
-                 evs_graphic_domain=$domain
-             fi
-             mv lead_average_regional_${domain}_init_${ihr}_cape_${stats}_${thresh}.png  evs.global_ens.${stats}_${thresh}.cape_l0.last${past_days}days.fhrmean_init${ihr}_f384.g212_buk_${evs_graphic_domain}.png
-             for lead in 120 240 360 ; do
-                 mv time_series_regional_${domain}_init_${ihr}_cape_${stats}_f${lead}_${thresh}.png  evs.global_ens.${stats}_${thresh}.cape_l0.last${past_days}days.timeseries_init${ihr}_f${lead}.g212_buk_${evs_graphic_domain}.png
-             done       
-         done
-    done
-  done
-done
-
-for ihr in 00z 12z ; do
- for var in tmp dpt ugrd vgrd rh ; do
-     if [ $var = tmp ] || [ $var = dpt ] || [ $var = rh ]; then
-         levels='2m'
-     elif [ $var = ugrd ] || [ $var = vgrd ] ; then
-         levels='10m'
-     fi
-     if [ $var = rh ]; then
-         stats_list="me_mae rmse_spread"
-     else
-         stats_list="acc me_mae crpss rmse_spread"
-     fi
-  for score_type in time_series lead_average ; do
-
-   if [ $score_type = time_series ] ; then
-      leads='_f120.png _f240.png _f360.png'
-      scoretype='timeseries' 
-    elif [ $score_type = lead_average ] ; then
-      leads='.png'
-      scoretype='fhrmean'
-    fi
-
-
-   for lead in $leads ; do
-    
-    if [ $score_type = time_series ] ; then
-	lead_time=_${lead:1:4}
-    else
-        lead_time=_f384
-    fi
-
-    for domain in conus conus_east conus_west conus_south conus_central alaska ; do
-        if [ $domain = conus ]; then
-            evs_graphic_domain="buk_conus"
-        elif [ $domain = conus_east ]; then
-            evs_graphic_domain="buk_conus_e"
+    for domain in conus conus_east conus_west conus_south conus_central ; do
+        if [ $domain = conus_east ]; then
+            evs_graphic_domain="conus_e"
         elif [ $domain = conus_west ]; then
-            evs_graphic_domain="buk_conus_w"
+            evs_graphic_domain="conus_w"
         elif [ $domain = conus_south ]; then
-            evs_graphic_domain="buk_conus_s"
+            evs_graphic_domain="conus_s"
         elif [ $domain = conus_central ]; then
-            evs_graphic_domain="buk_conus_c"
+            evs_graphic_domain="conus_c"
         else
             evs_graphic_domain=$domain
         fi
-     for stats in $stats_list ; do
+        for lead in 120 240 360; do
+            mv performance_diagram_regional_${domain}_init_${ihr}_cape_f${lead}__ge250ge500ge1000ge2000.png  evs.global_ens.ctc.cape_l0.last${past_days}days.perfdiag_${valid_time}_f${lead}.g212_buk_${evs_graphic_domain}.png
+        done #lead
+    done #domain
+done #ihr
 
-       for level in $levels ; do
-        if [ $level = '2m' ]; then
-            evs_graphic_level='z2'
-        elif [ $level = '10m' ]; then
-            evs_graphic_level='z10'
+for stats in ets fbias ; do
+    for ihr in 00z 12z ; do
+        for thresh in ge250 ge500 ge1000 ge2000 ; do
+            for domain in conus conus_east conus_west conus_south conus_central  ; do
+                if [ $domain = conus_east ]; then
+                    evs_graphic_domain="conus_e"
+                elif [ $domain = conus_west ]; then
+                    evs_graphic_domain="conus_w"
+                elif [ $domain = conus_south ]; then
+                    evs_graphic_domain="conus_s"
+                elif [ $domain = conus_central ]; then
+                    evs_graphic_domain="conus_c"
+                else
+                    evs_graphic_domain=$domain
+                fi
+                mv lead_average_regional_${domain}_init_${ihr}_cape_${stats}_${thresh}.png  evs.global_ens.${stats}_${thresh}.cape_l0.last${past_days}days.fhrmean_init${ihr}_f384.g212_buk_${evs_graphic_domain}.png
+                for lead in 120 240 360 ; do
+                    mv time_series_regional_${domain}_init_${ihr}_cape_${stats}_f${lead}_${thresh}.png  evs.global_ens.${stats}_${thresh}.cape_l0.last${past_days}days.timeseries_init${ihr}_f${lead}.g212_buk_${evs_graphic_domain}.png
+                done #lead
+            done #domain
+        done #thresh
+    done #ihr
+done #stats
+
+for ihr in 00z 12z ; do
+    for var in tmp dpt ugrd vgrd rh ; do
+        if [ $var = tmp ] || [ $var = dpt ] || [ $var = rh ]; then
+            levels='2m'
+        elif [ $var = ugrd ] || [ $var = vgrd ] ; then
+            levels='10m'
         fi
-        if [ $domain = alaska ]; then
-            mv ${score_type}_regional_${domain}_init_${ihr}_${level}_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${evs_graphic_level}.last${past_days}days.${scoretype}_init${ihr}${lead_time}.g003_${evs_graphic_domain}.png
+        if [ $var = rh ]; then
+            stats_list="me_mae rmse_spread"
         else
-            mv ${score_type}_regional_${domain}_init_${ihr}_${level}_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${evs_graphic_level}.last${past_days}days.${scoretype}_init${ihr}${lead_time}.g212_${evs_graphic_domain}.png
+            stats_list="acc me_mae crpss rmse_spread"
         fi
-      done #level
-
-    done #stats
-   done  #domain
-  done   #lead
- done    #score_type
-done     #var
+        for domain in conus conus_east conus_west conus_south conus_central alaska ; do
+            if [ $domain = conus ]; then
+                evs_graphic_domain="buk_conus"
+            elif [ $domain = conus_east ]; then
+                evs_graphic_domain="buk_conus_e"
+            elif [ $domain = conus_west ]; then
+                evs_graphic_domain="buk_conus_w"
+            elif [ $domain = conus_south ]; then
+                evs_graphic_domain="buk_conus_s"
+            elif [ $domain = conus_central ]; then
+                evs_graphic_domain="buk_conus_c"
+            else
+                evs_graphic_domain=$domain
+            fi
+            if [ $domain = alaska ]; then
+                grid="g003"
+            else
+                grid="g212"
+            fi
+            for stats in $stats_list ; do
+                for level in $levels ; do
+                    if [ $level = '2m' ]; then
+                        evs_graphic_level='z2'
+                    elif [ $level = '10m' ]; then
+                        evs_graphic_level='z10'
+                    fi
+                    mv lead_average_regional_${domain}_init_${ihr}_${level}_${var}_${stats}.png  evs.global_ens.${stats}.${var}_${evs_graphic_level}.last${past_days}days.fhrmean_init${ihr}_f384.${grid}_${evs_graphic_domain}.png
+                    for lead in 120 240 360; do
+                        mv time_series_regional_${domain}_init_${ihr}_${level}_${var}_${stats}_f${lead}.png  evs.global_ens.${stats}.${var}_${evs_graphic_level}.last${past_days}days.timeseries_init${ihr}_f${lead}.${grid}_${evs_graphic_domain}.png
+                    done #lead
+                done #level
+            done #stats
+        done  #domain
+    done     #var
 done     #ihr
 
 tar -cvf evs.plots.gefs.grid2obs.v${VDATE}.past${past_days}days.separate.init.00.12.tar *.png
