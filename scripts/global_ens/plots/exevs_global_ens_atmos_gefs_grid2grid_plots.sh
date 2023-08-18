@@ -212,102 +212,60 @@ fi
 
 
 cd $plot_dir
+
 for stats in acc me_mae crpss rmse_spread ; do
- for score_type in time_series lead_average ; do
-
-  if [ $score_type = time_series ] ; then
-    leads='_f120.png _f240.png _f360.png'
-    scoretype='timeseries' 
-
-  elif [ $score_type = lead_average ] ; then
-    leads='.png'
-    scoretype='fhrmean'
-  fi
-
-
-  for lead in $leads ; do
-    
-    if [ $score_type = time_series ] ; then
-	lead_time=_${lead:1:4}
-    else
-        lead_time=_f384
-    fi
-
-   for domain in g003 nhem shem tropics conus ; do 
-     if [ $domain = g003 ] ; then
-	 domain_new=glb
-     elif [ $domain = conus ]; then
-        domain_new="buk_conus"
-     else 
-	 domain_new=$domain
-     fi
-
-
-
-    for var in hgt tmp ugrd vgrd prmsl ; do
-      if [ $var = hgt ] ; then
-	 levels='500 700 1000'
-	 unit='mb'
-      elif [ $var = tmp ] ; then
-	 levels='500 850'
-	 unit='mb'
-      elif [ $var = ugrd ] || [ $var = vgrd ] ; then
-	 levels='850 250 10'
-	 unit='mb'
-      elif [ $var = prmsl ] ; then
-	 levels='l0'
-	 unit=''
-      fi
-
-      for level in $levels ; do
-
-	 if [ $level = 10 ] ; then
-	   unit='m'
-	 fi
-
-         if [ $level = 1000 ] || [ $level = 850 ] ||  [ $level = 500  ] ||  [ $level = 250  ] ||  [ $level = 700 ] ; then
-           plevel=p${level}
-         elif [ $level = 10 ] ; then
-           plevel=z${level}
-         else
-	   if [ $var = prmsl ] ; then 
-	      plevel=z0
-           else	      
-              plevel=$level
-	   fi
-         fi
-
-         if [ $var = prmsl ] ; then
-
-             if [ $stats = acc ] ; then 
-                  mv ${score_type}_regional_${domain}_valid_00z_12z_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
-             else  
-		  mv ${score_type}_regional_${domain}_valid_00z_12z_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
-             fi
-
-         else
-
-             if [ $var = ugrd ] || [ $var = vgrd ] ; then
-
-	       if [ $level = 10 ] && [ $stats = acc ] ; then
-	           mv ${score_type}_regional_${domain}_valid_00z_12z_10m_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
-               else
-	           mv ${score_type}_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png	     
-               fi
-
-            else
-
-               mv ${score_type}_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
-
-            fi
+    for domain in g003 nhem shem tropics conus ; do
+        if [ $domain = g003 ] ; then
+            domain_new="glb"
+        elif [ $domain = conus ]; then
+            domain_new="buk_conus"
+        else
+	    domain_new=$domain
         fi
-               
-      done #level
-
-    done #var
-   done  #domain
-  done   #lead
- done    #score_type
+        for var in hgt tmp ugrd vgrd prmsl ; do
+            if [ $var = hgt ] ; then
+                levels='500 700 1000'
+                unit='mb'
+            elif [ $var = tmp ] ; then
+                levels='500 850'
+                unit='mb'
+            elif [ $var = ugrd ] || [ $var = vgrd ] ; then
+                levels='850 250 10'
+                unit='mb'
+            elif [ $var = prmsl ] ; then
+                levels='l0'
+                unit=''
+            fi
+            for level in $levels ; do
+                if [ $level = 10 ] ; then
+                    unit='m'
+	        fi
+                if [ $level = 1000 ] || [ $level = 850 ] ||  [ $level = 500  ] ||  [ $level = 250  ] ||  [ $level = 700 ] ; then
+                    plevel=p${level}
+                elif [ $level = 10 ] ; then
+                    plevel=z${level}
+                else
+                    if [ $var = prmsl ] ; then
+                        plevel=z0
+                    else
+                        plevel=$level
+	            fi
+                fi
+                if [ $var = prmsl ] ; then
+                    mv lead_average_regional_${domain}_valid_00z_12z_${var}_${stats}.png evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${domain_new}.png
+                else
+                    mv lead_average_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}.png evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${domain_new}.png
+                fi
+                for lead in 120 240 360; do
+                    if [ $var = prmsl ] ; then
+                        mv time_series_regional_${domain}_valid_00z_12z_${var}_${stats}_f${lead}.png evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.timeseries_valid00z_12z_f${lead}.g003_${domain_new}.png
+                    else
+                        mv time_series_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}_f${lead}.png evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.timeseries_valid00z_12z_f${lead}.g003_${domain_new}.png
+                    fi
+                done #lead
+            done #level
+        done #var
+    done  #domain
 done     #stats
 
 tar -cvf evs.plots.gefs.grid2grid.v${VDATE}.past${past_days}days.tar *.png
