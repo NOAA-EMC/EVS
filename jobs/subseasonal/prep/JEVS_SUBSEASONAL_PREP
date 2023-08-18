@@ -34,6 +34,7 @@ export EXECevs=${EXECevs:-$HOMEevs/exec}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
+
 export gefs_members="30"
 
 export cfs_members="4"
