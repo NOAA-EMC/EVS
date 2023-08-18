@@ -4,7 +4,7 @@
 #PBS -q "dev"
 #PBS -A VERF-DEV
 #PBS -l walltime=01:30:00
-#PBS -l select=1:ncpus=1:mem=120GB
+#PBS -l place=vscatter,select=1:ncpus=1:ompthreads=1:mem=120GB
 #PBS -l debug=true
 #PBS -V
 
@@ -21,10 +21,10 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/subseasonal/subseasonal_prep.sh
 
-export DATAROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_subseasonal_gefs_prep}
 export jobid=$job.${PBS_JOBID:-$$}
-export TMPDIR=$DATAROOTtmp
+export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
 
 export maillist='geoffrey.manikin@noaa.gov,shannon.shields@noaa.gov'
@@ -36,6 +36,7 @@ export QUEUESHARED=dev_shared
 export QUEUESERV=dev_transfer
 export PARTITION_BATCH=
 export nproc=1
+export USE_CFP=YES
 export WGRIB2=`which wgrib2`
 export cyc=00
 export NET=evs
