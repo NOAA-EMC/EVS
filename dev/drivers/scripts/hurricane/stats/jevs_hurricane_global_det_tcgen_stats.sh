@@ -33,7 +33,7 @@ module reset
 source ${HOMEevs}/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
 #Set PDY to override setpdy.sh called in the j-jobs
-export PDY=20231231
+export PDY=20230818
 
 #Define the directories of your TC genesis data and A/Bdeck files
 export COMINgenesis=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/TCgen
