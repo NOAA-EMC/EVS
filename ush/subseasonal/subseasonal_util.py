@@ -2848,6 +2848,42 @@ def get_off_machine_data(job_file, job_name, job_output, machine, user, queue,
             break
         sleep_counter+=1
 
+def initialize_prep_job_env_dict(verif_type, group,
+                                 job):
+    """! This initializes a dictionary of environment variables and their
+         values to be set for the job pulling from environment variables
+         already set previously
+         Args:
+             verif_type                  - string of the use case name
+             group                       - string of the group name
+             job                         - string of job name
+         Returns:
+             job_env_dict - dictionary of job settings
+    """
+    job_env_var_list = [
+        'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA',
+        'NET', 'RUN', 'STEP', 'COMPONENT', 'COMINgefs', 'gefs_members'
+    ]
+    job_env_dict = {}
+    for env_var in job_env_var_list:
+        job_env_dict[env_var] = os.environ[env_var]
+    job_env_dict['JOB_GROUP'] = group
+    job_env_dict['fhr_start'] = os.environ['fhr_min']
+    job_env_dict['fhr_end'] = os.environ['fhr_max']
+    valid_hr_list = (
+        os.environ['vhr_list']\
+        .split(' ')
+    )
+    job_env_dict['valid_hr_start'] = (valid_hr_list[0].zfill(2))
+    job_env_dict['valid_hr_end'] = (valid_hr_list[-1].zfill(2))
+    init_hr_list = (
+        os.environ['fcyc_list']\
+        .split(' ')
+    )
+    job_env_dict['init_hr_start'] = (init_hr_list[0].zfill(2))
+    job_env_dict['init_hr_end'] = (init_hr_list[-1].zfill(2))
+    return job_env_dict
+
 def initalize_job_env_dict(verif_type, group,
                            verif_case_step_abbrev_type, job):
     """! This initializes a dictionary of environment variables and their
@@ -3096,7 +3132,7 @@ def get_met_line_type_cols(logger, met_root, met_version, met_line_type):
                     line_type_cols = line.split(' : ')[-1]
                     break
     else:
-        logger.error(f"{met_minor_version_col_file} DOES NOT EXIST, "
+        logger.error(f"{met_minor_version_col_file} DOES NOT EXISTS, "
                      +"cannot determine MET data column structure")
         sys.exit(1)
     met_version_line_type_col_list = (
