@@ -144,8 +144,7 @@ else
     echo '**************************************** '
     echo ' '
     echo "${MODELNAME}_${RUN} $VDATE : GDAS pb2nc files missing."
-    ./postmsg "$jlogfile" "FATAL ERROR : NO GDAS PB2NC FILES for valid date ${VDATE}"
-    err_exit "FATAL ERROR: Did not copy the GDAS pb2nc files for valid date ${VDATE}"
+    ./postmsg "$jlogfile" "WARNING : NO GDAS PB2NC FILES for valid date ${VDATE}"
 fi
 nc=`ls ${DATA}/ncfiles/ndbc.${VDATE}*.nc | wc -l | awk '{print $1}'`
 echo " Found ${DATA}/ncfiles/ndbc.${VDATE}*.nc for ${VDATE}"
@@ -159,8 +158,7 @@ else
     echo '**************************************** '
     echo ' '
     echo "${MODELNAME}_${RUN} $VDATE : NDBC ascii2nc files missing."
-    ./postmsg "$jlogfile" "FATAL ERROR : NO NDBC ASCII2NC FILES for valid date ${VDATE}"
-    err_exit "FATAL ERROR: Did not copy the NDBC ascii2nc files for valid date ${VDATE}"
+    ./postmsg "$jlogfile" "WARNING : NO NDBC ASCII2NC FILES for valid date ${VDATE}"
 fi
 
 ############################################
@@ -296,8 +294,7 @@ else
     echo '**************************************** '
     echo ' '
     echo "${MODELNAME}_${RUN} $VDATE : large STAT file missing."
-    ./postmsg "$jlogfile" "FATAL ERROR : NO LARGE STAT FILE FOR valid date ${VDATE}"
-    err_exit "FATAL ERROR: Did not find the large stat file for valid date ${VDATE}"
+    ./postmsg "$jlogfile" "WARNING : NO LARGE STAT FILE FOR valid date ${VDATE}"
 fi
 
 msg="JOB $job HAS COMPLETED NORMALLY."
