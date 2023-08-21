@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 '''
-Program Name: subseasonal_stats_grid2obs_create_job_scripts.py
+Program Name: subseasonal_prep_gefs_create_job_scripts.py
 Contact(s): Shannon Shields
-Abstract: This creates multiple independent job scripts. These
-          jobs contain all the necessary environment variables
+Abstract: This creates an independent job script for GEFS prep data. 
+          This job contains all the necessary environment variables
           and commands needed to run the specific
-          use case.
+          job.
 '''
 
 import sys
@@ -21,7 +21,6 @@ print("BEGIN: "+os.path.basename(__file__))
 DATA = os.environ['DATA']
 NET = os.environ['NET']
 RUN = os.environ['RUN']
-VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 COMPONENT = os.environ['COMPONENT']
 JOB_GROUP = os.environ['JOB_GROUP']
@@ -30,205 +29,27 @@ USE_CFP = os.environ['USE_CFP']
 nproc = os.environ['nproc']
 start_date = os.environ['start_date']
 end_date = os.environ['end_date']
-VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
-VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
-                             .split(' '))
-METPLUS_PATH = os.environ['METPLUS_PATH']
-MET_ROOT = os.environ['MET_ROOT']
-PARMevs = os.environ['PARMevs']
 model_list = os.environ['model_list'].split(' ')
-members = os.environ['members']
+gefs_members = os.environ['gefs_members']
 
-VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
 start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
 end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
 
 # Set up job directory
 njobs = 0
-JOB_GROUP_jobs_dir = os.path.join(DATA, VERIF_CASE_STEP,
-                                  'METplus_job_scripts', JOB_GROUP)
+JOB_GROUP_jobs_dir = os.path.join(DATA, STEP,
+                                  'prep_job_scripts', JOB_GROUP)
 if not os.path.exists(JOB_GROUP_jobs_dir):
     os.makedirs(JOB_GROUP_jobs_dir)
 
 ################################################
-#### generate_stats jobs
+#### retrieve_data jobs
 ################################################
-generate_stats_jobs_dict = {
-    'PrepBufr': {
-        'WeeklyAvg_TempAnom2m': {'env': {'prepbufr': 'nam',
-                                         'obs_window': '900',
-                                         'msg_type': 'ADPSFC',
-                                         'var1_fcst_name': 'TMP',
-                                         'var1_fcst_levels': 'Z2',
-                                         'var1_fcst_options': '',
-                                         'var1_obs_name': 'TMP',
-                                         'var1_obs_levels': 'Z2',
-                                         'var1_obs_options': '',
-                                         'met_config_overrides': ("'climo_mean "
-                                                                  +"= fcst;'")},
-                                 'commands': [sub_util.python_command(
-                                                 'subseasonal_stats_'
-                                                 'grid2obs_create_weekly_avg.py',
-                                                 ['TMP_ANOM_Z2',
-                                                   os.path.join(
-                                                       '$DATA',
-                                                       '${VERIF_CASE}_${STEP}',
-                                                       'METplus_output',
-                                                       '${RUN}.'
-                                                       +'$DATE',
-                                                       '$MODEL', '$VERIF_CASE',
-                                                       'anomaly_${VERIF_TYPE}_'
-                                                       +'TempAnom2m_init'
-                                                       +'{init?fmt=%Y%m%d%H}_'
-                                                       +'fhr{lead?fmt=%3H}.stat'
-                                                 ),
-                                                 os.path.join(
-                                                     '$COMOUT',
-                                                     '${RUN}.$DATE',
-                                                     '$MODEL', '$VERIF_CASE',
-                                                     'anomaly_${VERIF_TYPE}_'
-                                                     +'TempAnom2m_init'
-                                                     +'{init?fmt=%Y%m%d%H}_'
-                                                     +'fhr{lead?fmt=%3H}.stat'
-                                                 )]
-                                             ),
-                                             'nweekly_avg_stat_files='
-                                             +'$(ls '+os.path.join(
-                                                 '$DATA',
-                                                 '${VERIF_CASE}_${STEP}',
-                                                 'METplus_output',
-                                                 '${RUN}.${DATE}',
-                                                 '$MODEL', '$VERIF_CASE',
-                                                 'weekly_avg_*.stat'
-                                             )+'|wc -l)',
-                                             ('if [ $nweekly_avg_stat_files '
-                                             +'-ne 0 ]; then'),
-                                             sub_util.metplus_command(
-                                                 'StatAnalysis_'
-                                                 +'fcstSUBSEASONAL_'
-                                                 +'obsPrepbufr_'
-                                                 +'WeeklyMPRtoSL1L2.conf'
-                                             ),
-                                             'fi']},
-        'Days6_10Avg_TempAnom2m': {'env': {'prepbufr': 'nam',
-                                           'obs_window': '900',
-                                           'msg_type': 'ADPSFC',
-                                           'var1_fcst_name': 'TMP',
-                                           'var1_fcst_levels': 'Z2',
-                                           'var1_fcst_options': '',
-                                           'var1_obs_name': 'TMP',
-                                           'var1_obs_levels': 'Z2',
-                                           'var1_obs_options': '',
-                                           'met_config_overrides': ("'climo_mean "
-                                                                    +"= fcst;'")},
-                                   'commands': [sub_util.python_command(
-                                                   'subseasonal_stats_'
-                                                   'grid2obs_create_days6_10_avg.py',
-                                                   ['TMP_ANOM_Z2',
-                                                     os.path.join(
-                                                         '$DATA',
-                                                         '${VERIF_CASE}_${STEP}',
-                                                         'METplus_output',
-                                                         '${RUN}.'
-                                                         +'$DATE',
-                                                         '$MODEL', '$VERIF_CASE',
-                                                         'anomaly_${VERIF_TYPE}_'
-                                                         +'TempAnom2m_init'
-                                                         +'{init?fmt=%Y%m%d%H}_'
-                                                         +'fhr{lead?fmt=%3H}.stat'
-                                                   ),
-                                                   os.path.join(
-                                                       '$COMOUT',
-                                                       '${RUN}.$DATE',
-                                                       '$MODEL', '$VERIF_CASE',
-                                                       'anomaly_${VERIF_TYPE}_'
-                                                       +'TempAnom2m_init'
-                                                       +'{init?fmt=%Y%m%d%H}_'
-                                                       +'fhr{lead?fmt=%3H}.stat'
-                                                   )]
-                                               ),
-                                               'ndays6_10_avg_stat_files='
-                                               +'$(ls '+os.path.join(
-                                                   '$DATA',
-                                                   '${VERIF_CASE}_${STEP}',
-                                                   'METplus_output',
-                                                   '${RUN}.${DATE}',
-                                                   '$MODEL', '$VERIF_CASE',
-                                                   'days6_10_avg_*.stat'
-                                               )+'|wc -l)',
-                                               ('if [ $ndays6_10_avg_stat_files '
-                                               +'-ne 0 ]; then'),
-                                               sub_util.metplus_command(
-                                                   'StatAnalysis_'
-                                                   +'fcstSUBSEASONAL_'
-                                                   +'obsPrepbufr_'
-                                                   +'Days6_10MPRtoSL1L2.conf'
-                                               ),
-                                               'fi']},
-        'Weeks3_4Avg_TempAnom2m': {'env': {'prepbufr': 'nam',
-                                           'obs_window': '900',
-                                           'msg_type': 'ADPSFC',
-                                           'var1_fcst_name': 'TMP',
-                                           'var1_fcst_levels': 'Z2',
-                                           'var1_fcst_options': '',
-                                           'var1_obs_name': 'TMP',
-                                           'var1_obs_levels': 'Z2',
-                                           'var1_obs_options': '',
-                                           'met_config_overrides': ("'climo_mean "
-                                                                    +"= fcst;'")},
-                                   'commands': [sub_util.python_command(
-                                                   'subseasonal_stats_'
-                                                   'grid2obs_create_weeks3_4_avg.py',
-                                                   ['TMP_ANOM_Z2',
-                                                     os.path.join(
-                                                         '$DATA',
-                                                         '${VERIF_CASE}_${STEP}',
-                                                         'METplus_output',
-                                                         '${RUN}.'
-                                                         +'$DATE',
-                                                         '$MODEL', '$VERIF_CASE',
-                                                         'anomaly_${VERIF_TYPE}_'
-                                                         +'TempAnom2m_init'
-                                                         +'{init?fmt=%Y%m%d%H}_'
-                                                         +'fhr{lead?fmt=%3H}.stat'
-                                                   ),
-                                                   os.path.join(
-                                                       '$COMOUT',
-                                                       '${RUN}.$DATE',
-                                                       '$MODEL', '$VERIF_CASE',
-                                                       'anomaly_${VERIF_TYPE}_'
-                                                       +'TempAnom2m_init'
-                                                       +'{init?fmt=%Y%m%d%H}_'
-                                                       +'fhr{lead?fmt=%3H}.stat'
-                                                   )]
-                                               ),
-                                               'nweeks3_4_avg_stat_files='
-                                               +'$(ls '+os.path.join(
-                                                   '$DATA',
-                                                   '${VERIF_CASE}_${STEP}',
-                                                   'METplus_output',
-                                                   '${RUN}.${DATE}',
-                                                   '$MODEL', '$VERIF_CASE',
-                                                   'weeks3_4_avg_*.stat'
-                                               )+'|wc -l)',
-                                               ('if [ $nweeks3_4_avg_stat_files '
-                                               +'-ne 0 ]; then'),
-                                               sub_util.metplus_command(
-                                                   'StatAnalysis_'
-                                                   +'fcstSUBSEASONAL_'
-                                                   +'obsPrepbufr_'
-                                                   +'Weeks3_4MPRtoSL1L2.conf'
-                                               ),
-                                               'fi']},
-    }
-}
-
-################################################
-#### gather_stats jobs
-################################################
-gather_stats_jobs_dict = {'env': {},
-                          'commands': [sub_util.metplus_command(
-                                           'StatAnalysis_fcstSUBSEASONAL.conf'
+retrieve_data_jobs_dict = {'env': {},
+                          'commands': [sub_util.python_command(
+                                           'get_gefs_subseasonal_data_files_'
+                                           'prep.py',
+                                           []
                                        )]}
 
 # Create job scripts
@@ -428,18 +249,17 @@ if JOB_GROUP in ['assemble_data', 'generate_stats']:
                             job.write(cmd+'\n')
                     job.close()
                     date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
-elif JOB_GROUP == 'gather_stats':
-    print("----> Making job scripts for "+VERIF_CASE_STEP+" "
-      +"for job group "+JOB_GROUP)
+elif JOB_GROUP == 'retrieve_data':
+    print("----> Making job scripts for job group "+JOB_GROUP)
     # Initialize job environment dictionary
-    job_env_dict = sub_util.initalize_job_env_dict(
+    job_env_dict = sub_util.initialize_prep_job_env_dict(
         JOB_GROUP, JOB_GROUP,
-        VERIF_CASE_STEP_abbrev, JOB_GROUP
+        JOB_GROUP
     )
     # Loop through and write job script for dates and models
     date_dt = start_date_dt
     while date_dt <= end_date_dt:
-        job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
+        job_env_dict['INITDATE'] = date_dt.strftime('%Y%m%d')
         for model_idx in range(len(model_list)):
             job_env_dict['MODEL'] = model_list[model_idx]
             njobs+=1
@@ -455,31 +275,26 @@ elif JOB_GROUP == 'gather_stats':
             for name, value in job_env_dict.items():
                 job.write('export '+name+'='+value+'\n')
             job.write('\n')
-            # Do file checks
-            stat_files_exist = sub_util.check_stat_files(job_env_dict)
-            if stat_files_exist:
-                write_job_cmds = True
-            else:
-                write_job_cmds = False
+            write_job_cmds = True
             # Write job commands
             if write_job_cmds:
-                for cmd in gather_stats_jobs_dict['commands']:
+                for cmd in retrieve_data_jobs_dict['commands']:
                     job.write(cmd+'\n')
             job.close()
         date_dt = date_dt + datetime.timedelta(days=1)
 
 # If running USE_CFP, create POE scripts
 if USE_CFP == 'YES':
-    job_files = glob.glob(os.path.join(DATA, VERIF_CASE_STEP,
-                                       'METplus_job_scripts', JOB_GROUP,
+    job_files = glob.glob(os.path.join(DATA, STEP,
+                                       'prep_job_scripts', JOB_GROUP,
                                        'job*'))
     njob_files = len(job_files)
     if njob_files == 0:
         print("WARNING: No job files created in "
-              +os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
+              +os.path.join(DATA, STEP, 'prep_job_scripts',
                             JOB_GROUP))
-    poe_files = glob.glob(os.path.join(DATA, VERIF_CASE_STEP,
-                                       'METplus_job_scripts', JOB_GROUP,
+    poe_files = glob.glob(os.path.join(DATA, STEP,
+                                       'prep_job_scripts', JOB_GROUP,
                                        'poe*'))
     npoe_files = len(poe_files)
     if npoe_files > 0:
@@ -492,20 +307,20 @@ if USE_CFP == 'YES':
             if iproc >= int(nproc):
                 iproc = 0
                 node+=1
-        poe_filename = os.path.join(DATA, VERIF_CASE_STEP,
-                                    'METplus_job_scripts',
+        poe_filename = os.path.join(DATA, STEP,
+                                    'prep_job_scripts',
                                     JOB_GROUP, 'poe_jobs'+str(node))
         poe_file = open(poe_filename, 'a')
         iproc+=1
         if machine in ['HERA', 'ORION', 'S4', 'JET']:
             poe_file.write(
                str(iproc-1)+' '
-               +os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
+               +os.path.join(DATA, STEP, 'prep_job_scripts',
                              JOB_GROUP, job)+'\n'
             )
         else:
             poe_file.write(
-                os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
+                os.path.join(DATA, STEP, 'prep_job_scripts',
                              JOB_GROUP, job)+'\n'
             )
         poe_file.close()
@@ -513,8 +328,8 @@ if USE_CFP == 'YES':
     # If at final record and have not reached the
     # final processor then write echo's to
     # poe script for remaining processors
-    poe_filename = os.path.join(DATA, VERIF_CASE_STEP,
-                                'METplus_job_scripts',
+    poe_filename = os.path.join(DATA, STEP,
+                                'prep_job_scripts',
                                 JOB_GROUP, 'poe_jobs'+str(node))
     poe_file = open(poe_filename, 'a')
     iproc+=1
