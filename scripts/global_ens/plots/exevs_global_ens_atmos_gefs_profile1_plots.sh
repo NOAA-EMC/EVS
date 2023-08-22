@@ -97,13 +97,9 @@ fi
 
        var=`echo $VAR | tr '[A-Z]' '[a-z]'` 
 	    
-       if [ $VAR = HGT ] ; then
+       if [ $VAR = HGT ] || [ $VAR = UGRD ] || [ $VAR = VGRD ] ; then
           FCST_LEVEL_values="P1000 P925 P850 P700 P500 P300 P250 P200 P100 P50 P10"
-       elif [ $VAR = TMP ] ; then
-          FCST_LEVEL_values="P1000 P925 P850 P700 P500  P250 P200 P100 P50 P10"
-       elif [ $VAR = UGRD ] || [ $VAR = VGRD ] ; then
-          FCST_LEVEL_values="P1000 P925 P850 P700 P500 P400 P300 P250 P200 P100 P50 P10"
-       elif [ $VAR = RH ] ; then
+       elif [ $VAR = TMP ] || [ $VAR = RH ] ; then
           FCST_LEVEL_values="P1000 P925 P850 P700 P500 P250 P200 P100 P50 P10"
        fi
 
@@ -192,13 +188,9 @@ for stats in rmse_spread me ; do
             domain_new=$domain
         fi
         for var in hgt tmp ugrd vgrd rh ; do
-            if [ $var = hgt ] ; then
+            if [ $var = hgt ] || [ $var = ugrd ] || [ $var = vgrd ] ; then
                 levels='1000 925 850 700 500 300 250 200 100 50 10'
-            elif [ $var = tmp ] ; then
-                levels='1000 925 850 700 500  250 200 100 50 10'
-            elif [ $var = ugrd ] || [ $var = vgrd ] ; then
-                levels='1000 925 850 700 500 400 300 250 200 100 50 10'
-            elif [ $var = rh ] ; then
+            elif [ $var = tmp ] || [ $var = rh ] ; then
                 levels='1000 925 850 700 500  250 200 100 50 10'
             fi
             for level in $levels ; do
