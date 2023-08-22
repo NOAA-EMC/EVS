@@ -16,6 +16,9 @@ cd $PBS_O_WORKDIR
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
+export job=${PBS_JOBNAME:-jevs_subseasonal_gefs_grid2obs_stats}
+export jobid=$job.${PBS_JOBID:-$$}
+
 source $HOMEevs/versions/run.ver
 module reset
 module load prod_envir/${prod_envir_ver}
@@ -29,8 +32,8 @@ export PATH=${MET_ROOT}/bin:${PATH}
 export METviewer_AWS_scripts_dir=/lfs/h2/emc/vpppg/save/emc.vpppg/verification/metplus/metviewer_aws_scripts
 
 export USER=$USER
-export DATAROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export ACCOUNT=EVS-DEV
+export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export QUEUE=dev
 export QUEUESHARED=dev_shared
 export QUEUESERV=dev_transfer
