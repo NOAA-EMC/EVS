@@ -53,7 +53,7 @@ def get_valid_range(logger, date_type, date_range, date_hours, fleads):
 
 def run_prune_data(logger, stats_dir, prune_dir, output_base_template, 
                    verif_case, verif_type, line_type, valid_range, eval_period, 
-                   var_name, fcst_var_names, model_list, domain):
+                   var_name, fcst_var_names, model_list, domain, fcst_lev):
     model_list = [str(model) for model in model_list]
     tmp_dir = 'tmp'+str(uuid.uuid4().hex)
     pruned_data_dir = os.path.join(
@@ -69,12 +69,22 @@ def run_prune_data(logger, stats_dir, prune_dir, output_base_template,
         if len(os.listdir(stats_dir)):
             logger.info(f"Looking for stat files in {stats_dir} using the"
                         + f" template: {output_base_template}")
+            if type(fcst_lev) == str:
+                fcst_lev = [fcst_lev]
+            elif type(fcst_lev) != list:
+                e = (f"fcst_lev ({fcst_lev}) is neither a string nor a list."
+                     + f" Please check the plotting script"
+                     + f" (e.g., \"lead_average.py\") to make sure"
+                     + f" fcst_level(s) is preprocessed correctly.")
+                logger.error(e)
+                raise TypeError(e)
             prune_data(
                 stats_dir, prune_dir, tmp_dir, output_base_template, 
                 valid_range, str(eval_period).upper(), str(verif_case).lower(), 
                 str(verif_type).lower(), str(line_type).upper(), str(domain), 
-                [str(fcst_var_name) for fcst_var_name in fcst_var_names],
-                str(var_name).upper(), model_list
+                [' '+str(fcst_var_name)+' ' for fcst_var_name in fcst_var_names],
+                str(var_name).upper(), model_list, 
+                [' '+str(lev)+' ' for lev in fcst_lev]
             )
         else:
             e1 = f"{stats_dir} exists but is empty."
@@ -92,15 +102,18 @@ def run_prune_data(logger, stats_dir, prune_dir, output_base_template,
 
 def check_empty(df, logger, called_from):
     if df.empty:
-        logger.error(f"Called from {called_from}:")
-        logger.error(f"Empty Dataframe. Continuing onto next plot...")
+        logger.warning(f"Called from {called_from}:")
+        logger.warning(f"Empty Dataframe encountered while filtering a subset"
+                       + f" of input statistics...")
         logger.info("========================================")
         return True
     else:
         return False
 
 def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range, 
-              model_list, met_version, clear_prune_dir):
+              model_list, met_version, clear_prune_dir, verif_type, 
+              fcst_var_names, obs_var_names, interp, domain, date_type,
+              date_hours, model_queries):
     model_list = [str(model) for model in model_list]
     # Create df combining pruned stats for all models in model_list
     start_string = date_range[0].strftime('%HZ %d %B %Y')
@@ -122,13 +135,13 @@ def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range,
         if not clear_prune_dir:
             logger.debug(f"Creating dataframe using pruned data from {fpath}")
         try:
-            df_og_colnames = plot_util.get_stat_file_base_columns(met_version)
+            df_colnames = plot_util.get_stat_file_base_columns(met_version)
             df_line_type_colnames = plot_util.get_stat_file_line_type_columns(
-                logger, met_version, str(line_type).upper(), df_og_colnames, 
+                logger, met_version, str(line_type).upper(), df_colnames, 
                 fpath
             )
             df_colnames = np.concatenate((
-                df_og_colnames, df_line_type_colnames
+                df_colnames, df_line_type_colnames
             ))
             df_tmp = pd.read_csv(
                 fpath, delim_whitespace=True, header=None, skiprows=1,
@@ -137,12 +150,22 @@ def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range,
             i = -1*len(df_line_type_colnames)
             for col_name in df_colnames[i:]:
                 df_tmp[col_name] = df_tmp[col_name].astype(float)
+            df_tmp = run_filters(
+                df_tmp, logger, verif_type, fcst_var_names, obs_var_names,
+                interp, domain, date_type, date_range, date_hours, model_list,
+                model_queries
+            )
             try:
                 df = pd.concat([df, df_tmp])
             except NameError:
                 df = df_tmp
             except UnboundLocalError as e:
                 df = df_tmp
+            logger.debug(plot_util.get_memory_usage())
+            total_memory, _, _ = map(
+                int, os.popen('free -t -m').readlines()[-1].split()[1:]
+            )
+            logger.debug(f"RAM memory available: {total_memory} MiB")
         except pd.errors.EmptyDataError as e:
             logger.error(e)
             logger.error(f"The file in question:")
@@ -177,7 +200,7 @@ def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range,
 
 def filter_by_level_type(df, logger, verif_type):
     if df is None:
-        return None
+        return df
     if str(verif_type).lower() in ['pres', 'upper_air']:
         df = df[
             df['FCST_LEV'].str.startswith('P') 
@@ -189,76 +212,56 @@ def filter_by_level_type(df, logger, verif_type):
             ~(df['FCST_LEV'].str.startswith('P') 
             | df['OBS_LEV'].str.startswith('P'))
         ]
-    if check_empty(df, logger, 'filter_by_level_type'):
-        return None
-    else:
-        return df
+    check_empty(df, logger, 'filter_by_level_type')
+    return df
 
 def filter_by_var_name(df, logger, fcst_var_names, obs_var_names):
     if df is None:
-        return None
+        return df
     df = df[
         df['FCST_VAR'].isin(fcst_var_names) 
         & df['OBS_VAR'].isin(obs_var_names)
     ]
-    if check_empty(df, logger, 'filter_by_var_name'):
-        return None
-    else:
-        return df
+    check_empty(df, logger, 'filter_by_var_name')
+    return df
 
 def filter_by_interp(df, logger, interp):
     if df is None:
-        return None
-    df = df[df['INTERP_MTHD'].eq(str(interp).upper())]
-    if check_empty(df, logger, 'filter_by_interp'):
-        return None
-    else:
         return df
+    df = df[df['INTERP_MTHD'].eq(str(interp).upper())]
+    check_empty(df, logger, 'filter_by_interp')
+    return df
 
 def filter_by_domain(df, logger, domain):
     if df is None:
-        return None
-    df = df[df['VX_MASK'].eq(str(domain))]
-    if check_empty(df, logger, 'filter_by_domain'):
-        return None
-    else:
         return df
+    df = df[df['VX_MASK'].eq(str(domain))]
+    check_empty(df, logger, 'filter_by_domain')
+    return df
 
 def create_lead_hours(df, logger):
-    if df is None:
-        return None
     df['LEAD_HOURS'] = np.array([int(lead[:-4]) for lead in df['FCST_LEAD']])
-    if check_empty(df, logger, 'create_lead_hours'):
-        return None
-    else:
-        return df
+    check_empty(df, logger, 'create_lead_hours')
+    return df
 
 def create_valid_datetime(df, logger):
-    if df is None:
-        return None
     df['VALID'] = pd.to_datetime(df['FCST_VALID_END'], format='%Y%m%d_%H%M%S')
-    if check_empty(df, logger, 'create_valid_datetime'):
-        return None
-    else:
-        return df
+    check_empty(df, logger, 'create_valid_datetime')
+    return df
 
 def create_init_datetime(df, logger):
-    if df is None:
-        return None
     df.reset_index(drop=True, inplace=True)
     df['INIT'] = [
         df['VALID'][v] - pd.DateOffset(hours=int(hour)) 
         for v, hour in enumerate(df['LEAD_HOURS'])
     ]
-    if check_empty(df, logger, 'create_init_datetime'):
-        return None
-    else:
-        return df
+    check_empty(df, logger, 'create_init_datetime')
+    return df
 
 def filter_by_date_range(df, logger, date_type, date_range, model_list, 
                          model_queries):
     if df is None:
-        return None
+        return df
     if any(model_queries) and str(date_type).upper() == 'INIT':
         for m, model in enumerate(model_list):
             if 'shift' in model_queries[m]:
@@ -287,79 +290,86 @@ def filter_by_date_range(df, logger, date_type, date_range, model_list,
             (df[str(date_type).upper()] >= date_range[0]) 
             & (df[str(date_type).upper()] <= date_range[1])
         ]
-    if check_empty(df, logger, 'filter_by_date_range'):
-        return None
-    else:
-        return df
+    check_empty(df, logger, 'filter_by_date_range')
+    return df
 
 def filter_by_hour(df, logger, date_type, date_hours, model_list, 
                    model_queries):
     if df is None:
-        return None
-    if any(model_queries) and str(date_type).upper() == 'INIT':
-        for m, model in enumerate(model_list):
-            if 'shift' in model_queries[m]:
-                dhs = [
-                    datetime.strptime(str(date_hour).zfill(2), '%H') 
-                    for date_hour in date_hours
-                ]
-                dhs_shift = [
-                    dh+td(hours=int(model_queries[m]['shift'][0])) 
-                    for dh in dhs
-                ]
-                date_hours_shift = [
-                    int(dh_shift.strftime('%H')) for dh_shift in dhs_shift
-                ]
-            else:
-                date_hours_shift = date_hours
-            if m == 0:
-                df_tmp = df.loc[
-                    [
-                        x in date_hours_shift 
-                        for x in df[str(date_type).upper()].dt.hour
-                    ]
-                    & (df['MODEL'] == model)
-                ]
-            else:
-                df_tmp2 = df.loc[
-                    [
-                        x in date_hours_shift 
-                        for x in df[str(date_type).upper()].dt.hour
-                    ]
-                    & (df['MODEL'] == model)
-                ]
-                df_tmp = pd.concat([df_tmp, df_tmp2])
-        df = df_tmp
-    else:
-        df = df.loc[
-            [
-                x in date_hours 
-                for x in df[str(date_type).upper()].dt.hour
-            ]
-        ]
-    if check_empty(df, logger, 'filter_by_hour'):
-        return None
-    else:
         return df
+    if check_empty(df, logger, 'filter_by_hour'):
+        return df
+    else:
+        if any(model_queries) and str(date_type).upper() == 'INIT':
+            for m, model in enumerate(model_list):
+                if 'shift' in model_queries[m]:
+                    dhs = [
+                        datetime.strptime(str(date_hour).zfill(2), '%H') 
+                        for date_hour in date_hours
+                    ]
+                    dhs_shift = [
+                        dh+td(hours=int(model_queries[m]['shift'][0])) 
+                        for dh in dhs
+                    ]
+                    date_hours_shift = [
+                        int(dh_shift.strftime('%H')) for dh_shift in dhs_shift
+                    ]
+                else:
+                    date_hours_shift = date_hours
+                if m == 0:
+                    df_tmp = df.loc[
+                        [
+                            x in date_hours_shift 
+                            for x in df[str(date_type).upper()].dt.hour
+                        ]
+                        & (df['MODEL'] == model)
+                    ]
+                else:
+                    df_tmp2 = df.loc[
+                        [
+                            x in date_hours_shift 
+                            for x in df[str(date_type).upper()].dt.hour
+                        ]
+                        & (df['MODEL'] == model)
+                    ]
+                    df_tmp = pd.concat([df_tmp, df_tmp2])
+            df = df_tmp
+        else:
+            df = df.loc[
+                [
+                    x in date_hours 
+                    for x in df[str(date_type).upper()].dt.hour
+                ]
+            ]
+    check_empty(df, logger, 'filter_by_hour')
+    return df
 
 def get_preprocessed_data(logger, stats_dir, prune_dir, output_base_template, 
                           verif_case, verif_type, line_type, date_type, 
                           date_range, eval_period, date_hours, fleads, 
                           var_name, fcst_var_names, obs_var_names, model_list, 
                           model_queries, domain, interp, met_version, 
-                          clear_prune_dir):
+                          clear_prune_dir, fcst_lev):
     valid_range = get_valid_range(
         logger, date_type, date_range, date_hours, fleads
     )
     pruned_data_dir = run_prune_data(
         logger, stats_dir, prune_dir, output_base_template, verif_case, 
         verif_type, line_type, valid_range, eval_period, var_name, 
-        fcst_var_names, model_list, domain
+        fcst_var_names, model_list, domain, fcst_lev
     )
     df = create_df(
         logger, stats_dir, pruned_data_dir, line_type, date_range, model_list,
-        met_version, clear_prune_dir
+        met_version, clear_prune_dir, verif_type, fcst_var_names, obs_var_names, 
+        interp, domain, date_type, date_hours, model_queries
     )
+    if df is not None and check_empty(df, logger, 'get_preprocessed_data'):
+        df = None
+    return df
+
+def run_filters(df, logger, verif_type, fcst_var_names, obs_var_names,
+                interp, domain, date_type, date_range, date_hours, model_list,
+                model_queries):
     df = filter_by_level_type(df, logger, verif_type)
     df = filter_by_var_name(df, logger, fcst_var_names, obs_var_names)
     df = filter_by_interp(df, logger, interp)
