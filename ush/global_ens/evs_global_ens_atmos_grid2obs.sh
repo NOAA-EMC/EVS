@@ -121,7 +121,7 @@ for modnam in $models ; do
 
        #For profile/upper
        if [ $fhr = fhr1 ] ; then
-          echo  "export lead='  6, 12, 18, 24, 30, 36, 42, 48,  54, 60, 66, 72, 78, 84, 90, 96' " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+          echo  "export lead='0, 6, 12, 18, 24, 30, 36, 42, 48,  54, 60, 66, 72, 78, 84, 90, 96' " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
        elif [ $fhr = fhr2 ] ; then
           echo  "export lead='102,108,114,120,126,132,138,144,150,156,162,168,174,180,186,192' " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
        elif [ $fhr = fhr3 ] ; then
@@ -131,14 +131,14 @@ for modnam in $models ; do
 
        #For Cloud 
        elif [ $fhr = fhr30 ] ; then
-           echo  "export lead='  6,  12,  18,  24,  30,  36,  42,  48,  54,  60,  66,  72,  78,  84,  90,  96, 102, 108, 114, 120, 126 '  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+           echo  "export lead='0,  6,  12,  18,  24,  30,  36,  42,  48,  54,  60,  66,  72,  78,  84,  90,  96, 102, 108, 114, 120, 126 '  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
        elif [ $fhr = fhr31 ] ; then
            echo  "export lead='132, 138, 144, 150, 156, 162, 168, 174, 180, 186, 192, 198, 204, 210, 216, 222, 228, 234, 240, 246, 252'  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
        elif [ $fhr = fhr32 ] ; then
 	   echo  "export lead='258, 264, 270, 276, 282, 288, 294, 300, 306, 312, 318, 324, 330, 336, 342, 348, 354, 360, 366, 372, 378, 384' " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
        #For sfc
        elif [ $fhr = fhr21 ] ; then
-           echo  "export lead='6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66, 72,78, 84,90, 96'  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+           echo  "export lead='0, 6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66, 72,78, 84,90, 96'  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
        elif [ $fhr = fhr22 ] ; then
            echo  "export lead='102, 108,114, 120,126, 132,138, 144,150, 156,162, 168,174, 180,186, 192'  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
        elif [ $fhr = fhr23 ] ; then
@@ -153,7 +153,7 @@ for modnam in $models ; do
        echo "ecme fields ..."
        #For Cloud and sfc 
        if [ $fhr = fhr30 ] ; then
-            echo  "export lead='12, 24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180' "  >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+            echo  "export lead='0, 12, 24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180' "  >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
        elif [ $fhr = fhr31 ] ; then
             echo  "export lead='192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360' "  >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
         
@@ -161,7 +161,7 @@ for modnam in $models ; do
 
        #For profile/upper
        elif [ $fhr = fhr1 ] ; then
-            echo  "export lead=' 12, 24, 36, 48, 60, 72, 84, 96' " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+            echo  "export lead='0, 12, 24, 36, 48, 60, 72, 84, 96' " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
        elif [ $fhr = fhr2 ] ; then
             echo  "export lead='108,120,132,144, 156,168,180,192' " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
        elif [ $fhr = fhr3 ] ; then
@@ -175,13 +175,13 @@ for modnam in $models ; do
 
        #For cloud and sfc
        if [ $fhr = fhr30 ] ; then
-           echo  "export lead='12, 24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192' "  >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+           echo  "export lead='0, 12, 24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192' "  >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
        elif [ $fhr = fhr31 ] ; then
            echo  "export lead='204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384' "  >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
 
        #For profile
        elif [ $fhr = fhr1 ] ; then
-           echo  "export lead=' 12, 24, 36, 48,  60, 72, 84, 96' " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+           echo  "export lead='0, 12, 24, 36, 48,  60, 72, 84, 96' " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
        elif [ $fhr = fhr2 ] ; then
            echo  "export lead='108,120,132,144,156,168,180,192' " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
        elif [ $fhr = fhr3 ] ; then

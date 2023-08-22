@@ -19,7 +19,7 @@ for model in gefs cmce ecme ; do
 	>get_data_${model}_${cyc}_${fhr_range}.sh
 
 	if [ $fhr_range = range1 ] ; then
-	  fhr_beg=6
+	  fhr_beg=00
           fhr_end=24
         elif [ $fhr_range = range2 ] ; then
           fhr_beg=30
@@ -153,7 +153,7 @@ for model in gefs cmce ecme ; do
 	>get_data_${model}_${cyc}_${fhr_range}.sh
 
 	 if [ $fhr_range = range1 ] ; then
-           fhr_beg=12
+           fhr_beg=00
 	   fhr_end=48
          elif [ $fhr_range = range2 ] ; then
 	   fhr_beg=60
