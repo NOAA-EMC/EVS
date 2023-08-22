@@ -55,7 +55,7 @@ if STEP == 'stats':
         print(f"Copying restart directory {RESTART_DIR} "
               +f"into working directory {working_dir}")
         cutil.run_shell_command(
-            ['cp', '-rpv', os.path.join(RESTART_DIR,'*'), working_dir]
+            ['cp', '-rpv', RESTART_DIR, working_dir]
         )
 elif STEP == 'plots':
     COMOUTplots = os.environ['COMOUTplots']
