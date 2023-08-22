@@ -36,7 +36,7 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 ####################################
 # Run setpdy and initialize PDY variables
 ####################################
-export cycle=${cycle:-t${cyc}z}
+export cycle=${cycle:-t00z}
 export NDAYS=${NDAYS:-31}
 setpdy.sh $NDAYS
 . ./PDY
@@ -51,6 +51,7 @@ export STEP=${STEP:-plots}
 export COMPONENT=${COMPONENT:-global_det}
 export RUN=${RUN:-atmos}
 export VERIF_CASE=${VERIF_CASE:-grid2grid}
+export machine=${machine:-WCOSS2}
 
 ####################################
 # Define COMIN/COMOUT variables
@@ -68,7 +69,7 @@ export COMINimd=${COMINimd:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/imd)}
 export COMINjma=${COMINjma:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/jma)}
 export COMINmetfra=${COMINmetfra:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/metfra)}
 export COMINukmet=${COMINukmet:-$(compath.py -o $NET/$evs_ver/stats/$COMPONENT/ukmet)}
-export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE_END)}
+export COMOUT=${COMOUT:-$COMIN/$STEP/$COMPONENT/$RUN.$VDATE_END}
 mkdir -p $COMOUT
 if [ $RUN = atmos ]; then
     mkdir -p $COMOUT/${VERIF_CASE}_${VERIF_TYPE}/last${NDAYS}days
