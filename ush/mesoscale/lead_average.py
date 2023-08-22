@@ -1740,7 +1740,7 @@ def main():
                     VERIF_CASE, VERIF_TYPE, LINE_TYPE, DATE_TYPE, date_range, 
                     EVAL_PERIOD, date_hours, FLEADS, requested_var, 
                     fcst_var_names, obs_var_names, models, model_queries,
-                    domain, INTERP, MET_VERSION, clear_prune_dir
+                    domain, INTERP, MET_VERSION, clear_prune_dir, fcst_level
                 )
                 if df is None:
                     continue
