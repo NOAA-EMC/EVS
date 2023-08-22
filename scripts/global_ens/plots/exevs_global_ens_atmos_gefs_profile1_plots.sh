@@ -183,68 +183,37 @@ fi
 cd $plot_dir
 
 for stats in rmse_spread me ; do
- for score_type in time_series lead_average ; do
-
-  if [ $score_type = time_series ] ; then
-    leads='_f120.png _f240.png _f360.png'
-    scoretype='timeseries' 
-
-  elif [ $score_type = lead_average ] ; then
-    leads='.png'
-    scoretype='fhrmean'
-  fi
-
-
-  for lead in $leads ; do
-    
-    if [ $score_type = time_series ] ; then
-	lead_time=_${lead:1:4}
-    else
-        lead_time=_f384
-    fi
-
-   for domain in g003 nhem shem tropics conus ; do
-     if [ $domain = g003 ] ; then
-	 domain_new=glb
-     elif [ $domain = conus ]; then
-         domain_new="buk_conus"
-     else
-         domain_new=$domain
-     fi
-
-    for var in hgt tmp ugrd vgrd rh ; do
-      if [ $var = hgt ] ; then
-	 levels='1000 925 850 700 500 300 250 200 100 50 10'
-      elif [ $var = tmp ] ; then
-	 levels='1000 925 850 700 500  250 200 100 50 10'
-      elif [ $var = ugrd ] || [ $var = vgrd ] ; then
-	 levels='1000 925 850 700 500 400 300 250 200 100 50 10'
-      elif [ $var = rh ] ; then
-	 levels='1000 925 850 700 500  250 200 100 50 10'
-      fi
-
-      for level in $levels ; do
-
-         plevel=p${level}
-
-         mv ${score_type}_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
-
-      done #level
-
-    done #var
-   done  #domain
-  done   #lead
- done    #score_type
+    for domain in g003 nhem shem tropics conus ; do
+        if [ $domain = g003 ] ; then
+            domain_new=glb
+        elif [ $domain = conus ]; then
+            domain_new="buk_conus"
+        else
+            domain_new=$domain
+        fi
+        for var in hgt tmp ugrd vgrd rh ; do
+            if [ $var = hgt ] ; then
+                levels='1000 925 850 700 500 300 250 200 100 50 10'
+            elif [ $var = tmp ] ; then
+                levels='1000 925 850 700 500  250 200 100 50 10'
+            elif [ $var = ugrd ] || [ $var = vgrd ] ; then
+                levels='1000 925 850 700 500 400 300 250 200 100 50 10'
+            elif [ $var = rh ] ; then
+                levels='1000 925 850 700 500  250 200 100 50 10'
+            fi
+            for level in $levels ; do
+                plevel=p${level}
+                mv lead_average_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}.png  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.fhrmean_valid_00z_12z_f384.g003_${domain_new}.png
+                for lead in 120 240 360; do
+                    mv time_series_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}_f${lead}.png  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.timeseries_valid_00z_12z_f${lead}.g003_${domain_new}.png
+                done #lead
+            done #level
+        done #var
+    done  #domain
 done     #stats
-
-
-#scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/gens/profile1
 
 tar -cvf evs.plots.gefs.profile1.v${VDATE}.past${past_days}days.tar *.png
 
-cp  evs.plots.gefs.profile1.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
-
-
-
-
-
+if [ $SENDCOM = YES ]; then
+    cp  evs.plots.gefs.profile1.v${VDATE}.past${past_days}days.tar  $COMOUT/.
+fi
