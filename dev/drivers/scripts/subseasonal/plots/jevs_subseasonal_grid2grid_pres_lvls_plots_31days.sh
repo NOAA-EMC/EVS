@@ -13,11 +13,15 @@ set -x
 export model=evs
 
 cd $PBS_O_WORKDIR
-module reset
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
+export job=${PBS_JOBNAME:-jevs_subseasonal_grid2grid_pres_lvls_plots_31days}
+export jobid=$job.${PBS_JOBID:-$$}
+
 source $HOMEevs/versions/run.ver
+module reset
+module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/subseasonal/subseasonal_plots.sh
 #%include <head.h>
 #%include <envir-p1.h>
@@ -25,7 +29,7 @@ source $HOMEevs/modulefiles/subseasonal/subseasonal_plots.sh
 export MET_ROOT=/apps/ops/para/libs/intel/${intel_ver}/met/${met_ver}
 
 export USER=$USER
-export DATAROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export ACCOUNT=VERF-DEV
 export QUEUE=dev
 export QUEUESHARED=dev_shared

@@ -13,17 +13,18 @@ set -x
 export model=evs
 
 cd $PBS_O_WORKDIR
-module reset
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 source $HOMEevs/versions/run.ver
+module reset
+module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/subseasonal/subseasonal_prep.sh
 
-export DATAROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_subseasonal_cfs_prep}
 export jobid=$job.${PBS_JOBID:-$$}
-export TMPDIR=$DATAROOTtmp
+export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
 
 export maillist='geoffrey.manikin@noaa.gov,shannon.shields@noaa.gov'
