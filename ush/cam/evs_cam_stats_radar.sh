@@ -50,8 +50,8 @@ elif [ $DOMAIN = alaska ]; then
    export NBR_WIDTH=27
 
    if [ $RADAR_FIELD = REFC ]; then
-      MRMS_PRODUCT=MergedReflectivityQComposite
-      export OBS_VAR=MergedReflectivityQComposite
+      MRMS_PRODUCT=MergedReflectivityQCComposite
+      export OBS_VAR=MergedReflectivityQCComposite
    fi
 
    export MASK_POLY_LIST=$FIXevs/masks/Alaska_${VERIF_GRID}.nc
