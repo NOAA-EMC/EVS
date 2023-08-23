@@ -1,34 +1,32 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_global_det_wave_prep.sh                       
-# Deanna Spindler / Deanna.Spindler@noaa.gov
-# Mallory Row / Mallory.Row@noaa.gov
-# Purpose of Script: Run the prep for any global determinstic wave models   
+# Name of Script: exevs_global_det_wave_prep.sh
+# Developers: Deanna Spindler / Deanna.Spindler@noaa.gov
+#             Mallory Row / Mallory.Row@noaa.gov
+# Purpose of Script: This script is run for the global_det wave prep step
 ###############################################################################
 
-set -x 
-
-###################################
-## Global Wave Model Prep 
-###################################
+set -x
 
 cd $DATA
 echo "in $0"
 echo "Starting ${COMPONENT} ${RUN} prep"
 echo "Starting at : `date`"
 
+# Prep model files
 for MODEL in $MODELNAME; do
     echo ' '
     echo ' *************************************'
     echo " *** ${MODELNAME}-${RUN} prep ***"
     echo ' *************************************'
     echo ' '
+    # Copy the GFS 0.25 degree wave forecast files
     if [ $MODEL == "gfs" ]; then
         cycles='00 06 12 18'
         lead_hours='000 006 012 018 024 030 036 042 048 054 060 066 072 078
             084 090 096 102 108 114 120 126 132 138 144 150 156 162
             168 174 180 186 192 198 204 210 216 222 228 234 240 246
-            252 258 264 270 276 282 288 294 300 306 312 318 324 330 
+            252 258 264 270 276 282 288 294 300 306 312 318 324 330
             336 342 348 354 360 366 372 378 384'
         for cyc in ${cycles} ; do
             for hr in ${lead_hours} ; do
@@ -51,15 +49,17 @@ for MODEL in $MODELNAME; do
                 fi
             done
         done
-    fi 
+    fi
 done
 
+# Prep the observation files
 for OBS in $OBSNAME; do
     echo ' '
     echo ' *************************************'
     echo " *** ${OBSNAME}-${RUN} prep ***"
     echo ' *************************************'
     echo ' '
+    # Trim down the NDBC buoy files
     if [ $OBS == "ndbc" ]; then
         INITDATEp1=$(date --date="${INITDATE} 24 hours" +"%Y%m%d")
         nbdc_txt_ncount=$(ls -l $COMINndbc/${INITDATEp1}/validation_data/marine/buoy/*.txt |wc -l)

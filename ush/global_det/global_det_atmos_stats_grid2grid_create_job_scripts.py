@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 '''
-Program Name: global_det_atmos_stats_grid2grid_create_job_scripts.py
-Contact(s): Mallory Row
+Name: global_det_atmos_stats_grid2grid_create_job_scripts.py
+Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This creates multiple independent job scripts. These
-          jobs contain all the necessary environment variables
-          and commands to needed to run the specific
-          use case.
+          jobs scripts contain all the necessary environment variables
+          and commands to needed to run them.
+Run By: scripts/global_det/stats/exevs_global_det_atmos_grid2grid_stats.sh
 '''
 
 import sys
@@ -345,7 +345,7 @@ assemble_data_model_jobs_dict = {
                                'commands': [gda_util.metplus_command(
                                                 'PCPCombine_fcstGLOBAL_'
                                                 +'DET_24hrAccum_snow.conf'
-                                            )]}, 
+                                            )]},
         '24hrAccum_Depth': {'env': {'MODEL_var': 'SNOD'},
                             'commands': [gda_util.metplus_command(
                                              'PCPCombine_fcstGLOBAL_'
@@ -493,7 +493,7 @@ generate_stats_jobs_dict = {
                                           )]},
         'TotalOzone': {'env': {'var1_name': 'TOZNE',
                                'var1_level': 'L0',
-                               'var1_options': ''}, 
+                               'var1_options': ''},
                       'commands': [gda_util.metplus_command(
                                        'GridStat_fcstGLOBAL_DET.conf'
                                    )]},
@@ -1007,7 +1007,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
             verif_type_job_commands_list = (
                 JOB_GROUP_jobs_dict[verif_type]\
                 [verif_type_job]['commands']
-            ) 
+            )
             # Loop through and write job script for dates and models
             if JOB_GROUP == 'reformat_data':
                 if verif_type in ['sst', 'sea_ice']:

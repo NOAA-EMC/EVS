@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_stats_grid2grid_create_anomaly
-Contact(s): Mallory Row
+Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This script is used to create anomaly
-          data from MET grid_stat netCDF output
+          data from MET grid_stat netCDF output.
+Run By: individual statistics job scripts generated through
+        ush/global_det/global_det_atmos_stats_grid2grid_create_job_scripts.py
 '''
 
 import os
@@ -192,5 +194,5 @@ while valid_date_dt <= ENDDATE_dt:
                     and gda_util.check_file_exists_size(output_DATA_file):
                 gda_util.copy_file(output_DATA_file, output_COMOUT_file)
     valid_date_dt = valid_date_dt + datetime.timedelta(hours=int(valid_hr_inc))
-    
+
 print("END: "+os.path.basename(__file__))

@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_stats_grid2grid_create_daily_avg.py
-Contact(s): Mallory Row
+Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This script is used to create daily average
-          for variable from netCDF output
+          for variable from netCDF output.
+Run By: individual statistics job scripts generated through
+        ush/global_det/global_det_atmos_plots_grid2grid_create_job_scripts.py
 '''
 
 import os
@@ -30,7 +32,7 @@ job_name = os.environ['job_name']
 MODEL = os.environ['MODEL']
 DATE = os.environ['DATE']
 valid_hr_start = os.environ['valid_hr_start']
-valid_hr_end = os.environ['valid_hr_end'] 
+valid_hr_end = os.environ['valid_hr_end']
 valid_hr_inc = os.environ['valid_hr_inc']
 fhr_list = os.environ['fhr_list'].split(',')
 fhr_inc = '12'
@@ -314,5 +316,5 @@ while valid_hr <= int(valid_hr_end):
             daily_avg_day+=int(fhr_inc)/24.
         print("")
     valid_hr+=int(valid_hr_inc)
-    
+
 print("END: "+os.path.basename(__file__))

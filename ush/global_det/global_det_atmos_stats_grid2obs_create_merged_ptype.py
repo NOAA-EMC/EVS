@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 '''
-Program Name: global_det_atmos_stats_grid2obs_create_merged_ptype.py
-Contact(s): Mallory Row
+Name: global_det_atmos_stats_grid2obs_create_merged_ptype.py
+Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This creates a merged precipitation type file used for
           calculating MET MCTC line type.
-          1-rain, 2-snow, 3-freezing rain, 4-ice pellets
+          (1-rain, 2-snow, 3-freezing rain, 4-ice pellets)
+Run By: individual statistics job scripts generated through
+        ush/global_det/global_det_atmos_plots_grid2obs_create_job_scripts.py
 '''
 
 import os

@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+'''
+Name: global_det_atmos_util.py
+Contact(s): Mallory Row (mallory.row@noaa.gov)
+Abstract: This contains many functions used across global_det atmos.
+'''
+
 import os
 import datetime
 import numpy as np
@@ -238,7 +244,7 @@ def get_time_info(date_start, date_end, date_type, init_hr_list, valid_hr_list,
                               (string)
              valid_hr_list  - list of valid hours (string)
              fhr_list       - list of forecasts hours (string)
-         
+
          Returns:
              time_info - list of dictionaries with the valid,
                          initalization, and forecast hour
@@ -312,7 +318,7 @@ def get_valid_hour(init_hour, forecast_hour):
          Args:
              init_hour    - intit hour/cycle (integer)
              forecast_hour - forecast hour (integer)
-    """ 
+    """
     valid_hour = (init_hour + (forecast_hour%24))
     if forecast_hour % 24 == 0:
         valid_hour = init_hour
@@ -391,7 +397,7 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                    elif format_opt == 'cycle':
                        replace_format_opt_count = init_time_dt.strftime(
                            format_opt_count_fmt
-                       ) 
+                       )
                    elif format_opt == 'lead_shift':
                        shift = (
                            filled_file_format_chunk \
@@ -497,7 +503,7 @@ def prep_prod_fnmoc_file(source_file, dest_file, init_dt, forecast_hour,
 def prep_prod_jma_file(source_file_format, dest_file, init_dt, forecast_hour,
                        prep_method, log_missing_file):
     """! Do prep work for JMA production files
-         
+
          Args:
              source_file_format - source file format (string)
              dest_file          - destination file (string)
@@ -910,7 +916,7 @@ def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
                    source_file_format, dest_file_format):
     """! This get a model file and saves it in the specificed
          destination
-         
+
          Args:
              valid_time_dt      - valid time (datetime)
              init_time_dt       - initialization time (datetime)
@@ -960,7 +966,7 @@ def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
         else:
             if os.path.exists(source_file):
                 print("Linking "+source_file+" to "+dest_file)
-                os.symlink(source_file, dest_file)   
+                os.symlink(source_file, dest_file)
             else:
                 if model == 'jma':
                     if f"{init_time_dt:%H}" == '00' and int(forecast_hour) > 72:
@@ -982,13 +988,13 @@ def get_truth_file(valid_time_dt, obs, source_prod_file_format,
                    dest_file_format):
     """! This get a truth/observation file and saves it in the specificed
          destination
-         
+
          Args:
              valid_time_dt           - valid time (datetime)
              obs                     - observation name (string)
              source_prod_file_format - source productoin file format (string)
              source_arch_file_format - source archive file format (string)
-             evs_run_mode            - mode EVS is running in (string) 
+             evs_run_mode            - mode EVS is running in (string)
              dest_file_format        - destination file format (string)
          Returns:
     """
@@ -1584,7 +1590,7 @@ def check_model_files(job_dict):
                 'valid_date': valid_date_dt,
                 'init_date': init_date_dt,
                 'forecast_hour': str(fhr)
-            }  
+            }
     # Check input files
     for fhr_key in list(fhr_check_input_dict.keys()):
         fhr_key_input_files_exist_list = []
@@ -2408,7 +2414,7 @@ def get_plot_job_dirs(DATA_base_dir, COMOUT_base_dir, job_group,
     return DATAjob_dir, COMOUTjob_dir
 
 def get_daily_stat_file(model_name, source_stats_base_dir,
-                        dest_model_name_stats_dir, 
+                        dest_model_name_stats_dir,
                         verif_case, start_date_dt, end_date_dt):
     """! Link model daily stat files
          Args:
@@ -3590,7 +3596,7 @@ def calculate_stat(logger, data_df, line_type, stat):
 
 def calculate_average(logger, average_method, line_type, stat, df):
     """! Calculate average of dataset
-        
+
          Args:
              logger                 - logger object
              average_method         - method to use to

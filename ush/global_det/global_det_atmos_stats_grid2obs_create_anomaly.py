@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_stats_grid2obs_create_anomaly.py
-Contact(s): Mallory Row
+Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This script is used to create anomaly
-          data from MET point_stat MPR output
+          data from MET point_stat MPR output.
+Run By: individual statistics job scripts generated through
+        ush/global_det/global_det_atmos_plots_grid2obs_create_job_scripts.py
 '''
 
 import os
@@ -123,7 +125,7 @@ while valid_date_dt <= ENDDATE_dt:
                                         input_file])
             input_file_df = pd.read_csv(input_file, sep=" ", skiprows=1,
                                         skipinitialspace=True, header=None,
-                                        names=MET_MPR_column_list, 
+                                        names=MET_MPR_column_list,
                                         na_filter=False, dtype=str)
             input_file_var_level_df = input_file_df[
                 (input_file_df['FCST_VAR'] == var) & (input_file_df['FCST_LEV'] == level)

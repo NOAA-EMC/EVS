@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_stats_grid2obs_create_daily_average.py
-Contact(s): Mallory Row
+Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This script is used to create daily average
-          data from MET point_stat MPR output
+          data from MET point_stat MPR output.
+Run By: individual statistics job scripts generated through
+        ush/global_det/global_det_atmos_plots_grid2obs_create_job_scripts.py
 '''
 
 import os

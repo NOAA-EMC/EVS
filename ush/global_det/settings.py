@@ -1,3 +1,10 @@
+###########################################
+#
+# Used for global_det wave plots
+#
+###########################################
+
+
 from datetime import datetime, timedelta as td
 import numpy as np
 

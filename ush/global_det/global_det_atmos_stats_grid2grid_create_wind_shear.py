@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 '''
-Name: global_det_atmos_stats_grid2grid_create_wind_shear
-Contact(s): Mallory Row
+Name: global_det_atmos_stats_grid2grid_create_wind_shear.py
+Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This script is used to create wind shear
-          data from MET grid_stat netCDF output
+          data from MET grid_stat netCDF output.
+Run By: individual statistics job scripts generated through
+        ush/global_det/global_det_atmos_plots_grid2grid_create_job_scripts.py
 '''
 
 import os
@@ -106,7 +108,7 @@ while valid_date_dt <= ENDDATE_dt:
                               +f"variable {req_var_level} cannot make "
                               +"wind shear data")
                 make_wind_shear_output_file = False
-            input_file_data.close() 
+            input_file_data.close()
         else:
             print(f"\nWARNING: {input_file} does not exist")
             make_wind_shear_output_file = False

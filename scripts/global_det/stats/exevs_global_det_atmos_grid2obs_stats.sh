@@ -1,10 +1,10 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_global_det_atmos_grid2obs_stats.sh 
-# Purpose of Script: This script generates grid-to-observations
-#                    verification statistics using METplus for the
-#                    atmospheric component of global deterministic models
-# Log history:
+# Name of Script: exevs_global_det_atmos_grid2obs_stats.sh
+# Developers: Mallory Row / Mallory.Row@noaa.gov
+# Purpose of Script: This script is run for the global_det atmos stats step
+#                    for the grid-to-obs verification. It uses METplus to
+#                    generate the statistics.
 ###############################################################################
 
 set -x
@@ -100,30 +100,4 @@ if [ $SENDCOM = YES ]; then
             done
         done
     done
-fi
-
-# Non-production jobs
-if [ $evs_run_mode != "production" ]; then
-    # Send data to archive
-    if [ $SENDARCH = YES ]; then
-        python $USHevs/global_det/global_det_atmos_copy_to_archive.py
-        status=$?
-        [[ $status -ne 0 ]] && exit $status
-        [[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_copy_to_archive.py"
-        echo
-    fi
-    # Send data to METviewer AWS server
-    if [ $SENDMETVIEWER = YES ]; then
-        python $USHevs/global_det/global_det_atmos_load_to_METviewer_AWS.py
-        status=$?
-        [[ $status -ne 0 ]] && exit $status
-        [[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_load_to_METviewer_AWS.py"
-        echo
-    else
-        # Clean up
-        if [ $KEEPDATA != "YES" ] ; then
-            cd $DATAROOT
-            rm -rf $DATA
-        fi
-    fi
 fi
