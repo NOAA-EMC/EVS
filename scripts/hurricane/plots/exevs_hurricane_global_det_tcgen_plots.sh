@@ -1,10 +1,12 @@
 #!/bin/bash
+set -x
+
 export PS4=' + exevs_hurricane_global_det_tcgen_plots.sh line $LINENO: '
 
 export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
 
 export YEAR=${YYYY}
-export TCGENdays="TC Genesis(05/01/${YEAR}-08/18/${YEAR})"
+export TCGENdays="TC Genesis(05/01/${YEAR}-08/22/${YEAR})"
 export basinlist="al ep wp"
 export modellist="gfs ecmwf cmc"
 
