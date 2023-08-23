@@ -139,7 +139,7 @@ if [ "${nc}" != '0' ]; then
 else
     echo ' '
     echo '**************************************** '
-    echo '*** ERROR : NO GDAS netcdf FILES *** '
+    echo '*** WARNING : NO GDAS netcdf FILES *** '
     echo "      for valid date ${VDATE} "
     echo '**************************************** '
     echo ' '
@@ -153,7 +153,7 @@ if [ "${nc}" != '0' ]; then
 else
     echo ' '
     echo '**************************************** '
-    echo '*** ERROR : NO NDBC netcdf FILES *** '
+    echo '*** WARNING : NO NDBC netcdf FILES *** '
     echo "      for valid date ${VDATE} "
     echo '**************************************** '
     echo ' '
@@ -289,7 +289,7 @@ if [ "${nc}" != '0' ]; then
 else
     echo ' '
     echo '**************************************** '
-    echo '*** ERROR : NO LARGE STAT FILE *** '
+    echo '*** WARNING : NO LARGE STAT FILE *** '
     echo "      found for valid date ${VDATE} "
     echo '**************************************** '
     echo ' '
