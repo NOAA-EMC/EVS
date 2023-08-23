@@ -11,6 +11,16 @@ warnings.filterwarnings('ignore')
    @brief Provides utility functions for METplus plotting use case
 """
 
+def get_memory_usage():
+    total_memory, used_memory, free_memory = map(
+        int,
+        os.popen('free -t -m').readlines()[-1].split()[1:]
+    )
+    return ' '.join((
+        "RAM memory % used:",
+        str(round((used_memory/total_memory) * 100, 2))
+    ))
+
 def get_date_arrays(date_type, date_beg, date_end,
                     fcst_valid_hour, fcst_init_hour,
                     obs_valid_hour, obs_init_hour,
