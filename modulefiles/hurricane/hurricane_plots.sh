@@ -13,8 +13,6 @@ module load libfabric/${libfabric_ver}
 module load imagemagick/${imagemagick_ver}
 module load geos/${geos_ver}
 module load proj/${proj_ver}
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}/
 module load met/${met_ver}
 module load metplus/${metplus_ver}
 
