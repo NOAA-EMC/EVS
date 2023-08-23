@@ -13,7 +13,7 @@ echo $index
 COM_IN=${COMIN:0:$index}
 echo $COM_IN
 
-if [ ${VERIF_CASE} = profile ] || [ $VERIF_CASE = grid2obs_ecnt ] || [ $VERIF_CASE = grid2obs_ctc ] || [ $VERIF_CASE = grid2obs_mlcape ] ; then
+if [ ${VERIF_CASE} = profile ] || [ $VERIF_CASE = grid2obs_ecnt ] || [ $VERIF_CASE = grid2obs_ctc ] || [ $VERIF_CASE = grid2obs_mlcape ] || [ $VERIF_CASE = grid2obs_cape ] ; then
   VRF_CASE=grid2obs
 elif [ ${VERIF_CASE} = snowfall ] ; then
   VRF_CASE=precip
@@ -37,7 +37,7 @@ for MODEL in $MODEL_LIST ; do
 
   stat_file=${model_stat_dir}/evs.stats.${model}.${VRF_CASE}.v${day}.stat
 
-  if [ $VERIF_CASE = grid2obs_mlcape ] || [ $VERIF_CASE = spcoutlook ] || [ $VERIF_CASE = grid2obs_ctc  ] ; then
+  if [ $VERIF_CASE = grid2obs_mlcape ] || [ $VERIF_CASE = spcoutlook ] || [ $VERIF_CASE = grid2obs_ctc  ] || [ $VERIF_CASE = grid2obs_cape ]  ; then
     if [ -s $stat_file ] ; then
       cp  $stat_file ${MODEL}_${day}.stat
       #Binbin note: fcst level and obs level must be same string!
@@ -45,7 +45,7 @@ for MODEL in $MODEL_LIST ; do
       grep L0 ${MODEL}_${day}.stat > L0
       grep MLCAPE ${MODEL}_${day}.stat | sed -e "s! CAPE ! MLCAPE!g" -e "s!L100000-0!ML!g" -e "s!P90-0!ML!g"  > mlcape
       cat mlcape >> L0 
-      if [  $VERIF_CASE = grid2obs_ctc  ] ; then 
+      if [  $VERIF_CASE = grid2obs_ctc  ] || [ $VERIF_CASE = grid2obs_cape ] ; then 
         mv L0  ${MODEL}_${day}.stat
       elif [ $VERIF_CASE = spcoutlook ] ; then
        #Conbine all issued times of one day together
