@@ -1409,7 +1409,7 @@ def main():
                     VERIF_TYPE, LINE_TYPE, DATE_TYPE, date_range, EVAL_PERIOD, 
                     date_hours, FLEADS, requested_var, fcst_var_names, 
                     obs_var_names, MODELS, domain, INTERP, MET_VERSION, 
-                    clear_prune_dir
+                    clear_prune_dir, fcst_level
                 )
                 if df is None:
                     continue
