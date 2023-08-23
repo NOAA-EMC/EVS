@@ -44,8 +44,7 @@ for domain in domains:
     if domain == 'conus':
         MRMS_PRODUCTS = ['MergedReflectivityQCComposite','SeamlessHSR','EchoTop']
     elif domain == 'alaska':
-      # MRMS_PRODUCTS = ['MergedReflectivityQCComposite']
-        MRMS_PRODUCTS = ['MergedReflectivityQComposite']
+        MRMS_PRODUCTS = ['MergedReflectivityQCComposite']
 
 
     for MRMS_PRODUCT in MRMS_PRODUCTS:

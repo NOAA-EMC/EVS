@@ -11,22 +11,11 @@ date
 export machine="WCOSS2"
 
 ###########################################################
-# obtain unique process id (pid) and make temp directories
+# obtain unique LSF id (jobid) and make temp directories
 ###########################################################
-export pid=$$
-#export DATA_IN=${DATA_IN:-$DATAROOT}
-export DATA_IN=${DATA_IN:-$DATAROOTtmp}
-export DATA=$DATA_IN/${pid}
-
-
-#rm -rf $DATA_IN
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA 
-
-###############################
-# Determine Job Output Name on System
-###############################
-export pgmout="OUTPUT.${pid}" 
 
 ################################################################
 # SENDCOM=YES--Copy files from TMPDIR to $COMOUT
@@ -51,6 +40,7 @@ export gefs_members="30"
 export cfs_members="4"
 
 # Run setpdy and initialize PDY variables
+export cyc=${cyc:-00}
 export cycle=${cycle:-t${cyc}z}
 setpdy.sh
 . ./PDY
@@ -69,7 +59,7 @@ export COMINecmwf=$DCOMROOT
 export COMINccpa=${COMINccpa:-$(compath.py ${envir}/com/ccpa/${ccpa_ver})}
 export COMINmrmsak=$DCOMROOT/ldmdata/obs/upperair/mrms/alaska/MultiSensorQPE
 export COMINmrmshi=$DCOMROOT/ldmdata/obs/upperair/mrms/hawaii/MultiSensorQPE
-export COMINosi=${COMINosi:-/lfs/h1/ops/dev/dcom}
+export COMINosi=${COMINosi:-/lfs/h1/ops/prod/dcom}
 export COMINghrsst=${COMINghrsst:-/lfs/h1/ops/dev/dcom}
 export COMINumd=${COMINumd:-/lfs/h1/ops/dev/dcom}
 export COMINnam=${COMINnam:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
@@ -89,13 +79,11 @@ echo Actual output starts here
 $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${PREP_TYPE}_${STEP}.sh
 export err=$?; err_chk
 
-cat $pgmout
-
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
 
 if [ "$KEEPDATA" != "YES" ] ; then
-  cd $DATAROOTtmp
+  cd $DATAROOT
   rm -rf $DATA
 fi
 
