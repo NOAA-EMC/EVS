@@ -131,7 +131,7 @@ for modnam in $models ; do
 
        #For Cloud 
        elif [ $fhr = fhr30 ] ; then
-           echo  "export lead='0,  6,  12,  18,  24,  30,  36,  42,  48,  54,  60,  66,  72,  78,  84,  90,  96, 102, 108, 114, 120, 126 '  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
+           echo  "export lead='0, 6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 66, 72, 78, 84, 90, 96, 102, 108, 114, 120, 126'  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
        elif [ $fhr = fhr31 ] ; then
            echo  "export lead='132, 138, 144, 150, 156, 162, 168, 174, 180, 186, 192, 198, 204, 210, 216, 222, 228, 234, 240, 246, 252'  " >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
        elif [ $fhr = fhr32 ] ; then
