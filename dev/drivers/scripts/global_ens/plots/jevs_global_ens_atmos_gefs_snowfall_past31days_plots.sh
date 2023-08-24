@@ -1,10 +1,10 @@
-#PBS -N jevs_global_ens_profile3_past31days_plots
+#PBS -N jevs_global_ens_atmos_gefs_snowfall_past31days_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=01:30:00
-#PBS -l place=vscatter,select=10:ncpus=64:mem=400GB
+#PBS -l walltime=00:30:00
+#PBS -l place=vscatter,select=1:ncpus=64:mem=100GB
 #PBS -l debug=true
 
 
@@ -18,30 +18,21 @@ export NET=evs
 export STEP=plots
 export COMPONENT=global_ens
 export RUN=atmos
-export VERIF_CASE=profile3
+export VERIF_CASE=snowfall
 export MODELNAME=gefs
-
-
 
 module reset
 module load prod_envir/${prod_envir_ver}
-
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-
-
-
 export envir=prod
-
 
 export KEEPDATA=YES
 
 export cyc=00
-#export VDATE=20230115
 export past_days=31
 
 export met_v=${met_ver:0:4}
-export valid_time=both
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver

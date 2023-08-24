@@ -1,4 +1,4 @@
-#PBS -N jevs_global_ens_profile4_past90days_plots
+#PBS -N jevs_global_ens_atmos_gefs_profile4_past90days_plots
 #PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q dev
@@ -21,23 +21,15 @@ export RUN=atmos
 export VERIF_CASE=profile4
 export MODELNAME=gefs
 
-
-
 module reset
 module load prod_envir/${prod_envir_ver}
-
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-
-
-
 export envir=prod
-
 
 export KEEPDATA=YES
 
 export cyc=00
-#export VDATE=20230115
 export past_days=90
 
 export met_v=${met_ver:0:4}

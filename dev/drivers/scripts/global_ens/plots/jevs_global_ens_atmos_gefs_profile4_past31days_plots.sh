@@ -1,10 +1,10 @@
-#PBS -N jevs_global_ens_sea_ice_past90days_plots
-#PBS -j oe 
+#PBS -N jevs_global_ens_atmos_gefs_profile4_past31days_plots
+#PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:30:00
-#PBS -l place=vscatter,select=1:ncpus=64:mem=100GB
+#PBS -l walltime=01:30:00
+#PBS -l place=vscatter,select=5:ncpus=64:mem=100GB
 #PBS -l debug=true
 
 
@@ -18,26 +18,20 @@ export NET=evs
 export STEP=plots
 export COMPONENT=global_ens
 export RUN=atmos
-export VERIF_CASE=sea_ice
+export VERIF_CASE=profile4
 export MODELNAME=gefs
-
 
 module reset
 module load prod_envir/${prod_envir_ver}
 
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-
-
-
 export envir=prod
-
 
 export KEEPDATA=YES
 
 export cyc=00
-#export VDATE=20221207
-export past_days=90
+export past_days=31
 
 export met_v=${met_ver:0:4}
 export valid_time=both

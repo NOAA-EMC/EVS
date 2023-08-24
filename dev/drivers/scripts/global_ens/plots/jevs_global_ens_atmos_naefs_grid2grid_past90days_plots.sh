@@ -1,10 +1,10 @@
-#PBS -N jevs_global_ens_precip_past31days_plots
+#PBS -N jevs_global_ens_atmos_naefs_grid2grid_past90days_plots
 #PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:30:00
-#PBS -l place=vscatter,select=1:ncpus=64:mem=100GB
+#PBS -l place=vscatter,select=1:ncpus=24:mem=100GB
 #PBS -l debug=true
 
 
@@ -18,30 +18,23 @@ export NET=evs
 export STEP=plots
 export COMPONENT=global_ens
 export RUN=atmos
-export VERIF_CASE=precip
-export MODELNAME=gefs
-
-
+export VERIF_CASE=grid2grid
+export MODELNAME=naefs
 
 module reset
 module load prod_envir/${prod_envir_ver}
-
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-
-
-
-
 export envir=prod
-
 
 export KEEPDATA=YES
 
 export cyc=00
-#export VDATE=20221228
-export past_days=31
+export past_days=90
 
 export met_v=${met_ver:0:4}
+
+export valid_time=both
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver
