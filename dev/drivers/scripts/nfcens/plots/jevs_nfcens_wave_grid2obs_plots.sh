@@ -52,6 +52,7 @@ export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export OUTPUTROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}
 export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver}
+export COMOUT=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver}
 
 export run_mpi='yes'
 export gather='yes'

@@ -57,7 +57,8 @@ export COMINgefs=$COMIN/stats/$COMPONENT/gefs
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export VDATE_START=$(date -d "today -91 day" +"%Y%m%d")
 export VDATE_END=$(date -d "today -2 day" +"%Y%m%d")
-export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE_END
+#export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE_END
+export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE_END
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.${COMPONENT}.${VERIF_CASE}.${STEP}.${VERIF_TYPE}
 
