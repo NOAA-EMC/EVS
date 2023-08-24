@@ -14,8 +14,6 @@ module load zlib/$zlib_ver
 module load jasper/$jasper_ver
 module load cfp/$cfp_ver
 module load gsl/$gsl_ver
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
 module load met/$met_ver
 module load metplus/$metplus_ver
 
