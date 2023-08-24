@@ -1,4 +1,4 @@
-#PBS -N jevs_cam_href_grid2obs_cape_past31days_plots
+#PBS -N jevs_cam_href_grid2obs_cape_past90days_plots
 #PBS -j oe
 #PBS -q dev
 #PBS -S /bin/bash
@@ -35,7 +35,7 @@ export KEEPDATA=YES
 
 export cyc=00
 #export VDATE=20221231
-export past_days=31
+export past_days=90
 
 export run_mpi=yes
 export valid_time=both
