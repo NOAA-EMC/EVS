@@ -2918,6 +2918,8 @@ def check_weekly_truth_files(job_dict):
          Returns:
              truth_files_exist - if 80% of truth files
                                  exist or not (boolean)
+             truth_copy_output_DATA2COMOUT_list - list of files to copy
+                                                  from DATA to COMOUT
     """
     valid_date_dt = datetime.datetime.strptime(
         job_dict['DATE']+job_dict['valid_hr_start'],
@@ -2926,7 +2928,8 @@ def check_weekly_truth_files(job_dict):
     verif_case_dir = os.path.join(
         job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
     )
-    truth_file_list = []
+    truth_input_file_list = []
+    truth_output_file_list = []
     if job_dict['JOB_GROUP'] == 'reformat_data':
         if job_dict['VERIF_CASE'] == 'grid2grid':
             if job_dict['VERIF_TYPE'] == 'anom':
@@ -2942,7 +2945,7 @@ def check_weekly_truth_files(job_dict):
                         (valid_date_dt-datetime.timedelta(hours=12*nf)),
                         ['anl'], {}
                     )
-                    truth_file_list.append(truth_file)
+                    truth_input_file_list.append(truth_file)
                     nf+=1
             elif job_dict['VERIF_TYPE'] == 'pres_lvls':
                 truth_file_format = os.path.join(
@@ -2957,7 +2960,7 @@ def check_weekly_truth_files(job_dict):
                         (valid_date_dt-datetime.timedelta(hours=12*nf)),
                         ['anl'], {}
                     )
-                    truth_file_list.append(truth_file)
+                    truth_input_file_list.append(truth_file)
                     nf+=1
         elif job_dict['VERIF_CASE'] == 'grid2obs':
             if job_dict['VERIF_TYPE'] == 'PrepBufr':
@@ -2974,7 +2977,38 @@ def check_weekly_truth_files(job_dict):
                         (valid_date_dt-datetime.timedelta(hours=12*nf)),
                         ['anl'], {}
                     )
-                    truth_file_list.append(prepbufr_file)
+                    truth_input_file_list.append(prepbufr_file)
+                    nf+=1
+                pb2nc_DATA_output_file_format = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
+                    'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
+                    +job_dict['VERIF_TYPE']+'_'+job_dict['prepbufr']+'_valid'
+                    +'{valid?fmt=%Y%m%d%H}.nc'
+                )
+                pb2nc_COMOUT_output_file_format = os.path.join(
+                    job_dict['COMOUT'],
+                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
+                    'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
+                    +job_dict['VERIF_TYPE']+'_'+job_dict['prepbufr']+'_valid'
+                    +'{valid?fmt=%Y%m%d%H}.nc'
+                )
+                nf = 0
+                while nf <= 14:
+                    pb2nc_DATA_output = format_filler(
+                        pb2nc_DATA_output_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    pb2nc_COMOUT_output = format_filler(
+                        pb2nc_COMOUT_output_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    truth_output_file_list.append((pb2nc_DATA_output,
+                                                   pb2nc_COMOUT_output))
                     nf+=1
     elif job_dict['JOB_GROUP'] == 'assemble_data':
         if job_dict['VERIF_CASE'] == 'grid2obs':
@@ -2995,20 +3029,33 @@ def check_weekly_truth_files(job_dict):
                         (valid_date_dt-datetime.timedelta(hours=12*nf)),
                         ['anl'], {}
                     )
-                    truth_file_list.append(pb2nc_file)
+                    truth_input_file_list.append(pb2nc_file)
                     nf+=1
-    truth_files_exist_list = []
-    for truth_file in truth_file_list:
-        if os.path.exists(truth_file):
-            truth_files_exist_list.append(True)
+    truth_output_files_exist_list = []
+    truth_copy_output_DATA2COMOUT_list = truth_output_file_list
+    for truth_file_tuple in truth_output_file_list:
+        if os.path.exists(truth_file_tuple[1]):
+            truth_output_files_exist_list.append(True)
+            copy_file(truth_file_tuple[1], truth_file_tuple[0])
+            truth_copy_output_DATA2COMOUT_list.remove(truth_file_tuple)
         else:
-            truth_files_exist_list.append(False)
-    if any(x == True for x in truth_files_exist_list) \
-            and truth_files_exist_list.count(True) >= 12:
-        truth_files_exist = True
-    else:
+            truth_output_files_exist_list.append(False)
+    if all(x == True for x in truth_output_files_exist_list) \
+            and len(truth_output_files_exist_list) > 0:
         truth_files_exist = False
-    return truth_files_exist
+    else:
+        truth_input_files_exist_list = []
+        for truth_file in truth_input_file_list:
+            if os.path.exists(truth_file):
+                truth_input_files_exist_list.append(True)
+            else:
+                truth_input_files_exist_list.append(False)
+        if any(x == True for x in truth_input_files_exist_list) \
+                and truth_input_files_exist_list.count(True) >= 12:
+            truth_files_exist = True
+        else:
+            truth_files_exist = False
+    return truth_files_exist, truth_copy_output_DATA2COMOUT_list
 
 def check_days6_10_truth_files(job_dict):
     """! Check if obs files exist for Days 6-10 reformat and assemble step
@@ -3020,6 +3067,8 @@ def check_days6_10_truth_files(job_dict):
          Returns:
              truth_files_exist - if 80% of truth files
                                  exist or not (boolean)
+             truth_copy_output_DATA2COMOUT_list - list of files to copy
+                                                  from DATA to COMOUT
     """
     valid_date_dt = datetime.datetime.strptime(
         job_dict['DATE']+job_dict['valid_hr_start'],
@@ -3028,7 +3077,8 @@ def check_days6_10_truth_files(job_dict):
     verif_case_dir = os.path.join(
         job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
     )
-    truth_file_list = []
+    truth_input_file_list = []
+    truth_output_file_list = []
     if job_dict['JOB_GROUP'] == 'reformat_data':
         if job_dict['VERIF_CASE'] == 'grid2grid':
             if job_dict['VERIF_TYPE'] == 'anom':
@@ -3044,7 +3094,7 @@ def check_days6_10_truth_files(job_dict):
                         (valid_date_dt-datetime.timedelta(hours=12*nf)),
                         ['anl'], {}
                     )
-                    truth_file_list.append(truth_file)
+                    truth_input_file_list.append(truth_file)
                     nf+=1
             elif job_dict['VERIF_TYPE'] == 'pres_lvls':
                 truth_file_format = os.path.join(
@@ -3059,7 +3109,7 @@ def check_days6_10_truth_files(job_dict):
                         (valid_date_dt-datetime.timedelta(hours=12*nf)),
                         ['anl'], {}
                     )
-                    truth_file_list.append(truth_file)
+                    truth_input_file_list.append(truth_file)
                     nf+=1
         elif job_dict['VERIF_CASE'] == 'grid2obs':
             if job_dict['VERIF_TYPE'] == 'PrepBufr':
@@ -3076,7 +3126,38 @@ def check_days6_10_truth_files(job_dict):
                         (valid_date_dt-datetime.timedelta(hours=12*nf)),
                         ['anl'], {}
                     )
-                    truth_file_list.append(prepbufr_file)
+                    truth_input_file_list.append(prepbufr_file)
+                    nf+=1
+                pb2nc_DATA_output_file_format = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
+                    'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
+                    +job_dict['VERIF_TYPE']+'_'+job_dict['prepbufr']+'_valid'
+                    +'{valid?fmt=%Y%m%d%H}.nc'
+                )
+                pb2nc_COMOUT_output_file_format = os.path.join(
+                    job_dict['COMOUT'],
+                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
+                    'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
+                    +job_dict['VERIF_TYPE']+'_'+job_dict['prepbufr']+'_valid'
+                    +'{valid?fmt=%Y%m%d%H}.nc'
+                )
+                nf = 0
+                while nf <= 10:
+                    pb2nc_DATA_output = format_filler(
+                        pb2nc_DATA_output_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    pb2nc_COMOUT_output = format_filler(
+                        pb2nc_COMOUT_output_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    truth_output_file_list.append((pb2nc_DATA_output,
+                                                   pb2nc_COMOUT_output))
                     nf+=1
     elif job_dict['JOB_GROUP'] == 'assemble_data':
         if job_dict['VERIF_CASE'] == 'grid2obs':
@@ -3097,20 +3178,33 @@ def check_days6_10_truth_files(job_dict):
                         (valid_date_dt-datetime.timedelta(hours=12*nf)),
                         ['anl'], {}
                     )
-                    truth_file_list.append(pb2nc_file)
+                    truth_input_file_list.append(pb2nc_file)
                     nf+=1
-    truth_files_exist_list = []
-    for truth_file in truth_file_list:
-        if os.path.exists(truth_file):
-            truth_files_exist_list.append(True)
+    truth_output_files_exist_list = []
+    truth_copy_output_DATA2COMOUT_list = truth_output_file_list
+    for truth_file_tuple in truth_output_file_list:
+        if os.path.exists(truth_file_tuple[1]):
+            truth_output_files_exist_list.append(True)
+            copy_file(truth_file_tuple[1], truth_file_tuple[0])
+            truth_copy_output_DATA2COMOUT_list.remove(truth_file_tuple)
         else:
-            truth_files_exist_list.append(False)
-    if any(x == True for x in truth_files_exist_list) \
-            and truth_files_exist_list.count(True) >= 9:
-        truth_files_exist = True
-    else:
+            truth_output_files_exist_list.append(False)
+    if all(x == True for x in truth_output_files_exist_list) \
+            and len(truth_output_files_exist_list) > 0:
         truth_files_exist = False
-    return truth_files_exist
+    else:
+        truth_input_files_exist_list = []
+        for truth_file in truth_input_file_list:
+            if os.path.exists(truth_file):
+                truth_input_files_exist_list.append(True)
+            else:
+                truth_input_files_exist_list.append(False)
+        if any(x == True for x in truth_input_files_exist_list) \
+                and truth_input_files_exist_list.count(True) >= 9:
+            truth_files_exist = True
+        else:
+            truth_files_exist = False
+    return truth_files_exist, truth_copy_output_DATA2COMOUT_list
 
 def check_weeks3_4_truth_files(job_dict):
     """! Check if obs files exist for Weeks 3-4 reformat and assemble step
@@ -3122,6 +3216,8 @@ def check_weeks3_4_truth_files(job_dict):
          Returns:
              truth_files_exist - if 80% of truth files
                                  exist or not (boolean)
+             truth_copy_output_DATA2COMOUT_list - list of files to copy
+                                                  from DATA to COMOUT
     """
     valid_date_dt = datetime.datetime.strptime(
         job_dict['DATE']+job_dict['valid_hr_start'],
@@ -3130,7 +3226,8 @@ def check_weeks3_4_truth_files(job_dict):
     verif_case_dir = os.path.join(
         job_dict['DATA'], job_dict['VERIF_CASE']+'_'+job_dict['STEP']
     )
-    truth_file_list = []
+    truth_input_file_list = []
+    truth_output_file_list = []
     if job_dict['JOB_GROUP'] == 'reformat_data':
         if job_dict['VERIF_CASE'] == 'grid2grid':
             if job_dict['VERIF_TYPE'] == 'anom':
@@ -3146,7 +3243,7 @@ def check_weeks3_4_truth_files(job_dict):
                         (valid_date_dt-datetime.timedelta(hours=12*nf)),
                         ['anl'], {}
                     )
-                    truth_file_list.append(truth_file)
+                    truth_input_file_list.append(truth_file)
                     nf+=1
             elif job_dict['VERIF_TYPE'] == 'pres_lvls':
                 truth_file_format = os.path.join(
@@ -3161,7 +3258,7 @@ def check_weeks3_4_truth_files(job_dict):
                         (valid_date_dt-datetime.timedelta(hours=12*nf)),
                         ['anl'], {}
                     )
-                    truth_file_list.append(truth_file)
+                    truth_input_file_list.append(truth_file)
                     nf+=1
         elif job_dict['VERIF_CASE'] == 'grid2obs':
             if job_dict['VERIF_TYPE'] == 'PrepBufr' \
@@ -3181,7 +3278,38 @@ def check_weeks3_4_truth_files(job_dict):
                         (valid_date_dt-datetime.timedelta(hours=12*nf)),
                         ['anl'], {}
                     )
-                    truth_file_list.append(prepbufr_file)
+                    truth_input_file_list.append(prepbufr_file)
+                    nf+=1
+                pb2nc_DATA_output_file_format = os.path.join(
+                    verif_case_dir, 'METplus_output',
+                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
+                    'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
+                    +job_dict['VERIF_TYPE']+'_'+job_dict['prepbufr']+'_valid'
+                    +'{valid?fmt=%Y%m%d%H}.nc'
+                )
+                pb2nc_COMOUT_output_file_format = os.path.join(
+                    job_dict['COMOUT'],
+                    job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
+                    'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
+                    +job_dict['VERIF_TYPE']+'_'+job_dict['prepbufr']+'_valid'
+                    +'{valid?fmt=%Y%m%d%H}.nc'
+                )
+                nf = 0
+                while nf <= 28:
+                    pb2nc_DATA_output = format_filler(
+                        pb2nc_DATA_output_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    pb2nc_COMOUT_output = format_filler(
+                        pb2nc_COMOUT_output_file_format,
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        (valid_date_dt-datetime.timedelta(hours=12*nf)),
+                        ['anl'], {}
+                    )
+                    truth_output_file_list.append((pb2nc_DATA_output,
+                                                   pb2nc_COMOUT_output))
                     nf+=1
     elif job_dict['JOB_GROUP'] == 'assemble_data':
         if job_dict['VERIF_CASE'] == 'grid2obs':
@@ -3202,20 +3330,33 @@ def check_weeks3_4_truth_files(job_dict):
                         (valid_date_dt-datetime.timedelta(hours=12*nf)),
                         ['anl'], {}
                     )
-                    truth_file_list.append(pb2nc_file)
+                    truth_input_file_list.append(pb2nc_file)
                     nf+=1
-    truth_files_exist_list = []
-    for truth_file in truth_file_list:
-        if os.path.exists(truth_file):
-            truth_files_exist_list.append(True)
+    truth_output_files_exist_list = []
+    truth_copy_output_DATA2COMOUT_list = truth_output_file_list
+    for truth_file_tuple in truth_output_file_list:
+        if os.path.exists(truth_file_tuple[1]):
+            truth_output_files_exist_list.append(True)
+            copy_file(truth_file_tuple[1], truth_file_tuple[0])
+            truth_copy_output_DATA2COMOUT_list.remove(truth_file_tuple)
         else:
-            truth_files_exist_list.append(False)
-    if any(x == True for x in truth_files_exist_list) \
-            and truth_files_exist_list.count(True) >= 23:
-        truth_files_exist = True
-    else:
+            truth_output_files_exist_list.append(False)
+    if all(x == True for x in truth_output_files_exist_list) \
+            and len(truth_output_files_exist_list) > 0:
         truth_files_exist = False
-    return truth_files_exist
+    else:
+        truth_input_files_exist_list = []
+        for truth_file in truth_input_file_list:
+            if os.path.exists(truth_file):
+                truth_input_files_exist_list.append(True)
+            else:
+                truth_input_files_exist_list.append(False)
+        if any(x == True for x in truth_input_files_exist_list) \
+                and truth_input_files_exist_list.count(True) >= 23:
+            truth_files_exist = True
+        else:
+            truth_files_exist = False
+    return truth_files_exist, truth_copy_output_DATA2COMOUT_list
 
 def check_truth_files(job_dict):
     """!
@@ -3287,7 +3428,6 @@ def check_truth_files(job_dict):
                     )
                     truth_file_list.append(prepbufr_file)
                     nf+=1
-                #truth_file_list.append(prepbufr_file)
     elif job_dict['JOB_GROUP'] == 'assemble_data':
         if job_dict['VERIF_CASE'] == 'grid2obs':
             if job_dict['VERIF_TYPE'] == 'PrepBufr' \
