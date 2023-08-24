@@ -1020,6 +1020,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     if str(metric2_name).lower() == 'pcor':
         metric2_name = 'corr'
     domain_string = domain_string.replace(', ','_')
+    if str(domain_string).lower() == 'global_0p25':
+        domain_string = 'latlon_0p25_glb'
     save_name = (f'evs.'
                  + f'{str(models_savename).lower()}.'
                  + f'{str(metric1_name).lower()}.'
