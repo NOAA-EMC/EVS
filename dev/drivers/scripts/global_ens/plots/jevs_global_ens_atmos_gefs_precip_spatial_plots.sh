@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:30:00
-#PBS -l place=vscatter,select=1:ncpus=2:mem=200GB
+#PBS -l select=1:ncpus=1:mem=5GB
 #PBS -l debug=true
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
@@ -21,7 +21,6 @@ export envir=prod
 
 module reset
 module load prod_envir/${prod_envir_ver}
-
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 export KEEPDATA=YES
