@@ -1,10 +1,10 @@
-#PBS -N jevs_global_ens_atmos_gefs_profile4_past90days_plots
+#PBS -N jevs_global_ens_atmos_gefs_sea_ice_past31days_plots
 #PBS -j oe 
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:30:00
-#PBS -l place=vscatter,select=1:ncpus=64:mem=100GB
+#PBS -l walltime=00:10:00
+#PBS -l place=vscatter,select=1:ncpus=32:mem=10GB
 #PBS -l debug=true
 
 
