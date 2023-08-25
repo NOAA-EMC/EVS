@@ -72,8 +72,8 @@ python $USHevs/global_ens/ush_gens_plot_py/global_det_atmos_plots.py
 
 cd $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/precip/SL1L2_FBAR_24hrAccumMaps_CONUS_precip_spatial_map/images
 
-tar -cvf evs.plots.gefs.precip.spatial.map.v${VDATE}.tar *.gif
+tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.precip_spatial.v${VDATE}.tar *.gif
 
 if [ $SENDCOM = YES ]; then
-    cp evs.plots.gefs.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
+    cp evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.precip_spatial.v${VDATE}.tar  $COMOUT/.
 fi

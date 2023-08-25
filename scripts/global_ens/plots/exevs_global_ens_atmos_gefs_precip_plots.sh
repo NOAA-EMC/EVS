@@ -274,8 +274,8 @@ for domain in conus conus_east conus_west conus_south conus_central ; do
     done
 done
 
-tar -cvf evs.plots.gefs.precip.v${VDATE}.past${past_days}days.tar *.png
+tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar *.png
 
 if [ $SENDCOM = YES ]; then
-    cp evs.plots.gefs.precip.v${VDATE}.past${past_days}days.tar $COMOUT/.
+    cp evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar $COMOUT/.
 fi
