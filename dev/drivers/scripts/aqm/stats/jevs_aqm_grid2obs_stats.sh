@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=00:15:00
+#PBS -l walltime=01:15:00
 #PBS -l select=1:ncpus=1:mem=2GB
 #PBS -l debug=true
 
@@ -13,7 +13,7 @@ cd $PBS_O_WORKDIR
 
 export model=evs
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS_aqm_restart/EVS
 
 ###%include <head.h>
 ###%include <envir-p1.h>
@@ -43,24 +43,7 @@ export mod_ver=${aqm_ver}
 export config=$HOMEevs/parm/evs_config/aqm/config.evs.aqm.prod
 source $config
 
-########################################################################
-## The following setting is for parallel test and need to be removed for operational code
-########################################################################
-
-##
-## Instruction for Pull-Request testing
-##     point COMIN to personal directory
-##     output can be found at $COMOUTfinal (defined in JEVS_AQM_STATS based on COMIN setting below)
-## 
-## "Stats" needs previous three days' PREP for day3 verification
-## Default VDATE is PDYm3
-## (1) Repeat pull-request prep step for PDYm3, PDYm4, and PDYm5 and
-##     "export COMINaqmproc=" to $COMOUT in jevs_aqm_prep.sh
-## or (2) Use EVSv1.0 parallel preps archive, 
-##     export COMINaqmproc="export COMINaqmproc=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/evs/v1.0/prep/aqm"
-##
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
-## export COMIN=/lfs/h2/emc/physics/noscrub/$USER/${NET}/${evs_ver}
 export COMOUT=${COMIN}/${STEP}/${COMPONENT}
 
 ## export COMINaqm=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
@@ -69,23 +52,8 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-## For aqmv7 NRT runs
-## export fcst_input_ver=v7
-## export COMINaqm=/lfs/h2/emc/ptmp/jianping.huang/emc.para/com/aqm/v7.0
-
-## For aqmv6 restrospective runs
-## export fcst_input_ver=v6
-## export COMINaqm=/lfs/h2/emc/physics/noscrub/$USER/verification/${MODELNAME}/${envir}
-
-## Need VDATE setting
 export cycle=t${cyc}z
-setpdy.sh
-. ./PDY
-#
-## export KEEPDATA=NO
-#
-export VDATE=${PDYm3}
-#
+
 export COMOUT=$COMIN/${STEP}/${COMPONENT}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}

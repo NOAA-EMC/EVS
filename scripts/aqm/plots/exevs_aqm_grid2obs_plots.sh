@@ -123,7 +123,7 @@ do
 	
 	export inithr
 	export var=OZCON1
-	mkdir $COMOUTplots/$var
+	mkdir -p $COMOUTplots/$var
 	export lev=A1
 	export linetype=SL1L2
 	smlev=`echo $lev | tr A-Z a-z`
@@ -163,7 +163,7 @@ do
         fi
 
 	export var=PMTF
-	mkdir $COMOUTplots/$var
+	mkdir -p $COMOUTplots/$var
         export lev=L1
 	export lev_obs=A1
         export linetype=SL1L2
@@ -209,7 +209,7 @@ do
 	do
 	export flead
 	export var=OZMAX8
-	mkdir $COMOUTplots/$var
+	mkdir -p $COMOUTplots/$var
 	export lev=L1
 	export lev_obs=A8
 	export linetype=CTC
@@ -435,7 +435,7 @@ do
 done
 
 cd ${PLOTDIR_headline}
-tarfile=evs.plots.${COMPONENT}.${RUN}.headline.v${VDATE}.tar
+tarfile=evs.plots.${COMPONENT}.${RUN}.headline.last31days.v${VDATE}.tar
 tar -cvf ${tarfile} *png
 
 mkdir -m 775 -p ${COMOUTheadline}
