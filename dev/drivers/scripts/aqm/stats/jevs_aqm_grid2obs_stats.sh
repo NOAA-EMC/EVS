@@ -53,6 +53,7 @@ export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 export cycle=t${cyc}z
+export VDATE=$(date --date="3 days ago" +%Y%m%d)
 
 export COMOUT=$COMIN/${STEP}/${COMPONENT}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
