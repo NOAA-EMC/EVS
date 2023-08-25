@@ -79,11 +79,10 @@ export cycle=t${cyc}z
 ## setting to produce output to personal directory
 ## export COMIN=/lfs/h2/emc/physics/noscrub/$USER/${NET}/${evs_ver}
 ## export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
-export COMIN=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver}
-mkdir -p ${COMIN}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMINaqm=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/evs/v1.0/stats/aqm/aqm
 
-export COMOUT=${COMIN}/${STEP}/${COMPONENT}
+export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver/${STEP}/${COMPONENT}
 #
 ## export KEEPDATA=NO
 #
