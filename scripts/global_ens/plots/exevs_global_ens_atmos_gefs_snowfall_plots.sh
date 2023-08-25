@@ -118,7 +118,7 @@ for stats in ets fbias crps fss ; do
        var=`echo $VAR | tr '[A-Z]' '[a-z]'` 
 	    
        FCST_LEVEL_values="L0"
-       WEASD_24_gt0p0254 SNOD_24_gt0p0254 WEASD_24_gt0p1016 SNOD_24_gt0p1016 WEASD_24_gt0p2032 SNOD_24_gt0p2032 WEASD_24_gt0p3048 SNOD_24_gt0p3048
+
        if [ $VAR = WEASD_24_gt0p0254 ] || [ $VAR = SNOD_24_gt0p0254 ]; then
            threshes='>0.0254'
        elif [ $VAR = WEASD_24_gt0p1016 ] || [ $VAR = SNOD_24_gt0p1016 ]; then
@@ -258,8 +258,8 @@ for var in weasd snod; do
     done #domain
 done #vars
 
-tar -cvf evs.plots.gefs.snowfall.v${VDATE}.past${past_days}days.tar *.png
+tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar *.png
 
 if [ $SENDCOM = YES ]; then
-    cp evs.plots.gefs.snowfall.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
+    cp evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar  $COMOUT/.
 fi

@@ -179,7 +179,8 @@ for stats in rmse me ; do
     done  #domain
 done     #stats
 
-tar -cvf evs.plots.gefs.sst.v${VDATE}.past${past_days}days.tar *.png
+tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar *.png
+
 if [ $SENDCOM = YES ]; then 
-    cp evs.plots.gefs.sst.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
+    cp evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar  $COMOUT/.
 fi
