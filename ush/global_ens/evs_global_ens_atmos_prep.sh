@@ -275,7 +275,7 @@ if [ $run_mpi = yes ] ; then
    mpiexec  -n 83 -ppn 64 --cpu-bind core cfp  ${DATA}/run_get_all_gens_atmos_poe.sh
  fi
 
- #Only after the above jobs are finished, following jobs can be run!
+ #Only after the above jobs are finished, following non-mpi parallel jobs can be run!
 
  if [ -s run_get_all_gens_apcp24h_poe.sh ] ; then
    chmod +x run_get_all_gens_apcp24h_poe.sh
