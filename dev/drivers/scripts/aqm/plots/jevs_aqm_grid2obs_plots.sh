@@ -4,7 +4,7 @@
 #PBS -q "dev"
 #PBS -A VERF-DEV
 #PBS -l walltime=02:00:00
-#PBS -l select=1:ncpus=128:mem=512GB
+#PBS -l select=1:ncpus=128:mem=500GB
 #PBS -l debug=true
 
 set -x
@@ -13,7 +13,7 @@ cd $PBS_O_WORKDIR
 
 export model=evs
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS_aqm_restart/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 ###%include <head.h>
 ###%include <envir-p1.h>
