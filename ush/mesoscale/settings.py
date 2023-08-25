@@ -2611,6 +2611,28 @@ class Reference():
                     }
                 },
             },
+            'grid2obs_ptype': {
+                'MCTC': {
+                    'plot_stats_list': ('csi, ets, fbias, pod,'
+                                        + ' faratio, sratio'),
+                    'interp': 'BILIN',
+                    'vx_mask_list' : [
+                        'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
+                        'Alaska',
+                    ],
+                    'var_dict': {
+                        'PTYPE': {'fcst_var_names': ['PTYPE'],
+                                 'fcst_var_levels': ['Z0'],
+                                 'fcst_var_thresholds': '>=1.0,>=2.0,>=3.0,>=4.0',
+                                 'fcst_var_options': '',
+                                 'obs_var_names': ['PTYPE','PRWE'],
+                                 'obs_var_levels': ['Z0'],
+                                 'obs_var_thresholds': '>=1.0,>=2.0,>=3.0,>=4.0',
+                                 'obs_var_options': '',
+                                 'plot_group':'precip'},
+                    }
+                },
+            },
             'grid2obs_conus_sfc': {
                 'SL1L2': {
                     'plot_stats_list': ('me, rmse, bcrmse, fbar_obar, fbar,'

@@ -4,6 +4,37 @@ from datetime import datetime
 graphics = {
     'mesoscale':{
         'grid2obs':{
+            'ptype':{
+                'nam, rap?shift=-3, gfs': {
+                    'performance_diagram':{
+                        'DATE_TYPE':'INIT',
+                        'VALID_BEG':'',
+                        'VALID_END':'',
+                        'INIT_BEG':'',
+                        'INIT_END':'',
+                        'VX_MASK_LIST':'CONUS,CONUS_East,CONUS_West,CONUS_Central,CONUS_South,Alaska',
+                        'EVAL_PERIODS':['LAST31DAYS','LAST90DAYS'],
+                        'FCST_VALID_HOURS':[''],
+                        'FCST_INIT_HOURS':['0','12'],
+                        'VARIABLES':{
+                            'mctc':{
+                                'PTYPE':{
+                                    'STATSs':['sratio,pod,csi'],
+                                    'FCST_LEADS':['3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84'],
+                                    'FCST_LEVELs':['Z0'],
+                                    'OBS_LEVELs':['Z0'],
+                                    'FCST_THRESHs':['>=1.0,>=2.0,>=3.0,>=4.0'],
+                                    'OBS_THRESHs':['>=1.0,>=2.0,>=3.0,>=4.0'],
+                                    'CONFIDENCE_INTERVALS':'False',
+                                    'DELETE_INTERMED_TOGGLE':'False',
+                                    'INTERP':'BILIN',
+                                    'INTERP_PNTSs':[''],
+                                },
+                            },
+                        }
+                    }
+                },
+            },
             'raob':{
                 'lead_average_group, nam, rap?shift=-3, gfs': {
                     'lead_average':{
