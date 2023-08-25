@@ -158,7 +158,7 @@ chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 160 -ppn 160 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 160 -ppn 32 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi
@@ -186,8 +186,8 @@ for stats in mae ; do
     done  #domain
 done     #stats
 
-tar -cvf evs.plots.gefs.profile4.v${VDATE}.past${past_days}days.tar *.png
+tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar *.png
 
 if [ $SENDCOM = YES ]; then
-    cp evs.plots.gefs.profile4.v${VDATE}.past${past_days}days.tar  $COMOUT/.
+    cp evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar  $COMOUT/.
 fi
