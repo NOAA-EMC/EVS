@@ -12,6 +12,7 @@ from collections.abc import Iterable
 import numpy as np
 import subprocess
 import glob
+from datetime import datetime, timedelta as td
 
 def flatten(xs):
     for x in xs: 
@@ -503,7 +504,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             ))
             for fhr in np.arange(int(fhr_start), int(fhr_end), int(fhr_incr)):
                 copy_files.append(
-                    f'{met_tool}_{model}_{var_name}_{acc}H_{verif_type}_NBRHD{nbrhd}_'
+                    f'{met_tool}_{model}_{var_name}_{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}_'
                     + f'{str(fhr).zfill(2)}0000L_{vdate}_{vhour}0000V.stat'
                 )
         else:
@@ -523,7 +524,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             ))
             for fhr in np.arange(int(fhr_start), int(fhr_end), int(fhr_incr)):
                 copy_files.append(
-                    f'{met_tool}_{model}_*_{acc}H_{verif_type}_NBRHD{nbrhd}_'
+                    f'{met_tool}_{model}_*_{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}_'
                     + f'{str(fhr).zfill(2)}0000L_{vdate}_{vhour}0000V.stat'
                 )
     elif met_tool == 'merged_ptype':
@@ -610,7 +611,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                     f'{model}.init{idate}'
                 ))
                 copy_files.append(
-                    f'{model}.*.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
+                    f'{model}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
                 )
     elif met_tool == 'point_stat':
         check_if_none = [
@@ -699,9 +700,13 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 continue
             if not os.path.exists(dest_path):
                 print(f"ERROR: Could not copy METplus output to COMOUT directory"
-                      + f" {dest_path} because the path does not already exist")
+                      + f" {dest_path} because the path does not already exist.")
                 continue
-            run_shell_command(
-                ['cp', '-rpv', origin_path, os.path.join(dest_path,'.')]
-            )
+            if len(glob.glob(origin_path)) == len(glob.glob(os.path.join(dest_path, copy_file))):
+                print(f"Not copying restart files to restart_directory"
+                      + f" {dest_path} because they already exist.")
+            else:
+                run_shell_command(
+                    ['cp', '-rpv', origin_path, os.path.join(dest_path,'.')]
+                )
 

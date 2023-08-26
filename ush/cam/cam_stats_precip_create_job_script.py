@@ -265,6 +265,7 @@ if VERIF_CASE == 'precip':
                 + 'fhr_start=\\\"${FHR_START}\\\", '
                 + 'fhr_end=\\\"${FHR_END}\\\", '
                 + 'fhr_incr=\\\"${FHR_INCR}\\\", '
+                + 'model=\\\"${MODELNAME}\\\", '
                 + 'acc=\\\"${ACC}\\\"'
                 + ')\"'
             )
@@ -286,6 +287,7 @@ if VERIF_CASE == 'precip':
                 + 'fhr_start=\\\"${FHR_START}\\\", '
                 + 'fhr_end=\\\"${FHR_END}\\\", '
                 + 'fhr_incr=\\\"${FHR_INCR}\\\", '
+                + 'model=\\\"${MODELNAME}\\\", '
                 + 'acc=\\\"${ACC}\\\", '
                 + 'nbrhd=\\\"${BOOL_NBRHD}\\\"'
                 + ')\"'
