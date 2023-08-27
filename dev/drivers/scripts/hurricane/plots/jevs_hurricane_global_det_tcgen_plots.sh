@@ -5,7 +5,7 @@
 #PBS -q dev
 #PBS -l select=1:ncpus=2:mem=4GB
 ##PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
-#PBS -l walltime=03:00:00
+#PBS -l walltime=00:30:00
 #PBS -l debug=true
 #PBS -V
 
@@ -33,7 +33,7 @@ module reset
 source ${HOMEevs}/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
 #Set PDY to override setpdy.sh called in the j-jobs
-export PDY=20230822
+export PDY=20231231
 
 #Define the directories of your TC genesis stats files
 export COMINstats=/lfs/h2/emc/ptmp/$USER/com/evs/${evs_ver}/${COMPONENT}/${RUN}/${VERIF_CASE}/stats
@@ -42,6 +42,7 @@ export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
 export DATAROOT=/lfs/h2/emc/ptmp/$USER
 export COMROOT=${DATAROOT}/com
+rm -rf ${COMROOT}/evs/${evs_ver}/${COMPONENT}/${RUN}/${VERIF_CASE}/${STEP}
 export KEEPDATA=YES
 
 

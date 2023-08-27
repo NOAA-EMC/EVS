@@ -1,5 +1,5 @@
 #PBS -S /bin/bash
-#PBS -N jevs_hurricane_regional_tropcyc_stats
+#PBS -N jevs_hurricane_regional_late_tropcyc_ops_stats
 #PBS -j oe
 #PBS -A ENSTRACK-DEV
 #PBS -q dev
@@ -19,12 +19,12 @@ source ${HOMEevs}/versions/run.ver
 
 export NET=evs
 export COMPONENT=hurricane
-export RUN=regional
+export RUN=regional_late
 export STEP=stats
-export VERIF_CASE=tropcyc
+export VERIF_CASE=tropcyc_ops
 export envir=dev
 export cyc=00
-export job=jevs_hurricane_regional_tropcyc_stats_${cyc}
+export job=jevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}_${cyc}
 
 ############################################################
 # Load modules
@@ -42,13 +42,13 @@ export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/bdec
 export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/bdeck
 
 export DATAROOT=/lfs/h2/emc/ptmp/$USER
-
 export COMROOT=${DATAROOT}/com
+rm -rf ${COMROOT}/evs/${evs_ver}/${COMPONENT}/${RUN}/${VERIF_CASE}/${STEP}
 export KEEPDATA=YES
 
 
 # CALL executable job script here
-$HOMEevs/jobs/hurricane/stats/JEVS_HURRICANE_STATS
+$HOMEevs/jobs/${COMPONENT}/${STEP}/JEVS_HURRICANE_LATE_STATS
 
 %include <tail.h>
 %manual

@@ -22,9 +22,9 @@ export jlogfile=${jlogfile:-${DATA}/jlogfile.${jobid}}
 ####################################
 export NET=${NET:-evs}
 export COMPONENT=${COMPONENT:-hurricane}
-export RUN=${RUN:-global_det}   # global_det, global_ens, regional
-export STEP=${STEP:-plots}   # plots, stats
-export VERIF_CASE=${VERIF_CASE:-tropcyc}  # tropcyc, tcgen
+export RUN=${RUN:-global_det} # global_det, global_ens, regional
+export STEP=${STEP:-stats}  # plots, stats 
+export VERIF_CASE=${VERIF_CASE:-tropcyc}  # tropcyc, tcgen  
 
 ####################################
 # Determine Job Output Name on System
@@ -46,12 +46,10 @@ export SENDDBN=${SENDDBN:-NO}
 ####################################
 export HOMEevs=${HOMEevs:-${PACKAGEHOME}}
 export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
-export USHevs=${USHevs:-$HOMEevs/ush}
-export FIXevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
 
 # Run setpdy and initialize PDY variables
-# if not set in upstream ecf script
-#########################################
+##############################
 echo "PDY=$PDY"
 if [ -z $PDY ]; then
   setpdy.sh
@@ -64,29 +62,44 @@ fi
 if [ ${RUN} = "global_det" -a ${VERIF_CASE} = "tropcyc" ]; then
 export YYYY=`echo ${PDY} | cut -c1-4`
 export YY23=`echo ${PDY} | cut -c3-4`
-export COMINstats=${COMINstats:-/your/TC/stats/dir}
+
 export COMINvit=${COMINvit:-/your/TC/vitals/file}
+export COMINtrack=${COMINtrack:-your/TC/track/file}
 export COMINbdeckNHC=${COMINbdeckNHC:-/your/NHC/bdeck/data/dir}
 export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
 
 elif [ ${RUN} = "global_ens" -a ${VERIF_CASE} = "tropcyc" ]; then
 export YYYY=`echo ${PDY} | cut -c1-4`
 export YY23=`echo ${PDY} | cut -c3-4`
-export COMINstats=${COMINstats:-/your/TC/stats/dir}
+
 export COMINvit=${COMINvit:-/your/TC/vitals/file}
+export COMINtrack=${COMINtrack:-your/TC/track/file}
 export COMINbdeckNHC=${COMINbdeckNHC:-/your/NHC/bdeck/data/dir}
 export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
 
 elif [ ${RUN} = "global_det" -a ${VERIF_CASE} = "tcgen" ]; then
 export YYYY=`echo ${PDY} | cut -c1-4`
 #export YY23=`echo ${PDY} | cut -c3-4`
-export COMINstats=${COMINstats:-/your/TCgen/stats/dir}
 
-elif [ ${RUN} = "regional" -a ${VERIF_CASE} = "tropcyc" ]; then
+export COMINgenesis=${COMINgenesis:-/your/TC/genesis/data/dir}
+export COMINadeckNHC=${COMINadeckNHC:-/your/NHC/adeck/data/dir}
+export COMINbdeckNHC=${COMINbdeckNHC:-/your/NHC/bdeck/data/dir}
+export COMINadeckJTWC=${COMINadeckJTWC:-/your/JTWC/adeck/data/dir}
+export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
+
+elif [ ${RUN} = "regional_early" -a ${VERIF_CASE} = "tropcyc_ops" ]; then
 export YYYY=`echo ${PDY} | cut -c1-4`
 export YY23=`echo ${PDY} | cut -c3-4`
-export COMINstats=${COMINstats:-/your/TC/stats/dir}
 export COMINvit=${COMINvit:-/your/TC/vitals/file}
+export COMINtrack=${COMINtrack:-your/TC/track/file}
+export COMINbdeckNHC=${COMINbdeckNHC:-/your/NHC/bdeck/data/dir}
+export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
+
+elif [ ${RUN} = "regional_early" -a ${VERIF_CASE} = "tropcyc_legacy" ]; then
+export YYYY=`echo ${PDY} | cut -c1-4`
+export YY23=`echo ${PDY} | cut -c3-4`
+export COMINvit=${COMINvit:-/your/TC/vitals/file}
+export COMINtrack=${COMINtrack:-your/TC/track/file}
 export COMINbdeckNHC=${COMINbdeckNHC:-/your/NHC/bdeck/data/dir}
 export COMINbdeckJTWC=${COMINbdeckJTWC:-/your/JTWC/bdeck/data/dir}
 

@@ -102,7 +102,6 @@ err_exit "FAILED ${jobid} - ERROR IN unknown ${RUN} and ${VERIF_CASE} - ABNORMAL
 
 fi
 
-#export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})/${COMPONENT}/${RUN}/${VERIF_CASE}/${STEP}}
 export COMOUT=${COMOUT:-${COMROOT}/${NET}/${evs_ver}/${COMPONENT}/${RUN}/${VERIF_CASE}/${STEP}}
 mkdir -m 775 -p $COMOUT 
 

@@ -1,14 +1,14 @@
 #!/bin/bash
 set -x
-export PS4=' + exevs_hurricane_global_det_tropcyc_stats.sh line $LINENO: '
+export PS4=' + exevs_hurricane_regional_late_tropcyc_ops_stats.sh line $LINENO: '
 
-export MetOnMachine=${MetOnMachine:-$MET_ROOT}
-export LEAD_List="-lead 000000 -lead 120000 -lead 240000 -lead 360000 -lead 480000 -lead 600000 -lead 720000 -lead 840000 -lead 960000 -lead 1080000 -lead 1200000 -lead 1320000 -lead 1440000 -lead 1560000 -lead 1680000"
+export MetOnMachine=$MET_ROOT
+export LEAD_List="-lead 000000 -lead 060000 -lead 120000 -lead 180000 -lead 240000 -lead 300000 -lead 360000 -lead 420000 -lead 480000 -lead 540000 -lead 600000 -lead 660000 -lead 720000 -lead 780000 -lead 840000 -lead 900000 -lead 960000 -lead 1020000 -lead 1080000 -lead 1140000 -lead 1200000 -lead 1260000"
 
 export stormYear=${YYYY}
-export basinlist="al ep wp"
-export numlist="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 \
-	        21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40"
+export basinlist="al ep"
+export numlist="01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 \ # HAFS became operational on June 27, 2023.
+	        21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40"  # Any runs for AL02 &  AL03 are not included in input.
 
 for bas in $basinlist; do
 ### bas do loop start
@@ -74,16 +74,18 @@ stormName=$(sed "s/ //g" <<< $VARIABLE2)
 echo "Name_${stormName}_Name"
 echo "${stormBasin}, ${stormNumber}, ${stormYear}, ${stormName}"
 
-#---get the model forecast tracks "AVNO/EMX/CMC" from archive file "tracks.atcfunix.${YY23}"
+#---get the model forecast tracks "AVNO/HWRF/HMON/CTCX" from archive file "tracks.atcfunix.${YY23}"
 grep "${stbasin}, ${stormNumber}" ${COMINtrack} > tracks.atcfunix.${YY23}_${stormBasin}${stormNumber}
-grep "03, AVNO" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} > a${stormBasin}${stormNumber}${stormYear}.dat
-grep "03,  EMX" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
-grep "03,  CMC" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
-sed -i 's/03, AVNO/03, MD01/' a${stormBasin}${stormNumber}${stormYear}.dat
-sed -i 's/03,  EMX/03, MD02/' a${stormBasin}${stormNumber}${stormYear}.dat
-sed -i 's/03,  CMC/03, MD03/' a${stormBasin}${stormNumber}${stormYear}.dat
-export Model_List="MD01,MD02,MD03"
-#export Model_Plot="GFS,ECMWF,CMC"
+grep "03, HFSA" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} > a${stormBasin}${stormNumber}${stormYear}.dat
+grep "03, HFSB" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
+grep "03, AVNO" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
+grep "03, CTCX" tracks.atcfunix.${YY23}_${stormBasin}${stormNumber} >> a${stormBasin}${stormNumber}${stormYear}.dat
+sed -i 's/03, HFSA/03, MD01/' a${stormBasin}${stormNumber}${stormYear}.dat
+sed -i 's/03, HFSB/03, MD02/' a${stormBasin}${stormNumber}${stormYear}.dat
+sed -i 's/03, AVNO/03, MD03/' a${stormBasin}${stormNumber}${stormYear}.dat
+sed -i 's/03, CTCX/03, MD04/' a${stormBasin}${stormNumber}${stormYear}.dat
+export Model_List="MD01,MD02,MD03,MD04"
+#export Model_Plot="HFSA,HFSB,GFS,CTCX"
 
 #---get the $startdate, $enddate[YYMMDDHH] from the best track file  
 echo $(head -n 1 ${bdeckfile}) > head.txt
@@ -131,6 +133,7 @@ run_metplus.py -c $STORMdata/TCPairs_template.conf
 
 #--- run for TC_stat 
 cd $STORMdata
+
 cp ${PARMevs}/metplus_config/${COMPONENT}/${STEP}/TCStat_template.conf .
 
 export SEARCHy="LEAD_template"
@@ -168,7 +171,7 @@ if [ "$SENDCOM" = 'YES' ]; then
   fi
 fi
 
-### two ifs end
+## two ifs end
 fi
 fi
 ### num do loop end

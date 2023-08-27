@@ -92,8 +92,8 @@ elif model_type == 'regional':
     'model4': {'color': '#56B4E9',
                'marker': 'o', 'markersize': 7,
                'linestyle': 'solid', 'linewidth': 1.5},
-    'model5': {'color': '#E69F00',
-               'marker': 'o', 'markersize': 6,
+    'model5': {'color': '#696969',
+               'marker': 's', 'markersize': 6,
                'linestyle': 'solid', 'linewidth': 1.5},
     'model6': {'color': '#1E3CFF',
                'marker': 'o', 'markersize': 6,
@@ -114,6 +114,42 @@ elif model_type == 'regional':
             'marker': 'None', 'markersize': 0,
             'linestyle': 'solid', 'linewidth': 2}
   }
+elif model_type == 'regional_ops':
+  model_obs_plot_settings_dict = {
+    'model1': {'color': '#8400C8',
+               'marker': 'o', 'markersize': 7,
+               'linestyle': 'solid', 'linewidth': 3},
+    'model2': {'color': '#00DC00',
+               'marker': 'o', 'markersize': 7,
+               'linestyle': 'solid', 'linewidth': 1.5},
+    'model3': {'color': '#000000',
+               'marker': 'o', 'markersize': 7,
+               'linestyle': 'solid', 'linewidth': 1.5},
+    'model4': {'color': '#56B4E9',
+               'marker': 'o', 'markersize': 7,
+               'linestyle': 'solid', 'linewidth': 1.5},
+    'model5': {'color': '#696969',
+               'marker': 's', 'markersize': 6,
+               'linestyle': 'solid', 'linewidth': 1.5},
+ }
+elif model_type == 'regional_legacy':
+  model_obs_plot_settings_dict = {
+    'model1': {'color': '#8400C8',
+               'marker': 'o', 'markersize': 7,
+               'linestyle': 'solid', 'linewidth': 3},
+    'model2': {'color': '#00DC00',
+               'marker': 'o', 'markersize': 7,
+               'linestyle': 'solid', 'linewidth': 1.5},
+    'model3': {'color': '#FF00FF',
+               'marker': 'o', 'markersize': 7,
+               'linestyle': 'solid', 'linewidth': 1.5},
+    'model4': {'color': '#00FFFF',
+               'marker': 'o', 'markersize': 7,
+               'linestyle': 'solid', 'linewidth': 1.5},
+    'model5': {'color': '#696969',
+               'marker': 's', 'markersize': 6,
+               'linestyle': 'solid', 'linewidth': 1.5},
+ }
 
 noaa_logo_img_array = matplotlib.image.imread(
     os.path.join(os.environ['LOGOroot'], 'noaa.png')

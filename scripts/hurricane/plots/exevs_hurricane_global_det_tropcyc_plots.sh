@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 export PS4=' + exevs_hurricane_global_det_tropcyc_plots.sh line $LINENO: '
 
 export stormYear=${YYYY}

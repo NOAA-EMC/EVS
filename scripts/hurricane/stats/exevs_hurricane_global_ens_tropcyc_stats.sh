@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 export PS4=' + exevs_hurricane_global_ens_tropcyc_stats.sh line $LINENO: '
 
 export MetOnMachine=${MetOnMachine:-$MET_ROOT}
