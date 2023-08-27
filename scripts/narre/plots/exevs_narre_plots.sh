@@ -179,7 +179,7 @@ for grid in g130 g242 ; do
   if [ $grid = g130 ] ; then
    domain=buk_conus
   elif [ $grid = g242 ] ; then
-   domain=buk_alaska  
+   domain=alaska  
   fi
 
   for var in vis hgt ; do
