@@ -2622,7 +2622,7 @@ class Reference():
                     ],
                     'var_dict': {
                         'PTYPE': {'fcst_var_names': ['PTYPE'],
-                                 'fcst_var_levels': ['Z0'],
+                                 'fcst_var_levels': ['Z0', 'L0'],
                                  'fcst_var_thresholds': '>=1.0,>=2.0,>=3.0,>=4.0',
                                  'fcst_var_options': '',
                                  'obs_var_names': ['PTYPE','PRWE'],
