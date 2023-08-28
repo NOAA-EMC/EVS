@@ -55,7 +55,6 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 export DATA=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp/${jobid}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/stats/$COMPONENT
 export cyc=$(date -d "today" +"%H")
-export VDATE=$(date -d "today" +"%Y%m%d")
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
 
