@@ -237,7 +237,7 @@ chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 154 -ppn 154 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 154 -ppn 77 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi
@@ -336,8 +336,8 @@ for ihr in 00z 12z ; do
     done     #var
 done     #ihr
 
-tar -cvf evs.plots.gefs.grid2obs.v${VDATE}.past${past_days}days.separate.init.00.12.tar *.png
+tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}_separate.past${past_days}days.v${VDATE}.tar *.png
 
 if [ $SENDCOM = YES ]; then
-    cp  evs.plots.gefs.grid2obs.v${VDATE}.past${past_days}days.separate.init.00.12.tar $COMOUT/.
+    cp  evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}_separate.past${past_days}days.v${VDATE}.tar $COMOUT/.
 fi

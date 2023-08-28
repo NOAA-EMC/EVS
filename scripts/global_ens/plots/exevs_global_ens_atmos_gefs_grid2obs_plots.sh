@@ -254,8 +254,8 @@ for var in prmsl tmp dpt ugrd vgrd rh; do
     done  #domain
 done     #stats
 
-tar -cvf evs.plots.gefs.grid2obs.v${VDATE}.past${past_days}days.all.init.times.tar *.png
+tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar *.png
 
 if [ $SENDCOM = YES ]; then 
-    cp evs.plots.gefs.grid2obs.v${VDATE}.past${past_days}days.all.init.times.tar  $COMOUT/.
+    cp evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar  $COMOUT/.
 fi
