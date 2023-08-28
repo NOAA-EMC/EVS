@@ -9,8 +9,6 @@ module load gsl/${gsl_ver}
 module load netcdf/${netcdf_ver}
 module load prod_util/${prod_util_ver}
 module load rsync/${rsync_ver}
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
 
