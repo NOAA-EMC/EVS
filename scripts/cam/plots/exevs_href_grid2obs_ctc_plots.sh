@@ -238,11 +238,13 @@ for domain in conus conus_east conus_west conus_south conus_central alaska  appa
   if [ $var = vis ] ; then
     var_new=$var
     level=l0
-    valid=valid_00z_03z_06z_09z_12z_15z_18z_21z
+    #valid=valid_00z_03z_06z_09z_12z_15z_18z_21z
+    valid="valid_available_times"
   elif [ $var = hgt ] ; then
     var_new=ceiling
     level=l0
-    valid=valid_00z_03z_06z_09z_12z_15z_18z_21z
+    #valid=valid_00z_03z_06z_09z_12z_15z_18z_21z
+    valid="valid_available_times"
   elif [ $var = cape ] ; then
     var_new=cape
     level=l0
@@ -254,7 +256,8 @@ for domain in conus conus_east conus_west conus_south conus_central alaska  appa
   elif [ $var = tcdc ] ; then
     var_new_tatal_cloud
     level=l0
-    valid=valid_00z_03z_06z_09z_12z_15z_18z_21z
+    #valid=valid_00z_03z_06z_09z_12z_15z_18z_21z
+    valid="valid_available_times"
   fi
 
   mv performance_diagram_regional_${domain}_valid*_${var}_*.png evs.href.ctc.${var_new}_${level}.last${past_days}days.perfdiag_${valid}.${new_domain}.png
