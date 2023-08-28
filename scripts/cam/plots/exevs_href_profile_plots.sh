@@ -234,7 +234,7 @@ for stats in rmse_spread bss_smpl ; do
         elif [ $var = 850mb_tmp_ens_freq_lt273.15 ] ; then
 	  var_new='tmp.lt.0C.p850'
 	fi
-	valid="valid_available_times"
+	valid="valid_all_times"
       else
         level=''
 	var_new=$var

@@ -201,7 +201,7 @@ for score_type in lead_average ; do
        stats="csi fbias"
    fi
    
-   valid="valid_available_times"
+   valid="valid_all_times"
 
   if [ $score_type = lead_average ] ; then
      scoretype=fhrmean
@@ -218,7 +218,7 @@ for score_type in lead_average ; do
      fi
 
           for thresh in ge250 ge500 ge1000 ge2000 ; do
-           mv ${score_type}_regional_${domain}_valid_available_times_${var}_${stat}_${thresh}.png evs.href.${stat}.${var_new}_${level}.${thresh}.last${past_days}days.${scoretype}_${valid}.${new_domain}.png
+           mv ${score_type}_regional_${domain}_valid_all_times_${var}_${stat}_${thresh}.png evs.href.${stat}.${var_new}_${level}.${thresh}.last${past_days}days.${scoretype}_${valid}.${new_domain}.png
           done
 
        done #domain

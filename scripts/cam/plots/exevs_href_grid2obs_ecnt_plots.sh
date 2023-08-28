@@ -72,7 +72,7 @@ for stats in rmse_spread ; do
 
   export fcst_init_hour="0,6,12,18"
   export fcst_valid_hour="0,6,12,18"
-  valid_time='available_times'
+  valid_time='all_times'
   init_time='init00z_06z_12z_18z'
 
   export fcst_leads="6,12,18,24,30,36,42,48"
@@ -202,7 +202,7 @@ for stats in  rmse_spread ; do
       fi
 
 
-     valid=valid_available_times
+     valid=valid_all_times
 
       if [ $var = mslet ] || [ $var = gust ] || [  $var = hpbl ] ; then
         mv ${score_type}_regional_${domain}_${valid}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_${valid_time}.${new_domain}.png
