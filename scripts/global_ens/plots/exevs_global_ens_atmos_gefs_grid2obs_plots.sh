@@ -99,7 +99,7 @@ for stats in acc me_mae crpss rmse_spread  ; do
   for lead in $fcst_leads ; do 
 
    if [ $lead = vs_lead ] ; then
-	export fcst_lead="12, 24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384"
+	export fcst_lead="0, 12, 24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384"
    else
         export fcst_lead=$lead
    fi

@@ -79,7 +79,7 @@ fi
 
  for score_type in stat_by_level ; do
 
-  export fcst_leads="12 24 36 48 60 72 84 96 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384"
+  export fcst_leads="0 12 24 36 48 60 72 84 96 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384"
  
   for lead in $fcst_leads ; do 
 
@@ -177,7 +177,7 @@ for stats in mae ; do
             domain_new=$domain
         fi
         for var in hgt tmp ugrd vgrd rh ; do
-            leads="12 24 36 48 60 72 84 96 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384"
+            leads="0 12 24 36 48 60 72 84 96 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384"
             for lead in $leads ; do
                 lead_new=$(printf "%03d" "${lead}")
                 mv stat_by_level_regional_${domain}_valid_12z_${var}_${stats}_f${lead}.png  evs.global_ens.${stats}.${var}_all.last${past_days}days.vertprof_valid12z_f${lead_new}.g003_${domain_new}.png

@@ -44,7 +44,6 @@ while [ $n -le $past_days ] ; do
   n=$((n+1))
 done 
 
-
 VX_MASK_LIST="G003, NHEM, SHEM, TROPICS, CONUS"
 																  
 export fcst_init_hour="0,12"
@@ -111,7 +110,7 @@ for score_type in time_series lead_average ; do
   for lead in $fcst_leads ; do 
 
    if [ $lead = vs_lead ] ; then
-	export fcst_lead="12, 24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384"
+	export fcst_lead="0, 12, 24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384"
    else
         export fcst_lead=$lead
    fi
