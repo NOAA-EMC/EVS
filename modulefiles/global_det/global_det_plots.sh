@@ -18,8 +18,6 @@ module load udunits/${udunits_ver}
 module load grib_util/${grib_util_ver}
 module load wgrib2/${wgrib2_ver}
 module load imagemagick/${imagemagick_ver}
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
 
