@@ -60,8 +60,7 @@ export VERIF_CASE=${VERIF_CASE:-grid2obs}
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 export COMINmodel=${COMINmodel:-$(compath.py ${envir}/com/${RUN}_${MODELNAME}/${nfcens_ver})} 
 export COMINgdas=${COMINobs:-$(compath.py ${envir}/com/obsproc/${obsproc_ver}/gdas)}
-
-export COMOUT=${COMIN}/${STEP}/${COMPONENT}/${RUN}
+export COMOUT=${COMOUT:-${COMIN}/${STEP}/${COMPONENT}/${RUN}}
 export ARCmodel=${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
 
 # make the directory where the ARCmodel and gdasnc will be kept
