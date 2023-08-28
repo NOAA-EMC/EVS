@@ -8,7 +8,7 @@ set -xa
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
-
+export SENDDBN_NTC=${SENDDBN_NTC:-NO}
 
 ####################################
 # SET SHELL PROCESSING VARIABLES
@@ -20,22 +20,20 @@ date
 ####################################
 # obtain unique LSF id (jobid) and make temp directories
 ####################################
-export pid=$$
-export DATA=${DATA:-${DATAROOT:?}}/${jobid:?}
-rm -rf $DATA
+export DATA=${DATA:-${DATAROOT}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
 
 
 ####################################
-# Determine Job Output Name on System
-####################################
-export pgmout="OUTPUT.${pid}"
-
-
-####################################
 # Set EVS directories
 ####################################
+export machine=${machine:-WCOSS2}
+export MET_bin_exec=${MET_bin_exec:-bin}
+export MET_PLUS_PATH=${MET_PLUS_PATH:-$METPLUS_PATH}
+export MET_PATH=$MET_ROOT
+export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
+export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
@@ -43,10 +41,10 @@ export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
 export SCRIPTevs=$HOMEevs/scripts
 
-
 ####################################
 # Run setpdy and initialize PDY variables
 ####################################
+export cyc=${cyc:-00}
 export cycle=t${cyc}z
 setpdy.sh 31
 . ./PDY
@@ -95,6 +93,9 @@ export COMINapcp24mean=${COMINspatial:-$(compath.py  $envir/com/$NET/$evs_ver)}/
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
 export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
+export COMINccpa=${COMINccpa:-${COMevs}/prep/${COMPONENT}/${RUN}}
+export COMINmrms=${COMINmrms:-${COMevs}/prep/${COMPONENT}/${RUN}}
+export COMINspcotlk=${COMINspcotlk:-${COMevs}/prep/${COMPONENT}/${RUN}}
 
 if [ $MODELNAME = sref ] ; then 
   mkdir -p $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE
@@ -116,12 +117,7 @@ fi
 
 export err=$?; err_chk
 
-if [ -e "$pgmout" ]; then
-   cat $pgmout
-fi
-
 msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
 
 if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT
