@@ -236,7 +236,7 @@ for var in weasd snod; do
             for thresh in $threshs; do
                 if [ $thresh = NA ]; then
                     thresh_graphic=""
-                    evs_thresh_grpahic=""
+                    evs_thresh_graphic=""
                 else
                     thresh_graphic=$(echo "_${thresh}")
                     evs_thresh_graphic=$(echo $thresh_graphic | sed -e "s/0\./0p/g")
