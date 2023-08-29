@@ -1081,6 +1081,8 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         level_savename = f'{level}_'
     if var_savename == 'ICEC_Z0_mean':
         level_string = ''
+    if var_savename == 'TMP_Z0_mean':
+        level_string = 'Sea Surface '
     if metric2_name is not None:
         title1 = f'{metric1_string} and {metric2_string}'
     else:
