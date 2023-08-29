@@ -914,6 +914,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     else:
         level_string = f'{level} '
         level_savename = f'{level}_'
+    if var_savename == 'ICEC_Z0_mean':
+        level_string = ''
     thresholds_phrase = ', '.join([
         f'{opt}{thresh_label}' for thresh_label in thresh_labels
     ])
