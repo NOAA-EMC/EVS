@@ -28,6 +28,7 @@ import matplotlib.image as mpimg
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from datetime import datetime, timedelta as td
 from urllib.parse import urlparse, parse_qs
+import shutil
 
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
@@ -66,7 +67,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                       metric1_name: str = 'SRATIO', metric2_name: str = 'POD', 
                       metric3_name: str = 'CSI', date_type: str = 'VALID', 
                       date_hours: list = [0,6,12,18], verif_type: str = 'pres', 
-                      line_type: str = 'CTC', save_dir: str = '.', dpi: int = 300, 
+                      line_type: str = 'CTC', save_dir: str = '.', 
+                      restart_dir: str = '.', dpi: int = 300, 
                       confidence_intervals: bool = False, interp_pts: list = [],
                       bs_nrep: int = 5000, 
                       bs_method: str = 'MATCHED_PAIRS', ci_lev: float = .95, 
@@ -1216,6 +1218,16 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         os.makedirs(save_subdir)
     save_path = os.path.join(save_subdir, save_name+'.png')
     fig.savefig(save_path, dpi=dpi)
+    if restart_dir:
+        shutil.copy2(
+            save_path,
+            os.path.join(
+                restart_dir,
+                f'{str(plot_group).lower()}',
+                f'{str(time_period_savename).lower()}',
+                save_name+'.png'
+            )
+        )
     logger.info(u"\u2713"+f" plot saved successfully as {save_path}")
     plt.close(num)
     logger.info('========================================')
@@ -1278,6 +1290,7 @@ def main():
     logger.debug(f"STATS_DIR: {STATS_DIR}")
     logger.debug(f"PRUNE_DIR: {PRUNE_DIR}")
     logger.debug(f"SAVE_DIR: {SAVE_DIR}")
+    logger.debug(f"RESTART_DIR: {RESTART_DIR}")
     logger.debug(f"VERIF_CASETYPE: {VERIF_CASETYPE}")
     logger.debug(f"MODELS: {MODELS}")
     logger.debug(f"VARIABLES: {VARIABLES}")
@@ -1496,6 +1509,7 @@ def main():
                 metric3_name=metrics[2], date_type=DATE_TYPE,  
                 verif_type=VERIF_TYPE, line_type=LINE_TYPE, 
                 date_hours=date_hours, save_dir=SAVE_DIR, 
+                restart_dir=RESTART_DIR,
                 eval_period=EVAL_PERIOD, 
                 display_averages=display_averages, save_header=IMG_HEADER,
                 plot_group=plot_group, 
@@ -1528,6 +1542,10 @@ if __name__ == "__main__":
     STATS_DIR = STAT_OUTPUT_BASE_DIR
     PRUNE_DIR = check_PRUNE_DIR(os.environ['PRUNE_DIR'])
     SAVE_DIR = check_SAVE_DIR(os.environ['SAVE_DIR'])
+    if 'RESTART_DIR' in os.environ:
+        RESTART_DIR = check_RESTART_DIR(os.environ['RESTART_DIR'])
+    else:
+        RESTART_DIR = ''
     DATE_TYPE = check_DATE_TYPE(os.environ['DATE_TYPE'])
     LINE_TYPE = check_LINE_TYPE(os.environ['LINE_TYPE'])
     INTERP = check_INTERP(os.environ['INTERP'])
