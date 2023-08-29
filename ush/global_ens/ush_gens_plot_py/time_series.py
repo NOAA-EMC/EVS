@@ -985,6 +985,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     else:
         level_string = f'{level}'
         level_savename = f'{level}_'
+    if var_savename == 'ICEC_Z0_mean':
+        level_string = ''
     if metric2_name is not None:
         title1 = f'{metric1_string} and {metric2_string}'
     else:
