@@ -811,6 +811,7 @@ class Reference():
                                   'NHEM': 'Northern Hemisphere 20N-80N',
                                   'SHEM': 'Southern Hemisphere 20S-80S',
                                   'TRO': 'Tropics 20S-20N',
+                                  'TROPICS': 'Tropics 20S-20N',
                                   'PNA': 'Pacific North America',
                                   'N60': '60N-90N',
                                   'S60': '60S-90S',
