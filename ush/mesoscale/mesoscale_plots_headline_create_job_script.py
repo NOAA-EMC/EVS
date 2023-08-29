@@ -123,7 +123,7 @@ if STEP == 'prep':
 elif STEP == 'stats':
     pass
 elif STEP == 'plots':
-    if f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
+    if f'job{njob}' in mutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
         job_cmd_list_iterative.append(
             f'#jobs were restarted, and the following command has already run successfully'
         )

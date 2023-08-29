@@ -831,7 +831,7 @@ def snowfall_check_model_input_output_files(job_dict):
 def get_completed_jobs(completed_jobs_file):
     completed_jobs = set()
     if os.path.exists(completed_jobs_file):
-        with open(completed_jobs_files, 'r') as f:
+        with open(completed_jobs_file, 'r') as f:
             completed_jobs = set(f.read().splitlines())
     return completed_jobs
 
