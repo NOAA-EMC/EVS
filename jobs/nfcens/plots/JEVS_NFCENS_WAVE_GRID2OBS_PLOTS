@@ -10,9 +10,7 @@ date
 #########################################################
 # obtain unique LSF id (jobid) and make temp directories 
 #########################################################
-export pid=$$
-export DATA_IN=${DATA_IN:-${DATAROOT}}
-export DATA=${DATA_IN}/${jobid:?}
+export DATA=${DATA:-${DATAROOT}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
 
@@ -77,11 +75,8 @@ export jlogfile=${DATA}/${MODELNAME}_${RUN}_plots.log
 ####################################
 # Execute the script                
 ####################################
-env
-$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh 1>>$pgmout 2>errfile.${pid}
+$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
-
-cat $pgmout
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
