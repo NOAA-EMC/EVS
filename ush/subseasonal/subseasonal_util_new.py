@@ -2687,7 +2687,7 @@ def check_model_files(job_dict):
                         model, job_dict['VERIF_CASE'],
                         'stat_analysis_fcst'+job_dict['MODEL']+'_obsprepbufr_'
                         +job_dict['prepbufr']+'_'+job_dict['job_name']
-                        +'_SL1L2_valid{valid?fmt=%Y%m%d%H?shift=-168H}'
+                        +'_SL1L2_valid{valid_shift?fmt=%Y%m%d%H?shift=-168}'
                         +'to{valid?fmt=%Y%m%d%H}.stat'
                     )
                     output_COMOUT_file_format = os.path.join(
@@ -2696,7 +2696,7 @@ def check_model_files(job_dict):
                         model, job_dict['VERIF_CASE'],
                         'stat_analysis_fcst'+job_dict['MODEL']+'_obsprepbufr_'
                         +job_dict['prepbufr']+'_'+job_dict['job_name']
-                        +'_SL1L2_valid{valid?fmt=%Y%m%d%H?shift=-168H}'
+                        +'_SL1L2_valid{valid_shift?fmt=%Y%m%d%H?shift=-168}'
                         +'to{valid?fmt=%Y%m%d%H}.stat'
                     )
                 elif job_dict['VERIF_TYPE'] == 'PrepBufr' \
@@ -2721,7 +2721,7 @@ def check_model_files(job_dict):
                         model, job_dict['VERIF_CASE'],
                         'stat_analysis_fcst'+job_dict['MODEL']+'_obsprepbufr_'
                         +job_dict['prepbufr']+'_'+job_dict['job_name']
-                        +'_SL1L2_valid{valid?fmt=%Y%m%d%H?shift=-120H}'
+                        +'_SL1L2_valid{valid_shift?fmt=%Y%m%d%H?shift=-120}'
                         +'to{valid?fmt=%Y%m%d%H}.stat'
                     )
                     output_COMOUT_file_format = os.path.join(
@@ -2730,7 +2730,7 @@ def check_model_files(job_dict):
                         model, job_dict['VERIF_CASE'],
                         'stat_analysis_fcst'+job_dict['MODEL']+'_obsprepbufr_'
                         +job_dict['prepbufr']+'_'+job_dict['job_name']
-                        +'_SL1L2_valid{valid?fmt=%Y%m%d%H?shift=-120H}'
+                        +'_SL1L2_valid{valid_shift?fmt=%Y%m%d%H?shift=-120}'
                         +'to{valid?fmt=%Y%m%d%H}.stat'
                     )
                 elif job_dict['VERIF_TYPE'] == 'PrepBufr' \
@@ -2755,7 +2755,7 @@ def check_model_files(job_dict):
                         model, job_dict['VERIF_CASE'],
                         'stat_analysis_fcst'+job_dict['MODEL']+'_obsprepbufr_'
                         +job_dict['prepbufr']+'_'+job_dict['job_name']
-                        +'_SL1L2_valid{valid?fmt=%Y%m%d%H?shift=-336H}'
+                        +'_SL1L2_valid{valid_shift?fmt=%Y%m%d%H?shift=-336}'
                         +'to{valid?fmt=%Y%m%d%H}.stat'
                     )
                     output_COMOUT_file_format = os.path.join(
@@ -2764,7 +2764,7 @@ def check_model_files(job_dict):
                         model, job_dict['VERIF_CASE'],
                         'stat_analysis_fcst'+job_dict['MODEL']+'_obsprepbufr_'
                         +job_dict['prepbufr']+'_'+job_dict['job_name']
-                        +'_SL1L2_valid{valid?fmt=%Y%m%d%H?shift=-336H}'
+                        +'_SL1L2_valid{valid_shift?fmt=%Y%m%d%H?shift=-336}'
                         +'to{valid?fmt=%Y%m%d%H}.stat'
                     )
                 else:
@@ -2983,14 +2983,14 @@ def check_weekly_truth_files(job_dict):
                     verif_case_dir, 'METplus_output',
                     job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
                     'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
-                    +job_dict['VERIF_TYPE']+'_'+job_dict['prepbufr']+'_valid'
+                    +job_dict['VERIF_TYPE']+'_nam_valid'
                     +'{valid?fmt=%Y%m%d%H}.nc'
                 )
                 pb2nc_COMOUT_output_file_format = os.path.join(
                     job_dict['COMOUT'],
                     job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
                     'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
-                    +job_dict['VERIF_TYPE']+'_'+job_dict['prepbufr']+'_valid'
+                    +job_dict['VERIF_TYPE']+'_nam_valid'
                     +'{valid?fmt=%Y%m%d%H}.nc'
                 )
                 nf = 0
@@ -3132,14 +3132,14 @@ def check_days6_10_truth_files(job_dict):
                     verif_case_dir, 'METplus_output',
                     job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
                     'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
-                    +job_dict['VERIF_TYPE']+'_'+job_dict['prepbufr']+'_valid'
+                    +job_dict['VERIF_TYPE']+'_nam_valid'
                     +'{valid?fmt=%Y%m%d%H}.nc'
                 )
                 pb2nc_COMOUT_output_file_format = os.path.join(
                     job_dict['COMOUT'],
                     job_dict['RUN']+'.'+valid_date_dt.strftime('%Y%m%d'),
                     'prepbufr', job_dict['VERIF_CASE'], 'pb2nc_'
-                    +job_dict['VERIF_TYPE']+'_'+job_dict['prepbufr']+'_valid'
+                    +job_dict['VERIF_TYPE']+'_nam_valid'
                     +'{valid?fmt=%Y%m%d%H}.nc'
                 )
                 nf = 0
@@ -3745,7 +3745,8 @@ def initalize_job_env_dict(verif_type, group,
     """
     job_env_var_list = [
         'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA', 'COMROOT',
-        'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'COMIN', 'members'
+        'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'COMIN', 'SENDCOM',
+        'COMOUT', 'members'
     ]
     if group in ['reformat_data', 'assemble_data', 'generate_stats', 'gather_stats']:
         os.environ['MET_TMP_DIR'] = os.path.join(

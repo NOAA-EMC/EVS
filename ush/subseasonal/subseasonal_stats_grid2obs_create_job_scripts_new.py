@@ -68,7 +68,8 @@ generate_stats_jobs_dict = {
                                                                   +"= fcst;'")},
                                  'commands': [sub_util.python_command(
                                                  'subseasonal_stats_'
-                                                 'grid2obs_create_weekly_avg.py',
+                                                 'grid2obs_create_weekly_'
+                                                 'avg_new.py',
                                                  ['TMP_ANOM_Z2',
                                                    os.path.join(
                                                        '$DATA',
@@ -123,7 +124,8 @@ generate_stats_jobs_dict = {
                                                                     +"= fcst;'")},
                                    'commands': [sub_util.python_command(
                                                    'subseasonal_stats_'
-                                                   'grid2obs_create_days6_10_avg.py',
+                                                   'grid2obs_create_days6_10_'
+                                                   'avg_new.py',
                                                    ['TMP_ANOM_Z2',
                                                      os.path.join(
                                                          '$DATA',
@@ -178,7 +180,8 @@ generate_stats_jobs_dict = {
                                                                     +"= fcst;'")},
                                    'commands': [sub_util.python_command(
                                                    'subseasonal_stats_'
-                                                   'grid2obs_create_weeks3_4_avg.py',
+                                                   'grid2obs_create_weeks3_4_'
+                                                   'avg_new.py',
                                                    ['TMP_ANOM_Z2',
                                                      os.path.join(
                                                          '$DATA',

@@ -242,7 +242,7 @@ while valid_hr <= int(valid_hr_end):
                             ignore_index=True
                         )
             days_avg_df.to_csv(
-                output_file, header=input_file_header,
+                output_DATA_file, header=input_file_header,
                 index=None, sep=' ', mode='w'
             )
             if SENDCOM == 'YES' \

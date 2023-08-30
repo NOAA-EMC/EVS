@@ -81,7 +81,7 @@ assemble_data_model_jobs_dict = {
                                     sub_util.python_command(
                                         'subseasonal_stats_'
                                         'grid2obs_create_'
-                                        'weekly_anomaly.py',
+                                        'weekly_anomaly_new.py',
                                         ['TMP_Z2',
                                          os.path.join(
                                              '$DATA',
@@ -315,6 +315,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                                         in model_copy_output_DATA2COMOUT_list:
                                     job.write(f"cp -v {model_output_file_tuple[0]} "
                                               +f"{model_output_file_tuple[1]}\n")
+                        else:
+                            if JOB_GROUP == 'assemble_data':
+                                if verif_type_job == 'TempAnom2m':
+                                    job.write(verif_type_job_commands_list[1])
                         job.close()
                         job_env_dict.pop('fhr_list')
                         job_env_dict['fhr_start'] = fhr_start
