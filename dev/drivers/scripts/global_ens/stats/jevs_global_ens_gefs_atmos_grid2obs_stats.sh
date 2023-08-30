@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=01:30:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=88:mem=500GB
+#PBS -l place=vscatter,select=2:ncpus=60:mem=500GB
 #PBS -l debug=true
 
 
@@ -24,6 +24,7 @@ export MODELNAME=gefs
 
 
 module reset
+module load prod_envir/${prod_envir_ver}
 
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 

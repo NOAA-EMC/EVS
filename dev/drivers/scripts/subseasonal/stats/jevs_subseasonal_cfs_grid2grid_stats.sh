@@ -13,11 +13,15 @@ set -x
 export model=evs
 
 cd $PBS_O_WORKDIR
-module reset
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
+export job=${PBS_JOBNAME:-jevs_subseasonal_cfs_grid2grid_stats}
+export jobid=$job.${PBS_JOBID:-$$}
+
 source $HOMEevs/versions/run.ver
+module reset
+module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/subseasonal/subseasonal_stats.sh
 #%include <head.h>
 #%include <envir-p1.h>
@@ -28,7 +32,7 @@ export PATH=${MET_ROOT}/bin:${PATH}
 export METviewer_AWS_scripts_dir=/lfs/h2/emc/vpppg/save/emc.vpppg/verification/metplus/metviewer_aws_scripts
 
 export USER=$USER
-export DATAROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export ACCOUNT=VERF-DEV
 export QUEUE=dev
 export QUEUESHARED=dev_shared

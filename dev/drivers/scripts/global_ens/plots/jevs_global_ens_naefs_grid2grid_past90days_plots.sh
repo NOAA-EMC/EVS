@@ -23,6 +23,7 @@ export MODELNAME=naefs
 
 
 module reset
+module load prod_envir/${prod_envir_ver}
 
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
@@ -45,6 +46,7 @@ export valid_time=both
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver
 export DATA=/lfs/h2/emc/stmp/${USER}/evs/tmpnwprd
+export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix 
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 

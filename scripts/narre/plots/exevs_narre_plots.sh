@@ -8,6 +8,7 @@ export prune_dir=$DATA/data
 export save_dir=$DATA/out
 export output_base_dir=$DATA/stat_archive
 export log_metplus=$DATA/logs/NARRE_verif_plotting_job.out
+export met_v=${met_ver:0:4}
 mkdir -p $prune_dir
 mkdir -p $save_dir
 mkdir -p $output_base_dir
@@ -178,7 +179,7 @@ for grid in g130 g242 ; do
   if [ $grid = g130 ] ; then
    domain=buk_conus
   elif [ $grid = g242 ] ; then
-   domain=buk_alaska  
+   domain=alaska  
   fi
 
   for var in vis hgt ; do

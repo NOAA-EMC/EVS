@@ -11,7 +11,6 @@
 
 set -x
 export model=evs
-module reset
 export machine=WCOSS2
 
 # ECF Settings
@@ -44,6 +43,7 @@ export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPO
 source $HOMEevs/versions/run.ver
 source /usr/share/lmod/lmod/init/sh
 module reset
+module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 export MET_bin_exec="bin"
 export MET_PLUS_PATH="/apps/ops/para/libs/intel/${intel_ver}/metplus/${metplus_ver}"
@@ -53,10 +53,10 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # Developer Settings
 export DATA=/lfs/h2/emc/ptmp/$USER/evs_test/$envir/tmp
-export COMINccpa=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT/$RUN
-export COMINmrms=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT/$RUN
-export COMINspcotlk=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT/$RUN
-export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/$NET/$evs_ver/stats/
+export COMINccpa=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver/prep/$COMPONENT/$RUN
+export COMINmrms=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver/prep/$COMPONENT/$RUN
+export COMINspcotlk=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver/prep/$COMPONENT/$RUN
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/stats/
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver/$STEP/$COMPONENT/
 export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
 export cyc=$(date -d "today" +"%H")

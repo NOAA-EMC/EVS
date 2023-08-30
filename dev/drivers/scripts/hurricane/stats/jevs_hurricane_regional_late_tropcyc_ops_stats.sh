@@ -14,7 +14,7 @@ set -x
 #%include <head.h>
 #%include <envir-p1.h>
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/Fork/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 source ${HOMEevs}/versions/run.ver
 
 export NET=evs
@@ -30,6 +30,7 @@ export job=jevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}_${cyc}
 # Load modules
 ############################################################
 module reset
+module load prod_envir/${prod_envir_ver}
 source ${HOMEevs}/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh 
 
 export PDY=20231231 
