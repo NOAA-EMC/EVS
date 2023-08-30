@@ -19,7 +19,7 @@ for model in gefs cmce ecme ; do
 	>get_data_${model}_${cyc}_${fhr_range}.sh
 
 	if [ $fhr_range = range1 ] ; then
-	  fhr_beg=6
+	  fhr_beg=00
           fhr_end=24
         elif [ $fhr_range = range2 ] ; then
           fhr_beg=30
@@ -153,7 +153,7 @@ for model in gefs cmce ecme ; do
 	>get_data_${model}_${cyc}_${fhr_range}.sh
 
 	 if [ $fhr_range = range1 ] ; then
-           fhr_beg=12
+           fhr_beg=00
 	   fhr_end=48
          elif [ $fhr_range = range2 ] ; then
 	   fhr_beg=60
@@ -272,10 +272,10 @@ if [ $run_mpi = yes ] ; then
 
  if [ -s run_get_all_gens_atmos_poe.sh ] ; then
    chmod +x run_get_all_gens_atmos_poe.sh 
-   mpiexec  -n 174 -ppn 174 --cpu-bind core --depth=2 cfp  ${DATA}/run_get_all_gens_atmos_poe.sh
+   mpiexec  -n 83 -ppn 64 --cpu-bind core cfp  ${DATA}/run_get_all_gens_atmos_poe.sh
  fi
 
- #Only after the above jobs are finished, following jobs can be run!
+ #Only after the above jobs are finished, following non-mpi parallel jobs can be run!
 
  if [ -s run_get_all_gens_apcp24h_poe.sh ] ; then
    chmod +x run_get_all_gens_apcp24h_poe.sh
