@@ -72,7 +72,6 @@ if proceed:
         MIN_IHOUR = os.environ['MIN_IHOUR']
         if VERIF_CASE == 'grid2obs':
             COMINobsproc = os.environ['COMINobsproc']
-            #COMINmping = os.environ['COMINmping']
             COMINnam = os.environ['COMINnam']
         elif VERIF_CASE == 'snowfall':
             COMINsnow = os.environ['COMINsnow']
