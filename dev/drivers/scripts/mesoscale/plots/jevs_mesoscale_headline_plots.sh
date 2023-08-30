@@ -35,7 +35,7 @@ export VERIF_CASE="headline"
 export MODELNAME=${COMPONENT}
 
 # EVS Settings
-export HOMEevs="/lfs/h2/emc/vpppg/save/$USER/EVS"
+export HOMEevs="/lfs/h2/emc/vpppg/noscrub/$USER/EVS"
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}
 
@@ -54,9 +54,9 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # Developer Settings
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
-export COMINccpa=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT/$RUN
-export COMINmrms=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT/$RUN
-export COMINspcotlk=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT/$RUN
+export COMINccpa=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver/prep/$COMPONENT/$RUN
+export COMINmrms=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver/prep/$COMPONENT/$RUN
+export COMINspcotlk=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver/prep/$COMPONENT/$RUN
 export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/$NET/$evs_ver/stats
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
