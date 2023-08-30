@@ -280,9 +280,9 @@ for var in hgt tmp ugrd vgrd prmsl rh dpt tcdc cape ; do
 
            if [ $unit = m ] ; then
 	    	   
-	     mv ${score_type}_regional_conus_valid_00z_06z_12z_18z_${level}${unit}_${var}_${stat}_${end}  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}_valid_00z_06z_12z_18z.conus_glb.png
+	     mv ${score_type}_regional_conus_valid_00z_06z_12z_18z_${level}${unit}_${var}_${stat}_${end}  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}_valid_00z_06z_12z_18z.buk_conus.png
 	   else
-             mv ${score_type}_regional_conus_valid_00z_06z_12z_18z_${var}_${stat}_${end}  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}_valid_00z_06z_12z_18z.conus_glb.png
+             mv ${score_type}_regional_conus_valid_00z_06z_12z_18z_${var}_${stat}_${end}  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}_valid_00z_06z_12z_18z.buk_conus.png
            fi
          fi
       fi	 
