@@ -1453,6 +1453,8 @@ def check_weekly_model_files(job_dict):
         model_files_exist = True
     else:
         model_files_exist = False
+    if len(fhr_list) == 0:
+        model_files_exist = False
     return model_files_exist, fhr_list, model_copy_output_DATA2COMOUT_list
 
 
@@ -1835,6 +1837,8 @@ def check_days6_10_model_files(job_dict):
         model_files_exist = True
     else:
         model_files_exist = False
+    if len(fhr_list) == 0:
+        model_files_exist = False
     return model_files_exist, fhr_list, model_copy_output_DATA2COMOUT_list
 
 
@@ -2066,6 +2070,8 @@ def check_weeks3_4_model_files(job_dict):
     if len(input_fhr_list) >= 23:
         model_files_exist = True
     else:
+        model_files_exist = False
+    if len(fhr_list) == 0:
         model_files_exist = False
     return model_files_exist, fhr_list, model_copy_output_DATA2COMOUT_list
 
@@ -2886,13 +2892,13 @@ def check_model_files(job_dict):
             )
             if os.path.exists(fhr_fileN_COMOUT):
                 copy_file(fhr_fileN_COMOUT,fhr_fileN_DATA)
-                if fhr_check_output_dict[fhr_key]\
-                        [fhr_fileN_key]['forecast_hour'] \
-                        in fhr_list:
-                    fhr_list.remove(
-                        fhr_check_output_dict[fhr_key][fhr_fileN_key]\
-                        ['forecast_hour']
-                    )
+                #if fhr_check_output_dict[fhr_key]\
+                        #[fhr_fileN_key]['forecast_hour'] \
+                        #in fhr_list:
+                    #fhr_list.remove(
+                        #fhr_check_output_dict[fhr_key][fhr_fileN_key]\
+                        #['forecast_hour']
+                    #)
             else:
                 if fhr_check_output_dict[fhr_key]\
                         [fhr_fileN_key]['forecast_hour'] \
@@ -2902,7 +2908,7 @@ def check_model_files(job_dict):
                         model_copy_output_DATA2COMOUT_list.append(
                             (fhr_fileN_DATA, fhr_fileN_COMOUT)
                         )
-    if len(input_fhr_list) != 0:
+    if len(fhr_list) != 0:
         model_files_exist = True
     else:
         model_files_exist = False

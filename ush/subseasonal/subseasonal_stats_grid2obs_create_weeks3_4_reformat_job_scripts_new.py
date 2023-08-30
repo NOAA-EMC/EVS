@@ -259,7 +259,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                             job_env_dict['mask_list'] = env_var_mask_list
                         # Do file checks
                         check_model_files = True
-                        check_truth_files = False
+                        check_truth_files = True
                         if check_model_files:
                             (model_files_exist, valid_date_fhr_list,
                              model_copy_output_DATA2COMOUT_list) = (
