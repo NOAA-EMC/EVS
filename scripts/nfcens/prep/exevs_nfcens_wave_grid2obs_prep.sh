@@ -193,7 +193,7 @@ echo "Copying GDAS ncfiles to ${COMOUT}"
 echo '----------------------------------'
 [[ "$LOUD" = YES ]] && set -x
 
-cpreq ${DATA}/ncfiles/gdas*nc ${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/.
+cpreq ${DATA}/ncfiles/gdas*nc ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/.
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
