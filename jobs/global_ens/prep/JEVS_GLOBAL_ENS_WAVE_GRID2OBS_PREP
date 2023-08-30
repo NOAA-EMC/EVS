@@ -72,7 +72,7 @@ export jlogfile=${DATA}/${MODELNAME}_${RUN}_PB2NC.log
 # Execute the script                
 ####################################
 env
-$HOMEevs/scripts/global_ens/prep/exevs_global_ens_wave_grid2obs_prep.sh 1>>$pgmout 2>errfile.${pid}
+$HOMEevs/scripts/global_ens/prep/exevs_global_ens_wave_grid2obs_prep.sh
 export err=$?; err_chk
 
 cat $pgmout
