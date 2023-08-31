@@ -56,9 +56,9 @@ export maillist=${maillist:-'geoffrey.manikin@noaa.gov,yali.mao@noaa.gov'}
 ############################################################
 # CALL executable job script here
 ############################################################
-export DATA=/lfs/h2/emc/ptmp/$USER/evs/working/${STEP}.$pid
+export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
-export KEEPDATA=YES
+export KEEPDATA=NO
 
 $HOMEevs/jobs/wafs/stats/JEVS_WAFS_ATMOS_STATS
 
