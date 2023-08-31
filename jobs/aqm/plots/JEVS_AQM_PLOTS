@@ -62,8 +62,6 @@ export MODELNAME=${MODELNAME:-aqm}
 export modsys=${modsys:-aqm}
 export mod_ver=${mod_ver:-${aqm_ver}}
 
-export MET_bin_exec=${MET_bin_exec:-bin}
-
 export VDATE=${VDATE:-${PDYm3}}
 
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver}/)}
@@ -71,7 +69,7 @@ export COMINaqm=${COMINaqm:-$(compath.py ${envir}/com/${NET}/${evs_ver}/stats/${
 export COMOUT=${COMOUT:-${COMIN}/${STEP}/${COMPONENT}}
 export COMOUTplots=${COMOUTplots:-${COMOUT}/${RUN}.${VDATE}}
 export COMOUTheadline=${COMOUTheadline:-${COMOUT}/headline.${VDATE}}
-mkdir -m 775 -p $COMOUT
+mkdir -m 775 -p $COMOUT $COMOUTplots $COMOUTheadline
 
 vfcst_ver=$(echo ${mod_ver} | cut -c1-2 )
 export fcst_input_ver=${fcst_input_ver:-${vfcst_ver}}
