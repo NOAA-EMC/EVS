@@ -45,7 +45,7 @@ source $config
 ########################################################################
 ## The following setting is for parallel test and need to be removed for operational code
 ########################################################################
-export DATA=/lfs/h2/emc/ptmp/$USER/EVS/${cyc}_${MODELNAME}
+export DATAROOTROOTROOT=/lfs/h2/emc/ptmp/$USER/EVS/${cyc}_${MODELNAME}
 
 rm -rf $DATA
 mkdir -p $DATA

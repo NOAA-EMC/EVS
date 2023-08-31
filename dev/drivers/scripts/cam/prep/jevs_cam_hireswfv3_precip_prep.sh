@@ -17,7 +17,7 @@ export machine=WCOSS2
 export RUN_ENVIR=nco
 export SENDECF=YES
 export SENDCOM=YES
-export KEEPDATA=YES
+export KEEPDATA=NO
 export SENDDBN=YES
 export SENDDBN_NTC=
 export job=${PBS_JOBNAME:-jevs_cam_hireswfv3_precip_prep}
@@ -51,7 +51,7 @@ export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # Developer Settings
-export DATA=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp/${jobid:?}
+export DATAROOTROOTROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp/${jobid:?}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
 export cyc=$(date -d "today" +"%H")

@@ -20,7 +20,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 versionfile=$HOMEevs/versions/run.ver
 . $versionfile
 
-export DATAROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+export DATAROOTROOTROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_subseasonal_prep}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOTtmp

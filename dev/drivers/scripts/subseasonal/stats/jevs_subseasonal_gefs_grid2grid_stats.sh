@@ -33,7 +33,7 @@ export METviewer_AWS_scripts_dir=/lfs/h2/emc/vpppg/save/emc.vpppg/verification/m
 
 export USER=$USER
 export ACCOUNT=EVS-DEV
-export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+export DATAROOTROOTROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export QUEUE=dev
 export QUEUESHARED=dev_shared
 export QUEUESERV=dev_transfer

@@ -1,0 +1,10 @@
+#
+
+ls -1 */plots/*sh> list
+set files = ( `cat list` )
+foreach file ($files)
+sed 's/VERF-DEV/EVS-DEV/g' $file > $file.new
+mv $file.new $file
+end
+
+exit

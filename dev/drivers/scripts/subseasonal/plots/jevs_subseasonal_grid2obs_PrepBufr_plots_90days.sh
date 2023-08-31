@@ -29,7 +29,7 @@ source $HOMEevs/modulefiles/subseasonal/subseasonal_plots.sh
 export MET_ROOT=/apps/ops/para/libs/intel/${intel_ver}/met/${met_ver}
 
 export USER=$USER
-export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+export DATAROOTROOTROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export ACCOUNT=EVS-DEV
 export QUEUE=dev
 export QUEUESHARED=dev_shared

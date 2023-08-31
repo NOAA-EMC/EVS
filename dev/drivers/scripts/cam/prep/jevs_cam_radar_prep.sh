@@ -40,8 +40,8 @@ export cyc=${cyc:-${cyc}}
 # For dev testing
 ############################################################
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
-export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=YES
+export DATAROOTROOTROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
+export KEEPDATA=NO
 export VERIF_CASE=radar
 export MODELNAME=cam
 export job=${PBS_JOBNAME:-jevs_cam_${VERIF_CASE}_${STEP}_${cyc}}

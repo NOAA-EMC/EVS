@@ -50,10 +50,10 @@ export DAYS_LIST=${DAYS_LIST:-"90 31"}
 ############################################################
 # CALL executable job script here
 ############################################################
-export KEEPDATA=YES
+export KEEPDATA=NO
 
 export pid=${pid:-$$}
-export DATA=/lfs/h2/emc/ptmp/$USER/evs/working/${STEP}.$pid
+export DATAROOTROOTROOT=/lfs/h2/emc/ptmp/$USER/evs/working/${STEP}.$pid
 
 $HOMEevs/jobs/wafs/plots/JEVS_WAFS_ATMOS_PLOTS
 

@@ -43,9 +43,9 @@ export COMINstats=/lfs/h2/emc/ptmp/$USER/com/evs/${evs_ver}/${COMPONENT}/${RUN}/
 export COMINvit=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/TCvital/syndat_tcvitals.2022
 export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/bdeck/Year2022
 export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/bdeck/Year2022
-export DATAROOT=/lfs/h2/emc/ptmp/$USER
+export DATAROOTROOTROOT=/lfs/h2/emc/ptmp/$USER
 export COMROOT=${DATAROOT}/com
-export KEEPDATA=YES
+export KEEPDATA=NO
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
 # CALL executable job script here

@@ -42,9 +42,9 @@ export COMINtrack=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/globalTrack/Yea
 export COMINbdeckNHC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/bdeck/Year2022
 export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/jiayi.peng/MetTCData/bdeck/Year2022
 
-export DATAROOT=/lfs/h2/emc/ptmp/$USER
+export DATAROOTROOTROOT=/lfs/h2/emc/ptmp/$USER
 export COMROOT=${DATAROOT}/com
-export KEEPDATA=YES
+export KEEPDATA=NO
 
 # CALL executable job script here
 $HOMEevs/jobs/hurricane/stats/JEVS_HURRICANE_STATS

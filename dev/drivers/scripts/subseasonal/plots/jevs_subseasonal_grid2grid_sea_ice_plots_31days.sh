@@ -30,7 +30,7 @@ export MET_ROOT=/apps/ops/para/libs/intel/${intel_ver}/met/${met_ver}
 
 export USER=$USER
 export ACCOUNT=EVS-DEV
-export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+export DATAROOTROOTROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export QUEUE=dev
 export QUEUESHARED=dev_shared
 export QUEUESERV=dev_transfer
