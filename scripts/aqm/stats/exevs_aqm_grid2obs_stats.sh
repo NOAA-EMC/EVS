@@ -2,15 +2,13 @@
 #######################################################################
 ##  UNIX Script Documentation Block
 ##                      .
-## Script name:         exevs_aqmv7_stats.sh
+## Script name:         exevs_aqmv6_stats.sh
 ## Script description:  Perform MetPlus PointStat of Air Quality Model.
 ## Original Author   :  Perry Shafran
 ##
 ##   Change Logs:
 ##
 ##   04/26/2023   Ho-Chun Huang  modification for using AirNOW ASCII2NC
-##   05/22/2023   Ho-Chun Huang  separate hourly ozone by model cycle time becasuse
-##                               of directory path depends on model cycle hour.
 ##
 ##
 #######################################################################
@@ -29,14 +27,18 @@ if [ "${airnow_hourly_type}" == "aqobs" ]; then
 else
     export HOURLY_INPUT_TYPE=hourly_data
 fi
-if [ "${fcst_input_ver}" == "v7" ]; then
-    export dirname=aqm
-    export gridspec=793
-elif [ "${fcst_input_ver}" == "v6" ]; then
-    echo "EVS_CHECK :: This script exevs_aqmv7_stats.sh is not for ${fcst_input_ver}"
-else
-    echo "EVS_CHECK :: The AQM version number is not defined :: ${fcst_input_ver}"
-fi
+## 
+## Note the v6 and v7 comout directory structure are different
+## Check for correct scripts called
+##
+##if [ "${fcst_input_ver}" == "v6" ]; then
+    export dirname=cs
+    export gridspec=148
+##elif [ "${fcst_input_ver}" == "v7" ]; then
+##    echo "EVS_CHECK :: This script exevs_aqmv6_stats.sh is not for ${fcst_input_ver}"
+##else
+##    echo "EVS_CHECK :: The AQM version number is not defined :: ${fcst_input_ver}"
+##fi
 export fcstmax=72
 #
 ## export MASK_DIR is declared in the ~/EVS/jobs/aqm/stats/JEVS_AQM_STATS 
@@ -71,141 +73,135 @@ else
 fi
 echo "obs_hourly_found = ${obs_hourly_found}"
 
-for hour in 06 12
+for outtyp in awpozcon pm25
 do
 
-    export hour
-    export mdl_cyc=${hour}
+# Verification to be done both on raw output files and bias-corrected files
 
-    for outtyp in awpozcon pm25
+  for biastyp in raw bc
+  do
+
+    export outtyp
+    export biastyp
+    echo $biastyp
+
+    if [ $biastyp = "raw" ]
+    then
+      export bctag=
+      export bcout=_raw
+    fi
+
+    if [ $biastyp = "bc" ]
+    then
+      export bctag=_bc
+      export bcout=_bc
+    fi
+
+# check to see that model files exist, and list which forecast hours are to be used
+#
+# AQMv6 does not output IC, i.e., f00.  Thus the forecast file will be chekced from f01 to f72
+#
+    let ihr=1
+    numo3fcst=0
+    numpmfcst=0
+    while [ ${ihr} -le $fcstmax ]
     do
-    
-    # Verification to be done both on raw output files and bias-corrected files
-    
-      for biastyp in raw bc
-      do
-    
-        export outtyp
-        export biastyp
-        echo $biastyp
-    
-        if [ $biastyp = "raw" ]
+      filehr=$(printf %2.2d ${ihr})    ## fhr of grib2 filename is in 3 digit for aqmv7 and 2 digit for aqmv6
+      fhr=$(printf %2.2d ${ihr})       ## fhr for the processing valid hour is in 2 digit
+      export fhr
+
+      export datehr=${VDATE}${cyc}
+      adate=`$NDATE -${ihr} $datehr`
+      aday=`echo $adate |cut -c1-8`
+      acyc=`echo $adate |cut -c9-10`
+      if [ $acyc = 06 -o $acyc = 12 ]
+      then
+        fcst_file=$COMINaqm/${dirname}.${aday}/aqm.t${acyc}z.awpozcon${bctag}.f${filehr}.${gridspec}.grib2
+        if [ -s ${fcst_file} ]
         then
-          export bctag=
-          export bcout=_raw
-        fi
-    
-        if [ $biastyp = "bc" ]
+          echo "$fhr found"
+          echo $fhr >> $DATA/fcstlist_o3
+          let "numo3fcst=numo3fcst+1"
+        else
+          export subject="t${acyc}z ozone${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
+          echo "Warning: No AQM awpozcon${bctag} forecast was available for ${aday} t${acyc}z" > mailmsg
+          echo "Missing file is ${fcst_file}" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $maillist
+
+          echo "Warning: No AQM awpozcon${bctag} forecast was available for ${aday} t${acyc}z"
+          echo "Missing file is ${fcst_file}"
+        fi 
+
+        fcst_file=$COMINaqm/${dirname}.${aday}/aqm.t${acyc}z.pm25${bctag}.f${filehr}.${gridspec}.grib2
+        if [ -s ${fcst_file} ]
         then
-          export bctag=_bc
-          export bcout=_bc
+          echo "$fhr found"
+          echo $fhr >> $DATA/fcstlist_pm
+          let "numpmfcst=numpmfcst+1"
+        else
+          export subject="t${acyc}z pm25${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
+          echo "Warning: No AQM awpozcon${bctag} forecast was available for ${aday} t${acyc}z" > mailmsg
+          echo "Missing file is ${fcst_file}" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $maillist
+
+          echo "Warning: No AQM pm25${bctag} forecast was available for ${aday} t${acyc}z"
+          echo "Missing file is ${fcst_file}"
         fi
-    
-    # check to see that model files exist, and list which forecast hours are to be used
-    #
-    # AQMv7 does not output IC, i.e., f000.  Thus the forecast file will be chekced from f001 to f072
-    #
-        let ihr=1
-        numo3fcst=0
-        numpmfcst=0
-        while [ ${ihr} -le $fcstmax ]
-        do
-          filehr=$(printf %3.3d ${ihr})    ## fhr of grib2 filename is in 3 digit for aqmv7 and 2 digit for aqmv6
-          fhr=$(printf %2.2d ${ihr})       ## fhr for the processing valid hour is in 2 digit
-          export fhr
-    
-          export datehr=${VDATE}${cyc}
-          adate=`$NDATE -${ihr} $datehr`
-          aday=`echo $adate |cut -c1-8`
-          acyc=`echo $adate |cut -c9-10`
-          if [ $acyc = ${hour} ]
-          then
-            fcst_file=$COMINaqm/${dirname}.${aday}/${acyc}/aqm.t${acyc}z.awpozcon${bctag}.f${filehr}.${gridspec}.grib2
-            if [ -s ${fcst_file} ]
-            then
-              echo "$fhr found"
-              echo $fhr >> $DATA/fcstlist_o3
-              let "numo3fcst=numo3fcst+1"
-            else
-              export subject="t${acyc}z ozone${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
-              echo "Warning: No AQM awpozcon${bctag} forecast was available for ${aday} t${acyc}z" > mailmsg
-              echo "Missing file is ${fcst_file}" >> mailmsg
-              echo "Job ID: $jobid" >> mailmsg
-              cat mailmsg | mail -s "$subject" $maillist
 
-              echo "Warning: No AQM awpozcon${bctag} forecast was available for ${aday} t${acyc}z"
-              echo "Missing file is ${fcst_file}"
-            fi 
-
-            fcst_file=$COMINaqm/${dirname}.${aday}/${acyc}/aqm.t${acyc}z.pm25${bctag}.f${filehr}.${gridspec}.grib2
-            if [ -s ${fcst_file} ]
-            then
-              echo "$fhr found"
-              echo $fhr >> $DATA/fcstlist_pm
-              let "numpmfcst=numpmfcst+1"
-            else
-              export subject="t${acyc}z pm25${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
-              echo "Warning: No AQM dwipm25awpozcon${bctag} forecast was available for ${aday} t${acyc}z" > mailmsg
-              echo "Missing file is ${fcst_file}" >> mailmsg
-              echo "Job ID: $jobid" >> mailmsg
-              cat mailmsg | mail -s "$subject" $maillist
-
-              echo "Warning: No AQM pm25${bctag} forecast was available for ${aday} t${acyc}z"
-              echo "Missing file is ${fcst_file}"
-            fi 
-          fi
-          ((ihr++))
-        done
-        export fcsthours_o3=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcstlist_o3`
-        export fcsthours_pm=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcstlist_pm`
-        export numo3fcst
-        export numpmfcst
-        rm $DATA/fcstlist_o3 $DATA/fcstlist_pm
-        echo "numo3fcst,numpmfcst", $numo3fcst, $numpmfcst
-    
-        case $outtyp in
-    
-            awpozcon) if [ $numo3fcst -gt 0 -a $obs_hourly_found -eq 1 ]
-                      then
-                      export fcsthours=$fcsthours_o3
-                      run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstOZONE_obsAIRNOW_${fcst_input_ver}.conf $PARMevs/metplus_config/machine.conf
-                      export err=$?; err_chk
-                      mkdir -p $COMOUTsmall
-                      cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
-                      if [ $cyc = 23 ]
-                      then
-                        mkdir -p $COMOUTfinal
-                        run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstOZONE_obsAIRNOW_GatherByDay.conf $PARMevs/metplus_config/machine.conf
-                        export err=$?; err_chk
-                      fi
-                      else
-                      echo "NO O3 FORECAST OR OBS TO VERIFY"
-                      echo "NUM FCST, NUM OBS", $numo3fcst, $obs_hourly_found
-                      fi
-                      ;;
-          pm25) if [ $numpmfcst -gt 0 -a $obs_hourly_found -eq 1 ]
-                then
-                export fcsthours=$fcsthours_pm
-                run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstPM2p5_obsAIRNOW_${fcst_input_ver}.conf $PARMevs/metplus_config/machine.conf
-                export err=$?; err_chk
-                mkdir -p $COMOUTsmall
-                cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
-                if [ $cyc = 23 ]
-                then
-                   mkdir -p $COMOUTfinal
-                   run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstPM_obsANOWPM_GatherByDay.conf $PARMevs/metplus_config/machine.conf
-                   export err=$?; err_chk
-                fi
-                else
-                echo "NO PM FORECAST OR OBS TO VERIFY"
-                echo "NUM FCST, NUM OBS", $numpmfcst, $obs_hourly_found
-                fi
-                ;;
-        esac
-    
-      done
-    
+      fi
+      ((ihr++))
     done
+    export fcsthours_o3=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcstlist_o3`
+    export fcsthours_pm=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcstlist_pm`
+    export numo3fcst
+    export numpmfcst
+    rm $DATA/fcstlist_o3 $DATA/fcstlist_pm
+    echo "numo3fcst,numpmfcst", $numo3fcst, $numpmfcst
+
+    case $outtyp in
+
+        awpozcon) if [ $numo3fcst -gt 0 -a $obs_hourly_found -eq 1 ]
+                  then
+                  export fcsthours=$fcsthours_o3
+                  run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstOZONE_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
+                  export err=$?; err_chk
+                  mkdir -p $COMOUTsmall
+                  cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
+                  if [ $cyc = 23 ]
+                  then
+                    mkdir -p $COMOUTfinal
+                    run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstOZONE_obsAIRNOW_GatherByDay.conf $PARMevs/metplus_config/machine.conf
+                    export err=$?; err_chk
+                  fi
+                  else
+                  echo "NO O3 FORECAST OR OBS TO VERIFY"
+                  echo "NUM FCST, NUM OBS", $numo3fcst, $obs_hourly_found
+                  fi
+                  ;;
+      pm25) if [ $numpmfcst -gt 0 -a $obs_hourly_found -eq 1 ]
+            then
+            export fcsthours=$fcsthours_pm
+            run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstPM2p5_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
+            export err=$?; err_chk
+            mkdir -p $COMOUTsmall
+            cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
+            if [ $cyc = 23 ]
+            then
+               mkdir -p $COMOUTfinal
+               run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstPM_obsANOWPM_GatherByDay.conf $PARMevs/metplus_config/machine.conf
+               export err=$?; err_chk
+            fi
+            else
+            echo "NO PM FORECAST OR OBS TO VERIFY"
+            echo "NUM FCST, NUM OBS", $numpmfcst, $obs_hourly_found
+            fi
+            ;;
+    esac
+
+  done
+
 done
 # Daily verification of the daily maximum of 8-hr ozone
 # Verification being done on both raw and bias-corrected output data
@@ -222,6 +218,7 @@ echo "obs_daily_found = ${obs_daily_found}"
 
 
 if [ $cyc = 11 ]
+fcstmax=48
 then
 
   for biastyp in raw bc
@@ -246,7 +243,6 @@ then
     do
 
       export hour
-      export mdl_cyc=${hour}
 
 #  search for model file and 2nd obs file for the daily 8-hr ozone max
 
@@ -281,7 +277,7 @@ then
       echo "ozmax8, obs_daily_found=",$ozmax8,$obs_daily_found
       if [ $ozmax8 -gt 0 -a $obs_daily_found -gt 0 ]
       then 
-        run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstOZONEMAX_obsAIRNOW_${fcst_input_ver}.conf $PARMevs/metplus_config/machine.conf
+        run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstOZONEMAX_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
 	export err=$?; err_chk
         cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
         export outtyp=OZMAX8
@@ -301,6 +297,7 @@ fi
 # Verification is being done on both raw and bias-corrected output data
 
 if [ $cyc = 04 ]
+fcstmax=48
 then
 
   for biastyp in raw bc
@@ -325,12 +322,11 @@ then
     do
 
       export hour
-      export mdl_cyc=${hour}
 
 #  search for model file and 2nd obs file for the daily average PM
 
       pmave1=0
-      fcst_file=$COMINaqm/${dirname}.${VDAYm1}/${hour}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2
+      fcst_file=$COMINaqm/${dirname}.${VDAYm1}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2
       if [ -s ${fcst_file} ]
       then
         pmave1=1
@@ -344,7 +340,7 @@ then
         echo "Warning: No AQM ave_24hr_pm25${bctag} forecast was available for ${VDAYm1} t${hour}z"
         echo "Missing file is $fcst_file}"
       fi
-      fcst_file=$COMINaqm/${dirname}.${VDAYm2}/${hour}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2
+      fcst_file=$COMINaqm/${dirname}.${VDAYm2}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2
       if [ -s ${fcst_file} ]
       then
        let "pmave1=pmave1+1" 
@@ -358,7 +354,7 @@ then
         echo "Warning: No AQM ave_24hr_pm25${bctag} forecast was available for ${VDAYm2} t${hour}z"
         echo "Missing file is $fcst_file}"
       fi
-      fcst_file=$COMINaqm/${dirname}.${VDAYm3}/${hour}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2
+      fcst_file=$COMINaqm/${dirname}.${VDAYm3}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2
       if [ -s ${fcst_file} ]
       then
         let "pmave1=pmave1+1"
@@ -375,7 +371,7 @@ then
       echo "pmave1, obs_daily_found=",$pmave1,$obs_daily_found
       if [ $pmave1 -gt 0 -a $obs_daily_found -gt 0 ]
       then
-        run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstPMAVE_obsANOWPM_${fcst_input_ver}.conf $PARMevs/metplus_config/machine.conf
+        run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstPMAVE_obsANOWPM.conf $PARMevs/metplus_config/machine.conf
 	export err=$?; err_chk
         cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
         export outtyp=PMAVE
