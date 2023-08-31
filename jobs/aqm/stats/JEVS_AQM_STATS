@@ -68,6 +68,7 @@ export COMOUT=${COMOUT:-$(compath.py ${envir}/com/${NET}/${evs_ver}/${STEP}/${CO
 export COMOUTsmall=${COMOUTsmall:-${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}}
 export COMOUTfinal=${COMOUTfinal:-${COMOUT}/${MODELNAME}.${VDATE}}
 
+
 # alternative choice is dan option different from aqons
 export airnow_hourly_type=${airnow_hourly_type:-aqobs}
 
@@ -78,6 +79,7 @@ export KEEPDATA=${KEEPDATA:-YES}
 #######################################################################
 
 $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$msg"
