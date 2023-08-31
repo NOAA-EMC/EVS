@@ -75,7 +75,7 @@ export VDATE=${VDATE:-${PDYm3}}
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver}/)}
 export COMINobs=${COMINobs:-${DCOMROOT}}
 export COMINaqm=${COMINaqm:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
-export COMOUT=${COMOUT:-$(compath.py ${envir}/com/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
+export COMOUT=${COMOUT:-$(compath.py ${envir}/com/${NET}/${evs_ver}/${STEP}/${COMPONENT})}
 
 # alternative choice is dan option different from aqons
 export airnow_hourly_type=${airnow_hourly_type:-aqobs}
