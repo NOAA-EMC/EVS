@@ -75,7 +75,7 @@ export VDATE=${VDATE:-${PDYm3}}
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver}/)}
 export COMINobs=${COMINobs:-${DCOMROOT}}
 export COMINaqm=${COMINaqm:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
-export COMOUT=${COMOUT:-$(compath.py ${envir}/com/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
+export COMOUT=${COMOUT:-$(compath.py ${envir}/com/${NET}/${evs_ver}/${STEP}/${COMPONENT})}
 
 vfcst_ver=$(echo ${mod_ver} | cut -c1-2 )
 export fcst_input_ver=${fcst_input_ver:-${vfcst_ver}}
