@@ -167,3 +167,9 @@ if [ $gather = yes ] ; then
   fi
 
 fi
+
+echo ' '
+echo "Ending at : `date`"
+echo ' '
+echo " *** End of ${MODELNAME}-${RUN} grid2obs stat *** "
+echo ' '
