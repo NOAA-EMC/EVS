@@ -75,21 +75,18 @@ export VDATE=${VDATE:-${PDYm3}}
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver}/)}
 export COMINobs=${COMINobs:-${DCOMROOT}}
 export COMINaqm=${COMINaqm:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
-export COMOUT=${COMOUT:-$(compath.py ${envir}/com/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
-
-vfcst_ver=$(echo ${mod_ver} | cut -c1-2 )
-export fcst_input_ver=${fcst_input_ver:-${vfcst_ver}}
+export COMOUT=${COMOUT:-$(compath.py ${envir}/com/${NET}/${evs_ver}/${STEP}/${COMPONENT})}
 
 # alternative choice is dan option different from aqons
 export airnow_hourly_type=${airnow_hourly_type:-aqobs}
 
-export KEEPDATA=${KEEPDATA:-YES}
+export KEEPDATA=${KEEPDATA:-NO}
 
 #######################################################################
 # Execute the script.
 #######################################################################
 
-$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}${fcst_input_ver}_${STEP}.sh
+$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${STEP}.sh
 
 if [ -e "$pgmout" ]; then
     cat $pgmout

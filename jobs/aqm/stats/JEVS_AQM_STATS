@@ -65,8 +65,6 @@ export MODELNAME=${MODELNAME:-aqm}
 export modsys=${modsys:-aqm}
 export mod_ver=${mod_ver:-${aqm_ver}}
 
-export MET_bin_exec=${MET_bin_exec:-bin}
-
 export VDATE=${VDATE:-${PDYm3}}
 
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver}/)}
@@ -77,8 +75,8 @@ export COMOUT=${COMOUT:-$(compath.py ${envir}/com/${NET}/${evs_ver}/${STEP}/${CO
 export COMOUTsmall=${COMOUTsmall:-${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}}
 export COMOUTfinal=${COMOUTfinal:-${COMOUT}/${MODELNAME}.${VDATE}}
 
-vfcst_ver=$(echo ${mod_ver} | cut -c1-2 )
-export fcst_input_ver=${fcst_input_ver:-${vfcst_ver}}
+#vfcst_ver=$(echo ${mod_ver} | cut -c1-2 )
+#export fcst_input_ver=${fcst_input_ver:-${vfcst_ver}}
 
 # alternative choice is dan option different from aqons
 export airnow_hourly_type=${airnow_hourly_type:-aqobs}
@@ -89,7 +87,7 @@ export KEEPDATA=${KEEPDATA:-YES}
 # Execute the script.
 #######################################################################
 
-$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}${fcst_input_ver}_${STEP}.sh
+$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 
 if [ -e "$pgmout" ]; then
     cat $pgmout
