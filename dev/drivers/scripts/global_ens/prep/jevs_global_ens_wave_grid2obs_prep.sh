@@ -49,7 +49,7 @@ export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export OUTPUTROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}
 
-export job=${PBS_JOBNAME:-jevs_global_ens_wave_g2o_prep}
+export job=${PBS_JOBNAME:-jevs_global_ens_wave_grid2obs_prep}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
