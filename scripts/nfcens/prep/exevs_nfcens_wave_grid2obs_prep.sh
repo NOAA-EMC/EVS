@@ -108,7 +108,7 @@ echo 'Run pb2nc'
 
 mkdir $DATA/ncfiles
 
-for cyc in 00 06 12 18 ; do
+for cyc in 00 12; do
     export cyc=$cyc
     export cycle=t${cyc}z
     if [ -s ${DATA}/gdas.${INITDATE}${cyc}.prepbufr ]; then
