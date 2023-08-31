@@ -4,4 +4,4 @@ The branch of EVSforAQMv7 is created to preserve the structure of running both A
 
 NCO does not allow EVSv1.0 to have the code/scripts handling AQMv7 output.  Thus, in the PR#204 aqm restart, all *v6* has been removed from the filename and used in EVSiv1.0.  All *v7* files has been removed.
 
-This branch will never MERGE with develop beginning with PR#204, so developer can return to this branch for EVSv1.x that handling AQMv7 output.
+After the sync of develop with PR#204, replacing the v6 code with v7 code for EVSv1.x that handling AQMv7 output.
