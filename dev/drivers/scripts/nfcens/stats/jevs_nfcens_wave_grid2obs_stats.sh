@@ -1,4 +1,4 @@
-#PBS -N jevs_nfcens_grid2obs_stats
+#PBS -N jevs_nfcens_wave_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -9,9 +9,6 @@
 #PBS -V
 
 set -x 
-
-##%include <head.h>
-##%include <envir-p1.h>
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
@@ -51,7 +48,7 @@ export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output
 export FIXevs='/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix'
 export OUTPUTROOT="/lfs/h2/emc/vpppg/noscrub/$USER"
 export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}/${STEP}/${COMPONENT}
 
 export run_mpi='yes'
 export gather='yes'
@@ -66,10 +63,6 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 $HOMEevs/jobs/${COMPONENT}/${STEP}/JEVS_NFCENS_WAVE_GRID2OBS_STATS
 
-##%include <tail.h>
-##%manual
 #######################################################################
 # Purpose: This calculates the stats for the NFCENS wave model
 #######################################################################
-##%end
-exit
