@@ -97,8 +97,6 @@ fi
 mkdir -p $DATA/modelinput
 cd $DATA/modelinput
 
-## mkdir -p $COMOUT.${VDATE}/${MODELNAME}
-
 for hour in 06 12
 do
 
