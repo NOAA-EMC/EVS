@@ -20,14 +20,10 @@ export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
 
+export cyc=${cyc:-00}
 export cycle=${cycle:-t${cyc}z}
 setpdy.sh
 . ./PDY
-
-####################################
-# Determine Job Output Name on System
-####################################
-export pgmout="OUTPUT.${pid}"
 
 ##################################################
 # SAVEGES  - Copy Files From TMPDIR to $GESdir
@@ -87,10 +83,6 @@ export KEEPDATA=${KEEPDATA:-NO}
 #######################################################################
 
 $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${STEP}.sh
-
-if [ -e "$pgmout" ]; then
-    cat $pgmout
-fi
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$msg"
