@@ -4,13 +4,13 @@
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=02:00:00
+#PBS -l walltime=00:10:00
 #PBS -l select=1:ncpus=1:mem=2GB
 #PBS -l debug=true
 
 export model=evs
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS_firewx_restart/EVS
 
 source $HOMEevs/versions/run.ver
 
