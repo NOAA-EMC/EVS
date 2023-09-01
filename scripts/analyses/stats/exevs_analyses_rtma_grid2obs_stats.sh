@@ -229,7 +229,7 @@ then
     elif [ $cyc = 04 -o $cyc = 16 ]
     then
      fhr="16"
-    elif [ $cyc - 05 -o $cyc = 17 ]
+    elif [ $cyc = 05 -o $cyc = 17 ]
     then
      fhr="17"
     elif [ $cyc = 06 -o $cyc = 18 ]
