@@ -6,7 +6,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:30:00
-#PBS -l place=vscatter,select=1:ncpus=30:mem=300GB
+#PBS -l place=vscatter,select=2:ncpus=60:mem=300GB
 #PBS -l debug=true
 
 
