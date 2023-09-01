@@ -18,19 +18,9 @@ date
 ###########################################################
 # obtain unique LSF id (jobid) and make temp directories
 ###########################################################
-export pid=$$
-
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
-rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
-
-####################################
-# Determine Job Output Name on System
-####################################
-export pgmout="OUTPUT.${pid}"
-
-export cycle=t${cyc}z
 
 ####################################
 ## Set EVS directories
@@ -44,6 +34,8 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 export MASKS=${MASKS:-$FIXevs/masks}
 
 # Run setpdy and initialize PDY variables
+export cyc=${cyc:-00}
+export cycle=t${cyc}z
 setpdy.sh
 . ./PDY
 
@@ -60,7 +52,12 @@ export RUN=${RUN:-atmos}
 # Define COMIN/COMOUT variables:
 
 echo $COMPATH
-
+if [ "$modsys" = "urma" ] ; then
+  mod_ver=$urma_ver
+fi
+if [ "$modsys" = "rtma" ] ; then
+  mod_ver=$rtma_ver
+fi
 export COMIN=${COMIN:-$(compath.py -o ${envir}/com/${NET}/$evs_ver)}
 export COMINfcst=${COMINfcst:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
 export COMINobs=${COMINobs:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
@@ -77,10 +74,6 @@ mkdir -p $COMOUTsmall $COMOUTfinal
 $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 
 export err=$?; err_chk
-
-if [ -e "$pgmout" ]; then
-	   cat $pgmout
-fi
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$msg"
