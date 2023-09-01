@@ -36,7 +36,7 @@ source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 export VDATE=$(date --date="2 days ago" +%Y%m%d)
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
-export COMINobs=/lfs/h1/ops/dev/dcom
+export COMINobs=/lfs/h1/ops/prod/dcom
 export COMINfcst=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}/prep/$COMPONENT
 export COMINclimo=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/climos/$COMPONENT
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
