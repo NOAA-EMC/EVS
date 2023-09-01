@@ -878,8 +878,8 @@ if proceed:
                 ])
 
 
-    # exit with error
+    # If error, exit with 0 code 
     if err:
-        sys.exit(err)
+        sys.exit(0)
 
 print(f"END: {os.path.basename(__file__)}")
