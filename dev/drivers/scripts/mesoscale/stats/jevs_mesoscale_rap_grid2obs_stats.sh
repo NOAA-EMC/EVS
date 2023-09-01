@@ -73,9 +73,9 @@ export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # In production the following will be deleted (DATAROOT will be used instead, which already exists in the environment)
-  export DATAROOTROOTROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
-  export DATAROOTROOTROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
-  export DATAROOTROOTROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+  export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+  export DATAROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+  export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 
 # in production the following will be set to yesterday's date
   export VDATE=$(date -d "today -1 day" +"%Y%m%d")

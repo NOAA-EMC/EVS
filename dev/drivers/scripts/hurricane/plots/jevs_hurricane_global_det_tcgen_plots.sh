@@ -41,7 +41,7 @@ export COMINstats=/lfs/h2/emc/ptmp/$USER/com/evs/${evs_ver}/${COMPONENT}/${RUN}/
 #Define the directories of your NOAA/NWS logos
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
-export DATAROOTROOTROOT=/lfs/h2/emc/ptmp/$USER
+export DATAROOT=/lfs/h2/emc/ptmp/$USER
 export COMROOT=${DATAROOT}/com
 export KEEPDATA=NO
 

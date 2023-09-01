@@ -50,7 +50,7 @@ module load cdo/${cdo_ver}
 
 module list
 
-export DATAROOTROOTROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+export DATAROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export USE_CFP=YES
 #export cyc=%CYC%
 export NET=evs

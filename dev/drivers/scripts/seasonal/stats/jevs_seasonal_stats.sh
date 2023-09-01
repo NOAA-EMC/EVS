@@ -52,7 +52,7 @@ module list
 
 export envir=prod
 export RUN_ENVIR=nco
-export DATAROOTROOTROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+export DATAROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export USE_CFP=YES
 export met_ver=${met_ver}
 export metplus_ver=${metplus_ver}

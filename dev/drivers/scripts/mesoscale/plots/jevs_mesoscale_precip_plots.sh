@@ -52,7 +52,7 @@ export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # Developer Settings
-export DATAROOTROOTROOT=/lfs/h2/emc/ptmp/$USER/evs_test/$envir/tmp
+export DATAROOT=/lfs/h2/emc/ptmp/$USER/evs_test/$envir/tmp
 export COMINccpa=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver/prep/$COMPONENT/$RUN
 export COMINmrms=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver/prep/$COMPONENT/$RUN
 export COMINspcotlk=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver/prep/$COMPONENT/$RUN

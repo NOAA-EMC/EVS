@@ -56,7 +56,7 @@ export maillist=${maillist:-'geoffrey.manikin@noaa.gov,yali.mao@noaa.gov'}
 ############################################################
 # CALL executable job script here
 ############################################################
-export DATAROOTROOTROOT=/lfs/h2/emc/ptmp/$USER/evs/working/${STEP}.$pid
+export DATAROOT=/lfs/h2/emc/ptmp/$USER/evs/working/${STEP}.$pid
 
 export KEEPDATA=NO
 

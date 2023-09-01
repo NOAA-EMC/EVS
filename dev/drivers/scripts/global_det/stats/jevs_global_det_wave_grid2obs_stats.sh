@@ -68,7 +68,7 @@ export RUN=wave
 export VERIF_CASE=grid2obs
 
 ## developers directories
-export DATAROOTROOTROOT=/lfs/h2/emc/stmp/$USER/evs_output
+export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output
 export FIXevs='/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix'
 export OUTPUTROOT="/lfs/h2/emc/vpppg/noscrub/$USER"
 export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}

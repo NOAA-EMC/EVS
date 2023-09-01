@@ -28,7 +28,7 @@ export PATH=${MET_ROOT}/bin:${PATH}
 export METviewer_AWS_scripts_dir=/lfs/h2/emc/vpppg/save/emc.vpppg/verification/metplus/metviewer_aws_scripts
 
 export USER=$USER
-export DATAROOTROOTROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+export DATAROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export ACCOUNT=EVS-DEV
 export QUEUE=dev
 export QUEUESHARED=dev_shared

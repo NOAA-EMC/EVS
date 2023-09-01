@@ -43,7 +43,7 @@ export VERIF_CASE=grid2grid
 export MODELNAME=gfs
 
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
-export DATAROOTROOTROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
 export COMINgfs=$(compath.py prod/gfs/$gfs_ver)
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
