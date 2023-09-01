@@ -46,36 +46,49 @@ done
 
 																  
 export fcst_init_hour="0,6,12,18"
-export fcst_valid_hour="0,3,6,9,12,15,18,21,24"
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
 
 export fcst_init_hour="0,6,12,18"
-export fcst_valid_hour="0,3,6,9,12,15,18,21"
-valid_time='valid00z_03z_06z_09z_12z_15z_18z_21z'
 init_time='init00z_06z_12z_18z'
-
+line_type=ctc
 verif_case=grid2obs
 
 > run_all_poe.sh
 
-for stats in csi fbias  ; do 
+for valid_time in 00 12 ; do 
 
- stat_list=$stats
- line_tp='ctc'
- VARs='CAPEsfc MLCAPE'
- score_types='lead_average'
- threshs="250  500 1000 2000"
+ for stats in csi fbias  ; do 
 
- for thresh in $threshs ; do 
+   stat_list=$stats
+   VARs='CAPEsfc MLCAPE'
+   score_types='lead_average threshold_average'
+   #score_types='lead_average'
 
   for score_type in $score_types ; do
+ 
+    if [ $score_type = lead_average ] ; then   
+       thresholds="250  500 1000 2000"
+       fcst_leads="06,12,18,24,30,36,42,48"
+    elif [ $score_type = threshold_average ] ; then
+       thresholds=">=250,>=500,>=1000,>=2000"
+       fcst_leads="06 12 18 24 30 36 42 48"
+    fi 
 
-   export fcst_leads="6,9,12,15,18,21,24,27,30,33,36,39,42,45,48"
+   for threshold in $thresholds ; do 
 
-   for lead in $fcst_leads ; do 
+    for fcst_lead in $fcst_leads ; do 
 
-    for VAR in $VARs ; do 
+	#thresh and lead are just for file names
+	  if [  $score_type = lead_average ] ; then
+	      thresh=$threshold
+	      lead=all_leads
+	  elif [  $score_type = threshold_average ] ; then
+	      thresh=all_thresholds
+	      lead=$fcst_lead
+	 fi
+
+     for VAR in $VARs ; do 
 
        var=`echo $VAR | tr '[A-Z]' '[a-z]'` 
 	    
@@ -86,7 +99,7 @@ for stats in csi fbias  ; do
        fi 	  
 
        if [ $VAR = CAPEsfc ] || [ $VAR = MLCAPE ] ; then 
-	   doms="dom1 dom2 dom3 dom4 dom5"
+	   doms="dom1 dom2 dom3"
        fi 
 
        for dom in $doms ; do 
@@ -94,15 +107,11 @@ for stats in csi fbias  ; do
        if [ $VAR = CAPEsfc ] || [ $VAR = MLCAPE ] ; then
 
 	 if [ $dom = dom1 ] ; then      
-             VX_MASK_LIST="CONUS, CONUS_East, CONUS_West"
+             VX_MASK_LIST="CONUS, CONUS_East, CONUS_West, CONUS_South, CONUS_Central"
 	 elif [ $dom = dom2 ] ; then
-	      VX_MASK_LIST="CONUS_South, CONUS_Central,  Appalachia"
+	      VX_MASK_LIST="Appalachia, DeepSouth, GreatBasin, Mezquital"
 	 elif [ $dom = dom3 ] ; then
-	      VX_MASK_LIST="DeepSouth, GreatBasin, Mezquital"
-	 elif [ $dom = dom4 ] ; then
-	      VX_MASK_LIST="MidAtlantic,  PacificNW"
-	 elif [ $dom = dom4 ] ; then
-              VX_MASK_LIST="Southeast, SPlains"
+	      VX_MASK_LIST="MidAtlantic,  PacificNW, Southeast, SPlains"
 	 fi
        fi
 
@@ -112,54 +121,64 @@ for stats in csi fbias  ; do
 
         level=`echo $FCST_LEVEL_value | tr '[A-Z]' '[a-z]'`      
 
-      for line_type in $line_tp ; do 
-
-         > run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh  
+         > run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh  
 
         verif_type=conus_sfc
 
-        echo "export PLOT_TYPE=$score_type" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
+	if [ $score_type = lead_average ] ; then
+           echo "export PLOT_TYPE=lead_average_valid" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+        else		
+           echo "export PLOT_TYPE=$score_type" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+        fi
 
-        echo "export field=${var}_${level}" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
+        echo "export field=${var}_${level}" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
-        echo "export vx_mask_list='$VX_MASK_LIST'" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
-        echo "export verif_case=$verif_case" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
-        echo "export verif_type=$verif_type" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
+        echo "export vx_mask_list='$VX_MASK_LIST'" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+        echo "export verif_case=$verif_case" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+        echo "export verif_type=$verif_type" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
-        echo "export log_level=DEBUG" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
-        echo "export met_ver=$met_v" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
+        echo "export log_level=DEBUG" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+        echo "export met_ver=$met_v" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
-        echo "export eval_period=TEST" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
+        echo "export eval_period=TEST" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
 
         if [ $score_type = valid_hour_average ] ; then
-          echo "export date_type=INIT" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
+          echo "export date_type=INIT" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
         else
-          echo "export date_type=VALID" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
+          echo "export date_type=VALID" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
         fi
 
 
-         echo "export var_name=$VAR" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
-         echo "export fcts_level=$FCST_LEVEL_value" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
-         echo "export obs_level=$OBS_LEVEL_value" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
+         echo "export var_name=$VAR" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+         echo "export fcts_level=$FCST_LEVEL_value" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+         echo "export obs_level=$OBS_LEVEL_value" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
-         echo "export line_type=$line_type" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
-         echo "export interp=BILIN" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
-         echo "export score_py=$score_type" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
+         echo "export line_type=$line_type" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+         echo "export interp=BILIN" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
+         echo "export score_py=$score_type" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
-         thresh_fcst=">=${thresh}"
-	 thresh_obs=$thresh_fcst
 
-         sed -e "s!model_list!$models!g" -e "s!stat_list!$stat_list!g"  -e "s!thresh_fcst!$thresh_fcst!g"  -e "s!thresh_obs!$thresh_obs!g"   -e "s!fcst_init_hour!$fcst_init_hour!g" -e "s!fcst_valid_hour!$fcst_valid_hour!g" -e "s!fcst_lead!$lead!g"  -e "s!interp_pnts!$interp_pnts!g" $USHevs/cam/evs_href_plots_config.sh > run_py.${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
+	 if [ $score_type = lead_average ] ; then
+           thresh_fcst=">=${threshold}"
+           thresh_obs=$thresh_fcst
+         elif [ $score_type = threshold_average ] ; then
+           thresh_fcst=${threshold}
+           thresh_obs=$thresh_fcst
+         else
+           thresh_fcst=' '
+           thresh_obs=' '
+         fi
 
-         chmod +x  run_py.${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
+         sed -e "s!model_list!$models!g" -e "s!stat_list!$stat_list!g"  -e "s!thresh_fcst!$thresh_fcst!g"  -e "s!thresh_obs!$thresh_obs!g"   -e "s!fcst_init_hour!$fcst_init_hour!g" -e "s!fcst_valid_hour!$valid_time!g" -e "s!fcst_lead!$fcst_lead!g"  -e "s!interp_pnts!$interp_pnts!g" $USHevs/cam/evs_href_plots_config.sh > run_py.${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
-         echo "${DATA}/run_py.${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh
+         chmod +x  run_py.${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
-         chmod +x  run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh 
-         echo "${DATA}/run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
+         echo "${DATA}/run_py.${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh" >> run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh
 
-      done #end of line_type
+         chmod +x  run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh 
+         echo "${DATA}/run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh" >> run_all_poe.sh
+
 
      done #end of FCST_LEVEL_value
 
@@ -175,41 +194,52 @@ for stats in csi fbias  ; do
 
 done #end of stats 
 
+done #end of valid_time
+
 chmod +x run_all_poe.sh
 
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 80 -ppn 80 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 288 -ppn 72 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi
 
-cd $plot_dir
 
+cd $plot_dir
  	
-for score_type in lead_average ; do
+for score_type in lead_average threshold_average; do
+
+ for valid in 00z 12z ; do
 
   for var in cape mlcape ; do
    if [ $var = cape ] ; then
-       var_new=cape
        level=l0
        stats="csi fbias"
    elif [ $var = mlcape ] ; then
-       var_new=mlcape
        level=ml
        stats="csi fbias"
    fi
-   
-   valid="valid_all_times"
 
   if [ $score_type = lead_average ] ; then
      scoretype=fhrmean
+     leads="all"
+  else 
+     scoretype=threshmean
+     leads="f6 f12 f18 f24 f30 f36 f42 f48"
   fi 
 
   for stat in $stats ; do
 
-    for domain in conus conus_east conus_west conus_south conus_central alaska appalachia cplains deepsouth greatbasin greatlakes mezquital midatlantic northatlantic nolains nrockies pacificnw pacificsw prairie southeast southwest splains nplains srockies ; do
+   for domain in conus conus_east conus_west conus_south conus_central alaska appalachia cplains deepsouth greatbasin greatlakes mezquital midatlantic northatlantic nolains nrockies pacificnw pacificsw prairie southeast southwest splains nplains srockies ; do
+
+    for lead in $leads ; do   
+      if [ $lead = f6 ] ; then
+	  new_lead=f06
+      else 
+	  new_lead=$lead
+      fi
 
      if [ $domain = alaska ] ; then
          new_domain=$domain
@@ -217,13 +247,21 @@ for score_type in lead_average ; do
          new_domain=buk_${domain}
      fi
 
-          for thresh in ge250 ge500 ge1000 ge2000 ; do
-           mv ${score_type}_regional_${domain}_valid_all_times_${var}_${stat}_${thresh}.png evs.href.${stat}.${var_new}_${level}.${thresh}.last${past_days}days.${scoretype}_${valid}.${new_domain}.png
-          done
 
-       done #domain
-    done #stat
+     if [ $score_type = lead_average ] ; then
+   
+          for thresh in ge250 ge500 ge1000 ge2000 ; do
+           mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${thresh}.png evs.href.${stat}.${var}_${level}.${thresh}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+          done
+     else
+          mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}_${lead}.png  evs.href.${stat}.${var}_${level}.last${past_days}days.${scoretype}_valid_${valid}.${new_lead}.${new_domain}.png
+     fi
+      
+      done #lead
+    done #domain
+   done #stat
   done  #var
+ done   #valid 
 done    #score_type
 
 tar -cvf evs.plots.href.grid2obs.cape.past${past_days}days.v${VDATE}.tar *.png
