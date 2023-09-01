@@ -14,8 +14,6 @@ set -xa
 ###########################################################
 # obtain unique LSF id (jobid) and make temp directories
 ###########################################################
-export pid=$$
-
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
@@ -25,11 +23,6 @@ cd $DATA
 export cycle=${cycle:-t${cyc}z}
 setpdy.sh
 . ./PDY
-
-####################################
-# Determine Job Output Name on System
-####################################
-export pgmout="OUTPUT.${pid}"
 
 ##################################################
 # SAVEGES  - Copy Files From TMPDIR to $GESdir
@@ -75,8 +68,6 @@ export COMOUT=${COMOUT:-$(compath.py ${envir}/com/${NET}/${evs_ver}/${STEP}/${CO
 export COMOUTsmall=${COMOUTsmall:-${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}}
 export COMOUTfinal=${COMOUTfinal:-${COMOUT}/${MODELNAME}.${VDATE}}
 
-#vfcst_ver=$(echo ${mod_ver} | cut -c1-2 )
-#export fcst_input_ver=${fcst_input_ver:-${vfcst_ver}}
 
 # alternative choice is dan option different from aqons
 export airnow_hourly_type=${airnow_hourly_type:-aqobs}
@@ -89,9 +80,6 @@ export KEEPDATA=${KEEPDATA:-YES}
 
 $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 
-if [ -e "$pgmout" ]; then
-    cat $pgmout
-fi
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$msg"
