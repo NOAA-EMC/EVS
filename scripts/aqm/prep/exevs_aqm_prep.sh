@@ -2,7 +2,7 @@
 #######################################################################
 ##  UNIX Script Documentation Block
 ##                      .
-## Script name:         exevs_aqmv6_prep.sh
+## Script name:         exevs_aqm_prep.sh
 ## Script description:  Pre-processed input data for the MetPlus PointStat 
 ##                      of Air Quality Model.
 ## Original Author   :  Perry Shafran
@@ -12,6 +12,7 @@
 ##   04/26/2023   Ho-Chun Huang  add AirNOW ASCII2NC processing
 ##   05/01/2023   Ho-Chun Huang  separate v6 and v7 version becasuse
 ##                               of directory path difference
+##   08/31/2023   Ho-Chun Huang  update code for reading v7 mdl directory structure
 ##
 ##
 #######################################################################
@@ -32,8 +33,8 @@ else
     export HOURLY_ASCII2NC_FORMAT=airnowhourly
 fi
  
-export dirname=cs
-export gridspec=148
+export dirname=aqm
+export gridspec=793
 
 export PREP_SAVE_DIR=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}
 mkdir -p ${PREP_SAVE_DIR}
@@ -56,7 +57,7 @@ while [ ${ic} -le ${endvhr} ]; do
 	if [ -s ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf ]; then
             run_metplus.py ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
         else
-            echo "can not find ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf"
+            echo "Can not find ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf"
 	fi
     else
         export subject="AIRNOW ASCII Hourly Data Missing for EVS ${COMPONENT}"
@@ -78,7 +79,7 @@ if [ -s ${checkfile} ]; then
     if [ -s ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf ]; then
         run_metplus.py ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
     else
-        echo "can not find ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf"
+        echo "Can not find ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf"
     fi
 else
     export subject="AIRNOW ASCII Daily Data Missing for EVS ${COMPONENT}"
@@ -118,7 +119,7 @@ fi
 
 if [ $hour -eq 06 ]
 then
-    ozmax8_file=$COMINaqm/${dirname}.${VDATE}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+    ozmax8_file=$COMINaqm/${dirname}.${VDATE}/${hour}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
     if [ -s ${ozmax8_file} ]; then
         wgrib2 -d 1 ${ozmax8_file} -set_ftime "6-29 hour ave fcst"  -grib out1.grb2
         wgrib2 -d 2 ${ozmax8_file} -set_ftime "30-53 hour ave fcst" -grib out2.grb2
@@ -139,7 +140,7 @@ fi
 
 if [ $hour -eq 12 ]
 then
-    ozmax8_file=$COMINaqm/${dirname}.${VDATE}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+    ozmax8_file=$COMINaqm/${dirname}.${VDATE}/${hour}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
     if [ -s ${ozmax8_file} ]; then
         wgrib2 -d 1 ${ozmax8_file} -set_ftime "0-23 hour ave fcst" -grib out1.grb2
         wgrib2 -d 2 ${ozmax8_file} -set_ftime "24-47 hour ave fcst" -grib out2.grb2
@@ -156,7 +157,7 @@ then
         echo "Missing file is ${ozmax8_file}"
     fi
 fi
-    
+
 done
 done
 exit
