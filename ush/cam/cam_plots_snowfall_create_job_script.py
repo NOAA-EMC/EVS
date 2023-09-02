@@ -37,6 +37,7 @@ MET_VERSION = os.environ['MET_VERSION']
 IMG_HEADER = os.environ['IMG_HEADER']
 PRUNE_DIR = os.environ['PRUNE_DIR']
 SAVE_DIR = os.environ['SAVE_DIR']
+RESTART_DIR = os.environ['RESTART_DIR']
 LOG_TEMPLATE = os.environ['LOG_TEMPLATE']
 LOG_LEVEL = os.environ['LOG_LEVEL']
 STAT_OUTPUT_BASE_DIR = os.environ['STAT_OUTPUT_BASE_DIR']
@@ -65,6 +66,7 @@ CONFIDENCE_INTERVALS = os.environ['CONFIDENCE_INTERVALS']
 INTERP_PNTS = os.environ['INTERP_PNTS']
 PYTHONDONTWRITEBYTECODE = os.environ['PYTHONDONTWRITEBYTECODE']
 njob = os.environ['njob']
+COMPLETED_JOBS_FILE = os.environ['COMPLETED_JOBS_FILE']
 
 # Make a dictionary of environment variables needed to run this particular job
 job_env_vars_dict = {
@@ -76,6 +78,7 @@ job_env_vars_dict = {
     'FIXevs': FIXevs,
     'PRUNE_DIR': PRUNE_DIR,
     'SAVE_DIR': SAVE_DIR,
+    'RESTART_DIR': RESTART_DIR,
     'STAT_OUTPUT_BASE_DIR': STAT_OUTPUT_BASE_DIR,
     'STAT_OUTPUT_BASE_TEMPLATE': STAT_OUTPUT_BASE_TEMPLATE,
     'LOG_TEMPLATE': LOG_TEMPLATE.format(njob=njob),
@@ -118,10 +121,25 @@ if STEP == 'prep':
 elif STEP == 'stats':
     pass
 elif STEP == 'plots':
-    job_cmd_list_iterative.append(
-        f'python '
-        + f'{USH_DIR}/{PLOT_TYPE}.py'
-    )
+    if f'job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
+        job_cmd_list_iterative.append(
+            f'#jobs were restarted, and the following command has already run successfully'
+        )
+        job_cmd_list_iterative.append(
+            f'#python '
+            + f'{USH_DIR}/{PLOT_TYPE}.py'
+        )
+    else:
+        job_cmd_list_iterative.append(
+            f'python '
+            + f'{USH_DIR}/{PLOT_TYPE}.py'
+        )
+        job_cmd_list_iterative.append(
+            f"python -c "
+            + f"'import cam_util; cam_util.mark_job_completed("
+            + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
+            + f"\"job{njob}\")'"
+        )
 
 # Write job script
 indent = ''
