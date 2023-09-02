@@ -212,6 +212,8 @@ for stats in  rmse_spread ; do
    done  #domain
  done    #score_type
 done     #stats
+done     #valid 
+
 
 tar -cvf evs.plots.href.grid2obs.ecnt.past${past_days}days.v${VDATE}.tar *.png
 
