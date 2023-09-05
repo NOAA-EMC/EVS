@@ -28,6 +28,7 @@ import matplotlib.image as mpimg
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from datetime import datetime, timedelta as td
 from urllib.parse import urlparse, parse_qs
+import shutil
 
 SETTINGS_DIR = os.environ['USH_DIR']
 sys.path.insert(0, os.path.abspath(SETTINGS_DIR))
@@ -61,11 +62,13 @@ def get_bias_label_position(bias_value, radius):
 def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger, 
                       date_range: tuple, model_list: list, 
                       model_queries: list = [{}], num: int = 0, 
-                      levels: list = ['500'], flead='all', thresh: list = ['<20'], 
+                      levels: list = ['500'], flead='all', thresh: list = ['<20'],
+                      requested_var: str = 'HGT',
                       metric1_name: str = 'SRATIO', metric2_name: str = 'POD', 
                       metric3_name: str = 'CSI', date_type: str = 'VALID', 
                       date_hours: list = [0,6,12,18], verif_type: str = 'pres', 
-                      line_type: str = 'CTC', save_dir: str = '.', dpi: int = 300, 
+                      line_type: str = 'CTC', save_dir: str = '.', 
+                      restart_dir: str = '.', dpi: int = 300, 
                       confidence_intervals: bool = False, interp_pts: list = [],
                       bs_nrep: int = 5000, 
                       bs_method: str = 'MATCHED_PAIRS', ci_lev: float = .95, 
@@ -106,6 +109,12 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     model_settings = model_colors.model_settings
 
     # filter by level
+    if 'PBL' in levels:
+        levels.append('L0')
+        levels = np.unique(levels).tolist()
+    elif requested_var in ['CAPE', 'SBCAPE'] and 'L0' in levels:
+        levels.append('Z0')
+        levels = np.unique(levels).tolist()
     df = df[df['FCST_LEV'].astype(str).isin([str(level) for level in levels])]
     if len(levels) > 1:
         logger.warning(f"Multiple levels were provided.  Choosing the first"
@@ -764,7 +773,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     unit_convert = False
     if units in reference.unit_conversions:
         unit_convert = True
-        if str(var_long_name_key).upper() == 'HGT':
+        if str(var_long_name_key).upper() in ['HGT','HPBL']:
             if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
                 if units in ['m', 'gpm']:
                     units = 'gpm'
@@ -876,6 +885,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                 )
                 model_plot_name+=f" ({date_hours_shift_string})"
             else:
+                if int(model_queries[m]['shift'][0]) >= 0:
+                    model_plot_name+='+'
                 model_plot_name+=model_queries[m]['shift'][0]+'H'
         if str(model_list[m]) not in pivot_metric1:
             continue
@@ -998,8 +1009,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         linewidth=.5, c='black', zorder=0
     )
 
-    fig.subplots_adjust(bottom=.2, right=.77, left=.23, wspace=0, hspace=0)
-    cax = fig.add_axes([.775, .2, .01, .725])
+    fig.subplots_adjust(bottom=.2, top=.91, right=.77, left=.23, wspace=0, hspace=0)
+    cax = fig.add_axes([.775, .2, .01, .71])
     cbar_ticks = [0.,.1,.2,.3,.4,.5,.6,.7,.8,.9,1.]
     cb = plt.colorbar(
         csi_contour, orientation='vertical', cax=cax, ticks=cbar_ticks,
@@ -1207,6 +1218,16 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         os.makedirs(save_subdir)
     save_path = os.path.join(save_subdir, save_name+'.png')
     fig.savefig(save_path, dpi=dpi)
+    if restart_dir:
+        shutil.copy2(
+            save_path,
+            os.path.join(
+                restart_dir,
+                f'{str(plot_group).lower()}',
+                f'{str(time_period_savename).lower()}',
+                save_name+'.png'
+            )
+        )
     logger.info(u"\u2713"+f" plot saved successfully as {save_path}")
     plt.close(num)
     logger.info('========================================')
@@ -1269,6 +1290,7 @@ def main():
     logger.debug(f"STATS_DIR: {STATS_DIR}")
     logger.debug(f"PRUNE_DIR: {PRUNE_DIR}")
     logger.debug(f"SAVE_DIR: {SAVE_DIR}")
+    logger.debug(f"RESTART_DIR: {RESTART_DIR}")
     logger.debug(f"VERIF_CASETYPE: {VERIF_CASETYPE}")
     logger.debug(f"MODELS: {MODELS}")
     logger.debug(f"VARIABLES: {VARIABLES}")
@@ -1428,15 +1450,23 @@ def main():
             logger.warning(e)
             logger.warning("Continuing ...")
         plot_group = var_specs['plot_group']
-        for l, fcst_level in enumerate(FCST_LEVELS):
-            if len(FCST_LEVELS) != len(OBS_LEVELS):
+        if FCST_LEVELS in presets.level_presets:
+            fcst_levels = re.split(r',(?![0*])', presets.level_presets[FCST_LEVELS].replace(' ',''))
+        else:
+            fcst_levels = re.split(r',(?![0*])', FCST_LEVELS.replace(' ',''))
+        if OBS_LEVELS in presets.level_presets:
+            obs_levels = re.split(r',(?![0*])', presets.level_presets[OBS_LEVELS].replace(' ',''))
+        else:
+            obs_levels = re.split(r',(?![0*])', OBS_LEVELS.replace(' ',''))
+        for l, fcst_level in enumerate(fcst_levels):
+            if len(fcst_levels) != len(obs_levels):
                 e = ("FCST_LEVELS and OBS_LEVELS must be lists of the same"
                      + f" size")
                 logger.error(e)
                 logger.error("Quitting ...")
                 raise ValueError(e+"\nQuitting ...")
-            if (FCST_LEVELS[l] not in var_specs['fcst_var_levels'] 
-                    or OBS_LEVELS[l] not in var_specs['obs_var_levels']):
+            if (fcst_levels[l] not in var_specs['fcst_var_levels'] 
+                    or obs_levels[l] not in var_specs['obs_var_levels']):
                 e = (f"The requested variable/level combination is not valid:"
                      + f" {requested_var}/{fcst_level}")
                 logger.warning(e)
@@ -1473,11 +1503,13 @@ def main():
             plot_performance_diagram(
                 df_metric, logger, date_range, models, 
                 model_queries=model_queries, num=num, flead=FLEADS, 
-                levels=FCST_LEVELS, thresh=fcst_thresh, 
+                levels=fcst_levels, thresh=fcst_thresh, 
+                requested_var=requested_var,
                 metric1_name=metrics[0], metric2_name=metrics[1],
                 metric3_name=metrics[2], date_type=DATE_TYPE,  
                 verif_type=VERIF_TYPE, line_type=LINE_TYPE, 
                 date_hours=date_hours, save_dir=SAVE_DIR, 
+                restart_dir=RESTART_DIR,
                 eval_period=EVAL_PERIOD, 
                 display_averages=display_averages, save_header=IMG_HEADER,
                 plot_group=plot_group, 
@@ -1510,6 +1542,10 @@ if __name__ == "__main__":
     STATS_DIR = STAT_OUTPUT_BASE_DIR
     PRUNE_DIR = check_PRUNE_DIR(os.environ['PRUNE_DIR'])
     SAVE_DIR = check_SAVE_DIR(os.environ['SAVE_DIR'])
+    if 'RESTART_DIR' in os.environ:
+        RESTART_DIR = check_RESTART_DIR(os.environ['RESTART_DIR'])
+    else:
+        RESTART_DIR = ''
     DATE_TYPE = check_DATE_TYPE(os.environ['DATE_TYPE'])
     LINE_TYPE = check_LINE_TYPE(os.environ['LINE_TYPE'])
     INTERP = check_INTERP(os.environ['INTERP'])
@@ -1538,8 +1574,8 @@ if __name__ == "__main__":
     FLEADS = check_FCST_LEAD(os.environ['FCST_LEAD']).replace(' ','').split(',')
 
     # list of levels
-    FCST_LEVELS = re.split(r',(?![0*])', check_FCST_LEVEL(os.environ['FCST_LEVEL']).replace(' ',''))
-    OBS_LEVELS = re.split(r',(?![0*])', check_OBS_LEVEL(os.environ['OBS_LEVEL']).replace(' ',''))
+    FCST_LEVELS = check_FCST_LEVEL(os.environ['FCST_LEVEL'])
+    OBS_LEVELS = check_OBS_LEVEL(os.environ['OBS_LEVEL'])
 
     FCST_THRESH = check_FCST_THRESH(os.environ['FCST_THRESH'], LINE_TYPE)
     OBS_THRESH = check_OBS_THRESH(os.environ['OBS_THRESH'], FCST_THRESH, LINE_TYPE).replace(' ','').split(',')
@@ -1604,8 +1640,6 @@ if __name__ == "__main__":
     FLEADS = [int(flead) for flead in FLEADS]
     INTERP_PNTS = [str(pts) for pts in INTERP_PNTS]
     VERIF_CASETYPE = str(VERIF_CASE).lower() + '_' + str(VERIF_TYPE).lower()
-    FCST_LEVELS = [str(level) for level in FCST_LEVELS]
-    OBS_LEVELS = [str(level) for level in OBS_LEVELS]
     CONFIDENCE_INTERVALS = str(CONFIDENCE_INTERVALS).lower() in [
         'true', '1', 't', 'y', 'yes'
     ]
