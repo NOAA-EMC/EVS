@@ -11,7 +11,15 @@
 set -x
 
   export VERIF_CASE_STEP_abbrev="g2os"
-  
+
+# Set run mode
+  if [ $RUN_ENVIR = nco ]; then
+      export evs_run_mode="production"
+  else
+      export evs_run_mode=$evs_run_mode
+  fi
+  echo "RUN MODE:$evs_run_mode"
+
 # Make directory
   mkdir -p ${VERIF_CASE}_${STEP}
   mkdir -p $DATA/logs
