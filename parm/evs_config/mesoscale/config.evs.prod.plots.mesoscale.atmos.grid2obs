@@ -19,12 +19,14 @@ export MET_VERSION="${MET_VERSION%.}"
 
 # Logging
 export SAVE_DIR="${DATA}/${VERIF_CASE}/out"
+export RESTART_DIR="${COMOUTplots}/${VERIF_CASE}/restart"
+export COMPLETED_JOBS_FILE="completed_jobs.txt"
 export LOG_TEMPLATE="${SAVE_DIR}/logs/EVS_verif_plotting_job{njob}_`date '+%Y%m%d-%H%M%S'`_$$.out"
 export LOG_LEVEL="DEBUG"
 
 # Model/Obs Settings
 export STAT_OUTPUT_BASE_DIR="${COMIN}"
-export STAT_OUTPUT_BASE_TEMPLATE="*.{valid?fmt=%Y%m%d}/${NET}.stats.{MODEL}*${VERIF_CASE}*v{valid?fmt=%Y%m%d}.stat"
+export STAT_OUTPUT_BASE_TEMPLATE="*/{MODEL}.{valid?fmt=%Y%m%d}/${NET}.stats.{MODEL}*${VERIF_CASE}.v{valid?fmt=%Y%m%d}.stat"
 
 # Additional Verification Settings
 export IMG_HEADER="${NET}.${COMPONENT}"

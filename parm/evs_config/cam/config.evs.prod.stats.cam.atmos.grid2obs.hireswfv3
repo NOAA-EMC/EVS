@@ -21,6 +21,9 @@ export METPLUS_VERBOSITY="DEBUG"
 export MET_VERBOSITY="5"
 export LOG_MET_OUTPUT_TO_METPLUS="yes"
 
+# Restart Settings
+export RESTART_DIR="${COMOUTsmall}/restart/c${cyc}"
+
 # Time Settings
 export FHR_GROUP_LIST="FULL"
 

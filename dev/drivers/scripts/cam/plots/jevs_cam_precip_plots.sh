@@ -51,11 +51,11 @@ export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # Developer Settings
-export DATA=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export COMINccpa=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT
 export COMINmrms=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT
 export COMINspcotlk=/lfs/h2/emc/ptmp/${USER}/EVS_out/com/$NET/$evs_ver/prep/$COMPONENT
-export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/$NET/$evs_ver/stats/$COMPONENT
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/stats/$COMPONENT
 export cyc=$(date -d "today" +"%H")
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"

@@ -35,6 +35,14 @@ status=$?
 [[ $status -ne 0 ]] && exit $status
 [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_create_output_dirs.py"
 
+# Check For Restart Files
+if [ $evs_run_mode = production ]; then
+    python ${USHevs}/mesoscale/mesoscale_production_restart.py
+    status=$?
+    [[ $status -ne 0 ]] && exit $status
+    [[ $status -eq 0 ]] && echo "Successfully ran ${USHevs}/mesoscale/mesoscale_production_restart.py"
+fi
+
 # Create Job Script 
 python $USHevs/mesoscale/mesoscale_plots_headline_create_job_scripts.py
 status=$?
@@ -84,7 +92,8 @@ fi
 # Copy files to desired location
 #all commands to copy output files into the correct EVS COMOUT directory
 if [ $SENDCOM = YES ]; then
-    find ${DATA}/${VERIF_CASE}/out/*/*/*.png -type f -print | tar -cvf ${COMOUT}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar -T -
+    find ${DATA}/${VERIF_CASE}/out/*/*/*.png -type f -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar -T -
+    cp ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar ${COMOUTplots}/.
 fi
 
 # Non-production jobs

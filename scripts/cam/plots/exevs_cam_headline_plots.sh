@@ -35,6 +35,14 @@ status=$?
 [[ $status -ne 0 ]] && exit $status
 [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py"
 
+# Check For Restart Files
+if [ $evs_run_mode = production ]; then
+    python ${USHevs}/cam/cam_production_restart.py
+    status=$?
+    [[ $status -ne 0 ]] && exit $status
+    [[ $status -eq 0 ]] && echo "Successfully ran ${USHevs}/cam/cam_production_restart.py"
+fi
+
 # Create Job Script 
 python $USHevs/cam/cam_plots_headline_create_job_scripts.py
 status=$?
