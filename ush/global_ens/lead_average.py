@@ -921,9 +921,15 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         level_string = f'{level} '
         level_savename = f'{level}'
     if metric2_name is not None:
-        title1 = f'{metric1_string} and {metric2_string} - {domain_string}'
+        if f'{domain_string}' == 'Global, 0p25':
+            title1 = f'{metric1_string} and {metric2_string} - Global'
+        else:
+            title1 = f'{metric1_string} and {metric2_string} - {domain_string}'
     else:
-        title1 = f'{metric1_string} - {domain_string}'
+        if f'{domain_string}' == 'Global, 0p25':
+            title1 = f'{metric1_string} - Global'
+        else:
+            title1 = f'{metric1_string} - {domain_string}'
     if thresh and '' not in thresh:
         thresholds_phrase = ', '.join([
             f'{opt}{thresh_label}' for thresh_label in thresh_labels
