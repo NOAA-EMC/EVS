@@ -5,10 +5,6 @@
 ####################################
 set -xa
 
-export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-YES}
-export SENDECF=${SENDECF:-YES}
-
 
 ####################################
 # SET SHELL PROCESSING VARIABLES
@@ -21,7 +17,7 @@ date
 # obtain unique LSF id (jobid) and make temp directories
 ####################################
 export pid=$$
-export DATA=${DATA:-${DATAROOT:?}}/${jobid:?}
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
@@ -40,14 +36,25 @@ export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
-export USHevs=${USHevs:-$HOMEevs/ush}
 export SCRIPTevs=$HOMEevs/scripts
+export USHevs=${USHevs:-$HOMEevs/ush}
+
+
+####################################
+# SAVEGES  - Copy Files From TMPDIR to $GESdir
+# SENDECF  - Flag Events on ecFLOW
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+####################################
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
 
 
 ####################################
 # Run setpdy and initialize PDY variables
 ####################################
-export cycle=t${cyc}z
+export cycle=${cycle:-t${cyc}z}
 setpdy.sh 31
 . ./PDY
 
@@ -66,6 +73,8 @@ else
     elif [ $VERIF_CASE = precip ]; then
         export VDATE=${VDATE:-$PDYm1}
     elif [ $VERIF_CASE = snowfall ]; then
+        export VDATE=${VDATE:-$PDYm1}
+    elif [ $VERIF_CASE = headline ]; then
         export VDATE=${VDATE:-$PDYm1}
     else
         echo "The provided VERIF_CASE, $VERIF_CASE, is not supported for the $COMPONENT $STEP step"
@@ -93,6 +102,7 @@ fi
 export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
 export COMINapcp24mean=${COMINspatial:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
+export COMOUTplots=${COMOUTplots:-$COMOUT/$RUN.$VDATE}
 export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
 export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
 
@@ -111,7 +121,7 @@ echo $COMPATH
 if [ $MODELNAME = sref ] ; then
     $SCRIPTevs/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 else
-    $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+    $SCRIPTevs/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 fi 
 
 export err=$?; err_chk
@@ -127,3 +137,5 @@ if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT
   rm -rf $DATA
 fi
+
+date

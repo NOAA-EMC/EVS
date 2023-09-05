@@ -18,6 +18,8 @@ export MET_VERSION="${MET_VERSION%.}"
 
 # Logging
 export SAVE_DIR="${DATA}/${VERIF_CASE}/out"
+export RESTART_DIR="${COMOUTplots}/${VERIF_CASE}/restart"
+export COMPLETED_JOBS_FILE="completed_jobs.txt"
 export LOG_TEMPLATE="${SAVE_DIR}/logs/EVS_verif_plotting_job{njob}_`date '+%Y%m%d-%H%M%S'`_$$.out"
 export LOG_LEVEL="DEBUG"
 
@@ -28,9 +30,7 @@ export STAT_OUTPUT_BASE_TEMPLATE="*/{MODEL}.{valid?fmt=%Y%m%d}/${NET}.stats.{MOD
 # Additional Verification Settings
 export IMG_HEADER="${NET}.${COMPONENT}"
 export PRUNE_DIR="${DATA}/${VERIF_CASE}/data"
-#CHANGE TO THE FOLLOWING IN PROD
-#export USH_DIR=${USHevs}/${COMPONENT}
-export USH_DIR=${USHevs}/cam
+export USH_DIR=${USHevs}/${COMPONENT}
 export PYTHONDONTWRITEBYTECODE=1
 
 echo "END: $(basename ${BASH_SOURCE[0]})"
