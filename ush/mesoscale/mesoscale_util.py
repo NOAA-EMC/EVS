@@ -826,4 +826,15 @@ def snowfall_check_model_input_output_files(job_dict):
         all_COMOUT_file_exist = False
     return (all_input_file_exist, input_files_list, \
             all_COMOUT_file_exist, COMOUT_files_list,
-            DATA_files_list) 
+            DATA_files_list)
+
+def get_completed_jobs(completed_jobs_file):
+    completed_jobs = set()
+    if os.path.exists(completed_jobs_file):
+        with open(completed_jobs_file, 'r') as f:
+            completed_jobs = set(f.read().splitlines())
+    return completed_jobs
+
+def mark_job_completed(completed_jobs_file, job_name):
+    with open(completed_jobs_file, 'a') as f:
+        f.write(job_name + "\n")

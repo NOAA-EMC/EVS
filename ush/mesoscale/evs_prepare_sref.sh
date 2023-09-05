@@ -80,7 +80,7 @@ if [ $modnam = ccpa ] ; then
  if [ -s $COMINccpa/ccpa.${vday}/18/ccpa.t18z.03h.hrap.conus.gb2 ] ; then
 
   #ccpa hrap is in G240	
-  cd ${WORK}/ccpa.${vday}
+  #cd ${WORK}/ccpa.${vday}
 
   export cyc
   for cyc in 00 06 12 18 ; do

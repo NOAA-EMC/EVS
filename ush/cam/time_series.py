@@ -450,6 +450,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     if incr_idx < 1:
         incr_idx = 1
     incr = incrs[incr_idx-1]
+    print("date_range, date_hours, incr:")
+    print(date_range, date_hours, incr)
     idx = [
         item 
         for item in daterange(

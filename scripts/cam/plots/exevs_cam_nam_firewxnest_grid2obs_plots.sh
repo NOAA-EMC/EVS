@@ -55,13 +55,13 @@ do
 	smvar=`echo $varb | tr A-Z a-z`
 	export plottyp=lead
 	export datetyp=VALID
-	sh $USHevs/${COMPONENT}/py_plotting.config
+	sh $USHevs/${COMPONENT}/cam_nam_firewxnest_plots_py_plotting.config
 
         mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
 
 	export plottyp=valid_hour
 	export datetyp=INIT
-	sh $USHevs/${COMPONENT}/py_plotting.config
+	sh $USHevs/${COMPONENT}/cam_nam_firewxnest_plots_py_plotting.config
 
         mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
 
@@ -72,7 +72,7 @@ do
 		export linetype=CTC
 		export stat=fbias
                 export thresh=">=277.594, >=283.15, >=288.706, >=294.261"
-		sh $USHevs/${COMPONENT}/py_plotting.config_thresh
+		sh $USHevs/${COMPONENT}/cam_nam_firewxnest_plots_py_plotting.config_thresh
 
 		mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png
 	elif [ $varb = RH ]
@@ -82,7 +82,7 @@ do
 		export linetype=CTC
 		export stat=fbias
 		export thresh="<=15, <=20, <=25, <=30"
-		sh $USHevs/${COMPONENT}/py_plotting.config_thresh
+		sh $USHevs/${COMPONENT}/cam_nam_firewxnest_plots_py_plotting.config_thresh
 
 		mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png
 	fi
@@ -104,13 +104,13 @@ do
 	smvar=`echo $varb | tr A-Z a-z`
 	export plottyp=lead
 	export datetyp=VALID
-	sh $USHevs/${COMPONENT}/py_plotting.config
+	sh $USHevs/${COMPONENT}/cam_nam_firewxnest_plots_py_plotting.config
 
         mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
 
 	export plottyp=valid_hour
 	export datetyp=INIT
-	sh $USHevs/${COMPONENT}/py_plotting.config
+	sh $USHevs/${COMPONENT}/cam_nam_firewxnest_plots_py_plotting.config
 
 	mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
 
@@ -126,13 +126,13 @@ do
 	smvar=`echo $varb | tr A-Z a-z`
 	export plottyp=lead
 	export datetyp=VALID
-	sh $USHevs/${COMPONENT}/py_plotting.config
+	sh $USHevs/${COMPONENT}/cam_nam_firewxnest_plots_py_plotting.config
 
         mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
 
 	export plottyp=valid_hour
 	export datetyp=INIT
-	sh $USHevs/${COMPONENT}/py_plotting.config
+	sh $USHevs/${COMPONENT}/cam_nam_firewxnest_plots_py_plotting.config
 
 	mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
 done
@@ -147,13 +147,13 @@ do
 	smvar=`echo $varb | tr A-Z a-z`
 	export plottyp=lead
 	export datetyp=VALID
-	sh $USHevs/${COMPONENT}/py_plotting.config_pbl
+	sh $USHevs/${COMPONENT}/cam_nam_firewxnest_plots_py_plotting.config_pbl
 
 	mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
 
 	export plottyp=valid_hour
 	export datetyp=INIT
-	sh $USHevs/${COMPONENT}/py_plotting.config_pbl
+	sh $USHevs/${COMPONENT}/cam_nam_firewxnest_plots_py_plotting.config_pbl
 
 	mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
 

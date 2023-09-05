@@ -1,4 +1,4 @@
-#!/bin/bash
+#PBS -S /bin/bash
 #PBS -N jevs_cam_headline_plots
 #PBS -j oe
 #PBS -S /bin/bash
