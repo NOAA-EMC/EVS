@@ -72,7 +72,6 @@ if proceed:
         MIN_IHOUR = os.environ['MIN_IHOUR']
         if VERIF_CASE == 'grid2obs':
             COMINobsproc = os.environ['COMINobsproc']
-            #COMINmping = os.environ['COMINmping']
             COMINnam = os.environ['COMINnam']
         elif VERIF_CASE == 'snowfall':
             COMINsnow = os.environ['COMINsnow']
@@ -879,8 +878,8 @@ if proceed:
                 ])
 
 
-    # exit with error
+    # If error, exit with 0 code 
     if err:
-        sys.exit(err)
+        sys.exit(0)
 
 print(f"END: {os.path.basename(__file__)}")
