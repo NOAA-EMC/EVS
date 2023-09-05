@@ -1,12 +1,12 @@
 #!/bin/bash
 
-#PBS -N jevs_mesoscale_sref_cnv_past90days_plots
+#PBS -N jevs_mesoscale_sref_cape_past90days_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:30:00
-#PBS -l place=vscatter,select=2:ncpus=88:mem=300GB
+#PBS -l place=vscatter,select=1:ncpus=80:mem=300GB
 #PBS -l debug=true
 
 
@@ -25,7 +25,7 @@ export NET=evs
 export STEP=plots
 export COMPONENT=mesoscale
 export RUN=atmos
-export VERIF_CASE=cnv
+export VERIF_CASE=cape
 export MODELNAME=sref
 
 module reset
@@ -37,7 +37,6 @@ export KEEPDATA=NO
 export cyc=00
 export past_days=90
 
-#export run_mpi=yes: always miss one plot 
 export run_mpi=yes
 export valid_time=both
 
@@ -48,6 +47,5 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
-
 
 ${HOMEevs}/jobs/${COMPONENT}/${STEP}/JEVS_MESOSCALE_PLOTS

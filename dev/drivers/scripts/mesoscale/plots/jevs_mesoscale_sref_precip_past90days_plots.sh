@@ -6,7 +6,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:30:00
-#PBS -l place=vscatter,select=1:ncpus=30:mem=300GB
+#PBS -l place=vscatter,select=2:ncpus=60:mem=300GB
 #PBS -l debug=true
 
 
@@ -45,5 +45,6 @@ export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
+export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
 ${HOMEevs}/jobs/${COMPONENT}/${STEP}/JEVS_MESOSCALE_PLOTS
