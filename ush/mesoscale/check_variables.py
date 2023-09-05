@@ -109,6 +109,25 @@ def check_SAVE_DIR(SAVE_DIR):
                      + f" in the current working directory.")
     return SAVE_DIR
 
+#RESTART_DIR
+# info case: whether or not an empty string is provided
+# warning case:
+# error case: should be a string, should follow proper directory structure
+def check_RESTART_DIR(RESTART_DIR):
+    if not isinstance(RESTART_DIR, str):
+        sys.exit(f"The provided RESTART_DIR ('{RESTART_DIR}') is not a string."
+                 + f"  RESTART_DIR must be a string. Check the plotting"
+                 + f" configuration file.")
+    if not Path(RESTART_DIR).exists():
+        print(f"WARNING: The provuded RESTART_DIR ('{RESTART_DIR}') does not exists on the"
+              + f" current system.")
+    if not Path(RESTART_DIR).is_dir():
+        print(f"WARNING: The provided RESTART_DIR ('{RESTART_DIR}') is not a directory.")
+    if not RESTART_DIR:
+        print(f"The provided RESTART_DIR is empty. Will not back up plots"
+              + f" in a restart directory.")
+    return RESTART_DIR
+
 # STAT_OUTPUT_BASE_DIR
 # info case: whether or not an empty string is provided
 # warning case:
