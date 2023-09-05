@@ -14,6 +14,7 @@ module load cray-pals/${craypals_ver}
 module load cfp/${cfp_ver}
 module load imagemagick/${imagemagick_ver}
 module load met/${met_ver}
+module load metplus/${metplus_ver}
 
 module list
 
