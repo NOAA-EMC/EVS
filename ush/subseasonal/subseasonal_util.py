@@ -1071,6 +1071,71 @@ def get_truth_file(valid_time_dt, source_file_format, dest_file_format):
             print("WARNING: "+source_file+" DOES NOT EXIST")
 
 
+def check_prep_files(job_dict):
+    """! Check if COMOUT GEFS prep files exist and adjust fhr_list
+
+         Args:
+             job_dict - dictionary containing settings
+                        job is running with (strings)
+
+         Returns:
+             fhr_list - adjusted list of forecast hours that are
+                        needed for prep (string)
+    """
+    init_date_dt = datetime.datetime.strptime(
+        job_dict['INITDATE']+job_dict['init_hr_start'],
+        '%Y%m%d%H'
+    )
+    model = job_dict['MODEL']
+    inithr = job_dict['init_hr_start']
+    fhr_min = int(job_dict['fhr_start'])
+    fhr_max = int(job_dict['fhr_end'])
+    fhr_inc = 12
+    fhr = fhr_min
+    fhr_list = []
+    fhr_check_output_dict = {}
+    while fhr <= fhr_max:
+        fhr_check_output_dict[str(fhr)] = {}
+        if job_dict['JOB_GROUP'] == 'retrieve_data':
+            output_COMOUT_file_format = os.path.join(
+                job_dict['COMOUT']+'.'+job_dict['INITDATE'],
+                model, model+'.'
+                +'ens30.t'+inithr+'z'
+                +'.pgrb2.0p50.'
+                +'f{lead?fmt=%3H}'
+            )
+            fhr_check_output_dict[str(fhr)]['file1'] = {
+                'valid_date': init_date_dt,
+                'init_date': init_date_dt,
+                'forecast_hour': str(fhr)
+            }
+        fhr+=fhr_inc
+    # Check output files
+    for fhr_key in list(fhr_check_output_dict.keys()):
+        fhr_key_output_files_exist_list = []
+        for fhr_fileN_key in list(fhr_check_output_dict[fhr_key].keys()):
+            fhr_fileN_COMOUT = format_filler(
+                output_COMOUT_file_format,
+                fhr_check_output_dict[fhr_key][fhr_fileN_key]['valid_date'],
+                fhr_check_output_dict[fhr_key][fhr_fileN_key]['init_date'],
+                fhr_check_output_dict[fhr_key][fhr_fileN_key]['forecast_hour'],
+                {}
+            )
+            if os.path.exists(fhr_fileN_COMOUT):
+                fhr_key_output_files_exist_list.append(True)
+            else:
+                fhr_key_output_files_exist_list.append(False)
+                fhr_list.append(
+                    fhr_check_output_dict[fhr_key][fhr_fileN_key]\
+                    ['forecast_hour']
+                )
+        #fhr_list.append(fhr_key)
+    fhr_list = list(
+        np.asarray(np.unique(np.asarray(fhr_list, dtype=int)),dtype=str)
+    )
+    return fhr_list
+
+
 def check_daily_model_files(job_dict):
     """! Check if model files exist for daily reformat step
 
@@ -3713,7 +3778,8 @@ def initialize_prep_job_env_dict(verif_type, group,
     """
     job_env_var_list = [
         'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA',
-        'NET', 'RUN', 'STEP', 'COMPONENT', 'COMINgefs', 'gefs_members'
+        'NET', 'RUN', 'STEP', 'COMPONENT', 'COMINgefs', 'COMOUT',
+        'gefs_members'
     ]
     job_env_dict = {}
     for env_var in job_env_var_list:
