@@ -126,7 +126,7 @@ done
 
 # tar all plots together
 cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN
-tar -cvf $COMOUTplots/evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
+tar -cvf $COMOUTplotsheadline/evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
 
 exit
 
