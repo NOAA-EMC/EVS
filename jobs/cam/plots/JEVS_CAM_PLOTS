@@ -5,7 +5,7 @@
 ########################################
 set -xa
 
-#####################################
+# ###################################
 # SET SHELL PROCESSING VARIABLES
 # ###################################
 export PS4='$SECONDS + '
@@ -27,18 +27,7 @@ cd $DATA
 ####################################
 export pgmout="OUTPUT.${pid}"
 
-
-####################################
-# Set EVS directories
-####################################
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
-export EXECevs=${EXECevs:-$HOMEevs/exec}
-export FIXevs=${FIXevs:-$HOMEevs/fix}
-export PARMevs=${PARMevs:-$HOMEevs/parm}
-export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
-export USHevs=${USHevs:-$HOMEevs/ush}
-export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
-
+export cycle=t${cyc}z
 
 ##################################################
 # SAVEGES  - Copy Files From TMPDIR to $GESdir
@@ -50,73 +39,62 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
+export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
+export COMROOT=${COMROOT:-$(compath.py $envir/com)}
 
-####################################
-# Run setpdy and initialize PDY variables
-####################################
-export cycle=${cycle:-t${cyc}z}
-setpdy.sh 31
-. ./PDY
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
+export SCRIPTevs=$HOMEevs/scripts
 
-if [ $MODELNAME = href ] ; then
-   export VDATE=${VDATE:-$PDYm2}
-   export INITDATE=${INITDATE:-$PDYm2}
-else
-   if [ $VERIF_CASE = severe ] ; then
-      export VDATE=${VDATE:-$PDYm7}
-   elif [ $VERIF_CASE = radar ] ; then
+
+if [[ ${COMPONENT} == "cam" ]] ; then
+  if [  $MODELNAME = href ] ; then
+      setpdy.sh
+      . $DATA/PDY
       export VDATE=${VDATE:-$PDYm2}
-   else
-      export VDATE=${VDATE:-$PDYm1}
-   fi
+      export INITDATE=${INITDATE:-$PDYm2}
+  else
+    export VDATE=$(date -d "today -1 day" +"%Y%m%d")
+  fi 
+else
+    setpdy.sh 31
+    . ./PDY
+    export VDATE=${VDATE:-$PDYm1}
 fi
 
-
-####################################
-# Define COMIN/COMOUT variables
-####################################
-export COMROOT=${COMROOT:-$(compath.py $envir/com)}
-export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
-
+# Define COMIN/COMOUT variables:
 if  [ $MODELNAME = href ] ; then
+  setpdy.sh
+  . $DATA/PDY
   export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$MODELNAME.$VDATE
   export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/${evs_ver})}/$STEP/$COMPONENT/$RUN.$VDATE
   export COMINapcp24mean=${COMINspatial:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT
   export DATA_IN=${DATA_IN:-$DATAROOT}
+  mkdir -p $COMOUT
   export ush_dir=$USHevs/cam/ush_href_plot_py
 else
+  export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
   export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
-  export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
-  export COMOUTplots=${COMOUTplots:-$COMOUT/$RUN.$VDATE}
+  export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
   echo $COMPATH
 fi
-
-mkdir -p $COMOUT
-
-echo $COMPATH
 
 
 #######################################################################
 # Execute the script.
 #######################################################################
 
-if [ $MODELNAME = nam_firewxnest ]; then
- $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
-else
- $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
-fi
-export err=$?; err_chk
+$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 
-if [ -e "$pgmout" ]; then
-   cat $pgmout
-fi
+cat $pgmout
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
 
-if [ "$KEEPDATA" != "YES" ] ; then
-  cd $DATAROOT
-  rm -rf $DATA
-fi
-
-date
+#if [ "$KEEPDATA" != "YES" ] ; then
+#  cd $DATAROOT
+#  rm -rf $DATA
+#fi

@@ -4,7 +4,7 @@
 #PBS -S /bin/bash
 #PBS -A VERF-DEV
 #PBS -l walltime=00:30:00
-#PBS -l place=vscatter,select=1:ncpus=90:mem=100GB
+#PBS -l place=vscatter,select=1:ncpus=60:mem=100GB
 #PBS -l debug=true
 
 
@@ -42,7 +42,7 @@ export valid_time=both
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 #export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver
-export DATA=/lfs/h2/emc/stmp/${USER}/evs/tmpnwprd
+export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs/tmpnwprd
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
