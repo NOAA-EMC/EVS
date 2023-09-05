@@ -1,12 +1,12 @@
 #!/bin/bash
 
-#PBS -N jevs_mesoscale_sref_grid2obs_past90days_plots
+#PBS -N jevs_mesoscale_sref_cape_past90days_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:30:00
-#PBS -l place=vscatter,select=3:ncpus=72:mem=300GB
+#PBS -l place=vscatter,select=1:ncpus=80:mem=300GB
 #PBS -l debug=true
 
 
@@ -25,7 +25,7 @@ export NET=evs
 export STEP=plots
 export COMPONENT=mesoscale
 export RUN=atmos
-export VERIF_CASE=grid2obs
+export VERIF_CASE=cape
 export MODELNAME=sref
 
 module reset
