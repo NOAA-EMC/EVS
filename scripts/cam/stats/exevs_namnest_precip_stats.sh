@@ -20,6 +20,7 @@ export BOOL_NBRHD=False
 # Reformat MET Data
 export job_type="reformat"
 export njob=1
+export run_restart=true
 for NEST in $NEST_LIST; do
     export NEST=$NEST
     for ACC in "01" "03" "24"; do
@@ -46,6 +47,18 @@ for NEST in $NEST_LIST; do
                 source $config
             fi
             echo "RUN MODE: $evs_run_mode"
+            
+            # Check For Restart Files
+            if [ $evs_run_mode = production ]; then
+                if [ "$run_restart" = true ]; then
+                    python ${USHevs}/cam/cam_production_restart.py
+                    status=$?
+                    [[ $status -ne 0 ]] && exit $status
+                    [[ $status -eq 0 ]] && echo "Successfully ran ${USHevs}/cam/cam_production_restart.py"
+                    export run_restart=false
+                fi
+            fi
+
             # Check User's Configuration Settings
             python $USHevs/cam/cam_check_settings.py
             status=$?
