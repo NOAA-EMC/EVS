@@ -156,7 +156,10 @@ def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range,
                 model_queries
             )
             try:
-                df = pd.concat([df, df_tmp])
+                if not df_tmp.empty:
+                    df = pd.concat([df, df_tmp])
+                else:
+                    df = df
             except NameError:
                 df = df_tmp
             except UnboundLocalError as e:
