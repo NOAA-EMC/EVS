@@ -5,7 +5,7 @@
 #PBS -q "dev"
 #PBS -A VERF-DEV
 #PBS -l walltime=4:59:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=128GB
+#PBS -l place=vscatter:exclhost,select=3:ncpus=128:ompthreads=1:mem=128GB
 #PBS -l debug=true
 #PBS -V
 
@@ -44,7 +44,7 @@ set -x
   export QUEUE="dev"
   export QUEUESHARED="dev_shared"
   export PARTITION_BATCH=""
-        
+
 
 # EVS Settings
   export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS

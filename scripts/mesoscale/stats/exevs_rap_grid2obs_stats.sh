@@ -34,10 +34,9 @@ set -x
   export model0=`echo $MODELNAME | tr A-Z a-z`
   echo $model1
   
-##
+
 # Set Basic Environment Variables
 last_cyc=21
- #NEST_LIST="namer"
  NEST_LIST="namer conus conusc ak akc spc_otlk subreg"
 ##
 
@@ -138,7 +137,12 @@ if [ $USE_CFP = YES ]; then
       export MP_CMDFILE=${poe_script}
       if [ $machine = WCOSS2 ]; then
          export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-	 launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
+#---
+         nselect=$(cat $PBS_NODEFILE | wc -l)
+         nnp=$(($nselect * $nproc))
+         launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+#---
+#	 launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
       elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
          export SLURM_KILL_BAD_EXIT=0
 	 launcher="srun --export=ALL --multi-prog"
@@ -234,7 +238,12 @@ if [ $USE_CFP = YES ]; then
 		export MP_CMDFILE=${poe_script}
 		if [ $machine = WCOSS2 ]; then
 			export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-			launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
+#---
+                        nselect=$(cat $PBS_NODEFILE | wc -l)
+                        nnp=$(($nselect * $nproc))
+                        launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+#---
+#			launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
 		elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
 			export SLURM_KILL_BAD_EXIT=0
 			launcher="srun --export=ALL --multi-prog"
@@ -313,7 +322,12 @@ if [ $USE_CFP = YES ]; then
 		export MP_CMDFILE=${poe_script}
 		if [ $machine = WCOSS2 ]; then
 			export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-			launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
+#---
+                        nselect=$(cat $PBS_NODEFILE | wc -l)
+                        nnp=$(($nselect * $nproc))
+                        launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+#---
+#			launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
 		elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
 			export SLURM_KILL_BAD_EXIT=0
 			launcher="srun --export=ALL --multi-prog"
@@ -343,13 +357,13 @@ if [ $SENDCOM = YES ]; then
         if [ -d $MODEL_DIR_PATH ]; then
            MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
            mkdir -p $COMOUTsmall
-           for FILE in $MODEL_DIR_PATH/*; do	      
+           for FILE in $MODEL_DIR_PATH/*; do
              cp -v $FILE $COMOUTsmall/.
            done
         fi
       done
   done
-fi  
+fi
 
 echo "*****************************"
 echo "Gather3 jobs begin"
@@ -403,7 +417,12 @@ echo "*****************************"
             export MP_CMDFILE=${poe_script}
             if [ $machine = WCOSS2 ]; then
                 export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-                launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
+#---
+                nselect=$(cat $PBS_NODEFILE | wc -l)
+                nnp=$(($nselect * $nproc))
+                launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+#---
+#                launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
             elif [ $machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
                 export SLURM_KILL_BAD_EXIT=0
                 launcher="srun --export=ALL --multi-prog"
