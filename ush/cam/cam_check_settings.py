@@ -57,11 +57,11 @@ evs_cam_settings_dict['RUN_GRID2OBS_PREP'] = [
         'MET_PLUS_CONF','MET_PLUS_OUT','METPLUS_VERBOSITY','MET_VERBOSITY',
         'LOG_MET_OUTPUT_TO_METPLUS','NEST','URL_HEAD',
         ]
-evs_cam_settings_dict['RUN_GRID2OBS_STATS'] = []
+evs_cam_settings_dict['RUN_GRID2OBS_STATS'] = ['RESTART_DIR']
 evs_cam_settings_dict['RUN_GRID2OBS_PLOTS'] = [
         'MET_VERSION','IMG_HEADER','PRUNE_DIR','SAVE_DIR','LOG_TEMPLATE',
         'LOG_LEVEL','STAT_OUTPUT_BASE_DIR','STAT_OUTPUT_BASE_TEMPLATE',
-        'COMOUTplots'
+        'COMOUTplots','RESTART_DIR'
         ]
 evs_cam_settings_dict['RUN_PRECIP_PREP'] = [
         'VERIF_TYPE', 'VHOUR_LIST', 'COMINobs', 'OBSNAME', 'OBS_ACC', 'ACC'
@@ -74,18 +74,18 @@ evs_cam_settings_dict['RUN_PRECIP_STATS'] = [
         'OBSNAME','MIN_IHOUR','MODEL_ACC','OBS_ACC','ACC','BOOL_NBRHD','FCST_LEV',
         'FCST_THRESH','OBS_LEV','OBS_THRESH','OUTPUT_FLAG_NBRHD',
         'OUTPUT_FLAG_CATEG','NBRHD_WIDTHS','GRID','MODEL_INPUT_TEMPLATE',
-        'MASK_POLY_LIST'
+        'MASK_POLY_LIST','RESTART_DIR'
         ]
-evs_cam_settings_dict['RUN_PRECIP_PLOTS'] = ['COMOUTplots']
+evs_cam_settings_dict['RUN_PRECIP_PLOTS'] = ['COMOUTplots','RESTART_DIR']
 evs_cam_settings_dict['RUN_SNOWFALL_PREP'] = []
-evs_cam_settings_dict['RUN_SNOWFALL_STATS'] = []
-evs_cam_settings_dict['RUN_SNOWFALL_PLOTS'] = ['COMOUTplots']
+evs_cam_settings_dict['RUN_SNOWFALL_STATS'] = ['RESTART_DIR']
+evs_cam_settings_dict['RUN_SNOWFALL_PLOTS'] = ['COMOUTplots','RESTART_DIR']
 evs_cam_settings_dict['RUN_HEADLINE_PREP'] = []
 evs_cam_settings_dict['RUN_HEADLINE_STATS'] = []
 evs_cam_settings_dict['RUN_HEADLINE_PLOTS'] = [
         'MET_VERSION','IMG_HEADER','PRUNE_DIR','SAVE_DIR','LOG_TEMPLATE',
         'LOG_LEVEL','STAT_OUTPUT_BASE_DIR','STAT_OUTPUT_BASE_TEMPLATE',
-        'COMOUTplots']
+        'COMOUTplots','RESTART_DIR']
 
 # Check for existence of required env vars, by group in the dictionary
 env_group_list = [

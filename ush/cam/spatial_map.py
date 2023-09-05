@@ -51,11 +51,14 @@ VERIF_TYPE = os.environ['VERIF_TYPE']
 INPUT_DIR = STAT_OUTPUT_BASE_DIR
 OUTPUT_DIR = SAVE_DIR
 LOGO_DIR = FIXevs
-MODEL_INFO_DICT = {
-    'obs': {'name': VERIF_TYPE,
-            'plot_name': model_info.model_alias[VERIF_TYPE]['plot_name'],
-            'obs_name': 'OBS'}
-}
+if VERIF_TYPE == 'ccpa':
+    MODEL_INFO_DICT = {}
+else:
+    MODEL_INFO_DICT = {
+        'obs': {'name': VERIF_TYPE,
+                'plot_name': model_info.model_alias[VERIF_TYPE]['plot_name'],
+                'obs_name': 'OBS'}
+    }
 for MODEL in MODELS:
     if MODEL in model_info.model_alias:
         MODEL_INFO_DICT[MODEL] = {'name': MODEL,
