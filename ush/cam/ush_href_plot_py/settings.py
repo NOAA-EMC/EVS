@@ -608,7 +608,7 @@ class ModelSpecs():
             'HREF_MEAN': {'color': '#000000',
                      'marker': 'o', 'markersize': 12,
                      'linestyle': 'solid', 'linewidth': 3.},
-            'HREF_AVRG': {'color': '#696969',
+            'HREF_AVRG': {'color': '#183cf5',
                      'marker': 'o', 'markersize': 12,
                      'linestyle': 'solid', 'linewidth': 3.},
             'HREF_PMMN': {'color': '#8400c8',
