@@ -1,0 +1,53 @@
+#PBS -N jevs_analyses_rtma_grid2obs_stats_cyc_%CYC%
+#PBS -j oe
+#PBS -S /bin/bash
+#PBS -q %QUEUE%
+#PBS -A %PROJ%-%PROJENVIR%
+#PBS -l walltime=01:30:00
+#PBS -l select=1:ncpus=1:mem=2GB
+#PBS -l debug=true
+#PBS -V
+
+export model=evs
+%include <head.h>
+%include <envir-p1.h>
+
+############################################################
+# Load modules
+############################################################
+set -x
+export COMPONENT=analyses
+export STEP=stats
+source ${HOMEevs}/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
+module list
+
+############################################################
+# Specify environment variables
+############################################################
+export cyc=%CYC%
+export NET=evs
+export RUN=atmos
+export VERIF_CASE=grid2obs
+export pid=${pid:-$$}
+export outid=${outid:-"LL$job"}
+export DATA=${DATA:-${DATAROOT}/${jobid:?}}
+export COMIN=${COMevs}
+export COMOUT=${COMIN}/${STEP}/${COMPONENT}
+export modsys=rtma
+export MODELNAME=rtma
+export config=$HOMEevs/parm/evs_config/analyses/config.evs.rtma.prod
+source $config
+
+############################################################
+# Execute j-job
+############################################################
+$HOMEevs/jobs/analyses/stats/JEVS_ANALYSES_STATS
+if [ $? -ne 0 ]; then
+   ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
+   ecflow_client --abort
+   exit
+fi
+
+%include <tail.h>
+%manual
+%end
