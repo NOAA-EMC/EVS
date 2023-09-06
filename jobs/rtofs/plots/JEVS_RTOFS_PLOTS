@@ -137,7 +137,7 @@ postmsg "$msg"
 
 if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT
- ###  rm -rf $DATA
+  rm -rf $DATA
 fi
 
 date
