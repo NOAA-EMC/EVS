@@ -3113,7 +3113,7 @@ def check_weekly_truth_files(job_dict):
             truth_output_files_exist_list.append(False)
     if all(x == True for x in truth_output_files_exist_list) \
             and len(truth_output_files_exist_list) > 0:
-        truth_files_exist = False
+        truth_files_exist = True
     else:
         truth_input_files_exist_list = []
         for truth_file in truth_input_file_list:
@@ -3262,7 +3262,7 @@ def check_days6_10_truth_files(job_dict):
             truth_output_files_exist_list.append(False)
     if all(x == True for x in truth_output_files_exist_list) \
             and len(truth_output_files_exist_list) > 0:
-        truth_files_exist = False
+        truth_files_exist = True
     else:
         truth_input_files_exist_list = []
         for truth_file in truth_input_file_list:
@@ -3414,7 +3414,7 @@ def check_weeks3_4_truth_files(job_dict):
             truth_output_files_exist_list.append(False)
     if all(x == True for x in truth_output_files_exist_list) \
             and len(truth_output_files_exist_list) > 0:
-        truth_files_exist = False
+        truth_files_exist = True
     else:
         truth_input_files_exist_list = []
         for truth_file in truth_input_file_list:

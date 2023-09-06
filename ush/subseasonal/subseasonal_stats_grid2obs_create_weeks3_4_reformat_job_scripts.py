@@ -165,11 +165,11 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                 if write_job_cmds:
                     for cmd in verif_type_job_commands_list:
                         job.write(cmd+'\n')
-                    #if job_env_dict['SENDCOM'] == 'YES':
-                        #for truth_output_file_tuple \
-                                #in truth_copy_output_DATA2COMOUT_list:
-                            #job.write(f"cp -v {truth_output_file_tuple[0]} "
-                                      #+f"{truth_output_file_tuple[1]}\n")
+                    if job_env_dict['SENDCOM'] == 'YES':
+                        for truth_output_file_tuple \
+                                in truth_copy_output_DATA2COMOUT_list:
+                            job.write(f"cp -v {truth_output_file_tuple[0]} "
+                                      +f"{truth_output_file_tuple[1]}\n")
                 job.close()
                 date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
         # Create model job scripts
