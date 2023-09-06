@@ -65,10 +65,7 @@ export COMOUTplots=${COMOUTplots:-${COMOUT}/${RUN}.${VDATE}}
 export COMOUTheadline=${COMOUTheadline:-${COMOUT}/headline.${VDATE}}
 mkdir -m 775 -p $COMOUT $COMOUTplots $COMOUTheadline
 
-vfcst_ver=$(echo ${mod_ver} | cut -c1-2 )
-export fcst_input_ver=${fcst_input_ver:-${vfcst_ver}}
- 
-export KEEPDATA=${KEEPDATA:-YES}
+export KEEPDATA=${KEEPDATA:-NO}
 
 #######################################################################
 # Execute the script.
