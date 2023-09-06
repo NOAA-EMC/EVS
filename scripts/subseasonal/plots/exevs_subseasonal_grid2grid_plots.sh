@@ -101,6 +101,6 @@ fi
 
 # Clean up
 if [ $KEEPDATA != "YES" ]; then
-    cd $DATAROOTtmp
+    cd $DATAROOT
     rm -rf $DATA
 fi
