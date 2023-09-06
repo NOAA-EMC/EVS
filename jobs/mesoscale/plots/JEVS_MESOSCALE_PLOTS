@@ -29,7 +29,6 @@ cd $DATA
 # Set EVS directories
 ####################################
 export machine=${machine:-WCOSS2}
-export MET_bin_exec=${MET_bin_exec:-bin}
 export MET_PLUS_PATH=${MET_PLUS_PATH:-$METPLUS_PATH}
 export MET_PATH=$MET_ROOT
 export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
