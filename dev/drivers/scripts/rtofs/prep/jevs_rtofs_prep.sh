@@ -36,7 +36,6 @@ export COMINobs=/lfs/h1/ops/dev/dcom
 export COMINrtofs=/lfs/h1/ops/$envir/com/$COMPONENT/${rtofs_ver}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
 export COMOUTprep=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}/$STEP/$COMPONENT
-#export DATA=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver}
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/cdo_grids
 export USHevs=$HOMEevs/ush/$COMPONENT
