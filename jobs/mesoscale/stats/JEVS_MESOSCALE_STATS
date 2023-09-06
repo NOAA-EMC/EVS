@@ -29,11 +29,15 @@ echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 export PS4='$SECONDS + '
 date
 
+# LSF id (jobid) and Temp Directories
+export pid=$$
+export pgmout="OUTPUT.${pid}"
+
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
-export DATA=${DATA:-${DATAROOT}/${jobid:?}
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
 
