@@ -68,7 +68,8 @@ generate_stats_jobs_dict = {
                                                                   +"= fcst;'")},
                                  'commands': [sub_util.python_command(
                                                  'subseasonal_stats_'
-                                                 'grid2obs_create_weekly_avg.py',
+                                                 'grid2obs_create_weekly_'
+                                                 'avg.py',
                                                  ['TMP_ANOM_Z2',
                                                    os.path.join(
                                                        '$DATA',
@@ -123,7 +124,8 @@ generate_stats_jobs_dict = {
                                                                     +"= fcst;'")},
                                    'commands': [sub_util.python_command(
                                                    'subseasonal_stats_'
-                                                   'grid2obs_create_days6_10_avg.py',
+                                                   'grid2obs_create_days6_10_'
+                                                   'avg.py',
                                                    ['TMP_ANOM_Z2',
                                                      os.path.join(
                                                          '$DATA',
@@ -178,7 +180,8 @@ generate_stats_jobs_dict = {
                                                                     +"= fcst;'")},
                                    'commands': [sub_util.python_command(
                                                    'subseasonal_stats_'
-                                                   'grid2obs_create_weeks3_4_avg.py',
+                                                   'grid2obs_create_weeks3_4_'
+                                                   'avg.py',
                                                    ['TMP_ANOM_Z2',
                                                      os.path.join(
                                                          '$DATA',
@@ -321,7 +324,8 @@ if JOB_GROUP in ['assemble_data', 'generate_stats']:
                     # Do file checks
                     check_model_files = True
                     if check_model_files:
-                        model_files_exist, valid_date_fhr_list = (
+                        (model_files_exist, valid_date_fhr_list,
+                         model_copy_output_DATA2COMOUT_list) = (
                             sub_util.check_model_files(job_env_dict)
                         )
                         job_env_dict['fhr_list'] = (
@@ -352,6 +356,11 @@ if JOB_GROUP in ['assemble_data', 'generate_stats']:
                     if write_job_cmds:
                         for cmd in verif_type_job_commands_list:
                             job.write(cmd+'\n')
+                        if job_env_dict['SENDCOM'] == 'YES':
+                            for model_output_file_tuple \
+                                    in model_copy_output_DATA2COMOUT_list:
+                                job.write(f"cp -v {model_output_file_tuple[0]} "
+                                          +f"{model_output_file_tuple[1]}\n")
                     job.close()
                     job_env_dict.pop('fhr_list')
                     job_env_dict['fhr_start'] = fhr_start
