@@ -196,6 +196,11 @@ fi
 cd $plot_dir
 
 for stats in  acc crps rmse_spread me_mae ; do
+    if [ $stats = rmse_spread ]; then
+        evs_graphic_stats="rmse_sprd"
+    else
+        evs_graphic_stats=$stats
+    fi
     for var in tmp ugrd vgrd ; do
         if [ $var = tmp ] || [ $var = dpt ] ; then
 	    levels='2m 850mb'
@@ -234,9 +239,9 @@ for stats in  acc crps rmse_spread me_mae ; do
                     evs_graphic_domain=$domain
                 fi
                 if [ $domain = nhem ] || [ $domain = shem ] || [ $domain = tropics ] || [ $domain = alaska ]; then
-                    mv lead_average_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}.png  evs.naefs.${stats}.${var}_${level_new}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${evs_graphic_domain}.png
+                    mv lead_average_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}.png  evs.naefs.${evs_graphic_stats}.${var}_${level_new}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${evs_graphic_domain}.png
                 else
-                    mv lead_average_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}.png  evs.naefs.${stats}.${var}_${level_new}.last${past_days}days.fhrmean_valid00z_12z_f384.g212_${evs_graphic_domain}.png
+                    mv lead_average_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}.png  evs.naefs.${evs_graphic_stats}.${var}_${level_new}.last${past_days}days.fhrmean_valid00z_12z_f384.g212_${evs_graphic_domain}.png
                 fi
             done #domain
         done #level

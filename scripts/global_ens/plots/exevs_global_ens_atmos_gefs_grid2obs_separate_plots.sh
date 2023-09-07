@@ -320,15 +320,20 @@ for ihr in 00z 12z ; do
                 grid="g212"
             fi
             for stats in $stats_list ; do
+                if [ $stats = rmse_spread ]; then
+                    evs_graphic_stats="rmse_sprd"
+                else
+                    evs_graphic_stats=$stats
+                fi
                 for level in $levels ; do
                     if [ $level = '2m' ]; then
                         evs_graphic_level='z2'
                     elif [ $level = '10m' ]; then
                         evs_graphic_level='z10'
                     fi
-                    mv lead_average_regional_${domain}_init_${ihr}_${level}_${var}_${stats}.png  evs.global_ens.${stats}.${var}_${evs_graphic_level}.last${past_days}days.fhrmean_init${ihr}_f384.${grid}_${evs_graphic_domain}.png
+                    mv lead_average_regional_${domain}_init_${ihr}_${level}_${var}_${stats}.png  evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.fhrmean_init${ihr}_f384.${grid}_${evs_graphic_domain}.png
                     for lead in 120 240 360; do
-                        mv time_series_regional_${domain}_init_${ihr}_${level}_${var}_${stats}_f${lead}.png  evs.global_ens.${stats}.${var}_${evs_graphic_level}.last${past_days}days.timeseries_init${ihr}_f${lead}.${grid}_${evs_graphic_domain}.png
+                        mv time_series_regional_${domain}_init_${ihr}_${level}_${var}_${stats}_f${lead}.png  evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.timeseries_init${ihr}_f${lead}.${grid}_${evs_graphic_domain}.png
                     done #lead
                 done #level
             done #stats

@@ -185,6 +185,11 @@ fi
 cd $plot_dir
 
 for stats in acc me_mae crps rmse_spread ; do
+    if [ $stats = rmse_spread ]; then
+        evs_graphic_stats="rmse_sprd"
+    else
+        evs_graphic_stats=$stats
+    fi
     for domain in  nhem shem tropics  ; do
         for var in hgt tmp  ; do
             if [ $var = hgt ] ; then
@@ -196,7 +201,7 @@ for stats in acc me_mae crps rmse_spread ; do
             fi
             for level in $levels ; do
                 plevel=p${level}
-                mv lead_average_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}.png  evs.naefs.${stats}.${var}_${plevel}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${domain}.png
+                mv lead_average_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}.png  evs.naefs.${evs_graphic_stats}.${var}_${plevel}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${domain}.png
             done #level
         done #var
     done  #domain

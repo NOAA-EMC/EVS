@@ -212,15 +212,15 @@ cd $plot_dir
 for var in weasd snod; do
     for domain in conus conus_east conus_west conus_south conus_central ; do
         if [ $domain = conus_east ]; then
-            evs_graphic_domain="conus_e"
+            evs_graphic_domain="buk_conus_e"
         elif [ $domain = conus_west ]; then
-            evs_graphic_domain="conus_w"
+            evs_graphic_domain="buk_conus_w"
         elif [ $domain = conus_south ]; then
-            evs_graphic_domain="conus_s"
+            evs_graphic_domain="buk_conus_s"
         elif [ $domain = conus_central ]; then
-            evs_graphic_domain="conus_c"
-        else
-            evs_graphic_domain=$domain
+            evs_graphic_domain="buk_conus_c"
+        elif [ $domain = conus ]; then
+            evs_graphic_domain="buk_conus"
         fi
         for stats in  crps ets fbias fss ; do
             if [ $stats = crps ]; then

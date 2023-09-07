@@ -179,6 +179,11 @@ fi
 cd $plot_dir
 
 for stats in rmse_spread me ; do
+    if [ $stats = rmse_spread ]; then
+        evs_graphic_stats="rmse_sprd"
+    else
+        evs_graphic_stats=$stats
+    fi
     for domain in g003 nhem shem tropics conus ; do
         if [ $domain = g003 ] ; then
             domain_new=glb
@@ -195,9 +200,9 @@ for stats in rmse_spread me ; do
             fi
             for level in $levels ; do
                 plevel=p${level}
-                mv lead_average_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}.png  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${domain_new}.png
+                mv lead_average_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}.png  evs.global_ens.${evs_graphic_stats}.${var}_${plevel}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${domain_new}.png
                 for lead in 120 240 360; do
-                    mv time_series_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}_f${lead}.png  evs.global_ens.${stats}.${var}_${plevel}.last${past_days}days.timeseries_valid00z_12z_f${lead}.g003_${domain_new}.png
+                    mv time_series_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}_f${lead}.png  evs.global_ens.${evs_graphic_stats}.${var}_${plevel}.last${past_days}days.timeseries_valid00z_12z_f${lead}.g003_${domain_new}.png
                 done #lead
             done #level
         done #var

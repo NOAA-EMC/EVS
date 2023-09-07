@@ -168,6 +168,11 @@ fi
 cd $plot_dir
 
 for stats in rmse_spread me ; do
+    if [ $stats = rmse_spread ]; then
+        evs_graphic_stats="rmse_sprd"
+    else
+        evs_graphic_stats=$stats
+    fi
     for domain in g003 nhem shem tropics conus ; do
         if [ $domain = g003 ] ; then
             domain_new=glb
@@ -180,7 +185,7 @@ for stats in rmse_spread me ; do
             leads="0 12 24 36 48 60 72 84 96 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384"
             for lead in $leads ; do
                 lead_new=$(printf "%03d" "${lead}")
-                mv stat_by_level_regional_${domain}_valid_12z_${var}_${stats}_f${lead}.png  evs.global_ens.${stats}.${var}_all.last${past_days}days.vertprof_valid12z_f${lead_new}.g003_${domain_new}.png
+                mv stat_by_level_regional_${domain}_valid_12z_${var}_${stats}_f${lead}.png  evs.global_ens.${evs_graphic_stats}.${var}_all.last${past_days}days.vertprof_valid12z_f${lead_new}.g003_${domain_new}.png
             done #lead
         done #var
     done  #domain

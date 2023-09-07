@@ -229,6 +229,11 @@ for var in prmsl tmp dpt ugrd vgrd rh; do
             domain_new=$domain
         fi
         for stats in $stats_list ; do
+            if [ $stats = rmse_spread ]; then
+                evs_graphic_stats="rmse_sprd"
+            else
+                evs_graphic_stats=$stats
+            fi
             for level in $levels ; do
                 if [ $level = '2m' ]; then
                     evs_graphic_level='z2'
@@ -238,15 +243,15 @@ for var in prmsl tmp dpt ugrd vgrd rh; do
                     evs_graphic_level=$level
                 fi
                 if [ $var = prmsl ] ; then
-                    mv lead_average_regional_${domain}_valid_00z_12z_${var}_${stats}.png evs.global_ens.${stats}.${var}_${evs_graphic_level}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${domain_new}.png
+                    mv lead_average_regional_${domain}_valid_00z_12z_${var}_${stats}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${domain_new}.png
                 else
-                    mv lead_average_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}.png evs.global_ens.${stats}.${var}_${evs_graphic_level}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${domain_new}.png
+                    mv lead_average_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${domain_new}.png
                 fi
                 for lead in 120 240 360; do
                     if [ $var = prmsl ] ; then
-                        mv time_series_regional_${domain}_valid_00z_12z_${var}_${stats}_f${lead}.png evs.global_ens.${stats}.${var}_${evs_graphic_level}.last${past_days}days.timeseries_valid00z_12z_f${lead}.g003_${domain_new}.png
+                        mv time_series_regional_${domain}_valid_00z_12z_${var}_${stats}_f${lead}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.timeseries_valid00z_12z_f${lead}.g003_${domain_new}.png
                     else
-                        mv time_series_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}_f${lead}.png evs.global_ens.${stats}.${var}_${evs_graphic_level}.last${past_days}days.timeseries_valid00z_12z_f${lead}.g003_${domain_new}.png
+                        mv time_series_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}_f${lead}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.timeseries_valid00z_12z_f${lead}.g003_${domain_new}.png
                     fi
                 done #lead
             done #level
