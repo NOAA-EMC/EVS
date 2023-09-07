@@ -18,6 +18,8 @@ print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
 DATA = os.environ['DATA']
+COMOUT = os.environ['COMOUT']
+SENDCOM = os.environ['SENDCOM']
 RUN = os.environ['RUN']
 NET = os.environ['NET']
 VERIF_CASE = os.environ['VERIF_CASE']
@@ -79,6 +81,40 @@ while valid_date_dt <= ENDDATE_dt and fhr <= fhr_end:
         file_format, valid_date_dt, init_date_dt, str(fhr), {}
     )
     if os.path.exists(input_file):
+        output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP,
+                                  'METplus_output',
+                                  RUN+'.'
+                                  +ENDDATE_dt.strftime('%Y%m%d'),
+                                  MODEL, VERIF_CASE)
+        output_DATA_file = os.path.join(output_dir, 'anomaly_'
+                                        +VERIF_TYPE+'_'+job_name+'_init'
+                                        +init_date_dt.strftime('%Y%m%d%H')+'_'
+                                        +'fhr'+str(fhr).zfill(3)+'.stat')
+        output_COMOUT_file = os.path.join(COMOUT, RUN+'.'
+                                          +ENDDATE_dt.strftime('%Y%m%d'),
+                                          MODEL, VERIF_CASE, 'anomaly_'
+                                          +VERIF_TYPE+'_'+job_name+'_init'
+                                          +init_date_dt.strftime('%Y%m%d%H')+'_'
+                                          +'fhr'+str(fhr).zfill(3)+'.stat')
+        if os.path.exists(output_COMOUT_file):
+            make_anomaly_output_file = False
+            sub_util.copy_file(output_COMOUT_file, output_DATA_file)
+        else:
+            if not os.path.exists(output_DATA_file):
+                make_anomaly_output_file = True
+            else:
+                make_anomaly_output_file = False
+                print(f"DATA Output File exists: {output_DATA_file}")
+                if SENDCOM == 'YES' \
+                        and sub_util.check_file_size_exists(
+                            output_DATA_file
+                        ):
+                    sub_util.copy_file(output_DATA_file,
+                                       output_COMOUT_file)
+    else:
+        print(f"\nWARNING: {input_file} does not exist")
+        make_anomaly_output_file = False
+    if make_anomaly_output_file:
         print("\nInput file: "+input_file)
         with open(input_file, 'r') as infile:
             input_file_header = infile.readline()
@@ -109,22 +145,13 @@ while valid_date_dt <= ENDDATE_dt and fhr <= fhr_end:
         output_file_df['OBS'] = obs_anom_var_level
         output_file_df['FCST_VAR'] = var+'_ANOM'
         output_file_df['OBS_VAR'] = var+'_ANOM'
-        output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP,
-                                  'METplus_output',
-                                  RUN+'.'
-                                  +ENDDATE_dt.strftime('%Y%m%d'),
-                                  MODEL, VERIF_CASE)
-        output_file = os.path.join(output_dir, 'anomaly_'
-                                   +VERIF_TYPE+'_'+job_name+'_init'
-                                   +init_date_dt.strftime('%Y%m%d%H')+'_'
-                                   +'fhr'+str(fhr).zfill(3)+'.stat')
-        print("Output File: "+output_file)
-        if os.path.exists(output_file):
-            os.remove(output_file)
-        output_file_df.to_csv(output_file, header=input_file_header,
+        print(f"DATA Output File: {output_DATA_file}")
+        print(f"COMOUT Output File: {output_COMOUT_file}")
+        output_file_df.to_csv(output_DATA_file, header=input_file_header,
                               index=None, sep=' ', mode='w')
-    else:
-        print("\nWARNING: "+input_file+" does not exist")
+        if SENDCOM == 'YES' \
+                and sub_util.check_file_exists_size(output_DATA_file):
+            sub_util.copy_file(output_DATA_file, output_COMOUT_file)
     valid_date_dt = valid_date_dt + datetime.timedelta(hours=int(valid_hr_inc))
     fhr+=int(valid_hr_inc)
 
