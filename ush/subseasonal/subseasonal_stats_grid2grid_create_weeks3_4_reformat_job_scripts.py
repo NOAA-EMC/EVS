@@ -271,7 +271,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                     write_job_cmds = False
                     check_model_files = True
                     if check_model_files:
-                        model_files_exist, valid_date_fhr_list = (
+                        (model_files_exist, valid_date_fhr_list,
+                         model_copy_output_DATA2COMOUT_list) = (
                             sub_util.check_weeks3_4_model_files(job_env_dict)
                         )
                         job_env_dict['fhr_list'] = (
@@ -290,7 +291,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                     elif JOB_GROUP == 'assemble_data':
                         check_truth_files = False
                     if check_truth_files:
-                        all_truth_file_exist = (
+                        (all_truth_file_exist,
+                         truth_copy_output_DATA2COMOUT_list) = (
                             sub_util.check_weeks3_4_truth_files(job_env_dict)
                         )
                         if model_files_exist and all_truth_file_exist:
