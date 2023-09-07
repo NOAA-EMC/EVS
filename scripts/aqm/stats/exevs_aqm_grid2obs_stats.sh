@@ -2,7 +2,7 @@
 #######################################################################
 ##  UNIX Script Documentation Block
 ##                      .
-## Script name:         exevs_aqmv6_stats.sh
+## Script name:         exevs_aqmv_grid2obs_stats.sh
 ## Script description:  Perform MetPlus PointStat of Air Quality Model.
 ## Original Author   :  Perry Shafran
 ##
@@ -31,14 +31,8 @@ fi
 ## Note the v6 and v7 comout directory structure are different
 ## Check for correct scripts called
 ##
-##if [ "${fcst_input_ver}" == "v6" ]; then
     export dirname=cs
     export gridspec=148
-##elif [ "${fcst_input_ver}" == "v7" ]; then
-##    echo "EVS_CHECK :: This script exevs_aqmv6_stats.sh is not for ${fcst_input_ver}"
-##else
-##    echo "EVS_CHECK :: The AQM version number is not defined :: ${fcst_input_ver}"
-##fi
 export fcstmax=72
 #
 ## export MASK_DIR is declared in the ~/EVS/jobs/aqm/stats/JEVS_AQM_STATS 
@@ -141,7 +135,7 @@ do
           let "numpmfcst=numpmfcst+1"
         else
           export subject="t${acyc}z pm25${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
-          echo "Warning: No AQM awpozcon${bctag} forecast was available for ${aday} t${acyc}z" > mailmsg
+          echo "Warning: No AQM pm${bctag} forecast was available for ${aday} t${acyc}z" > mailmsg
           echo "Missing file is ${fcst_file}" >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
           cat mailmsg | mail -s "$subject" $maillist
