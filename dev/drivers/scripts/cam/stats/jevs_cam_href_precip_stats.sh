@@ -35,7 +35,7 @@ export COMIN=$COMROOT
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks
 export MASKS=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
-export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs/tmpnwprd
+export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 

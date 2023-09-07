@@ -44,11 +44,11 @@ export envir=prod
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
-export KEEPDATA=${KEEPDATA:-YES}
+export KEEPDATA=${KEEPDATA:-NO}
 
 
 ## developers directories
-export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_output
+export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export OUTPUTROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}
