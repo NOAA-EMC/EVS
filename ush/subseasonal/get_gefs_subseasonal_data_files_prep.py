@@ -247,7 +247,7 @@ if STEP == 'prep':
     end_hr = os.environ[make_met_data_by.lower()+'_hr_end']
     hr_inc = os.environ[make_met_data_by.lower()+'_hr_inc']
     fhr_list = os.environ['fhr_list'
-    ].split(', ')
+    ].split(',')
     # Get date and time information
     time_info_dict = get_time_info(
         start_date, end_date, start_hr,

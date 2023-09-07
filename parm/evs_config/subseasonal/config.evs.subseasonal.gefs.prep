@@ -29,8 +29,7 @@ export model_file_format_list="{init?fmt=%2H}/atmos"
 export gefs_file_type="pgrb2a pgrb2b"
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory
-export OUTPUTROOT="$DATAROOTtmp/$STEP"
-#export OUTPUTROOT="/lfs/h1/ops/prod/com/$NET/$evs_ver/$STEP"
+export OUTPUTROOT="$DATAROOT/$STEP"
 ## DATE SETTINGS
 #start_date:       verification start date, format YYYYMMDD
 #end_date:         verification end date, format YYYYMMDD
