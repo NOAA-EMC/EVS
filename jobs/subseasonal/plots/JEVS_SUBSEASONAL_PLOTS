@@ -29,7 +29,6 @@ export SENDDBN_NTC=${SENDDBN_NTC:-NO}
 ################################################################
 # Specify Execution Areas
 ################################################################
-export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
