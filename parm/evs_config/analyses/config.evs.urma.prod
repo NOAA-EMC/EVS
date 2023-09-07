@@ -39,7 +39,7 @@ export start_date=$yday
 export end_date=$yday
 ## DATA DIRECTIVE SETTINGS
 export KEEPDATA="NO"
-export SENDCOM="NO"
+export SENDCOM="YES"
 export SENDARCH="NO"
 export SENDMETVIEWER="NO"
 ####################################################
