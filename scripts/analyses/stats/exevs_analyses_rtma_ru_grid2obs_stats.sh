@@ -78,7 +78,10 @@ run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointSta
 export err=$?; err_chk
 
 mkdir -p $COMOUTsmall
-cp $DATA/point_stat/${MODELNAME}${typtag}/* $COMOUTsmall
+
+if [ $SENDCOM = YES ]; then
+ cp $DATA/point_stat/${MODELNAME}${typtag}/* $COMOUTsmall
+fi
 
 else
   echo "NO RTMA-RU OR OBS DATA, METplus will not run."
