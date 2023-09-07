@@ -100,28 +100,10 @@ for stats in csi_fbias ets_fbias ratio_pod_csi ; do
 	  FCST_LEVEL_values="ML"
        fi 	  
 
-       if [ $VAR = CAPEsfc ] || [ $VAR = MLCAPE ] ; then 
-	   doms="dom1 dom2 dom3 dom4 dom5"
-       else
-	   doms="dom1 dom2 dom3 dom4 dome5 dom6 dom7 dom8"
-       fi 
+       doms="dom1 dom2 dom3 dom4 dome5 dom6 dom7 dom8"
 
        for dom in $doms ; do 
 
-       if [ $VAR = CAPEsfc ] || [ $VAR = MLCAPE ] ; then
-
-	 if [ $dom = dom1 ] ; then      
-             VX_MASK_LIST="CONUS, CONUS_East, CONUS_West"
-	 elif [ $dom = dom2 ] ; then
-	      VX_MASK_LIST="CONUS_South, CONUS_Central,  Appalachia"
-	 elif [ $dom = dom3 ] ; then
-	      VX_MASK_LIST="DeepSouth, GreatBasin, Mezquital"
-	 elif [ $dom = dom4 ] ; then
-	      VX_MASK_LIST="MidAtlantic,  PacificNW"
-	 elif [ $dom = dom5 ] ; then
-              VX_MASK_LIST="Southeast, SPlains"
-	 fi
-       else
 	 if [ $dom = dom1 ] ; then
             VX_MASK_LIST="CONUS, CONUS_East, CONUS_West"
          elif [ $dom = dom2 ] ; then
@@ -139,9 +121,8 @@ for stats in csi_fbias ets_fbias ratio_pod_csi ; do
 	 elif [ $dom = dom8 ] ; then
             VX_MASK_LIST="Southwest, SPlains"
 	 fi
-       fi
 
-     for FCST_LEVEL_value in $FCST_LEVEL_values ; do 
+      for FCST_LEVEL_value in $FCST_LEVEL_values ; do 
 
         OBS_LEVEL_value=$FCST_LEVEL_value
 
@@ -226,7 +207,7 @@ chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 656 -ppn 72 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 704 -ppn 82 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi
