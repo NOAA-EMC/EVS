@@ -702,12 +702,13 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         np.digitize(x_range, x_range_categories[:-1])
     ]
     xlim_min = np.floor(x_min/round_to_nearest)*round_to_nearest
-    xlim_max = np.ceil(x_max/round_to_nearest)*round_to_nearest
+    xlim_max = round(np.ceil(x_max/round_to_nearest)*round_to_nearest, len(str(round_to_nearest))-1)
     if len(str(xlim_min)) > 5 and np.abs(xlim_min) < 1.:
         xlim_min = float(
             np.format_float_scientific(xlim_min, unique=False, precision=3)
         )
-    xticks = np.arange(xlim_min, xlim_max+round_to_nearest, round_to_nearest)
+    xticks_og = np.arange(xlim_min, xlim_max+round_to_nearest, round_to_nearest)
+    xticks = [round(xtick,len(str(round_to_nearest))-1) for xtick in xticks_og]
     if any([len(str(xtick)) > 5 and np.abs(xtick) < 1. for xtick in xticks]):
         xtick_labels = []
         for xtick in xticks:
