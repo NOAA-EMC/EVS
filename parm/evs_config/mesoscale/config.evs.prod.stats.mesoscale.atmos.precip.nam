@@ -11,11 +11,6 @@
 
 echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 
-# Logging
-export METPLUS_VERBOSITY="DEBUG"
-export MET_VERBOSITY="2"
-export LOG_MET_OUTPUT_TO_METPLUS="yes"
-
 # Time Settings
 export VHOUR_LIST="$cyc"
 export CYC_LIST="00 06 12 18"
