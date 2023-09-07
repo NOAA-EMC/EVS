@@ -1157,9 +1157,9 @@ class PlotSpecs:
             'model1': {'color': '#000000',
                        'marker': 'o', 'markersize': 6,
                        'linestyle': 'solid', 'linewidth': 3},
-            'model2': {'color': '#fb2020',
-                       'marker': '^', 'markersize': 7,
-                       'linestyle': 'solid', 'linewidth': 1.5},
+            'model2': {'color': '#56b4e9',
+                       'marker': 'o', 'markersize': 6,
+                       'linestyle': 'solid', 'linewidth': 3},
             'model3': {'color': '#1e3cff',
                        'marker': 'X', 'markersize': 7,
                        'linestyle': 'solid', 'linewidth': 1.5},
@@ -1187,9 +1187,6 @@ class PlotSpecs:
             'obs': {'color': '#aaaaaa',
                     'marker': 'None', 'markersize': 0,
                     'linestyle': 'solid', 'linewidth': 2},
-            #'cfs': {'color': '#56b4e9',
-                    #'marker': 'o', 'markersize': 6,
-                    #'linestyle': 'solid', 'linewidth': 1.5},
         }
         return model_plot_settings_dict
 

@@ -18,6 +18,8 @@ print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
 DATA = os.environ['DATA']
+COMOUT = os.environ['COMOUT']
+SENDCOM = os.environ['SENDCOM']
 RUN = os.environ['RUN']
 NET = os.environ['NET']
 VERIF_CASE = os.environ['VERIF_CASE']
@@ -85,16 +87,23 @@ while valid_hr <= int(valid_hr_end):
         days_avg_day_init = (days_avg_valid_end
                              - datetime.timedelta(days=days_avg_day))
         days_avg_day_fhr = days_avg_day_fhr_start
-        output_file = os.path.join(output_dir, 'days6_10_avg_'
-                                   +VERIF_TYPE+'_'+job_name+'_init'
-                                   +days_avg_day_init.strftime('%Y%m%d%H')
-                                   +'_valid'
-                                   +days_avg_valid_start\
-                                   .strftime('%Y%m%d%H')+'to'
-                                   +days_avg_valid_end\
-                                   .strftime('%Y%m%d%H')+'.stat')
-        if os.path.exists(output_file):
-            os.remove(output_file)
+        output_DATA_file = os.path.join(output_dir, 'days6_10_avg_'
+                                        +VERIF_TYPE+'_'+job_name+'_init'
+                                        +days_avg_day_init.strftime('%Y%m%d%H')
+                                        +'_valid'
+                                        +days_avg_valid_start\
+                                        .strftime('%Y%m%d%H')+'to'
+                                        +days_avg_valid_end\
+                                        .strftime('%Y%m%d%H')+'.stat')
+        output_COMOUT_file = os.path.join(COMOUT, RUN+'.'+DATE, MODEL,
+                                          VERIF_CASE, 'days6_10_avg_'
+                                          +VERIF_TYPE+'_'+job_name+'_init'
+                                          +days_avg_day_init.strftime('%Y%m%d%H')
+                                          +'_valid'
+                                          +days_avg_valid_start\
+                                          .strftime('%Y%m%d%H')+'to'
+                                          +days_avg_valid_end\
+                                          .strftime('%Y%m%d%H')+'.stat')
         while days_avg_day_fhr <= days_avg_day_fhr_end:
             days_avg_day_fhr_valid = (
                 days_avg_day_init
@@ -131,8 +140,28 @@ while valid_hr <= int(valid_hr_end):
                       +days_avg_day_fhr_COMIN_input_file)
             days_avg_day_fhr+=12
         days_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
-        if len(days_avg_file_list) >= 9:
-            print("Output File: "+output_file)
+        if os.path.exists(output_COMOUT_file):
+            sub_util.copy_file(output_COMOUT_file, output_DATA_file)
+            make_days_avg_output_file = False
+        else:
+            if len(days_avg_file_list) >= 9:
+                if not os.path.exists(output_DATA_file):
+                    make_days_avg_output_file = True
+                else:
+                    make_days_avg_output_file = False
+                    print(f"DATA Output File exist: {output_DATA_file}")
+                    if SENDCOM == 'YES' \
+                            and sub_util.check_file_exists_size(
+                                output_DATA_file
+                            ):
+                        sub_util.copy_file(output_DATA_file,
+                                           output_COMOUT_file)
+            else:
+                print("WARNING: Need at least 9 files to create Days 6-10 average")
+                make_days_avg_output_file = False
+        if make_days_avg_output_file:
+            print(f"DATA Output File: {output_DATA_file}")
+            print(f"COMOUT Output File: {output_COMOUT_file}")
             all_days_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
             for days_avg_file in days_avg_file_list:
                 with open(days_avg_file, 'r') as infile:
@@ -213,11 +242,12 @@ while valid_hr <= int(valid_hr_end):
                             ignore_index=True
                         )
             days_avg_df.to_csv(
-                output_file, header=input_file_header,
+                output_DATA_file, header=input_file_header,
                 index=None, sep=' ', mode='w'
             )
-        else:
-            print("WARNING: Need at least 9 files to create Days 6-10 average")
+            if SENDCOM == 'YES' \
+                    and sub_util.check_file_exists_size(output_DATA_file):
+                sub_util.copy_file(output_DATA_file, output_COMOUT_file)
         print("")
         days_avg_day+=1
     valid_hr+=int(valid_hr_inc)

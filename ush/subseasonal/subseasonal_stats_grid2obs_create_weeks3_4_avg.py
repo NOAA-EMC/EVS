@@ -18,6 +18,8 @@ print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
 DATA = os.environ['DATA']
+COMOUT = os.environ['COMOUT']
+SENDCOM = os.environ['SENDCOM']
 RUN = os.environ['RUN']
 NET = os.environ['NET']
 VERIF_CASE = os.environ['VERIF_CASE']
@@ -85,16 +87,23 @@ while valid_hr <= int(valid_hr_end):
         weeks_avg_day_init = (weeks_avg_valid_end
                               - datetime.timedelta(days=weeks_avg_day))
         weeks_avg_day_fhr = weeks_avg_day_fhr_start
-        output_file = os.path.join(output_dir, 'weeks3_4_avg_'
-                                   +VERIF_TYPE+'_'+job_name+'_init'
-                                   +weeks_avg_day_init.strftime('%Y%m%d%H')
-                                   +'_valid'
-                                   +weeks_avg_valid_start\
-                                   .strftime('%Y%m%d%H')+'to'
-                                   +weeks_avg_valid_end\
-                                   .strftime('%Y%m%d%H')+'.stat')
-        if os.path.exists(output_file):
-            os.remove(output_file)
+        output_DATA_file = os.path.join(output_dir, 'weeks3_4_avg_'
+                                        +VERIF_TYPE+'_'+job_name+'_init'
+                                        +weeks_avg_day_init.strftime('%Y%m%d%H')
+                                        +'_valid'
+                                        +weeks_avg_valid_start\
+                                        .strftime('%Y%m%d%H')+'to'
+                                        +weeks_avg_valid_end\
+                                        .strftime('%Y%m%d%H')+'.stat')
+        output_COMOUT_file = os.path.join(COMOUT, RUN+'.'+DATE, MODEL,
+                                          VERIF_CASE, 'weeks3_4_avg_'
+                                          +VERIF_TYPE+'_'+job_name+'_init'
+                                          +weeks_avg_day_init.strftime('%Y%m%d%H')
+                                          +'_valid'
+                                          +weeks_avg_valid_start\
+                                          .strftime('%Y%m%d%H')+'to'
+                                          +weeks_avg_valid_end\
+                                          .strftime('%Y%m%d%H')+'.stat')
         while weeks_avg_day_fhr <= weeks_avg_day_fhr_end:
             weeks_avg_day_fhr_valid = (
                 weeks_avg_day_init
@@ -131,8 +140,28 @@ while valid_hr <= int(valid_hr_end):
                       +weeks_avg_day_fhr_COMIN_input_file)
             weeks_avg_day_fhr+=12
         weeks_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
-        if len(weeks_avg_file_list) >= 23:
-            print("Output File: "+output_file)
+        if os.path.exists(output_COMOUT_file):
+            sub_util.copy_file(output_COMOUT_file, output_DATA_file)
+            make_weeks_avg_output_file = False
+        else:
+            if len(weeks_avg_file_list) >= 23:
+                if not os.path.exists(output_DATA_file):
+                    make_weeks_avg_output_file = True
+                else:
+                    make_weeks_avg_output_file = False
+                    print(f"DATA Output File exist: {output_DATA_file}")
+                    if SENDCOM == 'YES' \
+                            and sub_util.check_file_exists_size(
+                                output_DATA_file
+                            ):
+                        sub_util.copy_file(output_DATA_file,
+                                           output_COMOUT_file)
+            else:
+                print("WARNING: Need at least 23 files to create Weeks 3-4 average")
+                make_weeks_avg_output_file = False
+        if make_weeks_avg_output_file:
+            print(f"DATA Output File: {output_DATA_file}")
+            print(f"COMOUT Output File: {output_COMOUT_file}")
             all_weeks_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
             for weeks_avg_file in weeks_avg_file_list:
                 with open(weeks_avg_file, 'r') as infile:
@@ -213,11 +242,12 @@ while valid_hr <= int(valid_hr_end):
                             ignore_index=True
                         )
             weeks_avg_df.to_csv(
-                output_file, header=input_file_header,
+                output_DATA_file, header=input_file_header,
                 index=None, sep=' ', mode='w'
             )
-        else:
-            print("WARNING: Need at least 23 files to create Weeks 3-4 average")
+            if SENDCOM == 'YES' \
+                    and sub_util.check_file_exists_size(output_DATA_file):
+                sub_util.copy_file(output_DATA_file, output_COMOUT_file)
         print("")
         weeks_avg_day+=1
     valid_hr+=int(valid_hr_inc)

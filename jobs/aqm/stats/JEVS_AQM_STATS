@@ -72,7 +72,7 @@ export COMOUTfinal=${COMOUTfinal:-${COMOUT}/${MODELNAME}.${VDATE}}
 # alternative choice is dan option different from aqons
 export airnow_hourly_type=${airnow_hourly_type:-aqobs}
 
-export KEEPDATA=${KEEPDATA:-YES}
+export KEEPDATA=${KEEPDATA:-NO}
 
 #######################################################################
 # Execute the script.

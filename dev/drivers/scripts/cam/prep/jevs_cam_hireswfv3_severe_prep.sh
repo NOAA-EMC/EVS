@@ -40,7 +40,7 @@ export cyc=${cyc:-${cyc}}
 ############################################################
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=YES
+export KEEPDATA=NO
 export VERIF_CASE=severe
 export MODELNAME=hireswfv3
 export modsys=hiresw
