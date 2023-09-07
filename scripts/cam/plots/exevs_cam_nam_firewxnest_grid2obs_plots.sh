@@ -38,8 +38,8 @@ while [ $DATE -ge $ENDDATE ]; do
 	mv $STATDIR/temp3.stat $STATDIR/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat
 	rm -f $STATDIR/temp*stat
 
-	cp /lfs/h2/emc/vpppg/noscrub/perry.shafran/evs/v1.0/stats/cam/namnest.$DAY/evs.stats.namnest.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
-	cp /lfs/h2/emc/vpppg/noscrub/perry.shafran/evs/v1.0/stats/cam/hrrr.$DAY/evs.stats.hrrr.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+	cp $COMIN/stats/$COMPONENT/namnest.$DAY/evs.stats.namnest.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+	cp $COMIN/stats/$COMPONENT/hrrr.$DAY/evs.stats.hrrr.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
 
 	DATE=`$NDATE -24 $DATE`
 
