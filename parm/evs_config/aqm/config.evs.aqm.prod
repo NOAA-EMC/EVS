@@ -38,7 +38,7 @@ export end_date=$VDATE
 #log_met_output_to_metplus: log MET output to METplus log, yes or no
 ## DATA DIRECTIVE SETTINGS
 export KEEPDATA="NO"
-export SENDCOM="NO"
+export SENDCOM="YES"
 export SENDARCH="NO"
 ####################################################
 # SETTINGS FOR SPECIFIC USE CASES
