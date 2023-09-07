@@ -20,7 +20,7 @@ export ndate=$NDATE
 if [ $modnam = gefs_bc ] ; then
 
   cd $WORK
-  total=20
+  total=${gefs_number}
 
    export outdata=$COMOUT_gefs_bc
 
