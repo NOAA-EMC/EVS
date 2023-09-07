@@ -173,7 +173,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                     write_job_cmds = False
                     check_model_files = True
                     if check_model_files:
-                        model_files_exist, valid_date_fhr_list = (
+                        (model_files_exist, valid_date_fhr_list,
+                         model_copy_output_DATA2COMOUT_list) = (
                             sub_util.check_monthly_model_files(job_env_dict)
                         )
                         job_env_dict['fhr_list'] = (

@@ -146,7 +146,6 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                 job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
                 for model_idx in range(len(model_list)):
                     job_env_dict['MODEL'] = model_list[model_idx]
-                    #njobs+=1
                     njobs = (int(njobs) + 1)
                     # Create job file
                     job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
@@ -162,7 +161,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                     write_job_cmds = False
                     check_model_files = True
                     if check_model_files:
-                        model_files_exist, valid_date_fhr_list = (
+                        (model_files_exist, valid_date_fhr_list,
+                         model_copy_output_DATA2COMOUT_list) = (
                             sub_util.check_daily_model_files(job_env_dict)
                         )
                         job_env_dict['fhr_list'] = (
