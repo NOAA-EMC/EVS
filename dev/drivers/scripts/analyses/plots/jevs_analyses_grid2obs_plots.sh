@@ -47,7 +47,7 @@ export jobid=$job.${PBS_JOBID:-$$}
 
 export VDATE=$(date --date="2 days ago" +%Y%m%d)
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/${NET}/${evs_ver}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMINanl=${COMIN}/stats/${COMPONENT}
 export COMOUTplots=${COMOUT}/plots/${COMPONENT}/${RUN}.${VDATE}
