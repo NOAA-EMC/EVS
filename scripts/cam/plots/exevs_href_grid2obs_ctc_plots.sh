@@ -73,8 +73,8 @@ for stats in csi_fbias ets_fbias ratio_pod_csi ; do
     score_types='lead_average threshold_average'
  elif [ $stats = ratio_pod_csi ] ; then
     stat_list='sratio, pod, csi'
-    #VARs='VISsfc HGTcldceil CAPEsfc TCDC MLCAPE'
-    VARs='VISsfc HGTcldceil TCDC'
+    VARs='VISsfc HGTcldceil CAPEsfc TCDC MLCAPE'
+    #VARs='VISsfc HGTcldceil TCDC'
     score_types='performance_diagram'   
  else
   echo $stats is wrong stat
@@ -118,7 +118,7 @@ for stats in csi_fbias ets_fbias ratio_pod_csi ; do
 	      VX_MASK_LIST="DeepSouth, GreatBasin, Mezquital"
 	 elif [ $dom = dom4 ] ; then
 	      VX_MASK_LIST="MidAtlantic,  PacificNW"
-	 elif [ $dom = dom4 ] ; then
+	 elif [ $dom = dom5 ] ; then
               VX_MASK_LIST="Southeast, SPlains"
 	 fi
        else
@@ -226,7 +226,7 @@ chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 576 -ppn 72 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 656 -ppn 72 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi
@@ -244,7 +244,7 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
     new_domain=buk_${domain}
  fi
 
- for var in vis hgt tcdc ; do
+ for var in vis hgt tcdc cape mlcape; do
   if [ $var = vis ] ; then
     var_new=$var
     level=l0
@@ -254,6 +254,12 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
   elif [ $var = tcdc ] ; then
     var_new=cloud
     level=l0
+  elif [ $var = cape ] ; then
+    var_new=cape
+    level=l0
+  elif [ $var = mlcape ] ; then
+    var_new=mlcape
+    level=ml
   fi
 
   mv performance_diagram_regional_${domain}_valid_${valid}_${var}_*.png evs.href.ctc.${var_new}_${level}.last${past_days}days.perfdiag_valid_${valid}.${new_domain}.png
@@ -266,7 +272,7 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
 
  for score_type in lead_average threshold_average; do
 
-  for var in vis hgt cape tcdc mlcape ; do
+  for var in vis hgt tcdc ; do
    if [ $var = vis ] ; then
        var_new=$var
        level=l0
