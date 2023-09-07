@@ -63,7 +63,6 @@ for valid_time in 00 12 ; do
    stat_list=$stats
    VARs='CAPEsfc MLCAPE'
    score_types='lead_average threshold_average'
-   #score_types='lead_average'
 
   for score_type in $score_types ; do
  
@@ -99,21 +98,30 @@ for valid_time in 00 12 ; do
        fi 	  
 
        if [ $VAR = CAPEsfc ] || [ $VAR = MLCAPE ] ; then 
-	   doms="dom1 dom2 dom3"
+           doms="dom1 dom2 dom3 dom4 dome5 dom6 dom7 dom8"
        fi 
 
        for dom in $doms ; do 
 
-       if [ $VAR = CAPEsfc ] || [ $VAR = MLCAPE ] ; then
-
-	 if [ $dom = dom1 ] ; then      
-             VX_MASK_LIST="CONUS, CONUS_East, CONUS_West, CONUS_South, CONUS_Central"
-	 elif [ $dom = dom2 ] ; then
-	      VX_MASK_LIST="Appalachia, DeepSouth, GreatBasin, Mezquital"
-	 elif [ $dom = dom3 ] ; then
-	      VX_MASK_LIST="MidAtlantic,  PacificNW, Southeast, SPlains"
-	 fi
-       fi
+         if [ $VAR = CAPEsfc ] || [ $VAR = MLCAPE ] ; then
+	     if [ $dom = dom1 ] ; then
+	         VX_MASK_LIST="CONUS, CONUS_East, CONUS_West"
+	     elif [ $dom = dom2 ] ; then
+	         VX_MASK_LIST="CONUS_South, CONUS_Central, Alaska"
+	     elif [ $dom = dom3 ] ; then
+	         VX_MASK_LIST="Appalachia, CPlains, DeepSouth"
+	     elif [ $dom = dom4 ] ; then
+	         VX_MASK_LIST="GreatBasin, GreatLakes, Mezquital"
+	     elif [ $dom = dom5 ] ; then
+	         VX_MASK_LIST="MidAtlantic, NorthAtlantic, NPlains"
+	     elif [ $dom = dom6 ] ; then
+	         VX_MASK_LIST="NRockies, PacificNW, PacificSW"
+	     elif [ $dom = dom7 ] ; then
+	         VX_MASK_LIST="SRockies, Prairie, Southeast"
+	     elif [ $dom = dom8 ] ; then
+	         VX_MASK_LIST="Southwest, SPlains"
+             fi
+        fi
 
      for FCST_LEVEL_value in $FCST_LEVEL_values ; do 
 
@@ -201,7 +209,7 @@ chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 288 -ppn 72 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 768 -ppn 84 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi

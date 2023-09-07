@@ -30,7 +30,7 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-export KEEPDATA=NO
+export KEEPDATA=YES
 
 export cyc=00
 
@@ -39,7 +39,7 @@ export COMINspatial=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 #export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
-export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
+export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs/tmpnwprd
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix

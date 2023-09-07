@@ -20,7 +20,7 @@ export COMPONENT=cam
 export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=href
-export KEEPDATA=NO
+export KEEPDATA=YES
 
 
 module reset
@@ -37,7 +37,7 @@ export gather=yes
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks
 export MASKS=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
-export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
+export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs/tmpnwprd
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 

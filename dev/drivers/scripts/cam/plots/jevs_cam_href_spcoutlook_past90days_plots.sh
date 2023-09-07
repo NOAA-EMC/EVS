@@ -1,10 +1,10 @@
-#PBS -N jevs_cam_href_profile_past90days_plots
+#PBS -N jevs_cam_href_spcoutlook_past90days_plots
 #PBS -j oe
 #PBS -q dev
 #PBS -S /bin/bash
 #PBS -A VERF-DEV
-#PBS -l walltime=00:30:00
-#PBS -l place=vscatter,select=1:ncpus=60:mem=100GB
+#PBS -l walltime=01:00:00
+#PBS -l place=vscatter,select=1:ncpus=12:mem=100GB
 #PBS -l debug=true
 
 
@@ -22,7 +22,7 @@ export NET=evs
 export STEP=plots
 export COMPONENT=cam
 export RUN=atmos
-export VERIF_CASE=profile
+export VERIF_CASE=spcoutlook
 export MODELNAME=href
 
 module reset
@@ -32,10 +32,9 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 export KEEPDATA=YES
 
 export cyc=00
-#export VDATE=20230117
 export past_days=90
 
-export run_mpi=yes
+export run_mpi=no
 export valid_time=both
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
