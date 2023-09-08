@@ -828,6 +828,12 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     var_long_name = variable_translator[var_long_name_key]
     units = df['FCST_UNITS'].tolist()[0]
     if units in reference.unit_conversions:
+        do_unit_conversion = True
+        if var_long_name_key == 'TMP' and level[0] == 'P':
+            do_unit_conversion = False
+    else:
+        do_unit_conversion = False
+    if do_unit_conversion:
         if thresh and '' not in thresh:
             thresh_labels = [float(tlab) for tlab in thresh_labels]
             thresh_labels = reference.unit_conversions[units]['formula'](thresh_labels)

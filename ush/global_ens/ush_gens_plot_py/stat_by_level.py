@@ -736,6 +736,12 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     var_long_name = variable_translator[var_long_name_key]
     units = df['FCST_UNITS'].tolist()[0]
     if units in reference.unit_conversions:
+        do_unit_conversion = True
+        if var_long_name_key == 'TMP':
+            do_unit_conversion = False
+    else:
+        do_unit_conversion = False
+    if do_unit_conversion:
         units = reference.unit_conversions[units]['convert_to']
     if units == '-':
         units = ''

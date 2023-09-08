@@ -712,6 +712,10 @@ class Reference():
                 'convert_to': 'kt',
                 'formula': self.formulas.mps_to_kt
             },
+            'Pa': {
+                'convert_to': 'hPa',
+                'formula': self.formulas.PA_to_hPa
+            },
         }
 
         '''
@@ -3884,4 +3888,6 @@ class Reference():
         def mps_to_kt(mps_vals):
             kt_vals = np.array(mps_vals)*1.94384449412
             return kt_vals
+        def PA_to_hPa(PA_vals):
+            hPa_vals = np.array(PA_vals) * 0.01
 

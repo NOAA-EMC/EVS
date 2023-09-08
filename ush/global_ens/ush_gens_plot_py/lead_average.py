@@ -913,6 +913,12 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     var_long_name = variable_translator[var_long_name_key]
     units = df['FCST_UNITS'].tolist()[0]
     if units in reference.unit_conversions:
+        do_unit_conversion = True
+        if var_long_name_key == 'TMP' and level[0] == 'P':
+            do_unit_conversion = False
+    else:
+        do_unit_conversion = False
+    if do_unit_conversion:
         if fcst_thresh and '' not in fcst_thresh:
             fcst_thresh_labels = [float(tlab) for tlab in fcst_thresh_labels]
             fcst_thresh_labels = (
@@ -1139,7 +1145,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         title_pad=30
     else:
         title_pad=None
-    ax.set_title(title_center, loc=plotter.title_loc, pad=title_pad) 
+    ax.set_title(title_center, loc=plotter.title_loc, pad=title_pad)
     logger.info("... Plotting complete.")
 
     # Logos
