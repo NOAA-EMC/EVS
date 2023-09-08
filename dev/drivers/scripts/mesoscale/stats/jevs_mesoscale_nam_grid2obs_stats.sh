@@ -18,7 +18,7 @@ set -x
   export RUN_ENVIR=emc
   export SENDECF=YES
   export SENDCOM=YES
-  export KEEPDATA=YES
+  export KEEPDATA=NO
   export SENDDBN=YES
   export SENDDBN_NTC=
   export job=${PBS_JOBNAME:-jevs_mesoscale_grid2obs_stats}
@@ -73,8 +73,7 @@ export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # In production the following will be deleted (DATAROOT will be used instead, which already exists in the environment)
-  export DATAROOTtmp=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
-  export DATA=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+  export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 
 # in production the following will be set to yesterday's date
   export VDATE=$(date -d "today -1 day" +"%Y%m%d")

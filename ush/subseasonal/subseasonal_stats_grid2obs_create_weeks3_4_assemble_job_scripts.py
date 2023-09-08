@@ -277,7 +277,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                         check_model_files = True
                         check_truth_files = True
                         if check_model_files:
-                            model_files_exist, valid_date_fhr_list = (
+                            (model_files_exist, valid_date_fhr_list,
+                             model_copy_output_DATA2COMOUT_list) = (
                                 sub_util.check_weeks3_4_model_files(job_env_dict)
                             )
                             job_env_dict['fhr_list'] = (
@@ -287,7 +288,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                             job_env_dict.pop('fhr_end')
                             job_env_dict.pop('fhr_inc')
                         if check_truth_files:
-                            all_truth_file_exist = (
+                            (all_truth_file_exist,
+                             truth_copy_output_DATA2COMOUT_list) = (
                                 sub_util.check_weeks3_4_truth_files(job_env_dict)
                             )
                             if model_files_exist and all_truth_file_exist:
@@ -308,6 +310,15 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                         if write_job_cmds:
                             for cmd in verif_type_job_commands_list:
                                 job.write(cmd+'\n')
+                            if job_env_dict['SENDCOM'] == 'YES':
+                                for model_output_file_tuple \
+                                        in model_copy_output_DATA2COMOUT_list:
+                                    job.write(f"cp -v {model_output_file_tuple[0]} "
+                                              +f"{model_output_file_tuple[1]}\n")
+                        else:
+                            if JOB_GROUP == 'assemble_data':
+                                if verif_type_job == 'TempAnom2m':
+                                    job.write(verif_type_job_commands_list[1])
                         job.close()
                         job_env_dict.pop('fhr_list')
                         job_env_dict['fhr_start'] = fhr_start
