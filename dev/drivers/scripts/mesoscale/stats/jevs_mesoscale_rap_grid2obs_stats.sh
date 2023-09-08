@@ -79,13 +79,14 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
   export VDATE=$(date -d "today -1 day" +"%Y%m%d")
 
 # Developer Settings
-  export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/evs/v1.0/prep/cam
+  export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/prep/cam
+
   export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
   export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 
   export cyc=$(date -d "today" +"%H")
-  # export maillist="roshan.shrestha@noaa.gov,geoffrey.manikin@noaa.gov"
-  export maillist="roshan.shrestha@noaa.gov"
+  export maillist="roshan.shrestha@noaa.gov,geoffrey.manikin@noaa.gov"
+  # export maillist="roshan.shrestha@noaa.gov"
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS
