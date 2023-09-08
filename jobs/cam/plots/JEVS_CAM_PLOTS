@@ -91,7 +91,7 @@ else
   echo $COMPATH
 fi
 
-mkdir -p $COMOUT
+mkdir -p $COMOUT $COMOUTplots
 
 echo $COMPATH
 
