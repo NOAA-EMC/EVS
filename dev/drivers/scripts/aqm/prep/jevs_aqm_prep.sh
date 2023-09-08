@@ -46,6 +46,8 @@ source $config
 ## The following setting is for parallel test and need to be removed for operational code
 ########################################################################
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
+export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export jobid=$job.${PBS_JOBID:-$$}
 
 export cycle=t${cyc}z
 
