@@ -678,6 +678,13 @@ class PlotSpecs:
         if plot_info_dict['fcst_var_name'] == 'ICEEX_DAILYAVG' \
                 and units == '10^6_km^2':
             units = 'x'+units.replace('_', ' ')
+        elif plot_info_dict['fcst_var_name'] \
+                in ['UGRD', 'VGRD', 'UGRD_VGRD', 'WNDSHR', 'GUST']:
+            units = 'kt'
+        elif plot_info_dict['fcst_var_name'] \
+                in ['TMP', 'DPT', 'TMP_ANOM_DAILYAVG', 'SST_DAILYAVG'] and \
+                and plot_info_dict['fcst_var_level'] in ['Z0', 'Z2']:
+            units = 'F'
         plot_title = plot_title+' '+'('+units+')'
         if var_thresh_for_title != 'NA':
             plot_title = plot_title+', '+var_thresh_for_title+' '+units
