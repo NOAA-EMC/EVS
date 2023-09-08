@@ -1053,10 +1053,10 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     if plot_logo_left:
         if os.path.exists(path_logo_left):
             left_logo_arr = mpimg.imread(path_logo_left)
-            left_image_box = OffsetImage(left_logo_arr, zoom=zoom_logo_left*.8)
+            left_image_box = OffsetImage(left_logo_arr, zoom=zoom_logo_left*.65)
             ab_left = AnnotationBbox(
                 left_image_box, xy=(0.,1.), xycoords='axes fraction',
-                xybox=(-60, 24), boxcoords='offset points', frameon = False,
+                xybox=(-60, 40), boxcoords='offset points', frameon = False,
                 box_alignment=(0,0)
             )
             ax.add_artist(ab_left)
@@ -1068,10 +1068,10 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     if plot_logo_right:
         if os.path.exists(path_logo_right):
             right_logo_arr = mpimg.imread(path_logo_right)
-            right_image_box = OffsetImage(right_logo_arr, zoom=zoom_logo_right*.8)
+            right_image_box = OffsetImage(right_logo_arr, zoom=zoom_logo_right*.65)
             ab_right = AnnotationBbox(
                 right_image_box, xy=(1.,1.), xycoords='axes fraction',
-                xybox=(60, 24), boxcoords='offset points', frameon = False,
+                xybox=(60, 40), boxcoords='offset points', frameon = False,
                 box_alignment=(1,0)
             )
             ax.add_artist(ab_right)

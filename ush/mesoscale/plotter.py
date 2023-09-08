@@ -9,7 +9,7 @@ class Plotter():
     def __init__(self, font_weight='bold',  axis_title_weight='bold',  
                 axis_title_size=15,         axis_offset=False,
                 axis_title_pad=10,          axis_label_weight='bold',  
-                axis_label_size=16,         axis_label_pad=10,
+                axis_label_size=14,         axis_label_pad=10,
                 axis_fontsize=16,           clabel_font_size=10,
                 xtick_label_size=16,        xtick_major_pad=10,        
                 ytick_label_size=16,        ytick_major_pad=10, 
