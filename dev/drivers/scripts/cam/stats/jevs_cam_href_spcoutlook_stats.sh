@@ -41,7 +41,7 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export jobid=$job.${PBS_JOBID:-$$}
 
 #Define the spc outlook reqions mask file path
-export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/evs/v1.0/prep/cam/spc_otlk
+export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/${USER}/evs/v1.0/prep/cam
 
 
 export maillist='geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'
