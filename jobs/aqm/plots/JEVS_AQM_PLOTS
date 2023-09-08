@@ -34,7 +34,6 @@ export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
 export envir=${envir:-prod}
-export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
