@@ -682,8 +682,9 @@ class PlotSpecs:
                 in ['UGRD', 'VGRD', 'UGRD_VGRD', 'WNDSHR', 'GUST']:
             units = 'kt'
         elif plot_info_dict['fcst_var_name'] \
-                in ['TMP', 'DPT', 'TMP_ANOM_DAILYAVG', 'SST_DAILYAVG'] \
-                and plot_info_dict['fcst_var_level'] in ['Z0', 'Z2']:
+                in ['TMP', 'DPT', 'TMP_ANOM_DAILYAVG', 'SST_DAILYAVG',
+                    'TSOIL'] \
+                and plot_info_dict['fcst_var_level'] in ['Z0', 'Z2', 'Z0.1-0']:
             units = 'F'
         plot_title = plot_title+' '+'('+units+')'
         if var_thresh_for_title != 'NA':
