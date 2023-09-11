@@ -1023,10 +1023,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         x_val for x_val in np.arange(xticks_min, xticks_max+incr, incr)
     ] 
     xtick_labels = [str(xtick) for xtick in xticks]
-    if len(xticks) < 48:
-        show_xtick_every = 1
-    else:
-        show_xtick_every = 2
+    show_xtick_every = len(xticks)//40+1
     xtick_labels_with_blanks = ['' for item in xtick_labels]
     for i, item in enumerate(xtick_labels[::int(show_xtick_every)]):
          xtick_labels_with_blanks[int(show_xtick_every)*i] = item
@@ -1703,12 +1700,20 @@ def main():
                     logger.warning(e)
                     logger.warning("Continuing ...")
                     continue
+                # BAND-AID to plot PBL and L0 stats together and L0 and Z0 stats together
+                temp_fcst_level = fcst_level
+                if "PBL" in fcst_levels:
+                    if fcst_level == "PBL":
+                        temp_fcst_level = [fcst_level, "L0"]
+                elif "L0" in fcst_levels:
+                    if fcst_level == "L0":
+                        temp_fcst_level = [fcst_level, "Z0"]
                 df = df_preprocessing.get_preprocessed_data(
                     logger, STATS_DIR, PRUNE_DIR, OUTPUT_BASE_TEMPLATE, VERIF_CASE, 
                     VERIF_TYPE, LINE_TYPE, DATE_TYPE, date_range, EVAL_PERIOD, 
                     date_hours, FLEADS, requested_var, fcst_var_names, obs_var_names, 
                     models, model_queries, domain, INTERP, MET_VERSION, 
-                    clear_prune_dir, fcst_level
+                    clear_prune_dir, temp_fcst_level
                 )
                 if df is None:
                     continue

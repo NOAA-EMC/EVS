@@ -1488,12 +1488,18 @@ def main():
                 logger.warning(e)
                 logger.warning("Continuing ...")
                 continue
+            # BAND-AID to plot PBL and L0 stats together and L0 and Z0 stats together
+            temp_fcst_levels = fcst_levels
+            if "PBL" in fcst_levels:
+                temp_fcst_levels.append("L0")
+            elif "L0" in fcst_levels:
+                temp_fcst_levels.append("Z0")
             df = df_preprocessing.get_preprocessed_data(
                 logger, STATS_DIR, PRUNE_DIR, OUTPUT_BASE_TEMPLATE, VERIF_CASE, 
                 VERIF_TYPE, LINE_TYPE, DATE_TYPE, date_range, EVAL_PERIOD, 
                 date_hours, FLEADS, requested_var, fcst_var_names, 
                 obs_var_names, models, model_queries, domain, INTERP, 
-                MET_VERSION, clear_prune_dir, FCST_LEVELS
+                MET_VERSION, clear_prune_dir, temp_fcst_levels
             )
             if df is None:
                 continue

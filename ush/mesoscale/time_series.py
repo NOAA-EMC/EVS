@@ -968,7 +968,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         x_val for x_val in daterange(x_vals1[0], x_vals1[-1], td(hours=incr))
     ] 
     xtick_labels = [xtick.strftime('%HZ %m/%d') for xtick in xticks]
-    number of ticks_dig = np.arange(9, 225, 9, dtype=int)
+    number_of_ticks_dig = np.arange(9, 225, 9, dtype=int)
     show_xtick_every = np.ceil((
         np.digitize(len(xtick_labels), number_of_ticks_dig) + 2
     )/2.)*2
@@ -1575,12 +1575,20 @@ def main():
                     logger.warning(e)
                     logger.warning("Continuing ...")
                     continue
+                # BAND-AID to plot PBL and L0 stats together and L0 and Z0 stats together
+                temp_fcst_level = fcst_level
+                if "PBL" in fcst_levels:
+                    if fcst_level == "PBL":
+                        temp_fcst_level = [fcst_level, "L0"]
+                elif "L0" in fcst_levels:
+                    if fcst_level == "L0":
+                        temp_fcst_level = [fcst_level, "Z0"]
                 df = df_preprocessing.get_preprocessed_data(
                     logger, STATS_DIR, PRUNE_DIR, OUTPUT_BASE_TEMPLATE, VERIF_CASE, 
                     VERIF_TYPE, LINE_TYPE, DATE_TYPE, date_range, EVAL_PERIOD, 
                     date_hours, FLEADS, requested_var, fcst_var_names, 
                     obs_var_names, models, model_queries, domain, INTERP, 
-                    MET_VERSION, clear_prune_dir, fcst_level
+                    MET_VERSION, clear_prune_dir, temp_fcst_level
                 )
                 if df is None:
                     continue
