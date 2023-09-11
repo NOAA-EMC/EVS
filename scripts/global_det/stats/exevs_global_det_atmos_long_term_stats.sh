@@ -1,10 +1,11 @@
 #!/bin/bash
 ###############################################################################
 # Name of Script: exevs_global_det_atmos_long_term_stats.sh
-# Purpose of Script: This script generates long term
-#                    verification statistics for the atmospheric component
-#                    of global deterministic models
-# Log history:
+# Developers: Mallory Row / Mallory.Row@noaa.gov
+# Purpose of Script: This script is run for the global_det atmos stats step
+#                    for the long-term verification. It uses EMC-developed python
+#                    scripts to generate averages from METplus stats files.
+#                    This is not run in operations.
 ###############################################################################
 
 set -x

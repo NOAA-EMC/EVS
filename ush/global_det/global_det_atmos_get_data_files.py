@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_get_data_files.py
-Contact(s): Mallory Row
-Abstract: This script is run by all scripts in scripts/.
-          This gets the necessary data files to run
-          the  use case.
+Contact(s): Mallory Row (mallory.row@noaa.gov)
+Abstract: This gets the necessary data files for verification.
+Run By: scripts/global_det/stats/exevs_global_det_atmos_grid2grid_stats.sh
+        scripts/global_det/stats/exevs_global_det_atmos_grid2obs_stats.sh
+        scripts/global_det/plots/exevs_global_det_atmos_grid2grid_plots.sh
+        scripts/global_det/plots/exevs_global_det_atmos_grid2obs_plots.sh
 '''
 
 import os
@@ -93,7 +95,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 )
             ]
             VERIF_CASE_STEP_type_valid_hr_list = GET_D_valid_hr_list
-        elif VERIF_CASE_STEP_type in ['pres_levs', 'means']: 
+        elif VERIF_CASE_STEP_type in ['pres_levs', 'means']:
             VERIF_CASE_STEP_type_valid_hr_list = os.environ[
                 VERIF_CASE_STEP_abbrev_type+'_valid_hr_list'
             ].split(' ')
