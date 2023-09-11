@@ -1,6 +1,8 @@
 #! /usr/bin/env python3
 
 from datetime import datetime, timedelta as td
+
+import os
 import numpy as np
 
 class Toggle():
@@ -79,8 +81,8 @@ class Paths():
         Referenced if plot_logo_left and plot_logo_right, in the Toggle class,
         are set to True
         '''
-        self.logo_left_path = "/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/logos/noaa.png"
-        self.logo_right_path = "/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/logos/nws.png"
+        self.logo_left_path = f"{os.environ['FIXevs']}/logos/noaa.png"
+        self.logo_right_path =  f"{os.environ['FIXevs']}/logos/nws.png"
 
 class Presets():
     def __init__(self):
@@ -606,7 +608,7 @@ class ModelSpecs():
             'HREF_MEAN': {'color': '#000000',
                      'marker': 'o', 'markersize': 12,
                      'linestyle': 'solid', 'linewidth': 3.},
-            'HREF_AVRG': {'color': '#696969',
+            'HREF_AVRG': {'color': '#183cf5',
                      'marker': 'o', 'markersize': 12,
                      'linestyle': 'solid', 'linewidth': 3.},
             'HREF_PMMN': {'color': '#8400c8',
@@ -718,7 +720,7 @@ class Reference():
         '''
         self.variable_translator = {'TMP': 'Temperature',
                                     'TMP_Z0_mean': 'Temperature',
-                                    'HGT': 'Geopotential Height',
+                                    'HGT': 'Ceiling Height',
                                     'HGT_WV1_0-3': ('Geopotential Height:' 
                                                     + ' Waves 0-3'),
                                     'HGT_WV1_4-9': ('Geopotential Height:'

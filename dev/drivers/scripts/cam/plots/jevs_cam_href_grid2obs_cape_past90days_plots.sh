@@ -1,10 +1,10 @@
-#PBS -N jevs_cam_href_precip_past31days_plots
+#PBS -N jevs_cam_href_grid2obs_cape_past90days_plots
 #PBS -j oe
 #PBS -q dev
 #PBS -S /bin/bash
-#PBS -A EVS-DEV
-#PBS -l walltime=01:00:00
-#PBS -l place=vscatter,select=4:ncpus=78:mem=100GB
+#PBS -A VERF-DEV
+#PBS -l walltime=00:30:00
+#PBS -l place=vscatter,select=10:ncpus=84:mpiprocs=72:mem=100GB
 #PBS -l debug=true
 
 
@@ -22,7 +22,7 @@ export NET=evs
 export STEP=plots
 export COMPONENT=cam
 export RUN=atmos
-export VERIF_CASE=precip
+export VERIF_CASE=grid2obs_cape
 export MODELNAME=href
 
 
@@ -30,11 +30,12 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
+
 export KEEPDATA=NO
 
 export cyc=00
-#export VDATE=20230117
-export past_days=31
+#export VDATE=20221231
+export past_days=90
 
 export run_mpi=yes
 
