@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_specs.py
-Contact(s): Mallory Row
-Abstract: This script contains plotting specifications.
+Contact(s): Mallory Row (mallory.row@noaa.gov)
+Abstract: This script defines plotting related settings.
 '''
 import matplotlib
 import matplotlib.pyplot as plt
@@ -19,7 +19,7 @@ class PlotSpecs:
              Args:
                  logger    - logger object
                  plot_type - type of graphic being produced (string)
- 
+
              Returns:
         """
         self.plot_type = plot_type
@@ -160,7 +160,7 @@ class PlotSpecs:
         """! Set up the matplotlib rcParams
 
              Args:
- 
+
              Returns:
         """
         plt.rcParams['font.weight'] = self.font_weight
@@ -196,7 +196,7 @@ class PlotSpecs:
 
              Args:
                  stat - abbreviated statistic name (string)
- 
+
              Returns:
                  stat_plot_name - full statistic name that
                                   will be displayed on the plot
@@ -288,7 +288,7 @@ class PlotSpecs:
             'HGT_DECOMP_WV1_4-9/P500': ('500 hPa Geopotential Height: '
                                         +'Waves 4-9'),
             'HGT_DECOMP_WV1_10-20/P500': ('500 hPa Geopotential Height: '
-                                          +'Waves 10-20'), 
+                                          +'Waves 10-20'),
             'HPBL/L0': 'Planetary Boundary Layer Height',
             'ICEC_DAILYAVG/Z0': 'Daily Avg Ice Concentration',
             'ICEEX_DAILYAVG/Z0': 'Daily Avg Ice Extent',
@@ -470,7 +470,7 @@ class PlotSpecs:
 
              Args:
                  vx_mask - abbreviated verification mask name (string)
- 
+
              Returns:
                  vx_mask_plot_name - full verification mask name that
                                      will be displayed on the plot
@@ -542,7 +542,7 @@ class PlotSpecs:
                                       (strings)
                  forecast_hour_list - list of forecast hour(s)
                  plot_type          - type of plot (string)
- 
+
              Returns:
                  date_plot_name - full date information that
                                   will be displayed on the plot
@@ -609,9 +609,9 @@ class PlotSpecs:
                  plot_info_dict  - plot information dictionary (strings)
                  date_info_dict  - date information dictionary (strings)
                  units           - variable units (string)
- 
+
              Returns:
-                 plot_title - full plot title that will be 
+                 plot_title - full plot title that will be
                               displayed on the plot
                               (string)
         """
@@ -722,7 +722,7 @@ class PlotSpecs:
                                    to save (string)
                  plot_info_dict  - plot information dictionary (strings)
                  date_info_dict  - date information dictionary (strings)
- 
+
              Returns:
                  image_path - full path of the name the plot will
                               be saved as (string)
@@ -860,7 +860,7 @@ class PlotSpecs:
             region_savefig_name = (
                 region_savefig_dict[plot_info_dict['vx_mask']]
             )
-        else:    
+        else:
             region_savefig_name = plot_info_dict['vx_mask']
         savefig_name = (
             'evs.'
@@ -888,7 +888,7 @@ class PlotSpecs:
                  x_figsize - image size in x direction (float)
                  y_figsize - image size in y direction(float)
                  dpi       - image dots per inch (float)
- 
+
              Returns:
                  x_loc - logo position in x direction (float)
                  y_loc - logo position in y direction (float)
@@ -1119,7 +1119,7 @@ class PlotSpecs:
 
              Args:
 
-             Returns: 
+             Returns:
                  marker_plot_settings_dict - dictionary of
                                              marker plotting specifications
                                              (strings)
@@ -1146,7 +1146,7 @@ class PlotSpecs:
 
              Args:
 
-             Returns: 
+             Returns:
                  model_plot_settings_dict - dictionary of
                                             model plotting specifications
                                             (strings)

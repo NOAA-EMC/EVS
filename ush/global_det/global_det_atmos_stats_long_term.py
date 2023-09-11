@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_stats_long_term.py
-Contact(s): Mallory Row
-Abstract: This script generates monthly and yearly long term stats.
+Contact(s): Mallory Row (mallory.row@noaa.gov)
+Abstract: This is the driver script for creating long-term stats.
+Run By: scripts/global_det/stats/exevs_global_det_atmos_long_term_stats.sh
 '''
 
 import sys
@@ -234,7 +235,7 @@ def create_avg_time_range_stat_df(logger, time_range, model_info_dict,
                 model_forecst_day_avg = str(round(model_forecst_day_avg,3))
             time_range_stat_df.loc[model][forecast_day_header] = (
                 model_forecst_day_avg
-            )    
+            )
     return time_range_stat_df
 
 def make_model_time_range_file(time_range, model_COMIN_file,

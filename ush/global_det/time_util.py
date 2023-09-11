@@ -1,3 +1,10 @@
+###########################################
+#
+# Used for global_det wave plots
+#
+###########################################
+
+
 """
 Program Name: time_util.py
 Contact(s): George McCabe
