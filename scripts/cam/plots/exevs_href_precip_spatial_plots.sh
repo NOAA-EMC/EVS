@@ -78,8 +78,9 @@ cd $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/precip/SL1L2_FBAR_24hrAccumM
 #mv qpe.v${VDATE}12.024h.conus.png evs.ccpa.spatial_map.apcp_a24.vlid12z.f00.conus.png
 tar -cvf evs.plots.href.precip.spatial.map.v${VDATE}.tar *.gif
 
-cp evs.plots.href.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
-
+if [ $SENDCOM="YES" ]; then
+ cp evs.plots.href.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
+fi
 
 
 
