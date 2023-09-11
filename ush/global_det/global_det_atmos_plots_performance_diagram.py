@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_performance_diagram.py
-Contact(s): Mallory Row
+Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This script generates a performance_diagram plot.
+          (x-axis: success ratio; y-axis: probability of detection; contours: csi, frequency bias)
+          (EVS Graphics Naming Convention: perfdiag)
 '''
 
 import sys
@@ -26,7 +28,7 @@ class PerformanceDiagram:
     """
     Create a performance_diagram graphic
     """
- 
+
     def __init__(self, logger, input_dir, output_dir, model_info_dict,
                  date_info_dict, plot_info_dict, met_info_dict, logo_dir):
         """! Initalize TimeSeries class
@@ -40,7 +42,7 @@ class PerformanceDiagram:
                  date_info_dict  - date information dictionary (strings)
                  met_info_dict   - MET information dictionary (strings)
                  logo_dir        - directory with logo images (string)
- 
+
              Returns:
         """
         self.logger = logger
@@ -196,7 +198,7 @@ class PerformanceDiagram:
                     if not np.isnan(model_idx_fcst_var_thresh_avg):
                         perf_diag_stat_avg_df.loc[(model_idx,stat),
                                                   fcst_var_thresh] = (
-                            model_idx_fcst_var_thresh_avg    
+                            model_idx_fcst_var_thresh_avg
                         )
         # Set up plot
         self.logger.info(f"Doing plot set up")
@@ -280,7 +282,7 @@ class PerformanceDiagram:
                 right_logo_img_array, right_logo_xpixel_loc,
                 right_logo_ypixel_loc, zorder=1, alpha=right_logo_alpha
             )
-        CBIAS = plt.contour(pd_sr, pd_pod, pd_bias, pd_bias_clevs, 
+        CBIAS = plt.contour(pd_sr, pd_pod, pd_bias, pd_bias_clevs,
                             colors='gray', linestyles='dashed')
         radius = 0.75
         CBIAS_label_loc = []
@@ -480,7 +482,7 @@ def main():
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')
     if not os.path.exists(logging_dir):
          os.makedirs(logging_dir)
-    job_logging_file = os.path.join(logging_dir, 
+    job_logging_file = os.path.join(logging_dir,
                                     os.path.basename(__file__)+'_runon'
                                     +datetime.datetime.now()\
                                     .strftime('%Y%m%d%H%M%S')+'.log')
