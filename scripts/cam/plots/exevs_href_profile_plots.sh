@@ -274,5 +274,6 @@ done     #vlaid
 
 tar -cvf evs.plots.href.profile.past${past_days}days.v${VDATE}.tar *.png
 
-cp evs.plots.href.profile.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
-
+if [ $SENDCOM="YES" ]; then
+ cp evs.plots.href.profile.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
+fi

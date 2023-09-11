@@ -190,8 +190,9 @@ done
 
 tar -cvf evs.plots.href.spcoutlook.past${past_days}days.v${VDATE}.tar *.png
 
-cp  evs.plots.href.spcoutlook.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
-
+if [ $SENDCOM="YES" ]; then
+ cp  evs.plots.href.spcoutlook.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
+fi
 
 
 

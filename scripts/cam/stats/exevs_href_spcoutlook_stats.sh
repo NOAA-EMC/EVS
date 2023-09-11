@@ -11,6 +11,7 @@ set -x
 export WORK=$DATA
 cd $WORK
 
+
 #check input data are available:
 $USHevs/cam/evs_check_href_files.sh 
 

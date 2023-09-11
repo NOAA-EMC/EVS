@@ -294,8 +294,9 @@ done
 
 tar -cvf evs.plots.href.grid2obs.ctc.past${past_days}days.v${VDATE}.tar *.png
 
-cp  evs.plots.href.grid2obs.ctc.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
-
+if [ $SENDCOM="YES" ]; then
+ cp  evs.plots.href.grid2obs.ctc.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
+fi
 
 
 
