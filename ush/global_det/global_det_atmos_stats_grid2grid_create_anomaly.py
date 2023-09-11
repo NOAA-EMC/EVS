@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_stats_grid2grid_create_anomaly
-Contact(s): Mallory Row
+Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This script is used to create anomaly
-          data from MET grid_stat netCDF output
+          data from MET grid_stat netCDF output.
+Run By: individual statistics job scripts generated through
+        ush/global_det/global_det_atmos_stats_grid2grid_create_job_scripts.py
 '''
 
 import os
@@ -18,6 +20,8 @@ print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
 DATA = os.environ['DATA']
+COMOUT = os.environ['COMOUT']
+SENDCOM = os.environ['SENDCOM']
 RUN = os.environ['RUN']
 NET = os.environ['NET']
 VERIF_CASE = os.environ['VERIF_CASE']
@@ -76,20 +80,34 @@ while valid_date_dt <= ENDDATE_dt:
                 if 'CLIMO_MEAN_'+var_level in input_var:
                     climo_var_level = input_var
             if climo_var_level in input_file_data_var_list:
-                output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP,
-                                         'METplus_output',
-                                          RUN+'.'
-                                          +valid_date_dt.strftime('%Y%m%d'),
-                                          MODEL, VERIF_CASE)
-                output_file = os.path.join(output_dir, 'anomaly_'
-                                           +VERIF_TYPE+'_'+job_name+'_init'
-                                           +init_date_dt.strftime('%Y%m%d%H')+'_'
-                                           +'fhr'+str(fhr).zfill(3)+'.nc')
-                if not os.path.exists(output_file):
-                    make_anomaly_output_file = True
-                else:
+                output_DATA_file = os.path.join(
+                    DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
+                    RUN+'.'+valid_date_dt.strftime('%Y%m%d'),
+                    MODEL, VERIF_CASE, 'anomaly_'+VERIF_TYPE+'_'
+                    +job_name+'_init'+init_date_dt.strftime('%Y%m%d%H')+'_'
+                    +'fhr'+str(fhr).zfill(3)+'.nc'
+                )
+                output_COMOUT_file = os.path.join(
+                    COMOUT, RUN+'.'+valid_date_dt.strftime('%Y%m%d'),
+                    MODEL, VERIF_CASE, 'anomaly_'+VERIF_TYPE+'_'
+                    +job_name+'_init'+init_date_dt.strftime('%Y%m%d%H')+'_'
+                    +'fhr'+str(fhr).zfill(3)+'.nc'
+                )
+                if os.path.exists(output_COMOUT_file):
+                    gda_util.copy_file(output_COMOUT_file, output_DATA_file)
                     make_anomaly_output_file = False
-                    print(f"Output File exists: {output_file}")
+                else:
+                    if not os.path.exists(output_DATA_file):
+                        make_anomaly_output_file = True
+                    else:
+                        make_anomaly_output_file = False
+                        print(f"DATA Output File exists: {output_DATA_file}")
+                        if SENDCOM == 'YES' \
+                                and gda_util.check_file_exists_size(
+                                    output_DATA_file
+                                ):
+                            gda_util.copy_file(output_DATA_file,
+                                               output_COMOUT_file)
             else:
                 print(f"WARNING: {input_file} does not contain any "
                       +"climo variable cannot make anomaly data")
@@ -99,10 +117,11 @@ while valid_date_dt <= ENDDATE_dt:
            print(f"\nWARNING: {input_file} does not exist")
            make_anomaly_output_file = False
         if make_anomaly_output_file:
-            print("\nInput file: "+input_file)
+            print(f"\nInput file: {input_file}")
             input_file_data = netcdf.Dataset(input_file)
-            print("Output File: "+output_file)
-            output_file_data = netcdf.Dataset(output_file, 'w',
+            print(f"DATA Output File: {output_DATA_file}")
+            print(f"COMOUT Output File: {output_COMOUT_file}")
+            output_file_data = netcdf.Dataset(output_DATA_file, 'w',
                                               format='NETCDF3_CLASSIC')
             for attr in input_file_data.ncattrs():
                 if attr == 'MET_tool':
@@ -171,6 +190,9 @@ while valid_date_dt <= ENDDATE_dt:
                           f"{data_name} variable, cannot make anomaly data")
             output_file_data.close()
             input_file_data.close()
+            if SENDCOM == 'YES' \
+                    and gda_util.check_file_exists_size(output_DATA_file):
+                gda_util.copy_file(output_DATA_file, output_COMOUT_file)
     valid_date_dt = valid_date_dt + datetime.timedelta(hours=int(valid_hr_inc))
-    
+
 print("END: "+os.path.basename(__file__))
