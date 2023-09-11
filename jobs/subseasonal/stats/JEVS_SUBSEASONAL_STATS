@@ -22,7 +22,7 @@ cd $DATA
 # SENDECF=YES--Flag events on ecflow
 # SENDDBN=YES--Issue DBNet Client Calls
 ################################################################
-export SENDCOM=${SENDCOM:-NO}
+export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-NO}       # need to set to NO for testing
 export SENDECF=${SENDECF:-NO}
 export SENDDBN_NTC=${SENDDBN_NTC:-NO}
