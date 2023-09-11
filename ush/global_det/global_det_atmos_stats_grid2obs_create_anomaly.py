@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_stats_grid2obs_create_anomaly.py
-Contact(s): Mallory Row
+Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This script is used to create anomaly
-          data from MET point_stat MPR output
+          data from MET point_stat MPR output.
+Run By: individual statistics job scripts generated through
+        ush/global_det/global_det_atmos_plots_grid2obs_create_job_scripts.py
 '''
 
 import os
@@ -18,6 +20,8 @@ print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
 DATA = os.environ['DATA']
+COMOUT = os.environ['COMOUT']
+SENDCOM = os.environ['SENDCOM']
 RUN = os.environ['RUN']
 NET = os.environ['NET']
 VERIF_CASE = os.environ['VERIF_CASE']
@@ -81,20 +85,35 @@ while valid_date_dt <= ENDDATE_dt:
             file_format, valid_date_dt, init_date_dt, str(fhr), {}
         )
         if os.path.exists(input_file):
-            output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP,
-                                      'METplus_output',
-                                       RUN+'.'
-                                       +valid_date_dt.strftime('%Y%m%d'),
-                                       MODEL, VERIF_CASE)
-            output_file = os.path.join(output_dir, 'anomaly_'
-                                       +VERIF_TYPE+'_'+job_name+'_init'
-                                       +init_date_dt.strftime('%Y%m%d%H')+'_'
-                                       +'fhr'+str(fhr).zfill(3)+'.stat')
-            if not os.path.exists(output_file):
-                make_anomaly_output_file = True
-            else:
+            output_DATA_file = os.path.join(
+                DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
+                RUN+'.'+valid_date_dt.strftime('%Y%m%d'),
+                MODEL, VERIF_CASE, 'anomaly_'+VERIF_TYPE+'_'
+                +job_name+'_init'+init_date_dt.strftime('%Y%m%d%H')+'_'
+                +'fhr'+str(fhr).zfill(3)+'.stat'
+            )
+            output_COMOUT_file = os.path.join(
+                COMOUT,
+                RUN+'.'+valid_date_dt.strftime('%Y%m%d'),
+                MODEL, VERIF_CASE, 'anomaly_'+VERIF_TYPE+'_'
+                +job_name+'_init'+init_date_dt.strftime('%Y%m%d%H')+'_'
+                +'fhr'+str(fhr).zfill(3)+'.stat'
+            )
+            if os.path.exists(output_COMOUT_file):
                 make_anomaly_output_file = False
-                print(f"Output File exists: {output_file}")
+                gda_util.copy_file(output_COMOUT_file, output_DATA_file)
+            else:
+                if not os.path.exists(output_DATA_file):
+                    make_anomaly_output_file = True
+                else:
+                    make_anomaly_output_file = False
+                    print(f"DATA Output File exists: {output_DATA_file}")
+                    if SENDCOM == 'YES' \
+                            and gda_util.check_file_size_exists(
+                                output_DATA_file
+                            ):
+                        gda_util.copy_file(output_DATA_file,
+                                           output_COMOUT_file)
         else:
             print(f"\nWARNING: {input_file} does not exist")
             make_anomaly_output_file = False
@@ -106,7 +125,7 @@ while valid_date_dt <= ENDDATE_dt:
                                         input_file])
             input_file_df = pd.read_csv(input_file, sep=" ", skiprows=1,
                                         skipinitialspace=True, header=None,
-                                        names=MET_MPR_column_list, 
+                                        names=MET_MPR_column_list,
                                         na_filter=False, dtype=str)
             input_file_var_level_df = input_file_df[
                 (input_file_df['FCST_VAR'] == var) & (input_file_df['FCST_LEV'] == level)
@@ -129,9 +148,13 @@ while valid_date_dt <= ENDDATE_dt:
             output_file_df['OBS'] = obs_anom_var_level
             output_file_df['FCST_VAR'] = var+'_ANOM'
             output_file_df['OBS_VAR'] = var+'_ANOM'
-            print(f"Output File: {output_file}")
-            output_file_df.to_csv(output_file, header=input_file_header,
+            print(f"DATA Output File: {output_DATA_file}")
+            print(f"COMOUT Output File: {output_COMOUT_file}")
+            output_file_df.to_csv(output_DATA_file, header=input_file_header,
                                   index=None, sep=' ', mode='w')
+            if SENDCOM == 'YES' \
+                    and gda_util.check_file_exists_size(output_DATA_file):
+                gda_util.copy_file(output_DATA_file, output_COMOUT_file)
     valid_date_dt = valid_date_dt + datetime.timedelta(hours=int(valid_hr_inc))
 
 print("END: "+os.path.basename(__file__))

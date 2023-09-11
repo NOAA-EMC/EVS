@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_production_tof240.py
-Contact(s): Mallory Row
-Abstract: This script is main driver for the plotting scripts.
+Contact(s): Mallory Row (mallory.row@noaa.gov)
+Abstract: This is the driver script for creating plots.
           It is only used in production to generate plots to
-          forecast hour 240 for certain values of verif_type.
+          forecast hour 240.
+Run By: individual plotting job scripts generated through
+        ush/global_det/global_det_atmos_plots_grid2obs_create_job_scripts.py
+        and ush/global_det/global_det_atmos_plots_grid2grid_create_job_scripts.py
 '''
 
 import os
@@ -86,7 +89,7 @@ logging_dir = os.path.join(plot_output_dir, 'logs')
 for output_dir in [logging_dir, DATAjob, COMOUTjob]:
     if not os.path.exists(output_dir):
        print(f"Creating output directory: {output_dir}")
-       os.makedirs(output_dir) 
+       os.makedirs(output_dir)
 
 # Set up logging
 job_logging_file = os.path.join(logging_dir, 'evs_'+COMPONENT+'_'+RUN+'_'

@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_stats_grid2obs_create_daily_average.py
-Contact(s): Mallory Row
+Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This script is used to create daily average
-          data from MET point_stat MPR output
+          data from MET point_stat MPR output.
+Run By: individual statistics job scripts generated through
+        ush/global_det/global_det_atmos_plots_grid2obs_create_job_scripts.py
 '''
 
 import os
@@ -15,8 +17,11 @@ import datetime
 import global_det_atmos_util as gda_util
 
 print("BEGIN: "+os.path.basename(__file__))
+
 # Read in environment variables
 DATA = os.environ['DATA']
+COMOUT = os.environ['COMOUT']
+SENDCOM = os.environ['SENDCOM']
 RUN = os.environ['RUN']
 NET = os.environ['NET']
 VERIF_CASE = os.environ['VERIF_CASE']
@@ -34,7 +39,7 @@ fhr_end = os.environ['fhr_list'].split(',')[-1]
 # Process run time agruments
 if len(sys.argv) != 4:
     print("ERROR: Not given correct number of run time agruments..."
-          +os.path.basename(__file__)+" VARNAME_VARLEVEL DATAROOT_FILE_FORMAT "
+          +os.path.basename(__file__)+" VARNAME_VARLEVEL DATA_FILE_FORMAT "
           +"COMIN_FILE_FORMART")
     sys.exit(1)
 else:
@@ -46,7 +51,7 @@ else:
     else:
         var_level = sys.argv[1]
         print("Using var_level = "+var_level)
-    DATAROOT_file_format = sys.argv[2]
+    DATA_file_format = sys.argv[2]
     COMIN_file_format = sys.argv[3]
 
 # Set MET MPR columns
@@ -59,10 +64,6 @@ MET_MPR_column_list = [
     'OBS_LAT', 'OBS_LON', 'OBS_LVL', 'OBS_ELV', 'FCST', 'OBS', 'OBS_QC',
     'CLIMO_MEAN', 'CLIMO_STDEV', 'CLIMO_CDF'
 ]
-
-# Set input and output directories
-output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
-                          RUN+'.'+DATE, MODEL, VERIF_CASE)
 
 # Create daily average files
 print("\nCreating daily average files")
@@ -81,23 +82,27 @@ while valid_hr <= int(valid_hr_end):
         daily_avg_day_init = (daily_avg_valid_end
                               - datetime.timedelta(days=daily_avg_day))
         daily_avg_day_fhr = daily_avg_day_fhr_start
-        output_file = os.path.join(output_dir, 'daily_avg_'
-                                   +VERIF_TYPE+'_'+job_name+'_init'
-                                   +daily_avg_day_init.strftime('%Y%m%d%H')
-                                   +'_valid'
-                                   +daily_avg_valid_start\
-                                   .strftime('%Y%m%d%H')+'to'
-                                   +daily_avg_valid_end\
-                                   .strftime('%Y%m%d%H')+'.stat')
-        if os.path.exists(output_file):
-            os.remove(output_file)
+        output_DATA_file = os.path.join(
+            DATA, VERIF_CASE+'_'+STEP, 'METplus_output', RUN+'.'+DATE, MODEL,
+            VERIF_CASE, 'daily_avg_'+VERIF_TYPE+'_'+job_name+'_init'
+            +daily_avg_day_init.strftime('%Y%m%d%H')+'_valid'
+            +daily_avg_valid_start.strftime('%Y%m%d%H')+'to'
+            +daily_avg_valid_end.strftime('%Y%m%d%H')+'.stat'
+        )
+        output_COMOUT_file = os.path.join(
+            COMOUT, RUN+'.'+DATE, MODEL,
+            VERIF_CASE, 'daily_avg_'+VERIF_TYPE+'_'+job_name+'_init'
+            +daily_avg_day_init.strftime('%Y%m%d%H')+'_valid'
+            +daily_avg_valid_start.strftime('%Y%m%d%H')+'to'
+            +daily_avg_valid_end.strftime('%Y%m%d%H')+'.stat'
+        )
         while daily_avg_day_fhr <= daily_avg_day_fhr_end:
             daily_avg_day_fhr_valid = (
                 daily_avg_day_init
                 + datetime.timedelta(hours=daily_avg_day_fhr)
             )
-            daily_avg_day_fhr_DATAROOT_input_file = gda_util.format_filler(
-                    DATAROOT_file_format, daily_avg_day_fhr_valid,
+            daily_avg_day_fhr_DATA_input_file = gda_util.format_filler(
+                    DATA_file_format, daily_avg_day_fhr_valid,
                     daily_avg_day_init,
                     str(daily_avg_day_fhr), {}
             )
@@ -111,7 +116,7 @@ while valid_hr <= int(valid_hr_end):
                     daily_avg_day_fhr_COMIN_input_file)
             else:
                 daily_avg_day_fhr_input_file = (
-                    daily_avg_day_fhr_DATAROOT_input_file
+                    daily_avg_day_fhr_DATA_input_file
                 )
             if os.path.exists(daily_avg_day_fhr_input_file):
                 print("Input file for forecast hour "+str(daily_avg_day_fhr)
@@ -123,20 +128,32 @@ while valid_hr <= int(valid_hr_end):
                 print("No input file for forecast hour "+str(daily_avg_day_fhr)
                       +', valid '+str(daily_avg_day_fhr_valid)
                       +', init '+str(daily_avg_day_init)+" "
-                      +daily_avg_day_fhr_DATAROOT_input_file+" or "
+                      +daily_avg_day_fhr_DATA_input_file+" or "
                       +daily_avg_day_fhr_COMIN_input_file)
             daily_avg_day_fhr+=12
         daily_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
-        if len(daily_avg_file_list) == 2:
-            if not os.path.exists(output_file):
-                make_daily_avg_output_file = True
-            else:
-                make_daily_avg_output_file = False
-        else:
-            print("WARNING: Need 2 files to create daily average")
+        if os.path.exists(output_COMOUT_file):
+            gda_util.copy_file(output_COMOUT_file, output_DATA_file)
             make_daily_avg_output_file = False
+        else:
+            if len(daily_avg_file_list) == 2:
+                if not os.path.exists(output_DATA_file):
+                    make_daily_avg_output_file = True
+                else:
+                    make_daily_avg_output_file = False
+                    print(f"DATA Output File exist: {output_DATA_file}")
+                    if SENDCOM == 'YES' \
+                            and gda_util.check_file_exists_size(
+                                output_DATA_file
+                            ):
+                        gda_util.copy_file(output_DATA_file,
+                                           output_COMOUT_file)
+            else:
+                print("WARNING: Need 2 files to create daily average")
+                make_daily_avg_output_file = False
         if make_daily_avg_output_file:
-            print(f"Output File: {output_file}")
+            print(f"DATA Output File: {output_DATA_file}")
+            print(f"COMOUT Output File: {output_COMOUT_file}")
             all_daily_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
             for daily_avg_file in daily_avg_file_list:
                 with open(daily_avg_file, 'r') as infile:
@@ -217,9 +234,12 @@ while valid_hr <= int(valid_hr_end):
                             ignore_index=True
                         )
             daily_avg_df.to_csv(
-                output_file, header=input_file_header,
+                output_DATA_file, header=input_file_header,
                 index=None, sep=' ', mode='w'
             )
+            if SENDCOM == 'YES' \
+                    and gda_util.check_file_exists_size(output_DATA_file):
+                gda_util.copy_file(output_DATA_file, output_COMOUT_file)
         print("")
         daily_avg_day+=1
     valid_hr+=int(valid_hr_inc)
