@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_time_series.py
-Contact(s): Mallory Row
+Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This script generates a time series plot.
+          (x-axis: dates; y-axis: statistics value)
+          (EVS Graphics Naming Convention: timeseries)
 '''
 
 import sys
@@ -26,7 +28,7 @@ class TimeSeries:
     """
     Create a time series graphic
     """
- 
+
     def __init__(self, logger, input_dir, output_dir, model_info_dict,
                  date_info_dict, plot_info_dict, met_info_dict, logo_dir):
         """! Initalize TimeSeries class
@@ -40,7 +42,7 @@ class TimeSeries:
                  date_info_dict  - date information dictionary (strings)
                  met_info_dict   - MET information dictionary (strings)
                  logo_dir        - directory with logo images (string)
- 
+
              Returns:
         """
         self.logger = logger
@@ -571,7 +573,7 @@ def main():
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')
     if not os.path.exists(logging_dir):
          os.makedirs(logging_dir)
-    job_logging_file = os.path.join(logging_dir, 
+    job_logging_file = os.path.join(logging_dir,
                                     os.path.basename(__file__)+'_runon'
                                     +datetime.datetime.now()\
                                     .strftime('%Y%m%d%H%M%S')+'.log')

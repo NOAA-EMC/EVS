@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_lead_average.py
-Contact(s): Mallory Row
+Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This script generates a lead average plot.
+          (x-axis: forecast hour; y-axis: statistics value)
+          (EVS Graphics Naming Convention: fhrmean)
 '''
 
 import sys
@@ -26,7 +28,7 @@ class LeadAverage:
     """
     Create a lead average graphic
     """
- 
+
     def __init__(self, logger, input_dir, output_dir, model_info_dict,
                  date_info_dict, plot_info_dict, met_info_dict, logo_dir):
         """! Initalize LeadAverage class
@@ -40,7 +42,7 @@ class LeadAverage:
                  date_info_dict  - date information dictionary (strings)
                  met_info_dict   - MET information dictionary (strings)
                  logo_dir        - directory with logo images (string)
- 
+
              Returns:
         """
         self.logger = logger
@@ -363,7 +365,7 @@ class LeadAverage:
                               +f"- {model_num_plot_name}")
             masked_model_num_data = np.ma.masked_invalid(model_num_data)
             if model_num == 'model1':
-                 model1_masked_model_num_data = masked_model_num_data 
+                 model1_masked_model_num_data = masked_model_num_data
             model_num_npts = (
                 len(masked_model_num_data)
                 - np.ma.count_masked(masked_model_num_data)
@@ -555,7 +557,7 @@ class LeadAverage:
                     ax.set_yticks(np.arange(y_axis_min,
                                             y_axis_max +  y_axis_tick_inc,
                                             y_axis_tick_inc))
-                    ax.set_ylim([y_axis_min, y_axis_max])  
+                    ax.set_ylim([y_axis_min, y_axis_max])
             subplot_num+=1
         if len(ax1.lines) != 0:
             y_axis_min = ax1.get_yticks()[0]
@@ -655,7 +657,7 @@ def main():
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')
     if not os.path.exists(logging_dir):
          os.makedirs(logging_dir)
-    job_logging_file = os.path.join(logging_dir, 
+    job_logging_file = os.path.join(logging_dir,
                                     os.path.basename(__file__)+'_runon'
                                     +datetime.datetime.now()\
                                     .strftime('%Y%m%d%H%M%S')+'.log')
