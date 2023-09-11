@@ -15,7 +15,7 @@ export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
 export pid=$$
-export DATA=${DATA:-${DATAROOT:?}}/${jobid:?}
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 rm -rf $DATA
 mkdir -p $DATA
 cd $DATA

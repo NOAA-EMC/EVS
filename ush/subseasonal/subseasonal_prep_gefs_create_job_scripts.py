@@ -270,7 +270,15 @@ elif JOB_GROUP == 'retrieve_data':
             job.write('#!/bin/bash\n')
             job.write('set -x\n')
             job.write('\n')
-            # Set any environment variables for special cases
+            # Do prep file check to get fhr_list
+            check_prep_files = True
+            if check_prep_files:
+                prep_fhr_list = (
+                    sub_util.check_prep_files(job_env_dict)
+                )
+                job_env_dict['fhr_list'] = (
+                    '"'+','.join(prep_fhr_list)+'"'
+                )
             # Write environment variables
             for name, value in job_env_dict.items():
                 job.write('export '+name+'='+value+'\n')
