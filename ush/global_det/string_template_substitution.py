@@ -1,3 +1,10 @@
+###########################################
+#
+# Used for global_det wave plots
+#
+###########################################
+
+
 """
 
 Program Name: string_template_substitution.py

@@ -1,10 +1,10 @@
 #!/bin/bash
 ###############################################################################
 # Name of Script: exevs_global_det_atmos_grid2obs_plots.sh
-# Purpose of Script: This script generates grid-to-observations
-#                    verification plots using python for the
-#                    atmospheric component of global deterministic models
-# Log history:
+# Developers: Mallory Row / Mallory.Row@noaa.gov
+# Purpose of Script: This script is run for the global_det atmos plots step
+#                    for the grid-to-obs verification. It uses EMC-developed
+#                    python scripts to do the plotting.
 ###############################################################################
 
 set -x
@@ -101,13 +101,3 @@ if [ $SENDCOM = YES ]; then
     done
     cd $DATA
 fi
-
-# Non-production jobs
-if [ $evs_run_mode != "production" ]; then
-    # Clean up
-    if [ $KEEPDATA != "YES" ] ; then
-        cd $DATAROOT
-        rm -rf $DATA
-    fi
-fi
-

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 '''
-Program Name: global_det_atmos_stats_grid2grid_calc_sea_ice_extent.py
-Contact(s): Mallory Row
+Name: global_det_atmos_stats_grid2grid_calc_sea_ice_extent.py
+Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This script calculates the forecast and observation
-          sea-ice extent, and it used with python embedding
-          for StatAnalysis.
+          sea-ice extent.
+Run By: python embedding for parm/metplus_config/global_det/atmos_grid2grid/stats/StatAnalysis_fcstGLOBAL_DET_obsOSI-SAF_DailyAvg_Extent_MPRtoSL1L2.conf
 '''
 
 import os
@@ -20,7 +20,7 @@ print("Python Script:\t" + repr(sys.argv[0]))
 def iceArea(lon1,lat1,ice1):
     """
     Compute the cell side dimensions (Vincenty) and the cell surface areas.
-    This assumes the ice has already been masked and subsampled as needed    
+    This assumes the ice has already been masked and subsampled as needed
     returns ice_extent, ice_area, surface_area = iceArea(lon,lat,ice)
     surface_area is the computed grid areas in km**2)
     """
@@ -79,7 +79,7 @@ elif hemisphere == 'sh':
     OBS_LAT = '-85.0'
     OBS_LON = '90.0'
 
-# Build MPR data 
+# Build MPR data
 mpr_data = []
 
 # Static variables

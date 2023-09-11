@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_long_term_lead_by_date.py
-Contact(s): Mallory Row
+Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This script generates the plots for long term
           lead by date.
+          (x-axis: forecast day; y-axis: months and years; contours: statistics values)
+          (EVS Graphics Naming Convention: leaddate)
 '''
 
 import sys
@@ -521,7 +523,7 @@ def main():
     STAT = 'STAT'
     NBRHD = 'NBHRD'
     FORECAST_DAY_LIST = ['1', '2']
-    RUN_LENGTH_LIST = ['allyears', 'past10years'] 
+    RUN_LENGTH_LIST = ['allyears', 'past10years']
     # Create OUTPUT_DIR
     if not os.path.exists(OUTPUT_DIR):
         os.makedirs(OUTPUT_DIR)
@@ -529,7 +531,7 @@ def main():
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')
     if not os.path.exists(logging_dir):
          os.makedirs(logging_dir)
-    job_logging_file = os.path.join(logging_dir, 
+    job_logging_file = os.path.join(logging_dir,
                                     os.path.basename(__file__)+'_runon'
                                     +datetime.datetime.now()\
                                     .strftime('%Y%m%d%H%M%S')+'.log')

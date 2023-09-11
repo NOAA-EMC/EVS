@@ -1,3 +1,9 @@
+###########################################
+#
+# Used for global_det wave plots
+#
+###########################################
+
 import sys
 import logging
 import re
