@@ -1,3 +1,10 @@
+###########################################
+#
+# Used for global_det wave plots
+#
+###########################################
+
+
 import pickle
 import os
 import datetime as datetime

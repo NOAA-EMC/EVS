@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_headline_plots.py
-Contact(s): Mallory Row
-Abstract: This script is main driver for the headline score plots.
+Contact(s): Mallory Row (mallory.row@noaa.gov)
+Abstract: This is the driver script for creating headline plots.
+Run By: scripts/global_det/plots/exevs_global_det_atmos_headline_plots.sh
 '''
 
 import os
@@ -100,7 +101,7 @@ headline1_plot_info_dict = {
 now = datetime.datetime.now()
 headline1_date_info_dict = {
     'date_type': 'VALID',
-    'start_date': (VDATE_END_dt - datetime.timedelta(days=headline1_ndays))\
+    'start_date': (VDATE_END_dt - datetime.timedelta(days=headline1_ndays-1))\
                    .strftime('%Y%m%d'),
     'end_date': VDATE_END_dt.strftime('%Y%m%d'),
     'valid_hr_start': '00',
@@ -162,7 +163,7 @@ for model_num in list(headline1_model_info_dict.keys()):
 plot_specs = PlotSpecs(logger1, headline1_plot)
 import global_det_atmos_plots_time_series as gdap_ts
 plot_ts = gdap_ts.TimeSeries(logger1, headline1_output_dir,
-                             headline1_output_dir, 
+                             headline1_output_dir,
                              headline1_model_info_dict,
                              headline1_date_info_dict,
                              headline1_plot_info_dict,
@@ -207,7 +208,7 @@ headline2_plot_info_dict = {
 }
 headline2_date_info_dict = {
     'date_type': 'VALID',
-    'start_date': (VDATE_END_dt - datetime.timedelta(days=headline2_ndays))\
+    'start_date': (VDATE_END_dt - datetime.timedelta(days=headline2_ndays-1))\
                    .strftime('%Y%m%d'),
     'end_date': VDATE_END_dt.strftime('%Y%m%d'),
     'valid_hr_start': '00',
@@ -435,7 +436,7 @@ else:
     ### & ETS
     print("\nHeadline Score Plot 5: Grid-to-Grid - "
           +"GFS 24 hour Precip CONUS FSS 62km Neighborhood and ETS")
-    headline5_vx_mask = 'CONUS' 
+    headline5_vx_mask = 'CONUS'
     headline5_var_name = 'APCP'
     headline5_var_level = 'A24'
     headline5_forecast_day_list = ['1', '2', '3']
@@ -455,7 +456,7 @@ else:
         )
     )
     import global_det_atmos_plots_long_term_time_series_multifhr \
-        as gdap_lttsmf 
+        as gdap_lttsmf
     for stat in list(headline5_stat_thresh_dict.keys()):
         headline5_job_name = (
             'grid2grid_'+headline5_avg_time_range+'_gfs_'
@@ -468,7 +469,7 @@ else:
         headline5_output_dir = os.path.join(DATA, headline5_job_name)
         if not os.path.exists(headline5_output_dir):
             os.makedirs(headline5_output_dir)
-        # Set up logging 
+        # Set up logging
         now = datetime.datetime.now()
         headline5_logging_file = os.path.join(
             logging_dir, 'evs_'+COMPONENT+'_atmos_'
@@ -487,7 +488,7 @@ else:
                 logger5, COMINyearlystats, headline5_output_dir,
                 os.path.join(FIXevs, 'logos'), headline5_avg_time_range,
                 headline5_all_dt_list, 'gfs', ['gfs'], headline5_var_name,
-                headline5_var_level, thresh, vx_grid, headline5_vx_mask, 
+                headline5_var_level, thresh, vx_grid, headline5_vx_mask,
                 stat, nbrhd, headline5_forecast_day_list, ['allyears']
             )
             plot_lttsmf.make_long_term_time_series_multifhr()

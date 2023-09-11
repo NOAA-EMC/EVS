@@ -1,9 +1,10 @@
 #!/bin/bash
 ###############################################################################
 # Name of Script: exevs_global_det_headline_plots.sh
-# Purpose of Script: This script generates grid-to-grid verification headline
-#                    plots using python for global deterministic models
-# Log history:
+# Developers: Mallory Row / Mallory.Row@noaa.gov
+# Purpose of Script: This script is run for the global_det atmos plots step
+#                    for the headline verification. It uses EMC-developed
+#                    python scripts to do the plotting.
 ###############################################################################
 
 set -x
@@ -18,7 +19,7 @@ echo "RUN MODE:$evs_run_mode"
 
 pwd
 
-# Create job scripts data
+# Create headline plots
 python $USHevs/global_det/global_det_atmos_plots_headline.py
 status=$?
 [[ $status -ne 0 ]] && exit $status
@@ -30,14 +31,4 @@ if [ $SENDCOM = YES ]; then
     cd $DATA/images
     tar -cvf $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar *.png
     cp -v $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar $COMOUT/.
-fi
-cd $DATA
-
-# Non-production jobs
-if [ $evs_run_mode != "production" ]; then
-    # Clean up
-    if [ $KEEPDATA != "YES" ] ; then
-        cd $DATAROOT
-        rm -rf $DATA
-    fi
 fi
