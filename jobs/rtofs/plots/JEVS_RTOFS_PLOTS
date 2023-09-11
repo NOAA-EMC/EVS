@@ -64,7 +64,6 @@ export COMINstats=${COMINstats:-$COMIN/stats/$COMPONENT}
 export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
 export COMOUTplots=${COMOUTplots:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
 export COMOUTplotsheadline=${COMOUTplotsheadline:-$COMOUT/$STEP/$COMPONENT/headline.$VDATE}
-export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
 
 mkdir -p $COMOUT $COMOUTplots $COMOUTplotsheadline
 mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE
