@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 '''
-Program Name: global_det_atmos_plots_grid2obs_create_job_scripts.py
-Contact(s): Mallory Row
+Name: global_det_atmos_plots_grid2obs_create_job_scripts.py
+Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This creates multiple independent job scripts. These
-          jobs contain all the necessary environment variables
-          and commands to needed to run the specific
-          use case.
+          jobs scripts contain all the necessary environment variables
+          and commands to needed to run them.
+Run By: scripts/global_det/plots/exevs_global_det_atmos_grid2obs_plots.sh
 '''
 
 import sys
@@ -106,7 +106,7 @@ base_plot_jobs_info_dict = {
                   'fcst_var_dict': {'name': 'UGRD',
                                     'levels': ['P1000', 'P925', 'P850', 'P700',
                                                'P500', 'P300', 'P250', 'P200',
-                                               'P100', 'P50', 'P20', 'P10', 
+                                               'P100', 'P50', 'P20', 'P10',
                                                'P5']},
                   'obs_var_dict': {'name': 'UGRD',
                                    'levels': ['P1000', 'P925', 'P850', 'P700',
@@ -193,7 +193,7 @@ base_plot_jobs_info_dict = {
                                       'MidAtlantic', 'NorthAtlantic',
                                       'NPlains', 'NRockies', 'PacificNW',
                                       'PacificSW', 'Prairie', 'Southeast',
-                                      'Southwest', 'SPlains', 'SRockies'], 
+                                      'Southwest', 'SPlains', 'SRockies'],
                          'fcst_var_dict': {'name': 'CAPE',
                                            'levels': ['Z0']},
                          'obs_var_dict': {'name': 'CAPE',
@@ -663,7 +663,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
         elif JOB_GROUP == 'make_plots':
             job_env_dict['grid'] = (
                 verif_type_plot_jobs_dict[verif_type_job]['grid']
-            )   
+            )
             JOB_GROUP_verif_type_job_product_loops = list(itertools.product(
                 verif_type_plot_jobs_dict[verif_type_job]['line_type_stats'],
                 verif_type_plot_jobs_dict[verif_type_job]['plots'],
@@ -895,7 +895,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     COMOUT
                 )
                 # Create job file
-                njobs+=1 
+                njobs+=1
                 job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
                 print("Creating job script: "+job_file)
                 job = open(job_file, 'w')
