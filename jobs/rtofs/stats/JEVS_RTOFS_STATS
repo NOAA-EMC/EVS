@@ -55,7 +55,6 @@ setpdy.sh
 export VDATE=${VDATE:-$PDYm1}
 
 # set up paths
-export FIXevs=${FIXevs:-$HOMEevs/fix}
 export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config/$COMPONENT}
 
 # define COMIN/COMOUT variables
@@ -66,7 +65,6 @@ export COMINclimo=${COMINclimo:-$HOMEevs/fix/climos/$COMPONENT}
 export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
 export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE
 export COMOUTfinal=${COMOUTfinal:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
-export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
 
 mkdir -p $COMOUT $COMOUTsmall $COMOUTfinal
 
@@ -92,7 +90,7 @@ postmsg "$msg"
 
 if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT
-##  rm -rf $DATA
+  rm -rf $DATA
 fi
 
 date

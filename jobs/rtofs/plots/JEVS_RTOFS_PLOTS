@@ -56,8 +56,6 @@ export VDATE=${VDATE:-$PDYm1}
 
 
 # set up paths
-export FIXevs=${FIXevs:-$HOMEevs/fix/logos}
-export USHevs=${USHevs:-$HOMEevs/ush/$COMPONENT}
 export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config/$COMPONENT}
 
 # define COMIN/COMOUT variables
@@ -142,7 +140,7 @@ postmsg "$msg"
 
 if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT
- ###  rm -rf $DATA
+  rm -rf $DATA
 fi
 
 date
