@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_valid_hour_average.py
-Contact(s): Mallory Row
+Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This script generates a valid hour average plot.
+          (x-axis: valid hour; y-axis: statistics value)
+          (EVS Graphics Naming Convention: vhrmean)
 '''
 
 import sys
@@ -26,7 +28,7 @@ class ValidHourAverage:
     """
     Create a valid hour average graphic
     """
- 
+
     def __init__(self, logger, input_dir, output_dir, model_info_dict,
                  date_info_dict, plot_info_dict, met_info_dict, logo_dir):
         """! Initalize ValidHourAverage class
@@ -40,7 +42,7 @@ class ValidHourAverage:
                  date_info_dict  - date information dictionary (strings)
                  met_info_dict   - MET information dictionary (strings)
                  logo_dir        - directory with logo images (string)
- 
+
              Returns:
         """
         self.logger = logger
@@ -164,7 +166,7 @@ class ValidHourAverage:
             # Calculate statistic mean and 95% confidence intervals
             self.logger.info(f"Calculating statstic {self.plot_info_dict['stat']} "
                              +f"from line type {self.plot_info_dict['line_type']} "
-                             +"average and 95% confidence intervals") 
+                             +"average and 95% confidence intervals")
             stat_df, stat_array = gda_util.calculate_stat(
                 self.logger, all_forecast_hour_all_model_df,
                 self.plot_info_dict['line_type'],
@@ -377,7 +379,7 @@ class ValidHourAverage:
                               +f"- {model_num_plot_name}")
             masked_model_num_data = np.ma.masked_invalid(model_num_data)
             if model_num == 'model1':
-                 model1_masked_model_num_data = masked_model_num_data 
+                 model1_masked_model_num_data = masked_model_num_data
             model_num_npts = (
                 len(masked_model_num_data)
                 - np.ma.count_masked(masked_model_num_data)
@@ -569,7 +571,7 @@ class ValidHourAverage:
                     ax.set_yticks(np.arange(y_axis_min,
                                             y_axis_max +  y_axis_tick_inc,
                                             y_axis_tick_inc))
-                    ax.set_ylim([y_axis_min, y_axis_max])  
+                    ax.set_ylim([y_axis_min, y_axis_max])
             subplot_num+=1
         if len(ax1.lines) != 0:
             y_axis_min = ax1.get_yticks()[0]
@@ -669,7 +671,7 @@ def main():
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')
     if not os.path.exists(logging_dir):
          os.makedirs(logging_dir)
-    job_logging_file = os.path.join(logging_dir, 
+    job_logging_file = os.path.join(logging_dir,
                                     os.path.basename(__file__)+'_runon'
                                     +datetime.datetime.now()\
                                     .strftime('%Y%m%d%H%M%S')+'.log')

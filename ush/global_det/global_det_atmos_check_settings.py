@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 '''
-Program Name: global_det_atmos_check_settings.py
-Contact(s): Mallory Row
-Abstract: This script is run by all scripts in scripts/.
-          This does a check on the user's settings.
+Name: global_det_atmos_check_settings.py
+Contact(s): Mallory Row (mallory.row@noaa.gov)
+Abstract: This does a check on the run's configuration
+          settings for global_det atmos stats and plots jobs.
+Run By: scripts/global_det/stats/exevs_global_det_atmos_grid2grid_stats.sh
+        scripts/global_det/stats/exevs_global_det_atmos_grid2obs_stats.sh
+        scripts/global_det/plots/exevs_global_det_atmos_grid2grid_plots.sh
+        scripts/global_det/plots/exevs_global_det_atmos_grid2obs_plots.sh
 '''
 
 import sys

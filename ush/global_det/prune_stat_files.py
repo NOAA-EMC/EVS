@@ -1,3 +1,10 @@
+###########################################
+#
+# Used for global_det wave plots
+#
+###########################################
+
+
 '''
 Program Name: prune_stat_files.py
 Contact(s): Marcel Caron, Mallory Row, and L. Gwen Chen (lichuan.chen@noaa.gov)

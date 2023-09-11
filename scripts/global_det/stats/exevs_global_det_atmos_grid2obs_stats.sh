@@ -1,10 +1,10 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_global_det_atmos_grid2obs_stats.sh 
-# Purpose of Script: This script generates grid-to-observations
-#                    verification statistics using METplus for the
-#                    atmospheric component of global deterministic models
-# Log history:
+# Name of Script: exevs_global_det_atmos_grid2obs_stats.sh
+# Developers: Mallory Row / Mallory.Row@noaa.gov
+# Purpose of Script: This script is run for the global_det atmos stats step
+#                    for the grid-to-obs verification. It uses METplus to
+#                    generate the statistics.
 ###############################################################################
 
 set -x
@@ -51,14 +51,6 @@ if ls $DATA/grid2obs_stats/data/mail_* 1> /dev/null 2>&1; then
     done
 fi
 
-# Check for restart files
-if [ $evs_run_mode = production ]; then
-    python ${USHevs}/global_det/global_det_atmos_production_restart.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/global_det/global_det_atmos_production_restart.py"
-fi
-
 # Create and run job scripts for reformat_data, assemble_data, generate_stats, and gather_stats
 for group in reformat_data assemble_data generate_stats gather_stats; do
     export JOB_GROUP=$group
@@ -95,22 +87,6 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
             nc=$((nc+1))
         done
     fi
-    if [ $SENDCOM = YES ]; then
-        # Copy atmos
-        for RUN_DATE_PATH in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$RUN.*; do
-            RUN_DATE_DIR=$(echo ${RUN_DATE_PATH##*/})
-            for RUN_DATE_SUBDIR_PATH in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$RUN_DATE_DIR/*; do
-                RUN_DATE_SUBDIR=$(echo ${RUN_DATE_SUBDIR_PATH##*/})
-                if [ $(ls -A "$RUN_DATE_SUBDIR_PATH/$VERIF_CASE" | wc -l) -ne 0 ]; then
-                    for FILE in $RUN_DATE_SUBDIR_PATH/$VERIF_CASE/*; do
-                        if [ ! -f $COMOUT/$RUN_DATE_DIR/$RUN_DATE_SUBDIR/$VERIF_CASE/${FILE##*/} ]; then
-                            cp -v $FILE $COMOUT/$RUN_DATE_DIR/$RUN_DATE_SUBDIR/$VERIF_CASE/${FILE##*/}
-                        fi
-                    done
-                fi
-            done
-        done
-    fi
 done
 
 # Copy files to desired location
@@ -124,30 +100,4 @@ if [ $SENDCOM = YES ]; then
             done
         done
     done
-fi
-
-# Non-production jobs
-if [ $evs_run_mode != "production" ]; then
-    # Send data to archive
-    if [ $SENDARCH = YES ]; then
-        python $USHevs/global_det/global_det_atmos_copy_to_archive.py
-        status=$?
-        [[ $status -ne 0 ]] && exit $status
-        [[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_copy_to_archive.py"
-        echo
-    fi
-    # Send data to METviewer AWS server
-    if [ $SENDMETVIEWER = YES ]; then
-        python $USHevs/global_det/global_det_atmos_load_to_METviewer_AWS.py
-        status=$?
-        [[ $status -ne 0 ]] && exit $status
-        [[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_load_to_METviewer_AWS.py"
-        echo
-    else
-        # Clean up
-        if [ $KEEPDATA != "YES" ] ; then
-            cd $DATAROOT
-            rm -rf $DATA
-        fi
-    fi
 fi
