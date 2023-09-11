@@ -179,10 +179,10 @@ for domain in day1_mrgl day1_slgt day1_tstm day1_enh day1_mdt day1_high day2_mrg
     level=ml
     valid=valid_00z_12z
   fi
-  mv lead_average_regional_${domain}_valid_available_times_${var}*.png  evs.href.csi_fbias.${var_new}_${level}.last${past_days}days.fhrmean_${valid}.buk_${domain}.png
-  mv threshold_average_regional_${domain}_${valid}_${var}_csi*.png  evs.href.csi.${var_new}_${level}.last${past_days}days.threshmean_${valid}.buk_${domain}.png
-  mv threshold_average_regional_${domain}_${valid}_${var}_fbias*.png  evs.href.fbias.${var_new}_${level}.last${past_days}days.threshmean_${valid}.buk_${domain}.png
-  mv performance_diagram_regional_${domain}_${valid}_${var}*.png evs.href.ctc.${var_new}_${level}.last${past_days}days.perfdiag_${valid}.buk_${domain}.png
+  mv lead_average_regional_${domain}_valid_all_times_${var}*.png  evs.href.csi_fbias.${var_new}_${level}.last${past_days}days.fhrmean_${valid}.${domain}.png
+  mv threshold_average_regional_${domain}_${valid}_${var}_csi*.png  evs.href.csi.${var_new}_${level}.last${past_days}days.threshmean_${valid}.${domain}.png
+  mv threshold_average_regional_${domain}_${valid}_${var}_fbias*.png  evs.href.fbias.${var_new}_${level}.last${past_days}days.threshmean_${valid}.${domain}.png
+  mv performance_diagram_regional_${domain}_${valid}_${var}*.png evs.href.ctc.${var_new}_${level}.last${past_days}days.perfdiag_${valid}.${domain}.png
 
  done
 done
@@ -190,8 +190,9 @@ done
 
 tar -cvf evs.plots.href.spcoutlook.past${past_days}days.v${VDATE}.tar *.png
 
-cp  evs.plots.href.spcoutlook.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
-
+if [ $SENDCOM="YES" ]; then
+ cp  evs.plots.href.spcoutlook.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
+fi
 
 
 

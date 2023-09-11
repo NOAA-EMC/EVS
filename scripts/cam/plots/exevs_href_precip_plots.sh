@@ -89,16 +89,15 @@ for stats in ets_fbias ratio_pod_csi fss ; do
    if [ $VAR = APCP_01 ] ; then
 	#export fcst_leads='3,6,9,12,15,18,21,24'
 	export fcst_leads='1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24'
-	export fcst_valid_hour='0,3,6,9,12,15,18,21'
-	#export fcst_valid_hour='0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23'
+	export fcst_valid_hours='00 03 06 09 12 15 18 21'
 	FCST_LEVEL_values=A01
    elif [ $VAR = APCP_03 ] ; then
          export fcst_leads='3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48'
-	 export fcst_valid_hour='0,3,6,9,12,15,18,21'
+	 export fcst_valid_hours='00 03 06 09 12 15 18 21'
 	 FCST_LEVEL_values=A03
    elif [ $VAR = APCP_24 ] ; then
          export fcst_leads='24,30,36,42,48'
-	 export fcst_valid_hour='12'
+	 export fcst_valid_hours='12'
 	 FCST_LEVEL_values=A24
    fi
 
@@ -116,40 +115,42 @@ for stats in ets_fbias ratio_pod_csi fss ; do
 
       for line_type in $line_tp ; do 
 
-         > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh  
+       for fcst_valid_hour in $fcst_valid_hours ; do	      
 
-        echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
-        echo "export vx_mask_list='$VX_MASK_LIST'" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
-        echo "export verif_case=$verif_case" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
-        echo "export verif_type=$verif_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
+         > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh  
 
-        echo "export log_level=DEBUG" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
-        echo "export met_ver=$met_v" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
+        echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+        echo "export vx_mask_list='$VX_MASK_LIST'" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+        echo "export verif_case=$verif_case" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+        echo "export verif_type=$verif_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 
-        echo "export eval_period=TEST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
+        echo "export log_level=DEBUG" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+        echo "export met_ver=$met_v" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+
+        echo "export eval_period=TEST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 
 
         if [ $score_type = valid_hour_average ] ; then
-          echo "export date_type=INIT" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
+          echo "export date_type=INIT" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
         else
-          echo "export date_type=VALID" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
+          echo "export date_type=VALID" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
         fi
 
 
-         echo "export var_name=$VAR" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
-         echo "export fcts_level=$FCST_LEVEL_value" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
-         echo "export obs_level=$OBS_LEVEL_value" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
+         echo "export var_name=$VAR" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+         echo "export fcts_level=$FCST_LEVEL_value" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
+         echo "export obs_level=$OBS_LEVEL_value" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 
-         echo "export line_type=$line_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
+         echo "export line_type=$line_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 
 	 if [ $stats = fss ] ; then
 	   
-	   echo "export interp=NBRHD_SQUARE" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
+	   echo "export interp=NBRHD_SQUARE" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
          else	   
-           echo "export interp=NEAREST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
+           echo "export interp=NEAREST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 	 fi
 
-         echo "export score_py=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
+         echo "export score_py=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
  
 	 if [ $VAR = APCP_01 ] ; then
            thresh_fcst='>=0.254, >=2.54, >=6.35, >=12.7, >=25.4'
@@ -160,14 +161,16 @@ for stats in ets_fbias ratio_pod_csi fss ; do
 	 fi
 	 thresh_obs=$thresh_fcst
 
-         sed -e "s!model_list!$models!g" -e "s!stat_list!$stat_list!g"  -e "s!thresh_fcst!$thresh_fcst!g"  -e "s!thresh_obs!$thresh_obs!g"   -e "s!fcst_init_hour!$fcst_init_hour!g" -e "s!fcst_valid_hour!$fcst_valid_hour!g" -e "s!fcst_lead!$lead!g"  -e "s!interp_pnts!$interp_pnts!g" $USHevs/cam/evs_href_plots_config.sh > run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
+         sed -e "s!model_list!$models!g" -e "s!stat_list!$stat_list!g"  -e "s!thresh_fcst!$thresh_fcst!g"  -e "s!thresh_obs!$thresh_obs!g"   -e "s!fcst_init_hour!$fcst_init_hour!g" -e "s!fcst_valid_hour!$fcst_valid_hour!g" -e "s!fcst_lead!$lead!g"  -e "s!interp_pnts!$interp_pnts!g" $USHevs/cam/evs_href_plots_config.sh > run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 
-         chmod +x  run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
+         chmod +x  run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 
-         echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
+         echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh
 
-         chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh 
-         echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh" >> run_all_poe.sh
+         chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh 
+         echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.${fcst_valid_hour}.sh" >> run_all_poe.sh
+
+       done # end of fcst_valid_hour
 
       done #end of line_type
 
@@ -187,7 +190,7 @@ chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 54 -ppn 54 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 306 -ppn 77 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi
@@ -195,39 +198,52 @@ fi
 
 cd $plot_dir
 
+
 for stats in ets fbias fss ; do
   score_type='threshold_average' 
   scoretype='threshmean'
 
   for var in apcp_01 apcp_03 apcp_24 ; do
+
+    if [ $var = apcp_01 ] || [ $var = apcp_03 ] ; then
+      valids="00z 03z 06z 09z 12z 15z 18z 21z"
+    elif [ $var = apcp_24 ] ; then
+      valids="12z"
+    fi 
+
     level=${var:5:2}h
     if [ $stats = fss ] ; then 
        if [ $var = apcp_01 ] ; then
-        valid=valid_00z_03z_06z_09z_12z_15z_18z_21z
         lead=width1-3-5-7-9-11_f1_to_f24
        elif [ $var = apcp_03 ] ; then
-        valid=valid_00z_03z_06z_09z_12z_15z_18z_21z
         lead=width1-3-5-7-9-11_f3_to_f48
        elif [ $var = apcp_24 ] ; then
-               valid=valid_12z
         lead=width1-3-5-7-9-11_f24-30-36-42-48
        fi	
     else	    
       if [ $var = apcp_01 ] ; then
-	valid=valid_00z_03z_06z_09z_12z_15z_18z_21z
         lead=f1_to_f24
       elif [ $var = apcp_03 ] ; then
-        valid=valid_00z_03z_06z_09z_12z_15z_18z_21z
         lead=f3_to_f48
       elif [ $var = apcp_24 ] ; then
-        valid=valid_12z
         lead=f24-30-36-42-48
       fi
     fi
 
    for domain in conus conus_east conus_west conus_south conus_central alaska  ; do
-      mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var}h.last${past_days}days.${scoretype}_valid_all_times.buk_${domain}.png
-   done
+
+      if [ $domain = alaska ] ; then
+          new_domain=$domain
+      else
+          new_domain=buk_${domain}
+      fi
+    for valid in $valids ; do
+ 
+      ls ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png
+
+      mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var}h.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+    done
+  done
 
  done
 done
@@ -237,29 +253,43 @@ score_type='performance_diagram'
 scoretype='perfdiag'
 
 for var in apcp_01 apcp_03 apcp_24 ; do
+  
+    if [ $var = apcp_01 ] || [ $var = apcp_03 ] ; then
+	 valids="00z 03z 06z 09z 12z 15z 18z 21z"
+    elif [ $var = apcp_24 ] ; then
+         valids="12z"
+    fi
+
     level=${var:5:2}h
     if [ $var = apcp_01 ] ; then
-	valid=valid_00z_03z_06z_09z_12z_15z_18z_21z
         lead=f1_to_f24__ge0.254ge2.54ge6.35ge12.7ge25.4
     elif [ $var = apcp_03 ] ; then
-        valid=valid_00z_03z_06z_09z_12z_15z_18z_21z
         lead=f3_to_f48__ge2.54ge6.35ge12.7ge25.4ge50.8
     elif [ $var = apcp_24 ] ; then
-        valid=valid_12z
         lead=f24-30-36-42-48__ge12.7ge25.4ge50.8ge76.2
     fi
 
    for domain in conus conus_east conus_west conus_south conus_central alaska  ; do
-      mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${lead}.png  evs.href.ctc.${var}h.last${past_days}days.${scoretype}_valid_all_times.buk_${domain}.png
-   done
+    for valid in $valids ; do
 
+     if [ $domain = alaska ] ; then
+          new_domain=$domain
+     else
+         new_domain=buk_${domain}
+     fi
+
+      mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${lead}.png  evs.href.ctc.${var}h.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+
+    done
+  done
 done
 
 
 tar -cvf evs.plots.href.precip.past${past_days}days.v${VDATE}.tar *.png
 
-cp evs.plots.href.precip.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
-
+if [ $SENDCOM="YES" ]; then
+ cp evs.plots.href.precip.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
+fi
 
 
 

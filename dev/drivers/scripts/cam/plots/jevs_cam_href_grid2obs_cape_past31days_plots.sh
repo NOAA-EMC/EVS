@@ -1,10 +1,10 @@
-#PBS -N jevs_cam_href_grid2obs_ctc_past31days_plots
+#PBS -N jevs_cam_href_grid2obs_cape_past31days_plots
 #PBS -j oe
 #PBS -q dev
 #PBS -S /bin/bash
 #PBS -A VERF-DEV
 #PBS -l walltime=00:30:00
-#PBS -l place=vscatter,select=10:ncpus=82:mpiprocs=72:mem=100GB
+#PBS -l place=vscatter,select=10:ncpus=84:mpiprocs=72:mem=100GB
 #PBS -l debug=true
 
 
@@ -22,7 +22,7 @@ export NET=evs
 export STEP=plots
 export COMPONENT=cam
 export RUN=atmos
-export VERIF_CASE=grid2obs_ctc
+export VERIF_CASE=grid2obs_cape
 export MODELNAME=href
 
 
