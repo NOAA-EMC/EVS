@@ -10,9 +10,6 @@
 
 set -x
 
-#%include <head.h>
-#%include <envir-p1.h>
-
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 export MODELNAME=nfcens
@@ -56,7 +53,7 @@ export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver}
 export run_mpi='yes'
 export gather='yes'
 
-export job=${PBS_JOBNAME:-jevs_nfcens_grid2obs_prep}
+export job=${PBS_JOBNAME:-jevs_nfcens_grid2obs_plots}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
@@ -66,9 +63,6 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 ${HOMEevs}/jobs/${COMPONENT}/${STEP}/JEVS_NFCENS_WAVE_GRID2OBS_PLOTS
 
-#%include <tail.h>
-#%manual
 #########################################################################
 # Purpose: This job creates the plots for the NFCENS wave model
 #########################################################################
-#%end
