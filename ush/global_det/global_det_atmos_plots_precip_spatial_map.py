@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_precip_spatial_map.py
-Contact(s): Mallory Row
-Abstract: This script generates a spatial map for precip
+Contact(s): Mallory Row (mallory.row@noaa.gov)
+Abstract: This script generates a spatial map for 24 hour precipitation.
+          (lat-lon plots; contours: precipitation)
+          (EVS Graphics Naming Convention: (MODEL).vYYYYmmdd12.024h.(region).[gif][png])
 '''
 
 import netCDF4 as netcdf
@@ -44,7 +46,7 @@ class PrecipSpatialMap:
                  date_info_dict    - date information dictionary (strings)
                  met_info_dict     - MET information dictionary (strings)
                  logo_dir          - directory with logo images (string)
- 
+
              Returns:
         """
         self.logger = logger
@@ -77,7 +79,7 @@ class PrecipSpatialMap:
             +self.date_info_dict['valid_hr_end'], '%Y%m%d%H'
         )
         init_date_dt = (
-            valid_date_dt 
+            valid_date_dt
             - datetime.timedelta(
                 hours=int(self.date_info_dict['forecast_hour']))
         )
@@ -100,7 +102,7 @@ class PrecipSpatialMap:
                         'goldenrod', 'yellow']
         cmap_over_color_mm = '#ffaeb9'
         # Set Cartopy shapefile location
-        config['data_dir'] = '/apps/ops/prod/data/cartopy'
+        config['data_dir'] = f"{os.environ['cartopyDataDir']}"
         # Read in data
         self.logger.info(f"Reading in model files from {self.input_dir}")
         for model_num in self.model_info_dict:
@@ -196,7 +198,7 @@ class PrecipSpatialMap:
                                           +f"{init_date_dt}")
                         sys.exit(1)
                 if var_units in ['mm', 'kg/m^2']:
-                    self.logger.info(f"Converting from {var_units} to " 
+                    self.logger.info(f"Converting from {var_units} to "
                                      +"inches")
                     precip_APCP_A24 = precip_APCP_A24 * 0.0393701
                     var_units = 'inches'
@@ -319,8 +321,7 @@ class PrecipSpatialMap:
                 CF1 = ax1.contourf(x, y, precip_APCP_A24,
                                    transform=ccrs.PlateCarree(),
                                    levels=clevs, norm=norm,
-                                   cmap=cmap, extend='max',
-                                   transform_first=True)
+                                   cmap=cmap, extend='max')
                 CF1.cmap.set_over(cmap_over_color)
                 cbar_left = gs.get_grid_positions(fig)[2][0]
                 cbar_width = (gs.get_grid_positions(fig)[3][-1]
@@ -429,7 +430,7 @@ def main():
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')
     if not os.path.exists(logging_dir):
          os.makedirs(logging_dir)
-    job_logging_file = os.path.join(logging_dir, 
+    job_logging_file = os.path.join(logging_dir,
                                     os.path.basename(__file__)+'_runon'
                                     +datetime.datetime.now()\
                                     .strftime('%Y%m%d%H%M%S')+'.log')
