@@ -1,13 +1,15 @@
 #!/bin/bash
-##############################################################
-# Name of Script: global_det_wave_leadaverages.sh                    
-# Deanna Spindler / Deanna.Spindler@noaa.gov                  
-# Mallory Row / Mallory.Row@noaa.gov
-# Purpose of Script: Make the lead_averages.py command files  
-#                                                             
+###############################################################################
+# Name of Script: global_det_wave_leadaverages.sh
+# Developers: Deanna Spindler / Deanna.Spindler@noaa.gov
+#             Mallory Row / Mallory.Row@noaa.gov
+# Purpose of Script: This script generates the job scripts to create
+#                    lead average plots.
+# Run By: cripts/global_det/plots/exevs_global_det_wave_grid2obs_plots.sh
+###############################################################################
 
 #################################
-# Make the command files for cfp 
+# Make the command files for cfp
 #################################
 
 # set up plot variables
@@ -77,7 +79,7 @@ for period in ${periods} ; do
                   'stats4')
                     image_stat="esd"
                     echo "export METRIC=esd " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_${stats}_${ptype}_${period}_${region}.sh
-                    ;; 
+                    ;;
                   'stats5')
                     image_stat="si"
                     echo "export METRIC=si "  >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_${stats}_${ptype}_${period}_${region}.sh
@@ -118,14 +120,14 @@ for period in ${periods} ; do
                         echo "export err=$?; err_chk" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_${stats}_${ptype}_${period}_${region}.sh
                     fi
                 fi
-        
+
                 chmod +x ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_${stats}_${ptype}_${period}_${region}.sh
-        
+
                 echo "${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_${stats}_${ptype}_${period}_${region}.sh" >> ${DATA}/jobs/run_all_${RUN}_g2o_plots_poe.sh
             done # end of regions
-        done # end of obsname        
+        done # end of obsname
       done  # end of stats
     done  # end of wave vars
   done  # end of valid hours
 done  # end of periods
-  
+

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 '''
-Program Name: global_det_atmos_stats_grid2grid_create_job_scripts.py
-Contact(s): Mallory Row
+Name: global_det_atmos_stats_grid2grid_create_job_scripts.py
+Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This creates multiple independent job scripts. These
-          jobs contain all the necessary environment variables
-          and commands to needed to run the specific
-          use case.
+          jobs scripts contain all the necessary environment variables
+          and commands to needed to run them.
+Run By: scripts/global_det/stats/exevs_global_det_atmos_grid2grid_stats.sh
 '''
 
 import sys
@@ -345,7 +345,7 @@ assemble_data_model_jobs_dict = {
                                'commands': [gda_util.metplus_command(
                                                 'PCPCombine_fcstGLOBAL_'
                                                 +'DET_24hrAccum_snow.conf'
-                                            )]}, 
+                                            )]},
         '24hrAccum_Depth': {'env': {'MODEL_var': 'SNOD'},
                             'commands': [gda_util.metplus_command(
                                              'PCPCombine_fcstGLOBAL_'
@@ -493,7 +493,7 @@ generate_stats_jobs_dict = {
                                           )]},
         'TotalOzone': {'env': {'var1_name': 'TOZNE',
                                'var1_level': 'L0',
-                               'var1_options': ''}, 
+                               'var1_options': ''},
                       'commands': [gda_util.metplus_command(
                                        'GridStat_fcstGLOBAL_DET.conf'
                                    )]},
@@ -1007,7 +1007,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
             verif_type_job_commands_list = (
                 JOB_GROUP_jobs_dict[verif_type]\
                 [verif_type_job]['commands']
-            ) 
+            )
             # Loop through and write job script for dates and models
             if JOB_GROUP == 'reformat_data':
                 if verif_type in ['sst', 'sea_ice']:
@@ -1100,7 +1100,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     write_job_cmds = False
                     check_model_files = True
                     if check_model_files:
-                        model_files_exist, valid_date_fhr_list = (
+                        (model_files_exist, valid_date_fhr_list,
+                         model_copy_output_DATA2COMOUT_list) = (
                             gda_util.check_model_files(job_env_dict)
                         )
                         job_env_dict['fhr_list'] = (
@@ -1127,8 +1128,9 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         else:
                             check_truth_files = True
                     if check_truth_files:
-                        all_truth_file_exist = gda_util.check_truth_files(
-                            job_env_dict
+                        (all_truth_file_exist,
+                         truth_copy_output_DATA2COMOUT_list)= (
+                             gda_util.check_truth_files(job_env_dict)
                         )
                         if model_files_exist and all_truth_file_exist:
                             write_job_cmds = True
@@ -1153,6 +1155,18 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     if write_job_cmds:
                         for cmd in verif_type_job_commands_list:
                             job.write(cmd+'\n')
+                        if job_env_dict['SENDCOM'] == 'YES':
+                            for model_output_file_tuple \
+                                    in model_copy_output_DATA2COMOUT_list:
+                                job.write(f"cp -v {model_output_file_tuple[0]} "
+                                          +f"{model_output_file_tuple[1]}\n")
+                    else:
+                        if JOB_GROUP == 'reformat_data':
+                            if (verif_type_job == 'GeoHeightAnom' \
+                                     and int(job_env_dict['valid_hr_start']) \
+                                     % 12 == 0) \
+                                    or verif_type_job == 'WindShear':
+                                job.write(verif_type_job_commands_list[1])
                     job.close()
                 date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
         # Do reformat_data and assemble_data observation jobs
@@ -1205,8 +1219,9 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     job.write('\n')
                     # Set any environment variables for special cases
                     # Do file checks
-                    all_truth_file_exist = gda_util.check_truth_files(
-                        job_env_dict
+                    (all_truth_file_exist,
+                     truth_copy_output_DATA2COMOUT_list) = (
+                         gda_util.check_truth_files(job_env_dict)
                     )
                     if all_truth_file_exist:
                         write_job_cmds = True
@@ -1220,6 +1235,11 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     if write_job_cmds:
                         for cmd in verif_type_job_commands_list:
                             job.write(cmd+'\n')
+                        if job_env_dict['SENDCOM'] == 'YES':
+                            for truth_output_file_tuple \
+                                    in truth_copy_output_DATA2COMOUT_list:
+                                job.write(f"cp -v {truth_output_file_tuple[0]} "
+                                          +f"{truth_output_file_tuple[1]}\n")
                     job.close()
                     date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
 elif JOB_GROUP == 'gather_stats':

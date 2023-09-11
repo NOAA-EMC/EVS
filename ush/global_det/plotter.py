@@ -1,3 +1,9 @@
+###########################################
+#
+# Used for global_det wave plots
+#
+###########################################
+
 import matplotlib.pyplot as plt
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Rectangle, PathPatch
