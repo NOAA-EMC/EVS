@@ -10,7 +10,7 @@
 
 export model=evs
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS_firewx_fixes/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 source $HOMEevs/versions/run.ver
 
@@ -48,7 +48,7 @@ export config=$HOMEevs/parm/evs_config/cam/config.evs.cam_nam_firewxnest.prod
 source $config
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}/$STEP/$COMPONENT
+export COMOUT=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver}/$STEP/$COMPONENT
 export COMINnam=${COMIN}/stats/${COMPONENT}/${MODELNAME}
 
 # CALL executable job script here
