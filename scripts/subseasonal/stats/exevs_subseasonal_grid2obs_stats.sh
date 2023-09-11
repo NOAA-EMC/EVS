@@ -210,15 +210,6 @@ done
 
 # Copy stat files to desired location
 if [ $SENDCOM = YES ]; then
-    for RUN_DATE_PATH in $DATA/$VERIF_CASE_STEP/METplus_output/$RUN.*; do
-	RUN_DATE_DIR=$(echo ${RUN_DATE_PATH##*/})
-	for RUN_DATE_SUBDIR_PATH in $DATA/$VERIF_CASE_STEP/METplus_output/$RUN_DATE_DIR/*; do
-            RUN_DATE_SUBDIR=$(echo ${RUN_DATE_SUBDIR_PATH##*/})
-	    for FILE in $RUN_DATE_SUBDIR_PATH/$VERIF_CASE/*; do
-		cp -v $FILE $COMOUT/$RUN_DATE_DIR/$RUN_DATE_SUBDIR/$VERIF_CASE/.
-	    done
-        done
-    done
     for MODEL in $model_list; do
 	for MODEL_DATE_PATH in $DATA/$VERIF_CASE_STEP/METplus_output/$MODEL.*; do
 	    MODEL_DATE_SUBDIR=$(echo ${MODEL_DATE_PATH##*/})
@@ -227,27 +218,4 @@ if [ $SENDCOM = YES ]; then
 	    done
         done
     done
-fi
-
-# Send data to archive
-if [ $SENDARCH = YES ]; then
-    python $USHevs/subseasonal/copy_subseasonal_stat_files.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran copy_subseasonal_stat_files.py"
-    echo
-fi
-
-# Send data to METviewer AWS server and clean up
-if [ $SENDMETVIEWER = YES ]; then
-    python $USHevs/subseasonal/subseasonal_load_to_METviewer_AWS.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran subseasonal_load_to_METviewer_AWS.py"
-    echo
-else
-    if [ $KEEPDATA = NO ]; then
-	cd $DATAROOTtmp
-	rm -rf $DATA
-    fi
 fi
