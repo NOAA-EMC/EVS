@@ -42,7 +42,7 @@ export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export KEEPDATA=${KEEPDATA:-NO}
 
-export maillist='samira.ardani@noaa.gov'
+export maillist='alicia.bentley@noaa.gov,samira.ardani@noaa.gov'
 
 export cycle=t00z
 
