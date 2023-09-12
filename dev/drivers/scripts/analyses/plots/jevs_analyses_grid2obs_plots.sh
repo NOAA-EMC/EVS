@@ -54,7 +54,7 @@ export COMOUTplots=${COMOUT}/plots/${COMPONENT}/${RUN}.${VDATE}
 export cyc=00
 echo $cyc
 
-export maillist=perry.shafran@noaa.gov
+export maillist="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
 
 export config=$HOMEevs/parm/evs_config/analyses/config.evs.rtma.prod
 source $config

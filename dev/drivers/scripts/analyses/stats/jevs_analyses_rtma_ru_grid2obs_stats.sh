@@ -54,7 +54,7 @@ export mod_ver=${rtma_ver}
 export modsys=rtma
 export MODELNAME=rtma_ru
 
-export maillist=perry.shafran@noaa.gov
+export maillist="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
 
 export config=$HOMEevs/parm/evs_config/analyses/config.evs.rtma.prod
 source $config
