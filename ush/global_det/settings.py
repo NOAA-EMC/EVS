@@ -1,5 +1,13 @@
+###########################################
+#
+# Used for global_det wave plots
+#
+###########################################
+
+
 from datetime import datetime, timedelta as td
 import numpy as np
+import os
 
 class Toggle():
     def __init__(self):
@@ -71,8 +79,8 @@ class Paths():
         Referenced if plot_logo_left and plot_logo_right, in the Toggle class,
         are set to True
         '''
-        self.logo_left_path = "/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/logos/noaa.png"
-        self.logo_right_path = "/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/logos/nws.png"
+        self.logo_left_path =  f"{os.environ['FIXevs']}/logos/noaa.png"
+        self.logo_right_path =  f"{os.environ['FIXevs']}/logos/nws.png"
 
 class Presets():
     def __init__(self):

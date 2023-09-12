@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 '''
-Program Name: global_det_atmos_plots_grid2grid_create_job_scripts.py
-Contact(s): Mallory Row
+Name: global_det_atmos_plots_grid2grid_create_job_scripts.py
+Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This creates multiple independent job scripts. These
-          jobs contain all the necessary environment variables
-          and commands to needed to run the specific
-          use case.
+          jobs scripts contain all the necessary environment variables
+          and commands to needed to run them.
+Run By: scripts/global_det/plots/exevs_global_det_atmos_grid2grid_plots.sh
 '''
 
 import sys
@@ -307,7 +307,7 @@ base_plot_jobs_info_dict = {
 }
 
 ################################################
-#### condense_stats jobs 
+#### condense_stats jobs
 ################################################
 condense_stats_jobs_dict = copy.deepcopy(base_plot_jobs_info_dict)
 #### means
@@ -399,7 +399,7 @@ for pres_levs_job in list(filter_stats_jobs_dict['pres_levs'].keys()):
     if pres_levs_job == 'GeoHeight_FourierDecomp':
         pres_levs_job_interps = [
             'WV1_0-20/NA', 'WV1_0-3/NA', 'WV1_4-9/NA', 'WV1_10-20/NA'
-        ] 
+        ]
     else:
         pres_levs_job_interps = ['NEAREST/1']
     filter_stats_jobs_dict['pres_levs'][pres_levs_job]['interps'] = (
@@ -454,7 +454,7 @@ for snow_job in list(filter_stats_jobs_dict['snow'].keys()):
         'NBRHD_SQUARE/3969'
     ]
 #### sst
-for sst_job in list(filter_stats_jobs_dict['sst'].keys()): 
+for sst_job in list(filter_stats_jobs_dict['sst'].keys()):
     filter_stats_jobs_dict['sst'][sst_job]['grid'] = 'G004'
     filter_stats_jobs_dict['sst'][sst_job]['fcst_var_dict']['threshs'] = ['NA']
     filter_stats_jobs_dict['sst'][sst_job]['obs_var_dict']['threshs'] = ['NA']
@@ -997,7 +997,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     COMOUT
                 )
                 # Create job file
-                njobs+=1 
+                njobs+=1
                 job_file = os.path.join(JOB_GROUP_jobs_dir, 'job'+str(njobs))
                 print("Creating job script: "+job_file)
                 job = open(job_file, 'w')

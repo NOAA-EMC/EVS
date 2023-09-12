@@ -27,8 +27,6 @@ export RUN_GRID2OBS_PLOTS="NO"
 #model_stat_dir_list:    directory path to model .stat files
 #model_file_format_list: file format of model files
 export model_list="NAM_FIREWXNEST"
-export model_stat_dir_list="/lfs/h2/emc/ptmp/$USER"
-export model_file_format_list="/lfs/h1/ops/prod/com/nam/v4.2/nam.{init?fmt=%Y%m%d}/nam.t{init?fmt=%2H}z.firewxnest.hiresf{lead?fmt=%2H}.tm00.grib2"
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory
 export OUTPUTROOT="/lfs/h2/emc/ptmp/$USER/evs_cam"
@@ -42,11 +40,9 @@ export end_date=$yday
 #metplus_verbosity:         DEBUG, INFO, WARN, ERROR (most verbose is DEBUG)
 #met_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
 #log_met_output_to_metplus: log MET output to METplus log, yes or no
-export metplus_verbosity="DEBUG"
-export met_verbosity="2"
 export log_met_output_to_metplus="yes"
 ## DATA DIRECTIVE SETTINGS
-export KEEPDATA="YES"
+export KEEPDATA="NO"
 export SENDCOM="YES"
 export SENDARCH="NO"
 export SENDMETVIEWER="NO"
