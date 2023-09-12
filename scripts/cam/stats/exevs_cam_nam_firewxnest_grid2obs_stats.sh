@@ -116,7 +116,9 @@ then
   export err=$?; err_chk
 
   mkdir -p $COMOUTsmall
-  cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
+  if [ $SENDCOM = "YES" ]; then
+   cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
+  fi
 
   if [ $cyc = 23 ]
   then
@@ -129,7 +131,9 @@ then
        export err=$?; err_chk
 
        cat *ADPUPA >> evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat
-       cp evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat  $COMOUTfinal
+       if [ $SENDCOM = "YES" ]; then
+        cp evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat  $COMOUTfinal
+       fi
   fi
 
 else
