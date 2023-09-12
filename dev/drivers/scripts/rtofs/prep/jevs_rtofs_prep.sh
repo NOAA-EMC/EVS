@@ -15,7 +15,7 @@
 ############################################################
 set -x
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS_rtofs_cleanup/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 source $HOMEevs/versions/run.ver
 
 module reset
@@ -41,7 +41,7 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export maillist=${maillist:-'geoffrey.manikin@noaa.gov,lichuan.chen@noaa.gov'}
+export maillist=${maillist:-'alicia.bentley@noaa.gov,lichuan.chen@noaa.gov'}
 
 # call j-job
 $HOMEevs/jobs/$COMPONENT/$STEP/JEVS_RTOFS_PREP
