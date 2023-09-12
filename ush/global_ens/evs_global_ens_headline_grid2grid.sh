@@ -149,7 +149,7 @@ if [ $verify = upper ] ; then
 
         fi
 
-        echo "cp \$output_base/stat/${modnam}/grid_stat*.stat $COMOUTsmall" >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
+        [[ $SENDCOM="YES" ]] && echo "cp \$output_base/stat/${modnam}/grid_stat*.stat $COMOUTsmall" >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
 
         chmod +x run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
 

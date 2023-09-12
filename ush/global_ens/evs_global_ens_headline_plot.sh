@@ -137,6 +137,6 @@ sed -e "s!YYYY!${last_year}!g" -e "s!FIRST!$first!g" -e "s!LAST!$last!g"  $USHev
 
 python evs_global_ens_headline_plot.py
 
-cp NH_H500_PAC_${last_year}.png  $COMOUT/evs.plot.gefs.headline.hgt_p500.${beg_day}_${end_day}.nhem.png 
+[[ $SENDCOM="YES" ]] && cp NH_H500_PAC_${last_year}.png  $COMOUT/evs.plot.gefs.headline.hgt_p500.${beg_day}_${end_day}.nhem.png 
 
 
