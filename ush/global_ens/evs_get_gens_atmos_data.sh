@@ -343,7 +343,7 @@ if [ $modnam = prepbufr ] ; then
   done
 
       echo "wait" >> run_pb2nc.sh
-      echo "mv ${WORK}/pb2nc/prepbufr_nc/*.nc $COMOUT_gefs" >> run_pb2nc.sh
+      [[ $SENDCOM="YES" ]] && echo "cp ${WORK}/pb2nc/prepbufr_nc/*.nc $COMOUT_gefs" >> run_pb2nc.sh
 
   chmod +x run_pb2nc.sh
   ${DATA}/run_pb2nc.sh
@@ -384,7 +384,7 @@ if [ $modnam = ccpa ] ; then
 
     if [ -s ${WORK}/ccpa24/ccpa1 ] && [ -s ${WORK}/ccpa24/ccpa2 ] && [ -s ${WORK}/ccpa24/ccpa3 ] && [ -s ${WORK}/ccpa24/ccpa4 ] ; then
        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_obsCCPA24h.conf
-       mv $output_base/ccpa.t12z.grid3.24h.f00.nc $COMOUT_gefs/.
+       [[ $SENDCOM="YES" ]] && cp $output_base/ccpa.t12z.grid3.24h.f00.nc $COMOUT_gefs/.
     else
        export subject="06h CCPA Data Missing for 24h CCPA generation"
        echo "Warning: At least one of ccpa06h files is missing  for ${INITDATE}${cyc}" > mailmsg
@@ -452,7 +452,7 @@ if [ $modnam = gefs_apcp24h ] ; then
      wait
     done
 
-    mv ${output_base}/*.nc $COMOUT_gefs/.
+    [[ $SENDCOM="YES" ]] && cp ${output_base}/*.nc $COMOUT_gefs/.
 fi
 
 
@@ -497,7 +497,7 @@ if [ $modnam = cmce_apcp24h ] ; then
      wait
     done
 
-    mv ${output_base}/*.nc $COMOUT_cmce/.
+    [[ $SENDCOM="YES" ]] && cp ${output_base}/*.nc $COMOUT_cmce/.
 fi
 
 
@@ -519,7 +519,7 @@ if [ $modnam = ecme_apcp24h ] ; then
      wait
   done
 
-     mv ${output_base}/*.nc $COMOUT_ecme/.
+     [[ $SENDCOM="YES" ]] && cp ${output_base}/*.nc $COMOUT_ecme/.
 fi
 
 
@@ -528,7 +528,7 @@ if [ $modnam = nohrsc24h ] ; then
   for cyc in 00 12 ; do
     snowfall=$COMINsnow/${vday}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_24h_${vday}${cyc}_grid184.grb2
     if [ -s $snowfall ] ; then
-      mv $snowfall $COMOUT_gefs/nohrsc.t${cyc}z.grid184.grb2
+      [[ $SENDCOM="YES" ]] && cp $snowfall $COMOUT_gefs/nohrsc.t${cyc}z.grid184.grb2
     else
         export subject="NOHRSC Data Missing for EVS ${COMPONENT}"
         echo "Warning:  No NOHRSC analysis available for ${INITDATE}${cyc}" > mailmsg
@@ -564,7 +564,7 @@ if [ $modnam = gefs_snow24h ] ; then
     
   done
 
-  mv $output_base/*.nc $COMOUT_gefs/.
+  [[ $SENDCOM="YES" ]] && cp $output_base/*.nc $COMOUT_gefs/.
 fi
 
 
@@ -591,7 +591,7 @@ if [ $modnam = cmce_snow24h ] ; then
      wait
   done
 
-  mv $output_base/*.nc $COMOUT_cmce/.
+  [[ $SENDCOM="YES" ]] && cp $output_base/*.nc $COMOUT_cmce/.
 fi
 
 if [ $modnam = ecme_snow24h ] ; then
@@ -675,7 +675,7 @@ if [ $modnam = gefs_icec24h ] ; then
       wait
     done
 
-    mv $output_base/gefs*icec*.nc $COMOUT_gefs
+    [[ $SENDCOM="YES" ]] && cp $output_base/gefs*icec*.nc $COMOUT_gefs
 fi
 
 if [ $modnam = gefs_icec7day ] ; then
@@ -702,7 +702,7 @@ if [ $modnam = gefs_icec7day ] ; then
      wait
    done
 							     
-   mv $output_base/gefs*icec*.nc $COMOUT_gefs
+   [[ $SENDCOM="YES" ]] && cp $output_base/gefs*icec*.nc $COMOUT_gefs
 fi
 
 if [ $modnam = gefs_sst24h ] ; then
@@ -732,7 +732,7 @@ if [ $modnam = gefs_sst24h ] ; then
 
     done
 
-    mv $output_base/gefs*sst*.nc $COMOUT_gefs
+    [[ $SENDCOM="YES" ]] && cp $output_base/gefs*sst*.nc $COMOUT_gefs
 
 fi
 
