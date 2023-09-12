@@ -60,7 +60,7 @@ export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 export COMINmodel=${COMINmodel:-$(compath.py ${envir}/com/${MODELNAME}/${model_ver})} 
 export COMINgdas=${COMINgdas:-$(compath.py ${envir}/com/obsproc/${obsproc_ver}/gdas)}
 
-export COMOUT=${COMIN}/${STEP}/${COMPONENT}/${RUN}
+export COMOUT=${COMOUT:-${COMIN}/${STEP}/${COMPONENT}/${RUN}}
 export ARCgefs=${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
 
 # make the directory where the ARCgefs and gdasnc will be kept
