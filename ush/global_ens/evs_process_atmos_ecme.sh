@@ -2,6 +2,7 @@
 #
 # 2015-06-12: Modified from Yan.Luo's script
 #
+env
 set +x
 #####################################################################
 
@@ -62,6 +63,8 @@ get_ecme='yes'
 
 if [ $get_ecme = 'yes' ] ; then
 
+tmpDir=/tmp
+
 VAR[1]=':10U:'
 VAR[2]=':10V:'
 VAR[3]=':U:kpds5=131:kpds6=100:kpds7=850:'
@@ -80,6 +83,20 @@ VAR[15]=':2D:'
 VAR[20]=':TP:'
 VAR[21]=':SF:'
 
+pat0=${tmpDir}/pattern.file0.${cyc}
+if [ -e ${pat0} ]; then rm ${pat0}; fi
+>${pat0}
+for n in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 ; do
+  echo "${VAR[$n]}" >> ${pat0}
+done
+
+pat=${tmpDir}/pattern.file.${cyc}
+if [ -e ${pat} ]; then rm ${pat}; fi
+>${pat}
+for n in 1 2 12 13 14 15 ; do
+  echo "${VAR[$n]}" >> ${pat}
+done
+
 hourix=0
 #while [ ${hourix} -lt 61 ]; do
 while [ ${hourix} -lt 31 ]; do
@@ -93,11 +110,7 @@ while [ ${hourix} -lt 31 ]; do
     DCD=${dcom}/$yyyymmdd/wgrbbul/ecmwf/DCD${imdh}00${vmdh}001
 
     if [ -s $DCD ] ; then
-      >$outdata/ecmanl.t${cyc}z.grid3.f000.grib1
-      for n in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 ; do
-       $WGRIB $DCD|grep "${VAR[$n]}"|$WGRIB -i -grib $DCD -o x 
-       cat x >> $outdata/ecmanl.t${cyc}z.grid3.f000.grib1
-      done
+      $WGRIB $DCD | grep --file=${pat0}|$WGRIB -i -grib $DCD -o $outdata/ecmanl.t${cyc}z.grid3.f000.grib1
      else
         export subject="ECME Data Missing for EVS ${COMPONENT}"
         echo "Warning:  No ECME data for ${ymdh}" > mailmsg
@@ -108,12 +121,8 @@ while [ ${hourix} -lt 31 ]; do
   fi 
 
   E1E=${dcom}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}001
-
-  >E1E.${hourinc} 
-  for n in 1 2 12 13 14 15 ; do
-     $WGRIB $E1E|grep "${VAR[$n]}"|$WGRIB -i -grib $E1E -o x 
-     cat x >> E1E.${hourinc}
-  done
+  $WGRIB $E1E|grep --file=${pat} |$WGRIB -i -grib $E1E -o ${tmpDir}/E1E.${cyc}.${hourinc} 1> /dev/null
+  $WGRIB ${tmpDir}/E1E.${cyc}.${hourinc} 1> ${tmpDir}/E1E.${cyc}.${hourinc}.manifest
  
   h3=${hourinc}
   typeset -Z3 h3
@@ -121,18 +130,27 @@ while [ ${hourix} -lt 31 ]; do
    while [ ${mbr} -le 50 ]; do
     m2=$mbr
     typeset -Z2 m2
-     
-    $WGRIB E1E.${hourinc}|grep "forecast $mbr:"|$WGRIB -i -grib E1E.${hourinc} -o $outdata/ecme.ens${m2}.t${cyc}z.grid4.f${h3}.grib1
+
+    grep "forecast $mbr:" ${tmpDir}/E1E.${cyc}.${hourinc}.manifest | $WGRIB -i -grib ${tmpDir}/E1E.${cyc}.${hourinc} -o $outdata/ecme.ens${m2}.t${cyc}z.grid4.f${h3}.grib1 &
     mbr=$((mbr+1))
    
    done
-   rm E1E.${hourinc}
+  wait
+  rm ${tmpDir}/E1E.${cyc}.${hourinc} ${tmpDir}/E1E.${cyc}.${hourinc}.manifest
    
-
   let hourix=hourix+1
 
-done 
+done
+rm ${pat0} ${pat}
 
+
+pat=${tmpDir}/pattern.file.${cyc}
+if [ -e ${pat} ]; then rm ${pat}; fi
+>${pat}
+
+for n in 20 21 ; do
+  echo "${VAR[$n]}" >> ${pat}
+done
 
 hourix=0
 while [ ${hourix} -lt 31 ]; do
@@ -143,12 +161,8 @@ while [ ${hourix} -lt 31 ]; do
   vhour=` ${getvhour} ${vymdh} ${ymdh}`
 
   E1E=${dcom}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}001
-
-  >E1E_apcp.${hourinc}
-  for n in 20 21 ; do
-     $WGRIB $E1E|grep "${VAR[$n]}"|$WGRIB -i -grib $E1E -o x
-     cat x >> E1E_apcp.${hourinc}
-  done
+  $WGRIB $E1E|grep --file=${pat} |$WGRIB -i -grib $E1E -o ${tmpDir}/E1E_apcp.${cyc}.${hourinc} 1> /dev/null
+  $WGRIB ${tmpDir}/E1E_apcp.${cyc}.${hourinc} 1> ${tmpDir}/E1E_apcp.${cyc}.${hourinc}.manifest
 
   h3=${hourinc}
   typeset -Z3 h3
@@ -157,15 +171,17 @@ while [ ${hourix} -lt 31 ]; do
     m2=$mbr
     typeset -Z2 m2
 
-    $WGRIB E1E_apcp.${hourinc}|grep "forecast $mbr:"|$WGRIB -i -grib E1E_apcp.${hourinc} -o $outdata/ecme.ens${m2}.t${cyc}z.grid4_apcp.f${h3}.grib1
+    grep "forecast $mbr:" ${tmpDir}/E1E_apcp.${cyc}.${hourinc}.manifest | $WGRIB -i -grib ${tmpDir}/E1E_apcp.${cyc}.${hourinc} -o $outdata/ecme.ens${m2}.t${cyc}z.grid4_apcp.f${h3}.grib1 &
     mbr=$((mbr+1))
 
    done
-   rm E1E_apcp.${hourinc}
+  wait
+  rm ${tmpDir}/E1E_apcp.${cyc}.${hourinc} ${tmpDir}/E1E_apcp.${cyc}.${hourinc}.manifest
 
   let hourix=hourix+1
 
 done
+rm ${pat}
 
 fi 
 
@@ -174,6 +190,22 @@ VAR[2]=':V:kpds5=132:kpds6=100'
 VAR[3]=':GH:kpds5=156:kpds6=100'
 VAR[4]=':T:kpds5=130:kpds6=100'
 VAR[5]=':R:kpds5=157:kpds6=100'
+
+pat=${tmpDir}/pattern.file.${cyc}
+if [ -e ${pat} ]; then rm ${pat}; fi
+>${pat}
+for n in 1 2 3 4 5  ; do
+  for level in 50 100 200 300 400 500 700 850 925 1000 ; do
+    echo "${VAR[$n]}:kpds7=${level}:" >> ${pat}
+  done
+done
+
+function extractVert {
+  local mbr=$1
+  grep "forecast $mbr:" ${tmpDir}/E1E_vertical.${cyc}.${hourinc}.manifest | $WGRIB -i -grib ${tmpDir}/E1E_vertical.${cyc}.${hourinc} -o ${tmpDir}/E1E_vertical.${cyc}.${hourinc}.mbr${mbr}
+  cat ${tmpDir}/E1E_vertical.${cyc}.${hourinc}.mbr${mbr} >> $outdata/ecme.ens${m2}.t${cyc}z.grid4.f${h3}.grib1
+}
+
 
 hourix=0
 while [ ${hourix} -lt 31 ]; do
@@ -185,17 +217,8 @@ while [ ${hourix} -lt 31 ]; do
   vhour=` ${getvhour} ${vymdh} ${ymdh}`
 
   E1E=${dcom}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}001
-  
- >E1E_vertical.${hourinc}
-
-  for n in 1 2 3 4 5  ; do
- 
-   for level in 50 100 200 300 400 500 700 850 925 1000 ; do 
-     $WGRIB $E1E|grep "${VAR[$n]}:kpds7=${level}:"|$WGRIB -i -grib $E1E -o x
-     cat x >> E1E_vertical.${hourinc}
-   done
- 
-  done
+  $WGRIB $E1E|grep --file=${pat} |$WGRIB -i -grib $E1E -o ${tmpDir}/E1E_vertical.${cyc}.${hourinc} 1> /dev/null
+  $WGRIB ${tmpDir}/E1E_vertical.${cyc}.${hourinc} 1> ${tmpDir}/E1E_vertical.${cyc}.${hourinc}.manifest
 
   h3=${hourinc}
   typeset -Z3 h3
@@ -203,18 +226,20 @@ while [ ${hourix} -lt 31 ]; do
    while [ ${mbr} -le 50 ]; do
     m2=$mbr
     typeset -Z2 m2
-
-    $WGRIB E1E_vertical.${hourinc}|grep "forecast $mbr:"|$WGRIB -i -grib E1E_vertical.${hourinc} -o E1E_vertical.${hourinc}.mbr${mbr}
-    cat E1E_vertical.${hourinc}.mbr${mbr} >> $outdata/ecme.ens${m2}.t${cyc}z.grid4.f${h3}.grib1
+    extractVert m2 &
+    #grep "forecast $mbr:" ${tmpDir}/E1E_vertical.${cyc}.${hourinc}.manifest | $WGRIB -i -grib ${tmpDir}/E1E_vertical.${cyc}.${hourinc} -o ${tmpDir}/E1E_vertical.${cyc}.${hourinc}.mbr${mbr}
+    #cat ${tmpDir}/E1E_vertical.${cyc}.${hourinc}.mbr${mbr} >> $outdata/ecme.ens${m2}.t${cyc}z.grid4.f${h3}.grib1
 
     mbr=$((mbr+1))
 
    done
-   rm E1E_vertical.${hourinc}*
-   rm E1E_vertical.${hourinc}*
+  wait
+  rm ${tmpDir}/E1E_vertical.${cyc}.${hourinc}.mbr*
+  rm ${tmpDir}/E1E_vertical.${cyc}.${hourinc} ${tmpDir}/E1E_vertical.${cyc}.${hourinc}.manifest
 
 
   let hourix=hourix+1
 
 done
+rm ${pat}
 
