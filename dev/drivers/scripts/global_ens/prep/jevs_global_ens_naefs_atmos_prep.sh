@@ -44,7 +44,7 @@ export jobid=$job.${PBS_JOBID:-$$}
 
 #export COMINgefs_bc=/lfs/h2/emc/ptmp/bo.cui/com/naefs/v7.0
 
-export maillist='geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'
+export maillist='alicia.bentley@noaa.gov,steven.simon@noaa.gov'
 
 export run_mpi=yes
 export get_gefs_bc_apcp24h=yes
