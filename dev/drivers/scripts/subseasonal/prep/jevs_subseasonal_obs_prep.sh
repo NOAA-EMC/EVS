@@ -27,7 +27,7 @@ export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
 
-export maillist='geoffrey.manikin@noaa.gov,shannon.shields@noaa.gov'
+export maillist='alicia.bentley@noaa.gov,shannon.shields@noaa.gov'
 
 export USER=$USER
 export ACCOUNT=VERF-DEV
