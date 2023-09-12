@@ -53,7 +53,6 @@ export VERIF_CASE=grid2grid
 
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=$COMROOT/$NET/$evs_ver/prep/$COMPONENT/$RUN
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.subseasonal.cfs.grid2grid.stats
