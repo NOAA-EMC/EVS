@@ -40,7 +40,10 @@ from check_variables import *
 
 # ================ GLOBALS AND CONSTANTS ================
 
-plotter = Plotter(fig_size=(20., 14.))
+plotter = Plotter(
+    fig_size=(10., 8.), legend_font_size=10, fig_subplot_right=.77, 
+    fig_subplot_left=.23, fig_subplot_top=.87, fig_subplot_bottom=.23
+)
 plotter.set_up_plots()
 toggle = Toggle()
 templates = Templates()
@@ -65,7 +68,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                       metric3_name: str = 'CSI', date_type: str = 'VALID', 
                       date_hours: list = [0,6,12,18], verif_type: str = 'pres', 
                       line_type: str = 'CTC', save_dir: str = '.', 
-                      restart_dir: str = '.', dpi: int = 300, 
+                      restart_dir: str = '.', dpi: int = 100, 
                       confidence_intervals: bool = False, interp_pts: list = [],
                       bs_nrep: int = 5000, 
                       bs_method: str = 'MATCHED_PAIRS', ci_lev: float = .95, 
@@ -158,6 +161,11 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         for x in date_hours
     ]]
 
+    if df.empty:
+        logger.warning(f"Empty Dataframe. Continuing onto next plot...")
+        plt.close(num)
+        logger.info("========================================")
+        return None
     if interp_pts and '' not in interp_pts:
         interp_shape = list(df['INTERP_MTHD'])[0]
         if 'SQUARE' in interp_shape:
@@ -648,7 +656,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         sr_g, pod_g, csi, np.arange(0., 1.1, 0.1), cmap=cmap, extend='neither'
     )
     plt.clabel(
-        b_contour, fmt='%1.1f', 
+        b_contour, fmt='%1.1f', fontsize=plotter.clabel_font_size,
         manual=[
             get_bias_label_position(bias_value, .75) 
             for bias_value in bias_contour_vals
@@ -666,9 +674,9 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         requested_thresh_value[i] for i in requested_thresh_argsort
     ]
     thresh_markers = [
-        ('o',12),('P',14),('^',14),('X',14),('s',12),('D',12),('v',14),
-        ('p',14),('<',14),('d',14),(r'$\spadesuit$',14),('>',14),
-        (r'$\clubsuit$',14)
+        ('o',10),('P',11),('^',11),('X',11),('s',10),('D',11),('v',10),
+        ('p',11),('<',11),('d',11),(r'$\spadesuit$',11),('>',11),
+        (r'$\clubsuit$',11)
     ]
     if len(thresh_labels)+len(model_list) > 12:
         e = (f"The plot legend may be cut off.  Consider reducing the number"
@@ -822,7 +830,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         for i, item in enumerate(x_vals):
             plt.scatter(
                 x_vals[i], y_vals[i], marker=thresh_markers[i][0], 
-                c=mod_setting_dicts[m]['color'], linewidths=2., 
+                c=mod_setting_dicts[m]['color'], linewidths=1.5, 
                 edgecolors='white', figure=fig, s=thresh_markers[i][1]**2,
                 zorder=10
             )
@@ -892,17 +900,16 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     )
 
     ax.legend(
-        handles, labels, loc='upper center', fontsize=15, framealpha=1, 
-        bbox_to_anchor=(0.5, -0.08), ncol=5, frameon=True, numpoints=1, 
-        borderpad=.8, labelspacing=2., columnspacing=3., handlelength=3., 
-        handletextpad=.4, borderaxespad=.5) 
+        handles, labels, framealpha=1, 
+        bbox_to_anchor=(0.5, -0.15), ncol=5, frameon=True, numpoints=1, 
+        borderpad=.8, labelspacing=1.) 
     ax.grid(
         visible=True, which='major', axis='both', alpha=.35, linestyle='--', 
         linewidth=.5, c='black', zorder=0
     )
 
-    fig.subplots_adjust(bottom=.2, top=.91, right=.77, left=.23, wspace=0, hspace=0)
-    cax = fig.add_axes([.775, .2, .01, .71])
+    fig.subplots_adjust(wspace=0, hspace=0)
+    cax = fig.add_axes([.775, .23, .01, .64])
     cbar_ticks = [0.,.1,.2,.3,.4,.5,.6,.7,.8,.9,1.]
     cb = plt.colorbar(
         csi_contour, orientation='vertical', cax=cax, ticks=cbar_ticks,
@@ -1039,17 +1046,17 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
               + f'{date_start_string} to {date_end_string}, {frange_string}')
     title_center = '\n'.join([title1, title2, title3])
-    ax.set_title(title_center, loc=plotter.title_loc) 
+    ax.set_title(title_center) 
     logger.info("... Plotting complete.")
 
     # Logos
     if plot_logo_left:
         if os.path.exists(path_logo_left):
             left_logo_arr = mpimg.imread(path_logo_left)
-            left_image_box = OffsetImage(left_logo_arr, zoom=zoom_logo_left*.8)
+            left_image_box = OffsetImage(left_logo_arr, zoom=zoom_logo_left*.65)
             ab_left = AnnotationBbox(
                 left_image_box, xy=(0.,1.), xycoords='axes fraction',
-                xybox=(0, 3), boxcoords='offset points', frameon = False,
+                xybox=(-60, 40), boxcoords='offset points', frameon = False,
                 box_alignment=(0,0)
             )
             ax.add_artist(ab_left)
@@ -1061,10 +1068,10 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     if plot_logo_right:
         if os.path.exists(path_logo_right):
             right_logo_arr = mpimg.imread(path_logo_right)
-            right_image_box = OffsetImage(right_logo_arr, zoom=zoom_logo_right*.8)
+            right_image_box = OffsetImage(right_logo_arr, zoom=zoom_logo_right*.65)
             ab_right = AnnotationBbox(
                 right_image_box, xy=(1.,1.), xycoords='axes fraction',
-                xybox=(0, 3), boxcoords='offset points', frameon = False,
+                xybox=(60, 40), boxcoords='offset points', frameon = False,
                 box_alignment=(1,0)
             )
             ax.add_artist(ab_right)
