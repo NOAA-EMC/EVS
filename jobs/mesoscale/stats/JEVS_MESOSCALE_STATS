@@ -50,6 +50,7 @@ export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
+export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
 export FIXevs=${FIXevs:-/lfs/h1/ops/prod/packages/evs.${evs_ver}/fix}
 export MASKS=$FIXevs/masks
 export MET_PLUS_CONF="${PARMevs}/metplus_config/mesoscale/grid2obs/stats"

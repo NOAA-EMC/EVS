@@ -49,13 +49,6 @@ set -x
 # EVS Settings
   export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
-# Subdirectories to EVS Home Directory
-  export PARMevs=$HOMEevs/parm
-  export USHevs=$HOMEevs/ush
-  export EXECevs=$HOMEevs/exec
-  export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
-  export SCRIPTSevs=$HOMEevs/scripts
-  export MET_PLUS_CONF="${PARMevs}/metplus_config/mesoscale/grid2obs/stats"
 
 # EVS configuration
   export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
@@ -85,8 +78,8 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
   export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 
   export cyc=$(date -d "today" +"%H")
-  export maillist="roshan.shrestha@noaa.gov,geoffrey.manikin@noaa.gov"
-  # export maillist="roshan.shrestha@noaa.gov"
+  export maillist="roshan.shrestha@noaa.gov,alicia.bentley@noaa.gov"
+  # export maillist="firstname.lastname@noaa.gov"
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS
