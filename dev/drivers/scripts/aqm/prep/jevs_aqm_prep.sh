@@ -71,8 +71,7 @@ export KEEPDATA=NO
 #
 ########################################################################
 
-export maillist=${maillist:-'ho-chun.huang@noaa.gov,geoffrey.manikin@noaa.gov'}
-## export maillist=${maillist:-'perry.shafran@noaa.gov,geoffrey.manikin@noaa.gov'}
+export maillist=${maillist:-'ho-chun.huang@noaa.gov,alicia.bentley@noaa.gov'}
 
 if [ -z "$maillist" ]; then
 
