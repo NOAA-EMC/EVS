@@ -1,12 +1,14 @@
 #!/bin/bash
-################################################################################
-# Name of Script: exevs_global_det_wave_grid2obs_plots.sh            
-# Deanna Spindler / Deanna.Spindler@noaa.gov 
-# Mallory Row / Mallory.Row@noaa.gov                       
-# Purpose of Script: Run the grid2obs plots for global deterministic wave models
-################################################################################
+###############################################################################
+# Name of Script: exevs_global_det_wave_grid2obs_plots.sh
+# Developers: Deanna Spindler / Deanna.Spindler@noaa.gov
+#             Mallory Row / Mallory.Row@noaa.gov
+# Purpose of Script: This script is run for the global_det wave plots step
+#                    for the grid-to-obs verification. It uses EMC-developed
+#                    python scripts to do the plotting.
+###############################################################################
 
-set -x 
+set -x
 
 #############################
 ## grid2obs wave model plots
@@ -26,7 +28,7 @@ mkdir -p ${DATA}/logs
 mkdir -p ${DATA}/images
 
 ############################
-# get the model .stat files 
+# get the model .stat files
 ############################
 echo ' '
 echo 'Copying *.stat files :'
@@ -45,7 +47,7 @@ while (( ${theDate} <= ${VDATE_END} )); do
     done
 done
 ####################
-# quick error check 
+# quick error check
 ####################
 for MODEL in $model_list; do
     nc=`ls ${DATA}/stats/evs.stats.${MODEL}.${RUN}.${VERIF_CASE}.v* | wc -l | awk '{print $1}'`
@@ -66,7 +68,7 @@ for MODEL in $model_list; do
 done
 
 #################################
-# Make the command files for cfp 
+# Make the command files for cfp
 #################################
 ## time_series
 ${USHevs}/${COMPONENT}/global_det_wave_plots_grid2obs_timeseries.sh
@@ -96,7 +98,7 @@ if [[ $plot_ncount_job -gt 0 ]]; then
 fi
 
 #######################
-# Gather all the files 
+# Gather all the files
 #######################
 # check to see if the plots are there
 nc=$(ls ${DATA}/images/*.png | wc -l | awk '{print $1}')
@@ -120,7 +122,7 @@ else
     err_exit "FATAL ERROR: Did not find any plots"
 fi
 
-echo ' ' 
+echo ' '
 echo "Ending grid2obs_plots for ${RUN}"
 echo "Ending at : `date`"
-echo ' ' 
+echo ' '

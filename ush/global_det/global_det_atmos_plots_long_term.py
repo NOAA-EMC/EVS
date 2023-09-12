@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_long_term.py
-Contact(s): Mallory Row
-Abstract: This script generates monthly and yearly long term stats plots.
+Contact(s): Mallory Row (mallory.row@noaa.gov)
+Abstract: This is the driver script for creating long-term plots.
+Run By: scripts/global_det/plots/exevs_global_det_atmos_long_term_plots.sh
 '''
 
 import sys
