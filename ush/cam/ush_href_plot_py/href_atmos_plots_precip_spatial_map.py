@@ -103,7 +103,7 @@ class PrecipSpatialMap:
                         'goldenrod', 'yellow']
         cmap_over_color_mm = '#ffaeb9'
         # Set Cartopy shapefile location
-        config['data_dir'] = '/apps/ops/prod/data/cartopy'
+        config['data_dir'] = f"{os.environ['cartopyDataDir']}"
         # Read in data
         self.logger.info(f"Reading in model files from {self.input_dir}")
         for model_num in self.model_info_dict:
