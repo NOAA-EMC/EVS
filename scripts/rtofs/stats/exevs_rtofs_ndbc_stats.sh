@@ -113,7 +113,9 @@ fi
 run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
 -c $CONFIGevs/${VERIF_CASE}/$STEP/PointStat_fcstRTOFS_obsNDBC_climoWOA23.conf
 
-cp $STATSDIR/$RUN.$VDATE/*stat $COMOUTsmall
+if [ $SENDCOM = "YES" ]; then
+ cp $STATSDIR/$RUN.$VDATE/*stat $COMOUTsmall
+fi
 export STATSOUT=$STATSDIR/$RUN.$VDATE
 
 # check if stat files exist; exit if not
@@ -127,7 +129,9 @@ fi
 run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
 -c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstRTOFS_obsNDBC.conf
 
-cp $STATSOUT/evs*stat $COMOUTfinal
+if [ $SENDCOM = "YES" ];then
+ cp $STATSOUT/evs*stat $COMOUTfinal
+fi
 
 exit
 

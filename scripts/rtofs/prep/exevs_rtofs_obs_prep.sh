@@ -17,7 +17,9 @@ if [ -s $COMINobs/$VDATE/seaice/osisaf/ice_conc_nh_polstere-100_multi_${VDATE}12
     cdo remapbil,$FIXevs/cdo_grids/rtofs_$RUN.grid \
     $COMINobs/$VDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc \
     $DATA/rtofs.$VDATE/$RUN/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc
-    cp $DATA/rtofs.$VDATE/$RUN/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc $COMOUTprep/rtofs.$VDATE/$RUN
+    if [ $SENDCOM = "YES" ]; then
+     cp $DATA/rtofs.$VDATE/$RUN/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc $COMOUTprep/rtofs.$VDATE/$RUN
+    fi
   done
 else
   export subject="OSI-SAF Data Missing for EVS RTOFS"
