@@ -28,7 +28,7 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/global_det/global_det_prep.sh
 
-export maillist='geoffrey.manikin@noaa.gov,mallory.row@noaa.gov'
+export maillist='alicia.bentley@noaa.gov,mallory.row@noaa.gov'
 
 export envir=dev
 export NET=evs
