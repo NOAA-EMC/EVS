@@ -11,10 +11,6 @@ set -x
 export WORK=$DATA
 cd $WORK
 
-export MET_bin_exec='bin'
-export log_met_output_to_metplus=''
-export metplus_verbosity=2
-export met_verbosity=2
 
 #check input data are available:
 $USHevs/cam/evs_check_href_files.sh 

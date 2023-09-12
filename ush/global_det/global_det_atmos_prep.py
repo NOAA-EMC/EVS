@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_prep.py
-Contact(s): Mallory Row
-Abstract: 
+Contact(s): Mallory Row (mallory.row@noaa.gov)
+Abstract: This does the prep work for global determinstic
+          model files and observation files.
+Run By: scripts/global_det/prep/exevs_global_det_atmos_prep.sh
 '''
 
 import os
@@ -422,7 +424,10 @@ for MODEL in MODELNAME:
 
 ###### OBS
 # Get operational observation data
-# Nortnern & Southern Hemisphere 10 km OSI-SAF multi-sensor analysis - osi_saf
+# Northern & Southern Hemisphere 10 km OSI-SAF multi-sensor analysis - osi_saf
+# Group for High Resolution Sea Surface Temperature (GHRSST) Level 4 SST analysis for Office of Satellite and Product Operations (OSPO)- ghrsst_ospo
+# NESDIS Evapotranspiration Geostationary Operational Environmental Satellite (GOES) ET and Drought (GET-D)- get_d
+
 global_det_obs_dict = {
     'osi_saf': {'COMIN_file_format': os.path.join(COMINosi_saf,
                                                   '{init_shift?fmt=%Y%m%d'
