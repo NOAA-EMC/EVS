@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#PBS -N jevs_mesoscale_sref_cape_past90days_plots
+#PBS -N jevs_mesoscale_sref_td2m_past90days_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -25,7 +25,7 @@ export NET=evs
 export STEP=plots
 export COMPONENT=mesoscale
 export RUN=atmos
-export VERIF_CASE=cape
+export VERIF_CASE=td2m
 export MODELNAME=sref
 
 module reset
@@ -41,7 +41,6 @@ export run_mpi=yes
 export valid_time=both
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
-#export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver
 export DATAROOT=/lfs/h2/emc/ptmp/$USER/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}

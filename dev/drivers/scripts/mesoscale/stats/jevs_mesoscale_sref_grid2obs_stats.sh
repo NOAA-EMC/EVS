@@ -9,7 +9,7 @@
 #PBS -l place=vscatter,select=1:ncpus=4:mem=100GB
 #PBS -l debug=true
 
-#Total 2 parallel processes
+#Total 2 prodllel processes
 
 export OMP_NUM_THREADS=1
 
@@ -30,7 +30,6 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 export KEEPDATA=NO
 
 export cyc=00
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export DATAROOT=/lfs/h2/emc/ptmp/$USER/evs_test/$envir/tmp
 export COMINsrefmean=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
