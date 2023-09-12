@@ -303,7 +303,7 @@ if [ $modnam = ecme ] ; then
   export outdata=$COMOUT_ecme
 
   for cyc in 00 12 ; do
-    $USHevs/global_ens/evs_process_atmos_ecme.sh.dk ${vday}${cyc} ${cyc} &
+    $USHevs/global_ens/evs_process_atmos_ecme.sh ${vday}${cyc} ${cyc} &
   done
   wait
 
