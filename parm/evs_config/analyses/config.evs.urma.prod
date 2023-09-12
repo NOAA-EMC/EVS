@@ -38,7 +38,7 @@ yday=$(date -d "24 hours ago" '+%Y%m%d')
 export start_date=$yday
 export end_date=$yday
 ## DATA DIRECTIVE SETTINGS
-export KEEPDATA="YES"
+export KEEPDATA="NO"
 export SENDCOM="YES"
 export SENDARCH="NO"
 export SENDMETVIEWER="NO"

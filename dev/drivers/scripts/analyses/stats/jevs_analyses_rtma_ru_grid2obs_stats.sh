@@ -30,7 +30,7 @@ module load prod_envir/${prod_envir_ver}
 ##############################################################
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=YES
+export KEEPDATA=NO
 export envir=prod
 export NET=evs
 export STEP=stats
