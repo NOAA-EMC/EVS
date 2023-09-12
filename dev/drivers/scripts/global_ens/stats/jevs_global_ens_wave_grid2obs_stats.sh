@@ -67,10 +67,6 @@ export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
 
-export metplus_verbosity="INFO"
-export met_verbosity="2"
-export log_met_output_to_metplus="yes"
-export MET_bin_exec=bin
 
 ############################################################
 # CALL executable job script here
