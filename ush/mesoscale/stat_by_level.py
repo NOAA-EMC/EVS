@@ -42,7 +42,10 @@ from check_variables import *
 
 # ================ GLOBALS AND CONSTANTS ================
 
-plotter = Plotter(fig_size=(18., 14.))
+plotter = Plotter(
+    fig_size=(16., 16.), axis_title_size=17., legend_font_size=15.,
+    fig_subplot_top=.93, fig_subplot_bottom=.14
+)
 plotter.set_up_plots()
 toggle = Toggle()
 templates = Templates()
@@ -68,7 +71,7 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
                        date_type: str = 'VALID', line_type: str = 'SL1L2',
                        date_hours: list = [0,6,12,18], save_dir: str = '.', 
                        restart_dir: str = '.',
-                       dpi: int = 300, confidence_intervals: bool = False,
+                       dpi: int = 100, confidence_intervals: bool = False,
                        interp_pts: list = [],
                        bs_nrep: int = 5000, bs_method: str = 'MATCHED_PAIRS',
                        bs_min_samp: int = 300, ci_lev: float = .95, 
@@ -207,6 +210,11 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         for x in date_hours
     ]]
 
+    if df.empty:
+        logger.warning(f"Empty Dataframe. Continuing onto next plot...")
+        plt.close(num)
+        logger.info("========================================")
+        return None
     if interp_pts and '' not in interp_pts:
         interp_shape = list(df['INTERP_MTHD'])[0]
         if 'SQUARE' in interp_shape:
@@ -341,6 +349,8 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         elif any(field in str(var_long_name_key).upper() for field in ['WEASD', 'SNOD', 'ASNOW']):
             if units in ['m']:
                 units = 'm_snow'
+        elif str(var_long_name_key).upper() == 'TMP':
+            unit_convert = False
         if unit_convert:
             if metric2_name is not None:
                 if (str(metric1_name).upper() in metrics_using_var_units
@@ -978,11 +988,11 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     )
 
     ax.legend(
-        handles, labels, loc='upper center', fontsize=15, framealpha=1, 
-        bbox_to_anchor=(0.5, -0.08), ncol=4, frameon=True, numpoints=2, 
-        borderpad=.8, labelspacing=2., columnspacing=3., handlelength=3., 
-        handletextpad=.4, borderaxespad=.5) 
-    fig.subplots_adjust(bottom=.2, top=.91, wspace=0., hspace=0)
+        handles, labels, framealpha=1, 
+        bbox_to_anchor=(0.5, -0.06), ncol=4, frameon=True, numpoints=2, 
+        borderpad=.8, labelspacing=1.
+    )
+    fig.subplots_adjust(wspace=0., hspace=0)
     ax.grid(
         visible=True, which='major', axis='both', alpha=.5, linestyle='--', 
         linewidth=.5, zorder=0
@@ -995,8 +1005,8 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
                 count = str(int(count))
             ax.annotate(
                 f'{count}', xy=(1.,yval),
-                xycoords=('axes fraction','data'), xytext=(9,0),
-                textcoords='offset points', va='center', fontsize=16,
+                xycoords=('axes fraction','data'), xytext=(6,0),
+                textcoords='offset points', va='center', fontsize=11,
                 color='dimgrey', ha='left'
             )
         ax.annotate(
@@ -1045,7 +1055,7 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     title3 = (f'{str(date_type).capitalize()} {date_hours_string}'
               + f' {date_start_string} to {date_end_string}, {frange_string}')
     title_center = '\n'.join([title1, title2, title3])
-    ax.set_title(title_center, loc=plotter.title_loc) 
+    ax.set_title(title_center) 
     logger.info("... Plotting complete.")
 
     # Logos
