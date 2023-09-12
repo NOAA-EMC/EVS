@@ -24,6 +24,13 @@ export VDATE=${VDATE:-${PDYm1}}
 export NEXTDATE=${NEXTDATE:-${PDY}}
 
 ####################################
+# Set data directives
+####################################
+export SENDECF=${SENDECF:-YES}
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-NO}
+
+####################################
 # Set EVS directories               
 ####################################
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
