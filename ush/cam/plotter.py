@@ -6,20 +6,22 @@ from matplotlib.path import Path
 import numpy as np
 
 class Plotter():
-    def __init__(self, font_weight='bold',   axis_title_weight='bold',  
-                axis_title_size=20,         axis_offset=False,
-                axis_title_pad=15,          axis_label_weight='bold',  
-                axis_label_size=16,         axis_label_pad=10,
+    def __init__(self, font_weight='bold',  axis_title_weight='bold',  
+                axis_title_size=15,         axis_offset=False,
+                axis_title_pad=10,          axis_label_weight='bold',  
+                axis_label_size=14,         axis_label_pad=10,
+                axis_fontsize=16,           clabel_font_size=10,
                 xtick_label_size=16,        xtick_major_pad=10,        
                 ytick_label_size=16,        ytick_major_pad=10, 
                 fig_subplot_right=.95,      fig_subplot_left=.1,      
-                fig_subplot_top=.925,       fig_subplot_bottom=.075,
-                legend_handle_text_pad=.25, legend_handle_length=1.25, 
-                legend_border_axis_pad=0,   legend_col_space=1.,
-                legend_frame_on=True,       fig_size=(14.,14.),        
-                legend_bbox=(0,1),          legend_font_size=17, 
-                legend_loc='center right',  legend_ncol=1,             
-                title_loc='center'):
+                fig_subplot_top=.87,        fig_subplot_bottom=.27,
+                legend_handle_text_pad=.4,  legend_handle_length=3., 
+                legend_border_axis_pad=.5,  legend_col_space=3.,
+                legend_frame_on=True,       fig_size=(16.,8.),        
+                legend_bbox=(0,1),          legend_font_size=12, 
+                legend_loc='upper center',  legend_ncol=4,        
+                lines_line_width=1.,
+                title_loc='center',         title_color='black'):
         self.font_weight = font_weight
         self.axis_title_weight = axis_title_weight
         self.axis_title_size = axis_title_size
@@ -28,10 +30,13 @@ class Plotter():
         self.axis_label_weight = axis_label_weight
         self.axis_label_size = axis_label_size
         self.axis_label_pad = axis_label_pad
+        self.axis_fontsize = axis_fontsize
+        self.clabel_font_size = clabel_font_size
         self.xtick_label_size = xtick_label_size
         self.xtick_major_pad = xtick_major_pad
         self.ytick_label_size = ytick_label_size
         self.ytick_major_pad = ytick_major_pad
+        self.fig_size = fig_size
         self.fig_subplot_right = fig_subplot_right
         self.fig_subplot_left = fig_subplot_left
         self.fig_subplot_top = fig_subplot_top
@@ -41,35 +46,43 @@ class Plotter():
         self.legend_border_axis_pad = legend_border_axis_pad
         self.legend_col_space = legend_col_space
         self.legend_frame_on = legend_frame_on
-        self.fig_size = fig_size
         self.legend_bbox = legend_bbox
-        self.legend_fontsize = legend_font_size
+        self.legend_font_size = legend_font_size
         self.legend_loc = legend_loc
         self.legend_ncol = legend_ncol
+        self.lines_line_width = lines_line_width
         self.title_loc = title_loc
+        self.title_color = title_color
 
     def set_up_plots(self):
-        plt.rcParams['font.weight'] = self.font_weight
-        plt.rcParams['axes.titleweight'] = self.axis_title_weight
-        plt.rcParams['axes.titlesize'] = self.axis_title_size
-        plt.rcParams['axes.titlepad'] = self.axis_title_pad
-        plt.rcParams['axes.labelweight'] = self.axis_label_weight
-        plt.rcParams['axes.labelsize'] = self.axis_label_size
-        plt.rcParams['axes.labelpad'] = self.axis_label_pad
         plt.rcParams['axes.formatter.useoffset'] = self.axis_offset
-        plt.rcParams['xtick.labelsize'] = self.xtick_label_size
-        plt.rcParams['xtick.major.pad'] = self.xtick_major_pad
-        plt.rcParams['ytick.labelsize'] = self.ytick_label_size
-        plt.rcParams['ytick.major.pad'] = self.ytick_major_pad
+        plt.rcParams['axes.labelpad'] = self.axis_label_pad
+        plt.rcParams['axes.labelsize'] = self.axis_label_size
+        plt.rcParams['axes.labelweight'] = self.axis_label_weight
+        plt.rcParams['axes.titlecolor'] = self.title_color
+        plt.rcParams['axes.titlelocation'] = self.title_loc
+        plt.rcParams['axes.titlepad'] = self.axis_title_pad
+        plt.rcParams['axes.titlesize'] = self.axis_title_size
+        plt.rcParams['axes.titleweight'] = self.axis_title_weight
+        plt.rcParams['figure.figsize'] = self.fig_size
+        plt.rcParams['figure.subplot.bottom'] = self.fig_subplot_bottom
         plt.rcParams['figure.subplot.left'] = self.fig_subplot_left
         plt.rcParams['figure.subplot.right'] = self.fig_subplot_right
         plt.rcParams['figure.subplot.top'] = self.fig_subplot_top
-        plt.rcParams['figure.subplot.bottom'] = self.fig_subplot_bottom
+        plt.rcParams['font.size'] = self.axis_fontsize
+        plt.rcParams['font.weight'] = self.font_weight
         plt.rcParams['legend.handletextpad'] = self.legend_handle_text_pad
         plt.rcParams['legend.handlelength'] = self.legend_handle_length
         plt.rcParams['legend.borderaxespad'] = self.legend_border_axis_pad
         plt.rcParams['legend.columnspacing'] = self.legend_col_space
         plt.rcParams['legend.frameon'] = self.legend_frame_on
+        plt.rcParams['legend.fontsize'] = self.legend_font_size
+        plt.rcParams['legend.loc'] = self.legend_loc
+        plt.rcParams['lines.linewidth'] = self.lines_line_width
+        plt.rcParams['xtick.labelsize'] = self.xtick_label_size
+        plt.rcParams['xtick.major.pad'] = self.xtick_major_pad
+        plt.rcParams['ytick.labelsize'] = self.ytick_label_size
+        plt.rcParams['ytick.major.pad'] = self.ytick_major_pad
       
     def get_plots(self, num):
         fig, ax = plt.subplots(1, 1, figsize=self.fig_size, num=num)
