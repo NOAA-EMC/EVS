@@ -265,7 +265,7 @@ done     #stats
 
 tar -cvf evs.plots.naefs.grid2obs.v${VDATE}.past${past_days}days.tar *.png
 
-cp evs.plots.naefs.grid2obs.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
+[[ $SENDCOM="YES" ]] && cp evs.plots.naefs.grid2obs.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
 
 
 

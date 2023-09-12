@@ -222,9 +222,7 @@ done     #stats
 
 tar -cvf evs.plots.naefs.grid2grid.v${VDATE}.past${past_days}days.tar *.png
 
-if [ $SENDCOM = "YES" ]; then
-  cp  evs.plots.naefs.grid2grid.v${VDATE}.past${past_days}days.tar $COMOUT/.  
-fi
+[[ $SENDCOM="YES" ]] && cp  evs.plots.naefs.grid2grid.v${VDATE}.past${past_days}days.tar $COMOUT/.  
 
 
 

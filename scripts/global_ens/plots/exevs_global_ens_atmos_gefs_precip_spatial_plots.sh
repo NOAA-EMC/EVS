@@ -79,7 +79,7 @@ mv qpe.v${VDATE}12.024h.conus.png evs.ccpa.spatial_map.apcp_a24_vlid12z_f000.con
 
 tar -cvf evs.plots.gefs.precip.spatial.map.v${VDATE}.tar *.gif
 
-cp evs.plots.gefs.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
+[[ $SENDCOM="YES" ]] && cp evs.plots.gefs.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
 
 
 

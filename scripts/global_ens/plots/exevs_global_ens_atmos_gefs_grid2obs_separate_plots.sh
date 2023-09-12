@@ -341,7 +341,7 @@ done     #vhr
 
 tar -cvf evs.plots.gefs.grid2obs.v${VDATE}.past${past_days}days.separate.init.00.12.tar *.png
 
-cp  evs.plots.gefs.grid2obs.v${VDATE}.past${past_days}days.separate.init.00.12.tar $COMOUT/.
+[[ $SENDCOM="YES" ]] && cp  evs.plots.gefs.grid2obs.v${VDATE}.past${past_days}days.separate.init.00.12.tar $COMOUT/.
 
 
 

@@ -214,7 +214,7 @@ done     #stats
 
 tar -cvf evs.plots.gefs.sst.v${VDATE}.past${past_days}days.tar *.png
 
-cp evs.plots.gefs.sst.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
+[[ $SENDCOM="YES" ]] && cp evs.plots.gefs.sst.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
 
 
 

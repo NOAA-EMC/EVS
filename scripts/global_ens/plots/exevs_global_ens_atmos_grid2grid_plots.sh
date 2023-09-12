@@ -295,11 +295,11 @@ for stats in acc bias_mae crpss rmse_spread ; do
  done    #score_type
 done     #stats
 
-scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/gens/grid2grid
+#scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/gens/grid2grid
 
 tar -cvf plots_gefs_grid2grid_v${VDATE}_$past_days.tar *.png
 
-cp plots_gefs_grid2grid_v${VDATE}_$past_days.tar  $COMOUT/.  
+[[ $SENDCOM="YES" ]] && cp plots_gefs_grid2grid_v${VDATE}_$past_days.tar  $COMOUT/.  
 
 
 

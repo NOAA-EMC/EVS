@@ -314,7 +314,7 @@ done     #stats
 
 tar -cvf evs.plots.gefs.grid2grid.v${VDATE}.past${past_days}days.tar *.png
 
-cp evs.plots.gefs.grid2grid.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
+[[ $SENDCOM="YES" ]] && cp evs.plots.gefs.grid2grid.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
 
 
 

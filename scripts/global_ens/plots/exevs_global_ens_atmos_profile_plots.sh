@@ -276,7 +276,7 @@ done     #stats
 
 tar -cvf plots_gefs_grid2obs_v${VDATE}_${past_days}_both_valid_times.tar *.png
 
-cp plots_gefs_grid2grid_v${VDATE}_${past_days}_both_valid_time.tar  $COMOUT/.  
+[[ $SENDCOM="YES" ]] && cp plots_gefs_grid2grid_v${VDATE}_${past_days}_both_valid_time.tar  $COMOUT/.  
 
 
 
