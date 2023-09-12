@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_long_term_useful_forecast_days.py
-Contact(s): Mallory Row
+Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This script generates the plots for long term
-          useful forecast days
+          useful forecast days.
+          (x-axis: year; y-axis: useful forecast day)
+          (EVS Graphics Naming Convention: useful_fcst_days_timeseries)
 '''
 
 import sys
@@ -76,7 +78,7 @@ class LongTermUsefulForecastDays:
     def make_long_term_useful_forecast_days_time_series(self):
         """! Create the long term useful forecast days
              time series graphics
-             
+
              Args:
              Returns:
         """
@@ -265,7 +267,7 @@ class LongTermUsefulForecastDays:
             # Make time series for each model
             plot_specs_ts = PlotSpecs(self.logger, 'time_series')
             plot_specs_ts.set_up_plot()
-            plt.rcParams['figure.subplot.top'] = 0.85 
+            plt.rcParams['figure.subplot.top'] = 0.85
             left_logo_xpixel_loc, left_logo_ypixel_loc, left_logo_alpha = (
                 plot_specs_ts.get_logo_location(
                     'left', plot_specs_ts.fig_size[0],
@@ -546,7 +548,7 @@ class LongTermUsefulForecastDays:
     def make_long_term_useful_forecast_days_histogram(self):
         """! Create the long term useful forecast days histogram
              graphics
-             
+
              Args:
              Returns:
         """
@@ -838,7 +840,7 @@ class LongTermUsefulForecastDays:
                 plt.savefig(image_name)
                 plt.clf()
                 plt.close('all')
-                
+
 def main():
     # Need settings
     INPUT_DIR = os.environ['HOME']
@@ -855,7 +857,7 @@ def main():
     VX_MASK = 'VX_MASK'
     STAT = 'STAT'
     NBRHD = 'NBRHD'
-    RUN_LENGTH_LIST = ['allyears'] 
+    RUN_LENGTH_LIST = ['allyears']
     # Create OUTPUT_DIR
     if not os.path.exists(OUTPUT_DIR):
         os.makedirs(OUTPUT_DIR)
@@ -863,7 +865,7 @@ def main():
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')
     if not os.path.exists(logging_dir):
          os.makedirs(logging_dir)
-    job_logging_file = os.path.join(logging_dir, 
+    job_logging_file = os.path.join(logging_dir,
                                     os.path.basename(__file__)+'_runon'
                                     +datetime.datetime.now()\
                                     .strftime('%Y%m%d%H%M%S')+'.log')
