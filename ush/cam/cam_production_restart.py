@@ -1,8 +1,12 @@
-'''
-Name: cam_production_restart.py
-Contact(s): Marcel Caron
-Abstract: 
-'''
+#!/usr/bin/env python3
+# =============================================================================
+#
+# NAME: cam_production_restart.py
+# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# PURPOSE: Check the appropriate restart directory for restart files and copy
+#          the available files to the working directory
+#
+# =============================================================================
 
 import os
 import glob

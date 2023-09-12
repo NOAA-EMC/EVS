@@ -4,7 +4,7 @@
 #
 # NAME: exevs_hireswarwmem2_snowfall_stats.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Handle all components of an EVS HiRes Window ARW 2 Snowfall -  
+# PURPOSE: Handle all components of an EVS HiRes Window ARW Member 2 Snowfall -  
 #          Statistics job
 # DEPENDENCIES: $HOMEevs/jobs/cam/stats/JEVS_CAM_STATS 
 #

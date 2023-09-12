@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+# =============================================================================
+#
+# NAME: settings.py
+# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# PURPOSE: General settings used for CAM plotting scripts
+#
+# =============================================================================
 
 import os
 from datetime import datetime, timedelta as td

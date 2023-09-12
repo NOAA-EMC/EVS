@@ -4,8 +4,8 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=10:15:00
-#PBS -l place=vscatter:exclhost,select=10:ncpus=128:ompthreads=1:mem=550GB
+#PBS -l walltime=05:00:00
+#PBS -l place=vscatter:exclhost,select=10:ncpus=128:ompthreads=1:mem=55GB
 #PBS -l debug=true
 #PBS -V
 
@@ -35,7 +35,7 @@ export VERIF_CASE="snowfall"
 export MODELNAME=${COMPONENT}
 
 # EVS Settings
-export HOMEevs="/lfs/h2/emc/vpppg/noscrub/$USER/EVS"
+export HOMEevs="/lfs/h2/emc/vpppg/save/$USER/EVS"
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export config=$HOMEevs/parm/evs_config/cam/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}
 
@@ -53,10 +53,9 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # Developer Settings
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
-export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/stats/$COMPONENT
+export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/$NET/$evs_ver/stats/$COMPONENT
 export cyc=$(date -d "today" +"%H")
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
-export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/cam/plots/JEVS_CAM_PLOTS

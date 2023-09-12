@@ -4,8 +4,8 @@
 #
 # NAME: exevs_hireswfv3_precip_stats.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Handle all components of an EVS HiRes Window FV3 Member 
-#          Precipitation - Statistics job
+# PURPOSE: Handle all components of an EVS HiRes Window FV3 Precipitation 
+#           - Statistics job
 # DEPENDENCIES: $HOMEevs/jobs/cam/stats/JEVS_CAM_STATS 
 #
 # =============================================================================
