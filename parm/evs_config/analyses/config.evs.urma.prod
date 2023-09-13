@@ -29,11 +29,8 @@ export RUN_GRID2OBS_PLOTS="NO"
 #model_stat_dir_list:    directory path to model .stat files
 #model_file_format_list: file format of model files
 export model_list="rtma"
-export model_stat_dir_list="/lfs/h2/emc/ptmp/$USER"
-export model_file_format_list="/lfs/h1/ops/prod/com/rtma/v2.9/rtma2p5.{init?fmt=%Y%m%d}/rtma2p5.t{init?fmt=%2H}z.2dvaranl_ndfd.grb2"
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory
-export OUTPUTROOT="/lfs/h2/emc/ptmp/$USER/evs_cam"
 ## DATE SETTINGS
 #start_date:       verification start date, format YYYYMMDD
 #end_date:         verification end date, format YYYYMMDD
@@ -41,7 +38,7 @@ yday=$(date -d "24 hours ago" '+%Y%m%d')
 export start_date=$yday
 export end_date=$yday
 ## DATA DIRECTIVE SETTINGS
-export KEEPDATA="YES"
+export KEEPDATA="NO"
 export SENDCOM="YES"
 export SENDARCH="NO"
 export SENDMETVIEWER="NO"

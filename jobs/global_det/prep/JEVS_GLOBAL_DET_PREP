@@ -38,6 +38,13 @@ setpdy.sh
 export INITDATE=${INITDATE:-$PDYm1}
 
 ####################################
+# Set data directives
+####################################
+export SENDECF=${SENDECF:-YES}
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-NO}
+
+####################################
 # Define NET/RUN variables
 ####################################
 export NET=${NET:-evs}
