@@ -36,7 +36,7 @@ export COMINsrefmean=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export maillist='geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'
+export maillist='alicia.bentley@noaa.gov,binbin.zhou@noaa.gov'
 
 if [ -z "$maillist" ]; then
 

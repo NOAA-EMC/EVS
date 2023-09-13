@@ -41,7 +41,7 @@ export just_cnv=yes
 export run_mpi=yes
 export gather=no
 
-export maillist='geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'
+export maillist='alicia.bentley@noaa.gov,binbin.zhou@noaa.gov'
 
 if [ -z "$maillist" ]; then
 
