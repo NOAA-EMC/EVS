@@ -61,18 +61,30 @@ verif_type=ghrsst_ncei_avhrr_anl
 
 > run_all_poe.sh
 
-for stats in rmse_me csi sratio_pod_csi ; do 
- if [ $stats = rmse_me  ] ; then
-   stat_list='rmse, me'
+for stats in rmse me csi sratio_pod_csi ; do 
+ if [ $stats = rmse  ] ; then
+   stat_list='rmse'
    line_tp='ecnt'
+   VARs='ICEC'
+   threshes=''
+   score_types='time_series lead_average'
+ elif [ $stats = me  ] ; then
+   stat_list='me'
+   line_tp='ecnt'
+   VARs='ICEC'
+   threshes=''
    score_types='time_series lead_average'
  elif [ $stats = csi  ] ; then
     stat_list='csi'
     line_tp='ctc'	  
+    VARs='ICEC_gt10 ICEC_gt40 ICEC_gt80'
+    threshes=''
     score_types='time_series lead_average'
  elif [ $stats = sratio_pod_csi ] ; then
     stat_list='sratio, pod, csi'
     line_tp='ctc'
+    VARs='ICEC'
+    threshes='>10, >40, >80'
     score_types='performance_diagram'
  else
    echo $stats is wrong stat
@@ -81,7 +93,7 @@ for stats in rmse_me csi sratio_pod_csi ; do
 
  for score_type in $score_types ; do
 
-  if [ $score_type = time_series ] ; then
+  if [ $score_type = time_series ] || [ $score_type = performance_diagram ] ; then
     export fcst_leads="24 48 72 96 120 144 168 192 216 240 264 288 312 336 360 384"
   else
     export fcst_leads="vs_lead" 
@@ -95,11 +107,19 @@ for stats in rmse_me csi sratio_pod_csi ; do
         export fcst_lead=$lead
    fi
 
-    for VAR in ICEC ; do 
+    for VAR in $VARs ; do 
 
        var=`echo $VAR | tr '[A-Z]' '[a-z]'` 
 	    
        FCST_LEVEL_values="Z0"
+
+       if [ $VAR = ICEC_gt10 ] ; then
+	   threshes='>10'
+       elif [ $VAR = ICEC_gt40 ] ; then
+           threshes='>40'	       
+       elif [ $VAR = ICEC_gt80 ] ; then
+           threshes='>80'
+       fi
 
      for FCST_LEVEL_value in $FCST_LEVEL_values ; do 
 
@@ -140,13 +160,8 @@ for stats in rmse_me csi sratio_pod_csi ; do
          echo "export interp=NEAREST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
          echo "export score_py=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
      
-	 if [ $stats = csi ] || [ $stats = sratio_pod_csi ] ; then
-	   thresh_fcst='>10, >40, >80'
-	   thresh_obs='>10, >40, >80'
-	 else
-	   thresh_fcst=''
-           thresh_obs=''
-         fi
+	 thresh_fcst=$threshes
+	 thresh_obs=$threshes
 
          sed -e "s!model_list!$models!g" -e "s!stat_list!$stat_list!g"  -e "s!thresh_fcst!$thresh_fcst!g" -e "s!thresh_obs!$thresh_obs!g"  -e "s!fcst_init_hour!$fcst_init_hour!g" -e "s!fcst_valid_hour!$fcst_valid_hour!g" -e "s!fcst_lead!$fcst_lead!g"  -e "s!interp_pnts!$interp_pnts!g" $USHevs/global_ens/evs_gens_atmos_plots_config.sh > run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
 
@@ -179,77 +194,39 @@ else
   ${DATA}/run_all_poe.sh
 fi
 
-
 cd $plot_dir
 
 for domain in arctic antarctic ; do
- mv performance_diagram_regional_${domain}_valid_00z_z0_icec_z0_mean_f24_to_f384__gt10gt40gt80.png  evs.global_ens.ctc.icec.last${past_days}days.perfdiag_${valid_time}_f384.${domain}_glb.png
-done
+    for lead in 24 48 72 96 120 144 168 192 216 240 264 288 312 336 360 384; do
+        lead_new=$(printf "%03d" "${lead}")
+        mv performance_diagram_regional_${domain}_valid_00z_z0_icec_z0_mean_f${lead}__gt10gt40gt80.png  evs.global_ens.ctc.icec_z0.last${past_days}days.perfdiag_${valid_time}_f${lead_new}.g003_${domain}.png
+    done #lead
+done #domain
 
-for stats in  rmse_me csi ; do
- for score_type in time_series lead_average ; do
-
-  if [ $score_type = time_series ] ; then
-    if [ $stats = rmse_me ] ; then
-      leads='_f24.png _f48.png _f72.png _f96.png _f120.png _f144.png _f168.png _f192.png _f216.png _f240.png _f264.png _f288.png _f312.png _f336.png _f360.png _f384.png'
-    elif [ $stats = csi ] ; then 
-      leads='_f24_gt10gt40gt80.png _f48_gt10gt40gt80.png _f72_gt10gt40gt80.png _f96_gt10gt40gt80.png _f120_gt10gt40gt80.png _f144_gt10gt40gt80.png _f168_gt10gt40gt80.png _f192_gt10gt40gt80.png _f216_gt10gt40gt80.png _f240_gt10gt40gt80.png _f264_gt10gt40gt80.png _f288_gt10gt40gt80.png _f312_gt10gt40gt80.png _f336_gt10gt40gt80.png _f360_gt10gt40gt80.png _f384_gt10gt40gt80.png'
-    fi 
-
-    scoretype='timeseries' 
-
-  elif [ $score_type = lead_average ] ; then
-    if [ $stats = rmse_me ] ; then
-      leads='.png'
+for stats in  rmse me csi ; do
+    if [ $stats = csi ]; then
+        threshs="gt10 gt40 gt80"
     else
-      leads='_gt10gt40gt80.png'
+        threshs="NA"
     fi
-    scoretype='fhrmean'
-  fi
-
-
-  for lead in $leads ; do
-    
-    if [ $score_type = time_series ] ; then
-      if [ $stats = rmse_me ] ; then
-          tail='.png'
-	  prefix=${lead%%$tail*}
-	  index=${#prefix}
-	  lead_time=${lead:0:$index}
-      elif [ $stats = csi ] ; then
-	  tail='_gt10gt40gt80.png'
-	  prefix=${lead%%$tail*}
-	  index=${#prefix}
-	  lead_time=${lead:0:$index}
-      fi	      
-    else
-      lead_time=_f384
-    fi
-
-   for domain in arctic antarctic ; do
-
-    for var in icec ; do
-
-      for level in z0 ; do
-
-        mv ${score_type}_regional_${domain}_valid_00z_z0_${var}_${level}_mean_${stats}${lead}  evs.global_ens.${stats}.${var}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain}.png
-               
-      done #level
-
-    done #var
-   done  #domain
-  done   #lead
- done    #score_type
+    for thresh in $threshs; do
+        if [ $thresh = NA ]; then
+            thresh_graphic=""
+        else
+            thresh_graphic=$(echo "_${thresh}")
+        fi
+        for domain in arctic antarctic ; do
+            mv lead_average_regional_${domain}_valid_00z_z0_icec_z0_mean_${stats}${thresh_graphic}.png  evs.global_ens.${stats}${thresh_graphic}.icec_z0.last${past_days}days.fhrmean_valid00z_f384.g003_${domain}.png
+            for lead in 24 48 72 96 120 144 168 192 216 240 264 288 312 336 360 384; do
+                lead_new=$(printf "%03d" "${lead}")
+                mv time_series_regional_${domain}_valid_00z_z0_icec_z0_mean_${stats}_f${lead}${thresh_graphic}.png  evs.global_ens.${stats}${thresh_graphic}.icec_z0.last${past_days}days.timeseries_valid00z_f${lead_new}.g003_${domain}.png
+            done #lead
+        done #domain
+    done  #thresh
 done     #stats
 
+tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar *.png
 
-#scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/gens/sea_ice
-
-tar -cvf evs.plots.gefs.sea.ice.v${VDATE}.past${past_days}days.tar *.png
-
-cp evs.plots.gefs.sea.ice.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
-
-
-
-
-
+if [ $SENDCOM = YES ]; then
+    cp evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar  $COMOUT/.
+fi

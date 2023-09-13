@@ -58,15 +58,11 @@ verif_case=$VERIF_CASE
 
 > run_all_poe.sh
 
-for stats in acc bias_mae crps rmse_spread me_mae ; do 
+for stats in acc crps rmse_spread me_mae ; do 
  if [ $stats = acc ] ; then
   stat_list='acc'
   line_tp='sal1l2'
   VARs='TMP2m UGRD10m VGRD10m UGRD VGRD TMP'
- elif [ $stats = bias_mae  ] ; then
-  stat_list='bias, mae'
-  line_tp='sl1l2'
-  VARs='TMP2m  UGRD10m VGRD10m '
  elif [ $stats = crps ] ; then
   stat_list='crps'
   line_tp='ecnt'
@@ -78,7 +74,7 @@ for stats in acc bias_mae crps rmse_spread me_mae ; do
  elif [ $stats = me_mae ] ; then
   stat_list='me, mae'
   line_tp='ecnt'
-  VARs='UGRD VGRD TMP'
+  VARs='TMP2m UGRD10m VGRD10m UGRD VGRD TMP'
  else
   echo $stats is wrong stat
   exit
@@ -90,7 +86,7 @@ for stats in acc bias_mae crps rmse_spread me_mae ; do
  
   for lead in $fcst_leads ; do 
 
-    export fcst_lead="12, 24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384"
+    export fcst_lead="0, 12, 24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384"
 
     for VAR in $VARs ; do 
 
@@ -199,78 +195,61 @@ fi
 
 cd $plot_dir
 
-for stats in  acc bias_mae crps rmse_spread me_mae ; do
- for score_type in lead_average ; do
-
-    leads='.png'
-    scoretype='fhrmean'
-    vars='tmp ugrd vgrd'
-
-  for lead in $leads ; do
-    
-    lead_time=''
-
-    for var in $vars ; do
-      if [ $var = tmp ] || [ $var = dpt ] ; then
-	 levels='2m 850mb'
-      elif [ $var = ugrd ] || [ $var = vgrd ] ; then
-	 levels='10m 850mb 250mb'
-      fi
-
-     for level in $levels ; do
-        
-      if [ $level = 850mb ] || [ $level = 250mb ] ; then
-	  domains='nhem shem tropics'
-      else
-	  domains='conus conus_east conus_west conus_south conus_central alaska'
-      fi
-
-      if [ $level = 850mb ] ; then
-	 level_new=p850
-      elif [ $level = 250mb ] ; then
-	 level_new=p250
-      else
-	 level_new=$level
-      fi
-
-      for domain in $domains ; do
-	
-         if [ $domain = conus_east ]; then
-             evs_graphic_domain="conus_e"
-         elif [ $domain = conus_west ]; then
-             evs_graphic_domain="conus_w"
-         elif [ $domain = conus_south ]; then
-             evs_graphic_domain="conus_s"
-         elif [ $domain = conus_central ]; then
-             evs_graphic_domain="conus_c"
-         else
-             evs_graphic_domain=$domain
-         fi
-
-        if [ $domain = nhem ] || [ $domain = shem ] || [ $domain = tropics ] ; then
-           mv ${score_type}_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}${lead}  evs.naefs.${stats}.${var}_${level_new}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${evs_graphic_domain}.png
-	else
-           mv ${score_type}_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}${lead}  evs.naefs.${stats}.${var}_${level_new}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.buk_${evs_graphic_domain}.png
+for stats in  acc crps rmse_spread me_mae ; do
+    if [ $stats = rmse_spread ]; then
+        evs_graphic_stats="rmse_sprd"
+    else
+        evs_graphic_stats=$stats
+    fi
+    for var in tmp ugrd vgrd ; do
+        if [ $var = tmp ] || [ $var = dpt ] ; then
+	    levels='2m 850mb'
+        elif [ $var = ugrd ] || [ $var = vgrd ] ; then
+	    levels='10m 850mb 250mb'
         fi
-               
-      done #domain
-
-    done #level
-   done  #domain
-  done   #var
- done    #score_type
+        for level in $levels ; do     
+            if [ $level = 850mb ] || [ $level = 250mb ] ; then
+                domains='nhem shem tropics'
+            else
+	        domains='conus conus_east conus_west conus_south conus_central alaska'
+            fi
+            if [ $level = 850mb ] ; then
+                level_new=p850
+            elif [ $level = 250mb ] ; then
+                level_new=p250
+            elif [ $level = 2m ] ; then
+                level_new=z2
+            elif [ $level = 10m ] ; then
+                level_new=z10
+            else
+	        level_new=$level
+            fi
+            for domain in $domains ; do	
+                if [ $domain = conus ]; then
+                    evs_graphic_domain="buk_conus"
+                elif [ $domain = conus_east ]; then
+                    evs_graphic_domain="buk_conus_e"
+                elif [ $domain = conus_west ]; then
+                    evs_graphic_domain="buk_conus_w"
+                elif [ $domain = conus_south ]; then
+                    evs_graphic_domain="buk_conus_s"
+                elif [ $domain = conus_central ]; then
+                    evs_graphic_domain="buk_conus_c"
+                else
+                    evs_graphic_domain=$domain
+                fi
+                if [ $domain = nhem ] || [ $domain = shem ] || [ $domain = tropics ] || [ $domain = alaska ]; then
+                    mv lead_average_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}.png  evs.naefs.${evs_graphic_stats}.${var}_${level_new}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${evs_graphic_domain}.png
+                else
+                    mv lead_average_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}.png  evs.naefs.${evs_graphic_stats}.${var}_${level_new}.last${past_days}days.fhrmean_valid00z_12z_f384.g212_${evs_graphic_domain}.png
+                fi
+            done #domain
+        done #level
+    done   #var
 done     #stats
 
-#scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/naefs/grid2obs
+tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar *.png
 
-tar -cvf evs.plots.naefs.grid2obs.v${VDATE}.past${past_days}days.tar *.png
-
-cp evs.plots.naefs.grid2obs.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
-
-
-
-
-
-
-
-
+if [ $SENDCOM = YES ]; then
+    cp evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar  $COMOUT/.
+fi
