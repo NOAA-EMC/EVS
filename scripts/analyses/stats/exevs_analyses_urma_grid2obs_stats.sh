@@ -4,6 +4,8 @@ set -x
 
 mkdir -p $DATA/logs
 mkdir -p $DATA/stat
+export finalstat=$DATA/final
+mkdir -p $DATA/final
 
 export regionnest=urma
 export fcstmax=$g2os_sfc_fhr_max
@@ -212,7 +214,9 @@ run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointSta
 export err=$?; err_chk
 
 mkdir -p $COMOUTsmall
-cp $DATA/point_stat/${modnam}${typtag}/* $COMOUTsmall
+if [ $SENDCOM = "YES" ]; then
+ cp $DATA/point_stat/${modnam}${typtag}/* $COMOUTsmall
+fi
 else
 echo "NO URMA OR OBS DATA, METplus will not run"
 echo "URMAFOUND, OBFOUND", $urmafound, $obfound
@@ -227,8 +231,13 @@ done
 if [ $cyc = 23 -a $urmafound -eq 1 -a $obfound -eq 1 ]
 then
        mkdir -p $COMOUTfinal
+       cp $COMOUTsmall/*${regionnest}*${typtag}* $finalstat
+       cd $finalstat
        run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstANALYSES_obsNDAS_GatherByDay.conf $PARMevs/metplus_config/machine.conf
        export err=$?; err_chk
+       if [ $SENDCOM = "YES" ]; then
+	 cp $finalstat/evs.stats.${regionnest}${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal
+       fi
 else    
        echo "NO RTMA OR OBS DATA, or not gather time yet, METplus gather job will not run"
 fi
