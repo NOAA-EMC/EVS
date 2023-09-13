@@ -49,7 +49,6 @@ export gefs_ver=${gefs_ver}
 export PREP_TYPE=gefs
 
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.subseasonal.gefs.prep
 
