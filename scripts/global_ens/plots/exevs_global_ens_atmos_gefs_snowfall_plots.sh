@@ -61,13 +61,13 @@ for stats in ets fbias crps fss ; do
   if [ $stats = ets ] ; then
     stat_list='ets'
     line_tp='ctc'
-    VARs='WEASD_24 SNOD_24' 
-    threshes='>0.0254, >0.1016, >0.2032, >0.3048'
+    VARs='WEASD_24_gt0p0254 SNOD_24_gt0p0254 WEASD_24_gt0p1016 SNOD_24_gt0p1016 WEASD_24_gt0p2032 SNOD_24_gt0p2032 WEASD_24_gt0p3048 SNOD_24_gt0p3048' 
+    threshes=''
   elif [ $stats = fbias ] ; then
     stat_list='fbias'
     line_tp='ctc'
-    VARs='WEASD_24 SNOD_24'
-    threshes='>0.0254, >0.1016, >0.2032, >0.3048'
+    VARs='WEASD_24_gt0p0254 SNOD_24_gt0p0254 WEASD_24_gt0p1016 SNOD_24_gt0p1016 WEASD_24_gt0p2032 SNOD_24_gt0p2032 WEASD_24_gt0p3048 SNOD_24_gt0p3048'
+    threshes=''
   elif [ $stats = crps  ] ; then
     stat_list='crps'
     line_tp='ecnt'
@@ -76,17 +76,17 @@ for stats in ets fbias crps fss ; do
   elif [ $stats = fss ] ; then
     stat_list='fss'
     line_tp='nbrcnt'
-    VARs='WEASD_24 SNOD_24'
-    threshes='>0.0254, >0.1016, >0.2032, >0.3048'
+    VARs='WEASD_24_gt0p0254 SNOD_24_gt0p0254 WEASD_24_gt0p1016 SNOD_24_gt0p1016 WEASD_24_gt0p2032 SNOD_24_gt0p2032 WEASD_24_gt0p3048 SNOD_24_gt0p3048'
+    threshes=''
   else
     echo $stats is wrong stat
   exit
   fi   
 
   if [ $stats = fss ] ; then
-   interp_pnts='1,9,25,49,91,121'
+   interp_pnts='1 9 25 49 81 121'
   else
-   interp_pnts=''
+   interp_pnts='1'
   fi 
 
  for score_type in time_series lead_average ; do
@@ -119,63 +119,74 @@ for stats in ets fbias crps fss ; do
 	    
        FCST_LEVEL_values="L0"
 
+       if [ $VAR = WEASD_24_gt0p0254 ] || [ $VAR = SNOD_24_gt0p0254 ]; then
+           threshes='>0.0254'
+       elif [ $VAR = WEASD_24_gt0p1016 ] || [ $VAR = SNOD_24_gt0p1016 ]; then
+           threshes='>0.1016'
+       elif [ $VAR = WEASD_24_gt0p2032 ] || [ $VAR = SNOD_24_gt0p2032 ]; then
+           threshes='>0.2032'
+       elif [ $VAR = WEASD_24_gt0p3048 ] || [ $VAR = SNOD_24_gt0p3048 ]; then
+           threshes='>0.3048'
+       fi
      for FCST_LEVEL_value in $FCST_LEVEL_values ; do 
 
 	OBS_LEVEL_value=A24
 
         level=`echo $FCST_LEVEL_value | tr '[A-Z]' '[a-z]'`      
 
-      for line_type in $line_tp ; do 
+      for interp_pnt in $interp_pnts ; do 
 
-         > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh  
+         > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh  
 
-        echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+        echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
 
-        echo "export field=${var}_${level}" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+        echo "export field=${var}_${level}" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
 
-        echo "export vx_mask_list='$VX_MASK_LIST'" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-        echo "export verif_case=$verif_case" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-        echo "export verif_type=$verif_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+        echo "export vx_mask_list='$VX_MASK_LIST'" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+        echo "export verif_case=$verif_case" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+        echo "export verif_type=$verif_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
 
-        echo "export log_level=DEBUG" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-        echo "export met_ver=$met_v" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+        echo "export log_level=DEBUG" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+        echo "export met_ver=$met_v" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
 
-        echo "export eval_period=TEST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+        echo "export eval_period=TEST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
 
 
         if [ $score_type = valid_hour_average ] ; then
-          echo "export date_type=INIT" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+          echo "export date_type=INIT" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
         else
-          echo "export date_type=VALID" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+          echo "export date_type=VALID" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
         fi
 
 
-         echo "export var_name=$VAR" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-         echo "export fcts_level=$FCST_LEVEL_value" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-         echo "export obs_level=$OBS_LEVEL_value" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+         echo "export var_name=$VAR" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+         echo "export fcts_level=$FCST_LEVEL_value" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+         echo "export obs_level=$OBS_LEVEL_value" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
 
-         echo "export line_type=$line_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+         echo "export line_type=$line_tp" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
          if [ $stats = fss ] ; then
-            echo "export interp=NBRHD_SQUARE" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+            echo "export interp=NBRHD_SQUARE" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+            interp_pnt_config=$interp_pnt
          else	   
-	    echo "export interp=NEAREST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+	    echo "export interp=NEAREST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
+            intero_pnt_config=''
 	 fi
-         echo "export score_py=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+         echo "export score_py=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
      
          thresh_fcst=$threshes
          thresh_obs=$threshes
 
-         sed -e "s!model_list!$models!g" -e "s!stat_list!$stat_list!g"  -e "s!thresh_fcst!$thresh_fcst!g" -e "s!thresh_obs!$thresh_obs!g"  -e "s!fcst_init_hour!$fcst_init_hour!g" -e "s!fcst_valid_hour!$fcst_valid_hour!g" -e "s!fcst_lead!$fcst_lead!g" -e "s!interp_pnts!$interp_pnts!g"  $USHevs/global_ens/evs_gens_atmos_plots_config.sh > run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+         sed -e "s!model_list!$models!g" -e "s!stat_list!$stat_list!g"  -e "s!thresh_fcst!$thresh_fcst!g" -e "s!thresh_obs!$thresh_obs!g"  -e "s!fcst_init_hour!$fcst_init_hour!g" -e "s!fcst_valid_hour!$fcst_valid_hour!g" -e "s!fcst_lead!$fcst_lead!g" -e "s!interp_pnts!$interp_pnt_config!g"  $USHevs/global_ens/evs_gens_atmos_plots_config.sh > run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
 
-         chmod +x  run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+         chmod +x  run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
 
-         echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+         echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
 
 
-         chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh 
-         echo " ${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
+         chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh 
+         echo " ${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh" >> run_all_poe.sh
 
-      done #end of line_type
+      done #end of interp_pnts
 
      done #end of FCST_LEVEL_value
 
@@ -198,76 +209,57 @@ fi
 
 cd $plot_dir
 
-for stats in  crps ets fbias fss ; do
- vars='weasd_l0 snod_l0'
- for score_type in time_series lead_average ; do
-
-   if [ $score_type = time_series ] ; then
-     if [ $stats = fss ] || [ $stats = ets ] || [ $stats = fbias ] ; then	   
-       leads='_f120_gt0.0254gt0.1016gt0.2032gt0.3048.png _f240_gt0.0254gt0.1016gt0.2032gt0.3048.png _f360_gt0.0254gt0.1016gt0.2032gt0.3048.png'
-     else       
-       leads='_f120.png _f240.png _f360.png'
-     fi       
-     scoretype='timeseries'
-   elif [ $score_type = lead_average ] ; then
-     if [  $stats = fss ] || [ $stats = ets ] || [ $stats = fbias ] ; then	   
-       leads='_gt0.0254gt0.1016gt0.2032gt0.3048.png'
-     else
-       leads='.png'	     
-     fi
-     scoretype='fhrmean'
-
-   fi
-
-   for lead in $leads ; do
-      if [ $score_type = time_series ] ; then
-          lead_time=_${lead:1:4}
-      else
-          lead_time=_f384
-     fi
-
-     for domain in conus conus_east conus_west conus_south conus_central ; do
-     
-         if [ $domain = conus_east ]; then
-             evs_graphic_domain="conus_e"
-         elif [ $domain = conus_west ]; then
-             evs_graphic_domain="conus_w"
-         elif [ $domain = conus_south ]; then
-             evs_graphic_domain="conus_s"
-         elif [ $domain = conus_central ]; then
-             evs_graphic_domain="conus_c"
-         else
-             evs_graphic_domain=$domain
-         fi
-
-      for var in $vars ; do
-    
-	if [ $var = weasd_l0 ] ; then
-	   var_new=weasd_a24
-	elif [ $var = snod_l0 ] ; then
-	   var_new=snod_a24
-	fi 
-
-        if [ $stats = fss ] ; then	     
-          mv ${score_type}_regional_${domain}_valid_12z_${var}_${stats}_width1-3-5-7-9-11${lead} evs.global_ens.${stats}.${var_new}.last${past_days}days.${scoretype}_valid_12z${lead_time}.buk_${evs_graphic_domain}.png  
-       else
-	  mv ${score_type}_regional_${domain}_valid_12z_${var}_${stats}${lead} evs.global_ens.${stats}.${var_new}.last${past_days}days.${scoretype}_valid_12z${lead_time}.buk_${evs_graphic_domain}.png
+for var in weasd snod; do
+    for domain in conus conus_east conus_west conus_south conus_central ; do
+        if [ $domain = conus_east ]; then
+            evs_graphic_domain="buk_conus_e"
+        elif [ $domain = conus_west ]; then
+            evs_graphic_domain="buk_conus_w"
+        elif [ $domain = conus_south ]; then
+            evs_graphic_domain="buk_conus_s"
+        elif [ $domain = conus_central ]; then
+            evs_graphic_domain="buk_conus_c"
+        elif [ $domain = conus ]; then
+            evs_graphic_domain="buk_conus"
         fi
+        for stats in  crps ets fbias fss ; do
+            if [ $stats = crps ]; then
+                threshs="NA"
+            else
+                threshs="gt0.0254 gt0.1016 gt0.2032 gt0.3048"
+            fi
+            if [ $stats = fss ]; then
+                nbrhds="1 3 5 7 9 11"
+            else
+                nbrhds="NA"
+            fi
+            for thresh in $threshs; do
+                if [ $thresh = NA ]; then
+                    thresh_graphic=""
+                    evs_thresh_graphic=""
+                else
+                    thresh_graphic=$(echo "_${thresh}")
+                    evs_thresh_graphic=$(echo $thresh_graphic | sed -e "s/0\./0p/g")
+                fi
+                for nbrhd in $nbrhds; do
+                    if [ $nbrhd = NA ]; then
+                        nbhrd_graphic=""
+                    else
+                        nbhrd_graphic=$(echo "_width${nbrhd}")
+                    fi
+                    mv lead_average_regional_${domain}_valid_12z_${var}_l0_${stats}${nbhrd_graphic}${thresh_graphic}.png evs.global_ens.${stats}${nbhrd_graphic}${evs_thresh_graphic}.${var}_a24.last${past_days}days.fhrmean_valid12z_f384.g212_${evs_graphic_domain}.png
+                    for lead in 120 240 360; do
+                        lead_graphic=$(echo "_f${lead}")
+                        mv time_series_regional_${domain}_valid_12z_${var}_l0_${stats}${nbhrd_graphic}${lead_graphic}${thresh_graphic}.png evs.global_ens.${stats}${nbhrd_graphic}${evs_thresh_graphic}.${var}_a24.last${past_days}days.timeseries_valid12z${lead_graphic}.g212_${evs_graphic_domain}.png
+                    done #lead 
+                done #nbrhd
+            done # threshs
+        done #stats
+    done #domain
+done #vars
 
-      done #var	
-     done  #domain
-  done   #lead
- done    #score_type
-done     #stats
+tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar *.png
 
-
-#scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/gens/snowfall
-
-tar -cvf evs.plots.gefs.snowfall.v${VDATE}.past${past_days}days.tar *.png
-
-cp evs.plots.gefs.snowfall.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
-
-
-
-
-
+if [ $SENDCOM = YES ]; then
+    cp evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar  $COMOUT/.
+fi
