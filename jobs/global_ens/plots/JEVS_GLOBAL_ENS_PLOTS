@@ -37,6 +37,7 @@ export PARMevs=$HOMEevs/parm
 export USHevs=$HOMEevs/ush
 export SCRIPTevs=$HOMEevs/scripts
 export FIXevs=${FIXevs:-$HOMEevs/fix}
+export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
 
 export run_mpi=${run_mpi:-yes}
 

@@ -321,7 +321,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
                 unit_convert = False
             elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
                 unit_convert = False
-        if str(var_long_name_key).upper() == 'HGTCLDCEIL':
+        if str(var_long_name_key).upper() in ['HGTCLDCEIL','CEIL']:
            if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
               if units in ['m', 'gpm']:
                   units = 'gpm'
@@ -672,8 +672,8 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     round_to_nearest =  round_to_nearest_categories[
         np.digitize(y_range, y_range_categories[:-1])
     ]
-    ylim_min = np.floor(y_min/round_to_nearest)*round_to_nearest
-    ylim_max = np.ceil(y_max/round_to_nearest)*round_to_nearest
+    ylim_min = np.floor(y_min*(1-1E-10)/round_to_nearest)*round_to_nearest
+    ylim_max = np.ceil(y_max*(1+1E-10)/round_to_nearest)*round_to_nearest
     if len(str(ylim_min)) > 5 and np.abs(ylim_min) < 1.:
         ylim_min = float(
             np.format_float_scientific(ylim_min, unique=False, precision=3)
