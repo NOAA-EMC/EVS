@@ -60,7 +60,7 @@ export COMINosi=${COMINosi:-$DCOMROOT}
 export COMINghrsst=${COMINghrsst:-$DCOMROOT}
 export COMINumd=${COMINumd:-$DCOMROOT}
 export COMINnam=${COMINnam:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
-export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$INITDATE)}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 
 
 echo Actual output starts here
