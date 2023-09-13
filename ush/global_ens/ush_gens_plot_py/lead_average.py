@@ -913,6 +913,12 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     var_long_name = variable_translator[var_long_name_key]
     units = df['FCST_UNITS'].tolist()[0]
     if units in reference.unit_conversions:
+        do_unit_conversion = True
+        if var_long_name_key == 'TMP' and level[0] == 'P':
+            do_unit_conversion = False
+    else:
+        do_unit_conversion = False
+    if do_unit_conversion:
         if fcst_thresh and '' not in fcst_thresh:
             fcst_thresh_labels = [float(tlab) for tlab in fcst_thresh_labels]
             fcst_thresh_labels = (
@@ -1079,6 +1085,10 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     else:
         level_string = f'{level}'
         level_savename = f'{level}_'
+    if var_savename == 'ICEC_Z0_mean':
+        level_string = ''
+    if var_savename == 'TMP_Z0_mean':
+        level_string = 'Sea Surface '
     if metric2_name is not None:
         title1 = f'{metric1_string} and {metric2_string}'
     else:
@@ -1087,6 +1097,9 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         title1+=f' {interp_pts_string}'
     fcst_thresh_on = (fcst_thresh and '' not in fcst_thresh)
     obs_thresh_on = (obs_thresh and '' not in obs_thresh)
+    if metric1_string == 'Brier Score':
+        fcst_thresh_on = False
+        obs_thresh_on = False
     if fcst_thresh_on:
         fcst_thresholds_phrase = ', '.join([
             f'{opt}{fcst_thresh_label}' 
@@ -1132,7 +1145,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         title_pad=30
     else:
         title_pad=None
-    ax.set_title(title_center, loc=plotter.title_loc, pad=title_pad) 
+    ax.set_title(title_center, loc=plotter.title_loc, pad=title_pad)
     logger.info("... Plotting complete.")
 
     # Logos
