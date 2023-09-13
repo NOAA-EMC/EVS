@@ -1,10 +1,10 @@
 #!/bin/bash
 ###############################################################################
 # Name of Script: exevs_global_det_atmos_grid2grid_plots.sh
-# Purpose of Script: This script generates grid-to-grid
-#                    verification plots using python for the
-#                    atmospheric component of global deterministic models
-# Log history:
+# Developers: Mallory Row / Mallory.Row@noaa.gov
+# Purpose of Script: This script is run for the global_det atmos plots step
+#                    for the grid-to-grid verification. It uses EMC-developed
+#                    python scripts to do the plotting.
 ###############################################################################
 
 set -x
@@ -62,7 +62,7 @@ for group in condense_stats filter_stats make_plots tar_images; do
     [[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_plots_grid2grid_create_job_scripts.py"
     chmod u+x ${VERIF_CASE}_${STEP}/plot_job_scripts/$group/*
     group_ncount_job=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/$group/job* |wc -l)
-    nc=1 
+    nc=1
     if [ $USE_CFP = YES ]; then
         group_ncount_poe=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/$group/poe* |wc -l)
         while [ $nc -le $group_ncount_poe ]; do
@@ -100,13 +100,4 @@ if [ $SENDCOM = YES ]; then
         cp -v $large_tar_file $COMOUT/.
     done
     cd $DATA
-fi
-
-# Non-production jobs
-if [ $evs_run_mode != "production" ]; then
-    # Clean up
-    if [ $KEEPDATA != "YES" ] ; then
-        cd $DATAROOT
-        rm -rf $DATA
-    fi
 fi

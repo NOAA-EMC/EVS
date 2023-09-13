@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots.py
-Contact(s): Mallory Row
-Abstract: This script is main driver for the plotting scripts.
+Contact(s): Mallory Row (mallory.row@noaa.gov)
+Abstract: This is the driver script for creating plots.
+Run By: individual plotting job scripts generated through
+        ush/global_det/global_det_atmos_plots_grid2obs_create_job_scripts.py
+        and ush/global_det/global_det_atmos_plots_grid2grid_create_job_scripts.py
 '''
 
 import os
@@ -114,7 +117,7 @@ logging_dir = os.path.join(plot_output_dir, 'logs')
 for output_dir in [logging_dir, DATAjob, COMOUTjob]:
     if not os.path.exists(output_dir):
        print(f"Creating output directory: {output_dir}")
-       os.makedirs(output_dir) 
+       os.makedirs(output_dir)
 
 # Set up logging
 job_logging_file = os.path.join(logging_dir, 'evs_'+COMPONENT+'_'+RUN+'_'
@@ -203,7 +206,7 @@ if JOB_GROUP in ['filter_stats', 'make_plots']:
             logger.error("FORECAST AND OBSERVATION VARIABLE INFORMATION NOT THE "
                          +"SAME LENGTH")
             sys.exit(1)
-     
+
 
 # Set up MET information dictionary
 original_met_info_dict = {
@@ -823,7 +826,7 @@ elif JOB_GROUP == 'tar_images':
                                 f"{VERIF_CASE}_{VERIF_TYPE}",
                                 f"last{NDAYS}days/"), '')\
           .replace('/', '_')+'.tar')
-    )   
+    )
     if not os.path.exists(tar_file):
         if len(glob.glob(DATAjob+'/*')) != 0:
             os.chdir(DATAjob)

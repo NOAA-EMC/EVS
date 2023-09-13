@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_time_series.py
-Contact(s): Mallory Row
+Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This script generates a time series plot.
+          (x-axis: dates; y-axis: statistics value)
+          (EVS Graphics Naming Convention: timeseries)
 '''
 
 import sys
@@ -26,7 +28,7 @@ class TimeSeries:
     """
     Create a time series graphic
     """
- 
+
     def __init__(self, logger, input_dir, output_dir, model_info_dict,
                  date_info_dict, plot_info_dict, met_info_dict, logo_dir):
         """! Initalize TimeSeries class
@@ -40,7 +42,7 @@ class TimeSeries:
                  date_info_dict  - date information dictionary (strings)
                  met_info_dict   - MET information dictionary (strings)
                  logo_dir        - directory with logo images (string)
- 
+
              Returns:
         """
         self.logger = logger
@@ -388,6 +390,27 @@ class TimeSeries:
                         obar_model_num_avg_label = format(
                             round(obar_model_num_avg, 3), '.3f'
                         )
+                ############################################################
+                # For FBAR stats, do the following unit conversions:
+                #     TMP/Z2: K to F
+                #     TSOIL/Z0.1-0: K to F
+                #     UGRD/Z10: m/s to kt
+                #     VGRD/Z10: m/s to kt
+                if self.plot_info_dict['stat'] == 'FBAR':
+                    if self.plot_info_dict['fcst_var_name'] \
+                            in ['TMP', 'TSOIL'] \
+                            and self.plot_info_dict['fcst_var_level'] \
+                            in ['Z2', 'Z0.1-0']:
+                        masked_model_num_data = (
+                            (((masked_model_num_data-273.15)*9)/5)+32
+                        )
+                    elif self.plot_info_dict['fcst_var_name'] \
+                            in ['UGRD', 'VGRD'] \
+                            and self.plot_info_dict['fcst_var_level'] == 'Z10':
+                        masked_model_num_data = (
+                            masked_model_num_data * 1.94384449412
+                        )
+                ############################################################
                 ax.plot_date(
                     np.ma.compressed(masked_plot_dates),
                     np.ma.compressed(masked_model_num_data),
@@ -571,7 +594,7 @@ def main():
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')
     if not os.path.exists(logging_dir):
          os.makedirs(logging_dir)
-    job_logging_file = os.path.join(logging_dir, 
+    job_logging_file = os.path.join(logging_dir,
                                     os.path.basename(__file__)+'_runon'
                                     +datetime.datetime.now()\
                                     .strftime('%Y%m%d%H%M%S')+'.log')

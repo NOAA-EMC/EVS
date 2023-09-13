@@ -20,11 +20,6 @@ mkdir -p $DATA
 cd $DATA
 
 ####################################
-# Determine Job Output Name on System
-####################################
-export pgmout="OUTPUT.${pid}"
-
-####################################
 # Set EVS directories
 ####################################
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
@@ -42,6 +37,13 @@ setpdy.sh
 . ./PDY
 export VDATEYYYY=${VDATEYYYY:-$(date -d "1 month ago" '+%Y')}
 export VDATEmm=${VDATEmm:-$(date -d "1 month ago" '+%m')}
+
+####################################
+# Set data directives
+####################################
+export SENDECF=${SENDECF:-YES}
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-NO}
 
 ####################################
 # Define NET/RUN variables

@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 '''
 Name: global_det_atmos_plots_nohrsc_spatial_map.py
-Contact(s): Mallory Row
-Abstract: This script generates a spatial map for 24 hour NOHRSC
+Contact(s): Mallory Row (mallory.row@noaa.gov)
+Abstract: This script generates a spatial map for 24 hour NOHRSC snowfall.
+          (lat-lon plots; contours: snowfall)
+          (EVS Graphics Naming Convention: nohrsc.vYYYYmmdd12.024h.conus.[gif][png])
 '''
 
 import netCDF4 as netcdf
@@ -41,7 +43,7 @@ class NOHRSCSpatialMap:
                  plot_info_dict    - plot information dictionary (strings)
                  date_info_dict    - date information dictionary (strings)
                  logo_dir          - directory with logo images (string)
- 
+
              Returns:
         """
         self.logger = logger
@@ -85,7 +87,7 @@ class NOHRSCSpatialMap:
         cmap_under_color_m = '#ffffff'
         cmap_over_color_m = '#5d2c2e'
         # Set Cartopy shapefile location
-        config['data_dir'] = '/apps/ops/prod/data/cartopy'
+        config['data_dir'] = f"{os.environ['cartopyDataDir']}"
         # Convert NOHRSC grib2 to netCDF and read in data
         self.logger.info(f"Reading in NOHRSC file from {self.input_dir}")
         nohrsc_grib2_file = os.path.join(
@@ -152,7 +154,7 @@ class NOHRSCSpatialMap:
                 x = nohrsc_lon
                 y = nohrsc_lat
             if var_units == 'm':
-                self.logger.info(f"Converting from {var_units} to " 
+                self.logger.info(f"Converting from {var_units} to "
                                  +"inches")
                 nohrsc_ASNOW_surface = nohrsc_ASNOW_surface * 39.3701
                 var_units = 'inches'
@@ -199,7 +201,7 @@ class NOHRSCSpatialMap:
                 clevs = clevs_in
                 cmap = matplotlib.colors.ListedColormap(colorlist_in)
                 cmap_under_color = cmap_under_color_in
-                cmap_over_color = cmap_over_color_in 
+                cmap_over_color = cmap_over_color_in
             elif var_units == 'm':
                 clevs = clevs_m
                 cmap = matplotlib.colors.ListedColormap(colorlist_m)
@@ -336,7 +338,7 @@ def main():
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')
     if not os.path.exists(logging_dir):
          os.makedirs(logging_dir)
-    job_logging_file = os.path.join(logging_dir, 
+    job_logging_file = os.path.join(logging_dir,
                                     os.path.basename(__file__)+'_runon'
                                     +datetime.datetime.now()\
                                     .strftime('%Y%m%d%H%M%S')+'.log')

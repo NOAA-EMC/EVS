@@ -1,15 +1,17 @@
 #!/bin/bash
-################################################################################
-# Name of Script: exevs_global_det_wave_grid2obs_stats.sh            
-# Deanna Spindler / Deanna.Spindler@noaa.gov
-# Mallory Row / Mallory.Row@noaa.gov                       
-# Purpose of Script: Run the grid2obs stats for any global deterministic wave model           
-################################################################################
+###############################################################################
+# Name of Script: exevs_global_det_wave_grid2obs_stats.sh
+# Developers: Deanna Spindler / Deanna.Spindler@noaa.gov
+#             Mallory Row / Mallory.Row@noaa.gov
+# Purpose of Script: This script is run for the global_det wave stats step
+#                    for the grid-to-obs verification. It uses METplus to
+#                    generate the statistics.
+###############################################################################
 
-set -x 
+set -x
 
 #############################
-## grid2obs wave model stats 
+## grid2obs wave model stats
 #############################
 
 cd $DATA
@@ -38,7 +40,7 @@ if [ $MODELNAME == "gfs" ]; then
     lead_hours='0 6 12 18 24 30 36 42 48 54 60 66 72 78
                 84 90 96 102 108 114 120 126 132 138 144 150 156 162
                 168 174 180 186 192 198 204 210 216 222 228 234 240 246
-                252 258 264 270 276 282 288 294 300 306 312 318 324 330 
+                252 258 264 270 276 282 288 294 300 306 312 318 324 330
                 336 342 348 354 360 366 372 378 384'
 else
     echo ' '
@@ -52,7 +54,7 @@ else
 fi
 
 ############################################
-# create ASCII2NC NBDC files and PB2NC GDAS files 
+# create ASCII2NC NBDC files and PB2NC GDAS files
 ############################################
 poe_script=${DATA}/jobs/run_all_2NC_poe.sh
 echo ' '
@@ -70,6 +72,7 @@ else
         echo "export COMINndbc=${COMINndbc}" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         echo "export DATA=$DATA" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         echo "export VDATE=$VDATE" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
+        echo "export MET_NDBC_STATIONS=${FIXevs}/ndbc_stations/ndbc_stations.xml" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}/ASCII2NC_obsNDBC.conf" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         echo "export err=$?; err_chk" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         if [ $SENDCOM = YES ]; then
@@ -130,7 +133,7 @@ if [[ $ncount_job -gt 0 ]]; then
     fi
 fi
 ####################
-# quick error check 
+# quick error check
 ####################
 nc=`ls ${DATA}/ncfiles/gdas.${VDATE}*.nc | wc -l | awk '{print $1}'`
 echo " Found ${DATA}/ncfiles/gdas.${VDATE}*.nc for ${VDATE}"

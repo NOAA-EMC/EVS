@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 '''
-Program Name: global_det_atmos_create_output_dirs.py
-Contact(s): Mallory Row
-Abstract: This script is run by all scripts in scripts/.
-          This creates the base directories and their subdirectories
-          for the verification use cases.
+Name: global_det_atmos_create_output_dirs.py
+Contact(s): Mallory Row (mallory.row@noaa.gov)
+Abstract: This creates the base directories and their subdirectories.
+Run By: scripts/global_det/stats/exevs_global_det_atmos_grid2grid_stats.sh
+        scripts/global_det/stats/exevs_global_det_atmos_grid2obs_stats.sh
+        scripts/global_det/plots/exevs_global_det_atmos_grid2grid_plots.sh
+        scripts/global_det/plots/exevs_global_det_atmos_grid2obs_plots.sh
 '''
 
 import os

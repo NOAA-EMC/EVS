@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=00:30:00
-#PBS -l select=1:ncpus=1:mem=50GB
+#PBS -l select=1:ncpus=1:mem=75GB
 #PBS -l debug=true
 #PBS -V
 
@@ -28,7 +28,7 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/global_det/global_det_prep.sh
 
-export maillist='geoffrey.manikin@noaa.gov,mallory.row@noaa.gov'
+export maillist='alicia.bentley@noaa.gov,mallory.row@noaa.gov'
 
 export envir=dev
 export NET=evs
@@ -36,7 +36,6 @@ export STEP=prep
 export COMPONENT=global_det
 export RUN=atmos
 
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
