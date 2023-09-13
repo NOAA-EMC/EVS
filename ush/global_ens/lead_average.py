@@ -921,9 +921,15 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         level_string = f'{level} '
         level_savename = f'{level}'
     if metric2_name is not None:
-        title1 = f'{metric1_string} and {metric2_string} - {domain_string}'
+        if f'{domain_string}' == 'Global, 0p25':
+            title1 = f'{metric1_string} and {metric2_string} - Global'
+        else:
+            title1 = f'{metric1_string} and {metric2_string} - {domain_string}'
     else:
-        title1 = f'{metric1_string} - {domain_string}'
+        if f'{domain_string}' == 'Global, 0p25':
+            title1 = f'{metric1_string} - Global'
+        else:
+            title1 = f'{metric1_string} - {domain_string}'
     if thresh and '' not in thresh:
         thresholds_phrase = ', '.join([
             f'{opt}{thresh_label}' for thresh_label in thresh_labels
@@ -1011,12 +1017,14 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     if str(metric2_name).lower() == 'pcor':
         metric2_name = 'corr'
     domain_string = domain_string.replace(', ','_')
+    if str(domain_string).lower() == 'global_0p25':
+        domain_string = 'latlon_0p25_glb'
     save_name = (f'evs.'
                  + f'{str(models_savename).lower()}.'
                  + f'{str(metric1_name).lower()}.'
                  + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
                  + f'{str(time_period_savename).lower()}.'
-                 + f'fhr_{str(date_type).lower()}{str(date_hours_savename).lower()}.'
+                 + f'fhrmean_{str(date_type).lower()}{str(date_hours_savename).lower()}_f{xticks[-1]}.'
                  + f'{str(domain_string).lower()}')
     if metric2_name is not None:
         save_name = (f'evs.'
@@ -1024,7 +1032,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                      + f'{str(metric1_name).lower()}_{str(metric2_name).lower()}.'
                      + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
                      + f'{str(time_period_savename).lower()}.'
-                     + f'fhr_{str(date_type).lower()}{str(date_hours_savename).lower()}.'
+                     + f'fhrmean_{str(date_type).lower()}{str(date_hours_savename).lower()}_f{xticks[-1]}.'
                      + f'{str(domain_string).lower()}')
     if thresh and '' not in thresh:
         save_name = (f'evs.'
@@ -1032,8 +1040,8 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                      + f'{str(metric1_name).lower()}_{str(thresholds_save_phrase).lower()}.'
                      + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
                      + f'{str(time_period_savename).lower()}.'
-                     + f'fhr_{str(date_type).lower()}{str(date_hours_savename).lower()}.'
-                     + f'{str(domain).lower()}')
+                     + f'fhrmean_{str(date_type).lower()}{str(date_hours_savename).lower()}_f{xticks[-1]}.'
+                     + f'{str(domain_string).lower()}')
     if save_header:
         save_name = f'{save_header}_'+save_name
     save_subdir = os.path.join(

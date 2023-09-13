@@ -31,7 +31,6 @@ module load prod_envir/${prod_envir_ver}
 ## For dev testing
 #############################################################
 
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=NO
 export envir=prod
@@ -58,7 +57,7 @@ export mod_ver=${rtma_ver}
 export modsys=rtma
 export MODELNAME=rtma
 
-export maillist=perry.shafran@noaa.gov
+export maillist="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
 
 export config=$HOMEevs/parm/evs_config/analyses/config.evs.rtma.prod
 source $config

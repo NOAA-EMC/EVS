@@ -32,7 +32,7 @@ export machine=WCOSS2
 export USE_CFP=YES
 export nproc=128
 
-export maillist='geoffrey.manikin@noaa.gov,mallory.row@noaa.gov'
+export maillist='alicia.bentley@noaa.gov,mallory.row@noaa.gov'
 
 export envir=dev
 export NET=evs
@@ -42,7 +42,6 @@ export RUN=atmos
 export VERIF_CASE=grid2grid
 export MODELNAME=gfs
 
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
 export COMINgfs=$(compath.py prod/gfs/$gfs_ver)

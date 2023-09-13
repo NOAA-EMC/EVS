@@ -29,7 +29,6 @@ module load prod_envir/${prod_envir_ver}
 ## For dev testing
 ##############################################################
 
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=NO
 export envir=prod
@@ -55,7 +54,7 @@ export MODELNAME=urma
 export modsys=urma
 export mod_ver=${urma_ver}
 
-export maillist=perry.shafran@noaa.gov
+export maillist="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
 
 export config=$HOMEevs/parm/evs_config/analyses/config.evs.urma.prod
 source $config
