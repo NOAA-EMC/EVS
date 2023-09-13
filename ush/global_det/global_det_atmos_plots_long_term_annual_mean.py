@@ -134,7 +134,8 @@ class LongTermAnnualMean:
         if self.var_name == 'HGT':
             var_units = 'gpm'
         elif self.var_name == 'UGRD_VGRD':
-            var_units = 'm/s'
+            #var_units = 'm/s'
+            var_units = 'kt'
         elif self.var_name == 'APCP':
             var_units = self.var_thresh[-2:]
         if self.model_group == 'gfs_4cycles':
