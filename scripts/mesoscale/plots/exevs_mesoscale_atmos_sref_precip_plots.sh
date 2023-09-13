@@ -93,7 +93,8 @@ elif [ $stats = fss ] ; then
 
   if [ $score_type = lead_average ] ; then
 	if [ $stats = fss ] ; then
-	  threshes='>=0.1,>=1,>=5,>=10,>=25,>=50'
+	  #threshes='>=0.1,>=1,>=5,>=10,>=25,>=50'
+	  threshes='>=0.1 >=1 >=5 >=10 >=25 >=50'
 	else
 	  threshes='>=0.1 >=1 >=5 >=10 >=25 >=50'
         fi
@@ -227,11 +228,8 @@ for stats in  ets fbias fss  ; do
  for score_type in $score_types ; do
 
   if [ $score_type = lead_average ] ; then 
-    if [ $stats = ets ] || [ $stats = fbias ] ; then
+    if [ $stats = ets ] || [ $stats = fbias ] || [ $stats = fss ] ; then
       threshes='ge0.1 ge1 ge5 ge10 ge25 ge50'
-      scoretype='fhrmean'
-    elif [ $stats = fss ] ; then
-      threshes='width1-3-5-7-9-11'
       scoretype='fhrmean'
     fi
   elif [ $score_type = threshold_average ] ; then
@@ -249,7 +247,7 @@ for stats in  ets fbias fss  ; do
       if [ $stats = ets ] || [ $stats = fbias ] ; then
          mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${thresh}.png evs.sref.${stats}.apcp_6a.${thresh}.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png
       elif [ $stats = fss ] ; then
-         mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${thresh}.png evs.sref.${stats}.apcp_6a.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png	    
+         mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_width1-3-5-7-9-11_${thresh}.png evs.sref.${stats}.apcp_6a.${thresh}.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png	    
       fi
     elif [ $score_type = threshold_average ] ; then
 	 for lead in f24 f36 f48 f60 f72 f84 ; do 
