@@ -56,7 +56,7 @@ export COMINccpa=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
 export COMINmrms=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/$COMPONENT
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 export cyc=$(date -d "today" +"%H")
-export maillist="marcel.caron@noaa.gov"
+export maillist="alicia.bentley@noaa.gov,marcel.caron@noaa.gov"
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/cam/stats/JEVS_CAM_STATS

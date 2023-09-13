@@ -134,7 +134,7 @@ export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 mkdir -p $COMOUTfinal $COMOUTsmall
 
-export maillist=${maillist:-'geoffrey.manikin@noaa.gov'}
+export maillist=${maillist:-'alicia.bentley@noaa.gov'}
 
 
 ####################################
