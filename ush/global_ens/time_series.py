@@ -927,9 +927,15 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         level_string = f'{level} '
         level_savename = f'{level}'
     if metric2_name is not None:
-        title1 = f'{metric1_string} and {metric2_string} - {domain_string}'
+        if f'{domain_string}' == 'Global, 0p25':
+            title1 = f'{metric1_string} and {metric2_string} - Global'
+        else:
+            title1 = f'{metric1_string} and {metric2_string} - {domain_string}'
     else:
-        title1 = f'{metric1_string} - {domain_string}'
+        if f'{domain_string}' == 'Global, 0p25':
+            title1 = f'{metric1_string} - Global'
+        else:
+            title1 = f'{metric1_string} - {domain_string}'
     if thresh and '' not in thresh:
         thresholds_phrase = ', '.join([
             f'{opt}{thresh_label}' for thresh_label in thresh_labels
@@ -939,16 +945,16 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             for thresh_label in requested_thresh_labels
         ])
         if units:
-            title2 = (f'{level_string} Daily Avg {var_long_name} ({thresholds_phrase}'
+            title2 = (f'{level_string} {var_long_name} ({thresholds_phrase}'
                       + f' {units})')
         else:
-            title2 = (f'{level_string} Daily Avg {var_long_name} ({thresholds_phrase}'
+            title2 = (f'{level_string} {var_long_name} ({thresholds_phrase}'
                       + f' unitless)')
     else:
         if units:
-            title2 = f'{level_string} Daily Avg {var_long_name} ({units})'
+            title2 = f'{level_string} {var_long_name} ({units})'
         else:
-            title2 = f'{level_string} Daily Avg {var_long_name} (unitless)'
+            title2 = f'{level_string} {var_long_name} (unitless)'
 #    title3 = f'{str(date_type).capitalize()} {date_hours_string} '
 #              + f'{date_start_string} to {date_end_string}, {frange_string}'
     fcst_day=int(flead[0]/24)
@@ -1020,6 +1026,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     if str(metric2_name).lower() == 'pcor':
         metric2_name = 'corr'
     domain_string = domain_string.replace(', ','_')
+    if str(domain_string).lower() == 'global_0p25':
+        domain_string = 'latlon_0p25_glb'
     save_name = (f'evs.'
                  + f'{str(models_savename).lower()}.'
                  + f'{str(metric1_name).lower()}.'
