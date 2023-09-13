@@ -4,8 +4,8 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=07:00:00
-#PBS -l place=vscatter:exclhost,select=10:ncpus=128:ompthreads=1:mem=55GB
+#PBS -l walltime=10:00:00
+#PBS -l place=vscatter:exclhost,select=4:ncpus=128:mem=140GB
 #PBS -l debug=true
 #PBS -V
 
@@ -24,7 +24,7 @@ export job=${PBS_JOBNAME:-jevs_cam_grid2obs_plots}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export USE_CFP=YES
-export nproc=128
+export nproc=256
 
 # General Verification Settings
 export NET="evs"
@@ -35,7 +35,7 @@ export VERIF_CASE="grid2obs"
 export MODELNAME=${COMPONENT}
 
 # EVS Settings
-export HOMEevs="/lfs/h2/emc/vpppg/save/$USER/EVS"
+export HOMEevs="/lfs/h2/emc/vpppg/noscrub/$USER/EVS"
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export config=$HOMEevs/parm/evs_config/cam/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}
 
