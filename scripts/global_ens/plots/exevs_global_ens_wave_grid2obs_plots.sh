@@ -115,8 +115,8 @@ periods='PAST31DAYS PAST90DAYS'
 if [ $gather = yes ] ; then
   echo "copying all images into one directory"
   cp ${DATA}/wave/*png ${DATA}/sfcshp/.  ## lead_average plots
-  nc=$(ls ${DATA}/sfcshp/*.fhr_valid*.png | wc -l | awk '{print $1}')
-  echo "copied $nc lead_average plots"
+  nc=$(ls ${DATA}/sfcshp/*png | wc -l | awk '{print $1}')
+  echo "copied $nc plots"
   for period in ${periods} ; do
     period_lower=$(echo ${period,,})
     if [ ${period} = 'PAST31DAYS' ] ; then
@@ -152,7 +152,7 @@ if [ $gather = yes ] ; then
       tar -cvf evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar evs.*${period_lower}*.png
     fi
   done
-  cp evs.${STEP}.${COMPONENT}.${RUN}.*.tar ${COMOUTplots}/.
+  cp -v evs.${STEP}.${COMPONENT}.${RUN}.*.tar ${COMOUTplots}/.
 else  
   echo "not copying the plots"
 fi
