@@ -55,34 +55,25 @@ for model in $model_list ; do
   past=`$NDATE -$fhr ${VDATE}12`	
   INITDATE=${past:0:8}
   apcp24mean=$source/GenEnsProd_${MODEL}_APCP24_FHR${fhr}_${VDATE}_120000V_ens.nc
-  size=`ls -l $apcp24mean | awk '{ print $5}'`
-  if [ $size -gt 1000000 ] ; then
-    ln -sf $source/GenEnsProd_${MODEL}_APCP24_FHR${fhr}_${VDATE}_120000V_ens.nc $target/${model}_precip_24hrAccum_init${INITDATE}12_fhr${fhr}.nc	
+  if [ -f $apcp24mean ]; then
+      size=`ls -l $apcp24mean | awk '{ print $5}'`
+      if [ $size -gt 1000000 ] ; then
+          ln -sf $source/GenEnsProd_${MODEL}_APCP24_FHR${fhr}_${VDATE}_120000V_ens.nc $target/${model}_precip_24hrAccum_init${INITDATE}12_fhr${fhr}.nc
+      else
+          echo "$apcp24mean SIZE LESS THAN 1000000"
+      fi
+  else
+      echo "$apcp24mean DOES NOT EXIST"
   fi 
  done
 done
-
-source=$COMINccpa24/gefs
-target=$DATA/grid2grid_plots/data/ccpa
-mkdir -p $target
-if [ -s $source/ccpa.t12z.grid3.24h.f00.nc ] ; then
- ln -sf $source/ccpa.t12z.grid3.24h.f00.nc $target/ccpa_precip_24hrAccum_valid${VDATE}12.nc
-fi 
 
 python $USHevs/global_ens/ush_gens_plot_py/global_det_atmos_plots.py
 
 cd $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/precip/SL1L2_FBAR_24hrAccumMaps_CONUS_precip_spatial_map/images
 
-#scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/gens/spaticl
+tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.precip_spatial.v${VDATE}.tar *.gif
 
-mv qpe.v${VDATE}12.024h.conus.png evs.ccpa.spatial_map.apcp_a24_vlid12z_f000.conus.png
-
-tar -cvf evs.plots.gefs.precip.spatial.map.v${VDATE}.tar *.gif
-
-cp evs.plots.gefs.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
-
-
-
-
-
-
+if [ $SENDCOM = YES ]; then
+    cp evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.precip_spatial.v${VDATE}.tar  $COMOUT/.
+fi
