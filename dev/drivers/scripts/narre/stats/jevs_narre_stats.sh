@@ -37,9 +37,9 @@ export cyc=00
 
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
-export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
+DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
-export maillist='geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'
+export maillist='alicia.bentley@noaa.gov,binbin.zhou@noaa.gov'
 
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
