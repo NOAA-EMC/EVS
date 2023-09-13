@@ -240,7 +240,7 @@ done
 
 tar -cvf evs.plots.sref.td2m.past${past_days}days.v${VDATE}.tar *.png
 
-exevs_mesoscale_atmos_sref_td2m_plots.sh
+if [ $SENDCOM="YES" ]; then
  cp  evs.plots.sref.td2m.past${past_days}days.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
 fi
 
