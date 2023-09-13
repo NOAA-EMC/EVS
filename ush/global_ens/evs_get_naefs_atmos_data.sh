@@ -97,7 +97,7 @@ if [ $modnam = cmce_bc ] ; then
 
   cd $WORK
 
-  total=20
+  total=${gefs_number}
 
    export outdata=$COMOUT_cmce_bc
 

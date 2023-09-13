@@ -42,7 +42,7 @@ export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 
-#export COMINgefs_bc=/lfs/h2/emc/ptmp/bo.cui/com/naefs/v7.0
+export COMINgefs_bc=/lfs/h2/emc/ptmp/bo.cui/com/${MODELNAME}/${naefs_ver}
 
 export maillist='geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'
 
