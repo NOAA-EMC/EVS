@@ -51,9 +51,6 @@ export VERIF_TYPE=pres_lvls
 export NDAYS=31
 
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
-export COMIN=$COMROOT/$NET/$evs_ver
-export COMINcfs=$COMIN/stats/$COMPONENT/cfs
-export COMINgefs=$COMIN/stats/$COMPONENT/gefs
 export VDATE_START=$(date -d "today -32 day" +"%Y%m%d")
 export VDATE_END=$(date -d "today -2 day" +"%Y%m%d")
 export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE_END
