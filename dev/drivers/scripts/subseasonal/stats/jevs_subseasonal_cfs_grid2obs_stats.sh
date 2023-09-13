@@ -26,7 +26,7 @@ source $HOMEevs/modulefiles/subseasonal/subseasonal_stats.sh
 #%include <head.h>
 #%include <envir-p1.h>
 
-export MET_ROOT=/apps/ops/para/libs/intel/${intel_ver}/met/${met_ver}
+export MET_ROOT=/apps/prod/lmodules/intel/${intel_ver}/met/${met_ver}
 export MET_BASE=${MET_ROOT}/share/met
 export PATH=${MET_ROOT}/bin:${PATH}
 
