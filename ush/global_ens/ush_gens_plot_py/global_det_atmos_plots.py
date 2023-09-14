@@ -518,9 +518,6 @@ for plot in plots_list:
                                              plot_info_dict, logo_dir)
         plot_nsm.make_nohrsc_spatial_map()
     elif plot == 'precip_spatial_map':
-        model_info_dict['obs'] = {'name': 'ccpa',
-                                  'plot_name': 'ccpa',
-                                  'obs_name': '24hrCCPA'}
         pcp_combine_base_dir = os.path.join(VERIF_CASE_STEP_dir, 'data')
         import global_det_atmos_plots_precip_spatial_map as gdap_psm
         for psm_info in \

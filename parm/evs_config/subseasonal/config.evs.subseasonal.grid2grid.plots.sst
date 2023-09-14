@@ -37,17 +37,7 @@ export OUTPUTROOT="$DATAROOT/$STEP"
 export start_date="$VDATE_START"
 export end_date="$VDATE_END"
 export plot_by="VALID"
-## WEB SETTINGS
-#SEND2WEB:  whether or not to send plots to webhost
-#webhost:   webhost(rzdm) computer
-#webhostid: webhost(rzdm) user name
-#webdir:    directory where to send plots on webhost
-export SEND2WEB="NO"
-export webhost="emcrzdm.ncep.noaa.gov"
-export webhostid="$USER"
-export webdir="/home/people/emc/www/htdocs/users/verification/global/subseasonal/para/atmos/tar_files"
 ## DATA DIRECTIVE SETTINGS
-export SENDARCH="YES"
 export KEEPDATA="YES"
 ####################################################
 # SETTINGS FOR SPECIFIC USE CASES

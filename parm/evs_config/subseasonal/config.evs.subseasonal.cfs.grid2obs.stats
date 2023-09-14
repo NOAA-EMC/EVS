@@ -41,8 +41,6 @@ export make_met_data_by="VALID"
 export met_version="$met_ver" 
 export metplus_version="$metplus_ver" 
 ## DATA DIRECTIVE SETTINGS
-export SENDARCH="YES"
-export SENDMETVIEWER="NO"
 export KEEPDATA="YES"
 ####################################################
 # SETTINGS FOR SPECIFIC USE CASES
@@ -69,9 +67,6 @@ if [ $VERIF_CASE_STEP = grid2obs_stats ]; then
     export g2ostats_PrepBufr_fhr_inc=12
     export g2ostats_PrepBufr_grid="G003"
     export g2ostats_PrepBufr_gather_by="VALID"
-    export g2ostats_mv_database_name="mv_evs_subseasonal_grid2obs_stats_$MODELNAME"
-    export g2ostats_mv_database_group="$USER"
-    export g2ostats_mv_database_desc="Grid-to-obs subseasonal METplus data for $MODELNAME"
 fi
 
 

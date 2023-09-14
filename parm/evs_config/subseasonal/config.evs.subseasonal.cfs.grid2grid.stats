@@ -41,8 +41,6 @@ export make_met_data_by="VALID"
 export met_version="$met_ver" 
 export metplus_version="$metplus_ver"
 ## DATA DIRECTIVE SETTINGS
-export SENDARCH="YES"
-export SENDMETVIEWER="NO"
 export KEEPDATA="YES"
 ####################################################
 # SETTINGS FOR SPECIFIC USE CASES
@@ -139,9 +137,6 @@ if [ $VERIF_CASE_STEP = grid2grid_stats ]; then
     export g2gstats_seaice_fhr_inc=12
     export g2gstats_seaice_grid="G003"
     export g2gstats_seaice_gather_by="VALID"
-    export g2gstats_mv_database_name="mv_evs_subseasonal_grid2grid_stats_$MODELNAME"
-    export g2gstats_mv_database_group="$USER"
-    export g2gstats_mv_database_desc="Grid-to-grid METplus subseasonal data for $MODELNAME"
 fi
 
 

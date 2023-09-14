@@ -45,8 +45,6 @@ while [ $n -le $past_days ] ; do
 done 
 
 
-VX_MASK_LIST="G003, NHEM, SHEM, TROPICS, CONUS"
-																  
 export fcst_init_hour="0,12"
 export fcst_valid_hour="0,12"
 
@@ -58,16 +56,17 @@ verif_case=$VERIF_CASE
 
 > run_all_poe.sh
 
-#for stats in acc bias_mae crpss rmse_spread ets_fbias sratio_pod_csi ; do 
-for stats in acc bias_mae crpss rmse_spread  ; do 
+#for stats in acc me_mae crpss rmse_spread ets_fbias sratio_pod_csi ; do 
+for stats in acc me_mae crpss rmse_spread  ; do 
  if [ $stats = acc ] ; then
   stat_list='acc'
   line_tp='sal1l2'
   VARs='PRMSL TMP2m DPT2m UGRD10m VGRD10m'
   score_types='time_series lead_average'
- elif [ $stats = bias_mae  ] ; then
-  stat_list='bias, mae'
-  line_tp='sl1l2'
+ elif [ $stats = me_mae  ] ; then
+  stat_list='me, mae'
+  line_tp='ecnt'
+  VARs='PRMSL TMP2m DPT2m UGRD10m VGRD10m RH2m'
   score_types='time_series lead_average'
  elif [ $stats = crpss ] ; then
   stat_list='crpss'
@@ -100,13 +99,18 @@ for stats in acc bias_mae crpss rmse_spread  ; do
   for lead in $fcst_leads ; do 
 
    if [ $lead = vs_lead ] ; then
-	export fcst_lead="12, 24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384"
+	export fcst_lead="0, 12, 24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384"
    else
         export fcst_lead=$lead
    fi
 
     for VAR in $VARs ; do 
 
+       if [ $VAR = PRMSL ]; then
+           VX_MASK_LIST="G003, NHEM, SHEM, TROPICS, CONUS"
+       else
+           VX_MASK_LIST="G003, NHEM, SHEM, TROPICS"
+       fi
        var=`echo $VAR | tr '[A-Z]' '[a-z]'` 
 	    
        if [ $VAR = TMP2m ] || [ $VAR = DPT2m ] || [ $VAR = RH2m ] ; then 
@@ -196,86 +200,67 @@ fi
 
 cd $plot_dir
 
-for stats in  acc bias_mae crpss rmse_spread ; do
- for score_type in time_series lead_average ; do
-
-  if [ $stats = ets_fbias ] ; then
-    if [ $score_type = time_series ] ; then
-      leads='_f120_ge250ge500ge1000ge2000.png _f240_ge250ge500ge1000ge2000.png _f360_ge250ge500ge1000ge2000.png'
-      scoretype='timeseries'
-    elif [ $score_type = lead_average ] ; then
-      leads='_ge250ge500ge1000ge2000.png'
-      scoretype='fhrmean'
-    fi
-    vars='cape'
-  else
-
-    if [ $score_type = time_series ] ; then
-      leads='_f120.png _f240.png _f360.png'
-      scoretype='timeseries' 
-    elif [ $score_type = lead_average ] ; then
-      leads='.png'
-      scoretype='fhrmean'
-    fi
-    vars='prmsl tmp dpt ugrd vgrd rh'
-  fi
-
-  for lead in $leads ; do
-    
-    if [ $score_type = time_series ] ; then
-	lead_time=_${lead:1:4}
+for var in prmsl tmp dpt ugrd vgrd rh; do
+    if [ $var = rh ]; then
+        stats_list='me_mae rmse_spread'
     else
-        lead_time=_f384
+        stats_list='acc me_mae crpss rmse_spread'
     fi
-
-   for domain in g003 nhem shem tropics conus ; do
-     if [ $domain = g003 ] ; then
-         domain_new=glb
-     elif [ $domain = conus ]; then
-        domain_new="buk_conus"
-     else
-         domain_new=$domain
-     fi
-
-
-    for var in $vars ; do
-      if [ $var = tmp ] || [ $var = dpt ] || [ $var = rh ]; then
-	 levels='2m'
-      elif [ $var = ugrd ] || [ $var = vgrd ] ; then
-	 levels='10m'
-      elif [ $var = cape ] ; then
-	 levels='l0'
-      elif [ $var = prmsl ] ; then
-	 levels='z0'
-      fi
-
-      for level in $levels ; do
-
-         if [ $var = prmsl ] || [ $var = cape ] ; then
-
-             mv ${score_type}_regional_${domain}_valid_00z_12z_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${level}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
-
-         else
-             mv ${score_type}_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}${lead}  evs.global_ens.${stats}.${var}_${level}.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
-
+    if [ $var = prmsl ]; then
+        domain_list='g003 nhem shem tropics conus'
+    else
+        domain_list='g003 nhem shem tropics'
+    fi
+    if [ $var = tmp ] || [ $var = dpt ] || [ $var = rh ]; then
+        levels='2m'
+    elif [ $var = ugrd ] || [ $var = vgrd ] ; then
+        levels='10m'
+    elif [ $var = cape ] ; then
+        levels='l0'
+    elif [ $var = prmsl ] ; then
+        levels='z0'
+    fi
+    for domain in $domain_list ; do
+        if [ $domain = g003 ] ; then
+            domain_new="glb"
+        elif [ $domain = conus ]; then
+            domain_new="buk_conus"
+        else
+            domain_new=$domain
         fi
-               
-      done #level
-
-    done #var
-   done  #domain
-  done   #lead
- done    #score_type
+        for stats in $stats_list ; do
+            if [ $stats = rmse_spread ]; then
+                evs_graphic_stats="rmse_sprd"
+            else
+                evs_graphic_stats=$stats
+            fi
+            for level in $levels ; do
+                if [ $level = '2m' ]; then
+                    evs_graphic_level='z2'
+                elif [ $level = '10m' ]; then
+                    evs_graphic_level='z10'
+                else
+                    evs_graphic_level=$level
+                fi
+                if [ $var = prmsl ] ; then
+                    mv lead_average_regional_${domain}_valid_00z_12z_${var}_${stats}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${domain_new}.png
+                else
+                    mv lead_average_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${domain_new}.png
+                fi
+                for lead in 120 240 360; do
+                    if [ $var = prmsl ] ; then
+                        mv time_series_regional_${domain}_valid_00z_12z_${var}_${stats}_f${lead}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.timeseries_valid00z_12z_f${lead}.g003_${domain_new}.png
+                    else
+                        mv time_series_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}_f${lead}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.timeseries_valid00z_12z_f${lead}.g003_${domain_new}.png
+                    fi
+                done #lead
+            done #level
+        done #stats
+    done  #domain
 done     #stats
 
+tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar *.png
 
-#scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/gens/grid2obs 
-
-tar -cvf evs.plots.gefs.grid2obs.v${VDATE}.past${past_days}days.all.init.times.tar *.png
-
-cp evs.plots.gefs.grid2obs.v${VDATE}.past${past_days}days.all.init.times.tar  $COMOUT/.  
-
-
-
-
-
+if [ $SENDCOM = YES ]; then 
+    cp evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar  $COMOUT/.
+fi

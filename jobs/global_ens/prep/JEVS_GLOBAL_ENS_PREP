@@ -20,7 +20,7 @@ cd $DATA
 setpdy.sh
 . $DATA/PDY
 
-if [ $RUN = atmos ] ; then
+if [ $RUN = atmos ] || [ $RUN = headline ]; then
   export INITDATE=${INITDATE:-$PDYm2}
 fi
 
