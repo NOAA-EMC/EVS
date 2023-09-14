@@ -47,7 +47,7 @@ export jobid=$job.${PBS_JOBID:-$$}
 
 export run_mpi=no
 
-export gefs_number=20
+export gefs_number=30
 
 export maillist='geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'
 

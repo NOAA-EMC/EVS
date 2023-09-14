@@ -135,11 +135,7 @@ for  verify in $verifys ; do
 
         echo  "export model=$modnam"  >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
 
-	if [ $gefs_number = 30 ] && [ ${modnam} = naefs ] ; then
-	  echo  "export MODEL=${MODL}v7" >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh 
-	else
-           echo  "export MODEL=$MODL" >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
-	fi
+        echo  "export MODEL=$MODL" >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
 
         echo  "export modelhead=$modnam" >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
 
@@ -307,11 +303,7 @@ for  verify in $verifys ; do
 
        echo  "export model=$modnam"  >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
 
-       if [ $modnam = naefs ] && [ $gefs_number = 30 ] ; then
-	  echo  "export MODEL=${MODNAM}v7" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh 
-       else
-          echo  "export MODEL=$MODNAM" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
-       fi
+       echo  "export MODEL=$MODNAM" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
 
        echo  "export modelhead=$modnam" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
        echo  "export extradir='atmos/'" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
