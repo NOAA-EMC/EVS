@@ -20,7 +20,7 @@ export ndate=$NDATE
 if [ $modnam = gefs_bc ] ; then
 
   cd $WORK
-  total=20
+  total=30
 
    export outdata=$COMOUT_gefs_bc
 
@@ -183,7 +183,7 @@ if [ $modnam = gefs_bc_apcp24h ] ; then
         #apcp24_bc=$origin/geprcp.t${cyc}z.pgrb2a.0p50.bc_24hf${hhh}
 
 	>$WORK/grabmbr.${cyc}.${hhh}
-        for mbr in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 ; do
+        for mbr in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30; do
 
           mb=$mbr
           typeset -Z2 mb
