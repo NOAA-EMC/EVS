@@ -200,12 +200,10 @@ for stats in  rmse_spread ; do
       fi
 
 
-     valid=valid_all_times
-
       if [ $var = mslet ] || [ $var = gust ] || [  $var = hpbl ] ; then
         mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
       else
-        mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+        mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
       fi
 
      done #var
