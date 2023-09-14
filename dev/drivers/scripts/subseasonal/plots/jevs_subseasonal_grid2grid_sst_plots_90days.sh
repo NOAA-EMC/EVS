@@ -26,7 +26,7 @@ source $HOMEevs/modulefiles/subseasonal/subseasonal_plots.sh
 #%include <head.h>
 #%include <envir-p1.h>
 
-export MET_ROOT=/apps/prod/lmodules/intel/${intel_ver}/met/${met_ver}
+export MET_ROOT=/apps/ops/prod/libs/intel/${intel_ver}/met/${met_ver}
 
 export USER=$USER
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
