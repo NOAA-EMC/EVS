@@ -29,6 +29,7 @@ COMINghrsst = os.environ['COMINghrsst']
 COMINumd = os.environ['COMINumd']
 COMINnam = os.environ['COMINnam']
 COMOUT = os.environ['COMOUT']
+SENDCOM = os.environ['SENDCOM']
 INITDATE = os.environ['INITDATE']
 NET = os.environ['NET']
 RUN = os.environ['RUN']
@@ -43,7 +44,7 @@ if not os.path.exists(COMOUT_INITDATE):
 
 ###### OBS
 # Get operational observation data
-# Nortnern & Southern Hemisphere 10 km OSI-SAF multi-sensor analysis - osi_saf
+# Northern & Southern Hemisphere 10 km OSI-SAF multi-sensor analysis - osi_saf
 subseasonal_obs_dict = {
     'gfs': {'prod_file_format': os.path.join(COMINgfs, 'gfs.'
                                              +'{init?fmt=%Y%m%d}',
@@ -112,7 +113,7 @@ subseasonal_obs_dict = {
                                              +'latest.nc'),
                       'arch_file_format': os.path.join(COMOUT_INITDATE,
                                                        'umd',
-                                                       'umd.'
+                                                       'umd.olr.'
                                                        '{init?fmt=%Y%m%d}.nc'),
                       'cycles': ['00']},
 
@@ -163,7 +164,8 @@ for OBS in OBSNAME:
                 if not os.path.exists(arch_file_dir):
                     os.makedirs(arch_file_dir)
                 print("----> Trying to create "+arch_file)
-                sub_util.copy_file(prod_file, arch_file)
+                if SENDCOM == 'YES':
+                    sub_util.copy_file(prod_file, arch_file)
                 if not os.path.exists(prod_file):
                     sub_util.log_missing_file_obs(
                         log_missing_file, prod_file, OBS,
@@ -191,10 +193,11 @@ for OBS in OBSNAME:
                 if not os.path.exists(arch_file_dir):
                     os.makedirs(arch_file_dir)
                 print("----> Trying to create "+daily_arch_file)
-                sub_util.prep_prod_osi_saf_file(
-                    daily_prod_file, daily_arch_file,
-                    CDATE_dt, log_missing_file
-                )
+                if SENDCOM == 'YES':
+                    sub_util.prep_prod_osi_saf_file(
+                        daily_prod_file, daily_arch_file,
+                        CDATE_dt, log_missing_file
+                    )
         elif OBS == 'ghrsst':
             daily_prod_file = sub_util.format_filler(
                 obs_dict['daily_prod_file_format'], CDATE_dt, CDATE_dt,
@@ -218,10 +221,11 @@ for OBS in OBSNAME:
                 if not os.path.exists(arch_file_dir):
                     os.makedirs(arch_file_dir)
                 print("----> Trying to create "+daily_arch_file)
-                sub_util.prep_prod_ghrsst_ospo_file(
-                    daily_prod_file, daily_arch_file,
-                    CDATE_dt, log_missing_file
-                )
+                if SENDCOM == 'YES':
+                    sub_util.prep_prod_ghrsst_ospo_file(
+                        daily_prod_file, daily_arch_file,
+                        CDATE_dt, log_missing_file
+                    )
         else:
             prod_file = sub_util.format_filler(
                 obs_dict['prod_file_format'], CDATE_dt, CDATE_dt,
@@ -241,10 +245,12 @@ for OBS in OBSNAME:
                     os.makedirs(arch_file_dir)
                 print("----> Trying to create "+arch_file)
                 if OBS == 'gfs':
-                    sub_util.prep_prod_gfs_file(
-                        prod_file, arch_file, CDATE_dt, log_missing_file)
+                    if SENDCOM == 'YES':
+                        sub_util.prep_prod_gfs_file(
+                            prod_file, arch_file, CDATE_dt, log_missing_file)
                 else:
-                    sub_util.copy_file(prod_file, arch_file)
+                    if SENDCOM == 'YES':
+                        sub_util.copy_file(prod_file, arch_file)
                     if not os.path.exists(prod_file):
                         sub_util.log_missing_file_obs(
                             log_missing_file, prod_file, OBS,

@@ -522,17 +522,6 @@ def prep_prod_gefs_file(source_afile, source_bfile, prepped_file, dest_file,
             log_missing_file_model(log_missing_file, source_afile,
                                    'gefs', init_dt,
                                    str(forecast_hour).zfill(3))
-    #elif 'precip' in prep_method:
-        #if int(forecast_hour) % 24 == 0:
-            #thin_var_level = ('APCP:surface:0-'
-                              #+str(int(int(forecast_hour)/24)))
-        #else:
-            #thin_var_level = ('APCP:surface:0-'+forecast_hour)
-        #if check_file_exists_size(source_file):
-            #run_shell_command([WGRIB2, '-match', '"'+thin_var_level+'"',
-                               #source_file+'|'+WGRIB2, '-i', source_file,
-                               #'-grib', prepped_file])
-    copy_file(prepped_file, dest_file)
 
 def prep_prod_cfs_pfile(source_pfile, prepped_pfile, dest_pfile,
                         init_dt, forecast_hour, prep_method, 
@@ -585,7 +574,6 @@ def prep_prod_cfs_pfile(source_pfile, prepped_pfile, dest_pfile,
             log_missing_file_model(log_missing_pfile, source_pfile,
                                    'cfs', init_dt,
                                    str(forecast_hour).zfill(3))
-    copy_file(prepped_pfile, dest_pfile)
 
 def prep_prod_cfs_ffile(source_ffile, prepped_ffile, dest_ffile,
                         init_dt, forecast_hour, prep_method,
@@ -641,7 +629,6 @@ def prep_prod_cfs_ffile(source_ffile, prepped_ffile, dest_ffile,
             log_missing_file_model(log_missing_ffile, source_ffile,
                                    'cfs', init_dt,
                                    str(forecast_hour).zfill(3))
-    copy_file(prepped_ffile, dest_ffile)
 
 def prep_prod_gfs_file(source_file, dest_file, date_dt, log_missing_file):
     """! Do prep work for GFS analysis production files
@@ -3779,7 +3766,7 @@ def initialize_prep_job_env_dict(verif_type, group,
     job_env_var_list = [
         'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA',
         'NET', 'RUN', 'STEP', 'COMPONENT', 'COMINgefs', 'COMOUT',
-        'gefs_members'
+        'SENDCOM', 'gefs_members'
     ]
     job_env_dict = {}
     for env_var in job_env_var_list:
