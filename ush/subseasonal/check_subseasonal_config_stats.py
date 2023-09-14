@@ -29,7 +29,6 @@ VCS_type_env_vars_dict = {
                'OUTPUTROOT',
                'start_date', 'end_date', 'make_met_data_by',
                'met_version', 'metplus_version',
-               'SENDARCH', 'SENDMETVIEWER',
                'KEEPDATA'],
     'grid2grid_stats': ['g2gstats_type_list',
                         'g2gstats_anom_truth_name_list',
@@ -85,10 +84,7 @@ VCS_type_env_vars_dict = {
                         'g2gstats_seaice_vhr_list',
                         'g2gstats_seaice_fhr_min', 'g2gstats_seaice_fhr_max',
                         'g2gstats_seaice_fhr_inc',
-                        'g2gstats_seaice_grid', 'g2gstats_seaice_gather_by',
-                        'g2gstats_mv_database_name', 
-                        'g2gstats_mv_database_group',
-                        'g2gstats_mv_database_desc'],
+                        'g2gstats_seaice_grid', 'g2gstats_seaice_gather_by'],
     'grid2obs_stats': ['g2ostats_type_list',
                        'g2ostats_PrepBufr_truth_name_list',
                        'g2ostats_PrepBufr_truth_file_format_list',
@@ -98,10 +94,7 @@ VCS_type_env_vars_dict = {
                        'g2ostats_PrepBufr_fhr_max', 
                        'g2ostats_PrepBufr_fhr_inc',
                        'g2ostats_PrepBufr_grid',
-                       'g2ostats_PrepBufr_gather_by',
-                       'g2ostats_mv_database_name', 
-                       'g2ostats_mv_database_group',
-                       'g2ostats_mv_database_desc']
+                       'g2ostats_PrepBufr_gather_by']
 }
 VCS_type_env_check_list = ['shared', VERIF_CASE_STEP]
 for VCS_type_env_check in VCS_type_env_check_list:
@@ -169,8 +162,6 @@ for config_var in check_config_var_len_list:
 # Do check for valid list config variable options
 valid_config_var_values_dict = {
     'make_met_data_by': ['VALID', 'INIT'],
-    'SENDARCH': ['YES', 'NO'],
-    'SENDMETVIEWER': ['YES', 'NO'],
     'KEEPDATA': ['YES', 'NO']
 }
 if VERIF_CASE_STEP == 'grid2grid_stats':

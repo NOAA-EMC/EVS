@@ -26,10 +26,9 @@ source $HOMEevs/modulefiles/subseasonal/subseasonal_stats.sh
 #%include <head.h>
 #%include <envir-p1.h>
 
-export MET_ROOT=/apps/ops/para/libs/intel/${intel_ver}/met/${met_ver}
+export MET_ROOT=/apps/ops/prod/libs/intel/${intel_ver}/met/${met_ver}
 export MET_BASE=${MET_ROOT}/share/met
 export PATH=${MET_ROOT}/bin:${PATH}
-export METviewer_AWS_scripts_dir=/lfs/h2/emc/vpppg/save/emc.vpppg/verification/metplus/metviewer_aws_scripts
 
 export USER=$USER
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
@@ -53,13 +52,7 @@ export cfs_ver=${cfs_ver}
 export VERIF_CASE=grid2obs
 
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
-#export COMIN=$COMROOT/$NET/$evs_ver
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/prep/$COMPONENT/$RUN
-export COMINobs=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/prep/$COMPONENT/$RUN
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
-export COMINclimo=$FIXevs/climos/atmos
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT
-#export VDATE=$(date -d "today -22 day" +"%Y%m%d")
+export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.subseasonal.cfs.grid2obs.stats
 

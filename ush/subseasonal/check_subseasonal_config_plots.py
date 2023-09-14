@@ -28,8 +28,6 @@ VCS_type_env_vars_dict = {
                'model_file_format_list',
                'OUTPUTROOT',
                'start_date', 'end_date', 'plot_by',
-               'SEND2WEB', 'webhost', 'webhostid', 'webdir',
-               'SENDARCH',
                'KEEPDATA'],
     'grid2grid_plots': ['g2gplots_model_plot_name_list', 
                         'g2gplots_type_list',
@@ -112,8 +110,6 @@ for config_var in check_config_var_len_list:
 # Do check for valid list config variable options
 valid_config_var_values_dict = {
     'plot_by': ['VALID', 'INIT'],
-    'SEND2WEB': ['YES', 'NO'],
-    'SENDARCH': ['YES', 'NO'],
     'KEEPDATA': ['YES', 'NO']
 }
 if VERIF_CASE_STEP in ['grid2grid_plots', 'grid2obs_plots']:
