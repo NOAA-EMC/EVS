@@ -48,7 +48,6 @@ export job=${PBS_JOBNAME:-jevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}_$
 export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}
 export COMINrrfs=/lfs/h2/emc/ptmp/emc.lam/${MODELNAME}/conus/prod
-export COMINspc=/lfs/h1/ops/dev/dcom
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}/${STEP}/${COMPONENT}
 export USE_CFP=YES
 export nproc=10
