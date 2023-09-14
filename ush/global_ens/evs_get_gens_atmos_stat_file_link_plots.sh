@@ -24,10 +24,6 @@ for MODEL in $MODEL_LIST ; do
   echo $COM_IN
 
   model_stat_dir=${COM_IN}${model}.${day}
-  if [ $model = naefsv7 ] ; then
-    model_stat_dir=${COM_IN}naefs.${day}
-
-  fi 
 
   gens_archive_yyyymmdd=${archive}/${model}
   mkdir -p $gens_archive_yyyymmdd
@@ -35,9 +31,6 @@ for MODEL in $MODEL_LIST ; do
   cd ${gens_archive_yyyymmdd}
 
   stat=${model_stat_dir}/evs.stats.${model}.atmos.${VRF_CASE}.v${day}.stat
-  if [ $model = naefsv7 ] ; then
-    stat=${model_stat_dir}/evs.stats.naefs.v7.atmos.${VRF_CASE}.v${day}.stat
-  fi 
 
   if [ -s ${stat} ] ; then
     ln -sf ${stat} ${MODEL}_${day}.stat
