@@ -198,13 +198,6 @@ if job_type == 'reformat':
         job_env_vars_dict['metplus_launcher'] = metplus_launcher
         job_env_vars_dict['COMINspcotlk'] = COMINspcotlk
         job_env_vars_dict['GRID_POLY_LIST'] = GRID_POLY_LIST
-        '''
-        job_iterate_over_custom_lists_dict['DAY'] = {
-            'custom_list': '1 2 3',
-            'export_value': '{DAY}',
-            'dependent_vars': {}
-        }
-        '''
     if NEST == 'firewx':
         job_env_vars_dict['GRID_POLY_LIST'] = GRID_POLY_LIST
     job_dependent_vars['FHR_START'] = {
@@ -261,23 +254,6 @@ elif job_type == 'generate':
         'exports': ['FHR_END','FHR_INCR']
     }
     if NEST == 'firewx': 
-        '''
-        job_env_vars_dict['MASK_POLY_LIST'] = (
-            f'{MET_PLUS_OUT}/{VERIF_TYPE}/genvxmask/{NEST}.'
-            + '{valid?fmt=%Y%m%d}/'
-            + f'{NEST}.' + 't{valid=%2H}z_f{lead=%2H}.nc'
-        )
-        job_dependent_vars['MASK_POLY_LIST'] = {
-            'exec_value': '',
-            'bash_value': (
-                f'{MET_PLUS_OUT}/{VERIF_TYPE}/genvxmask/{NEST}.'
-                + '${VDATE}'+ f'/{NEST}.t{VHOUR}z_'+ 'f${FHR}.nc'
-            ),
-            'bash_conditional': '',
-            'bash_conditional_value': '',
-            'bash_conditional_else_value': ''
-        }
-        '''
         job_iterate_over_custom_lists_dict['FHR'] = {
             'custom_list': '`seq ${FHR_START} ${FHR_INCR} ${FHR_END}`',
             'export_value': '(printf "%02d" $FHR)',
@@ -356,14 +332,6 @@ elif STEP == 'stats':
                 + 'fhr_incr=\\\"${FHR_INCR}\\\"'
                 + ')\"'
             )
-        '''
-        elif NEST == 'spc_otlk':
-            job_cmd_list_iterative.append(
-                f'python '
-                + f'{USHevs}/{COMPONENT}/'
-                + f'{COMPONENT}_{STEP}_{VERIF_CASE}_gen_{NEST}_mask.py'
-            )
-        '''
         if VERIF_TYPE == 'mping':
             job_cmd_list_iterative.append(
                 f'{metplus_launcher} -c {machine_conf} '

@@ -440,7 +440,6 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                 ci_output = (
                     ci_output
                     .reindex(df_aggregated.index)
-                    #.reindex(ci_output.index)
                 )
                 df_aggregated[str(stat).upper()+'_BLERR'] = ci_output[
                     'CI_LOWER'
@@ -468,13 +467,11 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
             df_aggregated, values='COUNTS', columns='MODEL',
             index='LEAD_HOURS'
         )
-    #pivot_metric1 = pivot_metric1.dropna() 
     if metric2_name is not None:
         pivot_metric2 = pd.pivot_table(
             df_aggregated, values=str(metric2_name).upper(), columns='MODEL', 
             index='LEAD_HOURS'
         )
-        #pivot_metric2 = pivot_metric2.dropna() 
     if confidence_intervals:
         pivot_ci_lower1 = pd.pivot_table(
             df_aggregated, values=str(metric1_name).upper()+'_BLERR',
@@ -1122,11 +1119,6 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         [f'{date_hour:02d}' for date_hour in date_hours],
         ', ', '', 'Z', 'and ', ''
     )
-    '''
-    date_hours_string = ' '.join([
-        f'{date_hour:02d}Z,' for date_hour in date_hours
-    ])
-    '''
     date_start_string = date_range[0].strftime('%d %b %Y')
     date_end_string = date_range[1].strftime('%d %b %Y')
     if str(level).upper() in ['CEILING', 'TOTAL', 'PBL']:

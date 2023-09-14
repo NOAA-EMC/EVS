@@ -734,7 +734,6 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                     np.multiply(thresh_labels, precision_scale)
                 )
             ]
-            #thresh_labels = [f'{tlab}' for tlab in thresh_labels]
             units = reference.unit_conversions[units]['convert_to']
     if units == '-':
         units = ''
@@ -950,11 +949,6 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         [f'{date_hour:02d}' for date_hour in date_hours],
         ', ', '', 'Z', 'and ', ''
     )
-    '''
-    date_hours_string = ' '.join([
-        f'{date_hour:02d}Z,' for date_hour in date_hours
-    ])
-    '''
     date_start_string = date_range[0].strftime('%d %b %Y')
     date_end_string = date_range[1].strftime('%d %b %Y')
     if str(level).upper() in ['CEILING', 'TOTAL', 'PBL']:
