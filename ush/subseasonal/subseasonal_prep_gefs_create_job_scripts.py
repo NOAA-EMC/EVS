@@ -66,7 +66,7 @@ if JOB_GROUP in ['assemble_data', 'generate_stats']:
         # Read in environment variables for verif_type
         for verif_type_job in list(JOB_GROUP_jobs_dict[verif_type].keys()):
             # Initialize job environment dictionary
-            job_env_dict = sub_util.initalize_job_env_dict(
+            job_env_dict = sub_util.initialize_job_env_dict(
                 verif_type, JOB_GROUP, VERIF_CASE_STEP_abbrev_type,
                 verif_type_job
             )
@@ -188,7 +188,7 @@ if JOB_GROUP in ['assemble_data', 'generate_stats']:
             for verif_type_job in list(JOB_GROUP_obs_jobs_dict[verif_type]\
                                        .keys()):
                 # Initialize job environment dictionary
-                job_env_dict = sub_util.initalize_job_env_dict(
+                job_env_dict = sub_util.initialize_job_env_dict(
                     verif_type, JOB_GROUP, VERIF_CASE_STEP_abbrev_type,
                     verif_type_job
                 )

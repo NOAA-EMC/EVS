@@ -3788,8 +3788,8 @@ def initialize_prep_job_env_dict(verif_type, group,
     job_env_dict['init_hr_end'] = (init_hr_list[-1].zfill(2))
     return job_env_dict
 
-def initalize_job_env_dict(verif_type, group,
-                           verif_case_step_abbrev_type, job):
+def initialize_job_env_dict(verif_type, group,
+                            verif_case_step_abbrev_type, job):
     """! This initializes a dictionary of environment variables and their
          values to be set for the job pulling from environment variables
          already set previously
