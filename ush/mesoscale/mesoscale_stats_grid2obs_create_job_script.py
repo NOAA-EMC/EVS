@@ -22,27 +22,30 @@ from mesoscale_stats_grid2obs_var_defs import generate_stats_jobs_dict as var_de
 print(f"BEGIN: {os.path.basename(__file__)}")
 
 # Read in environment variables
-cyc = os.environ['cyc'] 
+cyc = os.environ['cyc']
 job_type = os.environ['job_type']
 PYTHONPATH = os.environ['PYTHONPATH']
 COMPONENT = os.environ['COMPONENT']
+NET = os.environ['NET']
 STEP = os.environ['STEP']
+RUN = os.environ['RUN']
 VERIF_CASE = os.environ['VERIF_CASE']
-# VERIF_TYPE = os.environ['VERIF_TYPE']
 MODELNAME = os.environ['MODELNAME']
 MET_PLUS_PATH = os.environ['MET_PLUS_PATH']
 MET_PATH = os.environ['MET_PATH']
 MET_CONFIG = os.environ['MET_CONFIG']
 DATA = os.environ['DATA']
+
 VDATE = os.environ['VDATE']
 MET_PLUS_CONF = os.environ['MET_PLUS_CONF']
 MET_PLUS_OUT = os.environ['MET_PLUS_OUT']
 MET_CONFIG_OVERRIDES = os.environ['MET_CONFIG_OVERRIDES']
 METPLUS_VERBOSITY = os.environ['METPLUS_VERBOSITY']
 MET_VERBOSITY = os.environ['MET_VERBOSITY']
-LOG_MET_OUTPUT_TO_METPLUS = os.environ['LOG_MET_OUTPUT_TO_METPLUS']
-# NEST = os.environ['NEST']
 metplus_launcher = 'run_metplus.py'
+machine_conf = os.path.join(
+    os.environ['PARMevs'], 'metplus_config', 'machine.conf'
+)
 if job_type == 'reformat':
     VERIF_TYPE = os.environ['VERIF_TYPE']
     NEST = os.environ['NEST']
@@ -60,7 +63,7 @@ if job_type == 'reformat':
     njob = os.environ['njob']
     USHevs = os.environ['USHevs']
     SKIP_IF_OUTPUT_EXISTS = os.environ['SKIP_IF_OUTPUT_EXISTS']
-    if NEST == 'spc_otlk': 
+    if NEST == 'spc_otlk':
         COMINspcotlk = os.environ['COMINspcotlk']
         GRID_POLY_LIST = os.environ['GRID_POLY_LIST']
 elif job_type == 'generate':
@@ -160,7 +163,6 @@ job_env_vars_dict = {
     'cyc': cyc,
     'PYTHONPATH': PYTHONPATH,
     'VERIF_CASE': VERIF_CASE,
-##    'VERIF_TYPE': VERIF_TYPE,
     'MODELNAME': MODELNAME,
     'MET_PLUS_PATH': MET_PLUS_PATH,
     'MET_PATH': MET_PATH,
@@ -172,8 +174,6 @@ job_env_vars_dict = {
     'MET_CONFIG_OVERRIDES': MET_CONFIG_OVERRIDES,
     'METPLUS_VERBOSITY': METPLUS_VERBOSITY,
     'MET_VERBOSITY': MET_VERBOSITY,
-    'LOG_MET_OUTPUT_TO_METPLUS': LOG_MET_OUTPUT_TO_METPLUS,
-    #'NEST': NEST,
 }
 job_iterate_over_env_lists_dict = {}
 job_iterate_over_custom_lists_dict = {}
@@ -332,9 +332,9 @@ elif job_type == 'generate':
 #---
     if VAR_NAME == 'PTYPE' and NEST == 'conusp':
         job_iterate_over_custom_lists_dict['FHR'] = {
-                'custom_list': '`seq ${FHR_START} ${FHR_INCR} ${FHR_END}`',
-                'export_value': '(printf "%02d" $FHR)',
-                'dependent_vars': {}
+            'custom_list': '`seq ${FHR_START} ${FHR_INCR} ${FHR_END}`',
+            'export_value': '(printf "%02d" $FHR)',
+            'dependent_vars': {}
         }
 #---
     job_dependent_vars['FHR_START'] = {
@@ -345,10 +345,10 @@ elif job_type == 'generate':
         ),
         'bash_conditional': '',
         'bash_conditional_value': '',
-        'bash_conditional_else_value': '' 
+        'bash_conditional_else_value': ''
     }
 elif job_type == 'gather':
-    job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE 
+    job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE
 elif job_type == 'gather3':
     job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE 
 
@@ -360,23 +360,23 @@ if STEP == 'prep':
 elif STEP == 'stats':
     if job_type == 'reformat':
         job_cmd_list_iterative.append(
-            f'{metplus_launcher} -c '
-            + f'{MET_PLUS_CONF}/'
+            f'{metplus_launcher} -c {machine_conf} '
+            + f'-c {MET_PLUS_CONF}/'
             + f'PB2NC_obs{VERIF_TYPE.upper()}.conf'
         )
     if job_type == 'generate':
         if FCST_VAR2_NAME:
             job_cmd_list_iterative.append(
-                f'{metplus_launcher} -c '
-                + f'{MET_PLUS_CONF}/'
+                f'{metplus_launcher} -c {machine_conf} '
+                + f'-c {MET_PLUS_CONF}/'
                 + f'PointStat_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}_VAR2.conf'
             )
         else:
             if NEST == 'conusp':
                 if VAR_NAME == 'PTYPE':
                     job_cmd_list_iterative.append(
-                        f'{metplus_launcher} -c '
-                        + f'{MET_PLUS_CONF}/'
+                        f'{metplus_launcher} -c {machine_conf} '
+                        + f'-c {MET_PLUS_CONF}/'
                         + f'RegridDataPlane_fcst{COMPONENT.upper()}_PTYPE.conf'
                     )
                     job_cmd_list_iterative.append(
@@ -386,8 +386,8 @@ elif STEP == 'stats':
                     )
 
                     job_cmd_list_iterative.append(
-                        f'{metplus_launcher} -c '
-                        + f'{MET_PLUS_CONF}/'
+                        f'{metplus_launcher} -c {machine_conf} '
+                        + f'-c {MET_PLUS_CONF}/'
                         + f'PointStat_fcst{COMPONENT.upper()}_'
                         + f'obs{VERIF_TYPE.upper()}_{VAR_NAME}.conf'
                         )
@@ -397,30 +397,30 @@ elif STEP == 'stats':
                     print(f"skip this run, pstat already exist")
                 else:
                     job_cmd_list_iterative.append(
-                        f'{metplus_launcher} -c '
-                        + f'{MET_PLUS_CONF}/'
+                        f'{metplus_launcher} -c {machine_conf} '
+                        + f'-c {MET_PLUS_CONF}/'
                         + f'PointStat_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}.conf'
                     )
     elif job_type == 'gather':
         job_cmd_list.append(
-            f'{metplus_launcher} -c '
-            + f'{MET_PLUS_CONF}/'
+            f'{metplus_launcher} -c {machine_conf} '
+            + f'-c {MET_PLUS_CONF}/'
             + f'StatAnalysis_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}'
             + f'_GatherByDay.conf'
         )
     elif job_type == 'gather2':
         job_cmd_list.append(
-            f'{metplus_launcher} -c '
-            + f'{MET_PLUS_CONF}/'
+            f'{metplus_launcher} -c {machine_conf} '
+            + f'-c {MET_PLUS_CONF}/'
             + f'StatAnalysis_fcst{COMPONENT.upper()}'
             + f'_GatherByCycle.conf'
         )
     elif job_type == 'gather3':
         job_cmd_list.append(
-            f'{metplus_launcher} -c '
-            + f'{MET_PLUS_CONF}/'
+            f'{metplus_launcher} -c {machine_conf} '
+            + f'-c {MET_PLUS_CONF}/'
             + f'StatAnalysis_fcst{COMPONENT.upper()}'
-            + f'_GatherByDay.conf' 
+            + f'_GatherByDay.conf'
         )
 elif STEP == 'plots':
     pass
@@ -463,8 +463,7 @@ for name, value in job_dependent_vars.items():
         )
     elif value["bash_value"]:
         job.write(f'{indent}export {name}={value["bash_value"]}\n')
-    if (value["bash_conditional"]
-            and (
+    if (value["bash_conditional"]            and (
             value["bash_conditional_value"]
             or value["bash_conditional_else_value"])):
         job.write(

@@ -18,7 +18,7 @@ set -x
   export RUN_ENVIR=emc
   export SENDECF=YES
   export SENDCOM=YES
-  export KEEPDATA=NO
+  export KEEPDATA=YES
   export SENDDBN=YES
   export SENDDBN_NTC=
   export job=${PBS_JOBNAME:-jevs_mesoscale_grid2obs_stats}
@@ -73,6 +73,7 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # Developer Settings
   export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/prep/cam
+  export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/$NET/$evs_ver/prep/cam
 
   export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
   export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}

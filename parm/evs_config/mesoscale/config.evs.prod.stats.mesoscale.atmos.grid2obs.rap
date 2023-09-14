@@ -18,7 +18,6 @@ export MET_CONFIG_OVERRIDES=""
 # Logging
 export METPLUS_VERBOSITY="DEBUG"
 export MET_VERBOSITY="5"
-export LOG_MET_OUTPUT_TO_METPLUS="yes"
 
 # Time Settings
 export FHR_START=0
