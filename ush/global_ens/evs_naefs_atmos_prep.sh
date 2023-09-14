@@ -1,7 +1,7 @@
 #!/bin/ksh
 set -x 
 
->run_get_all_narre_atmos_poe.sh
+>run_get_all_naefs_atmos_poe.sh
 
 if [ $get_model_bc = yes ] ; then
 
@@ -75,7 +75,7 @@ if [ $run_mpi = yes ] ; then
 
  if [ -s run_get_all_naefs_atmos_poe.sh ] ; then
    chmod +x run_get_all_naefs_atmos_poe.sh 
-   mpiexec  -n 34 -ppn 34 --cpu-bind core --depth=2 cfp  ${DATA}/run_get_all_naefs_atmos_poe.sh
+   mpiexec  -n 34 -ppn 34 --cpu-bind verbose,depth cfp  ${DATA}/run_get_all_naefs_atmos_poe.sh
  fi
 
 else
