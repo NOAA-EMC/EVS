@@ -425,8 +425,3 @@ if [ "$cyc" -ge "$last_cyc" ]; then
         fi
     fi
 fi
-
-# Non-production jobs
-#things to do if evs_run_mode != "production" (i.e., RUN_ENVIR != nco)
-#if [ $evs_run_mode != "production" ]; then
-#    if [ $SEND
