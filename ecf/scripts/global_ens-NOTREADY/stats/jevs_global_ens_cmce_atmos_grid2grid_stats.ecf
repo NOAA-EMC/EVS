@@ -1,0 +1,53 @@
+#PBS -N jevs_global_ens_cmce_atmos_grid2grid_stats
+#PBS -j oe
+#PBS -S /bin/bash
+#PBS -q %QUEUE%
+#PBS -A %PROJ%-%PROJENVIR%
+#PBS -l walltime=03:30:00
+#PBS -l place=vscatter,select=1:ncpus=4:mem=100GB
+#PBS -l debug=true
+
+export model=evs
+%include <head.h>
+%include <envir-p1.h>
+
+############################################################
+# Load modules
+############################################################
+set -x
+export COMPONENT=global_ens
+export STEP=stats
+source ${HOMEevs}/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
+module list
+
+############################################################
+# Specify environment variables
+############################################################
+if [ -n "%CYC:%" ]; then
+  export cyc=${cyc:-%CYC:%}
+else
+  export cyc=$($NDATE | cut -c 9-10)
+fi
+export NET=evs
+export RUN=atmos
+export VERIF_CASE=grid2grid
+export MODELNAME=cmce
+export COMIN=${COMevs}
+export COMOUT=${COMevs}
+export pid=${pid:-$$}
+export outid=${outid:-"LL$job"}
+export DATA=${DATA:-${DATAROOT}/${jobid:?}}
+
+############################################################
+# Execute j-job
+############################################################
+${HOMEevs}/jobs/global_ens/stats/JEVS_GLOBAL_ENS_STATS
+if [ $? -ne 0 ]; then
+   ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
+   ecflow_client --abort
+   exit
+fi
+
+%include <tail.h>
+%manual
+%end
