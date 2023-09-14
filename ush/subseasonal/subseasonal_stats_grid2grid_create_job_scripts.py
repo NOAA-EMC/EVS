@@ -57,12 +57,7 @@ assemble_data_obs_jobs_dict = {
     'anom': {},
     'ENSO': {},
     'OLR': {},
-    'precip': {
-        #'24hrCCPA': {'env': {},
-                     #'commands': [sub_util.metplus_command(
-                                      #'PCPCombine_obs24hrCCPA.conf'
-                                  #)]}
-    },
+    'precip': {},
     'pres_lvls': {},
     'seaice': {},
     'sst': {},
@@ -177,13 +172,7 @@ assemble_data_model_jobs_dict = {
     },
     'ENSO': {},
     'OLR': {},
-    'precip': {
-        #'24hrAccum': {'env': {},
-                      #'commands': [sub_util.metplus_command(
-                                       #'PCPCombine_fcstSUBSEASONAL_'
-                                       #+'24hrAccum_precip.conf'
-                                   #)]}
-    },
+    'precip': {},
     'pres_lvls': {
         'WeeklyAvg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
                                             'var1_levels': 'P500'},
