@@ -40,11 +40,7 @@ for modnam in $models ; do
     echo  "export valid_increment=21600" >>  run_gather_${modnam}_${verify}.sh
 
     echo  "export model=$modnam" >> run_gather_${modnam}_${verify}.sh
-    if [ $gefs_number = 30 ] && [ $modnam = naefs ] ; then
-      echo  "export MODEL=${MODEL}v7" >> run_gather_${modnam}_${verify}.sh
-    else
-      echo  "export MODEL=${MODEL}" >> run_gather_${modnam}_${verify}.sh
-    fi
+    echo  "export MODEL=${MODEL}" >> run_gather_${modnam}_${verify}.sh
     echo  "export stat_file_dir=${COMOUTsmall}" >> run_gather_${modnam}_${verify}.sh
 
     echo  "export gather_output_dir=${WORK}/gather " >> run_gather_${modnam}_${verify}.sh
@@ -65,11 +61,7 @@ for modnam in $models ; do
       echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/StatAnlysis_fcstGENS_obsPREPBUFR_CNV_GatherByDay.conf " >> run_gather_${modnam}_${verify}.sh
     fi
 
-    if [ $gefs_number = 30 ] && [ $modnam = naefs ] ; then
-      echo "cp $output_base/${vday}/${modnam}_${verify}_${vday}.stat $COMOUTfinal/evs.stats.${modnam}.v7.${RUN}.${verify}.v${vday}.stat" >> run_gather_${modnam}_${verify}.sh
-    else
-      echo "cp $output_base/${vday}/${modnam}_${verify}_${vday}.stat $COMOUTfinal/evs.stats.${modnam}.${RUN}.${verify}.v${vday}.stat" >> run_gather_${modnam}_${verify}.sh
-    fi
+    echo "cp $output_base/${vday}/${modnam}_${verify}_${vday}.stat $COMOUTfinal/evs.stats.${modnam}.${RUN}.${verify}.v${vday}.stat" >> run_gather_${modnam}_${verify}.sh
   chmod +x run_gather_${modnam}_${verify}.sh
 
   echo "${DATA}/run_gather_${modnam}_${verify}.sh" >> run_gather_all_poe.sh 
