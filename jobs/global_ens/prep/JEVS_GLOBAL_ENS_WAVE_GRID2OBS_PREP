@@ -10,9 +10,6 @@ date
 #########################################################
 # obtain unique LSF id (jobid) and make temp directories 
 #########################################################
-export pid=$$
-#export DATA_IN=${DATA_IN:-${DATAROOT}}
-#export DATA=${DATA_IN}/${jobid:?}
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
@@ -26,10 +23,12 @@ setpdy.sh 20
 export INITDATE=${INITDATE:-${PDYm1}}
 export NEXTDATE=${NEXTDATE:-${PDY}}
 
-######################################
-# Determine Job Output Name on System 
-######################################
-export pgmout="OUTPUT.${pid}"
+####################################
+# Set data directives
+####################################
+export SENDECF=${SENDECF:-YES}
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-NO}
 
 ####################################
 # Set EVS directories               
@@ -57,10 +56,10 @@ export VERIF_CASE=${VERIF_CASE:-grid2obs}
 # Define COMIN/COMOUT variables     
 ####################################
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export COMINmodel=${COMINmodel:-$(compath.py ${envir}/com/${MODELNAME}/${model_ver})} 
+export COMINmodel=${COMINmodel:-$(compath.py ${envir}/com/${MODELNAME}/${gefs_ver})} 
 export COMINgdas=${COMINgdas:-$(compath.py ${envir}/com/obsproc/${obsproc_ver}/gdas)}
 
-export COMOUT=${COMIN}/${STEP}/${COMPONENT}/${RUN}
+export COMOUT=${COMOUT:-${COMIN}/${STEP}/${COMPONENT}/${RUN}}
 export ARCgefs=${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
 
 # make the directory where the ARCgefs and gdasnc will be kept
@@ -71,11 +70,8 @@ export jlogfile=${DATA}/${MODELNAME}_${RUN}_PB2NC.log
 ####################################
 # Execute the script                
 ####################################
-env
-$HOMEevs/scripts/global_ens/prep/exevs_global_ens_wave_grid2obs_prep.sh 1>>$pgmout 2>errfile.${pid}
+$HOMEevs/scripts/global_ens/prep/exevs_global_ens_wave_grid2obs_prep.sh
 export err=$?; err_chk
-
-cat $pgmout
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
