@@ -31,7 +31,8 @@ STEP = os.environ['STEP']
 USER = os.environ['USER']
 jobid = os.environ['jobid']
 
-mail_cmd = 'mail.py -s "$subject" $maillist -v'
+# mail_cmd = 'mail.py -s "$subject" $maillist -v'
+mail_cmd = 'mail -s "$subject" $maillist'
 
 for VHOUR in VHOUR_LIST:
     # What accumulations stats will be run for
