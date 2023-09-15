@@ -149,7 +149,9 @@ for levl in 0 50 125 200 400 700 1000 1400; do
   -c $CONFIGevs/${VERIF_CASE}/$STEP/PointStat_fcstRTOFS_obsARGO_climoWOA23_$VAR.conf
 done
 
-cp $STATSDIR/$RUN.$VDATE/$VAR/*stat $COMOUTsmall
+if [ $SENDCOM = "YES" ]; then
+ cp $STATSDIR/$RUN.$VDATE/$VAR/*stat $COMOUTsmall
+fi
 export STATSOUT=$STATSDIR/$RUN.$VDATE/$VAR
 
 # check if stat files exist; exit if not
@@ -164,7 +166,9 @@ mkdir -p $COMOUTfinal
 run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
 -c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstRTOFS.conf
 
-cp $STATSOUT/evs*stat $COMOUTfinal
+if [ $SENDCOM = "YES" ]; then
+ cp $STATSOUT/evs*stat $COMOUTfinal
+fi
 
 # archive final stat file
 #rsync -av $COMOUTfinal $ARCHevs

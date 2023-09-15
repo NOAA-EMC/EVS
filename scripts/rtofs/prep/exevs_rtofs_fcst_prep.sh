@@ -16,18 +16,22 @@ mkdir -p $COMOUTprep/rtofs.$VDATE/$RUN
 mkdir -p $DATA/rtofs.$VDATE/$RUN
 
 for ftype in prog diag ice; do
-  cdo remapbil,$FIXevs/rtofs_$RUN.grid \
+  cdo remapbil,$FIXevs/cdo_grids/rtofs_$RUN.grid \
   $COMOUTprep/rtofs.$VDATE/rtofs_glo_2ds_n024_${ftype}.nc \
   $DATA/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_${ftype}.$RUN.nc
-  cp $DATA/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_${ftype}.$RUN.nc $COMOUTprep/rtofs.$VDATE/$RUN
+  if [ $SENDCOM = "YES" ]; then
+   cp $DATA/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_${ftype}.$RUN.nc $COMOUTprep/rtofs.$VDATE/$RUN
+  fi
 done
 
 if [ $RUN = 'argo' ] ; then
   for ftype in t s; do
-    cdo remapbil,$FIXevs/rtofs_$RUN.grid \
+    cdo remapbil,$FIXevs/cdo_grids/rtofs_$RUN.grid \
     $COMOUTprep/rtofs.$VDATE/rtofs_glo_3dz_n024_daily_3z${ftype}io.nc \
     $DATA/rtofs.$VDATE/$RUN/rtofs_glo_3dz_f000_daily_3z${ftype}io.$RUN.nc
-    cp $DATA/rtofs.$VDATE/$RUN/rtofs_glo_3dz_f000_daily_3z${ftype}io.$RUN.nc $COMOUTprep/rtofs.$VDATE/$RUN
+    if [ $SENDCOM = "YES" ]; then
+     cp $DATA/rtofs.$VDATE/$RUN/rtofs_glo_3dz_f000_daily_3z${ftype}io.$RUN.nc $COMOUTprep/rtofs.$VDATE/$RUN
+    fi
   done
 fi
 
@@ -37,18 +41,22 @@ mkdir -p $COMOUTprep/rtofs.$INITDATE/$RUN
 mkdir -p $DATA/rtofs.$INITDATE/$RUN
 
 for ftype in prog diag ice; do
-  cdo remapbil,$FIXevs/rtofs_$RUN.grid \
+  cdo remapbil,$FIXevs/cdo_grids/rtofs_$RUN.grid \
   $COMOUTprep/rtofs.$INITDATE/rtofs_glo_2ds_f024_${ftype}.nc \
   $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f024_${ftype}.$RUN.nc
-  cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f024_${ftype}.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+  if [ $SENDCOM = "YES" ]; then
+   cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f024_${ftype}.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+  fi
 done
 
 if [ $RUN = 'argo' ] ; then
   for ftype in t s; do
-    cdo remapbil,$FIXevs/rtofs_$RUN.grid \
+    cdo remapbil,$FIXevs/cdo_grids/rtofs_$RUN.grid \
     $COMOUTprep/rtofs.$INITDATE/rtofs_glo_3dz_f024_daily_3z${ftype}io.nc \
     $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f024_daily_3z${ftype}io.$RUN.nc
-    cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f024_daily_3z${ftype}io.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+    if [ $SENDCOM = "YES" ]; then
+     cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f024_daily_3z${ftype}io.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+    fi
   done
 fi
 
@@ -58,18 +66,22 @@ mkdir -p $COMOUTprep/rtofs.$INITDATE/$RUN
 mkdir -p $DATA/rtofs.$INITDATE/$RUN
 
 for ftype in prog diag ice; do
-  cdo remapbil,$FIXevs/rtofs_$RUN.grid \
+  cdo remapbil,$FIXevs/cdo_grids/rtofs_$RUN.grid \
   $COMOUTprep/rtofs.$INITDATE/rtofs_glo_2ds_f048_${ftype}.nc \
   $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f048_${ftype}.$RUN.nc
-  cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f048_${ftype}.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+  if [ $SENDCOM = "YES" ]; then
+   cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f048_${ftype}.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+  fi
 done
 
 if [ $RUN = 'argo' ] ; then
   for ftype in t s; do
-    cdo remapbil,$FIXevs/rtofs_$RUN.grid \
+    cdo remapbil,$FIXevs/cdo_grids/rtofs_$RUN.grid \
     $COMOUTprep/rtofs.$INITDATE/rtofs_glo_3dz_f048_daily_3z${ftype}io.nc \
     $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f048_daily_3z${ftype}io.$RUN.nc
-    cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f048_daily_3z${ftype}io.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+    if [ $SENDCOM = "YES" ]; then
+     cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f048_daily_3z${ftype}io.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+    fi
   done
 fi
 
@@ -79,18 +91,22 @@ mkdir -p $COMOUTprep/rtofs.$INITDATE/$RUN
 mkdir -p $DATA/rtofs.$INITDATE/$RUN
 
 for ftype in prog diag ice; do
-  cdo remapbil,$FIXevs/rtofs_$RUN.grid \
+  cdo remapbil,$FIXevs/cdo_grids/rtofs_$RUN.grid \
   $COMOUTprep/rtofs.$INITDATE/rtofs_glo_2ds_f072_${ftype}.nc \
   $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f072_${ftype}.$RUN.nc
-  cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f072_${ftype}.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+  if [ $SENDCOM = "YES" ]; then
+   cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f072_${ftype}.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+  fi
 done
 
 if [ $RUN = 'argo' ] ; then
   for ftype in t s; do
-    cdo remapbil,$FIXevs/rtofs_$RUN.grid \
+    cdo remapbil,$FIXevs/cdo_grids/rtofs_$RUN.grid \
     $COMOUTprep/rtofs.$INITDATE/rtofs_glo_3dz_f072_daily_3z${ftype}io.nc \
     $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f072_daily_3z${ftype}io.$RUN.nc
-    cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f072_daily_3z${ftype}io.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+    if [ $SENDCOM = "YES" ]; then
+     cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f072_daily_3z${ftype}io.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+    fi
   done
 fi
 
@@ -100,18 +116,22 @@ mkdir -p $COMOUTprep/rtofs.$INITDATE/$RUN
 mkdir -p $DATA/rtofs.$INITDATE/$RUN
 
 for ftype in prog diag ice; do
-  cdo remapbil,$FIXevs/rtofs_$RUN.grid \
+  cdo remapbil,$FIXevs/cdo_grids/rtofs_$RUN.grid \
   $COMOUTprep/rtofs.$INITDATE/rtofs_glo_2ds_f096_${ftype}.nc \
   $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f096_${ftype}.$RUN.nc
-  cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f096_${ftype}.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+  if [ $SENDCOM = "YES" ]; then
+   cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f096_${ftype}.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+  fi 
 done
 
 if [ $RUN = 'argo' ] ; then
   for ftype in t s; do
-    cdo remapbil,$FIXevs/rtofs_$RUN.grid \
+    cdo remapbil,$FIXevs/cdo_grids/rtofs_$RUN.grid \
     $COMOUTprep/rtofs.$INITDATE/rtofs_glo_3dz_f096_daily_3z${ftype}io.nc \
     $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f096_daily_3z${ftype}io.$RUN.nc
-    cp  $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f096_daily_3z${ftype}io.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+    if [ $SENDCOM = "YES" ]; then
+     cp  $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f096_daily_3z${ftype}io.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+    fi
   done
 fi
 
@@ -121,18 +141,22 @@ mkdir -p $COMOUTprep/rtofs.$INITDATE/$RUN
 mkdir -p $DATA/rtofs.$INITDATE/$RUN
 
 for ftype in prog diag ice; do
-  cdo remapbil,$FIXevs/rtofs_$RUN.grid \
+  cdo remapbil,$FIXevs/cdo_grids/rtofs_$RUN.grid \
   $COMOUTprep/rtofs.$INITDATE/rtofs_glo_2ds_f120_${ftype}.nc \
   $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f120_${ftype}.$RUN.nc
-  cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f120_${ftype}.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+  if [ $SENDCOM = "YES" ]; then
+   cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f120_${ftype}.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+  fi
 done
 
 if [ $RUN = 'argo' ] ; then
   for ftype in t s; do
-    cdo remapbil,$FIXevs/rtofs_$RUN.grid \
+    cdo remapbil,$FIXevs/cdo_grids/rtofs_$RUN.grid \
     $COMOUTprep/rtofs.$INITDATE/rtofs_glo_3dz_f120_daily_3z${ftype}io.nc \
     $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f120_daily_3z${ftype}io.$RUN.nc
-    cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f120_daily_3z${ftype}io.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+    if [ $SENDCOM = "YES" ]; then
+     cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f120_daily_3z${ftype}io.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+    fi
   done
 fi
 
@@ -142,18 +166,22 @@ mkdir -p $COMOUTprep/rtofs.$INITDATE/$RUN
 mkdir -p $DATA/rtofs.$INITDATE/$RUN
 
 for ftype in prog diag ice; do
-  cdo remapbil,$FIXevs/rtofs_$RUN.grid \
+  cdo remapbil,$FIXevs/cdo_grids/rtofs_$RUN.grid \
   $COMOUTprep/rtofs.$INITDATE/rtofs_glo_2ds_f144_${ftype}.nc \
   $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f144_${ftype}.$RUN.nc
-  cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f144_${ftype}.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+  if [ $SENDCOM = "YES" ]; then
+   cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f144_${ftype}.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+  fi
 done
 
 if [ $RUN = 'argo' ] ; then
   for ftype in t s; do
-    cdo remapbil,$FIXevs/rtofs_$RUN.grid \
+    cdo remapbil,$FIXevs/cdo_grids/rtofs_$RUN.grid \
     $COMOUTprep/rtofs.$INITDATE/rtofs_glo_3dz_f144_daily_3z${ftype}io.nc \
     $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f144_daily_3z${ftype}io.$RUN.nc
-    cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f144_daily_3z${ftype}io.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+    if [ $SENDCOM = "YES" ]; then
+     cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f144_daily_3z${ftype}io.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+    fi
   done
 fi
 
@@ -163,18 +191,22 @@ mkdir -p $COMOUTprep/rtofs.$INITDATE/$RUN
 mkdir -p $DATA/rtofs.$INITDATE/$RUN
 
 for ftype in prog diag ice; do
-  cdo remapbil,$FIXevs/rtofs_$RUN.grid \
+  cdo remapbil,$FIXevs/cdo_grids/rtofs_$RUN.grid \
   $COMOUTprep/rtofs.$INITDATE/rtofs_glo_2ds_f168_${ftype}.nc \
   $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f168_${ftype}.$RUN.nc
-  cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f168_${ftype}.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+  if [ $SENDCOM = "YES" ]; then
+   cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f168_${ftype}.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+  fi
 done
 
 if [ $RUN = 'argo' ] ; then
   for ftype in t s; do
-    cdo remapbil,$FIXevs/rtofs_$RUN.grid \
+    cdo remapbil,$FIXevs/cdo_grids/rtofs_$RUN.grid \
     $COMOUTprep/rtofs.$INITDATE/rtofs_glo_3dz_f168_daily_3z${ftype}io.nc \
     $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f168_daily_3z${ftype}io.$RUN.nc
-    cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f168_daily_3z${ftype}io.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+    if [ $SENDCOM = "YES" ]; then
+     cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f168_daily_3z${ftype}io.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+    fi
   done
 fi
 
@@ -184,18 +216,22 @@ mkdir -p $COMOUTprep/rtofs.$INITDATE/$RUN
 mkdir -p $DATA/rtofs.$INITDATE/$RUN
 
 for ftype in prog diag ice; do
-  cdo remapbil,$FIXevs/rtofs_$RUN.grid \
+  cdo remapbil,$FIXevs/cdo_grids/rtofs_$RUN.grid \
   $COMOUTprep/rtofs.$INITDATE/rtofs_glo_2ds_f192_${ftype}.nc \
   $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f192_${ftype}.$RUN.nc
-  cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f192_${ftype}.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+  if [ $SENDCOM = "YES" ]; then
+   cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f192_${ftype}.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+  fi
 done
 
 if [ $RUN = 'argo' ] ; then
   for ftype in t s; do
-    cdo remapbil,$FIXevs/rtofs_$RUN.grid \
+    cdo remapbil,$FIXevs/cdo_grids/rtofs_$RUN.grid \
     $COMOUTprep/rtofs.$INITDATE/rtofs_glo_3dz_f192_daily_3z${ftype}io.nc \
     $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f192_daily_3z${ftype}io.$RUN.nc
-    cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f192_daily_3z${ftype}io.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+    if [ $SENDCOM = "YES" ]; then
+     cp $DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f192_daily_3z${ftype}io.$RUN.nc $COMOUTprep/rtofs.$INITDATE/$RUN
+    fi
   done
 fi
 
