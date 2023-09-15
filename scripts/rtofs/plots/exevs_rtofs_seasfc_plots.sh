@@ -68,7 +68,11 @@ done
 
 # tar all plots together
 cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN
-tar -cvf $COMOUTplots/evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
+tar -cvf evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
+
+if [ $SENDCOM = "YES" ]; then
+ cp evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplots
+fi
 
 exit
 

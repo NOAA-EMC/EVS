@@ -22,7 +22,7 @@ cd $DATA
 # SENDECF=YES--Flag events on ecflow
 # SENDDBN=YES--Issue DBNet client calls
 ################################################################
-export SENDCOM=${SENDCOM:-NO}
+export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-NO}       # need to set to NO for testing
 export SENDECF=${SENDECF:-NO}
 export SENDDBN_NTC=${SENDDBN_NTC:-NO}
@@ -53,9 +53,6 @@ export COMINgefs=${COMINgefs:-$(compath.py ${envir}/com/gefs/${gefs_ver}/gefs.$I
 export COMINcfs=${COMINcfs:-$(compath.py ${envir}/com/cfs/${cfs_ver}/cfs.$INITDATE)}
 export COMINgfs=${COMINgfs:-$(compath.py ${envir}/com/gfs/${gfs_ver})}
 export COMINecmwf=${COMINecmwf:-$DCOMROOT}
-export COMINccpa=${COMINccpa:-$(compath.py ${envir}/com/ccpa/${ccpa_ver})}
-export COMINmrmsak=$DCOMROOT/ldmdata/obs/upperair/mrms/alaska/MultiSensorQPE
-export COMINmrmshi=$DCOMROOT/ldmdata/obs/upperair/mrms/hawaii/MultiSensorQPE
 export COMINosi=${COMINosi:-$DCOMROOT}
 export COMINghrsst=${COMINghrsst:-$DCOMROOT}
 export COMINumd=${COMINumd:-$DCOMROOT}

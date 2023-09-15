@@ -27,7 +27,6 @@ export RUN_PLOTS="NO"
 #model_stat_dir_list:    directory path to model .stat files
 #model_file_format_list: file format of model files
 #OUTPUTROOT: base output directory
-export OUTPUTROOT="/lfs/h2/emc/ptmp/$USER/evs_cam"
 ## DATE SETTINGS
 #start_date:       verification start date, format YYYYMMDDHH
 #end_date:         verification end date, format YYYYMMDDHH
@@ -38,7 +37,7 @@ export end_date=$VDATE
 #met_verbosity:             MET verbosity for logging, 1-5 (most verbose is 5)
 #log_met_output_to_metplus: log MET output to METplus log, yes or no
 ## DATA DIRECTIVE SETTINGS
-export KEEPDATA="YES"
+export KEEPDATA="NO"
 export SENDCOM="YES"
 export SENDARCH="NO"
 ####################################################

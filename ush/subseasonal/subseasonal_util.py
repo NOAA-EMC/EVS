@@ -522,17 +522,6 @@ def prep_prod_gefs_file(source_afile, source_bfile, prepped_file, dest_file,
             log_missing_file_model(log_missing_file, source_afile,
                                    'gefs', init_dt,
                                    str(forecast_hour).zfill(3))
-    #elif 'precip' in prep_method:
-        #if int(forecast_hour) % 24 == 0:
-            #thin_var_level = ('APCP:surface:0-'
-                              #+str(int(int(forecast_hour)/24)))
-        #else:
-            #thin_var_level = ('APCP:surface:0-'+forecast_hour)
-        #if check_file_exists_size(source_file):
-            #run_shell_command([WGRIB2, '-match', '"'+thin_var_level+'"',
-                               #source_file+'|'+WGRIB2, '-i', source_file,
-                               #'-grib', prepped_file])
-    copy_file(prepped_file, dest_file)
 
 def prep_prod_cfs_pfile(source_pfile, prepped_pfile, dest_pfile,
                         init_dt, forecast_hour, prep_method, 
@@ -585,7 +574,6 @@ def prep_prod_cfs_pfile(source_pfile, prepped_pfile, dest_pfile,
             log_missing_file_model(log_missing_pfile, source_pfile,
                                    'cfs', init_dt,
                                    str(forecast_hour).zfill(3))
-    copy_file(prepped_pfile, dest_pfile)
 
 def prep_prod_cfs_ffile(source_ffile, prepped_ffile, dest_ffile,
                         init_dt, forecast_hour, prep_method,
@@ -641,7 +629,6 @@ def prep_prod_cfs_ffile(source_ffile, prepped_ffile, dest_ffile,
             log_missing_file_model(log_missing_ffile, source_ffile,
                                    'cfs', init_dt,
                                    str(forecast_hour).zfill(3))
-    copy_file(prepped_ffile, dest_ffile)
 
 def prep_prod_gfs_file(source_file, dest_file, date_dt, log_missing_file):
     """! Do prep work for GFS analysis production files
@@ -1129,7 +1116,6 @@ def check_prep_files(job_dict):
                     fhr_check_output_dict[fhr_key][fhr_fileN_key]\
                     ['forecast_hour']
                 )
-        #fhr_list.append(fhr_key)
     fhr_list = list(
         np.asarray(np.unique(np.asarray(fhr_list, dtype=int)),dtype=str)
     )
@@ -1164,11 +1150,6 @@ def check_daily_model_files(job_dict):
     )
     model = job_dict['MODEL']
     members = job_dict['members']
-    #lead_seq = job_dict['CORRECT_LEAD_SEQ'].split(',')
-    #fhr_min = int(lead_seq[0])
-    #fhr_max = int(lead_seq[-1])
-    #fhr_inc = 12
-    #fhr = fhr_min
     fhr_list = []
     fhr_check_input_dict = {}
     fhr_check_output_dict = {}
@@ -1212,7 +1193,6 @@ def check_daily_model_files(job_dict):
                         'init_date': init_date_dt,
                         'forecast_hour': str(fhr)
                     }
-        #fhr+=fhr_inc
     # Check input files
     for fhr_key in list(fhr_check_input_dict.keys()):
         fhr_key_input_files_exist_list = []
@@ -1312,11 +1292,6 @@ def check_weekly_model_files(job_dict):
     )
     model = job_dict['MODEL']
     members = job_dict['members']
-    #lead_seq = job_dict['CORRECT_LEAD_SEQ'].split(',')
-    #fhr_min = int(lead_seq[0])
-    #fhr_max = int(lead_seq[-1])
-    #fhr_inc = 12
-    #fhr = fhr_min
     fhr_list = []
     fhr_check_input_dict = {}
     fhr_check_output_dict = {}
@@ -1439,7 +1414,6 @@ def check_weekly_model_files(job_dict):
                         'init_date': init_date_dt,
                         'forecast_hour': str(fhr)
                     }
-        #fhr+=fhr_inc
     # Check input files
     for fhr_key in list(fhr_check_input_dict.keys()):
         fhr_key_input_files_exist_list = []
@@ -1551,11 +1525,6 @@ def check_monthly_model_files(job_dict):
     )
     model = job_dict['MODEL']
     members = job_dict['members']
-    #lead_seq = job_dict['CORRECT_LEAD_SEQ'].split(',')
-    #fhr_min = int(lead_seq[0])
-    #fhr_max = int(lead_seq[-1])
-    #fhr_inc = 12
-    #fhr = fhr_min
     fhr_list = []
     fhr_check_input_dict = {}
     fhr_check_output_dict = {}
@@ -1600,7 +1569,6 @@ def check_monthly_model_files(job_dict):
                         'init_date': init_date_dt,
                         'forecast_hour': str(fhr)
                     }
-        #fhr+=fhr_inc
     # Check input files
     for fhr_key in list(fhr_check_input_dict.keys()):
         fhr_key_input_files_exist_list = []
@@ -1701,11 +1669,6 @@ def check_days6_10_model_files(job_dict):
     )
     model = job_dict['MODEL']
     members = job_dict['members']
-    #lead_seq = job_dict['CORRECT_LEAD_SEQ'].split(',')
-    #fhr_min = int(lead_seq[0])
-    #fhr_max = int(lead_seq[-1])
-    #fhr_inc = 12
-    #fhr = fhr_min
     fhr_list = []
     fhr_check_input_dict = {}
     fhr_check_output_dict = {}
@@ -1825,7 +1788,6 @@ def check_days6_10_model_files(job_dict):
                         'init_date': init_date_dt,
                         'forecast_hour': str(fhr)
                     }
-        #fhr+=fhr_inc
     # Check input files
     for fhr_key in list(fhr_check_input_dict.keys()):
         fhr_key_input_files_exist_list = []
@@ -1935,11 +1897,6 @@ def check_weeks3_4_model_files(job_dict):
     )
     model = job_dict['MODEL']
     members = job_dict['members']
-    #lead_seq = job_dict['CORRECT_LEAD_SEQ'].split(',')
-    #fhr_min = int(lead_seq[0])
-    #fhr_max = int(lead_seq[-1])
-    #fhr_inc = 12
-    #fhr = fhr_min
     fhr_list = []
     fhr_check_input_dict = {}
     fhr_check_output_dict = {}
@@ -2059,7 +2016,6 @@ def check_weeks3_4_model_files(job_dict):
                         'init_date': init_date_dt,
                         'forecast_hour': str(fhr)
                     }
-        #fhr+=fhr_inc
     # Check input files
     for fhr_key in list(fhr_check_input_dict.keys()):
         fhr_key_input_files_exist_list = []
@@ -2545,24 +2501,6 @@ def check_model_files(job_dict):
                         'init_date': init_date_dt,
                         'forecast_hour': str(fhr)
                     }
-            #elif job_dict['VERIF_CASE'] == 'grid2obs':
-                #model_file_format = os.path.join(verif_case_dir, 'data',
-                                                 #model, model
-                                                 #+'.{init?fmt=%Y%m%d%H}.'
-                                                 #+'f{lead?fmt=%3H}')
-                #if job_dict['VERIF_TYPE'] == 'sfc' \
-                        #and job_dict['job_name'] == 'TempAnom2m':
-                    #fhr_check_dict[str(fhr)]['file1'] = {
-                        #'valid_date': valid_date_dt,
-                        #'init_date': init_date_dt,
-                        #'forecast_hour': str(fhr)
-                    #}
-                    #fhr_check_dict[str(fhr)]['file2'] = {
-                        #'valid_date': valid_date_dt,
-                        #'init_date': (valid_date_dt
-                                      #-datetime.timedelta(hours=fhr-12)),
-                        #'forecast_hour': str(fhr-12)
-                    #}
         elif job_dict['JOB_GROUP'] == 'generate_stats':
             if job_dict['VERIF_CASE'] == 'grid2grid':
                 output_DATA_file_format = os.path.join(
@@ -2957,13 +2895,6 @@ def check_model_files(job_dict):
             )
             if os.path.exists(fhr_fileN_COMOUT):
                 copy_file(fhr_fileN_COMOUT,fhr_fileN_DATA)
-                #if fhr_check_output_dict[fhr_key]\
-                        #[fhr_fileN_key]['forecast_hour'] \
-                        #in fhr_list:
-                    #fhr_list.remove(
-                        #fhr_check_output_dict[fhr_key][fhr_fileN_key]\
-                        #['forecast_hour']
-                    #)
             else:
                 if fhr_check_output_dict[fhr_key]\
                         [fhr_fileN_key]['forecast_hour'] \
@@ -3107,7 +3038,6 @@ def check_weekly_truth_files(job_dict):
     for truth_file_tuple in truth_output_file_list:
         if os.path.exists(truth_file_tuple[1]):
             truth_output_files_exist_list.append(True)
-            #copy_file(truth_file_tuple[1], truth_file_tuple[0])
             truth_copy_output_DATA2COMOUT_list.remove(truth_file_tuple)
         else:
             truth_output_files_exist_list.append(False)
@@ -3256,7 +3186,6 @@ def check_days6_10_truth_files(job_dict):
     for truth_file_tuple in truth_output_file_list:
         if os.path.exists(truth_file_tuple[1]):
             truth_output_files_exist_list.append(True)
-            #copy_file(truth_file_tuple[1], truth_file_tuple[0])
             truth_copy_output_DATA2COMOUT_list.remove(truth_file_tuple)
         else:
             truth_output_files_exist_list.append(False)
@@ -3779,7 +3708,7 @@ def initialize_prep_job_env_dict(verif_type, group,
     job_env_var_list = [
         'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA',
         'NET', 'RUN', 'STEP', 'COMPONENT', 'COMINgefs', 'COMOUT',
-        'gefs_members'
+        'SENDCOM', 'gefs_members'
     ]
     job_env_dict = {}
     for env_var in job_env_var_list:
@@ -3801,8 +3730,8 @@ def initialize_prep_job_env_dict(verif_type, group,
     job_env_dict['init_hr_end'] = (init_hr_list[-1].zfill(2))
     return job_env_dict
 
-def initalize_job_env_dict(verif_type, group,
-                           verif_case_step_abbrev_type, job):
+def initialize_job_env_dict(verif_type, group,
+                            verif_case_step_abbrev_type, job):
     """! This initializes a dictionary of environment variables and their
          values to be set for the job pulling from environment variables
          already set previously

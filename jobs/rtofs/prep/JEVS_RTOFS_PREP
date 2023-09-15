@@ -56,17 +56,14 @@ setpdy.sh
 export VDATE=${VDATE:-$PDYm1}
 
 # set up paths
-export FIXevs=${FIXevs:-$HOMEevs/fix/cdo_grids}
-export USHevs=${USHevs:-$HOMEevs/ush/$COMPONENT}
 export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config/$COMPONENT}
 
 # define COMIN/COMOUT variables
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
-export COMINobs=${DCOMROOT:-"/lfs/h1/ops/dev/dcom"}
+export COMINobs=${COMINobs:-/lfs/h1/ops/prod/dcom}
 export COMINrtofs=${COMINrtofs:-$(compath.py $envir/com/$COMPONENT/${rtofs_ver})}
 export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
 export COMOUTprep=${COMOUTprep:-$COMOUT/$STEP/$COMPONENT}
-export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
 
 mkdir -d $COMOUT $COMOUTprep
 

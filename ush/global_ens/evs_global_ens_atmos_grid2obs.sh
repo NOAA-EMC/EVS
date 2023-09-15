@@ -107,11 +107,7 @@ for modnam in $models ; do
     echo  "export prepbufrgrid=prepbufr.f00.nc" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
     echo  "export prepbufrpath=$COM_IN" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
     echo  "export model=$modnam"  >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
-    if [ $modnam = naefs ] && [ $gefs_number = 30 ] ; then
-      echo  "export MODEL=${MODNAM}v7" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
-    else
-      echo  "export MODEL=${MODNAM}" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
-    fi
+    echo  "export MODEL=${MODNAM}" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
 
     echo  "export vbeg=$cyc" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
     echo  "export vend=$cyc" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
