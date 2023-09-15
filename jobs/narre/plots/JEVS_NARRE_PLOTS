@@ -39,8 +39,6 @@ export USHevs=$HOMEevs/ush
 export FIXevs=${FIXevs:-/lfs/h1/ops/prod/packages/evs.${evs_ver}/fix}
 export MASKS=$FIXevs/masks
 
-#export ush_dir=/lfs/h2/emc/vpppg/noscrub/marcel.caron/verif_plotting/ush
-#export ush_dir=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS_plots/verif_plotting/ush
 export ush_dir=$USHevs/narre/ush_narre_plot_py
 
 
