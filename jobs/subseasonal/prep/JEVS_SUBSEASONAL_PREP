@@ -29,7 +29,6 @@ export SENDDBN_NTC=${SENDDBN_NTC:-NO}
 ################################################################
 # Specify Execution Areas
 ################################################################
-export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
@@ -50,20 +49,18 @@ export INITDATE=$PDYm2
 #################################################
 # Set up the INPUT and OUTPUT directories
 #################################################
-#export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 export COMINgefs=${COMINgefs:-$(compath.py ${envir}/com/gefs/${gefs_ver}/gefs.$INITDATE)}
-#export COMINgefs=${COMINgefs:-$(compath.py ${envir}/com/gefs/${gefs_ver}/gefs)}
 export COMINcfs=${COMINcfs:-$(compath.py ${envir}/com/cfs/${cfs_ver}/cfs.$INITDATE)}
 export COMINgfs=${COMINgfs:-$(compath.py ${envir}/com/gfs/${gfs_ver})}
-export COMINecmwf=$DCOMROOT
+export COMINecmwf=${COMINecmwf:-$DCOMROOT}
 export COMINccpa=${COMINccpa:-$(compath.py ${envir}/com/ccpa/${ccpa_ver})}
 export COMINmrmsak=$DCOMROOT/ldmdata/obs/upperair/mrms/alaska/MultiSensorQPE
 export COMINmrmshi=$DCOMROOT/ldmdata/obs/upperair/mrms/hawaii/MultiSensorQPE
-export COMINosi=${COMINosi:-/lfs/h1/ops/prod/dcom}
-export COMINghrsst=${COMINghrsst:-/lfs/h1/ops/dev/dcom}
-export COMINumd=${COMINumd:-/lfs/h1/ops/dev/dcom}
+export COMINosi=${COMINosi:-$DCOMROOT}
+export COMINghrsst=${COMINghrsst:-$DCOMROOT}
+export COMINumd=${COMINumd:-$DCOMROOT}
 export COMINnam=${COMINnam:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
-export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$INITDATE)}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 
 
 echo Actual output starts here
