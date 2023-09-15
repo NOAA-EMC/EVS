@@ -129,7 +129,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
         obs_var_threshs = (verif_type_plot_jobs_dict[verif_type_job]\
                            ['obs_var_dict']['threshs'].split(', '))
         # Initialize job environment dictionary
-        job_env_dict = sub_util.initalize_job_env_dict(
+        job_env_dict = sub_util.initialize_job_env_dict(
             verif_type, JOB_GROUP,
             VERIF_CASE_STEP_abbrev_type, verif_type_job
         )

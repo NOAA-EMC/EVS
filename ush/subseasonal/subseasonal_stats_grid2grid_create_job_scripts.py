@@ -57,12 +57,7 @@ assemble_data_obs_jobs_dict = {
     'anom': {},
     'ENSO': {},
     'OLR': {},
-    'precip': {
-        #'24hrCCPA': {'env': {},
-                     #'commands': [sub_util.metplus_command(
-                                      #'PCPCombine_obs24hrCCPA.conf'
-                                  #)]}
-    },
+    'precip': {},
     'pres_lvls': {},
     'seaice': {},
     'sst': {},
@@ -177,13 +172,7 @@ assemble_data_model_jobs_dict = {
     },
     'ENSO': {},
     'OLR': {},
-    'precip': {
-        #'24hrAccum': {'env': {},
-                      #'commands': [sub_util.metplus_command(
-                                       #'PCPCombine_fcstSUBSEASONAL_'
-                                       #+'24hrAccum_precip.conf'
-                                   #)]}
-    },
+    'precip': {},
     'pres_lvls': {
         'WeeklyAvg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
                                             'var1_levels': 'P500'},
@@ -597,7 +586,7 @@ if JOB_GROUP in ['assemble_data', 'generate_stats']:
                 .split(' '))
         for verif_type_job in list(JOB_GROUP_jobs_dict[verif_type].keys()):
             # Initialize job environment dictionary
-            job_env_dict = sub_util.initalize_job_env_dict(
+            job_env_dict = sub_util.initialize_job_env_dict(
                 verif_type, JOB_GROUP, VERIF_CASE_STEP_abbrev_type,
                 verif_type_job
             )
@@ -736,7 +725,7 @@ if JOB_GROUP in ['assemble_data', 'generate_stats']:
             for verif_type_job in list(JOB_GROUP_obs_jobs_dict[verif_type]\
                                        .keys()):
                 # Initialize job environment dictionary
-                job_env_dict = sub_util.initalize_job_env_dict(
+                job_env_dict = sub_util.initialize_job_env_dict(
                     verif_type, JOB_GROUP, VERIF_CASE_STEP_abbrev_type,
                     verif_type_job
                 )
@@ -801,7 +790,7 @@ elif JOB_GROUP == 'gather_stats':
     print("----> Making job scripts for "+VERIF_CASE_STEP+" "
       +"for job group "+JOB_GROUP)
     # Initialize job environment dictionary
-    job_env_dict = sub_util.initalize_job_env_dict(
+    job_env_dict = sub_util.initialize_job_env_dict(
         JOB_GROUP, JOB_GROUP,
         VERIF_CASE_STEP_abbrev, JOB_GROUP
     )

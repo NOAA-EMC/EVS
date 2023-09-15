@@ -36,21 +36,15 @@ source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 export VDATE=$(date --date="2 days ago" +%Y%m%d)
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
-export COMINobs=/lfs/h1/ops/dev/dcom
 export COMINfcst=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}/prep/$COMPONENT
-export COMINclimo=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/climos/$COMPONENT
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
 export COMOUTfinal=$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE
-#export DATA=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver}
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
-export CONFIGevs=$HOMEevs/parm/metplus_config/$COMPONENT
-export ARCHevs=/lfs/h2/emc/vpppg/noscrub/$USER/stat_archive/RTOFS
 
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export maillist=${maillist:-'geoffrey.manikin@noaa.gov,lichuan.chen@noaa.gov'}
+export maillist=${maillist:-'alicia.bentley@noaa.gov,samira.ardani@noaa.gov'}
 
 # call j-job
 $HOMEevs/jobs/$COMPONENT/$STEP/JEVS_RTOFS_STATS

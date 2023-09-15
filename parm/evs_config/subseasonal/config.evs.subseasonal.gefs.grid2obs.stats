@@ -47,16 +47,13 @@ export KEEPDATA="YES"
 ####################################################
 if [ $VERIF_CASE_STEP = grid2obs_stats ]; then
     #g2ostats_type_list: list type of verifications to run for grid-to-obs: PrepBufr
-    #### PrepBufr:  compare 2m temp (and anomalies) to NAM prepbufr obs
+    #### PrepBufr:  compare 2m temp anomalies to NAM prepbufr obs
     #####    g2ostats_[type]_fyc_list:      all forecast cycles to be included in verification: HH
     #####    g2ostats_[type]_vhr_list:      all valid hours to be included in verification: HH
     #####    g2ostats_[type]_fhr_min:       forecast hour to start verification HH[H]
     #####    g2ostats_[type]_fhr_max:       forecast hour to end verification HH[H]
     #####    g2ostats_[type]_grid:          NCEP grid to do verification on
     #####    g2ostats_[type]_gather_by:     how to group the verification data, VSDB, VALID, INIT
-    #g2ostats_mv_database_name: name of the METviewer database to send data to, MUST START WITH "mv"
-    #g2ostats_mv_database_group: name of the group the METviewer database belongs to
-    #g2ostats_mv_database_desc: description of database, can be blank
     export g2ostats_type_list="PrepBufr" 
     export g2ostats_PrepBufr_truth_name_list="nam_anl"
     export g2ostats_PrepBufr_truth_file_format_list="$COMINobs.{valid?fmt=%Y%m%d}/prepbufr_nam/prepbufr.nam.{valid?fmt=%Y%m%d%H}"
