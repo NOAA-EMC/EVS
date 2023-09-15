@@ -2,9 +2,6 @@
 
 set +x
 
-#vday=20221003
-#COMINobs=/lfs/h1/ops/prod/com/obsproc/v1.0
-#COMINnarre=/lfs/h1/ops/prod/com/narre/v1.2
 
 typeset -Z2 cyc
 

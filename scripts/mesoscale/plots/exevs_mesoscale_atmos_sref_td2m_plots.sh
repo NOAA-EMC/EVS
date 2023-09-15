@@ -58,7 +58,7 @@ export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
 verif_case=grid2obs
 line_type='ctc'
 score_types='lead_average threshold_average'
-VAR='CAPEsfc'
+VAR='DPT2m'
 
 > run_all_poe.sh
 
@@ -69,14 +69,13 @@ for stat in  ets fbias; do
 
   if [ $score_type = lead_average ] ; then
     valid_times="00 06 12 18"
-    thresholds="250 500 1000 2000"
+    thresholds="277.59  283.15  288.71  294.26"
     export fcst_group=one_group
     #export fcst_lead=" 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63, 66, 69, 72, 75, 78, 81, 84, 87
   elif [ $score_type = threshold_average ] ; then
     valid_times="00 06 12 18"
-    thresholds=">=250,>=500,>=1000,>=2000"
+    thresholds=">=277.59,>=283.15,>=288.71,>=294.26"
     export fcst_group="group1 group2 group3 group4 group5 group6" 
-    #export fcst_lead=" 6,9,12,15,18,21,24,27  30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63, 66, 69, 72, 75, 78, 81, 84, 87
   fi
  
   for valid_time in $valid_times ; do
@@ -101,7 +100,7 @@ for stat in  ets fbias; do
 
        var=`echo $VAR | tr '[A-Z]' '[a-z]'` 
 	    
-       FCST_LEVEL_value="L0"
+       FCST_LEVEL_value="Z2"
 
        OBS_LEVEL_value=$FCST_LEVEL_value
 
@@ -191,13 +190,13 @@ fi
 
 cd $plot_dir
 
-var=cape 
-   levels=L0
+   var=dpt
+   levels=z2
    stats='ets fbias'
    score_types='lead_average threshold_average'
    valid_times="00z 06z 12z 18z"
    unit=''
-   var_level=${var}_l0
+   var_level=${var}_2m
 
 for stat in $stats ; do
       	   
@@ -206,7 +205,7 @@ for stat in $stats ; do
     for valid in $valid_times ; do
 
 	if [ $score_type = lead_average ] ; then
-          thresholds="ge250 ge500 ge1000 ge2000"
+          thresholds="ge277.59 ge283.15 ge288.71 ge294.26"
 	  leads="all"
 	  scoretype=fhrmean
 	else
@@ -226,10 +225,10 @@ for stat in $stats ; do
 
 	   if [ $score_type = lead_average ] ; then
 
-               mv ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${threshold}.png  evs.sref.${stat}.${var_level}_${threshold}.last${past_days}days.${scoretype}.valid_${valid}.buk_conus.png
+               mv ${score_type}_regional_conus_valid_${valid}_2m_dpt_${stat}_${threshold}.png  evs.sref.${stat}.${var_level}_${threshold}.last${past_days}days.${scoretype}.valid_${valid}.buk_conus.png
            elif [ $score_type = threshold_average ] ; then
 
-               mv ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${lead}.png  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}.valid_${valid}.${new_lead}.buk_conus.png
+               mv ${score_type}_regional_conus_valid_${valid}_2m_dpt_${stat}_${lead}.png  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}.valid_${valid}.${new_lead}.buk_conus.png
            fi
 
        done 
@@ -239,10 +238,10 @@ for stat in $stats ; do
 done    
 
 
-tar -cvf evs.plots.sref.cape.past${past_days}days.v${VDATE}.tar *.png
+tar -cvf evs.plots.sref.td2m.past${past_days}days.v${VDATE}.tar *.png
 
-if [ $SENDCOM = YES ] ; then
- cp  evs.plots.sref.cape.past${past_days}days.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
+if [ $SENDCOM="YES" ]; then
+ cp  evs.plots.sref.td2m.past${past_days}days.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
 fi
 
 

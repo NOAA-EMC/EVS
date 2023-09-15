@@ -48,7 +48,6 @@ start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
 end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
 
 # Set up job directory
-#njobs = 0
 JOB_GROUP_jobs_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                   'METplus_job_scripts', JOB_GROUP)
 if not os.path.exists(JOB_GROUP_jobs_dir):
@@ -102,7 +101,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
         # Read in environment variables for verif_type
         for verif_type_job in list(JOB_GROUP_jobs_dict[verif_type].keys()):
             # Initialize job environment dictionary
-            job_env_dict = sub_util.initalize_job_env_dict(
+            job_env_dict = sub_util.initialize_job_env_dict(
                 verif_type, JOB_GROUP, VERIF_CASE_STEP_abbrev_type,
                 verif_type_job
             )
@@ -211,7 +210,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
             for verif_type_job in list(JOB_GROUP_obs_jobs_dict[verif_type]\
                                        .keys()):
                 # Initialize job environment dictionary
-                job_env_dict = sub_util.initalize_job_env_dict(
+                job_env_dict = sub_util.initialize_job_env_dict(
                     verif_type, JOB_GROUP, VERIF_CASE_STEP_abbrev_type,
                     verif_type_job
                 )
