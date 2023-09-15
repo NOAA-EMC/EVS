@@ -45,7 +45,6 @@ export COMPONENT=subseasonal
 export RUN=atmos
 export OBSNAME="gfs ecmwf osi ghrsst umd nam"
 export gfs_ver=${gfs_ver}
-export ccpa_ver=${ccpa_ver}
 export obsproc_ver=${obsproc_ver}
 export PREP_TYPE=obs
 

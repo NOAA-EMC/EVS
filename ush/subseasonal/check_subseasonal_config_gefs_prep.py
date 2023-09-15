@@ -24,7 +24,7 @@ env_vars_dict = {
                'gefs_file_type',
                'model_file_format_list', 'OUTPUTROOT',
                'start_date', 'end_date', 'make_met_data_by',
-               'SENDARCH', 'KEEPDATA',
+               'KEEPDATA',
                'fcyc_list', 'vhr_list', 'fhr_min', 'fhr_max',
                'gather_by']
 }
@@ -83,7 +83,6 @@ for config_var in check_config_var_len_list:
 valid_config_var_values_dict = {
     'make_met_data_by': ['VALID', 'INIT'],
     'gather_by': ['VALID', 'INIT'],
-    'SENDARCH': ['YES', 'NO'],
     'KEEPDATA': ['YES', 'NO']
 }
         

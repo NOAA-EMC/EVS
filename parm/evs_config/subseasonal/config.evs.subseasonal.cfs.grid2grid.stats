@@ -46,20 +46,14 @@ export KEEPDATA="YES"
 # SETTINGS FOR SPECIFIC USE CASES
 ####################################################
 if [ $VERIF_CASE_STEP = grid2grid_stats ]; then
-    #g2gstats_type_list: list type of verifications to run for grid-to-grid: anom, pres_lvls, ENSO, OLR, precip, sst, seaice
+    #g2gstats_type_list: list type of verifications to run for grid-to-grid: anom, pres_lvls, sst, seaice
     #
     #        anom:      2-m temperature anomaly to compare to ECMWF 
     #        pres_lvls: pressure level variables to compare to GFS 
-    #        ENSO:      compare to GHRSST OSPO 
-    #        OLR:       compare to UMD
-    #        precip:    compare to CCPA and MRMS 
     #        sst:       compare to GHRSST OSPO 
     #        seaice:    compare to OSI-SAF
     #g2gstats_*_truth_name_list:   list of reference name for truth files
-    #g2gstats_*_truth_file_format_list: list of truth files
-    #g2gstats_precip_file_format_list:     list of precip files
-    #g2gstats_precip_file_accum_list:      list of precip accumulations in file: hours (HH) or continuous
-    #g2gstats_precip_var_list:             list of the precip variable name to use    
+    #g2gstats_*_truth_file_format_list: list of truth files    
     #g2gstats_*_fcyc_list:                all forecast cycles to be included in verification: HH
     #g2gstats_*_vhr_list:               all valid hours to be included in verification: HH
     #g2gstats_*_fhr_min:                forecast hour to start verification HH[H]
@@ -67,9 +61,6 @@ if [ $VERIF_CASE_STEP = grid2grid_stats ]; then
     #g2gstats_*_fhr_inc:                    frequency to verify forecast hours at HH[H]
     #g2gstats_*_grid:                   NCEP grid to do verification on
     #g2gstats_*_gather_by:              how to group the verification data, VSDB, VALID, INIT
-    #g2gstats_mv_database_name: name of the METviewer database to send data to, MUST START WITH "mv"
-    #g2gstats_mv_database_group: name of the group the METviewer database belongs to
-    #g2gstats_mv_database_desc: description of database, can be blank
     export g2gstats_type_list="sst seaice anom pres_lvls"
     export g2gstats_anom_truth_name_list="ecmwf_anl"
     export g2gstats_anom_truth_file_format_list="$COMINobs.{valid?fmt=%Y%m%d}/ecmwf/ecmwf.{valid?fmt=%Y%m%d%H}.anl"
@@ -89,36 +80,6 @@ if [ $VERIF_CASE_STEP = grid2grid_stats ]; then
     export g2gstats_pres_lvls_fhr_inc=12
     export g2gstats_pres_lvls_grid="G003"
     export g2gstats_pres_lvls_gather_by="VALID"
-    export g2gstats_ENSO_truth_name_list="ghrsst_anl"
-    export g2gstats_ENSO_truth_file_format_list="$COMINobs.{valid?fmt=%Y%m%d}/ghrsst_ospo/ghrsst_ospo.{valid?fmt=%Y%m%d%H}to{valid?fmt=%Y%m%d%H}.nc"
-    export g2gstats_ENSO_fcyc_list="00"
-    export g2gstats_ENSO_vhr_list="00 12"
-    export g2gstats_ENSO_fhr_min="24"
-    export g2gstats_ENSO_fhr_max="840"
-    export g2gstats_ENSO_fhr_inc=12
-    export g2gstats_ENSO_grid="G003"
-    export g2gstats_ENSO_gather_by="VALID"
-    export g2gstats_OLR_truth_name_list="umd_anl"
-    export g2gstats_OLR_truth_file_format_list="$COMINobs.{valid?fmt=%Y%m%d}/umd/umd.{valid?fmt=%Y%m%d}.nc"
-    export g2gstats_OLR_fcyc_list="00"
-    export g2gstats_OLR_vhr_list="00 12"
-    export g2gstats_OLR_fhr_min="24"
-    export g2gstats_OLR_fhr_max="840"
-    export g2gstats_OLR_fhr_inc=12
-    export g2gstats_OLR_grid="G003"
-    export g2gstats_OLR_gather_by="VALID"
-    export g2gstats_precip_file_format_list="$COMIN.{init?fmt=%Y%m%d}/cfs/cfs"
-    export g2gstats_precip_file_accum_list="24"
-    export g2gstats_precip_truth_name_list="ccpa_anl"
-    export g2gstats_precip_truth_file_format_list="$COMINobs.{valid?fmt=%Y%m%d}/ccpa/ccpa.{valid?fmt=%Y%m%d%H}"
-    export g2gstats_precip_var_list="APCP"
-    export g2gstats_precip_fcyc_list="00"
-    export g2gstats_precip_vhr_list="00 12"
-    export g2gstats_precip_fhr_min="24"
-    export g2gstats_precip_fhr_max="840"
-    export g2gstats_precip_fhr_inc=24
-    export g2gstats_precip_grid="G003"
-    export g2gstats_precip_gather_by="VALID"
     export g2gstats_sst_truth_name_list="ghrsst_anl"
     export g2gstats_sst_truth_file_format_list="$COMINobs.{valid?fmt=%Y%m%d}/ghrsst_ospo/ghrsst_ospo.{valid?fmt=%Y%m%d%H}to{valid?fmt=%Y%m%d%H}.nc"
     export g2gstats_sst_fcyc_list="00"

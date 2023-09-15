@@ -33,8 +33,6 @@ valid_hr_end = os.environ['valid_hr_end']
 valid_hr_inc = os.environ['valid_hr_inc']
 fhr_list = os.environ['fhr_list'].split(',')
 fhr_inc = '12'
-#fhr_end = os.environ['fhr_end']
-#fhr_inc = os.environ['fhr_inc']
 
 # Process run time arguments
 if len(sys.argv) != 4:
