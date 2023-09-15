@@ -47,30 +47,6 @@ VCS_type_env_vars_dict = {
                         'g2gstats_pres_lvls_fhr_inc',
                         'g2gstats_pres_lvls_grid', 
                         'g2gstats_pres_lvls_gather_by',
-                        'g2gstats_ENSO_truth_name_list',
-                        'g2gstats_ENSO_truth_file_format_list',
-                        'g2gstats_ENSO_fcyc_list',
-                        'g2gstats_ENSO_vhr_list',
-                        'g2gstats_ENSO_fhr_min', 'g2gstats_ENSO_fhr_max',
-                        'g2gstats_ENSO_fhr_inc',
-                        'g2gstats_ENSO_grid', 'g2gstats_ENSO_gather_by',
-                        'g2gstats_OLR_truth_name_list',
-                        'g2gstats_OLR_truth_file_format_list',
-                        'g2gstats_OLR_fcyc_list',
-                        'g2gstats_OLR_vhr_list',
-                        'g2gstats_OLR_fhr_min', 'g2gstats_OLR_fhr_max',
-                        'g2gstats_OLR_fhr_inc',
-                        'g2gstats_OLR_grid', 'g2gstats_OLR_gather_by',
-                        'g2gstats_precip_file_format_list',
-                        'g2gstats_precip_file_accum_list',
-                        'g2gstats_precip_truth_name_list',
-                        'g2gstats_precip_truth_file_format_list',
-                        'g2gstats_precip_var_list',
-                        'g2gstats_precip_fcyc_list',
-                        'g2gstats_precip_vhr_list',
-                        'g2gstats_precip_fhr_min', 'g2gstats_precip_fhr_max',
-                        'g2gstats_precip_fhr_inc',
-                        'g2gstats_precip_grid', 'g2gstats_precip_gather_by',
                         'g2gstats_sst_truth_name_list',
                         'g2gstats_sst_truth_file_format_list',
                         'g2gstats_sst_fcyc_list',
@@ -135,8 +111,7 @@ if datetime.datetime.strptime(os.environ['end_date'], '%Y%m%d') \
 
 # Do check for valid config options
 valid_VCS_type_opts_dict = {
-    'grid2grid_stats': ['anom', 'pres_lvls', 'ENSO', 'OLR', 'precip', 'sst', 
-                        'seaice'],
+    'grid2grid_stats': ['anom', 'pres_lvls', 'sst', 'seaice'],
     'grid2obs_stats': ['PrepBufr']
 }
 for VCS_type in VCS_type_list:
@@ -170,9 +145,6 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
         valid_config_var_values_dict[VCS_abbrev_type
                                      +'_truth_name_list'] = ['gfs_anl', 
                                                              'ecmwf_anl',
-                                                             'ccpa_anl', 
-                                                             'mrmsak_anl',
-                                                             'mrmshi_anl',
                                                              'umd_anl',
                                                              'ghrsst_anl',
                                                              'osi_anl']
