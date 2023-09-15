@@ -49,7 +49,8 @@ done
 VX_MASK_LIST="CONUS"
 																  
 export fcst_init_hour="0,3,6,9,12,15,18,21"
-export fcst_valid_hours="0 3 6 9 12 15 18 21"
+#export fcst_valid_hours="0 3 6 9 12 15 18 21"
+export fcst_valid_hours="0  6  12 18"
 valid_time='valid00z_03z_06z_09z_12z_15z_18z_21z'
 init_time='init00_to_21z'
 
@@ -65,7 +66,9 @@ VARs=APCP_06
 FCST_LEVEL_values=A6
 
 for fcst_valid_hour in $fcst_valid_hours ; do
+
 for stats in  ets fbias fss ; do 
+
  if [ $stats = ets ] ; then
   stat_list='ets'
   line_tp='ctc'
@@ -89,20 +92,25 @@ elif [ $stats = fss ] ; then
  for score_type in $score_types ; do
 
   if [ $score_type = lead_average ] ; then
-    if [ $stats = ets ] || [ $stats = fbias ] ; then
-	threshes='>=0.1 >=1 >=5 >=10 >=25 >=50'
-    elif [ $stats = fss ] ; then
-	threshes='>=0.1,>=1,>=5,>=10,>=25,>=50'
-    fi
+	if [ $stats = fss ] ; then
+	  #threshes='>=0.1,>=1,>=5,>=10,>=25,>=50'
+	  threshes='>=0.1 >=1 >=5 >=10 >=25 >=50'
+	else
+	  threshes='>=0.1 >=1 >=5 >=10 >=25 >=50'
+        fi
+         export fcst_leads="24,36,48,60,72,84"
   elif [ $score_type = threshold_average ] ; then
 	threshes='>=0.1,>=1,>=5,>=10,>=25,>=50'
+	export fcst_leads="24 36 48 60 72 84"
   fi
 
-  export fcst_leads="vs_lead" 
  
-  for lead in $fcst_leads ; do 
-
-    export fcst_lead=" 24, 36, 48, 60, 72, 84"
+  for fcst_lead in $fcst_leads ; do
+      if [ $score_type = lead_average ] ; then
+	 lead="all_leads"
+      elif [ $score_type = threshold_average ] ; then
+	 lead=$fcst_lead
+      fi
 
     for VAR in $VARs ; do 
 
@@ -203,14 +211,14 @@ chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 120 -ppn 60 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   mpiexec -np 100 -ppn 100 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi
 
 cd $plot_dir
 
-for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
+for valid in 00z 06z 12z 18z ; do
 for stats in  ets fbias fss  ; do
  if [ $stats = ets ] || [ $stats = fbias ] ; then 
    score_types='lead_average threshold_average'
@@ -220,11 +228,8 @@ for stats in  ets fbias fss  ; do
  for score_type in $score_types ; do
 
   if [ $score_type = lead_average ] ; then 
-    if [ $stats = ets ] || [ $stats = fbias ] ; then
+    if [ $stats = ets ] || [ $stats = fbias ] || [ $stats = fss ] ; then
       threshes='ge0.1 ge1 ge5 ge10 ge25 ge50'
-      scoretype='fhrmean'
-    elif [ $stats = fss ] ; then
-      threshes='width1-3-5-7-9-11'
       scoretype='fhrmean'
     fi
   elif [ $score_type = threshold_average ] ; then
@@ -242,10 +247,12 @@ for stats in  ets fbias fss  ; do
       if [ $stats = ets ] || [ $stats = fbias ] ; then
          mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${thresh}.png evs.sref.${stats}.apcp_6a.${thresh}.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png
       elif [ $stats = fss ] ; then
-         mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${thresh}.png evs.sref.${stats}.apcp_6a.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png	    
+         mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_width1-3-5-7-9-11_${thresh}.png evs.sref.${stats}.apcp_6a.${thresh}.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png	    
       fi
     elif [ $score_type = threshold_average ] ; then
-         mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${thresh}.png evs.sref.${stats}.apcp_6a.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png
+	 for lead in f24 f36 f48 f60 f72 f84 ; do 
+           mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${lead}.png evs.sref.${stats}.apcp_6a.last${past_days}days.${scoretype}_valid_${valid}.${lead}.buk_conus.png
+	 done
     fi	 
 
   done   # thresh
@@ -255,8 +262,9 @@ done     #valid
 
 tar -cvf evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar *.png
 
-cp evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
-
+if [ $SENDCOM="YES" ]; then
+ cp evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
+fi
 
 
 

@@ -10,7 +10,7 @@
 #PBS -l debug=true
 
 export OMP_NUM_THREADS=1
-#Total 2 processes
+#Total 4 processes
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 source $HOMEevs/versions/run.ver
