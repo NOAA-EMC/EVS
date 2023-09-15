@@ -1001,6 +1001,11 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
 
     if sample_equalization:
         counts = pivot_counts.mean(axis=1, skipna=True).fillna('')
+        show_counts_every = len(counts)//48+1
+        counts_with_blanks = ['' for item in counts]
+        for i, item in enumerate(counts[::int(show_counts_every)]):
+             counts_with_blanks[int(show_counts_every)*i] = str(int(item))
+        counts = counts_with_blanks
         for count, xval in zip(counts, x_vals1.tolist()):
             if not isinstance(count, str):
                 count = str(int(count))

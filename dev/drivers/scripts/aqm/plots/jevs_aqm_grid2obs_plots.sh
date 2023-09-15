@@ -56,7 +56,6 @@ source $config
 ## (1) input from the pull-request stats output (see example (a) below)
 ## or (2) Use EVSv1.0 parallel stats archive (see example (b) below)
 ##
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=NO
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
@@ -80,7 +79,7 @@ export cycle=t${cyc}z
 ## export COMIN=/lfs/h2/emc/physics/noscrub/$USER/${NET}/${evs_ver}
 ## export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
-export COMINaqm=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/evs/v1.0/stats/aqm/aqm
+export COMINaqm=/lfs/h2/emc/vpppg/noscrub/$USER/evs/v1.0/stats/aqm/aqm
 
 export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver/${STEP}/${COMPONENT}
 #
@@ -88,7 +87,7 @@ export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver/${STEP}/${COMPONENT}
 #
 ########################################################################
 
-export maillist=${maillist:-'perry.shafran@noaa.gov,geoffrey.manikin@noaa.gov'}
+export maillist=${maillist:-'perry.shafran@noaa.gov,alicia.bentley@noaa.gov'}
 
 if [ -z "$maillist" ]; then
 
