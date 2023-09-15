@@ -41,7 +41,7 @@ export USE_CFP=YES
 export nproc=128  
 export evs_run_mode="production"
 
-export maillist='alicia.bentley@noaa.gov,mallory.row@noaa.gov,roshan.shrestha@noaa.gov'
+export maillist='alicia.bentley@noaa.gov,roshan.shrestha@noaa.gov'
 # export maillist="firstname.lastname@noaa.gov"
 
 export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
