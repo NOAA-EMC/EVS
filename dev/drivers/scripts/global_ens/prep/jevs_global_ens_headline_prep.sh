@@ -38,11 +38,6 @@ export jobid=$job.${PBS_JOBID:-$$}
 export run_mpi=no
 export gefs_number=30
 
-########################################
-# This is for NAEFS v7
-export COMINgefs_bc=/lfs/h2/emc/ptmp/bo.cui/com/${MODELNAME}/${naefs_ver}
-########################################
-
 export maillist='geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'
 
 if [ -z "$maillist" ]; then
