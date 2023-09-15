@@ -6,6 +6,13 @@ export PS4='$SECONDS + '
 date
 
 ############################################
+# Set data directives
+############################################
+export SENDECF=${SENDECF:-YES}
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-NO}
+
+############################################
 # Working Directory                                                                                                                                      
 ############################################
 export DATA=${DATA:-${DATAROOT}/${jobid:?}}
@@ -115,6 +122,12 @@ for observation in $observations ; do
     done
 done
 
+export STATSDIR=$DATA/stats
+export STATSOUTsmall=$STATSDIR/$RUN.$VDATE
+export STATSOUTfinal=$STATSDIR/$MODELNAME.$VDATE
+mkdir -p $STATSOUTsmall $STATSOUTfinal
+
+
 export MPIRUN="$MPIRUN -np $ic -cpu-bind verbose,core cfp"
 $MPIRUN wafs_stat.cmdfile
 
@@ -132,9 +145,15 @@ for resolution in $resolutions ; do
 	cat $file >> $finalfile
     done
     if [[ -s $finalfile ]] ; then
-	awk '!seen[$0]++' $finalfile > $COMOUTfinal/$finalfile
+	awk '!seen[$0]++' $finalfile > $STATSOUTfinal/$finalfile
     fi
 done
+
+if [ $SENDCOM = YES ] ; then
+    mv $STATSOUTfinal/* $COMOUTfinal/.
+    # COMOUTsmall
+    mv $STATSOUTsmall/* $COMOUTsmall/.
+fi
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 echo $msg

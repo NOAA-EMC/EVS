@@ -53,7 +53,7 @@ fi
 # Non wind direction variables:
 # remove duplicate lines and keep the first one
 if [ $OBSERVATION = "GFS" ] ; then
-    sed '/>=/s/WIND/WIND80/g' $STAT_ANALYSIS_OUTPUT_DIR/* > $COMOUTfinal/$NET.$STEP.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$VDATE.stat
+    sed '/>=/s/WIND/WIND80/g' $STAT_ANALYSIS_OUTPUT_DIR/* > $STATSOUTfinal/$NET.$STEP.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$VDATE.stat
 else
     cat $STAT_ANALYSIS_OUTPUT_DIR/* > $DATA/semifinal/${CENTER}_${RESOLUTION}.$NET.$STEP.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$VDATE.stat
 fi
