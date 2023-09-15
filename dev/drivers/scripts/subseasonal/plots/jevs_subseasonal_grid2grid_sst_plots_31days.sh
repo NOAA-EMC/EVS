@@ -26,7 +26,7 @@ source $HOMEevs/modulefiles/subseasonal/subseasonal_plots.sh
 #%include <head.h>
 #%include <envir-p1.h>
 
-export MET_ROOT=/apps/ops/para/libs/intel/${intel_ver}/met/${met_ver}
+export MET_ROOT=/apps/ops/prod/libs/intel/${intel_ver}/met/${met_ver}
 
 export USER=$USER
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
@@ -51,10 +51,6 @@ export VERIF_TYPE=sst
 export NDAYS=31
 
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
-export COMIN=$COMROOT/$NET/$evs_ver
-export COMINcfs=$COMIN/stats/$COMPONENT/cfs
-export COMINgefs=$COMIN/stats/$COMPONENT/gefs
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export VDATE_START=$(date -d "today -32 day" +"%Y%m%d")
 export VDATE_END=$(date -d "today -2 day" +"%Y%m%d")
 export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE_END

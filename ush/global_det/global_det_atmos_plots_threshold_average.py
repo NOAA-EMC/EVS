@@ -313,7 +313,21 @@ class ThresholdAverage:
         ax2.set_xlabel('Threshold')
         ax2.set_xlim([xticks[0], xticks[-1]])
         ax2.set_xticks(xticks[::xtick_intvl])
-        ax2.set_xticklabels(self.plot_info_dict['fcst_var_threshs'][::xtick_intvl])
+        if self.plot_info_dict['fcst_var_name'] == 'DPT' \
+                and self.plot_info_dict['fcst_var_level'] == 'Z2':
+            convert_thresh_list = []
+            for thresh in self.plot_info_dict['fcst_var_threshs']:
+                convert_thresh_K_to_F = round(
+                    round((((float(thresh[2:])-273.15)*9)/5)+32)
+                )
+                convert_thresh_list.append(
+                    f"{thresh[0:2]}{str(convert_thresh_K_to_F)}"
+                )
+            ax2.set_xticklabels(convert_thresh_list[::xtick_intvl])
+        else:
+            ax2.set_xticklabels(
+                self.plot_info_dict['fcst_var_threshs'][::xtick_intvl]
+            )
         ax2.set_ylabel('Difference')
         ax2.set_title('Difference from '
                       +self.model_info_dict['model1']['plot_name'], loc='left')

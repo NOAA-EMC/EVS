@@ -28,7 +28,7 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/global_det/global_det_prep.sh
 
-export maillist='geoffrey.manikin@noaa.gov,mallory.row@noaa.gov'
+export maillist='alicia.bentley@noaa.gov,mallory.row@noaa.gov'
 
 export envir=dev
 export NET=evs
@@ -36,7 +36,6 @@ export STEP=prep
 export COMPONENT=global_det
 export RUN=wave
 
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
