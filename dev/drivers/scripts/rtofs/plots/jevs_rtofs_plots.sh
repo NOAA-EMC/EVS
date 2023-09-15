@@ -36,9 +36,6 @@ export COMINstats=$COMIN/stats/$COMPONENT
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
 export COMOUTplots=$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/logos
-export USHevs=$HOMEevs/ush/$COMPONENT
-export CONFIGevs=$HOMEevs/parm/metplus_config/$COMPONENT
 
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
