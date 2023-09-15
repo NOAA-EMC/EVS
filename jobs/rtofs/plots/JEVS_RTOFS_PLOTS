@@ -56,8 +56,6 @@ export VDATE=${VDATE:-$PDYm1}
 
 
 # set up paths
-export FIXevs=${FIXevs:-$HOMEevs/fix/logos}
-export USHevs=${USHevs:-$HOMEevs/ush/$COMPONENT}
 export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config/$COMPONENT}
 
 # define COMIN/COMOUT variables
@@ -65,9 +63,9 @@ export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
 export COMINstats=${COMINstats:-$COMIN/stats/$COMPONENT}
 export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
 export COMOUTplots=${COMOUTplots:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
-export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
+export COMOUTplotsheadline=${COMOUTplotsheadline:-$COMOUT/$STEP/$COMPONENT/headline.$VDATE}
 
-mkdir -p $COMOUT $COMOUTplots
+mkdir -p $COMOUT $COMOUTplots $COMOUTplotsheadline
 mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE
 
 # make plots; run scripts for each RUN;
@@ -127,6 +125,10 @@ for vari in TEMP PSAL; do
   export VAR=$vari
   $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_profile_${STEP}.sh
 done
+
+export RUN=headline
+$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_headline_${STEP}.sh
+mkdir $COMOUTplots
 
 if [ -e "$pgmout" ]; then
 	    cat $pgmout

@@ -17,7 +17,9 @@ $COMOUTprep/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_ice.$RUN.nc \
 $DATA/rtofs.$VDATE/$RUN/ice_mask.nc \
 -type data -mask_field 'name="ice_coverage"; level="(0,*,*)";' -thresh lt0.15 -name ice_mask
 
-cp $DATA/rtofs.$VDATE/$RUN/ice_mask.nc $COMOUTprep/rtofs.$VDATE/$RUN
+if [ $SENDCOM = "YES" ]; then
+ cp $DATA/rtofs.$VDATE/$RUN/ice_mask.nc $COMOUTprep/rtofs.$VDATE/$RUN
+fi
 
 # create subregions using ice mask
 #   Global
@@ -27,7 +29,9 @@ $DATA/rtofs.$VDATE/$RUN/ice_mask.nc \
 $DATA/rtofs.$VDATE/$RUN/mask.global.nc \
 -type lat -thresh 'ge-80 && le90' -intersection -name GLB
 
-cp $DATA/rtofs.$VDATE/$RUN/mask.global.nc $COMOUTprep/rtofs.$VDATE/$RUN
+if [ $SENDCOM = "YES" ]; then
+ cp $DATA/rtofs.$VDATE/$RUN/mask.global.nc $COMOUTprep/rtofs.$VDATE/$RUN
+fi
 
 #   North Atlantic Ocean
 gen_vx_mask \
@@ -36,7 +40,9 @@ $DATA/rtofs.$VDATE/$RUN/ice_mask.nc \
 $DATA/rtofs.$VDATE/$RUN/north_atlantic.lat.nc \
 -type lat -thresh 'ge0 && le60' -intersection
 
-cp $DATA/rtofs.$VDATE/$RUN/north_atlantic.lat.nc $COMOUTprep/rtofs.$VDATE/$RUN
+if [ $SENDCOM = "YES" ]; then
+ cp $DATA/rtofs.$VDATE/$RUN/north_atlantic.lat.nc $COMOUTprep/rtofs.$VDATE/$RUN
+fi
 
 gen_vx_mask \
 $DATA/rtofs.$VDATE/$RUN/north_atlantic.lat.nc \
@@ -51,7 +57,9 @@ $DATA/rtofs.$VDATE/$RUN/ice_mask.nc \
 $DATA/rtofs.$VDATE/$RUN/south_atlantic.lat.nc \
 -type lat -thresh 'ge-80 && le0' -intersection
 
-cp $DATA/rtofs.$VDATE/$RUN/south_atlantic.lat.nc $COMOUTprep/rtofs.$VDATE/$RUN
+if [ $SENDCOM = "YES" ]; then
+ cp $DATA/rtofs.$VDATE/$RUN/south_atlantic.lat.nc $COMOUTprep/rtofs.$VDATE/$RUN
+fi
 
 gen_vx_mask \
 $DATA/rtofs.$VDATE/$RUN/south_atlantic.lat.nc \
@@ -66,7 +74,9 @@ $DATA/rtofs.$VDATE/$RUN/ice_mask.nc \
 $DATA/rtofs.$VDATE/$RUN/equatorial_atlantic.lat.nc \
 -type lat -thresh 'ge-30 && le30' -intersection
 
-cp $DATA/rtofs.$VDATE/$RUN/equatorial_atlantic.lat.nc $COMOUTprep/rtofs.$VDATE/$RUN
+if [ $SENDCOM = "YES" ]; then
+ cp $DATA/rtofs.$VDATE/$RUN/equatorial_atlantic.lat.nc $COMOUTprep/rtofs.$VDATE/$RUN
+fi
 
 gen_vx_mask \
 $DATA/rtofs.$VDATE/$RUN/equatorial_atlantic.lat.nc \
@@ -81,7 +91,9 @@ $DATA/rtofs.$VDATE/$RUN/ice_mask.nc \
 $DATA/rtofs.$VDATE/$RUN/north_pacific.lat.nc \
 -type lat -thresh 'ge0 && le70' -intersection
 
-cp $DATA/rtofs.$VDATE/$RUN/north_pacific.lat.nc $COMOUTprep/rtofs.$VDATE/$RUN
+if [ $SENDCOM = "YES" ]; then
+ cp $DATA/rtofs.$VDATE/$RUN/north_pacific.lat.nc $COMOUTprep/rtofs.$VDATE/$RUN
+fi
 
 gen_vx_mask \
 $DATA/rtofs.$VDATE/$RUN/north_pacific.lat.nc \
@@ -97,7 +109,9 @@ $DATA/rtofs.$VDATE/$RUN/north_pacific.lat.nc \
 $DATA/rtofs.$VDATE/$RUN/northwest_pacific.nc \
 -type lon -thresh 'ge101 && le180' -intersection -name NWPAC
 
-cp $DATA/rtofs.$VDATE/$RUN/northwest_pacific.nc $COMOUTprep/rtofs.$VDATE/$RUN
+if [ $SENDCOM = "YES" ]; then
+ cp $DATA/rtofs.$VDATE/$RUN/northwest_pacific.nc $COMOUTprep/rtofs.$VDATE/$RUN
+fi
 
 gen_vx_mask \
 $DATA/rtofs.$VDATE/$RUN/northeast_pacific.nc \
@@ -112,7 +126,9 @@ $DATA/rtofs.$VDATE/$RUN/ice_mask.nc \
 $DATA/rtofs.$VDATE/$RUN/south_pacific.lat.nc \
 -type lat -thresh 'ge-80 && le0' -intersection
 
-cp $DATA/rtofs.$VDATE/$RUN/south_pacific.lat.nc $COMOUTprep/rtofs.$VDATE/$RUN
+if [ $SENDCOM = "YES" ]; then
+ cp $DATA/rtofs.$VDATE/$RUN/south_pacific.lat.nc $COMOUTprep/rtofs.$VDATE/$RUN
+fi
 
 gen_vx_mask \
 $DATA/rtofs.$VDATE/$RUN/south_pacific.lat.nc \
@@ -120,7 +136,9 @@ $DATA/rtofs.$VDATE/$RUN/south_pacific.lat.nc \
 $DATA/rtofs.$VDATE/$RUN/southeast_pacific.nc \
 -type lon -thresh 'ge-180 && le-70' -intersection -name SEPAC
 
-cp $DATA/rtofs.$VDATE/$RUN/southeast_pacific.nc $COMOUTprep/rtofs.$VDATE/$RUN
+if [ $SENDCOM = "YES" ]; then
+ cp $DATA/rtofs.$VDATE/$RUN/southeast_pacific.nc $COMOUTprep/rtofs.$VDATE/$RUN
+fi
 
 gen_vx_mask \
 $DATA/rtofs.$VDATE/$RUN/south_pacific.lat.nc \
@@ -128,7 +146,9 @@ $DATA/rtofs.$VDATE/$RUN/south_pacific.lat.nc \
 $DATA/rtofs.$VDATE/$RUN/southwest_pacific.nc \
 -type lon -thresh 'ge115 && le180' -intersection -name SWPAC
 
-cp $DATA/rtofs.$VDATE/$RUN/southwest_pacific.nc $COMOUTprep/rtofs.$VDATE/$RUN
+if [ $SENDCOM = "YES" ]; then
+ cp $DATA/rtofs.$VDATE/$RUN/southwest_pacific.nc $COMOUTprep/rtofs.$VDATE/$RUN
+fi
 
 gen_vx_mask \
 $DATA/rtofs.$VDATE/$RUN/southeast_pacific.nc \
@@ -143,7 +163,9 @@ $DATA/rtofs.$VDATE/$RUN/ice_mask.nc \
 $DATA/rtofs.$VDATE/$RUN/equatorial_pacific.lat.nc \
 -type lat -thresh 'ge-30 && le30' -intersection
 
-cp $DATA/rtofs.$VDATE/$RUN/equatorial_pacific.lat.nc $COMOUTprep/rtofs.$VDATE/$RUN
+if [ $SENDCOM = "YES" ]; then
+ cp $DATA/rtofs.$VDATE/$RUN/equatorial_pacific.lat.nc $COMOUTprep/rtofs.$VDATE/$RUN
+fi
 
 gen_vx_mask \
 $DATA/rtofs.$VDATE/$RUN/equatorial_pacific.lat.nc \
@@ -151,7 +173,9 @@ $DATA/rtofs.$VDATE/$RUN/equatorial_pacific.lat.nc \
 $DATA/rtofs.$VDATE/$RUN/centraleast_pacific.nc \
 -type lon -thresh 'ge-180 && le-80' -intersection -name CEPAC
 
-cp $DATA/rtofs.$VDATE/$RUN/centraleast_pacific.nc $COMOUTprep/rtofs.$VDATE/$RUN
+if [ $SENDCOM = "YES" ]; then
+ cp $DATA/rtofs.$VDATE/$RUN/centraleast_pacific.nc $COMOUTprep/rtofs.$VDATE/$RUN
+fi
 
 gen_vx_mask \
 $DATA/rtofs.$VDATE/$RUN/equatorial_pacific.lat.nc \
@@ -159,7 +183,9 @@ $DATA/rtofs.$VDATE/$RUN/equatorial_pacific.lat.nc \
 $DATA/rtofs.$VDATE/$RUN/centralwest_pacific.nc \
 -type lon -thresh 'ge115 && le180' -intersection -name CWPAC
 
-cp $DATA/rtofs.$VDATE/$RUN/centralwest_pacific.nc $COMOUTprep/rtofs.$VDATE/$RUN
+if [ $SENDCOM = "YES" ]; then
+ cp $DATA/rtofs.$VDATE/$RUN/centralwest_pacific.nc $COMOUTprep/rtofs.$VDATE/$RUN
+fi
 
 gen_vx_mask \
 $DATA/rtofs.$VDATE/$RUN/centraleast_pacific.nc \
@@ -174,7 +200,9 @@ $DATA/rtofs.$VDATE/$RUN/ice_mask.nc \
 $DATA/rtofs.$VDATE/$RUN/indian.lat.nc \
 -type lat -thresh 'ge-75 && le30' -intersection
 
-cp $DATA/rtofs.$VDATE/$RUN/indian.lat.nc $COMOUTprep/rtofs.$VDATE/$RUN
+if [ $SENDCOM = "YES" ]; then
+ cp $DATA/rtofs.$VDATE/$RUN/indian.lat.nc $COMOUTprep/rtofs.$VDATE/$RUN
+fi
 
 gen_vx_mask \
 $DATA/rtofs.$VDATE/$RUN/indian.lat.nc \
@@ -203,7 +231,9 @@ $DATA/rtofs.$VDATE/$RUN/ice_mask.nc \
 $DATA/rtofs.$VDATE/$RUN/mediterranean.lat.nc \
 -type lat -thresh 'ge29 && le48' -intersection
 
-cp $DATA/rtofs.$VDATE/$RUN/mediterranean.lat.nc $COMOUTprep/rtofs.$VDATE/$RUN
+if [ $SENDCOM = "YES" ]; then
+ cp $DATA/rtofs.$VDATE/$RUN/mediterranean.lat.nc $COMOUTprep/rtofs.$VDATE/$RUN
+fi
 
 gen_vx_mask \
 $DATA/rtofs.$VDATE/$RUN/mediterranean.lat.nc \
@@ -211,7 +241,9 @@ $DATA/rtofs.$VDATE/$RUN/mediterranean.lat.nc \
 $DATA/rtofs.$VDATE/$RUN/mask.mediterranean.nc \
 -type lon -thresh 'ge-2 && le45' -intersection -name MEDIT
 
-cp -rp $DATA/rtofs.$VDATE/$RUN/*mask* $COMOUTprep/rtofs.$VDATE/$RUN
+if [ $SENDCOM = "YES" ]; then
+ cp -rp $DATA/rtofs.$VDATE/$RUN/*mask* $COMOUTprep/rtofs.$VDATE/$RUN
+fi
 
 exit
 
