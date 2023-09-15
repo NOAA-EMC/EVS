@@ -1085,7 +1085,7 @@ class Reference():
                         'HGT': {'fcst_var_names': ['HGT'],
                                 'fcst_var_levels': [
                                     'P1000', 'P700', 'P500', 'P250'
-                                ],
+                                    ],
                                 'fcst_var_thresholds': '',
                                 'fcst_var_options': '',
                                 'obs_var_names': ['HGT','GH'],
@@ -3172,11 +3172,27 @@ class Reference():
                                     'plot_group':'precip'},
                         'APCP_06': {'fcst_var_names': ['APCP', 'APCP_06'],
                                     'fcst_var_levels': ['A06','A6'],
-                                    'fcst_var_thresholds': '',
+                                    'fcst_var_thresholds': ('>=0.1, >=1, >=5, >=10, >=25, >=50, >=75, >=0.254, >=2.54,'
+                                                            + ' >=6.35,'
+                                                            + ' >=12.7,'
+                                                            + ' >=19.05,'
+                                                            + ' >=25.4,'
+                                                            + ' >=38.1,'
+                                                            + ' >=50.8,'
+                                                            + ' >=76.2,'
+                                                            + ' >=101.6'),
                                     'fcst_var_options': '',
                                     'obs_var_names': ['APCP', 'APCP_06', 'APCP_01_Z0'],
                                     'obs_var_levels': ['A06','A6'],
-                                    'obs_var_thresholds': '',
+                                    'obs_var_thresholds': ('>=0.1, >=1, >=5, >=10, >=25, >=50, >=75, >=0.254, >=2.54,'
+                                                           + ' >=6.35,'
+                                                           + ' >=12.7,'
+                                                           + ' >=19.05,'
+                                                           + ' >=25.4,'
+                                                           + ' >=38.1,'
+                                                           + ' >=50.8,'
+                                                           + ' >=76.2,'
+                                                           + ' >=101.6'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
                         'APCP_24': {'fcst_var_names': ['APCP', 'APCP_24'],

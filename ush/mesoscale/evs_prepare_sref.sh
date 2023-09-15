@@ -152,7 +152,7 @@ if [ $modnam = ccpa ] ; then
     echo "Warning:  No CCPA data available for ${VDATE}" > mailmsg
     echo Missing file is $COMINccpa/ccpa.${vday}/??/ccpa.t??z.03h.hrap.conus.gb2  >> mailmsg
     echo "Job ID: $jobid" >> mailmsg
-    cat mailmsg | mail -s "$subject" $maillist
+    cat mailmsg | mail -s "$subject" $maillist  
     exit
  fi
 fi
@@ -182,7 +182,7 @@ export output_base=${WORK}/pb2nc
    echo "Warning:  No Prepbufr data available for ${VDATE}" > mailmsg
    echo Missing file is $COMINprepbufr/gfs.${vday}/??/atmos/gfs.t??z.prepbufr  >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
-   cat mailmsg | mail -s "$subject" $maillist
+   cat mailmsg | mail -s "$subject" $maillist 
    exit
 
  fi
