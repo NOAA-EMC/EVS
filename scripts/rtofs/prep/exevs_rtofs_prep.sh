@@ -14,7 +14,9 @@ cd $COMOUTprep/rtofs.$VDATE
 leads='n024 f024 f048 f072 f096 f120 f144 f168 f192'
 for lead in ${leads}; do
   pattern="rtofs_glo_*_${lead}_*.nc"
-  cp -p --no-clobber $COMINrtofs/rtofs.$VDATE/${pattern} . &
+  if [ $SENDCOM = "YES" ]; then
+   cp -p --no-clobber $COMINrtofs/rtofs.$VDATE/${pattern} . &
+  fi
 done
 wait
 rm -f *hvr*.nc  # don't need these

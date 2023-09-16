@@ -241,8 +241,9 @@ done
 
 tar -cvf evs.plots.sref.cape.past${past_days}days.v${VDATE}.tar *.png
 
-cp  evs.plots.sref.cape.past${past_days}days.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
-
+if [ $SENDCOM = YES ] ; then
+ cp  evs.plots.sref.cape.past${past_days}days.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
+fi
 
 
 

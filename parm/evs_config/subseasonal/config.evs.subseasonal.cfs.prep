@@ -38,7 +38,6 @@ export start_date="$INITDATE"
 export end_date="$INITDATE"
 export make_met_data_by="INIT"
 ## DATA DIRECTIVE SETTINGS
-export SENDARCH="YES"
 export KEEPDATA="YES"
 ####################################################
 # SETTINGS FOR USE CASES

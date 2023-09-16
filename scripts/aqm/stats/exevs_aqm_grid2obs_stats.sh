@@ -2,7 +2,7 @@
 #######################################################################
 ##  UNIX Script Documentation Block
 ##                      .
-## Script name:         exevs_aqmv6_stats.sh
+## Script name:         exevs_aqmv_grid2obs_stats.sh
 ## Script description:  Perform MetPlus PointStat of Air Quality Model.
 ## Original Author   :  Perry Shafran
 ##
@@ -17,6 +17,8 @@ set -x
 
 mkdir -p $DATA/logs
 mkdir -p $DATA/stat
+export finalstat=$DATA/final
+mkdir -p $DATA/final
 
 #######################################################################
 # Define INPUT OBS DATA TYPE for PointStat
@@ -31,14 +33,8 @@ fi
 ## Note the v6 and v7 comout directory structure are different
 ## Check for correct scripts called
 ##
-##if [ "${fcst_input_ver}" == "v6" ]; then
     export dirname=cs
     export gridspec=148
-##elif [ "${fcst_input_ver}" == "v7" ]; then
-##    echo "EVS_CHECK :: This script exevs_aqmv6_stats.sh is not for ${fcst_input_ver}"
-##else
-##    echo "EVS_CHECK :: The AQM version number is not defined :: ${fcst_input_ver}"
-##fi
 export fcstmax=72
 #
 ## export MASK_DIR is declared in the ~/EVS/jobs/aqm/stats/JEVS_AQM_STATS 
@@ -141,7 +137,7 @@ do
           let "numpmfcst=numpmfcst+1"
         else
           export subject="t${acyc}z pm25${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
-          echo "Warning: No AQM awpozcon${bctag} forecast was available for ${aday} t${acyc}z" > mailmsg
+          echo "Warning: No AQM pm${bctag} forecast was available for ${aday} t${acyc}z" > mailmsg
           echo "Missing file is ${fcst_file}" >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
           cat mailmsg | mail -s "$subject" $maillist
@@ -168,12 +164,19 @@ do
                   run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstOZONE_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
                   export err=$?; err_chk
                   mkdir -p $COMOUTsmall
-                  cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
+		  if [ $SENDCOM = "YES" ]; then
+                   cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
+		  fi
                   if [ $cyc = 23 ]
                   then
                     mkdir -p $COMOUTfinal
+		    cp $COMOUTsmall/*${outtyp}${bcout}* $finalstat
+		    cd $finalstat
                     run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstOZONE_obsAIRNOW_GatherByDay.conf $PARMevs/metplus_config/machine.conf
                     export err=$?; err_chk
+		    if [ $SENDCOM = "YES" ]; then
+		     cp $finalstat/evs.stats.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_ozone.v${VDATE}.stat $COMOUTfinal
+		    fi
                   fi
                   else
                   echo "NO O3 FORECAST OR OBS TO VERIFY"
@@ -186,12 +189,18 @@ do
             run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstPM2p5_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
             export err=$?; err_chk
             mkdir -p $COMOUTsmall
-            cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
+	    if [ $SENDCOM = "YES" ]; then
+             cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
+	    fi
             if [ $cyc = 23 ]
             then
                mkdir -p $COMOUTfinal
+	       cp $COMOUTsmall/*${outtyp}${bcout}* $finalstat
                run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstPM_obsANOWPM_GatherByDay.conf $PARMevs/metplus_config/machine.conf
                export err=$?; err_chk
+	       if [ $SENDCOM = "YES" ]; then
+		cp $finalstat/evs.stats.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_pm25.v${VDATE}.stat $COMOUTfinal
+	       fi
             fi
             else
             echo "NO PM FORECAST OR OBS TO VERIFY"
@@ -218,8 +227,9 @@ echo "obs_daily_found = ${obs_daily_found}"
 
 
 if [ $cyc = 11 ]
-fcstmax=48
 then
+   
+  fcstmax=48
 
   for biastyp in raw bc
   do
@@ -279,10 +289,16 @@ then
       then 
         run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstOZONEMAX_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
 	export err=$?; err_chk
-        cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
+	if [ $SENDCOM = "YES" ]; then
+         cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
+	fi
         export outtyp=OZMAX8
+	cp $COMOUTsmall/*${outtyp}${bcout}* $finalstat
         run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstOZONEMAX_obsAIRNOW_GatherByDay.conf $PARMevs/metplus_config/machine.conf
 	export err=$?; err_chk
+	if [ $SENDCOM = "YES" ]; then
+         cp $finalstat/evs.stats.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_ozmax8.v${VDATE}.stat $COMOUTfinal
+        fi	 
        else
          echo "NO OZMAX8 OBS OR MODEL DATA"
          echo "OZMAX8, OBS_DAILY_FOUND", $ozmax8, $obs_daily_found
@@ -297,8 +313,8 @@ fi
 # Verification is being done on both raw and bias-corrected output data
 
 if [ $cyc = 04 ]
-fcstmax=48
 then
+  fcstmax=48
 
   for biastyp in raw bc
   do
@@ -373,10 +389,16 @@ then
       then
         run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/PointStat_fcstPMAVE_obsANOWPM.conf $PARMevs/metplus_config/machine.conf
 	export err=$?; err_chk
-        cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
+	if [ $SENDCOM = "YES" ]; then
+         cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
+	fi
         export outtyp=PMAVE
+	cp $COMOUTsmall/*${outtyp}${bcout}* $finalstat
         run_metplus.py $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/stats/StatAnalysis_fcstPMAVE_obsANOWPM_GatherByDay.conf $PARMevs/metplus_config/machine.conf
 	export err=$?; err_chk
+	if [ $SENDCOM = "YES" ]; then
+        	cp $finalstat/evs.stats.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_pmave.v${VDATE}.stat $COMOUTfinal
+	fi
        else
          echo "NO PMAVE OBS OR MODEL DATA"
          echo "PMAVE1, OBS_DAILY_FOUND", $pmave1, $obs_daily_found
