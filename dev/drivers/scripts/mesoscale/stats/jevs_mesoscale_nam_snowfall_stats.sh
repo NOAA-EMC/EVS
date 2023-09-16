@@ -4,7 +4,7 @@
 #PBS -q "dev"
 #PBS -A VERF-DEV
 #PBS -l walltime=00:15:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=25GB
+#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
 #PBS -l debug=true
 #PBS -V
 
@@ -30,10 +30,6 @@ export cyc=$(date +"%H")
 export cycle=t${cyc}z
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
-export PARMevs=$HOMEevs/parm
-export USHevs=$HOMEevs/ush
-export EXECevs=$HOMEevs/exec
-export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
 
 export VDATE=$(date -d "today -2 day" +"%Y%m%d")
 export STEP="stats"
@@ -44,7 +40,10 @@ export machine=WCOSS2
 export USE_CFP=YES
 export nproc=128  
 export evs_run_mode="production"
-export maillist='geoffrey.manikin@noaa.gov,mallory.row@noaa.gov'
+
+export maillist='alicia.bentley@noaa.gov,roshan.shrestha@noaa.gov'
+# export maillist="firstname.lastname@noaa.gov"
+
 export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
 source /usr/share/lmod/lmod/init/sh
