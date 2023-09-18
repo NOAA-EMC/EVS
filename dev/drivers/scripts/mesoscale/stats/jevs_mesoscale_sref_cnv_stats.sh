@@ -42,6 +42,7 @@ export run_mpi=yes
 export gather=no
 
 export maillist='alicia.bentley@noaa.gov,binbin.zhou@noaa.gov'
+# export maillist="firstname.lastname@noaa.gov"
 
 if [ -z "$maillist" ]; then
 

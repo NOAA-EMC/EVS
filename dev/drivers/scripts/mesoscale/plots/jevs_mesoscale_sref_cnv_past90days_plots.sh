@@ -37,7 +37,6 @@ export KEEPDATA=NO
 export cyc=00
 export past_days=90
 
-#export run_mpi=yes: always miss one plot 
 export run_mpi=yes
 export valid_time=both
 

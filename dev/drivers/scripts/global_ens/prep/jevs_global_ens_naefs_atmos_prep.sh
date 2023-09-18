@@ -39,11 +39,6 @@ export run_mpi=yes
 export get_gefs_bc_apcp24h=yes
 export get_model_bc=yes
 
-########################################
-# This is for NAEFS v7
-export COMINgefs_bc=/lfs/h2/emc/ptmp/bo.cui/com/${MODELNAME}/${naefs_ver}
-########################################
-
 export maillist='geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'
 
 if [ -z "$maillist" ]; then
