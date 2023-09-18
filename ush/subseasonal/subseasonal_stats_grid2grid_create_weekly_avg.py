@@ -33,8 +33,6 @@ valid_hr_end = os.environ['valid_hr_end']
 valid_hr_inc = os.environ['valid_hr_inc']
 fhr_list = os.environ['fhr_list'].split(',')
 fhr_inc = '12'
-#fhr_end = os.environ['fhr_end']
-#fhr_inc = os.environ['fhr_inc']
 
 # Process run time arguments
 if len(sys.argv) != 4:
@@ -62,16 +60,8 @@ output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
 print("\nCreating weekly average files")
 valid_hr = int(valid_hr_start)
 while valid_hr <= int(valid_hr_end):
-    #if job_name == 'DailyAvg_GeoHeightAnom':
-        #if int(valid_hr) % 12 != 0 :
-            #valid_hr+=int(valid_hr_inc)
-            #continue
     weekly_avg_valid_end = datetime.datetime.strptime(DATE+str(valid_hr),
                                                       '%Y%m%d%H')
-    #if job_name == 'DailyAvg_GeoHeightAnom':
-        #weekly_avg_valid_start = (weekly_avg_valid_end
-                                  #- datetime.timedelta(hours=156))
-    #else:
     weekly_avg_valid_start = datetime.datetime.strptime(WEEKLYSTART
                                                         +str(valid_hr),
                                                         '%Y%m%d%H')
@@ -81,9 +71,6 @@ while valid_hr <= int(valid_hr_end):
     while weekly_avg_day <= weekly_avg_day_end:
         weekly_avg_day_fhr_end = int(weekly_avg_day * 24)
         weekly_avg_file_list = []
-        #if job_name == 'DailyAvg_GeoHeightAnom':
-            #weekly_avg_day_fhr_start = weekly_avg_day_fhr_end - 156
-        #else:
         weekly_avg_day_fhr_start = weekly_avg_day_fhr_end - 168
         weekly_avg_day_init = (weekly_avg_valid_end
                               - datetime.timedelta(days=weekly_avg_day))
@@ -158,9 +145,6 @@ while valid_hr <= int(valid_hr_end):
                       +', init '+str(weekly_avg_day_init)+" "
                       +weekly_avg_day_fhr_DATAROOT_input_file+" or "
                       +weekly_avg_day_fhr_COMIN_input_file)
-            #if job_name == 'DailyAvg_GeoHeightAnom':
-                #weekly_avg_day_fhr+=12
-            #else:
             weekly_avg_day_fhr+=int(fhr_inc)
         if len(weekly_avg_fcst_file_list) >= 12:
             weekly_avg_fcst = (
@@ -170,9 +154,6 @@ while valid_hr <= int(valid_hr_end):
             weekly_avg_obs = (
                 weekly_avg_obs_sum/len(weekly_avg_obs_file_list)
             )
-        #if job_name == 'DailyAvg_GeoHeightAnom':
-            #expected_nfiles = 14
-        #else:
         if fhr_inc == '12':
             expected_nfiles = 12
         if len(weekly_avg_fcst_file_list) >= expected_nfiles \
@@ -268,11 +249,7 @@ while valid_hr <= int(valid_hr_end):
         else:
             print("WARNING: Cannot create weekly average file "+output_file+" "
                   +"; need at least "+str(expected_nfiles)+" input files")
-        #if job_name == 'DailyAvg_GeoHeightAnom':
-            #weekly_avg_day+=1
-        #else:
         weekly_avg_day+=7
-        #weekly_avg_day+=int(fhr_inc)/24.
         print("")
     valid_hr+=int(valid_hr_inc)
     
