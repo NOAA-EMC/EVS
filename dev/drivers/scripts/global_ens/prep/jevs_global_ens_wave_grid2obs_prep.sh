@@ -10,9 +10,6 @@
 
 set -x 
 
-##%include <head.h>
-##%include <envir-p1.h>
-
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 ############################################################
@@ -44,37 +41,24 @@ export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export KEEPDATA=${KEEPDATA:-NO}
 
+export maillist='alicia.bentley@noaa.gov,steven.simon@noaa.gov'
 
 ## developers directories
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-
 export OUTPUTROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMOUT=$OUTPUTROOT/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}
 
-######################################
-# Correct MET/METplus roots (Aug 2022)
-######################################
-#export MET_ROOT=/apps/ops/prod/libs/intel/${intel_ver}/met/${met_ver}
-#export MET_BASE=${MET_ROOT}/share/met
-#export METPLUS_PATH=/apps/ops/prod/libs/intel/${intel_ver}/metplus/${metplus_ver}
-#export PATH=${METPLUS_PATH}/ush:${MET_ROOT}/bin:${PATH}
-
-export job=${PBS_JOBNAME:-jevs_global_ens_wave_g2o_prep}
+export job=${PBS_JOBNAME:-jevs_global_ens_wave_grid2obs_prep}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
-
 
 ############################################################
 # CALL executable job script here
 ############################################################
 $HOMEevs/jobs/global_ens/prep/JEVS_GLOBAL_ENS_WAVE_GRID2OBS_PREP
 
-##%include <tail.h>
-##%manual
 ######################################################################
 # Purpose: This does the prep work for the global_ens GEFS-Wave model
 ######################################################################
-##%end
-exit

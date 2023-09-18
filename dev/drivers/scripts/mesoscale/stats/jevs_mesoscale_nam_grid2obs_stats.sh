@@ -5,7 +5,7 @@
 #PBS -q "dev"
 #PBS -A VERF-DEV
 #PBS -l walltime=4:59:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=32GB
+#PBS -l place=vscatter:exclhost,select=3:ncpus=128:ompthreads=1
 #PBS -l debug=true
 #PBS -V
 
@@ -45,16 +45,10 @@ set -x
   export QUEUESHARED="dev_shared"
   export PARTITION_BATCH=""
 
+
 # EVS Settings
   export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
-# Subdirectories to EVS Home Directory
-  export PARMevs=$HOMEevs/parm
-  export USHevs=$HOMEevs/ush
-  export EXECevs=$HOMEevs/exec
-  export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
-  export SCRIPTSevs=$HOMEevs/scripts
-  export MET_PLUS_CONF="${PARMevs}/metplus_config/mesoscale/grid2obs/stats"
 
 # EVS configuration
   export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
@@ -79,13 +73,15 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
   export VDATE=$(date -d "today -1 day" +"%Y%m%d")
 
 # Developer Settings
-  export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/logan.dawson/evs/v1.0/prep/cam
+  export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/prep/cam
+  export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/$NET/$evs_ver/prep/cam
+
   export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
   export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 
   export cyc=$(date -d "today" +"%H")
-  # export maillist="roshan.shrestha@noaa.gov,geoffrey.manikin@noaa.gov"
-  export maillist="roshan.shrestha@noaa.gov"
+  export maillist="roshan.shrestha@noaa.gov,alicia.bentley@noaa.gov"
+  # export maillist="firstname.lastname@noaa.gov"
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS

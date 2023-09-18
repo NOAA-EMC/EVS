@@ -333,8 +333,10 @@ done
 cd ${PLOTDIR}
 tar -cvf evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar *png
 
-mkdir -m 775 -p $COMOUTplots
-cp evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
+if [ $SENDCOM = "YES" ]; then
+ mkdir -m 775 -p $COMOUTplots
+ cp evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
+fi
 
 ##
 ## Headline Plots
@@ -438,8 +440,10 @@ cd ${PLOTDIR_headline}
 tarfile=evs.plots.${COMPONENT}.${RUN}.headline.last31days.v${VDATE}.tar
 tar -cvf ${tarfile} *png
 
-mkdir -m 775 -p ${COMOUTheadline}
-cp ${tarfile} ${COMOUTheadline}
+if [ $SENDCOM = "YES" ]; then
+ mkdir -m 775 -p ${COMOUTheadline}
+ cp ${tarfile} ${COMOUTheadline}
+fi
 
 exit
 

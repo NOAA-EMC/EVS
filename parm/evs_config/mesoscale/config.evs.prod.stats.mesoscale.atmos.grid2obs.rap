@@ -18,12 +18,10 @@ export MET_CONFIG_OVERRIDES=""
 # Logging
 export METPLUS_VERBOSITY="DEBUG"
 export MET_VERBOSITY="5"
-export LOG_MET_OUTPUT_TO_METPLUS="yes"
 
 # Time Settings
 export FHR_START=0
 export FHR_INCR=1
-#export FHR_END="51"
 export FHR_END="21"
 
 # Model/Obs Settings
@@ -50,7 +48,6 @@ fi
     export SKIP_IF_OUTPUT_EXISTS="yes"
     export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awip32f{lead?fmt=%2H}.grib2"
     if [ "$OBSNAME" = "raob" ]; then
-      # export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH"
       export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD"
     elif [ "$OBSNAME" = "metar" ]; then
       export VAR_NAME_LIST=""
@@ -58,7 +55,6 @@ fi
       echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
       exit 1
     fi
- #   export MASK_POLY_LIST="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix/masks/G221_NAMER.nc"
     export MASK_POLY_LIST="${FIXevs}/masks/G221_NAMER.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS.nc, ${FIXevs}/masks/Alaska_G221.nc"
     export MASK_CUSTOM_LIST=""
     export FHR_GROUP_LIST="SHORT FULL"
@@ -72,7 +68,6 @@ fi
     export SKIP_IF_OUTPUT_EXISTS="yes"
     export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awip32f{lead?fmt=%2H}.grib2"
     if [ "$OBSNAME" = "raob" ]; then
-      # export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH SBCAPE MLCAPE HPBL"
       export VAR_NAME_LIST="SBCAPE MLCAPE HPBL"
     elif [ "$OBSNAME" = "metar" ]; then
       export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS"
@@ -80,8 +75,6 @@ fi
       echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
       exit 1
     fi
-#    export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G221.nc, ${FIXevs}/masks/Bukovsky_G221_Appalachia.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_South.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G221_CPlains.nc, ${FIXevs}/masks/Bukovsky_G221_DeepSouth.nc, ${FIXevs}/masks/Bukovsky_G221_GreatBasin.nc, ${FIXevs}/masks/Bukovsky_G221_GreatLakes.nc, ${FIXevs}/masks/Bukovsky_G221_Mezquital.nc, ${FIXevs}/masks/Bukovsky_G221_MidAtlantic.nc, ${FIXevs}/masks/Bukovsky_G221_NorthAtlantic.nc, ${FIXevs}/masks/Bukovsky_G221_NPlains.nc, ${FIXevs}/masks/Bukovsky_G221_NRockies.nc, ${FIXevs}/masks/Bukovsky_G221_PacificNW.nc, ${FIXevs}/masks/Bukovsky_G221_PacificSW.nc, ${FIXevs}/masks/Bukovsky_G221_Prairie.nc, ${FIXevs}/masks/Bukovsky_G221_Southeast.nc, ${FIXevs}/masks/Bukovsky_G221_Southwest.nc, ${FIXevs}/masks/Bukovsky_G221_SPlains.nc, ${FIXevs}/masks/Bukovsky_G221_SRockies.nc"
-#    export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G221_CONUS.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_South.nc"
     export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G221_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_South.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_West.nc"
     export MASK_CUSTOM_LIST=""
     export FHR_GROUP_LIST="SHORT FULL"
@@ -113,7 +106,6 @@ fi
        	  export FHR_INCR_FULL="06"
        	  export FHR_END_SHORT="81"
        	  export FHR_INCR_SHORT="06"
-       	  #-------
    
   elif [ "$NEST" = "conusc" ]; then
     export SKIP_IF_OUTPUT_EXISTS="yes"
@@ -126,7 +118,6 @@ fi
       echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
       exit 1
     fi
-#    export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G221_CONUS.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_South.nc"
     export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G221_Appalachia.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_South.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G221_CPlains.nc, ${FIXevs}/masks/Bukovsky_G221_DeepSouth.nc, ${FIXevs}/masks/Bukovsky_G221_GreatBasin.nc, ${FIXevs}/masks/Bukovsky_G221_GreatLakes.nc, ${FIXevs}/masks/Bukovsky_G221_Mezquital.nc, ${FIXevs}/masks/Bukovsky_G221_MidAtlantic.nc, ${FIXevs}/masks/Bukovsky_G221_NorthAtlantic.nc, ${FIXevs}/masks/Bukovsky_G221_NPlains.nc, ${FIXevs}/masks/Bukovsky_G221_NRockies.nc, ${FIXevs}/masks/Bukovsky_G221_PacificNW.nc, ${FIXevs}/masks/Bukovsky_G221_PacificSW.nc, ${FIXevs}/masks/Bukovsky_G221_Prairie.nc, ${FIXevs}/masks/Bukovsky_G221_Southeast.nc, ${FIXevs}/masks/Bukovsky_G221_Southwest.nc, ${FIXevs}/masks/Bukovsky_G221_SPlains.nc, ${FIXevs}/masks/Bukovsky_G221_SRockies.nc"
 
     export MASK_CUSTOM_LIST=""
@@ -143,7 +134,6 @@ fi
     if [ "$OBSNAME" = "raob" ]; then
       export VAR_NAME_LIST=""
     elif [ "$OBSNAME" = "metar" ]; then
-#      export VAR_NAME_LIST="TMP2m DPT2m RH2m UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc VIS CEILING"
       export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc VIS"
     else
       echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
@@ -169,9 +159,7 @@ fi
       echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
       exit 1
     fi
-    #export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc"
-     export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G221.nc"
-    # export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc, ${FIXevs}/masks/Alaska_G221.nc"
+    export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G221.nc"
     export MASK_CUSTOM_LIST=""
     export FHR_GROUP_LIST="SHORT FULL"
     export MIN_IHOUR="00"
@@ -191,7 +179,6 @@ fi
       echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
       exit 1
     fi
-    # export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc, ${FIXevs}/masks/Alaska_G221.nc"
     export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G221.nc"
     export MASK_CUSTOM_LIST=""
     export FHR_GROUP_LIST="SHORT FULL"
@@ -203,7 +190,6 @@ fi
 
   elif [ "$NEST" = "spc_otlk" ]; then
     export SKIP_IF_OUTPUT_EXISTS="yes"
-#   export FHR_GROUP_LIST="SHORT FULL"
     export FHR_GROUP_LIST="FULL"
     export MODEL_INPUT_TEMPLATE="rap.{init?fmt=%Y%m%d}/rap.t{init?fmt=%2H}z.awip32f{lead?fmt=%2H}.grib2"
     if [ "$OBSNAME" = "raob" ]; then

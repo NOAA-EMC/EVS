@@ -828,6 +828,12 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     var_long_name = variable_translator[var_long_name_key]
     units = df['FCST_UNITS'].tolist()[0]
     if units in reference.unit_conversions:
+        do_unit_conversion = True
+        if var_long_name_key == 'TMP' and level[0] == 'P':
+            do_unit_conversion = False
+    else:
+        do_unit_conversion = False
+    if do_unit_conversion:
         if thresh and '' not in thresh:
             thresh_labels = [float(tlab) for tlab in thresh_labels]
             thresh_labels = reference.unit_conversions[units]['formula'](thresh_labels)
@@ -985,10 +991,16 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     else:
         level_string = f'{level}'
         level_savename = f'{level}_'
+    if var_savename == 'ICEC_Z0_mean':
+        level_string = ''
+    if var_savename == 'TMP_Z0_mean':
+        level_string = 'Sea Surface '
     if metric2_name is not None:
         title1 = f'{metric1_string} and {metric2_string}'
     else:
         title1 = f'{metric1_string}'
+    if metric1_string == 'Brier Score':
+        thresh = ''
     if interp_pts and '' not in interp_pts:
         title1+=f' {interp_pts_string}'
     if thresh and '' not in thresh:

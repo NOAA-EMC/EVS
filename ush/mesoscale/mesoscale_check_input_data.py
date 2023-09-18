@@ -358,6 +358,8 @@ if proceed:
                     'echo', f'\"{DATAmsg_body2}\"', '>>mailmsg'
                 ])
                 cutil.run_shell_command([
+                    # 'cat', 'mailmsg', '|' , 'mail.py', '-s', f'\"{subject}\"', 
+                    # f'\"{maillist}\"', '-v'
                     'cat', 'mailmsg', '|' , 'mail', '-s', f'\"{subject}\"', 
                     f'\"{maillist}\"'
                 ])

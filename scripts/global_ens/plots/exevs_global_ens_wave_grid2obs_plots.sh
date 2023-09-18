@@ -115,8 +115,8 @@ periods='PAST31DAYS PAST90DAYS'
 if [ $gather = yes ] ; then
   echo "copying all images into one directory"
   cp ${DATA}/wave/*png ${DATA}/sfcshp/.  ## lead_average plots
-  nc=$(ls ${DATA}/sfcshp/*.fhr_valid*.png | wc -l | awk '{print $1}')
-  echo "copied $nc lead_average plots"
+  nc=$(ls ${DATA}/sfcshp/*png | wc -l | awk '{print $1}')
+  echo "copied $nc plots"
   for period in ${periods} ; do
     period_lower=$(echo ${period,,})
     if [ ${period} = 'PAST31DAYS' ] ; then

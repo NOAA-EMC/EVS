@@ -111,7 +111,9 @@ run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
 run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
 -c $CONFIGevs/${VERIF_CASE}/$STEP/GridStat_fcstRTOFS_obsOSISAF_sh.conf
 
-cp $STATSDIR/$RUN.$VDATE/*stat $COMOUTsmall
+if [ $SENDCOM = "YES" ]; then
+ cp $STATSDIR/$RUN.$VDATE/*stat $COMOUTsmall
+fi
 export STATSOUT=$STATSDIR/$RUN.$VDATE
 
 # check if stat files exist; exit if not
@@ -125,7 +127,9 @@ fi
 run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
 -c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstRTOFS.conf
 
-cp $STATSOUT/evs*stat $COMOUTfinal
+if [ $SENDCOM = "YES" ]; then
+ cp $STATSOUT/evs*stat $COMOUTfinal
+fi
 
 exit
 
