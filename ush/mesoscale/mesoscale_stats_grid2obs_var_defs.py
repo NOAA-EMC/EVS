@@ -897,7 +897,6 @@ generate_stats_jobs_dict = {
             'nam': {
                 'var1_fcst_name': 'PTYPE',
                 'var1_fcst_levels': '\\"(*,*)\\"',
-                #'var1_fcst_levels': 'L0',
                 'var1_fcst_thresholds': 'ge1.0, ge2.0, ge3.0, ge4.0',
                 'var1_fcst_options': 'set_attr_name = \\"PTYPE\\";',
                 'var1_obs_name': 'PRWE',

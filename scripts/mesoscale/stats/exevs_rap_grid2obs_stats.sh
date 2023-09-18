@@ -11,16 +11,15 @@
 set -x
 
   export VERIF_CASE_STEP_abbrev="g2os"
-  
+
 # Set run mode
   if [ $RUN_ENVIR = nco ]; then
       export evs_run_mode="production"
-      source $config
   else
       export evs_run_mode=$evs_run_mode
   fi
   echo "RUN MODE:$evs_run_mode"
-  
+
 # Make directory
   mkdir -p ${VERIF_CASE}_${STEP}
   mkdir -p $DATA/logs
@@ -34,14 +33,11 @@ set -x
   export model0=`echo $MODELNAME | tr A-Z a-z`
   echo $model1
   
-##
-# Set Basic Environment Variables
-last_cyc=21
- #NEST_LIST="namer"
- NEST_LIST="namer conus conusc ak akc spc_otlk subreg"
-##
 
-VERIF_TYPES="raob metar"
+# Set Basic Environment Variables
+ last_cyc=21
+ NEST_LIST="namer conus conusc ak akc spc_otlk subreg"
+ VERIF_TYPES="raob metar"
 
 echo "*****************************"
 echo "Reformat setup begin"
@@ -138,7 +134,9 @@ if [ $USE_CFP = YES ]; then
       export MP_CMDFILE=${poe_script}
       if [ $machine = WCOSS2 ]; then
          export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-	 launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
+         nselect=$(cat $PBS_NODEFILE | wc -l)
+         nnp=$(($nselect * $nproc))
+         launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
       elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
          export SLURM_KILL_BAD_EXIT=0
 	 launcher="srun --export=ALL --multi-prog"
@@ -234,7 +232,9 @@ if [ $USE_CFP = YES ]; then
 		export MP_CMDFILE=${poe_script}
 		if [ $machine = WCOSS2 ]; then
 			export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-			launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
+                        nselect=$(cat $PBS_NODEFILE | wc -l)
+                        nnp=$(($nselect * $nproc))
+                        launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
 		elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
 			export SLURM_KILL_BAD_EXIT=0
 			launcher="srun --export=ALL --multi-prog"
@@ -313,7 +313,9 @@ if [ $USE_CFP = YES ]; then
 		export MP_CMDFILE=${poe_script}
 		if [ $machine = WCOSS2 ]; then
 			export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-			launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
+                        nselect=$(cat $PBS_NODEFILE | wc -l)
+                        nnp=$(($nselect * $nproc))
+                        launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
 		elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
 			export SLURM_KILL_BAD_EXIT=0
 			launcher="srun --export=ALL --multi-prog"
@@ -343,13 +345,13 @@ if [ $SENDCOM = YES ]; then
         if [ -d $MODEL_DIR_PATH ]; then
            MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
            mkdir -p $COMOUTsmall
-           for FILE in $MODEL_DIR_PATH/*; do	      
+           for FILE in $MODEL_DIR_PATH/*; do
              cp -v $FILE $COMOUTsmall/.
            done
         fi
       done
   done
-fi  
+fi
 
 echo "*****************************"
 echo "Gather3 jobs begin"
@@ -357,7 +359,6 @@ date
 echo "*****************************"
 
 # Final Stats Job
-# if [ "$cyc" -ge "$last_cyc" ]; then
     export job_type="gather3"
     export njob=1
     if [ $RUN_ENVIR = nco ]; then
@@ -403,7 +404,9 @@ echo "*****************************"
             export MP_CMDFILE=${poe_script}
             if [ $machine = WCOSS2 ]; then
                 export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-                launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
+                nselect=$(cat $PBS_NODEFILE | wc -l)
+                nnp=$(($nselect * $nproc))
+                launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
             elif [ $machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
                 export SLURM_KILL_BAD_EXIT=0
                 launcher="srun --export=ALL --multi-prog"
@@ -420,7 +423,6 @@ echo "*****************************"
             nc=$((nc+1))
         done
     fi
-#fi
 
 echo "*****************************"
 echo "Gather3 jobs done"

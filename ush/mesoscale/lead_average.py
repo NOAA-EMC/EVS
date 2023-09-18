@@ -5,6 +5,7 @@
 # Contact(s):    Marcel Caron
 # Developed:     Nov. 18, 2021 by Marcel Caron 
 # Last Modified: Jul. 13, 2023 by Marcel Caron             
+# Last Modified: Sep. 13, 2023 by Roshan Shrestha             
 # Title:         Line plot of verification metric as a function of 
 #                lead time
 # Abstract:      Plots METplus output (e.g., BCRMSE) as a line plot, 
@@ -217,8 +218,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
             widths = [1 for p in interp_pts]
         else:
             error_string = (
-                f"Unknown INTERP_MTHD used to compute INTERP_PNTS:"
-                + f" {interp_shape}."
+                f"Unknown INTERP_MTHD used to compute INTERP_PNTS: {interp_shape}."
                 + f" Check the INTERP_MTHD column in your METplus stats files."
                 + f" INTERP_MTHD must have either \"SQUARE\" or \"CIRCLE\""
                 + f" in the name."
@@ -279,9 +279,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
             ])
         )
         df['OBS_THRESH_SYMBOL'] = df_obs_thresh_symbol
-        df['OBS_THRESH_VALUE'] = [
-            str(item)[2:] for item in df_obs_thresh_letter
-        ]
+        df['OBS_THRESH_VALUE'] = [str(item)[2:] for item in df_obs_thresh_letter]
         requested_obs_thresh_value = [
             str(item)[2:] for item in requested_obs_thresh_letter
         ]
@@ -303,8 +301,8 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                                   + f" were not found and will not be"
                                   + f" plotted.")
             else:
-                warning_string = (f"{thresholds_removed_string} obs threshold"
-                                  + f" was not found and will not be plotted.")
+                warning_string = (f"{thresholds_removed_string} obs threshold was"
+                                  + f" not found and will not be plotted.")
             logger.warning(warning_string)
             logger.warning("Continuing ...")
     if fcst_thresh and '' not in fcst_thresh:
@@ -333,9 +331,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
             zip(*[plot_util.format_thresh(t) for t in df['FCST_THRESH']])
         )
         df['FCST_THRESH_SYMBOL'] = df_fcst_thresh_symbol
-        df['FCST_THRESH_VALUE'] = [
-            str(item)[2:] for item in df_fcst_thresh_letter
-        ]
+        df['FCST_THRESH_VALUE'] = [str(item)[2:] for item in df_fcst_thresh_letter]
         requested_fcst_thresh_value = [
             str(item)[2:] for item in requested_fcst_thresh_letter
         ]
@@ -353,13 +349,12 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         if thresholds_removed.size > 0:
             thresholds_removed_string = ', '.join(thresholds_removed)
             if len(thresholds_removed) > 1:
-                warning_string = (f"{thresholds_removed_string} fcst"
-                                  + f" thresholds"
+                warning_string = (f"{thresholds_removed_string} fcst thresholds"
                                   + f" were not found and will not be"
                                   + f" plotted.")
             else:
-                warning_string = (f"{thresholds_removed_string} fcst threshold"
-                                  + f" was not found and will not be plotted.")
+                warning_string = (f"{thresholds_removed_string} fcst threshold was"
+                                  + f" not found and will not be plotted.")
             logger.warning(warning_string)
             logger.warning("Continuing ...")
 
@@ -667,19 +662,11 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                 pivot_ci_upper1.index
             ]
         )))
-        pivot_metric1 = pivot_metric1[
-            pivot_metric1.index.isin(indices_in_common1)
-        ]
-        pivot_ci_lower1 = pivot_ci_lower1[
-            pivot_ci_lower1.index.isin(indices_in_common1)
-        ]
-        pivot_ci_upper1 = pivot_ci_upper1[
-            pivot_ci_upper1.index.isin(indices_in_common1)
-        ]
+        pivot_metric1 = pivot_metric1[pivot_metric1.index.isin(indices_in_common1)]
+        pivot_ci_lower1 = pivot_ci_lower1[pivot_ci_lower1.index.isin(indices_in_common1)]
+        pivot_ci_upper1 = pivot_ci_upper1[pivot_ci_upper1.index.isin(indices_in_common1)]
         if sample_equalization:
-            pivot_counts = pivot_counts[
-                pivot_counts.index.isin(indices_in_common1)
-            ]
+            pivot_counts = pivot_counts[pivot_counts.index.isin(indices_in_common1)]
         if metric2_name is not None:
             indices_in_common2 = list(set.intersection(*map(
                 set, 
@@ -689,15 +676,9 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                     pivot_ci_upper2.index
                 ]
             )))
-            pivot_metric2 = pivot_metric2[
-                pivot_metric2.index.isin(indices_in_common2)
-            ]
-            pivot_ci_lower2 = pivot_ci_lower2[
-                pivot_ci_lower2.index.isin(indices_in_common2)
-            ]
-            pivot_ci_upper2 = pivot_ci_upper2[
-                pivot_ci_upper2.index.isin(indices_in_common2)
-            ]
+            pivot_metric2 = pivot_metric2[pivot_metric2.index.isin(indices_in_common2)]
+            pivot_ci_lower2 = pivot_ci_lower2[pivot_ci_lower2.index.isin(indices_in_common2)]
+            pivot_ci_upper2 = pivot_ci_upper2[pivot_ci_upper2.index.isin(indices_in_common2)]
     x_vals1 = pivot_metric1.index
     if metric2_name is not None:
         x_vals2 = pivot_metric2.index
@@ -711,8 +692,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         )
         obs_thresh_labels = [obs_thresh_labels[i] for i in obs_thresh_argsort]
         requested_obs_thresh_labels = [
-            requested_obs_thresh_value[i] 
-            for i in requested_obs_thresh_argsort
+            requested_obs_thresh_value[i] for i in requested_obs_thresh_argsort
         ]
     if fcst_thresh and '' not in fcst_thresh:
         fcst_thresh_labels = np.unique(df['FCST_THRESH_VALUE'])
@@ -720,12 +700,9 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         requested_fcst_thresh_argsort = np.argsort(
             [float(item) for item in requested_fcst_thresh_value]
         )
-        fcst_thresh_labels = [
-            fcst_thresh_labels[i] for i in fcst_thresh_argsort
-        ]
+        fcst_thresh_labels = [fcst_thresh_labels[i] for i in fcst_thresh_argsort]
         requested_fcst_thresh_labels = [
-            requested_fcst_thresh_value[i] 
-            for i in requested_fcst_thresh_argsort
+            requested_fcst_thresh_value[i] for i in requested_fcst_thresh_argsort
         ]
     plot_reference = [False, False]
     ref_metrics = ['OBAR']
@@ -864,27 +841,17 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                 ].values
         if not y_lim_lock:
             if metric2_name is not None:
-                y_vals_both_metrics = np.concatenate(
-                    (y_vals_metric1, y_vals_metric2)
-                )
+                y_vals_both_metrics = np.concatenate((y_vals_metric1, y_vals_metric2))
                 if np.any(y_vals_both_metrics != np.inf):
-                    y_vals_metric_min = np.nanmin(
-                        y_vals_both_metrics[y_vals_both_metrics != np.inf]
-                    )
-                    y_vals_metric_max = np.nanmax(
-                        y_vals_both_metrics[y_vals_both_metrics != np.inf]
-                    )
+                    y_vals_metric_min = np.nanmin(y_vals_both_metrics[y_vals_both_metrics != np.inf])
+                    y_vals_metric_max = np.nanmax(y_vals_both_metrics[y_vals_both_metrics != np.inf])
                 else:
                     y_vals_metric_min = np.nanmin(y_vals_both_metrics)
                     y_vals_metric_max = np.nanmax(y_vals_both_metrics)
             else:
                 if np.any(y_vals_metric1 != np.inf):
-                    y_vals_metric_min = np.nanmin(
-                        y_vals_metric1[y_vals_metric1 != np.inf]
-                    )
-                    y_vals_metric_max = np.nanmax(
-                        y_vals_metric1[y_vals_metric1 != np.inf]
-                    )
+                    y_vals_metric_min = np.nanmin(y_vals_metric1[y_vals_metric1 != np.inf])
+                    y_vals_metric_max = np.nanmax(y_vals_metric1[y_vals_metric1 != np.inf])
                 else:
                     y_vals_metric_min = np.nanmin(y_vals_metric1)
                     y_vals_metric_max = np.nanmax(y_vals_metric1)
@@ -960,8 +927,8 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                         x_vals2_plot.tolist(), y_vals2_plot, 
                         marker=ref_color_dict['marker'], 
                         c=ref_color_dict['color'], mew=2., mec='white', 
-                        figure=fig, ms=ref_color_dict['markersize'], 
-                        ls='dashed', lw=ref_color_dict['linewidth']
+                        figure=fig, ms=ref_color_dict['markersize'], ls='dashed', 
+                        lw=ref_color_dict['linewidth']
                     )
                     plotted_reference[1] = True
             else:
@@ -975,8 +942,8 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                     x_vals2_plot.tolist(), y_vals2_plot, 
                     marker=mod_setting_dicts[m]['marker'], 
                     c=mod_setting_dicts[m]['color'], mew=2., mec='white', 
-                    figure=fig, ms=mod_setting_dicts[m]['markersize'], 
-                    ls='dashed', lw=mod_setting_dicts[m]['linewidth']
+                    figure=fig, ms=mod_setting_dicts[m]['markersize'], ls='dashed',
+                    lw=mod_setting_dicts[m]['linewidth']
                 )
         if confidence_intervals:
             if plot_reference[0]:
@@ -1099,10 +1066,10 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     else:
         y_precision_scale = 1.
     yticks = [
-        y_val for y_val
+        y_val for y_val 
         in np.arange(
-            ylim_min*y_precision_scale,
-            ylim_max*y_precision_scale+round_to_nearest*y_precision_scale,
+            ylim_min*y_precision_scale, 
+            ylim_max*y_precision_scale+round_to_nearest*y_precision_scale, 
             round_to_nearest*y_precision_scale
         )
     ]
@@ -1208,8 +1175,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     ax.legend(
         handles, labels, framealpha=1, 
         bbox_to_anchor=(0.5, -0.15), ncol=4, frameon=True, numpoints=2, 
-        borderpad=.8, labelspacing=1.
-    ) 
+        borderpad=.8, labelspacing=1.) 
     fig.subplots_adjust(wspace=0, hspace=0)
     ax.grid(
         visible=True, which='major', axis='both', alpha=.5, linestyle='--', 
@@ -1333,7 +1299,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         title1+=f' {interp_pts_string}'
     fcst_thresh_on = (fcst_thresh and '' not in fcst_thresh)
     obs_thresh_on = (obs_thresh and '' not in obs_thresh)
-    tail_dot_rgx = re.compile(r'(?:(\.)|(\.\d*?[1-9]\d*?))0+(?=\b|[^0-9])') 
+    tail_dot_rgx = re.compile(r'(?:(\.)|(\.\d*?[1-9]\d*?))0+(?=\b|[^0-9])')
     if fcst_thresh_on:
         fcst_thresh_labels = [
             tail_dot_rgx.sub(r'\2', lab) for lab in fcst_thresh_labels
@@ -1400,8 +1366,8 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
             left_image_box = OffsetImage(left_logo_arr, zoom=zoom_logo_left)
             ab_left = AnnotationBbox(
                 left_image_box, xy=(0.,1.), xycoords='axes fraction', 
-                xybox=(0, annot_y_offset+2), boxcoords='offset points', 
-                frameon = False, box_alignment=(0,0)
+                xybox=(0, annot_y_offset+2), boxcoords='offset points', frameon = False,
+                box_alignment=(0,0)
             )
             ax.add_artist(ab_left)
         else:
@@ -1477,11 +1443,11 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     fig.savefig(save_path, dpi=dpi)
     if restart_dir:
         shutil.copy2(
-            save_path,
+            save_path, 
             os.path.join(
-                restart_dir,
-                f'{str(plot_group).lower()}',
-                f'{str(time_period_savename).lower()}',
+                restart_dir, 
+                f'{str(plot_group).lower()}', 
+                f'{str(time_period_savename).lower()}', 
                 save_name+'.png'
             )
         )
@@ -1578,14 +1544,10 @@ def main():
     logger.debug(f"METRICS: {METRICS}")
     logger.debug(f"CONFIDENCE_INTERVALS: {CONFIDENCE_INTERVALS}")
     logger.debug(
-        f"INTERP_PNTS:"
-        + f" {INTERP_PNTS if INTERP_PNTS else 'No interpolation points'}"
-    )
+        f"INTERP_PNTS: {INTERP_PNTS if INTERP_PNTS else 'No interpolation points'}")
 
     logger.debug('----------------------------------------')
-    logger.debug(
-        f"Advanced settings (configurable in {SETTINGS_DIR}/settings.py)"
-    )
+    logger.debug(f"Advanced settings (configurable in {SETTINGS_DIR}/settings.py)")
     logger.debug(f"Y_MIN_LIMIT: {Y_MIN_LIMIT}")
     logger.debug(f"Y_MAX_LIMIT: {Y_MAX_LIMIT}")
     logger.debug(f"Y_LIM_LOCK: {Y_LIM_LOCK}")
@@ -1779,10 +1741,10 @@ def main():
                     if fcst_level == "L0":
                         temp_fcst_level = [fcst_level, "Z0"]
                 df = df_preprocessing.get_preprocessed_data(
-                    logger, STATS_DIR, PRUNE_DIR, OUTPUT_BASE_TEMPLATE, 
-                    VERIF_CASE, VERIF_TYPE, LINE_TYPE, DATE_TYPE, date_range, 
-                    EVAL_PERIOD, date_hours, FLEADS, requested_var, 
-                    fcst_var_names, obs_var_names, models, model_queries,
+                    logger, STATS_DIR, PRUNE_DIR, OUTPUT_BASE_TEMPLATE, VERIF_CASE, 
+                    VERIF_TYPE, LINE_TYPE, DATE_TYPE, date_range, EVAL_PERIOD, 
+                    date_hours, FLEADS, requested_var, fcst_var_names, obs_var_names, 
+                    models, model_queries,
                     domain, INTERP, MET_VERSION, clear_prune_dir, temp_fcst_level
                 )
                 if df is None:
@@ -1830,9 +1792,7 @@ if __name__ == "__main__":
     IMG_HEADER = check_IMG_HEADER(os.environ['IMG_HEADER'])
     VERIF_CASE = check_VERIF_CASE(os.environ['VERIF_CASE'])
     VERIF_TYPE = check_VERIF_TYPE(os.environ['VERIF_TYPE'])
-    STAT_OUTPUT_BASE_DIR = check_STAT_OUTPUT_BASE_DIR(
-        os.environ['STAT_OUTPUT_BASE_DIR']
-    )
+    STAT_OUTPUT_BASE_DIR = check_STAT_OUTPUT_BASE_DIR(os.environ['STAT_OUTPUT_BASE_DIR'])
     STATS_DIR = STAT_OUTPUT_BASE_DIR
     PRUNE_DIR = check_PRUNE_DIR(os.environ['PRUNE_DIR'])
     SAVE_DIR = check_SAVE_DIR(os.environ['SAVE_DIR'])
@@ -1844,63 +1804,39 @@ if __name__ == "__main__":
     LINE_TYPE = check_LINE_TYPE(os.environ['LINE_TYPE'])
     INTERP = check_INTERP(os.environ['INTERP'])
     MODELS = check_MODELS(os.environ['MODELS']).replace(' ','').split(',')
-    DOMAINS = check_VX_MASK_LIST(
-        os.environ['VX_MASK_LIST']
-    ).replace(' ','').split(',')
+    DOMAINS = check_VX_MASK_LIST(os.environ['VX_MASK_LIST']).replace(' ','').split(',')
 
     # valid hour (each plot will use all available valid_hours listed below)
-    VALID_HOURS = check_FCST_VALID_HOUR(
-        os.environ['FCST_VALID_HOUR'], DATE_TYPE
-    ).replace(' ','').split(',')
-    INIT_HOURS = check_FCST_INIT_HOUR(
-        os.environ['FCST_INIT_HOUR'], DATE_TYPE
-    ).replace(' ','').split(',')
+    VALID_HOURS = check_FCST_VALID_HOUR(os.environ['FCST_VALID_HOUR'], DATE_TYPE).replace(' ','').split(',')
+    INIT_HOURS = check_FCST_INIT_HOUR(os.environ['FCST_INIT_HOUR'], DATE_TYPE).replace(' ','').split(',')
 
     # time period to cover (inclusive)
     EVAL_PERIOD = check_EVAL_PERIOD(os.environ['EVAL_PERIOD'])
-    VALID_BEG = check_VALID_BEG(
-        os.environ['VALID_BEG'], DATE_TYPE, EVAL_PERIOD, 
-        plot_type='time_series'
-    )
-    VALID_END = check_VALID_END(
-        os.environ['VALID_END'], DATE_TYPE, EVAL_PERIOD, 
-        plot_type='time_series'
-    )
-    INIT_BEG = check_INIT_BEG(
-        os.environ['INIT_BEG'], DATE_TYPE, EVAL_PERIOD, plot_type='time_series'
-    )
-    INIT_END = check_INIT_END(
-        os.environ['INIT_END'], DATE_TYPE, EVAL_PERIOD, plot_type='time_series'
-    )
+    VALID_BEG = check_VALID_BEG(os.environ['VALID_BEG'], DATE_TYPE, EVAL_PERIOD, plot_type='time_series')
+    VALID_END = check_VALID_END(os.environ['VALID_END'], DATE_TYPE, EVAL_PERIOD, plot_type='time_series')
+    INIT_BEG = check_INIT_BEG(os.environ['INIT_BEG'], DATE_TYPE, EVAL_PERIOD, plot_type='time_series')
+    INIT_END = check_INIT_END(os.environ['INIT_END'], DATE_TYPE, EVAL_PERIOD, plot_type='time_series')
 
     # list of variables
     # Options: {'TMP','HGT','CAPE','RH','DPT','UGRD','VGRD','UGRD_VGRD','TCDC',
     #           'VIS'}
-    VARIABLES = check_var_name(
-        os.environ['var_name']
-    ).replace(' ','').split(',')
+    VARIABLES = check_var_name(os.environ['var_name']).replace(' ','').split(',')
 
     # list of lead hours
     # Options: {list of lead hours; string, 'all'; tuple, start/stop flead; 
     #           string, single flead}
-    FLEADS = check_FCST_LEAD(
-        os.environ['FCST_LEAD']
-    ).replace(' ','').split(',')
+    FLEADS = check_FCST_LEAD(os.environ['FCST_LEAD']).replace(' ','').split(',')
 
     # list of levels
     FCST_LEVELS = check_FCST_LEVEL(os.environ['FCST_LEVEL'])
     OBS_LEVELS = check_OBS_LEVEL(os.environ['OBS_LEVEL'])
 
     FCST_THRESH = check_FCST_THRESH(os.environ['FCST_THRESH'], LINE_TYPE)
-    OBS_THRESH = check_OBS_THRESH(
-        os.environ['OBS_THRESH'], FCST_THRESH, LINE_TYPE
-    ).replace(' ','').split(',')
+    OBS_THRESH = check_OBS_THRESH(os.environ['OBS_THRESH'], FCST_THRESH, LINE_TYPE).replace(' ','').split(',')
     FCST_THRESH = FCST_THRESH.replace(' ','').split(',')
     
     # requires two metrics to plot
-    METRICS = list(filter(
-        None, check_STATS(os.environ['STATS']).replace(' ','').split(',')
-    ))
+    METRICS = list(filter(None, check_STATS(os.environ['STATS']).replace(' ','').split(',')))
 
     # set the lowest possible lower (and highest possible upper) axis limits. 
     # E.g.: If Y_LIM_LOCK == True, use Y_MIN_LIMIT as the definitive lower 
@@ -1916,9 +1852,7 @@ if __name__ == "__main__":
 
 
     # configure CIs
-    CONFIDENCE_INTERVALS = check_CONFIDENCE_INTERVALS(
-        os.environ['CONFIDENCE_INTERVALS']
-    ).replace(' ','')
+    CONFIDENCE_INTERVALS = check_CONFIDENCE_INTERVALS(os.environ['CONFIDENCE_INTERVALS']).replace(' ','')
     bs_nrep = toggle.plot_settings['bs_nrep']
     ci_lev = toggle.plot_settings['ci_lev']
     bs_method = toggle.plot_settings['bs_method']
@@ -1928,17 +1862,14 @@ if __name__ == "__main__":
     display_averages = toggle.plot_settings['display_averages']
 
     # list of points used in interpolation method
-    INTERP_PNTS = check_INTERP_PTS(
-        os.environ['INTERP_PNTS']
-    ).replace(' ','').split(',')
+    INTERP_PNTS = check_INTERP_PTS(os.environ['INTERP_PNTS']).replace(' ','').split(',')
 
     # At each value of the independent variable, whether or not to remove 
     # samples used to aggregate each statistic if the samples are not shared 
     # by all models.  Required to display sample sizes 
     sample_equalization = toggle.plot_settings['sample_equalization']
 
-    # Whether or not to clear the intermediate directory that stores pruned 
-    # data
+    # Whether or not to clear the intermediate directory that stores pruned data
     clear_prune_dir = toggle.plot_settings['clear_prune_directory']
 
     # Information about logos

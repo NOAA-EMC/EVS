@@ -80,8 +80,9 @@ cd $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/precip/SL1L2_FBAR_24hrAccumM
 
 tar -cvf evs.plots.sref.precip.spatial.map.v${VDATE}.tar *.gif
 
-cp evs.plots.sref.precip.spatial.map.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
-
+if [ $SENDCOM="YES" ]; then
+ cp evs.plots.sref.precip.spatial.map.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
+fi
 
 
 
