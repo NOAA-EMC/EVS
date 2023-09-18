@@ -15,6 +15,7 @@ import os
 import glob
 from datetime import datetime
 import numpy as np
+import subprocess
 
 print(f"BEGIN: {os.path.basename(__file__)}")
 
@@ -26,6 +27,7 @@ nproc = os.environ['nproc']
 STEP = os.environ['STEP']
 VERIF_CASE = os.environ['VERIF_CASE']
 DATA = os.environ['DATA']
+PBS_NODEFILE = os.environ['PBS_NODEFILE']
 
 # If Using CFP, create POE scripts
 if USE_CFP == 'YES':
@@ -58,8 +60,18 @@ if USE_CFP == 'YES':
         njob+=1
     poe_job_file = os.path.join(job_dir, f'poe_jobs{node}')
     poe_job = open(poe_job_file, 'a')
+#--
+    if machine == 'WCOSS2':
+        nselect = subprocess.check_output(
+            'cat '+PBS_NODEFILE+'| wc -l', shell=True, encoding='UTF-8'
+        ).replace('\n', '')
+        nnp = int(nselect) * int(nproc)
+    else:
+        nnp = nproc
+#--
     iproc+=1
-    while iproc <= int(nproc):
+#    while iproc <= int(nproc):
+    while iproc <= int(nnp):
         if machine in ['HERA', 'ORION', 'S4', 'JET']:
             poe_job.write(f'{iproc-1} /bin/echo {iproc}\n')
         else:

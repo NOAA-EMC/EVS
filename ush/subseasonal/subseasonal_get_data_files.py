@@ -32,21 +32,8 @@ VERIF_CASE_STEP_abbrev = os.environ['VERIF_CASE_STEP_abbrev']
 VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
 USER = os.environ['USER']
-#evs_run_mode = os.environ['evs_run_mode']
 if STEP == 'stats':
     COMINobs = os.environ['COMINobs']
-    #COMINccpa = os.environ['COMINccpa']
-    #COMINobsproc = os.environ['COMINobsproc']
-    #COMINosi_saf = os.environ['COMINosi_saf']
-    #COMINghrsst_ospo = os.environ['COMINghrsst_ospo']
-#if evs_run_mode != 'production':
-    #QUEUESERV = os.environ['QUEUESERV']
-    #ACCOUNT = os.environ['ACCOUNT']
-    #machine = os.environ['machine']
-
-# Set archive paths
-#if evs_run_mode != 'production':
-    #archive_obs_data_dir = os.environ['archive_obs_data_dir']
 
 # Make sure in right working directory
 cwd = os.getcwd()
@@ -635,12 +622,6 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                             osi_saf_monthly_dest_file,
                             (VDATEm30_dt,VERIF_CASE_STEP_type_valid_time)
                         )
-                    #if not os.path.exists(osi_saf_dest_file) \
-                            #and evs_run_mode != 'production':
-                        #gda_util.get_truth_file(
-                            #VERIF_CASE_STEP_type_valid_time,
-                            #osi_saf_arch_file_format, osi_saf_dest_file_format
-                        #)
             elif VERIF_CASE_STEP_type in ['sst', 'ENSO']:
                 # GHRSST OSPO
                 VERIF_CASE_STEP_ghrsst_ospo_dir = os.path.join(

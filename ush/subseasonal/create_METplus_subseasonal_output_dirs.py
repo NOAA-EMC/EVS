@@ -89,8 +89,6 @@ if STEP == 'stats':
     working_dir_list.append(os.path.join(working_output_base_dir, 'logs'))
     working_dir_list.append(os.path.join(working_output_base_dir, 'tmp'))
     working_dir_list.append(os.path.join(working_output_base_dir, 'stage'))
-    #sdate = start_date_dt - datetime.timedelta(days=35)
-    #date_dt = sdate
     date_dt = start_date_dt
     while date_dt <= end_date_dt:
         for model in model_list:

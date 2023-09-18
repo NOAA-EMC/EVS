@@ -933,34 +933,6 @@ def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt):
         prepped_data.close()
     copy_file(prepped_file, dest_file)
 
-def prep_prod_get_d_file(source_file, dest_file, date_dt):
-    """! Do prep work for ALEXI GET-D production files
-
-         Args:
-             source_file - source file (string)
-             dest_file   - destination file (string)
-             date_dt     - date (datetime object)
-         Returns:
-    """
-    # Environment variables and executables
-    # Temporary file names
-    prepped_file = os.path.join(os.getcwd(), 'atmos.'
-                                +source_file.rpartition('/')[2])
-    # Prep file
-    #copy_file(prod_file, prepped_file)
-    ##########################################################################
-    # Temporary until NCO brings in data feed
-    ftp_file = ('ftp://ftp.star.nesdis.noaa.gov/'
-                +'pub/smcd/emb/lfang/GET-D_ET_H_updated/'
-                +date_dt.strftime('%Y')+'/'
-                +'GETDL3_DAL_CONUS_'+date_dt.strftime('%Y%j')+'_1.0.nc')
-    run_shell_command(
-        ['wget', ftp_file]
-    )
-    copy_file(os.path.join(os.getcwd(),ftp_file.rpartition('/')[2]), prepped_file)
-    ##########################################################################
-    copy_file(prepped_file, dest_file)
-
 def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
                    source_file_format, dest_file_format):
     """! This get a model file and saves it in the specificed
