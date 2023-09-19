@@ -40,9 +40,8 @@ export FIXevs=${FIXevs:-$HOMEevs/fix}
 export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
 
 export run_mpi=${run_mpi:-yes}
+export valid_time=${valid_time:-both}
 
-
-#export ush_dir=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/EVS_plots/verif_plotting/ush
 export ush_dir=$USHevs/global_ens/ush_gens_plot_py
 
 

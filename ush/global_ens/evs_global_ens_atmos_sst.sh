@@ -81,7 +81,7 @@ if [ $verify = sst24h ] ; then
 
         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/EnsembleStat_fcst${MODL}_obsGHRSST.conf " >> run_${modnam}_valid_at_t${cyc}z_${verify}.sh
 
-        echo "cp \$output_base/stat/${modnam}/*.stat $COMOUTsmall" >> run_${modnam}_valid_at_t${cyc}z_${verify}.sh
+        [[ $SENDCOM="YES" ]] && echo "cp \$output_base/stat/${modnam}/*.stat $COMOUTsmall" >> run_${modnam}_valid_at_t${cyc}z_${verify}.sh
 
         chmod +x run_${modnam}_valid_at_t${cyc}z_${verify}.sh
 

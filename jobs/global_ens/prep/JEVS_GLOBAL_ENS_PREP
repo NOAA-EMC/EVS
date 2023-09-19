@@ -1,5 +1,5 @@
 #!/bin/ksh
-#  JOB card cerated for running METPlus-based Global enesmble verifications
+#  JOB card created for running METPlus-based Global enesmble verifications
 #   By Binbin Zhou, IMSG@EMC/NCEP
 #   Feb 2, 2022
 #
@@ -77,7 +77,6 @@ export jobid="${outid}.o${pid}"
 export pgmout="OUTPUT.${pid}"
 
 
-#$HOMEevs/scripts/global_ens/${STEP}/exevs_${COMPONENT}_${RUN}_${STEP}.sh
 $HOMEevs/scripts/global_ens/${STEP}/exevs_${COMPONENT}_${MODELNAME}_${RUN}_${STEP}.sh
 
 msg="JOB $job HAS COMPLETED NORMALLY."

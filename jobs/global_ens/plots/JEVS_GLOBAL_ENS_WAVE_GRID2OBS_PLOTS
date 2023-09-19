@@ -65,6 +65,10 @@ mkdir -p ${COMOUTplots}
 
 export jlogfile=${DATA}/${MODELNAME}_${RUN}_plots.log
 
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+
 ####################################
 # Execute the script                
 ####################################
