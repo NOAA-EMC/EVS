@@ -38,7 +38,6 @@ export cyc=${cyc:-${cyc}}
 ############################################################
 # For dev testing
 ############################################################
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=NO
 export VERIF_CASE=severe
@@ -47,7 +46,6 @@ export modsys=nam
 export job=${PBS_JOBNAME:-jevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}_${cyc}}
 export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}
-export COMINspc=/lfs/h1/ops/dev/dcom
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}/${STEP}/${COMPONENT}
 ############################################################
 
@@ -56,7 +54,7 @@ export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-NO}
 
-export maillist=${maillist:-'logan.dawson@noaa.gov,geoffrey.manikin@noaa.gov'}
+export maillist=${maillist:-'marcel.caron@noaa.gov,alicia.bentley@noaa.gov'}
 
 if [ -z "$maillist" ]; then
 

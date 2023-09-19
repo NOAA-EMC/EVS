@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+# =============================================================================
+#
+# NAME: plotter.py
+# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# PURPOSE: Plotting specifications for CAM plotting scripts
+#
+# =============================================================================
+
 import matplotlib.pyplot as plt
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Rectangle, PathPatch

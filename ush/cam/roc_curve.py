@@ -542,45 +542,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
 
     # Plot data
     logger.info("Begin plotting ...")
-    '''
-    gray_colors = [
-        '#ffffff',
-        '#f5f5f5',
-        '#ececec',
-        '#dfdfdf',
-        '#cbcbcb',
-        '#b2b2b2',
-        '#8e8e8e',
-        '#6f6f6f',
-        '#545454',
-        '#3f3f3f',
-    ]
-
-    cmap = colors.ListedColormap(gray_colors)
-    '''
     grid_ticks = np.arange(0.001, 1.001, 0.001)
     fr_g, pod_g = np.meshgrid(grid_ticks, grid_ticks)
-    '''
-    bias = pod_g / sr_g
-    csi = 1.0 / (1.0 / sr_g + 1.0 / pod_g - 1.0)
-    bias_contour_vals = [
-        0.1, 0.2, 0.4, 0.6, 0.8, 1., 1.2, 1.5, 2., 3., 5., 10.
-    ]
-    b_contour = plt.contour(
-        sr_g, pod_g, bias, bias_contour_vals, 
-        colors='gray', linestyles='dashed'
-    )
-    csi_contour = plt.contourf(
-        sr_g, pod_g, csi, np.arange(0., 1.1, 0.1), cmap=cmap, extend='neither'
-    )
-    plt.clabel(
-        b_contour, fmt='%1.1f', 
-        manual=[
-            get_bias_label_position(bias_value, .75) 
-            for bias_value in bias_contour_vals
-        ]
-    )
-    '''
     random_contour = plt.contour(
         fr_g, pod_g, pod_g / fr_g, [1.],
         colors='gray', linestyles='dashed'
@@ -777,25 +740,6 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     )
     
     fig.subplots_adjust(wspace=0, hspace=0)
-    '''
-    cax = fig.add_axes([.775, .2, .01, .725])
-    cbar_ticks = [0.,.1,.2,.3,.4,.5,.6,.7,.8,.9,1.]
-    cb = plt.colorbar(
-        csi_contour, orientation='vertical', cax=cax, ticks=cbar_ticks,
-        spacing='uniform', drawedges=True
-    )
-    cb.dividers.set_color('black')
-    cb.dividers.set_linewidth(2)
-    cb.ax.tick_params(
-        labelsize=8, labelright=True, labelleft=False, right=False
-    )
-    cb.ax.set_yticklabels(
-        [f'{cbar_tick:.1f}' for cbar_tick in cbar_ticks], 
-        fontdict={'fontsize': 12}
-    )
-    cax.hlines([0, 1], 0, 1, colors='black', linewidth=4)
-    cb.set_label(f'{metric_long_names[2]}')
-    '''
 
     # Title
     domain = df['VX_MASK'].tolist()[0]
@@ -808,11 +752,6 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         [f'{date_hour:02d}' for date_hour in date_hours],
         ', ', '', 'Z', 'and ', ''
     )
-    '''
-    date_hours_string = ' '.join([
-        f'{date_hour:02d}Z,' for date_hour in date_hours
-    ])
-    '''
     date_start_string = date_range[0].strftime('%d %b %Y')
     date_end_string = date_range[1].strftime('%d %b %Y')
     if str(verif_type).lower() in ['pres', 'upper_air'] or 'P' in str(level):

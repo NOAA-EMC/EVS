@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+# =============================================================================
+#
+# NAME: cam_plots_precip_graphx_defs.py
+# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# PURPOSE: Graphics definitions for the CAM Precip Plots jobs
+#
+# =============================================================================
+
 import os
 from datetime import datetime, timedelta as td
 graphics = {

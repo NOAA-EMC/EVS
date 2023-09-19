@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+# =============================================================================
+#
+# NAME: check_variables.py
+# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# PURPOSE: Functions that check specific configurations to CAM plotting scripts
+#
+# =============================================================================
+
 import sys
 import logging
 import re
