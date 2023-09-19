@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+# =============================================================================
+#
+# NAME: cam_stats_grid2obs_var_defs.py
+# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# PURPOSE: Configurations for each variable that will be processed by MET
+#
+# =============================================================================
+
 generate_stats_jobs_dict = {
     'HGT': {
         'raob': {

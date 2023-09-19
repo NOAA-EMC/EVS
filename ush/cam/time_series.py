@@ -361,14 +361,6 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             )
             df_aggregated[str(stat).upper()] = stat_output[0]
             metric_long_names.append(stat_output[2])
-            '''if confidence_intervals:
-                logger.warning(
-                    f"Confidence intervals are turned on but are not currently"
-                    + f" allowed on time series plots. None will be plotted"
-                    + f" for {str(stat).upper()}."
-                )
-                confidence_intervals = False
-            # Remove the above section to re-enable CIs for time series''' 
             if confidence_intervals:
                 ci_output = df_groups.apply(
                     lambda x: plot_util.calculate_bootstrap_ci(
@@ -998,11 +990,6 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
     else:
         domain_string = domain
         domain_save_string = domain
-    '''
-    date_hours_string = ' '.join([
-        f'{date_hour:02d}Z,' for date_hour in date_hours
-    ])
-    '''
     date_hours_string = plot_util.get_name_for_listed_items(
         [f'{date_hour:02d}' for date_hour in date_hours],
         ', ', '', 'Z', 'and ', ''
