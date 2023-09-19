@@ -4,8 +4,8 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=10:00:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
+#PBS -l walltime=00:30:00
+#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1:mem=256GB
 #PBS -l debug=true
 #PBS -V
 
@@ -45,17 +45,17 @@ source /usr/share/lmod/lmod/init/sh
 module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
-export MET_PLUS_PATH="/apps/ops/para/libs/intel/${intel_ver}/metplus/${metplus_ver}"
-export MET_PATH="/apps/ops/para/libs/intel/${intel_ver}/met/${met_ver}"
+export MET_PLUS_PATH="/apps/ops/prod/libs/intel/${intel_ver}/metplus/${metplus_ver}"
+export MET_PATH="/apps/ops/prod/libs/intel/${intel_ver}/met/${met_ver}"
 export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # Developer Settings
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
+export COMROOT=/lfs/h2/emc/vpppg/noscrub/${USER}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
-export FIXevs="/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix"
 export cyc=$(date -d "today" +"%H")
-export maillist="marcel.caron@noaa.gov"
+export maillist="alicia.bentley@noaa.gov,marcel.caron@noaa.gov"
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/cam/stats/JEVS_CAM_STATS
