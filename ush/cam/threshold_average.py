@@ -636,8 +636,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         np.digitize(len(xtick_labels), number_of_ticks_dig) + 2
     )/2.)*2
     xtick_labels_with_blanks = ['' for item in xtick_labels]
-    #for i, item in enumerate(xtick_labels[::int(show_xtick_every)]):
-    #     xtick_labels_with_blanks[int(show_xtick_every)*i] = item
      
     replace_xticks = [
         xtick for xtick in xticks 
@@ -661,9 +659,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     xtick_labels_with_blanks = np.concatenate((
         res_xlabels, add_labels
     ))[xticks_argsort]
-    #xticks_argsort = np.argsort(x_vals.tolist())
-    #xticks = np.array(x_vals.tolist())[xticks_argsort]
-    #xtick_labels_with_blanks = np.array(add_labels)[xticks_argsort]
     res_diff = np.diff(
         [xtick for x, xtick in enumerate(xticks) if xtick_labels_with_blanks[x]]
     )
@@ -802,11 +797,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         [f'{date_hour:02d}' for date_hour in date_hours],
         ', ', '', 'Z', 'and ', ''
     )
-    '''
-    date_hours_string = ' '.join([
-        f'{date_hour:02d}Z,' for date_hour in date_hours
-    ])
-    '''
     date_start_string = date_range[0].strftime('%d %b %Y')
     date_end_string = date_range[1].strftime('%d %b %Y')
     metric_string = metric_long_name

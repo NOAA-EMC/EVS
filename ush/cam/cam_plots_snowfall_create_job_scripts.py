@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+# =============================================================================
+#
+# NAME: cam_snowfall_create_job_scripts.py
+# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# PURPOSE: Loads graphics definitions dictionary and feeds each set of configs
+#          to cam_plots_snowfall_create_job_script.py to write the job card
+#
+# =============================================================================
+
 import os
 import sys
 from pathlib import Path

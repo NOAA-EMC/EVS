@@ -54,12 +54,7 @@ else
    PRODS="det"
 fi
 
-
-if [ $MODELNAME = rrfs ]; then
-   DOMAINS="conus"
-else
-   DOMAINS="alaska conus"
-fi
+DOMAINS="alaska conus"
 
 #Loop over products
 for PROD in ${PRODS}; do

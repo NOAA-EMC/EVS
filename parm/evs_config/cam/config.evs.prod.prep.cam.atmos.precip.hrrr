@@ -11,10 +11,6 @@
 
 echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 
-# METplus Settings
-
-# Logging
-
 # Time Settings
 export FHR_END_FULL="48"
 export FHR_END_SHORT="18"
