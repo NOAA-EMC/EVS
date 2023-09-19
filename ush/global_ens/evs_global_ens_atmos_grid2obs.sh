@@ -262,7 +262,7 @@ for modnam in $models ; do
 
     fi      
 
-   echo  "cp \$output_base/stat/${modnam}/*.stat $COMOUTsmall" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh 
+   [[ $SENDCOM="YES" ]] && echo  "cp \$output_base/stat/${modnam}/*.stat $COMOUTsmall" >> run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh 
 
    chmod +x run_${modnam}_${cyc}_${fhr}_${field}_g2o.sh
 
