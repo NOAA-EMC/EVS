@@ -95,8 +95,3 @@ if [ $SENDCOM = YES ]; then
     find ${DATA}/${VERIF_CASE}/out/*/*/*.png -type f -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar -T -
     cp ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar ${COMOUTplots}/.
 fi
-
-# Non-production jobs
-#things to do if evs_run_mode != "production" (i.e., RUN_ENVIR != nco)
-#if [ $evs_run_mode != "production" ]; then
-#    if [ $SEND

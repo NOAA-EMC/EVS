@@ -16,11 +16,6 @@ echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 export MET_PLUS_OUT=${DATA}/${VERIF_CASE}/METplus_output
 export MET_CONFIG_OVERRIDES=""
 
-# Logging
-export METPLUS_VERBOSITY="DEBUG"
-export MET_VERBOSITY="5"
-export LOG_MET_OUTPUT_TO_METPLUS="yes"
-
 # Restart Settings
 export RESTART_DIR="${COMOUTsmall}/restart/c${cyc}"
 

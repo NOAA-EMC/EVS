@@ -40,21 +40,6 @@ if VERIF_CASE == 'precip':
 
 # Make a dictionary of environment variables needed to run this particular job
 job_env_vars_dict = {}
-'''
-job_env_vars_dict = {
-    'STEP': STEP,
-    'COMPONENT': COMPONENT,
-    'VERIF_CASE': VERIF_CASE,
-    'OBSNAME': OBSNAME,
-    'VDATE': VDATE,
-    'VHOUR': VHOUR,
-    'DATA': DATA,
-    'COMINobs': COMINobs
-}
-if VERIF_CASE == 'precip': 
-    job_env_vars_dict['OBS_ACC'] = OBS_ACC
-    job_env_vars_dict['ACC'] = ACC
-'''
 
 # Make a list of commands needed to run this particular job
 job_cmd_list = []

@@ -127,15 +127,6 @@ elif [ ${MODELNAME} = namnest ]; then
    export MODEL_INPUT_DIR=${COMINnam}
    export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.${DOMAIN}nest.hiresf{lead?fmt=%2H}.tm00.grib2
 
-elif [ ${MODELNAME} = rrfs ]; then
-
-   fhr_min=0
-   fhr_max=60
-   fhr_inc=1
-
-   export MODEL_INPUT_DIR=${COMINrrfs}
-   export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/{init?fmt=%H}/${modsys}.t{init?fmt=%2H}z.prslev.f{lead?fmt=%3H}.conus_3km.grib2
-
 fi
 
 
@@ -173,8 +164,6 @@ while [ $fhr -le $fhr_max ]; do
       fi
    elif [ ${MODELNAME} = namnest ]; then
       export fcst_file=${modsys}.${IDATE}/${modsys}.t${INIT_HR}z.${DOMAIN}nest.hiresf$(printf "%02d" $fhr).tm00.grib2
-   elif [ ${MODELNAME} = rrfs ]; then
-      export fcst_file=${modsys}.${IDATE}/${INIT_HR}/${modsys}.t${INIT_HR}z.prslev.f$(printf "%03d" $fhr).conus_3km.grib2
    fi
 
    # Check for the existence of each forecast file 

@@ -101,7 +101,7 @@ export COMINhref=${COMINhref:-$(compath.py  href/$href_ver)}
 export COMINhrrr=${COMINhrrr:-$(compath.py ${envir}/com/hrrr/${hrrr_ver})}
 export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
 export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
-export COMINmping=${COMINmping:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
+export COMINmping=${COMINmping:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT)}
 export COMINprepbufr=${COMINprepbufr:-$(compath.py  obsproc/${obsproc_ver})}
 export COMINsnow=$DCOMROOT
 export COMINspcotlk=${COMINspcotlk:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT)}
@@ -116,8 +116,8 @@ if [ $MODELNAME = href ] && [ $VERIF_CASE = precip ] ; then
    export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
    export COMINmrms=$DCOMROOT/ldmdata/obs/upperair/mrms/alaska/MultiSensorQPE
 else
-   export COMINccpa=${COMINccpa:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
-   export COMINmrms=${COMINmrms:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
+   export COMINccpa=${COMINccpa:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT)}
+   export COMINmrms=${COMINmrms:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT)}
 fi
 
 # LCD COMMENT: COMOUT should not be different between HREF and other CAMs
@@ -134,7 +134,7 @@ export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 mkdir -p $COMOUTfinal $COMOUTsmall
 
-export maillist=${maillist:-'geoffrey.manikin@noaa.gov'}
+export maillist=${maillist:-'alicia.bentley@noaa.gov'}
 
 
 ####################################
