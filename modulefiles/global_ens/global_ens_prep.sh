@@ -15,8 +15,6 @@ module load cfp/${cfp_ver}
 module load cdo/${cdo_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
-module load udunits/${udunits_ver}
-module load nco/${nco_ver}
 
 module list
 
