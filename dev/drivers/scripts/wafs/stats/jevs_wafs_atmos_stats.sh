@@ -8,11 +8,6 @@
 #PBS -l debug=true
 #PBS -V
 
-##PBS -q debug
-##PBS -A GFS-DEV
-##PBS -q dev
-##PBS -A VERF-DEV
-
 set -x
 
 export OMP_NUM_THREADS=1
@@ -41,8 +36,6 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_$STEP.sh
 ############################################################
 export envir=prod
 
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
-
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs/$evs_ver
 
 ############################################################
@@ -51,7 +44,7 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs/$evs_ver
 export pid=${PBS_JOBID:-$$}
 export job=${PBS_JOBNAME:-jevs_aviation_stats}
 export jobid=$job.$pid
-export maillist=${maillist:-'geoffrey.manikin@noaa.gov,yali.mao@noaa.gov'}
+export maillist=${maillist:-'alicia.bentley@noaa.gov,yali.mao@noaa.gov'}
 
 ############################################################
 # CALL executable job script here
