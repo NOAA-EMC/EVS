@@ -18,7 +18,7 @@ set -x
   export RUN_ENVIR=emc
   export SENDECF=YES
   export SENDCOM=YES
-  export KEEPDATA=YES
+  export KEEPDATA=NO
   export SENDDBN=YES
   export SENDDBN_NTC=
   export job=${PBS_JOBNAME:-jevs_mesoscale_grid2obs_stats}
@@ -35,7 +35,6 @@ set -x
   export VERIF_CASE="grid2obs"
   export MODELNAME="rap" 
 
-# export envir="dev"
   export envir="prod"
   export evs_run_mode="standalone"
 
