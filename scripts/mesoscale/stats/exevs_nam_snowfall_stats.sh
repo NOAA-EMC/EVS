@@ -9,6 +9,7 @@
 
 set -x
 
+export MET_bin_exec="bin"
 export VERIF_CASE_STEP_abbrev="snowfalls"
 
 # Set run mode
