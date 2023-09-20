@@ -123,7 +123,7 @@ if [ $get_osi_saf = yes ] ; then
  export COMINmetfra_precip=
  export COMINukmet=
  export COMINukmet_precip=
- export COMINosi_saf=${COMINosi_saf:-/lfs/h1/ops/dev/dcom}
+ export COMINosi_saf=${COMINosi_saf:-$DCOMROOT}
 
  $USHevs/${COMPONENT}/evs_get_gens_${RUN}_data.sh osi_saf
  export MODELNAME=gefs
