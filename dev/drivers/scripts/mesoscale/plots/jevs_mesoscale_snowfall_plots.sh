@@ -27,6 +27,7 @@ export USE_CFP=YES
 export nproc=256
 
 # General Verification Settings
+export envir=prod
 export NET="evs"
 export STEP="plots"
 export COMPONENT="mesoscale"
