@@ -18,7 +18,7 @@ set -x
   export RUN_ENVIR=emc
   export SENDECF=YES
   export SENDCOM=YES
-  export KEEPDATA=NO
+  export KEEPDATA=YES
   export SENDDBN=YES
   export SENDDBN_NTC=
   export job=${PBS_JOBNAME:-jevs_mesoscale_grid2obs_stats}
@@ -80,6 +80,7 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
   export cyc=$(date -d "today" +"%H")
   export maillist="roshan.shrestha@noaa.gov,alicia.bentley@noaa.gov"
+  export maillist="roshan.shrestha@noaa.gov"
   # export maillist="firstname.lastname@noaa.gov"
 
 # Job Settings and Run

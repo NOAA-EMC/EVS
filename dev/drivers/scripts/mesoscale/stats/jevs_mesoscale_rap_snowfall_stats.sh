@@ -17,13 +17,13 @@ export model=evs
 export RUN_ENVIR=emc
 export SENDECF=YES
 export SENDCOM=YES
-export KEEPDATA=NO
+export KEEPDATA=YES
 export SENDDBN=YES
 export SENDDBN_NTC=
 export job=${PBS_JOBNAME:-jevs_rap_snowfall_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)  
-export envir="dev"
+export envir="prod"
 export NET="evs"
 export RUN="atmos"
 export cyc=$(date +"%H")
@@ -42,6 +42,7 @@ export nproc=128
 export evs_run_mode="production"
 
 export maillist='alicia.bentley@noaa.gov,roshan.shrestha@noaa.gov'
+export maillist='roshan.shrestha@noaa.gov'
 # export maillist="firstname.lastname@noaa.gov"
 
 export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
