@@ -79,7 +79,6 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
   export cyc=$(date -d "today" +"%H")
   export maillist="roshan.shrestha@noaa.gov,alicia.bentley@noaa.gov"
-  export maillist="roshan.shrestha@noaa.gov"
   # export maillist="firstname.lastname@noaa.gov"
 
 # Job Settings and Run

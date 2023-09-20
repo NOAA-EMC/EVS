@@ -41,15 +41,13 @@ export USE_CFP=YES
 export nproc=128  
 export evs_run_mode="production"
 
-export maillist='alicia.bentley@noaa.gov,roshan.shrestha@noaa.gov'
-export maillist='roshan.shrestha@noaa.gov'
+export maillist="roshan.shrestha@noaa.gov,alicia.bentley@noaa.gov"
 # export maillist="firstname.lastname@noaa.gov"
 
 export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
 
 source /usr/share/lmod/lmod/init/sh
-export MET_bin_exec="bin"
 
 source $HOMEevs/versions/run.ver
 module reset
