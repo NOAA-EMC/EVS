@@ -23,7 +23,7 @@ if [ $modnam = gfsanl ]; then
   echo $modnam is print here ...............
 
   for cyc in 00 06 12 18 ; do
-    ###cp $COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.f000 $COMOUT_gefs/gfsanl.t${cyc}z.grid3.f000.grib2
+    ###[[ $SENDCOM="YES" ]] && cp $COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.f000 $COMOUT_gefs/gfsanl.t${cyc}z.grid3.f000.grib2
 
     #check if gfsanl is missing:
     missing=no
@@ -37,7 +37,7 @@ if [ $modnam = gfsanl ]; then
     fi
 
    if [ $missing = no ] ; then 
-    cp $COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.anl $COMOUT_gefs/gfsanl.t${cyc}z.grid3.f000.grib2
+    [[ $SENDCOM="YES" ]] && cp $COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.anl $COMOUT_gefs/gfsanl.t${cyc}z.grid3.f000.grib2
     #There are no U10, V10 in GFS analysis, so use GFS*f000 as alternative
     GFSf000=$COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.f000 
     $WGRIB2  $GFSf000|grep "UGRD:10 m above ground"|$WGRIB2 -i $GFSf000 -grib $WORK/U10_f000.${cyc}
@@ -442,7 +442,7 @@ if [ $modnam = ccpa ] ; then
 
     if [ -s ${WORK}/ccpa24/ccpa1 ] && [ -s ${WORK}/ccpa24/ccpa2 ] && [ -s ${WORK}/ccpa24/ccpa3 ] && [ -s ${WORK}/ccpa24/ccpa4 ] ; then
        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_obsCCPA24h.conf
-       cp $output_base/ccpa.t12z.grid3.24h.f00.nc $COMOUT_gefs/.
+       [[ $SENDCOM="YES" ]] && cp $output_base/ccpa.t12z.grid3.24h.f00.nc $COMOUT_gefs/.
     else
        export subject="06h CCPA Data Missing for 24h CCPA generation"
        echo "Warning: At least one of ccpa06h files is missing  for ${INITDATE}${cyc}" > mailmsg
@@ -508,7 +508,7 @@ if [ $modnam = gefs_apcp24h ] ; then
       done
     done
 
-    cp ${output_base}/*.nc $COMOUT_gefs/.
+    [[ $SENDCOM="YES" ]] && cp ${output_base}/*.nc $COMOUT_gefs/.
 fi
 
 
@@ -551,7 +551,7 @@ if [ $modnam = cmce_apcp24h ] ; then
       done
     done
 
-    cp ${output_base}/*.nc $COMOUT_cmce/.
+    [[ $SENDCOM="YES" ]] && cp ${output_base}/*.nc $COMOUT_cmce/.
 fi
 
 
@@ -572,7 +572,7 @@ if [ $modnam = ecme_apcp24h ] ; then
      done
   done
 
-     cp ${output_base}/*.nc $COMOUT_ecme/.
+     [[ $SENDCOM="YES" ]] && cp ${output_base}/*.nc $COMOUT_ecme/.
 fi
 
 
@@ -581,7 +581,7 @@ if [ $modnam = nohrsc24h ] ; then
   for cyc in 00 12 ; do
     snowfall=$COMINsnow/${vday}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_24h_${vday}${cyc}_grid184.grb2
     if [ -s $snowfall ] ; then
-      cp $snowfall $COMOUT_gefs/nohrsc.t${cyc}z.grid184.grb2
+      [[ $SENDCOM="YES" ]] && cp $snowfall $COMOUT_gefs/nohrsc.t${cyc}z.grid184.grb2
     else
         export subject="NOHRSC Data Missing for EVS ${COMPONENT}"
         echo "Warning:  No NOHRSC analysis available for ${INITDATE}${cyc}" > mailmsg
@@ -616,7 +616,7 @@ if [ $modnam = gefs_snow24h ] ; then
     
   done
 
-  cp $output_base/*.nc $COMOUT_gefs/.
+  [[ $SENDCOM="YES" ]] && cp $output_base/*.nc $COMOUT_gefs/.
 fi
 
 
@@ -642,7 +642,7 @@ if [ $modnam = cmce_snow24h ] ; then
      done
   done
 
-  cp $output_base/*.nc $COMOUT_cmce/.
+  [[ $SENDCOM="YES" ]] && cp $output_base/*.nc $COMOUT_cmce/.
 fi
 
 if [ $modnam = ecme_snow24h ] ; then
@@ -664,7 +664,7 @@ if [ $modnam = ecme_snow24h ] ; then
      done
   done
 
-  #cp $output_base/ecme*.nc $COMOUT_ecme
+  #[[ $SENDCOM="YES" ]] && cp $output_base/ecme*.nc $COMOUT_ecme
 fi
 
 
@@ -687,7 +687,7 @@ if [ $modnam = osi_saf ] ; then
    osi=$COMINosi_saf/$INITDATE/seaice/osisaf/ice_conc_nh_polstere-100_multi_${INITDATE}1200.nc	
    if [ -s $osi ] ; then
      python ${USHevs}/global_ens/global_det_sea_ice_prep.py
-     cp $WORK/atmos.${INITDATE}/osi_saf/*.nc $COMOUT_osi_saf/.
+     [[ $SENDCOM="YES" ]] && cp $WORK/atmos.${INITDATE}/osi_saf/*.nc $COMOUT_osi_saf/.
    else
 
         export subject="OSI_SAF Data Missing for EVS ${COMPONENT}"
@@ -723,7 +723,7 @@ if [ $modnam = gefs_icec24h ] ; then
       done
     done
 
-    cp $output_base/gefs*icec*.nc $COMOUT_gefs
+    [[ $SENDCOM="YES" ]] && cp $output_base/gefs*icec*.nc $COMOUT_gefs
 fi
 
 if [ $modnam = gefs_icec7day ] ; then
@@ -749,7 +749,7 @@ if [ $modnam = gefs_icec7day ] ; then
      done
    done
 							     
-   cp $output_base/gefs*icec*.nc $COMOUT_gefs
+   [[ $SENDCOM="YES" ]] && cp $output_base/gefs*icec*.nc $COMOUT_gefs
 fi
 
 if [ $modnam = gefs_sst24h ] ; then
@@ -777,7 +777,7 @@ if [ $modnam = gefs_sst24h ] ; then
 
    done
 
-     cp $output_base/gefs*sst*.nc $COMOUT_gefs
+     [[ $SENDCOM="YES" ]] && cp $output_base/gefs*sst*.nc $COMOUT_gefs
 
 fi
 

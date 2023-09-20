@@ -450,7 +450,6 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                 ci_output = (
                     ci_output
                     .reindex(df_aggregated.index)
-                    #.reindex(ci_output.index)
                 )
                 df_aggregated[str(stat).upper()+'_BLERR'] = ci_output[
                     'CI_LOWER'
@@ -1111,11 +1110,6 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         [f'{date_hour:02d}' for date_hour in date_hours],
         ', ', '', 'Z', 'and ', ''
     )
-    '''
-    date_hours_string = ' '.join([
-        f'{date_hour:02d}Z,' for date_hour in date_hours
-    ])
-    '''
     date_start_string = date_range[0].strftime('%d %b %Y')
     date_end_string = date_range[1].strftime('%d %b %Y')
     if str(level).upper() in ['CEILING', 'TOTAL', 'PBL']:

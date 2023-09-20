@@ -74,7 +74,7 @@ def run_prune_data(logger, stats_dir, prune_dir, output_base_template, verif_cas
                 str(eval_period).upper(), str(verif_case).lower(), 
                 str(verif_type).lower(), str(line_type).upper(), 
                 str(domain), 
-                [str(fcst_var_name) for fcst_var_name in fcst_var_names],
+                [' '+str(fcst_var_name)+' ' for fcst_var_name in fcst_var_names],
                 str(var_name).upper(), model_list
             )
         else:

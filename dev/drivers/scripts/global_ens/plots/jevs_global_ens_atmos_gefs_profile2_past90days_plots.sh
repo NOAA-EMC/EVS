@@ -39,7 +39,7 @@ export valid_time=both
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
+
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 

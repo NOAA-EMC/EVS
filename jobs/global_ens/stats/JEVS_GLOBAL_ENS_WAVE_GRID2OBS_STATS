@@ -68,6 +68,10 @@ mkdir -p ${COMOUT} ${COMOUTsmall} ${COMOUTfinal}
 
 export jlogfile=${DATA}/${MODELNAME}_${RUN}_PointStat.log
 
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+
 ####################################
 # Execute the script                
 ####################################

@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+# =============================================================================
+#
+# NAME: cam_stats_mail_message.py
+# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# PURPOSE: Check logfiles after MET ran, records instances of missing data, and
+#          send an email message notification about the missing data
+#
+# =============================================================================
+
 import os
 import numpy as np
 from glob import glob
