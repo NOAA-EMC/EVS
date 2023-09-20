@@ -1008,7 +1008,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     else:
                         if JOB_GROUP == 'assemble_data':
                             if verif_type_job == 'TempAnom2m':
-                                job.write(verif_type_job_commands_list[1])
+                                if job_env_dict['fhr_list'] != '""':
+                                    job.write(verif_type_job_commands_list[1])
                     job.close()
                 date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
         # Do reformat_data and assemble_data observation jobs
