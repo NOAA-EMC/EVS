@@ -39,6 +39,7 @@ export cyc=${cyc:-${cyc}}
 # For dev testing
 ############################################################
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
+export COMROOT=/lfs/h2/emc/vpppg/noscrub/${USER}
 export KEEPDATA=NO
 export VERIF_CASE=radar
 export MODELNAME=href
