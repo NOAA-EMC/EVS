@@ -31,6 +31,7 @@ export MET_BASE=${MET_ROOT}/share/met
 export PATH=${MET_ROOT}/bin:${PATH}
 
 export USER=$USER
+export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export ACCOUNT=VERF-DEV
 export QUEUE=dev

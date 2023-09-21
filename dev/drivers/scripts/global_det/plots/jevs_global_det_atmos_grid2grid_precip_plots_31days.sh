@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:45:00
+#PBS -l walltime=01:00:00
 #PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
 #PBS -l debug=true
 #PBS -V
@@ -32,7 +32,7 @@ export machine=WCOSS2
 export USE_CFP=YES
 export nproc=128
 
-export envir=dev
+export envir=prod
 export NET=evs
 export STEP=plots
 export COMPONENT=global_det

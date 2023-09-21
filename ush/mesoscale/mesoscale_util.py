@@ -387,7 +387,7 @@ def initalize_job_env_dict():
         'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'evs_run_mode',
         'COMROOT', 'COMIN', 'COMOUT', 'COMOUTsmall', 'COMOUTfinal',
         'METPLUS_PATH','LOG_MET_OUTPUT_TO_METPLUS', 'METPLUS_VERBOSITY',
-        'MET_ROOT', 'MET_bin_exec', 'MET_VERBOSITY',
+        'MET_ROOT', 'MET_VERBOSITY',
         'MET_TMP_DIR', 'MODELNAME', 'JOB_GROUP'
     ]
     job_env_dict = {}

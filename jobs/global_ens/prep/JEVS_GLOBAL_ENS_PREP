@@ -38,8 +38,8 @@ export COMINccpa=${COMINccpa:-$(compath.py $envir/com/ccpa/${ccpa_ver})}
 export COMINcmce=$COMINnaefs
 export COMINprepbufr=${COMINprepbufr:-$(compath.py $envir/com/obsproc/${obsproc_ver})}
 export COMINsnow=${DCOMIN}
-export COMINosi_saf=${COMINosi_saf:-/lfs/h1/ops/dev/dcom}
-export COMINsst=${COMINsst:-/lfs/h1/ops/dev/dcom} 
+export COMINosi_saf=${COMINosi_saf:-$DCOMROOT}
+export COMINsst=${COMINsst:-$DCOMROOT} 
 
 export COMINgefs_bc=${COMINgefs_bc:-$COMINnaefs}
 export COMINcmce_bc=${DCOMIN}

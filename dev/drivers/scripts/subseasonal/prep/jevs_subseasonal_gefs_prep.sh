@@ -21,6 +21,7 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/subseasonal/subseasonal_prep.sh
 
+export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_subseasonal_gefs_prep}
 export jobid=$job.${PBS_JOBID:-$$}
