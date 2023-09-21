@@ -34,7 +34,7 @@ export nproc=14
 
 export maillist='alicia.bentley@noaa.gov,mallory.row@noaa.gov'
 
-export envir=dev
+export envir=prod
 export NET=evs
 export STEP=stats
 export COMPONENT=global_det
@@ -46,7 +46,6 @@ export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=$COMROOT/$NET/$evs_ver
-export COMINfnmoc=$COMIN/prep/$COMPONENT/$RUN
 export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT
 
 export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}

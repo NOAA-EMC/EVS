@@ -38,6 +38,7 @@ export cyc=${cyc:-${cyc}}
 ############################################################
 # For dev testing
 ############################################################
+export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=NO
 export VERIF_CASE=severe
