@@ -9,15 +9,16 @@
 # 4/2023: Script updated to handle storm reports and outlook areas 
 ###############################################################################
 
-
-set +x
+set -x
 
 echo 
 echo " ENTERING SUB SCRIPT $0 "
 echo
 
-set -x
-
+export MET_bin_exec=bin
+export metplus_verbosity=DEBUG
+export met_verbosity=2
+export log_met_output_to_metplus=yes
 
 ############################################################
 ## Copy and preprocess SPC OTLK files

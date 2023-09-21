@@ -17,7 +17,7 @@ mkdir -p $DATA/logs
 export eval_period='TEST'
 
 export interp_pnts=''
-
+met_v=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
 export init_end=$VDATE
 export valid_end=$VDATE
 
@@ -50,7 +50,7 @@ done
 
 
 export plot_dir=$DATA/out/precip/${valid_beg}-${valid_end}
-
+mkdir -p $plot_dir
 verif_case=precip
 verif_type=ccpa
 

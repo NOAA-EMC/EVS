@@ -17,7 +17,7 @@ mkdir -p $DATA/logs
 export eval_period='TEST'
 
 export interp_pnts='' 
-
+met_v=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
 export init_end=$VDATE
 export valid_end=$VDATE
 

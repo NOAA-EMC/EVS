@@ -10,14 +10,11 @@
 ##################################################################################
 
 
-set +x
+set -x
 
 echo
 echo " ENTERING SUB SCRIPT $0 "
 echo
-
-set -x
-
 
 ############################################################
 # Define some configuration settings to define
