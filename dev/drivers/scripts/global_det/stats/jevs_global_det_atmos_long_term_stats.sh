@@ -30,7 +30,7 @@ source $HOMEevs/modulefiles/global_det/global_det_stats.sh
 
 export machine=WCOSS2
 
-export envir=dev
+export envir=prod
 export NET=evs
 export STEP=stats
 export COMPONENT=global_det

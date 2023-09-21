@@ -31,7 +31,7 @@ source $HOMEevs/modulefiles/global_det/global_det_plots.sh
 
 export machine=WCOSS2
 
-export envir=dev
+export envir=prod
 export NET=evs
 export STEP=plots
 export COMPONENT=global_det
