@@ -17,6 +17,7 @@ set -x
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 source $HOMEevs/versions/run.ver
 
+export envir=prod
 export NET=evs
 export RUN=atmos
 export STEP=stats
