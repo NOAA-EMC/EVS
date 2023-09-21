@@ -13,6 +13,7 @@ export OMP_NUM_THREADS=1
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
+export envir=prod
 export NET=evs
 export RUN=atmos
 export STEP=prep

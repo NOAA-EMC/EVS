@@ -34,7 +34,7 @@ export nproc=128
 
 export maillist='alicia.bentley@noaa.gov,mallory.row@noaa.gov'
 
-export envir=dev
+export envir=prod
 export NET=evs
 export STEP=stats
 export COMPONENT=global_det
@@ -44,7 +44,6 @@ export MODELNAME=gfs
 
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
-export COMINgfs=$(compath.py prod/gfs/$gfs_ver)
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=$COMROOT/$NET/$evs_ver
 export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT
