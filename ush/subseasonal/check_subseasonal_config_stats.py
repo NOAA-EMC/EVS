@@ -29,7 +29,6 @@ VCS_type_env_vars_dict = {
                'OUTPUTROOT',
                'start_date', 'end_date', 'make_met_data_by',
                'met_version', 'metplus_version',
-               'SENDARCH', 'SENDMETVIEWER',
                'KEEPDATA'],
     'grid2grid_stats': ['g2gstats_type_list',
                         'g2gstats_anom_truth_name_list',
@@ -48,30 +47,6 @@ VCS_type_env_vars_dict = {
                         'g2gstats_pres_lvls_fhr_inc',
                         'g2gstats_pres_lvls_grid', 
                         'g2gstats_pres_lvls_gather_by',
-                        'g2gstats_ENSO_truth_name_list',
-                        'g2gstats_ENSO_truth_file_format_list',
-                        'g2gstats_ENSO_fcyc_list',
-                        'g2gstats_ENSO_vhr_list',
-                        'g2gstats_ENSO_fhr_min', 'g2gstats_ENSO_fhr_max',
-                        'g2gstats_ENSO_fhr_inc',
-                        'g2gstats_ENSO_grid', 'g2gstats_ENSO_gather_by',
-                        'g2gstats_OLR_truth_name_list',
-                        'g2gstats_OLR_truth_file_format_list',
-                        'g2gstats_OLR_fcyc_list',
-                        'g2gstats_OLR_vhr_list',
-                        'g2gstats_OLR_fhr_min', 'g2gstats_OLR_fhr_max',
-                        'g2gstats_OLR_fhr_inc',
-                        'g2gstats_OLR_grid', 'g2gstats_OLR_gather_by',
-                        'g2gstats_precip_file_format_list',
-                        'g2gstats_precip_file_accum_list',
-                        'g2gstats_precip_truth_name_list',
-                        'g2gstats_precip_truth_file_format_list',
-                        'g2gstats_precip_var_list',
-                        'g2gstats_precip_fcyc_list',
-                        'g2gstats_precip_vhr_list',
-                        'g2gstats_precip_fhr_min', 'g2gstats_precip_fhr_max',
-                        'g2gstats_precip_fhr_inc',
-                        'g2gstats_precip_grid', 'g2gstats_precip_gather_by',
                         'g2gstats_sst_truth_name_list',
                         'g2gstats_sst_truth_file_format_list',
                         'g2gstats_sst_fcyc_list',
@@ -85,10 +60,7 @@ VCS_type_env_vars_dict = {
                         'g2gstats_seaice_vhr_list',
                         'g2gstats_seaice_fhr_min', 'g2gstats_seaice_fhr_max',
                         'g2gstats_seaice_fhr_inc',
-                        'g2gstats_seaice_grid', 'g2gstats_seaice_gather_by',
-                        'g2gstats_mv_database_name', 
-                        'g2gstats_mv_database_group',
-                        'g2gstats_mv_database_desc'],
+                        'g2gstats_seaice_grid', 'g2gstats_seaice_gather_by'],
     'grid2obs_stats': ['g2ostats_type_list',
                        'g2ostats_PrepBufr_truth_name_list',
                        'g2ostats_PrepBufr_truth_file_format_list',
@@ -98,10 +70,7 @@ VCS_type_env_vars_dict = {
                        'g2ostats_PrepBufr_fhr_max', 
                        'g2ostats_PrepBufr_fhr_inc',
                        'g2ostats_PrepBufr_grid',
-                       'g2ostats_PrepBufr_gather_by',
-                       'g2ostats_mv_database_name', 
-                       'g2ostats_mv_database_group',
-                       'g2ostats_mv_database_desc']
+                       'g2ostats_PrepBufr_gather_by']
 }
 VCS_type_env_check_list = ['shared', VERIF_CASE_STEP]
 for VCS_type_env_check in VCS_type_env_check_list:
@@ -142,8 +111,7 @@ if datetime.datetime.strptime(os.environ['end_date'], '%Y%m%d') \
 
 # Do check for valid config options
 valid_VCS_type_opts_dict = {
-    'grid2grid_stats': ['anom', 'pres_lvls', 'ENSO', 'OLR', 'precip', 'sst', 
-                        'seaice'],
+    'grid2grid_stats': ['anom', 'pres_lvls', 'sst', 'seaice'],
     'grid2obs_stats': ['PrepBufr']
 }
 for VCS_type in VCS_type_list:
@@ -169,8 +137,6 @@ for config_var in check_config_var_len_list:
 # Do check for valid list config variable options
 valid_config_var_values_dict = {
     'make_met_data_by': ['VALID', 'INIT'],
-    'SENDARCH': ['YES', 'NO'],
-    'SENDMETVIEWER': ['YES', 'NO'],
     'KEEPDATA': ['YES', 'NO']
 }
 if VERIF_CASE_STEP == 'grid2grid_stats':
@@ -179,9 +145,6 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
         valid_config_var_values_dict[VCS_abbrev_type
                                      +'_truth_name_list'] = ['gfs_anl', 
                                                              'ecmwf_anl',
-                                                             'ccpa_anl', 
-                                                             'mrmsak_anl',
-                                                             'mrmshi_anl',
                                                              'umd_anl',
                                                              'ghrsst_anl',
                                                              'osi_anl']

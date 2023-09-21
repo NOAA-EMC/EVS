@@ -4,7 +4,7 @@
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=02:00:00
+#PBS -l walltime=00:15:00
 #PBS -l select=1:ncpus=1:mem=2GB
 #PBS -l debug=true
 
@@ -25,9 +25,8 @@ set -x
 module reset
 module load prod_envir/${prod_envir_ver}
 
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=YES
+export KEEPDATA=NO
 
 export cyc=00
 export envir=prod
@@ -49,7 +48,7 @@ export config=$HOMEevs/parm/evs_config/cam/config.evs.cam_nam_firewxnest.prod
 source $config
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}/$STEP/$COMPONENT
+export COMOUT=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver}/$STEP/$COMPONENT
 export COMINnam=${COMIN}/stats/${COMPONENT}/${MODELNAME}
 
 # CALL executable job script here

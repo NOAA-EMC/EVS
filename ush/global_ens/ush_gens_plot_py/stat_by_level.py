@@ -235,6 +235,24 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         logger.info("========================================")
         return None
 
+    units = df['FCST_UNITS'].tolist()[0]
+    metrics_using_var_units = [
+        'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
+        'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR',
+        'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
+    ]
+    unit_convert = False
+    if units in reference.unit_conversions:
+        unit_convert = True
+        var_long_name_key = df['FCST_VAR'].tolist()[0]
+        if str(var_long_name_key).upper() == 'HGT':
+            if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
+                if units in ['m', 'gpm']:
+                    units = 'gpm'
+            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+                unit_convert = False
+        elif str(var_long_name_key).upper() == 'TMP':
+            unit_convert = False
     # Calculate desired metrics
     metric_long_names = []
     for stat in [metric1_name, metric2_name]:
@@ -702,12 +720,13 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         np.digitize(x_range, x_range_categories[:-1])
     ]
     xlim_min = np.floor(x_min/round_to_nearest)*round_to_nearest
-    xlim_max = np.ceil(x_max/round_to_nearest)*round_to_nearest
+    xlim_max = round(np.ceil(x_max/round_to_nearest)*round_to_nearest, len(str(round_to_nearest))-1)
     if len(str(xlim_min)) > 5 and np.abs(xlim_min) < 1.:
         xlim_min = float(
             np.format_float_scientific(xlim_min, unique=False, precision=3)
         )
-    xticks = np.arange(xlim_min, xlim_max+round_to_nearest, round_to_nearest)
+    xticks_og = np.arange(xlim_min, xlim_max+round_to_nearest, round_to_nearest)
+    xticks = [round(xtick,len(str(round_to_nearest))-1) for xtick in xticks_og]
     if any([len(str(xtick)) > 5 and np.abs(xtick) < 1. for xtick in xticks]):
         xtick_labels = []
         for xtick in xticks:
@@ -735,14 +754,15 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
     var_long_name = variable_translator[var_long_name_key]
     units = df['FCST_UNITS'].tolist()[0]
     if units in reference.unit_conversions:
+        do_unit_conversion = True
+        if var_long_name_key == 'TMP':
+            do_unit_conversion = False
+    else:
+        do_unit_conversion = False
+    if do_unit_conversion:
         units = reference.unit_conversions[units]['convert_to']
     if units == '-':
         units = ''
-    metrics_using_var_units = [
-        'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
-        'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR',
-        'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
-    ]
     if metric2_name is not None:
         metric1_string, metric2_string = metric_long_names
         if (str(metric1_name).upper() in metrics_using_var_units 

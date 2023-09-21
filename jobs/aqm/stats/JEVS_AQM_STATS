@@ -35,11 +35,10 @@ export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
 export envir=${envir:-prod}
-export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
-export FIXvevs=${FIXevs:-$HOMEevs/fix}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
 export USHevs=${USHevs:-$HOMEevs/ush}
@@ -68,11 +67,13 @@ export COMOUT=${COMOUT:-$(compath.py ${envir}/com/${NET}/${evs_ver}/${STEP}/${CO
 export COMOUTsmall=${COMOUTsmall:-${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}}
 export COMOUTfinal=${COMOUTfinal:-${COMOUT}/${MODELNAME}.${VDATE}}
 
+mkdir -p $COMOUTsmall $COMOUTfinal
+
 
 # alternative choice is dan option different from aqons
 export airnow_hourly_type=${airnow_hourly_type:-aqobs}
 
-export KEEPDATA=${KEEPDATA:-YES}
+export KEEPDATA=${KEEPDATA:-NO}
 
 #######################################################################
 # Execute the script.

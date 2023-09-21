@@ -48,7 +48,6 @@ start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
 end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
 
 # Set up job directory
-#njobs = 0
 JOB_GROUP_jobs_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                   'METplus_job_scripts', JOB_GROUP)
 if not os.path.exists(JOB_GROUP_jobs_dir):
@@ -96,7 +95,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
         for verif_type_job in list(JOB_GROUP_obs_jobs_dict[verif_type]\
                                    .keys()):
             # Initialize job environment dictionary
-            job_env_dict = sub_util.initalize_job_env_dict(
+            job_env_dict = sub_util.initialize_job_env_dict(
                 verif_type, JOB_GROUP, VERIF_CASE_STEP_abbrev_type,
                 verif_type_job
             )
@@ -148,8 +147,9 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                 job.write('\n')
                 # Set any environment variables for special cases
                 # Do file checks
-                all_truth_file_exist = sub_util.check_weeks3_4_truth_files(
-                    job_env_dict
+                (all_truth_file_exist,
+                 truth_copy_output_DATA2COMOUT_list) = (
+                    sub_util.check_weeks3_4_truth_files(job_env_dict)
                 )
                 if all_truth_file_exist:
                     write_job_cmds = True
@@ -164,6 +164,11 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                 if write_job_cmds:
                     for cmd in verif_type_job_commands_list:
                         job.write(cmd+'\n')
+                    if job_env_dict['SENDCOM'] == 'YES':
+                        for truth_output_file_tuple \
+                                in truth_copy_output_DATA2COMOUT_list:
+                            job.write(f"cp -v {truth_output_file_tuple[0]} "
+                                      +f"{truth_output_file_tuple[1]}\n")
                 job.close()
                 date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
         # Create model job scripts
@@ -175,7 +180,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
             for verif_type_job in list(JOB_GROUP_jobs_dict[verif_type]\
                                        .keys()):
                 # Initialize job environment dictionary
-                job_env_dict = sub_util.initalize_job_env_dict(
+                job_env_dict = sub_util.initialize_job_env_dict(
                     verif_type, JOB_GROUP, VERIF_CASE_STEP_abbrev_type,
                     verif_type_job
                 )
@@ -255,7 +260,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                         check_model_files = True
                         check_truth_files = False
                         if check_model_files:
-                            model_files_exist, valid_date_fhr_list = (
+                            (model_files_exist, valid_date_fhr_list,
+                             model_copy_output_DATA2COMOUT_list) = (
                                 sub_util.check_weeks3_4_model_files(job_env_dict)
                             )
                             job_env_dict['fhr_list'] = (
@@ -265,7 +271,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                             job_env_dict.pop('fhr_end')
                             job_env_dict.pop('fhr_inc')
                         if check_truth_files:
-                            all_truth_file_exist = (
+                            (all_truth_file_exist,
+                             truth_copy_output_DATA2COMOUT_list) = (
                                 sub_util.check_weeks3_4_truth_files(job_env_dict)
                             )
                             if model_files_exist and all_truth_file_exist:
@@ -285,6 +292,11 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                         if write_job_cmds:
                             for cmd in verif_type_job_commands_list:
                                 job.write(cmd+'\n')
+                            if job_env_dict['SENDCOM'] == 'YES':
+                                for model_output_file_tuple \
+                                        in model_copy_output_DATA2COMOUT_list:
+                                    job.write(f"cp -v {model_output_file_tuple[0]} "
+                                              +f"{model_output_file_tuple[1]}\n")
                         job.close()
                         job_env_dict.pop('fhr_list')
                         job_env_dict['fhr_start'] = fhr_start

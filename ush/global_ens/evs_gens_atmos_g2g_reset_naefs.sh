@@ -6,7 +6,6 @@
 set -x
 
 
-NDATE=${NDATE:-/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate}
 
 
 if [ $RUN = atmos ] ; then

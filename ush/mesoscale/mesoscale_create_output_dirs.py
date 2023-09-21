@@ -53,6 +53,7 @@ if VERIF_CASE == "precip":
         OBSNAME = os.environ['OBSNAME']
     elif STEP == 'plots':
         all_eval_periods = cutil.get_all_eval_periods(graphics_pcp)
+        COMOUTplots = os.environ['COMOUTplots']
 elif VERIF_CASE == "grid2obs":
     if STEP == 'prep':
         NEST = os.environ['NEST']
@@ -66,9 +67,11 @@ elif VERIF_CASE == "grid2obs":
         OBSNAME = os.environ['OBSNAME']
     elif STEP == 'plots':
         all_eval_periods = cutil.get_all_eval_periods(graphics_g2o)
+        COMOUTplots = os.environ['COMOUTplots']
 elif VERIF_CASE == "headline":
     if STEP == 'plots':
         all_eval_periods = cutil.get_all_eval_periods(graphics_hdl)
+        COMOUTplots = os.environ['COMOUTplots']
 elif VERIF_CASE == "snowfall":
     if STEP == 'prep':
         pass
@@ -76,8 +79,11 @@ elif VERIF_CASE == "snowfall":
         pass
     elif STEP == 'plots':
         all_eval_periods = cutil.get_all_eval_periods(graphics_sno)
+        COMOUTplots = os.environ['COMOUTplots']
 if STEP == 'stats':
     job_type = os.environ['job_type']
+if STEP == 'plots':
+    RESTART_DIR = os.environ['RESTART_DIR']
 
 
 # Define data base directorie
@@ -340,6 +346,12 @@ elif STEP == 'plots':
         COMOUT_dir_list.append(os.path.join(
             COMOUT, 
         ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUTplots,
+        ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUTplots, VERIF_CASE
+        ))
         for plot_group in [
                 'aq', 'aviation', 'cape', 'ceil_vis', 'precip', 
                 'radar', 'rtofs_sfc', 'sfc_upper'
@@ -347,6 +359,10 @@ elif STEP == 'plots':
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'out', str(plot_group).lower(), 
+                    str(eval_period).lower()
+                ))
+                COMOUT_dir_list.append(os.path.join(
+                    RESTART_DIR, str(plot_group).lower(),
                     str(eval_period).lower()
                 ))
     if VERIF_CASE == 'precip':
@@ -366,10 +382,20 @@ elif STEP == 'plots':
         COMOUT_dir_list.append(os.path.join(
             COMOUT, 
         ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUTplots,
+        ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUTplots, VERIF_CASE
+        ))
         for plot_group in ['precip', 'radar', 'rtofs_sfc', 'sfc_upper']:
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'out', str(plot_group).lower(), 
+                    str(eval_period).lower()
+                ))
+                COMOUT_dir_list.append(os.path.join(
+                    RESTART_DIR, str(plot_group).lower(),
                     str(eval_period).lower()
                 ))
     elif VERIF_CASE == 'snowfall':
@@ -389,10 +415,20 @@ elif STEP == 'plots':
         COMOUT_dir_list.append(os.path.join(
             COMOUT,
         ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUTplots,
+        ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUTplots, VERIF_CASE
+        ))
         for plot_group in ['precip']:
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'out', str(plot_group).lower(), 
+                    str(eval_period).lower()
+                ))
+                COMOUT_dir_list.append(os.path.join(
+                    RESTART_DIR, str(plot_group).lower(),
                     str(eval_period).lower()
                 ))
     elif VERIF_CASE == 'headline':
@@ -412,6 +448,12 @@ elif STEP == 'plots':
         COMOUT_dir_list.append(os.path.join(
             COMOUT, 
         ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUTplots,
+        ))
+        COMOUT_dir_list.append(os.path.join(
+            COMOUTplots, VERIF_CASE
+        ))
         for plot_group in [
                 'aq', 'aviation', 'cape', 'ceil_vis', 'precip', 
                 'radar', 'rtofs_sfc', 'sfc_upper'
@@ -419,6 +461,10 @@ elif STEP == 'plots':
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'out', str(plot_group).lower(), 
+                    str(eval_period).lower()
+                ))
+                COMOUT_dir_list.append(os.path.join(
+                    RESTART_DIR, str(plot_group).lower(),
                     str(eval_period).lower()
                 ))
 # Create working output and COMOUT directories

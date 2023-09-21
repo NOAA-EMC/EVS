@@ -59,7 +59,7 @@ verif_case=$VERIF_CASE
 
 > run_all_poe.sh
 
-for stats in acc bias_mae crps rmse_spread ; do 
+for stats in acc me_mae crps rmse_spread ; do 
 if [ $stats = acc ] ; then
   stat_list='acc'
   line_tp='sal1l2'
@@ -69,9 +69,9 @@ elif [ $stats = bias ] ; then
 elif [ $stats = mae ] ; then
   stat_list='mae'
   line_tp='sl1l2'
-elif [ $stats = bias_mae  ] ; then
-  stat_list='bias, mae'
-  line_tp='sl1l2'
+elif [ $stats = me_mae  ] ; then
+  stat_list='me, mae'
+  line_tp='ecnt'
 elif [ $stats = crps  ] ; then
   stat_list='crps'
   line_tp='ecnt'
@@ -90,7 +90,7 @@ fi
   for lead in $fcst_leads ; do 
 
    if [ $lead = vs_lead ] ; then
-	export fcst_lead="12, 24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384"
+	export fcst_lead="0, 12, 24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384"
    else
         export fcst_lead=$lead
    fi
@@ -184,47 +184,31 @@ fi
 
 cd $plot_dir
 
-for stats in acc bias_mae crps rmse_spread ; do
- for score_type in lead_average ; do
-
-    leads='.png'
-    scoretype='fhrmean'
-
-
-  for lead in $leads ; do
-
-   for domain in  nhem shem tropics  ; do
-
-    for var in hgt tmp  ; do
-      if [ $var = hgt ] ; then
-	 levels='500  1000'
-	 unit='mb'
-      elif [ $var = tmp ] ; then
-	 levels='850'
-	 unit='mb'
-      fi
-
-      for level in $levels ; do
-
-         plevel=p${level}
-
-         mv ${score_type}_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}${lead}  evs.naefs.${stats}.${var}_${plevel}.last${past_days}days.${scoretype}_${valid_time}.g003_${domain}.png
-               
-      done #level
-
-    done #var
-   done  #domain
-  done   #lead
- done    #score_type
+for stats in acc me_mae crps rmse_spread ; do
+    if [ $stats = rmse_spread ]; then
+        evs_graphic_stats="rmse_sprd"
+    else
+        evs_graphic_stats=$stats
+    fi
+    for domain in  nhem shem tropics  ; do
+        for var in hgt tmp  ; do
+            if [ $var = hgt ] ; then
+                levels='500  1000'
+                unit='mb'
+            elif [ $var = tmp ] ; then
+                levels='850'
+                unit='mb'
+            fi
+            for level in $levels ; do
+                plevel=p${level}
+                mv lead_average_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}.png  evs.naefs.${evs_graphic_stats}.${var}_${plevel}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${domain}.png
+            done #level
+        done #var
+    done  #domain
 done     #stats
 
-#scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/naefs/grid2grid
+tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar *.png
 
-tar -cvf evs.plots.naefs.grid2grid.v${VDATE}.past${past_days}days.tar *.png
-
-cp  evs.plots.naefs.grid2grid.v${VDATE}.past${past_days}days.tar $COMOUT/.  
-
-
-
-
-
+if [ $SENDCOM = YES ]; then
+    cp  evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar $COMOUT/.
+fi 

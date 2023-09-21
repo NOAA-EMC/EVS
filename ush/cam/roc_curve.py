@@ -38,7 +38,10 @@ from check_variables import *
 
 # ================ GLOBALS AND CONSTANTS ================
 
-plotter = Plotter(fig_size=(20., 14.))
+plotter = Plotter(
+    fig_size=(10., 8.), legend_font_size=10, fig_subplot_right=.77,
+    fig_subplot_left=.23, fig_subplot_top=.87, fig_subplot_bottom=.23                  
+)
 plotter.set_up_plots()
 toggle = Toggle()
 templates = Templates()
@@ -62,7 +65,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                       metric3_name: str = 'CSI', date_type: str = 'VALID', 
                       date_hours: list = [0,6,12,18], verif_type: str = 'pres', 
                       line_type: str = 'CTC', save_dir: str = '.', 
-                      restart_dir: str = '.', dpi: int = 300, 
+                      restart_dir: str = '.', dpi: int = 100, 
                       confidence_intervals: bool = False, bs_nrep: int = 5000, 
                       bs_method: str = 'MATCHED_PAIRS', ci_lev: float = .95, 
                       bs_min_samp: int = 30, eval_period: str = 'TEST', 
@@ -147,6 +150,11 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         for x in date_hours
     ]]
 
+    if df.empty:
+        logger.warning(f"Empty Dataframe. Continuing onto next plot...")
+        plt.close(num)
+        logger.info("========================================")
+        return None
     if interp_pts and '' not in interp_pts:
         interp_shape = list(df['INTERP_MTHD'])[0]
         if 'SQUARE' in interp_shape:
@@ -534,45 +542,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
 
     # Plot data
     logger.info("Begin plotting ...")
-    '''
-    gray_colors = [
-        '#ffffff',
-        '#f5f5f5',
-        '#ececec',
-        '#dfdfdf',
-        '#cbcbcb',
-        '#b2b2b2',
-        '#8e8e8e',
-        '#6f6f6f',
-        '#545454',
-        '#3f3f3f',
-    ]
-
-    cmap = colors.ListedColormap(gray_colors)
-    '''
     grid_ticks = np.arange(0.001, 1.001, 0.001)
     fr_g, pod_g = np.meshgrid(grid_ticks, grid_ticks)
-    '''
-    bias = pod_g / sr_g
-    csi = 1.0 / (1.0 / sr_g + 1.0 / pod_g - 1.0)
-    bias_contour_vals = [
-        0.1, 0.2, 0.4, 0.6, 0.8, 1., 1.2, 1.5, 2., 3., 5., 10.
-    ]
-    b_contour = plt.contour(
-        sr_g, pod_g, bias, bias_contour_vals, 
-        colors='gray', linestyles='dashed'
-    )
-    csi_contour = plt.contourf(
-        sr_g, pod_g, csi, np.arange(0., 1.1, 0.1), cmap=cmap, extend='neither'
-    )
-    plt.clabel(
-        b_contour, fmt='%1.1f', 
-        manual=[
-            get_bias_label_position(bias_value, .75) 
-            for bias_value in bias_contour_vals
-        ]
-    )
-    '''
     random_contour = plt.contour(
         fr_g, pod_g, pod_g / fr_g, [1.],
         colors='gray', linestyles='dashed'
@@ -589,9 +560,9 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         requested_thresh_value[i] for i in requested_thresh_argsort
     ]
     thresh_markers = [
-        ('o',12),('P',14),('^',14),('X',14),('s',12),('D',12),('v',14),
-        ('p',14),('<',14),('d',14),(r'$\spadesuit$',14),('>',14),
-        (r'$\clubsuit$',14)
+        ('o',10),('P',11),('^',11),('X',11),('s',10),('D',10),('v',11),
+        ('p',11),('<',11),('d',11),(r'$\spadesuit$',11),('>',11),
+        (r'$\clubsuit$',11)
     ]
     if len(thresh_labels)+len(model_list) > 12:
         e = (f"The plot legend may be cut off.  Consider reducing the number"
@@ -691,7 +662,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         for i, item in enumerate(x_vals):
             plt.scatter(
                 x_vals[i], y_vals[i], marker=thresh_markers[i][0], 
-                c=mod_setting_dicts[m]['color'], linewidths=2., 
+                c=mod_setting_dicts[m]['color'], linewidths=1.5, 
                 edgecolors='white', figure=fig, s=thresh_markers[i][1]**2,
                 zorder=10
             )
@@ -759,35 +730,16 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     )
 
     ax.legend(
-        handles, labels, loc='upper center', fontsize=15, framealpha=1, 
-        bbox_to_anchor=(0.5, -0.08), ncol=4, frameon=True, numpoints=1, 
-        borderpad=.8, labelspacing=2., columnspacing=3., handlelength=3., 
-        handletextpad=.4, borderaxespad=.5) 
+        handles, labels, framealpha=1, 
+        bbox_to_anchor=(0.5, -0.15), ncol=4, frameon=True, numpoints=1, 
+        borderpad=.8, labelspacing=1. 
+    ) 
     ax.grid(
         visible=True, which='major', axis='both', alpha=.35, linestyle='--', 
         linewidth=.5, c='black', zorder=0
     )
     
-    fig.subplots_adjust(bottom=.2, top=.91, right=.77, left=.23, wspace=0, hspace=0)
-    '''
-    cax = fig.add_axes([.775, .2, .01, .725])
-    cbar_ticks = [0.,.1,.2,.3,.4,.5,.6,.7,.8,.9,1.]
-    cb = plt.colorbar(
-        csi_contour, orientation='vertical', cax=cax, ticks=cbar_ticks,
-        spacing='uniform', drawedges=True
-    )
-    cb.dividers.set_color('black')
-    cb.dividers.set_linewidth(2)
-    cb.ax.tick_params(
-        labelsize=8, labelright=True, labelleft=False, right=False
-    )
-    cb.ax.set_yticklabels(
-        [f'{cbar_tick:.1f}' for cbar_tick in cbar_ticks], 
-        fontdict={'fontsize': 12}
-    )
-    cax.hlines([0, 1], 0, 1, colors='black', linewidth=4)
-    cb.set_label(f'{metric_long_names[2]}')
-    '''
+    fig.subplots_adjust(wspace=0, hspace=0)
 
     # Title
     domain = df['VX_MASK'].tolist()[0]
@@ -800,11 +752,6 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         [f'{date_hour:02d}' for date_hour in date_hours],
         ', ', '', 'Z', 'and ', ''
     )
-    '''
-    date_hours_string = ' '.join([
-        f'{date_hour:02d}Z,' for date_hour in date_hours
-    ])
-    '''
     date_start_string = date_range[0].strftime('%d %b %Y')
     date_end_string = date_range[1].strftime('%d %b %Y')
     if str(verif_type).lower() in ['pres', 'upper_air'] or 'P' in str(level):
@@ -858,7 +805,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
               + f'{date_start_string} to {date_end_string}, {frange_string}')
     title_center = '\n'.join([title1, title2, title3])
-    ax.set_title(title_center, loc=plotter.title_loc) 
+    ax.set_title(title_center) 
     logger.info("... Plotting complete.")
 
     # Saving

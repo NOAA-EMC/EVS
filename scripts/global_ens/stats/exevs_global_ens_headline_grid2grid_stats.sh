@@ -9,11 +9,6 @@ set -x
 export WORK=$DATA
 cd $WORK
 
-export MET_bin_exec='bin'
-export log_met_output_to_metplus=''
-export metplus_verbosity=2
-export met_verbosity=2
-
 export CLIMO=$FIXevs/climos/atmos
 export MASKS=$FIXevs/masks
 
@@ -39,7 +34,7 @@ verify_type=$3
 if  [ $ens = gefs ] || [ $ens = naefs ] || [ $ens = gfs ] ; then
   if [ $verify_type = upper ] ; then
 
-   if [ $ens = gfs ] || [ [ $ens = gefs ] ; then
+   if [ $ens = gfs ] || [ $ens = gefs ] ; then
     if [ ! -s ${COMIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2 ] ; then
          	       
        export subject="GFS analysis data missing for $ens headline stat job"

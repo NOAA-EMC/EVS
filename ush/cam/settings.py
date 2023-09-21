@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+# =============================================================================
+#
+# NAME: settings.py
+# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# PURPOSE: General settings used for CAM plotting scripts
+#
+# =============================================================================
 
 import os
 from datetime import datetime, timedelta as td
@@ -29,8 +36,8 @@ class Toggle():
             'clear_prune_directory': False, # remove the intermediate directory created to store pruned data files temporarily
             'plot_logo_left': True,
             'plot_logo_right': True,
-            'zoom_logo_left': 1.0, 
-            'zoom_logo_right': 1.0,
+            'zoom_logo_left': .65, 
+            'zoom_logo_right': .65,
             'delete_intermed_data': True # whether of not to delete DataFrame rows if, for any model, rows include NaN (currently only used in lead_average.py)
         }
 
@@ -601,119 +608,119 @@ class ModelSpecs():
         '''
         self.model_settings = {
             'model1': {'color': '#000000',
-                       'marker': 'o', 'markersize': 12,
-                       'linestyle': 'solid', 'linewidth': 3.},
+                       'marker': 'o', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
             'model2': {'color': '#fb2020',
-                       'marker': '^', 'markersize': 14,
-                       'linestyle': 'solid', 'linewidth': 3.},
+                       'marker': '^', 'markersize': 11,
+                       'linestyle': 'solid', 'linewidth': 1.8},
             'model3': {'color': '#1e3cff',
-                       'marker': 'X', 'markersize': 14,
-                       'linestyle': 'solid', 'linewidth': 3.},
+                       'marker': 'X', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
             'model4': {'color': '#00dc00',
-                       'marker': 'P', 'markersize': 14,
-                       'linestyle': 'solid', 'linewidth': 3.},
+                       'marker': 'P', 'markersize': 11,
+                       'linestyle': 'solid', 'linewidth': 1.8},
             'model5': {'color': '#e69f00',
-                       'marker': 'o', 'markersize': 12,
-                       'linestyle': 'solid', 'linewidth': 3.},
+                       'marker': 'o', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
             'model6': {'color': '#56b4e9',
-                       'marker': 'o', 'markersize': 12,
-                       'linestyle': 'solid', 'linewidth': 3.},
+                       'marker': 'o', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
             'model7': {'color': '#696969',
-                       'marker': 's', 'markersize': 12,
-                       'linestyle': 'solid', 'linewidth': 3.},
+                       'marker': 's', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
             'model8': {'color': '#8400c8',
-                       'marker': 'D', 'markersize': 12,
-                       'linestyle': 'solid', 'linewidth': 3.},
+                       'marker': 'D', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
             'model9': {'color': '#d269c1',
-                       'marker': 's', 'markersize': 12,
-                       'linestyle': 'solid', 'linewidth': 3.},
+                       'marker': 's', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
             'model10': {'color': '#f0e492',
-                        'marker': 'o', 'markersize': 12,
-                        'linestyle': 'solid', 'linewidth': 3.},
+                        'marker': 'o', 'markersize': 10,
+                        'linestyle': 'solid', 'linewidth': 1.8},
             'obs': {'color': '#aaaaaa',
                     'marker': 'None', 'markersize': 0,
-                    'linestyle': 'solid', 'linewidth': 4.},
+                    'linestyle': 'solid', 'linewidth': 1.8},
             'LAM': {'color': '#00dc00',
-                      'marker': 'o', 'markersize': 12,
-                      'linestyle': 'solid', 'linewidth': 3.},
+                      'marker': 'o', 'markersize': 10,
+                      'linestyle': 'solid', 'linewidth': 1.8},
             'LAMDA': {'color': '#8400c8',
-                      'marker': 'o', 'markersize': 12,
-                      'linestyle': 'solid', 'linewidth': 3.},
+                      'marker': 'o', 'markersize': 10,
+                      'linestyle': 'solid', 'linewidth': 1.8},
             'LAMX': {'color': '#00dc00',
-                       'marker': 'P', 'markersize': 14,
-                       'linestyle': 'dashed', 'linewidth': 3.},
+                       'marker': 'P', 'markersize': 11,
+                       'linestyle': 'dashed', 'linewidth': 1.8},
             'LAMDAX': {'color': '#8400c8',
-                       'marker': 'P', 'markersize': 14,
-                       'linestyle': 'dashed', 'linewidth': 3.},
+                       'marker': 'P', 'markersize': 11,
+                       'linestyle': 'dashed', 'linewidth': 1.8},
             'HWRF': {'color': '#00dc00',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'HMON': {'color': '#8400c8',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'HRW_ARW': {'color': '#00dc00',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'HRW_ARW2': {'color': '#e69f00',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'HRW_FV3': {'color': '#56b4e9',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'HREF_MEAN': {'color': '#000000',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'HREF_AVRG': {'color': '#696969',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'HREF_PMMN': {'color': '#8400c8',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'HREF_LPMM': {'color': '#d269c1',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'HREFX_MEAN': {'color': '#000000',
-                     'marker': 'P', 'markersize': 14,
-                     'linestyle': 'dashed', 'linewidth': 3.},
+                     'marker': 'P', 'markersize': 11,
+                     'linestyle': 'dashed', 'linewidth': 1.8},
             'HRRR': {'color': '#fb2020',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'NAM': {'color': '#1e3cff',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'NAM_NEST': {'color': '#1e3cff',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'RRFS_A': {'color': '#00dc00',
-                      'marker': 'o', 'markersize': 12,
-                      'linestyle': 'solid', 'linewidth': 3.},
+                      'marker': 'o', 'markersize': 10,
+                      'linestyle': 'solid', 'linewidth': 1.8},
             'RRFS_A_NA': {'color': '#00dc00',
-                      'marker': 'P', 'markersize': 14,
-                      'linestyle': 'dashed', 'linewidth': 3.},
+                      'marker': 'P', 'markersize': 11,
+                      'linestyle': 'dashed', 'linewidth': 1.8},
             'GFS': {'color': '#000000',
-                    'marker': 'o', 'markersize': 12,
-                    'linestyle': 'solid', 'linewidth': 5.},
+                    'marker': 'o', 'markersize': 10,
+                    'linestyle': 'solid', 'linewidth': 2.},
             'GFS_DASHED': {'color': '#000000',
-                           'marker': 'o', 'markersize': 12,
-                           'linestyle': 'dashed', 'linewidth': 5.},
+                           'marker': 'o', 'markersize': 10,
+                           'linestyle': 'dashed', 'linewidth': 2.},
             'GEFS': {'color': '#000000',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 5.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 2.},
             'NARRE_MEAN': {'color': '#000000',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 5.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 2.},
             'EC': {'color': '#fb2020',
-                   'marker': 'o', 'markersize': 12,
-                   'linestyle': 'solid', 'linewidth': 3.},
+                   'marker': 'o', 'markersize': 10,
+                   'linestyle': 'solid', 'linewidth': 1.8},
             'CMC': {'color': '#1e3cff',
-                    'marker': 'o', 'markersize': 12,
-                    'linestyle': 'solid', 'linewidth': 3.},
+                    'marker': 'o', 'markersize': 10,
+                    'linestyle': 'solid', 'linewidth': 1.8},
             'CTCX': {'color': '#56b4e9',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'OFCL': {'color': '#696969',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.}
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8}
         }    
       
     def get_color_dict(self, name):
@@ -3490,8 +3497,8 @@ class Reference():
                                     'fcst_var_levels': ['A01','A1'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['APCP', 'APCP_01', 'APCP_01_Z0'],
-                                    'obs_var_levels': ['A01','A1'],
+                                    'obs_var_names': ['APCP', 'APCP_01', 'APCP_01_Z0', 'A01'],
+                                    'obs_var_levels': ['A01','A1', 'Z0'],
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
@@ -3499,8 +3506,8 @@ class Reference():
                                     'fcst_var_levels': ['A03','A3'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['APCP', 'APCP_03', 'APCP_01_Z0'],
-                                    'obs_var_levels': ['A03','A3'],
+                                    'obs_var_names': ['APCP', 'APCP_03', 'APCP_01_Z0', 'A03'],
+                                    'obs_var_levels': ['A03','A3','Z0'],
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
@@ -3508,8 +3515,8 @@ class Reference():
                                     'fcst_var_levels': ['A06','A6'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['APCP', 'APCP_06', 'APCP_01_Z0'],
-                                    'obs_var_levels': ['A06','A6'],
+                                    'obs_var_names': ['APCP', 'APCP_06', 'APCP_01_Z0', 'A06'],
+                                    'obs_var_levels': ['A06','A6','Z0'],
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
@@ -3517,8 +3524,8 @@ class Reference():
                                     'fcst_var_levels': ['A24'],
                                     'fcst_var_thresholds': '',
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['APCP', 'APCP_24', 'APCP_01_Z0'],
-                                    'obs_var_levels': ['A24'],
+                                    'obs_var_names': ['APCP', 'APCP_24', 'APCP_01_Z0','A24'],
+                                    'obs_var_levels': ['A24','Z0'],
                                     'obs_var_thresholds': '',
                                     'obs_var_options': '',
                                     'plot_group':'precip'}
@@ -3540,8 +3547,8 @@ class Reference():
                                                             + ' >=19.05,'
                                                             + ' >=25.4,'),
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['APCP', 'APCP_01', 'APCP_01_Z0'],
-                                    'obs_var_levels': ['A01','A1'],
+                                    'obs_var_names': ['APCP', 'APCP_01', 'APCP_01_Z0','A01'],
+                                    'obs_var_levels': ['A01','A1','Z0'],
                                     'obs_var_thresholds': ('>=0.254, >=1.27,'
                                                            + ' >=2.54,'
                                                            + ' >=6.35,'
@@ -3559,8 +3566,8 @@ class Reference():
                                                             + ' >=19.05,'
                                                             + ' >=25.4,'),
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['APCP', 'APCP_03', 'APCP_01_Z0'],
-                                    'obs_var_levels': ['A03','A3'],
+                                    'obs_var_names': ['APCP', 'APCP_03', 'APCP_01_Z0', 'A03'],
+                                    'obs_var_levels': ['A03','A3','Z0'],
                                     'obs_var_thresholds': ('>=0.254, >=1.27,'
                                                            + ' >=2.54,'
                                                            + ' >=6.35,'
@@ -3578,8 +3585,8 @@ class Reference():
                                                             + ' >=19.05,'
                                                             + ' >=25.4,'),
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['APCP', 'APCP_06', 'APCP_01_Z0'],
-                                    'obs_var_levels': ['A06','A6'],
+                                    'obs_var_names': ['APCP', 'APCP_06', 'APCP_01_Z0','A06'],
+                                    'obs_var_levels': ['A06','A6','Z0'],
                                     'obs_var_thresholds': ('>=0.254, >=1.27,'
                                                            + ' >=2.54,'
                                                            + ' >=6.35,'
@@ -3597,8 +3604,8 @@ class Reference():
                                                             + ' >=19.05,'
                                                             + ' >=25.4,'),
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['APCP', 'APCP_24', 'APCP_01_Z0'],
-                                    'obs_var_levels': ['A24'],
+                                    'obs_var_names': ['APCP', 'APCP_24', 'APCP_01_Z0','A24'],
+                                    'obs_var_levels': ['A24','Z0'],
                                     'obs_var_thresholds': ('>=0.254, >=1.27,'
                                                            + ' >=2.54,'
                                                            + ' >=6.35,'
@@ -3626,8 +3633,8 @@ class Reference():
                                                             + ' >=19.05,'
                                                             + ' >=25.4,'),
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['APCP', 'APCP_01', 'APCP_01_Z0'],
-                                    'obs_var_levels': ['A01','A1'],
+                                    'obs_var_names': ['APCP', 'APCP_01', 'APCP_01_Z0','A01'],
+                                    'obs_var_levels': ['A01','A1','Z0'],
                                     'obs_var_thresholds': ('>=0.254, >=1.27,'
                                                            + ' >=2.54,'
                                                            + ' >=6.35,'
@@ -3646,8 +3653,8 @@ class Reference():
                                                             + ' >=25.4,'
                                                             + ' >=50.8,'),
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['APCP', 'APCP_03', 'APCP_01_Z0'],
-                                    'obs_var_levels': ['A03','A3'],
+                                    'obs_var_names': ['APCP', 'APCP_03', 'APCP_01_Z0','A03'],
+                                    'obs_var_levels': ['A03','A3','Z0'],
                                     'obs_var_thresholds': ('>=0.254, >=1.27,'
                                                            + ' >=2.54,'
                                                            + ' >=6.35,'
@@ -3669,8 +3676,8 @@ class Reference():
                                                             + ' >=76.2,'
                                                             + ' >=101.6'),
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['APCP', 'APCP_06', 'APCP_01_Z0'],
-                                    'obs_var_levels': ['A06','A6'],
+                                    'obs_var_names': ['APCP', 'APCP_06', 'APCP_01_Z0','A06'],
+                                    'obs_var_levels': ['A06','A6','Z0'],
                                     'obs_var_thresholds': ('>=0.254, >=2.54,'
                                                            + ' >=6.35,'
                                                            + ' >=12.7,'
@@ -3694,8 +3701,8 @@ class Reference():
                                                             + ' >=101.6'
                                                             + ' >=152.4'),
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['APCP', 'APCP_24', 'APCP_01_Z0'],
-                                    'obs_var_levels': ['A24'],
+                                    'obs_var_names': ['APCP', 'APCP_24', 'APCP_01_Z0','A24'],
+                                    'obs_var_levels': ['A24','Z0'],
                                     'obs_var_thresholds': ('>=0.254, >=2.54,'
                                                            + ' >=6.35,'
                                                            + ' >=12.7,'

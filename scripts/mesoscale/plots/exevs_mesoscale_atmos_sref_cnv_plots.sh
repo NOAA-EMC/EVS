@@ -50,156 +50,226 @@ VX_MASK_LIST="CONUS"
 																  
 export fcst_init_hour="0,3,6,9,12,15,18,21"
 export fcst_valid_hour="0,6,12,18"
-valid_time='valid00z_06z_12z_18z'
 init_time='init00_to_21z'
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
 
 
 verif_case=grid2obs
-verif_type=conus_sfc
+line_type='ctc'
+score_types='lead_average threshold_average'
+VARS='VISsfc HGTcldceil'
 
 > run_all_poe.sh
 
-for stats in  ets  fbias; do 
+for VAR in $VARS ; do
 
- if [ $stats = ets ] ; then	
-  stat_list='ets'
- elif [ $stats = fbias ] ; then
-  stat_list='fbias'
- fi
-
-  line_tp='ctc'
-  VARs='VISsfc HGTcldceil'
-  score_types='lead_average threshold_average'
+ for stat in  ets fbias; do 
+  stat_list=$stat
 
  for score_type in $score_types ; do
 
-  export fcst_leads="vs_lead" 
+  if [ $score_type = lead_average ] ; then
+    valid_times="00 06 12 18"
+    if [ $VAR = VISsfc ] ; then
+       thresholds="805 1609 4828 8045 16090"
+    elif [ $VAR = HGTcldceil ] ; then
+       thresholds="152 305 914 1524 3048"
+    fi 
+    export fcst_group=one_group
+  elif [ $score_type = threshold_average ] ; then
+    valid_times="00 06 12 18"
+    if [ $VAR = VISsfc ] ; then
+      thresholds="<805,<1609,<4828,<8045,<16090"
+    elif [ $VAR = HGTcldceil ] ; then
+      thresholds="<152,<305,<914,<1524,<3048" 
+    fi	    
+    export fcst_group="group1 group2 group3 group4 group5 group6" 
+  fi
  
-  for lead in $fcst_leads ; do 
+  for valid_time in $valid_times ; do
+ 
+   for group in $fcst_group ; do	  
 
-    export fcst_lead=" 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63, 66, 69, 72, 75, 78, 81, 84, 87"
-
-    for VAR in $VARs ; do 
+     if [ $group = one_group ] ; then	   
+       fcst_lead=" 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63, 66, 69, 72, 75, 78, 81, 84, 87"  
+     elif [ $group = group1 ] ; then
+       fcst_lead=" 6, 9, 12, 15, 18, 21, 24, 27"
+     elif [ $group = group2 ] ; then
+       fcst_lead="12, 15, 18, 21, 24, 27, 30, 33, 36, 39"
+     elif [ $group = group3 ] ; then
+       fcst_lead="24, 27, 30, 33, 36, 39, 42, 45, 48, 51"
+     elif [ $group = group4 ] ; then
+       fcst_lead="36, 39, 42, 45, 48, 51, 54, 57, 60, 63"
+     elif [ $group = group5 ] ; then
+       fcst_lead="48, 51, 54, 57, 60, 63, 66, 69, 72, 75"
+     elif [ $group = group6 ] ; then
+        fcst_lead="60, 63, 66, 69, 72, 75, 78, 81, 84, 87"
+     fi
 
        var=`echo $VAR | tr '[A-Z]' '[a-z]'` 
 	    
-       FCST_LEVEL_values="L0"
+       FCST_LEVEL_value="L0"
 
-     for FCST_LEVEL_value in $FCST_LEVEL_values ; do 
-
-	OBS_LEVEL_value=$FCST_LEVEL_value
+       OBS_LEVEL_value=$FCST_LEVEL_value
 
         level=`echo $FCST_LEVEL_value | tr '[A-Z]' '[a-z]'`      
+ 
+	for threshold in $thresholds ; do
+        
+	  if [  $score_type = lead_average ] ; then
+	     thresh=$threshold
+	  elif [  $score_type = threshold_average ] ; then
+	     thresh=all_thresholds
+	  fi 
 
-      for line_type in $line_tp ; do 
+         > run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh  
 
-         > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh  
+        verif_type=conus_sfc
 
-        echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+        echo "export PLOT_TYPE=$score_type" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
-        echo "export field=${var}_${level}" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+        echo "export field=${var}_${level}" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
-        echo "export vx_mask_list='$VX_MASK_LIST'" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-        echo "export verif_case=$verif_case" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-        echo "export verif_type=$verif_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+        echo "export vx_mask_list='$VX_MASK_LIST'" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+        echo "export verif_case=$verif_case" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+        echo "export verif_type=$verif_type" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
-        echo "export log_level=DEBUG" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-        echo "export met_ver=$met_v" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+        echo "export log_level=DEBUG" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+        echo "export met_ver=$met_v" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
-        echo "export eval_period=TEST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+        echo "export eval_period=TEST" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
 
         if [ $score_type = valid_hour_average ] ; then
-          echo "export date_type=INIT" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+          echo "export date_type=INIT" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
         else
-          echo "export date_type=VALID" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+          echo "export date_type=VALID" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
         fi
 
 
-         echo "export var_name=$VAR" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-         echo "export fcts_level=$FCST_LEVEL_value" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-         echo "export obs_level=$OBS_LEVEL_value" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+         echo "export var_name=$VAR" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+         echo "export fcts_level=$FCST_LEVEL_value" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+         echo "export obs_level=$OBS_LEVEL_value" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
-         echo "export line_type=$line_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-         echo "export interp=NEAREST" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-         echo "export score_py=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+         echo "export line_type=$line_type" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+         echo "export interp=NEAREST" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
+         echo "export score_py=$score_type" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
+	 if [ $score_type = lead_average ] ; then
+	  if [ $VAR = VISsfc ] ; then	 
+            thresh_fcst="<${threshold}"
+          elif [ $VAR = HGTcldceil ] ; then
+            thresh_fcst="<${threshold}"
+          fi
+            thresh_obs=$thresh_fcst
+	 elif [ $score_type = threshold_average ] ; then
+	    thresh_fcst=${threshold}
+	    thresh_obs=$thresh_fcst
+	 else
+          thresh_fcst=' '
+	  thresh_obs=' '
+         fi
 
-	 if [ $VAR = VISsfc  ] ; then
-            thresh_fcst='<805, <1609, <4828, <8045, <16090'
-         elif [ $VAR = HGTcldceil  ] ; then
-            thresh_fcst='<152, <305, <914, <1524, <3048'
-	 fi
+         sed -e "s!model_list!$models!g" -e "s!stat_list!$stat_list!g"  -e "s!thresh_fcst!$thresh_fcst!g"  -e "s!thresh_obs!$thresh_obs!g"   -e "s!fcst_init_hour!$fcst_init_hour!g" -e "s!fcst_valid_hour!$valid_time!g" -e "s!fcst_lead!$fcst_lead!g"  -e "s!interp_pnts!$interp_pnts!g" $USHevs/mesoscale/evs_sref_plots_config.sh > run_py.${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
-	 thresh_obs=$thresh_fcst
+         chmod +x  run_py.${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
-         sed -e "s!model_list!$models!g" -e "s!stat_list!$stat_list!g"  -e "s!thresh_fcst!$thresh_fcst!g"  -e "s!thresh_obs!$thresh_obs!g"   -e "s!fcst_init_hour!$fcst_init_hour!g" -e "s!fcst_valid_hour!$fcst_valid_hour!g" -e "s!fcst_lead!$fcst_lead!g"  -e "s!interp_pnts!$interp_pnts!g" $USHevs/mesoscale/evs_sref_plots_config.sh > run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+         echo "${DATA}/run_py.${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh" >> run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh
 
-         chmod +x  run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
+         chmod +x  run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh 
+         echo "${DATA}/run_${VAR}.${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh" >> run_all_poe.sh
 
-         echo "${DATA}/run_py.${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
-  
-         chmod +x  run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh 
-         echo "${DATA}/run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh" >> run_all_poe.sh
+    done # enf of threshold
 
-      done #end of line_type
+   done #end of fcst_group
 
-     done #end of FCST_LEVEL_value
-
-    done #end of VAR
-
-  done #end of fcst_lead
+  done #end of valid times 
 
  done #end of score_type
 
 done #end of stats 
+
+done #end of VAR
 
 chmod +x run_all_poe.sh
 
 
 if [ $run_mpi = yes ] ; then
   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 8 -ppn 8 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+  mpiexec -np 176 -ppn 88 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
- ${DATA}/run_all_poe.sh
+   ${DATA}/run_all_poe.sh
 fi
 
+echo "run_all_poe done!"
 
 cd $plot_dir
 
-for var in hgt vis ; do 
- for stat in ets fbias  ; do
-   for score_type in  lead_average threshold_average ; do
-     if [ $var = hgt ] ; then
-	 if [ $score_type = lead_average ] ; then
-	   end=lt152lt305lt914lt1524lt3048.png
-	   scoretype=fhrmean
-	 elif [ $score_type = threshold_average ] ; then
-	   end=f6_to_f87.png
-	   scoretype=threshmean
-	 fi
-     elif [ $var = vis ] ; then
-	 if [ $score_type = lead_average ] ; then
-	   end=lt805lt1609lt4828lt8045lt16090.png
-	   scoretype=fhrmean
-	 elif [  $score_type = threshold_average ] ; then
-           end=f6_to_f87.png
-	   scoretype=threshmean
-         fi
-      fi
+for var in vis hgt ; do
+   levels=L0
+   stats='ets fbias'
+   score_types='lead_average threshold_average'
+   valid_times="00z 06z 12z 18z"
+   unit=''
+   if [ $var = vis ] ; then
+     var_level=vis_l0
+   elif [ $var = hgt ] ; then
+     var_level=ceiling_l0
+   fi
 
-      mv ${score_type}_regional_conus_valid_00z_06z_12z_18z_${var}_${stat}_${end}  evs.sref.${stat}.${var}.last${past_days}days.${scoretype}_valid_00z_06z_12z_18z.buk_conus.png
+ for stat in $stats ; do
+      	   
+  for score_type in $score_types ; do
 
-  done    #score_type
- done     #stat
-done     #var
+    for valid in $valid_times ; do
 
+	if [ $score_type = lead_average ] ; then
+	  if [ $var = vis ] ; then
+             thresholds="lt805 lt1609 lt4828 lt8045 lt16090"
+	  elif [ $var = hgt ] ; then
+	     thresholds="lt152 lt305 lt914 lt1524 lt3048"    
+	  fi 
+	  leads="all"
+	  scoretype=fhrmean
+	else
+	  thresholds="all"
+          leads="f6-9-12-15-18-21-24-27 f12_to_f39 f24_to_f51 f36_to_f63 f48_to_f75 f60_to_f87"
+	  scoretype=threshmean 
+        fi
+
+      for lead in $leads ; do 
+
+	  if [ $lead = f6-9-12-15-18-21-24-27 ] ; then
+	      new_lead=f06_to_f27
+          else
+              new_lead=$lead
+          fi	      
+       for threshold in $thresholds ; do
+
+	   if [ $score_type = lead_average ] ; then
+
+               mv ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${threshold}.png  evs.sref.${stat}.${var_level}_${threshold}.last${past_days}days.${scoretype}.valid_${valid}.buk_conus.png
+           elif [ $score_type = threshold_average ] ; then
+
+               mv ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${lead}.png  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}.valid_${valid}.${new_lead}.buk_conus.png
+           fi
+
+       done 
+    done
+   done 
+  done  
+ done    
+done
 
 tar -cvf evs.plots.sref.cnv.past${past_days}days.v${VDATE}.tar *.png
 
-cp evs.plots.sref.cnv.past${past_days}days.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
+if [ $SENDCOM="YES" ]; then
+ cp  evs.plots.sref.cnv.past${past_days}days.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
+fi
+
+
+
 
 
 

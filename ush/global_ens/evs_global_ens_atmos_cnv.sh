@@ -104,7 +104,7 @@ for fhr in $fhrs ; do
     echo "cd \$output_base/stat/${modnam}" >> run_${modnam}_${fhr}_cnv.sh
     echo "$USHevs/global_ens/evs_global_ens_average_cnv.sh $modnam $fhr" >> run_${modnam}_${fhr}_cnv.sh
 
-    echo  "cp \$output_base/stat/${modnam}/*PREPBUFR_CONUS*.stat $COMOUTsmall" >> run_${modnam}_${fhr}_cnv.sh 
+    [[ $SENDCOM="YES" ]] && echo  "cp \$output_base/stat/${modnam}/*PREPBUFR_CONUS*.stat $COMOUTsmall" >> run_${modnam}_${fhr}_cnv.sh 
 
     chmod +x run_${modnam}_${fhr}_cnv.sh
 

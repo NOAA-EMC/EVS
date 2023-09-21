@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''
 Name: mesoscale_precip_get_data.py
-Contact(s): Mallory Row
+Contact(s): Mallory Row, Roshan Shrestha
 Abstract: This gather model and observation data files
 '''
 
@@ -31,6 +31,7 @@ STEP = os.environ['STEP']
 USER = os.environ['USER']
 jobid = os.environ['jobid']
 
+# mail_cmd = 'mail.py -s "$subject" $maillist -v'
 mail_cmd = 'mail -s "$subject" $maillist'
 
 for VHOUR in VHOUR_LIST:

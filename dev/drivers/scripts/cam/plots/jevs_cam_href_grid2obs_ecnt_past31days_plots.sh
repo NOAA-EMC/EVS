@@ -4,7 +4,7 @@
 #PBS -S /bin/bash
 #PBS -A VERF-DEV
 #PBS -l walltime=00:30:00
-#PBS -l place=vscatter,select=1:ncpus=48:mem=100GB
+#PBS -l place=vscatter,select=1:ncpus=72:mem=100GB
 #PBS -l debug=true
 
 
@@ -29,21 +29,19 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-export KEEPDATA=YES
+export KEEPDATA=NO
 
 export cyc=00
 #export VDATE=20221231
 export past_days=31
 
 export run_mpi=yes
-export valid_time=both
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 #export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver
-export DATA=/lfs/h2/emc/stmp/${USER}/evs/tmpnwprd
+export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
-
 
 ${HOMEevs}/jobs/cam/plots/JEVS_CAM_PLOTS

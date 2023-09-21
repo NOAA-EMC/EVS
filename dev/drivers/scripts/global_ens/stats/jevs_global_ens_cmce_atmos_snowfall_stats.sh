@@ -17,6 +17,7 @@ set -x
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 source $HOMEevs/versions/run.ver
 
+export envir=prod
 export NET=evs
 export RUN=atmos
 export STEP=stats
@@ -33,17 +34,16 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 
 
-export KEEPDATA=YES
+export KEEPDATA=NO
 
 export cyc=00
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
-export DATA=/lfs/h2/emc/stmp/${USER}/evs/tmpnwprd
+export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export maillist='geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'
+export maillist='alicia.bentley@noaa.gov,steven.simon@noaa.gov'
 
 ${HOMEevs}/jobs/global_ens/stats/JEVS_GLOBAL_ENS_STATS
 

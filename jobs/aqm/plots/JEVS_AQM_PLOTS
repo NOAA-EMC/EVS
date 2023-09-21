@@ -34,11 +34,10 @@ export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
 export envir=${envir:-prod}
-export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
-export FIXvevs=${FIXevs:-$HOMEevs/fix}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
 export USHevs=${USHevs:-$HOMEevs/ush}
@@ -65,10 +64,7 @@ export COMOUTplots=${COMOUTplots:-${COMOUT}/${RUN}.${VDATE}}
 export COMOUTheadline=${COMOUTheadline:-${COMOUT}/headline.${VDATE}}
 mkdir -m 775 -p $COMOUT $COMOUTplots $COMOUTheadline
 
-vfcst_ver=$(echo ${mod_ver} | cut -c1-2 )
-export fcst_input_ver=${fcst_input_ver:-${vfcst_ver}}
- 
-export KEEPDATA=${KEEPDATA:-YES}
+export KEEPDATA=${KEEPDATA:-NO}
 
 #######################################################################
 # Execute the script.

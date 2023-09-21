@@ -144,27 +144,6 @@ def format_filler(unfilled_file_format, dt_valid_time, dt_init_time, str_lead):
                                           filled_file_format_chunk)
     return filled_file_format
 
-
-
-def convert_grib2_grib1(grib2_file, grib1_file):
-    """! This converts GRIB2 data to GRIB1
-
-         Args:
-             grib2_file - string of the path to
-                          the GRIB2 file to
-                          convert
-             grib1_file - string of the path to
-                          save the converted GRIB1
-                          file
-
-         Returns:
-    """
-    print("Converting GRIB2 file "+grib2_file+" "
-          +"to GRIB1 file "+grib1_file)
-    cnvgrib = os.environ['CNVGRIB']
-    os.system(cnvgrib+' -g21 '+grib2_file+' '
-              +grib1_file+' > /dev/null 2>&1')
-
 def get_source_file(valid_time_dt, init_time_dt, lead_str,
                    name, data_dir, file_format):
     """! This links a model file from its source.
@@ -219,6 +198,7 @@ def get_dest_file(valid_time_dt, init_time_dt, lead_str,
 RUN = os.environ['RUN']
 STEP = os.environ['STEP']
 DATA = os.environ['DATA']
+SENDCOM = os.environ['SENDCOM']
 model_list = os.environ['model_list'].split(' ')
 model_dir_list = os.environ['model_dir_list'].split(' ')
 model_prep_dir_list = os.environ['model_prep_dir_list'].split(' ')
@@ -247,7 +227,7 @@ if STEP == 'prep':
     end_hr = os.environ[make_met_data_by.lower()+'_hr_end']
     hr_inc = os.environ[make_met_data_by.lower()+'_hr_inc']
     fhr_list = os.environ['fhr_list'
-    ].split(', ')
+    ].split(',')
     # Get date and time information
     time_info_dict = get_time_info(
         start_date, end_date, start_hr,
@@ -334,6 +314,9 @@ if STEP == 'prep':
                                                      lead,
                                                      'full',
                                                      log_missing_file)
+                        if SENDCOM == 'YES':
+                            sub_util.copy_file(prep_file,
+                                               dest_model_file)
                         del model_afile_format
                         del model_bfile_format
                         mbr = mbr+1

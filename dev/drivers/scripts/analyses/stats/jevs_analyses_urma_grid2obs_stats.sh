@@ -29,9 +29,8 @@ module load prod_envir/${prod_envir_ver}
 ## For dev testing
 ##############################################################
 
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=YES
+export KEEPDATA=NO
 export envir=prod
 export NET=evs
 export STEP=stats
@@ -45,7 +44,7 @@ export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
-export COMOUT=$COMIN/${STEP}/${COMPONENT}
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}/${STEP}/${COMPONENT}
 
 export cyc
 echo $cyc
@@ -55,7 +54,7 @@ export MODELNAME=urma
 export modsys=urma
 export mod_ver=${urma_ver}
 
-export maillist=perry.shafran@noaa.gov
+export maillist="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
 
 export config=$HOMEevs/parm/evs_config/analyses/config.evs.urma.prod
 source $config

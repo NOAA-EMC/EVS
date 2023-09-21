@@ -60,10 +60,14 @@ verif_type=sfc
 
 > run_all_poe.sh
 
-for stats in rmse_me ; do 
- if [ $stats = rmse_me  ] ; then
-   stat_list='rmse, me'
+for stats in rmse me ; do 
+ if [ $stats = rmse  ] ; then
+   stat_list='rmse'
    line_tp='ecnt'
+ elif [ $stats = me  ] ; then
+   stat_list='me'
+   line_tp='ecnt'
+
  else
    echo $stats is wrong stat
    exit
@@ -157,66 +161,26 @@ done #end of stats
 
 chmod +x run_all_poe.sh
 
-#if [ $run_mpi = yes ] ; then
-#  export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-#   mpiexec -np 4 -ppn 4 --cpu-bind verbose,depth cfp run_all_poe.sh
-#else
-  ${DATA}/run_all_poe.sh
-#fi
+${DATA}/run_all_poe.sh
 
 cd $plot_dir
-for stats in rmse_me ; do
- for score_type in time_series lead_average ; do
 
-  if [ $score_type = time_series ] ; then
-    leads='_f120.png _f240.png _f360.png'
-    scoretype='timeseries' 
-
-  elif [ $score_type = lead_average ] ; then
-    leads='.png'
-    scoretype='fhrmean'
-  fi
-
-
-  for lead in $leads ; do
-    
-    if [ $score_type = time_series ] ; then
-	lead_time=_${lead:1:4}
-    else
-        lead_time=_f384
-    fi
-
+for stats in rmse me ; do
    for domain in g003 nhem shem tropics ; do
-
-     if [ $domain = g003 ] ; then
-       domain_new=glb
-      elif [ $domain = conus ]; then
-        domain_new="buk_conus"
-     else
-       domain_new=$domain
-     fi
-
-    for var in tmp ; do
-
-      for level in z0 ; do
-
-        mv ${score_type}_regional_${domain}_valid_00z_sfc_${var}_${level}_mean_${stats}${lead}  evs.global_ens.${stats}.sst.last${past_days}days.${scoretype}_${valid_time}${lead_time}.g003_${domain_new}.png
-               
-      done #level
-
-    done #var
-   done  #domain
-  done   #lead
- done    #score_type
+       if [ $domain = g003 ] ; then
+           domain_new=glb
+       else
+           domain_new=$domain
+       fi
+       mv lead_average_regional_${domain}_valid_00z_sfc_tmp_z0_mean_${stats}.png  evs.global_ens.${stats}.sst_z0.last${past_days}days.fhrmean_valid00z_f384.g003_${domain_new}.png
+       for lead in 120 240 360; do
+           mv time_series_regional_${domain}_valid_00z_sfc_tmp_z0_mean_${stats}_f${lead}.png  evs.global_ens.${stats}.sst_z0.last${past_days}days.timeseries_valid00z_f${lead}.g003_${domain_new}.png
+       done #lead
+    done  #domain
 done     #stats
 
-#scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/gens/sst
+tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar *.png
 
-tar -cvf evs.plots.gefs.sst.v${VDATE}.past${past_days}days.tar *.png
-
-cp evs.plots.gefs.sst.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
-
-
-
-
-
+if [ $SENDCOM = YES ]; then 
+    cp evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar  $COMOUT/.
+fi

@@ -25,10 +25,11 @@ class Toggle():
             'sample_equalization': False, # equalize samples along each value of the independent variable where data exist
             'keep_shared_events_only': False, # functional for time_series only.
             'clear_prune_directory': True, # remove the intermediate directory created to store pruned data files temporarily
+            'delete_intermed_data': os.environ['DELETE_INTERMED_TOGGLE'], # if True, delete rows of data if, for any model, rows include NaN (lead_average only)
             'plot_logo_left': True,
             'plot_logo_right': True,
-            'zoom_logo_left': .95, 
-            'zoom_logo_right': .95,
+            'zoom_logo_left': .65, 
+            'zoom_logo_right': .65,
         }
 
 class Templates():
@@ -78,7 +79,15 @@ class Paths():
 
 class Presets():
     def __init__(self):
-        
+      
+        self.level_presets = {
+            'all': 'P1000,P925,P850,P700,P500,P400,P300,P200,P150,P100,P50',
+            'ltrop': 'P1000,P950,P900,P850,P800,P750,P700,P650,P600,P550,P500',
+            'strat': 'P100,P75,P50,P30,P20,P10',
+            'trop': 'P1000,P900,P850,P700,P600,P500,P400,P300,P200,P100',
+            'utrop': 'P500,P450,P400,P350,P300,P250,P200,P150,P100'
+        }
+
         '''
         Evaluation periods that are requested regularly can be defined here 
         and then requested as the 'EVAL_PERIOD' variable in the plotting 
@@ -602,122 +611,122 @@ class ModelSpecs():
         '''
         self.model_settings = {
             'model1': {'color': '#000000',
-                       'marker': 'o', 'markersize': 12,
-                       'linestyle': 'solid', 'linewidth': 3.},
+                       'marker': 'o', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
             'model2': {'color': '#fb2020',
-                       'marker': '^', 'markersize': 14,
-                       'linestyle': 'solid', 'linewidth': 3.},
+                       'marker': '^', 'markersize': 11,
+                       'linestyle': 'solid', 'linewidth': 1.8},
             'model3': {'color': '#1e3cff',
-                       'marker': 'X', 'markersize': 14,
-                       'linestyle': 'solid', 'linewidth': 3.},
+                       'marker': 'X', 'markersize': 11,
+                       'linestyle': 'solid', 'linewidth': 1.8},
             'model4': {'color': '#00dc00',
-                       'marker': 'P', 'markersize': 14,
-                       'linestyle': 'solid', 'linewidth': 3.},
+                       'marker': 'P', 'markersize': 11,
+                       'linestyle': 'solid', 'linewidth': 1.8},
             'model5': {'color': '#e69f00',
-                       'marker': 'o', 'markersize': 12,
-                       'linestyle': 'solid', 'linewidth': 3.},
+                       'marker': 'o', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
             'model6': {'color': '#56b4e9',
-                       'marker': 'o', 'markersize': 12,
-                       'linestyle': 'solid', 'linewidth': 3.},
+                       'marker': 'o', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
             'model7': {'color': '#696969',
-                       'marker': 's', 'markersize': 12,
-                       'linestyle': 'solid', 'linewidth': 3.},
+                       'marker': 's', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
             'model8': {'color': '#8400c8',
-                       'marker': 'D', 'markersize': 12,
-                       'linestyle': 'solid', 'linewidth': 3.},
+                       'marker': 'D', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
             'model9': {'color': '#d269c1',
-                       'marker': 's', 'markersize': 12,
-                       'linestyle': 'solid', 'linewidth': 3.},
+                       'marker': 's', 'markersize': 10,
+                       'linestyle': 'solid', 'linewidth': 1.8},
             'model10': {'color': '#f0e492',
-                        'marker': 'o', 'markersize': 12,
-                        'linestyle': 'solid', 'linewidth': 3.},
+                        'marker': 'o', 'markersize': 10,
+                        'linestyle': 'solid', 'linewidth': 1.8},
             'obs': {'color': '#aaaaaa',
                     'marker': 'None', 'markersize': 0,
-                    'linestyle': 'solid', 'linewidth': 4.},
+                    'linestyle': 'solid', 'linewidth': 2.4},
             'LAM': {'color': '#00dc00',
-                      'marker': 'o', 'markersize': 12,
-                      'linestyle': 'solid', 'linewidth': 3.},
+                      'marker': 'o', 'markersize': 10,
+                      'linestyle': 'solid', 'linewidth': 1.8},
             'LAMDA': {'color': '#8400c8',
-                      'marker': 'o', 'markersize': 12,
-                      'linestyle': 'solid', 'linewidth': 3.},
+                      'marker': 'o', 'markersize': 10,
+                      'linestyle': 'solid', 'linewidth': 1.8},
             'LAMX': {'color': '#00dc00',
-                       'marker': 'P', 'markersize': 14,
-                       'linestyle': 'dashed', 'linewidth': 3.},
+                       'marker': 'P', 'markersize': 11,
+                       'linestyle': 'dashed', 'linewidth': 1.8},
             'LAMDAX': {'color': '#8400c8',
-                       'marker': 'P', 'markersize': 14,
-                       'linestyle': 'dashed', 'linewidth': 3.},
+                       'marker': 'P', 'markersize': 11,
+                       'linestyle': 'dashed', 'linewidth': 1.8},
             'HWRF': {'color': '#00dc00',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'HMON': {'color': '#8400c8',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'HRW_ARW': {'color': '#00dc00',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'HRW_ARW2': {'color': '#e69f00',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'HRW_FV3': {'color': '#56b4e9',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'HREF_MEAN': {'color': '#000000',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'HREF_AVRG': {'color': '#696969',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'HREF_PMMN': {'color': '#8400c8',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'HREF_LPMM': {'color': '#d269c1',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'HREFX_MEAN': {'color': '#000000',
-                     'marker': 'P', 'markersize': 14,
-                     'linestyle': 'dashed', 'linewidth': 3.},
+                     'marker': 'P', 'markersize': 11,
+                     'linestyle': 'dashed', 'linewidth': 1.8},
             'RAP': {'color': '#fb2020',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'HRRR': {'color': '#fb2020',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'NAM': {'color': '#1e3cff',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'NAM_NEST': {'color': '#1e3cff',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'RRFS_A': {'color': '#00dc00',
-                      'marker': 'o', 'markersize': 12,
-                      'linestyle': 'solid', 'linewidth': 3.},
+                      'marker': 'o', 'markersize': 10,
+                      'linestyle': 'solid', 'linewidth': 1.8},
             'RRFS_A_NA': {'color': '#00dc00',
-                      'marker': 'P', 'markersize': 14,
-                      'linestyle': 'dashed', 'linewidth': 3.},
+                      'marker': 'P', 'markersize': 11,
+                      'linestyle': 'dashed', 'linewidth': 1.8},
             'GFS': {'color': '#000000',
-                    'marker': 'o', 'markersize': 12,
-                    'linestyle': 'solid', 'linewidth': 5.},
+                    'marker': 'o', 'markersize': 10,
+                    'linestyle': 'solid', 'linewidth': 2.},
             'GFS_DASHED': {'color': '#000000',
-                           'marker': 'o', 'markersize': 12,
-                           'linestyle': 'dashed', 'linewidth': 5.},
+                           'marker': 'o', 'markersize': 10,
+                           'linestyle': 'dashed', 'linewidth': 2.},
             'GEFS': {'color': '#000000',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 5.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 2.},
             'NARRE_MEAN': {'color': '#000000',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 5.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 2.},
             'EC': {'color': '#fb2020',
-                   'marker': 'o', 'markersize': 12,
-                   'linestyle': 'solid', 'linewidth': 3.},
+                   'marker': 'o', 'markersize': 10,
+                   'linestyle': 'solid', 'linewidth': 1.8},
             'CMC': {'color': '#1e3cff',
-                    'marker': 'o', 'markersize': 12,
-                    'linestyle': 'solid', 'linewidth': 3.},
+                    'marker': 'o', 'markersize': 10,
+                    'linestyle': 'solid', 'linewidth': 1.8},
             'CTCX': {'color': '#56b4e9',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.},
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8},
             'OFCL': {'color': '#696969',
-                     'marker': 'o', 'markersize': 12,
-                     'linestyle': 'solid', 'linewidth': 3.}
+                     'marker': 'o', 'markersize': 10,
+                     'linestyle': 'solid', 'linewidth': 1.8}
         }    
       
     def get_color_dict(self, name):
@@ -1021,6 +1030,10 @@ class Reference():
                                       'long_name': 'CONUS - NCEP Grid 221',
                                       'save_name': 'G221',
                                   },
+                                  'G221_NAMER': {
+                                      'long_name': 'N. America - NCEP Grid 221',
+                                      'save_name': 'G221',
+                                  },
                                   'G236': {
                                       'long_name': 'CONUS - NCEP Grid 236',
                                       'save_name': 'G236',
@@ -1079,7 +1092,7 @@ class Reference():
                                   },
                                   'PacificNW': {
                                       'long_name': 'Pacific Northwest',
-                                      'save_name': 'buk_pnw',
+                                      'save_name': 'buk_npw',
                                   },
                                   'SWC': {
                                       'long_name': 'Southwest Coast',
@@ -2051,7 +2064,7 @@ class Reference():
                                         + ' obar'),
                     'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
-                        'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
+                        'G221_NAMER', 'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
                         'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 
                         'Mezquital', 'MidAtlantic', 'NorthAtlantic', 'NPlains', 'NRockies',
                         'PacificNW', 'PacificSW', 'Prairie', 'Southeast', 'SPlains', 'SRockies',
@@ -2238,7 +2251,7 @@ class Reference():
                                         + ' obar'),
                     'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
-                        'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
+                        'G221_NAMER', 'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
                         'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 
                         'Mezquital', 'MidAtlantic', 'NorthAtlantic', 'NPlains', 'NRockies',
                         'PacificNW', 'PacificSW', 'Prairie', 'Southeast', 'SPlains', 'SRockies',
@@ -2286,7 +2299,7 @@ class Reference():
                                         + ' faratio, sratio'),
                     'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
-                        'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
+                        'G221_NAMER', 'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
                         'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 
                         'Mezquital', 'MidAtlantic', 'NorthAtlantic', 'NPlains', 'NRockies',
                         'PacificNW', 'PacificSW', 'Prairie', 'Southeast', 'SPlains', 'SRockies',
@@ -2336,12 +2349,61 @@ class Reference():
                     }
                 }
             },
+            'headline_metar': {
+                'SL1L2': {
+                    'plot_stats_list': ('bcrmse, me'),
+                    'interp': 'NEAREST, BILIN',
+                    'vx_mask_list' : [
+                        'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
+                        'Alaska', 'Hawaii'
+                    ],
+                    'var_dict': {
+                        'TMP2m': {'fcst_var_names': ['TMP'],
+                                  'fcst_var_levels': ['Z2'],
+                                  'fcst_var_thresholds': '',
+                                  'fcst_var_options': '',
+                                  'obs_var_names': ['TMP'],
+                                  'obs_var_levels': ['Z2'],
+                                  'obs_var_thresholds': '',
+                                  'obs_var_options': '',
+                                  'plot_group':'sfc_upper'},
+                        'DPT2m': {'fcst_var_names': ['DPT'],
+                                  'fcst_var_levels': ['Z2'],
+                                  'fcst_var_thresholds': '',
+                                  'fcst_var_options': '',
+                                  'obs_var_names': ['DPT'],
+                                  'obs_var_levels': ['Z2'],
+                                  'obs_var_thresholds': '>=272.039,>=277.594,>=283.15,>=288.706,>=294.261',
+                                  'obs_var_options': '',
+                                  'plot_group':'sfc_upper'},
+                    }
+                },
+                'VL1L2': {
+                    'plot_stats_list': ('bcrmse, me'),
+                    'interp': 'NEAREST, BILIN',
+                    'vx_mask_list' : [
+                        'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
+                        'Alaska', 'Hawaii'
+                    ],
+                    'var_dict': {
+                        'UGRD_VGRD10m': {'fcst_var_names': ['UGRD_VGRD'],
+                                         'fcst_var_levels': ['Z10'],
+                                         'fcst_var_thresholds': '',
+                                         'fcst_var_options': '',
+                                         'obs_var_names': ['UGRD_VGRD'],
+                                         'obs_var_levels': ['Z10'],
+                                         'obs_var_thresholds': '',
+                                         'obs_var_options': '',
+                                         'plot_group':'sfc_upper'},
+                    }
+                },
+            },
             'grid2obs_metar': {
                 'SL1L2': {
                     'plot_stats_list': ('bcrmse, me'),
                     'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
-                        'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
+                        'G221_NAMER', 'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
                         'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 
                         'Mezquital', 'MidAtlantic', 'NorthAtlantic', 'NPlains', 'NRockies',
                         'PacificNW', 'PacificSW', 'Prairie', 'Southeast', 'SPlains', 'SRockies',
@@ -2376,7 +2438,7 @@ class Reference():
                                  'obs_var_thresholds': '<=15,<=20,<=25,<=30',
                                  'obs_var_options': '',
                                  'plot_group':'sfc_upper'},
-                        'MSLP': {'fcst_var_names': ['MSLET','MSLMA'],
+                        'MSLP': {'fcst_var_names': ['MSLET','MSLMA','PRMSL'],
                                   'fcst_var_levels': ['Z0'],
                                   'fcst_var_thresholds': '',
                                   'fcst_var_options': '',
@@ -2427,7 +2489,7 @@ class Reference():
                     'plot_stats_list': ('bcrmse, me'),
                     'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
-                        'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
+                        'G221_NAMER', 'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
                         'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 
                         'Mezquital', 'MidAtlantic', 'NorthAtlantic', 'NPlains', 'NRockies',
                         'PacificNW', 'PacificSW', 'Prairie', 'Southeast', 'SPlains', 'SRockies',
@@ -2451,7 +2513,7 @@ class Reference():
                                         + ' faratio, sratio'),
                     'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
-                        'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
+                        'G221_NAMER', 'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
                         'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 
                         'Mezquital', 'MidAtlantic', 'NorthAtlantic', 'NPlains', 'NRockies',
                         'PacificNW', 'PacificSW', 'Prairie', 'Southeast', 'SPlains', 'SRockies',
@@ -2483,35 +2545,35 @@ class Reference():
                                   'plot_group':'sfc_upper'},
                         'VIS': {'fcst_var_names': ['VIS'],
                                    'fcst_var_levels': ['Z0'],
-                                   'fcst_var_thresholds': ('<=805, <=1609,'
-                                                           + ' <=4828, <=8045,'
+                                   'fcst_var_thresholds': ('<805, <1609,'
+                                                           + ' <4828, <8045,'
                                                            + ' >=8045,'
-                                                           + ' <=16090'),
+                                                           + ' <16090'),
                                    'fcst_var_options': '',
                                    'obs_var_names': ['VIS'],
                                    'obs_var_levels': ['Z0'],
-                                   'obs_var_thresholds': ('<=805, <=1609,'
-                                                          + ' <=4828, <=8045,'
+                                   'obs_var_thresholds': ('<805, <1609,'
+                                                          + ' <4828, <8045,'
                                                           + ' >=8045,'
-                                                          + ' <=16090'),
+                                                          + ' <16090'),
                                    'obs_var_options': '',
                                    'plot_group':'ceil_vis'},
                         'CEILING': {'fcst_var_names': ['HGT'],
                                        'fcst_var_levels': ['L0','CEILING'],
-                                       'fcst_var_thresholds': ('<=152,'
-                                                               + ' <=305,'
-                                                               + ' >=914, <=914,'
-                                                               + ' <=1524, '
-                                                               + ' <=3048'),
+                                       'fcst_var_thresholds': ('<152,'
+                                                               + ' <305,'
+                                                               + ' >=914, <914,'
+                                                               + ' <1524, '
+                                                               + ' <3048'),
                                        'fcst_var_options': ('GRIB_lvl_typ ='
                                                             + ' 215;'),
                                        'obs_var_names': ['CEILING','HGT'],
                                        'obs_var_levels': ['L0'],
-                                       'obs_var_thresholds': ('<=152,'
-                                                              + ' <=305,'
-                                                              + ' >=914, <=914,'
-                                                              + ' <=1524, '
-                                                              + ' <=3048'),
+                                       'obs_var_thresholds': ('<152,'
+                                                              + ' <305,'
+                                                              + ' >=914, <914,'
+                                                              + ' <1524, '
+                                                              + ' <3048'),
                                        'obs_var_options': '',
                                        'plot_group':'ceil_vis'},
                         'TCDC': {'fcst_var_names': ['TCDC'],
@@ -2529,7 +2591,7 @@ class Reference():
                     'plot_stats_list': ('fss'),
                     'interp': 'NEAREST, BILIN',
                     'vx_mask_list' : [
-                        'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
+                        'G221_NAMER', 'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
                         'Appalachia', 'CPlains', 'DeepSouth', 'GreatBasin', 'GreatLakes', 
                         'Mezquital', 'MidAtlantic', 'NorthAtlantic', 'NPlains', 'NRockies',
                         'PacificNW', 'PacificSW', 'Prairie', 'Southeast', 'SPlains', 'SRockies',
@@ -2546,6 +2608,28 @@ class Reference():
                                  'obs_var_thresholds': '',
                                  'obs_var_options': '',
                                  'plot_group':'sfc_upper'},
+                    }
+                },
+            },
+            'grid2obs_ptype': {
+                'MCTC': {
+                    'plot_stats_list': ('csi, ets, fbias, pod,'
+                                        + ' faratio, sratio'),
+                    'interp': 'BILIN',
+                    'vx_mask_list' : [
+                        'CONUS', 'CONUS_East', 'CONUS_West', 'CONUS_Central', 'CONUS_South',
+                        'Alaska',
+                    ],
+                    'var_dict': {
+                        'PTYPE': {'fcst_var_names': ['PTYPE'],
+                                 'fcst_var_levels': ['Z0', 'L0'],
+                                 'fcst_var_thresholds': '>=1.0,>=2.0,>=3.0,>=4.0',
+                                 'fcst_var_options': '',
+                                 'obs_var_names': ['PTYPE','PRWE'],
+                                 'obs_var_levels': ['Z0'],
+                                 'obs_var_thresholds': '>=1.0,>=2.0,>=3.0,>=4.0',
+                                 'obs_var_options': '',
+                                 'plot_group':'precip'},
                     }
                 },
             },

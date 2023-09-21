@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=02:30:00
+#PBS -l walltime=00:30:00
 #PBS -l select=1:ncpus=1:mem=2GB
 #PBS -l debug=true
 
@@ -38,6 +38,7 @@ export VERIF_CASE=grid2obs
 export MODELNAME=aqm
 export modsys=aqm
 export mod_ver=${aqm_ver}
+export envir=prod
 
 export config=$HOMEevs/parm/evs_config/aqm/config.evs.aqm.prod
 source $config
@@ -45,11 +46,9 @@ source $config
 ########################################################################
 ## The following setting is for parallel test and need to be removed for operational code
 ########################################################################
-export DATA=/lfs/h2/emc/ptmp/$USER/EVS/${cyc}_${MODELNAME}
-
-rm -rf $DATA
-mkdir -p $DATA
-cd $DATA
+export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
+export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export jobid=$job.${PBS_JOBID:-$$}
 
 export cycle=t${cyc}z
 
@@ -57,7 +56,7 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}
 
 #
-## export KEEPDATA=NO
+export KEEPDATA=NO
 #
 ########################################################################
 ## VDATE = ${PDYm2} is okay after 01Z today for the default
@@ -73,8 +72,7 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}/${STEP}/${COMP
 #
 ########################################################################
 
-export maillist=${maillist:-'ho-chun.huang@noaa.gov,geoffrey.manikin@noaa.gov'}
-## export maillist=${maillist:-'perry.shafran@noaa.gov,geoffrey.manikin@noaa.gov'}
+export maillist=${maillist:-'ho-chun.huang@noaa.gov,alicia.bentley@noaa.gov'}
 
 if [ -z "$maillist" ]; then
 

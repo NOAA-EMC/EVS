@@ -80,7 +80,7 @@ if [ $modnam = ccpa ] ; then
  if [ -s $COMINccpa/ccpa.${vday}/18/ccpa.t18z.03h.hrap.conus.gb2 ] ; then
 
   #ccpa hrap is in G240	
-  cd ${WORK}/ccpa.${vday}
+  #cd ${WORK}/ccpa.${vday}
 
   export cyc
   for cyc in 00 06 12 18 ; do
@@ -152,6 +152,7 @@ if [ $modnam = ccpa ] ; then
     echo "Warning:  No CCPA data available for ${VDATE}" > mailmsg
     echo Missing file is $COMINccpa/ccpa.${vday}/??/ccpa.t??z.03h.hrap.conus.gb2  >> mailmsg
     echo "Job ID: $jobid" >> mailmsg
+    # cat mailmsg | mail.py -s "$subject" $maillist -v
     cat mailmsg | mail -s "$subject" $maillist
     exit
  fi
@@ -182,6 +183,7 @@ export output_base=${WORK}/pb2nc
    echo "Warning:  No Prepbufr data available for ${VDATE}" > mailmsg
    echo Missing file is $COMINprepbufr/gfs.${vday}/??/atmos/gfs.t??z.prepbufr  >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
+   # cat mailmsg | mail.py -s "$subject" $maillist -v
    cat mailmsg | mail -s "$subject" $maillist
    exit
 

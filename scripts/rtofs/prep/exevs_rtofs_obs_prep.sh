@@ -14,10 +14,12 @@ mkdir -p $DATA/rtofs.$VDATE/$RUN
 
 if [ -s $COMINobs/$VDATE/seaice/osisaf/ice_conc_nh_polstere-100_multi_${VDATE}1200.nc ] ; then
   for ftype in nh sh; do
-    cdo remapbil,$FIXevs/rtofs_$RUN.grid \
+    cdo remapbil,$FIXevs/cdo_grids/rtofs_$RUN.grid \
     $COMINobs/$VDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc \
     $DATA/rtofs.$VDATE/$RUN/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc
-    cp $DATA/rtofs.$VDATE/$RUN/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc $COMOUTprep/rtofs.$VDATE/$RUN
+    if [ $SENDCOM = "YES" ]; then
+     cp $DATA/rtofs.$VDATE/$RUN/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc $COMOUTprep/rtofs.$VDATE/$RUN
+    fi
   done
 else
   export subject="OSI-SAF Data Missing for EVS RTOFS"
@@ -30,7 +32,10 @@ fi
 export RUN=ndbc
 mkdir -p $COMOUTprep/rtofs.$VDATE/$RUN
 
-if [ -s $COMINobs/$VDATE/validation_data/marine/buoy/activestations.xml ] ; then
+export MET_NDBC_STATIONS=${FIXevs}/ndbc_stations/ndbc_stations.xml
+ndbc_txt_ncount=$(ls -l $COMINobs/$VDATE/validation_data/marine/buoy/*.txt |wc -l)
+#if [ -s $COMINobs/$VDATE/validation_data/marine/buoy/activestations.xml ] ; then
+if [ $ndbc_txt_ncount -gt 0 ]; then
   run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
   -c $CONFIGevs/grid2obs/$STEP/ASCII2NC_obsNDBC.conf
 else

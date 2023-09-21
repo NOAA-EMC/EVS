@@ -79,7 +79,7 @@ fi
 
  for score_type in stat_by_level ; do
 
-  export fcst_leads="12 24 36 48 60 72 84 96 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384"
+  export fcst_leads="0 12 24 36 48 60 72 84 96 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384"
  
   for lead in $fcst_leads ; do 
 
@@ -89,13 +89,9 @@ fi
 
        var=`echo $VAR | tr '[A-Z]' '[a-z]'` 
 	    
-       if [ $VAR = HGT ] ; then
+       if [ $VAR = HGT ] || [ $VAR = UGRD ] || [ $VAR = VGRD ]; then
           FCST_LEVEL_value="P1000,P925,P850,P700,P500,P300,P250,P200,P100,P50,P10"
-       elif [ $VAR = TMP ] ; then
-          FCST_LEVEL_value="P1000,P925,P850,P700,P500,P250,P200,P100,P50,P10"
-       elif [ $VAR = UGRD ] || [ $VAR = VGRD ] ; then
-          FCST_LEVEL_value="P1000,P925,P850,P700,P500,P400,P300,P250,P200,P100,P50,P10"
-       elif [ $VAR = RH ] ; then
+       elif [ $VAR = TMP ] || [ $VAR = RH ] ; then
           FCST_LEVEL_value="P1000,P925,P850,P700,P500,P250,P200,P100,P50,P10"
        fi
 
@@ -171,47 +167,34 @@ fi
 
 cd $plot_dir
 
-
 for stats in rmse_spread me ; do
- for score_type in stat_by_level ; do
-  scoretype='vertprof'
-  leads="12 24 36 48 60 72 84 96 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384"
-
-  for lead in $leads ; do
-      new_lead=$lead
-      typeset -Z3 new_lead 
-
-   for domain in g003 nhem shem tropics conus ; do
-     if [ $domain = g003 ] ; then
-        domain_new=glb
-     elif [ $domain = conus ]; then
-        domain_new="buk_conus"
-     else
-        domain_new=$domain
-     fi
-
-    for var in hgt tmp ugrd vgrd rh ; do
-
-         mv ${score_type}_regional_${domain}_valid_12z_${var}_${stats}_f${lead}.png  evs.global_ens.${stats}.${var}_all.last${past_days}days.${scoretype}_${valid_time}_f${new_lead}.g003_${domain_new}.png
-
-    done #var
-   done  #domain
-  done   #lead
- done    #score_type
+    if [ $stats = rmse_spread ]; then
+        evs_graphic_stats="rmse_sprd"
+    else
+        evs_graphic_stats=$stats
+    fi
+    for domain in g003 nhem shem tropics conus ; do
+        if [ $domain = g003 ] ; then
+            domain_new=glb
+        elif [ $domain = conus ]; then
+            domain_new="buk_conus"
+        else
+            domain_new=$domain
+        fi
+        for var in hgt tmp ugrd vgrd rh ; do
+            leads="0 12 24 36 48 60 72 84 96 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384"
+            for lead in $leads ; do
+                lead_new=$(printf "%03d" "${lead}")
+                mv stat_by_level_regional_${domain}_valid_12z_${var}_${stats}_f${lead}.png  evs.global_ens.${evs_graphic_stats}.${var}_all.last${past_days}days.vertprof_valid12z_f${lead_new}.g003_${domain_new}.png
+            done #lead
+        done #var
+    done  #domain
 done     #stats
 
+tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar *.png
 
-#scp *.png wd20bz@emcrzdm:/home/people/emc/www/htdocs/bzhou/evs_plots/gens/profile3
-
-tar -cvf evs.plots.gefs.profile3.v${VDATE}.past${past_days}days.tar *.png
-
-cp evs.plots.gefs.profile3.v${VDATE}.past${past_days}days.tar  $COMOUT/.  
-
-
-
-
-
-
-
+if [ $SENDCOM = YES ]; then
+    cp evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar  $COMOUT/.
+fi
 
 

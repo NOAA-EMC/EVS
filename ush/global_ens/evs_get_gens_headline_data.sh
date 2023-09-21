@@ -35,5 +35,5 @@ done
 
 cd $COMIN_gefs
 for hhh in 024 048 072 096  120 144 168 192 216 240 264 288 312 336 360 384 ; do
-  cp gfs.t00z.grid3.f${hhh}.grib2 $COMOUT_gefs/.
+  [[ $SENDCOM="YES" ]] && cp gfs.t00z.grid3.f${hhh}.grib2 $COMOUT_gefs/.
 done
