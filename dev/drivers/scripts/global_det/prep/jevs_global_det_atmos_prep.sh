@@ -30,7 +30,7 @@ source $HOMEevs/modulefiles/global_det/global_det_prep.sh
 
 export maillist='alicia.bentley@noaa.gov,mallory.row@noaa.gov'
 
-export envir=dev
+export envir=prod
 export NET=evs
 export STEP=prep
 export COMPONENT=global_det

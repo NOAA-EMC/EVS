@@ -30,7 +30,7 @@ source $HOMEevs/modulefiles/global_det/global_det_plots.sh
 
 export machine=WCOSS2
 
-export envir=dev
+export envir=prod
 export NET=evs
 export STEP=plots
 export COMPONENT=global_det
@@ -40,9 +40,6 @@ export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=$COMROOT/$NET/$evs_ver
-export COMINdailystats=$COMIN/stats/$COMPONENT
-export COMINmonthlystats=$COMIN/stats/$COMPONENT/$RUN/monthly_means
-export COMINyearlystats=$COMIN/stats/$COMPONENT/$RUN/annual_means
 export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
 
 export VDATEYYYY=$(date -d "1 month ago" '+%Y')
