@@ -40,12 +40,7 @@ export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=$COMROOT/$NET/$evs_ver
-export COMINdailystats=$COMIN/$STEP/$COMPONENT
-export COMINmonthlystats=$COMIN/$STEP/$COMPONENT/$RUN/monthly_means
-export COMINyearlystats=$COMIN/$STEP/$COMPONENT/$RUN/annual_means
 export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT
-export COMOUTmonthlystats=$COMOUT/$RUN/monthly_means
-export COMOUTyearlystats=$COMOUT/$RUN/annual_means
 
 export VDATEYYYY=$(date -d "1 month ago" '+%Y')
 export VDATEmm=$(date -d "1 month ago" '+%m')
