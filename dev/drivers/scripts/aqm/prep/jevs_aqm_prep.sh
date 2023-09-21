@@ -53,7 +53,7 @@ export jobid=$job.${PBS_JOBID:-$$}
 export cycle=t${cyc}z
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}/${STEP}/${COMPONENT}
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}
 
 #
 export KEEPDATA=NO
