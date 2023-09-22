@@ -90,26 +90,6 @@ def prune_data(data_dir, prune_dir, tmp_dir, output_base_template, valid_range,
          +'" | grep " '+line_type
          +' " | grep " '+os.environ['INTERP']+' "'
       )
-      '''
-      if RUN_type == 'anom' and 'HGT' in var_name:
-         print("Pruning "+data_dir+" files for model "+model+", vx_mask "
-               +vx_mask+", variable "+'/'.join(fcst_var_names)+", line_type "+line_type
-               +", interp "+os.environ['INTERP'])
-         filter_cmd = (
-            ' | grep " '+vx_mask
-            +' " | grep "'+'\|'.join(fcst_var_names)
-            +'" | grep " '+line_type
-            +' " | grep " '+os.environ['INTERP']+' "'
-         )
-      else:
-         print("Pruning "+data_dir+" files for model "+model+", vx_mask "
-               +vx_mask+", variable "+'/'.join(fcst_var_names)+", line_type "+line_type)
-         filter_cmd = (
-            ' | grep " '+vx_mask
-            +' " | grep "'+'\|'.join(fcst_var_names)
-            +'" | grep " '+line_type+' "'
-         )
-      '''   
       # Prune the MET .stat files and write to new file
       for met_stat_file in met_stat_files:
          ps = subprocess.Popen('grep -R "'+model+'" '+met_stat_file+filter_cmd,

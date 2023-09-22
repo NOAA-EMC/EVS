@@ -110,8 +110,3 @@ for NEST in "conus" "ak" "pr" "hi"; do
     fi
 
 done
-
-# Non-production jobs
-#things to do if evs_run_mode != "production" (i.e., RUN_ENVIR != nco)
-#if [ $evs_run_mode != "production" ]; then
-# ... 

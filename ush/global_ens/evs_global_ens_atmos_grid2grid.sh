@@ -201,7 +201,7 @@ for  verify in $verifys ; do
 
         fi
 
-        echo "cp \$output_base/stat/${modnam}/*.stat $COMOUTsmall" >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
+        [[ $SENDCOM="YES" ]] && echo "cp \$output_base/stat/${modnam}/*.stat $COMOUTsmall" >> run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
 
         chmod +x run_${modnam}_valid_at_t${cyc}z_${fhr}_g2g.sh
 
@@ -339,12 +339,11 @@ for  verify in $verifys ; do
          
        fi
 
-
-       echo "cp \$output_base/stat/${modnam}/*.stat $COMOUTsmall_precip" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
+       [[ $SENDCOM="YES" ]] && echo "cp \$output_base/stat/${modnam}/*.stat $COMOUTsmall_precip" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
 
        if [ $apcp = 24h ] ; then
          mkdir -p $COMOUT/$RUN.$VDATE/apcp24_mean/$MODELNAME
-         echo "cp \$output_base/stat/${modnam}/GenEnsProd*APCP24*.nc  $COMOUT/$RUN.$VDATE/apcp24_mean/$MODELNAME" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
+         [[ $SENDCOM="YES" ]] && echo "cp \$output_base/stat/${modnam}/GenEnsProd*APCP24*.nc  $COMOUT/$RUN.$VDATE/apcp24_mean/$MODELNAME" >> run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
        fi	
 
        chmod +x run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh

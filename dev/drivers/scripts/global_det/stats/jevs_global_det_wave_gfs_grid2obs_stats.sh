@@ -34,7 +34,7 @@ export nproc=25
 
 export maillist='alicia.bentley@noaa.gov,mallory.row@noaa.gov'
 
-export envir=dev
+export envir=prod
 export NET=evs
 export STEP=stats
 export COMPONENT=global_det

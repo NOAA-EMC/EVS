@@ -115,7 +115,7 @@ if [ $verify = sea_ice ] ; then
 
         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/GridStat_fcstGEFS_obsOSI_SAF_mean.conf " >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
 
-        echo "cp \$output_base/stat/${modnam}/*.stat $COMOUTsmall" >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
+        [[ $SENDCOM="YES" ]] && echo "cp \$output_base/stat/${modnam}/*.stat $COMOUTsmall" >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
 
         chmod +x run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
 

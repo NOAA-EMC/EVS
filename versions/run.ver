@@ -63,7 +63,4 @@ export sref_ver=v7.1
 export st4_ver=v4.1
 export urma_ver=v2.10
 
-export COMPATH=/lfs/h1/ops/prod/com/gfs/:/lfs/h1/ops/prod/com/hrrr/:/lfs/h1/ops/prod/com/rtma/:/lfs/h1/ops/prod/com/aqm/:/lfs/h1/ops/prod/com/gefs/:/lfs/h1/ops/prod/com/nam/:/lfs/h1/ops/prod/com/urma/:/lfs/h1/ops/prod/com/narre/:/lfs/h1/ops/prod/com/hiresw/:/lfs/h1/ops/prod/com/rap/:/lfs/h1/ops/prod/com/sref/:/lfs/h1/ops/prod/com/hourly/:/lfs/h1/ops/para/com/naefs/
-export DATAFS=h1
-export DCOMROOT=/lfs/h1/ops/prod/dcom
-export envir=prod
+export COMPATH=/lfs/h1/ops/para/com/naefs/

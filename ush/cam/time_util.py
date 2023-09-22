@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
 Program Name: time_util.py
-Contact(s): George McCabe
-Abstract:
+Contact(s): Marcel Caron, George McCabe
+Abstract: Tools to handle time templates in EVS CAM
+          ... inherited code from METplus
 History Log:  Initial version
 Usage: Create a subclass
 Parameters: None

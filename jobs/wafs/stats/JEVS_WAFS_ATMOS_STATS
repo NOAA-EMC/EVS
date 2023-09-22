@@ -6,11 +6,17 @@ export PS4='$SECONDS + '
 date
 
 ############################################
+# Set data directives
+############################################
+export SENDECF=${SENDECF:-YES}
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-NO}
+
+############################################
 # Working Directory                                                                                                                                      
 ############################################
 export DATA=${DATA:-${DATAROOT}/${jobid:?}}
 mkdir -p $DATA
-mkdir -p $DATA/semifinal
 cd $DATA
 
 ############################################
@@ -64,8 +70,9 @@ export COMOUT=${COMOUT:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
 export COMOUTfinal=$COMOUT/$STEP/$COMPONENT/$MODELNAME.$VDATE
 
-mkdir -p $COMOUTsmall $COMOUTfinal
-rm $COMOUTsmall/* $COMOUTfinal/*
+if [ $SENDCOM = YES ] ; then
+    mkdir -p $COMOUTsmall $COMOUTfinal
+fi
 
 ############################################
 # Specify HOME Directory
@@ -86,62 +93,14 @@ export MASKS=${MASKS:-$FIXevs/masks}
 ############################################
 # Execute the script using MPMD
 ############################################
-rm wafs_stat.cmdfile
-
-export MPIRUN=${MPIRUN:-"mpiexec"}
-ic=0
-observations="GCIP GFS"
-for observation in $observations ; do
-    if [ $observation = "GCIP" ] ; then
-	# For ICING, there are 2 different resoltions (before Nov 2023) and 3 centers
-	resolutions="0P25"
-	centers="blend uk us"
-    elif [ $observation = "GFS" ] ; then
-	# For wind/temperature, only 1 resolution so far
-	resolutions="1P25"
-	centers="gfs"
-    fi
-
-    for resolution in $resolutions ; do
-	for center in $centers; do
-	    if [ `echo $MPIRUN | cut -d " " -f1` = 'srun' ] ; then
-		echo $ic $SCRIPTSevs/stats/exevs_wafs_atmos_stats.sh $observation $resolution $center  >> wafs_stat.cmdfile
-	    else
-		echo $SCRIPTSevs/stats/exevs_wafs_atmos_stats.sh $observation $resolution $center  >> wafs_stat.cmdfile
-		export MP_PGMMODEL=mpmd
-	    fi
-	    ic=`expr $ic + 1`
-	done
-    done
-done
-
-export MPIRUN="$MPIRUN -np $ic -cpu-bind verbose,core cfp"
-$MPIRUN wafs_stat.cmdfile
-
+$SCRIPTSevs/stats/exevs_wafs_atmos_stats.sh
 export err=$?; err_chk
 
-# Combine icing files from different centers ( blend, uk, us) to $COMOUTfinal
-#===============================
-resolutions="0P25"
-centers="blend uk us"
-cd $DATA/semifinal
-for resolution in $resolutions ; do
-    for center in $centers ; do
-	file=`ls ${center}_$resolution.*`
-	finalfile=${file#*\.}
-	cat $file >> $finalfile
-    done
-    if [[ -s $finalfile ]] ; then
-	awk '!seen[$0]++' $finalfile > $COMOUTfinal/$finalfile
-    fi
-done
-
-msg="JOB $job HAS COMPLETED NORMALLY."
-echo $msg
+echo "JOB $job HAS COMPLETED NORMALLY!"
 
 if [ "$KEEPDATA" != "YES" ] ; then
   rm -rf $DATA
 fi
 
 date
-exit
+

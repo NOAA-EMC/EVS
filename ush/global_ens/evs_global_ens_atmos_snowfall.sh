@@ -137,7 +137,7 @@ if [ $verify = snowfall ] ; then
 
         fi
 
-        echo "cp \$output_base/stat/${modnam}/*.stat $COMOUTsmall" >> run_${modnam}_${verify}_${type}.sh
+        [[ $SENDCOM="YES" ]] && echo "cp \$output_base/stat/${modnam}/*.stat $COMOUTsmall" >> run_${modnam}_${verify}_${type}.sh
 
         chmod +x run_${modnam}_${verify}_${type}.sh
 

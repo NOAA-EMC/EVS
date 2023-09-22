@@ -56,7 +56,7 @@ export machine=${machine:-WCOSS2}
 # Define COMIN/COMOUT variables
 ####################################
 export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
-export COMINgfs=${COMINgfs:-$(compath.py prod/gfs/$gfs_ver)}
+export COMINgfs=${COMINgfs:-$(compath.py $envir/gfs/$gfs_ver)}
 export COMINcfs=${COMINcfs:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
 export COMINcmc=${COMINcmc:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
 export COMINcmc_regional=${COMINcmc_regional:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
@@ -67,12 +67,12 @@ export COMINimd=${COMINimd:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
 export COMINjma=${COMINjma:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
 export COMINmetfra=${COMINmetfra:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
 export COMINukmet=${COMINukmet:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT/$RUN)}
-export COMINccpa=${COMINccpa:-$(compath.py prod/ccpa/$ccpa_ver)}
+export COMINccpa=${COMINccpa:-$(compath.py $envir/ccpa/$ccpa_ver)}
 export COMINghrsst_ospo=${COMINghrsst_ospo:-$(compath.py -o $NET/$evs_ver)}
 export COMINget_d=${COMINget_d:-$(compath.py -o $NET/$evs_ver)}
 export COMINndbc=${COMINndbc:-$(compath.py -o $NET/$evs_ver)}
 export COMINnohrsc=${COMINnohrsc:-$DCOMROOT}
-export COMINobsproc=${COMINobsproc:-$(compath.py prod/obsproc/$obsproc_ver)}
+export COMINobsproc=${COMINobsproc:-$(compath.py $envir/obsproc/$obsproc_ver)}
 export COMINosi_saf=${COMINosi_saf:-$(compath.py -o $NET/$evs_ver)}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
 export COMOUTsmall=$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE
