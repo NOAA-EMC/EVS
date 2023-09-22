@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+# =============================================================================
+#
+# NAME: cam_stats_grid2obs_read_mping_point.py
+# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# PURPOSE: Read point data from raw mPING data files and convert them to 
+#          MET-readable format
+#
+# =============================================================================
+
 import pandas as pd
 import numpy as np
 import os

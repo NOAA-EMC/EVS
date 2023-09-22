@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+# =============================================================================
+#
+# NAME: cam_plots_specs.py
+# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# PURPOSE: Plotting specifications and tools used primarily to make spatial 
+#          maps (other plotting scripts more heavily use plotter.py)
+#
+# =============================================================================
+
 import matplotlib
 import matplotlib.pyplot as plt
 import datetime

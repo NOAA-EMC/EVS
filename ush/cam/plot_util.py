@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+# =============================================================================
+#
+# NAME: plot_util.py
+# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# PURPOSE: Plotting tools for CAM plotting scripts
+#
+# =============================================================================
+
 import os
 import sys
 import datetime as datetime

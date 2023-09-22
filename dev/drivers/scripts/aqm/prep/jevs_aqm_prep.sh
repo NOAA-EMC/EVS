@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=02:30:00
+#PBS -l walltime=00:30:00
 #PBS -l select=1:ncpus=1:mem=2GB
 #PBS -l debug=true
 
@@ -38,6 +38,7 @@ export VERIF_CASE=grid2obs
 export MODELNAME=aqm
 export modsys=aqm
 export mod_ver=${aqm_ver}
+export envir=prod
 
 export config=$HOMEevs/parm/evs_config/aqm/config.evs.aqm.prod
 source $config

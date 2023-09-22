@@ -1166,7 +1166,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                      and int(job_env_dict['valid_hr_start']) \
                                      % 12 == 0) \
                                     or verif_type_job == 'WindShear':
-                                job.write(verif_type_job_commands_list[1])
+                                if job_env_dict['fhr_list'] != '""':
+                                    job.write(verif_type_job_commands_list[1])
                     job.close()
                 date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
         # Do reformat_data and assemble_data observation jobs

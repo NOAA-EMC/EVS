@@ -25,6 +25,7 @@ set -x
 module reset
 module load prod_envir/${prod_envir_ver}
 
+export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=NO
 

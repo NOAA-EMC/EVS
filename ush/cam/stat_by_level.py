@@ -936,11 +936,6 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
         [f'{date_hour:02d}' for date_hour in date_hours],
         ', ', '', 'Z', 'and ', ''
     )
-    '''
-    date_hours_string = ' '.join([
-        f'{date_hour:02d}Z,' for date_hour in date_hours
-    ])
-    '''
     date_start_string = date_range[0].strftime('%d %b %Y')
     date_end_string = date_range[1].strftime('%d %b %Y')
     if metric2_name is not None:

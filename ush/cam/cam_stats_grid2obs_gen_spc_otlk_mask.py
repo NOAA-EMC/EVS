@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+# =============================================================================
+#
+# NAME: cam_grid2obs_gen_spc_otlk_mask.py
+# CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+# PURPOSE: Launch the METplus job needed to create verification masks of the 
+#          relevant SPC Outlook areas
+#
+# =============================================================================
+
 from datetime import datetime, timedelta as td
 import os
 import sys

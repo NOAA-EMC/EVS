@@ -39,7 +39,7 @@ export cyc=${cyc:-${cyc}}
 ############################################################
 # For dev testing
 ############################################################
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
+export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=NO
 export VERIF_CASE=radar
@@ -55,7 +55,7 @@ export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-NO}
 
-export maillist=${maillist:-'logan.dawson@noaa.gov,geoffrey.manikin@noaa.gov'}
+export maillist=${maillist:-'marcel.caron@noaa.gov,alicia.bentley@noaa.gov'}
 
 if [ -z "$maillist" ]; then
 

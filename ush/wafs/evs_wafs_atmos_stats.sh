@@ -1,99 +1,68 @@
-#!/bin/bash
-##############################################################################
-# Script Name: evs_wafs_atmos_stats.sh
-# Purpose:  This script prepares unified templates for UK, GFS and blended forecasts
-# History:  Yali Mao Aug 2022
-###############################################################################
+#! /bin/bash
+########################################################################################
+# Name of Script: exevs_wafs_atmos_stats.sh
+# Purpose of Script: To generate the verification products for WAFS verification
+# Arguments: exevs_wafs_atmos_stats.sh
+#   
+########################################################################################
 set -x
 
-cycles="00 06 12 18"
+cd $DATA
 
-# Since WAFS verification is up to 36/48 hours, link only 2 days in the past
-for past_day in 0 1 2 ; do
-   hour=$((past_day*24))
-   past=`$NDATE -$hour ${VDATE}00`
-   day=${past:0:8}
-   # cc=${past:8:2}
-   for cc in $cycles ; do
-       for ff in $FHOURS ; do
-	   if [ $CENTER = "uk" ] ; then
-	       if [ $RESOLUTION = "0P25" ] ; then
-		   sourcefile=$COMINuk/$day/wgrbbul/ukmet_wafs/EGRR_WAFS_0p25_icing_unblended_${day}_${cc}z_t${ff}.grib2
-	       fi
-	   elif [ $CENTER = "us" ] ; then
-	       if [ $RESOLUTION = "0P25" ] ; then
-		   sourcefile=$COMINgfs/gfs.$day/$cc/atmos/gfs.t${cc}z.wafs_0p25_unblended.f${ff}.grib2
-	       fi
-	   elif [ $CENTER = "blend" ] ; then
-               if [ $RESOLUTION = "0P25" ] ; then
-		   sourcefile=$COMINgfs/gfs.$day/$cc/atmos/WAFS_0p25_blended_${day}${cc}f${ff}.grib2
-	       fi
-	   elif [ $CENTER = "gfs" ] ; then
-	       if [ $RESOLUTION = "1P25" ] ; then
-		   sourcefile=$COMINgfs/gfs.$day/$cc/atmos/gfs.t${cc}z.wafs_grb45f${ff}.grib2
-	       fi
-	   fi
+msg="WAFS g2g verification job HAS BEGUN"
+echo $msg
 
-	   if [[ $RESOLUTION = "1P25" ]] && [[ $OBSERVATION = "GFS" ]] ; then
-	       if [[ -f $sourcefile ]] ; then
-		   # Convert tempalte 4.15 to 4.0
-                   $WGRIB2 $sourcefile -set_pdt +0 -grib $GRID_STAT_INPUT_BASE/$CENTER.${day}${cc}.f${ff}.grib2
-               fi
-	   else
-	       if [[ -f $sourcefile ]] ; then
-		   ln -sf $sourcefile $GRID_STAT_INPUT_BASE/$CENTER.${day}${cc}.f${ff}.grib2
-	       fi
-	   fi
-       done
-   done
-done
+export OBSERVATION=$1
+export RESOLUTION=$2
+export CENTER=$3
 
-# GCIP data
-if [[ $OBSERVATION = "GCIP" ]] ; then
-    for cc in $cycles ; do
-	sourcedir=$COMINgfs/gfs.$VDATE/$cc/atmos
+resolution=`echo $RESOLUTION | tr '[:upper:]' '[:lower:]'`
 
-	targetdir=$GRID_STAT_INPUT_BASE/gfs.$VDATE/$cc/atmos
-	sourcefile=$sourcedir/gfs.t${cc}z.gcip.f00.grib2
-	if [[ -f $sourcefile ]] ; then
-	    mkdir -p $targetdir
-	    ln -sf $sourcefile $targetdir/.
-	else
-	    export subject="GCIP Analysis Data Missing for EVS ${COMPONENT}"
-	    echo "Warning: No GCIP analysis was available for valid date ${VDATE}${cc}" > mailmsg
-	    echo “Missing file is $sourcefile” >> mailmsg
-	    echo "Job ID: $jobid" >> mailmsg
-	    cat mailmsg | mail -s "$subject" $maillist
-	fi
-	
-	cc2=$(( 10#$cc + 3 ))
-	cc2="$(printf "%02d" $(( 10#$cc2 )) )"
-	targetdir=$GRID_STAT_INPUT_BASE/gfs.$VDATE/$cc2/atmos
-	sourcefile=$sourcedir/gfs.t${cc2}z.gcip.f00.grib2
-	if [[ -f $sourcefile ]] ; then
-            mkdir -p $targetdir
-            ln -sf $sourcefile $targetdir/.
-	else
-	    export subject="GCIP Analysis Data Missing for EVS ${COMPONENT}"
-	    echo "Warning: No GCIP analysis was available for valid date ${VDATE}${cc2}" > mailmsg
-	    echo “Missing file is $sourcefile” >> mailmsg
-	    echo "Job ID: $jobid" >> mailmsg
-	    cat mailmsg | mail -s "$subject" $maillist
-        fi
-    done
-elif [[ $OBSERVATION = "GFS" ]] ; then
-    for cc in $cycles ; do
-        sourcedir=$COMINgfs/gfs.$VDATE/$cc/atmos
-	sourcefile=$sourcedir/gfs.t${cc}z.pgrb2.0p25.anl
-	if [[ ! -f $sourcefile ]] ; then
-	    export subject="GFS Analysis Data Missing for EVS ${COMPONENT}"
-            echo "Warning: No GFS analysis was available for valid date ${VDATE}${cc}" > mailmsg
-            echo “Missing file is $sourcefile” >> mailmsg
-            echo "Job ID: $jobid" >> mailmsg
-            cat mailmsg | mail -s "$subject" $maillist
-	fi
-    done    
+export GRID_STAT_INPUT_BASE=$DATA/${OBSERVATION}_${RESOLUTION}_data
+mkdir -p $GRID_STAT_INPUT_BASE
+    
+export STAT_ANALYSIS_OUTPUT_DIR=$DATA/${OBSERVATION}_${RESOLUTION}_${CENTER}_stat
+
+source $HOMEevs/parm/evs_config/wafs/config.evs.stats.wafs.atmos.standalone
+
+cp $PARMevs/$STEP/GridStat_fcstWAFS_obs${OBSERVATION}.conf GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
+
+# Prepare data
+$USHevs/evs_wafs_atmos_stats_preparedata.sh
+
+# run stat files
+${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $DATA/GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
+${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/$STEP/StatAnalysis_fcstWAFS_obs${OBSERVATION}_GatherbyDay.conf
+
+	#===================================================================================================#
+	#========== Turn off Wind Direction verification until its RMSE gets supported by METplus ==========#
+	#if [ $OBSERVATION = "GFS" ] ; then
+	#    # Do wind direction verification separately
+	#    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/$STEP/GridStat_fcstWAFS_obs${OBSERVATION}wdir.conf
+	#    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/$STEP/StatAnalysis_fcstWAFS_obs${OBSERVATION}wdir_GatherbyDay.conf
+	#    cat $STAT_ANALYSIS_OUTPUT_DIR/wdir_${RESOLUTION}.* > $COMOUTfinal/$NET.$STEP.$MODELNAME.$RUN.${VERIF_CASE}_wdir$resolution.v$VDATE.stat
+	#fi
+	#===================================================================================================#
+
+
+if [ $OBSERVATION = "GCIP" ] ; then
+    stat_file_suffix=`echo $VAR1_NAME | tr '[:upper:]' '[:lower:]'`
+elif [ $OBSERVATION = "GFS" ] ; then
+    stat_file_suffix='uvt'$resolution
+fi
+# Non wind direction variables:
+# remove duplicate lines and keep the first one
+if [ $OBSERVATION = "GFS" ] ; then
+    sed '/>=/s/WIND/WIND80/g' $STAT_ANALYSIS_OUTPUT_DIR/* > $STATSOUTfinal/$NET.$STEP.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$VDATE.stat
+else
+    cat $STAT_ANALYSIS_OUTPUT_DIR/* > $DATAsemifinal/${CENTER}_${RESOLUTION}.$NET.$STEP.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$VDATE.stat
 fi
 
-exit
+#####################################################################
+# GOOD RUN
+echo "********SCRIPT exevs_wafs_atmos_stats.sh COMPLETED NORMALLY on `date`"
+exit 0
+#####################################################################
+
+############## END OF SCRIPT #######################
 
