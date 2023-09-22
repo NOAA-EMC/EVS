@@ -32,7 +32,7 @@ export machine=WCOSS2
 export USE_CFP=YES
 export nproc=32
 
-export envir=dev
+export envir=prod
 export NET=evs
 export STEP=plots
 export COMPONENT=global_det

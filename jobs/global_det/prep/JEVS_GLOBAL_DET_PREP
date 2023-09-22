@@ -55,15 +55,15 @@ export RUN=${RUN:-atmos}
 ####################################
 # Define COMIN/COMOUT variables
 ####################################
-export COMINcfs=${COMINcfs:-$(compath.py prod/cfs/$cfs_ver/cfs.$INITDATE)}
-export COMINcmc=${COMINcmc:-$(compath.py prod/cmc/$cmc_ver/cmc.$INITDATE)}
+export COMINcfs=${COMINcfs:-$(compath.py $envir/cfs/$cfs_ver/cfs.$INITDATE)}
+export COMINcmc=${COMINcmc:-$(compath.py $envir/cmc/$cmc_ver/cmc.$INITDATE)}
 export COMINcmc_precip=${COMINcmc_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
 export COMINcmc_regional_precip=${COMINcmc_regional_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
 export COMINdwd_precip=${COMINdwd_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
 export COMINecmwf=${COMINecmwf:-$DCOMROOT/${INITDATE}/wgrbbul/ecmwf}
 export COMINecmwf_precip=${COMINecmwf_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
 export COMINfnmoc=${COMINfnmoc:-$DCOMROOT/navgem}
-export COMINgfs=${COMINgfs:-$(compath.py prod/gfs/$gfs_ver/gfs.$INITDATE)}
+export COMINgfs=${COMINgfs:-$(compath.py $envir/gfs/$gfs_ver/gfs.$INITDATE)}
 export COMINimd=${COMINimd:-$DCOMROOT/${INITDATE}/wgrbbul/ncmrwf_gdas}
 export COMINjma=${COMINjma:-$DCOMROOT/${INITDATE}/wgrbbul}
 export COMINjma_precip=${COMINjma_precip:-$DCOMROOT/${INITDATE}/qpf_verif}

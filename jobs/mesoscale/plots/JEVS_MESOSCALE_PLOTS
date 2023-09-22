@@ -105,9 +105,9 @@ export COMINapcp24mean=${COMINspatial:-$(compath.py  $envir/com/$NET/$evs_ver)}/
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 export COMOUTplots=${COMOUTplots:-$COMOUT/$RUN.$VDATE}
 export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
-export COMINccpa=${COMINccpa:-${COMevs}/prep/${COMPONENT}/${RUN}}
-export COMINmrms=${COMINmrms:-${COMevs}/prep/${COMPONENT}/${RUN}}
-export COMINspcotlk=${COMINspcotlk:-${COMevs}/prep/${COMPONENT}/${RUN}}
+export COMINccpa=${COMINccpa:-$(compath.py -o $NET/$evs_ver/prep/${COMPONENT})/${RUN}}
+export COMINmrms=${COMINmrms:-$(compath.py -o $NET/$evs_ver/prep/${COMPONENT})/${RUN}}
+export COMINspcotlk=${COMINspcotlk:-$(compath.py -o $NET/$evs_ver/prep/${COMPONENT})/${RUN}}
 
 if [ $MODELNAME = sref ] ; then 
   mkdir -p $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE
