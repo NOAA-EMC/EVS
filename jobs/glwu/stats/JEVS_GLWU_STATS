@@ -1,0 +1,101 @@
+#!/bin/bash
+###############################################################################
+# Job Name: JEVS_GLWU_STATS
+# Purpose: To create stat files for GLWU verification using
+#          MET/METplus.
+# Author: Samira Ardani (samira.ardani@noaa.gov)
+###############################################################################
+ 
+set -x
+
+# Preliminary data setup step
+########################################
+
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+
+# ###################################
+# SET SHELL PROCESSING VARIABLES
+# ###################################
+export PS4='$SECONDS + '
+date
+
+###########################################################
+# obtain unique LSF id (jobid) and make temp directories
+###########################################################
+export pid=$$
+
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+rm -rf $DATA
+mkdir -p $DATA
+cd $DATA
+
+# Determine Job Output Name on System
+####################################
+export pgmout="OUTPUT.${pid}"
+
+export cycle=t00z
+
+###################################
+# Set EVS directories
+####################################
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
+export USHevs=${USHevs:-$HOMEevs/ush}
+export MASKS=${MASKS:-$FIXevs/masks}
+
+# Run setpdy and initialize PDY variables
+setpdy.sh
+. ./PDY
+
+export VDATE=${VDATE:-$PDYm1}
+
+# set up paths
+export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config/$COMPONENT}
+
+# define COMIN/COMOUT variables
+export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
+export COMINobs=${COMINobs:-/lfs/h1/ops/prod/dcom}
+export COMINfcst=${COMINfcst:-$(compath.py $NET/${evs_ver}/prep/$COMPONENT)}
+export COMINclimo=${COMINclimo:-$FIXevs/climos/$COMPONENT}
+export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
+export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE
+export COMOUTfinal=${COMOUTfinal:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
+
+mkdir -p $COMOUT $COMOUTsmall $COMOUTfinal
+
+if [ $VERIF_CASE == grid2obs ]; then
+	export COMOUTprepbufr=$COMOUT/$RUN.$VDATE/prepbufr/$VERIF_CASE
+	mkdir -p $COMOUTprepbufr
+	export COMOUTndbc=$COMOUT/$RUN.$VDATE/ndbc/$VERIF_CASE
+	mkdir -p $COMOUTndbc
+fi
+
+
+############################################
+# Execute the script
+###########################################
+
+$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${STEP}.sh
+
+export err=$?; err_chk
+
+if [ -e "$pgmout" ]; then
+  cat $pgmout
+fi
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$msg"
+
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATAROOT
+  rm -rf $DATA
+fi
+
+date
+
+################################# END OF JOB ##################################
