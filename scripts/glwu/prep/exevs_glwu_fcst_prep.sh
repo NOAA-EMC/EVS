@@ -30,6 +30,7 @@ if [[ ${mtype} == "glwu" || ${mtype} == "glwu_lc" ]];then
 for cyc in ${cycles} ; do
 	for hr in ${lead_hours} ; do
 		filename="glwu.${mtype}.t${cyc}z.nc"
+		newname="glwu.${mtype}.${INITDATE}.t${cyc}z.nc"
 		if [ ! -s glwu.${INITDATE}/${filename} ]; then
 			export subject="F${hr} GLWU Forecast Data Missing for EVS ${COMPONENT}"
 			echo "Warning: No GLWU forecast was available for ${INITDATE}${cyc}f${hr}" > mailmsg
@@ -38,9 +39,9 @@ for cyc in ${cycles} ; do
 			cat mailmsg | mail -s "$subject" $maillist
 		else
 			if [ ! -s ${ARCglwu}/${newname} ]; then
-				cp -v glwu.${INITDATE}/${filename} $DATA/glwu_nc/${fname}/
+				cp -v glwu.${INITDATE}/${filename} $DATA/glwu_nc/${newname}/
 				if [ $SENDCOM = YES ]; then
-					cp -v $DATA/glwu_nc/ ${ARCglwu}/glwu_nc/${fname}/
+					cp -v $DATA/glwu_nc/ ${ARCglwu}/glwu_nc/${newname}/
 				fi
 			fi
 		fi
@@ -58,9 +59,9 @@ for cyc in ${cycles} ; do
 			cat mailmsg | mail -s "$subject" $maillist
 		else
 			if [ ! -s ${ARCglwu}/${newname} ]; then
-				cp -v glwu.${INITDATE}/${filename} $DATA/glwu_grib2/${fname}/
+				cp -v glwu.${INITDATE}/${filename} $DATA/glwu_grib2/${newname}/
 				if [ $SENDCOM = YES ]; then
-					cp -v $DATA/glwu_grib2/ ${ARCglwu}/glwu_grib2/${fname}/
+					cp -v $DATA/glwu_grib2/ ${ARCglwu}/glwu_grib2/${newname}/
 				fi
 			fi
 		fi
