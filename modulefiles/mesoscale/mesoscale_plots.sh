@@ -1,7 +1,7 @@
 #!/bin/bash
 # modulefile for EVS mesoscale (NAM, RAP, SREF) component, plots step
 
-set +x
+set -x
 
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
@@ -29,4 +29,3 @@ module load metplus/${metplus_ver}
 
 
 module list
-set -x

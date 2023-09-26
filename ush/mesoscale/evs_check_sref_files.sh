@@ -1,6 +1,6 @@
 #!/bin/ksh
 
-set +x
+set -x
 #For testing: 
 #vday=20221003
 #COMINsref=/lfs/h1/ops/prod/com/sref/v7.1

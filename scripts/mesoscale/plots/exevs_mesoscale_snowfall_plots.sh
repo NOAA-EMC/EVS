@@ -79,12 +79,10 @@ if [ $USE_CFP = YES ]; then
         nc=$((nc+1))
     done
 else
-    set +x
     while [ $nc -le $ncount_job ]; do
         ${DATA}/${VERIF_CASE}/${STEP}/plotting_job_scripts/job${nc}
         nc=$((nc+1))
     done
-    set -x
 fi
 
 # Copy files to desired location
