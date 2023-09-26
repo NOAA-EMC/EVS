@@ -99,8 +99,8 @@ if [ $SENDCOM = YES ]; then
     cd $DATA
 fi
 
-# Clean up
-if [ $KEEPDATA != "YES" ]; then
-    cd $DATAROOT
-    rm -rf $DATA
+# SENDDBN alert
+if [ $SENDDBN = YES ] ; then
+    tarname=evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_prepbufr.last${NDAYS}days.v${PDYm2}.tar
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/$tarname
 fi
