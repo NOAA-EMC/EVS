@@ -1003,8 +1003,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         if job_env_dict['SENDCOM'] == 'YES':
                             for model_output_file_tuple \
                                     in model_copy_output_DATA2COMOUT_list:
-                                job.write(f"cp -v {model_output_file_tuple[0]} "
-                                          +f"{model_output_file_tuple[1]}\n")
+                                job.write(f'if [ -f "{model_output_file_tuple[0]}" ]; then '
+                                          +f"cp -v {model_output_file_tuple[0]} "
+                                          +f"{model_output_file_tuple[1]}"
+                                          +f"; fi\n")
                     else:
                         if JOB_GROUP == 'assemble_data':
                             if verif_type_job == 'TempAnom2m':
@@ -1081,8 +1083,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         if job_env_dict['SENDCOM'] == 'YES':
                             for truth_output_file_tuple \
                                     in truth_copy_output_DATA2COMOUT_list:
-                                job.write(f"cp -v {truth_output_file_tuple[0]} "
-                                          +f"{truth_output_file_tuple[1]}\n")
+                                job.write(f'if [ -f "{truth_output_file_tuple[0]}" ]; then '
+                                          +f"cp -v {truth_output_file_tuple[0]} "
+                                          +f"{truth_output_file_tuple[1]}"
+                                          +f"; fi\n")
                     job.close()
                     date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
 elif JOB_GROUP == 'gather_stats':
