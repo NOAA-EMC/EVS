@@ -14,7 +14,6 @@ cd $PBS_O_WORKDIR
 
 export model=evs
 
-export RUN_ENVIR=emc
 export SENDECF=YES
 export SENDCOM=YES
 export KEEPDATA=NO

@@ -13,12 +13,7 @@ set -x
   export VERIF_CASE_STEP_abbrev="g2os"
 
 # Set run mode
-  if [ $RUN_ENVIR = nco ]; then
-      export evs_run_mode="production"
-  else
       export evs_run_mode=$evs_run_mode
-  fi
-  echo "RUN MODE:$evs_run_mode"
 
 # Make directory
   mkdir -p ${VERIF_CASE}_${STEP}
@@ -51,14 +46,9 @@ for NEST in $NEST_LIST; do
    for VERIF_TYPE in $VERIF_TYPES; do
       export VERIF_TYPE=$VERIF_TYPE
 
-      if [ $RUN_ENVIR = nco ]; then
-         export evs_run_mode="production"
-         source $config
-      else
-         export evs_run_mode=$evs_run_mode
-         source $config
-      fi
-      echo "RUN MODE: $evs_run_mode"
+      export evs_run_mode=$evs_run_mode
+      source $config
+
       if [ ${#VAR_NAME_LIST} -lt 1 ]; then
          continue
       fi
@@ -164,13 +154,9 @@ for NEST in $NEST_LIST; do
    export NEST=$NEST
    for VERIF_TYPE in $VERIF_TYPES; do
       export VERIF_TYPE=$VERIF_TYPE
-      if [ $RUN_ENVIR = nco ]; then
-         export evs_run_mode="production"
-	 source $config
-      else
-         export evs_run_mode=$evs_run_mode
-	 source $config
-      fi
+      export evs_run_mode=$evs_run_mode
+      source $config
+
       if [ ${#VAR_NAME_LIST} -lt 1 ]; then
          continue
       fi
@@ -259,13 +245,8 @@ export job_type="gather"
 export njob=1
 for VERIF_TYPE in $VERIF_TYPES; do
     export VERIF_TYPE=$VERIF_TYPE
-    if [ $RUN_ENVIR = nco ]; then
-	export evs_run_mode="production"
-	source $config
-    else
-	export evs_run_mode=$evs_run_mode
-	source $config
-    fi
+    export evs_run_mode=$evs_run_mode
+    source $config
 
     if [ ${#VAR_NAME_LIST} -lt 1 ]; then
         continue
@@ -359,15 +340,9 @@ echo "*****************************"
 # Final Stats Job
     export job_type="gather3"
     export njob=1
-    if [ $RUN_ENVIR = nco ]; then
-        export evs_run_mode="production"
-        source $config
-        #source $USHevs/mesoscale/mesoscale_stats_grid2obs_filter_valid_hours_list.sh
-    else
-        export evs_run_mode=$evs_run_mode
-        source $config
-        #source $USHevs/mesoscale/mesoscale_stats_grid2obs_filter_valid_hours_list.sh
-    fi
+    export evs_run_mode=$evs_run_mode
+    source $config
+
     # Create Output Directories
     python $USHevs/mesoscale/mesoscale_create_output_dirs.py
     status=$?

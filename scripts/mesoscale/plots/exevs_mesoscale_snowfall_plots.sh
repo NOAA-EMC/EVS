@@ -15,14 +15,9 @@ set -x
 # Set Basic Environment Variables
 
 export njob=1
-if [ $RUN_ENVIR = nco ]; then
-    export evs_run_mode="production"
-    source $config
-else
-    export evs_run_mode=$evs_run_mode
-    source $config
-fi
-echo "RUN MODE: $evs_run_mode"
+export evs_run_mode=$evs_run_mode
+source $config
+
 # Check User's Configuration Settings
 python $USHevs/mesoscale/mesoscale_check_settings.py
 status=$?

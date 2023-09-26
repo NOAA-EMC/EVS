@@ -9,13 +9,8 @@
 set -x
 
 # Set run mode
-if [ $RUN_ENVIR = nco ]; then
-    export evs_run_mode="production"
-    source $config
-else
-    export evs_run_mode=$evs_run_mode
-fi
-echo "RUN MODE:$evs_run_mode"
+export evs_run_mode=$evs_run_mode
+source $config
 
 # Make directory
 mkdir -p $DATA/${COMPONENT}.${VDATE}

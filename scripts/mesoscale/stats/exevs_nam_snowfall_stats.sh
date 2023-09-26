@@ -12,14 +12,8 @@ set -x
 export VERIF_CASE_STEP_abbrev="snowfalls"
 
 # Set run mode
-if [ $RUN_ENVIR = nco ]; then
-    export evs_run_mode="production"
-    source $config
-else
     export evs_run_mode=$evs_run_mode
     source $config
-fi
-echo "RUN MODE:$evs_run_mode"
 
 # Make directory
 mkdir -p $DATA/logs

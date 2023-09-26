@@ -14,8 +14,6 @@ set -x
   export machine=WCOSS2
 
 # ECF Settings
-# export RUN_ENVIR=nco
-  export RUN_ENVIR=emc
   export SENDECF=YES
   export SENDCOM=YES
   export KEEPDATA=NO
@@ -36,7 +34,7 @@ set -x
   export MODELNAME="rap" 
 
   export envir="prod"
-  export evs_run_mode="standalone"
+  export evs_run_mode="production"
 
   export ACCOUNT=VERF-DEV
   export QUEUESERV="dev_transfer"

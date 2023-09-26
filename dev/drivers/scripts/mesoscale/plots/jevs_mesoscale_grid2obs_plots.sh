@@ -15,7 +15,6 @@ module reset
 export machine=WCOSS2
 
 # ECF Settings
-export RUN_ENVIR=nco
 export SENDECF=YES
 export SENDCOM=YES
 export KEEPDATA=NO
