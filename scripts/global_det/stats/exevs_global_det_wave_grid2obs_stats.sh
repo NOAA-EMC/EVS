@@ -123,7 +123,6 @@ if [[ $ncount_job -gt 0 ]]; then
         chmod 775 $poe_script
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
-        export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
         nselect=$(cat $PBS_NODEFILE | wc -l)
         nnp=$(($nselect * $nproc))
         launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
@@ -251,7 +250,6 @@ if [[ $ncount_job -gt 0 ]]; then
         chmod 775 $poe_script
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
-        export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
         nselect=$(cat $PBS_NODEFILE | wc -l)
         nnp=$(($nselect * $nproc))
         launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"

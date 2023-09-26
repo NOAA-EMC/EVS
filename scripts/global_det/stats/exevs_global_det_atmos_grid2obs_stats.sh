@@ -70,7 +70,6 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
             export MP_PGMMODEL=mpmd
             export MP_CMDFILE=${poe_script}
             if [ $machine = WCOSS2 ]; then
-                export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
                 nselect=$(cat $PBS_NODEFILE | wc -l)
                 nnp=$(($nselect * $nproc))
                 launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"

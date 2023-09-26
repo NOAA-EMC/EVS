@@ -29,7 +29,7 @@ end_date_seconds=$(date +%s -d ${end_date})
 diff_seconds=$(expr $end_date_seconds - $start_date_seconds)
 diff_days=$(expr $diff_seconds \/ 86400)
 total_days=$(expr $diff_days + 1)
-NDAYS=${NDAYS:-total_days}
+NDAYS=${NDAYS:-$total_days}
 
 # Check user's config settings
 python $USHevs/global_det/global_det_atmos_check_settings.py
@@ -71,7 +71,6 @@ for group in condense_stats filter_stats make_plots tar_images; do
             export MP_PGMMODEL=mpmd
             export MP_CMDFILE=${poe_script}
             if [ $machine = WCOSS2 ]; then
-                export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
                 nselect=$(cat $PBS_NODEFILE | wc -l)
                 nnp=$(($nselect * $nproc))
                 launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
