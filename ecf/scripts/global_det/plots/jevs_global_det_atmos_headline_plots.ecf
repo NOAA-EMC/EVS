@@ -1,86 +1,51 @@
-#PBS -N jevs_global_det_atmos_headline_plots_00
+#PBS -N jevs_global_det_atmos_headline_plots
 #PBS -j oe
 #PBS -S /bin/bash
-#PBS -q dev
-#PBS -A VERF-DEV
-#PBS -l walltime=00:10:00
+#PBS -q %QUEUE%
+#PBS -A %PROJ%-%PROJENVIR%
+#PBS -l walltime=03:10:00
 #PBS -l select=1:ncpus=1:mem=35GB
 #PBS -l debug=true
-#PBS -V
-
-set -x
 
 export model=evs
-
-############################################################
-# For dev testing
-############################################################
-cd $PBS_O_WORKDIR
-module reset
-#export HOMEevs=$(eval "cd ../../../;pwd")
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
-versionfile=$HOMEevs/versions/run.ver
-. $versionfile
-export evs_ver=$evs_ver
-export envir=dev
-export RUN_ENVIR=nco
-export SENDCOM=YES
-export KEEPDATA=NO
-export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_global_det_atmos_test/$envir/tmp
-export job=${PBS_JOBNAME:-jevs_global_det_atmos_headline_plots}
-export jobid=$job.${PBS_JOBID:-$$}
-export TMPDIR=$DATAROOT
-export SITE=$(cat /etc/cluster_name)
-############################################################
-
+%include <head.h>
+%include <envir-p1.h>
 
 ############################################################
 # Load modules
 ############################################################
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/dev/modulefiles/
-module load ve/evs/${ve_evs_ver}
-module load gsl/${gsl_ver}
-module load netcdf/${netcdf_ver}
-module load met/${met_ver}
-module load metplus/${metplus_ver}
-module load cray-pals/${craypals_ver}
-module load prod_envir/${prod_envir_ver}
-module load prod_util/${prod_util_ver}
-module load cfp/${cfp_ver}
-module load libjpeg/${libjpeg_ver}
-module load libpng/${libpng_ver}
-module load zlib/${zlib_ver}
-module load jasper/${jasper_ver}
-export MET_bin_exec=bin
+set -x
+export COMPONENT=global_det
+export STEP=plots
+source ${HOMEevs}/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 module list
 
-# Set machine
-export machine=WCOSS2
-
-# Set cycle
-export cyc=00
-
-# Set verification information
+############################################################
+# Specify environment variables
+############################################################
+if [ -n "%CYC:%" ]; then
+  export cyc=${cyc:-%CYC:%}
+else
+  export cyc=$($NDATE | cut -c 9-10)
+fi
+export SENDCOM=YES
 export NET=evs
-export STEP=plots
-export COMPONENT=global_det
 export RUN=headline
+export COMIN=${COMevs}
+export pid=${pid:-$$}
+export outid=${outid:-"LL$job"}
+export DATA=${DATA:-${DATAROOT}/${jobid:?}}
 
-# Set COM paths
-export PDYm1=$(date -d "24 hours ago" '+%Y%m%d')
-export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
-export COMIN=$COMROOT/$NET/$evs_ver
-export COMINdailystats=$COMIN/stats/$COMPONENT
-export COMINyearlystats=$COMIN/stats/$COMPONENT/long_term/annual_means
-#export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1
-export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$PDYm1
+############################################################
+# Execute j-job
+############################################################
+$HOMEevs/jobs/global_det/plots/JEVS_GLOBAL_DET_PLOTS
+if [ $? -ne 0 ]; then
+   ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
+   ecflow_client --abort
+   exit
+fi
 
-# CALL executable job script here
-$HOMEevs/jobs/global_det/plots/JEVS_GLOBAL_DET_ATMOS_HEADLINE_PLOTS
-
-######################################################################
-# Purpose: This does the plotting work for the global deterministic
-#          atmospheric grid-to-grid headline scores
-######################################################################
+%include <tail.h>
+%manual
+%end
