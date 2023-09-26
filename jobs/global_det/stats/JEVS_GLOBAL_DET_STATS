@@ -52,6 +52,8 @@ export STEP=${STEP:-stats}
 export COMPONENT=${COMPONENT:-global_det}
 export RUN=${RUN:-atmos}
 export machine=${machine:-WCOSS2}
+export evs_run_mode=${evs_run_mode:-production}
+
 ####################################
 # Define COMIN/COMOUT variables
 ####################################

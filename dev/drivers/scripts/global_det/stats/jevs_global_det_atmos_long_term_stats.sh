@@ -17,7 +17,6 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 export SENDCOM=YES
 export KEEPDATA=NO
-export RUN_ENVIR=nco
 export job=${PBS_JOBNAME:-jevs_global_det_atmos_long_term_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
@@ -30,7 +29,8 @@ source $HOMEevs/modulefiles/global_det/global_det_stats.sh
 
 export machine=WCOSS2
 
-export envir=prod
+export evs_run_mode=production
+export envir=dev
 export NET=evs
 export STEP=stats
 export COMPONENT=global_det

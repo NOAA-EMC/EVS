@@ -9,15 +9,10 @@
 
 set -x
 
-# Set run mode
-if [ $RUN_ENVIR = nco ]; then
-    export evs_run_mode="production"
-else
-    export evs_run_mode=$evs_run_mode
-fi
 echo "RUN MODE:$evs_run_mode"
 
-pwd
+# Source config
+source $config
 
 # Create headline plots
 python $USHevs/global_det/global_det_atmos_plots_headline.py

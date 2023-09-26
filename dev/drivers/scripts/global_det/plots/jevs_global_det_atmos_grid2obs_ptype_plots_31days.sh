@@ -15,7 +15,6 @@ cd $PBS_O_WORKDIR
 export model=evs
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
-export RUN_ENVIR=nco
 export SENDCOM=YES
 export KEEPDATA=NO
 export job=${PBS_JOBNAME:-jevs_global_det_atmos_grid2obs_ptype_plots_31days}

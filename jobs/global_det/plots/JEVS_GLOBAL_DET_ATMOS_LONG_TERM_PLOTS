@@ -27,6 +27,7 @@ export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
+export evs_run_mode=${evs_run_mode:-production}
 
 ####################################
 # Run setpdy and initialize PDY variables

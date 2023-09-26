@@ -15,7 +15,6 @@ cd $PBS_O_WORKDIR
 export model=evs
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
-export RUN_ENVIR=nco
 export SENDCOM=YES
 export KEEPDATA=NO
 export job=${PBS_JOBNAME:-jevs_global_det_atmos_long_term_plots}
@@ -30,7 +29,8 @@ source $HOMEevs/modulefiles/global_det/global_det_plots.sh
 
 export machine=WCOSS2
 
-export envir=prod
+export evs_run_mode=production
+export envir=dev
 export NET=evs
 export STEP=plots
 export COMPONENT=global_det

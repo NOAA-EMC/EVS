@@ -52,6 +52,7 @@ export NET=${NET:-evs}
 export STEP=${STEP:-stats}
 export COMPONENT=${COMPONENT:-global_det}
 export RUN=${RUN:-long_term}
+export evs_run_mode=${evs_run_mode:-production}
 
 ####################################
 # Define COMIN/COMOUT variables
