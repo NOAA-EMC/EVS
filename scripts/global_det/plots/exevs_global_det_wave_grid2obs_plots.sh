@@ -109,6 +109,9 @@ if [ "${nc}" != '0' ]; then
     if [ $SENDCOM = YES ]; then
         cp -v evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.last${NDAYS}days.v${VDATE_END}.tar ${COMOUT}/.
     fi
+    if [ $SENDDBN = YES ]; then
+        $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.last${NDAYS}days.v${VDATE_END}.tar
+    fi
     cd $DATA
 else
     echo ' '

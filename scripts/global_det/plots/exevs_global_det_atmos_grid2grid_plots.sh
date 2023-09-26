@@ -100,3 +100,7 @@ if [ $SENDCOM = YES ]; then
     done
     cd $DATA
 fi
+
+if [ $SENDDBN = YES ]; then
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.last${NDAYS}days.v${end_date}.tar
+fi
