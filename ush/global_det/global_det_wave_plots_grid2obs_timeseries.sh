@@ -28,6 +28,7 @@ cd ${DATA}
 touch ${DATA}/jobs/run_all_${RUN}_g2o_plots_poe.sh
 
 export GRID2OBS_CONF="${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}"
+MET_VERSION_major_minor=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
 
 # write the commands
 for period in ${periods} ; do
@@ -65,6 +66,7 @@ for period in ${periods} ; do
                   echo "export plot_end_date=${VDATE_END} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                   echo "export VHR=${vhr} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                   echo "export REGION=${region} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  echo "export MET_VERSION_major_minor=${MET_VERSION_major_minor} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                   case ${stats} in
                     'stats1')
                       image_stat="me_rmse"
