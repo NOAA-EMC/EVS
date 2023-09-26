@@ -43,7 +43,7 @@ export MODELNAME="cfs cmc cmc_regional dwd ecmwf fnmoc imd jma metfra ukmet"
 export OBSNAME="osi_saf ghrsst_ospo"
 
 # CALL executable job script here
-$HOMEevs/jobs/global_det/prep/JEVS_GLOBAL_DET_PREP
+$HOMEevs/jobs/JEVS_GLOBAL_DET_PREP
 
 ######################################################################
 # Purpose: This does the prep work for the global deterministic atmospheric

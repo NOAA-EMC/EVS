@@ -52,7 +52,7 @@ export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMP
 echo $config
 
 # CALL executable job script here
-$HOMEevs/jobs/global_det/plots/JEVS_GLOBAL_DET_PLOTS
+$HOMEevs/jobs/JEVS_GLOBAL_DET_PLOTS
 
 ######################################################################
 # Purpose: This does the plotting work for the global deterministic

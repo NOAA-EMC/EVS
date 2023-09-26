@@ -50,7 +50,7 @@ export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT
 export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
 # CALL executable job script here
-$HOMEevs/jobs/global_det/stats/JEVS_GLOBAL_DET_STATS
+$HOMEevs/jobs/JEVS_GLOBAL_DET_STATS
 
 ######################################################################
 # Purpose: This does the statistics work for the global deterministic

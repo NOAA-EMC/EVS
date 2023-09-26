@@ -48,7 +48,7 @@ export COMIN=$COMROOT/$NET/$evs_ver
 export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT
 
 # CALL executable job script here
-$HOMEevs/jobs/global_det/stats/JEVS_GLOBAL_DET_STATS
+$HOMEevs/jobs/JEVS_GLOBAL_DET_STATS
 
 #######################################################################
 # Purpose: This does the statistics work for the global deterministic

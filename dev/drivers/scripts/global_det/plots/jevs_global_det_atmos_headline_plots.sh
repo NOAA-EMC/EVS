@@ -45,7 +45,7 @@ export VDATE_END=$($NDATE -24 | cut -c 1-8)
 export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE_END
 
 # CALL executable job script here
-$HOMEevs/jobs/global_det/plots/JEVS_GLOBAL_DET_PLOTS
+$HOMEevs/jobs/JEVS_GLOBAL_DET_PLOTS
 
 ######################################################################
 # Purpose: This does the plotting work for the global deterministic

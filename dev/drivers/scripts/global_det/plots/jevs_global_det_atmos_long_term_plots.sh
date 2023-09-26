@@ -46,7 +46,7 @@ export VDATEYYYY=$(date -d "1 month ago" '+%Y')
 export VDATEmm=$(date -d "1 month ago" '+%m')
 
 # CALL executable job script here
-$HOMEevs/jobs/global_det/plots/JEVS_GLOBAL_DET_ATMOS_LONG_TERM_PLOTS
+$HOMEevs/jobs/JEVS_GLOBAL_DET_ATMOS_LONG_TERM_PLOTS
 
 ######################################################################
 # Purpose: This does the plotting work for the global deterministic
