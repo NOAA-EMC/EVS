@@ -42,7 +42,7 @@ export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=$COMROOT/$NET/$evs_ver
-export VDATE_END=$(date -d "24 hours ago" '+%Y%m%d')
+export VDATE_END=$($NDATE -24 | cut -c 1-8)
 export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE_END
 
 # CALL executable job script here
