@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 ###########################################
 #
 # Used for global_det wave plots
