@@ -57,5 +57,5 @@ export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 
 # Job Settings and Run
-${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS
+${HOMEevs}/jobs/JEVS_MESOSCALE_STATS
 

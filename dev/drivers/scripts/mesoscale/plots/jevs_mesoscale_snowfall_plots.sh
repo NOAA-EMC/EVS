@@ -61,4 +61,4 @@ export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 export cyc=$(date -d "today" +"%H")
 
 # Job Settings and Run
-. ${HOMEevs}/jobs/${COMPONENT}/plots/JEVS_MESOSCALE_PLOTS
+. ${HOMEevs}/jobs/JEVS_MESOSCALE_PLOTS

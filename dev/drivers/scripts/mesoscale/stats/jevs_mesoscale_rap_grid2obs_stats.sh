@@ -80,5 +80,5 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
   # export maillist="firstname.lastname@noaa.gov"
 
 # Job Settings and Run
-. ${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS
+. ${HOMEevs}/jobs/JEVS_MESOSCALE_STATS
 
