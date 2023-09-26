@@ -23,7 +23,7 @@ cd $DATA
 # SENDDBN=YES--Issue DBNet client calls
 ################################################################
 export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-NO}       # need to set to NO for testing
+export SENDDBN=${SENDDBN:-YES}       # need to set to NO for testing
 export SENDECF=${SENDECF:-NO}
 export SENDDBN_NTC=${SENDDBN_NTC:-NO}
 ################################################################
@@ -53,7 +53,7 @@ export VDATE_END=${VDATE_END:-$PDYm2}
 export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
 export COMINgefs=${COMINgefs:-$COMIN/stats/$COMPONENT/gefs}
 export COMINcfs=${COMINcfs:-$COMIN/stats/$COMPONENT/cfs}
-export COMOUT=${COMOUT:-$COMIN/$STEP/$COMPONENT/$RUN.$VDATE_END}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE_END)}
 
 mkdir -p $COMOUT
 

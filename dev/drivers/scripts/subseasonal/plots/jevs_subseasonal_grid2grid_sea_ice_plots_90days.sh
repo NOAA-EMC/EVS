@@ -23,8 +23,6 @@ source $HOMEevs/versions/run.ver
 module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/subseasonal/subseasonal_plots.sh
-#%include <head.h>
-#%include <envir-p1.h>
 
 export MET_ROOT=/apps/ops/prod/libs/intel/${intel_ver}/met/${met_ver}
 
@@ -59,13 +57,11 @@ export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE_END
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.${COMPONENT}.${VERIF_CASE}.${STEP}.${VERIF_TYPE}
 
 # Call executable job script
-$HOMEevs/jobs/subseasonal/plots/JEVS_SUBSEASONAL_PLOTS
+$HOMEevs/jobs/JEVS_SUBSEASONAL_PLOTS
 
-#%include <tail.h>
-#%manual
+
 ######################################################################
 # Purpose: The job and task scripts work together to generate the
 #          subseasonal grid-to-grid sea ice statistical plots
 #          for the GEFS and CFS models for past 90 days.
 ######################################################################
-#%end

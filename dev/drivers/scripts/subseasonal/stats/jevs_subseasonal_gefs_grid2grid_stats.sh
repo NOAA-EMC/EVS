@@ -23,8 +23,6 @@ source $HOMEevs/versions/run.ver
 module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/subseasonal/subseasonal_stats.sh
-#%include <head.h>
-#%include <envir-p1.h>
 
 export MET_ROOT=/apps/ops/prod/libs/intel/${intel_ver}/met/${met_ver}
 export MET_BASE=${MET_ROOT}/share/met
@@ -58,12 +56,10 @@ export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.subseasonal.gefs.grid2grid.stats
 
 # Call executable job script
-$HOMEevs/jobs/subseasonal/stats/JEVS_SUBSEASONAL_STATS
+$HOMEevs/jobs/JEVS_SUBSEASONAL_STATS
 
-#%include <tail.h>
-#%manual
+
 ######################################################################
 # Purpose: The job and task scripts work together to generate the
 #          subseasonal verification grid-to-grid statistics for the GEFS model#          and create the stat files in the databases.
 ######################################################################
-#%end
