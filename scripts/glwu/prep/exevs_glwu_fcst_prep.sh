@@ -27,47 +27,46 @@ mtype='glwu glwu_lc grlc_2p5km grlc_2p5km_lc grlc_2p5km_lc_sr grlc_2p5km_sr grlr
 
 
 if [[ ${mtype} == "glwu" || ${mtype} == "glwu_lc" ]];then
-for cyc in ${cycles} ; do
-	for hr in ${lead_hours} ; do
-		filename="glwu.${mtype}.t${cyc}z.nc"
-		newname="glwu.${mtype}.${INITDATE}.t${cyc}z.nc"
-		if [ ! -s glwu.${INITDATE}/${filename} ]; then
-			export subject="F${hr} GLWU Forecast Data Missing for EVS ${COMPONENT}"
-			echo "Warning: No GLWU forecast was available for ${INITDATE}${cyc}f${hr}" > mailmsg
-			echo "Missing file is glwu.${INITDATE}/${filename}" >> mailmsg
-			echo "Job ID: $jobid" >> mailmsg
-			cat mailmsg | mail -s "$subject" $maillist
-		else
-			if [ ! -s ${ARCglwu}/${newname} ]; then
-				cp -v glwu.${INITDATE}/${filename} $DATA/glwu_nc/${newname}/
-				if [ $SENDCOM = YES ]; then
-					cp -v $DATA/glwu_nc/ ${ARCglwu}/glwu_nc/${newname}/
-				fi
-			fi
-		fi
-	done
-done
+  for cyc in ${cycles} ; do
+     for hr in ${lead_hours} ; do
+	filename="glwu.${mtype}.t${cyc}z.nc"
+	newname="glwu.${mtype}.${INITDATE}.t${cyc}z.nc"
+	if [ ! -s glwu.${INITDATE}/${filename} ]; then
+	   export subject="F${hr} GLWU Forecast Data Missing for EVS ${COMPONENT}"
+	   echo "Warning: No GLWU forecast was available for ${INITDATE}${cyc}f${hr}" > mailmsg
+	   echo "Missing file is glwu.${INITDATE}/${filename}" >> mailmsg
+	   echo "Job ID: $jobid" >> mailmsg
+	   cat mailmsg | mail -s "$subject" $maillist
+        else
+	   if [ ! -s ${ARCglwu}/${newname} ]; then
+	      cp -v glwu.${INITDATE}/${filename} $DATA/glwu_nc/${newname}/
+	      if [ $SENDCOM = YES ]; then
+		 cp -v $DATA/glwu_nc/ ${ARCglwu}/glwu_nc/${newname}/
+	      fi
+	   fi
+	fi
+   done
+  done
 else
-for cyc in ${cycles} ; do
-	for hr in ${lead_hours} ; do
-		filename="glwu.${mtype}.t${cyc}z.grib2"
-		if [ ! -s glwu.${INITDATE}/${filename} ]; then
-			export subject="F${hr} GLWU Forecast Data Missing for EVS ${COMPONENT}"
-			echo "Warning: No GLWU forecast was available for ${INITDATE}${cyc}f${hr}" > mailmsg
-			echo "Missing file is glwu.${INITDATE}/${filename}" >> mailmsg
-			echo "Job ID: $jobid" >> mailmsg
-			cat mailmsg | mail -s "$subject" $maillist
-		else
-			if [ ! -s ${ARCglwu}/${newname} ]; then
-				cp -v glwu.${INITDATE}/${filename} $DATA/glwu_grib2/${newname}/
-				if [ $SENDCOM = YES ]; then
-					cp -v $DATA/glwu_grib2/ ${ARCglwu}/glwu_grib2/${newname}/
-				fi
-			fi
-		fi
-	done
-done
-
+  for cyc in ${cycles} ; do
+     for hr in ${lead_hours} ; do	   
+	filename="glwu.${mtype}.t${cyc}z.grib2"
+	if [ ! -s glwu.${INITDATE}/${filename} ]; then
+	    export subject="F${hr} GLWU Forecast Data Missing for EVS ${COMPONENT}"
+	    echo "Warning: No GLWU forecast was available for ${INITDATE}${cyc}f${hr}" > mailmsg
+	    echo "Missing file is glwu.${INITDATE}/${filename}" >> mailmsg
+	    echo "Job ID: $jobid" >> mailmsg
+	    cat mailmsg | mail -s "$subject" $maillist
+        else
+	    if [ ! -s ${ARCglwu}/${newname} ]; then
+	       cp -v glwu.${INITDATE}/${filename} $DATA/glwu_grib2/${newname}/
+	       if [ $SENDCOM = YES ]; then
+		  cp -v $DATA/glwu_grib2/ ${ARCglwu}/glwu_grib2/${newname}/
+	       fi
+	    fi
+	fi
+   done
+  done
 fi
 
 
