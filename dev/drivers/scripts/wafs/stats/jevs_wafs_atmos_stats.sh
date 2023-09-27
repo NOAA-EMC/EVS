@@ -51,7 +51,7 @@ export maillist=${maillist:-'alicia.bentley@noaa.gov,yali.mao@noaa.gov'}
 ############################################################
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
-export KEEPDATA=NO
+export KEEPDATA=YES
 
 $HOMEevs/jobs/wafs/stats/JEVS_WAFS_ATMOS_STATS
 

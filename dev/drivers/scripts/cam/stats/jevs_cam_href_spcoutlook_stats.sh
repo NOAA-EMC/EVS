@@ -18,7 +18,7 @@ export COMPONENT=cam
 export RUN=atmos
 export VERIF_CASE=spcoutlook
 export MODELNAME=href
-export KEEPDATA=NO
+export KEEPDATA=YES
 
 module reset
 module load prod_envir/${prod_envir_ver}

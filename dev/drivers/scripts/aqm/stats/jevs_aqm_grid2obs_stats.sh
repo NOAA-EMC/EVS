@@ -4,7 +4,7 @@
 #PBS -q "dev"
 #PBS -A EVS-DEV
 #PBS -l walltime=00:15:00
-#PBS -l select=1:ncpus=1:mem=2GB
+#PBS -l select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
 
 set -x
@@ -47,7 +47,7 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 
 ## export COMINaqm=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=NO
+export KEEPDATA=YES
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 

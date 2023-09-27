@@ -20,7 +20,7 @@ export COMPONENT=cam
 export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=href
-export KEEPDATA=NO
+export KEEPDATA=YES
 
 
 module reset

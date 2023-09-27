@@ -4,7 +4,7 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A EVS-DEV
-#PBS -l walltime=15:00:00
+#PBS -l walltime=16:00:00
 #PBS -l place=vscatter:exclhost,select=8:ncpus=128
 #PBS -l debug=true
 #PBS -V
@@ -17,7 +17,7 @@ export machine=WCOSS2
 export RUN_ENVIR=nco
 export SENDECF=YES
 export SENDCOM=YES
-export KEEPDATA=NO
+export KEEPDATA=YES
 export SENDDBN=YES
 export SENDDBN_NTC=
 export job=${PBS_JOBNAME:-jevs_cam_grid2obs_plots}

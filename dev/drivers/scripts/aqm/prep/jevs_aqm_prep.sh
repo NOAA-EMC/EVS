@@ -56,7 +56,7 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}
 
 #
-export KEEPDATA=NO
+export KEEPDATA=YES
 #
 ########################################################################
 ## VDATE = ${PDYm2} is okay after 01Z today for the default

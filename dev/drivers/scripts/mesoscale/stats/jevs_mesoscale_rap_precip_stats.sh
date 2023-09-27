@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A EVS-DEV
-#PBS -l walltime=00:15:00
+#PBS -l walltime=01:00:00
 #PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
 #PBS -l debug=true
 #PBS -V
@@ -17,7 +17,7 @@ export model=evs
 export RUN_ENVIR=emc
 export SENDECF=YES
 export SENDCOM=YES
-export KEEPDATA=NO
+export KEEPDATA=YES
 export SENDDBN=YES
 export SENDDBN_NTC=
 export job=${PBS_JOBNAME:-jevs_rap_precip_stats}

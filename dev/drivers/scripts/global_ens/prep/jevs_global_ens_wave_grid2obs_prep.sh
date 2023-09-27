@@ -39,7 +39,7 @@ export envir=prod
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
-export KEEPDATA=${KEEPDATA:-NO}
+export KEEPDATA=${KEEPDATA:-YES}
 
 export maillist='alicia.bentley@noaa.gov,steven.simon@noaa.gov'
 

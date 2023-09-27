@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A EVS-DEV
 #PBS -l walltime=00:45:00
-#PBS -l place=vscatter,select=1:ncpus=10:mem=15GB
+#PBS -l place=vscatter,select=1:ncpus=10:mem=30GB
 #PBS -l debug=true
 #PBS -V
 
@@ -17,7 +17,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 export RUN_ENVIR=nco
 export SENDCOM=YES
-export KEEPDATA=NO
+export KEEPDATA=YES
 export job=${PBS_JOBNAME:-jevs_global_det_wave_grid2obs_plots_31days}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)

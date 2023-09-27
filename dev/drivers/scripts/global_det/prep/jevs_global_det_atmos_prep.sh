@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A EVS-DEV
-#PBS -l walltime=00:30:00
+#PBS -l walltime=01:30:00
 #PBS -l select=1:ncpus=1:mem=75GB
 #PBS -l debug=true
 #PBS -V
@@ -16,7 +16,7 @@ export model=evs
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 export SENDCOM=YES
-export KEEPDATA=NO
+export KEEPDATA=YES
 export RUN_ENVIR=nco
 export job=${PBS_JOBNAME:-jevs_global_det_atmos_prep}
 export jobid=$job.${PBS_JOBID:-$$}

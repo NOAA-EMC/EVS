@@ -4,7 +4,7 @@
 #PBS -S /bin/bash
 #PBS -A EVS-DEV
 #PBS -l walltime=02:00:00
-#PBS -l place=vscatter,select=1:ncpus=88:mem=10GB
+#PBS -l place=vscatter,select=1:ncpus=88:mem=20GB
 #PBS -l debug=true
 
 export OMP_NUM_THREADS=1
@@ -23,7 +23,7 @@ export COMPONENT=cam
 export RUN=atmos
 export VERIF_CASE=precip
 export MODELNAME=href
-export KEEPDATA=NO
+export KEEPDATA=YES
 
 module reset
 module load prod_envir/${prod_envir_ver}

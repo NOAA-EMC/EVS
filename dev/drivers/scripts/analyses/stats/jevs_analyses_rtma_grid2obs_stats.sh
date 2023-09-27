@@ -5,7 +5,7 @@
 #PBS -q "dev"
 #PBS -A EVS-DEV
 #PBS -l walltime=00:30:00
-#PBS -l select=1:ncpus=1:mem=2GB
+#PBS -l select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
 #PBS -V
  
@@ -32,7 +32,7 @@ module load prod_envir/${prod_envir_ver}
 #############################################################
 
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=NO
+export KEEPDATA=YES
 export envir=prod
 export NET=evs
 export STEP=stats

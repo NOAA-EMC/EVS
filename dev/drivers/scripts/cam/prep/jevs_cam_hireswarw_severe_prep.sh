@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A EVS-DEV
 #PBS -l walltime=0:30:00
-#PBS -l select=1:ncpus=1:mem=10GB
+#PBS -l select=1:ncpus=1:mem=20GB
 #PBS -l debug=true
 #PBS -V
 
@@ -40,7 +40,7 @@ export cyc=${cyc:-${cyc}}
 ############################################################
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=NO
+export KEEPDATA=YES
 export VERIF_CASE=severe
 export MODELNAME=hireswarw
 export modsys=hiresw
@@ -53,7 +53,7 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}/${STEP}/${COMP
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
-export KEEPDATA=${KEEPDATA:-NO}
+export KEEPDATA=${KEEPDATA:-YES}
 
 export maillist=${maillist:-'marcel.caron@noaa.gov,alicia.bentley@noaa.gov'}
 

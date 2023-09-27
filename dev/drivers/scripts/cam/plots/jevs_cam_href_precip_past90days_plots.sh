@@ -4,7 +4,7 @@
 #PBS -S /bin/bash
 #PBS -A EVS-DEV
 #PBS -l walltime=02:00:00
-#PBS -l place=vscatter,select=4:ncpus=78:mem=100GB
+#PBS -l place=vscatter,select=4:ncpus=78:mem=200GB
 #PBS -l debug=true
 
 
@@ -29,7 +29,7 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-export KEEPDATA=NO
+export KEEPDATA=YES
 
 export cyc=00
 #export VDATE=20230117

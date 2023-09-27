@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A EVS-DEV
 #PBS -l walltime=00:45:00
-#PBS -l place=vscatter,select=1:ncpus=32:mem=175GB
+#PBS -l place=vscatter,select=1:ncpus=32:mem=250GB
 #PBS -l debug=true
 
 
@@ -27,7 +27,7 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 export envir=prod
 
-export KEEPDATA=NO
+export KEEPDATA=YES
 
 export cyc=00
 export past_days=90
