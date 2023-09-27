@@ -35,7 +35,6 @@ set -x
   export VERIF_CASE="grid2obs"
   export MODELNAME="rap" 
 
-# export envir="dev"
   export envir="prod"
   export evs_run_mode="standalone"
 

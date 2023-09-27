@@ -22,6 +22,7 @@ module reset
 module load prod_envir/${prod_envir_ver}
 
 # specify environment variables
+export envir=prod
 export NET=evs
 export STEP=stats
 export RUN=ndbc
