@@ -39,7 +39,7 @@ export OUTPUTROOT="$DATAROOT"
 export start_date=$VDATE_START
 export end_date=$VDATE_END
 ## DATA DIRECTIVE SETTINGS
-export KEEPDATA=${KEEPDATA:-"NO"}
+export KEEPDATA=${KEEPDATA:-"YES"}
 export SENDCOM="YES"
 export SENDARCH="NO"
 export SENDMETVIEWER="NO"
