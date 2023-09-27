@@ -61,8 +61,8 @@ cd $pkg_root/sorc/pcpconform.fd
 make
 make install
 
-cd $pkg_root/sorc/evs_sref_adjust_precip24_time.fd
+cd $pkg_root/sorc/sref_precip.fd
 make precip
 
-cd $pkg_root/sorc/evs_global_ens_adjust_CMCE_NAEFS.fd
+cd $pkg_root/sorc/evs_g2g_adjustCMC.fd
 make cmce

@@ -14,7 +14,7 @@ CMCE= evs_g2g_adjustCMC.x
 
 cmce:	cleanCMCE $(CMCE) installCMCE
 $(CMCE):
-	$(FC) $(FFLAGS) -o $(@)  adjustCMCE.f $(LIBS)
+	$(FC) $(FFLAGS) -o $(@)  evs_g2g_adjustCMC.f $(LIBS)
 cleanCMCE:
 	-rm -f *.o $(CMCE)
 installCMCE:
