@@ -14,14 +14,7 @@ set -x
 # Set Basic Environment Variables
 
 export njob=1
-if [ $RUN_ENVIR = nco ]; then
-    export evs_run_mode="production"
-    source $config
-else
-    export evs_run_mode=$evs_run_mode
-    source $config
-fi
-echo "RUN MODE: $evs_run_mode"
+source $config
 # Check User's Configuration Settings
 python $USHevs/cam/cam_check_settings.py
 status=$?
@@ -36,12 +29,10 @@ status=$?
 [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py"
 
 # Check For Restart Files
-if [ $evs_run_mode = production ]; then
-    python ${USHevs}/cam/cam_production_restart.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran ${USHevs}/cam/cam_production_restart.py"
-fi
+python ${USHevs}/cam/cam_production_restart.py
+status=$?
+[[ $status -ne 0 ]] && exit $status
+[[ $status -eq 0 ]] && echo "Successfully ran ${USHevs}/cam/cam_production_restart.py"
 
 # Create Job Script 
 python $USHevs/cam/cam_plots_snowfall_create_job_scripts.py

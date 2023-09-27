@@ -36,24 +36,15 @@ for NEST in $NEST_LIST; do
         source $USHevs/cam/cam_stats_snowfall_filter_valid_hours_list.sh
         for VHOUR in $VHOUR_LIST; do
             export VHOUR=$VHOUR
-            if [ $RUN_ENVIR = nco ]; then
-                export evs_run_mode="production"
-                source $config
-            else
-                export evs_run_mode=$evs_run_mode
-                source $config
-            fi
-            echo "RUN MODE: $evs_run_mode"
+            source $config
             
             # Check For Restart Files
-            if [ $evs_run_mode = production ]; then
-                if [ "$run_restart" = true ]; then
-                    python ${USHevs}/cam/cam_production_restart.py
-                    status=$?
-                    [[ $status -ne 0 ]] && exit $status
-                    [[ $status -eq 0 ]] && echo "Successfully ran ${USHevs}/cam/cam_production_restart.py"
-                    export run_restart=false
-                fi
+            if [ "$run_restart" = true ]; then
+                python ${USHevs}/cam/cam_production_restart.py
+                status=$?
+                [[ $status -ne 0 ]] && exit $status
+                [[ $status -eq 0 ]] && echo "Successfully ran ${USHevs}/cam/cam_production_restart.py"
+                export run_restart=false
             fi
 
             for VAR_NAME in $VAR_NAME_LIST; do
@@ -148,13 +139,7 @@ for NEST in $NEST_LIST; do
             export VHOUR=$VHOUR
             for BOOL_NBRHD in True False; do
                 export BOOL_NBRHD=$BOOL_NBRHD
-                if [ $RUN_ENVIR = nco ]; then
-                    export evs_run_mode="production"
-                    source $config
-                else
-                    export evs_run_mode=$evs_run_mode
-                    source $config
-                fi
+                source $config
                 for VAR_NAME in $VAR_NAME_LIST; do
                     export VAR_NAME=$VAR_NAME 
                     # Check User's Configuration Settings
@@ -225,13 +210,7 @@ export job_type="gather"
 export njob=1
 for NEST in $NEST_LIST; do
     export NEST=$NEST
-    if [ $RUN_ENVIR = nco ]; then
-        export evs_run_mode="production"
-        source $config
-    else
-        export evs_run_mode=$evs_run_mode
-        source $config
-    fi
+    source $config
     # Create Output Directories
     python $USHevs/cam/cam_create_output_dirs.py
     status=$?
@@ -287,13 +266,7 @@ fi
 
 export job_type="gather2"
 export njob=1
-if [ $RUN_ENVIR = nco ]; then
-    export evs_run_mode="production"
-    source $config
-else
-    export evs_run_mode=$evs_run_mode
-    source $config
-fi
+source $config
 # Create Output Directories
 python $USHevs/cam/cam_create_output_dirs.py
 status=$?
@@ -361,13 +334,7 @@ if [ "$cyc" -ge "$last_cyc" ]; then
     if [ $SENDCOM = YES ]; then
         export job_type="gather3"
         export njob=1
-        if [ $RUN_ENVIR = nco ]; then
-            export evs_run_mode="production"
-            source $config
-        else
-            export evs_run_mode=$evs_run_mode
-            source $config
-        fi
+        source $config
         # Create Output Directories
         python $USHevs/cam/cam_create_output_dirs.py
         status=$?

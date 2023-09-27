@@ -25,26 +25,16 @@ for NEST in $NEST_LIST; do
     export NEST=$NEST
     for VERIF_TYPE in $VERIF_TYPES; do
         export VERIF_TYPE=$VERIF_TYPE
-        if [ $RUN_ENVIR = nco ]; then
-            export evs_run_mode="production"
-            source $config
-            source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
-        else
-            export evs_run_mode=$evs_run_mode
-            source $config
-            source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
-        fi
-        echo "RUN MODE: $evs_run_mode"
+        source $config
+        source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
 
         # Check For Restart Files
-        if [ $evs_run_mode = production ]; then
-            if [ "$run_restart" = true ]; then
-                python ${USHevs}/cam/cam_production_restart.py
-                status=$?
-                [[ $status -ne 0 ]] && exit $status
-                [[ $status -eq 0 ]] && echo "Successfully ran ${USHevs}/cam/cam_production_restart.py"
-                export run_restart=false
-            fi
+        if [ "$run_restart" = true ]; then
+            python ${USHevs}/cam/cam_production_restart.py
+            status=$?
+            [[ $status -ne 0 ]] && exit $status
+            [[ $status -eq 0 ]] && echo "Successfully ran ${USHevs}/cam/cam_production_restart.py"
+            export run_restart=false
         fi
 
         for VHOUR in $VHOUR_LIST; do
@@ -127,15 +117,8 @@ for NEST in $NEST_LIST; do
     export NEST=$NEST
     for VERIF_TYPE in $VERIF_TYPES; do
         export VERIF_TYPE=$VERIF_TYPE
-        if [ $RUN_ENVIR = nco ]; then
-            export evs_run_mode="production"
-            source $config
-            source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
-        else
-            export evs_run_mode=$evs_run_mode
-            source $config
-            source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
-        fi
+        source $config
+        source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
         for VAR_NAME in $VAR_NAME_LIST; do
             export VAR_NAME=$VAR_NAME
             for VHOUR in $VHOUR_LIST; do
@@ -209,15 +192,8 @@ export job_type="gather"
 export njob=1
 for VERIF_TYPE in $VERIF_TYPES; do
     export VERIF_TYPE=$VERIF_TYPE
-    if [ $RUN_ENVIR = nco ]; then
-        export evs_run_mode="production"
-        source $config
-        source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
-    else
-        export evs_run_mode=$evs_run_mode
-        source $config
-        source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
-    fi
+    source $config
+    source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
     if [[ ! -z $VHOUR_LIST ]]; then
         # Create Output Directories
         python $USHevs/cam/cam_create_output_dirs.py
@@ -280,15 +256,8 @@ export job_type="gather2"
 export njob=1
 for VERIF_TYPE in $VERIF_TYPES; do
     export VERIF_TYPE=$VERIF_TYPE
-    if [ $RUN_ENVIR = nco ]; then
-        export evs_run_mode="production"
-        source $config
-        source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
-    else
-        export evs_run_mode=$evs_run_mode
-        source $config
-        source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
-    fi
+    source $config
+    source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
     if [[ ! -z $VHOUR_LIST ]]; then
         # Create Output Directories
         python $USHevs/cam/cam_create_output_dirs.py
@@ -361,15 +330,8 @@ if [ "$cyc" -ge "$last_cyc" ]; then
     if [ $SENDCOM = YES ]; then
         export job_type="gather3"
         export njob=1
-        if [ $RUN_ENVIR = nco ]; then
-            export evs_run_mode="production"
-            source $config
-            source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
-        else
-            export evs_run_mode=$evs_run_mode
-            source $config
-            source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
-        fi
+        source $config
+        source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
         # Create Output Directories
         python $USHevs/cam/cam_create_output_dirs.py
         status=$?

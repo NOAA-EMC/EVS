@@ -17,14 +17,7 @@ for NEST in "conus" "ak" "pr" "hi"; do
     export NEST=$NEST
     for ACC in "24"; do
         export ACC=$ACC
-        if [ $RUN_ENVIR = nco ]; then
-            export evs_run_mode="production"
-            source $config
-        else
-            export evs_run_mode=$evs_run_mode
-            source $config
-        fi
-        echo "RUN MODE: $evs_run_mode"
+        source $config
  
         # Check User's Configuration Settings
         python $USHevs/cam/cam_check_settings.py
@@ -89,13 +82,7 @@ fi
 
 for NEST in "conus" "ak" "pr" "hi"; do
     export NEST=$NEST
-    if [ $RUN_ENVIR = nco ]; then
-        export evs_run_mode="production"
-        source $config
-    else
-        export evs_run_mode=$evs_run_mode
-        source $config
-    fi
+    source $config
     # Copy files to desired location
     #all commands to copy output files into the correct EVS COMOUT directory
     if [ $SENDCOM = YES ]; then
