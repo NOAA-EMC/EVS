@@ -11,6 +11,7 @@ Run By: scripts/global_det/stats/exevs_global_det_atmos_grid2grid_stats.sh
 
 import os
 import datetime
+import global_det_atmos_util as gda_util
 
 print("BEGIN: "+os.path.basename(__file__))
 
@@ -71,9 +72,7 @@ elif VERIF_CASE_STEP == 'grid2grid_plots':
 
 # Create data directories
 for data_dir in data_dir_list:
-    if not os.path.exists(data_dir):
-        print("Creating data directory: "+data_dir)
-        os.makedirs(data_dir, mode=0o755)
+    gda_util.make_dir(data_dir)
 
 # Create job script base directory
 if STEP == 'stats':
@@ -83,8 +82,7 @@ elif STEP == 'plots':
    job_scripts_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                    'plot_job_scripts')
 if not os.path.exists(job_scripts_dir):
-    print("Creating job script directory: "+job_scripts_dir)
-    os.makedirs(job_scripts_dir, mode=0o755)
+    gda_util.make_dir(job_scripts_dir)
 
 # Build information of working and COMOUT output directories
 working_dir_list = []
@@ -181,14 +179,10 @@ elif STEP == 'plots':
 
 # Create working output directories
 for working_output_dir in working_dir_list:
-    if not os.path.exists(working_output_dir):
-        print("Creating working output directory: "+working_output_dir)
-        os.makedirs(working_output_dir, mode=0o755, exist_ok=True)
+    gda_util.make_dir(working_output_dir)
 
 # Create COMOUT output directories
 for COMOUT_dir in COMOUT_dir_list:
-    if not os.path.exists(COMOUT_dir):
-        print("Creating COMOUT output directory: "+COMOUT_dir)
-        os.makedirs(COMOUT_dir, mode=0o755, exist_ok=True)
+    gda_util.make_dir(COMOUT_dir)
 
 print("END: "+os.path.basename(__file__))

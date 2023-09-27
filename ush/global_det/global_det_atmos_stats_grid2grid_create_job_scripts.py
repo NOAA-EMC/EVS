@@ -46,8 +46,7 @@ end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
 njobs = 0
 JOB_GROUP_jobs_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                   'METplus_job_scripts', JOB_GROUP)
-if not os.path.exists(JOB_GROUP_jobs_dir):
-    os.makedirs(JOB_GROUP_jobs_dir)
+gda_util.make_dir(JOB_GROUP_jobs_dir)
 
 ################################################
 #### reformat_data jobs

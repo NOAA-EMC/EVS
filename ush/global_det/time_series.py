@@ -1092,6 +1092,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         save_dir, 'images'              
     )
     if not os.path.isdir(save_subdir):
+        print(f"Making directory {save_subdir}")
+        logger.info("Making directory "+save_subdir)
         os.makedirs(save_subdir)
     save_path = os.path.join(save_subdir, save_name+'.png')
     fig.savefig(save_path, dpi=dpi)
@@ -1107,6 +1109,7 @@ def main():
     for subdir in LOG_METPLUS.split('/')[:-1]:
         log_metplus_dir = os.path.join(log_metplus_dir, subdir)
     if not os.path.isdir(log_metplus_dir):
+        print(f"Making directory {log_metplus_dir}")
         os.makedirs(log_metplus_dir)
     logger = logging.getLogger(LOG_METPLUS)
     logger.setLevel(LOG_LEVEL)
