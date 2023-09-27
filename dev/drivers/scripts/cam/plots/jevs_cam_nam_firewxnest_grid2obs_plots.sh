@@ -4,13 +4,13 @@
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A VERF-DEV
-#PBS -l walltime=00:15:00
-#PBS -l select=1:ncpus=1:mem=2GB
+#PBS -l walltime=00:30:00
+#PBS -l select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
 
 export model=evs
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS_configs/EVS
 
 source $HOMEevs/versions/run.ver
 
@@ -48,7 +48,7 @@ export jobid=$job.${PBS_JOBID:-$$}
 export config=$HOMEevs/parm/evs_config/cam/config.evs.cam_nam_firewxnest.prod
 source $config
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/${NET}/${evs_ver}
 export COMOUT=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver}/$STEP/$COMPONENT
 export COMINnam=${COMIN}/stats/${COMPONENT}/${MODELNAME}
 
