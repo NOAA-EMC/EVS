@@ -41,10 +41,12 @@ status=$?
 echo
 
 # Send for missing files
-if ls $DATA/grid2obs_stats/data/mail_* 1> /dev/null 2>&1; then
-    for FILE in $DATA/grid2obs_stats/data/mail_*; do
-        $FILE
-    done
+if [ $SENDMAIL = YES ] ; then
+    if ls $DATA/grid2obs_stats/data/mail_* 1> /dev/null 2>&1; then
+        for FILE in $DATA/grid2obs_stats/data/mail_*; do
+            $FILE
+        done
+    fi
 fi
 
 # Create and run job scripts for reformat_data, assemble_data, generate_stats, and gather_stats
