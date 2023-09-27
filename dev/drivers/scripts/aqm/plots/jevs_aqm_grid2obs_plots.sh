@@ -40,7 +40,7 @@ export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=aqm
 export modsys=aqm
-export mod_ver=${aqm}
+export mod_ver=${aqm_ver}
 
 export config=$HOMEevs/parm/evs_config/aqm/config.evs.aqm.prod
 source $config
@@ -83,7 +83,7 @@ export COMINaqm=/lfs/h2/emc/vpppg/noscrub/$USER/evs/v1.0/stats/aqm/aqm
 
 export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver/${STEP}/${COMPONENT}
 #
-## export KEEPDATA=NO
+## export KEEPDATA=YES
 #
 ########################################################################
 
