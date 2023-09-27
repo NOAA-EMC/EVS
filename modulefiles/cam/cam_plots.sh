@@ -3,7 +3,8 @@
 
 set +x
 
-module use /apps/prod/lmodules/intel/${intel_ver}
+module load PrgEnv-intel/${PrgEnvintel_ver}
+module load intel/${intel_ver}
 module load ve/evs/${ve_evs_ver}
 module load cray-mpich/${craympich_ver}
 module load cray-pals/${craypals_ver}
