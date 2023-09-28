@@ -197,6 +197,9 @@ if [ $SENDCOM = YES ]; then
 
    if [ -s $tarfile ]; then
       cp -v $tarfile $COMOUT/${RUN}.${VDATE}/
+      if [ $SENDDBN = YES ]; then
+          $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/${RUN}.${VDATE}/${tarfile}
+      fi
    else
       echo "tarfile creation was not completed. Need to rerun"
    fi

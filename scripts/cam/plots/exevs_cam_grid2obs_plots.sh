@@ -87,4 +87,7 @@ fi
 if [ $SENDCOM = YES ]; then
     find ${DATA}/${VERIF_CASE}/out/*/*/*.png -type f -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar -T -
     cp ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar ${COMOUTplots}/.
+    if [ $SENDDBN = YES ]; then
+        $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar
+    fi
 fi
