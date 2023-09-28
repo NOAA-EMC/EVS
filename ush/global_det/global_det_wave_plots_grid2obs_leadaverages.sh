@@ -12,6 +12,8 @@
 # Make the command files for cfp
 #################################
 
+set -x
+
 # set up plot variables
 
 periods="PAST${NDAYS}DAYS"
@@ -64,7 +66,7 @@ for period in ${periods} ; do
                 echo "export plot_end_date=${VDATE_END} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_${stats}_${ptype}_${period}_${region}.sh
                 echo "export VHR=${vhr} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_${stats}_${ptype}_${period}_${region}.sh
                 echo "export REGION=${region}" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_${stats}_${ptype}_${period}_${region}.sh
-                echo "export MET_VERSION_major_minor=${MET_VERSION_major_minor} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                echo "export MET_VERSION_major_minor=${MET_VERSION_major_minor} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_${stats}_${ptype}_${period}_${region}.sh
                 case ${stats} in
                   'stats1')
                     image_stat="me_rmse"
