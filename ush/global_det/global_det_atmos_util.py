@@ -184,7 +184,7 @@ def copy_file(source_file, dest_file):
     """
     if check_file_exists_size(source_file):
         print("Copying "+source_file+" to "+dest_file)
-        shutil.copy2(source_file, dest_file)
+        shutil.copy(source_file, dest_file)
 
 def convert_grib1_grib2(grib1_file, grib2_file):
     """! Converts GRIB1 data to GRIB2
@@ -623,7 +623,7 @@ def prep_prod_ecmwf_file(source_file, dest_file, init_dt, forecast_hour, prep_me
             log_missing_file_model(log_missing_file, source_file, 'ecmwf',
                                    init_dt, str(forecast_hour).zfill(3))
         if check_file_exists_size(working_file1):
-            run_shell_command(['chmod', '750', working_file1])
+            run_shell_command(['chmod', '640', working_file1])
             run_shell_command(['chgrp', 'rstprod', working_file1])
             run_shell_command(
                 [ECMGFSLOOKALIKENEW, working_file1, prepped_file]
@@ -638,7 +638,7 @@ def prep_prod_ecmwf_file(source_file, dest_file, init_dt, forecast_hour, prep_me
                 log_missing_file_model(log_missing_file, source_file, 'ecmwf',
                                        init_dt, str(forecast_hour).zfill(3))
     if os.path.exists(prepped_file):
-        run_shell_command(['chmod', '750', prepped_file])
+        run_shell_command(['chmod', '640', prepped_file])
         run_shell_command(['chgrp', 'rstprod', prepped_file])
     copy_file(prepped_file, dest_file)
 

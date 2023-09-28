@@ -261,6 +261,13 @@ for MODEL in MODELNAME:
                             )
                     if SENDCOM == 'YES':
                         gda_util.copy_file(DATA_fcst_file, COMOUT_fcst_file)
+                        if MODEL == 'ecmwf':
+                            gda_util.run_shell_command(
+                                ['chmod', '640', COMOUT_fcst_file]
+                            )
+                            gda_util.run_shell_command(
+                                ['chgrp', 'rstprod', COMOUT_fcst_file]
+                            )
                 else:
                     print(f"{COMOUT_fcst_file} exists")
             if 'COMIN_precip_file_format' in list(model_dict.keys()):
@@ -350,6 +357,13 @@ for MODEL in MODELNAME:
                         if SENDCOM == 'YES':
                             gda_util.copy_file(DATA_precip_file,
                                                COMOUT_precip_file)
+                            if MODEL == 'ecmwf':
+                                gda_util.run_shell_command(
+                                    ['chmod', '640', COMOUT_precip_file]
+                                )
+                                gda_util.run_shell_command(
+                                    ['chgrp', 'rstprod', COMOUT_precip_file]
+                                )
                 else:
                     print(f"{COMOUT_precip_file} exists")
         # Analysis file
@@ -415,6 +429,13 @@ for MODEL in MODELNAME:
                         )
                 if SENDCOM == 'YES':
                     gda_util.copy_file(DATA_anl_file, COMOUT_anl_file)
+                    if MODEL == 'ecmwf':
+                        gda_util.run_shell_command(
+                            ['chmod', '640', COMOUT_anl_file]
+                        )
+                        gda_util.run_shell_command(
+                            ['chgrp', 'rstprod', COMOUT_anl_file]
+                        )
             else:
                 print(f"{COMOUT_anl_file} exists")
 
