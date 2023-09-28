@@ -29,14 +29,15 @@ module load prod_envir/${prod_envir_ver}
 ## For dev testing
 ##############################################################
 
-export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=NO
 export envir=prod
+export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export NET=evs
 export STEP=stats
 export COMPONENT=analyses
 export RUN=atmos
 export VERIF_CASE=grid2obs
+
+export KEEPDATA=NO
 
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
@@ -60,7 +61,7 @@ export config=$HOMEevs/parm/evs_config/analyses/config.evs.urma.prod
 source $config
 
 # CALL executable job script here
-$HOMEevs/jobs/$COMPONENT/$STEP/JEVS_ANALYSES_STATS
+$HOMEevs/jobs/JEVS_ANALYSES_STATS
 
 ######################################################################
 ## Purpose: This job will generate the grid2obs statistics for the NAM_FIREWXNEST

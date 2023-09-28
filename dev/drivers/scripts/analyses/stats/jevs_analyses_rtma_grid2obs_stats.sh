@@ -63,7 +63,7 @@ export config=$HOMEevs/parm/evs_config/analyses/config.evs.rtma.prod
 source $config
 
 # CALL executable job script here
-$HOMEevs/jobs/analyses/stats/JEVS_ANALYSES_STATS
+$HOMEevs/jobs/JEVS_ANALYSES_STATS
 
 ######################################################################
 ## Purpose: This job will generate the grid2obs statistics for the NAM_FIREWXNEST
