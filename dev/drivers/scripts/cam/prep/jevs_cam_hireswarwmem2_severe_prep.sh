@@ -4,7 +4,7 @@
 #PBS -q dev
 #PBS -A EVS-DEV
 #PBS -l walltime=0:30:00
-#PBS -l select=1:ncpus=1:mem=20GB
+#PBS -l select=1:ncpus=1:mem=40GB
 #PBS -l debug=true
 #PBS -V
 
