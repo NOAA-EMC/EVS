@@ -60,7 +60,7 @@ export COMINstat=$COMIN/stats/$COMPONENT  # will be appended with wafs.$VDATE or
 
 # COMOUT folder
 # evs_ver defined in versions/run.ver
-export COMOUT=${COMOUT:-$COMIN/$STEP/$COMPONENT/$RUN.$VDATE}
+export COMOUT=${COMOUT:-$(compath.py ${envir}/com/${NET}/${evs_ver})/$STEP/$COMPONENT/$RUN.$VDATE}
 
 mkdir -p $COMOUT
 
@@ -121,10 +121,6 @@ done
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 echo $msg
-
-if [ "$KEEPDATA" != "YES" ] ; then
-  rm -rf $DATA
-fi
 
 date
 

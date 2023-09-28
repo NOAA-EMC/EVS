@@ -98,9 +98,5 @@ export err=$?; err_chk
 
 echo "JOB $job HAS COMPLETED NORMALLY!"
 
-if [ "$KEEPDATA" != "YES" ] ; then
-  rm -rf $DATA
-fi
-
 date
 

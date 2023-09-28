@@ -55,7 +55,7 @@ export KEEPDATA=YES
 export pid=${pid:-$$}
 export DATA=/lfs/h2/emc/ptmp/$USER/evs/working/${STEP}.$pid
 
-$HOMEevs/jobs/wafs/plots/JEVS_WAFS_ATMOS_PLOTS
+$HOMEevs/jobs/JEVS_WAFS_ATMOS_PLOTS
 
 ############################################################
 ## Purpose: This job generates the grid2grid statistics stat
