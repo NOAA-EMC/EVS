@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash
 
 # ================================================================================================
 # NCEP EMC PYTHON PLOTTING OF CAM VERIFICATION
@@ -76,7 +76,8 @@ set -x
 
 # Case type settings are used to check if settings are allowed. **
 export VERIF_CASE="grid2obs"
-export VERIF_TYPE="aq"
+export VERIF_TYPE="conus_sfc"
+export MODELS="nam_firewxnest"
 
 # Used to name the graphics ouput files. File names will start with the URL_HEADER, followed by plot 
 # details.  Leave blank ("") to include only plot details in the file names.
@@ -87,7 +88,7 @@ export URL_HEADER=""
 # The format must be ${OUTPUT_BASE_DIR}/${VERIF_CASE}/${MODEL_NAME}/${Ym}/${MODEL_NAME}*.stat
 # The format requirement can be changed by editing the ${USH_DIR}/prune_stat_files.py file 
 # at line 30
-export USH_DIR="$USHevs/aqm"
+export USH_DIR="$USHevs/cam"
 export IMG_HEADER="${NET}.${COMPONENT}"
 export PRUNE_DIR="$PRUNEDIR"
 export SAVE_DIR="$PLOTDIR"
@@ -101,14 +102,13 @@ export LOG_TEMPLATE="${SAVE_DIR}/logs/EVS_plotting_job_`date '+%Y%m%d-%H%M%S'`_$
 export LOG_LEVEL="DEBUG"
 
 # Version of MET listed in the metplus .stat files used to create graphics
-export MET_VERSION="11.0"
 
 # Will use statistics for all comma-separated models.  Case-insensitive by default, but names must 
 # match the model naming convention in ${OUTPUT_BASE_DIR}
-export MODELS="pm25_raw, pm25_bc"
+##export MODEL="$MODELNAME"
 
 # Will use valid or init datetimes based on the setting below. Options are "VALID" or "INIT"
-export DATE_TYPE="INIT"
+export DATE_TYPE="$datetyp"
 
 # Will choose a valid or init range based on a preset EVAL_PERIOD.  Use "TEST" if you want to use 
 # the custom-defined range below. Presets are defined in ${USH_DIR}/settings.py in the Presets() 
@@ -129,12 +129,12 @@ export FCST_VALID_HOUR="00, 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 
 
 # Settings below are used to select desired variable and domain. **
 export FCST_LEVEL="$lev"
-export OBS_LEVEL="${lev_obs}"
+export OBS_LEVEL="$lev_obs"
 export var_name="$var"
-export VX_MASK_LIST="$region"
+export VX_MASK_LIST="FireWx"
 
 # Will use statistics for all comma-separated lead times 
-export FCST_LEAD="01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72"
+export FCST_LEAD="01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36"
 
 # Line type in metplus .stat files used to compute desired metric(s). **
 export LINE_TYPE="$linetype"
@@ -144,12 +144,12 @@ export INTERP="BILIN"
 
 # Will use statistics for all comma-separated thresholds. Use symbols (e.g., >=) to define 
 # thresholds. **
-export FCST_THRESH=""
-export OBS_THRESH=""
+export FCST_THRESH="$thresh"
+export OBS_THRESH="$thresh"
 
 # Will plot all comma-separated metrics.  For performance diagram, metrics must be "sratio,pod,csi". 
 # Depending on the VERIF_CASE, VERIF_TYPE, and LINE_TYPE, only some settings are allowed. **
-export STATS="bcrmse,me"
+export STATS="$stat"
 
 # String of True or False. If "True", will plot bootstrap confidence intervals. Other confidence 
 # interval settings can be configured in ${USH_DIR}/settings.py
@@ -159,6 +159,6 @@ export CONFIDENCE_INTERVALS="False"
 # Executes the desired python script.  Scripts in $USH_DIR currently include {lead_average.py, 
 # performance_diagram.py, stat_by_level.py, threshold_average.py, time_series.py, 
 # valid_hour_average.py}
-python $USH_DIR/lead_average.py
+python $USH_DIR/${plottyp}_average.py
 
 exit 0
