@@ -6,6 +6,12 @@
 
 EVS_fix=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
-rm -rf ../fix
-mkdir -p ../fix
-[ -d $EVS_fix ] && ln -s ${EVS_fix}/* ../fix/ || echo "$EVS_fix does not exist"
+if [ ! -L ../fix ]; then
+  echo "creating symbolic link for FIXevs ..."
+  [ -d $EVS_fix ] && ln -s ${EVS_fix} ../fix || echo "$EVS_fix does not exist"
+  echo "created"
+  ls -l ../fix
+else
+  echo "symbolic link for FIXevs previously created"
+  ls -l ../fix
+fi
