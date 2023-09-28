@@ -164,7 +164,6 @@ export USE_CFP=YES
 
 if [ $USE_CFP = YES ]; then
 
-#  export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
    echo "running cfp"
    mpiexec -np $nproc --cpu-bind verbose,core cfp ${MP_CMDFILE} 
    export err=$?; err_chk
