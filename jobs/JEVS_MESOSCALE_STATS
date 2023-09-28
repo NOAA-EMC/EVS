@@ -36,6 +36,7 @@ export pgmout="OUTPUT.${pid}"
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
+export SENDMAIL=${SENDMAIL:-YES}
 
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
@@ -98,7 +99,7 @@ else
 fi
 
 # Execute the Script
-$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
 
 # Clean Up

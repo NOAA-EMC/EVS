@@ -50,6 +50,7 @@ if proceed:
     send_mail = 0
     err=0
     max_num_files = 10
+    SENDMAIL = os.environ['SENDMAIL']
     COMPONENT = os.environ['COMPONENT']
     maillist = os.environ['maillist']
     CYC = os.environ['cyc']
