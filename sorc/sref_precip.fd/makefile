@@ -1,15 +1,18 @@
-#!/bin/bash
-FC=   ftn -convert big_endian    
+SRCS=sref_precip.f
+CMD=sref_precip.x
+FC=ftn -convert big_endian    
+DEBUG=-check all -ftrapuv
 INC= ${G2_INC4}
-BINDIR=../../exec
-#mkdir -p $BINDIR
 LIBS= ${IP_LIB4} ${W3NCO_LIB4} ${W3EMC_LIB4} ${BACIO_LIB4}  ${SP_LIB4} ${G2_LIB4} ${JASPER_LIB} ${PNG_LIB} ${Z_LIB}
 FFLAGS = -O3 -auto -I $(INC)
-precip: clean sref_precip.x install
-sref_precip.x:
-	$(FC) $(FFLAGS) -o $(@) sref_precip.f $(LIBS)
+BINDIR=${EXECevs}
+
+$(CMD):
+	$(FC) $(FFLAGS) -o $(@) $(SRCS) $(LIBS)
+all: $(CMD)
+debug:FFLAGS += $(DEBUG)
+debug:$(CMD)
 clean:
-	-rm -f sref_precip.x *.o
+	-rm -f $(CMD) *.o
 install:
-	-mv sref_precip.x  ${BINDIR}
-#
+	-mv $(CMD)  $(BINDIR)/.

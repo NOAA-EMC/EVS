@@ -1,22 +1,18 @@
-#!/bin/sh
-#
-#  This makefile is to compile ensembel production generator
-#  Author: Binbin Zhou
-#  OS: Intel WCOSS2
-#
-
-FC=     ftn -convert big_endian
+SRCS=evs_g2g_adjustCMC.f
+CMD=evs_g2g_adjustCMC.x
+FC=ftn -convert big_endian
+DEBUG=-check all -ftrapuv
 INC= ${G2_INC4}
-BINDIR= ../../exec
 LIBS= ${IP_LIB4} ${W3NCO_LIB4} ${W3EMC_LIB4} ${BACIO_LIB4}  ${SP_LIB4} ${G2_LIB4} ${JASPER_LIB} ${PNG_LIB} ${Z_LIB}
 FFLAGS = -O3 -auto -I $(INC)
-CMCE= evs_g2g_adjustCMC.x
+BINDIR=${EXECevs}
 
-cmce:	cleanCMCE $(CMCE) installCMCE
-$(CMCE):
-	$(FC) $(FFLAGS) -o $(@)  evs_g2g_adjustCMC.f $(LIBS)
-cleanCMCE:
-	-rm -f *.o $(CMCE)
-installCMCE:
-	-mv $(CMCE) ${BINDIR}/
-#
+$(CMD):
+	$(FC) $(FFLAGS) -o $(@)  $(SRCS) $(LIBS)
+all: $(CMD)
+debug:FFLAGS += $(DEBUG)
+debug:$(CMD)
+clean:
+	-rm -f *.o $(CMD)
+install:
+	-mv $(CMD) $(BINDIR)/.
