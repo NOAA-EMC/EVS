@@ -93,8 +93,7 @@ if [ $SENDCOM = YES ]; then
 fi
 
 if [ $SENDDBN = YES ]; then
-        $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTpath2tar
+        $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar
 fi
-
 
 
