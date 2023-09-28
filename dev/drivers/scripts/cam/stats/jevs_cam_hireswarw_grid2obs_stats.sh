@@ -17,7 +17,7 @@ export machine=WCOSS2
 export SENDMAIL=YES
 export SENDECF=YES
 export SENDCOM=YES
-export KEEPDATA=NO
+export KEEPDATA=YES
 export SENDDBN=YES
 export SENDDBN_NTC=
 export job=${PBS_JOBNAME:-jevs_cam_hireswarw_grid2obs_stats}
@@ -53,10 +53,11 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 # Developer Settings
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
-export COMROOT=/lfs/h2/emc/vpppg/noscrub/${USER}
+export COMROOT=/lfs/h2/emc/vpppg/noscrub/emc.vpppg
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
-export cyc=$(date -d "today" +"%H")
-export maillist="alicia.bentley@noaa.gov,marcel.caron@noaa.gov"
+#export cyc=$(date -d "today" +"%H")
+export cyc=00
+export maillist="marcel.caron@noaa.gov"
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/JEVS_CAM_STATS

@@ -16,7 +16,7 @@ export machine=WCOSS2
 # ECF Settings
 export SENDECF=YES
 export SENDCOM=YES
-export KEEPDATA=NO
+export KEEPDATA=YES
 export SENDDBN=YES
 export SENDDBN_NTC=
 export job=${PBS_JOBNAME:-jevs_cam_hireswfv3_precip_prep}

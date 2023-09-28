@@ -41,7 +41,7 @@ export cyc=${cyc:-${cyc}}
 ############################################################
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=NO
+export KEEPDATA=YES
 export VERIF_CASE=radar
 export MODELNAME=cam
 export job=${PBS_JOBNAME:-jevs_cam_${VERIF_CASE}_${STEP}_${cyc}}

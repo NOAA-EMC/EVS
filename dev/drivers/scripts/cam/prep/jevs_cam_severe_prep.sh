@@ -38,7 +38,7 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 ############################################################
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=NO
+export KEEPDATA=YES
 export VERIF_CASE=severe
 export MODELNAME=cam
 export job=${PBS_JOBNAME:-jevs_cam_${VERIF_CASE}_${STEP}}

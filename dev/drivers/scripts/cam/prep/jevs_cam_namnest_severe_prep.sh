@@ -40,7 +40,7 @@ export cyc=${cyc:-${cyc}}
 ############################################################
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=NO
+export KEEPDATA=YES
 export VERIF_CASE=severe
 export MODELNAME=namnest
 export modsys=nam
