@@ -6,7 +6,7 @@
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Handle all components of an EVS NAM Nest Precipitation - Statistics 
 #          job
-# DEPENDENCIES: $HOMEevs/jobs/cam/stats/JEVS_CAM_STATS 
+# DEPENDENCIES: $HOMEevs/jobs/JEVS_CAM_STATS 
 #
 # =============================================================================
 
@@ -113,7 +113,7 @@ if [ $USE_CFP = YES ]; then
         nc=$((nc+1))
     done
 else
-    set +x
+    set -x
     while [ $nc -le $ncount_job ]; do
         ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
         nc=$((nc+1))
@@ -204,7 +204,7 @@ if [ $USE_CFP = YES ]; then
         nc=$((nc+1))
     done
 else
-    set +x
+    set -x
     while [ $nc -le $ncount_job ]; do
         ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
         nc=$((nc+1))
@@ -264,7 +264,7 @@ if [ $USE_CFP = YES ]; then
         nc=$((nc+1))
     done
 else
-    set +x
+    set -x
     while [ $nc -le $ncount_job ]; do
         ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
         nc=$((nc+1))
@@ -321,7 +321,7 @@ if [ $USE_CFP = YES ]; then
         nc=$((nc+1))
     done
 else
-    set +x
+    set -x
     while [ $nc -le $ncount_job ]; do
         ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
         nc=$((nc+1))
@@ -403,7 +403,7 @@ if [ "$cyc" -ge "$last_cyc" ]; then
                 nc=$((nc+1))
             done
         else
-            set +x
+            set -x
             while [ $nc -le $ncount_job ]; do
                 ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
                 nc=$((nc+1))

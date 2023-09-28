@@ -5,7 +5,7 @@
 # NAME: exevs_namnest_precip_prep.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Handle all components of an EVS NAM Nest Precipitation - Prep job
-# DEPENDENCIES: $HOMEevs/jobs/cam/prep/JEVS_CAM_PREP 
+# DEPENDENCIES: $HOMEevs/jobs/JEVS_CAM_PREP 
 #
 # =============================================================================
 
