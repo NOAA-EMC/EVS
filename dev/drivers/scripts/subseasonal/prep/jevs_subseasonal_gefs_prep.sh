@@ -27,6 +27,7 @@ export job=${PBS_JOBNAME:-jevs_subseasonal_gefs_prep}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
+export KEEPDATA=YES
 
 export maillist='alicia.bentley@noaa.gov,shannon.shields@noaa.gov'
 

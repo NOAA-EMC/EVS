@@ -28,6 +28,7 @@ export MET_ROOT=/apps/ops/prod/libs/intel/${intel_ver}/met/${met_ver}
 
 export USER=$USER
 export envir=prod
+export KEEPDATA=YES
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export ACCOUNT=VERF-DEV
 export QUEUE=dev
