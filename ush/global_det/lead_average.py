@@ -848,8 +848,8 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
 
     ax.legend(
          handles, labels, framealpha=1,
-￼        bbox_to_anchor=(0.5, -0.15), ncol=4, frameon=True, numpoints=2,
-￼        borderpad=.8, labelspacing=1.)
+         bbox_to_anchor=(0.5, -0.15), ncol=4, frameon=True, numpoints=2,
+         borderpad=.8, labelspacing=1.)
     fig.subplots_adjust(wspace=0, hspace=0)
     ax.grid(
         visible=True, which='major', axis='both', alpha=.5, linestyle='--', 
@@ -973,14 +973,15 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         else:
             title2 = f'{level_string}{var_long_name} (unitless)'
     if obtype == 'SFCSHP':
-        title2 = title2+f', Observations: Surface Marine (Ship, Buoy, C-MAN Platform)'
+        title2 = title2+f'\nObservations: Surface Marine (Ship, Buoy, C-MAN Platform)'
     elif obtype == 'NDBC_STANDARD':
-        title2 = title2+f', Observations: NDBC Buoys'
+        title2 = title2+f'\nObservations: NDBC Buoys'
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
               + f'{date_start_string} to {date_end_string}')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
-        title_pad=23
+        #title_pad=23
+        title_pad=None
     else:
         title_pad=None
     ax.set_title(title_center, pad=title_pad)
