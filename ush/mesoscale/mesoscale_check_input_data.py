@@ -63,7 +63,8 @@ if proceed:
     FHR_END_SHORT = os.environ['FHR_END_SHORT']
     NEST = os.environ['NEST']
     if STEP == 'stats':
-        send_mail = 1
+        if  SENDMAIL == "YES":
+            send_mail = 1
         MODELNAME = os.environ['MODELNAME']
         FHR_INCR_FULL = os.environ['FHR_INCR_FULL']
         FHR_INCR_SHORT = os.environ['FHR_INCR_SHORT']
