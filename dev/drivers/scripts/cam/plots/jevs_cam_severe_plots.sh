@@ -52,6 +52,7 @@ export cyc=${cyc:-${cyc}}
 export EVAL_PERIOD=${EVAL_PERIOD:-${EVAL_PERIOD}}
 export LINE_TYPE=${LINE_TYPE:-${LINE_TYPE}}
 
+export SENDMAIL=${SENDMAIL:-YES}
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
@@ -66,7 +67,7 @@ if [ -z "$maillist" ]; then
 else
 
    # CALL executable job script here
-   $HOMEevs/jobs/cam/plots/JEVS_CAM_PLOTS
+   $HOMEevs/jobs/JEVS_CAM_PLOTS
 
 fi
 

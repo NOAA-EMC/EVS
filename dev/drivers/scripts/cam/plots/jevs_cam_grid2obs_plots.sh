@@ -58,4 +58,4 @@ export cyc=$(date -d "today" +"%H")
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 
 # Job Settings and Run
-. ${HOMEevs}/jobs/cam/plots/JEVS_CAM_PLOTS
+. ${HOMEevs}/jobs/JEVS_CAM_PLOTS

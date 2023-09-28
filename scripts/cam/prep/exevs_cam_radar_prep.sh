@@ -91,10 +91,12 @@ for DOMAIN in ${DOMAINS}; do
 
       else
 
-         export subject="MRMS ${MRMS_PRODUCT} Data Missing for EVS ${COMPONENT}"
-         echo "Warning: The ${MRMS_PRODUCT} file is missing for valid date ${VDATE}${cyc}. METplus will not run." > mailmsg
-         echo "Job ID: $jobid" >> mailmsg
-         cat mailmsg | mail -s "$subject" $maillist
+         if [ $SENDMAIL = YES ]; then
+            export subject="MRMS ${MRMS_PRODUCT} Data Missing for EVS ${COMPONENT}"
+            echo "Warning: The ${MRMS_PRODUCT} file is missing for valid date ${VDATE}${cyc}. METplus will not run." > mailmsg
+            echo "Job ID: $jobid" >> mailmsg
+            cat mailmsg | mail -s "$subject" $maillist
+         fi
 
       fi	
 

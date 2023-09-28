@@ -14,6 +14,7 @@ export model=evs
 export machine=WCOSS2
 
 # ECF Settings
+export SENDMAIL=YES
 export SENDECF=YES
 export SENDCOM=YES
 export KEEPDATA=NO
@@ -58,4 +59,4 @@ export cyc=$(date -d "today" +"%H")
 export maillist="alicia.bentley@noaa.gov,marcel.caron@noaa.gov"
 
 # Job Settings and Run
-. ${HOMEevs}/jobs/cam/stats/JEVS_CAM_STATS
+. ${HOMEevs}/JEVS_CAM_STATS
