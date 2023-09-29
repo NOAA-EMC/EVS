@@ -45,6 +45,7 @@ export pid=${PBS_JOBID:-$$}
 export job=${PBS_JOBNAME:-jevs_aviation_stats}
 export jobid=$job.$pid
 export maillist=${maillist:-'alicia.bentley@noaa.gov,yali.mao@noaa.gov'}
+export SENDMAIL=${SENDMAIL:-YES}
 
 ############################################################
 # CALL executable job script here
@@ -53,7 +54,7 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
 export KEEPDATA=YES
 
-$HOMEevs/jobs/wafs/stats/JEVS_WAFS_ATMOS_STATS
+$HOMEevs/jobs/JEVS_WAFS_ATMOS_STATS
 
 ############################################################
 ## Purpose: This job generates the grid2grid statistics stat
