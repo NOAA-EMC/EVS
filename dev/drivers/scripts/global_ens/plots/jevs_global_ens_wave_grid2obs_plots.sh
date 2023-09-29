@@ -61,7 +61,7 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 ############################################################
-${HOMEevs}/jobs/global_ens/plots/JEVS_GLOBAL_ENS_WAVE_GRID2OBS_PLOTS
+${HOMEevs}/jobs/JEVS_GLOBAL_ENS_WAVE_GRID2OBS_PLOTS
 
 #########################################################################
 # Purpose: This job creates the plots for the global_ens GEFS-Wave model

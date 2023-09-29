@@ -44,4 +44,4 @@ export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 
-${HOMEevs}/jobs/global_ens/plots/JEVS_GLOBAL_ENS_PLOTS
+${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PLOTS

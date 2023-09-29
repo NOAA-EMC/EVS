@@ -57,7 +57,7 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 ############################################################
-$HOMEevs/jobs/global_ens/prep/JEVS_GLOBAL_ENS_WAVE_GRID2OBS_PREP
+$HOMEevs/jobs/JEVS_GLOBAL_ENS_WAVE_GRID2OBS_PREP
 
 ######################################################################
 # Purpose: This does the prep work for the global_ens GEFS-Wave model

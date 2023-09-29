@@ -59,7 +59,7 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 ############################################################
-${HOMEevs}/jobs/global_ens/stats/JEVS_GLOBAL_ENS_WAVE_GRID2OBS_STATS
+${HOMEevs}/jobs/JEVS_GLOBAL_ENS_WAVE_GRID2OBS_STATS
 
 #######################################################################
 # Purpose: This calculates the stats for the global_ens GEFS-Wave model

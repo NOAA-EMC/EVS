@@ -42,4 +42,4 @@ export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-${HOMEevs}/jobs/global_ens/plots/JEVS_GLOBAL_ENS_PLOTS
+${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PLOTS
