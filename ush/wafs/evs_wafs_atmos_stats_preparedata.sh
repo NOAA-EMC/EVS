@@ -59,11 +59,13 @@ if [[ $OBSERVATION = "GCIP" ]] ; then
 	    mkdir -p $targetdir
 	    ln -sf $sourcefile $targetdir/.
 	else
-	    export subject="GCIP Analysis Data Missing for EVS ${COMPONENT}"
-	    echo "Warning: No GCIP analysis was available for valid date ${VDATE}${cc}" > mailmsg
-	    echo “Missing file is $sourcefile” >> mailmsg
-	    echo "Job ID: $jobid" >> mailmsg
-	    cat mailmsg | mail -s "$subject" $maillist
+	    if [ $SENDMAIL = YES ] ; then
+		export subject="GCIP Analysis Data Missing for EVS ${COMPONENT}"
+		echo "Warning: No GCIP analysis was available for valid date ${VDATE}${cc}" > mailmsg
+		echo “Missing file is $sourcefile” >> mailmsg
+		echo "Job ID: $jobid" >> mailmsg
+		cat mailmsg | mail -s "$subject" $maillist
+	    fi
 	fi
 	
 	cc2=$(( 10#$cc + 3 ))
@@ -74,11 +76,13 @@ if [[ $OBSERVATION = "GCIP" ]] ; then
             mkdir -p $targetdir
             ln -sf $sourcefile $targetdir/.
 	else
-	    export subject="GCIP Analysis Data Missing for EVS ${COMPONENT}"
-	    echo "Warning: No GCIP analysis was available for valid date ${VDATE}${cc2}" > mailmsg
-	    echo “Missing file is $sourcefile” >> mailmsg
-	    echo "Job ID: $jobid" >> mailmsg
-	    cat mailmsg | mail -s "$subject" $maillist
+	    if [ $SENDMAIL = YES ] ; then
+		export subject="GCIP Analysis Data Missing for EVS ${COMPONENT}"
+		echo "Warning: No GCIP analysis was available for valid date ${VDATE}${cc2}" > mailmsg
+		echo “Missing file is $sourcefile” >> mailmsg
+		echo "Job ID: $jobid" >> mailmsg
+		cat mailmsg | mail -s "$subject" $maillist
+	    fi
         fi
     done
 elif [[ $OBSERVATION = "GFS" ]] ; then
@@ -86,11 +90,13 @@ elif [[ $OBSERVATION = "GFS" ]] ; then
         sourcedir=$COMINgfs/gfs.$VDATE/$cc/atmos
 	sourcefile=$sourcedir/gfs.t${cc}z.pgrb2.0p25.anl
 	if [[ ! -f $sourcefile ]] ; then
-	    export subject="GFS Analysis Data Missing for EVS ${COMPONENT}"
-            echo "Warning: No GFS analysis was available for valid date ${VDATE}${cc}" > mailmsg
-            echo “Missing file is $sourcefile” >> mailmsg
-            echo "Job ID: $jobid" >> mailmsg
-            cat mailmsg | mail -s "$subject" $maillist
+	    if [ $SENDMAIL = YES ] ; then
+		export subject="GFS Analysis Data Missing for EVS ${COMPONENT}"
+		echo "Warning: No GFS analysis was available for valid date ${VDATE}${cc}" > mailmsg
+		echo “Missing file is $sourcefile” >> mailmsg
+		echo "Job ID: $jobid" >> mailmsg
+		cat mailmsg | mail -s "$subject" $maillist
+	    fi
 	fi
     done    
 fi
