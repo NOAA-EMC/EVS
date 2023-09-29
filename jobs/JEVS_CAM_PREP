@@ -5,6 +5,8 @@
 ########################################
 set -xa
 
+export SENDMAIL=${SENDMAIL:-NO}
+
 
 ####################################
 # SET SHELL PROCESSING VARIABLES
