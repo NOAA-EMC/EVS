@@ -68,7 +68,7 @@ for model in $model_list ; do
  done
 done
 
-python $USHevs/global_ens/ush_gens_plot_py/global_det_atmos_plots.py
+python $USHevs/global_ens/ush_gens_plot_py/global_ens_atmos_plots.py
 
 cd $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/precip/SL1L2_FBAR_24hrAccumMaps_CONUS_precip_spatial_map/images
 
