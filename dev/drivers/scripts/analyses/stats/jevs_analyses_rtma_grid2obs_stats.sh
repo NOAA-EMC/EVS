@@ -15,7 +15,7 @@ cd $PBS_O_WORKDIR
 
 export model=evs
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS_analyses_EE2/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 source $HOMEevs/versions/run.ver
 
@@ -31,10 +31,10 @@ module load prod_envir/${prod_envir_ver}
 ## For dev testing
 #############################################################
 
+export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=YES
 export SENDMAIL=YES
-export envir=prod
 export NET=evs
 export STEP=stats
 export COMPONENT=analyses
