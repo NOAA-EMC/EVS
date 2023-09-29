@@ -42,7 +42,7 @@ evs_cam_settings_dict['evs'] = [
     'FIXevs'
 ]
 evs_cam_settings_dict['shared'] = []
-evs_cam_settings_dict['modules'] = ['METPLUS_PATH', 'MET_ROOT', 'MET_CONFIG']
+evs_cam_settings_dict['modules'] = ['METPLUS_PATH', 'MET_ROOT']
 evs_cam_settings_dict['RUN_GRID2OBS_PREP'] = [
         'MET_PLUS_CONF','MET_PLUS_OUT',
         'NEST','URL_HEAD',
@@ -205,17 +205,14 @@ env_file_list = []
 if STEP == 'prep':
     env_dir_list.append('METPLUS_PATH')
     env_dir_list.append('MET_ROOT')
-    env_dir_list.append('MET_CONFIG')
     if VERIF_CASE == 'precip':
         env_dir_list.append('COMINobs')
     if VERIF_CASE == 'grid2obs':
         env_dir_list.append('METPLUS_PATH')
         env_dir_list.append('MET_ROOT')
-        env_dir_list.append('MET_CONFIG')
 if STEP == 'stats':
     env_dir_list.append('METPLUS_PATH')
     env_dir_list.append('MET_ROOT')
-    env_dir_list.append('MET_CONFIG')
     env_dir_list.append('COMINobs')
     env_dir_list.append('COMINfcst')
     if VERIF_CASE == 'precip':

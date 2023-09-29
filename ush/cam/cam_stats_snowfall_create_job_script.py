@@ -32,7 +32,6 @@ VERIF_CASE = os.environ['VERIF_CASE']
 MODELNAME = os.environ['MODELNAME']
 METPLUS_PATH = os.environ['METPLUS_PATH']
 MET_ROOT = os.environ['MET_ROOT']
-MET_CONFIG = os.environ['MET_CONFIG']
 DATA = os.environ['DATA']
 RESTART_DIR = os.environ['RESTART_DIR']
 VDATE = os.environ['VDATE']
@@ -133,7 +132,6 @@ job_env_vars_dict = {
     'MODELNAME': MODELNAME,
     'METPLUS_PATH': METPLUS_PATH,
     'MET_ROOT': MET_ROOT,
-    'MET_CONFIG': MET_CONFIG,
     'DATA': DATA,
     'RESTART_DIR': RESTART_DIR,
     'VDATE': VDATE,
