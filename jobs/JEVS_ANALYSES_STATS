@@ -8,7 +8,7 @@ set -xa
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
-export SENDMAIL=${SENDMAIL:-YES}
+export SENDMAIL=${SENDMAIL:-NO}
 
 # ###################################
 # SET SHELL PROCESSING VARIABLES
@@ -62,10 +62,10 @@ fi
 export COMIN=${COMIN:-$(compath.py -o ${envir}/com/${NET}/$evs_ver)}
 export COMINfcst=${COMINfcst:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
 export COMINobs=${COMINobs:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
-export COMOUT=${COMOUT:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
+export COMOUT=${COMOUT:-$(compath.py ${NET}/${evs_ver})}
 mkdir -p $COMOUT
-export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
-export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
+export COMOUTsmall=${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
+export COMOUTfinal=${COMOUT}/${STEP}/${COMPONENT}/${MODELNAME}.${VDATE}
 mkdir -p $COMOUTsmall $COMOUTfinal
 
 #######################################################################

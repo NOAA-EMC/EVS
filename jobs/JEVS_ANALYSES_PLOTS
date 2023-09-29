@@ -8,7 +8,7 @@ set -xa
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
-export SENDMAIL=${SENDMAIL:-YES}
+export SENDMAIL=${SENDMAIL:-NO}
 
 # ###################################
 # SET SHELL PROCESSING VARIABLES
@@ -58,8 +58,8 @@ export RUN=${RUN:-atmos}
 echo $COMPATH
 
 export COMIN=${COMIN:-$(compath.py ${envir}/com/evs/${evs_ver})}
-export COMINanl=${COMINanl:-$(compath.py ${COMIN}/stats/${COMPONENT})}
-export COMOUT=${COMOUT:-compath.py ${envir}/com/evs/${evs_ver})}
+export COMINanl=${COMINanl:-${COMIN}/stats/${COMPONENT}}
+export COMOUT=${COMOUT:-$(compath.py ${envir}/com/evs/${evs_ver})}
 export COMOUTplots=${COMOUTplots:-${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}}
 mkdir -m 775 -p $COMOUTplots
 
