@@ -188,7 +188,6 @@ done #end of stats
 chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
-  export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
    mpiexec -np 32 -ppn 32 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
