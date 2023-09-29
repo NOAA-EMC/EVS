@@ -22,6 +22,14 @@ export RUN=atmos
 export VERIF_CASE=grid2grid
 
 ############################################################
+Set data directives
+############################################################
+export SENDECF=${SENDECF:-YES}
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-NO}
+export SENDMAIL=${SENDMAIL:-NO}
+
+############################################################
 # Load modules
 ############################################################
 source $HOMEevs/versions/run.ver
