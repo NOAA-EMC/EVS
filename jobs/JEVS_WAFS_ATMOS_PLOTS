@@ -11,6 +11,14 @@ date
 export MET_VERSION=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
 
 ############################################
+# Set data directives
+############################################
+export SENDECF=${SENDECF:-YES}
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-NO}
+export SENDMAIL=${SENDMAIL:-NO}
+
+############################################
 # Working Directory                                                                                                                                      
 ############################################
 export DATA=${DATA:-${DATAROOT}/${jobid:?}}
@@ -60,7 +68,7 @@ export COMINstat=$COMIN/stats/$COMPONENT  # will be appended with wafs.$VDATE or
 
 # COMOUT folder
 # evs_ver defined in versions/run.ver
-export COMOUT=${COMOUT:-$COMIN/$STEP/$COMPONENT/$RUN.$VDATE}
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})/$STEP/$COMPONENT/$RUN.$VDATE}
 
 mkdir -p $COMOUT
 
