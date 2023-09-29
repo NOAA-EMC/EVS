@@ -29,8 +29,8 @@ STEP = os.environ['STEP']
 RUN = os.environ['RUN']
 VERIF_CASE = os.environ['VERIF_CASE']
 MODELNAME = os.environ['MODELNAME']
-MET_PLUS_PATH = os.environ['MET_PLUS_PATH']
-MET_PATH = os.environ['MET_PATH']
+METPLUS_PATH = os.environ['METPLUS_PATH']
+MET_ROOT = os.environ['MET_ROOT']
 MET_CONFIG = os.environ['MET_CONFIG']
 DATA = os.environ['DATA']
 RESTART_DIR = os.environ['RESTART_DIR']
@@ -161,8 +161,8 @@ job_env_vars_dict = {
     'PYTHONPATH': PYTHONPATH,
     'VERIF_CASE': VERIF_CASE,
     'MODELNAME': MODELNAME,
-    'MET_PLUS_PATH': MET_PLUS_PATH,
-    'MET_PATH': MET_PATH,
+    'METPLUS_PATH': METPLUS_PATH,
+    'MET_ROOT': MET_ROOT,
     'MET_CONFIG': MET_CONFIG,
     'DATA': DATA,
     'RESTART_DIR': RESTART_DIR,
