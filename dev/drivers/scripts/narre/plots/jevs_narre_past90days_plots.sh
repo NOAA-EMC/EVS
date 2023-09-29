@@ -32,7 +32,8 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-export KEEPDATA=NO
+export KEEPDATA=YES
+export SENDMAIL=YES
 
 export cyc=00
 #export VDATE=20221031
@@ -49,4 +50,4 @@ export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 
-${HOMEevs}/jobs/narre/plots/JEVS_NARRE_PLOTS
+${HOMEevs}/jobs/JEVS_NARRE_PLOTS

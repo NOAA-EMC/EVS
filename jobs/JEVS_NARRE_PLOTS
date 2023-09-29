@@ -13,12 +13,14 @@ export cycle=t${cyc}z
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
+export SENDMAIL=${SENDMAIL:-NO}
 
 export pid=$$
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
+
 
 setpdy.sh
 . $DATA/PDY

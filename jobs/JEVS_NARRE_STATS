@@ -26,11 +26,12 @@ export VDATE=${VDATE:-$PDYm1}
 # SENDECF  - Flag Events on ECF
 # SENDCOM  - Copy Files From TMPDIR to $COMOUT
 # SENDDBN  - Issue DBNet Client Calls
+# SENDMAIL - Sen email to alert data missing
 ##################################################
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
-
+export SENDMAIL=${SENDMAIL:-NO} 
 
 export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}
 export COMINnarre=${COMIN:-$(compath.py  $envir/com/narre/$narre_ver)}
