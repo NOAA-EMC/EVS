@@ -40,7 +40,14 @@ export COMPONENT=wafs
 export RUN=atmos
 export VERIF_CASE=grid2grid
 
+export cyc=${cyc:-00}
+export cycle=t${cyc}z
+setpdy.sh
+. ./PDY
+export VDATE=${VDATE:-$PDYm1}
+
 export COMIN=${COMIN:-/lfs/h2/emc/vpppg/noscrub/$USER/evs/$evs_ver}
+export COMOUT=/lfs/h2/emc/ptmp/$USER/evs/$evs_ver/${STEP}/${COMPONENT}/${RUN}.${VDATE}
 
 export USH_DIR=$HOMEevs/ush/$COMPONENT
 export DAYS_LIST=${DAYS_LIST:-"90 31"}
