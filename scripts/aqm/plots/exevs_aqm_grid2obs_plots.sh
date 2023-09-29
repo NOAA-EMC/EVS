@@ -130,7 +130,7 @@ do
 	smvar=ozone
 	if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png ]
 	then
-	sh $USHevs/${COMPONENT}/py_plotting_awpozcon.config
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting_awpozcon.config
         else
 	echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$var/evs.$COMPONENT.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png $PLOTDIR
@@ -147,7 +147,7 @@ do
 
 	if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.fbar_obar.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png ]
 	then
-	sh $USHevs/${COMPONENT}/py_plotting_awpozcon_fbar.config
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting_awpozcon_fbar.config
         else
         echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$var/evs.$COMPONENT.fbar_obar.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png $PLOTDIR
@@ -171,7 +171,7 @@ do
         smvar=pm25
 	if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png ]
 	then
-        sh $USHevs/${COMPONENT}/py_plotting_pm25.config
+        sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting_pm25.config
         else
 	echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$var/evs.$COMPONENT.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png $PLOTDIR
@@ -188,7 +188,7 @@ do
 
 	if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.fbar_obar.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png ]
 	then
-        sh $USHevs/${COMPONENT}/py_plotting_pm25_fbar.config
+        sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting_pm25_fbar.config
         else
 	echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$var/evs.$COMPONENT.fbar_obar.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png $PLOTDIR
@@ -219,7 +219,7 @@ do
 
         if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png ]
 	then
-	sh $USHevs/${COMPONENT}/py_plotting_ozmax8.config
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting_ozmax8.config
         else
         echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$var/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png $PLOTDIR
@@ -250,7 +250,7 @@ do
 
 	if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png ]
 	then
-	sh $USHevs/${COMPONENT}/py_plotting_ozmax8.config
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting_ozmax8.config
 	else
         echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$var/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png $PLOTDIR
@@ -281,7 +281,7 @@ do
 
 	if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png ]
 	then
-	sh $USHevs/${COMPONENT}/py_plotting_pmave.config
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting_pmave.config
         else
 	echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$var/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png $PLOTDIR
@@ -312,7 +312,7 @@ do
 
 	if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png ]
 	then
-	sh $USHevs/${COMPONENT}/py_plotting_pmave.config
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting_pmave.config
         else
 	echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$var/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png $PLOTDIR
@@ -382,7 +382,7 @@ do
 
 	if [ ! -e $COMOUTplots/headline/headline_${COMPONENT}.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png ]
 	then
-	sh $USHevs/${COMPONENT}/py_plotting_ozmax8_headline.config
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting_ozmax8_headline.config
         else
 	echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/headline/headline_${COMPONENT}.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png ${PLOTDIR_headline}
@@ -418,7 +418,7 @@ do
 
 	if [ ! -e $COMOUTplots/headline/headline_${COMPONENT}.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png ]
 	then
-	sh $USHevs/${COMPONENT}/py_plotting_pmave_headline.config
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting_pmave_headline.config
         else
         echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/headline/headline_${COMPONENT}.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png ${PLOTDIR_headline}
