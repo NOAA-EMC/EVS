@@ -11,6 +11,14 @@ date
 export MET_VERSION=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
 
 ############################################
+# Set data directives
+############################################
+export SENDECF=${SENDECF:-YES}
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-NO}
+export SENDMAIL=${SENDMAIL:-NO}
+
+############################################
 # Working Directory                                                                                                                                      
 ############################################
 export DATA=${DATA:-${DATAROOT}/${jobid:?}}

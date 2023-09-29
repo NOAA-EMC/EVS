@@ -24,14 +24,6 @@ export RUN=atmos
 export VERIF_CASE=grid2grid
 
 ############################################################
-Set data directives
-############################################################
-export SENDECF=${SENDECF:-YES}
-export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-NO}
-export SENDMAIL=${SENDMAIL:-NO}
-
-############################################################
 # Load modules
 ############################################################
 source $HOMEevs/versions/run.ver
@@ -53,6 +45,7 @@ export pid=${PBS_JOBID:-$$}
 export job=${PBS_JOBNAME:-jevs_aviation_stats}
 export jobid=$job.$pid
 export maillist=${maillist:-'alicia.bentley@noaa.gov,yali.mao@noaa.gov'}
+export SENDMAIL=${SENDMAIL:-YES}
 
 ############################################################
 # CALL executable job script here
