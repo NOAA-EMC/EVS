@@ -9,7 +9,7 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN_NTC=${SENDDBN_NTC:-NO}
-export SENDMAIL=${SENDMAIL:-YES}
+export SENDMAIL=${SENDMAIL:-NO}
 
 ####################################
 # SET SHELL PROCESSING VARIABLES

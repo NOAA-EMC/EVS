@@ -19,6 +19,7 @@ set -x
   export KEEPDATA=NO
   export SENDDBN=YES
   export SENDDBN_NTC=
+  export SENDMAIL=YES
   export job=${PBS_JOBNAME:-jevs_mesoscale_grid2obs_stats}
   export jobid=$job.${PBS_JOBID:-$$}
   export SITE=$(cat /etc/cluster_name)
