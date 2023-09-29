@@ -110,7 +110,7 @@ do
 	smvar=`echo $varb | tr A-Z a-z`
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
 	then
-	sh $USHevs/${COMPONENT}/py_plotting.config
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting.config
         else
 	echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $PLOTDIR
@@ -137,7 +137,7 @@ do
         smvar=`echo $varb | tr A-Z a-z`
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
 	then
-	sh $USHevs/${COMPONENT}/py_plotting.config
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting.config
         else
 	echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $PLOTDIR
@@ -164,7 +164,7 @@ do
         smvar=`echo $varb | tr A-Z a-z`
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
 	then
-	sh $USHevs/${COMPONENT}/py_plotting.config
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting.config
         else
 	echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $PLOTDIR
@@ -203,7 +203,7 @@ do
 	smlev=`echo $lev | tr A-Z a-z`
 	smvar=`echo $varb | tr A-Z a-z`
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png ]; then
-	sh $USHevs/${COMPONENT}/py_plotting.config_perf
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting.config_perf
         else
 	echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$varb/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png $PLOTDIR
@@ -224,7 +224,7 @@ do
 	export stat
 
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]; then
-	sh $USHevs/${COMPONENT}/py_plotting.config_thresh
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting.config_thresh
         else
 	echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$varb/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png $PLOTDIR
@@ -259,7 +259,7 @@ done
 	export stat
 
 	if [ ! -e $COMOUTplots/$var/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]; then
-	sh $USHevs/${COMPONENT}/py_plotting.config_thresh
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting.config_thresh
         else
         echo "RESTART - plot exists; copying over to plot directory"
         cp $COMOUTplots/$var/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png $PLOTDIR
