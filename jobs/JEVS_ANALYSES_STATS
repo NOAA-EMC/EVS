@@ -3,8 +3,15 @@
 ########################################
 # Preliminary data setup step
 ########################################
-set -xa
+set -x
 
+##################################################
+### SAVEGES  - Copy Files From TMPDIR to $GESdir
+### SENDECF  - Flag Events on ecFLOW
+### SENDCOM  - Copy Files From TMPDIR to $COMOUT
+### SENDDBN  - Issue DBNet Client Calls
+### SENDMAIL - Send email if file is missing
+###################################################
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-NO}
 export SENDECF=${SENDECF:-YES}
