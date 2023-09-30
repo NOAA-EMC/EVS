@@ -16,8 +16,8 @@ export model=evs
 
 export SENDECF=YES
 export SENDCOM=YES
-export KEEPDATA=NO
-export SENDDBN=YES
+export KEEPDATA=YES
+export SENDDBN=NO
 export SENDDBN_NTC=
 export SENDMAIL=YES
 export job=${PBS_JOBNAME:-jevs_nam_precip_stats}

@@ -21,7 +21,7 @@
 ########################################
 # Preliminary data setup step  
 ########################################
-set -xa
+set -x
 
 echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 

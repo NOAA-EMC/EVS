@@ -16,8 +16,8 @@ export machine=WCOSS2
 # ECF Settings
 export SENDECF=YES
 export SENDCOM=YES
-export KEEPDATA=NO
-export SENDDBN=YES
+export KEEPDATA=YES
+export SENDDBN=NO
 export SENDDBN_NTC=
 export SENDMAIL=YES
 export job=${PBS_JOBNAME:-jevs_mesoscale_headline_plots}
@@ -25,6 +25,7 @@ export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export USE_CFP=YES
 export nproc=128
+export evs_run_mode="production"
 
 # General Verification Settings
 export envir=prod

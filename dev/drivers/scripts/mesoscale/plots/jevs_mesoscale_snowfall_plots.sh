@@ -5,7 +5,7 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=10:00:00
-#PBS -l place=vscatter:exclhost,select=4:ncpus=128
+#PBS -l place=vscatter:exclhost,select=12:ncpus=128
 #PBS -l debug=true
 #PBS -V
 
@@ -16,15 +16,16 @@ export machine=WCOSS2
 # ECF Settings
 export SENDECF=YES
 export SENDCOM=YES
-export KEEPDATA=NO
-export SENDDBN=YES
+export KEEPDATA=YES
+export SENDDBN=NO
 export SENDDBN_NTC=
 export SENDMAIL=YES
 export job=${PBS_JOBNAME:-jevs_mesoscale_snowfall_plots}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export USE_CFP=YES
-export nproc=256
+export nproc=128
+export evs_run_mode="production"
 
 # General Verification Settings
 export envir=prod

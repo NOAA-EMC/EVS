@@ -3,7 +3,7 @@
 ####################################
 # Preliminary data setup step
 ####################################
-set -xa
+set -x
 
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
@@ -125,7 +125,7 @@ echo $COMPATH
 if [ $MODELNAME = sref ] ; then
     $SCRIPTevs/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 else
-    $SCRIPTevs/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+    $SCRIPTevs/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${VERIF_CASE}_${STEP}.sh
 fi 
 
 export err=$?; err_chk

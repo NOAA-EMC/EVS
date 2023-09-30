@@ -16,8 +16,8 @@ set -x
 # ECF Settings
   export SENDECF=YES
   export SENDCOM=YES
-  export KEEPDATA=NO
-  export SENDDBN=YES
+  export KEEPDATA=YES
+  export SENDDBN=NO
   export SENDDBN_NTC=
   export SENDMAIL=YES
   export job=${PBS_JOBNAME:-jevs_mesoscale_grid2obs_stats}
@@ -59,8 +59,6 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
-export MET_PLUS_PATH="/apps/ops/para/libs/intel/${intel_ver}/metplus/${metplus_ver}"
-export MET_PATH="/apps/ops/para/libs/intel/${intel_ver}/met/${met_ver}"
 export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
