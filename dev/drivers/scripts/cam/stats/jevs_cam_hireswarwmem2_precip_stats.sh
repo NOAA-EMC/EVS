@@ -56,4 +56,4 @@ export cyc=$(date -d "today" +"%H")
 export maillist="alicia.bentley@noaa.gov,marcel.caron@noaa.gov"
 
 # Job Settings and Run
-. ${HOMEevs}/JEVS_CAM_STATS
+. ${HOMEevs}/jobs/JEVS_CAM_STATS
