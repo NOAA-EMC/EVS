@@ -66,7 +66,7 @@ if [ -z "$maillist" ]; then
 else
 
    # CALL executable job script here
-   $HOMEevs/jobs/aqm/stats/JEVS_AQM_STATS
+   $HOMEevs/jobs/JEVS_AQM_STATS
 
 fi
 

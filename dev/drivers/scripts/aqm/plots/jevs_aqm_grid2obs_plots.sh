@@ -72,7 +72,7 @@ if [ -z "$maillist" ]; then
 else
 
    # CALL executable job script here
-   $HOMEevs/jobs/aqm/plots/JEVS_AQM_PLOTS
+   $HOMEevs/jobs/JEVS_AQM_PLOTS
 
 fi
 
