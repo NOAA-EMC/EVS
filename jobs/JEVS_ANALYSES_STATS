@@ -3,11 +3,19 @@
 ########################################
 # Preliminary data setup step
 ########################################
-set -xa
+set -x
 
+##################################################
+### SAVEGES  - Copy Files From TMPDIR to $GESdir
+### SENDECF  - Flag Events on ecFLOW
+### SENDCOM  - Copy Files From TMPDIR to $COMOUT
+### SENDDBN  - Issue DBNet Client Calls
+### SENDMAIL - Send email if file is missing
+###################################################
 export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-YES}
+export SENDDBN=${SENDDBN:-NO}
 export SENDECF=${SENDECF:-YES}
+export SENDMAIL=${SENDMAIL:-NO}
 
 # ###################################
 # SET SHELL PROCESSING VARIABLES
@@ -58,13 +66,13 @@ fi
 if [ "$modsys" = "rtma" ] ; then
   mod_ver=$rtma_ver
 fi
-export COMIN=${COMIN:-$(compath.py -o ${envir}/com/${NET}/$evs_ver)}
+export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/$evs_ver)}
 export COMINfcst=${COMINfcst:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
 export COMINobs=${COMINobs:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
-export COMOUT=${COMOUT:-$(compath.py ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
 mkdir -p $COMOUT
-export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
-export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
+export COMOUTsmall=${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
+export COMOUTfinal=${COMOUT}/${STEP}/${COMPONENT}/${MODELNAME}.${VDATE}
 mkdir -p $COMOUTsmall $COMOUTfinal
 
 #######################################################################
