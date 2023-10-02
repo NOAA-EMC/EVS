@@ -21,6 +21,8 @@ source $HOMEevs/versions/run.ver
 module reset
 module load prod_envir/${prod_envir_ver}
 
+export KEEPDATA=YES
+
 # specify environment variables
 export envir=prod
 export NET=evs
