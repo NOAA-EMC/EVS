@@ -4,7 +4,7 @@
 #PBS -S /bin/bash
 #PBS -A EVS-DEV
 #PBS -l walltime=01:00:00
-#PBS -l place=vscatter,select=4:ncpus=78:mem=100GB
+#PBS -l place=vscatter,select=4:ncpus=78:mem=200GB
 #PBS -l debug=true
 
 
