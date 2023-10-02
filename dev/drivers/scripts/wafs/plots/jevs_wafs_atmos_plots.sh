@@ -40,9 +40,14 @@ export COMPONENT=wafs
 export RUN=atmos
 export VERIF_CASE=grid2grid
 
-export COMIN=${COMIN:-/lfs/h2/emc/vpppg/noscrub/$USER/evs/$evs_ver}
+export cyc=${cyc:-00}
+export cycle=t${cyc}z
+setpdy.sh
+. ./PDY
+export VDATE=${VDATE:-$PDYm1}
 
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
+export COMIN=${COMIN:-/lfs/h2/emc/vpppg/noscrub/$USER/evs/$evs_ver}
+export COMOUT=/lfs/h2/emc/ptmp/$USER/evs/$evs_ver/${STEP}/${COMPONENT}/${RUN}.${VDATE}
 
 export USH_DIR=$HOMEevs/ush/$COMPONENT
 export DAYS_LIST=${DAYS_LIST:-"90 31"}
@@ -55,7 +60,7 @@ export KEEPDATA=YES
 export pid=${pid:-$$}
 export DATA=/lfs/h2/emc/ptmp/$USER/evs/working/${STEP}.$pid
 
-$HOMEevs/jobs/wafs/plots/JEVS_WAFS_ATMOS_PLOTS
+$HOMEevs/jobs/JEVS_WAFS_ATMOS_PLOTS
 
 ############################################################
 ## Purpose: This job generates the grid2grid statistics stat
