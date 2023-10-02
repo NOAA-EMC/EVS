@@ -77,7 +77,6 @@ fi
 # Define COMIN/COMOUT variables
 ####################################
 export COMROOT=${COMROOT:-$(compath.py $envir/com)}
-export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
 
 if  [ $MODELNAME = href ] ; then
   export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$MODELNAME.$VDATE
