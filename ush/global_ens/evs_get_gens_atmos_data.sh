@@ -118,7 +118,6 @@ if [ $modnam = cmcanl ] ; then
 
        $wgrib2 $WORK/cmce.upper.${cyc}.${mb}.${h3} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $outdata/cmcanl.t${cyc}z.grid3.f000.grib2
 
-      rm   $WORK/cmce.upper.${cyc}.${mb}.${h3} $WORK/cmce.sfc.${cyc}.${mb}.${h3}  $WORK/output.${cyc}
 
     fi
    done
@@ -231,7 +230,6 @@ if [ $modnam = gefs ] ; then
 
             $wgrib2 $WORK/gefs.upper.${cyc}.${mb}.${hhh} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $outdata/gefs.ens${mb}.t${cyc}z.grid3.f${hhh}.grib2
 
-            rm -f  $WORK/gefs.upper.${cyc}.${mb}.${hhh} $WORK/gefs.sfc.${cyc}.${mb}.${hhh}         
 
             #nfhrs=`expr $nfhrs + 12`
             nfhrs=`expr $nfhrs + 6`
@@ -339,7 +337,6 @@ if [ $modnam = cmce ] ; then
 
 	     $wgrib2 $WORK/cmce.upper.${cyc}.${mb}.${h3} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $outdata/cmce.ens${mb}.t${cyc}z.grid3.f${h3}.grib2
 
-             rm -f  $WORK/cmce.upper.${cyc}.${mb}.${h3} $WORK/cmce.sfc.${cyc}.${mb}.${h3} 
 
            nfhrs=`expr $nfhrs + 12`
 
@@ -430,7 +427,6 @@ if [ $modnam = ccpa ] ; then
 
   export ccpa24=${WORK}/ccpa24
   mkdir $ccpa24
-  rm -f ${WORK}/ccpa24/*.grib2
 
 
   for cyc in 12 ; do
