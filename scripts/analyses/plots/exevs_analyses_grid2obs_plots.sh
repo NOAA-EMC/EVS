@@ -3,7 +3,10 @@
 set -x
 
 mkdir -p $DATA/plots
-mkdir -p $DATA/logs
+mkdir -p $DATA/plots/logs
+export LOGDIR=$DATA/plots/logs
+export LOGFIN=$DATA/logs
+mkdir -p $LOGFIN
 export STATDIR=$DATA/stats
 mkdir -p $STATDIR
 export PLOTDIR=$DATA/plots
@@ -111,6 +114,8 @@ do
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
 	then
 	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting.config
+	cat $LOGDIR/*out
+	mv $LOGDIR/*out $LOGFIN
         else
 	echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $PLOTDIR
@@ -138,6 +143,8 @@ do
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
 	then
 	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting.config
+        cat $LOGDIR/*out
+        mv $LOGDIR/*out $LOGFIN
         else
 	echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $PLOTDIR
@@ -165,6 +172,8 @@ do
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
 	then
 	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting.config
+        cat $LOGDIR/*out
+        mv $LOGDIR/*out $LOGFIN
         else
 	echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $PLOTDIR
@@ -204,6 +213,8 @@ do
 	smvar=`echo $varb | tr A-Z a-z`
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png ]; then
 	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting.config_perf
+        cat $LOGDIR/*out
+        mv $LOGDIR/*out $LOGFIN
         else
 	echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$varb/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png $PLOTDIR
@@ -225,6 +236,8 @@ do
 
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]; then
 	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting.config_thresh
+        cat $LOGDIR/*out
+        mv $LOGDIR/*out $LOGFIN
         else
 	echo "RESTART - plot exists; copying over to plot directory"
 	cp $COMOUTplots/$varb/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png $PLOTDIR
@@ -260,6 +273,8 @@ done
 
 	if [ ! -e $COMOUTplots/$var/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]; then
 	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting.config_thresh
+        cat $LOGDIR/*out
+        mv $LOGDIR/*out $LOGFIN
         else
         echo "RESTART - plot exists; copying over to plot directory"
         cp $COMOUTplots/$var/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png $PLOTDIR
@@ -286,6 +301,11 @@ tar -cvf evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar *p
 if [ $SENDCOM = "YES" ]; then
  cp evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
 fi
+
+if [ $SENDDBN = YES ] ; then     
+ $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar
+fi
+
 
 exit
 

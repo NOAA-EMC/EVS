@@ -30,6 +30,7 @@ COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
 USER = os.environ['USER']
 jobid = os.environ['jobid']
+SENDMAIL = os.environ['SENDMAIL']
 
 # mail_cmd = 'mail.py -s "$subject" $maillist -v'
 mail_cmd = 'mail -s "$subject" $maillist'
@@ -95,7 +96,7 @@ for VHOUR in VHOUR_LIST:
                             print(f"Linking {COMINmodel_file} to "
                                   +f"{DATAmodel_file}")
                             os.symlink(COMINmodel_file, DATAmodel_file)
-                        else:
+                        elif SENDMAIL == "YES":
                             mail_COMINmodel_file = os.path.join(
                                 DATA, f"mail_{MODELNAME}_"
                                 +f"init{init_dt:%Y%m%d%H}_"
@@ -155,7 +156,7 @@ for VHOUR in VHOUR_LIST:
         if m_util.check_file(COMINnohrsc_file):
             print(f"Linking {COMINnohrsc_file} to {DATAnohrsc_file}")
             os.symlink(COMINnohrsc_file, DATAnohrsc_file)
-        else:
+        elif SENDMAIL == "YES":
             mail_COMINnohrsc_file = os.path.join(
                 DATA, f"mail_nohrsc_accum{accum}hr_"
                 +f"valid{valid_dt:%Y%m%d%H}.sh"
