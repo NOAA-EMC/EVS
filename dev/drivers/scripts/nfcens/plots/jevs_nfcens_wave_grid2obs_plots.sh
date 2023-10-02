@@ -10,7 +10,7 @@
 
 set -x
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/githubworkspc/EVS
 
 export MODELNAME=nfcens
 export OBTYPE=GDAS
@@ -46,8 +46,8 @@ export KEEPDATA=${KEEPDATA:-NO}
 ## developers directories
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export OUTPUTROOT=/lfs/h2/emc/vpppg/noscrub/$USER
-export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}
-export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/${NET}/${evs_ver}
+export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}
 
 export run_mpi='yes'
 export gather='yes'
@@ -60,7 +60,7 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 ############################################################
-${HOMEevs}/jobs/${COMPONENT}/${STEP}/JEVS_NFCENS_WAVE_GRID2OBS_PLOTS
+${HOMEevs}/jobs/JEVS_NFCENS_WAVE_GRID2OBS_PLOTS
 
 #########################################################################
 # Purpose: This job creates the plots for the NFCENS wave model

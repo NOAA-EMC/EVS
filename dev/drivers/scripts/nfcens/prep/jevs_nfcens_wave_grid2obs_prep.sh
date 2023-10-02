@@ -10,7 +10,7 @@
 
 set -x 
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/githubworkspc/EVS
 
 export MODELNAME=nfcens
 export NET=evs
@@ -60,7 +60,7 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 ############################################################
-$HOMEevs/jobs/${COMPONENT}/${STEP}/JEVS_NFCENS_WAVE_GRID2OBS_PREP
+$HOMEevs/jobs/JEVS_NFCENS_WAVE_GRID2OBS_PREP
 
 ######################################################################
 # Purpose: This does the prep work for the NFCENS wave model
