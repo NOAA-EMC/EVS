@@ -4,12 +4,24 @@
 # Preliminary data setup step
 ########################################
 
+#################################################
+### SAVEGES  - Copy Files From TMPDIR to $GESdir
+### SENDECF  - Flag Events on ecFLOW
+### SENDCOM  - Copy Files From TMPDIR to $COMOUT
+### SENDDBN  - Issue DBNet Client Calls
+### SENDMAIL - Send email if file is missing
+###################################################
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-NO}
+export SENDECF=${SENDECF:-YES}
+export SENDMAIL=${SENDMAIL:-NO}
+
 # ###################################
 # SET SHELL PROCESSING VARIABLES
 # ###################################
 date
 export PS4='$SECONDS + '
-set -xa
+set -x
 
 ###########################################################
 # obtain unique LSF id (jobid) and make temp directories
@@ -22,16 +34,6 @@ export cyc=${cyc:-00}
 export cycle=${cycle:-t${cyc}z}
 setpdy.sh 31
 . ./PDY 
-
-##################################################
-# SAVEGES  - Copy Files From TMPDIR to $GESdir
-# SENDECF  - Flag Events on ecFLOW
-# SENDCOM  - Copy Files From TMPDIR to $COMOUT
-# SENDDBN  - Issue DBNet Client Calls
-##################################################
-export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-YES}
-export SENDECF=${SENDECF:-YES}
 
 export envir=${envir:-prod}
 
@@ -59,12 +61,10 @@ export VDATE=${VDATE:-${PDYm3}}
 
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver}/)}
 export COMINaqm=${COMINaqm:-$(compath.py ${envir}/com/${NET}/${evs_ver}/stats/${COMPONENT}/${MODELNAME})}
-export COMOUT=${COMOUT:-${COMIN}/${STEP}/${COMPONENT}}
-export COMOUTplots=${COMOUTplots:-${COMOUT}/${RUN}.${VDATE}}
-export COMOUTheadline=${COMOUTheadline:-${COMOUT}/headline.${VDATE}}
+export COMOUT=${COMOUT:-$(compath.py -o ${envir}/com/${NET}/${evs_ver}/)}
+export COMOUTplots=${COMOUTplots:-${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}}
+export COMOUTheadline=${COMOUTheadline:-${COMOUT}/${STEP}/${COMPONENT}/headline.${VDATE}}
 mkdir -m 775 -p $COMOUT $COMOUTplots $COMOUTheadline
-
-export KEEPDATA=${KEEPDATA:-NO}
 
 #######################################################################
 # Execute the script.
