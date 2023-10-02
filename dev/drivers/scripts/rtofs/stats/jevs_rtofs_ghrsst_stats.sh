@@ -7,9 +7,6 @@
 #PBS -l select=1:ncpus=1:mem=500GB
 #PBS -l debug=true
 
-#%include <head.h>
-#%include <envir-p1.h>
-
 ############################################################
 # Load modules
 ############################################################
@@ -50,13 +47,10 @@ export jobid=$job.${PBS_JOBID:-$$}
 export maillist=${maillist:-'alicia.bentley@noaa.gov,samira.ardani@noaa.gov'}
 
 # call j-job
-$HOMEevs/jobs/$COMPONENT/$STEP/JEVS_RTOFS_STATS
+$HOMEevs/jobs/JEVS_RTOFS_STATS
 
-#%include <tail.h>
-#%manual
 ######################################################################
 # Purpose: The job and task scripts work together to create stat
 #          files for RTOFS forecast verification using MET/METplus.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
 ######################################################################
-#%end

@@ -7,9 +7,6 @@
 #PBS -l select=1:ncpus=1:mem=500GB
 #PBS -l debug=true
 
-#%include <head.h>
-#%include <envir-p1.h>
-
 ############################################################
 # Load modules
 ############################################################
@@ -44,13 +41,10 @@ export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 # call j-job
-$HOMEevs/jobs/$COMPONENT/$STEP/JEVS_RTOFS_PLOTS
+$HOMEevs/jobs/JEVS_RTOFS_PLOTS
 
-#%include <tail.h>
-#%manual
 ######################################################################
 # Purpose: The job and task scripts work together to create plots
 #          for RTOFS forecast verification using MET/METplus.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
 ######################################################################
-#%end
