@@ -46,6 +46,7 @@ export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
 # SENDCOM  - Copy Files From TMPDIR to $COMOUT
 # SENDDBN  - Issue DBNet Client Calls
 ##################################################
+export SENDMAIL=${SENDMAIL:-NO}
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
@@ -85,7 +86,7 @@ if  [ $MODELNAME = href ] ; then
   export DATA_IN=${DATA_IN:-$DATAROOT}
   export ush_dir=$USHevs/cam/ush_href_plot_py
 else
-  export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
+  export COMIN=${COMIN:-$(compath.py $NET/$evs_ver)}
   export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
   export COMOUTplots=${COMOUTplots:-$COMOUT/$RUN.$VDATE}
   echo $COMPATH

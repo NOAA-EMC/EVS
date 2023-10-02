@@ -167,6 +167,11 @@ if [ $SENDCOM = "YES" ]; then
  cp evs.plots.${MODELNAME}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
 fi
 
+if [ $SENDDBN = YES ] ; then
+  $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.${MODELNAME}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar
+fi
+
+
 exit
 
 
