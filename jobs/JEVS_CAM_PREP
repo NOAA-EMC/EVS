@@ -3,7 +3,7 @@
 ########################################
 # Preliminary data setup step
 ########################################
-set -xa
+set -x
 
 export SENDMAIL=${SENDMAIL:-NO}
 export SENDCOM=${SENDCOM:-YES}

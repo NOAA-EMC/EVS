@@ -3,7 +3,7 @@
 ########################################
 # Preliminary data setup step
 ########################################
-set -xa
+set -x
 
 #####################################
 # SET SHELL PROCESSING VARIABLES
