@@ -56,5 +56,5 @@ $HOMEevs/jobs/JEVS_GLOBAL_DET_PLOTS
 
 ######################################################################
 # Purpose: This does the plotting work for the global deterministic
-#          atmospheric grid-to-grid means for past 90 days
+#          atmospheric grid-to-grid means for last 90 days
 ######################################################################

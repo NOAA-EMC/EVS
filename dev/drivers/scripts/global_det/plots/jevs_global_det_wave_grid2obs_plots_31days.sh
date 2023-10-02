@@ -51,5 +51,5 @@ ${HOMEevs}/jobs/JEVS_GLOBAL_DET_PLOTS
 
 #########################################################################
 # Purpose: This does the plotting work for the global deterministic
-#          wave grid-to-obs for past 31 days
+#          wave grid-to-obs for last 31 days
 #########################################################################

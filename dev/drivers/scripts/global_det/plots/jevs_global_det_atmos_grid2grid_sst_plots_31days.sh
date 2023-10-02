@@ -56,5 +56,5 @@ $HOMEevs/jobs/JEVS_GLOBAL_DET_PLOTS
 
 ######################################################################
 # Purpose: This does the plotting work for the global deterministic
-#          atmospheric grid-to-grid sst for past 31 days
+#          atmospheric grid-to-grid sst for last 31 days
 ######################################################################
