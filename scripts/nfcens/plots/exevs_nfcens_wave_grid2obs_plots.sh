@@ -159,6 +159,9 @@ fi
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
 
+if [ $SENDDBN = YES ]; then
+	$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.*.tar
+fi
 # --------------------------------------------------------------------------- #
 # Ending output                                                                
 
