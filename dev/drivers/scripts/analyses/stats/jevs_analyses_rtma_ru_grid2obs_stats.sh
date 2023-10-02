@@ -5,7 +5,7 @@
 #PBS -q "dev"
 #PBS -A EVS-DEV
 #PBS -l walltime=00:30:00
-#PBS -l select=1:ncpus=1:mem=2GB
+#PBS -l select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
 
 export model=evs
@@ -29,9 +29,10 @@ module load prod_envir/${prod_envir_ver}
 ### For dev testing
 ##############################################################
 
+export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=YES
-export envir=prod
+export SENDMAIL=YES
 export NET=evs
 export STEP=stats
 export COMPONENT=analyses
@@ -44,7 +45,7 @@ export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}/${STEP}/${COMPONENT}
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 
 
 export cyc
@@ -60,7 +61,7 @@ export config=$HOMEevs/parm/evs_config/analyses/config.evs.rtma.prod
 source $config
 
 # CALL executable job script here
-$HOMEevs/jobs/analyses/stats/JEVS_ANALYSES_STATS
+$HOMEevs/jobs/JEVS_ANALYSES_STATS
 
 ######################################################################
 ## Purpose: This job will generate the grid2obs statistics for the NAM_FIREWXNEST
