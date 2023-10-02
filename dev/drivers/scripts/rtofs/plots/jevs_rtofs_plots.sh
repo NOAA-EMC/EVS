@@ -28,13 +28,10 @@ export COMPONENT=rtofs
 
 source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
-# set up VDATE and COMIN and COMOUT
-export VDATE=$(date --date="3 days ago" +%Y%m%d)
-
+# set up COMIN and COMOUT
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
 export COMINstats=$COMIN/stats/$COMPONENT
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
-export COMOUTplots=$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}

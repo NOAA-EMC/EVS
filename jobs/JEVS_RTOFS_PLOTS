@@ -52,7 +52,7 @@ export MASKS=${MASKS:-$FIXevs/masks}
 setpdy.sh
 . ./PDY
 
-export VDATE=${VDATE:-$PDYm1}
+export VDATE=${VDATE:-$PDYm3}
 
 
 # set up paths

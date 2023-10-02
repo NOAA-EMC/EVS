@@ -53,7 +53,7 @@ export MASKS=${MASKS:-$FIXevs/masks}
 setpdy.sh
 . ./PDY
 
-export VDATE=${VDATE:-$PDYm1}
+export VDATE=${VDATE:-$PDYm2}
 
 # set up paths
 export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config/$COMPONENT}
