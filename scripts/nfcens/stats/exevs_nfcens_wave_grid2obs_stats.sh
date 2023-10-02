@@ -120,7 +120,7 @@ done
 #######################
 if [[ -s ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh ]]; then
     if [ ${run_mpi} = 'yes' ] ; then
-        export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
+        #export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
         mpiexec -np 36 -ppn 36 --cpu-bind verbose,core cfp ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
     else
         echo "not running mpiexec"
