@@ -58,10 +58,6 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMINaqm=/lfs/h2/emc/vpppg/noscrub/$USER/evs/v1.0/stats/aqm/aqm
 
 export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver
-#
-## export KEEPDATA=NO
-#
-########################################################################
 
 export maillist=${maillist:-'perry.shafran@noaa.gov,alicia.bentley@noaa.gov'}
 
