@@ -196,7 +196,6 @@ chmod +x run_all_poe.sh
 
 
 if [ $run_mpi = yes ] ; then
-  export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
   mpiexec -np 176 -ppn 88 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
    ${DATA}/run_all_poe.sh
@@ -263,6 +262,10 @@ for var in vis hgt ; do
 done
 
 tar -cvf evs.plots.sref.cnv.past${past_days}days.v${VDATE}.tar *.png
+
+if [ $SENDDBN = YES ] ; then
+     $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/evs.plots.sref.cnv.past${past_days}days.v${VDATE}.tar
+fi
 
 if [ $SENDCOM="YES" ]; then
  cp  evs.plots.sref.cnv.past${past_days}days.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  

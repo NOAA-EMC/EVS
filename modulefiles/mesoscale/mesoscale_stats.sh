@@ -1,7 +1,7 @@
 #!/bin/bash
 # modulefile for EVS mesoscale component
 
-set -x
+set +x
 
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
@@ -25,3 +25,4 @@ module load met/${met_ver}
 module load metplus/${metplus_ver}
 
 module list
+set -x

@@ -29,3 +29,4 @@ module load metplus/${metplus_ver}
 
 
 module list
+set -x
