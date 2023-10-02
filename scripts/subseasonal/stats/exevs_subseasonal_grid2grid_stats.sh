@@ -172,7 +172,7 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
 	    [[ $status -eq 0 ]] && echo "Successfully ran subseasonal_stats_grid2grid_create_daily_reformat_job_scripts.py"
 	    export njobs=$((njobs+1))
         done
-	WEEKLY_LIST="Week1 Week2 Week3 Week4 Week5"
+	WEEKLY_LIST="Week1 Week2 Week3 Week5"
 	export njobs=35 
 	for WEEK in $WEEKLY_LIST; do
 	    export WEEK=$WEEK
@@ -185,9 +185,6 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
 	    elif [ "${WEEK}" = "Week3" ]; then
 		export CORRECT_INIT_DATE=$PDYm23
 		export CORRECT_LEAD_SEQ=336,348,360,372,384,396,408,420,432,444,456,468,480,492,504
-            elif [ "${WEEK}" = "Week4" ]; then
-		export CORRECT_INIT_DATE=$PDYm30
-		export CORRECT_LEAD_SEQ=504,516,528,540,552,564,576,588,600,612,624,636,648,660,672
 	    elif [ "${WEEK}" = "Week5" ]; then
 		export CORRECT_INIT_DATE=$PDYm37
 		export CORRECT_LEAD_SEQ=672,684,696,708,720,732,744,756,768,780,792,804,816,828,840
@@ -198,9 +195,22 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
 	    [[ $status -eq 0 ]] && echo "Successfully ran subseasonal_stats_grid2grid_create_weekly_reformat_job_scripts.py"
 	    export njobs=$((njobs+4)) 
         done
+	WEEK4_LIST="Week4"
+	for WEEK in $WEEK4_LIST; do
+	    export njobs=51
+	    export WEEK=$WEEK
+	    if [ "${WEEK}" = "Week4" ]; then
+		export CORRECT_INIT_DATE=$PDYm30
+		export CORRECT_LEAD_SEQ=504,516,528,540,552,564,576,588,600,612,624,636,648,660,672
+	    fi
+	    python $USHevs/subseasonal/subseasonal_stats_grid2grid_create_week4_reformat_job_scripts.py
+	    status=$?
+	    [[ $status -ne 0 ]] && exit $status
+	    [[ $status -eq 0 ]] && echo "Successfully ran subseasonal_stats_grid2grid_create_week4_reformat_job_scripts.py"
+	done
 	MONTHLY_LIST="Month1"
 	for MONTH in $MONTHLY_LIST; do
-	    export njobs=55
+	    export njobs=53
 	    export MONTH=$MONTH
 	    if [ "${MONTH}" = "Month1" ]; then
 		export CORRECT_INIT_DATE=$PDYm32
@@ -213,7 +223,7 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
         done
 	DAYS6_10_LIST="Days6_10"
 	for DAYS in $DAYS6_10_LIST; do
-	    export njobs=57
+	    export njobs=55
 	    export DAYS=$DAYS
 	    if [ "${DAYS}" = "Days6_10" ]; then
 		export CORRECT_INIT_DATE=$PDYm12
@@ -226,7 +236,7 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
 	done
 	WEEKS3_4_LIST="Weeks3_4"
 	for WEEKS in $WEEKS3_4_LIST; do
-	    export njobs=59
+	    export njobs=57
 	    export WEEKS=$WEEKS
 	    if [ "${WEEKS}" = "Weeks3_4" ]; then
 		export CORRECT_INIT_DATE=$PDYm30
