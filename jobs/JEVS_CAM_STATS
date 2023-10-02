@@ -121,13 +121,7 @@ else
    export COMINmrms=${COMINmrms:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT)}
 fi
 
-# LCD COMMENT: COMOUT should not be different between HREF and other CAMs
-# I'm leaving this discrepancy for now, but we'll need to clean this up before EE2 review
-if [ $MODELNAME = href ] ; then
-   export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}/$STEP/$COMPONENT
-else
-   export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
-fi
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}/$STEP/$COMPONENT
 
 mkdir -p $COMOUT
 
