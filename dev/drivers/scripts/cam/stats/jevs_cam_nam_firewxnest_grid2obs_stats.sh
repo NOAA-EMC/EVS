@@ -53,7 +53,7 @@ export config=$HOMEevs/parm/evs_config/cam/config.evs.cam_nam_firewxnest.prod
 source $config
 
 # CALL executable job script here
-$HOMEevs/jobs/cam/stats/JEVS_CAM_STATS
+$HOMEevs/jobs/JEVS_CAM_STATS
 
 ######################################################################
 ## Purpose: This job will generate the grid2obs statistics for the NAM_FIREWXNEST
