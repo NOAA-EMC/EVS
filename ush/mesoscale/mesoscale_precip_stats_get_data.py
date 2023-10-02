@@ -30,6 +30,7 @@ COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
 USER = os.environ['USER']
 jobid = os.environ['jobid']
+SENDMAIL = os.environ['SENDMAIL']
 
 # mail_cmd = 'mail.py -s "$subject" $maillist -v'
 mail_cmd = 'mail -s "$subject" $maillist'
@@ -154,7 +155,7 @@ for VHOUR in VHOUR_LIST:
                                 print(f"Linking {COMINmodel_file} to "
                                       +f"{DATAmodel_file}")
                                 os.symlink(COMINmodel_file, DATAmodel_file)
-                            else:
+                            elif SENDMAIL == "YES":
                                 mail_COMINmodel_file = os.path.join(
                                     DATA, f"mail_{MODELNAME}_{area.lower()}_"
                                     +f"init{init_dt:%Y%m%d%H}_"
@@ -253,7 +254,7 @@ for VHOUR in VHOUR_LIST:
             if m_util.check_file(COMINccpa_file):
                 print(f"Linking {COMINccpa_file} to {DATAccpa_file}")
                 os.symlink(COMINccpa_file, DATAccpa_file)
-            else:
+            elif SENDMAIL == "YES":
                 mail_COMINccpa_file = os.path.join(
                     DATA, f"mail_ccpa_accum{ccpa_file_accum}hr_"
                     +f"valid{ccpa_file_dt_in_accum:%Y%m%d%H}.sh"
@@ -329,7 +330,7 @@ for VHOUR in VHOUR_LIST:
                 os.system("mv "
                          +f"{DATAmrms_gzfile.replace('.gz', '')} "
                          +f"{DATAmrms_file}")
-            else:
+            elif SENDMAIL == "YES":
                 mail_COMINmrms_file = os.path.join(
                     DATA, f"mail_mrms_accum{accum}hr_{mrms_area}_"
                     +f"valid{accum_end_dt:%Y%m%d%H}.sh"
