@@ -10,11 +10,13 @@ set -x
 
 # check if obs file exists; exit if not
 if [ ! -s $COMINobs/$VDATE/validation_data/marine/ghrsst/${VDATE}_OSPO_L4_GHRSST.nc ] ; then
-   export subject="GHRSST OSPO Data Missing for EVS RTOFS"
-   echo "Warning: No GHRSST OSPO data was available for valid date $VDATE." > mailmsg
-   echo "Missing file is $COMINobs/$VDATE/validation_data/marine/ghrsst/${VDATE}_OSPO_L4_GHRSST.nc." >> mailmsg
-   cat mailmsg | mail -s "$subject" $maillist
-   exit 0
+   if [ $SENDMAIL = YES ] ; then
+       export subject="GHRSST OSPO Data Missing for EVS RTOFS"
+       echo "Warning: No GHRSST OSPO data was available for valid date $VDATE." > mailmsg
+       echo "Missing file is $COMINobs/$VDATE/validation_data/marine/ghrsst/${VDATE}_OSPO_L4_GHRSST.nc." >> mailmsg
+       cat mailmsg | mail -s "$subject" $maillist
+       exit 0
+   fi
 fi
 
 # check if fcst files exist; exit if not

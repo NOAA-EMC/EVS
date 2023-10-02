@@ -22,10 +22,12 @@ if [ -s $COMINobs/$VDATE/seaice/osisaf/ice_conc_nh_polstere-100_multi_${VDATE}12
     fi
   done
 else
-  export subject="OSI-SAF Data Missing for EVS RTOFS"
-  echo "Warning: No OSI-SAF data was available for valid date $VDATE." > mailmsg
-  echo "Missing file is $COMINobs/$VDATE/seaice/osisaf/ice_conc_nh_polstere-100_multi_${VDATE}1200.nc." >> mailmsg
-  cat mailmsg | mail -s "$subject" $maillist
+  if [ $SENDMAIL = YES ] ; then
+    export subject="OSI-SAF Data Missing for EVS RTOFS"
+    echo "Warning: No OSI-SAF data was available for valid date $VDATE." > mailmsg
+    echo "Missing file is $COMINobs/$VDATE/seaice/osisaf/ice_conc_nh_polstere-100_multi_${VDATE}1200.nc." >> mailmsg
+    cat mailmsg | mail -s "$subject" $maillist
+  fi
 fi
 
 # convert NDBC *.txt files into a netcdf file using ASCII2NC
@@ -39,10 +41,12 @@ if [ $ndbc_txt_ncount -gt 0 ]; then
   run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
   -c $CONFIGevs/grid2obs/$STEP/ASCII2NC_obsNDBC.conf
 else
-  export subject="NDBC Data Missing for EVS RTOFS"
-  echo "Warning: No NDBC data was available for valid date $VDATE." > mailmsg
-  echo "Missing files are located at $COMINobs/$VDATE/validation_data/marine/buoy/." >> mailmsg
-  cat mailmsg | mail -s "$subject" $maillist
+  if [ $SENDMAIL = YES ] ; then
+    export subject="NDBC Data Missing for EVS RTOFS"
+    echo "Warning: No NDBC data was available for valid date $VDATE." > mailmsg
+    echo "Missing files are located at $COMINobs/$VDATE/validation_data/marine/buoy/." >> mailmsg
+    cat mailmsg | mail -s "$subject" $maillist
+  fi
 fi
 
 # convert Argo basin files into a netcdf file using python embedding
@@ -53,10 +57,12 @@ if [ -s $COMINobs/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_pro
   run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
   -c $CONFIGevs/grid2obs/$STEP/ASCII2NC_obsARGO.conf
 else
-  export subject="Argo Data Missing for EVS RTOFS"
-  echo "Warning: No Argo data was available for valid date $VDATE." > mailmsg
-  echo "Missing file is $COMINobs/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_prof.nc." >> mailmsg
-  cat mailmsg | mail -s "$subject" $maillist
+  if [ $SENDMAIL = YES ] ; then
+    export subject="Argo Data Missing for EVS RTOFS"
+    echo "Warning: No Argo data was available for valid date $VDATE." > mailmsg
+    echo "Missing file is $COMINobs/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_prof.nc." >> mailmsg
+    cat mailmsg | mail -s "$subject" $maillist
+  fi
 fi
 
 exit

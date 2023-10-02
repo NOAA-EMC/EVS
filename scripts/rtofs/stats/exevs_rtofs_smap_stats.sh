@@ -12,11 +12,13 @@ set -x
 export JDATE=$(date --date="$VDATE" +%Y%j)
 
 if [ ! -s $COMINobs/$VDATE/validation_data/marine/smap/SP_D${JDATE}_Map_SATSSS_data_1day.nc ] ; then
-   export subject="SMAP Data Missing for EVS RTOFS"
-   echo "Warning: No SMAP data was available for valid date $VDATE." > mailmsg
-   echo "Missing file is $COMINobs/$VDATE/validation_data/marine/smap/SP_D${JDATE}_Map_SATSSS_data_1day.nc." >> mailmsg
-   cat mailmsg | mail -s "$subject" $maillist
-   exit 0
+   if [ $SENDMAIL = YES ] ; then
+       export subject="SMAP Data Missing for EVS RTOFS"
+       echo "Warning: No SMAP data was available for valid date $VDATE." > mailmsg
+       echo "Missing file is $COMINobs/$VDATE/validation_data/marine/smap/SP_D${JDATE}_Map_SATSSS_data_1day.nc." >> mailmsg
+       cat mailmsg | mail -s "$subject" $maillist
+       exit 0
+   fi
 fi
 
 # check if fcst files exist; exit if not

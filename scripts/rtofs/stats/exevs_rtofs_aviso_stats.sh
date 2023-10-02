@@ -10,11 +10,13 @@ set -x
 
 # check if obs file exists; exit if not
 if [ ! -s $COMINobs/$VDATE/validation_data/marine/cmems/ssh/nrt_global_allsat_phy_l4_${VDATE}_${VDATE}.nc ] ; then
-   export subject="AVISO Data Missing for EVS RTOFS"
-   echo "Warning: No AVISO data was available for valid date $VDATE." > mailmsg
-   echo "Missing file is $COMINobs/$VDATE/validation_data/marine/cmems/ssh/nrt_global_allsat_phy_l4_${VDATE}_${VDATE}.nc." >> mailmsg
-   cat mailmsg | mail -s "$subject" $maillist
-   exit 0
+   if [ $SENDMAIL = YES ] ; then
+       export subject="AVISO Data Missing for EVS RTOFS"
+       echo "Warning: No AVISO data was available for valid date $VDATE." > mailmsg
+       echo "Missing file is $COMINobs/$VDATE/validation_data/marine/cmems/ssh/nrt_global_allsat_phy_l4_${VDATE}_${VDATE}.nc." >> mailmsg
+       cat mailmsg | mail -s "$subject" $maillist
+       exit 0
+   fi
 fi
 
 # check if fcst files exist; exit if not
