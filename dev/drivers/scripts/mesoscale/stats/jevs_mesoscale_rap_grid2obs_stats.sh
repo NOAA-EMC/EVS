@@ -14,13 +14,12 @@ set -x
   export machine=WCOSS2
 
 # ECF Settings
-# export RUN_ENVIR=nco
-  export RUN_ENVIR=emc
   export SENDECF=YES
   export SENDCOM=YES
-  export KEEPDATA=NO
-  export SENDDBN=YES
+  export KEEPDATA=YES
+  export SENDDBN=NO
   export SENDDBN_NTC=
+  export SENDMAIL=YES
   export job=${PBS_JOBNAME:-jevs_mesoscale_grid2obs_stats}
   export jobid=$job.${PBS_JOBID:-$$}
   export SITE=$(cat /etc/cluster_name)
@@ -36,7 +35,7 @@ set -x
   export MODELNAME="rap" 
 
   export envir="prod"
-  export evs_run_mode="standalone"
+  export evs_run_mode="production"
 
   export ACCOUNT=VERF-DEV
   export QUEUESERV="dev_transfer"
@@ -59,8 +58,6 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
-export MET_PLUS_PATH="/apps/ops/para/libs/intel/${intel_ver}/metplus/${metplus_ver}"
-export MET_PATH="/apps/ops/para/libs/intel/${intel_ver}/met/${met_ver}"
 export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
@@ -82,5 +79,5 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
   # export maillist="firstname.lastname@noaa.gov"
 
 # Job Settings and Run
-. ${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS
+. ${HOMEevs}/jobs/JEVS_MESOSCALE_STATS
 
