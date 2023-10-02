@@ -1,7 +1,7 @@
 #!/bin/bash
 # modulefile for EVS rtofs component
 
-set +x
+set -x
 
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
