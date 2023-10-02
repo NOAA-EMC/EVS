@@ -15,7 +15,11 @@
 #  User controllable options: None                                              
 ################################################################################
 
-set -x 
+set -x
+
+# set major & minor MET version
+export MET_VERSION_major_minor=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
+
 # Use LOUD variable to turn on/off trace.  Defaults to YES (on).
 export LOUD=${LOUD:-YES}; [[ $LOUD = yes ]] && export LOUD=YES
 [[ "$LOUD" != YES ]] && set +x
