@@ -63,7 +63,7 @@ if not os.path.exists(COMOUT_INITDATE):
 # Deutscher Wetterdienst (German) - dwd
 # Météo-France - metfra
 
-global_ens_model_dict = {
+global_det_model_dict = {
     'cfs': {'prod_fcst_file_format': os.path.join(COMINcfs,
                                                   '{init?fmt=%H}',
                                                   '6hrly_grib_01',
@@ -173,11 +173,11 @@ arch_precip_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
                                        +'f{lead?fmt=%3H}')
 
 for MODEL in MODELNAME:
-    if MODEL not in list(global_ens_model_dict.keys()):
+    if MODEL not in list(global_det_model_dict.keys()):
         print("ERROR: "+MODEL+" not recongized")
         sys.exit(1)
     print("---- Prepping data for "+MODEL+" for init "+INITDATE)
-    model_dict = global_ens_model_dict[MODEL]
+    model_dict = global_det_model_dict[MODEL]
     for cycle in model_dict['cycles']:
         CDATE = INITDATE+cycle
         CDATE_dt = datetime.datetime.strptime(CDATE, '%Y%m%d%H')
@@ -340,7 +340,7 @@ for MODEL in MODELNAME:
 ###### OBS
 # Get operational observation data
 # Nortnern & Southern Hemisphere 10 km OSI-SAF multi-sensor analysis - osi_saf
-global_ens_obs_dict = {
+global_det_obs_dict = {
     'osi_saf': {'daily_prod_file_format': os.path.join(COMINosi_saf,
                                                        '{init_shift?fmt=%Y%m%d'
                                                        +'?shift=-12}',
@@ -369,11 +369,11 @@ global_ens_obs_dict = {
 }
 
 for OBS in OBSNAME:
-    if OBS not in list(global_ens_obs_dict.keys()):
+    if OBS not in list(global_det_obs_dict.keys()):
         print("ERROR: "+OBS+" not recongized")
         sys.exit(1)
     print("---- Prepping data for "+OBS+" for init "+INITDATE)
-    obs_dict = global_ens_obs_dict[OBS]
+    obs_dict = global_det_obs_dict[OBS]
     for cycle in obs_dict['cycles']:
         CDATE = INITDATE+cycle
         CDATE_dt = datetime.datetime.strptime(CDATE, '%Y%m%d%H')
