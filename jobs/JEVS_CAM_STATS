@@ -96,29 +96,29 @@ export RUN=${RUN:-atmos}
 ####################################
 # Define COMIN/COMOUT variables
 ####################################
-export COMIN=${COMIN:-$(compath.py ${envir}/com/$NET/$evs_ver)}
+export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
 export COMINhiresw=${COMINhiresw:-$(compath.py ${envir}/com/hiresw/${hiresw_ver})}
 export COMINhref=${COMINhref:-$(compath.py  ${envir}/com/href/$href_ver)}
 export COMINhrrr=${COMINhrrr:-$(compath.py ${envir}/com/hrrr/${hrrr_ver})}
 export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
 export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
-export COMINmping=${COMINmping:-$(compath.py  ${envir}/com/$NET/$evs_ver/prep/$COMPONENT)}
+export COMINmping=${COMINmping:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT)}
 export COMINprepbufr=${COMINprepbufr:-$(compath.py  ${envir}/com/obsproc/${obsproc_ver})}
 export COMINsnow=$DCOMROOT
-export COMINspcotlk=${COMINspcotlk:-$(compath.py  ${envir}/com/$NET/$evs_ver/prep/$COMPONENT)}
+export COMINspcotlk=${COMINspcotlk:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT)}
 
 if [ $VERIF_CASE = severe ] ; then
-   export COMINfcst=${COMINfcst:-$(compath.py  ${envir}/com/$NET/$evs_ver/prep/$COMPONENT)}
-   export COMINspclsr=${COMINspclsr:-$(compath.py  ${envir}/com/$NET/$evs_ver/prep/$COMPONENT)}
+   export COMINfcst=${COMINfcst:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT)}
+   export COMINspclsr=${COMINspclsr:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT)}
 fi
 
 
 if [ $MODELNAME = href ] && [ $VERIF_CASE = precip ] ; then
-   export COMINccpa=${COMINccpa:-$(compath.py  ${envir}/com/ccpa/${ccpa_ver})}
+   export COMINccpa=${COMINccpa:-$(compath.py  $envir/com/ccpa/${ccpa_ver})}
    export COMINmrms=$DCOMROOT/ldmdata/obs/upperair/mrms/alaska/MultiSensorQPE
 else
-   export COMINccpa=${COMINccpa:-$(compath.py  ${envir}/com/$NET/$evs_ver/prep/$COMPONENT)}
-   export COMINmrms=${COMINmrms:-$(compath.py  ${envir}/com/$NET/$evs_ver/prep/$COMPONENT)}
+   export COMINccpa=${COMINccpa:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT)}
+   export COMINmrms=${COMINmrms:-$(compath.py -o $NET/$evs_ver/prep/$COMPONENT)}
 fi
 
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}/$STEP/$COMPONENT
