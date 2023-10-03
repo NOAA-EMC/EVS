@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_rtofs_seaice_plots.sh
+# Name of Script: rtofs_plots_seaice.sh
 # Purpose of Script: To create plots for RTOFS sea ice forecast verification
 #    using MET/METplus.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
@@ -86,7 +86,7 @@ cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN
 tar -cvf evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
 
 if [ $SENDCOM = "YES" ]; then
- cp evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplots
+ cp -v evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplots
 fi
 
 if [ $SENDDBN = YES ] ; then

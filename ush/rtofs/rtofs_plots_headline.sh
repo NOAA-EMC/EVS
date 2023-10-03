@@ -1,6 +1,6 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_rtofs_headline_plots.sh
+# Name of Script: rtofs_plots_headline.sh
 # Purpose of Script: To create headline score plots for RTOFS forecast
 #    verifications using MET/METplus.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
@@ -132,7 +132,7 @@ cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN
 tar -cvf evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
 
 if [ $SENDCOM = "YES" ]; then
- cp evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplotsheadline
+ cp -v evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplotsheadline
 fi
 
 if [ $SENDDBN = YES ] ; then
