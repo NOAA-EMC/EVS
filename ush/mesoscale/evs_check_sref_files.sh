@@ -1,12 +1,6 @@
 #!/bin/ksh
 
-set +x
-#For testing: 
-#vday=20221003
-#COMINsref=/lfs/h1/ops/prod/com/sref/v7.1
-#COMINprepbufr=/lfs/h1/ops/prod/com/obsproc/v1.0
-#COMINccpa=/lfs/h1/ops/prod/com/ccpa/v4.2
-
+set -x
 
 typeset -Z2 cyc
 
