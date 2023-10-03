@@ -53,6 +53,7 @@ if proceed:
     err=0
     max_num_files = 10
     COMPONENT = os.environ['COMPONENT']
+    SENDMAIL = os.environ['SENDMAIL']
     maillist = os.environ['maillist']
     CYC = os.environ['cyc']
     jobid = os.environ['jobid']
@@ -449,7 +450,7 @@ if proceed:
         print(f"ERROR: The following forecasts were not found:")
         for missing_fcst_path in missing_fcst_paths:
             print(missing_fcst_path)
-        if send_mail:
+        if send_mail and str(SENDMAIL) == "YES":
             err+=1
             data_info = [
                 cutil.get_data_type(fname) 
@@ -599,7 +600,7 @@ if proceed:
         print(f"ERROR: The following analyses were not found:")
         for missing_anl_path in missing_anl_paths:
             print(missing_anl_path)
-        if send_mail:
+        if send_mail and str(SENDMAIL) == "YES":
             err+=1
             data_info = [
                 cutil.get_data_type(fname) 
@@ -788,7 +789,7 @@ if proceed:
         print(f"ERROR: The following input data were not found:")
         for missing_gen_path in missing_gen_paths:
             print(missing_gen_path)
-        if send_mail:
+        if send_mail and str(SENDMAIL) == "YES":
             err+=1
             data_info = [
                 cutil.get_data_type(fname) 
