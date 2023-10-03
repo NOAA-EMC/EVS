@@ -24,7 +24,6 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/subseasonal/subseasonal_plots.sh
 
-export MET_ROOT=/apps/ops/prod/libs/intel/${intel_ver}/met/${met_ver}
 
 export USER=$USER
 export envir=prod
