@@ -682,7 +682,7 @@ if [ $modnam = osi_saf ] ; then
    
    osi=$COMINosi_saf/$INITDATE/seaice/osisaf/ice_conc_nh_polstere-100_multi_${INITDATE}1200.nc	
    if [ -s $osi ] ; then
-     python ${USHevs}/global_ens/global_det_sea_ice_prep.py
+     python ${USHevs}/global_ens/global_ens_sea_ice_prep.py
      [[ $SENDCOM="YES" ]] && cp $WORK/atmos.${INITDATE}/osi_saf/*.nc $COMOUT_osi_saf/.
    else
 

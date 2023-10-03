@@ -45,7 +45,7 @@ MODELNAME = os.environ['MODELNAME'].split(' ')
 OBSNAME = os.environ['OBSNAME'].split(' ')
 
 # Make COMOUT directory for dates
-COMOUT_INITDATE = COMOUT+'.'+INITDATE
+COMOUT_INITDATE = COMOUT+'/'+RUN+'.'+INITDATE
 if not os.path.exists(COMOUT_INITDATE):
     os.makedirs(COMOUT_INITDATE)
 
