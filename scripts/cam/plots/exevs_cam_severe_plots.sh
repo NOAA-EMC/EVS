@@ -10,7 +10,7 @@
 ##################################################################################
 
 
-set +x
+set -x
 
 echo
 echo " ENTERING SUB SCRIPT $0 "
@@ -178,7 +178,6 @@ export USE_CFP=NO
 
 if [ $USE_CFP = YES ]; then
 
-#  export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
    echo "running cfp"
    mpiexec -np $nproc --cpu-bind verbose,core cfp ${MP_CMDFILE} 
    export err=$?; err_chk
@@ -211,6 +210,9 @@ if [ $SENDCOM = YES ]; then
 
    if [ -s $tarfile ]; then
       cp -v $tarfile $COMOUT/${RUN}.${VDATE}/
+      if [ $SENDDBN = YES ]; then
+          $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/${RUN}.${VDATE}/${tarfile}
+      fi
    else
       echo "tarfile creation was not completed. Need to rerun"
    fi

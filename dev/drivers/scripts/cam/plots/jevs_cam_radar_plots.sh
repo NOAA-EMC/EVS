@@ -38,7 +38,7 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 ############################################################
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=NO
+export KEEPDATA=YES
 export VERIF_CASE=radar
 export MODELNAME=${COMPONENT}
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${LINE_TYPE}_${STEP}}
@@ -52,6 +52,7 @@ export cyc=${cyc:-${cyc}}
 export EVAL_PERIOD=${EVAL_PERIOD:-${EVAL_PERIOD}}
 export LINE_TYPE=${LINE_TYPE:-${LINE_TYPE}}
 
+export SENDMAIL=${SENDMAIL:-YES}
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
@@ -66,7 +67,7 @@ if [ -z "$maillist" ]; then
 else
 
    # CALL executable job script here
-   $HOMEevs/jobs/cam/plots/JEVS_CAM_PLOTS
+   $HOMEevs/jobs/JEVS_CAM_PLOTS
 
 fi
 

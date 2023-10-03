@@ -14,11 +14,11 @@ export model=evs
 export machine=WCOSS2
 
 # ECF Settings
-export RUN_ENVIR=nco
+export SENDMAIL=YES
 export SENDECF=YES
 export SENDCOM=YES
-export KEEPDATA=NO
-export SENDDBN=YES
+export KEEPDATA=YES
+export SENDDBN=NO
 export SENDDBN_NTC=
 export job=${PBS_JOBNAME:-jevs_cam_hrrr_grid2obs_stats}
 export jobid=$job.${PBS_JOBID:-$$}
@@ -45,9 +45,6 @@ source /usr/share/lmod/lmod/init/sh
 module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
-export MET_PLUS_PATH="/apps/ops/prod/libs/intel/${intel_ver}/metplus/${metplus_ver}"
-export MET_PATH="/apps/ops/prod/libs/intel/${intel_ver}/met/${met_ver}"
-export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # Developer Settings
@@ -59,4 +56,4 @@ export cyc=$(date -d "today" +"%H")
 export maillist="alicia.bentley@noaa.gov,marcel.caron@noaa.gov"
 
 # Job Settings and Run
-. ${HOMEevs}/jobs/cam/stats/JEVS_CAM_STATS
+. ${HOMEevs}/jobs/JEVS_CAM_STATS

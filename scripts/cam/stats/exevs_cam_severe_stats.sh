@@ -9,7 +9,7 @@
 ###############################################################################
 
 
-set +x
+set -x
 
 echo
 echo " ENTERING SUB SCRIPT $0 "
@@ -32,11 +32,13 @@ if [ -s $COMINspclsr/${obs_lsr_file} ]; then
    obs_lsr_found=1
 
 else
-   export subject="SPC LSR Prep Data Missing for EVS ${COMPONENT}"
-   echo "Warning: The ${REP_DATE} SPC LSR file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-   echo "Missing file is $COMINspclsr/${obs_lsr_file}" >> mailmsg
-   echo "Job ID: $jobid" >> mailmsg
-   cat mailmsg | mail -s "$subject" $maillist
+   if [ $SENDMAIL = YES ]; then
+      export subject="SPC LSR Prep Data Missing for EVS ${COMPONENT}"
+      echo "Warning: The ${REP_DATE} SPC LSR file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+      echo "Missing file is $COMINspclsr/${obs_lsr_file}" >> mailmsg
+      echo "Job ID: $jobid" >> mailmsg
+      cat mailmsg | mail -s "$subject" $maillist
+   fi
 
 fi
 
@@ -44,11 +46,13 @@ if [ -s $COMINspclsr/${obs_ppf_file} ]; then
    obs_ppf_found=1
 
 else
-   export subject="SPC LSR Prep Data Missing for EVS ${COMPONENT}"
-   echo "Warning: The ${REP_DATE} SPC PPF file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-   echo "Missing file is $COMINspclsr/${obs_ppf_file}" >> mailmsg
-   echo "Job ID: $jobid" >> mailmsg
-   cat mailmsg | mail -s "$subject" $maillist
+   if [ $SENDMAIL = YES ]; then
+      export subject="SPC LSR Prep Data Missing for EVS ${COMPONENT}"
+      echo "Warning: The ${REP_DATE} SPC PPF file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+      echo "Missing file is $COMINspclsr/${obs_ppf_file}" >> mailmsg
+      echo "Job ID: $jobid" >> mailmsg
+      cat mailmsg | mail -s "$subject" $maillist
+   fi
 
 fi
 
@@ -139,11 +143,13 @@ done
 
 # Send missing data alert if any forecast files are missing
 if [ -s $DATA/missing_fcst_list ]; then
-   export subject="${MODELNAME} SSPF Prep Data Missing for EVS ${COMPONENT}"
-   echo "Warning: ${MODELNAME} SSPF forecast file(s) is missing for valid date ${VDATE}12. METplus will not run." > mailmsg
-   echo -e "`cat $DATA/missing_fcst_list`" >> mailmsg
-   echo "Job ID: $jobid" >> mailmsg
-   cat mailmsg | mail -s "$subject" $maillist
+   if [ $SENDMAIL = YES ]; then
+      export subject="${MODELNAME} SSPF Prep Data Missing for EVS ${COMPONENT}"
+      echo "Warning: ${MODELNAME} SSPF forecast file(s) is missing for valid date ${VDATE}12. METplus will not run." > mailmsg
+      echo -e "`cat $DATA/missing_fcst_list`" >> mailmsg
+      echo "Job ID: $jobid" >> mailmsg
+      cat mailmsg | mail -s "$subject" $maillist
+   fi
 
 fi
 

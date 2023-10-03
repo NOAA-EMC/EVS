@@ -184,11 +184,13 @@ done
 # Send missing data alert if any forecast files are missing
 #if [ -s $DATA/job${JOBNUM}_missing_fcst_list ]; then
 if [ $nfcst = 0 ]; then
-   export subject="${DOM} ${MODELNAME} Data Missing for EVS ${COMPONENT}"
-   echo "Warning: ${DOM} ${MODELNAME} forecast files are missing for valid date ${VDATE}${cyc}. METplus will not run." > mailmsg
-   echo -e "`cat $DATA/job${JOBNUM}_missing_fcst_list`" >> mailmsg
-   echo "Job ID: $jobid" >> mailmsg
-   cat mailmsg | mail -s "$subject" $maillist
+   if [ $SENDMAIL = YES ]; then
+      export subject="${DOM} ${MODELNAME} Data Missing for EVS ${COMPONENT}"
+      echo "Warning: ${DOM} ${MODELNAME} forecast files are missing for valid date ${VDATE}${cyc}. METplus will not run." > mailmsg
+      echo -e "`cat $DATA/job${JOBNUM}_missing_fcst_list`" >> mailmsg
+      echo "Job ID: $jobid" >> mailmsg
+      cat mailmsg | mail -s "$subject" $maillist
+   fi
 
 fi
 
