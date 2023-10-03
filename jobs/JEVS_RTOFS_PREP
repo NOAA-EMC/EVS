@@ -27,17 +27,9 @@ date
 # obtain unique LSF id (jobid) and make temp directories
 ###########################################################
 export pid=$$
-
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
-rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
-
-# Determine Job Output Name on System
-####################################
-export pgmout="OUTPUT.${pid}"
-
-export cycle=t00z
 
 ###################################
 # Set EVS directories
@@ -47,17 +39,16 @@ export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
+export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config/$COMPONENT}
 export USHevs=${USHevs:-$HOMEevs/ush}
 export MASKS=${MASKS:-$FIXevs/masks}
 
 # Run setpdy and initialize PDY variables
+export cyc=${cyc:-"00"}
+export cycle=${cycle:-t${cyc}z}
 setpdy.sh
 . ./PDY
-
 export VDATE=${VDATE:-$PDYm2}
-
-# set up paths
-export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config/$COMPONENT}
 
 # define COMIN/COMOUT variables
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
@@ -66,27 +57,14 @@ export COMINrtofs=${COMINrtofs:-$(compath.py $envir/com/$COMPONENT/${rtofs_ver})
 export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
 export COMOUTprep=${COMOUTprep:-$COMOUT/$STEP/$COMPONENT}
 
-mkdir -d $COMOUT $COMOUTprep
+mkdir -p $COMOUT $COMOUTprep
 
-# run scripts
-#  get RTOFS production data from /com
+#######################################################################
+# Execute the script
+#######################################################################
+env
 $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${STEP}.sh
-
-#  convert RTOFS forecast data into lat-lon grids for each RUN;
-#  RUN is the validation source: ghrsst, smos, smap etc.
-for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
-  export RUN=$rcase
-  $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_fcst_${STEP}.sh
-done
-
-#  process obs data
-$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_obs_${STEP}.sh
-
 export err=$?; err_chk
-
-if [ -e "$pgmout" ]; then
-    cat $pgmout
-fi
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$msg"
@@ -97,5 +75,3 @@ if [ "$KEEPDATA" != "YES" ] ; then
 fi
 
 date
-
-################################# END OF JOB ##################################
