@@ -7,7 +7,7 @@ set -xa
 
 export SENDMAIL=${SENDMAIL:-NO}
 export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-YES}
+export SENDDBN=${SENDDBN:-NO}
 export SENDECF=${SENDECF:-YES}
 
 ####################################

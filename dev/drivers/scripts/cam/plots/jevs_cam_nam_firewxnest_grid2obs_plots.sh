@@ -29,6 +29,7 @@ export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=YES
 export SENDMAIL=YES
+export SENDDBN=NO
 
 export cyc=00
 export envir=prod
