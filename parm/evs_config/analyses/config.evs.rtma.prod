@@ -43,8 +43,6 @@ printf -v MET_VERSION '%s.' "${MET_VER[@]:0:2}"
 export MET_VERSION="${MET_VERSION%.}"
 
 ## DATA DIRECTIVE SETTINGS
-export KEEPDATA="NO"
-export SENDCOM="YES"
 export SENDARCH="NO"
 export SENDMETVIEWER="NO"
 ####################################################
