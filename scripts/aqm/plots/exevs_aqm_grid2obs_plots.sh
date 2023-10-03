@@ -338,6 +338,10 @@ if [ $SENDCOM = "YES" ]; then
  cp evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
 fi
 
+if [ $SENDDBN = YES ] ; then     
+ $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar
+fi
+
 ##
 ## Headline Plots
 ##
@@ -443,6 +447,10 @@ tar -cvf ${tarfile} *png
 if [ $SENDCOM = "YES" ]; then
  mkdir -m 775 -p ${COMOUTheadline}
  cp ${tarfile} ${COMOUTheadline}
+fi
+
+if [ $SENDDBN = YES ] ; then     
+  $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.${COMPONENT}.${RUN}.headline.last31days.v${VDATE}.tar
 fi
 
 exit
