@@ -28,7 +28,6 @@ COMINfcst = os.environ['COMINfcst']
 MODEL_INPUT_TEMPLATE = os.environ['MODEL_INPUT_TEMPLATE']
 VDATE = os.environ['VDATE']
 USER = os.environ['USER']
-evs_run_mode = os.environ['evs_run_mode']
 config = os.environ['config']
 if STEP == 'stats':
     COMINobs = os.environ['COMINobs']
@@ -36,10 +35,6 @@ if STEP == 'stats':
     FHR_START = os.environ['FHR_START']
     FHR_END = os.environ['FHR_END']
     FHR_INCR = os.environ['FHR_INCR']
-if evs_run_mode != 'production':
-    QUEUESERV = os.environ['QUEUESERV']
-    ACCOUNT = os.environ['ACCOUNT']
-    machine = os.environ['machine']
 
 # Read in case-dependent variables
 if VERIF_CASE == 'precip':

@@ -9,7 +9,7 @@
 ###############################################################################
 
 
-set +x
+set -x
 
 echo 
 echo " ENTERING SUB SCRIPT $0 "
@@ -129,10 +129,12 @@ i=1
 
    else
 
-      export subject="${MODELNAME} Forecast Data Missing for EVS ${COMPONENT}"
-      echo "Warning: Only $nfiles ${MODELNAME} forecast files found for ${cyc}Z ${IDATE} cycle. $min_file_req files are required. METplus will not run." > mailmsg
-      echo "Job ID: $jobid" >> mailmsg
-      cat mailmsg | mail -s "$subject" $maillist
+      if [ $SENDMAIL = YES ]; then
+         export subject="${MODELNAME} Forecast Data Missing for EVS ${COMPONENT}"
+         echo "Warning: Only $nfiles ${MODELNAME} forecast files found for ${cyc}Z ${IDATE} cycle. $min_file_req files are required. METplus will not run." > mailmsg
+         echo "Job ID: $jobid" >> mailmsg
+         cat mailmsg | mail -s "$subject" $maillist
+      fi
 
    fi
 
