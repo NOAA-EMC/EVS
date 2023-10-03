@@ -115,7 +115,7 @@ else
 fi
 
 # run Grid_Stat
-run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
+run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
 -c $CONFIGevs/${VERIF_CASE}/$STEP/GridStat_fcstRTOFS_obsAVISO_climoHYCOM.conf
 
 if [ $SENDCOM = "YES" ]; then
@@ -131,7 +131,7 @@ fi
 
 # sum small stat files into one big file using Stat_Analysis
 
-run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
+run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
 -c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstRTOFS.conf
 
 if [ $SENDCOM = "YES" ]; then
