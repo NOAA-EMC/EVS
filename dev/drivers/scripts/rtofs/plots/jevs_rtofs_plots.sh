@@ -19,6 +19,7 @@ module reset
 module load prod_envir/${prod_envir_ver}
 
 export KEEPDATA=YES
+export SENDDBN=NO
 
 # specify environment variables
 export envir=prod
