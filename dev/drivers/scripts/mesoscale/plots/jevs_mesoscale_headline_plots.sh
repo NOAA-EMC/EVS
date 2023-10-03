@@ -14,17 +14,18 @@ export model=evs
 export machine=WCOSS2
 
 # ECF Settings
-export RUN_ENVIR=nco
 export SENDECF=YES
 export SENDCOM=YES
-export KEEPDATA=NO
-export SENDDBN=YES
+export KEEPDATA=YES
+export SENDDBN=NO
 export SENDDBN_NTC=
+export SENDMAIL=YES
 export job=${PBS_JOBNAME:-jevs_mesoscale_headline_plots}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export USE_CFP=YES
 export nproc=128
+export evs_run_mode="production"
 
 # General Verification Settings
 export envir=prod
@@ -63,4 +64,4 @@ export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 export cyc=$(date -d "today" +"%H")
 
 # Job Settings and Run
-. ${HOMEevs}/jobs/${COMPONENT}/plots/JEVS_MESOSCALE_PLOTS
+. ${HOMEevs}/jobs/JEVS_MESOSCALE_PLOTS

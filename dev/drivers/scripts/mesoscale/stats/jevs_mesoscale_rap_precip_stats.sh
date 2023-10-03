@@ -14,12 +14,12 @@ cd $PBS_O_WORKDIR
 
 export model=evs
 
-export RUN_ENVIR=emc
 export SENDECF=YES
 export SENDCOM=YES
-export KEEPDATA=NO
-export SENDDBN=YES
+export KEEPDATA=YES
+export SENDDBN=NO
 export SENDDBN_NTC=
+export SENDMAIL=YES
 export job=${PBS_JOBNAME:-jevs_rap_precip_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)  
@@ -58,5 +58,5 @@ export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 
 # Job Settings and Run
-${HOMEevs}/jobs/mesoscale/stats/JEVS_MESOSCALE_STATS
+${HOMEevs}/jobs/JEVS_MESOSCALE_STATS
 
