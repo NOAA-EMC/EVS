@@ -18,7 +18,8 @@ export COMPONENT=cam
 export RUN=atmos
 export VERIF_CASE=spcoutlook
 export MODELNAME=href
-export KEEPDATA=NO
+export KEEPDATA=YES
+export SENDMAIL=YES
 
 module reset
 module load prod_envir/${prod_envir_ver}
@@ -40,17 +41,18 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export jobid=$job.${PBS_JOBID:-$$}
 
 #Define the spc outlook reqions mask file path
-export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/${USER}/evs/v1.0/prep/cam
+export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/evs/v1.0/prep/cam
+#export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/${USER}/evs/v1.0/prep/cam
 
 
-export maillist='geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'
+export maillist='alicia.bentley@noaa.gov,binbin.zhou@noaa.gov'
 if [ -z "$maillist" ]; then
 
   echo "maillist variable is not defined. Exiting without continuing."
 
 else
 
- ${HOMEevs}/jobs/cam/stats/JEVS_CAM_STATS
+ ${HOMEevs}/jobs/JEVS_CAM_STATS
 
 fi
 
