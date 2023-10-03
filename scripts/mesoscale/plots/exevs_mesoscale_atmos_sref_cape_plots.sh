@@ -246,7 +246,7 @@ if [ $SENDCOM = YES ] ; then
 fi
 
 if [ $SENDDBN = YES ] ; then
-     $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.sref.cape.past${past_days}days.v${VDATE}.tar
+     $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/evs.plots.sref.cape.past${past_days}days.v${VDATE}.tar
 fi
 
 
