@@ -1,8 +1,9 @@
 #!/bin/bash
 # modulefile for EVS cam component, prep step
 
+set -x
 
-module load PrgEnv-intel/${PrgEnv_intel_ver}
+module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
 module load ve/evs/${ve_evs_ver}
 module load cray-mpich/${craympich_ver}
