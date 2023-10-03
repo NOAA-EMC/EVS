@@ -51,6 +51,7 @@ export MODELNAME=cfs
 export cfs_ver=${cfs_ver}
 export VERIF_CASE=grid2grid
 
+export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.subseasonal.cfs.grid2grid.stats
 

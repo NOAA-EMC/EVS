@@ -52,6 +52,7 @@ export VERIF_TYPE=sst
 export NDAYS=90
 export DAYS=91
 
+export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.${COMPONENT}.${VERIF_CASE}.${STEP}.${VERIF_TYPE}
 
