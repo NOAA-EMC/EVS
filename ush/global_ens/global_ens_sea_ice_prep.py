@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 '''
-Name: global_det_atmos_prep.py
+Name: global_ens_atmos_prep.py
 Contact(s): Mallory Row
 Abstract: 
 '''
@@ -10,7 +10,7 @@ import os
 import datetime
 import glob
 import shutil
-import global_det_atmos_util as gda_util
+import global_ens_atmos_util as gda_util
 import sys
 
 print("BEGIN: "+os.path.basename(__file__))
@@ -50,7 +50,7 @@ if not os.path.exists(COMOUT_INITDATE):
     os.makedirs(COMOUT_INITDATE)
 
 ###### MODELS
-# Get operational global deterministic model data
+# Get operational global ensemble model data
 # Climate Forecast System - cfs
 # Japan Meteorological Agency - jma
 # European Centre for Medium-Range Weather Forecasts - ecmwf
@@ -63,7 +63,7 @@ if not os.path.exists(COMOUT_INITDATE):
 # Deutscher Wetterdienst (German) - dwd
 # France - metfra
 
-global_det_model_dict = {
+global_ens_model_dict = {
     'cfs': {'prod_fcst_file_format': os.path.join(COMINcfs,
                                                   '{init?fmt=%H}',
                                                   '6hrly_grib_01',
@@ -175,7 +175,7 @@ arch_precip_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
 ###### OBS
 # Get operational observation data
 # Nortnern & Southern Hemisphere 10 km OSI-SAF multi-sensor analysis - osi_saf
-global_det_obs_dict = {
+global_ens_obs_dict = {
     'osi_saf': {'daily_prod_file_format': os.path.join(COMINosi_saf,
                                                        '{init_shift?fmt=%Y%m%d'
                                                        +'?shift=-12}',
@@ -204,11 +204,11 @@ global_det_obs_dict = {
 }
 
 for OBS in OBSNAME:
-    if OBS not in list(global_det_obs_dict.keys()):
+    if OBS not in list(global_ens_obs_dict.keys()):
         print("ERROR: "+OBS+" not recongized")
         sys.exit(1)
     print("---- Prepping data for "+OBS+" for init "+INITDATE)
-    obs_dict = global_det_obs_dict[OBS]
+    obs_dict = global_ens_obs_dict[OBS]
     for cycle in obs_dict['cycles']:
         CDATE = INITDATE+cycle
         CDATE_dt = datetime.datetime.strptime(CDATE, '%Y%m%d%H')
