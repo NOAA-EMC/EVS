@@ -3,12 +3,13 @@
 ########################################
 # Preliminary data setup step
 ########################################
-set -xa
+set -x
 
 export SENDMAIL=${SENDMAIL:-NO}
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-NO}
 export SENDECF=${SENDECF:-YES}
+
 
 ####################################
 # SET SHELL PROCESSING VARIABLES
