@@ -1,4 +1,4 @@
-#PBS -N jevs_subseasonal_grid2obs_PrepBufr_plots_31days
+#PBS -N jevs_subseasonal_grid2obs_prepbufr_plots_90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -16,7 +16,7 @@ cd $PBS_O_WORKDIR
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
-export job=${PBS_JOBNAME:-jevs_subseasonal_grid2obs_PrepBufr_plots_31days}
+export job=${PBS_JOBNAME:-jevs_subseasonal_grid2obs_prepbufr_plots_90days}
 export jobid=$job.${PBS_JOBID:-$$}
 
 source $HOMEevs/versions/run.ver
@@ -29,6 +29,7 @@ export MET_ROOT=/apps/ops/prod/libs/intel/${intel_ver}/met/${met_ver}
 export USER=$USER
 export envir=prod
 export KEEPDATA=YES
+export SENDDBN=NO
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export ACCOUNT=VERF-DEV
 export QUEUE=dev
@@ -48,10 +49,10 @@ export RUN=atmos
 export MODELNAME="gefs cfs"
 export VERIF_CASE=grid2obs
 export VERIF_TYPE=PrepBufr
-export NDAYS=31
+export NDAYS=90
 
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
-export VDATE_START=$(date -d "today -32 day" +"%Y%m%d")
+export VDATE_START=$(date -d "today -91 day" +"%Y%m%d")
 export VDATE_END=$(date -d "today -2 day" +"%Y%m%d")
 export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE_END
 

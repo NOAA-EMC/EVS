@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -xa
+set -x
 
 # ###################################
 # SET SHELL PROCESSING VARIABLES
