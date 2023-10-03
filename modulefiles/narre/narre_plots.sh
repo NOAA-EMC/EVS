@@ -1,7 +1,7 @@
 #!/bin/bash
 # modulefile for EVS narre plots step
 
-set +x
+set -x
 
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
@@ -19,4 +19,3 @@ module load grib_util/${grib_util_ver}
 module load wgrib2/${wgrib2_ver}
 
 module list
-set -x
