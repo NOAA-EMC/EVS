@@ -2715,35 +2715,35 @@ class Reference():
                                  'plot_group':'sfc_upper'},
                         'VIS': {'fcst_var_names': ['VIS'],
                                    'fcst_var_levels': ['Z0'],
-                                   'fcst_var_thresholds': ('<=805, <=1609,'
-                                                           + ' <=4828, <=8045,'
-                                                           + ' >=8045,'
-                                                           + ' <=16090'),
+                                   'fcst_var_thresholds': ('<805, <=805, <1609, <=1609,'
+                                                           + ' <4828, <=4828, <8045, <=8045,'
+                                                           + ' >8045, >=8045,'
+                                                           + ' <16090, <=16090'),
                                    'fcst_var_options': '',
                                    'obs_var_names': ['VIS'],
                                    'obs_var_levels': ['Z0'],
-                                   'obs_var_thresholds': ('<=805, <=1609,'
-                                                          + ' <=4828, <=8045,'
-                                                          + ' >=8045,'
-                                                          + ' <=16090'),
+                                   'obs_var_thresholds': ('<805, <=805, <1609, <=1609,'
+                                                          + ' <4828, <=4828, <8045, <=8045,'
+                                                          + ' >8045, >=8045,'
+                                                          + ' <16090, <=16090'),
                                    'obs_var_options': '',
                                    'plot_group':'ceil_vis'},
                         'CEILING': {'fcst_var_names': ['HGT'],
                                        'fcst_var_levels': ['L0','CEILING'],
-                                       'fcst_var_thresholds': ('<=152,'
-                                                               + ' <=305,'
-                                                               + ' >=914, <=914,'
-                                                               + ' <=1524, '
-                                                               + ' <=3048'),
+                                       'fcst_var_thresholds': ('<152, <=152,'
+                                                               + ' <305, <=305,'
+                                                               + ' >914, >=914, <914, <=914,'
+                                                               + ' <1524, <=1524, '
+                                                               + ' <3048, <=3048'),
                                        'fcst_var_options': ('GRIB_lvl_typ ='
                                                             + ' 215;'),
                                        'obs_var_names': ['CEILING','HGT'],
                                        'obs_var_levels': ['L0'],
-                                       'obs_var_thresholds': ('<=152,'
-                                                              + ' <=305,'
-                                                              + ' >=914, <=914,'
-                                                              + ' <=1524, '
-                                                              + ' <=3048'),
+                                       'obs_var_thresholds': ('<152, <=152,'
+                                                              + ' <305, <=305,'
+                                                              + ' >914, >=914, <914, <=914,'
+                                                              + ' <1524, <=1524, '
+                                                              + ' <3048, <=3048'),
                                        'obs_var_options': '',
                                        'plot_group':'ceil_vis'},
                         'TCDC': {'fcst_var_names': ['TCDC'],
