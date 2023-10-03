@@ -50,11 +50,8 @@ export MODELNAME="gefs cfs"
 export VERIF_CASE=grid2grid
 export VERIF_TYPE=pres_lvls
 export NDAYS=90
+export DAYS=91
 
-export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
-export VDATE_START=$(date -d "today -91 day" +"%Y%m%d")
-export VDATE_END=$(date -d "today -2 day" +"%Y%m%d")
-export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE_END
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.${COMPONENT}.${VERIF_CASE}.${STEP}.${VERIF_TYPE}
 

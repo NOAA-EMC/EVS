@@ -51,8 +51,6 @@ export MODELNAME=gefs
 export gefs_ver=${gefs_ver}
 export VERIF_CASE=grid2obs
 
-export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
-export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.subseasonal.gefs.grid2obs.stats
 

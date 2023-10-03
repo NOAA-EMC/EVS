@@ -41,10 +41,10 @@ export members="NA"
 # Run setpdy and initialize PDY variables
 export cyc=${cyc:-00}
 export cycle=${cycle:-t${cyc}z}
-setpdy.sh $NDAYS
+setpdy.sh $DAYS
 . ./PDY
 
-export VDATE_START=${VDATE_START:-$(eval echo \$PDYm$NDAYS)}
+export VDATE_START=${VDATE_START:-$(eval echo \$PDYm$DAYS)}
 export VDATE_END=${VDATE_END:-$PDYm2}
 
 #################################################
