@@ -1,6 +1,6 @@
 #!/bin/sh
 ###############################################################################
-# Name of Script: exevs_nam_precip_stats.sh 
+# Name of Script: exevs_mesoscale_nam_precip_stats.sh 
 # Purpose of Script: This script generates precipitation
 #                    verification statistics using METplus for the
 #                    atmospheric component of NAM models
@@ -12,14 +12,8 @@ set -x
 export VERIF_CASE_STEP_abbrev="precips"
 
 # Set run mode
-if [ $RUN_ENVIR = nco ]; then
-    export evs_run_mode="production"
-    source $config
-else
     export evs_run_mode=$evs_run_mode
     source $config
-fi
-echo "RUN MODE:$evs_run_mode"
 
 # Make directory
 mkdir -p $DATA/logs
@@ -70,7 +64,6 @@ for group in $JOB_GROUP_list; do
             export MP_PGMMODEL=mpmd
             export MP_CMDFILE=${poe_script}
             if [ $machine = WCOSS2 ]; then
-                export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
                 nselect=$(cat $PBS_NODEFILE | wc -l)
                 nnp=$(($nselect * $nproc))
                 launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"

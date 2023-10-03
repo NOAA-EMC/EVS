@@ -4,8 +4,8 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=15:00:00
-#PBS -l place=vscatter:exclhost,select=8:ncpus=128
+#PBS -l walltime=10:00:00
+#PBS -l place=vscatter:exclhost,select=4:ncpus=128
 #PBS -l debug=true
 #PBS -V
 
@@ -14,17 +14,16 @@ export model=evs
 export machine=WCOSS2
 
 # ECF Settings
-export RUN_ENVIR=nco
 export SENDECF=YES
 export SENDCOM=YES
-export KEEPDATA=NO
-export SENDDBN=YES
+export KEEPDATA=YES
+export SENDDBN=NO
 export SENDDBN_NTC=
 export job=${PBS_JOBNAME:-jevs_cam_grid2obs_plots}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export USE_CFP=YES
-export nproc=256
+export nproc=512
 
 # General Verification Settings
 export NET="evs"
@@ -46,9 +45,6 @@ source /usr/share/lmod/lmod/init/sh
 module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
-export MET_PLUS_PATH="/apps/ops/prod/libs/intel/${intel_ver}/metplus/${metplus_ver}"
-export MET_PATH="/apps/ops/prod/libs/intel/${intel_ver}/met/${met_ver}"
-export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # Developer Settings
@@ -59,4 +55,4 @@ export cyc=$(date -d "today" +"%H")
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 
 # Job Settings and Run
-. ${HOMEevs}/jobs/cam/plots/JEVS_CAM_PLOTS
+. ${HOMEevs}/jobs/JEVS_CAM_PLOTS
