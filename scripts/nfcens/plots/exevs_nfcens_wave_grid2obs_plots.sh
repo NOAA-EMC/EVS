@@ -104,7 +104,6 @@ chmod 775 plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 # Run the command files for the PAST31DAYS 
 ###########################################
 if [ ${run_mpi} = 'yes' ] ; then
-  #export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
   mpiexec -np 36 --cpu-bind verbose,core --depth=3 cfp plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 else
   echo "not running mpiexec"
