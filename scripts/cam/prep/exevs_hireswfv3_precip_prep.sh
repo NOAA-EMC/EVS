@@ -6,7 +6,7 @@
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Handle all components of an EVS HiRes Window FV3 Precipitation - 
 #          Prep job
-# DEPENDENCIES: $HOMEevs/jobs/cam/prep/JEVS_CAM_PREP 
+# DEPENDENCIES: $HOMEevs/jobs/JEVS_CAM_PREP 
 #
 # =============================================================================
 
@@ -18,14 +18,7 @@ for NEST in "conus" "ak" "pr" "hi"; do
     export NEST=$NEST
     for ACC in "24"; do
         export ACC=$ACC
-        if [ $RUN_ENVIR = nco ]; then
-            export evs_run_mode="production"
-            source $config
-        else
-            export evs_run_mode=$evs_run_mode
-            source $config
-        fi
-        echo "RUN MODE: $evs_run_mode"
+        source $config
  
         # Check User's Configuration Settings
         python $USHevs/cam/cam_check_settings.py
@@ -69,7 +62,6 @@ if [ $USE_CFP = YES ]; then
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
         if [ $machine = WCOSS2 ]; then
-            export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
             launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
         elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
             export SLURM_KILL_BAD_EXIT=0
@@ -90,13 +82,7 @@ fi
 
 for NEST in "conus" "ak" "pr" "hi"; do
     export NEST=$NEST
-    if [ $RUN_ENVIR = nco ]; then
-        export evs_run_mode="production"
-        source $config
-    else
-        export evs_run_mode=$evs_run_mode
-        source $config
-    fi
+    source $config
     # Copy files to desired location
     #all commands to copy output files into the correct EVS COMOUT directory
     if [ $SENDCOM = YES ]; then

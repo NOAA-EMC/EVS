@@ -2198,6 +2198,9 @@ def equalize_samples(logger, df, group_by):
                 df_merged = df_merged.merge(
                     dfs_i, how='inner', indicator=False
                 )
+            # Reduce the size of the merged df as we go by removing duplicates
+            df_merged = df_merged.drop_duplicates()
+
         # make sure to remove duplicate rows (looking only at the columns in 
         # cols_to_check) to reduce comp time in the next in the next step
         match_these = df_merged.drop_duplicates()
