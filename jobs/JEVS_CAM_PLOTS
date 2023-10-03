@@ -48,7 +48,7 @@ export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
 ##################################################
 export SENDMAIL=${SENDMAIL:-NO}
 export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-NO}
+export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 
 
