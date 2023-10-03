@@ -43,8 +43,6 @@ export mod_ver=${aqm_ver}
 export config=$HOMEevs/parm/evs_config/aqm/config.evs.aqm.prod
 source $config
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
-
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=YES
 export SENDMAIL=YES
