@@ -60,7 +60,7 @@ for RESOLUTION in $resolutions ; do
     mkdir -p $OUTPUT_BASE_DIR
     #rm $OUTPUT_BASE_DIR/*
 
-    source $HOMEevs/parm/evs_config/wafs/config.evs.stats.wafs.atmos.standalone
+    source $HOMEevs/parm/evs_config/wafs/config.evs.wafs.standalone
 
     if [ $OBSERVATION = "GCIP" ] ; then
         stat_file_suffix=`echo $VAR1_NAME | tr '[:upper:]' '[:lower:]'`
