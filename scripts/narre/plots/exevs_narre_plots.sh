@@ -146,7 +146,7 @@ for grid in $VX_MASK_LIST ; do
 
      chmod +x run_py.${var}_${line_type}.${score_type}.${grid}.sh
 
-     echo "run_py.${var}_${line_type}.${score_type}.${grid}.sh" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
+     echo "${DATA}/run_py.${var}_${line_type}.${score_type}.${grid}.sh" >> run_narre_${grid}.${score_type}.${var}.${line_type}.sh
  
 
 #     if [ $score_type = performance_diagram ] ; then
@@ -154,7 +154,7 @@ for grid in $VX_MASK_LIST ; do
 #     fi 
      
      chmod +x  run_narre_${grid}.${score_type}.${var}.${line_type}.sh
-     echo "run_narre_${grid}.${score_type}.${var}.${line_type}.sh" >> run_all_poe.sh
+     echo "${DATA}/run_narre_${grid}.${score_type}.${var}.${line_type}.sh" >> run_all_poe.sh
 
     done #end of line_type
 
@@ -167,10 +167,9 @@ done #end of grid
 chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
-  export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-   mpiexec -np 4 -ppn 4 --cpu-bind verbose,depth cfp run_all_poe.sh
+   mpiexec -np 4 -ppn 4 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
-  run_all_poe.sh
+  ${DATA}/run_all_poe.sh
 fi
 
 cd $plot_dir
@@ -190,11 +189,19 @@ for grid in g130 g242 ; do
           field=ceiling_l0
 	  thrsh=_lt152lt305lt914lt1524lt3048
     fi	  
-  
-    mv  performance_diagram_regional_${grid}_valid_00z_03z_06z_09z_12z_15z_18z_21z_${var}_f1_to_f12_${thrsh}.png evs.narre.ctc.${field}.last${past_days}days.perfdiag_valid_all_times.${domain}.png
+    if [ -s performance_diagram_regional_${grid}_valid_00z_03z_06z_09z_12z_15z_18z_21z_${var}_f1_to_f12_${thrsh}.png ] ; then
+      mv  performance_diagram_regional_${grid}_valid_00z_03z_06z_09z_12z_15z_18z_21z_${var}_f1_to_f12_${thrsh}.png evs.narre.ctc.${field}.last${past_days}days.perfdiag_valid_all_times.${domain}.png
+    fi 
   done
 done
 
 tar -cvf evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar *.png
 
-cp evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar  $COMOUT/.
+if [ $SENDCOM = YES ] ; then
+   cp evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar  $COMOUT/.
+fi
+
+if [ $SENDDBN = YES ] ; then    
+   $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar
+fi 
+

@@ -54,7 +54,6 @@ if [ $USE_CFP = YES ]; then
 	export MP_PGMMODEL=mpmd
 	export MP_CMDFILE=${poe_script}
 	if [ $machine = WCOSS2 ]; then
-	    export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
 	    launcher="mpiexec -np ${nproc} -ppn ${nproc} --cpu-bind verbose,depth cfp"
 	elif [ $machine = HERA -o $machine = ORION ]; then
 	    export SLURM_KILL_BAD_EXIT=0
@@ -71,8 +70,10 @@ else
 fi
 
 # Send for missing files
-if ls $DATA/mail_* 1> /dev/null 2>&1; then
-    for FILE in $DATA/mail_*; do
-        $FILE
-    done
+if [ $SENDMAIL = YES ] ; then
+    if ls $DATA/mail_* 1> /dev/null 2>&1; then
+        for FILE in $DATA/mail_*; do
+            $FILE
+        done
+    fi
 fi
