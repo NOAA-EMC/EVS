@@ -1,12 +1,15 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: rtofs_plots_profile.sh
-# Purpose of Script: To create forecast verification plots for RTOFS
-#    temperature and salinity profiles using MET/METplus.
-# Author: L. Gwen Chen (lichuan.chen@noaa.gov)
+# Name of Script: exevs_rtofs_argo_grid2obs_plots
+# Purpose of Script: Create RTOFS ARGO plots for last 60 days
+# Author: Mallory Row (mallory.row@noaa.gov)
 ###############################################################################
 
 set -x
+
+export OBTYPE=ARGO
+
+mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE
 
 # set major & minor MET version
 export MET_VERSION_major_minor=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
@@ -67,22 +70,24 @@ for lead in 000 024 048 072 096 120 144 168 192; do
     for stats in me rmse acc; do
       export METRIC=$stats
 
-      if [ $stats = 'me' ] ; then 
+      if [ $stats = 'me' ] ; then
         export LTYPE=SL1L2
       fi
 
-      if [ $stats = 'rmse' ] ; then  
+      if [ $stats = 'rmse' ] ; then
         export LTYPE=SL1L2
       fi
 
-      if [ $stats = 'acc' ] ; then  
+      if [ $stats = 'acc' ] ; then
         export LTYPE=SAL1L2
       fi
 
-# make plots
-      $CONFIGevs/${VERIF_CASE}/$STEP/verif_plotting.rtofs.conf
-
-    done       
+      for vari in TEMP PSAL; do
+        export VAR=$vari
+        # make plots
+        $CONFIGevs/${VERIF_CASE}/$STEP/verif_plotting.rtofs.conf
+      done
+    done
   done
 done
 
@@ -146,9 +151,11 @@ for levl in 0 50 125 200 400 700 1000 1400; do
       export LTYPE=SAL1L2
     fi
 
-# make plots
-    $CONFIGevs/${VERIF_CASE}/$STEP/verif_plotting.rtofs.conf
-
+    for vari in TEMP PSAL; do
+      export VAR=$vari
+      # make plots
+      $CONFIGevs/${VERIF_CASE}/$STEP/verif_plotting.rtofs.conf
+    done
   done
 done
 
@@ -163,8 +170,3 @@ fi
 if [ $SENDDBN = YES ] ; then
     $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar
 fi
-
-
-exit
-
-################################ END OF SCRIPT ################################

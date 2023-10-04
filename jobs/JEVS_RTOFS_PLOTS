@@ -41,6 +41,15 @@ export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config/$COMPONENT}
 export USHevs=${USHevs:-$HOMEevs/ush}
 export MASKS=${MASKS:-$FIXevs/masks}
 
+####################################
+# Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-plots}
+export COMPONENT=${COMPONENT:-rtofs}
+export RUN=${RUN:-argo}
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+
 # Run setpdy and initialize PDY variables
 export cyc=${cyc:-"00"}
 export cycle=${cycle:-t${cyc}z}
@@ -55,13 +64,19 @@ export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
 export COMOUTplots=${COMOUTplots:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
 export COMOUTplotsheadline=${COMOUTplotsheadline:-$COMOUT/$STEP/$COMPONENT/headline.$VDATE}
 
-mkdir -p $COMOUT $COMOUTplots $COMOUTplotsheadline
+mkdir -p $COMOUT
+
+if [ $RUN = headline ]; then
+    mkdir -p $COMOUTplotsheadline
+else
+    mkdir -p $COMOUTplots
+fi
 
 #######################################################################
 # Execute the script
 #######################################################################
 env
-$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${STEP}.sh
+$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
 
 msg="JOB $job HAS COMPLETED NORMALLY."

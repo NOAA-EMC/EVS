@@ -1,4 +1,4 @@
-#PBS -N jevs_rtofs_plots
+#PBS -N jevs_rtofs_ndbc_grid2obs_last60days_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -26,6 +26,8 @@ export envir=prod
 export NET=evs
 export STEP=plots
 export COMPONENT=rtofs
+export RUN=ndbc
+export VERIF_CASE=grid2obs
 
 source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
@@ -35,7 +37,7 @@ export COMINstats=$COMIN/stats/$COMPONENT
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
-export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
+export job=${PBS_JOBNAME:-jevs_rtofs_ndbc_grid2obs_last60days_plots}
 export jobid=$job.${PBS_JOBID:-$$}
 
 # call j-job

@@ -1,12 +1,17 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: rtofs_plots_seaice.sh
-# Purpose of Script: To create plots for RTOFS sea ice forecast verification
-#    using MET/METplus.
-# Author: L. Gwen Chen (lichuan.chen@noaa.gov)
+# Name of Script: exevs_rtofs_osisaf_grid2grid_plots
+# Purpose of Script: Create RTOFS OSI-SAF plots for last 60 days
+# Author: Mallory Row (mallory.row@noaa.gov)
 ###############################################################################
 
 set -x
+
+export OBTYPE=OSISAF
+
+export VAR=SIC
+
+mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE
 
 # set major & minor MET version
 export MET_VERSION_major_minor=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
@@ -92,7 +97,3 @@ fi
 if [ $SENDDBN = YES ] ; then
     $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar
 fi
-
-exit
-
-################################ END OF SCRIPT ################################
