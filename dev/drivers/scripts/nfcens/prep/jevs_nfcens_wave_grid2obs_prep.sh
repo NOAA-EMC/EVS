@@ -49,7 +49,7 @@ export cycle=t00z
 ## developers directories
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export OUTPUTROOT=/lfs/h2/emc/vpppg/noscrub/$USER
-export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/${NET}/${evs_ver}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}
 export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}
 
 export job=${PBS_JOBNAME:-jevs_nfcens_wave_grid2obs_prep}
