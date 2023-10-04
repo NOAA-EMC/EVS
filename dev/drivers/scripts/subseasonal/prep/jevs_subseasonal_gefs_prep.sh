@@ -27,6 +27,8 @@ export job=${PBS_JOBNAME:-jevs_subseasonal_gefs_prep}
 export jobid=$job.${PBS_JOBID:-$$}
 export TMPDIR=$DATAROOT
 export SITE=$(cat /etc/cluster_name)
+export KEEPDATA=YES
+export SENDMAIL=YES
 
 export maillist='alicia.bentley@noaa.gov,shannon.shields@noaa.gov'
 
@@ -54,7 +56,7 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT/$RU
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.subseasonal.gefs.prep
 
 # Call executable job script
-$HOMEevs/jobs/subseasonal/prep/JEVS_SUBSEASONAL_PREP
+$HOMEevs/jobs/JEVS_SUBSEASONAL_PREP
 
 
 ######################################################################
