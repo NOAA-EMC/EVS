@@ -12,7 +12,7 @@ export OMP_NUM_THREADS=1
 ## 3x7 conus(ccpa) + 3x7 alaska(mrms) + 2 snow = 44 jobs 
 ##
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/pr273test/EVS
 source $HOMEevs/versions/run.ver
 
 set -x 
@@ -34,7 +34,7 @@ export cyc=00
 
 export COMIN=$COMROOT
 export envir=prod
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
