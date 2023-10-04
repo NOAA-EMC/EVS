@@ -24,8 +24,8 @@ export COMCCPA=$COMINccpa
 export COMSNOW=$COMINsnow
 export COMMRMS=$COMINmrms
 
-export PRECIP_CONF=$PARMevs/metplus_config/$COMPONENT/precip/$STEP
-export SNOWFALL_CONF=$PARMevs/metplus_config/$COMPONENT/snowfall/$STEP
+export PRECIP_CONF=$PARMevs/metplus_config/$STEP/$COMPONENT/precip
+export SNOWFALL_CONF=$PARMevs/metplus_config/$STEP/$COMPONENT/snowfall
 export GATHER_CONF_PRECIP=$PRECIP_CONF
 export MET_CONFIG=${METPLUS_BASE}/parm/met_config
 export maskpath=$MASKS

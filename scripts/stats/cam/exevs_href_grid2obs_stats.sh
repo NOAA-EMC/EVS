@@ -38,7 +38,7 @@ export COMHREF=$COMINhref
 export PREPBUFR=$COMINprepbufr
 
 export GATHER_CONF_PRECIP=$PRECIP_CONF
-export GRID2OBS_CONF=$PARMevs/metplus_config/$COMPONENT/grid2obs/$STEP
+export GRID2OBS_CONF=$PARMevs/metplus_config/$STEP/$COMPONENT/grid2obs
 export GATHER_CONF_GRID2OBS=$GRID2OBS_CONF
 export MET_CONFIG=${METPLUS_BASE}/parm/met_config
 export maskpath=$MASKS
