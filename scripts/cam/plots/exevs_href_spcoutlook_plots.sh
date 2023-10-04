@@ -159,7 +159,6 @@ chmod +x run_all_poe.sh
 
 
 if [ $run_mpi = yes ] ; then
-  export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
    mpiexec -np 6 -ppn 6 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
@@ -190,10 +189,14 @@ done
 
 tar -cvf evs.plots.href.spcoutlook.past${past_days}days.v${VDATE}.tar *.png
 
+
 if [ $SENDCOM="YES" ]; then
  cp  evs.plots.href.spcoutlook.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
 fi
 
+if [ $SENDDBN = YES ] ; then
+   $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.href.spcoutlook.past${past_days}days.v${VDATE}.tar
+fi
 
 
 

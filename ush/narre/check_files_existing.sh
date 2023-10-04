@@ -1,6 +1,6 @@
 #!/bin/ksh
 
-set +x
+set -x
 
 
 typeset -Z2 cyc
