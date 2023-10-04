@@ -45,6 +45,7 @@ export VDATE_END=${VDATE_END:-$PDYm1}
 export SENDECF=${SENDECF:-YES}
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
+export SENDMAIL=${SENDMAIL:-NO}
 
 ####################################
 # Define NET/RUN variables
