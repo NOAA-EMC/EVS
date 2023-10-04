@@ -31,11 +31,11 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-export KEEPDATA=NO
+export KEEPDATA=YES
+export SENDMAIL=YES
 
 export cyc=00
 
-export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
@@ -50,6 +50,6 @@ if [ -z "$maillist" ]; then
 
 else
 
-  ${HOMEevs}/jobs/narre/stats/JEVS_NARRE_STATS
+  ${HOMEevs}/jobs/JEVS_NARRE_STATS
 
 fi

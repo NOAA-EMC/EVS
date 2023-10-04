@@ -40,8 +40,6 @@ export make_met_data_by="VALID"
 #metplus_version:           METplus version to use
 export met_version="$met_ver" 
 export metplus_version="$metplus_ver" 
-## DATA DIRECTIVE SETTINGS
-export KEEPDATA="YES"
 ####################################################
 # SETTINGS FOR SPECIFIC USE CASES
 ####################################################
