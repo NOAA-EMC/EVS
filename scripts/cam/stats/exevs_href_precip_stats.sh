@@ -59,7 +59,6 @@ if [ -s ${DATA}/run_all_precip_poe.sh ]  ; then
   chmod 775 run_all_precip_poe.sh
 
   if [ $run_mpi = yes ] ; then
-    export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
     mpiexec  -n 44 -ppn 44 --cpu-bind core --depth=2 cfp ${DATA}/run_all_precip_poe.sh
   else
    ${DATA}/run_all_precip_poe.sh
