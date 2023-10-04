@@ -41,7 +41,7 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export KEEPDATA=${KEEPDATA:-NO}
-
+export SENDMAIL=YES
 ## developers directories
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export OUTPUTROOT=/lfs/h2/emc/vpppg/noscrub/$USER

@@ -43,7 +43,7 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_wmo_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
-
+export SENDMAIL=YES
 export maillist='alicia.bentley@noaa.gov,steven.simon@noaa.gov'
 
 ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_STATS
