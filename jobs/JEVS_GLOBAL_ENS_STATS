@@ -28,6 +28,7 @@ fi
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
+export SENDMAIL=${SENDMAIL:-NO}
 
 export COMIN_wmo=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/prep/$COMPONENT/atmos
 export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/prep/$COMPONENT/$RUN

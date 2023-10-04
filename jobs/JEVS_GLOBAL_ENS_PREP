@@ -28,6 +28,7 @@ fi
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
+export SENDMAIL=${SENDMAIL:-NO}
 
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
 export COMINgfsanl=${COMINgfs:-$(compath.py $envir/com/gfs/${gfs_ver})}

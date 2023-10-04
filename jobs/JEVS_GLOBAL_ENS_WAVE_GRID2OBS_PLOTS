@@ -29,7 +29,7 @@ export VDATE=${VDATE:-${PDYm1}}
 export SENDECF=${SENDECF:-YES}
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-NO}
-
+export SENDMAIL=${SENDMAIL:-NO}
 ####################################
 # Set EVS directories               
 ####################################
