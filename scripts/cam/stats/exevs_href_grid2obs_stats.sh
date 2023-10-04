@@ -98,14 +98,9 @@ chmod 775 run_href_all_grid2obs_poe
 
 
 if [ $run_mpi = yes ] ; then
-
-    export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-
     mpiexec -np 36 -ppn 36 --cpu-bind verbose,depth cfp  ${DATA}/run_href_all_grid2obs_poe
-
 else
     ${DATA}/run_href_all_grid2obs_poe
-
 fi
 
 if [ $gather = yes ] && [ -s run_href_all_grid2obs_poe ] ; then

@@ -189,7 +189,6 @@ done #end of stats
 chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
-  export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
    mpiexec -np 90 -ppn 90 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
@@ -259,9 +258,13 @@ for valid in 00z 12z ; do
         fi
 
        if [ ${score_type} = lead_average ] ; then	
-          mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${end}  evs.href.${stats}.${var_new}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+	  if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${end} ] ; then
+             mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${end}  evs.href.${stats}.${var_new}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+          fi 
        else
+	  if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${lead}.png ] ; then
    	  mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var_new}.last${past_days}days.${scoretype}_valid_${valid}_${new_lead}.${new_domain}.png
+          fi 
        fi
       done #lead
 
@@ -274,6 +277,12 @@ done     #vlaid
 
 tar -cvf evs.plots.href.profile.past${past_days}days.v${VDATE}.tar *.png
 
+
 if [ $SENDCOM="YES" ]; then
  cp evs.plots.href.profile.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
 fi
+
+if [ $SENDDBN = YES ] ; then
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.href.profile.past${past_days}days.v${VDATE}.tar
+fi
+
