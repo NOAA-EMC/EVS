@@ -1,4 +1,4 @@
-set +x
+set -x
 module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
 module load ve/evs/${ve_evs_ver}

@@ -1,6 +1,6 @@
 #!/bin/ksh
 
-set +x
+set -x
 #For testing: 
 
 
