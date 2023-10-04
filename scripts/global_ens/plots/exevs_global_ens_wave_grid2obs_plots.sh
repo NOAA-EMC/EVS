@@ -18,7 +18,7 @@
 set -x 
 # Use LOUD variable to turn on/off trace.  Defaults to YES (on).
 export LOUD=${LOUD:-YES}; [[ $LOUD = yes ]] && export LOUD=YES
-[[ "$LOUD" != YES ]] && set +x
+[[ "$LOUD" != YES ]] && set -x
 
 #############################
 ## grid2obs wave model plots 
@@ -28,7 +28,7 @@ cd $DATA
 echo "in $0 JLOGFILE is $jlogfile"
 echo "Starting grid2obs_plots for ${MODELNAME}_${RUN}"
 
-set +x
+set -x
 echo ' '
 echo ' ******************************************'
 echo " *** ${MODELNAME}-${RUN} grid2obs plots ***"
@@ -42,7 +42,7 @@ echo ' '
 ############################
 # get the model .stat files 
 ############################
-set +x
+set -x
 echo ' '
 echo 'Copying *.stat files :'
 echo '-----------------------------'
@@ -67,11 +67,11 @@ nc=`ls ${DATA}/stats/evs*stat | wc -l | awk '{print $1}'`
 echo " Found ${nc} ${DATA}/stats/evs*stat file for ${VDATE} "
 if [ "${nc}" != '0' ]
 then
-  set +x
+  set -x
   echo "Successfully copied the GEFS-Wave *.stat file for ${VDATE}"
   [[ "$LOUD" = YES ]] && set -x
 else
-  set +x
+  set -x
   echo ' '
   echo '**************************************** '
   echo '*** ERROR : NO GEFS-Wave *.stat FILE *** '
@@ -129,11 +129,11 @@ if [ $gather = yes ] ; then
     echo " Found ${nc} ${DATA}/plots/*${period_lower}*.png files for ${VDATE} "
     if [ "${nc}" != '0' ]
     then
-      set +x
+      set -x
       echo "Found ${nc} ${period_lower} plots for ${VDATE}"
       [[ "$LOUD" = YES ]] && set -x
     else
-      set +x
+      set -x
       echo ' '
       echo '**************************************** '
       echo '*** ERROR : NO ${period} PLOTS  *** '
@@ -163,7 +163,7 @@ postmsg "$jlogfile" "$msg"
 # --------------------------------------------------------------------------- #
 # Ending output                                                                
 
-set +x
+set -x
 echo ' '
 echo "Ending at : `date`"
 echo ' '

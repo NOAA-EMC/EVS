@@ -57,7 +57,7 @@ source $config
 ## or (2) Use EVSv1.0 parallel stats archive (see example (b) below)
 ##
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=NO
+export KEEPDATA=YES
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
@@ -83,7 +83,6 @@ export COMINaqm=/lfs/h2/emc/vpppg/noscrub/$USER/evs/v1.0/stats/aqm/aqm
 
 export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver/${STEP}/${COMPONENT}
 #
-## export KEEPDATA=YES
 #
 ########################################################################
 

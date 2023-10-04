@@ -1,6 +1,6 @@
 #!/bin/ksh
 
-set +x
+set -x
 
 vday=$VDATE
 #COMINhref=/lfs/h1/ops/prod/com/href/v3.1

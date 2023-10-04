@@ -64,7 +64,7 @@ export COMOUTplots=${COMOUTplots:-${COMOUT}/${RUN}.${VDATE}}
 export COMOUTheadline=${COMOUTheadline:-${COMOUT}/headline.${VDATE}}
 mkdir -m 775 -p $COMOUT $COMOUTplots $COMOUTheadline
 
-export KEEPDATA=${KEEPDATA:-NO}
+export KEEPDATA=${KEEPDATA:-YES}
 
 #######################################################################
 # Execute the script.

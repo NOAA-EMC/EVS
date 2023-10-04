@@ -17,7 +17,7 @@
 set -x 
 # Use LOUD variable to turn on/off trace.  Defaults to YES (on).
 export LOUD=${LOUD:-YES}; [[ $LOUD = yes ]] && export LOUD=YES
-[[ "$LOUD" != YES ]] && set +x
+[[ "$LOUD" != YES ]] && set -x
 
 ###################################
 ## grid2obs Global Wave Model Prep 
@@ -27,7 +27,7 @@ cd $DATA
 echo "in $0 JLOGFILE is $jlogfile"
 echo "Starting grid2obs_prep for ${MODELNAME}_${RUN}"
 
-set +x
+set -x
 echo ' '
 echo ' *************************************'
 echo " *** ${MODELNAME}-${RUN} grid2obs prep ***"
@@ -59,7 +59,7 @@ done
 ############################################
 # get the GDAS prepbufr files for yesterday 
 ############################################
-set +x
+set -x
 echo ' '
 echo 'Copying GDAS prepbufr files :'
 echo '-----------------------------'
@@ -76,11 +76,11 @@ for cyc in 00 06 12 18 ; do
   ############################################
   if [ -f "${DATA}/gdas.${cycle}.prepbufr" ]
   then 
-    set +x
+    set -x
     echo "Successfully copied the GDAS prepbufr file for ${cycle}"
     [[ "$LOUD" = YES ]] && set -x
   else
-    set +x
+    set -x
     echo ' '
     echo '************************************* '
     echo '*** ERROR : NO GDAS PREPBUFR FILE *** '
@@ -106,14 +106,14 @@ cat $pgmout
 ##############################################
 # check to see if the nc files have been made 
 ##############################################
-set +x
+set -x
 nc=`ls ${DATA}/ncfiles/gdas.*.nc | wc -l | awk '{print $1}'`
 echo " Found ${nc} ${DATA}/ncfiles/gdas.nc files for ${INITDATE} "
 [[ "$LOUD" = YES ]] && set -x
 
 if [ "${nc}" = '0' ]
 then
-  set +x
+  set -x
   echo ' '
   echo '**************************************** '
   echo '*** FATAL ERROR : NO GDAS.*.nc FILES *** '
@@ -128,7 +128,7 @@ fi
 ###################################
 # move the nc files to prep COMOUT 
 ###################################
-set +x
+set -x
 echo ' '
 echo "Copying GDAS ncfiles to ${COMOUT}"
 echo '----------------------------------'
@@ -142,7 +142,7 @@ postmsg "$jlogfile" "$msg"
 # --------------------------------------------------------------------------- #
 # Ending output                                                                
 
-set +x
+set -x
 echo ' '
 echo "Ending at : `date`"
 echo ' '
