@@ -42,11 +42,13 @@ do
      else
        if [ $acyc = 00 -o $acyc = 06 -o $acyc = 12 -o $acyc = 18 ]
        then
-       export subject="NAM Firewx File Missing for EVS ${COMPONENT}"
-       echo "Warning: The NAM Firewx file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-       echo "Missing file is $COMINnam/nam.${aday}/nam.t${acyc}z.${regionnest}.${outtyp}${fhr}.tm00.grib2" >> mailmsg
-       echo "Job ID: $jobid" >> mailmsg
-       cat mailmsg | mail -s "$subject" $maillist
+       if [ $SENDMAIL = "YES" ]; then
+        export subject="NAM Firewx File Missing for EVS ${COMPONENT}"
+        echo "Warning: The NAM Firewx file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+        echo "Missing file is $COMINnam/nam.${aday}/nam.t${acyc}z.${regionnest}.${outtyp}${fhr}.tm00.grib2" >> mailmsg
+        echo "Job ID: $jobid" >> mailmsg
+        cat mailmsg | mail -s "$subject" $maillist
+       fi
        fi
      fi
      let "shr=shr+1"
@@ -100,11 +102,13 @@ then
  mkdir -p $DATA/$OBSDIR/nam.${obday}
   cp $COMINobsproc/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum} $DATA/$OBSDIR/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum}
 else
-  export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
-  echo "Warning: The ${obday} prepbufr file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-  echo "Missing file is $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obcyc}z.prepbufr.tm${tmnum}" >> mailmsg
-  echo "Job ID: $jobid" >> mailmsg
-  cat mailmsg | mail -s "$subject" $maillist
+  if [ $SENDMAIL = "YES" ]; then
+   export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
+   echo "Warning: The ${obday} prepbufr file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+   echo "Missing file is $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obcyc}z.prepbufr.tm${tmnum}" >> mailmsg
+   echo "Job ID: $jobid" >> mailmsg
+   cat mailmsg | mail -s "$subject" $maillist
+  fi
 fi
 
 echo $obfound

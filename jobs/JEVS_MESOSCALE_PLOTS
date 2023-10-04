@@ -1,0 +1,139 @@
+#!/bin/bash
+
+####################################
+# Preliminary data setup step
+####################################
+set -x
+
+
+####################################
+# SET SHELL PROCESSING VARIABLES
+####################################
+export PS4='$SECONDS + '
+date
+
+####################################
+# obtain unique LSF id (jobid) and make temp directories
+####################################
+export pid=$$
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+mkdir -p $DATA
+cd $DATA
+
+
+####################################
+# Set EVS directories
+####################################
+export machine=${machine:-WCOSS2}
+export MET_PLUS_PATH=${MET_PLUS_PATH:-$METPLUS_PATH}
+export MET_PATH=$MET_ROOT
+export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
+export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export SCRIPTevs=$HOMEevs/scripts
+export USHevs=${USHevs:-$HOMEevs/ush}
+
+####################################
+# SAVEGES  - Copy Files From TMPDIR to $GESdir
+# SENDECF  - Flag Events on ecFLOW
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+####################################
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+export SENDDBN_NTC=${SENDDBN_NTC:-NO}
+export SENDMAIL=${SENDMAIL:-NO}
+
+
+####################################
+# Run setpdy and initialize PDY variables
+####################################
+export cycle=${cycle:-t${cyc}z}
+export cyc=${cyc:-00}
+export cycle=t${cyc}z
+setpdy.sh 31
+. ./PDY
+
+if [ $MODELNAME = sref ] ; then
+    export VDATE=${VDATE:-$PDYm2}
+    if [ $VERIF_CASE = precip ] ; then
+        export ush_dir=$USHevs/mesoscale/ush_sref_plot_precip_py
+    elif [ $VERIF_CASE = cnv ] ; then
+        export ush_dir=$USHevs/mesoscale/ush_sref_plot_cnv_py
+    else  
+        export ush_dir=$USHevs/mesoscale/ush_sref_plot_py
+    fi
+else
+    if [ $VERIF_CASE = grid2obs ]; then
+        export VDATE=${VDATE:-$PDYm1}
+    elif [ $VERIF_CASE = precip ]; then
+        export VDATE=${VDATE:-$PDYm1}
+    elif [ $VERIF_CASE = snowfall ]; then
+        export VDATE=${VDATE:-$PDYm1}
+    elif [ $VERIF_CASE = headline ]; then
+        export VDATE=${VDATE:-$PDYm1}
+    else
+        echo "The provided VERIF_CASE, $VERIF_CASE, is not supported for the $COMPONENT $STEP step"
+        exit 1
+    fi
+fi
+
+
+####################################
+# Define NET/RUN variables:
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-stats}
+export COMPONENT=${COMPONENT:-mesoscale}
+export RUN=${RUN:-atmos}
+
+if [ $RUN = atmos ] ; then
+  export INITDATE=${INITDATE:-$PDYm2}
+fi
+
+
+####################################
+# Define COMIN/COMOUT variables:
+####################################
+export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
+export COMINapcp24mean=${COMINapcp24mean:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT
+export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
+export COMOUTplots=${COMOUTplots:-$COMOUT/$RUN.$VDATE}
+export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
+export COMINccpa=${COMINccpa:-$(compath.py -o $NET/$evs_ver/prep/${COMPONENT})/${RUN}}
+export COMINmrms=${COMINmrms:-$(compath.py -o $NET/$evs_ver/prep/${COMPONENT})/${RUN}}
+export COMINspcotlk=${COMINspcotlk:-$(compath.py -o $NET/$evs_ver/prep/${COMPONENT})/${RUN}}
+
+if [ $MODELNAME = sref ] ; then 
+  mkdir -p $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE
+else
+ mkdir -p $COMOUT
+fi
+
+echo $COMPATH
+
+
+####################################
+# Execute the script.
+####################################
+if [ $MODELNAME = sref ] ; then
+    $SCRIPTevs/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+else
+    $SCRIPTevs/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${VERIF_CASE}_${STEP}.sh
+fi 
+
+export err=$?; err_chk
+
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATAROOT
+  rm -rf $DATA
+fi
+
+date

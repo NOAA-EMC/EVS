@@ -29,17 +29,22 @@ while [ $DATE -ge $ENDDATE ]; do
 
 	if [ -e ${COMINnam}.$DAY/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat ]
 	then
-	cp ${COMINnam}.$DAY/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
-        fi
+	 cp ${COMINnam}.$DAY/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
 
-	sed "s/$model1/$MODELNAME/g" $STATDIR/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat > $STATDIR/temp.stat
-	sed "s/FULL/FireWx/g" $STATDIR/temp.stat > $STATDIR/temp2.stat
-	sed "s/TDO/DPT/g" $STATDIR/temp2.stat > $STATDIR/temp3.stat
-	mv $STATDIR/temp3.stat $STATDIR/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat
-	rm -f $STATDIR/temp*stat
+	 sed "s/$model1/$MODELNAME/g" $STATDIR/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat > $STATDIR/temp.stat
+	 sed "s/FULL/FireWx/g" $STATDIR/temp.stat > $STATDIR/temp2.stat
+	 sed "s/TDO/DPT/g" $STATDIR/temp2.stat > $STATDIR/temp3.stat
+	 mv $STATDIR/temp3.stat $STATDIR/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat
+	 rm -f $STATDIR/temp*stat
+	fi
 
-	cp $COMIN/stats/$COMPONENT/namnest.$DAY/evs.stats.namnest.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
-	cp $COMIN/stats/$COMPONENT/hrrr.$DAY/evs.stats.hrrr.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+	if [ -e $COMIN/stats/$COMPONENT/namnest.$DAY/evs.stats.namnest.${RUN}.${VERIF_CASE}.v${DAY}.stat ]; then
+	 cp $COMIN/stats/$COMPONENT/namnest.$DAY/evs.stats.namnest.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+	fi
+
+	if [ -e $COMIN/stats/$COMPONENT/hrrr.$DAY/evs.stats.hrrr.${RUN}.${VERIF_CASE}.v${DAY}.stat ]; then
+	 cp $COMIN/stats/$COMPONENT/hrrr.$DAY/evs.stats.hrrr.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+	fi
 
 	DATE=`$NDATE -24 $DATE`
 
@@ -55,13 +60,13 @@ do
 	smvar=`echo $varb | tr A-Z a-z`
 	export plottyp=lead
 	export datetyp=VALID
-	sh $USHevs/${COMPONENT}/cam_nam_firewxnest_plots_py_plotting.config
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/cam_nam_firewxnest_plots_py_plotting.config
 
         mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
 
 	export plottyp=valid_hour
 	export datetyp=INIT
-	sh $USHevs/${COMPONENT}/cam_nam_firewxnest_plots_py_plotting.config
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/cam_nam_firewxnest_plots_py_plotting.config
 
         mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
 
@@ -72,7 +77,7 @@ do
 		export linetype=CTC
 		export stat=fbias
                 export thresh=">=277.594, >=283.15, >=288.706, >=294.261"
-		sh $USHevs/${COMPONENT}/cam_nam_firewxnest_plots_py_plotting.config_thresh
+		sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/cam_nam_firewxnest_plots_py_plotting.config_thresh
 
 		mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png
 	elif [ $varb = RH ]
@@ -82,7 +87,7 @@ do
 		export linetype=CTC
 		export stat=fbias
 		export thresh="<=15, <=20, <=25, <=30"
-		sh $USHevs/${COMPONENT}/cam_nam_firewxnest_plots_py_plotting.config_thresh
+		sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/cam_nam_firewxnest_plots_py_plotting.config_thresh
 
 		mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.fbias.${smvar}_${smlev}.last31days.threshmean.firewx.png
 	fi
@@ -104,13 +109,13 @@ do
 	smvar=`echo $varb | tr A-Z a-z`
 	export plottyp=lead
 	export datetyp=VALID
-	sh $USHevs/${COMPONENT}/cam_nam_firewxnest_plots_py_plotting.config
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/cam_nam_firewxnest_plots_py_plotting.config
 
         mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
 
 	export plottyp=valid_hour
 	export datetyp=INIT
-	sh $USHevs/${COMPONENT}/cam_nam_firewxnest_plots_py_plotting.config
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/cam_nam_firewxnest_plots_py_plotting.config
 
 	mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
 
@@ -126,13 +131,13 @@ do
 	smvar=`echo $varb | tr A-Z a-z`
 	export plottyp=lead
 	export datetyp=VALID
-	sh $USHevs/${COMPONENT}/cam_nam_firewxnest_plots_py_plotting.config
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/cam_nam_firewxnest_plots_py_plotting.config
 
         mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
 
 	export plottyp=valid_hour
 	export datetyp=INIT
-	sh $USHevs/${COMPONENT}/cam_nam_firewxnest_plots_py_plotting.config
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/cam_nam_firewxnest_plots_py_plotting.config
 
 	mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
 done
@@ -147,13 +152,13 @@ do
 	smvar=`echo $varb | tr A-Z a-z`
 	export plottyp=lead
 	export datetyp=VALID
-	sh $USHevs/${COMPONENT}/cam_nam_firewxnest_plots_py_plotting.config_pbl
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/cam_nam_firewxnest_plots_py_plotting.config_pbl
 
 	mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean.firewx.png
 
 	export plottyp=valid_hour
 	export datetyp=INIT
-	sh $USHevs/${COMPONENT}/cam_nam_firewxnest_plots_py_plotting.config_pbl
+	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/cam_nam_firewxnest_plots_py_plotting.config_pbl
 
 	mv ${PLOTDIR}/sfc_upper/*/evs*png ${PLOTDIR}/evs.${MODELNAME}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.firewx.png
 
@@ -166,6 +171,11 @@ if [ $SENDCOM = "YES" ]; then
  mkdir -m 775 -p $COMOUTplots
  cp evs.plots.${MODELNAME}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
 fi
+
+if [ $SENDDBN = YES ] ; then
+  $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.${MODELNAME}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar
+fi
+
 
 exit
 

@@ -31,7 +31,9 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-export KEEPDATA=NO
+export KEEPDATA=YES
+export SENDMAIL=YES
+export SENDDBN=NO
 
 export cyc=00
 export past_days=90
@@ -45,8 +47,8 @@ export COMINccpa=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/prep/$COMPONENT/$
 export COMINmrms=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/prep/$COMPONENT/$RUN
 export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/prep/$COMPONENT/$RUN
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver
-export DATAROOT=/lfs/h2/emc/ptmp/$USER/evs_test/$envir/tmp
+export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-${HOMEevs}/jobs/${COMPONENT}/${STEP}/JEVS_MESOSCALE_PLOTS
+${HOMEevs}/jobs/JEVS_MESOSCALE_PLOTS

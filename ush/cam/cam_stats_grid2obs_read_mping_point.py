@@ -14,10 +14,10 @@ import os
 import sys
 from datetime import datetime
 
-MET_PATH = os.environ['MET_PATH']
+MET_ROOT = os.environ['MET_ROOT']
 met_ver = os.environ['met_ver']
 sys.path.insert(0, os.path.abspath( os.path.join(
-    MET_PATH,f'share','met','python'
+    MET_ROOT,f'share','met','python'
 )))
 from met_point_obs import convert_point_data
 

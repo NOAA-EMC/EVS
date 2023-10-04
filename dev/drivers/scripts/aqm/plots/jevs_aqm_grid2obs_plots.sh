@@ -40,52 +40,25 @@ export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=aqm
 export modsys=aqm
-export mod_ver=${aqm}
+export mod_ver=${aqm_ver}
 
 export config=$HOMEevs/parm/evs_config/aqm/config.evs.aqm.prod
 source $config
 
-########################################################################
-## The following setting is for parallel test and need to be removed for operational code
-########################################################################
-##
-## Instruction for Pull-Request testing
-##     point COMIN to personal directory
-##     output can be found at $COMOUTplot (defined in JEVS_AQM_PLOTS based on COMIN setting below)
-## 
-## (1) input from the pull-request stats output (see example (a) below)
-## or (2) Use EVSv1.0 parallel stats archive (see example (b) below)
-##
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=NO
+export KEEPDATA=YES
+export SENDMAIL=YES
+export SENDDBN=NO
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 export cycle=t${cyc}z
 #
 
-##
-## Note plot step in general needs previous 31 days of data (it is okay for missing days)
-##
-## Example a
-## setting to use stats generated from pull-request stats testing
-## USE THE SAME "export COMIN=" as in stats step during pull-request testing
-## export COMINaqm=${COMIN}/stats/${COMPONENT}/${MODELNAME}
-#
-## Example b
-## setting to use stats from EVSv1.0 parallel output directory
-#
-## setting to produce output to personal directory
-## export COMIN=/lfs/h2/emc/physics/noscrub/$USER/${NET}/${evs_ver}
-## export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMINaqm=/lfs/h2/emc/vpppg/noscrub/$USER/evs/v1.0/stats/aqm/aqm
 
-export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver/${STEP}/${COMPONENT}
-#
-## export KEEPDATA=NO
-#
-########################################################################
+export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver
 
 export maillist=${maillist:-'perry.shafran@noaa.gov,alicia.bentley@noaa.gov'}
 
@@ -96,7 +69,7 @@ if [ -z "$maillist" ]; then
 else
 
    # CALL executable job script here
-   $HOMEevs/jobs/aqm/plots/JEVS_AQM_PLOTS
+   $HOMEevs/jobs/JEVS_AQM_PLOTS
 
 fi
 
