@@ -49,7 +49,7 @@ export COMIN_cmce=${COMIN_cmce:-${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/
 export COMIN_cmce_bc=${COMIN_cmce_bc:-${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/cmce_bc}
 
 
-export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/${evs_ver})}/$STEP/${COMPONENT}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}/$STEP/${COMPONENT}
 mkdir -p $COMOUT
 
 export COMOUT_gefs=${COMOUT_gefs:-${COMOUT}/${RUN}.${INITDATE}/gefs}
