@@ -23,16 +23,12 @@ source $HOMEevs/versions/run.ver
 module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/subseasonal/subseasonal_stats.sh
-#%include <head.h>
-#%include <envir-p1.h>
 
-export MET_ROOT=/apps/ops/prod/libs/intel/${intel_ver}/met/${met_ver}
-export MET_BASE=${MET_ROOT}/share/met
-export PATH=${MET_ROOT}/bin:${PATH}
 
 export USER=$USER
 export ACCOUNT=EVS-DEV
 export envir=prod
+export KEEPDATA=YES
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export QUEUE=dev
 export QUEUESHARED=dev_shared
@@ -53,18 +49,16 @@ export cfs_ver=${cfs_ver}
 export VERIF_CASE=grid2obs
 
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
-export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT
+export COMIN=$COMROOT/$NET/$evs_ver/prep/$COMPONENT/$RUN
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.subseasonal.cfs.grid2obs.stats
 
 # Call executable job script
-$HOMEevs/jobs/subseasonal/stats/JEVS_SUBSEASONAL_STATS
+$HOMEevs/jobs/JEVS_SUBSEASONAL_STATS
 
-#%include <tail.h>
-#%manual
+
 ######################################################################
 # Purpose: The job and task scripts work together to generate the
 #          subseasonal verification grid-to-obs statistics for the CFS model 
 #          and create the stat files in the databases.
 ######################################################################
-#%end

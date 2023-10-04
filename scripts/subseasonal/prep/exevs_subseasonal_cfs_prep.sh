@@ -44,8 +44,10 @@ status=$?
 echo
 
 # Send for missing files
-if ls $DATA/mail_* 1> /dev/null 2>&1; then
-    for FILE in $DATA/mail_*; do
-	$FILE
-    done
+if [ $SENDMAIL = YES ] ; then
+    if ls $DATA/mail_* 1> /dev/null 2>&1; then
+        for FILE in $DATA/mail_*; do
+	    $FILE
+        done
+    fi
 fi
