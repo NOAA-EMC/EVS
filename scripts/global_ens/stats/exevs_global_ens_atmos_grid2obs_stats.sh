@@ -42,15 +42,17 @@ export verif_case=$3
 
 if [ $ens = all ] || [ $ens = gefs ] || [ $ens = cmce ] || [ $ens = naefs ] || [ $ens = ecme ] ; then 	
     if [ ! -s ${COMIN}.${VDATE}/gefs/gfs.t00z.prepbufr.f00.nc ] ; then
-       export subject="PREPBUFR data file missing "
-       echo "Warning: No PREPBUFR data available for ${VDATE}" > mailmsg 
-       echo Missing file is ${COMIN}.${VDATE}/gefs/gfs.t00z.prepbufr.f00.nc  >> mailmsg
-       echo "Job ID: $jobid" >> mailmsg
-       cat mailmsg | mail -s "$subject" $maillist
-       exit
-     fi
-    echo "All data are available, continuing ...."
-    $USHevs/global_ens/evs_global_ens_atmos_${verif_case}.sh $ens  
+      if [ $SENDMAIL = YES ]; then
+        export subject="PREPBUFR data file missing "
+        echo "Warning: No PREPBUFR data available for ${VDATE}" > mailmsg 
+        echo Missing file is ${COMIN}.${VDATE}/gefs/gfs.t00z.prepbufr.f00.nc  >> mailmsg
+        echo "Job ID: $jobid" >> mailmsg
+        cat mailmsg | mail -s "$subject" $maillist
+      fi
+     exit
+    fi
+   echo "All data are available, continuing ...."
+   $USHevs/global_ens/evs_global_ens_atmos_${verif_case}.sh $ens  
 fi
 
 msg="JOB $job HAS COMPLETED NORMALLY"

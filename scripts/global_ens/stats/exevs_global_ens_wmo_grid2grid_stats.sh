@@ -40,21 +40,25 @@ if  [ $ens = gefs ] ||  [ $ens = cmce ] ; then
   if [ $verify_type = upper ] ; then 
 
    if [ $ens = gefs ] && [ ! -s ${COMIN_wmo}.${VDATE}/gefs/gfsanl.t00z.deg1.5.f000.grib2 ] ; then
+     if [ $SENDMAIL = YES ]; then
        export subject="GFS analysis data missing for WMO gefs verif"
        echo "Warning: No GFS analysis available for ${VDATE}" > mailmsg
        echo Missing file is ${COMIN_wmo}.${VDATE}/gefs/gfsanl.t00z.deg1.5.f000.grib2  >> mailmsg
        echo "Job ID: $jobid" >> mailmsg
        cat mailmsg | mail -s "$subject" $maillist
-       exit
-    fi
+     fi
+    exit
+   fi
 
     if [ $ens = cmce ] && [ ! -s ${COMIN_wmo}.${VDATE}/cmce/cmcanl.t00z.deg1.5.f000.grib2 ] ; then
-       export subject="CMC analysis data missing for WMO cmce verif"
-       echo "Warning: No CMC analysis available for ${VDATE}" > mailmsg
-       echo Missing file is ${COMIN_wmo}.${VDATE}/cmce/cmcanl.t00z.deg1.5.f000.grib2  >> mailmsg
-       echo "Job ID: $jobid" >> mailmsg
-       cat mailmsg | mail -s "$subject" $maillist
-       exit
+      if [ $SENDMAIL = YES ]; then
+        export subject="CMC analysis data missing for WMO cmce verif"
+        echo "Warning: No CMC analysis available for ${VDATE}" > mailmsg
+        echo Missing file is ${COMIN_wmo}.${VDATE}/cmce/cmcanl.t00z.deg1.5.f000.grib2  >> mailmsg
+        echo "Job ID: $jobid" >> mailmsg
+        cat mailmsg | mail -s "$subject" $maillist
+      fi
+     exit
     fi
 
    echo "All data are available, continuing ..."
