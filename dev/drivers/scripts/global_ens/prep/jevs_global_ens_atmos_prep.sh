@@ -35,7 +35,7 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 
 
-export KEEPDATA=NO
+export KEEPDATA=YES
 
 #This var is only for testing, if not set, then run operational 
 

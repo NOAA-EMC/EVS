@@ -28,7 +28,7 @@ set -x
 
 export envir=prod
 
-export KEEPDATA=NO
+export KEEPDATA=YES
 
 export cyc=00
 export past_days=31

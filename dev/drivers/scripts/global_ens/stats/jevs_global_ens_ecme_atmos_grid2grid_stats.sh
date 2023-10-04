@@ -34,7 +34,7 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 
 
-export KEEPDATA=NO
+export KEEPDATA=YES
 
 
 export cyc=00
