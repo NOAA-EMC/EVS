@@ -3,7 +3,7 @@
 ########################################
 # Preliminary data setup step
 ########################################
-set -xa
+set -x
 
 #####################################
 # SET SHELL PROCESSING VARIABLES
@@ -41,11 +41,12 @@ export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
 
 
 ##################################################
-# SAVEGES  - Copy Files From TMPDIR to $GESdir
+# SENDMAIL - Send Email Alerts When Missing Data
 # SENDECF  - Flag Events on ecFLOW
 # SENDCOM  - Copy Files From TMPDIR to $COMOUT
 # SENDDBN  - Issue DBNet Client Calls
 ##################################################
+export SENDMAIL=${SENDMAIL:-NO}
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
@@ -76,16 +77,15 @@ fi
 # Define COMIN/COMOUT variables
 ####################################
 export COMROOT=${COMROOT:-$(compath.py $envir/com)}
-export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
 
 if  [ $MODELNAME = href ] ; then
   export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$MODELNAME.$VDATE
   export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/${evs_ver})}/$STEP/$COMPONENT/$RUN.$VDATE
-  export COMINapcp24mean=${COMINspatial:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT
+  export COMINapcp24mean=${COMINapcp24mean:-$(compath.py -o $envir/com/$NET/$evs_ver)}/stats/$COMPONENT
   export DATA_IN=${DATA_IN:-$DATAROOT}
   export ush_dir=$USHevs/cam/ush_href_plot_py
 else
-  export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
+  export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}
   export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
   export COMOUTplots=${COMOUTplots:-$COMOUT/$RUN.$VDATE}
   echo $COMPATH

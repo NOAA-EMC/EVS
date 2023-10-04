@@ -5,7 +5,7 @@
 # NAME: exevs_cam_grid2obs_plots.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Handle all components of an EVS CAM Grid2Obs - Plots job
-# DEPENDENCIES: $HOMEevs/jobs/cam/plots/JEVS_CAM_PLOTS 
+# DEPENDENCIES: $HOMEevs/jobs/JEVS_CAM_PLOTS 
 #
 # =============================================================================
 
@@ -14,14 +14,7 @@ set -x
 # Set Basic Environment Variables
 
 export njob=1
-if [ $RUN_ENVIR = nco ]; then
-    export evs_run_mode="production"
-    source $config
-else
-    export evs_run_mode=$evs_run_mode
-    source $config
-fi
-echo "RUN MODE: $evs_run_mode"
+source $config
 # Check User's Configuration Settings
 python $USHevs/cam/cam_check_settings.py
 status=$?
@@ -36,12 +29,10 @@ status=$?
 [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py"
 
 # Check For Restart Files
-if [ $evs_run_mode = production ]; then
-    python ${USHevs}/cam/cam_production_restart.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran ${USHevs}/cam/cam_production_restart.py"
-fi
+python ${USHevs}/cam/cam_production_restart.py
+status=$?
+[[ $status -ne 0 ]] && exit $status
+[[ $status -eq 0 ]] && echo "Successfully ran ${USHevs}/cam/cam_production_restart.py"
 
 # Create Job Script 
 python $USHevs/cam/cam_plots_grid2obs_create_job_scripts.py
@@ -70,8 +61,7 @@ if [ $USE_CFP = YES ]; then
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
         if [ $machine = WCOSS2 ]; then
-            export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-            launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
+            launcher="mpiexec -np $nproc --cpu-bind verbose,depth cfp"
         elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
             export SLURM_KILL_BAD_EXIT=0
             launcher="srun --export=ALL --multi-prog"
@@ -96,4 +86,7 @@ fi
 if [ $SENDCOM = YES ]; then
     find ${DATA}/${VERIF_CASE}/out/*/*/*.png -type f -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar -T -
     cp ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar ${COMOUTplots}/.
+    if [ $SENDDBN = YES ]; then
+        $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar
+    fi
 fi

@@ -47,7 +47,7 @@ export MODELNAME=href
 export modsys=href
 export job=${PBS_JOBNAME:-jevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}_${cyc}}
 export jobid=$job.${PBS_JOBID:-$$}
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 export USE_CFP=YES
 export nproc=9
 ############################################################

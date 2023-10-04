@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A EVS-DEV
-#PBS -l walltime=0:30:00
+#PBS -l walltime=00:30:00
 #PBS -l select=1:ncpus=5:mem=500MB
 #PBS -l debug=true
 #PBS -V
@@ -50,6 +50,7 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 
 export cyc=${cyc:-${cyc}}
 
+export SENDMAIL=${SENDMAIL:-YES}
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
@@ -64,7 +65,7 @@ if [ -z "$maillist" ]; then
 else
 
    # CALL executable job script here
-   $HOMEevs/jobs/cam/stats/JEVS_CAM_STATS
+   $HOMEevs/jobs/JEVS_CAM_STATS
 
 fi
 

@@ -210,10 +210,12 @@ i=1
 
    else
 
-      export subject="${MODELNAME} Forecast Data Missing for EVS ${COMPONENT}"
-      echo "Warning: Only $nfiles ${MODELNAME} forecast files found for ${cyc}Z ${IDATE} cycle. At least $min_file_req files are required. METplus will not run." > mailmsg
-      echo -e "`cat missing_file_list`" >> mailmsg
-      cat mailmsg | mail -s "$subject" $maillist
+      if [ $SENDMAIL = YES ]; then
+         export subject="${MODELNAME} Forecast Data Missing for EVS ${COMPONENT}"
+         echo "Warning: Only $nfiles ${MODELNAME} forecast files found for ${cyc}Z ${IDATE} cycle. At least $min_file_req files are required. METplus will not run." > mailmsg
+         echo -e "`cat missing_file_list`" >> mailmsg
+         cat mailmsg | mail -s "$subject" $maillist
+      fi
 
    fi
 

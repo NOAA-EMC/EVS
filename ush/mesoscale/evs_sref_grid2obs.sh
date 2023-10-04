@@ -69,7 +69,6 @@ done
 
 chmod 775 run_all_sref_g2o_poe.sh
 if [ $run_mpi = yes ] ; then
-   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
    mpiexec  -n 2 -ppn 2 --cpu-bind core --depth=2 cfp ${DATA}/run_all_sref_g2o_poe.sh
 else
    ${DATA}/run_all_sref_g2o_poe.sh

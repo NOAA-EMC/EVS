@@ -3,10 +3,6 @@
 set -x
 
 vday=$VDATE
-#COMINhref=/lfs/h1/ops/prod/com/href/v3.1
-#COMINprepbufr=/lfs/h1/ops/prod/com/obsproc/v1.0
-#COMINccpa=/lfs/h1/ops/prod/com/ccpa/v4.2
-#COMINmrms=$DCOMROOT/ldmdata/obs/upperair/mrms/alaska/MultiSensorQPE
 
 typeset -Z2 cyc
 
@@ -25,6 +21,8 @@ else
   echo "Continue check CCAP files...." 
 fi
 
+
+if [ $VERIF_CASE = precip ] ; then
 next=`$NDATE +24 ${vday}12 |cut -c 1-8`
 prev=`$NDATE -24 ${vday}12 |cut -c 1-8`
 
@@ -59,6 +57,8 @@ if [ $missing -eq 24  ] ; then
   echo "all of the ccpa files are missing, exit execution!!!"
   exit
 fi
+
+fi 
 
 missing=0
 for cyc in 00 03 06 09 12 15 18 21 ; do
