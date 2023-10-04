@@ -76,7 +76,6 @@ done
 
 chmod 775 run_all_sref_cnv_poe.sh
 if [ $run_mpi = yes ] ; then
-   export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
    mpiexec  -n 15 -ppn 15 --cpu-bind core --depth=2 cfp ${DATA}/run_all_sref_cnv_poe.sh
 else
    ${DATA}/run_all_sref_cnv_poe.sh
