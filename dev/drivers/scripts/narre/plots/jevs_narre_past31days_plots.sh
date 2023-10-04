@@ -31,7 +31,9 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-export KEEPDATA=NO
+export KEEPDATA=YES
+export SENDMAIL=YES
+export SENDDBN=NO
 
 export cyc=00
 export past_days=31
@@ -39,7 +41,6 @@ export past_days=31
 export run_mpi=yes
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
-#export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
@@ -47,4 +48,4 @@ export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 
-${HOMEevs}/jobs/narre/plots/JEVS_NARRE_PLOTS
+${HOMEevs}/jobs/JEVS_NARRE_PLOTS
