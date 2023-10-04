@@ -50,7 +50,6 @@ VX_MASK_LIST="CONUS"
 																  
 export fcst_init_hour="0,3,6,9,12,15,18,21"
 #export fcst_valid_hours="0 3 6 9 12 15 18 21"
-#export fcst_valid_hours="0  6  12 18"
 export fcst_valid_hours="0,3  6,9  12,15 18,21"
 valid_time='valid00z_03z_06z_09z_12z_15z_18z_21z'
 init_time='init00_to_21z'
@@ -211,7 +210,6 @@ chmod +x run_all_poe.sh
 
 
 if [ $run_mpi = yes ] ; then
-  export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
    mpiexec -np 100 -ppn 100 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
@@ -219,7 +217,6 @@ fi
 
 cd $plot_dir
 
-#for valid in 00z 06z 12z 18z ; do
 for valid in 00z_03z 06z_09z 12z_15z 18z_21z ; do
 for stats in  ets fbias fss  ; do
  if [ $stats = ets ] || [ $stats = fbias ] ; then 
@@ -264,11 +261,15 @@ done     #valid
 
 tar -cvf evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar *.png
 
+
 if [ $SENDCOM="YES" ]; then
  cp evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
 fi
 
 
+if [ $SENDDBN = YES ] ; then
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar
+fi
 
 
 
