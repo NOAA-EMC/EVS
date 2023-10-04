@@ -82,7 +82,7 @@ if [ -s $COMINspc/${REP_DATE}/validation_data/weather/spc/spc_reports_${REP_DATE
    mkdir -p $COMOUTlsr
 
    # Run METplus
-   ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/Point2Grid_obsSPC_PracticallyPerfect.conf
+   ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/Point2Grid_obsSPC_PracticallyPerfect.conf
    export err=$?; err_chk
 
 

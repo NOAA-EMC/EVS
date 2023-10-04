@@ -162,7 +162,7 @@ if [ $nfcst -ge 1 ] && [ $obs_lsr_found = 1 ]; then
 
    export fhrs=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcst_list`
 
-   run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/GridStat_fcstSSPF_obsLSR.conf
+   run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GridStat_fcstSSPF_obsLSR.conf
    export err=$?; err_chk
 
 else
@@ -179,7 +179,7 @@ if [ $nfcst -ge 1 ] && [ $obs_ppf_found = 1 ]; then
 
    export fhrs=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' $DATA/fcst_list`
 
-   run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/GridStat_fcstSSPF_obsPPF.conf
+   run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GridStat_fcstSSPF_obsPPF.conf
    export err=$?; err_chk
 
 else
@@ -196,7 +196,7 @@ if [ -d $DATA/grid_stat ]; then
 
    if [ "$(ls -A $DATA/grid_stat)" ]; then
 
-      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/StatAnalysis_fcstSSPF_obsLSR_gatherByDay.conf
+      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstSSPF_obsLSR_gatherByDay.conf
       export err=$?; err_chk
 
       # Copy output to $COMOUT

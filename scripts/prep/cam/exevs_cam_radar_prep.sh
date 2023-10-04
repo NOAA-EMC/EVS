@@ -78,7 +78,7 @@ for DOMAIN in ${DOMAINS}; do
       if [ -s $DATA/MRMS_${DOMAIN}_tmp/${MRMS_PRODUCT}_${VDATE}-${cyc}0000.grib2 ]; then
 
 	 # Run METplus
-         ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/RegridDataPlane_obsMRMS_${RADAR_FIELD}.conf
+         ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/RegridDataPlane_obsMRMS_${RADAR_FIELD}.conf
          export err=$?; err_chk
 
 	 # Copy output to $COMOUT

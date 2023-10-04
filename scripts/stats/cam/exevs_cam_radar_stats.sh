@@ -143,13 +143,13 @@ if [ $cyc = 23 ]; then
 
          for HREF_MOD in ${HREF_MODS}; do
 	    export HREF_MOD
-            run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/StatAnalysis_fcstHREF_obsMRMS_gatherByDay.conf
+            run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstHREF_obsMRMS_gatherByDay.conf
             export err=$?; err_chk
          done
 
       else
 
-         run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/StatAnalysis_fcstCAM_obsMRMS_gatherByDay.conf
+         run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstCAM_obsMRMS_gatherByDay.conf
          export err=$?; err_chk
 
       fi
