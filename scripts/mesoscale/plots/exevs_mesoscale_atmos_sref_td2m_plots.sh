@@ -181,7 +181,6 @@ chmod +x run_all_poe.sh
 
 
 if [ $run_mpi = yes ] ; then
-  export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
    mpiexec -np 80 -ppn 80 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
    ${DATA}/run_all_poe.sh
@@ -225,10 +224,10 @@ for stat in $stats ; do
 
 	   if [ $score_type = lead_average ] ; then
 
-               mv ${score_type}_regional_conus_valid_${valid}_2m_dpt_${stat}_${threshold}.png  evs.sref.${stat}.${var_level}_${threshold}.last${past_days}days.${scoretype}.valid_${valid}.buk_conus.png
+               mv ${score_type}_regional_conus_valid_${valid}_2m_dpt_${stat}_${threshold}.png  evs.sref.${stat}.${var_level}_${threshold}.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png
            elif [ $score_type = threshold_average ] ; then
 
-               mv ${score_type}_regional_conus_valid_${valid}_2m_dpt_${stat}_${lead}.png  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}.valid_${valid}.${new_lead}.buk_conus.png
+               mv ${score_type}_regional_conus_valid_${valid}_2m_dpt_${stat}_${lead}.png  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}_valid_${valid}.${new_lead}.buk_conus.png
            fi
 
        done 
@@ -240,10 +239,14 @@ done
 
 tar -cvf evs.plots.sref.td2m.past${past_days}days.v${VDATE}.tar *.png
 
+
 if [ $SENDCOM="YES" ]; then
  cp  evs.plots.sref.td2m.past${past_days}days.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
 fi
 
+if [ $SENDDBN = YES ] ; then
+   $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/evs.plots.sref.td2m.past${past_days}days.v${VDATE}.tar
+fi
 
 
 
