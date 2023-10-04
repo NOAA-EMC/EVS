@@ -343,7 +343,7 @@ if [ ! -s $COMOUTprep/rtofs.$VDATE/$RUN/mask.mediterranean.nc ]; then
         $DATA/rtofs.$VDATE/$RUN/mask.mediterranean.nc \
         -type lon -thresh 'ge-2 && le45' -intersection -name MEDIT
         if [ $SENDCOM = "YES" ]; then
-            cp -v $DATA/rtofs.$VDATE/$RUN/mediterranean.lat.nc $COMOUTprep/rtofs.$VDATE/$RUN
+            cp -v $DATA/rtofs.$VDATE/$RUN/mask.mediterranean.nc $COMOUTprep/rtofs.$VDATE/$RUN
         fi
     fi
 fi
