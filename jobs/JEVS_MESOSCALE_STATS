@@ -123,4 +123,3 @@ if [ "$KEEPDATA" != "YES" ] ; then
 fi
 
 echo "END: $(basename ${BASH_SOURCE[0]})"
-
