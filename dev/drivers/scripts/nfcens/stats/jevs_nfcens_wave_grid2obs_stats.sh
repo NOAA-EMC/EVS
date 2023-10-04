@@ -10,7 +10,7 @@
 
 set -x 
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/githubworkspc/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 export MODELNAME=nfcens
 export OBTYPE=GDAS
