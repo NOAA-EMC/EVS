@@ -152,6 +152,9 @@ if [ $gather = yes ] ; then
     fi
   done
   [[ $SENDCOM="YES" ]] && cp evs.${STEP}.${COMPONENT}.${RUN}.*.tar ${COMOUTplots}/.
+  if [ $SENDDBN = YES ]; then 
+      $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/evs.${STEP}.${COMPONENT}.${RUN}.*.tar
+  fi
 else  
   echo "not copying the plots"
 fi

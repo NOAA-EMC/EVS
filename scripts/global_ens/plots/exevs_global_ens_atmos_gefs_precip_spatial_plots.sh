@@ -77,3 +77,8 @@ tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.precip_spatial.v${VDATE}.tar
 if [ $SENDCOM = YES ]; then
     cp evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.precip_spatial.v${VDATE}.tar  $COMOUT/.
 fi
+
+if [ $SENDDBN = YES ]; then 
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.precip_spatial.v${VDATE}.tar
+fi
+
