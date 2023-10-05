@@ -23,4 +23,3 @@ postmsg "$jlogfile" "$msg"
 
 
 
-exit 0

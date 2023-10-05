@@ -106,8 +106,7 @@ class LongTermAnnualMean:
         self.logger.debug(f"Run Lengths: {', '.join(self.run_length_list)}")
         # Make job image directory
         output_image_dir = os.path.join(self.output_dir, 'images')
-        if not os.path.exists(output_image_dir):
-            os.makedirs(output_image_dir)
+        gda_util.make_dir(output_image_dir)
         self.logger.info(f"Plots will be in: {output_image_dir}")
         # Create merged dataset of verification systems
         if self.var_name == 'APCP':
@@ -435,12 +434,10 @@ def main():
     FORECAST_DAY_LIST = ['1', '2']
     RUN_LENGTH_LIST = ['allyears', 'past10years']
     # Create OUTPUT_DIR
-    if not os.path.exists(OUTPUT_DIR):
-        os.makedirs(OUTPUT_DIR)
+    gda_util.make_dir(OUTPUT_DIR)
     # Set up logging
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')
-    if not os.path.exists(logging_dir):
-         os.makedirs(logging_dir)
+    gda_util.make_dir(logging_dir)
     job_logging_file = os.path.join(logging_dir,
                                     os.path.basename(__file__)+'_runon'
                                     +datetime.datetime.now()\

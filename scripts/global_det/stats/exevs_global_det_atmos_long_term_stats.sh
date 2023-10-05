@@ -10,12 +10,6 @@
 
 set -x
 
-# Set run mode
-if [ $RUN_ENVIR = nco ]; then
-    export evs_run_mode="production"
-else
-    export evs_run_mode=$evs_run_mode
-fi
 echo "RUN MODE:$evs_run_mode"
 if [ $evs_run_mode = production ] && [ $envir = prod ]; then
     echo "exevs_global_det_atmos_long_term_stats.sh does run in production; exit"
