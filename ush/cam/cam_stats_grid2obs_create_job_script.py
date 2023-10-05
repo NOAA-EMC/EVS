@@ -375,7 +375,7 @@ elif STEP == 'stats':
                     + f'PointStat_fcst{COMPONENT.upper()}_'
                     + f'obs{VERIF_TYPE.upper()}_{str(NEST).upper()}_VAR2.conf'
                 )
-                job_cmd_list_iterative.append(
+                job_cmd_list.append(
                     f'python -c '
                     + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                     + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -398,7 +398,7 @@ elif STEP == 'stats':
                     + f'-c {MET_PLUS_CONF}/'
                     + f'PointStat_fcst{COMPONENT.upper()}_obs{VERIF_TYPE.upper()}_VAR2.conf'
                 )
-                job_cmd_list_iterative.append(
+                job_cmd_list.append(
                     f'python -c '
                     + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                     + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -423,7 +423,7 @@ elif STEP == 'stats':
                         + f'-c {MET_PLUS_CONF}/'
                         + f'RegridDataPlane_fcst{COMPONENT.upper()}_PTYPE.conf'
                     )
-                    job_cmd_list_iterative.append(
+                    job_cmd_list.append(
                         f'python -c '
                         + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -469,7 +469,7 @@ elif STEP == 'stats':
                         + f'obs{VERIF_TYPE.upper()}_'
                         + f'{str(NEST).upper()}_{VAR_NAME}.conf'
                     )
-                    job_cmd_list_iterative.append(
+                    job_cmd_list.append(
                         f'python -c '
                         + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -493,7 +493,7 @@ elif STEP == 'stats':
                         + f'PointStat_fcst{COMPONENT.upper()}_'
                         + f'obs{VERIF_TYPE.upper()}_{str(NEST).upper()}.conf'
                     )
-                    job_cmd_list_iterative.append(
+                    job_cmd_list.append(
                         f'python -c '
                         + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -517,7 +517,7 @@ elif STEP == 'stats':
                         + f'-c {MET_PLUS_CONF}/'
                         + f'RegridDataPlane_fcst{COMPONENT.upper()}_PTYPE.conf'
                     )
-                    job_cmd_list_iterative.append(
+                    job_cmd_list.append(
                         f'python -c '
                         + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -562,7 +562,7 @@ elif STEP == 'stats':
                         + f'PointStat_fcst{COMPONENT.upper()}_'
                         + f'obs{VERIF_TYPE.upper()}_{VAR_NAME}.conf'
                     )
-                    job_cmd_list_iterative.append(
+                    job_cmd_list.append(
                         f'python -c '
                         + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
@@ -586,7 +586,7 @@ elif STEP == 'stats':
                         + f'PointStat_fcst{COMPONENT.upper()}_'
                         + f'obs{VERIF_TYPE.upper()}.conf'
                     )
-                    job_cmd_list_iterative.append(
+                    job_cmd_list.append(
                         f'python -c '
                         + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                         + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
