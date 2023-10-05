@@ -12,7 +12,7 @@ export model=evs
 
 cd $PBS_O_WORKDIR
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/pr273test/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 source $HOMEevs/versions/run.ver
 
