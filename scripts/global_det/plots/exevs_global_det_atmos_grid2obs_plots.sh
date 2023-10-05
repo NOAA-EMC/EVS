@@ -10,15 +10,10 @@
 set -x
 
 export VERIF_CASE_STEP_abbrev="g2op"
-
-# Set run mode
-if [ $RUN_ENVIR = nco ]; then
-    export evs_run_mode="production"
-    source $config
-else
-    export evs_run_mode=$evs_run_mode
-fi
 echo "RUN MODE:$evs_run_mode"
+
+# Source config
+source $config
 
 # Make directory
 mkdir -p ${VERIF_CASE}_${STEP}
@@ -29,7 +24,7 @@ end_date_seconds=$(date +%s -d ${end_date})
 diff_seconds=$(expr $end_date_seconds - $start_date_seconds)
 diff_days=$(expr $diff_seconds \/ 86400)
 total_days=$(expr $diff_days + 1)
-NDAYS=${NDAYS:-total_days}
+NDAYS=${NDAYS:-$total_days}
 
 # Check user's config settings
 python $USHevs/global_det/global_det_atmos_check_settings.py
@@ -71,7 +66,6 @@ for group in condense_stats filter_stats make_plots tar_images; do
             export MP_PGMMODEL=mpmd
             export MP_CMDFILE=${poe_script}
             if [ $machine = WCOSS2 ]; then
-                export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
                 nselect=$(cat $PBS_NODEFILE | wc -l)
                 nnp=$(($nselect * $nproc))
                 launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
@@ -100,4 +94,8 @@ if [ $SENDCOM = YES ]; then
         cp -v $large_tar_file $COMOUT/.
     done
     cd $DATA
+fi
+
+if [ $SENDDBN = YES ]; then
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.last${NDAYS}days.v${end_date}.tar
 fi
