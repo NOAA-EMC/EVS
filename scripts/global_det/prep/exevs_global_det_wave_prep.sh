@@ -34,11 +34,13 @@ for MODEL in $MODELNAME; do
                 DATAfilename="${DATA}/gfswave.${INITDATE}.t${cyc}z.global.0p25.f${hr}.grib2"
                 COMOUTfilename="$COMOUT.${INITDATE}/${MODEL}/gfswave.${INITDATE}.t${cyc}z.global.0p25.f${hr}.grib2"
                 if [ ! -s $COMINfilename ] ; then
-                    export subject="F${hr} GFS Forecast Data Missing for EVS ${COMPONENT}"
-                    echo "Warning: No GFS forecast was available for ${INITDATE}${cyc}f${hr}" > mailmsg
-                    echo “Missing file is ${COMINfilename}” >> mailmsg
-                    echo "Job ID: $jobid" >> mailmsg
-                    cat mailmsg | mail -s "$subject" $maillist
+                    if [ $SENDMAIL = YES ] ; then
+                        export subject="F${hr} GFS Forecast Data Missing for EVS ${COMPONENT}"
+                        echo "Warning: No GFS forecast was available for ${INITDATE}${cyc}f${hr}" > mailmsg
+                        echo "Missing file is ${COMINfilename}" >> mailmsg
+                        echo "Job ID: $jobid" >> mailmsg
+                        cat mailmsg | mail -s "$subject" $maillist
+                    fi
                 else
                     if [ ! -s $COMOUTfilename ] ; then
                         cp -v $COMINfilename $DATAfilename
@@ -64,11 +66,13 @@ for OBS in $OBSNAME; do
         INITDATEp1=$(date --date="${INITDATE} 24 hours" +"%Y%m%d")
         nbdc_txt_ncount=$(ls -l $COMINndbc/${INITDATEp1}/validation_data/marine/buoy/*.txt |wc -l)
         if [[ $nbdc_txt_ncount -eq 0 ]]; then
-            export subject="NDBC Data Missing for EVS ${COMPONENT}"
-            echo "Warning: No NDBC data was available for valid date ${VDATE}" > mailmsg
-            echo “Missing files are located at $COMINndbc/${INITDATEp1}/validation_data/marine/buoy” >> mailmsg
-            echo "Job ID: $jobid" >> mailmsg
-            cat mailmsg | mail -s "$subject" $maillist
+            if [ $SENDMAIL = YES ] ; then
+                export subject="NDBC Data Missing for EVS ${COMPONENT}"
+                echo "Warning: No NDBC data was available for valid date ${VDATE}" > mailmsg
+                echo "Missing files are located at $COMINndbc/${INITDATEp1}/validation_data/marine/buoy" >> msg
+                echo "Job ID: $jobid" >> mailmsg
+                cat mailmsg | mail -s "$subject" $maillist
+            fi
         else
             python $USHevs/${COMPONENT}/global_det_wave_prep_trim_ndbc_files.py
         fi
