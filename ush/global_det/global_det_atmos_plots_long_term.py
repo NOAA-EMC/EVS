@@ -66,8 +66,7 @@ for avg_time_range in avg_time_range_list:
         COMINtime_range_stats = COMINyearlystats
     # Set up time range directory
     avg_time_range_dir = os.path.join(DATA, avg_time_range)
-    if not os.path.exists(avg_time_range_dir):
-        os.makedirs(avg_time_range_dir)
+    gda_util.make_dir(avg_time_range_dir)
     ### Do grid-to-grid plots
     print(f"Doing {avg_time_range} grid-to-grid plots")
     avg_time_range_g2g_dir = os.path.join(avg_time_range_dir, 'grid2grid')
@@ -75,10 +74,9 @@ for avg_time_range in avg_time_range_list:
                                                'grid2grid', 'logs')
     avg_time_range_images_g2g_dir = os.path.join(avg_time_range_dir,
                                                  'grid2grid', 'images')
-    if not os.path.exists(avg_time_range_g2g_dir):
-        os.makedirs(avg_time_range_g2g_dir)
-        os.makedirs(avg_time_range_logs_g2g_dir)
-        os.makedirs(avg_time_range_images_g2g_dir)
+    gda_util.make_dir(avg_time_range_g2g_dir)
+    gda_util.make_dir(avg_time_range_logs_g2g_dir)
+    gda_util.make_dir(avg_time_range_images_g2g_dir)
     print(f"Working in {avg_time_range_g2g_dir}")
     # Make plots for groupings
     for model_group in list(model_group_dict.keys()):
@@ -182,11 +180,10 @@ yyyymm_acc_dir = os.path.join(DATA, VDATEYYYY+'_'+VDATEmm+'_ACC')
 yyyymm_acc_logs_dir = os.path.join(yyyymm_acc_dir, 'logs')
 yyyymm_acc_data_dir = os.path.join(yyyymm_acc_dir, 'data')
 yyyymm_acc_images_dir = os.path.join(yyyymm_acc_dir, 'images')
-if not os.path.exists(yyyymm_acc_dir):
-    os.makedirs(yyyymm_acc_dir)
-    os.makedirs(yyyymm_acc_logs_dir)
-    os.makedirs(yyyymm_acc_data_dir)
-    os.makedirs(yyyymm_acc_images_dir)
+gda_util.make_dir(yyyymm_acc_dir)
+gda_util.make_dir(yyyymm_acc_logs_dir)
+gda_util.make_dir(yyyymm_acc_data_dir)
+gda_util.make_dir(yyyymm_acc_images_dir)
 print(f"Working in {yyyymm_acc_dir}")
 yyyymm_acc_forecast_hour_list = list(range(0, 240+24, 24))
 yyyymm_acc_valid_hour_list = [str(x).zfill(2) for x in np.arange(0,13,12)]
@@ -249,8 +246,7 @@ acc_job_name = ('GeoHeight/SA1L2/ACC/'
 acc_output_dir = os.path.join(
     yyyymm_acc_dir, acc_job_name.replace('/','_')
 )
-if not os.path.exists(acc_output_dir):
-    os.makedirs(acc_output_dir)
+gda_util.make_dir(acc_output_dir)
 now = datetime.datetime.now()
 acc_logging_file = os.path.join(
     yyyymm_acc_logs_dir,
@@ -264,8 +260,7 @@ for model_num in list(yyyymm_acc_model_info_dict.keys()):
     model = yyyymm_acc_model_info_dict[model_num]['name']
     obs_name = yyyymm_acc_model_info_dict[model_num]['obs_name']
     stat_model_dir = os.path.join(yyyymm_acc_data_dir, model)
-    if not os.path.exists(stat_model_dir):
-        os.makedirs(stat_model_dir)
+    gda_util.make_dir(stat_model_dir)
     date_dt = datetime.datetime.strptime(
         yyyymm_acc_date_info_dict['start_date'], '%Y%m%d'
     )

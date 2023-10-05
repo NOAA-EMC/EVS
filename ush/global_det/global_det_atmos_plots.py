@@ -115,9 +115,7 @@ stat_base_dir = os.path.join(VERIF_CASE_STEP_dir, 'data')
 plot_output_dir = os.path.join(VERIF_CASE_STEP_dir, 'plot_output')
 logging_dir = os.path.join(plot_output_dir, 'logs')
 for output_dir in [logging_dir, DATAjob, COMOUTjob]:
-    if not os.path.exists(output_dir):
-       print(f"Creating output directory: {output_dir}")
-       os.makedirs(output_dir)
+   gda_util.make_dir(output_dir)
 
 # Set up logging
 job_logging_file = os.path.join(logging_dir, 'evs_'+COMPONENT+'_'+RUN+'_'

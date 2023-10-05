@@ -208,8 +208,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 VERIF_CASE_STEP_model_dir = os.path.join(
                     VERIF_CASE_STEP_data_dir, model
                 )
-                if not os.path.exists(VERIF_CASE_STEP_model_dir):
-                    os.makedirs(VERIF_CASE_STEP_model_dir)
+                gda_util.make_dir(VERIF_CASE_STEP_model_dir)
                 if VERIF_CASE_STEP_type in ['precip_accum24hr',
                                             'precip_accum3hr']:
                     model_file_format = (
@@ -397,8 +396,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                     VERIF_CASE_STEP_ccpa_dir, 'ccpa.'+str(ccpa_accum_intvl)
                     +'H.{valid?fmt=%Y%m%d%H}'
                 )
-                if not os.path.exists(VERIF_CASE_STEP_ccpa_dir):
-                    os.makedirs(VERIF_CASE_STEP_ccpa_dir)
+                gda_util.make_dir(VERIF_CASE_STEP_ccpa_dir)
                 accum_valid_start = (VERIF_CASE_STEP_type_valid_time -
                                      datetime.timedelta(hours=accum))
                 accum_valid_end = VERIF_CASE_STEP_type_valid_time
@@ -446,8 +444,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                         VERIF_CASE_STEP_model_dir,
                         model+'.'+'{valid?fmt=%Y%m%d%H}.truth'
                     )
-                    if not os.path.exists(VERIF_CASE_STEP_model_dir):
-                        os.makedirs(VERIF_CASE_STEP_model_dir)
+                    gda_util.make_dir(VERIF_CASE_STEP_model_dir)
                     gda_util.get_model_file(
                         VERIF_CASE_STEP_type_valid_time,
                         VERIF_CASE_STEP_type_valid_time,
@@ -459,8 +456,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 VERIF_CASE_STEP_osi_saf_dir = os.path.join(
                     VERIF_CASE_STEP_data_dir, 'osi_saf'
                 )
-                if not os.path.exists(VERIF_CASE_STEP_osi_saf_dir):
-                    os.makedirs(VERIF_CASE_STEP_osi_saf_dir)
+                gda_util.make_dir(VERIF_CASE_STEP_osi_saf_dir)
                 for hem in ['nh', 'sh']:
                     osi_saf_hem_prod_file_format = os.path.join(
                         COMINosi_saf, 'prep',
@@ -527,8 +523,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 VERIF_CASE_STEP_ghrsst_ospo_dir = os.path.join(
                     VERIF_CASE_STEP_data_dir, 'ghrsst_ospo'
                 )
-                if not os.path.exists(VERIF_CASE_STEP_ghrsst_ospo_dir):
-                    os.makedirs(VERIF_CASE_STEP_ghrsst_ospo_dir)
+                gda_util.make_dir(VERIF_CASE_STEP_ghrsst_ospo_dir)
                 ghrsst_ospo_dest_file_format = os.path.join(
                     VERIF_CASE_STEP_ghrsst_ospo_dir,
                     'ghrsst_ospo.{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
@@ -600,8 +595,7 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                     VERIF_CASE_STEP_model_dir,
                     model+'.'+'{init?fmt=%Y%m%d%H}.f{lead?fmt=%3H}'
                 )
-                if not os.path.exists(VERIF_CASE_STEP_model_dir):
-                    os.makedirs(VERIF_CASE_STEP_model_dir)
+                gda_util.make_dir(VERIF_CASE_STEP_model_dir)
                 gda_util.get_model_file(
                     time['valid_time'], time['init_time'],
                     time['forecast_hour'], model_file_format,
@@ -655,8 +649,7 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                         VERIF_CASE_STEP_gdas_dir,
                         'prepbufr.gdas.{valid?fmt=%Y%m%d%H}'
                     )
-                    if not os.path.exists(VERIF_CASE_STEP_gdas_dir):
-                        os.makedirs(VERIF_CASE_STEP_gdas_dir)
+                    gda_util.make_dir(VERIF_CASE_STEP_gdas_dir)
                     gda_util.get_truth_file(
                         VERIF_CASE_STEP_type_valid_time, 'Prepbufr GDAS',
                         gdas_prod_file_format, gdas_arch_file_format,
@@ -699,8 +692,7 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                     nam_dest_file_format, VERIF_CASE_STEP_type_valid_time,
                     VERIF_CASE_STEP_type_valid_time, ['anl'], {}
                 )
-                if not os.path.exists(VERIF_CASE_STEP_nam_dir):
-                    os.makedirs(VERIF_CASE_STEP_nam_dir)
+                gda_util.make_dir(VERIF_CASE_STEP_nam_dir)
                 gda_util.get_truth_file(
                     VERIF_CASE_STEP_type_valid_time, 'Prepbufr NAM',
                     nam_prod_file, nam_arch_file, evs_run_mode,
@@ -723,8 +715,7 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
                     VERIF_CASE_STEP_rap_dir,
                     'prepbufr.rap.{valid?fmt=%Y%m%d%H}'
                 )
-                if not os.path.exists(VERIF_CASE_STEP_rap_dir):
-                    os.makedirs(VERIF_CASE_STEP_rap_dir)
+                gda_util.make_dir(VERIF_CASE_STEP_rap_dir)
                 gda_util.get_truth_file(
                     VERIF_CASE_STEP_type_valid_time, 'Prepbufr RAP',
                     rap_prod_file_format, rap_arch_file_format,

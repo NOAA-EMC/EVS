@@ -1,9 +1,8 @@
 #!/bin/ksh
 
-set +x
+set -x
 #For testing: 
 
-#COMIN=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/prep/global_ens/headline
 
 var=$1
 typeset -Z2 cyc
