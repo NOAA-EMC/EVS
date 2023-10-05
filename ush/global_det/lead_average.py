@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 ###########################################
 #
 # Used for global_det wave plots
@@ -44,7 +45,7 @@ from check_variables import *
 
 # ================ GLOBALS AND CONSTANTS ================
 
-plotter = Plotter(fig_size=(28.,14.))
+plotter = Plotter()
 plotter.set_up_plots()
 toggle = Toggle()
 templates = Templates()
@@ -131,6 +132,12 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         str(x) in df[str(date_type).upper()].dt.hour.astype(str).tolist() 
         for x in date_hours
     ]]
+
+    if df.empty:
+        logger.warning(f"Empty Dataframe. Continuing onto next plot...")
+        plt.close(num)
+        logger.info("========================================")
+        return None
     if thresh and '' not in thresh:
         requested_thresh_symbol, requested_thresh_letter = list(
             zip(*[plot_util.format_thresh(t) for t in thresh])
@@ -739,10 +746,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         x_val for x_val in np.arange(xticks_min, xticks_max+incr, incr)
     ] 
     xtick_labels = [str(xtick) for xtick in xticks]
-    if len(xticks) < 48:
-        show_xtick_every = 1
-    else:
-        show_xtick_every = 2
+    show_xtick_every = len(xticks)//40+1
     xtick_labels_with_blanks = ['' for item in xtick_labels]
     for i, item in enumerate(xtick_labels[::int(show_xtick_every)]):
          xtick_labels_with_blanks[int(show_xtick_every)*i] = item
@@ -765,7 +769,24 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         ylim_min = float(
             np.format_float_scientific(ylim_min, unique=False, precision=3)
         )
-    yticks = np.arange(ylim_min, ylim_max+round_to_nearest, round_to_nearest)
+    if round_to_nearest < 1.:
+        y_precision_scale = 100/round_to_nearest
+    else:
+        y_precision_scale = 1.
+    yticks = [
+        y_val for y_val
+        in np.arange(
+            ylim_min*y_precision_scale,
+            ylim_max*y_precision_scale+round_to_nearest*y_precision_scale,
+            round_to_nearest*y_precision_scale
+        )
+    ]
+    yticks=np.divide(yticks,y_precision_scale)
+    ytick_labels = [f'{ytick}' for ytick in yticks]
+    show_ytick_every = len(yticks)//10+1
+    ytick_labels_with_blanks = ['' for item in ytick_labels]
+    for i, item in enumerate(ytick_labels[::int(show_ytick_every)]):
+        ytick_labels_with_blanks[int(show_ytick_every)*i] = item
     var_long_name_key = df['FCST_VAR'].tolist()[0]
     if str(var_long_name_key).upper() == 'HGT':
         if str(df['OBS_VAR'].tolist()[0]).upper() == 'CEILING':
@@ -808,6 +829,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     ax.set_ylabel(ylabel)
     ax.set_xlabel(xlabel) 
     ax.set_xticklabels(xtick_labels_with_blanks)
+    ax.set_yticklabels(ytick_labels_with_blanks)
     ax.set_yticks(yticks)
     ax.set_xticks(xticks)
     ax.tick_params(
@@ -817,16 +839,18 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         left=False, labelleft=False, labelright=False, labelbottom=False, 
         labeltop=False, which='minor', axis='y', pad=15
     )
-    majticks = [i for i, item in enumerate(xtick_labels_with_blanks) if item]
-    for mt in majticks:
+    majxticks = [i for i, item in enumerate(xtick_labels_with_blanks) if item]
+    for mt in majxticks:
         ax.xaxis.get_major_ticks()[mt].tick1line.set_markersize(8)
+    majyticks = [i for i, item in enumerate(ytick_labels_with_blanks) if item]
+    for mt in majyticks:
+        ax.yaxis.get_major_ticks()[mt].tick1line.set_markersize(8)
 
     ax.legend(
-        handles, labels, loc='upper center', fontsize=15, framealpha=1, 
-        bbox_to_anchor=(0.5, -0.08), ncol=4, frameon=True, numpoints=2, 
-        borderpad=.8, labelspacing=2., columnspacing=3., handlelength=3., 
-        handletextpad=.4, borderaxespad=.5) 
-    fig.subplots_adjust(bottom=.15, wspace=0, hspace=0)
+         handles, labels, framealpha=1,
+         bbox_to_anchor=(0.5, -0.15), ncol=4, frameon=True, numpoints=2,
+         borderpad=.8, labelspacing=1.)
+    fig.subplots_adjust(wspace=0, hspace=0)
     ax.grid(
         visible=True, which='major', axis='both', alpha=.5, linestyle='--', 
         linewidth=.5, zorder=0
@@ -839,8 +863,8 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                 count = str(int(count))
         #    ax.annotate(
         #        f'{count}', xy=(xval,1.), 
-        #        xycoords=('data', 'axes fraction'), xytext=(0,18),
-        #        textcoords='offset points', va='top', fontsize=14,
+        #        xycoords=('data', 'axes fraction'), xytext=(0,12),
+        #        textcoords='offset points', va='top', fontsize=11,
         #        color='dimgrey', ha='center'
         #    )
         #ax.annotate(
@@ -848,7 +872,6 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         #    xytext=(-50, 21), textcoords='offset points', va='top', 
         #    fontsize=11, color='dimgrey', ha='center'
         #)
-        fig.subplots_adjust(top=.9)
 
     # Title
     domain = df['VX_MASK'].tolist()[0]
@@ -950,17 +973,18 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         else:
             title2 = f'{level_string}{var_long_name} (unitless)'
     if obtype == 'SFCSHP':
-        title2 = title2+f', Observations: Surface Marine (Ship, Buoy, C-MAN Platform)'
+        title2 = title2+f'\nObservations: Surface Marine (Ship, Buoy, C-MAN Platform)'
     elif obtype == 'NDBC_STANDARD':
-        title2 = title2+f', Observations: NDBC Buoys'
+        title2 = title2+f'\nObservations: NDBC Buoys'
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
               + f'{date_start_string} to {date_end_string}')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
-        title_pad=20
+        #title_pad=23
+        title_pad=None
     else:
         title_pad=None
-    ax.set_title(title_center, loc=plotter.title_loc, pad=title_pad) 
+    ax.set_title(title_center, pad=title_pad)
     logger.info("... Plotting complete.")
 
     # Logos
@@ -1057,6 +1081,8 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         save_dir, 'images' 
     )
     if not os.path.isdir(save_subdir):
+        print(f"Making directory {save_subdir}")
+        logger.info("Making directory "+save_subdir)
         os.makedirs(save_subdir)
     save_path = os.path.join(save_subdir, save_name+'.png')
     fig.savefig(save_path, dpi=dpi)
@@ -1072,6 +1098,7 @@ def main():
     for subdir in LOG_METPLUS.split('/')[:-1]:
         log_metplus_dir = os.path.join(log_metplus_dir, subdir)
     if not os.path.isdir(log_metplus_dir):
+        print(f"Making directory {log_metplus_dir}")
         os.makedirs(log_metplus_dir)
     logger = logging.getLogger(LOG_METPLUS)
     logger.setLevel(LOG_LEVEL)

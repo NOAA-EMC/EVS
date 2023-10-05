@@ -35,7 +35,7 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 
 
-export KEEPDATA=NO
+export KEEPDATA=YES
 
 export cyc=00
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
@@ -47,7 +47,7 @@ export jobid=$job.${PBS_JOBID:-$$}
 
 export gefs_number=30
 export run_mpi=no
-
+export SENDMAIL=YES
 export maillist='alicia.bentley@noaa.gov,steven.simon@noaa.gov'
 
-${HOMEevs}/jobs/global_ens/stats/JEVS_GLOBAL_ENS_STATS
+${HOMEevs}/jobs/JEVS_GLOBAL_ENS_STATS
