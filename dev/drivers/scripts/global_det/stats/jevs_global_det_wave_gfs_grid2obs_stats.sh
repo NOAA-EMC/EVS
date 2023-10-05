@@ -44,9 +44,8 @@ export MODELNAME=gfs
 
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
-export COMIN=$COMROOT/$NET/$evs_ver
-export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_GLOBAL_DET_STATS
