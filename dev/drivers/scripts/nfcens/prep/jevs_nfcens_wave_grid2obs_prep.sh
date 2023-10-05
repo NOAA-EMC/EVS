@@ -39,7 +39,7 @@ source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 export envir=prod
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
-export SENDDBN=${SENDDBN:-YES}
+export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-YES}
 
 export maillist='alicia.bentley@noaa.gov,samira.ardani@noaa.gov'
