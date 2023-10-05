@@ -43,5 +43,10 @@ if [ $SENDCOM = YES ]; then
     cp evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.v${VDATE}.tar $COMOUT/.
 fi
 
+if [ $SENDDBN = YES ]; then 
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.v${VDATE}.tar
+fi
+
+
 msg="JOB $job HAS COMPLETED NORMALLY"
 postmsg "$jlogfile" "$msg"

@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=01:30:00
+#PBS -l walltime=03:00:00
 #PBS -l place=vscatter,select=1:ncpus=8:mem=100GB
 #PBS -l debug=true
 
@@ -35,7 +35,7 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 
 
-export KEEPDATA=NO
+export KEEPDATA=YES
 
 
 export cyc=00
@@ -44,7 +44,7 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
-
+export SENDMAIL=YES
 export maillist='alicia.bentley@noaa.gov,steven.simon@noaa.gov'
 
-${HOMEevs}/jobs/global_ens/stats/JEVS_GLOBAL_ENS_STATS
+${HOMEevs}/jobs/JEVS_GLOBAL_ENS_STATS
