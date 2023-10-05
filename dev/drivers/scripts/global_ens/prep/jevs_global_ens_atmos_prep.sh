@@ -47,12 +47,13 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
+export SENDMAIL=YES
 export maillist='alicia.bentley@noaa.gov,steven.simon@noaa.gov' 
 
 
 if [ -z "$maillist" ]; then
    echo "maillist variable is not defined. Exiting without continuing."
 else
-   ${HOMEevs}/jobs/global_ens/prep/JEVS_GLOBAL_ENS_PREP
+   ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PREP
 fi
 

@@ -94,11 +94,13 @@ for vhr in ${valid_hours} ; do
         cp -v $COMOUTpb2ncGDAS $DATApb2ncGDAS
     else
         if [ ! -s $COMINprepbufrGDAS ] ; then
-            export subject="GDAS Prepbufr Data Missing for EVS ${COMPONENT}"
-            echo "Warning: No GDAS Prepbufr was available for valid date ${VDATE}${vhr}" > mailmsg
-            echo “Missing file is $COMINprepbufrGDAS” >> mailmsg
-            echo "Job ID: $jobid" >> mailmsg
-            cat mailmsg | mail -s "$subject" $maillist
+            if [ $SENDMAIL = YES ] ; then
+                export subject="GDAS Prepbufr Data Missing for EVS ${COMPONENT}"
+                echo "Warning: No GDAS Prepbufr was available for valid date ${VDATE}${vhr}" > mailmsg
+                echo "Missing file is $COMINprepbufrGDAS" >> mailmsg
+                echo "Job ID: $jobid" >> mailmsg
+                cat mailmsg | mail -s "$subject" $maillist
+            fi
         else
             echo "#!/bin/bash" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
             echo "" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
@@ -123,7 +125,6 @@ if [[ $ncount_job -gt 0 ]]; then
         chmod 775 $poe_script
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
-        export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
         nselect=$(cat $PBS_NODEFILE | wc -l)
         nnp=$(($nselect * $nproc))
         launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
@@ -251,7 +252,6 @@ if [[ $ncount_job -gt 0 ]]; then
         chmod 775 $poe_script
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
-        export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
         nselect=$(cat $PBS_NODEFILE | wc -l)
         nnp=$(($nselect * $nproc))
         launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"

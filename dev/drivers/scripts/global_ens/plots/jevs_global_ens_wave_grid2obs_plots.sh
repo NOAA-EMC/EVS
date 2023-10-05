@@ -42,7 +42,7 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export KEEPDATA=${KEEPDATA:-YES}
-
+export SENDMAIL=YES
 
 ## developers directories
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
@@ -62,7 +62,7 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 ############################################################
-${HOMEevs}/jobs/global_ens/plots/JEVS_GLOBAL_ENS_WAVE_GRID2OBS_PLOTS
+${HOMEevs}/jobs/JEVS_GLOBAL_ENS_WAVE_GRID2OBS_PLOTS
 
 #########################################################################
 # Purpose: This job creates the plots for the global_ens GEFS-Wave model

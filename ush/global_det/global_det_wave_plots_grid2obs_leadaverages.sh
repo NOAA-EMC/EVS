@@ -5,12 +5,14 @@
 #             Mallory Row / Mallory.Row@noaa.gov
 # Purpose of Script: This script generates the job scripts to create
 #                    lead average plots.
-# Run By: cripts/global_det/plots/exevs_global_det_wave_grid2obs_plots.sh
+# Run By: scripts/global_det/plots/exevs_global_det_wave_grid2obs_plots.sh
 ###############################################################################
 
 #################################
 # Make the command files for cfp
 #################################
+
+set -x
 
 # set up plot variables
 
@@ -27,6 +29,7 @@ cd ${DATA}
 touch ${DATA}/jobs/run_all_${RUN}_g2o_plots_poe.sh
 
 export GRID2OBS_CONF="${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}"
+MET_VERSION_major_minor=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
 
 # write the commands
 for period in ${periods} ; do
@@ -63,6 +66,7 @@ for period in ${periods} ; do
                 echo "export plot_end_date=${VDATE_END} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_${stats}_${ptype}_${period}_${region}.sh
                 echo "export VHR=${vhr} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_${stats}_${ptype}_${period}_${region}.sh
                 echo "export REGION=${region}" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_${stats}_${ptype}_${period}_${region}.sh
+                echo "export MET_VERSION_major_minor=${MET_VERSION_major_minor} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_${stats}_${ptype}_${period}_${region}.sh
                 case ${stats} in
                   'stats1')
                     image_stat="me_rmse"

@@ -15,7 +15,11 @@
 #  User controllable options: None                                              
 ################################################################################
 
-set -x 
+set -x
+
+# set major & minor MET version
+export MET_VERSION_major_minor=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
+
 # Use LOUD variable to turn on/off trace.  Defaults to YES (on).
 export LOUD=${LOUD:-YES}; [[ $LOUD = yes ]] && export LOUD=YES
 [[ "$LOUD" != YES ]] && set -x
@@ -100,7 +104,6 @@ chmod 775 plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 # Run the command files for the PAST31DAYS 
 ###########################################
 if [ ${run_mpi} = 'yes' ] ; then
-  export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
   mpiexec -np 36 --cpu-bind verbose,core --depth=3 cfp plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 else
   echo "not running mpiexec"
@@ -159,6 +162,9 @@ fi
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
 
+if [ $SENDDBN = YES ]; then
+	$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.*.tar
+fi
 # --------------------------------------------------------------------------- #
 # Ending output                                                                
 

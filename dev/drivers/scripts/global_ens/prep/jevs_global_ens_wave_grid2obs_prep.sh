@@ -40,7 +40,7 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export KEEPDATA=${KEEPDATA:-YES}
-
+export SENDMAIL=YES
 export maillist='alicia.bentley@noaa.gov,steven.simon@noaa.gov'
 
 ## developers directories
@@ -57,7 +57,7 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 ############################################################
-$HOMEevs/jobs/global_ens/prep/JEVS_GLOBAL_ENS_WAVE_GRID2OBS_PREP
+$HOMEevs/jobs/JEVS_GLOBAL_ENS_WAVE_GRID2OBS_PREP
 
 ######################################################################
 # Purpose: This does the prep work for the global_ens GEFS-Wave model

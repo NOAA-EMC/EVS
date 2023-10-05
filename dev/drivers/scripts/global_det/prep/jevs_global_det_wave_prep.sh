@@ -16,8 +16,8 @@ export model=evs
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 export SENDCOM=YES
+export SENDMAIL=YES
 export KEEPDATA=YES
-export RUN_ENVIR=nco
 export job=${PBS_JOBNAME:-jevs_global_det_wave_prep}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
@@ -38,14 +38,14 @@ export RUN=wave
 
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
-export COMINndbc=/lfs/h1/ops/dev/dcom
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
+export COMIN= /lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver
+export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 
 export MODELNAME="gfs"
 export OBSNAME="ndbc"
 
 # CALL executable job script here
-$HOMEevs/jobs/global_det/prep/JEVS_GLOBAL_DET_PREP
+$HOMEevs/jobs/JEVS_GLOBAL_DET_PREP
 
 #####################################################################
 # Purpose: This does the prep work for the global deterministic wave

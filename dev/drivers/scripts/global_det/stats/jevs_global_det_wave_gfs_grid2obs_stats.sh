@@ -16,8 +16,8 @@ export model=evs
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 export SENDCOM=YES
+export SENDMAIL=YES
 export KEEPDATA=YES
-export RUN_ENVIR=nco
 export job=${PBS_JOBNAME:-jevs_global_det_wave_gfs_grid2obs_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
@@ -44,12 +44,11 @@ export MODELNAME=gfs
 
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
-export COMIN=$COMROOT/$NET/$evs_ver
-export COMOUT=$COMROOT/$NET/$evs_ver/$STEP/$COMPONENT
 
 # CALL executable job script here
-$HOMEevs/jobs/global_det/stats/JEVS_GLOBAL_DET_STATS
+$HOMEevs/jobs/JEVS_GLOBAL_DET_STATS
 
 #######################################################################
 # Purpose: This does the statistics work for the global deterministic

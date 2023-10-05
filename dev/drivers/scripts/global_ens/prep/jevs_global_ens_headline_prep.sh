@@ -39,10 +39,11 @@ export jobid=$job.${PBS_JOBID:-$$}
 export run_mpi=no
 export gefs_number=30
 
+export SENDMAIL=YES
 export maillist='alicia.bentley@noaa.gov,steven.simon@noaa.gov'
 
 if [ -z "$maillist" ]; then
    echo "maillist variable is not defined. Exiting without continuing."
 else
-  ${HOMEevs}/jobs/global_ens/prep/JEVS_GLOBAL_ENS_PREP
+  ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PREP
 fi

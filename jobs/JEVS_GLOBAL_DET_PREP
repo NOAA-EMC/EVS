@@ -3,7 +3,7 @@
 ########################################
 # Preliminary data setup step
 ########################################
-set -xa
+set -x
 
 ####################################
 # SET SHELL PROCESSING VARIABLES
@@ -43,6 +43,7 @@ export INITDATE=${INITDATE:-$PDYm1}
 export SENDECF=${SENDECF:-YES}
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-NO}
+export SENDMAIL=${SENDMAIL:-NO}
 
 ####################################
 # Define NET/RUN variables
@@ -55,6 +56,7 @@ export RUN=${RUN:-atmos}
 ####################################
 # Define COMIN/COMOUT variables
 ####################################
+export COMIN=${COMIN:-$(compath.py $NET/$evs_ver)}
 export COMINcfs=${COMINcfs:-$(compath.py $envir/cfs/$cfs_ver/cfs.$INITDATE)}
 export COMINcmc=${COMINcmc:-$(compath.py $envir/cmc/$cmc_ver/cmc.$INITDATE)}
 export COMINcmc_precip=${COMINcmc_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
@@ -74,7 +76,6 @@ export COMINosi_saf=${COMINosi_saf:-$DCOMROOT}
 export COMINghrsst_ospo=${COMINghrsst_ospo:-$DCOMROOT}
 export COMINget_d=${COMINget_d:-$DCOMROOT}
 export COMINndbc=${COMINndbc:-$DCOMROOT}
-export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 mkdir -p $COMOUT.${INITDATE}
 for mname in $MODELNAME; do

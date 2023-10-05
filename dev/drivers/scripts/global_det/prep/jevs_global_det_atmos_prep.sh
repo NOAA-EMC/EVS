@@ -16,8 +16,8 @@ export model=evs
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 export SENDCOM=YES
+export SENDMAIL=YES
 export KEEPDATA=YES
-export RUN_ENVIR=nco
 export job=${PBS_JOBNAME:-jevs_global_det_atmos_prep}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
@@ -38,13 +38,14 @@ export RUN=atmos
 
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
+export COMIN= /lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver
+export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 
 export MODELNAME="cfs cmc cmc_regional dwd ecmwf fnmoc imd jma metfra ukmet"
 export OBSNAME="osi_saf ghrsst_ospo"
 
 # CALL executable job script here
-$HOMEevs/jobs/global_det/prep/JEVS_GLOBAL_DET_PREP
+$HOMEevs/jobs/JEVS_GLOBAL_DET_PREP
 
 ######################################################################
 # Purpose: This does the prep work for the global deterministic atmospheric
