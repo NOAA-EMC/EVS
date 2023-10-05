@@ -50,7 +50,7 @@ elif STEP == 'prep':
 if proceed:
     # Load environment variables
     send_mail = 0
-    err=0
+    missing_data_flag=0
     max_num_files = 10
     COMPONENT = os.environ['COMPONENT']
     SENDMAIL = os.environ['SENDMAIL']
@@ -451,7 +451,7 @@ if proceed:
         for missing_fcst_path in missing_fcst_paths:
             print(missing_fcst_path)
         if send_mail and str(SENDMAIL) == "YES":
-            err+=1
+            missing_data_flag+=1
             data_info = [
                 cutil.get_data_type(fname) 
                 for fname in missing_fcst_files
@@ -601,7 +601,7 @@ if proceed:
         for missing_anl_path in missing_anl_paths:
             print(missing_anl_path)
         if send_mail and str(SENDMAIL) == "YES":
-            err+=1
+            missing_data_flag+=1
             data_info = [
                 cutil.get_data_type(fname) 
                 for fname in missing_anl_files
@@ -790,7 +790,7 @@ if proceed:
         for missing_gen_path in missing_gen_paths:
             print(missing_gen_path)
         if send_mail and str(SENDMAIL) == "YES":
-            err+=1
+            missing_data_flag+=1
             data_info = [
                 cutil.get_data_type(fname) 
                 for fname in missing_gen_files
@@ -879,8 +879,8 @@ if proceed:
                 ])
 
 
-    # If error, exit with 0 code 
-    if err:
+    # If missing data, exit with 0 code 
+    if missing_data_flag:
         sys.exit(0)
 
 print(f"END: {os.path.basename(__file__)}")
