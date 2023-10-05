@@ -87,7 +87,6 @@ if [[ $plot_ncount_job -gt 0 ]]; then
         chmod 775 $poe_script
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
-        export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
         nselect=$(cat $PBS_NODEFILE | wc -l)
         nnp=$(($nselect * $nproc))
         launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
@@ -109,6 +108,9 @@ if [ "${nc}" != '0' ]; then
     tar -cvf evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.last${NDAYS}days.v${VDATE_END}.tar *.png
     if [ $SENDCOM = YES ]; then
         cp -v evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.last${NDAYS}days.v${VDATE_END}.tar ${COMOUT}/.
+    fi
+    if [ $SENDDBN = YES ]; then
+        $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.last${NDAYS}days.v${VDATE_END}.tar
     fi
     cd $DATA
 else
