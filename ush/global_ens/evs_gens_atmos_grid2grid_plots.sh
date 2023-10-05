@@ -187,4 +187,3 @@ export CONFIDENCE_INTERVALS="False"
 # Executes the desired python script.  No need to edit this. 
 python $USH_DIR/${PLOT_TYPE}.py
 
-exit 0
