@@ -30,7 +30,7 @@ export COMPONENT=rtofs
 source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
 # set up VDATE and COMIN and COMOUT
-export VDATE=$(date --date="8 days ago" +%Y%m%d)
+export VDATE=$(date --date="2 days ago" +%Y%m%d)
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
 export COMINrtofs=/lfs/h1/ops/$envir/com/$COMPONENT/${rtofs_ver}

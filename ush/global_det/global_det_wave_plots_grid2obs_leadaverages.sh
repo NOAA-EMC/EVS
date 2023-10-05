@@ -114,10 +114,10 @@ for period in ${periods} ; do
                     echo "cp -v $COMOUTimage $DATAimage" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_${stats}_${ptype}_${period}_${region}.sh
                 else
                     echo "${GRID2OBS_CONF}/py_plotting_wave.config"  >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_${stats}_${ptype}_${period}_${region}.sh
-                    echo "export err=$?; err_chk" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_${stats}_${ptype}_${period}_${region}.sh
+                    echo "export err=\$?; err_chk" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_${stats}_${ptype}_${period}_${region}.sh
                     if [ $SENDCOM = YES ]; then
                         echo "cp -v $DATAimage $COMOUTimage" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_${stats}_${ptype}_${period}_${region}.sh
-                        echo "export err=$?; err_chk" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_${stats}_${ptype}_${period}_${region}.sh
+                        echo "export err=\$?; err_chk" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_${stats}_${ptype}_${period}_${region}.sh
                     fi
                 fi
 
