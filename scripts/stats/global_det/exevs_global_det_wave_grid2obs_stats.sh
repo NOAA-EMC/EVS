@@ -73,7 +73,7 @@ else
         echo "export DATA=$DATA" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         echo "export VDATE=$VDATE" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         echo "export MET_NDBC_STATIONS=${FIXevs}/ndbc_stations/ndbc_stations.xml" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
-        echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}/ASCII2NC_obsNDBC.conf" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
+        echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/ASCII2NC_obsNDBC.conf" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         if [ $SENDCOM = YES ]; then
             echo "cp -v $DATAascii2ncNDBC $COMOUTascii2ncNDBC" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
@@ -108,7 +108,7 @@ for vhr in ${valid_hours} ; do
             echo "export DATA=$DATA" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
             echo "export VDATE=$VDATE" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
             echo "export vhr2=$vhr2" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
-            echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}/PB2NC_obsPrepbufrGDAS.conf" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
+            echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/PB2NC_obsPrepbufrGDAS.conf" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
             echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
             if [ $SENDCOM = YES ]; then
                 echo "cp -v $DATApb2ncGDAS $COMOUTpb2ncGDAS" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
@@ -232,7 +232,7 @@ for vhr in ${valid_hours} ; do
                         echo "export perpw_level_str=${perpw_level_str}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
                         echo "export flead=${flead}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
                         echo "export MODNAM=${MODNAM}" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
-                        echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}/PointStat_fcstGLOBAL_DET_obs${OBSNAME}_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
+                        echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/PointStat_fcstGLOBAL_DET_obs${OBSNAME}_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
                         echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
                         if [ $SENDCOM = YES ]; then
                             echo "cp -v $DATAstatfilename $COMOUTstatfilename" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
@@ -269,7 +269,7 @@ echo " Found ${nc} ${DATA}/all_stats/*stat files for valid date ${VDATE} "
 if [ "${nc}" != '0' ]; then
     echo "Small stat files found for valid date ${VDATE}"
     # Use StatAnalysis to gather the small stat files into one file
-    run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}/StatAnalysis_fcstGLOBAL_DET.conf
+    run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/StatAnalysis_fcstGLOBAL_DET.conf
 else
     echo ' '
     echo '**************************************** '
