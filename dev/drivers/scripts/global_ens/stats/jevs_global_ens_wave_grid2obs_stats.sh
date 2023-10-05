@@ -40,8 +40,8 @@ export envir=prod
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
-export KEEPDATA=${KEEPDATA:-NO}
-
+export KEEPDATA=${KEEPDATA:-YES}
+export SENDMAIL=YES
 ## developers directories
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export OUTPUTROOT=/lfs/h2/emc/vpppg/noscrub/$USER
@@ -59,7 +59,7 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 ############################################################
-${HOMEevs}/jobs/global_ens/stats/JEVS_GLOBAL_ENS_WAVE_GRID2OBS_STATS
+${HOMEevs}/jobs/JEVS_GLOBAL_ENS_WAVE_GRID2OBS_STATS
 
 #######################################################################
 # Purpose: This calculates the stats for the global_ens GEFS-Wave model

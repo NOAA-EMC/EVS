@@ -29,7 +29,7 @@ export NEXTDATE=${NEXTDATE:-${PDY}}
 export SENDECF=${SENDECF:-YES}
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-NO}
-
+export SENDMAIL=${SENDMAIL:-NO}
 ####################################
 # Set EVS directories               
 ####################################
@@ -60,7 +60,7 @@ export COMINmodel=${COMINmodel:-$(compath.py ${envir}/com/${MODELNAME}/${gefs_ve
 export ARCgefs=${COMIN}/prep/${COMPONENT}
 export COMINgdasnc=${COMIN}/prep/${COMPONENT}
 
-export COMOUT=${COMOUT:-${COMIN}/${STEP}/${COMPONENT}}
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})/${STEP}/${COMPONENT}}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
 

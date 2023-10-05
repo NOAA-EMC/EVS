@@ -37,8 +37,10 @@ for MODEL in $MODEL_LIST ; do
   fi
 
   if [ $MODEL = ECME ] ; then
-    sed -e 's!-1   L0!-1   Z10!g'  ${MODEL}_${day}.stat > a
-    mv a ${MODEL}_${day}.stat 
+    if [ -s ${MODEL}_${day}.stat ]; then
+      sed -e 's!-1   L0!-1   Z10!g'  ${MODEL}_${day}.stat > a
+      mv a ${MODEL}_${day}.stat
+    fi
   fi 
 
 done
