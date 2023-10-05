@@ -367,7 +367,6 @@ done # end of verify
 if [ -s run_all_gens_g2g_poe.sh ] ; then
  if [ $run_mpi = yes ] ; then
 
-    export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
 
     if [ ${models} = gefs ] ; then
       if [ $verify_list = all ] ; then

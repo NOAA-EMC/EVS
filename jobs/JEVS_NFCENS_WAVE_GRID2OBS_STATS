@@ -18,9 +18,9 @@ cd $DATA
 # Run setpdy and initialize PDY variables 
 ##########################################
 export cycle=${cycle:-t00z}
-setpdy.sh 20
+setpdy.sh 17
 . ./PDY
-export INITDATE=${INITDATE:-${PDYm1}}
+export VDATE=${VDATE:-${PDYm1}}
 export NEXTDATE=${NEXTDATE:-${PDY}}
 
 ####################################
@@ -39,15 +39,16 @@ export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
 
+
 ####################################
 # Define NET/RUN variables          
 ####################################
 export NET=${NET:-evs}
 export MODEL=${MODEL:-evs}
-export STEP=${STEP:-prep}
-export COMPONENT=${COMPONENT:-global_ens}
-export MODELNAME=${MODELNAME:-gefs}
-export MODNAM=echo $MODELNAME | tr '[a-z]' '[A-Z]'
+export STEP=${STEP:-stats}
+export COMPONENT=${COMPONENT:-nfcens}
+export MODELNAME=${MODELNAME:-nfcens}
+export MODNAM=`echo $MODELNAME | tr '[a-z]' '[A-Z]'`
 export OBTYPE=${OBTYPE:-GDAS}
 export RUN=${RUN:-wave}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
@@ -56,25 +57,23 @@ export VERIF_CASE=${VERIF_CASE:-grid2obs}
 # Define COMIN/COMOUT variables     
 ####################################
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export COMINmodel=${COMINmodel:-$(compath.py ${envir}/com/${MODELNAME}/${gefs_ver})} 
-export COMINgdas=${COMINgdas:-$(compath.py ${envir}/com/obsproc/${obsproc_ver}/gdas)}
+export COMINmodel=${COMINmodel:-$(compath.py ${envir}/com/${RUN}_${MODELNAME}/${nfcens_ver})}
+export COMINgdasnc=${COMIN}/prep/${COMPONENT}
+export ARCmodel=${COMIN}/prep/${COMPONENT}
 
-export COMOUT=${COMOUT:-${COMIN}/${STEP}/${COMPONENT}/${RUN}}
-export ARCgefs=${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})/${STEP}/${COMPONENT}}
 
-# make the directory where the ARCgefs and gdasnc will be kept
-mkdir -p ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
+export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
+export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
 
-export jlogfile=${DATA}/${MODELNAME}_${RUN}_PB2NC.log
+mkdir -p ${COMOUT} ${COMOUTsmall} ${COMOUTfinal} 
 
-export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-YES}
-export SENDECF=${SENDECF:-YES}
+export jlogfile=${DATA}/${MODELNAME}_${RUN}_PointStat.log
 
 ####################################
 # Execute the script                
 ####################################
-$HOMEevs/scripts/global_ens/prep/exevs_global_ens_wave_grid2obs_prep.sh
+$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
 
 msg="JOB $job HAS COMPLETED NORMALLY."

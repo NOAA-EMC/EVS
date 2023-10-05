@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 ###########################################
 #
 # Used for global_det wave plots
@@ -79,6 +80,7 @@ def prune_data(data_dir, prune_dir, tmp_dir, output_base_template, valid_range,
          prune_dir, line_type+'_'+var_name+'_'+vx_mask+'_'+eval_period, tmp_dir
       )
       if not os.path.exists(pruned_data_dir):
+         print(f"Making directory {pruned_data_dir}")
          os.makedirs(pruned_data_dir)
       if len(met_stat_files) == 0:
          continue

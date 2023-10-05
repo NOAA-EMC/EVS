@@ -28,7 +28,7 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-export KEEPDATA=NO
+export KEEPDATA=YES
 
 export cyc=00
 export run_mpi=no
@@ -37,10 +37,10 @@ export run_entire_year=no
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
- 
+export SENDMAIL=YES 
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-${HOMEevs}/jobs/global_ens/plots/JEVS_GLOBAL_ENS_PLOTS
+${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PLOTS
 
 

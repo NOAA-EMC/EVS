@@ -9,15 +9,7 @@
 
 set -x
 
-# Set run mode
-if [ $RUN_ENVIR = nco ]; then
-    export evs_run_mode="production"
-else
-    export evs_run_mode=$evs_run_mode
-fi
 echo "RUN MODE:$evs_run_mode"
-
-pwd
 
 # Create headline plots
 python $USHevs/global_det/global_det_atmos_plots_headline.py
@@ -31,4 +23,8 @@ if [ $SENDCOM = YES ]; then
     cd $DATA/images
     tar -cvf $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar *.png
     cp -v $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar $COMOUT/.
+fi
+
+if [ $SENDDBN = YES ]; then
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar
 fi
