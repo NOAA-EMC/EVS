@@ -3,7 +3,7 @@
 ########################################
 # Preliminary data setup step
 ########################################
-set -xa
+set -x
 
 ####################################
 # SET SHELL PROCESSING VARIABLES
@@ -35,7 +35,8 @@ export cyc=${cyc:-"00"}
 export cycle=${cycle:-t${cyc}z}
 setpdy.sh
 . ./PDY
-export INITDATE=${INITDATE:-$PDYm1}
+export VDATEYYYY=${VDATEYYYY:-$(date -d "1 month ago" '+%Y')}
+export VDATEmm=${VDATEmm:-$(date -d "1 month ago" '+%m')}
 
 ####################################
 # Set data directives
@@ -48,47 +49,28 @@ export SENDDBN=${SENDDBN:-NO}
 # Define NET/RUN variables
 ####################################
 export NET=${NET:-evs}
-export STEP=${STEP:-prep}
+export STEP=${STEP:-stats}
 export COMPONENT=${COMPONENT:-global_det}
-export RUN=${RUN:-atmos}
+export RUN=${RUN:-long_term}
+export evs_run_mode=${evs_run_mode:-production}
 
 ####################################
 # Define COMIN/COMOUT variables
 ####################################
-export COMINcfs=${COMINcfs:-$(compath.py $envir/cfs/$cfs_ver/cfs.$INITDATE)}
-export COMINcmc=${COMINcmc:-$(compath.py $envir/cmc/$cmc_ver/cmc.$INITDATE)}
-export COMINcmc_precip=${COMINcmc_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
-export COMINcmc_regional_precip=${COMINcmc_regional_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
-export COMINdwd_precip=${COMINdwd_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
-export COMINecmwf=${COMINecmwf:-$DCOMROOT/${INITDATE}/wgrbbul/ecmwf}
-export COMINecmwf_precip=${COMINecmwf_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
-export COMINfnmoc=${COMINfnmoc:-$DCOMROOT/navgem}
-export COMINgfs=${COMINgfs:-$(compath.py $envir/gfs/$gfs_ver/gfs.$INITDATE)}
-export COMINimd=${COMINimd:-$DCOMROOT/${INITDATE}/wgrbbul/ncmrwf_gdas}
-export COMINjma=${COMINjma:-$DCOMROOT/${INITDATE}/wgrbbul}
-export COMINjma_precip=${COMINjma_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
-export COMINmetfra_precip=${COMINmetfra_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
-export COMINukmet=${COMINukmet:-$DCOMROOT/${INITDATE}/wgrbbul/ukmet_hires}
-export COMINukmet_precip=${COMINukmet_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
-export COMINosi_saf=${COMINosi_saf:-$DCOMROOT}
-export COMINghrsst_ospo=${COMINghrsst_ospo:-$DCOMROOT}
-export COMINget_d=${COMINget_d:-$DCOMROOT}
-export COMINndbc=${COMINndbc:-$DCOMROOT}
-export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
-export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
-mkdir -p $COMOUT.${INITDATE}
-for mname in $MODELNAME; do
-    mkdir -p $COMOUT.$INITDATE/$mname
-done
-for oname in $OBSNAME; do
-    mkdir -p $COMOUT.$INITDATE/$oname
-done
+export COMIN=${COMIN:-$(compath.py $NET/$evs_ver)}
+export COMINdailystats=${COMINdailystats:-$COMIN/stats/$COMPONENT}
+export COMINmonthlystats=${COMINmonthlystats:-$COMIN/$STEP/$COMPONENT/$RUN/monthly_means}
+export COMINyearlystats=${COMINyearlystats:-$COMIN/$STEP/$COMPONENT/$RUN/yearly_means}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
+export COMOUTmonthlystats=${COMOUTmonthlystats:-$COMOUT/$RUN/monthly_means}
+export COMOUTyearlystats=${COMOUTyearlystats:-$COMOUT/$RUN/yearly_means}
+mkdir -p $COMOUT $COMOUTmonthlystats $COMOUTyearlystats
 
 #######################################################################
 # Execute the script
 #######################################################################
 env
-$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${STEP}.sh
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_atmos_${RUN}_${STEP}.sh
 export err=$?; err_chk
 
 msg="JOB $job HAS COMPLETED NORMALLY."

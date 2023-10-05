@@ -50,8 +50,7 @@ OBSNAME = os.environ['OBSNAME'].split(' ')
 
 # Make COMOUT directory for dates
 COMOUT_INITDATE = COMOUT+'.'+INITDATE
-if not os.path.exists(COMOUT_INITDATE):
-    os.makedirs(COMOUT_INITDATE)
+gda_util.make_dir(COMOUT_INITDATE)
 
 ###### MODELS
 # Get operational global deterministic model data
@@ -217,13 +216,12 @@ for MODEL in MODELNAME:
                         +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
                     )
                     DATA_fcst_file_dir = DATA_fcst_file.rpartition('/')[0]
-                    if not os.path.exists(DATA_fcst_file_dir):
-                        os.makedirs(DATA_fcst_file_dir)
-                        if MODEL in ['ecmwf']:
-                             gda_util.run_shell_command(['chmod', '750',
-                                                         DATA_fcst_file_dir])
-                             gda_util.run_shell_command(['chgrp', 'rstprod',
-                                                         DATA_fcst_file_dir])
+                    gda_util.make_dir(DATA_fcst_file_dir)
+                    if MODEL in ['ecmwf']:
+                         gda_util.run_shell_command(['chmod', '750',
+                                                     DATA_fcst_file_dir])
+                         gda_util.run_shell_command(['chgrp', 'rstprod',
+                                                     DATA_fcst_file_dir])
                     if MODEL == 'jma':
                         gda_util.prep_prod_jma_file(COMIN_fcst_file,
                                                     DATA_fcst_file,
@@ -263,6 +261,13 @@ for MODEL in MODELNAME:
                             )
                     if SENDCOM == 'YES':
                         gda_util.copy_file(DATA_fcst_file, COMOUT_fcst_file)
+                        if MODEL == 'ecmwf':
+                            gda_util.run_shell_command(
+                                ['chmod', '640', COMOUT_fcst_file]
+                            )
+                            gda_util.run_shell_command(
+                                ['chgrp', 'rstprod', COMOUT_fcst_file]
+                            )
                 else:
                     print(f"{COMOUT_fcst_file} exists")
             if 'COMIN_precip_file_format' in list(model_dict.keys()):
@@ -290,16 +295,15 @@ for MODEL in MODELNAME:
                         DATA_precip_file_dir = (
                             DATA_precip_file.rpartition('/')[0]
                         )
-                        if not os.path.exists(DATA_precip_file_dir):
-                            os.makedirs(DATA_precip_file_dir)
-                            if MODEL in ['ecmwf']:
-                                 gda_util.run_shell_command(
-                                     ['chmod', '750', DATA_precip_file_dir]
-                                 )
-                                 gda_util.run_shell_command(
-                                     ['chgrp', 'rstprod',
-                                       DATA_precip_file_dir]
-                                 )
+                        gda_util.make_dir(DATA_precip_file_dir)
+                        if MODEL in ['ecmwf']:
+                             gda_util.run_shell_command(
+                                 ['chmod', '750', DATA_precip_file_dir]
+                             )
+                             gda_util.run_shell_command(
+                                 ['chgrp', 'rstprod',
+                                   DATA_precip_file_dir]
+                             )
                         if MODEL == 'jma':
                             gda_util.prep_prod_jma_file(COMIN_precip_file,
                                                         DATA_precip_file,
@@ -353,6 +357,13 @@ for MODEL in MODELNAME:
                         if SENDCOM == 'YES':
                             gda_util.copy_file(DATA_precip_file,
                                                COMOUT_precip_file)
+                            if MODEL == 'ecmwf':
+                                gda_util.run_shell_command(
+                                    ['chmod', '640', COMOUT_precip_file]
+                                )
+                                gda_util.run_shell_command(
+                                    ['chgrp', 'rstprod', COMOUT_precip_file]
+                                )
                 else:
                     print(f"{COMOUT_precip_file} exists")
         # Analysis file
@@ -375,13 +386,12 @@ for MODEL in MODELNAME:
                         +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
                     )
                 DATA_anl_file_dir = DATA_anl_file.rpartition('/')[0]
-                if not os.path.exists(DATA_anl_file_dir):
-                    os.makedirs(DATA_anl_file_dir)
-                    if MODEL in ['ecmwf']:
-                         gda_util.run_shell_command(['chmod', '750',
-                                                     DATA_anl_file_dir])
-                         gda_util.run_shell_command(['chgrp', 'rstprod',
-                                                     DATA_anl_file_dir])
+                gda_util.make_dir(DATA_anl_file_dir)
+                if MODEL in ['ecmwf']:
+                     gda_util.run_shell_command(['chmod', '750',
+                                                 DATA_anl_file_dir])
+                     gda_util.run_shell_command(['chgrp', 'rstprod',
+                                                 DATA_anl_file_dir])
                 if MODEL == 'jma':
                     gda_util.prep_prod_jma_file(COMIN_anl_file,
                                                 DATA_anl_file,
@@ -419,6 +429,13 @@ for MODEL in MODELNAME:
                         )
                 if SENDCOM == 'YES':
                     gda_util.copy_file(DATA_anl_file, COMOUT_anl_file)
+                    if MODEL == 'ecmwf':
+                        gda_util.run_shell_command(
+                            ['chmod', '640', COMOUT_anl_file]
+                        )
+                        gda_util.run_shell_command(
+                            ['chgrp', 'rstprod', COMOUT_anl_file]
+                        )
             else:
                 print(f"{COMOUT_anl_file} exists")
 
@@ -491,8 +508,7 @@ for OBS in OBSNAME:
             COMOUT_INITDATE, OBS, DATA_file.rpartition('/')[2]
         )
         DATA_file_dir = DATA_file.rpartition('/')[0]
-        if not os.path.exists(DATA_file_dir):
-            os.makedirs(DATA_file_dir)
+        gda_util.make_dir(DATA_file_dir)
         log_missing_file = os.path.join(
             DATA, 'mail_missing_'+OBS+'_valid'
             +CDATE_dt.strftime('%Y%m%d%H')+'.sh'

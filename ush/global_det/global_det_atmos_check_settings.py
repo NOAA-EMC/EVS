@@ -106,8 +106,7 @@ if STEP.upper() == 'STATS':
     )
 evs_global_det_atmos_settings_dict['shared'] = [
     'model_list', 'model_evs_data_dir_list', 'model_file_format_list',
-    'OUTPUTROOT', 'start_date', 'end_date', 'KEEPDATA', 'SENDCOM',
-    'SENDARCH', 'SENDMETVIEWER'
+    'OUTPUTROOT', 'start_date', 'end_date', 'KEEPDATA', 'SENDCOM'
 ]
 evs_global_det_atmos_settings_dict['modules'] = ['MET_ROOT', 'METPLUS_PATH']
 evs_global_det_atmos_settings_dict['RUN_GRID2GRID_STATS'] = [

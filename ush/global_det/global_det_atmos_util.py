@@ -39,6 +39,19 @@ def run_shell_command(command):
         print("ERROR: "+' '.join(run_command.args)+" gave return code "
               +str(run_command.returncode))
 
+def make_dir(dir_path):
+    """! Make a directory
+
+         Args:
+             dir_path - path of the directory (string)
+
+         Returns:
+
+    """
+    if not os.path.exists(dir_path):
+        print(f"Making directory {dir_path}")
+        os.makedirs(dir_path, mode=0o755, exist_ok=True)
+
 def metplus_command(conf_file_name):
     """! Write out full call to METplus
 
@@ -172,7 +185,7 @@ def copy_file(source_file, dest_file):
     """
     if check_file_exists_size(source_file):
         print("Copying "+source_file+" to "+dest_file)
-        shutil.copy2(source_file, dest_file)
+        shutil.copy(source_file, dest_file)
 
 def convert_grib1_grib2(grib1_file, grib2_file):
     """! Converts GRIB1 data to GRIB2
@@ -611,7 +624,7 @@ def prep_prod_ecmwf_file(source_file, dest_file, init_dt, forecast_hour, prep_me
             log_missing_file_model(log_missing_file, source_file, 'ecmwf',
                                    init_dt, str(forecast_hour).zfill(3))
         if check_file_exists_size(working_file1):
-            run_shell_command(['chmod', '750', working_file1])
+            run_shell_command(['chmod', '640', working_file1])
             run_shell_command(['chgrp', 'rstprod', working_file1])
             run_shell_command(
                 [ECMGFSLOOKALIKENEW, working_file1, prepped_file]
@@ -626,7 +639,7 @@ def prep_prod_ecmwf_file(source_file, dest_file, init_dt, forecast_hour, prep_me
                 log_missing_file_model(log_missing_file, source_file, 'ecmwf',
                                        init_dt, str(forecast_hour).zfill(3))
     if os.path.exists(prepped_file):
-        run_shell_command(['chmod', '750', prepped_file])
+        run_shell_command(['chmod', '640', prepped_file])
         run_shell_command(['chgrp', 'rstprod', prepped_file])
     copy_file(prepped_file, dest_file)
 
@@ -2043,8 +2056,7 @@ def initalize_job_env_dict(verif_type, group,
             os.environ['VERIF_CASE']+'_'+os.environ['STEP'],
             'METplus_output', 'tmp'
         )
-        if not os.path.exists(os.environ['MET_TMP_DIR']):
-            os.makedirs(os.environ['MET_TMP_DIR'])
+        make_dir(os.environ['MET_TMP_DIR'])
         job_env_var_list.extend(
             ['METPLUS_PATH', 'MET_ROOT', 'MET_TMP_DIR', 'COMROOT']
         )

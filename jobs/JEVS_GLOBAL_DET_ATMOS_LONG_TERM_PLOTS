@@ -3,7 +3,7 @@
 ########################################
 # Preliminary data setup step
 ########################################
-set -xa
+set -x
 
 ####################################
 # SET SHELL PROCESSING VARIABLES
@@ -27,11 +27,11 @@ export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
+export evs_run_mode=${evs_run_mode:-production}
 
 ####################################
 # Run setpdy and initialize PDY variables
 ####################################
-export cyc=${cyc:-"00"}
 export cycle=${cycle:-t${cyc}z}
 setpdy.sh
 . ./PDY
@@ -49,27 +49,25 @@ export SENDDBN=${SENDDBN:-NO}
 # Define NET/RUN variables
 ####################################
 export NET=${NET:-evs}
-export STEP=${STEP:-stats}
+export STEP=${STEP:-plots}
 export COMPONENT=${COMPONENT:-global_det}
 export RUN=${RUN:-long_term}
 
 ####################################
 # Define COMIN/COMOUT variables
 ####################################
-export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
+export COMIN=${COMIN:-$(compath.py $NET/$evs_ver)}
 export COMINdailystats=${COMINdailystats:-$COMIN/stats/$COMPONENT}
-export COMINmonthlystats=${COMINmonthlystats:-$COMIN/$STEP/$COMPONENT/$RUN/monthly_means}
-export COMINyearlystats=${COMINyearlystats:-$COMIN/$STEP/$COMPONENT/$RUN/yearly_means}
-export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
-export COMOUTmonthlystats=${COMOUTmonthlystats:-$COMOUT/$RUN/monthly_means}
-export COMOUTyearlystats=${COMOUTyearlystats:-$COMOUT/$RUN/yearly_means}
-mkdir -p $COMOUT $COMOUTmonthlystats $COMOUTyearlystats
+export COMINmonthlystats=${COMINmonthlystats:-$COMIN/stats/$COMPONENT/$RUN/monthly_means}
+export COMINyearlystats=${COMINyearlystats:-$COMIN/stats/$COMPONENT/$RUN/yearly_means}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
+mkdir -p $COMOUT
 
 #######################################################################
 # Execute the script
 #######################################################################
 env
-$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_atmos_${RUN}_${STEP}.sh
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs${COMPONENT}_atmos_${RUN}_${STEP}.sh
 export err=$?; err_chk
 
 msg="JOB $job HAS COMPLETED NORMALLY."
