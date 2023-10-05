@@ -26,17 +26,9 @@ date
 # obtain unique LSF id (jobid) and make temp directories
 ###########################################################
 export pid=$$
-
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
-rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
-
-# Determine Job Output Name on System
-####################################
-export pgmout="OUTPUT.${pid}"
-
-export cycle=t00z
 
 ###################################
 # Set EVS directories
@@ -46,25 +38,31 @@ export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
+export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config/$COMPONENT}
 export USHevs=${USHevs:-$HOMEevs/ush}
 export MASKS=${MASKS:-$FIXevs/masks}
 
 # Run setpdy and initialize PDY variables
+export cyc=${cyc:-"00"}
+export cycle=${cycle:-t${cyc}z}
 setpdy.sh
 . ./PDY
-
 export VDATE=${VDATE:-$PDYm2}
 
-# set up paths
-export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config/$COMPONENT}
+####################################
+# Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-prep}
+export COMPONENT=${COMPONENT:-rtofs}
 
 # define COMIN/COMOUT variables
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
 export COMINobs=${COMINobs:-$DCOMROOT}
 export COMINfcst=${COMINfcst:-$(compath.py $NET/${evs_ver}/prep/$COMPONENT)}
 export COMINclimo=${COMINclimo:-$FIXevs/climos/$COMPONENT}
-export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
-export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}
+export COMOUTsmall=${COMOUTsmall:-$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE}
 export COMOUTfinal=${COMOUTfinal:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
 
 mkdir -p $COMOUT $COMOUTsmall $COMOUTfinal
@@ -81,10 +79,6 @@ else
 fi
 
 export err=$?; err_chk
-
-if [ -e "$pgmout" ]; then
-  cat $pgmout
-fi
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$msg"
