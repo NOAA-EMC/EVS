@@ -11,9 +11,6 @@ set -x
 
 echo "RUN MODE:$evs_run_mode"
 
-# Source config
-source $config
-
 # Create headline plots
 python $USHevs/global_det/global_det_atmos_plots_headline.py
 status=$?
