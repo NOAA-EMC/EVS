@@ -45,8 +45,7 @@ stat_base_dir = os.path.join(DATA, 'data')
 logging_dir = os.path.join(DATA, 'logs')
 images_dir = os.path.join(DATA, 'images')
 for mkdir in [stat_base_dir, logging_dir, images_dir]:
-    if not os.path.exists(mkdir):
-        os.makedirs(mkdir)
+    gda_util.make_dir(mkdir)
 
 # Set up MET information dictionary
 met_info_dict = {
@@ -124,8 +123,7 @@ headline1_job_name = (
 )
 # Set output
 headline1_output_dir = os.path.join(DATA, headline1_job_name)
-if not os.path.exists(headline1_output_dir):
-    os.makedirs(headline1_output_dir)
+gda_util.make_dir(headline1_output_dir)
 # Set up logging
 now = datetime.datetime.now()
 headline1_logging_file = os.path.join(logging_dir, 'evs_'+COMPONENT+'_atmos_'
@@ -144,8 +142,7 @@ for model_num in list(headline1_model_info_dict.keys()):
     model = headline1_model_info_dict[model_num]['name']
     obs_name = headline1_model_info_dict[model_num]['obs_name']
     stat_model_dir = os.path.join(stat_base_dir, model)
-    if not os.path.exists(stat_model_dir):
-        os.makedirs(stat_model_dir)
+    gda_util.make_dir(stat_model_dir)
     gda_util.get_daily_stat_file(model, COMINdailystats, stat_model_dir,
                                  'grid2grid', headline1_start_date_dt,
                                  headline1_end_date_dt)
@@ -229,8 +226,7 @@ headline2_end_date_dt = datetime.datetime.strptime(
 for model_num in list(headline2_model_info_dict.keys()):
     model = headline2_model_info_dict[model_num]['name']
     stat_model_dir = os.path.join(stat_base_dir, model)
-    if not os.path.exists(stat_model_dir):
-        os.makedirs(stat_model_dir)
+    gda_util.make_dir(stat_model_dir)
     gda_util.get_daily_stat_file(model, COMINdailystats, stat_model_dir,
                                  'grid2obs', headline2_start_date_dt,
                                  headline2_end_date_dt)
@@ -249,8 +245,7 @@ for stat in ['ME', 'RMSE']:
     )
     # Set output
     headline2_output_dir = os.path.join(DATA, headline2_job_name)
-    if not os.path.exists(headline2_output_dir):
-        os.makedirs(headline2_output_dir)
+    gda_util.make_dir(headline2_output_dir)
     # Set up logging
     now = datetime.datetime.now()
     headline2_logging_file = os.path.join(logging_dir, 'evs_'+COMPONENT+'_atmos_'
@@ -339,8 +334,7 @@ else:
         )
         # Set output
         headline3_output_dir = os.path.join(DATA, headline3_job_name)
-        if not os.path.exists(headline3_output_dir):
-            os.makedirs(headline3_output_dir)
+        gda_util.make_dir(headline3_output_dir)
         # Set up logging
         now = datetime.datetime.now()
         headline3_logging_file = os.path.join(
@@ -401,8 +395,7 @@ else:
     )
     # Set output
     headline4_output_dir = os.path.join(DATA, headline4_job_name)
-    if not os.path.exists(headline4_output_dir):
-        os.makedirs(headline4_output_dir)
+    gda_util.make_dir(headline4_output_dir)
     # Set up logging
     now = datetime.datetime.now()
     headline4_logging_file = os.path.join(
@@ -467,8 +460,7 @@ else:
         )
         # Set output
         headline5_output_dir = os.path.join(DATA, headline5_job_name)
-        if not os.path.exists(headline5_output_dir):
-            os.makedirs(headline5_output_dir)
+        gda_util.make_dir(headline5_output_dir)
         # Set up logging
         now = datetime.datetime.now()
         headline5_logging_file = os.path.join(

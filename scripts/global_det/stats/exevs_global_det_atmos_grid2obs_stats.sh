@@ -11,14 +11,10 @@ set -x
 
 export VERIF_CASE_STEP_abbrev="g2os"
 
-# Set run mode
-if [ $RUN_ENVIR = nco ]; then
-    export evs_run_mode="production"
-    source $config
-else
-    export evs_run_mode=$evs_run_mode
-fi
 echo "RUN MODE:$evs_run_mode"
+
+# Source config
+source $config
 
 # Make directory
 mkdir -p ${VERIF_CASE}_${STEP}
@@ -45,10 +41,12 @@ status=$?
 echo
 
 # Send for missing files
-if ls $DATA/grid2obs_stats/data/mail_* 1> /dev/null 2>&1; then
-    for FILE in $DATA/grid2obs_stats/data/mail_*; do
-        $FILE
-    done
+if [ $SENDMAIL = YES ] ; then
+    if ls $DATA/grid2obs_stats/data/mail_* 1> /dev/null 2>&1; then
+        for FILE in $DATA/grid2obs_stats/data/mail_*; do
+            $FILE
+        done
+    fi
 fi
 
 # Create and run job scripts for reformat_data, assemble_data, generate_stats, and gather_stats
@@ -70,7 +68,6 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
             export MP_PGMMODEL=mpmd
             export MP_CMDFILE=${poe_script}
             if [ $machine = WCOSS2 ]; then
-                export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
                 nselect=$(cat $PBS_NODEFILE | wc -l)
                 nnp=$(($nselect * $nproc))
                 launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
