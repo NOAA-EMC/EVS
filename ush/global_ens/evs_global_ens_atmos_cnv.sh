@@ -116,7 +116,6 @@ done #end of model
 chmod 775 run_all_gens_cnv_poe.sh
 
 if [ $run_mpi = yes ] ; then
-  export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
   mpiexec -n 14 -ppn 14 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_cnv_poe.sh
 
 else

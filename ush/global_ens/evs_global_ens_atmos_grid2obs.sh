@@ -280,7 +280,6 @@ chmod 775 run_all_gens_g2o_poe.sh
 
 
 if [ $run_mpi = yes ] ; then
-  export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
 
    if [ ${models} = gefs ] ; then
     mpiexec -n 60 -ppn 60 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_g2o_poe.sh

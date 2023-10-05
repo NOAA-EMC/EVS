@@ -39,8 +39,8 @@ source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 export envir=prod
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
-export SENDDBN=${SENDDBN:-YES}
-export KEEPDATA=${KEEPDATA:-NO}
+export SENDDBN=${SENDDBN:-NO}
+export KEEPDATA=${KEEPDATA:-YES}
 
 export maillist='alicia.bentley@noaa.gov,samira.ardani@noaa.gov'
 
@@ -49,7 +49,8 @@ export cycle=t00z
 ## developers directories
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export OUTPUTROOT=/lfs/h2/emc/vpppg/noscrub/$USER
-export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}
+export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}
 
 export job=${PBS_JOBNAME:-jevs_nfcens_wave_grid2obs_prep}
 export jobid=$job.${PBS_JOBID:-$$}
@@ -59,7 +60,7 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 ############################################################
-$HOMEevs/jobs/${COMPONENT}/${STEP}/JEVS_NFCENS_WAVE_GRID2OBS_PREP
+$HOMEevs/jobs/JEVS_NFCENS_WAVE_GRID2OBS_PREP
 
 ######################################################################
 # Purpose: This does the prep work for the NFCENS wave model
