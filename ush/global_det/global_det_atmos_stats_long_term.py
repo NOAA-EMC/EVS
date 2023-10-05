@@ -3,7 +3,7 @@
 Name: global_det_atmos_stats_long_term.py
 Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This is the driver script for creating long-term stats.
-Run By: scripts/global_det/stats/exevs_global_det_atmos_long_term_stats.sh
+Run By: scripts/stats/global_det/exevs_global_det_atmos_long_term_stats.sh
 '''
 
 import sys

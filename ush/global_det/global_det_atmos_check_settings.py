@@ -4,10 +4,10 @@ Name: global_det_atmos_check_settings.py
 Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This does a check on the run's configuration
           settings for global_det atmos stats and plots jobs.
-Run By: scripts/global_det/stats/exevs_global_det_atmos_grid2grid_stats.sh
-        scripts/global_det/stats/exevs_global_det_atmos_grid2obs_stats.sh
-        scripts/global_det/plots/exevs_global_det_atmos_grid2grid_plots.sh
-        scripts/global_det/plots/exevs_global_det_atmos_grid2obs_plots.sh
+Run By: scripts/stats/global_det/exevs_global_det_atmos_grid2grid_stats.sh
+        scripts/stats/global_det/exevs_global_det_atmos_grid2obs_stats.sh
+        scripts/plots/global_det/exevs_global_det_atmos_grid2grid_plots.sh
+        scripts/plots/global_det/exevs_global_det_atmos_grid2obs_plots.sh
 '''
 
 import sys

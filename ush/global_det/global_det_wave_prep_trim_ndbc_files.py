@@ -4,7 +4,7 @@ Name: global_det_wave_prep_trim_ndbc_files.py
 Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This trims the NDBC individual buoy text files
           for only data for a single date
-Run By: scripts/global_det/prep/exevs_global_det_wave_prep.sh
+Run By: scripts/prep/global_det/exevs_global_det_wave_prep.sh
 '''
 
 

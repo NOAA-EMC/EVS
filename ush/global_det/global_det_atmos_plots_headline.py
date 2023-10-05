@@ -3,7 +3,7 @@
 Name: global_det_atmos_headline_plots.py
 Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This is the driver script for creating headline plots.
-Run By: scripts/global_det/plots/exevs_global_det_atmos_headline_plots.sh
+Run By: scripts/plots/global_det/exevs_global_det_atmos_headline_plots.sh
 '''
 
 import os
