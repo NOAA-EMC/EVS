@@ -75,7 +75,7 @@ class TimeSeriesMultiFhr:
         if self.plot_info_dict['stat'] == 'FBAR_OBAR':
             self.logger.warning("Cannot make time_series_multifhr for stat "
                                 +f"{self.plot_info_dict['stat']}")
-            sys.exit(0)
+            sys.exit(1)
         # Check only requested 1 model
         if len(list(self.model_info_dict.keys())) != 1:
             self.logger.warning(

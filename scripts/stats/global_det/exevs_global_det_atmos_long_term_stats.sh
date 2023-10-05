@@ -13,7 +13,7 @@ set -x
 echo "RUN MODE:$evs_run_mode"
 if [ $evs_run_mode = production ] && [ $envir = prod ]; then
     echo "exevs_global_det_atmos_long_term_stats.sh does run in production; exit"
-    exit 0
+    exit
 fi
 
 # Make stats

@@ -75,7 +75,7 @@ class LeadByDate:
         if self.plot_info_dict['stat'] == 'FBAR_OBAR':
             self.logger.warning("Cannot make lead_by_date for stat "
                                 +f"{self.plot_info_dict['stat']}")
-            sys.exit(0)
+            sys.exit(1)
         # Create dataframe for all forecast hours
         self.logger.info("Building dataframe for all forecast hours")
         forecast_hours_stat_df_dict = {}
