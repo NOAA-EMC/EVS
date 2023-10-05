@@ -28,11 +28,13 @@ if [ $modnam = gfsanl ]; then
     #check if gfsanl is missing:
     missing=no
     if [ ! -s $COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.anl ] ; then
-       export subject="GFS Analysis Data Missing for EVS ${COMPONENT}"
-       echo "Warning: No GFS analysis available for ${INITDATE}${cyc}" > mailmsg
-       echo Missing file is $COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.anl >> mailmsg
-     echo "Job ID: $jobid" >> mailmsg
-     cat mailmsg | mail -s "$subject" $maillist
+      if [ $SENDMAIL = YES ]; then
+        export subject="GFS Analysis Data Missing for EVS ${COMPONENT}"
+        echo "Warning: No GFS analysis available for ${INITDATE}${cyc}" > mailmsg
+        echo Missing file is $COMINgfsanl/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.anl >> mailmsg
+        echo "Job ID: $jobid" >> mailmsg
+        cat mailmsg | mail -s "$subject" $maillist
+      fi
      missing=yes
     fi
 
@@ -75,12 +77,14 @@ if [ $modnam = cmcanl ] ; then
 
      missing=no
      if [ ! -s $cmcanl ] ; then
+       if [ $SENDMAIL = YES ]; then
          export subject="CMC Analysis Data Missing for EVS ${COMPONENT}"
          echo "Warning: No CMC analysis available for ${INITDATE}${cyc}" > mailmsg
          echo Missing file is $cmcanl >> mailmsg
          echo "Job ID: $jobid" >> mailmsg
          cat mailmsg | mail -s "$subject" $maillist
-         missing=yes
+       fi
+     missing=yes
     fi
 
    if [ $missing = no ] ; then
@@ -118,7 +122,6 @@ if [ $modnam = cmcanl ] ; then
 
        $wgrib2 $WORK/cmce.upper.${cyc}.${mb}.${h3} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003 $outdata/cmcanl.t${cyc}z.grid3.f000.grib2
 
-      rm   $WORK/cmce.upper.${cyc}.${mb}.${h3} $WORK/cmce.sfc.${cyc}.${mb}.${h3}  $WORK/output.${cyc}
 
     fi
    done
@@ -231,7 +234,6 @@ if [ $modnam = gefs ] ; then
 
             $wgrib2 $WORK/gefs.upper.${cyc}.${mb}.${hhh} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $outdata/gefs.ens${mb}.t${cyc}z.grid3.f${hhh}.grib2
 
-            rm -f  $WORK/gefs.upper.${cyc}.${mb}.${hhh} $WORK/gefs.sfc.${cyc}.${mb}.${hhh}         
 
             #nfhrs=`expr $nfhrs + 12`
             nfhrs=`expr $nfhrs + 6`
@@ -339,7 +341,6 @@ if [ $modnam = cmce ] ; then
 
 	     $wgrib2 $WORK/cmce.upper.${cyc}.${mb}.${h3} -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  $outdata/cmce.ens${mb}.t${cyc}z.grid3.f${h3}.grib2
 
-             rm -f  $WORK/cmce.upper.${cyc}.${mb}.${h3} $WORK/cmce.sfc.${cyc}.${mb}.${h3} 
 
            nfhrs=`expr $nfhrs + 12`
 
@@ -388,11 +389,13 @@ if [ $modnam = prepbufr ] ; then
         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr.conf" >> run_pb2nc.${cyc}.sh
         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr_Profile.conf" >> run_pb2nc.${cyc}.sh
       else
-        export subject="Prepbufr  Data Missing for EVS ${COMPONENT}"
-        echo "Warning:  No prepbufr analysis available for ${INITDATE}${cyc}" > mailmsg
-        echo Missing file is $COMINprepbufr/gdas.${vday}/${cyc}/atmos/gdas.t${cyc}z.prepbufr  >> mailmsg
-        echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+	if [ $SENDMAIL = YES ]; then
+          export subject="Prepbufr  Data Missing for EVS ${COMPONENT}"
+          echo "Warning:  No prepbufr analysis available for ${INITDATE}${cyc}" > mailmsg
+          echo Missing file is $COMINprepbufr/gdas.${vday}/${cyc}/atmos/gdas.t${cyc}z.prepbufr  >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $maillist
+	fi
       fi 
 
       chmod +x run_pb2nc.${cyc}.sh
@@ -418,11 +421,13 @@ if [ $modnam = ccpa ] ; then
     if [ -s $COMINccpa/ccpa.${vday}/$cyc/ccpa.t${cyc}z.06h.1p0.conus.gb2 ] ; then
       $wgrib2 $COMINccpa/ccpa.${vday}/$cyc/ccpa.t${cyc}z.06h.1p0.conus.gb2 -set_grib_type same -new_grid_winds earth -new_grid ncep grid 003  ${COMOUT_gefs}/ccpa.t${cyc}z.grid3.06h.f00.grib2
     else
-        export subject="CCPA  Data Missing for EVS ${COMPONENT}"
-        echo "Warning:  No CCPA analysis available for ${INITDATE}${cyc}" > mailmsg
-        echo Missing file is $COMINccpa/ccpa.${vday}/$cyc/ccpa.t${cyc}z.06h.1p0.conus.gb2  >> mailmsg
-        echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+        if [ $SENDMAIL = YES ]; then
+          export subject="CCPA  Data Missing for EVS ${COMPONENT}"
+          echo "Warning:  No CCPA analysis available for ${INITDATE}${cyc}" > mailmsg
+          echo Missing file is $COMINccpa/ccpa.${vday}/$cyc/ccpa.t${cyc}z.06h.1p0.conus.gb2  >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $maillist
+	fi
     fi 
   done
 
@@ -430,7 +435,6 @@ if [ $modnam = ccpa ] ; then
 
   export ccpa24=${WORK}/ccpa24
   mkdir $ccpa24
-  rm -f ${WORK}/ccpa24/*.grib2
 
 
   for cyc in 12 ; do
@@ -444,12 +448,14 @@ if [ $modnam = ccpa ] ; then
        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_obsCCPA24h.conf
        [[ $SENDCOM="YES" ]] && cp $output_base/ccpa.t12z.grid3.24h.f00.nc $COMOUT_gefs/.
     else
-       export subject="06h CCPA Data Missing for 24h CCPA generation"
-       echo "Warning: At least one of ccpa06h files is missing  for ${INITDATE}${cyc}" > mailmsg
-       echo Missing file is ${COMOUT_gefs}/ccpa.t12z.grid3.06h.f00.grib2 or ${COMOUT}.${vday_1}/gefs/ccpa.t18z.grid3.06h.f00.grib2  >> mailmsg
-       echo "Job ID: $jobid" >> mailmsg
-       cat mailmsg | mail -s "$subject" $maillist
-       exit 
+       if [ $SENDMAIL = YES ]; then
+         export subject="06h CCPA Data Missing for 24h CCPA generation"
+         echo "Warning: At least one of ccpa06h files is missing  for ${INITDATE}${cyc}" > mailmsg
+         echo Missing file is ${COMOUT_gefs}/ccpa.t12z.grid3.06h.f00.grib2 or ${COMOUT}.${vday_1}/gefs/ccpa.t18z.grid3.06h.f00.grib2  >> mailmsg
+         echo "Job ID: $jobid" >> mailmsg
+         cat mailmsg | mail -s "$subject" $maillist
+       fi
+      exit 
     fi  
   done
 fi
@@ -583,11 +589,13 @@ if [ $modnam = nohrsc24h ] ; then
     if [ -s $snowfall ] ; then
       [[ $SENDCOM="YES" ]] && cp $snowfall $COMOUT_gefs/nohrsc.t${cyc}z.grid184.grb2
     else
-        export subject="NOHRSC Data Missing for EVS ${COMPONENT}"
-        echo "Warning:  No NOHRSC analysis available for ${INITDATE}${cyc}" > mailmsg
-        echo Missing file is $snowfall  >> mailmsg
-        echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+        if [ $SENDMAIL = YES ]; then
+          export subject="NOHRSC Data Missing for EVS ${COMPONENT}"
+          echo "Warning:  No NOHRSC analysis available for ${INITDATE}${cyc}" > mailmsg
+          echo Missing file is $snowfall  >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $maillist
+	fi
     fi
   done
 
@@ -686,15 +694,16 @@ if [ $modnam = osi_saf ] ; then
    
    osi=$COMINosi_saf/$INITDATE/seaice/osisaf/ice_conc_nh_polstere-100_multi_${INITDATE}1200.nc	
    if [ -s $osi ] ; then
-     python ${USHevs}/global_ens/global_det_sea_ice_prep.py
+     python ${USHevs}/global_ens/global_ens_sea_ice_prep.py
      [[ $SENDCOM="YES" ]] && cp $WORK/atmos.${INITDATE}/osi_saf/*.nc $COMOUT_osi_saf/.
    else
-
-        export subject="OSI_SAF Data Missing for EVS ${COMPONENT}"
-        echo "Warning:  No OSI_SAF data  available for ${INITDATE}" > mailmsg
-        echo Missing file is $osi  >> mailmsg
-        echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+	if [ $SENDMAIL = YES ]; then
+          export subject="OSI_SAF Data Missing for EVS ${COMPONENT}"
+          echo "Warning:  No OSI_SAF data  available for ${INITDATE}" > mailmsg
+          echo Missing file is $osi  >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $maillist
+	fi
     fi 
 fi
 
