@@ -15,10 +15,14 @@
 #  User controllable options: None                                              
 ################################################################################
 
-set -x 
+set -x
+
+# set major & minor MET version
+export MET_VERSION_major_minor=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
+
 # Use LOUD variable to turn on/off trace.  Defaults to YES (on).
 export LOUD=${LOUD:-YES}; [[ $LOUD = yes ]] && export LOUD=YES
-[[ "$LOUD" != YES ]] && set +x
+[[ "$LOUD" != YES ]] && set -x
 
 #############################
 ## grid2obs wave model plots 
@@ -28,7 +32,7 @@ cd $DATA
 echo "in $0 JLOGFILE is $jlogfile"
 echo "Starting grid2obs_plots for ${MODELNAME}_${RUN}"
 
-set +x
+set -x
 echo ' '
 echo ' ******************************************'
 echo " *** ${MODELNAME}-${RUN} grid2obs plots ***"
@@ -42,7 +46,7 @@ echo ' '
 ############################
 # get the model .stat files 
 ############################
-set +x
+set -x
 echo ' '
 echo 'Copying *.stat files :'
 echo '-----------------------------'
@@ -67,11 +71,11 @@ nc=`ls ${DATA}/stats/evs*stat | wc -l | awk '{print $1}'`
 echo " Found ${nc} ${DATA}/stats/evs*stat file for ${VDATE} "
 if [ "${nc}" != '0' ]
 then
-  set +x
+  set -x
   echo "Successfully copied the NFCENS *.stat file for ${VDATE}"
   [[ "$LOUD" = YES ]] && set -x
 else
-  set +x
+  set -x
   echo ' '
   echo '**************************************** '
   echo '*** ERROR : NO NFCENS *.stat FILE *** '
@@ -100,7 +104,6 @@ chmod 775 plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 # Run the command files for the PAST31DAYS 
 ###########################################
 if [ ${run_mpi} = 'yes' ] ; then
-  export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
   mpiexec -np 36 --cpu-bind verbose,core --depth=3 cfp plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 else
   echo "not running mpiexec"
@@ -128,11 +131,11 @@ if [ $gather = yes ] ; then
     echo " Found ${nc} ${DATA}/plots/*${period_lower}*.png files for ${VDATE} "
     if [ "${nc}" != '0' ]
     then
-      set +x
+      set -x
       echo "Found ${nc} ${period_lower} plots for ${VDATE}"
       [[ "$LOUD" = YES ]] && set -x
     else
-      set +x
+      set -x
       echo ' '
       echo '**************************************** '
       echo '*** ERROR : NO ${period} PLOTS  *** '
@@ -159,10 +162,13 @@ fi
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
 
+if [ $SENDDBN = YES ]; then
+	$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.*.tar
+fi
 # --------------------------------------------------------------------------- #
 # Ending output                                                                
 
-set +x
+set -x
 echo ' '
 echo "Ending at : `date`"
 echo ' '
