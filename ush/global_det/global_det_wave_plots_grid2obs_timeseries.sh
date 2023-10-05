@@ -5,7 +5,7 @@
 #             Mallory Row / Mallory.Row@noaa.gov
 # Purpose of Script: This script generates the job scripts to create
 #                    time series plots.
-# Run By: cripts/global_det/plots/exevs_global_det_wave_grid2obs_plots.sh
+# Run By: scripts/global_det/plots/exevs_global_det_wave_grid2obs_plots.sh
 ###############################################################################
 
 #################################
@@ -120,10 +120,10 @@ for period in ${periods} ; do
                       echo "cp -v $COMOUTimage $DATAimage" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                   else
                       echo "${GRID2OBS_CONF}/py_plotting_wave.config"  >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
-                      echo "export err=$?; err_chk" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                      echo "export err=\$?; err_chk" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                       if [ $SENDCOM = YES ]; then
                           echo "cp -v $DATAimage $COMOUTimage" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
-                          echo "export err=$?; err_chk" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                          echo "export err=\$?; err_chk" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                       fi
                   fi
 
