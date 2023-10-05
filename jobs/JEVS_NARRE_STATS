@@ -3,7 +3,7 @@
 #   By Binbin Zhou, IMSG@EMC/NCEP
 #   June 2, 2022
 #
-set -xa
+set -x
 #######################################################
 #######################################################
 
@@ -26,16 +26,17 @@ export VDATE=${VDATE:-$PDYm1}
 # SENDECF  - Flag Events on ECF
 # SENDCOM  - Copy Files From TMPDIR to $COMOUT
 # SENDDBN  - Issue DBNet Client Calls
+# SENDMAIL - Sen email to alert data missing
 ##################################################
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
-
+export SENDMAIL=${SENDMAIL:-NO} 
 
 export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}
 export COMINnarre=${COMIN:-$(compath.py  $envir/com/narre/$narre_ver)}
 export COMINobs=${COMINobs:-$(compath.py  $envir/com/obsproc/$obsproc_ver)}
-export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/${evs_ver})}/${STEP}/${COMPONENT}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}/${STEP}/${COMPONENT}
 mkdir -p $COMOUT
 
 export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}

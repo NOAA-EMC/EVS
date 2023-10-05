@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -xa
+set -x
 
 # ###################################
 # SET SHELL PROCESSING VARIABLES
@@ -19,10 +19,12 @@ cd $DATA
 
 ################################################################
 # SENDCOM=YES--Copy files from TMPDIR to $COMOUT
+# SENDMAIL=YES--Send missing data emails
 # SENDECF=YES--Flag events on ecflow
 # SENDDBN=YES--Issue DBNet client calls
 ################################################################
 export SENDCOM=${SENDCOM:-YES}
+export SENDMAIL=${SENDMAIL:-NO}
 export SENDDBN=${SENDDBN:-NO}       # need to set to NO for testing
 export SENDECF=${SENDECF:-NO}
 export SENDDBN_NTC=${SENDDBN_NTC:-NO}
