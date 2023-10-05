@@ -10,7 +10,7 @@ date
 #########################################################
 # obtain unique LSF id (jobid) and make temp directories 
 #########################################################
-export DATA=${DATA:-${DATAROOT}/${jobid:?}}
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
 
@@ -18,10 +18,17 @@ cd $DATA
 # Run setpdy and initialize PDY variables 
 ##########################################
 export cycle=${cycle:-t00z}
-setpdy.sh 20
+setpdy.sh 17
 . ./PDY
-export INITDATE=${INITDATE:-${PDYm1}}
+export VDATE=${VDATE:-${PDYm1}}
 export NEXTDATE=${NEXTDATE:-${PDY}}
+
+####################################
+# Set data directives
+####################################
+export SENDECF=${SENDECF:-YES}
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-NO}
 
 ####################################
 # Set EVS directories               
@@ -32,22 +39,16 @@ export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
 
-####################################
-# Set data directives
-####################################
-export SENDECF=${SENDECF:-YES}
-export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-NO}
 
 ####################################
 # Define NET/RUN variables          
 ####################################
 export NET=${NET:-evs}
 export MODEL=${MODEL:-evs}
-export STEP=${STEP:-prep}
+export STEP=${STEP:-stats}
 export COMPONENT=${COMPONENT:-nfcens}
 export MODELNAME=${MODELNAME:-nfcens}
-export MODNAM=echo $MODELNAME | tr '[a-z]' '[A-Z]'
+export MODNAM=`echo $MODELNAME | tr '[a-z]' '[A-Z]'`
 export OBTYPE=${OBTYPE:-GDAS}
 export RUN=${RUN:-wave}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
@@ -56,15 +57,18 @@ export VERIF_CASE=${VERIF_CASE:-grid2obs}
 # Define COMIN/COMOUT variables     
 ####################################
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export COMINmodel=${COMINmodel:-$(compath.py ${envir}/com/${RUN}_${MODELNAME}/${nfcens_ver})} 
-export COMINgdas=${COMINobs:-$(compath.py ${envir}/com/obsproc/${obsproc_ver}/gdas)}
-export COMOUT=${COMOUT:-${COMIN}/${STEP}/${COMPONENT}/${RUN}}
-export ARCmodel=${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
+export COMINmodel=${COMINmodel:-$(compath.py ${envir}/com/${RUN}_${MODELNAME}/${nfcens_ver})}
+export COMINgdasnc=${COMIN}/prep/${COMPONENT}
+export ARCmodel=${COMIN}/prep/${COMPONENT}
 
-# make the directory where the ARCmodel and gdasnc will be kept
-mkdir -p ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})/${STEP}/${COMPONENT}}
 
-export jlogfile=${DATA}/${MODELNAME}_${RUN}_PB2NC.log
+export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
+export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
+
+mkdir -p ${COMOUT} ${COMOUTsmall} ${COMOUTfinal} 
+
+export jlogfile=${DATA}/${MODELNAME}_${RUN}_PointStat.log
 
 ####################################
 # Execute the script                

@@ -10,7 +10,7 @@ date
 #########################################################
 # obtain unique LSF id (jobid) and make temp directories 
 #########################################################
-export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+export DATA=${DATA:-${DATAROOT}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
 
@@ -18,17 +18,17 @@ cd $DATA
 # Run setpdy and initialize PDY variables 
 ##########################################
 export cycle=${cycle:-t00z}
-setpdy.sh 17
+setpdy.sh 90
 . ./PDY
+export PDYm90=${PDYm90:-${PDYm90}}
 export VDATE=${VDATE:-${PDYm1}}
-export NEXTDATE=${NEXTDATE:-${PDY}}
 
 ####################################
 # Set data directives
 ####################################
 export SENDECF=${SENDECF:-YES}
 export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-NO}
+export SENDDBN=${SENDDBN:-YES}
 
 ####################################
 # Set EVS directories               
@@ -39,24 +39,15 @@ export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
 
-######################################
-# Correct MET/METplus roots (Aug 2022)
-######################################
-# for use with MET/10.1.1 and METplus/4.1.1
-export MET_ROOT=/apps/ops/para/libs/intel/${intel_ver}/met/${met_ver}
-export MET_BASE=${MET_ROOT}/share/met
-export METPLUS_PATH=/apps/ops/para/libs/intel/${intel_ver}/metplus/${metplus_ver}
-export PATH=${METPLUS_PATH}/ush:${MET_ROOT}/bin:${PATH}
-
 ####################################
 # Define NET/RUN variables          
 ####################################
 export NET=${NET:-evs}
 export MODEL=${MODEL:-evs}
-export STEP=${STEP:-stats}
+export STEP=${STEP:-plots}
 export COMPONENT=${COMPONENT:-nfcens}
 export MODELNAME=${MODELNAME:-nfcens}
-export MODNAM=`echo $MODELNAME | tr '[a-z]' '[A-Z]'`
+export MODNAM=$(echo $MODELNAME | tr '[a-z]' '[A-Z]')
 export OBTYPE=${OBTYPE:-GDAS}
 export RUN=${RUN:-wave}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
@@ -65,17 +56,14 @@ export VERIF_CASE=${VERIF_CASE:-grid2obs}
 # Define COMIN/COMOUT variables     
 ####################################
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export COMINmodel=${COMINmodel:-$(compath.py ${envir}/com/${RUN}_${MODELNAME}/${nfcens_ver})}
-export COMINgdasnc=${COMIN}/prep/${COMPONENT}
-export ARCmodel=${COMIN}/prep/${COMPONENT}
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
+export COMINstats=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${VDATE}
+export COMOUTplots=${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}
 
-export COMOUT=${COMOUT:-${COMIN}/${STEP}/${COMPONENT}}
-export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
-export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
+# make the directory where the plots will be kept
+mkdir -p ${COMOUTplots}
 
-mkdir -p ${COMOUT} ${COMOUTsmall} ${COMOUTfinal} 
-
-export jlogfile=${DATA}/${MODELNAME}_${RUN}_PointStat.log
+export jlogfile=${DATA}/${MODELNAME}_${RUN}_plots.log
 
 ####################################
 # Execute the script                
