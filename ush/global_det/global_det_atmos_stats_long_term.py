@@ -286,8 +286,7 @@ for avg_time_range in avg_time_range_list:
         COMINtime_range_stats = COMINyearlystats
     # Set up time range directory
     avg_time_range_dir = os.path.join(DATA, avg_time_range)
-    if not os.path.exists(avg_time_range_dir):
-        os.makedirs(avg_time_range_dir)
+    gda_util.make_dir(avg_time_range_dir)
     # Get time range start and end date
     if avg_time_range == 'monthly':
         avg_time_range_start_date_dt = datetime.datetime.strptime(
@@ -316,9 +315,8 @@ for avg_time_range in avg_time_range_list:
     avg_time_range_logs_g2g_dir = os.path.join(
         avg_time_range_dir, 'grid2grid', 'logs'
     )
-    if not os.path.exists(avg_time_range_g2g_dir):
-        os.makedirs(avg_time_range_g2g_dir)
-        os.makedirs(avg_time_range_logs_g2g_dir)
+    gda_util.make_dir(avg_time_range_g2g_dir)
+    gda_util.make_dir(avg_time_range_logs_g2g_dir)
     print(f"Working in {avg_time_range_g2g_dir}")
     # Set model information
     g2g_model_info_dict = {
@@ -399,20 +397,17 @@ for avg_time_range in avg_time_range_list:
         avg_time_range_g2g_dir,
         avg_time_range_info.replace(' ','_')+'_daily_stats'
     )
-    if not os.path.exists(avg_time_range_daily_g2g_stats_dir):
-        os.makedirs(avg_time_range_daily_g2g_stats_dir)
+    gda_util.make_dir(avg_time_range_daily_g2g_stats_dir)
     for model_num in list(g2g_model_info_dict.keys()):
         model = g2g_model_info_dict[model_num]['name']
         stat_model_dir = os.path.join(
             avg_time_range_daily_g2g_stats_dir, model
         )
-        if not os.path.exists(stat_model_dir):
-            os.makedirs(stat_model_dir)
+        gda_util.make_dir(stat_model_dir)
         avg_time_range_model_dir = os.path.join(
             avg_time_range_g2g_dir, avg_time_range+'_means', model
         )
-        if not os.path.exists(avg_time_range_model_dir):
-            os.makedirs(avg_time_range_model_dir)
+        gda_util.make_dir(avg_time_range_model_dir)
         get_daily_stat_file(model, COMINdailystats, stat_model_dir, 'grid2grid',
                             avg_time_range_start_date_dt,
                             avg_time_range_end_date_dt)
@@ -439,8 +434,7 @@ for avg_time_range in avg_time_range_list:
                 avg_time_range_g2g_dir,
                 line_type+'_'+stat+'_'+var_name+'_'+vx_mask
             )
-            if not os.path.exists(stat_var_dir):
-                os.makedirs(stat_var_dir)
+            gda_util.make_dir(stat_var_dir)
             for model_num in list(g2g_model_info_dict.keys()):
                 model = g2g_model_info_dict[model_num]['name']
                 obs_name = g2g_model_info_dict[model_num]['obs_name']
@@ -559,9 +553,8 @@ for avg_time_range in avg_time_range_list:
     avg_time_range_logs_precip_dir = os.path.join(
         avg_time_range_dir, 'grid2grid', 'logs'
     )
-    if not os.path.exists(avg_time_range_precip_dir):
-        os.makedirs(avg_time_range_precip_dir)
-        os.makedirs(avg_time_range_logs_precip_dir)
+    gda_util.make_dir(avg_time_range_precip_dir)
+    gda_util.make_dir(avg_time_range_logs_precip_dir)
     print(f"Working in {avg_time_range_precip_dir}")
     # Set model information
     precip_model_info_dict = {
@@ -591,8 +584,7 @@ for avg_time_range in avg_time_range_list:
         avg_time_range_precip_dir,
         avg_time_range_info.replace(' ','_')+'_daily_stats'
     )
-    if not os.path.exists(avg_time_range_daily_precip_stats_dir):
-        os.makedirs(avg_time_range_daily_precip_stats_dir)
+    gda_util.make_dir(avg_time_range_daily_precip_stats_dir)
     for model_num in list(precip_model_info_dict.keys()):
         model = precip_model_info_dict[model_num]['name']
         obs_name = precip_model_info_dict[model_num]['obs_name']
@@ -600,13 +592,11 @@ for avg_time_range in avg_time_range_list:
         stat_model_dir = os.path.join(
             avg_time_range_daily_precip_stats_dir, model
         )
-        if not os.path.exists(stat_model_dir):
-            os.makedirs(stat_model_dir)
+        gda_util.make_dir(stat_model_dir)
         avg_time_range_model_dir = os.path.join(
             avg_time_range_precip_dir, avg_time_range+'_means', model
         )
-        if not os.path.exists(avg_time_range_model_dir):
-            os.makedirs(avg_time_range_model_dir)
+        gda_util.make_dir(avg_time_range_model_dir)
         get_daily_stat_file(model, COMINdailystats, stat_model_dir, 'grid2grid',
                             avg_time_range_start_date_dt,
                             avg_time_range_end_date_dt)
@@ -637,8 +627,7 @@ for avg_time_range in avg_time_range_list:
                 avg_time_range_precip_dir, line_type+'_'+stat+'_'+var_name+'_'
                 +accum+'_'+vx_mask
             )
-            if not os.path.exists(stat_var_dir):
-                os.makedirs(stat_var_dir)
+            gda_util.make_dir(stat_var_dir)
             for model_num in list(precip_model_info_dict.keys()):
                 model = precip_model_info_dict[model_num]['name']
                 logger.debug("Condensing model .stat files for job")

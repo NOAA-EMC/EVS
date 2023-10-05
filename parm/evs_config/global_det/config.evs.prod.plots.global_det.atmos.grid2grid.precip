@@ -41,11 +41,6 @@ export OUTPUTROOT="$DATAROOT"
 #end_date:         verification end date, format YYYYMMDD
 export start_date=$VDATE_START
 export end_date=$VDATE_END
-## DATA DIRECTIVE SETTINGS
-export KEEPDATA=${KEEPDATA:-"NO"}
-export SENDCOM="YES"
-export SENDARCH="NO"
-export SENDMETVIEWER="NO"
 ####################################################
 # SETTINGS FOR SPECIFIC USE CASES
 ####################################################
