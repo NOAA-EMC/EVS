@@ -251,25 +251,23 @@ fi
 
 export job_type="gather2"
 export njob=1
-for VERIF_TYPE in $VERIF_TYPES; do
-    export VERIF_TYPE=$VERIF_TYPE
-    source $config
-    source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
-    if [[ ! -z $VHOUR_LIST ]]; then
-        # Create Output Directories
-        python $USHevs/cam/cam_create_output_dirs.py
-        status=$?
-        [[ $status -ne 0 ]] && exit $status
-        [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
+source $config
+source $USHevs/cam/cam_stats_grid2obs_filter_valid_hours_list.sh
+if [[ ! -z $VHOUR_LIST ]]; then
+    # Create Output Directories
+    python $USHevs/cam/cam_create_output_dirs.py
+    status=$?
+    [[ $status -ne 0 ]] && exit $status
+    [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
 
-        # Create Gather 2 Job Script
-        python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
-        status=$?
-        [[ $status -ne 0 ]] && exit $status
-        [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_grid2obs_create_job_script.py ($job_type)"
-        export njob=$((njob+1))
-    fi
-done
+    # Create Gather 2 Job Script
+    python $USHevs/cam/cam_stats_grid2obs_create_job_script.py
+    status=$?
+    [[ $status -ne 0 ]] && exit $status
+    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_grid2obs_create_job_script.py ($job_type)"
+    export njob=$((njob+1))
+fi
+
 
 # Create Gather 2 POE Job Scripts
 if [ $USE_CFP = YES ]; then
