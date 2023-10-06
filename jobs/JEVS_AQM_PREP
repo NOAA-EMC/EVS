@@ -81,7 +81,7 @@ export airnow_hourly_type=${airnow_hourly_type:-aqobs}
 # Execute the script.
 #######################################################################
 
-$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${STEP}.sh
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${STEP}.sh
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$msg"

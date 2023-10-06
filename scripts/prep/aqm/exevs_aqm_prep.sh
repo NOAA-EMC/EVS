@@ -48,7 +48,7 @@ echo $model1
 ##
 let ic=0
 let endvhr=23
-conf_dir=$PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}
+conf_dir=$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}
 while [ ${ic} -le ${endvhr} ]; do
     vldhr=$(printf %2.2d ${ic})
     checkfile=${COMINobs}/${VDATE}/airnow/${HOURLY_INPUT_TYPE}_${VDATE}${vldhr}.dat
