@@ -1,12 +1,16 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_rtofs_headline_plots.sh
-# Purpose of Script: To create headline score plots for RTOFS forecast
-#    verifications using MET/METplus.
-# Author: L. Gwen Chen (lichuan.chen@noaa.gov)
+# Name of Script: exevs_rtofs_headline_grid2grid_plots
+# Purpose of Script: Create RTOFS headline plots
+# Author: Mallory Row (mallory.row@noaa.gov)
 ###############################################################################
 
 set -x
+
+mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE
+
+# set major & minor MET version
+export MET_VERSION_major_minor=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
 
 # set up plot variables
 export PERIOD=last90days
@@ -129,9 +133,9 @@ cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN
 tar -cvf evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
 
 if [ $SENDCOM = "YES" ]; then
- cp evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplotsheadline
+ cp -v evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplotsheadline
 fi
 
-exit
-
-################################ END OF SCRIPT ################################
+if [ $SENDDBN = YES ] ; then
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplotsheadline/evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar
+fi

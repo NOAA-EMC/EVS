@@ -12,11 +12,13 @@ set -x
 export JDATE=$(date --date="$VDATE" +%Y%j)
 
 if [ ! -s $COMINobs/$VDATE/validation_data/marine/smos/SM_D${JDATE}_Map_SATSSS_data_1day.nc ] ; then
-   export subject="SMOS Data Missing for EVS RTOFS"
-   echo "Warning: No SMOS data was available for valid date $VDATE." > mailmsg
-   echo "Missing file is $COMINobs/$VDATE/validation_data/marine/smos/SM_D${JDATE}_Map_SATSSS_data_1day.nc." >> mailmsg
-   cat mailmsg | mail -s "$subject" $maillist
-   exit 0
+   if [ $SENDMAIL = YES ] ; then
+       export subject="SMOS Data Missing for EVS RTOFS"
+       echo "Warning: No SMOS data was available for valid date $VDATE." > mailmsg
+       echo "Missing file is $COMINobs/$VDATE/validation_data/marine/smos/SM_D${JDATE}_Map_SATSSS_data_1day.nc." >> mailmsg
+       cat mailmsg | mail -s "$subject" $maillist
+       exit 0
+   fi
 fi
 
 # check if fcst files exist; exit if not
@@ -115,7 +117,7 @@ else
 fi
 
 # run Grid_Stat
-run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
+run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
 -c $CONFIGevs/${VERIF_CASE}/$STEP/GridStat_fcstRTOFS_obsSMOS_climoWOA23.conf
 
 if [ $SENDCOM = "YES" ];then
@@ -131,7 +133,7 @@ fi
 
 # sum small stat files into one big file using Stat_Analysis
 
-run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
+run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
 -c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstRTOFS.conf
 
 if [ $SENDCOM = "YES" ]; then
