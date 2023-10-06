@@ -10,11 +10,13 @@ set -x
 
 # check if obs file exists; exit if not
 if [ ! -s $COMINobs/$VDATE/validation_data/marine/cmems/ssh/nrt_global_allsat_phy_l4_${VDATE}_${VDATE}.nc ] ; then
-   export subject="AVISO Data Missing for EVS RTOFS"
-   echo "Warning: No AVISO data was available for valid date $VDATE." > mailmsg
-   echo "Missing file is $COMINobs/$VDATE/validation_data/marine/cmems/ssh/nrt_global_allsat_phy_l4_${VDATE}_${VDATE}.nc." >> mailmsg
-   cat mailmsg | mail -s "$subject" $maillist
-   exit 0
+   if [ $SENDMAIL = YES ] ; then
+       export subject="AVISO Data Missing for EVS RTOFS"
+       echo "Warning: No AVISO data was available for valid date $VDATE." > mailmsg
+       echo "Missing file is $COMINobs/$VDATE/validation_data/marine/cmems/ssh/nrt_global_allsat_phy_l4_${VDATE}_${VDATE}.nc." >> mailmsg
+       cat mailmsg | mail -s "$subject" $maillist
+       exit 0
+   fi
 fi
 
 # check if fcst files exist; exit if not
@@ -113,7 +115,7 @@ else
 fi
 
 # run Grid_Stat
-run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
+run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
 -c $CONFIGevs/${VERIF_CASE}/$STEP/GridStat_fcstRTOFS_obsAVISO_climoHYCOM.conf
 
 if [ $SENDCOM = "YES" ]; then
@@ -129,7 +131,7 @@ fi
 
 # sum small stat files into one big file using Stat_Analysis
 
-run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
+run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
 -c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstRTOFS.conf
 
 if [ $SENDCOM = "YES" ]; then

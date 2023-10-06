@@ -40,14 +40,14 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 export envir=prod
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
-export SENDDBN=${SENDDBN:-YES}
-export KEEPDATA=${KEEPDATA:-NO}
+export SENDDBN=${SENDDBN:-NO}
+export KEEPDATA=${KEEPDATA:-YES}
 
 ## developers directories
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export OUTPUTROOT="/lfs/h2/emc/vpppg/noscrub/$USER"
-export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}/${STEP}/${COMPONENT}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}
+export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}
 
 export run_mpi='yes'
 export gather='yes'
@@ -60,7 +60,7 @@ export SITE=$(cat /etc/cluster_name)
 ############################################################
 # CALL executable job script here
 ############################################################
-$HOMEevs/jobs/${COMPONENT}/${STEP}/JEVS_NFCENS_WAVE_GRID2OBS_STATS
+$HOMEevs/jobs/JEVS_NFCENS_WAVE_GRID2OBS_STATS
 
 #######################################################################
 # Purpose: This calculates the stats for the NFCENS wave model
