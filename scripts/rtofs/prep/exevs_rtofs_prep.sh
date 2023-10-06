@@ -1,26 +1,205 @@
 #!/bin/bash
 ###############################################################################
 # Name of Script: exevs_rtofs_prep.sh
-# Purpose of Script: To copy RTOFS production data from /com to EVS workspace
-#    and to maintain a 12-day archive.
-# Author: L. Gwen Chen (lichuan.chen@noaa.gov)
+# Purpose of Script: To copy RTOFS production data, convert RTOFS forecasts grids,
+#                    process obs, create masking files
+# Author: Mallory Row (mallory.row@noaa.gov)
 ###############################################################################
 
 set -x
 
+##########################
 # get latest RTOFS data
-mkdir -p $COMOUTprep/rtofs.$VDATE
-cd $COMOUTprep/rtofs.$VDATE
+##########################
+if [ ! -d $COMOUTprep/rtofs.$VDATE ]; then
+    mkdir -p $COMOUTprep/rtofs.$VDATE
+fi
+# n024 is nowcast = f000 forecast
 leads='n024 f024 f048 f072 f096 f120 f144 f168 f192'
+filetypes_2ds='diag ice prog'
+filestypes_3dz_daily='3zsio 3ztio 3zuio 3zvio'
 for lead in ${leads}; do
-  pattern="rtofs_glo_*_${lead}_*.nc"
-  if [ $SENDCOM = "YES" ]; then
-   cp -p --no-clobber $COMINrtofs/rtofs.$VDATE/${pattern} . &
-  fi
+    # glo_2ds files
+    for filetype in ${filetypes_2ds}; do
+        COMINfilename=$COMINrtofs/rtofs.$VDATE/rtofs_glo_2ds_${lead}_${filetype}.nc
+        DATAfilename=${DATA}/rtofs_glo_2ds_${lead}_${filetype}.nc
+        COMOUTfilename=$COMOUTprep/rtofs.$VDATE/rtofs_glo_2ds_${lead}_${filetype}.nc
+        if [ ! -s $COMOUTfilename ]; then
+            if [ -s $COMINfilename ]; then
+                cp -v $COMINfilename $DATAfilename
+                if [ $SENDCOM = YES ]; then
+                    cp -v $DATAfilename $COMOUTfilename
+                fi
+            else
+                export subject="${lead} RTOFS Forecast Data Missing for EVS ${COMPONENT}"
+                echo "Warning: No RTOFS forecast was available for ${VDATE}${lead}" > mailmsg
+                echo “Missing file is ${COMINfilename}” >> mailmsg
+                echo "Job ID: $jobid" >> mailmsg
+                cat mailmsg | mail -s "$subject" $maillist
+            fi
+        fi
+    done
+    # glo_3dz daily files
+    for filetype in ${filestypes_3dz_daily}; do
+        COMINfilename=$COMINrtofs/rtofs.$VDATE/rtofs_glo_3dz_${lead}_daily_${filetype}.nc
+        DATAfilename=${DATA}/rtofs_glo_3dz_${lead}_daily_${filetype}.nc
+        COMOUTfilename=$COMOUTprep/rtofs.$VDATE/rtofs_glo_3dz_${lead}_daily_${filetype}.nc
+        if [ ! -s $COMOUTfilename ]; then
+            if [ -s $COMINfilename ]; then
+                cp -v $COMINfilename $DATAfilename
+                if [ $SENDCOM = YES ]; then
+                    cp -v $DATAfilename $COMOUTfilename
+                fi
+            else
+                export subject="${lead} RTOFS Forecast Data Missing for EVS ${COMPONENT}"
+                echo "Warning: No RTOFS forecast was available for ${VDATE}${lead}" > mailmsg
+                echo “Missing file is ${COMINfilename}” >> mailmsg
+                echo "Job ID: $jobid" >> mailmsg
+                cat mailmsg | mail -s "$subject" $maillist
+            fi
+        fi
+    done
 done
-wait
-rm -f *hvr*.nc  # don't need these
 
-exit
+##########################
+#  convert RTOFS forecast data into lat-lon grids for each RUN;
+#  RUN is the validation source: ghrsst, smos, smap etc.
+##########################
+for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
+    export RUN=$rcase
+    for lead in ${leads}; do
+        if [ $lead = n024 ]; then
+            fhr=000
+        else
+            fhr=$(echo $lead | cut -c 2-4)
+        fi
+        INITDATE=$($NDATE -${fhr} ${VDATE}${cyc} | cut -c 1-8)
+        if [ ! -d $COMOUTprep/rtofs.$INITDATE/$RUN ]; then
+            mkdir -p $COMOUTprep/rtofs.$INITDATE/$RUN
+        fi
+        mkdir -p $DATA/rtofs.$INITDATE/$RUN
+        for ftype in prog diag ice; do
+            rtofs_grid_file=$FIXevs/cdo_grids/rtofs_$RUN.grid
+            rtofs_native_filename=$COMOUTprep/rtofs.$INITDATE/rtofs_glo_2ds_${lead}_${ftype}.nc
+            DATArtofs_latlon_filename=$DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f${fhr}_${ftype}.$RUN.nc
+            COMOUTrtofs_latlon_filename=$COMOUTprep/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f${fhr}_${ftype}.$RUN.nc
+            if [ ! -s $COMOUTrtofs_latlon_filename ]; then
+                if [ -s $rtofs_native_filename ]; then
+                    cdo remapbil,$rtofs_grid_file $rtofs_native_filename $DATArtofs_latlon_filename
+                    if [ $SENDCOM = "YES" ]; then
+                        cp -v $DATArtofs_latlon_filename $COMOUTrtofs_latlon_filename
+                    fi
+                fi
+            fi
+        done
+        if [ $RUN = 'argo' ] ; then
+            for ftype in t s; do
+                rtofs_grid_file=$FIXevs/cdo_grids/rtofs_$RUN.grid
+                rtofs_native_filename=$COMOUTprep/rtofs.$INITDATE/rtofs_glo_3dz_${lead}_daily_3z${ftype}io.nc
+                DATArtofs_latlon_filename=$DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f${fhr}_daily_3z${ftype}io.$RUN.nc
+                COMOUTrtofs_latlon_filename=$COMOUTprep/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f${fhr}_daily_3z${ftype}io.$RUN.nc
+                if [ ! -s $COMOUTrtofs_latlon_filename ]; then
+                    if [ -s $rtofs_native_filename ]; then
+                        cdo remapbil,$rtofs_grid_file $rtofs_native_filename $DATArtofs_latlon_filename
+                        if [ $SENDCOM = "YES" ]; then
+                            cp -v $DATArtofs_latlon_filename $COMOUTrtofs_latlon_filename
+                        fi
+                    fi
+                fi
+            done
+        fi
+    done
+done
 
+##########################
+#  process obs data
+##########################
+# convert OSI-SAF data into lat-lon grid
+export RUN=osisaf
+if [ ! -d $COMOUTprep/rtofs.$VDATE/$RUN ]; then
+    mkdir -p $COMOUTprep/rtofs.$VDATE/$RUN
+fi
+mkdir -p $DATA/rtofs.$VDATE/$RUN
+for ftype in nh sh; do
+    osi_saf_grid_file=$FIXevs/cdo_grids/rtofs_$RUN.grid
+    COMINfilename=$COMINobs/$VDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc
+    DATAfilename=$DATA/rtofs.$VDATE/$RUN/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc
+    COMOUTfilename=$COMOUTprep/rtofs.$VDATE/$RUN/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc
+    if [ ! -s $COMOUTfilename ]; then
+        if [ -s $COMINfilename ]; then
+            cdo remapbil,$osi_saf_grid_file $COMINfilename $DATAfilename
+            if [ $SENDCOM = "YES" ]; then
+                cp -v $DATAfilename $COMOUTfilename
+            fi
+        else
+            if [ $SENDMAIL = YES ] ; then
+                export subject="OSI-SAF Data Missing for EVS RTOFS"
+                echo "Warning: No OSI-SAF ${ftype} data was available for valid date $VDATE." > mailmsg
+                echo "Missing file is $COMINfilename" >> mailmsg
+                cat mailmsg | mail -s "$subject" $maillist
+            fi
+        fi
+    fi
+done
+# convert NDBC *.txt files into a netcdf file using ASCII2NC
+export RUN=ndbc
+if [ ! -d $COMOUTprep/rtofs.$VDATE/$RUN ]; then
+    mkdir -p $COMOUTprep/rtofs.$VDATE/$RUN
+fi
+mkdir -p $DATA/rtofs.$VDATE/$RUN
+export MET_NDBC_STATIONS=${FIXevs}/ndbc_stations/ndbc_stations.xml
+ndbc_txt_ncount=$(ls -l $COMINobs/$VDATE/validation_data/marine/buoy/*.txt |wc -l)
+if [ $ndbc_txt_ncount -gt 0 ]; then
+    DATAfilename=$DATA/rtofs.$VDATE/$RUN/ndbc.${VDATE}.nc
+    COMOUTfilename=$COMOUTprep/rtofs.$VDATE/$RUN/ndbc.${VDATE}.nc
+    if [ ! -s $COMOUTfilename ]; then
+        run_metplus.py -c $PARMevs/metplus_config/machine.conf \
+        -c $CONFIGevs/grid2obs/$STEP/ASCII2NC_obsNDBC.conf
+         if [ $SENDCOM = YES ]; then
+             cp -v $DATAfilename $COMOUTfilename
+         fi
+    fi
+else
+  if [ $SENDMAIL = YES ] ; then
+    export subject="NDBC Data Missing for EVS RTOFS"
+    echo "Warning: No NDBC data was available for valid date $VDATE." > mailmsg
+    echo "Missing files are located at $COMINobs/$VDATE/validation_data/marine/buoy/." >> mailmsg
+    cat mailmsg | mail -s "$subject" $maillist
+  fi
+fi
+# convert Argo basin files into a netcdf file using python embedding
+export RUN=argo
+if [ ! -d $COMOUTprep/rtofs.$VDATE/$RUN ]; then
+    mkdir -p $COMOUTprep/rtofs.$VDATE/$RUN
+fi
+mkdir -p $DATA/rtofs.$VDATE/$RUN
+if [ -s $COMINobs/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_prof.nc ] && [ -s $COMINobs/$VDATE/validation_data/marine/argo/indian_ocean/${VDATE}_prof.nc ] && [ -s $COMINobs/$VDATE/validation_data/marine/argo/pacific_ocean/${VDATE}_prof.nc ]; then
+    DATAfilename=$DATA/rtofs.$VDATE/$RUN/argo.${VDATE}.nc
+    COMOUTfilename=$COMOUTprep/rtofs.$VDATE/$RUN/argo.${VDATE}.nc
+    if [ ! -s $COMOUTfilename ]; then
+        run_metplus.py -c $PARMevs/metplus_config/machine.conf \
+        -c $CONFIGevs/grid2obs/$STEP/ASCII2NC_obsARGO.conf
+        if [ $SENDCOM = YES ]; then
+             cp -v $DATAfilename $COMOUTfilename
+        fi
+    fi
+else
+  if [ $SENDMAIL = YES ] ; then
+    export subject="Argo Data Missing for EVS RTOFS"
+    echo "Warning: No Argo data was available for valid date $VDATE." > mailmsg
+    echo "Missing file is $COMINobs/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_prof.nc, COMINobs/$VDATE/validation_data/marine/argo/indian_ocean/${VDATE}_prof.nc, and/or $COMINobs/$VDATE/validation_data/marine/argo/pacific_ocean/${VDATE}_prof.nc" >> mailmsg
+    cat mailmsg | mail -s "$subject" $maillist
+  fi
+fi
+
+
+##########################
+#  create the masks
+#  NOTE: script below is calling MET's gen_vx_mask directly instead of using METplus
+#        so keeping it in a ush script; future use should use METplus to do this
+##########################
+for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
+    export RUN=$rcase
+    $USHevs/${COMPONENT}/${COMPONENT}_${STEP}_regions.sh
+done
 ################################ END OF SCRIPT ################################
