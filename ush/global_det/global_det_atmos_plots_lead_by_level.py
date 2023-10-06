@@ -74,7 +74,7 @@ class LeadByLevel:
         if self.plot_info_dict['stat'] == 'FBAR_OBAR':
             self.logger.warning("Cannot make lead_by_level for stat "
                                 +f"{self.plot_info_dict['stat']}")
-            sys.exit(0)
+            sys.exit(1)
         plot_specs_lbl = PlotSpecs(self.logger, 'lead_by_level')
         self.logger.info(f"Gathering data for {self.plot_info_dict['stat']} "
                          +"- vertical profile "
