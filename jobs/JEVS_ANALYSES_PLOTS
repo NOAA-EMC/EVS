@@ -66,7 +66,7 @@ mkdir -m 775 -p $COMOUTplots
 # Execute the script.
 #######################################################################
 
-$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${VERIF_CASE}_${STEP}.sh
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${VERIF_CASE}_${STEP}.sh
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$msg"
