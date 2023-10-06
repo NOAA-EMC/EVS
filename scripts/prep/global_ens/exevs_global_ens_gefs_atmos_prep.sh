@@ -45,10 +45,10 @@ export MASKS=$FIXevs/mask
 
 
 
-export GRID2GRID_CONF=$PARMevs/metplus_config/${COMPONENT}/${RUN}_grid2grid/stats
-export GRID2OBS_CONF=$PARMevs/metplus_config/${COMPONENT}/${RUN}_grid2obs/stats
-export ENS_LIST=$PARMevs/metplus_config/${COMPONENT}/atmos_grid2grid/prep
-export CONF_PREP=$PARMevs/metplus_config/${COMPONENT}/atmos_grid2grid/prep
+export GRID2GRID_CONF=$PARMevs/metplus_config/stats/${COMPONENT}/${RUN}_grid2grid
+export GRID2OBS_CONF=$PARMevs/metplus_config/stats/${COMPONENT}/${RUN}_grid2obs
+export ENS_LIST=$PARMevs/metplus_config/prep/${COMPONENT}/atmos_grid2grid
+export CONF_PREP=$PARMevs/metplus_config/prep/${COMPONENT}/atmos_grid2grid
 
 if [ $get_gfs = yes ] ; then
  $USHevs/${COMPONENT}/evs_get_gens_${RUN}_data.sh gfs

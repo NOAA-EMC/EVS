@@ -75,7 +75,7 @@ export SENDECF=${SENDECF:-YES}
 ####################################
 # Execute the script                
 ####################################
-$HOMEevs/scripts/global_ens/prep/exevs_global_ens_wave_grid2obs_prep.sh
+$HOMEevs/scripts/prep/global_ens/exevs_global_ens_wave_grid2obs_prep.sh
 export err=$?; err_chk
 
 msg="JOB $job HAS COMPLETED NORMALLY."
