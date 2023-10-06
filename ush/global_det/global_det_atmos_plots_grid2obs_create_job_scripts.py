@@ -5,7 +5,7 @@ Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This creates multiple independent job scripts. These
           jobs scripts contain all the necessary environment variables
           and commands to needed to run them.
-Run By: scripts/global_det/plots/exevs_global_det_atmos_grid2obs_plots.sh
+Run By: scripts/plots/global_det/exevs_global_det_atmos_grid2obs_plots.sh
 '''
 
 import sys
