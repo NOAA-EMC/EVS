@@ -44,7 +44,7 @@ export NDAYS=90
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver
-export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
+export COMROOT=/lfs/h2/emc/ptmp/${USER}
 
 # Set config file
 export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${VERIF_TYPE}

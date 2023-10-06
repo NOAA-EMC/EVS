@@ -39,7 +39,7 @@ export RUN=long_term
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver
-export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
+export COMROOT=/lfs/h2/emc/ptmp/${USER}
 
 export VDATEYYYY=$(date -d "1 month ago" '+%Y')
 export VDATEmm=$(date -d "1 month ago" '+%m')
