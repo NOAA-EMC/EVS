@@ -104,8 +104,7 @@ fi
 # Execute the script
 #######################################################################
 env
-
-$HOMEevs/scripts/global_det/stats/exevs_global_det_${RUN}_${VERIF_CASE}_stats.sh
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
 
 msg="JOB $job HAS COMPLETED NORMALLY."

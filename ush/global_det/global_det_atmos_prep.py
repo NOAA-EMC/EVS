@@ -4,7 +4,7 @@ Name: global_det_atmos_prep.py
 Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This does the prep work for global determinstic
           model files and observation files.
-Run By: scripts/global_det/prep/exevs_global_det_atmos_prep.sh
+Run By: scripts/prep/global_det/exevs_global_det_atmos_prep.sh
 '''
 
 import os

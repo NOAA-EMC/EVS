@@ -5,7 +5,7 @@
 #             Mallory Row / Mallory.Row@noaa.gov
 # Purpose of Script: This script generates the job scripts to create
 #                    lead average plots.
-# Run By: scripts/global_det/plots/exevs_global_det_wave_grid2obs_plots.sh
+# Run By: scripts/plots/global_det/exevs_global_det_wave_grid2obs_plots.sh
 ###############################################################################
 
 #################################
@@ -28,7 +28,7 @@ obsnames='GDAS NDBC'
 cd ${DATA}
 touch ${DATA}/jobs/run_all_${RUN}_g2o_plots_poe.sh
 
-export GRID2OBS_CONF="${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}"
+export GRID2OBS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}"
 MET_VERSION_major_minor=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
 
 # write the commands
