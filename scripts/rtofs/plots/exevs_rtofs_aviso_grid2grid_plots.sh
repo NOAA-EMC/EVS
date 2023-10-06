@@ -1,20 +1,25 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_rtofs_seasfc_plots.sh
-# Purpose of Script: To create forecast verification plots for RTOFS sea
-#    surface variables using MET/METplus.
-# Author: L. Gwen Chen (lichuan.chen@noaa.gov)
+# Name of Script: exevs_rtofs_aviso_grid2grid_plots
+# Purpose of Script: Create RTOFS AVISO plots for last 60 days
+# Author: Mallory Row (mallory.row@noaa.gov)
 ###############################################################################
 
 set -x
+
+export OBTYPE=AVISO
+
+export VAR=SSH
+
+mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE
+
+# set major & minor MET version
+export MET_VERSION_major_minor=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
 
 # set up plot variables
 export PERIOD=last60days
 export THRESH=""
 export MASKS="GLB, NATL, SATL, EQATL, NPAC, SPAC, EQPAC, IND, SOC, Arctic, MEDIT"
-if [ $RUN = 'ndbc' ] ; then
-  export MASKS="GLB"
-fi
 
 # plot time series
 export PTYPE=time_series
@@ -25,19 +30,19 @@ for lead in 000 024 048 072 096 120 144 168 192; do
   for stats in me rmse acc; do
     export METRIC=$stats
 
-    if [ $stats = 'me' ] ; then 
+    if [ $stats = 'me' ] ; then
       export LTYPE=SL1L2
     fi
 
-    if [ $stats = 'rmse' ] ; then  
+    if [ $stats = 'rmse' ] ; then
       export LTYPE=SL1L2
     fi
 
-    if [ $stats = 'acc' ] ; then  
+    if [ $stats = 'acc' ] ; then
       export LTYPE=SAL1L2
     fi
 
-# make plots
+    # make plots
     $CONFIGevs/${VERIF_CASE}/$STEP/verif_plotting.rtofs.conf
 
   done
@@ -62,7 +67,7 @@ for stats in me rmse acc; do
     export LTYPE=SAL1L2
   fi
 
-# make plots
+  # make plots
   $CONFIGevs/${VERIF_CASE}/$STEP/verif_plotting.rtofs.conf
 done
 
@@ -71,9 +76,9 @@ cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN
 tar -cvf evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
 
 if [ $SENDCOM = "YES" ]; then
- cp evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplots
+ cp -v evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplots
 fi
 
-exit
-
-################################ END OF SCRIPT ################################
+if [ $SENDDBN = YES ] ; then
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar
+fi
