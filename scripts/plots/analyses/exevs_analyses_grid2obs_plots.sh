@@ -113,7 +113,7 @@ do
 	smvar=`echo $varb | tr A-Z a-z`
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
 	then
-	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting.config
+	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config
 	cat $LOGDIR/*out
 	mv $LOGDIR/*out $LOGFIN
         else
@@ -142,7 +142,7 @@ do
         smvar=`echo $varb | tr A-Z a-z`
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
 	then
-	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting.config
+	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config
         cat $LOGDIR/*out
         mv $LOGDIR/*out $LOGFIN
         else
@@ -171,7 +171,7 @@ do
         smvar=`echo $varb | tr A-Z a-z`
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
 	then
-	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting.config
+	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config
         cat $LOGDIR/*out
         mv $LOGDIR/*out $LOGFIN
         else
@@ -212,7 +212,7 @@ do
 	smlev=`echo $lev | tr A-Z a-z`
 	smvar=`echo $varb | tr A-Z a-z`
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png ]; then
-	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting.config_perf
+	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_perf
         cat $LOGDIR/*out
         mv $LOGDIR/*out $LOGFIN
         else
@@ -235,7 +235,7 @@ do
 	export stat
 
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]; then
-	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting.config_thresh
+	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_thresh
         cat $LOGDIR/*out
         mv $LOGDIR/*out $LOGFIN
         else
@@ -272,7 +272,7 @@ done
 	export stat
 
 	if [ ! -e $COMOUTplots/$var/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]; then
-	sh $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/py_plotting.config_thresh
+	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_thresh
         cat $LOGDIR/*out
         mv $LOGDIR/*out $LOGFIN
         else
