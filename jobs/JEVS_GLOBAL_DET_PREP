@@ -89,7 +89,7 @@ done
 # Execute the script
 #######################################################################
 env
-$HOMEevs/scripts/global_det/prep/exevs_global_det_${RUN}_prep.sh
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${STEP}.sh
 export err=$?; err_chk
 
 msg="JOB $job HAS COMPLETED NORMALLY."
