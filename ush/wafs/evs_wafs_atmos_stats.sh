@@ -23,23 +23,23 @@ mkdir -p $GRID_STAT_INPUT_BASE
     
 export STAT_ANALYSIS_OUTPUT_DIR=$DATA/${OBSERVATION}_${RESOLUTION}_${CENTER}_stat
 
-source $HOMEevs/parm/evs_config/wafs/config.evs.stats.wafs.atmos.standalone
+source $HOMEevs/parm/evs_config/wafs/config.evs.wafs.standalone
 
-cp $PARMevs/$STEP/GridStat_fcstWAFS_obs${OBSERVATION}.conf GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
+cp $PARMevs/GridStat_fcstWAFS_obs${OBSERVATION}.conf GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
 
 # Prepare data
 $USHevs/evs_wafs_atmos_stats_preparedata.sh
 
 # run stat files
 ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $DATA/GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
-${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/$STEP/StatAnalysis_fcstWAFS_obs${OBSERVATION}_GatherbyDay.conf
+${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/StatAnalysis_fcstWAFS_obs${OBSERVATION}_GatherbyDay.conf
 
 	#===================================================================================================#
 	#========== Turn off Wind Direction verification until its RMSE gets supported by METplus ==========#
 	#if [ $OBSERVATION = "GFS" ] ; then
 	#    # Do wind direction verification separately
-	#    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/$STEP/GridStat_fcstWAFS_obs${OBSERVATION}wdir.conf
-	#    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/$STEP/StatAnalysis_fcstWAFS_obs${OBSERVATION}wdir_GatherbyDay.conf
+	#    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/GridStat_fcstWAFS_obs${OBSERVATION}wdir.conf
+	#    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/StatAnalysis_fcstWAFS_obs${OBSERVATION}wdir_GatherbyDay.conf
 	#    cat $STAT_ANALYSIS_OUTPUT_DIR/wdir_${RESOLUTION}.* > $COMOUTfinal/$NET.$STEP.$MODELNAME.$RUN.${VERIF_CASE}_wdir$resolution.v$VDATE.stat
 	#fi
 	#===================================================================================================#
@@ -61,7 +61,6 @@ fi
 #####################################################################
 # GOOD RUN
 echo "********SCRIPT exevs_wafs_atmos_stats.sh COMPLETED NORMALLY on `date`"
-exit 0
 #####################################################################
 
 ############## END OF SCRIPT #######################
