@@ -23,21 +23,21 @@ print("Working in: "+cwd)
 DATA = os.environ['DATA']
 COMINcfs = os.environ['COMINcfs']
 COMINcmc = os.environ['COMINcmc']
-COMINcmc_precip = os.environ['COMINcmc_precip']
-COMINcmc_regional_precip = os.environ['COMINcmc_regional_precip']
-COMINdwd_precip = os.environ['COMINdwd_precip']
-COMINecmwf = os.environ['COMINecmwf']
-COMINecmwf_precip = os.environ['COMINecmwf_precip']
-COMINfnmoc = os.environ['COMINfnmoc']
-COMINimd = os.environ['COMINimd']
-COMINjma = os.environ['COMINjma']
-COMINjma_precip = os.environ['COMINjma_precip']
-COMINmetfra_precip = os.environ['COMINmetfra_precip']
-COMINukmet = os.environ['COMINukmet']
-COMINukmet_precip = os.environ['COMINukmet_precip']
-COMINosi_saf = os.environ['COMINosi_saf']
-COMINghrsst_ospo = os.environ['COMINghrsst_ospo']
-COMINget_d = os.environ['COMINget_d']
+DCOMINcmc_precip = os.environ['DCOMINcmc_precip']
+DCOMINcmc_regional_precip = os.environ['DCOMINcmc_regional_precip']
+DCOMINdwd_precip = os.environ['DCOMINdwd_precip']
+DCOMINecmwf = os.environ['DCOMINecmwf']
+DCOMINecmwf_precip = os.environ['DCOMINecmwf_precip']
+DCOMINfnmoc = os.environ['DCOMINfnmoc']
+DCOMINimd = os.environ['DCOMINimd']
+DCOMINjma = os.environ['DCOMINjma']
+DCOMINjma_precip = os.environ['DCOMINjma_precip']
+DCOMINmetfra_precip = os.environ['DCOMINmetfra_precip']
+DCOMINukmet = os.environ['DCOMINukmet']
+DCOMINukmet_precip = os.environ['DCOMINukmet_precip']
+DCOMINosi_saf = os.environ['DCOMINosi_saf']
+DCOMINghrsst_ospo = os.environ['DCOMINghrsst_ospo']
+DCOMINget_d = os.environ['DCOMINget_d']
 SENDCOM = os.environ['SENDCOM']
 COMOUT = os.environ['COMOUT']
 INITDATE = os.environ['INITDATE']
@@ -64,7 +64,7 @@ gda_util.make_dir(COMOUT_INITDATE)
 # Climate Forecast System - cfs
 # Canadian Meteorological Centre - Regional - cmc_regional
 # Deutscher Wetterdienst (German) - dwd
-# Météo-France - metfra
+# Met-France - metfra
 
 global_det_model_dict = {
     'cfs': {'COMIN_fcst_file_format': os.path.join(COMINcfs,
@@ -81,7 +81,7 @@ global_det_model_dict = {
             'COMIN_anl_file_format': os.path.join(COMINcmc,
                                                   'cmc_{init?fmt=%Y%m%d%H}'
                                                   +'f000'),
-            'COMIN_precip_file_format': os.path.join(COMINcmc_precip,
+            'COMIN_precip_file_format': os.path.join(DCOMINcmc_precip,
                                                      'cmcglb_'
                                                      +'{init?fmt=%Y%m%d%H}_'
                                                      +'{lead_shift?fmt=%3H?'
@@ -89,7 +89,7 @@ global_det_model_dict = {
                                                      +'{lead?fmt=%3H}.grb2'),
             'cycles': ['00', '12'],
             'fcst_hrs': range(0, 240+6, 6)},
-    'cmc_regional': {'COMIN_precip_file_format': os.path.join(COMINcmc_regional_precip,
+    'cmc_regional': {'COMIN_precip_file_format': os.path.join(DCOMINcmc_regional_precip,
                                                               'cmc_'
                                                               +'{init?fmt=%Y%m%d%H}_'
                                                               +'{lead_shift?fmt=%3H?'
@@ -97,67 +97,67 @@ global_det_model_dict = {
                                                               +'{lead?fmt=%3H}'),
                      'cycles': ['00', '12'],
                      'fcst_hrs': range(24, 48+12, 12)},
-    'dwd': {'COMIN_precip_file_format': os.path.join(COMINdwd_precip, 'dwd_'
+    'dwd': {'COMIN_precip_file_format': os.path.join(DCOMINdwd_precip, 'dwd_'
                                                      +'{init?fmt=%Y%m%d%H}_'
                                                      +'{lead_shift?fmt=%3H?'
                                                      +'shift=-24}_'
                                                      +'{lead?fmt=%3H}'),
             'cycles': ['00', '12'],
             'fcst_hrs': range(24, 72+12, 12)},
-    'ecmwf': {'COMIN_fcst_file_format': os.path.join(COMINecmwf,
+    'ecmwf': {'COMIN_fcst_file_format': os.path.join(DCOMINecmwf,
                                                      'U1D{init?fmt=%m%d%H}00'
                                                      +'{valid?fmt=%m%d%H}001'),
-              'COMIN_anl_file_format': os.path.join(COMINecmwf,
+              'COMIN_anl_file_format': os.path.join(DCOMINecmwf,
                                                     'U1D{init?fmt=%m%d%H}00'
                                                     +'{init?fmt=%m%d%H}011'),
-              'COMIN_precip_file_format': os.path.join(COMINecmwf_precip,
+              'COMIN_precip_file_format': os.path.join(DCOMINecmwf_precip,
                                                        'UWD{init?fmt=%Y%m%d%H%M}'
                                                        +'{valid?fmt=%m%d%H%M}1'),
               'cycles': ['00', '12'],
               'fcst_hrs': range(0, 240+6, 6)},
-    'fnmoc': {'COMIN_fcst_file_format': os.path.join(COMINfnmoc,
+    'fnmoc': {'COMIN_fcst_file_format': os.path.join(DCOMINfnmoc,
                                                      'US058GMET-OPSbd2.NAVGEM'
                                                      +'{lead?fmt=%3H}-'
                                                      +'{init?fmt=%Y%m%d%H}-'
                                                      +'NOAA-halfdeg.gr2'),
-              'COMIN_anl_file_format': os.path.join(COMINfnmoc,
+              'COMIN_anl_file_format': os.path.join(DCOMINfnmoc,
                                                     'US058GMET-OPSbd2.NAVGEM'
                                                     +'000-'
                                                     +'{init?fmt=%Y%m%d%H}-'
                                                     +'NOAA-halfdeg.gr2'),
               'cycles': ['00', '12'],
               'fcst_hrs': range(0, 180+6, 6)},
-    'imd': {'COMIN_fcst_file_format': os.path.join(COMINimd,
+    'imd': {'COMIN_fcst_file_format': os.path.join(DCOMINimd,
                                                    'gdas1.t{init?fmt=%2H}z.'
                                                    +'grbf{lead?fmt=%2H}'),
-            'COMIN_anl_file_format': os.path.join(COMINimd,
+            'COMIN_anl_file_format': os.path.join(DCOMINimd,
                                                   'gdas1.t{init?fmt=%2H}z.'
                                                   +'grbf00'),
             'cycles': ['00', '12'],
             'fcst_hrs': range(0, 240+6, 6)},
-    'jma': {'COMIN_fcst_file_format': os.path.join(COMINjma,
+    'jma': {'COMIN_fcst_file_format': os.path.join(DCOMINjma,
                                                    'jma_{hem?fmt=str}'
                                                    +'_{init?fmt=%H}'),
-            'COMIN_anl_file_format': os.path.join(COMINjma,
+            'COMIN_anl_file_format': os.path.join(DCOMINjma,
                                                   'jma_{hem?fmt=str}'
                                                   +'_{init?fmt=%H}'),
-            'COMIN_precip_file_format': os.path.join(COMINjma_precip, 'jma_'
+            'COMIN_precip_file_format': os.path.join(DCOMINjma_precip, 'jma_'
                                                      +'{init?fmt=%Y%m%d%H}00'
                                                      +'.grib'),
             'cycles': ['00', '12'],
             'fcst_hrs': range(0, 192+24, 24)},
-    'metfra': {'COMIN_precip_file_format': os.path.join(COMINmetfra_precip,
+    'metfra': {'COMIN_precip_file_format': os.path.join(DCOMINmetfra_precip,
                                                         'METFRA_'
                                                         +'{init?fmt=%H}_'
                                                         +'{init?fmt=%Y%m%d}.gz'),
                'cycles': ['00', '12'],
                'fcst_hrs': range(24, 72+12, 12)},
-    'ukmet': {'COMIN_fcst_file_format': os.path.join(COMINukmet,
+    'ukmet': {'COMIN_fcst_file_format': os.path.join(DCOMINukmet,
                                                      'GAB{init?fmt=%2H}'
                                                      +'{letter?fmt=str}.GRB'),
-              'COMIN_anl_file_format': os.path.join(COMINukmet,
+              'COMIN_anl_file_format': os.path.join(DCOMINukmet,
                                                     'GAB{init?fmt=%2H}AAT.GRB'),
-              #'COMIN_precip_file_format': os.path.join(COMINukmet_precip, 'ukmo.'
+              #'COMIN_precip_file_format': os.path.join(DCOMINukmet_precip, 'ukmo.'
               #                                         +'{init?fmt=%Y%m%d%H}'),
               'cycles': ['00', '12'],
               'fcst_hrs': range(0, 144+6, 6)}
@@ -446,7 +446,7 @@ for MODEL in MODELNAME:
 # NESDIS Evapotranspiration Geostationary Operational Environmental Satellite (GOES) ET and Drought (GET-D)- get_d
 
 global_det_obs_dict = {
-    'osi_saf': {'COMIN_file_format': os.path.join(COMINosi_saf,
+    'osi_saf': {'COMIN_file_format': os.path.join(DCOMINosi_saf,
                                                   '{init_shift?fmt=%Y%m%d'
                                                   +'?shift=-12}',
                                                   'seaice', 'osisaf',
@@ -461,7 +461,7 @@ global_det_obs_dict = {
                                                  +'?shift=-24}to'
                                                  +'{init?fmt=%Y%m%d%H}.nc'),
                 'cycles': ['00']},
-    'ghrsst_ospo': {'COMIN_file_format': os.path.join(COMINghrsst_ospo,
+    'ghrsst_ospo': {'COMIN_file_format': os.path.join(DCOMINghrsst_ospo,
                                                       '{init_shift?fmt=%Y%m%d'
                                                       +'?shift=-24}',
                                                       'validation_data', 'marine',
@@ -476,7 +476,7 @@ global_det_obs_dict = {
                                                      +'?shift=-24}to'
                                                      +'{init?fmt=%Y%m%d%H}.nc'),
                     'cycles': ['00']},
-    'get_d': {'COMIN_file_format': os.path.join(COMINget_d, 'get_d',
+    'get_d': {'COMIN_file_format': os.path.join(DCOMINget_d, 'get_d',
                                                 'GETDL3_DAL_CONUS_'
                                                 +'{init?fmt=%Y%j}_1.0.nc'),
               'DATA_file_format': os.path.join(DATA, RUN+'.'+INITDATE,

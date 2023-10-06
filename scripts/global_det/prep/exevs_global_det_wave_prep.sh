@@ -64,12 +64,12 @@ for OBS in $OBSNAME; do
     # Trim down the NDBC buoy files
     if [ $OBS == "ndbc" ]; then
         INITDATEp1=$(date --date="${INITDATE} 24 hours" +"%Y%m%d")
-        nbdc_txt_ncount=$(ls -l $COMINndbc/${INITDATEp1}/validation_data/marine/buoy/*.txt |wc -l)
+        nbdc_txt_ncount=$(ls -l $DCOMINndbc/${INITDATEp1}/validation_data/marine/buoy/*.txt |wc -l)
         if [[ $nbdc_txt_ncount -eq 0 ]]; then
             if [ $SENDMAIL = YES ] ; then
                 export subject="NDBC Data Missing for EVS ${COMPONENT}"
                 echo "Warning: No NDBC data was available for valid date ${VDATE}" > mailmsg
-                echo "Missing files are located at $COMINndbc/${INITDATEp1}/validation_data/marine/buoy" >> msg
+                echo "Missing files are located at $DCOMINndbc/${INITDATEp1}/validation_data/marine/buoy" >> msg
                 echo "Job ID: $jobid" >> mailmsg
                 cat mailmsg | mail -s "$subject" $maillist
             fi

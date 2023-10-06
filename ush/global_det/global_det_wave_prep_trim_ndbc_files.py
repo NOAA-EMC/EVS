@@ -19,7 +19,7 @@ print("BEGIN: "+os.path.basename(__file__))
 # Read in environment variables to use
 INITDATE = os.environ['INITDATE']
 DATA = os.environ['DATA']
-COMINndbc = os.environ['COMINndbc']
+DCOMINndbc = os.environ['DCOMINndbc']
 SENDCOM = os.environ['SENDCOM']
 COMOUT = os.environ['COMOUT']
 
@@ -34,33 +34,33 @@ ndbc_header2 = ("#yr  mo dy hr mn degT m/s  m/s     m   sec   sec degT   "
                 +"hPa  degC  degC  degC  nmi  hPa    ft\n")
 
 # Trim down files for single date
-for COMINndbc_file in glob.glob(os.path.join(COMINndbc,
+for DCOMINndbc_file in glob.glob(os.path.join(DCOMINndbc,
                                              f"{INITDATEp1_dt:%Y%m%d}",
                                              'validation_data', 'marine',
                                              'buoy', '*.txt')):
     DATAndbc_file = os.path.join(DATA,
                                  f"ndbc_trimmed_{INITDATE_dt:%Y%m%d}_"
-                                 +f"{COMINndbc_file.rpartition('/')[2]}")
+                                 +f"{DCOMINndbc_file.rpartition('/')[2]}")
     COMOUTndbc_file = os.path.join(f"{COMOUT}.{INITDATE_dt:%Y%m%d}",
                                    'ndbc',
-                                   f"{COMINndbc_file.rpartition('/')[2]}")
+                                   f"{DCOMINndbc_file.rpartition('/')[2]}")
     if not os.path.exists(COMOUTndbc_file):
-        print(f"Trimming {COMINndbc_file} for {INITDATE_dt:%Y%m%d}")
-        COMINndbc_file_df = pd.read_csv(
-            COMINndbc_file, sep=" ", skiprows=2, skipinitialspace=True,
+        print(f"Trimming {DCOMINndbc_file} for {INITDATE_dt:%Y%m%d}")
+        DCOMINndbc_file_df = pd.read_csv(
+            DCOMINndbc_file, sep=" ", skiprows=2, skipinitialspace=True,
             keep_default_na=False, dtype='str', header=None,
             names=ndbc_header1[1:].split()
         )
-        trimmed_COMINndbc_file_df = COMINndbc_file_df[
-            (COMINndbc_file_df['YY'] == f"{INITDATE_dt:%Y}") \
-             & (COMINndbc_file_df['MM'] == f"{INITDATE_dt:%m}") \
-             & (COMINndbc_file_df['DD'] == f"{INITDATE_dt:%d}")
+        trimmed_DCOMINndbc_file_df = DCOMINndbc_file_df[
+            (DCOMINndbc_file_df['YY'] == f"{INITDATE_dt:%Y}") \
+             & (DCOMINndbc_file_df['MM'] == f"{INITDATE_dt:%m}") \
+             & (DCOMINndbc_file_df['DD'] == f"{INITDATE_dt:%d}")
         ]
         DATAndbc_file_data = open(DATAndbc_file, 'w')
         DATAndbc_file_data.write(ndbc_header1)
         DATAndbc_file_data.write(ndbc_header2)
         DATAndbc_file_data.close()
-        trimmed_COMINndbc_file_df.to_csv(
+        trimmed_DCOMINndbc_file_df.to_csv(
             DATAndbc_file, header=None, index=None, sep=' ', mode='a'
         )
         if SENDCOM == 'YES':
