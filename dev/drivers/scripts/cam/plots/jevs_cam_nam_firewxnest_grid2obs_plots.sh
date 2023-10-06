@@ -27,7 +27,9 @@ module load prod_envir/${prod_envir_ver}
 
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
-export KEEPDATA=NO
+export KEEPDATA=YES
+export SENDMAIL=YES
+export SENDDBN=NO
 
 export cyc=00
 export envir=prod
@@ -53,7 +55,7 @@ export COMOUT=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver}/$STEP/$COMPONENT
 export COMINnam=${COMIN}/stats/${COMPONENT}/${MODELNAME}
 
 # CALL executable job script here
-$HOMEevs/jobs/cam/plots/JEVS_CAM_PLOTS
+$HOMEevs/jobs/JEVS_CAM_PLOTS
 
 ######################################################################
 ## Purpose: This job will generate the grid2obs statistics for the NAM_FIREWXNEST

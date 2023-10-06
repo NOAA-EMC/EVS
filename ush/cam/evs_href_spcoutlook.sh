@@ -23,13 +23,16 @@ mask_day1=${COMINspcotlk:0:$index}/cam/spc_otlk.$day1
 mask_day2=${COMINspcotlk:0:$index}/cam/spc_otlk.$day2
 mask_day3=${COMINspcotlk:0:$index}/cam/spc_otlk.$day3
 
+
 if [ ! -d  $mask_day1 ] && [ ! -d  $mask_day2 ] && [ ! -d  $mask_day3 ] ; then
+  if [ $SENDMAIL = YES ] ; then
     export subject="SPC outlook mask files are Missing for EVS ${COMPONENT}"
     echo "Warning:  No SPC outlook mask files available for ${VDATE}" > mailmsg
     echo Missing mask directories are $mask_day1 , $mask_day2 and $mask_day3   >> mailmsg
     echo "Job ID: $jobid" >> mailmsg
     cat mailmsg | mail -s "$subject" $maillist
     exit
+  fi
 fi
 
 

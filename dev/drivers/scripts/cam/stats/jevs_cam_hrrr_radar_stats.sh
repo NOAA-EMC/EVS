@@ -42,7 +42,7 @@ export cyc=${cyc:-${cyc}}
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/${USER}
-export KEEPDATA=NO
+export KEEPDATA=YES
 export VERIF_CASE=radar
 export MODELNAME=hrrr
 export modsys=hrrr
@@ -53,6 +53,7 @@ export USE_CFP=YES
 export nproc=3
 ############################################################
 
+export SENDMAIL=${SENDMAIL:-YES}
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
@@ -67,7 +68,7 @@ if [ -z "$maillist" ]; then
 else
 
    # CALL executable job script here
-   $HOMEevs/jobs/cam/stats/JEVS_CAM_STATS
+   $HOMEevs/jobs/JEVS_CAM_STATS
 
 fi
 

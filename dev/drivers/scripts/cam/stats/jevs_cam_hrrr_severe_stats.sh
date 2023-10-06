@@ -39,7 +39,7 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/${USER}
-export KEEPDATA=NO
+export KEEPDATA=YES
 export VERIF_CASE=severe
 export MODELNAME=hrrr
 export modsys=hrrr
@@ -50,6 +50,7 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 
 export cyc=${cyc:-${cyc}}
 
+export SENDMAIL=${SENDMAIL:-YES}
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
@@ -64,7 +65,7 @@ if [ -z "$maillist" ]; then
 else
 
    # CALL executable job script here
-   $HOMEevs/jobs/cam/stats/JEVS_CAM_STATS
+   $HOMEevs/jobs/JEVS_CAM_STATS
 
 fi
 

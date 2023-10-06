@@ -66,7 +66,6 @@ for group in condense_stats filter_stats make_plots tar_images; do
 	    export MP_PGMMODEL=mpmd
 	    export MP_CMDFILE=${poe_script}
 	    if [ $machine = WCOSS2 ]; then
-	        export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
 	        nselect=$(cat $PBS_NODEFILE | wc -l)
 	        nnp=$(($nselect * $nproc))
 	        launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
@@ -99,8 +98,11 @@ if [ $SENDCOM = YES ]; then
     cd $DATA
 fi
 
-# Clean up
-if [ $KEEPDATA != "YES" ]; then
-    cd $DATAROOT
-    rm -rf $DATA
+# SENDDBN alert
+if [ $SENDDBN = YES ] ; then
+    for VERIF_TYPE_SUBDIR_PATH in $DATA/$VERIF_CASE_STEP/plot_output/$RUN.${end_date}/images/*; do
+	VERIF_TYPE_SUBDIR=$(echo ${VERIF_TYPE_SUBDIR_PATH##*/})
+	tarname=evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${PDYm2}.tar
+	$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/$tarname
+    done
 fi

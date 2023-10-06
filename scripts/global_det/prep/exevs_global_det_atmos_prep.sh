@@ -16,8 +16,10 @@ status=$?
 [[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/global_det/global_det_atmos_prep.py"
 
 # Send for missing files
-if ls $DATA/mail_* 1> /dev/null 2>&1; then
-    for FILE in $DATA/mail_*; do
-        $FILE
-    done
+if [ $SENDMAIL = YES ] ; then
+    if ls $DATA/mail_* 1> /dev/null 2>&1; then
+        for FILE in $DATA/mail_*; do
+            $FILE
+        done
+    fi
 fi

@@ -1097,7 +1097,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
             )
             fcst_thresh_labels = [str(tlab) for tlab in fcst_thresh_labels]
             requested_fcst_thresh_labels = [
-                float(tlab) for tlab in fcst_thresh_labels
+                float(tlab) for tlab in requested_fcst_thresh_labels
             ]
             requested_fcst_thresh_labels = (
                 reference.unit_conversions[units]['formula'](
