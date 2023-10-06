@@ -42,8 +42,9 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs/$evs_ver
 # set up for email alerts of missing data
 ############################################################
 export pid=${PBS_JOBID:-$$}
-export job=${PBS_JOBNAME:-jevs_aviation_stats}
+export job=${PBS_JOBNAME:-jevs_wafs_stats}
 export jobid=$job.$pid
+
 export maillist=${maillist:-'alicia.bentley@noaa.gov,yali.mao@noaa.gov'}
 export SENDMAIL=${SENDMAIL:-YES}
 
