@@ -1,13 +1,13 @@
 #!/bin/bash
 ###############################################################################
-# Job Name: JEVS_RTOFS_STATS
-# Purpose: To create stat files for RTOFS forecast verification using
-#          MET/METplus.
+# Job Name: JEVS_RTOFS_PLOTS
+# Purpose: To create plots for RTOFS forecast verification using MET/METplus.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
 ###############################################################################
- 
+
 set -x
 
+########################################
 # Preliminary data setup step
 ########################################
 
@@ -25,19 +25,11 @@ date
 # obtain unique LSF id (jobid) and make temp directories
 ###########################################################
 export pid=$$
-
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
-rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
 
-# Determine Job Output Name on System
-####################################
-export pgmout="OUTPUT.${pid}"
-
-export cycle=t00z
-
-###################################
+##################################
 # Set EVS directories
 ####################################
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
@@ -45,45 +37,47 @@ export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
+export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config/$COMPONENT}
 export USHevs=${USHevs:-$HOMEevs/ush}
 export MASKS=${MASKS:-$FIXevs/masks}
 
+####################################
+# Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-plots}
+export COMPONENT=${COMPONENT:-rtofs}
+export RUN=${RUN:-argo}
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+
 # Run setpdy and initialize PDY variables
+export cyc=${cyc:-"00"}
+export cycle=${cycle:-t${cyc}z}
 setpdy.sh
 . ./PDY
-
-export VDATE=${VDATE:-$PDYm1}
-
-# set up paths
-export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config/$COMPONENT}
+export VDATE=${VDATE:-$PDYm3}
 
 # define COMIN/COMOUT variables
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
-export COMINobs=${COMINobs:-/lfs/h1/ops/prod/dcom}
-export COMINfcst=${COMINfcst:-$(compath.py $NET/${evs_ver}/prep/$COMPONENT)}
-export COMINclimo=${COMINclimo:-$FIXevs/climos/$COMPONENT}
-export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
-export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE
-export COMOUTfinal=${COMOUTfinal:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
+export COMINstats=${COMINstats:-$COMIN/stats/$COMPONENT}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}
+export COMOUTplots=${COMOUTplots:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
+export COMOUTplotsheadline=${COMOUTplotsheadline:-$COMOUT/$STEP/$COMPONENT/headline.$VDATE}
 
-mkdir -p $COMOUT $COMOUTsmall $COMOUTfinal
+mkdir -p $COMOUT
 
-if [ $RUN = 'argo' ] ; then
-  for vari in ${VARS}; do
-    export VAR=$vari
-    export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/$VAR
-    mkdir -p $COMOUTsmall
-    $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${STEP}.sh
-  done
+if [ $RUN = headline ]; then
+    mkdir -p $COMOUTplotsheadline
 else
-  $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${STEP}.sh
+    mkdir -p $COMOUTplots
 fi
 
+#######################################################################
+# Execute the script
+#######################################################################
+env
+$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
-
-if [ -e "$pgmout" ]; then
-  cat $pgmout
-fi
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$msg"
@@ -94,5 +88,3 @@ if [ "$KEEPDATA" != "YES" ] ; then
 fi
 
 date
-
-################################# END OF JOB ##################################
