@@ -64,13 +64,11 @@ export MODELNAME=${MODELNAME:-wafs}
 # COMIN folder of analysis and forecast grib2 data
 # gfs_ver defined in versions/run.ver
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export COMINstat=$COMIN/stats/$COMPONENT  # will be appended with wafs.$VDATE or gfs.$VDATE
+export EVSINstat=$COMIN/stats/$COMPONENT  # will be appended with wafs.$VDATE or gfs.$VDATE
 
 # COMOUT folder
 # evs_ver defined in versions/run.ver
-export COMROOT=${COMROOT:-$(compath.py -o ${NET}/${evs_ver})}
-export COMOUT=$COMROOT/$STEP/$COMPONENT/$RUN.$VDATE
-
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})/$STEP/$COMPONENT/$RUN.$VDATE}
 mkdir -p $COMOUT
 
 ############################################

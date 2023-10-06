@@ -42,8 +42,7 @@ export COMPONENT=wafs
 export RUN=atmos
 export VERIF_CASE=grid2grid
 
-#export COMIN=${COMIN:-/lfs/h2/emc/vpppg/noscrub/$USER/evs/$evs_ver}
-export COMIN=${COMIN:-/lfs/h2/emc/vpppg/noscrub/emc.vpppg/evs/$evs_ver}
+export COMIN=${COMIN:-/lfs/h2/emc/vpppg/noscrub/$USER/evs/$evs_ver}
 export COMROOT=/lfs/h2/emc/ptmp/$USER
 
 export USH_DIR=$HOMEevs/ush/$COMPONENT
