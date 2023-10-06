@@ -145,7 +145,7 @@ for levl in 0 50 125 200 400 700 1000 1400; do
     export ZRANGE=1397-1403
   fi
 
-  run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
+  run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
   -c $CONFIGevs/${VERIF_CASE}/$STEP/PointStat_fcstRTOFS_obsARGO_climoWOA23_$VAR.conf
 done
 
@@ -163,7 +163,7 @@ fi
 # sum small stat files into one big file using Stat_Analysis
 mkdir -p $COMOUTfinal
 
-run_metplus.py -c $CONFIGevs/metplus_rtofs.conf \
+run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
 -c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstRTOFS.conf
 
 if [ $SENDCOM = "YES" ]; then

@@ -74,7 +74,7 @@ class PerformanceDiagram:
         if self.plot_info_dict['stat'] != 'PERFDIAG':
             self.logger.warning("Cannot make performance diagram for stat "
                                 +f"{self.plot_info_dict['stat']}")
-            sys.exit(0)
+            sys.exit(1)
         # Set stats to calculate for diagram
         perf_diag_stat_list = ['SRATIO', 'POD', 'CSI']
         # Get dates to plot
