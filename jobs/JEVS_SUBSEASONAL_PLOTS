@@ -68,7 +68,7 @@ echo Actual output starts here
 #######################################################################
 # Execute the script.
 #######################################################################
-$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${VERIF_CASE}_${STEP}.sh
+$HOMEevs/scripts/$STEP/$COMPONENT/exevs_${COMPONENT}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
 
 msg="JOB $job HAS COMPLETED NORMALLY."
