@@ -2,7 +2,7 @@
 #
 # 2015-06-12: Modified from Yan.Luo's script
 #
-set +x
+set -x
 #####################################################################
 
 dcom=${DCOMIN} 
@@ -99,11 +99,13 @@ while [ ${hourix} -lt 31 ]; do
        cat x >> $outdata/ecmanl.t${cyc}z.grid3.f000.grib1
       done
      else
-        export subject="ECME Data Missing for EVS ${COMPONENT}"
-        echo "Warning:  No ECME data for ${ymdh}" > mailmsg
-        echo Missing files are in ${dcom}/$yyyymmdd/wgrbbul/ecmwf  >> mailmsg
-        echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+       if [ $SENDMAIL = YES ]; then
+         export subject="ECME Data Missing for EVS ${COMPONENT}"
+         echo "Warning:  No ECME data for ${ymdh}" > mailmsg
+         echo Missing files are in ${dcom}/$yyyymmdd/wgrbbul/ecmwf  >> mailmsg
+         echo "Job ID: $jobid" >> mailmsg
+         cat mailmsg | mail -s "$subject" $maillist
+       fi
      fi 
   fi 
 
