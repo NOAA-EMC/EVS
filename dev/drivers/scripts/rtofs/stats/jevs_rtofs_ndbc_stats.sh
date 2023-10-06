@@ -7,9 +7,6 @@
 #PBS -l select=1:ncpus=1:mem=500GB
 #PBS -l debug=true
 
-#%include <head.h>
-#%include <envir-p1.h>
-
 ############################################################
 # Load modules
 ############################################################
@@ -20,6 +17,9 @@ source $HOMEevs/versions/run.ver
 
 module reset
 module load prod_envir/${prod_envir_ver}
+
+export KEEPDATA=YES
+export SENDMAIL=YES
 
 # specify environment variables
 export envir=prod
@@ -33,13 +33,10 @@ export COMPONENT=rtofs
 
 source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
-# set up VDATE and COMIN and COMOUT
-export VDATE=$(date --date="2 days ago" +%Y%m%d)
-
+# set up COMIN and COMOUT
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
 export COMINfcst=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}/prep/$COMPONENT
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
-export COMOUTfinal=$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
@@ -48,14 +45,11 @@ export jobid=$job.${PBS_JOBID:-$$}
 export maillist=${maillist:-'alicia.bentley@noaa.gov,samira.ardani@noaa.gov'}
 
 # call j-job
-$HOMEevs/jobs/$COMPONENT/$STEP/JEVS_RTOFS_STATS
+$HOMEevs/jobs/JEVS_RTOFS_STATS
 
-#%include <tail.h>
-#%manual
 ######################################################################
 # Purpose: The job and task scripts work together to create stat
 #          files for RTOFS forecasts verified with NDBC data using
 #          MET/METplus.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
 ######################################################################
-#%end
