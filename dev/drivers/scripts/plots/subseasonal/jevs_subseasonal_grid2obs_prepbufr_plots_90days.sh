@@ -1,4 +1,4 @@
-#PBS -N jevs_subseasonal_grid2obs_prepbufr_plots_31days
+#PBS -N jevs_subseasonal_grid2obs_prepbufr_plots_90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -16,7 +16,7 @@ cd $PBS_O_WORKDIR
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
-export job=${PBS_JOBNAME:-jevs_subseasonal_grid2obs_prepbufr_plots_31days}
+export job=${PBS_JOBNAME:-jevs_subseasonal_grid2obs_prepbufr_plots_90days}
 export jobid=$job.${PBS_JOBID:-$$}
 
 source $HOMEevs/versions/run.ver
@@ -48,11 +48,11 @@ export RUN=atmos
 export MODELNAME="gefs cfs"
 export VERIF_CASE=grid2obs
 export VERIF_TYPE=PrepBufr
-export NDAYS=31
-export DAYS=32
+export NDAYS=90
+export DAYS=91
 
-export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
-export COMIN=$COMROOT/$NET/$evs_ver
+export COMROOT=/lfs/h2/emc/ptmp/$USER
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.${COMPONENT}.${VERIF_CASE}.${STEP}.${VERIF_TYPE}
 
