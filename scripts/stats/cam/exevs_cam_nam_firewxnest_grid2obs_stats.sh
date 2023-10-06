@@ -116,7 +116,7 @@ echo $obfound
 if [ $obfound = 1 -a $fcstnum -gt 0 ]
 then
 
-  run_metplus.py $PARMevs/metplus_config/stats/${COMPONENT}/${VERIF_CASE}/PointStat_fcstNAM_FIREWXNEST_obsPREPBUFR.conf $PARMevs/metplus_config/machine.conf
+  run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstNAM_FIREWXNEST_obsPREPBUFR.conf $PARMevs/metplus_config/machine.conf
   export err=$?; err_chk
 
   mkdir -p $COMOUTsmall
@@ -128,15 +128,15 @@ then
   then
        mkdir -p $COMOUTfinal
        cd $DATA/statanalysis
-       run_metplus.py $PARMevs/metplus_config/stats/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstNAM_FIREWXNEST_obsONLYSF_GatherByDay.conf $PARMevs/metplus_config/machine.conf
+       run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstNAM_FIREWXNEST_obsONLYSF_GatherByDay.conf $PARMevs/metplus_config/machine.conf
        export err=$?; err_chk
 
-       run_metplus.py $PARMevs/metplus_config/stats/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstNAM_FIREWXNEST_obsADPUPA_GatherByDay.conf $PARMevs/metplus_config/machine.conf
+       run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstNAM_FIREWXNEST_obsADPUPA_GatherByDay.conf $PARMevs/metplus_config/machine.conf
        export err=$?; err_chk
 
-       cat *ADPUPA >> evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat
+       cat *ADPUPA >> evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat
        if [ $SENDCOM = "YES" ]; then
-        cp evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat  $COMOUTfinal
+        cp evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat  $COMOUTfinal
        fi
   fi
 
