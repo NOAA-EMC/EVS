@@ -1,15 +1,17 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_rtofs_smos_grid2grid_plots
-# Purpose of Script: Create RTOFS SMOS plots for last 60 days
+# Name of Script: exevs_rtofs_ndnc_grid2obs_plots
+# Purpose of Script: Create RTOFS NDBC plots for last 60 days
 # Author: Mallory Row (mallory.row@noaa.gov)
 ###############################################################################
 
 set -x
 
-export OBTYPE=SMOS
+export OBTYPE=NDBC_STANDARD
 
-export VAR=SSS
+export VAR=SST
+export FLVL=Z0
+export OLVL=Z0
 
 mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE
 
@@ -19,7 +21,7 @@ export MET_VERSION_major_minor=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/
 # set up plot variables
 export PERIOD=last60days
 export THRESH=""
-export MASKS="GLB, NATL, SATL, EQATL, NPAC, SPAC, EQPAC, IND, SOC, Arctic, MEDIT"
+export MASKS="GLB"
 
 # plot time series
 export PTYPE=time_series
@@ -43,7 +45,7 @@ for lead in 000 024 048 072 096 120 144 168 192; do
     fi
 
     # make plots
-    $CONFIGevs/${VERIF_CASE}/$STEP/verif_plotting.rtofs.conf
+    $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
 
   done
 done
@@ -68,7 +70,7 @@ for stats in me rmse acc; do
   fi
 
   # make plots
-  $CONFIGevs/${VERIF_CASE}/$STEP/verif_plotting.rtofs.conf
+  $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
 done
 
 # tar all plots together

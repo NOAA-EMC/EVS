@@ -118,7 +118,7 @@ fi
 
 # run Grid_Stat
 run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
--c $CONFIGevs/${VERIF_CASE}/$STEP/GridStat_fcstRTOFS_obsSMAP_climoWOA23.conf
+-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/GridStat_fcstRTOFS_obsSMAP_climoWOA23.conf
 
 if [ $SENDCOM = "YES" ]; then
  cp $STATSDIR/$RUN.$VDATE/*stat $COMOUTsmall
@@ -134,7 +134,7 @@ fi
 # sum small stat files into one big file using Stat_Analysis
 
 run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
--c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstRTOFS.conf
+-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/StatAnalysis_fcstRTOFS.conf
 
 if [ $SENDCOM = "YES" ]; then
  cp $STATSOUT/evs*stat $COMOUTfinal

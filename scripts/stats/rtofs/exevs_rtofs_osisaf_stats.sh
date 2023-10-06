@@ -1,24 +1,17 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_rtofs_smos_stats.sh
-# Purpose of Script: To create stat files for RTOFS SSS forecasts verified
-#    with SMOS data using MET/METplus.
+# Name of Script: exevs_rtofs_osisaf_stats.sh
+# Purpose of Script: To create stat files for RTOFS sea ice concentration
+#    forecasts verified with OSI-SAF data using MET/METplus.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
 ###############################################################################
 
 set -x
 
 # check if obs file exists; exit if not
-export JDATE=$(date --date="$VDATE" +%Y%j)
-
-if [ ! -s $COMINobs/$VDATE/validation_data/marine/smos/SM_D${JDATE}_Map_SATSSS_data_1day.nc ] ; then
-   if [ $SENDMAIL = YES ] ; then
-       export subject="SMOS Data Missing for EVS RTOFS"
-       echo "Warning: No SMOS data was available for valid date $VDATE." > mailmsg
-       echo "Missing file is $COMINobs/$VDATE/validation_data/marine/smos/SM_D${JDATE}_Map_SATSSS_data_1day.nc." >> mailmsg
-       cat mailmsg | mail -s "$subject" $maillist
-       exit 0
-   fi
+if [ ! -s $COMINfcst/rtofs.$VDATE/$RUN/ice_conc_nh_polstere-100_multi_${VDATE}1200.nc ] ; then
+   echo "Missing OSI-SAF data file for $VDATE"
+   exit 0
 fi
 
 # check if fcst files exist; exit if not
@@ -28,64 +21,59 @@ if [ ! -s $COMINfcst/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_ice.$RUN.nc ] ; then
    exit 0
 fi
 
-if [ ! -s $COMINfcst/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_prog.$RUN.nc ] ; then
-   echo "Missing RTOFS f000 prog file for $VDATE" 
-   exit 0
-fi
-
 #   f024 forecast for VDATE was issued 1 day earlier
 INITDATE=$(date --date="$VDATE -1 day" +%Y%m%d)
-if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f024_prog.$RUN.nc ] ; then
-   echo "Missing RTOFS f024 prog file for $VDATE" 
+if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f024_ice.$RUN.nc ] ; then
+   echo "Missing RTOFS f024 ice file for $VDATE" 
    exit 0
 fi
 
 #   f048 forecast for VDATE was issued 2 days earlier
 INITDATE=$(date --date="$VDATE -2 days" +%Y%m%d)
-if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f048_prog.$RUN.nc ] ; then
-   echo "Missing RTOFS f048 prog file for $VDATE" 
+if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f048_ice.$RUN.nc ] ; then
+   echo "Missing RTOFS f048 ice file for $VDATE" 
    exit 0
 fi
 
 #   f072 forecast for VDATE was issued 3 days earlier
 INITDATE=$(date --date="$VDATE -3 days" +%Y%m%d)
-if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f072_prog.$RUN.nc ] ; then
-   echo "Missing RTOFS f072 prog file for $VDATE" 
+if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f072_ice.$RUN.nc ] ; then
+   echo "Missing RTOFS f072 ice file for $VDATE" 
    exit 0
 fi
 
 #   f096 forecast for VDATE was issued 4 days earlier
 INITDATE=$(date --date="$VDATE -4 days" +%Y%m%d)
-if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f096_prog.$RUN.nc ] ; then
-   echo "Missing RTOFS f096 prog file for $VDATE" 
+if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f096_ice.$RUN.nc ] ; then
+   echo "Missing RTOFS f096 ice file for $VDATE" 
    exit 0
 fi
 
 #   f120 forecast for VDATE was issued 5 days earlier
 INITDATE=$(date --date="$VDATE -5 days" +%Y%m%d)
-if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f120_prog.$RUN.nc ] ; then
-   echo "Missing RTOFS f120 prog file for $VDATE" 
+if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f120_ice.$RUN.nc ] ; then
+   echo "Missing RTOFS f120 ice file for $VDATE" 
    exit 0
 fi
 
 #   f144 forecast for VDATE was issued 6 days earlier
 INITDATE=$(date --date="$VDATE -6 days" +%Y%m%d)
-if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f144_prog.$RUN.nc ] ; then
-   echo "Missing RTOFS f144 prog file for $VDATE" 
+if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f144_ice.$RUN.nc ] ; then
+   echo "Missing RTOFS f144 ice file for $VDATE" 
    exit 0
 fi
 
 #   f168 forecast for VDATE was issued 7 days earlier
 INITDATE=$(date --date="$VDATE -7 days" +%Y%m%d)
-if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f168_prog.$RUN.nc ] ; then
-   echo "Missing RTOFS f168 prog file for $VDATE" 
+if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f168_ice.$RUN.nc ] ; then
+   echo "Missing RTOFS f168 ice file for $VDATE" 
    exit 0
 fi
 
 #   f192 forecast for VDATE was issued 8 days earlier
 INITDATE=$(date --date="$VDATE -8 days" +%Y%m%d)
-if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f192_prog.$RUN.nc ] ; then
-   echo "Missing RTOFS f192 prog file for $VDATE" 
+if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f192_ice.$RUN.nc ] ; then
+   echo "Missing RTOFS f192 ice file for $VDATE" 
    exit 0
 fi
 
@@ -118,23 +106,26 @@ fi
 
 # run Grid_Stat
 run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
--c $CONFIGevs/${VERIF_CASE}/$STEP/GridStat_fcstRTOFS_obsSMOS_climoWOA23.conf
+-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/GridStat_fcstRTOFS_obsOSISAF_nh.conf
 
-if [ $SENDCOM = "YES" ];then
+run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
+-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/GridStat_fcstRTOFS_obsOSISAF_sh.conf
+
+if [ $SENDCOM = "YES" ]; then
  cp $STATSDIR/$RUN.$VDATE/*stat $COMOUTsmall
 fi
 export STATSOUT=$STATSDIR/$RUN.$VDATE
 
 # check if stat files exist; exit if not
-if [ ! -s $COMOUTsmall/grid_stat_RTOFS_SMOS_SSS_1920000L_${VDATE}_000000V.stat ] ; then
-   echo "Missing RTOFS_SMOS_SSS stat files for $VDATE" 
+if [ ! -s $COMOUTsmall/grid_stat_RTOFS_OSISAF_SIC_sh_1920000L_${VDATE}_000000V.stat ] ; then
+   echo "Missing RTOFS_OSISAF_SIC stat files for $VDATE" 
    exit 0
 fi
 
 # sum small stat files into one big file using Stat_Analysis
 
 run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
--c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstRTOFS.conf
+-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/StatAnalysis_fcstRTOFS.conf
 
 if [ $SENDCOM = "YES" ]; then
  cp $STATSOUT/evs*stat $COMOUTfinal

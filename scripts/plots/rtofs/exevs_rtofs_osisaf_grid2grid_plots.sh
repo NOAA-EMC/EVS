@@ -31,7 +31,7 @@ for lead in 000 024 048 072 096 120 144 168 192; do
     export THRESH=""
 
 # make plots
-    $CONFIGevs/${VERIF_CASE}/$STEP/verif_plotting.rtofs.conf
+    $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
   done
 
   for stats in csi; do
@@ -42,7 +42,7 @@ for lead in 000 024 048 072 096 120 144 168 192; do
       export THRESH=$thre
 
 # make plots
-      $CONFIGevs/${VERIF_CASE}/$STEP/verif_plotting.rtofs.conf
+      $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
     done
   done
 
@@ -58,7 +58,7 @@ for lead in 000 024 048 072 096 120 144 168 192; do
   export FLEAD=$lead
 
 # make plots
-  $CONFIGevs/${VERIF_CASE}/$STEP/verif_plotting.rtofs.conf
+  $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
 done
 
 # plot mean vs. lead time
@@ -71,7 +71,7 @@ for stats in me rmse; do
   export THRESH=""
 
 # make plots
-  $CONFIGevs/${VERIF_CASE}/$STEP/verif_plotting.rtofs.conf
+  $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
 done
 
 for stats in csi; do
@@ -82,7 +82,7 @@ for stats in csi; do
     export THRESH=$thre
 
 # make plots
-    $CONFIGevs/${VERIF_CASE}/$STEP/verif_plotting.rtofs.conf
+    $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
   done
 done
 

@@ -1,17 +1,24 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_rtofs_ndbc_stats.sh
-# Purpose of Script: To create stat files for RTOFS ocean temperature
-#    forecasts verified with NDBC buoy data using MET/METplus.
+# Name of Script: exevs_rtofs_smos_stats.sh
+# Purpose of Script: To create stat files for RTOFS SSS forecasts verified
+#    with SMOS data using MET/METplus.
 # Author: L. Gwen Chen (lichuan.chen@noaa.gov)
 ###############################################################################
 
 set -x
 
-# check if ndbc nc file exists; exit if not
-if [ ! -s $COMINfcst/rtofs.$VDATE/$RUN/ndbc.${VDATE}.nc ] ; then
-   echo "Missing NDBC data file for $VDATE"
-   exit 0
+# check if obs file exists; exit if not
+export JDATE=$(date --date="$VDATE" +%Y%j)
+
+if [ ! -s $COMINobs/$VDATE/validation_data/marine/smos/SM_D${JDATE}_Map_SATSSS_data_1day.nc ] ; then
+   if [ $SENDMAIL = YES ] ; then
+       export subject="SMOS Data Missing for EVS RTOFS"
+       echo "Warning: No SMOS data was available for valid date $VDATE." > mailmsg
+       echo "Missing file is $COMINobs/$VDATE/validation_data/marine/smos/SM_D${JDATE}_Map_SATSSS_data_1day.nc." >> mailmsg
+       cat mailmsg | mail -s "$subject" $maillist
+       exit 0
+   fi
 fi
 
 # check if fcst files exist; exit if not
@@ -109,27 +116,27 @@ else
    export EM=$NM
 fi
 
-# run Point_Stat
+# run Grid_Stat
 run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
--c $CONFIGevs/${VERIF_CASE}/$STEP/PointStat_fcstRTOFS_obsNDBC_climoWOA23.conf
+-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/GridStat_fcstRTOFS_obsSMOS_climoWOA23.conf
 
-if [ $SENDCOM = "YES" ]; then
+if [ $SENDCOM = "YES" ];then
  cp $STATSDIR/$RUN.$VDATE/*stat $COMOUTsmall
 fi
 export STATSOUT=$STATSDIR/$RUN.$VDATE
 
 # check if stat files exist; exit if not
-if [ ! -s $COMOUTsmall/point_stat_RTOFS_NDBC_SST_1920000L_${VDATE}_000000V.stat ] ; then
-   echo "Missing RTOFS_NDBC_SST stat files for $VDATE" 
+if [ ! -s $COMOUTsmall/grid_stat_RTOFS_SMOS_SSS_1920000L_${VDATE}_000000V.stat ] ; then
+   echo "Missing RTOFS_SMOS_SSS stat files for $VDATE" 
    exit 0
 fi
 
 # sum small stat files into one big file using Stat_Analysis
 
 run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
--c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstRTOFS_obsNDBC.conf
+-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/StatAnalysis_fcstRTOFS.conf
 
-if [ $SENDCOM = "YES" ];then
+if [ $SENDCOM = "YES" ]; then
  cp $STATSOUT/evs*stat $COMOUTfinal
 fi
 

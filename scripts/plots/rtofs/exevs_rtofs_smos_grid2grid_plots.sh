@@ -1,13 +1,13 @@
 #!/bin/bash
 ###############################################################################
-# Name of Script: exevs_rtofs_smap_grid2grid_plots
-# Purpose of Script: Create RTOFS SMAP plots for last 60 days
+# Name of Script: exevs_rtofs_smos_grid2grid_plots
+# Purpose of Script: Create RTOFS SMOS plots for last 60 days
 # Author: Mallory Row (mallory.row@noaa.gov)
 ###############################################################################
 
 set -x
 
-export OBTYPE=SMAP
+export OBTYPE=SMOS
 
 export VAR=SSS
 
@@ -43,7 +43,7 @@ for lead in 000 024 048 072 096 120 144 168 192; do
     fi
 
     # make plots
-    $CONFIGevs/${VERIF_CASE}/$STEP/verif_plotting.rtofs.conf
+    $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
 
   done
 done
@@ -68,7 +68,7 @@ for stats in me rmse acc; do
   fi
 
   # make plots
-  $CONFIGevs/${VERIF_CASE}/$STEP/verif_plotting.rtofs.conf
+  $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
 done
 
 # tar all plots together

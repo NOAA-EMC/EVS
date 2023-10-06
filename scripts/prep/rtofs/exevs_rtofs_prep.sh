@@ -154,7 +154,7 @@ if [ $ndbc_txt_ncount -gt 0 ]; then
     COMOUTfilename=$COMOUTprep/rtofs.$VDATE/$RUN/ndbc.${VDATE}.nc
     if [ ! -s $COMOUTfilename ]; then
         run_metplus.py -c $PARMevs/metplus_config/machine.conf \
-        -c $CONFIGevs/grid2obs/$STEP/ASCII2NC_obsNDBC.conf
+        -c $CONFIGevs/$STEP/$COMPONENT/grid2obs/ASCII2NC_obsNDBC.conf
          if [ $SENDCOM = YES ]; then
              cp -v $DATAfilename $COMOUTfilename
          fi
@@ -178,7 +178,7 @@ if [ -s $COMINobs/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_pro
     COMOUTfilename=$COMOUTprep/rtofs.$VDATE/$RUN/argo.${VDATE}.nc
     if [ ! -s $COMOUTfilename ]; then
         run_metplus.py -c $PARMevs/metplus_config/machine.conf \
-        -c $CONFIGevs/grid2obs/$STEP/ASCII2NC_obsARGO.conf
+        -c $CONFIGevs/$STEP/$COMPONENT/grid2obs/ASCII2NC_obsARGO.conf
         if [ $SENDCOM = YES ]; then
              cp -v $DATAfilename $COMOUTfilename
         fi

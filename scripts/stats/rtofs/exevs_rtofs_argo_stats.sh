@@ -146,7 +146,7 @@ for levl in 0 50 125 200 400 700 1000 1400; do
   fi
 
   run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
-  -c $CONFIGevs/${VERIF_CASE}/$STEP/PointStat_fcstRTOFS_obsARGO_climoWOA23_$VAR.conf
+  -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/PointStat_fcstRTOFS_obsARGO_climoWOA23_$VAR.conf
 done
 
 if [ $SENDCOM = "YES" ]; then
@@ -164,7 +164,7 @@ fi
 mkdir -p $COMOUTfinal
 
 run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
--c $CONFIGevs/${VERIF_CASE}/$STEP/StatAnalysis_fcstRTOFS.conf
+-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/StatAnalysis_fcstRTOFS.conf
 
 if [ $SENDCOM = "YES" ]; then
  cp $STATSOUT/evs*stat $COMOUTfinal
