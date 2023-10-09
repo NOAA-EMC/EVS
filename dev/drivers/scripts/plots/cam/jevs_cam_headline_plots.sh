@@ -52,7 +52,7 @@ export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/stats/$COMPONENT
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
-export cyc=$(date -d "today" +"%H")
+export cyc=${cyc:-${cyc}}
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/JEVS_CAM_PLOTS
