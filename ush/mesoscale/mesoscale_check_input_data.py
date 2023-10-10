@@ -302,7 +302,7 @@ if proceed:
             missing_fcst_files.append(os.path.split(fcst_path)[-1])
             missing_fcst_paths.append(fcst_path)
     
-    # Print error (mdf) and send an email for missing data
+    # Print warning (mdf) and send an email for missing data
     if missing_fcst_paths:
         print(f"WARNING: The following forecasts were not found:")
         for missing_fcst_path in missing_fcst_paths:
@@ -454,9 +454,9 @@ if proceed:
             missing_anl_files.append(os.path.split(anl_path)[-1])
             missing_anl_paths.append(anl_path)
 
-    # Print error (mdf) and send an email for missing data
+    # Print warning (mdf) and send an email for missing data
     if missing_anl_paths:
-        print(f"ERROR: The following analyses were not found:")
+        print(f"WARNING: The following analyses were not found:")
         for missing_anl_path in missing_anl_paths:
             print(missing_anl_path)
         if send_mail:
@@ -550,7 +550,7 @@ if proceed:
 
 
 
-    # exit with error (mdf)
+    # exit with warning (mdf)
     if mdf:
         sys.exit(mdf)
 
