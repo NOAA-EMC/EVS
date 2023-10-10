@@ -73,7 +73,7 @@ export pgmout="OUTPUT.${pid}"
 ####################################
 
 
-$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${MODELNAME}_${STEP}.sh 
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${STEP}.sh 
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"

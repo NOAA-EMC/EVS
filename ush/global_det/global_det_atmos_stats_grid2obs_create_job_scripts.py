@@ -5,7 +5,7 @@ Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This creates multiple independent job scripts. These
           jobs scripts contain all the necessary environment variables
           and commands to needed to run them.
-Run By: scripts/global_det/stats/exevs_global_det_atmos_grid2obs_stats.sh
+Run By: scripts/stats/global_det/exevs_global_det_atmos_grid2obs_stats.sh
 '''
 
 import sys
@@ -984,7 +984,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             and job_env_dict['VERIF_CASE'] == 'grid2obs' \
                             and job_env_dict['VERIF_TYPE'] == 'pres_levs' \
                             and job_env_dict['job_name'] == 'RelHum':
-                        ukmet_fhr_list = job_env_dict['fhr_list'].split(',')
+                        ukmet_fhr_list = (
+                            job_env_dict['fhr_list'].replace('"','')\
+                            .split(',')
+                        )
                         for fhr_rm in ['132', '144']:
                             if fhr_rm in ukmet_fhr_list:
                                 ukmet_fhr_list.remove(fhr_rm)
