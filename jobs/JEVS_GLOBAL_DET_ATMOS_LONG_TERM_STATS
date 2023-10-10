@@ -70,11 +70,8 @@ mkdir -p $COMOUT $COMOUTmonthlystats $COMOUTyearlystats
 # Execute the script
 #######################################################################
 env
-
-$HOMEevs/scripts/global_det/stats/exevs_global_det_atmos_${RUN}_stats.sh
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_atmos_${RUN}_${STEP}.sh
 export err=$?; err_chk
-
-cat $pgmout
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
