@@ -304,7 +304,7 @@ if proceed:
     
     # Print error (mdf) and send an email for missing data
     if missing_fcst_paths:
-        print(f"ERROR: The following forecasts were not found:")
+        print(f"WARNING: The following forecasts were not found:")
         for missing_fcst_path in missing_fcst_paths:
             print(missing_fcst_path)
         if send_mail:
