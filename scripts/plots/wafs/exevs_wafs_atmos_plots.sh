@@ -60,7 +60,7 @@ for RESOLUTION in $resolutions ; do
     mkdir -p $OUTPUT_BASE_DIR
     #rm $OUTPUT_BASE_DIR/*
 
-    source $HOMEevs/parm/evs_config/wafs/config.evs.stats.wafs.atmos.standalone
+    source $HOMEevs/parm/evs_config/wafs/config.evs.wafs.standalone
 
     if [ $OBSERVATION = "GCIP" ] ; then
         stat_file_suffix=`echo $VAR1_NAME | tr '[:upper:]' '[:lower:]'`
@@ -92,7 +92,7 @@ for RESOLUTION in $resolutions ; do
 		yyyy=`echo $day | cut -c 1-4`
 		sourcefile=$COMIN/$yyyy/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
 	    else
-		sourcefile=$COMINstat/${MODELNAME}.$day/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
+		sourcefile=$EVSINstat/${MODELNAME}.$day/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
 	    fi
 	    targetfile=$OUTPUT_BASE_DIR/$NET.stats.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$day.stat
 	    if [[ ! -f "$targetfile" ]] ; then

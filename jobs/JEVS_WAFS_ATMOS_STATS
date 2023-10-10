@@ -82,9 +82,9 @@ fi
 export HOMEevs=${HOMEevs:-$PACKAGEROOT/evs.$evs_ver}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
-export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts/$COMPONENT} # step
-export JOBSevs=${JOBSevs:-$HOMEevs/jobs/$COMPONENT} # step
-export PARMevs=${PARMevs:-$HOMEevs/parm/metplus_config/$COMPONENT/$RUN} # step
+export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts/$STEP/$COMPONENT}
+export JOBSevs=${JOBSevs:-$HOMEevs/jobs}
+export PARMevs=${PARMevs:-$HOMEevs/parm/metplus_config/$STEP/$COMPONENT/$RUN}
 export USHevs=${USHevs:-$HOMEevs/ush/$COMPONENT} # all pool
 
 export MACHINE_CONF=$HOMEevs/parm/metplus_config/machine.conf
@@ -94,7 +94,7 @@ export MASKS=${MASKS:-$FIXevs/masks}
 ############################################
 # Execute the script using MPMD
 ############################################
-$SCRIPTSevs/stats/exevs_wafs_atmos_stats.sh
+$SCRIPTSevs/exevs_wafs_atmos_stats.sh
 export err=$?; err_chk
 
 echo "JOB $job HAS COMPLETED NORMALLY!"

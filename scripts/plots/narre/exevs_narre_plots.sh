@@ -190,7 +190,7 @@ for grid in g130 g242 ; do
 	  thrsh=_lt152lt305lt914lt1524lt3048
     fi	  
     if [ -s performance_diagram_regional_${grid}_valid_00z_03z_06z_09z_12z_15z_18z_21z_${var}_f1_to_f12_${thrsh}.png ] ; then
-      mv  performance_diagram_regional_${grid}_valid_00z_03z_06z_09z_12z_15z_18z_21z_${var}_f1_to_f12_${thrsh}.png evs.narre.ctc.${field}.last${past_days}days.perfdiag_valid_all_times.${domain}.png
+      cp  performance_diagram_regional_${grid}_valid_00z_03z_06z_09z_12z_15z_18z_21z_${var}_f1_to_f12_${thrsh}.png evs.narre.ctc.${field}.last${past_days}days.perfdiag_valid_all_times.${domain}.png
     fi 
   done
 done
