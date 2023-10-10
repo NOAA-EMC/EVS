@@ -11,70 +11,70 @@ set -x
 # check if obs file exists; exit if not
 if [ ! -s $COMINfcst/rtofs.$VDATE/$RUN/ice_conc_nh_polstere-100_multi_${VDATE}1200.nc ] ; then
    echo "Missing OSI-SAF data file for $VDATE"
-   exit 0
+   exit
 fi
 
 # check if fcst files exist; exit if not
 #   f000 forecast for VDATE
 if [ ! -s $COMINfcst/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_ice.$RUN.nc ] ; then
    echo "Missing RTOFS f000 ice file for $VDATE" 
-   exit 0
+   exit
 fi
 
 #   f024 forecast for VDATE was issued 1 day earlier
 INITDATE=$(date --date="$VDATE -1 day" +%Y%m%d)
 if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f024_ice.$RUN.nc ] ; then
    echo "Missing RTOFS f024 ice file for $VDATE" 
-   exit 0
+   exit
 fi
 
 #   f048 forecast for VDATE was issued 2 days earlier
 INITDATE=$(date --date="$VDATE -2 days" +%Y%m%d)
 if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f048_ice.$RUN.nc ] ; then
    echo "Missing RTOFS f048 ice file for $VDATE" 
-   exit 0
+   exit
 fi
 
 #   f072 forecast for VDATE was issued 3 days earlier
 INITDATE=$(date --date="$VDATE -3 days" +%Y%m%d)
 if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f072_ice.$RUN.nc ] ; then
    echo "Missing RTOFS f072 ice file for $VDATE" 
-   exit 0
+   exit
 fi
 
 #   f096 forecast for VDATE was issued 4 days earlier
 INITDATE=$(date --date="$VDATE -4 days" +%Y%m%d)
 if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f096_ice.$RUN.nc ] ; then
    echo "Missing RTOFS f096 ice file for $VDATE" 
-   exit 0
+   exit
 fi
 
 #   f120 forecast for VDATE was issued 5 days earlier
 INITDATE=$(date --date="$VDATE -5 days" +%Y%m%d)
 if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f120_ice.$RUN.nc ] ; then
    echo "Missing RTOFS f120 ice file for $VDATE" 
-   exit 0
+   exit
 fi
 
 #   f144 forecast for VDATE was issued 6 days earlier
 INITDATE=$(date --date="$VDATE -6 days" +%Y%m%d)
 if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f144_ice.$RUN.nc ] ; then
    echo "Missing RTOFS f144 ice file for $VDATE" 
-   exit 0
+   exit
 fi
 
 #   f168 forecast for VDATE was issued 7 days earlier
 INITDATE=$(date --date="$VDATE -7 days" +%Y%m%d)
 if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f168_ice.$RUN.nc ] ; then
    echo "Missing RTOFS f168 ice file for $VDATE" 
-   exit 0
+   exit
 fi
 
 #   f192 forecast for VDATE was issued 8 days earlier
 INITDATE=$(date --date="$VDATE -8 days" +%Y%m%d)
 if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f192_ice.$RUN.nc ] ; then
    echo "Missing RTOFS f192 ice file for $VDATE" 
-   exit 0
+   exit
 fi
 
 # get the months for the climo files:
@@ -119,7 +119,7 @@ export STATSOUT=$STATSDIR/$RUN.$VDATE
 # check if stat files exist; exit if not
 if [ ! -s $COMOUTsmall/grid_stat_RTOFS_OSISAF_SIC_sh_1920000L_${VDATE}_000000V.stat ] ; then
    echo "Missing RTOFS_OSISAF_SIC stat files for $VDATE" 
-   exit 0
+   exit
 fi
 
 # sum small stat files into one big file using Stat_Analysis
