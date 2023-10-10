@@ -34,7 +34,7 @@ module load prod_envir/${prod_envir_ver}
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=YES
-export SENDMAIL=YES
+export SENDMAIL=NO
 export NET=evs
 export STEP=stats
 export COMPONENT=analyses
@@ -49,8 +49,8 @@ export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 
-export cyc
-echo $cyc
+export vhr
+echo $vhr
 
 export mod_ver=${rtma_ver}
 export modsys=rtma

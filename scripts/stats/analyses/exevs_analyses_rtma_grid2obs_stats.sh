@@ -10,6 +10,8 @@ mkdir -p $DATA/final
 export regionnest=rtma
 export fcstmax=$g2os_sfc_fhr_max
 
+export dirin=$COMINrtma
+
 export maskdir=$MASKS
 
 # search to see if obs file exists
@@ -66,14 +68,14 @@ then
 	 fhr="01"
 	fi
 
-	if [ -e $COMINanl/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2_wexp ]
+	if [ -e $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2_wexp ]
         then
           rtmafound=1
         else
 	 if [ $SENDMAIL = "YES" ]; then
           export subject="CONUS Analysis Missing for EVS ${COMPONENT}"
           echo "Warning: The CONUS Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-          echo "Missing file is $COMINanl/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2_wexp" >> mailmsg
+          echo "Missing file is $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2_wexp" >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
           cat mailmsg | mail -s "$subject" $maillist
 	 fi
@@ -105,14 +107,14 @@ then
 
         rtmafound=0
 
-        if [ -e $COMINanl/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2 ]
+        if [ -e $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2 ]
         then
           rtmafound=1
         else
 	 if [ $SENDMAIL = "YES" ]; then
           export subject="Alaska Analysis Missing for EVS ${COMPONENT}"
           echo "Warning: The Alaska Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-          echo "Missing file is $COMINanl/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2" >> mailmsg
+          echo "Missing file is $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2" >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
           cat mailmsg | mail -s "$subject" $maillist
 	 fi
@@ -153,14 +155,14 @@ then
 
         rtmafound=0
 
-        if [ -e $COMINanl/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2 ]
+        if [ -e $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2 ]
         then    
           rtmafound=1
         else 
 	 if [ $SENDMAIL = "YES" ]; then
           export subject="Hawaii Analysis Missing for EVS ${COMPONENT}"
           echo "Warning: The Hawaii Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-          echo "Missing file is $COMINanl/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2" >> mailmsg
+          echo "Missing file is $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2" >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
           cat mailmsg | mail -s "$subject" $maillist	    
 	 fi
@@ -199,14 +201,14 @@ then
 
 	rtmafound=0
 
-        if [ -e $COMINanl/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2 ]
+        if [ -e $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2 ]
         then
           rtmafound=1
         else
 	 if [ $SENDMAIL = "YES" ]; then
           export subject="Puerto Rico Analysis Missing for EVS ${COMPONENT}"
           echo "Warning: The Puerto Rico Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-          echo "Missing file is $COMINanl/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2" >> mailmsg
+          echo "Missing file is $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2" >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
           cat mailmsg | mail -s "$subject" $maillist
 	 fi
@@ -276,14 +278,14 @@ then
     fi
    fi
    
-   if [ -s $COMINanl/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2 ]
+   if [ -s $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2 ]
    then
      rtmafound=1
    else
     if [ $SENDMAIL = "YES" ]; then
      export subject="Guam Analysis Missing for EVS ${COMPONENT}"
      echo "Warning: The Guam Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-     echo "Missing file is $COMINanl/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2" >> mailmsg
+     echo "Missing file is $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2" >> mailmsg
      echo "Job ID: $jobid" >> mailmsg
      cat mailmsg | mail -s "$subject" $maillist
     fi
@@ -294,8 +296,14 @@ if [ ! -e $COMOUTsmall/point_stat_${modnam}${typtag}_${fhr}0000L_${VDATE}_${vhr}
 then
 if [ $rtmafound -eq 1 -a $obfound -eq 1 ]
 then
-run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstANALYSES_obsNDAS_PrepBufr.conf $PARMevs/metplus_config/machine.conf
+if [ $modnam = "gurtma" ]; then
+  run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstGURTMA_obsURMA_PrepBufr.conf $PARMevs/metplus_config/machine.conf
+else
+  run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstANALYSES_obsNDAS_PrepBufr.conf $PARMevs/metplus_config/machine.conf 
+fi
 export err=$?; err_chk
+cat $DATA/logs/${MODELNAME}${typtag}/metplus_pb2nc_pointstat.log*
+mv $DATA/logs/${MODELNAME}${typtag}/metplus_pb2nc_pointstat.log* $DATA/logs
 
 mkdir -p $COMOUTsmall
 if [ $SENDCOM = "YES" ]; then
@@ -319,6 +327,8 @@ then
        cd $finalstat
        run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstANALYSES_obsNDAS_GatherByDay.conf $PARMevs/metplus_config/machine.conf
        export err=$?; err_chk
+       cat $DATA/logs/${MODELNAME}${typtag}/metplus.statanalysis.log*
+       mv $DATA/logs/${MODELNAME}${typtag}/metplus.statanalysis.log* $DATA/logs
        if [ $SENDCOM = "YES" ]; then
          cp $finalstat/evs.stats.${regionnest}${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal
        fi

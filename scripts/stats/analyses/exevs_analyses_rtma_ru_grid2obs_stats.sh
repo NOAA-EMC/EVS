@@ -10,6 +10,8 @@ mkdir -p $DATA/final
 export regionnest=rtma
 export fcstmax=$g2os_sfc_fhr_max
 
+export dirin=$COMINrtma
+
 export maskdir=$MASKS
 export fhr="00"
 
@@ -21,14 +23,14 @@ datehr=${VDATE}${vhr}
 obday=`echo $datehr |cut -c1-8`
 obhr=`echo $datehr |cut -c9-10`
 
-if [ -e $COMINobs/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}00z.prepbufr.tm00 ]
+if [ -e $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}00z.prepbufr.tm00 ]
 then
  obfound=1
 else
  if [ $SENDMAIL = "YES" ]; then
   export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
   echo "Warning: The ${obday} prepbufr file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-  echo "Missing file is $COMINobs/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00" >> mailmsg
+  echo "Missing file is $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00" >> mailmsg
   echo "Job ID: $jobid" >> mailmsg
   cat mailmsg | mail -s "$subject" $maillist
  fi
@@ -63,14 +65,14 @@ then
 
 fi
 
-       if [ -e $COMINfcst/${modnam}.${VDATE}/${modnam}.t${vhr}00z.${outtyp}_ndfd.grb2 ]
+       if [ -e $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}00z.${outtyp}_ndfd.grb2 ]
        then
          rtmafound=1
        else
 	if [ $SENDMAIL = "YES" ]; then
          export subject="CONUS Analysis Missing for EVS ${COMPONENT}"
          echo "Warning: The CONUS Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-         echo "Missing file is $COMINfcst/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2_wexp" >> mailmsg
+         echo "Missing file is $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2_wexp" >> mailmsg
          echo "Job ID: $jobid" >> mailmsg
          cat mailmsg | mail -s "$subject" $maillist
 	fi
@@ -82,6 +84,9 @@ if [ $rtmafound -eq 1 -a $obfound -eq 1 ]
 then
 run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstANALYSES_RU_obsNDAS_PrepBufr.conf $PARMevs/metplus_config/machine.conf
 export err=$?; err_chk
+
+cat $DATA/logs/${MODELNAME}${typtag}/metplus_pb2nc_pointstat.log*
+mv $DATA/logs/${MODELNAME}${typtag}/metplus_pb2nc_pointstat.log* $DATA/logs
 
 mkdir -p $COMOUTsmall
 
@@ -106,6 +111,8 @@ then
        cd $finalstat
        run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstANALYSES_obsNDAS_GatherByDay.conf $PARMevs/metplus_config/machine.conf
        export err=$?; err_chk
+       cat $DATA/logs/${MODELNAME}${typtag}/metplus.statanalysis.log*
+       mv $DATA/logs/${MODELNAME}${typtag}/metplus.statanalysis.log* $DATA/logs
        if [ $SENDCOM = "YES" ]; then
            cp $finalstat/evs.stats.${regionnest}_ru${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal
        fi
