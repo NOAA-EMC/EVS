@@ -460,6 +460,8 @@ if proceed:
             unk_names = []
             fcst_fnames = []
             unk_fnames = []
+            fcst_pnames = []
+            unk_pnames = []
             for i, info in enumerate(data_info):
                 if info[1] == "fcst":
                     fcst_names.append(info[0])
@@ -612,6 +614,8 @@ if proceed:
             unk_names = []
             anl_fnames = []
             unk_fnames = []
+            anl_pnames = []
+            unk_pnames = []
             for i, info in enumerate(data_info):
                 if info[1] == "anl":
                     anl_names.append(info[0])
@@ -803,6 +807,8 @@ if proceed:
             unk_names = []
             gen_fnames = []
             unk_fnames = []
+            gen_pnames = []
+            unk_pnames = []
             for i, info in enumerate(data_info):
                 if info[1] == "gen":
                     gen_names.append(info[0])
