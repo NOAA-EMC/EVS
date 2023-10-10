@@ -133,7 +133,7 @@ for DAY in range(1,4):
                         os.path.join(os.environ['METPLUS_PATH'],'ush','run_metplus.py'), '-c',
                         os.path.join(os.environ['PARMevs'],'metplus_config','machine.conf'),
                         os.path.join(os.environ['PARMevs'],'metplus_config',
-                                     'cam/severe/prep','GenVxMask_SPC_OTLK.conf')])
+                                     'prep/cam/severe','GenVxMask_SPC_OTLK.conf')])
 
             else:
                 print(f'No Day {DAY} outlook areas were issued at {OTLK}Z on {OTLK_DATE}')
