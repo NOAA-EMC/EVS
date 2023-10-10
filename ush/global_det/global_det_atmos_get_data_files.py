@@ -33,13 +33,15 @@ VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
 USER = os.environ['USER']
 evs_run_mode = os.environ['evs_run_mode']
-COMINnohrsc = os.environ['COMINnohrsc']
 if STEP == 'stats':
     COMINccpa = os.environ['COMINccpa']
     COMINobsproc = os.environ['COMINobsproc']
     COMINosi_saf = os.environ['COMINosi_saf']
     COMINghrsst_ospo = os.environ['COMINghrsst_ospo']
     COMINget_d = os.environ['COMINget_d']
+    COMINnohrsc = os.environ['COMINnohrsc']
+elif STEP == 'plots':
+    DCOMINnohrsc = os.environ['DCOMINnohrsc']
 if evs_run_mode != 'production':
     QUEUESERV = os.environ['QUEUESERV']
     ACCOUNT = os.environ['ACCOUNT']
@@ -849,7 +851,7 @@ elif STEP == 'plots' :
                     else:
                         print("WARNING: "+source_model_fhr_pcp_combine_file+" "
                               +"DOES NOT EXIST")
-    # Get NOHRSC files from COMINnohrsc
+    # Get NOHRSC files from DCOMINnohrsc
     if VERIF_CASE == 'grid2grid' and 'snow' in VERIF_CASE_STEP_type_list:
         (NOHRSC24hr_valid_hr_start, NOHRSC24hr_valid_hr_end,
          NOHRSC24hr_valid_hr_inc) = gda_util.get_obs_valid_hrs(
@@ -863,7 +865,7 @@ elif STEP == 'plots' :
             )
         ]
         source_nohrsc_file = os.path.join(
-            COMINnohrsc, end_date_dt.strftime('%Y%m%d'),
+            DCOMINnohrsc, end_date_dt.strftime('%Y%m%d'),
             'wgrbbul', 'nohrsc_snowfall',
             'sfav2_CONUS_24h_'+end_date_dt.strftime('%Y%m%d')
             +NOHRSC24hr_valid_hr_list[0]+'_grid184.grb2'
