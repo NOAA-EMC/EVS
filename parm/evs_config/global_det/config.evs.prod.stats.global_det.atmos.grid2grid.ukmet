@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 ##---------------------------------------------------------------------------
 ##---------------------------------------------------------------------------
 ## NCEP EMC Verification System (EVS) - GFS Atmospheric
@@ -7,6 +7,8 @@
 ## PURPOSE: Set up configurations to run EVS GFS Atmospheric standalone
 ##---------------------------------------------------------------------------
 ##--------------------------------------------------------------------------
+
+set -x
 
 echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 
@@ -29,7 +31,7 @@ export RUN_GRID2OBS_PLOTS="NO"
 #model_file_format_list: file format of model files
 export model_list="$MODELNAME"
 export model_evs_data_dir_list="$COMOUTfinal"
-export model_file_format_list="${COMINukmet}.{init?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.t{init?fmt=%H}z.f{lead?fmt=%3H}"
+export model_file_format_list="$COMIN/prep/$COMPONENT/${RUN}.{init?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.t{init?fmt=%H}z.f{lead?fmt=%3H}"
 
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory
@@ -66,7 +68,7 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
     #    g2gs_*_fhr_max: forecast hour to end verification: HH[H]
     #    g2gs_*_fhr_inc: frequency to verify forecast hours: HH[H]
     #export g2gs_type_list="pres_levs precip_accum24hr sst"
-    #export g2gs_precip_accum24hr_file_format_list="${COMINukmet}.{init?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.precip.t{init?fmt=%H}z.f{lead?fmt=%3H}"
+    #export g2gs_precip_accum24hr_file_format_list="$COMIN/prep/$COMPONENT/${RUN}.{init?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.precip.t{init?fmt=%H}z.f{lead?fmt=%3H}"
     #export g2gs_precip_accum24hr_file_accum_list="12"
     #export g2gs_precip_accum24hr_var_list="APCP"
     #export g2gs_precip_accum24hr_init_hr_list="12"
@@ -75,7 +77,7 @@ if [ $RUN_GRID2GRID_STATS = YES ]; then
     #export g2gs_precip_accum24hr_fhr_inc=24
     export g2gs_type_list="pres_levs sst"
     export g2gs_pres_levs_truth_name_list="${MODELNAME}_anl"
-    export g2gs_pres_levs_truth_format_list="${COMINukmet}.{valid?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.t{valid?fmt=%H}z.anl"
+    export g2gs_pres_levs_truth_format_list="$COMIN/prep/$COMPONENT/${RUN}.{valid?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.t{valid?fmt=%H}z.anl"
     export g2gs_pres_levs_init_hr_list="00 12"
     export g2gs_pres_levs_valid_hr_list="00 12"
     export g2gs_pres_levs_fhr_min=00
