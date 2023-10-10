@@ -64,7 +64,7 @@ mkdir -p $COMOUT
 # Execute the script
 #######################################################################
 env
-$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs${COMPONENT}_atmos_${RUN}_${STEP}.sh
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_atmos_${RUN}_${STEP}.sh
 export err=$?; err_chk
 
 msg="JOB $job HAS COMPLETED NORMALLY."
