@@ -75,7 +75,7 @@ class ThresholdAverage:
         if self.plot_info_dict['stat'] == 'FBAR_OBAR':
             self.logger.warning("Cannot make threshold_average for stat "
                                 +f"{self.plot_info_dict['stat']}")
-            sys.exit(0)
+            sys.exit(1)
         # Get dates to plot
         self.logger.info("Creating valid and init date arrays")
         valid_dates, init_dates = gda_util.get_plot_dates(
