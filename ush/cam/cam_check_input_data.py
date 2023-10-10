@@ -447,7 +447,7 @@ if proceed:
     
     # Print error and send an email for missing data
     if missing_fcst_paths:
-        print(f"ERROR: The following forecasts were not found:")
+        print(f"WARNING: The following forecasts were not found:")
         for missing_fcst_path in missing_fcst_paths:
             print(missing_fcst_path)
         if send_mail and str(SENDMAIL) == "YES":
@@ -599,7 +599,7 @@ if proceed:
 
     # Print error and send an email for missing data
     if missing_anl_paths:
-        print(f"ERROR: The following analyses were not found:")
+        print(f"WARNING: The following analyses were not found:")
         for missing_anl_path in missing_anl_paths:
             print(missing_anl_path)
         if send_mail and str(SENDMAIL) == "YES":
@@ -790,7 +790,7 @@ if proceed:
 
     # Print error and send an email for missing data
     if missing_gen_paths:
-        print(f"ERROR: The following input data were not found:")
+        print(f"WARNING: The following input data were not found:")
         for missing_gen_path in missing_gen_paths:
             print(missing_gen_path)
         if send_mail and str(SENDMAIL) == "YES":
