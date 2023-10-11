@@ -242,28 +242,28 @@ if [ $nfcst -ge 1 ] && [ $obs_found = 1 ]; then
          export MODEL=${MODELNAME}
       fi
 
-      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/GridStat_fcstCAM_obsMRMS_${RADAR_FIELD}.conf
+      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GridStat_fcstCAM_obsMRMS_${RADAR_FIELD}.conf
       export err=$?; err_chk
 
    elif [ $PROD = ens ]; then
 
       export MODEL=${MODELNAME}
 
-      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/EnsembleStat_fcstHREF_obsMRMS_${RADAR_FIELD}.conf
+      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/EnsembleStat_fcstHREF_obsMRMS_${RADAR_FIELD}.conf
       export err=$?; err_chk
 
    elif [ $PROD = ppf ]; then
 
       export MODEL=${MODELNAME}_prob
 
-      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/GridStat_fcstHREFPPF_obsMRMS_${RADAR_FIELD}.conf
+      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GridStat_fcstHREFPPF_obsMRMS_${RADAR_FIELD}.conf
       export err=$?; err_chk
 
    elif [ $PROD = prob ]; then
 
       export MODEL=${MODELNAME}_prob
 
-      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/GridStat_fcstHREFPROB_obsMRMS_${RADAR_FIELD}.conf
+      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GridStat_fcstHREFPROB_obsMRMS_${RADAR_FIELD}.conf
       export err=$?; err_chk
 
    fi
