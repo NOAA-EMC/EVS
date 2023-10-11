@@ -105,7 +105,7 @@ for cyc in 00 06 12 18 ; do
     export cycle=t${cyc}z
     if [ -s ${DATA}/gdas.${INITDATE}${cyc}.prepbufr ]; then
         if [ ! -s ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${INITDATE}${cyc}.nc ]; then
-            run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}/PB2NC_wave.conf
+            run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/PB2NC_wave.conf
             export err=$?; err_chk
             if [ $SENDCOM = YES ]; then
                 cp -v $DATA/ncfiles/gdas.${INITDATE}${cyc}.nc ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/.

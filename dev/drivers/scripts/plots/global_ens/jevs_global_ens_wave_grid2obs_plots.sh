@@ -48,7 +48,7 @@ export SENDMAIL=YES
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export OUTPUTROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export COMIN=${OUTPUTROOT}/${NET}/${evs_ver}
-export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver}
+export COMOUT=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver}
 
 export run_mpi='yes'
 export gather='yes'

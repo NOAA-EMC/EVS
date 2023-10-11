@@ -20,8 +20,8 @@ cd $WORK
 export CLIMO=$FIXevs/climos/atmos
 export MASKS=$FIXevs/masks
 
-export ENS_LIST=$PARMevs/metplus_config/${COMPONENT}/${RUN}_grid2grid/prep
-export GRID2OBS_CONF=$PARMevs/metplus_config/${COMPONENT}/${RUN}_grid2obs/${STEP}
+export ENS_LIST=$PARMevs/metplus_config/prep/${COMPONENT}/${RUN}_grid2grid
+export GRID2OBS_CONF=$PARMevs/metplus_config/${STEP}/${COMPONENT}/${RUN}_grid2obs
 export MET_CONFIG=${METPLUS_BASE}/parm/met_config
 export maskpath=$MASKS
 
