@@ -72,7 +72,7 @@ export SENDECF=${SENDECF:-YES}
 ####################################
 # Execute the script                
 ####################################
-$HOMEevs/scripts/global_ens/plots/exevs_global_ens_wave_grid2obs_plots.sh
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh 
 export err=$?; err_chk
 
 msg="JOB $job HAS COMPLETED NORMALLY."

@@ -50,7 +50,7 @@ lead_hours='0 6 12 18 24 30 36 42 48 54 60 66 72 78
             252 258 264 270 276 282 288 294 300 306 312 318 324 330 
             336 342 348 354 360 366 372 378 384'
 
-export GRID2OBS_CONF="${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}"
+export GRID2OBS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}"
 
 cd ${DATA}
 
