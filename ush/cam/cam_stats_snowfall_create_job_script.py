@@ -244,7 +244,7 @@ if VERIF_CASE == 'snowfall':
                 + f'-c {MET_PLUS_CONF}/'
                 + f'PCPCombine_fcst{COMPONENT.upper()}.conf'
             )
-            job_cmd_list_iterative.append(
+            job_cmd_list.append(
                 f'python -c '
                 + '\"import cam_util as cutil; cutil.copy_data_to_restart('
                 + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
