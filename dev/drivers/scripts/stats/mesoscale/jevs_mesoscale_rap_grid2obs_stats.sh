@@ -51,8 +51,6 @@ set -x
 # EVS configuration
   export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
-source /usr/share/lmod/lmod/init/sh
-
 source $HOMEevs/versions/run.ver
 module reset
 module load prod_envir/${prod_envir_ver}
@@ -68,8 +66,7 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
   export VDATE=$(date -d "today -1 day" +"%Y%m%d")
 
 # Developer Settings
-  export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/prep/cam
-  export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/$NET/$evs_ver/prep/cam
+  export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/cam
 
   export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
   export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}

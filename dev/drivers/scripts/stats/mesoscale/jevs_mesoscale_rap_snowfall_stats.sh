@@ -1,4 +1,4 @@
-#PBS -N jevs_mesoscale_rap_precip_stats_00
+#PBS -N jevs_mesoscale_rap_snowfall_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q "dev"
@@ -20,7 +20,7 @@ export KEEPDATA=YES
 export SENDDBN=NO
 export SENDDBN_NTC=
 export SENDMAIL=YES
-export job=${PBS_JOBNAME:-jevs_rap_precip_stats}
+export job=${PBS_JOBNAME:-jevs_rap_snowfall_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)  
 export envir="prod"
@@ -34,7 +34,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 export VDATE=$(date -d "today -2 day" +"%Y%m%d")
 export STEP="stats"
 export COMPONENT="mesoscale"
-export VERIF_CASE="precip"
+export VERIF_CASE="snowfall"
 export MODELNAME="rap" 
 export machine=WCOSS2
 export USE_CFP=YES
@@ -46,13 +46,11 @@ export maillist="roshan.shrestha@noaa.gov,alicia.bentley@noaa.gov"
 
 export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
-source /usr/share/lmod/lmod/init/sh
 
 source $HOMEevs/versions/run.ver
 module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
-
 
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
