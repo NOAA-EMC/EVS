@@ -14,6 +14,7 @@ set -x
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
+export SENDMAIL=${SENDMAIL:-NO}
 
 # ###################################
 # SET SHELL PROCESSING VARIABLES
@@ -37,7 +38,7 @@ export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
-export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config/$COMPONENT}
+export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config}
 export USHevs=${USHevs:-$HOMEevs/ush}
 export MASKS=${MASKS:-$FIXevs/masks}
 
@@ -76,7 +77,7 @@ fi
 # Execute the script
 #######################################################################
 env
-$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
+$HOMEevs/scripts/$STEP/$COMPONENT/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
 
 msg="JOB $job HAS COMPLETED NORMALLY."

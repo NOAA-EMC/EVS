@@ -61,7 +61,14 @@ export COMOUT_osi_saf=${COMOUT_osi_saf:-${COMOUT}/${RUN}.${INITDATE}/osi_saf}
 export COMOUT_gefs_bc=${COMOUT_gefs_bc:-${COMOUT}/${RUN}.${INITDATE}/gefs_bc}
 export COMOUT_cmce_bc=${COMOUT_cmce_bc:-${COMOUT}/${RUN}.${INITDATE}/cmce_bc}
 
-mkdir -p $COMOUT_gefs $COMOUT_cmce $COMOUT_ecme $COMOUT_osi_saf $COMOUT_gefs_bc $COMOUT_cmce_bc
+if [ $RUN = headline ]; then
+  mkdir -p $COMOUT_gefs $COMOUT_cmce
+elif [ $RUN = atmos ]; then
+  mkdir -p $COMOUT_gefs $COMOUT_cmce $COMOUT_ecme $COMOUT_osi_saf
+  if [ $MODELNAME = naefs ]; then
+    mkdir -p $COMOUT_gefs_bc $COMOUT_cmce_bc
+  fi
+fi
 
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs_gens.${evs_ver}}
 export EXECevs=$HOMEevs/exec
@@ -78,7 +85,7 @@ export jobid="${outid}.o${pid}"
 export pgmout="OUTPUT.${pid}"
 
 
-$HOMEevs/scripts/global_ens/${STEP}/exevs_${COMPONENT}_${MODELNAME}_${RUN}_${STEP}.sh
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${MODELNAME}_${RUN}_${STEP}.sh
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$msg"

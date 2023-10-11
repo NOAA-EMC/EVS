@@ -43,7 +43,6 @@ export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
 export USHevs=${USHevs:-$HOMEevs/ush}
-export MET_PLUS_CONF="${PARMevs}/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}"
 
 
 ####################################
@@ -94,6 +93,12 @@ export RUN=${RUN:-atmos}
 
 
 ####################################
+# Define METplus variables
+####################################
+export MET_PLUS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}"
+
+
+####################################
 # Define COMIN/COMOUT variables
 ####################################
 export COMIN=${COMIN:-$(compath.py $NET/$evs_ver)}
@@ -121,7 +126,7 @@ fi
 ####################################
 # Execute the script 
 ####################################
-$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+$HOMEevs/scripts/$STEP/$COMPONENT/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
 
 if [ -e "$pgmout" ]; then
