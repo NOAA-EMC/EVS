@@ -38,7 +38,7 @@ export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
-export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config/$COMPONENT}
+export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config}
 export USHevs=${USHevs:-$HOMEevs/ush}
 export MASKS=${MASKS:-$FIXevs/masks}
 
@@ -72,10 +72,10 @@ if [ $RUN = 'argo' ] ; then
     export VAR=$vari
     export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/$VAR
     mkdir -p $COMOUTsmall
-    $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${STEP}.sh
+    $HOMEevs/scripts/$STEP/$COMPONENT/exevs_${COMPONENT}_${RUN}_${STEP}.sh
   done
 else
-  $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${STEP}.sh
+  $HOMEevs/scripts/$STEP/$COMPONENT/exevs_${COMPONENT}_${RUN}_${STEP}.sh
 fi
 
 export err=$?; err_chk
