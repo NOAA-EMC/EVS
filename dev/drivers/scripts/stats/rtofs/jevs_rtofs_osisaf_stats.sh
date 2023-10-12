@@ -26,8 +26,6 @@ export envir=prod
 export NET=evs
 export STEP=stats
 export RUN=osisaf
-export RUNupper=OSISAF
-export VAR=sic
 export VERIF_CASE=grid2grid
 export COMPONENT=rtofs
 
