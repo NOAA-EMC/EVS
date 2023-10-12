@@ -78,7 +78,6 @@ else
        echo "Warning: No GHRSST OSPO data was available for valid date $VDATE." > mailmsg
        echo "Missing file is $DCOMROOT/$VDATE/validation_data/marine/ghrsst/${VDATE}_OSPO_L4_GHRSST.nc." >> mailmsg
        cat mailmsg | mail -s "$subject" $maillist
-       exit
    fi
 fi
 
