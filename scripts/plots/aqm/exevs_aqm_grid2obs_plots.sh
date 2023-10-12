@@ -34,11 +34,11 @@ while [ $DATE -ge $ENDDATE ]; do
 	HOUR=`cut -c 9-10 curdate`
 
 	cpfile=evs.stats.${COMPONENT}_${biasc}.${RUN}.${VERIF_CASE}_${aqmtyp}.v${DAY}.stat
-	if [ -e ${COMINaqm}.$DAY/${cpfile} ]; then
-	    cp ${COMINaqm}.$DAY/${cpfile} $STATDIR
+	if [ -e ${EVSINaqm}.$DAY/${cpfile} ]; then
+	    cp ${EVSINaqm}.$DAY/${cpfile} $STATDIR
             sed "s/$model1/${aqmtyp}_${biasc}/g" $STATDIR/${cpfile} > $STATDIR/evs.stats.${aqmtyp}_${biasc}.${RUN}.${VERIF_CASE}.v${DAY}.stat
         else
-            echo "WARNING ${COMPONENT} ${STEP} :: Can not find ${COMINaqm}.$DAY/${cpfile}"
+            echo "WARNING ${COMPONENT} ${STEP} :: Can not find ${EVSINaqm}.$DAY/${cpfile}"
         fi
 
 	DATE=`$NDATE -24 $DATE`

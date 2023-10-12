@@ -43,12 +43,12 @@ echo $model1
 #
 # The valid time of forecast model output is the reference here in PointStat
 # Because of the valid time definition between forecat output and observation is different
-#     For average concentration of a period [ cyc-1 to cyc ], aqm output is defined at cyc Z
-#     while observation is defined at cyc-1 Z
+#     For average concentration of a period [ vhr-1 to vhr ], aqm output is defined at vhr Z
+#     while observation is defined at vhr-1 Z
 # Thus, the one hour back OBS input will be checked and used in PointStat
 #     [OBS_POINT_STAT_INPUT_TEMPLATE=****_{valid?fmt=%Y%m%d%H?shift=-3600}.nc]
 #
-cdate=${VDATE}${cyc}
+cdate=${VDATE}${vhr}
 vld_date=$(${NDATE} -1 ${cdate} | cut -c1-8)
 vld_time=$(${NDATE} -1 ${cdate} | cut -c1-10)
 
@@ -56,7 +56,7 @@ VDAYm1=$(${NDATE} -24 ${cdate} | cut -c1-8)
 VDAYm2=$(${NDATE} -48 ${cdate} | cut -c1-8)
 VDAYm3=$(${NDATE} -72 ${cdate} | cut -c1-8)
 
-check_file=${COMINaqmproc}/${RUN}.${vld_date}/${MODELNAME}/airnow_${HOURLY_INPUT_TYPE}_${vld_time}.nc
+check_file=${EVSINaqm}/${RUN}.${vld_date}/${MODELNAME}/airnow_${HOURLY_INPUT_TYPE}_${vld_time}.nc
 obs_hourly_found=0
 if [ -s ${check_file} ]; then
     obs_hourly_found=1
@@ -109,7 +109,7 @@ do
       fhr=$(printf %2.2d ${ihr})       ## fhr for the processing valid hour is in 2 digit
       export fhr
 
-      export datehr=${VDATE}${cyc}
+      export datehr=${VDATE}${vhr}
       adate=`$NDATE -${ihr} $datehr`
       aday=`echo $adate |cut -c1-8`
       acyc=`echo $adate |cut -c9-10`
@@ -174,7 +174,7 @@ do
 		  if [ $SENDCOM = "YES" ]; then
                    cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
 		  fi
-                  if [ $cyc = 23 ]
+                  if [ $vhr = 23 ]
                   then
                     mkdir -p $COMOUTfinal
 		    cp $COMOUTsmall/*${outtyp}${bcout}* $finalstat
@@ -199,7 +199,7 @@ do
 	    if [ $SENDCOM = "YES" ]; then
              cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
 	    fi
-            if [ $cyc = 23 ]
+            if [ $vhr = 23 ]
             then
                mkdir -p $COMOUTfinal
 	       cp $COMOUTsmall/*${outtyp}${bcout}* $finalstat
@@ -222,7 +222,7 @@ done
 # Daily verification of the daily maximum of 8-hr ozone
 # Verification being done on both raw and bias-corrected output data
 
-check_file=${COMINaqmproc}/${RUN}.${VDATE}/${MODELNAME}/airnow_daily_${VDATE}.nc
+check_file=${EVSINaqm}/${RUN}.${VDATE}/${MODELNAME}/airnow_daily_${VDATE}.nc
 obs_daily_found=0
 if [ -s ${check_file} ]; then
     obs_daily_found=1
@@ -240,7 +240,7 @@ fi
 echo "obs_daily_found = ${obs_daily_found}"
 
 
-if [ $cyc = 11 ]
+if [ $vhr = 11 ]
 then
    
   fcstmax=48
@@ -271,7 +271,7 @@ then
 #  search for model file and 2nd obs file for the daily 8-hr ozone max
 
       ozmax8=0
-      ozmax8_preprocessed_file=$COMINaqmproc/atmos.${VDAYm1}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+      ozmax8_preprocessed_file=$EVSINaqm/atmos.${VDAYm1}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
       if [ -s ${ozmax8_preprocessed_file} ]
       then
         ozmax8=1
@@ -287,7 +287,7 @@ then
         echo "Warning: No AQM max_8hr_o3${bctag} forecast was available for ${VDAYm1} t${hour}z"
         echo "Missing file is ${ozmax8_preprocessed_file}"
       fi
-      ozmax8_preprocessed_file=$COMINaqmproc/atmos.${VDAYm2}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+      ozmax8_preprocessed_file=$EVSINaqm/atmos.${VDAYm2}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
       if [ -s ${ozmax8_preprocessed_file} ]
       then
        let "ozmax8=ozmax8+1"
@@ -303,7 +303,7 @@ then
         echo "Warning: No AQM max_8hr_o3${bctag} forecast was available for ${VDAYm2} t${hour}z"
         echo "Missing file is ${ozmax8_preprocessed_file}"
       fi
-      ozmax8_preprocessed_file=$COMINaqmproc/atmos.${VDAYm3}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+      ozmax8_preprocessed_file=$EVSINaqm/atmos.${VDAYm3}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
       if [ -s ${ozmax8_preprocessed_file} ]
       then
         let "ozmax8=ozmax8+1"
@@ -348,7 +348,7 @@ fi
 # Daily verification of the daily average of PM2.5
 # Verification is being done on both raw and bias-corrected output data
 
-if [ $cyc = 04 ]
+if [ $vhr = 04 ]
 then
   fcstmax=48
 
