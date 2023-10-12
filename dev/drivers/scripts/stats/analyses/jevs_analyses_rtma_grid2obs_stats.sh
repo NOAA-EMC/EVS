@@ -49,8 +49,8 @@ export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 
-export cyc
-echo $cyc
+export vhr
+echo $vhr
 
 export mod_ver=${rtma_ver}
 export modsys=rtma
