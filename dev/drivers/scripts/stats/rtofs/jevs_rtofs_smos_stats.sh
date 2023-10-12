@@ -26,8 +26,6 @@ export envir=prod
 export NET=evs
 export STEP=stats
 export RUN=smos
-export RUNupper=SMOS
-export VAR=sss
 export VERIF_CASE=grid2grid
 export COMPONENT=rtofs
 
