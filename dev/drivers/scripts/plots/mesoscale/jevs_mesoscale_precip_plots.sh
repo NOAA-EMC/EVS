@@ -1,10 +1,10 @@
 #PBS -S /bin/bash
-#PBS -N jevs_mesoscale_snowfall_plots
+#PBS -N jevs_mesoscale_precip_plots
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=3:00:00
+#PBS -l walltime=04:00:00
 #PBS -l place=vscatter:exclhost,select=12:ncpus=128
 #PBS -l debug=true
 #PBS -V
@@ -20,7 +20,7 @@ export KEEPDATA=YES
 export SENDDBN=NO
 export SENDDBN_NTC=
 export SENDMAIL=YES
-export job=${PBS_JOBNAME:-jevs_mesoscale_snowfall_plots}
+export job=${PBS_JOBNAME:-jevs_mesoscale_precip_plots}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export USE_CFP=YES
@@ -33,7 +33,7 @@ export NET="evs"
 export STEP="plots"
 export COMPONENT="mesoscale"
 export RUN="atmos"
-export VERIF_CASE="snowfall"
+export VERIF_CASE="precip"
 export MODELNAME=${COMPONENT}
 
 # EVS Settings
@@ -43,7 +43,6 @@ export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPO
 
 # Load Modules
 source $HOMEevs/versions/run.ver
-source /usr/share/lmod/lmod/init/sh
 module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
@@ -53,12 +52,14 @@ export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # Developer Settings
-export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
+export DATAROOT=/lfs/h2/emc/ptmp/${USER}/evs_test/$envir/tmp
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/stats/
 export COMINapcp24mean=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/stats/$COMPONENT
 export COMINccpa=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/cam/$RUN
 export COMINmrms=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/cam/$RUN
 export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/cam/$RUN
+
+
 
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 export cyc=$(date -d "today" +"%H")

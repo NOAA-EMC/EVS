@@ -45,7 +45,6 @@ export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPO
 # Load Modules
 source $HOMEevs/versions/run.ver
 
-source /usr/share/lmod/lmod/init/sh
 module reset
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 export MET_PLUS_PATH="/apps/ops/prod/libs/intel/${intel_ver}/metplus/${metplus_ver}"
