@@ -81,6 +81,7 @@ fi
 # check if stat files exist
 for vari in ${VARS}; do
   export VAR=$vari
+  export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
   export STATSOUT=$STATSDIR/$RUN.$VDATE/$VAR
   VAR_file_count=$(ls -l $STATSDIR/$RUN.$VDATE/$VAR/*.stat |wc -l)
   if [[ $VAR_file_count -ne 0 ]]; then
@@ -91,6 +92,6 @@ for vari in ${VARS}; do
       cp -v $STATSOUT/evs.stats.${COMPONENT}.${RUN}.${VERIF_CASE}_${VAR}.v${VDATE}.stat $COMOUTfinal/.
     fi
   else
-     echo "Missing RTOFS_${RUNupper}_$VAR stat files for $VDATE" 
+     echo "Missing RTOFS_${RUNupper}_$VARupper stat files for $VDATE"
   fi
 done
