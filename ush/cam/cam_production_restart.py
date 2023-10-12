@@ -30,12 +30,15 @@ if STEP == 'stats':
     VERIF_CASE = os.environ['VERIF_CASE']
     RESTART_DIR = os.environ['RESTART_DIR']
     working_dir = os.path.join(DATA, VERIF_CASE)
+    completed_jobs_file = os.path.join(RESTART_DIR, 'completed_jobs.txt')
     if os.path.exists(RESTART_DIR):
-        print(f"Copying restart directory {RESTART_DIR} "
-              +f"into working directory {working_dir}")
-        cutil.run_shell_command(
-            ['cp', '-rpv', RESTART_DIR, working_dir]
-        )
+        if (os.path.exists(completed_jobs_file) 
+                and os.stat(completed_jobs_file).st_size != 0):
+            print(f"Copying restart directory {RESTART_DIR} "
+                  +f"into working directory {working_dir}")
+            cutil.run_shell_command(
+                ['cp', '-rpv', RESTART_DIR, working_dir]
+            )
 elif STEP == 'plots':
     COMOUTplots = os.environ['COMOUTplots']
     RESTART_DIR = os.environ['RESTART_DIR']

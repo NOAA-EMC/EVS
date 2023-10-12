@@ -18,6 +18,7 @@ export MET_CONFIG_OVERRIDES=""
 
 # Restart Settings
 export RESTART_DIR="${COMOUTsmall}/restart/c${cyc}"
+export COMPLETED_JOBS_FILE="completed_jobs.txt"
 
 # Time Settings
 export FHR_GROUP_LIST="FULL"

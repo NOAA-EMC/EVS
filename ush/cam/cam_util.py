@@ -440,9 +440,12 @@ def get_completed_jobs(completed_jobs_file):
             completed_jobs = set(f.read().splitlines())
     return completed_jobs
 
-def mark_job_completed(completed_jobs_file, job_name):
+def mark_job_completed(completed_jobs_file, job_name, job_type=""):
     with open(completed_jobs_file, 'a') as f:
-        f.write(job_name + "\n")
+        if job_type:
+            f.write(job_type + "_" + job_name + "\n")
+        else:
+            f.write(job_name + "\n")
 
 def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None, 
                          run=None, step=None, model=None, vdate=None, cyc=None, 
