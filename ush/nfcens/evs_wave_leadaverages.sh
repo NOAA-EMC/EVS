@@ -20,7 +20,7 @@ wave_vars='HTSGW'
 stats_list='stats1 stats2 stats3 stats4 stats5'
 ptype='lead_average'
 
-export GRID2OBS_CONF="${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}"
+export GRID2OBS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}"
 
 cd ${DATA}
 mkdir ${DATA}/sfcshp
