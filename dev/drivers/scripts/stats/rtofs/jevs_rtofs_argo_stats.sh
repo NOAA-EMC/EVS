@@ -26,9 +26,7 @@ export envir=prod
 export NET=evs
 export STEP=stats
 export RUN=argo
-export RUNupper=ARGO
 export VERIF_CASE=grid2obs
-export VARS="temp psal"
 export COMPONENT=rtofs
 
 source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
