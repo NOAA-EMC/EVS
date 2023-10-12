@@ -26,8 +26,6 @@ export envir=prod
 export NET=evs
 export STEP=stats
 export RUN=ghrsst
-export RUNupper=GHRSST
-export VAR=sst
 export VERIF_CASE=grid2grid
 export COMPONENT=rtofs
 
