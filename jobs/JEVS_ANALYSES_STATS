@@ -42,8 +42,8 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 export MASKS=${MASKS:-$FIXevs/masks}
 
 # Run setpdy and initialize PDY variables
-export cyc=${cyc:-00}
-export cycle=t${cyc}z
+export vhr=${vhr:-00}
+export cycle=t${vhr}z
 setpdy.sh
 . ./PDY
 
@@ -67,8 +67,9 @@ if [ "$modsys" = "rtma" ] ; then
   mod_ver=$rtma_ver
 fi
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/$evs_ver)}
-export COMINfcst=${COMINfcst:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
-export COMINobs=${COMINobs:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
+export COMINrtma=${COMINrtma:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
+export COMINurma=${COMINurma:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
+export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
 mkdir -p $COMOUT
 export COMOUTsmall=${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
