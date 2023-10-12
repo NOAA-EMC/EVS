@@ -64,7 +64,7 @@ else
   echo "Can not find pre-processed obs hourly input ${check_file}"
   if [ $SENDMAIL = "YES" ]; then 
     export subject="AQM Hourly Observed Missing for EVS ${COMPONENT}"
-    echo "Warning: No AQM ${HOURLY_INPUT_TYPE} was available for ${aday} ${vld_time}" > mailmsg
+    echo "Warning: No AQM ${HOURLY_INPUT_TYPE} was available for ${vld_date} ${vld_time}" > mailmsg
     echo "Missing file is ${check_file}" >> mailmsg
     echo "Job ID: $jobid" >> mailmsg
     cat mailmsg | mail -s "$subject" $maillist
@@ -238,7 +238,7 @@ else
     echo "Can not find pre-processed obs daily input ${check_file}"
     if [ $SENDMAIL = "YES" ]; then
       export subject="AQM Daily Observed Missing for EVS ${COMPONENT}"
-      echo "Warning: No AQM Daily Observed file was available for ${aday}" > mailmsg
+      echo "Warning: No AQM Daily Observed file was available for ${VDATE}" > mailmsg
       echo "Missing file is ${check_file}" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $maillist
