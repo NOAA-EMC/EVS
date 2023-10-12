@@ -42,8 +42,8 @@ export maskpath=$MASKS
 export vday=$VDATE
 
 #Define the spc outlook reqions mask file path
-export COMINspcoutlook=${COMINspcoutlook:-$(compath.py -o ${NET}/${evs_ver})/prep/$COMPONENT/href}
-export SPCoutlookMask=$COMINspcoutlook/spc.$VDATE
+export EVSINspcoutlook=${EVSINspcoutlook:-$COMIN/prep/$COMPONENT/href}
+export SPCoutlookMask=$EVSINspcoutlook/spc.$VDATE
 
 
 

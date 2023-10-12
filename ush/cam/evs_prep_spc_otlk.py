@@ -35,7 +35,7 @@ day4_datetime = day1_datetime + datetime.timedelta(days=3)
 
 
 
-SPC_PROD_DIR = os.environ['COMINspc']+'/'+OTLK_DATE+'/validation_data/weather/spc'
+SPC_PROD_DIR = os.environ['DCOMINspc']+'/'+OTLK_DATE+'/validation_data/weather/spc'
 
 
 VERIF_GRIDS = ['G211','G221','G227','3km']

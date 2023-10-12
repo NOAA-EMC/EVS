@@ -60,7 +60,7 @@ if job_type == 'reformat':
     USHevs = os.environ['USHevs']
     SKIP_IF_OUTPUT_EXISTS = os.environ['SKIP_IF_OUTPUT_EXISTS']
     if NEST == 'spc_otlk':
-        COMINspcotlk = os.environ['COMINspcotlk']
+        EVSINspcotlk = os.environ['EVSINspcotlk']
         GRID_POLY_LIST = os.environ['GRID_POLY_LIST']
     if NEST == 'firewx':
         GRID_POLY_LIST = os.environ['GRID_POLY_LIST']
@@ -86,7 +86,7 @@ elif job_type == 'generate':
     GRID = os.environ['GRID']
     USHevs = os.environ['USHevs']
     if NEST == 'spc_otlk':
-        COMINspcotlk = os.environ['COMINspcotlk']
+        EVSINspcotlk = os.environ['EVSINspcotlk']
 elif job_type == 'gather':
     VERIF_TYPE = os.environ['VERIF_TYPE']
     njob = os.environ['njob']
@@ -195,7 +195,7 @@ if job_type == 'reformat':
     }
     if NEST == 'spc_otlk':
         job_env_vars_dict['metplus_launcher'] = metplus_launcher
-        job_env_vars_dict['COMINspcotlk'] = COMINspcotlk
+        job_env_vars_dict['EVSINspcotlk'] = EVSINspcotlk
         job_env_vars_dict['GRID_POLY_LIST'] = GRID_POLY_LIST
     if NEST == 'firewx':
         job_env_vars_dict['GRID_POLY_LIST'] = GRID_POLY_LIST
@@ -271,13 +271,13 @@ elif job_type == 'generate':
             'bash_conditional': '[[ ${VHOUR} -lt 12 ]]',
             'bash_conditional_value': '"' + ', '.join(
                 glob.glob(os.path.join(
-                    COMINspcotlk,f'spc_otlk.*',
+                    EVSINspcotlk,f'spc_otlk.*',
                     f'spc_otlk.*.v*-{VDATE}12.3km*'
                 ))
             ) + '"',
             'bash_conditional_else_value': '"' + ', '.join(
                 glob.glob(os.path.join(
-                    COMINspcotlk,f'spc_otlk.*',
+                    EVSINspcotlk,f'spc_otlk.*',
                     f'spc_otlk.*.v{VDATE}*3km*'
                 ))
             ) + '"'
