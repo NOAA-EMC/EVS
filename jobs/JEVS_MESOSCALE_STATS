@@ -105,8 +105,10 @@ else
   exit
 fi
 
-# Execute the Script
-$HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+
+# Execute the script.
+   $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+
 export err=$?; err_chk
 
 # Clean Up
