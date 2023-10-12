@@ -37,8 +37,8 @@ export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
 export USHevs=${USHevs:-$HOMEevs/ush}
 
 # Run setpdy and initialize PDY variables
- export cyc=${cyc:-00}
- export cycle=t${cyc}z
+ export vhr=${vhr:-00}
+ export cycle=t${vhr}z
  setpdy.sh 31
  . ./PDY
 
@@ -57,7 +57,7 @@ export RUN=${RUN:-atmos}
 echo $COMPATH
 
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export COMINanl=${COMINanl:-${COMIN}/stats/${COMPONENT}}
+export EVSINanl=${EVSINanl:-${COMIN}/stats/${COMPONENT}}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}
 export COMOUTplots=${COMOUTplots:-${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}}
 mkdir -m 775 -p $COMOUTplots
