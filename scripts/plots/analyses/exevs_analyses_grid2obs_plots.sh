@@ -37,14 +37,14 @@ while [ $DATE -ge $ENDDATE ]; do
 	MONTH=`cut -c 1-6 curdate`
 	HOUR=`cut -c 9-10 curdate`
 
-	if [ -e ${COMINanl}/${anl}.${DAY}/evs.stats.${anl}_anl.${RUN}.${VERIF_CASE}.v${DAY}.stat ]
+	if [ -e ${EVSINanl}/${anl}.${DAY}/evs.stats.${anl}_anl.${RUN}.${VERIF_CASE}.v${DAY}.stat ]
 	then
-	cp ${COMINanl}/${anl}.${DAY}/evs.stats.${anl}_anl.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+	cp ${EVSINanl}/${anl}.${DAY}/evs.stats.${anl}_anl.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
         fi
 
-        if [ -e ${COMINanl}/${anl}.${DAY}/evs.stats.${anl}_ges.${RUN}.${VERIF_CASE}.v${DAY}.stat ]
+        if [ -e ${EVSINanl}/${anl}.${DAY}/evs.stats.${anl}_ges.${RUN}.${VERIF_CASE}.v${DAY}.stat ]
         then
-        cp ${COMINanl}/${anl}.${DAY}/evs.stats.${anl}_ges.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+        cp ${EVSINanl}/${anl}.${DAY}/evs.stats.${anl}_ges.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
 	fhr=0
 	shr=0
 	while [ $shr -lt 18 ]
