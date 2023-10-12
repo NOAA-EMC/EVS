@@ -30,9 +30,7 @@ export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
 
-## note the cyc here is the selected valid hour for processing
-## thus the cycle definition is not cycle hour from AQM run
-export cycle=${cycle:-t${cyc}z}
+export cycle=${cycle:-t${vhr}z}
 setpdy.sh
 . ./PDY
 

@@ -170,6 +170,8 @@ do
                   export fcsthours=$fcsthours_o3
                   run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstOZONE_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
                   export err=$?; err_chk
+		  cat $DATA/logs/${model1}/metplus_ascii_pointstat.log*
+		  mv $DATA/logs/${model1}/metplus_ascii_pointstat.log* $DATA/logs
                   mkdir -p $COMOUTsmall
 		  if [ $SENDCOM = "YES" ]; then
                    cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
@@ -181,6 +183,8 @@ do
 		    cd $finalstat
                     run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstOZONE_obsAIRNOW_GatherByDay.conf $PARMevs/metplus_config/machine.conf
                     export err=$?; err_chk
+		    cat $DATA/logs/${model1}/metplus.statanalysis.log*
+		    mv $DATA/logs/${model1}/metplus.statanalysis.log* $DATA/logs
 		    if [ $SENDCOM = "YES" ]; then
 		     cp $finalstat/evs.stats.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_ozone.v${VDATE}.stat $COMOUTfinal
 		    fi
@@ -195,6 +199,8 @@ do
             export fcsthours=$fcsthours_pm
             run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstPM2p5_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
             export err=$?; err_chk
+	    cat $DATA/logs/${model1}/metplus_ascii_pointstat.log*
+            mv $DATA/logs/${model1}/metplus_ascii_pointstat.log* $DATA/logs
             mkdir -p $COMOUTsmall
 	    if [ $SENDCOM = "YES" ]; then
              cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
@@ -205,6 +211,8 @@ do
 	       cp $COMOUTsmall/*${outtyp}${bcout}* $finalstat
                run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstPM_obsANOWPM_GatherByDay.conf $PARMevs/metplus_config/machine.conf
                export err=$?; err_chk
+	       cat $DATA/logs/${model1}/metplus.statanalysis.log*
+	       mv $DATA/logs/${model1}/metplus.statanalysis.log* $DATA/logs
 	       if [ $SENDCOM = "YES" ]; then
 		cp $finalstat/evs.stats.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_pm25.v${VDATE}.stat $COMOUTfinal
 	       fi
@@ -325,6 +333,8 @@ then
       then 
         run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstOZONEMAX_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
 	export err=$?; err_chk
+	cat $DATA/logs/${model1}/metplus_ascii_pointstat.log*
+        mv $DATA/logs/${model1}/metplus.ascii_pointstat.log* $DATA/logs
 	if [ $SENDCOM = "YES" ]; then
          cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
 	fi
@@ -332,6 +342,7 @@ then
 	cp $COMOUTsmall/*${outtyp}${bcout}* $finalstat
         run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstOZONEMAX_obsAIRNOW_GatherByDay.conf $PARMevs/metplus_config/machine.conf
 	export err=$?; err_chk
+	cat $DATA/logs/${model1}/metplus.statanalysis.log*                                                                           mv $DATA/logs/${model1}/metplus.statanalysis.log* $DATA/logs
 	if [ $SENDCOM = "YES" ]; then
          cp $finalstat/evs.stats.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_ozmax8.v${VDATE}.stat $COMOUTfinal
         fi	 
@@ -431,6 +442,8 @@ then
       then
         run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstPMAVE_obsANOWPM.conf $PARMevs/metplus_config/machine.conf
 	export err=$?; err_chk
+	cat $DATA/logs/${model1}/metplus_ascii_pointstat.log*
+        mv $DATA/logs/${model1}/metplus_ascii_pointstat.log* $DATA/logs
 	if [ $SENDCOM = "YES" ]; then
          cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
 	fi
@@ -438,6 +451,8 @@ then
 	cp $COMOUTsmall/*${outtyp}${bcout}* $finalstat
         run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstPMAVE_obsANOWPM_GatherByDay.conf $PARMevs/metplus_config/machine.conf
 	export err=$?; err_chk
+	cat $DATA/logs/${model1}/metplus.statanalysis.log*
+        mv $DATA/logs/${model1}/metplus.statanalysis.log* $DATA/logs
 	if [ $SENDCOM = "YES" ]; then
         	cp $finalstat/evs.stats.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_pmave.v${VDATE}.stat $COMOUTfinal
 	fi

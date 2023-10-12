@@ -13,7 +13,7 @@ cd $PBS_O_WORKDIR
 
 export model=evs
 
-export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS_aqm_finalEE2/EVS
 
 ###%include <head.h>
 ###%include <envir-p1.h>
@@ -28,8 +28,8 @@ module load prod_envir/${prod_envir_ver}
 
 source $HOMEevs/modulefiles/aqm/aqm_stats.sh
 
-export cyc
-echo $cyc
+export vhr
+echo $vhr
 export envir=prod
 export NET=evs
 export STEP=stats
@@ -49,9 +49,7 @@ export SENDMAIL=YES
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export cycle=t${cyc}z
-
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/${NET}/${evs_ver}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 ########################################################################
 
