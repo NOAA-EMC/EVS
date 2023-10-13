@@ -1,0 +1,11 @@
+set -x
+
+# requeue EVS model when step is done for the day
+
+# evs_ecflow_suit_prefix point to ecflow suite tree replace with production as needed
+evs_ecflow_suit_prefix=/evs_prod/primary
+
+# EVS model name
+model=%MODEL%
+
+ecflow_client --requeue=force ${evs_ecflow_suit_prefix}/${model}

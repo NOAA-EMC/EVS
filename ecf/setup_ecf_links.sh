@@ -19,7 +19,7 @@ function link_master_to_cyc(){
 }
 
 # CAM files
-cd $ECF_DIR/scripts/cam/prep
+cd $ECF_DIR/scripts/prep/cam
 echo "Linking CAM prep ..."
 cyc=$(seq 0 23)
 link_master_to_cyc "jevs_cam_radar_prep_cyc" "$cyc"
@@ -47,7 +47,7 @@ cyc=$(seq 0 12 23)
 link_master_to_cyc "jevs_cam_hireswfv3_severe_prep_cyc" "$cyc"
 cyc=$(seq 0 12 23)
 link_master_to_cyc "jevs_cam_href_severe_prep_cyc" "$cyc"
-cd $ECF_DIR/scripts/cam/stats
+cd $ECF_DIR/scripts/stats/cam
 echo "Linking CAM stats ..."
 cyc=$(seq 0 23)
 link_master_to_cyc "jevs_cam_nam_firewxnest_grid2obs_stats_cyc" "$cyc"
@@ -104,7 +104,7 @@ link_master_to_cyc "jevs_cam_hireswarw_snowfall_stats_cyc" "$cyc"
 cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_cam_hireswarwmem2_snowfall_stats_cyc" "$cyc"
 # MESOSCALE files
-cd $ECF_DIR/scripts/mesoscale/stats
+cd $ECF_DIR/scripts/stats/mesoscale
 echo "Linking MESOSCALE stats ..."
 cyc=$(seq 0 23)
 link_master_to_cyc "jevs_mesoscale_nam_precip_stats_cyc" "$cyc"
@@ -116,13 +116,13 @@ cyc=$(seq 0 6 23)
 link_master_to_cyc "jevs_mesoscale_rap_snowfall_stats_cyc" "$cyc"
 
 # AQM files
-cd $ECF_DIR/scripts/aqm/stats
+cd $ECF_DIR/scripts/stats/aqm
 echo "Linking AQM stats ..."
 cyc=$(seq 0 23)
 #link_master_to_cyc "jevs_aqm_stats_cyc" "$cyc"
 
 # ANALYSES files
-cd $ECF_DIR/scripts/analyses/stats
+cd $ECF_DIR/scripts/stats/analyses
 echo "Linking ANALYSES stats ..."
 cyc=$(seq 0 23)
 #link_master_to_cyc "jevs_analyses_urma_grid2obs_stats_cyc" "$cyc"

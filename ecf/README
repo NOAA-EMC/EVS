@@ -1,0 +1,28 @@
+This README file was last modified on Oct 10th, 2023 by Lin Gan.
+
+EVS ecflow workflow for EVS implementation package code deliver note:
+
+Background:
+This version dated Oct 13th 2023 has the following conditions:
+	[1] The EVS implementation package is still under EE2 fix and development modifications.
+	[2] EMC management made decision on Oct 10th to have a version of ecflow as is according to the current status of vpppg parallel.
+	[3] NCO is still requesting architecture changes for example, cyc and com/source code structure.
+
+Summary:
+This version of ecflow workflow using the following approach and justification:	
+	[1] CYC is assigned from ecflow definition level.
+	  Justification: This is the same solution as used by the current EVS vpppg official parallel.
+	[2] This version of ecflow workflow will not be tested as of Oct 13th 2023.
+	  Justification: EMC manager had a meeting on Oct 10th. It has been approved that this version of ecflow workflow does not need test due to the EVS package being under redesign/modification.
+	[3] cyc assignment application logic is under modification requested by NCO. The ecflow CYC assignment is using vpppg parallel solution as of Oct 13th 2023.
+	[4] The PBS -l walltime and mem resource is using large reserves instead of original production job design.
+	  Justification: Due to wcoss2 slowdown issue. Jobs run longer and use more memory.
+	[5] COM parameter export statements for each ecflow script file is the same as vpppg parallel cron based driver as currently stand on Oct 13th 2023.
+	[6] Only COMIN and COMOUT will be set in ecflow script files (*.ecf). All other COM* parameter should be set in exscript as requested by NCO.
+
+Code delivery step:
+NCO needs to run the linking script $HOMEevs/ecf/setup_ecf_links.sh before executing the ecflow workflow for the first time after code delivery. This script will create required ecflow script level links to allow EVS ecflow workflow to function. 
+  Step:	
+    cd $HOMEevs/ecf
+    sh setup_ecf_links.sh
+  End of Code delivery step
