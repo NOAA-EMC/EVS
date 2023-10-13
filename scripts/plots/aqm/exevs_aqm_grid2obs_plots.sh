@@ -3,7 +3,6 @@
 set -x
 
 mkdir -p $DATA/logs
-mkdir -p $DATA/plots/logs
 export LOGDIR=$DATA/plots/logs
 export LOGFIN=$DATA/logs
 mkdir -p $LOGFIN
