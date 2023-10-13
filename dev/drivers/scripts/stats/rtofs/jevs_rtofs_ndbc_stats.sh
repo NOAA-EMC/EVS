@@ -26,9 +26,7 @@ export envir=prod
 export NET=evs
 export STEP=stats
 export RUN=ndbc
-export RUNupper=NDBC_STANDARD
 export VERIF_CASE=grid2obs
-export VAR=sst
 export COMPONENT=rtofs
 
 source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
