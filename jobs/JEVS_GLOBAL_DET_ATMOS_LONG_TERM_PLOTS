@@ -32,7 +32,8 @@ export evs_run_mode=${evs_run_mode:-production}
 ####################################
 # Run setpdy and initialize PDY variables
 ####################################
-export cycle=${cycle:-t${cyc}z}
+export vhr=${vhr:-00}
+export cycle=${cycle:-t${vhr}z}
 setpdy.sh
 . ./PDY
 export VDATEYYYY=${VDATEYYYY:-$(date -d "1 month ago" '+%Y')}

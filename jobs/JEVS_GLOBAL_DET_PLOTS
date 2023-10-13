@@ -32,7 +32,8 @@ export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
 ####################################
 # Run setpdy and initialize PDY variables
 ####################################
-export cycle=${cycle:-t00z}
+export vhr=${vhr:-00}
+export cycle=${cycle:-t${vhr}z}
 export NDAYS=${NDAYS:-31}
 setpdy.sh $NDAYS
 . ./PDY
