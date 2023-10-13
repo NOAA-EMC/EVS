@@ -99,7 +99,8 @@ fi
 ####################################
 # Define COMIN/COMOUT variables:
 ####################################
-export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
+#export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
+export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
 export COMINapcp24mean=${COMINapcp24mean:-$(compath.py $envir/com/$NET/$evs_ver)/stats/$COMPONENT}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 export COMOUTplots=${COMOUTplots:-$COMOUT/$RUN.$VDATE}

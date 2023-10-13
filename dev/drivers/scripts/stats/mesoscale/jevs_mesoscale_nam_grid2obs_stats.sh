@@ -67,6 +67,7 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
   export VDATE=$(date -d "today -1 day" +"%Y%m%d")
 
 # Developer Settings
+  export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
   export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/cam
 
   export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
