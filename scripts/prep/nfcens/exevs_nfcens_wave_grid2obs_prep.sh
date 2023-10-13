@@ -46,7 +46,7 @@ mkdir -p ${DATA}/gribs
 
 for cyc in ${cycles} ; do
     # copy the model grib2 files
-    COMINfilename="${COMINmodel}/${MODELNAME}.${INITDATE}/HTSGW_mean.t${cyc}z.grib2"
+    COMINfilename="${COMINnfcens}/${MODELNAME}.${INITDATE}/HTSGW_mean.t${cyc}z.grib2"
     DATAfilename="${DATA}/gribs/HTSGW_mean.${INITDATE}.t${cyc}z.grib2"
     if [ ! -s $COMINfilename ]; then
         export subject="NFCENS Forecast Data Missing for EVS ${COMPONENT}"
