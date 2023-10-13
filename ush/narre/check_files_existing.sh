@@ -8,7 +8,7 @@ typeset -Z2 cyc
 cyc=00
 missing=0 
 while [ $cyc -le 23 ] ; do 
-  if [ ! -s $COMINobs/rap.${vday}/rap.t${cyc}z.prepbufr.tm00.nr ] ; then
+  if [ ! -s $COMINobsproc/rap.${vday}/rap.t${cyc}z.prepbufr.tm00.nr ] ; then
     missing=$((missing + 1 ))
   fi
   cyc=$((cyc+1))
