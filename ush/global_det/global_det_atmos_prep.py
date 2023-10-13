@@ -261,7 +261,8 @@ for MODEL in MODELNAME:
                             )
                     if SENDCOM == 'YES':
                         gda_util.copy_file(DATA_fcst_file, COMOUT_fcst_file)
-                        if MODEL == 'ecmwf':
+                        if MODEL == 'ecmwf' \
+                                and os.path.exists(COMOUT_fcst_file):
                             gda_util.run_shell_command(
                                 ['chmod', '640', COMOUT_fcst_file]
                             )
@@ -357,7 +358,8 @@ for MODEL in MODELNAME:
                         if SENDCOM == 'YES':
                             gda_util.copy_file(DATA_precip_file,
                                                COMOUT_precip_file)
-                            if MODEL == 'ecmwf':
+                            if MODEL == 'ecmwf' \
+                                    and os.path.exists(COMOUT_precip_file):
                                 gda_util.run_shell_command(
                                     ['chmod', '640', COMOUT_precip_file]
                                 )
@@ -429,7 +431,7 @@ for MODEL in MODELNAME:
                         )
                 if SENDCOM == 'YES':
                     gda_util.copy_file(DATA_anl_file, COMOUT_anl_file)
-                    if MODEL == 'ecmwf':
+                    if MODEL == 'ecmwf' and os.path.exists(COMOUT_anl_file):
                         gda_util.run_shell_command(
                             ['chmod', '640', COMOUT_anl_file]
                         )
