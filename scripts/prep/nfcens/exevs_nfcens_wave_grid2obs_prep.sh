@@ -89,14 +89,14 @@ echo 'Copying GDAS prepbufr files'
 for cyc in 00 06 12 18 ; do
 
   export cycle=t${cyc}z
-  if [ ! -s ${COMINgdas}.${INITDATE}/${cyc}/atmos/gdas.${cycle}.prepbufr ]; then
+  if [ ! -s ${EVSINgdas}.${INITDATE}/${cyc}/atmos/gdas.${cycle}.prepbufr ]; then
       export subject="GDAS Prepbufr Data Missing for EVS ${COMPONENT}"
       echo "Warning: No GDAS Prepbufr was available for init date ${INITDATE}${cyc}" > mailmsg
-      echo "Missing file is ${COMINgdas}.${INITDATE}/${cyc}/atmos/gdas.${cycle}.prepbufr" >> mailmsg
+      echo "Missing file is ${EVSINgdas}.${INITDATE}/${cyc}/atmos/gdas.${cycle}.prepbufr" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $maillist
   else
-      cp -v ${COMINgdas}.${INITDATE}/${cyc}/atmos/gdas.${cycle}.prepbufr ${DATA}/gdas.${INITDATE}${cyc}.prepbufr
+      cp -v ${EVSINgdas}.${INITDATE}/${cyc}/atmos/gdas.${cycle}.prepbufr ${DATA}/gdas.${INITDATE}${cyc}.prepbufr
   fi
 
 done
