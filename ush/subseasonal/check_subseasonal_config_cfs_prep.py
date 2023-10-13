@@ -2,7 +2,8 @@
 '''
 Program Name: check_subseasonal_config_cfs_prep.py
 Contact(s): Shannon Shields
-Abstract: This script is run by all scripts in scripts/.
+Abstract: This script is run by exevs_subseasonal_cfs_prep.sh
+          in scripts/prep/subseasonal.
           This does a check on the user's settings in
           the passed config file.
 '''

@@ -2,7 +2,7 @@
 '''
 Program Name: create_METplus_subseasonal_output_dirs.py
 Contact(s): Shannon Shields
-Abstract: This script is run by all scripts in scripts/.
+Abstract: This script is run by all stats and plots scripts in scripts/.
           This creates the base directories and their subdirectories
           for the METplus verification use cases and their types.
 '''
@@ -54,7 +54,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
             data_dir_list.append(os.path.join(data_base_dir, 'osi_saf'))
 elif VERIF_CASE_STEP == 'grid2obs_stats':
     for VCS_type in VCS_type_list:
-        if VCS_type == 'PrepBufr':
+        if VCS_type == 'prepbufr':
             data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_nam'))
 elif VERIF_CASE_STEP == 'grid2grid_plots':
     for VCS_type in VCS_type_list:
@@ -125,7 +125,7 @@ if STEP == 'stats':
                     )
         elif VERIF_CASE_STEP == 'grid2obs_stats':
             for VCS_type in VCS_type_list:
-                if VCS_type in ['PrepBufr']:
+                if VCS_type in ['prepbufr']:
                     COMROOT_dir_list.append(
                         os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
                                      RUN+'.'+date_dt.strftime('%Y%m%d'), 'prepbufr',
