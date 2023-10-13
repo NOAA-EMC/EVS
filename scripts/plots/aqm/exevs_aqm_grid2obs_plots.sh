@@ -407,7 +407,7 @@ do
 	if [ ! -e $COMOUTplots/headline/headline_${COMPONENT}.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png ]
 	then
 	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_ozmax8_headline.config
-	cat $LOGDIR_headline/*out
+	cat ${LOGDIR_headline}/*out
         mv $LOGDIR/*out $LOGFIN
         else
 	echo "RESTART - plot exists; copying over to plot directory"
@@ -445,7 +445,7 @@ do
 	if [ ! -e $COMOUTplots/headline/headline_${COMPONENT}.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png ]
 	then
 	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_pmave_headline.config
-	cat $LOGDIR_headline/*out
+	cat ${LOGDIR_headline}/*out
         mv $LOGDIR/*out $LOGFIN
         else
         echo "RESTART - plot exists; copying over to plot directory"
