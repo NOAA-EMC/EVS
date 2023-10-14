@@ -507,7 +507,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             ))
             for fhr in np.arange(int(fhr_start), int(fhr_end), int(fhr_incr)):
                 copy_files.append(
-                    f'{met_tool}_{model}_{var_name}_{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}_'
+                    f'{met_tool}_{model}_{var_name}_{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}*_'
                     + f'{str(fhr).zfill(2)}0000L_{vdate}_{vhour}0000V.stat'
                 )
         else:
@@ -527,7 +527,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             ))
             for fhr in np.arange(int(fhr_start), int(fhr_end), int(fhr_incr)):
                 copy_files.append(
-                    f'{met_tool}_{model}_*_{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}_'
+                    f'{met_tool}_{model}_*_{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}*_'
                     + f'{str(fhr).zfill(2)}0000L_{vdate}_{vhour}0000V.stat'
                 )
     elif met_tool == 'merged_ptype':
@@ -633,7 +633,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
         ))
         for fhr in np.arange(int(fhr_start), int(fhr_end), int(fhr_incr)):
             copy_files.append(
-                f'{met_tool}_{model}_{vx_mask}_{var_name}_OBS_{str(fhr).zfill(2)}0000L_{vdate}_'
+                f'{met_tool}_{model}_{vx_mask}_{var_name}_OBS*_{str(fhr).zfill(2)}0000L_{vdate}_'
                 + f'{vhour}0000V.stat'
             )
     elif met_tool == 'regrid_data_plane':
