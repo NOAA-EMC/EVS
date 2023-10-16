@@ -51,11 +51,14 @@ let endvhr=23
 conf_dir=$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}
 while [ ${ic} -le ${endvhr} ]; do
     vldhr=$(printf %2.2d ${ic})
-    checkfile=${COMINobs}/${VDATE}/airnow/${HOURLY_INPUT_TYPE}_${VDATE}${vldhr}.dat
+    checkfile=${DCOMIN}/${VDATE}/airnow/${HOURLY_INPUT_TYPE}_${VDATE}${vldhr}.dat
     if [ -s ${checkfile} ]; then
         export VHOUR=${vldhr}
 	if [ -s ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf ]; then
             run_metplus.py ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
+	    export err=$?; err_chk
+	    cat $DATA/logs/${model1}/metplus_hourly_ascii2nc.log*
+	    mv $DATA/logs/${model1}/metplus_hourly_ascii2nc.log* $DATA/logs
 	    if [ $SENDCOM = "YES" ]; then
 	      cp ${PREP_SAVE_DIR}/airnow_hourly_aqobs_${VDATE}${VHOUR}.nc ${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}
 	    fi
@@ -79,10 +82,13 @@ done
 ##
 ## Daily (MAX/AVG) AirNOW observation
 ##
-checkfile=${COMINobs}/${VDATE}/airnow/daily_data_v2.dat
+checkfile=${DCOMIN}/${VDATE}/airnow/daily_data_v2.dat
 if [ -s ${checkfile} ]; then
     if [ -s ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf ]; then
         run_metplus.py ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf $PARMevs/metplus_config/machine.conf
+        export err=$?; err_chk
+        cat $DATA/logs/${model1}}/metplus_daily_ascii2nc.log*
+        mv $DATA/logs/${model1}/metplus_daily_ascii2nc.log* $DATA/logs
 	if [ $SENDCOM = "YES" ]; then
 	  cp ${PREP_SAVE_DIR}/airnow_daily_$VDATE.nc ${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}
 	fi

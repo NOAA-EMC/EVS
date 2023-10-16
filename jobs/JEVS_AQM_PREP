@@ -32,8 +32,8 @@ export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
 
-export cyc=${cyc:-00}
-export cycle=${cycle:-t${cyc}z}
+export vhr=${vhr:-00}
+export cycle=${cycle:-t${vhr}z}
 setpdy.sh
 . ./PDY
 
@@ -69,7 +69,7 @@ export mod_ver=${mod_ver:-${aqm_ver}}
 export VDATE=${VDATE:-${PDYm3}}
 
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export COMINobs=${COMINobs:-${DCOMROOT}}
+export DCOMIN=${DCOMIN:-${DCOMROOT}}
 export COMINaqm=${COMINaqm:-$(compath.py ${envir}/com/${modsys}/${mod_ver})}
 export COMOUT=${COMOUT:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 
