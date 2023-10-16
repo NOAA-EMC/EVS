@@ -28,8 +28,8 @@ module load prod_envir/${prod_envir_ver}
 
 source $HOMEevs/modulefiles/aqm/aqm_stats.sh
 
-export cyc
-echo $cyc
+export vhr
+echo $vhr
 export envir=prod
 export NET=evs
 export STEP=stats
@@ -48,8 +48,6 @@ export KEEPDATA=YES
 export SENDMAIL=YES
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
-
-export cycle=t${cyc}z
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
