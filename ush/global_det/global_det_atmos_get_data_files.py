@@ -33,13 +33,10 @@ VERIF_CASE_STEP_type_list = (os.environ[VERIF_CASE_STEP_abbrev+'_type_list'] \
                              .split(' '))
 USER = os.environ['USER']
 evs_run_mode = os.environ['evs_run_mode']
-COMINnohrsc = os.environ['COMINnohrsc']
+DCOMINnohrsc = os.environ['DCOMINnohrsc']
 if STEP == 'stats':
     COMINccpa = os.environ['COMINccpa']
     COMINobsproc = os.environ['COMINobsproc']
-    COMINosi_saf = os.environ['COMINosi_saf']
-    COMINghrsst_ospo = os.environ['COMINghrsst_ospo']
-    COMINget_d = os.environ['COMINget_d']
 if evs_run_mode != 'production':
     QUEUESERV = os.environ['QUEUESERV']
     ACCOUNT = os.environ['ACCOUNT']
@@ -356,12 +353,9 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
             if VERIF_CASE_STEP_type == 'flux':
                 # GET-D
                 get_d_prod_file_format = os.path.join(
-                    COMINget_d, 'prep',
-                    COMPONENT, RUN+'.{valid?fmt=%Y%m%d}',
-                    'get_d', 'get_d.'
-                    +'{valid_shift?fmt=%Y%m%d%H?shift='
-                    +'-24}to'
-                    +'{valid?fmt=%Y%m%d%H}.nc'
+                    COMIN, 'prep', COMPONENT, RUN+'.{valid?fmt=%Y%m%d}',
+                    'get_d', 'get_d.'+'{valid_shift?fmt=%Y%m%d%H?shift='
+                    +'-24}to{valid?fmt=%Y%m%d%H}.nc'
                 )
                 get_d_arch_file_format = os.path.join(
                     archive_obs_data_dir, 'get_d',
@@ -459,8 +453,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
                 gda_util.make_dir(VERIF_CASE_STEP_osi_saf_dir)
                 for hem in ['nh', 'sh']:
                     osi_saf_hem_prod_file_format = os.path.join(
-                        COMINosi_saf, 'prep',
-                        COMPONENT, RUN+'.{valid?fmt=%Y%m%d}',
+                        COMIN, 'prep', COMPONENT, RUN+'.{valid?fmt=%Y%m%d}',
                         'osi_saf', 'osi_saf.multi.'+hem+'.'
                         +'{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
                         +'{valid?fmt=%Y%m%d%H}.nc'
@@ -487,7 +480,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
             elif VERIF_CASE_STEP_type == 'snow':
                 # NOHRSC
                 nohrsc_prod_file_format = os.path.join(
-                    COMINnohrsc, '{valid?fmt=%Y%m%d}', 'wgrbbul',
+                    DCOMINnohrsc, '{valid?fmt=%Y%m%d}', 'wgrbbul',
                     'nohrsc_snowfall',
                     'sfav2_CONUS_24h_{valid?fmt=%Y%m%d%H}_grid184.grb2'
                 )
@@ -510,8 +503,8 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
             elif VERIF_CASE_STEP_type == 'sst':
                 # GHRSST OSPO
                 ghrsst_ospo_prod_file_format = os.path.join(
-                    COMINghrsst_ospo, 'prep',
-                    COMPONENT, RUN+'.{valid?fmt=%Y%m%d}', 'ghrsst_ospo',
+                    COMIN, 'prep', COMPONENT, RUN+'.{valid?fmt=%Y%m%d}',
+                    'ghrsst_ospo',
                     'ghrsst_ospo.{valid_shift?fmt=%Y%m%d%H?shift=-24}to'
                     +'{valid?fmt=%Y%m%d%H}.nc'
                 )
@@ -849,7 +842,7 @@ elif STEP == 'plots' :
                     else:
                         print("WARNING: "+source_model_fhr_pcp_combine_file+" "
                               +"DOES NOT EXIST")
-    # Get NOHRSC files from COMINnohrsc
+    # Get NOHRSC files from DCOMINnohrsc
     if VERIF_CASE == 'grid2grid' and 'snow' in VERIF_CASE_STEP_type_list:
         (NOHRSC24hr_valid_hr_start, NOHRSC24hr_valid_hr_end,
          NOHRSC24hr_valid_hr_inc) = gda_util.get_obs_valid_hrs(
@@ -863,7 +856,7 @@ elif STEP == 'plots' :
             )
         ]
         source_nohrsc_file = os.path.join(
-            COMINnohrsc, end_date_dt.strftime('%Y%m%d'),
+            DCOMINnohrsc, end_date_dt.strftime('%Y%m%d'),
             'wgrbbul', 'nohrsc_snowfall',
             'sfav2_CONUS_24h_'+end_date_dt.strftime('%Y%m%d')
             +NOHRSC24hr_valid_hr_list[0]+'_grid184.grb2'

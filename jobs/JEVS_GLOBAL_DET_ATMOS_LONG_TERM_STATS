@@ -58,9 +58,6 @@ export evs_run_mode=${evs_run_mode:-production}
 # Define COMIN/COMOUT variables
 ####################################
 export COMIN=${COMIN:-$(compath.py $NET/$evs_ver)}
-export COMINdailystats=${COMINdailystats:-$COMIN/stats/$COMPONENT}
-export COMINmonthlystats=${COMINmonthlystats:-$COMIN/$STEP/$COMPONENT/$RUN/monthly_means}
-export COMINyearlystats=${COMINyearlystats:-$COMIN/$STEP/$COMPONENT/$RUN/yearly_means}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
 export COMOUTmonthlystats=${COMOUTmonthlystats:-$COMOUT/$RUN/monthly_means}
 export COMOUTyearlystats=${COMOUTyearlystats:-$COMOUT/$RUN/yearly_means}
