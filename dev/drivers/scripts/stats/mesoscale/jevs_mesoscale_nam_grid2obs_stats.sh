@@ -51,7 +51,6 @@ set -x
 # EVS configuration
   export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
-
 source $HOMEevs/versions/run.ver
 module reset
 module load prod_envir/${prod_envir_ver}
@@ -68,7 +67,7 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # Developer Settings
   export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
-  export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/cam
+  export EVSINspcotlk=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/cam
 
   export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
   export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}

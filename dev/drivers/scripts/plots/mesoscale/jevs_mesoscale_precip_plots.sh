@@ -52,13 +52,12 @@ export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # Developer Settings
-#export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/stats/
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
 export DATAROOT=/lfs/h2/emc/ptmp/${USER}/evs_test/$envir/tmp
-export COMINapcp24mean=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/stats/$COMPONENT
-export COMINccpa=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/cam/$RUN
-export COMINmrms=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/cam/$RUN
-export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/cam/$RUN
+export EVSINapcp24mean=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/stats/$COMPONENT
+export EVSINccpa=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/cam/$RUN
+export EVSINmrms=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/cam/$RUN
+export EVSINspcotlk=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/cam/$RUN
 
 
 

@@ -16,7 +16,8 @@ export run_mpi=${run_mpi:-'yes'}
 export gather=${gather:-'yes'}
 export just_cnv=${just_cnv:-'no'} 
 
-export GRID2OBS_CONF=$PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}
+#export GRID2OBS_CONF=$PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}
+export GRID2OBS_CONF=$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}
 export MET_CONFIG=${METPLUS_BASE}/parm/met_config
 export maskpath=$MASKS
 

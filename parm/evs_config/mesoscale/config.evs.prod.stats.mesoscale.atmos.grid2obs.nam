@@ -27,8 +27,8 @@ export FHR_GROUP_LIST="FULL"
 export MIN_IHOUR="00"
 
 # Model/Obs Settings
-export COMINfcst=${COMINnam}
-export COMINobs=${COMINobsproc}
+export COMINfcst=${DCOMINnam}
+export COMINobs=${DCOMINobsproc}
 export OBSNAME=${VERIF_TYPE}
 
 export job=${NET}_${COMPONENT}_${RUN}

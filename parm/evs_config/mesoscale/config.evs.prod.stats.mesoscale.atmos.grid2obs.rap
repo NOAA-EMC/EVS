@@ -25,8 +25,8 @@ export FHR_INCR=1
 export FHR_END="21"
 
 # Model/Obs Settings
-export COMINfcst=${COMINrap}
-export COMINobs=${COMINobsproc}
+export COMINfcst=${DCOMINrap}
+export COMINobs=${DCOMINobsproc}
 export OBSNAME=${VERIF_TYPE}
 
 export job=${NET}_${COMPONENT}_${RUN}
