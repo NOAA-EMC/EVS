@@ -30,22 +30,22 @@ for MODEL in $MODELNAME; do
             336 342 348 354 360 366 372 378 384'
         for cyc in ${cycles} ; do
             for hr in ${lead_hours} ; do
-                COMINfilename="${COMINgfs}/${cyc}/wave/gridded/gfswave.t${cyc}z.global.0p25.f${hr}.grib2"
-                DATAfilename="${DATA}/gfswave.${INITDATE}.t${cyc}z.global.0p25.f${hr}.grib2"
-                COMOUTfilename="$COMOUT.${INITDATE}/${MODEL}/gfswave.${INITDATE}.t${cyc}z.global.0p25.f${hr}.grib2"
-                if [ ! -s $COMINfilename ] ; then
+                input_filename="${COMINgfs}/${cyc}/wave/gridded/gfswave.t${cyc}z.global.0p25.f${hr}.grib2"
+                tmp_filename="${DATA}/gfswave.${INITDATE}.t${cyc}z.global.0p25.f${hr}.grib2"
+                output_filename="$COMOUT.${INITDATE}/${MODEL}/gfswave.${INITDATE}.t${cyc}z.global.0p25.f${hr}.grib2"
+                if [ ! -s $input_filename ] ; then
                     if [ $SENDMAIL = YES ] ; then
                         export subject="F${hr} GFS Forecast Data Missing for EVS ${COMPONENT}"
                         echo "Warning: No GFS forecast was available for ${INITDATE}${cyc}f${hr}" > mailmsg
-                        echo "Missing file is ${COMINfilename}" >> mailmsg
+                        echo "Missing file is ${input_filename}" >> mailmsg
                         echo "Job ID: $jobid" >> mailmsg
                         cat mailmsg | mail -s "$subject" $maillist
                     fi
                 else
-                    if [ ! -s $COMOUTfilename ] ; then
-                        cp -v $COMINfilename $DATAfilename
+                    if [ ! -s $output_filename ] ; then
+                        cp -v $input_filename $tmp_filename
                         if [ $SENDCOM = YES ]; then
-                            cp -v $DATAfilename $COMOUTfilename
+                            cp -v $tmp_filename $output_filename
                         fi
                     fi
                 fi
@@ -64,12 +64,12 @@ for OBS in $OBSNAME; do
     # Trim down the NDBC buoy files
     if [ $OBS == "ndbc" ]; then
         INITDATEp1=$(date --date="${INITDATE} 24 hours" +"%Y%m%d")
-        nbdc_txt_ncount=$(ls -l $COMINndbc/${INITDATEp1}/validation_data/marine/buoy/*.txt |wc -l)
+        nbdc_txt_ncount=$(ls -l $DCOMINndbc/${INITDATEp1}/validation_data/marine/buoy/*.txt |wc -l)
         if [[ $nbdc_txt_ncount -eq 0 ]]; then
             if [ $SENDMAIL = YES ] ; then
                 export subject="NDBC Data Missing for EVS ${COMPONENT}"
                 echo "Warning: No NDBC data was available for valid date ${VDATE}" > mailmsg
-                echo "Missing files are located at $COMINndbc/${INITDATEp1}/validation_data/marine/buoy" >> msg
+                echo "Missing files are located at $DCOMINndbc/${INITDATEp1}/validation_data/marine/buoy" >> msg
                 echo "Job ID: $jobid" >> mailmsg
                 cat mailmsg | mail -s "$subject" $maillist
             fi
