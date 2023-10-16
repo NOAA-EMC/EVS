@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 ##---------------------------------------------------------------------------
 ##---------------------------------------------------------------------------
 ## NCEP EMC Verification System (EVS) - GFS Atmospheric
@@ -7,6 +7,8 @@
 ## PURPOSE: Set up configurations to run EVS GFS Atmospheric standalone
 ##---------------------------------------------------------------------------
 ##--------------------------------------------------------------------------
+
+set -x
 
 echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 
@@ -29,7 +31,7 @@ export RUN_GRID2OBS_PLOTS="NO"
 #model_file_format_list: file format of model files
 export model_list="$MODELNAME"
 export model_evs_data_dir_list="$COMOUTfinal"
-export model_file_format_list="${COMINimd}.{init?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.t{init?fmt=%H}z.f{lead?fmt=%3H}"
+export model_file_format_list="$COMIN/prep/$COMPONENT/${RUN}.{init?fmt=%Y%m%d}/${MODELNAME}/${MODELNAME}.t{init?fmt=%H}z.f{lead?fmt=%3H}"
 
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory
