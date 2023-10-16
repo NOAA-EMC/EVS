@@ -2,8 +2,10 @@
 '''
 Name: subseasonal_stats_grid2grid_create_days6_10_avg.py
 Contact(s): Shannon Shields
-Abstract: This script is used to create Days 6-10 average
-          for variable from netCDF output
+Abstract: This script is run by subseasonal_stats_grid2grid_create_job_
+          scripts.py in ush/subseasonal.
+          This script is used to create Days 6-10 average
+          for variable from netCDF output.
 '''
 
 import os
