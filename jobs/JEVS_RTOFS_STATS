@@ -58,25 +58,13 @@ export COMPONENT=${COMPONENT:-rtofs}
 
 # define COMIN/COMOUT variables
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
-export COMINobs=${COMINobs:-$DCOMROOT}
-export COMINfcst=${COMINfcst:-$(compath.py $NET/${evs_ver}/prep/$COMPONENT)}
-export COMINclimo=${COMINclimo:-$FIXevs/climos/$COMPONENT}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}
 export COMOUTsmall=${COMOUTsmall:-$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE}
 export COMOUTfinal=${COMOUTfinal:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
 
 mkdir -p $COMOUT $COMOUTsmall $COMOUTfinal
 
-if [ $RUN = 'argo' ] ; then
-  for vari in ${VARS}; do
-    export VAR=$vari
-    export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/$VAR
-    mkdir -p $COMOUTsmall
-    $HOMEevs/scripts/$STEP/$COMPONENT/exevs_${COMPONENT}_${RUN}_${STEP}.sh
-  done
-else
-  $HOMEevs/scripts/$STEP/$COMPONENT/exevs_${COMPONENT}_${RUN}_${STEP}.sh
-fi
+$HOMEevs/scripts/$STEP/$COMPONENT/exevs_${COMPONENT}_${RUN}_${STEP}.sh
 
 export err=$?; err_chk
 
