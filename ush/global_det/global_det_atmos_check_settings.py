@@ -4,10 +4,10 @@ Name: global_det_atmos_check_settings.py
 Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This does a check on the run's configuration
           settings for global_det atmos stats and plots jobs.
-Run By: scripts/global_det/stats/exevs_global_det_atmos_grid2grid_stats.sh
-        scripts/global_det/stats/exevs_global_det_atmos_grid2obs_stats.sh
-        scripts/global_det/plots/exevs_global_det_atmos_grid2grid_plots.sh
-        scripts/global_det/plots/exevs_global_det_atmos_grid2obs_plots.sh
+Run By: scripts/stats/global_det/exevs_global_det_atmos_grid2grid_stats.sh
+        scripts/stats/global_det/exevs_global_det_atmos_grid2obs_stats.sh
+        scripts/plots/global_det/exevs_global_det_atmos_grid2grid_plots.sh
+        scripts/plots/global_det/exevs_global_det_atmos_grid2obs_plots.sh
 '''
 
 import sys
@@ -101,13 +101,11 @@ else:
 ]
 if STEP.upper() == 'STATS':
     evs_global_det_atmos_settings_dict['evs'].extend(
-            ['COMINccpa', 'COMINnohrsc', 'COMINobsproc',
-             'COMINosi_saf', 'COMINghrsst_ospo', 'COMINget_d']
+            ['COMINccpa', 'DCOMINnohrsc', 'COMINobsproc']
     )
 evs_global_det_atmos_settings_dict['shared'] = [
     'model_list', 'model_evs_data_dir_list', 'model_file_format_list',
-    'OUTPUTROOT', 'start_date', 'end_date', 'KEEPDATA', 'SENDCOM',
-    'SENDARCH', 'SENDMETVIEWER'
+    'OUTPUTROOT', 'start_date', 'end_date', 'KEEPDATA', 'SENDCOM'
 ]
 evs_global_det_atmos_settings_dict['modules'] = ['MET_ROOT', 'METPLUS_PATH']
 evs_global_det_atmos_settings_dict['RUN_GRID2GRID_STATS'] = [

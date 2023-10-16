@@ -5,7 +5,7 @@ Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This creates multiple independent job scripts. These
           jobs scripts contain all the necessary environment variables
           and commands to needed to run them.
-Run By: scripts/global_det/stats/exevs_global_det_atmos_grid2obs_stats.sh
+Run By: scripts/stats/global_det/exevs_global_det_atmos_grid2obs_stats.sh
 '''
 
 import sys
@@ -46,8 +46,7 @@ end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
 njobs = 0
 JOB_GROUP_jobs_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                   'METplus_job_scripts', JOB_GROUP)
-if not os.path.exists(JOB_GROUP_jobs_dir):
-    os.makedirs(JOB_GROUP_jobs_dir)
+gda_util.make_dir(JOB_GROUP_jobs_dir)
 
 ################################################
 #### reformat_data jobs
@@ -985,7 +984,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             and job_env_dict['VERIF_CASE'] == 'grid2obs' \
                             and job_env_dict['VERIF_TYPE'] == 'pres_levs' \
                             and job_env_dict['job_name'] == 'RelHum':
-                        ukmet_fhr_list = job_env_dict['fhr_list'].split(',')
+                        ukmet_fhr_list = (
+                            job_env_dict['fhr_list'].replace('"','')\
+                            .split(',')
+                        )
                         for fhr_rm in ['132', '144']:
                             if fhr_rm in ukmet_fhr_list:
                                 ukmet_fhr_list.remove(fhr_rm)
@@ -1003,8 +1005,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         if job_env_dict['SENDCOM'] == 'YES':
                             for model_output_file_tuple \
                                     in model_copy_output_DATA2COMOUT_list:
-                                job.write(f"cp -v {model_output_file_tuple[0]} "
-                                          +f"{model_output_file_tuple[1]}\n")
+                                job.write(f'if [ -f "{model_output_file_tuple[0]}" ]; then '
+                                          +f"cp -v {model_output_file_tuple[0]} "
+                                          +f"{model_output_file_tuple[1]}"
+                                          +f"; fi\n")
                     else:
                         if JOB_GROUP == 'assemble_data':
                             if verif_type_job == 'TempAnom2m':
@@ -1081,8 +1085,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         if job_env_dict['SENDCOM'] == 'YES':
                             for truth_output_file_tuple \
                                     in truth_copy_output_DATA2COMOUT_list:
-                                job.write(f"cp -v {truth_output_file_tuple[0]} "
-                                          +f"{truth_output_file_tuple[1]}\n")
+                                job.write(f'if [ -f "{truth_output_file_tuple[0]}" ]; then '
+                                          +f"cp -v {truth_output_file_tuple[0]} "
+                                          +f"{truth_output_file_tuple[1]}"
+                                          +f"; fi\n")
                     job.close()
                     date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
 elif JOB_GROUP == 'gather_stats':

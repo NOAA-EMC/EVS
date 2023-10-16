@@ -10,8 +10,6 @@ for MODEL in GEFS ; do
   model=`echo $MODEL | tr '[A-Z]' '[a-z]'`
 
   archive=$output_base_dir
-# COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/com/$NET/$evs_ver/stats/$COMPONENT/$MODELNAME.$day
-# COMIN=/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/stats/global_ens/gefs.$day
   prefix=${COMIN%%gefs*}
   index=${#prefix}
   echo $index

@@ -20,7 +20,7 @@ import calendar
 print(f"BEGIN: {os.path.basename(__file__)}")
 
 # Read in initial environment variables
-top_level_env_vars = ['machine', 'VERIF_CASE', 'STEP', 'config', 'evs_run_mode']
+top_level_env_vars = ['machine', 'VERIF_CASE', 'STEP', 'config']
 for env_var in top_level_env_vars:
     if not env_var in os.environ:
         print(f"ERROR: {env_var} is not set in environment, "
@@ -30,29 +30,19 @@ machine = os.environ['machine']
 VERIF_CASE = os.environ['VERIF_CASE']
 STEP = os.environ['STEP']
 config = os.environ['config']
-evs_run_mode = os.environ['evs_run_mode']
 
 # Set up a dictionary of variables to check for existence in the environment
 evs_cam_settings_dict = {}
-if evs_run_mode == 'production':
-    evs_cam_settings_dict['evs'] = [
-        'model', 'machine', 'envir', 'SENDCOM', 'KEEPDATA', 'job', 'jobid', 'USE_CFP', 'nproc', 'NET', 
-        'HOMEevs', 'config', 'evs_ver', 'ccpa_ver', 'obsproc_ver', 'pid', 'DATA', 
-        'STEP', 'COMPONENT', 'RUN', 'VERIF_CASE',
-        'HOMEevs', 'config', 'evs_ver', 'ccpa_ver', 'obsproc_ver', 'pid', 'DATA', 
-        'VDATE', 'COMIN', 'COMOUT', 'PARMevs', 'USHevs', 'EXECevs', 
-        'FIXevs', 'evs_run_mode'
-    ]
-else:
-    evs_cam_settings_dict['evs'] = [
-        'model', 'machine', 'envir', 'SENDCOM', 'KEEPDATA', 'job', 'jobid', 'USE_CFP', 'ACCOUNT', 'QUEUE', 
-        'QUEUESHARED', 'QUEUESERV', 'PARTITION_BATCH', 'nproc', 'NET', 'STEP', 
-        'COMPONENT', 'RUN', 'VERIF_CASE', 'HOMEevs', 
-        'config', 'evs_ver', 'ccpa_ver', 'obsproc_ver', 'pid', 'DATA', 'VDATE', 'COMIN', 'COMOUT', 
-        'PARMevs', 'USHevs', 'EXECevs', 'FIXevs',  'evs_run_mode'
-    ]
+evs_cam_settings_dict['evs'] = [
+    'model', 'machine', 'envir', 'SENDCOM', 'KEEPDATA', 'job', 'jobid', 'USE_CFP', 'nproc', 'NET', 
+    'HOMEevs', 'config', 'evs_ver', 'ccpa_ver', 'obsproc_ver', 'pid', 'DATA', 
+    'STEP', 'COMPONENT', 'RUN', 'VERIF_CASE',
+    'HOMEevs', 'config', 'evs_ver', 'ccpa_ver', 'obsproc_ver', 'pid', 'DATA', 
+    'VDATE', 'COMIN', 'COMOUT', 'PARMevs', 'USHevs', 'EXECevs', 
+    'FIXevs'
+]
 evs_cam_settings_dict['shared'] = []
-evs_cam_settings_dict['modules'] = ['MET_PLUS_PATH', 'MET_PATH', 'MET_CONFIG']
+evs_cam_settings_dict['modules'] = ['METPLUS_PATH', 'MET_ROOT']
 evs_cam_settings_dict['RUN_GRID2OBS_PREP'] = [
         'MET_PLUS_CONF','MET_PLUS_OUT',
         'NEST','URL_HEAD',
@@ -173,9 +163,6 @@ COMPONENT = os.environ['COMPONENT']
 DATA = os.environ['DATA']
 MODELNAME = os.environ['MODELNAME']
 USER = os.environ['USER']
-if evs_run_mode != 'production':
-    QUEUESERV = os.environ['QUEUESERV']
-    ACCOUNT = os.environ['ACCOUNT']
 if STEP == 'stats':
     MODEL_INPUT_TEMPLATE = os.environ['MODEL_INPUT_TEMPLATE']
     COMINfcst = os.environ['COMINfcst']
@@ -216,19 +203,16 @@ if cwd != DATA:
 env_dir_list = ['DATA']
 env_file_list = []
 if STEP == 'prep':
-    env_dir_list.append('MET_PLUS_PATH')
-    env_dir_list.append('MET_PATH')
-    env_dir_list.append('MET_CONFIG')
+    env_dir_list.append('METPLUS_PATH')
+    env_dir_list.append('MET_ROOT')
     if VERIF_CASE == 'precip':
         env_dir_list.append('COMINobs')
     if VERIF_CASE == 'grid2obs':
-        env_dir_list.append('MET_PLUS_PATH')
-        env_dir_list.append('MET_PATH')
-        env_dir_list.append('MET_CONFIG')
+        env_dir_list.append('METPLUS_PATH')
+        env_dir_list.append('MET_ROOT')
 if STEP == 'stats':
-    env_dir_list.append('MET_PLUS_PATH')
-    env_dir_list.append('MET_PATH')
-    env_dir_list.append('MET_CONFIG')
+    env_dir_list.append('METPLUS_PATH')
+    env_dir_list.append('MET_ROOT')
     env_dir_list.append('COMINobs')
     env_dir_list.append('COMINfcst')
     if VERIF_CASE == 'precip':

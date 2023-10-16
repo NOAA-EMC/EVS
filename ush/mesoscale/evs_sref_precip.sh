@@ -104,11 +104,7 @@ done
 chmod +x  run_all_sref_precip_poe
 
 if [ $run_mpi = yes ] ; then
-
-  export LD_LIBRARY_PATH=/apps/dev/pmi-fix:$LD_LIBRARY_PATH
-
   mpiexec  -n 4 -ppn 4 --cpu-bind core --depth=2 cfp ${DATA}/run_all_sref_precip_poe
-
 else
    ${DATA}/run_all_sref_precip_poe
 fi 

@@ -3,7 +3,7 @@
 Name: global_det_atmos_plots_long_term.py
 Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This is the driver script for creating long-term plots.
-Run By: scripts/global_det/plots/exevs_global_det_atmos_long_term_plots.sh
+Run By: scripts/plots/global_det/exevs_global_det_atmos_long_term_plots.sh
 '''
 
 import sys
@@ -33,9 +33,7 @@ FIXevs = os.environ['FIXevs']
 MET_ROOT = os.environ['MET_ROOT']
 met_ver = os.environ['met_ver']
 evs_run_mode = os.environ['evs_run_mode']
-COMINdailystats = os.environ['COMINdailystats']
-COMINmonthlystats = os.environ['COMINmonthlystats']
-COMINyearlystats = os.environ['COMINyearlystats']
+COMIN = os.environ['COMIN']
 VDATEYYYY = os.environ['VDATEYYYY']
 VDATEmm = os.environ['VDATEmm']
 
@@ -59,15 +57,12 @@ for avg_time_range in avg_time_range_list:
     forecast_day_list = [str(x) for x in np.arange(0,11,1)]
     # Set run lengths to plot
     run_length_list = ['allyears', 'past10years']
-    # Set COMIN directory
-    if avg_time_range == 'monthly':
-        COMINtime_range_stats = COMINmonthlystats
-    elif avg_time_range == 'yearly':
-        COMINtime_range_stats = COMINyearlystats
+    # Set time range stats directory
+    time_range_stats_dir = os.path.join(COMIN, 'stats', COMPONENT, RUN,
+                                        f"{avg_time_range}_means")
     # Set up time range directory
     avg_time_range_dir = os.path.join(DATA, avg_time_range)
-    if not os.path.exists(avg_time_range_dir):
-        os.makedirs(avg_time_range_dir)
+    gda_util.make_dir(avg_time_range_dir)
     ### Do grid-to-grid plots
     print(f"Doing {avg_time_range} grid-to-grid plots")
     avg_time_range_g2g_dir = os.path.join(avg_time_range_dir, 'grid2grid')
@@ -75,10 +70,9 @@ for avg_time_range in avg_time_range_list:
                                                'grid2grid', 'logs')
     avg_time_range_images_g2g_dir = os.path.join(avg_time_range_dir,
                                                  'grid2grid', 'images')
-    if not os.path.exists(avg_time_range_g2g_dir):
-        os.makedirs(avg_time_range_g2g_dir)
-        os.makedirs(avg_time_range_logs_g2g_dir)
-        os.makedirs(avg_time_range_images_g2g_dir)
+    gda_util.make_dir(avg_time_range_g2g_dir)
+    gda_util.make_dir(avg_time_range_logs_g2g_dir)
+    gda_util.make_dir(avg_time_range_images_g2g_dir)
     print(f"Working in {avg_time_range_g2g_dir}")
     # Make plots for groupings
     for model_group in list(model_group_dict.keys()):
@@ -133,7 +127,7 @@ for avg_time_range in avg_time_range_list:
                     import global_det_atmos_plots_long_term_time_series_diff \
                         as gdap_lttsd
                     plot_lttsd = gdap_lttsd.LongTermTimeSeriesDiff(
-                        logger, COMINtime_range_stats, avg_time_range_g2g_dir,
+                        logger, time_range_stats_dir, avg_time_range_g2g_dir,
                         os.path.join(FIXevs, 'logos'), avg_time_range,
                         all_dt_list, model_group, model_list, var_name,
                         var_level, 'NA', 'G004', vx_mask, stat, 'NA',
@@ -143,7 +137,7 @@ for avg_time_range in avg_time_range_list:
                     import global_det_atmos_plots_long_term_lead_by_date \
                         as gdap_ltlbd
                     plot_ltlbd = gdap_ltlbd.LongTermLeadByDate(
-                        logger, COMINtime_range_stats, avg_time_range_g2g_dir,
+                        logger, time_range_stats_dir, avg_time_range_g2g_dir,
                         os.path.join(FIXevs, 'logos'), avg_time_range,
                         all_dt_list, model_group, model_list, var_name,
                         var_level, 'NA', 'G004', vx_mask, stat, 'NA',
@@ -155,7 +149,7 @@ for avg_time_range in avg_time_range_list:
                         import global_det_atmos_plots_long_term_useful_forecast_days \
                             as gdap_ltufd
                         plot_ltufd = gdap_ltufd.LongTermUsefulForecastDays(
-                            logger, COMINtime_range_stats,
+                            logger, time_range_stats_dir,
                             avg_time_range_g2g_dir,
                             os.path.join(FIXevs, 'logos'), avg_time_range,
                             all_dt_list, model_group, model_list, var_name,
@@ -167,7 +161,7 @@ for avg_time_range in avg_time_range_list:
                     import global_det_atmos_plots_long_term_annual_mean \
                         as gdap_ltam
                     plot_ltam = gdap_ltam.LongTermAnnualMean(
-                        logger, COMINtime_range_stats, avg_time_range_g2g_dir,
+                        logger, time_range_stats_dir, avg_time_range_g2g_dir,
                         os.path.join(FIXevs, 'logos'), avg_time_range,
                         all_dt_list, model_group, model_list, var_name,
                         var_level, 'NA', 'G004', vx_mask, stat, 'NA',
@@ -182,11 +176,10 @@ yyyymm_acc_dir = os.path.join(DATA, VDATEYYYY+'_'+VDATEmm+'_ACC')
 yyyymm_acc_logs_dir = os.path.join(yyyymm_acc_dir, 'logs')
 yyyymm_acc_data_dir = os.path.join(yyyymm_acc_dir, 'data')
 yyyymm_acc_images_dir = os.path.join(yyyymm_acc_dir, 'images')
-if not os.path.exists(yyyymm_acc_dir):
-    os.makedirs(yyyymm_acc_dir)
-    os.makedirs(yyyymm_acc_logs_dir)
-    os.makedirs(yyyymm_acc_data_dir)
-    os.makedirs(yyyymm_acc_images_dir)
+gda_util.make_dir(yyyymm_acc_dir)
+gda_util.make_dir(yyyymm_acc_logs_dir)
+gda_util.make_dir(yyyymm_acc_data_dir)
+gda_util.make_dir(yyyymm_acc_images_dir)
 print(f"Working in {yyyymm_acc_dir}")
 yyyymm_acc_forecast_hour_list = list(range(0, 240+24, 24))
 yyyymm_acc_valid_hour_list = [str(x).zfill(2) for x in np.arange(0,13,12)]
@@ -249,8 +242,7 @@ acc_job_name = ('GeoHeight/SA1L2/ACC/'
 acc_output_dir = os.path.join(
     yyyymm_acc_dir, acc_job_name.replace('/','_')
 )
-if not os.path.exists(acc_output_dir):
-    os.makedirs(acc_output_dir)
+gda_util.make_dir(acc_output_dir)
 now = datetime.datetime.now()
 acc_logging_file = os.path.join(
     yyyymm_acc_logs_dir,
@@ -264,8 +256,7 @@ for model_num in list(yyyymm_acc_model_info_dict.keys()):
     model = yyyymm_acc_model_info_dict[model_num]['name']
     obs_name = yyyymm_acc_model_info_dict[model_num]['obs_name']
     stat_model_dir = os.path.join(yyyymm_acc_data_dir, model)
-    if not os.path.exists(stat_model_dir):
-        os.makedirs(stat_model_dir)
+    gda_util.make_dir(stat_model_dir)
     date_dt = datetime.datetime.strptime(
         yyyymm_acc_date_info_dict['start_date'], '%Y%m%d'
     )
@@ -273,7 +264,8 @@ for model_num in list(yyyymm_acc_model_info_dict.keys()):
             yyyymm_acc_date_info_dict['end_date'],'%Y%m%d'
     ):
         source_model_date_stat_file = os.path.join(
-            COMINdailystats, model+'.'+date_dt.strftime('%Y%m%d'),
+            os.path.join(COMIN, 'stats', COMPONENT),
+            model+'.'+date_dt.strftime('%Y%m%d'),
             'evs.stats.'+model+'.atmos.grid2grid.'
             +'v'+date_dt.strftime('%Y%m%d')+'.stat'
         )
