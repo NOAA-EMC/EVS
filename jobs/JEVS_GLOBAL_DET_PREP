@@ -74,7 +74,6 @@ export DCOMINukmet=${DCOMINukmet:-$DCOMROOT/${INITDATE}/wgrbbul/ukmet_hires}
 export DCOMINukmet_precip=${DCOMINukmet_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
 export DCOMINosi_saf=${DCOMINosi_saf:-$DCOMROOT}
 export DCOMINghrsst_ospo=${DCOMINghrsst_ospo:-$DCOMROOT}
-export DCOMINget_d=${DCOMINget_d:-$DCOMROOT}
 export DCOMINndbc=${DCOMINndbc:-$DCOMROOT}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 mkdir -p $COMOUT.${INITDATE}
