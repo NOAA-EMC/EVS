@@ -31,10 +31,9 @@ export VERIF_CASE=grid2grid
 
 source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
-# set up COMIN and COMOUT
+# set up COMIN and COMROOT
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
-export COMINstats=$COMIN/stats/$COMPONENT
-export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver}
+export COMROOT=/lfs/h2/emc/ptmp/$USER
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
 export job=${PBS_JOBNAME:-jevs_rtofs_osisaf_grid2grid_last60days_plots}
