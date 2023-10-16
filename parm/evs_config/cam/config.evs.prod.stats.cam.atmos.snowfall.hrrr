@@ -5,7 +5,7 @@
 # NAME: config.evs.prod.stats.cam.atmos.snowfall.hrrr 
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Set up configurations to run EVS HRRR Snowfall - Statistics
-# DEPENDENCIES: $HOMEevs/ecf/cam/stats/jevs_hrrr_snowfall_stats.ecf
+# DEPENDENCIES: $HOMEevs/scripts/stats/cam/exevs_hrrr_snowfall_stats.sh
 # 
 # =============================================================================
 

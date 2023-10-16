@@ -5,7 +5,7 @@
 # NAME: config.evs.prod.stats.cam.atmos.grid2obs.namnest 
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Set up configurations to run EVS NAM Nest Grid2Obs - Statistics
-# DEPENDENCIES: $HOMEevs/ecf/cam/stats/jevs_namnest_grid2obs_stats.ecf
+# DEPENDENCIES: $HOMEevs/scripts/stats/cam/exevs_namnest_grid2obs_stats.sh
 # 
 # =============================================================================
 

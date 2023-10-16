@@ -6,7 +6,7 @@
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Set up configurations to run EVS HiRes Window FV3 Precipitation - 
 #          Prepare
-# DEPENDENCIES: $HOMEevs/ecf/cam/prep/jevs_hireswfv3_precip_prep.ecf
+# DEPENDENCIES: $HOMEevs/scripts/prep/cam/exevs_hireswfv3_precip_prep.sh
 # 
 # =============================================================================
 

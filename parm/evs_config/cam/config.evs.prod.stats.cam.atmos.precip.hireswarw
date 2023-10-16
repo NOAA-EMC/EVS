@@ -6,7 +6,7 @@
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Set up configurations to run EVS Hires Window ARW Precipitation - 
 #          Statistics
-# DEPENDENCIES: $HOMEevs/ecf/cam/stats/jevs_hireswarw_precip_stats.ecf
+# DEPENDENCIES: $HOMEevs/scripts/stats/cam/exevs_hireswarw_precip_stats.sh
 # 
 # =============================================================================
 

@@ -6,7 +6,7 @@
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Set up configurations to run EVS HiRes Window ARW2 Snowfall - 
 #          Statistics
-# DEPENDENCIES: $HOMEevs/ecf/cam/stats/jevs_hireswarwmem2_snowfall_stats.ecf
+# DEPENDENCIES: $HOMEevs/scripts/stats/cam/exevs_hireswarwmem2_snowfall_stats.sh
 # 
 # =============================================================================
 
