@@ -57,9 +57,6 @@ export RUN=${RUN:-long_term}
 # Define COMIN/COMOUT variables
 ####################################
 export COMIN=${COMIN:-$(compath.py $NET/$evs_ver)}
-export COMINdailystats=${COMINdailystats:-$COMIN/stats/$COMPONENT}
-export COMINmonthlystats=${COMINmonthlystats:-$COMIN/stats/$COMPONENT/$RUN/monthly_means}
-export COMINyearlystats=${COMINyearlystats:-$COMIN/stats/$COMPONENT/$RUN/yearly_means}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 mkdir -p $COMOUT
 
@@ -67,7 +64,7 @@ mkdir -p $COMOUT
 # Execute the script
 #######################################################################
 env
-$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs${COMPONENT}_atmos_${RUN}_${STEP}.sh
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_atmos_${RUN}_${STEP}.sh
 export err=$?; err_chk
 
 msg="JOB $job HAS COMPLETED NORMALLY."
