@@ -31,7 +31,7 @@ source $HOMEevs/modulefiles/aqm/aqm_plots.sh
 ############################################################
 ## For dev testing
 #############################################################
-export cyc=00
+export vhr=00
 export envir=prod
 export NET=evs
 export STEP=plots
@@ -52,11 +52,10 @@ export SENDDBN=NO
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export cycle=t${cyc}z
 #
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
-export COMINaqm=/lfs/h2/emc/vpppg/noscrub/$USER/evs/v1.0/stats/aqm/aqm
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 
 export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver
 
