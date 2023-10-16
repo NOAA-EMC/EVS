@@ -36,12 +36,12 @@ echo 'Copying *.stat files :'
 theDate=${VDATE_START}
 while (( ${theDate} <= ${VDATE_END} )); do
     for MODEL in $model_list; do
-        COMINstatsfilename=${COMIN}/stats/${COMPONENT}/${MODEL}.${theDate}/evs.stats.${MODEL}.${RUN}.${VERIF_CASE}.v${theDate}.stat
-        DATAstatsfilename=${DATA}/stats/evs.stats.${MODEL}.${RUN}.${VERIF_CASE}.v${theDate}.stat
-        if [[ -s $COMINstatsfilename ]]; then
-            cp -v $COMINstatsfilename $DATAstatsfilename
+        input_stats_file=${COMIN}/stats/${COMPONENT}/${MODEL}.${theDate}/evs.stats.${MODEL}.${RUN}.${VERIF_CASE}.v${theDate}.stat
+        tmp_stats_file=${DATA}/stats/evs.stats.${MODEL}.${RUN}.${VERIF_CASE}.v${theDate}.stat
+        if [[ -s $input_stats_file ]]; then
+            cp -v $input_stats_file $tmp_stats_file
         else
-            echo "DOES NOT EXIST $COMINstatsfilename"
+            echo "DOES NOT EXIST $input_stats_file"
         fi
         theDate=$(date --date="${theDate} + 1 day" '+%Y%m%d')
     done
