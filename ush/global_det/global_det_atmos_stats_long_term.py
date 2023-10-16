@@ -31,9 +31,7 @@ COMPONENT = os.environ['COMPONENT']
 MET_ROOT = os.environ['MET_ROOT']
 met_ver = os.environ['met_ver']
 evs_run_mode = os.environ['evs_run_mode']
-COMINdailystats = os.environ['COMINdailystats']
-COMINmonthlystats = os.environ['COMINmonthlystats']
-COMINyearlystats = os.environ['COMINyearlystats']
+COMIN = os.environ['COMIN']
 VDATEYYYY = os.environ['VDATEYYYY']
 VDATEmm = os.environ['VDATEmm']
 
@@ -279,11 +277,9 @@ def make_model_time_range_file(time_range, model_COMIN_file,
         )
 
 for avg_time_range in avg_time_range_list:
-    # Set COMIN directory
-    if avg_time_range == 'monthly':
-        COMINtime_range_stats = COMINmonthlystats
-    if avg_time_range == 'yearly':
-        COMINtime_range_stats = COMINyearlystats
+    # Set input directory
+    time_range_stats_dir = os.path.join(COMIN, 'stats', COMPONENT, 'long_term',
+                                        f"{avg_time_range}_means")
     # Set up time range directory
     avg_time_range_dir = os.path.join(DATA, avg_time_range)
     gda_util.make_dir(avg_time_range_dir)
@@ -408,7 +404,8 @@ for avg_time_range in avg_time_range_list:
             avg_time_range_g2g_dir, avg_time_range+'_means', model
         )
         gda_util.make_dir(avg_time_range_model_dir)
-        get_daily_stat_file(model, COMINdailystats, stat_model_dir, 'grid2grid',
+        get_daily_stat_file(model, os.path.join(COMIN, 'stats', COMPONENT),
+                            stat_model_dir, 'grid2grid',
                             avg_time_range_start_date_dt,
                             avg_time_range_end_date_dt)
     # Calculate time range averages
@@ -470,8 +467,8 @@ for avg_time_range in avg_time_range_list:
                         'evs_'+stat+'_'+var_name+'_'+var_level+'_'+vx_mask
                         +'_valid'+valid_hour+'Z.txt'
                     )
-                    COMINtime_range_stats_file = os.path.join(
-                        COMINtime_range_stats, model, model_file_name
+                    time_range_stats_file = os.path.join(
+                        time_range_stats_dir, model, model_file_name
                     )
                     DATA_file = os.path.join(
                         avg_time_range_g2g_dir, avg_time_range+'_means',
@@ -479,7 +476,7 @@ for avg_time_range in avg_time_range_list:
                     )
                     make_model_time_range_file(
                         avg_time_range,
-                        COMINtime_range_stats_file,
+                        time_range_stats_file,
                         avg_time_range_stat_df.loc[[
                             model_num+'/'+model+'/'+plot_name
                         ]],
@@ -531,8 +528,8 @@ for avg_time_range in avg_time_range_list:
                         'usefulfcstdays_'+stat+'06_'+var_name+'_'+var_level
                         +'_'+vx_mask+'_valid'+valid_hour+'Z.txt'
                     )
-                    COMINtime_range_stats_file = os.path.join(
-                        COMINtime_range_stats, model, model_file_name
+                    time_range_stats_file = os.path.join(
+                        time_range_stats_dir, model, model_file_name
                     )
                     DATA_file = os.path.join(
                         avg_time_range_g2g_dir, avg_time_range+'_means',
@@ -540,7 +537,7 @@ for avg_time_range in avg_time_range_list:
                     )
                     make_model_time_range_file(
                         avg_time_range,
-                        COMINtime_range_stats_file,
+                        time_range_stats_file,
                         acc06_day_df,
                         DATA_file
                     )
@@ -597,7 +594,8 @@ for avg_time_range in avg_time_range_list:
             avg_time_range_precip_dir, avg_time_range+'_means', model
         )
         gda_util.make_dir(avg_time_range_model_dir)
-        get_daily_stat_file(model, COMINdailystats, stat_model_dir, 'grid2grid',
+        get_daily_stat_file(model, os.path.join(COMIN, 'stats', COMPONENT),
+                            stat_model_dir, 'grid2grid',
                             avg_time_range_start_date_dt,
                             avg_time_range_end_date_dt)
     # Calculate time range averages
@@ -679,8 +677,8 @@ for avg_time_range in avg_time_range_list:
                             +var_name+'_'+accum+'_'+grid+'_'+vx_mask+'_valid'
                             +valid_hour+'Z.txt'
                         )
-                    COMINtime_range_stats_file = os.path.join(
-                        COMINtime_range_stats, model, model_file_name
+                    time_range_stats_file = os.path.join(
+                        time_range_stats_dir, model, model_file_name
                     )
                     DATA_file = os.path.join(
                         avg_time_range_precip_dir, avg_time_range+'_means',
@@ -688,7 +686,7 @@ for avg_time_range in avg_time_range_list:
                     )
                     make_model_time_range_file(
                         avg_time_range,
-                        COMINtime_range_stats_file,
+                        time_range_stats_file,
                         avg_time_range_stat_df.loc[[
                             model_num+'/'+model+'/'+plot_name
                         ]],

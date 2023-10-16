@@ -8,86 +8,15 @@
 
 set -x
 
-# check if argo nc file exists; exit if not
-if [ ! -s $COMINfcst/rtofs.$VDATE/$RUN/argo.$VDATE.nc ] ; then
-   echo "Missing Argo data file for $VDATE"
-   exit
-fi
+export VARS="temp psal"
+export RUNupper=$(echo $RUN | tr '[a-z]' '[A-Z]')
 
-# check if fcst files exist; exit if not
-#   f000 forecast for VDATE
-if [ ! -s $COMINfcst/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_ice.$RUN.nc ] ; then
-   echo "Missing RTOFS f000 ice file for $VDATE" 
-   exit
-fi
-
-if [ ! -s $COMINfcst/rtofs.$VDATE/$RUN/rtofs_glo_3dz_f000_daily_3ztio.$RUN.nc ] ; then
-   echo "Missing RTOFS f000 3dz file for $VDATE" 
-   exit
-fi
-
-#   f024 forecast for VDATE was issued 1 day earlier
-INITDATE=$(date --date="$VDATE -1 day" +%Y%m%d)
-if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f024_daily_3ztio.$RUN.nc ] ; then
-   echo "Missing RTOFS f024 3dz file for $VDATE" 
-   exit
-fi
-
-#   f048 forecast for VDATE was issued 2 days earlier
-INITDATE=$(date --date="$VDATE -2 days" +%Y%m%d)
-if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f048_daily_3ztio.$RUN.nc ] ; then
-   echo "Missing RTOFS f048 3dz file for $VDATE" 
-   exit
-fi
-
-#   f072 forecast for VDATE was issued 3 days earlier
-INITDATE=$(date --date="$VDATE -3 days" +%Y%m%d)
-if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f072_daily_3ztio.$RUN.nc ] ; then
-   echo "Missing RTOFS f072 3dz file for $VDATE" 
-   exit
-fi
-
-#   f096 forecast for VDATE was issued 4 days earlier
-INITDATE=$(date --date="$VDATE -4 days" +%Y%m%d)
-if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f096_daily_3ztio.$RUN.nc ] ; then
-   echo "Missing RTOFS f096 3dz file for $VDATE" 
-   exit
-fi
-
-#   f120 forecast for VDATE was issued 5 days earlier
-INITDATE=$(date --date="$VDATE -5 days" +%Y%m%d)
-if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f120_daily_3ztio.$RUN.nc ] ; then
-   echo "Missing RTOFS f120 3dz file for $VDATE" 
-   exit
-fi
-
-#   f144 forecast for VDATE was issued 6 days earlier
-INITDATE=$(date --date="$VDATE -6 days" +%Y%m%d)
-if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f144_daily_3ztio.$RUN.nc ] ; then
-   echo "Missing RTOFS f144 3dz file for $VDATE" 
-   exit
-fi
-
-#   f168 forecast for VDATE was issued 7 days earlier
-INITDATE=$(date --date="$VDATE -7 days" +%Y%m%d)
-if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f168_daily_3ztio.$RUN.nc ] ; then
-   echo "Missing RTOFS f168 3dz file for $VDATE" 
-   exit
-fi
-
-#   f192 forecast for VDATE was issued 8 days earlier
-INITDATE=$(date --date="$VDATE -8 days" +%Y%m%d)
-if [ ! -s $COMINfcst/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f192_daily_3ztio.$RUN.nc ] ; then
-   echo "Missing RTOFS f192 3dz file for $VDATE" 
-   exit
-fi
+export STATSDIR=$DATA/stats
+mkdir -p $STATSDIR
 
 # get the months for the climo files:
 #     for day < 15, use the month before + valid month
 #     for day >= 15, use valid month + the month after
-
-export STATSDIR=$DATA/stats
-mkdir -p $STATSDIR
 
 MM=$(date --date=$VDATE +%m)
 DD=$(date --date=$VDATE +%d)
@@ -145,34 +74,55 @@ for levl in 0 50 125 200 400 700 1000 1400; do
     export ZRANGE=1397-1403
   fi
 
-  run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
-  -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/PointStat_fcstRTOFS_obsARGO_climoWOA23_$VAR.conf
+  if [ -s $COMIN/prep/$COMPONENT/rtofs.$VDATE/$RUN/argo.$VDATE.nc ] ; then
+    if [ -s $COMIN/prep/$COMPONENT/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_ice.$RUN.nc ] ; then
+      for fday in 0 1 2 3 4 5 6 7 8; do
+        fhr=$(($fday * 24))
+        fhr2=$(printf "%02d" "${fhr}")
+        export fhr3=$(printf "%03d" "${fhr}")
+        INITDATE=$(date --date="$VDATE -${fday} day" +%Y%m%d)
+        if [ -s $COMIN/prep/$COMPONENT/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f${fhr3}_daily_3ztio.$RUN.nc ] ; then
+          for vari in ${VARS}; do
+            export VAR=$vari
+            mkdir -p $STATSDIR/$RUN.$VDATE/$VAR
+            if [ -s $COMOUTsmall/$VAR/point_stat_RTOFS_${RUNupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
+              cp -v $COMOUTsmall/$VAR/point_stat_RTOFS_${RUNupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/$RUN.$VDATE/$VAR/.
+            else
+              run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
+              -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/PointStat_fcstRTOFS_obs${RUNupper}_climoWOA23_$VAR.conf
+              if [ $SENDCOM = "YES" ]; then
+                  mkdir -p $COMOUTsmall/$VAR
+                  cp -v $STATSDIR/$RUN.$VDATE/$VAR/point_stat_RTOFS_${RUNupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
+              fi
+            fi
+          done
+        else
+          echo "Missing RTOFS f${fhr3} 3dz file for $VDATE"
+        fi
+      done
+    else
+      echo "Missing RTOFS f000 ice file for $VDATE"
+    fi
+  else
+    echo "Missing Argo data file for $VDATE"
+  fi
 done
 
-if [ $SENDCOM = "YES" ]; then
- cp $STATSDIR/$RUN.$VDATE/$VAR/*stat $COMOUTsmall
-fi
 export STATSOUT=$STATSDIR/$RUN.$VDATE/$VAR
 
-# check if stat files exist; exit if not
-if [ ! -s $COMOUTsmall/point_stat_RTOFS_ARGO_${VAR}_Z1400_1920000L_${VDATE}_000000V.stat ] ; then
-   echo "Missing RTOFS_ARGO_$VAR stat files for $VDATE" 
-   exit
-fi
-
-# sum small stat files into one big file using Stat_Analysis
-mkdir -p $COMOUTfinal
-
-run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
--c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/StatAnalysis_fcstRTOFS.conf
-
-if [ $SENDCOM = "YES" ]; then
- cp $STATSOUT/evs*stat $COMOUTfinal
-fi
-
-# archive final stat file
-#rsync -av $COMOUTfinal $ARCHevs
-
-exit
-
-################################ END OF SCRIPT ################################
+# check if stat files exist
+for vari in ${VARS}; do
+  export VAR=$vari
+  export STATSOUT=$STATSDIR/$RUN.$VDATE/$VAR
+  VAR_file_count=$(ls -l $STATSDIR/$RUN.$VDATE/$VAR/*.stat |wc -l)
+  if [[ $VAR_file_count -ne 0 ]]; then
+    # sum small stat files into one big file using Stat_Analysis
+    run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
+    -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/StatAnalysis_fcstRTOFS.conf
+    if [ $SENDCOM = "YES" ]; then
+      cp -v $STATSOUT/evs.stats.${COMPONENT}.${RUN}.${VERIF_CASE}_${VAR}.v${VDATE}.stat $COMOUTfinal/.
+    fi
+  else
+     echo "Missing RTOFS_${RUNupper}_$VAR stat files for $VDATE" 
+  fi
+done
