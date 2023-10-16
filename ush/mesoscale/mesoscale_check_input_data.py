@@ -71,13 +71,13 @@ if proceed:
         FHR_GROUP_LIST = os.environ['FHR_GROUP_LIST']
         MIN_IHOUR = os.environ['MIN_IHOUR']
         if VERIF_CASE == 'grid2obs':
-            COMINobsproc = os.environ['COMINobsproc']
-            COMINnam = os.environ['COMINnam']
-            COMINrap = os.environ['COMINrap']
+            DCOMINobsproc = os.environ['DCOMINobsproc']
+            DCOMINnam = os.environ['DCOMINnam']
+            DCOMINrap = os.environ['DCOMINrap']
         if MODELNAME == 'nam':
-            COMINfcst = os.environ['COMINnam']
+            COMINfcst = os.environ['DCOMINnam']
         elif MODELNAME == 'rap':
-            COMINfcst = os.environ['COMINrap']
+            COMINfcst = os.environ['DCOMINrap']
         else:
             print(f"The provided MODELNAME ({MODELNAME}) is not recognized. Quitting ...")
             sys.exit(1)
@@ -427,12 +427,12 @@ if proceed:
             # Expect PrepBufr to at least be available at these times
             if VHOUR in ['00', '06', '12', '18']:
                 anl_templates.append(os.path.join(
-                    COMINobsproc, 
+                    DCOMINobsproc, 
                     'nam.{VDATE}',
                     'nam.t{VHOUR}z.prepbufr.tm00'
                 ))
                 anl_templates.append(os.path.join(
-                    COMINobsproc, 
+                    DCOMINobsproc, 
                     'gdas.{VDATE}',
                     '{VHOUR}',
                     'atmos',
