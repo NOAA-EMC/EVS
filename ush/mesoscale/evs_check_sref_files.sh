@@ -39,7 +39,7 @@ for cyc in 00 03 06 09 12 15 18 21 ; do
     cyc_dir=00
     init=$next
   fi	      
-  ccpa=$EVSINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${cyc}z.03h.hrap.conus.gb2
+  ccpa=$COMINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${cyc}z.03h.hrap.conus.gb2
   echo $ccpa
 
   if [ ! -s $ccpa ] ; then

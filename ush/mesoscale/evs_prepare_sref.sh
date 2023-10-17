@@ -77,33 +77,33 @@ if [ $modnam = ccpa ] ; then
 
   export output_base=${WORK}/ccpa.${vday}
 
- if [ -s $EVSINccpa/ccpa.${vday}/18/ccpa.t18z.03h.hrap.conus.gb2 ] ; then
+ if [ -s $COMINccpa/ccpa.${vday}/18/ccpa.t18z.03h.hrap.conus.gb2 ] ; then
 
   #ccpa hrap is in G240	
   #cd ${WORK}/ccpa.${vday}
 
   export cyc
   for cyc in 00 06 12 18 ; do
-    export ccpapath=$EVSINccpa/ccpa.${vday}/$cyc
+    export ccpapath=$COMINccpa/ccpa.${vday}/$cyc
     export vbeg=$vday$cyc
     export vend=$vday$cyc
 
     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsCCPA_toG212.conf
 
-    cp $EVSINccpa/ccpa.${vday}/$cyc/ccpa.t${cyc}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${cyc}z.grid240.f00.grib2
+    cp $COMINccpa/ccpa.${vday}/$cyc/ccpa.t${cyc}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${cyc}z.grid240.f00.grib2
   done
    
    
   typeset -Z2 cyc3
   for cyc in 03 09 15 ; do
     cyc3=$((cyc+3))
-    export ccpapath=$EVSINccpa/ccpa.${vday}/$cyc3
+    export ccpapath=$COMINccpa/ccpa.${vday}/$cyc3
     export vbeg=$vday$cyc3
     export vend=$vday$cyc3
 
     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsCCPA_toG212.conf
 
-    cp $EVSINccpa/ccpa.${vday}/$cyc3/ccpa.t${cyc}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${cyc}z.grid240.f00.grib2
+    cp $COMINccpa/ccpa.${vday}/$cyc3/ccpa.t${cyc}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${cyc}z.grid240.f00.grib2
 
   done
 
@@ -111,13 +111,13 @@ if [ $modnam = ccpa ] ; then
      next=`echo ${DAY1} | cut -c 1-8`
 
    for cyc in 21 ; do
-      export ccpapath=$EVSINccpa/ccpa.${next}/00
+      export ccpapath=$COMINccpa/ccpa.${next}/00
       export vbeg=$next$cyc
       export vend=$next$cyc
 
      ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsCCPA_toG212.conf
 
-     cp $EVSINccpa/ccpa.${next}/00/ccpa.t${cyc}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${cyc}z.grid240.f00.grib2
+     cp $COMINccpa/ccpa.${next}/00/ccpa.t${cyc}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${cyc}z.grid240.f00.grib2
    done
 
 #############################################################################
@@ -151,7 +151,7 @@ if [ $modnam = ccpa ] ; then
   if [ $SENDMAIL = YES ] ; then	 
     export subject="CCPA Data Missing for EVS ${COMPONENT}"
     echo "Warning:  No CCPA data available for ${VDATE}" > mailmsg
-    echo Missing file is $EVSINccpa/ccpa.${vday}/??/ccpa.t??z.03h.hrap.conus.gb2  >> mailmsg
+    echo Missing file is $COMINccpa/ccpa.${vday}/??/ccpa.t??z.03h.hrap.conus.gb2  >> mailmsg
     echo "Job ID: $jobid" >> mailmsg
     cat mailmsg | mail -s "$subject" $maillist  
     exit
