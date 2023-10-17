@@ -46,7 +46,7 @@ mkdir -p ${DATA}/gribs
 
 for cyc in ${cycles} ; do
     # copy the model grib2 files
-    COMINfilename="${COMINmodel}/${MODELNAME}.${INITDATE}/HTSGW_mean.t${cyc}z.grib2"
+    COMINfilename="${COMINnfcens}/${MODELNAME}.${INITDATE}/HTSGW_mean.t${cyc}z.grib2"
     DATAfilename="${DATA}/gribs/HTSGW_mean.${INITDATE}.t${cyc}z.grib2"
     if [ ! -s $COMINfilename ]; then
         export subject="NFCENS Forecast Data Missing for EVS ${COMPONENT}"
@@ -89,14 +89,14 @@ echo 'Copying GDAS prepbufr files'
 for cyc in 00 06 12 18 ; do
 
   export cycle=t${cyc}z
-  if [ ! -s ${COMINgdas}.${INITDATE}/${cyc}/atmos/gdas.${cycle}.prepbufr ]; then
+  if [ ! -s ${COMINobsproc}.${INITDATE}/${cyc}/atmos/gdas.${cycle}.prepbufr ]; then
       export subject="GDAS Prepbufr Data Missing for EVS ${COMPONENT}"
       echo "Warning: No GDAS Prepbufr was available for init date ${INITDATE}${cyc}" > mailmsg
-      echo "Missing file is ${COMINgdas}.${INITDATE}/${cyc}/atmos/gdas.${cycle}.prepbufr" >> mailmsg
+      echo "Missing file is ${COMINobsproc}.${INITDATE}/${cyc}/atmos/gdas.${cycle}.prepbufr" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $maillist
   else
-      cp -v ${COMINgdas}.${INITDATE}/${cyc}/atmos/gdas.${cycle}.prepbufr ${DATA}/gdas.${INITDATE}${cyc}.prepbufr
+      cp -v ${COMINobsproc}.${INITDATE}/${cyc}/atmos/gdas.${cycle}.prepbufr ${DATA}/gdas.${INITDATE}${cyc}.prepbufr
   fi
 
 done
