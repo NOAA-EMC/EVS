@@ -30,6 +30,7 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 export KEEPDATA=YES
 export SENDMAIL=YES
+export SENDCOM=YES
 
 export cyc=00
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
@@ -41,7 +42,6 @@ export jobid=$job.${PBS_JOBID:-$$}
 
 
 export maillist='alicia.bentley@noaa.gov,binbin.zhou@noaa.gov'
-export maillist='roshan.shrestha@noaa.gov'
 
 if [ -z "$maillist" ]; then
 
