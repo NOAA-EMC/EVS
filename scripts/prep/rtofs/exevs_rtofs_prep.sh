@@ -73,7 +73,7 @@ for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
         else
             fhr=$(echo $lead | cut -c 2-4)
         fi
-        INITDATE=$($NDATE -${fhr} ${VDATE}${cyc} | cut -c 1-8)
+        INITDATE=$($NDATE -${fhr} ${VDATE}${vhr} | cut -c 1-8)
         if [ ! -d $COMOUTprep/rtofs.$INITDATE/$RUN ]; then
             mkdir -p $COMOUTprep/rtofs.$INITDATE/$RUN
         fi
