@@ -38,16 +38,17 @@ export DCOMIN=${DCOMIN:-${DCOMROOT}}
 export COMINccpa=${COMINccpa:-$(compath.py $envir/com/ccpa/${ccpa_ver})}
 export COMINcmce=$COMINnaefs
 export COMINprepbufr=${COMINprepbufr:-$(compath.py $envir/com/obsproc/${obsproc_ver})}
-export COMINsnow=${DCOMIN}
-export COMINosi_saf=${COMINosi_saf:-$DCOMROOT}
-export COMINsst=${COMINsst:-$DCOMROOT} 
+export DCOMINsnow=${DCOMIN}
+export DCOMINosi_saf=${DCOMINosi_saf:-$DCOMROOT}
+export DCOMINsst=${DCOMINsst:-$DCOMROOT} 
 
 export COMINgefs_bc=${COMINgefs_bc:-$COMINnaefs}
-export COMINcmce_bc=${DCOMIN}
-export COMIN_gefs=${COMIN_gefs:-${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/gefs}
-export COMIN_gefs_bc=${COMIN_gefs_bc:-${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/gefs_bc}
-export COMIN_cmce=${COMIN_cmce:-${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/cmce}
-export COMIN_cmce_bc=${COMIN_cmce_bc:-${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/cmce_bc}
+export DCOMINcmce_bc=${DCOMIN}
+export EVS_gefs=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/gefs
+export EVS_gefs_bc=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/gefs_bc
+export EVS_cmce=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/cmce
+export EVS_cmce_bc=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/cmce_bc
+
 
 
 export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}/$STEP/${COMPONENT}
@@ -66,7 +67,7 @@ if [ $RUN = headline ]; then
 elif [ $RUN = atmos ]; then
   mkdir -p $COMOUT_gefs $COMOUT_cmce $COMOUT_ecme $COMOUT_osi_saf
   if [ $MODELNAME = naefs ]; then
-    mkdir -p $COMOUT_gefs_bc $COMOUT_cmce_bc
+      mkdir -p $COMOUT_gefs_bc $COMOUT_cmce_bc
   fi
 fi
 

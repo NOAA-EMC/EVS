@@ -28,7 +28,7 @@ export NEXTDATE=${NEXTDATE:-${PDY}}
 ####################################
 export SENDECF=${SENDECF:-YES}
 export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-NO}
+export SENDDBN=${SENDDBN:-YES}
 export SENDMAIL=${SENDMAIL:-NO}
 
 ####################################
@@ -68,9 +68,6 @@ mkdir -p ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
 
 export jlogfile=${DATA}/${MODELNAME}_${RUN}_PB2NC.log
 
-export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-YES}
-export SENDECF=${SENDECF:-YES}
 
 ####################################
 # Execute the script                

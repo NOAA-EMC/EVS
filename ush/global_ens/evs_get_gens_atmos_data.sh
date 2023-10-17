@@ -585,7 +585,7 @@ fi
 if [ $modnam = nohrsc24h ] ; then
  
   for cyc in 00 12 ; do
-    snowfall=$COMINsnow/${vday}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_24h_${vday}${cyc}_grid184.grb2
+    snowfall=$DCOMINsnow/${vday}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_24h_${vday}${cyc}_grid184.grb2
     if [ -s $snowfall ] ; then
       [[ $SENDCOM="YES" ]] && cp $snowfall $COMOUT_gefs/nohrsc.t${cyc}z.grid184.grb2
     else
@@ -692,10 +692,10 @@ fi
 
 if [ $modnam = osi_saf ] ; then
    
-   osi=$COMINosi_saf/$INITDATE/seaice/osisaf/ice_conc_nh_polstere-100_multi_${INITDATE}1200.nc	
+   osi=$DCOMINosi_saf/$INITDATE/seaice/osisaf/ice_conc_nh_polstere-100_multi_${INITDATE}1200.nc	
    if [ -s $osi ] ; then
      python ${USHevs}/global_ens/global_ens_sea_ice_prep.py
-     [[ $SENDCOM="YES" ]] && cp $WORK/atmos.${INITDATE}/osi_saf/*.nc $COMOUT_osi_saf/.
+     [[ $SENDCOM="YES" ]] &&  cp $WORK/atmos.${INITDATE}/osi_saf/*.nc $COMOUT_osi_saf/.
    else
 	if [ $SENDMAIL = YES ]; then
           export subject="OSI_SAF Data Missing for EVS ${COMPONENT}"

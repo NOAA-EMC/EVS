@@ -48,7 +48,7 @@ mkdir -p $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/logs
 
 for model in $model_list ; do
  MODEL=`echo $model | tr '[a-z]' '[A-Z]'`	
- source=$COMINapcp24mean/${model}
+ source=$EVSapcp24mean/${model}
  target=$DATA/grid2grid_plots/data/$model
  mkdir -p $target
  for fhr in 024 048 072 096 120 144 168 192 216 240 ; do
