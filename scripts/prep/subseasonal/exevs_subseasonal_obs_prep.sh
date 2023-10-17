@@ -1,7 +1,8 @@
 #!/bin/bash
 # Program Name: exevs_subseasonal_obs_prep
 # Author(s)/Contact(s): Shannon Shields
-# Abstract: Retrieve data for subseasonal observations
+# Abstract: This script is run by JEVS_SUBSEASONAL_PREP in jobs/.
+#           This script retrieves data for subseasonal observations.
 # History Log:
 
 set -x

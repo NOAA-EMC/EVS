@@ -2,7 +2,10 @@
 '''
 Name: subseasonal_plots.py
 Contact(s): Shannon Shields
-Abstract: This script is the main driver for the plotting scripts.
+Abstract: This script is run by subseasonal_plots_grid2grid_create_job_
+          scripts.py and subseasonal_plots_grid2obs_create_job_scripts.py
+          in ush/subseasonal.
+          This script is the main driver for the plotting scripts.
 '''
 
 import os
@@ -573,32 +576,6 @@ elif JOB_GROUP == 'make_plots':
                                                     plot_info_dict,
                                                     met_info_dict, logo_dir)
                     plot_lbl.make_lead_by_level()
-    elif plot == 'precip_spatial_map':
-        model_info_dict['obs'] = {'name': 'ccpa',
-                                  'plot_name': 'ccpa',
-                                  'obs_name': '24hrCCPA'}
-        pcp_combine_base_dir = os.path.join(VERIF_CASE_STEP_dir, 'data')
-        import subseasonal_plots_precip_spatial_map as subp_psm
-        for psm_info in \
-                list(itertools.product(valid_hrs, fhrs)):
-            date_info_dict['valid_hr_start'] = str(psm_info[0])
-            date_info_dict['valid_hr_end'] = str(psm_info[0])
-            date_info_dict['valid_hr_inc'] = '24'
-            date_info_dict['forecast_hour'] = str(psm_info[1])
-            plot_info_dict['fcst_var_name'] = fcst_var_name
-            plot_info_dict['fcst_var_level'] = fcst_var_level_list[0]
-            plot_info_dict['fcst_var_thresh'] = 'NA'
-            plot_info_dict['obs_var_name'] = obs_var_name
-            plot_info_dict['obs_var_level'] = obs_var_level_list[0]
-            plot_info_dict['obs_var_thresh'] = 'NA'
-            plot_info_dict['interp_points'] = 'NA'
-            plot_psm = subp_psm.PrecipSpatialMap(logger, pcp_combine_base_dir,
-                                                 job_output_dir,
-                                                 model_info_dict,
-                                                 date_info_dict,
-                                                 plot_info_dict,
-                                                 met_info_dict, logo_dir)
-            plot_psm.make_precip_spatial_map()
     elif plot == 'performance_diagram':
         import subseasonal_plots_performance_diagram as subp_pd
         for pd_info in \

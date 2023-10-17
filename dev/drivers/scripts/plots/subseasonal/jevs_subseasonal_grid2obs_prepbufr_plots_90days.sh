@@ -47,7 +47,7 @@ export COMPONENT=subseasonal
 export RUN=atmos
 export MODELNAME="gefs cfs"
 export VERIF_CASE=grid2obs
-export VERIF_TYPE=PrepBufr
+export VERIF_TYPE=prepbufr
 export NDAYS=90
 export DAYS=91
 
