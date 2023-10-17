@@ -2,7 +2,9 @@
 '''                           
 Program Name: subseasonal_plots_grid2grid_create_job_scripts.py
 Contact(s): Shannon Shields
-Abstract: This creates multiple independent job scripts. These
+Abstract: This script is run by exevs_subseasonal_grid2grid_plots.sh
+          in scripts/plots/subseasonal.
+          This creates multiple independent job scripts. These
           jobs contain all the necessary environment variables
           and commands needed to run the specific
           use case.
@@ -164,9 +166,6 @@ plot_jobs_dict = {
                                       'obs_name': 'gfs',
                                       'plots_list': 'time_series'},
     },
-    'ENSO': {},
-    'OLR': {},
-    'precip': {},
     'sea_ice': {
         'WeeklyAvg_Concentration': {'line_type_stat_list': ['SL1L2/RMSE',
                                                             'SL1L2/ME'],

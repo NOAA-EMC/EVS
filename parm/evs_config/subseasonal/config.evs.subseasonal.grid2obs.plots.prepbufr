@@ -24,7 +24,7 @@ export VERIF_CASE_STEP=${VERIF_CASE}_${STEP}
 #model_plots_dir_list:    directory path to model plots
 #model_file_format_list: file format of model files
 export model_list="$MODELNAME"
-export model_dir_list="$COMINgefs $COMINcfs"
+export model_dir_list="$EVSINgefs $EVSINcfs"
 export model_plots_dir_list="$COMOUT $COMOUT"
 export model_file_format_list="gefs.{init?fmt=%Y%m%d}/{init?fmt=%2H} cfs.{init?fmt=%Y%m%d}/{init?fmt=%2H}"
 ## OUTPUT DATA SETTINGS
@@ -42,19 +42,19 @@ export plot_by="VALID"
 ####################################################
 if [ $VERIF_CASE_STEP = grid2obs_plots ]; then
     #g2oplots_model_plot_name_list: list of models reference name on plots
-    #g2oplots_type_list: list type of verifications to run for grid-to-obs:  PrepBufr
+    #g2oplots_type_list: list type of verifications to run for grid-to-obs:  prepbufr
     #####    g2oplots_*_fcyc_list:        all forecast cycles to be included in verification: HH
     #####    g2oplots_*_fhr_min:         forecast hour to start verification HH[H]
     #####    g2oplots_*_fhr_max:         forecast hour to end verification HH[H]
     #####    g2oplots_*_fhr_inc:         frequency to verify forecast hours at HH[H]
     #####    g2oplots_*_event_eq:        do event equalization (YES) or not (NO)
     export g2oplots_model_plot_name_list="gefs_mean cfs_mean"
-    export g2oplots_type_list="PrepBufr"
-    export g2oplots_PrepBufr_fcyc_list="00"
-    export g2oplots_PrepBufr_valid_hr_list="00"
-    export g2oplots_PrepBufr_fhr_min=168
-    export g2oplots_PrepBufr_fhr_max=840
-    export g2oplots_PrepBufr_fhr_inc=24
+    export g2oplots_type_list="prepbufr"
+    export g2oplots_prepbufr_fcyc_list="00"
+    export g2oplots_prepbufr_valid_hr_list="00"
+    export g2oplots_prepbufr_fhr_min=168
+    export g2oplots_prepbufr_fhr_max=840
+    export g2oplots_prepbufr_fhr_inc=24
     export g2oplots_event_eq="NO"
 fi
 

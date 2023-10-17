@@ -2,7 +2,7 @@
 '''
 Program Name: set_init_valid_fhr_subseasonal_prep_info.py
 Contact(s): Shannon Shields
-Abstract: This script is run by all scripts in scripts/.
+Abstract: This script is run by all scripts in scripts/prep/subseasonal.
           This sets up the necessary environment variables
           for valid dates and times information, initialization
           dates and times information, and forecast hour
