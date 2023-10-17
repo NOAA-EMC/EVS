@@ -29,8 +29,8 @@ OBS_NAME = aqm
 #INIT_SEQ = 06, 12
 LEAD_SEQ = {ENV[fcsthours]}
 
-VALID_BEG = {ENV[VDATE]}{ENV[cyc]}
-VALID_END = {ENV[VDATE]}{ENV[cyc]}
+VALID_BEG = {ENV[VDATE]}{ENV[vhr]}
+VALID_END = {ENV[VDATE]}{ENV[vhr]}
 
 ################################
 ## The obs window dictionary  ##

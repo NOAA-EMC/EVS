@@ -9,8 +9,8 @@
 ##   Change Logs:
 ##
 ##   04/26/2023   Ho-Chun Huang  modification for using AirNOW ASCII2NC
-##   05/22/2023   Ho-Chun Huang  separate hourly ozone by model cycle time becasuse
-##                               of directory path depends on model cycle hour.
+##   05/22/2023   Ho-Chun Huang  separate hourly ozone by model verified time becasuse
+##                               of directory path depends on model verified hour.
 ##
 ##
 #######################################################################
@@ -45,12 +45,12 @@ echo ${model1}
 #
 # The valid time of forecast model output is the reference here in PointStat
 # Because of the valid time definition between forecat output and observation is different
-#     For average concentration of a period [ cyc-1 to cyc ], aqm output is defined at cyc Z
-#     while observation is defined at cyc-1 Z
+#     For average concentration of a period [ vhr-1 to vhr ], aqm output is defined at vhr Z
+#     while observation is defined at vhr-1 Z
 # Thus, the one hour back OBS input will be checked and used in PointStat
 #     [OBS_POINT_STAT_INPUT_TEMPLATE=****_{valid?fmt=%Y%m%d%H?shift=-3600}.nc]
 #
-cdate=${VDATE}${cyc}
+cdate=${VDATE}${vhr}
 vld_date=$(${NDATE} -1 ${cdate} | cut -c1-8)
 vld_time=$(${NDATE} -1 ${cdate} | cut -c1-10)
 
@@ -111,7 +111,7 @@ for hour in 06 12; do
           fhr=$(printf %2.2d ${ihr})       ## fhr for the processing valid hour is in 2 digit
           export fhr
     
-          export datehr=${VDATE}${cyc}
+          export datehr=${VDATE}${vhr}
           adate=`${NDATE} -${ihr} ${datehr}`
           aday=`echo ${adate} |cut -c1-8`
           acyc=`echo ${adate} |cut -c9-10`
@@ -171,7 +171,7 @@ for hour in 06 12; do
                         if [ ${SENDCOM} = "YES" ]; then
                           cp ${DATA}/point_stat/${MODELNAME}/* ${COMOUTsmall}
                         fi
-                        if [ ${cyc} = 23 ]; then
+                        if [ ${vhr} = 23 ]; then
                           mkdir -p ${COMOUTfinal}
                           cp ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
                           cd ${finalstat}
@@ -194,7 +194,7 @@ for hour in 06 12; do
                   if [ ${SENDCOM} = "YES" ]; then
                     cp ${DATA}/point_stat/${MODELNAME}/* ${COMOUTsmall}
                   fi
-                  if [ ${cyc} = 23 ]; then
+                  if [ ${vhr} = 23 ]; then
                      mkdir -p ${COMOUTfinal}
                      cp ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
                      run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstPM_obsANOWPM_GatherByDay.conf ${PARMevs}/metplus_config/machine.conf
@@ -234,7 +234,7 @@ fi
 echo "obs_daily_found = ${obs_daily_found}"
 
 
-if [ ${cyc} = 11 ]; then
+if [ ${vhr} = 11 ]; then
 
   fcstmax=48
   for biastyp in raw bc; do
@@ -329,7 +329,7 @@ fi
 # Daily verification of the daily average of PM2.5
 # Verification is being done on both raw and bias-corrected output data
 
-if [ ${cyc} = 04 ]; then
+if [ ${vhr} = 04 ]; then
 
   fcstmax=48
   for biastyp in raw bc; do

@@ -11,8 +11,6 @@ LOG_DIR={OUTPUT_BASE}/logs
 
 [config]
 
-LOG_LEVEL = DEBUG
-LOG_MET_VERBOSITY = 2
 PROCESS_LIST = PointStat
 LOOP_ORDER = processes
 LOOP_BY = VALID
@@ -31,8 +29,8 @@ OBS_NAME = aqm
 #INIT_SEQ = 06, 12
 LEAD_SEQ = {ENV[fcsthours]}
 
-VALID_BEG = {ENV[VDATE]}{ENV[cyc]}
-VALID_END = {ENV[VDATE]}{ENV[cyc]}
+VALID_BEG = {ENV[VDATE]}{ENV[vhr]}
+VALID_END = {ENV[VDATE]}{ENV[vhr]}
 
 ################################
 ## The obs window dictionary  ##
