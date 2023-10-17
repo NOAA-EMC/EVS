@@ -2,7 +2,7 @@
 '''
 Program Name: check_subseasonal_config_stats.py
 Contact(s): Shannon Shields
-Abstract: This script is run by all scripts in scripts/.
+Abstract: This script is run by all scripts in scripts/stats/subseasonal.
           This does a check on the user's settings in
           the passed config file.
 '''
@@ -62,15 +62,15 @@ VCS_type_env_vars_dict = {
                         'g2gstats_seaice_fhr_inc',
                         'g2gstats_seaice_grid', 'g2gstats_seaice_gather_by'],
     'grid2obs_stats': ['g2ostats_type_list',
-                       'g2ostats_PrepBufr_truth_name_list',
-                       'g2ostats_PrepBufr_truth_file_format_list',
-                       'g2ostats_PrepBufr_fcyc_list',
-                       'g2ostats_PrepBufr_vhr_list', 
-                       'g2ostats_PrepBufr_fhr_min',
-                       'g2ostats_PrepBufr_fhr_max', 
-                       'g2ostats_PrepBufr_fhr_inc',
-                       'g2ostats_PrepBufr_grid',
-                       'g2ostats_PrepBufr_gather_by']
+                       'g2ostats_prepbufr_truth_name_list',
+                       'g2ostats_prepbufr_truth_file_format_list',
+                       'g2ostats_prepbufr_fcyc_list',
+                       'g2ostats_prepbufr_vhr_list', 
+                       'g2ostats_prepbufr_fhr_min',
+                       'g2ostats_prepbufr_fhr_max', 
+                       'g2ostats_prepbufr_fhr_inc',
+                       'g2ostats_prepbufr_grid',
+                       'g2ostats_prepbufr_gather_by']
 }
 VCS_type_env_check_list = ['shared', VERIF_CASE_STEP]
 for VCS_type_env_check in VCS_type_env_check_list:
@@ -112,7 +112,7 @@ if datetime.datetime.strptime(os.environ['end_date'], '%Y%m%d') \
 # Do check for valid config options
 valid_VCS_type_opts_dict = {
     'grid2grid_stats': ['anom', 'pres_lvls', 'sst', 'seaice'],
-    'grid2obs_stats': ['PrepBufr']
+    'grid2obs_stats': ['prepbufr']
 }
 for VCS_type in VCS_type_list:
     if VCS_type not in valid_VCS_type_opts_dict[VCS]:

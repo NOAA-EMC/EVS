@@ -2,7 +2,7 @@
 '''
 Program Name: check_subseasonal_config_plots.py
 Contact(s): Shannon Shields
-Abstract: This script is run by all scripts in scripts/.
+Abstract: This script is run by all scripts in scripts/plots/subseasonal.
           This does a check on the user's settings in
           the passed config file.
 '''
@@ -34,11 +34,11 @@ VCS_type_env_vars_dict = {
                         'g2gplots_event_eq'],
     'grid2obs_plots': ['g2oplots_model_plot_name_list', 
                        'g2oplots_type_list',
-                       'g2oplots_PrepBufr_fcyc_list',
-                       'g2oplots_PrepBufr_valid_hr_list', 
-                       'g2oplots_PrepBufr_fhr_min',
-                       'g2oplots_PrepBufr_fhr_max',
-                       'g2oplots_PrepBufr_fhr_inc',
+                       'g2oplots_prepbufr_fcyc_list',
+                       'g2oplots_prepbufr_valid_hr_list', 
+                       'g2oplots_prepbufr_fhr_min',
+                       'g2oplots_prepbufr_fhr_max',
+                       'g2oplots_prepbufr_fhr_inc',
                        'g2oplots_event_eq']
 }
 VCS_type_env_check_list = ['shared', VERIF_CASE_STEP]
@@ -80,9 +80,9 @@ if datetime.datetime.strptime(os.environ['end_date'], '%Y%m%d') \
 # Do check for valid config options
 VCS_type_list = os.environ[VERIF_CASE_STEP_abbrev+'_type_list'].split(' ')
 valid_VCS_type_opts_dict = {
-    'grid2grid_plots': ['anom', 'pres_lvls', 'ENSO', 'OLR', 'precip', 'sst', 
+    'grid2grid_plots': ['anom', 'pres_lvls', 'sst', 
                         'sea_ice'],
-    'grid2obs_plots': ['PrepBufr']
+    'grid2obs_plots': ['prepbufr']
 }
 for VCS_type in VCS_type_list:
     if VCS_type not in valid_VCS_type_opts_dict[VCS]:

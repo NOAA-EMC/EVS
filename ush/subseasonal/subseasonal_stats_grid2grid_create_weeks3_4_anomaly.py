@@ -2,8 +2,10 @@
 '''
 Name: subseasonal_stats_grid2grid_create_weeks3_4_anomaly.py
 Contact(s): Shannon Shields
-Abstract: This script is used to create anomaly
-          data from MET grid_stat netCDF output
+Abstract: This script is run by subseasonal_stats_grid2grid_create_weeks3_4_
+          reformat_job_scripts.py in ush/subseasonal.
+          This script is used to create anomaly
+          data from MET grid_stat netCDF output.
 '''
 
 import os
