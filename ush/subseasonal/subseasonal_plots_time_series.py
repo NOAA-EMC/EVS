@@ -2,7 +2,8 @@
 '''
 Name: subseasonal_plots_time_series.py
 Contact(s): Shannon Shields
-Abstract: This script generates a time series plot.
+Abstract: This script is run by subseasonal_plots.py in ush/subseasonal.
+          This script generates a time series plot.
 '''
 
 import sys
@@ -13,7 +14,6 @@ import glob
 import subprocess
 import pandas as pd
 pd.plotting.deregister_matplotlib_converters()
-#pd.plotting.register_matplotlib_converters()
 import numpy as np
 import matplotlib
 matplotlib.use('agg')
