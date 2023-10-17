@@ -90,7 +90,7 @@ elif [ $MODELNAME = sref ]; then
 
   export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}/prep/$COMPONENT/$RUN
   export COMINsref=${COMINsref:-$(compath.py  sref/$sref_ver)}
-  export COMINprepbufr=${COMINprepbufr:-$(compath.py  obsproc/${obsproc_ver})}
+  export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
   export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
   export EVSINsrefmean=${EVSINsrefmean:-$COMIN/prep/$COMPONENT}
 
