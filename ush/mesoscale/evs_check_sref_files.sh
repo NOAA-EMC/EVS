@@ -6,7 +6,7 @@ typeset -Z2 cyc
 
 missing=0 
 for cyc in 00 06 12 18 ; do
-  if [ ! -s $COMINprepbufr/gfs.${vday}/${cyc}/atmos/gfs.t${cyc}z.prepbufr ] ; then
+  if [ ! -s $DCOMINprepbufr/gfs.${vday}/${cyc}/atmos/gfs.t${cyc}z.prepbufr ] ; then
     missing=$((missing + 1 ))
   fi
 done
@@ -76,7 +76,7 @@ for cyc in  00 06 12 18 ; do #SREF grid2obs validation is by gfs prepbufr
     sref_mbrs=0
     for model in arw nmb ; do
       for mb in n1 n2 n3 n4 n5 n6 p1 p2 p3 p4 p5 p6 ctl ; do 
-        sref=$COMINsref/sref.${fday}/${fcyc}/pgrb/sref_${model}.t${fcyc}z.pgrb212.${mb}.f${fhr}.grib2
+        sref=$DCOMINsref/sref.${fday}/${fcyc}/pgrb/sref_${model}.t${fcyc}z.pgrb212.${mb}.f${fhr}.grib2
         echo $sref
 	if [ -s $sref ] ; then
            sref_mbrs=$((sref_mbrs+1))

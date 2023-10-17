@@ -9,7 +9,7 @@ export vday=$VDATE
 export regrid='NONE'
 ############################################################
 
-$USHevs/evs_check_sref_files.sh
+$USHevs/mesoscale/evs_check_sref_files.sh
 
 >run_all_sref_g2o_poe.sh
 

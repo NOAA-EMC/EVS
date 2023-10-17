@@ -54,7 +54,7 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export MASKS=$FIXevs/masks
-export MET_PLUS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}?${VERIF_CASE}"
+export MET_PLUS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}"
 export cyc=${cyc:-00}
 export cycle=t${cyc}z
 setpdy.sh

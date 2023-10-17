@@ -41,6 +41,7 @@ export jobid=$job.${PBS_JOBID:-$$}
 
 
 export maillist='alicia.bentley@noaa.gov,binbin.zhou@noaa.gov'
+export maillist='roshan.shrestha@noaa.gov'
 
 if [ -z "$maillist" ]; then
 
