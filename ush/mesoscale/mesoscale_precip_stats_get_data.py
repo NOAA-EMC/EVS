@@ -19,7 +19,7 @@ print(f"Working in: {cwd}")
 DATA = os.environ['DATA']
 MODELNAME = os.environ['MODELNAME']
 EVSINccpa = os.environ['EVSINccpa']
-EVSINmrms = os.environ['EVSINmrms']
+EVSINmrms = os.environ['DCOMINmrms']
 COMOUT = os.environ['COMOUT']
 VDATE = os.environ['VDATE']
 VHOUR_LIST = os.environ['VHOUR_LIST'].split(' ')

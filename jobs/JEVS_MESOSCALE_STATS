@@ -70,7 +70,7 @@ if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
   export DCOMINobs=$DCOMINobsproc
   export EVSINspcotlk=${EVSINspcotlk:-$(compath.py -o $NET/$evs_ver/prep/cam)}
   export EVSINccpa=${EVSINccpa:-$(compath.py  ccpa/${ccpa_ver})}
-  export EVSINmrms=${EVSINmrms:-$DCOMROOT/ldmdata/obs/upperair/mrms}
+  export DCOMINmrms=${DCOMINmrms:-$DCOMROOT/ldmdata/obs/upperair/mrms}
   export DCOMINnohrsc=${DCOMINnohrsc:-$DCOMROOT}
 
   if [ $VERIF_CASE = snowfall ]; then
