@@ -86,3 +86,8 @@ for vari in ${VARS}; do
      echo "Missing RTOFS_NDBC_$VARupper stat files for $VDATE" 
   fi
 done
+
+# Cat the METplus log files
+for log_file in $DATA/logs/*; do
+    cat $log_file
+done

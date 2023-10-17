@@ -192,6 +192,10 @@ else
   fi
 fi
 
+# Cat the METplus log files
+for log_file in $DATA/logs/*; do
+    cat $log_file
+done
 
 ##########################
 #  create the masks

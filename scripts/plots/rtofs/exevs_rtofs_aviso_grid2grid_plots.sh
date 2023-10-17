@@ -71,6 +71,11 @@ for stats in me rmse acc; do
   $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
 done
 
+# Cat the plotting log files
+for log_file in $DATA/logs/rtofs/*; do
+    cat $log_file
+done
+
 # tar all plots together
 cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN
 tar -cvf evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png

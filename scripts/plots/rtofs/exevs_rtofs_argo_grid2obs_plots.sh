@@ -159,6 +159,12 @@ for levl in 0 50 125 200 400 700 1000 1400; do
   done
 done
 
+# Cat the plotting log files
+for log_file in $DATA/logs/rtofs/*; do
+    cat $log_file
+done
+
+
 # tar all plots together
 cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN
 tar -cvf evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
