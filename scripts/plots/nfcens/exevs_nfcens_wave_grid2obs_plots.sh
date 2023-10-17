@@ -59,8 +59,8 @@ plot_end_date=${VDATE}
 
 theDate=${plot_start_date}
 while (( ${theDate} <= ${plot_end_date} )); do
-  COMINstats=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${theDate}
-  cp ${COMINstats}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
+  EVSINnfcens=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${theDate}
+  cp ${EVSINnfcens}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
   theDate=$(date --date="${theDate} + 1 day" '+%Y%m%d')
 done
 
