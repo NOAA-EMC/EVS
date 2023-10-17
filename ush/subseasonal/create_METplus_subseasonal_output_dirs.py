@@ -2,7 +2,7 @@
 '''
 Program Name: create_METplus_subseasonal_output_dirs.py
 Contact(s): Shannon Shields
-Abstract: This script is run by all scripts in scripts/.
+Abstract: This script is run by all stats and plots scripts in scripts/.
           This creates the base directories and their subdirectories
           for the METplus verification use cases and their types.
 '''
@@ -42,24 +42,16 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
     for VCS_type in VCS_type_list:
         if VCS_type == 'anom':
             data_dir_list.append(os.path.join(data_base_dir, 'ecmwf'))
-        elif VCS_type == 'pres':
+        elif VCS_type == 'pres_lvls':
             data_dir_list.append(os.path.join(data_base_dir, 'gfs'))
-        elif VCS_type == 'ENSO' or 'sst':
+        elif VCS_type == 'sst':
             data_dir_list.append(os.path.join(data_base_dir, 'ghrsst_ospo'))
-        elif VCS_type == 'OLR':
-            data_dir_list.append(os.path.join(data_base_dir, 'umd'))
-        elif VCS_type == 'precip':
-            data_dir_list.append(os.path.join(data_base_dir, 'ccpa'))
         elif VCS_type == 'seaice':
             data_dir_list.append(os.path.join(data_base_dir, 'osi_saf'))
 elif VERIF_CASE_STEP == 'grid2obs_stats':
     for VCS_type in VCS_type_list:
-        if VCS_type == 'PrepBufr':
+        if VCS_type == 'prepbufr':
             data_dir_list.append(os.path.join(data_base_dir, 'prepbufr_nam'))
-elif VERIF_CASE_STEP == 'grid2grid_plots':
-    for VCS_type in VCS_type_list:
-        if VCS_type == 'precip':
-            data_dir_list.append(os.path.join(data_base_dir, 'ccpa'))
 
 # Create data directories
 for data_dir in data_dir_list:
@@ -110,22 +102,9 @@ if STEP == 'stats':
                 os.path.join(working_output_base_dir,
                              model+'.'+date_dt.strftime('%Y%m%d'))
             )
-        if VERIF_CASE_STEP == 'grid2grid_stats':
+        if VERIF_CASE_STEP == 'grid2obs_stats':
             for VCS_type in VCS_type_list:
-                if VCS_type == 'precip':
-                    COMROOT_dir_list.append(
-                        os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
-                                     RUN+'.'+date_dt.strftime('%Y%m%d'), 'ccpa',
-                                     VERIF_CASE)
-                    )
-                    working_dir_list.append(
-                        os.path.join(working_output_base_dir,
-                                     RUN+'.'+date_dt.strftime('%Y%m%d'), 'ccpa',
-                                     VERIF_CASE)
-                    )
-        elif VERIF_CASE_STEP == 'grid2obs_stats':
-            for VCS_type in VCS_type_list:
-                if VCS_type in ['PrepBufr']:
+                if VCS_type in ['prepbufr']:
                     COMROOT_dir_list.append(
                         os.path.join(COMROOT, NET, evs_ver, STEP, COMPONENT,
                                      RUN+'.'+date_dt.strftime('%Y%m%d'), 'prepbufr',

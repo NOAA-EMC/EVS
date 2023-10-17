@@ -2,7 +2,9 @@
 '''
 Program Name: subseasonal_stats_grid2obs_create_weekly_assemble_job_scripts.py
 Contact(s): Shannon Shields
-Abstract: This creates multiple independent job scripts. These
+Abstract: This script is run by exevs_subseasonal_grid2obs_stats.sh
+          in scripts/stats/subseasonal.
+          This creates multiple independent job scripts. These
           jobs contain all the necessary environment variables
           and commands needed to run the specific
           use case.
@@ -57,10 +59,10 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 #### assemble_data jobs
 ################################################
 assemble_data_obs_jobs_dict = {
-    'PrepBufr': {}
+    'prepbufr': {}
 }
 assemble_data_model_jobs_dict = {
-    'PrepBufr': {
+    'prepbufr': {
         'TempAnom2m': {'env': {'prepbufr': 'nam',
                                'obs_window': '900',
                                'msg_type': 'ADPSFC',
@@ -138,7 +140,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
             ) 
             # Loop through and write job script for dates and models
             if JOB_GROUP == 'assemble_data':
-                if verif_type == 'PrepBufr':
+                if verif_type == 'prepbufr':
                     job_env_dict['valid_hr_start'] = '00'
                     job_env_dict['valid_hr_end'] = '00'
                     job_env_dict['valid_hr_inc'] = '12'
@@ -215,7 +217,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                 )
                 # Loop through and write job script for dates and models
                 if JOB_GROUP == 'assemble_data':
-                    if verif_type == 'PrepBufr' \
+                    if verif_type == 'prepbufr' \
                             and verif_type_job == 'TempAnom2m':
                         job_env_dict['valid_hr_start'] = '00'
                         job_env_dict['valid_hr_end'] = '00'
@@ -251,7 +253,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                         job.write('\n')
                         # Set any environment variables for special cases
                         if JOB_GROUP == 'assemble_data':
-                            if verif_type == 'PrepBufr':
+                            if verif_type == 'prepbufr':
                                 job_env_dict['grid'] = 'G003'
                                 mask_list = [
                                     'G003_GLOBAL',
@@ -295,7 +297,6 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                                 write_job_cmds = True
                             else:
                                 write_job_cmds = False
-                                print("WARNING: Missing > 80% of files")
                         else:
                             if model_files_exist:
                                 write_job_cmds = True
@@ -309,6 +310,8 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                         if write_job_cmds:
                             for cmd in verif_type_job_commands_list:
                                 job.write(cmd+'\n')
+                            # Copy DATA files to COMOUT restart dir
+                            # to be used in possible restart
                             if job_env_dict['SENDCOM'] == 'YES':
                                 for model_output_file_tuple \
                                         in model_copy_output_DATA2COMOUT_list:
