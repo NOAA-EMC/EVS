@@ -63,7 +63,7 @@ for  obsv in ccpa ; do
        echo  "export extradir=''" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
 
     else
-       echo  "export modelpath=$DCOMINsref" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+       echo  "export modelpath=$COMINsref" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
        echo  "export modelgrid=pgrb212" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
        echo  "export modeltail='.grib2'" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
        echo  "export extradir=''" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh

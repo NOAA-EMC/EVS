@@ -46,7 +46,7 @@ for  obsv in prepbufr ; do
        echo  "export regrid=NONE " >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo  "export modelhead=sref" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
     
-       echo  "export modelpath=$DCOMINsref" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo  "export modelpath=$COMINsref" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo  "export modelmean=$EVSINsrefmean" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo  "export modelgrid=pgrb212" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo  "export modeltail='.grib2'" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
