@@ -2,7 +2,8 @@
 '''
 Program Name: get_cfs_subseasonal_data_files_prep.py
 Contact(s): Shannon Shields
-Abstract: This script is run by all scripts in scripts/.
+Abstract: This script is run by exevs_subseasonal_cfs_prep.sh
+          in scripts/prep/subseasonal.
           This gets the necessary CFS model files for the
           prep step.
 '''

@@ -1,7 +1,8 @@
 #!/bin/bash
 # Program Name: exevs_subseasonal_cfs_prep
 # Author(s)/Contact(s): Shannon Shields
-# Abstract: Retrieve data for subseasonal CFS verification
+# Abstract: This script is run by JEVS_SUBSEASONAL_PREP in jobs/.
+#           This script retrieves data for subseasonal CFS verification.
 # History Log:
 
 set -x
