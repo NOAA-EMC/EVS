@@ -42,8 +42,7 @@ export maskpath=$MASKS
 export vday=$VDATE
 
 #Define the spc outlook reqions mask file path
-export EVSINspcoutlook=${EVSINspcoutlook:-$COMIN/prep/$COMPONENT/href}
-export SPCoutlookMask=$EVSINspcoutlook/spc.$VDATE
+export SPCoutlookMask=$EVSINspcotlk/$MODELNAME/spc.$VDATE
 
 
 
