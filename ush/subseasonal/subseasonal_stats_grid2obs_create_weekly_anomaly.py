@@ -2,8 +2,10 @@
 '''
 Name: subseasonal_stats_grid2obs_create_weekly_anomaly.py
 Contact(s): Shannon Shields
-Abstract: This script is used to create anomaly
-          data from MET point_stat MPR output
+Abstract: This script is run by subseasonal_stats_grid2obs_create_weekly_
+          assemble_job_scripts.py in ush/subseasonal.
+          This script is used to create anomaly
+          data from MET point_stat MPR output.
 '''
 
 import os

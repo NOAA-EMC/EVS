@@ -2,7 +2,8 @@
 '''
 Program Name: get_subseasonal_stat_files.py
 Contact(s): Shannon Shields
-Abstract: This script retrieves stat files for subseasonal plotting step.
+Abstract: This script is run by all scripts in scripts/plots/subseasonal.
+          This script retrieves stat files for subseasonal plotting step.
 '''
 
 import os
