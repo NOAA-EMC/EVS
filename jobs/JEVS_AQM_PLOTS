@@ -58,6 +58,11 @@ export modsys=${modsys:-aqm}
 export mod_ver=${mod_ver:-${aqm_ver}}
 
 export VDATE=${VDATE:-${PDYm3}}
+if [ "${VDATE}" == "${PDYm3}" ]; then
+    export VDAYm31=${PDYm31}
+else
+    export VDAYm31=$(${NDATE} -744 ${VDATE}${cyc} | cut -c1-8)  # 31 days back
+fi
 
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver}/)}
 export EVSINaqm=${EVSINaqm:-${COMIN}/stats/${COMPONENT}/${MODELNAME}}
