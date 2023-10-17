@@ -2,7 +2,9 @@
 '''
 Name: subseasonal_prep_obs.py
 Contact(s): Shannon Shields
-Abstract: Retrieves obs data for subseasonal prep step
+Abstract: This script is run by exevs_subseasonal_obs_prep.sh
+          in scripts/prep/subseasonal. This script retrieves
+          obs data for subseasonal prep step.
 '''
 
 import os
@@ -20,10 +22,10 @@ print("Working in: "+cwd)
 # Read in common environment variables
 DATA = os.environ['DATA']
 COMINgfs = os.environ['COMINgfs']
-COMINecmwf = os.environ['COMINecmwf']
-COMINosi = os.environ['COMINosi']
-COMINghrsst = os.environ['COMINghrsst']
-COMINumd = os.environ['COMINumd']
+DCOMINecmwf = os.environ['DCOMINecmwf']
+DCOMINosi = os.environ['DCOMINosi']
+DCOMINghrsst = os.environ['DCOMINghrsst']
+DCOMINumd = os.environ['DCOMINumd']
 COMINnam = os.environ['COMINnam']
 COMOUT = os.environ['COMOUT']
 SENDCOM = os.environ['SENDCOM']
@@ -53,7 +55,7 @@ subseasonal_obs_dict = {
                                                        +'{init?fmt=%Y%m%d%H}'
                                                        +'.anl'),
                       'cycles': ['00', '12']},
-    'ecmwf': {'prod_file_format': os.path.join(COMINecmwf,
+    'ecmwf': {'prod_file_format': os.path.join(DCOMINecmwf,
                                                '{init?fmt=%Y%m%d}',
                                                'wgrbbul',
                                                'ecmwf',
@@ -64,7 +66,7 @@ subseasonal_obs_dict = {
                                                        +'{init?fmt=%Y%m%d%H}'
                                                        +'.anl'),
                       'cycles': ['00', '12']},
-    'osi': {'daily_prod_file_format': os.path.join(COMINosi,
+    'osi': {'daily_prod_file_format': os.path.join(DCOMINosi,
                                                    '{init_shift?fmt=%Y%m%d'
                                                    +'?shift=-12}',
                                                    'seaice', 'osisaf',
@@ -81,7 +83,7 @@ subseasonal_obs_dict = {
                                                        +'{init?fmt=%Y%m%d%H}'
                                                        +'_G003.nc'),
                 'cycles': ['00']},
-    'ghrsst': {'daily_prod_file_format': os.path.join(COMINghrsst,
+    'ghrsst': {'daily_prod_file_format': os.path.join(DCOMINghrsst,
                                                       '{init_shift?fmt=%Y%m%d'
                                                       +'?shift=-24}',
                                                       'validation_data', 
@@ -99,7 +101,7 @@ subseasonal_obs_dict = {
                                                              +'{init?fmt=%Y%m%d%H}'
                                                              +'.nc'),
                       'cycles': ['00']},
-    'umd': {'prod_file_format': os.path.join(COMINumd, 
+    'umd': {'prod_file_format': os.path.join(DCOMINumd, 
                                              '{init?fmt=%Y%m%d}',
                                              'validation_data',
                                              'landsfc',

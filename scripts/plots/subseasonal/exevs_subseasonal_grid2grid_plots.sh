@@ -1,8 +1,9 @@
 #!/bin/bash
 # Program Name: exevs_subseasonal_grid2grid_plots.sh
 # Author(s)/Contact(s): Shannon Shields
-# Abstract: This script generates grid-to-grid verification plots
-#           using python for the subseasonal models
+# Abstract: This script is run by JEVS_SUBSEASONAL_PLOTS in jobs/.
+#           This script generates grid-to-grid verification plots
+#           using python for the subseasonal models.
 # History Log:
 
 set -x

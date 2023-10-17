@@ -2,7 +2,9 @@
 '''
 Program Name: subseasonal_stats_grid2grid_create_job_scripts.py
 Contact(s): Shannon Shields
-Abstract: This creates multiple independent job scripts. These
+Abstract: This script is run by exevs_subseasonal_grid2grid_stats.sh
+          in scripts/stats/subseasonal.
+          This creates multiple independent job scripts. These
           jobs contain all the necessary environment variables
           and commands to needed to run the specific
           use case.
@@ -55,9 +57,6 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 ################################################
 assemble_data_obs_jobs_dict = {
     'anom': {},
-    'ENSO': {},
-    'OLR': {},
-    'precip': {},
     'pres_lvls': {},
     'seaice': {},
     'sst': {},
@@ -170,9 +169,6 @@ assemble_data_model_jobs_dict = {
                                                      )]
                                                 )]},
     },
-    'ENSO': {},
-    'OLR': {},
-    'precip': {},
     'pres_lvls': {
         'WeeklyAvg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
                                             'var1_levels': 'P500'},
@@ -459,8 +455,6 @@ assemble_data_model_jobs_dict = {
 #### generate_stats jobs
 ################################################
 generate_stats_jobs_dict = {
-    'ENSO': {},
-    'OLR': {},
     'anom': {
         'WeeklyAvg_TempAnom2m': {'env': {'var1_name': 'TMP',
                                          'var1_levels': 'Z2',
@@ -493,7 +487,6 @@ generate_stats_jobs_dict = {
                                                     +'.conf'
                                                 )]},
     },
-    'precip': {},
     'pres_lvls': {
         'WeeklyAvg_GeoHeightAnom': {'env': {'var1_name': 'HGT',
                                             'var1_levels': 'P500',
@@ -577,13 +570,6 @@ if JOB_GROUP in ['assemble_data', 'generate_stats']:
         VERIF_CASE_STEP_abbrev_type = (VERIF_CASE_STEP_abbrev+'_'
                                        +verif_type)
         # Read in environment variables for verif_type
-        if JOB_GROUP == 'assemble_data' and verif_type == 'precip':
-            precip_file_accum_list = (os.environ \
-                [VERIF_CASE_STEP_abbrev+'_precip_file_accum_list'] \
-                .split(' '))
-            precip_var_list = (os.environ \
-                [VERIF_CASE_STEP_abbrev+'_precip_var_list'] \
-                .split(' '))
         for verif_type_job in list(JOB_GROUP_jobs_dict[verif_type].keys()):
             # Initialize job environment dictionary
             job_env_dict = sub_util.initialize_job_env_dict(
@@ -641,24 +627,6 @@ if JOB_GROUP in ['assemble_data', 'generate_stats']:
                     job.write('set -x\n')
                     job.write('\n')
                     # Set any environment variables for special cases
-                    if JOB_GROUP == 'assemble_data':
-                        if verif_type == 'precip':
-                            job_env_dict['MODEL_var'] = (
-                                precip_var_list[model_idx]
-                            )
-                            if precip_file_accum_list[model_idx] \
-                                    == 'continuous':
-                                job_env_dict['pcp_combine_method'] = 'SUBTRACT'
-                                job_env_dict['MODEL_accum'] = '{lead?fmt=%HH}'
-                                job_env_dict['MODEL_levels'] = 'A{lead?fmt=%HH}'
-                            else:
-                                job_env_dict['pcp_combine_method'] = 'SUM'
-                                job_env_dict['MODEL_accum'] = (
-                                    precip_file_accum_list[model_idx]
-                                )
-                                job_env_dict['MODEL_levels'] = (
-                                    'A'+job_env_dict['MODEL_accum']
-                                )
                     # Do file checks
                     all_truth_file_exist = False
                     model_files_exist = False
