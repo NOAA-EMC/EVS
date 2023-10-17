@@ -2,7 +2,9 @@
 '''
 Program Name: subseasonal_stats_grid2grid_create_weeks3_4_reformat_job_scripts.py
 Contact(s): Shannon Shields
-Abstract: This creates multiple independent job scripts. These
+Abstract: This script is run by exevs_subseasonal_grid2grid_stats.sh
+          in scripts/stats/subseasonal.
+          This creates multiple independent job scripts. These
           jobs contain all the necessary environment variables
           and commands to needed to run the specific
           use case.
@@ -59,9 +61,6 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 reformat_data_obs_jobs_dict = {
     'anom': {},
     'pres_lvls': {},
-    'ENSO': {},
-    'OLR': {},
-    'precip': {},
     'seaice': {},
     'sst': {},
 }
@@ -100,9 +99,6 @@ reformat_data_gefs_jobs_dict = {
                                        )]},
     },
     'anom': {},
-    'ENSO': {},
-    'OLR': {},
-    'precip': {},
     'seaice': {},
     'sst': {},
 }
@@ -141,9 +137,6 @@ reformat_data_cfs_jobs_dict = {
                                        )]},
     },
     'anom': {},
-    'ENSO': {},
-    'OLR': {},
-    'precip': {},
     'seaice': {},
     'sst': {},
 }
@@ -178,9 +171,6 @@ reformat_data_model_jobs_dict = {
                                          )]
                                     )]},
     },
-    'ENSO': {},
-    'OLR': {},
-    'precip': {},
     'pres_lvls': {},
     'seaice': {},
     'sst': {},

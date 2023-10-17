@@ -51,8 +51,8 @@ export VDATE_END=${VDATE_END:-$PDYm2}
 # Set up the INPUT and OUTPUT directories
 #################################################
 export COMIN=${COMIN:-$(compath.py ${envir}/com/$NET/$evs_ver)}
-export COMINgefs=${COMINgefs:-$COMIN/stats/$COMPONENT/gefs}
-export COMINcfs=${COMINcfs:-$COMIN/stats/$COMPONENT/cfs}
+export EVSINgefs=${EVSINgefs:-$COMIN/stats/$COMPONENT/gefs}
+export EVSINcfs=${EVSINcfs:-$COMIN/stats/$COMPONENT/cfs}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN.$VDATE_END)}
 
 mkdir -p $COMOUT

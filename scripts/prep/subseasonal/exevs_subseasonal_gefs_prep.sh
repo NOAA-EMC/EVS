@@ -1,7 +1,8 @@
 #!/bin/bash
 # Program Name: exevs_subseasonal_gefs_prep.sh
 # Author(s)/Contact(s): Shannon Shields
-# Abstract: Retrieve data for subseasonal GEFS verification
+# Abstract: This script is run by JEVS_SUBSEASONAL_PREP in jobs/.
+#           This script retrieves data for subseasonal GEFS verification.
 # History Log:
 
 set -x

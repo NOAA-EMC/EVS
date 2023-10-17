@@ -44,24 +44,24 @@ export metplus_version="$metplus_ver"
 # SETTINGS FOR SPECIFIC USE CASES
 ####################################################
 if [ $VERIF_CASE_STEP = grid2obs_stats ]; then
-    #g2ostats_type_list: list type of verifications to run for grid-to-obs: PrepBufr
-    #### PrepBufr:  compare 2m temp anomalies to NAM prepbufr obs
+    #g2ostats_type_list: list type of verifications to run for grid-to-obs: prepbufr
+    #### prepbufr:  compare 2m temp anomalies to NAM prepbufr obs
     #####    g2ostats_[type]_fyc_list:      all forecast cycles to be included in verification: HH
     #####    g2ostats_[type]_vhr_list:      all valid hours to be included in verification: HH
     #####    g2ostats_[type]_fhr_min:       forecast hour to start verification HH[H]
     #####    g2ostats_[type]_fhr_max:       forecast hour to end verification HH[H]
     #####    g2ostats_[type]_grid:          NCEP grid to do verification on
     #####    g2ostats_[type]_gather_by:     how to group the verification data, VSDB, VALID, INIT
-    export g2ostats_type_list="PrepBufr" 
-    export g2ostats_PrepBufr_truth_name_list="nam_anl"
-    export g2ostats_PrepBufr_truth_file_format_list="$COMINobs.{valid?fmt=%Y%m%d}/prepbufr_nam/prepbufr.nam.{valid?fmt=%Y%m%d%H}"
-    export g2ostats_PrepBufr_fcyc_list="00"
-    export g2ostats_PrepBufr_vhr_list="00 12"
-    export g2ostats_PrepBufr_fhr_min="24"
-    export g2ostats_PrepBufr_fhr_max="840"
-    export g2ostats_PrepBufr_fhr_inc=12
-    export g2ostats_PrepBufr_grid="G003"
-    export g2ostats_PrepBufr_gather_by="VALID"
+    export g2ostats_type_list="prepbufr" 
+    export g2ostats_prepbufr_truth_name_list="nam_anl"
+    export g2ostats_prepbufr_truth_file_format_list="$COMIN.{valid?fmt=%Y%m%d}/prepbufr_nam/prepbufr.nam.{valid?fmt=%Y%m%d%H}"
+    export g2ostats_prepbufr_fcyc_list="00"
+    export g2ostats_prepbufr_vhr_list="00 12"
+    export g2ostats_prepbufr_fhr_min="24"
+    export g2ostats_prepbufr_fhr_max="840"
+    export g2ostats_prepbufr_fhr_inc=12
+    export g2ostats_prepbufr_grid="G003"
+    export g2ostats_prepbufr_gather_by="VALID"
 fi
 
 

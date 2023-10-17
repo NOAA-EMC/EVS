@@ -2,7 +2,8 @@
 '''
 Program Name: get_gefs_subseasonal_data_files_prep.py
 Contact(s): Shannon Shields
-Abstract: This script is run by all scripts in scripts/.
+Abstract: This script is run by subseasonal_prep_gefs_create_job_scripts.py
+          in ush/subseasonal.
           This gets the necessary GEFS model files for the
           prep step.
 '''
