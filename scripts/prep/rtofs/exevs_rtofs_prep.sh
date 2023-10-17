@@ -193,9 +193,15 @@ else
 fi
 
 # Cat the METplus log files
-for log_file in $DATA/logs/*; do
-    cat $log_file
-done
+log_dir=$DATA/logs
+log_file_count=$(find $log_dir -type f |wc -l)
+if [[ $log_file_count -ne 0 ]]; then
+    for log_file in $log_dir/*; do
+        echo "Start: $log_file"
+        cat $log_file
+        echo "End: $log_file"
+    done
+fi
 
 ##########################
 #  create the masks
