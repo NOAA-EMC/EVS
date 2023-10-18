@@ -37,7 +37,6 @@ DCOMINukmet = os.environ['DCOMINukmet']
 DCOMINukmet_precip = os.environ['DCOMINukmet_precip']
 DCOMINosi_saf = os.environ['DCOMINosi_saf']
 DCOMINghrsst_ospo = os.environ['DCOMINghrsst_ospo']
-DCOMINget_d = os.environ['DCOMINget_d']
 SENDCOM = os.environ['SENDCOM']
 COMOUT = os.environ['COMOUT']
 INITDATE = os.environ['INITDATE']
@@ -261,7 +260,8 @@ for MODEL in MODELNAME:
                             )
                     if SENDCOM == 'YES':
                         gda_util.copy_file(tmp_fcst_file, output_fcst_file)
-                        if MODEL == 'ecmwf':
+                        if MODEL == 'ecmwf' \
+                                and os.path.exists(output_fcst_file):
                             gda_util.run_shell_command(
                                 ['chmod', '640', output_fcst_file]
                             )
@@ -357,7 +357,8 @@ for MODEL in MODELNAME:
                         if SENDCOM == 'YES':
                             gda_util.copy_file(tmp_precip_file,
                                                output_precip_file)
-                            if MODEL == 'ecmwf':
+                            if MODEL == 'ecmwf' \
+                                    and os.path.exists(output_precip_file):
                                 gda_util.run_shell_command(
                                     ['chmod', '640', output_precip_file]
                                 )
@@ -429,7 +430,7 @@ for MODEL in MODELNAME:
                         )
                 if SENDCOM == 'YES':
                     gda_util.copy_file(tmp_anl_file, output_anl_file)
-                    if MODEL == 'ecmwf':
+                    if MODEL == 'ecmwf' and os.path.exists(output_anl_file):
                         gda_util.run_shell_command(
                             ['chmod', '640', output_anl_file]
                         )
@@ -443,7 +444,6 @@ for MODEL in MODELNAME:
 # Get operational observation data
 # Northern & Southern Hemisphere 10 km OSI-SAF multi-sensor analysis - osi_saf
 # Group for High Resolution Sea Surface Temperature (GHRSST) Level 4 SST analysis for Office of Satellite and Product Operations (OSPO)- ghrsst_ospo
-# NESDIS Evapotranspiration Geostationary Operational Environmental Satellite (GOES) ET and Drought (GET-D)- get_d
 
 global_det_obs_dict = {
     'osi_saf': {'input_file_format': os.path.join(DCOMINosi_saf,
@@ -476,15 +476,6 @@ global_det_obs_dict = {
                                                     +'?shift=-24}to'
                                                     +'{init?fmt=%Y%m%d%H}.nc'),
                     'cycles': ['00']},
-    'get_d': {'input_file_format': os.path.join(DCOMINget_d, 'get_d',
-                                                'GETDL3_DAL_CONUS_'
-                                                +'{init?fmt=%Y%j}_1.0.nc'),
-              'tmp_file_format': os.path.join(DATA, RUN+'.'+INITDATE,
-                                              'get_d', 'get_d.'
-                                              '{init_shift?fmt=%Y%m%d%H'
-                                              +'?shift=-24}to'
-                                              '{init?fmt=%Y%m%d%H}.nc'),
-              'cycles': ['00']},
 }
 
 for OBS in OBSNAME:
@@ -540,21 +531,6 @@ for OBS in OBSNAME:
             if not os.path.exists(output_file):
                 print("----> Trying to create "+tmp_file)
                 gda_util.prep_prod_ghrsst_ospo_file(
-                    input_file, tmp_file, CDATE_dt,
-                    log_missing_file
-                )
-                if SENDCOM == 'YES':
-                    gda_util.copy_file(tmp_file, output_file)
-            else:
-                print(f"{output_file} exists")
-        elif OBS == 'get_d':
-            log_missing_file = os.path.join(
-                DATA, 'mail_missing_'+OBS+'_valid'
-                +CDATE_dt.strftime('%Y%m%d%H')+'.sh'
-            )
-            if not os.path.exists(output_file):
-                print("----> Trying to create "+tmp_file)
-                gda_util.prep_prod_get_d_file(
                     input_file, tmp_file, CDATE_dt,
                     log_missing_file
                 )
