@@ -34,7 +34,7 @@ VCS_type_env_vars_dict = {
                         'g2gplots_event_eq'],
     'grid2obs_plots': ['g2oplots_model_plot_name_list', 
                        'g2oplots_type_list',
-                       'g2oplots_prepbufr_fcyc_list',
+                       'g2oplots_prepbufr_inithour_list',
                        'g2oplots_prepbufr_valid_hr_list', 
                        'g2oplots_prepbufr_fhr_min',
                        'g2oplots_prepbufr_fhr_max',

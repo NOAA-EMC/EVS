@@ -26,7 +26,7 @@ env_vars_dict = {
                'model_file_format_list', 'OUTPUTROOT',
                'start_date', 'end_date', 'make_met_data_by',
                'KEEPDATA',
-               'fcyc_list', 'vhr_list', 'fhr_min', 'fhr_max',
+               'inithour_list', 'vhr_list', 'fhr_min', 'fhr_max',
                'gather_by']
 }
 env_check_list = ['shared']

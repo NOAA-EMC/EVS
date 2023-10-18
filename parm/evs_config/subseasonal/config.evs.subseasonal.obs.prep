@@ -30,7 +30,7 @@ export make_met_data_by="INIT"
 ####################################################
 # SETTINGS FOR USE CASES
 ####################################################
-export fcyc_list="00"
+export inithour_list="00"
 export vhr_list="00 12"
 export fhr_min="00"
 export fhr_max="840"

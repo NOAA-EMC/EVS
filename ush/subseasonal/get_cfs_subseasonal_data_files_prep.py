@@ -99,7 +99,7 @@ def format_filler(unfilled_file_format, dt_valid_time, dt_init_time, str_lead):
                                   time information
     """
     filled_file_format = ''
-    format_opt_list = ['lead', 'valid', 'init', 'cycle']
+    format_opt_list = ['lead', 'valid', 'init']
     for filled_file_format_chunk in unfilled_file_format.split('/'):
         for format_opt in format_opt_list:
             nformat_opt = (
@@ -129,7 +129,7 @@ def format_filler(unfilled_file_format, dt_valid_time, dt_init_time, str_lead):
                            replace_format_opt_count = str_lead.zfill(3)
                        else:
                            replace_format_opt_count = str_lead
-                   elif format_opt in ['init', 'cycle']:
+                   elif format_opt == 'init':
                        replace_format_opt_count = dt_init_time.strftime(
                            format_opt_count_fmt
                        )
@@ -220,7 +220,7 @@ if cwd != DATA:
 if STEP == 'prep':
     # Read in environment variables
     # Get model forecast files
-    fcyc_list = os.environ['fcyc_list'
+    inithour_list = os.environ['inithour_list'
     ].split(' ')
     vhr_list = os.environ['vhr_list'
     ].split(' ')
@@ -247,7 +247,7 @@ if STEP == 'prep':
             init_time = time['init_time']
             lead = time['lead']
             if init_time.strftime('%H') \
-                    not in fcyc_list:
+                    not in inithour_list:
                 continue
             elif valid_time.strftime('%H') \
                     not in vhr_list:

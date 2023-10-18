@@ -294,7 +294,7 @@ def get_time_info(date_start, date_end, date_type, init_hr_list, valid_hr_list,
     return time_info
 
 def get_init_hour(valid_hour, forecast_hour):
-    """! Get a initialization hour/cycle
+    """! Get a initialization hour
 
          Args:
              valid_hour    - valid hour (integer)
@@ -313,7 +313,7 @@ def get_valid_hour(init_hour, forecast_hour):
     """! Get a valid hour
 
          Args:
-             init_hour    - intit hour/cycle (integer)
+             init_hour    - init hour (integer)
              forecast_hour - forecast hour (integer)
     """
     valid_hour = (init_hour + (forecast_hour%24))
@@ -341,7 +341,7 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
     """
     filled_file_format = '/'
     format_opt_list = ['lead', 'lead_shift', 'valid', 'valid_shift',
-                       'init', 'init_shift', 'cycle']
+                       'init', 'init_shift']
     if len(list(str_sub_dict.keys())) != 0:
         format_opt_list = format_opt_list+list(str_sub_dict.keys())
     for filled_file_format_chunk in unfilled_file_format.split('/'):
@@ -385,10 +385,6 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                        else:
                            replace_format_opt_count = forecast_hour
                    elif format_opt == 'init':
-                       replace_format_opt_count = init_time_dt.strftime(
-                           format_opt_count_fmt
-                       )
-                   elif format_opt == 'cycle':
                        replace_format_opt_count = init_time_dt.strftime(
                            format_opt_count_fmt
                        ) 
@@ -3700,7 +3696,7 @@ def initialize_prep_job_env_dict(verif_type, group,
     job_env_dict['valid_hr_start'] = (valid_hr_list[0].zfill(2))
     job_env_dict['valid_hr_end'] = (valid_hr_list[-1].zfill(2))
     init_hr_list = (
-        os.environ['fcyc_list']\
+        os.environ['inithour_list']\
         .split(' ')
     )
     job_env_dict['init_hr_start'] = (init_hr_list[0].zfill(2))
@@ -3811,7 +3807,7 @@ def initialize_job_env_dict(verif_type, group,
             job_env_dict['valid_hr_end'] = str(valid_hr_end).zfill(2)
             job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
         verif_type_init_hr_list = (
-            os.environ[verif_case_step_abbrev_type+'_fcyc_list']\
+            os.environ[verif_case_step_abbrev_type+'_inithour_list']\
             .split(' ')
         )
         job_env_dict['init_hr_start'] = (
