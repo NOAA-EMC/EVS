@@ -92,7 +92,7 @@ for  obsv in ccpa ; do
          exit
        fi
 
-       if [ $SENDCOM = yes ]; then
+       if [ $SENDCOM = YES ]; then
        echo "cp \$output_base/stat/*.stat $COMOUTsmall" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
        fi
 
