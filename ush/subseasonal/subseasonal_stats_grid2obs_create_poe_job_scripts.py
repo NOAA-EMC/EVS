@@ -2,7 +2,9 @@
 '''
 Program Name: subseasonal_stats_grid2obs_create_poe_job_scripts.py
 Contact(s): Shannon Shields
-Abstract: This creates subseasonal grid2obs stats POE job scripts. These
+Abstract: This script is run by exevs_subseasonal_grid2obs_stats.sh
+          in scripts/stats/subseasonal.
+          This creates subseasonal grid2obs stats POE job scripts. These
           jobs contain all the necessary environment variables
           and commands needed to run the specific
           use case.

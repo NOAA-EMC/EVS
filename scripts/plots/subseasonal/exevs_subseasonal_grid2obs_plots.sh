@@ -1,8 +1,9 @@
 #!/bin/bash
 # Program Name: exevs_subseasonal_grid2obs_plots.sh
 # Author(s)/Contact(s): Shannon Shields
-# Abstract: This script generates grid-to-obs verification plots
-#           using python for the subseasonal models
+# Abstract: This script is run by JEVS_SUBSEASONAL_PLOTS in jobs/.
+#           This script generates grid-to-obs verification plots
+#           using python for the subseasonal models.
 # History Log:
 
 set -x
@@ -91,7 +92,7 @@ if [ $SENDCOM = YES ]; then
     for VERIF_TYPE_SUBDIR_PATH in $DATA/$VERIF_CASE_STEP/plot_output/$RUN.${end_date}/images/*; do
 	VERIF_TYPE_SUBDIR=$(echo ${VERIF_TYPE_SUBDIR_PATH##*/})
 	cd $VERIF_TYPE_SUBDIR
-	large_tar_file=${DATA}/${VERIF_CASE_STEP}/plot_output/${RUN}.${end_date}/images/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_prepbufr.last${NDAYS}days.v${PDYm2}.tar
+	large_tar_file=${DATA}/${VERIF_CASE_STEP}/plot_output/${RUN}.${end_date}/images/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${PDYm2}.tar
         tar -cvf $large_tar_file *.tar
 	cp -v $large_tar_file $COMOUT/.
     done
