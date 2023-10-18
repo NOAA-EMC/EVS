@@ -21,7 +21,7 @@ export KEEPDATA=YES
 export job=${PBS_JOBNAME:-jevs_global_det_atmos_ecmwf_grid2obs_stats}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
-export cyc=00
+export vhr=00
 
 source $HOMEevs/versions/run.ver
 module reset
