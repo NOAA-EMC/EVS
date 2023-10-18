@@ -43,7 +43,7 @@ mkdir -p ${DATA}/logs
 mkdir -p ${DATA}/confs
 mkdir -p ${DATA}/tmp
 
-inithours='0 12'
+vhours='0 12'
 
 lead_hours='0 12 24 36 48 60 72
             84 96 108 120 132 144 156
@@ -58,7 +58,7 @@ cd ${DATA}
 ############################################
 echo ' '
 echo 'Creating point_stat files'
-for vhr in ${inithours} ; do
+for vhr in ${vhours} ; do
     vhr2=$(printf "%02d" "${vhr}")
     if [ ${vhr2} = '00' ] ; then
       climo_level_str="'{ name=\"HTSGW\"; level=\"(0,*,*)\"; }'"
