@@ -22,21 +22,21 @@ for MODEL in $MODELNAME; do
     echo ' '
     # Copy the GFS 0.25 degree wave forecast files
     if [ $MODEL == "gfs" ]; then
-        cycles='00 06 12 18'
+        inithours='00 06 12 18'
         lead_hours='000 006 012 018 024 030 036 042 048 054 060 066 072 078
             084 090 096 102 108 114 120 126 132 138 144 150 156 162
             168 174 180 186 192 198 204 210 216 222 228 234 240 246
             252 258 264 270 276 282 288 294 300 306 312 318 324 330
             336 342 348 354 360 366 372 378 384'
-        for cyc in ${cycles} ; do
+        for inithour in ${inithours} ; do
             for hr in ${lead_hours} ; do
-                input_filename="${COMINgfs}/${cyc}/wave/gridded/gfswave.t${cyc}z.global.0p25.f${hr}.grib2"
-                tmp_filename="${DATA}/gfswave.${INITDATE}.t${cyc}z.global.0p25.f${hr}.grib2"
-                output_filename="$COMOUT.${INITDATE}/${MODEL}/gfswave.${INITDATE}.t${cyc}z.global.0p25.f${hr}.grib2"
+                input_filename="${COMINgfs}/${inithour}/wave/gridded/gfswave.t${inithour}z.global.0p25.f${hr}.grib2"
+                tmp_filename="${DATA}/gfswave.${INITDATE}.t${inithour}z.global.0p25.f${hr}.grib2"
+                output_filename="$COMOUT.${INITDATE}/${MODEL}/gfswave.${INITDATE}.t${inithour}z.global.0p25.f${hr}.grib2"
                 if [ ! -s $input_filename ] ; then
                     if [ $SENDMAIL = YES ] ; then
                         export subject="F${hr} GFS Forecast Data Missing for EVS ${COMPONENT}"
-                        echo "Warning: No GFS forecast was available for ${INITDATE}${cyc}f${hr}" > mailmsg
+                        echo "Warning: No GFS forecast was available for ${INITDATE}${inithour}f${hr}" > mailmsg
                         echo "Missing file is ${input_filename}" >> mailmsg
                         echo "Job ID: $jobid" >> mailmsg
                         cat mailmsg | mail -s "$subject" $maillist
