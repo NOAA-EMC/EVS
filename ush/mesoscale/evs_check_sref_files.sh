@@ -6,7 +6,7 @@ typeset -Z2 cyc
 
 missing=0 
 for cyc in 00 06 12 18 ; do
-  if [ ! -s $COMINprepbufr/gfs.${vday}/${cyc}/atmos/gfs.t${cyc}z.prepbufr ] ; then
+  if [ ! -s $COMINobsproc/gfs.${vday}/${cyc}/atmos/gfs.t${cyc}z.prepbufr ] ; then
     missing=$((missing + 1 ))
   fi
 done
