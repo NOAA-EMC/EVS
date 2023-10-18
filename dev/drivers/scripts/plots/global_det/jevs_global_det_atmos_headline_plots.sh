@@ -22,7 +22,7 @@ export SENDDBN=NO
 export job=${PBS_JOBNAME:-jevs_global_det_atmos_headline_plots}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
-export cyc=00
+export vhr=00
 
 source $HOMEevs/versions/run.ver
 module reset
