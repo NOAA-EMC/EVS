@@ -23,6 +23,7 @@ matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import matplotlib.dates as md
 import global_det_atmos_util as gda_util
+import global_det_atmos_long_term_util as gdalt_util
 import matplotlib.gridspec as gridspec
 import itertools
 from global_det_atmos_plots_specs import PlotSpecs
@@ -114,7 +115,7 @@ class LongTermUsefulForecastDays:
         # Create merged dataset of verification systems
         if self.var_name == 'APCP':
             model_group_merged_df = (
-                gda_util.merge_precip_long_term_stats_datasets(
+                gdalt_util.merge_precip_long_term_stats_datasets(
                     self.logger, self.input_dir, self.time_range,
                     self.date_dt_list, self.model_group, self.model_list,
                     self.var_name, self.var_level, self.var_thresh,
@@ -123,7 +124,7 @@ class LongTermUsefulForecastDays:
             )
         else:
             model_group_merged_df = (
-                gda_util.merge_grid2grid_long_term_stats_datasets(
+                gdalt_util.merge_grid2grid_long_term_stats_datasets(
                     self.logger, self.input_dir, self.time_range,
                     self.date_dt_list, self.model_group, self.model_list,
                     self.var_name, self.var_level, self.var_thresh,
@@ -581,7 +582,7 @@ class LongTermUsefulForecastDays:
         # Create merged dataset of verification systems
         if self.var_name == 'APCP':
             model_group_merged_df = (
-                gda_util.merge_precip_long_term_stats_datasets(
+                gdalt_util.merge_precip_long_term_stats_datasets(
                     self.logger, self.input_dir, self.time_range,
                     self.date_dt_list, self.model_group, self.model_list,
                     self.var_name, self.var_level, self.var_thresh,
@@ -590,7 +591,7 @@ class LongTermUsefulForecastDays:
             )
         else:
             model_group_merged_df = (
-                gda_util.merge_grid2grid_long_term_stats_datasets(
+                gdalt_util.merge_grid2grid_long_term_stats_datasets(
                     self.logger, self.input_dir, self.time_range,
                     self.date_dt_list, self.model_group, self.model_list,
                     self.var_name, self.var_level, self.var_thresh,
