@@ -84,6 +84,17 @@ for group in condense_stats filter_stats make_plots tar_images; do
     fi
 done
 
+# Cat the plotting log files
+log_dir=$DATA/${VERIF_CASE}_${STEP}/plot_output/logs
+log_file_count=$(find $log_dir -type f |wc -l)
+if [[ $log_file_count -ne 0 ]]; then
+    for log_file in $log_dir/*; do
+        echo "Start: $log_file"
+        cat $log_file
+        echo "End: $log_file"
+    done
+fi
+
 # Copy files to desired location
 if [ $SENDCOM = YES ]; then
     # Make and copy tar file
