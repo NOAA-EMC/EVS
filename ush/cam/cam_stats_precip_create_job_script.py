@@ -39,6 +39,7 @@ MET_CONFIG_OVERRIDES = os.environ['MET_CONFIG_OVERRIDES']
 machine_conf = os.path.join(
     os.environ['PARMevs'], 'metplus_config', 'machine.conf'
 )
+COMPLETED_JOBS_FILE = os.environ['COMPLETED_JOBS_FILE']
 if job_type == 'reformat':
     VERIF_TYPE = os.environ['VERIF_TYPE']
     NEST = os.environ['NEST']
@@ -230,6 +231,7 @@ if VERIF_CASE == 'precip':
             'bash_conditional': '',
             'bash_conditional_value': ''
         }
+
 # Make a list of commands needed to run this particular job
 metplus_launcher = 'run_metplus.py'
 job_cmd_list_iterative = []
@@ -239,95 +241,225 @@ if VERIF_CASE == 'precip':
         pass
     elif STEP == 'stats':
         if job_type == 'reformat':
-            job_cmd_list_iterative.append(
-                f'{metplus_launcher} -c {machine_conf} '
-                + f'-c {MET_PLUS_CONF}/'
-                + f'PCPCombine_fcst{COMPONENT.upper()}_obs{OBSNAME.upper()}.conf'
-            )
-            job_cmd_list.append(
-                f'python -c '
-                + '\"import cam_util as cutil; cutil.copy_data_to_restart('
-                + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
-                + 'verif_case=\\\"${VERIF_CASE}\\\", '
-                + 'verif_type=\\\"${VERIF_TYPE}\\\", '
-                + 'vx_mask=\\\"${NEST}\\\", '
-                + 'met_tool=\\\"pcp_combine\\\", '
-                + 'vdate=\\\"${VDATE}\\\", '
-                + 'vhour=\\\"${VHOUR}\\\", '
-                + 'fhr_start=\\\"${FHR_START}\\\", '
-                + 'fhr_end=\\\"${FHR_END}\\\", '
-                + 'fhr_incr=\\\"${FHR_INCR}\\\", '
-                + 'model=\\\"${MODELNAME}\\\", '
-                + 'acc=\\\"${ACC}\\\"'
-                + ')\"'
-            )
+            if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
+                job_cmd_list_iterative.append(
+                    f'#jobs were restarted, and the following has already run successfully'
+                )
+                job_cmd_list_iterative.append(
+                    f'#{metplus_launcher} -c {machine_conf} '
+                    + f'-c {MET_PLUS_CONF}/'
+                    + f'PCPCombine_fcst{COMPONENT.upper()}_obs{OBSNAME.upper()}.conf'
+                )
+                job_cmd_list.append(
+                    f'#python -c '
+                    + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                    + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                    + 'verif_case=\\\"${VERIF_CASE}\\\", '
+                    + 'verif_type=\\\"${VERIF_TYPE}\\\", '
+                    + 'vx_mask=\\\"${NEST}\\\", '
+                    + 'met_tool=\\\"pcp_combine\\\", '
+                    + 'vdate=\\\"${VDATE}\\\", '
+                    + 'vhour=\\\"${VHOUR}\\\", '
+                    + 'fhr_start=\\\"${FHR_START}\\\", '
+                    + 'fhr_end=\\\"${FHR_END}\\\", '
+                    + 'fhr_incr=\\\"${FHR_INCR}\\\", '
+                    + 'model=\\\"${MODELNAME}\\\", '
+                    + 'acc=\\\"${ACC}\\\"'
+                    + ')\"'
+                )
+            else:
+                job_cmd_list_iterative.append(
+                    f'{metplus_launcher} -c {machine_conf} '
+                    + f'-c {MET_PLUS_CONF}/'
+                    + f'PCPCombine_fcst{COMPONENT.upper()}_obs{OBSNAME.upper()}.conf'
+                )
+                job_cmd_list.append(
+                    f'python -c '
+                    + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                    + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                    + 'verif_case=\\\"${VERIF_CASE}\\\", '
+                    + 'verif_type=\\\"${VERIF_TYPE}\\\", '
+                    + 'vx_mask=\\\"${NEST}\\\", '
+                    + 'met_tool=\\\"pcp_combine\\\", '
+                    + 'vdate=\\\"${VDATE}\\\", '
+                    + 'vhour=\\\"${VHOUR}\\\", '
+                    + 'fhr_start=\\\"${FHR_START}\\\", '
+                    + 'fhr_end=\\\"${FHR_END}\\\", '
+                    + 'fhr_incr=\\\"${FHR_INCR}\\\", '
+                    + 'model=\\\"${MODELNAME}\\\", '
+                    + 'acc=\\\"${ACC}\\\"'
+                    + ')\"'
+                )
+                job_cmd_list.append(
+                    "python -c "
+                    + f"'import cam_util; cam_util.mark_job_completed("
+                    + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
+                    + f"\"job{njob}\", job_type=\"{job_type}\")'"
+                )
         if job_type == 'generate':
-            job_cmd_list_iterative.append(
-                f'{metplus_launcher} -c {machine_conf} '
-                + f'-c {MET_PLUS_CONF}/'
-                + f'GridStat_fcst{COMPONENT.upper()}_obs{OBSNAME.upper()}.conf'
-            )
-            job_cmd_list_iterative.append(
-                f'python -c '
-                + '\"import cam_util as cutil; cutil.copy_data_to_restart('
-                + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
-                + 'verif_case=\\\"${VERIF_CASE}\\\", '
-                + 'verif_type=\\\"${VERIF_TYPE}\\\", '
-                + 'met_tool=\\\"grid_stat\\\", '
-                + 'vdate=\\\"${VDATE}\\\", '
-                + 'vhour=\\\"${VHOUR}\\\", '
-                + 'fhr_start=\\\"${FHR_START}\\\", '
-                + 'fhr_end=\\\"${FHR_END}\\\", '
-                + 'fhr_incr=\\\"${FHR_INCR}\\\", '
-                + 'model=\\\"${MODELNAME}\\\", '
-                + 'acc=\\\"${ACC}\\\", '
-                + 'nbrhd=\\\"${BOOL_NBRHD}\\\"'
-                + ')\"'
-            )
+            if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
+                job_cmd_list_iterative.append(
+                    f'#jobs were restarted, and the following has already run successfully'
+                )
+                job_cmd_list_iterative.append(
+                    f'#{metplus_launcher} -c {machine_conf} '
+                    + f'-c {MET_PLUS_CONF}/'
+                    + f'GridStat_fcst{COMPONENT.upper()}_obs{OBSNAME.upper()}.conf'
+                )
+                job_cmd_list_iterative.append(
+                    f'#python -c '
+                    + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                    + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                    + 'verif_case=\\\"${VERIF_CASE}\\\", '
+                    + 'verif_type=\\\"${VERIF_TYPE}\\\", '
+                    + 'met_tool=\\\"grid_stat\\\", '
+                    + 'vdate=\\\"${VDATE}\\\", '
+                    + 'vhour=\\\"${VHOUR}\\\", '
+                    + 'fhr_start=\\\"${FHR_START}\\\", '
+                    + 'fhr_end=\\\"${FHR_END}\\\", '
+                    + 'fhr_incr=\\\"${FHR_INCR}\\\", '
+                    + 'model=\\\"${MODELNAME}\\\", '
+                    + 'acc=\\\"${ACC}\\\", '
+                    + 'nbrhd=\\\"${BOOL_NBRHD}\\\"'
+                    + ')\"'
+                )
+            else:
+                job_cmd_list_iterative.append(
+                    f'{metplus_launcher} -c {machine_conf} '
+                    + f'-c {MET_PLUS_CONF}/'
+                    + f'GridStat_fcst{COMPONENT.upper()}_obs{OBSNAME.upper()}.conf'
+                )
+                job_cmd_list_iterative.append(
+                    f'python -c '
+                    + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                    + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                    + 'verif_case=\\\"${VERIF_CASE}\\\", '
+                    + 'verif_type=\\\"${VERIF_TYPE}\\\", '
+                    + 'met_tool=\\\"grid_stat\\\", '
+                    + 'vdate=\\\"${VDATE}\\\", '
+                    + 'vhour=\\\"${VHOUR}\\\", '
+                    + 'fhr_start=\\\"${FHR_START}\\\", '
+                    + 'fhr_end=\\\"${FHR_END}\\\", '
+                    + 'fhr_incr=\\\"${FHR_INCR}\\\", '
+                    + 'model=\\\"${MODELNAME}\\\", '
+                    + 'acc=\\\"${ACC}\\\", '
+                    + 'nbrhd=\\\"${BOOL_NBRHD}\\\"'
+                    + ')\"'
+                )
+                job_cmd_list.append(
+                    "python -c "
+                    + f"'import cam_util; cam_util.mark_job_completed("
+                    + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
+                    + f"\"job{njob}\", job_type=\"{job_type}\")'"
+                )
         elif job_type == 'gather':
-            job_cmd_list.append(
-                f'{metplus_launcher} -c {machine_conf} '
-                + f'-c {MET_PLUS_CONF}/'
-                + f'StatAnalysis_fcst{COMPONENT.upper()}_obs{OBSNAME.upper()}'
-                + f'_GatherByDay.conf'
-            )
-            job_cmd_list.append(
-                f'python -c '
-                + '\"import cam_util as cutil; cutil.copy_data_to_restart('
-                + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
-                + 'verif_case=\\\"${VERIF_CASE}\\\", '
-                + 'verif_type=\\\"${VERIF_TYPE}\\\", '
-                + 'met_tool=\\\"stat_analysis\\\", '
-                + 'vdate=\\\"${VDATE}\\\", '
-                + 'net=\\\"${NET}\\\", '
-                + 'step=\\\"${STEP}\\\", '
-                + 'model=\\\"${MODELNAME}\\\", '
-                + 'run=\\\"${RUN}\\\", '
-                + f'job_type=\\\"{job_type}\\\"'
-                + ')\"'
-            )
+            if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
+                job_cmd_list_iterative.append(
+                    f'#jobs were restarted, and the following has already run successfully'
+                )
+                job_cmd_list.append(
+                    f'#{metplus_launcher} -c {machine_conf} '
+                    + f'-c {MET_PLUS_CONF}/'
+                    + f'StatAnalysis_fcst{COMPONENT.upper()}_obs{OBSNAME.upper()}'
+                    + f'_GatherByDay.conf'
+                )
+                job_cmd_list.append(
+                    f'#python -c '
+                    + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                    + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                    + 'verif_case=\\\"${VERIF_CASE}\\\", '
+                    + 'verif_type=\\\"${VERIF_TYPE}\\\", '
+                    + 'met_tool=\\\"stat_analysis\\\", '
+                    + 'vdate=\\\"${VDATE}\\\", '
+                    + 'net=\\\"${NET}\\\", '
+                    + 'step=\\\"${STEP}\\\", '
+                    + 'model=\\\"${MODELNAME}\\\", '
+                    + 'run=\\\"${RUN}\\\", '
+                    + f'job_type=\\\"{job_type}\\\"'
+                    + ')\"'
+                )
+            else:
+                job_cmd_list.append(
+                    f'{metplus_launcher} -c {machine_conf} '
+                    + f'-c {MET_PLUS_CONF}/'
+                    + f'StatAnalysis_fcst{COMPONENT.upper()}_obs{OBSNAME.upper()}'
+                    + f'_GatherByDay.conf'
+                )
+                job_cmd_list.append(
+                    f'python -c '
+                    + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                    + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                    + 'verif_case=\\\"${VERIF_CASE}\\\", '
+                    + 'verif_type=\\\"${VERIF_TYPE}\\\", '
+                    + 'met_tool=\\\"stat_analysis\\\", '
+                    + 'vdate=\\\"${VDATE}\\\", '
+                    + 'net=\\\"${NET}\\\", '
+                    + 'step=\\\"${STEP}\\\", '
+                    + 'model=\\\"${MODELNAME}\\\", '
+                    + 'run=\\\"${RUN}\\\", '
+                    + f'job_type=\\\"{job_type}\\\"'
+                    + ')\"'
+                )
+                job_cmd_list.append(
+                    "python -c "
+                    + f"'import cam_util; cam_util.mark_job_completed("
+                    + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
+                    + f"\"job{njob}\", job_type=\"{job_type}\")'"
+                )
         elif job_type == 'gather2':
-            job_cmd_list.append(
-                f'{metplus_launcher} -c {machine_conf} '
-                + f'-c {MET_PLUS_CONF}/'
-                + f'StatAnalysis_fcst{COMPONENT.upper()}'
-                + f'_GatherByCycle.conf'
-            )
-            job_cmd_list.append(
-                f'python -c '
-                + '\"import cam_util as cutil; cutil.copy_data_to_restart('
-                + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
-                + 'verif_case=\\\"${VERIF_CASE}\\\", '
-                + 'met_tool=\\\"stat_analysis\\\", '
-                + 'vdate=\\\"${VDATE}\\\", '
-                + 'net=\\\"${NET}\\\", '
-                + 'step=\\\"${STEP}\\\", '
-                + 'model=\\\"${MODELNAME}\\\", '
-                + 'run=\\\"${RUN}\\\", '
-                + 'cyc=\\\"${cyc}\\\", '
-                + f'job_type=\\\"{job_type}\\\"'
-                + ')\"'
-            )
+            if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
+                job_cmd_list_iterative.append(
+                    f'#jobs were restarted, and the following has already run successfully'
+                )
+                job_cmd_list.append(
+                    f'#{metplus_launcher} -c {machine_conf} '
+                    + f'-c {MET_PLUS_CONF}/'
+                    + f'StatAnalysis_fcst{COMPONENT.upper()}'
+                    + f'_GatherByCycle.conf'
+                )
+                job_cmd_list.append(
+                    f'#python -c '
+                    + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                    + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                    + 'verif_case=\\\"${VERIF_CASE}\\\", '
+                    + 'met_tool=\\\"stat_analysis\\\", '
+                    + 'vdate=\\\"${VDATE}\\\", '
+                    + 'net=\\\"${NET}\\\", '
+                    + 'step=\\\"${STEP}\\\", '
+                    + 'model=\\\"${MODELNAME}\\\", '
+                    + 'run=\\\"${RUN}\\\", '
+                    + 'cyc=\\\"${cyc}\\\", '
+                    + f'job_type=\\\"{job_type}\\\"'
+                    + ')\"'
+                )
+            else:
+                job_cmd_list.append(
+                    f'{metplus_launcher} -c {machine_conf} '
+                    + f'-c {MET_PLUS_CONF}/'
+                    + f'StatAnalysis_fcst{COMPONENT.upper()}'
+                    + f'_GatherByCycle.conf'
+                )
+                job_cmd_list.append(
+                    f'python -c '
+                    + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                    + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                    + 'verif_case=\\\"${VERIF_CASE}\\\", '
+                    + 'met_tool=\\\"stat_analysis\\\", '
+                    + 'vdate=\\\"${VDATE}\\\", '
+                    + 'net=\\\"${NET}\\\", '
+                    + 'step=\\\"${STEP}\\\", '
+                    + 'model=\\\"${MODELNAME}\\\", '
+                    + 'run=\\\"${RUN}\\\", '
+                    + 'cyc=\\\"${cyc}\\\", '
+                    + f'job_type=\\\"{job_type}\\\"'
+                    + ')\"'
+                )
+                job_cmd_list.append(
+                    "python -c "
+                    + f"'import cam_util; cam_util.mark_job_completed("
+                    + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
+                    + f"\"job{njob}\", job_type=\"{job_type}\")'"
+                )
         elif job_type == 'gather3':
             job_cmd_list.append(
                 f'{metplus_launcher} -c {machine_conf} '

@@ -32,7 +32,7 @@ domains = ['conus','alaska']
 
 for domain in domains:
 
-    MRMS_PROD_DIR = os.environ['COMINmrms']+'/'+domain
+    MRMS_PROD_DIR = os.environ['DCOMINmrms']+'/'+domain
     TMP_DIR = os.environ['DATA']+'/MRMS_'+domain+'_tmp'
 
     # Set up working directory

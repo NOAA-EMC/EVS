@@ -303,7 +303,7 @@ if [ $data = mrms ] ; then
 
 export accum
 
- if [ -s $COMINmrms/MultiSensor_QPE_03H_Pass2_00.00_${vday}-120000.grib2.gz ] ; then 
+ if [ -s $DCOMINmrms/MultiSensor_QPE_03H_Pass2_00.00_${vday}-120000.grib2.gz ] ; then 
 
   for accum in 01 03 24 ; do 	
 
@@ -327,7 +327,7 @@ export accum
     export vend=$vday$cyc
    
 
-    mrms03=$COMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${cyc}0000.grib2.gz
+    mrms03=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${cyc}0000.grib2.gz
     cp $mrms03 $mrmsdir/.
     gunzip MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${cyc}0000.grib2.gz
     export MET_GRIB_TABLES=$PARMevs/metplus_config/cam/precip/prep/grib2_mrms_qpf.txt
@@ -354,7 +354,7 @@ export accum
   if [ $SENDMAIL = YES ] ; then
    export subject="MRMS Data Missing for EVS ${COMPONENT}"
    echo "Warning:  No MRMS data available for ${VDATE}" > mailmsg
-   echo Missing file is $COMINmrms/MultiSensor_QPE_??H_Pass2_00.00_${vday}-120000.grib2.gz  >> mailmsg
+   echo Missing file is $DCOMINmrms/MultiSensor_QPE_??H_Pass2_00.00_${vday}-120000.grib2.gz  >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $maillist
    exit
