@@ -959,7 +959,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
 #              + f'{date_start_string} to {date_end_string}, {frange_string}'
     fcst_day=int(flead[0]/24)
     title3 = (f'{str(date_type).lower()} {date_start_string} - {date_end_string}, '
-              + f'cycles: {date_hours_string} Forecast Day {fcst_day} (Hour {flead[0]})')
+              + f'init: {date_hours_string} Forecast Day {fcst_day} (Hour {flead[0]})')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
         title_pad=40

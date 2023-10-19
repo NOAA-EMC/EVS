@@ -44,7 +44,6 @@ export KEEPDATA=${KEEPDATA:-YES}
 
 export maillist='alicia.bentley@noaa.gov,samira.ardani@noaa.gov'
 
-export cycle=t00z
 
 ## developers directories
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
