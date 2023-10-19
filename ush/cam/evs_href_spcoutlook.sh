@@ -11,7 +11,7 @@ set -x
  
 
 tail='/cam'
-prefix=${COMINspcotlk%%$tail*}
+prefix=${EVSINspcotlk%%$tail*}
 index=${#prefix}
 echo $index
 
@@ -19,9 +19,9 @@ day1=`$NDATE -24 ${VDATE}00 |cut -c1-8`
 day2=`$NDATE -48 ${VDATE}00 |cut -c1-8`
 day3=`$NDATE -72 ${VDATE}00 |cut -c1-8`
 
-mask_day1=${COMINspcotlk:0:$index}/cam/spc_otlk.$day1
-mask_day2=${COMINspcotlk:0:$index}/cam/spc_otlk.$day2
-mask_day3=${COMINspcotlk:0:$index}/cam/spc_otlk.$day3
+mask_day1=${EVSINspcotlk:0:$index}/cam/spc_otlk.$day1
+mask_day2=${EVSINspcotlk:0:$index}/cam/spc_otlk.$day2
+mask_day3=${EVSINspcotlk:0:$index}/cam/spc_otlk.$day3
 
 
 if [ ! -d  $mask_day1 ] && [ ! -d  $mask_day2 ] && [ ! -d  $mask_day3 ] ; then

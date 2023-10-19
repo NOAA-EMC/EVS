@@ -28,28 +28,28 @@ obs_ppf_found=0
 export obs_lsr_file=spc_lsr.${REP_DATE}/spc.lsr.${REP_DATE}12_${VDATE}12.G211.nc
 export obs_ppf_file=spc_lsr.${REP_DATE}/spc.ppf.${REP_DATE}12_${VDATE}12.G211.nc
 
-if [ -s $COMINspclsr/${obs_lsr_file} ]; then
+if [ -s $EVSINspclsr/${obs_lsr_file} ]; then
    obs_lsr_found=1
 
 else
    if [ $SENDMAIL = YES ]; then
       export subject="SPC LSR Prep Data Missing for EVS ${COMPONENT}"
       echo "Warning: The ${REP_DATE} SPC LSR file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-      echo "Missing file is $COMINspclsr/${obs_lsr_file}" >> mailmsg
+      echo "Missing file is $EVSINspclsr/${obs_lsr_file}" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $maillist
    fi
 
 fi
 
-if [ -s $COMINspclsr/${obs_ppf_file} ]; then
+if [ -s $EVSINspclsr/${obs_ppf_file} ]; then
    obs_ppf_found=1
 
 else
    if [ $SENDMAIL = YES ]; then
       export subject="SPC LSR Prep Data Missing for EVS ${COMPONENT}"
       echo "Warning: The ${REP_DATE} SPC PPF file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
-      echo "Missing file is $COMINspclsr/${obs_ppf_file}" >> mailmsg
+      echo "Missing file is $EVSINspclsr/${obs_ppf_file}" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $maillist
    fi
@@ -59,7 +59,7 @@ fi
 
 ############################################################
 # Define Mask List and Include SPC OLTKs if Valid
-# Mask Files Exist in COMINspcotlk
+# Mask Files Exist in EVSINspcotlk
 ############################################################
 
 export VERIF_GRID=G211
@@ -126,13 +126,13 @@ while [ $fhr -le $fhr_max ]; do
    export fcst_file=${modsys}.${IDATE}/${MODELNAME}.t${INIT_HR}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr}.nc
    export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${MODELNAME}.t{init?fmt=%2H}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f{lead?fmt=%2H}.nc
 
-   if [ -s $COMINfcst/${fcst_file} ]; then
+   if [ -s $EVSINfcst/${fcst_file} ]; then
       echo $fhr >> $DATA/fcst_list
       nfcst=$((nfcst+1))
       fcst_found=1
 
    else
-      echo "Missing file is $COMINfcst/${fcst_file}\n" >> $DATA/missing_fcst_list
+      echo "Missing file is $EVSINfcst/${fcst_file}\n" >> $DATA/missing_fcst_list
 
    fi
 

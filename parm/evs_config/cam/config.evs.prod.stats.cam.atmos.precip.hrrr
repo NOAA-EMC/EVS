@@ -5,7 +5,7 @@
 # NAME: config.evs.prod.stats.cam.atmos.precip.hrrr 
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Set up configurations to run EVS HRRR Precipitation - Statistics
-# DEPENDENCIES: $HOMEevs/ecf/cam/stats/jevs_hrrr_precip_stats.ecf
+# DEPENDENCIES: $HOMEevs/scripts/stats/cam/exevs_hrrr_precip_stats.sh
 # 
 # =============================================================================
 
@@ -17,6 +17,7 @@ export MET_CONFIG_OVERRIDES=""
 
 # Restart Settings
 export RESTART_DIR="${COMOUTsmall}/restart/c${cyc}"
+export COMPLETED_JOBS_FILE="completed_jobs.txt"
 
 # Time Settings
 export FHR_END_FULL="48"
@@ -89,7 +90,7 @@ if [ "$BOOL_NBRHD" = True ]; then
     export NBRHD_WIDTHS="1,3,5,7,9,11,13,17,21,25,31,35,39,43,47,53,57,63"
     if [ "$NEST" = "conus" ]; then
         export VERIF_TYPE="ccpa"
-        export COMINobs=${COMINccpa}
+        export COMINobs=${EVSINccpa}
         export OBSNAME="ccpa"
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
@@ -98,7 +99,7 @@ if [ "$BOOL_NBRHD" = True ]; then
         export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G240_CONUS.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_South.nc"
     elif [ "$NEST" = "ak" ]; then
         export VERIF_TYPE="mrms"
-        export COMINobs=${COMINmrms}
+        export COMINobs=${EVSINmrms}
         export OBSNAME="mrms"
         export FHR_INCR_SHORT="3"
         export MIN_IHOUR="00"
@@ -115,7 +116,7 @@ else
     export NBRHD_WIDTHS="1"
     if [ "$NEST" = "conus" ]; then
         export VERIF_TYPE="ccpa"
-        export COMINobs=${COMINccpa}
+        export COMINobs=${EVSINccpa}
         export OBSNAME="ccpa"
         export FHR_INCR_SHORT="1"
         export MIN_IHOUR="00"
@@ -124,7 +125,7 @@ else
         export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G212_CONUS.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_South.nc"
     elif [ "$NEST" = "ak" ]; then
         export VERIF_TYPE="mrms"
-        export COMINobs=${COMINmrms}
+        export COMINobs=${EVSINmrms}
         export OBSNAME="mrms"
         export FHR_INCR_SHORT="3"
         export MIN_IHOUR="00"
