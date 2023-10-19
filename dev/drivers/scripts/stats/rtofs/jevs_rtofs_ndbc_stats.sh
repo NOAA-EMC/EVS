@@ -31,8 +31,11 @@ export COMPONENT=rtofs
 
 source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
+export evs_ver=1.0.0
+evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
+
 # set up COMIN and COMROOT
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
