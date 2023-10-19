@@ -52,7 +52,6 @@ source $config
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
 export COMOUT=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver}/$STEP/$COMPONENT
-export COMINnam=${COMIN}/stats/${COMPONENT}/${MODELNAME}
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_CAM_PLOTS

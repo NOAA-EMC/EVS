@@ -32,7 +32,7 @@ export verify=$VERIF_CASE
 export run_mpi=${run_mpi:-'yes'}
 
 export COMHREF=$COMINhref
-export PREPBUFR=$COMINprepbufr
+export PREPBUFR=$COMINobsproc
 
 export GATHER_CONF_PRECIP=$PRECIP_CONF
 export GRID2OBS_CONF=$PARMevs/metplus_config/$STEP/$COMPONENT/grid2obs
@@ -42,8 +42,7 @@ export maskpath=$MASKS
 export vday=$VDATE
 
 #Define the spc outlook reqions mask file path
-export COMINspcoutlook=${COMINspcoutlook:-$(compath.py -o ${NET}/${evs_ver})/prep/$COMPONENT/href}
-export SPCoutlookMask=$COMINspcoutlook/spc.$VDATE
+export SPCoutlookMask=$EVSINspcotlk/$MODELNAME/spc.$VDATE
 
 
 

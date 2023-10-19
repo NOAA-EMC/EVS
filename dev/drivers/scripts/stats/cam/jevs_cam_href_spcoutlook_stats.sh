@@ -34,14 +34,12 @@ export cyc=00
 export run_mpi=yes
 export gather=yes
 
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export envir=prod
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export jobid=$job.${PBS_JOBID:-$$}
-
-#Define the spc outlook reqions mask file path
-export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/${USER}/evs/v1.0/prep/cam
 
 
 export maillist='alicia.bentley@noaa.gov,binbin.zhou@noaa.gov'

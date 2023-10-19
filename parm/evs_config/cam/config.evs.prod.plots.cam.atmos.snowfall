@@ -5,7 +5,7 @@
 # NAME: config.evs.prod.plots.cam.atmos.snowfall
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Set up configurations to run EVS CAM Snowfall - Plots
-# DEPENDENCIES: $HOMEevs/ecf/cam/plots/jevs_cam_snowfall_plots.ecf
+# DEPENDENCIES: $HOMEevs/scripts/plots/cam/exevs_cam_snowfall_plots.sh
 # 
 # =============================================================================
 
@@ -24,7 +24,7 @@ export LOG_TEMPLATE="${SAVE_DIR}/logs/EVS_verif_plotting_job{njob}_`date '+%Y%m%
 export LOG_LEVEL="DEBUG"
 
 # Model/Obs Settings
-export STAT_OUTPUT_BASE_DIR="${COMIN}"
+export STAT_OUTPUT_BASE_DIR="${COMIN}/stats/${COMPONENT}"
 export STAT_OUTPUT_BASE_TEMPLATE="{MODEL}.{valid?fmt=%Y%m%d}/${NET}.stats.{MODEL}.${RUN}.${VERIF_CASE}.v{valid?fmt=%Y%m%d}.stat"
 
 # Additional Verification Settings
