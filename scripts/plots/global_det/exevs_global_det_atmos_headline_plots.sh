@@ -25,6 +25,17 @@ if [ $SENDCOM = YES ]; then
     cp -v $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar $COMOUT/.
 fi
 
+# Cat the plotting log files
+log_dir=$DATA/logs
+log_file_count=$(find $log_dir -type f |wc -l)
+if [[ $log_file_count -ne 0 ]]; then
+    for log_file in $log_dir/*; do
+        echo "Start: $log_file"
+        cat $log_file
+        echo "End: $log_file"
+    done
+fi
+
 if [ $SENDDBN = YES ]; then
     $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar
 fi
