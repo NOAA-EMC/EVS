@@ -92,7 +92,9 @@ for  obsv in ccpa ; do
          exit
        fi
 
+       if [ $SENDCOM = YES ]; then
        echo "cp \$output_base/stat/*.stat $COMOUTsmall" >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
+       fi
 
        chmod +x run_sref_mpi_${domain}.${obsv}.${fhr}.sh
        echo "${DATA}/run_sref_mpi_${domain}.${obsv}.${fhr}.sh" >> run_all_sref_precip_poe

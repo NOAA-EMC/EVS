@@ -54,7 +54,7 @@ export USHevs=${USHevs:-$HOMEevs/ush}
 export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export MASKS=$FIXevs/masks
-export MET_PLUS_CONF="${PARMevs}/metplus_config/mesoscale/grid2obs/stats"
+export MET_PLUS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}"
 export cyc=${cyc:-00}
 export cycle=t${cyc}z
 setpdy.sh
@@ -62,15 +62,15 @@ setpdy.sh
 
 if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
   export VDATE=${VDATE:-$PDYm1}
-  export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
+  export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
   export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
   export COMINrap=${COMINrap:-$(compath.py ${envir}/com/rap/${rap_ver})}
   export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
   export COMINobs=$COMINobsproc
-  export COMINspcotlk=${COMINspcotlk:-$(compath.py -o $NET/$evs_ver/prep/cam)}
   export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
-  export COMINmrms=${COMINmrms:-$DCOMROOT/ldmdata/obs/upperair/mrms}
-  export COMINnohrsc=${COMINnohrsc:-$DCOMROOT}
+  export EVSINspcotlk=${EVSINspcotlk:-$COMIN/prep/cam}
+  export DCOMINmrms=${DCOMINmrms:-$DCOMROOT/ldmdata/obs/upperair/mrms}
+  export DCOMINnohrsc=${DCOMINnohrsc:-$DCOMROOT}
 
   if [ $VERIF_CASE = snowfall ]; then
       np=$(date +"%H");         nq=$(($np%6));        nr=$(($np-$nq));
@@ -88,11 +88,11 @@ if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
 elif [ $MODELNAME = sref ]; then
   export VDATE=${VDATE:-$PDYm2}
 
-  export COMIN=${COMIN:-$(compath.py  $NET/$evs_ver)}/prep/$COMPONENT/$RUN
+  export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}/prep/$COMPONENT/$RUN
   export COMINsref=${COMINsref:-$(compath.py  sref/$sref_ver)}
-  export COMINprepbufr=${COMINprepbufr:-$(compath.py  obsproc/${obsproc_ver})}
+  export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
   export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
-  export COMINsrefmean=${COMINsrefmean:-$(compath.py  $NET/$evs_ver)}/prep/$COMPONENT
+  export EVSINsrefmean=${EVSINsrefmean:-$COMIN/prep/$COMPONENT}
 
   export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}/$STEP/$COMPONENT
   mkdir -p $COMOUT
