@@ -99,19 +99,20 @@ fi
 ####################################
 # Define COMIN/COMOUT variables:
 ####################################
-export COMIN=${COMIN:-$(compath.py -o $NET/$evs_ver)}
-export COMINapcp24mean=${COMINapcp24mean:-$(compath.py $envir/com/$NET/$evs_ver)/stats/$COMPONENT}
+export EVSINapcp24mean=${EVSINapcp24mean:-$COMIN/stats/$COMPONENT}
+export EVSINccpa=${EVSINccpa:-$COMIN/prep/cam/$RUN}
+export EVSINmrms=${EVSINmrms:-$COMIN/prep/cam/$RUN}
+export EVSINspcotlk=${EVSINspcotlk:-$COMIN/prep/cam/$RUN}
+export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 export COMOUTplots=${COMOUTplots:-$COMOUT/$RUN.$VDATE}
-export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
-export COMINccpa=${COMINccpa:-$(compath.py -o $NET/$evs_ver/prep/${COMPONENT})/${RUN}}
-export COMINmrms=${COMINmrms:-$(compath.py -o $NET/$evs_ver/prep/${COMPONENT})/${RUN}}
-export COMINspcotlk=${COMINspcotlk:-$(compath.py -o $NET/$evs_ver/prep/${COMPONENT})/${RUN}}
 
-if [ $MODELNAME = sref ] ; then 
+if [ $MODELNAME = sref ] ; then
+  export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}	
   mkdir -p $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE
 else
- mkdir -p $COMOUT
+  export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}/stats
+  mkdir -p $COMOUT
 fi
 
 echo $COMPATH
