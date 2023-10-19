@@ -5,7 +5,7 @@
 # NAME: config.evs.prod.stats.cam.atmos.snowfall.hrrr 
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Set up configurations to run EVS HRRR Snowfall - Statistics
-# DEPENDENCIES: $HOMEevs/ecf/cam/stats/jevs_hrrr_snowfall_stats.ecf
+# DEPENDENCIES: $HOMEevs/scripts/stats/cam/exevs_hrrr_snowfall_stats.sh
 # 
 # =============================================================================
 
@@ -17,6 +17,7 @@ export MET_CONFIG_OVERRIDES=""
 
 # Restart Settings
 export RESTART_DIR="${COMOUTsmall}/restart/c${cyc}"
+export COMPLETED_JOBS_FILE="completed_jobs.txt"
 
 # Time Settings
 export FHR_END_FULL="48"
@@ -70,7 +71,7 @@ if [ "$BOOL_NBRHD" = True ]; then
     if [ "$NEST" = "conus" ]; then
         export FHR_INCR_SHORT="1"
         export VERIF_TYPE="nohrsc"
-        export COMINobs=${COMINsnow}
+        export COMINobs=${DCOMINsnow}
         export OBSNAME=${VERIF_TYPE}
         if [ "$OBSNAME" = "nohrsc" ]; then
             export VAR_NAME_LIST="WEASD ASNOW"
@@ -93,7 +94,7 @@ else
     if [ "$NEST" = "conus" ]; then
         export FHR_INCR_SHORT="1"
         export VERIF_TYPE="nohrsc"
-        export COMINobs=${COMINsnow}
+        export COMINobs=${DCOMINsnow}
         export OBSNAME=${VERIF_TYPE}
         if [ "$OBSNAME" = "nohrsc" ]; then
             export VAR_NAME_LIST="WEASD ASNOW"

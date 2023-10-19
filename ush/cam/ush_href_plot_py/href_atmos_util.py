@@ -47,9 +47,9 @@ def metplus_command(conf_file_name):
     machine_conf = os.path.join(os.environ['PARMevs'], 'metplus_config',
                                 'machine.conf')
     conf_file = os.path.join(os.environ['PARMevs'], 'metplus_config',
-                             os.environ['COMPONENT'],
+                             os.environ['STEP'], os.environ['COMPONENT'],
                              os.environ['RUN']+'_'+os.environ['VERIF_CASE'],
-                             os.environ['STEP'], conf_file_name)
+                             conf_file_name)
     if not os.path.exists(conf_file):
         print("ERROR: "+conf_file+" DOES NOT EXIST")
         sys.exit(1)
@@ -932,7 +932,6 @@ def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt):
         prepped_data['time'][:] = prepped_data['time'][:][0] + 43200
         prepped_data.close()
     copy_file(prepped_file, dest_file)
-
 def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
                    source_file_format, dest_file_format):
     """! This get a model file and saves it in the specificed

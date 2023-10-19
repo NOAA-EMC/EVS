@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 ##---------------------------------------------------------------------------
 ##---------------------------------------------------------------------------
 ## NCEP EMC Verification System (EVS) - GFS Atmospheric
@@ -7,6 +7,8 @@
 ## PURPOSE: Set up configurations to run EVS GFS Atmospheric standalone
 ##---------------------------------------------------------------------------
 ##--------------------------------------------------------------------------
+
+set -x
 
 echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 
@@ -39,11 +41,6 @@ export OUTPUTROOT="$DATAROOT"
 #end_date:         verification end date, format YYYYMMDD
 export start_date=$VDATE
 export end_date=$VDATE
-## DATA DIRECTIVE SETTINGS
-export KEEPDATA=${KEEPDATA:-"NO"}
-export SENDCOM="YES"
-export SENDARCH="NO"
-export SENDMETVIEWER="NO"
 ####################################################
 # SETTINGS FOR SPECIFIC USE CASES
 ####################################################

@@ -390,7 +390,7 @@ def ti_calculate(input_dict_preserve):
     # set synonyms for items
     if 'da_init' in out_dict:
         out_dict['date'] = out_dict['da_init']
-        out_dict['cycle'] = out_dict['da_init']
+        out_dict['init_hour'] = out_dict['da_init']
 
     # if lead is wildcard, skip updating other lead values
     if out_dict['lead'] == '*':

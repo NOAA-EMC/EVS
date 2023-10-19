@@ -49,4 +49,3 @@ else
     echo "$STEP is not a valid STEP for cam_precip_prep.sh (please use 'prep')"
     exit 1
 fi
-exit 0

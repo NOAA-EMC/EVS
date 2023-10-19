@@ -5,12 +5,14 @@
 #             Mallory Row / Mallory.Row@noaa.gov
 # Purpose of Script: This script generates the job scripts to create
 #                    time series plots.
-# Run By: cripts/global_det/plots/exevs_global_det_wave_grid2obs_plots.sh
+# Run By: scripts/plots/global_det/exevs_global_det_wave_grid2obs_plots.sh
 ###############################################################################
 
 #################################
 # Make the command files for cfp
 #################################
+
+set -x
 
 # set up plot variables
 
@@ -27,7 +29,8 @@ obsnames='GDAS NDBC'
 cd ${DATA}
 touch ${DATA}/jobs/run_all_${RUN}_g2o_plots_poe.sh
 
-export GRID2OBS_CONF="${PARMevs}/metplus_config/${COMPONENT}/${RUN}_${VERIF_CASE}/${STEP}"
+export GRID2OBS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}"
+MET_VERSION_major_minor=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
 
 # write the commands
 for period in ${periods} ; do
@@ -65,6 +68,7 @@ for period in ${periods} ; do
                   echo "export plot_end_date=${VDATE_END} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                   echo "export VHR=${vhr} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                   echo "export REGION=${region} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  echo "export MET_VERSION_major_minor=${MET_VERSION_major_minor} " >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                   case ${stats} in
                     'stats1')
                       image_stat="me_rmse"
@@ -105,21 +109,21 @@ for period in ${periods} ; do
                   esac
                   echo "export PTYPE=${ptype}" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                   # Make COMOUT restart directory
-                  COMOUTjob=$COMOUT/$VERIF_CASE/last${NDAYS}days/sl1l2/${image_var}_${image_level}/${regionl}/${image_stat}
-                  mkdir -p $COMOUTjob
+                  output_job_dir=$COMOUT/$VERIF_CASE/last${NDAYS}days/sl1l2/${image_var}_${image_level}/${regionl}/${image_stat}
+                  mkdir -p $output_job_dir
                   #Define DATA and COMOUT image name
                   imagename=evs.${COMPONENT}.${image_stat}.${image_var}_${image_level}_${obtypel}.past${NDAYS}days.timeseries_valid${vhr}z_f${fhr}.latlon_0p25_${regionl}.png
-                  COMOUTimage=$COMOUTjob/$imagename
-                  DATAimage=$DATA/images/$imagename
+                  output_image=$output_job_dir/$imagename
+                  tmp_image=$DATA/images/$imagename
                   # Add commands
-                  if [[ -s $COMOUTimage ]]; then
-                      echo "cp -v $COMOUTimage $DATAimage" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                  if [[ -s $output_image ]]; then
+                      echo "cp -v $output_image $tmp_image" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                   else
                       echo "${GRID2OBS_CONF}/py_plotting_wave.config"  >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
-                      echo "export err=$?; err_chk" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                      echo "export err=\$?; err_chk" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                       if [ $SENDCOM = YES ]; then
-                          echo "cp -v $DATAimage $COMOUTimage" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
-                          echo "export err=$?; err_chk" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                          echo "cp -v $tmp_image $output_image" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
+                          echo "export err=\$?; err_chk" >> ${DATA}/jobs/plot_obs${OBTYPE}_${wvar}_v${vhr}z_f${fhr}_${stats}_${ptype}_${period}_${region}.sh
                       fi
                   fi
 

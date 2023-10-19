@@ -213,13 +213,13 @@ fi
 export obs_file=mrms.${VDATE}/${DOMAIN}/${MRMS_PRODUCT}_${OBS_PROD}_${VDATE}-${cyc}0000.${VERIF_GRID}.nc
 export OBS_INPUT_TEMPLATE=mrms.{valid?fmt=%Y%m%d}/${DOMAIN}/${MRMS_PRODUCT}_${OBS_PROD}_{valid?fmt=%Y%m%d}-{valid?fmt=%H}0000.${VERIF_GRID}.nc
 
-if [ -s $COMINmrms/${obs_file} ]; then
+if [ -s $EVSINmrms/${obs_file} ]; then
    obs_found=1
 
 else
    export subject="MRMS Prep Data Missing for EVS ${COMPONENT}"
    echo "Warning: The MRMS ${MRMS_PRODUCT} file is missing for valid date ${VDATE}${cyc}. METplus will not run." > mailmsg
-   echo "Missing file is $COMINmrms/${obs_file}" >> mailmsg
+   echo "Missing file is $EVSINmrms/${obs_file}" >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $maillist
 
@@ -242,28 +242,28 @@ if [ $nfcst -ge 1 ] && [ $obs_found = 1 ]; then
          export MODEL=${MODELNAME}
       fi
 
-      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/GridStat_fcstCAM_obsMRMS_${RADAR_FIELD}.conf
+      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GridStat_fcstCAM_obsMRMS_${RADAR_FIELD}.conf
       export err=$?; err_chk
 
    elif [ $PROD = ens ]; then
 
       export MODEL=${MODELNAME}
 
-      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/EnsembleStat_fcstHREF_obsMRMS_${RADAR_FIELD}.conf
+      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/EnsembleStat_fcstHREF_obsMRMS_${RADAR_FIELD}.conf
       export err=$?; err_chk
 
    elif [ $PROD = ppf ]; then
 
       export MODEL=${MODELNAME}_prob
 
-      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/GridStat_fcstHREFPPF_obsMRMS_${RADAR_FIELD}.conf
+      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GridStat_fcstHREFPPF_obsMRMS_${RADAR_FIELD}.conf
       export err=$?; err_chk
 
    elif [ $PROD = prob ]; then
 
       export MODEL=${MODELNAME}_prob
 
-      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/GridStat_fcstHREFPROB_obsMRMS_${RADAR_FIELD}.conf
+      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GridStat_fcstHREFPROB_obsMRMS_${RADAR_FIELD}.conf
       export err=$?; err_chk
 
    fi

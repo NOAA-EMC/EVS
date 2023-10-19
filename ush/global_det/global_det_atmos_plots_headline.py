@@ -3,7 +3,7 @@
 Name: global_det_atmos_headline_plots.py
 Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This is the driver script for creating headline plots.
-Run By: scripts/global_det/plots/exevs_global_det_atmos_headline_plots.sh
+Run By: scripts/plots/global_det/exevs_global_det_atmos_headline_plots.sh
 '''
 
 import os
@@ -34,10 +34,10 @@ met_ver = os.environ['met_ver']
 evs_run_mode = os.environ['evs_run_mode']
 envir = os.environ['envir']
 
-# Set more specific COMIN paths
-COMINdailystats = os.path.join(COMIN, 'stats', COMPONENT)
-COMINyearlystats = os.path.join(COMIN, 'stats', COMPONENT, 'long_term',
-                                'annual_means')
+# Set more specific input directory paths
+daily_stats_dir = os.path.join(COMIN, 'stats', COMPONENT)
+yearly_stats_dir = os.path.join(COMIN, 'stats', COMPONENT, 'long_term',
+                                'yearly_means')
 
 # Set up directory paths
 logo_dir = os.path.join(FIXevs, 'logos')
@@ -45,8 +45,7 @@ stat_base_dir = os.path.join(DATA, 'data')
 logging_dir = os.path.join(DATA, 'logs')
 images_dir = os.path.join(DATA, 'images')
 for mkdir in [stat_base_dir, logging_dir, images_dir]:
-    if not os.path.exists(mkdir):
-        os.makedirs(mkdir)
+    gda_util.make_dir(mkdir)
 
 # Set up MET information dictionary
 met_info_dict = {
@@ -124,8 +123,7 @@ headline1_job_name = (
 )
 # Set output
 headline1_output_dir = os.path.join(DATA, headline1_job_name)
-if not os.path.exists(headline1_output_dir):
-    os.makedirs(headline1_output_dir)
+gda_util.make_dir(headline1_output_dir)
 # Set up logging
 now = datetime.datetime.now()
 headline1_logging_file = os.path.join(logging_dir, 'evs_'+COMPONENT+'_atmos_'
@@ -144,9 +142,8 @@ for model_num in list(headline1_model_info_dict.keys()):
     model = headline1_model_info_dict[model_num]['name']
     obs_name = headline1_model_info_dict[model_num]['obs_name']
     stat_model_dir = os.path.join(stat_base_dir, model)
-    if not os.path.exists(stat_model_dir):
-        os.makedirs(stat_model_dir)
-    gda_util.get_daily_stat_file(model, COMINdailystats, stat_model_dir,
+    gda_util.make_dir(stat_model_dir)
+    gda_util.get_daily_stat_file(model, daily_stats_dir, stat_model_dir,
                                  'grid2grid', headline1_start_date_dt,
                                  headline1_end_date_dt)
     logger1.info("Condensing model .stat files for job")
@@ -229,9 +226,8 @@ headline2_end_date_dt = datetime.datetime.strptime(
 for model_num in list(headline2_model_info_dict.keys()):
     model = headline2_model_info_dict[model_num]['name']
     stat_model_dir = os.path.join(stat_base_dir, model)
-    if not os.path.exists(stat_model_dir):
-        os.makedirs(stat_model_dir)
-    gda_util.get_daily_stat_file(model, COMINdailystats, stat_model_dir,
+    gda_util.make_dir(stat_model_dir)
+    gda_util.get_daily_stat_file(model, daily_stats_dir, stat_model_dir,
                                  'grid2obs', headline2_start_date_dt,
                                  headline2_end_date_dt)
 # Make plot
@@ -249,8 +245,7 @@ for stat in ['ME', 'RMSE']:
     )
     # Set output
     headline2_output_dir = os.path.join(DATA, headline2_job_name)
-    if not os.path.exists(headline2_output_dir):
-        os.makedirs(headline2_output_dir)
+    gda_util.make_dir(headline2_output_dir)
     # Set up logging
     now = datetime.datetime.now()
     headline2_logging_file = os.path.join(logging_dir, 'evs_'+COMPONENT+'_atmos_'
@@ -339,8 +334,7 @@ else:
         )
         # Set output
         headline3_output_dir = os.path.join(DATA, headline3_job_name)
-        if not os.path.exists(headline3_output_dir):
-            os.makedirs(headline3_output_dir)
+        gda_util.make_dir(headline3_output_dir)
         # Set up logging
         now = datetime.datetime.now()
         headline3_logging_file = os.path.join(
@@ -350,7 +344,7 @@ else:
         )
         logger3 = gda_util.get_logger(headline3_logging_file)
         plot_ltts = gdap_ltts.LongTermTimeSeries(
-            logger3, COMINyearlystats, headline3_output_dir,
+            logger3, yearly_stats_dir, headline3_output_dir,
             os.path.join(FIXevs, 'logos'), headline3_avg_time_range,
             headline3_all_dt_list, headline3_model_group, headline3_model_list,
             headline3_var_name, headline3_var_level, headline3_var_thresh,
@@ -401,8 +395,7 @@ else:
     )
     # Set output
     headline4_output_dir = os.path.join(DATA, headline4_job_name)
-    if not os.path.exists(headline4_output_dir):
-        os.makedirs(headline4_output_dir)
+    gda_util.make_dir(headline4_output_dir)
     # Set up logging
     now = datetime.datetime.now()
     headline4_logging_file = os.path.join(
@@ -413,7 +406,7 @@ else:
     logger4 = gda_util.get_logger(headline4_logging_file)
     import global_det_atmos_plots_long_term_useful_forecast_days as gdap_ltufd
     plot_ltufd = gdap_ltufd.LongTermUsefulForecastDays(
-        logger4, COMINyearlystats, headline4_output_dir,
+        logger4, yearly_stats_dir, headline4_output_dir,
         os.path.join(FIXevs, 'logos'), headline4_avg_time_range,
         headline4_all_dt_list, 'gfs', ['gfs'], headline4_var_name,
         headline4_var_level, headline4_var_thresh, headline4_vx_grid,
@@ -467,8 +460,7 @@ else:
         )
         # Set output
         headline5_output_dir = os.path.join(DATA, headline5_job_name)
-        if not os.path.exists(headline5_output_dir):
-            os.makedirs(headline5_output_dir)
+        gda_util.make_dir(headline5_output_dir)
         # Set up logging
         now = datetime.datetime.now()
         headline5_logging_file = os.path.join(
@@ -485,7 +477,7 @@ else:
             nbrhd = 'NA'
         for thresh in headline5_stat_thresh_dict[stat]:
             plot_lttsmf = gdap_lttsmf.LongTermTimeSeriesMultiFhr(
-                logger5, COMINyearlystats, headline5_output_dir,
+                logger5, yearly_stats_dir, headline5_output_dir,
                 os.path.join(FIXevs, 'logos'), headline5_avg_time_range,
                 headline5_all_dt_list, 'gfs', ['gfs'], headline5_var_name,
                 headline5_var_level, thresh, vx_grid, headline5_vx_mask,

@@ -1,0 +1,102 @@
+#!/bin/bash
+
+########################################
+# Preliminary data setup step
+########################################
+set -x
+
+####################################
+# SET SHELL PROCESSING VARIABLES
+####################################
+export PS4='$SECONDS + '
+date
+
+###########################################################
+# obtain unique LSF id (jobid) and make temp directories
+###########################################################
+export pid=$$
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+mkdir -p $DATA
+cd $DATA
+
+####################################
+# Set EVS directories
+####################################
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
+
+####################################
+# Run setpdy and initialize PDY variables
+####################################
+export vhr=${vhr:-00}
+export cycle=${cycle:-t${vhr}z}
+setpdy.sh
+. ./PDY
+export INITDATE=${INITDATE:-$PDYm1}
+
+####################################
+# Set data directives
+####################################
+export SENDECF=${SENDECF:-YES}
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-NO}
+export SENDMAIL=${SENDMAIL:-NO}
+
+####################################
+# Define NET/RUN variables
+####################################
+export NET=${NET:-evs}
+export STEP=${STEP:-prep}
+export COMPONENT=${COMPONENT:-global_det}
+export RUN=${RUN:-atmos}
+
+####################################
+# Define COMIN/COMOUT variables
+####################################
+export COMIN=${COMIN:-$(compath.py $NET/$evs_ver)}
+export COMINcfs=${COMINcfs:-$(compath.py $envir/cfs/$cfs_ver/cfs.$INITDATE)}
+export COMINcmc=${COMINcmc:-$(compath.py $envir/cmc/$cmc_ver/cmc.$INITDATE)}
+export COMINgfs=${COMINgfs:-$(compath.py $envir/gfs/$gfs_ver/gfs.$INITDATE)}
+export DCOMINcmc_precip=${DCOMINcmc_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
+export DCOMINcmc_regional_precip=${DCOMINcmc_regional_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
+export DCOMINdwd_precip=${DCOMINdwd_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
+export DCOMINecmwf=${DCOMINecmwf:-$DCOMROOT/${INITDATE}/wgrbbul/ecmwf}
+export DCOMINecmwf_precip=${DCOMINecmwf_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
+export DCOMINfnmoc=${DCOMINfnmoc:-$DCOMROOT/navgem}
+export DCOMINimd=${DCOMINimd:-$DCOMROOT/${INITDATE}/wgrbbul/ncmrwf_gdas}
+export DCOMINjma=${DCOMINjma:-$DCOMROOT/${INITDATE}/wgrbbul}
+export DCOMINjma_precip=${DCOMINjma_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
+export DCOMINmetfra_precip=${DCOMINmetfra_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
+export DCOMINukmet=${DCOMINukmet:-$DCOMROOT/${INITDATE}/wgrbbul/ukmet_hires}
+export DCOMINukmet_precip=${DCOMINukmet_precip:-$DCOMROOT/${INITDATE}/qpf_verif}
+export DCOMINosi_saf=${DCOMINosi_saf:-$DCOMROOT}
+export DCOMINghrsst_ospo=${DCOMINghrsst_ospo:-$DCOMROOT}
+export DCOMINndbc=${DCOMINndbc:-$DCOMROOT}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
+mkdir -p $COMOUT.${INITDATE}
+for mname in $MODELNAME; do
+    mkdir -p $COMOUT.$INITDATE/$mname
+done
+for oname in $OBSNAME; do
+    mkdir -p $COMOUT.$INITDATE/$oname
+done
+
+#######################################################################
+# Execute the script
+#######################################################################
+env
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${STEP}.sh
+export err=$?; err_chk
+
+msg="JOB $job HAS COMPLETED NORMALLY."
+postmsg "$jlogfile" "$msg"
+
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATAROOT
+  rm -rf $DATA
+fi
+
+date

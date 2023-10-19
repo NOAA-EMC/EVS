@@ -65,12 +65,14 @@ cd $ccpadir
      done
 
   else
+   if [ $SENDMAIL = YES ] ; then
      export subject="CCPA Data Missing for EVS ${COMPONENT}"
      echo "Warning:  No CCPA data available for ${VDATE}" > mailmsg
      echo Missing file is $COMCCPA/ccpa.${vday}/00/ccpa.t00z.03h.hrap.conus.gb2 or $COMCCPA/ccpa.${vday}/00/ccpa.t00z.01h.hrap.conus.gb2 >> mailmsg
      echo "Job ID: $jobid" >> mailmsg
      cat mailmsg | mail -s "$subject" $maillist
      exit
+   fi
   fi
 
 fi
@@ -95,12 +97,14 @@ mkdir -p $ccpa24
     mkdir -p ${COMOUTfinal}/precip_mean24
     cp ${WORK}/ccpa.${vday}/ccpa24h.t12z.G240.nc ${COMOUTfinal}/precip_mean24
   else
+   if [ $SENDMAIL = YES ] ; then
     export subject="06h CCPA Data Missing for 24h CCPA generation"
     echo "Warning: At least one of ccpa06h files is missing  for ${VDATE}" > mailmsg
     echo Missing file is ${COMCCPA}/ccpa.${vday}/12/ccpa.t12z.06h.hrap.conus.gb2 or ${COMCCPA}/ccpa.${prevday}/18/ccpa.t18z.06h.hrap.conus.gb2  >> mailmsg
     echo "Job ID: $jobid" >> mailmsg
     cat mailmsg | mail -s "$subject" $maillist
     exit
+   fi
   fi
 
  done
@@ -238,13 +242,14 @@ if [ $data = prepbufr ] ; then
   cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${vday}
 
  else
-
+  if [ $SENDMAIL = YES ] ; then
    export subject="RAP Prepbufr Data Missing for EVS ${COMPONENT}"
    echo "Warning:  No RAP Prepbufr data available for ${VDATE}" > mailmsg
    echo Missing file is $COMINobsproc/rap.${VDATE}/rap.t??z.prepbufr.tm00  >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $maillist
    exit 
+  fi
  fi
 
 
@@ -280,12 +285,14 @@ if [ $data = gfs_prepbufr ] ; then
   done
 
   else
+   if [ $SENDMAIL = YES ] ; then
      export subject="GFS Prepbufr Data Missing for EVS ${COMPONENT}"
      echo "Warning:  No GFS Prepbufr data available for ${VDATE}" > mailmsg
      echo Missing file is $COMINobsproc/gfs.${vday}/??/atmos/gfs.t??z.prepbufr  >> mailmsg
      echo "Job ID: $jobid" >> mailmsg
      cat mailmsg | mail -s "$subject" $maillist
      exit
+   fi
   fi
 
 
@@ -296,7 +303,7 @@ if [ $data = mrms ] ; then
 
 export accum
 
- if [ -s $COMINmrms/MultiSensor_QPE_03H_Pass2_00.00_${vday}-120000.grib2.gz ] ; then 
+ if [ -s $DCOMINmrms/MultiSensor_QPE_03H_Pass2_00.00_${vday}-120000.grib2.gz ] ; then 
 
   for accum in 01 03 24 ; do 	
 
@@ -320,7 +327,7 @@ export accum
     export vend=$vday$cyc
    
 
-    mrms03=$COMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${cyc}0000.grib2.gz
+    mrms03=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${cyc}0000.grib2.gz
     cp $mrms03 $mrmsdir/.
     gunzip MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${cyc}0000.grib2.gz
     export MET_GRIB_TABLES=$PARMevs/metplus_config/cam/precip/prep/grib2_mrms_qpf.txt
@@ -344,13 +351,14 @@ export accum
   done
 
  else
-
+  if [ $SENDMAIL = YES ] ; then
    export subject="MRMS Data Missing for EVS ${COMPONENT}"
    echo "Warning:  No MRMS data available for ${VDATE}" > mailmsg
-   echo Missing file is $COMINmrms/MultiSensor_QPE_??H_Pass2_00.00_${vday}-120000.grib2.gz  >> mailmsg
+   echo Missing file is $DCOMINmrms/MultiSensor_QPE_??H_Pass2_00.00_${vday}-120000.grib2.gz  >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $maillist
    exit
+  fi
  fi
 
 

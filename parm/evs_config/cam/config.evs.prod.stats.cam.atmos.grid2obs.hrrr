@@ -5,7 +5,7 @@
 # NAME: config.evs.prod.stats.cam.atmos.grid2obs.hrrr
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Set up configurations to run EVS HRRR Grid2Obs - Statistics
-# DEPENDENCIES: $HOMEevs/ecf/cam/stats/jevs_hrrr_grid2obs_stats.ecf
+# DEPENDENCIES: $HOMEevs/scripts/stats/cam/exevs_hrrr_grid2obs_stats.sh
 # 
 # =============================================================================
 
@@ -17,6 +17,7 @@ export MET_CONFIG_OVERRIDES=""
 
 # Restart Settings
 export RESTART_DIR="${COMOUTsmall}/restart/c${cyc}"
+export COMPLETED_JOBS_FILE="completed_jobs.txt"
 
 # Time Settings
 
@@ -40,7 +41,7 @@ if [ "$NEST" = "conus" ]; then
         export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING PTYPE"
         export VHOUR_LIST="00 03 06 09 12 15 18 21"
     elif [ "$OBSNAME" = "mping" ]; then
-        export COMINobs=${COMINmping}
+        export COMINobs=${EVSINmping}
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.grib2"
         export VAR_NAME_LIST="PTYPE"
         export VHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
@@ -69,7 +70,7 @@ elif [ "$NEST" = "subreg" ]; then
         export VAR_NAME_LIST="TMP2m DPT2m RH2m UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc VIS CEILING"
         export VHOUR_LIST="00 03 06 09 12 15 18 21"
     elif [ "$OBSNAME" = "mping" ]; then
-        export COMINobs=${COMINmping}
+        export COMINobs=${EVSINmping}
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.grib2"
         export VAR_NAME_LIST=""
         export VHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
@@ -98,7 +99,7 @@ elif [ "$NEST" = "ak" ]; then
         export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING PTYPE"
         export VHOUR_LIST="00 03 06 09 12 15 18 21"
     elif [ "$OBSNAME" = "mping" ]; then
-        export COMINobs=${COMINmping}
+        export COMINobs=${EVSINmping}
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/alaska/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.ak.grib2"
         export VAR_NAME_LIST=""
         export VHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
@@ -127,7 +128,7 @@ elif [ "$NEST" = "firewx" ]; then
         export VAR_NAME_LIST="TMP2m DPT2m RH2m UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc"
         export VHOUR_LIST="00 03 06 09 12 15 18 21"
     elif [ "$OBSNAME" = "mping" ]; then
-        export COMINobs=${COMINmping}
+        export COMINobs=${EVSINmping}
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.grib2"
         export VAR_NAME_LIST=""
         export VHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
@@ -156,7 +157,7 @@ elif [ "$NEST" = "spc_otlk" ]; then
         export VAR_NAME_LIST=""
         export VHOUR_LIST="00 03 06 09 12 15 18 21"
     elif [ "$OBSNAME" = "mping" ]; then
-        export COMINobs=${COMINmping}
+        export COMINobs=${EVSINmping}
         export MODEL_INPUT_TEMPLATE="hrrr.{init?fmt=%Y%m%d}/conus/hrrr.t{init?fmt=%2H}z.wrfsfcf{lead?fmt=%2H}.grib2"
         export VAR_NAME_LIST=""
         export VHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"

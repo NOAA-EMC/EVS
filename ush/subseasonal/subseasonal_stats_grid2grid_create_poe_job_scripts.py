@@ -2,7 +2,9 @@
 '''
 Program Name: subseasonal_stats_grid2grid_create_poe_job_scripts.py
 Contact(s): Shannon Shields
-Abstract: This creates subseasonal grid2grid stats POE job scripts. These
+Abstract: This script is run by exevs_subseasonal_grid2grid_stats.sh
+          in scripts/stats/subseasonal.
+          This creates subseasonal grid2grid stats POE job scripts. These
           jobs contain all the necessary environment variables
           and commands needed to run the specific
           use case.
@@ -43,7 +45,7 @@ if USE_CFP == 'YES':
                                        'job*'))
     njob_files = len(job_files)
     if njob_files == 0:
-        print("ERROR: No job files created in "
+        print("WARNING: No job files created in "
               +os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
                             JOB_GROUP))
         sys.exit(1)
@@ -99,7 +101,7 @@ if USE_CFP == 'YES':
        iproc+=1
     poe_file.close()
 else:
-    print("ERROR: Cannot create POE scripts. Please set USE_CFP=YES")
+    print("WARNING: Cannot create POE scripts. Please set USE_CFP=YES")
     sys.exit(1)
 
 print("END: "+os.path.basename(__file__))
