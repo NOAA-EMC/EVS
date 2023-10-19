@@ -21,8 +21,8 @@ export verify='precip'
 
 export COMHREF=$COMINhref
 export COMCCPA=$COMINccpa
-export COMSNOW=$COMINsnow
-export COMMRMS=$COMINmrms
+export COMSNOW=$DCOMINsnow
+export COMMRMS=$DCOMINmrms
 
 export PRECIP_CONF=$PARMevs/metplus_config/$STEP/$COMPONENT/precip
 export SNOWFALL_CONF=$PARMevs/metplus_config/$STEP/$COMPONENT/snowfall

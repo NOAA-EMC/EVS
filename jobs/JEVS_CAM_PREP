@@ -105,10 +105,10 @@ export COMIN=${COMIN:-$(compath.py $NET/$evs_ver)}
 export COMINccpa=${COMINccpa:-$(compath.py prod/ccpa/$ccpa_ver)}
 export COMINhiresw=${COMINhiresw:-$(compath.py ${envir}/com/hiresw/${hiresw_ver})}
 export COMINhrrr=${COMINhrrr:-$(compath.py ${envir}/com/hrrr/${hrrr_ver})}
-export COMINmrms=$DCOMROOT/ldmdata/obs/upperair/mrms
 export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
 export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
-export COMINspc=${COMINspc:-$DCOMROOT}
+export DCOMINmrms=${DCOMINmrms:-$DCOMROOT/ldmdata/obs/upperair/mrms}
+export DCOMINspc=${DCOMINspc:-$DCOMROOT}
 
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 
@@ -122,6 +122,7 @@ if [ $VERIF_CASE = severe ] ; then
 elif [ $VERIF_CASE = grid2obs ] ; then
    export mPINGToken=${mPINGToken:-9999}
 fi
+
 
 ####################################
 # Execute the script 

@@ -8,7 +8,7 @@ typeset -Z2 cyc
 
 missing=0 
 for cyc in 00 01 02 03 04 05 06 07 08  09 10 11 12 13 14 15 16 17 18 19 20  21 22 23 ; do
-  if [ ! -s $COMINprepbufr/rap.${vday}/rap.t${cyc}z.prepbufr.tm00 ] ; then
+  if [ ! -s $COMINobsproc/rap.${vday}/rap.t${cyc}z.prepbufr.tm00 ] ; then
     missing=$((missing + 1 ))
   fi
 done
@@ -44,7 +44,11 @@ for cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 
     cyc_dir=00
     init=$next
   fi	      
-  ccpa=$COMINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${cyc}z.01h.hrap.conus.gb2
+  if [ $VERIF_CASE = precip ] ; then
+     ccpa=$COMINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${cyc}z.01h.hrap.conus.gb2
+  else
+     ccpa=$EVSINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${cyc}z.01h.hrap.conus.gb2
+  fi
   #echo $ccpa
 
   if [ ! -s $ccpa ] ; then
@@ -79,7 +83,11 @@ for cyc in 00 03 06 09 12 15 18 21 ; do
        init=$next
   fi
 
-   ccpa=$COMINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${cyc}z.03h.hrap.conus.gb2
+  if [ $VERIF_CASE = precip ] ; then
+     ccpa=$COMINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${cyc}z.03h.hrap.conus.gb2
+  else
+     ccpa=$EVSINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${cyc}z.03h.hrap.conus.gb2
+  fi
    #echo $ccpa
 
    if [ ! -s $ccpa ] ; then
@@ -96,14 +104,26 @@ fi
 
 missing=0
 for cyc in 12 ; do
-   if [ ! -s $COMINccpa/ccpa.${vday}/12/ccpa.t12z.06h.hrap.conus.gb2 ] ; then
-	   missing=$((missing+1))
-   elif [ ! -s $COMINccpa/ccpa.${vday}/06/ccpa.t06z.06h.hrap.conus.gb2 ] ; then
-           missing=$((missing+1))
-   elif [ ! -s $COMINccpa/ccpa.${vday}/00/ccpa.t00z.06h.hrap.conus.gb2 ] ; then
-	   missing=$((missing+1))
-   elif [ ! -s $COMINccpa/ccpa.${prev}/18/ccpa.t18z.06h.hrap.conus.gb2 ] ; then
-	   missing=$((missing+1))
+   if [ $VERIF_CASE = precip ] ; then
+      if [ ! -s $COMINccpa/ccpa.${vday}/12/ccpa.t12z.06h.hrap.conus.gb2 ] ; then
+          missing=$((missing+1))
+      elif [ ! -s $COMINccpa/ccpa.${vday}/06/ccpa.t06z.06h.hrap.conus.gb2 ] ; then
+              missing=$((missing+1))
+      elif [ ! -s $COMINccpa/ccpa.${vday}/00/ccpa.t00z.06h.hrap.conus.gb2 ] ; then
+          missing=$((missing+1))
+      elif [ ! -s $COMINccpa/ccpa.${prev}/18/ccpa.t18z.06h.hrap.conus.gb2 ] ; then
+          missing=$((missing+1))
+      fi
+   else
+      if [ ! -s $EVSINccpa/ccpa.${vday}/12/ccpa.t12z.06h.hrap.conus.gb2 ] ; then
+          missing=$((missing+1))
+      elif [ ! -s $EVSINccpa/ccpa.${vday}/06/ccpa.t06z.06h.hrap.conus.gb2 ] ; then
+              missing=$((missing+1))
+      elif [ ! -s $EVSINccpa/ccpa.${vday}/00/ccpa.t00z.06h.hrap.conus.gb2 ] ; then
+          missing=$((missing+1))
+      elif [ ! -s $EVSINccpa/ccpa.${prev}/18/ccpa.t18z.06h.hrap.conus.gb2 ] ; then
+          missing=$((missing+1))
+      fi
    fi
 done
 
@@ -127,7 +147,7 @@ accum=01
 accum=01
 missing=0
 for cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 ; do
-   mrms=$COMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${cyc}0000.grib2.gz
+   mrms=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${cyc}0000.grib2.gz
    if [ ! -s $mrms ] ; then
      missing=$((missing+1))
    fi
@@ -141,7 +161,7 @@ fi
 accum=03
 missing=0
 for cyc in 00 03 06 09 12 15 18 21 ; do
-   mrms=$COMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${cyc}0000.grib2.gz
+   mrms=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${cyc}0000.grib2.gz
    if [ ! -s $mrms ] ; then
      missing=$((missing+1))
    fi
@@ -155,7 +175,7 @@ fi
 accum=24
 missing=0
 for cyc in 00 06 12 18 ; do
-   mrms=$COMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${cyc}0000.grib2.gz
+   mrms=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${cyc}0000.grib2.gz
    if [ ! -s $mrms ] ; then
      missing=$((missing+1))
    fi

@@ -6,7 +6,7 @@
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Set up configurations to run EVS HiRes Window ARW Member 2 
 #          Precipitation - Prepare
-# DEPENDENCIES: $HOMEevs/ecf/cam/prep/jevs_hireswarwmem2_precip_prep.ecf
+# DEPENDENCIES: $HOMEevs/scripts/prep/cam/exevs_hireswarwmem2_precip_prep.sh
 # 
 # =============================================================================
 
@@ -36,15 +36,15 @@ if [ "$NEST" = "conus" ]; then
     export OBSNAME="ccpa"
 elif [ "$NEST" = "ak" ]; then
     export VERIF_TYPE="mrms"
-    export COMINobs=${COMINmrms}
+    export COMINobs=${DCOMINmrms}
     export OBSNAME="mrms"
 elif [ "$NEST" = "pr" ]; then
     export VERIF_TYPE="mrms"
-    export COMINobs=${COMINmrms}
+    export COMINobs=${DCOMINmrms}
     export OBSNAME="mrms"
 elif [ "$NEST" = "hi" ]; then
     export VERIF_TYPE="mrms"
-    export COMINobs=${COMINmrms}
+    export COMINobs=${DCOMINmrms}
     export OBSNAME="mrms"
 else
     echo "The provided NEST, $NEST, is not supported for $MODELNAME"
