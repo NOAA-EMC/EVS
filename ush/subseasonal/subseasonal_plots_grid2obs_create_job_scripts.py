@@ -452,7 +452,8 @@ if USE_CFP == 'YES':
     job_files = glob.glob(os.path.join(JOB_GROUP_jobs_dir, 'job*'))
     njob_files = len(job_files)
     if njob_files == 0:
-        print("ERROR: No job files created in "+JOB_GROUP_jobs_dir)
+        print("FATAL ERROR: No job files created in "+JOB_GROUP_jobs_dir)
+        sys.exit(1)
     poe_files = glob.glob(os.path.join(JOB_GROUP_jobs_dir, 'poe*'))
     npoe_files = len(poe_files)
     if npoe_files > 0:

@@ -125,7 +125,7 @@ subseasonal_obs_dict = {
 
 for OBS in OBSNAME:
     if OBS not in list(subseasonal_obs_dict.keys()):
-        print("ERROR: "+OBS+" not recognized")
+        print("FATAL ERROR: "+OBS+" not recognized")
         sys.exit(1)
     print("---- Prepping data for "+OBS+" for init "+INITDATE)
     obs_dict = subseasonal_obs_dict[OBS]
