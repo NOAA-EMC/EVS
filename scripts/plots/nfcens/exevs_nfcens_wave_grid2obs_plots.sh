@@ -82,7 +82,7 @@ else
   echo "             for ${VDATE} "
   echo '**************************************** '
   echo ' '
-  echo "${MODELNAME}_${RUN} $VDATE $cycle : NFCENS *.stat file missing."
+  echo "${MODELNAME}_${RUN} $VDATE $vhour : NFCENS *.stat file missing."
   [[ "$LOUD" = YES ]] && set -x
   ./postmsg "$jlogfile" "FATAL ERROR : NO NFCENS *.stat file for ${VDATE}"
   err_exit "FATAL ERROR: Did not copy the NFCENS *.stat file for ${VDATE}"

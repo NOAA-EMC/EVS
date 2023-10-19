@@ -43,7 +43,7 @@ mkdir -p ${DATA}/logs
 mkdir -p ${DATA}/confs
 mkdir -p ${DATA}/tmp
 
-cycles='0 12'
+vhours='0 12'
 
 lead_hours='0 12 24 36 48 60 72
             84 96 108 120 132 144 156
@@ -58,26 +58,26 @@ cd ${DATA}
 ############################################
 echo ' '
 echo 'Creating point_stat files'
-for cyc in ${cycles} ; do
-    cyc2=$(printf "%02d" "${cyc}")
-    if [ ${cyc2} = '00' ] ; then
+for vhr in ${vhours} ; do
+    vhr2=$(printf "%02d" "${vhr}")
+    if [ ${vhr2} = '00' ] ; then
       climo_level_str="'{ name=\"HTSGW\"; level=\"(0,*,*)\"; }'"
-    elif [ ${cyc2} = '12' ] ; then
+    elif [ ${vhr2} = '12' ] ; then
       climo_level_str="'{ name=\"HTSGW\"; level=\"(4,*,*)\"; }'"
     fi
     for fhr in ${lead_hours} ; do
-        matchtime=$(date --date="${VDATE} ${cyc2} ${fhr} hours ago" +"%Y%m%d %H")
+        matchtime=$(date --date="${VDATE} ${vhr2} ${fhr} hours ago" +"%Y%m%d %H")
         match_date=$(echo ${matchtime} | awk '{print $1}')
         match_hr=$(echo ${matchtime} | awk '{print $2}')
         match_fhr=$(printf "%02d" "${match_hr}")
         flead=$(printf "%03d" "${fhr}")
         flead2=$(printf "%02d" "${fhr}")
-        EVSINgdasncfilename=${EVSINgdasnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${VDATE}${cyc2}.nc 
-        DATAgdasncfilename=${DATA}/ncfiles/gdas.${VDATE}${cyc2}.nc
+        EVSINgdasncfilename=${EVSINgdasnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${VDATE}${vhr2}.nc 
+        DATAgdasncfilename=${DATA}/ncfiles/gdas.${VDATE}${vhr2}.nc
         EVSINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/HTSGW_mean.${match_date}.t${match_fhr}z.f${flead}.grib2
         DATAmodelfilename=$DATA/gribs/HTSGW_mean.${match_date}.t${match_fhr}z.f${flead}.grib2
-        DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${cyc2}0000V.stat
-        COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${cyc2}0000V.stat
+        DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
+        COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhr2}0000V.stat
         if [[ -s $COMOUTstatfilename ]]; then
             cp -v $COMOUTstatfilename $DATAstatfilename
         else
@@ -97,18 +97,18 @@ for cyc in ${cycles} ; do
                     fi
                 fi
                 if [[ -s $DATAmodelfilename ]]; then
-                    echo "export climo_level_str=${climo_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
-                    echo "export CYC=${cyc2}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
-                    echo "export fhr=${flead}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
-                    echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstNFCENS_obsGDAS_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
-                    echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
+                    echo "export climo_level_str=${climo_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+                    echo "export VHR=${vhr2}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+                    echo "export fhr=${flead}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+                    echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstNFCENS_obsGDAS_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+                    echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
                     if [ $SENDCOM = YES ]; then
-                        echo "cp -v $DATAstatfilename $COMOUTstatfilename" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
+                        echo "cp -v $DATAstatfilename $COMOUTstatfilename" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
                     fi
 
-                    chmod +x ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
+                    chmod +x ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
       
-                    echo "${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh" >> ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
+                    echo "${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh" >> ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
                 fi
             fi
         fi
