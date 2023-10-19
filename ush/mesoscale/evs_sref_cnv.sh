@@ -64,7 +64,10 @@ for  obsv in prepbufr ; do
 
        #echo "rm \$output_base/stat/*SREFarw*.stat ">> run_sref_cnv_${fhr}.sh
        #echo "rm \$output_base/stat/*SREFnmb*.stat ">> run_sref_cnv_${fhr}.sh
+
+       if [ $SENDCOM = 'YES' ]; then
        echo "cp \$output_base/stat/*CNV*.stat $COMOUTsmall" >> run_sref_cnv_${fhr}.sh
+       fi
 
        chmod +x run_sref_cnv_${fhr}.sh
        echo "${DATA}/run_sref_cnv_${fhr}.sh" >> run_all_sref_cnv_poe.sh

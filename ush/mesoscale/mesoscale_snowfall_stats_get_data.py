@@ -18,7 +18,7 @@ print(f"Working in: {cwd}")
 # Read in common environment variables
 DATA = os.environ['DATA']
 MODELNAME = os.environ['MODELNAME']
-COMINnohrsc = os.environ['COMINnohrsc']
+COMINnohrsc = os.environ['DCOMINnohrsc']
 COMOUT = os.environ['COMOUT']
 COMINmodel_file_template = os.environ['MODEL_INPUT_TEMPLATE']
 VDATE = os.environ['VDATE']

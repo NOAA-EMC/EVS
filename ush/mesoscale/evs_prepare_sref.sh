@@ -45,7 +45,7 @@ if [ $modnam = sref_apcp24_mean ] ; then
   cd $output_base
 
   for cyc in 09 15 ; do
-    large=$COMINsref/sref.${vday}/${cyc}/ensprod/sref.t${cyc}z.pgrb212.mean_3hrly.grib2
+    large=${COMINsref}/sref.${vday}/${cyc}/ensprod/sref.t${cyc}z.pgrb212.mean_3hrly.grib2
     fhr=3
     while [ $fhr -le 87 ] ; do
      fhr_3=$((fhr-3))
@@ -166,7 +166,7 @@ if [ $modnam = prepbufr ] ; then
 
 export output_base=${WORK}/pb2nc
 
- if [ -s $COMINprepbufr/gfs.${vday}/18/atmos/gfs.t18z.prepbufr ] ; then 
+ if [ -s ${COMINobsproc}/gfs.${vday}/18/atmos/gfs.t18z.prepbufr ] ; then 
 
    for cyc in 00  06  12  18  ; do
 
@@ -182,7 +182,7 @@ export output_base=${WORK}/pb2nc
   if [ $SENDMAIL = YES ] ; then
    export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
    echo "Warning:  No Prepbufr data available for ${VDATE}" > mailmsg
-   echo Missing file is $COMINprepbufr/gfs.${vday}/??/atmos/gfs.t??z.prepbufr  >> mailmsg
+   echo Missing file is ${COMINobsproc}/gfs.${vday}/??/atmos/gfs.t??z.prepbufr  >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $maillist 
    exit
