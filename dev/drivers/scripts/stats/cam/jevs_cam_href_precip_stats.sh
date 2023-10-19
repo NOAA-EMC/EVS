@@ -32,7 +32,7 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 export cyc=00
 
-export COMIN=$COMROOT
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver
 export envir=prod
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp

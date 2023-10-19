@@ -52,12 +52,12 @@ for model in $model_list ; do
  for fhr in 24 48 ; do
   past=`$NDATE -$fhr ${VDATE}12`	
   INITDATE=${past:0:8}
-  source=$COMINapcp24mean/href.$INITDATE/precip_mean24
+  source=$EVSINapcp24mean/href.$INITDATE/precip_mean24
   ln -sf $source/${model}.t12z.G227.24h.f${fhr}.nc  $target/${model}_precip_24hrAccum_init${INITDATE}12_fhr0${fhr}.nc	
  done
 done
 
-source=$COMINapcp24mean/href.$VDATE/precip_mean24
+source=$EVSINapcp24mean/href.$VDATE/precip_mean24
 target=$DATA/grid2grid_plots/data/ccpa
 mkdir -p $target
 ln -sf $source/ccpa24h.t12z.G240.nc  $target/ccpa_precip_24hrAccum_valid${VDATE}12.nc

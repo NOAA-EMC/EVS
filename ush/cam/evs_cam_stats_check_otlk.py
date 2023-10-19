@@ -15,7 +15,7 @@ import os, glob
 
 
 FIX_DIR = os.environ['FIXevs'] 
-OTLK_DIR = os.environ['COMINspcotlk']
+OTLK_DIR = os.environ['EVSINspcotlk']
 WORK_DIR = os.environ['DATA']
 
 verif_case = os.environ['VERIF_CASE']
