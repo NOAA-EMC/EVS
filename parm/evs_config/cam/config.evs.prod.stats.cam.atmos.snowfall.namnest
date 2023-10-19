@@ -5,7 +5,7 @@
 # NAME: config.evs.prod.stats.cam.atmos.snowfall.namnest 
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Set up configurations to run EVS NAM Nest Snowfall - Statistics
-# DEPENDENCIES: $HOMEevs/ecf/cam/stats/jevs_namnest_snowfall_stats.ecf
+# DEPENDENCIES: $HOMEevs/scripts/stats/cam/exevs_namnest_snowfall_stats.sh
 # 
 # =============================================================================
 
@@ -17,6 +17,7 @@ export MET_CONFIG_OVERRIDES=""
 
 # Restart Settings
 export RESTART_DIR="${COMOUTsmall}/restart/c${cyc}"
+export COMPLETED_JOBS_FILE="completed_jobs.txt"
 
 # Time Settings
 export FHR_GROUP_LIST="FULL"
@@ -69,7 +70,7 @@ if [ "$BOOL_NBRHD" = True ]; then
     export NBRHD_WIDTHS="1,3,5,7,9,11,13,17,21,25,31,35,39,43,47,53,57,63"
     if [ "$NEST" = "conus" ]; then
         export VERIF_TYPE="nohrsc"
-        export COMINobs=${COMINsnow}
+        export COMINobs=${DCOMINsnow}
         export OBSNAME=${VERIF_TYPE}
         if [ "$OBSNAME" = "nohrsc" ]; then
             export VAR_NAME_LIST="WEASD SNOD"
@@ -91,7 +92,7 @@ else
     export NBRHD_WIDTHS="1"
     if [ "$NEST" = "conus" ]; then
         export VERIF_TYPE="nohrsc"
-        export COMINobs=${COMINsnow}
+        export COMINobs=${DCOMINsnow}
         export OBSNAME=${VERIF_TYPE}
         if [ "$OBSNAME" = "nohrsc" ]; then
             export VAR_NAME_LIST="WEASD SNOD"

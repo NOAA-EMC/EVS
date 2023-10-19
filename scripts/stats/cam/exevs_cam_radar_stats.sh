@@ -21,7 +21,7 @@ set -x
 
 ############################################################
 # Update Mask List and Include SPC OLTKs if Valid
-# Mask Files Exist in COMINspcotlk
+# Mask Files Exist in EVSINspcotlk
 # Only for CONUS verification
 ############################################################
 
