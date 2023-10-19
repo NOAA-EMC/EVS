@@ -85,8 +85,8 @@ export ccpa24=$ccpadir/ccpa24
 mkdir -p $ccpa24
 
 
- cycles="12"
- for vhr in $cycles ; do
+ vhours="12"
+ for vhr in $vhours ; do
   cp ${COMCCPA}/ccpa.${vday}/12/ccpa.t12z.06h.hrap.conus.gb2 $ccpa24/ccpa1
   cp ${COMCCPA}/ccpa.${vday}/06/ccpa.t06z.06h.hrap.conus.gb2 $ccpa24/ccpa2
   cp ${COMCCPA}/ccpa.${vday}/00/ccpa.t00z.06h.hrap.conus.gb2 $ccpa24/ccpa3
