@@ -55,7 +55,7 @@ if proceed:
     COMPONENT = os.environ['COMPONENT']
     SENDMAIL = os.environ['SENDMAIL']
     maillist = os.environ['maillist']
-    CYC = os.environ['cyc']
+    CYC = os.environ['vhr']
     jobid = os.environ['jobid']
     FIXevs = os.environ['FIXevs']
     VDATE = os.environ['VDATE']

@@ -21,7 +21,7 @@ import cam_util as cutil
 
 
 OTLK_DATE = os.environ['OTLK_DATE'] 
-cyc = os.environ['cyc']
+vhr = os.environ['vhr']
 
 YYYY = int(OTLK_DATE[0:4])
 MM   = int(OTLK_DATE[4:6])

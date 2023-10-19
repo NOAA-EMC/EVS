@@ -448,7 +448,7 @@ def mark_job_completed(completed_jobs_file, job_name, job_type=""):
             f.write(job_name + "\n")
 
 def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None, 
-                         run=None, step=None, model=None, vdate=None, cyc=None, 
+                         run=None, step=None, model=None, vdate=None, vhr=None, 
                          verif_case=None, verif_type=None, vx_mask=None, 
                          job_type=None, var_name=None, vhour=None, 
                          fhr_start=None, fhr_end=None, fhr_incr=None, 
@@ -679,7 +679,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
         elif job_type == 'gather2':
             check_if_none = [
                 data_dir, restart_dir, verif_case, met_tool, vdate, net, step, 
-                model, run, cyc
+                model, run, vhr
             ]
             if any([var is None for var in check_if_none]):
                 e = (f"ERROR: None encountered as an argument while copying"
@@ -691,7 +691,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 f'{model}.{vdate}'
             ))
             copy_files.append(
-                f'{net}.{step}.{model}.{run}.{verif_case}.v{vdate}.c{cyc}z.stat'
+                f'{net}.{step}.{model}.{run}.{verif_case}.v{vdate}.c{vhr}z.stat'
             )
     for sub_dir in sub_dirs:
         for copy_file in copy_files:

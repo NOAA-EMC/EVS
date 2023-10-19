@@ -20,7 +20,7 @@ from cam_stats_grid2obs_var_defs import generate_stats_jobs_dict as var_defs
 print(f"BEGIN: {os.path.basename(__file__)}")
 
 # Read in environment variables
-cyc = os.environ['cyc']
+vhr = os.environ['vhr']
 job_type = os.environ['job_type']
 PYTHONPATH = os.environ['PYTHONPATH']
 COMPONENT = os.environ['COMPONENT']
@@ -154,7 +154,7 @@ if job_type == 'generate':
 
 # Make a dictionary of environment variables needed to run this particular job
 job_env_vars_dict = {
-    'cyc': cyc,
+    'vhr': vhr,
     'NET': NET,
     'STEP': STEP,
     'RUN': RUN,
@@ -1059,7 +1059,7 @@ elif STEP == 'stats':
                 + 'step=\\\"${STEP}\\\", '
                 + 'model=\\\"${MODELNAME}\\\", '
                 + 'run=\\\"${RUN}\\\", '
-                + 'cyc=\\\"${cyc}\\\", '
+                + 'vhr=\\\"${vhr}\\\", '
                 + f'job_type=\\\"{job_type}\\\"'
                 + ')\"'
             )
@@ -1081,7 +1081,7 @@ elif STEP == 'stats':
                 + 'step=\\\"${STEP}\\\", '
                 + 'model=\\\"${MODELNAME}\\\", '
                 + 'run=\\\"${RUN}\\\", '
-                + 'cyc=\\\"${cyc}\\\", '
+                + 'vhr=\\\"${vhr}\\\", '
                 + f'job_type=\\\"{job_type}\\\"'
                 + ')\"'
             )
