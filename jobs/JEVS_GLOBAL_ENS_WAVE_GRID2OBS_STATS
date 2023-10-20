@@ -56,7 +56,7 @@ export VERIF_CASE=${VERIF_CASE:-grid2obs}
 # Define EVSIN/COMOUT variables     
 ####################################
 export EVSIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export COMINmodel=${COMINmodel:-$(compath.py ${envir}/com/${MODELNAME}/${gefs_ver})}
+export COMINgefs=${COMINgefs:-$(compath.py ${envir}/com/${MODELNAME}/${gefs_ver})}
 export ARCgefs=${EVSIN}/prep/${COMPONENT}
 export EVSgdasnc=${EVSIN}/prep/${COMPONENT}
 

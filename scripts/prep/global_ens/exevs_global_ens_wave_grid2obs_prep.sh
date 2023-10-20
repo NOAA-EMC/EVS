@@ -52,17 +52,17 @@ for cyc in ${cycles} ; do
   for hr in ${lead_hours} ; do
     filename="gefs.wave.t${cyc}z.mean.global.0p25.f${hr}.grib2"
     newname="gefs.wave.${INITDATE}.t${cyc}z.mean.global.0p25.f${hr}.grib2"
-    if [ ! -s ${COMINmodel}/${MODELNAME}.${INITDATE}/${cyc}/wave/gridded/${filename} ]; then
+    if [ ! -s ${COMINgefs}/${MODELNAME}.${INITDATE}/${cyc}/wave/gridded/${filename} ]; then
 	if [ $SENDMAIL = YES ]; then
           export subject="F${hr} GEFS Forecast Data Missing for EVS ${COMPONENT}"
           echo "Warning: No GEFS forecast was available for ${INITDATE}${cyc}f${hr}" > mailmsg
-          echo "Missing file is ${COMINmodel}/${MODELNAME}.${INITDATE}/${cyc}/wave/gridded/${filename}" >> mailmsg
+          echo "Missing file is ${COMINgefs}/${MODELNAME}.${INITDATE}/${cyc}/wave/gridded/${filename}" >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
           cat mailmsg | mail -s "$subject" $maillist
 	fi
     else
         if [ ! -s ${ARCgefs}/${newname} ]; then
-            cp -v ${COMINmodel}/${MODELNAME}.${INITDATE}/${cyc}/wave/gridded/${filename} $DATA/gefs_wave_grib2/${newname}
+            cp -v ${COMINgefs}/${MODELNAME}.${INITDATE}/${cyc}/wave/gridded/${filename} $DATA/gefs_wave_grib2/${newname}
             if [ $SENDCOM = YES ]; then
                 cp -v $DATA/gefs_wave_grib2/${newname} ${ARCgefs}/${newname}
             fi
