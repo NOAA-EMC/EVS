@@ -61,10 +61,10 @@ for cyc in ${cycles} ; do
           cat mailmsg | mail -s "$subject" $maillist
 	fi
     else
-        if [ ! -s ${ARCgefs}/${newname} ]; then
+        if [ ! -s ${COMOUTgefs}/${newname} ]; then
             cp -v ${COMINgefs}/${MODELNAME}.${INITDATE}/${cyc}/wave/gridded/${filename} $DATA/gefs_wave_grib2/${newname}
             if [ $SENDCOM = YES ]; then
-                cp -v $DATA/gefs_wave_grib2/${newname} ${ARCgefs}/${newname}
+                cp -v $DATA/gefs_wave_grib2/${newname} ${COMOUTgefs}/${newname}
             fi
         fi
     fi
