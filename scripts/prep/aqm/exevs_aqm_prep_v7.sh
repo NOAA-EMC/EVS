@@ -60,7 +60,7 @@ while [ ${ic} -le ${endvhr} ]; do
 	    cat $DATA/logs/${model1}/metplus_hourly_ascii2nc.log*
 	    mv $DATA/logs/${model1}/metplus_hourly_ascii2nc.log* $DATA/logs
 	    if [ ${SENDCOM} = "YES" ]; then
-	        cp ${PREP_SAVE_DIR}/airnow_hourly_aqobs_${VDATE}${VHOUR}.nc ${EVSOUTaqm}
+	        cp ${PREP_SAVE_DIR}/airnow_hourly_aqobs_${VDATE}${VHOUR}.nc ${COMOUTproc}
 	    fi
         else
             echo "Warning: can not find ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf"
@@ -90,7 +90,7 @@ if [ -s ${checkfile} ]; then
         cat $DATA/logs/${model1}}/metplus_daily_ascii2nc.log*
         mv $DATA/logs/${model1}/metplus_daily_ascii2nc.log* $DATA/logs
 	if [ ${SENDCOM} = "YES" ]; then
-	    cp ${PREP_SAVE_DIR}/airnow_daily_${VDATE}.nc ${EVSOUTaqm}
+	    cp ${PREP_SAVE_DIR}/airnow_daily_${VDATE}.nc ${COMOUTproc}
 	fi
     else
         echo "Warning: can not find ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf"
@@ -143,7 +143,7 @@ then
         wgrib2 -d 2 ${ozmax8_file} -set_ftime "30-53 hour ave fcst" -grib out2.grb2
         wgrib2 -d 3 ${ozmax8_file} -set_ftime "54-77 hour ave fcst" -grib out3.grb2
 	if [ ${SENDCOM} = "YES" ]; then
-            cat out1.grb2 out2.grb2 out3.grb2 > ${EVSOUTaqm}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+            cat out1.grb2 out2.grb2 out3.grb2 > ${COMOUTproc}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
 	fi
     else
         if [ ${SENDMAIL} = "YES" ]; then
@@ -168,7 +168,7 @@ then
         wgrib2 -d 2 ${ozmax8_file} -set_ftime "24-47 hour ave fcst" -grib out2.grb2
         wgrib2 -d 3 ${ozmax8_file} -set_ftime "48-71 hour ave fcst" -grib out3.grb2
 	if [ ${SENDCOM} = "YES" ]; then
-            cat out1.grb2 out2.grb2 out3.grb2 > ${EVSOUTaqm}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
+            cat out1.grb2 out2.grb2 out3.grb2 > ${COMOUTproc}/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
 	fi
     else
         if [ ${SENDMAIL} = "YES" ]; then
