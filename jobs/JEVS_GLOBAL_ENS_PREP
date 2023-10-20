@@ -40,10 +40,10 @@ export COMINcmce=$COMINnaefs
 export COMINobsproc=${COMINobsproc:-$(compath.py $envir/com/obsproc/${obsproc_ver})}
 export DCOMINnohrsc=${DCOMINnohrsc:-$DCOMROOT}
 export DCOMINosi_saf=${DCOMINosi_saf:-$DCOMROOT}
-export DCOMINghrsst=${DCOMINsst:-$DCOMROOT} 
+export DCOMINghrsst=${DCOMINghrsst:-$DCOMROOT} 
 
 export COMINgefs_bc=${COMINgefs_bc:-$COMINnaefs}
-export DCOMINcmce_bc=${DCOMINcmce_bc:-DCOMIN}
+export DCOMINcmce_bc=${DCOMINcmce_bc:-$DCOMIN}
 export EVSINgefs=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/gefs
 export EVSINgefs_bc=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/gefs_bc
 export EVSINcmce=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/cmce
