@@ -34,6 +34,9 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
+export evs_ver=v1.0.0
+evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
+
 ############################################################
 # set some variables
 ############################################################
@@ -46,8 +49,8 @@ export KEEPDATA=${KEEPDATA:-YES}
 ## developers directories
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export OUTPUTROOT="/lfs/h2/emc/vpppg/noscrub/$USER"
-export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}
-export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver}/${STEP}/${COMPONENT}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}
+export COMOUT=${OUTPUTROOT}/${NET}/${evs_ver_2d}/${STEP}/${COMPONENT}
 
 export run_mpi='yes'
 export gather='yes'
