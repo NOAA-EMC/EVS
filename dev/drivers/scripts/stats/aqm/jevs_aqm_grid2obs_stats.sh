@@ -57,18 +57,18 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 ########################################################################
 
-#export maillist=${maillist:-'ho-chun.huang@noaa.gov,alicia.bentley@noaa.gov'}
+export maillist=${maillist:-'ho-chun.huang@noaa.gov,alicia.bentley@noaa.gov'}
 
-#if [ -z "$maillist" ]; then
+if [ -z "$maillist" ]; then
 
    echo "maillist variable is not defined. Exiting without continuing."
 
-#else
+else
 
    # CALL executable job script here
    $HOMEevs/jobs/JEVS_AQM_STATS
 
-#fi
+fi
 
 ######################################################################
 ## Purpose: This job will generate the grid2obs statistics for the AQM
