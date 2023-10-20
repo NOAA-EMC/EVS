@@ -5,7 +5,7 @@
 # NAME: config.evs.prod.stats.cam.atmos.precip.namnest 
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Set up configurations to run EVS NAM Nest Precipitation - Statistics
-# DEPENDENCIES: $HOMEevs/ecf/cam/stats/jevs_namnest_precip_stats.ecf
+# DEPENDENCIES: $HOMEevs/scripts/stats/cam/exevs_namnest_precip_stats.sh
 # 
 # =============================================================================
 
@@ -17,6 +17,7 @@ export MET_CONFIG_OVERRIDES=""
 
 # Restart Settings
 export RESTART_DIR="${COMOUTsmall}/restart/c${cyc}"
+export COMPLETED_JOBS_FILE="completed_jobs.txt"
 
 # Time Settings
 export FHR_GROUP_LIST="FULL"
@@ -134,7 +135,7 @@ if [ "$BOOL_NBRHD" = True ]; then
     export NBRHD_WIDTHS="1,3,5,7,9,11,13,17,21,25,31,35,39,43,47,53,57,63"
     if [ "$NEST" = "conus" ]; then
         export VERIF_TYPE="ccpa"
-        export COMINobs=${COMINccpa}
+        export COMINobs=${EVSINccpa}
         export OBSNAME="ccpa"
         export MIN_IHOUR="00"
         export GRID="G240"
@@ -142,7 +143,7 @@ if [ "$BOOL_NBRHD" = True ]; then
         export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G240_CONUS.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_South.nc"
     elif [ "$NEST" = "ak" ]; then
         export VERIF_TYPE="mrms"
-        export COMINobs=${COMINmrms}
+        export COMINobs=${EVSINmrms}
         export OBSNAME="mrms"
         export MIN_IHOUR="00"
         export GRID="G091"
@@ -150,7 +151,7 @@ if [ "$BOOL_NBRHD" = True ]; then
         export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc"
     elif [ "$NEST" = "hi" ]; then
         export VERIF_TYPE="mrms"
-        export COMINobs=${COMINmrms}
+        export COMINobs=${EVSINmrms}
         export OBSNAME="mrms"
         export MIN_IHOUR="00"
         export GRID="G196"
@@ -158,7 +159,7 @@ if [ "$BOOL_NBRHD" = True ]; then
         export MASK_POLY_LIST="${FIXevs}/masks/Hawaii_G196.nc"
     elif [ "$NEST" = "pr" ]; then
         export VERIF_TYPE="mrms"
-        export COMINobs=${COMINmrms}
+        export COMINobs=${EVSINmrms}
         export OBSNAME="mrms"
         export MIN_IHOUR="00"
         export GRID="G194"
@@ -174,7 +175,7 @@ else
     export NBRHD_WIDTHS="1"
     if [ "$NEST" = "conus" ]; then
         export VERIF_TYPE="ccpa"
-        export COMINobs=${COMINccpa}
+        export COMINobs=${EVSINccpa}
         export OBSNAME="ccpa"
         export MIN_IHOUR="00"
         export GRID="G212"
@@ -182,7 +183,7 @@ else
         export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G212_CONUS.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_South.nc"
     elif [ "$NEST" = "ak" ]; then
         export VERIF_TYPE="mrms"
-        export COMINobs=${COMINmrms}
+        export COMINobs=${EVSINmrms}
         export OBSNAME="mrms"
         export MIN_IHOUR="00"
         export GRID="G216"
@@ -190,7 +191,7 @@ else
         export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G216.nc"
     elif [ "$NEST" = "hi" ]; then
         export VERIF_TYPE="mrms"
-        export COMINobs=${COMINmrms}
+        export COMINobs=${EVSINmrms}
         export OBSNAME="mrms"
         export MIN_IHOUR="00"
         export GRID="G196"
@@ -198,7 +199,7 @@ else
         export MASK_POLY_LIST="${FIXevs}/masks/Hawaii_G196.nc"
     elif [ "$NEST" = "pr" ]; then
         export VERIF_TYPE="mrms"
-        export COMINobs=${COMINmrms}
+        export COMINobs=${EVSINmrms}
         export OBSNAME="mrms"
         export MIN_IHOUR="00"
         export GRID="G194"

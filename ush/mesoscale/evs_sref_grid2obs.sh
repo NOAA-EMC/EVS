@@ -9,7 +9,7 @@ export vday=$VDATE
 export regrid='NONE'
 ############################################################
 
-$USHevs/evs_check_sref_files.sh
+$USHevs/mesoscale/evs_check_sref_files.sh
 
 >run_all_sref_g2o_poe.sh
 
@@ -47,7 +47,7 @@ for  obsv in prepbufr ; do
        echo  "export modelhead=sref" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
     
        echo  "export modelpath=$COMINsref" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
-       echo  "export modelmean=$COMINsrefmean" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       echo  "export modelmean=$EVSINsrefmean" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo  "export modelgrid=pgrb212" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo  "export modeltail='.grib2'" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo  "export extradir=''" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
@@ -57,7 +57,9 @@ for  obsv in prepbufr ; do
        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstSREF_obsPREPBUFR_mean.conf">> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstSREF_obsPREPBUFR_prob.conf">> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
 
+       if [ $SENDCOM = 'YES' ]; then
        echo "cp \$output_base/stat/*.stat $COMOUTsmall" >> run_sref_g2o_${domain}.${obsv}.${fhr}.sh
+       fi
 
        chmod +x run_sref_g2o_${domain}.${obsv}.${fhr}.sh
        echo "${DATA}/run_sref_g2o_${domain}.${obsv}.${fhr}.sh" >> run_all_sref_g2o_poe.sh

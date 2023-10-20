@@ -35,7 +35,7 @@ day4_datetime = day1_datetime + datetime.timedelta(days=3)
 
 
 
-SPC_PROD_DIR = os.environ['COMINspc']+'/'+OTLK_DATE+'/validation_data/weather/spc'
+SPC_PROD_DIR = os.environ['DCOMINspc']+'/'+OTLK_DATE+'/validation_data/weather/spc'
 
 
 VERIF_GRIDS = ['G211','G221','G227','3km']
@@ -118,6 +118,13 @@ for DAY in range(1,4):
                         print(f'Processing Record Number #{REC}: {NAME}')
 
                         if DAY == 3:
+                            if "DEBUG" in NAME:
+                                print(f'Warning: Invalid record name ({NAME}) '
+                                      + f'for Day {DAY} outlook area issued '
+                                      + f'at {OTLK}Z on {OTLK_DATE}. Check for'
+                                      + f' bad data in the spc dbf file:'
+                                      + f'{OTLK_DIR}/{SHP_FILE}.dbf')
+                                continue
                             MASK_FNAME = f'spc_otlk.day{DAY}_{NAME}.v{V1DATE}-{V2DATE}.{VERIF_GRID}'
                             MASK_NAME = f"DAY{DAY}_{NAME}"
                         else:

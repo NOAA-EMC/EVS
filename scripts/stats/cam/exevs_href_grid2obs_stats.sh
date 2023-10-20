@@ -35,7 +35,7 @@ export verify=$VERIF_CASE
 export run_mpi=${run_mpi:-'yes'}
 
 export COMHREF=$COMINhref
-export PREPBUFR=$COMINprepbufr
+export PREPBUFR=$COMINobsproc
 
 export GATHER_CONF_PRECIP=$PRECIP_CONF
 export GRID2OBS_CONF=$PARMevs/metplus_config/$STEP/$COMPONENT/grid2obs
