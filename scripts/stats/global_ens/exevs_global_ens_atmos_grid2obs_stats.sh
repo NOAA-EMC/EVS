@@ -41,11 +41,11 @@ export verif_case=$3
 
 
 if [ $ens = all ] || [ $ens = gefs ] || [ $ens = cmce ] || [ $ens = naefs ] || [ $ens = ecme ] ; then 	
-    if [ ! -s ${COMIN}.${VDATE}/gefs/gfs.t00z.prepbufr.f00.nc ] ; then
+    if [ ! -s ${EVSIN}.${VDATE}/gefs/gfs.t00z.prepbufr.f00.nc ] ; then
       if [ $SENDMAIL = YES ]; then
         export subject="PREPBUFR data file missing "
         echo "Warning: No PREPBUFR data available for ${VDATE}" > mailmsg 
-        echo Missing file is ${COMIN}.${VDATE}/gefs/gfs.t00z.prepbufr.f00.nc  >> mailmsg
+        echo Missing file is ${EVSIN}.${VDATE}/gefs/gfs.t00z.prepbufr.f00.nc  >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
         cat mailmsg | mail -s "$subject" $maillist
       fi

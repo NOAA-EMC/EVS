@@ -25,13 +25,13 @@ export SENDDBN=${SENDDBN:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDMAIL=${SENDMAIL:-NO}
 
-export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$MODELNAME.$VDATE
-export EVSapcp24mean=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$RUN.$VDATE/apcp24_mean
+export EVSIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$MODELNAME.$VDATE
+export EVSINapcp24mean=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$RUN.$VDATE/apcp24_mean
 export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}/$STEP/$COMPONENT/$RUN.$VDATE
 export DATA_IN=${DATA_IN:-$DATAROOT}
 mkdir -p $COMOUT
 
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs_gens.${evs_ver}}
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=$HOMEevs/exec
 export PARMevs=$HOMEevs/parm
 export USHevs=$HOMEevs/ush

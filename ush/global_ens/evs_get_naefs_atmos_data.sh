@@ -22,7 +22,7 @@ if [ $modnam = gefs_bc ] ; then
   cd $WORK
   total=$gefs_mbrs
 
-   export outdata=$COMOUT_gefs_bc
+   export outdata=$COMOUTgefs_bc
 
    if [ ! -s $outdata/gefs.ens30.t12z.grid3.f384.grib2 ] ; then
 
@@ -99,7 +99,7 @@ if [ $modnam = cmce_bc ] ; then
 
   total=20
 
-   export outdata=$COMOUT_cmce_bc
+   export outdata=$COMOUTcmce_bc
 
      for cyc in $naefs_cyc ; do
 
@@ -171,7 +171,7 @@ if [ $modnam = gefs_bc_apcp24h ] ; then
 
     cd $WORK
 
-    export outdata=$COMOUT_gefs_bc
+    export outdata=$COMOUTgefs_bc
 
     if [ $gefs_mbrs = 20 ] ; then
       mbrs='1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20'

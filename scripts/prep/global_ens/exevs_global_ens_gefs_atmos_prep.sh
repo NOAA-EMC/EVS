@@ -73,14 +73,14 @@ if [ $get_nohrsc24h = yes ] ; then
 fi
 
 if [ $get_ghrsst = yes ] ; then
-  if [ -s $DCOMINsst/$vday/validation_data/marine/ghrsst/${vday}_OSPO_L4_GHRSST.nc ] ; then
-     cp $DCOMINsst/$vday/validation_data/marine/ghrsst/${vday}_OSPO_L4_GHRSST.nc $COMOUT_gefs/ghrsst.t00z.nc
+  if [ -s $DCOMINghrsst/$vday/validation_data/marine/ghrsst/${vday}_OSPO_L4_GHRSST.nc ] ; then
+     cp $DCOMINghrsst/$vday/validation_data/marine/ghrsst/${vday}_OSPO_L4_GHRSST.nc $COMOUTgefs/ghrsst.t00z.nc
   else
     if [ $SENDMAIL = YES ]; then
      export subject="GHRSST OSPO Data Missing for EVS ${COMPONENT}"
      export maillist=${maillist:-'alicia.bentley@noaa.gov,steven.simon@noaa.gov'}
      echo "Warning: No GHRSST OSPO data was available for valid date ${vday}" > mailmsg
-     echo Missing file is  $DCOMINsst/$vday/validation_data/marine/ghrsst/${vday}_OSPO_L4_GHRSST.nc >> mailmsg
+     echo Missing file is  $DCOMINghrsst/$vday/validation_data/marine/ghrsst/${vday}_OSPO_L4_GHRSST.nc >> mailmsg
      echo "Job ID: $jobid" >> mailmsg
      cat mailmsg | mail -s "$subject" $maillist
     fi 
