@@ -74,7 +74,7 @@ fi
 
 if [ $get_ghrsst = yes ] ; then
   if [ -s $DCOMINghrsst/$vday/validation_data/marine/ghrsst/${vday}_OSPO_L4_GHRSST.nc ] ; then
-     cp $DCOMINghrsst/$vday/validation_data/marine/ghrsst/${vday}_OSPO_L4_GHRSST.nc $COMOUTgefs/ghrsst.t00z.nc
+     [[ $SENDCOM=YES ]] && cp $DCOMINghrsst/$vday/validation_data/marine/ghrsst/${vday}_OSPO_L4_GHRSST.nc $COMOUTgefs/ghrsst.t00z.nc
   else
     if [ $SENDMAIL = YES ]; then
      export subject="GHRSST OSPO Data Missing for EVS ${COMPONENT}"
