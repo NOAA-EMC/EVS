@@ -18,12 +18,12 @@ import numpy as np
 
 
 valid_date = os.environ['VDATE'] 
-cyc = os.environ['cyc']
+vhr = os.environ['vhr']
 
 YYYY = int(valid_date[0:4])
 MM   = int(valid_date[4:6])
 DD   = int(valid_date[6:8])
-HH   = int(cyc)
+HH   = int(vhr)
 
 valid = datetime.datetime(YYYY,MM,DD,HH,0,0)
 
