@@ -1,6 +1,6 @@
 #!/bin/ksh
 
-set -xa
+set -x
 #######################################################
 #######################################################
 
@@ -26,8 +26,8 @@ export SENDECF=${SENDECF:-YES}
 export SENDMAIL=${SENDMAIL:-NO}
 
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
-export EVSIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$MODELNAME.$VDATE
-export EVSINapcp24mean=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$RUN.$VDATE/apcp24_mean
+export EVSIN=${EVSIN:-$COMIN/stats/$COMPONENT/$MODELNAME.$VDATE}
+export EVSINapcp24mean=${EVSINapcp24mean:-$COMIN/stats/$COMPONENT/$RUN.$VDATE/apcp24_mean}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}/$STEP/$COMPONENT/$RUN.$VDATE
 export DATA_IN=${DATA_IN:-$DATAROOT}
 mkdir -p $COMOUT

@@ -40,11 +40,7 @@ export run_mpi=yes
 export get_gefs_bc_apcp24h=yes
 export get_model_bc=yes
 
-if [ $naefs_ver=v6.1 ] ; then
- export gefs_mbrs=20
-else
- export gefs_mbrs=30
-fi
+export gefs_mbrs=30
 
 export SENDMAIL=YES
 export maillist='alicia.bentley@noaa.gov,steven.simon@noaa.gov'

@@ -3,7 +3,7 @@
 #   By Binbin Zhou, IMSG@EMC/NCEP
 #   Feb 2, 2022
 #
-set -xa
+set -x
 #######################################################
 #######################################################
 
@@ -31,8 +31,8 @@ export SENDECF=${SENDECF:-YES}
 export SENDMAIL=${SENDMAIL:-NO}
 
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
-export EVSIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/prep/$COMPONENT/$RUN
-export EVSINwmo=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/prep/$COMPONENT/atmos
+export EVSIN=${EVSIN:-$COMIN/prep/$COMPONENT/$RUN}
+export EVSINwmo=${EVSINwmo:-$COMIN/prep/$COMPONENT/$RUN}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver)}/$STEP/$COMPONENT
 mkdir $COMOUT
 
