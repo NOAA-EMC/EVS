@@ -26,42 +26,42 @@ cd $ccpadir
 
  if [ -s $COMCCPA/ccpa.${vday}/00/ccpa.t00z.03h.hrap.conus.gb2 ] && [ -s $COMCCPA/ccpa.${vday}/00/ccpa.t00z.01h.hrap.conus.gb2 ] ; then 
 
-     for cyc in 00 ; do
-       cp $COMCCPA/ccpa.${vday}/00/ccpa.t${cyc}z.01h.hrap.conus.gb2  $ccpadir/ccpa01h.t${cyc}z.G240.grib2
-       cp $COMCCPA/ccpa.${vday}/00/ccpa.t${cyc}z.03h.hrap.conus.gb2  $ccpadir/ccpa03h.t${cyc}z.G240.grib2
+     for vhr in 00 ; do
+       cp $COMCCPA/ccpa.${vday}/00/ccpa.t${vhr}z.01h.hrap.conus.gb2  $ccpadir/ccpa01h.t${vhr}z.G240.grib2
+       cp $COMCCPA/ccpa.${vday}/00/ccpa.t${vhr}z.03h.hrap.conus.gb2  $ccpadir/ccpa03h.t${vhr}z.G240.grib2
      done
 
-     for cyc in 01 02 03 04 05 06  ; do
-       cp $COMCCPA/ccpa.${vday}/06/ccpa.t${cyc}z.01h.hrap.conus.gb2  $ccpadir/ccpa01h.t${cyc}z.G240.grib2
+     for vhr in 01 02 03 04 05 06  ; do
+       cp $COMCCPA/ccpa.${vday}/06/ccpa.t${vhr}z.01h.hrap.conus.gb2  $ccpadir/ccpa01h.t${vhr}z.G240.grib2
      done
 
-     for cyc in 07 08 09 10 11 12  ; do
-       cp $COMCCPA/ccpa.${vday}/12/ccpa.t${cyc}z.01h.hrap.conus.gb2  $ccpadir/ccpa01h.t${cyc}z.G240.grib2
+     for vhr in 07 08 09 10 11 12  ; do
+       cp $COMCCPA/ccpa.${vday}/12/ccpa.t${vhr}z.01h.hrap.conus.gb2  $ccpadir/ccpa01h.t${vhr}z.G240.grib2
      done
 
-     for cyc in 13 14 15 16 17 18  ; do
-       cp $COMCCPA/ccpa.${vday}/18/ccpa.t${cyc}z.01h.hrap.conus.gb2 $ccpadir/ccpa01h.t${cyc}z.G240.grib2
+     for vhr in 13 14 15 16 17 18  ; do
+       cp $COMCCPA/ccpa.${vday}/18/ccpa.t${vhr}z.01h.hrap.conus.gb2 $ccpadir/ccpa01h.t${vhr}z.G240.grib2
      done
 
-     for cyc in 19 20 21 22 23  ; do
-       cp $COMCCPA/ccpa.${nextday}/00/ccpa.t${cyc}z.01h.hrap.conus.gb2 $ccpadir/ccpa01h.t${cyc}z.G240.grib2
+     for vhr in 19 20 21 22 23  ; do
+       cp $COMCCPA/ccpa.${nextday}/00/ccpa.t${vhr}z.01h.hrap.conus.gb2 $ccpadir/ccpa01h.t${vhr}z.G240.grib2
      done
 
  
-     for cyc in  03 06 ; do 
-       cp $COMCCPA/ccpa.${vday}/06/ccpa.t${cyc}z.03h.hrap.conus.gb2  $ccpadir/ccpa03h.t${cyc}z.G240.grib2
+     for vhr in  03 06 ; do 
+       cp $COMCCPA/ccpa.${vday}/06/ccpa.t${vhr}z.03h.hrap.conus.gb2  $ccpadir/ccpa03h.t${vhr}z.G240.grib2
      done
  
-     for cyc in 09 12 ; do 
-       cp $COMCCPA/ccpa.${vday}/12/ccpa.t${cyc}z.03h.hrap.conus.gb2 $ccpadir/ccpa03h.t${cyc}z.G240.grib2
+     for vhr in 09 12 ; do 
+       cp $COMCCPA/ccpa.${vday}/12/ccpa.t${vhr}z.03h.hrap.conus.gb2 $ccpadir/ccpa03h.t${vhr}z.G240.grib2
      done 
 
-     for cyc in 15 18 ; do
-       cp $COMCCPA/ccpa.${vday}/18/ccpa.t${cyc}z.03h.hrap.conus.gb2 $ccpadir/ccpa03h.t${cyc}z.G240.grib2
+     for vhr in 15 18 ; do
+       cp $COMCCPA/ccpa.${vday}/18/ccpa.t${vhr}z.03h.hrap.conus.gb2 $ccpadir/ccpa03h.t${vhr}z.G240.grib2
      done
 
-     for cyc in 21 ; do
-       cp $COMCCPA/ccpa.${nextday}/00/ccpa.t${cyc}z.03h.hrap.conus.gb2 $ccpadir/ccpa03h.t${cyc}z.G240.grib2
+     for vhr in 21 ; do
+       cp $COMCCPA/ccpa.${nextday}/00/ccpa.t${vhr}z.03h.hrap.conus.gb2 $ccpadir/ccpa03h.t${vhr}z.G240.grib2
      done
 
   else
@@ -85,8 +85,8 @@ export ccpa24=$ccpadir/ccpa24
 mkdir -p $ccpa24
 
 
- cycles="12"
- for cyc in $cycles ; do
+ vhours="12"
+ for vhr in $vhours ; do
   cp ${COMCCPA}/ccpa.${vday}/12/ccpa.t12z.06h.hrap.conus.gb2 $ccpa24/ccpa1
   cp ${COMCCPA}/ccpa.${vday}/06/ccpa.t06z.06h.hrap.conus.gb2 $ccpa24/ccpa2
   cp ${COMCCPA}/ccpa.${vday}/00/ccpa.t00z.06h.hrap.conus.gb2 $ccpa24/ccpa3
@@ -219,10 +219,10 @@ if [ $data = prepbufr ] ; then
 
  if [ -s $COMINobsproc/rap.${VDATE}/rap.t12z.prepbufr.tm00 ] ; then
   for grid in $grids ; do
-   for cyc in $cycs  ; do
+   for vhr in $cycs  ; do
 
-     export vbeg=${cyc}
-     export vend=${cyc}
+     export vbeg=${vhr}
+     export vend=${vhr}
      export verif_grid=$grid
 
      if [ $lvl = sfc ] ; then
@@ -231,7 +231,7 @@ if [ $data = prepbufr ] ; then
        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr_href_profile.conf
      elif [ $lvl = both ] ; then
        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr_href.conf
-       if [ $cyc = 00 ] || [ $cyc = 12 ] ; then
+       if [ $vhr = 00 ] || [ $vhr = 12 ] ; then
           ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr_href_profile.conf
        fi
      fi
@@ -274,9 +274,9 @@ if [ $data = gfs_prepbufr ] ; then
 
    export verif_grid=$grid
 
-   for cyc in 00 12 ; do
-      export vbeg=${cyc}
-      export vend=${cyc}
+   for vhr in 00 12 ; do
+      export vbeg=${vhr}
+      export vend=${vhr}
 
       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr_Profile.conf
    done
@@ -315,21 +315,21 @@ export accum
     cycs="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
    fi
 
-   export cyc
+   export vhr
    export output_base=$WORK/mrms${accum}h
    export mrmsdir=$WORK/mrms.$vday
    mkdir -p $mrmsdir
    cd $mrmsdir
 
-   for cyc in $cycs ; do
+   for vhr in $cycs ; do
 
-    export vbeg=$vday$cyc
-    export vend=$vday$cyc
+    export vbeg=$vday$vhr
+    export vend=$vday$vhr
    
 
-    mrms03=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${cyc}0000.grib2.gz
+    mrms03=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
     cp $mrms03 $mrmsdir/.
-    gunzip MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${cyc}0000.grib2.gz
+    gunzip MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
     export MET_GRIB_TABLES=$PARMevs/metplus_config/cam/precip/prep/grib2_mrms_qpf.txt
 
     export togrid=G216

@@ -144,8 +144,8 @@ while [ $fhr -le $fhr_max ]; do
    export fhr
 
    # Define initialization date/cycle for each forecast lead
-   export IDATE=`$NDATE -$fhr ${VDATE}${cyc} | cut -c 1-8`
-   export INIT_HR=`$NDATE -$fhr ${VDATE}${cyc} | cut -c 9-10`
+   export IDATE=`$NDATE -$fhr ${VDATE}${vhr} | cut -c 1-8`
+   export INIT_HR=`$NDATE -$fhr ${VDATE}${vhr} | cut -c 9-10`
 
    # Define forecast filename for each model 
    if [ ${MODELNAME} = hireswarw ]; then
@@ -186,7 +186,7 @@ done
 if [ $nfcst = 0 ]; then
    if [ $SENDMAIL = YES ]; then
       export subject="${DOM} ${MODELNAME} Data Missing for EVS ${COMPONENT}"
-      echo "Warning: ${DOM} ${MODELNAME} forecast files are missing for valid date ${VDATE}${cyc}. METplus will not run." > mailmsg
+      echo "Warning: ${DOM} ${MODELNAME} forecast files are missing for valid date ${VDATE}${vhr}. METplus will not run." > mailmsg
       echo -e "`cat $DATA/job${JOBNUM}_missing_fcst_list`" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $maillist
@@ -210,7 +210,7 @@ else
 fi
 
 
-export obs_file=mrms.${VDATE}/${DOMAIN}/${MRMS_PRODUCT}_${OBS_PROD}_${VDATE}-${cyc}0000.${VERIF_GRID}.nc
+export obs_file=mrms.${VDATE}/${DOMAIN}/${MRMS_PRODUCT}_${OBS_PROD}_${VDATE}-${vhr}0000.${VERIF_GRID}.nc
 export OBS_INPUT_TEMPLATE=mrms.{valid?fmt=%Y%m%d}/${DOMAIN}/${MRMS_PRODUCT}_${OBS_PROD}_{valid?fmt=%Y%m%d}-{valid?fmt=%H}0000.${VERIF_GRID}.nc
 
 if [ -s $EVSINmrms/${obs_file} ]; then
@@ -218,7 +218,7 @@ if [ -s $EVSINmrms/${obs_file} ]; then
 
 else
    export subject="MRMS Prep Data Missing for EVS ${COMPONENT}"
-   echo "Warning: The MRMS ${MRMS_PRODUCT} file is missing for valid date ${VDATE}${cyc}. METplus will not run." > mailmsg
+   echo "Warning: The MRMS ${MRMS_PRODUCT} file is missing for valid date ${VDATE}${vhr}. METplus will not run." > mailmsg
    echo "Missing file is $EVSINmrms/${obs_file}" >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $maillist
@@ -269,7 +269,7 @@ if [ $nfcst -ge 1 ] && [ $obs_found = 1 ]; then
    fi
 
 else
-   echo "Missing fcst or obs file(s) for ${VDATE}${cyc}. METplus will not run."
+   echo "Missing fcst or obs file(s) for ${VDATE}${vhr}. METplus will not run."
 
 fi
 

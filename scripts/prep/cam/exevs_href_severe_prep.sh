@@ -36,11 +36,11 @@ mkdir -p ${MODEL_INPUT_DIR}
 
 
 # Define settings for 00Z HREF time-lagged members
-if [ $cyc -eq 00 ];then
+if [ $vhr -eq 00 ];then
 
    nloop=1
 
-   export IDATE_lag=${IDATE_lag:-`$NDATE -12 ${IDATE}${cyc} | cut -c 1-8`}
+   export IDATE_lag=${IDATE_lag:-`$NDATE -12 ${IDATE}${vhr} | cut -c 1-8`}
 
    export MEM1_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE}
    export MEM2_INPUT_DIR=${COMIN}/${STEP}/${COMPONENT}/hiresw.${IDATE}
@@ -62,7 +62,7 @@ if [ $cyc -eq 00 ];then
    fhr_end1_lag12=48
 
 # Define settings for 12Z HREF time-lagged members
-elif [ $cyc -eq 12 ]; then
+elif [ $vhr -eq 12 ]; then
 
    nloop=2
 
@@ -92,7 +92,7 @@ elif [ $cyc -eq 12 ]; then
 
 else
 
-   echo "The current cyc, $cyc, is not supported for $MODELNAME. Exiting"
+   echo "The current vhr, $vhr, is not supported for $MODELNAME. Exiting"
    exit 1
 
 fi
@@ -126,8 +126,8 @@ i=1
    fi
 
    # Define accumulation begin/end time
-   export ACCUM_BEG=`$NDATE $fhr_beg ${IDATE}${cyc}`
-   export ACCUM_END=`$NDATE $fhr_end ${IDATE}${cyc}`
+   export ACCUM_BEG=`$NDATE $fhr_beg ${IDATE}${vhr}`
+   export ACCUM_END=`$NDATE $fhr_end ${IDATE}${vhr}`
 
 
    # Loop over all members to check that they exist
@@ -135,23 +135,23 @@ i=1
 
       # Define path to forecast file for each member
       if [ $i -eq 1 ]; then
-	 export mem1=hireswarw.t${cyc}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
+	 export mem1=hireswarw.t${vhr}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
          export fcst_file=${MEM1_INPUT_DIR}/${mem1}
 
       elif [ $i -eq 2 ]; then
-	 export mem2=hireswarwmem2.t${cyc}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
+	 export mem2=hireswarwmem2.t${vhr}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
          export fcst_file=${MEM2_INPUT_DIR}/${mem2}
 
       elif [ $i -eq 3 ]; then
-	 export mem3=hireswfv3.t${cyc}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
+	 export mem3=hireswfv3.t${vhr}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
          export fcst_file=${MEM3_INPUT_DIR}/${mem3}
 
       elif [ $i -eq 4 ]; then
-	 export mem4=hrrr.t${cyc}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
+	 export mem4=hrrr.t${vhr}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
          export fcst_file=${MEM4_INPUT_DIR}/${mem4}
 
       elif [ $i -eq 5 ]; then
-	 export mem5=namnest.t${cyc}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
+	 export mem5=namnest.t${vhr}z.MXUPHL25_A24.SSPF.${ACCUM_BEG}-${ACCUM_END}.f${fhr_end}.nc
          export fcst_file=${MEM5_INPUT_DIR}/${mem5}
 
       elif [ $i -eq 6 ]; then
@@ -197,7 +197,7 @@ i=1
 
    if [ $nfiles -ge $min_file_req ]; then
 
-      echo "Found $nfiles forecast files. Generating ${MODELNAME} SSPF for ${cyc}Z ${IDATE} cycle at F${fhr_end}"
+      echo "Found $nfiles forecast files. Generating ${MODELNAME} SSPF for ${vhr}Z ${IDATE} cycle at F${fhr_end}"
       ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GenEnsProd_fcstHREF_MXUPHL_SurrogateSevere.conf
       export err=$?; err_chk
 
@@ -212,7 +212,7 @@ i=1
 
       if [ $SENDMAIL = YES ]; then
          export subject="${MODELNAME} Forecast Data Missing for EVS ${COMPONENT}"
-         echo "Warning: Only $nfiles ${MODELNAME} forecast files found for ${cyc}Z ${IDATE} cycle. At least $min_file_req files are required. METplus will not run." > mailmsg
+         echo "Warning: Only $nfiles ${MODELNAME} forecast files found for ${vhr}Z ${IDATE} cycle. At least $min_file_req files are required. METplus will not run." > mailmsg
          echo -e "`cat missing_file_list`" >> mailmsg
          cat mailmsg | mail -s "$subject" $maillist
       fi

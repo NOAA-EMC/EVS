@@ -29,7 +29,7 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 export run_envir=dev
 
-export cyc=00
+export vhr=00
 
 export run_mpi=yes
 export gather=yes
