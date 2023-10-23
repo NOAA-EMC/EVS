@@ -132,7 +132,7 @@ fi
 # Run METplus (StatAnalysis) if GridStat output exists
 ###################################################################
 
-if [ $cyc = 23 ]; then
+if [ $vhr = 23 ]; then
 
    if [ "$(ls -A $COMOUTsmall)" ]; then
 

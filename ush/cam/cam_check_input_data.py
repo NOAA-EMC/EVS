@@ -55,7 +55,7 @@ if proceed:
     COMPONENT = os.environ['COMPONENT']
     SENDMAIL = os.environ['SENDMAIL']
     maillist = os.environ['maillist']
-    CYC = os.environ['cyc']
+    VHR = os.environ['vhr']
     jobid = os.environ['jobid']
     FIXevs = os.environ['FIXevs']
     VDATE = os.environ['VDATE']
@@ -489,7 +489,7 @@ if proceed:
                     DATAsubj = ', '.join(unk_names)
                 subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
                 DATAmsg_head = (f"Warning: Some unrecognized data were unavailable"
-                                + f" for valid date {VDATE} and cycle {CYC}Z.")
+                                + f" for valid date {VDATE} and cycle {VHR}Z.")
                 if len(unk_fnames) > max_num_files:
                     DATAmsg_body1 = (f"\nMissing files are: (showing"
                                 + f" {max_num_files} of"
@@ -533,7 +533,7 @@ if proceed:
                                    + f" EVS {COMPONENT}")
                         DATAmsg_head = (f"Warning: No {DATAsubj} data were"
                                         + f" available for valid date {VDATE},"
-                                        + f" cycle {CYC}Z, and f{lead_hours[0]}.")
+                                        + f" cycle {VHR}Z, and f{lead_hours[0]}.")
                     else:
                         lead_string = ', '.join(
                             [f'f{lead}' for lead in lead_hours]
@@ -541,7 +541,7 @@ if proceed:
                         subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
                         DATAmsg_head = (f"Warning: No {DATAsubj} data were"
                                         + f" available for valid date {VDATE},"
-                                        + f" cycle {CYC}Z, and {lead_string}.")
+                                        + f" cycle {VHR}Z, and {lead_string}.")
                 if len(fcst_pnames) > max_num_files:
                     DATAmsg_body1 = (f"\nMissing files are: (showing"
                                 + f" {max_num_files} of"
