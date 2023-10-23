@@ -51,7 +51,7 @@ export VERIF_TYPE=sea_ice
 export NDAYS=90
 export DAYS=91
 
-export COMROOT=/lfs/h2/emc/ptmp/$USER
+export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver/$STEP/$COMPONENT
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.${COMPONENT}.${VERIF_CASE}.${STEP}.${VERIF_TYPE}
