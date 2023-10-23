@@ -48,7 +48,7 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
 export nproc=64
 ############################################################
 
-export cyc=${cyc:-${cyc}}
+export vhr=${vhr:-${vhr}}
 export EVAL_PERIOD=${EVAL_PERIOD:-${EVAL_PERIOD}}
 export LINE_TYPE=${LINE_TYPE:-${LINE_TYPE}}
 

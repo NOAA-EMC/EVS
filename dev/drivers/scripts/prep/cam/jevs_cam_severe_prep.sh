@@ -47,7 +47,7 @@ export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver}/${STEP}/${COMPONENT}
 ############################################################
 
-export cyc=${cyc:-${cyc}}
+export vhr=${vhr:-${vhr}}
 
 export SENDMAIL=${SENDMAIL:-YES}
 export SENDCOM=${SENDCOM:-YES}

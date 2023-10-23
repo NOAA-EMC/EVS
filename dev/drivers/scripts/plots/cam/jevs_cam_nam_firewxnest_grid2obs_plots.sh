@@ -31,7 +31,7 @@ export KEEPDATA=YES
 export SENDMAIL=YES
 export SENDDBN=NO
 
-export cyc=00
+export vhr=00
 export envir=prod
 export NET=evs
 export STEP=plots
