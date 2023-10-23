@@ -28,13 +28,13 @@ export NEXTDATE=${NEXTDATE:-${PDY}}
 ####################################
 export SENDECF=${SENDECF:-YES}
 export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-NO}
+export SENDDBN=${SENDDBN:-YES}
 export SENDMAIL=${SENDMAIL:-NO}
 
 ####################################
 # Set EVS directories               
 ####################################
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
@@ -57,20 +57,17 @@ export VERIF_CASE=${VERIF_CASE:-grid2obs}
 # Define COMIN/COMOUT variables     
 ####################################
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export COMINmodel=${COMINmodel:-$(compath.py ${envir}/com/${MODELNAME}/${gefs_ver})} 
-export COMINgdas=${COMINgdas:-$(compath.py ${envir}/com/obsproc/${obsproc_ver}/gdas)}
+export COMINgefs=${COMINgefs:-$(compath.py ${envir}/com/${MODELNAME}/${gefs_ver})} 
+export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver}/gdas)}
 
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})/${STEP}/${COMPONENT}/${RUN}}
-export ARCgefs=${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
+export COMOUTgefs=${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
 
 # make the directory where the ARCgefs and gdasnc will be kept
 mkdir -p ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
 
 export jlogfile=${DATA}/${MODELNAME}_${RUN}_PB2NC.log
 
-export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-YES}
-export SENDECF=${SENDECF:-YES}
 
 ####################################
 # Execute the script                
