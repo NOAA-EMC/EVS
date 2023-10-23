@@ -255,7 +255,7 @@ class LeadAverage:
         fcst_units = np.unique(fcst_units)
         fcst_units = np.delete(fcst_units, np.where(fcst_units == 'nan'))
         if len(fcst_units) > 1:
-            self.logger.error("DIFFERING UNITS")
+            self.logger.error("FATAL ERROR, DIFFERING UNITS")
             sys.exit(1)
         elif len(fcst_units) == 0:
             self.logger.warning("Empty dataframe")
