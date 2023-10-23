@@ -21,7 +21,7 @@ import cam_util as cutil
 
 
 OTLK_DATE = os.environ['OTLK_DATE'] 
-cyc = os.environ['cyc']
+vhr = os.environ['vhr']
 
 YYYY = int(OTLK_DATE[0:4])
 MM   = int(OTLK_DATE[4:6])
@@ -114,17 +114,18 @@ for DAY in range(1,4):
                                '|', 'cut', '-d\'"\'', '-f2'],
                                capture_output=True)
                         NAME = NAME.replace('\n','')
-
+                        regexp="^[^:. ()]*$"
+                        if not re.match(regexp, NAME):
+                            print(f'WARNING: Invalid record name ({NAME}) '
+                                  + f'for Day {DAY} outlook area issued '
+                                  + f'at {OTLK}Z on {OTLK_DATE}. Check for'
+                                  + f' bad data in the spc dbf file:'
+                                  + f'{OTLK_DIR}/{SHP_FILE}.dbf')
+                            continue
+                        
                         print(f'Processing Record Number #{REC}: {NAME}')
-
+                        
                         if DAY == 3:
-                            if "DEBUG" in NAME:
-                                print(f'Warning: Invalid record name ({NAME}) '
-                                      + f'for Day {DAY} outlook area issued '
-                                      + f'at {OTLK}Z on {OTLK_DATE}. Check for'
-                                      + f' bad data in the spc dbf file:'
-                                      + f'{OTLK_DIR}/{SHP_FILE}.dbf')
-                                continue
                             MASK_FNAME = f'spc_otlk.day{DAY}_{NAME}.v{V1DATE}-{V2DATE}.{VERIF_GRID}'
                             MASK_NAME = f"DAY{DAY}_{NAME}"
                         else:

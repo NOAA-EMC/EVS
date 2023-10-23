@@ -75,7 +75,7 @@ for DOMAIN in ${DOMAINS}; do
          MRMS_PRODUCT=EchoTop18_00.50
       fi
 
-      if [ -s $DATA/MRMS_${DOMAIN}_tmp/${MRMS_PRODUCT}_${VDATE}-${cyc}0000.grib2 ]; then
+      if [ -s $DATA/MRMS_${DOMAIN}_tmp/${MRMS_PRODUCT}_${VDATE}-${vhr}0000.grib2 ]; then
 
 	 # Run METplus
          ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/RegridDataPlane_obsMRMS_${RADAR_FIELD}.conf
@@ -93,7 +93,7 @@ for DOMAIN in ${DOMAINS}; do
 
          if [ $SENDMAIL = YES ]; then
             export subject="MRMS ${MRMS_PRODUCT} Data Missing for EVS ${COMPONENT}"
-            echo "Warning: The ${MRMS_PRODUCT} file is missing for valid date ${VDATE}${cyc}. METplus will not run." > mailmsg
+            echo "Warning: The ${MRMS_PRODUCT} file is missing for valid date ${VDATE}${vhr}. METplus will not run." > mailmsg
             echo "Job ID: $jobid" >> mailmsg
             cat mailmsg | mail -s "$subject" $maillist
          fi

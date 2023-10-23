@@ -32,7 +32,7 @@ module load prod_envir/${prod_envir_ver}
 
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-export cyc=${cyc:-${cyc}}
+export vhr=${vhr:-${vhr}}
 
 
 ############################################################
@@ -44,7 +44,7 @@ export KEEPDATA=YES
 export VERIF_CASE=radar
 export MODELNAME=namnest
 export modsys=nam
-export job=${PBS_JOBNAME:-jevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}_${cyc}}
+export job=${PBS_JOBNAME:-jevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}_${vhr}}
 export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
