@@ -29,7 +29,7 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export KEEPDATA=YES
 export SENDMAIL=YES
 
-export cyc
+export vhr
 export NET=evs
 export STEP=stats
 export COMPONENT=cam

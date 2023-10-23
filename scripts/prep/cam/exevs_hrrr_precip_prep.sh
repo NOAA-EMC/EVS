@@ -88,9 +88,11 @@ for NEST in "conus" "ak"; do
         for OBS_DIR_PATH in $DATA/$VERIF_CASE/data/$VERIF_TYPE/*; do
             OBS_DIR=$(echo ${OBS_DIR_PATH##*/})
             mkdir -p $COMOUT/$OBS_DIR
-            for FILE in $OBS_DIR_PATH/*; do
-                cp -v $FILE $COMOUT/$OBS_DIR/.
-            done
+            if [ ! -z "$(ls -A $OBS_DIR_PATH)" ]; then
+                for FILE in $OBS_DIR_PATH/*; do
+                    cp -v $FILE $COMOUT/$OBS_DIR/.
+                done
+            fi
         done
     fi
 
