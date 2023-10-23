@@ -28,12 +28,12 @@ export VDATE=${VDATE:-${PDYm1}}
 ####################################
 export SENDECF=${SENDECF:-YES}
 export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-NO}
+export SENDDBN=${SENDDBN:-YES}
 export SENDMAIL=${SENDMAIL:-NO}
 ####################################
 # Set EVS directories               
 ####################################
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
@@ -57,7 +57,7 @@ export VERIF_CASE=${VERIF_CASE:-grid2obs}
 ####################################
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}
-export COMINstats=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${VDATE}
+export EVSINstats=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${VDATE}
 export COMOUTplots=${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}
 
 # make the directory where the plots will be kept
@@ -65,9 +65,6 @@ mkdir -p ${COMOUTplots}
 
 export jlogfile=${DATA}/${MODELNAME}_${RUN}_plots.log
 
-export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-YES}
-export SENDECF=${SENDECF:-YES}
 
 ####################################
 # Execute the script                

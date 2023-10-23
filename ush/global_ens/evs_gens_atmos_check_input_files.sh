@@ -11,7 +11,7 @@ typeset -Z2 cyc
 if [ $var = gfsanl ] ; then
   missing=0
   for cyc in 00 06 12 18 ; do
-          if [ ! -s ${COMIN}.${vday}/gefs/gfsanl.t${cyc}z.grid3.f000.grib2 ] ; then
+          if [ ! -s ${EVSIN}.${vday}/gefs/gfsanl.t${cyc}z.grid3.f000.grib2 ] ; then
       missing=$((missing + 1 ))
     fi
   done
@@ -30,7 +30,7 @@ fi
 if [ $var = cmcanl ] ; then
   missing=0
   for cyc in 00 12 ; do
-          if [ ! -s ${COMIN}.${vday}/cmce/cmcanl.t${cyc}z.grid3.f000.grib2 ] ; then
+          if [ ! -s ${EVSIN}.${vday}/cmce/cmcanl.t${cyc}z.grid3.f000.grib2 ] ; then
       missing=$((missing + 1 ))
     fi
   done
@@ -49,7 +49,7 @@ fi
 if [ $var = ecmanl ] ; then
   missing=0
   for cyc in 00 12 ; do
-          if [ ! -s ${COMIN}.${vday}/ecme/ecmanl.t${cyc}z.grid3.f000.grib1 ] ; then
+          if [ ! -s ${EVSIN}.${vday}/ecme/ecmanl.t${cyc}z.grid3.f000.grib1 ] ; then
       missing=$((missing + 1 ))
     fi
   done
@@ -66,7 +66,7 @@ fi
 
 
 if [ $var = gfsanl_1.5deg ] ; then
-  if [ ! -s ${COMIN}.${vday}/gefs/gfsanl.t00z.deg1.5.f000.grib2 ] ; then
+  if [ ! -s ${EVSIN}.${vday}/gefs/gfsanl.t00z.deg1.5.f000.grib2 ] ; then
     echo "gfsanl_1.5deg file is missing, exit execution!!!"
     exit
   else
@@ -75,7 +75,7 @@ if [ $var = gfsanl_1.5deg ] ; then
 fi
 
 if [ $var = cmcanl_1.5deg ] ; then
-  if [ ! -s ${COMIN}.${vday}/cmce/cmcanl.t00z.deg1.5.f000.grib2 ] ; then
+  if [ ! -s ${EVSIN}.${vday}/cmce/cmcanl.t00z.deg1.5.f000.grib2 ] ; then
       echo "cmcanl_1.5deg file is missing, exit execution!!!"
       exit
   else
@@ -89,7 +89,7 @@ fi
 if [ $var = prepbufr ] ; then
   missing=0 
   for cyc in 00 06 12 18 ; do
-	  if [ ! -s ${COMIN}.${vday}/gefs/gfs.t${cyc}z.prepbufr.f00.nc ] ; then
+	  if [ ! -s ${EVSIN}.${vday}/gefs/gfs.t${cyc}z.prepbufr.f00.nc ] ; then
       missing=$((missing + 1 ))
     fi
   done
@@ -108,7 +108,7 @@ fi
 if [ $var = prepbufr_profile ] ; then
   missing=0
   for cyc in 00 06 12 18 ; do
-          if [ ! -s ${COMIN}.${vday}/gefs/gfs.t${cyc}z.prepbufr_profile.f00.nc ] ; then
+          if [ ! -s ${EVSIN}.${vday}/gefs/gfs.t${cyc}z.prepbufr_profile.f00.nc ] ; then
       missing=$((missing + 1 ))
     fi
   done
@@ -126,7 +126,7 @@ fi
 
 if [ $var = ccpa ] ; then
 
-   if [ -s ${COMIN}.${vday}/gefs/ccpa.t12z.grid3.24h.f00.nc ] ; then
+   if [ -s ${EVSIN}.${vday}/gefs/ccpa.t12z.grid3.24h.f00.nc ] ; then
       echo "CCPA24h data is OK"
    else
       echo "CPA24h data is mssing"
@@ -139,7 +139,7 @@ if [ $var = osi_saf ]; then
     export vday1=${past:0:8}
     export period=multi.${vday1}00to${vday}00_G004
 
-   if [ -s ${COMIN}.${vday}/osi_saf/osi_saf.${period}.nc ] ; then
+   if [ -s ${EVSIN}.${vday}/osi_saf/osi_saf.${period}.nc ] ; then
         echo "OSI_SAF data is OK"
    else
         echo "OSI_SAF data is mssing"
@@ -149,7 +149,7 @@ fi
 
 if [ $var = nohrsc ] ; then
 
-   if [ -s ${COMIN}.${vday}/gefs/nohrsc.t00z.grid184.grb2 ] && [ -s ${COMIN}.${vday}/gefs/nohrsc.t12z.grid184.grb2 ] ; then
+   if [ -s ${EVSIN}.${vday}/gefs/nohrsc.t00z.grid184.grb2 ] && [ -s ${EVSIN}.${vday}/gefs/nohrsc.t12z.grid184.grb2 ] ; then
        echo "NOHRCS data is OK"
    else
       echo "NOHRSC data is mssing"
@@ -159,7 +159,7 @@ fi
 
 if [ $var = ghrsst ] ; then
 
-   if [ -s ${COMIN}.${vday}/gefs/ghrsst.t00z.nc ] ; then
+   if [ -s ${EVSIN}.${vday}/gefs/ghrsst.t00z.nc ] ; then
        echo "GHRSST data is OK"
    else
        echo "GHRSST data is mssing"
@@ -195,7 +195,7 @@ if [ $var = gefs ] || [ $var = gefs_bc ] ; then
 
     gefs_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do 
-      gefs=$COMIN.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.f${hhh}.grib2
+      gefs=$EVSIN.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.f${hhh}.grib2
       #echo $gefs
 
       if [ -s $gefs ] ; then
@@ -250,7 +250,7 @@ if [ $var = cmce ] || [ $var = cmce_bc ] ; then
 
     cmce_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ; do 
-      cmce=$COMIN.${fday}/${var}/${var}.ens${mb}.t${fcyc}z.grid3.f${hhh}.grib2
+      cmce=$EVSIN.${fday}/${var}/${var}.ens${mb}.t${fcyc}z.grid3.f${hhh}.grib2
       #echo $cmce
 
       if [ -s $cmce ] ; then
@@ -305,7 +305,7 @@ if [ $var = ecme ] ; then
 
     ecme_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      ecme=$COMIN.${fday}/ecme/ecme.ens${mb}.t${fcyc}z.grid4.f${hhh}.grib1
+      ecme=$EVSIN.${fday}/ecme/ecme.ens${mb}.t${fcyc}z.grid4.f${hhh}.grib1
       #echo $ecme
 
       if [ -s $ecme ] ; then
@@ -359,7 +359,7 @@ if [ $var = gefs_apcp24h ] ; then
     gefs_apcp24h_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do 
     #for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      gefs_apcp24h=$COMIN.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.24h.f${hhh}.nc
+      gefs_apcp24h=$EVSIN.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.24h.f${hhh}.nc
       #echo $gefs_apcp24h
 
       if [ -s $gefs_apcp24h ] ; then
@@ -414,7 +414,7 @@ if [ $var = cmce_apcp24h ] ; then
     cmce_apcp24h_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ; do 
     #for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      cmce_apcp24h=$COMIN.${fday}/cmce/cmce.ens${mb}.t${fcyc}z.grid3.24h.f${hhh}.nc
+      cmce_apcp24h=$EVSIN.${fday}/cmce/cmce.ens${mb}.t${fcyc}z.grid3.24h.f${hhh}.nc
       #echo $cmce_apcp24h
 
       if [ -s $cmce_apcp24h ] ; then
@@ -469,7 +469,7 @@ if [ $var = ecme_apcp24h ] ; then
     ecme_apcp24h_mbrs=0
     #for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ; do 
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      ecme_apcp24h=$COMIN.${fday}/ecme/ecme.ens${mb}.t${fcyc}z.grid4.24h.f${hhh}.nc
+      ecme_apcp24h=$EVSIN.${fday}/ecme/ecme.ens${mb}.t${fcyc}z.grid4.24h.f${hhh}.nc
       #echo $ecme_apcp24h
 
       if [ -s $ecme_apcp24h ] ; then
@@ -523,7 +523,7 @@ if [ $var = gefs_icec_24h ] ; then
     gefs_icec_24h_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do 
     #for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      gefs_icec_24h=$COMIN.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.icec_24h.f${hhh}.nc
+      gefs_icec_24h=$EVSIN.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.icec_24h.f${hhh}.nc
       #echo $gefs_icec_24h
 
       if [ -s $gefs_icec_24h ] ; then
@@ -578,7 +578,7 @@ if [ $var = gefs_sst24h ] ; then
     gefs_sst24h_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do 
     #for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      gefs_sst24h=$COMIN.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.sst24h.f${hhh}.nc
+      gefs_sst24h=$EVSIN.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.sst24h.f${hhh}.nc
       #echo $gefs_sst24h
 
       if [ -s $gefs_sst24h ] ; then
@@ -632,7 +632,7 @@ if [ $var = gefs_WEASD ] ; then
     gefs_WEASD_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do 
     #for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      gefs_WEASD=$COMIN.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.WEASD_24h.f${hhh}.nc
+      gefs_WEASD=$EVSIN.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.WEASD_24h.f${hhh}.nc
       #echo $gefs_WEASD
 
       if [ -s $gefs_WEASD ] ; then
@@ -686,7 +686,7 @@ if [ $var = gefs_SNOD ] ; then
     gefs_SNOD_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do 
     #for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      gefs_SNOD=$COMIN.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.SNOD_24h.f${hhh}.nc
+      gefs_SNOD=$EVSIN.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.SNOD_24h.f${hhh}.nc
       #echo $gefs_SNOD
 
       if [ -s $gefs_SNOD ] ; then
@@ -741,7 +741,7 @@ if [ $var = cmce_SNOD ] ; then
     cmce_SNOD_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20; do 
     #for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      cmce_SNOD=$COMIN.${fday}/cmce/cmce.ens${mb}.t${fcyc}z.grid3.SNOD_24h.f${hhh}.nc
+      cmce_SNOD=$EVSIN.${fday}/cmce/cmce.ens${mb}.t${fcyc}z.grid3.SNOD_24h.f${hhh}.nc
       #echo $cmce_SNOD
 
       if [ -s $cmce_SNOD ] ; then
@@ -797,7 +797,7 @@ if [ $var = cmce_WEASD ] ; then
     cmce_WEASD_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20; do 
     #for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      cmce_WEASD=$COMIN.${fday}/cmce/cmce.ens${mb}.t${fcyc}z.grid3.WEASD_24h.f${hhh}.nc
+      cmce_WEASD=$EVSIN.${fday}/cmce/cmce.ens${mb}.t${fcyc}z.grid3.WEASD_24h.f${hhh}.nc
       #echo $cmce_WEASD
 
       if [ -s $cmce_WEASD ] ; then
@@ -852,7 +852,7 @@ if [ $var = ecme_weasd ] ; then
     ecme_weasd_mbrs=0
     #for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20; do 
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      ecme_weasd=$COMIN.${fday}/ecme/ecme.ens${mb}.t${fcyc}z.grid4.weasd_24h.f${hhh}.nc
+      ecme_weasd=$EVSIN.${fday}/ecme/ecme.ens${mb}.t${fcyc}z.grid4.weasd_24h.f${hhh}.nc
       #echo $ecme_weasd
 
       if [ -s $ecme_weasd ] ; then
@@ -907,7 +907,7 @@ if [ $var = headline_gefs ] ; then
 
     gefs_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do 
-      gefs=$COMIN.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.f${hhh}.grib2
+      gefs=$EVSIN.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.f${hhh}.grib2
       #echo $gefs
 
       if [ -s $gefs ] ; then
@@ -961,7 +961,7 @@ if [ $var = headline_cmce ] ; then
 
     cmce_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ; do 
-      cmce=$COMIN.${fday}/cmce/cmce.ens${mb}.t${fcyc}z.grid3.f${hhh}.grib2
+      cmce=$EVSIN.${fday}/cmce/cmce.ens${mb}.t${fcyc}z.grid3.f${hhh}.grib2
       #echo $cmce
 
       if [ -s $cmce ] ; then
@@ -993,7 +993,7 @@ if [ $var = headline_cmce ] ; then
 fi 
 
 if [ $var = headline_gfsanl ] ; then
-    if [ ! -s ${COMIN}.${vday}/gefs/gfsanl.t00z.grid3.f000.grib2 ] ; then
+    if [ ! -s ${EVSIN}.${vday}/gefs/gfsanl.t00z.grid3.f000.grib2 ] ; then
       echo " gfsanl file missing, exit execution!!!"
       exit
      else
@@ -1003,7 +1003,7 @@ if [ $var = headline_gfsanl ] ; then
 fi
 
 if [ $var = headline_cmcanl ] ; then
-    if [ ! -s ${COMIN}.${vday}/cmce/cmcanl.t00z.grid3.f000.grib2 ] ; then
+    if [ ! -s ${EVSIN}.${vday}/cmce/cmcanl.t00z.grid3.f000.grib2 ] ; then
         echo " cmcanl file missing, exit execution!!!"
         exit
     else
@@ -1029,7 +1029,7 @@ if [ $var = headline_gfs ] ; then
     fday=${fcst_time:0:8}
     fcyc=${fcst_time:8:2}
 
-    gfs=$COMIN.${fday}/gefs/gfs.t${fcyc}z.grid3.f${hhh}.grib2
+    gfs=$EVSIN.${fday}/gefs/gfs.t${fcyc}z.grid3.f${hhh}.grib2
     if [ ! -s $gfs ] ; then
       echo $gfs not existing, exit METplus execution!
       exit

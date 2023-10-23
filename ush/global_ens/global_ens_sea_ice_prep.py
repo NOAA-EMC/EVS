@@ -34,7 +34,7 @@ COMINjma_precip = os.environ['COMINjma_precip']
 COMINmetfra_precip = os.environ['COMINmetfra_precip']
 COMINukmet = os.environ['COMINukmet']
 COMINukmet_precip = os.environ['COMINukmet_precip']
-COMINosi_saf = os.environ['COMINosi_saf']
+DCOMINosi_saf = os.environ['DCOMINosi_saf']
 COMOUT = os.environ['COMOUT']
 INITDATE = os.environ['INITDATE']
 NET = os.environ['NET']
@@ -176,7 +176,7 @@ arch_precip_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
 # Get operational observation data
 # Nortnern & Southern Hemisphere 10 km OSI-SAF multi-sensor analysis - osi_saf
 global_det_obs_dict = {
-    'osi_saf': {'daily_prod_file_format': os.path.join(COMINosi_saf,
+    'osi_saf': {'daily_prod_file_format': os.path.join(DCOMINosi_saf,
                                                        '{init_shift?fmt=%Y%m%d'
                                                        +'?shift=-12}',
                                                        'seaice', 'osisaf',

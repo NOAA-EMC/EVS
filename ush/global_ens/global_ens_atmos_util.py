@@ -1030,7 +1030,7 @@ def initalize_job_env_dict(verif_type, group,
              job_env_dict - dictionary of job settings
     """
     job_env_var_list = [
-        'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA', 'COMROOT',
+        'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA', 'COMOUT',
         'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT'
     ]
     if group in ['reformat', 'generate', 'gather']:
@@ -1044,7 +1044,7 @@ def initalize_job_env_dict(verif_type, group,
         job_env_var_list.extend(
             ['METPLUS_PATH','log_met_output_to_metplus', 'metplus_verbosity',
              'MET_ROOT', 'MET_bin_exec', 'met_verbosity', 'MET_TMP_DIR',
-             'COMROOT']
+             'COMOUT']
         )
     elif group == 'plot':
         job_env_var_list.extend(['MET_ROOT', 'met_ver'])
