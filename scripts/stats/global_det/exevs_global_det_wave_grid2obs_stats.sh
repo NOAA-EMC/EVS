@@ -73,8 +73,7 @@ else
         echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/ASCII2NC_obsNDBC.conf" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         if [ $SENDCOM = YES ]; then
-            echo "cp -v $tmp_ascii2nc_ndbc_file $output_ascii2nc_ndbc_file" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
-            echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
+            echo "if [ -f $tmp_ascii2nc_ndbc_file ]; then cp -v $tmp_ascii2nc_ndbc_file $output_ascii2nc_ndbc_file; fi" >> ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         fi
         chmod +x ${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh
         echo "${DATA}/jobs/run_ASCII2NC_NDBC_valid${VDATE}.sh" >> $poe_script
@@ -89,6 +88,8 @@ for vhr in ${valid_hours} ; do
     output_pb2nc_prepbufrgdas_file=$COMOUTprepbufr/gdas.${VDATE}${vhr2}.nc
     if [[ -s $output_pb2nc_prepbufrgdas_file ]]; then
         cp -v $output_pb2nc_prepbufrgdas_file $tmp_pb2nc_prepbufrgdas_file
+        chmod 640 $tmp_pb2nc_prepbufrgdas_file
+        chgrp rstprod $tmp_pb2nc_prepbufrgdas_file
     else
         if [ ! -s $input_pb2nc_prepbufrgdas_file ] ; then
             if [ $SENDMAIL = YES ] ; then
@@ -104,9 +105,12 @@ for vhr in ${valid_hours} ; do
             echo "export vhr2=$vhr2" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
             echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/PB2NC_obsPrepbufrGDAS.conf" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
             echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
+            echo "if [ $tmp_pb2nc_prepbufrgdas_file ]; then chmod 640 $tmp_pb2nc_prepbufrgdas_file; fi" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
+            echo "if [ $tmp_pb2nc_prepbufrgdas_file ]; then chgrp rstprod $tmp_pb2nc_prepbufrgdas_file; fi" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
             if [ $SENDCOM = YES ]; then
-                echo "cp -v $tmp_pb2nc_prepbufrgdas_file $output_pb2nc_prepbufrgdas_file" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
-                echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
+                echo "if [ $tmp_pb2nc_prepbufrgdas_file ]; then cp -v $tmp_pb2nc_prepbufrgdas_file $output_pb2nc_prepbufrgdas_file; fi" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
+                echo "if [ $output_pb2nc_prepbufrgdas_file ]; then chmod 640 $output_pb2nc_prepbufrgdas_file; fi" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
+            echo "if [ $output_pb2nc_prepbufrgdas_file ]; then chgrp rstprod $output_pb2nc_prepbufrgdas_file; fi" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
             fi
             chmod +x ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh
             echo "${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${vhr2}.sh" >> $poe_script
@@ -226,8 +230,7 @@ for vhr in ${valid_hours} ; do
                         echo "run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/PointStat_fcstGLOBAL_DET_obs${OBSNAME}_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
                         echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
                         if [ $SENDCOM = YES ]; then
-                            echo "cp -v $tmp_stat_file $output_stat_file" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
-                            echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
+                            echo "if [ -f $tmp_stat_file ]; then cp -v $tmp_stat_file $output_stat_file; fi" >> ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
                         fi
                         chmod +x ${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh
                         echo "${DATA}/jobs/run_PointStat_obs${OBSNAME}_valid${VDATE}${vhr2}_f${flead}.sh" >> $poe_script

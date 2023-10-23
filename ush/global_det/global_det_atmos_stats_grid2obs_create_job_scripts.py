@@ -1089,6 +1089,24 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                           +f"cp -v {truth_output_file_tuple[0]} "
                                           +f"{truth_output_file_tuple[1]}"
                                           +f"; fi\n")
+                                if job_env_dict['JOB_GROUP'] == 'reformat_data' \
+                                        and job_env_dict['VERIF_CASE'] == 'grid2obs' \
+                                        and job_env_dict['VERIF_TYPE'] \
+                                        in ['pres_levs', 'sfc', 'ptype'] \
+                                        and 'Prepbufr' in job_env_dict['job_name']:
+                                    job.write(f'if [ -f "{truth_output_file_tuple[0]}" ]; then '
+                                              +f"chmod 640 {truth_output_file_tuple[0]} "
+                                              +f"; fi\n")
+                                    job.write(f'if [ -f "{truth_output_file_tuple[0]}" ]; then '
+                                              +f"chgrp rstprod {truth_output_file_tuple[0]} "
+                                              +f"; fi\n")
+                                    job.write(f'if [ -f "{truth_output_file_tuple[1]}" ]; then '
+                                              +f"chmod 640 {truth_output_file_tuple[1]} "
+                                              +f"; fi\n")
+                                    job.write(f'if [ -f "{truth_output_file_tuple[1]}" ]; then '
+                                              +f"chgrp rstprod {truth_output_file_tuple[1]} "
+                                              +f"; fi\n")
+
                     job.close()
                     date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
 elif JOB_GROUP == 'gather_stats':
