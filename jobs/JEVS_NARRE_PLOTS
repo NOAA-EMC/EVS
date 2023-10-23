@@ -8,7 +8,6 @@ set -x
 #######################################################
 
 
-export cycle=t${cyc}z
 
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
@@ -33,7 +32,7 @@ export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/
 export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/$evs_ver)}/$STEP/$COMPONENT/$RUN.$VDATE
 mkdir -p $COMOUT
 
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=$HOMEevs/exec
 export PARMevs=$HOMEevs/parm
 export USHevs=$HOMEevs/ush
