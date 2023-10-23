@@ -27,7 +27,7 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/global_det/global_det_stats.sh
 
-export evs_ver=1.0.0
+export evs_ver=v1.0.0
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 export machine=WCOSS2
