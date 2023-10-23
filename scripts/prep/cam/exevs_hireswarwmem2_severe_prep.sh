@@ -37,12 +37,12 @@ export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H
 export MXUPHL25_THRESH1=75.0
 
 
-if [ $cyc -eq 00 ];then
+if [ $vhr -eq 00 ];then
    nloop=1
    fhr_beg1=12
    fhr_end1=36
 
-elif [ $cyc -eq 12 ]; then
+elif [ $vhr -eq 12 ]; then
    nloop=2
    fhr_beg1=0
    fhr_end1=24
@@ -75,8 +75,8 @@ i=1
    export fhr_end
 
    # Define accumulation begin/end time
-   export ACCUM_BEG=${ACCUM_BEG:-`$NDATE $fhr ${IDATE}${cyc}`}
-   export ACCUM_END=${ACCUM_END:-`$NDATE $fhr_end ${IDATE}${cyc}`}
+   export ACCUM_BEG=${ACCUM_BEG:-`$NDATE $fhr ${IDATE}${vhr}`}
+   export ACCUM_END=${ACCUM_END:-`$NDATE $fhr_end ${IDATE}${vhr}`}
 
    # Increment fhr by 1 at the start of loop for each 24-h period
    # Correctly skips initial file (F00, F12, F24) that doesn't include necessary data
@@ -87,7 +87,7 @@ i=1
    # Search for required forecast files
    while [ $i -le $min_file_req ]; do
 
-      export fcst_file=${MODEL_INPUT_DIR}/${modsys}.${IDATE}/${modsys}.t${cyc}z.arw_5km.f$(printf "%02d" $fhr).conusmem2.grib2
+      export fcst_file=${MODEL_INPUT_DIR}/${modsys}.${IDATE}/${modsys}.t${vhr}z.arw_5km.f$(printf "%02d" $fhr).conusmem2.grib2
 
       if [ -s $fcst_file ]; then
          echo "File number $i found"
@@ -108,7 +108,7 @@ i=1
 
    if [ $nfiles -eq $min_file_req ]; then
 
-      echo "Found all $nfiles forecast files. Generating ${MODELNAME} SSPF for ${cyc}Z ${IDATE} cycle at F${fhr_end}"
+      echo "Found all $nfiles forecast files. Generating ${MODELNAME} SSPF for ${vhr}Z ${IDATE} cycle at F${fhr_end}"
 
       ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GenEnsProd_fcstCAM_MXUPHL_SurrogateSevere.conf
       export err=$?; err_chk
@@ -129,7 +129,7 @@ i=1
 
       if [ $SENDMAIL = YES ]; then
          export subject="${MODELNAME} Forecast Data Missing for EVS ${COMPONENT}"
-         echo "Warning: Only $nfiles ${MODELNAME} forecast files found for ${cyc}Z ${IDATE} cycle. $min_file_req files are required. METplus will not run." > mailmsg
+         echo "Warning: Only $nfiles ${MODELNAME} forecast files found for ${vhr}Z ${IDATE} cycle. $min_file_req files are required. METplus will not run." > mailmsg
          echo "Job ID: $jobid" >> mailmsg
          cat mailmsg | mail -s "$subject" $maillist
       fi

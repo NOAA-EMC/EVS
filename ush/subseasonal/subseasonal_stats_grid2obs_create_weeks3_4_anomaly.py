@@ -2,8 +2,10 @@
 '''
 Name: subseasonal_stats_grid2obs_create_weeks3_4_anomaly.py
 Contact(s): Shannon Shields
-Abstract: This script is used to create anomaly
-          data from MET point_stat MPR output
+Abstract: This script is run by subseasonal_stats_grid2obs_create_weeks3_4_
+          assemble_job_scripts.py in ush/subseasonal.
+          This script is used to create anomaly
+          data from MET point_stat MPR output.
 '''
 
 import os
@@ -37,12 +39,12 @@ fhr_list = os.environ['CORRECT_LEAD_SEQ'].split(',')
 
 # Process run time arguments
 if len(sys.argv) != 3:
-    print("ERROR: Not given correct number of run time arguments..."
+    print("FATAL ERROR: Not given correct number of run time arguments..."
           +os.path.basename(__file__)+" VARNAME_VARLEVEL FILE_FORMAT")
     sys.exit(1)
 else:
     if '_' not in sys.argv[1]:
-        print("ERROR: variable and level runtime argument formatted "
+        print("FATAL ERROR: variable and level runtime argument formatted "
               +"incorrectly, be sure to separate variable and level with "
               +"an underscore (_), example TMP_Z2")
         sys.exit(1)

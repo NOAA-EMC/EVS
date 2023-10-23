@@ -309,7 +309,7 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
     """
     filled_file_format = '/'
     format_opt_list = ['lead', 'lead_shift', 'valid', 'valid_shift',
-                       'init', 'init_shift', 'cycle']
+                       'init', 'init_shift']
     if len(list(str_sub_dict.keys())) != 0:
         format_opt_list = format_opt_list+list(str_sub_dict.keys())
     for filled_file_format_chunk in unfilled_file_format.split('/'):
@@ -356,10 +356,6 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                        replace_format_opt_count = init_time_dt.strftime(
                            format_opt_count_fmt
                        )
-                   elif format_opt == 'cycle':
-                       replace_format_opt_count = init_time_dt.strftime(
-                           format_opt_count_fmt
-                       ) 
                    elif format_opt == 'lead_shift':
                        shift = (filled_file_format_chunk.partition('shift=')[2]\
                                 .partition('}')[0])
@@ -440,12 +436,15 @@ def get_completed_jobs(completed_jobs_file):
             completed_jobs = set(f.read().splitlines())
     return completed_jobs
 
-def mark_job_completed(completed_jobs_file, job_name):
+def mark_job_completed(completed_jobs_file, job_name, job_type=""):
     with open(completed_jobs_file, 'a') as f:
-        f.write(job_name + "\n")
+        if job_type:
+            f.write(job_type + "_" + job_name + "\n")
+        else:
+            f.write(job_name + "\n")
 
 def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None, 
-                         run=None, step=None, model=None, vdate=None, cyc=None, 
+                         run=None, step=None, model=None, vdate=None, vhr=None, 
                          verif_case=None, verif_type=None, vx_mask=None, 
                          job_type=None, var_name=None, vhour=None, 
                          fhr_start=None, fhr_end=None, fhr_incr=None, 
@@ -504,7 +503,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             ))
             for fhr in np.arange(int(fhr_start), int(fhr_end), int(fhr_incr)):
                 copy_files.append(
-                    f'{met_tool}_{model}_{var_name}_{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}_'
+                    f'{met_tool}_{model}_{var_name}_{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}*_'
                     + f'{str(fhr).zfill(2)}0000L_{vdate}_{vhour}0000V.stat'
                 )
         else:
@@ -524,7 +523,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             ))
             for fhr in np.arange(int(fhr_start), int(fhr_end), int(fhr_incr)):
                 copy_files.append(
-                    f'{met_tool}_{model}_*_{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}_'
+                    f'{met_tool}_{model}_*_{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}*_'
                     + f'{str(fhr).zfill(2)}0000L_{vdate}_{vhour}0000V.stat'
                 )
     elif met_tool == 'merged_ptype':
@@ -630,7 +629,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
         ))
         for fhr in np.arange(int(fhr_start), int(fhr_end), int(fhr_incr)):
             copy_files.append(
-                f'{met_tool}_{model}_{vx_mask}_{var_name}_OBS_{str(fhr).zfill(2)}0000L_{vdate}_'
+                f'{met_tool}_{model}_{vx_mask}_{var_name}_OBS*_{str(fhr).zfill(2)}0000L_{vdate}_'
                 + f'{vhour}0000V.stat'
             )
     elif met_tool == 'regrid_data_plane':
@@ -676,7 +675,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
         elif job_type == 'gather2':
             check_if_none = [
                 data_dir, restart_dir, verif_case, met_tool, vdate, net, step, 
-                model, run, cyc
+                model, run, vhr
             ]
             if any([var is None for var in check_if_none]):
                 e = (f"ERROR: None encountered as an argument while copying"
@@ -688,7 +687,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 f'{model}.{vdate}'
             ))
             copy_files.append(
-                f'{net}.{step}.{model}.{run}.{verif_case}.v{vdate}.c{cyc}z.stat'
+                f'{net}.{step}.{model}.{run}.{verif_case}.v{vdate}.c{vhr}z.stat'
             )
     for sub_dir in sub_dirs:
         for copy_file in copy_files:

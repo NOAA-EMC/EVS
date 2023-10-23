@@ -55,7 +55,7 @@ if proceed:
     COMPONENT = os.environ['COMPONENT']
     SENDMAIL = os.environ['SENDMAIL']
     maillist = os.environ['maillist']
-    CYC = os.environ['cyc']
+    VHR = os.environ['vhr']
     jobid = os.environ['jobid']
     FIXevs = os.environ['FIXevs']
     VDATE = os.environ['VDATE']
@@ -75,7 +75,7 @@ if proceed:
             COMINobsproc = os.environ['COMINobsproc']
             COMINnam = os.environ['COMINnam']
         elif VERIF_CASE == 'snowfall':
-            COMINsnow = os.environ['COMINsnow']
+            DCOMINsnow = os.environ['DCOMINsnow']
             OBS_ACC = os.environ['OBS_ACC']
             ACC = os.environ['ACC']
         elif VERIF_CASE == 'precip':
@@ -94,8 +94,12 @@ if proceed:
             print(f"The provided MODELNAME ({MODELNAME}) is not recognized. Quitting ...")
             sys.exit(1)
     if VERIF_CASE == 'precip':
-        COMINmrms = os.environ['COMINmrms']
-        COMINccpa = os.environ['COMINccpa']
+        if STEP == 'stats':
+            EVSINmrms = os.environ['EVSINmrms']
+            EVSINccpa = os.environ['EVSINccpa']
+        elif STEP == 'prep':
+            DCOMINmrms = os.environ['DCOMINmrms']
+            COMINccpa = os.environ['COMINccpa']
 
 
     # Calculate all lead hours
@@ -485,7 +489,7 @@ if proceed:
                     DATAsubj = ', '.join(unk_names)
                 subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
                 DATAmsg_head = (f"Warning: Some unrecognized data were unavailable"
-                                + f" for valid date {VDATE} and cycle {CYC}Z.")
+                                + f" for valid date {VDATE} and cycle {VHR}Z.")
                 if len(unk_fnames) > max_num_files:
                     DATAmsg_body1 = (f"\nMissing files are: (showing"
                                 + f" {max_num_files} of"
@@ -529,7 +533,7 @@ if proceed:
                                    + f" EVS {COMPONENT}")
                         DATAmsg_head = (f"Warning: No {DATAsubj} data were"
                                         + f" available for valid date {VDATE},"
-                                        + f" cycle {CYC}Z, and f{lead_hours[0]}.")
+                                        + f" cycle {VHR}Z, and f{lead_hours[0]}.")
                     else:
                         lead_string = ', '.join(
                             [f'f{lead}' for lead in lead_hours]
@@ -537,7 +541,7 @@ if proceed:
                         subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
                         DATAmsg_head = (f"Warning: No {DATAsubj} data were"
                                         + f" available for valid date {VDATE},"
-                                        + f" cycle {CYC}Z, and {lead_string}.")
+                                        + f" cycle {VHR}Z, and {lead_string}.")
                 if len(fcst_pnames) > max_num_files:
                     DATAmsg_body1 = (f"\nMissing files are: (showing"
                                 + f" {max_num_files} of"
@@ -705,19 +709,19 @@ if proceed:
         if VERIF_CASE == 'precip':
             if NEST in ['conus', 'subreg']:
                 gen_templates.append(os.path.join(
-                    COMINccpa, 
+                    EVSINccpa, 
                     'ccpa.{VDATE}',
                     'ccpa.t{VHOUR}z.01h.hrap.conus.gb2'
                 ))
             elif NEST in ['ak', 'pr', 'hi']:
                 gen_templates.append(os.path.join(
-                    COMINmrms, 
+                    EVSINmrms, 
                     'mrms.{VDATE}',
                     'mrms.t{VHOUR}z.01h.'+NEST+'.gb2'
                 ))
         elif VERIF_CASE == 'snowfall':
             gen_templates.append(os.path.join(
-                COMINsnow,
+                DCOMINsnow,
                 '{VDATE}',
                 'wgrbbul',
                 'nohrsc_snowfall',
@@ -738,7 +742,7 @@ if proceed:
                 ))
             elif NEST == 'ak':
                 gen_templates.append(os.path.join(
-                    COMINmrms,
+                    DCOMINmrms,
                     'alaska',
                     'MultiSensorQPE',
                     (
@@ -748,7 +752,7 @@ if proceed:
                 ))
             elif NEST == 'pr':
                 gen_templates.append(os.path.join(
-                    COMINmrms,
+                    DCOMINmrms,
                     'carib',
                     'MultiSensorQPE',
                     (
@@ -758,7 +762,7 @@ if proceed:
                 ))
             elif NEST == 'hi':
                 gen_templates.append(os.path.join(
-                    COMINmrms,
+                    DCOMINmrms,
                     'hawaii',
                     'MultiSensorQPE',
                     (
@@ -768,7 +772,7 @@ if proceed:
                 ))
             elif NEST == 'gu':
                 gen_templates.append(os.path.join(
-                    COMINmrms,
+                    DCOMINmrms,
                     'guam',
                     'MultiSensorQPE',
                     (

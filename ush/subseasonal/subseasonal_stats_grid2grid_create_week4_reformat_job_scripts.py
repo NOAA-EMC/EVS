@@ -2,7 +2,9 @@
 '''
 Program Name: subseasonal_stats_grid2grid_create_week4_reformat_job_scripts.py
 Contact(s): Shannon Shields
-Abstract: This creates multiple independent job scripts. These
+Abstract: This script is run by exevs_subseasonal_grid2grid_stats.sh
+          in scripts/stats/subseasonal.
+          This creates multiple independent job scripts. These
           jobs contain all the necessary environment variables
           and commands to needed to run the specific
           use case.
@@ -48,7 +50,6 @@ start_date_dt = datetime.datetime.strptime(start_date, '%Y%m%d')
 end_date_dt = datetime.datetime.strptime(end_date, '%Y%m%d')
 
 # Set up job directory
-#njobs = 0
 JOB_GROUP_jobs_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                   'METplus_job_scripts', JOB_GROUP)
 if not os.path.exists(JOB_GROUP_jobs_dir):
@@ -60,17 +61,11 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 reformat_data_obs_jobs_dict = {
     'anom': {},
     'pres_lvls': {},
-    'ENSO': {},
-    'OLR': {},
-    'precip': {},
     'seaice': {},
     'sst': {},
 }
 reformat_data_model_jobs_dict = {
     'anom': {},
-    'ENSO': {},
-    'OLR': {},
-    'precip': {},
     'pres_lvls': {},
     'seaice': {
         'Concentration': {'env': {'var1_name': 'ICEC',
@@ -136,7 +131,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
             if JOB_GROUP == 'reformat_data':
                 if verif_type in ['sst', 'seaice', 'anom', 'pres_lvls']:
                     job_env_dict['valid_hr_start'] = '00'
-                    job_env_dict['valid_hr_end'] = '00' #12
+                    job_env_dict['valid_hr_end'] = '00'
                     job_env_dict['valid_hr_inc'] = '12'
             valid_start_date_dt = datetime.datetime.strptime(
                 start_date+job_env_dict['valid_hr_start'],

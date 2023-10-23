@@ -36,7 +36,7 @@ valid_hours='0 6 12 18'
 # get the model fcst files
 ##########################
 if [ $MODELNAME == "gfs" ]; then
-    cycles='0 6 12 18'
+    init_hours='0 6 12 18'
     lead_hours='0 6 12 18 24 30 36 42 48 54 60 66 72 78
                 84 90 96 102 108 114 120 126 132 138 144 150 156 162
                 168 174 180 186 192 198 204 210 216 222 228 234 240 246
@@ -289,6 +289,17 @@ else
     echo ' '
     echo "${MODELNAME}_${RUN} $VDATE : large STAT file missing."
     ./postmsg "$jlogfile" "WARNING : NO LARGE STAT FILE FOR valid date ${VDATE}"
+fi
+
+# Cat the METplus log files
+log_dir=$DATA/logs
+log_file_count=$(find $log_dir -type f |wc -l)
+if [[ $log_file_count -ne 0 ]]; then
+    for log_file in $log_dir/*; do
+        echo "Start: $log_file"
+        cat $log_file
+        echo "End: $log_file"
+    done
 fi
 
 msg="JOB $job HAS COMPLETED NORMALLY."

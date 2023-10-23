@@ -2,7 +2,8 @@
 '''
 Name: subseasonal_plots_performance_diagram.py
 Contact(s): Shannon Shields
-Abstract: This script generates a performance diagram plot.
+Abstract: This script is run by subseasonal_plots.py in ush/subseasonal.
+          This script generates a performance diagram plot.
 '''
 
 import sys
@@ -13,7 +14,6 @@ import glob
 import subprocess
 import pandas as pd
 pd.plotting.deregister_matplotlib_converters()
-#pd.plotting.register_matplotlib_converters()
 import numpy as np
 import matplotlib
 matplotlib.use('agg')
@@ -225,7 +225,7 @@ class PerformanceDiagram:
         fcst_units = np.unique(fcst_units)
         fcst_units = np.delete(fcst_units, np.where(fcst_units == 'nan'))
         if len(fcst_units) > 1:
-            self.logger.error("DIFFERING UNITS")
+            self.logger.error("FATAL ERROR, DIFFERING UNITS")
             sys.exit(1)
         elif len(fcst_units) == 0:
             self.logger.warning("Empty dataframe")
@@ -317,7 +317,7 @@ class PerformanceDiagram:
         )
         if len(self.plot_info_dict['fcst_var_threshs']) > \
                 len(list(thresh_marker_plot_settings_dict.keys())):
-          self.logger.error("REQUESTED NUMBER OF THRESHOLDS ("
+          self.logger.error("FATAL ERROR, REQUESTED NUMBER OF THRESHOLDS ("
                             +f"{len(self.plot_info_dict['fcst_var_threshs'])} "
                             +", "
                             +','.join(self.plot_info_dict['fcst_var_threshs'])

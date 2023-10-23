@@ -59,8 +59,8 @@ plot_end_date=${VDATE}
 
 theDate=${plot_start_date}
 while (( ${theDate} <= ${plot_end_date} )); do
-  COMINstats=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${theDate}
-  cp ${COMINstats}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
+  EVSINnfcens=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${theDate}
+  cp ${EVSINnfcens}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
   theDate=$(date --date="${theDate} + 1 day" '+%Y%m%d')
 done
 
@@ -82,7 +82,7 @@ else
   echo "             for ${VDATE} "
   echo '**************************************** '
   echo ' '
-  echo "${MODELNAME}_${RUN} $VDATE $cycle : NFCENS *.stat file missing."
+  echo "${MODELNAME}_${RUN} $VDATE $vhour : NFCENS *.stat file missing."
   [[ "$LOUD" = YES ]] && set -x
   ./postmsg "$jlogfile" "FATAL ERROR : NO NFCENS *.stat file for ${VDATE}"
   err_exit "FATAL ERROR: Did not copy the NFCENS *.stat file for ${VDATE}"

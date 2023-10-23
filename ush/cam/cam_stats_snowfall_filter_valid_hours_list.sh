@@ -4,14 +4,14 @@
 ## NCEP EMC Verification System (EVS) - CAM
 ##
 ## CONTRIBUTORS: Marcel Caron, marcel.caron@noaa.gov, Affiliate @ NOAA/NWS/NCEP/EMC-VPPPGB
-## PURPOSE: Filter list of valid hours depending on the current cyc value (precip)
+## PURPOSE: Filter list of valid hours depending on the current vhr value (precip)
 ##---------------------------------------------------------------------------
 ##---------------------------------------------------------------------------
 
 echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 
-if [ -z ${cyc} ]; then
-    echo "ERROR: cyc is unset."
+if [ -z ${vhr} ]; then
+    echo "ERROR: vhr is unset."
     exit 1
 fi
 if [ -z ${VHOUR_LIST} ]; then
@@ -21,25 +21,25 @@ fi
 
 echo "REQUESTED LIST OF VALID HOURS: $VHOUR_LIST"
 NEW_VHOUR_LIST=""
-if [ $cyc -ge 0 ] && [ $cyc -lt 6 ]; then
+if [ $vhr -ge 0 ] && [ $vhr -lt 6 ]; then
     for VHOUR in $VHOUR_LIST; do
         if [ $VHOUR -ge 0 ] && [ $VHOUR -le 5 ]; then
             NEW_VHOUR_LIST+="$VHOUR "
         fi
     done
-elif [ $cyc -ge 6 ] && [ $cyc -lt 12 ]; then
+elif [ $vhr -ge 6 ] && [ $vhr -lt 12 ]; then
     for VHOUR in $VHOUR_LIST; do
         if [ $VHOUR -ge 6 ] && [ $VHOUR -le 11 ]; then
             NEW_VHOUR_LIST+="$VHOUR "
         fi
     done
-elif [ $cyc -ge 12 ] && [ $cyc -lt 18 ]; then
+elif [ $vhr -ge 12 ] && [ $vhr -lt 18 ]; then
     for VHOUR in $VHOUR_LIST; do
         if [ $VHOUR -ge 12 ] && [ $VHOUR -le 17 ]; then
             NEW_VHOUR_LIST+="$VHOUR "
         fi
     done
-elif [ $cyc -ge 18 ] && [ $cyc -le 23 ]; then
+elif [ $vhr -ge 18 ] && [ $vhr -le 23 ]; then
     for VHOUR in $VHOUR_LIST; do
         if [ $VHOUR -ge 18 ] && [ $VHOUR -le 23 ]; then
             NEW_VHOUR_LIST+="$VHOUR "

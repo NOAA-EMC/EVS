@@ -2,7 +2,9 @@
 '''
 Program Name: subseasonal_prep_gefs_create_job_scripts.py
 Contact(s): Shannon Shields
-Abstract: This creates an independent job script for GEFS prep data. 
+Abstract: This script is run by exevs_subseasonal_gefs_prep.sh
+          in scripts/prep/subseasonal.
+          This creates an independent job script for GEFS prep data. 
           This job contains all the necessary environment variables
           and commands needed to run the specific
           job.
@@ -74,7 +76,8 @@ if JOB_GROUP == 'retrieve_data':
             job.write('#!/bin/bash\n')
             job.write('set -x\n')
             job.write('\n')
-            # Do prep file check to get fhr_list
+            # Check if prep files already exist in output dir
+            # If so, adjust fhr_list for restart
             check_prep_files = True
             if check_prep_files:
                 prep_fhr_list = (
@@ -88,6 +91,8 @@ if JOB_GROUP == 'retrieve_data':
                 job.write('export '+name+'='+value+'\n')
             job.write('\n')
             write_job_cmds = True
+            if len(prep_fhr_list) == 0:
+                write_job_cmds = False
             # Write job commands
             if write_job_cmds:
                 for cmd in retrieve_data_jobs_dict['commands']:
@@ -102,9 +107,10 @@ if USE_CFP == 'YES':
                                        'job*'))
     njob_files = len(job_files)
     if njob_files == 0:
-        print("WARNING: No job files created in "
+        print("FATAL ERROR: No job files created in "
               +os.path.join(DATA, STEP, 'prep_job_scripts',
                             JOB_GROUP))
+        sys.exit(1)
     poe_files = glob.glob(os.path.join(DATA, STEP,
                                        'prep_job_scripts', JOB_GROUP,
                                        'poe*'))

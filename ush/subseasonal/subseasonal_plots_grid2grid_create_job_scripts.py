@@ -2,7 +2,9 @@
 '''                           
 Program Name: subseasonal_plots_grid2grid_create_job_scripts.py
 Contact(s): Shannon Shields
-Abstract: This creates multiple independent job scripts. These
+Abstract: This script is run by exevs_subseasonal_grid2grid_plots.sh
+          in scripts/plots/subseasonal.
+          This creates multiple independent job scripts. These
           jobs contain all the necessary environment variables
           and commands needed to run the specific
           use case.
@@ -164,9 +166,6 @@ plot_jobs_dict = {
                                       'obs_name': 'gfs',
                                       'plots_list': 'time_series'},
     },
-    'ENSO': {},
-    'OLR': {},
-    'precip': {},
     'sea_ice': {
         'WeeklyAvg_Concentration': {'line_type_stat_list': ['SL1L2/RMSE',
                                                             'SL1L2/ME'],
@@ -689,7 +688,8 @@ if USE_CFP == 'YES':
     job_files = glob.glob(os.path.join(JOB_GROUP_jobs_dir, 'job*'))
     njob_files = len(job_files)
     if njob_files == 0:
-        print("ERROR: No job files created in "+JOB_GROUP_jobs_dir)
+        print("FATAL ERROR: No job files created in "+JOB_GROUP_jobs_dir)
+        sys.exit(1)
     poe_files = glob.glob(os.path.join(JOB_GROUP_jobs_dir, 'poe*'))
     npoe_files = len(poe_files)
     if npoe_files > 0:

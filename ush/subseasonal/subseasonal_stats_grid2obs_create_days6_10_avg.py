@@ -2,8 +2,10 @@
 '''
 Name: subseasonal_stats_grid2obs_create_days6_10_avg.py
 Contact(s): Shannon Shields
-Abstract: This script is used to create Days 6-10 averages
-          from MET point_stat MPR output
+Abstract: This script is run by subseasonal_stats_grid2obs_create_job_scripts.py
+          in ush/subseasonal.
+          This script is used to create Days 6-10 averages
+          from MET point_stat MPR output.
 '''
 
 import os
@@ -37,13 +39,13 @@ fhr_end = os.environ['fhr_list'].split(',')[-1]
 
 # Process run time arguments
 if len(sys.argv) != 4:
-    print("ERROR: Not given correct number of run time arguments..."
+    print("FATAL ERROR: Not given correct number of run time arguments..."
           +os.path.basename(__file__)+" VARNAME_VARLEVEL DATAROOT_FILE_FORMAT "
           +"COMIN_FILE_FORMAT")
     sys.exit(1)
 else:
     if '_' not in sys.argv[1]:
-        print("ERROR: variable and level runtime argument formatted "
+        print("FATAL ERROR: variable and level runtime argument formatted "
               +"incorrectly, be sure to separate variable and level with "
               +"an underscore (_), example HGT_P500")
         sys.exit(1)

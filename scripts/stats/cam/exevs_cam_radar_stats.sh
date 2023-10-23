@@ -21,7 +21,7 @@ set -x
 
 ############################################################
 # Update Mask List and Include SPC OLTKs if Valid
-# Mask Files Exist in COMINspcotlk
+# Mask Files Exist in EVSINspcotlk
 # Only for CONUS verification
 ############################################################
 
@@ -132,7 +132,7 @@ fi
 # Run METplus (StatAnalysis) if GridStat output exists
 ###################################################################
 
-if [ $cyc = 23 ]; then
+if [ $vhr = 23 ]; then
 
    if [ "$(ls -A $COMOUTsmall)" ]; then
 

@@ -1,4 +1,5 @@
 #!/bin/bash
+
 #PBS -N jevs_mesoscale_rap_grid2obs_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
@@ -66,8 +67,7 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
   export VDATE=$(date -d "today -1 day" +"%Y%m%d")
 
 # Developer Settings
-  export COMINspcotlk=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/prep/cam
-
+  export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
   export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver/$STEP/$COMPONENT
   export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 
