@@ -86,13 +86,13 @@ for levl in 0 50 125 200 400 700 1000 1400; do
             export VAR=$vari
             mkdir -p $STATSDIR/$RUN.$VDATE/$VAR
             if [ -s $COMOUTsmall/$VAR/point_stat_RTOFS_${RUNupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
-              cp -v $COMOUTsmall/$VAR/point_stat_RTOFS_${RUNupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/$RUN.$VDATE/$VAR/.
+              cpreq -v $COMOUTsmall/$VAR/point_stat_RTOFS_${RUNupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/$RUN.$VDATE/$VAR/.
             else
               run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
               -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/PointStat_fcstRTOFS_obs${RUNupper}_climoWOA23_$VAR.conf
               if [ $SENDCOM = "YES" ]; then
                   mkdir -p $COMOUTsmall/$VAR
-                  cp -v $STATSDIR/$RUN.$VDATE/$VAR/point_stat_RTOFS_${RUNupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
+                  cpreq -v $STATSDIR/$RUN.$VDATE/$VAR/point_stat_RTOFS_${RUNupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
               fi
             fi
           done
@@ -120,7 +120,7 @@ for vari in ${VARS}; do
     run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
     -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/StatAnalysis_fcstRTOFS.conf
     if [ $SENDCOM = "YES" ]; then
-      cp -v $STATSOUT/evs.stats.${COMPONENT}.${RUN}.${VERIF_CASE}_${VAR}.v${VDATE}.stat $COMOUTfinal/.
+      cpreq -v $STATSOUT/evs.stats.${COMPONENT}.${RUN}.${VERIF_CASE}_${VAR}.v${VDATE}.stat $COMOUTfinal/.
     fi
   else
      echo "Missing RTOFS_${RUNupper}_$VAR stat files for $VDATE" 

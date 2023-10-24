@@ -52,13 +52,13 @@ if [ -s $DCOMROOT/$VDATE/validation_data/marine/cmems/ssh/nrt_global_allsat_phy_
             export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
             mkdir -p $STATSDIR/$RUN.$VDATE/$VAR
             if [ -s $COMOUTsmall/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
-              cp -v $COMOUTsmall/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/$RUN.$VDATE/$VAR/.
+              cpreq -v $COMOUTsmall/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/$RUN.$VDATE/$VAR/.
             else
               run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
               -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/GridStat_fcstRTOFS_obsAVISO_climoHYCOM.conf
               if [ $SENDCOM = "YES" ]; then
                   mkdir -p $COMOUTsmall/$VAR
-                  cp -v $STATSDIR/$RUN.$VDATE/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
+                  cpreq -v $STATSDIR/$RUN.$VDATE/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
               fi
             fi
           done
@@ -89,7 +89,7 @@ for vari in ${VARS}; do
     run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
     -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/StatAnalysis_fcstRTOFS.conf
     if [ $SENDCOM = "YES" ]; then
-      cp -v $STATSOUT/evs.stats.${COMPONENT}.${RUN}.${VERIF_CASE}_${VAR}.v${VDATE}.stat $COMOUTfinal/.
+      cpreq -v $STATSOUT/evs.stats.${COMPONENT}.${RUN}.${VERIF_CASE}_${VAR}.v${VDATE}.stat $COMOUTfinal/.
     fi
   else
      echo "Missing RTOFS_${RUNupper}_$VARupper stat files for $VDATE"

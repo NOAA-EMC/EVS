@@ -48,13 +48,13 @@ if [ -s $COMIN/prep/$COMPONENT/rtofs.$VDATE/$RUN/ndbc.${VDATE}.nc ] ; then
             export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
             mkdir -p $STATSDIR/$RUN.$VDATE/$VAR
             if [ -s $COMOUTsmall/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
-              cp -v $COMOUTsmall/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/$RUN.$VDATE/$VAR/.
+              cpreq -v $COMOUTsmall/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/$RUN.$VDATE/$VAR/.
             else
               run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
               -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/PointStat_fcstRTOFS_obsNDBC_climoWOA23.conf
               if [ $SENDCOM = "YES" ]; then
                   mkdir -p $COMOUTsmall/$VAR
-                  cp -v $STATSDIR/$RUN.$VDATE/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
+                  cpreq -v $STATSDIR/$RUN.$VDATE/$VAR/point_stat_RTOFS_NDBC_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
               fi
             fi
           done
@@ -80,7 +80,7 @@ for vari in ${VARS}; do
     run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
     -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/StatAnalysis_fcstRTOFS_obsNDBC.conf
     if [ $SENDCOM = "YES" ]; then
-      cp -v $STATSOUT/evs.stats.${COMPONENT}.ndbc_standard.${VERIF_CASE}_${VAR}.v${VDATE}.stat $COMOUTfinal/.
+      cpreq -v $STATSOUT/evs.stats.${COMPONENT}.ndbc_standard.${VERIF_CASE}_${VAR}.v${VDATE}.stat $COMOUTfinal/.
     fi
   else
      echo "Missing RTOFS_NDBC_$VARupper stat files for $VDATE" 
