@@ -24,6 +24,9 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/subseasonal/subseasonal_stats.sh
 
+export evs_ver=v1.0.0
+evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
+
 
 export USER=$USER
 export envir=prod
@@ -40,7 +43,7 @@ export met_ver=${met_ver}
 export metplus_ver=${metplus_ver}
 export vhr=00
 export NET=evs
-export evs_ver=${evs_ver}
+export evs_ver=${evs_ver_2d}
 export STEP=stats
 export COMPONENT=subseasonal
 export RUN=atmos
