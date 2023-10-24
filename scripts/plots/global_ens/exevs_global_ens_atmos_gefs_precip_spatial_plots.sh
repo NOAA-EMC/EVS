@@ -5,7 +5,6 @@ set -x
 cd $DATA
 
 export machine=WCOSS2
-export COMROOT=${COMROOT:-$(compath.py $envir/com)}
 
 export VERIF_CASE=grid2grid
 export evs_run_mode=production
@@ -48,7 +47,7 @@ mkdir -p $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/logs
 
 for model in $model_list ; do
  MODEL=`echo $model | tr '[a-z]' '[A-Z]'`	
- source=$COMINapcp24mean/${model}
+ source=$EVSINapcp24mean/${model}
  target=$DATA/grid2grid_plots/data/$model
  mkdir -p $target
  for fhr in 024 048 072 096 120 144 168 192 216 240 ; do

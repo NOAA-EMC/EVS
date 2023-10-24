@@ -34,10 +34,10 @@ fi
 
 
 tail='/headline'
-prefix=${COMIN%%$tail*}
+prefix=${EVSIN%%$tail*}
 index=${#prefix}
 echo $index
-COM_IN=${COMIN:0:$index}
+COM_IN=${EVSIN:0:$index}
 echo $COM_IN
 
 >run_all_gens_g2g_poe.sh

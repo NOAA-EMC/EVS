@@ -17,7 +17,7 @@ print("BEGIN: "+os.path.basename(__file__))
 
 def get_hr_list_info(hr_list):
     """! This gets the beginning hour, end hour, and
-         increment for cycle or valid hour list
+         increment for init or valid hour list
 
          Args:
              hr_list - list of strings of hours
@@ -33,12 +33,12 @@ def get_hr_list_info(hr_list):
     hr_inc = str(int((24/len(hr_list))*3600))
     return hr_beg, hr_end, hr_inc
 
-def get_forecast_hours(fcyc_list, vhr_list, fhr_min_str, fhr_max_str):
+def get_forecast_hours(inithour_list, vhr_list, fhr_min_str, fhr_max_str):
     """! This creates a list of forecast hours to be
          considered
 
          Args:
-             fcyc_list   - list of strings of cycle hours
+             inithour_list   - list of strings of init hours
              vhr_list    - list of strings of valid hours
              fhr_min_str - string of the first forecast hour
              fhr_max_str - string of the last forecast hour
@@ -49,10 +49,10 @@ def get_forecast_hours(fcyc_list, vhr_list, fhr_min_str, fhr_max_str):
     """
     fhr_min = float(fhr_min_str)
     fhr_max = float(fhr_max_str)
-    nfcyc = len(fcyc_list)
+    ninithour = len(inithour_list)
     nvhr = len(vhr_list)
-    if nfcyc > nvhr:
-        fhr_intvl = int(24/nfcyc)
+    if ninithour > nvhr:
+        fhr_intvl = int(24/ninithour)
     else:
         fhr_intvl = int(24/nvhr)
     nfhr = fhr_max/fhr_intvl
@@ -70,23 +70,23 @@ RUN = os.environ['RUN']
 
 # Build dictionary
 env_var_dict = {}
-# Process forecast initialization cycles
-fcyc_list = (
-    os.environ['fcyc_list'].split(' ')
+# Process forecast initialization hours
+inithour_list = (
+    os.environ['inithour_list'].split(' ')
     )
-(fcyc_beg,
-fcyc_end,
-fcyc_inc) = \
-    get_hr_list_info(fcyc_list)
-env_var_dict['fcyc_list'] = (
-    os.environ['fcyc_list']
+(inithour_beg,
+inithour_end,
+inithour_inc) = \
+    get_hr_list_info(inithour_list)
+env_var_dict['inithour_list'] = (
+    os.environ['inithour_list']
 )
 env_var_dict['init_hr_list'] = ', '.join(
-    fcyc_list
+    inithour_list
 )
-env_var_dict['init_hr_beg'] = fcyc_beg
-env_var_dict['init_hr_end'] = fcyc_end
-env_var_dict['init_hr_inc'] = fcyc_inc
+env_var_dict['init_hr_beg'] = inithour_beg
+env_var_dict['init_hr_end'] = inithour_end
+env_var_dict['init_hr_inc'] = inithour_inc
 # Process valid hours
 vhr_list = (
     os.environ['vhr_list'].split(' ')
@@ -107,7 +107,7 @@ env_var_dict['valid_hr_inc'] = vhr_inc
 fhr_min = os.environ['fhr_min']
 fhr_max = os.environ['fhr_max']
 fhr_list_str = get_forecast_hours(
-    fcyc_list, vhr_list,
+    inithour_list, vhr_list,
     fhr_min, fhr_max
     )
 env_var_dict['fhr_list'] = (

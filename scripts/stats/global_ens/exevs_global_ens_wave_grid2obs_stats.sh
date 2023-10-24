@@ -85,9 +85,9 @@ for cyc in ${cycles} ; do
         match_fhr=$(printf "%02d" "${match_hr}")
         flead=$(printf "%03d" "${fhr}")
         flead2=$(printf "%02d" "${fhr}")
-        COMINgdasncfilename=${COMINgdasnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${VDATE}${cyc2}.nc 
+        EVSgdasncfilename=${EVSINgdasnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${VDATE}${cyc2}.nc 
         DATAgdasncfilename=${DATA}/ncfiles/gdas.${VDATE}${cyc2}.nc
-        COMINmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${MODELNAME}.${RUN}.${match_date}.t${match_fhr}z.mean.global.0p25.f${flead}.grib2
+        EVSmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${MODELNAME}.${RUN}.${match_date}.t${match_fhr}z.mean.global.0p25.f${flead}.grib2
         DATAmodelfilename=$DATA/gribs/${MODELNAME}.${RUN}.${match_date}.t${match_fhr}z.mean.global.0p25.f${flead}.grib2
         DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${cyc2}0000V.stat
         COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${cyc2}0000V.stat
@@ -95,18 +95,18 @@ for cyc in ${cycles} ; do
             cp -v $COMOUTstatfilename $DATAstatfilename
         else
             if [[ ! -s $DATAgdasncfilename ]]; then
-                if [[ -s $COMINgdasncfilename ]]; then
-                    cp -v $COMINgdasncfilename $DATAgdasncfilename
+                if [[ -s $EVSgdasncfilename ]]; then
+                    cp -v $EVSgdasncfilename $DATAgdasncfilename
                 else
-                    echo "DOES NOT EXIST $COMINgdasncfilename"
+                    echo "DOES NOT EXIST $EVSgdasncfilename"
                 fi
             fi
             if [[ -s $DATAgdasncfilename ]]; then
                 if [[ ! -s $DATAmodelfilename ]]; then
-                    if [[ -s $COMINmodelfilename ]]; then
-                        cp -v $COMINmodelfilename $DATAmodelfilename
+                    if [[ -s $EVSmodelfilename ]]; then
+                        cp -v $EVSmodelfilename $DATAmodelfilename
                     else
-                        echo "DOES NOT EXIST $COMINmodelfilename"
+                        echo "DOES NOT EXIST $EVSmodelfilename"
                     fi
                 fi
                 if [[ -s $DATAmodelfilename ]]; then

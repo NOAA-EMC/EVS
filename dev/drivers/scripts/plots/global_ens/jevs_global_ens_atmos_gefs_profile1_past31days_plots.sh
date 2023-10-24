@@ -29,6 +29,7 @@ export envir=prod
 
 
 export KEEPDATA=YES
+export SENDDBN=NO
 
 export cyc=00
 export past_days=31

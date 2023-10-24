@@ -10,10 +10,10 @@ for MODEL in GEFS ; do
   model=`echo $MODEL | tr '[A-Z]' '[a-z]'`
 
   archive=$output_base_dir
-  prefix=${COMIN%%gefs*}
+  prefix=${EVSIN%%gefs*}
   index=${#prefix}
   echo $index
-  COM_IN=${COMIN:0:$index}
+  COM_IN=${EVSIN:0:$index}
   echo $COM_IN
 
   model_stat_dir=${COM_IN}${model}.${day}
