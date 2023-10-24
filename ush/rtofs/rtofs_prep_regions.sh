@@ -203,7 +203,7 @@ if [ ! -s $COMOUTprep/rtofs.$VDATE/$RUN/southeast_pacific.nc ]; then
         -type lon -thresh 'ge-180 && le-70' -intersection -name SEPAC
         export err=$?; err_chk
         if [ $SENDCOM = "YES" ]; then
-            cpeq -v $DATA/rtofs.$VDATE/$RUN/southeast_pacific.nc $COMOUTprep/rtofs.$VDATE/$RUN
+            cpreq -v $DATA/rtofs.$VDATE/$RUN/southeast_pacific.nc $COMOUTprep/rtofs.$VDATE/$RUN
         fi
     fi
 fi
