@@ -20,7 +20,7 @@ rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
 
-
+export cycle=t${cyc}z
 setpdy.sh
 . $DATA/PDY
 
@@ -54,8 +54,6 @@ export jlogfile=${jlogfile:-${DATA}/jlogfile}
 export outid="LL$job"
 export jobid="${outid}.o${pid}"
 export pgmout="OUTPUT.${pid}"
-
-export cycle=t${cyc}z
 
 
 ####################################
