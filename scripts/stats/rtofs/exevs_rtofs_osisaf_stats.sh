@@ -55,6 +55,7 @@ for hem in nh sh; do
             else
               run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
               -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/GridStat_fcstRTOFS_obsOSISAF_${hem}.conf
+              export err=$?; err_chk
               if [ $SENDCOM = "YES" ]; then
                   mkdir -p $COMOUTsmall/$VAR
                   cpreq -v $STATSDIR/$RUN.$VDATE/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${hem}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.

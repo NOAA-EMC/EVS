@@ -90,6 +90,7 @@ for levl in 0 50 125 200 400 700 1000 1400; do
             else
               run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
               -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/PointStat_fcstRTOFS_obs${RUNupper}_climoWOA23_$VAR.conf
+              export err=$?; err_chk
               if [ $SENDCOM = "YES" ]; then
                   mkdir -p $COMOUTsmall/$VAR
                   cpreq -v $STATSDIR/$RUN.$VDATE/$VAR/point_stat_RTOFS_${RUNupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.

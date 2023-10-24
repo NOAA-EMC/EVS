@@ -32,6 +32,7 @@ for lead in 000 024 048 072 096 120 144 168 192; do
 
 # make plots
     $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
+    export err=$?; err_chk
   done
 
   for stats in csi; do
@@ -43,6 +44,7 @@ for lead in 000 024 048 072 096 120 144 168 192; do
 
 # make plots
       $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
+      export err=$?; err_chk
     done
   done
 
@@ -59,6 +61,7 @@ for lead in 000 024 048 072 096 120 144 168 192; do
 
 # make plots
   $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
+  export err=$?; err_chk
 done
 
 # plot mean vs. lead time
@@ -72,6 +75,7 @@ for stats in me rmse; do
 
 # make plots
   $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
+  export err=$?; err_chk
 done
 
 for stats in csi; do
@@ -83,6 +87,7 @@ for stats in csi; do
 
 # make plots
     $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
+    export err=$?; err_chk
   done
 done
 

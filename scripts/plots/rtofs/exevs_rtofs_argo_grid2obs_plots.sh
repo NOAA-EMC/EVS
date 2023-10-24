@@ -86,6 +86,7 @@ for lead in 000 024 048 072 096 120 144 168 192; do
         export VAR=$vari
         # make plots
         $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
+        export err=$?; err_chk
       done
     done
   done
@@ -155,6 +156,7 @@ for levl in 0 50 125 200 400 700 1000 1400; do
       export VAR=$vari
       # make plots
       $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
+      export err=$?; err_chk
     done
   done
 done
