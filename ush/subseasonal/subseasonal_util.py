@@ -30,7 +30,7 @@ def run_shell_command(command):
     else:
         run_command = subprocess.run(command)
     if run_command.returncode != 0:
-        print("ERROR: "+' '.join(run_command.args)+" gave return code "
+        print("WARNING: "+' '.join(run_command.args)+" gave return code "
               +str(run_command.returncode))
 
 def metplus_command(conf_file_name):
@@ -53,7 +53,7 @@ def metplus_command(conf_file_name):
                              os.environ['VERIF_CASE'],
                              conf_file_name)
     if not os.path.exists(conf_file):
-        print("ERROR: "+conf_file+" DOES NOT EXIST")
+        print("FATAL ERROR: "+conf_file+" DOES NOT EXIST")
         sys.exit(1)
     metplus_cmd = run_metplus+' -c '+machine_conf+' -c '+conf_file
     return metplus_cmd
@@ -72,7 +72,7 @@ def python_command(python_script_name, script_arg_list):
     python_script = os.path.join(os.environ['USHevs'], os.environ['COMPONENT'],
                                  python_script_name)
     if not os.path.exists(python_script):
-        print("ERROR: "+python_script+" DOES NOT EXIST")
+        print("FATAL ERROR: "+python_script+" DOES NOT EXIST")
         sys.exit(1)
     python_cmd = 'python '+python_script
     for script_arg in script_arg_list:
@@ -294,7 +294,7 @@ def get_time_info(date_start, date_end, date_type, init_hr_list, valid_hr_list,
     return time_info
 
 def get_init_hour(valid_hour, forecast_hour):
-    """! Get a initialization hour/cycle
+    """! Get a initialization hour
 
          Args:
              valid_hour    - valid hour (integer)
@@ -313,7 +313,7 @@ def get_valid_hour(init_hour, forecast_hour):
     """! Get a valid hour
 
          Args:
-             init_hour    - intit hour/cycle (integer)
+             init_hour    - init hour (integer)
              forecast_hour - forecast hour (integer)
     """
     valid_hour = (init_hour + (forecast_hour%24))
@@ -341,7 +341,7 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
     """
     filled_file_format = '/'
     format_opt_list = ['lead', 'lead_shift', 'valid', 'valid_shift',
-                       'init', 'init_shift', 'cycle']
+                       'init', 'init_shift']
     if len(list(str_sub_dict.keys())) != 0:
         format_opt_list = format_opt_list+list(str_sub_dict.keys())
     for filled_file_format_chunk in unfilled_file_format.split('/'):
@@ -385,10 +385,6 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                        else:
                            replace_format_opt_count = forecast_hour
                    elif format_opt == 'init':
-                       replace_format_opt_count = init_time_dt.strftime(
-                           format_opt_count_fmt
-                       )
-                   elif format_opt == 'cycle':
                        replace_format_opt_count = init_time_dt.strftime(
                            format_opt_count_fmt
                        ) 
@@ -3616,7 +3612,7 @@ def get_obs_valid_hrs(obs):
         valid_hr_end = obs_valid_hr_dict[obs]['valid_hr_end']
         valid_hr_inc = obs_valid_hr_dict[obs]['valid_hr_inc']
     else:
-        print(f"ERROR: Cannot get {obs} valid hour information")
+        print(f"FATAL ERROR: Cannot get {obs} valid hour information")
         sys.exit(1)
     return valid_hr_start, valid_hr_end, valid_hr_inc
 
@@ -3700,7 +3696,7 @@ def initialize_prep_job_env_dict(verif_type, group,
     job_env_dict['valid_hr_start'] = (valid_hr_list[0].zfill(2))
     job_env_dict['valid_hr_end'] = (valid_hr_list[-1].zfill(2))
     init_hr_list = (
-        os.environ['fcyc_list']\
+        os.environ['inithour_list']\
         .split(' ')
     )
     job_env_dict['init_hr_start'] = (init_hr_list[0].zfill(2))
@@ -3811,7 +3807,7 @@ def initialize_job_env_dict(verif_type, group,
             job_env_dict['valid_hr_end'] = str(valid_hr_end).zfill(2)
             job_env_dict['valid_hr_inc'] = str(valid_hr_inc)
         verif_type_init_hr_list = (
-            os.environ[verif_case_step_abbrev_type+'_fcyc_list']\
+            os.environ[verif_case_step_abbrev_type+'_inithour_list']\
             .split(' ')
         )
         job_env_dict['init_hr_start'] = (
@@ -3935,7 +3931,7 @@ def get_met_line_type_cols(logger, met_root, met_version, met_line_type):
              met_line_type - MET line type (string)
          Returns:
              met_version_line_type_col_list - list of MET version
-                                              line type colums (strings)
+                                              line type columns (strings)
     """
     if met_version.count('.') == 2:
         met_minor_version = met_version.rpartition('.')[0]
@@ -3952,7 +3948,8 @@ def get_met_line_type_cols(logger, met_root, met_version, met_line_type):
                     line_type_cols = line.split(' : ')[-1]
                     break
     else:
-        logger.error(f"{met_minor_version_col_file} DOES NOT EXISTS, "
+        logger.error(f"FATAL ERROR {met_minor_version_col_file} "
+                     +"DOES NOT EXIST, "
                      +"cannot determine MET data column structure")
         sys.exit(1)
     met_version_line_type_col_list = (
@@ -4648,7 +4645,7 @@ def calculate_stat(logger, data_df, line_type, stat):
        if line_type == 'CTC':
            stat_df = 1 - (FY_ON/(FY_ON + FY_OY))
    else:
-        logger.error(stat+" IS NOT AN OPTION")
+        logger.error("FATAL ERROR, "+stat+" IS NOT AN OPTION")
         sys.exit(1)
    idx = 0
    idx_dict = {}
