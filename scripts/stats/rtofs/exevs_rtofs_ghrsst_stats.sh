@@ -17,12 +17,8 @@ mkdir -p $STATSDIR
 # get the months for the climo files:
 #     for day < 15, use the month before + valid month
 #     for day >= 15, use valid month + the month after
-
-export STATSDIR=$DATA/stats
-mkdir -p $STATSDIR
-
-MM=$(date --date=$VDATE +%m)
-DD=$(date --date=$VDATE +%d)
+MM=$(echo $VDATE |cut -c5-6)
+DD=$(echo $VDATE |cut -c7-8)
 if [ $DD -lt 15 ] ; then
    NM=`expr $MM - 1`
    if [ $NM -eq 0 ] ; then
@@ -48,7 +44,7 @@ if [ -s $DCOMROOT/$VDATE/validation_data/marine/ghrsst/${VDATE}_OSPO_L4_GHRSST.n
         fhr=$(($fday * 24))
         fhr2=$(printf "%02d" "${fhr}")
         export fhr3=$(printf "%03d" "${fhr}")
-        INITDATE=$(date --date="$VDATE -${fday} day" +%Y%m%d)
+        INITDATE=$($NDATE -${fhr} ${VDATE}${vhr} | cut -c 1-8)
         if [ -s $COMIN/prep/$COMPONENT/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f${fhr3}_prog.$RUN.nc ] ; then
           for vari in ${VARS}; do
             export VAR=$vari
@@ -67,13 +63,14 @@ if [ -s $DCOMROOT/$VDATE/validation_data/marine/ghrsst/${VDATE}_OSPO_L4_GHRSST.n
             fi
           done
         else
-          echo "Missing RTOFS f${fhr3} prog file for $VDATE"
+          echo "WARNING: Missing RTOFS f${fhr3} prog file for $VDATE: $COMIN/prep/$COMPONENT/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f${fhr3}_prog.$RUN.nc"
         fi
       done
    else
-     echo "Missing RTOFS f000 ice file for $VDATE"
+     echo "WARNING: Missing RTOFS f000 ice file for $VDATE: $COMIN/prep/$COMPONENT/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_ice.$RUN.nc"
    fi
 else
+   echo "WARNING: Missing GHRSST data file for $VDATE: $DCOMROOT/$VDATE/validation_data/marine/ghrsst/${VDATE}_OSPO_L4_GHRSST.nc"
    if [ $SENDMAIL = YES ] ; then
        export subject="GHRSST OSPO Data Missing for EVS RTOFS"
        echo "Warning: No GHRSST OSPO data was available for valid date $VDATE." > mailmsg
@@ -97,7 +94,7 @@ for vari in ${VARS}; do
       cpreq -v $STATSOUT/evs.stats.${COMPONENT}.${RUN}.${VERIF_CASE}_${VAR}.v${VDATE}.stat $COMOUTfinal/.
     fi
   else
-     echo "Missing RTOFS_${RUNupper}_$VARupper stat files for $VDATE" 
+     echo "WARNING: Missing RTOFS_${RUNupper}_$VARupper stat files for $VDATE in $STATSDIR/$RUN.$VDATE/$VAR/*.stat" 
   fi
 done
 
