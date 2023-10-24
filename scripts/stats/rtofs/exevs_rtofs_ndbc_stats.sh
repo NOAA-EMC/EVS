@@ -80,6 +80,7 @@ for vari in ${VARS}; do
     # sum small stat files into one big file using Stat_Analysis
     run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
     -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/StatAnalysis_fcstRTOFS_obsNDBC.conf
+    export err=$?; err_chk
     if [ $SENDCOM = "YES" ]; then
       cpreq -v $STATSOUT/evs.stats.${COMPONENT}.ndbc_standard.${VERIF_CASE}_${VAR}.v${VDATE}.stat $COMOUTfinal/.
     fi
