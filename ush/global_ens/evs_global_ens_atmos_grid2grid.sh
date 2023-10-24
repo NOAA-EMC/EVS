@@ -56,10 +56,10 @@ fi
 
 
 tail='/atmos'
-prefix=${COMIN%%$tail*}
+prefix=${EVSIN%%$tail*}
 index=${#prefix}
 echo $index
-COM_IN=${COMIN:0:$index}
+COM_IN=${EVSIN:0:$index}
 echo $COM_IN
 
 

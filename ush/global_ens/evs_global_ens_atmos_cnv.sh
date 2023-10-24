@@ -18,17 +18,17 @@ model_list=$1
 models=$model_list
 
 #Check input if obs and fcst input data files availabble 
-#echo COMIN=$COMIN 
+#echo EVSIN=$EVSIN 
 $USHevs/global_ens/evs_gens_atmos_check_input_files.sh prepbufr
 $USHevs/global_ens/evs_gens_atmos_check_input_files.sh $models
 
 >run_all_gens_cnv_poe.sh
 
 tail='/atmos'
-prefix=${COMIN%%$tail*}
+prefix=${EVSIN%%$tail*}
 index=${#prefix}
 echo $index
-COM_IN=${COMIN:0:$index}
+COM_IN=${EVSIN:0:$index}
 echo $COM_IN
 
 
