@@ -50,8 +50,8 @@ export jobid=$job.${PBS_JOBID:-$$}
 export config=$HOMEevs/parm/evs_config/cam/config.evs.cam_nam_firewxnest.prod
 source $config
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
-export COMOUT=/lfs/h2/emc/ptmp/$USER/${NET}/${evs_ver}/$STEP/$COMPONENT
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
+export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_CAM_PLOTS
