@@ -8,7 +8,6 @@ set -x
 #######################################################
 
 
-export cycle=t${cyc}z
 
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
@@ -21,7 +20,7 @@ rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
 
-
+export cycle=t${cyc}z
 setpdy.sh
 . $DATA/PDY
 
@@ -33,7 +32,7 @@ export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/
 export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/$evs_ver)}/$STEP/$COMPONENT/$RUN.$VDATE
 mkdir -p $COMOUT
 
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=$HOMEevs/exec
 export PARMevs=$HOMEevs/parm
 export USHevs=$HOMEevs/ush
@@ -56,18 +55,12 @@ export outid="LL$job"
 export jobid="${outid}.o${pid}"
 export pgmout="OUTPUT.${pid}"
 
-export cycle=t${cyc}z
-
 
 ####################################
 # Specify codes and scripts locaton
 ####################################
 
-# Run setpdy and initialize PDY variables
-setpdy.sh
-. $DATA/PDY
 
-export VDATE=${VDATE:-$PDYm1}
 
 $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${STEP}.sh 
 
