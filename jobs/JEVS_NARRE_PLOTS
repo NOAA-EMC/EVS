@@ -62,9 +62,6 @@ export cycle=t${cyc}z
 # Specify codes and scripts locaton
 ####################################
 
-# Run setpdy and initialize PDY variables
-setpdy.sh
-. $DATA/PDY
 
 export VDATE=${VDATE:-$PDYm1}
 
