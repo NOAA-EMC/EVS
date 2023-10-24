@@ -32,9 +32,9 @@ for vcyc in 00 12 ; do   #for 6h APCP  verification
 
      #if [ $vcyc = 12 ] ; then 
 
-       #ln -sf  ${COMIN}.${fyyyymmdd}/gefs/gefs.ens${mbr}.t${fcyc}z.grid3.24h.f${fhr}.nc  naefs.ens${mbr}.${fyyyymmdd}.t${fcyc}z.grid3.24h.f${fhr}.nc
+       #ln -sf  ${EVSIN}.${fyyyymmdd}/gefs/gefs.ens${mbr}.t${fcyc}z.grid3.24h.f${fhr}.nc  naefs.ens${mbr}.${fyyyymmdd}.t${fcyc}z.grid3.24h.f${fhr}.nc
        #GEFS bias-corrected precip has 24h APCP, so directly use them:  
-       ln -sf  ${COMIN}.${fyyyymmdd}/gefs_bc/gefs_bc.ens${mbr}.t${fcyc}z.grid3.24h.f${fhr}.grib2  naefs.ens${mbr}.${fyyyymmdd}.t${fcyc}z.grid3.24h.f${fhr}.grib2
+       ln -sf  ${EVSIN}.${fyyyymmdd}/gefs_bc/gefs_bc.ens${mbr}.t${fcyc}z.grid3.24h.f${fhr}.grib2  naefs.ens${mbr}.${fyyyymmdd}.t${fcyc}z.grid3.24h.f${fhr}.grib2
 
      #fi 
 
@@ -46,7 +46,7 @@ for vcyc in 00 12 ; do   #for 6h APCP  verification
 #     typeset -Z2 mbr
 #     mbr40=$((mb+30))
 #     if [ $vcyc = 12 ] ; then
-#       ln -sf  ${COMIN}.${fyyyymmdd}/cmce/cmce.ens${mbr}.t${fcyc}z.grid3.24h.f${fhr}.nc  naefs.ens${mbr40}.${fyyyymmdd}.t${fcyc}z.grid3.24h.f${fhr}.nc
+#       ln -sf  ${EVSIN}.${fyyyymmdd}/cmce/cmce.ens${mbr}.t${fcyc}z.grid3.24h.f${fhr}.nc  naefs.ens${mbr40}.${fyyyymmdd}.t${fcyc}z.grid3.24h.f${fhr}.nc
 #
 #     fi
 #   done

@@ -40,6 +40,8 @@ export run_mpi=yes
 export get_gefs_bc_apcp24h=yes
 export get_model_bc=yes
 
+export gefs_mbrs=30
+
 export SENDMAIL=YES
 export maillist='alicia.bentley@noaa.gov,steven.simon@noaa.gov'
 

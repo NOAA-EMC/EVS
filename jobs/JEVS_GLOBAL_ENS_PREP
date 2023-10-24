@@ -3,7 +3,7 @@
 #   By Binbin Zhou, IMSG@EMC/NCEP
 #   Feb 2, 2022
 #
-set -xa
+set -x
 #######################################################
 #######################################################
 
@@ -31,46 +31,45 @@ export SENDECF=${SENDECF:-YES}
 export SENDMAIL=${SENDMAIL:-NO}
 
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
-export COMINgfsanl=${COMINgfs:-$(compath.py $envir/com/gfs/${gfs_ver})}
+export COMINgfs=${COMINgfs:-$(compath.py $envir/com/gfs/${gfs_ver})}
 export COMINgefs=${COMINgefs:-$(compath.py $envir/com/gefs/${gefs_ver})}
 export COMINnaefs=${COMINnaefs:-$(compath.py $envir/com/naefs/${naefs_ver})}
 export DCOMIN=${DCOMIN:-${DCOMROOT}}
 export COMINccpa=${COMINccpa:-$(compath.py $envir/com/ccpa/${ccpa_ver})}
 export COMINcmce=$COMINnaefs
-export COMINprepbufr=${COMINprepbufr:-$(compath.py $envir/com/obsproc/${obsproc_ver})}
-export COMINsnow=${DCOMIN}
-export COMINosi_saf=${COMINosi_saf:-$DCOMROOT}
-export COMINsst=${COMINsst:-$DCOMROOT} 
+export COMINobsproc=${COMINobsproc:-$(compath.py $envir/com/obsproc/${obsproc_ver})}
+export DCOMINnohrsc=${DCOMINnohrsc:-$DCOMROOT}
+export DCOMINosi_saf=${DCOMINosi_saf:-$DCOMROOT}
+export DCOMINghrsst=${DCOMINghrsst:-$DCOMROOT} 
 
 export COMINgefs_bc=${COMINgefs_bc:-$COMINnaefs}
-export COMINcmce_bc=${DCOMIN}
-export COMIN_gefs=${COMIN_gefs:-${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/gefs}
-export COMIN_gefs_bc=${COMIN_gefs_bc:-${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/gefs_bc}
-export COMIN_cmce=${COMIN_cmce:-${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/cmce}
-export COMIN_cmce_bc=${COMIN_cmce_bc:-${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/cmce_bc}
-
+export DCOMINcmce_bc=${DCOMINcmce_bc:-$DCOMIN}
+export EVSINgefs=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/gefs
+export EVSINgefs_bc=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/gefs_bc
+export EVSINcmce=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/cmce
+export EVSINcmce_bc=${COMIN}/${STEP}/${COMPONENT}/atmos.${INITDATE}/cmce_bc
 
 export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}/$STEP/${COMPONENT}
 mkdir -p $COMOUT
 
-export COMOUT_gefs=${COMOUT_gefs:-${COMOUT}/${RUN}.${INITDATE}/gefs}
-export COMOUT_cmce=${COMOUT_cmce:-${COMOUT}/${RUN}.${INITDATE}/cmce}
-export COMOUT_ecme=${COMOUT_ecme:-${COMOUT}/${RUN}.${INITDATE}/ecme}
-export COMOUT_naefs=${COMOUT}
-export COMOUT_osi_saf=${COMOUT_osi_saf:-${COMOUT}/${RUN}.${INITDATE}/osi_saf}
-export COMOUT_gefs_bc=${COMOUT_gefs_bc:-${COMOUT}/${RUN}.${INITDATE}/gefs_bc}
-export COMOUT_cmce_bc=${COMOUT_cmce_bc:-${COMOUT}/${RUN}.${INITDATE}/cmce_bc}
+export COMOUTgefs=${COMOUTgefs:-${COMOUT}/${RUN}.${INITDATE}/gefs}
+export COMOUTcmce=${COMOUTcmce:-${COMOUT}/${RUN}.${INITDATE}/cmce}
+export COMOUTecme=${COMOUTecme:-${COMOUT}/${RUN}.${INITDATE}/ecme}
+export COMOUTnaefs=${COMOUT}
+export COMOUTosi_saf=${COMOUTosi_saf:-${COMOUT}/${RUN}.${INITDATE}/osi_saf}
+export COMOUTgefs_bc=${COMOUTgefs_bc:-${COMOUT}/${RUN}.${INITDATE}/gefs_bc}
+export COMOUTcmce_bc=${COMOUTcmce_bc:-${COMOUT}/${RUN}.${INITDATE}/cmce_bc}
 
 if [ $RUN = headline ]; then
-  mkdir -p $COMOUT_gefs $COMOUT_cmce
+  mkdir -p $COMOUTgefs $COMOUTcmce
 elif [ $RUN = atmos ]; then
-  mkdir -p $COMOUT_gefs $COMOUT_cmce $COMOUT_ecme $COMOUT_osi_saf
+  mkdir -p $COMOUTgefs $COMOUTcmce $COMOUTecme $COMOUTosi_saf
   if [ $MODELNAME = naefs ]; then
-    mkdir -p $COMOUT_gefs_bc $COMOUT_cmce_bc
+      mkdir -p $COMOUTgefs_bc $COMOUTcmce_bc
   fi
 fi
 
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs_gens.${evs_ver}}
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=$HOMEevs/exec
 export PARMevs=$HOMEevs/parm
 export USHevs=$HOMEevs/ush

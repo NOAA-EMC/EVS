@@ -41,8 +41,8 @@ export gefs_members="30"
 export cfs_members="4"
 
 # Run setpdy and initialize PDY variables
-export cyc=${cyc:-00}
-export cycle=${cycle:-t${cyc}z}
+export vhr=${vhr:-00}
+export cycle=${cycle:-t${vhr}z}
 setpdy.sh
 . ./PDY
 

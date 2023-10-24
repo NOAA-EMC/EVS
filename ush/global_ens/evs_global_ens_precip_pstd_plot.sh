@@ -8,10 +8,10 @@ mkdir -p $stat_data
 
 yyyy=${VDATE:0:4}
 tail='/gefs'
-prefix=${COMIN%%$tail*}
+prefix=${EVSIN%%$tail*}
 index=${#prefix}
 echo $index
-COM_IN=${COMIN:0:$index}
+COM_IN=${EVSIN:0:$index}
 echo $COM_IN
 
 

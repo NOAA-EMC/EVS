@@ -38,7 +38,7 @@ export nproc=8
 export USE_CFP=YES
 export met_ver=${met_ver}
 export metplus_ver=${metplus_ver}
-export cyc=00
+export vhr=00
 export NET=evs
 export evs_ver=${evs_ver}
 export STEP=stats
@@ -48,8 +48,8 @@ export MODELNAME=gefs
 export gefs_ver=${gefs_ver}
 export VERIF_CASE=grid2obs
 
-export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
-export COMIN=$COMROOT/$NET/$evs_ver/prep/$COMPONENT/$RUN
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/prep/$COMPONENT/$RUN
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.subseasonal.gefs.grid2obs.stats
 

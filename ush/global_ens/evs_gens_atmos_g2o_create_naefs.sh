@@ -30,7 +30,7 @@ for vcyc in 00 12 ; do
    fi 
 
    for mbr in $mbrs ; do
-     ln -sf  ${COMIN}.${fyyyymmdd}/gefs_bc/gefs_bc.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  naefs.ens${mbr}.${fyyyymmdd}.t${fcyc}z.grid3.f${fhr}.grib2
+     ln -sf  ${EVSIN}.${fyyyymmdd}/gefs_bc/gefs_bc.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  naefs.ens${mbr}.${fyyyymmdd}.t${fcyc}z.grid3.f${fhr}.grib2
    done
 
    for mb in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 ; do 
@@ -42,7 +42,7 @@ for vcyc in 00 12 ; do
        mbr40=$((mb+30))
      fi
 
-     ln -sf  ${COMIN}.${fyyyymmdd}/cmce_bc/cmce_bc.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  naefs.ens${mbr40}.${fyyyymmdd}.t${fcyc}z.grid3.f${fhr}.grib2
+     ln -sf  ${EVSIN}.${fyyyymmdd}/cmce_bc/cmce_bc.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  naefs.ens${mbr40}.${fyyyymmdd}.t${fcyc}z.grid3.f${fhr}.grib2
    done
 
   

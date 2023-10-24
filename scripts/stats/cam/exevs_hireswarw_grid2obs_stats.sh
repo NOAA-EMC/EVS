@@ -320,7 +320,7 @@ if [ $SENDCOM = YES ]; then
 fi
 
 # Final Stats Job
-if [ "$cyc" -ge "$last_cyc" ]; then
+if [ "$vhr" -ge "$last_cyc" ]; then
     if [ $SENDCOM = YES ]; then
         export job_type="gather3"
         export njob=1
