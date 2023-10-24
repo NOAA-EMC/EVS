@@ -31,7 +31,7 @@ do
      fi
      export fhr
 
-     export datehr=${VDATE}${cyc}
+     export datehr=${VDATE}${vhr}
      adate=`$NDATE -$fhr $datehr`
      aday=`echo $adate |cut -c1-8`
      acyc=`echo $adate |cut -c9-10`
@@ -58,22 +58,22 @@ echo $fcsthours, $fcstnum
 
 # do a search on the obs file needed
 
-if [ $cyc = 00 -o $cyc = 06 -o $cyc = 12 -o $cyc = 18 ]
+if [ $vhr = 00 -o $vhr = 06 -o $vhr = 12 -o $vhr = 18 ]
 then
  tmnum=06
-elif [ $cyc = 01 -o $cyc = 07 -o $cyc = 13 -o $cyc = 19 ]
+elif [ $vhr = 01 -o $vhr = 07 -o $vhr = 13 -o $vhr = 19 ]
 then
  tmnum=05
-elif [ $cyc = 02 -o $cyc = 08 -o $cyc = 14 -o $cyc = 20 ]
+elif [ $vhr = 02 -o $vhr = 08 -o $vhr = 14 -o $vhr = 20 ]
 then
  tmnum=04
-elif [ $cyc = 03 -o $cyc = 09 -o $cyc = 15 -o $cyc = 21 ]
+elif [ $vhr = 03 -o $vhr = 09 -o $vhr = 15 -o $vhr = 21 ]
 then
  tmnum=03
-elif [ $cyc = 04 -o $cyc = 10 -o $cyc = 16 -o $cyc = 22 ]
+elif [ $vhr = 04 -o $vhr = 10 -o $vhr = 16 -o $vhr = 22 ]
 then
  tmnum=02
-elif [ $cyc = 05 -o $cyc = 11 -o $cyc = 17 -o $cyc = 23 ]
+elif [ $vhr = 05 -o $vhr = 11 -o $vhr = 17 -o $vhr = 23 ]
 then
  tmnum=01
 fi
@@ -82,16 +82,16 @@ obdate=`$NDATE +6 $datehr`
 obday=`echo $obdate |cut -c1-8`
 obhr=`echo $obdate |cut -c9-10`
 
-if [ $cyc -lt 06 -a $cyc -ge 00 ]
+if [ $vhr -lt 06 -a $vhr -ge 00 ]
 then
  obcyc=06
-elif [ $cyc -lt 12 -a $cyc -ge 06 ]
+elif [ $vhr -lt 12 -a $vhr -ge 06 ]
 then
  obcyc=12
-elif [ $cyc -lt 18 -a $cyc -ge 12 ]
+elif [ $vhr -lt 18 -a $vhr -ge 12 ]
 then
  obcyc=18
-elif [ $cyc -ge 18 ]
+elif [ $vhr -ge 18 ]
 then
  obcyc=00
 fi
@@ -124,7 +124,7 @@ then
    cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
   fi
 
-  if [ $cyc = 23 ]
+  if [ $vhr = 23 ]
   then
        mkdir -p $COMOUTfinal
        cd $DATA/statanalysis

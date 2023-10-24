@@ -37,10 +37,10 @@ model_list=$1
 verify_list=$2
 
 tail='/wmo'
-prefix=${COMIN%%$tail*}
+prefix=${EVSIN%%$tail*}
 index=${#prefix}
 echo $index
-export COM_IN=${COMIN:0:$index}
+export COM_IN=${EVSIN:0:$index}
 
 if [ $model_list = gefs ] ; then
   $USHevs/global_ens/evs_gens_atmos_check_input_files.sh wmo_gefs

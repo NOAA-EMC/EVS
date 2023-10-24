@@ -104,7 +104,7 @@ if VERIF_CASE_STEP == 'grid2grid_stats':
             VERIF_CASE_STEP_type_valid_hr_list = ['12']
         # Set initialization hours
         VERIF_CASE_STEP_type_init_hr_list = os.environ[
-            VERIF_CASE_STEP_abbrev_type+'_fcyc_list'
+            VERIF_CASE_STEP_abbrev_type+'_inithour_list'
         ].split(' ')
         # Set forecast hours
         VERIF_CASE_STEP_type_fhr_min = (
@@ -640,7 +640,7 @@ elif VERIF_CASE_STEP == 'grid2obs_stats':
             VERIF_CASE_STEP_type_valid_hr_list = BUFR_valid_hr_list
         # Set initialization hours
         VERIF_CASE_STEP_type_init_hr_list = os.environ[
-            VERIF_CASE_STEP_abbrev_type+'_fcyc_list'
+            VERIF_CASE_STEP_abbrev_type+'_inithour_list'
         ].split(' ')
         # Set forecast hours
         VERIF_CASE_STEP_type_fhr_min = (

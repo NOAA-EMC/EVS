@@ -22,8 +22,8 @@ mkdir -p $WORK/naefs
 
 for vcyc in $vcycs ; do 
  
-   ln -sf ${COMIN}.${vday}/gefs/gfsanl.t${vcyc}z.grid3.f000.grib2 gfsanl
-   ln -sf ${COMIN}.${vday}/cmce/cmcanl.t${vcyc}z.grid3.f000.grib2 cmcanl
+   ln -sf ${EVSIN}.${vday}/gefs/gfsanl.t${vcyc}z.grid3.f000.grib2 gfsanl
+   ln -sf ${EVSIN}.${vday}/cmce/cmcanl.t${vcyc}z.grid3.f000.grib2 cmcanl
 
 
  for lead in $leads ; do
@@ -44,18 +44,18 @@ for vcyc in $vcycs ; do
    for mbr in $mbrs ; do
     if [ $RUN = headline ] ; then
       #Note: in headline.yyyymmdd/gefs, the files were from atmos.yyyymmdd/gefs_bc 
-      ln -sf  ${COMIN}.${fyyyymmdd}/gefs/gefs.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  gefs.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2
+      ln -sf  ${EVSIN}.${fyyyymmdd}/gefs/gefs.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  gefs.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2
     else 
-      ln -sf  ${COMIN}.${fyyyymmdd}/gefs_bc/gefs_bc.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  gefs.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2
+      ln -sf  ${EVSIN}.${fyyyymmdd}/gefs_bc/gefs_bc.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  gefs.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2
     fi  
    done
 
    for mbr in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ; do
     if [ $RUN = headline ] ; then
      #Note: in headline.yyyymmdd/cmce, the files were from atmos.yyyymmdd/cmce_bc 
-     ln -sf  ${COMIN}.${fyyyymmdd}/cmce/cmce.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  cmce.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2
+     ln -sf  ${EVSIN}.${fyyyymmdd}/cmce/cmce.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  cmce.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2
     else
-     ln -sf  ${COMIN}.${fyyyymmdd}/cmce_bc/cmce_bc.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  cmce.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2
+     ln -sf  ${EVSIN}.${fyyyymmdd}/cmce_bc/cmce_bc.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  cmce.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2
     fi
    done
 

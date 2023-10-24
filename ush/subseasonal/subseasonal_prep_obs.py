@@ -54,7 +54,7 @@ subseasonal_obs_dict = {
                                                        'gfs.'
                                                        +'{init?fmt=%Y%m%d%H}'
                                                        +'.anl'),
-                      'cycles': ['00', '12']},
+                      'vhours': ['00', '12']},
     'ecmwf': {'prod_file_format': os.path.join(DCOMINecmwf,
                                                '{init?fmt=%Y%m%d}',
                                                'wgrbbul',
@@ -65,7 +65,7 @@ subseasonal_obs_dict = {
                                                        'ecmwf.'
                                                        +'{init?fmt=%Y%m%d%H}'
                                                        +'.anl'),
-                      'cycles': ['00', '12']},
+                      'vhours': ['00', '12']},
     'osi': {'daily_prod_file_format': os.path.join(DCOMINosi,
                                                    '{init_shift?fmt=%Y%m%d'
                                                    +'?shift=-12}',
@@ -82,7 +82,7 @@ subseasonal_obs_dict = {
                                                        +'?shift=-24}to'
                                                        +'{init?fmt=%Y%m%d%H}'
                                                        +'_G003.nc'),
-                'cycles': ['00']},
+                'vhours': ['00']},
     'ghrsst': {'daily_prod_file_format': os.path.join(DCOMINghrsst,
                                                       '{init_shift?fmt=%Y%m%d'
                                                       +'?shift=-24}',
@@ -100,7 +100,7 @@ subseasonal_obs_dict = {
                                                              +'?shift=-24}to'
                                                              +'{init?fmt=%Y%m%d%H}'
                                                              +'.nc'),
-                      'cycles': ['00']},
+                      'vhours': ['00']},
     'umd': {'prod_file_format': os.path.join(DCOMINumd, 
                                              '{init?fmt=%Y%m%d}',
                                              'validation_data',
@@ -114,23 +114,23 @@ subseasonal_obs_dict = {
                                                        'umd',
                                                        'umd.olr.'
                                                        '{init?fmt=%Y%m%d}.nc'),
-                      'cycles': ['00']},
+                      'vhours': ['00']},
 
     'nam': {'arch_file_format': os.path.join(COMOUT_INITDATE,
                                              'prepbufr_nam',
                                              'prepbufr.nam.'
                                              +'{init?fmt=%Y%m%d%H}'),
-                      'cycles': ['00', '12']},
+                      'vhours': ['00', '12']},
 }
 
 for OBS in OBSNAME:
     if OBS not in list(subseasonal_obs_dict.keys()):
-        print("ERROR: "+OBS+" not recognized")
+        print("FATAL ERROR: "+OBS+" not recognized")
         sys.exit(1)
     print("---- Prepping data for "+OBS+" for init "+INITDATE)
     obs_dict = subseasonal_obs_dict[OBS]
-    for cycle in obs_dict['cycles']:
-        CDATE = INITDATE+cycle
+    for vhour in obs_dict['vhours']:
+        CDATE = INITDATE+vhour
         CDATE_dt = datetime.datetime.strptime(CDATE, '%Y%m%d%H')
         log_missing_file = os.path.join(
             DATA, 'mail_missing_'+OBS+'_valid'
