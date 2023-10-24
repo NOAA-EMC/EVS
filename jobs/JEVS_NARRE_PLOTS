@@ -61,7 +61,6 @@ export pgmout="OUTPUT.${pid}"
 ####################################
 
 
-export VDATE=${VDATE:-$PDYm1}
 
 $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${STEP}.sh 
 
