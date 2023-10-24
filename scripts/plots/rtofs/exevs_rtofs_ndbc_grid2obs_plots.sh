@@ -16,7 +16,7 @@ export OLVL=Z0
 mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE
 
 # set major & minor MET version
-export MET_VERSION_major_minor=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
+export MET_VERSION_major_minor=$(echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g")
 
 # set up plot variables
 export PERIOD=last60days
