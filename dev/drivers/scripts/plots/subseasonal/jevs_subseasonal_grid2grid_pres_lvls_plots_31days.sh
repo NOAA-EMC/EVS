@@ -24,6 +24,9 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/subseasonal/subseasonal_plots.sh
 
+export evs_ver=v1.0.0
+evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
+
 
 export USER=$USER
 export envir=prod
@@ -41,7 +44,6 @@ export met_ver=${met_ver}
 export metplus_ver=${metplus_ver}
 export vhr=00
 export NET=evs
-export evs_ver=${evs_ver}
 export STEP=plots
 export COMPONENT=subseasonal
 export RUN=atmos
@@ -51,8 +53,8 @@ export VERIF_TYPE=pres_lvls
 export NDAYS=31
 export DAYS=32
 
-export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/$evs_ver/$STEP/$COMPONENT
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver
+export COMOUT=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver_2d}/$STEP/$COMPONENT
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.${COMPONENT}.${VERIF_CASE}.${STEP}.${VERIF_TYPE}
 
