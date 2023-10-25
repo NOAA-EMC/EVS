@@ -98,8 +98,11 @@ for prod in mean  ; do
        echo  "export extradir='ensprod/'" >> run_narre_${model}.${dom}.${range}.sh
 
        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstNARRE_obsPREPBUFR_SFC_mean.conf " >> run_narre_${model}.${dom}.${range}.sh
+       echo  "echo Start:  stat metplus log files for ${model}.${dom}.${range}" >> run_narre_${model}.${dom}.${range}.sh
+       echo  "cat \$output_base/logs/* " >> run_narre_${model}.${dom}.${range}.sh
+       echo  "echo End: stat metplus log files for ${model}.${dom}.${range}" >> run_narre_${model}.${dom}.${range}.sh
 
-       echo "cp \$output_base/stat/*.stat $COMOUTsmall" >> run_narre_${model}.${dom}.${range}.sh
+       echo "[[ $SENDCOM="YES" ]] && cp \$output_base/stat/*.stat $COMOUTsmall" >> run_narre_${model}.${dom}.${range}.sh
 
        chmod +x run_narre_${model}.${dom}.${range}.sh
        echo "${DATA}/run_narre_${model}.${dom}.${range}.sh" >> run_all_narre_poe.sh
