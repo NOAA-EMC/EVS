@@ -7,11 +7,6 @@ $USHevs/cam/evs_check_href_files.sh
 export WORK=$DATA
 cd $WORK
 
-export MET_bin_exec='bin'
-export log_met_output_to_metplus=''
-export metplus_verbosity=2
-export met_verbosity=2
-
 export run_mpi=${run_mpi:-'yes'}
 export prepare=${prepare:-'yes'}
 export verif_precip=${verif_precip:-'yes'}
