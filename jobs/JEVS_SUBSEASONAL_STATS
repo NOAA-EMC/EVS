@@ -29,7 +29,7 @@ export SENDDBN_NTC=${SENDDBN_NTC:-NO}
 ################################################################
 # Specify Execution Areas
 ################################################################
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
