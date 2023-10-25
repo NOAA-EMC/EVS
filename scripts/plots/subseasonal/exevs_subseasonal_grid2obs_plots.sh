@@ -86,7 +86,7 @@ for group in condense_stats filter_stats make_plots tar_images; do
 done
 
 # Cat the plotting log files
-log_dir=$DATA/${VERIF_CASE}_${STEP}/plot_output/logs
+log_dir=$DATA/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/logs
 log_file_count=$(find $log_dir -type f |wc -l)
 if [[ $log_file_count -ne 0 ]]; then
     for log_file in $log_dir/*; do
