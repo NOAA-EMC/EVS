@@ -205,20 +205,20 @@ elif STEP == 'stats':
         COMOUT_dir_list.append(COMOUT_restart_base_dir)
         if job_type == 'reformat':
             working_dir_list.append(os.path.join(
-                working_output_base_dir, 'pcp_combine', 'confs'
+                working_output_base_dir, 'out', 'confs'
             ))
             working_dir_list.append(os.path.join(
-                working_output_base_dir, 'pcp_combine', 'logs'
+                working_output_base_dir, 'out', 'logs'
             ))
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'pcp_combine', 'tmp'
             ))
         if job_type == 'generate':
             working_dir_list.append(os.path.join(
-                working_output_base_dir, 'grid_stat', 'confs'
+                working_output_base_dir, 'out', 'confs'
             ))
             working_dir_list.append(os.path.join(
-                working_output_base_dir, 'grid_stat', 'logs'
+                working_output_base_dir, 'out', 'logs'
             ))
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'grid_stat', 'tmp'
@@ -233,10 +233,10 @@ elif STEP == 'stats':
             ))
         if job_type in ['gather', 'gather2', 'gather3']:
             working_dir_list.append(os.path.join(
-                working_output_base_dir, 'stat_analysis', 'confs'
+                working_output_base_dir, 'out', 'confs'
             ))
             working_dir_list.append(os.path.join(
-                working_output_base_dir, 'stat_analysis', 'logs'
+                working_output_base_dir, 'out', 'logs'
             ))
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'stat_analysis', 'tmp'
@@ -313,29 +313,29 @@ elif STEP == 'stats':
         COMOUT_dir_list.append(COMOUT_restart_base_dir)
         if job_type == 'reformat':
             working_dir_list.append(os.path.join(
-                working_output_base_dir, NEST, 'pb2nc', 'confs'
+                working_output_base_dir, NEST, 'out', 'confs'
             ))
             working_dir_list.append(os.path.join(
-                working_output_base_dir, NEST, 'pb2nc', 'logs'
+                working_output_base_dir, NEST, 'out', 'logs'
             ))
             working_dir_list.append(os.path.join(
                 working_output_base_dir, NEST, 'pb2nc', 'tmp'
             ))
             working_dir_list.append(os.path.join(
-                working_output_base_dir, NEST, 'ascii2nc', 'confs'
+                working_output_base_dir, NEST, 'out', 'confs'
             ))
             working_dir_list.append(os.path.join(
-                working_output_base_dir, NEST, 'ascii2nc', 'logs'
+                working_output_base_dir, NEST, 'out', 'logs'
             ))
             working_dir_list.append(os.path.join(
                 working_output_base_dir, NEST, 'ascii2nc', 'tmp'
             ))
             if NEST in ['firewx']:
                 working_dir_list.append(os.path.join(
-                    working_output_base_dir, 'genvxmask', 'confs'
+                    working_output_base_dir, 'out', 'confs'
                 ))
                 working_dir_list.append(os.path.join(
-                    working_output_base_dir, 'genvxmask', 'logs'
+                    working_output_base_dir, 'out', 'logs'
                 ))
                 working_dir_list.append(os.path.join(
                     working_output_base_dir, 'genvxmask', 'tmp'
@@ -350,10 +350,10 @@ elif STEP == 'stats':
                 ))
         if job_type == 'generate':
             working_dir_list.append(os.path.join(
-                working_output_base_dir, 'regrid_data_plane', 'confs'
+                working_output_base_dir, 'out', 'confs'
             ))
             working_dir_list.append(os.path.join(
-                working_output_base_dir, 'regrid_data_plane', 'logs'
+                working_output_base_dir, 'out', 'logs'
             ))
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'regrid_data_plane', 'tmp'
@@ -363,10 +363,10 @@ elif STEP == 'stats':
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
             working_dir_list.append(os.path.join(
-                working_output_base_dir, 'point_stat', 'confs'
+                working_output_base_dir, 'out', 'confs'
             ))
             working_dir_list.append(os.path.join(
-                working_output_base_dir, 'point_stat', 'logs'
+                working_output_base_dir, 'out', 'logs'
             ))
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'point_stat', 'tmp'
@@ -385,10 +385,10 @@ elif STEP == 'stats':
             ))
         if job_type in ['gather', 'gather2', 'gather3']:
             working_dir_list.append(os.path.join(
-                working_output_base_dir, 'stat_analysis', 'confs'
+                working_output_base_dir, 'out', 'confs'
             ))
             working_dir_list.append(os.path.join(
-                working_output_base_dir, 'stat_analysis', 'logs'
+                working_output_base_dir, 'out', 'logs'
             ))
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'stat_analysis', 'tmp'
@@ -465,20 +465,20 @@ elif STEP == 'stats':
         COMOUT_dir_list.append(COMOUT_restart_base_dir)
         if job_type == 'reformat':
             working_dir_list.append(os.path.join(
-                working_output_base_dir, 'pcp_combine', 'confs'
+                working_output_base_dir, 'out', 'confs'
             ))
             working_dir_list.append(os.path.join(
-                working_output_base_dir, 'pcp_combine', 'logs'
+                working_output_base_dir, 'out', 'logs'
             ))
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'pcp_combine', 'tmp'
             ))
         if job_type == 'generate':
             working_dir_list.append(os.path.join(
-                working_output_base_dir, 'grid_stat', 'confs'
+                working_output_base_dir, 'out', 'confs'
             ))
             working_dir_list.append(os.path.join(
-                working_output_base_dir, 'grid_stat', 'logs'
+                working_output_base_dir, 'out', 'logs'
             ))
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'grid_stat', 'tmp'
@@ -493,10 +493,10 @@ elif STEP == 'stats':
             ))
         if job_type in ['gather', 'gather2', 'gather3']:
             working_dir_list.append(os.path.join(
-                working_output_base_dir, 'stat_analysis', 'confs'
+                working_output_base_dir, 'out', 'confs'
             ))
             working_dir_list.append(os.path.join(
-                working_output_base_dir, 'stat_analysis', 'logs'
+                working_output_base_dir, 'out', 'logs'
             ))
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'stat_analysis', 'tmp'

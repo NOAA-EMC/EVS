@@ -166,6 +166,22 @@ done
 
 cd ${PLOTDIR}
 tar -cvf evs.plots.${MODELNAME}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar *png
+
+# Cat the plotting log files
+log_dir="$DATA/plots/logs"
+if [ -d $log_dir ]; then
+    log_file_count=$(find $log_dir -type f | wc -l)
+    if [[ $log_file_count -ne 0 ]]; then
+        log_files=("$log_dir"/*)
+        for log_file in "${log_files[@]}"; do
+            if [ -f "$log_file" ]; then
+                echo "Start: $log_file"
+                cat "$log_file"
+                echo "End: $log_file"
+            fi
+        done
+    fi
+fi
         
 if [ $SENDCOM = "YES" ]; then
  mkdir -m 775 -p $COMOUTplots
