@@ -38,13 +38,13 @@ fhr_inc = '12'
 
 # Process run time agruments
 if len(sys.argv) != 4:
-    print("ERROR: Not given correct number of run time agruments..."
+    print("FATAL ERROR: Not given correct number of run time arguments..."
           +os.path.basename(__file__)+" VARNAME_VARLEVEL DATAROOT_FILE_FORMAT "
           +"COMIN_FILE_FORMAT")
     sys.exit(1)
 else:
     if '_' not in sys.argv[1]:
-        print("ERROR: variable and level runtime agrument formated "
+        print("FATAL ERROR: variable and level runtime argument formatted "
               +"incorrectly, be sure to separate variable and level with "
               +"an underscore (_), example HGT_P500")
         sys.exit(1)
@@ -62,17 +62,9 @@ output_dir = os.path.join(DATA, VERIF_CASE+'_'+STEP, 'METplus_output',
 print("\nCreating daily average files")
 valid_hr = int(valid_hr_start)
 while valid_hr <= int(valid_hr_end):
-    if job_name == 'DailyAvg_GeoHeightAnom':
-        if int(valid_hr) % 12 != 0 :
-            valid_hr+=int(valid_hr_inc)
-            continue
     daily_avg_valid_end = datetime.datetime.strptime(DATE+str(valid_hr),
                                                      '%Y%m%d%H')
-    if job_name == 'DailyAvg_GeoHeightAnom':
-        daily_avg_valid_start = (daily_avg_valid_end
-                                 - datetime.timedelta(hours=12))
-    else:
-        daily_avg_valid_start = datetime.datetime.strptime(DAILYSTART
+    daily_avg_valid_start = datetime.datetime.strptime(DAILYSTART
                                                            +str(valid_hr),
                                                            '%Y%m%d%H')
     daily_avg_day_end = int(fhr_list[-1])/24
@@ -81,10 +73,7 @@ while valid_hr <= int(valid_hr_end):
     while daily_avg_day <= daily_avg_day_end:
         daily_avg_file_list = []
         daily_avg_day_fhr_end = int(daily_avg_day * 24)
-        if job_name == 'DailyAvg_GeoHeightAnom':
-            daily_avg_day_fhr_start = daily_avg_day_fhr_end - 12
-        else:
-            daily_avg_day_fhr_start = daily_avg_day_fhr_end - 24
+        daily_avg_day_fhr_start = daily_avg_day_fhr_end - 24
         daily_avg_day_init = (daily_avg_valid_end
                               - datetime.timedelta(days=daily_avg_day))
         daily_avg_day_fhr = daily_avg_day_fhr_start
@@ -158,10 +147,7 @@ while valid_hr <= int(valid_hr_end):
                       +', init '+str(daily_avg_day_init)+" "
                       +daily_avg_day_fhr_DATAROOT_input_file+" or "
                       +daily_avg_day_fhr_COMIN_input_file)
-            if job_name == 'DailyAvg_GeoHeightAnom':
-                daily_avg_day_fhr+=12
-            else:
-                daily_avg_day_fhr+=int(fhr_inc)
+            daily_avg_day_fhr+=int(fhr_inc)
         if len(daily_avg_fcst_file_list) == 3:
             daily_avg_fcst = (
                 daily_avg_fcst_sum/len(daily_avg_fcst_file_list)
@@ -170,13 +156,10 @@ while valid_hr <= int(valid_hr_end):
             daily_avg_obs = (
                 daily_avg_obs_sum/len(daily_avg_obs_file_list)
             )
-        if job_name == 'DailyAvg_GeoHeightAnom':
-            expected_nfiles = 2
-        else:
-            if fhr_inc == '6':
-                expected_nfiles = 5
-            elif fhr_inc == '12':
-                expected_nfiles = 3
+        if fhr_inc == '6':
+            expected_nfiles = 5
+        elif fhr_inc == '12':
+            expected_nfiles = 3
         if len(daily_avg_fcst_file_list) == expected_nfiles \
                 and len(daily_avg_obs_file_list) == expected_nfiles:
             print("Output File: "+output_file)
@@ -270,10 +253,7 @@ while valid_hr <= int(valid_hr_end):
         else:
             print("WARNING: Cannot create daily average file "+output_file+" "
                   +"; need "+str(expected_nfiles)+" input files")
-        if job_name == 'DailyAvg_GeoHeightAnom':
-            daily_avg_day+=1
-        else:
-            daily_avg_day+=1
+        daily_avg_day+=1
         print("")
     valid_hr+=int(valid_hr_inc)
     

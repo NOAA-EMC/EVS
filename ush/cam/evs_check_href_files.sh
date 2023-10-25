@@ -4,11 +4,11 @@ set -x
 
 vday=$VDATE
 
-typeset -Z2 cyc
+typeset -Z2 vhr
 
 missing=0 
-for cyc in 00 01 02 03 04 05 06 07 08  09 10 11 12 13 14 15 16 17 18 19 20  21 22 23 ; do
-  if [ ! -s $COMINobsproc/rap.${vday}/rap.t${cyc}z.prepbufr.tm00 ] ; then
+for vhr in 00 01 02 03 04 05 06 07 08  09 10 11 12 13 14 15 16 17 18 19 20  21 22 23 ; do
+  if [ ! -s $COMINobsproc/rap.${vday}/rap.t${vhr}z.prepbufr.tm00 ] ; then
     missing=$((missing + 1 ))
   fi
 done
@@ -27,27 +27,27 @@ next=`$NDATE +24 ${vday}12 |cut -c 1-8`
 prev=`$NDATE -24 ${vday}12 |cut -c 1-8`
 
 missing=0
-for cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 ; do
-  if [ $cyc = 00 ] ; then
+for vhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 ; do
+  if [ $vhr = 00 ] ; then
     cyc_dir=00
     init=$vday
-  elif [ $cyc = 01 02 03 04 05 06  ] || [ $cyc = 06 ] ; then
+  elif [ $vhr = 01 02 03 04 05 06  ] || [ $vhr = 06 ] ; then
     cyc_dir=06
     init=$vday
-  elif [ $cyc = 07 08 09 10 11 12  ] || [ $cyc = 12 ] ; then
+  elif [ $vhr = 07 08 09 10 11 12  ] || [ $vhr = 12 ] ; then
     cyc_dir=12
     init=$vday
-  elif [ $cyc = 13 14 15 16 17 18 ] || [ $cyc = 18 ] ; then
+  elif [ $vhr = 13 14 15 16 17 18 ] || [ $vhr = 18 ] ; then
     cyc_dir=18
     init=$vday
-  elif [ $cyc = 19 20 21 22 23 ] ; then
+  elif [ $vhr = 19 20 21 22 23 ] ; then
     cyc_dir=00
     init=$next
   fi	      
   if [ $VERIF_CASE = precip ] ; then
-     ccpa=$COMINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${cyc}z.01h.hrap.conus.gb2
+     ccpa=$COMINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${vhr}z.01h.hrap.conus.gb2
   else
-     ccpa=$EVSINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${cyc}z.01h.hrap.conus.gb2
+     ccpa=$EVSINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${vhr}z.01h.hrap.conus.gb2
   fi
   #echo $ccpa
 
@@ -65,28 +65,28 @@ fi
 fi 
 
 missing=0
-for cyc in 00 03 06 09 12 15 18 21 ; do
-  if [ $cyc = 00 ] ; then
+for vhr in 00 03 06 09 12 15 18 21 ; do
+  if [ $vhr = 00 ] ; then
       cyc_dir=00
       init=$vday
-  elif [ $cyc = 03 06  ] || [ $cyc = 06 ] ; then
+  elif [ $vhr = 03 06  ] || [ $vhr = 06 ] ; then
       cyc_dir=06
       init=$vday
-  elif [ $cyc = 09 12  ] || [ $cyc = 12 ] ; then
+  elif [ $vhr = 09 12  ] || [ $vhr = 12 ] ; then
        cyc_dir=12
        init=$vday
-  elif [ $cyc = 15 18 ] || [ $cyc = 18 ] ; then
+  elif [ $vhr = 15 18 ] || [ $vhr = 18 ] ; then
        cyc_dir=18
        init=$vday
-  elif [ $cyc = 21 ] ; then
+  elif [ $vhr = 21 ] ; then
        cyc_dir=00
        init=$next
   fi
 
   if [ $VERIF_CASE = precip ] ; then
-     ccpa=$COMINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${cyc}z.03h.hrap.conus.gb2
+     ccpa=$COMINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${vhr}z.03h.hrap.conus.gb2
   else
-     ccpa=$EVSINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${cyc}z.03h.hrap.conus.gb2
+     ccpa=$EVSINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${vhr}z.03h.hrap.conus.gb2
   fi
    #echo $ccpa
 
@@ -103,7 +103,7 @@ if [ $missing -eq 8  ] ; then
 fi
 
 missing=0
-for cyc in 12 ; do
+for vhr in 12 ; do
    if [ $VERIF_CASE = precip ] ; then
       if [ ! -s $COMINccpa/ccpa.${vday}/12/ccpa.t12z.06h.hrap.conus.gb2 ] ; then
           missing=$((missing+1))
@@ -146,8 +146,8 @@ accum=01
 
 accum=01
 missing=0
-for cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 ; do
-   mrms=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${cyc}0000.grib2.gz
+for vhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 ; do
+   mrms=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
    if [ ! -s $mrms ] ; then
      missing=$((missing+1))
    fi
@@ -160,8 +160,8 @@ fi
 
 accum=03
 missing=0
-for cyc in 00 03 06 09 12 15 18 21 ; do
-   mrms=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${cyc}0000.grib2.gz
+for vhr in 00 03 06 09 12 15 18 21 ; do
+   mrms=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
    if [ ! -s $mrms ] ; then
      missing=$((missing+1))
    fi
@@ -174,8 +174,8 @@ fi
 
 accum=24
 missing=0
-for cyc in 00 06 12 18 ; do
-   mrms=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${cyc}0000.grib2.gz
+for vhr in 00 06 12 18 ; do
+   mrms=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
    if [ ! -s $mrms ] ; then
      missing=$((missing+1))
    fi
