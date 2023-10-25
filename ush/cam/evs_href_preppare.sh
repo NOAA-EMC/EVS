@@ -245,7 +245,7 @@ if [ $data = prepbufr ] ; then
   if [ $SENDMAIL = YES ] ; then
    export subject="RAP Prepbufr Data Missing for EVS ${COMPONENT}"
    echo "Warning:  No RAP Prepbufr data available for ${VDATE}" > mailmsg
-   echo Missing file is $COMINobsproc/rap.${VDATE}/rap.t??z.prepbufr.tm00  >> mailmsg
+   echo Missing file is $COMINobsproc/rap.${VDATE}/rap.t12z.prepbufr.tm00  >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $maillist
    exit 
@@ -288,7 +288,7 @@ if [ $data = gfs_prepbufr ] ; then
    if [ $SENDMAIL = YES ] ; then
      export subject="GFS Prepbufr Data Missing for EVS ${COMPONENT}"
      echo "Warning:  No GFS Prepbufr data available for ${VDATE}" > mailmsg
-     echo Missing file is $COMINobsproc/gfs.${vday}/??/atmos/gfs.t??z.prepbufr  >> mailmsg
+     echo Missing file is $COMINobsproc/gdas.${vday}/18/atmos/gdas.t18z.prepbufr  >> mailmsg
      echo "Job ID: $jobid" >> mailmsg
      cat mailmsg | mail -s "$subject" $maillist
      exit
@@ -354,7 +354,7 @@ export accum
   if [ $SENDMAIL = YES ] ; then
    export subject="MRMS Data Missing for EVS ${COMPONENT}"
    echo "Warning:  No MRMS data available for ${VDATE}" > mailmsg
-   echo Missing file is $DCOMINmrms/MultiSensor_QPE_??H_Pass2_00.00_${vday}-120000.grib2.gz  >> mailmsg
+   echo Missing file is $DCOMINmrms/MultiSensor_QPE_03H_Pass2_00.00_${vday}-120000.grib2.gz  >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
    cat mailmsg | mail -s "$subject" $maillist
    exit
