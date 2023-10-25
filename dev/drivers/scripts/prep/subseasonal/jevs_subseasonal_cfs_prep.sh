@@ -45,7 +45,6 @@ export nproc=1
 export WGRIB2=`which wgrib2`
 export vhr=00
 export NET=evs
-export evs_ver=${evs_ver_2d}
 export STEP=prep
 export COMPONENT=subseasonal
 export RUN=atmos
@@ -53,7 +52,7 @@ export MODELNAME=cfs
 export cfs_ver=${cfs_ver}
 export PREP_TYPE=cfs
 
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT/$RUN
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}/$STEP/$COMPONENT/$RUN
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.subseasonal.cfs.prep
 
