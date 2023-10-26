@@ -40,14 +40,16 @@ export modsys=nam
 export mod_ver=${nam_ver}
 
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
+export evs_ver=v1.0.0
+evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver}/$STEP/$COMPONENT
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 
-export maillist=perry.shafran@noaa.gov
+export maillist=${maillist:-'perry.shafran@noaa.gov,alicia.bentley@noaa.gov'}
 
 export config=$HOMEevs/parm/evs_config/cam/config.evs.cam_nam_firewxnest.prod
 source $config

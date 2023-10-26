@@ -37,7 +37,7 @@ export pgmout="OUTPUT.${pid}"
 ####################################
 # Set EVS directories
 ####################################
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
@@ -124,8 +124,6 @@ mkdir -p $COMOUT
 export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 mkdir -p $COMOUTfinal $COMOUTsmall
-
-export maillist=${maillist:-'alicia.bentley@noaa.gov'}
 
 
 ####################################
