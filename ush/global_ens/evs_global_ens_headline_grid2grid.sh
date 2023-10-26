@@ -158,7 +158,7 @@ if [ $verify = upper ] ; then
 
       done #end of fhr 
 
-     done #end of cycle
+     done #end of valid hour
 
    done #end if modnam 
 

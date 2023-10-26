@@ -125,7 +125,7 @@ for  verify in $verifys ; do
 
       done #end of fhr 
 
-     done #end of cycle
+     done #end of valid hour
 
    done #end if modnam 
 

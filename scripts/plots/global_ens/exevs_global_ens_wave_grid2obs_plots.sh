@@ -78,7 +78,7 @@ else
   echo "             for ${VDATE} "
   echo '**************************************** '
   echo ' '
-  echo "${MODELNAME}_${RUN} $VDATE $cycle : GEFS-Wave *.stat file missing."
+  echo "${MODELNAME}_${RUN} $VDATE : GEFS-Wave *.stat file missing."
   [[ "$LOUD" = YES ]] && set -x
   ./postmsg "$jlogfile" "FATAL ERROR : NO GEFS-Wave *.stat file for ${VDATE}"
   err_exit "FATAL ERROR: Did not copy the GEFS-Wave *.stat file for ${VDATE}"

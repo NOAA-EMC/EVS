@@ -22,12 +22,12 @@ cnvgrib=$CNVGRIB
 #########################################################
 
 
-CDATE=$1  #day+running cycle
+CDATE=$1  #day+running init hour
 cyc=$2
 
 #CDATE=2021080200
 #cyc=00
-cycle=t${cyc}z
+inithour=t${cyc}z
 
 
 #####################################################################

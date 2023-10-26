@@ -71,8 +71,8 @@ for OBS in OBSNAME:
         sys.exit(1)
     print("---- Prepping data for "+OBS+" for init "+INITDATE)
     obs_dict = global_det_obs_dict[OBS]
-    for cycle in obs_dict['inithours']:
-        CDATE = INITDATE+cycle
+    for inithour in obs_dict['inithours']:
+        CDATE = INITDATE+inithour
         CDATE_dt = datetime.datetime.strptime(CDATE, '%Y%m%d%H')
         if OBS == 'osi_saf':
             CDATEm7_dt = CDATE_dt + datetime.timedelta(hours=-168)

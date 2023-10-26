@@ -9,7 +9,7 @@
 # Usage:                                                                       
 #  Parameters: None                                                            
 #  Input files:                                                                
-#     gdas.${cycle}.prepbufr                                                   
+#     gdas.${inithour}.prepbufr
 #  Output files:                                                               
 #     gdas.${validdate}.nc                                                     
 #     global.0p25.grib2 files for archive                                      
@@ -78,17 +78,17 @@ echo 'Copying GDAS prepbufr files'
 
 for cyc in 00 06 12 18 ; do
 
-  export cycle=t${cyc}z
-  if [ ! -s ${COMINobsproc}.${INITDATE}/${cyc}/atmos/gdas.${cycle}.prepbufr ]; then
+  export inithour=t${cyc}z
+  if [ ! -s ${COMINobsproc}.${INITDATE}/${cyc}/atmos/gdas.${inithour}.prepbufr ]; then
       if [ $SENDMAIL = YES ]; then
         export subject="GDAS Prepbufr Data Missing for EVS ${COMPONENT}"
         echo "Warning: No GDAS Prepbufr was available for init date ${INITDATE}${cyc}" > mailmsg
-        echo "Missing file is ${COMINobsproc}.${INITDATE}/${cyc}/atmos/gdas.${cycle}.prepbufr" >> mailmsg
+        echo "Missing file is ${COMINobsproc}.${INITDATE}/${cyc}/atmos/gdas.${inithour}.prepbufr" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
         cat mailmsg | mail -s "$subject" $maillist
       fi
   else
-      cp -v ${COMINobsproc}.${INITDATE}/${cyc}/atmos/gdas.${cycle}.prepbufr ${DATA}/gdas.${INITDATE}${cyc}.prepbufr
+      cp -v ${COMINobsproc}.${INITDATE}/${cyc}/atmos/gdas.${inithour}.prepbufr ${DATA}/gdas.${INITDATE}${cyc}.prepbufr
   fi
 
 done
@@ -102,7 +102,7 @@ mkdir $DATA/ncfiles
 
 for cyc in 00 06 12 18 ; do
     export cyc=$cyc
-    export cycle=t${cyc}z
+    export inithour=t${cyc}z
     if [ -s ${DATA}/gdas.${INITDATE}${cyc}.prepbufr ]; then
         if [ ! -s ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${INITDATE}${cyc}.nc ]; then
             run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/PB2NC_wave.conf
