@@ -1,6 +1,15 @@
 #!/bin/bash
+
+#################################################################################
+# Name of Script: exevs_analyses__grid2obs_plots.sh
+# Contact(s):     Perry C. Shafran (perry.shafran@noaa.gov)
+# Purpose of Script: This script runs METplus to generate radar
+#                    verification statistics for deterministic and ensemble CAMs
+##################################################################################
  
 set -x
+
+# Set up initial directories and initialize variables
 
 mkdir -p $DATA/plots
 mkdir -p $DATA/plots/logs
@@ -22,6 +31,8 @@ STARTDATE=${VDATE}00
 ENDDATE=${PDYm31}00
 DATE=$STARTDATE
 
+# Bring in past 31 days of stats files
+
 while [ $DATE -ge $ENDDATE ]; do
 
 	for anl in rtma urma rtma_ru
@@ -40,6 +51,8 @@ while [ $DATE -ge $ENDDATE ]; do
 	if [ -e ${EVSINanl}/${anl}.${DAY}/evs.stats.${anl}_anl.${RUN}.${VERIF_CASE}.v${DAY}.stat ]
 	then
 	cp ${EVSINanl}/${anl}.${DAY}/evs.stats.${anl}_anl.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+	else 
+	echo "WARNING: ${EVSINanl}/${anl}.${DAY}/evs.stats.${anl}_anl.${RUN}.${VERIF_CASE}.v${DAY}.stat does not exist"
         fi
 
         if [ -e ${EVSINanl}/${anl}.${DAY}/evs.stats.${anl}_ges.${RUN}.${VERIF_CASE}.v${DAY}.stat ]
@@ -60,6 +73,8 @@ while [ $DATE -ge $ENDDATE ]; do
 
 	 let "shr=shr+1"
 	done
+        else
+	echo "WARNING: ${EVSINanl}/${anl}.${DAY}/evs.stats.${anl}_ges.${RUN}.${VERIF_CASE}.v${DAY}.stat does not exist"
         fi
 
         done
@@ -67,6 +82,8 @@ while [ $DATE -ge $ENDDATE ]; do
 	DATE=`$NDATE -24 $DATE`
 
 done
+
+# Create plot for each region
 
 for region in CONUS CONUS_East CONUS_West CONUS_Central CONUS_South Alaska Hawaii PuertoRico Guam
 do
@@ -100,6 +117,9 @@ do
 	fi
 
 for anl in rtma urma rtma_ru
+
+# Plots for temperature and dew point
+
 do
 for varb in TMP DPT
 do
@@ -127,11 +147,14 @@ do
 	cp ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $COMOUTplots/$varb
         elif [ ! -e  ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
 	then
-	echo "NO PLOT FOR",$varb,$region,$anl
+	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
         fi
 done
 
 for varb in WIND
+
+# Plots for wind
+
 do
 	mkdir $COMOUTplots/$varb
 	export var=${varb}10m
@@ -156,11 +179,14 @@ do
 	cp ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $COMOUTplots/$varb
         elif [ ! -e ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
         then
-	echo "NO PLOT FOR",$varb,$region,$anl
+	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
         fi
 done
 
 for varb in GUST
+
+# Plots for wind gust
+
 do
 	mkdir $COMOUTplots/$varb
 	export var=${varb}sfc
@@ -185,11 +211,14 @@ do
 	cp ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $COMOUTplots/$varb
         elif [ ! -e ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
         then
-	echo "NO PLOT FOR",$varb,$region,$anl
+	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
         fi
 done
 
 for varb in VIS CEILING
+
+# Plots for visibility and ceiling
+
 do
 	mkdir $COMOUTplots/$varb
 	if [ $varb = "VIS" ]
@@ -226,7 +255,7 @@ do
 	cp ${PLOTDIR}/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png $COMOUTplots/$varb
         elif [ ! -e ${PLOTDIR}/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png ]
 	then
-	echo "NO PLOT FOR",$varb,$region,$anl
+	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
         fi
 
 	for stat in csi fbias
@@ -249,12 +278,14 @@ do
 	cp ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png $COMOUTplots/$varb
         elif [ ! -e ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]
 	then
-	echo "NO PLOT FOR",$varb,$region,$anl
+	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
         fi
 
         
         done
 done
+
+# Plots for total cloud
 
         if [ $anl = rtma -o $anl = urma ]
 	then
@@ -286,7 +317,7 @@ done
 	cp ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png $COMOUTplots/$var
         elif [ ! -e ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]
 	then
-	echo "NO PLOT FOR",$var,$region,$anl
+	echo "WARNING: NO PLOT FOR",$var,$region,$anl
         fi
         done
         fi
@@ -295,11 +326,13 @@ done
 done
 done
 
+# Tar up plot files and send to com directory
+
 cd ${PLOTDIR}
 tar -cvf evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar *png
 
 if [ $SENDCOM = "YES" ]; then
- cp evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
+ cpreq -v  evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
 fi
 
 if [ $SENDDBN = YES ] ; then     
