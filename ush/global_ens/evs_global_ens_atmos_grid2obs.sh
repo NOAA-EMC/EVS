@@ -65,12 +65,12 @@ for modnam in $models ; do
    fi
 
   if [ $modnam = gefs ] ; then 
-   cycles="00 06 12 18"
+   validhours="00 06 12 18"
   else
-   cycles="00 12"
+   validhours="00 12"
   fi 
 
- for cyc in ${cycles}  ; do
+ for cyc in ${validhours}  ; do
 
   for field in $fields ; do
 

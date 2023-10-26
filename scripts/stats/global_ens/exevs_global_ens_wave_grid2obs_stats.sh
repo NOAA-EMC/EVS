@@ -42,7 +42,7 @@ mkdir -p ${DATA}/logs
 mkdir -p ${DATA}/confs
 mkdir -p ${DATA}/tmp
 
-cycles='0 6 12 18'
+validhours='0 6 12 18'
 
 lead_hours='0 6 12 18 24 30 36 42 48 54 60 66 72 78
             84 90 96 102 108 114 120 126 132 138 144 150 156 162
@@ -59,7 +59,7 @@ cd ${DATA}
 ############################################
 echo ' '
 echo 'Creating point_stat files'
-for cyc in ${cycles} ; do
+for cyc in ${validhours} ; do
     cyc2=$(printf "%02d" "${cyc}")
     if [ ${cyc2} = '00' ] ; then
       wind_level_str="'{ name=\"WIND\"; level=\"(0,*,*)\"; }'"

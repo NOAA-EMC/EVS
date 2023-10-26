@@ -13,7 +13,7 @@
 #   (3) Put all MPI procedure files into one MPI script file run_all_gens_g2g_poe.sh
 #   (4) If $run_mpi is yes, run the MPI script  in paraalel
 #        otherwise run the MPI script in sequence
-# Note: total number of parallels = grid2grid (models x cycles) + precip (models)
+# Note: total number of parallels = grid2grid (models x validhours) + precip (models)
 #   The maximum (4 models) = 4 + 2 + 2 + 2 + 4 = 14,  in this case 14 nodes should be set in its ecf,   
 #
 # Author: Binbin Zhou, IMSG
@@ -252,11 +252,11 @@ for  verify in $verifys ; do
 
     for apcp in $apcps ; do
        if [ $apcp = 24h ] ; then
-         cycles='12'
+         validhours='12'
        else
-         cycles='00 06 12 18'
+         validhours='00 06 12 18'
        fi
-     for cyc in $cycles ; do
+     for cyc in $validhours ; do
      
        >run_${modnam}_ccpa${apcp}_valid_at_t${cyc}z.sh
 

@@ -41,14 +41,14 @@ echo 'Copying GEFS wave grib2 files'
 
 mkdir -p $DATA/gefs_wave_grib2
 
-cycles='00 06 12 18'
+inithours='00 06 12 18'
 lead_hours='000 006 012 018 024 030 036 042 048 054 060 066 072 078
             084 090 096 102 108 114 120 126 132 138 144 150 156 162
             168 174 180 186 192 198 204 210 216 222 228 234 240 246
             252 258 264 270 276 282 288 294 300 306 312 318 324 330 
             336 342 348 354 360 366 372 378 384'
 
-for cyc in ${cycles} ; do
+for cyc in ${inithours} ; do
   for hr in ${lead_hours} ; do
     filename="gefs.wave.t${cyc}z.mean.global.0p25.f${hr}.grib2"
     newname="gefs.wave.${INITDATE}.t${cyc}z.mean.global.0p25.f${hr}.grib2"

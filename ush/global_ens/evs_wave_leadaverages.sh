@@ -13,7 +13,7 @@
 
 periods='PAST31DAYS PAST90DAYS'
 
-cycles='00 12'
+validhours='00 12'
 fhrs='000,024,048,072,096,120,144,168,192,216,240,264,288,312,336,360,384'
 wave_vars='WIND HTSGW PERPW'
 stats_list='stats1 stats2 stats3 stats4 stats5'
@@ -32,7 +32,7 @@ for period in ${periods} ; do
   elif [ ${period} = 'PAST90DAYS' ] ; then
     plot_start_date=${PDYm90}
   fi
-  for cyc in ${cycles} ; do
+  for cyc in ${validhours} ; do
     for wvar in ${wave_vars} ; do
       for stats in ${stats_list}; do
         echo "export VERIF_CASE=${VERIF_CASE} " >> plot_${wvar}_${cyc}_${stats}_${ptype}_${period}.sh
@@ -85,6 +85,6 @@ for period in ${periods} ; do
         
       done  # end of stats
     done  # end of wave vars
-  done  # end of cycles
+  done  # end of validhours
 done  # end of periods
   
