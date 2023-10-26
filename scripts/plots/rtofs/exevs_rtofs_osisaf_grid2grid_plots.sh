@@ -14,7 +14,7 @@ export VAR=SIC
 mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE
 
 # set major & minor MET version
-export MET_VERSION_major_minor=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
+export MET_VERSION_major_minor=$(echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g")
 
 # set up plot variables
 export PERIOD=last60days
@@ -32,6 +32,7 @@ for lead in 000 024 048 072 096 120 144 168 192; do
 
 # make plots
     $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
+    export err=$?; err_chk
   done
 
   for stats in csi; do
@@ -43,6 +44,7 @@ for lead in 000 024 048 072 096 120 144 168 192; do
 
 # make plots
       $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
+      export err=$?; err_chk
     done
   done
 
@@ -59,6 +61,7 @@ for lead in 000 024 048 072 096 120 144 168 192; do
 
 # make plots
   $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
+  export err=$?; err_chk
 done
 
 # plot mean vs. lead time
@@ -72,6 +75,7 @@ for stats in me rmse; do
 
 # make plots
   $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
+  export err=$?; err_chk
 done
 
 for stats in csi; do
@@ -83,6 +87,7 @@ for stats in csi; do
 
 # make plots
     $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
+    export err=$?; err_chk
   done
 done
 
@@ -102,7 +107,7 @@ cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN
 tar -cvf evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
 
 if [ $SENDCOM = "YES" ]; then
- cp -v evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplots
+ cpreq -v evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplots
 fi
 
 if [ $SENDDBN = YES ] ; then

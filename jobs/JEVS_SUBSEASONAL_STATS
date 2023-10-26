@@ -29,7 +29,7 @@ export SENDDBN_NTC=${SENDDBN_NTC:-NO}
 ################################################################
 # Specify Execution Areas
 ################################################################
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
@@ -44,8 +44,8 @@ fi
 
 
 # Run setpdy and initialize PDY variables
-export cyc=${cyc:-00}
-export cycle=${cycle:-t${cyc}z}
+export vhr=${vhr:-00}
+export cycle=${cycle:-t${vhr}z}
 setpdy.sh 40
 . ./PDY
 

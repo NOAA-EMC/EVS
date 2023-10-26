@@ -278,6 +278,22 @@ done    #score_type
 
 tar -cvf evs.plots.href.grid2obs.cape.past${past_days}days.v${VDATE}.tar *.png
 
+# Cat the plotting log files
+log_dir="$DATA/logs"
+if [ -d $log_dir ]; then
+    log_file_count=$(find $log_dir -type f | wc -l)
+    if [[ $log_file_count -ne 0 ]]; then
+        log_files=("$log_dir"/*)
+        for log_file in "${log_files[@]}"; do
+            if [ -f "$log_file" ]; then
+                echo "Start: $log_file"
+                cat "$log_file"
+                echo "End: $log_file"
+            fi
+        done
+    fi
+fi
+
 if [ $SENDCOM="YES" ]; then
  cp  evs.plots.href.grid2obs.cape.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
 fi

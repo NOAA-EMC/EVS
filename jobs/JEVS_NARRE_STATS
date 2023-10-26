@@ -7,7 +7,7 @@ set -x
 #######################################################
 #######################################################
 
-export cycle=t${cyc}z
+export cycle=${cycle:-t${vhr}z}
 
 export pid=$$
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
@@ -43,7 +43,7 @@ export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 mkdir -p $COMOUTfinal $COMOUTsmall
 
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=$HOMEevs/exec
 export PARMevs=$HOMEevs/parm
 export USHevs=$HOMEevs/ush

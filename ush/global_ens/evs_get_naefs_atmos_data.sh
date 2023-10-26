@@ -20,9 +20,9 @@ export ndate=$NDATE
 if [ $modnam = gefs_bc ] ; then
 
   cd $WORK
-  total=30
+  total=$gefs_mbrs
 
-   export outdata=$COMOUT_gefs_bc
+   export outdata=$COMOUTgefs_bc
 
    if [ ! -s $outdata/gefs.ens30.t12z.grid3.f384.grib2 ] ; then
 
@@ -99,11 +99,11 @@ if [ $modnam = cmce_bc ] ; then
 
   total=20
 
-   export outdata=$COMOUT_cmce_bc
+   export outdata=$COMOUTcmce_bc
 
      for cyc in $naefs_cyc ; do
 
-       origin=$COMINcmce_bc/${vday}/wgrbbul/cmcensbc_gb2
+       origin=$DCOMINcmce_bc/${vday}/wgrbbul/cmcensbc_gb2
 
        mbr=1
        while [ $mbr -le $total ] ; do
@@ -171,7 +171,16 @@ if [ $modnam = gefs_bc_apcp24h ] ; then
 
     cd $WORK
 
-    export outdata=$COMOUT_gefs_bc
+    export outdata=$COMOUTgefs_bc
+
+    if [ $gefs_mbrs = 20 ] ; then
+      mbrs='1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20'
+    elif [ $gefs_mbrs = 30 ] ; then
+      mbrs='1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30'
+    else
+      echo "mbrs is not defined"
+      exit
+    fi
 
     for cyc in $naefs_cyc ; do
 
@@ -183,7 +192,8 @@ if [ $modnam = gefs_bc_apcp24h ] ; then
         #apcp24_bc=$origin/geprcp.t${cyc}z.pgrb2a.0p50.bc_24hf${hhh}
 
 	>$WORK/grabmbr.${cyc}.${hhh}
-        for mbr in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30; do
+
+        for mbr in $mbrs ; do
 
           mb=$mbr
           typeset -Z2 mb

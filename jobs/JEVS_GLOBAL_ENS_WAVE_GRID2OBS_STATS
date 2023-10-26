@@ -28,12 +28,12 @@ export NEXTDATE=${NEXTDATE:-${PDY}}
 ####################################
 export SENDECF=${SENDECF:-YES}
 export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-NO}
+export SENDDBN=${SENDDBN:-YES}
 export SENDMAIL=${SENDMAIL:-NO}
 ####################################
 # Set EVS directories               
 ####################################
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
@@ -53,12 +53,12 @@ export RUN=${RUN:-wave}
 export VERIF_CASE=${VERIF_CASE:-grid2obs}
 
 ####################################
-# Define COMIN/COMOUT variables     
+# Define EVSIN/COMOUT variables     
 ####################################
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export COMINmodel=${COMINmodel:-$(compath.py ${envir}/com/${MODELNAME}/${gefs_ver})}
-export ARCgefs=${COMIN}/prep/${COMPONENT}
-export COMINgdasnc=${COMIN}/prep/${COMPONENT}
+export COMINgefs=${COMINgefs:-$(compath.py ${envir}/com/${MODELNAME}/${gefs_ver})}
+export EVSINgefs=${COMIN}/prep/${COMPONENT}
+export EVSINgdasnc=${COMIN}/prep/${COMPONENT}
 
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})/${STEP}/${COMPONENT}}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
@@ -68,9 +68,6 @@ mkdir -p ${COMOUT} ${COMOUTsmall} ${COMOUTfinal}
 
 export jlogfile=${DATA}/${MODELNAME}_${RUN}_PointStat.log
 
-export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-YES}
-export SENDECF=${SENDECF:-YES}
 
 ####################################
 # Execute the script                

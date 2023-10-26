@@ -52,7 +52,7 @@ if [ $VERIF_CASE_STEP = grid2grid_stats ]; then
     #        seaice:    compare to OSI-SAF
     #g2gstats_*_truth_name_list:   list of reference name for truth files
     #g2gstats_*_truth_file_format_list: list of truth files    
-    #g2gstats_*_fcyc_list:                all forecast cycles to be included in verification: HH
+    #g2gstats_*_inithour_list:          all forecast init hours to be included in verification: HH
     #g2gstats_*_vhr_list:               all valid hours to be included in verification: HH
     #g2gstats_*_fhr_min:                forecast hour to start verification HH[H]
     #g2gstats_*_fhr_max:                forecast hour to end verification HH[H]
@@ -62,7 +62,7 @@ if [ $VERIF_CASE_STEP = grid2grid_stats ]; then
     export g2gstats_type_list="sst seaice anom pres_lvls" 
     export g2gstats_anom_truth_name_list="ecmwf_anl"
     export g2gstats_anom_truth_file_format_list="$COMIN.{valid?fmt=%Y%m%d}/ecmwf/ecmwf.{valid?fmt=%Y%m%d%H}.anl"
-    export g2gstats_anom_fcyc_list="00"
+    export g2gstats_anom_inithour_list="00"
     export g2gstats_anom_vhr_list="00 12"
     export g2gstats_anom_fhr_min="24"
     export g2gstats_anom_fhr_max="840"
@@ -71,7 +71,7 @@ if [ $VERIF_CASE_STEP = grid2grid_stats ]; then
     export g2gstats_anom_gather_by="VALID"
     export g2gstats_pres_lvls_truth_name_list="gfs_anl"
     export g2gstats_pres_lvls_truth_file_format_list="$COMIN.{valid?fmt=%Y%m%d}/gfs/gfs.{valid?fmt=%Y%m%d%H}.anl"
-    export g2gstats_pres_lvls_fcyc_list="00"
+    export g2gstats_pres_lvls_inithour_list="00"
     export g2gstats_pres_lvls_vhr_list="00 12"
     export g2gstats_pres_lvls_fhr_min="24"
     export g2gstats_pres_lvls_fhr_max="840"
@@ -80,7 +80,7 @@ if [ $VERIF_CASE_STEP = grid2grid_stats ]; then
     export g2gstats_pres_lvls_gather_by="VALID"
     export g2gstats_sst_truth_name_list="ghrsst_anl"
     export g2gstats_sst_truth_file_format_list="$COMIN.{valid?fmt=%Y%m%d}/ghrsst_ospo/ghrsst_ospo.{valid?fmt=%Y%m%d%H}to{valid?fmt=%Y%m%d%H}.nc"
-    export g2gstats_sst_fcyc_list="00"
+    export g2gstats_sst_inithour_list="00"
     export g2gstats_sst_vhr_list="00 12"
     export g2gstats_sst_fhr_min="24"
     export g2gstats_sst_fhr_max="840"
@@ -89,7 +89,7 @@ if [ $VERIF_CASE_STEP = grid2grid_stats ]; then
     export g2gstats_sst_gather_by="VALID"
     export g2gstats_seaice_truth_name_list="osi_anl"
     export g2gstats_seaice_truth_file_format_list="$COMIN.{valid?fmt=%Y%m%d}/osi_saf/osi_saf.multi.{valid?fmt=%Y%m%d%H}to{valid?fmt=%Y%m%d%H}_G003.nc"
-    export g2gstats_seaice_fcyc_list="00"
+    export g2gstats_seaice_inithour_list="00"
     export g2gstats_seaice_vhr_list="00 12"
     export g2gstats_seaice_fhr_min="24"
     export g2gstats_seaice_fhr_max="840"
