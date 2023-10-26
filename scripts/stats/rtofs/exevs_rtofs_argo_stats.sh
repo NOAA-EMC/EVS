@@ -17,9 +17,8 @@ mkdir -p $STATSDIR
 # get the months for the climo files:
 #     for day < 15, use the month before + valid month
 #     for day >= 15, use valid month + the month after
-
-MM=$(date --date=$VDATE +%m)
-DD=$(date --date=$VDATE +%d)
+MM=$(echo $VDATE |cut -c5-6)
+DD=$(echo $VDATE |cut -c7-8)
 if [ $DD -lt 15 ] ; then
    NM=`expr $MM - 1`
    if [ $NM -eq 0 ] ; then
@@ -80,31 +79,32 @@ for levl in 0 50 125 200 400 700 1000 1400; do
         fhr=$(($fday * 24))
         fhr2=$(printf "%02d" "${fhr}")
         export fhr3=$(printf "%03d" "${fhr}")
-        INITDATE=$(date --date="$VDATE -${fday} day" +%Y%m%d)
+        INITDATE=$($NDATE -${fhr} ${VDATE}${vhr} | cut -c 1-8)
         if [ -s $COMIN/prep/$COMPONENT/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f${fhr3}_daily_3ztio.$RUN.nc ] ; then
           for vari in ${VARS}; do
             export VAR=$vari
             mkdir -p $STATSDIR/$RUN.$VDATE/$VAR
             if [ -s $COMOUTsmall/$VAR/point_stat_RTOFS_${RUNupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
-              cp -v $COMOUTsmall/$VAR/point_stat_RTOFS_${RUNupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/$RUN.$VDATE/$VAR/.
+              cpreq -v $COMOUTsmall/$VAR/point_stat_RTOFS_${RUNupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/$RUN.$VDATE/$VAR/.
             else
               run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
               -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/PointStat_fcstRTOFS_obs${RUNupper}_climoWOA23_$VAR.conf
+              export err=$?; err_chk
               if [ $SENDCOM = "YES" ]; then
                   mkdir -p $COMOUTsmall/$VAR
-                  cp -v $STATSDIR/$RUN.$VDATE/$VAR/point_stat_RTOFS_${RUNupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
+                  cpreq -v $STATSDIR/$RUN.$VDATE/$VAR/point_stat_RTOFS_${RUNupper}_${VAR}_Z${levl}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
               fi
             fi
           done
         else
-          echo "Missing RTOFS f${fhr3} 3dz file for $VDATE"
+          echo "WARNING: Missing RTOFS f${fhr3} 3dz file for $VDATE: $COMIN/prep/$COMPONENT/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f${fhr3}_daily_3ztio.$RUN.nc"
         fi
       done
     else
-      echo "Missing RTOFS f000 ice file for $VDATE"
+      echo "WARNING: Missing RTOFS f000 ice file for $VDATE: $COMIN/prep/$COMPONENT/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_ice.$RUN.nc"
     fi
   else
-    echo "Missing Argo data file for $VDATE"
+    echo "WARNING: Missing ARGO data file for $VDATE: $COMIN/prep/$COMPONENT/rtofs.$VDATE/$RUN/argo.$VDATE.nc"
   fi
 done
 
@@ -119,11 +119,12 @@ for vari in ${VARS}; do
     # sum small stat files into one big file using Stat_Analysis
     run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
     -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/StatAnalysis_fcstRTOFS.conf
+    export err=$?; err_chk
     if [ $SENDCOM = "YES" ]; then
-      cp -v $STATSOUT/evs.stats.${COMPONENT}.${RUN}.${VERIF_CASE}_${VAR}.v${VDATE}.stat $COMOUTfinal/.
+      cpreq -v $STATSOUT/evs.stats.${COMPONENT}.${RUN}.${VERIF_CASE}_${VAR}.v${VDATE}.stat $COMOUTfinal/.
     fi
   else
-     echo "Missing RTOFS_${RUNupper}_$VAR stat files for $VDATE" 
+     echo "WARNING: Missing RTOFS_${RUNupper}_$VAR stat files for $VDATE in $STATSDIR/$RUN.$VDATE/$VAR/*.stat" 
   fi
 done
 
