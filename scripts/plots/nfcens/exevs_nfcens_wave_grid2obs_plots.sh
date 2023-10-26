@@ -60,7 +60,11 @@ plot_end_date=${VDATE}
 theDate=${plot_start_date}
 while (( ${theDate} <= ${plot_end_date} )); do
   EVSINnfcens=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${theDate}
-  cp ${EVSINnfcens}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
+  if [ -s ${EVSINnfcens}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ]; then
+	  cp ${EVSINnfcens}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
+  else
+	  echo "WARNING: ${EVSINnfcens}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat does not exist"
+  fi
   theDate=$(date --date="${theDate} + 1 day" '+%Y%m%d')
 done
 
@@ -78,7 +82,7 @@ else
   set -x
   echo ' '
   echo '**************************************** '
-  echo '*** ERROR : NO NFCENS *.stat FILE *** '
+  echo '*** WARNING : NO NFCENS *.stat FILE *** '
   echo "             for ${VDATE} "
   echo '**************************************** '
   echo ' '
@@ -117,7 +121,7 @@ periods='PAST31DAYS PAST90DAYS'
 if [ $gather = yes ] ; then
   echo "copying all images into one directory"
   cp ${DATA}/wave/*png ${DATA}/sfcshp/.  ## lead_average plots
-  nc=$(ls ${DATA}/sfcshp/*.fhr_valid*.png | wc -l | awk '{print $1}')
+  nc=$(ls ${DATA}/sfcshp/*.fhrmean_valid*.png | wc -l | awk '{print $1}')
   echo "copied $nc lead_average plots"
   for period in ${periods} ; do
     period_lower=$(echo ${period,,})

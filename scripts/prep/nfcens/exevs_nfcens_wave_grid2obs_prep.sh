@@ -50,7 +50,7 @@ for HH in ${HHs} ; do
     DATAfilename="${DATA}/gribs/HTSGW_mean.${INITDATE}.t${HH}z.grib2"
     if [ ! -s $COMINfilename ]; then
         export subject="NFCENS Forecast Data Missing for EVS ${COMPONENT}"
-        echo "Warning: No NFCENS forecast was available for ${INITDATE}${HH}" > mailmsg
+        echo "WARNING: No NFCENS forecast was available for ${INITDATE}${HH}" > mailmsg
         echo "Missing file is $COMINfilename" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
         cat mailmsg | mail -s "$subject" $maillist
@@ -72,7 +72,8 @@ for HH in ${HHs} ; do
                 fi
                 DATAfilename_fhr=${DATA}/gribs/HTSGW_mean.${INITDATE}.t${HH}z.f${FCST}.grib2
                 wgrib2 $DATAfilename -match "$grib2_match_fhr" -grib $DATAfilename_fhr > /dev/null
-                if [ $SENDCOM = YES ]; then
+                export err=$?; err_chk
+		if [ $SENDCOM = YES ]; then
                     cp -v $DATAfilename_fhr ${ARCmodel}/.
                 fi
             fi
@@ -91,7 +92,7 @@ for HH in 00 06 12 18 ; do
   export inithour=t${HH}z
   if [ ! -s ${COMINobsproc}.${INITDATE}/${HH}/atmos/gdas.${inithour}.prepbufr ]; then
       export subject="GDAS Prepbufr Data Missing for EVS ${COMPONENT}"
-      echo "Warning: No GDAS Prepbufr was available for init date ${INITDATE}${HH}" > mailmsg
+      echo "WARNING: No GDAS Prepbufr was available for init date ${INITDATE}${HH}" > mailmsg
       echo "Missing file is ${COMINobsproc}.${INITDATE}/${HH}/atmos/gdas.${inithour}.prepbufr" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $maillist
