@@ -47,7 +47,7 @@ for period in ${periods} ; do
           echo "export VERIF_CASE=${VERIF_CASE} " >> plot_${wvar}_${cyc}_${fhr}_${stats}_${ptype}_${period}.sh
           echo "export plot_start_date=${plot_start_date} " >> plot_${wvar}_${cyc}_${fhr}_${stats}_${ptype}_${period}.sh
           echo "export plot_end_date=${VDATE} " >> plot_${wvar}_${cyc}_${fhr}_${stats}_${ptype}_${period}.sh
-          echo "export CYC=${cyc} " >> plot_${wvar}_${cyc}_${fhr}_${stats}_${ptype}_${period}.sh
+          echo "export VHOUR=${cyc} " >> plot_${wvar}_${cyc}_${fhr}_${stats}_${ptype}_${period}.sh
           case ${stats} in
             'stats1')
               echo "export METRIC='me, rmse' " >> plot_${wvar}_${cyc}_${fhr}_${stats}_${ptype}_${period}.sh

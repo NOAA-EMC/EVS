@@ -60,12 +60,12 @@ for vcyc in $vcycs ; do
    done
 
    if [ $gefs_number = 20 ] ; then
-     sed -e "s!CYC!$fcyc!g" -e "s!GRID!3!g" -e "s!FHR!$fhr!g" $ENS_LIST/evs_g2g_gefs_file_list.20 > gefs_file_list.t${fcyc}z.f${fhr}
+     sed -e "s!IHR!$fcyc!g" -e "s!GRID!3!g" -e "s!FHR!$fhr!g" $ENS_LIST/evs_g2g_gefs_file_list.20 > gefs_file_list.t${fcyc}z.f${fhr}
    elif [  $gefs_number = 30 ] ; then      
-     sed -e "s!CYC!$fcyc!g" -e "s!GRID!3!g" -e "s!FHR!$fhr!g" $ENS_LIST/evs_g2g_gefs_file_list.30 > gefs_file_list.t${fcyc}z.f${fhr}
+     sed -e "s!IHR!$fcyc!g" -e "s!GRID!3!g" -e "s!FHR!$fhr!g" $ENS_LIST/evs_g2g_gefs_file_list.30 > gefs_file_list.t${fcyc}z.f${fhr}
    fi 
 
-   sed -e "s!CYC!$fcyc!g" -e "s!GRID!3!g" -e "s!FHR!$fhr!g" $ENS_LIST/evs_g2g_cmce_file_list > cmce_file_list.t${fcyc}z.f${fhr}
+   sed -e "s!IHR!$fcyc!g" -e "s!GRID!3!g" -e "s!FHR!$fhr!g" $ENS_LIST/evs_g2g_cmce_file_list > cmce_file_list.t${fcyc}z.f${fhr}
 
    echo "gefs_file_list.t${fcyc}z.f${fhr}  cmce_file_list.t${fcyc}z.f${fhr}"|$EXECevs/evs_g2g_adjustCMC.x
 
