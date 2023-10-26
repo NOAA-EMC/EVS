@@ -26,16 +26,19 @@ for lead in ${leads}; do
         output_rtofs_file=$COMOUTprep/rtofs.$VDATE/rtofs_glo_2ds_${lead}_${filetype}.nc
         if [ ! -s $output_rtofs_file ]; then
             if [ -s $input_rtofs_file ]; then
-                cp -v $input_rtofs_file $tmp_rtofs_file
+                cpreq -v $input_rtofs_file $tmp_rtofs_file
                 if [ $SENDCOM = YES ]; then
-                    cp -v $tmp_rtofs_file $output_rtofs_file
+                    cpreq -v $tmp_rtofs_file $output_rtofs_file
                 fi
             else
-                export subject="${lead} RTOFS Forecast Data Missing for EVS ${COMPONENT}"
-                echo "Warning: No RTOFS forecast was available for ${VDATE}${lead}" > mailmsg
-                echo "Missing file is ${input_rtofs_file}" >> mailmsg
-                echo "Job ID: $jobid" >> mailmsg
-                cat mailmsg | mail -s "$subject" $maillist
+                echo "WARNING: ${input_rtofs_file} does not exist"
+                if [ $SENDMAIL = YES ] ; then
+                    export subject="${lead} RTOFS Forecast Data Missing for EVS ${COMPONENT}"
+                    echo "Warning: No RTOFS forecast was available for ${VDATE}${lead}" > mailmsg
+                    echo "Missing file is ${input_rtofs_file}" >> mailmsg
+                    echo "Job ID: $jobid" >> mailmsg
+                    cat mailmsg | mail -s "$subject" $maillist
+                fi
             fi
         fi
     done
@@ -46,16 +49,19 @@ for lead in ${leads}; do
         output_rtofs_file=$COMOUTprep/rtofs.$VDATE/rtofs_glo_3dz_${lead}_daily_${filetype}.nc
         if [ ! -s $output_rtofs_file ]; then
             if [ -s $input_rtofs_file ]; then
-                cp -v $input_rtofs_file $tmp_rtofs_file
+                cpreq -v $input_rtofs_file $tmp_rtofs_file
                 if [ $SENDCOM = YES ]; then
-                    cp -v $tmp_rtofs_file $output_rtofs_file
+                    cpreq -v $tmp_rtofs_file $output_rtofs_file
                 fi
             else
-                export subject="${lead} RTOFS Forecast Data Missing for EVS ${COMPONENT}"
-                echo "Warning: No RTOFS forecast was available for ${VDATE}${lead}" > mailmsg
-                echo "Missing file is ${input_rtofs_file}" >> mailmsg
-                echo "Job ID: $jobid" >> mailmsg
-                cat mailmsg | mail -s "$subject" $maillist
+                echo "WARNING: ${input_rtofs_file} does not exist"
+                if [ $SENDMAIL = YES ] ; then
+                    export subject="${lead} RTOFS Forecast Data Missing for EVS ${COMPONENT}"
+                    echo "Warning: No RTOFS forecast was available for ${VDATE}${lead}" > mailmsg
+                    echo "Missing file is ${input_rtofs_file}" >> mailmsg
+                    echo "Job ID: $jobid" >> mailmsg
+                    cat mailmsg | mail -s "$subject" $maillist
+                fi
             fi
         fi
     done
@@ -86,9 +92,12 @@ for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
             if [ ! -s $output_rtofs_latlon_filename ]; then
                 if [ -s $rtofs_native_filename ]; then
                     cdo remapbil,$rtofs_grid_file $rtofs_native_filename $tmp_rtofs_latlon_filename
+                    export err=$?; err_chk
                     if [ $SENDCOM = "YES" ]; then
-                        cp -v $tmp_rtofs_latlon_filename $output_rtofs_latlon_filename
+                        cpreq -v $tmp_rtofs_latlon_filename $output_rtofs_latlon_filename
                     fi
+                else
+                    echo "WARNING: ${rtofs_native_filename} does not exist; cannot create ${tmp_rtofs_latlon_filename}"
                 fi
             fi
         done
@@ -101,9 +110,12 @@ for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
                 if [ ! -s $output_rtofs_latlon_filename ]; then
                     if [ -s $rtofs_native_filename ]; then
                         cdo remapbil,$rtofs_grid_file $rtofs_native_filename $tmp_rtofs_latlon_filename
+                        export err=$?; err_chk
                         if [ $SENDCOM = "YES" ]; then
-                            cp -v $tmp_rtofs_latlon_filename $output_rtofs_latlon_filename
+                            cpreq -v $tmp_rtofs_latlon_filename $output_rtofs_latlon_filename
                         fi
+                    else
+                        echo "WARNING: ${rtofs_native_filename} does not exist; cannot create ${tmp_rtofs_latlon_filename}"
                     fi
                 fi
             done
@@ -128,8 +140,9 @@ for ftype in nh sh; do
     if [ ! -s $output_osisaf_file ]; then
         if [ -s $input_osisaf_file ]; then
             cdo remapbil,$osi_saf_grid_file $input_osisaf_file $tmp_osisaf_file
+            export err=$?; err_chk
             if [ $SENDCOM = "YES" ]; then
-                cp -v $tmp_osisaf_file $output_osisaf_file
+                cpreq -v $tmp_osisaf_file $output_osisaf_file
             fi
         else
             if [ $SENDMAIL = YES ] ; then
@@ -155,8 +168,9 @@ if [ $ndbc_txt_ncount -gt 0 ]; then
     if [ ! -s $output_ndbc_file ]; then
         run_metplus.py -c $PARMevs/metplus_config/machine.conf \
         -c $CONFIGevs/$STEP/$COMPONENT/grid2obs/ASCII2NC_obsNDBC.conf
+        export err=$?; err_chk
          if [ $SENDCOM = YES ]; then
-             cp -v $tmp_ndbc_file $output_ndbc_file
+             cpreq -v $tmp_ndbc_file $output_ndbc_file
          fi
     fi
 else
@@ -179,8 +193,9 @@ if [ -s $DCOMROOT/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_pro
     if [ ! -s $output_argo_file ]; then
         run_metplus.py -c $PARMevs/metplus_config/machine.conf \
         -c $CONFIGevs/$STEP/$COMPONENT/grid2obs/ASCII2NC_obsARGO.conf
+        export err=$?; err_chk
         if [ $SENDCOM = YES ]; then
-             cp -v $tmp_argo_file $output_argo_file
+             cpreq -v $tmp_argo_file $output_argo_file
         fi
     fi
 else

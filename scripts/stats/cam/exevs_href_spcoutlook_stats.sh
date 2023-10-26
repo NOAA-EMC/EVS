@@ -83,6 +83,40 @@ if [ $gather = yes ] && [ -s ${DATA}/run_href_all_grid2obs_poe ] ; then
   $USHevs/cam/evs_href_gather.sh $VERIF_CASE  
 fi
 
+# Cat the METplus log files
+log_dirs1="$DATA/*/logs"
+log_dirs2="$DATA/grid2obs/*/logs"
+for log_dir in $log_dirs1; do
+    if [ -d $log_dir ]; then
+        log_file_count=$(find $log_dir -type f | wc -l)
+        if [[ $log_file_count -ne 0 ]]; then
+            log_files=("$log_dir"/*)
+            for log_file in "${log_files[@]}"; do
+                if [ -f "$log_file" ]; then
+                    echo "Start: $log_file"
+                    cat "$log_file"
+                    echo "End: $log_file"
+                fi
+            done
+        fi
+    fi
+done
+for log_dir in $log_dirs2; do
+    if [ -d $log_dir ]; then
+        log_file_count=$(find $log_dir -type f | wc -l)
+        if [[ $log_file_count -ne 0 ]]; then
+            log_files=("$log_dir"/*)
+            for log_file in "${log_files[@]}"; do
+                if [ -f "$log_file" ]; then
+                    echo "Start: $log_file"
+                    cat "$log_file"
+                    echo "End: $log_file"
+                fi
+            done
+        fi
+    fi
+done
+
 msg="JOB $job HAS COMPLETED NORMALLY"
 postmsg "$jlogfile" "$msg"
 
