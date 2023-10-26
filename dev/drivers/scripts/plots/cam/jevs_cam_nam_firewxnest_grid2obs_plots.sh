@@ -1,4 +1,3 @@
-#!/bin/bash
 #PBS -N jevs_cam_nam_firewxnest_grid2obs_plots
 #PBS -j oe
 #PBS -S /bin/bash

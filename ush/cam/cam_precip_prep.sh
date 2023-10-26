@@ -8,6 +8,8 @@
 #
 ########################################
 
+set -x
+
 if [ $STEP == "prep" ]; then
     if [ $COMPONENT == "cam" ]; then
         if [ $VERIF_CASE == "precip" ]; then
