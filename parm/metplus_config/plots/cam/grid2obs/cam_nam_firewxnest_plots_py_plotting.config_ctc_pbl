@@ -19,9 +19,9 @@
 #                   or else choose any directory that will house Verif Plotting.  As an example, 
 #                   we'll call that directory PY_PLOT_DIR.  Then on the command line:
 #
-#                   $ PY_PLOT_DIR="/gpfs/path/to/my/directory"
+#                   $ PY_PLOT_DIR="/path/to/my/directory"
 #                   $ mkdir -p ${PY_PLOT_DIR}/out/logs ${PY_PLOT_DIR}/data ${PY_PLOT_DIR}/ush
-#                   $ BASE_DIR="/gpfs/dell2/emc/verification/noscrub/Marcel.Caron/verif_plotting"
+#                   $ BASE_DIR="/path/to/auth/verif_plotting"
 #                   $ cp -r ${BASE_DIR}/ush/* ${PY_PLOT_DIR}/ush/.
 #                   $ cp ${BASE_DIR}/py_plotting.config ${PY_PLOT_DIR}/.
 #

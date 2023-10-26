@@ -29,7 +29,7 @@ export RUN_GRID2OBS_PLOTS="NO"
 export model_list="NAM_FIREWXNEST"
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory
-export OUTPUTROOT="/lfs/h2/emc/ptmp/$USER/evs_cam"
+export OUTPUTROOT="$DATAROOT"
 ## DATE SETTINGS
 #start_date:       verification start date, format YYYYMMDD
 #end_date:         verification end date, format YYYYMMDD
