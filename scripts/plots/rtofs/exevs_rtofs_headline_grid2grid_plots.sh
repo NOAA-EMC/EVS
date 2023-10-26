@@ -10,7 +10,7 @@ set -x
 mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE
 
 # set major & minor MET version
-export MET_VERSION_major_minor=`echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g"`
+export MET_VERSION_major_minor=$(echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g")
 
 # set up plot variables
 export PERIOD=last90days
@@ -51,12 +51,14 @@ for lead in 000 024 048 072 096 120 144 168 192; do
     for stats in me rmse; do
       export METRIC=$stats
       $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
+      export err=$?; err_chk
     done
 
     export METRIC=fbias
     export LTYPE=CTC
     export THRESH=">=26.5"
     $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
+    export err=$?; err_chk
   done
 
 # make plots for SIC
@@ -70,6 +72,7 @@ for lead in 000 024 048 072 096 120 144 168 192; do
   for thre in ">=15" ">=40" ">=80"; do
     export THRESH=$thre
     $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
+    export err=$?; err_chk
   done
 done
 
@@ -107,12 +110,14 @@ for obs in GHRSST NDBC_STANDARD ARGO; do
   for stats in me rmse; do
     export METRIC=$stats
     $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
+    export err=$?; err_chk
   done
 
   export METRIC=fbias
   export LTYPE=CTC
   export THRESH=">=26.5"
   $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
+  export err=$?; err_chk
 done
 
 # make plots for SIC
@@ -126,6 +131,7 @@ export LTYPE=CTC
 for thre in ">=15" ">=40" ">=80"; do
   export THRESH=$thre
   $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/verif_plotting.rtofs.conf
+  export err=$?; err_chk
 done
 
 # Cat the plotting log files
@@ -144,7 +150,7 @@ cd $DATA/plots/$COMPONENT/rtofs.$VDATE/$RUN
 tar -cvf evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar *.png
 
 if [ $SENDCOM = "YES" ]; then
- cp -v evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplotsheadline
+ cpreq -v evs.plots.$COMPONENT.$RUN.${VERIF_CASE}.$PERIOD.v$VDATE.tar $COMOUTplotsheadline
 fi
 
 if [ $SENDDBN = YES ] ; then
