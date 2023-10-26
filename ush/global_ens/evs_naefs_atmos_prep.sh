@@ -7,11 +7,11 @@ if [ $get_model_bc = yes ] ; then
 
  for model in gefs_bc cmce_bc ; do 
 
-      for cyc in 00 12 ; do
+      for ihour in 00 12 ; do
 
        for fhr_range in range1 range2 range3 range4 range5 range6 range7 range8 ; do
 
-	>get_data_${model}_${cyc}_${fhr_range}.sh
+	>get_data_${model}_${ihour}_${fhr_range}.sh
 
 	 if [ $fhr_range = range1 ] ; then
            fhr_beg=00
@@ -46,10 +46,10 @@ if [ $get_model_bc = yes ] ; then
 	   	
          fi
 
-         echo "$USHevs/global_ens/evs_get_naefs_atmos_data.sh $model $cyc $fhr_beg $fhr_end" >> get_data_${model}_${cyc}_${fhr_range}.sh
+         echo "$USHevs/global_ens/evs_get_naefs_atmos_data.sh $model $ihour $fhr_beg $fhr_end" >> get_data_${model}_${ihour}_${fhr_range}.sh
 
-         chmod +x get_data_${model}_${cyc}_${fhr_range}.sh
-         echo "${DATA}/get_data_${model}_${cyc}_${fhr_range}.sh" >> run_get_all_naefs_atmos_poe.sh
+         chmod +x get_data_${model}_${ihour}_${fhr_range}.sh
+         echo "${DATA}/get_data_${model}_${ihour}_${fhr_range}.sh" >> run_get_all_naefs_atmos_poe.sh
 
        done
       done
@@ -60,11 +60,11 @@ fi
 
 if [ $get_gefs_bc_apcp24h = yes ] ; then
  for model in gefs_bc ; do
-  for cyc in 00 12 ; do
-    >get_data_${model}_${cyc}_apcp24h.sh
-    echo "$USHevs/global_ens/evs_get_naefs_atmos_data.sh ${model}_apcp24h $cyc 0 384" >> get_data_${model}_${cyc}_apcp24h.sh
-    chmod +x get_data_${model}_${cyc}_apcp24h.sh
-    echo "${DATA}/get_data_${model}_${cyc}_apcp24h.sh" >> run_get_all_naefs_atmos_poe.sh
+  for ihour in 00 12 ; do
+    >get_data_${model}_${ihour}_apcp24h.sh
+    echo "$USHevs/global_ens/evs_get_naefs_atmos_data.sh ${model}_apcp24h $ihour 0 384" >> get_data_${model}_${ihour}_apcp24h.sh
+    chmod +x get_data_${model}_${ihour}_apcp24h.sh
+    echo "${DATA}/get_data_${model}_${ihour}_apcp24h.sh" >> run_get_all_naefs_atmos_poe.sh
   done
  done
 fi

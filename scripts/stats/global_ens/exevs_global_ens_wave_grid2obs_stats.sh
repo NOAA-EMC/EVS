@@ -59,38 +59,38 @@ cd ${DATA}
 ############################################
 echo ' '
 echo 'Creating point_stat files'
-for cyc in ${validhours} ; do
-    cyc2=$(printf "%02d" "${cyc}")
-    if [ ${cyc2} = '00' ] ; then
+for vhour in ${validhours} ; do
+    vhour2=$(printf "%02d" "${vhour}")
+    if [ ${vhour2} = '00' ] ; then
       wind_level_str="'{ name=\"WIND\"; level=\"(0,*,*)\"; }'"
       htsgw_level_str="'{ name=\"HTSGW\"; level=\"(0,*,*)\"; }'"
       perpw_level_str="'{ name=\"PERPW\"; level=\"(0,*,*)\"; }'"
-    elif [ ${cyc2} = '06' ] ; then
+    elif [ ${vhour2} = '06' ] ; then
       wind_level_str="'{ name=\"WIND\"; level=\"(2,*,*)\"; }'"
       htsgw_level_str="'{ name=\"HTSGW\"; level=\"(2,*,*)\"; }'"
       perpw_level_str="'{ name=\"PERPW\"; level=\"(2,*,*)\"; }'"
-    elif [ ${cyc2} = '12' ] ; then
+    elif [ ${vhour2} = '12' ] ; then
       wind_level_str="'{ name=\"WIND\"; level=\"(4,*,*)\"; }'"
       htsgw_level_str="'{ name=\"HTSGW\"; level=\"(4,*,*)\"; }'"
       perpw_level_str="'{ name=\"PERPW\"; level=\"(4,*,*)\"; }'"
-    elif [ ${cyc2} = '18' ] ; then
+    elif [ ${vhour2} = '18' ] ; then
       wind_level_str="'{ name=\"WIND\"; level=\"(6,*,*)\"; }'"
       htsgw_level_str="'{ name=\"HTSGW\"; level=\"(6,*,*)\"; }'"
       perpw_level_str="'{ name=\"PERPW\"; level=\"(6,*,*)\"; }'"
     fi
     for fhr in ${lead_hours} ; do
-        matchtime=$(date --date="${VDATE} ${cyc2} ${fhr} hours ago" +"%Y%m%d %H")
+        matchtime=$(date --date="${VDATE} ${vhour2} ${fhr} hours ago" +"%Y%m%d %H")
         match_date=$(echo ${matchtime} | awk '{print $1}')
         match_hr=$(echo ${matchtime} | awk '{print $2}')
         match_fhr=$(printf "%02d" "${match_hr}")
         flead=$(printf "%03d" "${fhr}")
         flead2=$(printf "%02d" "${fhr}")
-        EVSgdasncfilename=${EVSINgdasnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${VDATE}${cyc2}.nc 
-        DATAgdasncfilename=${DATA}/ncfiles/gdas.${VDATE}${cyc2}.nc
+        EVSgdasncfilename=${EVSINgdasnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${VDATE}${vhour2}.nc 
+        DATAgdasncfilename=${DATA}/ncfiles/gdas.${VDATE}${vhour2}.nc
         EVSmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${MODELNAME}.${RUN}.${match_date}.t${match_fhr}z.mean.global.0p25.f${flead}.grib2
         DATAmodelfilename=$DATA/gribs/${MODELNAME}.${RUN}.${match_date}.t${match_fhr}z.mean.global.0p25.f${flead}.grib2
-        DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${cyc2}0000V.stat
-        COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${cyc2}0000V.stat
+        DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhour2}0000V.stat
+        COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhour2}0000V.stat
         if [[ -s $COMOUTstatfilename ]]; then
             cp -v $COMOUTstatfilename $DATAstatfilename
         else
@@ -110,20 +110,20 @@ for cyc in ${validhours} ; do
                     fi
                 fi
                 if [[ -s $DATAmodelfilename ]]; then
-                    echo "export wind_level_str=${wind_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
-                    echo "export htsgw_level_str=${htsgw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
-                    echo "export perpw_level_str=${perpw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
-                    echo "export VHOUR=${cyc2}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
-                    echo "export fhr=${flead}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
-                    echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstGEFS_obsGDAS_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
-                    echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
+                    echo "export wind_level_str=${wind_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
+                    echo "export htsgw_level_str=${htsgw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
+                    echo "export perpw_level_str=${perpw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
+                    echo "export VHOUR=${vhour2}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
+                    echo "export fhr=${flead}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
+                    echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstGEFS_obsGDAS_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
+                    echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
                     if [ $SENDCOM = YES ]; then
-                        echo "cp -v $DATAstatfilename $COMOUTstatfilename" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
+                        echo "cp -v $DATAstatfilename $COMOUTstatfilename" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
                     fi
 
-                    chmod +x ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
+                    chmod +x ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
       
-                    echo "${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh" >> ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
+                    echo "${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh" >> ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
                 fi
             fi
         fi

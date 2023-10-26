@@ -30,7 +30,7 @@ echo $COM_IN
 $USHevs/global_ens/evs_gens_atmos_check_input_files.sh $modnam
 $USHevs/global_ens/evs_gens_atmos_check_input_files.sh ghrsst
 anl=ghrsst
-export cyc='00'
+export vhour='00'
 
 
 if [ $verify = sst24h ] ; then 
@@ -47,45 +47,45 @@ if [ $verify = sst24h ] ; then
         echo "wrong model: $modnam"
       fi 
         
-        >run_${modnam}_valid_at_t${cyc}z_${verify}.sh
+        >run_${modnam}_valid_at_t${vhour}z_${verify}.sh
 
-        echo  "export output_base=${WORK}/${verify}/run_${modnam}_valid_at_t${cyc}z_${verify}" >> run_${modnam}_valid_at_t${cyc}z_${verify}.sh
-        echo  "export modelpath=$COM_IN" >> run_${modnam}_valid_at_t${cyc}z_${verify}.sh
+        echo  "export output_base=${WORK}/${verify}/run_${modnam}_valid_at_t${vhour}z_${verify}" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
+        echo  "export modelpath=$COM_IN" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
 
-        echo  "export OBTYPE=GHRSST" >> run_${modnam}_valid_at_t${cyc}z_${verify}.sh
-        echo  "export maskpath=$maskpath" >> run_${modnam}_valid_at_t${cyc}z_${verify}.sh
+        echo  "export OBTYPE=GHRSST" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
+        echo  "export maskpath=$maskpath" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
 
-        echo  "export obsvhead=$anl" >> run_${modnam}_valid_at_t${cyc}z_${verify}.sh
-        echo  "export obsvpath=$COM_IN" >> run_${modnam}_valid_at_t${cyc}z_${verify}.sh
+        echo  "export obsvhead=$anl" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
+        echo  "export obsvpath=$COM_IN" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
      
 	if  [ ${modnam} = ecme ] ; then 
-          echo  "export modelgrid=grid4.sst24h.f" >> run_${modnam}_valid_at_t${cyc}z_${verify}.sh
+          echo  "export modelgrid=grid4.sst24h.f" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
 	else
-	  echo  "export modelgrid=grid3.sst24h.f" >> run_${modnam}_valid_at_t${cyc}z_${verify}.sh
+	  echo  "export modelgrid=grid3.sst24h.f" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
 	fi
 
-        echo  "export model=$modnam"  >> run_${modnam}_valid_at_t${cyc}z_${verify}.sh
-        echo  "export MODEL=$MODL" >> run_${modnam}_valid_at_t${cyc}z_${verify}.sh
-        echo  "export modelhead=$modnam" >> run_${modnam}_valid_at_t${cyc}z_${verify}.sh
+        echo  "export model=$modnam"  >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
+        echo  "export MODEL=$MODL" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
+        echo  "export modelhead=$modnam" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
 
-        echo  "export vbeg=$cyc" >> run_${modnam}_valid_at_t${cyc}z_${verify}.sh
-        echo  "export vend=$cyc" >> run_${modnam}_valid_at_t${cyc}z_${verify}.sh
-        echo  "export valid_increment=21600" >>  run_${modnam}_valid_at_t${cyc}z_${verify}.sh
-
-
-        echo  "export lead='24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384' "  >> run_${modnam}_valid_at_t${cyc}z_${verify}.sh
-
-        echo  "export modeltail='.nc'" >> run_${modnam}_valid_at_t${cyc}z_${verify}.sh
-        echo  "export members=$mbrs" >> run_${modnam}_valid_at_t${cyc}z_${verify}.sh
+        echo  "export vbeg=$vhour" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
+        echo  "export vend=$vhour" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
+        echo  "export valid_increment=21600" >>  run_${modnam}_valid_at_t${vhour}z_${verify}.sh
 
 
-        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/EnsembleStat_fcst${MODL}_obsGHRSST.conf " >> run_${modnam}_valid_at_t${cyc}z_${verify}.sh
+        echo  "export lead='24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384' "  >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
 
-        [[ $SENDCOM="YES" ]] && echo "cp \$output_base/stat/${modnam}/*.stat $COMOUTsmall" >> run_${modnam}_valid_at_t${cyc}z_${verify}.sh
+        echo  "export modeltail='.nc'" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
+        echo  "export members=$mbrs" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
 
-        chmod +x run_${modnam}_valid_at_t${cyc}z_${verify}.sh
 
-        echo "${DATA}/run_${modnam}_valid_at_t${cyc}z_${verify}.sh" >> run_all_gens_sst24h_poe.sh
+        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/EnsembleStat_fcst${MODL}_obsGHRSST.conf " >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
+
+        [[ $SENDCOM="YES" ]] && echo "cp \$output_base/stat/${modnam}/*.stat $COMOUTsmall" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
+
+        chmod +x run_${modnam}_valid_at_t${vhour}z_${verify}.sh
+
+        echo "${DATA}/run_${modnam}_valid_at_t${vhour}z_${verify}.sh" >> run_all_gens_sst24h_poe.sh
 
    chmod 775 run_all_gens_sst24h_poe.sh
 

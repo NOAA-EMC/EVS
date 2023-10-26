@@ -48,7 +48,7 @@ echo $COM_IN
 
 
 anl=nohrsc
-cyc='12'
+vhour='12'
 
 if [ $verify = snowfall ] ; then 
 
@@ -93,8 +93,8 @@ if [ $verify = snowfall ] ; then
         echo  "export MODEL=$MODL" >> run_${modnam}_${verify}_${type}.sh
         echo  "export modelhead=$modnam" >> run_${modnam}_${verify}_${type}.sh
 
-        echo  "export vbeg=$cyc" >> run_${modnam}_${verify}_${type}.sh
-        echo  "export vend=$cyc" >> run_${modnam}_${verify}_${type}.sh
+        echo  "export vbeg=$vhour" >> run_${modnam}_${verify}_${type}.sh
+        echo  "export vend=$vhour" >> run_${modnam}_${verify}_${type}.sh
         echo  "export valid_increment=21600" >>  run_${modnam}_${verify}_${type}.sh
 
 

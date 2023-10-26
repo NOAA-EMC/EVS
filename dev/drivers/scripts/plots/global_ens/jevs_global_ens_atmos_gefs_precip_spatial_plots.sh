@@ -26,7 +26,7 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 export KEEPDATA=YES
 export SENDDBN=NO
 
-export cyc=00
+export vhr=00
 
 export met_v=${met_ver:0:4}
 

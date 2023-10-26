@@ -31,7 +31,7 @@ export envir=prod
 export KEEPDATA=YES
 export SENDDBN=NO
 
-export cyc=00
+export vhr=00
 export past_days=31
 
 export met_v=${met_ver:0:4}

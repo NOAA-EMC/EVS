@@ -5,13 +5,13 @@ set -x
 
 
 var=$1
-typeset -Z2 cyc
+typeset -Z2 ihour
 
 
 if [ $var = gfsanl ] ; then
   missing=0
-  for cyc in 00 06 12 18 ; do
-          if [ ! -s ${EVSIN}.${vday}/gefs/gfsanl.t${cyc}z.grid3.f000.grib2 ] ; then
+  for ihour in 00 06 12 18 ; do
+          if [ ! -s ${EVSIN}.${vday}/gefs/gfsanl.t${ihour}z.grid3.f000.grib2 ] ; then
       missing=$((missing + 1 ))
     fi
   done
@@ -29,8 +29,8 @@ fi
 
 if [ $var = cmcanl ] ; then
   missing=0
-  for cyc in 00 12 ; do
-          if [ ! -s ${EVSIN}.${vday}/cmce/cmcanl.t${cyc}z.grid3.f000.grib2 ] ; then
+  for ihour in 00 12 ; do
+          if [ ! -s ${EVSIN}.${vday}/cmce/cmcanl.t${ihour}z.grid3.f000.grib2 ] ; then
       missing=$((missing + 1 ))
     fi
   done
@@ -48,8 +48,8 @@ fi
 
 if [ $var = ecmanl ] ; then
   missing=0
-  for cyc in 00 12 ; do
-          if [ ! -s ${EVSIN}.${vday}/ecme/ecmanl.t${cyc}z.grid3.f000.grib1 ] ; then
+  for ihour in 00 12 ; do
+          if [ ! -s ${EVSIN}.${vday}/ecme/ecmanl.t${ihour}z.grid3.f000.grib1 ] ; then
       missing=$((missing + 1 ))
     fi
   done
@@ -88,8 +88,8 @@ fi
 
 if [ $var = prepbufr ] ; then
   missing=0 
-  for cyc in 00 06 12 18 ; do
-	  if [ ! -s ${EVSIN}.${vday}/gefs/gfs.t${cyc}z.prepbufr.f00.nc ] ; then
+  for ihour in 00 06 12 18 ; do
+	  if [ ! -s ${EVSIN}.${vday}/gefs/gfs.t${ihour}z.prepbufr.f00.nc ] ; then
       missing=$((missing + 1 ))
     fi
   done
@@ -107,8 +107,8 @@ fi
 
 if [ $var = prepbufr_profile ] ; then
   missing=0
-  for cyc in 00 06 12 18 ; do
-          if [ ! -s ${EVSIN}.${vday}/gefs/gfs.t${cyc}z.prepbufr_profile.f00.nc ] ; then
+  for ihour in 00 06 12 18 ; do
+          if [ ! -s ${EVSIN}.${vday}/gefs/gfs.t${ihour}z.prepbufr_profile.f00.nc ] ; then
       missing=$((missing + 1 ))
     fi
   done
@@ -170,17 +170,17 @@ fi
 
 if [ $var = gefs ] || [ $var = gefs_bc ] ; then 
 
- cyc_fhr_ok=0
- cyc_fhr_missing=0
+ ihour_fhr_ok=0
+ ihour_fhr_missing=0
  if [  $var = gefs ] ; then
-   cycs="00 06 12 18"
+   ihours="00 06 12 18"
  else
-   cycs="00 12"
+   ihours="00 12"
  fi 
 
- for cyc in  $cycs ; do 
+ for ihour in  $ihours ; do 
 
-  obsv_cyc=${vday}${cyc}
+  obsv_time=${vday}${ihour}
 
   fhr=06
 
@@ -189,13 +189,13 @@ if [ $var = gefs ] || [ $var = gefs_bc ] ; then
     hhh=$fhr
     typeset -Z3 hhh
 
-    fcst_time=`$NDATE -$fhr $obsv_cyc`
+    fcst_time=`$NDATE -$fhr $obsv_time`
     fday=${fcst_time:0:8}
-    fcyc=${fcst_time:8:2}
+    ihour=${fcst_time:8:2}
 
     gefs_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do 
-      gefs=$EVSIN.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.f${hhh}.grib2
+      gefs=$EVSIN.${fday}/gefs/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
       #echo $gefs
 
       if [ -s $gefs ] ; then
@@ -204,10 +204,10 @@ if [ $var = gefs ] || [ $var = gefs_bc ] ; then
     done
 
     if [ $gefs_mbrs -eq 30 ] ; then
-      #echo "gefs members = " $gefs_mbrs "  for cyc=$cyc  f${hhh} !!!"
-      cyc_fhr_ok=$((cyc_fhr_ok+1))
+      #echo "gefs members = " $gefs_mbrs "  for ihour=$ihour  f${hhh} !!!"
+      ihour_fhr_ok=$((ihour_fhr_ok+1))
     else  
-      cyc_fhr_missing=$((cyc_fhr_missing+1))
+      ihour_fhr_missing=$((ihour_fhr_missing+1))
     fi
 
     fhr=$((fhr+6))
@@ -215,10 +215,10 @@ if [ $var = gefs ] || [ $var = gefs_bc ] ; then
   done
      
  done
-   echo cyc_fhr_ok=$cyc_fhr_ok
-   echo cyc_fhr_missing=$cyc_fhr_missing
-   if [ $cyc_fhr_ok -eq 0 ] ; then
-    echo cyc_missing_fhr=0 member files for all cyc and fhr are missing, exit execution of METPlus!
+   echo ihour_fhr_ok=$ihour_fhr_ok
+   echo ihour_fhr_missing=$ihour_fhr_missing
+   if [ $ihour_fhr_ok -eq 0 ] ; then
+    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
     exit
    else
     echo at least there are some gefs member files!
@@ -231,11 +231,11 @@ fi
 
 if [ $var = cmce ] || [ $var = cmce_bc ] ; then 
 
- cyc_fhr_ok=0
- cyc_fhr_missing=0
- for cyc in  00 12 ; do 
+ ihour_fhr_ok=0
+ ihour_fhr_missing=0
+ for ihour in  00 12 ; do 
 
-  obsv_cyc=${vday}${cyc}
+  obsv_time=${vday}${ihour}
 
   fhr=12
 
@@ -244,13 +244,13 @@ if [ $var = cmce ] || [ $var = cmce_bc ] ; then
     hhh=$fhr
     typeset -Z3 hhh
 
-    fcst_time=`$NDATE -$fhr $obsv_cyc`
+    fcst_time=`$NDATE -$fhr $obsv_time`
     fday=${fcst_time:0:8}
-    fcyc=${fcst_time:8:2}
+    ihour=${fcst_time:8:2}
 
     cmce_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ; do 
-      cmce=$EVSIN.${fday}/${var}/${var}.ens${mb}.t${fcyc}z.grid3.f${hhh}.grib2
+      cmce=$EVSIN.${fday}/${var}/${var}.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
       #echo $cmce
 
       if [ -s $cmce ] ; then
@@ -259,10 +259,10 @@ if [ $var = cmce ] || [ $var = cmce_bc ] ; then
     done
 
     if [ $cmce_mbrs -eq 20 ] ; then
-      #echo "cmce members = " $cmce_mbrs "  for cyc=$cyc  f${hhh} !!!"
-      cyc_fhr_ok=$((cyc_fhr_ok+1))
+      #echo "cmce members = " $cmce_mbrs "  for ihour=$ihour  f${hhh} !!!"
+      ihour_fhr_ok=$((ihour_fhr_ok+1))
     else  
-      cyc_fhr_missing=$((cyc_fhr_missing+1))
+      ihour_fhr_missing=$((ihour_fhr_missing+1))
     fi
 
     fhr=$((fhr+12))
@@ -270,10 +270,10 @@ if [ $var = cmce ] || [ $var = cmce_bc ] ; then
   done
      
  done
-   echo cyc_fhr_ok=$cyc_fhr_ok
-   echo cyc_fhr_missing=$cyc_fhr_missing
-   if [ $cyc_fhr_ok -eq 0 ] ; then
-    echo cyc_missing_fhr=0 member files for all cyc and fhr are missing, exit execution of METPlus!
+   echo ihour_fhr_ok=$ihour_fhr_ok
+   echo ihour_fhr_missing=$ihour_fhr_missing
+   if [ $ihour_fhr_ok -eq 0 ] ; then
+    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
     exit
    else
     echo at least there are some cmce member files!
@@ -286,11 +286,11 @@ fi
 
 if [ $var = ecme ] ; then 
 
- cyc_fhr_ok=0
- cyc_fhr_missing=0
- for cyc in  00 12 ; do 
+ ihour_fhr_ok=0
+ ihour_fhr_missing=0
+ for ihour in  00 12 ; do 
 
-  obsv_cyc=${vday}${cyc}
+  obsv_time=${vday}${ihour}
 
   fhr=12
 
@@ -299,13 +299,13 @@ if [ $var = ecme ] ; then
     hhh=$fhr
     typeset -Z3 hhh
 
-    fcst_time=`$NDATE -$fhr $obsv_cyc`
+    fcst_time=`$NDATE -$fhr $obsv_time`
     fday=${fcst_time:0:8}
-    fcyc=${fcst_time:8:2}
+    ihour=${fcst_time:8:2}
 
     ecme_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      ecme=$EVSIN.${fday}/ecme/ecme.ens${mb}.t${fcyc}z.grid4.f${hhh}.grib1
+      ecme=$EVSIN.${fday}/ecme/ecme.ens${mb}.t${ihour}z.grid4.f${hhh}.grib1
       #echo $ecme
 
       if [ -s $ecme ] ; then
@@ -314,10 +314,10 @@ if [ $var = ecme ] ; then
     done
 
     if [ $ecme_mbrs -eq 50 ] ; then
-      #echo "ecme members = " $ecme_mbrs "  for cyc=$cyc  f${hhh} !!!"
-      cyc_fhr_ok=$((cyc_fhr_ok+1))
+      #echo "ecme members = " $ecme_mbrs "  for ihour=$ihour  f${hhh} !!!"
+      ihour_fhr_ok=$((ihour_fhr_ok+1))
     else  
-      cyc_fhr_missing=$((cyc_fhr_missing+1))
+      ihour_fhr_missing=$((ihour_fhr_missing+1))
     fi
 
     fhr=$((fhr+12))
@@ -325,10 +325,10 @@ if [ $var = ecme ] ; then
   done
      
  done
-   echo cyc_fhr_ok=$cyc_fhr_ok
-   echo cyc_fhr_missing=$cyc_fhr_missing
-   if [ $cyc_fhr_ok -eq 0 ] ; then
-    echo cyc_missing_fhr=0 member files for all cyc and fhr are missing, exit execution of METPlus!
+   echo ihour_fhr_ok=$ihour_fhr_ok
+   echo ihour_fhr_missing=$ihour_fhr_missing
+   if [ $ihour_fhr_ok -eq 0 ] ; then
+    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
     exit
    else
     echo at least there are some ecme member files!
@@ -339,11 +339,11 @@ fi
 
 if [ $var = gefs_apcp24h ] ; then 
 
- cyc_fhr_ok=0
- cyc_fhr_missing=0
- for cyc in  12 ; do 
+ ihour_fhr_ok=0
+ ihour_fhr_missing=0
+ for ihour in  12 ; do 
 
-  obsv_cyc=${vday}${cyc}
+  obsv_time=${vday}${ihour}
 
   fhr=24
 
@@ -352,14 +352,14 @@ if [ $var = gefs_apcp24h ] ; then
     hhh=$fhr
     typeset -Z3 hhh
 
-    fcst_time=`$NDATE -$fhr $obsv_cyc`
+    fcst_time=`$NDATE -$fhr $obsv_time`
     fday=${fcst_time:0:8}
-    fcyc=${fcst_time:8:2}
+    ihour=${fcst_time:8:2}
 
     gefs_apcp24h_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do 
     #for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      gefs_apcp24h=$EVSIN.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.24h.f${hhh}.nc
+      gefs_apcp24h=$EVSIN.${fday}/gefs/gefs.ens${mb}.t${ihour}z.grid3.24h.f${hhh}.nc
       #echo $gefs_apcp24h
 
       if [ -s $gefs_apcp24h ] ; then
@@ -368,9 +368,9 @@ if [ $var = gefs_apcp24h ] ; then
     done
 
     if [ $gefs_apcp24h_mbrs -eq 30 ] ; then
-      cyc_fhr_ok=$((cyc_fhr_ok+1))
+      ihour_fhr_ok=$((ihour_fhr_ok+1))
     else  
-      cyc_fhr_missing=$((cyc_fhr_missing+1))
+      ihour_fhr_missing=$((ihour_fhr_missing+1))
     fi
 
     fhr=$((fhr+12))
@@ -378,10 +378,10 @@ if [ $var = gefs_apcp24h ] ; then
   done
      
  done
-   echo cyc_fhr_ok=$cyc_fhr_ok
-   echo cyc_fhr_missing=$cyc_fhr_missing
-   if [ $cyc_fhr_ok -eq 0 ] ; then
-    echo cyc_missing_fhr=0 member files for all cyc and fhr are missing, exit execution of METPlus!
+   echo ihour_fhr_ok=$ihour_fhr_ok
+   echo ihour_fhr_missing=$ihour_fhr_missing
+   if [ $ihour_fhr_ok -eq 0 ] ; then
+    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
     exit
    else
     echo at least there are some gefs_apcp24h member files!
@@ -394,11 +394,11 @@ fi
 
 if [ $var = cmce_apcp24h ] ; then 
 
- cyc_fhr_ok=0
- cyc_fhr_missing=0
- for cyc in  12 ; do 
+ ihour_fhr_ok=0
+ ihour_fhr_missing=0
+ for ihour in  12 ; do 
 
-  obsv_cyc=${vday}${cyc}
+  obsv_time=${vday}${ihour}
 
   fhr=24
 
@@ -407,14 +407,14 @@ if [ $var = cmce_apcp24h ] ; then
     hhh=$fhr
     typeset -Z3 hhh
 
-    fcst_time=`$NDATE -$fhr $obsv_cyc`
+    fcst_time=`$NDATE -$fhr $obsv_time`
     fday=${fcst_time:0:8}
-    fcyc=${fcst_time:8:2}
+    ihour=${fcst_time:8:2}
 
     cmce_apcp24h_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ; do 
     #for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      cmce_apcp24h=$EVSIN.${fday}/cmce/cmce.ens${mb}.t${fcyc}z.grid3.24h.f${hhh}.nc
+      cmce_apcp24h=$EVSIN.${fday}/cmce/cmce.ens${mb}.t${ihour}z.grid3.24h.f${hhh}.nc
       #echo $cmce_apcp24h
 
       if [ -s $cmce_apcp24h ] ; then
@@ -423,9 +423,9 @@ if [ $var = cmce_apcp24h ] ; then
     done
 
     if [ $cmce_apcp24h_mbrs -eq 20 ] ; then
-      cyc_fhr_ok=$((cyc_fhr_ok+1))
+      ihour_fhr_ok=$((ihour_fhr_ok+1))
     else  
-      cyc_fhr_missing=$((cyc_fhr_missing+1))
+      ihour_fhr_missing=$((ihour_fhr_missing+1))
     fi
 
     fhr=$((fhr+12))
@@ -433,10 +433,10 @@ if [ $var = cmce_apcp24h ] ; then
   done
      
  done
-   echo cyc_fhr_ok=$cyc_fhr_ok
-   echo cyc_fhr_missing=$cyc_fhr_missing
-   if [ $cyc_fhr_ok -eq 0 ] ; then
-    echo cyc_missing_fhr=0 member files for all cyc and fhr are missing, exit execution of METPlus!
+   echo ihour_fhr_ok=$ihour_fhr_ok
+   echo ihour_fhr_missing=$ihour_fhr_missing
+   if [ $ihour_fhr_ok -eq 0 ] ; then
+    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
     exit
    else
     echo at least there are some cmce_apcp24h member files!
@@ -449,11 +449,11 @@ fi
 
 if [ $var = ecme_apcp24h ] ; then 
 
- cyc_fhr_ok=0
- cyc_fhr_missing=0
- for cyc in  12 ; do 
+ ihour_fhr_ok=0
+ ihour_fhr_missing=0
+ for ihour in  12 ; do 
 
-  obsv_cyc=${vday}${cyc}
+  obsv_time=${vday}${ihour}
 
   fhr=24
 
@@ -462,14 +462,14 @@ if [ $var = ecme_apcp24h ] ; then
     hhh=$fhr
     typeset -Z3 hhh
 
-    fcst_time=`$NDATE -$fhr $obsv_cyc`
+    fcst_time=`$NDATE -$fhr $obsv_time`
     fday=${fcst_time:0:8}
-    fcyc=${fcst_time:8:2}
+    ihour=${fcst_time:8:2}
 
     ecme_apcp24h_mbrs=0
     #for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ; do 
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      ecme_apcp24h=$EVSIN.${fday}/ecme/ecme.ens${mb}.t${fcyc}z.grid4.24h.f${hhh}.nc
+      ecme_apcp24h=$EVSIN.${fday}/ecme/ecme.ens${mb}.t${ihour}z.grid4.24h.f${hhh}.nc
       #echo $ecme_apcp24h
 
       if [ -s $ecme_apcp24h ] ; then
@@ -478,9 +478,9 @@ if [ $var = ecme_apcp24h ] ; then
     done
 
     if [ $ecme_apcp24h_mbrs -eq 50 ] ; then
-      cyc_fhr_ok=$((cyc_fhr_ok+1))
+      ihour_fhr_ok=$((ihour_fhr_ok+1))
     else  
-      cyc_fhr_missing=$((cyc_fhr_missing+1))
+      ihour_fhr_missing=$((ihour_fhr_missing+1))
     fi
 
     fhr=$((fhr+12))
@@ -488,10 +488,10 @@ if [ $var = ecme_apcp24h ] ; then
   done
      
  done
-   echo cyc_fhr_ok=$cyc_fhr_ok
-   echo cyc_fhr_missing=$cyc_fhr_missing
-   if [ $cyc_fhr_ok -eq 0 ] ; then
-    echo cyc_missing_fhr=0 member files for all cyc and fhr are missing, exit execution of METPlus!
+   echo ihour_fhr_ok=$ihour_fhr_ok
+   echo ihour_fhr_missing=$ihour_fhr_missing
+   if [ $ihour_fhr_ok -eq 0 ] ; then
+    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
     exit
    else
     echo at least there are some ecme_apcp24h member files!
@@ -503,11 +503,11 @@ fi
 
 if [ $var = gefs_icec_24h ] ; then 
 
- cyc_fhr_ok=0
- cyc_fhr_missing=0
- for cyc in 00 ; do 
+ ihour_fhr_ok=0
+ ihour_fhr_missing=0
+ for ihour in 00 ; do 
 
-  obsv_cyc=${vday}${cyc}
+  obsv_time=${vday}${ihour}
 
   fhr=24
 
@@ -516,14 +516,14 @@ if [ $var = gefs_icec_24h ] ; then
     hhh=$fhr
     typeset -Z3 hhh
 
-    fcst_time=`$NDATE -$fhr $obsv_cyc`
+    fcst_time=`$NDATE -$fhr $obsv_time`
     fday=${fcst_time:0:8}
-    fcyc=${fcst_time:8:2}
+    ihour=${fcst_time:8:2}
 
     gefs_icec_24h_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do 
     #for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      gefs_icec_24h=$EVSIN.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.icec_24h.f${hhh}.nc
+      gefs_icec_24h=$EVSIN.${fday}/gefs/gefs.ens${mb}.t${ihour}z.grid3.icec_24h.f${hhh}.nc
       #echo $gefs_icec_24h
 
       if [ -s $gefs_icec_24h ] ; then
@@ -532,9 +532,9 @@ if [ $var = gefs_icec_24h ] ; then
     done
 
     if [ $gefs_icec_24h_mbrs -eq 30 ] ; then
-      cyc_fhr_ok=$((cyc_fhr_ok+1))
+      ihour_fhr_ok=$((ihour_fhr_ok+1))
     else  
-      cyc_fhr_missing=$((cyc_fhr_missing+1))
+      ihour_fhr_missing=$((ihour_fhr_missing+1))
     fi
 
     fhr=$((fhr+12))
@@ -542,10 +542,10 @@ if [ $var = gefs_icec_24h ] ; then
   done
      
  done
-   echo cyc_fhr_ok=$cyc_fhr_ok
-   echo cyc_fhr_missing=$cyc_fhr_missing
-   if [ $cyc_fhr_ok -eq 0 ] ; then
-    echo cyc_missing_fhr=0 member files for all cyc and fhr are missing, exit execution of METPlus!
+   echo ihour_fhr_ok=$ihour_fhr_ok
+   echo ihour_fhr_missing=$ihour_fhr_missing
+   if [ $ihour_fhr_ok -eq 0 ] ; then
+    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
     exit
    else
     echo at least there are some gefs_icec_24h member files!
@@ -558,11 +558,11 @@ fi
 
 if [ $var = gefs_sst24h ] ; then 
 
- cyc_fhr_ok=0
- cyc_fhr_missing=0
- for cyc in 00 ; do 
+ ihour_fhr_ok=0
+ ihour_fhr_missing=0
+ for ihour in 00 ; do 
 
-  obsv_cyc=${vday}${cyc}
+  obsv_time=${vday}${ihour}
 
   fhr=24
 
@@ -571,14 +571,14 @@ if [ $var = gefs_sst24h ] ; then
     hhh=$fhr
     typeset -Z3 hhh
 
-    fcst_time=`$NDATE -$fhr $obsv_cyc`
+    fcst_time=`$NDATE -$fhr $obsv_time`
     fday=${fcst_time:0:8}
-    fcyc=${fcst_time:8:2}
+    ihour=${fcst_time:8:2}
 
     gefs_sst24h_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do 
     #for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      gefs_sst24h=$EVSIN.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.sst24h.f${hhh}.nc
+      gefs_sst24h=$EVSIN.${fday}/gefs/gefs.ens${mb}.t${ihour}z.grid3.sst24h.f${hhh}.nc
       #echo $gefs_sst24h
 
       if [ -s $gefs_sst24h ] ; then
@@ -587,9 +587,9 @@ if [ $var = gefs_sst24h ] ; then
     done
 
     if [ $gefs_sst24h_mbrs -eq 30 ] ; then
-      cyc_fhr_ok=$((cyc_fhr_ok+1))
+      ihour_fhr_ok=$((ihour_fhr_ok+1))
     else  
-      cyc_fhr_missing=$((cyc_fhr_missing+1))
+      ihour_fhr_missing=$((ihour_fhr_missing+1))
     fi
 
     fhr=$((fhr+12))
@@ -597,10 +597,10 @@ if [ $var = gefs_sst24h ] ; then
   done
      
  done
-   echo cyc_fhr_ok=$cyc_fhr_ok
-   echo cyc_fhr_missing=$cyc_fhr_missing
-   if [ $cyc_fhr_ok -eq 0 ] ; then
-    echo cyc_missing_fhr=0 member files for all cyc and fhr are missing, exit execution of METPlus!
+   echo ihour_fhr_ok=$ihour_fhr_ok
+   echo ihour_fhr_missing=$ihour_fhr_missing
+   if [ $ihour_fhr_ok -eq 0 ] ; then
+    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
     exit
    else
     echo at least there are some gefs_sst24h member files!
@@ -612,11 +612,11 @@ fi
 
 if [ $var = gefs_WEASD ] ; then 
 
- cyc_fhr_ok=0
- cyc_fhr_missing=0
- for cyc in 00 12 ; do 
+ ihour_fhr_ok=0
+ ihour_fhr_missing=0
+ for ihour in 00 12 ; do 
 
-  obsv_cyc=${vday}${cyc}
+  obsv_time=${vday}${ihour}
 
   fhr=24
 
@@ -625,14 +625,14 @@ if [ $var = gefs_WEASD ] ; then
     hhh=$fhr
     typeset -Z3 hhh
 
-    fcst_time=`$NDATE -$fhr $obsv_cyc`
+    fcst_time=`$NDATE -$fhr $obsv_time`
     fday=${fcst_time:0:8}
-    fcyc=${fcst_time:8:2}
+    ihour=${fcst_time:8:2}
 
     gefs_WEASD_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do 
     #for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      gefs_WEASD=$EVSIN.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.WEASD_24h.f${hhh}.nc
+      gefs_WEASD=$EVSIN.${fday}/gefs/gefs.ens${mb}.t${ihour}z.grid3.WEASD_24h.f${hhh}.nc
       #echo $gefs_WEASD
 
       if [ -s $gefs_WEASD ] ; then
@@ -641,9 +641,9 @@ if [ $var = gefs_WEASD ] ; then
     done
 
     if [ $gefs_WEASD_mbrs -eq 30 ] ; then
-      cyc_fhr_ok=$((cyc_fhr_ok+1))
+      ihour_fhr_ok=$((ihour_fhr_ok+1))
     else  
-      cyc_fhr_missing=$((cyc_fhr_missing+1))
+      ihour_fhr_missing=$((ihour_fhr_missing+1))
     fi
 
     fhr=$((fhr+12))
@@ -651,10 +651,10 @@ if [ $var = gefs_WEASD ] ; then
   done
      
  done
-   echo cyc_fhr_ok=$cyc_fhr_ok
-   echo cyc_fhr_missing=$cyc_fhr_missing
-   if [ $cyc_fhr_ok -eq 0 ] ; then
-    echo cyc_missing_fhr=0 member files for all cyc and fhr are missing, exit execution of METPlus!
+   echo ihour_fhr_ok=$ihour_fhr_ok
+   echo ihour_fhr_missing=$ihour_fhr_missing
+   if [ $ihour_fhr_ok -eq 0 ] ; then
+    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
     exit
    else
     echo at least there are some gefs_WEASD member files!
@@ -666,11 +666,11 @@ fi
 
 if [ $var = gefs_SNOD ] ; then 
 
- cyc_fhr_ok=0
- cyc_fhr_missing=0
- for cyc in 00 12 ; do 
+ ihour_fhr_ok=0
+ ihour_fhr_missing=0
+ for ihour in 00 12 ; do 
 
-  obsv_cyc=${vday}${cyc}
+  obsv_time=${vday}${ihour}
 
   fhr=24
 
@@ -679,14 +679,14 @@ if [ $var = gefs_SNOD ] ; then
     hhh=$fhr
     typeset -Z3 hhh
 
-    fcst_time=`$NDATE -$fhr $obsv_cyc`
+    fcst_time=`$NDATE -$fhr $obsv_time`
     fday=${fcst_time:0:8}
-    fcyc=${fcst_time:8:2}
+    ihour=${fcst_time:8:2}
 
     gefs_SNOD_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do 
     #for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      gefs_SNOD=$EVSIN.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.SNOD_24h.f${hhh}.nc
+      gefs_SNOD=$EVSIN.${fday}/gefs/gefs.ens${mb}.t${ihour}z.grid3.SNOD_24h.f${hhh}.nc
       #echo $gefs_SNOD
 
       if [ -s $gefs_SNOD ] ; then
@@ -695,9 +695,9 @@ if [ $var = gefs_SNOD ] ; then
     done
 
     if [ $gefs_SNOD_mbrs -eq 30 ] ; then
-      cyc_fhr_ok=$((cyc_fhr_ok+1))
+      ihour_fhr_ok=$((ihour_fhr_ok+1))
     else  
-      cyc_fhr_missing=$((cyc_fhr_missing+1))
+      ihour_fhr_missing=$((ihour_fhr_missing+1))
     fi
 
     fhr=$((fhr+12))
@@ -705,10 +705,10 @@ if [ $var = gefs_SNOD ] ; then
   done
      
  done
-   echo cyc_fhr_ok=$cyc_fhr_ok
-   echo cyc_fhr_missing=$cyc_fhr_missing
-   if [ $cyc_fhr_ok -eq 0 ] ; then
-    echo cyc_missing_fhr=0 member files for all cyc and fhr are missing, exit execution of METPlus!
+   echo ihour_fhr_ok=$ihour_fhr_ok
+   echo ihour_fhr_missing=$ihour_fhr_missing
+   if [ $ihour_fhr_ok -eq 0 ] ; then
+    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
     exit
    else
     echo at least there are some gefs_SNOD member files!
@@ -721,11 +721,11 @@ fi
 
 if [ $var = cmce_SNOD ] ; then 
 
- cyc_fhr_ok=0
- cyc_fhr_missing=0
- for cyc in 00 12 ; do 
+ ihour_fhr_ok=0
+ ihour_fhr_missing=0
+ for ihour in 00 12 ; do 
 
-  obsv_cyc=${vday}${cyc}
+  obsv_time=${vday}${ihour}
 
   fhr=24
 
@@ -734,14 +734,14 @@ if [ $var = cmce_SNOD ] ; then
     hhh=$fhr
     typeset -Z3 hhh
 
-    fcst_time=`$NDATE -$fhr $obsv_cyc`
+    fcst_time=`$NDATE -$fhr $obsv_time`
     fday=${fcst_time:0:8}
-    fcyc=${fcst_time:8:2}
+    ihour=${fcst_time:8:2}
 
     cmce_SNOD_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20; do 
     #for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      cmce_SNOD=$EVSIN.${fday}/cmce/cmce.ens${mb}.t${fcyc}z.grid3.SNOD_24h.f${hhh}.nc
+      cmce_SNOD=$EVSIN.${fday}/cmce/cmce.ens${mb}.t${ihour}z.grid3.SNOD_24h.f${hhh}.nc
       #echo $cmce_SNOD
 
       if [ -s $cmce_SNOD ] ; then
@@ -750,9 +750,9 @@ if [ $var = cmce_SNOD ] ; then
     done
 
     if [ $cmce_SNOD_mbrs -eq 20 ] ; then
-      cyc_fhr_ok=$((cyc_fhr_ok+1))
+      ihour_fhr_ok=$((ihour_fhr_ok+1))
     else  
-      cyc_fhr_missing=$((cyc_fhr_missing+1))
+      ihour_fhr_missing=$((ihour_fhr_missing+1))
     fi
 
     fhr=$((fhr+12))
@@ -760,10 +760,10 @@ if [ $var = cmce_SNOD ] ; then
   done
      
  done
-   echo cyc_fhr_ok=$cyc_fhr_ok
-   echo cyc_fhr_missing=$cyc_fhr_missing
-   if [ $cyc_fhr_ok -eq 0 ] ; then
-    echo cyc_missing_fhr=0 member files for all cyc and fhr are missing, exit execution of METPlus!
+   echo ihour_fhr_ok=$ihour_fhr_ok
+   echo ihour_fhr_missing=$ihour_fhr_missing
+   if [ $ihour_fhr_ok -eq 0 ] ; then
+    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
     exit
    else
     echo at least there are some cmce_SNOD member files!
@@ -777,11 +777,11 @@ fi
 
 if [ $var = cmce_WEASD ] ; then 
 
- cyc_fhr_ok=0
- cyc_fhr_missing=0
- for cyc in 00 12 ; do 
+ ihour_fhr_ok=0
+ ihour_fhr_missing=0
+ for ihour in 00 12 ; do 
 
-  obsv_cyc=${vday}${cyc}
+  obsv_time=${vday}${ihour}
 
   fhr=24
 
@@ -790,14 +790,14 @@ if [ $var = cmce_WEASD ] ; then
     hhh=$fhr
     typeset -Z3 hhh
 
-    fcst_time=`$NDATE -$fhr $obsv_cyc`
+    fcst_time=`$NDATE -$fhr $obsv_time`
     fday=${fcst_time:0:8}
-    fcyc=${fcst_time:8:2}
+    ihour=${fcst_time:8:2}
 
     cmce_WEASD_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20; do 
     #for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      cmce_WEASD=$EVSIN.${fday}/cmce/cmce.ens${mb}.t${fcyc}z.grid3.WEASD_24h.f${hhh}.nc
+      cmce_WEASD=$EVSIN.${fday}/cmce/cmce.ens${mb}.t${ihour}z.grid3.WEASD_24h.f${hhh}.nc
       #echo $cmce_WEASD
 
       if [ -s $cmce_WEASD ] ; then
@@ -806,9 +806,9 @@ if [ $var = cmce_WEASD ] ; then
     done
 
     if [ $cmce_WEASD_mbrs -eq 20 ] ; then
-      cyc_fhr_ok=$((cyc_fhr_ok+1))
+      ihour_fhr_ok=$((ihour_fhr_ok+1))
     else  
-      cyc_fhr_missing=$((cyc_fhr_missing+1))
+      ihour_fhr_missing=$((ihour_fhr_missing+1))
     fi
 
     fhr=$((fhr+12))
@@ -816,10 +816,10 @@ if [ $var = cmce_WEASD ] ; then
   done
      
  done
-   echo cyc_fhr_ok=$cyc_fhr_ok
-   echo cyc_fhr_missing=$cyc_fhr_missing
-   if [ $cyc_fhr_ok -eq 0 ] ; then
-    echo cyc_missing_fhr=0 member files for all cyc and fhr are missing, exit execution of METPlus!
+   echo ihour_fhr_ok=$ihour_fhr_ok
+   echo ihour_fhr_missing=$ihour_fhr_missing
+   if [ $ihour_fhr_ok -eq 0 ] ; then
+    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
     exit
    else
     echo at least there are some cmce_WEASD member files!
@@ -832,11 +832,11 @@ fi
 
 if [ $var = ecme_weasd ] ; then 
 
- cyc_fhr_ok=0
- cyc_fhr_missing=0
- for cyc in 00 12 ; do 
+ ihour_fhr_ok=0
+ ihour_fhr_missing=0
+ for ihour in 00 12 ; do 
 
-  obsv_cyc=${vday}${cyc}
+  obsv_time=${vday}${ihour}
 
   fhr=24
 
@@ -845,14 +845,14 @@ if [ $var = ecme_weasd ] ; then
     hhh=$fhr
     typeset -Z3 hhh
 
-    fcst_time=`$NDATE -$fhr $obsv_cyc`
+    fcst_time=`$NDATE -$fhr $obsv_time`
     fday=${fcst_time:0:8}
-    fcyc=${fcst_time:8:2}
+    ihour=${fcst_time:8:2}
 
     ecme_weasd_mbrs=0
     #for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20; do 
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do 
-      ecme_weasd=$EVSIN.${fday}/ecme/ecme.ens${mb}.t${fcyc}z.grid4.weasd_24h.f${hhh}.nc
+      ecme_weasd=$EVSIN.${fday}/ecme/ecme.ens${mb}.t${ihour}z.grid4.weasd_24h.f${hhh}.nc
       #echo $ecme_weasd
 
       if [ -s $ecme_weasd ] ; then
@@ -861,9 +861,9 @@ if [ $var = ecme_weasd ] ; then
     done
 
     if [ $ecme_weasd_mbrs -eq 50 ] ; then
-      cyc_fhr_ok=$((cyc_fhr_ok+1))
+      ihour_fhr_ok=$((ihour_fhr_ok+1))
     else  
-      cyc_fhr_missing=$((cyc_fhr_missing+1))
+      ihour_fhr_missing=$((ihour_fhr_missing+1))
     fi
 
     fhr=$((fhr+12))
@@ -871,10 +871,10 @@ if [ $var = ecme_weasd ] ; then
   done
      
  done
-   echo cyc_fhr_ok=$cyc_fhr_ok
-   echo cyc_fhr_missing=$cyc_fhr_missing
-   if [ $cyc_fhr_ok -eq 0 ] ; then
-    echo cyc_missing_fhr=0 member files for all cyc and fhr are missing, exit execution of METPlus!
+   echo ihour_fhr_ok=$ihour_fhr_ok
+   echo ihour_fhr_missing=$ihour_fhr_missing
+   if [ $ihour_fhr_ok -eq 0 ] ; then
+    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
     exit
    else
     echo at least there are some ecme_weasd member files!
@@ -887,12 +887,12 @@ fi
 
 if [ $var = headline_gefs ] ; then 
 
- cyc_fhr_ok=0
- cyc_fhr_missing=0
+ ihour_fhr_ok=0
+ ihour_fhr_missing=0
 
- for cyc in  00 ; do 
+ for ihour in  00 ; do 
 
-  obsv_cyc=${vday}${cyc}
+  obsv_time=${vday}${ihour}
 
   fhr=024
 
@@ -901,13 +901,13 @@ if [ $var = headline_gefs ] ; then
     hhh=$fhr
     typeset -Z3 hhh
 
-    fcst_time=`$NDATE -$fhr $obsv_cyc`
+    fcst_time=`$NDATE -$fhr $obsv_time`
     fday=${fcst_time:0:8}
-    fcyc=${fcst_time:8:2}
+    ihour=${fcst_time:8:2}
 
     gefs_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do 
-      gefs=$EVSIN.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.f${hhh}.grib2
+      gefs=$EVSIN.${fday}/gefs/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
       #echo $gefs
 
       if [ -s $gefs ] ; then
@@ -916,10 +916,10 @@ if [ $var = headline_gefs ] ; then
     done
 
     if [ $gefs_mbrs -eq 30 ] ; then
-      #echo "gefs members = " $gefs_mbrs "  for cyc=$cyc  f${hhh} !!!"
-      cyc_fhr_ok=$((cyc_fhr_ok+1))
+      #echo "gefs members = " $gefs_mbrs "  for ihour=$ihour  f${hhh} !!!"
+      ihour_fhr_ok=$((ihour_fhr_ok+1))
     else  
-      cyc_fhr_missing=$((cyc_fhr_missing+1))
+      ihour_fhr_missing=$((ihour_fhr_missing+1))
     fi
 
     fhr=$((fhr+24))
@@ -927,10 +927,10 @@ if [ $var = headline_gefs ] ; then
   done
      
  done
-   echo cyc_fhr_ok=$cyc_fhr_ok
-   echo cyc_fhr_missing=$cyc_fhr_missing
-   if [ $cyc_fhr_ok -eq 0 ] ; then
-    echo cyc_missing_fhr=0 member files for all cyc and fhr are missing, exit execution of METPlus!
+   echo ihour_fhr_ok=$ihour_fhr_ok
+   echo ihour_fhr_missing=$ihour_fhr_missing
+   if [ $ihour_fhr_ok -eq 0 ] ; then
+    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
     exit
    else
     echo at least there are some gefs member files!
@@ -942,11 +942,11 @@ fi
 
 if [ $var = headline_cmce ] ; then 
 
- cyc_fhr_ok=0
- cyc_fhr_missing=0
- for cyc in  00 ; do 
+ ihour_fhr_ok=0
+ ihour_fhr_missing=0
+ for ihour in  00 ; do 
 
-  obsv_cyc=${vday}${cyc}
+  obsv_time=${vday}${ihour}
 
   fhr=024
 
@@ -955,13 +955,13 @@ if [ $var = headline_cmce ] ; then
     hhh=$fhr
     typeset -Z3 hhh
 
-    fcst_time=`$NDATE -$fhr $obsv_cyc`
+    fcst_time=`$NDATE -$fhr $obsv_time`
     fday=${fcst_time:0:8}
-    fcyc=${fcst_time:8:2}
+    ihour=${fcst_time:8:2}
 
     cmce_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ; do 
-      cmce=$EVSIN.${fday}/cmce/cmce.ens${mb}.t${fcyc}z.grid3.f${hhh}.grib2
+      cmce=$EVSIN.${fday}/cmce/cmce.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
       #echo $cmce
 
       if [ -s $cmce ] ; then
@@ -970,10 +970,10 @@ if [ $var = headline_cmce ] ; then
     done
 
     if [ $cmce_mbrs -eq 20 ] ; then
-      #echo "cmce members = " $cmce_mbrs "  for cyc=$cyc  f${hhh} !!!"
-      cyc_fhr_ok=$((cyc_fhr_ok+1))
+      #echo "cmce members = " $cmce_mbrs "  for ihour=$ihour  f${hhh} !!!"
+      ihour_fhr_ok=$((ihour_fhr_ok+1))
     else  
-      cyc_fhr_missing=$((cyc_fhr_missing+1))
+      ihour_fhr_missing=$((ihour_fhr_missing+1))
     fi
 
     fhr=$((fhr+24))
@@ -981,10 +981,10 @@ if [ $var = headline_cmce ] ; then
   done
      
  done
-   echo cyc_fhr_ok=$cyc_fhr_ok
-   echo cyc_fhr_missing=$cyc_fhr_missing
-   if [ $cyc_fhr_ok -eq 0 ] ; then
-    echo cyc_missing_fhr=0 member files for all cyc and fhr are missing, exit execution of METPlus!
+   echo ihour_fhr_ok=$ihour_fhr_ok
+   echo ihour_fhr_missing=$ihour_fhr_missing
+   if [ $ihour_fhr_ok -eq 0 ] ; then
+    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
     exit
    else
     echo at least there are some cmce member files!
@@ -1015,9 +1015,9 @@ fi
 
 if [ $var = headline_gfs ] ; then 
 
- for cyc in  00 ; do 
+ for ihour in  00 ; do 
 
-  obsv_cyc=${vday}${cyc}
+  obsv_time=${vday}${ihour}
   fhr=024
 
   while [ $fhr -le 384 ] ; do
@@ -1025,11 +1025,11 @@ if [ $var = headline_gfs ] ; then
     hhh=$fhr
     typeset -Z3 hhh
 
-    fcst_time=`$NDATE -$fhr $obsv_cyc`
+    fcst_time=`$NDATE -$fhr $obsv_time`
     fday=${fcst_time:0:8}
-    fcyc=${fcst_time:8:2}
+    ihour=${fcst_time:8:2}
 
-    gfs=$EVSIN.${fday}/gefs/gfs.t${fcyc}z.grid3.f${hhh}.grib2
+    gfs=$EVSIN.${fday}/gefs/gfs.t${ihour}z.grid3.f${hhh}.grib2
     if [ ! -s $gfs ] ; then
       echo $gfs not existing, exit METplus execution!
       exit
@@ -1051,11 +1051,11 @@ fi
 if [ $var = wmo_cmce ] ; then 
 
  echo COM_IN=$COM_IN
- cyc_fhr_ok=0
- cyc_fhr_missing=0
- for cyc in  00 ; do 
+ ihour_fhr_ok=0
+ ihour_fhr_missing=0
+ for ihour in  00 ; do 
 
-  obsv_cyc=${vday}${cyc}
+  obsv_time=${vday}${ihour}
 
   fhr=024
 
@@ -1064,13 +1064,13 @@ if [ $var = wmo_cmce ] ; then
     hhh=$fhr
     typeset -Z3 hhh
 
-    fcst_time=`$NDATE -$fhr $obsv_cyc`
+    fcst_time=`$NDATE -$fhr $obsv_time`
     fday=${fcst_time:0:8}
-    fcyc=${fcst_time:8:2}
+    ihour=${fcst_time:8:2}
 
     cmce_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ; do 
-      cmce=$COM_IN/atmos.${fday}/cmce/cmce.ens${mb}.t${fcyc}z.grid3.f${hhh}.grib2
+      cmce=$COM_IN/atmos.${fday}/cmce/cmce.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
       #echo $cmce
 
       if [ -s $cmce ] ; then
@@ -1079,9 +1079,9 @@ if [ $var = wmo_cmce ] ; then
     done
 
     if [ $cmce_mbrs -eq 20 ] ; then
-      cyc_fhr_ok=$((cyc_fhr_ok+1))
+      ihour_fhr_ok=$((ihour_fhr_ok+1))
     else  
-      cyc_fhr_missing=$((cyc_fhr_missing+1))
+      ihour_fhr_missing=$((ihour_fhr_missing+1))
     fi
 
     fhr=$((fhr+24))
@@ -1089,10 +1089,10 @@ if [ $var = wmo_cmce ] ; then
   done
      
  done
-   echo cyc_fhr_ok=$cyc_fhr_ok
-   echo cyc_fhr_missing=$cyc_fhr_missing
-   if [ $cyc_fhr_ok -eq 0 ] ; then
-    echo cyc_missing_fhr=0 member files for all cyc and fhr are missing, exit execution of METPlus!
+   echo ihour_fhr_ok=$ihour_fhr_ok
+   echo ihour_fhr_missing=$ihour_fhr_missing
+   if [ $ihour_fhr_ok -eq 0 ] ; then
+    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
     exit
    else
     echo at least there are some cmce member files!
@@ -1115,11 +1115,11 @@ fi
 
 if [ $var = wmo_gefs ] ; then 
 
- cyc_fhr_ok=0
- cyc_fhr_missing=0
- for cyc in  00 ; do 
+ ihour_fhr_ok=0
+ ihour_fhr_missing=0
+ for ihour in  00 ; do 
 
-  obsv_cyc=${vday}${cyc}
+  obsv_time=${vday}${ihour}
 
   fhr=024
 
@@ -1128,13 +1128,13 @@ if [ $var = wmo_gefs ] ; then
     hhh=$fhr
     typeset -Z3 hhh
 
-    fcst_time=`$NDATE -$fhr $obsv_cyc`
+    fcst_time=`$NDATE -$fhr $obsv_time`
     fday=${fcst_time:0:8}
-    fcyc=${fcst_time:8:2}
+    ihour=${fcst_time:8:2}
 
     gefs_mbrs=0
     for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30; do 
-      gefs=$COM_IN/atmos.${fday}/gefs/gefs.ens${mb}.t${fcyc}z.grid3.f${hhh}.grib2
+      gefs=$COM_IN/atmos.${fday}/gefs/gefs.ens${mb}.t${ihour}z.grid3.f${hhh}.grib2
       #echo $gefs
 
       if [ -s $gefs ] ; then
@@ -1143,9 +1143,9 @@ if [ $var = wmo_gefs ] ; then
     done
 
     if [ $gefs_mbrs -eq 30 ] ; then
-      cyc_fhr_ok=$((cyc_fhr_ok+1))
+      ihour_fhr_ok=$((ihour_fhr_ok+1))
     else  
-      cyc_fhr_missing=$((cyc_fhr_missing+1))
+      ihour_fhr_missing=$((ihour_fhr_missing+1))
     fi
 
     fhr=$((fhr+24))
@@ -1153,10 +1153,10 @@ if [ $var = wmo_gefs ] ; then
   done
      
  done
-   echo cyc_fhr_ok=$cyc_fhr_ok
-   echo cyc_fhr_missing=$cyc_fhr_missing
-   if [ $cyc_fhr_ok -eq 0 ] ; then
-    echo cyc_missing_fhr=0 member files for all cyc and fhr are missing, exit execution of METPlus!
+   echo ihour_fhr_ok=$ihour_fhr_ok
+   echo ihour_fhr_missing=$ihour_fhr_missing
+   if [ $ihour_fhr_ok -eq 0 ] ; then
+    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
     exit
    else
     echo at least there are some gefs member files!

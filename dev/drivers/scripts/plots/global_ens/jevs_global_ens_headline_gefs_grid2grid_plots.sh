@@ -31,7 +31,7 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 export KEEPDATA=YES
 export SENDDBN=NO
 
-export cyc=00
+export vhr=00
 export run_mpi=no
 export run_entire_year=no
 

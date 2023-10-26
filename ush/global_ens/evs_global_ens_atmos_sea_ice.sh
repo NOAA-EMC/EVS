@@ -49,7 +49,7 @@ echo $COM_IN
 
 
 anl=osi_saf
-export cyc='00'
+export vhour='00'
 
 
 if [ $verify = sea_ice ] ; then 
@@ -73,53 +73,53 @@ if [ $verify = sea_ice ] ; then
         export vday1=${past:0:8}
 	export period=multi.${vday1}00to${vday}00_G004
         
-        >run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
+        >run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
 
-	echo  "export average=$average" >>  run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
-	echo  "export period=$period"  >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
-        echo  "export output_base=${WORK}/${verify}/run_${modnam}_valid_at_t${cyc}z_${verify}_${average}" >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
+	echo  "export average=$average" >>  run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
+	echo  "export period=$period"  >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
+        echo  "export output_base=${WORK}/${verify}/run_${modnam}_valid_at_t${vhour}z_${verify}_${average}" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
 
-        echo  "export modelpath=$COM_IN" >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
+        echo  "export modelpath=$COM_IN" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
 
-        echo  "export OBTYPE=OSI_SAF" >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
-        echo  "export maskpath=$maskpath" >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
+        echo  "export OBTYPE=OSI_SAF" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
+        echo  "export maskpath=$maskpath" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
 
-        echo  "export obsvhead=$anl" >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
-        echo  "export obsvgrid=$period" >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
-        echo  "export obsvpath=$COM_IN" >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
+        echo  "export obsvhead=$anl" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
+        echo  "export obsvgrid=$period" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
+        echo  "export obsvpath=$COM_IN" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
      
-        echo  "export modelgrid=grid3.icec_${average}h.f" >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
-        echo  "export model=$modnam"  >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
-        echo  "export MODEL=$MODL" >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
-        echo  "export modelhead=$modnam" >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
+        echo  "export modelgrid=grid3.icec_${average}h.f" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
+        echo  "export model=$modnam"  >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
+        echo  "export MODEL=$MODL" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
+        echo  "export modelhead=$modnam" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
 
-        echo  "export vbeg=$cyc" >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
-        echo  "export vend=$cyc" >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
-        echo  "export valid_increment=21600" >>  run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
+        echo  "export vbeg=$vhour" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
+        echo  "export vend=$vhour" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
+        echo  "export valid_increment=21600" >>  run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
 
 
          if [ $average = 24 ] ; then
-	  echo  "export lead='24, 48, 72, 96, 120, 144, 168, 192, 216,  240,  264,  288,  312,  336,  360,  384' "  >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
-	  #echo  "export lead='24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384' "  >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
+	  echo  "export lead='24, 48, 72, 96, 120, 144, 168, 192, 216,  240,  264,  288,  312,  336,  360,  384' "  >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
+	  #echo  "export lead='24, 36, 48, 60, 72, 84, 96,108, 120, 132, 144, 156, 168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384' "  >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
          elif  [ $average = 168 ] ; then
-           echo  "export lead='168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384' "  >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
+           echo  "export lead='168, 180, 192,204, 216, 228, 240, 252, 264, 276, 288, 300, 312, 324, 336, 348, 360, 372, 384' "  >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
          fi
 
-        echo  "export modeltail='.nc'" >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
-        echo  "export members=$mbrs" >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
+        echo  "export modeltail='.nc'" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
+        echo  "export members=$mbrs" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
 
 
-        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/GenEnsProd_fcstGEFS_obsOSI_SAF.conf " >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
+        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/GenEnsProd_fcstGEFS_obsOSI_SAF.conf " >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
 
-	echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/EnsembleStat_fcstGEFS_obsOSI_SAF.conf " >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
+	echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/EnsembleStat_fcstGEFS_obsOSI_SAF.conf " >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
 
-        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/GridStat_fcstGEFS_obsOSI_SAF_mean.conf " >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
+        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/GridStat_fcstGEFS_obsOSI_SAF_mean.conf " >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
 
-        [[ $SENDCOM="YES" ]] && echo "cp \$output_base/stat/${modnam}/*.stat $COMOUTsmall" >> run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
+        [[ $SENDCOM="YES" ]] && echo "cp \$output_base/stat/${modnam}/*.stat $COMOUTsmall" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
 
-        chmod +x run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh
+        chmod +x run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh
 
-        echo "${DATA}/run_${modnam}_valid_at_t${cyc}z_${verify}_${average}.sh" >> run_all_gens_sea_ice_poe.sh
+        echo "${DATA}/run_${modnam}_valid_at_t${vhour}z_${verify}_${average}.sh" >> run_all_gens_sea_ice_poe.sh
 
    done 
 

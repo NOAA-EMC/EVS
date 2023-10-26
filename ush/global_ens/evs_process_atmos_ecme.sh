@@ -23,20 +23,18 @@ cnvgrib=$CNVGRIB
 
 
 CDATE=$1  #day+running init hour
-cyc=$2
+ihour=$2
 
 #CDATE=2021080200
-#cyc=00
-inithour=t${cyc}z
+#ihour=00
+inithour=t${ihour}z
 
 
 #####################################################################
 # Set date variables to process CDATE data  
 #
 #####################################################################
-
-#Binbin tdate=`$ndate -24 $CDATE | cut -c1-8`
-tdate=`$ndate 0 $CDATE | cut -c1-8`              #Binbin set tdate = CDATE 
+tdate=`$ndate 0 $CDATE | cut -c1-8`
 
 cent=`echo $tdate | cut -c1-2 `
 yy=`  echo $tdate | cut -c3-4 `
@@ -51,10 +49,10 @@ mm=`  echo $indate | cut -c5-6 `
 dd=`  echo $indate | cut -c7-8 `
 
 yyyymmdd=$indate
-yyyymmddhh=${yyyymmdd}${cyc}
-ymdh=${indate}${cyc}
-imdh=${mm}${dd}${cyc}
-hh=${cyc}
+yyyymmddhh=${yyyymmdd}${ihour}
+ymdh=${indate}${ihour}
+imdh=${mm}${dd}${ihour}
+hh=${ihour}
 echo " Date to copy is $indate"
 yymmddhh=${yy}${mm}${dd}${hh}
 
@@ -93,10 +91,10 @@ while [ ${hourix} -lt 31 ]; do
     DCD=${dcom}/$yyyymmdd/wgrbbul/ecmwf/DCD${imdh}00${vmdh}001
 
     if [ -s $DCD ] ; then
-      >$outdata/ecmanl.t${cyc}z.grid3.f000.grib1
+      >$outdata/ecmanl.t${ihour}z.grid3.f000.grib1
       for n in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 ; do
        $WGRIB $DCD|grep "${VAR[$n]}"|$WGRIB -i -grib $DCD -o x 
-       cat x >> $outdata/ecmanl.t${cyc}z.grid3.f000.grib1
+       cat x >> $outdata/ecmanl.t${ihour}z.grid3.f000.grib1
       done
      else
        if [ $SENDMAIL = YES ]; then
@@ -124,7 +122,7 @@ while [ ${hourix} -lt 31 ]; do
     m2=$mbr
     typeset -Z2 m2
      
-    $WGRIB E1E.${hourinc}|grep "forecast $mbr:"|$WGRIB -i -grib E1E.${hourinc} -o $outdata/ecme.ens${m2}.t${cyc}z.grid4.f${h3}.grib1
+    $WGRIB E1E.${hourinc}|grep "forecast $mbr:"|$WGRIB -i -grib E1E.${hourinc} -o $outdata/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
     mbr=$((mbr+1))
    
    done
@@ -159,7 +157,7 @@ while [ ${hourix} -lt 31 ]; do
     m2=$mbr
     typeset -Z2 m2
 
-    $WGRIB E1E_apcp.${hourinc}|grep "forecast $mbr:"|$WGRIB -i -grib E1E_apcp.${hourinc} -o $outdata/ecme.ens${m2}.t${cyc}z.grid4_apcp.f${h3}.grib1
+    $WGRIB E1E_apcp.${hourinc}|grep "forecast $mbr:"|$WGRIB -i -grib E1E_apcp.${hourinc} -o $outdata/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
     mbr=$((mbr+1))
 
    done
@@ -207,7 +205,7 @@ while [ ${hourix} -lt 31 ]; do
     typeset -Z2 m2
 
     $WGRIB E1E_vertical.${hourinc}|grep "forecast $mbr:"|$WGRIB -i -grib E1E_vertical.${hourinc} -o E1E_vertical.${hourinc}.mbr${mbr}
-    cat E1E_vertical.${hourinc}.mbr${mbr} >> $outdata/ecme.ens${m2}.t${cyc}z.grid4.f${h3}.grib1
+    cat E1E_vertical.${hourinc}.mbr${mbr} >> $outdata/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
 
     mbr=$((mbr+1))
 

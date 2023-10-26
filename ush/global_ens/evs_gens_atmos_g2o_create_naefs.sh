@@ -12,13 +12,13 @@ mkdir -p $WORK/naefs_g2o
 
  cd $WORK/naefs_g2o
 
-for vcyc in 00 12 ; do 
+for vhour in 00 12 ; do 
 
  for lead in $fhrs ; do
-   obsv_cyc=${vday}${vcyc}     #validation time: xxxx.tvcycz.f00
-   fcst_time=`$NDATE -$lead $obsv_cyc`
+   obsv_time=${vday}${vhour}     #validation time: xxxx.tvhourz.f00
+   fcst_time=`$NDATE -$lead $obsv_time`
    fyyyymmdd=${fcst_time:0:8}
-   fcyc=${fcst_time:8:2}
+   ihour=${fcst_time:8:2}
   
    fhr=$lead
    typeset -Z3 fhr
@@ -30,7 +30,7 @@ for vcyc in 00 12 ; do
    fi 
 
    for mbr in $mbrs ; do
-     ln -sf  ${EVSIN}.${fyyyymmdd}/gefs_bc/gefs_bc.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  naefs.ens${mbr}.${fyyyymmdd}.t${fcyc}z.grid3.f${fhr}.grib2
+     ln -sf  ${EVSIN}.${fyyyymmdd}/gefs_bc/gefs_bc.ens${mbr}.t${ihour}z.grid3.f${fhr}.grib2  naefs.ens${mbr}.${fyyyymmdd}.t${ihour}z.grid3.f${fhr}.grib2
    done
 
    for mb in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 ; do 
@@ -42,7 +42,7 @@ for vcyc in 00 12 ; do
        mbr40=$((mb+30))
      fi
 
-     ln -sf  ${EVSIN}.${fyyyymmdd}/cmce_bc/cmce_bc.ens${mbr}.t${fcyc}z.grid3.f${fhr}.grib2  naefs.ens${mbr40}.${fyyyymmdd}.t${fcyc}z.grid3.f${fhr}.grib2
+     ln -sf  ${EVSIN}.${fyyyymmdd}/cmce_bc/cmce_bc.ens${mbr}.t${ihour}z.grid3.f${fhr}.grib2  naefs.ens${mbr40}.${fyyyymmdd}.t${ihour}z.grid3.f${fhr}.grib2
    done
 
   

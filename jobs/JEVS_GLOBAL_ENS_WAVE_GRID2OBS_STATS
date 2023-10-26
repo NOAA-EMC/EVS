@@ -17,7 +17,7 @@ cd $DATA
 ##########################################
 # Run setpdy and initialize PDY variables 
 ##########################################
-export cycle=${cycle:-t${cyc}z}
+export cycle=${cycle:-t${vhr}z}
 setpdy.sh 17
 . ./PDY
 export VDATE=${VDATE:-${PDYm1}}
