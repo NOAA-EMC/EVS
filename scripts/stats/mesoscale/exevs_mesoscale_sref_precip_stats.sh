@@ -18,7 +18,7 @@ export met_verbosity=2
 export run_mpi=${run_mpi:-'yes'}
 export gather=${gather:-'yes'}
 
-export PRECIP_CONF=$PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}
+export PRECIP_CONF=$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}
 export MET_CONFIG=${METPLUS_BASE}/parm/met_config
 export maskpath=$MASKS
 

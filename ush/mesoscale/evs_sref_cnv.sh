@@ -59,6 +59,8 @@ for  obsv in prepbufr ; do
          done
        done
        
+
+
        echo "cd \$output_base/stat" >> run_sref_cnv_${fhr}.sh 
        echo "$USHevs/mesoscale/evs_sref_average_cnv.sh $fhr" >> run_sref_cnv_${fhr}.sh
 
@@ -72,6 +74,7 @@ for  obsv in prepbufr ; do
        chmod +x run_sref_cnv_${fhr}.sh
        echo "${DATA}/run_sref_cnv_${fhr}.sh" >> run_all_sref_cnv_poe.sh
 
+
   done
 
 done
@@ -83,6 +86,10 @@ if [ $run_mpi = yes ] ; then
 else
    ${DATA}/run_all_sref_cnv_poe.sh
 fi 
+
+echo "Print stat generation metplus log files begin:"
+ cat $DATA/grid2obs/*/logs/*
+echo "Print stat generation metplus log files end"
 
 if [ $gather = yes ] ; then 
   $USHevs/mesoscale/evs_sref_gather.sh $VERIF_CASE

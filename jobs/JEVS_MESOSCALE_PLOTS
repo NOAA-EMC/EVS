@@ -29,7 +29,7 @@ export MET_PLUS_PATH=${MET_PLUS_PATH:-$METPLUS_PATH}
 export MET_PATH=$MET_ROOT
 export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${model_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
@@ -52,9 +52,9 @@ export SENDMAIL=${SENDMAIL:-NO}
 ####################################
 # Run setpdy and initialize PDY variables
 ####################################
-export cycle=${cycle:-t${cyc}z}
-export cyc=${cyc:-00}
-export cycle=t${cyc}z
+export cycle=${cycle:-t${vhr}z}
+export vhr=${vhr:-00}
+export cycle=t${vhr}z
 setpdy.sh 31
 . ./PDY
 
@@ -99,6 +99,7 @@ fi
 ####################################
 # Define COMIN/COMOUT variables:
 ####################################
+export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
 export EVSINapcp24mean=${EVSINapcp24mean:-$COMIN/stats/$COMPONENT}
 export EVSINccpa=${EVSINccpa:-$COMIN/prep/cam/$RUN}
 export EVSINmrms=${EVSINmrms:-$COMIN/prep/cam/$RUN}
@@ -108,10 +109,10 @@ export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
 export COMOUTplots=${COMOUTplots:-$COMOUT/$RUN.$VDATE}
 
 if [ $MODELNAME = sref ] ; then
-  export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}	
+  export EVSIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}	
   mkdir -p $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE
 else
-  export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}/stats
+  export EVSIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}/stats
   mkdir -p $COMOUT
 fi
 

@@ -76,8 +76,14 @@ else
    ${DATA}/run_all_sref_g2o_poe.sh
 fi 
 
+echo "Print stat generation  metplus log files begin:"
+ cat $DATA/grid2obs/*/logs/*
+echo "Print stat generation  metplus log files end"
+
+
 if [ $gather = yes ] ; then 
   $USHevs/mesoscale/evs_sref_gather.sh $VERIF_CASE
 fi
+
 
 

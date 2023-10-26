@@ -385,7 +385,7 @@ def initalize_job_env_dict():
     job_env_var_list = [
         'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA',
         'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'evs_run_mode',
-        'COMROOT', 'COMIN', 'COMOUT', 'COMOUTsmall', 'COMOUTfinal',
+        'COMROOT', 'COMIN', 'COMOUT', 'COMOUTsmall', 'COMOUTfinal', 'EVSIN',
         'METPLUS_PATH','LOG_MET_OUTPUT_TO_METPLUS', 'METPLUS_VERBOSITY',
         'MET_ROOT', 'MET_VERBOSITY',
         'MET_TMP_DIR', 'MODELNAME', 'JOB_GROUP'
@@ -409,9 +409,9 @@ def metplus_command(conf_file_name):
                                'run_metplus.py')
     machine_conf = os.path.join(os.environ['PARMevs'], 'metplus_config',
                                 'machine.conf')
-    conf_file = os.path.join(os.environ['PARMevs'], 'metplus_config',
+    conf_file = os.path.join(os.environ['PARMevs'], 'metplus_config', os.environ['STEP'],
                              os.environ['COMPONENT'], os.environ['VERIF_CASE'],
-                             os.environ['STEP'], conf_file_name)
+                             conf_file_name)
     if not os.path.exists(conf_file):
         print("ERROR: "+conf_file+" DOES NOT EXIST")
         sys.exit(1)

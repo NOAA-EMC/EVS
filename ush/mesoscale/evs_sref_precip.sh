@@ -111,6 +111,10 @@ else
    ${DATA}/run_all_sref_precip_poe
 fi 
 
+echo "Print stat generation  metplus log files begin:"
+cat $DATA/precip/*/logs/*
+echo "Print stat generation  metplus log files end"
+
 
 if [ $gather = yes ] ; then
   $USHevs/mesoscale/evs_sref_gather.sh $VERIF_CASE

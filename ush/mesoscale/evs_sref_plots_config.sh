@@ -22,7 +22,6 @@
 #
 #                   $ PY_PLOT_DIR="/path/to/my/verif/plotting/home/directory"
 #                   $ mkdir -p ${PY_PLOT_DIR}/out/logs ${PY_PLOT_DIR}/data ${PY_PLOT_DIR}/ush
-#                   $ BASE_DIR="/gpfs/dell2/emc/verification/noscrub/Marcel.Caron/verif_plotting"
 #                   $ cp -r ${BASE_DIR}/ush/* ${PY_PLOT_DIR}/ush/.
 #                   $ cp ${BASE_DIR}/py_plotting.config ${PY_PLOT_DIR}/.
 #
