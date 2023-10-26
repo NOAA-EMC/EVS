@@ -84,11 +84,12 @@ if STEP == 'stats':
     date_dt = start_date_dt
     while date_dt <= end_date_dt:
         for model in model_list:
-            COMOUT_dir_list.append(
-                os.path.join(COMOUT,
-                             RUN+'.'+date_dt.strftime('%Y%m%d'), model,
-                             VERIF_CASE)
-            )
+            if VERIF_CASE_STEP == 'grid2obs_stats':
+                COMOUT_dir_list.append(
+                    os.path.join(COMOUT,
+                                 RUN+'.'+date_dt.strftime('%Y%m%d'), model,
+                                 VERIF_CASE)
+                )
             COMOUT_dir_list.append(
                 os.path.join(COMOUT,
                              model+'.'+date_dt.strftime('%Y%m%d'))
