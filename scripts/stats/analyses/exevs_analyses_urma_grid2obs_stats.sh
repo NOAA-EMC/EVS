@@ -119,7 +119,7 @@ then
 	 fi
 	fi
 
-# check for akurma urma file
+# check for Alaska urma file
 
         urmafound=0
 

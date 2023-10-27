@@ -302,7 +302,7 @@ then
     fi
    fi
 
-# Check for Guam urma file
+# Check for Guam rtma file
    
    if [ -s $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2 ]
    then
@@ -319,7 +319,7 @@ then
    fi
 fi
 
-# Run METplus for urma vs obs
+# Run METplus for rtma vs obs
 
 if [ ! -e $COMOUTsmall/point_stat_${modnam}${typtag}_${fhr}0000L_${VDATE}_${vhr}0000V.stat ]
 then
