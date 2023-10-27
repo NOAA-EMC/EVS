@@ -177,7 +177,7 @@ tmp_precip_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
 
 for MODEL in MODELNAME:
     if MODEL not in list(global_det_model_dict.keys()):
-        print("ERROR: "+MODEL+" not recongized")
+        print("FATAL ERROR: "+MODEL+" not recongized")
         sys.exit(1)
     if MODEL == 'cmc_regional':
         max_precip_fhr = 48
@@ -480,7 +480,7 @@ global_det_obs_dict = {
 
 for OBS in OBSNAME:
     if OBS not in list(global_det_obs_dict.keys()):
-        print("ERROR: "+OBS+" not recongized")
+        print("FATAL ERROR: "+OBS+" not recongized")
         sys.exit(1)
     print("---- Prepping data for "+OBS+" for init "+INITDATE)
     obs_dict = global_det_obs_dict[OBS]

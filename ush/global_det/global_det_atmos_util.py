@@ -35,8 +35,9 @@ def run_shell_command(command):
     else:
         run_command = subprocess.run(command)
     if run_command.returncode != 0:
-        print("ERROR: "+' '.join(run_command.args)+" gave return code "
+        print("FATAL ERROR: "+' '.join(run_command.args)+" gave return code "
               +str(run_command.returncode))
+        sys.exit(run_command.returncode)
 
 def make_dir(dir_path):
     """! Make a directory
@@ -71,7 +72,7 @@ def metplus_command(conf_file_name):
                              os.environ['RUN']+'_'+os.environ['VERIF_CASE'],
                              conf_file_name)
     if not os.path.exists(conf_file):
-        print("ERROR: "+conf_file+" DOES NOT EXIST")
+        print("FATAL ERROR: "+conf_file+" DOES NOT EXIST")
         sys.exit(1)
     metplus_cmd = run_metplus+' -c '+machine_conf+' -c '+conf_file
     return metplus_cmd
@@ -90,7 +91,7 @@ def python_command(python_script_name, script_arg_list):
     python_script = os.path.join(os.environ['USHevs'], os.environ['COMPONENT'],
                                  python_script_name)
     if not os.path.exists(python_script):
-        print("ERROR: "+python_script+" DOES NOT EXIST")
+        print("FATAL ERROR: "+python_script+" DOES NOT EXIST")
         sys.exit(1)
     python_cmd = 'python '+python_script
     for script_arg in script_arg_list:
@@ -1978,7 +1979,7 @@ def get_obs_valid_hrs(obs):
         valid_hr_end = obs_valid_hr_dict[obs]['valid_hr_end']
         valid_hr_inc = obs_valid_hr_dict[obs]['valid_hr_inc']
     else:
-        print(f"ERROR: Cannot get {obs} valid hour information")
+        print(f"FATAL ERROR: Cannot get {obs} valid hour information")
         sys.exit(1)
     return valid_hr_start, valid_hr_end, valid_hr_inc
 
