@@ -32,7 +32,7 @@ export machine=WCOSS2
 export USE_CFP=YES
 export nproc=25
 
-export maillist='alicia.bentley@noaa.gov,mallory.row@noaa.gov'
+export MAILTO='alicia.bentley@noaa.gov,mallory.row@noaa.gov'
 
 export envir=prod
 export NET=evs

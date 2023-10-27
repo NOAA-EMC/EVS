@@ -64,7 +64,7 @@ if [[ $OBSERVATION = "GCIP" ]] ; then
 		echo "Warning: No GCIP analysis was available for valid date ${VDATE}${cc}" > mailmsg
 		echo “Missing file is $sourcefile” >> mailmsg
 		echo "Job ID: $jobid" >> mailmsg
-		cat mailmsg | mail -s "$subject" $maillist
+		cat mailmsg | mail -s "$subject" $MAILTO
 	    fi
 	fi
 	
@@ -81,7 +81,7 @@ if [[ $OBSERVATION = "GCIP" ]] ; then
 		echo "Warning: No GCIP analysis was available for valid date ${VDATE}${cc2}" > mailmsg
 		echo “Missing file is $sourcefile” >> mailmsg
 		echo "Job ID: $jobid" >> mailmsg
-		cat mailmsg | mail -s "$subject" $maillist
+		cat mailmsg | mail -s "$subject" $MAILTO
 	    fi
         fi
     done
@@ -95,7 +95,7 @@ elif [[ $OBSERVATION = "GFS" ]] ; then
 		echo "Warning: No GFS analysis was available for valid date ${VDATE}${cc}" > mailmsg
 		echo “Missing file is $sourcefile” >> mailmsg
 		echo "Job ID: $jobid" >> mailmsg
-		cat mailmsg | mail -s "$subject" $maillist
+		cat mailmsg | mail -s "$subject" $MAILTO
 	    fi
 	fi
     done    

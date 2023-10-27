@@ -70,7 +70,7 @@ cd $ccpadir
      echo "Warning:  No CCPA data available for ${VDATE}" > mailmsg
      echo Missing file is $COMCCPA/ccpa.${vday}/00/ccpa.t00z.03h.hrap.conus.gb2 or $COMCCPA/ccpa.${vday}/00/ccpa.t00z.01h.hrap.conus.gb2 >> mailmsg
      echo "Job ID: $jobid" >> mailmsg
-     cat mailmsg | mail -s "$subject" $maillist
+     cat mailmsg | mail -s "$subject" $MAILTO
      exit
    fi
   fi
@@ -102,7 +102,7 @@ mkdir -p $ccpa24
     echo "Warning: At least one of ccpa06h files is missing  for ${VDATE}" > mailmsg
     echo Missing file is ${COMCCPA}/ccpa.${vday}/12/ccpa.t12z.06h.hrap.conus.gb2 or ${COMCCPA}/ccpa.${prevday}/18/ccpa.t18z.06h.hrap.conus.gb2  >> mailmsg
     echo "Job ID: $jobid" >> mailmsg
-    cat mailmsg | mail -s "$subject" $maillist
+    cat mailmsg | mail -s "$subject" $MAILTO
     exit
    fi
   fi
@@ -247,7 +247,7 @@ if [ $data = prepbufr ] ; then
    echo "Warning:  No RAP Prepbufr data available for ${VDATE}" > mailmsg
    echo Missing file is $COMINobsproc/rap.${VDATE}/rap.t12z.prepbufr.tm00  >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
-   cat mailmsg | mail -s "$subject" $maillist
+   cat mailmsg | mail -s "$subject" $MAILTO
    exit 
   fi
  fi
@@ -290,7 +290,7 @@ if [ $data = gfs_prepbufr ] ; then
      echo "Warning:  No GFS Prepbufr data available for ${VDATE}" > mailmsg
      echo Missing file is $COMINobsproc/gdas.${vday}/18/atmos/gdas.t18z.prepbufr  >> mailmsg
      echo "Job ID: $jobid" >> mailmsg
-     cat mailmsg | mail -s "$subject" $maillist
+     cat mailmsg | mail -s "$subject" $MAILTO
      exit
    fi
   fi
@@ -356,7 +356,7 @@ export accum
    echo "Warning:  No MRMS data available for ${VDATE}" > mailmsg
    echo Missing file is $DCOMINmrms/MultiSensor_QPE_03H_Pass2_00.00_${vday}-120000.grib2.gz  >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
-   cat mailmsg | mail -s "$subject" $maillist
+   cat mailmsg | mail -s "$subject" $MAILTO
    exit
   fi
  fi

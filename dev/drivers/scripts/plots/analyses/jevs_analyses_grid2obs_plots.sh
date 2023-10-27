@@ -55,7 +55,7 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 export vhr=00
 echo $vhr
 
-export maillist="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
+export MAILTO="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
 
 export config=$HOMEevs/parm/evs_config/analyses/config.evs.rtma.prod
 source $config

@@ -75,7 +75,7 @@ else
        export subject="AVISO Data Missing for EVS RTOFS"
        echo "Warning: No AVISO data was available for valid date $VDATE." > mailmsg
        echo "Missing file is $DCOMROOT/$VDATE/validation_data/marine/cmems/ssh/nrt_global_allsat_phy_l4_${VDATE}_${VDATE}.nc." >> mailmsg
-       cat mailmsg | mail -s "$subject" $maillist
+       cat mailmsg | mail -s "$subject" $MAILTO
    fi
 fi
 

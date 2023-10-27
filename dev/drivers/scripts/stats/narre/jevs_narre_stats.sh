@@ -42,14 +42,14 @@ export vhr=${vhr:-00}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
-export maillist='alicia.bentley@noaa.gov,binbin.zhou@noaa.gov'
+export MAILTO='alicia.bentley@noaa.gov,binbin.zhou@noaa.gov'
 
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-if [ -z "$maillist" ]; then
+if [ -z "$MAILTO" ]; then
 
-   echo "maillist variable is not defined. Exiting without continuing."
+   echo "MAILTO variable is not defined. Exiting without continuing."
 
 else
 

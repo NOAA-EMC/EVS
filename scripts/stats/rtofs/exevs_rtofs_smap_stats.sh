@@ -76,7 +76,7 @@ else
        export subject="SMAP Data Missing for EVS RTOFS"
        echo "Warning: No SMAP data was available for valid date $VDATE." > mailmsg
        echo "Missing file is $DCOMROOT/$VDATE/validation_data/marine/smap/SP_D${JDATE}_Map_SATSSS_data_1day.nc." >> mailmsg
-       cat mailmsg | mail -s "$subject" $maillist
+       cat mailmsg | mail -s "$subject" $MAILTO
    fi
 fi
 

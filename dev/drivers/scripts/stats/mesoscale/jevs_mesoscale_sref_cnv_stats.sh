@@ -42,11 +42,11 @@ export just_cnv=yes
 export run_mpi=yes
 export gather=no
 
-export maillist='alicia.bentley@noaa.gov,binbin.zhou@noaa.gov'
+export MAILTO='alicia.bentley@noaa.gov,binbin.zhou@noaa.gov'
 
-if [ -z "$maillist" ]; then
+if [ -z "$MAILTO" ]; then
 
-   echo "maillist variable is not defined. Exiting without continuing."
+   echo "MAILTO variable is not defined. Exiting without continuing."
 
 else
   ${HOMEevs}/jobs/JEVS_MESOSCALE_STATS

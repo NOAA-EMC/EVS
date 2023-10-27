@@ -41,10 +41,10 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export jobid=$job.${PBS_JOBID:-$$}
 
 
-export maillist='alicia.bentley@noaa.gov,binbin.zhou@noaa.gov'
-if [ -z "$maillist" ]; then
+export MAILTO='alicia.bentley@noaa.gov,binbin.zhou@noaa.gov'
+if [ -z "$MAILTO" ]; then
 
-  echo "maillist variable is not defined. Exiting without continuing."
+  echo "MAILTO variable is not defined. Exiting without continuing."
 
 else
 

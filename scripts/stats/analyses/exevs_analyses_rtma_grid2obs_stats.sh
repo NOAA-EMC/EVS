@@ -31,7 +31,7 @@ else
  echo "Warning: The ${obday} prepbufr file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
  echo "Missing file is $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00" >> mailmsg
  echo "Job ID: $jobid" >> mailmsg
- cat mailmsg | mail -s "$subject" $maillist
+ cat mailmsg | mail -s "$subject" $MAILTO
 fi
 
 echo $obfound
@@ -77,7 +77,7 @@ then
           echo "Warning: The CONUS Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
           echo "Missing file is $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2_wexp" >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
-          cat mailmsg | mail -s "$subject" $maillist
+          cat mailmsg | mail -s "$subject" $MAILTO
 	 fi
        fi
 
@@ -116,7 +116,7 @@ then
           echo "Warning: The Alaska Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
           echo "Missing file is $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2" >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
-          cat mailmsg | mail -s "$subject" $maillist
+          cat mailmsg | mail -s "$subject" $MAILTO
 	 fi
         fi
 
@@ -164,7 +164,7 @@ then
           echo "Warning: The Hawaii Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
           echo "Missing file is $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2" >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
-          cat mailmsg | mail -s "$subject" $maillist	    
+          cat mailmsg | mail -s "$subject" $MAILTO	    
 	 fi
         fi
 
@@ -210,7 +210,7 @@ then
           echo "Warning: The Puerto Rico Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
           echo "Missing file is $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2" >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
-          cat mailmsg | mail -s "$subject" $maillist
+          cat mailmsg | mail -s "$subject" $MAILTO
 	 fi
         fi
 
@@ -274,7 +274,7 @@ then
       echo "Warning: The ${obday} prepbufr file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
       echo "Missing file is $COMINobsproc/urma.${obday}/urma.t${obhr}z.prepbufr.tm00" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
-      cat mailmsg | mail -s "$subject" $maillist
+      cat mailmsg | mail -s "$subject" $MAILTO
     fi
    fi
    
@@ -287,7 +287,7 @@ then
      echo "Warning: The Guam Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
      echo "Missing file is $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2" >> mailmsg
      echo "Job ID: $jobid" >> mailmsg
-     cat mailmsg | mail -s "$subject" $maillist
+     cat mailmsg | mail -s "$subject" $MAILTO
     fi
    fi
 fi

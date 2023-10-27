@@ -71,7 +71,7 @@ while [ ${ic} -le ${endvhr} ]; do
         echo "Warning: No AIRNOW ASCII data was available for valid date ${VDATE}${vldhr}" > mailmsg
         echo "Missing file is ${checkfile}" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist 
+        cat mailmsg | mail -s "$subject" $MAILTO 
       fi
 
         echo "Warning: No AIRNOW ASCII data was available for valid date ${VDATE}${vldhr}"
@@ -101,7 +101,7 @@ else
     echo "Warning: No AIRNOW ASCII data was available for valid date ${VDATE}" > mailmsg
     echo "Missing file is ${checkfile}" >> mailmsg
     echo "Job ID: $jobid" >> mailmsg
-    cat mailmsg | mail -s "$subject" $maillist 
+    cat mailmsg | mail -s "$subject" $MAILTO 
   fi
 
     echo "Warning: No AIRNOW ASCII data was available for valid date ${VDATE}"
@@ -149,7 +149,7 @@ then
         echo "Warning: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z" > mailmsg
         echo "Missing file is ${ozmax8_file}" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+        cat mailmsg | mail -s "$subject" $MAILTO
       fi
 
         echo "Warning: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z"
@@ -174,7 +174,7 @@ then
         echo "Warning: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z" > mailmsg
         echo "Missing file is ${ozmax8_file}" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+        cat mailmsg | mail -s "$subject" $MAILTO
       fi
 
         echo "Warning: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z"

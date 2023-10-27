@@ -41,7 +41,7 @@ if  [ $ens = gefs ] || [ $ens = naefs ] || [ $ens = gfs ] ; then
         echo "Warning: No GFS analysis available for ${VDATE}" > mailmsg 
         echo Missing file is ${EVSIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2  >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+        cat mailmsg | mail -s "$subject" $MAILTO
       fi
      exit
     fi
@@ -54,7 +54,7 @@ if  [ $ens = gefs ] || [ $ens = naefs ] || [ $ens = gfs ] ; then
           echo "Warning: No GFS or CMC analysis available for ${VDATE}" > mailmsg
           echo Missing file is ${EVSIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2 or ${EVSIN}.${VDATE}/cmce/cmcanl.t00z.grid3.f000.grib2  >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
-          cat mailmsg | mail -s "$subject" $maillist
+          cat mailmsg | mail -s "$subject" $MAILTO
 	fi
        exit
      fi

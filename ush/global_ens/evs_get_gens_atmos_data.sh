@@ -33,7 +33,7 @@ if [ $modnam = gfsanl ]; then
         echo "Warning: No GFS analysis available for ${INITDATE}${cyc}" > mailmsg
         echo Missing file is $COMINgfs/gfs.$vday/${cyc}/atmos/gfs.t${cyc}z.pgrb2.1p00.anl >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+        cat mailmsg | mail -s "$subject" $MAILTO
       fi
      missing=yes
     fi
@@ -82,7 +82,7 @@ if [ $modnam = cmcanl ] ; then
          echo "Warning: No CMC analysis available for ${INITDATE}${cyc}" > mailmsg
          echo Missing file is $cmcanl >> mailmsg
          echo "Job ID: $jobid" >> mailmsg
-         cat mailmsg | mail -s "$subject" $maillist
+         cat mailmsg | mail -s "$subject" $MAILTO
        fi
      missing=yes
     fi
@@ -394,7 +394,7 @@ if [ $modnam = prepbufr ] ; then
           echo "Warning:  No prepbufr analysis available for ${INITDATE}${cyc}" > mailmsg
           echo Missing file is $COMINobsproc/gdas.${vday}/${cyc}/atmos/gdas.t${cyc}z.prepbufr  >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
-          cat mailmsg | mail -s "$subject" $maillist
+          cat mailmsg | mail -s "$subject" $MAILTO
 	fi
       fi 
 
@@ -426,7 +426,7 @@ if [ $modnam = ccpa ] ; then
           echo "Warning:  No CCPA analysis available for ${INITDATE}${cyc}" > mailmsg
           echo Missing file is $COMINccpa/ccpa.${vday}/$cyc/ccpa.t${cyc}z.06h.1p0.conus.gb2  >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
-          cat mailmsg | mail -s "$subject" $maillist
+          cat mailmsg | mail -s "$subject" $MAILTO
 	fi
     fi 
   done
@@ -452,7 +452,7 @@ if [ $modnam = ccpa ] ; then
          echo "Warning: At least one of ccpa06h files is missing  for ${INITDATE}${cyc}" > mailmsg
          echo Missing file is ${COMOUTgefs}/ccpa.t12z.grid3.06h.f00.grib2 or ${COMOUT}.${vday_1}/gefs/ccpa.t18z.grid3.06h.f00.grib2  >> mailmsg
          echo "Job ID: $jobid" >> mailmsg
-         cat mailmsg | mail -s "$subject" $maillist
+         cat mailmsg | mail -s "$subject" $MAILTO
        fi
       exit 
     fi  
@@ -593,7 +593,7 @@ if [ $modnam = nohrsc24h ] ; then
           echo "Warning:  No NOHRSC analysis available for ${INITDATE}${cyc}" > mailmsg
           echo Missing file is $snowfall  >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
-          cat mailmsg | mail -s "$subject" $maillist
+          cat mailmsg | mail -s "$subject" $MAILTO
 	fi
     fi
   done
@@ -701,7 +701,7 @@ if [ $modnam = osi_saf ] ; then
           echo "Warning:  No OSI_SAF data  available for ${INITDATE}" > mailmsg
           echo Missing file is $osi  >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
-          cat mailmsg | mail -s "$subject" $maillist
+          cat mailmsg | mail -s "$subject" $MAILTO
 	fi
     fi 
 fi

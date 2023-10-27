@@ -37,7 +37,7 @@ for lead in ${leads}; do
                     echo "Warning: No RTOFS forecast was available for ${VDATE}${lead}" > mailmsg
                     echo "Missing file is ${input_rtofs_file}" >> mailmsg
                     echo "Job ID: $jobid" >> mailmsg
-                    cat mailmsg | mail -s "$subject" $maillist
+                    cat mailmsg | mail -s "$subject" $MAILTO
                 fi
             fi
         fi
@@ -60,7 +60,7 @@ for lead in ${leads}; do
                     echo "Warning: No RTOFS forecast was available for ${VDATE}${lead}" > mailmsg
                     echo "Missing file is ${input_rtofs_file}" >> mailmsg
                     echo "Job ID: $jobid" >> mailmsg
-                    cat mailmsg | mail -s "$subject" $maillist
+                    cat mailmsg | mail -s "$subject" $MAILTO
                 fi
             fi
         fi
@@ -149,7 +149,7 @@ for ftype in nh sh; do
                 export subject="OSI-SAF Data Missing for EVS RTOFS"
                 echo "Warning: No OSI-SAF ${ftype} data was available for valid date $VDATE." > mailmsg
                 echo "Missing file is $input_osisaf_file" >> mailmsg
-                cat mailmsg | mail -s "$subject" $maillist
+                cat mailmsg | mail -s "$subject" $MAILTO
             fi
         fi
     fi
@@ -178,7 +178,7 @@ else
     export subject="NDBC Data Missing for EVS RTOFS"
     echo "Warning: No NDBC data was available for valid date $VDATE." > mailmsg
     echo "Missing files are located at $DCOMROOT/$VDATE/validation_data/marine/buoy" >> mailmsg
-    cat mailmsg | mail -s "$subject" $maillist
+    cat mailmsg | mail -s "$subject" $MAILTO
   fi
 fi
 # convert Argo basin files into a netcdf file using python embedding
@@ -203,7 +203,7 @@ else
     export subject="Argo Data Missing for EVS RTOFS"
     echo "Warning: No Argo data was available for valid date $VDATE." > mailmsg
     echo "Missing file is $DCOMROOT/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_prof.nc, $DCOMROOT/$VDATE/validation_data/marine/argo/indian_ocean/${VDATE}_prof.nc, and/or $DCOMROOT/$VDATE/validation_data/marine/argo/pacific_ocean/${VDATE}_prof.nc" >> mailmsg
-    cat mailmsg | mail -s "$subject" $maillist
+    cat mailmsg | mail -s "$subject" $MAILTO
   fi
 fi
 

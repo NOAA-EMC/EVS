@@ -32,8 +32,8 @@ USER = os.environ['USER']
 jobid = os.environ['jobid']
 SENDMAIL = os.environ['SENDMAIL']
 
-# mail_cmd = 'mail.py -s "$subject" $maillist -v'
-mail_cmd = 'mail -s "$subject" $maillist'
+# mail_cmd = 'mail.py -s "$subject" $MAILTO -v'
+mail_cmd = 'mail -s "$subject" $MAILTO'
 
 for VHOUR in VHOUR_LIST:
     # What accumulations stats will be run for
@@ -117,7 +117,7 @@ for VHOUR in VHOUR_LIST:
                                     +'"\n'
                                 )
                                 mailmsg.write(
-                                    "export maillist=${maillist:-'"
+                                    "export MAILTO=${MAILTO:-'"
                                     +USER.lower()+"@noaa.gov'}\n"
                                 )
                                 mailmsg.write(
@@ -172,7 +172,7 @@ for VHOUR in VHOUR_LIST:
                     +'Data Missing for EVS '+COMPONENT+'"\n'
                 )
                 mailmsg.write(
-                    "export maillist=${maillist:-'"+USER.lower()
+                    "export MAILTO=${MAILTO:-'"+USER.lower()
                     +"@noaa.gov'}\n"
                 )
                 mailmsg.write(

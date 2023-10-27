@@ -189,7 +189,7 @@ if [ $nfcst = 0 ]; then
       echo "Warning: ${DOM} ${MODELNAME} forecast files are missing for valid date ${VDATE}${vhr}. METplus will not run." > mailmsg
       echo -e "`cat $DATA/job${JOBNUM}_missing_fcst_list`" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
-      cat mailmsg | mail -s "$subject" $maillist
+      cat mailmsg | mail -s "$subject" $MAILTO
    fi
 
 fi
@@ -221,7 +221,7 @@ else
    echo "Warning: The MRMS ${MRMS_PRODUCT} file is missing for valid date ${VDATE}${vhr}. METplus will not run." > mailmsg
    echo "Missing file is $EVSINmrms/${obs_file}" >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
-   cat mailmsg | mail -s "$subject" $maillist
+   cat mailmsg | mail -s "$subject" $MAILTO
 
 fi
 

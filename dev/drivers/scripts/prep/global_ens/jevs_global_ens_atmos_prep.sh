@@ -48,11 +48,11 @@ export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 export SENDMAIL=YES
-export maillist='alicia.bentley@noaa.gov,steven.simon@noaa.gov' 
+export MAILTO='alicia.bentley@noaa.gov,steven.simon@noaa.gov' 
 
 
-if [ -z "$maillist" ]; then
-   echo "maillist variable is not defined. Exiting without continuing."
+if [ -z "$MAILTO" ]; then
+   echo "MAILTO variable is not defined. Exiting without continuing."
 else
    ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PREP
 fi

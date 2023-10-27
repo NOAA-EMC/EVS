@@ -149,7 +149,7 @@ def log_missing_file_model(log_missing_file, missing_file, model, init_dt,
                           +'> mailmsg\n')
             lmf.write(f'echo "Missing file is {missing_file}" >> mailmsg\n')
             lmf.write(f'echo "Job ID: $jobid" >> mailmsg\n')
-            lmf.write(f'cat mailmsg | mail -s "$subject" $maillist\n')
+            lmf.write(f'cat mailmsg | mail -s "$subject" $MAILTO\n')
         os.chmod(log_missing_file, 0o755)
 
 def log_missing_file_truth(log_missing_file, missing_file, obs, valid_dt):
@@ -170,7 +170,7 @@ def log_missing_file_truth(log_missing_file, missing_file, obs, valid_dt):
                       +f'valid date {valid_dt:%Y%m%d%H}" > mailmsg\n')
             lmf.write(f'echo "Missing file is {missing_file}" >> mailmsg\n')
             lmf.write(f'echo "Job ID: $jobid" >> mailmsg\n')
-            lmf.write(f'cat mailmsg | mail -s "$subject" $maillist\n')
+            lmf.write(f'cat mailmsg | mail -s "$subject" $MAILTO\n')
         os.chmod(log_missing_file, 0o755)
 
 

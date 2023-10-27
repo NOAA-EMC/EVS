@@ -59,7 +59,7 @@ export MODELNAME=urma
 export modsys=urma
 export mod_ver=${urma_ver}
 
-export maillist="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
+export MAILTO="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
 
 export config=$HOMEevs/parm/evs_config/analyses/config.evs.urma.prod
 source $config

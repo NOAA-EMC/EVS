@@ -39,7 +39,7 @@ if [ $ens = all ] || [ $ens = gefs ] || [ $ens = cmce ] || [ $ens = naefs ] || [
         echo "Warning: No PREPBUFR data available for ${VDATE}" > mailmsg 
         echo Missing file is ${EVSIN}.${VDATE}/gefs/gfs.t00z.prepbufr.f00.nc  >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+        cat mailmsg | mail -s "$subject" $MAILTO
       fi
      exit
     fi

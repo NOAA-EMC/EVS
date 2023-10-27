@@ -43,10 +43,10 @@ export get_model_bc=yes
 export gefs_mbrs=30
 
 export SENDMAIL=YES
-export maillist='alicia.bentley@noaa.gov,steven.simon@noaa.gov'
+export MAILTO='alicia.bentley@noaa.gov,steven.simon@noaa.gov'
 
-if [ -z "$maillist" ]; then
-   echo "maillist variable is not defined. Exiting without continuing."
+if [ -z "$MAILTO" ]; then
+   echo "MAILTO variable is not defined. Exiting without continuing."
 else
   ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PREP
 fi

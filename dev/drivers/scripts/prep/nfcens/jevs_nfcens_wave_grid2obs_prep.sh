@@ -44,7 +44,7 @@ export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-YES}
 
-export maillist='alicia.bentley@noaa.gov,samira.ardani@noaa.gov'
+export MAILTO='alicia.bentley@noaa.gov,samira.ardani@noaa.gov'
 
 
 ## developers directories

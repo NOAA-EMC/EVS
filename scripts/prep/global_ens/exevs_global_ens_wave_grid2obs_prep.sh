@@ -58,7 +58,7 @@ for cyc in ${cycles} ; do
           echo "Warning: No GEFS forecast was available for ${INITDATE}${cyc}f${hr}" > mailmsg
           echo "Missing file is ${COMINgefs}/${MODELNAME}.${INITDATE}/${cyc}/wave/gridded/${filename}" >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
-          cat mailmsg | mail -s "$subject" $maillist
+          cat mailmsg | mail -s "$subject" $MAILTO
 	fi
     else
         if [ ! -s ${COMOUTgefs}/${newname} ]; then
@@ -85,7 +85,7 @@ for cyc in 00 06 12 18 ; do
         echo "Warning: No GDAS Prepbufr was available for init date ${INITDATE}${cyc}" > mailmsg
         echo "Missing file is ${COMINobsproc}.${INITDATE}/${cyc}/atmos/gdas.${cycle}.prepbufr" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+        cat mailmsg | mail -s "$subject" $MAILTO
       fi
   else
       cp -v ${COMINobsproc}.${INITDATE}/${cyc}/atmos/gdas.${cycle}.prepbufr ${DATA}/gdas.${INITDATE}${cyc}.prepbufr

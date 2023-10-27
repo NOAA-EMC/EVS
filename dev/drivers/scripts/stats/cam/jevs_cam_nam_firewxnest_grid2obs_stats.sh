@@ -48,7 +48,7 @@ export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 
-export maillist=${maillist:-'perry.shafran@noaa.gov,alicia.bentley@noaa.gov'}
+export MAILTO=${MAILTO:-'perry.shafran@noaa.gov,alicia.bentley@noaa.gov'}
 
 export config=$HOMEevs/parm/evs_config/cam/config.evs.cam_nam_firewxnest.prod
 source $config

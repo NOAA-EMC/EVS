@@ -75,7 +75,7 @@ else
        export subject="GHRSST OSPO Data Missing for EVS RTOFS"
        echo "Warning: No GHRSST OSPO data was available for valid date $VDATE." > mailmsg
        echo "Missing file is $DCOMROOT/$VDATE/validation_data/marine/ghrsst/${VDATE}_OSPO_L4_GHRSST.nc." >> mailmsg
-       cat mailmsg | mail -s "$subject" $maillist
+       cat mailmsg | mail -s "$subject" $MAILTO
    fi
 fi
 
