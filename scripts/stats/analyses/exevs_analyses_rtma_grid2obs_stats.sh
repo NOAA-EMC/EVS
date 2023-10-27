@@ -3,8 +3,8 @@
 #################################################################################
 # Name of Script: exevs_analyses_rtma_grid2obs_stats.sh
 # Contact(s):     Perry C. Shafran (perry.shafran@noaa.gov)
-# Purpose of Script: This script runs METplus to generate radar
-#                    verification statistics for deterministic and ensemble CAMs
+# Purpose of Script: This script runs METplus to generate
+#                    verification statistics for rtma analyses and first guess
 ##################################################################################
 
 set -x

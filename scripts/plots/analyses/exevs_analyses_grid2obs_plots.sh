@@ -3,8 +3,8 @@
 #################################################################################
 # Name of Script: exevs_analyses__grid2obs_plots.sh
 # Contact(s):     Perry C. Shafran (perry.shafran@noaa.gov)
-# Purpose of Script: This script runs METplus to generate radar
-#                    verification statistics for deterministic and ensemble CAMs
+# Purpose of Script: This script runs plotting codes to generate plots
+#                   of analysis vs first guess for all three analyses 
 ##################################################################################
  
 set -x
