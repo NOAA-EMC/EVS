@@ -150,7 +150,8 @@ do
 	smvar=ozone
 	if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png ]
 	then
-	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_awpozcon.config
+	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_awpozcon.config
+	export err=$?; err_chk
 	cat $LOGDIR/*out
         mv $LOGDIR/*out $LOGFIN
         else
@@ -169,7 +170,8 @@ do
 
 	if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.fbar_obar.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png ]
 	then
-	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_awpozcon_fbar.config
+	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_awpozcon_fbar.config
+	export err=$?; err_chk
 	cat $LOGDIR/*out
         mv $LOGDIR/*out $LOGFIN
         else
@@ -197,7 +199,8 @@ do
         smvar=pm25
 	if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.bcrmse_me.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png ]
 	then
-        sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_pm25.config
+        $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_pm25.config
+	export err=$?; err_chk
 	cat $LOGDIR/*out
 	mv $LOGDIR/*out $LOGFIN
         else
@@ -216,7 +219,8 @@ do
 
 	if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.fbar_obar.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png ]
 	then
-        sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_pm25_fbar.config
+        $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_pm25_fbar.config
+	export err=$?; err_chk
 	cat $LOGDIR/*out
         mv $LOGDIR/*out $LOGFIN
         else
@@ -251,7 +255,8 @@ do
 
         if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png ]
 	then
-	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_ozmax8.config
+	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_ozmax8.config
+	export err=$?; err_chk
 	cat $LOGDIR/*out
         mv $LOGDIR/*out $LOGFIN
         else
@@ -284,7 +289,8 @@ do
 
 	if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png ]
 	then
-	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_ozmax8.config
+	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_ozmax8.config
+	export err=$?; err_chk
 	cat $LOGDIR/*out
 	mv $LOGDIR/*out $LOGFIN
 	else
@@ -319,7 +325,8 @@ do
 
 	if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png ]
 	then
-	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_pmave.config
+	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_pmave.config
+	export err=$?; err_chk
 	cat $LOGDIR/*out
         mv $LOGDIR/*out $LOGFIN
         else
@@ -352,7 +359,8 @@ do
 
 	if [ ! -e $COMOUTplots/$var/evs.$COMPONENT.ctc.${smvar}.${smlev}.last31days.perfdiag_init${inithr}z_f${flead}.buk_${smregion}.png ]
 	then
-	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_pmave.config
+	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_pmave.config
+	export err=$?; err_chk
 	cat $LOGDIR/*out
         mv $LOGDIR/*out $LOGFIN
         else
@@ -430,7 +438,8 @@ do
 
 	if [ ! -e $COMOUTplots/headline/headline_${COMPONENT}.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png ]
 	then
-	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_ozmax8_headline.config
+	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_ozmax8_headline.config
+	export err=$?; err_chk
 	cat ${LOGDIR_headline}/*out
         mv ${LOGDIR_headline}/*out $LOGFIN
         else
@@ -468,7 +477,8 @@ do
 
 	if [ ! -e $COMOUTplots/headline/headline_${COMPONENT}.csi_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png ]
 	then
-	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_pmave_headline.config
+	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_pmave_headline.config
+	export err=$?; err_chk
 	cat ${LOGDIR_headline}/*out
         mv ${LOGDIR_headline}/*out $LOGFIN
         else
