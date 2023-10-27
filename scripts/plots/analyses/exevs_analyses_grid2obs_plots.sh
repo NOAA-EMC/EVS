@@ -123,7 +123,7 @@ for anl in rtma urma rtma_ru
 do
 for varb in TMP DPT
 do
-        mkdir $COMOUTplots/$varb	
+        mkdir -p $COMOUTplots/$varb	
 	export var=${varb}2m
 	export region
 	export lev=Z2
@@ -156,7 +156,7 @@ for varb in WIND
 # Plots for wind
 
 do
-	mkdir $COMOUTplots/$varb
+	mkdir -p $COMOUTplots/$varb
 	export var=${varb}10m
 	export lev=Z10
 	export lev_obs=Z10
@@ -188,7 +188,7 @@ for varb in GUST
 # Plots for wind gust
 
 do
-	mkdir $COMOUTplots/$varb
+	mkdir -p $COMOUTplots/$varb
 	export var=${varb}sfc
 	export lev=Z10
 	export lev_obs=Z0
@@ -220,7 +220,7 @@ for varb in VIS CEILING
 # Plots for visibility and ceiling
 
 do
-	mkdir $COMOUTplots/$varb
+	mkdir -p $COMOUTplots/$varb
 	if [ $varb = "VIS" ]
 	then
 	 export var=${varb}sfc
@@ -290,7 +290,7 @@ done
         if [ $anl = rtma -o $anl = urma ]
 	then
         export var=TCDC
-	mkdir $COMOUTplots/$var
+	mkdir -p $COMOUTplots/$var
 	export lev=L0
 	export lev_obs=L0
 	export linetype=CTC
