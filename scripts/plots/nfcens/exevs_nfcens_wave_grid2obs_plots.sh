@@ -63,7 +63,7 @@ while (( ${theDate} <= ${plot_end_date} )); do
   if [ -s ${EVSINnfcens}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ]; then
 	  cp ${EVSINnfcens}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
   else
-	  echo "WARNING: ${EVSINnfcens}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat does not exist"
+	  echo "WARNING: ${EVSINnfcens}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat DOES NOT EXIST"
   fi
   theDate=$(date --date="${theDate} + 1 day" '+%Y%m%d')
 done
@@ -82,13 +82,13 @@ else
   set -x
   echo ' '
   echo '**************************************** '
-  echo '*** WARNING : NO NFCENS *.stat FILE *** '
+  echo '*** FATAL ERROR: NO NFCENS *.stat FILE *** '
   echo "             for ${VDATE} "
   echo '**************************************** '
   echo ' '
   echo "${MODELNAME}_${RUN} $VDATE $vhour : NFCENS *.stat file missing."
   [[ "$LOUD" = YES ]] && set -x
-  ./postmsg "$jlogfile" "FATAL ERROR : NO NFCENS *.stat file for ${VDATE}"
+  ./postmsg "$jlogfile" "FATAL ERROR: NO NFCENS *.stat file for ${VDATE}"
   err_exit "FATAL ERROR: Did not copy the NFCENS *.stat file for ${VDATE}"
   exit
 fi
@@ -142,7 +142,7 @@ if [ $gather = yes ] ; then
       set -x
       echo ' '
       echo '**************************************** '
-      echo '*** ERROR : NO ${period} PLOTS  *** '
+      echo '*** FATAL ERROR: NO ${period} PLOTS  *** '
       echo "    found for ${VDATE} "
       echo '**************************************** '
       echo ' '
@@ -174,12 +174,13 @@ fi
 #########################################
 # copy log files into logs and cat them
 ########################################
+cd ${DATA}
 mkdir -p ${DATA}/logs
-cp ${DATA}/*.out ${DATA}/logs/
-cp ${DATA}/*.log ${DATA}/logs/
 log_dir=$DATA/logs
-log_file_count=$(find $log_dir -type f |wc -l)
+log_file_count=$(find ${DATA} -type f -name "*.out" -o -name ".log" |wc -l)
 if [[ $log_file_count -ne 0 ]]; then
+	cp ${DATA}/*.out ${DATA}/logs/
+	cp ${DATA}/*.log ${DATA}/logs/
 	for log_file in $log_dir/*; do
 		echo "Start: $log_file"
 		cat $log_file

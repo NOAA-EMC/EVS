@@ -51,7 +51,7 @@ for HH in ${HHs} ; do
     if [ ! -s $COMINfilename ]; then
         export subject="NFCENS Forecast Data Missing for EVS ${COMPONENT}"
         echo "WARNING: No NFCENS forecast was available for ${INITDATE}${HH}" > mailmsg
-        echo "Missing file is $COMINfilename" >> mailmsg
+        echo "WARNING: Missing file is $COMINfilename" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
         cat mailmsg | mail -s "$subject" $maillist
     else
@@ -93,7 +93,7 @@ for HH in 00 06 12 18 ; do
   if [ ! -s ${COMINobsproc}.${INITDATE}/${HH}/atmos/gdas.${inithour}.prepbufr ]; then
       export subject="GDAS Prepbufr Data Missing for EVS ${COMPONENT}"
       echo "WARNING: No GDAS Prepbufr was available for init date ${INITDATE}${HH}" > mailmsg
-      echo "Missing file is ${COMINobsproc}.${INITDATE}/${HH}/atmos/gdas.${inithour}.prepbufr" >> mailmsg
+      echo "WARNING: Missing file is ${COMINobsproc}.${INITDATE}/${HH}/atmos/gdas.${inithour}.prepbufr" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $maillist
   else
