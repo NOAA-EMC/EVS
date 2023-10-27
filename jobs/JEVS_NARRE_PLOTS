@@ -20,7 +20,7 @@ rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
 
-export cycle=t${cyc}z
+export cycle=${cycle:-t${vhr}z}
 setpdy.sh
 . $DATA/PDY
 

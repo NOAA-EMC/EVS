@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Program Name: prune_stat_files.py
 Contact(s): Marcel Caron, Mallory Row, and L. Gwen Chen (lichuan.chen@noaa.gov)
