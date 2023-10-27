@@ -58,6 +58,9 @@ for model in $model_list ; do
 done
 
 python $USHevs/mesoscale/ush_sref_plot_precip_py/sref_atmos_plots.py 
+status=$?
+[[ $status -ne 0 ]] && exit $status
+[[ $status -eq 0 ]] && echo "Successfully ran sref_atmos_plots.py"
 
 cd $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/precip/SL1L2_FBAR_24hrAccumMaps_CONUS_precip_spatial_map/images
 

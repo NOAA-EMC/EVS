@@ -10,6 +10,7 @@ export regrid='NONE'
 ############################################################
 
 $USHevs/mesoscale/evs_check_sref_files.sh
+export err=$?; err_chk
 
 >run_all_sref_cnv_poe.sh
 
@@ -20,9 +21,9 @@ for  obsv in prepbufr ; do
  export domain=CONUS
 
   $USHevs/mesoscale/evs_prepare_sref.sh prepbufr 
+  export err=$?; err_chk
 
   for fhr in 3 9 15 21 27 33 39 45 51 57 63 69 75 81 87 ; do
-#  for fhr in 3 ; do
        >run_sref_cnv_${fhr}.sh
 
        echo  "export output_base=$WORK/grid2obs/run_sref_cnv_${fhr}" >> run_sref_cnv_${fhr}.sh 
@@ -86,6 +87,7 @@ if [ $run_mpi = yes ] ; then
 else
    ${DATA}/run_all_sref_cnv_poe.sh
 fi 
+export err=$?; err_chk
 
 echo "Print stat generation metplus log files begin:"
  cat $DATA/grid2obs/*/logs/*
@@ -93,6 +95,7 @@ echo "Print stat generation metplus log files end"
 
 if [ $gather = yes ] ; then 
   $USHevs/mesoscale/evs_sref_gather.sh $VERIF_CASE
+  export err=$?; err_chk
 fi
 
 

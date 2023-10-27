@@ -185,7 +185,7 @@ if [ $run_mpi = yes ] ; then
 else
    ${DATA}/run_all_poe.sh
 fi
-
+export err=$?; err_chk
 
 cd $plot_dir
 

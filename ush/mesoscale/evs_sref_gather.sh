@@ -56,6 +56,7 @@ MODEL=`echo $modnam | tr '[a-z]' '[A-Z]'`
 chmod +x run_gather_all_poe.sh
 
  ${DATA}/run_gather_all_poe.sh
+ export err=$?; err_chk
 
 echo "Print stat gather  metplus log files begin:"
  cat $DATA/gather/logs/*

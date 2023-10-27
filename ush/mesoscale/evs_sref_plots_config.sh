@@ -189,4 +189,7 @@ export INTERP_PNTS=interp_pnts
 
 # Executes the desired python script.  No need to edit this. 
 python $USH_DIR/${PLOT_TYPE}.py
+tatus=$?
+[[ $status -ne 0 ]] && exit $status
+[[ $status -eq 0 ]] && echo "Successfully ran ${PLOT_TYPE}.py"
 
