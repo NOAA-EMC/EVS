@@ -13,6 +13,7 @@ export regrid='NONE'
 export vday=$VDATE
 
 $USHevs/narre/check_files_existing.sh
+export err=$?; err_chk
 
 echo COMOUTsmall=$COMOUTsmall
 
@@ -20,7 +21,7 @@ echo COMOUTsmall=$COMOUTsmall
 
 
 $USHevs/narre/evs_get_prepbufr.sh prepbufr
-
+export err=$?; err_chk
 
 obsv='prepbufr'
 
@@ -116,10 +117,13 @@ done #end of prod loop
 chmod 775 run_all_narre_poe.sh
 if [ $run_mpi = yes ] ; then
   mpiexec  -n 8 -ppn 8 --cpu-bind core --depth=2 cfp  ${DATA}/run_all_narre_poe.sh
+  export err=$?; err_chk
 else
    ${DATA}/run_all_narre_poe.sh
+   export err=$?; err_chk
 fi
 
 if [ $gather = yes ] ; then
   $USHevs/narre/evs_narre_gather.sh
+  export err=$?; err_chk
 fi

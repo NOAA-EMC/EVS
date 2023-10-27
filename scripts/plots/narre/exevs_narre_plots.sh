@@ -168,8 +168,10 @@ chmod +x run_all_poe.sh
 
 if [ $run_mpi = yes ] ; then
    mpiexec -np 4 -ppn 4 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   export err=$?; err_chk
 else
   ${DATA}/run_all_poe.sh
+  export err=$?; err_chk
 fi
 
 cd $plot_dir
