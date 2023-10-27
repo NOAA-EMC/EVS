@@ -168,7 +168,7 @@ then
 	 fi
 	fi
 
-	# check for hiurma urma file
+	# check for Hawaii urma file
 
         urmafound=0
 
@@ -279,7 +279,7 @@ then
 	 cp $finalstat/evs.stats.${regionnest}${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal
        fi
 else    
-       echo "WARNING: NO RTMA OR OBS DATA, or not gather time yet, METplus gather job will not run"
+       echo "WARNING: NO URMA OR OBS DATA, or not gather time yet, METplus gather job will not run"
 fi
 
 done

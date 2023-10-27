@@ -136,7 +136,7 @@ then
        fi
 
 else
-       echo "WARNING: NO RTMA OR OBS DATA, or not gather time yet, METplus gather job will not run"
+       echo "WARNING: NO RTMA-RU OR OBS DATA, or not gather time yet, METplus gather job will not run"
 fi
 
 done
