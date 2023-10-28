@@ -1,6 +1,6 @@
 #!/bin/ksh
 #################################################################
-# Purpose:   Setup somce paths and run narre stat ush scripts
+# Purpose:   Setup some paths and run narre stat ush scripts
 #
 # Last updated 10/27/2023: by  Binbin Zhou, Lynker@EMC/NCEP  
 ################################################################
@@ -8,11 +8,6 @@ set -x
 
 export WORK=$DATA
 cd $WORK
-
-export MET_bin_exec='bin'
-export log_met_output_to_metplus=''
-export metplus_verbosity=2
-export met_verbosity=2
 
 export run_mpi=${run_mpi:-'yes'}
 export stats=${stats:-'yes'}
