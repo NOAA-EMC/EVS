@@ -4,7 +4,6 @@
 # Abstract: This script is run by JEVS_SUBSEASONAL_PLOTS in jobs/.
 #           This script generates grid-to-grid verification plots
 #           using python for the subseasonal models.
-# History Log:
 
 set -x
 
@@ -105,7 +104,7 @@ if [ $SENDCOM = YES ]; then
 	cd $VERIF_TYPE_SUBDIR
 	large_tar_file=${DATA}/${VERIF_CASE_STEP}/plot_output/${RUN}.${end_date}/images/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${PDYm2}.tar
         tar -cvf $large_tar_file *.tar
-	cp -v $large_tar_file $COMOUT/.
+	cpreq -v $large_tar_file $COMOUT/.
     done
     cd $DATA
 fi

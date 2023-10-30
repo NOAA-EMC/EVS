@@ -3,7 +3,6 @@
 # Author(s)/Contact(s): Shannon Shields
 # Abstract: This script is run by JEVS_SUBSEASONAL_STATS in jobs/.
 #           This script runs METplus for subseasonal grid-to-grid verification            to produce stats.
-# History Log:
 
 set -x
 
@@ -305,7 +304,7 @@ if [ $SENDCOM = YES ]; then
 	for MODEL_DATE_PATH in $DATA/$VERIF_CASE_STEP/METplus_output/$MODEL.*; do
 	    MODEL_DATE_SUBDIR=$(echo ${MODEL_DATE_PATH##*/})
 	    for FILE in $DATA/$VERIF_CASE_STEP/METplus_output/$MODEL_DATE_SUBDIR/*; do
-		cp -v $FILE $COMOUT/$MODEL_DATE_SUBDIR/.
+		cpreq -v $FILE $COMOUT/$MODEL_DATE_SUBDIR/.
 	    done
         done
     done
