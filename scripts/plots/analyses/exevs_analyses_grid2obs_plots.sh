@@ -117,12 +117,29 @@ do
 	fi
 
 for anl in rtma urma rtma_ru
+do
+
+plot=yes
+
+if [ $smregion = alaska -o $smregion = hawaii -o $smregion = prico ]; then
+ if [ $anl = rtma_ru ]; then
+   plot=no
+ fi
+fi
+
+if [ $smregion = guam ]; then
+ if [ $anl = rtma_ru -o $anl = urma ]; then
+  plot=no
+ fi
+fi
+
+
 
 # Plots for temperature and dew point
 
-do
 for varb in TMP DPT
 do
+ if [ $plot = yes ]; then
         mkdir -p $COMOUTplots/$varb	
 	export var=${varb}2m
 	export region
@@ -133,7 +150,8 @@ do
 	smvar=`echo $varb | tr A-Z a-z`
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
 	then
-	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config
+	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config
+	export err=$?; err_chk
 	cat $LOGDIR/*out
 	mv $LOGDIR/*out $LOGFIN
         else
@@ -149,6 +167,7 @@ do
 	then
 	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
         fi
+ fi
 done
 
 for varb in WIND
@@ -156,6 +175,7 @@ for varb in WIND
 # Plots for wind
 
 do
+ if [ $plot = yes ]; then
 	mkdir -p $COMOUTplots/$varb
 	export var=${varb}10m
 	export lev=Z10
@@ -165,7 +185,8 @@ do
         smvar=`echo $varb | tr A-Z a-z`
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
 	then
-	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config
+	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config
+	export err=$?; err_chk
         cat $LOGDIR/*out
         mv $LOGDIR/*out $LOGFIN
         else
@@ -181,6 +202,7 @@ do
         then
 	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
         fi
+ fi
 done
 
 for varb in GUST
@@ -188,6 +210,7 @@ for varb in GUST
 # Plots for wind gust
 
 do
+ if [ $plot = yes ]; then
 	mkdir -p $COMOUTplots/$varb
 	export var=${varb}sfc
 	export lev=Z10
@@ -197,7 +220,8 @@ do
         smvar=`echo $varb | tr A-Z a-z`
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
 	then
-	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config
+	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config
+	export err=$?; err_chk
         cat $LOGDIR/*out
         mv $LOGDIR/*out $LOGFIN
         else
@@ -213,6 +237,7 @@ do
         then
 	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
         fi
+ fi
 done
 
 for varb in VIS CEILING
@@ -220,6 +245,7 @@ for varb in VIS CEILING
 # Plots for visibility and ceiling
 
 do
+ if [ $plot = yes ]; then
 	mkdir -p $COMOUTplots/$varb
 	if [ $varb = "VIS" ]
 	then
@@ -241,7 +267,8 @@ do
 	smlev=`echo $lev | tr A-Z a-z`
 	smvar=`echo $varb | tr A-Z a-z`
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png ]; then
-	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_perf
+	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_perf
+	export err=$?; err_chk
         cat $LOGDIR/*out
         mv $LOGDIR/*out $LOGFIN
         else
@@ -264,7 +291,8 @@ do
 	export stat
 
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]; then
-	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_thresh
+	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_thresh
+	export err=$?; err_chk
         cat $LOGDIR/*out
         mv $LOGDIR/*out $LOGFIN
         else
@@ -283,10 +311,12 @@ do
 
         
         done
+ fi
 done
 
 # Plots for total cloud
 
+if [ $plot = yes ]; then
         if [ $anl = rtma -o $anl = urma ]
 	then
         export var=TCDC
@@ -303,7 +333,8 @@ done
 	export stat
 
 	if [ ! -e $COMOUTplots/$var/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]; then
-	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_thresh
+	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_thresh
+	export err=$?; err_chk
         cat $LOGDIR/*out
         mv $LOGDIR/*out $LOGFIN
         else
@@ -321,7 +352,7 @@ done
         fi
         done
         fi
-
+fi
 	
 done
 done
