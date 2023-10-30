@@ -120,6 +120,8 @@ for HH in 00 12; do
                 cp -v $DATA/ncfiles/gdas.${INITDATE}${HH}.nc ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/.
             fi
         fi
+	chmod 640 $DATA/ncfiles/gdas.${INITDATE}${HH}.nc
+	chgrp rstprod $DATA/ncfiles/gdas.${INITDATE}${HH}.nc	
     fi
 done
 

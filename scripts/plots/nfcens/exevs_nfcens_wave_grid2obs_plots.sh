@@ -158,7 +158,7 @@ if [ $gather = yes ] ; then
       tar -cvf evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar evs.*${period_lower}*.png
     fi
   done
-  cp evs.${STEP}.${COMPONENT}.${RUN}.*.tar ${COMOUTplots}/.
+  cpreq evs.${STEP}.${COMPONENT}.${RUN}.*.tar ${COMOUTplots}/.
 else  
   echo "not copying the plots"
 fi
