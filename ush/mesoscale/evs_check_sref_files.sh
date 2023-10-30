@@ -1,5 +1,10 @@
 #!/bin/ksh
-
+#**************************************************************************
+#  Purpose: check the required input forecast and validation data files
+#           for sref stat jobs
+#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#************************************************************************
+#
 set -x
 
 typeset -Z2 vhr

@@ -1,19 +1,14 @@
 #!/bin/ksh
 #################################################################
-# Script Name: verf_g2g_reflt.sh.sms $vday $vcyc
-# Purpose:   To run grid-to-grid verification on reflectivity
+# Purpose:   Setup some paths and run sref precip stat ush scripts
 #
-# Log History:  Julia Zhu -- 2010.04.28 
-################################################################
+# Last updated 10/27/2023: by  Binbin Zhou, Lynker@EMC/NCEP
+##################################################################
+#
 set -x
 
 export WORK=$DATA
 cd $WORK
-
-export MET_bin_exec='bin'
-export log_met_output_to_metplus=''
-export metplus_verbosity=2
-export met_verbosity=2
 
 export run_mpi=${run_mpi:-'yes'}
 export gather=${gather:-'yes'}
@@ -27,10 +22,9 @@ msg="$job HAS BEGUN"
 postmsg "$jlogfile" "$msg"
 
 $USHevs/mesoscale/evs_sref_precip.sh 
+export err=$?; err_chk
 
 msg="JOB $job HAS COMPLETED NORMALLY"
 postmsg "$jlogfile" "$msg"
 
-
-
-exit 0
+exit 

@@ -1,5 +1,9 @@
 #!/bin/ksh
-
+#*******************************************************************************************
+# Purpose: Get ensemble mean of CTC by averaging the hits, false alarms etc in CTC line type 
+#          for each forecast times 
+#          Then save the mean CTC in new stat files 
+#*******************************************************************************************
 set -x 
 
 #vday=20221018

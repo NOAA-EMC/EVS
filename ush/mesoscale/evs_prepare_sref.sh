@@ -1,5 +1,9 @@
 #!/bin/ksh
-
+#**************************************************************************
+#  Purpose: Get required input forecast and validation data files
+#           for sref stat jobs
+#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#************************************************************************
 set -x
 
 modnam=$1
@@ -10,6 +14,11 @@ export ndate=${ndate:-$NDATE}
 
 export vday=$VDATE
 
+#**************************************************************
+# Get sref's 6hr APCP forecst data
+#   First get sref member files
+#   Then use MET Pcpcombine to get sref's APCP 6h mean netCD files
+#**************************************************************
 if [ $modnam = sref_apcp06 ] ; then
 
   export output_base=${WORK}/sref.${vday}
@@ -34,7 +43,6 @@ if [ $modnam = sref_apcp06 ] ; then
          ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstSREF_APCP06h.conf
          export err=$?; err_chk
 	 mv $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $WORK/sref.${fday}/.
-	  
        done
      done 
    done
@@ -42,7 +50,11 @@ if [ $modnam = sref_apcp06 ] ; then
 
 fi
 
-
+#********************************************************************************
+# Get sref's 24hr APCP forecast files
+#  First get operational sref's 3hr APCP mean grib2 files 
+#  Then use Pcpcombine to get 24hr APCP netCDF files
+#********************************************************************************
 if [ $modnam = sref_apcp24_mean ] ; then
   export output_base=${WORK}/sref.${vday}
   mkdir -p $output_base
@@ -76,6 +88,10 @@ if [ $modnam = sref_apcp24_mean ] ; then
 fi  
 
 
+#********************************************************************
+# Get 3hr CCPA observation data over grid212 and grid240 by using MET
+#  RegridDataPlane tool
+#*******************************************************************
 if [ $modnam = ccpa ] ; then
 
   export output_base=${WORK}/ccpa.${vday}
@@ -123,10 +139,11 @@ if [ $modnam = ccpa ] ; then
      cp $COMINccpa/ccpa.${next}/00/ccpa.t${vhr}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid240.f00.grib2
    done
 
-#############################################################################
-#Get CCPA06h
-#############################################################################
 
+#************************************************************************
+# Get 06hr CCPA data from previously obtained 3hr CCPA data files by usin
+#   MET PcpCombine tool
+#************************************************************************
   ccpa06_G212=${WORK}/ccpa.${vday}/ccpa06_G212
   ccpa06_G240=${WORK}/ccpa.${vday}/ccpa06_G240
   mkdir -p $ccpa06_G212
@@ -167,6 +184,10 @@ if [ $modnam = ccpa ] ; then
 fi
 
 
+#*****************************************************************
+# Get prepbufr data and converted to NetCDF format files by using
+#  MET pb2nc tool
+#  **************************************************************
 if [ $modnam = prepbufr ] ; then
 
  mkdir -p $WORK/prepbufr.$vday

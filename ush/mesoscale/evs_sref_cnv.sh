@@ -1,17 +1,22 @@
 #!/bin/ksh
-set -x 
+#***********************************************************************************
+#  Purpose: Run cnv job by using the mean CTC obtained from evs_sref_average_cnv.sh
+#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#************************************************************************
 
-#Binbin note: If METPLUS_BASE,  PARM_BASE not set, then they will be set to $METPLUS_PATH
-#             by config_launcher.py in METplus-3.0/ush
-#             why config_launcher.py is not in METplus-3.1/ush ??? 
-
+set -x
 export vday=$VDATE
 export regrid='NONE'
-############################################################
 
+#********************************************
+# Check the input data files availability
+# ******************************************
 $USHevs/mesoscale/evs_check_sref_files.sh
 export err=$?; err_chk
 
+#*******************************************
+# Build POE script to collect sub-jobs
+# ******************************************
 >run_all_sref_cnv_poe.sh
 
 export model=sref
@@ -20,9 +25,15 @@ for  obsv in prepbufr ; do
 
  export domain=CONUS
 
+  #***********************************************
+  # Get prepbufr data files for validation
+  #***********************************************
   $USHevs/mesoscale/evs_prepare_sref.sh prepbufr 
   export err=$?; err_chk
 
+  #*******************************************************
+  # Build sub-jobs
+  #*****************************************************
   for fhr in 3 9 15 21 27 33 39 45 51 57 63 69 75 81 87 ; do
        >run_sref_cnv_${fhr}.sh
 
@@ -80,7 +91,9 @@ for  obsv in prepbufr ; do
 
 done
 
-
+#***************************************************
+# Run POE script to get small stat files
+#*************************************************
 chmod 775 run_all_sref_cnv_poe.sh
 if [ $run_mpi = yes ] ; then
    mpiexec  -n 15 -ppn 15 --cpu-bind core --depth=2 cfp ${DATA}/run_all_sref_cnv_poe.sh
@@ -93,6 +106,9 @@ echo "Print stat generation metplus log files begin:"
  cat $DATA/grid2obs/*/logs/*
 echo "Print stat generation metplus log files end"
 
+#***********************************************
+# Gather small stat files to forma big stat file
+# **********************************************
 if [ $gather = yes ] ; then 
   $USHevs/mesoscale/evs_sref_gather.sh $VERIF_CASE
   export err=$?; err_chk

@@ -1,5 +1,9 @@
 #!/bin/bash
-
+#*******************************************************************************
+# Purpose: setup environment, paths, and run the sref precip spatial map 
+#           ploting python script
+# Last updated: 10/27/2023, Binbin Zhou Lynker@EMC/NCEP
+# ******************************************************************************
 set -x 
 
 cd $DATA
@@ -45,6 +49,9 @@ export job_name=SL1L2/FBAR/24hrAccumMaps/CONUS/precip_spatial_map
 
 mkdir -p $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/logs
 
+#*************************************************************************
+# Virtual link the  sref's stat data files of past 90 days 
+#**************************************************************************
 for model in $model_list ; do
  MODEL=`echo $model | tr '[a-z]' '[A-Z]'`	
  target=$DATA/grid2grid_plots/data/$model
@@ -57,17 +64,18 @@ for model in $model_list ; do
  done
 done
 
+#******************************************************************
+# Run spatial map python script
+# *****************************************************************
 python $USHevs/mesoscale/ush_sref_plot_precip_py/sref_atmos_plots.py 
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran sref_atmos_plots.py"
+export err=$?; err_chk
 
 cd $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/precip/SL1L2_FBAR_24hrAccumMaps_CONUS_precip_spatial_map/images
 
 tar -cvf evs.plots.sref.precip.spatial.map.v${VDATE}.tar *.gif
 
 if [ $SENDCOM="YES" ]; then
- cp evs.plots.sref.precip.spatial.map.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
+ cpreq evs.plots.sref.precip.spatial.map.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
 fi
 
 if [ $SENDDBN = YES ] ; then
