@@ -2,7 +2,7 @@
 #######################################################################
 ##  UNIX Script Documentation Block
 ##                      .
-## Script name:         exevs_aqmv_grid2obs_stats.sh
+## Script name:         exevs_aqmv7_stats.sh
 ## Script description:  Perform MetPlus PointStat of Air Quality Model.
 ## Original Author   :  Perry Shafran
 ##
@@ -61,16 +61,16 @@ VDAYm3=$(${NDATE} -72 ${cdate} | cut -c1-8)
 check_file=${EVSINaqm}/${RUN}.${vld_date}/${MODELNAME}/airnow_${HOURLY_INPUT_TYPE}_${vld_time}.nc
 obs_hourly_found=0
 if [ -s ${check_file} ]; then
-    obs_hourly_found=1
+  obs_hourly_found=1
 else
-    if [ $SENDMAIL = "YES" ]; then 
-        export subject="AQM Hourly Observed Missing for EVS ${COMPONENT}"
-        echo "Warning: No AQM ${HOURLY_INPUT_TYPE} was available for ${vld_date} ${vld_time}" > mailmsg
-        echo "Missing file is ${check_file}" >> mailmsg
-        echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
-    fi
-    echo "Can not find pre-processed obs hourly input ${check_file}"
+  echo "WARNING: Can not find pre-processed obs hourly input ${check_file}"
+  if [ $SENDMAIL = "YES" ]; then 
+    export subject="AQM Hourly Observed Missing for EVS ${COMPONENT}"
+    echo "WARNING: No AQM ${HOURLY_INPUT_TYPE} was available for ${vld_date} ${vld_time}" > mailmsg
+    echo "Missing file is ${check_file}" >> mailmsg
+    echo "Job ID: $jobid" >> mailmsg
+    cat mailmsg | mail -s "$subject" $maillist
+  fi
 fi
 echo "obs_hourly_found = ${obs_hourly_found}"
 
@@ -122,16 +122,16 @@ for hour in 06 12; do
               echo ${fhr} >> ${DATA}/fcstlist_o3
               let "numo3fcst=numo3fcst+1"
             else
-                if [ $SENDMAIL = "YES" ]; then
-                    export subject="t${acyc}z ozone${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
-                    echo "Warning: No AQM awpozcon${bctag} forecast was available for ${aday} t${acyc}z" > mailmsg
-                    echo "Missing file is ${fcst_file}" >> mailmsg
-                    echo "Job ID: $jobid" >> mailmsg
-                    cat mailmsg | mail -s "$subject" $maillist
-	        fi
+              if [ $SENDMAIL = "YES" ]; then
+                export subject="t${acyc}z ozone${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
+                echo "WARNING: No AQM awpozcon${bctag} forecast was available for ${aday} t${acyc}z" > mailmsg
+                echo "Missing file is ${fcst_file}" >> mailmsg
+                echo "Job ID: $jobid" >> mailmsg
+                cat mailmsg | mail -s "$subject" $maillist
+              fi
 
-              echo "Warning: No AQM awpozcon${bctag} forecast was available for ${aday} t${acyc}z"
-              echo "Missing file is ${fcst_file}"
+              echo "WARNING: No AQM awpozcon${bctag} forecast was available for ${aday} t${acyc}z"
+              echo "WARNING: Missing file is ${fcst_file}"
             fi 
 
             fcst_file=${COMINaqm}/${dirname}.${aday}/${acyc}/aqm.t${acyc}z.pm25${bctag}.f${filehr}.${gridspec}.grib2
@@ -140,16 +140,16 @@ for hour in 06 12; do
               echo ${fhr} >> ${DATA}/fcstlist_pm
               let "numpmfcst=numpmfcst+1"
             else
-                if [ $SENDMAIL = "YES" ]; then
-                    export subject="t${acyc}z pm25${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
-                    echo "Warning: No AQM pm25${bctag} forecast was available for ${aday} t${acyc}z" > mailmsg
-                    echo "Missing file is ${fcst_file}" >> mailmsg
-                    echo "Job ID: $jobid" >> mailmsg
-                    cat mailmsg | mail -s "$subject" $maillist
-	        fi
+              if [ $SENDMAIL = "YES" ]; then
+                export subject="t${acyc}z pm25${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
+                echo "WARNING: No AQM pm25${bctag} forecast was available for ${aday} t${acyc}z" > mailmsg
+                echo "Missing file is ${fcst_file}" >> mailmsg
+                echo "Job ID: $jobid" >> mailmsg
+                cat mailmsg | mail -s "$subject" $maillist
+	      fi
 
-              echo "Warning: No AQM pm25${bctag} forecast was available for ${aday} t${acyc}z"
-              echo "Missing file is ${fcst_file}"
+              echo "WARNING: No AQM pm25${bctag} forecast was available for ${aday} t${acyc}z"
+              echo "WARNING: Missing file is ${fcst_file}"
             fi 
           fi
           ((ihr++))
@@ -182,8 +182,8 @@ for hour in 06 12; do
                           fi
                         fi
                       else
-                        echo "NO O3 FORECAST OR OBS TO VERIFY"
-                        echo "NUM FCST, NUM OBS", ${numo3fcst}, ${obs_hourly_found}
+                        echo "WARNING: NO O3 FORECAST OR OBS TO VERIFY"
+                        echo "WARNING: NUM FCST, NUM OBS", ${numo3fcst}, ${obs_hourly_found}
                       fi
                       ;;
           pm25) if [ ${numpmfcst} -gt 0 -a ${obs_hourly_found} -eq 1 ]; then
@@ -204,8 +204,8 @@ for hour in 06 12; do
                      fi
                   fi
                 else
-                  echo "NO PM FORECAST OR OBS TO VERIFY"
-                  echo "NUM FCST, NUM OBS", ${numpmfcst}, ${obs_hourly_found}
+                  echo "WARNING: NO PM FORECAST OR OBS TO VERIFY"
+                  echo "WARNING: NUM FCST, NUM OBS", ${numpmfcst}, ${obs_hourly_found}
                 fi
                 ;;
         esac
@@ -220,16 +220,16 @@ done
 check_file=${EVSINaqm}/${RUN}.${VDATE}/${MODELNAME}/airnow_daily_${VDATE}.nc
 obs_daily_found=0
 if [ -s ${check_file} ]; then
-    obs_daily_found=1
+  obs_daily_found=1
 else
-    if [ $SENDMAIL = "YES" ]; then
-        export subject="AQM Daily Observed Missing for EVS ${COMPONENT}"
-        echo "Warning: No AQM Daily Observed file was available for ${VDATE}" > mailmsg
-        echo "Missing file is ${check_file}" >> mailmsg
-        echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
-     fi
-    echo "Can not find pre-processed obs daily input ${check_file}"
+  echo "WARNING: Can not find pre-processed obs daily input ${check_file}"
+  if [ $SENDMAIL = "YES" ]; then
+    export subject="AQM Daily Observed Missing for EVS ${COMPONENT}"
+    echo "WARNING: No AQM Daily Observed file was available for ${VDATE}" > mailmsg
+    echo "Missing file is ${check_file}" >> mailmsg
+    echo "Job ID: $jobid" >> mailmsg
+    cat mailmsg | mail -s "$subject" $maillist
+  fi
 fi
 echo "obs_daily_found = ${obs_daily_found}"
 
@@ -266,59 +266,59 @@ if [ ${vhr} = 11 ]; then
       else
          if [ $SENDMAIL = "YES" ]; then
            export subject="ozmax8${bctag} AQM Daily Forecast Data Missing for EVS ${COMPONENT}"
-           echo "Warning: No AQM ozmax8${bctag} daily forecast was available for ${VDAYm1} t${hour}z" > mailmsg
+           echo "WARNING: No AQM ozmax8${bctag} daily forecast was available for ${VDAYm1} t${hour}z" > mailmsg
            echo "Missing file is ${ozmax8_preprocessed_file}" >> mailmsg
            echo "Job ID: $jobid" >> mailmsg
            cat mailmsg | mail -s "$subject" $maillist
          fi
-         echo "Warning: No AQM max_8hr_o3${bctag} forecast was available for ${VDAYm1} t${hour}z"
-         echo "Missing file is ${ozmax8_preprocessed_file}"
+         echo "WARNING: No AQM max_8hr_o3${bctag} forecast was available for ${VDAYm1} t${hour}z"
+         echo "WARNING: Missing file is ${ozmax8_preprocessed_file}"
       fi
       ozmax8_preprocessed_file=${EVSINaqm}/atmos.${VDAYm2}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
       if [ -s ${ozmax8_preprocessed_file} ]; then
-          let "ozmax8=ozmax8+1"
+        let "ozmax8=ozmax8+1"
       else
-	  if [ $SENDMAIL = "YES" ]; then 
-              export subject="ozmax8${bctag} AQM Daily Forecast Data Missing for EVS ${COMPONENT}"
-              echo "Warning: No AQM ozmax8${bctag} daily forecast was available for ${VDAYm2} t${hour}z" > mailmsg
-              echo "Missing file is ${ozmax8_preprocessed_file}" >> mailmsg
-              echo "Job ID: $jobid" >> mailmsg
-              cat mailmsg | mail -s "$subject" $maillist
-          fi
-          echo "Warning: No AQM max_8hr_o3${bctag} forecast was available for ${VDAYm2} t${hour}z"
-          echo "Missing file is ${ozmax8_preprocessed_file}"
+        if [ $SENDMAIL = "YES" ]; then 
+          export subject="ozmax8${bctag} AQM Daily Forecast Data Missing for EVS ${COMPONENT}"
+          echo "WARNING: No AQM ozmax8${bctag} daily forecast was available for ${VDAYm2} t${hour}z" > mailmsg
+          echo "Missing file is ${ozmax8_preprocessed_file}" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $maillist
+        fi
+        echo "WARNING: No AQM max_8hr_o3${bctag} forecast was available for ${VDAYm2} t${hour}z"
+        echo "WARNING: Missing file is ${ozmax8_preprocessed_file}"
       fi
       ozmax8_preprocessed_file=${EVSINaqm}/atmos.${VDAYm3}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
       if [ -s ${ozmax8_preprocessed_file} ]; then
-          let "ozmax8=ozmax8+1"
+        let "ozmax8=ozmax8+1"
       else
-          if [ $SENDMAIL = "YES" ]; then 
-              export subject="ozmax8${bctag} AQM Daily Forecast Data Missing for EVS ${COMPONENT}"
-              echo "Warning: No AQM ozmax8${bctag} daily forecast was available for ${VDAYm3} t${hour}z" > mailmsg
-              echo "Missing file is ${ozmax8_preprocessed_file}" >> mailmsg
-              echo "Job ID: $jobid" >> mailmsg
-              cat mailmsg | mail -s "$subject" $maillist
-          fi
-          echo "Warning: No AQM max_8hr_o3${bctag} forecast was available for ${VDAYm3} t${hour}z"
-          echo "Missing file is ${ozmax8_preprocessed_file}"
+        if [ $SENDMAIL = "YES" ]; then 
+          export subject="ozmax8${bctag} AQM Daily Forecast Data Missing for EVS ${COMPONENT}"
+          echo "WARNING: No AQM ozmax8${bctag} daily forecast was available for ${VDAYm3} t${hour}z" > mailmsg
+          echo "Missing file is ${ozmax8_preprocessed_file}" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $maillist
+        fi
+        echo "WARNING: No AQM max_8hr_o3${bctag} forecast was available for ${VDAYm3} t${hour}z"
+        echo "WARNING: Missing file is ${ozmax8_preprocessed_file}"
       fi
       echo "ozmax8, obs_daily_found=",${ozmax8},${obs_daily_found}
       if [ ${ozmax8} -gt 0 -a ${obs_daily_found} -gt 0 ]; then 
-          run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstOZONEMAX_obsAIRNOW_${fcst_input_ver}.conf ${PARMevs}/metplus_config/machine.conf
-	  export err=$?; err_chk
-          if [ ${SENDCOM} = "YES" ]; then
-              cp ${DATA}/point_stat/${MODELNAME}/* ${COMOUTsmall}
-          fi
-          export outtyp=OZMAX8
-          cp ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
-          run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstOZONEMAX_obsAIRNOW_GatherByDay.conf ${PARMevs}/metplus_config/machine.conf
-	  export err=$?; err_chk
-	  if [ ${SENDCOM} = "YES" ]; then
-              cp ${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_ozmax8.v${VDATE}.stat ${COMOUTfinal}
-          fi	 
+        run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstOZONEMAX_obsAIRNOW_${fcst_input_ver}.conf ${PARMevs}/metplus_config/machine.conf
+	export err=$?; err_chk
+        if [ ${SENDCOM} = "YES" ]; then
+          cp ${DATA}/point_stat/${MODELNAME}/* ${COMOUTsmall}
+        fi
+        export outtyp=OZMAX8
+        cp ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
+        run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstOZONEMAX_obsAIRNOW_GatherByDay.conf ${PARMevs}/metplus_config/machine.conf
+	export err=$?; err_chk
+	if [ ${SENDCOM} = "YES" ]; then
+          cp ${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_ozmax8.v${VDATE}.stat ${COMOUTfinal}
+        fi	 
       else
-          echo "NO OZMAX8 OBS OR MODEL DATA"
-          echo "OZMAX8, OBS_DAILY_FOUND", ${ozmax8}, ${obs_daily_found}
+        echo "WARNING: NO OZMAX8 OBS OR MODEL DATA"
+        echo "WARNING: OZMAX8, OBS_DAILY_FOUND", ${ozmax8}, ${obs_daily_found}
       fi
     done
 
@@ -359,46 +359,46 @@ if [ ${vhr} = 04 ]; then
       if [ -s ${fcst_file} ]; then
         pmave1=1
       else
-          if [ $SENDMAIL = "YES" ]; then
-              export subject="t${hour}z PMAVE${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
-              echo "Warning: No AQM ave_24hr_pm25${bctag} forecast was available for ${VDAYm1} t${hour}z" > mailmsg
-              echo "Missing file is $fcst_file}" >> mailmsg
-              echo "Job ID: $jobid" >> mailmsg
-              cat mailmsg | mail -s "$subject" $maillist
-	  fi
+        if [ $SENDMAIL = "YES" ]; then
+          export subject="t${hour}z PMAVE${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
+          echo "WARNING: No AQM ave_24hr_pm25${bctag} forecast was available for ${VDAYm1} t${hour}z" > mailmsg
+          echo "Missing file is $fcst_file}" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $maillist
+        fi
 
-        echo "Warning: No AQM ave_24hr_pm25${bctag} forecast was available for ${VDAYm1} t${hour}z"
-        echo "Missing file is $fcst_file}"
+        echo "WARNING: No AQM ave_24hr_pm25${bctag} forecast was available for ${VDAYm1} t${hour}z"
+        echo "WARNING: Missing file is $fcst_file}"
       fi
       fcst_file=${COMINaqm}/${dirname}.${VDAYm2}/${hour}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2
       if [ -s ${fcst_file} ]; then
        let "pmave1=pmave1+1" 
       else
-          if [ $SENDMAIL = "YES" ]; then
-              export subject="t${hour}z PMAVE${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
-              echo "Warning: No AQM ave_24hr_pm25${bctag} forecast was available for ${VDAYm2} t${hour}z" > mailmsg
-              echo "Missing file is $fcst_file}" >> mailmsg
-              echo "Job ID: $jobid" >> mailmsg
-              cat mailmsg | mail -s "$subject" $maillist
-	  fi
+        if [ $SENDMAIL = "YES" ]; then
+          export subject="t${hour}z PMAVE${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
+          echo "WARNING: No AQM ave_24hr_pm25${bctag} forecast was available for ${VDAYm2} t${hour}z" > mailmsg
+          echo "Missing file is $fcst_file}" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $maillist
+        fi
 
-        echo "Warning: No AQM ave_24hr_pm25${bctag} forecast was available for ${VDAYm2} t${hour}z"
-        echo "Missing file is $fcst_file}"
+        echo "WARNING: No AQM ave_24hr_pm25${bctag} forecast was available for ${VDAYm2} t${hour}z"
+        echo "WARNING: Missing file is $fcst_file}"
       fi
       fcst_file=${COMINaqm}/${dirname}.${VDAYm3}/${hour}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2
       if [ -s ${fcst_file} ]; then
         let "pmave1=pmave1+1"
       else
-          if [ $SENDMAIL = "YES" ]; then
-              export subject="t${hour}z PMAVE${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
-              echo "Warning: No AQM ave_24hr_pm25${bctag} forecast was available for ${VDAYm3} t${hour}z" > mailmsg
-              echo "Missing file is $fcst_file}" >> mailmsg
-              echo "Job ID: $jobid" >> mailmsg
-              cat mailmsg | mail -s "$subject" $maillist
-          fi
+        if [ $SENDMAIL = "YES" ]; then
+          export subject="t${hour}z PMAVE${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
+          echo "WARNING: No AQM ave_24hr_pm25${bctag} forecast was available for ${VDAYm3} t${hour}z" > mailmsg
+          echo "Missing file is $fcst_file}" >> mailmsg
+          echo "Job ID: $jobid" >> mailmsg
+          cat mailmsg | mail -s "$subject" $maillist
+        fi
 
-        echo "Warning: No AQM ave_24hr_pm25${bctag} forecast was available for ${VDAYm3} t${hour}z"
-        echo "Missing file is $fcst_file}"
+        echo "WARNING: No AQM ave_24hr_pm25${bctag} forecast was available for ${VDAYm3} t${hour}z"
+        echo "WARNING: Missing file is $fcst_file}"
       fi
       echo "pmave1, obs_daily_found=",${pmave1},${obs_daily_found}
       if [ ${pmave1} -gt 0 -a ${obs_daily_found} -gt 0 ]; then
@@ -415,8 +415,8 @@ if [ ${vhr} = 04 ]; then
           cp ${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_pmave.v${VDATE}.stat ${COMOUTfinal}
 	fi
        else
-         echo "NO PMAVE OBS OR MODEL DATA"
-         echo "PMAVE1, OBS_DAILY_FOUND", ${pmave1}, ${obs_daily_found}
+         echo "WARNING: NO PMAVE OBS OR MODEL DATA"
+         echo "WARNING: PMAVE1, OBS_DAILY_FOUND", ${pmave1}, ${obs_daily_found}
        fi
     done
 

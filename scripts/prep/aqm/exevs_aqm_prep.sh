@@ -74,8 +74,8 @@ while [ ${ic} -le ${endvhr} ]; do
             cat mailmsg | mail -s "$subject" $maillist 
         fi
 
-        echo "Warning: No AIRNOW ASCII data was available for valid date ${VDATE}${vldhr}"
-        echo "Warning: Missing file is ${checkfile}"
+        echo "WARNING: No AIRNOW ASCII data was available for valid date ${VDATE}${vldhr}"
+        echo "WARNING: Missing file is ${checkfile}"
     fi
     ((ic++))
 done
@@ -104,8 +104,8 @@ else
         cat mailmsg | mail -s "$subject" $maillist 
     fi
 
-    echo "Warning: No AIRNOW ASCII data was available for valid date ${VDATE}"
-    echo "Warning: Missing file is ${checkfile}"
+    echo "WARNING: No AIRNOW ASCII data was available for valid date ${VDATE}"
+    echo "WARNING: Missing file is ${checkfile}"
 fi
 #
 ##
@@ -154,8 +154,8 @@ then
             cat mailmsg | mail -s "$subject" $maillist
         fi
 
-        echo "Warning: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z"
-        echo "Missing file is ${ozmax8_file}"
+        echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z"
+        echo "WARNING: Missing file is ${ozmax8_file}"
     fi
 fi
 
@@ -179,8 +179,8 @@ then
             cat mailmsg | mail -s "$subject" $maillist
         fi
 
-        echo "Warning: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z"
-        echo "Missing file is ${ozmax8_file}"
+        echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z"
+        echo "WARNING: Missing file is ${ozmax8_file}"
     fi
 fi
 
