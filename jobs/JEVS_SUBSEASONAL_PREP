@@ -6,7 +6,6 @@ set -x
 # SET SHELL PROCESSING VARIABLES
 # ###################################
 export PS4='$SECONDS + ' 
-date
 
 export machine="WCOSS2"
 
@@ -83,6 +82,4 @@ if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT
   rm -rf $DATA
 fi
-
-date
 
