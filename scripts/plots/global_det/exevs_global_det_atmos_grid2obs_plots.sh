@@ -46,7 +46,6 @@ for group in condense_stats filter_stats make_plots tar_images; do
     python $USHevs/global_det/global_det_atmos_plots_grid2obs_create_job_scripts.py
     export err=$?; err_chk
     chmod u+x ${VERIF_CASE}_${STEP}/plot_job_scripts/$group/*
-    group_ncount_job=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/$group/job* |wc -l)
     nc=1
     if [ $USE_CFP = YES ]; then
         group_ncount_poe=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/$group/poe* |wc -l)
@@ -68,6 +67,7 @@ for group in condense_stats filter_stats make_plots tar_images; do
             nc=$((nc+1))
         done
     else
+        group_ncount_job=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/$group/job* |wc -l)
         while [ $nc -le $group_ncount_job ]; do
             $DATA/${VERIF_CASE}_${STEP}/plot_job_scripts/$group/job${nc}
             export err=$?; err_chk
