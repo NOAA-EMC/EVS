@@ -1,7 +1,8 @@
 #!/bin/ksh
-#  JOB card cerated for running METPlus-based Global enesmble verifications
-#   By Binbin Zhou, IMSG@EMC/NCEP
-#   Feb 2, 2022
+#  JOB card cerated for running METPlus-based NARRE verifications
+#     By Binbin Zhou, Lynker@EMC/NCEP
+#     Last updated 10/27/2023
+#     Purpose: setup environment variables to run the NARRE plots script
 #
 set -x
 #######################################################
@@ -63,6 +64,7 @@ export pgmout="OUTPUT.${pid}"
 
 
 $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${STEP}.sh 
+export err=$?; err_chk
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$jlogfile" "$msg"
