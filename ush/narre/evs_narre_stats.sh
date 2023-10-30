@@ -1,26 +1,34 @@
 #!/bin/ksh
 set -x 
-
-#Binbin note: If METPLUS_BASE,  PARM_BASE not set, then they will be set to $METPLUS_PATH
-#             by config_launcher.py in METplus-3.0/ush
-#             why config_launcher.py is not in METplus-3.1/ush ??? 
+#**************************************************************************
+#  Purpose: To run the METplus-based stat generation jobs
+#  Last update: 10/27/2023, by Binbin Zhou Lynker@EMC/NCEP
+#************************************************************************
+#
 
 
 export regrid='NONE'
-############################################################
-
-
 export vday=$VDATE
 
+#********************************************************
+# Check input forecsat and validation data availability
+# ******************************************************
 $USHevs/narre/check_files_existing.sh
+export err=$?; err_chk
 
 echo COMOUTsmall=$COMOUTsmall
 
+#**********************************************
+# Build POE script to collect sub-jobs
+# *********************************************
 >run_all_narre_poe.sh
 
 
+#********************************************
+#Get prepbufr data
+#********************************************
 $USHevs/narre/evs_get_prepbufr.sh prepbufr
-
+export err=$?; err_chk
 
 obsv='prepbufr'
 
@@ -34,6 +42,9 @@ for prod in mean  ; do
 
   for range in range1 range2 range3 range4 ; do 
 
+     #************************************************************
+     # setup sub-jobs and all required environment for METplus run
+     # *********************************************************** 
      >run_narre_${model}.${dom}.${range}.sh
 
        echo  "export range=$range" >> run_narre_${model}.${dom}.${range}.sh
@@ -113,13 +124,22 @@ for prod in mean  ; do
 
 done #end of prod loop
 
+#****************************************************************************
+# Run the POE script in MPI or in Sequence order to generate small stat files
+# ***************************************************************************
 chmod 775 run_all_narre_poe.sh
 if [ $run_mpi = yes ] ; then
   mpiexec  -n 8 -ppn 8 --cpu-bind core --depth=2 cfp  ${DATA}/run_all_narre_poe.sh
+  export err=$?; err_chk
 else
    ${DATA}/run_all_narre_poe.sh
+   export err=$?; err_chk
 fi
 
+#*****************************************************
+# Combine small stat files to a big stat file (final)
+#****************************************************
 if [ $gather = yes ] ; then
   $USHevs/narre/evs_narre_gather.sh
+  export err=$?; err_chk
 fi
