@@ -1,6 +1,15 @@
 #/bin/bash
 
+#################################################################################
+# Name of Script: exevs_analyses_rtma_grid2obs_stats.sh
+# Contact(s):     Perry C. Shafran (perry.shafran@noaa.gov)
+# Purpose of Script: This script runs METplus to generate
+#                    verification statistics for rtma analyses and first guess
+##################################################################################
+
 set -x
+
+# Set up initial directories and initialize variables
 
 mkdir -p $DATA/logs
 mkdir -p $DATA/stat
@@ -14,7 +23,7 @@ export dirin=$COMINrtma
 
 export maskdir=$MASKS
 
-# search to see if obs file exists
+# Search for obs Prepbufr file
 
 obfound=0
 fhr="00"
@@ -27,15 +36,19 @@ if [ -e $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00
 then
  obfound=1
 else
- export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
- echo "Warning: The ${obday} prepbufr file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
- echo "Missing file is $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00" >> mailmsg
- echo "Job ID: $jobid" >> mailmsg
- cat mailmsg | mail -s "$subject" $maillist
+ echo "WARNING: $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00 is missing, METplus will not run"
+ if [ $SENDMAIL = "YES" ]; then
+  export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
+  echo "Warning: The ${obday} prepbufr file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
+  echo "Missing file is $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00" >> mailmsg
+  echo "Job ID: $jobid" >> mailmsg
+  cat mailmsg | mail -s "$subject" $maillist
+ fi
 fi
 
 echo $obfound
 
+# Search for analysis (2dvaranl) or first guess (2dvarges) file
 
 for type in 2dvaranl 2dvarges
 do
@@ -67,11 +80,14 @@ then
 	then
 	 fhr="01"
 	fi
+	
+# Check for CONUS rtma file
 
 	if [ -e $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2_wexp ]
         then
           rtmafound=1
         else
+	 echo "WARNING: $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2_wexp is missing; METplus will not run"
 	 if [ $SENDMAIL = "YES" ]; then
           export subject="CONUS Analysis Missing for EVS ${COMPONENT}"
           echo "Warning: The CONUS Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
@@ -103,7 +119,7 @@ then
 	 fi
 	fi
 
-# check for CONUS rtma2p5 file
+# check for Alaska rtma file
 
         rtmafound=0
 
@@ -111,6 +127,7 @@ then
         then
           rtmafound=1
         else
+	 echo "WARNING: $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2 is missing; METplus will not run"
 	 if [ $SENDMAIL = "YES" ]; then
           export subject="Alaska Analysis Missing for EVS ${COMPONENT}"
           echo "Warning: The Alaska Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
@@ -151,7 +168,7 @@ then
 	 fi
 	fi
 
-	# check for CONUS rtma2p5 file
+# check for Hawaii rtma file
 
         rtmafound=0
 
@@ -159,6 +176,7 @@ then
         then    
           rtmafound=1
         else 
+         echo "WARNING: $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2 is missing; METplus will not run"
 	 if [ $SENDMAIL = "YES" ]; then
           export subject="Hawaii Analysis Missing for EVS ${COMPONENT}"
           echo "Warning: The Hawaii Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
@@ -201,10 +219,13 @@ then
 
 	rtmafound=0
 
+# Check for Puerto Rico rtma file"
+
         if [ -e $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2 ]
         then
           rtmafound=1
         else
+	 echo "WARNING: $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2 is missing; METplus will not run"
 	 if [ $SENDMAIL = "YES" ]; then
           export subject="Puerto Rico Analysis Missing for EVS ${COMPONENT}"
           echo "Warning: The Puerto Rico Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
@@ -264,11 +285,14 @@ then
      fhr="11"
     fi
    fi
+
+# Check for urma prepbufr file for Guam
 					 
    if [ -s $COMINobsproc/urma.${obday}/urma.t${obhr}z.prepbufr.tm00 ]
    then 
       obfound=1
    else
+    echo "WARNING: $COMINobsproc/urma.${obday}/urma.t${obhr}z.prepbufr.tm00 is missing; METplus for Guam will not run"
     if [ $SENDMAIL = "YES" ]; then
       export subject="Guam Prepbufr Data Missing for EVS ${COMPONENT}"
       echo "Warning: The ${obday} prepbufr file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
@@ -277,11 +301,14 @@ then
       cat mailmsg | mail -s "$subject" $maillist
     fi
    fi
+
+# Check for Guam rtma file
    
    if [ -s $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2 ]
    then
      rtmafound=1
    else
+    echo "WARNING: $COMINrtma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2 is missing; METplus will not run"
     if [ $SENDMAIL = "YES" ]; then
      export subject="Guam Analysis Missing for EVS ${COMPONENT}"
      echo "Warning: The Guam Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
@@ -291,6 +318,8 @@ then
     fi
    fi
 fi
+
+# Run METplus for rtma vs obs
 
 if [ ! -e $COMOUTsmall/point_stat_${modnam}${typtag}_${fhr}0000L_${VDATE}_${vhr}0000V.stat ]
 then
@@ -310,8 +339,8 @@ if [ $SENDCOM = "YES" ]; then
  cp $DATA/point_stat/${modnam}${typtag}/* $COMOUTsmall
 fi
 else
-echo "NO RTMA OR OBS DATA, METplus will not run"
-echo "RTMAFOUND, OBFOUND", $rtmafound, $obfound
+echo "WARNING: NO RTMA OR OBS DATA, METplus will not run"
+echo "WARNING: RTMAFOUND, OBFOUND", $rtmafound, $obfound
 fi
 else
   echo "RESTART - $COMOUTsmall/point_stat_${modnam}${typtag}_${fhr}_${VDATE}_${vhr}0000V.stat exists"
@@ -319,6 +348,8 @@ fi
 
 
 done
+
+# Run StatAnalysis to generate final stat file
 
 if [ $vhr = 23 -a $rtmafound -eq 1 -a $obfound -eq 1 ]
 then
@@ -333,7 +364,7 @@ then
          cp $finalstat/evs.stats.${regionnest}${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal
        fi
 else    
-       echo "NO RTMA OR OBS DATA, or not gather time yet, METplus gather job will not run"
+       echo "WARNING: NO RTMA OR OBS DATA, or not gather time yet, METplus gather job will not run"
 fi
 
 done
