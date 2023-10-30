@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+'''
+Name: subseasonal_util.py
+Contact(s): Shannon Shields
+Abstract: This contains many functions used across subseasonal.
+'''
+
 import os
 import datetime
 import numpy as np
@@ -17,7 +23,7 @@ def run_shell_command(command):
     """! Run shell command
 
          Args:
-             command - list of agrument entries (string)
+             command - list of argument entries (string)
 
          Returns:
 
