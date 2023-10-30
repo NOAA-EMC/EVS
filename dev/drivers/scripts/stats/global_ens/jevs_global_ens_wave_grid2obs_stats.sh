@@ -24,7 +24,7 @@ export COMPONENT=global_ens
 export STEP=stats
 export RUN=wave
 export VERIF_CASE=grid2obs
-
+export vhr=00
 
 ############################################################
 # Load modules
