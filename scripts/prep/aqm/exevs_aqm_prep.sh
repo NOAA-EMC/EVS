@@ -63,7 +63,7 @@ while [ ${ic} -le ${endvhr} ]; do
 	      cp ${PREP_SAVE_DIR}/airnow_hourly_aqobs_${VDATE}${VHOUR}.nc ${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}
 	    fi
         else
-            echo "can not find ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf"
+            echo "WARNING: can not find ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf"
 	fi
     else
       if [ $SENDMAIL = "YES" ]; then
@@ -74,8 +74,8 @@ while [ ${ic} -le ${endvhr} ]; do
         cat mailmsg | mail -s "$subject" $maillist 
       fi
 
-        echo "Warning: No AIRNOW ASCII data was available for valid date ${VDATE}${vldhr}"
-        echo "Warning: Missing file is ${checkfile}"
+        echo "WARNING: No AIRNOW ASCII data was available for valid date ${VDATE}${vldhr}"
+        echo "WARNING: Missing file is ${checkfile}"
     fi
     ((ic++))
 done
@@ -93,7 +93,7 @@ if [ -s ${checkfile} ]; then
 	  cp ${PREP_SAVE_DIR}/airnow_daily_$VDATE.nc ${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}/${MODELNAME}
 	fi
     else
-        echo "can not find ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf"
+        echo "WARNING: can not find ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf"
     fi
 else
   if [ $SENDMAIL = "YES" ]; then
@@ -104,8 +104,8 @@ else
     cat mailmsg | mail -s "$subject" $maillist 
   fi
 
-    echo "Warning: No AIRNOW ASCII data was available for valid date ${VDATE}"
-    echo "Warning: Missing file is ${checkfile}"
+    echo "WARNING: No AIRNOW ASCII data was available for valid date ${VDATE}"
+    echo "WARNING: Missing file is ${checkfile}"
 fi
 #
 ##
@@ -152,8 +152,8 @@ then
         cat mailmsg | mail -s "$subject" $maillist
       fi
 
-        echo "Warning: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z"
-        echo "Missing file is ${ozmax8_file}"
+        echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z"
+        echo "WARNING: Missing file is ${ozmax8_file}"
     fi
 fi
 
@@ -177,8 +177,8 @@ then
         cat mailmsg | mail -s "$subject" $maillist
       fi
 
-        echo "Warning: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z"
-        echo "Missing file is ${ozmax8_file}"
+        echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z"
+        echo "WARNING: Missing file is ${ozmax8_file}"
     fi
 fi
     
