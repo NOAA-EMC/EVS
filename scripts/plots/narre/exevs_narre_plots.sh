@@ -1,4 +1,7 @@
 #!/bin/ksh
+# Purpose: setup environment, paths, and run the narre ploting python script
+# Last updated: 10/27/2023, Binbin Zhou Lynker@EMC/NCEP
+#
 
 set -x 
 
@@ -31,6 +34,9 @@ done
 export init_beg=$first_day
 export valid_beg=$first_day
 
+#*************************************************************************
+# Virtual link the  narre's stat data files of past days (31 or 90 days)
+#**************************************************************************
 n=0
 while [ $n -le $past_days ] ; do
   #hrs=`expr $n \* 24`
@@ -43,14 +49,15 @@ done
 
 VX_MASK_LIST="G130 G242"
 
-#fcst_init_hour=""
-#fcst_valid_hour="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23"
 export fcst_valid_hour="0,3,6,9,12,15,18,21"
 export fcst_lead="1,2,3,4,5,6,7,8,9,10,11,12"
 
 export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
 mkdir -p ${plot_dir}
 
+#*****************************************
+# Build a POE file to collect sub-jobs
+# **************************************** 
 > run_all_poe.sh 
 for grid in $VX_MASK_LIST ; do
 
@@ -62,6 +69,9 @@ for grid in $VX_MASK_LIST ; do
    #for line_type in ctc sl1l2 ; do 
    for line_type in ctc ; do 
 
+    #*****************************************************************************
+    # Build sub-jobs and setup environment for running the python plotting scripts
+    # ****************************************************************************
     > run_narre_${grid}.${score_type}.${var}.${line_type}.sh 
 
      
@@ -166,12 +176,21 @@ done #end of grid
 
 chmod +x run_all_poe.sh
 
+#***************************************************************************
+# Run the POE script in parallel or in sequence order to generate png files
+# **************************************************************************
 if [ $run_mpi = yes ] ; then
    mpiexec -np 4 -ppn 4 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   export err=$?; err_chk
 else
   ${DATA}/run_all_poe.sh
+  export err=$?; err_chk
 fi
 
+
+#**************************************************
+# Change plot file names to meet the EVS standard
+#**************************************************
 cd $plot_dir
 
 for grid in g130 g242 ; do 
@@ -198,7 +217,7 @@ done
 tar -cvf evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar *.png
 
 if [ $SENDCOM = YES ] ; then
-   cp evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar  $COMOUT/.
+   cpreq evs.plots.narre.grid2obs.last${past_days}days.v${VDATE}.tar  $COMOUT/.
 fi
 
 if [ $SENDDBN = YES ] ; then    

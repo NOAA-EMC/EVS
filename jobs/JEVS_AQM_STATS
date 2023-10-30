@@ -1,5 +1,7 @@
 #!/bin/ksh
 
+set -x
+
 ########################################
 # Preliminary data setup step
 ########################################
@@ -21,7 +23,6 @@ export SENDMAIL=${SENDMAIL:-NO}
 # ###################################
 date
 export PS4='$SECONDS + '
-set -x
 
 ###########################################################
 # obtain unique LSF id (jobid) and make temp directories
@@ -36,7 +37,7 @@ setpdy.sh
 
 export envir=${envir:-prod}
 
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
@@ -57,7 +58,7 @@ export MODELNAME=${MODELNAME:-aqm}
 export modsys=${modsys:-aqm}
 export mod_ver=${mod_ver:-${aqm_ver}}
 
-export VDATE=${VDATE:-${PDYm3}}
+export VDATE=${VDATE:-${PDYm2}}
 
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
 export DCOMIN=${DCOMIN:-${DCOMROOT}}
