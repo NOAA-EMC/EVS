@@ -1,5 +1,10 @@
 #!/bin/ksh
-
+#**************************************************************************
+#  Purpose: Get required input forecast and validation data files
+#           for narre stat jobs
+#  Last update: 10/27/2023, by Binbin Zhou Lynker@EMC/NCEP
+#************************************************************************
+#
 set -x 
 
 modnam=$1
@@ -20,6 +25,7 @@ if [ $modnam = prepbufr ] ; then
      export verif_grid=$grid
 
      ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsRAP_Prepbufr.conf
+     export err=$?; err_chk
      cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${VDATE}
      echo "Pb2nc_obsRAP_Prepbufr  Metplus log file start:"
      cat $output_base/logs/*
