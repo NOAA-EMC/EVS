@@ -165,7 +165,7 @@ for hour in 06 12; do
     
             awpozcon) if [ ${numo3fcst} -gt 0 -a ${obs_hourly_found} -eq 1 ]; then
                         export fcsthours=${fcsthours_o3}
-                        run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstOZONE_obsAIRNOW_${fcst_input_ver}.conf ${PARMevs}/metplus_config/machine.conf
+                        run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstOZONE_obsAIRNOW.conf ${PARMevs}/metplus_config/machine.conf
                         export err=$?; err_chk
                         mkdir -p ${COMOUTsmall}
                         if [ ${SENDCOM} = "YES" ]; then
@@ -188,7 +188,7 @@ for hour in 06 12; do
                       ;;
           pm25) if [ ${numpmfcst} -gt 0 -a ${obs_hourly_found} -eq 1 ]; then
                   export fcsthours=${fcsthours_pm}
-                  run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstPM2p5_obsAIRNOW_${fcst_input_ver}.conf ${PARMevs}/metplus_config/machine.conf
+                  run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstPM2p5_obsAIRNOW.conf ${PARMevs}/metplus_config/machine.conf
                   export err=$?; err_chk
                   mkdir -p ${COMOUTsmall}
                   if [ ${SENDCOM} = "YES" ]; then
@@ -304,7 +304,7 @@ if [ ${vhr} = 11 ]; then
       fi
       echo "ozmax8, obs_daily_found=",${ozmax8},${obs_daily_found}
       if [ ${ozmax8} -gt 0 -a ${obs_daily_found} -gt 0 ]; then 
-        run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstOZONEMAX_obsAIRNOW_${fcst_input_ver}.conf ${PARMevs}/metplus_config/machine.conf
+        run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstOZONEMAX_obsAIRNOW.conf ${PARMevs}/metplus_config/machine.conf
 	export err=$?; err_chk
         if [ ${SENDCOM} = "YES" ]; then
           cp ${DATA}/point_stat/${MODELNAME}/* ${COMOUTsmall}
@@ -402,7 +402,7 @@ if [ ${vhr} = 04 ]; then
       fi
       echo "pmave1, obs_daily_found=",${pmave1},${obs_daily_found}
       if [ ${pmave1} -gt 0 -a ${obs_daily_found} -gt 0 ]; then
-        run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstPMAVE_obsANOWPM_${fcst_input_ver}.conf ${PARMevs}/metplus_config/machine.conf
+        run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstPMAVE_obsANOWPM.conf ${PARMevs}/metplus_config/machine.conf
 	export err=$?; err_chk
         if [ ${SENDCOM} = "YES" ]; then
           cp ${DATA}/point_stat/${MODELNAME}/* ${COMOUTsmall}
