@@ -19,12 +19,12 @@ export maskpath=$MASKS
 
 
 msg="$job HAS BEGUN"
-postmsg "$jlogfile" "$msg"
+postmsg "$msg"
 
 $USHevs/mesoscale/evs_sref_precip.sh 
 export err=$?; err_chk
 
 msg="JOB $job HAS COMPLETED NORMALLY"
-postmsg "$jlogfile" "$msg"
+postmsg "$msg"
 
 exit 

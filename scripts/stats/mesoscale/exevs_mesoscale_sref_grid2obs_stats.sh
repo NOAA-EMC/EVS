@@ -22,7 +22,7 @@ export maskpath=$MASKS
 
 
 msg="$job HAS BEGUN"
-postmsg "$jlogfile" "$msg"
+postmsg "$msg"
 
 #******************************************************************************
 # The method in ceiling and vis (cnv) job is to deal with the conditional mean
@@ -40,6 +40,6 @@ else
 fi
 
 msg="JOB $job HAS COMPLETED NORMALLY"
-postmsg "$jlogfile" "$msg"
+postmsg "$msg"
 
 exit 
