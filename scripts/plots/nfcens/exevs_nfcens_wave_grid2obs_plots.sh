@@ -81,14 +81,14 @@ else
   set -x
   echo ' '
   echo '**************************************** '
-  echo '*** WARNING: NO NFCENS *.stat FILES *** '
+  echo '*** FATAL ERROR: NO NFCENS *.stat FILES *** '
   echo "             for ${VDATE} "
   echo '**************************************** '
   echo ' '
   echo "${MODELNAME}_${RUN} $VDATE $vhour : NFCENS *.stat files missing."
   [[ "$LOUD" = YES ]] && set -x
-  ./postmsg "WARNING: NO NFCENS *.stat files for ${VDATE}"
-  err_exit "WARNING: Did not copy the NFCENS *.stat files for ${VDATE}"
+  "FATAL ERROR: NO NFCENS *.stat files for ${VDATE}"
+  err_exit "FATAL ERROR: Did not copy the NFCENS *.stat files for ${VDATE}"
   exit
 fi
 
@@ -147,7 +147,7 @@ if [ $gather = yes ] ; then
       echo ' '
       echo "${MODELNAME}_${RUN} ${VDATE} ${period}: PLOTS are missing."
       [[ "$LOUD" = YES ]] && set -x
-      ./postmsg "FATAL ERROR : NO ${period} PLOTS FOR ${VDATE}"
+      "FATAL ERROR : NO ${period} PLOTS FOR ${VDATE}"
       err_exit "FATAL ERROR: Did not find any ${period} plots for ${VDATE}"
     fi
     
