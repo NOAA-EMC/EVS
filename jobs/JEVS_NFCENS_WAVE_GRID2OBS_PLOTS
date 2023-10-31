@@ -63,7 +63,6 @@ export COMOUTplots=${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}
 # make the directory where the plots will be kept
 mkdir -p ${COMOUTplots}
 
-export jlogfile=${DATA}/${MODELNAME}_${RUN}_plots.log
 
 ####################################
 # Execute the script                
@@ -72,7 +71,6 @@ $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${
 export err=$?; err_chk
 
 msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
 
 if [ "$KEEPDATA" != "YES" ] ; then
   rm -rf $DATA
