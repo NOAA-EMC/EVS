@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 '''
-Name: global_ens_atmos_prep.py
+Name: global_ens_sea_ice_prep.py
 Contact(s): Mallory Row
 Abstract: 
 '''
