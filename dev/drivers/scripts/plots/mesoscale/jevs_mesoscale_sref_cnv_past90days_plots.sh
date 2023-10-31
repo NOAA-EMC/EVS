@@ -38,7 +38,6 @@ export KEEPDATA=YES
 export SENDMAIL=YES
 export SENDDBN=NO
 
-export vhr=00
 export past_days=90
 
 export run_mpi=yes
