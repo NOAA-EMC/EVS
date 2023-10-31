@@ -38,7 +38,7 @@ if ls $DATA/mail_* 1> /dev/null 2>&1; then
 fi
 
 # What jobs to run
-if [ $cyc = 18 ]; then
+if [ $vhr = 18 ]; then
     JOB_GROUP_list="assemble_data generate_stats gather_stats"
 else
     JOB_GROUP_list="assemble_data generate_stats"
@@ -87,5 +87,10 @@ for group in $JOB_GROUP_list; do
         fi
     fi
 done
+
+echo "******************************"
+echo "Begin to print METplus Log files "
+  cat $DATA/logs/*
+echo "End to print METplus Log files "
 
 exit

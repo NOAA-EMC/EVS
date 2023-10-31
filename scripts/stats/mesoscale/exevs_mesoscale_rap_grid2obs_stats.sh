@@ -30,7 +30,7 @@ set -x
   
 
 # Set Basic Environment Variables
- last_cyc=21
+ last_vhr=21
  NEST_LIST="namer conus conusc ak akc spc_otlk subreg"
  VERIF_TYPES="raob metar"
 
@@ -409,5 +409,11 @@ echo "*****************************"
         done
       done
     fi
-  
+
+echo "******************************"
+echo "Begin to print METplus Log files "
+ cat $DATA/grid2obs/METplus_output/*/*/pb2nc/logs/*
+echo "End to print METplus Log files "
+
+
 exit
