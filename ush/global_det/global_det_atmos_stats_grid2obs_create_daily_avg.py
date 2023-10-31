@@ -38,13 +38,13 @@ fhr_end = os.environ['fhr_list'].split(',')[-1]
 
 # Process run time agruments
 if len(sys.argv) != 4:
-    print("ERROR: Not given correct number of run time agruments..."
+    print("FATAL ERROR: Not given correct number of run time agruments..."
           +os.path.basename(__file__)+" VARNAME_VARLEVEL DATA_FILE_FORMAT "
           +"COMIN_FILE_FORMART")
     sys.exit(1)
 else:
     if '_' not in sys.argv[1]:
-        print("ERROR: variable and level runtime agrument formated "
+        print("FATAL ERROR: variable and level runtime agrument formated "
               +"incorrectly, be sure to separate variable and level with "
               +"an underscore (_), example HGT_P500")
         sys.exit(1)
@@ -131,7 +131,7 @@ while valid_hr <= int(valid_hr_end):
                       +daily_avg_day_fhr_DATA_input_file+" or "
                       +daily_avg_day_fhr_COMIN_input_file)
             daily_avg_day_fhr+=12
-        daily_avg_df = pd.DataFrame(columns=MET_MPR_column_list)
+        daily_avg_df_list = []
         if os.path.exists(output_COMOUT_file):
             gda_util.copy_file(output_COMOUT_file, output_DATA_file)
             make_daily_avg_output_file = False
@@ -162,8 +162,9 @@ while valid_hr <= int(valid_hr_end):
                                                 skipinitialspace=True, header=None,
                                                 names=MET_MPR_column_list,
                                                 na_filter=False, dtype=str)
-                all_daily_avg_df = all_daily_avg_df.append(daily_avg_file_df,
-                                                           ignore_index=True)
+                all_daily_avg_df = pd.concat(
+                    [all_daily_avg_df, daily_avg_file_df], ignore_index=True
+                )
             for obtype in all_daily_avg_df['OBTYPE'].unique():
                 all_daily_avg_obtype_df = all_daily_avg_df.loc[
                     all_daily_avg_df['OBTYPE'] == obtype
@@ -229,10 +230,12 @@ while valid_hr <= int(valid_hr_end):
                         daily_avg_obtype_sid_vx_mask_df['OBS'] = str(
                             all_daily_avg_obtype_sid_vx_mask_obs_mean
                         )
-                        daily_avg_df = daily_avg_df.append(
-                            daily_avg_obtype_sid_vx_mask_df,
-                            ignore_index=True
+                        daily_avg_df_list.append(
+                            daily_avg_obtype_sid_vx_mask_df
                         )
+            daily_avg_df = pd.concat(
+                daily_avg_df_list, axis=1, ignore_index=True
+            ).T
             daily_avg_df.to_csv(
                 output_DATA_file, header=input_file_header,
                 index=None, sep=' ', mode='w'
