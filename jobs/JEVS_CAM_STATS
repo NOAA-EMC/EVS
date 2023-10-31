@@ -5,6 +5,13 @@
 ########################################
 set -x
 
+
+##################################################
+# SENDMAIL - Send Email Alerts When Missing Data
+# SENDECF  - Flag Events on ecFLOW
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+##################################################
 export SENDMAIL=${SENDMAIL:-NO}
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-NO}
@@ -77,8 +84,7 @@ elif [ $VERIF_CASE = spcoutlook ] ; then
 
 else
 
-   echo "The provided VERIF_CASE, $VERIF_CASE, is not supported for the $COMPONENT $STEP step"
-   exit 1
+   err_exit "The provided VERIF_CASE, $VERIF_CASE, is not supported for the $COMPONENT $STEP step"
 
 fi
 

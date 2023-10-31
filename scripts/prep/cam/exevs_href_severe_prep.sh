@@ -92,8 +92,7 @@ elif [ $vhr -eq 12 ]; then
 
 else
 
-   echo "The current vhr, $vhr, is not supported for $MODELNAME. Exiting"
-   exit 1
+   err_exit "The current vhr, $vhr, is not supported for $MODELNAME. Exiting"
 
 fi
 

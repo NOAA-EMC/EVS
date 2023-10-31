@@ -46,8 +46,7 @@ if [ "$ACC" = "01" ]; then
     elif [ "$NEST" = "pr" ]; then
         export OBS_LEV="Z0"
     else
-        echo "The provided NEST, $NEST, is not supported for $MODELNAME"
-        exit 1
+        err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
     fi
     export OBS_THRESH="ge0.254,ge1.27,ge2.54,ge6.35,ge12.7,ge19.05,ge25.4"
     export MODEL_PCP_COMBINE_METHOD="ADD"
@@ -66,8 +65,7 @@ elif [ "$ACC" = "03" ]; then
     elif [ "$NEST" = "pr" ]; then
         export OBS_LEV="Z0"
     else
-        echo "The provided NEST, $NEST, is not supported for $MODELNAME"
-        exit 1
+        err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
     fi
     export OBS_THRESH="ge0.254,ge1.27,ge2.54,ge6.35,ge12.7,ge19.05,ge25.4,ge50.8"
     export MODEL_PCP_COMBINE_METHOD="ADD"
@@ -86,15 +84,13 @@ elif [ "$ACC" = "24" ]; then
     elif [ "$NEST" = "pr" ]; then
         export OBS_LEV="Z0"
     else
-        echo "The provided NEST, $NEST, is not supported for $MODELNAME"
-        exit 1
+        err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
     fi
     export OBS_THRESH="ge0.254,ge2.54,ge6.35,ge12.7,ge25.4,ge38.1,ge50.8,ge76.2,ge101.6,ge152.4"
     export MODEL_PCP_COMBINE_METHOD="ADD"
     export MODEL_PCP_COMBINE_COMMAND=""
 else
-    echo "The provided ACC, $ACC, is not supported for $MODELNAME"
-    exit 1
+    err_exit "The provided ACC, $ACC, is not supported for $MODELNAME"
 fi
 if [ "$BOOL_NBRHD" = True ]; then
     export OUTPUT_FLAG_NBRHD="STAT"
@@ -133,8 +129,7 @@ if [ "$BOOL_NBRHD" = True ]; then
         export MODEL_INPUT_TEMPLATE="hiresw.{init?fmt=%Y%m%d}/hiresw.t{init?fmt=%2H}z.arw_5km.f{lead?fmt=%2H}.prmem2.grib2"
         export MASK_POLY_LIST="${FIXevs}/masks/Puerto_Rico_G194.nc"
     else
-        echo "The provided NEST, $NEST, is not supported for $MODELNAME"
-        exit 1
+        err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
     fi
 else
     export OUTPUT_FLAG_NBRHD="NONE"
@@ -173,8 +168,7 @@ else
         export MODEL_INPUT_TEMPLATE="hiresw.{init?fmt=%Y%m%d}/hiresw.t{init?fmt=%2H}z.arw_5km.f{lead?fmt=%2H}.prmem2.grib2"
         export MASK_POLY_LIST="${FIXevs}/masks/Puerto_Rico_G194.nc"
     else
-        echo "The provided NEST, $NEST, is not supported for $MODELNAME"
-        exit 1
+        err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
     fi
 fi
 

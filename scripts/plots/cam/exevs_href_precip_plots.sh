@@ -45,6 +45,7 @@ while [ $n -le $past_days ] ; do
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
    $USHevs/cam/evs_get_href_stat_file_link_plots.sh $day "$model_list"
+  export err=$?; err_chk
   n=$((n+1))
 done 
 

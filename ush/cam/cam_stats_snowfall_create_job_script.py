@@ -115,7 +115,7 @@ if job_type in ['generate', 'reformat']:
                         '{FCST_VAR_NAME}', FCST_VAR_NAME
                     )
     if not plot_this_var:
-        print(f"ERROR: VAR_NAME \"{VAR_NAME}\" is not valid for VERIF_TYPE "
+        print(f"FATAL ERROR: VAR_NAME \"{VAR_NAME}\" is not valid for VERIF_TYPE "
               + f"\"{VERIF_TYPE}\" and MODEL \"{MODELNAME}\". Check "
               + f"{USHevs}/{COMPONENT}/{COMPONENT}_stats_grid2obs_var_defs.py "
               + f"for valid configurations.")

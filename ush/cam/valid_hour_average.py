@@ -133,7 +133,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         frange_save_string = f'F{flead:03d}'
         df = df[df['LEAD_HOURS'] == flead]
     else:
-        e1 = f"Invalid forecast lead: \'{flead}\'"
+        e1 = f"FATAL ERROR: Invalid forecast lead: \'{flead}\'"
         e2 = f"Please check settings for forecast leads."
         logger.error(e1)
         logger.error(e2)
@@ -172,7 +172,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
             widths = [1 for p in interp_pts]
         else:
             error_string = (
-                f"Unknown INTERP_MTHD used to compute INTERP_PNTS: {interp_shape}."
+                f"FATAL ERROR: Unknown INTERP_MTHD used to compute INTERP_PNTS: {interp_shape}."
                 + f" Check the INTERP_MTHD column in your METplus stats files."
                 + f" INTERP_MTHD must have either \"SQUARE\" or \"CIRCLE\""
                 + f" in the name."
@@ -198,7 +198,7 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
             df = df[df['INTERP_PNTS'] == widths]
         else:
             error_string = (
-                f"Invalid interpolation points entry: \'{interp_pts}\'\n"
+                f"FATAL ERROR: Invalid interpolation points entry: \'{interp_pts}\'\n"
                 + f"Please check settings for interpolation points."
             )
             logger.error(error_string)
@@ -216,13 +216,13 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                     opt_letter = requested_obs_thresh_letter[0][:2]
                     break
                 else:
-                    e = ("Threshold operands do not match among all requested"
+                    e = ("FATAL ERROR: Threshold operands do not match among all requested"
                          + f" obs thresholds.")
                     logger.error(e)
                     logger.error("Quitting ...")
                     raise ValueError(e+"\nQuitting ...")
         if not symbol_found:
-            e = "None of the requested obs thresholds contain a valid symbol."
+            e = "FATAL ERROR: None of the requested obs thresholds contain a valid symbol."
             logger.error(e)
             logger.error("Quitting ...")
             raise ValueError(e+"\nQuitting ...")
@@ -271,13 +271,13 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                     opt_letter = requested_fcst_thresh_letter[0][:2]
                     break
                 else:
-                    e = ("Threshold operands do not match among all requested"
+                    e = ("FATAL ERROR: Threshold operands do not match among all requested"
                          + f" fcst thresholds.")
                     logger.error(e)
                     logger.error("Quitting ...")
                     raise ValueError(e+"\nQuitting ...")
         if not symbol_found:
-            e = "None of the requested fcst thresholds contain a valid symbol."
+            e = "FATAL ERROR: None of the requested fcst thresholds contain a valid symbol."
             logger.error(e)
             logger.error("Quitting ...")
             raise ValueError(e+"\nQuitting ...")
@@ -1368,7 +1368,7 @@ def main():
         init_beg = presets.date_presets[EVAL_PERIOD]['init_beg']
         init_end = presets.date_presets[EVAL_PERIOD]['init_end']
     if str(DATE_TYPE).upper() == 'VALID':
-        e = (f"You requested a valid_hour_average plot with the DATE_TYPE "
+        e = (f"FATAL ERROR: You requested a valid_hour_average plot with the DATE_TYPE "
              + f"set to 'VALID'. Valid time is already used as the independent"
              + f" variable in valid_hour_average plots. Set the DATE_TYPE to"
              + f" 'INIT' to equalize data by initialization"
@@ -1384,7 +1384,7 @@ def main():
         anti_date_type_string = 'Valid'
         xlabel=f'{str(anti_date_type_string).capitalize()} Hour (UTC)'
     else:
-        e = (f"Invalid DATE_TYPE: {str(date_type).upper()}. Valid values are"
+        e = (f"FATAL ERROR: Invalid DATE_TYPE: {str(date_type).upper()}. Valid values are"
              + f" VALID or INIT")
         logger.error(e)
         raise ValueError(e)
@@ -1472,7 +1472,7 @@ def main():
     elif len(METRICS) > 1:
         metrics = METRICS[:2]
     else:
-        e = (f"Received no list of metrics.  Check that, for the METRICS"
+        e = (f"FATAL ERROR: Received no list of metrics.  Check that, for the METRICS"
              + f" setting, a comma-separated string of at least one metric is"
              + f" provided")
         logger.error(e)
@@ -1486,11 +1486,11 @@ def main():
     num=0
     e = ''
     if str(VERIF_CASETYPE).lower() not in list(reference.case_type.keys()):
-        e = (f"The requested verification case/type combination is not valid:"
+        e = (f"FATAL ERROR: The requested verification case/type combination is not valid:"
              + f" {VERIF_CASETYPE}")
     elif str(LINE_TYPE).upper() not in list(
             reference.case_type[str(VERIF_CASETYPE).lower()].keys()):
-        e = (f"The requested line_type is not valid for {VERIF_CASETYPE}:"
+        e = (f"FATAL ERROR: The requested line_type is not valid for {VERIF_CASETYPE}:"
              + f" {LINE_TYPE}")
     else:
         case_specs = (
@@ -1504,7 +1504,7 @@ def main():
         raise ValueError(e+"\nQuitting ...")
     if (str(INTERP).upper() 
             not in case_specs['interp'].replace(' ','').split(',')):
-        e = (f"The requested interp method is not valid for the"
+        e = (f"FATAL ERROR: The requested interp method is not valid for the"
              + f" requested case type ({VERIF_CASETYPE}) and"
              + f" line_type ({LINE_TYPE}): {INTERP}")
         logger.error(e)
@@ -1515,7 +1515,7 @@ def main():
             if (str(metric).lower() 
                     not in case_specs['plot_stats_list']
                     .replace(' ','').split(',')):
-                e = (f"The requested metric is not valid for the"
+                e = (f"FATAL ERROR: The requested metric is not valid for the"
                      + f" requested case type ({VERIF_CASETYPE}) and"
                      + f" line_type ({LINE_TYPE}): {metric}")
                 logger.error(e)
@@ -1571,7 +1571,7 @@ def main():
             obs_levels = re.split(r',(?![0*])', OBS_LEVELS.replace(' ',''))
         for l, fcst_level in enumerate(fcst_levels):
             if len(fcst_levels) != len(obs_levels):
-                e = ("FCST_LEVELS and OBS_LEVELS must be lists of the same"
+                e = ("FATAL ERROR: FCST_LEVELS and OBS_LEVELS must be lists of the same"
                      + f" size")
                 logger.error(e)
                 logger.error("Quitting ...")

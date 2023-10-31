@@ -32,8 +32,8 @@ print("Python Script:\t" + repr(sys.argv[0]))
 
 if len(sys.argv) != 3:
     print(
-        "ERROR: test_read_mping_point.py -> Must specify exactly two input "
-        + "file."
+        "FATAL ERROR: test_read_mping_point.py -> Must specify exactly two input "
+        + "files."
     )
     sys.exit(1)
 

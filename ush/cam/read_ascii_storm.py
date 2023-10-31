@@ -21,7 +21,7 @@ print(f'Python Script: {sys.argv[0]}')
 
 if len(sys.argv) < 2:
     script_name = os.path.basename(sys.argv[0])
-    print(f"ERROR: {script_name} -> Must specify exactly one input file.")
+    print(f"FATAL ERROR: {script_name} -> Must specify exactly one input file.")
     sys.exit(1)
 
 # Read the input file as the first argument
@@ -29,7 +29,7 @@ input_file = os.path.expandvars(sys.argv[1])
 print(f'Input File: {input_file}')
 
 if not os.path.exists(input_file):
-    print("ERROR: Could not find input file")
+    print("FATAL ERROR: Could not find input file")
     sys.exit(2)
 
 # Read and format the input 11-column observations

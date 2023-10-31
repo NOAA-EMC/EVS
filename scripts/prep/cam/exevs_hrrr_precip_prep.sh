@@ -21,22 +21,15 @@ for NEST in "conus" "ak"; do
  
         # Check User's Configuration Settings
         python $USHevs/cam/cam_check_settings.py
-        status=$?
-        [[ $status -ne 0 ]] && exit $status
-        [[ $status -eq 0 ]] && echo "Successfully ran cam_check_settings.py"
-        echo
+        export err=$?; err_chk
  
         # Create Output Directories
         python $USHevs/cam/cam_create_output_dirs.py
-        status=$?
-        [[ $status -ne 0 ]] && exit $status
-        [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py" 
+        export err=$?; err_chk
  
         # Create Job Script 
         python $USHevs/cam/cam_prep_precip_create_job_script.py
-        status=$?
-        [[ $status -ne 0 ]] && exit $status
-        [[ $status -eq 0 ]] && echo "Successfully ran cam_prep_precip_create_job_script.py"
+        export err=$?; err_chk
         export njob=$((njob+1))
     done
 done
@@ -44,9 +37,7 @@ done
 # Create POE Job Scripts
 if [ $USE_CFP = YES ]; then
     python $USHevs/cam/cam_prep_precip_create_poe_job_scripts.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran cam_prep_precip_create_poe_job_scripts.py"
+    export err=$?; err_chk
 fi
 
 # Run all HRRR precip/prep jobs
@@ -66,8 +57,7 @@ if [ $USE_CFP = YES ]; then
             export SLURM_KILL_BAD_EXIT=0
             launcher="srun --export=ALL --multi-prog"
         else
-            echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-            exit 1    
+            err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
         fi
         $launcher $MP_CMDFILE
         nc=$((nc+1))

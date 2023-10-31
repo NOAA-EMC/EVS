@@ -38,7 +38,7 @@ elif int(DAY) == 2:
 elif int(DAY) == 3:
     OTLKs = ['0730', '0830']
 else:
-    print(f"ERROR: Invalid day in DAYS: {DAY}")
+    print(f"FATAL ERROR: Invalid day in DAYS: {DAY}. (Must be 1, 2, or 3)")
     sys.exit(1)
 
 for OTLK in OTLKs:
@@ -61,7 +61,7 @@ for OTLK in OTLKs:
             else:
                 V2DATE = VDATEp1
         else:
-            print(f"ERROR: Invalid VHOUR: {VHOUR}")
+            print(f"FATAL ERROR: Invalid VHOUR: {VHOUR}")
             sys.exit(1)
     elif int(DAY) == 2:
         if int(VHOUR) < 12:
@@ -75,7 +75,7 @@ for OTLK in OTLKs:
             V1HOUR = '1200'
             IDATE = VDATEm1
         else:
-            print(f"ERROR: Invalid VHOUR: {VHOUR}")
+            print(f"FATAL ERROR: Invalid VHOUR: {VHOUR}")
             sys.exit(1)
     elif int(DAY) == 3:
         if int(VHOUR) < 12:
@@ -89,7 +89,7 @@ for OTLK in OTLKs:
             V1HOUR = '1200'
             IDATE = VDATEm2
         else:
-            print(f"ERROR: Invalid VHOUR: {VHOUR}")
+            print(f"FATAL ERROR: Invalid VHOUR: {VHOUR}")
             sys.exit(1)
     V2HOUR = '1200'
     YYYY = IDATE[0:4]
@@ -135,7 +135,7 @@ for OTLK in OTLKs:
                 print(f"No day {DAY} outlook areas were issued at {OTLK}Z on {IDATE}")
                 continue
         except IOError as e:
-            print(f"ERROR: {e}")
+            print(f"FATAL ERROR: {e}")
             print(f"The following file was deleted or corrupted while trying "
                   + f"to open it: {os.path.join(EVSINspcotlk,NEST_INPUT_TEMPLATE)}")
             sys.exit(1)

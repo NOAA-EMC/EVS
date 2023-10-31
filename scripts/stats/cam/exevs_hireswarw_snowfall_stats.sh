@@ -30,8 +30,7 @@ for NEST in $NEST_LIST; do
         elif [ "${ACC}" = "24" ]; then
             VHOUR_LIST="00 12"
         else
-            echo "${ACC} is not supported"
-            exit 1
+            err_exit "${ACC} is not supported"
         fi
         source $USHevs/cam/cam_stats_snowfall_filter_valid_hours_list.sh
         for VHOUR in $VHOUR_LIST; do
@@ -41,9 +40,7 @@ for NEST in $NEST_LIST; do
             # Check For Restart Files
             if [ "$run_restart" = true ]; then
                 python ${USHevs}/cam/cam_production_restart.py
-                status=$?
-                [[ $status -ne 0 ]] && exit $status
-                [[ $status -eq 0 ]] && echo "Successfully ran ${USHevs}/cam/cam_production_restart.py"
+                export err=$?; err_chk
                 export run_restart=false
             fi
 
@@ -51,29 +48,19 @@ for NEST in $NEST_LIST; do
                 export VAR_NAME=$VAR_NAME 
                 # Check User's Configuration Settings
                 python $USHevs/cam/cam_check_settings.py
-                status=$?
-                [[ $status -ne 0 ]] && exit $status
-                [[ $status -eq 0 ]] && echo "Successfully ran cam_check_settings.py ($job_type)"
-                echo
+                export err=$?; err_chk
                 
                 # Check Availability of Input Data
                 python $USHevs/cam/cam_check_input_data.py
-                status=$?
-                [[ $status -ne 0 ]] && exit $status
-                [[ $status -eq 0 ]] && echo "Successfully ran cam_check_input_data.py ($job_type)"
-                echo
+                export err=$?; err_chk
          
                 # Create Output Directories
                 python $USHevs/cam/cam_create_output_dirs.py
-                status=$?
-                [[ $status -ne 0 ]] && exit $status
-                [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
+                export err=$?; err_chk
                 
                 # Create Reformat Job Script 
                 python $USHevs/cam/cam_stats_snowfall_create_job_script.py
-                status=$?
-                [[ $status -ne 0 ]] && exit $status
-                [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_job_script.py ($job_type)"
+                export err=$?; err_chk
                 export njob=$((njob+1))
             done
         done
@@ -83,9 +70,7 @@ done
 # Create Reformat POE Job Scripts
 if [ $USE_CFP = YES ]; then
     python $USHevs/cam/cam_stats_snowfall_create_poe_job_scripts.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_poe_job_scripts.py ($job_type)"
+    export err=$?; err_chk
 fi
 
 # Run All HiRes Window ARW snowfall/stats Reformat Jobs
@@ -105,8 +90,7 @@ if [ $USE_CFP = YES ]; then
             export SLURM_KILL_BAD_EXIT=0
             launcher="srun --export=ALL --multi-prog"
         else
-            echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-            exit 1    
+            err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
         fi
         $launcher $MP_CMDFILE
         nc=$((nc+1))
@@ -130,8 +114,7 @@ for NEST in $NEST_LIST; do
         elif [ "${ACC}" = "24" ]; then
             VHOUR_LIST="00 12"
         else
-            echo "${ACC} is not supported"
-            exit 1
+            err_exit "${ACC} is not supported"
         fi
         source $USHevs/cam/cam_stats_snowfall_filter_valid_hours_list.sh
         for VHOUR in $VHOUR_LIST; do
@@ -143,22 +126,15 @@ for NEST in $NEST_LIST; do
                     export VAR_NAME=$VAR_NAME 
                     # Check User's Configuration Settings
                     python $USHevs/cam/cam_check_settings.py
-                    status=$?
-                    [[ $status -ne 0 ]] && exit $status
-                    [[ $status -eq 0 ]] && echo "Successfully ran cam_check_settings.py ($job_type)"
-                    echo
+                    export err=$?; err_chk
                     
                     # Create Output Directories
                     python $USHevs/cam/cam_create_output_dirs.py
-                    status=$?
-                    [[ $status -ne 0 ]] && exit $status
-                    [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
+                    export err=$?; err_chk
                     
                     # Create Generate Job Script 
                     python $USHevs/cam/cam_stats_snowfall_create_job_script.py
-                    status=$?
-                    [[ $status -ne 0 ]] && exit $status
-                    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_job_script.py ($job_type)"
+                    export err=$?; err_chk
                     export njob=$((njob+1))
                 done
             done
@@ -169,9 +145,7 @@ done
 # Create Generate POE Job Scripts
 if [ $USE_CFP = YES ]; then
     python $USHevs/cam/cam_stats_snowfall_create_poe_job_scripts.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_poe_job_scripts.py ($job_type)"
+    export err=$?; err_chk
 fi
 
 # Run All HiRes Window ARW snowfall/stats Generate Jobs
@@ -191,8 +165,7 @@ if [ $USE_CFP = YES ]; then
             export SLURM_KILL_BAD_EXIT=0
             launcher="srun --export=ALL --multi-prog"
         else
-            echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-            exit 1    
+            err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
         fi
         $launcher $MP_CMDFILE
         nc=$((nc+1))
@@ -211,24 +184,18 @@ for NEST in $NEST_LIST; do
     source $config
     # Create Output Directories
     python $USHevs/cam/cam_create_output_dirs.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
+    export err=$?; err_chk
     
     # Create Gather Job Script
     python $USHevs/cam/cam_stats_snowfall_create_job_script.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_job_script.py ($job_type)"
+    export err=$?; err_chk
     export njob=$((njob+1))
 done
 
 # Create Gather POE Job Scripts
 if [ $USE_CFP = YES ]; then
     python $USHevs/cam/cam_stats_snowfall_create_poe_job_scripts.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_poe_job_scripts.py ($job_type)"
+    export err=$?; err_chk
 fi
 
 # Run All HiRes Window ARW snowfall/stats Gather Jobs
@@ -248,8 +215,7 @@ if [ $USE_CFP = YES ]; then
             export SLURM_KILL_BAD_EXIT=0
             launcher="srun --export=ALL --multi-prog"
         else
-            echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-            exit 1    
+            err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
         fi
         $launcher $MP_CMDFILE
         nc=$((nc+1))
@@ -266,23 +232,17 @@ export njob=1
 source $config
 # Create Output Directories
 python $USHevs/cam/cam_create_output_dirs.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
+export err=$?; err_chk
 
 # Create Gather 2 Job Script
 python $USHevs/cam/cam_stats_snowfall_create_job_script.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_job_script.py ($job_type)"
+export err=$?; err_chk
 export njob=$((njob+1))
 
 # Create Gather 2 POE Job Scripts
 if [ $USE_CFP = YES ]; then
     python $USHevs/cam/cam_stats_snowfall_create_poe_job_scripts.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_poe_job_scripts.py ($job_type)"
+    export err=$?; err_chk
 fi
 
 # Run All HiRes Window ARW snowfall/stats Gather 2 Jobs
@@ -302,8 +262,7 @@ if [ $USE_CFP = YES ]; then
             export SLURM_KILL_BAD_EXIT=0
             launcher="srun --export=ALL --multi-prog"
         else
-            echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-            exit 1
+            err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
         fi
         $launcher $MP_CMDFILE
         nc=$((nc+1))
@@ -333,23 +292,17 @@ if [ "$vhr" -ge "$last_cyc" ]; then
         source $config
         # Create Output Directories
         python $USHevs/cam/cam_create_output_dirs.py
-        status=$?
-        [[ $status -ne 0 ]] && exit $status
-        [[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py ($job_type)"
+        export err=$?; err_chk
 
         # Create Gather 3 Job Script
         python $USHevs/cam/cam_stats_snowfall_create_job_script.py
-        status=$?
-        [[ $status -ne 0 ]] && exit $status
-        [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_job_script.py ($job_type)"
+        export err=$?; err_chk
         export njob=$((njob+1))
 
         # Create Gather 3 POE Job Scripts
         if [ $USE_CFP = YES ]; then
             python $USHevs/cam/cam_stats_snowfall_create_poe_job_scripts.py
-            status=$?
-            [[ $status -ne 0 ]] && exit $status
-            [[ $status -eq 0 ]] && echo "Successfully ran cam_stats_snowfall_create_poe_job_scripts.py ($job_type)"
+            export err=$?; err_chk
         fi
 
         # Run All HiRes Window ARW snowfall/stats Gather 3 Jobs
@@ -369,8 +322,7 @@ if [ "$vhr" -ge "$last_cyc" ]; then
                     export SLURM_KILL_BAD_EXIT=0
                     launcher="srun --export=ALL --multi-prog"
                 else
-                    echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-                    exit 1
+                    err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
                 fi
                 $launcher $MP_CMDFILE
                 nc=$((nc+1))

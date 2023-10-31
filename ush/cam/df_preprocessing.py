@@ -27,7 +27,7 @@ import plot_util
 
 def get_valid_range(logger, date_type, date_range, date_hours, fleads):
     if None in date_hours:
-        e = (f"One or more FCST_{date_type}_HOURS is Nonetype. This may be"
+        e = (f"FATAL ERROR: One or more FCST_{date_type}_HOURS is Nonetype. This may be"
              + f" because the input string is empty.")
         logger.error(e)
         raise ValueError(e)
@@ -45,7 +45,7 @@ def get_valid_range(logger, date_type, date_range, date_hours, fleads):
     elif date_type == 'VALID':
         valid_range = date_range
     else:
-        e = (f"Invalid DATE_TYPE: {str(date_type).upper()}. Valid values are"
+        e = (f"FATAL ERROR: Invalid DATE_TYPE: {str(date_type).upper()}. Valid values are"
              + f" VALID or INIT")
         logger.error(e)
         raise ValueError(e)
@@ -78,13 +78,13 @@ def run_prune_data(logger, stats_dir, prune_dir, output_base_template, verif_cas
                 str(var_name).upper(), model_list
             )
         else:
-            e1 = f"{stats_dir} exists but is empty."
+            e1 = f"FATAL ERROR: {stats_dir} exists but is empty."
             e2 = f"Populate {stats_dir} and retry."
             logger.error(e1)
             logger.error(e2)
             raise OSError(e1+"\n"+e2)
     else:
-        e1 = f"{stats_dir} does not exist."
+        e1 = f"FATAL ERROR: {stats_dir} does not exist."
         e2 = f"Create and populate {stats_dir} and retry."
         logger.error(e1)
         logger.error(e2)
@@ -156,23 +156,23 @@ def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range,
             )
             logger.debug(f"RAM memory available: {total_memory}")
         except pd.errors.EmptyDataError as e:
-            logger.error(e)
-            logger.error(f"The file in question:")
-            logger.error(f"{fpath}")
-            logger.error("Continuing ...")
+            logger.warning(e)
+            logger.warning(f"The file in question:")
+            logger.warning(f"{fpath}")
+            logger.warning("Continuing ...")
         except OSError as e:
-            logger.error(e)
-            logger.error(f"The file in question:")
-            logger.error(f"{fpath}")
-            logger.error("Continuing ...")
+            logger.warning(e)
+            logger.warning(f"The file in question:")
+            logger.warning(f"{fpath}")
+            logger.warning("Continuing ...")
     if clear_prune_dir:
         try:
             shutil.rmtree(pruned_data_dir)
         except OSError as e:
-            logger.error(e)
-            logger.error(f"The directory in question:")
-            logger.error(f"{pruned_data_dir}")
-            logger.error("Continuing ...")
+            logger.warning(e)
+            logger.warning(f"The directory in question:")
+            logger.warning(f"{pruned_data_dir}")
+            logger.warning("Continuing ...")
     try:
         if check_empty(df, logger, 'create_df'):
             return None
@@ -182,10 +182,10 @@ def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range,
     except UnboundLocalError as e:
         logger.error(e)
         logger.error(
-            "Nonexistent dataframe. Check the logfile for more details."
+            "FATAL ERROR: Nonexistent dataframe. Check the logfile for more details."
         )
         logger.error("Quitting ...")
-        sys.exit(0)
+        sys.exit(1)
 
 def filter_by_level_type(df, logger, verif_type):
     if df is None:

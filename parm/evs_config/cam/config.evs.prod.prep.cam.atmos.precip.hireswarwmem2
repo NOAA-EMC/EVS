@@ -27,8 +27,7 @@ elif [ "$ACC" = "03" ]; then
 elif [ "$ACC" = "24" ]; then
     export VHOUR_LIST="00, 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23"
 else
-    echo "The provided ACC, $ACC, is not supported for $MODELNAME"
-    exit 1
+    err_exit "The provided ACC, $ACC, is not supported for $MODELNAME"
 fi
 if [ "$NEST" = "conus" ]; then
     export VERIF_TYPE="ccpa"
@@ -47,8 +46,7 @@ elif [ "$NEST" = "hi" ]; then
     export COMINobs=${DCOMINmrms}
     export OBSNAME="mrms"
 else
-    echo "The provided NEST, $NEST, is not supported for $MODELNAME"
-    exit 1
+    err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
 fi
 
 echo "END: $(basename ${BASH_SOURCE[0]})"

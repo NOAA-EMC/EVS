@@ -36,18 +36,14 @@ if [ $STEP == "prep" ]; then
                     subtract_hours=$(( $subtract_hours + $subtract_hours_inc ))
                 done
             else
-                echo "$OBSNAME is not a valid reference data source."
-                exit 1
+                err_exit "$OBSNAME is not a valid reference data source."
             fi
         else
-            echo "$VERIF_CASE is not a valid VERIF_CASE for cam_precip_prep.sh (please use 'precip')"
-            exit 1
+            err_exit "$VERIF_CASE is not a valid VERIF_CASE for cam_precip_prep.sh (please use 'precip')"
         fi
     else
-        echo "$COMPONENT is not a valid COMPONENT for cam_precip_prep.sh (please use 'cam')"
-        exit 1
+        err_exit "$COMPONENT is not a valid COMPONENT for cam_precip_prep.sh (please use 'cam')"
     fi
 else
-    echo "$STEP is not a valid STEP for cam_precip_prep.sh (please use 'prep')"
-    exit 1
+    err_exit "$STEP is not a valid STEP for cam_precip_prep.sh (please use 'prep')"
 fi

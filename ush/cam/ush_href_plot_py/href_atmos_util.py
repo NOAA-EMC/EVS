@@ -29,7 +29,7 @@ def run_shell_command(command):
     else:
         run_command = subprocess.run(command)
     if run_command.returncode != 0:
-        print("ERROR: "+' '.join(run_command.args)+" gave return code "
+        print("FATAL ERROR: "+' '.join(run_command.args)+" gave return code "
               +str(run_command.returncode))
 
 def metplus_command(conf_file_name):
@@ -51,7 +51,7 @@ def metplus_command(conf_file_name):
                              os.environ['RUN']+'_'+os.environ['VERIF_CASE'],
                              conf_file_name)
     if not os.path.exists(conf_file):
-        print("ERROR: "+conf_file+" DOES NOT EXIST")
+        print("FATAL ERROR: "+conf_file+" DOES NOT EXIST")
         sys.exit(1)
     metplus_cmd = run_metplus+' -c '+machine_conf+' -c '+conf_file
     return metplus_cmd
@@ -70,7 +70,7 @@ def python_command(python_script_name, script_arg_list):
     python_script = os.path.join(os.environ['USHevs'], os.environ['COMPONENT'],
                                  python_script_name)
     if not os.path.exists(python_script):
-        print("ERROR: "+python_script+" DOES NOT EXIST")
+        print("FATAL ERROR: "+python_script+" DOES NOT EXIST")
         sys.exit(1)
     python_cmd = 'python '+python_script
     for script_arg in script_arg_list:
@@ -1538,7 +1538,7 @@ def get_obs_valid_hrs(obs):
         valid_hr_end = obs_valid_hr_dict[obs]['valid_hr_end']
         valid_hr_inc = obs_valid_hr_dict[obs]['valid_hr_inc']
     else:
-        print(f"ERROR: Cannot get {obs} valid hour information")
+        print(f"FATAL ERROR: Cannot get {obs} valid hour information")
         sys.exit(1)
     return valid_hr_start, valid_hr_end, valid_hr_inc
 
@@ -1807,7 +1807,7 @@ def get_met_line_type_cols(logger, met_root, met_version, met_line_type):
                     line_type_cols = line.split(' : ')[-1]
                     break
     else:
-        logger.error(f"{met_minor_version_col_file} DOES NOT EXISTS, "
+        logger.error(f"FATAL ERROR: {met_minor_version_col_file} DOES NOT EXISTS, "
                      +"cannot determine MET data column structure")
         sys.exit(1)
     met_version_line_type_col_list = (
@@ -2505,7 +2505,7 @@ def calculate_stat(logger, data_df, line_type, stat):
        if line_type == 'CTC':
            stat_df = 1 - (FY_ON/(FY_ON + FY_OY))
    else:
-        logger.error(stat+" IS NOT AN OPTION")
+        logger.error("FATAL ERROR: "+stat+" IS NOT AN OPTION")
         sys.exit(1)
    idx = 0
    idx_dict = {}
