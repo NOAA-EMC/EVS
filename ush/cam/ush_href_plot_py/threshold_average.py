@@ -441,7 +441,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         if sample_equalization:
             pivot_counts = pivot_counts[pivot_counts.index.isin(indices_in_common)]
     units = df['FCST_UNITS'].tolist()[0]
-    #pivot_metric = 
     x_vals = pivot_metric.index.astype(float).tolist()
     if units in reference.unit_conversions:
         x_vals = reference.unit_conversions[units]['formula'](x_vals)
@@ -574,8 +573,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         np.digitize(len(xtick_labels), number_of_ticks_dig) + 2
     )/2.)*2
     xtick_labels_with_blanks = ['' for item in xtick_labels]
-    #for i, item in enumerate(xtick_labels[::int(show_xtick_every)]):
-    #     xtick_labels_with_blanks[int(show_xtick_every)*i] = item
      
     replace_xticks = [
         xtick for xtick in xticks 
@@ -599,9 +596,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     xtick_labels_with_blanks = np.concatenate((
         res_xlabels, add_labels
     ))[xticks_argsort]
-    #xticks_argsort = np.argsort(x_vals.tolist())
-    #xticks = np.array(x_vals.tolist())[xticks_argsort]
-    #xtick_labels_with_blanks = np.array(add_labels)[xticks_argsort]
     res_diff = np.diff(
         [xtick for x, xtick in enumerate(xticks) if xtick_labels_with_blanks[x]]
     )
@@ -790,7 +784,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
               + f'{date_start_string} to {date_end_string}, {frange_string}')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
-        #title_pad=40
         title_pad=30
     else:
         title_pad=None

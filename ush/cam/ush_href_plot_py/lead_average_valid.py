@@ -387,7 +387,6 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                 ci_output = (
                     ci_output
                     .reindex(df_aggregated.index)
-                    #.reindex(ci_output.index)
                 )
                 df_aggregated[str(stat).upper()+'_BLERR'] = ci_output[
                     'CI_LOWER'
@@ -415,13 +414,11 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
             df_aggregated, values='COUNTS', columns='MODEL',
             index='LEAD_HOURS'
         )
-    #pivot_metric1 = pivot_metric1.dropna() 
     if metric2_name is not None:
         pivot_metric2 = pd.pivot_table(
             df_aggregated, values=str(metric2_name).upper(), columns='MODEL', 
             index='LEAD_HOURS'
         )
-        #pivot_metric2 = pivot_metric2.dropna() 
     if confidence_intervals:
         pivot_ci_lower1 = pd.pivot_table(
             df_aggregated, values=str(metric1_name).upper()+'_BLERR',
@@ -974,7 +971,6 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         bbox_to_anchor=(0.5, -0.08), ncol=4, frameon=True, numpoints=2, 
         borderpad=.8, labelspacing=2., columnspacing=3., handlelength=3., 
         handletextpad=.4, borderaxespad=.5) 
-    #fig.subplots_adjust(bottom=.2, wspace=0, hspace=0)
     fig.subplots_adjust(bottom=.15, wspace=0, hspace=0)
     fig.subplots_adjust(top=0.85)
     ax.grid(
@@ -998,7 +994,6 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
             xytext=(-50, 21), textcoords='offset points', va='top', 
             fontsize=11, color='dimgrey', ha='center'
         )
-        #fig.subplots_adjust(top=.9)
         fig.subplots_adjust(top=.85)
 
     # Title
@@ -1128,7 +1123,6 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
               + f'{date_start_string} to {date_end_string}')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
-        #title_pad=40
         title_pad=30
     else:
         title_pad=None
@@ -1173,13 +1167,11 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         date_hours_savename = '_'.join([
             f'{date_hour:02d}Z' for date_hour in date_hours
         ])
-        #date_hours_savename='all_times'
     else:
         date_hours_savename = '-'.join([
             f'{date_hour:02d}Z' 
             for date_hour in [date_hours[0], date_hours[-1]]
         ])
-        #date_hours_savename='all_times'
     date_start_savename = date_range[0].strftime('%Y%m%d')
     date_end_savename = date_range[1].strftime('%Y%m%d')
     if str(eval_period).upper() == 'TEST':

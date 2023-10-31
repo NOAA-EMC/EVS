@@ -46,9 +46,6 @@ if job_type == 'reformat':
     VERIF_TYPE = os.environ['VERIF_TYPE']
     NEST = os.environ['NEST']
     VHOUR = os.environ['VHOUR']
-    #FHR_START = os.environ['FHR_START']
-    #FHR_INCR = os.environ['FHR_INCR']
-    #FHR_END = os.environ['FHR_END']
     FHR_GROUP_LIST = os.environ['FHR_GROUP_LIST']
     FHR_END_SHORT = os.environ['FHR_END_SHORT']
     FHR_INCR_SHORT = os.environ['FHR_INCR_SHORT']
@@ -68,9 +65,6 @@ elif job_type == 'generate':
     VERIF_TYPE = os.environ['VERIF_TYPE']
     NEST = os.environ['NEST']
     VHOUR = os.environ['VHOUR']
-    #FHR_START = os.environ['FHR_START']
-    #FHR_INCR = os.environ['FHR_INCR']
-    #FHR_END = os.environ['FHR_END']
     FHR_GROUP_LIST = os.environ['FHR_GROUP_LIST']
     FHR_END_SHORT = os.environ['FHR_END_SHORT']
     FHR_INCR_SHORT = os.environ['FHR_INCR_SHORT']
@@ -177,9 +171,6 @@ if job_type == 'reformat':
     job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE
     job_env_vars_dict['NEST'] = NEST
     job_env_vars_dict['VHOUR'] = VHOUR
-    #job_env_vars_dict['FHR_START'] = FHR_START
-    #job_env_vars_dict['FHR_INCR'] = FHR_INCR
-    #job_env_vars_dict['FHR_END'] = FHR_END
     job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE
     job_env_vars_dict['FHR_GROUP_LIST'] = FHR_GROUP_LIST
     job_env_vars_dict['FHR_END_SHORT'] = FHR_END_SHORT
@@ -213,9 +204,6 @@ elif job_type == 'generate':
     job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE
     job_env_vars_dict['NEST'] = NEST
     job_env_vars_dict['VHOUR'] = VHOUR
-    #job_env_vars_dict['FHR_START'] = FHR_START
-    #job_env_vars_dict['FHR_INCR'] = FHR_INCR
-    #job_env_vars_dict['FHR_END'] = FHR_END
     job_env_vars_dict['FHR_GROUP_LIST'] = FHR_GROUP_LIST
     job_env_vars_dict['FHR_END_SHORT'] = FHR_END_SHORT
     job_env_vars_dict['FHR_INCR_SHORT'] = FHR_INCR_SHORT

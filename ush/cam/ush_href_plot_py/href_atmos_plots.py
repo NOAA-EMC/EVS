@@ -587,30 +587,4 @@ for plot in plots_list:
     else:
         logger.warning(plot+" not recongized")
 
-# Create tar file of jobs plots and move to main image directory
-#job_output_image_dir = os.path.join(job_output_dir, 'images')
-#cwd = os.getcwd()
-#if len(glob.glob(job_output_image_dir+'/*')) != 0:
-#    os.chdir(job_output_image_dir)
-#    tar_file = os.path.join(job_output_image_dir,
-#                            job_name.replace('/','_')+'.tar')
-#    if os.path.exists(tar_file):
-#        os.remove(tar_file)
-#    logger.debug("Make tar file "+tar_file+" from "+job_output_image_dir)
-#    gda_util.run_shell_command(
-#        ['tar', '-cvf', tar_file, '*']
-#    )
-#    logger.debug(f"Moving {tar_file} to {VERIF_TYPE_image_dir}")
-#    gda_util.run_shell_command(
-#        ['mv', tar_file, VERIF_TYPE_image_dir+'/.']
-#    )
-#    os.chdir(cwd)
-#else:
-#    logger.warning(f"No images generated in {job_output_image_dir}")
-
-# Clean up
-#if evs_run_mode == 'production':
-#    logger.info(f"Removing {job_output_dir}")
-#    shutil.rmtree(job_output_dir)
-
 print("END: "+os.path.basename(__file__))

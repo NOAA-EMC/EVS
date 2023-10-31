@@ -65,7 +65,6 @@ if STEP == 'prep':
                                 f"if [ ! -d \"{COMOUTobs}\" ]; then mkdir \"{COMOUTobs}\";"
                                 + f" fi"
                             )
-                            #os.makedirs(COMOUTobs, exist_ok=True)
                             if int(VHOURm) > 18:
                                 VDATEmp1 = (
                                     VDATEHOURm + td(days=1)
@@ -93,7 +92,6 @@ if STEP == 'prep':
                                     + f" file does not exist: {infile} ..."
                                     + f" Continuing to the next valid datetime.\"; fi"
                                 )
-                                #shutil.copy(infile, COMOUTobs)
                         subtract_hours+=subtract_hours_inc
             elif OBSNAME == 'mrms':
                 for VHOUR in re.split(r'[\s,]+', VHOUR_LIST):

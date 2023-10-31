@@ -661,7 +661,6 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
                 np.multiply(thresh_labels, precision_scale)
             )
         ]
-        #thresh_labels = [f'{tlab}' for tlab in thresh_labels]
         units = reference.unit_conversions[units]['convert_to']
     if units == '-':
         units = ''
@@ -814,7 +813,6 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         linewidth=.5, c='black', zorder=0
     )
 
-    #fig.subplots_adjust(bottom=.2, right=.77, left=.23, wspace=0, hspace=0)
     fig.subplots_adjust(bottom=.15, right=.77, left=.23, wspace=0, hspace=0)
     fig.subplots_adjust(top=0.85)
     cax = fig.add_axes([.775, .2, .01, .725])

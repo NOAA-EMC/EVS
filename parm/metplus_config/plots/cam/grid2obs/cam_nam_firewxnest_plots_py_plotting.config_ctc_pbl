@@ -105,7 +105,6 @@ export LOG_LEVEL="DEBUG"
 
 # Will use statistics for all comma-separated models.  Case-insensitive by default, but names must 
 # match the model naming convention in ${OUTPUT_BASE_DIR}
-##export MODEL="$MODELNAME"
 
 # Will use valid or init datetimes based on the setting below. Options are "VALID" or "INIT"
 export DATE_TYPE="$datetyp"

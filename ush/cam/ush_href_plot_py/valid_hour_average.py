@@ -395,7 +395,6 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
                 ci_output = (
                     ci_output
                     .reindex(df_aggregated.index)
-                    #.reindex(ci_output.index)
                 )
                 df_aggregated[str(stat).upper()+'_BLERR'] = ci_output[
                     'CI_LOWER'
