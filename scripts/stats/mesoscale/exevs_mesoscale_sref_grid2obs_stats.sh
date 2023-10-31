@@ -21,9 +21,6 @@ export MET_CONFIG=${METPLUS_BASE}/parm/met_config
 export maskpath=$MASKS
 
 
-msg="$job HAS BEGUN"
-postmsg "$msg"
-
 #******************************************************************************
 # The method in ceiling and vis (cnv) job is to deal with the conditional mean
 #  (1) First average hits, false alarms, etc in the categoery table
@@ -39,7 +36,5 @@ else
   export err=$?; err_chk
 fi
 
-msg="JOB $job HAS COMPLETED NORMALLY"
-postmsg "$msg"
 
 exit 

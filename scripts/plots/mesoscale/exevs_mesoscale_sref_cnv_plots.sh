@@ -284,12 +284,12 @@ tar -cvf evs.plots.sref.cnv.past${past_days}days.v${VDATE}.tar *.png
 
 
 if [ $SENDCOM="YES" ]; then
- cpreq  evs.plots.sref.cnv.past${past_days}days.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
+ cpreq  evs.plots.sref.cnv.past${past_days}days.v${VDATE}.tar  $COMOUT/$RUN.$VDATE/.  
 fi
 
 
 if [ $SENDDBN = YES ] ; then
-     $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/evs.plots.sref.cnv.past${past_days}days.v${VDATE}.tar
+     $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/$RUN.$VDATE/evs.plots.sref.cnv.past${past_days}days.v${VDATE}.tar
 fi
 
 

@@ -17,14 +17,8 @@ export PRECIP_CONF=$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}
 export MET_CONFIG=${METPLUS_BASE}/parm/met_config
 export maskpath=$MASKS
 
-
-msg="$job HAS BEGUN"
-postmsg "$msg"
-
 $USHevs/mesoscale/evs_sref_precip.sh 
 export err=$?; err_chk
 
-msg="JOB $job HAS COMPLETED NORMALLY"
-postmsg "$msg"
 
 exit 
