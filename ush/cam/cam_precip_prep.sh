@@ -14,13 +14,13 @@ if [ $STEP == "prep" ]; then
     if [ $COMPONENT == "cam" ]; then
         if [ $VERIF_CASE == "precip" ]; then
             if [ $OBSNAME == "ccpa" ]; then
-                VDATEHOUR=$(date -d "$( date -d $VDATE +'%Y-%m-%d' ) $VHOUR:00:00" "+%Y-%m-%d %H:%M:%S UTC")
                 subtract_hours_inc=$(echo $OBS_ACC | sed 's/^0*//')
                 subtract_hours=0
                 max_subtract_hours=$(echo $ACC | sed 's/^0*//')
                 while [ $subtract_hours -lt $max_subtract_hours ]; do
-                    VDATEm=$(date -d "$VDATEHOUR -$subtract_hours hours" +"%Y%m%d")
-                    VHOURm=$(date -d "$VDATEHOUR -$subtract_hours hours" +"%H")
+                    VDATEHOURm=$($NDATE -$subtract_hours $VDATE$VHOUR)
+                    VDATEm=${VDATEHOURm:0:8}
+                    VHOURm=${VDATEHOURm:8:10}
                     export COMOUTobs="${DATA}/ccpa.$VDATEm"
                     if [ ! -f $COMOUTobs/ccpa.t${VHOURm}z.${OBS_ACC}h.hrap.conus.gb2 ]; then
                         if [ ! -d $COMOUTobs ]; then

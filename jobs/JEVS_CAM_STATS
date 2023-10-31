@@ -76,7 +76,7 @@ elif [ $VERIF_CASE = severe ] ; then
    export VDATE=${VDATE:-$PDYm7}
 
    # Set correct date for SPC report data (set relative to VDATE) 
-   export REP_DATE=$(date -d "$VDATE -1 day" +"%Y%m%d")
+   export REP_DATE=$(finddate.sh $VDATE d-1)
 
 elif [ $VERIF_CASE = spcoutlook ] ; then
    #for HREF grid2obs SPC outlook 

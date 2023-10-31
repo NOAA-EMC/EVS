@@ -33,7 +33,7 @@ export OUTPUTROOT="$DATAROOT"
 ## DATE SETTINGS
 #start_date:       verification start date, format YYYYMMDD
 #end_date:         verification end date, format YYYYMMDD
-yday=$(date -d "24 hours ago" '+%Y%m%d')
+yday=$(finddate.sh $PDY d-1)
 export start_date=$yday
 export end_date=$yday
 ## METPLUS SETTINGS

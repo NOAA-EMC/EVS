@@ -56,7 +56,7 @@ export LOG_DIR=${SAVE_DIR}/logs
 export OUTPUT_DIR=${SAVE_DIR}/${VERIF_CASE}/${eval_period}
 export IMG_HEADER=${NET}.${COMPONENT}
 
-export LOG_TEMPLATE="${LOG_DIR}/EVS_verif_plotting_job{njob}_`date '+%Y%m%d-%H%M%S'`_$$.out"
+export LOG_TEMPLATE="${LOG_DIR}/EVS_verif_plotting_job{njob}_$($NDATE)_$$.out"
 export LOG_LEVEL="DEBUG"
 
 export PYTHONDONTWRITEBYTECODE=1

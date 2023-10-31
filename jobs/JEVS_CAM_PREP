@@ -74,7 +74,7 @@ elif [ $VERIF_CASE = severe ] ; then
    export VDATE=${VDATE:-$PDYm7}
   
    # Set correct date for SPC report data (must be relative to VDATE) 
-   export REP_DATE=${REP_DATE:-$(date -d "$VDATE -1 day" +"%Y%m%d")}
+   export REP_DATE=$(finddate.sh $VDATE d-1)
 
    # Set correct date for SPC outlook data 
    export OTLK_DATE=${OTLK_DATE:-$PDYm1}
