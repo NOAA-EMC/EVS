@@ -35,7 +35,7 @@ class TimeSeries:
                  logger          - logger object
                  input_dir       - path to input directory (string)
                  output_dir      - path to output directory (string)
-                 model_info_dict - model infomation dictionary (strings)
+                 model_info_dict - model information dictionary (strings)
                  plot_info_dict  - plot information dictionary (strings)
                  date_info_dict  - date information dictionary (strings)
                  met_info_dict   - MET information dictionary (strings)
@@ -515,75 +515,3 @@ class TimeSeries:
         plt.savefig(image_name)
         plt.clf()
         plt.close('all')
-
-def main():
-    # Need settings
-    INPUT_DIR = os.environ['HOME']
-    OUTPUT_DIR = os.environ['HOME']
-    LOGO_DIR = os.environ['HOME'],
-    MODEL_INFO_DICT = {
-        'model1': {'name': 'MODEL_A',
-                   'plot_name': 'PLOT_MODEL_A',
-                   'obs_name': 'MODEL_A_OBS'},
-    }
-    DATE_INFO_DICT = {
-        'date_type': 'DATE_TYPE',
-        'start_date': 'START_DATE',
-        'end_date': 'END_DATE',
-        'valid_hr_start': 'VALID_HR_START',
-        'valid_hr_end': 'VALID_HR_END',
-        'valid_hr_inc': 'VALID_HR_INC',
-        'init_hr_start': 'INIT_HR_START',
-        'init_hr_end': 'INIT_HR_END',
-        'init_hr_inc': 'INIT_HR_INC',
-        'forecast_hour': 'FORECAST_HOUR'
-    }
-    PLOT_INFO_DICT = {
-        'line_type': 'LINE_TYPE',
-        'grid': 'GRID',
-        'stat': 'STAT',
-        'vx_mask': 'VX_MASK',
-        'event_equalization': 'EVENT_EQUALIZATION',
-        'interp_method': 'INTERP_METHOD',
-        'interp_points': 'INTERP_POINTS',
-        'fcst_var_name': 'FCST_VAR_NAME',
-        'fcst_var_level': 'FCST_VAR_LEVEL',
-        'fcst_var_thresh': 'FCST_VAR_THRESH',
-        'obs_var_name': 'OBS_VAR_NAME',
-        'obs_var_level': 'OBS_VAR_LEVEL',
-        'obs_var_thresh': 'OBS_VAR_THRESH',
-    }
-    MET_INFO_DICT = {
-        'root': '/PATH/TO/MET',
-        'version': '10.1.1'
-    }
-    # Create OUTPUT_DIR
-    if not os.path.exists(OUTPUT_DIR):
-        os.makedirs(OUTPUT_DIR)
-    # Set up logging
-    logging_dir = os.path.join(OUTPUT_DIR, 'logs')
-    if not os.path.exists(logging_dir):
-         os.makedirs(logging_dir)
-    job_logging_file = os.path.join(logging_dir, 
-                                    os.path.basename(__file__)+'_runon'
-                                    +datetime.datetime.now()\
-                                    .strftime('%Y%m%d%H%M%S')+'.log')
-    logger = logging.getLogger(job_logging_file)
-    logger.setLevel('DEBUG')
-    formatter = logging.Formatter(
-        '%(asctime)s.%(msecs)03d (%(filename)s:%(lineno)d) %(levelname)s: '
-        + '%(message)s',
-        '%m/%d %H:%M:%S'
-    )
-    file_handler = logging.FileHandler(job_logging_file, mode='a')
-    file_handler.setFormatter(formatter)
-    logger.addHandler(file_handler)
-    logger_info = f"Log file: {job_logging_file}"
-    print(logger_info)
-    logger.info(logger_info)
-    p = TimeSeries(logger, INPUT_DIR, OUTPUT_DIR, MODEL_INFO_DICT,
-                   DATE_INFO_DICT, PLOT_INFO_DICT, MET_INFO_DICT, LOGO_DIR)
-    p.make_time_series()
-
-if __name__ == "__main__":
-    main()
