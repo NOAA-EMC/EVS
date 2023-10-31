@@ -89,7 +89,7 @@ for log_dir in $log_dirs; do
 done
 
 if [ $SENDCOM="YES" ]; then
- cp evs.plots.href.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
+ cpreq evs.plots.href.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
 fi
 
 if [ $SENDDBN = YES ] ; then

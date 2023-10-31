@@ -232,7 +232,7 @@ if [ -d $log_dir ]; then
 fi
 
 if [ $SENDCOM="YES" ]; then
- cp evs.plots.href.grid2obs.ecnt.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
+ cpreq evs.plots.href.grid2obs.ecnt.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
 fi
 
 if [ $SENDDBN = YES ] ; then

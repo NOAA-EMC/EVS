@@ -121,7 +121,7 @@ if [ $SENDCOM = YES ]; then
    for output_dir in ${output_dirs}; do
       if [ "$(ls -A $DATA/$output_dir)" ]; then
          for FILE in $DATA/${output_dir}/*; do
-            cp -v $FILE $COMOUTsmall
+            cpreq -v $FILE $COMOUTsmall
          done
       fi
    done
@@ -158,7 +158,7 @@ if [ $vhr = 23 ]; then
       if [ $SENDCOM = YES ]; then
          mkdir -p $COMOUTfinal
          for FILE in $DATA/stat_analysis/*; do
-            cp -v $FILE $COMOUTfinal
+            cpreq -v $FILE $COMOUTfinal
          done
       fi
 

@@ -100,7 +100,7 @@ if [ -e $COMINobsproc/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum} ]
 then
  obfound=1
  mkdir -p $DATA/$OBSDIR/nam.${obday}
-  cp $COMINobsproc/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum} $DATA/$OBSDIR/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum}
+  cpreq $COMINobsproc/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum} $DATA/$OBSDIR/nam.${obday}/nam.t${obcyc}z.prepbufr.tm${tmnum}
 else
   if [ $SENDMAIL = "YES" ]; then
    export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
@@ -121,7 +121,7 @@ then
 
   mkdir -p $COMOUTsmall
   if [ $SENDCOM = "YES" ]; then
-   cp $DATA/point_stat/$MODELNAME/* $COMOUTsmall
+   cpreq $DATA/point_stat/$MODELNAME/* $COMOUTsmall
   fi
 
   if [ $vhr = 23 ]
@@ -136,7 +136,7 @@ then
 
        cat *ADPUPA >> evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat
        if [ $SENDCOM = "YES" ]; then
-        cp evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat  $COMOUTfinal
+        cpreq evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat  $COMOUTfinal
        fi
   fi
 

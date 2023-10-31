@@ -209,7 +209,7 @@ if [ $SENDCOM = YES ]; then
    mkdir -p $COMOUT/${RUN}.${VDATE}
 
    if [ -s $tarfile ]; then
-      cp -v $tarfile $COMOUT/${RUN}.${VDATE}/
+      cpreq -v $tarfile $COMOUT/${RUN}.${VDATE}/
       if [ $SENDDBN = YES ]; then
           $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/${RUN}.${VDATE}/${tarfile}
       fi

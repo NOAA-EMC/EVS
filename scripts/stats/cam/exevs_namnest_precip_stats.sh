@@ -289,7 +289,7 @@ fi
 if [ $SENDCOM = YES ]; then
     for MODEL_DIR_PATH in $MET_PLUS_OUT/stat_analysis/$MODELNAME*; do
         for FILE in $MODEL_DIR_PATH/*; do
-            cp -v $FILE $COMOUTsmall/.
+            cpreq -v $FILE $COMOUTsmall/.
         done
     done
     for DIR_PATH in $MET_PLUS_OUT/*/pcp_combine/*; do
@@ -300,7 +300,7 @@ if [ $SENDCOM = YES ]; then
         mkdir -p $COMOUTsmall/$DIR
         for FILEn in $DIR_PATH/*a24h*; do
             if [ -f "$FILEn" ]; then
-                cp -vr $FILEn $COMOUTsmall/${DIR}/.
+                cpreq -vr $FILEn $COMOUTsmall/${DIR}/.
             fi
         done
     done

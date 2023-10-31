@@ -279,7 +279,7 @@ fi
 if [ $SENDCOM = YES ]; then
     for MODEL_DIR_PATH in $MET_PLUS_OUT/stat_analysis/$MODELNAME*; do
         for FILE in $MODEL_DIR_PATH/*; do
-            cp -v $FILE $COMOUTsmall/.
+            cpreq -v $FILE $COMOUTsmall/.
         done
     done
 fi

@@ -80,7 +80,7 @@ for NEST in "conus" "ak"; do
             mkdir -p $COMOUT/$OBS_DIR
             if [ ! -z "$(ls -A $OBS_DIR_PATH)" ]; then
                 for FILE in $OBS_DIR_PATH/*; do
-                    cp -v $FILE $COMOUT/$OBS_DIR/.
+                    cpreq -v $FILE $COMOUT/$OBS_DIR/.
                 done
             fi
         done

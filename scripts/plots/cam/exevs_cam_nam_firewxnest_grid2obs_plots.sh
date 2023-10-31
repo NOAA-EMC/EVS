@@ -29,7 +29,7 @@ while [ $DATE -ge $ENDDATE ]; do
 
 	if [ -e ${EVSINnam}.$DAY/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat ]
 	then
-	 cp ${EVSINnam}.$DAY/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+	 cpreq ${EVSINnam}.$DAY/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
 
 	 sed "s/$model1/$MODELNAME/g" $STATDIR/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${DAY}.stat > $STATDIR/temp.stat
 	 sed "s/FULL/FireWx/g" $STATDIR/temp.stat > $STATDIR/temp2.stat
@@ -39,11 +39,11 @@ while [ $DATE -ge $ENDDATE ]; do
 	fi
 
 	if [ -e $COMIN/stats/$COMPONENT/namnest.$DAY/evs.stats.namnest.${RUN}.${VERIF_CASE}.v${DAY}.stat ]; then
-	 cp $COMIN/stats/$COMPONENT/namnest.$DAY/evs.stats.namnest.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+	 cpreq $COMIN/stats/$COMPONENT/namnest.$DAY/evs.stats.namnest.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
 	fi
 
 	if [ -e $COMIN/stats/$COMPONENT/hrrr.$DAY/evs.stats.hrrr.${RUN}.${VERIF_CASE}.v${DAY}.stat ]; then
-	 cp $COMIN/stats/$COMPONENT/hrrr.$DAY/evs.stats.hrrr.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+	 cpreq $COMIN/stats/$COMPONENT/hrrr.$DAY/evs.stats.hrrr.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
 	fi
 
 	DATE=`$NDATE -24 $DATE`
@@ -195,7 +195,7 @@ fi
         
 if [ $SENDCOM = "YES" ]; then
  mkdir -m 775 -p $COMOUTplots
- cp evs.plots.${MODELNAME}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
+ cpreq evs.plots.${MODELNAME}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
 fi
 
 if [ $SENDDBN = YES ] ; then
