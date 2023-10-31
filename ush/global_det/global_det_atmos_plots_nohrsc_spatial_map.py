@@ -21,7 +21,6 @@ import datetime
 import subprocess
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
-from cartopy.util import add_cyclic_point
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 from cartopy import config
 import global_det_atmos_util as gda_util
