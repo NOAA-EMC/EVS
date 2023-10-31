@@ -55,7 +55,7 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONENT
-export vhr=$(date -d "today" +"%H")
+export vhr=${vhr:-${vhr}}
 
 # Job Settings and Run
 . ${HOMEevs}/jobs/JEVS_MESOSCALE_PLOTS

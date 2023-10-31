@@ -73,7 +73,7 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
   export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONENT
   export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 
-  export vhr=$(date -d "today" +"%H")
+  export vhr=${vhr:-${vhr}}
   export maillist="roshan.shrestha@noaa.gov,alicia.bentley@noaa.gov"
   # export maillist="firstname.lastname@noaa.gov"
 

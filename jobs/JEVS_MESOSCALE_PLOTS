@@ -52,9 +52,9 @@ export SENDMAIL=${SENDMAIL:-NO}
 ####################################
 # Run setpdy and initialize PDY variables
 ####################################
-export cycle=${cycle:-t${vhr}z}
 export vhr=${vhr:-00}
-export cycle=t${vhr}z
+export cycle=${cycle:-t${vhr}z}
+
 setpdy.sh 31
 . ./PDY
 

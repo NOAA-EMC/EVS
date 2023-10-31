@@ -26,7 +26,7 @@ export SITE=$(cat /etc/cluster_name)
 export envir="prod"
 export NET="evs"
 export RUN="atmos"
-export vhr=$(date +"%H")
+xport vhr=${vhr:-${vhr}}
 export cycle=t${vhr}z
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
