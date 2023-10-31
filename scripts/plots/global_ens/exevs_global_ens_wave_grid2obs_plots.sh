@@ -107,6 +107,19 @@ else
   sh plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 fi
 
+###########################################
+# Cat the plotting log files
+###########################################
+log_dir=$DATA
+log_file_count=$(find $log_dir/*.out -type f |wc -l)
+if [[ $log_file_count -ne 0 ]]; then
+    for log_file in $log_dir/*.out; do
+        echo "Start: $log_file"
+        cat $log_file
+        echo "End: $log_file"
+    done
+fi
+
 #######################
 # Gather all the files 
 #######################
