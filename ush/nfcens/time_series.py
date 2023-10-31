@@ -561,7 +561,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
 #                    str(metric_names[p]).upper()
 # this only works for 1 model!
                 labels += [
-                    str(metric_names[p] + ' (' + model_list[0] +')').upper()
+                    str(metric_names[p]).upper()
                 ]
         else:
             handles = [
@@ -569,7 +569,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 for line_setting in ['solid','dashed']
             ]
             labels = [
-                str(metric_name + ' (' + model_list[0] +')').upper()
+                str(metric_name).upper()
                 for metric_name in [metric1_name, metric2_name]
             ]
     else:
