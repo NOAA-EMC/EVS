@@ -1,6 +1,15 @@
 #!/bin/bash
+
+#################################################################################
+# Name of Script: exevs_analyses__grid2obs_plots.sh
+# Contact(s):     Perry C. Shafran (perry.shafran@noaa.gov)
+# Purpose of Script: This script runs plotting codes to generate plots
+#                   of analysis vs first guess for all three analyses 
+##################################################################################
  
 set -x
+
+# Set up initial directories and initialize variables
 
 mkdir -p $DATA/plots
 mkdir -p $DATA/plots/logs
@@ -22,6 +31,8 @@ STARTDATE=${VDATE}00
 ENDDATE=${PDYm31}00
 DATE=$STARTDATE
 
+# Bring in past 31 days of stats files
+
 while [ $DATE -ge $ENDDATE ]; do
 
 	for anl in rtma urma rtma_ru
@@ -40,6 +51,8 @@ while [ $DATE -ge $ENDDATE ]; do
 	if [ -e ${EVSINanl}/${anl}.${DAY}/evs.stats.${anl}_anl.${RUN}.${VERIF_CASE}.v${DAY}.stat ]
 	then
 	cp ${EVSINanl}/${anl}.${DAY}/evs.stats.${anl}_anl.${RUN}.${VERIF_CASE}.v${DAY}.stat $STATDIR
+	else 
+	echo "WARNING: ${EVSINanl}/${anl}.${DAY}/evs.stats.${anl}_anl.${RUN}.${VERIF_CASE}.v${DAY}.stat does not exist"
         fi
 
         if [ -e ${EVSINanl}/${anl}.${DAY}/evs.stats.${anl}_ges.${RUN}.${VERIF_CASE}.v${DAY}.stat ]
@@ -60,6 +73,8 @@ while [ $DATE -ge $ENDDATE ]; do
 
 	 let "shr=shr+1"
 	done
+        else
+	echo "WARNING: ${EVSINanl}/${anl}.${DAY}/evs.stats.${anl}_ges.${RUN}.${VERIF_CASE}.v${DAY}.stat does not exist"
         fi
 
         done
@@ -67,6 +82,8 @@ while [ $DATE -ge $ENDDATE ]; do
 	DATE=`$NDATE -24 $DATE`
 
 done
+
+# Create plot for each region
 
 for region in CONUS CONUS_East CONUS_West CONUS_Central CONUS_South Alaska Hawaii PuertoRico Guam
 do
@@ -101,9 +118,29 @@ do
 
 for anl in rtma urma rtma_ru
 do
+
+plot=yes
+
+if [ $smregion = alaska -o $smregion = hawaii -o $smregion = prico ]; then
+ if [ $anl = rtma_ru ]; then
+   plot=no
+ fi
+fi
+
+if [ $smregion = guam ]; then
+ if [ $anl = rtma_ru -o $anl = urma ]; then
+  plot=no
+ fi
+fi
+
+
+
+# Plots for temperature and dew point
+
 for varb in TMP DPT
 do
-        mkdir $COMOUTplots/$varb	
+ if [ $plot = yes ]; then
+        mkdir -p $COMOUTplots/$varb	
 	export var=${varb}2m
 	export region
 	export lev=Z2
@@ -113,7 +150,8 @@ do
 	smvar=`echo $varb | tr A-Z a-z`
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
 	then
-	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config
+	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config
+	export err=$?; err_chk
 	cat $LOGDIR/*out
 	mv $LOGDIR/*out $LOGFIN
         else
@@ -127,13 +165,18 @@ do
 	cp ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $COMOUTplots/$varb
         elif [ ! -e  ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
 	then
-	echo "NO PLOT FOR",$varb,$region,$anl
+	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
         fi
+ fi
 done
 
 for varb in WIND
+
+# Plots for wind
+
 do
-	mkdir $COMOUTplots/$varb
+ if [ $plot = yes ]; then
+	mkdir -p $COMOUTplots/$varb
 	export var=${varb}10m
 	export lev=Z10
 	export lev_obs=Z10
@@ -142,7 +185,8 @@ do
         smvar=`echo $varb | tr A-Z a-z`
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
 	then
-	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config
+	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config
+	export err=$?; err_chk
         cat $LOGDIR/*out
         mv $LOGDIR/*out $LOGFIN
         else
@@ -156,13 +200,18 @@ do
 	cp ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $COMOUTplots/$varb
         elif [ ! -e ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
         then
-	echo "NO PLOT FOR",$varb,$region,$anl
+	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
         fi
+ fi
 done
 
 for varb in GUST
+
+# Plots for wind gust
+
 do
-	mkdir $COMOUTplots/$varb
+ if [ $plot = yes ]; then
+	mkdir -p $COMOUTplots/$varb
 	export var=${varb}sfc
 	export lev=Z10
 	export lev_obs=Z0
@@ -171,7 +220,8 @@ do
         smvar=`echo $varb | tr A-Z a-z`
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
 	then
-	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config
+	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config
+	export err=$?; err_chk
         cat $LOGDIR/*out
         mv $LOGDIR/*out $LOGFIN
         else
@@ -185,13 +235,18 @@ do
 	cp ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png $COMOUTplots/$varb
         elif [ ! -e ${PLOTDIR}/evs.${anl}.bcrmse_me.${smvar}_${smlev}.last31days.vhrmean.buk_${smregion}.png ]
         then
-	echo "NO PLOT FOR",$varb,$region,$anl
+	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
         fi
+ fi
 done
 
 for varb in VIS CEILING
+
+# Plots for visibility and ceiling
+
 do
-	mkdir $COMOUTplots/$varb
+ if [ $plot = yes ]; then
+	mkdir -p $COMOUTplots/$varb
 	if [ $varb = "VIS" ]
 	then
 	 export var=${varb}sfc
@@ -212,7 +267,8 @@ do
 	smlev=`echo $lev | tr A-Z a-z`
 	smvar=`echo $varb | tr A-Z a-z`
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png ]; then
-	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_perf
+	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_perf
+	export err=$?; err_chk
         cat $LOGDIR/*out
         mv $LOGDIR/*out $LOGFIN
         else
@@ -226,7 +282,7 @@ do
 	cp ${PLOTDIR}/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png $COMOUTplots/$varb
         elif [ ! -e ${PLOTDIR}/evs.${anl}.ctc.${smvar}_${smlev}.last31days.perfdiag.buk_${smregion}.png ]
 	then
-	echo "NO PLOT FOR",$varb,$region,$anl
+	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
         fi
 
 	for stat in csi fbias
@@ -235,7 +291,8 @@ do
 	export stat
 
 	if [ ! -e $COMOUTplots/$varb/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]; then
-	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_thresh
+	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_thresh
+	export err=$?; err_chk
         cat $LOGDIR/*out
         mv $LOGDIR/*out $LOGFIN
         else
@@ -249,17 +306,21 @@ do
 	cp ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png $COMOUTplots/$varb
         elif [ ! -e ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]
 	then
-	echo "NO PLOT FOR",$varb,$region,$anl
+	echo "WARNING: NO PLOT FOR",$varb,$region,$anl
         fi
 
         
         done
+ fi
 done
 
+# Plots for total cloud
+
+if [ $plot = yes ]; then
         if [ $anl = rtma -o $anl = urma ]
 	then
         export var=TCDC
-	mkdir $COMOUTplots/$var
+	mkdir -p $COMOUTplots/$var
 	export lev=L0
 	export lev_obs=L0
 	export linetype=CTC
@@ -272,7 +333,8 @@ done
 	export stat
 
 	if [ ! -e $COMOUTplots/$var/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]; then
-	sh $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_thresh
+	$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting.config_thresh
+	export err=$?; err_chk
         cat $LOGDIR/*out
         mv $LOGDIR/*out $LOGFIN
         else
@@ -286,20 +348,22 @@ done
 	cp ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png $COMOUTplots/$var
         elif [ ! -e ${PLOTDIR}/evs.${anl}.${stat}.${smvar}_${smlev}.last31days.threshmean.buk_${smregion}.png ]
 	then
-	echo "NO PLOT FOR",$var,$region,$anl
+	echo "WARNING: NO PLOT FOR",$var,$region,$anl
         fi
         done
         fi
-
+fi
 	
 done
 done
+
+# Tar up plot files and send to com directory
 
 cd ${PLOTDIR}
 tar -cvf evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar *png
 
 if [ $SENDCOM = "YES" ]; then
- cp evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
+ cpreq -v  evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar $COMOUTplots
 fi
 
 if [ $SENDDBN = YES ] ; then     

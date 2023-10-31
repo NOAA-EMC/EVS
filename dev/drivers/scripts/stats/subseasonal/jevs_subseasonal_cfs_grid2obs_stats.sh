@@ -24,6 +24,9 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/subseasonal/subseasonal_stats.sh
 
+export evs_ver=v1.0.0
+evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
+
 
 export USER=$USER
 export envir=prod
@@ -40,7 +43,6 @@ export met_ver=${met_ver}
 export metplus_ver=${metplus_ver}
 export vhr=00
 export NET=evs
-export evs_ver=${evs_ver}
 export STEP=stats
 export COMPONENT=subseasonal
 export RUN=atmos
@@ -48,8 +50,8 @@ export MODELNAME=cfs
 export cfs_ver=${cfs_ver}
 export VERIF_CASE=grid2obs
 
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/$STEP/$COMPONENT
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver/prep/$COMPONENT/$RUN
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}/$STEP/$COMPONENT
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}/prep/$COMPONENT/$RUN
 
 export config=$HOMEevs/parm/evs_config/subseasonal/config.evs.subseasonal.cfs.grid2obs.stats
 

@@ -1,6 +1,15 @@
 #/bin/bash
 
+##################################################################################
+# Name of Script: exevs_analyses_urma_grid2obs_stats.sh
+# Contact(s):     Perry C. Shafran (perry.shafran@noaa.gov)
+# Purpose of Script: This script runs METplus to generate 
+#                    verification statistics for urma analyses and first guess
+##################################################################################
+
 set -x
+
+# Set up initial directories and initialize variables
 
 mkdir -p $DATA/logs
 mkdir -p $DATA/stat
@@ -14,7 +23,7 @@ export dirin=$COMINurma
 
 export maskdir=$MASKS
 
-# search to see if obs file exists
+# Search for obs Prepbufr file
 
 obfound=0
 fhr="00"
@@ -27,6 +36,7 @@ if [ -e $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00
 then
  obfound=1
 else
+ echo "WARNING: $COMINobsproc/${MODELNAME}.${obday}/${MODELNAME}.t${obhr}z.prepbufr.tm00 is missing, METplus will not run"
  if [ $SENDMAIL = "YES" ]; then
   export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
   echo "Warning: The ${obday} prepbufr file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
@@ -38,6 +48,7 @@ fi
 
 echo $obfound
 
+# Search for analysis (2dvaranl) or first guess (2dvarges) file
 
 for type in 2dvaranl 2dvarges
 do
@@ -70,10 +81,13 @@ then
 	 fhr="01"
 	fi
 
+# Check for CONUS urma file
+
 	if [ -e $COMINurma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2_wexp ]
         then
           urmafound=1
         else
+	 echo "WARNING: $COMINurma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2_wexp is missing, METplus will not run"
 	 if [ $SENDMAIL = "YES" ]; then
           export subject="CONUS Analysis Missing for EVS ${COMPONENT}"
           echo "Warning: The CONUS Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
@@ -105,7 +119,7 @@ then
 	 fi
 	fi
 
-# check for CONUS rtma2p5 file
+# check for Alaska urma file
 
         urmafound=0
 
@@ -113,6 +127,7 @@ then
         then
           urmafound=1
         else
+	 echo "WARNING: $COMINurma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2 is missing; METplus will not run"
          if [ $SENDMAIL = "YES" ]; then		
           export subject="Alaska Analysis Missing for EVS ${COMPONENT}"
           echo "Warning: The Alaska Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
@@ -153,7 +168,7 @@ then
 	 fi
 	fi
 
-	# check for CONUS rtma2p5 file
+	# check for Hawaii urma file
 
         urmafound=0
 
@@ -161,6 +176,7 @@ then
         then    
           urmafound=1
         else 
+	 echo "WARNING: $COMINurma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2 is missing; METplus will not run"
 	 if [ $SENDMAIL = "YES" ]; then
           export subject="Hawaii Analysis Missing for EVS ${COMPONENT}"
           echo "Warning: The Hawaii Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
@@ -203,10 +219,13 @@ then
 
 	urmafound=0
 
+# Check for Puerto Rico urma file
+
         if [ -e $COMINurma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2 ]
         then
           urmafound=1
         else
+	 echo "WARNING: $COMINurma/${modnam}.${VDATE}/${modnam}.t${vhr}z.${outtyp}_ndfd.grb2 is missing; METplus will not run"
 	 if [ $SENDMAIL = "YES" ]; then
           export subject="Puerto Rico Analysis Missing for EVS ${COMPONENT}"
           echo "Warning: The Puerto Rico Analysis file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
@@ -217,6 +236,8 @@ then
         fi
 
 fi
+
+# Run METplus for urma vs obs
 
 if [ ! -e $COMOUTsmall/point_stat_${modnam}${typtag}_${fhr}0000L_${VDATE}_${vhr}0000V.stat ]
 then
@@ -233,8 +254,8 @@ if [ $SENDCOM = "YES" ]; then
  cp $DATA/point_stat/${modnam}${typtag}/* $COMOUTsmall
 fi
 else
-echo "NO URMA OR OBS DATA, METplus will not run"
-echo "URMAFOUND, OBFOUND", $urmafound, $obfound
+echo "WARNING: NO URMA OR OBS DATA, METplus will not run"
+echo "WARNING: URMAFOUND, OBFOUND", $urmafound, $obfound
 fi
 else
   echo "RESTART - $COMOUTsmall/point_stat_${modnam}${typtag}_${fhr}_${VDATE}_${vhr}0000V.stat exists"
@@ -242,6 +263,8 @@ fi
 
 
 done
+
+# Run StatAnalysis to generate final stat file
 
 if [ $vhr = 23 -a $urmafound -eq 1 -a $obfound -eq 1 ]
 then
@@ -256,7 +279,7 @@ then
 	 cp $finalstat/evs.stats.${regionnest}${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal
        fi
 else    
-       echo "NO RTMA OR OBS DATA, or not gather time yet, METplus gather job will not run"
+       echo "WARNING: NO URMA OR OBS DATA, or not gather time yet, METplus gather job will not run"
 fi
 
 done
