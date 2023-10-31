@@ -22,7 +22,7 @@ cd $DATA
 ####################################
 # Set EVS directories
 ####################################
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
@@ -34,11 +34,11 @@ export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
 ####################################
 export vhr=${vhr:-00}
 export cycle=${cycle:-t${vhr}z}
-export NDAYS=${NDAYS:-31}
-setpdy.sh $NDAYS
+setpdy.sh
 . ./PDY
-export VDATE_START=${VDATE_START:-$(eval echo \$PDYm$NDAYS)}
 export VDATE_END=${VDATE_END:-$PDYm1}
+export NDAYS=${NDAYS:-31}
+export VDATE_START=${VDATE_START:-$(finddate.sh $VDATE_END d-$((${NDAYS}-1)))}
 
 ####################################
 # Set data directives

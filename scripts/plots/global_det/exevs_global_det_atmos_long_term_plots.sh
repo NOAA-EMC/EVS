@@ -11,16 +11,12 @@ set -x
 
 echo "RUN MODE:$evs_run_mode"
 if [ $evs_run_mode = production ] && [ $envir = prod ]; then
-    echo "exevs_global_det_atmos_long_term_plots.sh does run in production; exit"
-    exit
+    err_exit "exevs_global_det_atmos_long_term_plots.sh does run in production"
 fi
 
 # Make plots
 python $USHevs/global_det/global_det_atmos_plots_long_term.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_plots_long_term.py"
-echo
+export err=$?; err_chk
 
 # Copy files to desired location
 if [ $SENDCOM = YES ]; then
@@ -31,5 +27,5 @@ if [ $SENDCOM = YES ]; then
     else
         tar -cvf ${large_tar_file} -C ${DATA}/${VDATEYYYY}_${VDATEmm}_ACC/images . -C ${DATA}/monthly/grid2grid/images .
     fi
-    cp -v $large_tar_file $COMOUT/.
+    cpreq -v $large_tar_file $COMOUT/.
 fi
