@@ -34,21 +34,22 @@ for date_check_name in date_check_name_list:
     date_check_month = int(date_check[4:6])
     date_check_day = int(date_check[6:])
     if len(date_check) != 8:
-        print("ERROR: "+date_check_name+"_date not in YYYYMMDD format")
+        print("FATAL ERROR: "+date_check_name+"_date not in YYYYMMDD format")
         sys.exit(1)
     if date_check_month > 12 or int(date_check_month) == 0:
-        print("ERROR: month "+str(date_check_month)+" in value "
+        print("FATAL ERROR: month "+str(date_check_month)+" in value "
               +date_check+" for "+date_check_name+"_date is not a valid month")
         sys.exit(1)
     if date_check_day \
             > calendar.monthrange(date_check_year, date_check_month)[1]:
-        print("ERROR: day "+str(date_check_day)+" in value "
+        print("FATAL ERROR: day "+str(date_check_day)+" in value "
               +date_check+" for "+date_check_name+"_date is not a valid day "
               +"for month")
         sys.exit(1)
 if datetime.datetime.strptime(os.environ['end_date'], '%Y%m%d') \
         < datetime.datetime.strptime(os.environ['start_date'], '%Y%m%d'):
-    print("ERROR: end_date ("+os.environ['end_date']+") cannot be less than "
+    print("FATAL ERROR: end_date ("+os.environ['end_date']+") "
+          +"cannot be less than "
           +"start_date ("+os.environ['start_date']+")")
     sys.exit(1)
 
@@ -70,7 +71,7 @@ for VERIF_CASE_STEP_type in VERIF_CASE_STEP_type_list:
             not in valid_VERIF_CASE_STEP_type_opts_dict[
             'RUN_'+VERIF_CASE.upper()+'_'+STEP.upper()
             ]:
-        print("ERROR: "+VERIF_CASE_STEP_type+" not a valid option for "
+        print("FATAL ERROR: "+VERIF_CASE_STEP_type+" not a valid option for "
               +VERIF_CASE_STEP_abbrev+"_type_list. Valid options are "
               +','.join(valid_VERIF_CASE_STEP_type_opts_dict[
                   'RUN_'+VERIF_CASE.upper()+'_'+STEP.upper()
@@ -172,14 +173,14 @@ for env_check_group in env_check_group_list:
     for env_var_check in env_var_check_list:
         if not env_var_check in os.environ:
             if env_check_group == 'modules':
-                print("ERROR: "+env_var_check+" not set in environment, "
+                print("FATAL ERROR: "+env_var_check+" not set in environment, "
                       +"review modules loaded in "
                       +"global_det_atmos_load_modules.sh")
             elif env_check_group == 'evs':
-                print("ERROR: "+env_var_check+" was not set in environment, "
+                print("FATAL ERROR: "+env_var_check+" was not set in environment, "
                       +"was not set through previous EVS scripts")
             else:
-                print("ERROR: "+env_var_check+" not set in environment, "
+                print("FATAL ERROR: "+env_var_check+" not set in environment, "
                       +"check configuration file "+config)
             sys.exit(1)
 verif_type_list  = os.environ[VERIF_CASE_STEP_abbrev+'_type_list'].split(' ')
@@ -200,7 +201,7 @@ for verif_type in verif_type_list:
          env_var_check = (VERIF_CASE_STEP_abbrev+'_'+verif_type+'_'
                           +verif_type_env_var)
          if not env_var_check in os.environ:
-              print("ERROR: "+env_var_check+" not set in environment, "
+              print("FATAL ERROR: "+env_var_check+" not set in environment, "
                     +"check configuration file "+config)
               sys.exit(1)
 
@@ -255,7 +256,7 @@ for verif_type in verif_type_list:
 for config_var in check_config_var_len_list:
     if len(os.environ[config_var].split(' ')) \
             != len(os.environ['model_list'].split(' ')):
-     print("ERROR: length of "+config_var+" (length="
+     print("FATAL ERROR: length of "+config_var+" (length="
            +str(len(os.environ[config_var].split(' ')))+", values="
            +os.environ[config_var]+") not equal to length of model_list "
            +"(length="+str(len(os.environ['model_list'].split(' ')))+", "
@@ -290,7 +291,7 @@ for config_var in list(valid_config_var_values_dict.keys()):
         else:
             config_var_pass = True
     if not config_var_pass:
-        print("ERROR: value of "+failed_config_value+" for "
+        print("FATAL ERROR: value of "+failed_config_value+" for "
               +config_var+" not a valid option. Valid options are "
               +', '.join(valid_config_var_values_dict[config_var]))
         sys.exit(1)

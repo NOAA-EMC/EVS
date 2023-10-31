@@ -16,10 +16,7 @@ echo "Starting at : `date`"
 # Prep model files
 for MODEL in $MODELNAME; do
     echo ' '
-    echo ' *************************************'
     echo " *** ${MODELNAME}-${RUN} prep ***"
-    echo ' *************************************'
-    echo ' '
     # Copy the GFS 0.25 degree wave forecast files
     if [ $MODEL == "gfs" ]; then
         inithours='00 06 12 18'
@@ -34,6 +31,7 @@ for MODEL in $MODELNAME; do
                 tmp_filename="${DATA}/gfswave.${INITDATE}.t${inithour}z.global.0p25.f${hr}.grib2"
                 output_filename="$COMOUT.${INITDATE}/${MODEL}/gfswave.${INITDATE}.t${inithour}z.global.0p25.f${hr}.grib2"
                 if [ ! -s $input_filename ] ; then
+                    echo "WARNING: F${hr} GFS Forecast Data Missing: ${input_filename}"
                     if [ $SENDMAIL = YES ] ; then
                         export subject="F${hr} GFS Forecast Data Missing for EVS ${COMPONENT}"
                         echo "Warning: No GFS forecast was available for ${INITDATE}${inithour}f${hr}" > mailmsg
@@ -43,9 +41,9 @@ for MODEL in $MODELNAME; do
                     fi
                 else
                     if [ ! -s $output_filename ] ; then
-                        cp -v $input_filename $tmp_filename
+                        cpreq -v $input_filename $tmp_filename
                         if [ $SENDCOM = YES ]; then
-                            cp -v $tmp_filename $output_filename
+                            cpreq -v $tmp_filename $output_filename
                         fi
                     fi
                 fi
@@ -56,16 +54,13 @@ done
 
 # Prep the observation files
 for OBS in $OBSNAME; do
-    echo ' '
-    echo ' *************************************'
     echo " *** ${OBSNAME}-${RUN} prep ***"
-    echo ' *************************************'
-    echo ' '
     # Trim down the NDBC buoy files
     if [ $OBS == "ndbc" ]; then
-        INITDATEp1=$(date --date="${INITDATE} 24 hours" +"%Y%m%d")
+        export INITDATEp1=$($NDATE +24 ${INITDATE}${vhr} | cut -c 1-8)
         nbdc_txt_ncount=$(ls -l $DCOMINndbc/${INITDATEp1}/validation_data/marine/buoy/*.txt |wc -l)
         if [[ $nbdc_txt_ncount -eq 0 ]]; then
+            echo "WARNING: No NDBC data in $DCOMINndbc/${INITDATEp1}/validation_data/marine/buoy"
             if [ $SENDMAIL = YES ] ; then
                 export subject="NDBC Data Missing for EVS ${COMPONENT}"
                 echo "Warning: No NDBC data was available for valid date ${VDATE}" > mailmsg
@@ -75,6 +70,7 @@ for OBS in $OBSNAME; do
             fi
         else
             python $USHevs/${COMPONENT}/global_det_wave_prep_trim_ndbc_files.py
+            export err=$?; err_chk
         fi
     fi
 done

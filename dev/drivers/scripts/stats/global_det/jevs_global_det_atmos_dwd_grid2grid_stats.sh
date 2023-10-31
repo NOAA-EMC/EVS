@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:10:00
+#PBS -l walltime=00:15:00
 #PBS -l place=vscatter,select=1:ncpus=11:ompthreads=1:mem=25GB
 #PBS -l debug=true
 #PBS -V
@@ -28,6 +28,9 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/global_det/global_det_stats.sh
 
+export evs_ver=v1.0.0
+evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
+
 export machine=WCOSS2
 export USE_CFP=YES
 export nproc=11
@@ -44,8 +47,8 @@ export MODELNAME=dwd
 
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver
-export COMROOT=/lfs/h2/emc/vpppg/noscrub/$USER
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 
 export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
