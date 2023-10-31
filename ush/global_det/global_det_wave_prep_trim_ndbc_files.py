@@ -18,6 +18,7 @@ print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables to use
 INITDATE = os.environ['INITDATE']
+INITDATEp1 = os.environ['INITDATEp1']
 DATA = os.environ['DATA']
 DCOMINndbc = os.environ['DCOMINndbc']
 SENDCOM = os.environ['SENDCOM']
@@ -25,7 +26,7 @@ COMOUT = os.environ['COMOUT']
 
 # Set up dates
 INITDATE_dt = datetime.datetime.strptime(INITDATE, '%Y%m%d')
-INITDATEp1_dt = INITDATE_dt + datetime.timedelta(days=1)
+INITDATEp1_dt = datetime.datetime.strptime(INITDATEp1, '%Y%m%d')
 
 # Assign header columns in NDBC individual buoy files
 ndbc_header1 = ("#YY  MM DD hh mm WDIR WSPD GST  WVHT   DPD   APD MWD   "
