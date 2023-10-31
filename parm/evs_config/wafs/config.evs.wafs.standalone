@@ -5,10 +5,15 @@
 if [ $OBSERVATION = "GCIP" ] ; then
     export FHOURS="06 09 12 15 18 21 24 27 30 33 36"
     export FHOURS_EVSlist=${FHOURS// /, }
+    export FHOURS_EVSlist1="06,12,18,24,30,36"
+    export FHOURS_EVSlist2="09,15,21,27,33"
 
-    export valid_beg=00
-    export valid_end=21
-    export valid_inc=3
+    export valid_beg1=00
+    export valid_end1=18
+    export valid_beg2=03
+    export valid_end2=21
+    export valid_inc6=6
+    export valid_inc3=3
     export FCST_VALID_HOUR="00,03,06,09,12,15,18,21"
     
     # Only for stat
