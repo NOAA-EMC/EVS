@@ -23,7 +23,6 @@ set -x
 #############################
 
 cd $DATA
-echo "in $0 JLOGFILE is $jlogfile"
 echo "Starting grid2obs_stats for ${MODELNAME}_${RUN}"
 
 echo ' '
@@ -85,7 +84,7 @@ for vhr in ${vhours} ; do
                 if [[ -s $EVSINgdasncfilename ]]; then
                     cp -v $EVSINgdasncfilename $DATAgdasncfilename
                 else
-                    echo "DOES NOT EXIST $EVSINgdasncfilename"
+                    echo "WARNING: DOES NOT EXIST $EVSINgdasncfilename"
                 fi
             fi
             if [[ -s $DATAgdasncfilename ]]; then
@@ -93,7 +92,7 @@ for vhr in ${vhours} ; do
                     if [[ -s $EVSINmodelfilename ]]; then
                         cp -v $EVSINmodelfilename $DATAmodelfilename
                     else
-                        echo "DOES NOT EXIST $EVSINmodelfilename"
+                        echo "WARNING: DOES NOT EXIST $EVSINmodelfilename"
                     fi
                 fi
                 if [[ -s $DATAmodelfilename ]]; then
@@ -101,6 +100,7 @@ for vhr in ${vhours} ; do
                     echo "export VHR=${vhr2}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
                     echo "export fhr=${flead}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
                     echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstNFCENS_obsGDAS_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
+		    export err=$?; err_chk
                     echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
                     if [ $SENDCOM = YES ]; then
                         echo "cp -v $DATAstatfilename $COMOUTstatfilename" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhr2}_f${flead}_g2o.sh
@@ -139,15 +139,16 @@ if [ $gather = yes ] ; then
       mkdir -p ${DATA}/stats
       # Use StatAnalysis to gather the small stat files into one file
       run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/StatAnalysis_fcstNFCENS_obsGDAS.conf
+      export err=$?; err_chk
       if [ $SENDCOM = YES ]; then
           if [ -s ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
               cp -v ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
           else
-              echo "DOES NOT EXIST ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
+              echo "WARNING: DOES NOT EXIST ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
           fi
       fi
   else
-      echo "NO SMALL STAT FILES FOUND IN ${DATA}/all_stats"
+      echo "WARNING: NO SMALL STAT FILES FOUND IN ${DATA}/all_stats"
   fi
 
 fi
