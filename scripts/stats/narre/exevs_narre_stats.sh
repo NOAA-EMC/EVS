@@ -15,7 +15,7 @@ export gather=${gather:-'yes'}
 
 
 msg="$job HAS BEGUN"
-postmsg "$jlogfile" "$msg"
+postmsg "$msg"
 
 export GRID2OBS_CONF=$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}
 export MET_CONFIG=${METPLUS_BASE}/parm/met_config
