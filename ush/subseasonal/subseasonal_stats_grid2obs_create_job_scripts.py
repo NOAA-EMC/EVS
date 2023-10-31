@@ -359,12 +359,15 @@ if JOB_GROUP in ['assemble_data', 'generate_stats']:
                     if write_job_cmds:
                         for cmd in verif_type_job_commands_list:
                             job.write(cmd+'\n')
+                            job.write('export err=$?; err_chk'+'\n')
                         # Copy DATA files to COMOUT restart dir
                         if job_env_dict['SENDCOM'] == 'YES':
                             for model_output_file_tuple \
                                     in model_copy_output_DATA2COMOUT_list:
-                                job.write(f"cp -v {model_output_file_tuple[0]} "
-                                          +f"{model_output_file_tuple[1]}\n")
+                                job.write(f'if [ -f "{model_output_file_tuple[0]}" ]; then '
+                                          +f"cpreq -v {model_output_file_tuple[0]} "
+                                          +f"{model_output_file_tuple[1]}"
+                                          +f"; fi\n")
                     job.close()
                     job_env_dict.pop('fhr_list')
                     job_env_dict['fhr_start'] = fhr_start
@@ -439,6 +442,7 @@ if JOB_GROUP in ['assemble_data', 'generate_stats']:
                     if write_job_cmds:
                         for cmd in verif_type_job_commands_list:
                             job.write(cmd+'\n')
+                            job.write('export err=$?; err_chk'+'\n')
                     job.close()
                     date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
 elif JOB_GROUP == 'gather_stats':
@@ -478,6 +482,7 @@ elif JOB_GROUP == 'gather_stats':
             if write_job_cmds:
                 for cmd in gather_stats_jobs_dict['commands']:
                     job.write(cmd+'\n')
+                    job.write('export err=$?; err_chk'+'\n')
             job.close()
         date_dt = date_dt + datetime.timedelta(days=1)
 

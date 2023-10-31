@@ -36,8 +36,9 @@ def run_shell_command(command):
     else:
         run_command = subprocess.run(command)
     if run_command.returncode != 0:
-        print("WARNING: "+' '.join(run_command.args)+" gave return code "
+        print("FATAL ERROR: "+' '.join(run_command.args)+" gave return code "
               +str(run_command.returncode))
+        sys.exit(run_command.returncode)
 
 def metplus_command(conf_file_name):
     """! Write out full call to METplus

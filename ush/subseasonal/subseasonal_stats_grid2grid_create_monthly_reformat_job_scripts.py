@@ -202,6 +202,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                     if write_job_cmds:
                         for cmd in verif_type_job_commands_list:
                             job.write(cmd+'\n')
+                            job.write('export err=$?; err_chk'+'\n')
                     job.close()
                     job_env_dict.pop('fhr_list')
                     job_env_dict['fhr_start'] = fhr_start
@@ -276,6 +277,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data']:
                     if write_job_cmds:
                         for cmd in verif_type_job_commands_list:
                             job.write(cmd+'\n')
+                            job.write('export err=$?; err_chk'+'\n')
                     job.close()
                     date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
 

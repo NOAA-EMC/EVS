@@ -487,7 +487,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     # Write job commands
                     job.write(
                         sub_util.python_command('subseasonal_plots.py',[])
+                        +'\n'
                     )
+                    job.write('export err=$?; err_chk'+'\n')
                     job.close()
             elif JOB_GROUP == 'filter_stats':
                 for JOB_GROUP_loop in list(
@@ -536,7 +538,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     job.write('\n')
                     job.write(
                         sub_util.python_command('subseasonal_plots.py',[])
+                        +'\n'
                     )
+                    job.write('export err=$?; err_chk'+'\n')
                     job.close()
             elif JOB_GROUP == 'make_plots':
                 job_output_images_dir = os.path.join(
@@ -640,9 +644,10 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             job.write('\n')
                             job.write(
                                 sub_util.python_command(run_subseasonal_plot,
-                                                        [])
+                                                        [])+'\n'
                             )
-                        job.close()
+                            job.write('export err=$?; err_chk'+'\n')
+                            job.close()
             elif JOB_GROUP == 'tar_images':
                 job_env_dict['model_list'] = "'"+f"{', '.join(model_list)}"+"'"
                 job_env_dict['model_plot_name_list'] = (
@@ -680,7 +685,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job.write('\n')
                 job.write(
                     sub_util.python_command('subseasonal_plots.py',[])
+                    +'\n'
                 )
+                job.write('export err=$?; err_chk'+'\n')
                 job.close()
 
 # If running USE_CFP, create POE scripts
