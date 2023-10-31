@@ -29,7 +29,6 @@ export LOUD=${LOUD:-YES}; [[ $LOUD = yes ]] && export LOUD=YES
 #############################
 
 cd $DATA
-echo "in $0 JLOGFILE is $jlogfile"
 echo "Starting grid2obs_plots for ${MODELNAME}_${RUN}"
 
 set -x
@@ -82,14 +81,14 @@ else
   set -x
   echo ' '
   echo '**************************************** '
-  echo '*** FATAL ERROR: NO NFCENS *.stat FILE *** '
+  echo '*** WARNING: NO NFCENS *.stat FILES *** '
   echo "             for ${VDATE} "
   echo '**************************************** '
   echo ' '
-  echo "${MODELNAME}_${RUN} $VDATE $vhour : NFCENS *.stat file missing."
+  echo "${MODELNAME}_${RUN} $VDATE $vhour : NFCENS *.stat files missing."
   [[ "$LOUD" = YES ]] && set -x
-  ./postmsg "$jlogfile" "FATAL ERROR: NO NFCENS *.stat file for ${VDATE}"
-  err_exit "FATAL ERROR: Did not copy the NFCENS *.stat file for ${VDATE}"
+  ./postmsg "WARNING: NO NFCENS *.stat files for ${VDATE}"
+  err_exit "WARNING: Did not copy the NFCENS *.stat files for ${VDATE}"
   exit
 fi
 
@@ -148,7 +147,7 @@ if [ $gather = yes ] ; then
       echo ' '
       echo "${MODELNAME}_${RUN} ${VDATE} ${period}: PLOTS are missing."
       [[ "$LOUD" = YES ]] && set -x
-      ./postmsg "$jlogfile" "FATAL ERROR : NO ${period} PLOTS FOR ${VDATE}"
+      ./postmsg "FATAL ERROR : NO ${period} PLOTS FOR ${VDATE}"
       err_exit "FATAL ERROR: Did not find any ${period} plots for ${VDATE}"
     fi
     
@@ -164,7 +163,7 @@ else
 fi
 
 msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
+postmsg "$msg"
 
 if [ $SENDDBN = YES ]; then
 	$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.*.tar
