@@ -588,6 +588,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         handles = []
         #labels = []
         labels = [model_list[0].upper()]
+    handles = []
+    labels = []
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -653,6 +655,14 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                     lw=ref_color_dict['linewidth']
                 )
                 plotted_reference[0] = True
+                handles+=[
+                    f(
+                          ref_color_dict['marker'], ref_color_dict['color'],
+                          'solid', ref_color_dict['linewidth'],
+                          ref_color_dict['markersize'], 'white'
+                    )
+                ]
+                labels+=[str(metric1_name).upper()]
         else:
             plt.plot(
                 x_vals1.tolist(), y_vals_metric1, 
@@ -661,6 +671,14 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 figure=fig, ms=mod_setting_dicts[m]['markersize'], ls='solid', 
                 lw=mod_setting_dicts[m]['linewidth']
             )
+            handles+=[
+                f(
+                      mod_setting_dicts[m]['marker'], mod_setting_dicts[m]['color'],
+                      'solid', mod_setting_dicts[m]['linewidth'],
+                      mod_setting_dicts[m]['markersize'], 'white'
+                )
+            ]
+            labels+=[str(metric1_name).upper()+' ('+model_plot_name.upper()+')']
         if metric2_name is not None:
             if np.abs(y_vals_metric2_mean) < 1E4:
                 metric2_mean_fmt_string = f'{y_vals_metric2_mean:.2f}'
@@ -677,6 +695,14 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                         lw=ref_color_dict['linewidth']
                     )
                     plotted_reference[1] = True
+                    handles+=[
+                        f(
+                              ref_color_dict['marker'], ref_color_dict['color'],
+                              'dashed', ref_color_dict['linewidth'],
+                              ref_color_dict['markersize'], 'white'
+                        )
+                    ]
+                    labels+=[str(metric2_name).upper()]
             else:
                 plt.plot(
                     x_vals2.tolist(), y_vals_metric2, 
@@ -685,6 +711,14 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                     figure=fig, ms=mod_setting_dicts[m]['markersize'], 
                     ls='dashed', lw=mod_setting_dicts[m]['linewidth']
                 )
+                handles+=[
+                    f(
+                          mod_setting_dicts[m]['marker'], mod_setting_dicts[m]['color'],
+                          'dashed', mod_setting_dicts[m]['linewidth'],
+                          mod_setting_dicts[m]['markersize'], 'white'
+                    )
+                ]
+                labels+=[str(metric2_name).upper()+' ('+model_plot_name.upper()+')']
         if confidence_intervals:
             if plot_reference[0]:
                 if not plotted_reference_CIs[0]:
@@ -729,13 +763,13 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                         capsize=10., capthick=mod_setting_dicts[m]['linewidth'],
                         alpha=.70, zorder=0
                     )
-        handles+=[
-            f(
-                mod_setting_dicts[m]['marker'], mod_setting_dicts[m]['color'],
-                'solid', mod_setting_dicts[m]['linewidth'], 
-                mod_setting_dicts[m]['markersize'], 'white'
-            )
-        ]
+        #handles+=[
+        #    f(
+        #        mod_setting_dicts[m]['marker'], mod_setting_dicts[m]['color'],
+        #        'solid', mod_setting_dicts[m]['linewidth'], 
+        #        mod_setting_dicts[m]['markersize'], 'white'
+        #    )
+        #]
         if display_averages:
             if metric2_name is not None:
                 labels+=[
@@ -775,7 +809,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         np.digitize(y_range, y_range_categories[:-1])
     ]
     ylim_min = np.floor(y_min/round_to_nearest)*round_to_nearest
-    ylim_max = np.ceil(y_max/round_to_nearest)*round_to_nearest
+    #ylim_max = np.ceil(y_max/round_to_nearest)*round_to_nearest
+    ylim_max = round(np.ceil(y_max/round_to_nearest)*round_to_nearest, len(str(round_to_nearest))-1)
     if len(str(ylim_min)) > 5 and np.abs(ylim_min) < 1.:
         ylim_min = float(
             np.format_float_scientific(ylim_min, unique=False, precision=3)
@@ -784,7 +819,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         y_precision_scale = 100/round_to_nearest
     else:
         y_precision_scale = 1.
-    yticks = [
+    yticks_og = [
         y_val for y_val
         in np.arange(
             ylim_min*y_precision_scale,
@@ -792,7 +827,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             round_to_nearest*y_precision_scale
         )
     ]
-    yticks=np.divide(yticks,y_precision_scale)
+    yticks_og=np.divide(yticks_og,y_precision_scale)
+    yticks = [round(ytick,len(str(round_to_nearest))-1) for ytick in yticks_og]
     ytick_labels = [f'{ytick}' for ytick in yticks]
     show_ytick_every = len(yticks)//10+1
     ytick_labels_with_blanks = ['' for item in ytick_labels]
@@ -986,7 +1022,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
 #              + f'{date_start_string} to {date_end_string}, {frange_string}'
     fcst_day=int(flead[0]/24)
     title3 = (f'{str(date_type).lower()} {date_start_string} - {date_end_string}, '
-              + f'cycles: {date_hours_string} Forecast Day {fcst_day} (Hour {flead[0]})')
+              + f'init. hours: {date_hours_string} Forecast Day {fcst_day} (Hour {flead[0]})')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
         #title_pad=23

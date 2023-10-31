@@ -18,10 +18,6 @@ import sys
 import re
 import datetime
 from dateutil.relativedelta import relativedelta
-sys.path.insert(
-    1, 
-    '/gpfs/dell2/emc/verification/noscrub/emc.metplus/METplus/METplus-4.0.0/metplus/util/'
-)
 import time_util
 
 TEMPLATE_IDENTIFIER_BEGIN = "{"

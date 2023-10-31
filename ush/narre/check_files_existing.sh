@@ -1,5 +1,9 @@
 #!/bin/ksh
-
+#**************************************************************************
+#  Purpose: check the required input forecast and validation data files 
+#           for narre stat jobs
+#  Last update: 10/27/2023, by Binbin Zhou Lynker@EMC/NCEP
+#************************************************************************
 set -x
 
 

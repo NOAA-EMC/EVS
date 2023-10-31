@@ -1,16 +1,14 @@
 #!/bin/ksh
 set -x 
+#**************************************************************************
+#  Purpose: To combine narre's small stat files to a big stat file 
+#  Last update: 10/27/2023, by Binbin Zhou Lynker@EMC/NCEP
+#************************************************************************
+#
 
-#Binbin note: If METPLUS_BASE,  PARM_BASE not set, then they will be set to $METPLUS_PATH
-#             by config_launcher.py in METplus-3.0/ush
-#             why config_launcher.py is not in METplus-3.1/ush ??? 
 
 
-###########################################################
-#export global parameters unified for all mpi sub-tasks
-############################################################
 export regrid='NONE'
-############################################################
 
 >run_gather_all_poe.sh
 
@@ -58,3 +56,5 @@ done
 chmod 775 run_gather_all_poe.sh
 
  ${DATA}/run_gather_all_poe.sh
+ export err=$?; err_chk
+
