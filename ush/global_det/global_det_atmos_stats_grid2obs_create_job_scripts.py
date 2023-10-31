@@ -1002,11 +1002,12 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     if write_job_cmds:
                         for cmd in verif_type_job_commands_list:
                             job.write(cmd+'\n')
+                            job.write('export err=$?; err_chk'+'\n')
                         if job_env_dict['SENDCOM'] == 'YES':
                             for model_output_file_tuple \
                                     in model_copy_output_DATA2COMOUT_list:
                                 job.write(f'if [ -f "{model_output_file_tuple[0]}" ]; then '
-                                          +f"cp -v {model_output_file_tuple[0]} "
+                                          +f"cpreq -v {model_output_file_tuple[0]} "
                                           +f"{model_output_file_tuple[1]}"
                                           +f"; fi\n")
                     else:
@@ -1082,13 +1083,32 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     if write_job_cmds:
                         for cmd in verif_type_job_commands_list:
                             job.write(cmd+'\n')
+                            job.write('export err=$?; err_chk'+'\n')
                         if job_env_dict['SENDCOM'] == 'YES':
                             for truth_output_file_tuple \
                                     in truth_copy_output_DATA2COMOUT_list:
                                 job.write(f'if [ -f "{truth_output_file_tuple[0]}" ]; then '
-                                          +f"cp -v {truth_output_file_tuple[0]} "
+                                          +f"cpreq -v {truth_output_file_tuple[0]} "
                                           +f"{truth_output_file_tuple[1]}"
                                           +f"; fi\n")
+                                if job_env_dict['JOB_GROUP'] == 'reformat_data' \
+                                        and job_env_dict['VERIF_CASE'] == 'grid2obs' \
+                                        and job_env_dict['VERIF_TYPE'] \
+                                        in ['pres_levs', 'sfc', 'ptype'] \
+                                        and 'Prepbufr' in job_env_dict['job_name']:
+                                    job.write(f'if [ -f "{truth_output_file_tuple[0]}" ]; then '
+                                              +f"chmod 640 {truth_output_file_tuple[0]} "
+                                              +f"; fi\n")
+                                    job.write(f'if [ -f "{truth_output_file_tuple[0]}" ]; then '
+                                              +f"chgrp rstprod {truth_output_file_tuple[0]} "
+                                              +f"; fi\n")
+                                    job.write(f'if [ -f "{truth_output_file_tuple[1]}" ]; then '
+                                              +f"chmod 640 {truth_output_file_tuple[1]} "
+                                              +f"; fi\n")
+                                    job.write(f'if [ -f "{truth_output_file_tuple[1]}" ]; then '
+                                              +f"chgrp rstprod {truth_output_file_tuple[1]} "
+                                              +f"; fi\n")
+
                     job.close()
                     date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
 elif JOB_GROUP == 'gather_stats':
@@ -1128,6 +1148,7 @@ elif JOB_GROUP == 'gather_stats':
             if write_job_cmds:
                 for cmd in gather_stats_jobs_dict['commands']:
                     job.write(cmd+'\n')
+                    job.write('export err=$?; err_chk'+'\n')
             job.close()
         date_dt = date_dt + datetime.timedelta(days=1)
 
