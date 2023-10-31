@@ -11,9 +11,7 @@ echo
 
 # Run prep work for global determinstic model and observations
 python ${USHevs}/global_det/global_det_atmos_prep.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/global_det/global_det_atmos_prep.py"
+export err=$?; err_chk
 
 # Send for missing files
 if [ $SENDMAIL = YES ] ; then
