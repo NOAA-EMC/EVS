@@ -65,12 +65,12 @@ while [ ${ic} -le ${endvhr} ]; do
 	        cp ${PREP_SAVE_DIR}/airnow_hourly_aqobs_${VDATE}${VHOUR}.nc ${COMOUTproc}
 	    fi
         else
-            echo "Warning: can not find ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf"
+            echo "WARNING: can not find ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf"
 	fi
     else
         if [ ${SENDMAIL} = "YES" ]; then
             export subject="AIRNOW ASCII Hourly Data Missing for EVS ${COMPONENT}"
-            echo "Warning: No AIRNOW ASCII data was available for valid date ${VDATE}${vldhr}" > mailmsg
+            echo "WARNING: No AIRNOW ASCII data was available for valid date ${VDATE}${vldhr}" > mailmsg
             echo "Missing file is ${checkfile}" >> mailmsg
             echo "Job ID: $jobid" >> mailmsg
             cat mailmsg | mail -s "$subject" $maillist 
@@ -95,12 +95,12 @@ if [ -s ${checkfile} ]; then
 	    cp ${PREP_SAVE_DIR}/airnow_daily_${VDATE}.nc ${COMOUTproc}
 	fi
     else
-        echo "Warning: can not find ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf"
+        echo "WARNING: can not find ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf"
     fi
 else
     if [ ${SENDMAIL} = "YES" ]; then
         export subject="AIRNOW ASCII Daily Data Missing for EVS ${COMPONENT}"
-        echo "Warning: No AIRNOW ASCII data was available for valid date ${VDATE}" > mailmsg
+        echo "WARNING: No AIRNOW ASCII data was available for valid date ${VDATE}" > mailmsg
         echo "Missing file is ${checkfile}" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
         cat mailmsg | mail -s "$subject" $maillist 
@@ -150,7 +150,7 @@ then
     else
         if [ ${SENDMAIL} = "YES" ]; then
             export subject="t${hour}z OZMAX8${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
-            echo "Warning: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z" > mailmsg
+            echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z" > mailmsg
             echo "Missing file is ${ozmax8_file}" >> mailmsg
             echo "Job ID: $jobid" >> mailmsg
             cat mailmsg | mail -s "$subject" $maillist
@@ -175,7 +175,7 @@ then
     else
         if [ ${SENDMAIL} = "YES" ]; then
             export subject="t${hour}z OZMAX8${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
-            echo "Warning: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z" > mailmsg
+            echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z" > mailmsg
             echo "Missing file is ${ozmax8_file}" >> mailmsg
             echo "Job ID: $jobid" >> mailmsg
             cat mailmsg | mail -s "$subject" $maillist
