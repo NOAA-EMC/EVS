@@ -1,12 +1,11 @@
 #!/bin/ksh
+################################################################################
 #  JOB card cerated for running METPlus-based NARRE verifications
 #     By Binbin Zhou, Lynker@EMC/NCEP
 #     Last updated 10/27/2023
 #     Purpose: setup environment variables to run the NARRE plots script
-#
+###############################################################################
 set -x
-#######################################################
-#######################################################
 
 
 
@@ -42,12 +41,6 @@ export FIXevs=$HOMEevs/fix
 export MASKS=$FIXevs/masks
 
 export ush_dir=$USHevs/narre/ush_narre_plot_py
-
-
-####################################
-# File To Log Msgs
-####################################
-export jlogfile=${jlogfile:-${DATA}/jlogfile}
 
 ####################################
 # Determine Job Output Name on System

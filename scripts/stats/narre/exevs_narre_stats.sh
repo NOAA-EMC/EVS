@@ -23,9 +23,3 @@ if [ $stats = yes ] ; then
  export err=$?; err_chk
 fi
 
-
-msg="JOB $job HAS COMPLETED NORMALLY"
-postmsg "$jlogfile" "$msg"
-
-
-
