@@ -46,7 +46,6 @@ export domain="all"
 
 
 msg="$job HAS BEGUN"
-postmsg "$jlogfile" "$msg"
 
 if [ $prepare = yes ] ; then
 
@@ -159,7 +158,6 @@ for log_dir in $log_dirs2; do
 done
 
 msg="JOB $job HAS COMPLETED NORMALLY"
-postmsg "$jlogfile" "$msg"
 
 
 exit 0
