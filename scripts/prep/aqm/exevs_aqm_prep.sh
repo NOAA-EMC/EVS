@@ -2,7 +2,7 @@
 #######################################################################
 ##  UNIX Script Documentation Block
 ##                      .
-## Script name:         exevs_aqmv7_prep.sh
+## Script name:         exevs_aqm_prep.sh
 ## Script description:  Pre-processed input data for the MetPlus PointStat 
 ##                      of Air Quality Model.
 ## Original Author   :  Perry Shafran
@@ -12,6 +12,8 @@
 ##   04/26/2023   Ho-Chun Huang  add AirNOW ASCII2NC processing
 ##   05/01/2023   Ho-Chun Huang  separate v6 and v7 version becasuse
 ##                               of directory path difference
+##   10/31/2023   Ho-Chun Huang  Update EVS model input directory
+##                               structure from AQMv6 to AQMv7
 ##
 ##
 #######################################################################

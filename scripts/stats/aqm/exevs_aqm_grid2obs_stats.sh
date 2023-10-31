@@ -2,7 +2,7 @@
 #######################################################################
 ##  UNIX Script Documentation Block
 ##                      .
-## Script name:         exevs_aqmv7_stats.sh
+## Script name:         exevs_aqm_grid2obs_stats.sh
 ## Script description:  Perform MetPlus PointStat of Air Quality Model.
 ## Original Author   :  Perry Shafran
 ##
@@ -11,6 +11,7 @@
 ##   04/26/2023   Ho-Chun Huang  modification for using AirNOW ASCII2NC
 ##   05/22/2023   Ho-Chun Huang  separate hourly ozone by model verified time becasuse
 ##                               of directory path depends on model verified hour.
+##   10/31/2023   Ho-Chun Huang  Update EVS model input directory structure from AQMv6 to AQMv7
 ##
 ##
 #######################################################################
