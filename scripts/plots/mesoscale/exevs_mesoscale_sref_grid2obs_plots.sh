@@ -1,6 +1,6 @@
 #!/bin/ksh
 #*******************************************************************************
-# Purpose: setup environment, paths, and run the sref grid2obs ploting python script
+# Purpose: setup environment, paths, and run the sref grid2obs plotting python script
 # Last updated: 10/27/2023, Binbin Zhou Lynker@EMC/NCEP
 # ******************************************************************************
 set -x 

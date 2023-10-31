@@ -1,7 +1,7 @@
 #!/bin/bash
 #*******************************************************************************
 # Purpose: setup environment, paths, and run the sref precip spatial map 
-#           ploting python script
+#           plotting python script
 # Last updated: 10/27/2023, Binbin Zhou Lynker@EMC/NCEP
 # ******************************************************************************
 set -x 
