@@ -38,7 +38,7 @@ fhr_list = os.environ['fhr_list'].split(',')
 
 # Process run time agruments
 if len(sys.argv) != 5:
-    print("ERROR: Not given correct number of run time agruments..."
+    print("FATAL ERROR: Not given correct number of run time agruments..."
           +os.path.basename(__file__)+" "
           +"CRAIN_FILE CSNOW_FILE CFRZR_FILE CICEP_FILE")
     sys.exit(1)

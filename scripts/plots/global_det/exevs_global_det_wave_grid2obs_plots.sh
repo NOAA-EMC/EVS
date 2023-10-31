@@ -15,7 +15,7 @@ set -x
 #############################
 
 cd $DATA
-echo "in $0 JLOGFILE"
+echo "in $0"
 echo "Starting grid2obs_plots for ${RUN}"
 echo "Starting at : `date`"
 
@@ -39,11 +39,11 @@ while (( ${theDate} <= ${VDATE_END} )); do
         input_stats_file=${COMIN}/stats/${COMPONENT}/${MODEL}.${theDate}/evs.stats.${MODEL}.${RUN}.${VERIF_CASE}.v${theDate}.stat
         tmp_stats_file=${DATA}/stats/evs.stats.${MODEL}.${RUN}.${VERIF_CASE}.v${theDate}.stat
         if [[ -s $input_stats_file ]]; then
-            cp -v $input_stats_file $tmp_stats_file
+            cpreq -v $input_stats_file $tmp_stats_file
         else
-            echo "DOES NOT EXIST $input_stats_file"
+            echo "WARNING: DOES NOT EXIST $input_stats_file"
         fi
-        theDate=$(date --date="${theDate} + 1 day" '+%Y%m%d')
+        theDate=$($NDATE +24 ${theDate}${vhr} | cut -c 1-8)
     done
 done
 ####################
@@ -55,15 +55,7 @@ for MODEL in $model_list; do
     if [ "${nc}" != '0' ]; then
         echo "Successfully copied ${MODEL} *.stat files"
     else
-        echo ' '
-        echo '**************************************** '
-        echo "*** ERROR : NO ${MODEL} *.stat FILES *** "
-        echo '**************************************** '
-        echo ' '
-        echo "${MODEL}_${RUN} : ${MODEL} *.stat files missing."
-        ./postmsg "$jlogfile" "FATAL ERROR : NO ${MODEL} *.stat files"
-        err_exit "FATAL ERROR: Did not copy the ${MODEL} *.stat files"
-        exit
+        err_exit "${MODEL} *.stat files missing."
     fi
 done
 
@@ -72,8 +64,10 @@ done
 #################################
 ## time_series
 ${USHevs}/${COMPONENT}/global_det_wave_plots_grid2obs_timeseries.sh
+export err=$?; err_chk
 ## lead_averages
 ${USHevs}/${COMPONENT}/global_det_wave_plots_grid2obs_leadaverages.sh
+export err=$?; err_chk
 
 chmod 775 $DATA/jobs/run_all_${RUN}_g2o_plots_poe.sh
 
@@ -91,8 +85,10 @@ if [[ $plot_ncount_job -gt 0 ]]; then
         nnp=$(($nselect * $nproc))
         launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
         $launcher $MP_CMDFILE
+        export err=$?; err_chk
     else
-        /bin/bash ${poe_script}
+        ${poe_script}
+        export err=$?; err_chk
     fi
 fi
 
@@ -118,21 +114,14 @@ if [ "${nc}" != '0' ]; then
     cd ${DATA}/images
     tar -cvf evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.last${NDAYS}days.v${VDATE_END}.tar *.png
     if [ $SENDCOM = YES ]; then
-        cp -v evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.last${NDAYS}days.v${VDATE_END}.tar ${COMOUT}/.
+        cpreq -v evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.last${NDAYS}days.v${VDATE_END}.tar ${COMOUT}/.
     fi
     if [ $SENDDBN = YES ]; then
         $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.last${NDAYS}days.v${VDATE_END}.tar
     fi
     cd $DATA
 else
-    echo ' '
-    echo '**************************************** '
-    echo '*** ERROR : NO PLOTS found  *** '
-    echo '**************************************** '
-    echo ' '
-    echo "${RUN} : PLOTS are missing."
-    ./postmsg "$jlogfile" "FATAL ERROR : NO PLOTS"
-    err_exit "FATAL ERROR: Did not find any plots"
+    err_exit "PLOTS are missing"
 fi
 
 echo ' '
