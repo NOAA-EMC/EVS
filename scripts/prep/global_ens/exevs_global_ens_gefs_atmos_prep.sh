@@ -110,20 +110,6 @@ fi
 if [ $get_osi_saf = yes ] ; then 
  export MODELNAME=""
  export OBSNAME="osi_saf"
- export COMINcfs=
- export COMINcmc=
- export COMINcmc_precip=
- export COMINcmc_regional_precip=
- export COMINdwd_precip=
- export COMINecmwf=
- export COMINecmwf_precip=
- export COMINfnmoc=
- export COMINimd=
- export COMINjma=
- export COMINjma_precip=
- export COMINmetfra_precip=
- export COMINukmet=
- export COMINukmet_precip=
 
  $USHevs/${COMPONENT}/evs_get_gens_${RUN}_data.sh osi_saf
  export MODELNAME=gefs
