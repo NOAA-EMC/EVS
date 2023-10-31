@@ -215,6 +215,7 @@ for hour in 06 12; do
     
     done
 done
+
 # Daily verification of the daily maximum of 8-hr ozone
 # Verification being done on both raw and bias-corrected output data
 
@@ -327,7 +328,7 @@ if [ ${vhr} = 04 ]; then
       export hour
       export mdl_cyc=${hour}
 
-#  search for model file and 2nd obs file for the daily average PM
+      ##  search for forecast daily average PM model files
 
       pmave1=0
       for chk_date in ${VDAYm1} ${VDAYm2} ${VDAYm3}; do
