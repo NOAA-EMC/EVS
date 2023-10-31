@@ -29,8 +29,8 @@ export pgmout=OUTPUT.${pid}
 ############################################
 # Initialize PDY variables
 ############################################
-export cyc=${cyc:-00}
-export cycle=t${cyc}z
+export vhr=${vhr:-00}
+export cycle=t${vhr}z
 
 #It needs $DATA and $cycle to be set
 setpdy.sh
@@ -79,7 +79,7 @@ fi
 # Specify HOME Directory
 ############################################
 
-export HOMEevs=${HOMEevs:-$PACKAGEROOT/evs.$evs_ver}
+export HOMEevs=${HOMEevs:-$PACKAGEROOT/$NET.$evs_ver}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts/$STEP/$COMPONENT}
