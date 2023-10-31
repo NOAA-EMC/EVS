@@ -20,38 +20,30 @@ source $config
 
 # Check User's Configuration Settings
 python $USHevs/mesoscale/mesoscale_check_settings.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran mesoscale_check_settings.py"
-echo
+    export err=$?; err_chk
 
 # Create Output Directories
 python $USHevs/mesoscale/mesoscale_create_output_dirs.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran mesoscale_create_output_dirs.py"
+    export err=$?; err_chk
 
 # Check For Restart Files
 if [ $evs_run_mode = production ]; then
     python ${USHevs}/mesoscale/mesoscale_production_restart.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran ${USHevs}/mesoscale/mesoscale_production_restart.py"
+    export err=$?; err_chk
+
 fi
 
 # Create Job Script 
 python $USHevs/mesoscale/mesoscale_plots_grid2obs_create_job_scripts.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran mesoscale_plots_grid2obs_create_job_scripts.py"
+    export err=$?; err_chk
+
 export njob=$((njob+1))
 
 # Create POE Job Scripts
 if [ $USE_CFP = YES ]; then
     python $USHevs/mesoscale/mesoscale_plots_grid2obs_create_poe_job_scripts.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_plots_grid2obs_create_poe_job_scripts.py"
+    export err=$?; err_chk
+
 fi
 
 # Run All Mesoscale grid2obs/plots Jobs

@@ -65,29 +65,20 @@ for NEST in $NEST_LIST; do
          export VHOUR=$VHOUR
          # Check User's Configuration Settings
          python $USHevs/mesoscale/mesoscale_check_settings.py
-         status=$?
-         [[ $status -ne 0 ]] && exit $status
-         [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_check_settings.py ($job_type)"
-         echo
+     	 export err=$?; err_chk
 
          # Check for data files
          python $USHevs/mesoscale/mesoscale_check_input_data.py
-         status=$?
-         [[ $status -ne 0 ]] && exit $status
-         [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_check_input_data.py ($job_type)"
-         echo
+     	 export err=$?; err_chk
 
          # Create Output Directories	    
          python $USHevs/mesoscale/mesoscale_create_output_dirs.py
-         status=$?
-         [[ $status -ne 0 ]] && exit $status
-         [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_create_output_dirs.py ($job_type)"
+     	 export err=$?; err_chk
 
          # Create Reformat Job Script
          python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
-         status=$?
-         [[ $status -ne 0 ]] && exit $status
-         [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_job_script.py ($job_type)"
+     	 export err=$?; err_chk
+
          export njob=$((njob+1))
          echo "Done $VHOUR"
       done
@@ -99,9 +90,8 @@ done
 # Create Reformat POE Job Scripts
 if [ $USE_CFP = YES ]; then
    python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
-   status=$?
-   [[ $status -ne 0 ]] && exit $status
-   [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
+   export err=$?; err_chk
+
 fi
 
 echo "*****************************"
@@ -167,22 +157,16 @@ for NEST in $NEST_LIST; do
 
 	     # Check User's Configuration Settings
              python $USHevs/mesoscale/mesoscale_check_settings.py
-             status=$?
-             [[ $status -ne 0 ]] && exit $status
-             [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_check_settings.py ($job_type)"
-             echo
+	     export err=$?; err_chk
 
              # Create Output Directories
              python $USHevs/mesoscale/mesoscale_create_output_dirs.py
-             status=$?
-             [[ $status -ne 0 ]] && exit $status
-             [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_create_output_dirs.py ($job_type)"
+	     export err=$?; err_chk
 
              # Create Generate Job Script
              python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
-             status=$?
-             [[ $status -ne 0 ]] && exit $status
-             [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_job_script.py ($job_type)"
+	     export err=$?; err_chk
+
              export njob=$((njob+1))
          done
       done
@@ -192,9 +176,8 @@ done
 # Create Generate POE Job Scripts
 if [ $USE_CFP = YES ]; then
     python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
-        status=$?
-	    [[ $status -ne 0 ]] && exit $status
-	    [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
+    export err=$?; err_chk
+
 fi
 
 echo "*****************************"
@@ -252,24 +235,20 @@ for VERIF_TYPE in $VERIF_TYPES; do
 
     # Create Output Directories
     python $USHevs/mesoscale/mesoscale_create_output_dirs.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_create_output_dirs.py ($job_type)"
+    export err=$?; err_chk
 
     # Create Gather Job Script
     python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_job_script.py ($job_type)"
+    export err=$?; err_chk
+
     export njob=$((njob+1))
 done
 
 # Create Gather POE Job Scripts
 if [ $USE_CFP = YES ]; then
     python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
+    export err=$?; err_chk
+
 fi
 
 echo "*****************************"
@@ -342,23 +321,20 @@ echo "*****************************"
 
     # Create Output Directories
     python $USHevs/mesoscale/mesoscale_create_output_dirs.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_create_output_dirs.py ($job_type)"
+    export err=$?; err_chk
+
 
     # Create Gather 3 Job Script
     python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_job_script.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_job_script.py ($job_type)"
+    export err=$?; err_chk
+
     export njob=$((njob+1))
 
     # Create Gather 3 POE Job Scripts
     if [ $USE_CFP = YES ]; then
         python $USHevs/mesoscale/mesoscale_stats_grid2obs_create_poe_job_scripts.py
-        status=$?
-        [[ $status -ne 0 ]] && exit $status
-        [[ $status -eq 0 ]] && echo "Successfully ran mesoscale_stats_grid2obs_create_poe_job_scripts.py ($job_type)"
+    	export err=$?; err_chk
+
     fi
 
     # Run All NAM grid2obs/stats Gather 3 Jobs

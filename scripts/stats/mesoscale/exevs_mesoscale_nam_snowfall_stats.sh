@@ -26,9 +26,8 @@ mkdir -p $DATA/${RUN}.${VDATE}/$MODELNAME/$VERIF_CASE
 
 # Get NAM and NOHRSC
 python $USHevs/mesoscale/mesoscale_snowfall_stats_get_data.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Succesfully ran mesoscale_snowfall_stats_get_data.py"
+
+    export err=$?; err_chk
 
 # Send for missing files
 if ls $DATA/mail_* 1> /dev/null 2>&1; then
@@ -50,9 +49,9 @@ for group in $JOB_GROUP_list; do
     mkdir -p $DATA/jobs/$JOB_GROUP
     echo "Creating and running jobs for snowfall stats: ${JOB_GROUP}"
     python $USHevs/mesoscale/mesoscale_snowfall_stats_create_job_scripts.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Succesfully ran mesoscale_snowfall_stats_create_job_scripts.py"
+
+    export err=$?; err_chk
+
     chmod u+x $DATA/jobs/$JOB_GROUP/*
     group_ncount_job=$(ls -l $DATA/jobs/$JOB_GROUP/job* |wc -l)
     nc=1

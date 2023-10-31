@@ -16,10 +16,7 @@ source $config
 mkdir -p $DATA/${COMPONENT}.${VDATE}
 
 python ${USHevs}/${COMPONENT}/${COMPONENT}_${VERIF_CASE}_prep.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Succesfully ran ${USHevs}/${COMPONENT}/${COMPONENT}_${VERIF_CASE}_prep.py"
-
+export err=$?; err_chk
  
 # Copy output files into the correct EVS COMOUT directory
 #  if [ $SENDCOM = YES ]; then
