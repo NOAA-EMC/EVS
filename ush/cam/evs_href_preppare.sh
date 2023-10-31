@@ -202,9 +202,9 @@ if [ $data = prepbufr ] ; then
  mkdir -p $WORK/prepbufr.$vday
  export output_base=${WORK}/pb2nc
 
- if [ $domain = CONUS ] ; then
+ if [ "$domain" = "CONUS" ] ; then
    grids=G227
- elif [ $domain = Alaska ] ; then
+ elif [ "$domain" = "Alaska" ] ; then
    grids=G198
  else
    grids="G227 G198"
