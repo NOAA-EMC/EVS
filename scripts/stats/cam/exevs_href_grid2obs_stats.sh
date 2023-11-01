@@ -12,7 +12,7 @@ export WORK=$DATA
 cd $WORK
 
 #check input data are available:
-$USHevs/evs_check_href_files.sh 
+$USHevs/$COMPONENT/evs_check_href_files.sh 
 export err=$?; err_chk
 
 #lvl = profile or sfc or both
