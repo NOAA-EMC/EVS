@@ -83,11 +83,6 @@ else
 fi
 export err=$?; err_chk
 
-cat $pgmout
-
-msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
-
 if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT
   rm -rf $DATA
