@@ -320,7 +320,7 @@ tar -cvf evs.plots.sref.grid2obs.past${past_days}days.v${VDATE}.tar *.png
 
 
 if [ $SENDCOM="YES" ]; then
- cpreq  evs.plots.sref.grid2obs.past${past_days}days.v${VDATE}.tar  $COMOUTplots/$RUN.$VDATE/.  
+ cpreq  evs.plots.sref.grid2obs.past${past_days}days.v${VDATE}.tar  $COMOUTplots/.  
 fi
 
 if [ $SENDDBN = YES ] ; then

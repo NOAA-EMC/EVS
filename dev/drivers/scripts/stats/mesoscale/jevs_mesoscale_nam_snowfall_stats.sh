@@ -27,7 +27,6 @@ export envir="prod"
 export NET="evs"
 export RUN="atmos"
 export vhr=${vhr:-${vhr}}
-export cycle=t${vhr}z
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 

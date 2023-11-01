@@ -56,6 +56,12 @@ export FIXevs=${FIXevs:-$HOMEevs/fix}
 export MASKS=$FIXevs/masks
 export MET_PLUS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}"
 export vhr=${vhr:-00}
+if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
+  if [ $VERIF_CASE = snowfall ]; then
+      np=$vhr;  nq=$(($np%6)); nr=$(($np-$nq)); printf -v nt "%02d" $nr;
+      export vhr=$nt;
+  fi
+fi
 export cycle=t${vhr}z
 setpdy.sh
 . $DATA/PDY
@@ -73,14 +79,7 @@ if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
   export DCOMINnohrsc=${DCOMINnohrsc:-$DCOMROOT}
   export EVSIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
 
-  if [ $VERIF_CASE = snowfall ]; then
-      export VDATE=${VDATE:-$PDYm2}
-      np=$vhr;         nq=$(($np%6));        nr=$(($np-$nq));
-      printf -v ns "%02d" $np;        printf -v nt "%02d" $nr;
-      export vhr=$nt;
-      export cycle=t${vhr}z
-  fi
-  if [ $VERIF_CASE = precip ]; then
+  if [ $VERIF_CASE = snowfall ] || [ $VERIF_CASE = precip ]; then
       export VDATE=${VDATE:-$PDYm2}
   fi
   
