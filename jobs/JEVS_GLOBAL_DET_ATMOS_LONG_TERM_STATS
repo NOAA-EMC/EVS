@@ -70,9 +70,6 @@ env
 $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_atmos_${RUN}_${STEP}.sh
 export err=$?; err_chk
 
-msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
-
 if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT
   rm -rf $DATA
