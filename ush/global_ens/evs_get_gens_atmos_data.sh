@@ -450,7 +450,7 @@ if [ $modnam = ccpa ] ; then
        if [ $SENDMAIL = YES ]; then
          export subject="06h CCPA Data Missing for 24h CCPA generation"
          echo "Warning: At least one of ccpa06h files is missing  for ${INITDATE}${ihour}" > mailmsg
-         echo Missing file is ${COMOUTgefs}/ccpa.t12z.grid3.06h.f00.grib2 or ${COMOUT}.${vday_1}/gefs/ccpa.t18z.grid3.06h.f00.grib2  >> mailmsg
+         echo Missing file is {COMOUTgefs}/ccpa.t00z.grid3.06h.f00.grib2, ${COMOUTgefs}/ccpa.t06z.grid3.06h.f00.grib2, ${COMOUTgefs}/ccpa.t12z.grid3.06h.f00.grib2, or ${COMOUT}.${vday_1}/gefs/ccpa.t18z.grid3.06h.f00.grib2  >> mailmsg
          echo "Job ID: $jobid" >> mailmsg
          cat mailmsg | mail -s "$subject" $maillist
        fi
