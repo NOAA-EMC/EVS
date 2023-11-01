@@ -29,7 +29,6 @@ export LOUD=${LOUD:-YES}; [[ $LOUD = yes ]] && export LOUD=YES
 #############################
 
 cd $DATA
-echo "in $0 JLOGFILE is $jlogfile"
 echo "Starting grid2obs_plots for ${MODELNAME}_${RUN}"
 
 set -x
@@ -60,7 +59,11 @@ plot_end_date=${VDATE}
 theDate=${plot_start_date}
 while (( ${theDate} <= ${plot_end_date} )); do
   EVSINnfcens=${COMIN}/stats/${COMPONENT}/${MODELNAME}.${theDate}
-  cp ${EVSINnfcens}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
+  if [ -s ${EVSINnfcens}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ]; then
+	  cp ${EVSINnfcens}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat ${DATA}/stats/.
+  else
+	  echo "WARNING: ${EVSINnfcens}/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${theDate}.stat DOES NOT EXIST"
+  fi
   theDate=$(date --date="${theDate} + 1 day" '+%Y%m%d')
 done
 
@@ -78,14 +81,14 @@ else
   set -x
   echo ' '
   echo '**************************************** '
-  echo '*** ERROR : NO NFCENS *.stat FILE *** '
+  echo '*** FATAL ERROR: NO NFCENS *.stat FILES *** '
   echo "             for ${VDATE} "
   echo '**************************************** '
   echo ' '
-  echo "${MODELNAME}_${RUN} $VDATE $vhour : NFCENS *.stat file missing."
+  echo "${MODELNAME}_${RUN} $VDATE $vhour : NFCENS *.stat files missing."
   [[ "$LOUD" = YES ]] && set -x
-  ./postmsg "$jlogfile" "FATAL ERROR : NO NFCENS *.stat file for ${VDATE}"
-  err_exit "FATAL ERROR: Did not copy the NFCENS *.stat file for ${VDATE}"
+  "FATAL ERROR: NO NFCENS *.stat files for ${VDATE}"
+  err_exit "FATAL ERROR: Did not copy the NFCENS *.stat files for ${VDATE}"
   exit
 fi
 
@@ -117,7 +120,7 @@ periods='PAST31DAYS PAST90DAYS'
 if [ $gather = yes ] ; then
   echo "copying all images into one directory"
   cp ${DATA}/wave/*png ${DATA}/sfcshp/.  ## lead_average plots
-  nc=$(ls ${DATA}/sfcshp/*.fhr_valid*.png | wc -l | awk '{print $1}')
+  nc=$(ls ${DATA}/sfcshp/*.fhrmean_valid*.png | wc -l | awk '{print $1}')
   echo "copied $nc lead_average plots"
   for period in ${periods} ; do
     period_lower=$(echo ${period,,})
@@ -138,13 +141,13 @@ if [ $gather = yes ] ; then
       set -x
       echo ' '
       echo '**************************************** '
-      echo '*** ERROR : NO ${period} PLOTS  *** '
+      echo '*** FATAL ERROR: NO ${period} PLOTS  *** '
       echo "    found for ${VDATE} "
       echo '**************************************** '
       echo ' '
       echo "${MODELNAME}_${RUN} ${VDATE} ${period}: PLOTS are missing."
       [[ "$LOUD" = YES ]] && set -x
-      ./postmsg "$jlogfile" "FATAL ERROR : NO ${period} PLOTS FOR ${VDATE}"
+      "FATAL ERROR : NO ${period} PLOTS FOR ${VDATE}"
       err_exit "FATAL ERROR: Did not find any ${period} plots for ${VDATE}"
     fi
     
@@ -154,13 +157,12 @@ if [ $gather = yes ] ; then
       tar -cvf evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${period_out}.v${VDATE}.tar evs.*${period_lower}*.png
     fi
   done
-  cp evs.${STEP}.${COMPONENT}.${RUN}.*.tar ${COMOUTplots}/.
+  cpreq evs.${STEP}.${COMPONENT}.${RUN}.*.tar ${COMOUTplots}/.
 else  
   echo "not copying the plots"
 fi
 
 msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
 
 if [ $SENDDBN = YES ]; then
 	$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.*.tar
@@ -170,12 +172,13 @@ fi
 #########################################
 # copy log files into logs and cat them
 ########################################
+cd ${DATA}
 mkdir -p ${DATA}/logs
-cp ${DATA}/*.out ${DATA}/logs/
-cp ${DATA}/*.log ${DATA}/logs/
 log_dir=$DATA/logs
-log_file_count=$(find $log_dir -type f |wc -l)
+log_file_count=$(find ${DATA} -type f -name "*.out" -o -name ".log" |wc -l)
 if [[ $log_file_count -ne 0 ]]; then
+	cp ${DATA}/*.out ${DATA}/logs/
+	cp ${DATA}/*.log ${DATA}/logs/
 	for log_file in $log_dir/*; do
 		echo "Start: $log_file"
 		cat $log_file
