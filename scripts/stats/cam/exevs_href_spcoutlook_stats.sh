@@ -52,8 +52,6 @@ export domain="all"
 #export domain="HI"
 
 
-msg="$job HAS BEGUN"
-
 if [ $prepare = yes ] ; then
   $USHevs/cam/evs_href_preppare.sh prepbufr CONUS
   export err=$?; err_chk

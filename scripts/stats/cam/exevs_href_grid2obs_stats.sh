@@ -45,8 +45,6 @@ export domain="all"
 #export domain="HI"
 
 
-msg="$job HAS BEGUN"
-
 if [ $prepare = yes ] ; then
 
   if [ -s $COMINobsproc/rap.${VDATE}/rap.t12z.prepbufr.tm00 ] && [ -s $COMINobsproc/gdas.${vday}/00/atmos/gdas.t00z.prepbufr ] ; then

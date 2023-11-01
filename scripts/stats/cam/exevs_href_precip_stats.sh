@@ -28,9 +28,6 @@ export maskpath=$MASKS
 export vday=$VDATE
 
 
-msg="$job HAS BEGUN"
-
-
 if [ $prepare = yes ] ; then
  for precip in ccpa01h03h ccpa24h apcp24h_conus  apcp24h_alaska mrms ; do
   $USHevs/cam/evs_href_preppare.sh  $precip
