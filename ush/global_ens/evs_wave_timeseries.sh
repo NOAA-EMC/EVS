@@ -5,6 +5,8 @@
 # Purpose of Script: Make the time series command files    
 #                                                          
 
+set -x
+
 #################################
 # Make the command files for cfp 
 #################################

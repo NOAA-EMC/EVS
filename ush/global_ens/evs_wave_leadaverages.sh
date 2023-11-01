@@ -5,6 +5,8 @@
 # Purpose of Script: Make the lead_averages.py command files  
 #                                                             
 
+set -x
+
 #################################
 # Make the command files for cfp 
 #################################

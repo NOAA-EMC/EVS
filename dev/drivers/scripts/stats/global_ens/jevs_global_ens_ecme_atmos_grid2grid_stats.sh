@@ -7,10 +7,11 @@
 #PBS -l place=vscatter,select=1:ncpus=4:mem=100GB
 #PBS -l debug=true
 
+set -x
+
 export OMP_NUM_THREADS=1
 #2 processes (ecme/upper) + 1 (24hapcp)
 #
-set -x
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 

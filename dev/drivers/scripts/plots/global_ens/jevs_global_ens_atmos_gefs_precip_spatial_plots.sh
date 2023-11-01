@@ -7,6 +7,8 @@
 #PBS -l select=1:ncpus=1:mem=5GB
 #PBS -l debug=true
 
+set -x
+
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 source $HOMEevs/versions/run.ver
 

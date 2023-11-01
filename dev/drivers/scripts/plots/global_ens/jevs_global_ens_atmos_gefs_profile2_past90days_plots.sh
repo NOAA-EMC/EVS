@@ -7,6 +7,8 @@
 #PBS -l place=vscatter,select=5:ncpus=44:mpiprocs=44:mem=150GB
 #PBS -l debug=true
 
+set -x
+
 export OMP_NUM_THREADS=1
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
