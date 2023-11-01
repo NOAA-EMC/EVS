@@ -31,8 +31,24 @@ cp $PARMevs/GridStat_fcstWAFS_obs${OBSERVATION}.conf GridStat_fcstWAFS_obs${OBSE
 $USHevs/evs_wafs_atmos_stats_preparedata.sh
 
 # run stat files
-${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $DATA/GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
-${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/StatAnalysis_fcstWAFS_obs${OBSERVATION}_GatherbyDay.conf
+if [ $OBSERVATION = "GCIP" ] ; then
+    export valid_inc=$valid_inc6
+    export FHOURS_EVSlist=$FHOURS_EVSlist1
+    export valid_beg=$valid_beg1
+    export valid_end=$valid_end1
+    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $DATA/GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
+    export FHOURS_EVSlist=$FHOURS_EVSlist2
+    export valid_beg=$valid_beg2
+    export valid_end=$valid_end2
+    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $DATA/GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
+    export valid_beg=$valid_beg1
+    export valid_end=$valid_end2
+    export valid_inc=$valid_inc3
+    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/StatAnalysis_fcstWAFS_obs${OBSERVATION}_GatherbyDay.conf
+else
+    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $DATA/GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
+    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/StatAnalysis_fcstWAFS_obs${OBSERVATION}_GatherbyDay.conf
+fi
 
 	#===================================================================================================#
 	#========== Turn off Wind Direction verification until its RMSE gets supported by METplus ==========#
