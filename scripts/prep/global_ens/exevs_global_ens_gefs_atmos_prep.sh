@@ -5,11 +5,6 @@ export WORK=$DATA
 
 cd $WORK
 
-export MET_bin_exec='bin'
-export log_met_output_to_metplus=''
-export metplus_verbosity=2
-export met_verbosity=2
-
 export get_anl=${get_anl:-'yes'}
 export get_prepbufr=${get_prepbufr:-'yes'}
 export get_ccpa=${get_ccpa:-'yes'}
