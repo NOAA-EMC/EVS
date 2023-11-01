@@ -74,9 +74,9 @@ if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
   export EVSIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
 
   if [ $VERIF_CASE = snowfall ]; then
-      np=$(date +"%H");         nq=$(($np%6));        nr=$(($np-$nq));
+      np=$vhr;         nq=$(($np%6));        nr=$(($np-$nq));
       printf -v ns "%02d" $np;        printf -v nt "%02d" $nr;
-      export cyc=$nt;
+      export vhr=$nt;
       export cycle=t${vhr}z
   fi
   
