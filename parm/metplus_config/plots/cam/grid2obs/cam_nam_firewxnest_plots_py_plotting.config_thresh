@@ -160,4 +160,5 @@ export CONFIDENCE_INTERVALS="False"
 # valid_hour_average.py}
 python $USH_DIR/${plottyp}.py
 
-exit 0
+export err=$?
+exit $err

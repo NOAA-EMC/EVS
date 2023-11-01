@@ -65,8 +65,7 @@ elif [ $vhr -eq 18 ]; then
    fhr_end1=42
 
 else
-   echo "Current vhr is unsupported"
-   exit 0
+   err_exit "Current vhr is unsupported"
 
 fi
 

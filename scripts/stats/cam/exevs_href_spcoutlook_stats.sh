@@ -120,7 +120,4 @@ for log_dir in $log_dirs2; do
     fi
 done
 
-msg="JOB $job HAS COMPLETED NORMALLY"
-
-
-exit 0
+export err=$?; err_chk
