@@ -10,7 +10,6 @@ set -x
 # SET SHELL PROCESSING VARIABLES
 ####################################
 export PS4='$SECONDS + '
-date
 
 ####################################
 # obtain unique LSF id (jobid) and make temp directories
@@ -135,4 +134,3 @@ if [ "$KEEPDATA" != "YES" ] ; then
   rm -rf $DATA
 fi
 
-date

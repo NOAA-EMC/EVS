@@ -65,13 +65,9 @@ export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 # In production the following will be deleted (DATAROOT will be used instead, which already exists in the environment)
   export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 
-# in production the following will be set to yesterday's date
-  export VDATE=$(date -d "today -1 day" +"%Y%m%d")
-
 # Developer Settings
   export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
   export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONENT
-  export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
 
   export vhr=${vhr:-${vhr}}
   export maillist="roshan.shrestha@noaa.gov,alicia.bentley@noaa.gov"

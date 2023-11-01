@@ -31,7 +31,6 @@ export cycle=t${vhr}z
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
-export VDATE=$(date -d "today -2 day" +"%Y%m%d")
 export STEP="stats"
 export COMPONENT="mesoscale"
 export VERIF_CASE="precip"

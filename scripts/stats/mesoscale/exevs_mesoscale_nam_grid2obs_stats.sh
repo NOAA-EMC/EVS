@@ -35,7 +35,6 @@ set -x
 
 echo "*****************************"
 echo "Reformat setup begin"
-date
 echo "*****************************"
 
 # Reformat MET Data
@@ -96,7 +95,6 @@ fi
 
 echo "*****************************"
 echo "Reformat jobs begin"
-date
 echo "*****************************"
 
 # Run All NAM grid2obs/stats Reformat Jobs
@@ -133,7 +131,6 @@ fi
 
 echo "*****************************"
 echo "Reformat jobs done"
-date
 echo "*****************************"
 
 # Generate MET Data
@@ -182,7 +179,6 @@ fi
 
 echo "*****************************"
 echo "Generate jobs begin"
-date
 echo "*****************************"
 
 # Run All NAM grid2obs/stats Generate Jobs
@@ -219,7 +215,6 @@ fi
 
 echo "*****************************"
 echo "Generate jobs done"
-date
 echo "*****************************"
 
 export job_type="gather"
@@ -253,7 +248,6 @@ fi
 
 echo "*****************************"
 echo "Gather jobs begin"
-date
 echo "*****************************"
 
 # Run All NAM grid2obs/stats Gather Jobs
@@ -290,7 +284,6 @@ fi
 
 echo "*****************************"
 echo "Gather jobs done"
-date
 echo "*****************************"
 
 # Copy stat output files to EVS COMOUTsmall directory
@@ -310,7 +303,6 @@ fi
 
 echo "*****************************"
 echo "Gather3 jobs begin"
-date 
 echo "*****************************"
 
 # Final Stats Job
@@ -371,7 +363,6 @@ echo "*****************************"
 
 echo "*****************************"
 echo "Gather3 jobs done"
-date
 echo "*****************************"
 
   # Copy output files into the correct EVS COMOUT directory
