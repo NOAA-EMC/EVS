@@ -62,7 +62,8 @@ if [ $USE_CFP = YES ]; then
     done
 else
     while [ $nc -le $ncount_job ]; do
-        sh +x ${DATA}/${VERIF_CASE}/${STEP}/plotting_job_scripts/job${nc}
+        ${DATA}/${VERIF_CASE}/${STEP}/plotting_job_scripts/job${nc}
+        export err=$?; err_chk
         nc=$((nc+1))
     done
 fi

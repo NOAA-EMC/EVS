@@ -97,7 +97,8 @@ if [ $USE_CFP = YES ]; then
     done
 else
     while [ $nc -le $ncount_job ]; do
-        sh +x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+        ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+        export err=$?; err_chk
         nc=$((nc+1))
     done
 fi
@@ -172,7 +173,8 @@ if [ $USE_CFP = YES ]; then
     done
 else
     while [ $nc -le $ncount_job ]; do
-        sh +x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+        ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+        export err=$?; err_chk
         nc=$((nc+1))
     done
 fi
@@ -222,7 +224,8 @@ if [ $USE_CFP = YES ]; then
     done
 else
     while [ $nc -le $ncount_job ]; do
-        sh +x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+        ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+        export err=$?; err_chk
         nc=$((nc+1))
     done
 fi
@@ -269,7 +272,8 @@ if [ $USE_CFP = YES ]; then
     done
 else
     while [ $nc -le $ncount_job ]; do
-        sh +x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+        ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+        export err=$?; err_chk
         nc=$((nc+1))
     done
 fi
@@ -329,7 +333,8 @@ if [ "$vhr" -ge "$last_cyc" ]; then
             done
         else
             while [ $nc -le $ncount_job ]; do
-                sh +x ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+                ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+                export err=$?; err_chk
                 nc=$((nc+1))
             done
         fi
