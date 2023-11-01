@@ -93,8 +93,12 @@ while [ ${hourix} -lt 31 ]; do
 
     if [ -s $DCD ] ; then
       >$outdata/ecmanl.t${ihour}z.grid3.f000.grib1
+      chmod 640 $outdata/ecmanl.t${ihour}z.grid3.f000.grib1
+      chgrp rstprod $outdata/ecmanl.t${ihour}z.grid3.f000.grib1
       for n in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 ; do
        $WGRIB $DCD|grep "${VAR[$n]}"|$WGRIB -i -grib $DCD -o x 
+       chmod 640 x
+       chgrp rstprod x
        cat x >> $outdata/ecmanl.t${ihour}z.grid3.f000.grib1
       done
      else
@@ -110,9 +114,13 @@ while [ ${hourix} -lt 31 ]; do
 
   E1E=${dcom}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}001
 
-  >E1E.${hourinc} 
+  >E1E.${hourinc}
+  chmod 640 E1E.${hourinc}
+  chgrp rstprod E1E.${hourinc}
   for n in 1 2 12 13 14 15 ; do
-     $WGRIB $E1E|grep "${VAR[$n]}"|$WGRIB -i -grib $E1E -o x 
+     $WGRIB $E1E|grep "${VAR[$n]}"|$WGRIB -i -grib $E1E -o x
+     chmod 640 x
+     chgrp rstprod x
      cat x >> E1E.${hourinc}
   done
  
@@ -124,6 +132,8 @@ while [ ${hourix} -lt 31 ]; do
     typeset -Z2 m2
      
     $WGRIB E1E.${hourinc}|grep "forecast $mbr:"|$WGRIB -i -grib E1E.${hourinc} -o $outdata/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+    chmod 640 $outdata/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+    chgrp rstprod $outdata/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
     mbr=$((mbr+1))
    
    done
@@ -146,8 +156,12 @@ while [ ${hourix} -lt 31 ]; do
   E1E=${dcom}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}001
 
   >E1E_apcp.${hourinc}
+  chmod 640 E1E_apcp.${hourinc}
+  chgrp rstprod E1E_apcp.${hourinc}
   for n in 20 21 ; do
      $WGRIB $E1E|grep "${VAR[$n]}"|$WGRIB -i -grib $E1E -o x
+     chmod 640 x
+     chgrp rstprod x
      cat x >> E1E_apcp.${hourinc}
   done
 
@@ -159,6 +173,8 @@ while [ ${hourix} -lt 31 ]; do
     typeset -Z2 m2
 
     $WGRIB E1E_apcp.${hourinc}|grep "forecast $mbr:"|$WGRIB -i -grib E1E_apcp.${hourinc} -o $outdata/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
+    chmod 640 $outdata/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
+    chgrp rstprod $outdata/ecme.ens${m2}.t${ihour}z.grid4_apcp.f${h3}.grib1
     mbr=$((mbr+1))
 
    done
@@ -188,11 +204,14 @@ while [ ${hourix} -lt 31 ]; do
   E1E=${dcom}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}001
   
  >E1E_vertical.${hourinc}
-
+ chmod 640 E1E_vertical.${hourinc}
+ chgrp rstprod E1E_vertical.${hourinc}
   for n in 1 2 3 4 5  ; do
  
    for level in 50 100 200 300 400 500 700 850 925 1000 ; do 
      $WGRIB $E1E|grep "${VAR[$n]}:kpds7=${level}:"|$WGRIB -i -grib $E1E -o x
+     chmod 640 x
+     chgrp rstprod x
      cat x >> E1E_vertical.${hourinc}
    done
  
@@ -206,8 +225,11 @@ while [ ${hourix} -lt 31 ]; do
     typeset -Z2 m2
 
     $WGRIB E1E_vertical.${hourinc}|grep "forecast $mbr:"|$WGRIB -i -grib E1E_vertical.${hourinc} -o E1E_vertical.${hourinc}.mbr${mbr}
+    chmod 640 E1E_vertical.${hourinc}.mbr${mbr}
+    chgrp rstprod E1E_vertical.${hourinc}.mbr${mbr}
     cat E1E_vertical.${hourinc}.mbr${mbr} >> $outdata/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
-
+    chmod 640 $outdata/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
+    chgrp rsptrod $outdata/ecme.ens${m2}.t${ihour}z.grid4.f${h3}.grib1
     mbr=$((mbr+1))
 
    done
@@ -218,4 +240,3 @@ while [ ${hourix} -lt 31 ]; do
   let hourix=hourix+1
 
 done
-

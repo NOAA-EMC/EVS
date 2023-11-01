@@ -402,8 +402,11 @@ if [ $modnam = prepbufr ] ; then
       echo "${DATA}/run_pb2nc.${ihour}.sh" >> run_pb2nc.sh
            
   done
-
-      echo "cp ${WORK}/pb2nc/prepbufr_nc/*.nc $COMOUTgefs" >> run_pb2nc.sh  
+      echo "chmod 640 ${WORK}/pb2nc/prepbufr_nc/*prepbufr*.nc" >> run_pb2nc.sh
+      echo "chgrp rstprod ${WORK}/pb2nc/prepbufr_nc/*prepbufr*.nc" >> run_pb2nc.sh
+      echo "cp ${WORK}/pb2nc/prepbufr_nc/*.nc $COMOUTgefs" >> run_pb2nc.sh
+      echo "chmod 640 $COMOUTgefs/*prepbufr*.nc" >> run_pb2nc.sh
+      echo "chgrp rstprod $COMOUTgefs/*prepbufr*.nc" >> run_pb2nc.sh
 
   chmod +x run_pb2nc.sh
   ${DATA}/run_pb2nc.sh

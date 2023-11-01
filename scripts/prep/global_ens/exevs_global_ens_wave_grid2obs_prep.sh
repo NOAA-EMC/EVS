@@ -88,6 +88,8 @@ for ihour in 00 06 12 18 ; do
       fi
   else
       cp -v ${COMINobsproc}.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr ${DATA}/gdas.${INITDATE}${ihour}.prepbufr
+      chmod 640 ${DATA}/gdas.${INITDATE}${ihour}.prepbufr
+      chgrp rstprod ${DATA}/gdas.${INITDATE}${ihour}.prepbufr
   fi
 
 done
@@ -106,8 +108,12 @@ for ihour in 00 06 12 18 ; do
         if [ ! -s ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${INITDATE}${ihour}.nc ]; then
             run_metplus.py ${PARMevs}/metplus_config/machine.conf ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}/PB2NC_wave.conf
             export err=$?; err_chk
+            chmod 640 $DATA/ncfiles/gdas.${INITDATE}${ihour}.nc
+            chgrp rstprod $DATA/ncfiles/gdas.${INITDATE}${ihour}.nc
             if [ $SENDCOM = YES ]; then
                 cp -v $DATA/ncfiles/gdas.${INITDATE}${ihour}.nc ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/.
+                chmod 640 ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${INITDATE}${ihour}.nc
+                chgrp rstprod ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${INITDATE}${ihour}.nc
             fi
         fi
     fi
