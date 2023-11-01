@@ -1,4 +1,4 @@
-
+#!/bin/ksh
 #################################################################
 # Purpose:   To run grid-to-grid verification on all global ensembles
 #
