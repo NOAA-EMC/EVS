@@ -890,6 +890,10 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         for y in [-5,-4,-3,-2,-1,0,1,2,3,4,5]
     ]).flatten()
     round_to_nearest_categories = y_range_categories/20.
+    if math.isinf(y_min):
+        y_min = y_min_limit
+    if math.isinf(y_max):
+        y_max = y_max_limit
     y_range = y_max-y_min
     round_to_nearest =  round_to_nearest_categories[
         np.digitize(y_range, y_range_categories[:-1])
@@ -1198,7 +1202,11 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         f'{str(time_period_savename).lower()}'
     )
     if not os.path.isdir(save_subdir):
-        os.makedirs(save_subdir)
+        try:
+            os.makedirs(save_subdir)
+        except FileExistsError as e:
+            logger.warning(f"Several processes are making {save_subdir} at "
+                           + f"the same time. Passing")
     save_path = os.path.join(save_subdir, save_name+'.png')
     fig.savefig(save_path, dpi=dpi)
     logger.info(u"\u2713"+f" plot saved successfully as {save_path}")

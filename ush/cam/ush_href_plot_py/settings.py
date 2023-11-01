@@ -3219,7 +3219,7 @@ class Reference():
                         'LMV', 'GMC', 'APL', 'NAK', 'SAK'
                     ],
                     'var_dict': {
-                        'APCP_01': {'fcst_var_names': ['APCP', 'APCP_01'],
+                        'APCP_01': {'fcst_var_names': ['APCP_01'],
                                     'fcst_var_levels': ['A01','A1'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3228,7 +3228,7 @@ class Reference():
                                                             + ' >=19.05,'
                                                             + ' >=25.4,'),
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['APCP', 'APCP_01', 'APCP_01_Z0'],
+                                    'obs_var_names': ['APCP_01', 'APCP_01_Z0'],
                                     'obs_var_levels': ['A01','A1','L0'],
                                     'obs_var_thresholds': ('>=0.254, >=1.27,'
                                                            + ' >=2.54,'
@@ -3238,7 +3238,7 @@ class Reference():
                                                            + ' >=25.4,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_03': {'fcst_var_names': ['APCP', 'APCP_03'],
+                        'APCP_03': {'fcst_var_names': ['APCP_03'],
                                     'fcst_var_levels': ['A03','A3'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3248,7 +3248,7 @@ class Reference():
                                                             + ' >=25.4,'
                                                             + ' >=50.8,'),
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['APCP', 'APCP_03', 'APCP_01_Z0'],
+                                    'obs_var_names': ['APCP_03', 'APCP_01_Z0'],
                                     'obs_var_levels': ['A03','A3','L0'],
                                     'obs_var_thresholds': ('>=0.254, >=1.27,'
                                                            + ' >=2.54,'
