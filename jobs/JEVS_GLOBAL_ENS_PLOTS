@@ -53,9 +53,6 @@ else
   $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 fi
 
-msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$msg"
-
 if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT
   rm -rf $DATA

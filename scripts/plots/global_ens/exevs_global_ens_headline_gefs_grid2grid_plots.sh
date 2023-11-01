@@ -5,11 +5,7 @@
 # Log History:  12/01/2021 Binbin Zhou  
 ################################################################
 set -x
-
-msg="$job HAS BEGUN"
-postmsg "$jlogfile" "$msg"
 export run_mpi=${run_mpi:-'yes'}
-
 
 #############################################################
 # Step 0: Run copygb to convert URMA data to 4km WRF grid
@@ -41,7 +37,3 @@ fi
 if [ $SENDDBN = YES ]; then 
     $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.v${VDATE}.tar
 fi
-
-
-msg="JOB $job HAS COMPLETED NORMALLY"
-postmsg "$jlogfile" "$msg"

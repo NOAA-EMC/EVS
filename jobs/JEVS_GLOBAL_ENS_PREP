@@ -84,11 +84,7 @@ export outid="LL$job"
 export jobid="${outid}.o${pid}"
 export pgmout="OUTPUT.${pid}"
 
-
 $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${MODELNAME}_${RUN}_${STEP}.sh
-
-msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$msg"
 
 if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT

@@ -75,9 +75,6 @@ else
       exit
 fi
 
-msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$msg"
-
 if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT
   rm -rf $DATA

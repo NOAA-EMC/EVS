@@ -22,7 +22,6 @@ set -x
 #############################
 
 cd $DATA
-echo "in $0 JLOGFILE is $jlogfile"
 echo "Starting grid2obs_stats for ${MODELNAME}_${RUN}"
 
 echo ' '

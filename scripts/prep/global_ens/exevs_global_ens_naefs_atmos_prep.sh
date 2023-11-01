@@ -17,9 +17,3 @@ export MASKS=$FIXevs/mask
 
 #get ensemble member data by sequentail(non-mpi) or mpi run
 $USHevs/global_ens/evs_naefs_atmos_prep.sh
-
-msg="JOB $job HAS COMPLETED NORMALLY"
-postmsg "$jlogfile" "$msg"
-
-
-

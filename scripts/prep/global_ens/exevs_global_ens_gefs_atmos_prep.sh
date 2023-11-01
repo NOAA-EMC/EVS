@@ -120,11 +120,3 @@ fi
 if [ $get_naefs = yes ] ; then
  $USHevs/${COMPONENT}/evs_gens_${RUN}_g2g_prep_naefs.sh
 fi
-
-
-
-msg="JOB $job HAS COMPLETED NORMALLY"
-postmsg "$jlogfile" "$msg"
-
-
-

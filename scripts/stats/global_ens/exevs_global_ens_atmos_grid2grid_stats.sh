@@ -17,8 +17,6 @@ export GRID2GRID_CONF=$PARMevs/metplus_config/${STEP}/${COMPONENT}/${RUN}_grid2g
 export MET_CONFIG=${METPLUS_BASE}/parm/met_config
 export maskpath=$MASKS
 
-msg="$job HAS BEGUN"
-postmsg "$jlogfile" "$msg"
 export run_mpi=${run_mpi:-'yes'}
 export gather=${gather:-'yes'}
 
@@ -151,10 +149,3 @@ if [ $verif_case = sst ] ; then
   
   $USHevs/global_ens/evs_global_ens_atmos_${verif_case}.sh $ens sst24h
 fi
-
-
-msg="JOB $job HAS COMPLETED NORMALLY"
-postmsg "$jlogfile" "$msg"
-
-
-

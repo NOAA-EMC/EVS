@@ -25,7 +25,6 @@ export LOUD=${LOUD:-YES}; [[ $LOUD = yes ]] && export LOUD=YES
 #############################
 
 cd $DATA
-echo "in $0 JLOGFILE is $jlogfile"
 echo "Starting grid2obs_plots for ${MODELNAME}_${RUN}"
 
 set -x
@@ -80,7 +79,6 @@ else
   echo ' '
   echo "${MODELNAME}_${RUN} $VDATE : GEFS-Wave *.stat file missing."
   [[ "$LOUD" = YES ]] && set -x
-  ./postmsg "$jlogfile" "FATAL ERROR : NO GEFS-Wave *.stat file for ${VDATE}"
   err_exit "FATAL ERROR: Did not copy the GEFS-Wave *.stat file for ${VDATE}"
   exit
 fi
@@ -154,7 +152,6 @@ if [ $gather = yes ] ; then
       echo ' '
       echo "${MODELNAME}_${RUN} ${VDATE} ${period}: PLOTS are missing."
       [[ "$LOUD" = YES ]] && set -x
-      ./postmsg "$jlogfile" "FATAL ERROR : NO ${period} PLOTS FOR ${VDATE}"
       err_exit "FATAL ERROR: Did not find any ${period} plots for ${VDATE}"
     fi
     
@@ -171,9 +168,6 @@ if [ $gather = yes ] ; then
 else  
   echo "not copying the plots"
 fi
-
-msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
 
 # --------------------------------------------------------------------------- #
 # Ending output                                                                
