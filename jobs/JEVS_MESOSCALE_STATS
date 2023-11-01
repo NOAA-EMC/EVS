@@ -66,6 +66,16 @@ export cycle=t${vhr}z
 setpdy.sh
 . $DATA/PDY
 
+if [ $MODELNAME = sref ] ; then
+  export VDATE=${VDATE:-$PDYm2}
+else 
+  if [ $VERIF_CASE = snowfall ] || [ $VERIF_CASE = precip ]; then
+        export VDATE=${VDATE:-$PDYm2}
+  else
+	VDATE=${VDATE:-$PDYm1}
+  fi
+fi  
+
 if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
   export VDATE=${VDATE:-$PDYm1}
   export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
