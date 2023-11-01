@@ -11,6 +11,9 @@ echo
 echo "===== RUNNING EVS SUBSEASONAL CFS PREP  ====="
 export STEP="prep"
 
+# Source config
+source $config
+export err=$?; err_chk
 
 # Set up directories
 mkdir -p $STEP

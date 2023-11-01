@@ -13,6 +13,10 @@ export STEP="plots"
 export VERIF_CASE_STEP="grid2grid_plots"
 export VERIF_CASE_STEP_abbrev="g2gplots"
 
+# Source config
+source $config
+export err=$?; err_chk
+
 # Set up directories
 mkdir -p $VERIF_CASE_STEP
 cd $VERIF_CASE_STEP

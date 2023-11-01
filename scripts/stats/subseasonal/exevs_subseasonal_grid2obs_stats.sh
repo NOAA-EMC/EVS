@@ -12,6 +12,10 @@ export STEP="stats"
 export VERIF_CASE_STEP="grid2obs_stats"
 export VERIF_CASE_STEP_abbrev="g2ostats"
 
+# Source config
+source $config
+export err=$?; err_chk
+
 # Set up directories
 mkdir -p $VERIF_CASE_STEP
 cd $VERIF_CASE_STEP
