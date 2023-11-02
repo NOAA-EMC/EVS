@@ -260,8 +260,7 @@ for model in gefs cmce ecme ; do
 
    else
 
-    echo "$model =>  wrong model"
-    exit
+    echo "WARNING: $model =>  wrong model"
 
    fi
 
@@ -273,6 +272,7 @@ if [ $run_mpi = yes ] ; then
  if [ -s run_get_all_gens_atmos_poe.sh ] ; then
    chmod +x run_get_all_gens_atmos_poe.sh 
    mpiexec  -n 83 -ppn 64 --cpu-bind core cfp  ${DATA}/run_get_all_gens_atmos_poe.sh
+   export err=$?; err_chk
  fi
 
  #Only after the above jobs are finished, following non-mpi parallel jobs can be run!
@@ -280,22 +280,26 @@ if [ $run_mpi = yes ] ; then
  if [ -s run_get_all_gens_apcp24h_poe.sh ] ; then
    chmod +x run_get_all_gens_apcp24h_poe.sh
    ${DATA}/run_get_all_gens_apcp24h_poe.sh
+   export err=$?; err_chk
  fi
 
   if [ -s run_get_all_gens_snow24h_poe.sh ] ; then
     chmod +x run_get_all_gens_snow24h_poe.sh
     ${DATA}/run_get_all_gens_snow24h_poe.sh
+    export err=$?; err_chk
   fi
 
   if [ -s run_get_all_gens_icec_poe.sh ] ; then
      chmod +x run_get_all_gens_icec_poe.sh
      ${DATA}/run_get_all_gens_icec_poe.sh
+     export err=$?; err_chk
   fi     
 
 
     if [ -s run_get_all_gens_sst24h_poe.sh ] ; then
       chmod +x run_get_all_gens_sst24h_poe.sh
       ${DATA}/run_get_all_gens_sst24h_poe.sh
+      export err=$?; err_chk
     fi
 
 else
@@ -303,29 +307,30 @@ else
  if [ -s run_get_all_gens_atmos_poe.sh ] ; then
    chmod +x run_get_all_gens_atmos_poe.sh 
    ${DATA}/run_get_all_gens_atmos_poe.sh
+   export err=$?; err_chk
  fi
  if [ -s run_get_all_gens_apcp24h_poe.sh ] ; then
    chmod +x run_get_all_gens_apcp24h_poe.sh
    ${DATA}/run_get_all_gens_apcp24h_poe.sh
+   export err=$?; err_chk
  fi
 
  if [ -s run_get_all_gens_snow24h_poe.sh ] ; then
     chmod +x run_get_all_gens_snow24h_poe.sh
     ${DATA}/run_get_all_gens_snow24h_poe.sh
+    export err=$?; err_chk
  fi
 
  if [ -s run_get_all_gens_icec_poe.sh ] ; then
     chmod +x run_get_all_gens_icec_poe.sh
     ${DATA}/run_get_all_gens_icec_poe.sh
+    export err=$?; err_chk
  fi
 
  if [ -s run_get_all_gens_sst24h_poe.sh ] ; then
     chmod +x run_get_all_gens_sst24h_poe.sh
     ${DATA}/run_get_all_gens_sst24h_poe.sh
+    export err=$?; err_chk
  fi
 
 fi 
-
-exit 
-
-

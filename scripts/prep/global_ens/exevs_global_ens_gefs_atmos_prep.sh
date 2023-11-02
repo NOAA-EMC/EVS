@@ -34,11 +34,8 @@ export vday=$INITDATE
 
 export run_mpi=${run_mpi:-'yes'}
 
-
 export CLIMO=$FIXevs/climos/atmos
 export MASKS=$FIXevs/mask
-
-
 
 export GRID2GRID_CONF=$PARMevs/metplus_config/stats/${COMPONENT}/${RUN}_grid2grid
 export GRID2OBS_CONF=$PARMevs/metplus_config/stats/${COMPONENT}/${RUN}_grid2obs
@@ -47,29 +44,35 @@ export CONF_PREP=$PARMevs/metplus_config/prep/${COMPONENT}/atmos_grid2grid
 
 if [ $get_gfs = yes ] ; then
  $USHevs/${COMPONENT}/evs_get_gens_${RUN}_data.sh gfs
+ export err=$?; err_chk
 fi
 
 if [ $get_anl = yes ] ; then
  $USHevs/${COMPONENT}/evs_get_gens_${RUN}_data.sh gfsanl
+ export err=$?; err_chk
  $USHevs/${COMPONENT}/evs_get_gens_${RUN}_data.sh cmcanl
+ export err=$?; err_chk
 fi
 
 if [ $get_prepbufr = yes ] ; then
  $USHevs/${COMPONENT}/evs_get_gens_${RUN}_data.sh prepbufr
+ export err=$?; err_chk
 fi
-
 
 if [ $get_ccpa = yes ] ; then
  $USHevs/${COMPONENT}/evs_get_gens_${RUN}_data.sh ccpa
+ export err=$?; err_chk
 fi
 
 if [ $get_nohrsc24h = yes ] ; then
- $USHevs/${COMPONENT}/evs_get_gens_${RUN}_data.sh nohrsc24h 
+ $USHevs/${COMPONENT}/evs_get_gens_${RUN}_data.sh nohrsc24h
+ export err=$?; err_chk
 fi
 
 if [ $get_ghrsst = yes ] ; then
   if [ -s $DCOMINghrsst/$vday/validation_data/marine/ghrsst/${vday}_OSPO_L4_GHRSST.nc ] ; then
-     [[ $SENDCOM=YES ]] && cp $DCOMINghrsst/$vday/validation_data/marine/ghrsst/${vday}_OSPO_L4_GHRSST.nc $COMOUTgefs/ghrsst.t00z.nc
+     cpreq -v $DCOMINghrsst/$vday/validation_data/marine/ghrsst/${vday}_OSPO_L4_GHRSST.nc $WORK/ghrsst.t00z.nc
+     [[ $SENDCOM=YES ]] && cpreq -v $WORK/ghrsst.t00z.nc $COMOUTgefs/ghrsst.t00z.nc
   else
     if [ $SENDMAIL = YES ]; then
      export subject="GHRSST OSPO Data Missing for EVS ${COMPONENT}"
@@ -82,41 +85,19 @@ if [ $get_ghrsst = yes ] ; then
   fi
 fi
 
-#get_gefs_icec24h
-#if [ $get_gefs_icec = yes ] || [ $test_icec = yes ] ; then
-#  $USHevs/${COMPONENT}/evs_get_gens_${RUN}_data.sh gefs_icec24h 
-#  $USHevs/${COMPONENT}/evs_get_gens_${RUN}_data.sh gefs_icec7day
-#exit 
-#fi
-
-
-#if [ $get_gefs_snow24h = yes ] ; then
-#just for testing  
-#  $USHevs/${COMPONENT}/evs_get_gens_${RUN}_data.sh gefs_snow24h 
-#  exit
-#fi
-
-
-#if [ $get_gefs_sst24h = yes ] ; then
-#  $USHevs/${COMPONENT}/evs_get_gens_${RUN}_data.sh gefs_sst24h
-#  exit
-#fi
-
 if [ $get_osi_saf = yes ] ; then 
- export MODELNAME=""
  export OBSNAME="osi_saf"
-
  $USHevs/${COMPONENT}/evs_get_gens_${RUN}_data.sh osi_saf
- export MODELNAME=gefs
-
+ export err=$?; err_chk
 fi
 
-#get ensemble member data by sequentail(non-mpi) or mpi run
+#get ensemble member data sequentially (non-mpi) or mpi run
 if [ $get_forecast = yes ] ; then
  $USHevs/${COMPONENT}/evs_global_ens_${RUN}_prep.sh
+ export err=$?; err_chk
 fi
-
 
 if [ $get_naefs = yes ] ; then
  $USHevs/${COMPONENT}/evs_gens_${RUN}_g2g_prep_naefs.sh
+ export err=$?; err_chk
 fi

@@ -9,10 +9,6 @@ export vday=$INITDATE
 
 export run_mpi=${run_mpi:-'yes'}
 
-
-
-
-
-
-#get ensemble member data by sequentail(non-mpi) or mpi run
+#get ensemble member data sequentially (non-mpi) or mpi run
 $USHevs/${COMPONENT}/evs_get_gens_headline_data.sh
+export err=$?; err_chk
