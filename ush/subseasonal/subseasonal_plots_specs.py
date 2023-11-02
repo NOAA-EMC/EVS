@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+'''
+Name: subseasonal_plots_specs.py
+Contact(s): Shannon Shields
+Abstract: This script defines plotting related settings.
+'''
 import matplotlib
 import matplotlib.pyplot as plt
 import datetime
