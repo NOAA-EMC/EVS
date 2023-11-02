@@ -1,17 +1,23 @@
 #!/bin/ksh
+#***********************************************************************************
+#  Purpose: Run sref's precip stat job
+#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+##************************************************************************
 set -x 
-
-#Binbin note: If METPLUS_BASE,  PARM_BASE not set, then they will be set to $METPLUS_PATH
-#             by config_launcher.py in METplus-3.0/ush
-#             why config_launcher.py is not in METplus-3.1/ush ??? 
-
 
 export vday=$VDATE
 export regrid='NONE'
 ############################################################
 
+#********************************************
+# Check the input data files availability
+# ******************************************
 $USHevs/mesoscale/evs_check_sref_files.sh
+export err=$?; err_chk
 
+#*******************************************
+# Build POE script to collect sub-jobs
+# ******************************************
 >run_all_sref_precip_poe
 
 export model=sref
@@ -22,15 +28,22 @@ for  obsv in ccpa ; do
 
  export domain=CONUS
 
+  #***********************************************
+  # Get prepbufr data files for validation
+  #***********************************************
   $USHevs/mesoscale/evs_prepare_sref.sh $obsv 
-
+  export err=$?; err_chk
 
   if [ $obsv = ccpa ] ; then
     $USHevs/mesoscale/evs_prepare_sref.sh  sref_apcp06
+    export err=$?; err_chk
     $USHevs/mesoscale/evs_prepare_sref.sh sref_apcp24_mean
+    export err=$?; err_chk
   fi
 
-
+  #*******************************************************
+   Build sub-jobs
+  #*****************************************************
   for fhr in fhr1 fhr2 ; do
   
        >run_sref_mpi_${domain}.${obsv}.${fhr}.sh
@@ -105,13 +118,24 @@ done
 
 chmod +x  run_all_sref_precip_poe
 
+#***************************************************
+# Run POE script to get small stat files
+#*************************************************
 if [ $run_mpi = yes ] ; then
   mpiexec  -n 4 -ppn 4 --cpu-bind core --depth=2 cfp ${DATA}/run_all_sref_precip_poe
 else
    ${DATA}/run_all_sref_precip_poe
 fi 
+export err=$?; err_chk
 
+echo "Print stat generation  metplus log files begin:"
+cat $DATA/precip/*/logs/*
+echo "Print stat generation  metplus log files end"
 
+#***********************************************
+# Gather small stat files to forma big stat file
+# **********************************************
 if [ $gather = yes ] ; then
   $USHevs/mesoscale/evs_sref_gather.sh $VERIF_CASE
+  export err=$?; err_chk
 fi 
