@@ -4,7 +4,6 @@
 # Abstract: This script is run by JEVS_SUBSEASONAL_PLOTS in jobs/.
 #           This script generates grid-to-obs verification plots
 #           using python for the subseasonal models.
-# History Log:
 
 set -x
 
@@ -13,6 +12,10 @@ echo "===== RUNNING GRID-TO-OBS PLOTS VERIFICATION  ====="
 export STEP="plots"
 export VERIF_CASE_STEP="grid2obs_plots"
 export VERIF_CASE_STEP_abbrev="g2oplots"
+
+# Source config
+source $config
+export err=$?; err_chk
 
 # Set up directories
 mkdir -p $VERIF_CASE_STEP
@@ -28,36 +31,24 @@ NDAYS=${NDAYS:-total_days}
 
 # Check user's configuration file
 python $USHevs/subseasonal/check_subseasonal_config_plots.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran check_subseasonal_config_plots.py"
-echo
+export err=$?; err_chk
 
 # Create output directories
 python $USHevs/subseasonal/create_METplus_subseasonal_output_dirs.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran create_METplus_subseasonal_output_dirs.py"
-echo
+export err=$?; err_chk
 
 # Link needed data files and set up model information
 python $USHevs/subseasonal/get_subseasonal_stat_files.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran get_subseasonal_stat_files.py"
-echo
+export err=$?; err_chk
 
 # Create job scripts
 for group in condense_stats filter_stats make_plots tar_images; do
     export JOB_GROUP=$group
     echo "Creating and running jobs for grid-to-obs plots: ${JOB_GROUP}"
     python $USHevs/subseasonal/subseasonal_plots_grid2obs_create_job_scripts.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran subseasonal_plots_grid2obs_create_job_scripts.py"
+    export err=$?; err_chk
     # Run job scripts
     chmod u+x $DATA/$VERIF_CASE_STEP/plot_job_scripts/$group/*
-    group_ncount_job=$(ls -l  $DATA/$VERIF_CASE_STEP/plot_job_scripts/$group/job* |wc -l)
     nc=1
     if [ $USE_CFP = YES ]; then
         group_ncount_poe=$(ls -l  $DATA/$VERIF_CASE_STEP/plot_job_scripts/$group/poe* |wc -l)
@@ -75,11 +66,14 @@ for group in condense_stats filter_stats make_plots tar_images; do
 	        launcher="srun --export=ALL --multi-prog"
 	    fi
 	    $launcher $MP_CMDFILE
+	    export err=$?; err_chk
 	    nc=$((nc+1))
         done
     else
+	group_ncount_job=$(ls -l  $DATA/$VERIF_CASE_STEP/plot_job_scripts/$group/job* |wc -l)
         while [ $nc -le $group_ncount_job ]; do
-	    sh +x $DATA/$VERIF_CASE_STEP/plot_job_scripts/$group/job${nc}
+	    $DATA/$VERIF_CASE_STEP/plot_job_scripts/$group/job${nc}
+	    export err=$?; err_chk
 	    nc=$((nc+1))
         done
     fi
@@ -105,7 +99,7 @@ if [ $SENDCOM = YES ]; then
 	cd $VERIF_TYPE_SUBDIR
 	large_tar_file=${DATA}/${VERIF_CASE_STEP}/plot_output/${RUN}.${end_date}/images/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${PDYm2}.tar
         tar -cvf $large_tar_file *.tar
-	cp -v $large_tar_file $COMOUT/.
+	cpreq -v $large_tar_file $COMOUT/.
     done
     cd $DATA
 fi

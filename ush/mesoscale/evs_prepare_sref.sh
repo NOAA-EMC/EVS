@@ -1,5 +1,9 @@
 #!/bin/ksh
-
+#**************************************************************************
+#  Purpose: Get required input forecast and validation data files
+#           for sref stat jobs
+#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#************************************************************************
 set -x
 
 modnam=$1
@@ -10,27 +14,35 @@ export ndate=${ndate:-$NDATE}
 
 export vday=$VDATE
 
+#**************************************************************
+# Get sref's 6hr APCP forecst data
+#   First get sref member files
+#   Then use MET Pcpcombine to get sref's APCP 6h mean netCD files
+#**************************************************************
 if [ $modnam = sref_apcp06 ] ; then
 
   export output_base=${WORK}/sref.${vday}
   export fhr
   export mb
   export base
-  export vcyc
-  for vcyc in 03 09 15 21  ; do
+  export vvhr
+  #vvhr -> validation cycle hour
+  #fday -> forecst running day 
+  #fvhr -> forecast cycle hour
+  for vvhr in 03 09 15 21  ; do
     for fhr in  06 12 18 24 30 36 42 48 54 60 66 72 78 84 ; do
-      obsv_cyc=${vday}${vcyc}     #validation time: xxxx.tvcycz.f00
-      fcst_time=`$ndate -$fhr $obsv_cyc`   #fcst running time in yyyyymmddhh
+      obsv_vhr=${vday}${vvhr}     #validation time: xxxx.tvvhrz.f00
+      fcst_time=`$ndate -$fhr $obsv_vhr`   #fcst running time in yyyyymmddhh
       export fday=${fcst_time:0:8}
-      export fcyc=${fcst_time:8:2}
-      export modelpath=${COMINsref}/sref.${fday}/$fcyc/pgrb
+      export fvhr=${fcst_time:8:2}
+      export modelpath=${COMINsref}/sref.${fday}/$fvhr/pgrb
       mkdir $WORK/sref.${fday}
 
       for base in arw nmb ; do
         for mb in ctl n1 n2 n3 n4 n5 n6 p1 p2 p3 p4 p5 p6 ; do
          ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstSREF_APCP06h.conf
-         mv $output_base/sref_${base}.t${fcyc}z.${mb}.pgrb212.6hr.f${fhr}.nc $WORK/sref.${fday}/.
-	  
+         export err=$?; err_chk
+	 mv $output_base/sref_${base}.t${fvhr}z.${mb}.pgrb212.6hr.f${fhr}.nc $WORK/sref.${fday}/.
        done
      done 
    done
@@ -38,21 +50,25 @@ if [ $modnam = sref_apcp06 ] ; then
 
 fi
 
-
+#********************************************************************************
+# Get sref's 24hr APCP forecast files
+#  First get operational sref's 3hr APCP mean grib2 files 
+#  Then use Pcpcombine to get 24hr APCP netCDF files
+#********************************************************************************
 if [ $modnam = sref_apcp24_mean ] ; then
   export output_base=${WORK}/sref.${vday}
   mkdir -p $output_base
   cd $output_base
 
-  for cyc in 09 15 ; do
-    large=${COMINsref}/sref.${vday}/${cyc}/ensprod/sref.t${cyc}z.pgrb212.mean_3hrly.grib2
+  for vhr in 09 15 ; do
+    large=${COMINsref}/sref.${vday}/${vhr}/ensprod/sref.t${vhr}z.pgrb212.mean_3hrly.grib2
     fhr=3
     while [ $fhr -le 87 ] ; do
      fhr_3=$((fhr-3))
      string="APCP:surface:${fhr_3}-${fhr} hour"
      hh=$fhr
      typeset -Z2 hh
-     $WGRIB2 $large|grep "$string"|$WGRIB2 -i $large -grib $output_base/sref.t${cyc}z.pgrb212.mean.fhr${hh}.grib2
+     $WGRIB2 $large|grep "$string"|$WGRIB2 -i $large -grib $output_base/sref.t${vhr}z.pgrb212.mean.fhr${hh}.grib2
      fhr=$((fhr+3))
     done
   done
@@ -61,18 +77,21 @@ if [ $modnam = sref_apcp24_mean ] ; then
   done
 
   export lead='24, 48, 72'
-  export cyc='12'
+  export vhr='12'
   export modelpath=$output_base
 
   ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstSREF_APCP24h.conf
-  #mkdir -p $COMOUT/${RUN}.${VDATE}/${MODELNAME}/apcp24mean
-  #cp $output_base/*24mean*.nc $COMOUT/${RUN}.${VDATE}/${MODELNAME}/apcp24mean
+  export err=$?; err_chk
   mkdir -p ${COMOUTfinal}/apcp24mean
   cp $output_base/*24mean*.nc ${COMOUTfinal}/apcp24mean
 
 fi  
 
 
+#********************************************************************
+# Get 3hr CCPA observation data over grid212 and grid240 by using MET
+#  RegridDataPlane tool
+#*******************************************************************
 if [ $modnam = ccpa ] ; then
 
   export output_base=${WORK}/ccpa.${vday}
@@ -82,54 +101,55 @@ if [ $modnam = ccpa ] ; then
   #ccpa hrap is in G240	
   #cd ${WORK}/ccpa.${vday}
 
-  export cyc
-  for cyc in 00 06 12 18 ; do
-    export ccpapath=$COMINccpa/ccpa.${vday}/$cyc
-    export vbeg=$vday$cyc
-    export vend=$vday$cyc
+  export vhr
+  for vhr in 00 06 12 18 ; do
+    export ccpapath=$COMINccpa/ccpa.${vday}/$vhr
+    export vbeg=$vday$vhr
+    export vend=$vday$vhr
 
     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsCCPA_toG212.conf
-
-    cp $COMINccpa/ccpa.${vday}/$cyc/ccpa.t${cyc}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${cyc}z.grid240.f00.grib2
+    export err=$?; err_chk
+    cp $COMINccpa/ccpa.${vday}/$vhr/ccpa.t${vhr}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid240.f00.grib2
   done
    
    
-  typeset -Z2 cyc3
-  for cyc in 03 09 15 ; do
-    cyc3=$((cyc+3))
-    export ccpapath=$COMINccpa/ccpa.${vday}/$cyc3
-    export vbeg=$vday$cyc3
-    export vend=$vday$cyc3
+  typeset -Z2 vhr3
+  for vhr in 03 09 15 ; do
+    vhr3=$((vhr+3))
+    export ccpapath=$COMINccpa/ccpa.${vday}/$vhr3
+    export vbeg=$vday$vhr3
+    export vend=$vday$vhr3
 
     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsCCPA_toG212.conf
-
-    cp $COMINccpa/ccpa.${vday}/$cyc3/ccpa.t${cyc}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${cyc}z.grid240.f00.grib2
+    export err=$?; err_chk
+    cp $COMINccpa/ccpa.${vday}/$vhr3/ccpa.t${vhr}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid240.f00.grib2
 
   done
 
      DAY1=`$NDATE +24 ${vday}12`
      next=`echo ${DAY1} | cut -c 1-8`
 
-   for cyc in 21 ; do
+   for vhr in 21 ; do
       export ccpapath=$COMINccpa/ccpa.${next}/00
-      export vbeg=$next$cyc
-      export vend=$next$cyc
+      export vbeg=$next$vhr
+      export vend=$next$vhr
 
      ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsCCPA_toG212.conf
-
-     cp $COMINccpa/ccpa.${next}/00/ccpa.t${cyc}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${cyc}z.grid240.f00.grib2
+     export err=$?; err_chk
+     cp $COMINccpa/ccpa.${next}/00/ccpa.t${vhr}z.03h.hrap.conus.gb2 ${WORK}/ccpa.${vday}/ccpa.t${vhr}z.grid240.f00.grib2
    done
 
-#############################################################################
-#Get CCPA06h
-#############################################################################
 
+#************************************************************************
+# Get 06hr CCPA data from previously obtained 3hr CCPA data files by usin
+#   MET PcpCombine tool
+#************************************************************************
   ccpa06_G212=${WORK}/ccpa.${vday}/ccpa06_G212
   ccpa06_G240=${WORK}/ccpa.${vday}/ccpa06_G240
   mkdir -p $ccpa06_G212
   mkdir -p $ccpa06_G240
 
-   export cyc 
+   export vhr 
     export vbeg=${vday}03
     export vend=${vday}21
     export valid_increment=6H
@@ -139,13 +159,17 @@ if [ $modnam = ccpa ] ; then
     export tail=nc
 
     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA06h.conf
-
+    export err=$?; err_chk
     export ccpatype=GFRIB
     export grid=grid240
     export ccpa06h=$ccpa06_G240
     export tail=grib2
 
     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA06h.conf
+    export err=$?; err_chk
+    echo "Print PcpCombine_obsCCPA06h log files begin:"
+    cat $DATA/pb2nc/logs/*
+    echo "Print PcpCombine_obsCCPA06h log files end"
 
  else
   if [ $SENDMAIL = YES ] ; then	 
@@ -160,6 +184,10 @@ if [ $modnam = ccpa ] ; then
 fi
 
 
+#*****************************************************************
+# Get prepbufr data and converted to NetCDF format files by using
+#  MET pb2nc tool
+#  **************************************************************
 if [ $modnam = prepbufr ] ; then
 
  mkdir -p $WORK/prepbufr.$vday
@@ -168,15 +196,20 @@ export output_base=${WORK}/pb2nc
 
  if [ -s ${COMINobsproc}/gfs.${vday}/18/atmos/gfs.t18z.prepbufr ] ; then 
 
-   for cyc in 00  06  12  18  ; do
+   for vhr in 00  06  12  18  ; do
 
-     export vbeg=${cyc}
-     export vend=${cyc}
+     export vbeg=${vhr}
+     export vend=${vhr}
 
      ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/Pb2nc_obsGFS_Prepbufr.conf
+     export err=$?; err_chk
      cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${vday} 
 
    done
+    echo "Print Pb2nc_obsGFS_Prepbufr log files begin:"
+     cat $DATA/pb2nc/logs/*
+    echo "Print Pb2nc_obsGFS_Prepbufr log files end"
+
 
  else
   if [ $SENDMAIL = YES ] ; then

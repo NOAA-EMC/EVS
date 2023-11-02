@@ -6,7 +6,6 @@ set -x
 # SET SHELL PROCESSING VARIABLES
 # ###################################
 export PS4='$SECONDS + ' 
-date
 
 export machine="WCOSS2"
 
@@ -60,10 +59,6 @@ mkdir -p $COMOUT
 
 echo Actual output starts here
 
-################################################
-# Run the config file to set up model variables
-################################################
-. $PARMevs/evs_config/$COMPONENT/config.evs.${COMPONENT}.${VERIF_CASE}.${STEP}.${VERIF_TYPE}
 
 #######################################################################
 # Execute the script.
@@ -71,13 +66,9 @@ echo Actual output starts here
 $HOMEevs/scripts/$STEP/$COMPONENT/exevs_${COMPONENT}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
 
-msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
 
 if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT
   rm -rf $DATA
 fi
-
-date
 
