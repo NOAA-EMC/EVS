@@ -13,7 +13,6 @@ import datetime
 print("BEGIN: "+os.path.basename(__file__))
 
 # Read in environment variables
-evs_ver = os.environ['evs_ver']
 COMOUT = os.environ['COMOUT']
 DATA = os.environ['DATA']
 NET = os.environ['NET']
