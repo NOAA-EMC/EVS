@@ -645,13 +645,13 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 )
                 plotted_reference[0] = True
                 handles+=[
-￼                    f(
-￼                          ref_color_dict['marker'], ref_color_dict['color'],
-￼                          'solid', ref_color_dict['linewidth'],
-￼                          ref_color_dict['markersize'], 'white'
-￼                    )
-￼                ]
-￼                labels+=[str(metric1_name).upper()]
+                    f(
+                          ref_color_dict['marker'], ref_color_dict['color'],
+                          'solid', ref_color_dict['linewidth'],
+                          ref_color_dict['markersize'], 'white'
+                    )
+                ]
+                labels+=[str(metric1_name).upper()]
         else:
             plt.plot(
                 x_vals1.tolist(), y_vals_metric1, 
@@ -661,13 +661,13 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 lw=mod_setting_dicts[m]['linewidth']
             )
             handles+=[
-￼                f(
-￼                      mod_setting_dicts[m]['marker'], mod_setting_dicts[m]['color'],
-￼                      'solid', mod_setting_dicts[m]['linewidth'],
-￼                      mod_setting_dicts[m]['markersize'], 'white'
-￼                )
-￼            ]
-￼            labels+=[str(metric1_name).upper()+' ('+model_plot_name.upper()+')']
+                f(
+                      mod_setting_dicts[m]['marker'], mod_setting_dicts[m]['color'],
+                      'solid', mod_setting_dicts[m]['linewidth'],
+                      mod_setting_dicts[m]['markersize'], 'white'
+                )
+            ]
+            labels+=[str(metric1_name).upper()+' ('+model_plot_name.upper()+')']
         if metric2_name is not None:
             if np.abs(y_vals_metric2_mean) < 1E4:
                 metric2_mean_fmt_string = f'{y_vals_metric2_mean:.2f}'
@@ -685,13 +685,13 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                     )
                     plotted_reference[1] = True
                     handles+=[
-￼                        f(
-￼                              ref_color_dict['marker'], ref_color_dict['color'],
-￼                              'dashed', ref_color_dict['linewidth'],
-￼                              ref_color_dict['markersize'], 'white'
-￼                        )
-￼                    ]
-￼                    labels+=[str(metric2_name).upper()]
+                        f(
+                              ref_color_dict['marker'], ref_color_dict['color'],
+                              'dashed', ref_color_dict['linewidth'],
+                              ref_color_dict['markersize'], 'white'
+                        )
+                    ]
+                    labels+=[str(metric2_name).upper()]
             else:
                 plt.plot(
                     x_vals2.tolist(), y_vals_metric2, 
@@ -701,13 +701,13 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                     ls='dashed', lw=mod_setting_dicts[m]['linewidth']
                 )
                 handles+=[
-￼                    f(
-￼                          mod_setting_dicts[m]['marker'], mod_setting_dicts[m]['color'],
-￼                          'dashed', mod_setting_dicts[m]['linewidth'],
-￼                          mod_setting_dicts[m]['markersize'], 'white'
-￼                    )
-￼                ]
-￼                labels+=[str(metric2_name).upper()+' ('+model_plot_name.upper()+')']
+                    f(
+                          mod_setting_dicts[m]['marker'], mod_setting_dicts[m]['color'],
+                          'dashed', mod_setting_dicts[m]['linewidth'],
+                          mod_setting_dicts[m]['markersize'], 'white'
+                    )
+                ]
+                labels+=[str(metric2_name).upper()+' ('+model_plot_name.upper()+')']
         if confidence_intervals:
             if plot_reference[0]:
                 if not plotted_reference_CIs[0]:

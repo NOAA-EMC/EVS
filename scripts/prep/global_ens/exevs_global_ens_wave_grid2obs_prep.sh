@@ -61,9 +61,9 @@ for ihour in ${inithours} ; do
 	fi
     else
         if [ ! -s ${COMOUTgefs}/${newname} ]; then
-            cp -v ${COMINgefs}/${MODELNAME}.${INITDATE}/${ihour}/wave/gridded/${filename} $DATA/gefs_wave_grib2/${newname}
+            cpreq -v ${COMINgefs}/${MODELNAME}.${INITDATE}/${ihour}/wave/gridded/${filename} $DATA/gefs_wave_grib2/${newname}
             if [ $SENDCOM = YES ]; then
-                cp -v $DATA/gefs_wave_grib2/${newname} ${COMOUTgefs}/${newname}
+                cpreq -v $DATA/gefs_wave_grib2/${newname} ${COMOUTgefs}/${newname}
             fi
         fi
     fi
@@ -87,7 +87,7 @@ for ihour in 00 06 12 18 ; do
         cat mailmsg | mail -s "$subject" $maillist
       fi
   else
-      cp -v ${COMINobsproc}.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr ${DATA}/gdas.${INITDATE}${ihour}.prepbufr
+      cpreq -v ${COMINobsproc}.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr ${DATA}/gdas.${INITDATE}${ihour}.prepbufr
       chmod 640 ${DATA}/gdas.${INITDATE}${ihour}.prepbufr
       chgrp rstprod ${DATA}/gdas.${INITDATE}${ihour}.prepbufr
   fi
@@ -111,7 +111,7 @@ for ihour in 00 06 12 18 ; do
             chmod 640 $DATA/ncfiles/gdas.${INITDATE}${ihour}.nc
             chgrp rstprod $DATA/ncfiles/gdas.${INITDATE}${ihour}.nc
             if [ $SENDCOM = YES ]; then
-                cp -v $DATA/ncfiles/gdas.${INITDATE}${ihour}.nc ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/.
+                cpreq -v $DATA/ncfiles/gdas.${INITDATE}${ihour}.nc ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/.
                 chmod 640 ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${INITDATE}${ihour}.nc
                 chgrp rstprod ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${INITDATE}${ihour}.nc
             fi
