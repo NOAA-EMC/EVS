@@ -1,12 +1,11 @@
 #!/bin/ksh
+###########################################################################
 #  JOB card cerated for running METPlus-based NARRE verifications
 #   By Binbin Zhou, Lynker@EMC/NCEP
 #   Last updated 10/27/2023
 #   Purpose: setup environment variables to run the NARRE stats script 
-#
+########################################################################
 set -x
-#######################################################
-#######################################################
 
 export cycle=${cycle:-t${vhr}z}
 
@@ -51,17 +50,6 @@ export USHevs=$HOMEevs/ush
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export MASKS=$FIXevs/masks
 
-
-###########################################################
-# obtain unique process id (pid) and make temp directories
-###########################################################
-
-
-####################################
-# File To Log Msgs
-####################################
-export jlogfile=${jlogfile:-${DATA}/jlogfile}
-
 ####################################
 # Determine Job Output Name on System
 ####################################
@@ -76,9 +64,6 @@ export pgmout="OUTPUT.${pid}"
 
 $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${STEP}.sh 
 export err=$?; err_chk
-
-msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
 
 if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT
