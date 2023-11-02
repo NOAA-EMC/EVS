@@ -17,7 +17,7 @@ export MET_VERBOSITY="2"
 export LOG_MET_OUTPUT_TO_METPLUS="yes"
 
 # Time Settings
-export VHOUR_LIST="$cyc"
+export VHOUR_LIST="$vhr"
 export CYC_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
 export ACCUM06_FHR_START=6
 export ACCUM06_FHR_END=51

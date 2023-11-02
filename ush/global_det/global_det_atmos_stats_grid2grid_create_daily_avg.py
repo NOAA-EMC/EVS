@@ -41,13 +41,13 @@ fhr_inc = '12'
 
 # Process run time agruments
 if len(sys.argv) != 4:
-    print("ERROR: Not given correct number of run time agruments..."
+    print("FATAL ERROR: Not given correct number of run time agruments..."
           +os.path.basename(__file__)+" VARNAME_VARLEVEL DATA_FILE_FORMAT "
           +"COMIN_FILE_FORMART")
     sys.exit(1)
 else:
     if '_' not in sys.argv[1]:
-        print("ERROR: variable and level runtime agrument formated "
+        print("FATAL ERROR: variable and level runtime agrument formated "
               +"incorrectly, be sure to separate variable and level with "
               +"an underscore (_), example HGT_P500")
         sys.exit(1)

@@ -1,10 +1,10 @@
 #!/bin/ksh
 #################################################################
-# Script Name: verf_g2g_reflt.sh.sms $vday $vcyc
-# Purpose:   To run grid-to-grid verification on reflectivity
+# Purpose:   Setup some paths and run sref grid2obs stat ush scripts
 #
-# Log History:  Julia Zhu -- 2010.04.28 
-################################################################
+# Last updated 10/27/2023: by  Binbin Zhou, Lynker@EMC/NCEP
+#################################################################
+#
 set -x
 
 export WORK=$DATA
@@ -16,24 +16,35 @@ export run_mpi=${run_mpi:-'yes'}
 export gather=${gather:-'yes'}
 export just_cnv=${just_cnv:-'no'} 
 
-#export GRID2OBS_CONF=$PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}
 export GRID2OBS_CONF=$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}
 export MET_CONFIG=${METPLUS_BASE}/parm/met_config
 export maskpath=$MASKS
 
 
-msg="$job HAS BEGUN"
-postmsg "$jlogfile" "$msg"
-
+#***********************************************************************************
+# The method in ceiling and vis (cnv) job is to deal with the conditional mean
+#  (1) First average hits, false alarms, etc in the categoery table
+#      over all times to get averaged CTC (runevs_sref_cnv.sh)
+#  (2) After sref_cnv.sh is finished, run evs_sref_grid2obs.sh by using
+#        METplus to generate the stat files based on the averaged CTC
+#
+#For visibility and ceiling (c and v, or cnv), the computation of CTC mean metrics 
+#is tricky. Computation CTC  ensemble mean could be misleading in case of clear sky. 
+#In clear sky, there is no value for  cnv,  so the models define them to be very large 
+#arbitrary values. In this case, if first averaging CTC over forecast times and then 
+#averaging over members to get metrics (as current METplus does) could be wrong  
+#(e.g. got unexpected low ETS).  After discussing with Logan, we  decided that first  
+#averaging CTC among the members, then averaging over forecast times to get CTC
+#metrics. The results are much better. So for sref, first run cnv job. After it is
+#finished, run grid2obs job. In global_ens, both are combined together in grid2obs.
+#*****************************************************************************
 if [ $just_cnv = yes ] ; then
   $USHevs/mesoscale/evs_sref_cnv.sh
+  export err=$?; err_chk
 else
   $USHevs/mesoscale/evs_sref_grid2obs.sh
+  export err=$?; err_chk
 fi
 
-msg="JOB $job HAS COMPLETED NORMALLY"
-postmsg "$jlogfile" "$msg"
 
-
-
-exit 0
+exit 

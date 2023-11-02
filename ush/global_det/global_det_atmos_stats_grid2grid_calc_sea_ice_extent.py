@@ -45,7 +45,7 @@ env_var_list = ['MODEL', 'DATE', 'valid_hr_start', 'valid_hr_end',
                 'RUN']
 for env_var in env_var_list:
     if not env_var in os.environ:
-        print("ERROR: "+repr(sys.argv[0])
+        print("FATAL ERROR: "+repr(sys.argv[0])
               +" -> No environment variable "+env_var)
         sys.exit(1)
 MODEL = os.environ['MODEL'].replace('"', '')

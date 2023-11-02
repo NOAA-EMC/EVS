@@ -14,6 +14,7 @@ echo "RUN MODE:$evs_run_mode"
 
 # Source config
 source $config
+export err=$?; err_chk
 
 # Make directory
 mkdir -p ${VERIF_CASE}_${STEP}
@@ -28,35 +29,23 @@ NDAYS=${NDAYS:-$total_days}
 
 # Check user's config settings
 python $USHevs/global_det/global_det_atmos_check_settings.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_check_settings.py"
-echo
+export err=$?; err_chk
 
 # Create output directories
 python $USHevs/global_det/global_det_atmos_create_output_dirs.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_create_output_dirs.py"
-echo
+export err=$?; err_chk
 
 # Link needed data files and set up model information
 python $USHevs/global_det/global_det_atmos_get_data_files.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_get_data_files.py"
-echo
+export err=$?; err_chk
 
 # Create and run job scripts for condense_stats, filter_stats, make_plots, and tar_images
 for group in condense_stats filter_stats make_plots tar_images; do
     export JOB_GROUP=$group
     echo "Creating and running jobs for grid-to-grid plots: ${JOB_GROUP}"
     python $USHevs/global_det/global_det_atmos_plots_grid2grid_create_job_scripts.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_plots_grid2grid_create_job_scripts.py"
+    export err=$?; err_chk
     chmod u+x ${VERIF_CASE}_${STEP}/plot_job_scripts/$group/*
-    group_ncount_job=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/$group/job* |wc -l)
     nc=1
     if [ $USE_CFP = YES ]; then
         group_ncount_poe=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/$group/poe* |wc -l)
@@ -74,12 +63,14 @@ for group in condense_stats filter_stats make_plots tar_images; do
                 launcher="srun --export=ALL --multi-prog"
             fi
             $launcher $MP_CMDFILE
+            export err=$?; err_chk
             nc=$((nc+1))
         done
     else
+        group_ncount_job=$(ls -l  ${VERIF_CASE}_${STEP}/plot_job_scripts/$group/job* |wc -l)
         while [ $nc -le $group_ncount_job ]; do
-            sh +x $DATA/${VERIF_CASE}_${STEP}/plot_job_scripts/$group/job${nc}
-            nc=$((nc+1))
+            $DATA/${VERIF_CASE}_${STEP}/plot_job_scripts/$group/job${nc}
+            export err=$?; err_chk
         done
     fi
 done
@@ -102,7 +93,7 @@ if [ $SENDCOM = YES ]; then
     for VERIF_TYPE in $g2gp_type_list; do
         large_tar_file=${DATA}/${VERIF_CASE}_${STEP}/plot_output/${RUN}.${end_date}/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.last${NDAYS}days.v${end_date}.tar
         tar -cvf $large_tar_file ${VERIF_CASE}_${VERIF_TYPE}*.tar
-        cp -v $large_tar_file $COMOUT/.
+        cpreq -v $large_tar_file $COMOUT/.
     done
     cd $DATA
 fi

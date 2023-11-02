@@ -743,7 +743,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job.write('\n')
                 job.write(
                     gda_util.python_command('global_det_atmos_plots.py',[])
+                    +'\n'
                 )
+                job.write('export err=$?; err_chk'+'\n')
                 job.close()
             elif JOB_GROUP == 'make_plots':
                 job_env_dict['event_equalization'] = os.environ[
@@ -879,8 +881,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         job.write('\n')
                         job.write(
                             gda_util.python_command(run_global_det_atmos_plot,
-                                                    [])
+                                                    [])+'\n'
                         )
+                        job.write('export err=$?; err_chk'+'\n')
                         job.close()
             elif JOB_GROUP == 'tar_images':
                 job_env_dict['DATAjob'] = loop_info
@@ -905,7 +908,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job.write('\n')
                 job.write(
                     gda_util.python_command('global_det_atmos_plots.py', [])
+                    +'\n'
                 )
+                job.write('export err=$?; err_chk'+'\n')
                 job.close()
 
 # If running USE_CFP, create POE scripts

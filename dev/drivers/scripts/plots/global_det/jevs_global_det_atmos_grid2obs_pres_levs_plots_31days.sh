@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=00:45:00
+#PBS -l walltime=01:00:00
 #PBS -l place=vscatter:exclhost,select=5:ncpus=128:ompthreads=1
 #PBS -l debug=true
 #PBS -V
@@ -28,6 +28,9 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/global_det/global_det_plots.sh
 
+export evs_ver=v1.0.0
+evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
+
 export machine=WCOSS2
 export USE_CFP=YES
 export nproc=128
@@ -43,8 +46,10 @@ export NDAYS=31
 
 export DATAROOT=/lfs/h2/emc/stmp/$USER/evs_test/$envir/tmp
 export TMPDIR=$DATAROOT
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver
-export COMROOT=/lfs/h2/emc/ptmp/${USER}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
+today=$(cut -c7-14 ${COMROOT}/date/t${vhr}z)
+export VDATE_END=$(finddate.sh $today d-1)
+export COMOUT=/lfs/h2/emc/ptmp/${USER}/$NET/$evs_ver_2d/$STEP/$COMPONENT/$RUN.$VDATE_END
 
 # Set config file
 export config=$HOMEevs/parm/evs_config/global_det/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${VERIF_TYPE}

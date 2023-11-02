@@ -75,8 +75,7 @@ else
 fi
 
 ######################################################################
-## Purpose: This job will generate the grid2obs statistics for the NAM_FIREWXNEST
-##          model and generate stat files.
+## Purpose: This job will generate the plots for the aqm
 #######################################################################
 #
 exit
