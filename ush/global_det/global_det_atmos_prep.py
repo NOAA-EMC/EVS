@@ -72,7 +72,7 @@ global_det_model_dict = {
                                                   'pgbf{valid?fmt=%Y%m%d%H}.01'
                                                   +'.{init?fmt=%Y%m%d%H}'
                                                   +'.grb2'),
-            'cycles': ['00', '06', '12', '18'],
+            'inithours': ['00', '06', '12', '18'],
             'fcst_hrs': range(0, 384+6, 6)},
     'cmc': {'input_fcst_file_format': os.path.join(COMINcmc,
                                                    'cmc_{init?fmt=%Y%m%d%H}'
@@ -86,7 +86,7 @@ global_det_model_dict = {
                                                      +'{lead_shift?fmt=%3H?'
                                                      +'shift=-24}_'
                                                      +'{lead?fmt=%3H}.grb2'),
-            'cycles': ['00', '12'],
+            'inithours': ['00', '12'],
             'fcst_hrs': range(0, 240+6, 6)},
     'cmc_regional': {'input_precip_file_format': os.path.join(DCOMINcmc_regional_precip,
                                                               'cmc_'
@@ -94,14 +94,14 @@ global_det_model_dict = {
                                                               +'{lead_shift?fmt=%3H?'
                                                               +'shift=-24}_'
                                                               +'{lead?fmt=%3H}'),
-                     'cycles': ['00', '12'],
+                     'inithours': ['00', '12'],
                      'fcst_hrs': range(24, 48+12, 12)},
     'dwd': {'input_precip_file_format': os.path.join(DCOMINdwd_precip, 'dwd_'
                                                      +'{init?fmt=%Y%m%d%H}_'
                                                      +'{lead_shift?fmt=%3H?'
                                                      +'shift=-24}_'
                                                      +'{lead?fmt=%3H}'),
-            'cycles': ['00', '12'],
+            'inithours': ['00', '12'],
             'fcst_hrs': range(24, 72+12, 12)},
     'ecmwf': {'input_fcst_file_format': os.path.join(DCOMINecmwf,
                                                      'U1D{init?fmt=%m%d%H}00'
@@ -112,7 +112,7 @@ global_det_model_dict = {
               'input_precip_file_format': os.path.join(DCOMINecmwf_precip,
                                                        'UWD{init?fmt=%Y%m%d%H%M}'
                                                        +'{valid?fmt=%m%d%H%M}1'),
-              'cycles': ['00', '12'],
+              'inithours': ['00', '12'],
               'fcst_hrs': range(0, 240+6, 6)},
     'fnmoc': {'input_fcst_file_format': os.path.join(DCOMINfnmoc,
                                                      'US058GMET-OPSbd2.NAVGEM'
@@ -124,7 +124,7 @@ global_det_model_dict = {
                                                     +'000-'
                                                     +'{init?fmt=%Y%m%d%H}-'
                                                     +'NOAA-halfdeg.gr2'),
-              'cycles': ['00', '12'],
+              'inithours': ['00', '12'],
               'fcst_hrs': range(0, 180+6, 6)},
     'imd': {'input_fcst_file_format': os.path.join(DCOMINimd,
                                                    'gdas1.t{init?fmt=%2H}z.'
@@ -132,7 +132,7 @@ global_det_model_dict = {
             'input_anl_file_format': os.path.join(DCOMINimd,
                                                   'gdas1.t{init?fmt=%2H}z.'
                                                   +'grbf00'),
-            'cycles': ['00', '12'],
+            'inithours': ['00', '12'],
             'fcst_hrs': range(0, 240+6, 6)},
     'jma': {'input_fcst_file_format': os.path.join(DCOMINjma,
                                                    'jma_{hem?fmt=str}'
@@ -143,13 +143,13 @@ global_det_model_dict = {
             'input_precip_file_format': os.path.join(DCOMINjma_precip, 'jma_'
                                                      +'{init?fmt=%Y%m%d%H}00'
                                                      +'.grib'),
-            'cycles': ['00', '12'],
+            'inithours': ['00', '12'],
             'fcst_hrs': range(0, 192+24, 24)},
     'metfra': {'input_precip_file_format': os.path.join(DCOMINmetfra_precip,
                                                         'METFRA_'
                                                         +'{init?fmt=%H}_'
                                                         +'{init?fmt=%Y%m%d}.gz'),
-               'cycles': ['00', '12'],
+               'inithours': ['00', '12'],
                'fcst_hrs': range(24, 72+12, 12)},
     'ukmet': {'input_fcst_file_format': os.path.join(DCOMINukmet,
                                                      'GAB{init?fmt=%2H}'
@@ -158,7 +158,7 @@ global_det_model_dict = {
                                                     'GAB{init?fmt=%2H}AAT.GRB'),
               #'input_precip_file_format': os.path.join(DCOMINukmet_precip, 'ukmo.'
               #                                         +'{init?fmt=%Y%m%d%H}'),
-              'cycles': ['00', '12'],
+              'inithours': ['00', '12'],
               'fcst_hrs': range(0, 144+6, 6)}
 }
 
@@ -177,7 +177,7 @@ tmp_precip_file_format = os.path.join(DATA, RUN+'.'+INITDATE,
 
 for MODEL in MODELNAME:
     if MODEL not in list(global_det_model_dict.keys()):
-        print("ERROR: "+MODEL+" not recongized")
+        print("FATAL ERROR: "+MODEL+" not recongized")
         sys.exit(1)
     if MODEL == 'cmc_regional':
         max_precip_fhr = 48
@@ -185,11 +185,11 @@ for MODEL in MODELNAME:
         max_precip_fhr = 72
     print("---- Prepping data for "+MODEL+" for init "+INITDATE)
     model_dict = global_det_model_dict[MODEL]
-    for cycle in model_dict['cycles']:
-        CDATE = INITDATE+cycle
+    for inithour in model_dict['inithours']:
+        CDATE = INITDATE+inithour
         CDATE_dt = datetime.datetime.strptime(CDATE, '%Y%m%d%H')
         # Forecast files
-        if MODEL == 'jma' and cycle == '00':
+        if MODEL == 'jma' and inithour == '00':
             fcst_hrs = range(0, 72+24, 24)
         else:
             fcst_hrs = model_dict['fcst_hrs']
@@ -312,7 +312,7 @@ for MODEL in MODELNAME:
                                                         'precip',
                                                         log_missing_file)
                         elif MODEL == 'ecmwf':
-                            if cycle == '12':
+                            if inithour == '12':
                                 gda_util.prep_prod_ecmwf_file(input_precip_file,
                                                               tmp_precip_file,
                                                               CDATE_dt,
@@ -460,7 +460,7 @@ global_det_obs_dict = {
                                                 +'{init_shift?fmt=%Y%m%d%H'
                                                 +'?shift=-24}to'
                                                 +'{init?fmt=%Y%m%d%H}.nc'),
-                'cycles': ['00']},
+                'inithours': ['00']},
     'ghrsst_ospo': {'input_file_format': os.path.join(DCOMINghrsst_ospo,
                                                       '{init_shift?fmt=%Y%m%d'
                                                       +'?shift=-24}',
@@ -475,17 +475,17 @@ global_det_obs_dict = {
                                                     +'{init_shift?fmt=%Y%m%d%H'
                                                     +'?shift=-24}to'
                                                     +'{init?fmt=%Y%m%d%H}.nc'),
-                    'cycles': ['00']},
+                    'inithours': ['00']},
 }
 
 for OBS in OBSNAME:
     if OBS not in list(global_det_obs_dict.keys()):
-        print("ERROR: "+OBS+" not recongized")
+        print("FATAL ERROR: "+OBS+" not recongized")
         sys.exit(1)
     print("---- Prepping data for "+OBS+" for init "+INITDATE)
     obs_dict = global_det_obs_dict[OBS]
-    for cycle in obs_dict['cycles']:
-        CDATE = INITDATE+cycle
+    for inithour in obs_dict['inithours']:
+        CDATE = INITDATE+inithour
         CDATE_dt = datetime.datetime.strptime(CDATE, '%Y%m%d%H')
         input_file = gda_util.format_filler(
             obs_dict['input_file_format'], CDATE_dt, CDATE_dt,

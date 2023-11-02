@@ -15,30 +15,22 @@ echo "RUN MODE:$evs_run_mode"
 
 # Source config
 source $config
+export err=$?; err_chk
 
 # Make directory
 mkdir -p ${VERIF_CASE}_${STEP}
 
 # Check user's config settings
 python $USHevs/global_det/global_det_atmos_check_settings.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_check_settings.py"
-echo
+export err=$?; err_chk
 
 # Create output directories
 python $USHevs/global_det/global_det_atmos_create_output_dirs.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_create_output_dirs.py"
-echo
+export err=$?; err_chk
 
 # Link needed data files and set up model information
 python $USHevs/global_det/global_det_atmos_get_data_files.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_get_data_files.py"
-echo
+export err=$?; err_chk
 
 # Send for missing files
 if [ $SENDMAIL = YES ] ; then
@@ -54,11 +46,8 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
     export JOB_GROUP=$group
     echo "Creating and running jobs for grid-to-obs stats: ${JOB_GROUP}"
     python $USHevs/global_det/global_det_atmos_stats_grid2obs_create_job_scripts.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_stats_grid2obs_create_job_scripts.py"
+    export err=$?; err_chk
     chmod u+x ${VERIF_CASE}_${STEP}/METplus_job_scripts/$group/*
-    group_ncount_job=$(ls -l  ${VERIF_CASE}_${STEP}/METplus_job_scripts/$group/job* |wc -l)
     nc=1
     if [ $USE_CFP = YES ]; then
         group_ncount_poe=$(ls -l  ${VERIF_CASE}_${STEP}/METplus_job_scripts/$group/poe* |wc -l)
@@ -76,11 +65,14 @@ for group in reformat_data assemble_data generate_stats gather_stats; do
                 launcher="srun --export=ALL --multi-prog"
             fi
             $launcher $MP_CMDFILE
+            export err=$?; err_chk
             nc=$((nc+1))
         done
     else
+        group_ncount_job=$(ls -l  ${VERIF_CASE}_${STEP}/METplus_job_scripts/$group/job* |wc -l)
         while [ $nc -le $group_ncount_job ]; do
-            sh +x $DATA/${VERIF_CASE}_${STEP}/METplus_job_scripts/$group/job${nc}
+            $DATA/${VERIF_CASE}_${STEP}/METplus_job_scripts/$group/job${nc}
+            export err=$?; err_chk
             nc=$((nc+1))
         done
     fi
@@ -104,7 +96,7 @@ if [ $SENDCOM = YES ]; then
         for MODEL_DATE_PATH in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$MODEL.*; do
             MODEL_DATE_SUBDIR=$(echo ${MODEL_DATE_PATH##*/})
             for FILE in $DATA/${VERIF_CASE}_${STEP}/METplus_output/$MODEL_DATE_SUBDIR/*; do
-                cp -v $FILE $COMOUT/$MODEL_DATE_SUBDIR/.
+                cpreq -v $FILE $COMOUT/$MODEL_DATE_SUBDIR/.
             done
         done
     done

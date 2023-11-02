@@ -13,16 +13,14 @@ echo "RUN MODE:$evs_run_mode"
 
 # Create headline plots
 python $USHevs/global_det/global_det_atmos_plots_headline.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Succesfully ran global_det_atmos_plots_headline.py"
+export err=$?; err_chk
 
 # Copy files to desired location
 if [ $SENDCOM = YES ]; then
     # Make and copy tar file
     cd $DATA/images
     tar -cvf $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar *.png
-    cp -v $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar $COMOUT/.
+    cpreq -v $DATA/evs.plots.${COMPONENT}.atmos.${RUN}.v${VDATE_END}.tar $COMOUT/.
 fi
 
 # Cat the plotting log files

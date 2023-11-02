@@ -25,7 +25,7 @@ print(f"BEGIN: {os.path.basename(__file__)}")
 
 # Read in environment variables
 evs_ver = os.environ['evs_ver']
-COMIN = os.environ['COMIN']
+EVSIN = os.environ['EVSIN']
 COMOUT = os.environ['COMOUT']
 DATA = os.environ['DATA']
 NET = os.environ['NET']

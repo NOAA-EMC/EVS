@@ -47,7 +47,7 @@ export MET_PLUS_PATH=${MET_PLUS_PATH:-$METPLUS_PATH}
 export MET_PATH=$MET_ROOT
 export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${evs_ver}}
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}} 
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
@@ -55,13 +55,18 @@ export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export MASKS=$FIXevs/masks
 export MET_PLUS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}"
-export cyc=${cyc:-00}
-export cycle=t${cyc}z
+export vhr=${vhr:-00}
+if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
+  if [ $VERIF_CASE = snowfall ]; then
+      np=$vhr;  nq=$(($np%6)); nr=$(($np-$nq)); printf -v nt "%02d" $nr;
+      export vhr=$nt;
+  fi
+fi
+export cycle=t${vhr}z
 setpdy.sh
 . $DATA/PDY
 
 if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
-  export VDATE=${VDATE:-$PDYm1}
   export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
   export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
   export COMINrap=${COMINrap:-$(compath.py ${envir}/com/rap/${rap_ver})}
@@ -71,12 +76,13 @@ if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
   export EVSINspcotlk=${EVSINspcotlk:-$COMIN/prep/cam}
   export DCOMINmrms=${DCOMINmrms:-$DCOMROOT/ldmdata/obs/upperair/mrms}
   export DCOMINnohrsc=${DCOMINnohrsc:-$DCOMROOT}
+  export EVSIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
 
-  if [ $VERIF_CASE = snowfall ]; then
-      np=$(date +"%H");         nq=$(($np%6));        nr=$(($np-$nq));
-      printf -v ns "%02d" $np;        printf -v nt "%02d" $nr;
-      export cyc=$nt;
-      export cycle=t${cyc}z
+  if [ $VERIF_CASE = grid2obs ] ; then
+      export VDATE=${VDATE:-$PDYm1}
+  fi
+  if [ $VERIF_CASE = snowfall ] || [ $VERIF_CASE = precip ]; then
+      export VDATE=${VDATE:-$PDYm2}
   fi
   
  # in production, the following will be set to the approp. COMOUT dir
@@ -87,7 +93,7 @@ if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
 
 elif [ $MODELNAME = sref ]; then
   export VDATE=${VDATE:-$PDYm2}
-
+  
   export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}/prep/$COMPONENT/$RUN
   export COMINsref=${COMINsref:-$(compath.py  sref/$sref_ver)}
   export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
@@ -108,8 +114,7 @@ fi
 
 # Execute the script.
    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
-
-export err=$?; err_chk
+   export err=$?; err_chk
 
 # Clean Up
 msg="JOB $job HAS COMPLETED NORMALLY."
