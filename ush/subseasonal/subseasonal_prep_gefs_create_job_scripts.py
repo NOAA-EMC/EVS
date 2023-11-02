@@ -97,6 +97,7 @@ if JOB_GROUP == 'retrieve_data':
             if write_job_cmds:
                 for cmd in retrieve_data_jobs_dict['commands']:
                     job.write(cmd+'\n')
+                    job.write('export err=$?; err_chk'+'\n')
             job.close()
         date_dt = date_dt + datetime.timedelta(days=1)
 

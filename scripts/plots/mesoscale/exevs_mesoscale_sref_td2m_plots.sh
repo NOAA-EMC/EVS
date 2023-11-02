@@ -1,5 +1,8 @@
 #!/bin/ksh
-
+#*******************************************************************************
+# Purpose: setup environment, paths, and run the sref Td 2m plotting python script
+# Last updated: 10/27/2023, Binbin Zhou Lynker@EMC/NCEP
+## ******************************************************************************
 set -x 
 
 cd $DATA
@@ -35,6 +38,9 @@ done
 export init_beg=$first_day
 export valid_beg=$first_day
 
+#*************************************************************************
+# Virtual link the  sref's stat data files of past 90 days
+#***********************************************************************
 n=0
 while [ $n -le $past_days ] ; do
   #hrs=`expr $n \* 24`
@@ -60,6 +66,9 @@ line_type='ctc'
 score_types='lead_average threshold_average'
 VAR='DPT2m'
 
+#*****************************************
+# Build a POE file to collect sub-jobs
+# ****************************************
 > run_all_poe.sh
 
 for stat in  ets fbias; do 
@@ -114,6 +123,9 @@ for stat in  ets fbias; do
 	     thresh=all_thresholds
 	  fi 
 
+	 #*********************
+	 # Build sub-jobs
+	 #*********************
          > run_${stat}.${score_type}.${valid_time}.${group}.${thresh}.sh  
 
         verif_type=conus_sfc
@@ -179,14 +191,19 @@ done #end of stats
 
 chmod +x run_all_poe.sh
 
-
+#***************************************************************************
+# Run the POE script in parallel or in sequence order to generate png files
+# **************************************************************************
 if [ $run_mpi = yes ] ; then
    mpiexec -np 80 -ppn 80 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
    ${DATA}/run_all_poe.sh
 fi
+export err=$?; err_chk
 
-
+#**************************************************
+# Change plot file names to meet the EVS standard
+#**************************************************
 cd $plot_dir
 
    var=dpt
@@ -241,11 +258,11 @@ tar -cvf evs.plots.sref.td2m.past${past_days}days.v${VDATE}.tar *.png
 
 
 if [ $SENDCOM="YES" ]; then
- cp  evs.plots.sref.td2m.past${past_days}days.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
+ cpreq  evs.plots.sref.td2m.past${past_days}days.v${VDATE}.tar  $COMOUTplots/.  
 fi
 
 if [ $SENDDBN = YES ] ; then
-   $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/evs.plots.sref.td2m.past${past_days}days.v${VDATE}.tar
+   $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.sref.td2m.past${past_days}days.v${VDATE}.tar
 fi
 
 

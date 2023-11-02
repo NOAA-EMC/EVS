@@ -1,5 +1,8 @@
 #!/bin/ksh
-
+#*******************************************************************************
+# Purpose: setup environment, paths, and run the sref precip plotting python script
+# Last updated: 10/27/2023, Binbin Zhou Lynker@EMC/NCEP
+# ******************************************************************************
 set -x 
 
 cd $DATA
@@ -35,6 +38,9 @@ done
 export init_beg=$first_day
 export valid_beg=$first_day
 
+#*************************************************************************
+# Virtual link the  sref's stat data files of past 90 days
+#**************************************************************************
 n=0
 while [ $n -le $past_days ] ; do
   #hrs=`expr $n \* 24`
@@ -60,6 +66,9 @@ export plot_dir=$DATA/out/precip/${valid_beg}-${valid_end}
 verif_case=precip
 verif_type=ccpa 
 
+#*****************************************
+# Build a POE file to collect sub-jobs
+# ****************************************
 > run_all_poe.sh
 
 VARs=APCP_06
@@ -145,6 +154,9 @@ elif [ $stats = fss ] ; then
          thresh_fcst=$thr
          thresh_obs=$thresh_fcst
 
+	 #*********************
+	 # Build sub-jobs
+	 #*********************
          > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh  
 
         echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${thresh}.${fcst_valid_hour}.sh
@@ -208,13 +220,19 @@ done #end of stats
 done # end of fcst_valid_hour
 chmod +x run_all_poe.sh
 
-
+#***************************************************************************
+# Run the POE script in parallel or in sequence order to generate png files
+# **************************************************************************
 if [ $run_mpi = yes ] ; then
    mpiexec -np 100 -ppn 100 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi
+export err=$?; err_chk
 
+#**************************************************
+# Change plot file names to meet the EVS standard
+#**************************************************
 cd $plot_dir
 
 for valid in 00z_03z 06z_09z 12z_15z 18z_21z ; do
@@ -263,12 +281,12 @@ tar -cvf evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar *.png
 
 
 if [ $SENDCOM="YES" ]; then
- cp evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar  $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/.  
+ cpreq evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar  $COMOUTplots/.  
 fi
 
 
 if [ $SENDDBN = YES ] ; then
-    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE/evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUTplots/evs.plots.sref.precip.past${past_days}days.v${VDATE}.tar
 fi
 
 
