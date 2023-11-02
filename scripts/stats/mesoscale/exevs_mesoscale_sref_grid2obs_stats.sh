@@ -21,12 +21,22 @@ export MET_CONFIG=${METPLUS_BASE}/parm/met_config
 export maskpath=$MASKS
 
 
-#******************************************************************************
+#***********************************************************************************
 # The method in ceiling and vis (cnv) job is to deal with the conditional mean
 #  (1) First average hits, false alarms, etc in the categoery table
-#      over all times to get averaged CTC
-#  (2) Then use METplus to generate the stat files based on the averaged
-#      CTC
+#      over all times to get averaged CTC (runevs_sref_cnv.sh)
+#  (2) After sref_cnv.sh is finished, run evs_sref_grid2obs.sh by using
+#        METplus to generate the stat files based on the averaged CTC
+#
+#For visibility and ceiling (c and v, or cnv), the computation of CTC mean metrics 
+#is tricky. Computation CTC  ensemble mean could be misleading in case of clear sky. 
+#In clear sky, there is no value for  cnv,  so the models define them to be very large 
+#arbitrary values. In this case, if first averaging CTC over forecast times and then 
+#averaging over members to get metrics (as current METplus does) could be wrong  
+#(e.g. got unexpected low ETS).  After discussing with Logan, we  decided that first  
+#averaging CTC among the members, then averaging over forecast times to get CTC
+#metrics. The results are much better. So for sref, first run cnv job. After it is
+#finished, run grid2obs job. In global_ens, both are combined together in grid2obs.
 #*****************************************************************************
 if [ $just_cnv = yes ] ; then
   $USHevs/mesoscale/evs_sref_cnv.sh
