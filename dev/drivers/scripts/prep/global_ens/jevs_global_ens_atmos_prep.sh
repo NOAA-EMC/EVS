@@ -4,13 +4,8 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=06:00:00
-#PBS -l place=vscatter,select=2:ncpus=64:mpiprocs=64:mem=500GB
+#PBS -l place=vscatter,select=1:ncpus=83:mem=350GB
 #PBS -l debug=true
-
-#Total 98 processes: 68(gefs_atmos) + 2(gefs_precip) + 18(cmce_atmos) + 2(cmce_precip) + 1 (ecme_atmos) + 1 (ecme_precip) + 2 (gefs_snow) + 2 (cmce_snow) + 1 (ecme_snow) + 1 (gefs_icec) 
-# In which 87 (68 gefs_atmos, + 18 cmce_atmos, + 1 ecme_atmos) are run in parrell, all prepcip, snow and icec are not 
-#Total 2x87=174 cpu cores,  cpu cores are assigned to 3 node
-#Completed in about 1hr 40min
 
 set -x
 export OMP_NUM_THREADS=1
