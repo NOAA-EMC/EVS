@@ -13,10 +13,6 @@ export run_mpi=${run_mpi:-'yes'}
 export stats=${stats:-'yes'}
 export gather=${gather:-'yes'}
 
-
-msg="$job HAS BEGUN"
-postmsg "$jlogfile" "$msg"
-
 export GRID2OBS_CONF=$PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}
 export MET_CONFIG=${METPLUS_BASE}/parm/met_config
 export maskpath=$MASKS
@@ -26,10 +22,4 @@ if [ $stats = yes ] ; then
  $USHevs/narre/evs_narre_stats.sh  
  export err=$?; err_chk
 fi
-
-
-msg="JOB $job HAS COMPLETED NORMALLY"
-postmsg "$jlogfile" "$msg"
-
-
 

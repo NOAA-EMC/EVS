@@ -31,12 +31,15 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_$STEP.sh
 
+export evs_ver=v1.0.0
+evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
+
 ############################################################
 # environment variables set
 ############################################################
 export envir=prod
 
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/evs/$evs_ver
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/$evs_ver_2d
 
 ############################################################
 # set up for email alerts of missing data
