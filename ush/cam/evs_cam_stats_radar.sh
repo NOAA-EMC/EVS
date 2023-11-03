@@ -182,7 +182,6 @@ done
 
 
 # Send missing data alert if any forecast files are missing
-#if [ -s $DATA/job${JOBNUM}_missing_fcst_list ]; then
 if [ $nfcst = 0 ]; then
    if [ $SENDMAIL = YES ]; then
       export subject="${DOM} ${MODELNAME} Data Missing for EVS ${COMPONENT}"

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # =============================================================================
 #
 # NAME: cam_check_input_data.py
@@ -476,7 +477,7 @@ if proceed:
                     unk_fnames.append(missing_fcst_files[i])
                     unk_pnames.append(missing_fcst_paths[i])
                 else:
-                    print(f"ERROR: Undefined data type for missing data file: {info[1]}"
+                    print(f"FATAL ERROR: Undefined data type for missing data file: {info[1]}"
                           + f"\nPlease edit the get_data_type() function in"
                           + f" USHevs/cam/cam_util.py")
                     sys.exit(1)
@@ -630,7 +631,7 @@ if proceed:
                     unk_fnames.append(missing_anl_files[i])
                     unk_pnames.append(missing_anl_paths[i])
                 else:
-                    print(f"ERROR: Undefined data type for missing data file: {info[1]}"
+                    print(f"FATAL ERROR: Undefined data type for missing data file: {info[1]}"
                           + f"\nPlease edit the get_data_type() function in"
                           + f" USHevs/cam/cam_util.py")
                     sys.exit(1)
@@ -823,7 +824,7 @@ if proceed:
                     unk_fnames.append(missing_gen_files[i])
                     unk_pnames.append(missing_gen_paths[i])
                 else:
-                    print(f"ERROR: Undefined data type for missing data file: {info[1]}"
+                    print(f"FATAL ERROR: Undefined data type for missing data file: {info[1]}"
                           + f"\nPlease edit the get_data_type() function in"
                           + f" USHevs/cam/cam_util.py")
                     sys.exit(1)

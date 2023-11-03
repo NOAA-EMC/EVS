@@ -119,10 +119,10 @@ i=1
       if [ $SENDCOM = YES ]; then
          mkdir -p $COMOUT/${modsys}.${IDATE}
          for FILE in $DATA/pcp_combine/${modsys}.${IDATE}/*; do
-            cp -v $FILE $COMOUT/${modsys}.${IDATE}
+            cpreq -v $FILE $COMOUT/${modsys}.${IDATE}
          done
          for FILE in $DATA/sspf/${modsys}.${IDATE}/*; do
-            cp -v $FILE $COMOUT/${modsys}.${IDATE}
+            cpreq -v $FILE $COMOUT/${modsys}.${IDATE}
          done
       fi
 

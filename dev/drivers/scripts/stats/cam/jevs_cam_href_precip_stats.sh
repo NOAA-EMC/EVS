@@ -7,15 +7,14 @@
 #PBS -l place=vscatter,select=1:ncpus=88:mem=10GB
 #PBS -l debug=true
 
+set -x 
+
 export OMP_NUM_THREADS=1
 
 ## 3x7 conus(ccpa) + 3x7 alaska(mrms) + 2 snow = 44 jobs 
-##
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 source $HOMEevs/versions/run.ver
-
-set -x 
 
 export NET=evs
 export STEP=stats
