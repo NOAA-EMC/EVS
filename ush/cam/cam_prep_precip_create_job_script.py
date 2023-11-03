@@ -65,7 +65,6 @@ if STEP == 'prep':
                                 f"if [ ! -d \"{COMOUTobs}\" ]; then mkdir \"{COMOUTobs}\";"
                                 + f" fi"
                             )
-                            #os.makedirs(COMOUTobs, exist_ok=True)
                             if int(VHOURm) > 18:
                                 VDATEmp1 = (
                                     VDATEHOURm + td(days=1)
@@ -93,7 +92,6 @@ if STEP == 'prep':
                                     + f" file does not exist: {infile} ..."
                                     + f" Continuing to the next valid datetime.\"; fi"
                                 )
-                                #shutil.copy(infile, COMOUTobs)
                         subtract_hours+=subtract_hours_inc
             elif OBSNAME == 'mrms':
                 for VHOUR in re.split(r'[\s,]+', VHOUR_LIST):
@@ -184,18 +182,18 @@ if STEP == 'prep':
                             )
                         subtract_hours+=subtract_hours_inc
             else:
-                print(f"ERROR: {OBSNAME} is not a valid reference data source")
+                print(f"FATAL ERROR: {OBSNAME} is not a valid reference data source")
                 sys.exit(1)
         else:
-            print(f"ERROR: {VERIF_CASE} is not a valid VERIF_CASE for"
+            print(f"FATAL ERROR: {VERIF_CASE} is not a valid VERIF_CASE for"
                   + f" cam_precip_prep.sh (please use 'precip')")
             sys.exit(1)
     else:
-        print(f"ERROR: {COMPONENT} is not a valid COMPONENT for"
+        print(f"FATAL ERROR: {COMPONENT} is not a valid COMPONENT for"
               + f" cam_precip_prep.sh (please use 'cam')")
         sys.exit(1)
 else:
-    print(f"ERROR: {STEP} is not a valid STEP for cam_precip_prep.sh (please"
+    print(f"FATAL ERROR: {STEP} is not a valid STEP for cam_precip_prep.sh (please"
           + f" use 'prep')")
     sys.exit(1)
 

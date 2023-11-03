@@ -324,7 +324,7 @@ def ti_calculate(input_dict_preserve):
         out_dict['init'] = input_dict['init']
 
         if 'valid' in input_dict.keys():
-            print("ERROR: Cannot specify both valid and init to time utility")
+            print("FATAL ERROR: Cannot specify both valid and init to time utility")
             return None
 
         # compute valid from init and lead if lead is not wildcard
@@ -354,7 +354,7 @@ def ti_calculate(input_dict_preserve):
         out_dict['da_init'] = input_dict['da_init']
 
         if 'valid' in input_dict.keys():
-            print("ERROR: Cannot specify both valid and da_init to time utility")
+            print("FATAL ERROR: Cannot specify both valid and da_init to time utility")
             return None
 
         # compute valid from da_init and offset
@@ -366,7 +366,7 @@ def ti_calculate(input_dict_preserve):
         else:
             out_dict['init'] = out_dict['valid'] - out_dict['lead']
     else:
-        print("ERROR: Need to specify valid, init, or da_init to time utility")
+        print("FATAl ERROR: Need to specify valid, init, or da_init to time utility")
         return None
 
     # calculate da_init from valid and offset

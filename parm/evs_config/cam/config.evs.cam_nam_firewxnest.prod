@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 ##---------------------------------------------------------------------------
 ##---------------------------------------------------------------------------
 ## NCEP EMC Verification System (EVS) - NAM_FIREWXNEST Atmospheric
@@ -29,11 +29,11 @@ export RUN_GRID2OBS_PLOTS="NO"
 export model_list="NAM_FIREWXNEST"
 ## OUTPUT DATA SETTINGS
 #OUTPUTROOT: base output directory
-export OUTPUTROOT="/lfs/h2/emc/ptmp/$USER/evs_cam"
+export OUTPUTROOT="$DATAROOT"
 ## DATE SETTINGS
 #start_date:       verification start date, format YYYYMMDD
 #end_date:         verification end date, format YYYYMMDD
-yday=$(date -d "24 hours ago" '+%Y%m%d')
+yday=$(finddate.sh $PDY d-1)
 export start_date=$yday
 export end_date=$yday
 ## METPLUS SETTINGS

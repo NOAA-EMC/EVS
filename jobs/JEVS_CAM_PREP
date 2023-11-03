@@ -5,6 +5,13 @@
 ########################################
 set -x
 
+
+##################################################
+# SENDMAIL - Send Email Alerts When Missing Data
+# SENDECF  - Flag Events on ecFLOW
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+##################################################
 export SENDMAIL=${SENDMAIL:-NO}
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-NO}
@@ -67,7 +74,7 @@ elif [ $VERIF_CASE = severe ] ; then
    export VDATE=${VDATE:-$PDYm7}
   
    # Set correct date for SPC report data (must be relative to VDATE) 
-   export REP_DATE=${REP_DATE:-$(date -d "$VDATE -1 day" +"%Y%m%d")}
+   export REP_DATE=$(finddate.sh $VDATE d-1)
 
    # Set correct date for SPC outlook data 
    export OTLK_DATE=${OTLK_DATE:-$PDYm1}
@@ -77,8 +84,7 @@ elif [ $VERIF_CASE = severe ] ; then
 
 else
 
-   echo "The provided VERIF_CASE, $VERIF_CASE, is not supported for the $COMPONENT $STEP step"
-   exit 1
+   err_exit "The provided VERIF_CASE, $VERIF_CASE, is not supported for the $COMPONENT $STEP step"
 
 fi
 
@@ -133,9 +139,6 @@ export err=$?; err_chk
 if [ -e "$pgmout" ]; then
    cat $pgmout
 fi
-
-msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$msg"
 
 if [ "$KEEPDATA" != "YES" ]; then
    cd $DATAROOT

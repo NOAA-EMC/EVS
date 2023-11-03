@@ -49,7 +49,6 @@ for vhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 
   else
      ccpa=$EVSINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${vhr}z.01h.hrap.conus.gb2
   fi
-  #echo $ccpa
 
   if [ ! -s $ccpa ] ; then
       missing=$((missing + 1 ))
@@ -88,7 +87,6 @@ for vhr in 00 03 06 09 12 15 18 21 ; do
   else
      ccpa=$EVSINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${vhr}z.03h.hrap.conus.gb2
   fi
-   #echo $ccpa
 
    if [ ! -s $ccpa ] ; then
          missing=$((missing + 1 ))
@@ -200,13 +198,11 @@ for obsv_cyc in 00 03 06 09 12 15 18 21 ; do
       href_mbrs=0
       for mb in 01 02 03 04 05 06 07 08 09 10 ; do 
         href=$COMINhref/href.${fday}/verf_g2g/href.m${mb}.t${fcyc}z.conus.f${fhr}
-        #echo $href
 	if [ -s $href ] ; then
            href_mbrs=$((href_mbrs+1))
         fi	    
       done
 
-      #echo fday=$fday fcyc=$fcyc fhr=$fhr href_mbrs=$href_mbrs
 
       if [ $href_mbrs -lt 4 ] ; then
         echo "HREF members = " $href_mbrs " which < 6, exit METplus execution !!!"
@@ -235,13 +231,11 @@ for obsv_cyc in 00 03 06 09 12 15 18 21 ; do
       href_mbrs=0
       for mb in 01 02 03 04 05 06 07 08 09 10 ; do 
         href=$COMINhref/href.${fday}/verf_g2g/href.m${mb}.t${fcyc}z.ak.f${fhr}
-        #echo $href
 	if [ -s $href ] ; then
            href_mbrs=$((href_mbrs+1))
         fi	    
       done
 
-      #echo fday=$fday fcyc=$fcyc fhr=$fhr href_mbrs=$href_mbrs
 
       if [ $href_mbrs -lt 4 ] ; then
         echo "HREF members = " $href_mbrs " which < 6, exit METplus execution !!!"
@@ -273,7 +267,6 @@ for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 2
        href_prod=0	      
        for  prod in mean prob eas pmmn lpmm avrg ; do 
          href=$COMINhref/href.${fday}/ensprod/href.t${fcyc}z.conus.${prod}.f${fhr}.grib2
-         #echo $href
 	 if [ -s $href ] ; then
            href_prod=$((href_prod+1))
 	 else
@@ -281,7 +274,6 @@ for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 2
         fi	    
        done
 
-       #echo fday=$fday fcyc=$fcyc fhr=$fhr href_prod=$href_prod
 
         if [ $href_prod -lt 6 ] ; then
           echo "HREF Products = " $href_prod " which < 6, some products are missing, exit METplus execution !!!"
@@ -315,7 +307,6 @@ for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 2
        href_prod=0	      
        for  prod in mean prob eas pmmn lpmm avrg ; do 
          href=$COMINhref/href.${fday}/ensprod/href.t${fcyc}z.ak.${prod}.f${fhr}.grib2
-         #echo $href
 	 if [ -s $href ] ; then
            href_prod=$((href_prod+1))
 	 else
@@ -323,7 +314,6 @@ for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 2
         fi	    
        done
 
-       #echo fday=$fday fcyc=$fcyc fhr=$fhr href_prod=$href_prod
 
         if [ $href_prod -lt 6 ] ; then
           echo "HREF Products = " $href_prod " which < 6, some products are missing, exit METplus execution !!!"

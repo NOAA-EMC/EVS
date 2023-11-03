@@ -40,8 +40,7 @@ if [ "$ACC" = "06" ]; then
     if [ "$NEST" = "conus" ]; then
         export OBS_LEV="A6"
     else
-        echo "The provided NEST, $NEST, is not supported for $MODELNAME"
-        exit 1
+        err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
     fi
     export OBS_THRESH="ge0.0254,ge0.0508,ge0.1016,ge0.2032,ge0.3048"
     export MODEL_PCP_COMBINE_METHOD="SUBTRACT"
@@ -55,15 +54,13 @@ elif [ "$ACC" = "24" ]; then
     if [ "$NEST" = "conus" ]; then
         export OBS_LEV="A24"
     else
-        echo "The provided NEST, $NEST, is not supported for $MODELNAME"
-        exit 1
+        err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
     fi
     export OBS_THRESH="ge0.0254,ge0.0508,ge0.1016,ge0.2032,ge0.3048"
     export MODEL_PCP_COMBINE_METHOD="SUBTRACT"
     export MODEL_PCP_COMBINE_COMMAND=""
 else
-    echo "The provided ACC, $ACC, is not supported for $MODELNAME"
-    exit 1
+    err_exit "The provided ACC, $ACC, is not supported for $MODELNAME"
 fi
 if [ "$BOOL_NBRHD" = True ]; then
     export OUTPUT_FLAG_NBRHD="STAT"
@@ -76,16 +73,14 @@ if [ "$BOOL_NBRHD" = True ]; then
         if [ "$OBSNAME" = "nohrsc" ]; then
             export VAR_NAME_LIST="WEASD"
         else
-            echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
-            exit 1
+            err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
         fi
         export MIN_IHOUR="00"
         export GRID="OBS"
         export MODEL_INPUT_TEMPLATE="hiresw.{init?fmt=%Y%m%d}/hiresw.t{init?fmt=%2H}z.arw_5km.f{lead?fmt=%2H}.conusmem2.grib2"
         export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G240_CONUS.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G240_CONUS_South.nc"
     else
-        echo "The provided NEST, $NEST, is not supported for $MODELNAME"
-        exit 1
+        err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
     fi
 else
     export OUTPUT_FLAG_NBRHD="NONE"
@@ -98,16 +93,14 @@ else
         if [ "$OBSNAME" = "nohrsc" ]; then
             export VAR_NAME_LIST="WEASD"
         else
-            echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
-            exit 1
+            err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
         fi
         export MIN_IHOUR="00"
         export GRID="G212"
         export MODEL_INPUT_TEMPLATE="hiresw.{init?fmt=%Y%m%d}/hiresw.t{init?fmt=%2H}z.arw_5km.f{lead?fmt=%2H}.conusmem2.grib2"
         export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G212_CONUS.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G212_CONUS_South.nc"
     else
-        echo "The provided NEST, $NEST, is not supported for $MODELNAME"
-        exit 1
+        err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
     fi
 fi
 
