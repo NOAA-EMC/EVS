@@ -119,10 +119,25 @@ for RESOLUTION in $resolutions ; do
 
 done
 
+#########################################
+#Cat'ing errfiles to stdout
+#########################################
+
+log_dir=$DATA/logs
+log_file_count=$(find $log_dir -type f |wc -l)
+if [[ $log_file_count -ne 0 ]]; then            
+	for log_file in $log_dir/*; do                                  
+		echo "Start: $log_file"
+		cat $log_file                                                                   
+		echo "End: $log_file"
+	done
+fi
+
+
 #####################################################################
 # GOOD RUN
 echo "********SCRIPT exevs_wafs_atmos_plots.sh $1 $2 COMPLETED NORMALLY on `date`"
-exit 0
+
 #####################################################################
 
 ############## END OF SCRIPT #######################
