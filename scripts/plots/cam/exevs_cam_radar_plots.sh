@@ -56,7 +56,7 @@ export LOG_DIR=${SAVE_DIR}/logs
 export OUTPUT_DIR=${SAVE_DIR}/${VERIF_CASE}/${eval_period}
 export IMG_HEADER=${NET}.${COMPONENT}
 
-export LOG_TEMPLATE="${LOG_DIR}/EVS_verif_plotting_job{njob}_`date '+%Y%m%d-%H%M%S'`_$$.out"
+export LOG_TEMPLATE="${LOG_DIR}/EVS_verif_plotting_job{njob}_$($NDATE)_$$.out"
 export LOG_LEVEL="DEBUG"
 
 export PYTHONDONTWRITEBYTECODE=1
@@ -195,7 +195,7 @@ if [ $SENDCOM = YES ]; then
    mkdir -p $COMOUT/${RUN}.${VDATE}
 
    if [ -s $tarfile ]; then
-      cp -v $tarfile $COMOUT/${RUN}.${VDATE}/
+      cpreq -v $tarfile $COMOUT/${RUN}.${VDATE}/
       if [ $SENDDBN = YES ]; then
           $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/${RUN}.${VDATE}/${tarfile}
       fi
