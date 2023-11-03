@@ -210,6 +210,7 @@ if [ $modnam = cmce ] ; then
     while [ $mbr -le $total ] ; do
       mb=$mbr
       typeset -Z2 mb
+      nfhrs=$fhr_beg
       while [ $nfhrs -le $fhr_end ] ; do
         h3=$nfhrs
         typeset -Z3 h3
@@ -403,13 +404,17 @@ if [ $modnam = gefs_apcp24h ] ; then
     export lead
     for ihour in $gens_ihour ; do
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
-       for lead in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384; do
-         if [ -s $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead}.grib2 ] ; then 	
-            ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_APCP24h.conf
+        typeset -a lead_arr
+        for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384; do
+         if [ -s $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 ] ; then 	
+            lead_arr[${#lead_arr[*]}+1]=${lead_chk}
          else
-            echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead}.grib2 does not exist"
+            echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 does not exist"
 	 fi
         done
+        lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
+        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_APCP24h.conf
+        unset lead_arr
       done
     done
     [[ $SENDCOM="YES" ]] && cpreq -v ${output_base}/*.nc $COMOUTgefs/.
@@ -451,13 +456,17 @@ if [ $modnam = cmce_apcp24h ] ; then
     export mb
     for ihour in $gens_ihour ; do
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ; do
-         for lead in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384; do
-           if [ -s $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.06h.f${lead}.grib2 ] ; then
-             ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstCMCE_APCP24h.conf
+         typeset -a lead_arr
+         for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384; do
+           if [ -s $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.06h.f${lead_chk}.grib2 ] ; then
+             lead_arr[${#lead_arr[*]}+1]=${lead_chk}
            else
-             echo "WARNING: $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.06h.f${lead}.grib2 does not exist"
+             echo "WARNING: $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.06h.f${lead_chk}.grib2 does not exist"
 	   fi
          done
+         lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
+         ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstCMCE_APCP24h.conf
+         unset lead_arr
       done
     done
     [[ $SENDCOM="YES" ]] && cpreq -v ${output_base}/*.nc $COMOUTcmce/.
@@ -474,13 +483,17 @@ if [ $modnam = ecme_apcp24h ] ; then
   for ihour in 00 12 ; do
      export output_base=${WORK}/precip/ecme_apcp24h.${ihour}
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40  41 42 43 44 45 46 47 48 49 50  ; do
-       for lead in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360; do
-         if [ -s $COMOUTecme/ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead}.grib1 ] ; then  
-	   ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstECME_APCP24h.conf
+       typeset -a lead_arr
+       for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360; do
+         if [ -s $COMOUTecme/ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead_chk}.grib1 ] ; then 
+           lead_arr[${#lead_arr[*]}+1]=${lead_chk} 
          else
-           echo "WARNING: $COMOUTecme/ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead}.grib1 does not exist"
+           echo "WARNING: $COMOUTecme/ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead_chk}.grib1 does not exist"
          fi
        done
+       lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
+       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstECME_APCP24h.conf
+       unset lead_arr
      done
   done
   [[ $SENDCOM="YES" ]] && cpreq -v ${output_base}/*.nc $COMOUTecme/.
@@ -520,15 +533,19 @@ if [ $modnam = gefs_snow24h ] ; then
    export snow
    for ihour in $gens_ihour ; do
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
-       for lead in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384; do
-         if [  -s $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead}.grib2 ] ; then
-           for snow in WEASD SNOD ; do
-             ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SNOW24h.conf
-           done
+       typeset -a lead_arr
+       for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384; do
+         if [  -s $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 ] ; then
+             lead_arr[${#lead_arr[*]}+1]=${lead_chk}
          else
-             echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead}.grib2 does not exist"
+             echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 does not exist"
          fi
        done
+       lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
+       for snow in WEASD SNOD ; do
+           ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SNOW24h.conf
+       done
+       unset lead_arr
      done
    done
    [[ $SENDCOM="YES" ]] && cpreq -v $output_base/*.nc $COMOUTgefs/.
@@ -547,15 +564,19 @@ if [ $modnam = cmce_snow24h ] ; then
   export lead
   for ihour in $gens_ihour ; do
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 ; do
-       for lead in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384; do
-         if [  -s $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.f${lead}.grib2 ] ; then
-           for snow in WEASD SNOD ; do
-             ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SNOW24h.conf
-           done
+       typeset -a lead_arr
+       for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384; do
+         if [  -s $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 ] ; then
+           lead_arr[${#lead_arr[*]}+1]=${lead_chk}
          else
-           echo "WARNING: $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.f${lead}.grib2 does not exist"
+           echo "WARNING: $COMOUTcmce/cmce.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 does not exist"
          fi
        done
+       lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
+       for snow in WEASD SNOD ; do
+           ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SNOW24h.conf
+       done
+       unset lead_arr
      done
   done
   [[ $SENDCOM="YES" ]] && cp $output_base/*.nc $COMOUTcmce/.
@@ -573,13 +594,17 @@ if [ $modnam = ecme_snow24h ] ; then
   for ihour in 00 12 ; do
      export output_base=${WORK}/snow/ecme_snow24h.${ihour}
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 ; do
-       for lead in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360; do
-         if [  -s $COMOUTecme/ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead}.grib1 ] ; then
-           ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstECME_SNOW24h.conf
+       typeset -a lead_arr
+       for lead_chk in 024 036 048 060 072 084 096 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360; do
+         if [  -s $COMOUTecme/ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead_chk}.grib1 ] ; then
+           lead_arr[${#lead_arr[*]}+1]=${lead_chk}
          else
-           echo "WARNING: $COMOUTecme/ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead}.grib1 does not exist"
+           echo "WARNING: $COMOUTecme/ecme.ens${mb}.t${ihour}z.grid4_apcp.f${lead_chk}.grib1 does not exist"
          fi
        done
+       lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
+       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstECME_SNOW24h.conf
+       unset lead_arr
      done
   done
   [[ $SENDCOM="YES" ]] && cp $output_base/ecme*.nc $COMOUTecme
@@ -652,13 +677,17 @@ if [ $modnam = gefs_icec24h ] ; then
     export lead
     for ihour in 00 ; do
      for mb in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ; do
-       for lead in 024 048 072 096 120 144 168 192 216 240 264 288 312 336 360 384; do
-         if [  -s $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead}.grib2 ] ; then
-           ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_ICEC.conf
+       typeset -a lead_arr
+       for lead_chk in 024 048 072 096 120 144 168 192 216 240 264 288 312 336 360 384; do
+         if [  -s $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 ] ; then
+           lead_arr[${#lead_arr[*]}+1]=${lead_chk}
          else
-           echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead}.grib2 does not exist"
+           echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 does not exist"
          fi
        done
+       lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
+       ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_ICEC.conf
+       unset lead_arr
      done
     done
     [[ $SENDCOM="YES" ]] && cpreq -v $output_base/gefs*icec*.nc $COMOUTgefs/.
@@ -708,11 +737,17 @@ if [ $modnam = gefs_sst24h ] ; then
          elif [ $ihour = 12 ] ; then
            export leads='036 060 084 108 132 156 180 204 228 252 276 300 324 348 372'
          fi
-         for lead in $leads; do
-           if [  -s $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead}.grib2 ] ; then
-             ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SST24h.conf
+         typeset -a lead_arr
+         for lead_chk in $leads; do
+           if [  -s $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 ] ; then
+             lead_arr[${#lead_arr[*]}+1]=${lead_chk}
+           else
+             echo "WARNING: $COMOUTgefs/gefs.ens${mb}.t${ihour}z.grid3.f${lead_chk}.grib2 does not exist"
 	   fi
-         done 
+         done
+         lead=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
+         ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstGEFS_SST24h.conf
+         unset lead_arr
        done
    done
    [[ $SENDCOM="YES" ]] && cpreq -v $output_base/gefs*sst*.nc $COMOUTgefs
