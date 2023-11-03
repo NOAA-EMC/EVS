@@ -72,5 +72,17 @@ if [ $SENDCOM = YES ] ; then
     # COMOUTsmall
     mv $STATSOUTsmall/* $COMOUTsmall/.
 fi
+#########################################
+#Cat'ing errfiles to stdout
+#########################################
 
-exit 0
+log_dir=$DATA/METplus_output/logs
+log_file_count=$(find $log_dir -type f |wc -l)
+if [[ $log_file_count -ne 0 ]]; then
+	for log_file in $log_dir/*; do
+		echo "Start: $log_file"
+		cat $log_file
+		echo "End: $log_file"
+	done
+fi
+
