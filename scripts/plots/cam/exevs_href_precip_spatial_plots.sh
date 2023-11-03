@@ -63,6 +63,7 @@ mkdir -p $target
 ln -sf $source/ccpa24h.t12z.G240.nc  $target/ccpa_precip_24hrAccum_valid${VDATE}12.nc
 
 python $USHevs/cam/ush_href_plot_py/href_atmos_plots.py
+export err=$?; err_chk
 
 cd $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/precip/SL1L2_FBAR_24hrAccumMaps_CONUS_precip_spatial_map/images
 
@@ -88,7 +89,7 @@ for log_dir in $log_dirs; do
 done
 
 if [ $SENDCOM="YES" ]; then
- cp evs.plots.href.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
+ cpreq evs.plots.href.precip.spatial.map.v${VDATE}.tar  $COMOUT/.  
 fi
 
 if [ $SENDDBN = YES ] ; then

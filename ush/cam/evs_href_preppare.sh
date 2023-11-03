@@ -171,13 +171,11 @@ if [ $data = apcp24h_alaska ] ; then
 
  export fhr
 
- #for fhr in 24 30 36 42 48 ; do
  for fhr in 30 ; do  #since Alaska run only at 06Z, only 30fhr fcst can be validated at 12Z 
 
    fcst_time=`$NDATE -$fhr $obsv_vcyc`
    fyyyymmdd=${fcst_time:0:8}
    export fcyc=${fcst_time:8:2} #Alaska only has 06 cycle run 
-   #export fcyc=06  #Alaska only has 06 cycle run
 
    mkdir -p href.${fyyyymmdd}
 
@@ -202,9 +200,9 @@ if [ $data = prepbufr ] ; then
  mkdir -p $WORK/prepbufr.$vday
  export output_base=${WORK}/pb2nc
 
- if [ $domain = CONUS ] ; then
+ if [ "$domain" = "CONUS" ] ; then
    grids=G227
- elif [ $domain = Alaska ] ; then
+ elif [ "$domain" = "Alaska" ] ; then
    grids=G198
  else
    grids="G227 G198"
