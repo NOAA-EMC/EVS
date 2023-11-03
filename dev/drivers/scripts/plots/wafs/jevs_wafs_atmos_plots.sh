@@ -31,6 +31,9 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_$STEP.sh
 
+export evs_ver=v1.0.0
+evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
+
 ############################################################
 # environment variables set
 ############################################################
@@ -42,7 +45,7 @@ export COMPONENT=wafs
 export RUN=atmos
 export VERIF_CASE=grid2grid
 
-export COMIN=${COMIN:-/lfs/h2/emc/vpppg/noscrub/$USER/evs/$evs_ver}
+export COMIN=${COMIN:-/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/$evs_ver_2d}
 export COMROOT=/lfs/h2/emc/ptmp/$USER
 
 export USH_DIR=$HOMEevs/ush/$COMPONENT

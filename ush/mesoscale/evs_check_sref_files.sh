@@ -1,12 +1,17 @@
 #!/bin/ksh
-
+#**************************************************************************
+#  Purpose: check the required input forecast and validation data files
+#           for sref stat jobs
+#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#************************************************************************
+#
 set -x
 
-typeset -Z2 cyc
+typeset -Z2 vhr
 
 missing=0 
-for cyc in 00 06 12 18 ; do
-  if [ ! -s $COMINobsproc/gfs.${vday}/${cyc}/atmos/gfs.t${cyc}z.prepbufr ] ; then
+for vhr in 00 06 12 18 ; do
+  if [ ! -s $COMINobsproc/gfs.${vday}/${vhr}/atmos/gfs.t${vhr}z.prepbufr ] ; then
     missing=$((missing + 1 ))
   fi
 done
@@ -22,24 +27,24 @@ fi
 missing=0
 DAY1=`$NDATE +24 ${vday}12`
 next=`echo ${DAY1} | cut -c 1-8`
-for cyc in 00 03 06 09 12 15 18 21 ; do
-  if [ $cyc = 00 ] ; then
-    cyc_dir=00
+for vhr in 00 03 06 09 12 15 18 21 ; do
+  if [ $vhr = 00 ] ; then
+    vhr_dir=00
     init=$vday
-  elif [ $cyc = 03 ] || [ $cyc = 06 ] ; then
-    cyc_dir=06
+  elif [ $vhr = 03 ] || [ $vhr = 06 ] ; then
+    vhr_dir=06
     init=$vday
-  elif [ $cyc = 09 ] || [ $cyc = 12 ] ; then
-    cyc_dir=12
+  elif [ $vhr = 09 ] || [ $vhr = 12 ] ; then
+    vhr_dir=12
     init=$vday
-  elif [ $cyc = 15 ] || [ $cyc = 18 ] ; then
-    cyc_dir=18
+  elif [ $vhr = 15 ] || [ $vhr = 18 ] ; then
+    vhr_dir=18
     init=$vday
-  elif [ $cyc = 21 ] ; then
-    cyc_dir=00
+  elif [ $vhr = 21 ] ; then
+    vhr_dir=00
     init=$next
   fi	      
-  ccpa=$COMINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${cyc}z.03h.hrap.conus.gb2
+  ccpa=$COMINccpa/ccpa.${init}/${vhr_dir}/ccpa.t${vhr}z.03h.hrap.conus.gb2
   echo $ccpa
 
   if [ ! -s $ccpa ] ; then
@@ -58,25 +63,25 @@ fi
 
 
 
-typeset -Z2 fcyc
+typeset -Z2 fvhr
 
-for cyc in  00 06 12 18 ; do #SREF grid2obs validation is by gfs prepbufr
-	                     #So validation cyc is at 00 06 12 and 18Z
+for vhr in  00 06 12 18 ; do #SREF grid2obs validation is by gfs prepbufr
+	                     #So validation vhr is at 00 06 12 and 18Z
 
-  obsv_cyc=${vday}${cyc}
+  obsv_vhr=${vday}${vhr}
   typeset -Z2 fhr
   
   fhr=03
   while [ $fhr -le 84 ] ; do
 
-    fcst_time=`$NDATE -$fhr $obsv_cyc`
+    fcst_time=`$NDATE -$fhr $obsv_vhr`
     fday=${fcst_time:0:8}
-    fcyc=${fcst_time:8:2}
+    fvhr=${fcst_time:8:2}
 
     sref_mbrs=0
     for model in arw nmb ; do
       for mb in n1 n2 n3 n4 n5 n6 p1 p2 p3 p4 p5 p6 ctl ; do 
-        sref=$COMINsref/sref.${fday}/${fcyc}/pgrb/sref_${model}.t${fcyc}z.pgrb212.${mb}.f${fhr}.grib2
+        sref=$COMINsref/sref.${fday}/${fvhr}/pgrb/sref_${model}.t${fvhr}z.pgrb212.${mb}.f${fhr}.grib2
         echo $sref
 	if [ -s $sref ] ; then
            sref_mbrs=$((sref_mbrs+1))
