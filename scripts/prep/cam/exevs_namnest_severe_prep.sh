@@ -65,8 +65,7 @@ elif [ $vhr -eq 18 ]; then
    fhr_end1=42
 
 else
-   echo "Current vhr is unsupported"
-   exit 0
+   err_exit "Current vhr is unsupported"
 
 fi
 
@@ -136,10 +135,10 @@ i=1
       if [ $SENDCOM = YES ]; then
          mkdir -p $COMOUT/${modsys}.${IDATE}
          for FILE in $DATA/pcp_combine/${modsys}.${IDATE}/*; do
-            cp -v $FILE $COMOUT/${modsys}.${IDATE}
+            cpreq -v $FILE $COMOUT/${modsys}.${IDATE}
          done
          for FILE in $DATA/sspf/${modsys}.${IDATE}/*; do
-            cp -v $FILE $COMOUT/${modsys}.${IDATE}
+            cpreq -v $FILE $COMOUT/${modsys}.${IDATE}
          done
       fi
 

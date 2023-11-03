@@ -101,12 +101,6 @@ export STAT_OUTPUT_BASE_TEMPLATE="${NET}.stats.{MODEL}.${RUN}.${VERIF_CASE}.v{va
 export LOG_TEMPLATE="${SAVE_DIR}/logs/EVS_plotting_job_`date '+%Y%m%d-%H%M%S'`_$$.out"
 export LOG_LEVEL="DEBUG"
 
-# Version of MET listed in the metplus .stat files used to create graphics
-
-# Will use statistics for all comma-separated models.  Case-insensitive by default, but names must 
-# match the model naming convention in ${OUTPUT_BASE_DIR}
-##export MODEL="$MODELNAME"
-
 # Will use valid or init datetimes based on the setting below. Options are "VALID" or "INIT"
 export DATE_TYPE="$datetyp"
 
@@ -161,4 +155,5 @@ export CONFIDENCE_INTERVALS="False"
 # valid_hour_average.py}
 python $USH_DIR/${plottyp}_average.py
 
-exit 0
+export err=$?
+exit $err

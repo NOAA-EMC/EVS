@@ -20,7 +20,7 @@ export FCST_LEAD=$5
 export JOBNUM=$6
 export job_name="job${JOBNUM}"
 
-export LOG_TEMPLATE="${LOG_DIR}/EVS_verif_plotting_job${JOBNUM}_`date '+%Y%m%d-%H%M%S'`_$$.out"
+export LOG_TEMPLATE="${LOG_DIR}/EVS_verif_plotting_job${JOBNUM}_$($NDATE)_$$.out"
 
 
 ###################################################################
