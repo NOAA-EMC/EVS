@@ -117,7 +117,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     elif isinstance(flead, np.int):
         df = df[df['LEAD_HOURS'] == flead]
     else:
-        e1 = f"Invalid forecast lead: \'{flead}\'"
+        e1 = f"FATAL ERROR: Invalid forecast lead: \'{flead}\'"
         e2 = f"Please check settings for forecast leads."
         logger.error(e1)
         logger.error(e2)
@@ -140,7 +140,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
             widths = [1 for p in interp_pts]
         else:
             error_string = (
-                f"Unknown INTERP_MTHD used to compute INTERP_PNTS: {interp_shape}."
+                f"FATAL ERROR: Unknown INTERP_MTHD used to compute INTERP_PNTS: {interp_shape}."
                 + f" Check the INTERP_MTHD column in your METplus stats files."
                 + f" INTERP_MTHD must have either \"SQUARE\" or \"CIRCLE\""
                 + f" in the name"
@@ -166,7 +166,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
             df = df[df['INTERP_PNTS'] == widths]
         else:
             error_string = (
-                f"Invalid interpolation points entry: \'{interp_pts}\'\n"
+                f"FATAL ERROR: Invalid interpolation points entry: \'{interp_pts}\'\n"
                 + f"Please check settings for interpolation points."
             )
             logger.error(error_string)
@@ -184,13 +184,13 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                     opt_letter = requested_obs_thresh_letter[0][:2]
                     break
                 else:
-                    e = ("Threshold operands do not match among all requested"
+                    e = ("FATAL ERROR: Threshold operands do not match among all requested"
                          + f" obs thresholds.")
                     logger.error(e)
                     logger.error("Quitting ...")
                     raise ValueError(e+"\nQuitting ...")
         if not symbol_found:
-            e = "None of the requested obs thresholds contain a valid symbol."
+            e = "FATAL ERROR: None of the requested obs thresholds contain a valid symbol."
             logger.error(e)
             logger.error("Quitting ...")
             raise ValueError(e+"\nQuitting ...")
@@ -239,13 +239,13 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                     opt_letter = requested_fcst_thresh_letter[0][:2]
                     break
                 else:
-                    e = ("Threshold operands do not match among all requested"
+                    e = ("FATAL ERROR: Threshold operands do not match among all requested"
                          + f" fcst thresholds.")
                     logger.error(e)
                     logger.error("Quitting ...")
                     raise ValueError(e+"\nQuitting ...")
         if not symbol_found:
-            e = "None of the requested fcst thresholds contain a valid symbol."
+            e = "FATAL ERROR: None of the requested fcst thresholds contain a valid symbol."
             logger.error(e)
             logger.error("Quitting ...")
             raise ValueError(e+"\nQuitting ...")
@@ -387,7 +387,6 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                 ci_output = (
                     ci_output
                     .reindex(df_aggregated.index)
-                    #.reindex(ci_output.index)
                 )
                 df_aggregated[str(stat).upper()+'_BLERR'] = ci_output[
                     'CI_LOWER'
@@ -415,13 +414,11 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
             df_aggregated, values='COUNTS', columns='MODEL',
             index='LEAD_HOURS'
         )
-    #pivot_metric1 = pivot_metric1.dropna() 
     if metric2_name is not None:
         pivot_metric2 = pd.pivot_table(
             df_aggregated, values=str(metric2_name).upper(), columns='MODEL', 
             index='LEAD_HOURS'
         )
-        #pivot_metric2 = pivot_metric2.dropna() 
     if confidence_intervals:
         pivot_ci_lower1 = pd.pivot_table(
             df_aggregated, values=str(metric1_name).upper()+'_BLERR',
@@ -974,7 +971,6 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         bbox_to_anchor=(0.5, -0.08), ncol=4, frameon=True, numpoints=2, 
         borderpad=.8, labelspacing=2., columnspacing=3., handlelength=3., 
         handletextpad=.4, borderaxespad=.5) 
-    #fig.subplots_adjust(bottom=.2, wspace=0, hspace=0)
     fig.subplots_adjust(bottom=.15, wspace=0, hspace=0)
     fig.subplots_adjust(top=0.85)
     ax.grid(
@@ -998,7 +994,6 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
             xytext=(-50, 21), textcoords='offset points', va='top', 
             fontsize=11, color='dimgrey', ha='center'
         )
-        #fig.subplots_adjust(top=.9)
         fig.subplots_adjust(top=.85)
 
     # Title
@@ -1128,7 +1123,6 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
               + f'{date_start_string} to {date_end_string}')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
-        #title_pad=40
         title_pad=30
     else:
         title_pad=None
@@ -1170,15 +1164,8 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
     # Saving
     models_savename = '_'.join([str(model) for model in model_list])
     if len(date_hours) <= 8: 
-        #date_hours_savename = '_'.join([
-        #    f'{date_hour:02d}Z' for date_hour in date_hours
-        #])
         date_hours_savename='all_times'
     else:
-        #date_hours_savename = '-'.join([
-        #    f'{date_hour:02d}Z' 
-        #    for date_hour in [date_hours[0], date_hours[-1]]
-        #])
         date_hours_savename='all_times'
     date_start_savename = date_range[0].strftime('%Y%m%d')
     date_end_savename = date_range[1].strftime('%Y%m%d')
@@ -1257,7 +1244,7 @@ def main():
         date_hours = INIT_HOURS
         date_type_string = 'Initialization'
     else:
-        e = (f"Invalid DATE_TYPE: {str(date_type).upper()}. Valid values are"
+        e = (f"FATAL ERROR: Invalid DATE_TYPE: {str(date_type).upper()}. Valid values are"
              + f" VALID or INIT")
         logger.error(e)
         raise ValueError(e)
@@ -1344,7 +1331,7 @@ def main():
     elif len(METRICS) > 1:
         metrics = METRICS[:2]
     else:
-        e = (f"Received no list of metrics.  Check that, for the METRICS"
+        e = (f"FATAL ERROR: Received no list of metrics.  Check that, for the METRICS"
              + f" setting, a comma-separated string of at least one metric is"
              + f" provided")
         logger.error(e)
@@ -1358,11 +1345,11 @@ def main():
     num=0
     e = ''
     if str(VERIF_CASETYPE).lower() not in list(reference.case_type.keys()):
-        e = (f"The requested verification case/type combination is not valid:"
+        e = (f"FATAL ERROR: The requested verification case/type combination is not valid:"
              + f" {VERIF_CASETYPE}")
     elif str(LINE_TYPE).upper() not in list(
             reference.case_type[str(VERIF_CASETYPE).lower()].keys()):
-        e = (f"The requested line_type is not valid for {VERIF_CASETYPE}:"
+        e = (f"FATAL ERROR: The requested line_type is not valid for {VERIF_CASETYPE}:"
              + f" {LINE_TYPE}")
     else:
         case_specs = (
@@ -1376,7 +1363,7 @@ def main():
         raise ValueError(e+"\nQuitting ...")
     if (str(INTERP).upper()
             not in case_specs['interp'].replace(' ','').split(',')):
-        e = (f"The requested interp method is not valid for the"
+        e = (f"FATAL ERROR: The requested interp method is not valid for the"
              + f" requested case type ({VERIF_CASETYPE}) and"
              + f" line_type ({LINE_TYPE}): {INTERP}")
         logger.error(e)
@@ -1387,7 +1374,7 @@ def main():
             if (str(metric).lower()
                     not in case_specs['plot_stats_list']
                     .replace(' ','').split(',')):
-                e = (f"The requested metric is not valid for the"
+                e = (f"FATAL ERROR: The requested metric is not valid for the"
                      + f" requested case type ({VERIF_CASETYPE}) and"
                      + f" line_type ({LINE_TYPE}): {metric}")
                 logger.error(e)
@@ -1445,7 +1432,7 @@ def main():
         plot_group = var_specs['plot_group']
         for l, fcst_level in enumerate(FCST_LEVELS):
             if len(FCST_LEVELS) != len(OBS_LEVELS):
-                e = ("FCST_LEVELS and OBS_LEVELS must be lists of the same"
+                e = ("FATAL ERROR: FCST_LEVELS and OBS_LEVELS must be lists of the same"
                      + f" size")
                 logger.error(e)
                 logger.error("Quitting ...")

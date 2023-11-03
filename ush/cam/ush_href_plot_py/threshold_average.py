@@ -129,7 +129,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         frange_save_string = f'F{flead:02d}'
         df = df[df['LEAD_HOURS'] == flead]
     else:
-        e1 = f"Invalid forecast lead: \'{flead}\'"
+        e1 = f"FATAL ERROR: Invalid forecast lead: \'{flead}\'"
         e2 = f"Please check settings for forecast leads."
         logger.error(e1)
         logger.error(e2)
@@ -157,7 +157,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
             widths = [1 for p in interp_pts]
         else:
             error_string = (
-                f"Unknown INTERP_MTHD used to compute INTERP_PNTS: {interp_shape}."
+                f"FATAL ERROR: Unknown INTERP_MTHD used to compute INTERP_PNTS: {interp_shape}."
                 + f" Check the INTERP_MTHD column in your METplus stats files."
                 + f" INTERP_MTHD must have either \"SQUARE\" or \"CIRCLE\""
                 + f" in the name"
@@ -183,7 +183,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
             df = df[df['INTERP_PNTS'] == widths]
         else:
             error_string = (
-                f"Invalid interpolation points entry: \'{interp_pts}\'\n"
+                f"FATAL ERROR: Invalid interpolation points entry: \'{interp_pts}\'\n"
                 + f"Please check settings for interpolation points."
             )
             logger.error(error_string)
@@ -199,13 +199,13 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
                 symbol_found = True
                 break
             else:
-                e = ("Threshold operands do not match among all requested"
+                e = ("FATAL ERROR: Threshold operands do not match among all requested"
                     + f" thresholds.")
                 logger.error(e)
                 logger.error("Quitting ...")
                 raise ValueError(e+"\nQuitting ...")
     if not symbol_found:
-        e = "None of the requested thresholds contain a valid symbol."
+        e = "FATAL ERROR: None of the requested thresholds contain a valid symbol."
         logger.error(e)
         logger.error("Quitting ...")
         raise ValueError(e+"\nQuitting ...")
@@ -441,7 +441,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         if sample_equalization:
             pivot_counts = pivot_counts[pivot_counts.index.isin(indices_in_common)]
     units = df['FCST_UNITS'].tolist()[0]
-    #pivot_metric = 
     x_vals = pivot_metric.index.astype(float).tolist()
     if units in reference.unit_conversions:
         x_vals = reference.unit_conversions[units]['formula'](x_vals)
@@ -574,8 +573,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         np.digitize(len(xtick_labels), number_of_ticks_dig) + 2
     )/2.)*2
     xtick_labels_with_blanks = ['' for item in xtick_labels]
-    #for i, item in enumerate(xtick_labels[::int(show_xtick_every)]):
-    #     xtick_labels_with_blanks[int(show_xtick_every)*i] = item
      
     replace_xticks = [
         xtick for xtick in xticks 
@@ -599,9 +596,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
     xtick_labels_with_blanks = np.concatenate((
         res_xlabels, add_labels
     ))[xticks_argsort]
-    #xticks_argsort = np.argsort(x_vals.tolist())
-    #xticks = np.array(x_vals.tolist())[xticks_argsort]
-    #xtick_labels_with_blanks = np.array(add_labels)[xticks_argsort]
     res_diff = np.diff(
         [xtick for x, xtick in enumerate(xticks) if xtick_labels_with_blanks[x]]
     )
@@ -621,6 +615,10 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         for y in [-5,-4,-3,-2,-1,0,1,2,3,4,5]
     ]).flatten()
     round_to_nearest_categories = y_range_categories/20.
+    if math.isinf(y_min):
+        y_min = y_min_limit
+    if math.isinf(y_max):
+        y_max = y_max_limit
     y_range = y_max-y_min
     round_to_nearest =  round_to_nearest_categories[
         np.digitize(y_range, y_range_categories[:-1])
@@ -790,7 +788,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
               + f'{date_start_string} to {date_end_string}, {frange_string}')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
-        #title_pad=40
         title_pad=30
     else:
         title_pad=None
@@ -861,7 +858,11 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         f'{str(time_period_savename).lower()}'
     )
     if not os.path.isdir(save_subdir):
-        os.makedirs(save_subdir)
+        try:
+            os.makedirs(save_subdir)
+        except FileExistsError as e:
+            logger.warning(f"Several processes are making {save_subdir} at "
+                           + f"the same time. Passing")
     save_path = os.path.join(save_subdir, save_name+'.png')
     fig.savefig(save_path, dpi=dpi)
     logger.info(u"\u2713"+f" plot saved successfully as {save_path}")
@@ -912,7 +913,7 @@ def main():
         date_hours = INIT_HOURS
         date_type_string = 'Initialization'
     else:
-        e = (f"Invalid DATE_TYPE: {str(date_type).upper()}. Valid values are"
+        e = (f"FATAL ERROR: Invalid DATE_TYPE: {str(date_type).upper()}. Valid values are"
              + f" VALID or INIT")
         logger.error(e)
         raise ValueError(e)
@@ -1004,11 +1005,11 @@ def main():
     num=0
     e = ''
     if str(VERIF_CASETYPE).lower() not in list(reference.case_type.keys()):
-        e = (f"The requested verification case/type combination is not valid:"
+        e = (f"FATAL ERROR: The requested verification case/type combination is not valid:"
              + f" {VERIF_CASETYPE}")
     elif str(LINE_TYPE).upper() not in list(
             reference.case_type[str(VERIF_CASETYPE).lower()].keys()):
-        e = (f"The requested line_type is not valid for {VERIF_CASETYPE}:"
+        e = (f"FATAL ERROR: The requested line_type is not valid for {VERIF_CASETYPE}:"
              + f" {LINE_TYPE}")
     else:
         case_specs = (
@@ -1022,7 +1023,7 @@ def main():
         raise ValueError(e+"\nQuitting ...")
     if (str(INTERP).upper()
            not in case_specs['interp'].replace(' ','').split(',')):
-        e = (f"The requested interp method is not valid for the"
+        e = (f"FATAL ERROR: The requested interp method is not valid for the"
              + f" requested case type ({VERIF_CASETYPE}) and"
              + f" line_type ({LINE_TYPE}): {INTERP}")
         logger.error(e)
@@ -1032,7 +1033,7 @@ def main():
         if (str(metric).lower()
                 not in case_specs['plot_stats_list']
                 .replace(' ','').split(',')):
-            e = (f"The requested metric is not valid for the"
+            e = (f"FATAL ERROR: The requested metric is not valid for the"
                  + f" requested case type ({VERIF_CASETYPE}) and"
                  + f" line_type ({LINE_TYPE}): {metric}")
             logger.error(e)
@@ -1080,7 +1081,7 @@ def main():
         plot_group = var_specs['plot_group']
         for l, fcst_level in enumerate(FCST_LEVELS):
             if len(FCST_LEVELS) != len(OBS_LEVELS):
-                e = ("FCST_LEVELS and OBS_LEVELS must be lists of the same"
+                e = ("FATAL ERROR: FCST_LEVELS and OBS_LEVELS must be lists of the same"
                      + f" size")
                 logger.error(e)
                 logger.error("Quitting ...")

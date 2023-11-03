@@ -41,6 +41,7 @@ while [ $n -le $past_days ] ; do
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
   $USHevs/cam/evs_get_href_stat_file_link_plots.sh $day "$model_list"
+  export err=$?; err_chk
   n=$((n+1))
 done 
 
@@ -295,7 +296,7 @@ fi
 
 
 if [ $SENDCOM="YES" ]; then
- cp evs.plots.href.profile.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
+ cpreq evs.plots.href.profile.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
 fi
 
 if [ $SENDDBN = YES ] ; then

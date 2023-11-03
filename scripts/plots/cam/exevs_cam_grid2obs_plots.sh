@@ -17,36 +17,25 @@ export njob=1
 source $config
 # Check User's Configuration Settings
 python $USHevs/cam/cam_check_settings.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran cam_check_settings.py"
-echo
+export err=$?; err_chk
 
 # Create Output Directories
 python $USHevs/cam/cam_create_output_dirs.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran cam_create_output_dirs.py"
+export err=$?; err_chk
 
 # Check For Restart Files
 python ${USHevs}/cam/cam_production_restart.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran ${USHevs}/cam/cam_production_restart.py"
+export err=$?; err_chk
 
 # Create Job Script 
 python $USHevs/cam/cam_plots_grid2obs_create_job_scripts.py
-status=$?
-[[ $status -ne 0 ]] && exit $status
-[[ $status -eq 0 ]] && echo "Successfully ran cam_plots_grid2obs_create_job_scripts.py"
+export err=$?; err_chk
 export njob=$((njob+1))
 
 # Create POE Job Scripts
 if [ $USE_CFP = YES ]; then
     python $USHevs/cam/cam_plots_grid2obs_create_poe_job_scripts.py
-    status=$?
-    [[ $status -ne 0 ]] && exit $status
-    [[ $status -eq 0 ]] && echo "Successfully ran cam_plots_grid2obs_create_poe_job_scripts.py"
+    export err=$?; err_chk
 fi
 
 # Run All CAM grid2obs/plots Jobs
@@ -66,8 +55,7 @@ if [ $USE_CFP = YES ]; then
             export SLURM_KILL_BAD_EXIT=0
             launcher="srun --export=ALL --multi-prog"
         else
-            echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-            exit 1    
+            err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
         fi
         $launcher $MP_CMDFILE
         nc=$((nc+1))
@@ -101,7 +89,7 @@ fi
 #all commands to copy output files into the correct EVS COMOUT directory
 if [ $SENDCOM = YES ]; then
     find ${DATA}/${VERIF_CASE}/out/*/*/*.png -type f -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar -T -
-    cp ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar ${COMOUTplots}/.
+    cpreq ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar ${COMOUTplots}/.
     if [ $SENDDBN = YES ]; then
         $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar
     fi
