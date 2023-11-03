@@ -28,7 +28,6 @@ class Toggle():
             #'sample_equalization': False, # just for SREF-GEFS comparison! 
             'keep_shared_events_only': False, # functional for time_series only.
             'clear_prune_directory': False, # remove the intermediate directory created to store pruned data files temporarily
-            #'clear_prune_directory': True, # remove the intermediate directory created to store pruned data files temporarily
             'plot_logo_left': True,
             'plot_logo_right': True,
             'zoom_logo_left': 1.0, 
@@ -70,8 +69,6 @@ class Templates():
         "{RUN_CASE_LOWER}/{MODEL}/{valid?fmt=%Y%m}/{MODEL}_{valid?fmt=%Y%m%d}*"
         '''
         self.output_base_template = "{MODEL_LOWER}/{MODEL}_{valid?fmt=%Y%m%d}*"
-        #self.output_base_template = "{MODEL}.{valid?fmt=%Y%m%d}/evs.stats.{MODEL}.atmos.grid2obs.v{valid?fmt=%Y%m%d}*"
-        #self.output_base_template = "{RUN_CASE_LOWER}/{MODEL}/{valid?fmt=%Y%m}/{MODEL}_{valid?fmt=%Y%m%d}*"
 
 class Paths():
     def __init__(self):
@@ -689,10 +686,6 @@ class Reference():
         of the Reference() class (i.e., below...)
         '''
         self.unit_conversions = {
-            #'kg/m^2': {
-            #    'convert_to': 'in',
-            #    'formula': self.formulas.mm_to_in
-            #},
             'kg/m^2': {
                  'convert_to': 'mm',
                  'formula': self.formulas.mm_to_mm
@@ -1080,7 +1073,6 @@ class Reference():
                 'SAL1L2': {
                     'plot_stats_list': 'acc',
                     'interp': 'NEAREST, BILIN',
-                    #'vx_mask_list' : ['NHX', 'SHX', 'PNA', 'TRO'], 
                     #Added 'G003','NHEM','SHEM','TROPICS','CONUS' for global_ens: 
                     'vx_mask_list' : ['NHX', 'SHX', 'PNA', 'TRO', 'G003','NHEM','SHEM','TROPICS','CONUS'],
                     'var_dict': {
@@ -3227,7 +3219,7 @@ class Reference():
                         'LMV', 'GMC', 'APL', 'NAK', 'SAK'
                     ],
                     'var_dict': {
-                        'APCP_01': {'fcst_var_names': ['APCP', 'APCP_01'],
+                        'APCP_01': {'fcst_var_names': ['APCP_01'],
                                     'fcst_var_levels': ['A01','A1'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3236,7 +3228,7 @@ class Reference():
                                                             + ' >=19.05,'
                                                             + ' >=25.4,'),
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['APCP', 'APCP_01', 'APCP_01_Z0'],
+                                    'obs_var_names': ['APCP_01', 'APCP_01_Z0'],
                                     'obs_var_levels': ['A01','A1','L0'],
                                     'obs_var_thresholds': ('>=0.254, >=1.27,'
                                                            + ' >=2.54,'
@@ -3246,7 +3238,7 @@ class Reference():
                                                            + ' >=25.4,'),
                                     'obs_var_options': '',
                                     'plot_group':'precip'},
-                        'APCP_03': {'fcst_var_names': ['APCP', 'APCP_03'],
+                        'APCP_03': {'fcst_var_names': ['APCP_03'],
                                     'fcst_var_levels': ['A03','A3'],
                                     'fcst_var_thresholds': ('>=0.254, >=1.27,'
                                                             + ' >=2.54,'
@@ -3256,7 +3248,7 @@ class Reference():
                                                             + ' >=25.4,'
                                                             + ' >=50.8,'),
                                     'fcst_var_options': '',
-                                    'obs_var_names': ['APCP', 'APCP_03', 'APCP_01_Z0'],
+                                    'obs_var_names': ['APCP_03', 'APCP_01_Z0'],
                                     'obs_var_levels': ['A03','A3','L0'],
                                     'obs_var_thresholds': ('>=0.254, >=1.27,'
                                                            + ' >=2.54,'
@@ -3587,9 +3579,6 @@ class Reference():
         }
 
     class formulas():
-        #def mm_to_in(mm_vals):
-        #    inch_vals = np.divide(mm_vals, 25.4)
-        #    return inch_vals
         def mm_to_mm(mm_vals):
             inch_vals = np.divide(mm_vals, 1.0)
             return inch_vals

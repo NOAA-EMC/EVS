@@ -23,7 +23,7 @@ print(f"BEGIN: {os.path.basename(__file__)}")
 top_level_env_vars = ['machine', 'VERIF_CASE', 'STEP', 'config']
 for env_var in top_level_env_vars:
     if not env_var in os.environ:
-        print(f"ERROR: {env_var} is not set in environment, "
+        print(f"FATAL ERROR: variable \"{env_var}\" is not set in environment, "
               + f"review parent scripts.")
         sys.exit(1)
 machine = os.environ['machine']
@@ -85,13 +85,13 @@ for env_group in env_group_list:
     for env_var in env_var_list:
         if not env_var in os.environ:
             if env_group == 'modules':
-                print(f"ERROR: {env_var} is not set in environment, "
+                print(f"FATAL ERROR: {env_var} is not set in environment, "
                       + f"review modules loaded in evs_setup_{machine}.sh")
             elif env_group == 'evs':
-                print(f"ERROR: {env_var} is not set in environment, "
+                print(f"FATAL ERROR: {env_var} is not set in environment, "
                       + "check parent scripts")
             else:
-                print(f"ERROR: {env_var} is not set in environment, "
+                print(f"FATAL ERROR: {env_var} is not set in environment, "
                       + f"check configuration file: {config}")
             sys.exit(1)
 
@@ -100,21 +100,21 @@ date_name_list = ['VDATE']
 for date_name in date_name_list:
     date = os.environ[date_name]
     if len(date) != 8:
-        print(f"ERROR: {date_name} is not in YYYYMMDD format")
+        print(f"FATAL ERROR: {date_name} is not in YYYYMMDD format")
         sys.exit(1)
     date_year = int(date[0:4])
     date_month = int(date[4:6])
     date_day = int(date[6:])
     if date_year <= 0:
-        print(f"ERROR: Year value of {date_year:04d} in {date} is invalid."
+        print(f"FATAL ERROR: Year value of {date_year:04d} in {date} is invalid."
               + f" Check {date_name} variable in config file: {config}")
         sys.exit(1)
     if date_month > 12 or date_month <= 0:
-        print(f"ERROR: Month value of {date_month:02d} in {date} is invalid."
+        print(f"FATAL ERROR: Month value of {date_month:02d} in {date} is invalid."
               + f" Check {date_name} variable in config file: {config}")
         sys.exit(1)
     if date_day > calendar.monthrange(date_year, date_month)[1]:
-        print(f"ERROR: Day value of {date_day:02d} in {date} is invalid."
+        print(f"FATAL ERROR: Day value of {date_day:02d} in {date} is invalid."
               + f" Check {date_name} variable in config file: {config}")
         sys.exit(1)
 
@@ -147,7 +147,7 @@ for env_var in list(valid_config_var_values_dict.keys()):
             else: 
                 env_var_pass = True
         if not env_var_pass:
-            print(f"ERROR: The {env_var} value of {failed_config_value} is not a"
+            print(f"FATAL ERROR: The {env_var} value of {failed_config_value} is not a"
                   + f" valid option. Valid options are"
                   + f" {', '.join(valid_config_var_values_dict[env_var])}")
             sys.exit(1)
@@ -247,107 +247,107 @@ if STEP == 'prep':
         for VHOUR in re.split(r'[\s,]+', VHOUR_LIST):
             if int(VHOUR) < 0 or int(VHOUR) > 23:
                 if int(VHOUR) == 24:
-                    print(f"ERROR: VHOUR is set to {VHOUR}, which is equivalent to 00."
+                    print(f"FATAL ERROR: VHOUR is set to {VHOUR}, which is equivalent to 00."
                           + f" Please change the VHOUR to 00 instead in {config}.")
                     sys.exit(1)
                 else:
-                    print(f"ERROR: VHOUR is set to {VHOUR}, which is not a valid time"
+                    print(f"FATAL ERROR: VHOUR is set to {VHOUR}, which is not a valid time"
                           + f" of day. Please set VHOUR to a two-digit integer between"
                           + f"00 and 23 in {config}.")
                     sys.exit(1)
         if len(OBS_ACC) != 2:
-            print(f"ERROR: OBS_ACC is set to {OBS_ACC}, which has"
+            print(f"FATAL ERROR: OBS_ACC is set to {OBS_ACC}, which has"
                   + f" {len(OBS_ACC)} digits, but two digits are required."
                   + f" Please check the configuration file: {config}")
             sys.exit(1)
         if int(OBS_ACC) <= 0:
-            print(f"ERROR: OBS_ACC is set to {OBS_ACC}, but must be a"
+            print(f"FATAL ERROR: OBS_ACC is set to {OBS_ACC}, but must be a"
                   + f" positive integer. Please check the configuration file:"
                   + f" {config}")
             sys.exit(1)
         if len(ACC) != 2:
-            print(f"ERROR: ACC is set to {ACC}, which has"
+            print(f"FATAL ERROR: ACC is set to {ACC}, which has"
                   + f" {len(ACC)} digits, but two digits are required."
                   + f" Please check the configuration file: {config}")
             sys.exit(1)
         if int(ACC) <= 0:
-            print(f"ERROR: ACC is set to {ACC}, but must be a"
+            print(f"FATAL ERROR: ACC is set to {ACC}, but must be a"
                   + f" positive integer. Please check the configuration file:"
                   + f" {config}")
             sys.exit(1)
         elif int(ACC) < int(OBS_ACC):
-            print(f"ERROR: ACC is set to {ACC}, and is smaller than the"
+            print(f"FATAL ERROR: ACC is set to {ACC}, and is smaller than the"
                   + f" OBS_ACC ({OBS_ACC}), which is not allowed."
                   + f" Please check the configuration file: {config}")
             sys.exit(1)
 if STEP == 'stats':
     if int(VHOUR) < 0 or int(VHOUR) > 23:
         if int(VHOUR) == 24:
-            print(f"ERROR: VHOUR is set to {VHOUR}, which is equivalent to 00."
+            print(f"FATAL ERROR: VHOUR is set to {VHOUR}, which is equivalent to 00."
                   + f" Please change the VHOUR to 00 instead in {config}.")
             sys.exit(1)
         else:
-            print(f"ERROR: VHOUR is set to {VHOUR}, which is not a valid time"
+            print(f"FATAL ERROR: VHOUR is set to {VHOUR}, which is not a valid time"
                   + f" of day. Please set VHOUR to a two-digit integer between"
                   + f"00 and 23 in {config}.")
             sys.exit(1)
     if VERIF_CASE == 'precip':
         if int(MIN_IHOUR) < 0 or int(MIN_IHOUR) > 23:
             if int(MIN_IHOUR) == 24:
-                print(f"ERROR: MIN_IHOUR is set to {MIN_IHOUR}, which is equivalent to 00."
+                print(f"FATAL ERROR: MIN_IHOUR is set to {MIN_IHOUR}, which is equivalent to 00."
                       + f" Please change the MIN_IHOUR to 00 instead in {config}.")
                 sys.exit(1)
             else:
-                print(f"ERROR: MIN_IHOUR is set to {MIN_IHOUR}, which is not a valid time"
+                print(f"FATAL ERROR: MIN_IHOUR is set to {MIN_IHOUR}, which is not a valid time"
                       + f" of day. Please set MIN_IHOUR to a two-digit integer between"
                       + f"00 and 23 in {config}.")
                 sys.exit(1)
         if int(FHR_END_SHORT) < 0:
-            print(f"ERROR: FHR_END_SHORT is set to {FHR_END_SHORT}, which is invalid."
+            print(f"FATAL ERROR: FHR_END_SHORT is set to {FHR_END_SHORT}, which is invalid."
                   + f" Please set FHR_END_SHORT to a positive integer in {config}.")
             sys.exit(1)
         if int(FHR_INCR_SHORT) < 0:
-            print(f"ERROR: FHR_INCR_SHORT is set to {FHR_INCR_SHORT}, which is invalid."
+            print(f"FATAL ERROR: FHR_INCR_SHORT is set to {FHR_INCR_SHORT}, which is invalid."
                   + f" Please set FHR_INCR_SHORT to a positive integer in {config}.")
             sys.exit(1)
         if int(FHR_END_FULL) < 0:
-            print(f"ERROR: FHR_END_FULL is set to {FHR_END_FULL}, which is invalid."
+            print(f"FATAL ERROR: FHR_END_FULL is set to {FHR_END_FULL}, which is invalid."
                   + f" Please set FHR_END_FULL to a positive integer in {config}.")
             sys.exit(1)
         if int(FHR_INCR_FULL) < 0:
-            print(f"ERROR: FHR_INCR_FULL is set to {FHR_INCR_FULL}, which is invalid."
+            print(f"FATAL ERROR: FHR_INCR_FULL is set to {FHR_INCR_FULL}, which is invalid."
                   + f" Please set FHR_INCR_FULL to a positive integer in {config}.")
             sys.exit(1)
         for MODEL_ACC_i in re.split(r'[,\s]+', MODEL_ACC):
             for OBS_ACC_i in re.split(r'[,\s]+', OBS_ACC):
                 for ACC_i in re.split(r'[,\s]+', ACC):
                     if len(MODEL_ACC_i) != 2:
-                        print(f"ERROR: MODEL_ACC is set to {MODEL_ACC_i}, which has"
+                        print(f"FATAL ERROR: MODEL_ACC is set to {MODEL_ACC_i}, which has"
                               + f" {len(MODEL_ACC_i)} digits, but two digits are required."
                               + f" Please check the configuration file: {config}")
                         sys.exit(1)
                     if int(MODEL_ACC_i) <= 0:
-                        print(f"ERROR: MODEL_ACC is set to {MODEL_ACC_i}, but must be a"
+                        print(f"FATAL ERROR: MODEL_ACC is set to {MODEL_ACC_i}, but must be a"
                               + f" positive integer. Please check the configuration file:"
                               + f" {config}")
                         sys.exit(1)
                     if len(OBS_ACC_i) != 2:
-                        print(f"ERROR: OBS_ACC is set to {OBS_ACC_i}, which has"
+                        print(f"FATAL ERROR: OBS_ACC is set to {OBS_ACC_i}, which has"
                               + f" {len(OBS_ACC_i)} digits, but two digits are required."
                               + f" Please check the configuration file: {config}")
                         sys.exit(1)
                     if int(OBS_ACC_i) <= 0:
-                        print(f"ERROR: OBS_ACC is set to {OBS_ACC_i}, but must be a"
+                        print(f"FATAL ERROR: OBS_ACC is set to {OBS_ACC_i}, but must be a"
                               + f" positive integer. Please check the configuration file:"
                               + f" {config}")
                         sys.exit(1)
                     if len(ACC_i) != 2:
-                        print(f"ERROR: ACC is set to {ACC_i}, which has"
+                        print(f"FATAL ERROR: ACC is set to {ACC_i}, which has"
                               + f" {len(ACC_i)} digits, but two digits are required."
                               + f" Please check the configuration file: {config}")
                         sys.exit(1)
                     if int(ACC_i) <= 0:
-                        print(f"ERROR: ACC is set to {ACC_i}, but must be a"
+                        print(f"FATAL ERROR: ACC is set to {ACC_i}, but must be a"
                               + f" positive integer. Please check the configuration file:"
                               + f" {config}")
                         sys.exit(1)
@@ -364,28 +364,28 @@ if STEP == 'stats':
     elif VERIF_CASE == 'grid2obs':
         if int(MIN_IHOUR) < 0 or int(MIN_IHOUR) > 23:
             if int(MIN_IHOUR) == 24:
-                print(f"ERROR: MIN_IHOUR is set to {MIN_IHOUR}, which is equivalent to 00."
+                print(f"FATAL ERROR: MIN_IHOUR is set to {MIN_IHOUR}, which is equivalent to 00."
                       + f" Please change the MIN_IHOUR to 00 instead in {config}.")
                 sys.exit(1)
             else:
-                print(f"ERROR: MIN_IHOUR is set to {MIN_IHOUR}, which is not a valid time"
+                print(f"FATAL ERROR: MIN_IHOUR is set to {MIN_IHOUR}, which is not a valid time"
                       + f" of day. Please set MIN_IHOUR to a two-digit integer between"
                       + f"00 and 23 in {config}.")
                 sys.exit(1)
         if int(FHR_END_SHORT) < 0:
-            print(f"ERROR: FHR_END_SHORT is set to {FHR_END_SHORT}, which is invalid."
+            print(f"FATAL ERROR: FHR_END_SHORT is set to {FHR_END_SHORT}, which is invalid."
                   + f" Please set FHR_END_SHORT to a positive integer in {config}.")
             sys.exit(1)
         if int(FHR_INCR_SHORT) < 0:
-            print(f"ERROR: FHR_INCR_SHORT is set to {FHR_INCR_SHORT}, which is invalid."
+            print(f"FATAL ERROR: FHR_INCR_SHORT is set to {FHR_INCR_SHORT}, which is invalid."
                   + f" Please set FHR_INCR_SHORT to a positive integer in {config}.")
             sys.exit(1)
         if int(FHR_END_FULL) < 0:
-            print(f"ERROR: FHR_END_FULL is set to {FHR_END_FULL}, which is invalid."
+            print(f"FATAL ERROR: FHR_END_FULL is set to {FHR_END_FULL}, which is invalid."
                   + f" Please set FHR_END_FULL to a positive integer in {config}.")
             sys.exit(1)
         if int(FHR_INCR_FULL) < 0:
-            print(f"ERROR: FHR_INCR_FULL is set to {FHR_INCR_FULL}, which is invalid."
+            print(f"FATAL ERROR: FHR_INCR_FULL is set to {FHR_INCR_FULL}, which is invalid."
                   + f" Please set FHR_INCR_FULL to a positive integer in {config}.")
             sys.exit(1)
 

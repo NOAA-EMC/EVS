@@ -19,9 +19,9 @@
 #                   or else choose any directory that will house Verif Plotting.  As an example, 
 #                   we'll call that directory PY_PLOT_DIR.  Then on the command line:
 #
-#                   $ PY_PLOT_DIR="/gpfs/path/to/my/directory"
+#                   $ PY_PLOT_DIR="/path/to/my/directory"
 #                   $ mkdir -p ${PY_PLOT_DIR}/out/logs ${PY_PLOT_DIR}/data ${PY_PLOT_DIR}/ush
-#                   $ BASE_DIR="/gpfs/dell2/emc/verification/noscrub/Marcel.Caron/verif_plotting"
+#                   $ BASE_DIR="/path/to/auth/verif_plotting"
 #                   $ cp -r ${BASE_DIR}/ush/* ${PY_PLOT_DIR}/ush/.
 #                   $ cp ${BASE_DIR}/py_plotting.config ${PY_PLOT_DIR}/.
 #
@@ -105,7 +105,6 @@ export LOG_LEVEL="DEBUG"
 
 # Will use statistics for all comma-separated models.  Case-insensitive by default, but names must 
 # match the model naming convention in ${OUTPUT_BASE_DIR}
-##export MODEL="$MODELNAME"
 
 # Will use valid or init datetimes based on the setting below. Options are "VALID" or "INIT"
 export DATE_TYPE="$datetyp"
@@ -161,4 +160,5 @@ export CONFIDENCE_INTERVALS="False"
 # valid_hour_average.py}
 python $USH_DIR/${plottyp}_average.py
 
-exit 0
+export err=$?
+exit $err

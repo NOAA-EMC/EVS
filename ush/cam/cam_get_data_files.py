@@ -54,42 +54,42 @@ if cwd != DATA:
 if VERIF_CASE == 'precip':
     if STEP == 'stats':
         if int(MODEL_ACC) <= 0:
-            print(f"ERROR: MODEL_ACC is set to {MODEL_ACC}, but must be a"
+            print(f"FATAL ERROR: MODEL_ACC is set to {MODEL_ACC}, but must be a"
                   + f" positive integer. Please check the configuration file:"
                   + f" {config}")
             sys.exit(1)
         elif int(MODEL_ACC) > int(FHR_START):
-            print(f"ERROR: MODEL_ACC is set to {MODEL_ACC}, and is larger"
+            print(f"FATAL ERROR: MODEL_ACC is set to {MODEL_ACC}, and is larger"
                   + f" than the FHR_START ({FHR_START}), which is not allowed."
                   + f" Please check the configuration file: {config}")
             sys.exit(1)
         if int(OBS_ACC) <= 0:
-            print(f"ERROR: OBS_ACC is set to {OBS_ACC}, but must be a"
+            print(f"FATAL ERROR: OBS_ACC is set to {OBS_ACC}, but must be a"
                   + f" positive integer. Please check the configuration file:"
                   + f" {config}")
             sys.exit(1)
         elif int(OBS_ACC) > int(FHR_START):
-            print(f"ERROR: OBS_ACC is set to {OBS_ACC}, and is larger"
+            print(f"FATAL ERROR: OBS_ACC is set to {OBS_ACC}, and is larger"
                   + f" than the FHR_START ({FHR_START}), which is not allowed."
                   + f" Please check the configuration file: {config}")
             sys.exit(1)
         if int(ACC) <= 0:
-            print(f"ERROR: ACC is set to {ACC}, but must be a"
+            print(f"FATAL ERROR: ACC is set to {ACC}, but must be a"
                   + f" positive integer. Please check the configuration file:"
                   + f" {config}")
             sys.exit(1)
         elif int(ACC) > int(FHR_START):
-            print(f"ERROR: ACC is set to {ACC}, and is larger"
+            print(f"FATAL ERROR: ACC is set to {ACC}, and is larger"
                   + f" than the FHR_START ({FHR_START}), which is not allowed."
                   + f" Please check the configuration file: {config}")
             sys.exit(1)
         elif int(ACC) < int(MODEL_ACC):
-            print(f"ERROR: ACC is set to {ACC}, and is smaller than the"
+            print(f"FATAL ERROR: ACC is set to {ACC}, and is smaller than the"
                   + f" MODEL_ACC ({MODEL_ACC}), which is not allowed."
                   + f" Please check the configuration file: {config}")
             sys.exit(1)
         elif int(ACC) < int(OBS_ACC):
-            print(f"ERROR: ACC is set to {ACC}, and is smaller than the"
+            print(f"FATAL ERROR: ACC is set to {ACC}, and is smaller than the"
                   + f" OBS_ACC ({OBS_ACC}), which is not allowed."
                   + f" Please check the configuration file: {config}")
             sys.exit(1)
