@@ -30,7 +30,7 @@ if USE_CFP == 'YES':
     job_files = glob.glob(os.path.join(job_dir, 'job*'))
     njob_files = len(job_files)
     if njob_files == 0:
-        print(f"ERROR: No job files created in {job_dir}")
+        print(f"FATAL ERROR: No job files created in {job_dir}")
         sys.exit(1)
     poe_job_files = glob.glob(os.path.join(job_dir, f'poe_job*'))
     npoe_job_files = len(poe_job_files)
@@ -64,7 +64,7 @@ if USE_CFP == 'YES':
         iproc+=1
     poe_job.close()
 else:
-    print(f"ERROR: Cannot create POE scripts because USE_CFP is set to"
+    print(f"FATAL ERROR: Cannot create POE scripts because USE_CFP is set to"
           + f" {USE_CFP}.  Please set USE_CFP=YES")
     sys.exit(1)
 

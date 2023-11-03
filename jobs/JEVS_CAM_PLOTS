@@ -114,9 +114,6 @@ if [ -e "$pgmout" ]; then
    cat $pgmout
 fi
 
-msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
-
 if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT
   rm -rf $DATA
