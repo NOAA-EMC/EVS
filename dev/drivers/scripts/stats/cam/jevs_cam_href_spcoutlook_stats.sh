@@ -7,6 +7,8 @@
 #PBS -l place=vscatter,select=1:ncpus=4:mem=100GB
 #PBS -l debug=true
 
+set -x
+
 export OMP_NUM_THREADS=1
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
@@ -28,8 +30,6 @@ export evs_ver=v1.0.0
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 export vhr=00
-
-#export VDATE=20230312
 
 export run_mpi=yes
 export gather=yes

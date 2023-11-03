@@ -1,5 +1,4 @@
-#!/bin/bash -e
- 
+#!/usr/bin/env python3
 # =============================================================================
 #
 # NAME: cam_stats_snowfall_create_job_script.sh
@@ -59,7 +58,6 @@ if job_type == 'reformat':
 elif job_type == 'generate':
     VERIF_TYPE = os.environ['VERIF_TYPE']
     NEST = os.environ['NEST']
-    #VHOUR_LIST = os.environ['VHOUR_LIST']
     VHOUR = os.environ['VHOUR']
     FHR_GROUP_LIST = os.environ['FHR_GROUP_LIST']
     FHR_END_SHORT = os.environ['FHR_END_SHORT']
@@ -116,7 +114,7 @@ if job_type in ['generate', 'reformat']:
                         '{FCST_VAR_NAME}', FCST_VAR_NAME
                     )
     if not plot_this_var:
-        print(f"ERROR: VAR_NAME \"{VAR_NAME}\" is not valid for VERIF_TYPE "
+        print(f"FATAL ERROR: VAR_NAME \"{VAR_NAME}\" is not valid for VERIF_TYPE "
               + f"\"{VERIF_TYPE}\" and MODEL \"{MODELNAME}\". Check "
               + f"{USHevs}/{COMPONENT}/{COMPONENT}_stats_grid2obs_var_defs.py "
               + f"for valid configurations.")
@@ -171,7 +169,6 @@ if job_type == 'reformat':
 elif job_type == 'generate':
     job_env_vars_dict['VERIF_TYPE'] = VERIF_TYPE
     job_env_vars_dict['NEST'] = NEST
-    #job_env_vars_dict['VHOUR_LIST'] = VHOUR_LIST
     job_env_vars_dict['VHOUR'] = VHOUR
     job_env_vars_dict['FHR_GROUP_LIST'] = FHR_GROUP_LIST
     job_env_vars_dict['FHR_END_SHORT'] = FHR_END_SHORT
@@ -190,10 +187,6 @@ elif job_type == 'generate':
     job_env_vars_dict['OBS_VAR_OPTIONS'] = OBS_VAR_OPTIONS
     job_env_vars_dict['MASK_POLY_LIST'] = MASK_POLY_LIST
     job_env_vars_dict['VAR_NAME'] = VAR_NAME
-    #job_iterate_over_env_lists_dict['VHOUR_LIST'] = {
-    #    'list_items': re.split(r'[\s,]+', VHOUR_LIST),
-    #    'exports': [],
-    #}
     job_iterate_over_env_lists_dict['FHR_GROUP_LIST'] = {
         'list_items': re.split(r'[\s,]+', FHR_GROUP_LIST),
         'exports': ['FHR_END','FHR_INCR']

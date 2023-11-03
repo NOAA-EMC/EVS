@@ -8,15 +8,15 @@
 ##---------------------------------------------------------------------------
 ##---------------------------------------------------------------------------
 
+set -x
+
 echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 
 if [ -z ${vhr} ]; then
-    echo "ERROR: vhr is unset."
-    exit 1
+    err_exit "vhr is unset."
 fi
 if [ -z ${VHOUR_LIST} ]; then
-    echo "ERROR: VHOUR_LIST is unset."
-    exit 1
+    err_exit "VHOUR_LIST is unset."
 fi
 
 echo "REQUESTED LIST OF VALID HOURS: $VHOUR_LIST"
