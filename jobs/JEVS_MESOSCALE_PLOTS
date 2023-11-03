@@ -10,7 +10,6 @@ set -x
 # SET SHELL PROCESSING VARIABLES
 ####################################
 export PS4='$SECONDS + '
-date
 
 ####################################
 # obtain unique LSF id (jobid) and make temp directories
@@ -29,7 +28,7 @@ export MET_PLUS_PATH=${MET_PLUS_PATH:-$METPLUS_PATH}
 export MET_PATH=$MET_ROOT
 export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
-export HOMEevs=${HOMEevs:-${PACKAGEROOT}/evs.${model_ver}}
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
@@ -52,9 +51,8 @@ export SENDMAIL=${SENDMAIL:-NO}
 ####################################
 # Run setpdy and initialize PDY variables
 ####################################
-export cycle=${cycle:-t${cyc}z}
-export cyc=${cyc:-00}
-export cycle=t${cyc}z
+export vhr=${vhr:-00}
+export cycle=${cycle:-t${vhr}z}
 setpdy.sh 31
 . ./PDY
 
@@ -99,19 +97,20 @@ fi
 ####################################
 # Define COMIN/COMOUT variables:
 ####################################
+export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
 export EVSINapcp24mean=${EVSINapcp24mean:-$COMIN/stats/$COMPONENT}
 export EVSINccpa=${EVSINccpa:-$COMIN/prep/cam/$RUN}
 export EVSINmrms=${EVSINmrms:-$COMIN/prep/cam/$RUN}
 export EVSINspcotlk=${EVSINspcotlk:-$COMIN/prep/cam/$RUN}
 export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
-export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
 export COMOUTplots=${COMOUTplots:-$COMOUT/$RUN.$VDATE}
 
 if [ $MODELNAME = sref ] ; then
-  export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}	
-  mkdir -p $COMOUT/$STEP/$COMPONENT/$RUN.$VDATE
+  export EVSIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}	
+  mkdir -p $COMOUTplots
 else
-  export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}/stats
+  export EVSIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}/stats
   mkdir -p $COMOUT
 fi
 
@@ -126,7 +125,6 @@ if [ $MODELNAME = sref ] ; then
 else
     $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${VERIF_CASE}_${STEP}.sh
 fi 
-
 export err=$?; err_chk
 
 msg="JOB $job HAS COMPLETED NORMALLY."
@@ -136,4 +134,3 @@ if [ "$KEEPDATA" != "YES" ] ; then
   rm -rf $DATA
 fi
 
-date
