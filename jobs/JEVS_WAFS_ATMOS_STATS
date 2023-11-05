@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -xa
+set -x
 
 export PS4='$SECONDS + '
 date
@@ -24,7 +24,6 @@ cd $DATA
 # Determine Job Output Name on System
 ############################################
 export pid=$$
-export pgmout=OUTPUT.${pid}
 
 ############################################
 # Initialize PDY variables
