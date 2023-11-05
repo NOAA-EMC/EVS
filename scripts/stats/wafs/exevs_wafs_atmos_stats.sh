@@ -8,7 +8,11 @@
 set -x
 
 cd $DATA
-rm wafs_stat.cmdfile
+if [ -s wafs_stat.cmdfile ];then
+	rm wafs_stat.cmdfile
+else
+	echo "WARNING: wafs_stat.cmdfile DOES NOT EXIST"
+fi
 
 export DATAsemifinal=$DATA/semifinal
 mkdir -p $DATAsemifinal
@@ -18,7 +22,7 @@ ic=0
 observations="GCIP GFS"
 for observation in $observations ; do
     if [ $observation = "GCIP" ] ; then
-	# For ICING, there are 2 different resoltions (before Nov 2023) and 3 centers
+	# For ICING, there are 2 different resolutions (before Nov 2023) and 3 centers
 	resolutions="0P25"
 	centers="blend uk us"
     elif [ $observation = "GFS" ] ; then
@@ -68,9 +72,23 @@ for resolution in $resolutions ; do
 done
 
 if [ $SENDCOM = YES ] ; then
-    mv $STATSOUTfinal/* $COMOUTfinal/.
-    # COMOUTsmall
-    mv $STATSOUTsmall/* $COMOUTsmall/.
+    cpreq $STATSOUTfinal/* $COMOUTfinal/.
+  
+    cpreq $STATSOUTsmall/* $COMOUTsmall/.
+fi
+
+#########################################
+#Cat'ing errfiles to stdout
+#########################################
+
+log_dir=$DATA/METplus_output/logs
+log_file_count=$(find $log_dir -type f |wc -l)
+if [[ $log_file_count -ne 0 ]]; then
+	for log_file in $log_dir/*; do
+		echo "Start: $log_file"
+		cat $log_file
+		echo "End: $log_file"
+	done
 fi
 #########################################
 #Cat'ing errfiles to stdout
