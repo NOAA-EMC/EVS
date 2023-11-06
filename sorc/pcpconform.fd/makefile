@@ -1,10 +1,9 @@
 SRCS=pcpconform.f
 OBJS=pcpconform.o
 CMD=pcpconform
-FC=ftn
 DEBUG=-check all -ftrapuv
 LIBS=${W3EMC_LIB4} ${BACIO_LIB4}
-FFLAGS=-FR -cpp -g -traceback
+FFLAGS += ${FFLAGS} -FR -cpp
 LDFLAGS=
 BINDIR=${EXECevs}
 

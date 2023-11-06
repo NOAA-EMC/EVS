@@ -32,6 +32,9 @@ bacio_lib4_name=$(echo ${BACIO_LIB4##*/})
 export BACIOLIB=$(echo $bacio_lib4_name | sed -e "s/lib//g" | sed -e "s/\.a//g")
 export LIBDIRBACIO=$(echo $BACIO_LIB4 | sed -e "s/\/${bacio_lib4_name}//g")
 
+export FC=ftn
+export FFLAGS="-g -traceback"
+
 # Make EXECevs
 if [ ! -d $EXECevs ]; then
     echo "Creating $EXECevs"
