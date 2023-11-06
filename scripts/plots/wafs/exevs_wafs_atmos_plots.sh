@@ -58,7 +58,6 @@ for RESOLUTION in $resolutions ; do
     
     export OUTPUT_BASE_DIR=$DATA/datainput/${OBSERVATION}_${RESOLUTION}
     mkdir -p $OUTPUT_BASE_DIR
-    #rm $OUTPUT_BASE_DIR/*
 
     source $HOMEevs/parm/evs_config/wafs/config.evs.wafs.standalone
 
@@ -84,7 +83,6 @@ for RESOLUTION in $resolutions ; do
 	fi
 
 	# Re-organize data for plotting
-	#rm $OUTPUT_BASE_DIR/*
 	n=0
 	while [[ $n -le $NDAYS ]] ; do
 	    day=`date -d "$VDATE - $n days" +%Y%m%d`
@@ -114,15 +112,33 @@ for RESOLUTION in $resolutions ; do
 	    fi
 	    # Set the config and run python scripts to generate plots
 	    $HOMEevs/parm/evs_config/wafs/config.evs.plots.wafs.atmos
+	    export err=$?; err_chk
 	done
     done
 
 done
 
+#########################################
+#Cat'ing errfiles to stdout
+#########################################
+
+log_dir=$DATA/logs
+log_file_count=$(find $log_dir -type f |wc -l)
+if [[ $log_file_count -ne 0 ]]; then            
+	for log_file in $log_dir/*; do                                  
+		echo "Start: $log_file"
+		cat $log_file                                                                   
+		echo "End: $log_file"
+	done
+fi
+
+
 #####################################################################
 # GOOD RUN
-echo "********SCRIPT exevs_wafs_atmos_plots.sh $1 $2 COMPLETED NORMALLY on `date`"
-exit 0
+
+echo "********SCRIPT exevs_wafs_atmos_plots.sh $1 $2 COMPLETED NORMALLY on `$NDATE`"
+
+
 #####################################################################
 
 ############## END OF SCRIPT #######################

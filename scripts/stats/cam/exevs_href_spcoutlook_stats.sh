@@ -14,6 +14,7 @@ cd $WORK
 
 #check input data are available:
 $USHevs/cam/evs_check_href_files.sh 
+export err=$?; err_chk
 
 #lvl = profile or sfc or both
 export lvl='both'
@@ -51,11 +52,9 @@ export domain="all"
 #export domain="HI"
 
 
-msg="$job HAS BEGUN"
-postmsg "$jlogfile" "$msg"
-
 if [ $prepare = yes ] ; then
   $USHevs/cam/evs_href_preppare.sh prepbufr CONUS
+  export err=$?; err_chk
 fi 
 
 
@@ -64,6 +63,7 @@ fi
 #Spc_outlook: 2 job
 if [ $verif_spcoutlook = yes ] ; then
   $USHevs/cam/evs_href_spcoutlook.sh
+  export err=$?; err_chk
   cat ${DATA}/run_all_href_spcoutlook_poe.sh >> run_href_all_grid2obs_poe
 fi
 
@@ -81,6 +81,7 @@ fi
 
 if [ $gather = yes ] && [ -s ${DATA}/run_href_all_grid2obs_poe ] ; then
   $USHevs/cam/evs_href_gather.sh $VERIF_CASE  
+  export err=$?; err_chk
 fi
 
 # Cat the METplus log files
@@ -117,8 +118,4 @@ for log_dir in $log_dirs2; do
     fi
 done
 
-msg="JOB $job HAS COMPLETED NORMALLY"
-postmsg "$jlogfile" "$msg"
-
-
-exit 0
+export err=$?; err_chk

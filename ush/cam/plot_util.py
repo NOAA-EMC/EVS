@@ -370,7 +370,7 @@ def get_stat_file_line_type_columns(logger, met_version, line_type,
             'DIR_ABSERR', 'DIR_ABSERR_NCL', 'DIR_ABSERR_NCU'
          ]
       else:
-         logger.error("VCNT is not a valid LINE_TYPE in METV"+met_version)
+         logger.error("FATAL ERROR: VCNT is not a valid LINE_TYPE in METV"+met_version)
          exit(1)
    elif line_type == 'CTC':
       if met_version >= 11.0:
@@ -538,7 +538,7 @@ def calculate_average(logger, average_method, stat, model_dataframe,
       for l in range(len(avg_array[:,0])):
          average_array[l] = avg_array[l]
    else:
-      logger.error("Invalid entry for MEAN_METHOD, "
+      logger.error("FATAL ERROR: Invalid entry for MEAN_METHOD, "
                    +"use MEAN, MEDIAN, or AGGREGATION")
       exit(1)
    return average_array
@@ -647,7 +647,7 @@ def calculate_ci(logger, ci_method, modelB_values, modelA_values, total_days,
       intvl = 1.96*scores_diff_std
       
    else:
-      logger.error("Invalid entry for MAKE_CI_METHOD, "
+      logger.error("FATAL ERROR: Invalid entry for MAKE_CI_METHOD, "
                    +"use EMC, EMC_MONTE_CARLO")
       exit(1)
    return intvl
@@ -776,7 +776,7 @@ def get_stat_plot_name(logger, stat):
    elif stat == 'bss_smpl':
       stat_plot_name = 'Brier Skill Score'
    else:
-      logger.error(stat+" is not a valid option")
+      logger.error("FATAL ERROR: "+stat+" is not a valid option")
       exit(1)
    return stat_plot_name
 
@@ -956,7 +956,7 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          dir_err = model_data.loc[:]['DIR_ERR']
          if bool_convert:
             logger.error(
-               f"Cannot convert columns for line_type \"{line_type}\""
+               f"FATAL ERROR: Cannot convert columns for line_type \"{line_type}\""
             )
             exit(1) 
       elif all(elem in model_data_columns for elem in
@@ -1007,7 +1007,7 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          frate = model_data.loc[:]['F_RATE']
          orate = model_data.loc[:]['O_RATE']
       else:
-         logger.error("Could not recognize line type from columns")
+         logger.error("FATAL ERROR: Could not recognize line type from columns")
          exit(1)
    if str(bs_method).upper() == 'MATCHED_PAIRS':
       if total.sum() < bs_min_samp:
@@ -1107,7 +1107,8 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
             oobar_est_samp = np.concatenate((oobar_est_samples))
       else:
          logger.error(
-            line_type
+            "FATAL ERROR: "
+            + line_type
             + f" is not currently a valid option for bootstrapping {bs_method}"
          )
          exit(1)
@@ -1276,10 +1277,10 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
             frate_est_samp = np.concatenate((frate_samples))
             orate_est_samp = np.concatenate((orate_samples))
       else:
-         logger.error(line_type+" is not currently a valid option")
+         logger.error("FATAL ERROR: "+line_type+" is not currently a valid option")
          exit(1)
    else:
-      logger.error(bs_method+" is not a valid option")
+      logger.error("FATAL ERROR: "+bs_method+" is not a valid option")
       exit(1)
    if stat == 'me':
       if str(bs_method).upper() in ['MATCHED_PAIRS','FORECASTS']:
@@ -1556,7 +1557,7 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          C = (Ca + Cb)/total
          stat_values = (fy_oy_samp + fn_on_samp - C)/(total - C)
    else:
-      logger.error(stat+" is not a valid option")
+      logger.error("FATAL ERROR: "+stat+" is not a valid option")
       exit(1)
    stat_deltas = stat_values-stat_values_mean
    stat_ci_lower = np.nanpercentile(stat_deltas, lower_pctile)
@@ -1724,7 +1725,7 @@ def calculate_stat(logger, model_data, stat, conversion):
          dir_err = model_data.loc[:]['DIR_ERR']
          if bool_convert:
             logger.error(
-               f"Cannot convert column units for line_type \"{line_type}\""
+               f"FATAL ERROR: Cannot convert column units for line_type \"{line_type}\""
             )
             exit(1) 
       elif all(elem in model_data_columns for elem in
@@ -1796,7 +1797,7 @@ def calculate_stat(logger, model_data, stat, conversion):
          bss =  model_data.loc[:]['BSS']
          bss_smpl =  model_data.loc[:]['BSS_SMPL']
       else:
-         logger.error("Could not recognize line type from columns")
+         logger.error("FATAL ERROR: Could not recognize line type from columns")
          exit(1)
    stat_plot_name = get_stat_plot_name(logger, stat)
    if stat == 'me':
@@ -2032,7 +2033,7 @@ def calculate_stat(logger, model_data, stat, conversion):
          C = (Ca + Cb)/total
          stat_values = (fy_oy + fn_on - C)/(total - C)
    else:
-      logger.error(stat+" is not a valid option")
+      logger.error("FATAL ERROR: "+stat+" is not a valid option")
       exit(1)
    nindex = stat_values.index.nlevels
    if stat == 'fbar_obar' or stat == 'orate_frate' or stat == 'baser_frate':
@@ -2246,14 +2247,14 @@ def equalize_samples(logger, df, group_by):
         )
         return df_equalized, data_are_equalized
     else:
-        logger.error(
-            "Data equalization along the independent variable failed."
+        logger.warning(
+            "FATAL ERROR: Data equalization along the independent variable failed."
         )
-        logger.error(
+        logger.warning(
             "This may be a bug in the verif_plotting code. Please contact"
             + " the verif_plotting code manager about your issue."
         )
-        logger.error(
+        logger.warning(
             "Skipping equalization.  Sample sizes will not be plotted."
         )
         return df, data_are_equalized

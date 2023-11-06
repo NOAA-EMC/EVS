@@ -265,7 +265,7 @@ def run_shell_command(command, capture_output=False):
     else:
         run_command = subprocess.run(command, capture_output=capture_output)
     if run_command.returncode != 0:
-        print("ERROR: "+''.join(run_command.args)+" gave return code "
+        print("FATAL ERROR: "+''.join(run_command.args)+" gave return code "
               + str(run_command.returncode))
     else:
         if capture_output:
@@ -457,7 +457,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             vdate, vhour
         ]
         if any([var is None for var in check_if_none]):
-            e = (f"ERROR: None encountered as an argument while copying"
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
                  + f" {met_tool} METplus output to COMOUT directory.")
             raise TypeError(e)
         sub_dirs.append(os.path.join(
@@ -473,7 +473,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             vdate, vhour, fhr_start, fhr_end, fhr_incr
         ]
         if any([var is None for var in check_if_none]):
-            e = (f"ERROR: None encountered as an argument while copying"
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
                  + f" {met_tool} METplus output to COMOUT directory.")
             raise TypeError(e)
         sub_dirs.append(os.path.join(
@@ -492,7 +492,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 acc, nbrhd
             ]
             if any([var is None for var in check_if_none]):
-                e = (f"ERROR: None encountered as an argument while copying"
+                e = (f"FATAL ERROR: None encountered as an argument while copying"
                      + f" {met_tool} METplus output to COMOUT directory.")
                 raise TypeError(e)
             sub_dirs.append(os.path.join(
@@ -512,7 +512,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 vdate, vhour, fhr_start, fhr_end, fhr_incr, model, acc, nbrhd
             ]
             if any([var is None for var in check_if_none]):
-                e = (f"ERROR: None encountered as an argument while copying"
+                e = (f"FATAL ERROR: None encountered as an argument while copying"
                      + f" {met_tool} METplus output to COMOUT directory.")
                 raise TypeError(e)
             sub_dirs.append(os.path.join(
@@ -532,7 +532,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             vdate, vhour, fhr_start, fhr_end, fhr_incr, model, njob
         ]
         if any([var is None for var in check_if_none]):
-            e = (f"ERROR: None encountered as an argument while copying"
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
                  + f" {met_tool} output to COMOUT directory.")
             raise TypeError(e)
         sub_dirs.append(os.path.join(
@@ -555,7 +555,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             vdate, vhour
         ]
         if any([var is None for var in check_if_none]):
-            e = (f"ERROR: None encountered as an argument while copying"
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
                  + f" {met_tool} METplus output to COMOUT directory.")
             raise TypeError(e)
         sub_dirs.append(os.path.join(
@@ -572,7 +572,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 vdate, vhour, fhr_start, fhr_end, fhr_incr, model, var_name, acc
             ]
             if any([var is None for var in check_if_none]):
-                e = (f"ERROR: None encountered as an argument while copying"
+                e = (f"FATAL ERROR: None encountered as an argument while copying"
                      + f" {met_tool} METplus output to COMOUT directory.")
                 raise TypeError(e)
             for fhr in np.arange(int(fhr_start), int(fhr_end), int(fhr_incr)):
@@ -595,7 +595,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 vdate, vhour, fhr_start, fhr_end, fhr_incr, model, acc
             ]
             if any([var is None for var in check_if_none]):
-                e = (f"ERROR: None encountered as an argument while copying"
+                e = (f"FATAL ERROR: None encountered as an argument while copying"
                      + f" {met_tool} METplus output to COMOUT directory.")
                 raise TypeError(e)
             for fhr in np.arange(int(fhr_start), int(fhr_end), int(fhr_incr)):
@@ -618,7 +618,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             vdate, vhour, fhr_start, fhr_end, fhr_incr, model, var_name
         ]
         if any([var is None for var in check_if_none]):
-            e = (f"ERROR: None encountered as an argument while copying"
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
                  + f" {met_tool} METplus output to COMOUT directory.")
             raise TypeError(e)
         sub_dirs.append(os.path.join(
@@ -638,7 +638,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             vdate, vhour, fhr_start, fhr_end, fhr_incr, model, njob
         ]
         if any([var is None for var in check_if_none]):
-            e = (f"ERROR: None encountered as an argument while copying"
+            e = (f"FATAL ERROR: None encountered as an argument while copying"
                  + f" {met_tool} METplus output to COMOUT directory.")
             raise TypeError(e)
         sub_dirs.append(os.path.join(
@@ -659,7 +659,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 net, step, model, run 
             ]
             if any([var is None for var in check_if_none]):
-                e = (f"ERROR: None encountered as an argument while copying"
+                e = (f"FATAL ERROR: None encountered as an argument while copying"
                      + f" {met_tool} METplus output to COMOUT directory.")
                 raise TypeError(e)
             sub_dirs.append(os.path.join(
@@ -678,7 +678,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                 model, run, vhr
             ]
             if any([var is None for var in check_if_none]):
-                e = (f"ERROR: None encountered as an argument while copying"
+                e = (f"FATAL ERROR: None encountered as an argument while copying"
                      + f" {met_tool} METplus output to COMOUT directory.")
                 raise TypeError(e)
             sub_dirs.append(os.path.join(
@@ -698,7 +698,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             if not glob.glob(origin_path):
                 continue
             if not os.path.exists(dest_path):
-                print(f"ERROR: Could not copy METplus output to COMOUT directory"
+                print(f"FATAL ERROR: Could not copy METplus output to COMOUT directory"
                       + f" {dest_path} because the path does not already exist.")
                 continue
             if len(glob.glob(origin_path)) == len(glob.glob(os.path.join(dest_path, copy_file))):
