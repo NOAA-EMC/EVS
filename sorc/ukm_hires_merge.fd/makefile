@@ -11,6 +11,6 @@ all: $(CMD)
 debug:FFLAGS += $(DEBUG)
 debug:$(CMD)
 clean:
-	-rm -f $(CMD)
+	-rm -f *.o $(CMD)
 install:
 	-mv $(CMD) $(BINDIR)/.
