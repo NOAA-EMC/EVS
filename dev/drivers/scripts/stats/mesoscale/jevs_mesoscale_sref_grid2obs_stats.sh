@@ -9,6 +9,8 @@
 #PBS -l place=vscatter,select=1:ncpus=4:mem=100GB
 #PBS -l debug=true
 
+
+set -x 
 #Total 2 parallel processes
 
 export OMP_NUM_THREADS=1

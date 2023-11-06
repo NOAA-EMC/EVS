@@ -9,6 +9,7 @@
 #PBS -l place=vscatter,select=1:ncpus=80:mem=300GB
 #PBS -l debug=true
 
+set -x
 
 export OMP_NUM_THREADS=1
 
