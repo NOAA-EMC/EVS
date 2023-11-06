@@ -1,7 +1,7 @@
 SRCS=jma_merge.f
 CMD=jma_merge
-FC=ifort
-FOPTS=-O2 -convert big_endian -traceback -mkl -free
+FC=ftn
+FOPTS=-O2 -convert big_endian -g -traceback -mkl -free
 DEBUG=-check all -ftrapuv
 LIBS=-L${LIBDIRW3EMC} -l${W3EMCLIB} -L${LIBDIRBACIO} -l${BACIOLIB}
 BINDIR=${EXECevs}

@@ -1,7 +1,7 @@
 SRCS=ecm_gfs_look_alike_new.f90
 CMD=ecm_gfs_look_alike_new
-FC=ifort
-FOPTS=-O2 -convert big_endian -traceback -mkl -free
+FC=ftn
+FOPTS=-O2 -convert big_endian -g -traceback -mkl -free
 DEBUG=-check all -ftrapuv
 LIBS=-L${LIBDIRW3EMC} -l${W3EMCLIB} -L${LIBDIRBACIO} -l${BACIOLIB}
 BINDIR=${EXECevs}
