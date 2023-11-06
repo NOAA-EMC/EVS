@@ -1,5 +1,3 @@
-#!/bin/bash
-
 #PBS -N jevs_mesoscale_sref_cnv_past90days_plots
 #PBS -j oe
 #PBS -S /bin/bash
