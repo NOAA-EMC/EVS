@@ -495,8 +495,8 @@ if [ $modnam = ecme_apcp24h ] ; then
        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstECME_APCP24h.conf
        unset lead_arr
      done
+     [[ $SENDCOM="YES" ]] && cpreq -v ${output_base}/*.nc $COMOUTecme/.
   done
-  [[ $SENDCOM="YES" ]] && cpreq -v ${output_base}/*.nc $COMOUTecme/.
 fi
 
 #############################################################
@@ -547,8 +547,8 @@ if [ $modnam = gefs_snow24h ] ; then
        done
        unset lead_arr
      done
+     [[ $SENDCOM="YES" ]] && cpreq -v $output_base/*.nc $COMOUTgefs/.
    done
-   [[ $SENDCOM="YES" ]] && cpreq -v $output_base/*.nc $COMOUTgefs/.
 fi
 
 ###########################################
@@ -578,8 +578,8 @@ if [ $modnam = cmce_snow24h ] ; then
        done
        unset lead_arr
      done
+     [[ $SENDCOM="YES" ]] && cp $output_base/*.nc $COMOUTcmce/.
   done
-  [[ $SENDCOM="YES" ]] && cp $output_base/*.nc $COMOUTcmce/.
 fi
 
 ###########################################
@@ -606,8 +606,8 @@ if [ $modnam = ecme_snow24h ] ; then
        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_fcstECME_SNOW24h.conf
        unset lead_arr
      done
+     [[ $SENDCOM="YES" ]] && cp $output_base/ecme*.nc $COMOUTecme
   done
-  [[ $SENDCOM="YES" ]] && cp $output_base/ecme*.nc $COMOUTecme
 fi
 
 #############################################################
