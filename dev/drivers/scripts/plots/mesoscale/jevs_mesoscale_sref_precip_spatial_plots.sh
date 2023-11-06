@@ -35,7 +35,7 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 export KEEPDATA=YES
 export SENDMAIL=YES
-export SENDDBN=NO
+export SENDDBN=YES
 
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d

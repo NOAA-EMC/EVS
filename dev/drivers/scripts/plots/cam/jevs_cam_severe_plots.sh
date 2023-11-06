@@ -55,7 +55,7 @@ export LINE_TYPE=${LINE_TYPE:-${LINE_TYPE}}
 export SENDMAIL=${SENDMAIL:-YES}
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
-export SENDDBN=${SENDDBN:-NO}
+export SENDDBN=${SENDDBN:-YES}
 export KEEPDATA=${KEEPDATA:-NO}
 
 export maillist=${maillist:-'marcel.caron@noaa.gov,alicia.bentley@noaa.gov'}

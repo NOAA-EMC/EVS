@@ -43,7 +43,7 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 export envir=prod
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
-export SENDDBN=${SENDDBN:-NO}
+export SENDDBN=${SENDDBN:-YES}
 export KEEPDATA=${KEEPDATA:-YES}
 
 ## developers directories
