@@ -57,7 +57,7 @@ export nproc=3
 export SENDMAIL=${SENDMAIL:-YES}
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
-export SENDDBN=${SENDDBN:-NO}
+export SENDDBN=${SENDDBN:-YES}
 export KEEPDATA=${KEEPDATA:-YES}
 
 export maillist=${maillist:-'marcel.caron@noaa.gov,alicia.bentley@noaa.gov'}

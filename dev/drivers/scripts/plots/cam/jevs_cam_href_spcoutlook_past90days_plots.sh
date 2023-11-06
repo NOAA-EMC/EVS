@@ -34,7 +34,7 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 export KEEPDATA=YES
 export SENDMAIL=YES
-export SENDDBN=NO
+export SENDDBN=YES
 
 export vhr=00
 export past_days=90

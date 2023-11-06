@@ -18,7 +18,7 @@ set -x
   export SENDECF=YES
   export SENDCOM=YES
   export KEEPDATA=YES
-  export SENDDBN=NO
+  export SENDDBN=YES
   export SENDDBN_NTC=
   export SENDMAIL=YES
   export job=${PBS_JOBNAME:-jevs_mesoscale_grid2obs_stats}

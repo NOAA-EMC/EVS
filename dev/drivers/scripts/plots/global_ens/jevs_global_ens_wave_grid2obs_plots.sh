@@ -40,7 +40,7 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 export envir=prod
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
-export SENDDBN=NO
+export SENDDBN=YES
 export KEEPDATA=${KEEPDATA:-YES}
 export SENDMAIL=YES
 

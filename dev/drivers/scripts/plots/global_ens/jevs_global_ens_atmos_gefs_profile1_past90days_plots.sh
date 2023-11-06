@@ -29,7 +29,7 @@ source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 export envir=prod
 
 export KEEPDATA=YES
-export SENDDBN=NO
+export SENDDBN=YES
 
 export cyc=00
 export past_days=90
