@@ -3,7 +3,7 @@ OBJS=pcpconform.o
 CMD=pcpconform
 DEBUG=-check all -ftrapuv
 LIBS=${W3EMC_LIB4} ${BACIO_LIB4}
-FFLAGS += ${FFLAGS} -FR -cpp
+FFLAGS += -FR -cpp
 LDFLAGS=
 BINDIR=${EXECevs}
 

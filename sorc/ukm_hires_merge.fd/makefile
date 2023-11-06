@@ -1,6 +1,6 @@
 SRCS=ukm_hires_merge.f
 CMD=ukm_hires_merge
-FFLAGS += ${FFLAGS} -O2 -convert big_endian -mkl -free
+FFLAGS += -O2 -convert big_endian -mkl -free
 DEBUG=-check all -ftrapuv
 LIBS=-L${LIBDIRW3EMC} -l${W3EMCLIB} -L${LIBDIRBACIO} -l${BACIOLIB}
 BINDIR=${EXECevs}

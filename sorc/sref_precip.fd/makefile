@@ -3,7 +3,7 @@ CMD=sref_precip.x
 DEBUG=-check all -ftrapuv
 INC= ${G2_INC4}
 LIBS= ${IP_LIB4} ${W3EMC_LIB4} ${BACIO_LIB4}  ${SP_LIB4} ${G2_LIB4} ${JASPER_LIB} ${PNG_LIB} ${Z_LIB}
-FFLAGS += ${FFLAGS} -O3 -auto -convert big_endian -I $(INC)
+FFLAGS += -O3 -auto -convert big_endian -I $(INC)
 BINDIR=${EXECevs}
 
 $(CMD):
