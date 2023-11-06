@@ -92,4 +92,3 @@ echo "Begin to print METplus Log files "
   cat $DATA/logs/*
 echo "End to print METplus Log files "
 
-exit

@@ -116,8 +116,7 @@ if [ $USE_CFP = YES ]; then
          export SLURM_KILL_BAD_EXIT=0
 	 launcher="srun --export=ALL --multi-prog"
       else
-         echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-	 exit 1
+         err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
       fi
       $launcher $MP_CMDFILE
       nc=$((nc+1))
@@ -200,8 +199,7 @@ if [ $USE_CFP = YES ]; then
 			export SLURM_KILL_BAD_EXIT=0
 			launcher="srun --export=ALL --multi-prog"
 		else
-			echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-			exit 1
+			err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
 		fi
 		$launcher $MP_CMDFILE
 		nc=$((nc+1))
@@ -269,8 +267,7 @@ if [ $USE_CFP = YES ]; then
 			export SLURM_KILL_BAD_EXIT=0
 			launcher="srun --export=ALL --multi-prog"
 		else
-			echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-			exit 1
+			err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
 		fi
 		$launcher $MP_CMDFILE
 		nc=$((nc+1))
@@ -348,8 +345,7 @@ echo "*****************************"
                 export SLURM_KILL_BAD_EXIT=0
                 launcher="srun --export=ALL --multi-prog"
             else
-                echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-                exit 1
+                err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
             fi
             $launcher $MP_CMDFILE
             nc=$((nc+1))
@@ -382,4 +378,3 @@ echo "Begin to print METplus Log files "
   cat $DATA/grid2obs/METplus_output/*/*/pb2nc/logs/*
 echo "End to print METplus Log files "
 
-exit

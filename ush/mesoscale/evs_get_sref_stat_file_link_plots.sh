@@ -39,8 +39,7 @@ for MODEL in $MODEL_LIST ; do
          ln -sf ${model_stat_dir}/evs.stats.${model}.${VRF_CASE}.v${day}.stat ${MODEL}_${day}.stat
     fi
   else
-     echo "Wrong model"
-     exit
+     err_exit "Wrong model"
   fi 
 
 done

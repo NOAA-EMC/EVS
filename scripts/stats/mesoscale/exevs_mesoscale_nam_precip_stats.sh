@@ -93,4 +93,3 @@ echo "Begin to print METplus Log files "
 echo "End to print METplus Log files "
 
 
-exit

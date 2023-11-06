@@ -42,8 +42,7 @@ if [ "$OBSNAME" = "raob" ]; then
 elif [ "$OBSNAME" = "metar" ]; then
     export VHOUR_LIST="00 03 06 09 12 15 18 21"
 else
-    echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
-    exit 1
+    err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
 fi
 
   if [ "$NEST" = "namer" ]; then
@@ -55,8 +54,7 @@ fi
     elif [ "$OBSNAME" = "metar" ]; then
       export VAR_NAME_LIST=""
     else
-      echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
-      exit 1
+      err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
     fi
     export MASK_POLY_LIST="${FIXevs}/masks/G221_NAMER.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS.nc, ${FIXevs}/masks/Alaska_G221.nc"
     export MASK_CUSTOM_LIST=""
@@ -77,8 +75,7 @@ fi
     elif [ "$OBSNAME" = "metar" ]; then
       export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING"
     else
-      echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
-      exit 1
+      err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
     fi
     export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G221_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_South.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_West.nc"
     export MASK_CUSTOM_LIST=""
@@ -101,8 +98,7 @@ fi
 	  elif [ "$OBSNAME" = "mping" ]; then
 		  export VAR_NAME_LIST="PTYPE"
 	  else
-		  echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
-		  exit 1
+		  err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
 	  fi
 	  export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G218_CONUS.nc, ${FIXevs}/masks/Bukovsky_G218_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G218_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G218_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G218_CONUS_South.nc, ${FIXevs}/masks/Alaska_G221.nc"
 	  export MASK_CUSTOM_LIST=""
@@ -122,8 +118,7 @@ fi
     elif [ "$OBSNAME" = "metar" ]; then
       export VAR_NAME_LIST=""
     else
-      echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
-      exit 1
+      err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
     fi
     export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G221_CONUS.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_East.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_West.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_Central.nc, ${FIXevs}/masks/Bukovsky_G221_CONUS_South.nc"
     export MASK_CUSTOM_LIST=""
@@ -143,8 +138,7 @@ fi
     elif [ "$OBSNAME" = "metar" ]; then
       export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc VIS CEILING"
     else
-      echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
-      exit 1
+      err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
     fi
 
     export MASK_POLY_LIST="${FIXevs}/masks/Bukovsky_G221_Appalachia.nc, ${FIXevs}/masks/Bukovsky_G221_CPlains.nc, ${FIXevs}/masks/Bukovsky_G221_DeepSouth.nc, ${FIXevs}/masks/Bukovsky_G221_GreatBasin.nc, ${FIXevs}/masks/Bukovsky_G221_GreatLakes.nc, ${FIXevs}/masks/Bukovsky_G221_Mezquital.nc, ${FIXevs}/masks/Bukovsky_G221_MidAtlantic.nc, ${FIXevs}/masks/Bukovsky_G221_NorthAtlantic.nc, ${FIXevs}/masks/Bukovsky_G221_NPlains.nc, ${FIXevs}/masks/Bukovsky_G221_NRockies.nc, ${FIXevs}/masks/Bukovsky_G221_PacificNW.nc, ${FIXevs}/masks/Bukovsky_G221_PacificSW.nc, ${FIXevs}/masks/Bukovsky_G221_Prairie.nc, ${FIXevs}/masks/Bukovsky_G221_Southeast.nc, ${FIXevs}/masks/Bukovsky_G221_Southwest.nc, ${FIXevs}/masks/Bukovsky_G221_SPlains.nc, ${FIXevs}/masks/Bukovsky_G221_SRockies.nc"
@@ -165,8 +159,7 @@ fi
     elif [ "$OBSNAME" = "metar" ]; then
       export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING"
     else 
-      echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
-      exit 1
+      err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
     fi
     export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G221.nc"
     export MASK_CUSTOM_LIST=""
@@ -186,8 +179,7 @@ fi
     elif [ "$OBSNAME" = "metar" ]; then
       export VAR_NAME_LIST=""
     else
-      echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
-      exit 1
+      err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
     fi
     export MASK_POLY_LIST="${FIXevs}/masks/Alaska_G091.nc, ${FIXevs}/masks/Alaska_G221.nc"
     export MASK_CUSTOM_LIST=""
@@ -206,8 +198,7 @@ fi
     elif [ "$OBSNAME" = "metar" ]; then
        export VAR_NAME_LIST=""
     else
-      echo "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
-      exit 1
+      err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
     fi
     export GRID_POLY_LIST="${FIXevs}/masks/Bukovsky_G221_CONUS.nc"
     export NEST_INPUT_TEMPLATE=""
@@ -217,8 +208,7 @@ fi
     export FHR_END_SHORT="81"
     export FHR_INCR_SHORT="06"
   else
-    echo "The provided NEST, $NEST, is not supported for $MODELNAME"
-    exit 1
+    err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
   fi
 
   echo "END: $(basename ${BASH_SOURCE[0]})"
