@@ -17,7 +17,6 @@ module load craype/${craype_ver}
 module load cray-mpich/${craympich_ver}
 module load cray-pals/${craypals_ver}
 module load bacio/${bacio_ver}
-module load w3nco/${w3nco_ver}
 module load w3emc/${w3emc_ver}
 module load ip/${ip_ver}
 module load sp/${sp_ver}
@@ -26,9 +25,6 @@ module load jasper/${jasper_ver}
 module load libpng/${libpng_ver}
 module load zlib/${zlib_ver}
 module list
-w3nco_lib4_name=$(echo ${W3NCO_LIB4##*/})
-export W3NCOLIB=$(echo $w3nco_lib4_name | sed -e "s/lib//g" | sed -e "s/\.a//g")
-export LIBDIRW3NCO=$(echo $W3NCO_LIB4 | sed -e "s/\/${w3nco_lib4_name}//g")
 w3emc_lib4_name=$(echo ${W3EMC_LIB4##*/})
 export W3EMCLIB=$(echo $w3emc_lib4_name | sed -e "s/lib//g" | sed -e "s/\.a//g")
 export LIBDIRW3EMC=$(echo $W3EMC_LIB4 | sed -e "s/\/${w3emc_lib4_name}//g")
