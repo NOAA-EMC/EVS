@@ -1,10 +1,9 @@
 SRCS=pcpconform.f
 OBJS=pcpconform.o
 CMD=pcpconform
-FC=ifort
 DEBUG=-check all -ftrapuv
-LIBS=${W3NCO_LIB4} ${W3EMC_LIB4} ${BACIO_LIB4}
-FFLAGS=-FR -cpp 
+LIBS=${W3EMC_LIB4} ${BACIO_LIB4}
+FFLAGS += -FR -cpp
 LDFLAGS=
 BINDIR=${EXECevs}
 
