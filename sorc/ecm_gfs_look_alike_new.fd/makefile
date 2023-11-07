@@ -1,17 +1,16 @@
 SRCS=ecm_gfs_look_alike_new.f90
 CMD=ecm_gfs_look_alike_new
-FC=ifort
-FOPTS=-O2 -convert big_endian -traceback -mkl -free
+FFLAGS += -O2 -convert big_endian -mkl -free
 DEBUG=-check all -ftrapuv
 LIBS=-L${LIBDIRW3EMC} -l${W3EMCLIB} -L${LIBDIRBACIO} -l${BACIOLIB}
 BINDIR=${EXECevs}
 
 $(CMD): $(SRCS)
-	 $(FC) $(FOPTS) $(SRCS) $(LIBS) -o $(CMD)
+	 $(FC) $(FFLAGS) $(SRCS) $(LIBS) -o $(CMD)
 all: $(CMD)
-debug:FOPTS += $(DEBUG)
+debug:FFLAGS += $(DEBUG)
 debug:$(CMD)
 clean:
-	-rm -f $(CMD)
+	-rm -f *.o $(CMD)
 install:
 	-mv $(CMD) $(BINDIR)/.
