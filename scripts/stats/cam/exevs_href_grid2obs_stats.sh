@@ -1,10 +1,10 @@
 #!/bin/ksh
 #################################################################
-# Script Name: verf_g2g_reflt.sh.sms $vday $vcyc
-# Purpose:   To run grid-to-grid verification on reflectivity
-#
-# Log History:  Julia Zhu -- 2010.04.28 
-################################################################
+## Purpose:   Setup some paths and run href grid2obs stat ush scripts
+##
+## Last updated 10/30/2023: by  Binbin Zhou, Lynker@EMC/NCEP
+##################################################################
+
 set -x
 
 
@@ -12,8 +12,7 @@ export WORK=$DATA
 cd $WORK
 
 #check input data are available:
-$USHevs/$COMPONENT/evs_check_href_files.sh 
-export err=$?; err_chk
+$USHevs/cam/evs_check_href_files.sh 
 
 #lvl = profile or sfc or both
 export lvl='both'
@@ -42,18 +41,19 @@ export vday=$VDATE
 
 #  domain = conus or alaska or all
 export domain="all"
-#export domain="HI"
 
-
+#***************************************
+# Prepare the prepbufr data 
+# **************************************
 if [ $prepare = yes ] ; then
 
   if [ -s $COMINobsproc/rap.${VDATE}/rap.t12z.prepbufr.tm00 ] && [ -s $COMINobsproc/gdas.${vday}/00/atmos/gdas.t00z.prepbufr ] ; then
-
+     
+     domian=both	  
      $USHevs/cam/evs_href_preppare.sh prepbufr
      export err=$?; err_chk
      $USHevs/cam/evs_href_preppare.sh gfs_prepbufr
      export err=$?; err_chk
-
   else
        export subject="GFS or RAP Prepbufr Data Missing for EVS ${COMPONENT}"
        export maillist=${maillist:-'geoffrey.manikin@noaa.gov,binbin.zhou@noaa.gov'}
@@ -67,23 +67,26 @@ if [ $prepare = yes ] ; then
 fi 
 
 
+#*****************************************
+# Build a POE script to collect sub-jobs
+# ****************************************
 >run_href_all_grid2obs_poe
 
-#system: 10 jobs (8 on CONUS, 2 on Alaska)
+#system: build sub-jobs (8 on CONUS, 2 on Alaska)
 if [ $verif_system = yes ] ; then 
-  $USHevs/cam/evs_href_grid2obs_system.sh 
-  export err=$?; err_chk
+  $USHevs/cam/evs_href_grid2obs_system.sh
+  export err=$?; err_chk 
   cat ${DATA}/run_all_href_system_poe.sh >> run_href_all_grid2obs_poe
 fi
 
-#profile: total 10 jobs (4 for conus and 2 for alaska)
+#profile: build sub-jobs (4 for conus and 2 for alaska)
 if [ $verif_profile = yes ] ; then 
   $USHevs/cam/evs_href_grid2obs_profile.sh $domain
   export err=$?; err_chk
   cat ${DATA}/run_all_href_profile_poe.sh >> run_href_all_grid2obs_poe 
 fi 
 
-#Product: 16 jobs
+#Product: build sub-jobs
 if [ $verif_product = yes ] ; then
   $USHevs/cam/evs_href_grid2obs_product.sh
   export err=$?; err_chk
@@ -95,15 +98,23 @@ fi
 chmod 775 run_href_all_grid2obs_poe
 
 
+#*************************************************
+# Run the POE script to generate small stat files 
+#*************************************************
 if [ $run_mpi = yes ] ; then
     mpiexec -np 36 -ppn 36 --cpu-bind verbose,depth cfp  ${DATA}/run_href_all_grid2obs_poe
 else
     ${DATA}/run_href_all_grid2obs_poe
 fi
 
+export err=$?; err_chk
+
+#******************************************************************
+# Run gather job to combine the small stats to form a big stat file
+# *****************************************************************
 if [ $gather = yes ] && [ -s run_href_all_grid2obs_poe ] ; then
-  $USHevs/cam/evs_href_gather.sh $VERIF_CASE  
-  export err=$?; err_chk
+  $USHevs/cam/evs_href_gather.sh $VERIF_CASE
+  export err=$?; err_chk  
 fi
 
 # Cat the METplus log files
@@ -155,4 +166,5 @@ for log_dir in $log_dirs2; do
     fi
 done
 
-export err=$?; err_chk
+exit
+

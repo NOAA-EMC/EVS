@@ -1,14 +1,16 @@
 #!/bin/ksh
+#************************************************************************************
+#  Purpose: Generate href precip poe and sub-jobs files
+#           including 4 mean (mean, pmmn, lpmm and average), probability (prob, eas)
+#           and system (ecnt line type)
+#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#***********************************************************************************
 set -x 
 
-#Binbin note: If METPLUS_BASE,  PARM_BASE not set, then they will be set to $METPLUS_PATH
-#             by config_launcher.py in METplus-3.0/ush
-#             why config_launcher.py is not in METplus-3.1/ush ??? 
-
-
-############################################################
-
-
+#*******************************************
+# Build POE script to collect sub-jobs 
+#******************************************
+export members=10
 >run_all_href_precip_poe.sh
 
 
@@ -23,6 +25,9 @@ for obsvtype in ccpa mrms ; do
 	  
      PROD=`echo $prod | tr '[a-z]' '[A-Z]'`
 
+     #************************************
+     # Build sub-jobs
+     # ***********************************
      >run_href_precip_${prod}.${obsv}.sh
 
      if [ $acc = 24h ] ; then
@@ -38,6 +43,7 @@ for obsvtype in ccpa mrms ; do
              echo  "export lead='24, 30, 36, 42, 48'" >> run_href_precip_${prod}.${obsv}.sh
         fi
      else 
+                # acc=01h, 03h 
 	if [ $prod = system ] ; then 
              # Since HREF members are every 3fhr stored in verf_g2g directory 
              echo  "export vbeg=0" >>run_href_precip_${prod}.${obsv}.sh
@@ -187,6 +193,10 @@ for obsvtype in ccpa mrms ; do
           echo  "export modelgrid=conus.${prod}" >> run_href_precip_${prod}.${obsv}.sh
        fi
 
+       #echo  "export vbeg=0" >>run_href_precip_${prod}.${obsv}.sh
+       #echo  "export vend=21" >>run_href_precip_${prod}.${obsv}.sh
+       #echo  "export valid_increment=3600" >> run_href_precip_${prod}.${obsv}.sh
+       #echo  "export lead='1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23'" >> run_href_precip_${prod}.${obsv}.sh
 
        if [ $prod = system ] ; then
          echo  "export modelpath=$COMHREF" >> run_href_precip_${prod}.${obsv}.sh
@@ -211,6 +221,10 @@ for obsvtype in ccpa mrms ; do
          echo  "export modelgrid=ak.${prod}" >> run_href_precip_${prod}.${obsv}.sh
       fi
 
+       #echo  "export vbeg=0" >>run_href_precip_${prod}.${obsv}.sh
+       #echo  "export vend=21" >>run_href_precip_${prod}.${obsv}.sh
+       #echo  "export valid_increment=3600" >> run_href_precip_${prod}.${obsv}.sh
+       #echo  "export lead='1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23'" >> run_href_precip_${prod}.${obsv}.sh
 
        if [ $prod = system ] ; then
          echo  "export modelpath=$COMHREF" >> run_href_precip_${prod}.${obsv}.sh
@@ -234,6 +248,10 @@ for obsvtype in ccpa mrms ; do
           echo  "export modelgrid=conus.${prod}" >> run_href_precip_${prod}.${obsv}.sh
        fi
 
+       #echo  "export vbeg=0" >>run_href_precip_${prod}.${obsv}.sh
+       #echo  "export vend=21" >>run_href_precip_${prod}.${obsv}.sh
+       #echo  "export valid_increment=10800" >> run_href_precip_${prod}.${obsv}.sh
+       #echo  "export lead='24,27,30,33,36,39,42,45,48'" >> run_href_precip_${prod}.${obsv}.sh
 
        if [ $prod = system ] ; then
          echo  "export modelpath=$COMHREF" >> run_href_precip_${prod}.${obsv}.sh
@@ -256,6 +274,10 @@ for obsvtype in ccpa mrms ; do
          echo  "export modelgrid=ak.${prod}" >> run_href_precip_${prod}.${obsv}.sh
       fi
 
+       #echo  "export vbeg=0" >>run_href_precip_${prod}.${obsv}.sh
+       #echo  "export vend=21" >>run_href_precip_${prod}.${obsv}.sh
+       #echo  "export valid_increment=10800" >> run_href_precip_${prod}.${obsv}.sh
+       #echo  "export lead='24,27,30,33,36,39,42,45,48'" >> run_href_precip_${prod}.${obsv}.sh
 
        if [ $prod = system ] ; then
          echo  "export modelpath=$COMHREF" >> run_href_precip_${prod}.${obsv}.sh
@@ -271,6 +293,10 @@ for obsvtype in ccpa mrms ; do
     elif [ $obsv = ccpa24h ] ; then
 
        echo  "export obsvtail=nc" >> run_href_precip_${prod}.${obsv}.sh
+       #echo  "export vbeg=12" >>run_href_precip_${prod}.${obsv}.sh
+       #echo  "export vend=12" >>run_href_precip_${prod}.${obsv}.sh
+       #echo  "export valid_increment=21600" >> run_href_precip_${prod}.${obsv}.sh
+       #echo  "export lead='24, 30, 36, 42, 48'" >> run_href_precip_${prod}.${obsv}.sh
 
       if [ $prod = prob ] || [ $prod = eas ] ; then
        echo  "export modelhead=href" >> run_href_precip_${prod}.${obsv}.sh
@@ -295,6 +321,10 @@ for obsvtype in ccpa mrms ; do
     elif [ $obsv = mrms24h ] ; then
 
        echo  "export obsvtail=nc" >> run_href_precip_${prod}.${obsv}.sh
+       #echo  "export vbeg=00" >>run_href_precip_${prod}.${obsv}.sh
+       #echo  "export vend=18" >>run_href_precip_${prod}.${obsv}.sh
+       #echo  "export valid_increment=21600" >> run_href_precip_${prod}.${obsv}.sh
+       #echo  "export lead='24, 30, 36, 42, 48'" >> run_href_precip_${prod}.${obsv}.sh
 
       if [ $prod = prob ] || [ $prod = eas ] ; then
        echo  "export modelhead=href" >> run_href_precip_${prod}.${obsv}.sh

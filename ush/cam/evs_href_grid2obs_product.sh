@@ -1,17 +1,15 @@
 #!/bin/ksh
+#***************************************************************************************
+#  Purpose: Generate href grid2obs product joe and sub-jobs files by directly using href 
+#           operational ensemble mean and probability product files   
+#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#***************************************************************************************
 set -x 
 
-#Binbin note: If METPLUS_BASE,  PARM_BASE not set, then they will be set to $METPLUS_PATH
-#             by config_launcher.py in METplus-3.0/ush
-#             why config_launcher.py is not in METplus-3.1/ush ??? 
-
-
-############################################################
-
-
-
+#*******************************************
+# Build POE script to collect sub-jobs
+#******************************************
 >run_all_href_product_poe.sh
-
 
 obsv='prepbufr'
 
@@ -31,7 +29,9 @@ for prod in mean prob ; do
     for valid_run in run1 run2 run3 run4 ; do
 
      
-
+     #***********************
+     # Build sub-jobs
+     # **********************
      >run_href_${model}.${dom}.${valid_run}_product.sh
        echo  "export model=HREF${prod} " >>  run_href_${model}.${dom}.${valid_run}_product.sh
        echo  "export domain=$dom " >> run_href_${model}.${dom}.${valid_run}_product.sh     
@@ -53,9 +53,12 @@ for prod in mean prob ; do
 
        if [ $valid_run = run1 ] ; then 
          echo  "export vbeg=0" >>run_href_${model}.${dom}.${valid_run}_product.sh
+         #echo  "export vbeg=12" >>run_href_${model}.${dom}.${valid_run}_product.sh
+         #echo  "export vend=12" >>run_href_${model}.${dom}.${valid_run}_product.sh
          echo  "export vend=23" >>run_href_${model}.${dom}.${valid_run}_product.sh
          echo  "export valid_increment=3600" >> run_href_${model}.${dom}.${valid_run}_product.sh
          echo  "export lead='1,2,3,4,5,6,7,8'" >> run_href_${model}.${dom}.${valid_run}_product.sh
+         #echo  "export lead='6'" >> run_href_${model}.${dom}.${valid_run}_product.sh
        elif [ $valid_run = run2 ] ; then
          echo  "export vbeg=0" >>run_href_${model}.${dom}.${valid_run}_product.sh
          echo  "export vend=23" >>run_href_${model}.${dom}.${valid_run}_product.sh
@@ -104,6 +107,7 @@ for prod in mean prob ; do
                                  ${maskpath}/Bukovsky_G227_SPlains.nc,
                                  ${maskpath}/Bukovsky_G227_SRockies.nc'" >> run_href_${model}.${dom}.${valid_run}_product.sh
 
+         #echo 'export verif_poly="$verif_poly, $SPCoutlookMask/TSTM_01Z.nc" ' >> run_href_${model}.${dom}.${valid_run}_product.sh
 
          echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/PointStat_fcstHREF${prod}_obsPREPBUFR_SFC.conf " >> run_href_${model}.${dom}.${valid_run}_product.sh
 
