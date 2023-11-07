@@ -365,7 +365,7 @@ if [ $modnam = ccpa ] ; then
                 cat mailmsg | mail -s "$subject" $maillist
             fi
         fi
-        nccpa_file=$(($nccpa_file + 1))
+        nccpa_file=`expr $nccpa_file + 1`
     done
     if [ -s ${WORK}/ccpa24/ccpa1 ] && [ -s ${WORK}/ccpa24/ccpa2 ] && [ -s ${WORK}/ccpa24/ccpa3 ] && [ -s ${WORK}/ccpa24/ccpa4 ] ; then
        ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${CONF_PREP}/PcpCombine_obsCCPA24h.conf
