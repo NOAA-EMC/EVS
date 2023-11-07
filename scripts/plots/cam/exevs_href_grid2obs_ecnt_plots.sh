@@ -201,9 +201,13 @@ for stats in  rmse_spread ; do
 
 
       if [ $var = mslet ] || [ $var = gust ] || [  $var = hpbl ] ; then
-        mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+        if ls ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}.png 1> /dev/null 2>&1; then
+           mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+        fi
       else
-        mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+        if ls ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}.png 1> /dev/null 2>&1; then
+           mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+        fi
       fi
 
      done #var

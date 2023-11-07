@@ -201,8 +201,10 @@ for stats in ets fbias fss ; do
     fi
 
    for domain in conus conus_east conus_west conus_south conus_central  ; do
-      mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_valid_all_times.buk_${domain}.png
-   done
+      if ls ${score_type}_regional_${domain}_${valid}_${level}_${var}_${stats}_${lead}.png 1> /dev/null 2>&1; then
+         mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_valid_all_times.buk_${domain}.png
+      fi 
+  done
 
   done
  done

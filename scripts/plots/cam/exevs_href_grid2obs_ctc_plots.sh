@@ -243,7 +243,9 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
     level=ml
   fi
 
-  mv performance_diagram_regional_${domain}_valid_${valid}_${var}_*.png evs.href.ctc.${var_new}_${level}.last${past_days}days.perfdiag_valid_${valid}.${new_domain}.png
+  if ls performance_diagram_regional_${domain}_valid_${valid}_${var}_*.png 1> /dev/null 2>&1; then
+     mv performance_diagram_regional_${domain}_valid_${valid}_${var}_*.png evs.href.ctc.${var_new}_${level}.last${past_days}days.perfdiag_valid_${valid}.${new_domain}.png
+  fi
 
  done
 done
@@ -284,7 +286,9 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
          new_domain=buk_${domain}
      fi
 
-     mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}*.png evs.href.${stat}.${var_new}_${level}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+     if ls ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}*.png 1> /dev/null 2>&1; then
+        mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}*.png evs.href.${stat}.${var_new}_${level}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+     fi
 
        done #domain
     done #stat
