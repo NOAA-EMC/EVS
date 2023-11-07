@@ -14,6 +14,7 @@ missing=0
 while [ $vhr -le 23 ] ; do 
   if [ ! -s $COMINobsproc/rap.${vday}/rap.t${vhr}z.prepbufr.tm00.nr ] ; then
     missing=$((missing + 1 ))
+    echo $COMINobsproc/rap.${vday}/rap.t${vhr}z.prepbufr.tm00.nr is missing 
   fi
   vhr=$((vhr+1))
 done
@@ -43,14 +44,17 @@ for grid in 130 242 ; do
     narre_mean=$COMINnarre/narre.${fday}/ensprod/narre.t${fvhr}z.mean.grd${grid}.f${fhr}.grib2
     if [ -s $narre_mean ] ; then
        has_narre=$((has_narre+1))
+    else
+       echo $narre_mean is missing 	    
     fi	      
   done
 
-  echo "For vhr" $vhr " and  grid" $grid " has_narre = " $has_narre
 
   if [ $has_narre -eq 0 ] ; then
      echo "All narre files are missing for vhr " $vhr "  exit execution !!!"
      exit
+  else
+     echo "For vhr" $vhr " and  grid" $grid " has_narre = " $has_narre
   fi
 
  done
