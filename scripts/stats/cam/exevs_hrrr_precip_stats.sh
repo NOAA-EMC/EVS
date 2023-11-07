@@ -293,7 +293,7 @@ if [ $SENDCOM = YES ]; then
     done
     for DIR_PATH in $MET_PLUS_OUT/*/pcp_combine/*; do
         DIR=$(echo ${DIR_PATH##*/})
-        if [ "$DIR" == "confs" ] || [ "$DIR" == "logs" ] || [ "$DIR" == "tmp" ]; then
+        if [ "$DIR" == "confs" ] || [ "$DIR" == "logs" ] || [ "$DIR" == "tmp" ] || [ -z "$(ls $DIR_PATH)" ]; then
             continue
         fi
         mkdir -p $COMOUTsmall/$DIR
