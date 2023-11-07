@@ -122,7 +122,7 @@ for prod in mean prob ; do
 
        echo  "export model=HREF${prod} " >>  run_href_${model}.${dom}.${valid_run}_product.sh
        echo  "export domain=$dom " >> run_href_${model}.${dom}.${valid_run}_product.sh
-       echo  "xport regrid=NONE" >> run_href_${model}.${dom}.${valid_run}_product.sh
+       echo  "export regrid=NONE" >> run_href_${model}.${dom}.${valid_run}_product.sh
 
        echo  "export output_base=${WORK}/grid2obs/run_href_${model}.${dom}.${valid_run}_product" >> run_href_${model}.${dom}.${valid_run}_product.sh
        echo  "export OBTYPE='PREPBUFR'" >> run_href_${model}.${dom}.${valid_run}_product.sh
