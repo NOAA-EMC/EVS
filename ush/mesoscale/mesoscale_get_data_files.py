@@ -1,6 +1,6 @@
 # =============================================================================
 #
-# NAME: cam_get_data_files.py
+# NAME: mesoscale_get_data_files.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: 
 # DEPENDENCIES: os.path.join([
