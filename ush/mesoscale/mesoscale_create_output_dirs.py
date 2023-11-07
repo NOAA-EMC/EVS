@@ -352,10 +352,6 @@ elif STEP == 'plots':
         COMOUT_dir_list.append(os.path.join(
             COMOUTplots, VERIF_CASE
         ))
-        # for plot_group in [
-        #       'aq', 'aviation', 'cape', 'ceil_vis', 'precip', 
-        #       'radar', 'rtofs_sfc', 'sfc_upper'
-        #    ]:
         for plot_group in ['sfc_upper']:
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
@@ -389,7 +385,6 @@ elif STEP == 'plots':
         COMOUT_dir_list.append(os.path.join(
             COMOUTplots, VERIF_CASE
         ))
-        #for plot_group in ['precip', 'radar', 'rtofs_sfc', 'sfc_upper']:
         for plot_group in ['precip']:
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(
@@ -456,10 +451,6 @@ elif STEP == 'plots':
         COMOUT_dir_list.append(os.path.join(
             COMOUTplots, VERIF_CASE
         ))
-        # for plot_group in [
-        #        'aq', 'aviation', 'cape', 'ceil_vis', 'precip', 
-        #        'radar', 'rtofs_sfc', 'sfc_upper'
-        #    ]:
         for plot_group in ['sfc_upper']:
             for eval_period in all_eval_periods:
                 working_dir_list.append(os.path.join(

@@ -1056,7 +1056,11 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         f'{str(time_period_savename).lower()}'
     )
     if not os.path.isdir(save_subdir):
-        os.makedirs(save_subdir)
+        try:
+            os.makedirs(save_subdir)
+        except FileExistsError as e:
+            logger.warning(f"Several processes are making {save_subdir} at "
+                           + f"the same time. Passing")
     save_path = os.path.join(save_subdir, save_name+'.png')
     fig.savefig(save_path, dpi=dpi)
     if restart_dir:
