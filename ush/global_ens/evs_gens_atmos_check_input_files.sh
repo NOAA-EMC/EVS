@@ -18,8 +18,7 @@ if [ $var = gfsanl ] ; then
 
   echo "Missing gfsanl files = " $missing
   if [ $missing -eq 4  ] ; then
-    echo "all of the gfsanl files are missing, exit execution!!!"
-    exit
+    err_exit "all of the gfsanl files are missing, exit execution!!!"
   else
     echo "gfsanl data are OK!"
   fi
@@ -37,8 +36,7 @@ if [ $var = cmcanl ] ; then
 
   echo "Missing cmcanl files = " $missing
   if [ $missing -eq 2  ] ; then
-    echo "all of the cmcanl files are missing, exit execution!!!"
-    exit
+    err_exit "all of the cmcanl files are missing, exit execution!!!"
   else
     echo "cmcanl data are OK!"
   fi
@@ -56,8 +54,7 @@ if [ $var = ecmanl ] ; then
 
   echo "Missing ecmanl files = " $missing
   if [ $missing -eq 2  ] ; then
-    echo "all of the ecmanl files are missing, exit execution!!!"
-    exit
+    err_exit "all of the ecmanl files are missing, exit execution!!!"
   else
     echo "ecmanl data are OK!"
   fi
@@ -67,8 +64,7 @@ fi
 
 if [ $var = gfsanl_1.5deg ] ; then
   if [ ! -s ${EVSIN}.${vday}/gefs/gfsanl.t00z.deg1.5.f000.grib2 ] ; then
-    echo "gfsanl_1.5deg file is missing, exit execution!!!"
-    exit
+    err_exit "gfsanl_1.5deg file is missing, exit execution!!!"
   else
     echo "gfsanl_1.5deg data is OK!"
   fi
@@ -76,8 +72,7 @@ fi
 
 if [ $var = cmcanl_1.5deg ] ; then
   if [ ! -s ${EVSIN}.${vday}/cmce/cmcanl.t00z.deg1.5.f000.grib2 ] ; then
-      echo "cmcanl_1.5deg file is missing, exit execution!!!"
-      exit
+      err_exit "cmcanl_1.5deg file is missing, exit execution!!!"
   else
       echo "cmcanl_1.5deg data is OK!"
   fi
@@ -96,8 +91,7 @@ if [ $var = prepbufr ] ; then
 
   echo "Missing prepbufr files = " $missing
   if [ $missing -eq 4  ] ; then
-    echo "all of the preppbufr files are missing, exit execution!!!"
-    exit
+    err_exit "all of the preppbufr files are missing, exit execution!!!"
   else
     echo "prepbufr data are OK!" 
   fi
@@ -115,8 +109,7 @@ if [ $var = prepbufr_profile ] ; then
 
   echo "Missing prepbufr files = " $missing
   if [ $missing -eq 4  ] ; then
-    echo "all of the preppbufr_profile files are missing, exit execution!!!"
-    exit
+    err_exit "all of the preppbufr_profile files are missing, exit execution!!!"
   else
     echo "prepbufr_profile data are OK!"
   fi
@@ -129,8 +122,7 @@ if [ $var = ccpa ] ; then
    if [ -s ${EVSIN}.${vday}/gefs/ccpa.t12z.grid3.24h.f00.nc ] ; then
       echo "CCPA24h data is OK"
    else
-      echo "CPA24h data is mssing"
-      exit
+      err_exit "CPA24h data is mssing"
    fi
 fi 
 
@@ -142,8 +134,7 @@ if [ $var = osi_saf ]; then
    if [ -s ${EVSIN}.${vday}/osi_saf/osi_saf.${period}.nc ] ; then
         echo "OSI_SAF data is OK"
    else
-        echo "OSI_SAF data is mssing"
-        exit
+        err_exit "OSI_SAF data is mssing"
    fi
 fi
 
@@ -152,8 +143,7 @@ if [ $var = nohrsc ] ; then
    if [ -s ${EVSIN}.${vday}/gefs/nohrsc.t00z.grid184.grb2 ] && [ -s ${EVSIN}.${vday}/gefs/nohrsc.t12z.grid184.grb2 ] ; then
        echo "NOHRCS data is OK"
    else
-      echo "NOHRSC data is mssing"
-      exit
+      err_exit "NOHRSC data is mssing"
   fi
 fi
 
@@ -162,8 +152,7 @@ if [ $var = ghrsst ] ; then
    if [ -s ${EVSIN}.${vday}/gefs/ghrsst.t00z.nc ] ; then
        echo "GHRSST data is OK"
    else
-       echo "GHRSST data is mssing"
-       exit
+       err_exit "GHRSST data is mssing"
   fi
 fi
 
@@ -218,8 +207,7 @@ if [ $var = gefs ] || [ $var = gefs_bc ] ; then
    echo ihour_fhr_ok=$ihour_fhr_ok
    echo ihour_fhr_missing=$ihour_fhr_missing
    if [ $ihour_fhr_ok -eq 0 ] ; then
-    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
-    exit
+    err_exit ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
    else
     echo at least there are some gefs member files!
     echo Continue ...
@@ -273,8 +261,7 @@ if [ $var = cmce ] || [ $var = cmce_bc ] ; then
    echo ihour_fhr_ok=$ihour_fhr_ok
    echo ihour_fhr_missing=$ihour_fhr_missing
    if [ $ihour_fhr_ok -eq 0 ] ; then
-    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
-    exit
+    err_exit ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
    else
     echo at least there are some cmce member files!
     echo Continue ...
@@ -328,8 +315,7 @@ if [ $var = ecme ] ; then
    echo ihour_fhr_ok=$ihour_fhr_ok
    echo ihour_fhr_missing=$ihour_fhr_missing
    if [ $ihour_fhr_ok -eq 0 ] ; then
-    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
-    exit
+    err_exit ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
    else
     echo at least there are some ecme member files!
     echo Continue ...
@@ -381,8 +367,7 @@ if [ $var = gefs_apcp24h ] ; then
    echo ihour_fhr_ok=$ihour_fhr_ok
    echo ihour_fhr_missing=$ihour_fhr_missing
    if [ $ihour_fhr_ok -eq 0 ] ; then
-    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
-    exit
+    err_exit ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
    else
     echo at least there are some gefs_apcp24h member files!
     echo Continue ...
@@ -436,8 +421,7 @@ if [ $var = cmce_apcp24h ] ; then
    echo ihour_fhr_ok=$ihour_fhr_ok
    echo ihour_fhr_missing=$ihour_fhr_missing
    if [ $ihour_fhr_ok -eq 0 ] ; then
-    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
-    exit
+    err_exit ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
    else
     echo at least there are some cmce_apcp24h member files!
     echo Continue ...
@@ -491,8 +475,7 @@ if [ $var = ecme_apcp24h ] ; then
    echo ihour_fhr_ok=$ihour_fhr_ok
    echo ihour_fhr_missing=$ihour_fhr_missing
    if [ $ihour_fhr_ok -eq 0 ] ; then
-    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
-    exit
+    err_exit ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
    else
     echo at least there are some ecme_apcp24h member files!
     echo Continue ...
@@ -545,8 +528,7 @@ if [ $var = gefs_icec_24h ] ; then
    echo ihour_fhr_ok=$ihour_fhr_ok
    echo ihour_fhr_missing=$ihour_fhr_missing
    if [ $ihour_fhr_ok -eq 0 ] ; then
-    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
-    exit
+    err_exit ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
    else
     echo at least there are some gefs_icec_24h member files!
     echo Continue ...
@@ -600,8 +582,7 @@ if [ $var = gefs_sst24h ] ; then
    echo ihour_fhr_ok=$ihour_fhr_ok
    echo ihour_fhr_missing=$ihour_fhr_missing
    if [ $ihour_fhr_ok -eq 0 ] ; then
-    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
-    exit
+    err_exit ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
    else
     echo at least there are some gefs_sst24h member files!
     echo Continue
@@ -654,8 +635,7 @@ if [ $var = gefs_WEASD ] ; then
    echo ihour_fhr_ok=$ihour_fhr_ok
    echo ihour_fhr_missing=$ihour_fhr_missing
    if [ $ihour_fhr_ok -eq 0 ] ; then
-    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
-    exit
+    err_exit ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
    else
     echo at least there are some gefs_WEASD member files!
     echo Continue
@@ -708,8 +688,7 @@ if [ $var = gefs_SNOD ] ; then
    echo ihour_fhr_ok=$ihour_fhr_ok
    echo ihour_fhr_missing=$ihour_fhr_missing
    if [ $ihour_fhr_ok -eq 0 ] ; then
-    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
-    exit
+    err_exit ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
    else
     echo at least there are some gefs_SNOD member files!
     echo Continue
@@ -763,8 +742,7 @@ if [ $var = cmce_SNOD ] ; then
    echo ihour_fhr_ok=$ihour_fhr_ok
    echo ihour_fhr_missing=$ihour_fhr_missing
    if [ $ihour_fhr_ok -eq 0 ] ; then
-    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
-    exit
+    err_exit ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
    else
     echo at least there are some cmce_SNOD member files!
     echo Continue
@@ -819,8 +797,7 @@ if [ $var = cmce_WEASD ] ; then
    echo ihour_fhr_ok=$ihour_fhr_ok
    echo ihour_fhr_missing=$ihour_fhr_missing
    if [ $ihour_fhr_ok -eq 0 ] ; then
-    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
-    exit
+    err_exit ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
    else
     echo at least there are some cmce_WEASD member files!
     echo Continue
@@ -874,8 +851,7 @@ if [ $var = ecme_weasd ] ; then
    echo ihour_fhr_ok=$ihour_fhr_ok
    echo ihour_fhr_missing=$ihour_fhr_missing
    if [ $ihour_fhr_ok -eq 0 ] ; then
-    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
-    exit
+    err_exit ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
    else
     echo at least there are some ecme_weasd member files!
     echo Continue ...
@@ -930,8 +906,7 @@ if [ $var = headline_gefs ] ; then
    echo ihour_fhr_ok=$ihour_fhr_ok
    echo ihour_fhr_missing=$ihour_fhr_missing
    if [ $ihour_fhr_ok -eq 0 ] ; then
-    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
-    exit
+    err_exit ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
    else
     echo at least there are some gefs member files!
     echo Continue ...
@@ -984,8 +959,7 @@ if [ $var = headline_cmce ] ; then
    echo ihour_fhr_ok=$ihour_fhr_ok
    echo ihour_fhr_missing=$ihour_fhr_missing
    if [ $ihour_fhr_ok -eq 0 ] ; then
-    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
-    exit
+    err_exit ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
    else
     echo at least there are some cmce member files!
     echo Continue ...
@@ -994,8 +968,7 @@ fi
 
 if [ $var = headline_gfsanl ] ; then
     if [ ! -s ${EVSIN}.${vday}/gefs/gfsanl.t00z.grid3.f000.grib2 ] ; then
-      echo " gfsanl file missing, exit execution!!!"
-      exit
+      err_exit " gfsanl file missing, exit execution!!!"
      else
        echo "gfsanl data is OK!"
        echo Continue ...
@@ -1004,8 +977,7 @@ fi
 
 if [ $var = headline_cmcanl ] ; then
     if [ ! -s ${EVSIN}.${vday}/cmce/cmcanl.t00z.grid3.f000.grib2 ] ; then
-        echo " cmcanl file missing, exit execution!!!"
-        exit
+        err_exit " cmcanl file missing, exit execution!!!"
     else
          echo "cmcanl data is OK!"
 	 echo Continue ...
@@ -1031,8 +1003,7 @@ if [ $var = headline_gfs ] ; then
 
     gfs=$EVSIN.${fday}/gefs/gfs.t${ihour}z.grid3.f${hhh}.grib2
     if [ ! -s $gfs ] ; then
-      echo $gfs not existing, exit METplus execution!
-      exit
+      err_exit $gfs not existing, exit METplus execution!
     fi 
 
     fhr=$((fhr+24))
@@ -1092,8 +1063,7 @@ if [ $var = wmo_cmce ] ; then
    echo ihour_fhr_ok=$ihour_fhr_ok
    echo ihour_fhr_missing=$ihour_fhr_missing
    if [ $ihour_fhr_ok -eq 0 ] ; then
-    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
-    exit
+    err_exit ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
    else
     echo at least there are some cmce member files!
     echo Continue ...
@@ -1102,8 +1072,7 @@ fi
 
 if [ $var = wmo_cmcanl ] ; then
   if [ ! -s ${COM_IN}/atmos.${vday}/cmce/cmcanl.t00z.grid3.f000.grib2 ] ; then
-      echo " cmcanl file missing, exit execution!!!"
-      exit
+      err_exit " cmcanl file missing, exit execution!!!"
   else
      echo "cmcanl data is OK!"
      echo Continue ...
@@ -1156,8 +1125,7 @@ if [ $var = wmo_gefs ] ; then
    echo ihour_fhr_ok=$ihour_fhr_ok
    echo ihour_fhr_missing=$ihour_fhr_missing
    if [ $ihour_fhr_ok -eq 0 ] ; then
-    echo ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
-    exit
+    err_exit ihour_missing_fhr=0 member files for all ihour and fhr are missing, exit execution of METPlus!
    else
     echo at least there are some gefs member files!
     echo Continue ...
@@ -1167,8 +1135,7 @@ fi
 
 if [ $var = wmo_gfsanl ] ; then
    if [ ! -s ${COM_IN}/atmos.${vday}/gefs/gfsanl.t00z.grid3.f000.grib2 ] ; then
-       echo " gfsanl file missing, exit execution!!!"
-       exit
+       err_exit " gfsanl file missing, exit execution!!!"
    else
        echo "gfsanl data is OK!"
        echo Continue ...
