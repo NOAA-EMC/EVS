@@ -3,11 +3,9 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=01:00:00
-#PBS -l place=vscatter,select=1:ncpus=32:mem=100GB
+#PBS -l walltime=01:30:00
+#PBS -l place=vscatter,select=1:ncpus=16:mem=25GB
 #PBS -l debug=true
-
-#Total 40  processes = 4x2 profile, 4x2 sfc, 2x2 cloud
 
 set -x
 
