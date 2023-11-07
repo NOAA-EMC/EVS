@@ -33,7 +33,7 @@ if [ $modnam = prepbufr ] ; then
     if [ $SENDMAIL = YES ] ; then
      export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
      echo "Warning:  No Prepbufr data available for ${VDATE}" > mailmsg
-     echo Missing file is $COMINobsproc/rap.${VDATE}/rap.t??z.prepbufr.tm00  >> mailmsg
+     echo Missing file is $COMINobsproc/rap.${VDATE}/rap.t${vhr}z.prepbufr.tm00  >> mailmsg
      echo "Job ID: $jobid" >> mailmsg
      cat mailmsg | mail -s "$subject" $maillist  
      exit
