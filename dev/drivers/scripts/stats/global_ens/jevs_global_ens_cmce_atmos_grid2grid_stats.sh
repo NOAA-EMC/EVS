@@ -4,14 +4,10 @@
 #PBS -q dev
 #PBS -A VERF-DEV
 #PBS -l walltime=01:30:00
-#PBS -l place=vscatter,select=1:ncpus=4:mem=100GB
+#PBS -l place=vscatter,select=1:ncpus=2:mem=50GB
 #PBS -l debug=true
 
 set -x
-
-export OMP_NUM_THREADS=1
-#3 processes 4(cmce/upper) + 1 (24h apcp)
-#
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 

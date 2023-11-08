@@ -3,16 +3,13 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=01:00:00
-#PBS -l place=vscatter,select=1:ncpus=2:mem=100GB
+#PBS -l walltime=00:30:00
+#PBS -l place=vscatter,select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
 
 set -x
 
 export OMP_NUM_THREADS=1
-#Total 18 cpu cores: assigned to 1 nodes, 18 cores for each node 
-#Total 9 processes 4(cmce/upper) + 1 (cmce/apcp24h) + 4 (cmce/apcp06h)
-#
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 source $HOMEevs/versions/run.ver
@@ -42,6 +39,7 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 export SENDMAIL=YES
+export run_mpi=no
 export maillist='alicia.bentley@noaa.gov,steven.simon@noaa.gov'
 
 ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_STATS

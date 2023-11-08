@@ -3,15 +3,11 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=03:00:00
-#PBS -l place=vscatter,select=1:ncpus=4:mem=100GB
+#PBS -l walltime=02:00:00
+#PBS -l place=vscatter,select=1:ncpus=2:mem=100GB
 #PBS -l debug=true
 
 set -x
-
-export OMP_NUM_THREADS=1
-#2 processes (ecme/upper) + 1 (24hapcp)
-#
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 

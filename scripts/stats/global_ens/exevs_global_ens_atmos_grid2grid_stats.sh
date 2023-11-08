@@ -57,11 +57,11 @@ if [ $ens = cmce ] && [ $verif_case = upper ] ; then
 fi
 
 if [ $ens = ecme ] && [ $verif_case = upper ] ; then
-      if [ ! -s ${EVSIN}.${VDATE}/ecme/ecmanl.t00z.grid3.f000.grib2 ] ; then
+      if [ ! -s ${EVSIN}.${VDATE}/ecme/ecmanl.t00z.grid3.f000.grib1 ] ; then
         if [ $SENDMAIL = YES ]; then
           export subject="EC analysis data missing "
           echo "Warning: No EC analysis available for ${VDATE}" > mailmsg 
-          echo "Missing file is ${EVSIN}.${VDATE}/ecme/ecmanl.t00z.grid3.f000.grib2"  >> mailmsg
+          echo "Missing file is ${EVSIN}.${VDATE}/ecme/ecmanl.t00z.grid3.f000.grib1"  >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
           cat mailmsg | mail -s "$subject" $maillist
 	fi
