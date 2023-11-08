@@ -1,8 +1,8 @@
 #!/bin/ksh
 #################################################################
-## Purpose:   Setup some paths and run href grid2obs stat ush scripts
-##
-## Last updated 10/30/2023: by  Binbin Zhou, Lynker@EMC/NCEP
+# Purpose:   Setup some paths and run href grid2obs stat ush scripts
+#
+# Last updated 10/30/2023: by  Binbin Zhou, Lynker@EMC/NCEP
 ##################################################################
 
 set -x

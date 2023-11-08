@@ -9,6 +9,7 @@ set -x
 
 #check input data are available:
 $USHevs/cam/evs_check_href_files.sh
+export err=$?; err_chk
 
 export WORK=$DATA
 cd $WORK

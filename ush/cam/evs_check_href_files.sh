@@ -225,7 +225,7 @@ for obsv_cyc in 00 03 06 09 12 15 18 21 ; do
       #echo fday=$fday fcyc=$fcyc fhr=$fhr href_mbrs=$href_mbrs
 
       if [ $href_mbrs -lt 4 ] ; then
-        echo "HREF members = " $href_mbrs " which < 6, exit METplus execution !!!"
+        echo "HREF members = " $href_mbrs " which < 4, exit METplus execution !!!"
         exit
       fi
 
@@ -262,7 +262,7 @@ for obsv_cyc in 00 03 06 09 12 15 18 21 ; do
       #echo fday=$fday fcyc=$fcyc fhr=$fhr href_mbrs=$href_mbrs
 
       if [ $href_mbrs -lt 4 ] ; then
-        echo "HREF members = " $href_mbrs " which < 6, exit METplus execution !!!"
+        echo "HREF members = " $href_mbrs " which < 4, exit METplus execution !!!"
         exit
       fi
 
@@ -301,8 +301,8 @@ for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 2
 
        #echo fday=$fday fcyc=$fcyc fhr=$fhr href_prod=$href_prod
 
-        if [ $href_prod -lt 6 ] ; then
-          echo "HREF Products = " $href_prod " which < 6, some products are missing, exit METplus execution !!!"
+        if [ $href_prod -lt 4 ] ; then
+          echo "HREF Products = " $href_prod " which < 4, some products are missing, exit METplus execution !!!"
           exit
         fi
 
@@ -343,8 +343,8 @@ for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 2
 
        #echo fday=$fday fcyc=$fcyc fhr=$fhr href_prod=$href_prod
 
-        if [ $href_prod -lt 6 ] ; then
-          echo "HREF Products = " $href_prod " which < 6, some products are missing, exit METplus execution !!!"
+        if [ $href_prod -lt 4 ] ; then
+          echo "HREF Products = " $href_prod " which < 4, some products are missing, exit METplus execution !!!"
           exit
         fi
 

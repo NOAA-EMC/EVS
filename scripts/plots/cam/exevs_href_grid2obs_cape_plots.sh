@@ -312,7 +312,7 @@ if [ -d $log_dir ]; then
 fi
 
 if [ $SENDCOM="YES" ]; then
- cpireq  evs.plots.href.grid2obs.cape.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
+ cpreq  evs.plots.href.grid2obs.cape.past${past_days}days.v${VDATE}.tar  $COMOUT/.  
 fi
 
 if [ $SENDDBN = YES ] ; then
