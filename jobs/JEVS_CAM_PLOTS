@@ -108,7 +108,6 @@ if [ $MODELNAME = nam_firewxnest ]; then
 else
  $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 fi
-
 export err=$?; err_chk
 
 if [ -e "$pgmout" ]; then
