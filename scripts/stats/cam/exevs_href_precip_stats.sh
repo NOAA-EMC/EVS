@@ -1,13 +1,15 @@
 #!/bin/ksh
-#################################################################
-## Purpose:   Setup some paths and run href precip stat ush scripts
-## 
-## Last updated 10/30/2023: by  Binbin Zhou, Lynker@EMC/NCEP
-##################################################################
+###################################################################
+# Purpose:   Setup some paths and run href precip stat ush scripts
+#
+# Last updated 10/30/2023: by  Binbin Zhou, Lynker@EMC/NCEP
+###################################################################
 
 set -x
 
+#*************************************
 #check input data are available:
+#*************************************
 $USHevs/cam/evs_check_href_files.sh
 export err=$?; err_chk
 
@@ -34,9 +36,8 @@ export maskpath=$MASKS
 export vday=$VDATE
 
 
-
 #**********************************
-# Prepare CCAP data for validation
+# Prepare CCPA data for validation
 #**********************************
 if [ $prepare = yes ] ; then
  for precip in ccpa01h03h ccpa24h apcp24h_conus  apcp24h_alaska mrms ; do
@@ -50,7 +51,7 @@ fi
 # **************************************
 > run_all_precip_poe.sh
 
-# Build sub-jobs for precip 
+# Build sub-jobs for precip
 if [ $verif_precip = yes ] ; then
  $USHevs/cam/evs_href_precip.sh
  export err=$?; err_chk
@@ -75,7 +76,9 @@ if [ -s ${DATA}/run_all_precip_poe.sh ]  ; then
   else
    ${DATA}/run_all_precip_poe.sh
   fi
+
 fi
+
 export err=$?; err_chk
 
 #******************************************************************
@@ -120,4 +123,4 @@ for log_dir in $log_dirs2; do
     fi
 done
 
-exit 
+export err=$?; err_chk

@@ -43,7 +43,6 @@ for obsvtype in ccpa mrms ; do
              echo  "export lead='24, 30, 36, 42, 48'" >> run_href_precip_${prod}.${obsv}.sh
         fi
      else 
-                # acc=01h, 03h 
 	if [ $prod = system ] ; then 
              # Since HREF members are every 3fhr stored in verf_g2g directory 
              echo  "export vbeg=0" >>run_href_precip_${prod}.${obsv}.sh
