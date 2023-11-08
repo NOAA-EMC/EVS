@@ -41,6 +41,7 @@ while [ $n -le $past_days ] ; do
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
   $USHevs/global_ens/evs_get_gens_atmos_stat_file_link_plots.sh $day "$model_list"
+  export err=$?; err_chk
   n=$((n+1))
 done 
 
@@ -79,8 +80,7 @@ elif [ $stats = rmse_spread  ] ; then
   stat_list='rmse, spread'
   line_tp='ecnt'
 else
-  echo $stats is wrong stat
-  exit
+  err_exit "$stats is not a valid metric"
 fi   
 
  for score_type in lead_average ; do
@@ -179,6 +179,7 @@ if [ $run_mpi = yes ] ; then
    mpiexec -np 12 -ppn 12 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
+  export err=$?; err_chk
 fi
 
 # Cat the plotting log file

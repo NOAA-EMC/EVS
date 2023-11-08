@@ -187,4 +187,5 @@ export INTERP_PNTS=interp_pnts
 
 # Executes the desired python script.  No need to edit this. 
 python $USH_DIR/${PLOT_TYPE}.py
+export err=$?; err_chk
 

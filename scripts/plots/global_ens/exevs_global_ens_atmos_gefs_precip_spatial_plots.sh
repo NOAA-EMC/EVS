@@ -68,6 +68,7 @@ for model in $model_list ; do
 done
 
 python $USHevs/global_ens/ush_gens_plot_py/global_ens_atmos_plots.py
+export err=$?; err_chk
 
 # Cat the plotting log files
 log_dir=$DATA/grid2grid_plots/plot_output/atmos.${VDATE}/logs

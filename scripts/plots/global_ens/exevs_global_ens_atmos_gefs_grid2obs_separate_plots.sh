@@ -41,6 +41,7 @@ while [ $n -le $past_days ] ; do
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
   $USHevs/global_ens/evs_get_gens_atmos_stat_file_link_plots.sh $day "$model_list"
+  export err=$?; err_chk
   n=$((n+1))
 done 
 
@@ -111,8 +112,7 @@ elif [ $stats = sratio_pod_csi ] ; then
   score_types='performance_diagram'
   VX_MASK_LIST="CONUS, CONUS_East, CONUS_West, CONUS_South, CONUS_Central"
  else
-  echo $stats is wrong stat
-  exit
+  err_exit "$stats is not a valid metric"
  fi   
 
  for score_type in $score_types ; do
@@ -239,6 +239,7 @@ if [ $run_mpi = yes ] ; then
    mpiexec -np 154 -ppn 77 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
+  export err=$?; err_chk
 fi
 
 # Cat the plotting log file

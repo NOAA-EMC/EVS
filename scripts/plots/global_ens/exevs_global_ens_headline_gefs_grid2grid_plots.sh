@@ -27,6 +27,7 @@ fi
 
 export PLOT_CONF=$PARMevs/metplus_config/$STEP/$COMPONENT/headline_grid2grid
 $USHevs/global_ens/evs_global_ens_headline_plot.sh $last_year $this_year 
+export err=$?; err_chk
 
 tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.v${VDATE}.tar evs.global_ens*.png
 

@@ -39,6 +39,7 @@ while [ $n -le $past_days ] ; do
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
   $USHevs/global_ens/evs_get_gens_atmos_stat_file_link_plots.sh $day "$model_list"
+  export err=$?; err_chk
   n=$((n+1))
 done 
 
@@ -84,8 +85,7 @@ for stats in crps ets fbias fss bs ; do
     VARs='APCP_24'
     threshes=''
   else
-    echo $stats is wrong stat
-  exit
+    err_exit "$stats is not a valid metric"
   fi   
 
   if [ $stats = fss ] ; then
@@ -206,6 +206,7 @@ if [ $run_mpi = yes ] ; then
    mpiexec -np 8 -ppn 8 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
+  export err=$?; err_chk
 fi
 
 # Cat the plotting log file

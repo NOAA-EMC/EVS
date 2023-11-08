@@ -132,8 +132,7 @@ if [ $verify = snowfall ] ; then
 
         else
 
-          echo "wrong model"
-        exit
+          err_exit "$modnam is not a valid model name"
 
         fi
 
