@@ -9,7 +9,7 @@
 ###############################################################################
 
 set -x
-
+export machine=${machine:-"WCOSS2"}
   export VERIF_CASE_STEP_abbrev="g2os"
 
 # Set run mode
