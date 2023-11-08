@@ -67,7 +67,7 @@ global_det_obs_dict = {
 
 for OBS in OBSNAME:
     if OBS not in list(global_det_obs_dict.keys()):
-        print("ERROR: "+OBS+" not recongized")
+        print("FATAL ERROR: "+OBS+" not a recognized observation dataset.")
         sys.exit(1)
     print("---- Prepping data for "+OBS+" for init "+INITDATE)
     obs_dict = global_det_obs_dict[OBS]

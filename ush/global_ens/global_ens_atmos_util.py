@@ -1224,7 +1224,7 @@ def get_met_line_type_cols(logger, met_root, met_version, met_line_type):
                     line_type_cols = line.split(' : ')[-1]
                     break
     else:
-        logger.error(f"FATAL ERROR: {met_minor_version_col_file} DOES NOT EXISTS, "
+        logger.error(f"FATAL ERROR: {met_minor_version_col_file} DOES NOT EXIST, "
                      +"cannot determine MET data column structure")
         sys.exit(1)
     met_version_line_type_col_list = (
