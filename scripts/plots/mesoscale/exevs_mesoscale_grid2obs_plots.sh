@@ -6,14 +6,14 @@
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 #                 Roshan Shrestha, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: Handle all components of an EVS Mesoscale Grid2Obs - Plots job
-# DEPENDENCIES: $HOMEevs/jobs/cam/plots/JEVS_MESOSCALE_PLOTS 
+# DEPENDENCIES: $HOMEevs/jobs/mesoscale/plots/JEVS_MESOSCALE_PLOTS 
 #
 # =============================================================================
 
 set -x
 
 # Set Basic Environment Variables
-
+export machine=${machine:-"WCOSS2"}
 export njob=1
 export evs_run_mode=$evs_run_mode
 source $config
@@ -67,8 +67,7 @@ if [ $USE_CFP = YES ]; then
             export SLURM_KILL_BAD_EXIT=0
             launcher="srun --export=ALL --multi-prog"
         else
-            echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-            exit 1    
+            err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
         fi
         $launcher $MP_CMDFILE
         nc=$((nc+1))

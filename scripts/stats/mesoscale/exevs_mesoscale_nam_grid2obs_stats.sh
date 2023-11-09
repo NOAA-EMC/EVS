@@ -9,7 +9,7 @@
 ###############################################################################
 
 set -x
-
+export machine=${machine:-"WCOSS2"}
   export VERIF_CASE_STEP_abbrev="g2os"
 
 # Set run mode
@@ -116,8 +116,7 @@ if [ $USE_CFP = YES ]; then
          export SLURM_KILL_BAD_EXIT=0
 	 launcher="srun --export=ALL --multi-prog"
       else
-         echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-	 exit 1
+         err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
       fi
       $launcher $MP_CMDFILE
       nc=$((nc+1))
@@ -200,8 +199,7 @@ if [ $USE_CFP = YES ]; then
 			export SLURM_KILL_BAD_EXIT=0
 			launcher="srun --export=ALL --multi-prog"
 		else
-			echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-			exit 1
+			err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
 		fi
 		$launcher $MP_CMDFILE
 		nc=$((nc+1))
@@ -269,8 +267,7 @@ if [ $USE_CFP = YES ]; then
 			export SLURM_KILL_BAD_EXIT=0
 			launcher="srun --export=ALL --multi-prog"
 		else
-			echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-			exit 1
+			err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
 		fi
 		$launcher $MP_CMDFILE
 		nc=$((nc+1))
@@ -348,8 +345,7 @@ echo "*****************************"
                 export SLURM_KILL_BAD_EXIT=0
                 launcher="srun --export=ALL --multi-prog"
             else
-                echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-                exit 1
+                err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
             fi
             $launcher $MP_CMDFILE
             nc=$((nc+1))
@@ -371,7 +367,7 @@ echo "*****************************"
         MODEL_DIR=$(echo ${MODEL_DIR_PATH##*/})
         mkdir -p $COMOUT/$MODEL_DIR
         for FILE in $MODEL_DIR_PATH/*; do
-          cp -v $FILE $COMOUT/$MODEL_DIR/.
+          cpreq -v $FILE $COMOUT/$MODEL_DIR/.
         done
       done
     fi
@@ -382,4 +378,3 @@ echo "Begin to print METplus Log files "
   cat $DATA/grid2obs/METplus_output/*/*/pb2nc/logs/*
 echo "End to print METplus Log files "
 
-exit

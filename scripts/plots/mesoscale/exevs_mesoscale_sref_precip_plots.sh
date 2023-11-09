@@ -94,8 +94,7 @@ elif [ $stats = fss ] ; then
   line_tp='nbrcnt'
   interp_pnts='1,9,25,49,91,121'
  else
-  echo $stats is wrong stat
-  exit
+  err_exit "$stats is wrong stat"
  fi   
 
  for score_type in $score_types ; do
