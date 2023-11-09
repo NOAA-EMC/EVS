@@ -27,20 +27,27 @@ for MODEL in $MODEL_LIST ; do
   if [ $model = gefs ] ; then
     model_stat_dir=${COM_IN}/global_ens/${model}.${day}
     if [ $VRF_CASE = grid2obs ] ||  [ $VRF_CASE = cape ] || [ $VRF_CASE = cloud ] || [ $VRF_CASE = td2m ] ; then
-       ln -sf ${model_stat_dir}/evs.stats.${model}.atmos.grid2obs.v${day}.stat ${MODEL}_${day}.stat
+       if [ -s  ${model_stat_dir}/evs.stats.${model}.atmos.grid2obs.v${day}.stat ] ; then
+         ln -sf ${model_stat_dir}/evs.stats.${model}.atmos.grid2obs.v${day}.stat ${MODEL}_${day}.stat
+       fi
     else 
-       ln -sf ${model_stat_dir}/evs.stats.${model}.atmos.${VRF_CASE}.v${day}.stat ${MODEL}_${day}.stat
+       if [ -s ${model_stat_dir}/evs.stats.${model}.atmos.${VRF_CASE}.v${day}.stat ] ; then
+        ln -sf ${model_stat_dir}/evs.stats.${model}.atmos.${VRF_CASE}.v${day}.stat ${MODEL}_${day}.stat
+       fi
     fi 
   elif [ $model = sref ] ; then
     model_stat_dir=${COM_IN}/mesoscale/${model}.${day}
     if [ $VRF_CASE = cnv ] || [ $VRF_CASE = cape ] || [ $VRF_CASE = cloud ] || [ $VRF_CASE = td2m ] ; then
-        ln -sf ${model_stat_dir}/evs.stats.${model}.grid2obs.v${day}.stat ${MODEL}_${day}.stat
-    else	       
+	if [ -s ${model_stat_dir}/evs.stats.${model}.grid2obs.v${day}.stat ] ;then 
+         ln -sf ${model_stat_dir}/evs.stats.${model}.grid2obs.v${day}.stat ${MODEL}_${day}.stat
+	fi 
+    else
+        if [ -s ${model_stat_dir}/evs.stats.${model}.${VRF_CASE}.v${day}.stat ] ; then	    
          ln -sf ${model_stat_dir}/evs.stats.${model}.${VRF_CASE}.v${day}.stat ${MODEL}_${day}.stat
+	fi
     fi
   else
-     echo "Wrong model"
-     exit
+     err_exit "Wrong model"
   fi 
 
 done
