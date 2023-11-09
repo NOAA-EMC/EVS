@@ -1,5 +1,3 @@
-#!/bin/bash
-
 #PBS -N jevs_mesoscale_sref_grid2obs_stats
 #PBS -j oe 
 #PBS -S /bin/bash
@@ -9,6 +7,8 @@
 #PBS -l place=vscatter,select=1:ncpus=4:mem=100GB
 #PBS -l debug=true
 
+
+set -x 
 #Total 2 parallel processes
 
 export OMP_NUM_THREADS=1

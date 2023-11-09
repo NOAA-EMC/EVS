@@ -432,7 +432,6 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         )
         plt.close(num)
         logger.info("========================================")
-        print("Quitting due to missing data.  Check the log file for details.")
         return None
     elif not metric2_name and pivot_metric1.empty:
         print_varname = df['FCST_VAR'].tolist()[0]
@@ -443,7 +442,6 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         )
         plt.close(num)
         logger.info("========================================")
-        print("Quitting due to missing data.  Check the log file for details.")
         return None
 
     models_renamed = []
@@ -1086,7 +1084,11 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         f'{str(time_period_savename).lower()}'
     )
     if not os.path.isdir(save_subdir):
-        os.makedirs(save_subdir)
+        try:
+            os.makedirs(save_subdir)
+        except FileExistsError as e:
+            logger.warning(f"Several processes are making {save_subdir} at "
+                           + f"the same time. Passing")
     save_path = os.path.join(save_subdir, save_name+'.png')
     fig.savefig(save_path, dpi=dpi)
     logger.info(u"\u2713"+f" plot saved successfully as {save_path}")

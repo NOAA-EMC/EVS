@@ -1,5 +1,3 @@
-#!/bin/bash
-
 #PBS -N jevs_mesoscale_sref_precip_spatial_plots
 #PBS -j oe
 #PBS -S /bin/bash
@@ -9,6 +7,7 @@
 #PBS -l place=vscatter,select=1:ncpus=2:mem=100GB
 #PBS -l debug=true
 
+set -x
 
 export OMP_NUM_THREADS=1
 

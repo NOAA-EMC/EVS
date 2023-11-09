@@ -1,4 +1,3 @@
-#PBS -S /bin/bash
 #PBS -N jevs_mesoscale_snowfall_plots
 #PBS -j oe
 #PBS -S /bin/bash

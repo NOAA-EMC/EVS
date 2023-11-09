@@ -1,5 +1,3 @@
-#!/bin/bash
-
 #PBS -N jevs_mesoscale_rap_grid2obs_stats_00
 #PBS -j oe
 #PBS -S /bin/bash
