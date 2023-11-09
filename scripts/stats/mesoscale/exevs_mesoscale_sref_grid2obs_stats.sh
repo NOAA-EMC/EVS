@@ -47,4 +47,3 @@ else
 fi
 
 
-exit 

@@ -1,7 +1,7 @@
 #!/bin/ksh
 
 # ================================================================================================
-# NCEP EMC PYTHON PLOTTING OF CAM VERIFICATION
+# NCEP EMC PYTHON PLOTTING OF SREF VERIFICATION
 # 
 # CONTRIBUTORS:     Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 #

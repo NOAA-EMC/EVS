@@ -102,7 +102,7 @@ for  obsv in ccpa ; do
 	 echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/GridStat_fcstSREF_obsCCPA_mean_G240.conf " >> run_sref_mpi_${domain}.${obsv}.${fhr}.sh
 
        else
-         exit
+         err_exit "Exited from ccpa"
        fi
 
        if [ $SENDCOM = YES ]; then
