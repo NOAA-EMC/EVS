@@ -499,7 +499,6 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         )
         plt.close(num)
         logger.info("========================================")
-        print("Quitting due to missing data.  Check the log file for details.")
         return None
     elif not metric2_name and pivot_metric1.empty:
         print_varname = df['FCST_VAR'].tolist()[0]
@@ -510,7 +509,6 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         )
         plt.close(num)
         logger.info("========================================")
-        print("Quitting due to missing data.  Check the log file for details.")
         return None
 
 
