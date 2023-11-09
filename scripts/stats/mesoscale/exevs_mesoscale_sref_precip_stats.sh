@@ -7,6 +7,7 @@
 #
 set -x
 
+export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 export WORK=$DATA
 cd $WORK
 

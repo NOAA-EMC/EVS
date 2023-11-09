@@ -9,11 +9,12 @@
 
 set -x
 
-export VERIF_CASE_STEP_abbrev="snowfalls"
+  export VERIF_CASE_STEP_abbrev="snowfalls"
+  export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # Set run mode
-    export evs_run_mode=$evs_run_mode
-    source $config
+  export evs_run_mode=$evs_run_mode
+  source $config
 
 # Make directory
 mkdir -p $DATA/logs
