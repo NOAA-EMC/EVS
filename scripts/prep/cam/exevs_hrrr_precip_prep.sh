@@ -13,6 +13,7 @@ set -x
 
 # Loop through HRRR Precipitation configs
 export machine=${machine:-"WCOSS2"}
+export PYTHONPATH=$USHevs/$COMPONENT:$PYTHONPATH
 export njob=1
 for NEST in "conus" "ak"; do
     export NEST=$NEST

@@ -14,6 +14,7 @@ set -x
 
 # Set Basic Environment Variables
 export machine=${machine:-"WCOSS2"}
+export PYTHONPATH=$USHevs/$COMPONENT:$PYTHONPATH
 last_cyc="22"
 NEST_LIST="conus ak pr hi" # this is reset after reformat
 export BOOL_NBRHD=False
