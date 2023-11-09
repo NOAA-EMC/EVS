@@ -22,10 +22,8 @@ mkdir -p $VERIF_CASE_STEP
 cd $VERIF_CASE_STEP
 
 # Set number of days being plotted
-start_date_seconds=$(date +%s -d ${start_date})
-end_date_seconds=$(date +%s -d ${end_date})
-diff_seconds=$(expr $end_date_seconds - $start_date_seconds)
-diff_days=$(expr $diff_seconds \/ 86400)
+diff_hours=$($NHOUR  ${end_date}00 ${start_date}00)
+diff_days=$(expr $diff_hours \/ 24)
 total_days=$(expr $diff_days + 1)
 NDAYS=${NDAYS:-total_days}
 
