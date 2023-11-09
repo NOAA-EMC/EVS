@@ -47,7 +47,8 @@ for MODEL in $MODEL_LIST ; do
 	fi
     fi
   else
-     err_exit "Wrong model"
+     echo "Wrong model"
+     exit
   fi 
 
 done

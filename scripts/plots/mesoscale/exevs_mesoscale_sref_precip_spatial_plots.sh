@@ -60,7 +60,9 @@ for model in $model_list ; do
   past=`$NDATE -$fhr ${VDATE}12`	
   INITDATE=${past:0:8}
   source=$EVSINapcp24mean/sref.$INITDATE/apcp24mean
-  ln -sf $source/${model}.t12z.pgrb212.24mean.f${fhr}.nc $target/${model}_precip_24hrAccum_init${INITDATE}12_fhr0${fhr}.nc
+  if [ -s $source/${model}.t12z.pgrb212.24mean.f${fhr}.nc ] ; then
+   ln -sf $source/${model}.t12z.pgrb212.24mean.f${fhr}.nc $target/${model}_precip_24hrAccum_init${INITDATE}12_fhr0${fhr}.nc
+  fi
  done
 done
 
