@@ -181,9 +181,13 @@ for stats in rmse me ; do
        else
            domain_new=$domain
        fi
-       mv lead_average_regional_${domain}_valid_00z_sfc_tmp_z0_mean_${stats}.png  evs.global_ens.${stats}.sst_z0.last${past_days}days.fhrmean_valid00z_f384.g003_${domain_new}.png
+       if [ -f "lead_average_regional_${domain}_valid_00z_sfc_tmp_z0_mean_${stats}.png" ]; then
+          mv lead_average_regional_${domain}_valid_00z_sfc_tmp_z0_mean_${stats}.png  evs.global_ens.${stats}.sst_z0.last${past_days}days.fhrmean_valid00z_f384.g003_${domain_new}.png
+       fi
        for lead in 120 240 360; do
-           mv time_series_regional_${domain}_valid_00z_sfc_tmp_z0_mean_${stats}_f${lead}.png  evs.global_ens.${stats}.sst_z0.last${past_days}days.timeseries_valid00z_f${lead}.g003_${domain_new}.png
+           if [ -f "time_series_regional_${domain}_valid_00z_sfc_tmp_z0_mean_${stats}_f${lead}.png" ]; then
+              mv time_series_regional_${domain}_valid_00z_sfc_tmp_z0_mean_${stats}_f${lead}.png  evs.global_ens.${stats}.sst_z0.last${past_days}days.timeseries_valid00z_f${lead}.g003_${domain_new}.png
+           fi
        done #lead
     done  #domain
 done     #stats

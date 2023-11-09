@@ -266,7 +266,9 @@ for ihr in 00z 12z ; do
             evs_graphic_domain=$domain
         fi
         for lead in 120 240 360; do
-            mv performance_diagram_regional_${domain}_init_${ihr}_cape_f${lead}__ge250ge500ge1000ge2000.png  evs.global_ens.ctc.cape_l0.last${past_days}days.perfdiag_${valid_time}_f${lead}.g212_buk_${evs_graphic_domain}.png
+            if [ -f "performance_diagram_regional_${domain}_init_${ihr}_cape_f${lead}__ge250ge500ge1000ge2000.png" ]; then
+                mv performance_diagram_regional_${domain}_init_${ihr}_cape_f${lead}__ge250ge500ge1000ge2000.png  evs.global_ens.ctc.cape_l0.last${past_days}days.perfdiag_${valid_time}_f${lead}.g212_buk_${evs_graphic_domain}.png
+            fi
         done #lead
     done #domain
 done #ihr
@@ -286,9 +288,13 @@ for stats in ets fbias ; do
                 else
                     evs_graphic_domain=$domain
                 fi
-                mv lead_average_regional_${domain}_init_${ihr}_cape_${stats}_${thresh}.png  evs.global_ens.${stats}_${thresh}.cape_l0.last${past_days}days.fhrmean_init${ihr}_f384.g212_buk_${evs_graphic_domain}.png
+                if [ -f "lead_average_regional_${domain}_init_${ihr}_cape_${stats}_${thresh}.png" ]; then
+                    mv lead_average_regional_${domain}_init_${ihr}_cape_${stats}_${thresh}.png  evs.global_ens.${stats}_${thresh}.cape_l0.last${past_days}days.fhrmean_init${ihr}_f384.g212_buk_${evs_graphic_domain}.png
+                fi
                 for lead in 120 240 360 ; do
-                    mv time_series_regional_${domain}_init_${ihr}_cape_${stats}_f${lead}_${thresh}.png  evs.global_ens.${stats}_${thresh}.cape_l0.last${past_days}days.timeseries_init${ihr}_f${lead}.g212_buk_${evs_graphic_domain}.png
+                    if [ -f "time_series_regional_${domain}_init_${ihr}_cape_${stats}_f${lead}_${thresh}.png" ]; then
+                        mv time_series_regional_${domain}_init_${ihr}_cape_${stats}_f${lead}_${thresh}.png  evs.global_ens.${stats}_${thresh}.cape_l0.last${past_days}days.timeseries_init${ihr}_f${lead}.g212_buk_${evs_graphic_domain}.png
+                    fi
                 done #lead
             done #domain
         done #thresh
@@ -338,9 +344,13 @@ for ihr in 00z 12z ; do
                     elif [ $level = '10m' ]; then
                         evs_graphic_level='z10'
                     fi
-                    mv lead_average_regional_${domain}_init_${ihr}_${level}_${var}_${stats}.png  evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.fhrmean_init${ihr}_f384.${grid}_${evs_graphic_domain}.png
+                    if [ -f "lead_average_regional_${domain}_init_${ihr}_${level}_${var}_${stats}.png" ]; then
+                        mv lead_average_regional_${domain}_init_${ihr}_${level}_${var}_${stats}.png  evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.fhrmean_init${ihr}_f384.${grid}_${evs_graphic_domain}.png
+                    fi
                     for lead in 120 240 360; do
-                        mv time_series_regional_${domain}_init_${ihr}_${level}_${var}_${stats}_f${lead}.png  evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.timeseries_init${ihr}_f${lead}.${grid}_${evs_graphic_domain}.png
+                        if [ -f "time_series_regional_${domain}_init_${ihr}_${level}_${var}_${stats}_f${lead}.png" ]; then
+                            mv time_series_regional_${domain}_init_${ihr}_${level}_${var}_${stats}_f${lead}.png  evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.timeseries_init${ihr}_f${lead}.${grid}_${evs_graphic_domain}.png
+                        fi
                     done #lead
                 done #level
             done #stats

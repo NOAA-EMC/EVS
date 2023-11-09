@@ -207,7 +207,9 @@ cd $plot_dir
 for domain in arctic antarctic ; do
     for lead in 24 48 72 96 120 144 168 192 216 240 264 288 312 336 360 384; do
         lead_new=$(printf "%03d" "${lead}")
-        mv performance_diagram_regional_${domain}_valid_00z_z0_icec_z0_mean_f${lead}__gt10gt40gt80.png  evs.global_ens.ctc.icec_z0.last${past_days}days.perfdiag_${valid_time}_f${lead_new}.g003_${domain}.png
+        if [ -f "performance_diagram_regional_${domain}_valid_00z_z0_icec_z0_mean_f${lead}__gt10gt40gt80.png" ]; then
+            mv performance_diagram_regional_${domain}_valid_00z_z0_icec_z0_mean_f${lead}__gt10gt40gt80.png  evs.global_ens.ctc.icec_z0.last${past_days}days.perfdiag_${valid_time}_f${lead_new}.g003_${domain}.png
+        fi
     done #lead
 done #domain
 
@@ -224,10 +226,14 @@ for stats in  rmse me csi ; do
             thresh_graphic=$(echo "_${thresh}")
         fi
         for domain in arctic antarctic ; do
-            mv lead_average_regional_${domain}_valid_00z_z0_icec_z0_mean_${stats}${thresh_graphic}.png  evs.global_ens.${stats}${thresh_graphic}.icec_z0.last${past_days}days.fhrmean_valid00z_f384.g003_${domain}.png
+            if [ -f "lead_average_regional_${domain}_valid_00z_z0_icec_z0_mean_${stats}${thresh_graphic}.png" ]; then
+                mv lead_average_regional_${domain}_valid_00z_z0_icec_z0_mean_${stats}${thresh_graphic}.png  evs.global_ens.${stats}${thresh_graphic}.icec_z0.last${past_days}days.fhrmean_valid00z_f384.g003_${domain}.png
+            fi
             for lead in 24 48 72 96 120 144 168 192 216 240 264 288 312 336 360 384; do
                 lead_new=$(printf "%03d" "${lead}")
-                mv time_series_regional_${domain}_valid_00z_z0_icec_z0_mean_${stats}_f${lead}${thresh_graphic}.png  evs.global_ens.${stats}${thresh_graphic}.icec_z0.last${past_days}days.timeseries_valid00z_f${lead_new}.g003_${domain}.png
+                if [ -f "time_series_regional_${domain}_valid_00z_z0_icec_z0_mean_${stats}_f${lead}${thresh_graphic}.png" ]; then
+                    mv time_series_regional_${domain}_valid_00z_z0_icec_z0_mean_${stats}_f${lead}${thresh_graphic}.png  evs.global_ens.${stats}${thresh_graphic}.icec_z0.last${past_days}days.timeseries_valid00z_f${lead_new}.g003_${domain}.png
+                fi
             done #lead
         done #domain
     done  #thresh

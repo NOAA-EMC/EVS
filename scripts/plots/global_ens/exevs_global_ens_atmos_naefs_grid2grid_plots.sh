@@ -209,7 +209,9 @@ for stats in acc me_mae crps rmse_spread ; do
             fi
             for level in $levels ; do
                 plevel=p${level}
-                mv lead_average_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}.png  evs.naefs.${evs_graphic_stats}.${var}_${plevel}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${domain}.png
+                if [ -f "lead_average_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}.png" ]; then
+                    mv lead_average_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}.png  evs.naefs.${evs_graphic_stats}.${var}_${plevel}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${domain}.png
+                fi
             done #level
         done #var
     done  #domain

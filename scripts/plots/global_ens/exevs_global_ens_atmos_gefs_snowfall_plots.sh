@@ -255,10 +255,14 @@ for var in weasd snod; do
                     else
                         nbhrd_graphic=$(echo "_width${nbrhd}")
                     fi
-                    mv lead_average_regional_${domain}_valid_12z_${var}_l0_${stats}${nbhrd_graphic}${thresh_graphic}.png evs.global_ens.${stats}${nbhrd_graphic}${evs_thresh_graphic}.${var}_a24.last${past_days}days.fhrmean_valid12z_f384.g212_${evs_graphic_domain}.png
+                    if [ -f "lead_average_regional_${domain}_valid_12z_${var}_l0_${stats}${nbhrd_graphic}${thresh_graphic}.png" ]; then
+                        mv lead_average_regional_${domain}_valid_12z_${var}_l0_${stats}${nbhrd_graphic}${thresh_graphic}.png evs.global_ens.${stats}${nbhrd_graphic}${evs_thresh_graphic}.${var}_a24.last${past_days}days.fhrmean_valid12z_f384.g212_${evs_graphic_domain}.png
+                    fi
                     for lead in 120 240 360; do
                         lead_graphic=$(echo "_f${lead}")
-                        mv time_series_regional_${domain}_valid_12z_${var}_l0_${stats}${nbhrd_graphic}${lead_graphic}${thresh_graphic}.png evs.global_ens.${stats}${nbhrd_graphic}${evs_thresh_graphic}.${var}_a24.last${past_days}days.timeseries_valid12z${lead_graphic}.g212_${evs_graphic_domain}.png
+                        if [ -f "time_series_regional_${domain}_valid_12z_${var}_l0_${stats}${nbhrd_graphic}${lead_graphic}${thresh_graphic}.png" ]; then
+                            mv time_series_regional_${domain}_valid_12z_${var}_l0_${stats}${nbhrd_graphic}${lead_graphic}${thresh_graphic}.png evs.global_ens.${stats}${nbhrd_graphic}${evs_thresh_graphic}.${var}_a24.last${past_days}days.timeseries_valid12z${lead_graphic}.g212_${evs_graphic_domain}.png
+                        fi
                     done #lead 
                 done #nbrhd
             done # threshs
