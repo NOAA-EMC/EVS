@@ -21,14 +21,6 @@ export err=$?; err_chk
 mkdir -p $VERIF_CASE_STEP
 cd $VERIF_CASE_STEP
 
-# Set number of days being plotted
-start_date_seconds=$(date +%s -d ${start_date})
-end_date_seconds=$(date +%s -d ${end_date})
-diff_seconds=$(expr $end_date_seconds - $start_date_seconds)
-diff_days=$(expr $diff_seconds \/ 86400)
-total_days=$(expr $diff_days + 1)
-NDAYS=${NDAYS:-total_days}
-
 # Check user's configuration file
 python $USHevs/subseasonal/check_subseasonal_config_plots.py
 export err=$?; err_chk
