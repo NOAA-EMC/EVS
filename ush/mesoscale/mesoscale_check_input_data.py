@@ -327,7 +327,7 @@ if proceed:
                 else:
                     print(f"ERROR: Undefined data type for missing data file: {info[1]}"
                           + f"\nPlease edit the get_data_type() function in"
-                          + f" USHevs/cam/cam_util.py")
+                          + f" USHevs/mesoscale/mesoscale_util.py")
                     sys.exit(1)
             fcst_names = np.unique(fcst_names)
             unk_names = np.unique(unk_names)
@@ -479,7 +479,7 @@ if proceed:
                 else:
                     print(f"ERROR: Undefined data type for missing data file: {info[1]}"
                           + f"\nPlease edit the get_data_type() function in"
-                          + f" USHevs/cam/cam_util.py")
+                          + f" USHevs/mesoscale/mesoscale_util.py")
                     sys.exit(1)
             anl_names = np.unique(anl_names)
             unk_names = np.unique(unk_names)
