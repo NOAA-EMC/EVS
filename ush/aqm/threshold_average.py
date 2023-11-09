@@ -401,7 +401,6 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         )
         plt.close(num)
         logger.info("========================================")
-        print("Quitting due to missing data.  Check the log file for details.")
         return None
     models_renamed = []
     count_renamed = 1
