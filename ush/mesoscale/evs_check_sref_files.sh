@@ -18,8 +18,7 @@ done
 
 echo "Missing prepbufr files = " $missing
 if [ $missing -eq 4  ] ; then
-  echo "all of the preppbufr files are missing, exit execution!!!"
-  exit
+  err_exit "all of the preppbufr files are missing, exit execution!!!"
 else
   echo "Continue check CCAP files...." 
 fi
@@ -54,8 +53,7 @@ done
 
 echo "Missing ccpa  files = " $missing
 if [ $missing -eq 8  ] ; then
-  echo "all of the ccpa files are missing, exit execution!!!"
-  exit
+  err_exit "all of the ccpa files are missing, exit execution!!!"
 else
   echo "Continue check SREF files...."
 fi
@@ -90,8 +88,7 @@ for vhr in  00 06 12 18 ; do #SREF grid2obs validation is by gfs prepbufr
     done
 
     if [ $sref_mbrs -lt 26 ] ; then
-      echo "SREF members = " $sref_mbrs " which < 26, exit METplus execution !!!"
-      exit
+      err_exit "SREF members = " $sref_mbrs " which < 26, exit METplus execution !!!"
     fi
 
     fhr=$((fhr+6))

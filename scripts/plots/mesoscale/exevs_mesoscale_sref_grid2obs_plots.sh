@@ -93,8 +93,7 @@ for fcst_valid_hour in $fcst_valid_hours ; do
    VARs='CAPEsfc DPT2m TCDC'
    score_types='lead_average threshold_average'
   else
-   echo $stats is wrong stat
-   exit
+   err_exit "$stats is wrong stat"
   fi   
 
   for score_type in $score_types ; do

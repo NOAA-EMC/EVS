@@ -1,5 +1,3 @@
-#!/bin/bash
-
 #PBS -N jevs_mesoscale_sref_cnv_stats
 #PBS -j oe 
 #PBS -S /bin/bash
@@ -8,6 +6,8 @@
 #PBS -l walltime=00:30:00
 #PBS -l place=vscatter,select=1:ncpus=30:mem=100GB
 #PBS -l debug=true
+
+set -x
 
 #Total 2 parallel processes
 
