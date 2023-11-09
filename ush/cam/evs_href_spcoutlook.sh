@@ -1,15 +1,14 @@
 #!/bin/ksh
+#************************************************************************************
+#  Purpose: Generate href spcoutlook job's  poe and sub-jobs files
+#           and system (ecnt line type)
+#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#***********************************************************************************
 set -x 
 
-#Binbin note: If METPLUS_BASE,  PARM_BASE not set, then they will be set to $METPLUS_PATH
-#             by config_launcher.py in METplus-3.0/ush
-#             why config_launcher.py is not in METplus-3.1/ush ??? 
-
-
-############################################################
-
- 
-
+#******************************************
+# Get prefix of $EVSINspcotlk 
+# *****************************************
 tail='/cam'
 prefix=${EVSINspcotlk%%$tail*}
 index=${#prefix}
@@ -73,6 +72,9 @@ echo $spc_otlk_masks
 
 cd $WORK
 
+#*******************************************
+# Build POE script to collect sub-jobs
+#******************************************
 >run_all_href_spcoutlook_poe.sh
 
 obsv='prepbufr'
@@ -89,6 +91,9 @@ for prod in mean ; do
 
     export domain=$dom
 
+     #******************************
+     # Build sub-jobs
+     # *****************************
      >run_href_${model}.${dom}.${valid}_spcoutlook.sh
        echo  "export model=HREF${prod} " >>  run_href_${model}.${dom}.${valid}_spcoutlook.sh
        echo  "export domain=$dom " >> run_href_${model}.${dom}.${valid}_spcoutlook.sh     

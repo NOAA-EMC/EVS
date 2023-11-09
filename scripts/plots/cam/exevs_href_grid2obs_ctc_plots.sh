@@ -1,5 +1,8 @@
 #!/bin/ksh
-
+#*******************************************************************************
+# Purpose: setup environment, paths, and run the href ctc plotting python script
+# Last updated: 10/30/2023, Binbin Zhou Lynker@EMC/NCEP
+#******************************************************************************
 set -x 
 
 cd $DATA
@@ -34,6 +37,9 @@ done
 export init_beg=$first_day
 export valid_beg=$first_day
 
+#*************************************************************
+# Virtual link the href's stat data files of past 31/90 days
+#*************************************************************
 n=0
 while [ $n -le $past_days ] ; do
   #hrs=`expr $n \* 24`
@@ -58,6 +64,9 @@ init_time='init00z_06z_12z_18z'
 verif_case=grid2obs
 line_type='ctc'
 
+#*****************************************
+# Build a POE file to collect sub-jobs
+#****************************************
 > run_all_poe.sh
 
 for fcst_valid_hour in 00 03 06 09 12 15 18 21 ; do
@@ -129,6 +138,9 @@ for stats in csi_fbias ets_fbias ratio_pod_csi ; do
 
         level=`echo $FCST_LEVEL_value | tr '[A-Z]' '[a-z]'`      
 
+	 #**********************
+	 # Build sub-jobs
+	 # *********************
          > run_${stats}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh  
 
         verif_type=conus_sfc
@@ -205,14 +217,19 @@ done #end of valid
 chmod +x run_all_poe.sh
 
 
-
+#***************************************************************************
+# Run the POE script in parallel or in sequence order to generate png files
+#**************************************************************************
 if [ $run_mpi = yes ] ; then
    mpiexec -np 704 -ppn 82 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi
+export err=$?; err_chk
 
-
+#**************************************************
+# Change plot file names to meet the EVS standard
+#**************************************************
 cd $plot_dir
 
 for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
@@ -242,9 +259,9 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
     var_new=mlcape
     level=ml
   fi
-
-  mv performance_diagram_regional_${domain}_valid_${valid}_${var}_*.png evs.href.ctc.${var_new}_${level}.last${past_days}days.perfdiag_valid_${valid}.${new_domain}.png
-
+  if [ -s performance_diagram_regional_${domain}_valid_${valid}_${var}_*.png ] ; then
+    mv performance_diagram_regional_${domain}_valid_${valid}_${var}_*.png evs.href.ctc.${var_new}_${level}.last${past_days}days.perfdiag_valid_${valid}.${new_domain}.png
+  fi 
  done
 done
 done
@@ -283,9 +300,10 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
      else
          new_domain=buk_${domain}
      fi
-
-     mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}*.png evs.href.${stat}.${var_new}_${level}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
-
+    
+     if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}*.png ] ; then
+         mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}*.png evs.href.${stat}.${var_new}_${level}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+     fi
        done #domain
     done #stat
    done  #var

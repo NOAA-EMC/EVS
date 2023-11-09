@@ -1,5 +1,8 @@
 #!/bin/ksh
-
+#*******************************************************************************
+# Purpose: setup environment, paths, and run the href profile plotting python script
+# Last updated: 10/30/2023, Binbin Zhou Lynker@EMC/NCEP
+#******************************************************************************
 set -x 
 
 cd $DATA
@@ -34,6 +37,9 @@ done
 export init_beg=$first_day
 export valid_beg=$first_day
 
+#*************************************************************
+# Virtual link the href's stat data files of past 31/90 days
+#*************************************************************
 n=0
 while [ $n -le $past_days ] ; do
   #hrs=`expr $n \* 24`
@@ -58,6 +64,9 @@ export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
 verif_case=grid2obs
 verif_type=upper_air
 
+#*****************************************
+# Build a POE file to collect sub-jobs
+#****************************************
 > run_all_poe.sh
 
 for stats in rmse_spread bss ; do 
@@ -113,6 +122,9 @@ fi
 
       for line_type in $line_tp ; do 
 
+	 #*********************
+	 # Build sub-jobs
+	 # ********************
          > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${fcst_valid_hour}.sh  
 
 	if [ $score_type = lead_average ] ; then
@@ -189,13 +201,19 @@ done #end of stats
 
 chmod +x run_all_poe.sh
 
+#***************************************************************************
+# Run the POE script in parallel or in sequence order to generate png files
+#**************************************************************************
 if [ $run_mpi = yes ] ; then
    mpiexec -np 90 -ppn 90 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi
+export err=$?; err_chk
 
-
+#**************************************************
+# Change plot file names to meet the EVS standard
+#**************************************************
 cd $plot_dir
 
 for valid in 00z 12z ; do
@@ -264,7 +282,7 @@ for valid in 00z 12z ; do
           fi 
        else
 	  if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${lead}.png ] ; then
-   	  mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var_new}.last${past_days}days.${scoretype}_valid_${valid}_${new_lead}.${new_domain}.png
+   	     mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var_new}.last${past_days}days.${scoretype}_valid_${valid}_${new_lead}.${new_domain}.png
           fi 
        fi
       done #lead
