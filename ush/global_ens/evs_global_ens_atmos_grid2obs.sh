@@ -53,7 +53,7 @@ elif [ $modnam = naefs ] ; then
   elif [ $gefs_number = 30 ] ; then
      mbrs=50
   fi
-  fields="sfc cloud upper"
+  fields="sfc upper"
   validhours="00 12"
 elif [ $modnam = ecme ] ; then
   mbrs=50
@@ -69,7 +69,7 @@ for field in $fields ; do
       fhrs='fhr1 fhr2 fhr3 fhr4'
     elif [ $field = cloud ] ; then
       if [  $modnam = gefs ] ; then
-        fhrs='fhr30 fhr31 fhr32'
+        fhrs='fhr30 fhr31 fhr32 fhr33'
       else
         fhrs='fhr30 fhr31'
       fi
@@ -110,11 +110,13 @@ for field in $fields ; do
               leads_chk="294 300 306 312 318 324 330 336 342 348 354 360 366 372 378 384"
             #For cloud 
             elif [ $fhr = fhr30 ] ; then
-              leads_chk="000 006 012 018 024 030 036 042 048 054 060 066 072 078 084 090 096 102 108 114 120 126" 
+              leads_chk="006 012 018 024 030 036 042 048 054 060 066 072 078 084 090 096 102 108 114 120 126" 
             elif [ $fhr = fhr31 ] ; then
               leads_chk="132 138 144 150 156 162 168 174 180 186 192 198 204 210 216 222 228 234 240 246 252" 
             elif [ $fhr = fhr32 ] ; then
 	      leads_chk="258 264 270 276 282 288 294 300 306 312 318 324 330 336 342 348 354 360 366 372 378 384"
+            elif [ $fhr = fhr33 ] ; then
+              leads_chk="000"
             #For sfc
             elif [ $fhr = fhr21 ] ; then
               leads_chk="000 006 012 018 024 030 036 042 048 054 060 066 072 078 084 090 096" 
@@ -219,10 +221,31 @@ for field in $fields ; do
           echo  "export lead=$lead" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
           if [ $field = cloud ] ; then
               if [ $metplus_job = GenEnsProd ]|| [ $metplus_job = EnsembleStat ] ; then
-                  echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/${metplus_job}_fcst${MODNAM}_obsPREPBUFR_${fieldUPPER}.conf " >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                  if [ $modnam = gefs ] ; then
+                     if [ $fhr = fhr33 ] ; then
+                        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/${metplus_job}_fcst${MODNAM}_obsPREPBUFR_${fieldUPPER}_F000.conf " >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                     else
+                        echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/${metplus_job}_fcst${MODNAM}_obsPREPBUFR_${fieldUPPER}.conf " >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                     fi
+                  else
+                     echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/${metplus_job}_fcst${MODNAM}_obsPREPBUFR_${fieldUPPER}.conf " >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                  fi
               elif [ $metplus_job = PointStat ]; then
-                  echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/${metplus_job}_fcst${MODNAM}_obsPREPBUFR_${fieldUPPER}_mean.conf " >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
-                  echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/${metplus_job}_fcst${MODNAM}_obsPREPBUFR_${fieldUPPER}_prob.conf " >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                  if [ $modnam = gefs ] ; then
+                      if [ $fhr = fhr33 ] ; then
+                          echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/${metplus_job}_fcst${MODNAM}_obsPREPBUFR_${fieldUPPER}_mean_F000.conf " >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                          echo "export err=\$?; err_chk" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                          echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/${metplus_job}_fcst${MODNAM}_obsPREPBUFR_${fieldUPPER}_prob_F000.conf " >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                      else
+                          echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/${metplus_job}_fcst${MODNAM}_obsPREPBUFR_${fieldUPPER}_mean.conf " >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                          echo "export err=\$?; err_chk" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                          echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/${metplus_job}_fcst${MODNAM}_obsPREPBUFR_${fieldUPPER}_prob.conf " >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                      fi
+                  else
+                      echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/${metplus_job}_fcst${MODNAM}_obsPREPBUFR_${fieldUPPER}_mean.conf " >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                      echo "export err=\$?; err_chk" >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                      echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2OBS_CONF}/${metplus_job}_fcst${MODNAM}_obsPREPBUFR_${fieldUPPER}_prob.conf " >> run_${modnam}_${vhour}_${fhr}_${field}_${metplus_job}_g2o.sh
+                  fi
               fi
           elif [ $field = sfc ] || [ $field = upper ]; then
               if [ $modnam = gefs ] || [ $modnam = cmce ] || [ $modnam = ecme ] ; then
@@ -261,7 +284,7 @@ for field in $fields ; do
         mpiexec -n 24 -ppn 24 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_${field}_${metplus_job}_g2o_poe.sh
         export err=$?; err_chk
       else
-        mpiexec -n 16 -ppn 16 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_${field}_${metplus_job}_g2o_poe.sh
+        mpiexec -n 12 -ppn 12 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_${field}_${metplus_job}_g2o_poe.sh
         export err=$?; err_chk
       fi
     else
