@@ -15,7 +15,8 @@ done
 
 echo "Missing prepbufr files = " $missing
 if [ $missing -eq 24  ] ; then
-  echo "all of the preppbufr files are missing, exit execution!!!"
+  echo "WARNING: all of the preppbufr files are missing, exit execution!!!"
+  export err=$?; err_chk
   exit
 else
   echo "Continue check CCAP files...." 
@@ -57,7 +58,8 @@ done
 
 echo "Missing ccpa01h files = " $missing
 if [ $missing -eq 24  ] ; then
-  echo "all of the ccpa files are missing, exit execution!!!"
+  echo "WARNING: all of the ccpa files are missing, exit execution!!!"
+  export err=$?; err_chk
   exit
 fi
 
@@ -96,7 +98,8 @@ done
 
 echo "Missing ccpa03h files = " $missing
 if [ $missing -eq 8  ] ; then
-  echo "all of the ccpa03h files are missing, exit execution!!!"
+  echo "WARNING: all of the ccpa03h files are missing, exit execution!!!"
+  export err=$?; err_chk
   exit
 fi
 
@@ -127,7 +130,8 @@ done
 
 echo "Missing ccpa06h files = " $missing
 if [ $missing -ge 1  ] ; then
-  echo "At least one of the ccpa06h files are missing, exit execution!!!"
+  echo "WARNING: At least one of the ccpa06h files are missing, exit execution!!!"
+  export err=$?; err_chk
   exit
 fi
 
@@ -152,7 +156,8 @@ for vhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 
 done
 echo "Missing mrms01h files = " $missing
 if [ $missing -eq 24  ] ; then
-  echo "All of mrms01h files are missing, exit execution!!!"
+  echo "WARNING: All of mrms01h files are missing, exit execution!!!"
+  export err=$?; err_chk
   exit
 fi
 
@@ -166,7 +171,8 @@ for vhr in 00 03 06 09 12 15 18 21 ; do
 done
 echo "Missing mrms03h files = " $missing
 if [ $missing -eq 8  ] ; then
-  echo "All of mrms03h files are missing, exit execution!!!"
+  echo "WARNING: All of mrms03h files are missing, exit execution!!!"
+  export err=$?; err_chk
   exit
 fi
 
@@ -180,7 +186,8 @@ for vhr in 00 06 12 18 ; do
 done
 echo "Missing mrms24h files = " $missing
 if [ $missing -eq 4  ] ; then
- echo "All of mrms24h files are missing, exit execution!!!"   
+ echo "WARNING: All of mrms24h files are missing, exit execution!!!"   
+ export err=$?; err_chk
  exit
 fi
 
@@ -205,7 +212,8 @@ for obsv_cyc in 00 03 06 09 12 15 18 21 ; do
 
 
       if [ $href_mbrs -lt 4 ] ; then
-        echo "HREF members = " $href_mbrs " which < 6, exit METplus execution !!!"
+        echo "WARNING: HREF members = " $href_mbrs " which < 6, exit METplus execution !!!"
+        export err=$?; err_chk
         exit
       fi
 
@@ -238,7 +246,8 @@ for obsv_cyc in 00 03 06 09 12 15 18 21 ; do
 
 
       if [ $href_mbrs -lt 4 ] ; then
-        echo "HREF members = " $href_mbrs " which < 6, exit METplus execution !!!"
+        echo "WARNING: HREF members = " $href_mbrs " which < 6, exit METplus execution !!!"
+        export err=$?; err_chk
         exit
       fi
 
@@ -276,7 +285,8 @@ for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 2
 
 
         if [ $href_prod -lt 6 ] ; then
-          echo "HREF Products = " $href_prod " which < 6, some products are missing, exit METplus execution !!!"
+          echo "WARNING: HREF Products = " $href_prod " which < 6, some products are missing, exit METplus execution !!!"
+          export err=$?; err_chk
           exit
         fi
 
@@ -316,7 +326,8 @@ for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 2
 
 
         if [ $href_prod -lt 6 ] ; then
-          echo "HREF Products = " $href_prod " which < 6, some products are missing, exit METplus execution !!!"
+          echo "WARNING: HREF Products = " $href_prod " which < 6, some products are missing, exit METplus execution !!!"
+          export err=$?; err_chk
           exit
         fi
 
