@@ -1,14 +1,16 @@
 #!/bin/ksh
+#************************************************************************************
+#  Purpose: Generate href precip poe and sub-jobs files
+#           including 4 mean (mean, pmmn, lpmm and average), probability (prob, eas)
+#           and system (ecnt line type)
+#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#***********************************************************************************
 set -x 
 
-#Binbin note: If METPLUS_BASE,  PARM_BASE not set, then they will be set to $METPLUS_PATH
-#             by config_launcher.py in METplus-3.0/ush
-#             why config_launcher.py is not in METplus-3.1/ush ??? 
-
-
-############################################################
-
-
+#*******************************************
+# Build POE script to collect sub-jobs 
+#******************************************
+export members=10
 >run_all_href_precip_poe.sh
 
 
@@ -23,6 +25,9 @@ for obsvtype in ccpa mrms ; do
 	  
      PROD=`echo $prod | tr '[a-z]' '[A-Z]'`
 
+     #************************************
+     # Build sub-jobs
+     # ***********************************
      >run_href_precip_${prod}.${obsv}.sh
 
      if [ $acc = 24h ] ; then
@@ -187,7 +192,6 @@ for obsvtype in ccpa mrms ; do
           echo  "export modelgrid=conus.${prod}" >> run_href_precip_${prod}.${obsv}.sh
        fi
 
-
        if [ $prod = system ] ; then
          echo  "export modelpath=$COMHREF" >> run_href_precip_${prod}.${obsv}.sh
          echo  "export modeltail=''" >> run_href_precip_${prod}.${obsv}.sh
@@ -211,7 +215,6 @@ for obsvtype in ccpa mrms ; do
          echo  "export modelgrid=ak.${prod}" >> run_href_precip_${prod}.${obsv}.sh
       fi
 
-
        if [ $prod = system ] ; then
          echo  "export modelpath=$COMHREF" >> run_href_precip_${prod}.${obsv}.sh
          echo  "export modeltail=''" >> run_href_precip_${prod}.${obsv}.sh
@@ -234,7 +237,6 @@ for obsvtype in ccpa mrms ; do
           echo  "export modelgrid=conus.${prod}" >> run_href_precip_${prod}.${obsv}.sh
        fi
 
-
        if [ $prod = system ] ; then
          echo  "export modelpath=$COMHREF" >> run_href_precip_${prod}.${obsv}.sh
          echo  "export modeltail=''" >> run_href_precip_${prod}.${obsv}.sh
@@ -255,7 +257,6 @@ for obsvtype in ccpa mrms ; do
       else
          echo  "export modelgrid=ak.${prod}" >> run_href_precip_${prod}.${obsv}.sh
       fi
-
 
        if [ $prod = system ] ; then
          echo  "export modelpath=$COMHREF" >> run_href_precip_${prod}.${obsv}.sh

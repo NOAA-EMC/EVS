@@ -1,5 +1,9 @@
 #!/bin/ksh
-
+#**************************************************************************************
+# Purpose: To build virtually link for past 31/90 days of href stat data files required
+#          by href plot jobs
+# Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#**************************************************************************************
 set -x 
 
 day=$1
