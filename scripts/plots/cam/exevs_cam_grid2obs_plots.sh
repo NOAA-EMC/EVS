@@ -13,6 +13,7 @@ set -x
 
 # Set Basic Environment Variables
 
+export machine=${machine:-"WCOSS2"}
 export njob=1
 source $config
 # Check User's Configuration Settings

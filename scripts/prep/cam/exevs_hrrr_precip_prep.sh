@@ -12,6 +12,7 @@
 set -x
 
 # Loop through HRRR Precipitation configs
+export machine=${machine:-"WCOSS2"}
 export njob=1
 for NEST in "conus" "ak"; do
     export NEST=$NEST

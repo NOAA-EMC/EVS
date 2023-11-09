@@ -13,6 +13,7 @@
 set -x
 
 # Set Basic Environment Variables
+export machine=${machine:-"WCOSS2"}
 last_cyc="21"
 NEST_LIST="conus ak spc_otlk hi pr gu subreg"
 VERIF_TYPES="raob metar"

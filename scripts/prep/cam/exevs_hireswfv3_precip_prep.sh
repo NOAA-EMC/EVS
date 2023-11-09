@@ -13,6 +13,7 @@
 set -x
 
 # Loop through HiRes Window FV3 Precipitation configs
+export machine=${machine:-"WCOSS2"}
 export njob=1
 for NEST in "conus" "ak" "pr" "hi"; do
     export NEST=$NEST
