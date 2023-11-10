@@ -1,14 +1,9 @@
 #!/bin/ksh
+#*************************************************************************
+#  Purpose: Generate href grid2obs profile poe and sub-jobs files
+#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#*************************************************************************
 set -x 
-
-#Binbin note: If METPLUS_BASE,  PARM_BASE not set, then they will be set to $METPLUS_PATH
-#             by config_launcher.py in METplus-3.0/ush
-#             why config_launcher.py is not in METplus-3.1/ush ??? 
-
-
-#export regrid='NONE'
-############################################################
-
 
 domain=$1
 
@@ -18,6 +13,9 @@ else
   domains=$domain
 fi
 
+#*******************************************
+# Build POE script to collect sub-jobs
+#******************************************
 >run_all_href_profile_poe.sh
 
 
@@ -34,6 +32,9 @@ for dom in $domains ; do
 
       for fhr in fhr1 fhr2 ; do
 
+	#****************************
+	# Build sub-jobs
+	#****************************
         >run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
        
@@ -250,7 +251,7 @@ for dom in $domains ; do
 
         echo  "export OBTYPE='PREPBUFR'" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
-        echo  "export obsvhead=$obsv " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
+	echo  "export obsvhead=$obsv " >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export obsvgrid=G200" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
         echo  "export obsvpath=$WORK" >> run_href_${domain}.${valid_at}.${fhr}_profile.sh
 
