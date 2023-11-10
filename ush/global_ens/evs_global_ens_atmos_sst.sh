@@ -68,6 +68,11 @@ for lead_chk in $leads_chk; do
   fcst_time=$($NDATE -$lead_chk ${vday}${vhour})
   fyyyymmdd=${fcst_time:0:8}
   ihour=${fcst_time:8:2}
+  chk_path=$COM_IN/atmos.${fyyyymmdd}/$modnam/$modnam.ens*.t${ihour}z.grid3.sst24h.f${lead_chk}.nc
+  nmbrs_lead_check=$(find $chk_path -size +0c 2>/dev/null | wc -l)
+  if [ $nmbrs_lead_check -eq $mbrs ]; then
+      lead_arr[${#lead_arr[*]}+1]=${lead_chk}
+  fi
 done
 lead_str=$(echo $(echo ${lead_arr[@]}) | tr ' ' ',')
 unset lead_arr

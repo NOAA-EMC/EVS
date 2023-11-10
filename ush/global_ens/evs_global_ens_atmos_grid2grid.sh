@@ -151,7 +151,7 @@ if [ $verify = upper ] ; then
               else
                 chk_path=$COM_IN/atmos.${fyyyymmdd}/$modnam/$modnam.ens*.t${ihour}z.grid3.f${lead_chk}.grib2
               fi
-              nmbrs_lead_check=$(find $chk_path -size +0c | wc -l)
+              nmbrs_lead_check=$(find $chk_path -size +0c 2>/dev/null | wc -l)
               if [ $nmbrs_lead_check -eq $mbrs ]; then
                  lead_arr[${#lead_arr[*]}+1]=${lead_chk}
               fi
@@ -188,17 +188,20 @@ if [ $verify = upper ] ; then
         fi
         if [ $metplus_job = GenEnsProd ] || [ $metplus_job = EnsembleStat ]; then
           echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/${metplus_job}_fcst${conf_MODL}_obsModelAnalysis_climoERA5.conf " >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+          echo "export err=\$?; err_chk" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
           if [ $modnam = ecme ]; then
             echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/${metplus_job}_fcst${conf_MODL}_obsModelAnalysis_climoERA5_SFC.conf " >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+            echo "export err=\$?; err_chk" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
           fi
         elif [ $metplus_job = GridStat ]; then
           echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/${metplus_job}_fcst${conf_MODL}_obsModelAnalysis_climoERA5_mean.conf " >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+          echo "export err=\$?; err_chk" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
           if [ $modnam = ecme ]; then
             echo  "export lead=$lead_SFC" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
             echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/${metplus_job}_fcst${conf_MODL}_obsModelAnalysis_climoERA5_mean_SFC.conf " >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
+            echo "export err=\$?; err_chk" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
           fi
         fi
-        echo "export err=\$?; err_chk" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
         if [ $metplus_job = EnsembleStat ] ; then
             [[ $SENDCOM="YES" ]] && echo "cpreq -v \$output_base/stat/${modnam}/ensemble_stat_*.stat $COMOUTsmall" >> run_${modnam}_valid_at_t${vhour}z_${fhr}_${metplus_job}_g2g.sh
         elif [ $metplus_job = GridStat ] ; then
@@ -333,7 +336,7 @@ if [ $verify = precip ] ; then
                 chk_path=$COM_IN/atmos.${fyyyymmdd}/$modnam/$modnam.ens*.t${ihour}z.grid3.f${lead_chk}.grib2
               fi
             fi
-            nmbrs_lead_check=$(find $chk_path -size +0c | wc -l)
+            nmbrs_lead_check=$(find $chk_path -size +0c 2>/dev/null | wc -l)
             if [ $nmbrs_lead_check -eq $mbrs ]; then
               lead_arr[${#lead_arr[*]}+1]=${lead_chk}
             fi
@@ -341,7 +344,7 @@ if [ $verify = precip ] ; then
             if [ $apcp = 24h ]; then
                 chk_file=$WORK/grid2grid/run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z/stat/${modnam}/GenEnsProd_${MODL}_APCP24_FHR${lead_chk}_${vday}_${vhour}0000V_ens.nc
             elif [ $apcp = 06h ] ; then
-                chk_file=$WORK/grid2grid/run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z/stat/${modnam}/GenEnsProd_${MODL}_APCP06_FHR${lead_chk}_${vday}${vhour}0000V_ens.nc
+                chk_file=$WORK/grid2grid/run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z/stat/${modnam}/GenEnsProd_${MODL}_APCP06_FHR${lead_chk}_${vday}_${vhour}0000V_ens.nc
             fi
             if [ -s $chk_file ]; then
               lead_arr[${#lead_arr[*]}+1]=${lead_chk}
@@ -358,19 +361,23 @@ if [ $verify = precip ] ; then
         fi
         if [ $metplus_job = GenEnsProd ] || [ $metplus_job = EnsembleStat ]; then
           echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/${metplus_job}_fcst${conf_MODL}_obsCCPA${apcp}.conf " >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+          echo "export err=\$?; err_chk" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
         elif [ $metplus_job = GridStat ]; then
           echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/${metplus_job}_fcst${conf_MODL}_obsCCPA${apcp}_mean.conf " >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+          echo "export err=\$?; err_chk" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
           if [ $modnam = gefs ] || [ $modnam = cmce ] ; then
             if [ $apcp = 24h ] ; then
               echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/${metplus_job}_fcst${conf_MODL}_obsCCPA${apcp}_climoEMC_prob.conf " >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+              echo "export err=\$?; err_chk" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
             elif [ $apcp = 06h ] ; then
               echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/${metplus_job}_fcst${conf_MODL}_obsCCPA${apcp}_prob.conf " >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+              echo "export err=\$?; err_chk" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
             fi
           else
             echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/${metplus_job}_fcst${conf_MODL}_obsCCPA${apcp}_climoEMC_prob.conf " >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
+            echo "export err=\$?; err_chk" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
           fi
         fi
-        echo "export err=\$?; err_chk" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
         if [ $metplus_job = EnsembleStat ]; then
           [[ $SENDCOM="YES" ]] && echo "cpreq -v \$output_base/stat/${modnam}/ensemble_stat_*.stat $COMOUTsmall_precip" >> run_${modnam}_ccpa${apcp}_valid_at_t${vhour}z_${metplus_job}.sh
         elif [ $metplus_job = GridStat ]; then
@@ -402,7 +409,7 @@ if [ $verify = precip ] ; then
     fi
   done #end of metplus_jobs
   if [ $gather = yes ] ; then
-    if [ ${models} = gefs ] ; then
+    if [ $modnam = gefs ] ; then
       $USHevs/global_ens/evs_global_ens_atmos_gather.sh $MODELNAME  precip 00 18
     else
       $USHevs/global_ens/evs_global_ens_atmos_gather.sh $MODELNAME precip 00 12

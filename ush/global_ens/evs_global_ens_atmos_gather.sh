@@ -38,7 +38,7 @@ for modnam in $models ; do
     echo  "export MODEL=${MODEL}" >> run_gather_${modnam}_${verify}.sh
     echo  "export stat_file_dir=${COMOUTsmall}" >> run_gather_${modnam}_${verify}.sh
     echo  "export gather_output_dir=${WORK}/gather " >> run_gather_${modnam}_${verify}.sh
-    nsmall_stat_files=$(find ${COMOUTsmall} -type f | wc -l)
+    nsmall_stat_files=$(find ${COMOUTsmall} -type f 2>/dev/null | wc -l)
     if [ $nsmall_stat_files -eq 0 ]; then
       err_exit "No small stats files in ${COMOUTsmall}"
     fi

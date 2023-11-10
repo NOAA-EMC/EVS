@@ -106,7 +106,7 @@ for metplus_job in GenEnsProd EnsembleStat GridStat; do
             else
                 chk_path=$COM_IN/atmos.${fyyyymmdd}/$modnam/$modnam.ens*.t${ihour}z.grid3.${type}_24h.f${lead_chk}.nc
             fi
-            nmbrs_lead_check=$(find $chk_path -size +0c | wc -l)
+            nmbrs_lead_check=$(find $chk_path -size +0c 2>/dev/null | wc -l)
             if [ $nmbrs_lead_check -eq $mbrs ]; then
                 lead_arr[${#lead_arr[*]}+1]=${lead_chk}
             fi
@@ -131,11 +131,13 @@ for metplus_job in GenEnsProd EnsembleStat GridStat; do
     fi
     if [ $metplus_job = GridStat ]; then
         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/${metplus_job}_fcst${conf_MODEL}_obsNOHRSC24h_mean.conf " >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
+        echo "export err=\$?; err_chk" >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/${metplus_job}_fcst${conf_MODEL}_obsNOHRSC24h_prob.conf " >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
+        echo "export err=\$?; err_chk" >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
     else
         echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/${metplus_job}_fcst${conf_MODEL}_obsNOHRSC24h.conf " >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
+        echo "export err=\$?; err_chk" >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
     fi
-    echo "export err=\$?; err_chk" >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
     if [ $metplus_job = EnsembleStat ]; then
         [[ $SENDCOM="YES" ]] && echo "cpreq -v \$output_base/stat/${modnam}/ensemble_stat_*.stat $COMOUTsmall" >> run_${modnam}_${verify}_${type}_${metplus_job}.sh
     fi

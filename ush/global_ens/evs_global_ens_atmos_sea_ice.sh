@@ -92,7 +92,7 @@ for metplus_job in GenEnsProd EnsembleStat GridStat; do
             ihour=${fcst_time:8:2}
             if [ $metplus_job = GenEnsProd ]|| [ $metplus_job = EnsembleStat ] ; then
                 chk_path=$COM_IN/atmos.${fyyyymmdd}/$modnam/$modnam.ens*.t${ihour}z.grid3.icec_${average}h.f${lead_chk}.nc
-                nmbrs_lead_check=$(find $chk_path -size +0c | wc -l)
+                nmbrs_lead_check=$(find $chk_path -size +0c 2>/dev/null | wc -l)
                 if [ $nmbrs_lead_check -eq $mbrs ]; then
                    lead_arr[${#lead_arr[*]}+1]=${lead_chk}
                 fi
@@ -108,10 +108,11 @@ for metplus_job in GenEnsProd EnsembleStat GridStat; do
         echo  "export lead='${lead_str}' "  >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh
         if [ $metplus_job = GridStat ] ; then
             echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/${metplus_job}_fcst${MODL}_obsOSI_SAF_mean.conf " >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh
+            echo "export err=\$?; err_chk" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh
         else
             echo  "${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${GRID2GRID_CONF}/${metplus_job}_fcst${MODL}_obsOSI_SAF.conf " >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh
+            echo "export err=\$?; err_chk" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh
         fi
-        echo "export err=\$?; err_chk" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh
         if [ $metplus_job = EnsembleStat ]; then
           [[ $SENDCOM="YES" ]] && echo "cpreq -v \$output_base/stat/${modnam}/ensemble_stat_*.stat $COMOUTsmall" >> run_${modnam}_valid_at_t${vhour}z_${verify}_${average}_${metplus_job}.sh
         elif [ $metplus_job = GridStat ]; then
