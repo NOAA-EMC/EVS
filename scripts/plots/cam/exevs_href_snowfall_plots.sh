@@ -1,5 +1,8 @@
 #!/bin/ksh
-
+#*******************************************************************************
+# Purpose: setup environment, paths, and run the href snowfall plotting python script
+# Last updated: 10/30/2023, Binbin Zhou Lynker@EMC/NCEP
+#******************************************************************************
 set -x 
 
 cd $DATA
@@ -36,9 +39,10 @@ done
 export init_beg=$first_day
 export valid_beg=$first_day
 
+#*************************************************************
+# Virtual link the href's stat data files of past 31/90 days
+#*************************************************************
 n=0
-
-
 while [ $n -le $past_days ] ; do
   #hrs=`expr $n \* 24`
   hrs=$((n*24))
@@ -54,6 +58,9 @@ export plot_dir=$DATA/out/precip/${valid_beg}-${valid_end}
 verif_case=precip
 verif_type=ccpa
 
+#***************************************
+# Build a POE file to collect sub=jobs
+# **************************************
 > run_all_poe.sh
 
 for VX_MASK_LIST in $VX_MASK_LISTs ; do
@@ -105,6 +112,9 @@ for stats in ets_fbias ratio_pod_csi fss ; do
 
        for line_type in $line_tp ; do 
 
+	 #*****************************
+	 # Build sub-jobs
+	 # ****************************
          > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh  
 
         echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.${VX_MASK_LIST}.sh
@@ -167,13 +177,19 @@ done #end of stats
 done #end of vx_mask_list
 chmod +x run_all_poe.sh
 
-
+#***************************************************************************
+# Run the POE script in parallel or in sequence order to generate png files
+#**************************************************************************
 if [ $run_mpi = yes ] ; then
    mpiexec -np 30 -ppn 30 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi
+export err=$?; err_chk
 
+#**************************************************
+# Change plot file names to meet the EVS standard
+#**************************************************
 cd $plot_dir
 
 for stats in ets fbias fss ; do
@@ -201,7 +217,9 @@ for stats in ets fbias fss ; do
     fi
 
    for domain in conus conus_east conus_west conus_south conus_central  ; do
-      mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_valid_all_times.buk_${domain}.png
+     if [ -s ${score_type}_regional_${domain}_${valid}_${level}_${var}_${stats}_${lead}.png ] ; then
+       mv ${score_type}_regional_${domain}_${valid}_${level}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_valid_all_times.buk_${domain}.png
+     fi
    done
 
   done

@@ -1,5 +1,8 @@
 #!/bin/ksh
-
+#*******************************************************************************
+# Purpose: setup environment, paths, and run the href cape plotting python script
+# Last updated: 10/30/2023, Binbin Zhou Lynker@EMC/NCEP
+#******************************************************************************
 set -x 
 
 cd $DATA
@@ -34,6 +37,9 @@ done
 export init_beg=$first_day
 export valid_beg=$first_day
 
+#*************************************************************
+# Virtual link the href's stat data files of past 31/90 days
+#*************************************************************
 n=0
 while [ $n -le $past_days ] ; do
   #hrs=`expr $n \* 24`
@@ -41,7 +47,6 @@ while [ $n -le $past_days ] ; do
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
   $USHevs/cam/evs_get_href_stat_file_link_plots.sh $day HREF_MEAN
-  export err=$?; err_chk
   n=$((n+1))
 done 
 
@@ -55,6 +60,9 @@ init_time='init00z_06z_12z_18z'
 line_type=ctc
 verif_case=grid2obs
 
+#*****************************************
+# Build a POE file to collect sub-jobs
+# ****************************************
 > run_all_poe.sh
 
 for valid_time in 00 12 ; do 
@@ -130,6 +138,9 @@ for valid_time in 00 12 ; do
 
         level=`echo $FCST_LEVEL_value | tr '[A-Z]' '[a-z]'`      
 
+	 #*********************
+	 # Build sub-jobs
+	 #*********************
          > run_${stats}.${thresh}.${score_type}.${lead}.${VAR}.${dom}.${FCST_LEVEL_value}.${valid_time}.sh  
 
         verif_type=conus_sfc
@@ -207,14 +218,19 @@ done #end of valid_time
 
 chmod +x run_all_poe.sh
 
-
+#***************************************************************************
+# Run the POE script in parallel or in sequence order to generate png files
+#**************************************************************************
 if [ $run_mpi = yes ] ; then
    mpiexec -np 768 -ppn 84 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi
+export err=$?; err_chk
 
-
+#**************************************************
+# Change plot file names to meet the EVS standard
+#**************************************************
 cd $plot_dir
  	
 for score_type in lead_average threshold_average; do
@@ -300,7 +316,7 @@ if [ $SENDCOM="YES" ]; then
 fi
 
 if [ $SENDDBN = YES ] ; then
-	    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.href.grid2obs.cape.past${past_days}days.v${VDATE}.tar
+ $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.href.grid2obs.cape.past${past_days}days.v${VDATE}.tar
 fi
 
 
