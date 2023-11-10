@@ -1,5 +1,9 @@
 #!/bin/ksh
-
+#**************************************************************************
+#  Purpose: check the required input forecast and validation data files
+#           for href stat jobs
+#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#************************************************************************
 set -x
 
 vday=$VDATE
@@ -10,6 +14,7 @@ missing=0
 for vhr in 00 01 02 03 04 05 06 07 08  09 10 11 12 13 14 15 16 17 18 19 20  21 22 23 ; do
   if [ ! -s $COMINobsproc/rap.${vday}/rap.t${vhr}z.prepbufr.tm00 ] ; then
     missing=$((missing + 1 ))
+    echo  $COMINobsproc/rap.${vday}/rap.t${vhr}z.prepbufr.tm00 is missing
   fi
 done
 
@@ -49,9 +54,11 @@ for vhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 
   else
      ccpa=$EVSINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${vhr}z.01h.hrap.conus.gb2
   fi
+  #echo $ccpa
 
   if [ ! -s $ccpa ] ; then
       missing=$((missing + 1 ))
+      echo $ccpa is missing
   fi
 done
 
@@ -87,9 +94,11 @@ for vhr in 00 03 06 09 12 15 18 21 ; do
   else
      ccpa=$EVSINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${vhr}z.03h.hrap.conus.gb2
   fi
+   #echo $ccpa
 
    if [ ! -s $ccpa ] ; then
          missing=$((missing + 1 ))
+	 echo $ccpa is missing
    fi
 
 done
@@ -115,12 +124,16 @@ for vhr in 12 ; do
    else
       if [ ! -s $EVSINccpa/ccpa.${vday}/12/ccpa.t12z.06h.hrap.conus.gb2 ] ; then
           missing=$((missing+1))
+	  echo $EVSINccpa/ccpa.${vday}/12/ccpa.t12z.06h.hrap.conus.gb2 is missing
       elif [ ! -s $EVSINccpa/ccpa.${vday}/06/ccpa.t06z.06h.hrap.conus.gb2 ] ; then
               missing=$((missing+1))
+	      echo $EVSINccpa/ccpa.${vday}/06/ccpa.t06z.06h.hrap.conus.gb2 is missing
       elif [ ! -s $EVSINccpa/ccpa.${vday}/00/ccpa.t00z.06h.hrap.conus.gb2 ] ; then
           missing=$((missing+1))
+	  echo $EVSINccpa/ccpa.${vday}/00/ccpa.t00z.06h.hrap.conus.gb2 is missing
       elif [ ! -s $EVSINccpa/ccpa.${prev}/18/ccpa.t18z.06h.hrap.conus.gb2 ] ; then
           missing=$((missing+1))
+	  echo $EVSINccpa/ccpa.${prev}/18/ccpa.t18z.06h.hrap.conus.gb2 is missing
       fi
    fi
 done
@@ -148,6 +161,7 @@ for vhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 
    mrms=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
    if [ ! -s $mrms ] ; then
      missing=$((missing+1))
+     echo $mrms is missing
    fi
 done
 echo "Missing mrms01h files = " $missing
@@ -162,6 +176,7 @@ for vhr in 00 03 06 09 12 15 18 21 ; do
    mrms=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
    if [ ! -s $mrms ] ; then
      missing=$((missing+1))
+     echo $mrms is missing
    fi
 done
 echo "Missing mrms03h files = " $missing
@@ -176,6 +191,7 @@ for vhr in 00 06 12 18 ; do
    mrms=$DCOMINmrms/MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
    if [ ! -s $mrms ] ; then
      missing=$((missing+1))
+     echo $mrms is missing
    fi
 done
 echo "Missing mrms24h files = " $missing
@@ -198,14 +214,18 @@ for obsv_cyc in 00 03 06 09 12 15 18 21 ; do
       href_mbrs=0
       for mb in 01 02 03 04 05 06 07 08 09 10 ; do 
         href=$COMINhref/href.${fday}/verf_g2g/href.m${mb}.t${fcyc}z.conus.f${fhr}
+        #echo $href
 	if [ -s $href ] ; then
            href_mbrs=$((href_mbrs+1))
+	else
+	   echo $href is missing
         fi	    
       done
 
+      #echo fday=$fday fcyc=$fcyc fhr=$fhr href_mbrs=$href_mbrs
 
       if [ $href_mbrs -lt 4 ] ; then
-        echo "HREF members = " $href_mbrs " which < 6, exit METplus execution !!!"
+        echo "HREF members = " $href_mbrs " which < 4, exit METplus execution !!!"
         exit
       fi
 
@@ -231,14 +251,18 @@ for obsv_cyc in 00 03 06 09 12 15 18 21 ; do
       href_mbrs=0
       for mb in 01 02 03 04 05 06 07 08 09 10 ; do 
         href=$COMINhref/href.${fday}/verf_g2g/href.m${mb}.t${fcyc}z.ak.f${fhr}
+        #echo $href
 	if [ -s $href ] ; then
            href_mbrs=$((href_mbrs+1))
+	else
+	   echo $href is missing
         fi	    
       done
 
+      #echo fday=$fday fcyc=$fcyc fhr=$fhr href_mbrs=$href_mbrs
 
       if [ $href_mbrs -lt 4 ] ; then
-        echo "HREF members = " $href_mbrs " which < 6, exit METplus execution !!!"
+        echo "HREF members = " $href_mbrs " which < 4, exit METplus execution !!!"
         exit
       fi
 
@@ -267,6 +291,7 @@ for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 2
        href_prod=0	      
        for  prod in mean prob eas pmmn lpmm avrg ; do 
          href=$COMINhref/href.${fday}/ensprod/href.t${fcyc}z.conus.${prod}.f${fhr}.grib2
+         #echo $href
 	 if [ -s $href ] ; then
            href_prod=$((href_prod+1))
 	 else
@@ -274,9 +299,10 @@ for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 2
         fi	    
        done
 
+       #echo fday=$fday fcyc=$fcyc fhr=$fhr href_prod=$href_prod
 
-        if [ $href_prod -lt 6 ] ; then
-          echo "HREF Products = " $href_prod " which < 6, some products are missing, exit METplus execution !!!"
+        if [ $href_prod -lt 4 ] ; then
+          echo "HREF Products = " $href_prod " which < 4, some products are missing, exit METplus execution !!!"
           exit
         fi
 
@@ -307,6 +333,7 @@ for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 2
        href_prod=0	      
        for  prod in mean prob eas pmmn lpmm avrg ; do 
          href=$COMINhref/href.${fday}/ensprod/href.t${fcyc}z.ak.${prod}.f${fhr}.grib2
+         #echo $href
 	 if [ -s $href ] ; then
            href_prod=$((href_prod+1))
 	 else
@@ -314,9 +341,10 @@ for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 2
         fi	    
        done
 
+       #echo fday=$fday fcyc=$fcyc fhr=$fhr href_prod=$href_prod
 
-        if [ $href_prod -lt 6 ] ; then
-          echo "HREF Products = " $href_prod " which < 6, some products are missing, exit METplus execution !!!"
+        if [ $href_prod -lt 4 ] ; then
+          echo "HREF Products = " $href_prod " which < 4, some products are missing, exit METplus execution !!!"
           exit
         fi
 

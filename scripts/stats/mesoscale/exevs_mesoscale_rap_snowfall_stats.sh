@@ -82,7 +82,7 @@ for group in $JOB_GROUP_list; do
     if [ $JOB_GROUP = gather_stats ]; then
         # Copy output files into the correct EVS COMOUT directory
         if [ $SENDCOM = YES ]; then
-            cp -v $DATA/${MODELNAME}.${VDATE}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal/.
+            cpreq -v $DATA/${MODELNAME}.${VDATE}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal/.
         fi
     fi
 done
@@ -92,4 +92,3 @@ echo "Begin to print METplus Log files "
   cat $DATA/logs/*
 echo "End to print METplus Log files "
 
-exit
