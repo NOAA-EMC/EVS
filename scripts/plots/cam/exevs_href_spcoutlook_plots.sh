@@ -1,5 +1,9 @@
 #!/bin/ksh
-
+#*******************************************************************************
+# Purpose: setup environment, paths, and run the href spcoutlook plotting python 
+#          script
+# Last updated: 10/30/2023, Binbin Zhou Lynker@EMC/NCEP
+#******************************************************************************
 set -x 
 
 cd $DATA
@@ -34,6 +38,9 @@ done
 export init_beg=$first_day
 export valid_beg=$first_day
 
+#*************************************************************
+# Virtual link the href's stat data files of past 31/90 days
+#*************************************************************
 n=0
 while [ $n -le $past_days ] ; do
   #hrs=`expr $n \* 24`
@@ -41,7 +48,6 @@ while [ $n -le $past_days ] ; do
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
   $USHevs/cam/evs_get_href_stat_file_link_plots.sh $day HREF_MEAN
-  export err=$?; err_chk
   n=$((n+1))
 done 
 																  
@@ -57,11 +63,14 @@ init_time='init00z_06z_12z_18z'
 
 verif_case=grid2obs
 
-#Total SPC outlook area masks = 6 x 3 = 18
-#VX_MASK_LIST="DAY1_0100_MRGL, DAY1_1200_MRGL, DAY1_1300_MRGL, DAY1_1630_MRGL, DAY1_2000_MRGL, DAY2_0700_MRGL, DAY2_1730_MRGL, DAY3_MRGL, DAY1_0100_TSTM, DAY1_1200_TSTM, DAY1_1300_TSTM, DAY1_1630_TSTM, DAY1_2000_TSTM, DAY2_0700_TSTM, DAY2_1730_TSTM, DAY3_TSTM, DAY1_0100_SLGT, DAY1_1200_SLGT, DAY1_1300_SLGT, DAY1_1630_SLGT, DAY1_2000_SLGT, DAY2_0700_SLGT, DAY2_1730_SLGT, DAY3_SLGT, DAY1_0100_ENH, DAY1_1200_ENH, DAY1_1300_ENH, DAY1_1630_ENH, DAY1_2000_ENH, DAY2_0700_ENH, DAY2_1730_ENH, DAY3_ENH, DAY1_0100_MDT, DAY1_1200_MDT, DAY1_1300_MDT, DAY1_1630_MDT, DAY1_2000_MDT, DAY2_0700_MDT, DAY2_1730_MDT, DAY3_MDT, DAY1_0100_HIGH, DAY1_1200_HIGH, DAY1_1300_HIGH, DAY1_1630_HIGH, DAY1_2000_HIGH, DAY2_0700_HIGH, DAY2_1730_HIGH, DAY3_HIGH" 
-
+#********************************************
+# Total SPC outlook area masks = 6 x 3 = 18
+#********************************************
 VX_MASK_LIST="DAY1_MRGL,  DAY2_MRGL, DAY3_MRGL, DAY1_TSTM,  DAY2_TSTM, DAY3_TSTM,  DAY1_SLGT,  DAY2_SLGT, DAY3_SLGT, DAY1_ENH,  DAY2_ENH, DAY3_ENH, DAY1_MDT,  DAY2_MDT, DAY3_MDT, DAY1_HIGH,  DAY2_HIGH, DAY3_HIGH"
 
+#*********************************************
+# Build a POE file to collect sub-jobs
+# ********************************************
 > run_all_poe.sh
 
 for stats in csi_fbias ratio_pod_csi ; do 
@@ -103,6 +112,9 @@ for stats in csi_fbias ratio_pod_csi ; do
 
       for line_type in $line_tp ; do 
 
+	 #****************************
+	 #  Build sub-jobs
+	 #****************************
          > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh  
 
         verif_type=conus_sfc
@@ -158,13 +170,19 @@ done #end of stats
 
 chmod +x run_all_poe.sh
 
-
+#***************************************************************************
+# Run the POE script in parallel or in sequence order to generate png files
+#**************************************************************************
 if [ $run_mpi = yes ] ; then
    mpiexec -np 6 -ppn 6 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi
+export err=$?; err_chk
 
+#**************************************************
+# Change plot file names to meet the EVS standard
+#**************************************************
 
 cd $plot_dir
 

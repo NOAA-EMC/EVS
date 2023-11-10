@@ -13,7 +13,7 @@
 set -x
 
 # Set Basic Environment Variables
-
+export machine=${machine:-"WCOSS2"}
 export njob=1
 export evs_run_mode=$evs_run_mode
 source $config
@@ -67,8 +67,7 @@ if [ $USE_CFP = YES ]; then
             export SLURM_KILL_BAD_EXIT=0
             launcher="srun --export=ALL --multi-prog"
         else
-            echo "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
-            exit 1    
+            err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
         fi
         $launcher $MP_CMDFILE
         nc=$((nc+1))

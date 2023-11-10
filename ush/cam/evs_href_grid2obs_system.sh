@@ -1,14 +1,13 @@
 #!/bin/ksh
+#*************************************************************************
+#  Purpose: Generate href grid2obs ecnt poe and sub-jobs files
+#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+##*************************************************************************
 set -x 
 
-#Binbin note: If METPLUS_BASE,  PARM_BASE not set, then they will be set to $METPLUS_PATH
-#             by config_launcher.py in METplus-3.0/ush
-#             why config_launcher.py is not in METplus-3.1/ush ??? 
-
-
-#export regrid='G227'
-############################################################
-
+#*******************************************
+# Build POE script to collect sub-jobs
+#******************************************
 >run_all_href_system_poe.sh
 
 
@@ -21,7 +20,10 @@ for dom in CONUS Alaska ; do
       export domain=CONUS
 
       for valid_at in 1fhr 2fhr 3fhr 4fhr  5fhr 6fhr 7fhr 8fhr ; do
-      
+ 
+	 #**********************
+	 # Build sub-jobs
+	 #**********************     
          >run_href_${domain}.${valid_at}_system.sh
 
          echo "export regrid=G227" >> run_href_${domain}.${valid_at}_system.sh

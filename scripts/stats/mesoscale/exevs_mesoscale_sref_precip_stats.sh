@@ -21,4 +21,3 @@ $USHevs/mesoscale/evs_sref_precip.sh
 export err=$?; err_chk
 
 
-exit 

@@ -46,7 +46,7 @@ MODEL=`echo $modnam | tr '[a-z]' '[A-Z]'`
     fi
 
     if [ $SENDCOM = 'YES' ]; then
-   echo "cp ${WORK}/gather/${vday}/${modnam}_${verify}_${vday}.stat  $COMOUTfinal/evs.stats.${model}.${verify}.v${vday}.stat">>run_gather_${verify}.sh
+   echo "cpreq ${WORK}/gather/${vday}/${modnam}_${verify}_${vday}.stat  $COMOUTfinal/evs.stats.${model}.${verify}.v${vday}.stat">>run_gather_${verify}.sh
     fi
   chmod +x run_gather_${verify}.sh
 

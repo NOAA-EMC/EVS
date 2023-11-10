@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -xa
+set -x
 
 export PS4='$SECONDS + '
 date
@@ -29,7 +29,6 @@ cd $DATA
 # Determine Job Output Name on System
 ############################################
 export pid=$$
-export pgmout=OUTPUT.${pid}
 
 ############################################
 # Initialize PDY variables
@@ -99,7 +98,13 @@ mkdir -p $DATAplot
 export MPIRUN=${MPIRUN:-"mpiexec"}
 
 OBSERVATIONS="GCIP GFS"
-rm wafs_plots.cmdfile
+
+if [ -s wafs_plots.cmdfile ];then
+	rm wafs_plots.cmdfile
+else
+	echo "WARNING: wafs_plots.cmdfile DOES NOT EXIST"
+fi
+
 ic=0
 export VX_MASK_ALL="GLB ASIA AUNZ EAST NAMER NATL_AR2 NHEM NPO SHEM TROPICS"
 for observation in $OBSERVATIONS ; do
