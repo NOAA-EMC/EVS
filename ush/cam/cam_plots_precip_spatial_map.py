@@ -398,12 +398,12 @@ class PrecipSpatialMap:
                 plt.clf()
                 plt.close('all')
                 #Copy to restart directory
-                if restart_dir:
-                    self.logger.info("Copying image to restart directory: "+restart_dir)
+                if self.restart_dir:
+                    self.logger.info("Copying image to restart directory: "+self.restart_dir)
                     shutil.copy2(
                         image_name, 
                         os.path.join(
-                            restart_dir,
+                            self.restart_dir,
                             'precip',
                             'na',
                             os.path.basename(image_name)
@@ -422,12 +422,12 @@ class PrecipSpatialMap:
                          image_name.replace('.png', '.gif')]
                     )
                     #Copy to restart directory
-                    if restart_dir:
-                        self.logger.info("Copying converted image to restart directory: "+restart_dir)
+                    if self.restart_dir:
+                        self.logger.info("Copying converted image to restart directory: "+self.restart_dir)
                         shutil.copy2(
                             image_name.replace('.png', '.gif'), 
                             os.path.join(
-                                restart_dir,
+                                self.restart_dir,
                                 'precip',
                                 'na',
                                 os.path.basename(image_name.replace('.png', '.gif'))
