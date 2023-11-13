@@ -26,109 +26,108 @@ prevday=`$NDATE -24 ${vday}09 |cut -c1-8`
 # *******************************************************************
 if [ $data = ccpa01h03h ] ; then
 
-export  ccpadir=${WORK}/ccpa.${vday}
+   export  ccpadir=${WORK}/ccpa.${vday}
 
-mkdir -p $ccpadir
-cd $ccpadir
+   mkdir -p $ccpadir
+   cd $ccpadir
 
-has_ccpa=0
- if [ -s $COMCCPA/ccpa.${vday}/00/ccpa.t00z.03h.hrap.conus.gb2 ] && [ -s $COMCCPA/ccpa.${vday}/00/ccpa.t00z.01h.hrap.conus.gb2 ] ; then 
+   has_ccpa=0
+   if [ -s $COMCCPA/ccpa.${vday}/00/ccpa.t00z.03h.hrap.conus.gb2 ] && [ -s $COMCCPA/ccpa.${vday}/00/ccpa.t00z.01h.hrap.conus.gb2 ] ; then 
 
-     for vhr in 00 ; do
-       cp $COMCCPA/ccpa.${vday}/00/ccpa.t${vhr}z.01h.hrap.conus.gb2  $ccpadir/ccpa01h.t${vhr}z.G240.grib2
-       cp $COMCCPA/ccpa.${vday}/00/ccpa.t${vhr}z.03h.hrap.conus.gb2  $ccpadir/ccpa03h.t${vhr}z.G240.grib2
-     done
-     has_ccpa=$((has_ccpa + 1 ))
-  else
-     echo $COMCCPA/ccpa.${vday}/00/ccpa.t${vhr}z.01h.hrap.conus.gb2 or $COMCCPA/ccpa.${vday}/00/ccpa.t${vhr}z.03h.hrap.conus.gb2 is missing
-  fi
+      for vhr in 00 ; do
+         cp $COMCCPA/ccpa.${vday}/00/ccpa.t${vhr}z.01h.hrap.conus.gb2  $ccpadir/ccpa01h.t${vhr}z.G240.grib2
+         cp $COMCCPA/ccpa.${vday}/00/ccpa.t${vhr}z.03h.hrap.conus.gb2  $ccpadir/ccpa03h.t${vhr}z.G240.grib2
+      done
+      has_ccpa=$((has_ccpa + 1 ))
+   else
+      echo $COMCCPA/ccpa.${vday}/00/ccpa.t${vhr}z.01h.hrap.conus.gb2 or $COMCCPA/ccpa.${vday}/00/ccpa.t${vhr}z.03h.hrap.conus.gb2 is missing
+   fi
 
 
   
-     for vhr in 01 02 03 04 05 06  ; do
-       if [ -s $COMCCPA/ccpa.${vday}/06/ccpa.t${vhr}z.01h.hrap.conus.gb2 ] ; then
+   for vhr in 01 02 03 04 05 06  ; do
+      if [ -s $COMCCPA/ccpa.${vday}/06/ccpa.t${vhr}z.01h.hrap.conus.gb2 ] ; then
          cp $COMCCPA/ccpa.${vday}/06/ccpa.t${vhr}z.01h.hrap.conus.gb2  $ccpadir/ccpa01h.t${vhr}z.G240.grib2
          has_ccpa=$((has_ccpa + 1 ))
-       else
-	 echo $COMCCPA/ccpa.${vday}/06/ccpa.t${vhr}z.01h.hrap.conus.gb2 is missing
-       fi
-     done
+      else
+	     echo $COMCCPA/ccpa.${vday}/06/ccpa.t${vhr}z.01h.hrap.conus.gb2 is missing
+      fi
+   done
 
-     for vhr in 07 08 09 10 11 12  ; do
-       if [ -s $COMCCPA/ccpa.${vday}/12/ccpa.t${vhr}z.01h.hrap.conus.gb2 ] ; then
-          cp $COMCCPA/ccpa.${vday}/12/ccpa.t${vhr}z.01h.hrap.conus.gb2  $ccpadir/ccpa01h.t${vhr}z.G240.grib2
-	  has_ccpa=$((has_ccpa + 1 ))
-       else
-          echo $COMCCPA/ccpa.${vday}/12/ccpa.t${vhr}z.01h.hrap.conus.gb2 is missing
-       fi
-     done
+   for vhr in 07 08 09 10 11 12  ; do
+      if [ -s $COMCCPA/ccpa.${vday}/12/ccpa.t${vhr}z.01h.hrap.conus.gb2 ] ; then
+         cp $COMCCPA/ccpa.${vday}/12/ccpa.t${vhr}z.01h.hrap.conus.gb2  $ccpadir/ccpa01h.t${vhr}z.G240.grib2
+	     has_ccpa=$((has_ccpa + 1 ))
+      else
+         echo $COMCCPA/ccpa.${vday}/12/ccpa.t${vhr}z.01h.hrap.conus.gb2 is missing
+      fi
+   done
 
-     for vhr in 13 14 15 16 17 18  ; do
-       if [ -s $COMCCPA/ccpa.${vday}/18/ccpa.t${vhr}z.01h.hrap.conus.gb2 ] ; then 
-          cp $COMCCPA/ccpa.${vday}/18/ccpa.t${vhr}z.01h.hrap.conus.gb2 $ccpadir/ccpa01h.t${vhr}z.G240.grib2
-	  has_ccpa=$((has_ccpa + 1 ))
-       else
-	  echo $COMCCPA/ccpa.${vday}/18/ccpa.t${vhr}z.01h.hrap.conus.gb2 is missing
-       fi
-     done
+   for vhr in 13 14 15 16 17 18  ; do
+      if [ -s $COMCCPA/ccpa.${vday}/18/ccpa.t${vhr}z.01h.hrap.conus.gb2 ] ; then 
+         cp $COMCCPA/ccpa.${vday}/18/ccpa.t${vhr}z.01h.hrap.conus.gb2 $ccpadir/ccpa01h.t${vhr}z.G240.grib2
+	     has_ccpa=$((has_ccpa + 1 ))
+      else
+	     echo $COMCCPA/ccpa.${vday}/18/ccpa.t${vhr}z.01h.hrap.conus.gb2 is missing
+      fi
+   done
 
-     for vhr in 19 20 21 22 23  ; do
-       if [ -s $COMCCPA/ccpa.${nextday}/00/ccpa.t${vhr}z.01h.hrap.conus.gb2 ] ; then
-          cp $COMCCPA/ccpa.${nextday}/00/ccpa.t${vhr}z.01h.hrap.conus.gb2 $ccpadir/ccpa01h.t${vhr}z.G240.grib2
-	  has_ccpa=$((has_ccpa + 1 ))
-       else
-	  echo $COMCCPA/ccpa.${nextday}/00/ccpa.t${vhr}z.01h.hrap.conus.gb2 is missing
-       fi	  
-     done
+   for vhr in 19 20 21 22 23  ; do
+      if [ -s $COMCCPA/ccpa.${nextday}/00/ccpa.t${vhr}z.01h.hrap.conus.gb2 ] ; then
+         cp $COMCCPA/ccpa.${nextday}/00/ccpa.t${vhr}z.01h.hrap.conus.gb2 $ccpadir/ccpa01h.t${vhr}z.G240.grib2
+	     has_ccpa=$((has_ccpa + 1 ))
+      else
+	     echo $COMCCPA/ccpa.${nextday}/00/ccpa.t${vhr}z.01h.hrap.conus.gb2 is missing
+      fi	  
+   done
 
  
-     for vhr in  03 06 ; do
-       if [ -s $COMCCPA/ccpa.${vday}/06/ccpa.t${vhr}z.03h.hrap.conus.gb2 ] ; then 
-          cp $COMCCPA/ccpa.${vday}/06/ccpa.t${vhr}z.03h.hrap.conus.gb2  $ccpadir/ccpa03h.t${vhr}z.G240.grib2
-	  has_ccpa=$((has_ccpa + 1 ))
-       else
-	  echo $COMCCPA/ccpa.${vday}/06/ccpa.t${vhr}z.03h.hrap.conus.gb2 is missing
-       fi
-     done
+   for vhr in  03 06 ; do
+      if [ -s $COMCCPA/ccpa.${vday}/06/ccpa.t${vhr}z.03h.hrap.conus.gb2 ] ; then 
+         cp $COMCCPA/ccpa.${vday}/06/ccpa.t${vhr}z.03h.hrap.conus.gb2  $ccpadir/ccpa03h.t${vhr}z.G240.grib2
+	     has_ccpa=$((has_ccpa + 1 ))
+      else
+	     echo $COMCCPA/ccpa.${vday}/06/ccpa.t${vhr}z.03h.hrap.conus.gb2 is missing
+      fi
+   done
  
-     for vhr in 09 12 ; do
-       if [ -s $COMCCPA/ccpa.${vday}/12/ccpa.t${vhr}z.03h.hrap.conus.gb2 ] ; then
-          cp $COMCCPA/ccpa.${vday}/12/ccpa.t${vhr}z.03h.hrap.conus.gb2 $ccpadir/ccpa03h.t${vhr}z.G240.grib2
-	  has_ccpa=$((has_ccpa + 1 ))
-       else
-	  echo $COMCCPA/ccpa.${vday}/12/ccpa.t${vhr}z.03h.hrap.conus.gb2 is missing
-       fi
-     done 
+   for vhr in 09 12 ; do
+      if [ -s $COMCCPA/ccpa.${vday}/12/ccpa.t${vhr}z.03h.hrap.conus.gb2 ] ; then
+         cp $COMCCPA/ccpa.${vday}/12/ccpa.t${vhr}z.03h.hrap.conus.gb2 $ccpadir/ccpa03h.t${vhr}z.G240.grib2
+	     has_ccpa=$((has_ccpa + 1 ))
+      else
+	     echo $COMCCPA/ccpa.${vday}/12/ccpa.t${vhr}z.03h.hrap.conus.gb2 is missing
+      fi
+   done 
 
-     for vhr in 15 18 ; do
-       if [ -s $COMCCPA/ccpa.${vday}/18/ccpa.t${vhr}z.03h.hrap.conus.gb2 ] ; then
-        cp $COMCCPA/ccpa.${vday}/18/ccpa.t${vhr}z.03h.hrap.conus.gb2 $ccpadir/ccpa03h.t${vhr}z.G240.grib2
-	has_ccpa=$((has_ccpa + 1 ))
-       else
-	echo $COMCCPA/ccpa.${vday}/18/ccpa.t${vhr}z.03h.hrap.conus.gb2 is missing
-       fi
-     done
+   for vhr in 15 18 ; do
+      if [ -s $COMCCPA/ccpa.${vday}/18/ccpa.t${vhr}z.03h.hrap.conus.gb2 ] ; then
+         cp $COMCCPA/ccpa.${vday}/18/ccpa.t${vhr}z.03h.hrap.conus.gb2 $ccpadir/ccpa03h.t${vhr}z.G240.grib2
+	     has_ccpa=$((has_ccpa + 1 ))
+      else
+	     echo $COMCCPA/ccpa.${vday}/18/ccpa.t${vhr}z.03h.hrap.conus.gb2 is missing
+      fi
+   done
 
-     for vhr in 21 ; do
-       if [ -s $COMCCPA/ccpa.${nextday}/00/ccpa.t${vhr}z.03h.hrap.conus.gb2 ] ; then
-          cp $COMCCPA/ccpa.${nextday}/00/ccpa.t${vhr}z.03h.hrap.conus.gb2 $ccpadir/ccpa03h.t${vhr}z.G240.grib2
-	  has_ccpa=$((has_ccpa + 1 ))
-       else
-	  echo $COMCCPA/ccpa.${nextday}/00/ccpa.t${vhr}z.03h.hrap.conus.gb2 is missing
-       fi
-     done
+   for vhr in 21 ; do
+      if [ -s $COMCCPA/ccpa.${nextday}/00/ccpa.t${vhr}z.03h.hrap.conus.gb2 ] ; then
+         cp $COMCCPA/ccpa.${nextday}/00/ccpa.t${vhr}z.03h.hrap.conus.gb2 $ccpadir/ccpa03h.t${vhr}z.G240.grib2
+	     has_ccpa=$((has_ccpa + 1 ))
+      else
+	     echo $COMCCPA/ccpa.${nextday}/00/ccpa.t${vhr}z.03h.hrap.conus.gb2 is missing
+      fi
+   done
 
-  else
+else
    if [ $SENDMAIL = YES ] ; then
-     export subject="CCPA Data Missing for EVS ${COMPONENT}"
-     echo "Warning:  No CCPA data available for ${VDATE}" > mailmsg
-     echo Missing file is $COMCCPA/ccpa.${vday}/00/ccpa.t00z.03h.hrap.conus.gb2 or $COMCCPA/ccpa.${vday}/00/ccpa.t00z.01h.hrap.conus.gb2 >> mailmsg
-     echo "Job ID: $jobid" >> mailmsg
-     cat mailmsg | mail -s "$subject" $maillist
-     export err=$?; err_chk
-     exit
+      export subject="CCPA Data Missing for EVS ${COMPONENT}"
+      echo "Warning:  No CCPA data available for ${VDATE}" > mailmsg
+      echo Missing file is $COMCCPA/ccpa.${vday}/00/ccpa.t00z.03h.hrap.conus.gb2 or $COMCCPA/ccpa.${vday}/00/ccpa.t00z.01h.hrap.conus.gb2 >> mailmsg
+      echo "Job ID: $jobid" >> mailmsg
+      cat mailmsg | mail -s "$subject" $maillist
+      export err=$?; err_chk
+      exit
    fi
-  fi
 
 fi
 
