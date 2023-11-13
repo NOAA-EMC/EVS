@@ -1,18 +1,12 @@
 #!/bin/ksh
+#************************************************************
+# Purpose: collet small stat files to form a big stat file
+#   Input parameter: verify - verification case (VERIF_CASE)
+# Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#************************************************************
+
 set -x 
-
-#Binbin note: If METPLUS_BASE,  PARM_BASE not set, then they will be set to $METPLUS_PATH
-#             by config_launcher.py in METplus-3.0/ush
-#             why config_launcher.py is not in METplus-3.1/ush ??? 
-
-
-###########################################################
-#export global parameters unified for all mpi sub-tasks
-############################################################
 export regrid='NONE'
-############################################################
-
->run_gather_all_poe.sh
 
 modnam=href
 verify=$1
@@ -25,10 +19,17 @@ elif [ $verify = spcoutlook ] ; then
  MODELS='HREF_MEAN'
 fi 
 
+#****************************************
+# Build a POE script to collect sub-jobs
+#****************************************
+>run_gather_all_poe.sh
 for MODL in $MODELS ; do
 
     modl=`echo $MODL | tr '[A-Z]' '[a-z]'`
 
+#************************************************
+# Build sub-jobs
+#***********************************************
 >run_gather_${verify}_${MODL}.sh
 
     echo  "export output_base=${WORK}/gather" >> run_gather_${verify}_${MODL}.sh 
@@ -60,7 +61,11 @@ done
 
 chmod 775 run_gather_all_poe.sh
 
- ${DATA}/run_gather_all_poe.sh
+#*****************************
+#  Run the POE script
+#*****************************
+${DATA}/run_gather_all_poe.sh
+export err=$?; err_chk
 
 exit
 
