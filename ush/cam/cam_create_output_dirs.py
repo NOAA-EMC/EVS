@@ -250,7 +250,7 @@ elif STEP == 'stats':
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
         date_dt = start_date_dt
-        while date_dt <= vdate_dt+td(days=0):
+        while date_dt <= vdate_dt+td(days=1):
             COMOUT_dir_list.append(os.path.join(
                 COMOUT, 
                 MODELNAME+'.'+date_dt.strftime('%Y%m%d')
@@ -321,6 +321,9 @@ elif STEP == 'stats':
             ))
             working_dir_list.append(os.path.join(
                 working_output_base_dir, NEST, 'ascii2nc', 'tmp'
+            ))
+            COMOUT_dir_list.append(os.path.join(
+                COMOUT_restart_base_dir, NEST, 'pb2nc'
             ))
             if NEST in ['firewx']:
                 working_dir_list.append(os.path.join(
