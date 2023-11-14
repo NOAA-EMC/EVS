@@ -41,6 +41,7 @@ while [ $n -le $past_days ] ; do
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
   $USHevs/global_ens/evs_get_gens_atmos_stat_file_link_plots.sh $day "$model_list"
+  export err=$?; err_chk
   n=$((n+1))
 done 
 
@@ -79,8 +80,7 @@ for stats in acc me_mae crpss rmse_spread  ; do
   VARs='PRMSL TMP2m DPT2m UGRD10m VGRD10m RH2m'
   score_types='time_series lead_average'
  else
-  echo $stats is wrong stat
-  exit
+  err_exit "$stats is not a valid metric"
  fi   
 
  for score_type in $score_types ; do
@@ -194,6 +194,7 @@ if [ $run_mpi = yes ] ; then
    mpiexec -np 84 -ppn 84 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
+  export err=$?; err_chk
 fi
 
 # Cat the plotting log file
@@ -249,15 +250,23 @@ for var in prmsl tmp dpt ugrd vgrd rh; do
                     evs_graphic_level=$level
                 fi
                 if [ $var = prmsl ] ; then
-                    mv lead_average_regional_${domain}_valid_00z_12z_${var}_${stats}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${domain_new}.png
+                    if [ -f "lead_average_regional_${domain}_valid_00z_12z_${var}_${stats}.png" ]; then
+                        mv lead_average_regional_${domain}_valid_00z_12z_${var}_${stats}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${domain_new}.png
+                    fi
                 else
-                    mv lead_average_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${domain_new}.png
+                    if [ -f "lead_average_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}.png" ]; then
+                        mv lead_average_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${domain_new}.png
+                    fi
                 fi
                 for lead in 120 240 360; do
                     if [ $var = prmsl ] ; then
-                        mv time_series_regional_${domain}_valid_00z_12z_${var}_${stats}_f${lead}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.timeseries_valid00z_12z_f${lead}.g003_${domain_new}.png
+                        if [ -f "time_series_regional_${domain}_valid_00z_12z_${var}_${stats}_f${lead}.png" ]; then
+                            mv time_series_regional_${domain}_valid_00z_12z_${var}_${stats}_f${lead}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.timeseries_valid00z_12z_f${lead}.g003_${domain_new}.png
+                        fi
                     else
-                        mv time_series_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}_f${lead}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.timeseries_valid00z_12z_f${lead}.g003_${domain_new}.png
+                        if [ -f "time_series_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}_f${lead}.png" ]; then
+                            mv time_series_regional_${domain}_valid_00z_12z_${level}${unit}_${var}_${stats}_f${lead}.png evs.global_ens.${evs_graphic_stats}.${var}_${evs_graphic_level}.last${past_days}days.timeseries_valid00z_12z_f${lead}.g003_${domain_new}.png
+                        fi
                     fi
                 done #lead
             done #level
@@ -268,7 +277,7 @@ done     #stats
 tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar *.png
 
 if [ $SENDCOM = YES ]; then 
-    cp evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar  $COMOUT/.
+    cpreq evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar  $COMOUT/.
 fi
 
 if [ $SENDDBN = YES ]; then 

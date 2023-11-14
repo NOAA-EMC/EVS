@@ -41,6 +41,7 @@ while [ $n -le $past_days ] ; do
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
   $USHevs/global_ens/evs_get_gens_atmos_stat_file_link_plots.sh $day "$model_list"
+  export err=$?; err_chk
   n=$((n+1))
 done 
 
@@ -87,8 +88,7 @@ for stats in rmse me csi sratio_pod_csi ; do
     threshes='>10, >40, >80'
     score_types='performance_diagram'
  else
-   echo $stats is wrong stat
-   exit
+   err_exit "$stats is not a valid metric"
  fi   
 
  for score_type in $score_types ; do
@@ -191,6 +191,15 @@ if [ $run_mpi = yes ] ; then
    mpiexec -np 32 -ppn 32 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
+  export err=$?; err_chk
+fi
+
+# Cat the plotting log file
+log_file=$DATA/logs/GENS_verif_plotting_job.out
+if [ -s $log_file ]; then
+    echo "Start: $log_file"
+    cat $log_file
+    echo "End: $log_file"
 fi
 
 # Cat the plotting log file
@@ -206,7 +215,9 @@ cd $plot_dir
 for domain in arctic antarctic ; do
     for lead in 24 48 72 96 120 144 168 192 216 240 264 288 312 336 360 384; do
         lead_new=$(printf "%03d" "${lead}")
-        mv performance_diagram_regional_${domain}_valid_00z_z0_icec_z0_mean_f${lead}__gt10gt40gt80.png  evs.global_ens.ctc.icec_z0.last${past_days}days.perfdiag_${valid_time}_f${lead_new}.g003_${domain}.png
+        if [ -f "performance_diagram_regional_${domain}_valid_00z_z0_icec_z0_mean_f${lead}__gt10gt40gt80.png" ]; then
+            mv performance_diagram_regional_${domain}_valid_00z_z0_icec_z0_mean_f${lead}__gt10gt40gt80.png  evs.global_ens.ctc.icec_z0.last${past_days}days.perfdiag_${valid_time}_f${lead_new}.g003_${domain}.png
+        fi
     done #lead
 done #domain
 
@@ -223,10 +234,14 @@ for stats in  rmse me csi ; do
             thresh_graphic=$(echo "_${thresh}")
         fi
         for domain in arctic antarctic ; do
-            mv lead_average_regional_${domain}_valid_00z_z0_icec_z0_mean_${stats}${thresh_graphic}.png  evs.global_ens.${stats}${thresh_graphic}.icec_z0.last${past_days}days.fhrmean_valid00z_f384.g003_${domain}.png
+            if [ -f "lead_average_regional_${domain}_valid_00z_z0_icec_z0_mean_${stats}${thresh_graphic}.png" ]; then
+                mv lead_average_regional_${domain}_valid_00z_z0_icec_z0_mean_${stats}${thresh_graphic}.png  evs.global_ens.${stats}${thresh_graphic}.icec_z0.last${past_days}days.fhrmean_valid00z_f384.g003_${domain}.png
+            fi
             for lead in 24 48 72 96 120 144 168 192 216 240 264 288 312 336 360 384; do
                 lead_new=$(printf "%03d" "${lead}")
-                mv time_series_regional_${domain}_valid_00z_z0_icec_z0_mean_${stats}_f${lead}${thresh_graphic}.png  evs.global_ens.${stats}${thresh_graphic}.icec_z0.last${past_days}days.timeseries_valid00z_f${lead_new}.g003_${domain}.png
+                if [ -f "time_series_regional_${domain}_valid_00z_z0_icec_z0_mean_${stats}_f${lead}${thresh_graphic}.png" ]; then
+                    mv time_series_regional_${domain}_valid_00z_z0_icec_z0_mean_${stats}_f${lead}${thresh_graphic}.png  evs.global_ens.${stats}${thresh_graphic}.icec_z0.last${past_days}days.timeseries_valid00z_f${lead_new}.g003_${domain}.png
+                fi
             done #lead
         done #domain
     done  #thresh
@@ -235,7 +250,7 @@ done     #stats
 tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar *.png
 
 if [ $SENDCOM = YES ]; then
-    cp evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar  $COMOUT/.
+    cpreq evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar  $COMOUT/.
 fi
 
 if [ $SENDDBN = YES ]; then 

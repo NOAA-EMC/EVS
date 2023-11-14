@@ -41,6 +41,7 @@ while [ $n -le $past_days ] ; do
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
   $USHevs/global_ens/evs_get_gens_atmos_stat_file_link_plots.sh $day "$model_list"
+  export err=$?; err_chk
   n=$((n+1))
 done 
 
@@ -76,8 +77,7 @@ for stats in acc crps rmse_spread me_mae ; do
   line_tp='ecnt'
   VARs='TMP2m UGRD10m VGRD10m UGRD VGRD TMP'
  else
-  echo $stats is wrong stat
-  exit
+  err_exit "$stats is not a valid metric"
  fi   
 
  for score_type in lead_average ; do
@@ -190,6 +190,15 @@ if [ $run_mpi = yes ] ; then
    mpiexec -np 32 -ppn 32 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
+  export err=$?; err_chk
+fi
+
+# Cat the plotting log file
+log_file=$DATA/logs/GENS_verif_plotting_job.out
+if [ -s $log_file ]; then
+    echo "Start: $log_file"
+    cat $log_file
+    echo "End: $log_file"
 fi
 
 # Cat the plotting log file
@@ -246,9 +255,13 @@ for stats in  acc crps rmse_spread me_mae ; do
                     evs_graphic_domain=$domain
                 fi
                 if [ $domain = nhem ] || [ $domain = shem ] || [ $domain = tropics ] || [ $domain = alaska ]; then
-                    mv lead_average_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}.png  evs.naefs.${evs_graphic_stats}.${var}_${level_new}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${evs_graphic_domain}.png
+                    if [ -f "lead_average_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}.png" ]; then
+                        mv lead_average_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}.png  evs.naefs.${evs_graphic_stats}.${var}_${level_new}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${evs_graphic_domain}.png
+                    fi
                 else
-                    mv lead_average_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}.png  evs.naefs.${evs_graphic_stats}.${var}_${level_new}.last${past_days}days.fhrmean_valid00z_12z_f384.g212_${evs_graphic_domain}.png
+                    if [ -f "lead_average_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}.png" ]; then
+                        mv lead_average_regional_${domain}_valid_00z_12z_${level}_${var}_${stats}.png  evs.naefs.${evs_graphic_stats}.${var}_${level_new}.last${past_days}days.fhrmean_valid00z_12z_f384.g212_${evs_graphic_domain}.png
+                    fi
                 fi
             done #domain
         done #level
@@ -258,7 +271,7 @@ done     #stats
 tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar *.png
 
 if [ $SENDCOM = YES ]; then
-    cp evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar  $COMOUT/.
+    cpreq evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar  $COMOUT/.
 fi
 
 if [ $SENDDBN = YES ]; then 
