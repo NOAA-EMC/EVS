@@ -17,7 +17,8 @@ cd $DATA
 ##########################################
 # Run setpdy and initialize PDY variables 
 ##########################################
-export cycle=${cycle:-t00z}
+export vhr=${vhr:-00}
+export cycle=${cycle:-t${vhr}z}
 setpdy.sh 90
 . ./PDY
 export PDYm90=${PDYm90:-${PDYm90}}
@@ -63,17 +64,11 @@ export COMOUTplots=${COMOUT}/${STEP}/${COMPONENT}/${RUN}.${VDATE}
 # make the directory where the plots will be kept
 mkdir -p ${COMOUTplots}
 
-export jlogfile=${DATA}/${MODELNAME}_${RUN}_plots.log
-
-
 ####################################
 # Execute the script                
 ####################################
 $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh 
 export err=$?; err_chk
-
-msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
 
 if [ "$KEEPDATA" != "YES" ] ; then
   rm -rf $DATA

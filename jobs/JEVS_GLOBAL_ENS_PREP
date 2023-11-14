@@ -7,7 +7,8 @@ set -x
 #######################################################
 #######################################################
 
-export cycle=t${cyc}z
+export vhr=${vhr:-00}
+export cycle=${cycle:-t${vhr}z}
 
 export pid=$$
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
@@ -82,11 +83,7 @@ export FIXevs=${FIXevs:-$HOMEevs/fix}
 export outid="LL$job"
 export jobid="${outid}.o${pid}"
 
-
 $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${MODELNAME}_${RUN}_${STEP}.sh
-
-msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$msg"
 
 if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT

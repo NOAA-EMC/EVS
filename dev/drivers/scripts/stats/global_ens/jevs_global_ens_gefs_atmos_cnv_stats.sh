@@ -3,12 +3,9 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=01:30:00
-#PBS -l place=vscatter,select=1:ncpus=28:mem=100GB
+#PBS -l walltime=02:00:00
+#PBS -l place=vscatter,select=1:ncpus=28:mem=25GB
 #PBS -l debug=true
-
-
-#Total 40  processes = 4x4 profile, 4x4 sfc, 2x4 cloud
 
 set -x
 
@@ -24,20 +21,19 @@ export COMPONENT=global_ens
 export VERIF_CASE=cnv
 export MODELNAME=gefs
 
-
 module reset
 module load prod_envir/${prod_envir_ver}
 
 source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-
-
+export evs_ver=v1.0.0
+evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 export KEEPDATA=YES
 
-export cyc=00
-export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
-export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver
+export vhr=00
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
+export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
