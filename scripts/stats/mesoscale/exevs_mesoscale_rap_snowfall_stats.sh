@@ -8,7 +8,7 @@
 ###############################################################################
 
 set -x
-
+  export machine=${machine:-"WCOSS2"} 
   export VERIF_CASE_STEP_abbrev="snowfalls"
   export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
