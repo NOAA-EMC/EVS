@@ -39,6 +39,7 @@ while [ $n -le $past_days ] ; do
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
   $USHevs/global_ens/evs_get_gens_atmos_stat_file_link_plots.sh $day "$model_list"
+  export err=$?; err_chk
   n=$((n+1))
 done 
 
@@ -84,8 +85,7 @@ for stats in crps ets fbias fss bs ; do
     VARs='APCP_24'
     threshes=''
   else
-    echo $stats is wrong stat
-  exit
+    err_exit "$stats is not a valid metric"
   fi   
 
   if [ $stats = fss ] ; then
@@ -206,6 +206,7 @@ if [ $run_mpi = yes ] ; then
    mpiexec -np 8 -ppn 8 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
+  export err=$?; err_chk
 fi
 
 # Cat the plotting log file
@@ -254,9 +255,13 @@ for domain in conus conus_east conus_west conus_south conus_central ; do
                     nbhrd_graphic=$(echo "_width${nbrhd}")
                 fi
                 if [ $stat = bs ]; then
-                    mv lead_average_regional_${domain}_valid_12z_24h_apcp_24_ens_freq${thresh_graphic}_bs.png evs.naefs.${stat}${nbhrd_graphic}${thresh_graphic}.apcp_a24.last${past_days}days.fhrmean_valid12z_f384.g212_${evs_graphic_domain}.png
+                    if [ -f "lead_average_regional_${domain}_valid_12z_24h_apcp_24_ens_freq${thresh_graphic}_bs.png" ]; then
+                        mv lead_average_regional_${domain}_valid_12z_24h_apcp_24_ens_freq${thresh_graphic}_bs.png evs.naefs.${stat}${nbhrd_graphic}${thresh_graphic}.apcp_a24.last${past_days}days.fhrmean_valid12z_f384.g212_${evs_graphic_domain}.png
+                    fi
                 else
-                    mv lead_average_regional_${domain}_valid_12z_24h_apcp_24_${stat}${nbhrd_graphic}${thresh_graphic}.png evs.naefs.${stat}${nbhrd_graphic}${thresh_graphic}.apcp_a24.last${past_days}days.fhrmean_valid12z_f384.g212_${evs_graphic_domain}.png
+                    if [ -f "lead_average_regional_${domain}_valid_12z_24h_apcp_24_${stat}${nbhrd_graphic}${thresh_graphic}.png" ]; then
+                        mv lead_average_regional_${domain}_valid_12z_24h_apcp_24_${stat}${nbhrd_graphic}${thresh_graphic}.png evs.naefs.${stat}${nbhrd_graphic}${thresh_graphic}.apcp_a24.last${past_days}days.fhrmean_valid12z_f384.g212_${evs_graphic_domain}.png
+                    fi
                 fi
             done
         done
@@ -266,7 +271,7 @@ done
 tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar *.png
 
 if [ $SENDCOM = YES ]; then
-    cp evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar  $COMOUT/.
+    cpreq evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar  $COMOUT/.
 fi
 
 if [ $SENDDBN = YES ]; then 

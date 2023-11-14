@@ -68,6 +68,18 @@ for model in $model_list ; do
 done
 
 python $USHevs/global_ens/ush_gens_plot_py/global_ens_atmos_plots.py
+export err=$?; err_chk
+
+# Cat the plotting log files
+log_dir=$DATA/grid2grid_plots/plot_output/atmos.${VDATE}/logs
+log_file_count=$(find $log_dir -type f |wc -l)
+if [[ $log_file_count -ne 0 ]]; then
+    for log_file in $log_dir/*; do
+        echo "Start: $log_file"
+        cat $log_file
+        echo "End: $log_file"
+    done
+fi
 
 # Cat the plotting log files
 log_dir=$DATA/grid2grid_plots/plot_output/atmos.${VDATE}/logs
@@ -81,11 +93,14 @@ if [[ $log_file_count -ne 0 ]]; then
 fi
 
 cd $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/precip/SL1L2_FBAR_24hrAccumMaps_CONUS_precip_spatial_map/images
-
-tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.precip_spatial.v${VDATE}.tar *.gif
+if ls *.gif 1> /dev/null 2>&1; then
+   tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.precip_spatial.v${VDATE}.tar *.gif
+else
+   err_exit "No .gif files were found in $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/precip/SL1L2_FBAR_24hrAccumMaps_CONUS_precip_spatial_map/images"
+fi
 
 if [ $SENDCOM = YES ]; then
-    cp evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.precip_spatial.v${VDATE}.tar  $COMOUT/.
+    cpreq evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.precip_spatial.v${VDATE}.tar  $COMOUT/.
 fi
 
 if [ $SENDDBN = YES ]; then 
