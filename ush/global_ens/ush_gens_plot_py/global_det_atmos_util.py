@@ -237,7 +237,7 @@ def get_time_info(date_start, date_end, date_type, init_hr_list, valid_hr_list,
     return time_info
 
 def get_init_hour(valid_hour, forecast_hour):
-    """! Get a initialization hour/cycle
+    """! Get a initialization hour
 
          Args:
              valid_hour    - valid hour (integer)
@@ -268,7 +268,7 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
     """
     filled_file_format = '/'
     format_opt_list = ['lead', 'lead_shift', 'valid', 'valid_shift',
-                       'init', 'init_shift', 'cycle']
+                       'init', 'init_shift']
     if len(list(str_sub_dict.keys())) != 0:
         format_opt_list = format_opt_list+list(str_sub_dict.keys())
     for filled_file_format_chunk in unfilled_file_format.split('/'):
@@ -315,10 +315,6 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                        replace_format_opt_count = init_time_dt.strftime(
                            format_opt_count_fmt
                        )
-                   elif format_opt == 'cycle':
-                       replace_format_opt_count = init_time_dt.strftime(
-                           format_opt_count_fmt
-                       ) 
                    elif format_opt == 'lead_shift':
                        shift = (filled_file_format_chunk.partition('shift=')[2]\
                                 .partition('}')[0])
