@@ -14,12 +14,6 @@ export run_mpi=${run_mpi:-'yes'}
 export CLIMO=$FIXevs/climos/atmos
 export MASKS=$FIXevs/mask
 
-
-#get ensemble member data by sequentail(non-mpi) or mpi run
+#get ensemble member data by sequentially (non-mpi) or mpi run
 $USHevs/global_ens/evs_naefs_atmos_prep.sh
-
-msg="JOB $job HAS COMPLETED NORMALLY"
-postmsg "$jlogfile" "$msg"
-
-
-
+export err=$?; err_chk

@@ -14,15 +14,12 @@
 # BEFORE YOU BEGIN: Make sure to set up verif_plotting if you haven't already.  To set up, 
 #                   clone the Github repository:
 #
-#                   $ git clone https://github.com/MarcelCaron-NOAA/verif_plotting 
-#
 #                   or, if on the NOAA WCOSS supercomputer, choose any directory that will house 
 #                   verif_plotting.  As an example, we'll call that directory PY_PLOT_DIR.  Then on 
 #                   the command line:
 #
 #                   $ PY_PLOT_DIR="/path/to/my/verif/plotting/home/directory"
 #                   $ mkdir -p ${PY_PLOT_DIR}/out/logs ${PY_PLOT_DIR}/data ${PY_PLOT_DIR}/ush
-#                   $ BASE_DIR="/gpfs/dell2/emc/verification/noscrub/Marcel.Caron/verif_plotting"
 #                   $ cp -r ${BASE_DIR}/ush/* ${PY_PLOT_DIR}/ush/.
 #                   $ cp ${BASE_DIR}/py_plotting.config ${PY_PLOT_DIR}/.
 #
