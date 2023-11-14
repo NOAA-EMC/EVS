@@ -92,10 +92,7 @@ export PRUNE_DIR=$prune_dir
 export SAVE_DIR=$save_dir
 export OUTPUT_BASE_DIR=$output_base_dir
 
-
 # Logfile settings. Log level options are "DEBUG", "INFO", "WARNING", "ERROR", and "CRITICAL"
-#export LOG_METPLUS="${SAVE_DIR}/logs/RRFS_verif_plotting_job_`date '+%Y%m%d-%H%M%S'`_$$.out"
-#export LOG_LEVEL="INFO"
 export LOG_METPLUS=$log_metplus
 export LOG_LEVEL=$log_level
 
@@ -104,7 +101,6 @@ export MET_VERSION=$met_ver
 
 # Will use statistics for all comma-separated models.  Names must match the model naming convention
 # in ${OUTPUT_BASE_DIR}
-#export MODEL="FV3LAM, FV3LAMDA, FV3LAMDAX, CONUSNEST, HRRR, GFS"
 export MODEL="model_list"
 
 # Will use valid or init datetimes based on the setting below. Options are "VALID" or "INIT"
@@ -113,15 +109,10 @@ export DATE_TYPE=$date_type
 # Will choose a valid or init range based on a preset EVAL_PERIOD.  Use "TEST" if you want to use 
 # the custom-defined range below. Presets are defined in ${USH_DIR}/settings.py in the Presets() 
 # class. 
-#export EVAL_PERIOD="PAST30DAYS"
 export EVAL_PERIOD=$eval_period
 
 # If EVAL_PERIOD="TEST", will use statistics from the valid or init range below. If not, ignores 
 # these settings. DATE_TYPE decides whether valid or init is used.
-#export VALID_BEG="20220213"
-#export VALID_END="20220214"
-#export INIT_BEG="20220213"
-#export INIT_END="20220314"
 export VALID_BEG=$valid_beg
 export VALID_END=$valid_end
 export INIT_BEG=$init_beg
@@ -129,47 +120,31 @@ export INIT_END=$init_end
 
 # Will use statistics for all comma-separated valid or init hours. DATE_TYPE decides whether valid 
 # or init is used.
-#export FCST_INIT_HOUR="0,12"
-#export FCST_VALID_HOUR="0,6,12,18"
 export FCST_INIT_HOUR="fcst_init_hour"
 export FCST_VALID_HOUR="fcst_valid_hour"
 
-
-
 # Settings below are used to select desired variable and domain. **
-#export FCST_LEVEL="L0"
-#export OBS_LEVEL="L0"
-#export var_name="VISsfc"
-#export VX_MASK_LIST="apl"
 export FCST_LEVEL=$fcts_level
 export OBS_LEVEL=$obs_level
 export var_name=$var_name
 export VX_MASK_LIST="$vx_mask_list"
 
-
 # Will use statistics for all comma-separated lead times 
-#export FCST_LEAD="0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57,60"
 export FCST_LEAD="fcst_lead"
 
 # Line type in metplus .stat files used to compute desired metric(s). **
-#export LINE_TYPE="ctc"
 export LINE_TYPE=$line_type
 
 # Interpolation, as listed in metplus .stat files. **
-#export INTERP="BILIN"
 export INTERP=$interp
 
 # Will use statistics for all comma-separated thresholds. Use symbols (e.g., >=) to define 
 # thresholds. **
-#export FCST_THRESH="<805,<1609,<4828,<8045,<16090"
-#export OBS_THRESH="<805,<1609,<4828,<8045,<16090"
 export FCST_THRESH="thresh_fcst"
 export OBS_THRESH="thresh_obs"
 
-
 # Will plot all comma-separated metrics.  For performance diagram, metrics must be "sratio,pod,csi". 
 # Depending on the VERIF_CASE, VERIF_TYPE, and LINE_TYPE, only some settings are allowed. **
-#export STATS="sratio, pod, csi"
 export STATS="stat_list"
 
 # String of True or False. If "True", will plot bootstrap confidence intervals. Other confidence 
@@ -177,14 +152,9 @@ export STATS="stat_list"
 export CONFIDENCE_INTERVALS="False"
 
 # Will use statistics for all comma-separated interpolation points
-#export INTERP_PNTS="3969"
 export INTERP_PNTS=interp_pnts
-
-
-# String defining the type of plot to make. Options are "lead_average", "performance_diagram", 
-# "stat_by_level", "threshold_average", "time_series", and "valid_hour_average".
-#export PLOT_TYPE="performance_diagram"
 
 # Executes the desired python script.  No need to edit this. 
 python $USH_DIR/${PLOT_TYPE}.py
+export err=$?; err_chk
 
