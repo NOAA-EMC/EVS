@@ -10,6 +10,8 @@ vday=$VDATE
 
 typeset -Z2 vhr
 
+if [ $VERIF_CASE = grid2obs ] || [ $VERIF_CASE = spcoutlook ] ; then
+
 missing=0 
 for vhr in 00 01 02 03 04 05 06 07 08  09 10 11 12 13 14 15 16 17 18 19 20  21 22 23 ; do
   if [ ! -s $COMINobsproc/rap.${vday}/rap.t${vhr}z.prepbufr.tm00 ] ; then
@@ -27,6 +29,7 @@ else
   echo "Continue check CCAP files...." 
 fi
 
+fi
 
 if [ $VERIF_CASE = precip ] ; then
 next=`$NDATE +24 ${vday}12 |cut -c 1-8`
@@ -50,12 +53,7 @@ for vhr in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 
     cyc_dir=00
     init=$next
   fi	      
-  if [ $VERIF_CASE = precip ] ; then
-     ccpa=$COMINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${vhr}z.01h.hrap.conus.gb2
-  else
-     ccpa=$EVSINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${vhr}z.01h.hrap.conus.gb2
-  fi
-  #echo $ccpa
+  ccpa=$COMINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${vhr}z.01h.hrap.conus.gb2
 
   if [ ! -s $ccpa ] ; then
       missing=$((missing + 1 ))
@@ -69,8 +67,7 @@ if [ $missing -eq 24  ] ; then
   export err=$?; err_chk
   exit
 fi
-
-fi 
+ 
 
 missing=0
 for vhr in 00 03 06 09 12 15 18 21 ; do
@@ -91,12 +88,7 @@ for vhr in 00 03 06 09 12 15 18 21 ; do
        init=$next
   fi
 
-  if [ $VERIF_CASE = precip ] ; then
-     ccpa=$COMINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${vhr}z.03h.hrap.conus.gb2
-  else
-     ccpa=$EVSINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${vhr}z.03h.hrap.conus.gb2
-  fi
-   #echo $ccpa
+  ccpa=$COMINccpa/ccpa.${init}/${cyc_dir}/ccpa.t${vhr}z.03h.hrap.conus.gb2
 
    if [ ! -s $ccpa ] ; then
          missing=$((missing + 1 ))
@@ -114,31 +106,19 @@ fi
 
 missing=0
 for vhr in 12 ; do
-   if [ $VERIF_CASE = precip ] ; then
-      if [ ! -s $COMINccpa/ccpa.${vday}/12/ccpa.t12z.06h.hrap.conus.gb2 ] ; then
-          missing=$((missing+1))
-      elif [ ! -s $COMINccpa/ccpa.${vday}/06/ccpa.t06z.06h.hrap.conus.gb2 ] ; then
-              missing=$((missing+1))
-      elif [ ! -s $COMINccpa/ccpa.${vday}/00/ccpa.t00z.06h.hrap.conus.gb2 ] ; then
-          missing=$((missing+1))
-      elif [ ! -s $COMINccpa/ccpa.${prev}/18/ccpa.t18z.06h.hrap.conus.gb2 ] ; then
-          missing=$((missing+1))
-      fi
-   else
-      if [ ! -s $EVSINccpa/ccpa.${vday}/12/ccpa.t12z.06h.hrap.conus.gb2 ] ; then
-          missing=$((missing+1))
-	  echo $EVSINccpa/ccpa.${vday}/12/ccpa.t12z.06h.hrap.conus.gb2 is missing
-      elif [ ! -s $EVSINccpa/ccpa.${vday}/06/ccpa.t06z.06h.hrap.conus.gb2 ] ; then
-              missing=$((missing+1))
-	      echo $EVSINccpa/ccpa.${vday}/06/ccpa.t06z.06h.hrap.conus.gb2 is missing
-      elif [ ! -s $EVSINccpa/ccpa.${vday}/00/ccpa.t00z.06h.hrap.conus.gb2 ] ; then
-          missing=$((missing+1))
-	  echo $EVSINccpa/ccpa.${vday}/00/ccpa.t00z.06h.hrap.conus.gb2 is missing
-      elif [ ! -s $EVSINccpa/ccpa.${prev}/18/ccpa.t18z.06h.hrap.conus.gb2 ] ; then
-          missing=$((missing+1))
-	  echo $EVSINccpa/ccpa.${prev}/18/ccpa.t18z.06h.hrap.conus.gb2 is missing
-      fi
-   fi
+  if [ ! -s $COMINccpa/ccpa.${vday}/12/ccpa.t12z.06h.hrap.conus.gb2 ] ; then
+      missing=$((missing+1))
+      echo "WARNING: $COMINccpa/ccpa.${vday}/12/ccpa.t12z.06h.hrap.conus.gb2 is missing"
+  elif [ ! -s $COMINccpa/ccpa.${vday}/06/ccpa.t06z.06h.hrap.conus.gb2 ] ; then
+      missing=$((missing+1))
+      echo "WARNING: $COMINccpa/ccpa.${vday}/06/ccpa.t06z.06h.hrap.conus.gb2 is missing"
+  elif [ ! -s $COMINccpa/ccpa.${vday}/00/ccpa.t00z.06h.hrap.conus.gb2 ] ; then
+      missing=$((missing+1))
+      echo "WARNING: $COMINccpa/ccpa.${vday}/00/ccpa.t00z.06h.hrap.conus.gb2 is missing"
+  elif [ ! -s $COMINccpa/ccpa.${prev}/18/ccpa.t18z.06h.hrap.conus.gb2 ] ; then
+      missing=$((missing+1))
+      echo "WARNING: $COMINccpa/ccpa.${prev}/18/ccpa.t18z.06h.hrap.conus.gb2 is missing"
+  fi
 done
 
 echo "Missing ccpa06h files = " $missing
@@ -147,17 +127,6 @@ if [ $missing -ge 1  ] ; then
   export err=$?; err_chk
   exit
 fi
-
-missing=0
-accum=01
-
- if [ $accum = 03 ] ; then
-    cycs="00 03 06 09 12 15 18 21"
- elif [ $accum = 24 ] ; then
-    cycs="00 06 12  18"
- elif [ $accum = 01 ] ; then
-    cycs="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
- fi
 
 accum=01
 missing=0
@@ -207,6 +176,8 @@ if [ $missing -eq 4  ] ; then
  exit
 fi
 
+fi
+
 echo "Continue checking HREF members" 
 
 domain=conus 
@@ -221,7 +192,6 @@ for obsv_cyc in 00 03 06 09 12 15 18 21 ; do
       href_mbrs=0
       for mb in 01 02 03 04 05 06 07 08 09 10 ; do 
         href=$COMINhref/href.${fday}/verf_g2g/href.m${mb}.t${fcyc}z.conus.f${fhr}
-        #echo $href
 	if [ -s $href ] ; then
            href_mbrs=$((href_mbrs+1))
 	else
@@ -229,7 +199,6 @@ for obsv_cyc in 00 03 06 09 12 15 18 21 ; do
         fi	    
       done
 
-      #echo fday=$fday fcyc=$fcyc fhr=$fhr href_mbrs=$href_mbrs
 
       if [ $href_mbrs -lt 4 ] ; then
         echo "WARNING: HREF members = " $href_mbrs " which < 4, exit METplus execution !!!"
@@ -259,7 +228,6 @@ for obsv_cyc in 00 03 06 09 12 15 18 21 ; do
       href_mbrs=0
       for mb in 01 02 03 04 05 06 07 08 09 10 ; do 
         href=$COMINhref/href.${fday}/verf_g2g/href.m${mb}.t${fcyc}z.ak.f${fhr}
-        #echo $href
 	if [ -s $href ] ; then
            href_mbrs=$((href_mbrs+1))
 	else
@@ -267,7 +235,6 @@ for obsv_cyc in 00 03 06 09 12 15 18 21 ; do
         fi	    
       done
 
-      #echo fday=$fday fcyc=$fcyc fhr=$fhr href_mbrs=$href_mbrs
 
       if [ $href_mbrs -lt 4 ] ; then
         echo "WARNING: HREF members = " $href_mbrs " which < 4, exit METplus execution !!!"
@@ -299,7 +266,6 @@ for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 2
        href_prod=0	      
        for  prod in mean prob eas pmmn lpmm avrg ; do 
          href=$COMINhref/href.${fday}/ensprod/href.t${fcyc}z.conus.${prod}.f${fhr}.grib2
-         #echo $href
 	 if [ -s $href ] ; then
            href_prod=$((href_prod+1))
 	 else
@@ -307,7 +273,6 @@ for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 2
         fi	    
        done
 
-       #echo fday=$fday fcyc=$fcyc fhr=$fhr href_prod=$href_prod
 
         if [ $href_prod -lt 4 ] ; then
           echo "WARNING: HREF Products = " $href_prod " which < 4, some products are missing, exit METplus execution !!!"
@@ -342,7 +307,6 @@ for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 2
        href_prod=0	      
        for  prod in mean prob eas pmmn lpmm avrg ; do 
          href=$COMINhref/href.${fday}/ensprod/href.t${fcyc}z.ak.${prod}.f${fhr}.grib2
-         #echo $href
 	 if [ -s $href ] ; then
            href_prod=$((href_prod+1))
 	 else
@@ -350,7 +314,6 @@ for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 2
         fi	    
        done
 
-       #echo fday=$fday fcyc=$fcyc fhr=$fhr href_prod=$href_prod
 
         if [ $href_prod -lt 4 ] ; then
           echo "WARNING: HREF Products = " $href_prod " which < 4, some products are missing, exit METplus execution !!!"
