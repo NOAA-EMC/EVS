@@ -3,16 +3,13 @@
 #PBS -S /bin/bash
 #PBS -q dev
 #PBS -A VERF-DEV
-#PBS -l walltime=01:00:00
-#PBS -l place=vscatter,select=1:ncpus=4:mem=100GB
+#PBS -l walltime=00:30:00
+#PBS -l place=vscatter,select=1:ncpus=1:mem=10GB
 #PBS -l debug=true
 
 set -x
 
 export OMP_NUM_THREADS=1
-#Total 18 cpu cores: assigned to 1 nodes, 18 cores for each node 
-#Total 9 processes 4(ecme/upper) + 1 (ecme/apcp24h) + 4 (ecme/apcp06h)
-#
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 

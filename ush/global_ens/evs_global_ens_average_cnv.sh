@@ -2,8 +2,6 @@
 
 set -x 
 
-#vday=20221018
-
 typeset -Z2 fhr
 modnam=$1
 fhr=$2
@@ -14,7 +12,6 @@ if [ $modnam = gefs ] ; then
 fi
 
 for vvhour in 00 06 12 18 ; do 
-#for vvhour in 00  ; do 
 
   for n in 2 3 4 5 6 7 8 9 10 11 12 13 ; do
     ctc25[$n]=0
