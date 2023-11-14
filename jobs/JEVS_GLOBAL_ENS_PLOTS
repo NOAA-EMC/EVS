@@ -4,7 +4,8 @@ set -x
 #######################################################
 #######################################################
 
-export cycle=t${cyc}z
+export vhr=${vhr:-00}
+export cycle=${cycle:-t${vhr}z}
 
 export pid=$$
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
@@ -51,9 +52,6 @@ if [ $valid_time = separate ] ; then
 else
   $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 fi
-
-msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$msg"
 
 if [ "$KEEPDATA" != "YES" ] ; then
   cd $DATAROOT

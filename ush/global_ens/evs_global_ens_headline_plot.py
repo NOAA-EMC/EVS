@@ -8,8 +8,6 @@ import glob
 
 import os
 
-os.environ['PROJ_LIB']='/opt/anaconda3/share/proj'
-
 import matplotlib as mpl
 
 # from mpl_toolkits.basemap import Basemap
