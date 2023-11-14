@@ -265,11 +265,9 @@ for ihr in 00z 12z ; do
         else
             evs_graphic_domain=$domain
         fi
-        for lead in 120 240 360; do
-            if [ -f "performance_diagram_regional_${domain}_init_${ihr}_cape_f${lead}__ge250ge500ge1000ge2000.png" ]; then
-                mv performance_diagram_regional_${domain}_init_${ihr}_cape_f${lead}__ge250ge500ge1000ge2000.png  evs.global_ens.ctc.cape_l0.last${past_days}days.perfdiag_${valid_time}_f${lead}.g212_buk_${evs_graphic_domain}.png
-            fi
-        done #lead
+        if [ -f "lead_average_regional_${domain}_init_${ihr}_cape_${stats}_${thresh}.png" ]; then
+            mv lead_average_regional_${domain}_init_${ihr}_cape_${stats}_${thresh}.png evs.global_ens.${stats}_${thresh}.cape_l0.last${past_days}days.fhrmean_init${ihr}_f384.g212_buk_${evs_graphic_domain}.png
+        fi
     done #domain
 done #ihr
 
