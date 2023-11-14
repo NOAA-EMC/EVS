@@ -97,6 +97,7 @@ if ls *.gif 1> /dev/null 2>&1; then
    tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.precip_spatial.v${VDATE}.tar *.gif
 else
    err_exit "No .gif files were found in $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/precip/SL1L2_FBAR_24hrAccumMaps_CONUS_precip_spatial_map/images"
+fi
 
 if [ $SENDCOM = YES ]; then
     cpreq evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.precip_spatial.v${VDATE}.tar  $COMOUT/.
