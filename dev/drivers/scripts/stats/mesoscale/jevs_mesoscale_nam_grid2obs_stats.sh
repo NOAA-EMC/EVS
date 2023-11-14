@@ -36,13 +36,6 @@ set -x
   export envir="prod"
   export evs_run_mode="production"
 
-  export ACCOUNT=VERF-DEV
-  export QUEUESERV="dev_transfer"
-  export QUEUE="dev"
-  export QUEUESHARED="dev_shared"
-  export PARTITION_BATCH=""
-
-
 # EVS Settings
   export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 

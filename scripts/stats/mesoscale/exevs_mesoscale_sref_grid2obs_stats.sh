@@ -6,7 +6,8 @@
 #################################################################
 #
 set -x
-
+export machine=${machine:-"WCOSS2"} 
+export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 export WORK=$DATA
 cd $WORK
 
