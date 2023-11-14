@@ -170,16 +170,16 @@ for hour in 06 12; do
                         export err=$?; err_chk
                         mkdir -p ${COMOUTsmall}
                         if [ ${SENDCOM} = "YES" ]; then
-                          cp ${DATA}/point_stat/${MODELNAME}/* ${COMOUTsmall}
+                          cpreq ${DATA}/point_stat/${MODELNAME}/* ${COMOUTsmall}
                         fi
                         if [ ${vhr} = 23 ]; then
                           mkdir -p ${COMOUTfinal}
-                          cp ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
+                          cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
                           cd ${finalstat}
                           run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstOZONE_obsAIRNOW_GatherByDay.conf ${PARMevs}/metplus_config/machine.conf
                           export err=$?; err_chk
                           if [ ${SENDCOM} = "YES" ]; then
-                            cp ${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_ozone.v${VDATE}.stat ${COMOUTfinal}
+                            cpreq ${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_ozone.v${VDATE}.stat ${COMOUTfinal}
                           fi
                         fi
                       else
@@ -193,15 +193,15 @@ for hour in 06 12; do
                   export err=$?; err_chk
                   mkdir -p ${COMOUTsmall}
                   if [ ${SENDCOM} = "YES" ]; then
-                    cp ${DATA}/point_stat/${MODELNAME}/* ${COMOUTsmall}
+                    cpreq ${DATA}/point_stat/${MODELNAME}/* ${COMOUTsmall}
                   fi
                   if [ ${vhr} = 23 ]; then
                      mkdir -p ${COMOUTfinal}
-                     cp ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
+                     cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
                      run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstPM_obsANOWPM_GatherByDay.conf ${PARMevs}/metplus_config/machine.conf
                      export err=$?; err_chk
                      if [ ${SENDCOM} = "YES" ]; then
-                       cp ${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_pm25.v${VDATE}.stat ${COMOUTfinal}
+                       cpreq ${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_pm25.v${VDATE}.stat ${COMOUTfinal}
                      fi
                   fi
                 else
@@ -283,14 +283,14 @@ if [ ${vhr} = 11 ]; then
         run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstOZONEMAX_obsAIRNOW.conf ${PARMevs}/metplus_config/machine.conf
 	export err=$?; err_chk
         if [ ${SENDCOM} = "YES" ]; then
-          cp ${DATA}/point_stat/${MODELNAME}/* ${COMOUTsmall}
+          cpreq ${DATA}/point_stat/${MODELNAME}/* ${COMOUTsmall}
         fi
         export outtyp=OZMAX8
-        cp ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
+        cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
         run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstOZONEMAX_obsAIRNOW_GatherByDay.conf ${PARMevs}/metplus_config/machine.conf
 	export err=$?; err_chk
 	if [ ${SENDCOM} = "YES" ]; then
-          cp ${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_ozmax8.v${VDATE}.stat ${COMOUTfinal}
+          cpreq ${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_ozmax8.v${VDATE}.stat ${COMOUTfinal}
         fi	 
       else
         echo "WARNING: NO OZMAX8 OBS OR MODEL DATA"
@@ -353,14 +353,14 @@ if [ ${vhr} = 04 ]; then
         run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstPMAVE_obsANOWPM.conf ${PARMevs}/metplus_config/machine.conf
 	export err=$?; err_chk
         if [ ${SENDCOM} = "YES" ]; then
-          cp ${DATA}/point_stat/${MODELNAME}/* ${COMOUTsmall}
+          cpreq ${DATA}/point_stat/${MODELNAME}/* ${COMOUTsmall}
         fi
         export outtyp=PMAVE
-        cp ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
+        cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
         run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstPMAVE_obsANOWPM_GatherByDay.conf ${PARMevs}/metplus_config/machine.conf
 	export err=$?; err_chk
 	if [ ${SENDCOM} = "YES" ]; then
-          cp ${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_pmave.v${VDATE}.stat ${COMOUTfinal}
+          cpreq ${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_pmave.v${VDATE}.stat ${COMOUTfinal}
 	fi
        else
          echo "WARNING: NO PMAVE OBS OR MODEL DATA"
