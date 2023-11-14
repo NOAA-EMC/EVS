@@ -11,6 +11,7 @@ vday=$VDATE
 typeset -Z2 vhr
 
 if [ $VERIF_CASE = grid2obs ] || [ $VERIF_CASE = spcoutlook ] ; then
+   echo "Checking prepbufr files...." 
    
    missing=0 
    for vhr in 00 01 02 03 04 05 06 07 08  09 10 11 12 13 14 15 16 17 18 19 20  21 22 23 ; do
@@ -22,13 +23,13 @@ if [ $VERIF_CASE = grid2obs ] || [ $VERIF_CASE = spcoutlook ] ; then
    echo "Missing prepbufr files = " $missing
    if [ $missing -eq 24  ] ; then
       err_exit "All of the preppbufr files are missing."
-   else
-      echo "Continue check CCAP files...." 
    fi
 
 fi
 
+
 if [ $VERIF_CASE = precip ] ; then
+   echo "Checking precip files...." 
 
    next=`$NDATE +24 ${vday}12 |cut -c 1-8`
    prev=`$NDATE -24 ${vday}12 |cut -c 1-8`
@@ -154,7 +155,7 @@ if [ $VERIF_CASE = precip ] ; then
    fi
 fi
 
-echo "Continue checking HREF members" 
+echo "Checking HREF members files ..." 
 
 domain=conus 
 for obsv_cyc in 00 03 06 09 12 15 18 21 ; do 
@@ -260,4 +261,5 @@ for obsv_cyc in 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 2
       fhr=$((fhr+1))  
    done
 done
-echo "All HREF ensemble products files in Alaska are available. Continue  ..."
+echo "All HREF ensemble products files in Alaska are available."
+echo "File checks are complete."
