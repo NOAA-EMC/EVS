@@ -5,6 +5,8 @@
 # ****************************************************************************** 
 set -x 
 
+export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
+export met_v=${met_ver:0:4}
 cd $DATA
 
 export prune_dir=$DATA/data
@@ -243,11 +245,13 @@ for stat in $stats ; do
        for threshold in $thresholds ; do
 
 	   if [ $score_type = lead_average ] ; then
-
+             if [ -s ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${threshold}.png ] ; then
                mv ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${threshold}.png  evs.sref.${stat}.${var_level}_${threshold}.last${past_days}days.${scoretype}.valid_${valid}.buk_conus.png
+	     fi
            elif [ $score_type = threshold_average ] ; then
-
+             if [ -s ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${lead}.png ] ; then 
                mv ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${lead}.png  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}.valid_${valid}.${new_lead}.buk_conus.png
+	     fi
            fi
 
        done 
