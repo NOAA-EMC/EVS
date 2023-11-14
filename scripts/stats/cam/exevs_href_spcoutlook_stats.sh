@@ -1,18 +1,18 @@
 #!/bin/ksh
-#################################################################
-# Script Name: verf_g2g_reflt.sh.sms $vday $vcyc
-# Purpose:   To run grid-to-grid verification on reflectivity
-#
-# Log History:  Julia Zhu -- 2010.04.28 
-################################################################
+##############################################################
+# Purpose:   Setup some paths and run href spcoutlook job
+# 
+# Last updated 10/30/2023: by  Binbin Zhou, Lynker@EMC/NCEP
+##############################################################
 set -x
 
 
 export WORK=$DATA
 cd $WORK
 
-
+#*********************************
 #check input data are available:
+#*********************************
 $USHevs/cam/evs_check_href_files.sh 
 export err=$?; err_chk
 
@@ -51,13 +51,17 @@ export SPCoutlookMask=$EVSINspcotlk/$MODELNAME/spc.$VDATE
 export domain="all"
 #export domain="HI"
 
-
+#*********************************
+# Prepare prepbufr data files
+# ********************************
 if [ $prepare = yes ] ; then
   $USHevs/cam/evs_href_preppare.sh prepbufr CONUS
   export err=$?; err_chk
 fi 
 
-
+#****************************************
+# Build a POE script to collect sub-jobs
+# ***************************************
 >run_href_all_grid2obs_poe
 
 #Spc_outlook: 2 job
@@ -67,18 +71,22 @@ if [ $verif_spcoutlook = yes ] ; then
   cat ${DATA}/run_all_href_spcoutlook_poe.sh >> run_href_all_grid2obs_poe
 fi
 
-
-#totall: 32 jobs for all (both conus and alaska, profile, system and product)
 chmod 775 run_href_all_grid2obs_poe
 
-
+#****************************************
+# Run POE script to get small stat files
+# ***************************************
 if [ $run_mpi = yes ] ; then
     mpiexec -np 2 -ppn 2 --cpu-bind verbose,depth cfp  ${DATA}/run_href_all_grid2obs_poe
 else
     ${DATA}/run_href_all_grid2obs_poe
 
 fi
+export err=$?; err_chk
 
+#*******************************************************************
+# Run gather job to combine small stat files to form a big stat file
+# ******************************************************************
 if [ $gather = yes ] && [ -s ${DATA}/run_href_all_grid2obs_poe ] ; then
   $USHevs/cam/evs_href_gather.sh $VERIF_CASE  
   export err=$?; err_chk

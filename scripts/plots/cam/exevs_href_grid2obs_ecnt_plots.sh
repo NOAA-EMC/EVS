@@ -1,5 +1,8 @@
 #!/bin/ksh
-
+#*******************************************************************************
+# Purpose: setup environment, paths, and run the href ecnt plotting python script
+# Last updated: 10/30/2023, Binbin Zhou Lynker@EMC/NCEP
+##******************************************************************************
 set -x 
 
 cd $DATA
@@ -34,6 +37,9 @@ done
 export init_beg=$first_day
 export valid_beg=$first_day
 
+#*************************************************************
+# Virtual link the href's stat data files of past 31/90 days
+#*************************************************************
 n=0
 while [ $n -le $past_days ] ; do
   #hrs=`expr $n \* 24`
@@ -55,6 +61,9 @@ export plot_dir=$DATA/out/sfc_upper/${valid_beg}-${valid_end}
 
 verif_case=grid2obs
 
+#*****************************************
+# Build a POE file to collect sub-jobs
+# ****************************************
 > run_all_poe.sh
 
 for fcst_valid_hour in 00 03 06 09 12 15 18 21 ; do
@@ -97,6 +106,9 @@ for fcst_valid_hour in 00 03 06 09 12 15 18 21 ; do
 
         level=`echo $FCST_LEVEL_value | tr '[A-Z]' '[a-z]'`      
 
+	 #****************
+	 # Build sub-jobs
+	 # **************
          > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${fcst_valid_hour}.sh  
 
         verif_type=conus_sfc
@@ -157,14 +169,19 @@ done #valid
 
 chmod +x run_all_poe.sh
 
-
+#***************************************************************************
+# Run the POE script in parallel or in sequence order to generate png files
+#**************************************************************************
 if [ $run_mpi = yes ] ; then
    mpiexec -np 72 -ppn 72 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
 fi
+export err=$?; err_chk
 
-
+#**************************************************
+# Change plot file names to meet the EVS standard
+#**************************************************
 cd $plot_dir
 
 for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
@@ -201,9 +218,13 @@ for stats in  rmse_spread ; do
 
 
       if [ $var = mslet ] || [ $var = gust ] || [  $var = hpbl ] ; then
-        mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+	if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}.png ] ; then
+          mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+        fi 
       else
-        mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+	if [ -s ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}.png ] ; then
+          mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}.png  evs.href.${stats}.${var}_${level}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
+        fi
       fi
 
      done #var
@@ -236,7 +257,7 @@ if [ $SENDCOM="YES" ]; then
 fi
 
 if [ $SENDDBN = YES ] ; then
-	    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.href.grid2obs.ecnt.past${past_days}days.v${VDATE}.tar
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/evs.plots.href.grid2obs.ecnt.past${past_days}days.v${VDATE}.tar
 fi  
 
 

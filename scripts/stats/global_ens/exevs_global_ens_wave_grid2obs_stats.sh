@@ -22,7 +22,6 @@ set -x
 #############################
 
 cd $DATA
-echo "in $0 JLOGFILE is $jlogfile"
 echo "Starting grid2obs_stats for ${MODELNAME}_${RUN}"
 
 echo ' '
@@ -38,11 +37,11 @@ mkdir -p ${DATA}/gribs
 mkdir -p ${DATA}/ncfiles
 mkdir -p ${DATA}/all_stats
 mkdir -p ${DATA}/jobs
-mkdir -p ${DATA}/logs
+#mkdir -p ${DATA}/logs
 mkdir -p ${DATA}/confs
 mkdir -p ${DATA}/tmp
 
-cycles='0 6 12 18'
+validhours='0 6 12 18'
 
 lead_hours='0 6 12 18 24 30 36 42 48 54 60 66 72 78
             84 90 96 102 108 114 120 126 132 138 144 150 156 162
@@ -59,71 +58,71 @@ cd ${DATA}
 ############################################
 echo ' '
 echo 'Creating point_stat files'
-for cyc in ${cycles} ; do
-    cyc2=$(printf "%02d" "${cyc}")
-    if [ ${cyc2} = '00' ] ; then
+for vhour in ${validhours} ; do
+    vhour2=$(printf "%02d" "${vhour}")
+    if [ ${vhour2} = '00' ] ; then
       wind_level_str="'{ name=\"WIND\"; level=\"(0,*,*)\"; }'"
       htsgw_level_str="'{ name=\"HTSGW\"; level=\"(0,*,*)\"; }'"
       perpw_level_str="'{ name=\"PERPW\"; level=\"(0,*,*)\"; }'"
-    elif [ ${cyc2} = '06' ] ; then
+    elif [ ${vhour2} = '06' ] ; then
       wind_level_str="'{ name=\"WIND\"; level=\"(2,*,*)\"; }'"
       htsgw_level_str="'{ name=\"HTSGW\"; level=\"(2,*,*)\"; }'"
       perpw_level_str="'{ name=\"PERPW\"; level=\"(2,*,*)\"; }'"
-    elif [ ${cyc2} = '12' ] ; then
+    elif [ ${vhour2} = '12' ] ; then
       wind_level_str="'{ name=\"WIND\"; level=\"(4,*,*)\"; }'"
       htsgw_level_str="'{ name=\"HTSGW\"; level=\"(4,*,*)\"; }'"
       perpw_level_str="'{ name=\"PERPW\"; level=\"(4,*,*)\"; }'"
-    elif [ ${cyc2} = '18' ] ; then
+    elif [ ${vhour2} = '18' ] ; then
       wind_level_str="'{ name=\"WIND\"; level=\"(6,*,*)\"; }'"
       htsgw_level_str="'{ name=\"HTSGW\"; level=\"(6,*,*)\"; }'"
       perpw_level_str="'{ name=\"PERPW\"; level=\"(6,*,*)\"; }'"
     fi
     for fhr in ${lead_hours} ; do
-        matchtime=$(date --date="${VDATE} ${cyc2} ${fhr} hours ago" +"%Y%m%d %H")
-        match_date=$(echo ${matchtime} | awk '{print $1}')
-        match_hr=$(echo ${matchtime} | awk '{print $2}')
+        matchtime=$($NDATE -${fhr} ${VDATE}${vhour2})
+        match_date=$(echo ${matchtime} | cut -c 1-8)
+        match_hr=$(echo ${matchtime}  | cut -c 9-10)
         match_fhr=$(printf "%02d" "${match_hr}")
         flead=$(printf "%03d" "${fhr}")
         flead2=$(printf "%02d" "${fhr}")
-        EVSgdasncfilename=${EVSINgdasnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${VDATE}${cyc2}.nc 
-        DATAgdasncfilename=${DATA}/ncfiles/gdas.${VDATE}${cyc2}.nc
+        EVSgdasncfilename=${EVSINgdasnc}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}/gdas.${VDATE}${vhour2}.nc 
+        DATAgdasncfilename=${DATA}/ncfiles/gdas.${VDATE}${vhour2}.nc
         EVSmodelfilename=$COMIN/prep/$COMPONENT/${RUN}.${match_date}/${MODELNAME}/${VERIF_CASE}/${MODELNAME}.${RUN}.${match_date}.t${match_fhr}z.mean.global.0p25.f${flead}.grib2
         DATAmodelfilename=$DATA/gribs/${MODELNAME}.${RUN}.${match_date}.t${match_fhr}z.mean.global.0p25.f${flead}.grib2
-        DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${cyc2}0000V.stat
-        COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${cyc2}0000V.stat
+        DATAstatfilename=$DATA/all_stats/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhour2}0000V.stat
+        COMOUTstatfilename=$COMOUTsmall/point_stat_fcst${MODNAM}_obsGDAS_climoERA5_${flead2}0000L_${VDATE}_${vhour2}0000V.stat
         if [[ -s $COMOUTstatfilename ]]; then
-            cp -v $COMOUTstatfilename $DATAstatfilename
+            cpreq -v $COMOUTstatfilename $DATAstatfilename
         else
             if [[ ! -s $DATAgdasncfilename ]]; then
                 if [[ -s $EVSgdasncfilename ]]; then
-                    cp -v $EVSgdasncfilename $DATAgdasncfilename
+                    cpreq -v $EVSgdasncfilename $DATAgdasncfilename
                 else
-                    echo "DOES NOT EXIST $EVSgdasncfilename"
+                    echo "WARNING: DOES NOT EXIST $EVSgdasncfilename"
                 fi
             fi
             if [[ -s $DATAgdasncfilename ]]; then
                 if [[ ! -s $DATAmodelfilename ]]; then
                     if [[ -s $EVSmodelfilename ]]; then
-                        cp -v $EVSmodelfilename $DATAmodelfilename
+                        cpreq -v $EVSmodelfilename $DATAmodelfilename
                     else
-                        echo "DOES NOT EXIST $EVSmodelfilename"
+                        echo "WARNING: DOES NOT EXIST $EVSmodelfilename"
                     fi
                 fi
                 if [[ -s $DATAmodelfilename ]]; then
-                    echo "export wind_level_str=${wind_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
-                    echo "export htsgw_level_str=${htsgw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
-                    echo "export perpw_level_str=${perpw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
-                    echo "export CYC=${cyc2}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
-                    echo "export fhr=${flead}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
-                    echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstGEFS_obsGDAS_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
-                    echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
+                    echo "export wind_level_str=${wind_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
+                    echo "export htsgw_level_str=${htsgw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
+                    echo "export perpw_level_str=${perpw_level_str}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
+                    echo "export VHOUR=${vhour2}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
+                    echo "export fhr=${flead}" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
+                    echo "${METPLUS_PATH}/ush/run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/PointStat_fcstGEFS_obsGDAS_climoERA5_Wave_Multifield.conf" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
+                    echo "export err=\$?; err_chk" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
                     if [ $SENDCOM = YES ]; then
-                        echo "cp -v $DATAstatfilename $COMOUTstatfilename" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
+                        echo "cpreq -v $DATAstatfilename $COMOUTstatfilename" >> ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
                     fi
 
-                    chmod +x ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh
+                    chmod +x ${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh
       
-                    echo "${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${cyc2}_f${flead}_g2o.sh" >> ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
+                    echo "${DATA}/jobs/run_${MODELNAME}_${RUN}_${VDATE}${vhour2}_f${flead}_g2o.sh" >> ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
                 fi
             fi
         fi
@@ -136,9 +135,11 @@ done
 if [[ -s ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh ]]; then
     if [ ${run_mpi} = 'yes' ] ; then
         mpiexec -np 36 -ppn 36 --cpu-bind verbose,core cfp ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
+        export err=$?; err_chk
     else
         echo "not running mpiexec"
-        sh ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
+        ${DATA}/jobs/run_all_${MODELNAME}_${RUN}_g2o_poe.sh
+        export err=$?; err_chk
     fi
 fi
 
@@ -146,7 +147,6 @@ fi
 # Gather all the files 
 #######################
 if [ $gather = yes ] ; then
-
   # check to see if the small stat files are there
   nc=$(ls ${DATA}/all_stats/*stat | wc -l | awk '{print $1}')
   if [ "${nc}" != '0' ]; then
@@ -154,19 +154,18 @@ if [ $gather = yes ] ; then
       mkdir -p ${DATA}/stats
       # Use StatAnalysis to gather the small stat files into one file
       run_metplus.py ${PARMevs}/metplus_config/machine.conf ${GRID2OBS_CONF}/StatAnalysis_fcstGEFS_obsGDAS.conf
+      export err=$?; err_chk
       if [ $SENDCOM = YES ]; then
           if [ -s ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ]; then
-              cp -v ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
+              cpreq -v ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat ${COMOUTfinal}/.
           else
-              echo "DOES NOT EXIST ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
+              echo "WARNING: DOES NOT EXIST ${DATA}/stats/evs.stats.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat"
           fi
       fi
   else
-      echo "NO SMALL STAT FILES FOUND IN ${DATA}/all_stats"
+      echo "WARNING: NO SMALL STAT FILES FOUND IN ${DATA}/all_stats, not running StatAnalysis"
   fi
-
 fi
-
 echo ' '
 echo "Ending at : `date`"
 echo ' '

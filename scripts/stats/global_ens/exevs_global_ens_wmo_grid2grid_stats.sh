@@ -9,11 +9,6 @@ set -x
 export WORK=$DATA
 cd $WORK
 
-export MET_bin_exec='bin'
-export log_met_output_to_metplus=''
-export metplus_verbosity=2
-export met_verbosity=2
-
 export CLIMO=$FIXevs/climos/atmos
 export MASKS=$FIXevs/masks
 
@@ -22,8 +17,6 @@ export GRID2GRID_CONF=$PARMevs/metplus_config/${STEP}/${COMPONENT}/${RUN}_grid2g
 export MET_CONFIG=${METPLUS_BASE}/parm/met_config
 export maskpath=$MASKS
 
-msg="$job HAS BEGUN"
-postmsg "$jlogfile" "$msg"
 export run_mpi=${run_mpi:-'yes'}
 export gather=${gather:-'yes'}
 
@@ -67,10 +60,3 @@ if  [ $ens = gefs ] ||  [ $ens = cmce ] ; then
 
  fi
 fi
-
-
-msg="JOB $job HAS COMPLETED NORMALLY"
-postmsg "$jlogfile" "$msg"
-
-
-
