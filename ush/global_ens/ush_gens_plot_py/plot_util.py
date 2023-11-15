@@ -2,6 +2,7 @@
 
 import pickle
 import os
+import sys
 import datetime as datetime
 import time
 import numpy as np
@@ -329,8 +330,8 @@ def get_stat_file_line_type_columns(logger, met_version, line_type):
             'DIR_ABSERR', 'DIR_ABSERR_NCL', 'DIR_ABSERR_NCU'
          ]
       else:
-         logger.error("VCNT is not a valid LINE_TYPE in METV"+met_version)
-         exit(1)
+         logger.error("FATAL ERROR: VCNT is not a valid LINE_TYPE in METV"+met_version)
+         sys.exit(1)
    elif line_type == 'CTC':
       if met_version < 11.0:
          stat_file_line_type_columns = [
@@ -446,9 +447,9 @@ def calculate_average(logger, average_method, stat, model_dataframe,
       for l in range(len(avg_array[:,0])):
          average_array[l] = avg_array[l]
    else:
-      logger.error("Invalid entry for MEAN_METHOD, "
+      logger.error("FATAL ERROR: Invalid entry for MEAN_METHOD, "
                    +"use MEAN, MEDIAN, or AGGREGATION")
-      exit(1)
+      sys.exit(1)
    return average_array
 
 def calculate_ci(logger, ci_method, modelB_values, modelA_values, total_days,
@@ -555,9 +556,9 @@ def calculate_ci(logger, ci_method, modelB_values, modelA_values, total_days,
       intvl = 1.96*scores_diff_std
       
    else:
-      logger.error("Invalid entry for MAKE_CI_METHOD, "
+      logger.error("FATAL ERROR: Invalid entry for MAKE_CI_METHOD, "
                    +"use EMC, EMC_MONTE_CARLO")
-      exit(1)
+      sys.exit(1)
    return intvl
 
 def get_stat_plot_name(logger, stat):
@@ -684,8 +685,8 @@ def get_stat_plot_name(logger, stat):
    elif stat == 'bss_smpl':
       stat_plot_name = 'Brier Skill Score'
    else:
-      logger.error(stat+" is not a valid option")
-      exit(1)
+      logger.error("FATAL ERROR: "+stat+" is not a valid option")
+      sys.exit(1)
    return stat_plot_name
 
 def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level, 
@@ -819,8 +820,8 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          me = model_data.loc[:]['ME']
          mae = model_data.loc[:]['MAE']
       else:
-         logger.error("Could not recognize line type from columns")
-         exit(1)
+         logger.error("FATAL ERROR: Could not recognize line type from columns")
+         sys.exit(1)
    if str(bs_method).upper() == 'MATCHED_PAIRS':
       if total.sum() < bs_min_samp:
          logger.warning(f"Sample too small for bootstrapping. (Matched pairs"
@@ -918,8 +919,8 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
             ffbar_est_samp = np.concatenate((ffbar_est_samples))
             oobar_est_samp = np.concatenate((oobar_est_samples))
       else:
-         logger.error(line_type+" is not currently a valid option")
-         exit(1)
+         logger.error("FATAL ERROR: "+line_type+" is not currently a valid option")
+         sys.exit(1)
    elif str(bs_method).upper() == 'FORECASTS':
       if total.size < bs_min_samp:
          logger.warning(f"Sample too small for bootstrapping. (Forecasts"
@@ -1145,11 +1146,11 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
             spread_est_samp = np.concatenate((spread_samples))
             me_est_samp = np.concatenate((me_samples))
       else:
-         logger.error(line_type+" is not currently a valid option")
-         exit(1)
+         logger.error("FATAL ERROR: "+line_type+" is not currently a valid option")
+         sys.exit(1)
    else:
-      logger.error(bs_method+" is not a valid option")
-      exit(1)
+      logger.error("FATAL ERROR: "+bs_method+" is not a valid option")
+      sys.exit(1)
    if stat == 'bias':
       if str(bs_method).upper() in ['MATCHED_PAIRS','FORECASTS']:
          if line_type == 'SL1L2':
@@ -1454,8 +1455,8 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          C = (Ca + Cb)/total
          stat_values = (fy_oy_samp + fn_on_samp - C)/(total - C)
    else:
-      logger.error(stat+" is not a valid option")
-      exit(1)
+      logger.error("FATAL ERROR: "+stat+" is not a valid option")
+      sys.exit(1)
    stat_deltas = stat_values-stat_values_mean
    stat_ci_lower = np.nanpercentile(stat_deltas, lower_pctile)
    stat_ci_upper = np.nanpercentile(stat_deltas, upper_pctile)
@@ -1585,8 +1586,8 @@ def calculate_stat(logger, model_data, stat):
          bss =  model_data.loc[:]['BSS']
          bss_smpl =  model_data.loc[:]['BSS_SMPL']
       else:
-         logger.error("Could not recognize line type from columns")
-         exit(1)
+         logger.error("FATAL ERROR: Could not recognize line type from columns")
+         sys.exit(1)
    stat_plot_name = get_stat_plot_name(logger, stat)
    if stat == 'bias':
       if line_type == 'SL1L2':
@@ -1821,8 +1822,8 @@ def calculate_stat(logger, model_data, stat):
          C = (Ca + Cb)/total
          stat_values = (fy_oy + fn_on - C)/(total - C)
    else:
-      logger.error(stat+" is not a valid option")
-      exit(1)
+      logger.error("FATAL ERROR: "+stat+" is not a valid option")
+      sys.exit(1)
    nindex = stat_values.index.nlevels
    if stat == 'fbar_obar' or stat == 'orate_frate' or stat == 'baser_frate':
       try:
@@ -2024,14 +2025,14 @@ def equalize_samples(logger, df, group_by):
         )
         return df_equalized, data_are_equalized
     else:
-        logger.error(
+        logger.warning(
             "Data equalization along the independent variable failed."
         )
-        logger.error(
+        logger.warning(
             "This may be a bug in the verif_plotting code. Please contact"
             + " the verif_plotting code manager about your issue."
         )
-        logger.error(
+        logger.warning(
             "Skipping equalization.  Sample sizes will not be plotted."
         )
         return df, data_are_equalized

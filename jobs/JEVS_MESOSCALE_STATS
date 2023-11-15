@@ -46,7 +46,6 @@ export machine=${machine:-WCOSS2}
 export MET_PLUS_PATH=${MET_PLUS_PATH:-$METPLUS_PATH}
 export MET_PATH=$MET_ROOT
 export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
-export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}} 
 export EXECevs=${EXECevs:-$HOMEevs/exec}
 export PARMevs=${PARMevs:-$HOMEevs/parm}

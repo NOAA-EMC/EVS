@@ -36,8 +36,6 @@ if STEP == 'stats':
     FHR_END = os.environ['FHR_END']
     FHR_INCR = os.environ['FHR_INCR']
 if evs_run_mode != 'production':
-    QUEUESERV = os.environ['QUEUESERV']
-    ACCOUNT = os.environ['ACCOUNT']
     machine = os.environ['machine']
 
 # Read in case-dependent variables
