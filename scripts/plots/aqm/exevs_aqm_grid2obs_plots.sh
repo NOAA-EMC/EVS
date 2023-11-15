@@ -155,7 +155,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
                     cat ${LOGDIR}/*out
                     mv ${LOGDIR}/*out ${LOGFIN}
                 else
-                    echo "RESTART - ${var} ${figtype} {$region} plot exists; copying over to plot directory"
+                    echo "RESTART - ${var} ${figtype} ${region} plot exists; copying over to plot directory"
                     cpreq ${cpfile} ${PLOTDIR}
                 fi
   
@@ -164,7 +164,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
                     mv ${PLOTDIR}/aq/*/evs*png ${cpfile}
                     cpreq ${cpfile} ${COMOUTplots}/${var}
                 elif [ ! -e ${cpfile} ]; then
-                    echo "WARNING: NO PLOT FOR ${var} ${figtype} {$region}"
+                    echo "WARNING: NO PLOT FOR ${var} ${figtype} ${region}"
                 fi
 
             done
@@ -225,7 +225,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
                      mv ${PLOTDIR}/aq/*/evs*png ${cpfile}
                      cpreq ${cpfile} ${COMOUTplots}/${var}
                 elif [ ! -e ${cpfile} ]; then
-                     echo "WARNING: NO PLOT FOR ${var} ${figtype} {$region}"
+                     echo "WARNING: NO PLOT FOR ${var} ${figtype} ${region}"
                 fi
 
             done
@@ -316,7 +316,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central; do
                 mv ${PLOTDIR_headline}/aq/*/evs*png ${cpfile}
                 cpreq ${cpfile} ${COMOUTplots}/headline
             elif [ ! -e ${cpfile} ]; then
-                echo "WARNING: NO HEADLINE PLOT FOR ${var} ${figtype} {$region}"
+                echo "WARNING: NO HEADLINE PLOT FOR ${var} ${figtype} ${region}"
             fi
         done
     done
