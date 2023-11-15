@@ -378,7 +378,7 @@ if [ $data = mrms ] ; then
             if [ -s $mrms03 ] ; then 
                cp $mrms03 $mrmsdir/.
                gunzip MultiSensor_QPE_${accum}H_Pass2_00.00_${vday}-${vhr}0000.grib2.gz
-               export MET_GRIB_TABLES=$PARMevs/metplus_config/cam/precip/prep/grib2_mrms_qpf.txt
+               export MET_GRIB_TABLES=$PARMevs/metplus_config/prep/$COMPONENT/precip/grib2_mrms_qpf.txt
                export togrid=G216
                export grid=G216
                ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/RegridDataPlane_obsMRMSqpf.conf
