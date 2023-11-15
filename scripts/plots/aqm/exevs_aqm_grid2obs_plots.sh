@@ -1,71 +1,70 @@
 #!/bin/ksh
-
-#################################################################################
-# Name of Script: exevs_analyses__grid2obs_plots.sh
-# Contact(s):     Perry C. Shafran (perry.shafran@noaa.gov)
-# Purpose of Script: This script runs plotting codes to generate plots
-#                   of aqm vs airnow observations
-#
-# OZMAX8 forecast lead option for init::06z are day1::F29, day2::F53, and day3::F77
-#                                 init::12z are day1::F23, day2::F47, and day3::F71
-# PMAVE  forecast lead option for init::06z are day1::F22, day2::F46, and day3::F70
-#                                 init::12z are day1::F16, day2::F40, and day3::F64
-# Selected csi values need to be defined in settings.py
-#   ('grid2obs_aq'::'CTC'::'var_dict'::'OZMAX8'::'obs_var_thresholds' and 'fcst_var_thresholds')
-#
-##################################################################################
-
+#######################################################################
+## UNIX Script Documentation Block
+##                      .
+## Script name:         exevs_analyses_grid2obs_plots.sh
+## Script description:  This script runs plotting codes to generate plots
+##                      of aqm vs airnow observations
+## Original Author   :  Perry C. Shafran (perry.shafran@noaa.gov)
+##
+##   Change Logs:
+##
+##   11/14/2023   Ho-Chun Huang  replace cp with cpreq
+##   11/15/2023   Ho-Chun Huang  combine similar code for multiple variable
+##
+## Plotting Information
+##    OZMAX8 forecast lead option for init::06z are day1::F29, day2::F53, and day3::F77
+##                                    init::12z are day1::F23, day2::F47, and day3::F71
+##    PMAVE  forecast lead option for init::06z are day1::F22, day2::F46, and day3::F70
+##                                    init::12z are day1::F16, day2::F40, and day3::F64
+##    Selected csi values need to be defined in settings.py
+##        ('grid2obs_aq'::'CTC'::'var_dict'::'OZMAX8'::'obs_var_thresholds'
+##          and 'fcst_var_thresholds')
+#######################################################################
 
 set -x
 
 # Set up initial directories and initialize variables
 
-mkdir -p $DATA/logs
-export LOGDIR=$DATA/plots/logs
-export LOGDIR_headline=$DATA/plots_headline/logs
-export LOGFIN=$DATA/logs
-mkdir -p $LOGFIN
-export STATDIR=$DATA/stats
-export PLOTDIR=$DATA/plots
-export PLOTDIR_headline=$DATA/plots_headline
-export OUTDIR=$DATA/out
-export PRUNEDIR=$DATA/prune
-mkdir -p ${STATDIR}
-mkdir -p $PLOTDIR ${PLOTDIR_headline}
-mkdir -p $PRUNEDIR
-mkdir -p $OUTDIR
+export LOGFIN=${DATA}/logs
+export LOGDIR=${DATA}/plots/logs
+export LOGDIR_headline=${DATA}/plots_headline/logs
 
-model1=`echo $MODELNAME | tr a-z A-Z`
+export STATDIR=${DATA}/stats
+export PLOTDIR=${DATA}/plots
+export PLOTDIR_headline=${DATA}/plots_headline
+export OUTDIR=${DATA}/out
+export PRUNEDIR=${DATA}/prune
+
+mkdir -p ${LOGFIN}   ${LOGDIR}  ${LOGDIR_headline}
+mkdir -p ${STATDIR}  ${PLOTDIR} ${PLOTDIR_headline}
+mkdir -p ${PRUNEDIR} ${OUTDIR}
+
+model1=`echo ${MODELNAME} | tr a-z A-Z`
 export model1
 
 # Bring in 31 days of stats files
 
+STARTDATE=${VDATE}00
+ENDDATE=${PDYm31}00
+
 for aqmtyp in ozone pm25 ozmax8 pmave; do
-  for biasc in raw bc; do
-
-    STARTDATE=${VDATE}00
-    ENDDATE=${PDYm31}00
-
-    DATE=${STARTDATE}
-    while [ ${DATE} -ge ${ENDDATE} ]; do
-
-      echo ${DATE} > curdate
-      DAY=`cut -c 1-8 curdate`
-      YEAR=`cut -c 1-4 curdate`
-      MONTH=`cut -c 1-6 curdate`
-      HOUR=`cut -c 9-10 curdate`
-
-      cpfile=evs.stats.${COMPONENT}_${biasc}.${RUN}.${VERIF_CASE}_${aqmtyp}.v${DAY}.stat
-      sedfile= evs.stats.${aqmtyp}_${biasc}.${RUN}.${VERIF_CASE}.v${DAY}.stat
-      if [ -e ${EVSINaqm}.${DAY}/${cpfile} ]; then
-        cpreq ${EVSINaqm}.${DAY}/${cpfile} ${STATDIR}
-        sed "s/${model1}/${aqmtyp}_${biasc}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
-      else
-        echo "WARNING ${COMPONENT} ${STEP} :: Can not find ${EVSINaqm}.${DAY}/${cpfile}"
-      fi
-      DATE=`${NDATE} -24 ${DATE}`
+    for biasc in raw bc; do
+        DATE=${STARTDATE}
+        while [ ${DATE} -ge ${ENDDATE} ]; do
+            echo ${DATE} > curdate
+            DAY=`cut -c 1-8 curdate`
+            cpfile=evs.stats.${COMPONENT}_${biasc}.${RUN}.${VERIF_CASE}_${aqmtyp}.v${DAY}.stat
+            sedfile=evs.stats.${aqmtyp}_${biasc}.${RUN}.${VERIF_CASE}.v${DAY}.stat
+            if [ -e ${EVSINaqm}.${DAY}/${cpfile} ]; then
+                cpreq ${EVSINaqm}.${DAY}/${cpfile} ${STATDIR}
+                sed "s/${model1}/${aqmtyp}_${biasc}/g" ${STATDIR}/${cpfile} > ${STATDIR}/${sedfile}
+            else
+                echo "WARNING ${COMPONENT} ${STEP} :: Can not find ${EVSINaqm}.${DAY}/${cpfile}"
+            fi
+            DATE=`${NDATE} -24 ${DATE}`
+        done
     done
-  done
 done
 
 # Create plot for each region
@@ -122,52 +121,54 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
     #   figure type of bcrmse_me fbar_obar
     #
     for inithr in 06 12; do
-      export inithr
-      for smvar in ozone pm25; do
-        case ${smvar} in
-          ozone)
-                config_name=awpozcon
-                export var=OZCON1
-                export lev=A1;;
-          pm25)
-                config_name=pm25
-                export var=PMTF
-                export lev=L1
-                export lev_obs=A1;;
-        esac
-        export linetype=SL1L2
-        mkdir -p ${COMOUTplots}/${var}
-        smlev=`echo ${lev} | tr A-Z a-z`
+        export inithr
 
-        for figtype in bcrmse_me fbar_obar; do
-          case ${figtype} in
-            bcrmse_me)
-                  config_file=py_plotting_${config_name}.config;;
-            fbar_obar)
-                  config_file=py_plotting_${config_name}_fbar.config;;
-          esac
-          figfile=evs.${COMPONENT}.${figtype}.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png
-          cpfile=${COMOUTplots}/${var}/${figfile}
-          if [ ! -e $${cpfile} ]; then
-            ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/${config_file}
-            export err=$?; err_chk
-            cat $LOGDIR/*out
-            mv $LOGDIR/*out $LOGFIN
-          else
-            echo "RESTART - ${var} ${figtype} {$region} plot exists; copying over to plot directory"
-            cpreq ${cpfile} $PLOTDIR
-          fi
+        for smvar in ozone pm25; do
+            case ${smvar} in
+                ozone)
+                      config_name=awpozcon
+                      export var=OZCON1
+                      export lev=A1
+                      export lev_obs=A1;;
+                pm25)
+                      config_name=pm25
+                      export var=PMTF
+                      export lev=L1
+                      export lev_obs=A1;;
+            esac
+            export linetype=SL1L2
+            mkdir -p ${COMOUTplots}/${var}
+            smlev=`echo ${lev} | tr A-Z a-z`
+
+            for figtype in bcrmse_me fbar_obar; do
+                case ${figtype} in
+                    bcrmse_me)
+                          config_file=py_plotting_${config_name}.config;;
+                    fbar_obar)
+                          config_file=py_plotting_${config_name}_fbar.config;;
+                esac
+                figfile=evs.${COMPONENT}.${figtype}.${smvar}_${smlev}.last31days.fhrmean_init${inithr}z.buk_${smregion}.png
+                cpfile=${COMOUTplots}/${var}/${figfile}
+                if [ ! -e $${cpfile} ]; then
+                    ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/${config_file}
+                    export err=$?; err_chk
+                    cat ${LOGDIR}/*out
+                    mv ${LOGDIR}/*out ${LOGFIN}
+                else
+                    echo "RESTART - ${var} ${figtype} {$region} plot exists; copying over to plot directory"
+                    cpreq ${cpfile} ${PLOTDIR}
+                fi
   
-          cpfile=${PLOTDIR}/${figfile}
-          if [ -e $PLOTDIR/aq/*/evs*png ]; then
-            mv $PLOTDIR/aq/*/evs*png ${cpfile}
-            cpreq ${cpfile} ${COMOUTplots}/${var}
-          elif [ ! -e ${cpfile} ]; then
-            echo "WARNING: NO PLOT FOR ${var} ${figtype} {$region}"
-          fi
+                cpfile=${PLOTDIR}/${figfile}
+                if [ -e ${PLOTDIR}/aq/*/evs*png ]; then
+                    mv ${PLOTDIR}/aq/*/evs*png ${cpfile}
+                    cpreq ${cpfile} ${COMOUTplots}/${var}
+                elif [ ! -e ${cpfile} ]; then
+                    echo "WARNING: NO PLOT FOR ${var} ${figtype} {$region}"
+                fi
 
+            done
         done
-      done
     done
     #
     # Daily Plots for maximum 8-hr average ozone 
@@ -175,62 +176,60 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
     #   for figure type of perfdiag
     #
     for inithr in 06 12; do
-      export inithr
+        export inithr
 
-      for var in OZMAX8 PMAVE; do
-        export var
+        for var in OZMAX8 PMAVE; do
+            export var
 
-        case ${var} in
-          OZMAX8)
-                if [ "${inithr}" == "06" ]; then
-                  declare -a fcst_lead=( 29 53 77 )
-                elif [ "${inithr}" == "12" ]; then
-                  declare -a fcst_lead=( 23 47 71 )
+            case ${var} in
+                OZMAX8)
+                    if [ "${inithr}" == "06" ]; then
+                        fcst_lead=( 29 53 77 )
+                    elif [ "${inithr}" == "12" ]; then
+                        fcst_lead=( 23 47 71 )
+                    fi
+                    export lev=L1
+                    export lev_obs=A8;;
+                PMAVE)
+                    if [ "${inithr}" == "06" ]; then
+                        fcst_lead=( 22 46 70 )
+                    elif [ "${inithr}" == "12" ]; then
+                        fcst_lead=( 16 40 64 )
+                    fi
+                    export lev=A23
+                    export lev_obs=A1;;
+            esac
+            export linetype=CTC
+            mkdir -p ${COMOUTplots}/${var}
+            smlev=`echo ${lev} | tr A-Z a-z`
+            smvar=`echo ${var} | tr A-Z a-z`
+            smlinetype=`echo ${linetype} | tr A-Z a-z`
+            figtype=perfdiag
+
+            for flead in "${fcst_lead[@]}"; do
+                export flead
+                figfile=evs.${COMPONENT}.${smlinetype}.${smvar}.${smlev}.last31days.${figtype}_init${inithr}z_f${flead}.buk_${smregion}.png
+                cpfile=${COMOUTplots}/${var}/${figfile}
+                if [ ! -e ${cpfile} ]; then
+                    ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_${smvar}.config
+                    export err=$?; err_chk
+                    cat ${LOGDIR}/*out
+                    mv ${LOGDIR}/*out ${LOGFIN}
+                else
+                    echo "RESTART - plot exists; copying over to plot directory"
+                    cpreq ${cpfile} ${PLOTDIR}
                 fi
-                export lev=L1
-                export lev_obs=A8;;
-          PMAVE)
-                if [ "${inithr}" == "06" ]; then
-                  declare -a fcst_lead=( 22 46 70 )
-                elif [ "${inithr}" == "12" ]; then
-                  declare -a fcst_lead=( 16 40 64 )
+
+                cpfile=${PLOTDIR}/${figfile}
+                if [ -e ${PLOTDIR}/aq/*/evs*png ]; then
+                     mv ${PLOTDIR}/aq/*/evs*png ${cpfile}
+                     cpreq ${cpfile} ${COMOUTplots}/${var}
+                elif [ ! -e ${cpfile} ]; then
+                     echo "WARNING: NO PLOT FOR ${var} ${figtype} {$region}"
                 fi
-                export lev=A23
-                export lev_obs=A1;;
-        esac
-        export linetype=CTC
-        mkdir -p ${COMOUTplots}/${var}
-        smlev=`echo ${lev} | tr A-Z a-z`
-        smvar=`echo ${var} | tr A-Z a-z`
-        smlinetype=`echo ${linetype} | tr A-Z a-z`
-	figtype=perfdiag
 
-        for flead in "${fcst_lead[@]}"; do
-          export flead
-
-
-          figfile=evs.${COMPONENT}.${smlinetype}.${smvar}.${smlev}.last31days.${figtype}_init${inithr}z_f${flead}.buk_${smregion}.png
-          cpfile=${COMOUTplots}/${var}/${figfile}
-          if [ ! -e ${cpfile} ]; then
-            ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_${smvar}.config
-            export err=$?; err_chk
-            cat $LOGDIR/*out
-            mv $LOGDIR/*out $LOGFIN
-          else
-            echo "RESTART - plot exists; copying over to plot directory"
-            cpreq ${cpfile} $PLOTDIR
-          fi
-
-          cpfile=${PLOTDIR}/${figfile}
-          if [ -e $PLOTDIR/aq/*/evs*png ]; then
-            mv $PLOTDIR/aq/*/evs*png ${cpfile}
-            cpreq ${cpfile} ${COMOUTplots}/${var}
-          elif [ ! -e ${cpfile} ]; then
-            echo "WARNING: NO PLOT FOR ${var} {$region}"
-          fi
-
+            done
         done
-      done
     done
 done
 
@@ -240,7 +239,7 @@ cd ${PLOTDIR}
 tarfile=evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}.last31days.v${VDATE}.tar
 tar -cvf ${tarfile} *png
 
-if [ $SENDCOM = "YES" ]; then
+if [ "${SENDCOM}" == "YES" ]; then
     if [ -e ${tarfile} ]; then
         mkdir -m 775 -p ${COMOUTplots}
         cpreq -v ${tarfile} ${COMOUTplots}
@@ -249,7 +248,7 @@ if [ $SENDCOM = "YES" ]; then
     fi
 fi
 
-if [ $SENDDBN = YES ] ; then     
+if [ "${SENDDBN}" == "YES" ] ; then     
     if [ -e ${COMOUTplots}/${tarfile} ]; then
         $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${tarfile}
     else
@@ -276,50 +275,50 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central; do
         smregion=conus
     fi
     for inithr in 12; do
-      export inithr
+        export inithr
 
-      for var in OZMAX8 PMAVE; do
-        export var
+        for var in OZMAX8 PMAVE; do
+            export var
 
-        case ${var} in
-          OZMAX8)
-                export flead=47
-                export lev=L1
-                export lev_obs=A8
-                export select_headline_csi="70";;
-          PMAVE)
-                export flead=40
-                export lev=A23
-                export lev_obs=A1
-                export select_headline_csi="35";;
-        esac
-        export linetype=CTC
-        export select_headline_threshold=">${select_headline_csi}"
-        mkdir -p ${COMOUTplots}/${var}
-        smlev=`echo ${lev} | tr A-Z a-z`
-        smvar=`echo ${var} | tr A-Z a-z`
-	figtype=csi
+            case ${var} in
+                OZMAX8)
+                        export flead=47
+                        export lev=L1
+                        export lev_obs=A8
+                        export select_headline_csi="70";;
+                PMAVE)
+                        export flead=40
+                        export lev=A23
+                        export lev_obs=A1
+                        export select_headline_csi="35";;
+            esac
+            export linetype=CTC
+            export select_headline_threshold=">${select_headline_csi}"
+            mkdir -p ${COMOUTplots}/${var}
+            smlev=`echo ${lev} | tr A-Z a-z`
+            smvar=`echo ${var} | tr A-Z a-z`
+            figtype=csi
 
-        figfile=headline_${COMPONENT}.${figtype}_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
-        cpfile=${COMOUTplots}/headline/${figfile}
-        if [ ! -e ${cpfile} ]; then
-            ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_${smvar}_headline.config
-            export err=$?; err_chk
-            cat ${LOGDIR_headline}/*out
-            mv ${LOGDIR_headline}/*out $LOGFIN
-        else
-            echo "RESTART - plot exists; copying over to plot directory"
-            cpreq ${cpfile} ${PLOTDIR_headline}
-        fi
-
-        cpfile=${PLOTDIR_headline}/${figfile}
-        if [ -e ${PLOTDIR_headline}/aq/*/evs*png ]; then
-            mv ${PLOTDIR_headline}/aq/*/evs*png ${cpfile}
-            cpreq ${cpfile} ${COMOUTplots}/headline
-        elif [ ! -e ${cpfile} ]; then
-            echo "WARNING: NO PLOT FOR ${var} {$region}"
-        fi
-
+            figfile=headline_${COMPONENT}.${figtype}_gt${select_headline_csi}.${smvar}.${smlev}.last31days.timeseries_init${inithr}z_f${flead}.buk_${smregion}.png
+            cpfile=${COMOUTplots}/headline/${figfile}
+            if [ ! -e ${cpfile} ]; then
+                ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_${smvar}_headline.config
+                export err=$?; err_chk
+                cat ${LOGDIR_headline}/*out
+                mv ${LOGDIR_headline}/*out ${LOGFIN}
+            else
+                echo "RESTART - plot exists; copying over to plot directory"
+                cpreq ${cpfile} ${PLOTDIR_headline}
+            fi
+  
+            cpfile=${PLOTDIR_headline}/${figfile}
+            if [ -e ${PLOTDIR_headline}/aq/*/evs*png ]; then
+                mv ${PLOTDIR_headline}/aq/*/evs*png ${cpfile}
+                cpreq ${cpfile} ${COMOUTplots}/headline
+            elif [ ! -e ${cpfile} ]; then
+                echo "WARNING: NO HEADLINE PLOT FOR ${var} ${figtype} {$region}"
+            fi
+        done
     done
 done
 
@@ -329,7 +328,7 @@ cd ${PLOTDIR_headline}
 tarfile=evs.plots.${COMPONENT}.${RUN}.headline.last31days.v${VDATE}.tar
 tar -cvf ${tarfile} *png
 
-if [ $SENDCOM = "YES" ]; then
+if [ "${SENDCOM}" == "YES" ]; then
     mkdir -m 775 -p ${COMOUTheadline}
     if [ -e ${tarfile} ]; then
         cpreq -v ${tarfile} ${COMOUTheadline}
@@ -338,7 +337,7 @@ if [ $SENDCOM = "YES" ]; then
     fi
 fi
 
-if [ $SENDDBN = YES ]; then     
+if [ "${SENDDBN}" == "YES" ]; then     
     if [ -e ${COMOUTheadline}/${tarfile} ]; then
         $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTheadline}/${tarfile}
     else
