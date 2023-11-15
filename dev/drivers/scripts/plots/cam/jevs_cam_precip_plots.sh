@@ -23,7 +23,7 @@ export job=${PBS_JOBNAME:-jevs_cam_precip_plots}
 export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export USE_CFP=YES
-export nproc=256
+export nproc=512
 
 # General Verification Settings
 export NET="evs"
