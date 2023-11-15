@@ -222,10 +222,10 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
 
                 cpfile=${PLOTDIR}/${figfile}
                 if [ -e ${PLOTDIR}/aq/*/evs*png ]; then
-                     mv ${PLOTDIR}/aq/*/evs*png ${cpfile}
-                     cpreq ${cpfile} ${COMOUTplots}/${var}
+                    mv ${PLOTDIR}/aq/*/evs*png ${cpfile}
+                    cpreq ${cpfile} ${COMOUTplots}/${var}
                 elif [ ! -e ${cpfile} ]; then
-                     echo "WARNING: NO PLOT FOR ${var} ${figtype} ${region}"
+                    echo "WARNING: NO PLOT FOR ${var} ${figtype} ${region}"
                 fi
 
             done

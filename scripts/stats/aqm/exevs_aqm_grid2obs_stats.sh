@@ -12,6 +12,7 @@
 ##   05/22/2023   Ho-Chun Huang  separate hourly ozone by model verified time becasuse
 ##                               of directory path depends on model verified hour.
 ##   10/31/2023   Ho-Chun Huang  Update EVS model input directory structure from AQMv6 to AQMv7
+##   11/14/2023   Ho-Chun Huang  Replace cp with cpreq
 ##
 ##
 #######################################################################
@@ -62,16 +63,16 @@ VDAYm3=$(${NDATE} -72 ${cdate} | cut -c1-8)
 check_file=${EVSINaqm}/${RUN}.${vld_date}/${MODELNAME}/airnow_${HOURLY_INPUT_TYPE}_${vld_time}.nc
 obs_hourly_found=0
 if [ -s ${check_file} ]; then
-  obs_hourly_found=1
+    obs_hourly_found=1
 else
-  echo "WARNING: Can not find pre-processed obs hourly input ${check_file}"
-  if [ $SENDMAIL = "YES" ]; then 
-    export subject="AQM Hourly Observed Missing for EVS ${COMPONENT}"
-    echo "WARNING: No AQM ${HOURLY_INPUT_TYPE} was available for ${vld_date} ${vld_time}" > mailmsg
-    echo "Missing file is ${check_file}" >> mailmsg
-    echo "Job ID: $jobid" >> mailmsg
-    cat mailmsg | mail -s "$subject" $maillist
-  fi
+    echo "WARNING: Can not find pre-processed obs hourly input ${check_file}"
+    if [ $SENDMAIL = "YES" ]; then 
+        export subject="AQM Hourly Observed Missing for EVS ${COMPONENT}"
+        echo "WARNING: No AQM ${HOURLY_INPUT_TYPE} was available for ${vld_date} ${vld_time}" > mailmsg
+        echo "Missing file is ${check_file}" >> mailmsg
+        echo "Job ID: $jobid" >> mailmsg
+        cat mailmsg | mail -s "$subject" $maillist
+    fi
 fi
 echo "obs_hourly_found = ${obs_hourly_found}"
 
@@ -222,16 +223,16 @@ done
 check_file=${EVSINaqm}/${RUN}.${VDATE}/${MODELNAME}/airnow_daily_${VDATE}.nc
 obs_daily_found=0
 if [ -s ${check_file} ]; then
-  obs_daily_found=1
+    obs_daily_found=1
 else
-  echo "WARNING: Can not find pre-processed obs daily input ${check_file}"
-  if [ $SENDMAIL = "YES" ]; then
-    export subject="AQM Daily Observed Missing for EVS ${COMPONENT}"
-    echo "WARNING: No AQM Daily Observed file was available for ${VDATE}" > mailmsg
-    echo "Missing file is ${check_file}" >> mailmsg
-    echo "Job ID: $jobid" >> mailmsg
-    cat mailmsg | mail -s "$subject" $maillist
-  fi
+    echo "WARNING: Can not find pre-processed obs daily input ${check_file}"
+    if [ $SENDMAIL = "YES" ]; then
+        export subject="AQM Daily Observed Missing for EVS ${COMPONENT}"
+        echo "WARNING: No AQM Daily Observed file was available for ${VDATE}" > mailmsg
+        echo "Missing file is ${check_file}" >> mailmsg
+        echo "Job ID: $jobid" >> mailmsg
+        cat mailmsg | mail -s "$subject" $maillist
+    fi
 fi
 echo "obs_daily_found = ${obs_daily_found}"
 
