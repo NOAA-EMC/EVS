@@ -13,6 +13,7 @@ set -x
 
 # Set Basic Environment Variables
 export machine=${machine:-"WCOSS2"}
+export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 export njob=1
 export evs_run_mode=$evs_run_mode
 source $config

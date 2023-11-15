@@ -106,7 +106,7 @@ print(logger_info)
 logger.info(logger_info)
 
 if len(model_list) > 10:
-    logger.error("TOO MANY MODELS LISTED ("+str(len(model_list))
+    logger.error("FATAL ERROR: TOO MANY MODELS LISTED ("+str(len(model_list))
                  +", ["+', '.join(model_list)+"]), maximum is 10")
     sys.exit(1)
 
@@ -182,8 +182,8 @@ if len(fcst_var_prod) == len(obs_var_prod):
     for v in range(len(fcst_var_prod)):
         var_info.append((fcst_var_prod[v], obs_var_prod[v]))
 else:
-    logger.error("FORECAST AND OBSERVATION VARIABLE INFORMATION NOT THE "
-                 +"SAME LENGTH")
+    logger.error("FATAL ERROR: FORECAST AND OBSERVATION VARIABLE INFORMATION "
+                 +"NOT THE SAME LENGTH")
     sys.exit(1)
 
 # Set up MET information dictionary
