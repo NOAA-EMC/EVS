@@ -102,7 +102,7 @@ class PrecipSpatialMap:
                         'goldenrod', 'yellow']
         cmap_over_color_mm = '#ffaeb9'
         # Set Cartopy shapefile location
-        config['data_dir'] = f"{os.environ['cartopyDataDir']}"
+        config['data_dir'] = config['repo_data_dir']
         # Read in data
         self.logger.info(f"Reading in model files from {self.input_dir}")
         for model_num in self.model_info_dict:
@@ -195,13 +195,13 @@ class PrecipSpatialMap:
                     file_valid_time, '%Y%m%d_%H%M%S'
                 )
                 if valid_date_dt != file_valid_time_dt:
-                    self.logger.error(f"FILE VALID TIME {file_valid_time_dt} "
+                    self.logger.error(f"FATAL ERROR: FILE VALID TIME {file_valid_time_dt} "
                                       +"DOES NOT MATCH EXPECTED VALID TIME "
                                       +f"{valid_date_dt}")
                     sys.exit(1)
                 if model_num != 'obs':
                     if init_date_dt != file_init_time_dt:
-                        self.logger.error(f"FILE INIT TIME {file_init_time_dt} "
+                        self.logger.error(f"FATAL ERROR: FILE INIT TIME {file_init_time_dt} "
                                           +"DOES NOT MATCH EXPECTED INIT TIME "
                                           +f"{init_date_dt}")
                         sys.exit(1)
