@@ -29,7 +29,7 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 module reset
 module load prod_envir/${prod_envir_ver}
 
-source $HOMEevs/modulefiles/aqm/aqm_stats.sh
+source $HOMEevs/dev/modulefiles/aqm/aqm_stats.sh
 
 export vhr
 echo $vhr

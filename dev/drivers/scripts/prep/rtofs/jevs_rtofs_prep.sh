@@ -27,7 +27,7 @@ export NET=evs
 export STEP=prep
 export COMPONENT=rtofs
 
-source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
+source $HOMEevs/dev/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 

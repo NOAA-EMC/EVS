@@ -19,7 +19,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 source $HOMEevs/versions/run.ver
 module reset
 module load prod_envir/${prod_envir_ver}
-source $HOMEevs/modulefiles/subseasonal/subseasonal_prep.sh
+source $HOMEevs/dev/modulefiles/subseasonal/subseasonal_prep.sh
 
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
