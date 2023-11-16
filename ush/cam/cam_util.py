@@ -503,7 +503,7 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
             ))
             for fhr in np.arange(int(fhr_start), int(fhr_end), int(fhr_incr)):
                 copy_files.append(
-                    f'{met_tool}_{model}_{var_name}_{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}*_'
+                    f'{met_tool}_{model}_{var_name}*{acc}H_{str(verif_type).upper()}_NBRHD{nbrhd}*_'
                     + f'{str(fhr).zfill(2)}0000L_{vdate}_{vhour}0000V.stat'
                 )
         else:
