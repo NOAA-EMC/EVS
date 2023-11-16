@@ -71,51 +71,32 @@ done
 
 for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia CPlains DeepSouth GreatBasin GreatLakes Mezquital MidAtlantic NorthAtlantic NPlains NRockies PacificNW PacificSW Prairie Southeast Southwest SPlains SRockies; do
     export region
-    if [ $region = CONUS_East ]; then
-        smregion=conus_e
-    elif [ $region = CONUS_West ]; then
-        smregion=conus_w
-    elif [ $region = CONUS_South ]; then
-        smregion=conus_s
-    elif [ $region = CONUS_Central ]; then
-        smregion=conus_c
-    elif [ $region = Appalachia ]; then
-        smregion=apl
-    elif [ $region = CPlains ]; then
-        smregion=cpl
-    elif [ $region = DeepSouth ]; then
-        smregion=ds
-    elif [ $region = GreatBasin ]; then
-        smregion=grb
-    elif [ $region = GreatLakes ]; then
-        smregion=grlk
-    elif [ $region = Mezquital ]; then
-        smregion=mez
-    elif [ $region = MidAtlantic ]; then
-        smregion=matl
-    elif [ $region = NorthAtlantic ]; then
-        smregion=ne
-    elif [ $region = NPlains ]; then
-        smregion=npl
-    elif [ $region = NRockies ]; then
-        smregion=nrk
-    elif [ $region = PacificNW ]; then
-        smregion=npw
-    elif [ $region = PacificSW ]; then
-        smregion=psw
-    elif [ $region = Prairie ]; then
-        smregion=pra
-    elif [ $region = Southeast ]; then
-        smregion=se
-    elif [ $region = Southwest ]; then
-        smregion=sw
-    elif [ $region = SPlains ]; then
-        smregion=spl
-    elif [ $region = SRockies ]; then
-        smregion=srk
-    elif [ $region = CONUS ]; then
-        smregion=conus
-    fi
+    case ${region} in
+        CONUS)         smregion=conus;;
+        CONUS_East)    smregion=conus_e;;
+        CONUS_West)    smregion=conus_w;;
+        CONUS_South)   smregion=conus_s;;
+        CONUS_Central) smregion=conus_c;;
+        Appalachia)    smregion=apl;;
+        CPlains)       smregion=cpl;;
+        DeepSouth)     smregion=ds;;
+        GreatBasin)    smregion=grb;;
+        GreatLakes)    smregion=grlk;;
+        Mezquital)     smregion=mez;;
+        MidAtlantic)   smregion=matl;;
+        NorthAtlantic) smregion=ne;;
+        NPlains)       smregion=npl;;
+        NRockies)      smregion=nrk;;
+        PacificNW)     smregion=npw;;
+        PacificSW)     smregion=psw;;
+        Prairie)       smregion=pra;;
+        Southeast)     smregion=se;;
+        Southwest)     smregion=sw;;
+        SPlains)       smregion=spl;;
+        SRockies)      smregion=srk;;
+        *) echo "Selected region is not defined, reset to CONUS"
+           smregion="conus";;
+    esac
     #
     # Hourly Plots for ozone and pm25 and 
     #   figure type of bcrmse_me fbar_obar
@@ -226,6 +207,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
                     cpreq ${cpfile} ${COMOUTplots}/${var}
                 elif [ ! -e ${cpfile} ]; then
                     echo "WARNING: NO PLOT FOR ${var} ${figtype} ${region}"
+                    echo "WARNING: This is possible where there is no exceedance of any threshold in the past 31 days"
                 fi
 
             done
@@ -259,21 +241,35 @@ fi
 ##
 ## Headline Plots
 ##
-
 mkdir -p ${COMOUTplots}/headline
 for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central; do
     export region
-    if [ $region = CONUS_East ]; then
-        smregion=conus_e
-    elif [ $region = CONUS_West ]; then
-        smregion=conus_w
-    elif [ $region = CONUS_South ]; then
-        smregion=conus_s
-    elif [ $region = CONUS_Central ]; then
-        smregion=conus_c
-    elif [ $region = CONUS ]; then
-        smregion=conus
-    fi
+    case ${region} in
+        CONUS) smregion=conus;;
+        CONUS_East) smregion=conus_e;;
+        CONUS_West) smregion=conus_w;;
+        CONUS_South) smregion=conus_s;;
+        CONUS_Central) smregion=conus_c;;
+        Appalachia) smregion=apl;;
+        CPlains) smregion=cpl;;
+        DeepSouth) smregion=ds;;
+        GreatBasin) smregion=grb;;
+        GreatLakes) smregion=grlk;;
+        Mezquital) smregion=mez;;
+        MidAtlantic) smregion=matl;;
+        NorthAtlantic) smregion=ne;;
+        NPlains) smregion=npl;;
+        NRockies) smregion=nrk;;
+        PacificNW) smregion=npw;;
+        PacificSW) smregion=psw;;
+        Prairie) smregion=pra;;
+        Southeast) smregion=se;;
+        Southwest) smregion=sw;;
+        SPlains) smregion=spl;;
+        SRockies) smregion=srk;;
+        *) echo "Selected region is not defined, reset to CONUS"
+           smregion="conus";;
+    esac
     for inithr in 12; do
         export inithr
 
@@ -317,6 +313,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central; do
                 cpreq ${cpfile} ${COMOUTplots}/headline
             elif [ ! -e ${cpfile} ]; then
                 echo "WARNING: NO HEADLINE PLOT FOR ${var} ${figtype} ${region}"
+                echo "WARNING: This is possible where there is no exceedance of the critical threshold in the past 31 days"
             fi
         done
     done
