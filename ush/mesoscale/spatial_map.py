@@ -44,7 +44,6 @@ VX_MASK_LIST = check_VX_MASK_LIST(os.environ['VX_MASK_LIST']).replace(' ','').sp
 SAVE_DIR = check_SAVE_DIR(os.environ['SAVE_DIR'])
 STAT_OUTPUT_BASE_DIR = check_STAT_OUTPUT_BASE_DIR(os.environ['STAT_OUTPUT_BASE_DIR'])
 FIXevs = os.environ['FIXevs']
-cartopyDataDir = os.environ['cartopyDataDir']
 VERIF_TYPE = os.environ['VERIF_TYPE']
 
 # Define Settings
@@ -107,6 +106,6 @@ for VX_MASK in VX_MASK_LIST:
     p = mesoscale_plots_precip_spatial_map.PrecipSpatialMap(
         logger, INPUT_DIR, OUTPUT_DIR, MODEL_INFO_DICT, 
         DATE_INFO_DICT, PLOT_INFO_DICT, MET_INFO_DICT, 
-        LOGO_DIR, cartopyDataDir
+        LOGO_DIR 
     )
     p.make_precip_spatial_map()
