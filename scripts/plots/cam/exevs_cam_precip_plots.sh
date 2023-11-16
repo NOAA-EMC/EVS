@@ -13,6 +13,8 @@ set -x
 
 # Set Basic Environment Variables
 
+export machine=${machine:-"WCOSS2"}
+export PYTHONPATH=$USHevs/$COMPONENT:$PYTHONPATH
 export njob=1
 source $config
 # Check User's Configuration Settings
@@ -50,7 +52,7 @@ if [ $USE_CFP = YES ]; then
         export MP_PGMMODEL=mpmd
         export MP_CMDFILE=${poe_script}
         if [ $machine = WCOSS2 ]; then
-            launcher="mpiexec -np $nproc -ppn $nproc --cpu-bind verbose,depth cfp"
+            launcher="mpiexec -np $nproc --cpu-bind verbose,depth cfp"
         elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
             export SLURM_KILL_BAD_EXIT=0
             launcher="srun --export=ALL --multi-prog"

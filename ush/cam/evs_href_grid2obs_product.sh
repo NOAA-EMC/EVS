@@ -122,7 +122,7 @@ for prod in mean prob ; do
 
        echo  "export model=HREF${prod} " >>  run_href_${model}.${dom}.${valid_run}_product.sh
        echo  "export domain=$dom " >> run_href_${model}.${dom}.${valid_run}_product.sh
-       echo  "xport regrid=NONE" >> run_href_${model}.${dom}.${valid_run}_product.sh
+       echo  "export regrid=NONE" >> run_href_${model}.${dom}.${valid_run}_product.sh
 
        echo  "export output_base=${WORK}/grid2obs/run_href_${model}.${dom}.${valid_run}_product" >> run_href_${model}.${dom}.${valid_run}_product.sh
        echo  "export OBTYPE='PREPBUFR'" >> run_href_${model}.${dom}.${valid_run}_product.sh
@@ -162,8 +162,7 @@ for prod in mean prob ; do
            echo  "export lead='17,18,19,20,21,22,23,24,27,30,33,36,39,42,45,48'" >> run_href_${model}.${dom}.${valid_run}_product.sh
 
         else
-           echo "wrong valid_run setting"
-           exit
+           err_exit "$valid_run is not a valid valid_run setting"
         fi
 
        echo  "export MODEL=HREF_${PROD}" >> run_href_${model}.${dom}.${valid_run}_product.sh
