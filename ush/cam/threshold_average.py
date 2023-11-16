@@ -411,11 +411,12 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
         logger.warning(
             f"Could not find (and cannot plot) {metric_name}"
             + f" stats for {print_varname} at any level. "
-            + f"Continuing ..."
+            + f"This often happens when processed data are all NaNs, "
+            + f" which are removed.  Check for seasonal cases where critical "
+            + f" threshold is not reached. Continuing ..."
         )
         plt.close(num)
         logger.info("========================================")
-        print("Quitting due to missing data.  Check the log file for details.")
         return None
     models_renamed = []
     count_renamed = 1
@@ -1227,7 +1228,7 @@ def main():
                     logger, STATS_DIR, PRUNE_DIR, OUTPUT_BASE_TEMPLATE, VERIF_CASE, VERIF_TYPE, 
                     LINE_TYPE, DATE_TYPE, date_range, EVAL_PERIOD, date_hours, 
                     FLEADS, requested_var, fcst_var_names, obs_var_names, MODELS, 
-                    domain, INTERP, MET_VERSION, clear_prune_dir
+                    domain, INTERP, INTERP_PNTS, MET_VERSION, clear_prune_dir
                 )
                 logger.info("test")
                 if df is None:

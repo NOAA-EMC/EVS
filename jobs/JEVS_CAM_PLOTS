@@ -39,7 +39,6 @@ export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
 export USHevs=${USHevs:-$HOMEevs/ush}
-export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
 
 
 ##################################################

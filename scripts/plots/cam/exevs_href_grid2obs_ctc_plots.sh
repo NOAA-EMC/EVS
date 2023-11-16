@@ -7,6 +7,7 @@ set -x
 
 cd $DATA
 
+export machine=${machine:-"WCOSS2"}
 export prune_dir=$DATA/data
 export save_dir=$DATA/out
 export output_base_dir=$DATA/stat_archive
@@ -259,9 +260,11 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
     var_new=mlcape
     level=ml
   fi
+
   if [ -s performance_diagram_regional_${domain}_valid_${valid}_${var}_*.png ] ; then
     mv performance_diagram_regional_${domain}_valid_${valid}_${var}_*.png evs.href.ctc.${var_new}_${level}.last${past_days}days.perfdiag_valid_${valid}.${new_domain}.png
   fi 
+
  done
 done
 done
@@ -304,6 +307,7 @@ for valid in 00z 03z 06z 09z 12z 15z 18z 21z ; do
      if [ -s ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}*.png ] ; then
          mv ${score_type}_regional_${domain}_valid_${valid}_${var}_${stat}*.png evs.href.${stat}.${var_new}_${level}.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
      fi
+
        done #domain
     done #stat
    done  #var

@@ -2,6 +2,7 @@
 
 set -x
 
+export machine=${machine:-"WCOSS2"}
 mkdir -p $DATA/plots
 mkdir -p $DATA/logs
 export STATDIR=$DATA/stats

@@ -12,10 +12,10 @@ set -x
 
 echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
 
-if [ -z ${vhr} ]; then
+if [ -z "${vhr}" ]; then
     err_exit "vhr is unset."
 fi
-if [ -z ${VHOUR_LIST} ]; then
+if [ -z "${VHOUR_LIST}" ]; then
     err_exit "VHOUR_LIST is unset."
 fi
 

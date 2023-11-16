@@ -3,9 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q "dev"
 #PBS -A EVS-DEV
-#PBS -l walltime=00:30:00
-#PBS -l select=1:ncpus=1:mem=20GB
-#PBS -l walltime=00:30:00
+#PBS -l walltime=01:00:00
+#PBS -l select=1:ncpus=1:mem=100GB
 #PBS -l debug=true
 
 export model=evs

@@ -6,6 +6,7 @@ mkdir -p $DATA/logs
 mkdir -p $DATA/stat
 mkdir -p $DATA/statanalysis
 
+export machine=${machine:-"WCOSS2"}
 export OBSDIR=OBS
 mkdir -p $DATA/$OBSDIR
 export modsys=nam
