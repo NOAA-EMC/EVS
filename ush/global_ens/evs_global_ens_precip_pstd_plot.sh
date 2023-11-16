@@ -51,6 +51,7 @@ for model in gefs  ; do
 
 
    ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PLOT_CONF}/StatAnlysis_fcstGENS_obsCCPA_PSTD_GatherByDate.conf
+   export err=$?; err_chk
 
     #cp $DATA/agg_stat_PSTD.${model}.12Z  agg_stat_PSTD.${model}.${yyyy}.12Z
 
@@ -66,12 +67,12 @@ for model in gefs  ; do
 
 done
 
-exit
 
 sed -e "s!YYYY!${yyyy}!g" -e "s!December!$last!g"  $USHevs/global_ens/evs_global_ens_headline_plot.py  >  evs_global_ens_headline_plot.py 
 
 
 python evs_global_ens_headline_plot.py
+export err=$?; err_chk
 
 
 

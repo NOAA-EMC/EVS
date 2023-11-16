@@ -41,6 +41,7 @@ while [ $n -le $past_days ] ; do
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
   $USHevs/global_ens/evs_get_gens_atmos_stat_file_link_plots.sh $day "$model_list"
+  export err=$?; err_chk
   n=$((n+1))
 done 
 
@@ -73,8 +74,7 @@ elif [ $stats = rmse_spread  ] ; then
   stat_list='rmse, spread'
   line_tp='ecnt'
 else
-  echo $stats is wrong stat
-  exit
+  err_exit "$stats is not a valid metric"
 fi   
 
  for score_type in time_series lead_average ; do
@@ -172,6 +172,7 @@ if [ $run_mpi = yes ] ; then
    mpiexec -np 440 -ppn 88 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
   ${DATA}/run_all_poe.sh
+  export err=$?; err_chk
 fi
 
 # Cat the plotting log file
@@ -206,9 +207,13 @@ for stats in rmse_spread me ; do
             fi
             for level in $levels ; do
                 plevel=p${level}
-                mv lead_average_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}.png  evs.global_ens.${evs_graphic_stats}.${var}_${plevel}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${domain_new}.png
+                if [ -f "lead_average_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}.png" ]; then
+                    mv lead_average_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}.png  evs.global_ens.${evs_graphic_stats}.${var}_${plevel}.last${past_days}days.fhrmean_valid00z_12z_f384.g003_${domain_new}.png
+                fi
                 for lead in 120 240 360; do
-                    mv time_series_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}_f${lead}.png  evs.global_ens.${evs_graphic_stats}.${var}_${plevel}.last${past_days}days.timeseries_valid00z_12z_f${lead}.g003_${domain_new}.png
+                    if [ -f "time_series_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}_f${lead}.png" ]; then
+                        mv time_series_regional_${domain}_valid_00z_12z_${level}mb_${var}_${stats}_f${lead}.png  evs.global_ens.${evs_graphic_stats}.${var}_${plevel}.last${past_days}days.timeseries_valid00z_12z_f${lead}.g003_${domain_new}.png
+                    fi
                 done #lead
             done #level
         done #var
@@ -218,7 +223,7 @@ done     #stats
 tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar *.png
 
 if [ $SENDCOM = YES ]; then
-    cp  evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar  $COMOUT/.
+    cpreq  evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.${VERIF_CASE}.past${past_days}days.v${VDATE}.tar  $COMOUT/.
 fi
 
 if [ $SENDDBN = YES ]; then 

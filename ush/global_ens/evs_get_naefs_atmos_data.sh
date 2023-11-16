@@ -131,8 +131,7 @@ if [ $modnam = gefs_bc_apcp24h ] ; then
     elif [ $gefs_mbrs = 30 ] ; then
       mbrs='1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30'
     else
-      echo "mbrs is not defined"
-      exit 1
+      err_exit "mbrs is not defined"
     fi
     for ihour in $naefs_ihour ; do
        origin=$COMINgefs_bc/gefs.$vday/$ihour/prcp_bc_gb2
