@@ -59,7 +59,7 @@ def expand_met_stat_files(met_stat_files, data_dir, output_base_template, RUN_ca
 
 def prune_data(data_dir, prune_dir, tmp_dir, output_base_template, valid_range, 
                eval_period, RUN_case, RUN_type, line_type, vx_mask, 
-               fcst_var_names, var_name, model_list):
+               fcst_var_names, var_name, model_list, interp_pnts):
 
    print("BEGIN: "+os.path.basename(__file__))
    # Get list of models and loop through
@@ -81,15 +81,27 @@ def prune_data(data_dir, prune_dir, tmp_dir, output_base_template, valid_range,
       with open(met_stat_files[0]) as msf:
          met_header_cols = msf.readline()
       all_grep_output = ''
-      print("Pruning "+data_dir+" files for model "+model+", vx_mask "
-            +vx_mask+", variable "+'/'.join(fcst_var_names)+", line_type "+line_type
-            +", interp "+os.environ['INTERP'])
-      filter_cmd = (
-         ' | grep " '+vx_mask
-         +' " | grep "'+'\|'.join(fcst_var_names)
-         +'" | grep " '+line_type
-         +' " | grep " '+os.environ['INTERP']+' "'
-      )
+      if any(interp_pnts):
+         print("Pruning "+data_dir+" files for model "+model+", vx_mask "
+               +vx_mask+", variable "+'/'.join(fcst_var_names)+", line_type "+line_type
+               +", interp "+os.environ['INTERP']+", interp points "+'/'.join(interp_pnts))
+         filter_cmd = (
+            ' | grep " '+vx_mask
+            +' " | grep "'+'\|'.join(fcst_var_names)
+            +'" | grep " '+line_type
+            +' " | grep " '+os.environ['INTERP']
+            +' " | grep "'+'\|'.join(interp_pnts)+'"'
+         )
+      else:
+         print("Pruning "+data_dir+" files for model "+model+", vx_mask "
+               +vx_mask+", variable "+'/'.join(fcst_var_names)+", line_type "+line_type
+               +", interp "+os.environ['INTERP'])
+         filter_cmd = (
+            ' | grep " '+vx_mask
+            +' " | grep "'+'\|'.join(fcst_var_names)
+            +'" | grep " '+line_type
+            +' " | grep " '+os.environ['INTERP']+' "'
+         )
       # Prune the MET .stat files and write to new file
       for met_stat_file in met_stat_files:
          ps = subprocess.Popen('grep -R "'+model+'" '+met_stat_file+filter_cmd,

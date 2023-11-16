@@ -515,9 +515,6 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         )
         plt.close(num)
         logger.info("========================================")
-        print(
-            "Continuing due to missing data.  Check the log file for details."
-        )
         return None
 
 

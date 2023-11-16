@@ -13,6 +13,8 @@
 set -x
 
 # Loop through HiRes Window ARW Member 2 Precipitation configs
+export machine=${machine:-"WCOSS2"}
+export PYTHONPATH=$USHevs/$COMPONENT:$PYTHONPATH
 export njob=1
 for NEST in "conus" "ak" "pr" "hi"; do
     export NEST=$NEST

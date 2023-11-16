@@ -7,6 +7,7 @@
 set -x
 
 
+export machine=${machine:-"WCOSS2"}
 export WORK=$DATA
 cd $WORK
 

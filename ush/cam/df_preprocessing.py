@@ -53,7 +53,7 @@ def get_valid_range(logger, date_type, date_range, date_hours, fleads):
 
 def run_prune_data(logger, stats_dir, prune_dir, output_base_template, verif_case, 
                    verif_type, line_type, valid_range, eval_period, var_name, 
-                   fcst_var_names, model_list, domain):
+                   fcst_var_names, model_list, domain, interp_pnts):
     model_list = [str(model) for model in model_list]
     tmp_dir = 'tmp'+str(uuid.uuid4().hex)
     pruned_data_dir = os.path.join(
@@ -75,7 +75,8 @@ def run_prune_data(logger, stats_dir, prune_dir, output_base_template, verif_cas
                 str(verif_type).lower(), str(line_type).upper(), 
                 str(domain), 
                 [' '+str(fcst_var_name)+' ' for fcst_var_name in fcst_var_names],
-                str(var_name).upper(), model_list
+                str(var_name).upper(), model_list, 
+                [' '+str(interp_pnt)+' ' for interp_pnt in interp_pnts]
             )
         else:
             e1 = f"FATAL ERROR: {stats_dir} exists but is empty."
@@ -271,14 +272,14 @@ def get_preprocessed_data(logger, stats_dir, prune_dir, output_base_template,
                           verif_case, verif_type, line_type, date_type, 
                           date_range, eval_period, date_hours, fleads, 
                           var_name, fcst_var_names, obs_var_names, model_list, 
-                          domain, interp, met_version, clear_prune_dir):
+                          domain, interp, interp_pnts, met_version, clear_prune_dir):
     valid_range = get_valid_range(
         logger, date_type, date_range, date_hours, fleads
     )
     pruned_data_dir = run_prune_data(
         logger, stats_dir, prune_dir, output_base_template, verif_case, verif_type, 
         line_type, valid_range, eval_period, var_name, fcst_var_names, model_list, 
-        domain
+        domain, interp_pnts
     )
     df = create_df(
         logger, stats_dir, pruned_data_dir, line_type, date_range, model_list,
