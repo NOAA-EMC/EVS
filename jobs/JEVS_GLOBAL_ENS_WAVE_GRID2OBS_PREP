@@ -17,7 +17,8 @@ cd $DATA
 ##########################################
 # Run setpdy and initialize PDY variables 
 ##########################################
-export cycle=${cycle:-t00z}
+export vhr=${vhr:-00}
+export cycle=${cycle:-t${vhr}z}
 setpdy.sh 20
 . ./PDY
 export INITDATE=${INITDATE:-${PDYm1}}
@@ -66,17 +67,11 @@ export COMOUTgefs=${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
 # make the directory where the ARCgefs and gdasnc will be kept
 mkdir -p ${COMOUT}.${INITDATE}/${MODELNAME}/${VERIF_CASE}
 
-export jlogfile=${DATA}/${MODELNAME}_${RUN}_PB2NC.log
-
-
 ####################################
 # Execute the script                
 ####################################
 $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
-
-msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
 
 if [ "$KEEPDATA" != "YES" ] ; then
   rm -rf $DATA

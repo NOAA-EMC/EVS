@@ -123,7 +123,9 @@ class PlotSpecs:
             self.legend_font_size = 16
             self.fig_title_size = 18
         else:
-            self.logger.error(f"{self.plot_type} NOT RECOGNIZED")
+            self.logger.error(
+                f"FATAL ERROR: {self.plot_type} NOT A RECOGNIZED PLOT TYPE"
+            )
             sys.exit(1)
 
     def set_up_plot(self):
@@ -519,7 +521,7 @@ class PlotSpecs:
                           +end_date_hr_dt.strftime('%d%b%Y %H')+'Z, ')
         if date_type == 'VALID':
             date_plot_name = (date_plot_name
-                              +'cycles: '+', '.join(other_hr_list))
+                              +'init. hours: '+', '.join(other_hr_list))
         elif date_type == 'INIT':
             date_plot_name = (date_plot_name
                               +'valid: '+', '.join(other_hr_list))

@@ -27,7 +27,6 @@ export EXECevs=${EXECevs:-$HOMEevs/exec}
 export FIXevs=${FIXevs:-$HOMEevs/fix}
 export PARMevs=${PARMevs:-$HOMEevs/parm}
 export USHevs=${USHevs:-$HOMEevs/ush}
-export cartopyDataDir=${cartopyDataDir:-/apps/ops/prod/data/cartopy}
 
 ####################################
 # Run setpdy and initialize PDY variables

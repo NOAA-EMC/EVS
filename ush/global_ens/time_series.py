@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 ###############################################################################
 #
 # Name:          time_series.py
@@ -130,7 +131,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         df = df[df['LEAD_HOURS'] == flead]
     else:
         error_string = (
-            f"Invalid forecast lead: \'{flead}\'\nPlease check settings for"
+            f"FATAL ERROR: Invalid forecast lead: \'{flead}\'\nPlease check settings for"
             + f" forecast leads."
         )
         logger.error(error_string)
@@ -155,16 +156,16 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                     opt_letter = requested_thresh_letter[0][:2]
                     break
                 else:
-                    e = ("Threshold operands do not match among all requested"
+                    e = ("FATAL ERROR: Threshold operands do not match among all requested"
                          + f" thresholds.")
                     logger.error(e)
                     logger.error("Quitting ...")
-                    raise ValueError(e+"\nQuitting ...")
+                    raise ValueError(e)
         if not symbol_found:
-            e = "None of the requested thresholds contain a valid symbol."
+            e = "FATAL ERROR: None of the requested thresholds contain a valid symbol."
             logger.error(e)
             logger.error("Quitting ...")
-            raise ValueError(e+"\nQuitting ...")
+            raise ValueError(e)
         df_thresh_symbol, df_thresh_letter = list(
             zip(*[plot_util.format_thresh(t) for t in df['FCST_THRESH']])
         )
@@ -384,22 +385,24 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         logger.warning(
             f"Could not find (and cannot plot) {metric1_name} and/or"
             + f" {metric2_name} stats for {print_varname} at any level. "
-            + f"Continuing ..."
+            + f"This often happens when processed data are all NaNs, "
+            + f" which are removed.  Check for seasonal cases where critical "
+            + f" threshold is not reached. Continuing ..."
         )
         plt.close(num)
         logger.info("========================================")
-        print("Quitting due to missing data.  Check the log file for details.")
         return None
     elif not metric2_name and pivot_metric1.empty:
         print_varname = df['FCST_VAR'].tolist()[0]
         logger.warning(
             f"Could not find (and cannot plot) {metric1_name}"
             + f" stats for {print_varname} at any level. "
-            + f"Continuing ..."
+            + f"This often happens when processed data are all NaNs, "
+            + f" which are removed.  Check for seasonal cases where critical "
+            + f" threshold is not reached. Continuing ..."
         )
         plt.close(num)
         logger.info("========================================")
-        print("Quitting due to missing data.  Check the log file for details.")
         return None
 
     models_renamed = []
@@ -576,6 +579,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         handles = []
         #labels = []
         labels = [model_list[0].upper()]
+    handles = []
+    labels = []
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -641,6 +646,14 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                     lw=ref_color_dict['linewidth']
                 )
                 plotted_reference[0] = True
+                handles+=[
+                    f(
+                          ref_color_dict['marker'], ref_color_dict['color'],
+                          'solid', ref_color_dict['linewidth'],
+                          ref_color_dict['markersize'], 'white'
+                    )
+                ]
+                labels+=[str(metric1_name).upper()]
         else:
             plt.plot(
                 x_vals1.tolist(), y_vals_metric1, 
@@ -649,6 +662,14 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 figure=fig, ms=mod_setting_dicts[m]['markersize'], ls='solid', 
                 lw=mod_setting_dicts[m]['linewidth']
             )
+            handles+=[
+                f(
+                      mod_setting_dicts[m]['marker'], mod_setting_dicts[m]['color'],
+                      'solid', mod_setting_dicts[m]['linewidth'],
+                      mod_setting_dicts[m]['markersize'], 'white'
+                )
+            ]
+            labels+=[str(metric1_name).upper()+' ('+model_plot_name.upper()+')']
         if metric2_name is not None:
             if np.abs(y_vals_metric2_mean) < 1E4:
                 metric2_mean_fmt_string = f'{y_vals_metric2_mean:.2f}'
@@ -665,6 +686,14 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                         lw=ref_color_dict['linewidth']
                     )
                     plotted_reference[1] = True
+                    handles+=[
+                        f(
+                              ref_color_dict['marker'], ref_color_dict['color'],
+                              'dashed', ref_color_dict['linewidth'],
+                              ref_color_dict['markersize'], 'white'
+                        )
+                    ]
+                    labels+=[str(metric2_name).upper()]
             else:
                 plt.plot(
                     x_vals2.tolist(), y_vals_metric2, 
@@ -673,6 +702,14 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                     figure=fig, ms=mod_setting_dicts[m]['markersize'], 
                     ls='dashed', lw=mod_setting_dicts[m]['linewidth']
                 )
+                handles+=[
+                    f(
+                          mod_setting_dicts[m]['marker'], mod_setting_dicts[m]['color'],
+                          'dashed', mod_setting_dicts[m]['linewidth'],
+                          mod_setting_dicts[m]['markersize'], 'white'
+                    )
+                ]
+                labels+=[str(metric2_name).upper()+' ('+model_plot_name.upper()+')']
         if confidence_intervals:
             if plot_reference[0]:
                 if not plotted_reference_CIs[0]:
@@ -717,13 +754,13 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                         capsize=10., capthick=mod_setting_dicts[m]['linewidth'],
                         alpha=.70, zorder=0
                     )
-        handles+=[
-            f(
-                mod_setting_dicts[m]['marker'], mod_setting_dicts[m]['color'],
-                'solid', mod_setting_dicts[m]['linewidth'], 
-                mod_setting_dicts[m]['markersize'], 'white'
-            )
-        ]
+        #handles+=[
+        #    f(
+        #        mod_setting_dicts[m]['marker'], mod_setting_dicts[m]['color'],
+        #        'solid', mod_setting_dicts[m]['linewidth'], 
+        #        mod_setting_dicts[m]['markersize'], 'white'
+        #    )
+        #]
         if display_averages:
             if metric2_name is not None:
                 labels+=[
@@ -959,7 +996,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
 #              + f'{date_start_string} to {date_end_string}, {frange_string}'
     fcst_day=int(flead[0]/24)
     title3 = (f'{str(date_type).lower()} {date_start_string} - {date_end_string}, '
-              + f'cycles: {date_hours_string} Forecast Day {fcst_day} (Hour {flead[0]})')
+              + f'init. hours: {date_hours_string} Forecast Day {fcst_day} (Hour {flead[0]})')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
         title_pad=20
@@ -1111,7 +1148,7 @@ def main():
         date_hours = INIT_HOURS
         date_type_string = 'Initialization'
     else:
-        e = (f"Invalid DATE_TYPE: {str(date_type).upper()}. Valid values are"
+        e = (f"FATAL ERROR: Invalid DATE_TYPE: {str(date_type).upper()}. Valid values are"
              + f" VALID or INIT")
         logger.error(e)
         raise ValueError(e)
@@ -1197,7 +1234,7 @@ def main():
     elif len(METRICS) > 1:
         metrics = METRICS[:2]
     else:
-        e = (f"Received no list of metrics.  Check that, for the METRICS"
+        e = (f"FATAL ERROR: Received no list of metrics.  Check that, for the METRICS"
              + f" setting, a comma-separated string of at least one metric is"
              + f" provided")
         logger.error(e)
@@ -1211,11 +1248,11 @@ def main():
     num=0
     e = ''
     if str(VERIF_CASETYPE).lower() not in list(reference.case_type.keys()):
-        e = (f"The requested verification case/type combination is not valid:"
+        e = (f"FATAL ERROR: The requested verification case/type combination is not valid:"
              + f" {VERIF_CASETYPE}")
     elif str(LINE_TYPE).upper() not in list(
             reference.case_type[str(VERIF_CASETYPE).lower()].keys()):
-        e = (f"The requested line_type is not valid for {VERIF_CASETYPE}:"
+        e = (f"FATAL ERROR: The requested line_type is not valid for {VERIF_CASETYPE}:"
              + f" {LINE_TYPE}")
     else:
         case_specs = (
@@ -1229,7 +1266,7 @@ def main():
         raise ValueError(e+"\nQuitting ...")
     if (str(INTERP).upper()
             not in case_specs['interp'].replace(' ','').split(',')):
-        e = (f"The requested interp method is not valid for the"
+        e = (f"FATAL ERROR: The requested interp method is not valid for the"
              + f" requested case type ({VERIF_CASETYPE}) and"
              + f" line_type ({LINE_TYPE}): {INTERP}")
         logger.error(e)
@@ -1288,11 +1325,11 @@ def main():
         plot_group = var_specs['plot_group']
         for l, fcst_level in enumerate(FCST_LEVELS):
             if len(FCST_LEVELS) != len(OBS_LEVELS):
-                e = ("FCST_LEVELS and OBS_LEVELS must be lists of the same"
+                e = ("FATAL ERROR: FCST_LEVELS and OBS_LEVELS must be lists of the same"
                      + f" size")
                 logger.error(e)
                 logger.error("Quitting ...")
-                raise ValueError(e+"\nQuitting ...")
+                raise ValueError(e)
             if (FCST_LEVELS[l] not in var_specs['fcst_var_levels'] 
                     or OBS_LEVELS[l] not in var_specs['obs_var_levels']):
                 e = (f"The requested variable/level combination is not valid: "

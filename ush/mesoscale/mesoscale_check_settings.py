@@ -46,8 +46,8 @@ if evs_run_mode == 'production':
     ]
 else:
     evs_mesoscale_settings_dict['evs'] = [
-        'model', 'machine', 'envir', 'SENDCOM', 'KEEPDATA', 'job', 'jobid', 'USE_CFP', 'ACCOUNT', 'QUEUE', 
-        'QUEUESHARED', 'QUEUESERV', 'PARTITION_BATCH', 'nproc', 'NET', 'STEP', 
+        'model', 'machine', 'envir', 'SENDCOM', 'KEEPDATA', 'job', 'jobid', 'USE_CFP', 
+        'nproc', 'NET', 'STEP', 
         'COMPONENT', 'RUN', 'VERIF_CASE', 'HOMEevs', 
         'config', 'evs_ver', 'nam_ver', 'obsproc_ver', 'pid', 'DATA', 'VDATE', 'COMIN', 'COMOUT', 'EVSIN',
         'PARMevs', 'USHevs', 'EXECevs', 'FIXevs',  'evs_run_mode'
@@ -188,9 +188,6 @@ COMPONENT = os.environ['COMPONENT']
 DATA = os.environ['DATA']
 MODELNAME = os.environ['MODELNAME']
 USER = os.environ['USER']
-if evs_run_mode != 'production':
-    QUEUESERV = os.environ['QUEUESERV']
-    ACCOUNT = os.environ['ACCOUNT']
 if STEP == 'stats':
     MODEL_INPUT_TEMPLATE = os.environ['MODEL_INPUT_TEMPLATE']
     COMINfcst = os.environ['COMINfcst']
