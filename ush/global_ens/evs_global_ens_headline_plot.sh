@@ -109,6 +109,7 @@ for model in gfs gefs naefs ; do
    # stat_analysis -lookin $stat_data/$model/${model}_headline_*${yyyy}*.stat -fcst_valid_hour 00  -job aggregate_stat -line_type SAL1L2 -out_line_type CNT -by FCST_VAR,FCST_LEV,FCST_LEAD,VX_MASK -out_stat agg_stat_SAL1L2_to_CNT.${model}.${yyyy}.00Z
 
    ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PLOT_CONF}/StatAnlysis_fcstGENS_obsAnalysis_GatherByYear.conf 
+   export err=$?; err_chk
 
    mv $DATA/agg_stat_SAL1L2_to_CNT.${model}.00Z  agg_stat_SAL1L2_to_CNT.${model}.${yyyy}.00Z
 
@@ -136,5 +137,6 @@ sed -e "s!YYYY!${last_year}!g" -e "s!FIRST!$first!g" -e "s!LAST!$last!g"  $USHev
 
 
 python evs_global_ens_headline_plot.py
+export err=$?; err_chk
 
-cp NH_H500_PAC_${last_year}.png  evs.global_ens.acc.hgt_p500.${beg_day}_${end_day}.fhrmean_bar_valid00z_f384.g003_nhem.png
+cpreq NH_H500_PAC_${last_year}.png  evs.global_ens.acc.hgt_p500.${beg_day}_${end_day}.fhrmean_bar_valid00z_f384.g003_nhem.png
