@@ -22,6 +22,7 @@ set -x
 # Define surrogate severe settings
 ############################################################
 
+export machine=${machine:-"WCOSS2"}
 export VERIF_GRID=G211
 export VERIF_GRID_DX=81.271
 export GAUSS_RAD=120

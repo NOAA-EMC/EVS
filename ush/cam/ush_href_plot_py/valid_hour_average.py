@@ -453,22 +453,24 @@ def plot_valid_hour_average(df: pd.DataFrame, logger: logging.Logger,
         logger.warning(
             f"Could not find (and cannot plot) {metric1_name} and/or"
             + f" {metric2_name} stats for {print_varname} at any level. "
-            + f"Continuing ..."
+            + f"This often happens when processed data are all NaNs, "
+            + f" which are removed.  Check for seasonal cases where critical "
+            + f" threshold is not reached. Continuing ..."
         )
         plt.close(num)
         logger.info("========================================")
-        print("Quitting due to missing data.  Check the log file for details.")
         return None
     elif not metric2_name and pivot_metric1.empty:
         print_varname = df['FCST_VAR'].tolist()[0]
         logger.warning(
             f"Could not find (and cannot plot) {metric1_name}"
             f" stats for {print_varname} at any level. "
-            + f"Continuing ..."
+            + f"This often happens when processed data are all NaNs, "
+            + f" which are removed.  Check for seasonal cases where critical "
+            + f" threshold is not reached. Continuing ..."
         )
         plt.close(num)
         logger.info("========================================")
-        print("Quitting due to missing data.  Check the log file for details.")
         return None
 
 

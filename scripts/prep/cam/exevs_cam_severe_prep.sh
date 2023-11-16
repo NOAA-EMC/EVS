@@ -17,6 +17,7 @@ echo " ENTERING SUB SCRIPT $0 "
 echo
 
 set -x
+export machine=${machine:-"WCOSS2"}
 
 
 ############################################################
