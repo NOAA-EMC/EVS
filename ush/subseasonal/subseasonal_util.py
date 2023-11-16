@@ -3364,11 +3364,19 @@ def check_weeks3_4_truth_files(job_dict):
                 truth_input_files_exist_list.append(True)
             else:
                 truth_input_files_exist_list.append(False)
-        if any(x == True for x in truth_input_files_exist_list) \
-                and truth_input_files_exist_list.count(True) >= 23:
-            truth_files_exist = True
+        if job_dict['JOB_GROUP'] == 'reformat_data' \
+                and job_dict['VERIF_CASE'] == 'grid2obs':
+            if all(x == True for x in truth_input_files_exist_list) \
+                    and len(truth_input_files_exist_list) > 0:
+                truth_files_exist = True
+            else:
+                truth_files_exist = False
         else:
-            truth_files_exist = False
+            if any(x == True for x in truth_input_files_exist_list) \
+                    and truth_input_files_exist_list.count(True) >= 23:
+                truth_files_exist = True
+            else:
+                truth_files_exist = False
     return truth_files_exist, truth_copy_output_DATA2COMOUT_list
 
 def check_truth_files(job_dict):
