@@ -7,6 +7,7 @@ set -x
 
 cd $DATA
 
+export machine=${machine:-"WCOSS2"}
 export prune_dir=$DATA/data
 export save_dir=$DATA/out
 export output_base_dir=$DATA/stat_archive

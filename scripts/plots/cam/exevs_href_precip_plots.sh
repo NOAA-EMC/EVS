@@ -7,6 +7,7 @@ set -x
 
 cd $DATA
 
+export machine=${machine:-"WCOSS2"}
 export prune_dir=$DATA/data
 export save_dir=$DATA/out
 export output_base_dir=$DATA/stat_archive
@@ -253,8 +254,8 @@ for stats in ets fbias fss ; do
       fi
     for valid in $valids ; do
  
-      ls ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png
       if [ -s ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png ] ; then
+        ls ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png
         mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${stats}_${lead}.png  evs.href.${stats}.${var}h.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
       fi
     done
@@ -292,9 +293,11 @@ for var in apcp_01 apcp_03 apcp_24 ; do
      else
          new_domain=buk_${domain}
      fi
+
       if [ -s ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${lead}.png ] ; then
        mv ${score_type}_regional_${domain}_valid_${valid}_${level}_${var}_${lead}.png  evs.href.ctc.${var}h.last${past_days}days.${scoretype}_valid_${valid}.${new_domain}.png
       fi
+
     done
   done
 done

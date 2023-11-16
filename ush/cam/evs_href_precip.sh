@@ -320,8 +320,7 @@ for obsvtype in ccpa mrms ; do
 
      else
 
-      echo "Wrong obsv: $obsv"
-      exit
+      err_exit "$obsv is not a valid obsv"
 
      fi 
       
@@ -378,4 +377,5 @@ for obsvtype in ccpa mrms ; do
 
 done # end of domain 
 
+export err=$?; err_chk
 exit
