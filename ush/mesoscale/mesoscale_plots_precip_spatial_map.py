@@ -30,8 +30,7 @@ class PrecipSpatialMap:
     """
 
     def __init__(self, logger, input_dir, output_dir, model_info_dict,
-                 date_info_dict, plot_info_dict, met_info_dict, logo_dir, 
-                 cartopy_data_dir):
+                 date_info_dict, plot_info_dict, met_info_dict, logo_dir):
         """! Initalize PrecipSpatialMap class
              Args:
                  logger           - logger object
@@ -42,7 +41,6 @@ class PrecipSpatialMap:
                  date_info_dict   - date information dictionary (strings)
                  met_info_dict    - MET information dictionary (strings)
                  logo_dir         - directory with logo images (string)
-                 cartopy_data_dir - directory with cartopy shapefiles (string)
  
              Returns:
         """
@@ -54,7 +52,6 @@ class PrecipSpatialMap:
         self.plot_info_dict = plot_info_dict
         self.met_info_dict = met_info_dict
         self.logo_dir = logo_dir
-        self.cartopy_data_dir = cartopy_data_dir
 
     def make_precip_spatial_map(self):
         """! Create the precipitation spatial map graphic
@@ -104,7 +101,7 @@ class PrecipSpatialMap:
                         'goldenrod', 'yellow']
         cmap_over_color_mm = '#ffaeb9'
         # Set Cartopy shapefile location
-        config['data_dir'] = self.cartopy_data_dir
+        config['data_dir'] = config['repo_data_dir']
         # Read in data
         self.logger.info(f"Reading in model files from {self.input_dir}")
         for model_num in self.model_info_dict:
@@ -417,7 +414,6 @@ def main():
     INPUT_DIR = os.environ['HOME']
     OUTPUT_DIR = os.environ['HOME']
     LOGO_DIR = os.environ['HOME'],
-    CARTOPY_DIR = os.environ['cartopyDataDir']
     MODEL_INFO_DICT = {
         'model1': {'name': 'MODEL_A',
                    'plot_name': 'PLOT_MODEL_A',
@@ -483,7 +479,7 @@ def main():
     logger.info(logger_info)
     p = PrecipSpatialMap(logger, INPUT_DIR, OUTPUT_DIR, MODEL_INFO_DICT,
                          DATE_INFO_DICT, PLOT_INFO_DICT, MET_INFO_DICT,
-                         LOGO_DIR, cartopyDataDir)
+                         LOGO_DIR)
     p.make_precip_spatial_map()
 
 if __name__ == "__main__":

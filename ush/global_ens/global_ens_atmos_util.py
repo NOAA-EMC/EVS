@@ -1862,7 +1862,7 @@ def calculate_stat(logger, data_df, line_type, stat):
            stat_df = 1 - (FY_ON/(FY_ON + FY_OY))
    else:
        logger.error("FATAL ERROR: "+stat+" IS NOT AN OPTION")
-        sys.exit(1)
+       sys.exit(1)
    idx = 0
    idx_dict = {}
    while idx < stat_df.index.nlevels:
