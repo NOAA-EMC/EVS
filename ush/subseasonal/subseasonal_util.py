@@ -846,7 +846,7 @@ def weekly_osi_saf_file(weekly_source_file_list, weekly_dest_file,
             ]
             weekly_data.close()
     else:
-        print("Not enough files to make "+weekly_prepped_file
+        print("WARNING: Not enough files to make "+weekly_prepped_file
               +": "+' '.join(weekly_source_file_list))
     print("Linking "+weekly_prepped_file+" to "+weekly_dest_file)
     os.symlink(weekly_prepped_file, weekly_dest_file)
@@ -895,7 +895,7 @@ def monthly_osi_saf_file(monthly_source_file_list,
             ]
             monthly_data.close()
     else:
-        print("Not enough files to make "+monthly_prepped_file
+        print("WARNING: Not enough files to make "+monthly_prepped_file
               +": "+' '.join(monthly_source_file_list))
     print("Linking "+monthly_prepped_file+" to "+monthly_dest_file)
     os.symlink(monthly_prepped_file, monthly_dest_file)
@@ -949,7 +949,7 @@ def weekly_ghrsst_ospo_file(weekly_source_file_list, weekly_dest_file,
             weekly_data['time'][:] = weekly_data['time'][:][-1]
             weekly_data.close()
     else:
-        print("Not enough files to make "+weekly_prepped_file
+        print("WARNING: Not enough files to make "+weekly_prepped_file
               +": "+' '.join(weekly_source_file_list))
     print("Linking "+weekly_prepped_file+" to "+weekly_dest_file)
     os.symlink(weekly_prepped_file, weekly_dest_file)
@@ -1003,7 +1003,7 @@ def monthly_ghrsst_ospo_file(monthly_source_file_list,
             monthly_data['time'][:] = monthly_data['time'][:][-1]
             monthly_data.close()
     else:
-        print("Not enough files to make "+monthly_prepped_file
+        print("WARNING: Not enough files to make "+monthly_prepped_file
               +": "+' '.join(monthly_source_file_list))
     print("Linking "+monthly_prepped_file+" to "+monthly_dest_file)
     os.symlink(monthly_prepped_file, monthly_dest_file)
