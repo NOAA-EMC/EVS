@@ -132,7 +132,7 @@ for field in $fields ; do
        fi
     fi
     for metplus_job in $metplus_jobs ; do
-      ****************************************
+      #****************************************
       # Build a poe script to collect sub-tasks
       #***************************************
       >run_all_gens_${field}_${metplus_job}_g2o_poe.sh

@@ -281,7 +281,7 @@ if [ $modnam = cmce ] ; then
           #cat $WORK/grabcmce.${ihour}.${mb}.${h3} >> $WORK/cmce.sfc.${ihour}.${mb}.${h3}
           #echo "cmce.upper" | $EXECevs_g2g/evs_g2g_adjustCMC.x
           #cat $WORK/cmce.sfc >> $WORK/cmce.upper.adjusted
-          *****************************************************************************************
+          #*****************************************************************************************
 
 	  #********************************************************************************
           #In MET, not necessary to adjust upper level fields for CMCE members since
