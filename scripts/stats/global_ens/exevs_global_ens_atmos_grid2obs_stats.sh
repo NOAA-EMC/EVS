@@ -32,6 +32,8 @@ else
   err_exit "$ens not valid"
 fi
 
+export gefs_number=30
+
 all_prepbufr_av=YES
 for vhour in $vhours; do
     if [ ! -s ${EVSIN}.${VDATE}/gefs/gfs.t${vhour}z.prepbufr.f00.nc ] ; then
@@ -41,7 +43,7 @@ for vhour in $vhours; do
         echo "Warning: No PREPBUFR data available for ${VDATE}${vhour}" > mailmsg 
         echo "Missing file is ${EVSIN}.${VDATE}/gefs/gfs.t${vhour}z.prepbufr.f00.nc"  >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+        cat mailmsg | mail -s "$subject" $MAILTO
       fi
     fi
 done

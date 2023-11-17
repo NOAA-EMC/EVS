@@ -76,11 +76,11 @@ if [ $get_ghrsst = yes ] ; then
   else
     if [ $SENDMAIL = YES ]; then
      export subject="GHRSST OSPO Data Missing for EVS ${COMPONENT}"
-     export maillist=${maillist:-'alicia.bentley@noaa.gov,steven.simon@noaa.gov'}
+     export MAILTO=${MAILTO:-'alicia.bentley@noaa.gov,steven.simon@noaa.gov'}
      echo "Warning: No GHRSST OSPO data was available for valid date ${vday}" > mailmsg
      echo Missing file is  $DCOMINghrsst/$vday/validation_data/marine/ghrsst/${vday}_OSPO_L4_GHRSST.nc >> mailmsg
      echo "Job ID: $jobid" >> mailmsg
-     cat mailmsg | mail -s "$subject" $maillist
+     cat mailmsg | mail -s "$subject" $MAILTO
     fi 
   fi
 fi

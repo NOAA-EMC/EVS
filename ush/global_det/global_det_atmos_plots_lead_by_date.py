@@ -396,18 +396,15 @@ class LeadByDate:
                 plt.setp(ax.get_xticklabels(), visible=False)
             ax.set_ylim([plot_dates[0], plot_dates[-1]])
             ax.set_yticks(plot_dates[::ytick_intvl])
-            if date_intvl != 86400:
-                ax.yaxis.set_major_formatter(md.DateFormatter('%d%b%Y %HZ'))
-                if len(plot_dates) < 10:
-                    ax.yaxis.set_minor_locator(md.HourLocator())
-                else:
-                    ax.yaxis.set_minor_locator(md.DayLocator())
-            else:
-                ax.yaxis.set_major_formatter(md.DateFormatter('%d%b%Y'))
-                if len(plot_dates) < 60:
-                    ax.yaxis.set_minor_locator(md.DayLocator())
-                else:
-                    ax.yaxis.set_minor_locator(md.MonthLocator())
+            ax.yaxis.set_major_formatter(md.DateFormatter('%HZ %d%b%Y'))
+            hr_minor_tick_type = self.date_info_dict['date_type'].lower()
+            ax.yaxis.set_minor_locator(
+                md.HourLocator(byhour=range(
+                    int(self.date_info_dict[f"{hr_minor_tick_type}_hr_start"]),
+                    int(self.date_info_dict[f"{hr_minor_tick_type}_hr_end"])+1,
+                    int(self.date_info_dict[f"{hr_minor_tick_type}_hr_inc"])
+                ))
+            )
             if ax.get_subplotspec().is_first_col():
                 ax.set_ylabel(self.date_info_dict['date_type'].title()+' Date')
             else:

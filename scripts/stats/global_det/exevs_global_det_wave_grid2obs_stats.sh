@@ -90,7 +90,7 @@ for valid_hour in ${valid_hours} ; do
                 echo "Warning: No GDAS Prepbufr was available for valid date ${VDATE}${valid_hour}" > mailmsg
                 echo "Missing file is $input_pb2nc_prepbufrgdas_file" >> mailmsg
                 echo "Job ID: $jobid" >> mailmsg
-                cat mailmsg | mail -s "$subject" $maillist
+                cat mailmsg | mail -s "$subject" $MAILTO
             fi
         else
             echo "#!/bin/bash" >> ${DATA}/jobs/run_PB2NC_GDAS_valid${VDATE}${valid_hour2}.sh

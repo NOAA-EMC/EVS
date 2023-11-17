@@ -29,7 +29,7 @@ if [ ! -d  $mask_day1 ] && [ ! -d  $mask_day2 ] && [ ! -d  $mask_day3 ] ; then
     echo "Warning:  No SPC outlook mask files available for ${VDATE}" > mailmsg
     echo Missing mask directories are $mask_day1 , $mask_day2 and $mask_day3   >> mailmsg
     echo "Job ID: $jobid" >> mailmsg
-    cat mailmsg | mail -s "$subject" $maillist
+    cat mailmsg | mail -s "$subject" $MAILTO
     export err=$?; err_chk
     exit
   fi
