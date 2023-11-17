@@ -135,7 +135,7 @@ for outtyp in awpozcon pm25; do
               echo "WARNING: No AQM ${outtyp}${bctag} forecast was available for ${aday} t${acyc}z" > mailmsg
               echo "Missing file is ${fcst_file}" >> mailmsg
               echo "Job ID: $jobid" >> mailmsg
-              cat mailmsg | mail -s "$subject" $maillist
+              cat mailmsg | mail -s "$subject" $MAILTO
             fi
 
             echo "WARNING: No AQM ${outtyp}${bctag} forecast was available for ${aday} t${acyc}z"

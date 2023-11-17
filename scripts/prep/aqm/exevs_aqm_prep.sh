@@ -149,7 +149,7 @@ for hour in 06 12; do
                     echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z" > mailmsg
                     echo "Missing file is ${ozmax8_file}" >> mailmsg
                     echo "Job ID: $jobid" >> mailmsg
-                    cat mailmsg | mail -s "$subject" $maillist
+                    cat mailmsg | mail -s "$subject" $MAILTO
                 fi
         
                 echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z"
@@ -173,7 +173,7 @@ for hour in 06 12; do
                     echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z" > mailmsg
                     echo "Missing file is ${ozmax8_file}" >> mailmsg
                     echo "Job ID: $jobid" >> mailmsg
-                    cat mailmsg | mail -s "$subject" $maillist
+                    cat mailmsg | mail -s "$subject" $MAILTO
                 fi
         
                 echo "WARNING: No AQM OZMAX8${bctag} forecast was available for ${VDATE} t${hour}z"
