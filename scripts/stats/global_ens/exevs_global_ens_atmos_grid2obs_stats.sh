@@ -32,6 +32,8 @@ else
   err_exit "$ens not valid"
 fi
 
+export gefs_number=30
+
 all_prepbufr_av=YES
 for vhour in $vhours; do
     if [ ! -s ${EVSIN}.${VDATE}/gefs/gfs.t${vhour}z.prepbufr.f00.nc ] ; then

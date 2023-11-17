@@ -42,7 +42,6 @@ export jobid=$job.${PBS_JOBID:-$$}
 
 export run_mpi=no
 
-export gefs_number=30
 export SENDMAIL=YES
 export MAILTO='alicia.bentley@noaa.gov,steven.simon@noaa.gov'
 

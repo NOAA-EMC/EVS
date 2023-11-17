@@ -24,6 +24,8 @@ export vday=$1
 ens=$2 
 verif_case=$3
 
+export gefs_number=30
+
 if [ $ens = gefs ] && [ $verif_case = upper ] ; then
      if [ ! -s ${EVSIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2 ] ; then
         if [ $SENDMAIL = YES ]; then

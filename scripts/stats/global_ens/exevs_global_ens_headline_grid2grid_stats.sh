@@ -24,6 +24,8 @@ export vday=$1
 ens=$2 
 verify_type=$3
 
+export gefs_number=30
+
 if [ $verify_type != upper ] ; then
     err_exit "$verify_type is not valid verification type"
 fi
