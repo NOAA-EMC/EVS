@@ -231,7 +231,7 @@ export output_base=${WORK}/pb2nc
    cat mailmsg | mail -s "$subject" $MAILTO 
    exit
 =======
-   cat mailmsg | mail -s "$subject" $maillist 
+   cat mailmsg | mail -s "$subject" $MAILTO 
    err_exit "Missing file is ${COMINobsproc}/gfs.${vday}/??/atmos/gfs.t??z.prepbufr"
 >>>>>>> develop
   fi

@@ -119,7 +119,7 @@ else
       echo "Warning:  No CCPA data available for ${VDATE}" > mailmsg
       echo -e "`cat $DATA/job${data}${domain}_missing_ccpa_list`" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
-      cat mailmsg | mail -s "$subject" $maillist
+      cat mailmsg | mail -s "$subject" $MAILTO
       export err=$?; err_chk
       exit
    fi
