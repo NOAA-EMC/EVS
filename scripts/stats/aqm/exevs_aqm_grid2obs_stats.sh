@@ -148,7 +148,7 @@ for hour in 06 12; do
                 echo "Missing file is ${fcst_file}" >> mailmsg
                 echo "Job ID: $jobid" >> mailmsg
                 cat mailmsg | mail -s "$subject" $maillist
-	      fi
+              fi
 
               echo "WARNING: No AQM pm25${bctag} forecast was available for ${aday} t${acyc}z"
               echo "WARNING: Missing file is ${fcst_file}"
@@ -171,16 +171,22 @@ for hour in 06 12; do
                         export err=$?; err_chk
                         mkdir -p ${COMOUTsmall}
                         if [ ${SENDCOM} = "YES" ]; then
-                          cpreq ${DATA}/point_stat/${MODELNAME}/* ${COMOUTsmall}
+                          cpdir=${DATA}/point_stat/${MODELNAME}
+                          stat_file_count=$(find ${cpdir} -type f | wc -l)
+                          echo "EMPTY_DIR_CHECK ${outtyp} ${biastyp} ${hour} ${vhr} = ${stat_file_count}"
+                          if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/* ${COMOUTsmall}; fi
                         fi
                         if [ ${vhr} = 23 ]; then
                           mkdir -p ${COMOUTfinal}
-                          cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
+                          stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
+                          echo "EMPTY_DIR_CHECK ${outtyp} ${biastyp} ${hour} ${vhr} = ${stat_file_count}"
+                          if [ ${stat_file_count} -ne 0 ]; then cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}; fi
                           cd ${finalstat}
                           run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstOZONE_obsAIRNOW_GatherByDay.conf ${PARMevs}/metplus_config/machine.conf
                           export err=$?; err_chk
                           if [ ${SENDCOM} = "YES" ]; then
-                            cpreq ${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_ozone.v${VDATE}.stat ${COMOUTfinal}
+                            cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_ozone.v${VDATE}.stat
+                            if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTfinal}; fi
                           fi
                         fi
                       else
@@ -194,16 +200,22 @@ for hour in 06 12; do
                   export err=$?; err_chk
                   mkdir -p ${COMOUTsmall}
                   if [ ${SENDCOM} = "YES" ]; then
-                    cpreq ${DATA}/point_stat/${MODELNAME}/* ${COMOUTsmall}
+                    cpdir=${DATA}/point_stat/${MODELNAME}
+                    stat_file_count=$(find ${cpdir} -type f | wc -l)
+                    echo "EMPTY_DIR_CHECK ${outtyp} ${biastyp} ${hour} ${vhr} = ${stat_file_count}"
+                    if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/* ${COMOUTsmall}; fi
                   fi
                   if [ ${vhr} = 23 ]; then
-                     mkdir -p ${COMOUTfinal}
-                     cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
-                     run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstPM_obsANOWPM_GatherByDay.conf ${PARMevs}/metplus_config/machine.conf
-                     export err=$?; err_chk
-                     if [ ${SENDCOM} = "YES" ]; then
-                       cpreq ${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_pm25.v${VDATE}.stat ${COMOUTfinal}
-                     fi
+                    mkdir -p ${COMOUTfinal}
+                    stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
+                    echo "EMPTY_DIR_CHECK ${outtyp} ${biastyp} ${hour} ${vhr} = ${stat_file_count}"
+                    if [ ${stat_file_count} -ne 0 ]; then cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}; fi
+                    run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstPM_obsANOWPM_GatherByDay.conf ${PARMevs}/metplus_config/machine.conf
+                    export err=$?; err_chk
+                    if [ ${SENDCOM} = "YES" ]; then
+                      cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_pm25.v${VDATE}.stat
+                      if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTfinal}; fi
+                    fi
                   fi
                 else
                   echo "WARNING: NO PM FORECAST OR OBS TO VERIFY"
@@ -282,17 +294,23 @@ if [ ${vhr} = 11 ]; then
       echo "ozmax8, obs_daily_found=",${ozmax8},${obs_daily_found}
       if [ ${ozmax8} -gt 0 -a ${obs_daily_found} -gt 0 ]; then 
         run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstOZONEMAX_obsAIRNOW.conf ${PARMevs}/metplus_config/machine.conf
-	export err=$?; err_chk
+        export err=$?; err_chk
         if [ ${SENDCOM} = "YES" ]; then
-          cpreq ${DATA}/point_stat/${MODELNAME}/* ${COMOUTsmall}
+          cpdir=${DATA}/point_stat/${MODELNAME}
+          stat_file_count=$(find ${cpdir} -type f | wc -l)
+          echo "EMPTY_DIR_CHECK ozmax8 ${biastyp} ${hour} ${vhr} = ${stat_file_count}"
+          if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/* ${COMOUTsmall}; fi
         fi
         export outtyp=OZMAX8
-        cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
+        stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
+        echo "EMPTY_DIR_CHECK ${outtyp} ${biastyp} ${hour} ${vhr} = ${stat_file_count}"
+        if [ ${stat_file_count} -ne 0 ]; then cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}; fi
         run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstOZONEMAX_obsAIRNOW_GatherByDay.conf ${PARMevs}/metplus_config/machine.conf
-	export err=$?; err_chk
-	if [ ${SENDCOM} = "YES" ]; then
-          cpreq ${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_ozmax8.v${VDATE}.stat ${COMOUTfinal}
-        fi	 
+        export err=$?; err_chk
+        if [ ${SENDCOM} = "YES" ]; then
+          cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_ozmax8.v${VDATE}.stat
+          if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTfinal}; fi
+        fi
       else
         echo "WARNING: NO OZMAX8 OBS OR MODEL DATA"
         echo "WARNING: OZMAX8, OBS_DAILY_FOUND", ${ozmax8}, ${obs_daily_found}
@@ -352,17 +370,23 @@ if [ ${vhr} = 04 ]; then
       echo "pmave1, obs_daily_found=",${pmave1},${obs_daily_found}
       if [ ${pmave1} -gt 0 -a ${obs_daily_found} -gt 0 ]; then
         run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstPMAVE_obsANOWPM.conf ${PARMevs}/metplus_config/machine.conf
-	export err=$?; err_chk
+        export err=$?; err_chk
         if [ ${SENDCOM} = "YES" ]; then
-          cpreq ${DATA}/point_stat/${MODELNAME}/* ${COMOUTsmall}
+          cpdir=${DATA}/point_stat/${MODELNAME}
+          stat_file_count=$(find ${cpdir} -type f | wc -l)
+          echo "EMPTY_DIR_CHECK pmave ${biastyp} ${hour} ${vhr} = ${stat_file_count}"
+          if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/* ${COMOUTsmall}; fi
         fi
         export outtyp=PMAVE
-        cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
+        stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
+        echo "EMPTY_DIR_CHECK ${outtyp} ${biastyp} ${hour} ${vhr} = ${stat_file_count}"
+        if [ ${stat_file_count} -ne 0 ]; then cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}; fi
         run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstPMAVE_obsANOWPM_GatherByDay.conf ${PARMevs}/metplus_config/machine.conf
-	export err=$?; err_chk
-	if [ ${SENDCOM} = "YES" ]; then
-          cpreq ${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_pmave.v${VDATE}.stat ${COMOUTfinal}
-	fi
+        export err=$?; err_chk
+        if [ ${SENDCOM} = "YES" ]; then
+          cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_pmave.v${VDATE}.stat
+          if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTfinal}; fi
+        fi
        else
          echo "WARNING: NO PMAVE OBS OR MODEL DATA"
          echo "WARNING: PMAVE1, OBS_DAILY_FOUND", ${pmave1}, ${obs_daily_found}

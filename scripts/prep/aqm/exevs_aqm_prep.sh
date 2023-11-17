@@ -63,7 +63,8 @@ while [ ${ic} -le ${endvhr} ]; do
 	    cat $DATA/logs/${model1}/metplus_hourly_ascii2nc.log*
 	    mv $DATA/logs/${model1}/metplus_hourly_ascii2nc.log* $DATA/logs
 	    if [ ${SENDCOM} = "YES" ]; then
-	        cpreq ${PREP_SAVE_DIR}/airnow_hourly_aqobs_${VDATE}${VHOUR}.nc ${COMOUTproc}
+                cpfile=${PREP_SAVE_DIR}/airnow_hourly_aqobs_${VDATE}${VHOUR}.nc 
+                if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTproc}; fi
 	    fi
         else
             echo "WARNING: can not find ${conf_dir}/Ascii2Nc_hourly_obsAIRNOW.conf"
@@ -93,7 +94,8 @@ if [ -s ${checkfile} ]; then
         cat $DATA/logs/${model1}}/metplus_daily_ascii2nc.log*
         mv $DATA/logs/${model1}/metplus_daily_ascii2nc.log* $DATA/logs
 	if [ ${SENDCOM} = "YES" ]; then
-	    cpreq ${PREP_SAVE_DIR}/airnow_daily_${VDATE}.nc ${COMOUTproc}
+            cpfile=${PREP_SAVE_DIR}/airnow_daily_${VDATE}.nc
+            if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTproc};fi
 	fi
     else
         echo "WARNING: can not find ${conf_dir}/Ascii2Nc_daily_obsAIRNOW.conf"
