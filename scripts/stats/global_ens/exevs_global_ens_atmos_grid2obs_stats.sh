@@ -43,7 +43,7 @@ for vhour in $vhours; do
         echo "Warning: No PREPBUFR data available for ${VDATE}${vhour}" > mailmsg 
         echo "Missing file is ${EVSIN}.${VDATE}/gefs/gfs.t${vhour}z.prepbufr.f00.nc"  >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+        cat mailmsg | mail -s "$subject" $MAILTO
       fi
     fi
 done

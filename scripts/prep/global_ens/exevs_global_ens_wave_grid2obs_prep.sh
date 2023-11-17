@@ -57,7 +57,7 @@ for ihour in ${inithours} ; do
           echo "Warning: No GEFS forecast was available for ${INITDATE}${ihour}f${hr}" > mailmsg
           echo "Missing file is ${COMINgefs}/${MODELNAME}.${INITDATE}/${ihour}/wave/gridded/${filename}" >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
-          cat mailmsg | mail -s "$subject" $maillist
+          cat mailmsg | mail -s "$subject" $MAILTO
 	fi
     else
         if [ ! -s ${COMOUTgefs}/${newname} ]; then
@@ -84,7 +84,7 @@ for ihour in 00 06 12 18 ; do
         echo "Warning: No GDAS Prepbufr was available for init date ${INITDATE}${ihour}" > mailmsg
         echo "Missing file is ${COMINobsproc}.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+        cat mailmsg | mail -s "$subject" $MAILTO
       fi
   else
       cpreq -v ${COMINobsproc}.${INITDATE}/${ihour}/atmos/gdas.${inithour}.prepbufr ${DATA}/gdas.${INITDATE}${ihour}.prepbufr

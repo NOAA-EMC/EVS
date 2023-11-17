@@ -19,9 +19,8 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 source $HOMEevs/versions/run.ver
 module reset
 module load prod_envir/${prod_envir_ver}
-source $HOMEevs/modulefiles/subseasonal/subseasonal_prep.sh
+source $HOMEevs/dev/modulefiles/subseasonal/subseasonal_prep.sh
 
-export evs_ver=v1.0.0
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 export envir=prod
@@ -33,7 +32,7 @@ export SITE=$(cat /etc/cluster_name)
 export KEEPDATA=YES
 export SENDMAIL=YES
 
-export maillist='alicia.bentley@noaa.gov,shannon.shields@noaa.gov'
+export MAILTO='alicia.bentley@noaa.gov,shannon.shields@noaa.gov'
 
 export USER=$USER
 export ACCOUNT=VERF-DEV

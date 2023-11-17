@@ -37,7 +37,7 @@ for MODEL in $MODELNAME; do
                         echo "Warning: No GFS forecast was available for ${INITDATE}${inithour}f${hr}" > mailmsg
                         echo "Missing file is ${input_filename}" >> mailmsg
                         echo "Job ID: $jobid" >> mailmsg
-                        cat mailmsg | mail -s "$subject" $maillist
+                        cat mailmsg | mail -s "$subject" $MAILTO
                     fi
                 else
                     if [ ! -s $output_filename ] ; then
@@ -66,7 +66,7 @@ for OBS in $OBSNAME; do
                 echo "Warning: No NDBC data was available for valid date ${VDATE}" > mailmsg
                 echo "Missing files are located at $DCOMINndbc/${INITDATEp1}/validation_data/marine/buoy" >> msg
                 echo "Job ID: $jobid" >> mailmsg
-                cat mailmsg | mail -s "$subject" $maillist
+                cat mailmsg | mail -s "$subject" $MAILTO
             fi
         else
             python $USHevs/${COMPONENT}/global_det_wave_prep_trim_ndbc_files.py

@@ -35,7 +35,7 @@ if [ $modnam = prepbufr ] ; then
      echo "Warning:  No Prepbufr data available for ${VDATE}" > mailmsg
      echo Missing file is $COMINobsproc/rap.${VDATE}/rap.t${vhr}z.prepbufr.tm00  >> mailmsg
      echo "Job ID: $jobid" >> mailmsg
-     cat mailmsg | mail -s "$subject" $maillist  
+     cat mailmsg | mail -s "$subject" $MAILTO  
      exit
     fi
   fi
