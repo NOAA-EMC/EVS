@@ -8,7 +8,7 @@ set -x
 
 cd $DATA
 
-export machine=WCOSS2
+export machine=${machine:-"WCOSS2"}
 
 export VERIF_CASE=grid2grid
 export evs_run_mode=production

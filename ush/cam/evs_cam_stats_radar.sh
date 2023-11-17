@@ -68,7 +68,7 @@ if [ ${MODELNAME} = hireswarw ]; then
    fhr_min=1
    fhr_max=48
    fhr_inc=1
-
+   
    export MODEL_INPUT_DIR=${COMINhiresw}
    export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.arw_5km.f{lead?fmt=%2H}.${DOM}.grib2
 
@@ -135,6 +135,7 @@ fi
 ####################################################################
 
 nfcst=0
+nmiss=0
 
 fhr=$fhr_min
 
@@ -149,31 +150,44 @@ while [ $fhr -le $fhr_max ]; do
 
    # Define forecast filename for each model 
    if [ ${MODELNAME} = hireswarw ]; then
+      ihr_avail="00 12"
       export fcst_file=${modsys}.${IDATE}/${modsys}.t${INIT_HR}z.arw_5km.f$(printf "%02d" $fhr).${DOM}.grib2
    elif [ ${MODELNAME} = hireswarwmem2 ]; then
+      ihr_avail="00 12"
       export fcst_file=${modsys}.${IDATE}/${modsys}.t${INIT_HR}z.arw_5km.f$(printf "%02d" $fhr).${DOM}mem2.grib2
    elif [ ${MODELNAME} = hireswfv3 ]; then
+      ihr_avail="00 12"
       export fcst_file=${modsys}.${IDATE}/${modsys}.t${INIT_HR}z.fv3_5km.f$(printf "%02d" $fhr).${DOM}.grib2
    elif [ ${MODELNAME} = href ]; then
+      ihr_avail="00 12"
       export fcst_file=${modsys}.${IDATE}/ensprod/${modsys}.t${INIT_HR}z.${DOM}.${ENSPROD}.f$(printf "%02d" $fhr).grib2
    elif [ ${MODELNAME} = hrrr ]; then
+      if [ $fhr -le 18 ]; then
+         ihr_avail="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
+      else
+         ihr_avail="00 06 12 18"
+      fi
       if [ $DOMAIN = alaska ]; then
          export fcst_file=${modsys}.${IDATE}/${DOMAIN}/${modsys}.t${INIT_HR}z.wrfprsf$(printf "%02d" $fhr).${DOM}.grib2
       elif [ $DOMAIN = conus ]; then
          export fcst_file=${modsys}.${IDATE}/${DOMAIN}/${modsys}.t${INIT_HR}z.wrfprsf$(printf "%02d" $fhr).grib2
       fi
    elif [ ${MODELNAME} = namnest ]; then
+      ihr_avail="00 06 12 18"
       export fcst_file=${modsys}.${IDATE}/${modsys}.t${INIT_HR}z.${DOMAIN}nest.hiresf$(printf "%02d" $fhr).tm00.grib2
    fi
 
-   # Check for the existence of each forecast file 
-   if [ -s ${MODEL_INPUT_DIR}/${fcst_file} ]; then
-      echo $fhr >> $DATA/job${JOBNUM}_fcst_list
-      nfcst=$((nfcst+1))
+   if echo "$INIT_HR" | grep -qw "$ihr_avail"; then
+      # Check for the existence of each forecast file 
+      if [ -s ${MODEL_INPUT_DIR}/${fcst_file} ]; then
+         echo $fhr >> $DATA/job${JOBNUM}_fcst_list
+         nfcst=$((nfcst+1))
 
-   else
-      echo "Missing file is ${MODEL_INPUT_DIR}/${fcst_file}\n" >> $DATA/job${JOBNUM}_missing_fcst_list
+      else
+         echo "Missing file is ${MODEL_INPUT_DIR}/${fcst_file}\n" >> $DATA/job${JOBNUM}_missing_fcst_list
+         nmiss=$((nmiss+1))
 
+      fi
    fi
 
    fhr=$((fhr+$fhr_inc))
@@ -182,7 +196,7 @@ done
 
 
 # Send missing data alert if any forecast files are missing
-if [ $nfcst = 0 ]; then
+if [ $nmiss -ge 1 ]; then
    if [ $SENDMAIL = YES ]; then
       export subject="${DOM} ${MODELNAME} Data Missing for EVS ${COMPONENT}"
       echo "Warning: ${DOM} ${MODELNAME} forecast files are missing for valid date ${VDATE}${vhr}. METplus will not run." > mailmsg
@@ -190,8 +204,8 @@ if [ $nfcst = 0 ]; then
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $maillist
    fi
-
 fi
+
 
 
 ############################################################

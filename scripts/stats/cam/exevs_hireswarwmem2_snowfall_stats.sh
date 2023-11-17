@@ -13,6 +13,8 @@
 set -x
 
 # Set Basic Environment Variables
+export machine=${machine:-"WCOSS2"}
+export PYTHONPATH=$USHevs/$COMPONENT:$PYTHONPATH
 last_cyc="18"
 NEST_LIST="conus" 
 export BOOL_NBRHD=False
