@@ -6,7 +6,8 @@
 ##################################################################
 #
 set -x
-
+export machine=${machine:-"WCOSS2"} 
+export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 export WORK=$DATA
 cd $WORK
 
@@ -21,4 +22,3 @@ $USHevs/mesoscale/evs_sref_precip.sh
 export err=$?; err_chk
 
 
-exit 

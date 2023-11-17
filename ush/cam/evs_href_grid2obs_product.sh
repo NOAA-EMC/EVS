@@ -1,17 +1,15 @@
 #!/bin/ksh
+#***************************************************************************************
+#  Purpose: Generate href grid2obs product joe and sub-jobs files by directly using href 
+#           operational ensemble mean and probability product files   
+#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#***************************************************************************************
 set -x 
 
-#Binbin note: If METPLUS_BASE,  PARM_BASE not set, then they will be set to $METPLUS_PATH
-#             by config_launcher.py in METplus-3.0/ush
-#             why config_launcher.py is not in METplus-3.1/ush ??? 
-
-
-############################################################
-
-
-
+#*******************************************
+# Build POE script to collect sub-jobs
+#******************************************
 >run_all_href_product_poe.sh
-
 
 obsv='prepbufr'
 
@@ -31,7 +29,9 @@ for prod in mean prob ; do
     for valid_run in run1 run2 run3 run4 ; do
 
      
-
+     #***********************
+     # Build sub-jobs
+     # **********************
      >run_href_${model}.${dom}.${valid_run}_product.sh
        echo  "export model=HREF${prod} " >>  run_href_${model}.${dom}.${valid_run}_product.sh
        echo  "export domain=$dom " >> run_href_${model}.${dom}.${valid_run}_product.sh     
@@ -122,7 +122,7 @@ for prod in mean prob ; do
 
        echo  "export model=HREF${prod} " >>  run_href_${model}.${dom}.${valid_run}_product.sh
        echo  "export domain=$dom " >> run_href_${model}.${dom}.${valid_run}_product.sh
-       echo  "xport regrid=NONE" >> run_href_${model}.${dom}.${valid_run}_product.sh
+       echo  "export regrid=NONE" >> run_href_${model}.${dom}.${valid_run}_product.sh
 
        echo  "export output_base=${WORK}/grid2obs/run_href_${model}.${dom}.${valid_run}_product" >> run_href_${model}.${dom}.${valid_run}_product.sh
        echo  "export OBTYPE='PREPBUFR'" >> run_href_${model}.${dom}.${valid_run}_product.sh
@@ -162,8 +162,7 @@ for prod in mean prob ; do
            echo  "export lead='17,18,19,20,21,22,23,24,27,30,33,36,39,42,45,48'" >> run_href_${model}.${dom}.${valid_run}_product.sh
 
         else
-           echo "wrong valid_run setting"
-           exit
+           err_exit "$valid_run is not a valid valid_run setting"
         fi
 
        echo  "export MODEL=HREF_${PROD}" >> run_href_${model}.${dom}.${valid_run}_product.sh

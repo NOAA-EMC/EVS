@@ -5,6 +5,8 @@
 # ******************************************************************************
 set -x 
 
+export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
+export met_v=${met_ver:0:4}
 cd $DATA
 
 export prune_dir=$DATA/data
@@ -94,8 +96,7 @@ elif [ $stats = fss ] ; then
   line_tp='nbrcnt'
   interp_pnts='1,9,25,49,91,121'
  else
-  echo $stats is wrong stat
-  exit
+  err_exit "$stats is wrong stat"
  fi   
 
  for score_type in $score_types ; do
@@ -262,13 +263,19 @@ for stats in  ets fbias fss  ; do
 
     if [ $score_type = lead_average ] ; then
       if [ $stats = ets ] || [ $stats = fbias ] ; then
+       if [ -s ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${thresh}.png ] ; then
          mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${thresh}.png evs.sref.${stats}.apcp_6a.${thresh}.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png
+       fi
       elif [ $stats = fss ] ; then
-         mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_width1-3-5-7-9-11_${thresh}.png evs.sref.${stats}.apcp_6a.${thresh}.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png	    
+       if [ -s ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_width1-3-5-7-9-11_${thresh}.png ] ; then
+         mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_width1-3-5-7-9-11_${thresh}.png evs.sref.${stats}.apcp_6a.${thresh}.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png
+       fi
       fi
     elif [ $score_type = threshold_average ] ; then
 	 for lead in f24 f36 f48 f60 f72 f84 ; do 
-           mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${lead}.png evs.sref.${stats}.apcp_6a.last${past_days}days.${scoretype}_valid_${valid}.${lead}.buk_conus.png
+	   if [ -s ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${lead}.png ] ; then
+             mv ${score_type}_regional_conus_valid_${valid}_6h_apcp_06_${stats}_${lead}.png evs.sref.${stats}.apcp_6a.last${past_days}days.${scoretype}_valid_${valid}.${lead}.buk_conus.png
+	   fi
 	 done
     fi	 
 

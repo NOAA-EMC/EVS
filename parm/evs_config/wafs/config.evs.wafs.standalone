@@ -28,8 +28,8 @@ if [ $OBSERVATION = "GCIP" ] ; then
 	export VAR1_THRESH_OBS=">=2,>=2,>=2,>=2"
 	export VAR1_LEVELS_FCST="P812, P696.8, P595.2, P506, P392.7"
 	# for icao2023:
-	# export VAR1_LEVELS_OBS="P812, P696.8, P595.2, P506, P392.7"
-	export VAR1_LEVELS_OBS="P800, P700, P600, P500, P400"
+	export VAR1_LEVELS_OBS="P812, P696.8, P595.2, P506, P392.7"
+	
     fi
 elif [ $OBSERVATION = "GFS" ] ; then
     export FHOURS="06 12 18 24 30 36"

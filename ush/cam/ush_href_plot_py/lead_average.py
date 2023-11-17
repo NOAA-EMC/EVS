@@ -454,22 +454,24 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         logger.warning(
             f"Could not find (and cannot plot) {metric1_name} and/or"
             + f" {metric2_name} stats for {print_varname} at any level. "
-            + f"Continuing ..."
+            + f"This often happens when processed data are all NaNs, "
+            + f" which are removed.  Check for seasonal cases where critical "
+            + f" threshold is not reached. Continuing ..."
         )
         plt.close(num)
         logger.info("========================================")
-        print("Quitting due to missing data.  Check the log file for details.")
         return None
     elif not metric2_name and pivot_metric1.empty:
         print_varname = df['FCST_VAR'].tolist()[0]
         logger.warning(
             f"Could not find (and cannot plot) {metric1_name}"
             + f" stats for {print_varname} at any level. "
-            + f"Continuing ..."
+            + f"This often happens when processed data are all NaNs, "
+            + f" which are removed.  Check for seasonal cases where critical "
+            + f" threshold is not reached. Continuing ..."
         )
         plt.close(num)
         logger.info("========================================")
-        print("Quitting due to missing data.  Check the log file for details.")
         return None
 
     models_renamed = []
@@ -1193,7 +1195,11 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         f'{str(time_period_savename).lower()}'
     )
     if not os.path.isdir(save_subdir):
-        os.makedirs(save_subdir)
+        try:
+           os.makedirs(save_subdir)
+        except FileExistsError as e:
+           logger.warning(f"Several processes are making {save_subdir} at "
+                          + f"the same time. Passing")
     save_path = os.path.join(save_subdir, save_name+'.png')
     fig.savefig(save_path, dpi=dpi)
     logger.info(u"\u2713"+f" plot saved successfully as {save_path}")

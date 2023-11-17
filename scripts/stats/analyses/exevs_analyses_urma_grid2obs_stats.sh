@@ -276,7 +276,7 @@ then
        cat $DATA/logs/${MODELNAME}${typtag}/metplus.statanalysis.log*
        mv $DATA/logs/${MODELNAME}${typtag}/metplus.statanalysis.log* $DATA/logs
        if [ $SENDCOM = "YES" ]; then
-	 cp $finalstat/evs.stats.${regionnest}${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal
+	 cpreq -v $finalstat/evs.stats.${regionnest}${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal
        fi
 else    
        echo "WARNING: NO URMA OR OBS DATA, or not gather time yet, METplus gather job will not run"

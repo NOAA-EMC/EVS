@@ -9,11 +9,6 @@ set -x
 export WORK=$DATA
 cd $WORK
 
-export MET_bin_exec='bin'
-export log_met_output_to_metplus=''
-export metplus_verbosity=2
-export met_verbosity=2
-
 export CLIMO=$FIXevs/climos/atmos
 export MASKS=$FIXevs/masks
 
@@ -22,8 +17,6 @@ export GRID2GRID_CONF=$PARMevs/metplus_config/${STEP}/${COMPONENT}/${RUN}_grid2g
 export MET_CONFIG=${METPLUS_BASE}/parm/met_config
 export maskpath=$MASKS
 
-msg="$job HAS BEGUN"
-postmsg "$jlogfile" "$msg"
 export run_mpi=${run_mpi:-'yes'}
 export gather=${gather:-'yes'}
 
@@ -31,114 +24,130 @@ export vday=$1
 ens=$2 
 verif_case=$3
 
-#############################################################
-# Step 0: Run copygb to convert URMA data to 4km WRF grid
-#############################################################
-
-if [ $ens = all ] || [ $ens = gefs ] || [ $ens = cmce ] || [ $ens = naefs ] || [ $ens = ecme ] ; then
- if [ $verif_case = all ] || [ $verif_case = upper ] || [ $verif_case = precip ] ; then 
-
-   if [ $ens = gefs ] && [ $verif_case = upper ] ; then
-
+if [ $ens = gefs ] && [ $verif_case = upper ] ; then
      if [ ! -s ${EVSIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2 ] ; then
-	if [ $SENDMAIL = YES ]; then
-          export subject="GFS analysis data missing "
+        if [ $SENDMAIL = YES ]; then
+          export subject="GFS analysis data missing"
           echo "Warning: No GFS analysis available for ${VDATE}" > mailmsg 
-          echo Missing file is ${EVSIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2  >> mailmsg
+          echo "Missing file is ${EVSIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2"  >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
           cat mailmsg | mail -s "$subject" $maillist
-	fi        
-       exit
-     fi 
+        fi
+     else
+        echo "All $ens $verif_case validation data are available, continuing ..."
+        $USHevs/global_ens/evs_global_ens_atmos_grid2grid.sh $ens ${verif_case}
+        export err=$?; err_chk
+     fi
+fi
 
-    elif [ $ens = cmce ] && [ $verif_case = upper ] ; then
-
+if [ $ens = cmce ] && [ $verif_case = upper ] ; then
      if [ ! -s ${EVSIN}.${VDATE}/cmce/cmcanl.t00z.grid3.f000.grib2 ] ; then
        if [ $SENDMAIL = YES ]; then
          export subject="CMC analysis data missing "
          echo "Warning: No CMC analysis available for ${VDATE}" > mailmsg 
-         echo Missing file is ${EVSIN}.${VDATE}/cmce/cmcanl.t00z.grid3.f000.grib2  >> mailmsg
+         echo "Missing file is ${EVSIN}.${VDATE}/cmce/cmcanl.t00z.grid3.f000.grib2"  >> mailmsg
          echo "Job ID: $jobid" >> mailmsg
          cat mailmsg | mail -s "$subject" $maillist
        fi
-       exit
-      fi
+     else
+       echo "All $ens $verif_case validation data are available, continuing ..."
+       $USHevs/global_ens/evs_global_ens_atmos_grid2grid.sh $ens ${verif_case}
+       export err=$?; err_chk
+     fi
+fi
 
-     elif [ $ens = ecme ] && [ $verif_case = upper ] ; then
-
-      if [ ! -s ${EVSIN}.${VDATE}/ecme/ecmanl.t00z.grid3.f000.grib2 ] ; then
+if [ $ens = ecme ] && [ $verif_case = upper ] ; then
+      if [ ! -s ${EVSIN}.${VDATE}/ecme/ecmanl.t00z.grid3.f000.grib1 ] ; then
         if [ $SENDMAIL = YES ]; then
           export subject="EC analysis data missing "
           echo "Warning: No EC analysis available for ${VDATE}" > mailmsg 
-          echo Missing file is ${EVSIN}.${VDATE}/ecme/ecmanl.t00z.grid3.f000.grib2  >> mailmsg
+          echo "Missing file is ${EVSIN}.${VDATE}/ecme/ecmanl.t00z.grid3.f000.grib1"  >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
           cat mailmsg | mail -s "$subject" $maillist
 	fi
-       exit
+      else
+        echo "All $ens $verif_case validation data are available, continuing ..."
+        $USHevs/global_ens/evs_global_ens_atmos_grid2grid.sh $ens ${verif_case}
+        export err=$?; err_chk
       fi
+fi
 
-     elif [ $ens = naefs ] && [ $verif_case = upper ] ; then
-
+if [ $ens = naefs ] && [ $verif_case = upper ] ; then
       if [ ! -s ${EVSIN}.${VDATE}/cmce/cmcanl.t00z.grid3.f000.grib2 ] || [ ! -s ${EVSIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2 ] ; then
         if [ $SENDMAIL = YES ]; then
-          export subject="GFS or CMC analysis data missing for NAEFS "
-          echo "Warning: No GFS or CMC analysis available for ${VDATE}" > mailmsg 
-          echo Missing file is ${EVSIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2 or ${EVSIN}.${VDATE}/cmce/cmcanl.t00z.grid3.f000.grib2  >> mailmsg
-          echo "Job ID: $jobid" >> mailmsg
-          cat mailmsg | mail -s "$subject" $maillist
+          for naefs_verif_anl in GFS CMC; do
+              if [ $naefs_verif_anl = GFS ]; then
+                  naefs_verif_anl_file=${EVSIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2
+              elif [ $naefs_verif_anl = CMC ]; then
+                  naefs_verif_anl_file=${EVSIN}.${VDATE}/cmce/cmcanl.t00z.grid3.f000.grib2
+              fi
+              if [ ! -s $naefs_verif_anl_file ]; then
+                 export subject="$naefs_verif_anl analysis data missing for NAEFS "
+                 echo "Warning: No $naefs_verif_anl analysis available for ${VDATE}" > mailmsg 
+                 echo "Missing file is $naefs_verif_anl_file"  >> mailmsg
+                 echo "Job ID: $jobid" >> mailmsg
+                 cat mailmsg | mail -s "$subject" $maillist
+              fi
+          done
 	fi
-       exit
+      else
+        echo "All $ens $verif_case validation data are available, continuing ..."
+        $USHevs/global_ens/evs_global_ens_atmos_grid2grid.sh $ens ${verif_case}
+        export err=$?; err_chk
       fi
+fi
 
-     elif [ $verif_case = precip ] ; then
-
+if [ $verif_case = precip ] ; then
       if [ ! -s ${EVSIN}.${VDATE}/gefs/ccpa.t12z.grid3.24h.f00.nc ] ; then
         if [ $SENDMAIL = YES ]; then
           export subject="24h CCAP data missing "
           echo "Warning: No 24hCCAP data available for ${VDATE}" > mailmsg 
-          echo Missing file is ${EVSIN}.${VDATE}/gefs/ccpa.t12z.grid3.24h.f00.nc  >> mailmsg
+          echo "Missing file is ${EVSIN}.${VDATE}/gefs/ccpa.t12z.grid3.24h.f00.nc"  >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
           cat mailmsg | mail -s "$subject" $maillist
 	fi
-       exit
+      else
+        echo "All $verif_case validation data are available, continuing ..."
+        $USHevs/global_ens/evs_global_ens_atmos_grid2grid.sh $ens $verif_case
+        export err=$?; err_chk
       fi
+fi 
 
-     fi 
-
-      echo "All validation data are available, continuing ..."
-
-      $USHevs/global_ens/evs_global_ens_atmos_grid2grid.sh $ens $verif_case
-
- fi
-fi
-
-if [ $verif_case = snowfall ] || [ $verif_case = sea_ice ] ; then
+if [ $verif_case = snowfall ] ; then
   day1=`$NDATE -24 ${VDATE}12`
   VDATE_1=${day1:0:8}
-
-  if [ $verif_case = snowfall ] && [ ! -s ${EVSIN}.${VDATE}/gefs/nohrsc.t00z.grid184.grb2 ] ; then
+  if [ ! -s ${EVSIN}.${VDATE}/gefs/nohrsc.t00z.grid184.grb2 ] ; then
     if [ $SENDMAIL = YES ]; then
       export subject="NOHRSC Snowfall analysis data missing "
-      echo "Warning: No NOHRSC snowfall analysis available for ${VDATE}" > mailmsg 
-      echo Missing file is ${EVSIN}.${VDATE}/gefs/nohrsc.t00z.grid184.grb2  >> mailmsg
+      echo "Warning: No NOHRSC snowfall analysis available for ${VDATE}" > mailmsg
+      echo "Missing file is ${EVSIN}.${VDATE}/gefs/nohrsc.t00z.grid184.grb2"  >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $maillist
     fi
-   exit
-   elif [ $verif_case = sea_ice ] && [ ! -s ${EVSIN}.${VDATE}/osi_saf/osi_saf.multi.${VDATE_1}00to${VDATE}00_G004.nc ] ; then
+  else
+    echo "All $verif_case validation data are available, continuing ..."  
+    $USHevs/global_ens/evs_global_ens_atmos_${verif_case}.sh $ens ${verif_case}
+    export err=$?; err_chk
+  fi
+fi
+
+
+if [ $verif_case = sea_ice ] ; then
+  day1=`$NDATE -24 ${VDATE}12`
+  VDATE_1=${day1:0:8}
+   if [ ! -s ${EVSIN}.${VDATE}/osi_saf/osi_saf.multi.${VDATE_1}00to${VDATE}00_G004.nc ] ; then
      if [ $SENDMAIL = YES ]; then
        export subject="OSI_SAF analysis data missing "
        echo "Warning: No OSI_SAF analysis available for ${VDATE}" > mailmsg 
-       echo Missing file is ${EVSIN}.${VDATE}/osi_saf/osi_saf.multi.${VDATE_1}00to${VDATE}00_G004.nc  >> mailmsg
+       echo "Missing file is ${EVSIN}.${VDATE}/osi_saf/osi_saf.multi.${VDATE_1}00to${VDATE}00_G004.nc"  >> mailmsg
        echo "Job ID: $jobid" >> mailmsg
        cat mailmsg | mail -s "$subject" $maillist
      fi
-    exit
+   else
+     echo "All $verif_case validation data are available, continuing ..."  
+     $USHevs/global_ens/evs_global_ens_atmos_${verif_case}.sh $ens ${verif_case}
+     export err=$?; err_chk
    fi
-
-    echo "All validation data are available, continuing ..."
-  
-    $USHevs/global_ens/evs_global_ens_atmos_${verif_case}.sh $ens ${verif_case}
 fi
 
 if [ $verif_case = sst ] ; then
@@ -146,20 +155,13 @@ if [ $verif_case = sst ] ; then
     if [ $SENDMAIL = YES ]; then
       export subject="GHRSST analysis data missing "
       echo "Warning: No GHRSST analysis available for ${VDATE}" > mailmsg 
-      echo Missing file is ${EVSIN}.${VDATE}/gefs/ghrsst.t00z.nc >> mailmsg
+      echo "Missing file is ${EVSIN}.${VDATE}/gefs/ghrsst.t00z.nc" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
       cat mailmsg | mail -s "$subject" $maillist
     fi
-   exit
+  else
+    echo "All sst24h validation data are available, continuing ..."
+    $USHevs/global_ens/evs_global_ens_atmos_${verif_case}.sh $ens sst24h
+    export err=$?; err_chk
   fi
-  echo "All validation data are available, continuing ..."
-  
-  $USHevs/global_ens/evs_global_ens_atmos_${verif_case}.sh $ens sst24h
 fi
-
-
-msg="JOB $job HAS COMPLETED NORMALLY"
-postmsg "$jlogfile" "$msg"
-
-
-

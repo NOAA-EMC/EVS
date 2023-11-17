@@ -13,13 +13,13 @@ missing=0
 for vhr in 00 06 12 18 ; do
   if [ ! -s $COMINobsproc/gfs.${vday}/${vhr}/atmos/gfs.t${vhr}z.prepbufr ] ; then
     missing=$((missing + 1 ))
+    echo $COMINobsproc/gfs.${vday}/${vhr}/atmos/gfs.t${vhr}z.prepbufr is missing
   fi
 done
 
 echo "Missing prepbufr files = " $missing
 if [ $missing -eq 4  ] ; then
-  echo "all of the preppbufr files are missing, exit execution!!!"
-  exit
+  err_exit "all of the preppbufr files are missing, exit execution!!!"
 else
   echo "Continue check CCAP files...." 
 fi
@@ -49,13 +49,13 @@ for vhr in 00 03 06 09 12 15 18 21 ; do
 
   if [ ! -s $ccpa ] ; then
       missing=$((missing + 1 ))
+      echo $ccpa is missing
   fi
 done
 
 echo "Missing ccpa  files = " $missing
 if [ $missing -eq 8  ] ; then
-  echo "all of the ccpa files are missing, exit execution!!!"
-  exit
+  err_exit "all of the ccpa files are missing, exit execution!!!"
 else
   echo "Continue check SREF files...."
 fi
@@ -85,13 +85,14 @@ for vhr in  00 06 12 18 ; do #SREF grid2obs validation is by gfs prepbufr
         echo $sref
 	if [ -s $sref ] ; then
            sref_mbrs=$((sref_mbrs+1))
+        else
+	   echo $sref is missing
         fi	    
       done
     done
 
     if [ $sref_mbrs -lt 26 ] ; then
-      echo "SREF members = " $sref_mbrs " which < 26, exit METplus execution !!!"
-      exit
+      err_exit "SREF members = " $sref_mbrs " which < 26, exit METplus execution !!!"
     fi
 
     fhr=$((fhr+6))

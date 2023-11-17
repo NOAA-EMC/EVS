@@ -1,5 +1,3 @@
-#!/bin/bash
-
 #PBS -N jevs_mesoscale_sref_precip_spatial_plots
 #PBS -j oe
 #PBS -S /bin/bash
@@ -9,14 +7,13 @@
 #PBS -l place=vscatter,select=1:ncpus=2:mem=100GB
 #PBS -l debug=true
 
+set -x
 
 export OMP_NUM_THREADS=1
 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
 source $HOMEevs/versions/run.ver
-
-export met_v=${met_ver:0:4}
 
 export envir=prod
 

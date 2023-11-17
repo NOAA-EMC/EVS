@@ -8,12 +8,13 @@
 ###############################################################################
 
 set -x
-
-export VERIF_CASE_STEP_abbrev="precips"
+  export machine=${machine:-"WCOSS2"} 
+  export VERIF_CASE_STEP_abbrev="precips"
+  export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
 
 # Set run mode
-    export evs_run_mode=$evs_run_mode
-    source $config
+  export evs_run_mode=$evs_run_mode
+  source $config
 
 # Make directory
 mkdir -p $DATA/logs
@@ -82,7 +83,7 @@ for group in $JOB_GROUP_list; do
     if [ $JOB_GROUP = gather_stats ]; then
         # Copy output files into the correct EVS COMOUT directory
         if [ $SENDCOM = YES ]; then
-            cp -v $DATA/${MODELNAME}.${VDATE}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal/.
+            cpreq -v $DATA/${MODELNAME}.${VDATE}/evs.${STEP}.${MODELNAME}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal/.
         fi
     fi
 done
@@ -93,4 +94,3 @@ echo "Begin to print METplus Log files "
 echo "End to print METplus Log files "
 
 
-exit

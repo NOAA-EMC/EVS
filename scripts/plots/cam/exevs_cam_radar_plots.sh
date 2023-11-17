@@ -24,6 +24,7 @@ set -x
 # plots to be created.
 ############################################################
 
+export machine=${machine:-"WCOSS2"}
 export MODELS="hrrr, namnest, hireswarw, hireswarwmem2, hireswfv3, href_pmmn"
 export VERIF_TYPE="mrms"
 export DATE_TYPE="INIT"

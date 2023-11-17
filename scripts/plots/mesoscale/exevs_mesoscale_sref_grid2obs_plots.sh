@@ -5,6 +5,8 @@
 # ******************************************************************************
 set -x 
 
+export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
+export met_v=${met_ver:0:4}
 cd $DATA
 
 export prune_dir=$DATA/data
@@ -93,8 +95,7 @@ for fcst_valid_hour in $fcst_valid_hours ; do
    VARs='CAPEsfc DPT2m TCDC'
    score_types='lead_average threshold_average'
   else
-   echo $stats is wrong stat
-   exit
+   err_exit "$stats is wrong stat"
   fi   
 
   for score_type in $score_types ; do
@@ -267,7 +268,7 @@ for var in hgt tmp ugrd vgrd prmsl rh dpt tcdc cape ; do
 	unit=m
 	var_level=${var}_${level}m
     elif [ $level = L0 ] ; then
-	unit=''
+	unit='non'
 	var_level=${var}_l0
     fi
 
@@ -288,11 +289,14 @@ for var in hgt tmp ugrd vgrd prmsl rh dpt tcdc cape ; do
 	 fi
 
       
-         if [ $unit = mb ] || [ $unit = m ] ; then	    
-            mv ${score_type}_regional_conus_valid_${valid}_${level}${unit}_${var}_${stat}${end}  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png
+         if [ $unit = mb ] || [ $unit = m ] ; then
+	   if [ -s ${score_type}_regional_conus_valid_${valid}_${level}${unit}_${var}_${stat}${end} ] ; then 
+             mv ${score_type}_regional_conus_valid_${valid}_${level}${unit}_${var}_${stat}${end}  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png
+	   fi
          else
-           mv ${score_type}_regional_conus_valid_${valid}_${var}_${stat}${end}  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png
- 
+           if [ -s ${score_type}_regional_conus_valid_${valid}_${var}_${stat}${end} ] ; then
+             mv ${score_type}_regional_conus_valid_${valid}_${var}_${stat}${end}  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png
+	   fi 
          fi
                
       else
@@ -302,10 +306,13 @@ for var in hgt tmp ugrd vgrd prmsl rh dpt tcdc cape ; do
 	   end='f6_to_f87.png'
 
            if [ $unit = m ] ; then
-	    	   
-	     mv ${score_type}_regional_conus_valid_${valid}_${level}${unit}_${var}_${stat}_${end}  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png
+	    if [ -s ${score_type}_regional_conus_valid_${valid}_${level}${unit}_${var}_${stat}_${end} ] ; then	   
+	      mv ${score_type}_regional_conus_valid_${valid}_${level}${unit}_${var}_${stat}_${end}  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png
+	    fi
 	   else
-             mv ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${end}  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png
+	    if [ -s ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${end} ]; then
+              mv ${score_type}_regional_conus_valid_${valid}_${var}_${stat}_${end}  evs.sref.${stat}.${var_level}.last${past_days}days.${scoretype}_valid_${valid}.buk_conus.png
+	    fi
            fi
          fi
       fi	 
