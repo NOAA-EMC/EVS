@@ -30,8 +30,7 @@ export MODELNAME=narre
 
 module reset
 module load prod_envir/${prod_envir_ver}
-source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
-export evs_ver=v1.0.0
+source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 
@@ -43,14 +42,14 @@ export vhr=${vhr:-00}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 
-export maillist='alicia.bentley@noaa.gov,binbin.zhou@noaa.gov'
+export MAILTO='alicia.bentley@noaa.gov,binbin.zhou@noaa.gov'
 
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-if [ -z "$maillist" ]; then
+if [ -z "$MAILTO" ]; then
 
-   echo "maillist variable is not defined. Exiting without continuing."
+   echo "MAILTO variable is not defined. Exiting without continuing."
 
 else
 

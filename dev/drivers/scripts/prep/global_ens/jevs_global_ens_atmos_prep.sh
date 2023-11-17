@@ -23,9 +23,8 @@ export MODELNAME=gefs
 module reset
 module load prod_envir/${prod_envir_ver}
 
-source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
+source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
-export evs_ver=v1.0.0
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 export KEEPDATA=YES
@@ -41,10 +40,10 @@ export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
 export SENDMAIL=YES
-export maillist='alicia.bentley@noaa.gov,steven.simon@noaa.gov' 
+export MAILTO='alicia.bentley@noaa.gov,steven.simon@noaa.gov' 
 
-if [ -z "$maillist" ]; then
-   echo "maillist variable is not defined. Exiting without continuing."
+if [ -z "$MAILTO" ]; then
+   echo "MAILTO variable is not defined. Exiting without continuing."
 else
    ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PREP
 fi

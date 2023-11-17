@@ -24,9 +24,8 @@ export MODELNAME=naefs
 source $HOMEevs/versions/run.ver
 module reset
 module load prod_envir/${prod_envir_ver}
-source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
+source $HOMEevs/dev/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
-export evs_ver=v1.0.0
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 export KEEPDATA=YES
@@ -43,13 +42,11 @@ export run_mpi=yes
 export get_gefs_bc_apcp24h=yes
 export get_model_bc=yes
 
-export gefs_mbrs=30
-
 export SENDMAIL=YES
-export maillist='alicia.bentley@noaa.gov,steven.simon@noaa.gov'
+export MAILTO='alicia.bentley@noaa.gov,steven.simon@noaa.gov'
 
-if [ -z "$maillist" ]; then
-   echo "maillist variable is not defined. Exiting without continuing."
+if [ -z "$MAILTO" ]; then
+   echo "MAILTO variable is not defined. Exiting without continuing."
 else
   ${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PREP
 fi

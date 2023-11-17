@@ -81,17 +81,6 @@ if [[ $log_file_count -ne 0 ]]; then
     done
 fi
 
-# Cat the plotting log files
-log_dir=$DATA/grid2grid_plots/plot_output/atmos.${VDATE}/logs
-log_file_count=$(find $log_dir -type f |wc -l)
-if [[ $log_file_count -ne 0 ]]; then
-    for log_file in $log_dir/*; do
-        echo "Start: $log_file"
-        cat $log_file
-        echo "End: $log_file"
-    done
-fi
-
 cd $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/precip/SL1L2_FBAR_24hrAccumMaps_CONUS_precip_spatial_map/images
 if ls *.gif 1> /dev/null 2>&1; then
    tar -cvf evs.plots.${COMPONENT}.${RUN}.${MODELNAME}.precip_spatial.v${VDATE}.tar *.gif

@@ -26,12 +26,11 @@ export vhr=00
 source $HOMEevs/versions/run.ver
 module reset
 module load prod_envir/${prod_envir_ver}
-source $HOMEevs/modulefiles/global_det/global_det_prep.sh
+source $HOMEevs/dev/modulefiles/global_det/global_det_prep.sh
 
-export evs_ver=v1.0.0
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
-export maillist='alicia.bentley@noaa.gov,mallory.row@noaa.gov'
+export MAILTO='alicia.bentley@noaa.gov,mallory.row@noaa.gov'
 
 export envir=prod
 export NET=evs

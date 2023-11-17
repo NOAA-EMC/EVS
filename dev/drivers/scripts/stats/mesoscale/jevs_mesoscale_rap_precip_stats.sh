@@ -39,16 +39,15 @@ export USE_CFP=YES
 export nproc=128  
 export evs_run_mode="production"
 
-export maillist="roshan.shrestha@noaa.gov,alicia.bentley@noaa.gov"
-# export maillist="firstname.lastname@noaa.gov"
+export MAILTO="roshan.shrestha@noaa.gov,alicia.bentley@noaa.gov"
+# export MAILTO="firstname.lastname@noaa.gov"
 
 export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
 source $HOMEevs/versions/run.ver
 module reset
 module load prod_envir/${prod_envir_ver}
-source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
-export evs_ver=v1.0.0
+source $HOMEevs/dev/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/$NET/$evs_ver_2d

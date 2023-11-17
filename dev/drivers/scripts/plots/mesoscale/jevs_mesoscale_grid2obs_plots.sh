@@ -45,9 +45,8 @@ export config=$HOMEevs/parm/evs_config/mesoscale/config.evs.prod.${STEP}.${COMPO
 source $HOMEevs/versions/run.ver
 
 module reset
-source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
+source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
-export evs_ver=v1.0.0
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 # Developer Settings

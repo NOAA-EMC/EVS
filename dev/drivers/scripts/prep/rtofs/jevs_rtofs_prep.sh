@@ -27,9 +27,8 @@ export NET=evs
 export STEP=prep
 export COMPONENT=rtofs
 
-source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
+source $HOMEevs/dev/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
-export evs_ver=v1.0.0
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 # set up COMIN and COMOUT
@@ -40,7 +39,7 @@ export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export maillist=${maillist:-'alicia.bentley@noaa.gov,samira.ardani@noaa.gov'}
+export MAILTO=${MAILTO:-'alicia.bentley@noaa.gov,samira.ardani@noaa.gov'}
 
 # call j-job
 $HOMEevs/jobs/JEVS_RTOFS_PREP
