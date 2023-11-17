@@ -38,7 +38,7 @@ else
       echo "Warning: The ${REP_DATE} SPC LSR file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
       echo "Missing file is $EVSINspclsr/${obs_lsr_file}" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
-      cat mailmsg | mail -s "$subject" $maillist
+      cat mailmsg | mail -s "$subject" $MAILTO
    fi
 
 fi
@@ -52,7 +52,7 @@ else
       echo "Warning: The ${REP_DATE} SPC PPF file is missing for valid date ${VDATE}. METplus will not run." > mailmsg
       echo "Missing file is $EVSINspclsr/${obs_ppf_file}" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
-      cat mailmsg | mail -s "$subject" $maillist
+      cat mailmsg | mail -s "$subject" $MAILTO
    fi
 
 fi
@@ -149,7 +149,7 @@ if [ -s $DATA/missing_fcst_list ]; then
       echo "Warning: ${MODELNAME} SSPF forecast file(s) is missing for valid date ${VDATE}12. METplus will not run." > mailmsg
       echo -e "`cat $DATA/missing_fcst_list`" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
-      cat mailmsg | mail -s "$subject" $maillist
+      cat mailmsg | mail -s "$subject" $MAILTO
    fi
 
 fi

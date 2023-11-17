@@ -119,7 +119,7 @@ else
       echo "Warning:  No CCPA data available for ${VDATE}" > mailmsg
       echo -e "`cat $DATA/job${data}${domain}_missing_ccpa_list`" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
-      cat mailmsg | mail -s "$subject" $maillist
+      cat mailmsg | mail -s "$subject" $MAILTO
       export err=$?; err_chk
       exit
    fi
@@ -170,7 +170,7 @@ if [ $data = ccpa24h ] ; then
             echo "Warning: At least one of ccpa06h files is missing  for ${VDATE}" > mailmsg
             echo -e "`cat $DATA/job${data}${domain}_missing_24hrccpa_list`" >> mailmsg
             echo "Job ID: $jobid" >> mailmsg
-            cat mailmsg | mail -s "$subject" $maillist
+            cat mailmsg | mail -s "$subject" $MAILTO
             export err=$?; err_chk
             exit
          fi
@@ -302,7 +302,7 @@ if [ $data = prepbufr ] ; then
          echo "Warning:  No RAP Prepbufr data available for ${VDATE}" > mailmsg
          echo Missing file is $COMINobsproc/rap.${VDATE}/rap.t12z.prepbufr.tm00  >> mailmsg
          echo "Job ID: $jobid" >> mailmsg
-         cat mailmsg | mail -s "$subject" $maillist
+         cat mailmsg | mail -s "$subject" $MAILTO
          export err=$?; err_chk
          exit 
       fi
@@ -343,7 +343,7 @@ if [ $data = gfs_prepbufr ] ; then
          echo "Warning:  No GFS Prepbufr data available for ${VDATE}" > mailmsg
          echo Missing file is $COMINobsproc/gdas.${vday}/18/atmos/gdas.t18z.prepbufr  >> mailmsg
          echo "Job ID: $jobid" >> mailmsg
-         cat mailmsg | mail -s "$subject" $maillist
+         cat mailmsg | mail -s "$subject" $MAILTO
          export err=$?; err_chk
          exit
       fi
@@ -405,7 +405,7 @@ if [ $data = mrms ] ; then
          echo "Warning:  No MRMS data available for ${VDATE}" > mailmsg
          echo Missing file is $DCOMINmrms/MultiSensor_QPE_*.grib2.gz  >> mailmsg
          echo "Job ID: $jobid" >> mailmsg
-         cat mailmsg | mail -s "$subject" $maillist
+         cat mailmsg | mail -s "$subject" $MAILTO
          export err=$?; err_chk
          exit
       fi

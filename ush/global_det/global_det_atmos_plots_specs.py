@@ -112,6 +112,9 @@ class PlotSpecs:
                 self.fig_subplot_right = 0.9
             if self.plot_type == 'long_term_lead_by_date':
                 self.fig_subplot_left = 0.1
+            if self.plot_type == 'lead_by_date':
+                self.ytick_major_pad = 5
+                self.fig_subplot_left = 0.1575
         elif self.plot_type == 'stat_by_level':
             self.fig_size = (16., 16.)
             self.fig_subplot_top = 0.925

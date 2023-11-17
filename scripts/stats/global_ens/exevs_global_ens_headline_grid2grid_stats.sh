@@ -27,6 +27,8 @@ export vday=$1
 ens=$2 
 verify_type=$3
 
+export gefs_number=30
+
 if [ $verify_type != upper ] ; then
     err_exit "$verify_type is not valid verification type"
 fi
@@ -39,7 +41,7 @@ if  [ $ens = gefs ] || [ $ens = naefs ] || [ $ens = gfs ] ; then
         echo "Warning: No GFS analysis available for ${VDATE}" > mailmsg 
         echo "Missing file is ${EVSIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2"  >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+        cat mailmsg | mail -s "$subject" $MAILTO
       fi
     else
       echo "All $verif_case data are available, continuing"
@@ -53,7 +55,7 @@ if  [ $ens = gefs ] || [ $ens = naefs ] || [ $ens = gfs ] ; then
           echo "Warning: No GFS or CMC analysis available for ${VDATE}" > mailmsg
           echo "Missing file is ${EVSIN}.${VDATE}/gefs/gfsanl.t00z.grid3.f000.grib2 or ${EVSIN}.${VDATE}/cmce/cmcanl.t00z.grid3.f000.grib2"  >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
-          cat mailmsg | mail -s "$subject" $maillist
+          cat mailmsg | mail -s "$subject" $MAILTO
         fi
        else
         echo "All $verif_case data are available, continuing"
