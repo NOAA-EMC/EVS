@@ -396,7 +396,7 @@ class LeadByDate:
                 plt.setp(ax.get_xticklabels(), visible=False)
             ax.set_ylim([plot_dates[0], plot_dates[-1]])
             ax.set_yticks(plot_dates[::ytick_intvl])
-            ax.yaxis.set_major_formatter(md.DateFormatter('%d%b%Y %HZ'))
+            ax.yaxis.set_major_formatter(md.DateFormatter('%HZ %d%b%Y'))
             hr_minor_tick_type = self.date_info_dict['date_type'].lower()
             ax.yaxis.set_minor_locator(
                 md.HourLocator(byhour=range(
