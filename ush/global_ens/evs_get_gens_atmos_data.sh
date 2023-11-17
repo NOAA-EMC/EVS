@@ -665,18 +665,12 @@ if [ $modnam = osi_saf ] ; then
           echo "Warning:  No OSI_SAF SH data  available for ${INITDATE}" > mailmsg
           echo "Missing file is $osi_sh"  >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
-<<<<<<< HEAD
-          cat mailmsg | mail -s "$subject" $MAILTO
-	fi
-    fi 
-=======
           cat mailmsg | mail -s "$subject" $MAILTO
          else
              python ${USHevs}/global_ens/global_ens_sea_ice_prep.py
              [[ $SENDCOM="YES" ]] &&  cpreq -v $WORK/atmos.${INITDATE}/osi_saf/*.nc $COMOUTosi_saf/.
          fi
    fi
->>>>>>> develop
 fi
 
 ###########################################
