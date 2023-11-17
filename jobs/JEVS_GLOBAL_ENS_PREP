@@ -82,7 +82,6 @@ export FIXevs=${FIXevs:-$HOMEevs/fix}
 ####################################
 export outid="LL$job"
 export jobid="${outid}.o${pid}"
-export pgmout="OUTPUT.${pid}"
 
 $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${MODELNAME}_${RUN}_${STEP}.sh
 

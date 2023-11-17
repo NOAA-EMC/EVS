@@ -38,7 +38,6 @@ cd $DATA
 ####################################
 # Determine Job Output Name on System
 ####################################
-export pgmout="OUTPUT.${pid}"
 
 
 ####################################
@@ -145,8 +144,6 @@ fi
 
 export err=$?; err_chk
 
-if [ -e "$pgmout" ]; then
-   cat $pgmout
 fi
 
 if [ "$KEEPDATA" != "YES" ]; then

@@ -17,7 +17,6 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 source $HOMEevs/versions/run.ver
 
-export evs_ver=v1.0.0
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 ###%include <head.h>
@@ -44,7 +43,7 @@ export VERIF_CASE=grid2obs
 export KEEPDATA=YES
 export SENDMAIL=YES
 
-source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
+source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
@@ -60,7 +59,7 @@ export MODELNAME=urma
 export modsys=urma
 export mod_ver=${urma_ver}
 
-export maillist="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
+export MAILTO="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
 
 export config=$HOMEevs/parm/evs_config/analyses/config.evs.urma.prod
 source $config

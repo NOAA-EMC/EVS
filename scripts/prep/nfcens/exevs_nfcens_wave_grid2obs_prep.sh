@@ -52,7 +52,7 @@ for HH in ${HHs} ; do
         echo "WARNING: No NFCENS forecast was available for ${INITDATE}${HH}" > mailmsg
         echo "WARNING: Missing file is $COMINfilename" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+        cat mailmsg | mail -s "$subject" $MAILTO
     else
         cp -v $COMINfilename $DATAfilename
     fi
@@ -94,7 +94,7 @@ for HH in 00 06 12 18 ; do
       echo "WARNING: No GDAS Prepbufr was available for init date ${INITDATE}${HH}" > mailmsg
       echo "WARNING: Missing file is ${COMINobsproc}.${INITDATE}/${HH}/atmos/gdas.${inithour}.prepbufr" >> mailmsg
       echo "Job ID: $jobid" >> mailmsg
-      cat mailmsg | mail -s "$subject" $maillist
+      cat mailmsg | mail -s "$subject" $MAILTO
   else
       cp -v ${COMINobsproc}.${INITDATE}/${HH}/atmos/gdas.${inithour}.prepbufr ${DATA}/gdas.${INITDATE}${HH}.prepbufr
   fi
