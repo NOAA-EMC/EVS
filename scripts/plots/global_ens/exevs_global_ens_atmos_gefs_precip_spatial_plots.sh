@@ -1,11 +1,19 @@
 #!/bin/bash
-
+#*******************************************************************************
+# Purpose: setup environment, paths, and run the global_ens precip spatial map
+#          plotting python script
+#
+# Last updated: 11/17/2023, Binbin Zhou Lynker@EMC/NCEP 
+#******************************************************************************
 set -x 
 
 cd $DATA
 
 export machine=WCOSS2
 
+#***************************************
+#Set required parameters
+#***************************************
 export VERIF_CASE=grid2grid
 export evs_run_mode=production
 export plot_verbosity=INFO
@@ -45,6 +53,9 @@ export job_name=SL1L2/FBAR/24hrAccumMaps/CONUS/precip_spatial_map
 
 mkdir -p $DATA/grid2grid_plots/plot_output/atmos.${VDATE}/logs
 
+#**********************************************
+# Link 24hr APCP ensemble mean netCDF files
+# *********************************************
 for model in $model_list ; do
  MODEL=`echo $model | tr '[a-z]' '[A-Z]'`	
  source=$EVSINapcp24mean/${model}
@@ -67,6 +78,9 @@ for model in $model_list ; do
  done
 done
 
+#*************************************
+# Run plotting script
+#*************************************
 python $USHevs/global_ens/ush_gens_plot_py/global_ens_atmos_plots.py
 export err=$?; err_chk
 

@@ -1,4 +1,13 @@
 #!/bin/ksh
+#*************************************************************************************************
+# Purpose:  Run NAEFS  prep job
+#             1. Retrieve bias-corrected GEFS and CMCE member files 
+#                to form smaller grib2 files
+#             2. Stored the smaller grib files in prep/global_ens/atmos.YYYYMMDD/gefs_bc, 
+#                and prep/global_ens/atmos.YYYYMMDD/cmce_bc
+#
+# Last updated 11/15/2023: by  Binbin Zhou, Lynker@EMC/NCEP
+#************************************************************************************************
 set -x
 
 export WORK=$DATA

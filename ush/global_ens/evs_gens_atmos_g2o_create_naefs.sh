@@ -1,8 +1,15 @@
 #!/bin/ksh
-
-#Note: For grid2obs verification, adjustment of CMCE is not required like it is in grid2grid.
-#      So for grid2obs, just re-name (softlink)  gefs members and cmce members to be naefs members 
-
+#************************************************************************************************************
+# Purpose: Dynamically create NAEFS member files based on prep bias-corrected GEFS and CMCE members 
+#          for NAEFS grid2obs verification. The created NAEFS member files are stored in the working
+#          directory $WORK($DATA)/naefs_g2o  
+#            
+#    Note: For grid2obs verification, adjustment of CMCE is not required like it is in grid2grid.
+#          So for grid2obs, just re-name (softlink) gefs members and cmce members to be naefs members 
+#
+# Last update: 11/16/2023, by Binbin Zhou Lynker@EMC/NCEP
+#
+#************************************************************************************************************
 set -x
 
 fhrs="00 12 24 36 48 60 72 84 96 108 120 132 144 156 168 180 192 204 216 228 240 252 264 276 288 300 312 324 336 348 360 372 384" 
