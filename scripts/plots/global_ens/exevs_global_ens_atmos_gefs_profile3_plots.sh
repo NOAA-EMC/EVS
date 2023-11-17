@@ -42,7 +42,7 @@ export init_beg=$first_day
 export valid_beg=$first_day
 
 #*************************************************************
-# Virtual link the href's stat data files of past 31/90 days
+# Virtual link required data files of past 31/90 days
 #*************************************************************
 n=0
 while [ $n -le $past_days ] ; do
