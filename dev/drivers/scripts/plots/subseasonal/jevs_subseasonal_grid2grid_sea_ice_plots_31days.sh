@@ -22,9 +22,8 @@ export jobid=$job.${PBS_JOBID:-$$}
 source $HOMEevs/versions/run.ver
 module reset
 module load prod_envir/${prod_envir_ver}
-source $HOMEevs/modulefiles/subseasonal/subseasonal_plots.sh
+source $HOMEevs/dev/modulefiles/subseasonal/subseasonal_plots.sh
 
-export evs_ver=v1.0.0
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 

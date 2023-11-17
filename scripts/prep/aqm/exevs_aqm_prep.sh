@@ -75,7 +75,7 @@ while [ ${ic} -le ${endvhr} ]; do
             echo "WARNING: No AIRNOW ASCII data was available for valid date ${VDATE}${vldhr}" > mailmsg
             echo "Missing file is ${checkfile}" >> mailmsg
             echo "Job ID: $jobid" >> mailmsg
-            cat mailmsg | mail -s "$subject" $maillist 
+            cat mailmsg | mail -s "$subject" $MAILTO 
         fi
 
         echo "WARNING: No AIRNOW ASCII data was available for valid date ${VDATE}${vldhr}"
@@ -106,7 +106,7 @@ else
         echo "WARNING: No AIRNOW ASCII data was available for valid date ${VDATE}" > mailmsg
         echo "Missing file is ${checkfile}" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist 
+        cat mailmsg | mail -s "$subject" $MAILTO 
     fi
 
     echo "WARNING: No AIRNOW ASCII data was available for valid date ${VDATE}"

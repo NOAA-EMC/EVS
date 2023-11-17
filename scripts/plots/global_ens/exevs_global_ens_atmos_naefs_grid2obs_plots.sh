@@ -201,14 +201,6 @@ if [ -s $log_file ]; then
     echo "End: $log_file"
 fi
 
-# Cat the plotting log file
-log_file=$DATA/logs/GENS_verif_plotting_job.out
-if [ -s $log_file ]; then
-    echo "Start: $log_file"
-    cat $log_file
-    echo "End: $log_file"
-fi
-
 cd $plot_dir
 
 for stats in  acc crps rmse_spread me_mae ; do

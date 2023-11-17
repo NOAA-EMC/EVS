@@ -85,7 +85,7 @@ while [ ${hourix} -lt 31 ]; do
         echo "Warning:  No ECME data for ${ymdh}" > mailmsg
         echo "Missing file is $DCD"  >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+        cat mailmsg | mail -s "$subject" $MAILTO
       fi
     fi 
   fi 
@@ -97,7 +97,7 @@ while [ ${hourix} -lt 31 ]; do
         echo "Warning:  No ECME data for ${ymdh}" > mailmsg
         echo "Missing files are in $E1E"  >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+        cat mailmsg | mail -s "$subject" $MAILTO
       fi
   else 
     >E1E.${hourinc}
