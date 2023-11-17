@@ -30,6 +30,7 @@ if [ ! -d  $mask_day1 ] && [ ! -d  $mask_day2 ] && [ ! -d  $mask_day3 ] ; then
     echo Missing mask directories are $mask_day1 , $mask_day2 and $mask_day3   >> mailmsg
     echo "Job ID: $jobid" >> mailmsg
     cat mailmsg | mail -s "$subject" $maillist
+    export err=$?; err_chk
     exit
   fi
 fi
@@ -139,5 +140,6 @@ done #end of prod loop
 
 chmod 775 run_all_href_spcoutlook_poe.sh
 
+export err=$?; err_chk
 exit
 

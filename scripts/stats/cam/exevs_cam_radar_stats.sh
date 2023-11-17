@@ -25,6 +25,7 @@ set -x
 # Only for CONUS verification
 ############################################################
 
+export machine=${machine:-"WCOSS2"}
 export VERIF_GRID=G227
 export ADD_CONUS_REGIONS=True
 export ADD_CONUS_SUBREGIONS=False
