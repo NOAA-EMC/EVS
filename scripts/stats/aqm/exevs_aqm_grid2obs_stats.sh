@@ -173,13 +173,11 @@ for hour in 06 12; do
                         if [ ${SENDCOM} = "YES" ]; then
                           cpdir=${DATA}/point_stat/${MODELNAME}
                           stat_file_count=$(find ${cpdir} -type f | wc -l)
-                          echo "EMPTY_DIR_CHECK ${outtyp} ${biastyp} ${hour} ${vhr} = ${stat_file_count}"
                           if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/* ${COMOUTsmall}; fi
                         fi
                         if [ ${vhr} = 23 ]; then
                           mkdir -p ${COMOUTfinal}
                           stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
-                          echo "EMPTY_DIR_CHECK ${outtyp} ${biastyp} ${hour} ${vhr} = ${stat_file_count}"
                           if [ ${stat_file_count} -ne 0 ]; then cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}; fi
                           cd ${finalstat}
                           run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstOZONE_obsAIRNOW_GatherByDay.conf ${PARMevs}/metplus_config/machine.conf
@@ -202,13 +200,11 @@ for hour in 06 12; do
                   if [ ${SENDCOM} = "YES" ]; then
                     cpdir=${DATA}/point_stat/${MODELNAME}
                     stat_file_count=$(find ${cpdir} -type f | wc -l)
-                    echo "EMPTY_DIR_CHECK ${outtyp} ${biastyp} ${hour} ${vhr} = ${stat_file_count}"
                     if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/* ${COMOUTsmall}; fi
                   fi
                   if [ ${vhr} = 23 ]; then
                     mkdir -p ${COMOUTfinal}
                     stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
-                    echo "EMPTY_DIR_CHECK ${outtyp} ${biastyp} ${hour} ${vhr} = ${stat_file_count}"
                     if [ ${stat_file_count} -ne 0 ]; then cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}; fi
                     run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstPM_obsANOWPM_GatherByDay.conf ${PARMevs}/metplus_config/machine.conf
                     export err=$?; err_chk
@@ -298,12 +294,10 @@ if [ ${vhr} = 11 ]; then
         if [ ${SENDCOM} = "YES" ]; then
           cpdir=${DATA}/point_stat/${MODELNAME}
           stat_file_count=$(find ${cpdir} -type f | wc -l)
-          echo "EMPTY_DIR_CHECK ozmax8 ${biastyp} ${hour} ${vhr} = ${stat_file_count}"
           if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/* ${COMOUTsmall}; fi
         fi
         export outtyp=OZMAX8
         stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
-        echo "EMPTY_DIR_CHECK ${outtyp} ${biastyp} ${hour} ${vhr} = ${stat_file_count}"
         if [ ${stat_file_count} -ne 0 ]; then cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}; fi
         run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstOZONEMAX_obsAIRNOW_GatherByDay.conf ${PARMevs}/metplus_config/machine.conf
         export err=$?; err_chk
@@ -374,12 +368,10 @@ if [ ${vhr} = 04 ]; then
         if [ ${SENDCOM} = "YES" ]; then
           cpdir=${DATA}/point_stat/${MODELNAME}
           stat_file_count=$(find ${cpdir} -type f | wc -l)
-          echo "EMPTY_DIR_CHECK pmave ${biastyp} ${hour} ${vhr} = ${stat_file_count}"
           if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/* ${COMOUTsmall}; fi
         fi
         export outtyp=PMAVE
         stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
-        echo "EMPTY_DIR_CHECK ${outtyp} ${biastyp} ${hour} ${vhr} = ${stat_file_count}"
         if [ ${stat_file_count} -ne 0 ]; then cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}; fi
         run_metplus.py ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstPMAVE_obsANOWPM_GatherByDay.conf ${PARMevs}/metplus_config/machine.conf
         export err=$?; err_chk
