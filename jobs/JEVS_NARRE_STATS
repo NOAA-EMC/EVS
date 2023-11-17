@@ -55,7 +55,6 @@ export MASKS=$FIXevs/masks
 ####################################
 export outid="LL$job"
 export jobid="${outid}.o${pid}"
-export pgmout="OUTPUT.${pid}"
 
 ####################################
 # Specify codes and scripts locaton

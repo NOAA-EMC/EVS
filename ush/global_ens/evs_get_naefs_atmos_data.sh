@@ -55,7 +55,7 @@ if [ $modnam = gefs_bc ] ; then
               echo "Warning: No GEFS BC member ${mb} F${hhh} available for ${vday}${ihour}" > mailmsg
               echo "Missing file is $gefs_bc" >> mailmsg
               echo "Job ID: $jobid" >> mailmsg
-              cat mailmsg | mail -s "$subject" $maillist
+              cat mailmsg | mail -s "$subject" $MAILTO
             fi
           fi  
           nfhrs=`expr $nfhrs + 12`
@@ -111,7 +111,7 @@ if [ $modnam = cmce_bc ] ; then
                  echo "Warning: No CMCE BC member ${mb} F${h3} available for ${vday}${ihour}" > mailmsg
                  echo "Missing file is $cmce_bc" >> mailmsg
                  echo "Job ID: $jobid" >> mailmsg
-                cat mailmsg | mail -s "$subject" $maillist
+                cat mailmsg | mail -s "$subject" $MAILTO
                fi
                echo "WARNING: $cmce_bc does not exist"
              fi
@@ -151,7 +151,7 @@ if [ $modnam = gefs_bc_apcp24h ] ; then
               echo "Warning: No GEFS BC member ${mb} F${hhh} available for ${vday}${ihour}" > mailmsg
               echo "Missing file is $apcp24_bc" >> mailmsg
               echo "Job ID: $jobid" >> mailmsg
-              cat mailmsg | mail -s "$subject" $maillist
+              cat mailmsg | mail -s "$subject" $MAILTO
             fi
           fi
         done

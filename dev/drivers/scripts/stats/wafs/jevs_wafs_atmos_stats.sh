@@ -31,7 +31,6 @@ module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_$STEP.sh
 
-export evs_ver=v1.0.0
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 ############################################################
@@ -48,7 +47,7 @@ export pid=${PBS_JOBID:-$$}
 export job=${PBS_JOBNAME:-jevs_wafs_stats}
 export jobid=$job.$pid
 
-export maillist=${maillist:-'alicia.bentley@noaa.gov,yali.mao@noaa.gov'}
+export MAILTO=${MAILTO:-'alicia.bentley@noaa.gov,yali.mao@noaa.gov'}
 export SENDMAIL=${SENDMAIL:-YES}
 
 ############################################################

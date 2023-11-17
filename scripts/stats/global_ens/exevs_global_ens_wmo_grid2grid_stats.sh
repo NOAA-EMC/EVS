@@ -38,7 +38,7 @@ if  [ $ens = gefs ] ||  [ $ens = cmce ] ; then
        echo "Warning: No GFS analysis available for ${VDATE}" > mailmsg
        echo Missing file is ${EVSINwmo}.${VDATE}/gefs/gfsanl.t00z.deg1.5.f000.grib2  >> mailmsg
        echo "Job ID: $jobid" >> mailmsg
-       cat mailmsg | mail -s "$subject" $maillist
+       cat mailmsg | mail -s "$subject" $MAILTO
      fi
     exit
    fi
@@ -49,7 +49,7 @@ if  [ $ens = gefs ] ||  [ $ens = cmce ] ; then
         echo "Warning: No CMC analysis available for ${VDATE}" > mailmsg
         echo Missing file is ${EVSINwmo}.${VDATE}/cmce/cmcanl.t00z.deg1.5.f000.grib2  >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+        cat mailmsg | mail -s "$subject" $MAILTO
       fi
      exit
     fi

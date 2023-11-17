@@ -19,7 +19,6 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 
 source $HOMEevs/versions/run.ver
 
-export evs_ver=v1.0.0
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 ############################################################
@@ -59,7 +58,7 @@ export mod_ver=${rtma_ver}
 export modsys=rtma
 export MODELNAME=rtma
 
-export maillist="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
+export MAILTO="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
 
 export config=$HOMEevs/parm/evs_config/analyses/config.evs.rtma.prod
 source $config

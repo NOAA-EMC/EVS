@@ -24,7 +24,7 @@ if [ $modnam = gfsanl ]; then
         echo "Warning: No GFS analysis available for ${vday}${ihour}" > mailmsg
         echo "Missing file is $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.anl" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+        cat mailmsg | mail -s "$subject" $MAILTO
       fi
     else
       cpreq -v $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.anl $WORK/gfsanl.t${ihour}z.grid3.f000.grib2
@@ -35,7 +35,7 @@ if [ $modnam = gfsanl ]; then
         echo "Warning: No GFS F000 available for ${vday}${ihour}" > mailmsg
         echo "Missing file is $COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.f000" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+        cat mailmsg | mail -s "$subject" $MAILTO
       fi
     else
       GFSf000=$COMINgfs/gfs.$vday/${ihour}/atmos/gfs.t${ihour}z.pgrb2.1p00.f000
@@ -72,7 +72,7 @@ if [ $modnam = cmcanl ] ; then
          echo "Warning: No CMC analysis available for ${vday}${ihour}" > mailmsg
          echo "Missing file is $cmcanl" >> mailmsg
          echo "Job ID: $jobid" >> mailmsg
-         cat mailmsg | mail -s "$subject" $maillist
+         cat mailmsg | mail -s "$subject" $MAILTO
        fi
       else
        >$WORK/cmce.upper.${ihour}.gec00.anl
@@ -135,7 +135,7 @@ if [ $modnam = gefs ] ; then
             echo "Warning: No GEFS Member ${mb} F${hhh} available for ${vday}${ihour}" > mailmsg
             echo "Missing file is $gefs" >> mailmsg
             echo "Job ID: $jobid" >> mailmsg
-            cat mailmsg | mail -s "$subject" $maillist
+            cat mailmsg | mail -s "$subject" $MAILTO
           fi
         else
           for level in 10 50 100 200 250 300 400 500 700 850 925 1000 ; do
@@ -172,7 +172,7 @@ if [ $modnam = gefs ] ; then
             echo "Warning: No GEFS Member ${mb} F${hhh} available for ${vday}${ihour}" > mailmsg
             echo "Missing file is $gefs_cvc" >> mailmsg
             echo "Job ID: $jobid" >> mailmsg
-            cat mailmsg | mail -s "$subject" $maillist
+            cat mailmsg | mail -s "$subject" $MAILTO
           fi
         else
           $WGRIB2 $gefs_cvc|grep "DPT:2 m"|$WGRIB2 -i $gefs_cvc -grib $WORK/grabgefs.${ihour}.${mb}.${hhh}
@@ -223,7 +223,7 @@ if [ $modnam = cmce ] ; then
             echo "Warning: No CMCE Member ${mb} F${h3} available for ${vday}${ihour}" > mailmsg
             echo "Missing file is $cmce" >> mailmsg
             echo "Job ID: $jobid" >> mailmsg
-            cat mailmsg | mail -s "$subject" $maillist
+            cat mailmsg | mail -s "$subject" $MAILTO
           fi
         else
           for level in 10 50 100 200 250 300 400 500 700 850 925 1000 ; do
@@ -303,7 +303,7 @@ if [ $modnam = prepbufr ] ; then
           echo "Warning:  No prepbufr analysis available for ${vday}${ihour}" > mailmsg
           echo "Missing file is $COMINobsproc/gdas.${vday}/${ihour}/atmos/gdas.t${ihour}z.prepbufr"  >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
-          cat mailmsg | mail -s "$subject" $maillist
+          cat mailmsg | mail -s "$subject" $MAILTO
 	fi
       fi 
       chmod +x run_pb2nc.${ihour}.sh
@@ -335,7 +335,7 @@ if [ $modnam = ccpa ] ; then
           echo "Warning:  No CCPA analysis available for ${INITDATE}${ihour}" > mailmsg
           echo "Missing file is $COMINccpa/ccpa.${vday}/$ihour/ccpa.t${ihour}z.06h.1p0.conus.gb2"  >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
-          cat mailmsg | mail -s "$subject" $maillist
+          cat mailmsg | mail -s "$subject" $MAILTO
 	fi
     fi 
   done
@@ -362,7 +362,7 @@ if [ $modnam = ccpa ] ; then
                 echo "Warning: A 06h CCPA file is missing for 24h CCPA generation at ${vday}${ihour}" > mailmsg
                 echo "Missing file is $source_ccpa_file"  >> mailmsg
                 echo "Job ID: $jobid" >> mailmsg
-                cat mailmsg | mail -s "$subject" $maillist
+                cat mailmsg | mail -s "$subject" $MAILTO
             fi
         fi
         nccpa_file=`expr $nccpa_file + 1`
@@ -526,7 +526,7 @@ if [ $modnam = nohrsc24h ] ; then
           echo "Warning:  No NOHRSC analysis available for ${vday}${ihour}" > mailmsg
           echo "Missing file is $snowfall"  >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
-          cat mailmsg | mail -s "$subject" $maillist
+          cat mailmsg | mail -s "$subject" $MAILTO
 	fi
     fi
   done
@@ -635,7 +635,7 @@ if [ $modnam = gfs ] ; then
         echo "Warning: No GFS F${hhh} available for ${vday}${ihour}" > mailmsg
         echo "Missing file is $gfs" >> mailmsg
         echo "Job ID: $jobid" >> mailmsg
-        cat mailmsg | mail -s "$subject" $maillist
+        cat mailmsg | mail -s "$subject" $MAILTO
       fi
      else
        $WGRIB2  $gfs|grep "HGT:500 mb"|$WGRIB2 -i $gfs -grib $WORK/gfs.t${ihour}z.grid3.f${hhh}.grib2
@@ -657,7 +657,7 @@ if [ $modnam = osi_saf ] ; then
           echo "Warning:  No OSI_SAF NH data  available for ${INITDATE}" > mailmsg
           echo "Missing file is $osi_nh"  >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
-          cat mailmsg | mail -s "$subject" $maillist
+          cat mailmsg | mail -s "$subject" $MAILTO
         fi 
    else
          if [ ! -s $osi_sh ]; then
@@ -665,7 +665,7 @@ if [ $modnam = osi_saf ] ; then
           echo "Warning:  No OSI_SAF SH data  available for ${INITDATE}" > mailmsg
           echo "Missing file is $osi_sh"  >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
-          cat mailmsg | mail -s "$subject" $maillist
+          cat mailmsg | mail -s "$subject" $MAILTO
          else
              python ${USHevs}/global_ens/global_ens_sea_ice_prep.py
              [[ $SENDCOM="YES" ]] &&  cpreq -v $WORK/atmos.${INITDATE}/osi_saf/*.nc $COMOUTosi_saf/.

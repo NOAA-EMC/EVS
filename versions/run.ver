@@ -1,4 +1,4 @@
-export evs_ver=v1.0
+export evs_ver=v1.0.0
 
 export bacio_ver=2.4.1
 export cdo_ver=1.9.8

@@ -31,7 +31,6 @@ date
 
 # LSF id (jobid) and Temp Directories
 export pid=$$
-export pgmout="OUTPUT.${pid}"
 
 export SENDCOM=${SENDCOM:-YES}
 export SENDDBN=${SENDDBN:-YES}
