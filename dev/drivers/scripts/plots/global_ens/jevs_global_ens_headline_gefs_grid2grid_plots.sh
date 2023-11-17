@@ -21,8 +21,6 @@ export COMPONENT=global_ens
 export VERIF_CASE=grid2grid
 export MODELNAME=gefs
 
-source $HOMEevs/dev/modulefiles/${evs_ver_2d}
-
 module reset
 module load prod_envir/${prod_envir_ver}
 source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
