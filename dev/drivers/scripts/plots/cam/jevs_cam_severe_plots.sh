@@ -30,7 +30,7 @@ source $HOMEevs/versions/run.ver
 module reset
 module load prod_envir/${prod_envir_ver}
 
-source $HOMEevs/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
+source $HOMEevs/dev/modulefiles/$COMPONENT/${COMPONENT}_${STEP}.sh
 
 
 ############################################################
@@ -58,11 +58,11 @@ export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-NO}
 
-export maillist=${maillist:-'marcel.caron@noaa.gov,alicia.bentley@noaa.gov'}
+export MAILTO=${MAILTO:-'marcel.caron@noaa.gov,alicia.bentley@noaa.gov'}
 
-if [ -z "$maillist" ]; then
+if [ -z "$MAILTO" ]; then
 
-   echo "maillist variable is not defined. Exiting without continuing."
+   echo "MAILTO variable is not defined. Exiting without continuing."
 
 else
 

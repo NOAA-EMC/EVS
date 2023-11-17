@@ -31,9 +31,8 @@ export model_ver=$nfcens_ver
 ############################################################
 module reset
 module load prod_envir/${prod_envir_ver}
-source $HOMEevs/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
+source $HOMEevs/dev/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
-export evs_ver=v1.0.0
 evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 ############################################################
@@ -45,7 +44,7 @@ export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-YES}
 
-export maillist='alicia.bentley@noaa.gov,samira.ardani@noaa.gov'
+export MAILTO='alicia.bentley@noaa.gov,samira.ardani@noaa.gov'
 
 
 ## developers directories
