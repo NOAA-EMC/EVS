@@ -1400,6 +1400,17 @@ def check_weekly_model_files(job_dict):
                         'init_date': init_date_dt,
                         'forecast_hour': str(fhr)
                     }
+            if job_dict['VERIF_CASE'] == 'grid2grid':
+                if job_dict['VERIF_TYPE'] == 'anom':
+                    truth_file_format = os.path.join(
+                        verif_case_dir, 'data', 'ecmwf',
+                        'ecmwf.{valid?fmt=%Y%m%d%H}.anl'
+                    )
+                elif job_dict['VERIF_TYPE'] == 'pres_lvls':
+                    truth_file_format = os.path.join(
+                        verif_case_dir, 'data', 'gfs',
+                        'gfs.{valid?fmt=%Y%m%d%H}.anl'
+                    )
         elif job_dict['JOB_GROUP'] == 'assemble_data':
             if job_dict['VERIF_CASE'] == 'grid2obs':
                 if job_dict['VERIF_TYPE'] == 'prepbufr' \
@@ -1454,26 +1465,47 @@ def check_weekly_model_files(job_dict):
                 fhr_check_input_dict[fhr_key][fhr_fileN_key]['forecast_hour'],
                 {}
             )
-            if os.path.exists(fhr_fileN):
-                fhr_key_input_files_exist_list.append(True)
-                if job_dict['JOB_GROUP'] == 'reformat_data' \
-                        and job_dict['job_name'] in ['Concentration',
-                                                     'SST',
-                                                     'TempAnom2m',
-                                                     'GenEnsProd',
-                                                     'GeoHeightAnom']:
+            if job_dict['JOB_GROUP'] == 'reformat_data' \
+                    and job_dict['job_name'] in ['TempAnom2m',
+                                                 'GeoHeightAnom']:
+                truth_file = format_filler(
+                    truth_file_format,
+                    fhr_check_input_dict[fhr_key][fhr_fileN_key]['valid_date'],
+                    fhr_check_input_dict[fhr_key][fhr_fileN_key]['valid_date'],
+                    ['anl'],
+                    {}
+                )
+                if os.path.exists(fhr_fileN) \
+                        and os.path.exists(truth_file):
+                    fhr_key_input_files_exist_list.append(True)
                     fhr_list.append(
                         fhr_check_input_dict[fhr_key][fhr_fileN_key]\
                         ['forecast_hour']
                     )
-                elif job_dict['JOB_GROUP'] == 'assemble_data' \
-                        and job_dict['job_name'] == 'TempAnom2m':
+                else:
+                    fhr_key_input_files_exist_list.append(False)
+            elif job_dict['JOB_GROUP'] == 'reformat_data' \
+                    and job_dict['job_name'] in ['Concentration',
+                                                 'SST',
+                                                 'GenEnsProd']:
+                if os.path.exists(fhr_fileN):
+                    fhr_key_input_files_exist_list.append(True)
                     fhr_list.append(
                         fhr_check_input_dict[fhr_key][fhr_fileN_key]\
                         ['forecast_hour']
                     )
-            else:
-                fhr_key_input_files_exist_list.append(False)
+                else:
+                    fhr_key_input_files_exist_list.append(False)
+            elif job_dict['JOB_GROUP'] == 'assemble_data' \
+                    and job_dict['job_name'] == 'TempAnom2m':
+                if os.path.exists(fhr_fileN):
+                    fhr_key_input_files_exist_list.append(True)
+                    fhr_list.append(
+                        fhr_check_input_dict[fhr_key][fhr_fileN_key]\
+                        ['forecast_hour']
+                    )
+                else:
+                    fhr_key_input_files_exist_list.append(False)
         if all(x == True for x in fhr_key_input_files_exist_list) \
                 and len(fhr_key_input_files_exist_list) > 0:
             fhr_list.append(fhr_key)
@@ -1782,6 +1814,17 @@ def check_days6_10_model_files(job_dict):
                         'init_date': init_date_dt,
                         'forecast_hour': str(fhr)
                     }
+            if job_dict['VERIF_CASE'] == 'grid2grid':
+                if job_dict['VERIF_TYPE'] == 'anom':
+                    truth_file_format = os.path.join(
+                        verif_case_dir, 'data', 'ecmwf',
+                        'ecmwf.{valid?fmt=%Y%m%d%H}.anl'
+                    )
+                elif job_dict['VERIF_TYPE'] == 'pres_lvls':
+                    truth_file_format = os.path.join(
+                        verif_case_dir, 'data', 'gfs',
+                        'gfs.{valid?fmt=%Y%m%d%H}.anl'
+                    )
         elif job_dict['JOB_GROUP'] == 'assemble_data':
             if job_dict['VERIF_CASE'] == 'grid2obs':
                 if job_dict['VERIF_TYPE'] == 'prepbufr' \
@@ -1836,24 +1879,45 @@ def check_days6_10_model_files(job_dict):
                 fhr_check_input_dict[fhr_key][fhr_fileN_key]['forecast_hour'],
                 {}
             )
-            if os.path.exists(fhr_fileN):
-                fhr_key_input_files_exist_list.append(True)
-                if job_dict['JOB_GROUP'] == 'reformat_data' \
-                        and job_dict['job_name'] in ['TempAnom2m',
-                                                     'GenEnsProd',
-                                                     'GeoHeightAnom']:
+            if job_dict['JOB_GROUP'] == 'reformat_data' \
+                    and job_dict['job_name'] in ['TempAnom2m',
+                                                 'GeoHeightAnom']:
+                truth_file = format_filler(
+                    truth_file_format,
+                    fhr_check_input_dict[fhr_key][fhr_fileN_key]['valid_date'],
+                    fhr_check_input_dict[fhr_key][fhr_fileN_key]['valid_date'],
+                    ['anl'],
+                    {}
+                )
+                if os.path.exists(fhr_fileN) \
+                        and os.path.exists(truth_file):
+                    fhr_key_input_files_exist_list.append(True)
                     fhr_list.append(
                         fhr_check_input_dict[fhr_key][fhr_fileN_key]\
                         ['forecast_hour']
                     )
-                elif job_dict['JOB_GROUP'] == 'assemble_data' \
-                        and job_dict['job_name'] == 'TempAnom2m':
+                else:
+                    fhr_key_input_files_exist_list.append(False)
+            elif job_dict['JOB_GROUP'] == 'reformat_data' \
+                    and job_dict['job_name'] == 'GenEnsProd':
+                if os.path.exists(fhr_fileN):
+                    fhr_key_input_files_exist_list.append(True)
                     fhr_list.append(
                         fhr_check_input_dict[fhr_key][fhr_fileN_key]\
                         ['forecast_hour']
                     )
-            else:
-                fhr_key_input_files_exist_list.append(False)
+                else:
+                    fhr_key_input_files_exist_list.append(False)
+            elif job_dict['JOB_GROUP'] == 'assemble_data' \
+                    and job_dict['job_name'] == 'TempAnom2m':
+                if os.path.exists(fhr_fileN):
+                    fhr_key_input_files_exist_list.append(True)
+                    fhr_list.append(
+                        fhr_check_input_dict[fhr_key][fhr_fileN_key]\
+                        ['forecast_hour']
+                    )
+                else:
+                    fhr_key_input_files_exist_list.append(False)
         if all(x == True for x in fhr_key_input_files_exist_list) \
                 and len(fhr_key_input_files_exist_list) > 0:
             fhr_list.append(fhr_key)
@@ -2014,6 +2078,17 @@ def check_weeks3_4_model_files(job_dict):
                         'init_date': init_date_dt,
                         'forecast_hour': str(fhr)
                     }
+            if job_dict['VERIF_CASE'] == 'grid2grid':
+                if job_dict['VERIF_TYPE'] == 'anom':
+                    truth_file_format = os.path.join(
+                        verif_case_dir, 'data', 'ecmwf',
+                        'ecmwf.{valid?fmt=%Y%m%d%H}.anl'
+                    )
+                elif job_dict['VERIF_TYPE'] == 'pres_lvls':
+                    truth_file_format = os.path.join(
+                        verif_case_dir, 'data', 'gfs',
+                        'gfs.{valid?fmt=%Y%m%d%H}.anl'
+                    )
         elif job_dict['JOB_GROUP'] == 'assemble_data':
             if job_dict['VERIF_CASE'] == 'grid2obs':
                 if job_dict['VERIF_TYPE'] == 'prepbufr' \
@@ -2068,24 +2143,45 @@ def check_weeks3_4_model_files(job_dict):
                 fhr_check_input_dict[fhr_key][fhr_fileN_key]['forecast_hour'],
                 {}
             )
-            if os.path.exists(fhr_fileN):
-                fhr_key_input_files_exist_list.append(True)
-                if job_dict['JOB_GROUP'] == 'reformat_data' \
-                        and job_dict['job_name'] in ['TempAnom2m',
-                                                     'GenEnsProd',
-                                                     'GeoHeightAnom']:
+            if job_dict['JOB_GROUP'] == 'reformat_data' \
+                    and job_dict['job_name'] in ['TempAnom2m',
+                                                 'GeoHeightAnom']:
+                truth_file = format_filler(
+                    truth_file_format,
+                    fhr_check_input_dict[fhr_key][fhr_fileN_key]['valid_date'],
+                    fhr_check_input_dict[fhr_key][fhr_fileN_key]['valid_date'],
+                    ['anl'],
+                    {}
+                )
+                if os.path.exists(fhr_fileN) \
+                        and os.path.exists(truth_file):
+                    fhr_key_input_files_exist_list.append(True)
                     fhr_list.append(
                         fhr_check_input_dict[fhr_key][fhr_fileN_key]\
                         ['forecast_hour']
                     )
-                elif job_dict['JOB_GROUP'] == 'assemble_data' \
-                        and job_dict['job_name'] == 'TempAnom2m':
+                else:
+                    fhr_key_input_files_exist_list.append(False)
+            elif job_dict['JOB_GROUP'] == 'reformat_data' \
+                    and job_dict['job_name'] == 'GenEnsProd':
+                if os.path.exists(fhr_fileN):
+                    fhr_key_input_files_exist_list.append(True)
                     fhr_list.append(
                         fhr_check_input_dict[fhr_key][fhr_fileN_key]\
                         ['forecast_hour']
                     )
-            else:
-                fhr_key_input_files_exist_list.append(False)
+                else:
+                    fhr_key_input_files_exist_list.append(False)
+            elif job_dict['JOB_GROUP'] == 'assemble_data' \
+                    and job_dict['job_name'] == 'TempAnom2m':
+                if os.path.exists(fhr_fileN):
+                    fhr_key_input_files_exist_list.append(True)
+                    fhr_list.append(
+                        fhr_check_input_dict[fhr_key][fhr_fileN_key]\
+                        ['forecast_hour']
+                    )
+                else:
+                    fhr_key_input_files_exist_list.append(False)
         if all(x == True for x in fhr_key_input_files_exist_list) \
                 and len(fhr_key_input_files_exist_list) > 0:
             fhr_list.append(fhr_key)
