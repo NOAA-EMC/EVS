@@ -42,7 +42,7 @@ export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
 export SENDDBN=${SENDDBN:-YES}
 export KEEPDATA=${KEEPDATA:-YES}
-export SENDMAIL=YES
+#export SENDMAIL=YES
 export MAILTO='alicia.bentley@noaa.gov,steven.simon@noaa.gov'
 
 ## developers directories
