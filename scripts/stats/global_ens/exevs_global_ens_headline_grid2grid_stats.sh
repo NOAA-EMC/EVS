@@ -1,9 +1,12 @@
 #!/bin/ksh
-#################################################################
-# Purpose:   To run grid-to-grid verification on all global ensembles
+#**********************************************************************************************
+# Purpose:  1. Setup some running envirnment paramters for headline job that are not
+#              defined in stat J-job
+#           2. Run headline verifications of surface fields for gefs, naefs and gfs 
 #
-# Log History:  12/01/2021 Binbin Zhou  
-################################################################
+# Last  updated 11/15/2023: by  Binbin Zhou, Lynker@EMC/NCEP
+#
+#**********************************************************************************************
 set -x
 
 export WORK=$DATA

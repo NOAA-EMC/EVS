@@ -1,12 +1,26 @@
 #!/bin/ksh
+#*************************************************************************************************
+# Purpose:  Run NAEFS  prep job
+#           1. Generate sub-tasks to run $USHevs/global_ens/evs_get_naefs_atmos_data.sh
+#           2. Run the sub-tasks
+#
+# Last updated 11/15/2023: by  Binbin Zhou, Lynker@EMC/NCEP
+#************************************************************************************************
+
 set -x 
 
+#*************************************************
+# Build a poe script to collect sub-tasks
+# ************************************************
 >run_get_all_naefs_atmos_poe.sh
 
 if [ $get_model_bc = yes ] ; then
  for model in gefs_bc cmce_bc ; do 
       for ihour in 00 12 ; do
        for fhr_range in range1 range2 range3 range4 range5 range6 range7 range8 ; do
+	#**********************************
+	# Build sub-task scripts
+	# ********************************
 	>get_data_${model}_${ihour}_${fhr_range}.sh
 	 if [ $fhr_range = range1 ] ; then
            fhr_beg=00
@@ -52,6 +66,9 @@ if [ $get_gefs_bc_apcp24h = yes ] ; then
  done
 fi
 
+#*****************************************
+# Run poe script
+# ***************************************
 if [ $run_mpi = yes ] ; then
  if [ -s run_get_all_naefs_atmos_poe.sh ] ; then
    chmod +x run_get_all_naefs_atmos_poe.sh 

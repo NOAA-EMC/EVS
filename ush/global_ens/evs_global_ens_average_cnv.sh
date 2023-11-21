@@ -1,5 +1,22 @@
 #!/bin/ksh
-
+#*******************************************************************************************
+#  Purpose: Run CTC average for cnv verification 
+#       
+#    Note: This scripts is specific for ceiling and visibility (cnv). 
+#           For ceiling and visibility, in case of claer sky in one member, its forecast
+#           will be given a very large value. This very large value may b arbitrary,
+#           so it can not be used in the ensemble mean computation of CTC scores
+#           (so-called conditional-mean). The better solution to deal with such case  is
+#              Step 1. First verify cnv to get CTC stat files for each ensemble members
+#              Step 2. Calculate the ensemble mean of CTC among the stat files of all ensemble
+#                      members. In other word, get the average of each column
+#                      (hit rate, false alarm, correct non, etc) of CTC line type
+#              Step 3. Form final CTC stat file for cnv using the averaged CTC columns
+#           This script is for step 2 and 3
+#
+#  Last update: 11/16/2023, by Binbin Zhou Lynker@EMC/NCEP
+#   
+#******************************************************************************************
 set -x 
 
 typeset -Z2 fhr
@@ -13,6 +30,9 @@ fi
 
 for vvhour in 00 06 12 18 ; do 
 
+  #***************************************************************************
+  # ctc25,ctc26, ctc27 and ctc28 are CTC's No 25, 26, 27 and 27, respectively 
+  #*************************************************************************** 	
   for n in 2 3 4 5 6 7 8 9 10 11 12 13 ; do
     ctc25[$n]=0
     ctc26[$n]=0
@@ -20,6 +40,9 @@ for vvhour in 00 06 12 18 ; do
     ctc28[$n]=0
   done
 
+  #***********************************************
+  #Final stst file name for the CTC ensemble mean 
+  #***********************************************
   >point_stat_GEFS_PREPBUFR_CONUS_FHR${fhr}_CNV_${fhr}0000L_${vday}_${vvhour}0000V.stat
 
    for mbr in $mbrs ; do

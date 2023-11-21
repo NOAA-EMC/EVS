@@ -1,5 +1,12 @@
 #!/bin/ksh
-
+#**************************************************************************
+#  Purpose: check the required input forecast and validation data files
+#           for global_ens stat jobs
+#           Input arguments: 
+#                  var, to specify the field to be checked
+#
+#  Last update: 11/16/2023, by Binbin Zhou Lynker@EMC/NCEP
+#************************************************************************
 set -x
 
 var=$1
