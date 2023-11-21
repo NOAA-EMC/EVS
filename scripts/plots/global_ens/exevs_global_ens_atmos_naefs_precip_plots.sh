@@ -1,5 +1,10 @@
 #!/bin/ksh
-
+#*******************************************************************************
+# Purpose: setup environment, paths, and run the NAEFS precip verification 
+#          score plotting python script
+#
+# Last updated: 11/17/2023, Binbin Zhou Lynker@EMC/NCEP 
+#******************************************************************************
 set -x 
 
 cd $DATA
@@ -32,6 +37,9 @@ done
 export init_beg=$first_day
 export valid_beg=$first_day
 
+#*************************************************************
+# Virtual link required stat data files of past 31/90 days
+#*************************************************************
 n=0
 while [ $n -le $past_days ] ; do
   #hrs=`expr $n \* 24`
@@ -56,6 +64,9 @@ mkdir -p $plot_dir
 verif_case=$VERIF_CASE
 verif_type=ccpa
 
+#*****************************************
+# Build a POE script to collect sub-tasks
+# ****************************************
 > run_all_poe.sh
 
 for stats in crps ets fbias fss bs ; do 
@@ -133,6 +144,9 @@ for stats in crps ets fbias fss bs ; do
 
       for interp_pnt in $interp_pnts ; do
 
+         #***************************
+         # Build sub-task scripts
+         #***************************
          > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh  
 
         echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_tp}_${interp_pnt}.sh
@@ -202,6 +216,9 @@ done #end of stats
 
 chmod +x run_all_poe.sh
 
+#***************************************************************************
+# Run the POE script in parallel or in sequence order to generate png files
+#**************************************************************************
 if [ $run_mpi = yes ] ; then
    mpiexec -np 8 -ppn 8 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
@@ -217,6 +234,9 @@ if [ -s $log_file ]; then
     echo "End: $log_file"
 fi
 
+#**************************************************
+# Change plot file names to meet the EVS standard
+#**************************************************
 cd $plot_dir
 
 for domain in conus conus_east conus_west conus_south conus_central ; do
