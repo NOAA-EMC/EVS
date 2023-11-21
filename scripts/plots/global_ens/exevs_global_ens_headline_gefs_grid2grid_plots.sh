@@ -1,15 +1,16 @@
 #!/bin/ksh
-#################################################################
-# Purpose:   To run grid-to-grid verification on all global ensembles
-#
-# Log History:  12/01/2021 Binbin Zhou  
-################################################################
+#****************************************************************************************
+# Purpose:  1. Setup the environment parameter for running GEFS headline plotting script
+#           2. Run plotting script $USHevs/global_ens/evs_global_ens_headline_plot.sh
+#  
+#  Note: 1. The headline score needs the stat files over 0ne year + 17 days 
+#           (this year + next 17 days of Jan) 
+#        2. This job is run on Jan 17 of each year                 
+#  
+# Log History:  11/17/2021 Binbin Zhou  
+#**********************************************************************
 set -x
 export run_mpi=${run_mpi:-'yes'}
-
-#############################################################
-# Step 0: Run copygb to convert URMA data to 4km WRF grid
-#############################################################
 
 this_year=${VDATE:0:4}
 past=`$NDATE -8760 ${VDATE}01`

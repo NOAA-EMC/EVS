@@ -1,7 +1,22 @@
 #!/bin/ksh
-
-# Author: Binbin Zhou, Lynker
-# Update log: 10/24/2022, beginning version  
+#*************************************************************************************************
+# Purpose: run Global ensemble SST verification by METPlus
+# Input parameters:
+#   (1) modnam: ensemble system names
+#   (2) verify: verifican case (sst)
+# Execution steps:
+#   (1) Set/export environment parameters for METplus conf files and put them into  procedure files 
+#   (2) Set running conf files and put them into sub-task files
+#   (3) Put all sub-task script files into one poe script file 
+#   (4) If $run_mpi is yes, run the poe script  in paraalel
+#        otherwise run the poe script in sequence
+# Note on METplus verification:
+#   (1) For EnsembleStat, the input forecast files are ensemble member files from EVS prep directory
+#       
+# Last update: 11/16/2023, by Binbin Zhou (Lynker@NCPE/EMC)
+#              11/12/2023  by Mallory Row (SAIC@NCEP/EMC)
+#       
+#********************************************************************************************************
 #
 
 set -x
@@ -14,6 +29,9 @@ verify=$2
 ############################################################
 export regrid='NONE'
 
+#********************************************************
+#Check input if obs and fcst input data files availabble
+#*******************************************************
 $USHevs/global_ens/evs_gens_atmos_check_input_files.sh $modnam
 export err=$?; err_chk
 $USHevs/global_ens/evs_gens_atmos_check_input_files.sh ghrsst
@@ -30,6 +48,9 @@ else
   err_exit "wrong model: $modnam"
 fi
 
+#*************************
+#Get sub-string of $EVSIN
+#*************************
 tail='/atmos'
 prefix=${EVSIN%%$tail*}
 index=${#prefix}
@@ -37,11 +58,17 @@ echo $index
 COM_IN=${EVSIN:0:$index}
 echo $COM_IN
 
+
 anl=ghrsst
 export vhour='00'
-
+#****************************************
+#Build a poe script to collect sub-tasks
+#****************************************
 >run_all_gens_sst24h_poe.sh
 
+#****************************
+# Build sub-task scripts
+#****************************
 >run_${modnam}_valid_at_t${vhour}z_${verify}.sh
 echo  "export output_base=${WORK}/${verify}/run_${modnam}_valid_at_t${vhour}z_${verify}" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
 echo  "export modelpath=$COM_IN" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
@@ -83,12 +110,18 @@ echo "export err=\$?; err_chk" >> run_${modnam}_valid_at_t${vhour}z_${verify}.sh
 chmod +x run_${modnam}_valid_at_t${vhour}z_${verify}.sh
 echo "${DATA}/run_${modnam}_valid_at_t${vhour}z_${verify}.sh" >> run_all_gens_sst24h_poe.sh
 
+#********************************
+#Run poe script in sequence
+#********************************
 chmod 775 run_all_gens_sst24h_poe.sh
 if [ -s run_all_gens_sst24h_poe.sh ] ; then
     ${DATA}/run_all_gens_sst24h_poe.sh	
     export err=$?; err_chk 
 fi
 
+#*******************************************************
+# Collect small stat files to form a final big stst file
+#*******************************************************
 if [ $gather = yes ] ; then
   $USHevs/global_ens/evs_global_ens_atmos_gather.sh $MODELNAME $verify 00 00 
   export err=$?; err_chk
