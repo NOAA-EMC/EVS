@@ -1,5 +1,11 @@
 #!/bin/ksh
-
+#***********************************************************
+# This file to average PSTD line type data over stat files
+# for plotting but is not used in current version, or
+# can be deleted !!!
+#
+#  Last update: 11/16/2023, by Binbin Zhou (Lynker@NCPE/EMC)
+#*********************************************************
 set -x 
 
 export stat_data=$DATA/all_stats

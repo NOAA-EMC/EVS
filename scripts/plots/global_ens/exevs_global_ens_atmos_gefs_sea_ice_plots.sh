@@ -1,5 +1,10 @@
 #!/bin/ksh
-
+#*******************************************************************************
+# Purpose: setup environment, paths, and run the global_ens sea ice score
+#          plotting python script. Only GEFS scores are  in the plots
+#
+# Last updated: 11/17/2023, Binbin Zhou Lynker@EMC/NCEP 
+#******************************************************************************
 set -x 
 
 cd $DATA
@@ -34,6 +39,9 @@ done
 export init_beg=$first_day
 export valid_beg=$first_day
 
+#*************************************************************
+# Virtual link required stat data files of past 31/90 days
+#*************************************************************
 n=0
 while [ $n -le $past_days ] ; do
   #hrs=`expr $n \* 24`
@@ -60,6 +68,9 @@ mkdir -p $plot_dir
 verif_case=satellite
 verif_type=ghrsst_ncei_avhrr_anl
 
+#*****************************************
+# Build a POE script to collect sub-tasks
+# ****************************************
 > run_all_poe.sh
 
 for stats in rmse me csi sratio_pod_csi ; do 
@@ -129,6 +140,9 @@ for stats in rmse me csi sratio_pod_csi ; do
 
       for line_type in $line_tp ; do 
 
+         #***************************
+         # Build sub-task scripts
+         #***************************
          > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh  
 
         echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
@@ -187,6 +201,9 @@ done #end of stats
 
 chmod +x run_all_poe.sh
 
+#***************************************************************************
+# Run the POE script in parallel or in sequence order to generate png files
+#**************************************************************************
 if [ $run_mpi = yes ] ; then
    mpiexec -np 32 -ppn 32 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else

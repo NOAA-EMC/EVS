@@ -1,7 +1,16 @@
 #!/bin/ksh
-
-#Note: This script is to adjust CMCE members by adding the difference between GFS analysis and CMC analysis to
-#each CMCE member.
+#************************************************************************************************************
+# Purpose: Dynamically create NAEFS member files based on prep bias-corrected GEFS and CMCE members
+#          for both NAEFS and headline grid2grid verification. The created NAEFS member files are stored in 
+#          the working directory $WORK($DATA)/naefs
+#
+#    Note: 1. The CMCE members are adjusted by adding the difference between GFS analysis and CMC analysis to
+#             each CMCE member. This work is done by the Fortran program in sorc/evs_g2g_adjustCMC.fd
+#          2. For NAEFS 6, use 20 GEFS bias-corrected members, for NAEFS/v7, use GEFS 30 bias-corrected members
+#
+# Last update: 11/16/2023, by Binbin Zhou Lynker@EMC/NCEP
+#
+#************************************************************************************************************
  
 set -x
 
@@ -42,7 +51,10 @@ for vhour in $vhours ; do
 
      for mbr in $gefs_mbrs ; do
        if [ $RUN = headline ] ; then
+	 #****************************************************************************
          #Note: in headline.yyyymmdd/gefs, the files were from atmos.yyyymmdd/gefs_bc
+	 #      So they are bias-corrected files
+	 #****************************************************************************
          if [ -s ${EVSIN}.${fyyyymmdd}/gefs/gefs.ens${mbr}.t${ihour}z.grid3.f${fhr}.grib2 ]; then
            ln -sf  ${EVSIN}.${fyyyymmdd}/gefs/gefs.ens${mbr}.t${ihour}z.grid3.f${fhr}.grib2  gefs.ens${mbr}.t${ihour}z.grid3.f${fhr}.grib2
          fi
@@ -55,7 +67,10 @@ for vhour in $vhours ; do
 
      for mbr in $cmce_mbrs ; do
        if [ $RUN = headline ] ; then
+	 #*****************************************************************************      
          #Note: in headline.yyyymmdd/cmce, the files were from atmos.yyyymmdd/cmce_bc
+	 #      So they are bias-corrected files
+	 #****************************************************************************
          if [ -s ${EVSIN}.${fyyyymmdd}/cmce/cmce.ens${mbr}.t${ihour}z.grid3.f${fhr}.grib2 ]; then
            ln -sf  ${EVSIN}.${fyyyymmdd}/cmce/cmce.ens${mbr}.t${ihour}z.grid3.f${fhr}.grib2  cmce.ens${mbr}.t${ihour}z.grid3.f${fhr}.grib2
          fi
@@ -66,6 +81,10 @@ for vhour in $vhours ; do
        fi
      done # cmce_mbrs
 
+     #************************************************************************************
+     # Run  Fortran program in sorc/evs_g2g_adjustCMC.fd to get the difference between
+     #      GFS analysis and CMC analysis in each grid, and add it to each CMCE members
+     #************************************************************************************      
      if [ $gefs_number = 20 ] ; then
        sed -e "s!IHR!$ihour!g" -e "s!GRID!3!g" -e "s!FHR!$fhr!g" $ENS_LIST/evs_g2g_gefs_file_list.20 > gefs_file_list.t${ihour}z.f${fhr}
      elif [  $gefs_number = 30 ] ; then

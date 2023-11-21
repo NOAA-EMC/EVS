@@ -1,5 +1,18 @@
 #!/bin/ksh
 
+#*******************************************************************************
+# Purose: generate GEFS headline ACC plot
+#    
+# Procedure steps:
+#        (1) Copy (virtual link) 12 months of headline stat files
+#        (2) Average all of the sheadline stat files  by running MET StatAnlysis too
+#            and save the output text files for GEFS, NAEFS and GFS, respectively
+#            These 3 text files contained averaged ACC score data
+#        (3) Send these 3 text files to a python script to generate plot
+#
+#   Last update: 11/16/2023  by Binbin Zhou (Lynker@NCPE/EMC)
+##***************************************************************
+#
 set -x 
 
 last_year=$1
@@ -56,6 +69,9 @@ for yyyy in $years ; do
 
 #months="01 02 03 04 05"
 
+#********************************************************
+# Virtual link 12 months of headline stat files
+#*********************************************************
 for mm in $months  ; do
   if [ $mm = 03 ] || [ $mm = 05 ] || [ $mm = 07 ] || [ $mm = 08 ] || [ $mm = 10 ] || [ $mm = 12 ] ; then
     days='01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31'
@@ -91,6 +107,10 @@ for mm in $months  ; do
  done #mm
 done #yyyy
 
+#****************************************************************
+# Average the SAL1L2 line type data over all stat files by using
+#  MET StatAnlysis tool
+#***************************************************************
 export model
 for model in gfs gefs naefs ; do
     export MODEL=`echo $model | tr '[a-z]' '[A-Z]'`
@@ -111,6 +131,9 @@ for model in gfs gefs naefs ; do
    ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PLOT_CONF}/StatAnlysis_fcstGENS_obsAnalysis_GatherByYear.conf 
    export err=$?; err_chk
 
+   #*********************************************************************************
+   # Save StatAnlysis output text file that contain averaged ACC for plotting script
+   #*********************************************************************************
    mv $DATA/agg_stat_SAL1L2_to_CNT.${model}.00Z  agg_stat_SAL1L2_to_CNT.${model}.${yyyy}.00Z
 
     for fhr in 24 48 72 96  120 144 168 192 216 240 264 288 312 336 360 384 ; do
@@ -133,6 +156,9 @@ else
  first=$beg_day
 fi
 
+#********************************************************************
+# Run evs_global_ens_headline_plot.py python script to generate plots
+#********************************************************************
 sed -e "s!YYYY!${last_year}!g" -e "s!FIRST!$first!g" -e "s!LAST!$last!g"  $USHevs/global_ens/evs_global_ens_headline_plot.py  >  evs_global_ens_headline_plot.py 
 
 
