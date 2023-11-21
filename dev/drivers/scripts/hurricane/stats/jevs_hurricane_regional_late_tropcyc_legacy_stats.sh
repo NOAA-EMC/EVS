@@ -30,7 +30,7 @@ export job=jevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}_${cyc}
 # Load modules
 ############################################################
 module reset
-source ${HOMEevs}/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh 
+source ${HOMEevs}/dev/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh 
 
 export PDY=20231231 
 #Set PDY to override setpdy.sh called in the j-jobs

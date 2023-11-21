@@ -31,7 +31,7 @@ export job=jevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}_${cyc}
 ############################################################
 module reset
 module load prod_envir/${prod_envir_ver}
-source ${HOMEevs}/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
+source ${HOMEevs}/dev/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 
 #Set PDY to override setpdy.sh called in the j-jobs
 export PDY=20231231
