@@ -125,7 +125,7 @@ class PrecipSpatialMap:
                 'CONUS': 'conus',
                 'Alaska': 'alaska',
                 'Hawaii': 'hawaii',
-                'PuertoRico': 'puerto_rico'
+                'PuertoRico': 'prico'
             }
             image_name = os.path.join(
                 output_image_dir,

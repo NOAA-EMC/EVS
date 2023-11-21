@@ -80,10 +80,11 @@ else
     done
 fi
 
-# Copy files to desired location
-#all commands to copy output files into the correct EVS COMOUT directory
+# Tar and Copy output files to EVS COMOUT directory
+  cd ${DATA}/${VERIF_CASE}/
+  find ./* -name "*.png" -type f -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar -T -
+
 if [ $SENDCOM = YES ]; then
-    find ${DATA}/${VERIF_CASE}/out/*/*/*.png -type f -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar -T -
     cpreq ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar ${COMOUTplots}/.
 fi
 
