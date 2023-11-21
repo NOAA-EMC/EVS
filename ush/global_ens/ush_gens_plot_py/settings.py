@@ -3890,4 +3890,5 @@ class Reference():
             return kt_vals
         def PA_to_hPa(PA_vals):
             hPa_vals = np.array(PA_vals) * 0.01
+            return hPa_vals
 
