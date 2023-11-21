@@ -88,8 +88,7 @@ if [ -d $log_dir ]; then
 fi
 
 # Tar and Copy output files to EVS COMOUT directory
-   cd ${DATA}/${VERIF_CASE}
-   find ./* -type f \( -name "*.png" -o -name "*.gif"  \) -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar --transform='s#.*/##' -T -
+   find ${DATA}/${VERIF_CASE}/* -type f \( -name "*.png" -o -name "*.gif"  \) -print | tar -cvf ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar --transform='s#.*/##' -T -
 
 if [ $SENDCOM = YES ]; then
     cpreq -v ${DATA}/${NET}.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.v${VDATE}.tar ${COMOUTplots}/.
