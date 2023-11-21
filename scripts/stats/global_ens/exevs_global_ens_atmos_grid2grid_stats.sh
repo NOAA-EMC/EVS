@@ -1,9 +1,17 @@
 #!/bin/ksh
-#################################################################
-# Purpose:   To run grid-to-grid verification on all global ensembles
+#**********************************************************************************************
+# Purpose:  1. Setup some running envirnment paramters for grid-to-grid job that are not
+#              defined in stat J-job  
+#           2. Run  grid-to-grid verifications for all global ensembles, including
+#               (1) upper air fields grid2grid verification for gefs, cmce, ecme and naefs
+#               (2) precip verification for gefs, cmce, ecme and naefs
+#               (3) snowfall verification for gefs, cmce, and ecme 
+#               (4) sea ice verification for gefs
+#               (5) SST verification for gefs
 #
-# Log History:  12/01/2021 Binbin Zhou  
-################################################################
+# Last  updated 11/15/2023: by  Binbin Zhou, Lynker@EMC/NCEP
+#
+#**********************************************************************************************
 set -x
 
 export WORK=$DATA

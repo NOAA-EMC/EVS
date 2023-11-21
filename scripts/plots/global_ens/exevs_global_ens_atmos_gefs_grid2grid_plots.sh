@@ -1,5 +1,10 @@
 #!/bin/ksh
-
+#*******************************************************************************
+# Purpose: setup environment, paths, and run the global_ens grid2grid 
+#          plotting python script
+#
+# Last updated: 11/17/2023, Binbin Zhou Lynker@EMC/NCEP
+#******************************************************************************
 set -x 
 
 cd $DATA
@@ -34,6 +39,9 @@ done
 export init_beg=$first_day
 export valid_beg=$first_day
 
+#*************************************************************
+# Virtual link reguired stat files of past 31/90 days
+#*************************************************************
 n=0
 while [ $n -le $past_days ] ; do
   #hrs=`expr $n \* 24`
@@ -55,7 +63,9 @@ mkdir -p $plot_dir
 
 
 verif_case=$VERIF_CASE
-
+#*****************************************
+# Build a POE script to collect sub-tasks
+# ****************************************
 > run_all_poe.sh
 
 for stats in acc me_mae crpss rmse_spread ; do 
@@ -136,6 +146,9 @@ for score_type in time_series lead_average ; do
 
       for line_type in $line_tp ; do 
 
+	 #***************************
+	 # Build sub-task scripts
+	 #***************************
          > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh  
 
         if [ $stats = acc ] ; then
@@ -202,6 +215,9 @@ done #end of stats
 
 chmod +x run_all_poe.sh
 
+#***************************************************************************
+# Run the POE script in parallel or in sequence order to generate png files
+#**************************************************************************
 if [ $run_mpi = yes ] ; then
    mpiexec -np 192 -ppn 96 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
@@ -217,6 +233,9 @@ if [ -s $log_file ]; then
     echo "End: $log_file"
 fi
 
+#**************************************************
+# Change plot file names to meet the EVS standard
+#**************************************************
 cd $plot_dir
 
 for stats in acc me_mae crpss rmse_spread ; do
