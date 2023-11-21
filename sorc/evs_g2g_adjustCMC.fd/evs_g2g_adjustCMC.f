@@ -1,4 +1,25 @@
-        use grib_mod
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C  Purpose: Generate NAEFS ensemble members for grid2grid verification
+C           against GFS and CMC analysis  
+C   
+C   Note: 1. This program read GFS analysis, CMC analysis, GEFS, CMCE
+C         member file
+C            Step 1. Get the difference between GFS ans CMC analysis at
+C                 each grid for all fields
+C            Step 2. Add the above difference to ecah CMCE member files
+C                 at each grid for all fields
+C            Step 3. Store the resultant CMCE fields in the new member
+C                 files (still in the same grid) 
+C         2. The new CMCE member files will be used as NAEFS member files.
+C            The GEFS member files are not changed and directly used as
+C            NAEFS member files
+C         3. The NAEFS verification will use GFS anaylysis as validation
+C            data
+C            
+C    Last update: 11/17/2023, Binbin Zhou  Lynker@?NCEP/EMC
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      use grib_mod
 C  raw data
        real,allocatable,dimension(:,:) :: gfsa,gefs,cmca,cmce,cmce_adj
 
@@ -138,10 +159,6 @@ C  raw data
 
         read (*,*) gefs_file_list, cmce_file_list
 
-
-cc     RAP has one-hour accumu precip, so only one file is used
-cc     NAM has no one-hour accumu precip, so two files are needed
-
        if(GRIBID.eq.255) then   !For MOSAIC 255 grid
          im=1401
          jm=701
@@ -161,10 +178,11 @@ cc     NAM has no one-hour accumu precip, so two files are needed
        allocate(cmce(10,jf)) 
        allocate(cmce_adj(10,jf)) 
  
-       
+        !Open gefs and cmce member files to read
         open(1, file=gefs_file_list, status='old')
         open(2, file=cmce_file_list, status='old')
 
+        !Open gfs and cmc analysis files to read
         call baopenr(8,'gfsanl',ierr8)
         call baopenr(9,'cmcanl',ierr9)
         !write(*,*) 'open ierr8, ierr9=', ierr8, ierr9
@@ -183,6 +201,7 @@ cc     NAM has no one-hour accumu precip, so two files are needed
           jpd11=kpd11_gefs(i)
           jpd10=kpd10_gefs(i)
 
+          !read gfs analysis data
           jpdtn=0
           call readGB2(8,jpdtn,jpd1,jpd2,jpd10,jpd11,jpd12,
      +      gfld_gfsanl,iret)
@@ -196,7 +215,8 @@ cc     NAM has no one-hour accumu precip, so two files are needed
           jpd12=kpd12_cmce(i)
           jpd11=kpd11_cmce(i)
           jpd10=kpd10_cmce(i)
-
+     
+          !read cmc analysis data
           jpdtn=1
           call readGB2(9,jpdtn,jpd1,jpd2,jpd10,jpd11,jpd12,
      +      gfld_cmcanl,iret)
@@ -237,6 +257,7 @@ cc     NAM has no one-hour accumu precip, so two files are needed
          write(*,*) ncmce, trim(cmcembr),' open cmce error'
         end if
 
+        !open output file name to write out
         call baopen(nadj,cmcembr_adj,ierr)
         if (ierr.ne.0) then
          write(*,*) nadj, ' open cmcembr_adj error'
@@ -256,6 +277,7 @@ cc     NAM has no one-hour accumu precip, so two files are needed
           jpd11=kpd11_gefs(i)
           jpd10=kpd10_gefs(i)
 
+          !read gefs member files
           jpdtn=1
           call readGB2(ngefs,jpdtn,jpd1,jpd2,jpd10,jpd11,jpd12,
      +      gfld_gefs,iret)
@@ -270,6 +292,7 @@ cc     NAM has no one-hour accumu precip, so two files are needed
           jpd11=kpd11_cmce(i)
           jpd10=kpd10_cmce(i)
 
+          !read cmce member files
           jpdtn=1
           call readGB2(ncmce,jpdtn,jpd1,jpd2,jpd10,jpd11,jpd12,
      +      gfld_cmce,iret)
@@ -280,7 +303,7 @@ cc     NAM has no one-hour accumu precip, so two files are needed
            goto 1000
           end if
 
-          
+          !Calculate the difference between GFS and CMC analysis
           do k=1,jf
        
             if(gfsa(i,k).ne.-9999.99.and.cmca(i,k).ne.-9999.99) then
@@ -303,6 +326,7 @@ cc     NAM has no one-hour accumu precip, so two files are needed
      +     !      cmce(i,k),cmce_adj(i,k)
            !end do
 
+           !write out the results 
            gfld_cmce%fld(:)=cmce_adj(i,:)
            call putgb2(nadj,gfld_cmce,iret)
            if (iret .ne. 0) then
@@ -322,7 +346,12 @@ cc     NAM has no one-hour accumu precip, so two files are needed
       stop
       end
 
-
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C  This subroutine is to read grib2 file which was modified for reading
+C    GEFS and CMCE grib2 files
+C
+C  Last update: 11/17/2023,  Binbin Zhou Lynker@NCEP/EMC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       subroutine readGB2(iunit,jpdtn,jpd1,jpd2,jpd10,jpd11,jpd12,
      +    gfld,iret)
 

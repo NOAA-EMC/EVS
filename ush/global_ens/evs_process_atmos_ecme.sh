@@ -1,4 +1,9 @@
 #!/bin/ksh
+#***********************************************************************************
+# Purpose:  Process/prepare ECM analysis data files and ECME ensemble member files
+#  
+#  Last update: 11/16/2023, by Binbin Zhou (Lynker@NCPE/EMC)
+#***********************************************************************************         
 set -x
 
 cd $WORK
@@ -37,6 +42,9 @@ get_ecme='yes'
 
 if [ $get_ecme = 'yes' ] ; then
 
+#**********************************************
+# List all required fields to be retrieved
+#**********************************************	
 VAR[1]=':10U:'
 VAR[2]=':10V:'
 VAR[3]=':U:kpds5=131:kpds6=100:kpds7=850:'
@@ -55,6 +63,9 @@ VAR[15]=':2D:'
 VAR[20]=':TP:'
 VAR[21]=':SF:'
 
+#***********************************************************************************
+# Retrieve requried fields from  ECME's DCD analysis data files (grib1) in DCOM
+#************************************************************************************
 hourix=0
 while [ ${hourix} -lt 31 ]; do
   # Get DCD files
@@ -89,7 +100,11 @@ while [ ${hourix} -lt 31 ]; do
       fi
     fi 
   fi 
-  # Get E1E
+
+
+  #******************************************************************
+  # Retrieve requried fields from ECME member files E1E in DCOM
+  #******************************************************************
   E1E=${DCOMIN}/$yyyymmdd/wgrbbul/ecmwf/E1E${imdh}00${vmdh}001
   if [ ! -s $E1E ]; then
     if [ $SENDMAIL = YES ]; then
@@ -130,6 +145,9 @@ while [ ${hourix} -lt 31 ]; do
   fi
 done 
 
+#******************************************************************
+#  Retrieve requried fields from ECME member files E1E in DCOM
+#******************************************************************
 hourix=0
 while [ ${hourix} -lt 31 ]; do
   let hourinc=hourix*12
@@ -168,6 +186,10 @@ while [ ${hourix} -lt 31 ]; do
   fi
 done
 
+
+#***********************************************************************
+#  Retrieve requried upper air fields from ECME member files E1E in DCOM
+#***********************************************************************
 VAR[1]=':U:kpds5=131:kpds6=100'
 VAR[2]=':V:kpds5=132:kpds6=100'
 VAR[3]=':GH:kpds5=156:kpds6=100'

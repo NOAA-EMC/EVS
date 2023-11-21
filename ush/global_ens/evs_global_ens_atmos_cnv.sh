@@ -1,9 +1,24 @@
 #!/bin/ksh
+#*******************************************************************************************
+#  Purpose: Run cnv verification job
+#      
+#     Note: This scripts is specific for ceiling and visibility (cnv). 
+#           For ceiling and visibility, in case of claer sky in one member, its forecast 
+#           will be given a very large value. This very large value may b arbitrary,
+#           so it can not be used in the ensemble mean computation of CTC scores 
+#           (so-called conditional-mean). The better solution to deal with such case  is 
+#              Step 1. First verify cnv to get CTC stat files for each ensemble members
+#              Step 2. Calculate the ensemble mean of CTC among the stat files of all ensemble
+#                      members. In other word, get the average of each column  
+#                      (hit rate, false alarm, correct non, etc) of CTC line type
+#              Step 3. Form final CTC stat file for cnv using the averaged CTC columns  
+#
+#  Last update: 11/16/2023, by Binbin Zhou Lynker@EMC/NCEP
+#
+#******************************************************************************************
+
 set -x 
 
-#Binbin note: If METPLUS_BASE,  PARM_BASE not set, then they will be set to $METPLUS_PATH
-#             by config_launcher.py in METplus-3.0/ush
-#             why config_launcher.py is not in METplus-3.1/ush ??? 
 
 modnam=$1
 
@@ -12,13 +27,18 @@ modnam=$1
 ############################################################
 export regrid='NONE'
 
+#**********************************************************
 #Check input if obs and fcst input data files availabble 
+#*********************************************************
 $USHevs/global_ens/evs_gens_atmos_check_input_files.sh prepbufr
 export err=$?; err_chk
 $USHevs/global_ens/evs_gens_atmos_check_input_files.sh $modnam
 export err=$?; err_chk
 
 MODNAM=`echo $modnam | tr '[a-z]' '[A-Z]'`
+#******************************************************************
+# Setup members, valiation files and forecast hours based on models
+#******************************************************************
 if [ $modnam = gefs ] ; then
      mbrs='01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30'
      validhours="00 06 12 18"
@@ -45,6 +65,13 @@ echo $index
 COM_IN=${EVSIN:0:$index}
 echo $COM_IN
 
+#**********************************************************
+# Step 1. Run METplus for all members
+# ********************************************************
+
+#*********************************************************
+# Build a poe script to collect sub-task scripts
+#**********************************************************
 >run_all_gens_cnv_poe.sh
 for vhour in $validhours; do
   for fhr in $fhrs ; do
@@ -53,7 +80,13 @@ for vhour in $validhours; do
     fcst_time=$($NDATE -$fhr3 ${vday}${vhour})
     fyyyymmdd=${fcst_time:0:8}
     ihour=${fcst_time:8:2}
+    #***********************************
+    # Build sub-task scripts
+    #***********************************
     >run_${modnam}_t${vhour}z_${fhr}_cnv.sh
+    #************************************
+    # Run MATplus for all members
+    #************************************
     echo  "export output_base=$WORK/grid2obs/run_${modnam}_t${vhour}z_${fhr}_cnv" >> run_${modnam}_t${vhour}z_${fhr}_cnv.sh
     echo  "export modelpath=$COM_IN" >> run_${modnam}_t${vhour}z_${fhr}_cnv.sh
     echo  "export prepbufrhead=gfs" >> run_${modnam}_t${vhour}z_${fhr}_cnv.sh
@@ -92,6 +125,9 @@ for vhour in $validhours; do
  done # end of fhrs
 done # end of validhours
 
+#********************************
+# Run step 1 poe script
+#********************************
 chmod 775 run_all_gens_cnv_poe.sh
 if [ $run_mpi = yes ] ; then
   mpiexec -n 28 -ppn 28 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_cnv_poe.sh
@@ -101,8 +137,19 @@ else
     export err=$?; err_chk
 fi
 
+#*************************************************************
+# Step 2. Average CTC columns over stat files of all members
+# ************************************************************
+
+#*********************************************************
+# Build a poe script to collect sub-task scripts 
+#**********************************************************
 >run_all_gens_cnv_poe2.sh
 for fhr in $fhrs ; do
+    #***************************************************************************
+    # Build sub-tasks which use $USHevs/global_ens/evs_global_ens_average_cnv.sh
+    #   to get averaged CTC final stat files
+    #***************************************************************************
     mkdir -p $WORK/grid2obs/run_${modnam}_${fhr}_cnv/stat/${modnam}
     cpreq -v $WORK/grid2obs/run_${modnam}_t*z_${fhr}_cnv/stat/${modnam}/* $WORK/grid2obs/run_${modnam}_${fhr}_cnv/stat/${modnam}/.
     echo  "export output_base=$WORK/grid2obs/run_${modnam}_${fhr}_cnv" >> run_${modnam}_${fhr}_cnv.sh
@@ -114,6 +161,9 @@ for fhr in $fhrs ; do
     echo "${DATA}/run_${modnam}_${fhr}_cnv.sh" >> run_all_gens_cnv_poe2.sh
 done
 
+#**************************
+# Run step 2/3 pos script
+#**************************
 chmod 775 run_all_gens_cnv_poe2.sh
 if [ $run_mpi = yes ] ; then
   mpiexec -n 14 -ppn 14 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_cnv_poe2.sh
@@ -123,6 +173,9 @@ else
     export err=$?; err_chk
 fi
 
+#**********************************
+# Accumulate cnv final stst files 
+#**********************************
 if [ $gather = yes ] ; then
   $USHevs/global_ens/evs_global_ens_atmos_gather.sh $MODELNAME cnv 00 18
   export err=$?; err_chk

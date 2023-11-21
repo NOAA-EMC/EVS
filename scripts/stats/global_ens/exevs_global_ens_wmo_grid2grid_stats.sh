@@ -1,9 +1,12 @@
 #!/bin/ksh
-#################################################################
-# Purpose:   To run grid-to-grid verification on all global ensembles
+#**********************************************************************************************
+# Purpose:  1. Setup some running envirnment paramters for WMO job that are not
+#              defined in stat J-job
+#           2. Run WMO verifications of surface fields for gefs and cmce
 #
-# Log History:  12/01/2021 Binbin Zhou  
-################################################################
+# Last  updated 11/15/2023: by  Binbin Zhou, Lynker@EMC/NCEP
+#
+#**********************************************************************************************
 set -x
 
 export WORK=$DATA
@@ -24,10 +27,6 @@ export gather=${gather:-'yes'}
 export vday=$1
 ens=$2 
 verify_type=$3
-
-#############################################################
-# Step 0: Run copygb to convert URMA data to 4km WRF grid
-#############################################################
 
 if  [ $ens = gefs ] ||  [ $ens = cmce ] ; then
   if [ $verify_type = upper ] ; then 

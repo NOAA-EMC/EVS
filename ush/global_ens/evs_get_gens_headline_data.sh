@@ -1,4 +1,13 @@
 #!/bin/ksh
+#**************************************************************************************
+# Purpose:    1. Further retrieve 500hPa Height from GEFS and CMCE analysis 
+#                (in prep/atmos.YYYYMMDD/gefs and cmce) and bias-corrected GEFS and CMCE  
+#                 member files (in prep/atmos.YYYYMMDD/gefs_bc cmce_bc) to 
+#                 form even smaller grib2 files
+#             2. Stored the even smaller grib files in prep/global_ens/headline.YYYYMMDD
+#
+# Last updated 11/15/2023: by  Binbin Zhou, Lynker@EMC/NCEP
+#******************************************************************************************
 
 set -x
 

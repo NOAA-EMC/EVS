@@ -1,5 +1,12 @@
 #!/bin/ksh
-
+#*******************************************************************************
+# Purpose: setup environment, paths, and run the global_ens profile3
+#          plotting python script
+#  Note: The profile plots are split to 4 smaller scripts: profile1,2,3,4.
+#        The profile3 is for ECNT score profiles 
+#
+# Last updated: 11/17/2023, Binbin Zhou Lynker@EMC/NCEP
+#******************************************************************************
 set -x 
 
 cd $DATA
@@ -34,6 +41,9 @@ done
 export init_beg=$first_day
 export valid_beg=$first_day
 
+#*************************************************************
+# Virtual link required data files of past 31/90 days
+#*************************************************************
 n=0
 while [ $n -le $past_days ] ; do
   #hrs=`expr $n \* 24`
@@ -60,6 +70,9 @@ mkdir -p $plot_dir
 verif_case=grid2obs
 verif_type=upper_air
 
+#*****************************************
+# Build a POE script to collect sub-tasks
+# ****************************************
 > run_all_poe.sh
 
 for stats in rmse_spread me ; do 
@@ -102,6 +115,9 @@ fi
 
       for line_type in $line_tp ; do 
 
+         #***************************
+         # Build sub-task scripts
+         #***************************
          > run_${stats}.${score_type}.${lead}.${VAR}.${line_type}.sh  
 
         echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${line_type}.sh
@@ -156,6 +172,9 @@ done #end of stats
 
 chmod +x run_all_poe.sh
 
+#***************************************************************************
+# Run the POE script in parallel or in sequence order to generate png files
+#**************************************************************************
 if [ $run_mpi = yes ] ; then
    mpiexec -np 320 -ppn 64 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
 else
@@ -171,6 +190,9 @@ if [ -s $log_file ]; then
     echo "End: $log_file"
 fi
 
+#**************************************************
+# Change plot file names to meet the EVS standard
+#**************************************************
 cd $plot_dir
 
 for stats in rmse_spread me ; do

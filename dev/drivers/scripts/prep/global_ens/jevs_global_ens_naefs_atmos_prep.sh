@@ -42,7 +42,7 @@ export run_mpi=yes
 export get_gefs_bc_apcp24h=yes
 export get_model_bc=yes
 
-export SENDMAIL=YES
+#export SENDMAIL=YES
 export MAILTO='alicia.bentley@noaa.gov,steven.simon@noaa.gov'
 
 if [ -z "$MAILTO" ]; then
