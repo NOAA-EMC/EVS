@@ -4,7 +4,7 @@
 # NAME: mesoscale_plots_grid2obs_create_poe_job_scripts.sh
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # CONTRIBUTOR(S): RS, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
-# PURPOSE: Create EVS CAM Grid2Obs - Plots POE job scripts
+# PURPOSE: Create EVS Mesoscale Grid2Obs - Plots POE job scripts
 # DEPENDENCIES: $SCRIPTSevs/mesoscale/plots/exevs_$MODELNAME_grid2obs_plots.sh
 #
 # =============================================================================

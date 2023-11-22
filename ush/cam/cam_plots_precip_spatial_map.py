@@ -18,9 +18,9 @@ import logging
 import sys
 import datetime
 import subprocess
+import shutil
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
-from cartopy.util import add_cyclic_point
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 from cartopy import config
 from cam_plots_specs import PlotSpecs
@@ -30,32 +30,32 @@ class PrecipSpatialMap:
     Create a precipitation spatial map graphic
     """
 
-    def __init__(self, logger, input_dir, output_dir, model_info_dict,
-                 date_info_dict, plot_info_dict, met_info_dict, logo_dir, 
-                 cartopy_data_dir):
+    def __init__(self, logger, input_dir, output_dir, restart_dir, 
+                 model_info_dict, date_info_dict, plot_info_dict, 
+                 met_info_dict, logo_dir):
         """! Initalize PrecipSpatialMap class
              Args:
                  logger           - logger object
                  input_dir        - path to input directory (string)
                  output_dir       - path to output directory (string)
+                 restart_dir      - path to restart directory (string)
                  model_info_dict  - model infomation dictionary (strings)
                  plot_info_dict   - plot information dictionary (strings)
                  date_info_dict   - date information dictionary (strings)
                  met_info_dict    - MET information dictionary (strings)
                  logo_dir         - directory with logo images (string)
-                 cartopy_data_dir - directory with cartopy shapefiles (string)
  
              Returns:
         """
         self.logger = logger
         self.input_dir = input_dir
         self.output_dir = output_dir
+        self.restart_dir = restart_dir
         self.model_info_dict = model_info_dict
         self.date_info_dict = date_info_dict
         self.plot_info_dict = plot_info_dict
         self.met_info_dict = met_info_dict
         self.logo_dir = logo_dir
-        self.cartopy_data_dir = cartopy_data_dir
 
     def make_precip_spatial_map(self):
         """! Create the precipitation spatial map graphic
@@ -65,6 +65,7 @@ class PrecipSpatialMap:
         self.logger.info(f"Creating preciptation spatial map...")
         self.logger.debug(f"Input directory: {self.input_dir}")
         self.logger.debug(f"Output directory: {self.output_dir}")
+        self.logger.debug(f"Restart directory: {self.restart_dir}")
         self.logger.debug(f"Model information dictionary: "
                           +f"{self.model_info_dict}")
         self.logger.debug(f"Date information dictionary: "
@@ -105,7 +106,7 @@ class PrecipSpatialMap:
                         'goldenrod', 'yellow']
         cmap_over_color_mm = '#ffaeb9'
         # Set Cartopy shapefile location
-        config['data_dir'] = self.cartopy_data_dir
+        config['data_dir'] = config['repo_data_dir']
         # Read in data
         self.logger.info(f"Reading in model files from {self.input_dir}")
         for model_num in self.model_info_dict:
@@ -214,13 +215,13 @@ class PrecipSpatialMap:
                     file_valid_time, '%Y%m%d_%H%M%S'
                 )
                 if valid_date_dt != file_valid_time_dt:
-                    self.logger.error(f"FILE VALID TIME {file_valid_time_dt} "
+                    self.logger.error(f"FATAL ERROR: FILE VALID TIME {file_valid_time_dt} "
                                       +"DOES NOT MATCH EXPECTED VALID TIME "
                                       +f"{valid_date_dt}")
                     sys.exit(1)
                 if model_num != 'obs':
                     if init_date_dt != file_init_time_dt:
-                        self.logger.error(f"FILE INIT TIME {file_init_time_dt} "
+                        self.logger.error(f"FATAL ERROR: FILE INIT TIME {file_init_time_dt} "
                                           +"DOES NOT MATCH EXPECTED INIT TIME "
                                           +f"{init_date_dt}")
                         sys.exit(1)
@@ -394,6 +395,18 @@ class PrecipSpatialMap:
                 plt.savefig(image_name)
                 plt.clf()
                 plt.close('all')
+                #Copy to restart directory
+                if self.restart_dir:
+                    self.logger.info("Copying image to restart directory: "+self.restart_dir)
+                    shutil.copy2(
+                        image_name, 
+                        os.path.join(
+                            self.restart_dir,
+                            'precip',
+                            'na',
+                            os.path.basename(image_name)
+                        )
+                    )
                 # Convert png to gif, if possible
                 check_convert = subprocess.run(
                     ['which', 'convert'], stdout=subprocess.DEVNULL,
@@ -406,6 +419,18 @@ class PrecipSpatialMap:
                         ['convert', image_name,
                          image_name.replace('.png', '.gif')]
                     )
+                    #Copy to restart directory
+                    if self.restart_dir:
+                        self.logger.info("Copying converted image to restart directory: "+self.restart_dir)
+                        shutil.copy2(
+                            image_name.replace('.png', '.gif'), 
+                            os.path.join(
+                                self.restart_dir,
+                                'precip',
+                                'na',
+                                os.path.basename(image_name.replace('.png', '.gif'))
+                            )
+                        )
                 else:
                     self.logger.warning("convert executable not in PATH, "
                                         "not creating gif of image")
@@ -414,8 +439,8 @@ def main():
     # Need settings
     INPUT_DIR = os.environ['HOME']
     OUTPUT_DIR = os.environ['HOME']
+    RESTART_DIR = os.environ['RESTART_DIR']
     LOGO_DIR = os.environ['HOME'],
-    CARTOPY_DIR = os.environ['cartopyDataDir']
     MODEL_INFO_DICT = {
         'model1': {'name': 'MODEL_A',
                    'plot_name': 'PLOT_MODEL_A',
@@ -479,9 +504,9 @@ def main():
     logger_info = f"Log file: {job_logging_file}"
     print(logger_info)
     logger.info(logger_info)
-    p = PrecipSpatialMap(logger, INPUT_DIR, OUTPUT_DIR, MODEL_INFO_DICT,
-                         DATE_INFO_DICT, PLOT_INFO_DICT, MET_INFO_DICT,
-                         LOGO_DIR, cartopyDataDir)
+    p = PrecipSpatialMap(logger, INPUT_DIR, OUTPUT_DIR, RESTART_DIR, 
+                         MODEL_INFO_DICT, DATE_INFO_DICT, PLOT_INFO_DICT, 
+                         MET_INFO_DICT, LOGO_DIR)
     p.make_precip_spatial_map()
 
 if __name__ == "__main__":

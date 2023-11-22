@@ -18,7 +18,7 @@ print(f"Working in: {cwd}")
 # Read in common environment variables
 DATA = os.environ['DATA']
 MODELNAME = os.environ['MODELNAME']
-COMINnohrsc = os.environ['COMINnohrsc']
+COMINnohrsc = os.environ['DCOMINnohrsc']
 COMOUT = os.environ['COMOUT']
 COMINmodel_file_template = os.environ['MODEL_INPUT_TEMPLATE']
 VDATE = os.environ['VDATE']
@@ -30,9 +30,10 @@ COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
 USER = os.environ['USER']
 jobid = os.environ['jobid']
+SENDMAIL = os.environ['SENDMAIL']
 
-# mail_cmd = 'mail.py -s "$subject" $maillist -v'
-mail_cmd = 'mail -s "$subject" $maillist'
+# mail_cmd = 'mail.py -s "$subject" $MAILTO -v'
+mail_cmd = 'mail -s "$subject" $MAILTO'
 
 for VHOUR in VHOUR_LIST:
     # What accumulations stats will be run for
@@ -95,7 +96,7 @@ for VHOUR in VHOUR_LIST:
                             print(f"Linking {COMINmodel_file} to "
                                   +f"{DATAmodel_file}")
                             os.symlink(COMINmodel_file, DATAmodel_file)
-                        else:
+                        elif SENDMAIL == "YES":
                             mail_COMINmodel_file = os.path.join(
                                 DATA, f"mail_{MODELNAME}_"
                                 +f"init{init_dt:%Y%m%d%H}_"
@@ -116,7 +117,7 @@ for VHOUR in VHOUR_LIST:
                                     +'"\n'
                                 )
                                 mailmsg.write(
-                                    "export maillist=${maillist:-'"
+                                    "export MAILTO=${MAILTO:-'"
                                     +USER.lower()+"@noaa.gov'}\n"
                                 )
                                 mailmsg.write(
@@ -155,7 +156,7 @@ for VHOUR in VHOUR_LIST:
         if m_util.check_file(COMINnohrsc_file):
             print(f"Linking {COMINnohrsc_file} to {DATAnohrsc_file}")
             os.symlink(COMINnohrsc_file, DATAnohrsc_file)
-        else:
+        elif SENDMAIL == "YES":
             mail_COMINnohrsc_file = os.path.join(
                 DATA, f"mail_nohrsc_accum{accum}hr_"
                 +f"valid{valid_dt:%Y%m%d%H}.sh"
@@ -171,7 +172,7 @@ for VHOUR in VHOUR_LIST:
                     +'Data Missing for EVS '+COMPONENT+'"\n'
                 )
                 mailmsg.write(
-                    "export maillist=${maillist:-'"+USER.lower()
+                    "export MAILTO=${MAILTO:-'"+USER.lower()
                     +"@noaa.gov'}\n"
                 )
                 mailmsg.write(

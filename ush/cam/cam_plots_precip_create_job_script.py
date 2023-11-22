@@ -24,15 +24,13 @@ COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
 VERIF_CASE = os.environ['VERIF_CASE']
 MODELNAME = os.environ['MODELNAME']
-MET_PLUS_PATH = os.environ['MET_PLUS_PATH']
-MET_PATH = os.environ['MET_PATH']
-MET_CONFIG = os.environ['MET_CONFIG']
+METPLUS_PATH = os.environ['METPLUS_PATH']
+MET_ROOT = os.environ['MET_ROOT']
 DATA = os.environ['DATA']
 VDATE = os.environ['VDATE']
 VERIF_TYPE = os.environ['VERIF_TYPE']
 USH_DIR = os.environ['USH_DIR']
 FIXevs = os.environ['FIXevs']
-cartopyDataDir = os.environ['cartopyDataDir']
 MET_VERSION = os.environ['MET_VERSION']
 IMG_HEADER = os.environ['IMG_HEADER']
 PRUNE_DIR = os.environ['PRUNE_DIR']
@@ -76,7 +74,6 @@ job_env_vars_dict = {
     'IMG_HEADER': IMG_HEADER,
     'USH_DIR': USH_DIR,
     'FIXevs': FIXevs,
-    'cartopyDataDir': cartopyDataDir,
     'PRUNE_DIR': PRUNE_DIR,
     'SAVE_DIR': SAVE_DIR,
     'RESTART_DIR': RESTART_DIR,

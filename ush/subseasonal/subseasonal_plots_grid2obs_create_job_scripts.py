@@ -2,7 +2,9 @@
 '''                           
 Program Name: subseasonal_plots_grid2obs_create_job_scripts.py
 Contact(s): Shannon Shields
-Abstract: This creates multiple independent job scripts. These
+Abstract: This script is run by exevs_subseasonal_grid2obs_plots.sh
+          in scripts/plots/subseasonal.
+          This creates multiple independent job scripts. These
           jobs contain all the necessary environment variables
           and commands needed to run the specific
           use case.
@@ -49,7 +51,7 @@ if not os.path.exists(JOB_GROUP_jobs_dir):
 #### Plotting jobs
 ################################################
 plot_jobs_dict = {
-    'PrepBufr': {
+    'prepbufr': {
         'WeeklyAvg_TempAnom2m': {'line_type_stat_list': ['SL1L2/RMSE',
                                                          'SL1L2/ME'],
                                  'vx_mask_list': ['GLOBAL', 'CONUS',
@@ -249,7 +251,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     # Write job commands
                     job.write(
                         sub_util.python_command('subseasonal_plots.py',[])
+                        +'\n'
                     )
+                    job.write('export err=$?; err_chk'+'\n')
                     job.close()
             elif JOB_GROUP == 'filter_stats':
                 for JOB_GROUP_loop in list(
@@ -298,7 +302,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     job.write('\n')
                     job.write(
                         sub_util.python_command('subseasonal_plots.py',[])
+                        +'\n'
                     )
+                    job.write('export err=$?; err_chk'+'\n')
                     job.close()
             elif JOB_GROUP == 'make_plots':
                 job_output_images_dir = os.path.join(
@@ -402,9 +408,10 @@ for verif_type in VERIF_CASE_STEP_type_list:
                             job.write('\n')
                             job.write(
                                 sub_util.python_command(run_subseasonal_plot,
-                                                        [])
+                                                        [])+'\n'
                             )
-                        job.close()
+                            job.write('export err=$?; err_chk'+'\n')
+                            job.close()
             elif JOB_GROUP == 'tar_images':
                 job_env_dict['model_list'] = "'"+f"{', '.join(model_list)}"+"'"
                 job_env_dict['model_plot_name_list'] = (
@@ -442,7 +449,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job.write('\n')
                 job.write(
                     sub_util.python_command('subseasonal_plots.py',[])
+                    +'\n'
                 )
+                job.write('export err=$?; err_chk'+'\n')
                 job.close()
 
 # If running USE_CFP, create POE scripts
@@ -450,7 +459,8 @@ if USE_CFP == 'YES':
     job_files = glob.glob(os.path.join(JOB_GROUP_jobs_dir, 'job*'))
     njob_files = len(job_files)
     if njob_files == 0:
-        print("ERROR: No job files created in "+JOB_GROUP_jobs_dir)
+        print("FATAL ERROR: No job files created in "+JOB_GROUP_jobs_dir)
+        sys.exit(1)
     poe_files = glob.glob(os.path.join(JOB_GROUP_jobs_dir, 'poe*'))
     npoe_files = len(poe_files)
     if npoe_files > 0:

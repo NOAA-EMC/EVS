@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # =============================================================================
 #
 # NAME: cam_check_input_data.py
@@ -50,11 +51,12 @@ elif STEP == 'prep':
 if proceed:
     # Load environment variables
     send_mail = 0
-    err=0
+    missing_data_flag=0
     max_num_files = 10
     COMPONENT = os.environ['COMPONENT']
-    maillist = os.environ['maillist']
-    CYC = os.environ['cyc']
+    SENDMAIL = os.environ['SENDMAIL']
+    MAILTO = os.environ['MAILTO']
+    VHR = os.environ['vhr']
     jobid = os.environ['jobid']
     FIXevs = os.environ['FIXevs']
     VDATE = os.environ['VDATE']
@@ -74,7 +76,7 @@ if proceed:
             COMINobsproc = os.environ['COMINobsproc']
             COMINnam = os.environ['COMINnam']
         elif VERIF_CASE == 'snowfall':
-            COMINsnow = os.environ['COMINsnow']
+            DCOMINsnow = os.environ['DCOMINsnow']
             OBS_ACC = os.environ['OBS_ACC']
             ACC = os.environ['ACC']
         elif VERIF_CASE == 'precip':
@@ -93,8 +95,12 @@ if proceed:
             print(f"The provided MODELNAME ({MODELNAME}) is not recognized. Quitting ...")
             sys.exit(1)
     if VERIF_CASE == 'precip':
-        COMINmrms = os.environ['COMINmrms']
-        COMINccpa = os.environ['COMINccpa']
+        if STEP == 'stats':
+            EVSINmrms = os.environ['EVSINmrms']
+            EVSINccpa = os.environ['EVSINccpa']
+        elif STEP == 'prep':
+            DCOMINmrms = os.environ['DCOMINmrms']
+            COMINccpa = os.environ['COMINccpa']
 
 
     # Calculate all lead hours
@@ -446,11 +452,11 @@ if proceed:
     
     # Print error and send an email for missing data
     if missing_fcst_paths:
-        print(f"ERROR: The following forecasts were not found:")
+        print(f"WARNING: The following forecasts were not found:")
         for missing_fcst_path in missing_fcst_paths:
             print(missing_fcst_path)
-        if send_mail:
-            err+=1
+        if send_mail and str(SENDMAIL) == "YES":
+            missing_data_flag+=1
             data_info = [
                 cutil.get_data_type(fname) 
                 for fname in missing_fcst_files
@@ -459,15 +465,19 @@ if proceed:
             unk_names = []
             fcst_fnames = []
             unk_fnames = []
+            fcst_pnames = []
+            unk_pnames = []
             for i, info in enumerate(data_info):
                 if info[1] == "fcst":
                     fcst_names.append(info[0])
                     fcst_fnames.append(missing_fcst_files[i])
+                    fcst_pnames.append(missing_fcst_paths[i])
                 elif info[1] == "unk":
                     unk_names.append(info[0])
                     unk_fnames.append(missing_fcst_files[i])
+                    unk_pnames.append(missing_fcst_paths[i])
                 else:
-                    print(f"ERROR: Undefined data type for missing data file: {info[1]}"
+                    print(f"FATAL ERROR: Undefined data type for missing data file: {info[1]}"
                           + f"\nPlease edit the get_data_type() function in"
                           + f" USHevs/cam/cam_util.py")
                     sys.exit(1)
@@ -480,17 +490,17 @@ if proceed:
                     DATAsubj = ', '.join(unk_names)
                 subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
                 DATAmsg_head = (f"Warning: Some unrecognized data were unavailable"
-                                + f" for valid date {VDATE} and cycle {CYC}Z.")
+                                + f" for valid date {VDATE} and cycle {VHR}Z.")
                 if len(unk_fnames) > max_num_files:
                     DATAmsg_body1 = (f"\nMissing files are: (showing"
                                 + f" {max_num_files} of"
-                                + f" {len(unk_fnames)} total files)\n")
-                    for fname in unk_fnames[:max_num_files]:
-                        DATAmsg_body1+=f"{fname}\n"
+                                + f" {len(unk_pnames)} total files)\n")
+                    for pname in unk_pnames[:max_num_files]:
+                        DATAmsg_body1+=f"{pname}\n"
                 else:
                     DATAmsg_body1 = (f"Missing files are:\n")
-                    for fname in unk_fnames:
-                        DATAmsg_body1+=f"{fname}\n"
+                    for pname in unk_pnames:
+                        DATAmsg_body1+=f"{pname}\n"
                 DATAmsg_body2 = f"Job ID: {jobid}"
                 cutil.run_shell_command([
                     'echo', f'\"{DATAmsg_head}\"', '>mailmsg'
@@ -503,7 +513,7 @@ if proceed:
                 ])
                 cutil.run_shell_command([
                     'cat', 'mailmsg', '|' , 'mail', '-s', f'\"{subject}\"', 
-                    f'\"{maillist}\"'
+                    f'\"{MAILTO}\"'
                 ])
             if fcst_names:
                 if len(fcst_names) == 1:
@@ -524,7 +534,7 @@ if proceed:
                                    + f" EVS {COMPONENT}")
                         DATAmsg_head = (f"Warning: No {DATAsubj} data were"
                                         + f" available for valid date {VDATE},"
-                                        + f" cycle {CYC}Z, and f{lead_hours[0]}.")
+                                        + f" cycle {VHR}Z, and f{lead_hours[0]}.")
                     else:
                         lead_string = ', '.join(
                             [f'f{lead}' for lead in lead_hours]
@@ -532,17 +542,17 @@ if proceed:
                         subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
                         DATAmsg_head = (f"Warning: No {DATAsubj} data were"
                                         + f" available for valid date {VDATE},"
-                                        + f" cycle {CYC}Z, and {lead_string}.")
-                if len(fcst_fnames) > max_num_files:
+                                        + f" cycle {VHR}Z, and {lead_string}.")
+                if len(fcst_pnames) > max_num_files:
                     DATAmsg_body1 = (f"\nMissing files are: (showing"
                                 + f" {max_num_files} of"
-                                + f" {len(fcst_fnames)} total files)\n")
-                    for fname in fcst_fnames[:max_num_files]:
-                        DATAmsg_body1+=f"{fname}\n"
+                                + f" {len(fcst_pnames)} total files)\n")
+                    for pname in fcst_pnames[:max_num_files]:
+                        DATAmsg_body1+=f"{pname}\n"
                 else:
                     DATAmsg_body1 = (f"Missing files are:\n")
-                    for fname in fcst_fnames:
-                        DATAmsg_body1+=f"{fname}\n"
+                    for pname in fcst_pnames:
+                        DATAmsg_body1+=f"{pname}\n"
                 DATAmsg_body2 = f"Job ID: {jobid}"
                 cutil.run_shell_command([
                     'echo', f'\"{DATAmsg_head}\"', '>mailmsg'
@@ -555,7 +565,7 @@ if proceed:
                 ])
                 cutil.run_shell_command([
                     'cat', 'mailmsg', '|' , 'mail', '-s', f'\"{subject}\"', 
-                    f'\"{maillist}\"'
+                    f'\"{MAILTO}\"'
                 ])
 
 
@@ -596,11 +606,11 @@ if proceed:
 
     # Print error and send an email for missing data
     if missing_anl_paths:
-        print(f"ERROR: The following analyses were not found:")
+        print(f"WARNING: The following analyses were not found:")
         for missing_anl_path in missing_anl_paths:
             print(missing_anl_path)
-        if send_mail:
-            err+=1
+        if send_mail and str(SENDMAIL) == "YES":
+            missing_data_flag+=1
             data_info = [
                 cutil.get_data_type(fname) 
                 for fname in missing_anl_files
@@ -609,15 +619,19 @@ if proceed:
             unk_names = []
             anl_fnames = []
             unk_fnames = []
+            anl_pnames = []
+            unk_pnames = []
             for i, info in enumerate(data_info):
                 if info[1] == "anl":
                     anl_names.append(info[0])
                     anl_fnames.append(missing_anl_files[i])
+                    anl_pnames.append(missing_anl_paths[i])
                 elif info[1] == "unk":
                     unk_names.append(info[0])
                     unk_fnames.append(missing_anl_files[i])
+                    unk_pnames.append(missing_anl_paths[i])
                 else:
-                    print(f"ERROR: Undefined data type for missing data file: {info[1]}"
+                    print(f"FATAL ERROR: Undefined data type for missing data file: {info[1]}"
                           + f"\nPlease edit the get_data_type() function in"
                           + f" USHevs/cam/cam_util.py")
                     sys.exit(1)
@@ -631,16 +645,16 @@ if proceed:
                 subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
                 DATAmsg_head = (f"Warning: Some unrecognized data were unavailable"
                                 + f" for valid date {VDATE} at {VHOUR}Z.")
-                if len(unk_fnames) > max_num_files:
+                if len(unk_pnames) > max_num_files:
                     DATAmsg_body1 = (f"\nMissing files are: (showing"
                                 + f" {max_num_files} of"
-                                + f" {len(unk_fnames)} total files)\n")
-                    for fname in unk_fnames[:max_num_files]:
-                        DATAmsg_body1+=f"{fname}\n"
+                                + f" {len(unk_pnames)} total files)\n")
+                    for pname in unk_pnames[:max_num_files]:
+                        DATAmsg_body1+=f"{pname}\n"
                 else:
                     DATAmsg_body1 = (f"Missing files are:\n")
-                    for fname in unk_fnames:
-                        DATAmsg_body1+=f"{fname}\n"
+                    for pname in unk_pnames:
+                        DATAmsg_body1+=f"{pname}\n"
                 DATAmsg_body2 = f"Job ID: {jobid}"
                 cutil.run_shell_command([
                     'echo', f'\"{DATAmsg_head}\"', '>mailmsg'
@@ -653,7 +667,7 @@ if proceed:
                 ])
                 cutil.run_shell_command([
                     'cat', 'mailmsg', '|' , 'mail', '-s', f'\"{subject}\"', 
-                    f'\"{maillist}\"'
+                    f'\"{MAILTO}\"'
                 ])
             if anl_names.size > 0:
                 if len(anl_names) == 1:
@@ -663,16 +677,16 @@ if proceed:
                 subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
                 DATAmsg_head = (f"Warning: No {DATAsubj} data were available"
                                 + f" for valid date {VDATE} at {VHOUR}Z.")
-                if len(anl_fnames) > max_num_files:
+                if len(anl_pnames) > max_num_files:
                     DATAmsg_body1 = (f"\nMissing files are: (showing"
                                 + f" {max_num_files} of"
-                                + f" {len(anl_fnames)} total files)\n")
-                    for fname in anl_fnames[:max_num_files]:
-                        DATAmsg_body1+=f"{fname}\n"
+                                + f" {len(anl_pnames)} total files)\n")
+                    for pname in anl_pnames[:max_num_files]:
+                        DATAmsg_body1+=f"{pname}\n"
                 else:
                     DATAmsg_body1 = (f"Missing files are:\n")
-                    for fname in anl_fnames:
-                        DATAmsg_body1+=f"{fname}\n"
+                    for pname in anl_pnames:
+                        DATAmsg_body1+=f"{pname}\n"
                 DATAmsg_body2 = f"Job ID: {jobid}"
                 cutil.run_shell_command([
                     'echo', f'\"{DATAmsg_head}\"', '>mailmsg'
@@ -685,7 +699,7 @@ if proceed:
                 ])
                 cutil.run_shell_command([
                     'cat', 'mailmsg', '|' , 'mail', '-s', f'\"{subject}\"', 
-                    f'\"{maillist}\"'
+                    f'\"{MAILTO}\"'
                 ])
 
 
@@ -696,19 +710,19 @@ if proceed:
         if VERIF_CASE == 'precip':
             if NEST in ['conus', 'subreg']:
                 gen_templates.append(os.path.join(
-                    COMINccpa, 
+                    EVSINccpa, 
                     'ccpa.{VDATE}',
                     'ccpa.t{VHOUR}z.01h.hrap.conus.gb2'
                 ))
             elif NEST in ['ak', 'pr', 'hi']:
                 gen_templates.append(os.path.join(
-                    COMINmrms, 
+                    EVSINmrms, 
                     'mrms.{VDATE}',
                     'mrms.t{VHOUR}z.01h.'+NEST+'.gb2'
                 ))
         elif VERIF_CASE == 'snowfall':
             gen_templates.append(os.path.join(
-                COMINsnow,
+                DCOMINsnow,
                 '{VDATE}',
                 'wgrbbul',
                 'nohrsc_snowfall',
@@ -729,7 +743,7 @@ if proceed:
                 ))
             elif NEST == 'ak':
                 gen_templates.append(os.path.join(
-                    COMINmrms,
+                    DCOMINmrms,
                     'alaska',
                     'MultiSensorQPE',
                     (
@@ -739,7 +753,7 @@ if proceed:
                 ))
             elif NEST == 'pr':
                 gen_templates.append(os.path.join(
-                    COMINmrms,
+                    DCOMINmrms,
                     'carib',
                     'MultiSensorQPE',
                     (
@@ -749,7 +763,7 @@ if proceed:
                 ))
             elif NEST == 'hi':
                 gen_templates.append(os.path.join(
-                    COMINmrms,
+                    DCOMINmrms,
                     'hawaii',
                     'MultiSensorQPE',
                     (
@@ -759,7 +773,7 @@ if proceed:
                 ))
             elif NEST == 'gu':
                 gen_templates.append(os.path.join(
-                    COMINmrms,
+                    DCOMINmrms,
                     'guam',
                     'MultiSensorQPE',
                     (
@@ -785,11 +799,11 @@ if proceed:
 
     # Print error and send an email for missing data
     if missing_gen_paths:
-        print(f"ERROR: The following input data were not found:")
+        print(f"WARNING: The following input data were not found:")
         for missing_gen_path in missing_gen_paths:
             print(missing_gen_path)
-        if send_mail:
-            err+=1
+        if send_mail and str(SENDMAIL) == "YES":
+            missing_data_flag+=1
             data_info = [
                 cutil.get_data_type(fname) 
                 for fname in missing_gen_files
@@ -798,15 +812,19 @@ if proceed:
             unk_names = []
             gen_fnames = []
             unk_fnames = []
+            gen_pnames = []
+            unk_pnames = []
             for i, info in enumerate(data_info):
                 if info[1] == "gen":
                     gen_names.append(info[0])
                     gen_fnames.append(missing_gen_files[i])
+                    gen_pnames.append(missing_gen_paths[i])
                 elif info[1] == "unk":
                     unk_names.append(info[0])
                     unk_fnames.append(missing_gen_files[i])
+                    unk_pnames.append(missing_gen_paths[i])
                 else:
-                    print(f"ERROR: Undefined data type for missing data file: {info[1]}"
+                    print(f"FATAL ERROR: Undefined data type for missing data file: {info[1]}"
                           + f"\nPlease edit the get_data_type() function in"
                           + f" USHevs/cam/cam_util.py")
                     sys.exit(1)
@@ -820,16 +838,16 @@ if proceed:
                 subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
                 DATAmsg_head = (f"Warning: Some unrecognized data were unavailable"
                                 + f" for valid date {VDATE} at {VHOUR}Z.")
-                if len(unk_fnames) > max_num_files:
+                if len(unk_pnames) > max_num_files:
                     DATAmsg_body1 = (f"\nMissing files are: (showing"
                                 + f" {max_num_files} of"
-                                + f" {len(unk_fnames)} total files)\n")
-                    for fname in unk_fnames[:max_num_files]:
-                        DATAmsg_body1+=f"{fname}\n"
+                                + f" {len(unk_pnames)} total files)\n")
+                    for pname in unk_pnames[:max_num_files]:
+                        DATAmsg_body1+=f"{pname}\n"
                 else:
                     DATAmsg_body1 = (f"Missing files are:\n")
-                    for fname in unk_fnames:
-                        DATAmsg_body1+=f"{fname}\n"
+                    for pname in unk_pnames:
+                        DATAmsg_body1+=f"{pname}\n"
                 DATAmsg_body2 = f"Job ID: {jobid}"
                 cutil.run_shell_command([
                     'echo', f'\"{DATAmsg_head}\"', '>mailmsg'
@@ -842,7 +860,7 @@ if proceed:
                 ])
                 cutil.run_shell_command([
                     'cat', 'mailmsg', '|' , 'mail', '-s', f'\"{subject}\"', 
-                    f'\"{maillist}\"'
+                    f'\"{MAILTO}\"'
                 ])
             if gen_names.size > 0:
                 if len(gen_names) == 1:
@@ -852,16 +870,16 @@ if proceed:
                 subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
                 DATAmsg_head = (f"Warning: No {DATAsubj} data were available"
                                 + f" for valid date {VDATE} at {VHOUR}Z.")
-                if len(gen_fnames) > max_num_files:
+                if len(gen_pnames) > max_num_files:
                     DATAmsg_body1 = (f"\nMissing files are: (showing"
                                 + f" {max_num_files} of"
-                                + f" {len(gen_fnames)} total files)\n")
-                    for fname in gen_fnames[:max_num_files]:
-                        DATAmsg_body1+=f"{fname}\n"
+                                + f" {len(gen_pnames)} total files)\n")
+                    for pname in gen_pnames[:max_num_files]:
+                        DATAmsg_body1+=f"{pname}\n"
                 else:
                     DATAmsg_body1 = (f"Missing files are:\n")
-                    for fname in gen_fnames:
-                        DATAmsg_body1+=f"{fname}\n"
+                    for pname in gen_pnames:
+                        DATAmsg_body1+=f"{pname}\n"
                 DATAmsg_body2 = f"Job ID: {jobid}"
                 cutil.run_shell_command([
                     'echo', f'\"{DATAmsg_head}\"', '>mailmsg'
@@ -874,12 +892,12 @@ if proceed:
                 ])
                 cutil.run_shell_command([
                     'cat', 'mailmsg', '|' , 'mail', '-s', f'\"{subject}\"', 
-                    f'\"{maillist}\"'
+                    f'\"{MAILTO}\"'
                 ])
 
 
-    # If error, exit with 0 code 
-    if err:
+    # If missing data, exit with 0 code 
+    if missing_data_flag:
         sys.exit(0)
 
 print(f"END: {os.path.basename(__file__)}")

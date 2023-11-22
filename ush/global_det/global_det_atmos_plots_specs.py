@@ -112,6 +112,9 @@ class PlotSpecs:
                 self.fig_subplot_right = 0.9
             if self.plot_type == 'long_term_lead_by_date':
                 self.fig_subplot_left = 0.1
+            if self.plot_type == 'lead_by_date':
+                self.ytick_major_pad = 5
+                self.fig_subplot_left = 0.1575
         elif self.plot_type == 'stat_by_level':
             self.fig_size = (16., 16.)
             self.fig_subplot_top = 0.925
@@ -567,7 +570,8 @@ class PlotSpecs:
                         title_other_hr_list.append(str(other_hr).zfill(2)+'Z')
             title_other_hr_list.sort()
             date_plot_name = (date_plot_name+', '.join(date_type_hr_list)
-                              +', cycles: '+', '.join(title_other_hr_list))
+                              +', init. hours: '
+                              +', '.join(title_other_hr_list))
         elif date_type == 'INIT':
             for date_type_hr in date_type_hr_list:
                 for forecast_hour in forecast_hour_list:

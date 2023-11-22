@@ -1,5 +1,4 @@
-#!/bin/bash -e
- 
+#!/usr/bin/env python3
 # =============================================================================
 #
 # NAME: cam_plots_headline_create_job_script.sh
@@ -25,9 +24,8 @@ COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
 VERIF_CASE = os.environ['VERIF_CASE']
 MODELNAME = os.environ['MODELNAME']
-MET_PLUS_PATH = os.environ['MET_PLUS_PATH']
-MET_PATH = os.environ['MET_PATH']
-MET_CONFIG = os.environ['MET_CONFIG']
+METPLUS_PATH = os.environ['METPLUS_PATH']
+MET_ROOT = os.environ['MET_ROOT']
 DATA = os.environ['DATA']
 VDATE = os.environ['VDATE']
 VERIF_TYPE = os.environ['VERIF_TYPE']

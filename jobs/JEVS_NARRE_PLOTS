@@ -1,0 +1,67 @@
+#!/bin/ksh
+################################################################################
+#  JOB card cerated for running METPlus-based NARRE verifications
+#     By Binbin Zhou, Lynker@EMC/NCEP
+#     Last updated 10/27/2023
+#     Purpose: setup environment variables to run the NARRE plots script
+###############################################################################
+set -x
+
+
+
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+export SENDMAIL=${SENDMAIL:-NO}
+
+export pid=$$
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+rm -rf $DATA
+mkdir -p $DATA
+cd $DATA
+
+export cycle=${cycle:-t${vhr}z}
+setpdy.sh
+. $DATA/PDY
+
+mkdir -p $DATA/logs
+
+export VDATE=${VDATE:-$PDYm1}
+
+export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$MODELNAME.$VDATE
+export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/$evs_ver)}/$STEP/$COMPONENT/$RUN.$VDATE
+mkdir -p $COMOUT
+
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
+export EXECevs=$HOMEevs/exec
+export PARMevs=$HOMEevs/parm
+export USHevs=$HOMEevs/ush
+
+export FIXevs=$HOMEevs/fix
+export MASKS=$FIXevs/masks
+
+export ush_dir=$USHevs/narre/ush_narre_plot_py
+
+####################################
+# Determine Job Output Name on System
+####################################
+export outid="LL$job"
+export jobid="${outid}.o${pid}"
+
+
+####################################
+# Specify codes and scripts locaton
+####################################
+
+
+
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${STEP}.sh 
+export err=$?; err_chk
+
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATAROOT
+  rm -rf $DATA
+fi
+
+#date
+

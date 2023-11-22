@@ -2,8 +2,10 @@
 '''
 Name: subseasonal_stats_grid2grid_create_weekly_anomaly.py
 Contact(s): Shannon Shields
-Abstract: This script is used to create anomaly
-          data from MET grid_stat netCDF output
+Abstract: This script is run by subseasonal_stats_grid2grid_create_weekly_
+          reformat_job_scripts.py in ush/subseasonal.
+          This script is used to create anomaly
+          data from MET grid_stat netCDF output.
 '''
 
 import os
@@ -35,12 +37,12 @@ fhr_list = os.environ['CORRECT_LEAD_SEQ'].split(',')
 
 # Process run time arguments
 if len(sys.argv) != 3:
-    print("ERROR: Not given correct number of run time arguments..."
+    print("FATAL ERROR: Not given correct number of run time arguments..."
           +os.path.basename(__file__)+" VARNAME_VARLEVEL FILE_FORMAT")
     sys.exit(1)
 else:
     if '_' not in sys.argv[1]:
-        print("ERROR: variable and level runtime argument formatted "
+        print("FATAL ERROR: variable and level runtime argument formatted "
               +"incorrectly, be sure to separate variable and level with "
               +"an underscore (_), example HGT_P500")
         sys.exit(1)

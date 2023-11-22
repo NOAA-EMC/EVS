@@ -48,11 +48,12 @@ if STEP == 'stats':
 if proceed:
     # Load environment variables
     send_mail = 0
-    err=0
+    mdf=0
     max_num_files = 10
+    SENDMAIL = os.environ['SENDMAIL']
     COMPONENT = os.environ['COMPONENT']
-    maillist = os.environ['maillist']
-    CYC = os.environ['cyc']
+    MAILTO = os.environ['MAILTO']
+    VHR = os.environ['vhr']
     jobid = os.environ['jobid']
     FIXevs = os.environ['FIXevs']
     VDATE = os.environ['VDATE']
@@ -62,7 +63,8 @@ if proceed:
     FHR_END_SHORT = os.environ['FHR_END_SHORT']
     NEST = os.environ['NEST']
     if STEP == 'stats':
-        send_mail = 1
+        if  SENDMAIL == "YES":
+            send_mail = 1
         MODELNAME = os.environ['MODELNAME']
         FHR_INCR_FULL = os.environ['FHR_INCR_FULL']
         FHR_INCR_SHORT = os.environ['FHR_INCR_SHORT']
@@ -300,13 +302,13 @@ if proceed:
             missing_fcst_files.append(os.path.split(fcst_path)[-1])
             missing_fcst_paths.append(fcst_path)
     
-    # Print error and send an email for missing data
+    # Print warning (mdf) and send an email for missing data
     if missing_fcst_paths:
-        print(f"ERROR: The following forecasts were not found:")
+        print(f"WARNING: The following forecasts were not found:")
         for missing_fcst_path in missing_fcst_paths:
             print(missing_fcst_path)
         if send_mail:
-            err+=1
+            mdf+=1
             data_info = [
                 cutil.get_data_type(fname) 
                 for fname in missing_fcst_files
@@ -325,7 +327,7 @@ if proceed:
                 else:
                     print(f"ERROR: Undefined data type for missing data file: {info[1]}"
                           + f"\nPlease edit the get_data_type() function in"
-                          + f" USHevs/cam/cam_util.py")
+                          + f" USHevs/mesoscale/mesoscale_util.py")
                     sys.exit(1)
             fcst_names = np.unique(fcst_names)
             unk_names = np.unique(unk_names)
@@ -336,7 +338,7 @@ if proceed:
                     DATAsubj = ', '.join(unk_names)
                 subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
                 DATAmsg_head = (f"Warning: Some unrecognized data were unavailable"
-                                + f" for valid date {VDATE} and cycle {CYC}Z.")
+                                + f" for valid date {VDATE} and cycle {VHR}Z.")
                 if len(unk_fnames) > max_num_files:
                     DATAmsg_body1 = (f"\nMissing files are: (showing"
                                 + f" {max_num_files} of"
@@ -359,9 +361,9 @@ if proceed:
                 ])
                 cutil.run_shell_command([
                     # 'cat', 'mailmsg', '|' , 'mail.py', '-s', f'\"{subject}\"', 
-                    # f'\"{maillist}\"', '-v'
+                    # f'\"{MAILTO}\"', '-v'
                     'cat', 'mailmsg', '|' , 'mail', '-s', f'\"{subject}\"', 
-                    f'\"{maillist}\"'
+                    f'\"{MAILTO}\"'
                 ])
             if fcst_names:
                 if len(fcst_names) == 1:
@@ -382,7 +384,7 @@ if proceed:
                                    + f" EVS {COMPONENT}")
                         DATAmsg_head = (f"Warning: No {DATAsubj} data were"
                                         + f" available for valid date {VDATE},"
-                                        + f" cycle {CYC}Z, and f{lead_hours[0]}.")
+                                        + f" cycle {VHR}Z, and f{lead_hours[0]}.")
                     else:
                         lead_string = ', '.join(
                             [f'f{lead}' for lead in lead_hours]
@@ -390,7 +392,7 @@ if proceed:
                         subject = f"{DATAsubj} Data Missing for EVS {COMPONENT}"
                         DATAmsg_head = (f"Warning: No {DATAsubj} data were"
                                         + f" available for valid date {VDATE},"
-                                        + f" cycle {CYC}Z, and {lead_string}.")
+                                        + f" cycle {VHR}Z, and {lead_string}.")
                 if len(fcst_fnames) > max_num_files:
                     DATAmsg_body1 = (f"\nMissing files are: (showing"
                                 + f" {max_num_files} of"
@@ -413,7 +415,7 @@ if proceed:
                 ])
                 cutil.run_shell_command([
                     'cat', 'mailmsg', '|' , 'mail', '-s', f'\"{subject}\"', 
-                    f'\"{maillist}\"'
+                    f'\"{MAILTO}\"'
                 ])
 
 
@@ -452,13 +454,13 @@ if proceed:
             missing_anl_files.append(os.path.split(anl_path)[-1])
             missing_anl_paths.append(anl_path)
 
-    # Print error and send an email for missing data
+    # Print warning (mdf) and send an email for missing data
     if missing_anl_paths:
-        print(f"ERROR: The following analyses were not found:")
+        print(f"WARNING: The following analyses were not found:")
         for missing_anl_path in missing_anl_paths:
             print(missing_anl_path)
         if send_mail:
-            err+=1
+            mdf+=1
             data_info = [
                 cutil.get_data_type(fname) 
                 for fname in missing_anl_files
@@ -477,7 +479,7 @@ if proceed:
                 else:
                     print(f"ERROR: Undefined data type for missing data file: {info[1]}"
                           + f"\nPlease edit the get_data_type() function in"
-                          + f" USHevs/cam/cam_util.py")
+                          + f" USHevs/mesoscale/mesoscale_util.py")
                     sys.exit(1)
             anl_names = np.unique(anl_names)
             unk_names = np.unique(unk_names)
@@ -511,7 +513,7 @@ if proceed:
                 ])
                 cutil.run_shell_command([
                     'cat', 'mailmsg', '|' , 'mail', '-s', f'\"{subject}\"', 
-                    f'\"{maillist}\"'
+                    f'\"{MAILTO}\"'
                 ])
             if anl_names.size > 0:
                 if len(anl_names) == 1:
@@ -543,13 +545,13 @@ if proceed:
                 ])
                 cutil.run_shell_command([
                     'cat', 'mailmsg', '|' , 'mail', '-s', f'\"{subject}\"', 
-                    f'\"{maillist}\"'
+                    f'\"{MAILTO}\"'
                 ])
 
 
 
-    # exit with error
-    if err:
-        sys.exit(err)
+    # exit with warning (mdf)
+    if mdf:
+        sys.exit(mdf)
 
 print(f"END: {os.path.basename(__file__)}")

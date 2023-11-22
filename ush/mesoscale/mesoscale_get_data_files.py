@@ -1,6 +1,6 @@
 # =============================================================================
 #
-# NAME: cam_get_data_files.py
+# NAME: mesoscale_get_data_files.py
 # CONTRIBUTOR(S): Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 # PURPOSE: 
 # DEPENDENCIES: os.path.join([
@@ -36,8 +36,6 @@ if STEP == 'stats':
     FHR_END = os.environ['FHR_END']
     FHR_INCR = os.environ['FHR_INCR']
 if evs_run_mode != 'production':
-    QUEUESERV = os.environ['QUEUESERV']
-    ACCOUNT = os.environ['ACCOUNT']
     machine = os.environ['machine']
 
 # Read in case-dependent variables

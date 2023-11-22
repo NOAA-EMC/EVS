@@ -5,7 +5,7 @@ Contact(s): Mallory Row (mallory.row@noaa.gov)
 Abstract: This creates multiple independent job scripts. These
           jobs scripts contain all the necessary environment variables
           and commands to needed to run them.
-Run By: scripts/global_det/plots/exevs_global_det_atmos_grid2grid_plots.sh
+Run By: scripts/plots/global_det/exevs_global_det_atmos_grid2grid_plots.sh
 '''
 
 import sys
@@ -45,8 +45,7 @@ VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
 njobs = 0
 JOB_GROUP_jobs_dir = os.path.join(DATA, VERIF_CASE_STEP,
                                   'plot_job_scripts', JOB_GROUP)
-if not os.path.exists(JOB_GROUP_jobs_dir):
-    os.makedirs(JOB_GROUP_jobs_dir)
+gda_util.make_dir(JOB_GROUP_jobs_dir)
 
 ################################################
 #### Base/Common Plotting Information
@@ -829,9 +828,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job_env_dict['COMOUTjob'] = COMOUTjob
                 for output_dir in [job_env_dict['DATAjob'],
                                    job_env_dict['COMOUTjob']]:
-                    if not os.path.exists(output_dir):
-                        print(f"Creating output directory: {output_dir}")
-                        os.makedirs(output_dir)
+                    gda_util.make_dir(output_dir)
                 # Create job file
                 njobs+=1
                 job_file = os.path.join(JOB_GROUP_jobs_dir,
@@ -849,7 +846,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job.write('\n')
                 job.write(
                     gda_util.python_command('global_det_atmos_plots.py',[])
+                    +'\n'
                 )
+                job.write('export err=$?; err_chk'+'\n')
                 job.close()
             elif JOB_GROUP == 'make_plots':
                 job_env_dict['event_equalization'] = os.environ[
@@ -957,9 +956,7 @@ for verif_type in VERIF_CASE_STEP_type_list:
                     job_env_dict['COMOUTjob'] = COMOUTjob
                     for output_dir in [job_env_dict['DATAjob'],
                                        job_env_dict['COMOUTjob']]:
-                        if not os.path.exists(output_dir):
-                            print(f"Creating output directory: {output_dir}")
-                            os.makedirs(output_dir)
+                        gda_util.make_dir(output_dir)
                     run_global_det_atmos_plots = ['global_det_atmos_plots.py']
                     if evs_run_mode == 'production' and \
                             verif_type in ['pres_levs', 'sfc'] and \
@@ -986,8 +983,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
                         job.write('\n')
                         job.write(
                             gda_util.python_command(run_global_det_atmos_plot,
-                                                    [])
+                                                    [])+'\n'
                         )
+                        job.write('export err=$?; err_chk'+'\n')
                         job.close()
             elif JOB_GROUP == 'tar_images':
                 job_env_dict['DATAjob'] = loop_info
@@ -1012,7 +1010,9 @@ for verif_type in VERIF_CASE_STEP_type_list:
                 job.write('\n')
                 job.write(
                     gda_util.python_command('global_det_atmos_plots.py', [])
+                    +'\n'
                 )
+                job.write('export err=$?; err_chk'+'\n')
                 job.close()
 
 # If running USE_CFP, create POE scripts

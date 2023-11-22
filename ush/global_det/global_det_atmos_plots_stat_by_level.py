@@ -74,7 +74,7 @@ class StatByLevel:
         if self.plot_info_dict['stat'] == 'FBAR_OBAR':
             self.logger.warning("Cannot make stat_by_level for stat "
                                 +f"{self.plot_info_dict['stat']}")
-            sys.exit(0)
+            sys.exit(1)
         # Get dates to plot
         self.logger.info("Creating valid and init date arrays")
         valid_dates, init_dates = gda_util.get_plot_dates(
@@ -455,12 +455,10 @@ def main():
         'version': '11.0.2'
     }
     # Create OUTPUT_DIR
-    if not os.path.exists(OUTPUT_DIR):
-        os.makedirs(OUTPUT_DIR)
+    gda_util.make_dir(OUTPUT_DIR)
     # Set up logging
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')
-    if not os.path.exists(logging_dir):
-         os.makedirs(logging_dir)
+    gda_util.make_dir(logging_dir)
     job_logging_file = os.path.join(logging_dir,
                                     os.path.basename(__file__)+'_runon'
                                     +datetime.datetime.now()\

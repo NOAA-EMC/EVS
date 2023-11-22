@@ -29,8 +29,9 @@ def run_shell_command(command):
     else:
         run_command = subprocess.run(command)
     if run_command.returncode != 0:
-        print("ERROR: "+' '.join(run_command.args)+" gave return code "
+        print("FATAL ERROR: "+' '.join(run_command.args)+" gave return code "
               +str(run_command.returncode))
+        sys.exit(1)
 
 def metplus_command(conf_file_name):
     """! Write out full call to METplus
@@ -51,7 +52,7 @@ def metplus_command(conf_file_name):
                              os.environ['RUN']+'_'+os.environ['VERIF_CASE'],
                              os.environ['STEP'], conf_file_name)
     if not os.path.exists(conf_file):
-        print("ERROR: "+conf_file+" DOES NOT EXIST")
+        print("FATAL ERROR: "+conf_file+" DOES NOT EXIST")
         sys.exit(1)
     metplus_cmd = run_metplus+' -c '+machine_conf+' -c '+conf_file
     return metplus_cmd
@@ -70,7 +71,7 @@ def python_command(python_script_name, script_arg_list):
     python_script = os.path.join(os.environ['USHevs'], os.environ['COMPONENT'],
                                  python_script_name)
     if not os.path.exists(python_script):
-        print("ERROR: "+python_script+" DOES NOT EXIST")
+        print("FATAL ERROR: "+python_script+" DOES NOT EXIST")
         sys.exit(1)
     python_cmd = 'python '+python_script
     for script_arg in script_arg_list:
@@ -237,7 +238,7 @@ def get_time_info(date_start, date_end, date_type, init_hr_list, valid_hr_list,
     return time_info
 
 def get_init_hour(valid_hour, forecast_hour):
-    """! Get a initialization hour/cycle
+    """! Get a initialization hour
 
          Args:
              valid_hour    - valid hour (integer)
@@ -268,7 +269,7 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
     """
     filled_file_format = '/'
     format_opt_list = ['lead', 'lead_shift', 'valid', 'valid_shift',
-                       'init', 'init_shift', 'cycle']
+                       'init', 'init_shift']
     if len(list(str_sub_dict.keys())) != 0:
         format_opt_list = format_opt_list+list(str_sub_dict.keys())
     for filled_file_format_chunk in unfilled_file_format.split('/'):
@@ -315,10 +316,6 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                        replace_format_opt_count = init_time_dt.strftime(
                            format_opt_count_fmt
                        )
-                   elif format_opt == 'cycle':
-                       replace_format_opt_count = init_time_dt.strftime(
-                           format_opt_count_fmt
-                       ) 
                    elif format_opt == 'lead_shift':
                        shift = (filled_file_format_chunk.partition('shift=')[2]\
                                 .partition('}')[0])
@@ -1543,7 +1540,7 @@ def get_obs_valid_hrs(obs):
         valid_hr_end = obs_valid_hr_dict[obs]['valid_hr_end']
         valid_hr_inc = obs_valid_hr_dict[obs]['valid_hr_inc']
     else:
-        print(f"ERROR: Cannot get {obs} valid hour information")
+        print(f"FATAL ERROR: Cannot get {obs} valid hour information")
         sys.exit(1)
     return valid_hr_start, valid_hr_end, valid_hr_inc
 
@@ -1612,8 +1609,8 @@ def initalize_job_env_dict(verif_type, group,
              job_env_dict - dictionary of job settings
     """
     job_env_var_list = [
-        'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA', 'COMROOT',
-        'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'COMIN', 'evs_run_mode'
+        'machine', 'evs_ver', 'HOMEevs', 'FIXevs', 'USHevs', 'DATA', 'COMOUT',
+        'NET', 'RUN', 'VERIF_CASE', 'STEP', 'COMPONENT', 'COMIN', 'EVSIN', 'evs_run_mode'
     ]
     if group in ['reformat_data', 'assemble_data', 'generate_stats', 'gather_stats']:
         os.environ['MET_TMP_DIR'] = os.path.join(
@@ -1626,7 +1623,7 @@ def initalize_job_env_dict(verif_type, group,
         job_env_var_list.extend(
             ['METPLUS_PATH','log_met_output_to_metplus', 'metplus_verbosity',
              'MET_ROOT', 'MET_bin_exec', 'met_verbosity', 'MET_TMP_DIR',
-             'COMROOT']
+             'COMOUT']
         )
     elif group == 'plot':
         job_env_var_list.extend(['MET_ROOT', 'met_ver'])
@@ -1817,7 +1814,7 @@ def get_met_line_type_cols(logger, met_root, met_version, met_line_type):
                     line_type_cols = line.split(' : ')[-1]
                     break
     else:
-        logger.error(f"{met_minor_version_col_file} DOES NOT EXISTS, "
+        logger.error(f"FATAL ERROR: {met_minor_version_col_file} DOES NOT EXISTS, "
                      +"cannot determine MET data column structure")
         sys.exit(1)
     met_version_line_type_col_list = (
@@ -2515,8 +2512,8 @@ def calculate_stat(logger, data_df, line_type, stat):
        if line_type == 'CTC':
            stat_df = 1 - (FY_ON/(FY_ON + FY_OY))
    else:
-        logger.error(stat+" IS NOT AN OPTION")
-        sys.exit(1)
+       logger.error("FATAL ERROR: "+stat+" IS NOT AN OPTION")
+       sys.exit(1)
    idx = 0
    idx_dict = {}
    while idx < stat_df.index.nlevels:

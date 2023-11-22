@@ -6,7 +6,7 @@
 ###############################################################################
 set -x
 
-cycles="00 06 12 18"
+inithours="00 06 12 18"
 
 # Since WAFS verification is up to 36/48 hours, link only 2 days in the past
 for past_day in 0 1 2 ; do
@@ -14,7 +14,7 @@ for past_day in 0 1 2 ; do
    past=`$NDATE -$hour ${VDATE}00`
    day=${past:0:8}
    # cc=${past:8:2}
-   for cc in $cycles ; do
+   for cc in $inithours ; do
        for ff in $FHOURS ; do
 	   if [ $CENTER = "uk" ] ; then
 	       if [ $RESOLUTION = "0P25" ] ; then
@@ -50,7 +50,7 @@ done
 
 # GCIP data
 if [[ $OBSERVATION = "GCIP" ]] ; then
-    for cc in $cycles ; do
+    for cc in $inithours ; do
 	sourcedir=$COMINgfs/gfs.$VDATE/$cc/atmos
 
 	targetdir=$GRID_STAT_INPUT_BASE/gfs.$VDATE/$cc/atmos
@@ -59,11 +59,13 @@ if [[ $OBSERVATION = "GCIP" ]] ; then
 	    mkdir -p $targetdir
 	    ln -sf $sourcefile $targetdir/.
 	else
-	    export subject="GCIP Analysis Data Missing for EVS ${COMPONENT}"
-	    echo "Warning: No GCIP analysis was available for valid date ${VDATE}${cc}" > mailmsg
-	    echo “Missing file is $sourcefile” >> mailmsg
-	    echo "Job ID: $jobid" >> mailmsg
-	    cat mailmsg | mail -s "$subject" $maillist
+	    if [ $SENDMAIL = YES ] ; then
+		export subject="GCIP Analysis Data Missing for EVS ${COMPONENT}"
+		echo "Warning: No GCIP analysis was available for valid date ${VDATE}${cc}" > mailmsg
+		echo “Missing file is $sourcefile” >> mailmsg
+		echo "Job ID: $jobid" >> mailmsg
+		cat mailmsg | mail -s "$subject" $MAILTO
+	    fi
 	fi
 	
 	cc2=$(( 10#$cc + 3 ))
@@ -74,23 +76,27 @@ if [[ $OBSERVATION = "GCIP" ]] ; then
             mkdir -p $targetdir
             ln -sf $sourcefile $targetdir/.
 	else
-	    export subject="GCIP Analysis Data Missing for EVS ${COMPONENT}"
-	    echo "Warning: No GCIP analysis was available for valid date ${VDATE}${cc2}" > mailmsg
-	    echo “Missing file is $sourcefile” >> mailmsg
-	    echo "Job ID: $jobid" >> mailmsg
-	    cat mailmsg | mail -s "$subject" $maillist
+	    if [ $SENDMAIL = YES ] ; then
+		export subject="GCIP Analysis Data Missing for EVS ${COMPONENT}"
+		echo "Warning: No GCIP analysis was available for valid date ${VDATE}${cc2}" > mailmsg
+		echo “Missing file is $sourcefile” >> mailmsg
+		echo "Job ID: $jobid" >> mailmsg
+		cat mailmsg | mail -s "$subject" $MAILTO
+	    fi
         fi
     done
 elif [[ $OBSERVATION = "GFS" ]] ; then
-    for cc in $cycles ; do
+    for cc in $inithours ; do
         sourcedir=$COMINgfs/gfs.$VDATE/$cc/atmos
 	sourcefile=$sourcedir/gfs.t${cc}z.pgrb2.0p25.anl
 	if [[ ! -f $sourcefile ]] ; then
-	    export subject="GFS Analysis Data Missing for EVS ${COMPONENT}"
-            echo "Warning: No GFS analysis was available for valid date ${VDATE}${cc}" > mailmsg
-            echo “Missing file is $sourcefile” >> mailmsg
-            echo "Job ID: $jobid" >> mailmsg
-            cat mailmsg | mail -s "$subject" $maillist
+	    if [ $SENDMAIL = YES ] ; then
+		export subject="GFS Analysis Data Missing for EVS ${COMPONENT}"
+		echo "Warning: No GFS analysis was available for valid date ${VDATE}${cc}" > mailmsg
+		echo “Missing file is $sourcefile” >> mailmsg
+		echo "Job ID: $jobid" >> mailmsg
+		cat mailmsg | mail -s "$subject" $MAILTO
+	    fi
 	fi
     done    
 fi

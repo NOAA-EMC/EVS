@@ -29,7 +29,7 @@ def run_shell_command(command):
     else:
         run_command = subprocess.run(command)
     if run_command.returncode != 0:
-        print("ERROR: "+' '.join(run_command.args)+" gave return code "
+        print("FATAL ERROR: "+' '.join(run_command.args)+" gave return code "
               +str(run_command.returncode))
 
 def metplus_command(conf_file_name):
@@ -47,11 +47,11 @@ def metplus_command(conf_file_name):
     machine_conf = os.path.join(os.environ['PARMevs'], 'metplus_config',
                                 'machine.conf')
     conf_file = os.path.join(os.environ['PARMevs'], 'metplus_config',
-                             os.environ['COMPONENT'],
+                             os.environ['STEP'], os.environ['COMPONENT'],
                              os.environ['RUN']+'_'+os.environ['VERIF_CASE'],
-                             os.environ['STEP'], conf_file_name)
+                             conf_file_name)
     if not os.path.exists(conf_file):
-        print("ERROR: "+conf_file+" DOES NOT EXIST")
+        print("FATAL ERROR: "+conf_file+" DOES NOT EXIST")
         sys.exit(1)
     metplus_cmd = run_metplus+' -c '+machine_conf+' -c '+conf_file
     return metplus_cmd
@@ -70,7 +70,7 @@ def python_command(python_script_name, script_arg_list):
     python_script = os.path.join(os.environ['USHevs'], os.environ['COMPONENT'],
                                  python_script_name)
     if not os.path.exists(python_script):
-        print("ERROR: "+python_script+" DOES NOT EXIST")
+        print("FATAL ERROR: "+python_script+" DOES NOT EXIST")
         sys.exit(1)
     python_cmd = 'python '+python_script
     for script_arg in script_arg_list:
@@ -268,7 +268,7 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
     """
     filled_file_format = '/'
     format_opt_list = ['lead', 'lead_shift', 'valid', 'valid_shift',
-                       'init', 'init_shift', 'cycle']
+                       'init', 'init_shift']
     if len(list(str_sub_dict.keys())) != 0:
         format_opt_list = format_opt_list+list(str_sub_dict.keys())
     for filled_file_format_chunk in unfilled_file_format.split('/'):
@@ -315,10 +315,6 @@ def format_filler(unfilled_file_format, valid_time_dt, init_time_dt,
                        replace_format_opt_count = init_time_dt.strftime(
                            format_opt_count_fmt
                        )
-                   elif format_opt == 'cycle':
-                       replace_format_opt_count = init_time_dt.strftime(
-                           format_opt_count_fmt
-                       ) 
                    elif format_opt == 'lead_shift':
                        shift = (filled_file_format_chunk.partition('shift=')[2]\
                                 .partition('}')[0])
@@ -731,7 +727,6 @@ def prep_prod_dwd_file(source_file, dest_file, forecast_hour, prep_method):
     # Working file names
     prepped_file = os.path.join(os.getcwd(),
                                 'atmos.'+dest_file.rpartition('/')[2])
-    #working_file1 = prepped_file+'.tmp1'
     #### For DWD to run through pcpconform, file name must be
     ####    dwd_YYYYMMDDHH_(hhh)_(hhh).tmp
     working_file1 = os.path.join(os.getcwd(),
@@ -876,37 +871,6 @@ def prep_prod_osi_saf_file(daily_source_file_format, daily_dest_file,
             merged_var[:] = merged_var_vals
         merged_data.close()
     copy_file(daily_prepped_file, daily_dest_file)
-    # Prep weekly file
-    #for weekly_source_file in weekly_source_file_list:
-    #    if not os.path.exists(weekly_source_file):
-    #        print(f"WARNING: {weekly_source_file} does not exist, "
-    #              +"not using in weekly average file")
-    #        weekly_source_file_list.remove(weekly_source_file)
-    #if len(weekly_source_file_list) == 7:
-    #    ncea_cmd_list = ['ncea']
-    #    for weekly_source_file in weekly_source_file_list:
-    #        ncea_cmd_list.append(weekly_source_file)
-    #    ncea_cmd_list.append('-o')
-    #    ncea_cmd_list.append(weekly_prepped_file)
-    #    run_shell_command(ncea_cmd_list)
-    #    if check_file_exists_size(weekly_prepped_file):
-    #        weekly_data = netcdf.Dataset(weekly_prepped_file, 'a',
-    #                                     format='NETCDF3_CLASSIC')
-    #        weekly_data.setncattr(
-    #            'start_date', weekly_dates[0].strftime('%Y-%m-%d %H:%M:%S')
-    #        )
-    #        osi_saf_date_since_dt = datetime.datetime.strptime(
-    #            '1978-01-01 00:00:00','%Y-%m-%d %H:%M:%S'
-    #        )
-    #        weekly_data.variables['time_bnds'][:] = [
-    #            (weekly_dates[0] - osi_saf_date_since_dt).total_seconds(),
-    #            weekly_data.variables['time_bnds'][:][0][1]
-    #        ]
-    #        weekly_data.close()
-    #else:
-    #    print("Not enough files to make "+weekly_prepped_file
-    #          +": "+' '.join(weekly_source_file_list))
-    #copy_file(weekly_prepped_file, weekly_dest_file)
 
 def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt):
     """! Do prep work for GHRSST OSPO production files
@@ -932,7 +896,6 @@ def prep_prod_ghrsst_ospo_file(source_file, dest_file, date_dt):
         prepped_data['time'][:] = prepped_data['time'][:][0] + 43200
         prepped_data.close()
     copy_file(prepped_file, dest_file)
-
 def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
                    source_file_format, dest_file_format):
     """! This get a model file and saves it in the specificed
@@ -1543,7 +1506,7 @@ def get_obs_valid_hrs(obs):
         valid_hr_end = obs_valid_hr_dict[obs]['valid_hr_end']
         valid_hr_inc = obs_valid_hr_dict[obs]['valid_hr_inc']
     else:
-        print(f"ERROR: Cannot get {obs} valid hour information")
+        print(f"FATAL ERROR: Cannot get {obs} valid hour information")
         sys.exit(1)
     return valid_hr_start, valid_hr_end, valid_hr_inc
 
@@ -1624,8 +1587,7 @@ def initalize_job_env_dict(verif_type, group,
         if not os.path.exists(os.environ['MET_TMP_DIR']):
             os.makedirs(os.environ['MET_TMP_DIR'])
         job_env_var_list.extend(
-            ['METPLUS_PATH','log_met_output_to_metplus', 'metplus_verbosity',
-             'MET_ROOT', 'MET_bin_exec', 'met_verbosity', 'MET_TMP_DIR',
+            ['METPLUS_PATH', 'MET_ROOT', 'MET_TMP_DIR',
              'COMROOT']
         )
     elif group == 'plot':
@@ -1633,10 +1595,6 @@ def initalize_job_env_dict(verif_type, group,
     job_env_dict = {}
     for env_var in job_env_var_list:
         job_env_dict[env_var] = os.environ[env_var]
-    if group == 'plot':
-        job_env_dict['plot_verbosity'] = (
-            os.environ['metplus_verbosity']
-        )
     job_env_dict['JOB_GROUP'] = group
     if group in ['reformat_data', 'assemble_data', 'generate_stats', 'plot']:
         job_env_dict['VERIF_TYPE'] = verif_type
@@ -1817,7 +1775,7 @@ def get_met_line_type_cols(logger, met_root, met_version, met_line_type):
                     line_type_cols = line.split(' : ')[-1]
                     break
     else:
-        logger.error(f"{met_minor_version_col_file} DOES NOT EXISTS, "
+        logger.error(f"FATAL ERROR: {met_minor_version_col_file} DOES NOT EXISTS, "
                      +"cannot determine MET data column structure")
         sys.exit(1)
     met_version_line_type_col_list = (
@@ -2515,7 +2473,7 @@ def calculate_stat(logger, data_df, line_type, stat):
        if line_type == 'CTC':
            stat_df = 1 - (FY_ON/(FY_ON + FY_OY))
    else:
-        logger.error(stat+" IS NOT AN OPTION")
+        logger.error("FATAL ERROR: "+stat+" IS NOT AN OPTION")
         sys.exit(1)
    idx = 0
    idx_dict = {}

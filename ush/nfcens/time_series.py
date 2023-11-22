@@ -561,7 +561,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
 #                    str(metric_names[p]).upper()
 # this only works for 1 model!
                 labels += [
-                    str(metric_names[p] + ' (' + model_list[0] +')').upper()
+                    str(metric_names[p]).upper()
                 ]
         else:
             handles = [
@@ -569,7 +569,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 for line_setting in ['solid','dashed']
             ]
             labels = [
-                str(metric_name + ' (' + model_list[0] +')').upper()
+                str(metric_name).upper()
                 for metric_name in [metric1_name, metric2_name]
             ]
     else:
@@ -959,7 +959,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
 #              + f'{date_start_string} to {date_end_string}, {frange_string}'
     fcst_day=int(flead[0]/24)
     title3 = (f'{str(date_type).lower()} {date_start_string} - {date_end_string}, '
-              + f'cycles: {date_hours_string} Forecast Day {fcst_day} (Hour {flead[0]})')
+              + f'init: {date_hours_string} Forecast Day {fcst_day} (Hour {flead[0]})')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
         title_pad=40
