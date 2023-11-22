@@ -75,7 +75,7 @@ class TimeSeriesMultiFhr:
         if self.plot_info_dict['stat'] == 'FBAR_OBAR':
             self.logger.warning("Cannot make time_series_multifhr for stat "
                                 +f"{self.plot_info_dict['stat']}")
-            sys.exit(0)
+            sys.exit(1)
         # Check only requested 1 model
         if len(list(self.model_info_dict.keys())) != 1:
             self.logger.warning(
@@ -315,18 +315,15 @@ class TimeSeriesMultiFhr:
         ax.set_xlabel(self.date_info_dict['date_type'].title()+' Date')
         ax.set_xlim([plot_dates[0], plot_dates[-1]])
         ax.set_xticks(plot_dates[::xtick_intvl])
-        if date_intvl != 86400:
-            ax.xaxis.set_major_formatter(md.DateFormatter('%d%b%Y %HZ'))
-            if len(plot_dates) < 10:
-                ax.xaxis.set_minor_locator(md.HourLocator())
-            else:
-                ax.xaxis.set_minor_locator(md.DayLocator())
-        else:
-            ax.xaxis.set_major_formatter(md.DateFormatter('%d%b%Y'))
-            if len(plot_dates) < 60:
-                ax.xaxis.set_minor_locator(md.DayLocator())
-            else:
-                ax.xaxis.set_minor_locator(md.MonthLocator())
+        ax.xaxis.set_major_formatter(md.DateFormatter('%HZ %d%b%Y'))
+        hr_minor_tick_type = self.date_info_dict['date_type'].lower()
+        ax.xaxis.set_minor_locator(
+            md.HourLocator(byhour=range(
+                int(self.date_info_dict[f"{hr_minor_tick_type}_hr_start"]),
+                int(self.date_info_dict[f"{hr_minor_tick_type}_hr_end"])+1,
+                int(self.date_info_dict[f"{hr_minor_tick_type}_hr_inc"])
+            ))
+        )
         ax.set_ylabel(stat_plot_name)
         fig.suptitle(f"{self.model_info_dict['model1']['name'].upper()} "
                      +f"{plot_title}")
@@ -515,12 +512,10 @@ def main():
         'version': '11.0.2'
     }
     # Create OUTPUT_DIR
-    if not os.path.exists(OUTPUT_DIR):
-        os.makedirs(OUTPUT_DIR)
+    gda_util.make_dir(OUTPUT_DIR)
     # Set up logging
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')
-    if not os.path.exists(logging_dir):
-         os.makedirs(logging_dir)
+    gda_util.make_dir(logging_dir)
     job_logging_file = os.path.join(logging_dir,
                                     os.path.basename(__file__)+'_runon'
                                     +datetime.datetime.now()\

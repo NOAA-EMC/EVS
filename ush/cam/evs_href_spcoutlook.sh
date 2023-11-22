@@ -1,17 +1,16 @@
 #!/bin/ksh
+#************************************************************************************
+#  Purpose: Generate href spcoutlook job's  poe and sub-jobs files
+#           and system (ecnt line type)
+#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#***********************************************************************************
 set -x 
 
-#Binbin note: If METPLUS_BASE,  PARM_BASE not set, then they will be set to $METPLUS_PATH
-#             by config_launcher.py in METplus-3.0/ush
-#             why config_launcher.py is not in METplus-3.1/ush ??? 
-
-
-############################################################
-
- 
-
+#******************************************
+# Get prefix of $EVSINspcotlk 
+# *****************************************
 tail='/cam'
-prefix=${COMINspcotlk%%$tail*}
+prefix=${EVSINspcotlk%%$tail*}
 index=${#prefix}
 echo $index
 
@@ -19,17 +18,21 @@ day1=`$NDATE -24 ${VDATE}00 |cut -c1-8`
 day2=`$NDATE -48 ${VDATE}00 |cut -c1-8`
 day3=`$NDATE -72 ${VDATE}00 |cut -c1-8`
 
-mask_day1=${COMINspcotlk:0:$index}/cam/spc_otlk.$day1
-mask_day2=${COMINspcotlk:0:$index}/cam/spc_otlk.$day2
-mask_day3=${COMINspcotlk:0:$index}/cam/spc_otlk.$day3
+mask_day1=${EVSINspcotlk:0:$index}/cam/spc_otlk.$day1
+mask_day2=${EVSINspcotlk:0:$index}/cam/spc_otlk.$day2
+mask_day3=${EVSINspcotlk:0:$index}/cam/spc_otlk.$day3
+
 
 if [ ! -d  $mask_day1 ] && [ ! -d  $mask_day2 ] && [ ! -d  $mask_day3 ] ; then
+  if [ $SENDMAIL = YES ] ; then
     export subject="SPC outlook mask files are Missing for EVS ${COMPONENT}"
     echo "Warning:  No SPC outlook mask files available for ${VDATE}" > mailmsg
     echo Missing mask directories are $mask_day1 , $mask_day2 and $mask_day3   >> mailmsg
     echo "Job ID: $jobid" >> mailmsg
-    cat mailmsg | mail -s "$subject" $maillist
+    cat mailmsg | mail -s "$subject" $MAILTO
+    export err=$?; err_chk
     exit
+  fi
 fi
 
 
@@ -70,6 +73,9 @@ echo $spc_otlk_masks
 
 cd $WORK
 
+#*******************************************
+# Build POE script to collect sub-jobs
+#******************************************
 >run_all_href_spcoutlook_poe.sh
 
 obsv='prepbufr'
@@ -86,6 +92,9 @@ for prod in mean ; do
 
     export domain=$dom
 
+     #******************************
+     # Build sub-jobs
+     # *****************************
      >run_href_${model}.${dom}.${valid}_spcoutlook.sh
        echo  "export model=HREF${prod} " >>  run_href_${model}.${dom}.${valid}_spcoutlook.sh
        echo  "export domain=$dom " >> run_href_${model}.${dom}.${valid}_spcoutlook.sh     
@@ -131,5 +140,6 @@ done #end of prod loop
 
 chmod 775 run_all_href_spcoutlook_poe.sh
 
+export err=$?; err_chk
 exit
 

@@ -18,8 +18,8 @@ print(f"Working in: {cwd}")
 # Read in common environment variables
 DATA = os.environ['DATA']
 MODELNAME = os.environ['MODELNAME']
-COMINccpa = os.environ['COMINccpa']
-COMINmrms = os.environ['COMINmrms']
+EVSINccpa = os.environ['COMINccpa']
+EVSINmrms = os.environ['DCOMINmrms']
 COMOUT = os.environ['COMOUT']
 VDATE = os.environ['VDATE']
 VHOUR_LIST = os.environ['VHOUR_LIST'].split(' ')
@@ -30,9 +30,10 @@ COMPONENT = os.environ['COMPONENT']
 STEP = os.environ['STEP']
 USER = os.environ['USER']
 jobid = os.environ['jobid']
+SENDMAIL = os.environ['SENDMAIL']
 
-# mail_cmd = 'mail.py -s "$subject" $maillist -v'
-mail_cmd = 'mail -s "$subject" $maillist'
+# mail_cmd = 'mail.py -s "$subject" $MAILTO -v'
+mail_cmd = 'mail -s "$subject" $MAILTO'
 
 for VHOUR in VHOUR_LIST:
     # What accumulations stats will be run for
@@ -154,7 +155,7 @@ for VHOUR in VHOUR_LIST:
                                 print(f"Linking {COMINmodel_file} to "
                                       +f"{DATAmodel_file}")
                                 os.symlink(COMINmodel_file, DATAmodel_file)
-                            else:
+                            elif SENDMAIL == "YES":
                                 mail_COMINmodel_file = os.path.join(
                                     DATA, f"mail_{MODELNAME}_{area.lower()}_"
                                     +f"init{init_dt:%Y%m%d%H}_"
@@ -175,7 +176,7 @@ for VHOUR in VHOUR_LIST:
                                         +'"\n'
                                     )
                                     mailmsg.write(
-                                        "export maillist=${maillist:-'"
+                                        "export MAILTO=${MAILTO:-'"
                                         +USER.lower()+"@noaa.gov'}\n"
                                     )
                                     mailmsg.write(
@@ -219,30 +220,30 @@ for VHOUR in VHOUR_LIST:
             ccpa_file_HH = int(f"{ccpa_file_dt_in_accum:%H}")
             ccpa_file_YYYYmmdd = f"{ccpa_file_dt_in_accum:%Y%m%d}"
             if ccpa_file_HH > 0 and ccpa_file_HH <= 6:
-                COMINccpa_file_dir = os.path.join(
-                    COMINccpa, f"ccpa.{ccpa_file_YYYYmmdd}", '06'
+                EVSINccpa_file_dir = os.path.join(
+                    EVSINccpa, f"ccpa.{ccpa_file_YYYYmmdd}", '06'
                 )
             elif ccpa_file_HH > 6 and ccpa_file_HH <= 12:
-                COMINccpa_file_dir = os.path.join(
-                    COMINccpa, f"ccpa.{ccpa_file_YYYYmmdd}", '12'
+                EVSINccpa_file_dir = os.path.join(
+                    EVSINccpa, f"ccpa.{ccpa_file_YYYYmmdd}", '12'
                 )
             elif ccpa_file_HH > 12 and ccpa_file_HH <= 18:
-                COMINccpa_file_dir = os.path.join(
-                    COMINccpa, f"ccpa.{ccpa_file_YYYYmmdd}", '18'
+                EVSINccpa_file_dir = os.path.join(
+                    EVSINccpa, f"ccpa.{ccpa_file_YYYYmmdd}", '18'
                 )
             elif ccpa_file_HH == 0:
-                COMINccpa_file_dir = os.path.join(
-                    COMINccpa, f"ccpa.{ccpa_file_YYYYmmdd}", '00'
+                EVSINccpa_file_dir = os.path.join(
+                    EVSINccpa, f"ccpa.{ccpa_file_YYYYmmdd}", '00'
                 )
             else:
-                COMINccpa_file_dir = os.path.join(
-                    COMINccpa, 'ccpa.'+((ccpa_file_dt_in_accum
+                EVSINccpa_file_dir = os.path.join(
+                    EVSINccpa, 'ccpa.'+((ccpa_file_dt_in_accum
                                          +datetime.timedelta(days=1))\
                                          .strftime('%Y%m%d')),
                     '00'
                 )
-            COMINccpa_file = os.path.join(
-                COMINccpa_file_dir,
+            EVSINccpa_file = os.path.join(
+                EVSINccpa_file_dir,
                 f"ccpa.t{str(ccpa_file_HH).zfill(2)}z."
                 +f"{ccpa_file_accum}h.hrap.conus.gb2"
             )
@@ -250,18 +251,18 @@ for VHOUR in VHOUR_LIST:
                 DATAccpa, f"ccpa.accum{ccpa_file_accum}hr."
                 +f"v{ccpa_file_dt_in_accum:%Y%m%d%H}"
             )
-            if m_util.check_file(COMINccpa_file):
-                print(f"Linking {COMINccpa_file} to {DATAccpa_file}")
-                os.symlink(COMINccpa_file, DATAccpa_file)
-            else:
-                mail_COMINccpa_file = os.path.join(
+            if m_util.check_file(EVSINccpa_file):
+                print(f"Linking {EVSINccpa_file} to {DATAccpa_file}")
+                os.symlink(EVSINccpa_file, DATAccpa_file)
+            elif SENDMAIL == "YES":
+                mail_EVSINccpa_file = os.path.join(
                     DATA, f"mail_ccpa_accum{ccpa_file_accum}hr_"
                     +f"valid{ccpa_file_dt_in_accum:%Y%m%d%H}.sh"
                 )
-                print(f"MISSING or ZERO SIZE: {COMINccpa_file}")
-                print(f"Mail File: {mail_COMINccpa_file}")
-                if not os.path.exists(mail_COMINccpa_file):
-                    mailmsg = open(mail_COMINccpa_file, 'w')
+                print(f"MISSING or ZERO SIZE: {EVSINccpa_file}")
+                print(f"Mail File: {mail_EVSINccpa_file}")
+                if not os.path.exists(mail_EVSINccpa_file):
+                    mailmsg = open(mail_EVSINccpa_file, 'w')
                     mailmsg.write('#!/bin/bash\n')
                     mailmsg.write('set -x\n\n')
                     mailmsg.write(
@@ -269,7 +270,7 @@ for VHOUR in VHOUR_LIST:
                         +'Data Missing for EVS '+COMPONENT+'"\n'
                     )
                     mailmsg.write(
-                        "export maillist=${maillist:-'"+USER.lower()
+                        "export MAILTO=${MAILTO:-'"+USER.lower()
                         +"@noaa.gov'}\n"
                     )
                     mailmsg.write(
@@ -279,7 +280,7 @@ for VHOUR in VHOUR_LIST:
                         +'> mailmsg\n'
                     )
                     mailmsg.write(
-                        'echo "Missing file is '+COMINccpa_file
+                        'echo "Missing file is '+EVSINccpa_file
                         +'" >> mailmsg\n'
                     )
                     mailmsg.write(
@@ -288,7 +289,7 @@ for VHOUR in VHOUR_LIST:
                     mailmsg.write('cat mailmsg | '+mail_cmd+'\n')
                     mailmsg.write('exit 0')
                     mailmsg.close()
-                    os.chmod(mail_COMINccpa_file, 0o755)
+                    os.chmod(mail_EVSINccpa_file, 0o755)
         # OBS: Get MRMSE files -- Alaska
         DATAmrms = os.path.join(DATA, 'data', 'mrms')
         if not os.path.exists(DATAmrms):
@@ -303,19 +304,19 @@ for VHOUR in VHOUR_LIST:
             print(f"\nGetting MRMS files for accumulation {accum}hr valid "
                   +f"{accum_start_dt:%Y%m%d %H} to {accum_end_dt:%Y%m%d %H}Z "
                   +f"over {mrms_area.title()}")
-            COMINmrms_area = os.path.join(COMINmrms, mrms_area, 'MultiSensorQPE')
-            COMINmrms_gzfile = os.path.join(
-                COMINmrms, mrms_area, 'MultiSensorQPE',
+            EVSINmrms_area = os.path.join(EVSINmrms, mrms_area, 'MultiSensorQPE')
+            EVSINmrms_gzfile = os.path.join(
+                EVSINmrms, mrms_area, 'MultiSensorQPE',
                  f"MultiSensor_QPE_{accum}H_Pass2_00.00_"
                 +f"{accum_end_dt:%Y%m%d}-{accum_end_dt:%H}0000.grib2.gz"
             )
-            if m_util.check_file(COMINmrms_gzfile):
+            if m_util.check_file(EVSINmrms_gzfile):
                 DATAmrms_gzfile = os.path.join(
-                    DATAmrms, COMINmrms_gzfile.rpartition('/')[2]
+                    DATAmrms, EVSINmrms_gzfile.rpartition('/')[2]
                 )
-                print(f"Copying {COMINmrms_gzfile} to "
+                print(f"Copying {EVSINmrms_gzfile} to "
                       +f"{DATAmrms_gzfile}")
-                shutil.copy2(COMINmrms_gzfile, DATAmrms_gzfile)
+                shutil.copy2(EVSINmrms_gzfile, DATAmrms_gzfile)
                 print(f"Unzipping {DATAmrms_gzfile}")
                 os.system(f"gunzip {DATAmrms_gzfile}")
                 DATAmrms_file = os.path.join(
@@ -329,15 +330,15 @@ for VHOUR in VHOUR_LIST:
                 os.system("mv "
                          +f"{DATAmrms_gzfile.replace('.gz', '')} "
                          +f"{DATAmrms_file}")
-            else:
-                mail_COMINmrms_file = os.path.join(
+            elif SENDMAIL == "YES":
+                mail_EVSINmrms_file = os.path.join(
                     DATA, f"mail_mrms_accum{accum}hr_{mrms_area}_"
                     +f"valid{accum_end_dt:%Y%m%d%H}.sh"
                 )
-                print(f"MISSING or ZERO SIZE: {COMINmrms_gzfile}")
-                print(f"Mail File: {mail_COMINmrms_file}")
-                if not os.path.exists(mail_COMINmrms_file):
-                    mailmsg = open(mail_COMINmrms_file, 'w')
+                print(f"MISSING or ZERO SIZE: {EVSINmrms_gzfile}")
+                print(f"Mail File: {mail_EVSINmrms_file}")
+                if not os.path.exists(mail_EVSINmrms_file):
+                    mailmsg = open(mail_EVSINmrms_file, 'w')
                     mailmsg.write('#!/bin/bash\n')
                     mailmsg.write('set -x\n\n')
                     mailmsg.write(
@@ -346,7 +347,7 @@ for VHOUR in VHOUR_LIST:
                         +COMPONENT+'"\n'
                     )
                     mailmsg.write(
-                        "export maillist=${maillist:-'"+USER.lower()
+                        "export MAILTO=${MAILTO:-'"+USER.lower()
                         +"@noaa.gov'}\n"
                     )
                     mailmsg.write(
@@ -356,7 +357,7 @@ for VHOUR in VHOUR_LIST:
                         +'> mailmsg\n'
                     )
                     mailmsg.write(
-                        'echo "Missing file is '+COMINmrms_gzfile
+                        'echo "Missing file is '+EVSINmrms_gzfile
                         +'" >> mailmsg\n'
                     )
                     mailmsg.write(
@@ -365,6 +366,6 @@ for VHOUR in VHOUR_LIST:
                     mailmsg.write('cat mailmsg | '+mail_cmd+'\n')
                     mailmsg.write('exit 0')
                     mailmsg.close()
-                    os.chmod(mail_COMINmrms_file, 0o755)
+                    os.chmod(mail_EVSINmrms_file, 0o755)
 
 print(f"END: {os.path.basename(__file__)}")

@@ -1,4 +1,13 @@
 #! /usr/bin/env python3
+#*******************************************************************************
+# Purose: generate GEFS headline ACC plot 
+#          
+#  Note: This script first read 3 text files that conain the yearly averaged
+#        forecast hour ~ ACC data for GEFS, NAEFS and GFS, respectively 
+#        Then generate the headline plot
+#
+#   Last update: 11/16/2023  by Binbin Zhou (Lynker@NCPE/EMC)
+#***************************************************************
 
 # library to get a directory listing
 
@@ -7,8 +16,6 @@ import glob
 #from mpl_toolkits.basemap import Basemap, cm
 
 import os
-
-os.environ['PROJ_LIB']='/opt/anaconda3/share/proj'
 
 import matplotlib as mpl
 

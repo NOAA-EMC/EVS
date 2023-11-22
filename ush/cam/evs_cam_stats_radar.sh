@@ -68,7 +68,7 @@ if [ ${MODELNAME} = hireswarw ]; then
    fhr_min=1
    fhr_max=48
    fhr_inc=1
-
+   
    export MODEL_INPUT_DIR=${COMINhiresw}
    export MODEL_INPUT_TEMPLATE=${modsys}.{init?fmt=%Y%m%d}/${modsys}.t{init?fmt=%2H}z.arw_5km.f{lead?fmt=%2H}.${DOM}.grib2
 
@@ -135,6 +135,7 @@ fi
 ####################################################################
 
 nfcst=0
+nmiss=0
 
 fhr=$fhr_min
 
@@ -144,36 +145,49 @@ while [ $fhr -le $fhr_max ]; do
    export fhr
 
    # Define initialization date/cycle for each forecast lead
-   export IDATE=`$NDATE -$fhr ${VDATE}${cyc} | cut -c 1-8`
-   export INIT_HR=`$NDATE -$fhr ${VDATE}${cyc} | cut -c 9-10`
+   export IDATE=`$NDATE -$fhr ${VDATE}${vhr} | cut -c 1-8`
+   export INIT_HR=`$NDATE -$fhr ${VDATE}${vhr} | cut -c 9-10`
 
    # Define forecast filename for each model 
    if [ ${MODELNAME} = hireswarw ]; then
+      ihr_avail="00 12"
       export fcst_file=${modsys}.${IDATE}/${modsys}.t${INIT_HR}z.arw_5km.f$(printf "%02d" $fhr).${DOM}.grib2
    elif [ ${MODELNAME} = hireswarwmem2 ]; then
+      ihr_avail="00 12"
       export fcst_file=${modsys}.${IDATE}/${modsys}.t${INIT_HR}z.arw_5km.f$(printf "%02d" $fhr).${DOM}mem2.grib2
    elif [ ${MODELNAME} = hireswfv3 ]; then
+      ihr_avail="00 12"
       export fcst_file=${modsys}.${IDATE}/${modsys}.t${INIT_HR}z.fv3_5km.f$(printf "%02d" $fhr).${DOM}.grib2
    elif [ ${MODELNAME} = href ]; then
+      ihr_avail="00 12"
       export fcst_file=${modsys}.${IDATE}/ensprod/${modsys}.t${INIT_HR}z.${DOM}.${ENSPROD}.f$(printf "%02d" $fhr).grib2
    elif [ ${MODELNAME} = hrrr ]; then
+      if [ $fhr -le 18 ]; then
+         ihr_avail="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
+      else
+         ihr_avail="00 06 12 18"
+      fi
       if [ $DOMAIN = alaska ]; then
          export fcst_file=${modsys}.${IDATE}/${DOMAIN}/${modsys}.t${INIT_HR}z.wrfprsf$(printf "%02d" $fhr).${DOM}.grib2
       elif [ $DOMAIN = conus ]; then
          export fcst_file=${modsys}.${IDATE}/${DOMAIN}/${modsys}.t${INIT_HR}z.wrfprsf$(printf "%02d" $fhr).grib2
       fi
    elif [ ${MODELNAME} = namnest ]; then
+      ihr_avail="00 06 12 18"
       export fcst_file=${modsys}.${IDATE}/${modsys}.t${INIT_HR}z.${DOMAIN}nest.hiresf$(printf "%02d" $fhr).tm00.grib2
    fi
 
-   # Check for the existence of each forecast file 
-   if [ -s ${MODEL_INPUT_DIR}/${fcst_file} ]; then
-      echo $fhr >> $DATA/job${JOBNUM}_fcst_list
-      nfcst=$((nfcst+1))
+   if echo "$INIT_HR" | grep -qw "$ihr_avail"; then
+      # Check for the existence of each forecast file 
+      if [ -s ${MODEL_INPUT_DIR}/${fcst_file} ]; then
+         echo $fhr >> $DATA/job${JOBNUM}_fcst_list
+         nfcst=$((nfcst+1))
 
-   else
-      echo "Missing file is ${MODEL_INPUT_DIR}/${fcst_file}\n" >> $DATA/job${JOBNUM}_missing_fcst_list
+      else
+         echo "Missing file is ${MODEL_INPUT_DIR}/${fcst_file}\n" >> $DATA/job${JOBNUM}_missing_fcst_list
+         nmiss=$((nmiss+1))
 
+      fi
    fi
 
    fhr=$((fhr+$fhr_inc))
@@ -182,15 +196,16 @@ done
 
 
 # Send missing data alert if any forecast files are missing
-#if [ -s $DATA/job${JOBNUM}_missing_fcst_list ]; then
-if [ $nfcst = 0 ]; then
-   export subject="${DOM} ${MODELNAME} Data Missing for EVS ${COMPONENT}"
-   echo "Warning: ${DOM} ${MODELNAME} forecast files are missing for valid date ${VDATE}${cyc}. METplus will not run." > mailmsg
-   echo -e "`cat $DATA/job${JOBNUM}_missing_fcst_list`" >> mailmsg
-   echo "Job ID: $jobid" >> mailmsg
-   cat mailmsg | mail -s "$subject" $maillist
-
+if [ $nmiss -ge 1 ]; then
+   if [ $SENDMAIL = YES ]; then
+      export subject="${DOM} ${MODELNAME} Data Missing for EVS ${COMPONENT}"
+      echo "Warning: ${DOM} ${MODELNAME} forecast files are missing for valid date ${VDATE}${vhr}. METplus will not run." > mailmsg
+      echo -e "`cat $DATA/job${JOBNUM}_missing_fcst_list`" >> mailmsg
+      echo "Job ID: $jobid" >> mailmsg
+      cat mailmsg | mail -s "$subject" $MAILTO
+   fi
 fi
+
 
 
 ############################################################
@@ -208,18 +223,18 @@ else
 fi
 
 
-export obs_file=mrms.${VDATE}/${DOMAIN}/${MRMS_PRODUCT}_${OBS_PROD}_${VDATE}-${cyc}0000.${VERIF_GRID}.nc
+export obs_file=mrms.${VDATE}/${DOMAIN}/${MRMS_PRODUCT}_${OBS_PROD}_${VDATE}-${vhr}0000.${VERIF_GRID}.nc
 export OBS_INPUT_TEMPLATE=mrms.{valid?fmt=%Y%m%d}/${DOMAIN}/${MRMS_PRODUCT}_${OBS_PROD}_{valid?fmt=%Y%m%d}-{valid?fmt=%H}0000.${VERIF_GRID}.nc
 
-if [ -s $COMINmrms/${obs_file} ]; then
+if [ -s $EVSINmrms/${obs_file} ]; then
    obs_found=1
 
 else
    export subject="MRMS Prep Data Missing for EVS ${COMPONENT}"
-   echo "Warning: The MRMS ${MRMS_PRODUCT} file is missing for valid date ${VDATE}${cyc}. METplus will not run." > mailmsg
-   echo "Missing file is $COMINmrms/${obs_file}" >> mailmsg
+   echo "Warning: The MRMS ${MRMS_PRODUCT} file is missing for valid date ${VDATE}${vhr}. METplus will not run." > mailmsg
+   echo "Missing file is $EVSINmrms/${obs_file}" >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
-   cat mailmsg | mail -s "$subject" $maillist
+   cat mailmsg | mail -s "$subject" $MAILTO
 
 fi
 
@@ -240,34 +255,34 @@ if [ $nfcst -ge 1 ] && [ $obs_found = 1 ]; then
          export MODEL=${MODELNAME}
       fi
 
-      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/GridStat_fcstCAM_obsMRMS_${RADAR_FIELD}.conf
+      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GridStat_fcstCAM_obsMRMS_${RADAR_FIELD}.conf
       export err=$?; err_chk
 
    elif [ $PROD = ens ]; then
 
       export MODEL=${MODELNAME}
 
-      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/EnsembleStat_fcstHREF_obsMRMS_${RADAR_FIELD}.conf
+      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/EnsembleStat_fcstHREF_obsMRMS_${RADAR_FIELD}.conf
       export err=$?; err_chk
 
    elif [ $PROD = ppf ]; then
 
       export MODEL=${MODELNAME}_prob
 
-      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/GridStat_fcstHREFPPF_obsMRMS_${RADAR_FIELD}.conf
+      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GridStat_fcstHREFPPF_obsMRMS_${RADAR_FIELD}.conf
       export err=$?; err_chk
 
    elif [ $PROD = prob ]; then
 
       export MODEL=${MODELNAME}_prob
 
-      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${COMPONENT}/${VERIF_CASE}/${STEP}/GridStat_fcstHREFPROB_obsMRMS_${RADAR_FIELD}.conf
+      run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GridStat_fcstHREFPROB_obsMRMS_${RADAR_FIELD}.conf
       export err=$?; err_chk
 
    fi
 
 else
-   echo "Missing fcst or obs file(s) for ${VDATE}${cyc}. METplus will not run."
+   echo "Missing fcst or obs file(s) for ${VDATE}${vhr}. METplus will not run."
 
 fi
 

@@ -22,7 +22,7 @@ metplus_launcher = os.environ['metplus_launcher']
 machine_conf = os.path.join(
     os.environ['PARMevs'], 'metplus_config', 'machine.conf'
 )
-COMINspcotlk = os.environ['COMINspcotlk']
+EVSINspcotlk = os.environ['EVSINspcotlk']
 MET_PLUS_CONF = os.environ['MET_PLUS_CONF']
 
 vdate_dt = datetime.strptime(VDATE,'%Y%m%d')
@@ -38,7 +38,7 @@ elif int(DAY) == 2:
 elif int(DAY) == 3:
     OTLKs = ['0730', '0830']
 else:
-    print(f"ERROR: Invalid day in DAYS: {DAY}")
+    print(f"FATAL ERROR: Invalid day in DAYS: {DAY}. (Must be 1, 2, or 3)")
     sys.exit(1)
 
 for OTLK in OTLKs:
@@ -61,7 +61,7 @@ for OTLK in OTLKs:
             else:
                 V2DATE = VDATEp1
         else:
-            print(f"ERROR: Invalid VHOUR: {VHOUR}")
+            print(f"FATAL ERROR: Invalid VHOUR: {VHOUR}")
             sys.exit(1)
     elif int(DAY) == 2:
         if int(VHOUR) < 12:
@@ -75,7 +75,7 @@ for OTLK in OTLKs:
             V1HOUR = '1200'
             IDATE = VDATEm1
         else:
-            print(f"ERROR: Invalid VHOUR: {VHOUR}")
+            print(f"FATAL ERROR: Invalid VHOUR: {VHOUR}")
             sys.exit(1)
     elif int(DAY) == 3:
         if int(VHOUR) < 12:
@@ -89,7 +89,7 @@ for OTLK in OTLKs:
             V1HOUR = '1200'
             IDATE = VDATEm2
         else:
-            print(f"ERROR: Invalid VHOUR: {VHOUR}")
+            print(f"FATAL ERROR: Invalid VHOUR: {VHOUR}")
             sys.exit(1)
     V2HOUR = '1200'
     YYYY = IDATE[0:4]
@@ -99,11 +99,11 @@ for OTLK in OTLKs:
     )
     os.environ['SHP_FILE'] = SHP_FILE
     os.environ['NEST_INPUT_TEMPLATE'] = NEST_INPUT_TEMPLATE
-    if os.path.isfile(os.path.join(COMINspcotlk,NEST_INPUT_TEMPLATE)):
+    if os.path.isfile(os.path.join(EVSINspcotlk,NEST_INPUT_TEMPLATE)):
         try:
             N_REC = cutil.run_shell_command([
                 'gis_dump_dbf', 
-                os.path.join(COMINspcotlk,f"spc_otlk.{VDATE}/{SHP_FILE}.dbf"), 
+                os.path.join(EVSINspcotlk,f"spc_otlk.{VDATE}/{SHP_FILE}.dbf"), 
                 '|', 'grep', 'n_records', '|', 'cut', '-d\'=\'', '-f2', '|', 'tr', 
                 '-d', '\' \''
             ], capture_output=True)
@@ -112,7 +112,7 @@ for OTLK in OTLKs:
                 for REC in np.arange(int(N_REC)):
                     NAME = cutil.run_shell_command([
                         'gis_dump_dbf', 
-                        os.path.join(COMINspcotlk,f"spc_otlk.{VDATE}/{SHP_FILE}.dbf"), 
+                        os.path.join(EVSINspcotlk,f"spc_otlk.{VDATE}/{SHP_FILE}.dbf"), 
                         '|', 'egrep', '-A', '5', f'"^Record {REC}"', '|', 'tail',
                         '-1', '|', 'cut', '-d\'"\'', '-f2'
                     ], capture_output=True)
@@ -135,9 +135,9 @@ for OTLK in OTLKs:
                 print(f"No day {DAY} outlook areas were issued at {OTLK}Z on {IDATE}")
                 continue
         except IOError as e:
-            print(f"ERROR: {e}")
+            print(f"FATAL ERROR: {e}")
             print(f"The following file was deleted or corrupted while trying "
-                  + f"to open it: {os.path.join(COMINspcotlk,NEST_INPUT_TEMPLATE)}")
+                  + f"to open it: {os.path.join(EVSINspcotlk,NEST_INPUT_TEMPLATE)}")
             sys.exit(1)
     else:
         print(f"No day {DAY} outlook areas were issued at {OTLK}Z on {IDATE}")

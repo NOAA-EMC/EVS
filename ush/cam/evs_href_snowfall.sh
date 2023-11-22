@@ -1,14 +1,14 @@
 #!/bin/ksh
+#************************************************************************************
+#  Purpose: Generate href snowfall poe and sub-jobs files
+#  Last update: 10/30/2023, by Binbin Zhou Lynker@EMC/NCEP
+#***********************************************************************************
 set -x 
 
-#Binbin note: If METPLUS_BASE,  PARM_BASE not set, then they will be set to $METPLUS_PATH
-#             by config_launcher.py in METplus-3.0/ush
-#             why config_launcher.py is not in METplus-3.1/ush ??? 
-
-
-############################################################
-
-
+#*******************************************
+# Build POE script to collect sub-jobs 
+#******************************************
+export members=10
 >run_all_href_snowfall_poe.sh
 
 mkdir -p $COMOUTsmall/HREF_SNOW
@@ -19,13 +19,16 @@ if [ ! -s $COMSNOW/${VDATE}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_24h_${VDATE}12_g
    echo "Warning:  No NOHRSC data available for ${VDATE}" > mailmsg
    echo Missing file is  $COMSNOW/${VDATE}/wgrbbul/nohrsc_snowfall/sfav2_CONUS_24h_${VDATE}12_grid184.grb2  >> mailmsg
    echo "Job ID: $jobid" >> mailmsg
-   cat mailmsg | mail -s "$subject" $maillist
+   cat mailmsg | mail -s "$subject" $MAILTO
    exit
 fi
 
 
  for obsv in 6h 24h  ; do
 
+     #*****************************
+     # Build sub-jobs
+     # ****************************
      >run_href_snow${obsv}.sh
 
       echo "export regrid=G212" >> run_href_snow${obsv}.sh

@@ -9,7 +9,7 @@ VDATE = os.environ['VDATE']
 VHOUR = os.environ['VHOUR']
 DAY = os.environ['DAY']
 metplus_launcher = os.environ['metplus_launcher']
-COMINspcotlk = os.environ['COMINspcotlk']
+EVSINspcotlk = os.environ['EVSINspcotlk']
 MET_PLUS_CONF = os.environ['MET_PLUS_CONF']
 
 vdate_dt = datetime.strptime(VDATE,'%Y%m%d')
@@ -86,11 +86,11 @@ for OTLK in OTLKs:
     )
     os.environ['SHP_FILE'] = SHP_FILE
     os.environ['NEST_INPUT_TEMPLATE'] = NEST_INPUT_TEMPLATE
-    if os.path.isfile(os.path.join(COMINspcotlk,NEST_INPUT_TEMPLATE)):
+    if os.path.isfile(os.path.join(EVSINspcotlk,NEST_INPUT_TEMPLATE)):
         try:
             N_REC = cutil.run_shell_command([
                 'gis_dump_dbf', 
-                os.path.join(COMINspcotlk,f"spc_otlk.{VDATE}/{SHP_FILE}.dbf"), 
+                os.path.join(EVSINspcotlk,f"spc_otlk.{VDATE}/{SHP_FILE}.dbf"), 
                 '|', 'grep', 'n_records', '|', 'cut', '-d\'=\'', '-f2', '|', 'tr', 
                 '-d', '\' \''
             ], capture_output=True)
@@ -99,7 +99,7 @@ for OTLK in OTLKs:
                 for REC in np.arange(int(N_REC)):
                     NAME = cutil.run_shell_command([
                         'gis_dump_dbf', 
-                        os.path.join(COMINspcotlk,f"spc_otlk.{VDATE}/{SHP_FILE}.dbf"), 
+                        os.path.join(EVSINspcotlk,f"spc_otlk.{VDATE}/{SHP_FILE}.dbf"), 
                         '|', 'egrep', '-A', '5', f'"^Record {REC}"', '|', 'tail',
                         '-1', '|', 'cut', '-d\'"\'', '-f2'
                     ], capture_output=True)
@@ -124,7 +124,7 @@ for OTLK in OTLKs:
         except IOError as e:
             print(f"ERROR: {e}")
             print(f"The following file was deleted or corrupted while trying "
-                  + f"to open it: {os.path.join(COMINspcotlk,NEST_INPUT_TEMPLATE)}")
+                  + f"to open it: {os.path.join(EVSINspcotlk,NEST_INPUT_TEMPLATE)}")
             sys.exit(1)
     else:
         print(f"No day {DAY} outlook areas were issued at {OTLK}Z on {IDATE}")

@@ -80,7 +80,6 @@ for prod in mean ; do
 
        if [ $valid = 0 ] ; then
          echo "export verif_poly='$verif_poly_00Z'" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
-         #echo "export verif_poly='/lfs/h2/emc/vpppg/noscrub/binbin.zhou/com/evs/v1.0/prep/cam/href/spc.20230312/spc_otlk_d1_0100_MRGL_00Z.nc'" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
        elif [ $valid = 12 ] ; then 
 	 echo "export verif_poly='$verif_poly_12Z'" >> run_href_${model}.${dom}.${valid}_spcoutlook.sh
        fi

@@ -15,7 +15,7 @@ import os, glob
 
 
 FIX_DIR = os.environ['FIXevs'] 
-OTLK_DIR = os.environ['COMINspcotlk']
+OTLK_DIR = os.environ['EVSINspcotlk']
 WORK_DIR = os.environ['DATA']
 
 verif_case = os.environ['VERIF_CASE']
@@ -28,7 +28,7 @@ vday = os.environ['VDATE']
 if verif_case == 'severe':
     vhr = '12'
 else:
-    vhr = os.environ['cyc']
+    vhr = os.environ['vhr']
 
 YYYY = int(vday[0:4])
 MM   = int(vday[4:6])

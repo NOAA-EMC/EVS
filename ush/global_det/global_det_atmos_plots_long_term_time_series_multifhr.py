@@ -23,6 +23,7 @@ matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import matplotlib.dates as md
 import global_det_atmos_util as gda_util
+import global_det_atmos_long_term_util as gdalt_util
 import matplotlib.gridspec as gridspec
 from global_det_atmos_plots_specs import PlotSpecs
 
@@ -126,13 +127,12 @@ class LongTermTimeSeriesMultiFhr:
             self.forecast_day_list = self.forecast_day_list[:4]
         # Make job image directory
         output_image_dir = os.path.join(self.output_dir, 'images')
-        if not os.path.exists(output_image_dir):
-            os.makedirs(output_image_dir)
+        gda_util.make_dir(output_image_dir)
         self.logger.info(f"Plots will be in: {output_image_dir}")
         # Create merged dataset of verification systems
         if self.var_name == 'APCP':
             model_group_merged_df = (
-                gda_util.merge_precip_long_term_stats_datasets(
+                gdalt_util.merge_precip_long_term_stats_datasets(
                     self.logger, self.input_dir, self.time_range,
                     self.date_dt_list, self.model_group, self.model_list,
                     self.var_name, self.var_level, self.var_thresh,
@@ -141,7 +141,7 @@ class LongTermTimeSeriesMultiFhr:
             )
         else:
             model_group_merged_df = (
-                gda_util.merge_grid2grid_long_term_stats_datasets(
+                gdalt_util.merge_grid2grid_long_term_stats_datasets(
                     self.logger, self.input_dir, self.time_range,
                     self.date_dt_list, self.model_group, self.model_list,
                     self.var_name, self.var_level, self.var_thresh,
@@ -470,12 +470,10 @@ def main():
     FORECAST_DAY_LIST = ['1', '2']
     RUN_LENGTH_LIST = ['allyears', 'past10years']
     # Create OUTPUT_DIR
-    if not os.path.exists(OUTPUT_DIR):
-        os.makedirs(OUTPUT_DIR)
+    gda_util.make_dir(OUTPUT_DIR)
     # Set up logging
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')
-    if not os.path.exists(logging_dir):
-         os.makedirs(logging_dir)
+    gda_util.make_dir(logging_dir)
     job_logging_file = os.path.join(logging_dir,
                                     os.path.basename(__file__)+'_runon'
                                     +datetime.datetime.now()\

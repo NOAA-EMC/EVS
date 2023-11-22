@@ -1,0 +1,73 @@
+#!/bin/ksh
+###########################################################################
+#  JOB card cerated for running METPlus-based NARRE verifications
+#   By Binbin Zhou, Lynker@EMC/NCEP
+#   Last updated 10/27/2023
+#   Purpose: setup environment variables to run the NARRE stats script 
+########################################################################
+set -x
+
+export cycle=${cycle:-t${vhr}z}
+
+export pid=$$
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+mkdir -p $DATA
+cd $DATA
+
+# Run setpdy and initialize PDY variables
+setpdy.sh
+. $DATA/PDY
+
+export VDATE=${VDATE:-$PDYm1}
+
+
+##################################################
+# SAVEGES  - Copy Files From TMPDIR to $GESdir
+# SENDECF  - Flag Events on ECF
+# SENDCOM  - Copy Files From TMPDIR to $COMOUT
+# SENDDBN  - Issue DBNet Client Calls
+# SENDMAIL - Sen email to alert data missing
+##################################################
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+export SENDMAIL=${SENDMAIL:-NO} 
+
+export COMIN=${COMIN:-$(compath.py  $envir/com/$NET/$evs_ver)}
+export COMINnarre=${COMINnarre:-$(compath.py  $envir/com/narre/$narre_ver)}
+export COMINobsproc=${COMINobsproc:-$(compath.py  $envir/com/obsproc/$obsproc_ver)}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}/${STEP}/${COMPONENT}
+mkdir -p $COMOUT
+
+export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
+export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
+mkdir -p $COMOUTfinal $COMOUTsmall
+
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
+export EXECevs=$HOMEevs/exec
+export PARMevs=$HOMEevs/parm
+export USHevs=$HOMEevs/ush
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export MASKS=$FIXevs/masks
+
+####################################
+# Determine Job Output Name on System
+####################################
+export outid="LL$job"
+export jobid="${outid}.o${pid}"
+
+####################################
+# Specify codes and scripts locaton
+####################################
+
+
+$HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${MODELNAME}_${STEP}.sh 
+export err=$?; err_chk
+
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATAROOT
+  rm -rf $DATA
+fi
+
+#date
+

@@ -1,7 +1,7 @@
 #!/bin/ksh
 
 # ================================================================================================
-# NCEP EMC PYTHON PLOTTING OF CAM VERIFICATION
+# NCEP EMC PYTHON PLOTTING OF SREF VERIFICATION
 # 
 # CONTRIBUTORS:     Marcel Caron, marcel.caron@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
 #
@@ -22,7 +22,6 @@
 #
 #                   $ PY_PLOT_DIR="/path/to/my/verif/plotting/home/directory"
 #                   $ mkdir -p ${PY_PLOT_DIR}/out/logs ${PY_PLOT_DIR}/data ${PY_PLOT_DIR}/ush
-#                   $ BASE_DIR="/gpfs/dell2/emc/verification/noscrub/Marcel.Caron/verif_plotting"
 #                   $ cp -r ${BASE_DIR}/ush/* ${PY_PLOT_DIR}/ush/.
 #                   $ cp ${BASE_DIR}/py_plotting.config ${PY_PLOT_DIR}/.
 #
@@ -190,5 +189,4 @@ export INTERP_PNTS=interp_pnts
 
 # Executes the desired python script.  No need to edit this. 
 python $USH_DIR/${PLOT_TYPE}.py
-
-exit 0
+export err=$?; err_chk

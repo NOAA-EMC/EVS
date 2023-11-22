@@ -1,0 +1,124 @@
+#!/bin/bash
+
+# =============================================================================
+# 
+#  NAME: JEVS_MESOSCALE_STATS
+#  CONTRIBUTOR(S): RS, roshan.shrestha@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+#  CONTRIBUTOR(S): BZ, binbin.zhou@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+#  CONTRIBUTOR(S): MR, mallory.row@noaa.gov, NOAA/NWS/NCEP/EMC-VPPPGB
+#  PURPOSE: Use ECF environment variables to define and run an EVS job
+#  DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_nam_grid2obs_stats.ecf
+#  DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_grid2obs_stats.ecf
+#  DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_nam_precip_stats.ecf
+#  DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_precip_stats.ecf
+#  DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_nam_snowfall_stats.ecf
+#  DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_rap_snowfall_stats.ecf
+#  DEPENDENCIES: $HOMEevs/ecf/mesoscale/stats/jevs_sref_grid2obs_stats.ecf
+# 
+# =============================================================================
+#
+
+########################################
+# Preliminary data setup step  
+########################################
+set -x
+
+echo "BEGIN: $(basename ${BASH_SOURCE[0]})"
+
+# Shell Processing Variables
+export PS4='$SECONDS + '
+date
+
+# LSF id (jobid) and Temp Directories
+export pid=$$
+
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-YES}
+export SENDECF=${SENDECF:-YES}
+export SENDMAIL=${SENDMAIL:-NO}
+
+export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
+mkdir -p $DATA
+cd $DATA
+
+export machine=${machine:-WCOSS2}
+export MET_PLUS_PATH=${MET_PLUS_PATH:-$METPLUS_PATH}
+export MET_PATH=$MET_ROOT
+export MET_CONFIG="${MET_PLUS_PATH}/parm/met_config"
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}} 
+export EXECevs=${EXECevs:-$HOMEevs/exec}
+export PARMevs=${PARMevs:-$HOMEevs/parm}
+export USHevs=${USHevs:-$HOMEevs/ush}
+export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
+export MASKS=$FIXevs/masks
+export MET_PLUS_CONF="${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}"
+export vhr=${vhr:-00}
+if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
+  if [ $VERIF_CASE = snowfall ]; then
+      np=$vhr;  nq=$(($np%6)); nr=$(($np-$nq)); printf -v nt "%02d" $nr;
+      export vhr=$nt;
+  fi
+fi
+export cycle=t${vhr}z
+setpdy.sh
+. $DATA/PDY
+
+if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
+  export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
+  export COMINnam=${COMINnam:-$(compath.py ${envir}/com/nam/${nam_ver})}
+  export COMINrap=${COMINrap:-$(compath.py ${envir}/com/rap/${rap_ver})}
+  export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
+  export COMINobs=$COMINobsproc
+  export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
+  export EVSINspcotlk=${EVSINspcotlk:-$COMIN/prep/cam}
+  export DCOMINmrms=${DCOMINmrms:-$DCOMROOT/ldmdata/obs/upperair/mrms}
+  export DCOMINnohrsc=${DCOMINnohrsc:-$DCOMROOT}
+  export EVSIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}
+
+  if [ $VERIF_CASE = grid2obs ] ; then
+      export VDATE=${VDATE:-$PDYm1}
+  fi
+  if [ $VERIF_CASE = snowfall ] || [ $VERIF_CASE = precip ]; then
+      export VDATE=${VDATE:-$PDYm2}
+  fi
+  
+ # in production, the following will be set to the approp. COMOUT dir
+  export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
+  export COMOUTfinal=${COMOUTfinal:-$COMOUT/${MODELNAME}.${VDATE}}
+  export COMOUTsmall=${COMOUTsmall:-$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE}
+  mkdir -p $COMOUT $COMOUTfinal $COMOUTsmall
+
+elif [ $MODELNAME = sref ]; then
+  export VDATE=${VDATE:-$PDYm2}
+  
+  export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}/prep/$COMPONENT/$RUN
+  export COMINsref=${COMINsref:-$(compath.py  sref/$sref_ver)}
+  export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_ver})}
+  export COMINccpa=${COMINccpa:-$(compath.py  ccpa/${ccpa_ver})}
+  export EVSINsrefmean=${EVSINsrefmean:-$COMIN/prep/$COMPONENT}
+
+  export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver})}/$STEP/$COMPONENT
+  mkdir -p $COMOUT
+
+  export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
+  export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
+  mkdir -p $COMOUTfinal $COMOUTsmall
+else
+  echo "Improper MODELNAME: $MODELNAME"
+  exit
+fi
+
+
+# Execute the script.
+   $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
+   export err=$?; err_chk
+
+# Clean Up
+msg="JOB $job HAS COMPLETED NORMALLY."
+if [ "$KEEPDATA" != "YES" ] ; then
+  cd $DATA_IN
+  rm -rf $DATA
+fi
+
+echo "END: $(basename ${BASH_SOURCE[0]})"

@@ -1,5 +1,11 @@
 #!/bin/ksh
-
+#***********************************************************
+# This file to average PSTD line type data over stat files
+# for plotting but is not used in current version, or
+# can be deleted !!!
+#
+#  Last update: 11/16/2023, by Binbin Zhou (Lynker@NCPE/EMC)
+#*********************************************************
 set -x 
 
 export stat_data=$DATA/all_stats
@@ -8,10 +14,10 @@ mkdir -p $stat_data
 
 yyyy=${VDATE:0:4}
 tail='/gefs'
-prefix=${COMIN%%$tail*}
+prefix=${EVSIN%%$tail*}
 index=${#prefix}
 echo $index
-COM_IN=${COMIN:0:$index}
+COM_IN=${EVSIN:0:$index}
 echo $COM_IN
 
 
@@ -51,6 +57,7 @@ for model in gefs  ; do
 
 
    ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PLOT_CONF}/StatAnlysis_fcstGENS_obsCCPA_PSTD_GatherByDate.conf
+   export err=$?; err_chk
 
     #cp $DATA/agg_stat_PSTD.${model}.12Z  agg_stat_PSTD.${model}.${yyyy}.12Z
 
@@ -66,12 +73,12 @@ for model in gefs  ; do
 
 done
 
-exit
 
 sed -e "s!YYYY!${yyyy}!g" -e "s!December!$last!g"  $USHevs/global_ens/evs_global_ens_headline_plot.py  >  evs_global_ens_headline_plot.py 
 
 
 python evs_global_ens_headline_plot.py
+export err=$?; err_chk
 
 
 

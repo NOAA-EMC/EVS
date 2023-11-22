@@ -21,7 +21,6 @@ import datetime
 import subprocess
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
-from cartopy.util import add_cyclic_point
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 from cartopy import config
 import global_det_atmos_util as gda_util
@@ -87,7 +86,7 @@ class NOHRSCSpatialMap:
         cmap_under_color_m = '#ffffff'
         cmap_over_color_m = '#5d2c2e'
         # Set Cartopy shapefile location
-        config['data_dir'] = f"{os.environ['cartopyDataDir']}"
+        config['data_dir'] = config['repo_data_dir']
         # Convert NOHRSC grib2 to netCDF and read in data
         self.logger.info(f"Reading in NOHRSC file from {self.input_dir}")
         nohrsc_grib2_file = os.path.join(
@@ -332,12 +331,10 @@ def main():
         'obs_var_level': 'OBS_VAR_LEVEL',
     }
     # Create OUTPUT_DIR
-    if not os.path.exists(OUTPUT_DIR):
-        os.makedirs(OUTPUT_DIR)
+    gda_util.make_dir(OUTPUT_DIR)
     # Set up logging
     logging_dir = os.path.join(OUTPUT_DIR, 'logs')
-    if not os.path.exists(logging_dir):
-         os.makedirs(logging_dir)
+    gda_util.make_dir(logging_dir)
     job_logging_file = os.path.join(logging_dir,
                                     os.path.basename(__file__)+'_runon'
                                     +datetime.datetime.now()\
