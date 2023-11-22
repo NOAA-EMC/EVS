@@ -968,18 +968,6 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                 )
             )
             fcst_thresh_labels = [str(tlab) for tlab in fcst_thresh_labels]
-            requested_fcst_thresh_labels = [
-                float(tlab) for tlab in requested_fcst_thresh_labels
-            ]
-            requested_fcst_thresh_labels = (
-                reference.unit_conversions[units]['formula'](
-                    requested_fcst_thresh_labels,
-                    rounding=True
-                )
-            )
-            requested_fcst_thresh_labels = [
-                str(tlab) for tlab in requested_fcst_thresh_labels
-            ]
         if obs_thresh and '' not in obs_thresh:
             obs_thresh_labels = [float(tlab) for tlab in obs_thresh_labels]
             obs_thresh_labels = (
@@ -989,18 +977,6 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                 )
             )
             obs_thresh_labels = [str(tlab) for tlab in obs_thresh_labels]
-            requested_obs_thresh_labels = [
-                float(tlab) for tlab in requested_obs_thresh_labels
-            ]
-            requested_obs_thresh_labels = (
-                reference.unit_conversions[units]['formula'](
-                    requested_obs_thresh_labels,
-                    rounding=True
-                )
-            )
-            requested_obs_thresh_labels = [
-                str(tlab) for tlab in requested_obs_thresh_labels
-            ]
         units = reference.unit_conversions[units]['convert_to']
     if units == '-':
         units = ''
