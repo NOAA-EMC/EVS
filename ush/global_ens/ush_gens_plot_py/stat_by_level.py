@@ -269,13 +269,13 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
                             return_terms=True
                         )
                     )
-                elif str(metric1_name).upper() in metrics_using_var_units:
-                    coef, const = (
-                        reference.unit_conversions[units]['formula'](
-                            None,
-                            return_terms=True
-                        )
+            elif str(metric1_name).upper() in metrics_using_var_units:
+                coef, const = (
+                    reference.unit_conversions[units]['formula'](
+                        None,
+                        return_terms=True
                     )
+                )
     # Calculate desired metrics
     metric_long_names = []
     for stat in [metric1_name, metric2_name]:
