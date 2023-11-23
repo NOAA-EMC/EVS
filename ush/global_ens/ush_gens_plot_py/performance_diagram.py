@@ -311,7 +311,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     metric_long_names = []
     for metric_name in [metric1_name, metric2_name, metric3_name]:
         stat_output = plot_util.calculate_stat(
-            logger, df_aggregated, str(metric_name).lower()
+            logger, df_aggregated, str(metric_name).lower(), [None, None]
         )
         df_aggregated[str(metric_name).upper()] = stat_output[0]
         metric_long_names.append(stat_output[2])
@@ -319,7 +319,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             ci_output = df_groups.apply(
                 lambda x: plot_util.calculate_bootstrap_ci(
                     logger, bs_method, x, str(metric_name).lower(), bs_nrep,
-                    ci_lev, bs_min_samp
+                    ci_lev, bs_min_samp, [None, None]
                 )
             )
             if any(ci_output['STATUS'] == 1):
@@ -641,29 +641,48 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
         logger.info("========================================")
         return None
     units = df['FCST_UNITS'].tolist()[0]
+    var_long_name_key = df['FCST_VAR'].tolist()[0]
+    if str(var_long_name_key).upper() == 'PROB_MXUPHL25_A24_GEHWT':
+        units = 'decimal'
+    unit_convert = False
     if units in reference.unit_conversions:
-        thresh_labels = [float(tlab) for tlab in thresh_labels]
-        thresh_labels = reference.unit_conversions[units]['formula'](thresh_labels)
-        thresh_diff_categories = np.array([
-            [np.power(10., y)]
-            for y in [-5,-4,-3,-2,-1,0,1,2,3,4,5]
-        ]).flatten()
-        precision_scale_indiv_mult = [
-            thresh_diff_categories[item] 
-            for item in np.digitize(thresh_labels, thresh_diff_categories)
-        ]
-        precision_scale_collective_mult = 100/min(precision_scale_indiv_mult)
-        precision_scale = np.multiply(
-            precision_scale_indiv_mult, precision_scale_collective_mult
-        )
-        thresh_labels = [
-            f'{np.round(tlab)/precision_scale[t]}' 
-            for t, tlab in enumerate(
-                np.multiply(thresh_labels, precision_scale)
+        unit_convert = True
+        if str(var_long_name_key).upper() == 'HGT':
+            if str(df['OBS_VAR'].tolist()[0]).upper() in ['CEILING']:
+                if units in ['m', 'gpm']:
+                    units = 'gpm'
+            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HPBL']:
+                unit_convert = False
+            elif str(df['OBS_VAR'].tolist()[0]).upper() in ['HGT']:
+                unit_convert = False
+        elif any(field in str(var_long_name_key).upper() for field in ['WEASD', 'SNOD', 'ASNOW']):
+            if units in ['m']:
+                units = 'm_snow'
+        if unit_convert:
+            thresh_labels = [float(tlab) for tlab in thresh_labels]
+            thresh_labels = reference.unit_conversions[units]['formula'](
+                thresh_labels,
+                rounding=True
             )
-        ]
-        #thresh_labels = [f'{tlab}' for tlab in thresh_labels]
-        units = reference.unit_conversions[units]['convert_to']
+            thresh_diff_categories = np.array([
+                [np.power(10., y)]
+                for y in [-5,-4,-3,-2,-1,0,1,2,3,4,5]
+            ]).flatten()
+            precision_scale_indiv_mult = [
+                thresh_diff_categories[item]
+                for item in np.digitize(thresh_labels, thresh_diff_categories)
+            ]
+            precision_scale_collective_mult = 100/min(precision_scale_indiv_mult)
+            precision_scale = np.multiply(
+                precision_scale_indiv_mult, precision_scale_collective_mult
+            )
+            thresh_labels = [
+                f'{np.round(tlab)/precision_scale[t]}'
+                for t, tlab in enumerate(
+                    np.multiply(thresh_labels, precision_scale)
+                )
+            ]
+            units = reference.unit_conversions[units]['convert_to']
     if units == '-':
         units = ''
     f = lambda m,c,ls,lw,ms,mec: plt.plot(
@@ -788,7 +807,7 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
     var_long_name = variable_translator[var_long_name_key]
     metrics_using_var_units = [
         'BCRMSE','RMSE','BIAS','ME','FBAR','OBAR','MAE','FBAR_OBAR',
-        'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR',
+        'SPEED_ERR','DIR_ERR','RMSVE','VDIFF_SPEED','VDIF_DIR','SPREAD',
         'FBAR_OBAR_SPEED','FBAR_OBAR_DIR','FBAR_SPEED','FBAR_DIR'
     ]
     ax.set_ylabel(f'{metric_long_names[1]}')
