@@ -690,7 +690,7 @@ def get_stat_plot_name(logger, stat):
    return stat_plot_name
 
 def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level, 
-                           bs_min_samp):
+                           bs_min_samp, conversion):
    """! Calculate the upper and lower bound bootstrap statistic from the 
         data from the read in MET .stat file(s)
 
@@ -730,6 +730,10 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
       else:
          stat_values = model_data.loc[:]['TOTAL']
    else:
+      if np.any(conversion):
+          bool_convert = True
+      else:
+          bool_convert = False
       if all(elem in model_data_columns for elem in
             ['FBAR', 'OBAR', 'MAE']):
          line_type = 'SL1L2'
@@ -739,6 +743,26 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          fobar = model_data.loc[:]['FOBAR']
          ffbar = model_data.loc[:]['FFBAR']
          oobar = model_data.loc[:]['OOBAR']
+         if bool_convert:
+             coef, const = conversion
+             fbar = coef*fbar+const
+             obar = coef*obar+const
+             fobar = (
+                np.power(coef, 2)*fobar
+                + coef*const*fbar
+                + coef*const*obar
+                + np.power(const, 2)
+             )
+             ffbar = (
+                np.power(coef, 2)*ffbar
+                + 2.*coef*const*fbar
+                + np.power(const, 2)
+             )
+             oobar = (
+                np.power(coef, 2)*oobar
+                + 2.*coef*const*obar
+                + np.power(const, 2)
+             )
       elif all(elem in model_data_columns for elem in 
             ['FABAR', 'OABAR', 'MAE']):
          line_type = 'SAL1L2'
@@ -748,6 +772,19 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          foabar = model_data.loc[:]['FOABAR']
          ffabar = model_data.loc[:]['FFABAR']
          ooabar = model_data.loc[:]['OOABAR']
+         if bool_convert:
+             coef, const = conversion
+             fabar = coef*fabar
+             oabar = coef*oabar
+             foabar = (
+                np.power(coef, 2)*foabar
+             )
+             ffabar = (
+                np.power(coef, 2)*ffabar
+             )
+             ooabar = (
+                np.power(coef, 2)*ooabar
+             )
       elif all(elem in model_data_columns for elem in
             ['UFBAR', 'VFBAR']):
          line_type = 'VL1L2'
@@ -759,6 +796,27 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          uvfobar = model_data.loc[:]['UVFOBAR']
          uvffbar = model_data.loc[:]['UVFFBAR']
          uvoobar = model_data.loc[:]['UVOOBAR']
+         if bool_convert:
+             coef, const = conversion
+             ufbar = coef*ufbar+const
+             vfbar = coef*vfbar+const
+             uobar = coef*uobar+const
+             vobar = coef*vobar+const
+             uvfobar = (
+                np.power(coef, 2)*uvfobar
+                + coef*const*(ufbar + uobar + vfbar + vobar)
+                + np.power(const, 2)
+             )
+             uvffbar = (
+                np.power(coef, 2)*uvffbar
+                + 2.*coef*const*(ufbar + vfbar)
+                + np.power(const, 2)
+             )
+             uvoobar = (
+                np.power(coef, 2)*uvoobar
+                + 2.*coef*const*(uobar + vobar)
+                + np.power(const, 2)
+             )
       elif all(elem in model_data_columns for elem in 
             ['UFABAR', 'VFABAR']):
          line_type = 'VAL1L2'
@@ -770,6 +828,21 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          uvfoabar = model_data.loc[:]['UVFOABAR']
          uvffabar = model_data.loc[:]['UVFFABAR']
          uvooabar = model_data.loc[:]['UVOOABAR']
+         if bool_convert:
+             coef, const = conversion
+             ufabar = coef*ufabar
+             vfabar = coef*vfabar
+             uoabar = coef*uoabar
+             voabar = coef*voabar
+             uvfoabar = (
+                np.power(coef, 2)*uvfoabar
+             )
+             uvffabar = (
+                np.power(coef, 2)*uvffabar
+             )
+             uvooabar = (
+                np.power(coef, 2)*uvooabar
+             )
       elif all(elem in model_data_columns for elem in
             ['VDIFF_SPEED', 'VDIFF_DIR']):
          line_type = 'VCNT'
@@ -790,6 +863,11 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          vdiff_dir = model_data.loc[:]['VDIFF_DIR']
          speed_err = model_data.loc[:]['SPEED_ERR']
          dir_err = model_data.loc[:]['DIR_ERR']
+         if bool_convert:
+             logger.error(
+                f"FATAL ERROR: Cannot convert columns for line_type \"{line_type}\""
+             )
+             exit(1)
       elif all(elem in model_data_columns for elem in
             ['FY_OY', 'FN_ON']):
          line_type = 'CTC'
@@ -819,6 +897,12 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
          spread = model_data.loc[:]['SPREAD']
          me = model_data.loc[:]['ME']
          mae = model_data.loc[:]['MAE']
+         if bool_convert:
+             coef, const = conversion
+             rmse = coef*rmse
+             spread = coef*spread
+             me = coef*me
+             mae = np.abs(coef)*mae
       else:
          logger.error("FATAL ERROR: Could not recognize line type from columns")
          sys.exit(1)
@@ -1464,7 +1548,7 @@ def calculate_bootstrap_ci(logger, bs_method, model_data, stat, nrepl, level,
       dict(CI_LOWER=[stat_ci_lower], CI_UPPER=[stat_ci_upper], STATUS=[status])
    )
 
-def calculate_stat(logger, model_data, stat):
+def calculate_stat(logger, model_data, stat, conversion):
    """! Calculate the statistic from the data from the
         read in MET .stat file(s)
 
@@ -1493,6 +1577,10 @@ def calculate_stat(logger, model_data, stat):
       else:
          stat_values = model_data.loc[:]['TOTAL']
    else:
+      if np.any(conversion):
+          bool_convert = True
+      else:
+          bool_convert = False
       if all(elem in model_data_columns for elem in
             ['FBAR', 'OBAR', 'MAE']):
          line_type = 'SL1L2'
@@ -1502,6 +1590,26 @@ def calculate_stat(logger, model_data, stat):
          ffbar = model_data.loc[:]['FFBAR']
          oobar = model_data.loc[:]['OOBAR']
          mae   = model_data.loc[:]['MAE']
+         if bool_convert:
+             coef, const = conversion
+             fbar = coef*fbar+const
+             obar = coef*obar+const
+             fobar = (
+                np.power(coef, 2)*fobar
+                + coef*const*fbar
+                + coef*const*obar
+                + np.power(const, 2)
+             )
+             ffbar = (
+                np.power(coef, 2)*ffbar
+                + 2.*coef*const*fbar
+                + np.power(const, 2)
+             )
+             oobar = (
+                np.power(coef, 2)*oobar
+                + 2.*coef*const*obar
+                + np.power(const, 2)
+             )
       elif all(elem in model_data_columns for elem in 
             ['FABAR', 'OABAR', 'MAE']):
          line_type = 'SAL1L2'
@@ -1510,6 +1618,19 @@ def calculate_stat(logger, model_data, stat):
          foabar = model_data.loc[:]['FOABAR']
          ffabar = model_data.loc[:]['FFABAR']
          ooabar = model_data.loc[:]['OOABAR']
+         if bool_convert:
+             coef, const = conversion
+             fabar = coef*fabar
+             oabar = coef*oabar
+             foabar = (
+                np.power(coef, 2)*foabar
+             )
+             ffabar = (
+                np.power(coef, 2)*ffabar
+             )
+             ooabar = (
+                np.power(coef, 2)*ooabar
+             )
       elif all(elem in model_data_columns for elem in
             ['UFBAR', 'VFBAR']):
          line_type = 'VL1L2'
@@ -1520,6 +1641,27 @@ def calculate_stat(logger, model_data, stat):
          uvfobar = model_data.loc[:]['UVFOBAR']
          uvffbar = model_data.loc[:]['UVFFBAR']
          uvoobar = model_data.loc[:]['UVOOBAR']
+         if bool_convert:
+             coef, const = conversion
+             ufbar = coef*ufbar+const
+             vfbar = coef*vfbar+const
+             uobar = coef*uobar+const
+             vobar = coef*vobar+const
+             uvfobar = (
+                np.power(coef, 2)*uvfobar
+                + coef*const*(ufbar + uobar + vfbar + vobar)
+                + np.power(const, 2)
+             )
+             uvffbar = (
+                np.power(coef, 2)*uvffbar
+                + 2.*coef*const*(ufbar + vfbar)
+                + np.power(const, 2)
+             )
+             uvoobar = (
+                np.power(coef, 2)*uvoobar
+                + 2.*coef*const*(uobar + vobar)
+                + np.power(const, 2)
+             )
       elif all(elem in model_data_columns for elem in 
             ['UFABAR', 'VFABAR']):
          line_type = 'VAL1L2'
@@ -1530,6 +1672,21 @@ def calculate_stat(logger, model_data, stat):
          uvfoabar = model_data.loc[:]['UVFOABAR']
          uvffabar = model_data.loc[:]['UVFFABAR']
          uvooabar = model_data.loc[:]['UVOOABAR']
+         if bool_convert:
+             coef, const = conversion
+             ufabar = coef*ufabar
+             vfabar = coef*vfabar
+             uoabar = coef*uoabar
+             voabar = coef*voabar
+             uvfoabar = (
+                np.power(coef, 2)*uvfoabar
+             )
+             uvffabar = (
+                np.power(coef, 2)*uvffabar
+             )
+             uvooabar = (
+                np.power(coef, 2)*uvooabar
+             )
       elif all(elem in model_data_columns for elem in
             ['VDIFF_SPEED', 'VDIFF_DIR']):
          line_type = 'VCNT'
@@ -1549,6 +1706,11 @@ def calculate_stat(logger, model_data, stat):
          vdiff_dir = model_data.loc[:]['VDIFF_DIR']
          speed_err = model_data.loc[:]['SPEED_ERR']
          dir_err = model_data.loc[:]['DIR_ERR']
+         if bool_convert:
+             logger.error(
+                f"FATAL ERROR: Cannot convert column units for line_type \"{line_type}\""
+             )
+             exit(1)
       elif all(elem in model_data_columns for elem in
             ['FY_OY', 'FN_ON']):
          line_type = 'CTC'
@@ -1577,6 +1739,12 @@ def calculate_stat(logger, model_data, stat):
          spread = model_data.loc[:]['SPREAD']
          me     = model_data.loc[:]['ME']
          mae    = model_data.loc[:]['MAE']
+         if bool_convert:
+             coef, const = conversion
+             rmse = coef*rmse
+             spread = coef*spread
+             me = coef*me
+             mae = np.abs(coef)*mae
       elif all(elem in model_data_columns for elem in
             ['ROC_AUC', 'BRIER', 'BSS', 'BSS_SMPL']):
          line_type = 'PSTD'
