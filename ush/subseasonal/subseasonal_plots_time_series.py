@@ -399,7 +399,7 @@ class TimeSeries:
                     color = model_num_plot_settings_dict['color'],
                     linestyle = model_num_plot_settings_dict['linestyle'],
                     linewidth = model_num_plot_settings_dict['linewidth'],
-                    marker = model_num_plot_settings_dict['marker'],
+                    fmt = model_num_plot_settings_dict['marker'],
                     markersize = model_num_plot_settings_dict['markersize'],
                     label = (model_num_plot_name+' '+model_num_avg_label+' '
                              +str(model_num_npts)+' days'),
@@ -426,7 +426,7 @@ class TimeSeries:
                             color = obs_plot_settings_dict['color'],
                             linestyle = obs_plot_settings_dict['linestyle'],
                             linewidth = obs_plot_settings_dict['linewidth'],
-                            marker = obs_plot_settings_dict['marker'],
+                            fmt = obs_plot_settings_dict['marker'],
                             markersize = obs_plot_settings_dict['markersize'],
                             label = ('obs '+obar_model_num_avg_label+' '
                                      +str(obar_model_num_npts)+' days'),
