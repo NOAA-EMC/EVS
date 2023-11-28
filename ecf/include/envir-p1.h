@@ -16,6 +16,8 @@ if [[ "$envir" == prod && "$SENDDBN" == YES ]]; then
 else
     export SIPHONROOT=${UTILROOT}/fakedbn
 fi
+# export DBNROOT=$SIPHONROOT
+export SIPHONROOT=${UTILROOT}/fakedbn
 export DBNROOT=$SIPHONROOT
 
 if [[ ! " prod para test " =~ " ${envir} " && " ops.prod ops.para " =~ " $(whoami) " ]]; then err_exit "ENVIR must be prod, para, or test [envir-p1.h]"; fi
@@ -27,12 +29,18 @@ export maillist="first.last@noaa.gov"
 PTMP=/lfs/h2/emc/ptmp
 model=evs
 PSLOT=ecflow_evs
-export COMROOT=${PTMP}/${USER}/${PSLOT}/para/com
+#### Lin
+#### export COMROOT=${PTMP}/${USER}/${PSLOT}/para/com
+#### EVS
+export COMROOT=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/com
 export COMPATH=${COMROOT}/${model}
 if [ -n "%PDY:%" ]; then
   export PDY=${PDY:-%PDY:%}
-  export CDATE=${PDY}%CYC:%
+else
+  export PDY=$($NDATE | cut -c1-8)
 fi
+export CDATE=${PDY}%CYC:%
+
 export COMevs=$(compath.py evs/${evs_ver})
 export DATAFS=h1
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/${model}/${PSLOT}
