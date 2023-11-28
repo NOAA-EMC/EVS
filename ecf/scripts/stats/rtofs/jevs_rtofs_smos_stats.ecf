@@ -1,0 +1,63 @@
+#PBS -N evs_rtofs_smos_stats
+#PBS -j oe
+#PBS -S /bin/bash
+#PBS -q %QUEUE%
+#PBS -A %PROJ%-%PROJENVIR%
+#PBS -l walltime=01:00:00
+#PBS -l select=1:ncpus=1:mem=500GB
+#PBS -l debug=true
+
+export model=evs
+%include <head.h>
+%include <envir-p1.h>
+
+############################################################
+# Load modules
+############################################################
+set -x
+export COMPONENT=rtofs
+export STEP=stats
+
+module load PrgEnv-intel/${PrgEnvintel_ver}
+module load intel/${intel_ver}
+module load ve/evs/${ve_evs_ver}
+module load gsl/${gsl_ver}
+module load netcdf/${netcdf_ver}
+module load prod_util/${prod_util_ver}
+module load met/${met_ver}
+module load metplus/${metplus_ver}
+module list
+
+############################################################
+# Specify environment variables
+############################################################
+if [ -n "%VHR:%" ]; then
+  export vhr=${vhr:-%VHR:%}
+else
+  export vhr=$($NDATE | cut -c 9-10)
+fi
+export SENDMAIL=YES
+export NET=evs
+export RUN=smos
+export RUNupper=SMOS
+export VAR=sss
+export VERIF_CASE=grid2grid
+export COMIN=${COMevs}
+export COMOUT=${COMevs}
+export pid=${pid:-$$}
+export outid=${outid:-"LL$job"}
+export DATA=${DATA:-${DATAROOT}/${jobid:?}}
+
+############################################################
+# Execute j-job
+############################################################
+$HOMEevs/jobs/JEVS_RTOFS_STATS
+if [ $? -ne 0 ]; then
+   ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
+   ecflow_client --abort
+   exit
+fi
+
+%include <tail.h>
+%manual
+%end
