@@ -210,9 +210,9 @@ class LeadAverage:
                         model_idx_model1_diff_mean_std_err = (
                             model_idx_model1_diff_std/np.sqrt(nsamples-1)
                         )
-                        if nsamples > 80:
+                        if nsamples >= 80:
                             ci = 1.960 * model_idx_model1_diff_mean_std_err
-                        elif nsamples >=40 and nsamples < 80:
+                        elif nsamples >= 40 and nsamples < 80:
                             ci = 2.000 * model_idx_model1_diff_mean_std_err
                         elif nsamples >= 20 and nsamples < 40:
                             ci = 2.042 * model_idx_model1_diff_mean_std_err

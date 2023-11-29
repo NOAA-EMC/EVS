@@ -1,0 +1,75 @@
+#PBS -N evs_global_ens_naefs_atmos_prep
+#PBS -j oe
+#PBS -S /bin/bash
+#PBS -q %QUEUE%
+#PBS -A %PROJ%-%PROJENVIR%
+#PBS -l walltime=00:15:00
+#PBS -l place=vscatter,select=1:ncpus=34:mem=50GB
+#PBS -l debug=true
+
+export model=evs
+%include <head.h>
+%include <envir-p1.h>
+
+############################################################
+# Load modules
+############################################################
+set -x
+export COMPONENT=global_ens
+export STEP=prep
+
+module load PrgEnv-intel/${PrgEnvintel_ver}
+module load intel/${intel_ver}
+module load ve/evs/${ve_evs_ver}
+module load gsl/${gsl_ver}
+module load prod_util/${prod_util_ver}
+module load libjpeg/${libjpeg_ver}
+module load libpng/${libpng_ver}
+module load zlib/${zlib_ver}
+module load jasper/${jasper_ver}
+module load udunits/${udunits_ver}
+module load grib_util/${grib_util_ver}
+module load wgrib2/${wgrib2_ver}
+module load cray-pals/${craypals_ver}
+module load cfp/${cfp_ver}
+module load cdo/${cdo_ver}
+module load met/${met_ver}
+module load metplus/${metplus_ver}
+module list
+
+############################################################
+# Specify environment variables
+############################################################
+if [ -n "%VHR:%" ]; then
+  export vhr=${vhr:-%VHR:%}
+else
+  export vhr=$($NDATE | cut -c 9-10)
+fi
+export OMP_NUM_THREADS=1
+export NET=evs
+export RUN=atmos
+export VERIF_CASE=grid2grid
+export MODELNAME=naefs
+export COMIN=${COMevs}
+export COMOUT=${COMevs}
+export pid=${pid:-$$}
+export outid=${outid:-"LL$job"}
+export DATA=${DATA:-${DATAROOT}/${jobid:?}}
+export run_mpi=yes
+export get_gefs_bc_apcp24h=yes
+export get_model_bc=yes
+export SENDMAIL=YES
+
+############################################################
+# Execute j-job
+############################################################
+${HOMEevs}/jobs/JEVS_GLOBAL_ENS_PREP
+if [ $? -ne 0 ]; then
+   ecflow_client --msg="***JOB ${ECF_NAME} ERROR RUNNING J-SCRIPT ***"
+   ecflow_client --abort
+   exit
+fi
+
+%include <tail.h>
+%manual
+%end
