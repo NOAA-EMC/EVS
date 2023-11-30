@@ -13,6 +13,8 @@ else
     end_wgrib2="endif"
 fi
 
+icao2023=yes
+
 #Re-define FHOURS_EVSlist
 export FHOURS_EVSlist=""
 for ff in $FHOURS ; do
@@ -63,6 +65,7 @@ for ff in $FHOURS ; do
 	    # For WAFS before implementation 2023-2024
 	    nrecords=`$WGRIB2 $targetfile | wc -l`
 	    if [[ $nrecords -le 10 ]] ; then
+		icao2023=no
 		$WGRIB2 $sourcefile -match ":(850|700|600|500|400|300|250|200|150|100) mb" \
 			-match ":(UGRD|VGRD|TMP):"\
 			-grib $targetfile
@@ -129,14 +132,19 @@ if [[ $OBSERVATION = "GCIP" ]] ; then
 
 elif [[ $OBSERVATION = "GFS" ]] ; then
     sourcedir=$COMINgfs/gfs.$VDATE/$cc/atmos
-    sourcefile=$sourcedir/gfs.t${cc}z.wafs.0p25.anl
+    if [[ $icao2023 = yes ]] ; then
+	sourcefile=$sourcedir/gfs.t${cc}z.wafs.0p25.anl
+    else
+	sourcefile=$sourcedir/gfs.t${cc}z.pgrb2.0p25.anl
+    fi
 
     targetfile=$GRID_STAT_INPUT_BASE/gfs.t${cc}z.wafs.0p25.anl
 
     if [[ ! -f $targetfile ]] ; then
 	if [[ -f $sourcefile ]] ; then
-	    # For WAFS after implementation 2023-2024
-	    $WGRIB2 $sourcefile -match ":(843.1|696.8|595.2|506|392.7|300.9|250|196.8|147.5|100.4) mb" \
+	    if [[ $icao2023 = yes ]] ; then
+		# For WAFS after implementation 2023-2024
+		$WGRIB2 $sourcefile -match ":(843.1|696.8|595.2|506|392.7|300.9|250|196.8|147.5|100.4) mb" \
 		    -match ":(UGRD|VGRD|TMP):"\
 		    -if ":843.1 mb" -set_lev "850 mb" -$end_wgrib2 \
 		    -if ":696.8 mb" -set_lev "700 mb" -$end_wgrib2 \
@@ -148,9 +156,8 @@ elif [[ $OBSERVATION = "GFS" ]] ; then
 		    -if ":147.5 mb" -set_lev "150 mb" -$end_wgrib2 \
 		    -if ":100.4 mb" -set_lev "100 mb" -$end_wgrib2 \
 		    -grib $targetfile
-	    # For WAFS before implementation 2023-2024
-	    nrecords=`$WGRIB2 $targetfile | wc -l`
-	    if [[ $nrecords -le 10 ]] ; then
+	    else
+		# For WAFS before implementation 2023-2024
 		$WGRIB2 $sourcefile -match ":(850|700|600|500|400|300|250|200|150|100) mb" \
 			-match ":(UGRD|VGRD|TMP):"\
 			-grib $targetfile
