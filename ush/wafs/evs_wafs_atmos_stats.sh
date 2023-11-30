@@ -20,35 +20,20 @@ resolution=`echo $RESOLUTION | tr '[:upper:]' '[:lower:]'`
 
 export GRID_STAT_INPUT_BASE=$DATA/${OBSERVATION}_${RESOLUTION}_data
 mkdir -p $GRID_STAT_INPUT_BASE
-    
-export STAT_ANALYSIS_OUTPUT_DIR=$DATA/${OBSERVATION}_${RESOLUTION}_${CENTER}_stat
 
+# STAT_ANALYSIS_OUTPUT_DIR is defined in config.evs.wafs.standalone, and created & used by StatAnalysis_fcstWAFS*
 source $HOMEevs/parm/evs_config/wafs/config.evs.wafs.standalone
 
 cp $PARMevs/GridStat_fcstWAFS_obs${OBSERVATION}.conf GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
 
-# Prepare data
-$USHevs/evs_wafs_atmos_stats_preparedata.sh
+inithours=${FCST_VALID_HOUR//,/ }
 
 # run stat files
-if [ $OBSERVATION = "GCIP" ] ; then
-    export valid_inc=$valid_inc6
-    export FHOURS_EVSlist=$FHOURS_EVSlist1
-    export valid_beg=$valid_beg1
-    export valid_end=$valid_end1
-    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $DATA/GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
-    export FHOURS_EVSlist=$FHOURS_EVSlist2
-    export valid_beg=$valid_beg2
-    export valid_end=$valid_end2
-    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $DATA/GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
-    export valid_beg=$valid_beg1
-    export valid_end=$valid_end2
-    export valid_inc=$valid_inc3
-    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/StatAnalysis_fcstWAFS_obs${OBSERVATION}_GatherbyDay.conf
-else
-    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $DATA/GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
-    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/StatAnalysis_fcstWAFS_obs${OBSERVATION}_GatherbyDay.conf
-fi
+for cc in $inithours ; do
+    export cc
+    # Prepare data and re-define FHOURS_EVSlist  based on the availability for each verification hour
+    sh $USHevs/evs_wafs_atmos_stats_preparedata.sh
+done
 
 	#===================================================================================================#
 	#========== Turn off Wind Direction verification until its RMSE gets supported by METplus ==========#
@@ -68,10 +53,12 @@ elif [ $OBSERVATION = "GFS" ] ; then
 fi
 # Non wind direction variables:
 # remove duplicate lines and keep the first one
-if [ $OBSERVATION = "GFS" ] ; then
-    sed '/>=/s/WIND/WIND80/g' $STAT_ANALYSIS_OUTPUT_DIR/* > $STATSOUTfinal/$NET.$STEP.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$VDATE.stat
-else
-    cat $STAT_ANALYSIS_OUTPUT_DIR/* > $DATAsemifinal/${CENTER}_${RESOLUTION}.$NET.$STEP.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$VDATE.stat
+if [ -d $STAT_ANALYSIS_OUTPUT_DIR ] ; then
+    if [ $OBSERVATION = "GFS" ] ; then
+	sed '/>=/s/WIND/WIND80/g' $STAT_ANALYSIS_OUTPUT_DIR/* > $STATSOUTfinal/$NET.$STEP.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$VDATE.stat
+    else
+	cat $STAT_ANALYSIS_OUTPUT_DIR/* > $DATAsemifinal/${CENTER}_${RESOLUTION}.$NET.$STEP.$MODELNAME.$RUN.${VERIF_CASE}_${stat_file_suffix}.v$VDATE.stat
+    fi
 fi
 
 #####################################################################
