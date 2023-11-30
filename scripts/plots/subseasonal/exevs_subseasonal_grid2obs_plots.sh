@@ -95,7 +95,7 @@ if [ $SENDCOM = YES ]; then
     for VERIF_TYPE_SUBDIR_PATH in $DATA/$VERIF_CASE_STEP/plot_output/$RUN.${end_date}/images/*; do
 	VERIF_TYPE_SUBDIR=$(echo ${VERIF_TYPE_SUBDIR_PATH##*/})
 	cd $VERIF_TYPE_SUBDIR
-	large_tar_file=${DATA}/${VERIF_CASE_STEP}/plot_output/${RUN}.${end_date}/images/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${PDYm2}.tar
+	large_tar_file=${DATA}/${VERIF_CASE_STEP}/plot_output/${RUN}.${end_date}/images/evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${end_date}.tar
         tar -cvf $large_tar_file *.tar
 	cpreq -v $large_tar_file $COMOUT/.
     done
@@ -104,6 +104,6 @@ fi
 
 # SENDDBN alert
 if [ $SENDDBN = YES ] ; then
-    tarname=evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_prepbufr.last${NDAYS}days.v${PDYm2}.tar
+    tarname=evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_prepbufr.last${NDAYS}days.v${end_date}.tar
     $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/$tarname
 fi

@@ -125,8 +125,15 @@ class PrecipSpatialMap:
                 'CONUS': 'conus',
                 'Alaska': 'alaska',
                 'Hawaii': 'hawaii',
+                'PuertoRico': 'prico'
+            }
+            stats_region_dict = {
+                'CONUS': 'conus',
+                'Alaska': 'alaska',
+                'Hawaii': 'hawaii',
                 'PuertoRico': 'puerto_rico'
             }
+
             image_name = os.path.join(
                 output_image_dir,
                 image_data_source
@@ -144,7 +151,7 @@ class PrecipSpatialMap:
                     valid_date_dt.strftime(f'{model_num_name}.%Y%m%d'),
                     valid_date_dt.strftime(
                        f'{model_num_name}.t%Hz.a24h.'
-                       + f'{image_region_dict[self.plot_info_dict["vx_mask"]]}'
+                       + f'{stats_region_dict[self.plot_info_dict["vx_mask"]]}'
                        + f'.nc'
                     ),
                 ))
@@ -167,7 +174,7 @@ class PrecipSpatialMap:
                     'precip',
                     init_date_dt.strftime(
                        f'pcp_combine_{model_num_name}_accum24hr_'
-                       + f'{image_region_dict[self.plot_info_dict["vx_mask"]]}'
+                       + f'{stats_region_dict[self.plot_info_dict["vx_mask"]]}'
                        + f'_init%Y%m%d%H_'
                        + f'fhr{self.date_info_dict["forecast_hour"].zfill(3)}'
                        + f'.nc'

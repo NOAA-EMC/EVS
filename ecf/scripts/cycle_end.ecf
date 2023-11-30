@@ -1,0 +1,10 @@
+#!/bin/bash -l
+
+model=evs
+%include <head.h>
+%include <envir-p1.h>
+set -x
+cyc=%CYC%
+ecflow_client --requeue=force /evs_nco/primary/${cyc}/evs
+%include <tail.h>
+exit 0

@@ -129,6 +129,12 @@ class PrecipSpatialMap:
                 )
             image_region_dict = {
                 'CONUS': 'conus',
+                'Alaska': 'alaska',
+                'Hawaii': 'hawaii',
+                'PuertoRico': 'prico'
+            }
+            stats_region_dict = {
+                'CONUS': 'conus',
                 'Alaska': 'ak',
                 'Hawaii': 'hi',
                 'PuertoRico': 'pr'
@@ -148,7 +154,7 @@ class PrecipSpatialMap:
                     valid_date_dt.strftime(f'{model_num_name}.%Y%m%d'),
                     valid_date_dt.strftime(
                        f'{model_num_name}.t%Hz.a24h.'
-                       + f'{image_region_dict[self.plot_info_dict["vx_mask"]]}'
+                       + f'{stats_region_dict[self.plot_info_dict["vx_mask"]]}'
                        + f'.nc'
                     ),
                 ))
@@ -172,7 +178,7 @@ class PrecipSpatialMap:
                        f'{model_num_name}.t%Hz.'
                        + f'f{self.date_info_dict["forecast_hour"].zfill(3)}.'
                        + f'a24h.'
-                       + f'{image_region_dict[self.plot_info_dict["vx_mask"]]}'
+                       + f'{stats_region_dict[self.plot_info_dict["vx_mask"]]}'
                        + f'.nc'
                     ),
                 )
