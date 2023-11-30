@@ -27,6 +27,9 @@ module load imagemagick/${imagemagick_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
 
+export SIPHONROOT=${UTILROOT}/fakedbn
+export DBNROOT=$SIPHONROOT
+
 module list
 set -x
 
