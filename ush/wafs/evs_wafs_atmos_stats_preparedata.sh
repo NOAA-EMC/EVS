@@ -14,6 +14,7 @@ else
 fi
 
 icao2023=yes
+runMETplus=yes
 
 #Re-define FHOURS_EVSlist
 export FHOURS_EVSlist=""
@@ -87,7 +88,7 @@ if [ -z $FHOURS_EVSlist ] ; then
         echo "Job ID: $jobid" >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
 	cat mailmsg.$OBSERVATION.$CENTER.$RESOLUTION | mail -s "$subject" $MAILTO
     fi
-    exit 98
+    runMETplus=no
 fi
 
 # GCIP data
@@ -126,7 +127,7 @@ if [[ $OBSERVATION = "GCIP" ]] ; then
 		echo "Job ID: $jobid" >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
 		cat mailmsg.$OBSERVATION.$CENTER.$RESOLUTION | mail -s "$subject" $MAILTO
 	    fi
-	    exit 99
+	    runMETplus=no
 	fi
     fi
 
@@ -170,12 +171,14 @@ elif [[ $OBSERVATION = "GFS" ]] ; then
 		echo "Job ID: $jobid" >> mailmsg.$OBSERVATION.$CENTER.$RESOLUTION
 		cat mailmsg.$OBSERVATION.$CENTER.$RESOLUTION | mail -s "$subject" $MAILTO
 	    fi
-	    exit 99
+	    runMETplus=no
 	fi
     fi
 fi
 
 export valid_beg=$cc
 export valid_end=$cc
-${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $DATA/GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
-${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/StatAnalysis_fcstWAFS_obs${OBSERVATION}_GatherbyDay.conf
+if [ $runMETplus = yes ] ; then
+    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $DATA/GridStat_fcstWAFS_obs${OBSERVATION}_${RESOLUTION}.conf
+    ${METPLUS_PATH}/ush/run_metplus.py -c $MACHINE_CONF -c $PARMevs/StatAnalysis_fcstWAFS_obs${OBSERVATION}_GatherbyDay.conf
+fi
