@@ -67,7 +67,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                      date_hours: list = [0,6,12,18], verif_type: str = 'pres', 
                      save_dir: str = '.', fix_dir: str = '.',
                      requested_var: str = 'HGT', 
-                     line_type: str = 'SL1L2', dpi: int = 200, 
+                     line_type: str = 'SL1L2', dpi: int = 150, 
                      confidence_intervals: bool = False,
                      bs_nrep: int = 5000, bs_method: str = 'MATCHED_PAIRS',
                      ci_lev: float = .95, bs_min_samp: int = 30,
@@ -75,7 +75,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                      display_averages: bool = True, 
                      keep_shared_events_only: bool = False,
                      plot_group: str = 'sfc_upper', obtype: str = '',
-                     sample_equalization: bool = True, run: str = '',
+                     sample_equalization: bool = True,
                      plot_logo_left: bool = False,
                      plot_logo_right: bool = False, path_logo_left: str = '.',
                      path_logo_right: str = '.', zoom_logo_left: float = 1.,
@@ -110,12 +110,12 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 frange_phrase = 's '+', '.join([str(f) for f in flead])
             else:
                 frange_phrase = ' '+', '.join([str(f) for f in flead])
-            frange_save_phrase = '-'.join([f'{f:03d}' for f in flead])
+            frange_save_phrase = '-'.join([str(f) for f in flead])
         else:
             frange_phrase = f's {flead[0]}'+u'\u2013'+f'{flead[-1]}'
             frange_save_phrase = f'{flead[0]}_TO_F{flead[-1]}'
         frange_string = f'Forecast Hour{frange_phrase}'
-        frange_save_string = f'F{frange_save_phrase}'
+        frange_save_string = f'F{int(frange_save_phrase):03d}'
         df = df[df['LEAD_HOURS'].isin(flead)]
     elif isinstance(flead, tuple):
         frange_string = (f'Forecast Hours {flead[0]:03d}'
@@ -124,7 +124,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         df = df[
             (df['LEAD_HOURS'] >= flead[0]) & (df['LEAD_HOURS'] <= flead[1])
         ]
-    elif isinstance(flead, np.int):
+    elif isinstance(flead, int):
         frange_string = f'Forecast Hour {flead:03d}'
         frange_save_string = f'F{flead:03d}'
         df = df[df['LEAD_HOURS'] == flead]
@@ -557,6 +557,9 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                     handles += [
                         f('', 'black', line_settings[p], 5., 0, 'white')
                     ]
+#                labels += [
+#                    str(metric_names[p]).upper()
+# this only works for 1 model!
                 labels += [
                     str(metric_names[p]).upper()
                 ]
@@ -571,7 +574,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             ]
     else:
         handles = []
-        labels = []
+        #labels = []
+        labels = [model_list[0].upper()]
     for m in range(len(mod_setting_dicts)):
         if model_list[m] in model_colors.model_alias:
             model_plot_name = (
@@ -730,8 +734,9 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                 labels+=[
                     f'{model_plot_name} ({metric1_mean_fmt_string})'
                 ]
-        else:
-            labels+=[f'{model_plot_name}']
+#        else:
+#            labels+=[f'{model_plot_name}']
+# Removes the model legend after all the metrics
 
     # Zero line
     plt.axhline(y=0, color='black', linestyle='--', linewidth=1, zorder=0) 
@@ -825,6 +830,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         bbox_to_anchor=(0.5, -0.08), ncol=4, frameon=True, numpoints=2, 
         borderpad=.8, labelspacing=2., columnspacing=3., handlelength=3., 
         handletextpad=.4, borderaxespad=.5) 
+#    fig.subplots_adjust(bottom=.2, wspace=0, hspace=0)
     fig.subplots_adjust(bottom=.15, wspace=0, hspace=0)
     ax.grid(
         visible=True, which='major', axis='both', alpha=.5, linestyle='--', 
@@ -847,7 +853,8 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         #    xytext=(-50, 21), textcoords='offset points', va='top', 
         #    fontsize=11, color='dimgrey', ha='center'
         #)
-        fig.subplots_adjust(top=.9)
+#        fig.subplots_adjust(top=.9)
+        fig.subplots_adjust(top=.85)
 
     # Title
     domain = df['VX_MASK'].tolist()[0]
@@ -865,8 +872,10 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         [f'{date_hour:02d}' for date_hour in date_hours],
         ', ', '', 'Z', 'and ', ''
     )
-    date_start_string = date_range[0].strftime('%d %b %Y')
-    date_end_string = date_range[1].strftime('%d %b %Y')
+#    date_start_string = date_range[0].strftime('%d %b %Y')
+#    date_end_string = date_range[1].strftime('%d %b %Y')
+    date_start_string = date_range[0].strftime('%d %b %Y') + ' ' + date_hours_string
+    date_end_string = date_range[1].strftime('%d %b %Y') + ' ' + date_hours_string
     if str(verif_type).lower() in ['pres', 'upper_air'] or 'P' in str(level):
         level_num = level.replace('P', '')
         level_string = f'{level_num} hPa '
@@ -890,15 +899,22 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         else:
             level_string = f'{level} '
             level_savename = f'{level}'
-    elif str(verif_type).lower() in ['rtofs']:
-        if 'Z0' in str(level):
+    elif str(verif_type).lower() in ['wave']:
+        level_string = ''
+        print_varname = df['FCST_VAR'].tolist()[0]
+        if print_varname == 'WIND':
+            level_savename = 'Z10'
+        else:    
+            level_savename = 'L0'
+    elif str(verif_type).lower() in ['rtofs_sfc']:
+        if 'Z' in str(level):
             if str(level).upper() == 'Z0':
                 level_string = ''
                 level_savename = 'Z0'
         else:
             level_num = level.replace('Z', '')
             level_string = f'{level_num}-m '
-            level_savename = f'{level}'
+            level_savename = f'{level_num}M'
     elif str(verif_type).lower() in ['ccpa']:
         if 'A' in str(level):
             level_num = level.replace('A', '')
@@ -911,9 +927,15 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         level_string = f'{level} '
         level_savename = f'{level}'
     if metric2_name is not None:
-        title1 = f'{metric1_string} and {metric2_string}'
+        if f'{domain_string}' == 'Global, 0p25':
+            title1 = f'{metric1_string} and {metric2_string} - Global'
+        else:
+            title1 = f'{metric1_string} and {metric2_string} - {domain_string}'
     else:
-        title1 = f'{metric1_string}'
+        if f'{domain_string}' == 'Global, 0p25':
+            title1 = f'{metric1_string} - Global'
+        else:
+            title1 = f'{metric1_string} - {domain_string}'
     if thresh and '' not in thresh:
         thresholds_phrase = ', '.join([
             f'{opt}{thresh_label}' for thresh_label in thresh_labels
@@ -923,21 +945,24 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
             for thresh_label in requested_thresh_labels
         ])
         if units:
-            title2 = (f'{level_string}{var_long_name} ({thresholds_phrase}'
-                      + f' {units}), {domain_string}')
+            title2 = (f'{level_string} {var_long_name} ({thresholds_phrase}'
+                      + f' {units})')
         else:
-            title2 = (f'{level_string}{var_long_name} ({thresholds_phrase}'
-                      + f' unitless), {domain_string}')
+            title2 = (f'{level_string} {var_long_name} ({thresholds_phrase}'
+                      + f' unitless)')
     else:
         if units:
-            title2 = f'{level_string}{var_long_name} ({units}), {domain_string}'
+            title2 = f'{level_string} {var_long_name} ({units})'
         else:
-            title2 = f'{level_string}{var_long_name} (unitless), {domain_string}'
-    title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
-              + f'{date_start_string} to {date_end_string}, {frange_string}')
+            title2 = f'{level_string} {var_long_name} (unitless)'
+#    title3 = f'{str(date_type).capitalize()} {date_hours_string} '
+#              + f'{date_start_string} to {date_end_string}, {frange_string}'
+    fcst_day=int(flead[0]/24)
+    title3 = (f'{str(date_type).lower()} {date_start_string} - {date_end_string}, '
+              + f'init: {date_hours_string} Forecast Day {fcst_day} (Hour {flead[0]})')
     title_center = '\n'.join([title1, title2, title3])
     if sample_equalization:
-        title_pad=20
+        title_pad=40
     else:
         title_pad=None
     ax.set_title(title_center, loc=plotter.title_loc, pad=title_pad) 
@@ -992,6 +1017,17 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
         time_period_savename = f'{date_start_savename}-{date_end_savename}'
     else:
         time_period_savename = f'{eval_period}'
+    if str(models_savename).lower() == 'gefs':
+        models_savename='global_ens'
+    elif str(models_savename).lower() == 'gfs':
+        models_savename='global_det'
+    if str(metric1_name).lower() == 'pcor':
+        metric1_name = 'corr'
+    if str(metric2_name).lower() == 'pcor':
+        metric2_name = 'corr'
+    domain_string = domain_string.replace(', ','_')
+    if str(domain_string).lower() == 'global_0p25':
+        domain_string = 'latlon_0p25_glb'
     save_name = (f'evs.'
                  + f'{str(models_savename).lower()}.'
                  + f'{str(metric1_name).lower()}.'
@@ -999,7 +1035,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                  + f'{str(time_period_savename).lower()}.'
                  + f'timeseries_{str(date_type).lower()}{str(date_hours_savename).lower()}_'
                  + f'{str(frange_save_string).lower()}.'
-                 + f'{str(domain).lower()}')
+                 + f'{str(domain_string).lower()}')
     if metric2_name is not None:
         save_name = (f'evs.'
                  + f'{str(models_savename).lower()}.'
@@ -1008,7 +1044,7 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                  + f'{str(time_period_savename).lower()}.'
                  + f'timeseries_{str(date_type).lower()}{str(date_hours_savename).lower()}_'
                  + f'{str(frange_save_string).lower()}.'
-                 + f'{str(domain).lower()}')
+                 + f'{str(domain_string).lower()}')
     if thresh and '' not in thresh:
         save_name = (f'evs.'
                  + f'{str(models_savename).lower()}.'
@@ -1017,11 +1053,11 @@ def plot_time_series(df: pd.DataFrame, logger: logging.Logger,
                  + f'{str(time_period_savename).lower()}.'
                  + f'timeseries_{str(date_type).lower()}{str(date_hours_savename).lower()}_'
                  + f'{str(frange_save_string).lower()}.'
-                 + f'{str(domain).lower()}')
+                 + f'{str(domain_string).lower()}')
     if save_header:
         save_name = f'{save_header}_'+save_name
     save_subdir = os.path.join(
-        save_dir, f'{str(run).lower()}'
+        save_dir, f'{str(obtype).lower()}'
     )
     if not os.path.isdir(save_subdir):
         os.makedirs(save_subdir)
@@ -1289,7 +1325,7 @@ def main():
                     xlabel=f'{str(date_type_string).capitalize()} Date', 
                     verif_type=VERIF_TYPE, date_hours=date_hours, 
                     line_type=LINE_TYPE, save_dir=SAVE_DIR, fix_dir=FIX_DIR, 
-                    eval_period=EVAL_PERIOD, obtype=OBTYPE, run=RUN, 
+                    eval_period=EVAL_PERIOD, obtype=OBTYPE, 
                     display_averages=display_averages, 
                     keep_shared_events_only=keep_shared_events_only,
                     save_header=URL_HEADER, plot_group=plot_group,
@@ -1325,7 +1361,6 @@ if __name__ == "__main__":
     DATE_TYPE = check_DATE_TYPE(os.environ['DATE_TYPE'])
     LINE_TYPE = check_LINE_TYPE(os.environ['LINE_TYPE'])
     INTERP = check_INTERP(os.environ['INTERP'])
-    RUN = check_RUN(os.environ['RUN'])
     OBTYPE = check_OBTYPE(os.environ['OBTYPE'])
     MODELS = check_MODEL(os.environ['MODEL']).replace(' ','').split(',')
     DOMAINS = check_VX_MASK_LIST(os.environ['VX_MASK_LIST']).replace(' ','').split(',')

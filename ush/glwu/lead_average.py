@@ -63,7 +63,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
                       verif_type: str = 'pres', save_dir: str = '.',
                       fix_dir: str = '.',
                       requested_var: str = 'HGT', line_type: str = 'SL1L2',
-                      dpi: int = 200, confidence_intervals: bool = False,
+                      dpi: int = 100, confidence_intervals: bool = False,
                       bs_nrep: int = 5000, bs_method: str = 'MATCHED_PAIRS', 
                       ci_lev: float = .95, bs_min_samp: int = 30, 
                       eval_period: str = 'TEST', save_header: str = '', 
@@ -110,7 +110,7 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         df = df[
             (df['LEAD_HOURS'] >= flead[0]) & (df['LEAD_HOURS'] <= flead[1])
         ]
-    elif isinstance(flead, np.int):
+    elif isinstance(flead, int):
         df = df[df['LEAD_HOURS'] == flead]
     else:
         e1 = f"Invalid forecast lead: \'{flead}\'"
@@ -885,15 +885,30 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         else:
             level_string = f'{level} '
             level_savename = f'{level}'
-    elif str(verif_type).lower() in ['rtofs']:
-        if 'Z0' in str(level):
+    elif str(verif_type).lower() in ['wave']:
+        level_string = ''
+        print_varname = df['FCST_VAR'].tolist()[0]
+        if print_varname == 'WIND':
+            level_savename = 'Z10'
+        else:
+            level_savename = 'L0'
+    elif str(verif_type).lower() in ['rtofs_sfc']:
+        if 'Z' in str(level):
             if str(level).upper() == 'Z0':
                 level_string = ''
                 level_savename = 'Z0'
         else:
             level_num = level.replace('Z', '')
             level_string = f'{level_num}-m '
-            level_savename = f'{level}'
+            level_savename = f'{level_num}M'
+    elif str(verif_type).lower() in ['wave']:
+        if 'Z' in str(level):
+            level_num = level.replace('Z', '')
+            level_string = f'{level_num}-m '
+            level_savename = f'{level_num}M'
+        else:
+            level_string = ''
+            level_savename = 'L0'
     elif str(verif_type).lower() in ['ccpa']:
         if 'A' in str(level):
             level_num = level.replace('A', '')
@@ -906,9 +921,15 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         level_string = f'{level} '
         level_savename = f'{level}'
     if metric2_name is not None:
-        title1 = f'{metric1_string} and {metric2_string}'
+        if f'{domain_string}' == 'Global, 0p25':
+            title1 = f'{metric1_string} and {metric2_string} - Global'
+        else:
+            title1 = f'{metric1_string} and {metric2_string} - {domain_string}'
     else:
-        title1 = f'{metric1_string}'
+        if f'{domain_string}' == 'Global, 0p25':
+            title1 = f'{metric1_string} - Global'
+        else:
+            title1 = f'{metric1_string} - {domain_string}'
     if thresh and '' not in thresh:
         thresholds_phrase = ', '.join([
             f'{opt}{thresh_label}' for thresh_label in thresh_labels
@@ -919,15 +940,15 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         ])
         if units:
             title2 = (f'{level_string}{var_long_name} ({thresholds_phrase} '
-                      + f'{units}), {domain_string}')
+                      + f'{units})')
         else:
             title2 = (f'{level_string}{var_long_name} ({thresholds_phrase} '
-                      + f'unitless), {domain_string}')
+                      + f'unitless)')
     else:
         if units:
-            title2 = f'{level_string}{var_long_name} ({units}), {domain_string}'
+            title2 = f'{level_string}{var_long_name} ({units})'
         else:
-            title2 = f'{level_string}{var_long_name} (unitless), {domain_string}'
+            title2 = f'{level_string}{var_long_name} (unitless)'
     title3 = (f'{str(date_type).capitalize()} {date_hours_string} '
               + f'{date_start_string} to {date_end_string}')
     title_center = '\n'.join([title1, title2, title3])
@@ -987,28 +1008,39 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         time_period_savename = f'{date_start_savename}-{date_end_savename}'
     else:
         time_period_savename = f'{eval_period}'
+    if str(models_savename).lower() == 'gefs':
+        models_savename='global_ens'
+    elif str(models_savename).lower() == 'gfs':
+        models_savename='global_det'
+    if str(metric1_name).lower() == 'pcor':
+        metric1_name = 'corr'
+    if str(metric2_name).lower() == 'pcor':
+        metric2_name = 'corr'
+    domain_string = domain_string.replace(', ','_')
+    if str(domain_string).lower() == 'global_0p25':
+        domain_string = 'latlon_0p25_glb'
     save_name = (f'evs.'
                  + f'{str(models_savename).lower()}.'
                  + f'{str(metric1_name).lower()}.'
                  + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
                  + f'{str(time_period_savename).lower()}.'
-                 + f'fhrmean_{str(date_type).lower()}{str(date_hours_savename).lower()}.'
-                 + f'{str(domain).lower()}')
+                 + f'fhrmean_{str(date_type).lower()}{str(date_hours_savename).lower()}_f{xticks[-1]}.'
+                 + f'{str(domain_string).lower()}')
     if metric2_name is not None:
         save_name = (f'evs.'
                      + f'{str(models_savename).lower()}.'
                      + f'{str(metric1_name).lower()}_{str(metric2_name).lower()}.'
                      + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
                      + f'{str(time_period_savename).lower()}.'
-                     + f'fhrmean_{str(date_type).lower()}{str(date_hours_savename).lower()}.'
-                     + f'{str(domain).lower()}')
+                     + f'fhrmean_{str(date_type).lower()}{str(date_hours_savename).lower()}_f{xticks[-1]}.'
+                     + f'{str(domain_string).lower()}')
     if thresh and '' not in thresh:
         save_name = (f'evs.'
                      + f'{str(models_savename).lower()}.'
                      + f'{str(metric1_name).lower()}_{str(thresholds_save_phrase).lower()}.'
                      + f'{str(var_savename).lower()}_{str(level_savename).lower()}_{str(obtype).lower()}.'
                      + f'{str(time_period_savename).lower()}.'
-                     + f'fhrmean_{str(date_type).lower()}{str(date_hours_savename).lower()}.'
+                     + f'fhrmean_{str(date_type).lower()}{str(date_hours_savename).lower()}_f{xticks[-1]}.'
                      + f'{str(domain).lower()}')
     if save_header:
         save_name = f'{save_header}_'+save_name
