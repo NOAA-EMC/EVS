@@ -378,3 +378,6 @@ if [ -d $log_dir ]; then
         done
     fi
 fi
+
+# Delete empty restart directories
+find $RESTART_DIR -type d -empty -delete
