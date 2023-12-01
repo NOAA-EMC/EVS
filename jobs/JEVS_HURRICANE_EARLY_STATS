@@ -109,7 +109,7 @@ err_exit "FAILED ${jobid} - ERROR IN unknown ${RUN} and ${VERIF_CASE} - ABNORMAL
 
 fi
 
-export COMOUT=${COMOUT:-${COMROOT}/${NET}/${evs_ver}/${COMPONENT}/${RUN}/${VERIF_CASE}/${STEP}}
+export COMOUT=${COMOUT:-${COMROOT}/${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN}/${VERIF_CASE}}
 mkdir -m 775 -p $COMOUT 
 
 msg="HAS BEGUN on `hostname`"
@@ -119,7 +119,7 @@ postmsg "$jlogfile" "$msg"
 
 #############################################################
 # Execute the script
-${SCRIPTSevs}/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
+${SCRIPTSevs}/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
 
 #############################################################

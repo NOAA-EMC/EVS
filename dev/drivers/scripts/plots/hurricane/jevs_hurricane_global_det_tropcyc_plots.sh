@@ -37,7 +37,7 @@ source ${HOMEevs}/dev/modulefiles/${COMPONENT}/${COMPONENT}_${STEP}.sh
 export PDY=20231231
 
 #Define the directory for TC-stats file 
-export COMINstats=/lfs/h2/emc/ptmp/$USER/com/evs/${evs_ver}/${COMPONENT}/${RUN}/${VERIF_CASE}/stats
+export COMINstats=/lfs/h2/emc/ptmp/$USER/com/evs/${evs_ver}/stats/${COMPONENT}/${RUN}/${VERIF_CASE}
 #Define the directories of your NOAA/NWS logos
 export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 
@@ -48,7 +48,7 @@ export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/bde
 
 export DATAROOT=/lfs/h2/emc/ptmp/$USER
 export COMROOT=${DATAROOT}/com
-rm -rf ${COMROOT}/evs/${evs_ver}/${COMPONENT}/${RUN}/${VERIF_CASE}/${STEP}
+rm -rf ${COMROOT}/evs/${evs_ver}/${STEP}/${COMPONENT}/${RUN}/${VERIF_CASE}
 export KEEPDATA=YES
 
 

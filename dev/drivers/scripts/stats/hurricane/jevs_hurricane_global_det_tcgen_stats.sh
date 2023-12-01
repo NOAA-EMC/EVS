@@ -45,11 +45,11 @@ export COMINbdeckJTWC=/lfs/h2/emc/vpppg/noscrub/olivia.ostwald/Data/Year2023/bde
 
 export DATAROOT=/lfs/h2/emc/ptmp/$USER
 export COMROOT=${DATAROOT}/com
-rm -rf ${COMROOT}/evs/${evs_ver}/${COMPONENT}/${RUN}/${VERIF_CASE}/${STEP}
+rm -rf ${COMROOT}/evs/${evs_ver}/${STEP}/${COMPONENT}/${RUN}/${VERIF_CASE}
 export KEEPDATA=YES
 
 # CALL executable job script here
-$HOMEevs/jobs/${COMPONENT}/${STEP}/JEVS_HURRICANE_STATS
+$HOMEevs/jobs/JEVS_HURRICANE_STATS
 
 %include <tail.h>
 %manual

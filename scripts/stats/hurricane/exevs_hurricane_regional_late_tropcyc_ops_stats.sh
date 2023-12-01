@@ -110,7 +110,7 @@ export enddate="$YY02$MM02$DD02$HH02"
 echo "$startdate, $enddate"
 
 #--- run for TC_pairs
-cp ${PARMevs}/metplus_config/${COMPONENT}/${STEP}/TCPairs_template.conf .
+cp ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/TCPairs_template.conf .
 export SEARCH0="METBASE_template"
 export SEARCH1="INPUT_BASE_template"
 export SEARCH2="OUTPUT_BASE_template"
@@ -134,7 +134,7 @@ run_metplus.py -c $STORMdata/TCPairs_template.conf
 #--- run for TC_stat 
 cd $STORMdata
 
-cp ${PARMevs}/metplus_config/${COMPONENT}/${STEP}/TCStat_template.conf .
+cp ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/TCStat_template.conf .
 
 export SEARCHy="LEAD_template"
 sed -i "s|$SEARCH0|$MetOnMachine|g" TCStat_template.conf
@@ -210,7 +210,7 @@ cd $metTCcomout
 #export SEARCH3=INIT_BEG_template
 #export SEARCH4=INIT_END_template
 
-cp ${PARMevs}/metplus_config/${COMPONENT}/${STEP}/TCStat_template_basin.conf .
+cp ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/TCStat_template_basin.conf .
 
 #export SEARCHy="LEAD_template"
 sed -i "s|$SEARCH0|$MetOnMachine|g" TCStat_template_basin.conf

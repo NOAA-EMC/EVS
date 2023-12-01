@@ -82,7 +82,7 @@ export tc_name=${stbasin}${under}${stormYear}${under}${stormName}
 export basin=${stbasin}
 export tc_num=${stormNumber}
 export tropcyc_model_type="regional_ops"
-python ${USHevs}/${COMPONENT}/${STEP}/plot_tropcyc_lead_average.py
+python ${USHevs}/${COMPONENT}/plot_tropcyc_lead_average.py
 
 #/lfs/h2/emc/ptmp/jiayi.peng/metTC/wp02/plot/WP_2022_MALAKAS/images
 nimgs=$(ls ${STORMroot}/plot/${tc_name}/images/* |wc -l)
@@ -149,7 +149,7 @@ export tc_name=${stbasin}${under}${stormYear}${under}${stormNameB}
 export basin=${stbasin}
 export tc_num= 
 export tropcyc_model_type="regional_ops"
-python ${USHevs}/${COMPONENT}/${STEP}/plot_tropcyc_lead_average.py
+python ${USHevs}/${COMPONENT}/plot_tropcyc_lead_average.py
 
 bimgs=$(ls ${metTCcomout}/plot/${tc_name}/images/* |wc -l)
 if [ $bimgs -ne 0 ]; then
