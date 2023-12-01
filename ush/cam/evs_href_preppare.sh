@@ -113,7 +113,6 @@ if [ "$data" = "ccpa01h03h" ] ; then
          missing_ccpa=$((missing_ccpa + 1 ))
       fi
    done
-else
    if [ "$SENDMAIL" = "YES" ] && [ "$missing_ccpa" -gt "0" ] ; then
       export subject="CCPA Data Missing for EVS ${COMPONENT}"
       echo "Warning:  No CCPA data available for ${VDATE}" > mailmsg
