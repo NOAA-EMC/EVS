@@ -1897,8 +1897,11 @@ def check_truth_files(job_dict):
                     and job_dict['VERIF_CASE'] == 'grid2obs' \
                     and job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc', 'ptype'] \
                     and 'Prepbufr' in job_dict['job_name']:
-                run_shell_command(['chmod', '640', truth_file_tuple[0]])
-                run_shell_command(['chgrp', 'rstprod', truth_file_tuple[0]])
+                if os.path.exists(truth_file_tuple[0]):
+                    run_shell_command(['chmod', '640',
+                                       truth_file_tuple[0]])
+                    run_shell_command(['chgrp', 'rstprod',
+                                       truth_file_tuple[0]])
             truth_copy_output_DATA2COMOUT_list.remove(truth_file_tuple)
         else:
             truth_output_files_exist_list.append(False)
