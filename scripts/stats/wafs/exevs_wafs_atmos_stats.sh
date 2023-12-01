@@ -62,9 +62,11 @@ centers="blend uk us"
 cd $DATAsemifinal
 for resolution in $resolutions ; do
     for center in $centers ; do
+      if [ ! -z  `ls ${center}_$resolution.*` ] ; then
 	file=`ls ${center}_$resolution.*`
 	finalfile=${file#*\.}
 	cat $file >> $finalfile
+      fi
     done
     if [[ -s $finalfile ]] ; then
 	awk '!seen[$0]++' $finalfile > $STATSOUTfinal/$finalfile
@@ -72,9 +74,8 @@ for resolution in $resolutions ; do
 done
 
 if [ $SENDCOM = YES ] ; then
-    cpreq $STATSOUTfinal/* $COMOUTfinal/.
-  
-    cpreq $STATSOUTsmall/* $COMOUTsmall/.
+    [ -z `ls -A $STATSOUTfinal` ] || cpreq $STATSOUTfinal/* $COMOUTfinal/.  
+    [ -z `ls -A $STATSOUTsmall` ] || cpreq $STATSOUTsmall/* $COMOUTsmall/.
 fi
 
 #########################################

@@ -37,7 +37,6 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 # environment variables set
 ############################################################
 export envir=prod
-export COMINgfs=/lfs/h1/ops/para/com/gfs/${gfs_ver}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/$evs_ver_2d
 
 ############################################################
