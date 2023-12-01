@@ -1,19 +1,19 @@
 #!/bin/sh -e
 
 # This file is shared by both stat and plot scripts
+# FHOURS_EVSlist:
+#    for plot, it is used by plotting python scripts
+#    for stat, will be re-assigned for each cc in ush script and used by parm/metplus_config/stats/wafs/atmos/GridStat_fcstWAFS*
+# FCST_VALID_HOUR is defined only for plotting python scripts under ush/wafs/
+
+# STAT_ANALYSIS_OUTPUT_DIR is defined for METplus and created by METplus
+export STAT_ANALYSIS_OUTPUT_DIR=$DATA/${OBSERVATION}_${RESOLUTION}_${CENTER}_stat
 
 if [ $OBSERVATION = "GCIP" ] ; then
     export FHOURS="06 09 12 15 18 21 24 27 30 33 36"
     export FHOURS_EVSlist=${FHOURS// /, }
-    export FHOURS_EVSlist1="06,12,18,24,30,36"
-    export FHOURS_EVSlist2="09,15,21,27,33"
 
-    export valid_beg1=00
-    export valid_end1=18
-    export valid_beg2=03
-    export valid_end2=21
-    export valid_inc6=6
-    export valid_inc3=3
+    export valid_inc=3
     export FCST_VALID_HOUR="00,03,06,09,12,15,18,21"
     
     # Only for stat
@@ -27,16 +27,13 @@ if [ $OBSERVATION = "GCIP" ] ; then
 	export VAR1_THRESH_FCST=">=1,>=2,>=3,>=4"
 	export VAR1_THRESH_OBS=">=2,>=2,>=2,>=2"
 	export VAR1_LEVELS_FCST="P812, P696.8, P595.2, P506, P392.7"
-	# for icao2023:
-	export VAR1_LEVELS_OBS="P812, P696.8, P595.2, P506, P392.7"
+	export VAR1_LEVELS_OBS="P800, P700, P600, P500, P400"
 	
     fi
 elif [ $OBSERVATION = "GFS" ] ; then
     export FHOURS="06 12 18 24 30 36"
     export FHOURS_EVSlist=${FHOURS// /, }
 
-    export valid_beg=00
-    export valid_end=18
     export valid_inc=6
     export FCST_VALID_HOUR="00,06,12,18"
     
