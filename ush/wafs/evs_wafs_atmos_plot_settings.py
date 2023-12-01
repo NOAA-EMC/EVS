@@ -2085,7 +2085,7 @@ class Reference():
                                   'fcst_var_thresholds': '>=1, >=2, >=3, >=4',
                                   'fcst_var_options': '',
                                   'obs_var_names': ['ICESEV'],
-                                  'obs_var_levels': ['P812','P696.8','P595.2','P506','P392.7'],
+                                  'obs_var_levels': ['P800','P700','P600','P500','P400'],
                                   'obs_var_thresholds': '>=1, >=2, >=3, >=4',
                                   'obs_var_options': '',
                                   'plot_group':'aviation'}

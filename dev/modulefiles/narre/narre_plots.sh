@@ -18,4 +18,7 @@ module load udunits/${udunits_ver}
 module load grib_util/${grib_util_ver}
 module load wgrib2/${wgrib2_ver}
 
+export SIPHONROOT=${UTILROOT}/fakedbn
+export DBNROOT=$SIPHONROOT
+
 module list
