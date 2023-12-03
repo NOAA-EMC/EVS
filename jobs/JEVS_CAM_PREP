@@ -135,8 +135,6 @@ fi
 $HOMEevs/scripts/$STEP/$COMPONENT/exevs_${MODELNAME}_${VERIF_CASE}_${STEP}.sh
 export err=$?; err_chk
 
-fi
-
 if [ "$KEEPDATA" != "YES" ]; then
    cd $DATAROOT
    rm -rf $DATA

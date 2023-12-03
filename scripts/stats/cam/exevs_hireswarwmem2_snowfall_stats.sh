@@ -95,6 +95,7 @@ if [ $USE_CFP = YES ]; then
             err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
         fi
         $launcher $MP_CMDFILE
+        export err=$?; err_chk
         nc=$((nc+1))
     done
 else
@@ -171,6 +172,7 @@ if [ $USE_CFP = YES ]; then
             err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
         fi
         $launcher $MP_CMDFILE
+        export err=$?; err_chk
         nc=$((nc+1))
     done
 else
@@ -222,6 +224,7 @@ if [ $USE_CFP = YES ]; then
             err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
         fi
         $launcher $MP_CMDFILE
+        export err=$?; err_chk
         nc=$((nc+1))
     done
 else
@@ -270,6 +273,7 @@ if [ $USE_CFP = YES ]; then
             err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
         fi
         $launcher $MP_CMDFILE
+        export err=$?; err_chk
         nc=$((nc+1))
     done
 else
@@ -331,6 +335,7 @@ if [ "$vhr" -ge "$last_cyc" ]; then
                     err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
                 fi
                 $launcher $MP_CMDFILE
+                export err=$?; err_chk
                 nc=$((nc+1))
             done
         else
@@ -374,3 +379,6 @@ if [ -d $log_dir ]; then
         done
     fi
 fi
+
+# Delete empty restart directories
+find $RESTART_DIR -type d -empty -delete

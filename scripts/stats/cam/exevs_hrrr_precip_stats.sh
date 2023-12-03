@@ -94,12 +94,14 @@ if [ $USE_CFP = YES ]; then
             err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
         fi
         $launcher $MP_CMDFILE
+        export err=$?; err_chk
         nc=$((nc+1))
     done
 else
     set -x
     while [ $nc -le $ncount_job ]; do
         ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+        export err=$?; err_chk
         nc=$((nc+1))
     done
     set -x
@@ -171,12 +173,14 @@ if [ $USE_CFP = YES ]; then
             err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
         fi
         $launcher $MP_CMDFILE
+        export err=$?; err_chk
         nc=$((nc+1))
     done
 else
     set -x
     while [ $nc -le $ncount_job ]; do
         ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+        export err=$?; err_chk
         nc=$((nc+1))
     done
     set -x
@@ -224,12 +228,14 @@ if [ $USE_CFP = YES ]; then
             err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
         fi
         $launcher $MP_CMDFILE
+        export err=$?; err_chk
         nc=$((nc+1))
     done
 else
     set -x
     while [ $nc -le $ncount_job ]; do
         ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+        export err=$?; err_chk
         nc=$((nc+1))
     done
     set -x
@@ -274,12 +280,14 @@ if [ $USE_CFP = YES ]; then
             err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
         fi
         $launcher $MP_CMDFILE
+        export err=$?; err_chk
         nc=$((nc+1))
     done
 else
     set -x
     while [ $nc -le $ncount_job ]; do
         ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+        export err=$?; err_chk
         nc=$((nc+1))
     done
     set -x
@@ -348,12 +356,14 @@ if [ "$vhr" -ge "$last_cyc" ]; then
                     err_exit "Cannot submit jobs to scheduler on this machine.  Set USE_CFP=NO and retry."
                 fi
                 $launcher $MP_CMDFILE
+                export err=$?; err_chk
                 nc=$((nc+1))
             done
         else
             set -x
             while [ $nc -le $ncount_job ]; do
                 ${DATA}/${VERIF_CASE}/${STEP}/METplus_job_scripts/${job_type}/job${nc}
+                export err=$?; err_chk
                 nc=$((nc+1))
             done
             set -x
@@ -392,3 +402,6 @@ if [ -d $log_dir ]; then
         done
     fi
 fi
+
+# Delete empty restart directories
+find $RESTART_DIR -type d -empty -delete
