@@ -104,9 +104,6 @@ fi
 
 # SENDDBN alert
 if [ $SENDDBN = YES ] ; then
-    for VERIF_TYPE_SUBDIR_PATH in $DATA/$VERIF_CASE_STEP/plot_output/$RUN.${end_date}/images/*; do
-	VERIF_TYPE_SUBDIR=$(echo ${VERIF_TYPE_SUBDIR_PATH##*/})
-	tarname=evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE_SUBDIR}.last${NDAYS}days.v${end_date}.tar
-	$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/$tarname
-    done
+    tarname=evs.plots.${COMPONENT}.${RUN}.${VERIF_CASE}_${VERIF_TYPE}.last${NDAYS}days.v${end_date}.tar
+    $DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $COMOUT/$tarname
 fi
