@@ -253,7 +253,7 @@ elif STEP == 'stats':
                 MODELNAME+'.'+vdate_dt.strftime('%Y%m%d')
             ))
         date_dt = start_date_dt
-        while date_dt <= vdate_dt+td(days=1):
+        while date_dt <= vdate_dt+td(days=0):
             COMOUT_dir_list.append(os.path.join(
                 COMOUT, 
                 MODELNAME+'.'+date_dt.strftime('%Y%m%d')

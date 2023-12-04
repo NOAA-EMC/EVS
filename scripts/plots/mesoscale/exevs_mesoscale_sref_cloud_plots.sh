@@ -197,10 +197,11 @@ chmod +x run_all_poe.sh
 # **************************************************************************
 if [ $run_mpi = yes ] ; then
    mpiexec -np 112 -ppn 112 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   export err=$?; err_chk
 else
    ${DATA}/run_all_poe.sh
+   export err=$?; err_chk
 fi
-export err=$?; err_chk
 
 #**************************************************
 # Change plot file names to meet the EVS standard
