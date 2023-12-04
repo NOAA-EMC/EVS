@@ -1,4 +1,4 @@
-SRCS=evs_g2g_adjustCMC.f
+SRCS=evs_g2g_adjustCMC.f90
 CMD=evs_g2g_adjustCMC.x
 DEBUG=-check all -ftrapuv
 INC= ${G2_INC4}
