@@ -2068,6 +2068,8 @@ def initalize_job_env_dict(verif_type, group,
     elif group in ['condense_stats', 'filter_stats', 'make_plots',
                    'tar_images']:
         job_env_var_list.extend(['MET_ROOT', 'met_ver'])
+        if group == 'tar_images':
+            job_env_var_list.extend(['KEEPDATA'])
     job_env_dict = {}
     for env_var in job_env_var_list:
         job_env_dict[env_var] = os.environ[env_var]
