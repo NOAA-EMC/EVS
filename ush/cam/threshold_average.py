@@ -860,7 +860,7 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
             level_savename = f'A{level_num.zfill(2)}'
         elif 'Z' in str(level):
             level_num = df['OBS_LEV'].tolist()[0].replace('A', '').replace('0', '')
-            level_string = f'{level_num}-hour '
+            level_string = f''
             level_savename= f'A{level_num.zfill(2)}'
         else:
             level_string = f''
