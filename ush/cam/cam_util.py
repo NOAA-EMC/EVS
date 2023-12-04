@@ -594,6 +594,6 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                       + f" {dest_path} because they already exist.")
             else:
                 run_shell_command(
-                    ['cp', '-rpv', origin_path, os.path.join(dest_path,'.')]
+                    ['cpreq', '-rpv', origin_path, os.path.join(dest_path,'.')]
                 )
 
