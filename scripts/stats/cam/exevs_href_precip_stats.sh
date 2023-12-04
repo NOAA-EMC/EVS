@@ -74,13 +74,14 @@ if [ -s ${DATA}/run_all_precip_poe.sh ]  ; then
 
   if [ $run_mpi = yes ] ; then
     mpiexec  -n 44 -ppn 44 --cpu-bind core --depth=2 cfp ${DATA}/run_all_precip_poe.sh
+    export err=$?; err_chk
   else
    ${DATA}/run_all_precip_poe.sh
+    export err=$?; err_chk
   fi
 
 fi
 
-export err=$?; err_chk
 
 #******************************************************************
 # Run gather job to combine the small stats to form a big stat file

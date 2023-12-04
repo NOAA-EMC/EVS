@@ -53,9 +53,9 @@ if [ $prepare = yes ] ; then
 
   if [ -s $COMINobsproc/rap.${VDATE}/rap.t12z.prepbufr.tm00 ] && [ -s $COMINobsproc/gdas.${vday}/00/atmos/gdas.t00z.prepbufr ] ; then
 
-     $USHevs/cam/evs_href_preppare.sh prepbufr
+     $USHevs/cam/evs_href_preppare.sh prepbufr $domain
      export err=$?; err_chk
-     $USHevs/cam/evs_href_preppare.sh gfs_prepbufr
+     $USHevs/cam/evs_href_preppare.sh gfs_prepbufr $domain
      export err=$?; err_chk
 
   else
@@ -107,11 +107,12 @@ chmod 775 run_href_all_grid2obs_poe
 #*************************************************
 if [ $run_mpi = yes ] ; then
     mpiexec -np 36 -ppn 36 --cpu-bind verbose,depth cfp  ${DATA}/run_href_all_grid2obs_poe
+    export err=$?; err_chk
 else
     ${DATA}/run_href_all_grid2obs_poe
+    export err=$?; err_chk
 fi
 
-export err=$?; err_chk
 
 #******************************************************************
 # Run gather job to combine the small stats to form a big stat file
