@@ -101,6 +101,8 @@ elif JOB_GROUP == 'make_plots':
     obs_var_thresh_list = os.environ['obs_var_thresh_list'].split(', ')
     stat = os.environ['stat']
     plot = os.environ['plot']
+elif JOB_GROUP == 'tar_images':
+    KEEPDATA = os.environ['KEEPDATA']
 
 # Set variables
 VERIF_CASE_STEP = VERIF_CASE+'_'+STEP
@@ -833,8 +835,9 @@ elif JOB_GROUP == 'tar_images':
             os.chdir(cwd)
         else:
             logger.warning(f"No images generated in {DATAjob}")
-    if evs_run_mode == 'production':
-        logger.info(f"Removing {DATAjob}")
-        shutil.rmtree(DATAjob)
+    if KEEPDATA != 'YES':
+        if os.path.exists(DATAjob):
+            logger.info(f"Removing {DATAjob}")
+            shutil.rmtree(DATAjob)
 
 print("END: "+os.path.basename(__file__))
