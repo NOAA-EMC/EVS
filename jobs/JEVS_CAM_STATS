@@ -128,7 +128,11 @@ mkdir -p $COMOUT
 
 export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
-mkdir -p $COMOUTfinal $COMOUTsmall
+if [ $VERIF_CASE = radar ]; then
+    mkdir -p $COMOUTfinal
+else
+    mkdir -p $COMOUTfinal $COMOUTsmall
+fi
 
 
 ####################################
@@ -143,8 +147,6 @@ else
 fi
 
 export err=$?; err_chk
-
-fi
 
 if [ "$KEEPDATA" != "YES" ]; then
    cd $DATAROOT
