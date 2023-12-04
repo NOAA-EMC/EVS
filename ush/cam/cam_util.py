@@ -584,10 +584,9 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                     'METplus_output',
                     verif_type,
                     met_tool,
-                    f'{model}.init{idate}'
                 ))
                 copy_files.append(
-                    f'{model}.{var_name}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
+                    f'{model}.{var_name}.init{idate}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
                 )
         else:
             check_if_none = [
@@ -607,10 +606,9 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                     'METplus_output',
                     verif_type,
                     met_tool,
-                    f'{model}.init{idate}'
                 ))
                 copy_files.append(
-                    f'{model}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
+                    f'{model}.init{idate}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
                 )
     elif met_tool == 'point_stat':
         check_if_none = [
