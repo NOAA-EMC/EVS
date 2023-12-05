@@ -35,116 +35,6 @@ def get_data_type(fname):
             'not':[],
             'type': 'gen'
         },
-        'mPING': {
-            'and':[''],
-            'or':['mPING', 'mping'],
-            'not':[],
-            'type': 'gen'
-        },
-        'FireWX Nest': {
-            'and':[''],
-            'or':['firewx'],
-            'not':[],
-            'type': 'anl'
-        },
-        'SPC Outlook Area': {
-            'and':[''],
-            'or':['spc_otlk'],
-            'not':[],
-            'type': 'gen'
-        },
-        'CCPA': {
-            'and':[''],
-            'or':['ccpa'],
-            'not':[],
-            'type': 'gen'
-        },
-        'MRMS': {
-            'and':[''],
-            'or':['mrms'],
-            'not':[],
-            'type': 'gen'
-        },
-        'NAM Nest Forecast': {
-            'and':['nam', 'nest'],
-            'or':[''],
-            'not':[],
-            'type': 'fcst'
-        },
-        'HRRR Forecast': {
-            'and':['hrrr'],
-            'or':[''],
-            'not':[],
-            'type': 'fcst'
-        },
-        'HiRes Window ARW Forecast': {
-            'and':['hiresw','arw'],
-            'or':[''],
-            'not':['mem2'],
-            'type': 'fcst'
-        },
-        'HiRes Window ARW2 Forecast': {
-            'and':['hiresw','arw','mem2'],
-            'or':[''],
-            'not':[],
-            'type': 'fcst'
-        },
-        'HiRes Window FV3 Forecast': {
-            'and':['hiresw','fv3'],
-            'or':[''],
-            'not':[],
-            'type': 'fcst'
-        },
-    }
-    for k in data_type_dict:
-        if not data_type_dict[k]['and'] or not any(data_type_dict[k]['and']):
-            data_type_dict[k]['and'] = ['']
-        if not data_type_dict[k]['or'] or not any(data_type_dict[k]['or']):
-            data_type_dict[k]['or'] = ['']
-        if not data_type_dict[k]['not'] or not any(data_type_dict[k]['not']):
-            data_type_dict[k]['not'] = []
-    data_names = [
-        k for k in data_type_dict 
-        if (
-            all(map(fname.__contains__, data_type_dict[k]['and'])) 
-            and any(map(fname.__contains__, data_type_dict[k]['or'])) 
-            and not any(map(fname.__contains__, data_type_dict[k]['not']))
-        )
-    ]
-    if len(data_names) == 1:
-        data_name = data_names[0]
-        return data_name, data_type_dict[data_name]['type']
-    else:
-        data_name = "Unknown"
-        return data_name, 'unk'
-
-def flatten(xs):
-    for x in xs: 
-        if isinstance(x, Iterable) and not isinstance(x, (str, bytes)):
-            yield from flatten(x)
-        else:
-            yield x
-
-def get_data_type(fname):
-    data_type_dict = {
-        'PrepBUFR': {
-            'and':[''],
-            'or':['prepbufr'],
-            'not':[],
-            'type': 'anl'
-        },
-        'NOHRSC': {
-            'and':[''],
-            'or':['sfav2'],
-            'not':[],
-            'type': 'gen'
-        },
-        'mPING': {
-            'and':[''],
-            'or':['mPING', 'mping'],
-            'not':[],
-            'type': 'gen'
-        },
         'FireWX Nest': {
             'and':[''],
             'or':['firewx'],
@@ -584,10 +474,9 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                     'METplus_output',
                     verif_type,
                     met_tool,
-                    f'{model}.init{idate}'
                 ))
                 copy_files.append(
-                    f'{model}.{var_name}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
+                    f'{model}.{var_name}.init{idate}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
                 )
         else:
             check_if_none = [
@@ -607,10 +496,9 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                     'METplus_output',
                     verif_type,
                     met_tool,
-                    f'{model}.init{idate}'
                 ))
                 copy_files.append(
-                    f'{model}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
+                    f'{model}.init{idate}.t{ihour}z.f{str(fhr).zfill(3)}.a{acc}h.{vx_mask}.nc'
                 )
     elif met_tool == 'point_stat':
         check_if_none = [
@@ -706,6 +594,6 @@ def copy_data_to_restart(data_dir, restart_dir, met_tool=None, net=None,
                       + f" {dest_path} because they already exist.")
             else:
                 run_shell_command(
-                    ['cp', '-rpv', origin_path, os.path.join(dest_path,'.')]
+                    ['cpreq', '-rpv', origin_path, os.path.join(dest_path,'.')]
                 )
 
