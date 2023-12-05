@@ -177,7 +177,7 @@ while [ $fhr -le $fhr_max ]; do
       export fcst_file=${modsys}.${IDATE}/${modsys}.t${INIT_HR}z.${DOMAIN}nest.hiresf$(printf "%02d" $fhr).tm00.grib2
    fi
 
-   if echo "$INIT_HR" | grep -qw "$ihr_avail"; then
+   if echo "$ihr_avail" | grep -qw "$INIT_HR"; then
       # Check for the existence of each forecast file 
       if [ -s ${MODEL_INPUT_DIR}/${fcst_file} ]; then
          echo $fhr >> $DATA/job${JOBNUM}_fcst_list
