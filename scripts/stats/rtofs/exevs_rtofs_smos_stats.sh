@@ -39,7 +39,9 @@ fi
 
 # check if obs file exists; send alert email if not
 export JDATE=$(date2jday.sh $VDATE)
-if [ -s $DCOMROOT/$VDATE/validation_data/marine/smos/SM_D${JDATE}_Map_SATSSS_data_1day.nc ] ; then
+min_size=2404
+actual_size=$(wc -c <"$DCOMROOT/$VDATE/validation_data/marine/smos/SM_D${JDATE}_Map_SATSSS_data_1day.nc")
+if [ -s $DCOMROOT/$VDATE/validation_data/marine/smos/SM_D${JDATE}_Map_SATSSS_data_1day.nc ] && [ $actual_size -ge $min_size ]; then
    if [ -s $COMIN/prep/$COMPONENT/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_ice.$RUN.nc ] ; then
       for fday in 0 1 2 3 4 5 6 7 8; do
         fhr=$(($fday * 24))
@@ -52,7 +54,7 @@ if [ -s $DCOMROOT/$VDATE/validation_data/marine/smos/SM_D${JDATE}_Map_SATSSS_dat
             export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
             mkdir -p $STATSDIR/$RUN.$VDATE/$VAR
             if [ -s $COMOUTsmall/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
-              cpeq -v $COMOUTsmall/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/$RUN.$VDATE/$VAR/.
+              cpreq -v $COMOUTsmall/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/$RUN.$VDATE/$VAR/.
             else
               run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
               -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/GridStat_fcstRTOFS_obsSMOS_climoWOA23.conf
@@ -86,7 +88,8 @@ for vari in ${VARS}; do
   export VAR=$vari
   export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
   export STATSOUT=$STATSDIR/$RUN.$VDATE/$VAR
-  VAR_file_count=$(ls -l $STATSDIR/$RUN.$VDATE/$VAR/*.stat |wc -l)
+  mkdir -p $STATSOUT
+  VAR_file_count=$(find $STATSOUT -type f -name "*.stat" |wc -l)
   if [[ $VAR_file_count -ne 0 ]]; then
     # sum small stat files into one big file using Stat_Analysis
     run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
@@ -101,6 +104,7 @@ for vari in ${VARS}; do
 done
 
 # Cat the METplus log files
+mkdir -p $DATA/logs
 log_dir=$DATA/logs
 log_file_count=$(find $log_dir -type f |wc -l)
 if [[ $log_file_count -ne 0 ]]; then
