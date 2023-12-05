@@ -105,7 +105,9 @@ program ukm_hires_merge
   call getarg(2, output)
   call getarg(3, argument)
   read(argument, *) fhr
-  print*, trim(input), " ", trim(output), " fcst hour=", fhr
+  print*, "input: ", trim(input)
+  print*, "output: ", trim(output)
+  print*, "fcst hour:", fhr
   fhrm6 = fhr - 6
   fhrm12 = fhr - 12
 
@@ -114,7 +116,7 @@ program ukm_hires_merge
   call baopen(20, trim(output), iret)
   if (iret .ne. 0) write(6, *) " failed to open ", output
   if (iret .ne. 0) then
-    call W3TAGE('ukm_hires_merge ')
+    print *, "iret=",iret, "STOP"
     stop
   endif
 
@@ -132,17 +134,16 @@ program ukm_hires_merge
       jgds(7) = ye(n)
       jgds(8) = xe(n)
       call getgb(10, 0, mmax, nrec, jpds, jgds, kf, k, kpds, kgds, lb, varp(1, n), iret)
-      if (kpds(6) == 7) then
-        nrec = nrec - 1
+      if (kpds(6).ne.7) then
+          if (iret.ne.0) then
+            print *, "iret=",iret, "STOP" !reached end of record or incorrect file
+            CALL W3TAGE('ukm_hires_merge ')
+            stop
+          endif
+          do k = 1, 16
+            jpds(k) = kpds(k)
+          enddo
       endif
-      if (iret.ne.0) then
-        call W3TAGE('ukm_hires_merge ')
-        goto 200
-      endif
-
-      do k = 1, 16
-        jpds(k) = kpds(k)
-      enddo
       nrec = nrec - 1
     enddo
 
@@ -212,7 +213,7 @@ program ukm_hires_merge
     endif
   end do
 
-200 call baclose(10, iret)
+  call baclose(10, iret)
   call baclose(20, iret)
   CALL W3TAGE('ukm_hires_merge ')
 end

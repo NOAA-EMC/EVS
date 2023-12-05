@@ -28,7 +28,9 @@ endif
 call getarg(1, inputn)
 call getarg(2, inputs)
 call getarg(3, output)
-print*, inputn, inputs, output
+print*, "NH input: ", inputn
+print*, "SH input:", inputs
+print*, "Merged output", output
 
 call baopenr(11, trim(inputn), iret)
 if (iret .ne. 0) then
@@ -52,14 +54,8 @@ do while (j /= 0)
    jpds = -1
    call getgb(11, 0, mmax, j, jpds, jgds, kf, k, kpds, kgds, lb, varn, iretn)
    if (iretn.ne.0) then
-      if (iretn.eq.-1) then
-         write(*,*) 'Error reading input file 11'
-         stop
-      endif
-      if (iretn.eq.-2) then
-         write(*,*) 'Error reading input file 11'
-         stop
-      endif
+       print *, "iretn=",iretn, "STOP" !reached end of record or incorrect file
+       stop
    endif
 
    jpds = -1
@@ -69,14 +65,8 @@ do while (j /= 0)
    jpds(7) = kpds(7)
    call getgb(12, 0, mmax, -1, jpds, jgds, mf, m, kpds, kgds, lb, vars, irets)
    if (irets.ne.0) then
-      if (irets.eq.-1) then
-         write(*,*) 'Error reading input file 12'
-         stop
-      endif
-      if (irets.eq.-2) then
-         write(*,*) 'Error reading input file 12'
-         stop
-      endif
+       print *, "irets=",irets, "STOP" !reached end of record or incorrect file
+       stop
    endif
 
    if (iretn.eq.0 .and. irets.eq.0) then
