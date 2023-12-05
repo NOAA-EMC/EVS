@@ -350,98 +350,51 @@ elif STEP == 'stats':
                     + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
                     + f"\"job{njob}\", job_type=\"{job_type}\")'"
                 )
-        if VERIF_TYPE == 'mping':
-            if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
-                job_cmd_list_iterative.append(
-                    f'#jobs were restarted, and the following has already run successfully'
-                    )
-                job_cmd_list_iterative.append(
-                    f'#{metplus_launcher} -c {machine_conf} '
-                    + f'-c {MET_PLUS_CONF}/'
-                    + f'ASCII2NC_obs{VERIF_TYPE.upper()}.conf'
+        if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
+            job_cmd_list_iterative.append(
+                f'#jobs were restarted, and the following has already run successfully'
                 )
-                job_cmd_list_iterative.append(
-                    f'#python -c '
-                    + '\"import cam_util as cutil; cutil.copy_data_to_restart('
-                    + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
-                    + 'verif_case=\\\"${VERIF_CASE}\\\", '
-                    + 'verif_type=\\\"${VERIF_TYPE}\\\", '
-                    + 'vx_mask=\\\"${NEST}\\\", '
-                    + 'met_tool=\\\"ascii2nc\\\", '
-                    + 'vdate=\\\"${VDATE}\\\", '
-                    + 'vhour=\\\"${VHOUR}\\\"'
-                    + ')\"'
-                )
-            else:
-                job_cmd_list_iterative.append(
-                    f'{metplus_launcher} -c {machine_conf} '
-                    + f'-c {MET_PLUS_CONF}/'
-                    + f'ASCII2NC_obs{VERIF_TYPE.upper()}.conf'
-                )
-                job_cmd_list_iterative.append(
-                    f'python -c '
-                    + '\"import cam_util as cutil; cutil.copy_data_to_restart('
-                    + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
-                    + 'verif_case=\\\"${VERIF_CASE}\\\", '
-                    + 'verif_type=\\\"${VERIF_TYPE}\\\", '
-                    + 'vx_mask=\\\"${NEST}\\\", '
-                    + 'met_tool=\\\"ascii2nc\\\", '
-                    + 'vdate=\\\"${VDATE}\\\", '
-                    + 'vhour=\\\"${VHOUR}\\\"'
-                    + ')\"'
-                )
-                job_cmd_list.append(
-                    "python -c "
-                    + f"'import cam_util; cam_util.mark_job_completed("
-                    + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
-                    + f"\"job{njob}\", job_type=\"{job_type}\")'"
-                )
+            job_cmd_list_iterative.append(
+                f'#{metplus_launcher} -c {machine_conf} '
+                + f'-c {MET_PLUS_CONF}/'
+                + f'PB2NC_obs{VERIF_TYPE.upper()}.conf'
+            )
+            job_cmd_list_iterative.append(
+                f'#python -c '
+                + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                + 'verif_case=\\\"${VERIF_CASE}\\\", '
+                + 'verif_type=\\\"${VERIF_TYPE}\\\", '
+                + 'vx_mask=\\\"${NEST}\\\", '
+                + 'met_tool=\\\"pb2nc\\\", '
+                + 'vdate=\\\"${VDATE}\\\", '
+                + 'vhour=\\\"${VHOUR}\\\"'
+                + ')\"'
+            )
         else:
-            if f'{job_type}_job{njob}' in cutil.get_completed_jobs(os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)):
-                job_cmd_list_iterative.append(
-                    f'#jobs were restarted, and the following has already run successfully'
-                    )
-                job_cmd_list_iterative.append(
-                    f'#{metplus_launcher} -c {machine_conf} '
-                    + f'-c {MET_PLUS_CONF}/'
-                    + f'PB2NC_obs{VERIF_TYPE.upper()}.conf'
-                )
-                job_cmd_list_iterative.append(
-                    f'#python -c '
-                    + '\"import cam_util as cutil; cutil.copy_data_to_restart('
-                    + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
-                    + 'verif_case=\\\"${VERIF_CASE}\\\", '
-                    + 'verif_type=\\\"${VERIF_TYPE}\\\", '
-                    + 'vx_mask=\\\"${NEST}\\\", '
-                    + 'met_tool=\\\"pb2nc\\\", '
-                    + 'vdate=\\\"${VDATE}\\\", '
-                    + 'vhour=\\\"${VHOUR}\\\"'
-                    + ')\"'
-                )
-            else:
-                job_cmd_list_iterative.append(
-                    f'{metplus_launcher} -c {machine_conf} '
-                    + f'-c {MET_PLUS_CONF}/'
-                    + f'PB2NC_obs{VERIF_TYPE.upper()}.conf'
-                )
-                job_cmd_list_iterative.append(
-                    f'python -c '
-                    + '\"import cam_util as cutil; cutil.copy_data_to_restart('
-                    + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
-                    + 'verif_case=\\\"${VERIF_CASE}\\\", '
-                    + 'verif_type=\\\"${VERIF_TYPE}\\\", '
-                    + 'vx_mask=\\\"${NEST}\\\", '
-                    + 'met_tool=\\\"pb2nc\\\", '
-                    + 'vdate=\\\"${VDATE}\\\", '
-                    + 'vhour=\\\"${VHOUR}\\\"'
-                    + ')\"'
-                )
-                job_cmd_list.append(
-                    "python -c "
-                    + f"'import cam_util; cam_util.mark_job_completed("
-                    + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
-                    + f"\"job{njob}\", job_type=\"{job_type}\")'"
-                )
+            job_cmd_list_iterative.append(
+                f'{metplus_launcher} -c {machine_conf} '
+                + f'-c {MET_PLUS_CONF}/'
+                + f'PB2NC_obs{VERIF_TYPE.upper()}.conf'
+            )
+            job_cmd_list_iterative.append(
+                f'python -c '
+                + '\"import cam_util as cutil; cutil.copy_data_to_restart('
+                + '\\\"${DATA}\\\", \\\"${RESTART_DIR}\\\", '
+                + 'verif_case=\\\"${VERIF_CASE}\\\", '
+                + 'verif_type=\\\"${VERIF_TYPE}\\\", '
+                + 'vx_mask=\\\"${NEST}\\\", '
+                + 'met_tool=\\\"pb2nc\\\", '
+                + 'vdate=\\\"${VDATE}\\\", '
+                + 'vhour=\\\"${VHOUR}\\\"'
+                + ')\"'
+            )
+            job_cmd_list.append(
+                "python -c "
+                + f"'import cam_util; cam_util.mark_job_completed("
+                + f"\"{os.path.join(RESTART_DIR, COMPLETED_JOBS_FILE)}\", "
+                + f"\"job{njob}\", job_type=\"{job_type}\")'"
+            )
     if job_type == 'generate':
         if FCST_VAR2_NAME:
             if NEST == 'firewx':
