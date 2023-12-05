@@ -50,6 +50,7 @@ while [ $n -le $past_days ] ; do
   day=`$NDATE -$hrs ${VDATE}00|cut -c1-8`
   echo $day
   $USHevs/mesoscale/evs_get_sref_stat_file_link_plots.sh $day "$model_list"
+  export err=$?; err_chk
   n=$((n+1))
 done 
 
@@ -226,10 +227,11 @@ chmod +x run_all_poe.sh
 # **************************************************************************
 if [ $run_mpi = yes ] ; then
    mpiexec -np 100 -ppn 100 --cpu-bind verbose,depth cfp ${DATA}/run_all_poe.sh
+   export err=$?; err_chk
 else
   ${DATA}/run_all_poe.sh
+  export err=$?; err_chk
 fi
-export err=$?; err_chk
 
 #**************************************************
 # Change plot file names to meet the EVS standard

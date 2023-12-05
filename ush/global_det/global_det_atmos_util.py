@@ -1897,8 +1897,11 @@ def check_truth_files(job_dict):
                     and job_dict['VERIF_CASE'] == 'grid2obs' \
                     and job_dict['VERIF_TYPE'] in ['pres_levs', 'sfc', 'ptype'] \
                     and 'Prepbufr' in job_dict['job_name']:
-                run_shell_command(['chmod', '640', truth_file_tuple[0]])
-                run_shell_command(['chgrp', 'rstprod', truth_file_tuple[0]])
+                if os.path.exists(truth_file_tuple[0]):
+                    run_shell_command(['chmod', '640',
+                                       truth_file_tuple[0]])
+                    run_shell_command(['chgrp', 'rstprod',
+                                       truth_file_tuple[0]])
             truth_copy_output_DATA2COMOUT_list.remove(truth_file_tuple)
         else:
             truth_output_files_exist_list.append(False)
@@ -2065,6 +2068,8 @@ def initalize_job_env_dict(verif_type, group,
     elif group in ['condense_stats', 'filter_stats', 'make_plots',
                    'tar_images']:
         job_env_var_list.extend(['MET_ROOT', 'met_ver'])
+        if group == 'tar_images':
+            job_env_var_list.extend(['KEEPDATA'])
     job_env_dict = {}
     for env_var in job_env_var_list:
         job_env_dict[env_var] = os.environ[env_var]

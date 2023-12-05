@@ -79,11 +79,12 @@ chmod 775 run_href_all_grid2obs_poe
 # ***************************************
 if [ $run_mpi = yes ] ; then
     mpiexec -np 2 -ppn 2 --cpu-bind verbose,depth cfp  ${DATA}/run_href_all_grid2obs_poe
+    export err=$?; err_chk
 else
     ${DATA}/run_href_all_grid2obs_poe
+    export err=$?; err_chk
 
 fi
-export err=$?; err_chk
 
 #*******************************************************************
 # Run gather job to combine small stat files to form a big stat file
