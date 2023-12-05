@@ -127,11 +127,7 @@ mkdir -p $COMOUT
 
 export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
-if [ $VERIF_CASE = radar ]; then
-    mkdir -p $COMOUTfinal
-else
-    mkdir -p $COMOUTfinal $COMOUTsmall
-fi
+mkdir -p $COMOUTfinal $COMOUTsmall
 
 
 ####################################
