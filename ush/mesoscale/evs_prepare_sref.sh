@@ -177,7 +177,20 @@ if [ $modnam = ccpa ] ; then
     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA06h.conf
     export err=$?; err_chk
     echo "Print PcpCombine_obsCCPA06h log files begin:"
-    cat $DATA/pb2nc/logs/*
+    log_dir="$DATA/pb2nc/logs"
+    if [ -d $log_dir ]; then
+        log_file_count=$(find $log_dir -type f | wc -l)
+        if [[ $log_file_count -ne 0 ]]; then
+            log_files=("$log_dir"/*)
+            for log_file in "${log_files[@]}"; do
+                if [ -f "$log_file" ]; then
+                    echo "Start: $log_file"
+                    cat "$log_file"
+                    echo "End: $log_file"
+                fi
+            done
+        fi
+    fi
     echo "Print PcpCombine_obsCCPA06h log files end"
 
  else
@@ -217,7 +230,20 @@ export output_base=${WORK}/pb2nc
      fi
    done
     echo "Print Pb2nc_obsGFS_Prepbufr log files begin:"
-     cat $DATA/pb2nc/logs/*
+    log_dir="$DATA/pb2nc/logs"
+    if [ -d $log_dir ]; then
+        log_file_count=$(find $log_dir -type f | wc -l)
+        if [[ $log_file_count -ne 0 ]]; then
+            log_files=("$log_dir"/*)
+            for log_file in "${log_files[@]}"; do
+                if [ -f "$log_file" ]; then
+                    echo "Start: $log_file"
+                    cat "$log_file"
+                    echo "End: $log_file"
+                fi
+            done
+        fi
+    fi
     echo "Print Pb2nc_obsGFS_Prepbufr log files end"
 
 
