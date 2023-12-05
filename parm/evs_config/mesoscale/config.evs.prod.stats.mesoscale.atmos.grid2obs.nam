@@ -95,8 +95,6 @@ fi
 		  export VAR_NAME_LIST=""
 	  elif [ "$OBSNAME" = "metar" ]; then
 		  export VAR_NAME_LIST="PTYPE"
-	  elif [ "$OBSNAME" = "mping" ]; then
-		  export VAR_NAME_LIST="PTYPE"
 	  else
 		  err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
 	  fi
