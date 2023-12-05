@@ -176,9 +176,6 @@ if [ $modnam = ccpa ] ; then
 
     ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_obsCCPA06h.conf
     export err=$?; err_chk
-    echo "Print PcpCombine_obsCCPA06h log files begin:"
-    cat $DATA/pb2nc/logs/*
-    echo "Print PcpCombine_obsCCPA06h log files end"
 
  else
   if [ $SENDMAIL = YES ] ; then	 
@@ -216,9 +213,6 @@ export output_base=${WORK}/pb2nc
        cp ${WORK}/pb2nc/prepbufr_nc/*.nc $WORK/prepbufr.${vday} 
      fi
    done
-    echo "Print Pb2nc_obsGFS_Prepbufr log files begin:"
-     cat $DATA/pb2nc/logs/*
-    echo "Print Pb2nc_obsGFS_Prepbufr log files end"
 
 
  else
