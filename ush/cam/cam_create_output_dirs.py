@@ -127,11 +127,11 @@ job_scripts_dirs = []
 if STEP == 'prep':
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'prep_job_scripts'))
 if STEP == 'stats':
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'reformat'))
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'generate'))
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather'))
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather2'))
-    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, 'METplus_job_scripts', 'gather3'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'METplus_job_scripts', 'reformat'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'METplus_job_scripts', 'generate'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'METplus_job_scripts', 'gather'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'METplus_job_scripts', 'gather2'))
+    job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'METplus_job_scripts', 'gather3'))
 if STEP == 'plots':
     job_scripts_dirs.append(os.path.join(DATA, VERIF_CASE, STEP, 'plotting_job_scripts'))
 for job_scripts_dir in job_scripts_dirs:
@@ -213,6 +213,9 @@ elif STEP == 'stats':
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'pcp_combine', 'tmp'
             ))
+            COMOUT_dir_list.append(os.path.join(
+                COMOUT_restart_base_dir, 'pcp_combine', 
+            ))
         if job_type == 'generate':
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'out', 'confs'
@@ -255,18 +258,6 @@ elif STEP == 'stats':
                 COMOUT, 
                 MODELNAME+'.'+date_dt.strftime('%Y%m%d')
             ))
-            date_dt+=td(days=1)
-        date_dt = start_date_dt
-        while date_dt <= vdate_dt+td(days=1):
-            if job_type == 'reformat':
-                working_dir_list.append(os.path.join(
-                    working_output_base_dir, 'pcp_combine', 
-                    MODELNAME+'.'+date_dt.strftime('init%Y%m%d')
-                ))
-                COMOUT_dir_list.append(os.path.join(
-                    COMOUT_restart_base_dir, 'pcp_combine', 
-                    MODELNAME+'.'+date_dt.strftime('init%Y%m%d')
-                ))
             date_dt+=td(days=1)
     elif VERIF_CASE == "grid2obs":
         if job_type == 'reformat':
@@ -455,6 +446,9 @@ elif STEP == 'stats':
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'pcp_combine', 'tmp'
             ))
+            COMOUT_dir_list.append(os.path.join(
+                COMOUT_restart_base_dir, 'pcp_combine', 
+            ))
         if job_type == 'generate':
             working_dir_list.append(os.path.join(
                 working_output_base_dir, 'out', 'confs'
@@ -497,18 +491,6 @@ elif STEP == 'stats':
                 COMOUT, 
                 MODELNAME+'.'+date_dt.strftime('%Y%m%d')
             ))
-            date_dt+=td(days=1)
-        date_dt = start_date_dt
-        while date_dt <= vdate_dt+td(days=int(fhr_end_max)//49):
-            if job_type == 'reformat':
-                working_dir_list.append(os.path.join(
-                    working_output_base_dir, 'pcp_combine', 
-                    MODELNAME+'.'+date_dt.strftime('init%Y%m%d')
-                ))
-                COMOUT_dir_list.append(os.path.join(
-                    COMOUT_restart_base_dir, 'pcp_combine', 
-                    MODELNAME+'.'+date_dt.strftime('init%Y%m%d')
-                ))
             date_dt+=td(days=1)
 elif STEP == 'plots':
     if VERIF_CASE == 'grid2obs':

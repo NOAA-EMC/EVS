@@ -117,7 +117,6 @@ export DCOMINmrms=${DCOMINmrms:-$DCOMROOT/ldmdata/obs/upperair/mrms/alaska/Multi
 export DCOMINsnow=${DCOMINsnow:-$DCOMROOT}
 export EVSINccpa=${EVSINccpa:-$COMIN/prep/$COMPONENT}
 export EVSINmrms=${EVSINmrms:-$COMIN/prep/$COMPONENT}
-export EVSINmping=${EVSINmping:-$COMIN/prep/$COMPONENT}
 export EVSINspcotlk=${EVSINspcotlk:-$COMIN/prep/$COMPONENT}
 export EVSINfcst=${EVSINfcst:-$COMIN/prep/$COMPONENT}
 export EVSINspclsr=${EVSINspclsr:-$COMIN/prep/$COMPONENT}
@@ -128,11 +127,7 @@ mkdir -p $COMOUT
 
 export COMOUTfinal=${COMOUT}/${MODELNAME}.${VDATE}
 export COMOUTsmall=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
-if [ $VERIF_CASE = radar ]; then
-    mkdir -p $COMOUTfinal
-else
-    mkdir -p $COMOUTfinal $COMOUTsmall
-fi
+mkdir -p $COMOUTfinal $COMOUTsmall
 
 
 ####################################
