@@ -126,6 +126,7 @@ done
 ##########################
 #  process obs data
 ##########################
+min_size=2404
 # convert OSI-SAF data into lat-lon grid
 export RUN=osisaf
 if [ ! -d $COMOUTprep/rtofs.$VDATE/$RUN ]; then
@@ -137,6 +138,15 @@ for ftype in nh sh; do
     input_osisaf_file=$DCOMROOT/$VDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc
     tmp_osisaf_file=$DATA/rtofs.$VDATE/$RUN/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc
     output_osisaf_file=$COMOUTprep/rtofs.$VDATE/$RUN/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc
+    actual_size_osisaf=$(wc -c <"$DCOMROOT/$VDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc")
+    if [[ ! -s $input_osisaf_file || $actual_size_osisaf -lt $min_size ]]; then
+	    if [ $SENDMAIL = YES ] ; then
+		    export subject="OSI-SAF Data Missing for EVS RTOFS"
+		    echo "Warning: No OSI-SAF ${ftype} data was available for valid date $VDATE." > mailmsg
+		    echo "Missing file is $input_osisaf_file" >> mailmsg
+		    cat mailmsg | mail -s "$subject" $MAILTO
+	    fi
+    fi
     if [ ! -s $output_osisaf_file ]; then
         if [ -s $input_osisaf_file ]; then
             cdo remapbil,$osi_saf_grid_file $input_osisaf_file $tmp_osisaf_file
@@ -161,7 +171,7 @@ if [ ! -d $COMOUTprep/rtofs.$VDATE/$RUN ]; then
 fi
 mkdir -p $DATA/rtofs.$VDATE/$RUN
 export MET_NDBC_STATIONS=${FIXevs}/ndbc_stations/ndbc_stations.xml
-ndbc_txt_ncount=$(ls -l $DCOMROOT/$VDATE/validation_data/marine/buoy/*.txt |wc -l)
+ndbc_txt_ncount=$(find $DCOMROOT/$VDATE/validation_data/marine/buoy -type f -name "*.txt" |wc -l)
 if [ $ndbc_txt_ncount -gt 0 ]; then
     tmp_ndbc_file=$DATA/rtofs.$VDATE/$RUN/ndbc.${VDATE}.nc
     output_ndbc_file=$COMOUTprep/rtofs.$VDATE/$RUN/ndbc.${VDATE}.nc
@@ -187,27 +197,34 @@ if [ ! -d $COMOUTprep/rtofs.$VDATE/$RUN ]; then
     mkdir -p $COMOUTprep/rtofs.$VDATE/$RUN
 fi
 mkdir -p $DATA/rtofs.$VDATE/$RUN
+actual_size_argo_atlantic=$(wc -c <"$DCOMROOT/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_prof.nc")
+actual_size_argo_indian=$(wc -c <"$DCOMROOT/$VDATE/validation_data/marine/argo/indian_ocean/${VDATE}_prof.nc")
+actual_size_argo_pacific=$(wc -c <"$DCOMROOT/$VDATE/validation_data/marine/argo/pacific_ocean/${VDATE}_prof.nc")
 if [ -s $DCOMROOT/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_prof.nc ] && [ -s $DCOMROOT/$VDATE/validation_data/marine/argo/indian_ocean/${VDATE}_prof.nc ] && [ -s $DCOMROOT/$VDATE/validation_data/marine/argo/pacific_ocean/${VDATE}_prof.nc ]; then
-    tmp_argo_file=$DATA/rtofs.$VDATE/$RUN/argo.${VDATE}.nc
-    output_argo_file=$COMOUTprep/rtofs.$VDATE/$RUN/argo.${VDATE}.nc
-    if [ ! -s $output_argo_file ]; then
-        run_metplus.py -c $PARMevs/metplus_config/machine.conf \
-        -c $CONFIGevs/$STEP/$COMPONENT/grid2obs/ASCII2NC_obsARGO.conf
-        export err=$?; err_chk
-        if [ $SENDCOM = YES ]; then
-             cpreq -v $tmp_argo_file $output_argo_file
-        fi
-    fi
-else
-  if [ $SENDMAIL = YES ] ; then
-    export subject="Argo Data Missing for EVS RTOFS"
-    echo "Warning: No Argo data was available for valid date $VDATE." > mailmsg
-    echo "Missing file is $DCOMROOT/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_prof.nc, $DCOMROOT/$VDATE/validation_data/marine/argo/indian_ocean/${VDATE}_prof.nc, and/or $DCOMROOT/$VDATE/validation_data/marine/argo/pacific_ocean/${VDATE}_prof.nc" >> mailmsg
-    cat mailmsg | mail -s "$subject" $MAILTO
-  fi
+	if [ $actual_size_argo_atlantic -gt $min_size ] && [ $actual_size_argo_indian -gt $min_size ] && [ $actual_size_argo_pacific -gt $min_size ] ; then
+		tmp_argo_file=$DATA/rtofs.$VDATE/$RUN/argo.${VDATE}.nc
+		output_argo_file=$COMOUTprep/rtofs.$VDATE/$RUN/argo.${VDATE}.nc
+		if [ ! -s $output_argo_file ]; then
+			run_metplus.py -c $PARMevs/metplus_config/machine.conf \
+			-c $CONFIGevs/$STEP/$COMPONENT/grid2obs/ASCII2NC_obsARGO.conf
+			export err=$?; err_chk
+			if [ $SENDCOM = YES ]; then
+				cpreq -v $tmp_argo_file $output_argo_file
+			fi
+		fi
+	else
+		if [ $SENDMAIL = YES ] ; then
+			export subject="Argo Data Missing for EVS RTOFS"
+			echo "Warning: No Argo data was available for valid date $VDATE." > mailmsg
+			echo "Missing file is $DCOMROOT/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_prof.nc, $DCOMROOT/$VDATE/validation_data/marine/argo/indian_ocean/${VDATE}_prof.nc, and/or $DCOMROOT/$VDATE/validation_data/marine/argo/pacific_ocean/${VDATE}_prof.nc" >> mailmsg
+			cat mailmsg | mail -s "$subject" $MAILTO
+		fi
+	fi
 fi
 
+
 # Cat the METplus log files
+mkdir -p $DATA/logs
 log_dir=$DATA/logs
 log_file_count=$(find $log_dir -type f |wc -l)
 if [[ $log_file_count -ne 0 ]]; then
