@@ -26,7 +26,7 @@ if [ "${STEP}" = "stats" ]; then
    if [ -d ${COMOUT_RUN_VDATE_VERIF_CASE} ]; then
       cnf=$(ls ${COMOUT_RUN_VDATE_VERIF_CASE}/point_stat* 2>/dev/null | wc -l)
       if [ $cnf -gt 0 ]; then
-         cp -pv ${COMOUT_RUN_VDATE_VERIF_CASE}/point_stat* ${TDAT}/
+         cpreq -pv ${COMOUT_RUN_VDATE_VERIF_CASE}/point_stat* ${TDAT}/
       fi
    fi
    
@@ -46,8 +46,8 @@ if [ "${STEP}" = "stats" ]; then
 	 cnc=${#lsc}; # echo $cnc;
          if [ $cnc -gt 0 ]; then
             for f in $lsc; do
-               echo "cp -pv ${DAT3}/${f} ${TDAT}/"
-	       cp -pv ${DAT3}/${f} ${TDAT}/
+               echo "cpreq -pv ${DAT3}/${f} ${TDAT}/"
+	       cpreq -pv ${DAT3}/${f} ${TDAT}/
              done
 	 fi
       fi

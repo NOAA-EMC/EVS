@@ -35,9 +35,6 @@ if [ "$OBSNAME" = "raob" ]; then
 elif [ "$OBSNAME" = "metar" ]; then
     export COMINobs=${COMINobsproc}
     export VHOUR_LIST="00 03 06 09 12 15 18 21"
-elif [ "$OBSNAME" = "mping" ]; then
-    export COMINobs=${EVSINmping}
-    export VHOUR_LIST="00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23"
 else
     err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
 fi
@@ -48,8 +45,6 @@ if [ "$NEST" = "conus" ]; then
         export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH SBCAPE MLCAPE HPBL"
     elif [ "$OBSNAME" = "metar" ]; then
         export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING PTYPE"
-    elif [ "$OBSNAME" = "mping" ]; then
-        export VAR_NAME_LIST="PTYPE"
     else
         err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
     fi
@@ -66,8 +61,6 @@ elif [ "$NEST" = "subreg" ]; then
         export VAR_NAME_LIST=""
     elif [ "$OBSNAME" = "metar" ]; then
         export VAR_NAME_LIST="TMP2m DPT2m RH2m UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc VIS CEILING"
-    elif [ "$OBSNAME" = "mping" ]; then
-        export VAR_NAME_LIST=""
     else
         err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
     fi
@@ -84,8 +77,6 @@ elif [ "$NEST" = "ak" ]; then
         export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH SBCAPE MLCAPE HPBL"
     elif [ "$OBSNAME" = "metar" ]; then
         export VAR_NAME_LIST="TMP2m DPT2m RH2m MSLP UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc TCDC VIS CEILING PTYPE"
-    elif [ "$OBSNAME" = "mping" ]; then
-        export VAR_NAME_LIST=""
     else
         err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
     fi
@@ -102,8 +93,6 @@ elif [ "$NEST" = "hi" ]; then
         export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH"
     elif [ "$OBSNAME" = "metar" ]; then
         export VAR_NAME_LIST="TMP2m DPT2m UGRD_VGRD10m"
-    elif [ "$OBSNAME" = "mping" ]; then
-        export VAR_NAME_LIST=""
     else
         err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
     fi
@@ -119,8 +108,6 @@ elif [ "$NEST" = "pr" ]; then
     if [ "$OBSNAME" = "raob" ]; then
         export VAR_NAME_LIST="HGT TMP UGRD VGRD UGRD_VGRD SPFH"
     elif [ "$OBSNAME" = "metar" ]; then
-        export VAR_NAME_LIST=""
-    elif [ "$OBSNAME" = "mping" ]; then
         export VAR_NAME_LIST=""
     else
         err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
@@ -138,8 +125,6 @@ elif [ "$NEST" = "firewx" ]; then
         export VAR_NAME_LIST="HPBL"
     elif [ "$OBSNAME" = "metar" ]; then
         export VAR_NAME_LIST="TMP2m DPT2m RH2m UGRD10m VGRD10m UGRD_VGRD10m WIND10m GUSTsfc"
-    elif [ "$OBSNAME" = "mping" ]; then
-        export VAR_NAME_LIST=""
     else
         err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
     fi
@@ -155,8 +140,6 @@ elif [ "$NEST" = "spc_otlk" ]; then
     if [ "$OBSNAME" = "raob" ]; then
         export VAR_NAME_LIST="SBCAPE MLCAPE"
     elif [ "$OBSNAME" = "metar" ]; then
-        export VAR_NAME_LIST=""
-    elif [ "$OBSNAME" = "mping" ]; then
         export VAR_NAME_LIST=""
     else
         err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"

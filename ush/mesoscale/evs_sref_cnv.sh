@@ -103,7 +103,22 @@ fi
 export err=$?; err_chk
 
 echo "Print stat generation metplus log files begin:"
- cat $DATA/grid2obs/*/logs/*
+log_dirs="$DATA/grid2obs/*/logs"
+for log_dir in $log_dirs; do
+    if [ -d $log_dir ]; then
+        log_file_count=$(find $log_dir -type f | wc -l)
+        if [[ $log_file_count -ne 0 ]]; then
+            log_files=("$log_dir"/*)
+            for log_file in "${log_files[@]}"; do
+                if [ -f "$log_file" ]; then
+                    echo "Start: $log_file"
+                    cat "$log_file"
+                    echo "End: $log_file"
+                fi
+            done
+        fi
+    fi
+done
 echo "Print stat generation metplus log files end"
 
 #***********************************************
