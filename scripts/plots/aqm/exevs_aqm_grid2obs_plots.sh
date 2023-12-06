@@ -26,7 +26,6 @@ set -x
 
 # Set up initial directories and initialize variables
 
-export LOGFIN=${DATA}/logs
 export LOGDIR=${DATA}/plots/logs
 export LOGDIR_headline=${DATA}/plots_headline/logs
 
@@ -36,7 +35,7 @@ export PLOTDIR_headline=${DATA}/plots_headline
 export OUTDIR=${DATA}/out
 export PRUNEDIR=${DATA}/prune
 
-mkdir -p ${LOGFIN}   ${LOGDIR}  ${LOGDIR_headline}
+mkdir -p  ${LOGDIR}  ${LOGDIR_headline}
 mkdir -p ${STATDIR}  ${PLOTDIR} ${PLOTDIR_headline}
 mkdir -p ${PRUNEDIR} ${OUTDIR}
 
@@ -133,8 +132,6 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
                 if [ ! -e $${cpfile} ]; then
                     ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/${config_file}
                     export err=$?; err_chk
-                    cat ${LOGDIR}/*out
-                    mv ${LOGDIR}/*out ${LOGFIN}
                 else
                     echo "RESTART - ${var} ${figtype} ${region} plot exists; copying over to plot directory"
                     cpreq ${cpfile} ${PLOTDIR}
@@ -194,8 +191,6 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
                 if [ ! -e ${cpfile} ]; then
                     ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_${smvar}.config
                     export err=$?; err_chk
-                    cat ${LOGDIR}/*out
-                    mv ${LOGDIR}/*out ${LOGFIN}
                 else
                     echo "RESTART - plot exists; copying over to plot directory"
                     cpreq ${cpfile} ${PLOTDIR}
@@ -214,6 +209,21 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
         done
     done
 done
+
+log_dir="$LOGDIR"
+if [ -d $log_dir ]; then
+   log_file_count=$(find $log_dir -type f | wc -l)
+   if [[ $log_file_count -ne 0 ]]; then
+       log_files=("$log_dir"/*)
+       for log_file in "${log_files[@]}"; do
+          if [ -f "$log_file" ]; then
+           echo "Start: $log_file"
+           cat "$log_file"
+           echo "End: $log_file"
+         fi
+       done
+   fi   
+fi 
 
 # Tar up plot directory and copy to the plot output directory
 
@@ -300,8 +310,6 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central; do
             if [ ! -e ${cpfile} ]; then
                 ${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/py_plotting_${smvar}_headline.config
                 export err=$?; err_chk
-                cat ${LOGDIR_headline}/*out
-                mv ${LOGDIR_headline}/*out ${LOGFIN}
             else
                 echo "RESTART - plot exists; copying over to plot directory"
                 cpreq ${cpfile} ${PLOTDIR_headline}
@@ -318,6 +326,23 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central; do
         done
     done
 done
+
+log_dir="${LOGDIR_headline}"
+if [ -d $log_dir ]; then
+   log_file_count=$(find $log_dir -type f | wc -l)
+   if [[ $log_file_count -ne 0 ]]; then
+        log_files=("$log_dir"/*)
+        for log_file in "${log_files[@]}"; do
+          if [ -f "$log_file" ]; then
+            echo "Start: $log_file"
+            cat "$log_file"
+            echo "End: $log_file"
+          fi
+        done
+   fi
+fi
+
+
 
 # Tar up headline plot tarball and copy to the headline plot directory
 
