@@ -171,7 +171,11 @@ while [ $fhr -le $fhr_max ]; do
       fi
       export fcst_file=${modsys}.${IDATE}/${modsys}.t${INIT_HR}z.fv3_5km.f$(printf "%02d" $fhr).${DOM}.grib2
    elif [ ${MODELNAME} = href ]; then
-      ihr_avail="00 12"
+      if [ $DOMAIN = alaska ]; then
+         ihr_avail="06 18"
+      else
+         ihr_avail="00 12"
+      fi
       export fcst_file=${modsys}.${IDATE}/ensprod/${modsys}.t${INIT_HR}z.${DOM}.${ENSPROD}.f$(printf "%02d" $fhr).grib2
    elif [ ${MODELNAME} = hrrr ]; then
       if [ $fhr -le 18 ]; then
