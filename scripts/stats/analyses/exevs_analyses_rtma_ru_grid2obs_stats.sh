@@ -137,7 +137,7 @@ fi
 
 done
 
-log_dir="$DATA/logs/${modnam}${typtag}"
+log_dir="$DATA/logs/${MODELNAME}${typtag}"
 if [ -d $log_dir ]; then
   log_file_count=$(find $log_dir -type f | wc -l)
   if [[ $log_file_count -ne 0 ]]; then
