@@ -135,8 +135,6 @@ else
        echo "WARNING: NO RTMA-RU OR OBS DATA, or not gather time yet, METplus gather job will not run"
 fi
 
-done
-
 log_dir="$DATA/logs/${MODELNAME}${typtag}"
 if [ -d $log_dir ]; then
   log_file_count=$(find $log_dir -type f | wc -l)
@@ -151,6 +149,8 @@ if [ -d $log_dir ]; then
      done
   fi
 fi
+
+done
 
 
 exit
