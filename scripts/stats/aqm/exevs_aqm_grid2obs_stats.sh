@@ -336,5 +336,20 @@ if [ ${vhr} = 04 ]; then
   done  ## biastyp loop
 fi  ## vhr if logic
 
+log_dir="$DATA/logs/${model1}"
+if [ -d $log_dir ]; then
+   log_file_count=$(find $log_dir -type f | wc -l)
+   if [[ $log_file_count -ne 0 ]]; then
+       log_files=("$log_dir"/*)
+       for log_file in "${log_files[@]}"; do
+          if [ -f "$log_file" ]; then
+             echo "Start: $log_file"
+             cat "$log_file"
+             echo "End: $log_file"
+          fi
+      done
+  fi
+fi
+
 exit
 
