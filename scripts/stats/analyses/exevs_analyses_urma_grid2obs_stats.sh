@@ -293,6 +293,5 @@ if [ -d $log_dir ]; then
    fi
 fi
 
-
 exit
 

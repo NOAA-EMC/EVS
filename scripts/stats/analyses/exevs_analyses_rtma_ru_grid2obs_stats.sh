@@ -101,8 +101,6 @@ then
 run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstANALYSES_RU_obsNDAS_PrepBufr.conf $PARMevs/metplus_config/machine.conf
 export err=$?; err_chk
 
-cat $DATA/logs/${MODELNAME}${typtag}/metplus_pb2nc_pointstat.log*
-mv $DATA/logs/${MODELNAME}${typtag}/metplus_pb2nc_pointstat.log* $DATA/logs
 
 mkdir -p $COMOUTsmall
 
@@ -129,8 +127,6 @@ then
        cd $finalstat
        run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstANALYSES_obsNDAS_GatherByDay.conf $PARMevs/metplus_config/machine.conf
        export err=$?; err_chk
-       cat $DATA/logs/${MODELNAME}${typtag}/metplus.statanalysis.log*
-       mv $DATA/logs/${MODELNAME}${typtag}/metplus.statanalysis.log* $DATA/logs
        if [ $SENDCOM = "YES" ]; then
            cpreq -v $finalstat/evs.stats.${regionnest}_ru${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal
        fi
