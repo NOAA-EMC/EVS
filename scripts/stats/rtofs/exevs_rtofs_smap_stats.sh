@@ -111,7 +111,7 @@ for vari in ${VARS}; do
       cpreq -v $STATSOUT/evs.stats.${COMPONENT}.${RUN}.${VERIF_CASE}_${VAR}.v${VDATE}.stat $COMOUTfinal/.
     fi
   else
-     echo "WARNNG: Missing RTOFS_${RUNupper}_$VARupper stat files for $VDATE in $STATSDIR/$RUN.$VDATE/$VAR/*.stat" 
+     echo "WARNING: Missing RTOFS_${RUNupper}_$VARupper stat files for $VDATE in $STATSDIR/$RUN.$VDATE/$VAR/*.stat" 
   fi
 done
 
