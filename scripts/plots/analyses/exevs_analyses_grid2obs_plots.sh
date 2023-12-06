@@ -13,7 +13,6 @@ set -x
 
 mkdir -p $DATA/plots/logs
 export LOGDIR=$DATA/plots/logs
-mkdir -p $LOGFIN
 export STATDIR=$DATA/stats
 mkdir -p $STATDIR
 export PLOTDIR=$DATA/plots
