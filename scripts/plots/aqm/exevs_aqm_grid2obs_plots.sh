@@ -210,6 +210,21 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central Appalachia C
     done
 done
 
+log_dir="$LOGDIR"
+if [ -d $log_dir ]; then
+   log_file_count=$(find $log_dir -type f | wc -l)
+   if [[ $log_file_count -ne 0 ]]; then
+       log_files=("$log_dir"/*)
+       for log_file in "${log_files[@]}"; do
+          if [ -f "$log_file" ]; then
+           echo "Start: $log_file"
+           cat "$log_file"
+           echo "End: $log_file"
+         fi
+       done
+   fi   
+fi 
+
 # Tar up plot directory and copy to the plot output directory
 
 cd ${PLOTDIR}
@@ -312,7 +327,7 @@ for region in CONUS CONUS_East CONUS_West CONUS_South CONUS_Central; do
     done
 done
 
-log_dir="$LOGDIR"
+log_dir="${LOGDIR_headline}"
 if [ -d $log_dir ]; then
    log_file_count=$(find $log_dir -type f | wc -l)
    if [[ $log_file_count -ne 0 ]]; then
@@ -326,6 +341,8 @@ if [ -d $log_dir ]; then
         done
    fi
 fi
+
+
 
 # Tar up headline plot tarball and copy to the headline plot directory
 
