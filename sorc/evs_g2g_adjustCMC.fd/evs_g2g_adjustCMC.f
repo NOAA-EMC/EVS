@@ -16,8 +16,9 @@ C            NAEFS member files
 C         3. The NAEFS verification will use GFS anaylysis as validation
 C            data
 C            
-C    Last update: 11/17/2023, Binbin Zhou  Lynker@?NCEP/EMC
-C
+C    Last update: 12/5/2023, Binbin Zhou  Lynker@?NCEP/EMC
+C                    Remove goto statements required by NCO
+       
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       use grib_mod
 C  raw data
@@ -30,6 +31,7 @@ C  raw data
        integer kpd1(100),kpd2(100),kpd12_gefs(100),kpd12_cmce(100),
      +    kpd11_gefs(100),  kpd11_cmce(100), kpd10_gefs(100),
      +    kpd10_cmce(100) 
+       integer read_gfs, read_cmc, read_gefs, read_cmce, write_cmce
 
        type(gribfield) :: gfld_gfsanl,gfld_cmcanl,gfld_gefs,gfld_cmce
 
@@ -155,7 +157,10 @@ C  raw data
        kpd10_gefs(12)=103
        kpd10_cmce(12)=103
   
-
+       read_gfs=1
+       read_gefs=1
+       read_cmc=1
+       read_cmce=1
 
         read (*,*) gefs_file_list, cmce_file_list
 
@@ -207,10 +212,13 @@ C  raw data
      +      gfld_gfsanl,iret)
           if ( iret.eq.0) then
            gfsa(i,:) = gfld_gfsanl%fld(:)
+           read_gfs=1
           else
-           !write(*,*) 'gfsanl read iret=', iret
-           goto 100
+           write(*,*) 'gfsanl read iret=', iret
+           read_gfs=0
           end if
+
+         if (read_gfs.eq.1) then
 
           jpd12=kpd12_cmce(i)
           jpd11=kpd11_cmce(i)
@@ -222,11 +230,13 @@ C  raw data
      +      gfld_cmcanl,iret)
           if ( iret.eq.0) then
            cmca(i,:) = gfld_cmcanl%fld(:)
+           read_cmc=1
           else
-           !write(*,*) 'cmcanl read iret=', iret
-           goto 100
+           write(*,*) 'cmcanl read iret=', iret
+           read_cmc=0
           end if
 
+         end if
 100       continue
 
           call baclose(8,ierr)
@@ -283,9 +293,10 @@ C  raw data
      +      gfld_gefs,iret)
           if ( iret.eq.0) then
             gefs(i,:) = gfld_gefs%fld(:)
+            read_gefs=1
           else
-           !write(*,*) 'gefsmbr read iret=', iret
-           goto 1000
+            write(*,*) 'gefsmbr read iret=', iret
+            read_gefs=0
           end if
 
           jpd12=kpd12_cmce(i)
@@ -293,16 +304,19 @@ C  raw data
           jpd10=kpd10_cmce(i)
 
           !read cmce member files
+
           jpdtn=1
           call readGB2(ncmce,jpdtn,jpd1,jpd2,jpd10,jpd11,jpd12,
      +      gfld_cmce,iret)
           if ( iret.eq.0) then
             cmce(i,:) = gfld_cmce%fld(:)
+            read_cmce=1
           else
-           !write(*,*) 'cmcembr read iret=', iret
-           goto 1000
+           write(*,*) 'cmcembr read iret=', iret
+           read_cmce=0
           end if
 
+         if ( (read_gefs.eq.1).and.(read_cmce.eq.1) ) then  
           !Calculate the difference between GFS and CMC analysis
           do k=1,jf
        
@@ -333,6 +347,8 @@ C  raw data
             write (*,*) iret, ' putgb2 to nadj error' 
            end if
            !write(*,*) 'putgb2 for ',m,i,' done' 
+
+         end if
 
 1000    continue
 

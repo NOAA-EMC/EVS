@@ -214,7 +214,6 @@ export output_base=${WORK}/pb2nc
      fi
    done
 
-
  else
   if [ $SENDMAIL = YES ] ; then
    export subject="Prepbufr Data Missing for EVS ${COMPONENT}"
