@@ -331,8 +331,6 @@ else
   run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/PointStat_fcstANALYSES_obsNDAS_PrepBufr.conf $PARMevs/metplus_config/machine.conf 
 fi
 export err=$?; err_chk
-cat $DATA/logs/${MODELNAME}${typtag}/metplus_pb2nc_pointstat.log*
-mv $DATA/logs/${MODELNAME}${typtag}/metplus_pb2nc_pointstat.log* $DATA/logs
 
 mkdir -p $COMOUTsmall
 if [ $SENDCOM = "YES" ]; then
@@ -358,8 +356,6 @@ then
        cd $finalstat
        run_metplus.py $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/StatAnalysis_fcstANALYSES_obsNDAS_GatherByDay.conf $PARMevs/metplus_config/machine.conf
        export err=$?; err_chk
-       cat $DATA/logs/${MODELNAME}${typtag}/metplus.statanalysis.log*
-       mv $DATA/logs/${MODELNAME}${typtag}/metplus.statanalysis.log* $DATA/logs
        if [ $SENDCOM = "YES" ]; then
          cpreq -v $finalstat/evs.stats.${regionnest}${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal
        fi
@@ -367,7 +363,25 @@ else
        echo "WARNING: NO RTMA OR OBS DATA, or not gather time yet, METplus gather job will not run"
 fi
 
+
+log_dir="$DATA/logs/${MODELNAME}${typtag}"
+if [ -d $log_dir ]; then
+  log_file_count=$(find $log_dir -type f | wc -l)
+  if [[ $log_file_count -ne 0 ]]; then
+     log_files=("$log_dir"/*)
+     for log_file in "${log_files[@]}"; do
+       if [ -f "$log_file" ]; then
+         echo "Start: $log_file"
+         cat "$log_file"
+         echo "End: $log_file"
+       fi
+    done
+  fi
+fi
+
 done
+
+
 
 exit
 
