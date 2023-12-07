@@ -122,11 +122,11 @@ def create_df(logger, stats_dir, pruned_data_dir, line_type, date_range,
         fpath = os.path.join(pruned_data_dir,f'{str(model)}.stat')
         if not os.path.isfile(fpath):
             logger.warning(
-                f"The stat file for {str(model)} does not exist in"
+                f"The stat file for {str(model)} is not a model in"
                 + f" {pruned_data_dir}."
             )
             logger.warning(
-                f"You might check whether the stats_dir ({stats_dir}) includes"
+                f"It may be a group name, or else check if the stats_dir ({stats_dir}) includes"
                 + f" {str(model)} data according to the output_base template,"
                 + f" given domain, variable, etc..."
             )
