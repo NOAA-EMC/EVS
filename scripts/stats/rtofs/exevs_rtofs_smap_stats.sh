@@ -40,38 +40,49 @@ fi
 # check if obs file exists; send alert email if not
 export JDATE=$(date2jday.sh $VDATE)
 min_size=2404
-actual_size=$(wc -c <"$DCOMROOT/$VDATE/validation_data/marine/smap/SP_D${JDATE}_Map_SATSSS_data_1day.nc")
-if [ -s $DCOMROOT/$VDATE/validation_data/marine/smap/SP_D${JDATE}_Map_SATSSS_data_1day.nc ] && [ $actual_size -ge $min_size ]; then
-   if [ -s $COMIN/prep/$COMPONENT/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_ice.$RUN.nc ] ; then
-      for fday in 0 1 2 3 4 5 6 7 8; do
-        fhr=$(($fday * 24))
-        fhr2=$(printf "%02d" "${fhr}")
-        export fhr3=$(printf "%03d" "${fhr}")
-        INITDATE=$($NDATE -${fhr} ${VDATE}${vhr} | cut -c 1-8)
-        if [ -s $COMIN/prep/$COMPONENT/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f${fhr3}_prog.$RUN.nc ] ; then
-          for vari in ${VARS}; do
-            export VAR=$vari
-            export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
-            mkdir -p $STATSDIR/$RUN.$VDATE/$VAR
-            if [ -s $COMOUTsmall/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
-              cpreq -v $COMOUTsmall/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/$RUN.$VDATE/$VAR/.
-            else
-              run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
-              -c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/GridStat_fcstRTOFS_obsSMAP_climoWOA23.conf
-              export err=$?; err_chk
-              if [ $SENDCOM = "YES" ]; then
-                  mkdir -p $COMOUTsmall/$VAR
-                  cpreq -v $STATSDIR/$RUN.$VDATE/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
-              fi
-            fi
-          done
-        else
-          echo "WARNING: Missing RTOFS f${fhr3} prog file for $VDATE: $COMIN/prep/$COMPONENT/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f${fhr3}_prog.$RUN.nc"
-        fi
-      done
-   else
-     echo "WARNING: Missing RTOFS f000 ice file for $VDATE: $COMIN/prep/$COMPONENT/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_ice.$RUN.nc"
-   fi
+if [ -s $DCOMROOT/$VDATE/validation_data/marine/smap/SP_D${JDATE}_Map_SATSSS_data_1day.nc ]; then
+	actual_size=$(wc -c <"$DCOMROOT/$VDATE/validation_data/marine/smap/SP_D${JDATE}_Map_SATSSS_data_1day.nc")
+	if [ $actual_size -ge $min_size ]; then
+   		if [ -s $COMIN/prep/$COMPONENT/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_ice.$RUN.nc ] ; then
+      			for fday in 0 1 2 3 4 5 6 7 8; do
+        			fhr=$(($fday * 24))
+        			fhr2=$(printf "%02d" "${fhr}")
+        			export fhr3=$(printf "%03d" "${fhr}")
+        			INITDATE=$($NDATE -${fhr} ${VDATE}${vhr} | cut -c 1-8)
+        			if [ -s $COMIN/prep/$COMPONENT/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f${fhr3}_prog.$RUN.nc ] ; then
+          				for vari in ${VARS}; do
+            					export VAR=$vari
+            					export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
+            					mkdir -p $STATSDIR/$RUN.$VDATE/$VAR
+            					if [ -s $COMOUTsmall/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat ]; then
+              						cpreq -v $COMOUTsmall/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $STATSDIR/$RUN.$VDATE/$VAR/.
+            					else
+              						run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
+              						-c $CONFIGevs/$STEP/$COMPONENT/${VERIF_CASE}/GridStat_fcstRTOFS_obsSMAP_climoWOA23.conf
+              						export err=$?; err_chk
+              						if [ $SENDCOM = "YES" ]; then
+                  						mkdir -p $COMOUTsmall/$VAR
+                  						cpreq -v $STATSDIR/$RUN.$VDATE/$VAR/grid_stat_RTOFS_${RUNupper}_${VARupper}_${fhr2}0000L_${VDATE}_000000V.stat $COMOUTsmall/$VAR/.
+              						fi
+            					fi
+          				done
+        			else
+          				echo "WARNING: Missing RTOFS f${fhr3} prog file for $VDATE: $COMIN/prep/$COMPONENT/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f${fhr3}_prog.$RUN.nc"
+        			fi
+      			done
+   		else
+     			echo "WARNING: Missing RTOFS f000 ice file for $VDATE: $COMIN/prep/$COMPONENT/rtofs.$VDATE/$RUN/rtofs_glo_2ds_f000_ice.$RUN.nc"
+   		fi
+	else
+		echo "WARNING:  Missing SMAP data file for $VDATE: $DCOMROOT/$VDATE/validation_data/marine/smap/SP_D${JDATE}_Map_SATSSS_data_1day.nc"
+		if [ $SENDMAIL = YES ] ; then
+			export subject="SMAP Data Missing for EVS RTOFS"
+			echo "Warning: No SMAP data was available for valid date $VDATE." > mailmsg
+			echo "Missing file is $DCOMROOT/$VDATE/validation_data/marine/smap/SP_D${JDATE}_Map_SATSSS_data_1day.nc." >> mailmsg
+			cat mailmsg | mail -s "$subject" $MAILTO
+		fi
+
+	fi
 else
    echo "WARNING:  Missing SMAP data file for $VDATE: $DCOMROOT/$VDATE/validation_data/marine/smap/SP_D${JDATE}_Map_SATSSS_data_1day.nc"
    if [ $SENDMAIL = YES ] ; then
@@ -90,7 +101,7 @@ for vari in ${VARS}; do
   export VARupper=$(echo $VAR | tr '[a-z]' '[A-Z]')
   export STATSOUT=$STATSDIR/$RUN.$VDATE/$VAR
   mkdir -p $STATSOUT
-  VAR_file_count=$(find  $STATSOUT -type f -name "*.stat" |wc -l)
+  VAR_file_count=$(find $STATSOUT -type f -name "*.stat" |wc -l)
   if [[ $VAR_file_count -ne 0 ]]; then
     # sum small stat files into one big file using Stat_Analysis
     run_metplus.py -c ${PARMevs}/metplus_config/machine.conf \
@@ -100,7 +111,7 @@ for vari in ${VARS}; do
       cpreq -v $STATSOUT/evs.stats.${COMPONENT}.${RUN}.${VERIF_CASE}_${VAR}.v${VDATE}.stat $COMOUTfinal/.
     fi
   else
-     echo "WARNNG: Missing RTOFS_${RUNupper}_$VARupper stat files for $VDATE in $STATSDIR/$RUN.$VDATE/$VAR/*.stat" 
+     echo "WARNING: Missing RTOFS_${RUNupper}_$VARupper stat files for $VDATE in $STATSDIR/$RUN.$VDATE/$VAR/*.stat" 
   fi
 done
 
