@@ -41,7 +41,7 @@ evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 export envir=prod
 export SENDCOM=${SENDCOM:-YES}
 export SENDECF=${SENDECF:-YES}
-export SENDDBN=${SENDDBN:-YES}
+export SENDDBN=${SENDDBN:-NO}
 export KEEPDATA=${KEEPDATA:-YES}
 
 export MAILTO='alicia.bentley@noaa.gov,samira.ardani@noaa.gov'
