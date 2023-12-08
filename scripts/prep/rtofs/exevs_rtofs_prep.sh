@@ -86,7 +86,7 @@ for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
         mkdir -p $DATA/rtofs.$INITDATE/$RUN
         for ftype in prog diag ice; do
             rtofs_grid_file=$FIXevs/cdo_grids/rtofs_$RUN.grid
-            rtofs_native_filename=$COMOUTprep/rtofs.$INITDATE/rtofs_glo_2ds_${lead}_${ftype}.nc
+            rtofs_native_filename=$EVSINprep/rtofs.$INITDATE/rtofs_glo_2ds_${lead}_${ftype}.nc
             tmp_rtofs_latlon_filename=$DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f${fhr}_${ftype}.$RUN.nc
             output_rtofs_latlon_filename=$COMOUTprep/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f${fhr}_${ftype}.$RUN.nc
             if [ ! -s $output_rtofs_latlon_filename ]; then
@@ -104,7 +104,7 @@ for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
         if [ $RUN = 'argo' ] ; then
             for ftype in t s; do
                 rtofs_grid_file=$FIXevs/cdo_grids/rtofs_$RUN.grid
-                rtofs_native_filename=$COMOUTprep/rtofs.$INITDATE/rtofs_glo_3dz_${lead}_daily_3z${ftype}io.nc
+                rtofs_native_filename=$EVSINprep/rtofs.$INITDATE/rtofs_glo_3dz_${lead}_daily_3z${ftype}io.nc
                 tmp_rtofs_latlon_filename=$DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f${fhr}_daily_3z${ftype}io.$RUN.nc
                 output_rtofs_latlon_filename=$COMOUTprep/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f${fhr}_daily_3z${ftype}io.$RUN.nc
                 if [ ! -s $output_rtofs_latlon_filename ]; then
