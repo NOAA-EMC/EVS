@@ -52,7 +52,7 @@ rm -rf ${COMROOT}/evs/${evs_ver}/${STEP}/${COMPONENT}/${RUN}/${VERIF_CASE}
 export KEEPDATA=YES
 
 # CALL executable job script here
-$HOMEevs/jobs/${COMPONENT}/${STEP}/JEVS_HURRICANE_PLOTS
+$HOMEevs/jobs/JEVS_HURRICANE_PLOTS
 
 %include <tail.h>
 %manual

@@ -53,7 +53,7 @@ export KEEPDATA=YES
 
 
 # CALL executable job script here
-$HOMEevs/jobs/${COMPONENT}/${STEP}/JEVS_HURRICANE_PLOTS
+$HOMEevs/jobs/JEVS_HURRICANE_PLOTS
 
 %include <tail.h>
 %manual
