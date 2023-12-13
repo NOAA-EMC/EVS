@@ -306,6 +306,11 @@ if [ $SENDCOM = YES ]; then
             cpreq -vr $FILEn $COMOUTsmall/spatial_maps/.
         fi
     done
+    for FILEn in $MET_PLUS_OUT/*/pcp_combine/*/*a24h*; do
+        if [ -f "$FILEn" ]; then
+            cpreq -vr $FILEn $COMOUTsmall/spatial_maps/.
+        fi
+    done
 fi
 
 # Final Stats Job
