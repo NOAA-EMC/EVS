@@ -49,7 +49,7 @@ VERIF_TYPE = os.environ['VERIF_TYPE']
 # Define Settings
 INPUT_DIR = STAT_OUTPUT_BASE_DIR
 OUTPUT_DIR = SAVE_DIR
-LOGO_DIR = FIXevs
+LOGO_DIR = os.path.join(FIXevs,'logos')
 if VERIF_TYPE == 'ccpa':
     MODEL_INFO_DICT = {}
 else:
