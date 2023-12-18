@@ -360,7 +360,7 @@ then
          cpreq -v $finalstat/evs.stats.${regionnest}${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal
        fi
 else    
-       echo "WARNING: NO RTMA OR OBS DATA, or not gather time yet, METplus gather job will not run"
+       echo "NO RTMA OR OBS DATA, or not gather time yet, METplus gather job will not run"
 fi
 
 
