@@ -1,4 +1,4 @@
-#PBS -N evs_subseasonal_grid2obs_PrepBufr_plots_90days
+#PBS -N evs_subseasonal_grid2obs_prepbufr_plots_90days
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%

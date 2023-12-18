@@ -1,4 +1,4 @@
-#PBS -N evs_gefs_subseasonal_grid2obs_stats
+#PBS -N evs_subseasonal_gefs_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
