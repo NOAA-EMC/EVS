@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 from datetime import datetime, timedelta as td
 import numpy as np

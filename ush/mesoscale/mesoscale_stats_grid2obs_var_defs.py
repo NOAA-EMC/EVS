@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 generate_stats_jobs_dict = {
     'HGT': {
         'raob': {
