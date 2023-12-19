@@ -36,7 +36,7 @@ export SENDDBN=NO
 export vhr=00
 export past_days=90
 
-export met_v=${met_ver:0:4}
+
 export run_mpi=no
 export valid_time=both
 

@@ -7,7 +7,6 @@
 set -x 
 
 export PYTHONPATH=$HOMEevs/ush/$COMPONENT:$PYTHONPATH
-export met_v=${met_ver:0:4}
 cd $DATA
 
 export machine=WCOSS2
