@@ -46,8 +46,6 @@ export COMIN=${COMevs}
 export COMOUT=${COMevs}
 export modsys=rtma
 export MODELNAME=rtma_ru
-export config=$HOMEevs/parm/evs_config/analyses/config.evs.rtma.prod
-source $config
 export SENDMAIL=YES
 
 ############################################################

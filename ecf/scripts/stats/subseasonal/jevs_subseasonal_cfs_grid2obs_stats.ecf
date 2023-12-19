@@ -1,10 +1,10 @@
-#PBS -N evs_gefs_subseasonal_grid2grid_stats
+#PBS -N evs_subseasonal_cfs_grid2obs_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=02:00:00
-#PBS -l place=vscatter,select=1:ncpus=59:ompthreads=1:mem=70GB
+#PBS -l walltime=00:40:00
+#PBS -l place=vscatter,select=1:ncpus=8:ompthreads=1:mem=60GB
 #PBS -l debug=true
 
 export model=evs
@@ -47,16 +47,16 @@ if [ -n "%VHR:%" ]; then
 else
   export vhr=$($NDATE | cut -c 9-10)
 fi
-export nproc=59
+export nproc=8
 export USE_CFP=YES
 export NET=evs
 export RUN=atmos
-export MODELNAME=gefs
-export VERIF_CASE=grid2grid
+export MODELNAME=cfs
+export VERIF_CASE=grid2obs
+export COMIN=${COMevs}/prep/$COMPONENT/$RUN
 export pid=${pid:-$$}
 export outid=${outid:-"LL$job"}
 export DATA=${DATA:-${DATAROOT}/${jobid:?}}
-export COMIN=${COMevs}/prep/$COMPONENT/$RUN
 export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.${model}.${COMPONENT}.${MODELNAME}.${VERIF_CASE}.${STEP}
 
 ############################################################
