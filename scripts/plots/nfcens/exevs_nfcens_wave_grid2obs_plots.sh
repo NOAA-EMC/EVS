@@ -165,7 +165,9 @@ fi
 msg="JOB $job HAS COMPLETED NORMALLY."
 
 if [ $SENDDBN = YES ]; then
-	$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.*.tar
+	for file in $(ls ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.*.tar);do
+		$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $file
+	done
 fi
 
 
