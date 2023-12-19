@@ -135,7 +135,7 @@ then
        fi
 
 else
-       echo "NO RTMA-RU OR OBS DATA, or not gather time yet, METplus gather job will not run"
+       echo "Not gather time yet, METplus gather job will not run"
 fi
 
 log_dir="$DATA/logs/${MODELNAME}${typtag}"
