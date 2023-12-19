@@ -60,9 +60,6 @@ export MODELNAME=rtma_ru
 
 export MAILTO="perry.shafran@noaa.gov,alicia.bentley@noaa.gov"
 
-export config=$HOMEevs/parm/evs_config/analyses/config.evs.rtma.prod
-source $config
-
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_ANALYSES_STATS
 
