@@ -79,6 +79,7 @@ for NEST in "conus" "ak" "pr" "hi"; do
     # Copy files to desired location
     #all commands to copy output files into the correct EVS COMOUT directory
     if [ $SENDCOM = YES ]; then
+        sleep 1 # offset cpreq from other jobs run simultaneously
         for OBS_DIR_PATH in $DATA/$VERIF_CASE/data/$VERIF_TYPE/*; do
             OBS_DIR=$(echo ${OBS_DIR_PATH##*/})
             mkdir -p $COMOUT/$OBS_DIR

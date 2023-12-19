@@ -117,6 +117,7 @@ i=1
       # Copy final output to $COMOUT
       if [ $SENDCOM = YES ]; then
          mkdir -p $COMOUT/${modsys}.${IDATE}
+         sleep 20 # offset cpreq from other jobs run simultaneously
          for FILE in $DATA/pcp_combine/${modsys}.${IDATE}/*; do
             cpreq -v $FILE $COMOUT/${modsys}.${IDATE}
          done
