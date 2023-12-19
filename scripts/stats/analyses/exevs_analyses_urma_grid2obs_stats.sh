@@ -11,6 +11,9 @@ set -x
 
 # Set up initial directories and initialize variables
 
+export config=$PARMevs/evs_config/$COMPONENT/config.evs.urma.prod
+source $config
+
 mkdir -p $DATA/logs
 mkdir -p $DATA/stat
 export finalstat=$DATA/final
@@ -273,7 +276,7 @@ then
 	 cpreq -v $finalstat/evs.stats.${regionnest}${typtag}.${RUN}.${VERIF_CASE}.v${VDATE}.stat $COMOUTfinal
        fi
 else    
-       echo "WARNING: NO URMA OR OBS DATA, or not gather time yet, METplus gather job will not run"
+       echo "Not gather time yet, METplus gather job will not run"
 fi
 
 log_dir="$DATA/logs/${MODELNAME}${typtag}"
