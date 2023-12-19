@@ -49,8 +49,6 @@ export outid=${outid:-"LL$job"}
 export DATA=${DATA:-${DATAROOT}/${jobid:?}}
 export COMIN=${COMevs}
 export COMOUT=${COMevs}
-export config=$HOMEevs/parm/evs_config/analyses/config.evs.rtma.prod
-source $config
 export SENDMAIL=YES
 
 ############################################################
