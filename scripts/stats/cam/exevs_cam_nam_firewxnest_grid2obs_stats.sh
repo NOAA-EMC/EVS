@@ -2,6 +2,9 @@
 
 set -x
 
+export config=$HOMEevs/parm/evs_config/cam/config.evs.cam_nam_firewxnest.prod
+source $config
+
 mkdir -p $DATA/logs
 mkdir -p $DATA/stat
 mkdir -p $DATA/statanalysis
