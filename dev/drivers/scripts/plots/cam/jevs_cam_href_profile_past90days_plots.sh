@@ -15,7 +15,7 @@ export HOMEevs=/lfs/h2/emc/vpppg/noscrub/${USER}/EVS
 
 source $HOMEevs/versions/run.ver
 
-export met_v=${met_ver:0:4}
+
 
 export envir=prod
 
