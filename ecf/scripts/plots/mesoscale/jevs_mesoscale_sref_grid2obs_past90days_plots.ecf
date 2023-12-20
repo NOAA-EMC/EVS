@@ -59,7 +59,6 @@ export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=sref
 export past_days=90
-export met_v=${met_ver:0:4}
 export run_mpi=yes
 export valid_time=both
 export COMIN=${COMevs}

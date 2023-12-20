@@ -58,7 +58,6 @@ export NET=evs
 export RUN=atmos
 export VERIF_CASE=precip_spatial
 export MODELNAME=sref
-export met_v=${met_ver:0:4}
 export COMIN=${COMevs}
 export COMOUT=${COMevs}/${STEP}/${COMPONENT}
 export pid=${pid:-$$}
