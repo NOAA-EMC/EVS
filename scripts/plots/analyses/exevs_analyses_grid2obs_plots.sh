@@ -11,6 +11,9 @@ set -x
 
 # Set up initial directories and initialize variables
 
+export config=$PARMevs/evs_config/$COMPONENT/config.evs.rtma.prod
+source $config
+
 mkdir -p $DATA/plots/logs
 export LOGDIR=$DATA/plots/logs
 export STATDIR=$DATA/stats
