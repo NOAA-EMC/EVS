@@ -49,9 +49,6 @@ export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 
 export MAILTO=${MAILTO:-'perry.shafran@noaa.gov,alicia.bentley@noaa.gov'}
 
-export config=$HOMEevs/parm/evs_config/cam/config.evs.cam_nam_firewxnest.prod
-source $config
-
 # CALL executable job script here
 $HOMEevs/jobs/JEVS_CAM_STATS
 

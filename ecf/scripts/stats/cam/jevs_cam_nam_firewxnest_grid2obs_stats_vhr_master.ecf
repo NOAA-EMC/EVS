@@ -59,8 +59,6 @@ export COMOUT=${COMevs}/${STEP}/${COMPONENT}
 export pid=${pid:-$$}
 export outid=${outid:-"LL$job"}
 export DATA=${DATA:-${DATAROOT}/${jobid:?}}
-export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.${COMPONENT}_${MODELNAME}.${envir}
-source $config
 
 ############################################################
 # Execute j-job

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # =============================================================================
 #
 # NAME: mesoscale_create_output_dirs.py

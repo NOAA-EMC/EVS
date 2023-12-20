@@ -86,7 +86,7 @@ for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
         mkdir -p $DATA/rtofs.$INITDATE/$RUN
         for ftype in prog diag ice; do
             rtofs_grid_file=$FIXevs/cdo_grids/rtofs_$RUN.grid
-            rtofs_native_filename=$COMOUTprep/rtofs.$INITDATE/rtofs_glo_2ds_${lead}_${ftype}.nc
+            rtofs_native_filename=$EVSINprep/rtofs.$INITDATE/rtofs_glo_2ds_${lead}_${ftype}.nc
             tmp_rtofs_latlon_filename=$DATA/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f${fhr}_${ftype}.$RUN.nc
             output_rtofs_latlon_filename=$COMOUTprep/rtofs.$INITDATE/$RUN/rtofs_glo_2ds_f${fhr}_${ftype}.$RUN.nc
             if [ ! -s $output_rtofs_latlon_filename ]; then
@@ -104,7 +104,7 @@ for rcase in ghrsst smos smap aviso osisaf ndbc argo; do
         if [ $RUN = 'argo' ] ; then
             for ftype in t s; do
                 rtofs_grid_file=$FIXevs/cdo_grids/rtofs_$RUN.grid
-                rtofs_native_filename=$COMOUTprep/rtofs.$INITDATE/rtofs_glo_3dz_${lead}_daily_3z${ftype}io.nc
+                rtofs_native_filename=$EVSINprep/rtofs.$INITDATE/rtofs_glo_3dz_${lead}_daily_3z${ftype}io.nc
                 tmp_rtofs_latlon_filename=$DATA/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f${fhr}_daily_3z${ftype}io.$RUN.nc
                 output_rtofs_latlon_filename=$COMOUTprep/rtofs.$INITDATE/$RUN/rtofs_glo_3dz_f${fhr}_daily_3z${ftype}io.$RUN.nc
                 if [ ! -s $output_rtofs_latlon_filename ]; then
@@ -138,7 +138,9 @@ for ftype in nh sh; do
     input_osisaf_file=$DCOMROOT/$VDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc
     tmp_osisaf_file=$DATA/rtofs.$VDATE/$RUN/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc
     output_osisaf_file=$COMOUTprep/rtofs.$VDATE/$RUN/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc
-    actual_size_osisaf=$(wc -c <"$DCOMROOT/$VDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc")
+    if [ -s $input_osisaf_file ]; then
+    	actual_size_osisaf=$(wc -c <"$DCOMROOT/$VDATE/seaice/osisaf/ice_conc_${ftype}_polstere-100_multi_${VDATE}1200.nc")
+    fi
     if [[ ! -s $input_osisaf_file || $actual_size_osisaf -lt $min_size ]]; then
 	    if [ $SENDMAIL = YES ] ; then
 		    export subject="OSI-SAF Data Missing for EVS RTOFS"
@@ -197,10 +199,10 @@ if [ ! -d $COMOUTprep/rtofs.$VDATE/$RUN ]; then
     mkdir -p $COMOUTprep/rtofs.$VDATE/$RUN
 fi
 mkdir -p $DATA/rtofs.$VDATE/$RUN
-actual_size_argo_atlantic=$(wc -c <"$DCOMROOT/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_prof.nc")
-actual_size_argo_indian=$(wc -c <"$DCOMROOT/$VDATE/validation_data/marine/argo/indian_ocean/${VDATE}_prof.nc")
-actual_size_argo_pacific=$(wc -c <"$DCOMROOT/$VDATE/validation_data/marine/argo/pacific_ocean/${VDATE}_prof.nc")
 if [ -s $DCOMROOT/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_prof.nc ] && [ -s $DCOMROOT/$VDATE/validation_data/marine/argo/indian_ocean/${VDATE}_prof.nc ] && [ -s $DCOMROOT/$VDATE/validation_data/marine/argo/pacific_ocean/${VDATE}_prof.nc ]; then
+	actual_size_argo_atlantic=$(wc -c <"$DCOMROOT/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_prof.nc")
+	actual_size_argo_indian=$(wc -c <"$DCOMROOT/$VDATE/validation_data/marine/argo/indian_ocean/${VDATE}_prof.nc")
+	actual_size_argo_pacific=$(wc -c <"$DCOMROOT/$VDATE/validation_data/marine/argo/pacific_ocean/${VDATE}_prof.nc")
 	if [ $actual_size_argo_atlantic -gt $min_size ] && [ $actual_size_argo_indian -gt $min_size ] && [ $actual_size_argo_pacific -gt $min_size ] ; then
 		tmp_argo_file=$DATA/rtofs.$VDATE/$RUN/argo.${VDATE}.nc
 		output_argo_file=$COMOUTprep/rtofs.$VDATE/$RUN/argo.${VDATE}.nc
@@ -219,6 +221,13 @@ if [ -s $DCOMROOT/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_pro
 			echo "Missing file is $DCOMROOT/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_prof.nc, $DCOMROOT/$VDATE/validation_data/marine/argo/indian_ocean/${VDATE}_prof.nc, and/or $DCOMROOT/$VDATE/validation_data/marine/argo/pacific_ocean/${VDATE}_prof.nc" >> mailmsg
 			cat mailmsg | mail -s "$subject" $MAILTO
 		fi
+	fi
+else
+	if [ $SENDMAIL = YES ] ; then
+		export subject="Argo Data Missing for EVS RTOFS"
+		echo "Warning: No Argo data was available for valid date $VDATE." > mailmsg
+		echo "Missing file is $DCOMROOT/$VDATE/validation_data/marine/argo/atlantic_ocean/${VDATE}_prof.nc, $DCOMROOT/$VDATE/validation_data/marine/argo/indian_ocean/${VDATE}_prof.nc, and/or $DCOMROOT/$VDATE/validation_data/marine/argo/pacific_ocean/${VDATE}_prof.nc" >> mailmsg
+		cat mailmsg | mail -s "$subject" $MAILTO
 	fi
 fi
 
