@@ -97,10 +97,10 @@ fi
 #################################
 
 ${USHevs}/${COMPONENT}/evs_wave_timeseries.sh
-
+export err=$?; err_chk
 ## lead_averages
 ${USHevs}/${COMPONENT}/evs_wave_leadaverages.sh
-
+export err=$?; err_chk
 chmod 775 plot_all_${MODELNAME}_${RUN}_g2o_plots.sh
 
 ###########################################
@@ -165,7 +165,9 @@ fi
 msg="JOB $job HAS COMPLETED NORMALLY."
 
 if [ $SENDDBN = YES ]; then
-	$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.*.tar
+	for file in $(ls ${COMOUTplots}/${NET}.${STEP}.${COMPONENT}.${RUN}.*.tar);do
+		$DBNROOT/bin/dbn_alert MODEL EVS_RZDM $job $file
+	done
 fi
 
 
