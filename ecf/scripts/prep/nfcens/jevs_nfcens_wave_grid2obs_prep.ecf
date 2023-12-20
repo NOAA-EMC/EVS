@@ -1,4 +1,4 @@
-#PBS -N evs_nfcens_wave_prep
+#PBS -N evs_nfcens_wave_grid2obs_prep
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
