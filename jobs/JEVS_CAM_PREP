@@ -115,7 +115,7 @@ export COMINobsproc=${COMINobsproc:-$(compath.py ${envir}/com/obsproc/${obsproc_
 export DCOMINmrms=${DCOMINmrms:-$DCOMROOT/ldmdata/obs/upperair/mrms}
 export DCOMINspc=${DCOMINspc:-$DCOMROOT}
 
-export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT/$RUN)}
+export COMOUT=${COMOUT:-$(compath.py -o $NET/$evs_ver/$STEP/$COMPONENT)}
 
 mkdir -p $COMOUT
 

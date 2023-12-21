@@ -16,8 +16,6 @@ if [ "${STEP}" = "stats" ]; then
    
    COMOUT_RUN_VDATE_VERIF_CASE=${COMOUT}/${RUN}.${VDATE}/${MODELNAME}/${VERIF_CASE}
    
-   DAT1=${DATA%/*};	#echo "DAT1 = ${DAT1}"
-   
    DAT2a=${VERIF_CASE}/METplus_output/${VERIF_TYPE}/point_stat/${MODELNAME}.${VDATE}
    
    TDAT=${DATA}/${DAT2a}
@@ -30,26 +28,4 @@ if [ "${STEP}" = "stats" ]; then
       fi
    fi
    
-   DAT2=$(find ${DAT1}/ -type d | grep ${DAT2a} | sort | uniq)
-   echo ""
-   for DAT3 in $DAT2; do
-      if [ "$DAT3" != "$TDAT" ]; then 
-         echo "Looking : $DAT3"
-	 cd $TDAT; # lst=$(ls point_stat* 2>/dev/null | sort);
-	 ls point_stat* 2>/dev/null | sort > ${DATA}/lst.tt
-	 cd $DAT3; # lss=$(ls point_stat* 2>/dev/null | sort);
-	 ls point_stat* 2>/dev/null | sort > ${DATA}/lss.tt
-
-	 lsc=$(comm -23 ${DATA}/lss.tt ${DATA}/lst.tt)
-	 rm -f ${DATA}/lss.tt ${DATA}/lst.tt
-	 
-	 cnc=${#lsc}; # echo $cnc;
-         if [ $cnc -gt 0 ]; then
-            for f in $lsc; do
-               echo "cpreq -pv ${DAT3}/${f} ${TDAT}/"
-	       cpreq -pv ${DAT3}/${f} ${TDAT}/
-             done
-	 fi
-      fi
-   done
 fi
