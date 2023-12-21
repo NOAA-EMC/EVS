@@ -250,12 +250,13 @@ if [ -s $EVSINmrms/${obs_file} ]; then
    obs_found=1
 
 else
-   export subject="MRMS Prep Data Missing for EVS ${COMPONENT}"
-   echo "Warning: The MRMS ${MRMS_PRODUCT} file is missing for valid date ${VDATE}${vhr}. METplus will not run." > mailmsg
-   echo "Missing file is $EVSINmrms/${obs_file}" >> mailmsg
-   echo "Job ID: $jobid" >> mailmsg
-   cat mailmsg | mail -s "$subject" $MAILTO
-
+   if [ $SENDMAIL = YES ]; then
+      export subject="MRMS Prep Data Missing for EVS ${COMPONENT}"
+      echo "Warning: The MRMS ${MRMS_PRODUCT} file is missing for valid date ${VDATE}${vhr}. METplus will not run." > mailmsg
+      echo "Missing file is $EVSINmrms/${obs_file}" >> mailmsg
+      echo "Job ID: $jobid" >> mailmsg
+      cat mailmsg | mail -s "$subject" $MAILTO
+   fi
 fi
 
 
