@@ -55,24 +55,29 @@ for ndbc_input_file in glob.glob(os.path.join(DCOMROOT,
     ndbc_output_file = os.path.join(COMOUTprep, f"rtofs.{VDATE_dt:%Y%m%d}",
                                     RUN, 'buoy', f"{buoy_id}.txt")
     if not os.path.exists(ndbc_output_file):
-        print(f"Trimming {ndbc_input_file} for {VDATE_dt:%Y%m%d}")
-        ndbc_input_file_df = pd.read_csv(
-            ndbc_input_file, sep=" ", skiprows=2, skipinitialspace=True,
-            keep_default_na=False, dtype='str', header=None,
-            names=ndbc_header1[1:].split()
-        )
-        trimmed_ndbc_input_file_df = ndbc_input_file_df[
-            (ndbc_input_file_df['YY'] == f"{VDATE_dt:%Y}") \
-             & (ndbc_input_file_df['MM'] == f"{VDATE_dt:%m}") \
-             & (ndbc_input_file_df['DD'] == f"{VDATE_dt:%d}")
-        ]
-        ndbc_tmp_file_data = open(ndbc_tmp_file, 'w')
-        ndbc_tmp_file_data.write(ndbc_header1)
-        ndbc_tmp_file_data.write(ndbc_header2)
-        ndbc_tmp_file_data.close()
-        trimmed_ndbc_input_file_df.to_csv(
-            ndbc_tmp_file, header=None, index=None, sep=' ', mode='a'
-        )
+        #print(f"Trimming {ndbc_input_file} for {VDATE_dt:%Y%m%d}")
+        #ndbc_input_file_df = pd.read_csv(
+        #    ndbc_input_file, sep=" ", skiprows=2, skipinitialspace=True,
+        #    keep_default_na=False, dtype='str', header=None,
+        #    names=ndbc_header1[1:].split()
+        #)
+        #trimmed_ndbc_input_file_df = ndbc_input_file_df[
+        #    (ndbc_input_file_df['YY'] == f"{VDATE_dt:%Y}") \
+        #     & (ndbc_input_file_df['MM'] == f"{VDATE_dt:%m}") \
+        #     & (ndbc_input_file_df['DD'] == f"{VDATE_dt:%d}")
+        #]
+        #ndbc_tmp_file_data = open(ndbc_tmp_file, 'w')
+        #ndbc_tmp_file_data.write(ndbc_header1)
+        #ndbc_tmp_file_data.write(ndbc_header2)
+        #ndbc_tmp_file_data.close()
+        #trimmed_ndbc_input_file_df.to_csv(
+        #    ndbc_tmp_file, header=None, index=None, sep=' ', mode='a'
+        #)
+        if os.path.getsize(ndbc_input_file) > 0:
+            print(f"Copying {ndbc_input_file} to {ndbc_tmp_file}")
+            shutil.copy2(ndbc_input_file, ndbc_tmp_file)
+        else:
+            print("WARNING: {ndbc_input_file} empty, 0 sized")
         if SENDCOM == 'YES':
             if os.path.getsize(ndbc_tmp_file) > 0:
                 print(f"Copying {ndbc_tmp_file} to {ndbc_output_file}")
