@@ -256,7 +256,7 @@ for valid in 00z 12z ; do
 	if [ $var = 700mb_wind_ens_freq_ge15.4 ] ; then
 	  var_new='windspeed.ge.30kt.p700'
 	elif [ $var = 700mb_wind_ens_freq_ge20.58 ] ; then
-	  var_new='windspeed.ge.40kt.P700'
+	  var_new='windspeed.ge.40kt.p700'
 	elif [ $var = 850mb_wind_ens_freq_ge15.4 ] ; then
 	  var_new='windspeed.ge.30kt.p850'
         elif [ $var = 850mb_wind_ens_freq_ge20.58 ] ; then
