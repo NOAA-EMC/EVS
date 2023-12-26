@@ -108,7 +108,7 @@ for valid_time in 00 12 ; do
        fi 	  
 
        if [ $VAR = CAPEsfc ] || [ $VAR = MLCAPE ] ; then 
-           doms="dom1 dom2 dom3 dom4 dome5 dom6 dom7 dom8"
+           doms="dom1 dom2 dom3 dom4 dom5 dom6 dom7 dom8"
        fi 
 
        for dom in $doms ; do 
