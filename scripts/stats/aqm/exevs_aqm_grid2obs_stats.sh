@@ -223,11 +223,19 @@ if [ ${vhr} = 11 ]; then
 
       ##  search for processed daily 8-hr ozone max model files
 
-      num_fcst_ozmax8=0
-      for chk_date in ${VDAYm1} ${VDAYm2} ${VDAYm3}; do
+      cdate=${VDATE}${vhr}
+      let ihr=0
+      num_fcst_in_metplus=0
+      recorded_temp_list=${DATA}/fcstlist_in_metplus
+      if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
+      while [ ${ihr} -le ${fcstmax} ]; do
+        chk_date=$(${NDATE} -${ihr} ${cdate} | cut -c1-8)
         ozmax8_preprocessed_file=${EVSINaqm}/atmos.${chk_date}/aqm/aqm.t${hour}z.max_8hr_o3${bctag}.${gridspec}.grib2
         if [ -s ${ozmax8_preprocessed_file} ]; then
-          let "num_fcst_ozmax8=num_fcst_ozmax8+1"
+          fhr=$(printf %2.2d ${ihr})
+          echo "${ozmax8_preprocessed_file} found"
+          echo ${fhr} >> ${recorded_temp_list}
+          let "num_fcst_in_metplus=num_fcst_in_metplus+1"
         else
           if [ $SENDMAIL = "YES" ]; then
             export subject="ozmax8${bctag} AQM Daily Forecast Data Missing for EVS ${COMPONENT}"
@@ -239,14 +247,20 @@ if [ ${vhr} = 11 ]; then
           echo "WARNING: No AQM max_8hr_o3${bctag} forecast was available for ${chk_date} t${hour}z"
           echo "WARNING: Missing file is ${ozmax8_preprocessed_file}"
         fi
+        let "ihr=ihr+24"
       done
-      echo "number of fcst day for ${outtyp}${bctag} == ${num_fcst_ozmax8}, index of daily obs_found == ${obs_daily_found}"
-      if [ ${num_fcst_ozmax8} -gt 0 -a ${obs_daily_found} -gt 0 ]; then 
+      export fcsthours_list=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' ${recorded_temp_list}`
+      export num_fcst_in_metplus
+      if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
+      echo "number of fcst lead in_metplus point_stat for ${outtyp}${bctag} == ${num_fcst_in_metplus}"
+      echo "index of daily obs_found == ${obs_daily_found}"
+      if [ ${num_fcst_in_metplus} -gt 0 -a ${obs_daily_found} -gt 0 ]; then 
+        export fcsthours=${fcsthours_list}
         run_metplus.py ${conf_file_dir}/${point_stat_conf_file} ${PARMevs}/metplus_config/machine.conf
         export err=$?; err_chk
       else
         echo "WARNING: NO OZMAX8 OBS OR MODEL DATA"
-        echo "WARNING: NUM FCST=${num_fcst_ozmax8}, INDEX OBS=${obs_daily_found}"
+        echo "WARNING: NUM FCST=${num_fcst_in_metplus}, INDEX OBS=${obs_daily_found}"
       fi
     done   ## hour loop
     if [ ${SENDCOM} = "YES" ]; then
@@ -292,11 +306,19 @@ if [ ${vhr} = 04 ]; then
 
       ##  search for forecast daily average PM model files
 
-      num_fcst_pmave=0
-      for chk_date in ${VDAYm1} ${VDAYm2} ${VDAYm3}; do
+      cdate=${VDATE}${vhr}
+      let ihr=0
+      num_fcst_in_metplus=0
+      recorded_temp_list=${DATA}/fcstlist_in_metplus
+      if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
+      while [ ${ihr} -le ${fcstmax} ]; do
+        chk_date=$(${NDATE} -${ihr} ${cdate} | cut -c1-8)
         fcst_file=${COMINaqm}/${dirname}.${chk_date}/${hour}/aqm.t${hour}z.ave_24hr_pm25${bctag}.${gridspec}.grib2
         if [ -s ${fcst_file} ]; then
-          let "num_fcst_pmave=num_fcst_pmave+1"
+          fhr=$(printf %2.2d ${ihr})
+          echo "${fcst_file} found"
+          echo ${fhr} >> ${recorded_temp_list}
+          let "num_fcst_in_metplus=num_fcst_in_metplus+1"
         else
           if [ $SENDMAIL = "YES" ]; then
             export subject="t${hour}z PMAVE${bctag} AQM Forecast Data Missing for EVS ${COMPONENT}"
@@ -309,10 +331,16 @@ if [ ${vhr} = 04 ]; then
           echo "WARNING: No AQM ave_24hr_pm25${bctag} forecast was available for ${chk_date} t${hour}z"
           echo "WARNING: Missing file is $fcst_file}"
         fi
+        let "ihr=ihr+24"
       done
-      echo "number of fcst day for ${outtyp}${bctag} == ${num_fcst_pmave} index of daily obs_found == ${obs_daily_found}"
+      export fcsthours_list=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' ${recorded_temp_list}`
+      export num_fcst_in_metplus
+      if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
+      echo "number of fcst lead in_metplus point_stat for ${outtyp}${bctag} == ${num_fcst_in_metplus}"
+      echo "index of daily obs_found == ${obs_daily_found}"
 
-      if [ ${num_fcst_pmave} -gt 0 -a ${obs_daily_found} -gt 0 ]; then
+      if [ ${num_fcst_in_metplus} -gt 0 -a ${obs_daily_found} -gt 0 ]; then
+        export fcsthours=${fcsthours_list}
         run_metplus.py ${conf_file_dir}/${point_stat_conf_file} ${PARMevs}/metplus_config/machine.conf
         export err=$?; err_chk
       else
