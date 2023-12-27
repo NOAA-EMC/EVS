@@ -163,8 +163,10 @@ for outtyp in awpozcon pm25; do
     mkdir -p ${COMOUTsmall}
     if [ ${SENDCOM} = "YES" ]; then
       cpdir=${DATA}/point_stat/${MODELNAME}
-      stat_file_count=$(find ${cpdir} -name "*${outtyp}${bcout}*" | wc -l)
-      if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
+      if [ -d ${cpdir} ]; then
+        stat_file_count=$(find ${cpdir} -name "*${outtyp}${bcout}*" | wc -l)
+        if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
+      fi
     fi
     if [ "${vhr}" == "23" ]; then
       mkdir -p ${COMOUTfinal}
@@ -271,8 +273,10 @@ if [ ${vhr} = 11 ]; then
     done   ## hour loop
     if [ ${SENDCOM} = "YES" ]; then
       cpdir=${DATA}/point_stat/${MODELNAME}
-      stat_file_count=$(find ${cpdir} -name "*${outtyp}${bcout}*" | wc -l)
-      if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
+      if [ -d ${cpdir} ]; then
+        stat_file_count=$(find ${cpdir} -name "*${outtyp}${bcout}*" | wc -l)
+        if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
+      fi
     fi
     stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
     if [ ${stat_file_count} -ne 0 ]; then cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}; fi
@@ -356,13 +360,15 @@ if [ ${vhr} = 04 ]; then
         export err=$?; err_chk
       else
         echo "WARNING: NO PMAVE OBS OR MODEL DATA"
-        echo "WARNING: NUM FCST=${num_fcst_pmave}, INDEX OBS=${obs_daily_found}"
+        echo "WARNING: NUM FCST=${num_fcst_in_metplus}, INDEX OBS=${obs_daily_found}"
       fi
     done   ## hour loop
     if [ ${SENDCOM} = "YES" ]; then
       cpdir=${DATA}/point_stat/${MODELNAME}
-      stat_file_count=$(find ${cpdir} -name "*${outtyp}${bcout}*" | wc -l)
-      if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
+      if [ -d ${cpdir} ]; then
+        stat_file_count=$(find ${cpdir} -name "*${outtyp}${bcout}*" | wc -l)
+        if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
+      fi
     fi
     stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
     if [ ${stat_file_count} -ne 0 ]; then cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}; fi
