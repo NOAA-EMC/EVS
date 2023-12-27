@@ -12,7 +12,7 @@ export OBTYPE=OSISAF
 export VAR=SIC
 
 mkdir -p $DATA/$STEP/$COMPONENT/$COMPONENT.$VDATE
-
+mkdir -p $DATA/tmp/rtofs
 # set major & minor MET version
 export MET_VERSION_major_minor=$(echo $MET_VERSION | sed "s/\([^.]*\.[^.]*\)\..*/\1/g")
 
