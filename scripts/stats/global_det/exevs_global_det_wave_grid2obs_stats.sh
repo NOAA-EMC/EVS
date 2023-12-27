@@ -118,7 +118,7 @@ if [[ $ncount_job -gt 0 ]]; then
         export MP_CMDFILE=${poe_script}
         nselect=$(cat $PBS_NODEFILE | wc -l)
         nnp=$(($nselect * $nproc))
-        launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+        launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,core cfp"
         $launcher $MP_CMDFILE
         export err=$?; err_chk
     else
@@ -229,7 +229,7 @@ if [[ $ncount_job -gt 0 ]]; then
         export MP_CMDFILE=${poe_script}
         nselect=$(cat $PBS_NODEFILE | wc -l)
         nnp=$(($nselect * $nproc))
-        launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+        launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,core cfp"
         $launcher $MP_CMDFILE
         export err=$?; err_chk
     else

@@ -334,13 +334,13 @@ for field in $fields ; do
     #**********************************************
     if [ $run_mpi = yes ] ; then
       if [ ${modnam} = gefs ] ; then
-        mpiexec -n 60 -ppn 60 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_${field}_${metplus_job}_g2o_poe.sh
+        mpiexec -n 60 -ppn 60 --cpu-bind verbose,core cfp ${DATA}/run_all_gens_${field}_${metplus_job}_g2o_poe.sh
         export err=$?; err_chk
       elif [ ${modnam} = cmce ] || [ ${modnam} = ecme ] ; then
-        mpiexec -n 24 -ppn 24 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_${field}_${metplus_job}_g2o_poe.sh
+        mpiexec -n 24 -ppn 24 --cpu-bind verbose,core cfp ${DATA}/run_all_gens_${field}_${metplus_job}_g2o_poe.sh
         export err=$?; err_chk
       else
-        mpiexec -n 12 -ppn 12 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_${field}_${metplus_job}_g2o_poe.sh
+        mpiexec -n 12 -ppn 12 --cpu-bind verbose,core cfp ${DATA}/run_all_gens_${field}_${metplus_job}_g2o_poe.sh
         export err=$?; err_chk
       fi
     else
