@@ -13,6 +13,8 @@
 ##                               of directory path depends on model verified hour.
 ##   10/31/2023   Ho-Chun Huang  Update EVS model input directory structure from AQMv6 to AQMv7
 ##   11/14/2023   Ho-Chun Huang  Replace cp with cpreq
+##   12/27/2023   Ho-Chun Huang  Select the lead hours input to the METPlus only when
+##                               model output daily fcst files existed.
 ##
 ##
 #######################################################################
