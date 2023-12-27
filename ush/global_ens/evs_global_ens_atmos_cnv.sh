@@ -130,7 +130,7 @@ done # end of validhours
 #********************************
 chmod 775 run_all_gens_cnv_poe.sh
 if [ $run_mpi = yes ] ; then
-  mpiexec -n 28 -ppn 28 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_cnv_poe.sh
+  mpiexec -n 28 -ppn 28 --cpu-bind verbose,core cfp ${DATA}/run_all_gens_cnv_poe.sh
   export err=$?; err_chk
 else
     ${DATA}/run_all_gens_cnv_poe.sh
@@ -166,7 +166,7 @@ done
 #**************************
 chmod 775 run_all_gens_cnv_poe2.sh
 if [ $run_mpi = yes ] ; then
-  mpiexec -n 14 -ppn 14 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_cnv_poe2.sh
+  mpiexec -n 14 -ppn 14 --cpu-bind verbose,core cfp ${DATA}/run_all_gens_cnv_poe2.sh
   export err=$?; err_chk
 else
     ${DATA}/run_all_gens_cnv_poe2.sh
