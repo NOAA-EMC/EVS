@@ -144,9 +144,11 @@ for outtyp in awpozcon pm25; do
         fi 
         ((ihr++))
       done
-      export fcsthours_list=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' ${recorded_temp_list}`
-      export num_fcst_in_metplus
+      if [ -s ${recorded_temp_list} ]; then
+        export fcsthours_list=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' ${recorded_temp_list}`
+      fi
       if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
+      export num_fcst_in_metplus
       echo "number of fcst lead in_metplus point_stat for ${outtyp}${bctag} == ${num_fcst_in_metplus}"
     
       if [ ${num_fcst_in_metplus} -gt 0 -a ${obs_hourly_found} -eq 1 ]; then
@@ -167,13 +169,15 @@ for outtyp in awpozcon pm25; do
     if [ "${vhr}" == "23" ]; then
       mkdir -p ${COMOUTfinal}
       stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
-      if [ ${stat_file_count} -ne 0 ]; then cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}; fi
-      cd ${finalstat}
-      run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file} ${PARMevs}/metplus_config/machine.conf
-      export err=$?; err_chk
-      if [ ${SENDCOM} = "YES" ]; then
-        cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_${stat_output_index}.v${VDATE}.stat
-        if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTfinal}; fi
+      if [ ${stat_file_count} -ne 0 ]; then
+        cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
+        cd ${finalstat}
+        run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file} ${PARMevs}/metplus_config/machine.conf
+        export err=$?; err_chk
+        if [ ${SENDCOM} = "YES" ]; then
+          cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_${stat_output_index}.v${VDATE}.stat
+          if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTfinal}; fi
+        fi
       fi
     fi
   done  ## biastyp loop
@@ -249,9 +253,11 @@ if [ ${vhr} = 11 ]; then
         fi
         let "ihr=ihr+24"
       done
-      export fcsthours_list=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' ${recorded_temp_list}`
-      export num_fcst_in_metplus
+      if [ -s ${recorded_temp_list} ]; then
+        export fcsthours_list=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' ${recorded_temp_list}`
+      fi
       if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
+      export num_fcst_in_metplus
       echo "number of fcst lead in_metplus point_stat for ${outtyp}${bctag} == ${num_fcst_in_metplus}"
       echo "index of daily obs_found == ${obs_daily_found}"
       if [ ${num_fcst_in_metplus} -gt 0 -a ${obs_daily_found} -gt 0 ]; then 
@@ -270,11 +276,14 @@ if [ ${vhr} = 11 ]; then
     fi
     stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
     if [ ${stat_file_count} -ne 0 ]; then cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}; fi
-    run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file} ${PARMevs}/metplus_config/machine.conf
-    export err=$?; err_chk
-    if [ ${SENDCOM} = "YES" ]; then
-      cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_ozmax8.v${VDATE}.stat
-      if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTfinal}; fi
+    stat_file_count=$(find ${finalstat} -name "*${outtyp}${bcout}*" | wc -l)
+    if [ ${stat_file_count} -ne 0 ]; then
+      run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file} ${PARMevs}/metplus_config/machine.conf
+      export err=$?; err_chk
+      if [ ${SENDCOM} = "YES" ]; then
+        cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_ozmax8.v${VDATE}.stat
+        if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTfinal}; fi
+      fi
     fi
   done  ## biastyp loop
 fi  ## vhr if logic
@@ -333,9 +342,11 @@ if [ ${vhr} = 04 ]; then
         fi
         let "ihr=ihr+24"
       done
-      export fcsthours_list=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' ${recorded_temp_list}`
-      export num_fcst_in_metplus
+      if [ -s ${recorded_temp_list} ]; then
+        export fcsthours_list=`awk -v d=", " '{s=(NR==1?s:s d)$0}END{print s}' ${recorded_temp_list}`
+      fi
       if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
+      export num_fcst_in_metplus
       echo "number of fcst lead in_metplus point_stat for ${outtyp}${bctag} == ${num_fcst_in_metplus}"
       echo "index of daily obs_found == ${obs_daily_found}"
 
@@ -355,11 +366,14 @@ if [ ${vhr} = 04 ]; then
     fi
     stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
     if [ ${stat_file_count} -ne 0 ]; then cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}; fi
-    run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file} ${PARMevs}/metplus_config/machine.conf
-    export err=$?; err_chk
-    if [ ${SENDCOM} = "YES" ]; then
-      cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_pmave.v${VDATE}.stat
-      if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTfinal}; fi
+    stat_file_count=$(find ${finalstat} -name "*${outtyp}${bcout}*" | wc -l)
+    if [ ${stat_file_count} -ne 0 ]; then
+      run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file} ${PARMevs}/metplus_config/machine.conf
+      export err=$?; err_chk
+      if [ ${SENDCOM} = "YES" ]; then
+        cpfile=${finalstat}/evs.${STEP}.${COMPONENT}${bcout}.${RUN}.${VERIF_CASE}_pmave.v${VDATE}.stat
+        if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTfinal}; fi
+      fi
     fi
   done  ## biastyp loop
 fi  ## vhr if logic
