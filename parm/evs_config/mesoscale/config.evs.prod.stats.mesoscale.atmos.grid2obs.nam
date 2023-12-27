@@ -40,7 +40,7 @@ export GRID="FCST"
 if [ "$OBSNAME" = "raob" ]; then
     export VHOUR_LIST="00 06 12 18"
 elif [ "$OBSNAME" = "metar" ]; then
-    export VHOUR_LIST="00 03 06 09 12 15 18 21"
+    export VHOUR_LIST="00 06 12 18"
 else
     err_exit "The provided OBSNAME, $OBSNAME, is not supported for $MODELNAME"
 fi
