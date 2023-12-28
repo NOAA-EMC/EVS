@@ -111,7 +111,7 @@ for stats in csi_fbias ets_fbias ratio_pod_csi ; do
 	  FCST_LEVEL_values="ML"
        fi 	  
 
-       doms="dom1 dom2 dom3 dom4 dome5 dom6 dom7 dom8"
+       doms="dom1 dom2 dom3 dom4 dom5 dom6 dom7 dom8"
 
        for dom in $doms ; do 
 
