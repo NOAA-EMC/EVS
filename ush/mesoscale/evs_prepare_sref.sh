@@ -36,8 +36,9 @@ if [ $modnam = sref_apcp06 ] ; then
       export fday=${fcst_time:0:8}
       export fvhr=${fcst_time:8:2}
       export modelpath=${COMINsref}/sref.${fday}/$fvhr/pgrb
-      mkdir $WORK/sref.${fday}
-
+      if [ ! -d $WORK/sref.${fday} ] ; then
+       mkdir $WORK/sref.${fday}
+      fi
       for base in arw nmb ; do
         for mb in ctl n1 n2 n3 n4 n5 n6 p1 p2 p3 p4 p5 p6 ; do
          ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PRECIP_CONF}/PcpCombine_fcstSREF_APCP06h.conf
