@@ -55,7 +55,7 @@ export outid=${outid:-"LL$job"}
 export DATA=${DATA:-${DATAROOT}/${jobid:?}}
 export run_mpi='yes'
 export gather='yes'
-
+export OMP_NUM_THREADS=1
 ############################################################
 # Execute j-job
 ############################################################
