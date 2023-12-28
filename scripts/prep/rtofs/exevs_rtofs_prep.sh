@@ -171,10 +171,16 @@ export RUN=ndbc
 if [ ! -d $COMOUTprep/rtofs.$VDATE/$RUN ]; then
     mkdir -p $COMOUTprep/rtofs.$VDATE/$RUN
 fi
+if [ ! -d $COMOUTprep/rtofs.$VDATE/$RUN/buoy ]; then
+    mkdir -p $COMOUTprep/rtofs.$VDATE/$RUN/buoy
+fi
 mkdir -p $DATA/rtofs.$VDATE/$RUN
+mkdir -p $DATA/rtofs.$VDATE/$RUN/buoy
 export MET_NDBC_STATIONS=${FIXevs}/ndbc_stations/ndbc_stations.xml
 ndbc_txt_ncount=$(find $DCOMROOT/$VDATE/validation_data/marine/buoy -type f -name "*.txt" |wc -l)
 if [ $ndbc_txt_ncount -gt 0 ]; then
+    python $USHevs/${COMPONENT}/${COMPONENT}_${STEP}_trim_ndbc_files.py
+    export err=$?; err_chk
     tmp_ndbc_file=$DATA/rtofs.$VDATE/$RUN/ndbc.${VDATE}.nc
     output_ndbc_file=$COMOUTprep/rtofs.$VDATE/$RUN/ndbc.${VDATE}.nc
     if [ ! -s $output_ndbc_file ]; then
