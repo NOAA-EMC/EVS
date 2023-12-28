@@ -10,6 +10,7 @@
 
 set -x 
 
+export OMP_NUM_THREADS=1
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
 ############################################################
 # read version file and set model_ver
