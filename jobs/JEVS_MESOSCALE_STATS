@@ -84,7 +84,7 @@ if [ $MODELNAME = nam ] || [ $MODELNAME = rap ]; then
   fi
   
  # in production, the following will be set to the approp. COMOUT dir
-  export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT}/${RUN})}
+  export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${evs_ver}/${STEP}/${COMPONENT})}
   export COMOUTfinal=${COMOUTfinal:-$COMOUT/${MODELNAME}.${VDATE}}
   export COMOUTsmall=${COMOUTsmall:-$COMOUT/$RUN.$VDATE/$MODELNAME/$VERIF_CASE}
   mkdir -p $COMOUT $COMOUTfinal $COMOUTsmall

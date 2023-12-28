@@ -66,6 +66,7 @@ if [ $RUN_GRID2OBS_STATS = YES ]; then
     export g2os_sfc_fhr_max=00
     export g2os_sfc_fhr_inc=1
     export g2os_sfc_var_list="TOB, D_DPT, QOB, UOB, VOB, D_WIND, MXGS, TOCC, HOVI, CEILING"
+    export g2os_sfc_var_list_guam="TOB, D_DPT, QOB, UOB, VOB, D_WIND, TOCC, HOVI, CEILING"
     export g2os_mv_database_name="mv_evs_global_det_atmos_grid2obs_stats"
     export g2os_mv_database_group="$USER"
     export g2os_mv_database_desc="Grid-to-obs METplus data"

@@ -110,7 +110,7 @@ echo "*****************************"
         if [ $machine = WCOSS2 ]; then
            nselect=$(cat $PBS_NODEFILE | wc -l)
            nnp=$(($nselect * $nproc))
-           launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+           launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,core cfp"
         elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
            export SLURM_KILL_BAD_EXIT=0
 	   launcher="srun --export=ALL --multi-prog"
@@ -192,7 +192,7 @@ echo "*****************************"
         if [ $machine = WCOSS2 ]; then
            nselect=$(cat $PBS_NODEFILE | wc -l)
            nnp=$(($nselect * $nproc))
-           launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+           launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,core cfp"
         elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
            export SLURM_KILL_BAD_EXIT=0
            launcher="srun --export=ALL --multi-prog"
@@ -259,7 +259,7 @@ echo "*****************************"
 	if [ $machine = WCOSS2 ]; then
            nselect=$(cat $PBS_NODEFILE | wc -l)
            nnp=$(($nselect * $nproc))
-           launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+           launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,core cfp"
 	elif [$machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
 	   export SLURM_KILL_BAD_EXIT=0
 	   launcher="srun --export=ALL --multi-prog"
@@ -335,7 +335,7 @@ echo "*****************************"
         if [ $machine = WCOSS2 ]; then
            nselect=$(cat $PBS_NODEFILE | wc -l)
            nnp=$(($nselect * $nproc))
-           launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,depth cfp"
+           launcher="mpiexec -np ${nnp} -ppn ${nproc} --cpu-bind verbose,core cfp"
         elif [ $machine = HERA -o $machine = ORION -o $machine = S4 -o $machine = JET ]; then
            export SLURM_KILL_BAD_EXIT=0
            launcher="srun --export=ALL --multi-prog"
