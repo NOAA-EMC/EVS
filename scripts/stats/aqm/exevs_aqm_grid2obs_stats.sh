@@ -16,6 +16,9 @@
 ##   12/27/2023   Ho-Chun Huang  Select the lead hours input to the METPlus only when
 ##                               model output daily fcst files existed.
 ##
+##   Note :  The lead hours specification is important to avoid the error generated 
+##           by the MetPlus for not finding the input FCST or OBS files. The error
+##           will lead to job crash by err_chk.
 ##
 #######################################################################
 #
@@ -58,10 +61,6 @@ echo ${model1}
 cdate=${VDATE}${vhr}
 vld_date=$(${NDATE} -1 ${cdate} | cut -c1-8)
 vld_time=$(${NDATE} -1 ${cdate} | cut -c1-10)
-
-VDAYm1=$(${NDATE} -24 ${cdate} | cut -c1-8)
-VDAYm2=$(${NDATE} -48 ${cdate} | cut -c1-8)
-VDAYm3=$(${NDATE} -72 ${cdate} | cut -c1-8)
 
 check_file=${EVSINaqm}/${RUN}.${vld_date}/${MODELNAME}/airnow_${HOURLY_INPUT_TYPE}_${vld_time}.nc
 obs_hourly_found=0
@@ -110,7 +109,7 @@ for outtyp in awpozcon pm25; do
     #
     for hour in 06 12; do
       export hour
-      export mdl_cyc=${hour}
+      export mdl_cyc=${hour}    ## is needed for *.conf
 
       let ihr=1
       num_fcst_in_metplus=0
@@ -165,7 +164,7 @@ for outtyp in awpozcon pm25; do
     mkdir -p ${COMOUTsmall}
     if [ ${SENDCOM} = "YES" ]; then
       cpdir=${DATA}/point_stat/${MODELNAME}
-      if [ -d ${cpdir} ]; then
+      if [ -d ${cpdir} ]; then      ## does not exist if run_metplus.py did not execute
         stat_file_count=$(find ${cpdir} -name "*${outtyp}${bcout}*" | wc -l)
         if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
       fi
@@ -227,11 +226,13 @@ if [ ${vhr} = 11 ]; then
 
     for hour in 06 12; do
       export hour
-      export mdl_cyc=${hour}
+      export mdl_cyc=${hour}    ## is needed for *.conf
 
       ##  search for processed daily 8-hr ozone max model files
+      ##  AQMv7 output daily forecast of 3 days.  Becasue of
+      ##  different valid time definitions between model and
+      ##  observation, the lead time to check is 00, 24, and 48.
 
-      cdate=${VDATE}${vhr}
       let ihr=0
       num_fcst_in_metplus=0
       recorded_temp_list=${DATA}/fcstlist_in_metplus
@@ -272,18 +273,17 @@ if [ ${vhr} = 11 ]; then
         echo "WARNING: NO OZMAX8 OBS OR MODEL DATA"
         echo "WARNING: NUM FCST=${num_fcst_in_metplus}, INDEX OBS=${obs_daily_found}"
       fi
-    done   ## hour loop
+    done   ## cyc hour loop
     if [ ${SENDCOM} = "YES" ]; then
       cpdir=${DATA}/point_stat/${MODELNAME}
-      if [ -d ${cpdir} ]; then
+      if [ -d ${cpdir} ]; then      ## does not exist if run_metplus.py did not execute
         stat_file_count=$(find ${cpdir} -name "*${outtyp}${bcout}*" | wc -l)
         if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
       fi
     fi
     stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
-    if [ ${stat_file_count} -ne 0 ]; then cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}; fi
-    stat_file_count=$(find ${finalstat} -name "*${outtyp}${bcout}*" | wc -l)
     if [ ${stat_file_count} -ne 0 ]; then
+      cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
       run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file} ${PARMevs}/metplus_config/machine.conf
       export err=$?; err_chk
       if [ ${SENDCOM} = "YES" ]; then
@@ -317,11 +317,13 @@ if [ ${vhr} = 04 ]; then
 
     for hour in 06 12; do
       export hour
-      export mdl_cyc=${hour}
+      export mdl_cyc=${hour}    ## is needed for *.conf
 
       ##  search for forecast daily average PM model files
+      ##  AQMv7 output daily forecast of 3 days.  Becasue of
+      ##  different valid time definitions between model and
+      ##  observation, the lead time to check is 00, 24, and 48.
 
-      cdate=${VDATE}${vhr}
       let ihr=0
       num_fcst_in_metplus=0
       recorded_temp_list=${DATA}/fcstlist_in_metplus
@@ -364,18 +366,17 @@ if [ ${vhr} = 04 ]; then
         echo "WARNING: NO PMAVE OBS OR MODEL DATA"
         echo "WARNING: NUM FCST=${num_fcst_in_metplus}, INDEX OBS=${obs_daily_found}"
       fi
-    done   ## hour loop
+    done   ## cyc hour loop
     if [ ${SENDCOM} = "YES" ]; then
       cpdir=${DATA}/point_stat/${MODELNAME}
-      if [ -d ${cpdir} ]; then
+      if [ -d ${cpdir} ]; then      ## does not exist if run_metplus.py did not execute
         stat_file_count=$(find ${cpdir} -name "*${outtyp}${bcout}*" | wc -l)
         if [ ${stat_file_count} -ne 0 ]; then cpreq ${cpdir}/*${outtyp}${bcout}* ${COMOUTsmall}; fi
       fi
     fi
     stat_file_count=$(find ${COMOUTsmall} -name "*${outtyp}${bcout}*" | wc -l)
-    if [ ${stat_file_count} -ne 0 ]; then cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}; fi
-    stat_file_count=$(find ${finalstat} -name "*${outtyp}${bcout}*" | wc -l)
     if [ ${stat_file_count} -ne 0 ]; then
+      cpreq ${COMOUTsmall}/*${outtyp}${bcout}* ${finalstat}
       run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file} ${PARMevs}/metplus_config/machine.conf
       export err=$?; err_chk
       if [ ${SENDCOM} = "YES" ]; then
