@@ -106,7 +106,7 @@ chmod 775 run_href_all_grid2obs_poe
 # Run the POE script to generate small stat files
 #*************************************************
 if [ $run_mpi = yes ] ; then
-    mpiexec -np 36 -ppn 36 --cpu-bind verbose,depth cfp  ${DATA}/run_href_all_grid2obs_poe
+    mpiexec -np 36 -ppn 36 --cpu-bind verbose,core cfp  ${DATA}/run_href_all_grid2obs_poe
     export err=$?; err_chk
 else
     ${DATA}/run_href_all_grid2obs_poe

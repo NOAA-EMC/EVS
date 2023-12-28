@@ -242,10 +242,10 @@ if [ $verify = upper ] ; then
     if [ -s run_all_gens_g2g_${metplus_job}_poe.sh ] ; then
       if [ $run_mpi = yes ] ; then
         if [ ${modnam} = gefs ] ; then
-          mpiexec  -n 4 -ppn 4 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_g2g_${metplus_job}_poe.sh
+          mpiexec  -n 4 -ppn 4 --cpu-bind verbose,core cfp ${DATA}/run_all_gens_g2g_${metplus_job}_poe.sh
           export err=$?; err_chk
         else
-          mpiexec  -n 2 -ppn 2 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_g2g_${metplus_job}_poe.sh
+          mpiexec  -n 2 -ppn 2 --cpu-bind verbose,core cfp ${DATA}/run_all_gens_g2g_${metplus_job}_poe.sh
           export err=$?; err_chk
         fi
       else
@@ -443,10 +443,10 @@ if [ $verify = precip ] ; then
     if [ -s run_all_gens_precip_${metplus_job}_poe.sh ]; then
       if [ $run_mpi = yes ] ; then
         if [ ${modnam} = gefs ] ; then
-          mpiexec  -n 5 -ppn 5 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_precip_${metplus_job}_poe.sh
+          mpiexec  -n 5 -ppn 5 --cpu-bind verbose,core cfp ${DATA}/run_all_gens_precip_${metplus_job}_poe.sh
           export err=$?; err_chk
         else
-          mpiexec  -n 1 -ppn 1 --cpu-bind verbose,depth cfp ${DATA}/run_all_gens_precip_${metplus_job}_poe.sh
+          mpiexec  -n 1 -ppn 1 --cpu-bind verbose,core cfp ${DATA}/run_all_gens_precip_${metplus_job}_poe.sh
           export err=$?; err_chk
         fi
       else
