@@ -19,7 +19,7 @@ export COMPONENT=nfcens
 export STEP=stats
 export RUN=wave
 export VERIF_CASE=grid2obs
-
+export OMP_NUM_THREADS=1
 ############################################################
 # read version file and set model_ver
 ############################################################
