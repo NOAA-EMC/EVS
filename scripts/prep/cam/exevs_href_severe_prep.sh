@@ -196,7 +196,15 @@ i=1
    ###################################################################
 
    if [ $nfiles -ge $min_file_req ]; then
-
+      if [ "$nfiles" -eq "7" ]; then
+         export mems="$mem1, $mem2, $mem3, $mem4, $mem5, $mem8, $mem10"
+         export nmem="7"
+         export ens_thresh="1.0"
+      else
+         export mems="$mem1, $mem2, $mem3, $mem4, $mem5, $mem6, $mem7, $mem8, $mem9, $mem10"
+         export nmem="10"
+         export ens_thresh="0.7"
+      fi
       echo "Found $nfiles forecast files. Generating ${MODELNAME} SSPF for ${vhr}Z ${IDATE} cycle at F${fhr_end}"
       ${METPLUS_PATH}/ush/run_metplus.py -c $PARMevs/metplus_config/machine.conf $PARMevs/metplus_config/${STEP}/${COMPONENT}/${VERIF_CASE}/GenEnsProd_fcstHREF_MXUPHL_SurrogateSevere.conf
       export err=$?; err_chk
