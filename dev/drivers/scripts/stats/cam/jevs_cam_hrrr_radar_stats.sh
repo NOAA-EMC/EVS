@@ -51,7 +51,7 @@ export jobid=$job.${PBS_JOBID:-$$}
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/$evs_ver_2d/$STEP/$COMPONENT
 export USE_CFP=YES
-export nproc=3
+export nproc=12
 ############################################################
 
 export SENDMAIL=${SENDMAIL:-YES}
