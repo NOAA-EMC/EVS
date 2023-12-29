@@ -4,7 +4,7 @@
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
 #PBS -l walltime=03:30:00
-#PBS -l place=vscatter,select=1:ncpus=1:ompthreads=1:mem=120GB
+#PBS -l place=vscatter,select=1:ncpus=1:ompthreads=1:mem=150GB
 #PBS -l debug=true
 
 export model=evs
@@ -43,7 +43,7 @@ module list
 if [ -n "%VHR:%" ]; then
   export vhr=${vhr:-%VHR:%}
 else
-  export vhr=$($NDATE | cut -c 9-10)
+  export vhr=00
 fi
 export nproc=1
 export SENDMAIL=YES
