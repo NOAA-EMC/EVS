@@ -24,6 +24,7 @@ export jobid=$job.${PBS_JOBID:-$$}
 export SITE=$(cat /etc/cluster_name)
 export USE_CFP=YES
 export nproc=512
+export ncpu=128
 
 # General Verification Settings
 export NET="evs"
