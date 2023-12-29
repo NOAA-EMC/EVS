@@ -35,7 +35,7 @@ module list
 if [ -n "%VHR:%" ]; then
   export vhr=${vhr:-%VHR:%}
 else
-  export vhr=$($NDATE | cut -c 9-10)
+  export vhr=00
 fi
 export SENDMAIL=YES
 export NET=evs
