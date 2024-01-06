@@ -116,7 +116,7 @@ for outtyp in awpozcon pm25; do
       recorded_temp_list=${DATA}/fcstlist_in_metplus
       if [ -e ${recorded_temp_list} ]; then rm -f ${recorded_temp_list}; fi
       while [ ${ihr} -le ${fcstmax} ]; do
-        filehr=$(printf %3.3d ${ihr})    ## fhr of grib2 filename is in 3 digit for aqmv7
+        filehr=$(printf %2.2d ${ihr})    ## fhr of grib2 filename is in 3 digit for aqmv7
         fhr=$(printf %2.2d ${ihr})       ## fhr for the processing valid hour is in 2 digit
         export fhr
     
