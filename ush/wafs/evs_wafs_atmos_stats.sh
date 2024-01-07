@@ -7,14 +7,16 @@
 ########################################################################################
 set -x
 
-cd $DATA
-
 msg="WAFS g2g verification job HAS BEGUN"
 echo $msg
 
 export OBSERVATION=$1
 export RESOLUTION=$2
 export CENTER=$3
+
+export DATA=$DATA/$OBSERVATION.$RESOLUTION.$CENTER
+mkdir -p $DATA
+cd $DATA
 
 resolution=`echo $RESOLUTION | tr '[:upper:]' '[:lower:]'`
 

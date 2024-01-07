@@ -25,7 +25,7 @@ for ff in $FHOURS ; do
 
     if [ $CENTER = "uk" ] ; then
 	if [ $RESOLUTION = "0P25" ] ; then
-	    sourcefile=$COMINuk/$day/wgrbbul/ukmet_wafs/EGRR_WAFS_0p25_icing_unblended_${day}_${ccfcst}z_t${ff}.grib2
+	    sourcefile=$DCOMINuk/$day/wgrbbul/ukmet_wafs/EGRR_WAFS_0p25_icing_unblended_${day}_${ccfcst}z_t${ff}.grib2
 	fi
     elif [ $CENTER = "us" ] ; then
 	if [ $RESOLUTION = "0P25" ] ; then
