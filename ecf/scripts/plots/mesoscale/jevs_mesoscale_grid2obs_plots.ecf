@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=04:00:00
+#PBS -l walltime=06:00:00
 #PBS -l place=vscatter:exclhost,select=12:ncpus=128
 #PBS -l debug=true
 #PBS -V
@@ -57,7 +57,7 @@ export SENDCOM=YES
 export SENDDBN=NO
 export SENDDBN_NTC=${SENDDBN_NTC:-NO}
 export SENDMAIL=YES
-export nproc=128
+export nproc=64
 export evs_run_mode="production"
 export USE_CFP=YES
 export NET=evs
