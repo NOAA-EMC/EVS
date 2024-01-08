@@ -56,6 +56,7 @@ export SENDCOM=YES
 export SENDDBN=NO
 export SENDDBN_NTC=${SENDDBN_NTC:-NO}
 export nproc=256
+export ncpu=64
 export USE_CFP=YES
 export NET="evs"
 export RUN="atmos"
