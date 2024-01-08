@@ -46,7 +46,7 @@ if [ -n "%VHR:%" ]; then
 else
   export vhr=00
 fi
-export nproc=128
+export nproc=64
 export SENDCOM=YES
 export USE_CFP=YES
 export SENDDBN=NO

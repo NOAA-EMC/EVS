@@ -3,8 +3,8 @@
 #PBS -S /bin/bash
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
-#PBS -l walltime=01:15:00
-#PBS -l place=vscatter,select=1:ncpus=15:mem=75GB
+#PBS -l walltime=01:30:00
+#PBS -l place=vscatter,select=2:ncpus=20:mem=75GB
 #PBS -l debug=true
 
 export model=evs
@@ -46,7 +46,7 @@ if [ -n "%VHR:%" ]; then
 else
   export vhr=00
 fi
-export nproc=15
+export nproc=10
 export SENDCOM=YES
 export SENDDBN=NO
 export USE_CFP=YES

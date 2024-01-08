@@ -4,7 +4,7 @@
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
 #PBS -l walltime=00:30:00
-#PBS -l place=vscatter:exclhost,select=1:ncpus=128:ompthreads=1
+#PBS -l place=vscatter:exclhost,select=2:ncpus=128:ompthreads=1
 #PBS -l debug=true
 
 export model=evs
@@ -46,7 +46,7 @@ if [ -n "%VHR:%" ]; then
 else
   export vhr=00
 fi
-export nproc=128
+export nproc=64
 export SENDCOM=YES
 export SENDDBN=NO
 export USE_CFP=YES
