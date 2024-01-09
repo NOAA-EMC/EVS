@@ -26,7 +26,6 @@ export init_end=$VDATE
 export valid_end=$VDATE
 
 model_list='ECME CMCE GEFS'
-models='ECME, CMCE, GEFS'
 
 n=0
 while [ $n -le $past_days ] ; do
@@ -165,6 +164,11 @@ elif [ $stats = sratio_pod_csi ] ; then
            thresh_list='NA'
        fi
 
+       if [ $VAR = RH2m ] ; then
+          models='CMCE, GEFS'
+       else
+          models='ECME, CMCE, GEFS'
+       fi
      for FCST_LEVEL_value in $FCST_LEVEL_values ; do 
 
 	OBS_LEVEL_value=$FCST_LEVEL_value
