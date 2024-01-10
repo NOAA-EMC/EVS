@@ -1234,7 +1234,6 @@ def main():
                     FLEADS, requested_var, fcst_var_names, obs_var_names, MODELS, 
                     domain, INTERP, INTERP_PNTS, MET_VERSION, clear_prune_dir
                 )
-                logger.info("test")
                 if df is None:
                     continue
                 for metric in metrics:
