@@ -52,8 +52,6 @@ export jobid=$job.${PBS_JOBID:-$$}
 
 export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}
-export COMINaqm=/lfs/h2/emc/ptmp/ho-chun.huang/emc.para/com/${MODELNAME}/v7.0
-
 #
 export KEEPDATA=YES
 export SENDMAIL=YES

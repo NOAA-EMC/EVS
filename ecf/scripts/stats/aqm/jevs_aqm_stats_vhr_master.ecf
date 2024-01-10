@@ -50,9 +50,6 @@ export DATA=${DATA:-${DATAROOT}/${jobid:?}}
 export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.${COMPONENT}.prod
 source $config
 export SENDMAIL=YES
-#### develop only
-export COMINaqm=/lfs/h2/emc/ptmp/jianping.huang/emc.para/com/aqm/v7.0
-#### develop only
 ############################################################
 # Execute j-job
 ############################################################
