@@ -14,13 +14,13 @@ export OBSERVATION=$1
 export RESOLUTION=$2
 export CENTER=$3
 
-export DATA=$DATA/$OBSERVATION.$RESOLUTION.$CENTER
-mkdir -p $DATA
-cd $DATA
+export DATAmpmd=$DATA/$OBSERVATION.$RESOLUTION.$CENTER
+mkdir -p $DATAmpmd
+cd $DATAmpmd
 
 resolution=`echo $RESOLUTION | tr '[:upper:]' '[:lower:]'`
 
-export GRID_STAT_INPUT_BASE=$DATA/${OBSERVATION}_${RESOLUTION}_data
+export GRID_STAT_INPUT_BASE=$DATAmpmd/${OBSERVATION}_${RESOLUTION}_data
 mkdir -p $GRID_STAT_INPUT_BASE
 
 # STAT_ANALYSIS_OUTPUT_DIR is defined in config.evs.wafs.standalone, and created & used by StatAnalysis_fcstWAFS*
