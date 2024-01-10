@@ -164,8 +164,10 @@ elif [ $stats = sratio_pod_csi ] ; then
            thresh_list='NA'
        fi
 
-       if [ $VAR = RH2m ] ; then
+       if [ $VAR = RH2m ] || [ $VAR = CAPEsfc ] ; then
           models='CMCE, GEFS'
+       elif [ $VAR = DPT2m ] ; then
+          models='ECME, GEFS'
        else
           models='ECME, CMCE, GEFS'
        fi
