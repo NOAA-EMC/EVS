@@ -26,7 +26,7 @@ cd $DATA
 export SENDCOM=${SENDCOM:-YES}
 export SENDMAIL=${SENDMAIL:-NO}
 export SENDDBN=${SENDDBN:-NO}       # need to set to NO for testing
-export SENDECF=${SENDECF:-NO}
+export SENDECF=${SENDECF:-YES}
 export SENDDBN_NTC=${SENDDBN_NTC:-NO}
 ################################################################
 # Specify Execution Areas
