@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
 Program Name: mesoscale_stats_grid2obs_create_merged_ptype.py
 Contact(s): Marcel Caron, Mallory Row, Roshan Shrestha

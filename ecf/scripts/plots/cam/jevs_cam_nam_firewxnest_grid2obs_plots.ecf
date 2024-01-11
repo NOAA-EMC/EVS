@@ -58,8 +58,6 @@ export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=nam_firewxnest
 export modsys=nam
-export config=$HOMEevs/parm/evs_config/cam/config.evs.cam_nam_firewxnest.prod
-source $config
 export COMIN=${COMevs}
 export COMOUT=${COMevs}/$STEP/$COMPONENT
 export pid=${pid:-$$}
