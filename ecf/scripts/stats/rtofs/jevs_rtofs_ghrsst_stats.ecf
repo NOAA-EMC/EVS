@@ -23,7 +23,6 @@ module load intel/${intel_ver}
 module load ve/evs/${ve_evs_ver}
 module load gsl/${gsl_ver}
 module load netcdf/${netcdf_ver}
-module load prod_util/${prod_util_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
 module list
@@ -36,17 +35,11 @@ if [ -n "%VHR:%" ]; then
 else
   export vhr=00
 fi
-export SENDMAIL=YES
 export NET=evs
 export RUN=ghrsst
 export RUNupper=GHRSST
 export VAR=sst
 export VERIF_CASE=grid2grid
-export COMIN=${COMevs}
-export COMOUT=${COMevs}
-export pid=${pid:-$$}
-export outid=${outid:-"LL$job"}
-export DATA=${DATA:-${DATAROOT}/${jobid:?}}
 
 ############################################################
 # Execute j-job
