@@ -23,7 +23,7 @@ cd $DATA
 # SENDDBN=YES--Issue DBNet Client Calls
 ################################################################
 export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-NO}       # need to set to NO for testing
+export SENDDBN=${SENDDBN:-YES}       # need to set to NO for testing
 export SENDECF=${SENDECF:-YES}
 export SENDDBN_NTC=${SENDDBN_NTC:-NO}
 ################################################################
