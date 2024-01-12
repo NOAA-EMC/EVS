@@ -49,11 +49,6 @@ export VERIF_CASE=grid2obs
 export MODELNAME=narre
 export past_days=31
 export run_mpi=yes
-export pid=${pid:-$$}
-export outid=${outid:-"LL$job"}
-export DATA=${DATA:-${DATAROOT}/${jobid:?}}
-export COMIN=${COMevs}
-export COMOUT=${COMevs}
 
 ############################################################
 # Execute j-job
