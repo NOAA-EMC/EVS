@@ -25,6 +25,9 @@
 #
 set -x
 
+export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.${COMPONENT}.prod
+source $config
+
 mkdir -p ${DATA}/logs
 mkdir -p ${DATA}/stat
 export finalstat=${DATA}/final

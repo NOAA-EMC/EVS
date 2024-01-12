@@ -24,6 +24,9 @@
 
 set -x
 
+export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.${COMPONENT}.prod
+source $config
+
 # Set up initial directories and initialize variables
 
 export LOGDIR=${DATA}/plots/logs

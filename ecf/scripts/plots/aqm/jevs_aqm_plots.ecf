@@ -45,8 +45,6 @@ export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=aqm
 export modsys=aqm
-export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.${COMPONENT}.prod
-source $config
 
 ############################################################
 # Execute j-job
