@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/bin/bash
 #######################################################################
 ##  UNIX Script Documentation Block
 ##                      .
@@ -21,6 +21,9 @@
 #######################################################################
 #
 set -x
+
+export config=$PARMevs/evs_config/$COMPONENT/config.evs.aqm.prod
+source $config
 
 #######################################################################
 # Define INPUT OBS DATA TYPE for ASCII2NC 

@@ -28,7 +28,7 @@ export NEXTDATE=${NEXTDATE:-${PDY}}
 ####################################
 export SENDECF=${SENDECF:-YES}
 export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-NO}
+export SENDDBN=${SENDDBN:-YES}
 
 ####################################
 # Set EVS directories               

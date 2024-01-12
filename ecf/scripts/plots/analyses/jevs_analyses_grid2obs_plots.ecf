@@ -25,7 +25,6 @@ module load cray-mpich/${craympich_ver}
 module load cray-pals/${craypals_ver}
 module load wgrib2/${wgrib2_ver}
 module load gsl/${gsl_ver}
-module load prod_util/${prod_util_ver}
 module load imagemagick/${imagemagick_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
@@ -44,12 +43,6 @@ export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=rtma
 export modsys=rtma
-export pid=${pid:-$$}
-export outid=${outid:-"LL$job"}
-export DATA=${DATA:-${DATAROOT}/${jobid:?}}
-export COMIN=${COMevs}
-export COMOUT=${COMevs}
-export SENDMAIL=YES
 
 ############################################################
 # Execute j-job

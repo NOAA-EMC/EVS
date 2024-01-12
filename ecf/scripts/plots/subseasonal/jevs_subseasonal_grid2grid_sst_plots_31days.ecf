@@ -23,7 +23,6 @@ module load intel/${intel_ver}
 module load ve/evs/${ve_evs_ver}
 module load gsl/${gsl_ver}
 module load netcdf/${netcdf_ver}
-module load prod_util/${prod_util_ver}
 module load cray-mpich/${craympich_ver}
 module load cray-pals/${craypals_ver}
 module load cfp/${cfp_ver}
@@ -49,7 +48,6 @@ else
 fi
 export nproc=30
 export USE_CFP=YES
-export SENDDBN=NO
 export NET=evs
 export RUN=atmos
 export MODELNAME="gefs cfs"
@@ -57,10 +55,6 @@ export VERIF_CASE=grid2grid
 export VERIF_TYPE=sst
 export NDAYS=31
 export DAYS=32
-export pid=${pid:-$$}
-export outid=${outid:-"LL$job"}
-export DATA=${DATA:-${DATAROOT}/${jobid:?}}
-export COMIN=${COMevs}
 export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.${model}.${COMPONENT}.${VERIF_CASE}.${STEP}.${VERIF_TYPE}
 
 ############################################################
