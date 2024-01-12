@@ -6,10 +6,10 @@
 #################################################################
 set -x
 
-export VDATE
-export STEP
 export cyc=00
-export VDATE=$PDYm3
+
+
+??? PDYHH ???
 export PDYHHm3=$($NDATE -72 $PDYHH)
 echo "3 days ago $PDYHHm3"
 export METPLUS_PATH
@@ -20,15 +20,13 @@ export RUNnow=icap
 
 #run Grid_Stat
 
-${METPLUS_PATH}/ush/run_metplus.py -c ${CONFIGevs}/${RUN}_${VERIF_CASE}/metplus_chem.conf \
--c ${CONFIGevs}/${RUN}_${VERIF_CASE}/$STEP/GridStat_fcstGEFS_obsICAP_taod.conf
+${METPLUS_PATH}/ush/run_metplus.py -c ${CONFIGevs}/metplus_chem.conf \
+-c ${CONFIGevs}/GridStat_fcstGEFS_obsICAP_taod.conf
 
-${METPLUS_PATH}/ush/run_metplus.py -c ${CONFIGevs}/${RUN}_${VERIF_CASE}/metplus_chem.conf \
--c ${CONFIGevs}/${RUN}_${VERIF_CASE}/$STEP/GridStat_fcstGEFS_obsICAP_daod.conf
+${METPLUS_PATH}/ush/run_metplus.py -c ${CONFIGevs}/metplus_chem.conf \
+-c ${CONFIGevs}/GridStat_fcstGEFS_obsICAP_daod.conf
 
-#/usr/bin/env
 export err=$?; err_chk
-cat $pgmout
 
 exit
 
