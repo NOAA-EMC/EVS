@@ -22,7 +22,6 @@ module load PrgEnv-intel/${PrgEnvintel_ver}
 module load intel/${intel_ver}
 module load ve/evs/${ve_evs_ver}
 module load gsl/${gsl_ver}
-module load prod_util/${prod_util_ver}
 module load libjpeg/${libjpeg_ver}
 module load libpng/${libpng_ver}
 module load zlib/${zlib_ver}
@@ -52,12 +51,6 @@ export VERIF_CASE=profile4
 export MODELNAME=gefs
 export past_days=90
 export valid_time=both
-export COMIN=${COMevs}
-export COMOUT=${COMevs}
-export pid=${pid:-$$}
-export outid=${outid:-"LL$job"}
-export DATA=${DATA:-${DATAROOT}/${jobid:?}}
-export SENDMAIL=YES
 
 ############################################################
 # Execute j-job
