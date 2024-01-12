@@ -734,6 +734,7 @@ if [ $modnam = osi_saf ] ; then
    fi
  else
    echo "${osisaf_comout_file} exists"
+ fi
 fi
 
 #############################################################################
