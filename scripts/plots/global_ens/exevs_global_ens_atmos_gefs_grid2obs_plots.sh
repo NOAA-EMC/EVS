@@ -135,6 +135,8 @@ for stats in acc me_mae crpss rmse_spread  ; do
 
        if [ $VAR = RH2m ] ; then
           models='CMCE, GEFS'
+       elif [ $VAR = DPT2m ] ; then
+          models='ECME, GEFS'
        else
           models='ECME, CMCE, GEFS'
        fi
