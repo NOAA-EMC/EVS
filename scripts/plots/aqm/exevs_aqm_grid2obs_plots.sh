@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/bin/bash
 #######################################################################
 ## UNIX Script Documentation Block
 ##                      .
@@ -24,7 +24,7 @@
 
 set -x
 
-export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.${COMPONENT}.prod
+export config=$PARMevs/evs_config/$COMPONENT/config.evs.aqm.prod
 source $config
 
 # Set up initial directories and initialize variables
