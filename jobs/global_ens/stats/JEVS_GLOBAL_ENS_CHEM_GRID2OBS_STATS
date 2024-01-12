@@ -2,47 +2,77 @@
 
 set -xa
 
+########################################
+# Preliminary data setup step
+########################################
+
+##################################################
+### SENDCOM  - Copy Files From TMPDIR to $COMOUT
+### SENDDBN  - Issue DBNet Client Calls 
+### SENDECF  - Flag Events on ecFLOW
+### SENDMAIL - Send email if file is missing
+###################################################
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-NO}
+export SENDECF=${SENDECF:-YES}
+export SENDMAIL=${SENDMAIL:-NO}
+
 # ###################################
 # SET SHELL PROCESSING VARIABLES
 # ###################################
-export PS4='$SECONDS + '
 date
+export PS4='$SECONDS + '
 
 ###########################################################
 ## obtain unique LSF id (jobid) and make temp directories
 ############################################################
-export pid=$$
-
 export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
-rm -rf $DATA
 mkdir -p $DATA
 cd $DATA
 
 ####################################
 ## Determine Job Output Name on System
 #####################################
-export pgmout="OUTPUT.${pid}"
-export cycle=t${cyc}z
+export cycle=${cycle:t${cyc}z}
 
 setpdy.sh 8
 . ./PDY
 
-export FIXevs=${FIXevs:-$HOMEevs/fix}
-export CONFIGevs=${CONFIGevs:-$HOMEevs/parm/metplus_config/$COMPONENT}
+export envir=${envir:-prod}
+export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
+
+export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
+export SCRIPTSevs=${SCRIPTSevs:-$HOMEevs/scripts}
 export USHevs=${USHevs:-$HOMEevs/ush/$COMPONENT}
 export EXECevs=${EXECevs:-$HOMEevs/exec}
-export PARMevs=${PARMevs:-$HOMEevs/parm}
-export USHevs=${USHevs:-$HOMEevs/ush}
+export PARMevs=${PARMevs:-$HOMEevs/parm/metplus_config}
+export CONFIGevs=${CONFIGevs:-${PARMevs}/$COMPONENT}
+export FIXevs=${FIXevs:-$HOMEevs/fix}
 
-#export VDATE=${PDYm2}
+## to be determined export PARMevs=${PARMevs:-$HOMEevs/parm}
+## to be determined export USHevs=${USHevs:-$HOMEevs/ush}
+
+# Define COMIN/COMOUT variables:
+
 echo $COMPATH
 
+export NET=${NET:-evs}
+export STEP=${STEP:-stats}
+export COMPONENT=${COMPONENT:-global_ens}
+export RUN=${RUN:-chem}
+export VERIF_CASE=${VERIF_CASE:-grid2obs}
+export MODELNAME=${MODELNAME:-gefs}
+export modsys=${modsys:-gefs}
+export mod_ver=${mod_ver:-${gefs_ver}}
+
+export VDATE=${VDATE:-${PDYm2}}
+
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
-export COMINobs=${COMINobs:-$(compath.py $envir/dcom)}
-export COMINobs2=${COMINobs2:-$(compath.py obsproc/${obsproc_ver})}
-export COMINfcst=${COMINfcst:-$(compath.py $NET/${evs_ver}/prep/$COMPONENT)}
-export COMOUT=${COMOUT:-$(compath.py $NET/${evs_ver})}
-export COMOUTsmall=$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE
+export COMINobs=${COMINobs:-${DCOMROOT}}    ==> rename it to DCOMIN
+export COMINobs2=${COMINobs2:-$(compath.py obsproc/${obsproc_ver})} ==> rename it to EVSingefs
+export COMINfcst=${COMINfcst:-$(compath.py $NET/${evs_ver}/prep/$COMPONENT)}  ==> rename it to COMINgefs
+export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}
+export COMOUTsmall=${COMOUTsmall:-$COMOUT/$STEP/$COMPONENT/$RUN.$VDATE}
 export COMOUTfinal=${COMOUTfinal:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
 export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
 
@@ -50,21 +80,19 @@ export DATA=${DATA:-$DATAROOT/$NET/${evs_ver}}
 # Execute the script.
 #######################################################################
 if [ $OBTTYPE = aeronet ] ; then
-            $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${OBTTYPE}_${STEP}.sh $VDATE
+    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${OBTTYPE}_${STEP}.sh $VDATE
 elif [ $OBTTYPE = airnow ] ; then
-            $HOMEevs/scripts/${COMPONENT}/${STEP}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${OBTTYPE}_${STEP}.sh $VDATE
-      else
-      echo "Wrong RUN: $RUN"
-      exit
+    $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${OBTTYPE}_${STEP}.sh $VDATE
+else
+    echo "Wrong OBTTYPE: $OBTTYPE"
+    exit
 fi
 
-cat $pgmout
-
 msg="JOB $job HAS COMPLETED NORMALLY."
-postmsg "$jlogfile" "$msg"
+postmsg "$msg"
 
 if [ "$KEEPDATA" != "YES" ]; then
-       cd $DATAROOT
-       rm -rf $DATA
+    cd $DATAROOT
+    rm -rf $DATA
 fi
 
