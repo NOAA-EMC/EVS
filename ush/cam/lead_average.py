@@ -302,10 +302,14 @@ def plot_lead_average(df: pd.DataFrame, logger: logging.Logger,
         for (m, keep) in zip(model_list, cols_to_keep) if keep
     ]
     if not all(cols_to_keep):
-        logger.warning(
-            f"{models_removed_string} data were not found and will not be"
-            + f" plotted."
-        )
+        if not any(
+                group_name in str(models_removed_string) 
+                for group_name in ["group", "set"]
+            ):
+            logger.warning(
+                f"{models_removed_string} data were not found and will not be"
+                + f" plotted."
+            )
     if df.empty:
         logger.warning(f"Empty Dataframe. Continuing onto next plot...")
         plt.close(num)

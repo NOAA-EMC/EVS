@@ -80,7 +80,7 @@ export COMROOT=${COMROOT:-$(compath.py $envir/com)}
 
 if  [ $MODELNAME = href ] ; then
   export COMIN=${COMIN:-$(compath.py $envir/com/$NET/$evs_ver)}/stats/$COMPONENT/$MODELNAME.$VDATE
-  export COMOUT=${COMOUT:-$(compath.py -o $envir/com/$NET/${evs_ver})}/$STEP/$COMPONENT/$RUN.$VDATE
+  export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}/$STEP/$COMPONENT/$RUN.$VDATE
   export EVSINapcp24mean=${EVSINapcp24mean:-$(dirname $COMIN)}
   export DATA_IN=${DATA_IN:-$DATAROOT}
   export ush_dir=$USHevs/cam/ush_href_plot_py

@@ -13,7 +13,7 @@ cd $DATA
 export prune_dir=$DATA/data
 export save_dir=$DATA/out
 export output_base_dir=$DATA/stat_archive
-export log_metplus=$DATA/logs/GENS_verif_plotting_job.out
+export log_metplus=$DATA/logs/GENS_verif_plotting_job
 mkdir -p $prune_dir
 mkdir -p $save_dir
 mkdir -p $output_base_dir
@@ -27,7 +27,6 @@ export init_end=$VDATE
 export valid_end=$VDATE
 
 model_list='ECME CMCE GEFS'
-models='ECME, CMCE, GEFS'
 
 n=0
 while [ $n -le $past_days ] ; do
@@ -132,6 +131,12 @@ for stats in acc me_mae crpss rmse_spread  ; do
           FCST_LEVEL_values="Z10"
        elif [ $VAR = PRMSL ] || [ $VAR = CAPEsfc ] ; then
           FCST_LEVEL_values="L0"
+       fi
+
+       if [ $VAR = RH2m ] ; then
+          models='CMCE, GEFS'
+       else
+          models='ECME, CMCE, GEFS'
        fi
 
      for FCST_LEVEL_value in $FCST_LEVEL_values ; do 
