@@ -10,7 +10,7 @@ date
 ############################################
 export SENDECF=${SENDECF:-YES}
 export SENDCOM=${SENDCOM:-YES}
-export SENDDBN=${SENDDBN:-NO}
+export SENDDBN=${SENDDBN:-YES}
 export SENDMAIL=${SENDMAIL:-NO}
 
 ############################################
@@ -60,8 +60,8 @@ export MODELNAME=${MODELNAME:-wafs}
 # COMIN folder of analysis and forecast grib2 data
 # gfs_ver defined in versions/run.ver
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${evs_ver})}
-export COMINuk=${COMINuk:-$DCOMROOT} # $VDATE/wgrbbul/ukmet_wafs}
-export COMINgfs=${COMINgfs:-$(compath.py gfs/${gfs_ver})}
+export DCOMINuk=${DCOMINuk:-$DCOMROOT} # $VDATE/wgrbbul/ukmet_wafs}
+export COMINgfs=${COMINgfs:-$(compath.py ${envir}/com/gfs/${gfs_ver})}
 export COMINobs=$COMINgfs
 
 # COMOUT folder

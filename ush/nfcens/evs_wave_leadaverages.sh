@@ -9,6 +9,8 @@
 # Make the command files for cfp 
 #################################
 
+set -x
+
 # set up plot variables
 
 periods='PAST31DAYS PAST90DAYS'

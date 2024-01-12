@@ -80,7 +80,7 @@ fi
 #Cat'ing errfiles to stdout
 #########################################
 
-log_dir=$DATA/METplus_output/logs
+log_dir=$DATA/*/METplus_output/logs
 log_file_count=$(find $log_dir -type f |wc -l)
 if [[ $log_file_count -ne 0 ]]; then
 	for log_file in $log_dir/*; do
