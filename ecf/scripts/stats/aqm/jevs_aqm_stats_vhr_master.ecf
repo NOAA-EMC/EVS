@@ -27,7 +27,6 @@ module load libjpeg/${libjpeg_ver}
 module load grib_util/${grib_util_ver}
 module load wgrib2/${wgrib2_ver}
 module load gsl/${gsl_ver}
-module load prod_util/${prod_util_ver}
 module load met/${met_ver}
 module load metplus/${metplus_ver}
 module list
@@ -42,14 +41,6 @@ export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=aqm
 export modsys=aqm
-export COMIN=${COMevs}
-export COMOUT=${COMevs}
-export pid=${pid:-$$}
-export outid=${outid:-"LL$job"}
-export DATA=${DATA:-${DATAROOT}/${jobid:?}}
-export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.${COMPONENT}.prod
-source $config
-export SENDMAIL=YES
 ############################################################
 # Execute j-job
 ############################################################

@@ -43,14 +43,11 @@ export modsys=aqm
 export mod_ver=${aqm_ver}
 export envir=prod
 
-export config=$HOMEevs/parm/evs_config/aqm/config.evs.aqm.prod
-source $config
-
 export DATAROOT=/lfs/h2/emc/stmp/${USER}/evs_test/$envir/tmp
 export job=${PBS_JOBNAME:-jevs_${MODELNAME}_${VERIF_CASE}_${STEP}}
 export jobid=$job.${PBS_JOBID:-$$}
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/${NET}/${evs_ver_2d}
+export COMIN=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}
 export COMOUT=/lfs/h2/emc/vpppg/noscrub/${USER}/${NET}/${evs_ver_2d}
 #
 export KEEPDATA=YES

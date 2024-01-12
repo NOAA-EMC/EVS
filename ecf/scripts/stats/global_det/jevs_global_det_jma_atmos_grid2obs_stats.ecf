@@ -24,7 +24,6 @@ module load ve/evs/${ve_evs_ver}
 module load gsl/${gsl_ver}
 module load netcdf/${netcdf_ver}
 module load cray-pals/${craypals_ver}
-module load prod_util/${prod_util_ver}
 module load cfp/${cfp_ver}
 module load libjpeg/${libjpeg_ver}
 module load libpng/${libpng_ver}
@@ -46,17 +45,11 @@ else
   export vhr=00
 fi
 export nproc=14
-export SENDCOM=YES
-export SENDMAIL=YES
 export USE_CFP=YES
 export NET=evs
 export RUN=atmos
 export VERIF_CASE=grid2obs
 export MODELNAME=jma
-export COMIN=${COMevs}
-export pid=${pid:-$$}
-export outid=${outid:-"LL$job"}
-export DATA=${DATA:-${DATAROOT}/${jobid:?}}
 export config=$HOMEevs/parm/evs_config/${COMPONENT}/config.evs.prod.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}.${MODELNAME}
 
 ############################################################
