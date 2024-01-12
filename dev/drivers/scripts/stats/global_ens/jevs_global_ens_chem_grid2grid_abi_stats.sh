@@ -12,7 +12,10 @@
 
 set -x 
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+
 source $HOMEevs/versions/run.ver
+
+evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 ##%include <head.h>
 ##%include <envir-p1.h>
@@ -21,6 +24,11 @@ source $HOMEevs/versions/run.ver
 # Load modules
 ############################################################
 module reset
+
+module load prod_envir/${prod_envir_ver}
+
+source $HOMEevs/dev/modulefiles/global_ens/global_ens_prep.sh
+
 export HPC_OPT=/apps/ops/para/libs
 module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
 module use /apps/dev/modulefiles/

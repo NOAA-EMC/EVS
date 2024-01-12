@@ -6,8 +6,6 @@
 #PBS -l walltime=00:15:00
 #PBS -l place=vscatter,select=1:ncpus=1:mpiprocs=1:mem=10G
 #PBS -l debug=true
-#PBS -o g2o_statout.t00z
-#PBS -e g2o_staterr.t00z
 #PBS -V
 
 ##%include <head.h>
@@ -17,35 +15,20 @@ set -x
 
 export model=evs
 export HOMEevs=/lfs/h2/emc/vpppg/noscrub/$USER/EVS
+
 source $HOMEevs/versions/run.ver
+
+evs_ver_2d=$(echo $evs_ver | cut -d'.' -f1-2)
 
 ############################################################
 # Load modules
 ############################################################
 
 module reset
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
-module use /apps/dev/modulefiles/
-module load ve/evs/${ve_evs_ver}
-module load cray-mpich/${craympich_ver}
-module load cray-pals/${craypals_ver}
-module load libjpeg/${libjpeg_ver}
-module load libpng/${libpng_ver}
-module load zlib/${zlib_ver}
-module load jasper/${jasper_ver}
-module load cfp/${cfp_ver}
-module load gsl/${gsl_ver}
-module load grib_util/${grib_util_ver}
-module load wgrib2/${wgrib2_ver}
-module load netcdf/${netcdf_ver}
-module load python/${python_ver}
-module load met/${met_ver}
-module load metplus/${metplus_ver}
-module load prod_util/${prod_util_ver}
+
 module load prod_envir/${prod_envir_ver}
 
-module list
+source $HOMEevs/dev/modulefiles/global_ens/global_ens_stats.sh
 
 export MET_PLUS_PATH="/apps/ops/para/libs/intel/${intel_ver}/metplus/${metplus_ver}"
 export MET_PATH="/apps/ops/para/libs/intel/${intel_ver}/met/${met_ver}"
