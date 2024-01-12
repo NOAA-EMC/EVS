@@ -55,9 +55,11 @@ export mod_ver=${mod_ver:-${gefs_ver}}
 
 export VDATE=${VDATE:-${PDYm3}}
 
+## export COMINobs=${COMINobs:-${DCOMROOT}}   ==> rename to DCOMIN
+## export COMINfcst=${COMINfcst:-$(compath.py $NET/${evs_ver}/prep/$COMPONENT)} ==> rename to EVSINgefs
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
-export COMINobs=${COMINobs:-${DCOMROOT}}   ==> rename to DCOMIN
-export COMINfcst=${COMINfcst:-$(compath.py $NET/${evs_ver}/prep/$COMPONENT)} ==> rename to COMINgefs
+export DCOMIN=${DCOMIN:-${DCOMROOT}}
+export EVSINgefs=${EVSINgefs:-${COMIN}/prep/$COMPONENT)}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}
 export OBTTYPE=${OBTTYPE:-goes}
 export COMOUTsmall=${COMOUTsmall:-$COMOUT/$STEP/$COMPONENT/$OBTTYPE.$VDATE}
