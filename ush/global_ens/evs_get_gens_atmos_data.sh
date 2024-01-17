@@ -250,7 +250,7 @@ if [ $modnam = cmce ] ; then
    mkdir -p ${tmpDir}
 
   # Create a file of patterns to use with grep.  This way we only need one grep
-  pat=${tmpDir}/pattern.${gens_cyc}.${fhr_beg}
+  pat=${tmpDir}/pattern.${gens_ihour}.${fhr_beg}
   if [ -e ${pat} ]; then rm ${pat}; fi
   >${pat}
   for level in 10 50 100 200 250 300 400 500 700 850 925 1000 ; do
