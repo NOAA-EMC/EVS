@@ -4,7 +4,7 @@
 #PBS -q %QUEUE%
 #PBS -A %PROJ%-%PROJENVIR%
 #PBS -l walltime=12:00:00
-#PBS -l place=vscatter:exclhost,select=4:ncpus=128
+#PBS -l place=vscatter:exclhost,select=10:ncpus=128
 #PBS -l debug=true
 
 export model=evs 
@@ -51,7 +51,7 @@ else
   export vhr=00
 fi
 export USE_CFP=YES
-export nproc=512
+export nproc=1280
 export NET="evs"
 export RUN="atmos"
 export VERIF_CASE="grid2obs"
