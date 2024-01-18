@@ -24,7 +24,6 @@ export init_end=$VDATE
 export valid_end=$VDATE
 
 model_list='ECME CMCE GEFS'
-models='ECME, CMCE, GEFS'
 
 n=0
 while [ $n -le $past_days ] ; do
@@ -138,6 +137,13 @@ for stats in ets fbias crps fss ; do
        elif [ $VAR = WEASD_24_gt0p3048 ] || [ $VAR = SNOD_24_gt0p3048 ]; then
            threshes='>0.3048'
        fi
+
+       if [ $VAR = SNOD_24_gt0p0254 ] || [ $VAR = SNOD_24_gt0p1016 ] || [ $VAR = SNOD_24_gt0p2032 ] || [ $VAR = SNOD_24_gt0p3048 ] || [ $VAR = SNOD_24 ] ; then
+	  models='CMCE, GEFS'
+       else
+	  models='ECME, CMCE, GEFS'
+       fi
+
      for FCST_LEVEL_value in $FCST_LEVEL_values ; do 
 
 	OBS_LEVEL_value=A24
