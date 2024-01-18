@@ -130,7 +130,7 @@ fi
 	 if [ $FCST_LEVEL_value = P10 ]; then
 	    models='CMCE, GEFS'
 	 else
-            models='EMCE, CMCE, GEFS'
+            models='ECME, CMCE, GEFS'
 	 fi
 
         echo "export PLOT_TYPE=$score_type" >> run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh
