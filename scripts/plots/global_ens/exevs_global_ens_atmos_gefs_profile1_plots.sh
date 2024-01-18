@@ -127,7 +127,7 @@ fi
          #***************************
          > run_${stats}.${score_type}.${lead}.${VAR}.${FCST_LEVEL_value}.${line_type}.sh  
 
-	 if [ $FCST_LEVEL_value = P10 ]; then
+	 if [ $FCST_LEVEL_value = P10 ] || [ $FCST_LEVEL_value = P250 ]; then
 	    models='CMCE, GEFS'
 	 else
             models='ECME, CMCE, GEFS'
