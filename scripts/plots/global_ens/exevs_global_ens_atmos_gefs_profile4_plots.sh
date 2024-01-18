@@ -118,7 +118,7 @@ fi
          #***************************
          > run_${stats}.${score_type}.${lead}.${VAR}.${line_type}.sh  
 
-	if [ $fcst_leads = 372 ] || [ $fcst_leads = 384 ]; then
+	if [ $fcst_lead = 372 ] || [ $fcst_lead = 384 ]; then
 	   models='CMCE, GEFS'
 	else
 	   models='ECME, CMCE, GEFS'
