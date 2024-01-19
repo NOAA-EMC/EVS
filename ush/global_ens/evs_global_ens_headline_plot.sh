@@ -153,7 +153,7 @@ for model in gfs gefs naefs ; do
     export output_base=$DATA/plot
     export stat_file_dir=$stat_data/$model
 
-    stat_analysis -lookin $stat_data/$model/${model}_headline_v*.stat -fcst_valid_hour 00  -job aggregate_stat -line_type SAL1L2 -out_line_type CNT -by FCST_VAR,FCST_LEV,FCST_LEAD,VX_MASK -out_stat agg_stat_SAL1L2_to_CNT.${model}.${yyyy}.00Z
+    stat_analysis -lookin $stat_data/$model/${model}_headline_grid2grid_v*.stat -fcst_valid_hour 00  -job aggregate_stat -line_type SAL1L2 -out_line_type CNT -by FCST_VAR,FCST_LEV,FCST_LEAD,VX_MASK -out_stat agg_stat_SAL1L2_to_CNT.${model}.${yyyy}.00Z
 
    ${METPLUS_PATH}/ush/run_metplus.py -c ${PARMevs}/metplus_config/machine.conf -c ${PLOT_CONF}/StatAnlysis_fcstGENS_obsAnalysis_GatherByYear.conf 
    export err=$?; err_chk
