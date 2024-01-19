@@ -98,7 +98,7 @@ if [ $modnam = cmcanl ]; then
       if [ ! -s $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl ] ; then
         cmcanl=$origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.f000
       else
-        echo "WARNING: $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl does not exist, using $origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl"
+        echo "WARNING: $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.f000 does not exist, using $origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl"
         cmcanl=$origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl
       fi
       if [ ! -s $cmcanl ] ; then
