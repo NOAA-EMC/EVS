@@ -512,6 +512,8 @@ def plot_stat_by_level(df: pd.DataFrame, logger: logging.Logger,
             )
         else:
             model_plot_name = model_list[m]
+        if str(model_list[m]) not in pivot_metric1:
+            continue
         x_vals_metric1 = pivot_metric1[str(model_list[m])].values
         x_vals_metric1_mean = np.nanmean(x_vals_metric1)
         if metric2_name is not None:
