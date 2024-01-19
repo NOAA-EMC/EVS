@@ -6,7 +6,6 @@
 #               01/17/2024: Created by Binbin Zhou, Lynker/EMC
 #********************************************************************
 echo "Days:  ACC for $model" >> $output
-acc[i]=sref_nmb
 i=1
 while [ $i -le 16 ] ; do
   read LINE 

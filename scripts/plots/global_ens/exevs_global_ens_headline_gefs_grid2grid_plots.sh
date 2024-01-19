@@ -5,7 +5,7 @@
 #  
 #  Note: 1. The headline score needs the stat files over 0ne year + 16 days 
 #           (last year + next 16 days of Jan of this year) 
-#        2. This job is run on Jan 18 of each year                 
+#        2. This job is run on Jan 16 of each year                 
 #  
 # Log History:  
 #             01/17/2024, Add calculation of day for ACC<=0.6, Binbin Zhou, Lynker@EMC
