@@ -95,11 +95,13 @@ if [ $modnam = cmcanl ]; then
 
   for ihour in 00 12; do
       origin=$COMINcmce/cmce.$vday/$ihour/pgrb2ap5
-      if [ ! -s $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl ] ; then
-        cmcanl=$origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.f000
-      else
-        echo "WARNING: $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.f000 does not exist, using $origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl"
+      if [ -s $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl ] ; then
         cmcanl=$origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl
+      elif [ -s $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.f000 ] ; then
+        cmcanl=$origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.f000	
+        echo "WARNING: $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl does not exist, using $origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.f000"
+      else
+        echo "WARNING: No $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl or $origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.f000 file available"
       fi
       if [ ! -s $cmcanl ] ; then
        if [ $SENDMAIL = YES ]; then
