@@ -3,7 +3,7 @@
 # Purpose:  1. Setup the environment parameter for running GEFS headline plotting script
 #           2. Run plotting script $USHevs/global_ens/evs_global_ens_headline_plot.sh
 #  
-#  Note: 1. The headline score needs the stat files over 0ne year + 16 days 
+#  Note: 1. The headline score needs the stat files over one year + 16 days 
 #           (last year + next 16 days of Jan of this year) 
 #        2. This job is run on Jan 16 of each year                 
 #  
