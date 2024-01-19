@@ -1,4 +1,4 @@
-#PBS -N jevs_global_ens_chem_g2g_stats
+#PBS -N jevs_global_ens_gefs_chem_g2g_abi_stats
 #PBS -j oe
 #PBS -S /bin/bash
 #PBS -q dev
@@ -27,28 +27,9 @@ module reset
 
 module load prod_envir/${prod_envir_ver}
 
-source $HOMEevs/dev/modulefiles/global_ens/global_ens_prep.sh
+source $HOMEevs/dev/modulefiles/global_ens/global_ens_stats.sh
 
-export HPC_OPT=/apps/ops/para/libs
-module use /apps/ops/para/libs/modulefiles/compiler/intel/${intel_ver}
-module use /apps/dev/modulefiles/
-module load ve/evs/${ve_evs_ver}
 module load cray-mpich/${craympich_ver}
-module load cray-pals/${craypals_ver}
-module load libjpeg/${libjpeg_ver}
-module load libpng/${libpng_ver}
-module load zlib/${zlib_ver}
-module load jasper/${jasper_ver}
-module load cfp/${cfp_ver}
-module load gsl/${gsl_ver}
-module load grib_util/${grib_util_ver}
-module load wgrib2/${wgrib2_ver}
-module load netcdf/${netcdf_ver}
-module load python/${python_ver}
-module load met/${met_ver}
-module load metplus/${metplus_ver}
-module load prod_util/${prod_util_ver}
-module load prod_envir/${prod_envir_ver}
 
 module list
 

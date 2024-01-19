@@ -6,6 +6,8 @@
 #################################################################
 set -x
 
+export CONFIGevs=${CONFIGevs:-${PARMevs}/${STEP}/$COMPONENT/${RUN}_${VERIF_CASE}}
+
 export METPLUS_PATH
 export RUNnow=geos5
 

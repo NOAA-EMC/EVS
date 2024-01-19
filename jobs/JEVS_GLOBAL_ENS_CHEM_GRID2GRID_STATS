@@ -1,12 +1,25 @@
 #!/bin/bash
 
-#################################
-# SET SHELL PROCESSING VARIABLES 
-#################################
 set -xa
+
+#################################
+#  Preliminary data setup step
+#################################
+ 
+##################################################
+### SENDCOM  - Copy Files From TMPDIR to $COMOUT
+### SENDDBN  - Issue DBNet Client Calls 
+### SENDECF  - Flag Events on ecFLOW
+### SENDMAIL - Send email if file is missing
+###################################################
+export SENDCOM=${SENDCOM:-YES}
+export SENDDBN=${SENDDBN:-NO}
+export SENDECF=${SENDECF:-YES}
+export SENDMAIL=${SENDMAIL:-NO}
+
+###################################
+# SET SHELL PROCESSING VARIABLES
 # ###################################
-# # SET SHELL PROCESSING VARIABLES
-# # ###################################
 date
 export PS4='$SECONDS + '
 
@@ -18,16 +31,14 @@ export DATA=${DATA:-${DATAROOT:?}/${jobid:?}}
 mkdir -p $DATA
 cd $DATA
 
-####################################
-### Determine Job Output Name on System
-######################################
 export cycle=${cycle:t${cyc}z}
 
 setpdy.sh 8
 . ./PDY
 
 export envir=${envir:-prod}
-export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/$envir/dcom}
+
+# Define COMIN/COMOUT variables:
 
 echo $COMPATH
 
@@ -52,46 +63,22 @@ export FIXevs=${FIXevs:-$HOMEevs/fix}
 ## PDYm3 for goes5, icap
 export VDATE=${VDATE:-${PDYm2}}
 
-# Define COMIN/COMOUT variables:
-
 ## export COMINobs=${COMINobs:-${DCOMROOT}}   ==> rename to DCOMIN
-## export COMINfcst=${COMINfcst:-$(compath.py $NET/${evs_ver}/prep/$COMPONENT)} ==> rename to EVSINgefs
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
+export COMINgefs=${COMINgefs:-$(compath.py -o ${modsys}/${mod_ver}}
 export DCOMIN=${DCOMIN:-${DCOMROOT}}
 export EVSINgefs=${EVSINgefs:-${COMIN}/prep/$COMPONENT)}
 export COMOUT=${COMOUT:-$(compath.py -o $NET/${evs_ver})}
-export OBTTYPE=${OBTTYPE:-goes}
 export COMOUTsmall=${COMOUTsmall:-$COMOUT/$STEP/$COMPONENT/$OBTTYPE.$VDATE}
 export COMOUTfinal=${COMOUTfinal:-$COMOUT/$STEP/$COMPONENT/$COMPONENT.$VDATE}
-export CONFIGevs=${CONFIGevs:-${PARMevs}/${STEP}/$COMPONENT/${RUN}_${VERIF_CASE}}
 
 mkdir -p ${COMOUTsmall} ${COMOUTfinal}
 #######################################################################
 ## Execute the script.
 #########################################################################
+export OBTTYPE=${OBTTYPE:-geos5}
 
-???? what is the default VAR
-
-if [ $OBTTYPE = 'icap' ] ; then
-    export VDATE=${PDYm3}
-    for VAR in $VARS; do
-        export VAR
-        $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${OBTTYPE}_${STEP}.sh
-    done
-elif [ $OBTTYPE = 'geos5' ] ; then
-    export VDATE=${PDYm3}
-    for VAR in $VARS; do
-        export VAR
-        $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${OBTTYPE}_${STEP}.sh
-    done
-elif [ $OBTTYPE = 'viirs' ] ; then            
-    $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${OBTTYPE}_${STEP}.sh
-elif [ $OBTTYPE = 'abi' ] ; then
-    $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${OBTTYPE}_${STEP}.sh
-else
-    echo "Wrong OBTTYPE: $OBTTYPE"
-    exit 
-fi
+$HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
 
 msg="JOB $job HAS COMPLETED NORMALLY."
 postmsg "$msg"
