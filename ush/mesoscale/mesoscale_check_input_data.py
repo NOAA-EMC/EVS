@@ -53,7 +53,6 @@ if proceed:
     max_num_files = 10
     SENDMAIL = os.environ['SENDMAIL']
     COMPONENT = os.environ['COMPONENT']
-    MAILTO = os.environ['MAILTO']
     VHR = os.environ['vhr']
     jobid = os.environ['jobid']
     FIXevs = os.environ['FIXevs']
@@ -65,6 +64,7 @@ if proceed:
     NEST = os.environ['NEST']
     if STEP == 'stats':
         if  SENDMAIL == "YES":
+            MAILTO = os.environ['MAILTO']
             send_mail = 1
         MODELNAME = os.environ['MODELNAME']
         FHR_INCR_FULL = os.environ['FHR_INCR_FULL']
