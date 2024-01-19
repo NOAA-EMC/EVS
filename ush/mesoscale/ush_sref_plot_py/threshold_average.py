@@ -472,6 +472,8 @@ def plot_threshold_average(df: pd.DataFrame, logger: logging.Logger,
             )
         else:
             model_plot_name = model_list[m]
+        if str(model_list[m]) not in pivot_metric:
+            continue
         y_vals_metric = pivot_metric[str(model_list[m])].values
         y_vals_metric = np.array([y_vals_metric[i] for i in x_vals_argsort])
         y_vals_metric_mean = np.nanmean(y_vals_metric)
