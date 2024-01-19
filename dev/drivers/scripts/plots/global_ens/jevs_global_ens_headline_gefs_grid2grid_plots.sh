@@ -11,7 +11,7 @@
 #Note: (1) This headline plot generation driver script should be run 
 #           on Jan 16th of each year. 
 #      (2) If run it on the othe day, set "export VDATE=YYYY0116" in this file
-#          But must run it after 18th in Jan
+#          But must run it after 16th in Jan
 #      (3) For testing  generation of plot over incompleted days 
 #          (non-entire year), it can be run on any day. But should set
 #          follwoing "export run_entire_yea=no". See below.        
