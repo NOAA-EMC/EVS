@@ -696,6 +696,8 @@ def plot_performance_diagram(df: pd.DataFrame, logger: logging.Logger,
             )
         else:
             model_plot_name = model_list[m]
+        if str(model_list[m]) not in pivot_metric1:
+            continue
         x_vals = [
             pivot_metric1[str(model_list[m])].values[i] 
             for i in thresh_argsort
