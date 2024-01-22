@@ -731,9 +731,10 @@ if [ $modnam = osi_saf ] ; then
           echo "Job ID: $jobid" >> mailmsg
           cat mailmsg | mail -s "$subject" $MAILTO
     else
+	  echo "NH OSI_SAF and SH OSI_SAF datasets exist" 
           python ${USHevs}/global_ens/global_ens_sea_ice_prep.py
          [[ $SENDCOM="YES" ]] &&  cpreq -v $WORK/atmos.${INITDATE}/osi_saf/*.nc $COMOUTosi_saf/.
-    fi
+   fi
  fi
 fi
 
