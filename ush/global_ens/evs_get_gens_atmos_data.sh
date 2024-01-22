@@ -711,12 +711,12 @@ fi
 if [ $modnam = osi_saf ] ; then
   INITDATEm1=$($NDATE -24 ${INITDATE}00 | cut -c1-8)
   osisaf_comout_file=${COMOUTosi_saf}/osi_saf.multi.${INITDATEm1}00to${INITDATE}00_G004.nc
-  if [  -s $osisaf_comout_file ]; then
-   echo "${osisaf_comout_file} exists"
+  if [ -s $osisaf_comout_file ]; then
+    echo "${osisaf_comout_file} exists"
   else
-   osi_nh=$DCOMINosi_saf/$INITDATEm1/seaice/osisaf/ice_conc_nh_polstere-100_multi_${INITDATEm1}1200.nc
-   osi_sh=$DCOMINosi_saf/$INITDATEm1/seaice/osisaf/ice_conc_sh_polstere-100_multi_${INITDATEm1}1200.nc
-   if [ ! -s $osi_nh ]; then
+    osi_nh=$DCOMINosi_saf/$INITDATEm1/seaice/osisaf/ice_conc_nh_polstere-100_multi_${INITDATEm1}1200.nc
+    osi_sh=$DCOMINosi_saf/$INITDATEm1/seaice/osisaf/ice_conc_sh_polstere-100_multi_${INITDATEm1}1200.nc
+    if [ ! -s $osi_nh ]; then
         if [ $SENDMAIL = YES ]; then
           export subject="OSI_SAF NH Data Missing for EVS ${COMPONENT}"
           echo "Warning:  No OSI_SAF NH data  available for ${INITDATE}" > mailmsg
@@ -734,8 +734,8 @@ if [ $modnam = osi_saf ] ; then
 	  echo "NH OSI_SAF and SH OSI_SAF datasets exist" 
           python ${USHevs}/global_ens/global_ens_sea_ice_prep.py
          [[ $SENDCOM="YES" ]] &&  cpreq -v $WORK/atmos.${INITDATE}/osi_saf/*.nc $COMOUTosi_saf/.
-   fi
- fi
+    fi
+  fi
 fi
 
 #############################################################################
