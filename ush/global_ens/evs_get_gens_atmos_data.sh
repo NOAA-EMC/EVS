@@ -711,9 +711,11 @@ fi
 if [ $modnam = osi_saf ] ; then
   INITDATEm1=$($NDATE -24 ${INITDATE}00 | cut -c1-8)
   osisaf_comout_file=${COMOUTosi_saf}/osi_saf.multi.${INITDATEm1}00to${INITDATE}00_G004.nc
-  if [ ! -s $osisaf_comout_file ]; then
-   osi_nh=$DCOMINosi_saf/$INITDATE/seaice/osisaf/ice_conc_nh_polstere-100_multi_${INITDATE}1200.nc
-   osi_sh=$DCOMINosi_saf/$INITDATE/seaice/osisaf/ice_conc_sh_polstere-100_multi_${INITDATE}1200.nc
+  if [  -s $osisaf_comout_file ]; then
+   echo "${osisaf_comout_file} exists"
+  else
+   osi_nh=$DCOMINosi_saf/$INITDATEm1/seaice/osisaf/ice_conc_nh_polstere-100_multi_${INITDATEm1}1200.nc
+   osi_sh=$DCOMINosi_saf/$INITDATEm1/seaice/osisaf/ice_conc_sh_polstere-100_multi_${INITDATEm1}1200.nc
    if [ ! -s $osi_nh ]; then
         if [ $SENDMAIL = YES ]; then
           export subject="OSI_SAF NH Data Missing for EVS ${COMPONENT}"
@@ -722,20 +724,16 @@ if [ $modnam = osi_saf ] ; then
           echo "Job ID: $jobid" >> mailmsg
           cat mailmsg | mail -s "$subject" $MAILTO
         fi 
-   else
-         if [ ! -s $osi_sh ]; then
+    elif [ ! -s $osi_sh ]; then
           export subject="OSI_SAF SH Data Missing for EVS ${COMPONENT}"
           echo "Warning:  No OSI_SAF SH data  available for ${INITDATE}" > mailmsg
           echo "Missing file is $osi_sh"  >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
           cat mailmsg | mail -s "$subject" $MAILTO
-         else
-             python ${USHevs}/global_ens/global_ens_sea_ice_prep.py
-             [[ $SENDCOM="YES" ]] &&  cpreq -v $WORK/atmos.${INITDATE}/osi_saf/*.nc $COMOUTosi_saf/.
-         fi
-   fi
- else
-   echo "${osisaf_comout_file} exists"
+    else
+          python ${USHevs}/global_ens/global_ens_sea_ice_prep.py
+         [[ $SENDCOM="YES" ]] &&  cpreq -v $WORK/atmos.${INITDATE}/osi_saf/*.nc $COMOUTosi_saf/.
+    fi
  fi
 fi
 
