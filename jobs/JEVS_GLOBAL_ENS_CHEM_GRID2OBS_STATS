@@ -63,6 +63,8 @@ export FIXevs=${FIXevs:-$HOMEevs/fix}
 
 export VDATE=${VDATE:-${PDYm2}}
 
+export OBTTYPE=${OBTTYPE:-aeronet}
+
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
 export DCOMIN=${DCOMIN:-${DCOMROOT}}
 export COMINgefs=${COMINgefs:-$(compath.py -o ${modsys}/${mod_ver}}
@@ -76,7 +78,6 @@ mkdir -p ${COMOUTsmall} ${COMOUTfinal}
 #######################################################################
 # Execute the script.
 #######################################################################
-export OBTTYPE=${OBTTYPE:-aeronet}
 
 $HOMEevs/scripts/${STEP}/${COMPONENT}/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${OBTTYPE}_${STEP}.sh
 

@@ -63,6 +63,8 @@ export FIXevs=${FIXevs:-$HOMEevs/fix}
 ## PDYm3 for goes5, icap
 export VDATE=${VDATE:-${PDYm2}}
 
+export OBTTYPE=${OBTTYPE:-geos5}
+
 ## export COMINobs=${COMINobs:-${DCOMROOT}}   ==> rename to DCOMIN
 export COMIN=${COMIN:-$(compath.py $envir/com/$NET/${evs_ver})}
 export COMINgefs=${COMINgefs:-$(compath.py -o ${modsys}/${mod_ver}}
@@ -76,8 +78,6 @@ mkdir -p ${COMOUTsmall} ${COMOUTfinal}
 #######################################################################
 ## Execute the script.
 #########################################################################
-export OBTTYPE=${OBTTYPE:-geos5}
-
 $HOMEevs/scripts/$COMPONENT/$STEP/exevs_${COMPONENT}_${RUN}_${VERIF_CASE}_${STEP}.sh
 
 msg="JOB $job HAS COMPLETED NORMALLY."
