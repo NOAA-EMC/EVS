@@ -151,8 +151,8 @@ class PrecipSpatialMap:
                     make_png = True
                 else:
                     make_png = False
-                    self.logger.warning(f"{model_num_file} does not exist, "
-                                        +"not making plot")
+                    self.logger.info(f"{model_num_file} does not exist, "
+                                     +"not making plot")
             else:
                 make_png = False
             if model_num_name != 'gfs' \

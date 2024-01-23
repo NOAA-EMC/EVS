@@ -834,7 +834,7 @@ elif JOB_GROUP == 'tar_images':
             gda_util.run_shell_command(['tar', '-cvf', tar_file, '*'])
             os.chdir(cwd)
         else:
-            logger.warning(f"No images generated in {DATAjob}")
+            logger.info(f"No images generated in {DATAjob}")
     if KEEPDATA != 'YES':
         if os.path.exists(DATAjob):
             logger.info(f"Removing {DATAjob}")

@@ -72,8 +72,8 @@ class LeadByLevel:
                           +f"{self.plot_info_dict}")
         # Check stat
         if self.plot_info_dict['stat'] == 'FBAR_OBAR':
-            self.logger.warning("Cannot make lead_by_level for stat "
-                                +f"{self.plot_info_dict['stat']}")
+            self.logger.error("Cannot make lead_by_level for stat "
+                              +f"{self.plot_info_dict['stat']}")
             sys.exit(1)
         plot_specs_lbl = PlotSpecs(self.logger, 'lead_by_level')
         self.logger.info(f"Gathering data for {self.plot_info_dict['stat']} "
@@ -321,10 +321,10 @@ class LeadByLevel:
         fcst_units = np.unique(fcst_units)
         fcst_units = np.delete(fcst_units, np.where(fcst_units == 'nan'))
         if len(fcst_units) > 1:
-            self.logger.error("DIFFERING UNITS")
+            self.logger.error(f"Have multilple units: {', '.join(fcst_units)}")
             sys.exit(1)
         elif len(fcst_units) == 0:
-            self.logger.warning("Empty dataframe")
+            self.logger.debug("Cannot get variables units, leaving blank")
             fcst_units = ['']
         plot_title = plot_specs_lbl.get_plot_title(
             self.plot_info_dict, self.date_info_dict,
@@ -487,8 +487,8 @@ class LeadByLevel:
                                 self.plot_info_dict['stat']
                             )
                 else:
-                    self.logger.warning("Fully masked array "
-                                        +f"for {model_num}, no plotting")
+                    self.logger.debug("Fully masked array "
+                                      +f"for {model_num}, no plotting")
             else:
                 if self.plot_info_dict['stat'] in ['BIAS', 'ME', 'FBIAS']:
                     self.logger.debug(f"Plotting {model_num} "
@@ -544,12 +544,12 @@ class LeadByLevel:
                             else:
                                 cbar_label = 'Difference'
                     else:
-                        self.logger.warning("Do not have contour levels "
-                                            +"to plot, not plotting")
+                        self.logger.debug("Do not have contour levels "
+                                          +"to plot, not plotting")
                 else:
-                    self.logger.warning("Fully masked array "
-                                        +f"for {model_num}, "
-                                        +"no plotting")
+                    self.logger.debug("Fully masked array "
+                                      +f"for {model_num}, "
+                                      +"no plotting")
                     if os.environ['evs_run_mode'] == 'production' \
                             and model_num_plot_name == 'jma' \
                             and (int(self.date_info_dict['forecast_hours'][1])\
