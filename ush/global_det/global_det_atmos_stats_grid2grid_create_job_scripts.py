@@ -1296,7 +1296,7 @@ if USE_CFP == 'YES':
                                        'job*'))
     njob_files = len(job_files)
     if njob_files == 0:
-        print("WARNING: No job files created in "
+        print("NOTE: No job files created in "
               +os.path.join(DATA, VERIF_CASE_STEP, 'METplus_job_scripts',
                             JOB_GROUP))
     poe_files = glob.glob(os.path.join(DATA, VERIF_CASE_STEP,
