@@ -934,7 +934,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             for fhr in job_fhr_list:
                                 if int(fhr) % 24 != 0:
                                     job_fhr_list.remove(fhr)
-                                job_env_dict['fhr_list'] = ','.join(
+                                job_env_dict['fhr_list'] = ', '.join(
                                     job_fhr_list
                                 )
                     # Do file checks
@@ -945,7 +945,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             gda_util.check_model_files(job_env_dict)
                         )
                         job_env_dict['fhr_list'] = (
-                            '"'+','.join(valid_date_fhr_list)+'"'
+                            "'"+', '.join(valid_date_fhr_list)+"'"
                         )
                     if JOB_GROUP == 'assemble_data':
                         check_truth_files = False
@@ -969,31 +969,71 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             write_job_cmds = True
                         else:
                             write_job_cmds = False
-                     # Check job and model being run
-                    if job_env_dict['MODEL'] \
-                            in ['cmc', 'ecmwf', 'fnmoc',
-                                'imd', 'jma', 'ukmet'] \
-                            and verif_type_job == 'SpefHum':
-                        write_job_cmds = False
-                    elif job_env_dict['MODEL'] \
-                            in ['jma'] \
-                            and verif_type_job == 'RelHum':
-                        write_job_cmds = False
-                    # UKMET data doesn't have RH for fhr 132 or 144
-                    if job_env_dict['MODEL'] == 'ukmet' \
-                            and job_env_dict['VERIF_CASE'] == 'grid2obs' \
-                            and job_env_dict['VERIF_TYPE'] == 'pres_levs' \
-                            and job_env_dict['job_name'] == 'RelHum':
-                        ukmet_fhr_list = (
-                            job_env_dict['fhr_list'].replace('"','')\
-                            .split(',')
-                        )
-                        for fhr_rm in ['132', '144']:
-                            if fhr_rm in ukmet_fhr_list:
-                                ukmet_fhr_list.remove(fhr_rm)
-                        job_env_dict['fhr_list'] = (
-                            '"'+','.join(ukmet_fhr_list)+'"'
-                        )
+                    # Check job and model being run
+                    if JOB_GROUP == 'generate_stats':
+                        # Models below do not have Specific Humidity
+                        if job_env_dict['VERIF_TYPE'] == 'pres_levs' \
+                                and verif_type_job == 'SpefHum' \
+                                and job_env_dict['MODEL'] in ['cmc', 'ecmwf',
+                                                              'fnmoc', 'imd',
+                                                              'jma', 'ukmet']:
+                            write_job_cmds = False
+                        # JMA does not have Relative Humidity
+                        if job_env_dict['VERIF_TYPE'] == 'pres_levs' \
+                                and verif_type_job == 'RelHum' \
+                                and job_env_dict['MODEL'] == 'jma':
+                            write_job_cmds = False
+                        # UKMET doesn't have RH for past f120
+                        if job_env_dict['VERIF_TYPE'] == 'pres_levs' \
+                                and verif_type_job == 'RelHum' \
+                                and job_env_dict['MODEL'] == 'ukmet':
+                            fhr_list = (
+                                job_env_dict['fhr_list']\
+                                .replace("'",'').split(', ')
+                            )
+                            ukmet_fhr_list = []
+                            ukmet_fhr_rm_list = []
+                            for fhr_chk in fhr_list:
+                                if int(fhr_chk) > 120:
+                                    ukmet_fhr_rm_list.append(fhr_chk)
+                                else:
+                                    ukmet_fhr_list.append(fhr_chk)
+                            job_env_dict['fhr_list'] = (
+                                "'"+', '.join(ukmet_fhr_list)+"'"
+                            )
+                        # CMC doesn't have variables at all levels
+                        if job_env_dict['VERIF_TYPE'] == 'pres_levs' \
+                                and job_env_dict['MODEL'] == 'cmc':
+                            fcst_level_list = (
+                                job_env_dict['var1_fcst_levels']\
+                                .replace("'",'').split(', ')
+                            )
+                            if verif_type_job in ['UWind', 'VWind',
+                                                  'VectorWind']:
+                                cmc_rm_level_list = ['P400', 'P300', 'P150',
+                                                     'P100', 'P50', 'P20',
+                                                     'P10', 'P5', 'P1']
+                            else:
+                                cmc_rm_level_list = ['P400', 'P300', 'P200',
+                                                     'P150', 'P100', 'P50',
+                                                     'P20', 'P10', 'P5', 'P1']
+                            cmc_level_list = []
+                            for level_chk in fcst_level_list:
+                                if level_chk not in cmc_rm_level_list:
+                                    cmc_level_list.append(level_chk)
+                            job_env_dict['var1_fcst_levels'] = (
+                                "'"+', '.join(cmc_level_list)+"'"
+                            )
+                            job_env_dict['var1_obs_levels'] = (
+                                "'"+', '.join(cmc_level_list)+"'"
+                            )
+                            if verif_type_job == 'VectorWind':
+                                job_env_dict['var2_fcst_levels'] = (
+                                    "'"+', '.join(cmc_level_list)+"'"
+                                )
+                                job_env_dict['var2_obs_levels'] = (
+                                    "'"+', '.join(cmc_level_list)+"'"
+                                )
                     # Write environment variables
                     for name, value in job_env_dict.items():
                         job.write('export '+name+'='+value+'\n')
@@ -1013,7 +1053,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     else:
                         if JOB_GROUP == 'assemble_data':
                             if verif_type_job == 'TempAnom2m':
-                                if job_env_dict['fhr_list'] != '""':
+                                if job_env_dict['fhr_list'] != "''":
                                     job.write(verif_type_job_commands_list[1])
                     job.close()
                 date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
