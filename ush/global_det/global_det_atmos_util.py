@@ -110,14 +110,18 @@ def check_file_exists_size(file_name):
                        - False: file doesn't exist
                                 OR file size = 0
     """
+    if '/com/' in file_name or '/dcom/' in file_name:
+        alert_word = 'WARNING'
+    else:
+        alert_word = 'NOTE'
     if os.path.exists(file_name):
         if os.path.getsize(file_name) > 0:
             file_good = True
         else:
-            print("WARNING: "+file_name+" empty, 0 sized")
+            print(f"{alert_word}: {file_name} empty, 0 sized")
             file_good = False
     else:
-        print("WARNING: "+file_name+" does not exist")
+        print(f"{alert_word}: {file_name} does not exist")
         file_good = False
     return file_good
 

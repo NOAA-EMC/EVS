@@ -34,6 +34,8 @@ export machine=WCOSS2
 export USE_CFP=YES
 export nproc=25
 
+export OMP_NUM_THREADS=1
+
 export MAILTO='alicia.bentley@noaa.gov,mallory.row@noaa.gov'
 
 export envir=prod
