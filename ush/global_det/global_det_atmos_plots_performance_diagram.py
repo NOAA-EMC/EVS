@@ -72,8 +72,8 @@ class PerformanceDiagram:
                           +f"{self.plot_info_dict}")
         # Check stat
         if self.plot_info_dict['stat'] != 'PERFDIAG':
-            self.logger.warning("Cannot make performance diagram for stat "
-                                +f"{self.plot_info_dict['stat']}")
+            self.logger.error("Cannot make performance diagram for stat "
+                              +f"{self.plot_info_dict['stat']}")
             sys.exit(1)
         # Set stats to calculate for diagram
         perf_diag_stat_list = ['SRATIO', 'POD', 'CSI']
@@ -222,10 +222,10 @@ class PerformanceDiagram:
         fcst_units = np.unique(fcst_units)
         fcst_units = np.delete(fcst_units, np.where(fcst_units == 'nan'))
         if len(fcst_units) > 1:
-            self.logger.error("DIFFERING UNITS")
+            self.logger.error(f"Have multilple units: {', '.join(fcst_units)}")
             sys.exit(1)
         elif len(fcst_units) == 0:
-            self.logger.warning("Empty dataframe")
+            self.logger.debug("Cannot get variables units, leaving blank")
             fcst_units = ['']
         plot_title = plot_specs_pd.get_plot_title(
             self.plot_info_dict, self.date_info_dict,
