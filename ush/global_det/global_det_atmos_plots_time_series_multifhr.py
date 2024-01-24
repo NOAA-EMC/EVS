@@ -73,8 +73,8 @@ class TimeSeriesMultiFhr:
                           +f"{self.plot_info_dict}")
         # Check stat
         if self.plot_info_dict['stat'] == 'FBAR_OBAR':
-            self.logger.warning("Cannot make time_series_multifhr for stat "
-                                +f"{self.plot_info_dict['stat']}")
+            self.logger.error("Cannot make time_series_multifhr for stat "
+                               +f"{self.plot_info_dict['stat']}")
             sys.exit(1)
         # Check only requested 1 model
         if len(list(self.model_info_dict.keys())) != 1:
@@ -261,10 +261,10 @@ class TimeSeriesMultiFhr:
         fcst_units = np.unique(fcst_units)
         fcst_units = np.delete(fcst_units, np.where(fcst_units == 'nan'))
         if len(fcst_units) > 1:
-            self.logger.error("DIFFERING UNITS")
+            self.logger.error(f"Have multilple units: {', '.join(fcst_units)}")
             sys.exit(1)
         elif len(fcst_units) == 0:
-            self.logger.warning("Empty dataframe")
+            self.logger.debug("Cannot get variables units, leaving blank")
             fcst_units = ['']
         plot_title = plot_specs_tsmf.get_plot_title(
             self.plot_info_dict, self.date_info_dict,
@@ -395,7 +395,7 @@ class TimeSeriesMultiFhr:
                               .index(forecast_hour) + 4)
                 )
             else:
-                self.logger.warning(f"{forecast_hour} has no points")
+                self.logger.debug(f"{forecast_hour} has no points")
         preset_y_axis_tick_min = ax.get_yticks()[0]
         preset_y_axis_tick_max = ax.get_yticks()[-1]
         preset_y_axis_tick_inc = ax.get_yticks()[1] - ax.get_yticks()[0]

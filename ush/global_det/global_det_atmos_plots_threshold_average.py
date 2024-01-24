@@ -73,8 +73,8 @@ class ThresholdAverage:
                           +f"{self.plot_info_dict}")
         # Check stat
         if self.plot_info_dict['stat'] == 'FBAR_OBAR':
-            self.logger.warning("Cannot make threshold_average for stat "
-                                +f"{self.plot_info_dict['stat']}")
+            self.logger.error("Cannot make threshold_average for stat "
+                              +f"{self.plot_info_dict['stat']}")
             sys.exit(1)
         # Get dates to plot
         self.logger.info("Creating valid and init date arrays")
@@ -262,10 +262,10 @@ class ThresholdAverage:
         fcst_units = np.unique(fcst_units)
         fcst_units = np.delete(fcst_units, np.where(fcst_units == 'nan'))
         if len(fcst_units) > 1:
-            self.logger.error("DIFFERING UNITS")
+            self.logger.error(f"Have multilple units: {', '.join(fcst_units)}")
             sys.exit(1)
         elif len(fcst_units) == 0:
-            self.logger.warning("Empty dataframe")
+            self.logger.debug("Cannot get variables units, leaving blank")
             fcst_units = ['']
         plot_title = plot_specs_ta.get_plot_title(
             self.plot_info_dict, self.date_info_dict,

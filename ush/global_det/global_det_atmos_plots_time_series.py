@@ -233,10 +233,10 @@ class TimeSeries:
         fcst_units = np.unique(fcst_units)
         fcst_units = np.delete(fcst_units, np.where(fcst_units == 'nan'))
         if len(fcst_units) > 1:
-            self.logger.error("DIFFERING UNITS")
+            self.logger.error(f"Have multilple units: {', '.join(fcst_units)}")
             sys.exit(1)
         elif len(fcst_units) == 0:
-            self.logger.warning("Empty dataframe")
+            self.logger.debug("Cannot get variables units, leaving blank")
             fcst_units = ['']
         plot_title = plot_specs_ts.get_plot_title(
             self.plot_info_dict, self.date_info_dict,
@@ -455,8 +455,8 @@ class TimeSeries:
                             stat_max = obar_masked_model_num_data.max()
                         obs_plotted = True
             else:
-                self.logger.warning(f"{model_num} - {model_num_name} "
-                                    +f"- {model_num_plot_name} has no points")
+                self.logger.debug(f"{model_num} - {model_num_name} "
+                                  +f"- {model_num_plot_name} has no points")
         preset_y_axis_tick_min = ax.get_yticks()[0]
         preset_y_axis_tick_max = ax.get_yticks()[-1]
         preset_y_axis_tick_inc = ax.get_yticks()[1] - ax.get_yticks()[0]

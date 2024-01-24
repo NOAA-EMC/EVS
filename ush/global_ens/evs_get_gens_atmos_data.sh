@@ -95,11 +95,13 @@ if [ $modnam = cmcanl ]; then
 
   for ihour in 00 12; do
       origin=$COMINcmce/cmce.$vday/$ihour/pgrb2ap5
-      if [ ! -s $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl ] ; then
-        cmcanl=$origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.f000
-      else
-        echo "WARNING: $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl does not exist, using $origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl"
+      if [ -s $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl ] ; then
         cmcanl=$origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl
+      elif [ -s $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.f000 ] ; then
+        cmcanl=$origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.f000	
+        echo "WARNING: $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl does not exist, using $origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.f000"
+      else
+        echo "WARNING: No $COMINcmce/cmce.$vday/$ihour/pgrb2ap5/cmc_gec00.t${ihour}z.pgrb2a.0p50.anl or $origin/cmc_gec00.t${ihour}z.pgrb2a.0p50.f000 file available"
       fi
       if [ ! -s $cmcanl ] ; then
        if [ $SENDMAIL = YES ]; then
@@ -709,10 +711,12 @@ fi
 if [ $modnam = osi_saf ] ; then
   INITDATEm1=$($NDATE -24 ${INITDATE}00 | cut -c1-8)
   osisaf_comout_file=${COMOUTosi_saf}/osi_saf.multi.${INITDATEm1}00to${INITDATE}00_G004.nc
-  if [ ! -s $osisaf_comout_file ]; then
-   osi_nh=$DCOMINosi_saf/$INITDATE/seaice/osisaf/ice_conc_nh_polstere-100_multi_${INITDATE}1200.nc
-   osi_sh=$DCOMINosi_saf/$INITDATE/seaice/osisaf/ice_conc_sh_polstere-100_multi_${INITDATE}1200.nc
-   if [ ! -s $osi_nh ]; then
+  if [ -s $osisaf_comout_file ]; then
+    echo "${osisaf_comout_file} exists"
+  else
+    osi_nh=$DCOMINosi_saf/$INITDATEm1/seaice/osisaf/ice_conc_nh_polstere-100_multi_${INITDATEm1}1200.nc
+    osi_sh=$DCOMINosi_saf/$INITDATEm1/seaice/osisaf/ice_conc_sh_polstere-100_multi_${INITDATEm1}1200.nc
+    if [ ! -s $osi_nh ]; then
         if [ $SENDMAIL = YES ]; then
           export subject="OSI_SAF NH Data Missing for EVS ${COMPONENT}"
           echo "Warning:  No OSI_SAF NH data  available for ${INITDATE}" > mailmsg
@@ -720,21 +724,18 @@ if [ $modnam = osi_saf ] ; then
           echo "Job ID: $jobid" >> mailmsg
           cat mailmsg | mail -s "$subject" $MAILTO
         fi 
-   else
-         if [ ! -s $osi_sh ]; then
+    elif [ ! -s $osi_sh ]; then
           export subject="OSI_SAF SH Data Missing for EVS ${COMPONENT}"
           echo "Warning:  No OSI_SAF SH data  available for ${INITDATE}" > mailmsg
           echo "Missing file is $osi_sh"  >> mailmsg
           echo "Job ID: $jobid" >> mailmsg
           cat mailmsg | mail -s "$subject" $MAILTO
-         else
-             python ${USHevs}/global_ens/global_ens_sea_ice_prep.py
-             [[ $SENDCOM="YES" ]] &&  cpreq -v $WORK/atmos.${INITDATE}/osi_saf/*.nc $COMOUTosi_saf/.
-         fi
-   fi
- else
-   echo "${osisaf_comout_file} exists"
- fi
+    else
+	  echo "NH OSI_SAF and SH OSI_SAF datasets exist" 
+          python ${USHevs}/global_ens/global_ens_sea_ice_prep.py
+         [[ $SENDCOM="YES" ]] &&  cpreq -v $WORK/atmos.${INITDATE}/osi_saf/*.nc $COMOUTosi_saf/.
+    fi
+  fi
 fi
 
 #############################################################################
