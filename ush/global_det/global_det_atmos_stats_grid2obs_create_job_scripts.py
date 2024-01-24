@@ -112,24 +112,28 @@ reformat_data_model_jobs_dict = {
     'ptype': {
         'Rain': {'env': {'var1_name': 'CRAIN',
                          'var1_level': 'L0',
+                         'var1_options': "'GRIB2_pdt = 0'",
                          'grid': 'G104'},
                  'commands': [gda_util.metplus_command(
                                   'RegridDataPlane_fcstGLOBAL_DET.conf'
                               )]},
         'Snow': {'env': {'var1_name': 'CSNOW',
                          'var1_level': 'L0',
+                         'var1_options': "'GRIB2_pdt = 0'",
                          'grid': 'G104'},
                  'commands': [gda_util.metplus_command(
                                   'RegridDataPlane_fcstGLOBAL_DET.conf'
                               )]},
         'FrzRain': {'env': {'var1_name': 'CFRZR',
                             'var1_level': 'L0',
+                            'var1_options': "'GRIB2_pdt = 0'",
                             'grid': 'G104'},
                     'commands': [gda_util.metplus_command(
                                      'RegridDataPlane_fcstGLOBAL_DET.conf'
                                  )]},
         'IcePel': {'env': {'var1_name': 'CICEP',
                            'var1_level': 'L0',
+                           'var1_options': "'GRIB2_pdt = 0'",
                            'grid': 'G104'},
                    'commands': [gda_util.metplus_command(
                                     'RegridDataPlane_fcstGLOBAL_DET.conf'
@@ -414,7 +418,8 @@ generate_stats_jobs_dict = {
                          'var1_fcst_name': 'CRAIN',
                          'var1_fcst_levels': 'L0',
                          'var1_fcst_options': ("'set_attr_units = "
-                                               +'"unitless";'+"'"),
+                                               +'"unitless"; '
+                                               +'GRIB2_pdt = 0'+"'"),
                          'var1_fcst_threshs': "'ge1.0'",
                          'var1_obs_name': 'PRWE',
                          'var1_obs_levels': 'Z0',
@@ -431,7 +436,8 @@ generate_stats_jobs_dict = {
                          'var1_fcst_name': 'CSNOW',
                          'var1_fcst_levels': 'L0',
                          'var1_fcst_options': ("'set_attr_units = "
-                                               +'"unitless";'+"'"),
+                                               +'"unitless"; '
+                                               +'GRIB2_pdt = 0'+"'"),
                          'var1_fcst_threshs': "'ge1.0'",
                          'var1_obs_name': 'PRWE',
                          'var1_obs_levels': 'Z0',
@@ -448,7 +454,8 @@ generate_stats_jobs_dict = {
                             'var1_fcst_name': 'CFRZR',
                             'var1_fcst_levels': 'L0',
                             'var1_fcst_options': ("'set_attr_units = "
-                                                  +'"unitless";'+"'"),
+                                                  +'"unitless"; '
+                                                  +'GRIB2_pdt = 0'+"'"),
                             'var1_fcst_threshs': "'ge1.0'",
                             'var1_obs_name': 'PRWE',
                             'var1_obs_levels': 'Z0',
@@ -465,7 +472,8 @@ generate_stats_jobs_dict = {
                            'var1_fcst_name': 'CICEP',
                            'var1_fcst_levels': 'L0',
                            'var1_fcst_options': ("'set_attr_units = "
-                                                 +'"unitless";'+"'"),
+                                                 +'"unitless";'
+                                                 +'GRIB2_pdt = 0'+"'"),
                            'var1_fcst_threshs': "'ge1.0'",
                            'var1_obs_name': 'PRWE',
                            'var1_obs_levels': 'Z0',
@@ -703,8 +711,9 @@ generate_stats_jobs_dict = {
                                   'msg_type': 'ADPSFC',
                                   'var1_fcst_name': 'TCDC',
                                   'var1_fcst_levels': 'L0',
-                                  'var1_fcst_options': ("'GRIB_lvl_typ = 10;"
-                                                        +"set_attr_level = "
+                                  'var1_fcst_options': ("'GRIB_lvl_typ = 10; "
+                                                        +'GRIB2_pdt = 0; '
+                                                        +'set_attr_level = '
                                                         +'"TOTAL";'+"'"),
                                   'var1_fcst_threshs': "'lt10, gt10, gt50, gt90'",
                                   'var1_obs_name': 'TCDC',
