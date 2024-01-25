@@ -115,29 +115,53 @@ if job_type in ['generate', 'reformat']:
                     )
                     if 'WEASD' in FCST_VAR_NAME:
                         if MODELNAME == "hireswarw":
-                           MODEL_PCP_COMBINE_grib2_pdt = "0"
-                           MODEL_PCP_COMBINE_grib2_pdt_idx = "[ 8 ]"
-                           MODEL_PCP_COMBINE_grib2_pdt_val = "[ 0 ]"
+                           MODEL_PCP_COMBINE_grib2_pdt = " GRIB2_pdt = 0;"
+                           MODEL_PCP_COMBINE_grib2_pdt_idx1 = " GRIB2_pdt_index = [ 8 ];"
+                           MODEL_PCP_COMBINE_grib2_pdt_val1 = " GRIB2_pdt_val = [ 0 ];"
+                           MODEL_PCP_COMBINE_grib2_pdt_idx2 = " GRIB2_pdt_index = [ 8 ];"
+                           MODEL_PCP_COMBINE_grib2_pdt_val2 = " GRIB2_pdt_val = [ 0 ];"
+                           MODEL_PCP_COMBINE_grib2_pdt_idx3 = " GRIB2_pdt_index = [ 8 ];"
+                           MODEL_PCP_COMBINE_grib2_pdt_val3 = " GRIB2_pdt_val = [ 0 ];"
                         elif MODELNAME == "hireswarwmem2":
-                           MODEL_PCP_COMBINE_grib2_pdt = "0"
-                           MODEL_PCP_COMBINE_grib2_pdt_idx = "[ 8 ]"
-                           MODEL_PCP_COMBINE_grib2_pdt_val = "[ 0 ]"
+                           MODEL_PCP_COMBINE_grib2_pdt = " GRIB2_pdt = 0;"
+                           MODEL_PCP_COMBINE_grib2_pdt_idx1 = " GRIB2_pdt_index = [ 8 ];"
+                           MODEL_PCP_COMBINE_grib2_pdt_val1 = " GRIB2_pdt_val = [ 0 ];"
+                           MODEL_PCP_COMBINE_grib2_pdt_idx2 = " GRIB2_pdt_index = [ 8 ];"
+                           MODEL_PCP_COMBINE_grib2_pdt_val2 = " GRIB2_pdt_val = [ 0 ];"
+                           MODEL_PCP_COMBINE_grib2_pdt_idx3 = " GRIB2_pdt_index = [ 8 ];"
+                           MODEL_PCP_COMBINE_grib2_pdt_val3 = " GRIB2_pdt_val = [ 0 ];"
                         elif MODELNAME == "hireswfv3":
-                           MODEL_PCP_COMBINE_grib2_pdt = "0"
-                           MODEL_PCP_COMBINE_grib2_pdt_idx = "[ 8 ]"
-                           MODEL_PCP_COMBINE_grib2_pdt_val = "[ {lead?fmt=%H} ]"
+                           MODEL_PCP_COMBINE_grib2_pdt = " GRIB2_pdt = 0;"
+                           MODEL_PCP_COMBINE_grib2_pdt_idx1 = " GRIB2_pdt_index = [ 8 ];"
+                           MODEL_PCP_COMBINE_grib2_pdt_val1 = " GRIB2_pdt_val = [ {lead?fmt=%H} ];"
+                           MODEL_PCP_COMBINE_grib2_pdt_idx2 = " GRIB2_pdt_index = [ 8 ];"
+                           MODEL_PCP_COMBINE_grib2_pdt_val2 = " GRIB2_pdt_val = [ {lead?fmt=%H?shift=-6H} ];"
+                           MODEL_PCP_COMBINE_grib2_pdt_idx3 = " GRIB2_pdt_index = [ 8 ];"
+                           MODEL_PCP_COMBINE_grib2_pdt_val3 = " GRIB2_pdt_val = [ {lead?fmt=%H?shift=-24H} ];"
                         elif MODELNAME == "hrrr":
                            MODEL_PCP_COMBINE_grib2_pdt = " GRIB2_pdt = 0;"
-                           MODEL_PCP_COMBINE_grib2_pdt_idx = " GRIB2_pdt_index = [ 8 ];"
-                           MODEL_PCP_COMBINE_grib2_pdt_val = " GRIB2_pdt_val = [ {lead?fmt=%H} ];"
+                           MODEL_PCP_COMBINE_grib2_pdt_idx1 = " GRIB2_pdt_index = [ 8 ];"
+                           MODEL_PCP_COMBINE_grib2_pdt_val1 = " GRIB2_pdt_val = [ {lead?fmt=%H} ];"
+                           MODEL_PCP_COMBINE_grib2_pdt_idx2 = " GRIB2_pdt_index = [ 8 ];"
+                           MODEL_PCP_COMBINE_grib2_pdt_val2 = " GRIB2_pdt_val = [ {lead?fmt=%H?shift=-6H} ];"
+                           MODEL_PCP_COMBINE_grib2_pdt_idx3 = " GRIB2_pdt_index = [ 8 ];"
+                           MODEL_PCP_COMBINE_grib2_pdt_val3 = " GRIB2_pdt_val = [ {lead?fmt=%H?shift=-24H} ];"
                         else:
                            MODEL_PCP_COMBINE_grib2_pdt = ""
-                           MODEL_PCP_COMBINE_grib2_pdt_idx = ""
-                           MODEL_PCP_COMBINE_grib2_pdt_val = ""
+                           MODEL_PCP_COMBINE_grib2_pdt_idx1 = ""
+                           MODEL_PCP_COMBINE_grib2_pdt_val1 = ""
+                           MODEL_PCP_COMBINE_grib2_pdt_idx2 = ""
+                           MODEL_PCP_COMBINE_grib2_pdt_val2 = ""
+                           MODEL_PCP_COMBINE_grib2_pdt_idx3 = ""
+                           MODEL_PCP_COMBINE_grib2_pdt_val3 = ""
                     else:
                         MODEL_PCP_COMBINE_grib2_pdt = ""
-                        MODEL_PCP_COMBINE_grib2_pdt_idx = ""
-                        MODEL_PCP_COMBINE_grib2_pdt_val = ""
+                        MODEL_PCP_COMBINE_grib2_pdt_idx1 = ""
+                        MODEL_PCP_COMBINE_grib2_pdt_val1 = ""
+                        MODEL_PCP_COMBINE_grib2_pdt_idx2 = ""
+                        MODEL_PCP_COMBINE_grib2_pdt_val2 = ""
+                        MODEL_PCP_COMBINE_grib2_pdt_idx3 = ""
+                        MODEL_PCP_COMBINE_grib2_pdt_val3 = ""
     if not plot_this_var:
         print(f"FATAL ERROR: VAR_NAME \"{VAR_NAME}\" is not valid for VERIF_TYPE "
               + f"\"{VERIF_TYPE}\" and MODEL \"{MODELNAME}\". Check "
@@ -224,8 +248,12 @@ if VERIF_CASE == 'snowfall':
         job_env_vars_dict['ACC'] = ACC
         job_env_vars_dict['MODEL_PCP_COMBINE_METHOD'] = MODEL_PCP_COMBINE_METHOD
         job_env_vars_dict['MODEL_PCP_COMBINE_grib2_pdt'] = MODEL_PCP_COMBINE_grib2_pdt
-        job_env_vars_dict['MODEL_PCP_COMBINE_grib2_pdt_idx'] = MODEL_PCP_COMBINE_grib2_pdt_idx
-        job_env_vars_dict['MODEL_PCP_COMBINE_grib2_pdt_val'] = MODEL_PCP_COMBINE_grib2_pdt_val
+        job_env_vars_dict['MODEL_PCP_COMBINE_grib2_pdt_idx1'] = MODEL_PCP_COMBINE_grib2_pdt_idx1
+        job_env_vars_dict['MODEL_PCP_COMBINE_grib2_pdt_val1'] = MODEL_PCP_COMBINE_grib2_pdt_val1
+        job_env_vars_dict['MODEL_PCP_COMBINE_grib2_pdt_idx2'] = MODEL_PCP_COMBINE_grib2_pdt_idx2
+        job_env_vars_dict['MODEL_PCP_COMBINE_grib2_pdt_val2'] = MODEL_PCP_COMBINE_grib2_pdt_val2
+        job_env_vars_dict['MODEL_PCP_COMBINE_grib2_pdt_idx3'] = MODEL_PCP_COMBINE_grib2_pdt_idx3
+        job_env_vars_dict['MODEL_PCP_COMBINE_grib2_pdt_val3'] = MODEL_PCP_COMBINE_grib2_pdt_val3
         job_env_vars_dict['MODEL_PCP_COMBINE_COMMAND'] = MODEL_PCP_COMBINE_COMMAND
         job_dependent_vars['FHR_START'] = {
             'exec_value': '',
