@@ -43,8 +43,8 @@ if [ "$ACC" = "06" ]; then
         err_exit "The provided NEST, $NEST, is not supported for $MODELNAME"
     fi
     export OBS_THRESH="ge0.0254,ge0.0508,ge0.1016,ge0.2032,ge0.3048"
-    export MODEL_PCP_COMBINE_METHOD="SUBTRACT"
-    export MODEL_PCP_COMBINE_COMMAND=""
+    export MODEL_PCP_COMBINE_METHOD="USER_DEFINED"
+    export MODEL_PCP_COMBINE_COMMAND="-subtract ${COMINfcst}/hiresw.{init?fmt=%Y%m%d}/hiresw.t{init?fmt=%H}z.fv3_5km.f{lead?fmt=%2H}.conus.grib2 'name=\\\"{FCST_VAR_NAME}\\\"; level=\\\"Z0\\\";\${MODEL_PCP_COMBINE_grib2_pdt_idx1}\${MODEL_PCP_COMBINE_grib2_pdt_val1}' ${COMINfcst}/hiresw.{init?fmt=%Y%m%d}/hiresw.t{init?fmt=%H}z.fv3_5km.f{lead?fmt=%2H?shift=-6H}.conus.grib2 'name=\\\"{FCST_VAR_NAME}\\\"; level=\\\"Z0\\\";\${MODEL_PCP_COMBINE_grib2_pdt_idx2}\${MODEL_PCP_COMBINE_grib2_pdt_val2}'"
 elif [ "$ACC" = "24" ]; then
     export MODEL_ACC="24"
     export OBS_ACC="24"
@@ -59,6 +59,8 @@ elif [ "$ACC" = "24" ]; then
     export OBS_THRESH="ge0.0254,ge0.0508,ge0.1016,ge0.2032,ge0.3048"
     export MODEL_PCP_COMBINE_METHOD="SUBTRACT"
     export MODEL_PCP_COMBINE_COMMAND=""
+    export MODEL_PCP_COMBINE_METHOD="USER_DEFINED"
+    export MODEL_PCP_COMBINE_COMMAND="-subtract ${COMINfcst}/hiresw.{init?fmt=%Y%m%d}/hiresw.t{init?fmt=%H}z.fv3_5km.f{lead?fmt=%2H}.conus.grib2 'name=\\\"{FCST_VAR_NAME}\\\"; level=\\\"Z0\\\";\${MODEL_PCP_COMBINE_grib2_pdt_idx1}\${MODEL_PCP_COMBINE_grib2_pdt_val1}' ${COMINfcst}/hiresw.{init?fmt=%Y%m%d}/hiresw.t{init?fmt=%H}z.fv3_5km.f{lead?fmt=%2H?shift=-24H}.conus.grib2 'name=\\\"{FCST_VAR_NAME}\\\"; level=\\\"Z0\\\";\${MODEL_PCP_COMBINE_grib2_pdt_idx3}\${MODEL_PCP_COMBINE_grib2_pdt_val3}'"
 else
     err_exit "The provided ACC, $ACC, is not supported for $MODELNAME"
 fi

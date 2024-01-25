@@ -54,6 +54,7 @@ export MODELNAME=namnest
 export modsys=nam
 export USE_CFP=YES
 export nproc=3
+export OMP_NUM_THREADS=1
 
 ############################################################
 # Execute j-job
