@@ -79,10 +79,13 @@ if STEP == 'prep':
                                     f'ccpa.t{VHOURm}z.{OBS_ACC}h.hrap.{NEST}.gb2'
                                 )
                             if not glob.glob(infiles):
-                                print(f"WARNING: Found no matches for {infiles}."
-                                      + f" Cannot copy necessary data into the"
-                                      + f" prep archive ... Continuing to the"
-                                      + f" next valid datetime.")
+                                print(f"Currently there are no matches for"
+                                      + f" {infiles}. This is normal, and these"
+                                      + f" files may appear later, to be"
+                                      + f" captured by another prep cycle. Will"
+                                      + f" not attempt to copy into the prep"
+                                      + f" archive ... Continuing to the next"
+                                      + f" valid datetime.")
                                 subtract_hours+=subtract_hours_inc
                                 continue
                             for infile in glob.glob(infiles):
