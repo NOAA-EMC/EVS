@@ -28,7 +28,7 @@ SENDCOM = os.environ['SENDCOM']
 vdayml = os.environ['vdaym1']
 
 # Input definitions
-daily_source_file=os.path.join(DCOMINghrsst,{vdayml},validation_data,marine,ghrsst,{vdaym1}_OSPO_L4_GHRSST.nc)
+daily_source_file=os.path.join(DCOMINghrsst,{vdayml},validation_data,marine,ghrsst,{vdaym1}+'_OSPO_L4_GHRSST.nc')
 daily_dest_file = os.path.join(COMOUTgefs, ghrsst.t00z.nc)
 
 # Temporary file name
