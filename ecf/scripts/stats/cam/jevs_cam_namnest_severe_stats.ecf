@@ -52,6 +52,7 @@ export RUN=atmos
 export VERIF_CASE=severe
 export MODELNAME=namnest
 export modsys=nam
+export OMP_NUM_THREADS=1
 
 ############################################################
 # Execute j-job
