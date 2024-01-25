@@ -25,7 +25,7 @@ print("BEGIN: "+os.path.basename(__file__))
 DCOMINghrsst = os.environ['DCOMINghrsst']
 COMOUTgefs = os.environ['COMOUTgefs']
 SENDCOM = os.environ['SENDCOM']
-vdayml = os.environ['vdaym1']
+vdaym1=os.environ['vdaym1']
 
 # Input definitions
 daily_source_file=os.path.join(DCOMINghrsst,{vdayml},validation_data,marine,ghrsst,{vdaym1}+'_OSPO_L4_GHRSST.nc')

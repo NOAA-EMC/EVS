@@ -103,7 +103,7 @@ if [ $get_nohrsc24h = yes ] ; then
 fi
 
 if [ $get_ghrsst = yes ] ; then
-  vdaym1=$($NDATE -24 ${INITDATE}00 | cut -c1-8)
+ export vdaym1=$($NDATE -24 ${INITDATE}00 | cut -c1-8)
   if [ -s $DCOMINghrsst/$vdaym1/validation_data/marine/ghrsst/${vdaym1}_OSPO_L4_GHRSST.nc ] ; then
       python $USHevs/${COMPONENT}/global_ens_prep_ghrsst_obs.py
       export err=$?; err_chk
