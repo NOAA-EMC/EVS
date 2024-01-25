@@ -54,6 +54,7 @@ export MODELNAME=hireswfv3
 export modsys=hiresw
 export USE_CFP=YES
 export nproc=3
+export OMP_NUM_THREADS=1
 
 ############################################################
 # Execute j-job

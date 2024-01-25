@@ -18,6 +18,7 @@ cd $PBS_O_WORKDIR
 # Load modules
 ############################################################
 
+export OMP_NUM_THREADS=1
 export model=evs
 export NET=evs
 export STEP=stats
