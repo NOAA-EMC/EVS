@@ -29,7 +29,7 @@ for OBTTYPE in ${obstype}; do
         checkfile=${DCOMIN}/${VDATE}/validation_data/aq/${OBTTYPE}/${VDATE}.lev15
         if [ -s ${checkfile} ]; then
             if [ -s ${config_file} ]; then
-                run_metplus.py ${config_file}
+                run_metplus.py ${config_file} ${PARMevs}/metplus_config/machine.conf
                 export err=$?; err_chk
                 if [ ${SENDCOM} = "YES" ]; then
                     cpfile=${finalprep}/${OBTTYPE}_All_${VDATE}_lev15.nc
@@ -76,7 +76,7 @@ for OBTTYPE in ${obstype}; do
             if [ -s ${checkfile} ]; then
                 export VHOUR=${vldhr}
         	if [ -s ${conf_file} ]; then
-                    run_metplus.py ${conf_file}
+                    run_metplus.py ${conf_file} ${PARMevs}/metplus_config/machine.conf
         	    export err=$?; err_chk
         	    if [ ${SENDCOM} = "YES" ]; then
                         cpfile=${finalprep}/airnow_hourly_aqobs_${VDATE}${VHOUR}.nc 
