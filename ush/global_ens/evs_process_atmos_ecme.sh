@@ -220,7 +220,6 @@ for n in 1 2 3 4 5 ; do
   done
 done
 
-hourix=0
 while [ ${hourix} -lt 31 ]; do
   let hourinc=hourix*12
   vymdh=` ${NDATE} ${hourinc} ${ymdh}`
