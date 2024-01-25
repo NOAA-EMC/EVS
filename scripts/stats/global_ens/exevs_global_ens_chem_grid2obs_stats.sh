@@ -22,7 +22,6 @@ export CONFIGevs=${CONFIGevs:-${PARMevs}/${STEP}/$COMPONENT/${RUN}_${VERIF_CASE}
 export METPLUS_PATH
 
 export obstype=`echo ${OBTTYPE} | tr a-z A-Z`
-export RUNnow=${OBTTYPE}
 
 case ${OBTTYPE} in
     aeronet) point_stat_conf_file=PointStat_fcstGEFSAero_obsAeronet.conf;;
@@ -34,8 +33,7 @@ esac
 # run Point Stat Analysis
 #############################
 
-echo "${METPLUS_PATH}/ush/run_metplus.py -c ${CONFIGevs}/metplus_chem.conf \
-        -c ${CONFIGevs}/${point_stat_conf_file}"
-## export err=$?; err_chk
+run_metplus.py -c ${CONFIGevs}/${point_stat_conf_file}
+export err=$?; err_chk
 
 exit
