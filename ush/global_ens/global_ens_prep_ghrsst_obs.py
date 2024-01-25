@@ -22,18 +22,13 @@ print("BEGIN: "+os.path.basename(__file__))
 
 
 # Read in common environment variables
-WORK = os.environ['WORK']
 DCOMINghrsst = os.environ['DCOMINghrsst']
-COMOUT = os.environ['COMOUT']
+COMOUTgefs = os.environ['COMOUTgefs']
 SENDCOM = os.environ['SENDCOM']
-vday_ml = os.environ['vday_m1']
-NET = os.environ['NET']
-RUN = os.environ['RUN']
-COMPONENT = os.environ['COMPONENT']
-STEP = os.environ['STEP']
+vdayml = os.environ['vdaym1']
 
 # Input definitions
-daily_source_file=os.path.join(DCOMINghrsst,{vday_ml},validation_data,marine,ghrsst,{vdaym1}_OSPO_L4_GHRSST.nc)
+daily_source_file=os.path.join(DCOMINghrsst,{vdayml},validation_data,marine,ghrsst,{vdaym1}_OSPO_L4_GHRSST.nc)
 daily_dest_file = os.path.join(COMOUTgefs, ghrsst.t00z.nc)
 
 # Temporary file name
@@ -54,7 +49,7 @@ else:
 daily_prepped_data.close()
 if SENDCOM == 'YES':
     gea_util.copy_file(daily_prepped_file, daily_dest_file)
-
+print("END: "+os.path.basename(__file__))
 
 
 

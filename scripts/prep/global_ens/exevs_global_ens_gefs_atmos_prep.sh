@@ -103,8 +103,8 @@ if [ $get_nohrsc24h = yes ] ; then
 fi
 
 if [ $get_ghrsst = yes ] ; then
-  vday_m1=$($NDATE -24 ${INITDATE}00 | cut -c1-8)
-  if [ -s $DCOMINghrsst/$vday_m1/validation_data/marine/ghrsst/${vday_m1}_OSPO_L4_GHRSST.nc ] ; then
+  vdaym1=$($NDATE -24 ${INITDATE}00 | cut -c1-8)
+  if [ -s $DCOMINghrsst/$vdaym1/validation_data/marine/ghrsst/${vdaym1}_OSPO_L4_GHRSST.nc ] ; then
       python $USHevs/${COMPONENT}/global_ens/global_ens_prep_ghrsst_obs.py
       export err=$?; err_chk
   else
@@ -112,7 +112,7 @@ if [ $get_ghrsst = yes ] ; then
      export subject="GHRSST OSPO Data Missing for EVS ${COMPONENT}"
      export MAILTO=${MAILTO:-'alicia.bentley@noaa.gov,steven.simon@noaa.gov'}
      echo "Warning: No GHRSST OSPO data was available for valid date ${vday}" > mailmsg
-     echo Missing file is  $DCOMINghrsst/$vday/validation_data/marine/ghrsst/${vday}_OSPO_L4_GHRSST.nc >> mailmsg
+     echo Missing file is  $DCOMINghrsst/$vdaym1/validation_data/marine/ghrsst/${vdaym1}_OSPO_L4_GHRSST.nc >> mailmsg
      echo "Job ID: $jobid" >> mailmsg
      cat mailmsg | mail -s "$subject" $MAILTO
     fi 
