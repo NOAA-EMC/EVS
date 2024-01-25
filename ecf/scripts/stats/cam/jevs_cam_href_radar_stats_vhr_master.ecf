@@ -54,6 +54,7 @@ export MODELNAME=href
 export modsys=href
 export USE_CFP=YES
 export nproc=9
+export OMP_NUM_THREADS=1
 
 ############################################################
 # Execute j-job
