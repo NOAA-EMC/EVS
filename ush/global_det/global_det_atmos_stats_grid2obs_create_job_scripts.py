@@ -842,6 +842,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                 verif_type_job
             )
             # Add job specific environment variables
+            full_job_levels_dict = {}
             for verif_type_job_env_var in \
                     list(JOB_GROUP_jobs_dict[verif_type]\
                          [verif_type_job]['env'].keys()):
@@ -849,7 +850,14 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     JOB_GROUP_jobs_dict[verif_type]\
                     [verif_type_job]['env'][verif_type_job_env_var]
                 )
-            fhr_list = job_env_dict['fhr_list']
+                if verif_type_job_env_var in ['var1_fcst_levels',
+                                              'var1_obs_levels',
+                                              'var2_fcst_levels',
+                                              'var2_obs_levels']:
+                    full_job_levels_dict[verif_type_job_env_var] = (
+                        job_env_dict[verif_type_job_env_var]
+                    )
+            full_job_fhr_list = job_env_dict['fhr_list']
             verif_type_job_commands_list = (
                 JOB_GROUP_jobs_dict[verif_type]\
                 [verif_type_job]['commands']
@@ -874,11 +882,15 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
             valid_date_inc = int(job_env_dict['valid_hr_inc'])
             date_dt = valid_start_date_dt
             while date_dt <= valid_end_date_dt:
-                job_env_dict['fhr_list'] = fhr_list
                 job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
                 job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
                 job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
                 for model_idx in range(len(model_list)):
+                    job_env_dict['fhr_list'] = full_job_fhr_list
+                    for full_level_key in list(full_job_levels_dict.keys()):
+                        job_env_dict[full_level_key] = (
+                            full_job_levels_dict[full_level_key]
+                        )
                     job_env_dict['MODEL'] = model_list[model_idx]
                     njobs+=1
                     job_env_dict['job_num'] = str(njobs)
@@ -939,12 +951,13 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         job_env_dict['mask_list'] = env_var_mask_list
                     if JOB_GROUP == 'generate_stats':
                         if verif_type_job == 'DailyAvg_TempAnom2m':
-                            job_fhr_list = fhr_list.split(',')
-                            for fhr in job_fhr_list:
-                                if int(fhr) % 24 != 0:
-                                    job_fhr_list.remove(fhr)
-                                job_env_dict['fhr_list'] = ', '.join(
-                                    job_fhr_list
+                            job_fhr_list = []
+                            for fhr in (full_job_fhr_list\
+                                        .replace("'",'').split(', ')):
+                                if int(fhr) % 24 == 0:
+                                    job_fhr_list.append(fhr)
+                                job_env_dict['fhr_list'] = (
+                                    "'"+', '.join(job_fhr_list)+"'"
                                 )
                     # Do file checks
                     check_model_files = True
@@ -1013,10 +1026,6 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         # CMC doesn't have variables at all levels
                         if job_env_dict['VERIF_TYPE'] == 'pres_levs' \
                                 and job_env_dict['MODEL'] == 'cmc':
-                            fcst_level_list = (
-                                job_env_dict['var1_fcst_levels']\
-                                .replace("'",'').split(', ')
-                            )
                             if verif_type_job in ['UWind', 'VWind',
                                                   'VectorWind']:
                                 cmc_rm_level_list = ['P400', 'P300', 'P150',
@@ -1026,27 +1035,25 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                 cmc_rm_level_list = ['P400', 'P300', 'P200',
                                                      'P150', 'P100', 'P50',
                                                      'P20', 'P10', 'P5', 'P1']
-                            cmc_level_list = []
-                            for level_chk in fcst_level_list:
-                                if level_chk not in cmc_rm_level_list:
-                                    cmc_level_list.append(level_chk)
-                            job_env_dict['var1_fcst_levels'] = (
-                                "'"+', '.join(cmc_level_list)+"'"
-                            )
-                            job_env_dict['var1_obs_levels'] = (
-                                "'"+', '.join(cmc_level_list)+"'"
-                            )
-                            if verif_type_job == 'VectorWind':
-                                job_env_dict['var2_fcst_levels'] = (
-                                    "'"+', '.join(cmc_level_list)+"'"
+                            for dtype in ['fcst', 'obs']:
+                                dtype_level_list = (
+                                    job_env_dict[f"var1_{dtype}_levels"]\
+                                    .replace("'",'').split(', ')
                                 )
-                                job_env_dict['var2_obs_levels'] = (
-                                    "'"+', '.join(cmc_level_list)+"'"
+                                cmc_dtype_level_list = []
+                                for level_chk in dtype_level_list:
+                                    if level_chk not in cmc_rm_level_list:
+                                        cmc_dtype_level_list.append(level_chk)
+                                job_env_dict[f"var1_{dtype}_levels"] = (
+                                    "'"+', '.join(cmc_dtype_level_list)+"'"
                                 )
+                                if verif_type_job == 'VectorWind':
+                                    job_env_dict[f"var2_{dtype}_levels"] = (
+                                        "'"+', '.join(cmc_dtype_level_list)+"'"
+                                    )
                     # Write environment variables
                     for name, value in job_env_dict.items():
                         job.write('export '+name+'='+value+'\n')
-                    job.write('\n')
                     # Write job commands
                     if write_job_cmds:
                         for cmd in verif_type_job_commands_list:
