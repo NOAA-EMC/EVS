@@ -50,12 +50,13 @@ export MODELNAME=gefs
 ### Correct MET/METplus roots (Aug 2022)
 ########################################
 
-export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
+## export COMIN=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}
+export COMIN=/lfs/h2/emc/physics/noscrub/$USER/$NET/${evs_ver_2d}
+export COMOUT=${COMIN}
 ## export COMINobs=/lfs/h1/ops/dev/dcom/${VDATE}
-## export COMOUT=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}
-## export COMOUTprep=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver}/$STEP/$COMPONENT
-export DATA=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver}/${STEP}
-mkdir -p DATA
+## export COMOUTprep=/lfs/h2/emc/vpppg/noscrub/$USER/$NET/${evs_ver_2d}/$STEP/$COMPONENT
+export DATA=/lfs/h2/emc/ptmp/$USER/$NET/${evs_ver_2d}/${STEP}
+mkdir -p ${DATA}
 ## export FIXevs=/lfs/h2/emc/vpppg/noscrub/emc.vpppg/verification/EVS_fix
 ## export USHevs=$HOMEevs/ush/$COMPONENT
 ## export CONFIGevs=$HOMEevs/parm/metplus_config/$COMPONENT
@@ -67,14 +68,14 @@ export cycle=t${cyc}z
 
 echo ${PDYm1}
 export VDATE=$PDYm1
-export VDATE=$(date --date="2 days ago" +%Y%m%d)
+export VDATE=$(date --date="3 days ago" +%Y%m%d)
 echo ${VDATE}
 
 
 ############################################################
 ## CALL executable job script here
 #############################################################
-$HOMEevs/jobs/$COMPONENT/$STEP/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_PREP
+$HOMEevs/jobs/JEVS_GLOBAL_ENS_CHEM_GRID2OBS_PREP
 
 #%include <tail.h>
 #%manual

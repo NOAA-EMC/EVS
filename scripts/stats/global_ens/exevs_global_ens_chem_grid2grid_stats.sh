@@ -17,7 +17,10 @@ set -x
 export finalstat=${DATA}/final
 mkdir -p ${finalstat}
 
-export CONFIGevs=${CONFIGevs:-${PARMevs}/${STEP}/$COMPONENT/${RUN}_${VERIF_CASE}}
+export model1=`echo ${MODELNAME} | tr a-z A-Z`
+
+export CONFIGevs=${CONFIGevs:-${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}}
+export config_common=${PARMevs}/metplus_config/machine.conf
 
 export METPLUS_PATH
 
@@ -28,7 +31,7 @@ if [ -e mailmsg ]; /bin/rm -f mailmsg; fi
 
 case ${OBTTYPE} in
     abi)   flag_send_message=NO
-           grid_stat_conf_file=SeriesAnalysis_fcstGEFS_obs${obstype}.conf
+           grid_stat_conf_file=${CONFIGevs}/SeriesAnalysis_fcstGEFS_obs${obstype}.conf
            export mdl_cyc=00
            ## check valid time observation input VDATE 00, 03, 06, 09, 12, 15, 18, 21 Z and
            ## corresponding fcst file for each LEAD_SEQ 00, 03, 06, 09, 12, 15, 18, 21
@@ -96,8 +99,7 @@ case ${OBTTYPE} in
                echo "index of hourly obs_found == ${obs_num}"
                if [ ${num_fcst_in_metplus} -gt 0 -a ${obs_num} -gt 0 ]; then 
                  export fcsthours=${fcsthours_list}
-                 run_metplus.py -c ${CONFIGevs}/metplus_chem.conf \
-                     -c ${CONFIGevs}/${grid_stat_conf_file}
+                 run_metplus.py ${grid_stat_conf_file} ${config_common}
                  export err=$?; err_chk
                else
                  echo "WARNING: NO ${obstype} OBS OR MODEL DATA"
@@ -114,7 +116,7 @@ case ${OBTTYPE} in
            stat_file_count=$(find ${COMOUTsmall} -name "*${OBTTYPE}*" | wc -l)
            if [ ${stat_file_count} -ne 0 ]; then  ## run stat_analysis for one daily stat file
                cpreq ${COMOUTsmall}/*${OBTTYPE}* ${finalstat}
-               run_metplus.py ${CONFIGevs}/${stat_analysis_conf_file}
+               run_metplus.py ${CONFIGevs}/${stat_analysis_conf_file} ${config_common}
                export err=$?; err_chk
                if [ ${SENDCOM} = "YES" ]; then
                    cpfile=${finalstat}/evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${OBTTYPE}.v${vlddate}.stat
@@ -201,7 +203,7 @@ case ${OBTTYPE} in
                fi
                let tnow=${tnow}+3
            done
-           grid_stat_conf_file=SeriesAnalysis_fcstGEFS_obs${obstype}.conf
+           grid_stat_conf_file=${CONFIGevs}/SeriesAnalysis_fcstGEFS_obs${obstype}.conf
            export mdl_cyc=00
            export VDATE2=$PDYm3
            mdlfcst=${COMINgefs}/${MODELNAME}.${VDATE}/${mdl_cyc}/chem/pgrb2ap25
@@ -240,8 +242,7 @@ case ${OBTTYPE} in
            echo "index of 3-hourly obs_found == ${obs_num}"
            if [ ${num_fcst_in_metplus} -gt 0 -a ${obs_num} -gt 0 ]; then 
              export fcsthours=${fcsthours_list}
-             METPLUS_PATH}/ush/run_metplus.py -c ${CONFIGevs}/metplus_chem.conf \
-                 -c ${CONFIGevs}/${grid_stat_conf_file}
+             run_metplus.py ${grid_stat_conf_file} ${config_common}
              export err=$?; err_chk
            else
              echo "WARNING: NO ${obstype} OBS OR MODEL DATA"
@@ -257,7 +258,7 @@ case ${OBTTYPE} in
            stat_file_count=$(find ${COMOUTsmall} -name "*${OBTTYPE}*" | wc -l)
            if [ ${stat_file_count} -ne 0 ]; then
                cpreq ${COMOUTsmall}/*${OBTTYPE}* ${finalstat}
-               run_metplus.py ${conf_file_dir}/${stat_analysis_conf_file}
+               run_metplus.py ${stat_analysis_conf_file} ${config_common}
                export err=$?; err_chk
                if [ ${SENDCOM} = "YES" ]; then
                    cpfile=${finalstat}/evs.${STEP}.${COMPONENT}.${RUN}.${VERIF_CASE}_${OBTTYPE}.v${VDATE}.stat
@@ -280,12 +281,12 @@ if [ "${num_var}" != "1" ]; then
     for ivar in ${stats_var}; do
         grid_stat_conf_file=${file_header}_${ivar}.conf
         METPLUS_PATH}/ush/run_metplus.py -c ${CONFIGevs}/metplus_chem.conf \
-             -c ${CONFIGevs}/${grid_stat_conf_file}
+             -c ${CONFIGevs}/${grid_stat_conf_file} ${config_common}
         export err=$?; err_chk"
     done
 else
     METPLUS_PATH}/ush/run_metplus.py -c ${CONFIGevs}/metplus_chem.conf \
-        -c ${CONFIGevs}/${grid_stat_conf_file}
+        -c ${CONFIGevs}/${grid_stat_conf_file} ${config_common}
     export err=$?; err_chk
 fi
       export hour
@@ -328,7 +329,7 @@ fi
     
       if [ ${num_fcst_in_metplus} -gt 0 -a ${obs_hourly_found} -eq 1 ]; then
         export fcsthours=${fcsthours_list}
-        run_metplus.py ${conf_file_dir}/${point_stat_conf_file} ${PARMevs}/metplus_config/machine.conf
+        run_metplus.py ${point_stat_conf_file} ${config_common}
         export err=$?; err_chk
       else
         echo "WARNING: NO ${cap_outtyp} FORECAST OR OBS TO VERIFY"

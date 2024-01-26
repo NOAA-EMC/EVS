@@ -18,18 +18,19 @@ export finalprep=${DATA}/final
 mkdir -p ${finalprep}
 
 obstype="aeronet airnow"
-export CONFIGevs=${CONFIGevs:-${PARMevs}/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}}
+export CONFIGevs=${CONFIGevs:-${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}}
+export config_common=${PARMevs}/metplus_config/machine.conf
 
 for OBTTYPE in ${obstype}; do
     export OBTTYPE
     export obstype=`echo ${OBTTYPE} | tr a-z A-Z`
-    config_file=${CONFIGevs}/ASCII2NC_obs${obstype}.conf
+    prep_config_file=${CONFIGevs}/ASCII2NC_obs${obstype}.conf
 
     if [ "${OBTTYPE}" == "aeronet" ]; then
         checkfile=${DCOMIN}/${VDATE}/validation_data/aq/${OBTTYPE}/${VDATE}.lev15
         if [ -s ${checkfile} ]; then
-            if [ -s ${config_file} ]; then
-                run_metplus.py ${config_file} ${PARMevs}/metplus_config/machine.conf
+            if [ -s ${prep_config_file} ]; then
+                run_metplus.py ${prep_config_file} ${config_common}
                 export err=$?; err_chk
                 if [ ${SENDCOM} = "YES" ]; then
                     cpfile=${finalprep}/${OBTTYPE}_All_${VDATE}_lev15.nc
@@ -39,7 +40,7 @@ for OBTTYPE in ${obstype}; do
                     fi
                 fi
             else
-                echo "WARNING: can not find ${config_file}"
+                echo "WARNING: can not find ${prep_config_file}"
             fi
         else
             if [ ${SENDMAIL} = "YES" ]; then
@@ -75,15 +76,15 @@ for OBTTYPE in ${obstype}; do
             checkfile=${DCOMIN}/${VDATE}/airnow/${HOURLY_INPUT_TYPE}_${VDATE}${vldhr}.dat
             if [ -s ${checkfile} ]; then
                 export VHOUR=${vldhr}
-        	if [ -s ${conf_file} ]; then
-                    run_metplus.py ${conf_file} ${PARMevs}/metplus_config/machine.conf
+        	if [ -s ${prep_config_file} ]; then
+                    run_metplus.py ${prep_config_file} ${config_common}
         	    export err=$?; err_chk
         	    if [ ${SENDCOM} = "YES" ]; then
                         cpfile=${finalprep}/airnow_hourly_aqobs_${VDATE}${VHOUR}.nc 
                         if [ -e ${cpfile} ]; then cpreq ${cpfile} ${COMOUTprep}; fi
         	    fi
                 else
-                    echo "WARNING: can not find ${conf_file}"
+                    echo "WARNING: can not find ${prep_config_file}"
         	fi
             else
                 if [ ${SENDMAIL} = "YES" ]; then
@@ -100,7 +101,7 @@ for OBTTYPE in ${obstype}; do
             ((ic++))
         done
     else
-	echo "DEBUG :: OBTTYPE=${OBTTYPE}" is not define for ${STEP} operationa"
+	echo "DEBUG :: OBTTYPE=${OBTTYPE} is not define for ${COMPONENT}_${RUN} ${STEP} operationa"
     fi
 
 done

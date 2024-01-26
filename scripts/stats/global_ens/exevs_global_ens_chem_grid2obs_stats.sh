@@ -17,23 +17,31 @@ set -x
 export finalstat=${DATA}/final
 mkdir -p ${finalstat}
 
-export CONFIGevs=${CONFIGevs:-${PARMevs}/${STEP}/$COMPONENT/${RUN}_${VERIF_CASE}}
+export model1=`echo ${MODELNAME} | tr a-z A-Z`
+
+export CONFIGevs=${CONFIGevs:-${PARMevs}/metplus_config/${STEP}/${COMPONENT}/${RUN}_${VERIF_CASE}}
+export config_common=${PARMevs}/metplus_config/machine.conf
 
 export METPLUS_PATH
 
-export obstype=`echo ${OBTTYPE} | tr a-z A-Z`
+grid2obs_list="aeronet airnow"
 
-case ${OBTTYPE} in
-    aeronet) point_stat_conf_file=PointStat_fcstGEFSAero_obsAeronet.conf;;
-    airnow)  export outtyp=pm25
-             point_stat_conf_file=PointStat_fcstPM25_obsAirnow.conf;;
-esac
+for OBTTYPE in ${grid2obs_list}; do
+    export ${OBTTYPE}
+    export obstype=`echo ${OBTTYPE} | tr a-z A-Z`
 
-#############################
-# run Point Stat Analysis
-#############################
+    case ${OBTTYPE} in
+        aeronet) point_stat_conf_file=${CONFIGevs}/PointStat_fcstGEFSAero_obsAeronet.conf;;
+        airnow)  export outtyp=pm25
+                 point_stat_conf_file=${CONFIGevs}/PointStat_fcstGEFSAero_obsAirnow.conf;;
+    esac
 
-run_metplus.py -c ${CONFIGevs}/${point_stat_conf_file}
-export err=$?; err_chk
+    #############################
+    # run Point Stat Analysis
+    #############################
 
+    run_metplus.py ${point_stat_conf_file} ${config_common}
+    export err=$?; err_chk
+
+done
 exit

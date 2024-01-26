@@ -58,7 +58,7 @@ export HOMEevs=${HOMEevs:-${PACKAGEROOT}/${NET}.${evs_ver}}
 export SCRIPTSevs=${SCRIPTSevs:-${HOMEevs}/scripts}
 export EXECevs=${EXECevs:-${HOMEevs}/exec}
 export USHevs=${USHevs:-${HOMEevs}/ush/$COMPONENT}
-export PARMevs=${PARMevs:-${HOMEevs}/parm/metplus_config}
+export PARMevs=${PARMevs:-${HOMEevs}/parm}
 export FIXevs=${FIXevs:-${HOMEevs}/fix}
 
 export VDATE=${VDATE:-${PDYm2}}
