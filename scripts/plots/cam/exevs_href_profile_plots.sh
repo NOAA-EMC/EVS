@@ -53,7 +53,6 @@ while [ $n -le $past_days ] ; do
 done 
 
 
-VX_MASK_LIST="CONUS, Alaska, Hawaii, PRico"
 
 export fcst_init_hour="0,6,12,18"
 valid_time='valid00_12z'
@@ -100,6 +99,14 @@ fi
    for lead in $fcst_leads ; do 
 
     export fcst_lead=$lead
+
+    if [[ "$fcst_lead" == "06" ]] || [[ "$fcst_lead" == "18" ]] || [[ "$fcst_lead" == "30" ]] || [[ "$fcst_lead" == "42" ]] ; then
+       VX_MASK_LIST="CONUS, Alaska, PRico"
+    elif [[ "$fcst_lead" == "12" ]] || [[ "$fcst_lead" == "24" ]] || [[ "$fcst_lead" == "36" ]] || [[ "$fcst_lead" == "48" ]] ; then
+       VX_MASK_LIST="CONUS, Hawaii"
+    else
+       VX_MASK_LIST="CONUS, Alaska"
+    fi
 
     for VAR in $VARS ; do 
 
