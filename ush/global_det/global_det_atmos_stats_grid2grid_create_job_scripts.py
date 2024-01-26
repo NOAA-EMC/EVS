@@ -995,6 +995,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                 verif_type_job
             )
             # Add job specific environment variables
+            full_job_levels_dict = {}
             for verif_type_job_env_var in \
                     list(JOB_GROUP_jobs_dict[verif_type]\
                          [verif_type_job]['env'].keys()):
@@ -1002,6 +1003,11 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     JOB_GROUP_jobs_dict[verif_type]\
                     [verif_type_job]['env'][verif_type_job_env_var]
                 )
+                if verif_type_job_env_var in ['var1_levels',
+                                              'var2_levels']:
+                    full_job_levels_dict[verif_type_job_env_var] = (
+                        job_env_dict[verif_type_job_env_var]
+                    )
             full_job_fhr_list = job_env_dict['fhr_list']
             verif_type_job_commands_list = (
                 JOB_GROUP_jobs_dict[verif_type]\
@@ -1036,6 +1042,10 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                 job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
                 for model_idx in range(len(model_list)):
                     job_env_dict['fhr_list'] = full_job_fhr_list
+                    for full_level_key in list(full_job_levels_dict.keys()):
+                        job_env_dict[full_level_key] = (
+                            full_job_levels_dict[full_level_key]
+                        )
                     job_env_dict['MODEL'] = model_list[model_idx]
                     njobs+=1
                     job_env_dict['job_num'] = str(njobs)
@@ -1143,11 +1153,24 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         else:
                             write_job_cmds = False
                     # Check job and model being run
-                    if job_env_dict['MODEL'] \
-                            in ['cmc', 'cmc_regional', 'dwd', 'ecmwf',
-                                'fnmoc', 'jma', 'metfra', 'ukmet'] \
-                            and verif_type_job == 'Ozone':
-                        write_job_cmds = False
+                    if JOB_GROUP == 'generate_stats':
+                        if job_env_dict['MODEL'] \
+                                in ['cmc', 'cmc_regional', 'dwd', 'ecmwf',
+                                    'fnmoc', 'jma', 'metfra', 'ukmet'] \
+                                and verif_type_job == 'Ozone':
+                            write_job_cmds = False
+                        # IMD does not have Ozone Mixing Ratio at 925mb
+                        if verif_type == 'pres_levs' \
+                                and verif_type_job == 'Ozone' \
+                                and job_env_dict['MODEL'] == 'imd':
+                            imd_ozone_level_list = (
+                                job_env_dict['var1_levels']\
+                                .replace("'",'').split(', ')
+                            )
+                            imd_ozone_level_list.remove('P925')
+                            job_env_dict['var1_levels'] = (
+                                "'"+', '.join(imd_ozone_level_list)+"'"
+                            )
                     # Write environment variables
                     for name, value in job_env_dict.items():
                         job.write('export '+name+'='+value+'\n')
