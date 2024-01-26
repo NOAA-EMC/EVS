@@ -1005,52 +1005,180 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                 and verif_type_job == 'RelHum' \
                                 and job_env_dict['MODEL'] == 'jma':
                             write_job_cmds = False
-                        # UKMET doesn't have RH for past f120
+                        # CMC and FNMOC do not have variables at all levels
                         if job_env_dict['VERIF_TYPE'] == 'pres_levs' \
-                                and verif_type_job == 'RelHum' \
-                                and job_env_dict['MODEL'] == 'ukmet':
-                            fhr_list = (
-                                job_env_dict['fhr_list']\
-                                .replace("'",'').split(', ')
-                            )
-                            ukmet_fhr_list = []
-                            ukmet_fhr_rm_list = []
-                            for fhr_chk in fhr_list:
-                                if int(fhr_chk) > 120:
-                                    ukmet_fhr_rm_list.append(fhr_chk)
-                                else:
-                                    ukmet_fhr_list.append(fhr_chk)
-                            job_env_dict['fhr_list'] = (
-                                "'"+', '.join(ukmet_fhr_list)+"'"
-                            )
-                        # CMC doesn't have variables at all levels
-                        if job_env_dict['VERIF_TYPE'] == 'pres_levs' \
-                                and job_env_dict['MODEL'] == 'cmc':
-                            if verif_type_job in ['UWind', 'VWind',
-                                                  'VectorWind']:
-                                cmc_rm_level_list = ['P400', 'P300', 'P150',
-                                                     'P100', 'P50', 'P20',
-                                                     'P10', 'P5', 'P1']
-                            else:
-                                cmc_rm_level_list = ['P400', 'P300', 'P200',
-                                                     'P150', 'P100', 'P50',
-                                                     'P20', 'P10', 'P5', 'P1']
+                                and job_env_dict['MODEL'] in ['cmc', 'fnmoc']:
+                            if job_env_dict['MODEL'] == 'cmc':
+                                mod_rm_level_list = [
+                                    'P400', 'P300', 'P200', 'P150', 'P100',
+                                    'P50', 'P20', 'P10', 'P5', 'P1'
+                                ]
+                                if verif_type_job in ['UWind', 'VWind',
+                                                      'VectorWind']:
+                                    mod_rm_level_list.remove('P200')
+                            elif job_env_dict['MODEL'] == 'fnmoc':
+                                mod_rm_level_list = [
+                                    'P50', 'P20', 'P10', 'P5', 'P1'
+                                ]
+                                if verif_type_job == 'RelHum':
+                                    mod_rm_level_list.append('P925')
+                                    mod_rm_level_list.append('P250')
+                                    mod_rm_level_list.append('P200')
+                                    mod_rm_level_list.append('P150')
+                                    mod_rm_level_list.append('P100')
                             for dtype in ['fcst', 'obs']:
                                 dtype_level_list = (
                                     job_env_dict[f"var1_{dtype}_levels"]\
                                     .replace("'",'').split(', ')
                                 )
-                                cmc_dtype_level_list = []
+                                mod_dtype_level_list = []
                                 for level_chk in dtype_level_list:
-                                    if level_chk not in cmc_rm_level_list:
-                                        cmc_dtype_level_list.append(level_chk)
+                                    if level_chk not in mod_rm_level_list:
+                                        mod_dtype_level_list.append(level_chk)
                                 job_env_dict[f"var1_{dtype}_levels"] = (
-                                    "'"+', '.join(cmc_dtype_level_list)+"'"
+                                    "'"+', '.join(mod_dtype_level_list)+"'"
                                 )
                                 if verif_type_job == 'VectorWind':
                                     job_env_dict[f"var2_{dtype}_levels"] = (
-                                        "'"+', '.join(cmc_dtype_level_list)+"'"
+                                        "'"+', '.join(mod_dtype_level_list)+"'"
                                     )
+                        # ECMWF, UKMET, and JMA have variables at
+                        # different levels depending on if past
+                        # a certain forecast hour
+                        if job_env_dict['VERIF_TYPE'] == 'pres_levs' \
+                                and job_env_dict['MODEL'] in ['ecmwf', 'jma',
+                                                              'ukmet']:
+                            model_fhr_lev_dict = {
+                                'run1': {},
+                                'run2': {}
+                            }
+                            if job_env_dict['MODEL'] == 'ecmwf':
+                                mod_fhr_thresh = 144
+                                mod_rm_lefhr_level_list = [
+                                   'P150', 'P100', 'P50', 'P20', 'P10',
+                                   'P5', 'P1'
+                                ]
+                                mod_rm_gtfhr_level_list = [
+                                    'P20', 'P10', 'P5', 'P1'
+                                ]
+                            elif job_env_dict['MODEL'] == 'jma':
+                                run_jma_fhr000 = False
+                                mod_fhr_thresh = 120
+                                mod_rm_lefhr_level_list = [
+                                    'P925', 'P400', 'P150', 'P20', 'P10',
+                                    'P5', 'P1'
+                                ]
+                                mod_rm_gtfhr_level_list = [
+                                    'P925', 'P400', 'P250', 'P150', 'P100',
+                                    'P50', 'P20', 'P10', 'P5', 'P1'
+                                ]
+                                if verif_type_job in ['UWind', 'VWind',
+                                                      'VectorWind']:
+                                    mod_rm_lefhr_level_list.append('P1000')
+                                    mod_rm_gtfhr_level_list.append('P1000')
+                            elif job_env_dict['MODEL'] == 'ukmet':
+                                mod_fhr_thresh = 120
+                                mod_rm_lefhr_level_list = [
+                                    'P50', 'P20', 'P10', 'P5', 'P1'
+                                ]
+                                if verif_type_job == 'GeoHeight':
+                                    mod_rm_gtfhr_level_list = [
+                                        'P925', 'P850', 'P700', 'P400', 'P300',
+                                        'P250', 'P200', 'P150', 'P100', 'P50',
+                                        'P20', 'P10', 'P5', 'P1'
+                                    ]
+                                else:
+                                    mod_rm_gtfhr_level_list = [
+                                        'P1000', 'P925', 'P400', 'P500',
+                                        'P300', 'P250', 'P200', 'P150', 'P100',
+                                        'P50', 'P20', 'P10', 'P5', 'P1'
+                                    ]
+                            mod_full_fhr_list = (
+                                job_env_dict['fhr_list']\
+                                .replace("'",'').split(', ')
+                            )
+                            mod_lefhr_list = []
+                            mod_gtfhr_list = []
+                            for fhr_chk in mod_full_fhr_list:
+                                if int(fhr_chk) <= mod_fhr_thresh:
+                                    if int(fhr_chk) == 0 \
+                                            and job_env_dict['MODEL'] == 'jma':
+                                        run_jma_fhr000 = True
+                                    else:
+                                        mod_lefhr_list.append(fhr_chk)
+                                else:
+                                    mod_gtfhr_list.append(fhr_chk)
+                            # UKMET has no RH past 120
+                            if job_env_dict['MODEL'] == 'ukmet' \
+                                    and verif_type_job == 'RelHum':
+                                mod_gtfhr_list = []
+                            for runN in ['run1', 'run2']:
+                                if runN == 'run1':
+                                    mod_runN_fhr_list =  mod_lefhr_list
+                                    mod_runN_rm_level_list = (
+                                        mod_rm_lefhr_level_list
+                                    )
+                                elif runN == 'run2':
+                                    mod_runN_fhr_list =  mod_gtfhr_list
+                                    mod_runN_rm_level_list = (
+                                        mod_rm_gtfhr_level_list
+                                    )
+                                model_fhr_lev_dict[runN]['fhr_list'] = (
+                                    "'"+', '.join(mod_runN_fhr_list)+"'"
+                                )
+                                for dtype in ['fcst', 'obs']:
+                                    dtype_level_list = (
+                                        job_env_dict[f"var1_{dtype}_levels"]\
+                                        .replace("'",'').split(', ')
+                                    )
+                                    mod_runN_dtype_level_list = []
+                                    for level_chk in dtype_level_list:
+                                        if level_chk not \
+                                                in mod_runN_rm_level_list:
+                                            mod_runN_dtype_level_list.append(
+                                                level_chk
+                                            )
+                                    (model_fhr_lev_dict[runN]\
+                                     [f"var1_{dtype}_levels"]) = (
+                                         "'"
+                                         +', '.join(mod_runN_dtype_level_list)
+                                         +"'"
+                                    )
+                                    if verif_type_job == 'VectorWind':
+                                        (model_fhr_lev_dict[runN]\
+                                         [f"var2_{dtype}_levels"]) = (
+                                             "'"
+                                             +', '.join(mod_runN_dtype_level_list)
+                                             +"'"
+                                        )
+                            for run1_key \
+                                    in list(model_fhr_lev_dict['run1'].keys()):
+                                job_env_dict[run1_key] = (
+                                    model_fhr_lev_dict['run1'][run1_key]
+                                )
+                            if job_env_dict['MODEL'] == 'jma' \
+                                    and run_jma_fhr000:
+                                model_fhr_lev_dict['run3'] = {
+                                    'fhr_list': "'0'",
+                                }
+                                jma_fhr000_list = ['P1000', 'P850', 'P700',
+                                                   'P500', 'P400', 'P300',
+                                                   'P250', 'P200', 'P150',
+                                                   'P100', 'P50', 'P20', 'P10']
+                                for dtype in ['fcst', 'obs']:
+                                    (model_fhr_lev_dict['run3']\
+                                     [f"var1_{dtype}_levels"]) = (
+                                         "'"
+                                         +', '.join(jma_fhr000_list)
+                                         +"'"
+                                    )
+                                    if verif_type_job == 'VectorWind':
+                                        (model_fhr_lev_dict['run3']\
+                                         [f"var2_{dtype}_levels"]) = (
+                                            "'"
+                                            +', '.join(jma_fhr000_list)
+                                            +"'"
+                                        )
                     # Write environment variables
                     for name, value in job_env_dict.items():
                         job.write('export '+name+'='+value+'\n')
@@ -1059,6 +1187,32 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                         for cmd in verif_type_job_commands_list:
                             job.write(cmd+'\n')
                             job.write('export err=$?; err_chk'+'\n')
+                        if JOB_GROUP == 'generate_stats':
+                            # ECMWF: run again for fhr > 144
+                            # JMA: run again for fhr > 120 and fhr000
+                            # UKMET: run again for fhr > 120
+                            rerun_key_list = list(
+                                model_fhr_lev_dict.keys()
+                            )[1:]
+                            if verif_type == 'pres_levs' \
+                                    and job_env_dict['MODEL'] in ['ecmwf',
+                                                                  'jma',
+                                                                  'ukmet']:
+                                for runN in rerun_key_list:
+                                    if (model_fhr_lev_dict[runN]['fhr_list']) \
+                                            != "''":
+                                        export_key_list = list(
+                                            model_fhr_lev_dict[runN].keys()
+                                        )
+                                        for export_key in export_key_list:
+                                            job.write('export '
+                                                      +export_key+'='
+                                                      +model_fhr_lev_dict[runN]\
+                                                       [export_key]+'\n')
+                                        for cmd in verif_type_job_commands_list:
+                                            job.write(cmd+'\n')
+                                            job.write('export err=$?; err_chk'
+                                                      +'\n')
                         if job_env_dict['SENDCOM'] == 'YES':
                             for model_output_file_tuple \
                                     in model_copy_output_DATA2COMOUT_list:
