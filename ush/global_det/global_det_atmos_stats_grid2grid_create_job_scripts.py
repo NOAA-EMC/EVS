@@ -1002,7 +1002,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                     JOB_GROUP_jobs_dict[verif_type]\
                     [verif_type_job]['env'][verif_type_job_env_var]
                 )
-            fhr_list = job_env_dict['fhr_list']
+            full_job_fhr_list = job_env_dict['fhr_list']
             verif_type_job_commands_list = (
                 JOB_GROUP_jobs_dict[verif_type]\
                 [verif_type_job]['commands']
@@ -1031,11 +1031,11 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
             valid_date_inc = int(job_env_dict['valid_hr_inc'])
             date_dt = valid_start_date_dt
             while date_dt <= valid_end_date_dt:
-                job_env_dict['fhr_list'] = fhr_list
                 job_env_dict['DATE'] = date_dt.strftime('%Y%m%d')
                 job_env_dict['valid_hr_start'] = date_dt.strftime('%H')
                 job_env_dict['valid_hr_end'] = date_dt.strftime('%H')
                 for model_idx in range(len(model_list)):
+                    job_env_dict['fhr_list'] = full_job_fhr_list
                     job_env_dict['MODEL'] = model_list[model_idx]
                     njobs+=1
                     job_env_dict['job_num'] = str(njobs)
@@ -1073,12 +1073,13 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                 )
                         if verif_type == 'pres_levs' \
                                 and verif_type_job == 'DailyAvg_GeoHeightAnom':
-                            job_fhr_list = fhr_list.split(',')
-                            for fhr in job_fhr_list:
-                                if int(fhr) % 24 != 0 or int(fhr) < 24:
-                                    job_fhr_list.remove(fhr)
-                                job_env_dict['fhr_list'] = ','.join(
-                                    job_fhr_list
+                            job_fhr_list = []
+                            for fhr in (full_job_fhr_list.replace("'",'')
+                                        .split(', ')):
+                                if int(fhr) % 24 == 0 and int(fhr) >= 24:
+                                    job_fhr_list.append(fhr)
+                                job_env_dict['fhr_list'] = (
+                                    "'"+', '.join(job_fhr_list)+"'"
                                 )
                     elif JOB_GROUP == 'generate_stats':
                         if verif_type == 'pres_levs':
@@ -1086,12 +1087,13 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                 VERIF_CASE_STEP_abbrev_type+'_truth_name_list'
                             ].split(' ')[model_idx]
                             if verif_type_job == 'DailyAvg_GeoHeightAnom':
-                                job_fhr_list = fhr_list.split(',')
-                                for fhr in job_fhr_list:
-                                    if int(fhr) % 24 != 0 or int(fhr) < 24:
-                                        job_fhr_list.remove(fhr)
-                                    job_env_dict['fhr_list'] = ','.join(
-                                        job_fhr_list
+                                job_fhr_list = []
+                                for fhr in (full_job_fhr_list.replace("'",'')
+                                            .split(', ')):
+                                    if int(fhr) % 24 == 0 and int(fhr) >= 24:
+                                        job_fhr_list.append(fhr)
+                                    job_env_dict['fhr_list'] = (
+                                        "'"+', '.join(job_fhr_list)+"'"
                                     )
                     # Do file checks
                     all_truth_file_exist = False
@@ -1104,7 +1106,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             gda_util.check_model_files(job_env_dict)
                         )
                         job_env_dict['fhr_list'] = (
-                            '"'+','.join(valid_date_fhr_list)+'"'
+                            "'"+', '.join(valid_date_fhr_list)+"'"
                         )
                     if JOB_GROUP == 'reformat_data':
                         if verif_type == 'pres_levs' \
@@ -1168,7 +1170,7 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                                      and int(job_env_dict['valid_hr_start']) \
                                      % 12 == 0) \
                                     or verif_type_job == 'WindShear':
-                                if job_env_dict['fhr_list'] != '""':
+                                if job_env_dict['fhr_list'] != "''":
                                     job.write(verif_type_job_commands_list[1])
                     job.close()
                 date_dt = date_dt + datetime.timedelta(hours=valid_date_inc)
