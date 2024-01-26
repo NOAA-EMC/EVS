@@ -116,10 +116,10 @@ for DAY in range(1,4):
                         NAME = NAME.replace('\n','')
                         regexp="^[^:. ()]*$"
                         if not re.match(regexp, NAME):
-                            print(f'WARNING: Invalid record name ({NAME}) '
-                                  + f'for Day {DAY} outlook area issued '
-                                  + f'at {OTLK}Z on {OTLK_DATE}. Check for'
-                                  + f' bad data in the spc dbf file:'
+                            print(f'NOTE: Record name ({NAME}) '
+                                  + f'indicates no outlooks for Day {DAY} '
+                                  + f'were issued at {OTLK}Z on {OTLK_DATE}.'
+                                  + f' Check the spc dbf file for more info:'
                                   + f'{OTLK_DIR}/{SHP_FILE}.dbf')
                             continue
                         
