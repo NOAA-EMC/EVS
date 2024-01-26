@@ -973,6 +973,33 @@ def get_model_file(valid_time_dt, init_time_dt, forecast_hour,
         elif 'qpf_verif/METFRA' in source_file:
             prep_prod_metfra_file(source_file, dest_file, init_time_dt,
                                   forecast_hour, 'precip', log_missing_file)
+        elif '.precip.' in dest_file and 'com/gfs' in source_file \
+                and int(forecast_hour) in [3,6]:
+            ### Need to prepare special files for GFS precip for
+            ### for f003 and f006 as APCP variables in the files
+            ### are the same and throw WARNING from MET
+            if os.path.exists(source_file):
+                wgrib2_apcp_grep = subprocess.run(
+                    'wgrib2 '+source_file+' | grep "APCP"',
+                    shell=True, capture_output=True, encoding="utf8"
+                )
+                if wgrib2_apcp_grep.returncode == 0:
+                    first_apcp_rec = wgrib2_apcp_grep.stdout.split(':')[0]
+                    wgrib2_apcp_match = subprocess.run(
+                        "wgrib2 "+source_file
+                        +" -match '^("+first_apcp_rec+"):' "
+                        +"-grib "+dest_file, shell=True
+                    )
+                else:
+                    print("Could not get APCP record number(s) "
+                          +"linking files insted")
+                    print(f"Linking {source_file} to {dest_file}")
+                    os.symlink(source_file, dest_file)
+            else:
+                print(f"WARNING: {source_file} DOES NOT EXIST")
+                log_missing_file_model(log_missing_file, source_file,
+                                       model, init_time_dt,
+                                       forecast_hour.zfill(3))
         else:
             if os.path.exists(source_file):
                 print("Linking "+source_file+" to "+dest_file)
