@@ -50,7 +50,8 @@ if [ -n "%VHR:%" ]; then
 else
   export vhr=00
 fi
-export nproc=256
+export nproc=512
+export ncpu=128
 export USE_CFP=YES
 export NET="evs"
 export RUN="atmos"
