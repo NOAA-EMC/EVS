@@ -1191,13 +1191,13 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             # ECMWF: run again for fhr > 144
                             # JMA: run again for fhr > 120 and fhr000
                             # UKMET: run again for fhr > 120
-                            rerun_key_list = list(
-                                model_fhr_lev_dict.keys()
-                            )[1:]
                             if verif_type == 'pres_levs' \
                                     and job_env_dict['MODEL'] in ['ecmwf',
                                                                   'jma',
                                                                   'ukmet']:
+                                rerun_key_list = list(
+                                    model_fhr_lev_dict.keys()
+                                )[1:]
                                 for runN in rerun_key_list:
                                     if (model_fhr_lev_dict[runN]['fhr_list']) \
                                             != "''":

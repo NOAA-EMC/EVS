@@ -1297,15 +1297,15 @@ if JOB_GROUP in ['reformat_data', 'assemble_data', 'generate_stats']:
                             job.write('export err=$?; err_chk'+'\n')
                         if JOB_GROUP == 'generate_stats':
                             # JMA and UKMET: run again for fhr > 120
-                            rerun_key_list = list(
-                                model_fhr_lev_dict.keys()
-                            )[1:]
                             if verif_type == 'pres_levs' \
                                     and verif_type_job in ['GeoHeight',
                                                            'Temp', 'UWind',
                                                            'VWind', 'VectorWind'] \
                                     and job_env_dict['MODEL'] in ['jma',
                                                                   'ukmet']:
+                                rerun_key_list = list(
+                                    model_fhr_lev_dict.keys()
+                                )[1:]
                                 for runN in rerun_key_list:
                                     if (model_fhr_lev_dict[runN]['fhr_list']) \
                                             != "''":
